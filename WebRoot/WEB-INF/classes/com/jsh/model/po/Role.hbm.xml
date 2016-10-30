@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+ <class name="com.jsh.model.po.Role" table="jsh_role">
+  <id name="Id" type="java.lang.Long">
+   <column name="Id"/>
+   <generator class="native"/>
+  </id>
+  <property generated="never" lazy="false" name="Name" type="java.lang.String">
+   <column length="50" name="Name">
+    <comment>角色名称</comment>
+   </column>
+  </property>
+ </class>
+</hibernate-mapping>

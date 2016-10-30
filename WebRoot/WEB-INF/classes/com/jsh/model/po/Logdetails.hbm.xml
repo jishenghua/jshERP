@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.jsh.model.po.Logdetails" table="ams_t_logdetails">
+        <id name="id" type="java.lang.Long">
+            <column name="id" />
+            <generator class="native" />
+        </id>
+        <many-to-one name="user" class="com.jsh.model.po.Basicuser" lazy="false">
+            <column name="userID" not-null="true" />
+        </many-to-one>
+        <property name="operation" type="java.lang.String">
+            <column name="operation" length="500">
+                <comment>操作模块名称</comment>
+            </column>
+        </property>
+        <property name="clientIp" type="java.lang.String">
+            <column name="clientIP" length="50">
+                <comment>客户端IP</comment>
+            </column>
+        </property>
+        <property name="createtime" type="java.sql.Timestamp">
+            <column name="createtime" length="19">
+                <comment>创建时间</comment>
+            </column>
+        </property>
+        <property name="status" type="java.lang.Short">
+            <column name="status">
+                <comment>操作状态 0==成功，1==失败</comment>
+            </column>
+        </property>
+        <property name="contentdetails" type="java.lang.String">
+            <column name="contentdetails" length="1000">
+                <comment>操作详情</comment>
+            </column>
+        </property>
+        <property name="remark" type="java.lang.String">
+            <column name="remark" length="500">
+                <comment>备注信息</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

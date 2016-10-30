@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+ <class name="com.jsh.model.po.DepotItem" table="jsh_depotitem">
+  <id name="Id" type="java.lang.Long">
+   <column name="Id"/>
+   <generator class="native"/>
+  </id>
+  <many-to-one name="HeaderId" class="com.jsh.model.po.DepotHead" lazy="false">
+    <column name="HeaderId" not-null="true">
+     <comment>表头Id</comment>
+    </column>
+  </many-to-one>
+  <many-to-one name="MaterialId" class="com.jsh.model.po.Material" lazy="false">
+    <column name="MaterialId" not-null="true">
+     <comment>材料Id</comment>
+    </column>
+  </many-to-one>
+  <property generated="never" lazy="false" name="OperNumber" type="java.lang.Double">
+   <column name="OperNumber" precision="22" scale="3">
+    <comment>数量</comment>
+   </column>
+  </property>
+  <property generated="never" lazy="false" name="UnitPrice" type="java.lang.Double">
+   <column name="UnitPrice" precision="22" scale="3">
+    <comment>单价</comment>
+   </column>
+  </property>
+  <property generated="never" lazy="false" name="Incidentals" type="java.lang.Double">
+   <column name="Incidentals" precision="22" scale="3">
+    <comment>运杂费</comment>
+   </column>
+  </property>
+  <property generated="never" lazy="false" name="Remark" type="java.lang.String">
+   <column length="200" name="Remark">
+    <comment>描述</comment>
+   </column>
+  </property>
+  <property generated="never" lazy="false" name="Img" type="java.lang.String">
+   <column length="50" name="Img">
+    <comment>图片</comment>
+   </column>
+  </property>
+ </class>
+</hibernate-mapping>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.jsh.model.po.Measureunit" table="ams_t_measureunit">
+        <id name="id" type="java.lang.Long">
+            <column name="id" />
+            <generator class="native" />
+        </id>
+        <property name="unitname" type="java.lang.String">
+            <column name="unitname" length="30" not-null="true">
+                <comment>计量名称</comment>
+            </column>
+        </property>
+        <property name="description" type="java.lang.String">
+            <column name="description" length="500">
+                <comment>计量描述</comment>
+            </column>
+        </property>
+        <property name="isystem" type="java.lang.Short">
+            <column name="isystem" not-null="true">
+                <comment>是否系统自带 0==系统 1==非系统</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>
