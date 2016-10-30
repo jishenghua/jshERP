@@ -1,0 +1,155 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>jDigiClock - Digital Clock (HTC Hero inspired).</title>
+        <link rel="stylesheet" type="text/css" href="css/style.css" />
+        <link rel="stylesheet" type="text/css" href="css/jquery.jdigiclock.css" />
+        <script type="text/javascript" src="lib/jquery-1.3.2.min.js"></script>
+        <script type="text/javascript" src="lib/jquery.jdigiclock.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#digiclock').jdigiclock();
+            });
+        </script>
+    </head>
+    <body>
+        <div id="wrap">
+            <h1>jDigiClock</h1>
+            <h2>Digital Clock (HTC Hero inspired)</h2>
+            <p>
+                <strong>Author:</strong> <a href="http://www.radoslavdimov.com/">Radoslav Dimov</a><br />
+                <strong>Version:</strong> 2.1 (<a href="changelog.html">Changelog</a>)<br />
+                <strong>Download:</strong> <a href="http://www.radoslavdimov.com/jquery-plugins/jquery-plugin-digiclock/jdigiclock.zip">jdigiclock.zip</a><br />
+                <strong>Licence:</strong> Dual licensed under the <a href="http://www.opensource.org/licenses/mit-license.php">MIT</a> and <a href="http://www.opensource.org/licenses/gpl-license.php">GPL</a> licenses.
+            </p>
+            <h3>Contents</h3>
+            <ol>
+                <li><a href="#Introduction">Introduction</a></li>
+                <li><a href="#Examples">Examples</a></li>
+                <li><a href="#Getting-Started">Getting started</a></li>
+                <li><a href="#Configuration">Configuration</a></li>
+                <li><a href="#Compatibility">Compatibility</a></li>
+            </ol>
+            <a name="Introduction"></a>
+            <h3>Introduction</h3>
+            <p>
+                jDigiClock is a <a href="http://jquery.com">jQuery</a> plugin inspired from HTC Hero Clock Widget.
+            </p>
+            <a name="Examples"></a>
+            <h3>Examples</h3>
+            <div id="digiclock"></div>
+            <br /><br />
+            <a name="Getting-Started"></a>
+            <h3>Getting started</h3>
+            <p>
+                To use the jDigiClock plugin, include the <a href="http://jquery.com">jQuery</a>
+                library, the jDigiClock source file and jDigiClock core stylesheet file inside the <code>&lt;head&gt;</code> tag
+                of your HTML document:
+            </p>
+<pre>
+&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;css/jquery.jdigiclock.css&quot; /&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;lib/jquery-1.3.2.min.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;lib/jquery.jdigiclock.js&quot;&gt;&lt;/script&gt;
+</pre>
+            <p>
+                To setup jDigiClock, add the following code inside the <code>&lt;head&gt;</code>
+                tag of your HTML document:
+            </p>
+<pre>
+&lt;script type=&quot;text/javascript&quot;&gt;
+    $(document).ready(function() {
+        $('#digiclock').jdigiclock({
+            // Configuration goes here
+        });
+    });
+&lt;/script&gt;
+</pre>
+            <p>
+                jDigiClock accepts a lot of configuration options, see chapter "<a href="#Configuration">Configuration</a>"
+                for further informations.
+            </p>
+
+            <p>jDigiClock expects a very basic HTML markup structure inside your HTML document:</p>
+<pre>
+&lt;div id=&quot;digiclock&quot;&gt;&lt;/div&gt;
+</pre>
+            <a name="Configuration"></a>
+            <h3>Configuration</h3>
+            <p>
+                jDigiClock accepts a list of options to control the appearance and behaviour
+                of the Digital Clock. Here is the list of options you may set:
+            </p>
+            <table> 
+                <tr>
+                    <th>Property</th>
+                    <th>Type</th>
+                    <th>Default</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>clockImagesPath</td>
+                    <td>string</td>
+                    <td>"images/clock/"</td>
+                    <td>Clock images path.</td>
+                </tr>
+                <tr>
+                    <td>weatherImagesPath</td>
+                    <td>string</td>
+                    <td>"images/weather/"</td>
+                    <td>Weather images path.</td>
+                </tr>
+                <tr>
+                    <td>am_pm</td>
+                    <td>boolean</td>
+                    <td>false</td>
+                    <td>Specifies the AM/PM option.</td>
+                </tr>
+                <tr>
+                    <td>weatherLocationCode</td>
+                    <td>string</td>
+                    <td>"EUR|BG|BU002|BOURGAS"</td>
+                    <td>Weather location code (see: <a href="WeatherLocationDatabase.txt" target="_blank">WeatherLocationDatabase.txt</a>).</td>
+                </tr>
+                <tr>
+                    <td>weatherMetric</td>
+                    <td>string</td>
+                    <td>"C"</td>
+                    <td>Specifies the weather metric mode: C or F.</td>
+                </tr>
+                <tr>
+                    <td>weatherUpdate</td>
+                    <td>integer</td>
+                    <td>0</td>
+                    <td>Weather update in minutes.</td>
+                </tr>
+                <tr>
+                    <td>proxyType</td>
+                    <td>string</td>
+                    <td>"php"</td>
+                    <td>Specifies proxy type: php or asp (see: <a href="lib/proxy/asp/README.txt" target="_blank">README.txt</a>). </td>
+                </tr>
+            </table>
+            <a name="Compatibility"></a>
+            <h3>Compatibility</h3>
+            <p>jDigiClock has been tested and works on the following browsers:</p>
+            <ul>
+                <li>Internet Explorer 7 (PC)</li>
+                <li>FireFox 3.5 (PC/Linux)</li>
+                <li>Google Chrome 3.0 (PC)</li>
+                <li>Safari 4.0 (PC)</li>
+            </ul>
+            <!--
+            <h3>Donate a beer or two via PayPal</h3>
+            <div>
+                <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+                    <input type="hidden" name="cmd" value="_s-xclick" />
+                    <input type="hidden" name="hosted_button_id" value="9375573" />
+                    <input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif" name="submit" alt="PayPal - The safer, easier way to pay online!" />
+                    <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
+                </form>
+            </div>
+            -->
+        </div>
+    </body>
+</html>
