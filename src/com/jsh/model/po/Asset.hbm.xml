@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.jsh.model.po.Asset" table="ams_t_asset">
+        <id name="id" type="java.lang.Long">
+            <column name="id" />
+            <generator class="native" />
+        </id>
+        
+        <many-to-one name="assetname" class="com.jsh.model.po.Assetname" lazy="false">
+            <column name="assetnameID" not-null="true" />
+        </many-to-one>
+        
+        <property name="location" type="java.lang.String">
+            <column name="location">
+                <comment>位置</comment>
+            </column>
+        </property>
+        <property name="labels" type="java.lang.String">
+            <column name="labels">
+                <comment>标签：以空格为分隔符</comment>
+            </column>
+        </property>
+        <property name="status" type="java.lang.Short">
+            <column name="status">
+                <comment>资产的状态：0==在库，1==在用，2==消费</comment>
+            </column>
+        </property>
+        
+        <many-to-one name="user" class="com.jsh.model.po.Basicuser" lazy="false">
+            <column name="userID"/>
+        </many-to-one>
+        
+        <property name="price" type="java.lang.Double">
+            <column name="price" precision="22" scale="2">
+                <comment>购买价格</comment>
+            </column>
+        </property>
+        <property name="purchasedate" type="java.sql.Timestamp">
+            <column name="purchasedate" length="19">
+                <comment>购买日期</comment>
+            </column>
+        </property>
+        <property name="periodofvalidity" type="java.sql.Timestamp">
+            <column name="periodofvalidity" length="19">
+                <comment>有效日期</comment>
+            </column>
+        </property>
+        <property name="warrantydate" type="java.sql.Timestamp">
+            <column name="warrantydate" length="19">
+                <comment>保修日期</comment>
+            </column>
+        </property>
+        <property name="assetnum" type="java.lang.String">
+            <column name="assetnum">
+                <comment>资产编号</comment>
+            </column>
+        </property>
+        <property name="serialnum" type="java.lang.String">
+            <column name="serialnum">
+                <comment>资产序列号</comment>
+            </column>
+        </property>
+        
+        <many-to-one name="supplier" class="com.jsh.model.po.Supplier" lazy="false">
+            <column name="supplier"/>
+        </many-to-one>
+        
+        <property name="description" type="java.lang.String">
+            <column name="description" length="500">
+                <comment>描述信息</comment>
+            </column>
+        </property>
+        <property name="addMonth" type="java.lang.String">
+            <column name="addMonth" length="500">
+                <comment>资产添加时间，统计报表使用</comment>
+            </column>
+        </property>
+        <property name="createtime" type="java.sql.Timestamp">
+            <column name="createtime" length="19" />
+        </property>
+        
+        <many-to-one name="creator" class="com.jsh.model.po.Basicuser" lazy="false">
+            <column name="creator"/>
+        </many-to-one>
+        
+        <property name="updatetime" type="java.sql.Timestamp">
+            <column name="updatetime" length="19" />
+        </property>
+        
+        <many-to-one name="updator" class="com.jsh.model.po.Basicuser" lazy="false">
+            <column name="updator"/>
+        </many-to-one>
+    </class>
+</hibernate-mapping>
