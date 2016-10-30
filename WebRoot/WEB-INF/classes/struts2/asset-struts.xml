@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN"
+	"http://struts.apache.org/dtds/struts-2.1.7.dtd">
+<struts>
+	<package name="asset" namespace="/asset" extends="json-default">
+		<action name="*" class="assetAction" method="{1}">
+			<result type="json"/>
+		</action>
+		
+		<!--导出资产为excel表格 -->
+		<action name="exportExcel" class="assetAction" method="exportExcel">
+			<result name="excel" type="stream">
+				<param name="contentType">application/vnd.ms-excel</param>
+				<param name="inputName">excelStream</param>
+				<param name="contentDisposition">attachment;filename="${fileName}"</param>
+				<param name="bufferSize">1024</param>
+			</result>
+		</action>
+		
+		<!--导出资产为excel表格 -->
+		<action name="importExcel" class="assetAction" method="importExcel">
+			<result name="excel" type="stream">
+				<param name="contentType">application/vnd.ms-excel</param>
+				<param name="inputName">excelStream</param>
+				<param name="contentDisposition">attachment;filename="${fileName}"</param>
+				<param name="bufferSize">1024</param>
+			</result>
+			<result name="success">/pages/asset/asset.jsp</result>
+		</action>
+	</package>
+</struts>
