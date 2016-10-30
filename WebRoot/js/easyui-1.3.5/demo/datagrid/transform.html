@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Transform DataGrid from Table - jQuery EasyUI Demo</title>
+	<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../demo.css">
+	<script type="text/javascript" src="../../jquery.min.js"></script>
+	<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+</head>
+<body>
+	<h2>Transform DataGrid from Table</h2>
+	<div class="demo-info">
+		<div class="demo-tip icon-tip"></div>
+		<div>Transform DataGrid from an existing, unformatted html table.</div>
+	</div>
+	<div style="margin:10px 0;"></div>
+	<table class="easyui-datagrid" style="width:500px;height:auto">
+		<thead>
+			<tr>
+				<th data-options="field:'itemid'">Item ID</th>
+				<th data-options="field:'productid'">Product</th>
+				<th data-options="field:'listprice',align:'right'">List Price</th>
+				<th data-options="field:'attr1'">Attribute</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>EST-1</td><td>FI-SW-01</td><td>36.50</td><td>Large</td>
+			</tr>
+			<tr>
+				<td>EST-10</td><td>K9-DL-01</td><td>18.50</td><td>Spotted Adult Female</td>
+			</tr>
+			<tr>
+				<td>EST-11</td><td>RP-SN-01</td><td>28.50</td><td>Venomless</td>
+			</tr>
+			<tr>
+				<td>EST-12</td><td>RP-SN-01</td><td>26.50</td><td>Rattleless</td>
+			</tr>
+			<tr>
+				<td>EST-13</td><td>RP-LI-02</td><td>35.50</td><td>Green Adult</td>
+			</tr>
+		</tbody>
+	</table>
+</body>
+</html>
