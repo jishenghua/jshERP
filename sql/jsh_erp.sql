@@ -1,0 +1,370 @@
+/*
+MySQL Backup
+Source Server Version: 5.1.54
+Source Database: jsh_erp
+Date: 2016-11-13 13:35:26
+*/
+
+SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+--  Table structure for `jsh_app`
+-- ----------------------------
+DROP TABLE IF EXISTS `jsh_app`;
+CREATE TABLE `jsh_app` (
+  `Id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `Number` varchar(50) DEFAULT NULL,
+  `Name` varchar(50) DEFAULT NULL,
+  `Type` varchar(50) DEFAULT NULL,
+  `Icon` varchar(50) DEFAULT NULL,
+  `URL` varchar(50) DEFAULT NULL,
+  `Width` varchar(50) DEFAULT NULL,
+  `Height` varchar(50) DEFAULT NULL,
+  `ReSize` bit(1) DEFAULT NULL,
+  `OpenMax` bit(1) DEFAULT NULL,
+  `Flash` bit(1) DEFAULT NULL,
+  `ZL` varchar(50) DEFAULT NULL,
+  `Sort` varchar(50) DEFAULT NULL,
+  `Remark` varchar(200) DEFAULT NULL,
+  `Enabled` bit(1) DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+--  Table structure for `jsh_asset`
+-- ----------------------------
+DROP TABLE IF EXISTS `jsh_asset`;
+CREATE TABLE `jsh_asset` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `assetnameID` bigint(20) NOT NULL,
+  `location` varchar(255) DEFAULT NULL COMMENT '位置',
+  `labels` varchar(255) DEFAULT NULL COMMENT '标签：以空格为分隔符',
+  `status` smallint(6) DEFAULT NULL COMMENT '资产的状态：0==在库，1==在用，2==消费',
+  `userID` bigint(20) DEFAULT NULL,
+  `price` double DEFAULT NULL COMMENT '购买价格',
+  `purchasedate` datetime DEFAULT NULL COMMENT '购买日期',
+  `periodofvalidity` datetime DEFAULT NULL COMMENT '有效日期',
+  `warrantydate` datetime DEFAULT NULL COMMENT '保修日期',
+  `assetnum` varchar(255) DEFAULT NULL COMMENT '资产编号',
+  `serialnum` varchar(255) DEFAULT NULL COMMENT '资产序列号',
+  `supplier` bigint(20) NOT NULL,
+  `description` longtext COMMENT '描述信息',
+  `addMonth` longtext COMMENT '资产添加时间，统计报表使用',
+  `createtime` datetime DEFAULT NULL,
+  `creator` bigint(20) DEFAULT NULL,
+  `updatetime` datetime DEFAULT NULL,
+  `updator` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK353690ED9B6CB285` (`assetnameID`),
+  KEY `FK353690EDAD45B659` (`creator`),
+  KEY `FK353690ED27D23FE4` (`supplier`),
+  KEY `FK353690ED61FE182C` (`updator`),
+  KEY `FK353690ED3E226853` (`userID`),
+  CONSTRAINT `FK353690ED27D23FE4` FOREIGN KEY (`supplier`) REFERENCES `jsh_supplier` (`id`),
+  CONSTRAINT `FK353690ED3E226853` FOREIGN KEY (`userID`) REFERENCES `jsh_user` (`id`),
+  CONSTRAINT `FK353690ED61FE182C` FOREIGN KEY (`updator`) REFERENCES `jsh_user` (`id`),
+  CONSTRAINT `FK353690ED9B6CB285` FOREIGN KEY (`assetnameID`) REFERENCES `jsh_assetname` (`id`),
+  CONSTRAINT `FK353690EDAD45B659` FOREIGN KEY (`creator`) REFERENCES `jsh_user` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+--  Table structure for `jsh_assetcategory`
+-- ----------------------------
+DROP TABLE IF EXISTS `jsh_assetcategory`;
+CREATE TABLE `jsh_assetcategory` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `assetname` varchar(255) NOT NULL COMMENT '资产类型名称',
+  `isystem` tinyint(4) NOT NULL COMMENT '是否系统自带 0==系统 1==非系统',
+  `description` varchar(500) DEFAULT NULL COMMENT '描述信息',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+--  Table structure for `jsh_assetname`
+-- ----------------------------
+DROP TABLE IF EXISTS `jsh_assetname`;
+CREATE TABLE `jsh_assetname` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `assetname` varchar(255) NOT NULL COMMENT '资产名称',
+  `assetcategoryID` bigint(20) NOT NULL,
+  `isystem` smallint(6) NOT NULL COMMENT '是否系统自带 0==系统 1==非系统',
+  `description` longtext COMMENT '描述信息',
+  `isconsumables` smallint(6) DEFAULT NULL COMMENT '是否为耗材 0==否 1==是 耗材状态只能是消费',
+  PRIMARY KEY (`id`),
+  KEY `FKA4ADCCF866BC8AD3` (`assetcategoryID`),
+  CONSTRAINT `FKA4ADCCF866BC8AD3` FOREIGN KEY (`assetcategoryID`) REFERENCES `jsh_assetcategory` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+--  Table structure for `jsh_building`
+-- ----------------------------
+DROP TABLE IF EXISTS `jsh_building`;
+CREATE TABLE `jsh_building` (
+  `Id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `ProjectId` bigint(20) NOT NULL,
+  `Name` varchar(20) DEFAULT NULL COMMENT '名称',
+  `Remark` varchar(50) DEFAULT NULL COMMENT '备注',
+  `Enabled` bit(1) DEFAULT NULL COMMENT '启用',
+  PRIMARY KEY (`Id`),
+  KEY `FK3FFEB42888F9A` (`ProjectId`),
+  CONSTRAINT `FK3FFEB42888F9A` FOREIGN KEY (`ProjectId`) REFERENCES `jsh_depot` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+--  Table structure for `jsh_depot`
+-- ----------------------------
+DROP TABLE IF EXISTS `jsh_depot`;
+CREATE TABLE `jsh_depot` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `name` varchar(20) DEFAULT NULL COMMENT '仓库名称',
+  `sort` varchar(10) DEFAULT NULL COMMENT '排序',
+  `remark` varchar(100) DEFAULT NULL COMMENT '描述',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+--  Table structure for `jsh_depothead`
+-- ----------------------------
+DROP TABLE IF EXISTS `jsh_depothead`;
+CREATE TABLE `jsh_depothead` (
+  `Id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `Type` varchar(50) DEFAULT NULL COMMENT '类型(出库/入库)',
+  `SubType` varchar(50) DEFAULT NULL COMMENT '出入库分类',
+  `ProjectId` bigint(20) NOT NULL COMMENT '项目Id',
+  `Number` varchar(50) DEFAULT NULL COMMENT '票据号',
+  `OperPersonName` varchar(50) DEFAULT NULL COMMENT '操作员名字',
+  `CreateTime` datetime DEFAULT NULL COMMENT '创建时间',
+  `OperTime` datetime DEFAULT NULL COMMENT '出入库时间',
+  `OrganId` bigint(20) DEFAULT NULL COMMENT '供应商Id',
+  `HandsPersonId` bigint(20) DEFAULT NULL COMMENT '采购/领料-经手人Id',
+  `WareHousePersonId` bigint(20) NOT NULL COMMENT '仓管员-经手人Id',
+  `SettlementWay` varchar(50) DEFAULT NULL COMMENT '现金/记账',
+  `BuildingId` bigint(20) DEFAULT NULL COMMENT '单元Id',
+  `AllocationProjectId` bigint(20) DEFAULT NULL COMMENT '调拨时，对方项目Id',
+  `Remark` varchar(1000) DEFAULT NULL COMMENT '备注',
+  `State` varchar(50) DEFAULT NULL COMMENT '草稿/已生效/废弃/待审核/未通过',
+  `ReAuditPersonName` varchar(50) DEFAULT NULL COMMENT '撤审人',
+  `Reason` varchar(100) DEFAULT NULL COMMENT '撤审原因',
+  PRIMARY KEY (`Id`),
+  KEY `FK2A80F214CA633ABA` (`AllocationProjectId`),
+  KEY `FK2A80F214C4170B37` (`HandsPersonId`),
+  KEY `FK2A80F214B610FC06` (`OrganId`),
+  KEY `FK2A80F2148E0FA916` (`WareHousePersonId`),
+  KEY `FK2A80F2142888F9A` (`ProjectId`),
+  KEY `FK2A80F214F039F8D1` (`BuildingId`),
+  CONSTRAINT `jsh_depothead_ibfk_1` FOREIGN KEY (`ProjectId`) REFERENCES `jsh_depot` (`id`),
+  CONSTRAINT `jsh_depothead_ibfk_2` FOREIGN KEY (`WareHousePersonId`) REFERENCES `jsh_person` (`Id`),
+  CONSTRAINT `jsh_depothead_ibfk_3` FOREIGN KEY (`OrganId`) REFERENCES `jsh_supplier` (`id`),
+  CONSTRAINT `jsh_depothead_ibfk_4` FOREIGN KEY (`HandsPersonId`) REFERENCES `jsh_person` (`Id`),
+  CONSTRAINT `jsh_depothead_ibfk_5` FOREIGN KEY (`AllocationProjectId`) REFERENCES `jsh_depot` (`id`),
+  CONSTRAINT `jsh_depothead_ibfk_6` FOREIGN KEY (`BuildingId`) REFERENCES `jsh_building` (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+--  Table structure for `jsh_depotitem`
+-- ----------------------------
+DROP TABLE IF EXISTS `jsh_depotitem`;
+CREATE TABLE `jsh_depotitem` (
+  `Id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `HeaderId` bigint(20) NOT NULL COMMENT '表头Id',
+  `MaterialId` bigint(20) NOT NULL COMMENT '材料Id',
+  `OperNumber` double DEFAULT NULL COMMENT '数量',
+  `UnitPrice` double DEFAULT NULL COMMENT '单价',
+  `Incidentals` double DEFAULT NULL COMMENT '运杂费',
+  `Remark` varchar(200) DEFAULT NULL COMMENT '描述',
+  `Img` varchar(50) DEFAULT NULL COMMENT '图片',
+  PRIMARY KEY (`Id`),
+  KEY `FK2A819F475D61CCF7` (`MaterialId`),
+  KEY `FK2A819F474BB6190E` (`HeaderId`),
+  CONSTRAINT `jsh_depotitem_ibfk_1` FOREIGN KEY (`HeaderId`) REFERENCES `jsh_depothead` (`Id`) ON DELETE CASCADE,
+  CONSTRAINT `jsh_depotitem_ibfk_2` FOREIGN KEY (`MaterialId`) REFERENCES `jsh_material` (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1018 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+--  Table structure for `jsh_functions`
+-- ----------------------------
+DROP TABLE IF EXISTS `jsh_functions`;
+CREATE TABLE `jsh_functions` (
+  `Id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `Number` varchar(50) DEFAULT NULL,
+  `Name` varchar(50) DEFAULT NULL,
+  `PNumber` varchar(50) DEFAULT NULL,
+  `URL` varchar(100) DEFAULT NULL,
+  `State` bit(1) DEFAULT NULL,
+  `Sort` varchar(50) DEFAULT NULL,
+  `Enabled` bit(1) DEFAULT NULL,
+  `Type` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=194 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+--  Table structure for `jsh_log`
+-- ----------------------------
+DROP TABLE IF EXISTS `jsh_log`;
+CREATE TABLE `jsh_log` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `userID` bigint(20) NOT NULL COMMENT '操作用户ID',
+  `operation` varchar(500) DEFAULT NULL COMMENT '操作模块名称',
+  `clientIP` varchar(50) DEFAULT NULL COMMENT '客户端IP',
+  `createtime` datetime DEFAULT NULL COMMENT '创建时间',
+  `status` tinyint(4) DEFAULT NULL COMMENT '操作状态 0==成功，1==失败',
+  `contentdetails` varchar(1000) DEFAULT NULL COMMENT '操作详情',
+  `remark` varchar(500) DEFAULT NULL COMMENT '备注信息',
+  PRIMARY KEY (`id`),
+  KEY `FKF2696AA13E226853` (`userID`),
+  CONSTRAINT `FKF2696AA13E226853` FOREIGN KEY (`userID`) REFERENCES `jsh_user` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1664 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+--  Table structure for `jsh_material`
+-- ----------------------------
+DROP TABLE IF EXISTS `jsh_material`;
+CREATE TABLE `jsh_material` (
+  `Id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `CategoryId` bigint(20) DEFAULT NULL,
+  `Name` varchar(50) DEFAULT NULL COMMENT '名称',
+  `Model` varchar(50) DEFAULT NULL COMMENT '型号',
+  `Color` varchar(50) DEFAULT NULL COMMENT '颜色',
+  `Unit` varchar(50) DEFAULT NULL COMMENT '单位',
+  `Remark` varchar(100) DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`Id`),
+  KEY `FK675951272AB6672C` (`CategoryId`),
+  CONSTRAINT `FK675951272AB6672C` FOREIGN KEY (`CategoryId`) REFERENCES `jsh_materialcategory` (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=499 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+--  Table structure for `jsh_materialcategory`
+-- ----------------------------
+DROP TABLE IF EXISTS `jsh_materialcategory`;
+CREATE TABLE `jsh_materialcategory` (
+  `Id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `Name` varchar(50) DEFAULT NULL COMMENT '名称',
+  `CategoryLevel` smallint(6) DEFAULT NULL COMMENT '等级',
+  `ParentId` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`Id`),
+  KEY `FK3EE7F725237A77D8` (`ParentId`),
+  CONSTRAINT `FK3EE7F725237A77D8` FOREIGN KEY (`ParentId`) REFERENCES `jsh_materialcategory` (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+--  Table structure for `jsh_person`
+-- ----------------------------
+DROP TABLE IF EXISTS `jsh_person`;
+CREATE TABLE `jsh_person` (
+  `Id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `ProjectId` bigint(20) NOT NULL,
+  `Type` varchar(20) DEFAULT NULL COMMENT '类型',
+  `Name` varchar(50) DEFAULT NULL COMMENT '姓名',
+  PRIMARY KEY (`Id`),
+  KEY `FK5AF487552888F9A` (`ProjectId`),
+  CONSTRAINT `FK5AF487552888F9A` FOREIGN KEY (`ProjectId`) REFERENCES `jsh_depot` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+--  Table structure for `jsh_role`
+-- ----------------------------
+DROP TABLE IF EXISTS `jsh_role`;
+CREATE TABLE `jsh_role` (
+  `Id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `Name` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+--  Table structure for `jsh_supplier`
+-- ----------------------------
+DROP TABLE IF EXISTS `jsh_supplier`;
+CREATE TABLE `jsh_supplier` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `supplier` varchar(255) NOT NULL COMMENT '供应商名称',
+  `contacts` varchar(100) DEFAULT NULL COMMENT '联系人',
+  `phonenum` varchar(30) DEFAULT NULL COMMENT '联系电话',
+  `email` varchar(50) DEFAULT NULL COMMENT '电子邮箱',
+  `description` varchar(500) DEFAULT NULL,
+  `isystem` tinyint(4) DEFAULT NULL,
+  `type` varchar(20) DEFAULT NULL COMMENT '类型',
+  `enabled` bit(1) DEFAULT NULL COMMENT '启用',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+--  Table structure for `jsh_user`
+-- ----------------------------
+DROP TABLE IF EXISTS `jsh_user`;
+CREATE TABLE `jsh_user` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `username` varchar(255) NOT NULL COMMENT '用户姓名--例如张三',
+  `loginame` varchar(255) DEFAULT NULL COMMENT '登录用户名--可能为空',
+  `password` varchar(30) DEFAULT NULL COMMENT '登陆密码',
+  `position` varchar(200) DEFAULT NULL COMMENT '职位',
+  `department` varchar(255) DEFAULT NULL COMMENT '所属部门',
+  `email` varchar(100) DEFAULT NULL COMMENT '电子邮箱',
+  `phonenum` varchar(100) DEFAULT NULL COMMENT '手机号码',
+  `ismanager` tinyint(4) NOT NULL DEFAULT '1' COMMENT '是否为管理者 0==管理者 1==员工',
+  `isystem` tinyint(4) NOT NULL DEFAULT '1' COMMENT '是否系统自带数据 ',
+  `status` tinyint(4) DEFAULT NULL COMMENT '用户状态',
+  `description` varchar(500) DEFAULT NULL COMMENT '用户描述信息',
+  `remark` varchar(500) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+--  Table structure for `jsh_userbusiness`
+-- ----------------------------
+DROP TABLE IF EXISTS `jsh_userbusiness`;
+CREATE TABLE `jsh_userbusiness` (
+  `Id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `Type` varchar(50) DEFAULT NULL,
+  `KeyId` varchar(50) DEFAULT NULL,
+  `Value` varchar(10000) DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+--  Table structure for `jsh_visitaccount`
+-- ----------------------------
+DROP TABLE IF EXISTS `jsh_visitaccount`;
+CREATE TABLE `jsh_visitaccount` (
+  `Id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `ProjectId` bigint(20) NOT NULL,
+  `LouHao` varchar(50) DEFAULT NULL,
+  `HuHao` varchar(50) DEFAULT NULL,
+  `HuiFang` varchar(50) DEFAULT NULL,
+  `LuoShi` varchar(50) DEFAULT NULL,
+  `Name` varchar(50) DEFAULT NULL,
+  `Tel` varchar(50) DEFAULT NULL,
+  `AddTime` datetime DEFAULT NULL,
+  PRIMARY KEY (`Id`),
+  KEY `FKFF4AAE822888F9A` (`ProjectId`),
+  CONSTRAINT `FKFF4AAE822888F9A` FOREIGN KEY (`ProjectId`) REFERENCES `jsh_depot` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+--  View definition for `jsh_view_in_out_stock`
+-- ----------------------------
+DROP VIEW IF EXISTS `jsh_view_in_out_stock`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `jsh_view_in_out_stock` AS select `jsh_depotitem`.`Id` AS `Id`,`jsh_depotitem`.`HeaderId` AS `HeaderId`,`jsh_depotitem`.`MaterialId` AS `MaterialId`,`jsh_depotitem`.`OperNumber` AS `OperNumber`,`jsh_depotitem`.`UnitPrice` AS `UnitPrice`,`jsh_depotitem`.`Incidentals` AS `Incidentals`,`jsh_depotitem`.`Remark` AS `Remark`,`jsh_depotitem`.`Img` AS `Img` from `jsh_depotitem` group by `jsh_depotitem`.`MaterialId`;
+
+-- ----------------------------
+--  Records 
+-- ----------------------------
+INSERT INTO `jsh_app` VALUES ('1','','企业邮箱','app','0000000001.png','../EmailManage/Email','600','400','\0','\0','\0','desk','010','','\0'), ('2','','薪资管理','app','0000000003.png','http://192.168.1.12:803','1024','600','','\0','\0','desk','020','','\0'), ('3','00','系统管理','app','0000000004.png','','1024','600','','\0','\0','desk','198','',''), ('6','','个人信息','app','0000000005.png','../user/password.jsp','600','400','\0','\0','\0','dock','200','',''), ('7','01','基础数据','app','0000000006.png','','1024','600','','\0','\0','desk','100','',''), ('8','02','进销存','app','0000000007.png','','1024','600','','\0','\0','desk','030','',''), ('9','03','成本管理','app','0000000008.png','','1024','600','','\0','\0','desk','040','','\0'), ('10','05','合同会签','app','0000000010.png','','1024','600','','\0','\0','desk','060','','\0'), ('11','04','固定资产','app','0000000011.png','','1024','600','','\0','\0','desk','050','','\0'), ('12','08','薪资管理','app','0000000012.png','','1024','600','','\0','\0','desk','080','','\0'), ('15','06','人事管理','app','0000000013.png',NULL,'1024','600','','\0','\0','desk','070',NULL,'\0'), ('16','07','档案管理','app','0000000014.png',NULL,'1024','600','','\0','\0','desk','064',NULL,'\0'), ('17','09','留言管理','app','0000000015.png',NULL,'1024','600','','\0','\0','desk','120',NULL,'\0'), ('18','10','回访台帐','app','0000000018.png',NULL,'1024','600','','\0','\0','desk','180',NULL,'\0'), ('19','14','资金申请','app','0000000019.png',NULL,'1024','600','','\0','\0','desk','062',NULL,'\0'), ('20','13','公告管理','app','0000000020.png',NULL,'1024','600','','\0','\0','desk','125',NULL,'\0'), ('21','','今日留言','app','0000000021.png','../phone/msg','1024','600','','\0','\0','dock','000','','\0'), ('22','11','快捷审批','app','0000000022.png',NULL,'1024','600','','\0','\0','desk','210',NULL,'\0'), ('23','15','意见箱','app','0000000023.png',NULL,'1024','600','','\0','\0','desk','220',NULL,'\0'), ('24','20','施工日志','app','0000000024.png',NULL,'1024','600','','\0','\0','desk','230',NULL,'\0'), ('25','21','安全日记','app','0000000025.png',NULL,'1024','600','','\0','\0','desk','240',NULL,'\0');
+INSERT INTO `jsh_asset` VALUES ('1','27','weizhi','','0',NULL,'11','2016-10-22 00:00:00','2016-10-21 00:00:00','2016-11-03 00:00:00','1231241','123124123','2','','2016-10','2016-10-22 20:04:48','63','2016-10-22 20:04:48','63');
+INSERT INTO `jsh_assetcategory` VALUES ('14','递延资产','1','递延资产'), ('15','无形资产','1','无形资产'), ('16','长期投资','1','长期投资'), ('17','固定资产','1','固定资产'), ('18','流动资产','1','流动资产');
+INSERT INTO `jsh_assetname` VALUES ('1','联想Y450','17','1','','1'), ('2','惠普打印机','15','1','','0'), ('12','乐萌水杯','16','1','','1'), ('13','机顶盒','17','1','机顶盒','0'), ('14','TCL电视','17','1','','1'), ('15','手机','17','1','','1'), ('16','硬盘','16','1','','0'), ('17','毛笔','17','1','','0'), ('18','杯子','17','1','','0'), ('19','建造师证书','15','1','','0'), ('20','算量软件','14','1','','1'), ('21','cad软件','15','1','','0'), ('22','办公桌','17','1','','0'), ('23','笔记本','17','1','笔记本','1'), ('24','打印机','17','1','打印机','0'), ('25','电脑','17','1','电脑','0'), ('26','电动车','16','1','电动车','0'), ('27','电源线','17','1','电源线','0');
+INSERT INTO `jsh_depot` VALUES ('1','上海花边店','1','');
+INSERT INTO `jsh_depothead` VALUES ('29','入库','采购','1','1234','李四','2016-11-08 22:14:37','2016-11-08 00:00:00','1','2','1','记账',NULL,NULL,'','草稿',NULL,NULL), ('30','入库','采购','1','1235','李四','2016-11-08 22:15:16','2016-11-08 00:00:00','1','2','1','记账',NULL,NULL,'','草稿',NULL,NULL), ('31','出库','销售','1','123A','李四','2016-11-08 22:16:11','2016-11-08 00:00:00','2',NULL,'1','',NULL,NULL,'','草稿',NULL,NULL);
+INSERT INTO `jsh_depotitem` VALUES ('1014','29','485','300','0.4',NULL,'',''), ('1015','29','487','200','0.2',NULL,'',''), ('1016','30','498','432','0.5',NULL,'',''), ('1017','31','485','100','0.6',NULL,'','');
+INSERT INTO `jsh_functions` VALUES ('1','00','系统管理','0','','','0010','','电脑版'), ('2','01','基础数据','0','','','0020','','电脑版'), ('3','02','物资管理','0','','','0030','','电脑版'), ('4','03','成本管理','0','','','0040','','电脑版'), ('5','04','固定资产','0','','','0050','','电脑版'), ('6','05','合同管理','0','','\0','0060','','电脑版'), ('7','06','人事管理','0','','','0070','','电脑版'), ('8','07','档案管理','0','','','0080','','电脑版'), ('9','08','薪资管理','0','','','0090','','电脑版'), ('10','09','留言管理','0','','\0','0100','','手机版'), ('11','0001','系统管理','00','','\0','0110','','电脑版'), ('12','000101','应用管理','0001','../manage/app.jsp','\0','0132','','电脑版'), ('13','000102','角色管理','0001','../manage/role.jsp','\0','0130','','电脑版'), ('14','000103','用户管理','0001','../user/user.jsp','\0','0140','','电脑版'), ('15','000104','日志管理','0001','../log/operatelog.jsp','\0','0160','','电脑版'), ('16','000105','功能管理','0001','../manage/functions.jsp','\0','0135','','电脑版'), ('17','0002','系统配置','00','','\0','0170','','电脑版'), ('18','000201','系统配置','0002','../SystemManage/Configs/SystemConfig','\0','0180','','电脑版'), ('19','000202','IP限制配置','0002','../SystemManage/Configs/IpConfigList','\0','0190','','电脑版'), ('20','090105','参数配置','09','../MsgManage/MsgOther/MsgConfig','\0','1245','','电脑版'), ('21','0101','物料管理','01','','\0','0220','','电脑版'), ('22','010101','物料类别管理','0101','../materials/materialcategory.jsp','\0','0230','','电脑版'), ('23','010102','物料档案管理','0101','../materials/material.jsp','\0','0240','','电脑版'), ('24','0102','公司数据管理','01','','\0','0250','','电脑版'), ('25','010201','单位信息','0102','../manage/vendor.jsp','\0','0260','','电脑版'), ('26','010202','部门管理','0102','../manage/depot.jsp','\0','0270','','电脑版'), ('27','010203','岗位管理','0102','../MasterDataManage/CompanyMasterData/PostList','\0','0280','','电脑版'), ('28','060101','人事档案管理','0601','../PersonnelManage/Personnel/StaffList','\0','0912','','电脑版'), ('29','060105','员工类别管理','0601','../PersonnelManage/Personnel/StaffCategoryList','\0','0935','','电脑版'), ('30','0201','其他管理','02','','\0','0310','','电脑版'), ('31','020101','经手人管理','0201','../materials/person.jsp','\0','0312','','电脑版'), ('32','0202','入库管理','02','','\0','0330','','电脑版'), ('33','020201','采购入库','0202','../materials/purchase_in_list.jsp','\0','0340','','电脑版'), ('34','020202','甲供入库','0202','../materials/supply_in_list.jsp','\0','0350','','电脑版'), ('35','020203','租赁入库','0202','../materials/lease_in_list.jsp','\0','0360','','电脑版'), ('36','020204','回收入库','0202','../materials/recover_in_list.jsp','\0','0370','','电脑版'), ('37','020205','调拨入库','0202','../materials/allocation_in_list.jsp','\0','0380','','电脑版'), ('38','0203','出库管理','02','','\0','0390','','电脑版'), ('39','020301','领用出库','0203','../materials/consuming_out_list.jsp','\0','0400','','电脑版'), ('40','020302','调拨出库','0203','../materials/allocation_out_list.jsp','\0','0410','','电脑版'), ('41','020303','销售出库','0203','../materials/sale_out_list.jsp','\0','0420','','电脑版'), ('42','020304','退还出库','0203','../materials/return_out_list.jsp','\0','0430','','电脑版'), ('43','020305','报废出库','0203','../materials/other_out_list.jsp','\0','0430','','电脑版'), ('44','0204','财务管理','02','','\0','0450','','电脑版'), ('45','020401','单据审核','0204','','','0460','','电脑版'), ('46','02040101','采购入库审核','020401','../materials/audit_purchase_in_list.jsp','\0','0470','','电脑版'), ('47','02040102','甲供入库审核','020401','../materials/audit_supply_in_list.jsp','\0','0480','','电脑版'), ('48','02040103','租赁入库审核','020401','../materials/audit_lease_in_list.jsp','\0','0490','','电脑版'), ('49','02040104','调拨出库审核','020401','../materials/audit_allocation_out_list.jsp','\0','0500','','电脑版'), ('50','02040105','领用出库审核','020401','../materials/audit_consuming_out_list.jsp','\0','0510','','电脑版'), ('51','02040106','退还出库审核','020401','../materials/audit_return_out_list.jsp','\0','0520','','电脑版'), ('52','020402','采购定价','0204','../materials/fix_purchase_in_list.jsp','\0','0530','','电脑版'), ('53','020403','租赁定价','0204','../materials/fix_lease_in_list.jsp','\0','0540','','电脑版'), ('54','020404','调拨定价','0204','../materials/fix_allocation_out_list.jsp','\0','0550','','电脑版'), ('55','020405','销售定价','0204','../materials/fix_sale_out_list.jsp','\0','0560','','电脑版'), ('56','020406','采购结算','0204','../MaterialsManage/Financial/FinancialList?type=PurchasingSettlement','\0','0570','','电脑版'), ('57','020407','租赁结算','0204','../MaterialsManage/Financial/FinancialList?type=LeaseSettlement','\0','0580','','电脑版'), ('58','0205','报表中心','02','','\0','0590','','电脑版'), ('59','020501','项目进销存报表','0205','../reports/in_out_stock_report.jsp','\0','0600','','电脑版'), ('60','020502','项目流水报表','0205','../MaterialsManage/MaterialReport/InOutFlowsReport','\0','0610','','电脑版'), ('61','020503','材料甲供报表','0205','../MaterialsManage/MaterialReport/InSupplyReport','\0','0620','','电脑版'), ('62','020504','材料成本监控','0205','../MaterialsManage/MaterialReport/MaterialCostReport','\0','0630','','电脑版'), ('63','020505','材料采购报表','0205','../MaterialsManage/MaterialReport/PurchaseReport','\0','0640','','电脑版'), ('64','0301','项目信息维护','03','','\0','0650','','电脑版'), ('65','030101','项目进度维护','0301','../ProjectCostManage/ProjectInfo/ProjectProgressList','\0','0660','','电脑版'), ('66','030102','项目签证维护','0301','../ProjectCostManage/Plan/PlanVisaList','\0','0670','','电脑版'), ('67','0302','预算目标管理','03','','\0','0680','','电脑版'), ('68','030201','预算材料类别编制','0302','../ProjectCostManage/Budget/BudgetCategoryList','\0','0690','','电脑版'), ('69','030202','材料使用预算编制','0302','../ProjectCostManage/Plan/PlanBudgetList','\0','0700','','电脑版'), ('70','030203','材料使用目标编制','0302','../ProjectCostManage/Plan/PlanTargetList','\0','0710','','电脑版'), ('71','030204','材料月度计划编制','0302','../ProjectCostManage/Plan/PlanMonthList','\0','0720','','电脑版'), ('72','0303','项目成本分析','03','','\0','0730','','电脑版'), ('73','030301','项目进度信息','0303','../ProjectCostManage/Report/ProjectProcessReport','\0','0740','','电脑版'), ('74','030302','项目付款信息','0303','../ProjectCostManage/Report/ProjectPayReport','\0','0750','','电脑版'), ('75','0304','项目信息汇总','03','','\0','0760','','电脑版'), ('76','030401','材料计划月度对比','0304','../ProjectCostManage/Report/ProjectPlanSummaryReport','\0','0770','','电脑版'), ('77','030402','材料成本汇总分析','0304','../ProjectCostManage/Report/ProjectCostSummaryReport','\0','0780','','电脑版'), ('78','0401','固定资产管理','04','','\0','0790','','电脑版'), ('79','040101','固定资产列表','0401','../FixedAssetsManage/FixedAssetsData/FixedAssetsList','\0','0800','','电脑版'), ('80','0501','创建合同','05','','\0','0810','','电脑版'), ('81','050101','劳务施工合同','0501','../ContractManage/Contract/ContractLWForm','\0','0820','','电脑版'), ('82','050102','材料采购租赁合同','0501','../ContractManage/Contract/ContractCLForm','\0','0830','','电脑版'), ('83','050103','我的合同','0501','../ContractManage/ContractList/MyContractList','\0','0840','','电脑版'), ('84','0502','合同会签','05','','\0','0850','','电脑版'), ('85','050201','待审批合同','0502','../ContractManage/ContractList/DSPContractList','\0','0860','','电脑版'), ('86','050202','合同流转审批进度','0504','../ContractManage/ContractList/JDGZContractList','\0','0901','','电脑版'), ('87','050204','劳务施工合同查询','0504','../ContractManage/ContractList/OKLWContractList','\0','0902','\0','电脑版'), ('88','050205','材料采购租赁合同查询','0504','../ContractManage/ContractList/OKCLContractList','\0','0903','\0','电脑版'), ('89','050206','处理合同','0502','../ContractManage/ContractList/DCLContractList','\0','0865','','电脑版'), ('90','0601','人事管理','06','','\0','0910','','电脑版'), ('91','060103','人员任职管理','0601','../PersonnelManage/Personnel/TransferList','\0','0920','','电脑版'), ('92','060104','人员出勤管理','0601','../PersonnelManage/Personnel/AttendanceList','\0','0930','','电脑版'), ('93','0602','报表中心','06','','\0','0940','','电脑版'), ('94','060201','人员任职报表','0602','../PersonnelManage/Report/TransferList','\0','0950','','电脑版'), ('95','060202','人员出勤报表','0602','../PersonnelManage/Report/AttendanceList','\0','0960','','电脑版'), ('96','0701','基础数据管理','07','','\0','0970','','电脑版'), ('97','070101','档案类别','0701','../FilesManage/Files/FilesCategoryList','\0','0980','','电脑版'), ('98','0702','资料管理','07','','\0','0990','','电脑版'), ('99','070201','上传资料','0702','../FilesManage/Files/FilesForm','\0','1000','','电脑版'), ('100','070202','我的资料','0702','../FilesManage/Files/FilesList','\0','1010','','电脑版');
+INSERT INTO `jsh_functions` VALUES ('101','070203','资料查阅','0702','../FilesManage/Files/FilesDownloadList','\0','1020','','电脑版'), ('102','070204','资料删除','0702','../FilesManage/Files/FilesDeleteList','\0','1030','','电脑版'), ('103','0703','档案管理','07','','\0','1040','','电脑版'), ('104','070301','部门状态','0701','../FilesManage/DepartmentFiles/DepartmentFileState','\0','1050','','电脑版'), ('105','070302','档案查阅','0703','../FilesManage/DepartmentFiles/DepartmentFilesList','\0','1060','','电脑版'), ('106','0704','个人文件管理','07','','\0','1070','','电脑版'), ('107','070401','上传文件','0704','../FilesManage/UserFiles/UserFilesForm','\0','1080','','电脑版'), ('108','070402','我的文件','0704','../FilesManage/UserFiles/UserFilesList','\0','1090','','电脑版'), ('109','0801','款项支付管理','08','','\0','1100','','电脑版'), ('110','080101','创建支付凭证','0801','../SalaryManage/Grant/GrantForm','\0','1110','','电脑版'), ('111','080102','支付凭证列表','0801','../SalaryManage/Grant/GrantList','\0','1120','','电脑版'), ('112','0802','结算管理','08','','\0','1130','','电脑版'), ('113','080201','离职结算管理','0802','../SalaryManage/Settlement/QuitSettlement','\0','1140','','电脑版'), ('114','080202','年终结算管理','0802','#','\0','1150','','电脑版'), ('115','0804','报表中心','08','','\0','1160','','电脑版'), ('116','080401','支付凭证流水','0804','../SalaryManage/Report/GrantFlowsReport','\0','1170','','电脑版'), ('117','080402','应发统计报表','0804','#','\0','1180','','电脑版'), ('118','080405','薪资设定报表','0804','../SalaryManage/Report/SalarySetStaffList','\0','1190','','电脑版'), ('119','0805','工资体系管理','08','','\0','1200','','电脑版'), ('120','080501','薪资科目配置','0805','../SalaryManage/SalarySet/SalarySubjectList','\0','1210','','电脑版'), ('121','080502','人员薪资设定','0805','../SalaryManage/SalarySet/SalarySetStaffList','\0','1220','','电脑版'), ('122','090101','用户列表','09','../MsgManage/MsgOther/MsgUserList','\0','1240','','电脑版'), ('123','090102','留言列表','09','../MsgManage/MsgOther/MsgList','\0','1238','','电脑版'), ('124','020100','材料请购管理','0207','../MaterialsManage/MaterialNeeds/MaterialNeedsList','\0','0288','\0','电脑版'), ('125','020506','材料请购报表','0207','../MaterialsManage/MaterialNeeds/MaterialNeedsReport','\0','0641','','电脑版'), ('126','020102','信息指导价管理','021','../MaterialsManage/MaterialPrice/MaterialPriceList','\0','0321','','电脑版'), ('127','020104','材料照片上传','0201','../MaterialsManage/MaterialPrice/PaiZhaoShangChuan','\0','0313','','电脑版'), ('128','020105','信息指导价查询','021','../MaterialsManage/MaterialPrice/MaterialPriceTongJiList','\0','0322','','电脑版'), ('129','10','回访台账','0','','','0105','','电脑版'), ('130','100101','回访维修台账','10','../visit/visitAccount.jsp','\0','1270','','电脑版'), ('131','090103','快速留言','09','../MsgManage/MsgOther/MsgForm','\0','1235','','手机版'), ('132','130101','更新公告','13','../NewsManage/Index/NewsForm','\0','1310','','手机版'), ('133','13','公告管理 ','0','','\0','0013','','手机版'), ('134','060102','离职档案管理','0601','../PersonnelManage/Personnel/StaffLZList','\0','0913','','电脑版'), ('135','090104','高级留言','09','../MsgManage/MsgOther/MsgListForm','\0','1236','','电脑版'), ('136','14','资金申请','0','','\0','0108','','电脑版'), ('137','141010','创建单据','14','','\0','1420','','电脑版'), ('138','14101030','我的资金申请单','141010','../BillManage/BillList/MyBillList','\0','1425','','电脑版'), ('139','141030','补充单据','14','','\0','1440','','电脑版'), ('140','14105030','待签字单据','141050','../BillManage/BillList/BillMyQZList','\0','1450','','电脑版'), ('141','141050','单据管理','14','','\0','1445','','电脑版'), ('142','1420','配置管理','14','','\0','1470','','电脑版'), ('143','142010','模板管理','1420','../BillManage/BillOther/BillTypeList','\0','1480','','电脑版'), ('144','021','指导价管理','01','','\0','0325','','电脑版'), ('145','14105040','单据删除','141050','../BillManage/BillList/DeleteBillList','\0','1451','','电脑版'), ('146','14101010','项目资金申请单','141010','../BillManage/Bill/BillXMZJForm','\0','1421','','电脑版'), ('147','14101020','公司资金申请单','141010','../BillManage/Bill/BillGSZJForm','\0','1422','','电脑版'), ('148','14103010','补充项目资金申请单','141030','../BillManage/BillBC/BillBCXMList','\0','1441','','电脑版'), ('149','14103020','补充公司资金申请单','141030','../BillManage/BillBC/BillBCGSList','\0','1442','','电脑版'), ('150','14105010','项目资金申请单查询','141060','../BillManage/BillList/OKBillXMList','\0','1457','\0','电脑版'), ('151','14105020','公司资金申请单查询','141060','../BillManage/BillList/OKBillGSList','\0','1458','\0','电脑版'), ('152','14105050','单据流转签字进度','141060','../BillManage/BillList/JDGZBillList','\0','1456','','电脑版'), ('153','14103030','设置批准金额','141030','../BillManage/BillBC/OKResultBillList','\0','1443','','电脑版'), ('154','0207','请购管理','01','','\0','0285','','电脑版'), ('155','020107','项目经理审核','0207','../MaterialsManage/MaterialNeeds/MaterialNeedsList_xm','\0','0291','','电脑版'), ('156','020106','材料部审核','0207','../MaterialsManage/MaterialNeeds/MaterialNeedsList_cl','\0','0292','','电脑版'), ('157','020108','创建请购单','0207','../MaterialsManage/MaterialNeeds/MaterialNeedsForm','\0','0289','','电脑版'), ('158','020109','我的请购单','0207','../MaterialsManage/MaterialNeeds/MaterialNeedsList','\0','0290','','电脑版'), ('159','0503','配置管理','05','','\0','0905','','电脑版'), ('160','050301','模板管理','0503','../ContractManage/ContractOther/ContractTypeList','\0','0906','','电脑版'), ('161','050207','合同删除','0502','../ContractManage/ContractList/DeleteContractList','\0','0866','','电脑版'), ('162','11','快捷审批','0','','\0','0120','','手机版'), ('163','11006','待签字单据','11','../BillManage/BillList/BillMyQZList','\0','012006','','手机版'), ('164','11007','待审批合同','11','../ContractManage/ContractList/DSPContractList','\0','012007','','手机版'), ('165','050208','信息指导价查询','0504','../MaterialsManage/MaterialPrice/MaterialPriceTongJiList','\0','0904','','电脑版'), ('166','11004','补充项目资金申请单','11','../BillManage/BillBC/BillBCXMList','\0','012004','','手机版'), ('167','11005','补充公司资金申请单','11','../BillManage/BillBC/BillBCGSList','\0','012005','','手机版'), ('168','000001','今日留言','0','../phone/msg','\0','000001','','手机版'), ('169','11003','我的资金申请单','11','../BillManage/BillList/MyBillList','\0','0120003','','手机版'), ('170','11001','创建项目资金申请单','11','../BillManage/Bill/BillXMZJForm','\0','0120001','','手机版'), ('171','11002','创建公司资金申请单','11','../BillManage/Bill/BillGSZJForm','\0','0120002','','手机版'), ('172','11008','单据流转签字进度','11','../BillManage/BillList/JDGZBillList','\0','012008','','手机版'), ('173','11009','合同流转审批进度','11','../ContractManage/ContractList/JDGZContractList','\0','012009','','手机版'), ('174','0504','合同查询','05','','\0','0900','','电脑版'), ('175','141060','单据查询','14','','\0','1455','','电脑版'), ('176','050203','我已审批的合同','0504','../ContractManage/ContractList/MyYSPContractList','\0','090101','','电脑版'), ('177','15','匿名信箱','0','','\0','1501','','电脑版'), ('178','1501','意见列表','15','../SendMsgManage/NMSendMsgList/NMSendMsgList','\0','150101','','电脑版'), ('179','11010','我的合同','11','../ContractManage/ContractList/MyContractList','\0','012010','','手机版'), ('180','20','施工日志','0','','\0','20000','','电脑版'), ('181','20001','创建施工日志','20','../ShiGongAnQuanManage/ShiGongLog/ShiGongLogForm','\0','20001','','电脑版'), ('182','20002','我的施工日志','20','../ShiGongAnQuanManage/ShiGongLog/MyShiGongLogList','\0','20002','','电脑版'), ('183','20003','施工日志列表','20','../ShiGongAnQuanManage/ShiGongLog/ShiGongLogList','\0','20003','','电脑版'), ('184','14105035','我已签字的单据','141050','../BillManage/BillList/BillMyYQZList','\0','1452','','电脑版'), ('185','21','安全日记','0','','\0','21000','','电脑版'), ('186','21001','创建安全日记','21','../ShiGongAnQuanManage/AnQuanLog/AnQuanLogForm','\0','21001','','电脑版'), ('187','21002','我的安全日记','21','../ShiGongAnQuanManage/AnQuanLog/MyAnQuanLogList','\0','21002','','电脑版'), ('188','21003','安全日记列表','21','../ShiGongAnQuanManage/AnQuanLog/AnQuanLogList','\0','21003','','电脑版'), ('189','000106','假期管理','0001','../SystemManage/System/HolidayList','\0','0170','','电脑版'), ('190','04001','新固定资产管理','04','','\0','0810','','电脑版'), ('191','0400101','新固定资产列表','04001','../AssetManage/Asset/AssetList','\0','0811','','电脑版'), ('192','020408','销售结算','0204','../MaterialsManage/Financial/FinancialList?type=SaleSettlement','\0','0590','','电脑版'), ('193','02040107','销售出库审核','020401','../materials/audit_sale_out_list.jsp','\0','0525','','电脑版');
+INSERT INTO `jsh_log` VALUES ('1316','63','增加用户','192.168.1.105','2016-10-04 14:53:11','0','增加用户名称为  曹玉丽 成功！','增加用户成功'), ('1317','63','增加用户','192.168.1.105','2016-10-04 14:53:30','0','增加用户名称为  郭秀红 成功！','增加用户成功'), ('1318','63','更新用户','192.168.1.105','2016-10-04 14:53:47','0','更新用户ID为  64 成功！','更新用户成功'), ('1319','63','更新用户','192.168.1.105','2016-10-04 14:53:58','0','更新用户ID为  63 成功！','更新用户成功'), ('1320','63','退出系统','192.168.1.105','2016-10-04 14:54:21','0','管理用户：jishenghua 退出系统','jishenghua 退出系统'), ('1321','63','登录系统','192.168.1.105','2016-10-04 14:54:28','0','管理用户：jsh 登录系统','jsh 登录系统'), ('1322','63','更新用户','','2016-10-04 14:54:42','0','更新用户ID为  63密码信息 成功！','更新用户成功'), ('1323','63','登录系统','192.168.1.105','2016-10-04 14:54:47','0','管理用户：jsh 登录系统','jsh 登录系统'), ('1324','63','退出系统','192.168.1.105','2016-10-04 14:55:16','0','管理用户：jsh 退出系统','jsh 退出系统'), ('1325','64','登录系统','192.168.1.105','2016-10-04 14:55:24','0','管理用户：cyl 登录系统','cyl 登录系统'), ('1326','64','批量删除角色','192.168.1.105','2016-10-04 14:56:01','0','批量删除角色ID为  6 成功！','批量删除角色成功'), ('1327','64','批量删除角色','192.168.1.105','2016-10-04 14:56:04','0','批量删除角色ID为  7 成功！','批量删除角色成功'), ('1328','64','批量删除角色','192.168.1.105','2016-10-04 14:56:07','0','批量删除角色ID为  8 成功！','批量删除角色成功'), ('1329','64','批量删除角色','192.168.1.105','2016-10-04 14:56:10','0','批量删除角色ID为  9 成功！','批量删除角色成功'), ('1330','64','批量删除角色','192.168.1.105','2016-10-04 14:56:13','0','批量删除角色ID为  10 成功！','批量删除角色成功'), ('1331','64','批量删除角色','192.168.1.105','2016-10-04 14:56:16','0','批量删除角色ID为  11 成功！','批量删除角色成功'), ('1332','64','删除角色','192.168.1.105','2016-10-04 14:56:50','0','删除角色ID为  19 成功！','删除角色成功'), ('1333','64','删除角色','192.168.1.105','2016-10-04 14:56:52','0','删除角色ID为  18 成功！','删除角色成功'), ('1334','64','删除角色','192.168.1.105','2016-10-04 14:56:53','0','删除角色ID为  17 成功！','删除角色成功'), ('1335','64','删除角色','192.168.1.105','2016-10-04 14:56:54','0','删除角色ID为  16 成功！','删除角色成功'), ('1336','64','删除角色','192.168.1.105','2016-10-04 14:56:56','0','删除角色ID为  20 成功！','删除角色成功'), ('1337','64','删除角色','192.168.1.105','2016-10-04 14:56:59','0','删除角色ID为  21 成功！','删除角色成功'), ('1338','64','删除角色','192.168.1.105','2016-10-04 14:57:00','0','删除角色ID为  15 成功！','删除角色成功'), ('1339','64','删除角色','192.168.1.105','2016-10-04 14:57:02','0','删除角色ID为  14 成功！','删除角色成功'), ('1340','64','删除角色','192.168.1.105','2016-10-04 14:57:04','0','删除角色ID为  13 成功！','删除角色成功'), ('1341','64','删除角色','192.168.1.105','2016-10-04 14:57:05','0','删除角色ID为  23 成功！','删除角色成功'), ('1342','64','删除角色','192.168.1.105','2016-10-04 14:57:07','0','删除角色ID为  25 成功！','删除角色成功'), ('1343','64','删除角色','192.168.1.105','2016-10-04 14:57:09','0','删除角色ID为  27 成功！','删除角色成功'), ('1344','64','删除角色','192.168.1.105','2016-10-04 14:57:10','0','删除角色ID为  28 成功！','删除角色成功'), ('1345','64','删除角色','192.168.1.105','2016-10-04 14:57:12','0','删除角色ID为  30 成功！','删除角色成功'), ('1346','64','删除角色','192.168.1.105','2016-10-04 14:57:14','0','删除角色ID为  32 成功！','删除角色成功'), ('1347','64','删除角色','192.168.1.105','2016-10-04 14:57:17','0','删除角色ID为  33 成功！','删除角色成功'), ('1348','64','删除角色','192.168.1.105','2016-10-04 14:57:18','0','删除角色ID为  35 成功！','删除角色成功'), ('1349','64','删除角色','192.168.1.105','2016-10-04 14:57:20','0','删除角色ID为  31 成功！','删除角色成功'), ('1350','64','删除角色','192.168.1.105','2016-10-04 14:57:21','0','删除角色ID为  29 成功！','删除角色成功'), ('1351','64','删除角色','192.168.1.105','2016-10-04 14:57:22','0','删除角色ID为  34 成功！','删除角色成功'), ('1352','64','删除角色','192.168.1.105','2016-10-04 14:57:23','0','删除角色ID为  36 成功！','删除角色成功'), ('1353','64','删除角色','192.168.1.105','2016-10-04 14:57:26','0','删除角色ID为  38 成功！','删除角色成功'), ('1354','64','删除角色','192.168.1.105','2016-10-04 14:57:27','0','删除角色ID为  40 成功！','删除角色成功'), ('1355','64','删除角色','192.168.1.105','2016-10-04 14:57:28','0','删除角色ID为  26 成功！','删除角色成功'), ('1356','64','删除角色','192.168.1.105','2016-10-04 14:57:29','0','删除角色ID为  24 成功！','删除角色成功'), ('1357','64','删除角色','192.168.1.105','2016-10-04 14:57:31','0','删除角色ID为  22 成功！','删除角色成功'), ('1358','64','删除角色','192.168.1.105','2016-10-04 14:57:32','0','删除角色ID为  37 成功！','删除角色成功'), ('1359','64','删除角色','192.168.1.105','2016-10-04 14:57:34','0','删除角色ID为  12 成功！','删除角色成功'), ('1360','64','更新UserBusiness','192.168.1.105','2016-10-04 14:58:08','0','更新UserBusiness的ID为  2 成功！','更新UserBusiness成功'), ('1361','64','更新UserBusiness','192.168.1.105','2016-10-04 15:00:01','0','更新UserBusiness的ID为  6 成功！','更新UserBusiness成功'), ('1362','64','更新UserBusiness','192.168.1.105','2016-10-04 15:00:29','0','更新UserBusiness的ID为  6 成功！','更新UserBusiness成功'), ('1363','64','增加UserBusiness','192.168.1.105','2016-10-04 15:00:56','0','增加UserBusiness为  UserRole 成功！','增加UserBusiness成功'), ('1364','64','增加UserBusiness','192.168.1.105','2016-10-04 15:01:01','0','增加UserBusiness为  UserDepot 成功！','增加UserBusiness成功'), ('1365','64','退出系统','192.168.1.105','2016-10-04 15:01:15','0','管理用户：cyl 退出系统','cyl 退出系统'), ('1366','63','登录系统','192.168.1.105','2016-10-04 15:01:17','0','管理用户：jsh 登录系统','jsh 登录系统'), ('1367','63','增加UserBusiness','192.168.1.105','2016-10-04 15:01:29','0','增加UserBusiness为  UserRole 成功！','增加UserBusiness成功'), ('1368','63','增加UserBusiness','192.168.1.105','2016-10-04 15:01:34','0','增加UserBusiness为  UserDepot 成功！','增加UserBusiness成功'), ('1369','63','退出系统','192.168.1.105','2016-10-04 15:01:40','0','管理用户：jsh 退出系统','jsh 退出系统'), ('1370','64','登录系统','192.168.1.105','2016-10-04 15:01:45','0','管理用户：cyl 登录系统','cyl 登录系统'), ('1371','64','退出系统','192.168.1.105','2016-10-04 15:03:23','0','管理用户：cyl 退出系统','cyl 退出系统'), ('1372','63','登录系统','192.168.1.105','2016-10-04 15:03:31','0','管理用户：jsh 登录系统','jsh 登录系统'), ('1373','63','增加供应商','192.168.1.105','2016-10-04 15:15:37','0','增加供应商名称为  客户AAAA 成功！','增加供应商成功'), ('1374','63','增加仓管通','192.168.1.105','2016-10-04 15:16:30','0','增加仓管通编号为  123123 成功！','增加仓管通成功'), ('1375','63','保存仓管通明细','192.168.1.105','2016-10-04 15:16:30','0','保存仓管通明细对应主表编号为  4 成功！','保存仓管通明细成功'), ('1376','63','增加功能','192.168.1.105','2016-10-04 15:18:49','0','增加功能名称为  销售出库审核 成功！','增加功能成功'), ('1377','63','更新功能','192.168.1.105','2016-10-04 15:18:58','0','更新功能ID为  193 成功！','更新功能成功'), ('1378','63','更新功能','192.168.1.105','2016-10-04 15:19:14','0','更新功能ID为  193 成功！','更新功能成功'), ('1379','63','更新UserBusiness','192.168.1.105','2016-10-04 15:19:50','0','更新UserBusiness的ID为  5 成功！','更新UserBusiness成功'), ('1380','63','更新状态仓管通','192.168.1.105','2016-10-04 15:20:14','0','更新状态-待审核-ID为  4 成功！','更新状态仓管通成功'), ('1381','63','更新状态仓管通','192.168.1.105','2016-10-04 15:20:28','0','更新状态-已生效-ID为  4 成功！','更新状态仓管通成功'), ('1382','63','更新UserBusiness','192.168.1.105','2016-10-04 15:21:13','0','更新UserBusiness的ID为  6 成功！','更新UserBusiness成功'), ('1383','63','退出系统','192.168.1.105','2016-10-04 15:21:24','0','管理用户：jsh 退出系统','jsh 退出系统'), ('1384','64','登录系统','192.168.1.105','2016-10-04 15:21:26','0','管理用户：cyl 登录系统','cyl 登录系统'), ('1385','63','登录系统','192.168.1.102','2016-10-05 10:00:48','0','管理用户：jsh 登录系统','jsh 登录系统'), ('1386','63','退出系统','192.168.1.102','2016-10-05 10:00:56','0','管理用户：jsh 退出系统','jsh 退出系统'), ('1387','64','登录系统','192.168.1.102','2016-10-05 10:01:00','0','管理用户：cyl 登录系统','cyl 登录系统'), ('1388','64','退出系统','192.168.1.102','2016-10-05 10:01:24','0','管理用户：cyl 退出系统','cyl 退出系统'), ('1389','63','登录系统','192.168.1.102','2016-10-05 10:01:28','0','管理用户：jsh 登录系统','jsh 登录系统'), ('1390','63','更新UserBusiness','192.168.1.102','2016-10-05 10:02:07','0','更新UserBusiness的ID为  6 成功！','更新UserBusiness成功'), ('1391','63','退出系统','192.168.1.102','2016-10-05 10:02:11','0','管理用户：jsh 退出系统','jsh 退出系统'), ('1392','64','登录系统','192.168.1.102','2016-10-05 10:02:13','0','管理用户：cyl 登录系统','cyl 登录系统'), ('1393','64','增加物料','192.168.1.102','2016-10-05 10:05:10','0','增加物料名称为  花边 成功！','增加物料成功'), ('1394','64','更新物料类别','192.168.1.102','2016-10-05 10:05:42','0','更新物料类别ID为  244 成功！','更新物料类别成功'), ('1395','64','增加物料类别','192.168.1.102','2016-10-05 10:08:28','0','增加物料类别名称为  棉布 成功！','增加物料类别成功'), ('1396','64','增加物料类别','192.168.1.102','2016-10-05 10:08:46','0','增加物料类别名称为  网布 成功！','增加物料类别成功'), ('1397','64','更新物料','192.168.1.102','2016-10-05 10:09:23','0','更新物料ID为  5 成功！','更新物料成功'), ('1398','64','批量删除仓管通','192.168.1.102','2016-10-05 10:11:05','1','批量删除仓管通ID为  1 失败！','批量删除仓管通失败'), ('1399','64','删除物料','192.168.1.102','2016-10-05 10:11:41','0','删除物料ID为  4 成功！','删除物料成功'), ('1400','64','增加物料','192.168.1.102','2016-10-05 10:13:11','0','增加物料名称为  花边 成功！','增加物料成功'), ('1401','64','增加物料','192.168.1.102','2016-10-05 10:15:21','0','增加物料名称为  花边 成功！','增加物料成功'), ('1402','64','增加物料','192.168.1.102','2016-10-05 10:15:55','0','增加物料名称为  花边 成功！','增加物料成功'), ('1403','64','增加仓管通','192.168.1.102','2016-10-05 10:18:39','0','增加仓管通编号为  30198 成功！','增加仓管通成功'), ('1404','64','更新仓管通','192.168.1.102','2016-10-05 10:19:42','0','更新仓管通ID为  5 成功！','更新仓管通成功'), ('1405','64','保存仓管通明细','192.168.1.102','2016-10-05 10:19:42','0','保存仓管通明细对应主表编号为  5 成功！','保存仓管通明细成功'), ('1406','64','更新仓管通','192.168.1.102','2016-10-05 10:21:18','0','更新仓管通ID为  5 成功！','更新仓管通成功'), ('1407','64','保存仓管通明细','192.168.1.102','2016-10-05 10:21:18','0','保存仓管通明细对应主表编号为  5 成功！','保存仓管通明细成功'), ('1408','64','增加仓管通','192.168.1.102','2016-10-05 10:22:35','0','增加仓管通编号为  30199 成功！','增加仓管通成功'), ('1409','64','增加物料类别','192.168.1.102','2016-10-05 10:24:53','0','增加物料类别名称为  其他 成功！','增加物料类别成功'), ('1410','64','增加物料','192.168.1.102','2016-10-05 10:25:48','0','增加物料名称为  花边 成功！','增加物料成功'), ('1411','64','增加物料','192.168.1.102','2016-10-05 10:26:37','0','增加物料名称为  花边 成功！','增加物料成功'), ('1412','64','增加物料','192.168.1.102','2016-10-05 10:27:30','0','增加物料名称为  花边 成功！','增加物料成功'), ('1413','64','增加物料','192.168.1.102','2016-10-05 10:28:48','0','增加物料名称为  花边 成功！','增加物料成功'), ('1414','64','增加物料','192.168.1.102','2016-10-05 10:31:03','0','增加物料名称为  线边 成功！','增加物料成功'), ('1415','64','更新物料','192.168.1.102','2016-10-05 10:34:21','0','更新物料ID为  13 成功！','更新物料成功');
+INSERT INTO `jsh_log` VALUES ('1416','64','更新物料','192.168.1.102','2016-10-05 10:34:40','0','更新物料ID为  11 成功！','更新物料成功'), ('1417','64','更新物料','192.168.1.102','2016-10-05 10:34:45','0','更新物料ID为  10 成功！','更新物料成功'), ('1418','64','更新物料','192.168.1.102','2016-10-05 10:35:24','0','更新物料ID为  9 成功！','更新物料成功'), ('1419','64','更新物料','192.168.1.102','2016-10-05 10:35:37','0','更新物料ID为  8 成功！','更新物料成功'), ('1420','64','更新物料','192.168.1.102','2016-10-05 10:35:44','0','更新物料ID为  7 成功！','更新物料成功'), ('1421','63','登录系统','192.168.1.102','2016-10-05 10:44:31','0','管理用户：jsh 登录系统','jsh 登录系统'), ('1422','63','退出系统','192.168.1.102','2016-10-05 10:44:39','0','管理用户：jsh 退出系统','jsh 退出系统'), ('1423','64','登录系统','192.168.1.102','2016-10-05 10:44:44','0','管理用户：cyl 登录系统','cyl 登录系统'), ('1424','64','登录系统','192.168.1.102','2016-10-05 12:00:45','0','管理用户：cyl 登录系统','cyl 登录系统'), ('1425','64','登录系统','192.168.1.102','2016-10-05 12:02:51','0','管理用户：cyl 登录系统','cyl 登录系统'), ('1426','64','更新物料','192.168.1.102','2016-10-05 12:05:01','0','更新物料ID为  9 成功！','更新物料成功'), ('1427','64','更新仓管通','192.168.1.102','2016-10-05 12:07:32','0','更新仓管通ID为  6 成功！','更新仓管通成功'), ('1428','64','保存仓管通明细','192.168.1.102','2016-10-05 12:07:32','0','保存仓管通明细对应主表编号为  6 成功！','保存仓管通明细成功'), ('1429','64','登录系统','192.168.1.102','2016-10-05 12:33:28','0','管理用户：cyl 登录系统','cyl 登录系统'), ('1430','64','批量删除仓管通','192.168.1.102','2016-10-05 12:34:27','1','批量删除仓管通ID为  6,5 失败！','批量删除仓管通失败'), ('1431','64','登录系统','192.168.1.102','2016-10-05 12:36:23','0','管理用户：cyl 登录系统','cyl 登录系统'), ('1432','64','批量删除仓管通','192.168.1.102','2016-10-05 12:37:26','0','批量删除仓管通ID为  6,5 成功！','批量删除仓管通成功'), ('1433','64','批量删除物料','192.168.1.102','2016-10-05 12:37:39','0','批量删除物料ID为  5,6,7,8,9,10,11,12,13 成功！','批量删除物料成功'), ('1434','64','增加物料','192.168.1.102','2016-10-05 12:41:40','0','增加物料名称为  飞梭 成功！','增加物料成功'), ('1435','64','增加仓管通','192.168.1.102','2016-10-05 12:45:55','0','增加仓管通编号为  30198 成功！','增加仓管通成功'), ('1436','64','保存仓管通明细','192.168.1.102','2016-10-05 12:45:55','0','保存仓管通明细对应主表编号为  7 成功！','保存仓管通明细成功'), ('1437','64','增加物料','192.168.1.102','2016-10-05 12:46:55','0','增加物料名称为  飞梭 成功！','增加物料成功'), ('1438','64','更新仓管通','192.168.1.102','2016-10-05 12:47:23','0','更新仓管通ID为  7 成功！','更新仓管通成功'), ('1439','64','保存仓管通明细','192.168.1.102','2016-10-05 12:47:23','0','保存仓管通明细对应主表编号为  7 成功！','保存仓管通明细成功'), ('1440','64','增加仓管通','192.168.1.102','2016-10-05 12:51:01','0','增加仓管通编号为  30199 成功！','增加仓管通成功'), ('1441','64','保存仓管通明细','192.168.1.102','2016-10-05 12:51:02','0','保存仓管通明细对应主表编号为  8 成功！','保存仓管通明细成功'), ('1442','64','增加仓管通','192.168.1.102','2016-10-05 12:52:10','0','增加仓管通编号为  30205 成功！','增加仓管通成功'), ('1443','64','保存仓管通明细','192.168.1.102','2016-10-05 12:52:10','0','保存仓管通明细对应主表编号为  9 成功！','保存仓管通明细成功'), ('1444','64','增加物料','192.168.1.102','2016-10-05 12:52:52','0','增加物料名称为  飞梭 成功！','增加物料成功'), ('1445','64','更新仓管通','192.168.1.102','2016-10-05 12:57:46','0','更新仓管通ID为  9 成功！','更新仓管通成功'), ('1446','64','保存仓管通明细','192.168.1.102','2016-10-05 12:57:47','0','保存仓管通明细对应主表编号为  9 成功！','保存仓管通明细成功'), ('1447','64','增加物料','192.168.1.102','2016-10-05 12:58:37','0','增加物料名称为  棉线 成功！','增加物料成功'), ('1448','64','更新仓管通','192.168.1.102','2016-10-05 12:59:56','0','更新仓管通ID为  9 成功！','更新仓管通成功'), ('1449','64','保存仓管通明细','192.168.1.102','2016-10-05 12:59:57','0','保存仓管通明细对应主表编号为  9 成功！','保存仓管通明细成功'), ('1450','64','增加物料','192.168.1.102','2016-10-05 13:02:53','0','增加物料名称为  飞梭 成功！','增加物料成功'), ('1451','64','增加仓管通','192.168.1.102','2016-10-05 13:03:18','0','增加仓管通编号为  30213 成功！','增加仓管通成功'), ('1452','64','保存仓管通明细','192.168.1.102','2016-10-05 13:03:18','0','保存仓管通明细对应主表编号为  10 成功！','保存仓管通明细成功'), ('1453','64','增加仓管通','192.168.1.102','2016-10-05 13:11:36','0','增加仓管通编号为  30229 成功！','增加仓管通成功'), ('1454','64','保存仓管通明细','192.168.1.102','2016-10-05 13:11:36','0','保存仓管通明细对应主表编号为  11 成功！','保存仓管通明细成功'), ('1455','64','更新仓管通','192.168.1.102','2016-10-05 14:19:29','0','更新仓管通ID为  9 成功！','更新仓管通成功'), ('1456','64','更新仓管通','192.168.1.102','2016-10-05 14:19:59','0','更新仓管通ID为  9 成功！','更新仓管通成功'), ('1457','64','增加仓管通','192.168.1.102','2016-10-05 14:23:56','0','增加仓管通编号为  30230 成功！','增加仓管通成功'), ('1458','64','保存仓管通明细','192.168.1.102','2016-10-05 14:23:58','0','保存仓管通明细对应主表编号为  12 成功！','保存仓管通明细成功'), ('1459','64','增加仓管通','192.168.1.102','2016-10-05 14:30:48','0','增加仓管通编号为  30228 成功！','增加仓管通成功'), ('1460','64','保存仓管通明细','192.168.1.102','2016-10-05 14:30:50','0','保存仓管通明细对应主表编号为  13 成功！','保存仓管通明细成功'), ('1461','64','增加物料','192.168.1.102','2016-10-05 14:31:53','0','增加物料名称为  棉线 成功！','增加物料成功'), ('1462','64','增加物料','192.168.1.102','2016-10-05 14:34:39','0','增加物料名称为  棉线 成功！','增加物料成功'), ('1463','64','增加物料','192.168.1.102','2016-10-05 14:35:24','0','增加物料名称为  棉线 成功！','增加物料成功'), ('1464','64','增加物料','192.168.1.102','2016-10-05 14:38:22','0','增加物料名称为  棉线 成功！','增加物料成功'), ('1465','64','增加物料','192.168.1.102','2016-10-05 14:41:03','0','增加物料名称为  棉线 成功！','增加物料成功'), ('1466','64','更新仓管通','192.168.1.102','2016-10-05 14:43:45','0','更新仓管通ID为  13 成功！','更新仓管通成功'), ('1467','64','保存仓管通明细','192.168.1.102','2016-10-05 14:43:46','0','保存仓管通明细对应主表编号为  13 成功！','保存仓管通明细成功'), ('1468','64','增加仓管通','192.168.1.102','2016-10-05 14:44:56','0','增加仓管通编号为  30227 成功！','增加仓管通成功'), ('1469','64','增加物料','192.168.1.102','2016-10-05 14:46:19','0','增加物料名称为  飞梭 成功！','增加物料成功'), ('1470','64','更新仓管通','192.168.1.102','2016-10-05 14:46:59','0','更新仓管通ID为  14 成功！','更新仓管通成功'), ('1471','64','保存仓管通明细','192.168.1.102','2016-10-05 14:46:59','0','保存仓管通明细对应主表编号为  14 成功！','保存仓管通明细成功'), ('1472','64','增加物料','192.168.1.102','2016-10-05 14:47:44','0','增加物料名称为  飞梭 成功！','增加物料成功'), ('1473','64','更新仓管通','192.168.1.102','2016-10-05 14:49:08','0','更新仓管通ID为  14 成功！','更新仓管通成功'), ('1474','64','保存仓管通明细','192.168.1.102','2016-10-05 14:49:09','0','保存仓管通明细对应主表编号为  14 成功！','保存仓管通明细成功'), ('1475','64','增加物料','192.168.1.102','2016-10-05 14:51:24','0','增加物料名称为  飞梭 成功！','增加物料成功'), ('1476','64','增加仓管通','192.168.1.102','2016-10-05 14:52:10','0','增加仓管通编号为  30257 成功！','增加仓管通成功'), ('1477','64','保存仓管通明细','192.168.1.102','2016-10-05 14:52:12','0','保存仓管通明细对应主表编号为  15 成功！','保存仓管通明细成功'), ('1478','64','增加物料','192.168.1.102','2016-10-05 14:55:48','0','增加物料名称为  飞梭 成功！','增加物料成功'), ('1479','64','增加仓管通','192.168.1.102','2016-10-05 14:56:40','0','增加仓管通编号为  30249 成功！','增加仓管通成功'), ('1480','64','保存仓管通明细','192.168.1.102','2016-10-05 14:56:42','0','保存仓管通明细对应主表编号为  16 成功！','保存仓管通明细成功'), ('1481','64','增加物料','192.168.1.102','2016-10-05 14:59:16','0','增加物料名称为  飞梭 成功！','增加物料成功'), ('1482','64','增加物料','192.168.1.102','2016-10-05 15:00:43','0','增加物料名称为  飞梭 成功！','增加物料成功'), ('1483','64','增加物料','192.168.1.102','2016-10-05 15:03:20','0','增加物料名称为  棉线 成功！','增加物料成功'), ('1484','64','增加物料','192.168.1.102','2016-10-05 15:16:06','0','增加物料名称为  棉线 成功！','增加物料成功'), ('1485','64','增加仓管通','192.168.1.102','2016-10-05 15:16:53','0','增加仓管通编号为  30258 成功！','增加仓管通成功'), ('1486','64','保存仓管通明细','192.168.1.102','2016-10-05 15:16:56','0','保存仓管通明细对应主表编号为  17 成功！','保存仓管通明细成功'), ('1487','64','增加物料','192.168.1.102','2016-10-05 15:20:21','0','增加物料名称为  棉线 成功！','增加物料成功'), ('1488','64','更新仓管通','192.168.1.102','2016-10-05 15:21:11','0','更新仓管通ID为  17 成功！','更新仓管通成功'), ('1489','64','保存仓管通明细','192.168.1.102','2016-10-05 15:21:12','0','保存仓管通明细对应主表编号为  17 成功！','保存仓管通明细成功'), ('1490','64','更新仓管通','192.168.1.102','2016-10-05 15:21:29','0','更新仓管通ID为  17 成功！','更新仓管通成功'), ('1491','64','增加物料','192.168.1.102','2016-10-05 15:25:26','0','增加物料名称为  棉线 成功！','增加物料成功'), ('1492','64','增加仓管通','192.168.1.102','2016-10-05 15:31:34','0','增加仓管通编号为  30260 成功！','增加仓管通成功'), ('1493','64','保存仓管通明细','192.168.1.102','2016-10-05 15:31:36','0','保存仓管通明细对应主表编号为  18 成功！','保存仓管通明细成功'), ('1494','64','更新仓管通','192.168.1.102','2016-10-05 15:33:08','0','更新仓管通ID为  18 成功！','更新仓管通成功'), ('1495','64','保存仓管通明细','192.168.1.102','2016-10-05 15:33:10','0','保存仓管通明细对应主表编号为  18 成功！','保存仓管通明细成功'), ('1496','64','更新仓管通','192.168.1.102','2016-10-05 15:33:58','0','更新仓管通ID为  18 成功！','更新仓管通成功'), ('1497','64','增加物料','192.168.1.102','2016-10-05 15:35:44','0','增加物料名称为  棉线 成功！','增加物料成功'), ('1498','64','增加仓管通','192.168.1.102','2016-10-05 15:37:25','0','增加仓管通编号为  30271 成功！','增加仓管通成功'), ('1499','64','保存仓管通明细','192.168.1.102','2016-10-05 15:37:26','0','保存仓管通明细对应主表编号为  19 成功！','保存仓管通明细成功'), ('1500','64','增加仓管通','192.168.1.102','2016-10-05 15:40:12','0','增加仓管通编号为  30278 成功！','增加仓管通成功'), ('1501','64','保存仓管通明细','192.168.1.102','2016-10-05 15:40:19','0','保存仓管通明细对应主表编号为  20 成功！','保存仓管通明细成功'), ('1502','64','增加物料','192.168.1.102','2016-10-05 15:42:50','0','增加物料名称为  飞梭 成功！','增加物料成功'), ('1503','64','增加仓管通','192.168.1.102','2016-10-05 15:45:27','0','增加仓管通编号为  30296 成功！','增加仓管通成功'), ('1504','64','保存仓管通明细','192.168.1.102','2016-10-05 15:45:31','0','保存仓管通明细对应主表编号为  21 成功！','保存仓管通明细成功'), ('1505','64','增加物料','192.168.1.102','2016-10-05 15:49:31','0','增加物料名称为  飞梭 成功！','增加物料成功'), ('1506','64','增加物料','192.168.1.102','2016-10-05 15:50:44','0','增加物料名称为  飞梭 成功！','增加物料成功'), ('1507','64','增加物料','192.168.1.102','2016-10-05 15:52:26','0','增加物料名称为  飞梭 成功！','增加物料成功'), ('1508','64','增加物料','192.168.1.102','2016-10-05 15:54:11','0','增加物料名称为  飞梭 成功！','增加物料成功'), ('1509','64','增加仓管通','192.168.1.102','2016-10-05 15:55:02','0','增加仓管通编号为  30295 成功！','增加仓管通成功'), ('1510','64','保存仓管通明细','192.168.1.102','2016-10-05 15:55:04','0','保存仓管通明细对应主表编号为  22 成功！','保存仓管通明细成功'), ('1511','64','增加物料','192.168.1.102','2016-10-05 15:56:15','0','增加物料名称为  飞梭 成功！','增加物料成功'), ('1512','64','增加物料','192.168.1.102','2016-10-05 15:56:50','0','增加物料名称为  飞梭 成功！','增加物料成功'), ('1513','64','增加物料','192.168.1.102','2016-10-05 15:58:36','0','增加物料名称为  飞梭 成功！','增加物料成功'), ('1514','64','增加物料','192.168.1.102','2016-10-05 16:01:43','0','增加物料名称为  棉线 成功！','增加物料成功'), ('1515','64','增加物料','192.168.1.102','2016-10-05 16:05:22','0','增加物料名称为  飞梭 成功！','增加物料成功');
+INSERT INTO `jsh_log` VALUES ('1516','64','增加仓管通','192.168.1.102','2016-10-05 16:06:32','0','增加仓管通编号为  30305 成功！','增加仓管通成功'), ('1517','64','保存仓管通明细','192.168.1.102','2016-10-05 16:06:33','0','保存仓管通明细对应主表编号为  23 成功！','保存仓管通明细成功'), ('1518','64','增加物料','192.168.1.102','2016-10-05 16:08:24','0','增加物料名称为  飞梭 成功！','增加物料成功'), ('1519','64','增加仓管通','192.168.1.102','2016-10-05 16:10:53','0','增加仓管通编号为  30309 成功！','增加仓管通成功'), ('1520','64','保存仓管通明细','192.168.1.102','2016-10-05 16:10:57','0','保存仓管通明细对应主表编号为  24 成功！','保存仓管通明细成功'), ('1521','64','增加仓管通','192.168.1.102','2016-10-05 16:13:45','0','增加仓管通编号为  30315 成功！','增加仓管通成功'), ('1522','64','保存仓管通明细','192.168.1.102','2016-10-05 16:13:49','0','保存仓管通明细对应主表编号为  25 成功！','保存仓管通明细成功'), ('1523','64','更新仓管通','192.168.1.102','2016-10-05 16:17:22','0','更新仓管通ID为  25 成功！','更新仓管通成功'), ('1524','64','保存仓管通明细','192.168.1.102','2016-10-05 16:17:23','0','保存仓管通明细对应主表编号为  25 成功！','保存仓管通明细成功'), ('1525','64','增加仓管通','192.168.1.102','2016-10-05 16:18:16','0','增加仓管通编号为  30316 成功！','增加仓管通成功'), ('1526','64','更新仓管通','192.168.1.102','2016-10-05 16:18:46','0','更新仓管通ID为  26 成功！','更新仓管通成功'), ('1527','64','登录系统','192.168.1.106','2016-10-05 17:01:51','0','管理用户：cyl 登录系统','cyl 登录系统'), ('1528','64','登录系统','192.168.1.107','2016-10-06 08:24:57','0','管理用户：cyl 登录系统','cyl 登录系统'), ('1529','64','登录系统','127.0.0.1','2016-10-06 10:43:18','0','管理用户：cyl 登录系统','cyl 登录系统'), ('1530','64','登录系统','127.0.0.1','2016-10-06 15:04:09','0','管理用户：cyl 登录系统','cyl 登录系统'), ('1531','64','登录系统','127.0.0.1','2016-10-06 15:30:25','0','管理用户：cyl 登录系统','cyl 登录系统'), ('1532','64','登录系统','192.168.1.107','2016-10-06 20:13:50','0','管理用户：cyl 登录系统','cyl 登录系统'), ('1533','64','增加仓管通','192.168.1.107','2016-10-06 21:37:26','0','增加仓管通编号为  1001 成功！','增加仓管通成功'), ('1534','64','保存仓管通明细','192.168.1.107','2016-10-06 21:37:27','0','保存仓管通明细对应主表编号为  27 成功！','保存仓管通明细成功'), ('1535','64','登录系统','192.168.1.107','2016-10-06 22:14:09','0','管理用户：cyl 登录系统','cyl 登录系统'), ('1536','64','增加仓管通','192.168.1.107','2016-10-07 00:25:54','0','增加仓管通编号为  123123 成功！','增加仓管通成功'), ('1537','64','保存仓管通明细','192.168.1.107','2016-10-07 00:25:54','0','保存仓管通明细对应主表编号为  28 成功！','保存仓管通明细成功'), ('1538','64','更新仓管通','192.168.1.107','2016-10-07 00:27:33','0','更新仓管通ID为  28 成功！','更新仓管通成功'), ('1539','64','保存仓管通明细','192.168.1.107','2016-10-07 00:27:33','0','保存仓管通明细对应主表编号为  28 成功！','保存仓管通明细成功'), ('1540','64','登录系统','192.168.1.107','2016-10-07 07:11:42','0','管理用户：cyl 登录系统','cyl 登录系统'), ('1541','64','更新仓管通','192.168.1.107','2016-10-07 07:12:52','0','更新仓管通ID为  27 成功！','更新仓管通成功'), ('1542','64','保存仓管通明细','192.168.1.107','2016-10-07 07:12:52','0','保存仓管通明细对应主表编号为  27 成功！','保存仓管通明细成功'), ('1543','64','更新仓管通','192.168.1.107','2016-10-07 07:16:15','0','更新仓管通ID为  28 成功！','更新仓管通成功'), ('1544','64','保存仓管通明细','192.168.1.107','2016-10-07 07:16:15','0','保存仓管通明细对应主表编号为  28 成功！','保存仓管通明细成功'), ('1545','64','登录系统','192.168.1.107','2016-10-07 08:42:16','0','管理用户：cyl 登录系统','cyl 登录系统'), ('1546','64','更新仓管通','192.168.1.107','2016-10-07 09:11:13','0','更新仓管通ID为  28 成功！','更新仓管通成功'), ('1547','64','保存仓管通明细','192.168.1.107','2016-10-07 09:11:14','0','保存仓管通明细对应主表编号为  28 成功！','保存仓管通明细成功'), ('1548','64','退出系统','192.168.1.107','2016-10-07 09:12:07','0','管理用户：cyl 退出系统','cyl 退出系统'), ('1549','63','登录系统','192.168.1.107','2016-10-07 09:12:12','0','管理用户：jsh 登录系统','jsh 登录系统'), ('1550','63','更新UserBusiness','192.168.1.107','2016-10-07 09:12:49','0','更新UserBusiness的ID为  6 成功！','更新UserBusiness成功'), ('1551','63','退出系统','192.168.1.107','2016-10-07 09:12:53','0','管理用户：jsh 退出系统','jsh 退出系统'), ('1552','64','登录系统','192.168.1.107','2016-10-07 09:12:59','0','管理用户：cyl 登录系统','cyl 登录系统'), ('1553','64','退出系统','192.168.1.107','2016-10-07 09:13:15','0','管理用户：cyl 退出系统','cyl 退出系统'), ('1554','63','登录系统','192.168.1.107','2016-10-07 09:13:20','0','管理用户：jsh 登录系统','jsh 登录系统'), ('1555','63','更新UserBusiness','192.168.1.107','2016-10-07 09:14:08','0','更新UserBusiness的ID为  6 成功！','更新UserBusiness成功'), ('1556','63','退出系统','192.168.1.107','2016-10-07 09:14:13','0','管理用户：jsh 退出系统','jsh 退出系统'), ('1557','64','登录系统','192.168.1.107','2016-10-07 09:14:18','0','管理用户：cyl 登录系统','cyl 登录系统'), ('1558','64','退出系统','192.168.1.107','2016-10-07 09:14:55','0','管理用户：cyl 退出系统','cyl 退出系统'), ('1559','63','登录系统','192.168.1.107','2016-10-07 09:14:59','0','管理用户：jsh 登录系统','jsh 登录系统'), ('1560','63','更新UserBusiness','192.168.1.107','2016-10-07 09:15:52','0','更新UserBusiness的ID为  6 成功！','更新UserBusiness成功'), ('1561','63','退出系统','192.168.1.107','2016-10-07 09:15:56','0','管理用户：jsh 退出系统','jsh 退出系统'), ('1562','64','登录系统','192.168.1.107','2016-10-07 09:16:02','0','管理用户：cyl 登录系统','cyl 登录系统'), ('1563','63','登录系统','192.168.8.105','2016-10-08 17:58:33','0','管理用户：jsh 登录系统','jsh 登录系统'), ('1564','64','登录系统','192.168.8.105','2016-10-08 18:03:13','0','管理用户：cyl 登录系统','cyl 登录系统'), ('1565','64','登录系统','192.168.112.100','2016-10-08 21:25:05','0','管理用户：cyl 登录系统','cyl 登录系统'), ('1566','64','登录系统','192.168.1.107','2016-10-15 16:33:07','0','管理用户：cyl 登录系统','cyl 登录系统'), ('1567','64','退出系统','192.168.1.107','2016-10-15 16:38:03','0','管理用户：cyl 退出系统','cyl 退出系统'), ('1568','63','登录系统','192.168.1.107','2016-10-15 16:38:10','0','管理用户：jsh 登录系统','jsh 登录系统'), ('1569','64','登录系统','192.168.1.105','2016-10-16 09:30:46','0','管理用户：cyl 登录系统','cyl 登录系统'), ('1570','64','登录系统','192.168.1.105','2016-10-16 09:35:30','0','管理用户：cyl 登录系统','cyl 登录系统'), ('1571','64','更新仓管通','192.168.1.105','2016-10-16 11:31:53','0','更新仓管通ID为  28 成功！','更新仓管通成功'), ('1572','64','保存仓管通明细','192.168.1.105','2016-10-16 11:31:53','0','保存仓管通明细对应主表编号为  28 成功！','保存仓管通明细成功'), ('1573','64','登录系统','192.168.112.102','2016-10-16 20:13:38','0','管理用户：cyl 登录系统','cyl 登录系统'), ('1574','64','登录系统','192.168.112.102','2016-10-22 16:11:53','0','管理用户：cyl 登录系统','cyl 登录系统'), ('1575','64','登录系统','192.168.112.102','2016-10-22 16:42:20','0','管理用户：cyl 登录系统','cyl 登录系统'), ('1576','64','更新仓管通','192.168.112.102','2016-10-22 17:53:43','0','更新仓管通ID为  28 成功！','更新仓管通成功'), ('1577','64','保存仓管通明细','192.168.112.102','2016-10-22 17:53:43','0','保存仓管通明细对应主表编号为  28 成功！','保存仓管通明细成功'), ('1578','64','登录系统','192.168.112.102','2016-10-22 19:58:45','0','管理用户：cyl 登录系统','cyl 登录系统'), ('1579','64','退出系统','192.168.112.102','2016-10-22 19:59:50','0','管理用户：cyl 退出系统','cyl 退出系统'), ('1580','63','登录系统','192.168.112.102','2016-10-22 19:59:53','0','管理用户：jsh 登录系统','jsh 登录系统'), ('1581','63','增加资产','192.168.112.102','2016-10-22 20:04:48','0','增加资产名称ID为  27 成功！','增加资产成功'), ('1582','63','登录系统','192.168.112.102','2016-10-22 21:14:52','0','管理用户：jsh 登录系统','jsh 登录系统'), ('1583','64','登录系统','192.168.112.102','2016-10-23 20:12:34','0','管理用户：cyl 登录系统','cyl 登录系统'), ('1584','64','登录系统','192.168.112.102','2016-10-23 20:58:11','0','管理用户：cyl 登录系统','cyl 登录系统'), ('1585','64','登录系统','192.168.4.108','2016-10-30 17:29:19','0','管理用户：cyl 登录系统','cyl 登录系统'), ('1586','64','登录系统','192.168.112.102','2016-10-30 20:18:07','0','管理用户：cyl 登录系统','cyl 登录系统'), ('1587','64','登录系统','192.168.1.104','2016-11-06 09:10:05','0','管理用户：cyl 登录系统','cyl 登录系统'), ('1588','64','登录系统','192.168.1.104','2016-11-06 13:44:03','0','管理用户：cyl 登录系统','cyl 登录系统'), ('1589','64','退出系统','192.168.1.104','2016-11-06 13:45:02','0','管理用户：cyl 退出系统','cyl 退出系统'), ('1590','64','登录系统','192.168.1.104','2016-11-06 13:46:31','0','管理用户：cyl 登录系统','cyl 登录系统'), ('1591','64','登录系统','192.168.112.100','2016-11-06 21:26:43','0','管理用户：cyl 登录系统','cyl 登录系统'), ('1592','64','退出系统','192.168.112.100','2016-11-06 21:27:01','0','管理用户：cyl 退出系统','cyl 退出系统'), ('1593','64','登录系统','192.168.112.100','2016-11-06 23:15:25','0','管理用户：cyl 登录系统','cyl 登录系统'), ('1594','64','登录系统','127.0.0.1','2016-11-07 09:04:00','0','管理用户：cyl 登录系统','cyl 登录系统'), ('1595','64','登录系统','127.0.0.1','2016-11-07 09:04:40','0','管理用户：cyl 登录系统','cyl 登录系统'), ('1596','64','退出系统','127.0.0.1','2016-11-07 09:06:49','0','管理用户：cyl 退出系统','cyl 退出系统'), ('1597','64','登录系统','192.168.4.108','2016-11-08 22:01:22','0','管理用户：cyl 登录系统','cyl 登录系统'), ('1598','64','退出系统','192.168.4.108','2016-11-08 22:02:18','0','管理用户：cyl 退出系统','cyl 退出系统'), ('1599','63','登录系统','192.168.4.108','2016-11-08 22:02:29','0','管理用户：jsh 登录系统','jsh 登录系统'), ('1600','63','退出系统','192.168.4.108','2016-11-08 22:04:34','0','管理用户：jsh 退出系统','jsh 退出系统'), ('1601','64','登录系统','192.168.4.108','2016-11-08 22:04:43','0','管理用户：cyl 登录系统','cyl 登录系统'), ('1602','64','批量删除仓管通','192.168.4.108','2016-11-08 22:05:58','0','批量删除仓管通ID为  27,26,25,24,23,22,21,20,19,18,17,16,15,14,13 成功！','批量删除仓管通成功'), ('1603','64','批量删除仓管通','192.168.4.108','2016-11-08 22:06:09','0','批量删除仓管通ID为  12,11,10,9,8,7 成功！','批量删除仓管通成功'), ('1604','64','批量删除仓管通','192.168.4.108','2016-11-08 22:06:24','0','批量删除仓管通ID为  28 成功！','批量删除仓管通成功'), ('1605','64','更新经手人','192.168.4.108','2016-11-08 22:07:08','0','更新经手人ID为  1 成功！','更新经手人成功'), ('1606','64','更新经手人','192.168.4.108','2016-11-08 22:07:14','0','更新经手人ID为  2 成功！','更新经手人成功'), ('1607','64','更新供应商','192.168.4.108','2016-11-08 22:07:58','0','更新供应商ID为  1 成功！','更新供应商成功'), ('1608','64','批量删除物料','192.168.4.108','2016-11-08 22:08:26','0','批量删除物料ID为  15,16,17,18,19,20,21,22,23,24,25,26,27,28,29 成功！','批量删除物料成功'), ('1609','64','批量删除物料','192.168.4.108','2016-11-08 22:08:36','0','批量删除物料ID为  30,31,32,33,34,35,36,37,38,39,40,41,42,43,44 成功！','批量删除物料成功'), ('1610','64','批量删除物料','192.168.4.108','2016-11-08 22:08:40','0','批量删除物料ID为  45,46,47,48,49,50,51,52,53,54,55,56,57,58,59 成功！','批量删除物料成功'), ('1611','64','批量删除物料','192.168.4.108','2016-11-08 22:08:48','0','批量删除物料ID为  60,61,62,63,64,65,66,67,68,69,70,71,72,73,74 成功！','批量删除物料成功'), ('1612','64','批量删除物料','192.168.4.108','2016-11-08 22:08:53','0','批量删除物料ID为  75,76,77,78,79,80,81,82,83,84,85,86,87,88,89 成功！','批量删除物料成功'), ('1613','64','批量删除物料','192.168.4.108','2016-11-08 22:09:03','0','批量删除物料ID为  90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139 成功！','批量删除物料成功'), ('1614','64','批量删除物料','192.168.4.108','2016-11-08 22:09:09','0','批量删除物料ID为  140,141,142,143,144,145,146,147,148,149,150,151,152,153,154 成功！','批量删除物料成功'), ('1615','64','批量删除物料','192.168.4.108','2016-11-08 22:09:14','0','批量删除物料ID为  155,156,157,158,159,160,161,162,163,164,165,166,167,168,169 成功！','批量删除物料成功');
+INSERT INTO `jsh_log` VALUES ('1616','64','批量删除物料','192.168.4.108','2016-11-08 22:09:31','0','批量删除物料ID为  170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,210,211,212,213,214,215,216,217,218,219 成功！','批量删除物料成功'), ('1617','64','批量删除物料','192.168.4.108','2016-11-08 22:09:39','0','批量删除物料ID为  220,221,222,223,224,225,226,227,228,229,230,231,232,233,234,235,236,237,238,239,240,241,242,243,244,245,246,247,248,249,250,251,252,253,254,255,256,257,258,259,260,261,262,263,264,265,266,267,268,269 成功！','批量删除物料成功'), ('1618','64','批量删除物料','192.168.4.108','2016-11-08 22:09:48','0','批量删除物料ID为  270,271,272,273,274,275,276,277,278,279,280,281,282,283,284,285,286,287,288,289,290,291,292,293,294,295,296,297,298,299,300,301,302,303,304,305,306,307,308,309,310,311,312,313,314,315,316,317,318,319 成功！','批量删除物料成功'), ('1619','64','批量删除物料','192.168.4.108','2016-11-08 22:09:56','0','批量删除物料ID为  320,321,322,323,324,325,326,327,328,329,330,331,332,333,334,335,336,337,338,339,340,341,342,343,344,345,346,347,348,349,350,351,352,353,354,355,356,357,358,359,360,361,362,363,364,365,366,367,368,369 成功！','批量删除物料成功'), ('1620','64','批量删除物料','192.168.4.108','2016-11-08 22:10:08','0','批量删除物料ID为  370,371,372,373,374,375,376,377,378,379,380,381,382,383,384,385,386,387,388,389,390,391,392,393,394,395,396,397,398,399,400,401,402,403,404,405,406,407,408,409,410,411,412,413,414,415,416,417,418,419 成功！','批量删除物料成功'), ('1621','64','批量删除物料','192.168.4.108','2016-11-08 22:10:17','0','批量删除物料ID为  420,421,422,423,424,425,426,427,428,429,430,431,432,433,434,435,436,437,438,439,440,441,442,443,444,445,446,447,448,449,450,451,452,453,454,455,456,457,458,459,460,461,462,463,464,465,466,467,468,469 成功！','批量删除物料成功'), ('1622','64','批量删除物料','192.168.4.108','2016-11-08 22:10:37','0','批量删除物料ID为  470,471,472,473,474,475,476,477,478,479,480,481,482,483,484 成功！','批量删除物料成功'), ('1623','64','批量删除物料','192.168.4.108','2016-11-08 22:10:48','0','批量删除物料ID为  486 成功！','批量删除物料成功'), ('1624','64','批量删除物料','192.168.4.108','2016-11-08 22:11:10','0','批量删除物料ID为  488,489,490,491,492,493,494,495,496,497 成功！','批量删除物料成功'), ('1625','64','更新物料','192.168.4.108','2016-11-08 22:11:33','0','更新物料ID为  487 成功！','更新物料成功'), ('1626','64','更新物料','192.168.4.108','2016-11-08 22:11:46','0','更新物料ID为  485 成功！','更新物料成功'), ('1627','64','增加物料','192.168.4.108','2016-11-08 22:12:18','0','增加物料名称为  蕾丝 成功！','增加物料成功'), ('1628','64','更新供应商','192.168.4.108','2016-11-08 22:12:41','0','更新供应商ID为  1 成功！','更新供应商成功'), ('1629','64','更新仓库','192.168.4.108','2016-11-08 22:13:06','0','更新仓库ID为  1 成功！','更新仓库成功'), ('1630','64','增加仓管通','192.168.4.108','2016-11-08 22:14:37','0','增加仓管通编号为  1234 成功！','增加仓管通成功'), ('1631','64','保存仓管通明细','192.168.4.108','2016-11-08 22:14:38','0','保存仓管通明细对应主表编号为  29 成功！','保存仓管通明细成功'), ('1632','64','增加仓管通','192.168.4.108','2016-11-08 22:15:16','0','增加仓管通编号为  1235 成功！','增加仓管通成功'), ('1633','64','保存仓管通明细','192.168.4.108','2016-11-08 22:15:17','0','保存仓管通明细对应主表编号为  30 成功！','保存仓管通明细成功'), ('1634','64','增加仓管通','192.168.4.108','2016-11-08 22:16:11','0','增加仓管通编号为  123A 成功！','增加仓管通成功'), ('1635','64','保存仓管通明细','192.168.4.108','2016-11-08 22:16:11','0','保存仓管通明细对应主表编号为  31 成功！','保存仓管通明细成功'), ('1636','64','退出系统','192.168.4.108','2016-11-08 22:16:39','0','管理用户：cyl 退出系统','cyl 退出系统'), ('1637','63','登录系统','192.168.4.108','2016-11-08 22:16:42','0','管理用户：jsh 登录系统','jsh 登录系统'), ('1638','63','登录系统','192.168.4.108','2016-11-08 22:17:05','0','管理用户：jsh 登录系统','jsh 登录系统'), ('1639','63','更新用户','192.168.4.108','2016-11-08 22:17:34','0','更新用户ID为  64 成功！','更新用户成功'), ('1640','63','更新用户','192.168.4.108','2016-11-08 22:17:48','0','更新用户ID为  65 成功！','更新用户成功'), ('1641','63','退出系统','192.168.4.108','2016-11-08 22:18:07','0','管理用户：jsh 退出系统','jsh 退出系统'), ('1642','65','登录系统','192.168.4.108','2016-11-08 22:18:16','0','管理用户：ls 登录系统','ls 登录系统'), ('1643','65','退出系统','192.168.4.108','2016-11-08 22:18:22','0','管理用户：ls 退出系统','ls 退出系统'), ('1644','65','登录系统','192.168.4.108','2016-11-08 22:18:39','0','管理用户：ls 登录系统','ls 登录系统'), ('1645','65','更新仓管通','192.168.4.108','2016-11-08 22:18:50','0','更新仓管通ID为  30 成功！','更新仓管通成功'), ('1646','65','更新仓管通','192.168.4.108','2016-11-08 22:18:53','0','更新仓管通ID为  29 成功！','更新仓管通成功'), ('1647','65','更新仓管通','192.168.4.108','2016-11-08 22:19:03','0','更新仓管通ID为  31 成功！','更新仓管通成功'), ('1648','65','退出系统','192.168.4.108','2016-11-08 22:20:46','0','管理用户：ls 退出系统','ls 退出系统'), ('1649','63','登录系统','192.168.4.108','2016-11-08 22:20:57','0','管理用户：jsh 登录系统','jsh 登录系统'), ('1650','63','登录系统','192.168.4.108','2016-11-08 22:29:58','0','管理用户：jsh 登录系统','jsh 登录系统'), ('1651','63','退出系统','192.168.4.108','2016-11-08 22:30:22','0','管理用户：jsh 退出系统','jsh 退出系统'), ('1652','65','登录系统','192.168.4.108','2016-11-08 22:30:26','0','管理用户：ls 登录系统','ls 登录系统'), ('1653','63','登录系统','127.0.0.1','2016-11-10 09:15:50','0','管理用户：jsh 登录系统','jsh 登录系统'), ('1654','65','登录系统','192.168.1.105','2016-11-13 12:21:50','0','管理用户：ls 登录系统','ls 登录系统'), ('1655','65','登录系统','192.168.1.105','2016-11-13 12:41:50','0','管理用户：ls 登录系统','ls 登录系统'), ('1656','65','登录系统','192.168.1.105','2016-11-13 12:41:51','0','管理用户：ls 登录系统','ls 登录系统'), ('1657','65','登录系统','192.168.1.105','2016-11-13 13:09:10','0','管理用户：ls 登录系统','ls 登录系统'), ('1658','65','退出系统','192.168.1.105','2016-11-13 13:09:16','0','管理用户：ls 退出系统','ls 退出系统'), ('1659','65','登录系统','192.168.1.105','2016-11-13 13:09:21','0','管理用户：ls 登录系统','ls 登录系统'), ('1660','65','登录系统','192.168.1.105','2016-11-13 13:31:39','0','管理用户：ls 登录系统','ls 登录系统'), ('1661','65','退出系统','192.168.1.105','2016-11-13 13:32:20','0','管理用户：ls 退出系统','ls 退出系统'), ('1662','65','登录系统','192.168.1.105','2016-11-13 13:32:25','0','管理用户：ls 登录系统','ls 登录系统'), ('1663','65','登录系统','192.168.1.105','2016-11-13 13:35:12','0','管理用户：ls 登录系统','ls 登录系统');
+INSERT INTO `jsh_material` VALUES ('485','1','棉线','A21-4321','米色','码',''), ('487','1','网布','12343','红色','码',''), ('498','2','蕾丝','B123','蓝色','码','');
+INSERT INTO `jsh_materialcategory` VALUES ('1','根目录','1','1'), ('2','花边分类','1','1');
+INSERT INTO `jsh_person` VALUES ('1','1','仓管员','张三'), ('2','1','采购人','李四');
+INSERT INTO `jsh_role` VALUES ('4','管理员'), ('5','仓管员');
+INSERT INTO `jsh_supplier` VALUES ('1','上海某某花边工厂','','','','','1','供应商','\0'), ('2','客户AAAA','','','','','1','客户','\0');
+INSERT INTO `jsh_user` VALUES ('63','季圣华','jsh','4QrcOUm6Wau+VuBX8g+IPg==','','','','','1','1','-1','',NULL), ('64','张三','zs','4QrcOUm6Wau+VuBX8g+IPg==','','销售','','','1','1',NULL,'',NULL), ('65','李四','ls','4QrcOUm6Wau+VuBX8g+IPg==','','销售','','','1','1',NULL,'',NULL);
+INSERT INTO `jsh_userbusiness` VALUES ('1','RoleAPP','4','[21][1][8][11][10][19][16][15][12][7][17][20][18][3][6][22][23][24][25]'), ('2','RoleAPP','5','[8][7][3][6]'), ('3','RoleAPP','6','[21][1][8]'), ('4','RoleAPP','7','[21][1][8][11]'), ('5','RoleFunctions','4','[168][13][12][16][14][15][189][18][19][132][22][23][25][26][27][31][33][34][35][36][37][39][40][41][42][43][46][47][48][49][50][51][193][52][53][54][55][56][57][192][59][60][61][62][63][65][66][68][69][70][71][73][74][76][77][79][191][81][82][83][85][89][161][86][176][165][160][28][134][91][92][29][94][95][97][104][99][100][101][102][105][107][108][110][111][113][114][116][117][118][120][121][131][135][123][122][20][130][146][147][138][148][149][153][140][145][184][152][143][170][171][169][166][167][163][164][172][173][179][178][181][182][183][186][187][188]'), ('6','RoleFunctions','5','[22][23][25][26][27][31][33][41][46][193][52][55][59]'), ('7','RoleFunctions','6','[168][13][12][16][14][15][189][18][19]'), ('8','RoleAPP','8','[21][1][8][11][10]'), ('9','RoleFunctions','7','[168][13][12][16][14][15][189][18][19][132]'), ('10','RoleFunctions','8','[168][13][12][16][14][15][189][18][19][132][22][23][25][26][27][157][158][155][156][125][31][127][126][128][33][34][35][36][37][39][40][41][42][43][46][47][48][49][50][51][52][53][54][55][56][57][192][59][60][61][62][63][65][66][68][69][70][71][73][74][76][77][79][191][81][82][83][85][89][161][86][176][165][160][28][134][91][92][29][94][95][97][104][99][100][101][102][105][107][108][110][111][113][114][116][117][118][120][121][131][135][123][122][20][130][146][147][138][148][149][153][140][145][184][152][143][170][171][169][166][167][163][164][172][173][179][178][181][182][183][186][187]'), ('11','RoleFunctions','9','[168][13][12][16][14][15][189][18][19][132][22][23][25][26][27][157][158][155][156][125][31][127][126][128][33][34][35][36][37][39][40][41][42][43][46][47][48][49][50][51][52][53][54][55][56][57][192][59][60][61][62][63][65][66][68][69][70][71][73][74][76][77][79][191][81][82][83][85][89][161][86][176][165][160][28][134][91][92][29][94][95][97][104][99][100][101][102][105][107][108][110][111][113][114][116][117][118][120][121][131][135][123][122][20][130][146][147][138][148][149][153][140][145][184][152][143][170][171][169][166][167][163][164][172][173][179][178][181][182][183][186][187][188]'), ('12','UserRole','1','[5]'), ('13','UserRole','2','[6][7]'), ('14','UserDepot','2','[1][2][6][7]'), ('15','UserDepot','1','[1][2][5][6][7][10][12][14][15][17]'), ('16','UserRole','63','[4]'), ('17','RoleFunctions','13','[46][47][48][49]'), ('18','UserDepot','63','[1][6][45][46][50][51]'), ('19','UserDepot','5','[6][45][46][50]'), ('20','UserRole','5','[5]'), ('21','UserRole','64','[5]'), ('22','UserDepot','64','[1]'), ('23','UserRole','65','[5]'), ('24','UserDepot','65','[1]');

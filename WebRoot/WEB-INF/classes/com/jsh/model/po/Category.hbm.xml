@@ -2,7 +2,7 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
-    <class name="com.jsh.model.po.Category" table="ams_t_assetcategory">
+    <class name="com.jsh.model.po.Category" table="jsh_assetcategory">
         <id name="id" type="java.lang.Long">
             <column name="id" />
             <generator class="native" />
