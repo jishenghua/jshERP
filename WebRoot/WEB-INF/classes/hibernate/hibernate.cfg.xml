@@ -22,7 +22,6 @@
 
 	<!-- 对应的实体映射 -->
 	<mapping resource="com/jsh/model/po/Supplier.hbm.xml" />
-	<mapping resource="com/jsh/model/po/Measureunit.hbm.xml" />
 	<mapping resource="com/jsh/model/po/Logdetails.hbm.xml" />
 	<mapping resource="com/jsh/model/po/Department.hbm.xml" />
 	<mapping resource="com/jsh/model/po/Assetname.hbm.xml" />
