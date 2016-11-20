@@ -9,7 +9,7 @@ import com.jsh.base.Log;
 import com.jsh.constants.common.ExceptionCodeConstants;
 import com.jsh.dao.basic.UserBusinessIDAO;
 import com.jsh.dao.basic.UserIDAO;
-import com.jsh.exception.AmsException;
+import com.jsh.exception.JshException;
 import com.jsh.model.po.Basicuser;
 import com.jsh.util.common.PageUtil;
 
@@ -20,7 +20,7 @@ public class UserService extends BaseService<Basicuser> implements UserIService
 	private UserIDAO userDao;
 
 	@Override
-	public int validateUser(String username, String password)throws AmsException
+	public int validateUser(String username, String password)throws JshException
 	{
 		try
 		{
@@ -66,12 +66,12 @@ public class UserService extends BaseService<Basicuser> implements UserIService
 		}
 		catch (Exception e) 
 		{
-			throw new AmsException("unknown exception",e);
+			throw new JshException("unknown exception",e);
 		}
 	}
 
 	@Override
-	public Basicuser getUser(String username) throws AmsException
+	public Basicuser getUser(String username) throws JshException
 	{
 		//全局变量 每次使用前清除
 		condition.clear();
@@ -82,11 +82,11 @@ public class UserService extends BaseService<Basicuser> implements UserIService
 		if(null != list && list.size() >0)
 			return list.get(0); 
 		else
-			throw new AmsException("no username exist");
+			throw new JshException("no username exist");
 	}
 	
 	@Override
-	public Boolean checkIsNameExist(String field,String username, Long userID)throws AmsException
+	public Boolean checkIsNameExist(String field,String username, Long userID)throws JshException
 	{
 		condition.clear();
         condition.put(field + "_s_eq", username);

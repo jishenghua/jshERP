@@ -39,7 +39,7 @@ import com.jsh.dao.basic.AssetNameIDAO;
 import com.jsh.dao.basic.CategoryIDAO;
 import com.jsh.dao.basic.SupplierIDAO;
 import com.jsh.dao.basic.UserIDAO;
-import com.jsh.exception.AmsException;
+import com.jsh.exception.JshException;
 import com.jsh.model.po.Asset;
 import com.jsh.model.po.Assetname;
 import com.jsh.model.po.Category;
@@ -74,7 +74,7 @@ public class AssetService extends BaseService<Asset> implements AssetIService
 	 * 导出Excel表格
 	 */
 	@Override
-	public InputStream  exmportExcel(String isAllPage,PageUtil<Asset> pageUtil)throws AmsException 
+	public InputStream  exmportExcel(String isAllPage,PageUtil<Asset> pageUtil)throws JshException 
 	{
 		try
 		{
@@ -97,12 +97,12 @@ public class AssetService extends BaseService<Asset> implements AssetIService
 		catch (Exception e)
 		{
 			Log.errorFileSync(">>>>>>>>>>>>>>>>>>>>>>>导出资产信息为excel表格异常", e);
-			throw new AmsException("export asset info to excel exception",e);
+			throw new JshException("export asset info to excel exception",e);
 		}
 	}
 	
 	@Override
-	public InputStream importExcel(File assetFile,int isCheck) throws AmsException
+	public InputStream importExcel(File assetFile,int isCheck) throws JshException
 	{
 	    //全局变量--每次调用前需要清空数据
 	    mapData.clear();
@@ -129,10 +129,10 @@ public class AssetService extends BaseService<Asset> implements AssetIService
 	
 	/**
      * 初始加载系统基础数据--导入过程中，不用频繁查询数据库内容，影响系统性能。
-     * @throws AmsException
+     * @throws JshException
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    private void loadSystemData()throws AmsException
+    private void loadSystemData()throws JshException
     {
         PageUtil pageUtil = new  PageUtil();
         pageUtil.setPageSize(0);

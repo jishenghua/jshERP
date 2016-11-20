@@ -4,7 +4,7 @@ import org.apache.log4j.Logger;
 
 /**
  * 封装log4j日志信息，打印日志信息类
- * @author andy
+ * @author jishenghua
  * @since 2014-01-22
  */
 public class Log

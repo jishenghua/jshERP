@@ -33,7 +33,7 @@ public class BuildingAction extends BaseAction<BuildingModel>
         Map<String,List> mapData = model.getShowModel().getMap();
         PageUtil pageUtil = new  PageUtil();
         pageUtil.setPageSize(0);
-        pageUtil.setCurPage(0);
+        pageUtil.setCurPage(0); 
         try
         {
             Map<String,Object> condition = pageUtil.getAdvSearch();

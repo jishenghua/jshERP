@@ -1,7 +1,7 @@
 package com.jsh.service.asset;
 
 import com.jsh.dao.asset.ReportIDAO;
-import com.jsh.exception.AmsException;
+import com.jsh.exception.JshException;
 import com.jsh.model.po.Asset;
 import com.jsh.util.common.PageUtil;
 
@@ -15,7 +15,7 @@ public class ReportService implements ReportIService
     }
 
     @Override
-    public void find(PageUtil<Asset> pageUtil, String reportType,String reportName) throws AmsException
+    public void find(PageUtil<Asset> pageUtil, String reportType,String reportName) throws JshException
     {
         reportDao.find(pageUtil, reportType,reportName);
     }

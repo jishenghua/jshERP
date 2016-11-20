@@ -1,12 +1,3 @@
-/**
- * 项   目  名：HiTV
- * 包          名：com.suma.hitv.utils
- * 文   件  名：BeanFactoryUtil.java
- * 版本信息：V1.0
- * 日          期：2011-12-30-下午01:25:00
- * Copyright (c) 2000-2011北京数码视讯有限公司版权所有
- * 
- */
 package com.jsh.util.common;
 
 import java.util.HashMap;
@@ -19,7 +10,7 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
 /**
  * 获取spring配置中的bean对象,是单例，只会加载一次，请注意使用
  * 注意：此工具类默认处理UI组件WEB-INF目录下的applicationContext.xml配置文件,请注意文件 名和路径
- * @author  andy
+ * @author  jishenghua
  * @version V1.0
  */
 public class BeanFactoryUtil

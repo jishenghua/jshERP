@@ -13,7 +13,7 @@ import org.springframework.dao.DataAccessException;
 
 import com.jsh.base.BaseAction;
 import com.jsh.base.Log;
-import com.jsh.exception.AmsException;
+import com.jsh.exception.JshException;
 import com.jsh.model.po.Depot;
 import com.jsh.model.po.Logdetails;
 import com.jsh.model.po.Role;

@@ -4,7 +4,7 @@ public interface AmsConstants
 {
 	/**
 	 * 定义资产管理公共常量
-	 * @author andy
+	 * @author jishenghua
 	 */
 	public class Common
 	{

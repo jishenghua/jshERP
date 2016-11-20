@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.jsh.base.BaseAction;
 import com.jsh.base.Log;
-import com.jsh.exception.AmsException;
+import com.jsh.exception.JshException;
 import com.jsh.model.po.Asset;
 import com.jsh.model.vo.asset.ReportModel;
 import com.jsh.service.asset.ReportIService;
@@ -33,7 +33,7 @@ public class ReportAction extends BaseAction<ReportModel>
             reportService.find(pageUtil,reportType.split("_")[0],reportType.split("_")[1]);
             model.getShowModel().setReportData(pageUtil.getPageList());
         } 
-        catch (AmsException e) 
+        catch (JshException e) 
         {
             Log.errorFileSync(">>>>>>>>>查找资产信息异常", e);
             model.getShowModel().setMsgTip("get report data exception");

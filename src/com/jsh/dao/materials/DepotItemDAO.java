@@ -3,7 +3,7 @@ package com.jsh.dao.materials;
 import org.hibernate.Query;
 
 import com.jsh.base.BaseDAO;
-import com.jsh.exception.AmsException;
+import com.jsh.exception.JshException;
 import com.jsh.model.po.DepotHead;
 import com.jsh.model.po.DepotItem;
 import com.jsh.util.common.PageUtil;
@@ -23,7 +23,7 @@ public class DepotItemDAO extends BaseDAO<DepotItem> implements DepotItemIDAO
 	
     @SuppressWarnings("unchecked")
     @Override
-	public void findByType(PageUtil<DepotItem> pageUtil,String type,Long MId,String MonthTime,Boolean isPrev) throws AmsException
+	public void findByType(PageUtil<DepotItem> pageUtil,String type,Long MId,String MonthTime,Boolean isPrev) throws JshException
     {
     	//多表联查,多表连查，此处用到了createSQLQuery，可以随便写sql语句，很方便
     	Query query;
@@ -40,7 +40,7 @@ public class DepotItemDAO extends BaseDAO<DepotItem> implements DepotItemIDAO
     
     @SuppressWarnings("unchecked")
     @Override
-	public void findOrderByMaterial(PageUtil<DepotItem> pageUtil) throws AmsException
+	public void findOrderByMaterial(PageUtil<DepotItem> pageUtil) throws JshException
     {
     	//多表联查,多表连查，此处用到了createSQLQuery，可以随便写sql语句，很方便
     	Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery("select * from jsh_depotitem where 1=1 " + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));

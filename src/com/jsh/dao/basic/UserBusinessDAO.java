@@ -3,7 +3,7 @@ package com.jsh.dao.basic;
 import org.hibernate.Query;
 
 import com.jsh.base.BaseDAO;
-import com.jsh.exception.AmsException;
+import com.jsh.exception.JshException;
 import com.jsh.model.po.Asset;
 import com.jsh.model.po.UserBusiness;
 import com.jsh.util.common.PageUtil;
@@ -23,7 +23,7 @@ public class UserBusinessDAO extends BaseDAO<UserBusiness> implements UserBusine
 	
     @SuppressWarnings("unchecked")
     @Override
-	public void find(PageUtil<UserBusiness> pageUtil,String ceshi) throws AmsException
+	public void find(PageUtil<UserBusiness> pageUtil,String ceshi) throws JshException
     {
         Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createQuery("select count(id),sum(id) from UserBusiness userBusiness where 1=1 " + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
         pageUtil.setTotalCount(query.list().size());

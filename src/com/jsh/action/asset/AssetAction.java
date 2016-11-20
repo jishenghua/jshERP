@@ -18,7 +18,7 @@ import org.springframework.dao.DataAccessException;
 import com.jsh.base.BaseAction;
 import com.jsh.base.Log;
 import com.jsh.constants.asset.AssetConstants;
-import com.jsh.exception.AmsException;
+import com.jsh.exception.JshException;
 import com.jsh.model.po.Asset;
 import com.jsh.model.po.Assetname;
 import com.jsh.model.po.Basicuser;
@@ -431,7 +431,7 @@ public class AssetAction extends BaseAction<AssetModel>
 			}
 				
 		}
-		catch (AmsException e)
+		catch (JshException e)
 		{
 			Log.errorFileSync(">>>>>>>>>>>>>>>>>>>导入excel表格信息异常", e);
 		}

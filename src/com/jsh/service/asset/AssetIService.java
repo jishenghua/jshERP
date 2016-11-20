@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.InputStream;
 
 import com.jsh.base.BaseIService;
-import com.jsh.exception.AmsException;
+import com.jsh.exception.JshException;
 import com.jsh.model.po.Asset;
 import com.jsh.util.common.PageUtil;
 
@@ -14,7 +14,7 @@ public interface AssetIService extends BaseIService<Asset>
 	 * 导出信息
 	 * @return
 	 */
-	InputStream exmportExcel(String isAllPage,PageUtil<Asset> pageUtil)throws AmsException;
+	InputStream exmportExcel(String isAllPage,PageUtil<Asset> pageUtil)throws JshException;
 	
 	/**
 	 * 导入资产excel文件--表格格式 同 媒资列表 || 资产名称-资产类型-单价-用户-购买时间-状态-位置-资产编号-序列号-有效日期-保修日期-供应商-标签-描述
@@ -24,7 +24,7 @@ public interface AssetIService extends BaseIService<Asset>
 	 * @param assetFile excel表格文件
 	 * @param isCheck 是否检查 0--手工确定 1--直接导入数据库中
 	 * @return 错误的表格数据
-	 * @throws AmsException
+	 * @throws JshException
 	 */
-	InputStream importExcel(File assetFile,int isCheck)throws AmsException;
+	InputStream importExcel(File assetFile,int isCheck)throws JshException;
 }

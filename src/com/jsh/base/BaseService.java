@@ -7,7 +7,7 @@ import java.util.Map;
 
 import org.springframework.dao.DataAccessException;
 
-import com.jsh.exception.AmsException;
+import com.jsh.exception.JshException;
 import com.jsh.model.po.Basicuser;
 import com.jsh.util.common.PageUtil;
 

@@ -41,6 +41,7 @@ public class UserAction extends BaseAction<UserModel>
 		try
 		{
 			password = Tools.md5Encryp(password);
+			System.out.println(password);
 		}
 		catch (NoSuchAlgorithmException e)
 		{
@@ -136,7 +137,7 @@ public class UserAction extends BaseAction<UserModel>
 		    user.setIsystem((short)1);
 		    user.setIsmanager((short)1);
 		    user.setLoginame(model.getLoginame());
-		    String password ="00000000";
+		    String password ="123456";
 		    //因密码用MD5加密，需要对密码进行转化
 		    try 
 		    {

@@ -10,7 +10,7 @@ import com.jsh.util.common.PageUtil;
 
 /**
  * 常用增删改查操作
- * @author andy 
+ * @author jishenghua 
  * @param <T>
  */
 public interface BaseIDAO<T>

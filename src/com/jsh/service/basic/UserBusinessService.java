@@ -2,7 +2,7 @@ package com.jsh.service.basic;
 
 import com.jsh.base.BaseService;
 import com.jsh.dao.basic.UserBusinessIDAO;
-import com.jsh.exception.AmsException;
+import com.jsh.exception.JshException;
 import com.jsh.model.po.UserBusiness;
 import com.jsh.util.common.PageUtil;
 
@@ -23,7 +23,7 @@ public class UserBusinessService extends BaseService<UserBusiness> implements Us
 	}
 
     @Override
-    public void find(PageUtil<UserBusiness> pageUtil, String ceshi) throws AmsException
+    public void find(PageUtil<UserBusiness> pageUtil, String ceshi) throws JshException
     {
     	userBusinessDao.find(pageUtil, ceshi);
     }

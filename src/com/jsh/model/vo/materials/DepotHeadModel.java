@@ -1,7 +1,6 @@
 package com.jsh.model.vo.materials;
 
 import java.io.Serializable;
-import com.sun.jmx.snmp.Timestamp;
 
 @SuppressWarnings("serial")
 public class DepotHeadModel implements Serializable

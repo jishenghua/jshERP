@@ -2,7 +2,7 @@ package com.jsh.service.materials;
 
 import com.jsh.base.BaseService;
 import com.jsh.dao.materials.DepotHeadIDAO;
-import com.jsh.exception.AmsException;
+import com.jsh.exception.JshException;
 import com.jsh.model.po.DepotHead;
 import com.jsh.model.po.UserBusiness;
 import com.jsh.util.common.PageUtil;
@@ -25,7 +25,7 @@ public class DepotHeadService extends BaseService<DepotHead> implements DepotHea
 	}
 	
     @Override
-    public void find(PageUtil<DepotHead> pageUtil, String maxid) throws AmsException
+    public void find(PageUtil<DepotHead> pageUtil, String maxid) throws JshException
     {
     	depotHeadDao.find(pageUtil, maxid);
     }

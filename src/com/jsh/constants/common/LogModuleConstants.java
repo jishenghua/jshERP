@@ -4,7 +4,7 @@ public interface LogModuleConstants
 {
 	/**
 	 * 系统管理模块名称定义
-	 * @author andy
+	 * @author jishenghua
 	 */
 	public class ManageModuleNameCode
 	{
@@ -31,7 +31,7 @@ public interface LogModuleConstants
 	
 	/**
 	 * 资产管理模块名称定义
-	 * @author andy
+	 * @author jishenghua
 	 */
 	public class AssetModuleNameCode
 	{
@@ -53,7 +53,7 @@ public interface LogModuleConstants
 	
 	/**
 	 * 日志管理模块名称定义
-	 * @author andy
+	 * @author jishenghua
 	 */
 	public class LogModuleNameCode
 	{

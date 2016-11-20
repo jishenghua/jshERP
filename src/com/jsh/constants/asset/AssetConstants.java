@@ -2,13 +2,13 @@ package com.jsh.constants.asset;
 
 /**
  * 定义资产管理常量
- * @author andy
+ * @author jishenghua
  */
 public interface AssetConstants
 {
 	/**
 	 * 公共常量
-	 * @author andy
+	 * @author jishenghua
 	 */
 	public class Common
 	{
@@ -17,7 +17,7 @@ public interface AssetConstants
 	
 	/**
 	 * 资产常量--导入导出excel表格业务相关
-	 * @author andy
+	 * @author jishenghua
 	 */
 	public class BusinessForExcel
 	{

@@ -14,8 +14,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.UUID;
 import java.util.regex.Pattern;
-
-import sun.misc.BASE64Encoder;
+import java.math.BigInteger;
 
 public class Tools 
 {
@@ -435,7 +434,7 @@ public class Tools
 	
 	/**
      * 判断字符串中是否含有中文
-     * @author andy
+     * @author jishenghua
      * @param str
      * @return
      */
@@ -456,7 +455,7 @@ public class Tools
 	
 	 /**
      * 去掉字符串中所有符号，不论是全角，还是半角的，或是货币符号或者空格等
-     * @author andy
+     * @author jishenghua
      * @param s
      * @return 
      *
@@ -483,8 +482,12 @@ public class Tools
      */
     public static String md5Encryp(String msg) throws NoSuchAlgorithmException 
 	{
-		return new BASE64Encoder().encode(MessageDigest.getInstance("MD5").digest(msg.getBytes()));
-	}
+        // 生成一个MD5加密计算摘要
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        // 计算md5函数
+        md.update(msg.getBytes());
+        return new BigInteger(1, md.digest()).toString(16);
+    }
     
     /**
      * 处理字符串null值
@@ -500,7 +503,7 @@ public class Tools
 	
     /**
      * 使用参数Format将字符串转为Date
-     * @author andy
+     * @author jishenghua
      * @param strDate
      * @param pattern
      * @return

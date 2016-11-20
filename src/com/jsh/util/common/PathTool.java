@@ -8,7 +8,7 @@ import com.jsh.base.Log;
 
 /**
  * 获取应用系统路径
- * @author  andy
+ * @author  jishenghua
  */
 public class PathTool
 {

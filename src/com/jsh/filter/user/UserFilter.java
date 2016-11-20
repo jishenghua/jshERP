@@ -15,7 +15,7 @@ import javax.servlet.http.HttpSession;
 /**
  * 用户登录session处理类
  * 过滤session是否超时
- * @author  andy
+ * @author  jishenghua
  * @version  [版本号, 2012-3-6]
  * @see  [相关类/方法]
  * @since  

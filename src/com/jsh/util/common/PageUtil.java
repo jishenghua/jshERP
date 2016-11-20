@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 /**
  * 分页工具类，实现分页功能
- * @author  andy
+ * @author  jishenghua
  * @version  [版本号version01, 2012-1-25]
  */
 @SuppressWarnings("serial")

@@ -17,7 +17,7 @@ import org.springframework.dao.DataAccessException;
 import com.jsh.base.BaseAction;
 import com.jsh.base.Log;
 import com.jsh.constants.asset.AssetConstants;
-import com.jsh.exception.AmsException;
+import com.jsh.exception.JshException;
 import com.jsh.model.po.Asset;
 import com.jsh.model.po.DepotHead;
 import com.jsh.model.po.DepotItem;
@@ -348,7 +348,7 @@ public class DepotItemAction extends BaseAction<DepotItemModel>
 				allNumber = "0";
 			}
 			allNumber = allNumber.replace(".0", "");
-		} catch (AmsException e) {
+		} catch (JshException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

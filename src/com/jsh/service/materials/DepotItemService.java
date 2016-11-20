@@ -20,7 +20,7 @@ import com.jsh.base.BaseService;
 import com.jsh.base.Log;
 import com.jsh.constants.asset.AssetConstants;
 import com.jsh.dao.materials.DepotItemIDAO;
-import com.jsh.exception.AmsException;
+import com.jsh.exception.JshException;
 import com.jsh.model.po.Asset;
 import com.jsh.model.po.DepotHead;
 import com.jsh.model.po.DepotItem;
@@ -45,13 +45,13 @@ public class DepotItemService extends BaseService<DepotItem> implements DepotIte
 	}
 	
     @Override
-    public void findByType(PageUtil<DepotItem> pageUtil, String type,Long MId, String MonthTime,Boolean isPrev) throws AmsException
+    public void findByType(PageUtil<DepotItem> pageUtil, String type,Long MId, String MonthTime,Boolean isPrev) throws JshException
     {
     	depotItemDao.findByType(pageUtil, type, MId, MonthTime,isPrev);
     }
     
     @Override
-    public void findOrderByMaterial(PageUtil<DepotItem> pageUtil) throws AmsException
+    public void findOrderByMaterial(PageUtil<DepotItem> pageUtil) throws JshException
     {
     	depotItemDao.findOrderByMaterial(pageUtil);
     }
@@ -60,7 +60,7 @@ public class DepotItemService extends BaseService<DepotItem> implements DepotIte
 	 * 导出Excel表格
 	 */
 	@Override
-	public InputStream  exmportExcel(String isAllPage,JSONArray dataArray)throws AmsException 
+	public InputStream  exmportExcel(String isAllPage,JSONArray dataArray)throws JshException 
 	{
 		try
 		{			
@@ -72,7 +72,7 @@ public class DepotItemService extends BaseService<DepotItem> implements DepotIte
 		catch (Exception e)
 		{
 			Log.errorFileSync(">>>>>>>>>>>>>>>>>>>>>>>导出信息为excel表格异常", e);
-			throw new AmsException("export asset info to excel exception",e);
+			throw new JshException("export asset info to excel exception",e);
 		}
 	}
 	
