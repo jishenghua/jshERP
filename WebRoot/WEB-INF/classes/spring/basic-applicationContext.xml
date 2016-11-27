@@ -321,4 +321,28 @@
 		<property name="logService" ref="logService"/>
 	</bean>
 	<!--仓管通明细配置结束 -->
+        
+    <!--结算账户配置开始 -->
+    <bean id="accountService" class="com.jsh.service.basic.AccountService">
+        <property name="baseDao" ref="baseDao"/>
+        <property name="accountDao" ref="accountDao"/>
+    </bean>
+    <!-- spring整合struts2需要默认为request或者 prototype，不能是单例 -->
+    <bean id="accountAction" class="com.jsh.action.basic.AccountAction" scope="prototype">
+        <property name="accountService" ref="accountService"/>
+        <property name="logService" ref="logService"/>
+    </bean>
+	<!--结算账户配置结束 -->
+        
+    <!--收支项目配置开始 -->
+    <bean id="inOutItemService" class="com.jsh.service.basic.InOutItemService">
+        <property name="baseDao" ref="baseDao"/>
+        <property name="inOutItemDao" ref="inOutItemDao"/>
+    </bean>
+    <!-- spring整合struts2需要默认为request或者 prototype，不能是单例 -->
+    <bean id="inOutItemAction" class="com.jsh.action.basic.InOutItemAction" scope="prototype">
+        <property name="inOutItemService" ref="inOutItemService"/>
+        <property name="logService" ref="logService"/>
+    </bean>
+	<!--收支项目配置结束 -->
 </beans>

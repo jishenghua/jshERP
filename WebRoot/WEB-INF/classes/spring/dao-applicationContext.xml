@@ -47,5 +47,9 @@
 	<!-- 配置depotHeadDao组件 -->
 	<bean id="depotHeadDao" parent="daoTemplate" class="com.jsh.dao.materials.DepotHeadDAO"/>	
 	<!-- 配置depotItemDao组件 -->
-	<bean id="depotItemDao" parent="daoTemplate" class="com.jsh.dao.materials.DepotItemDAO"/>	
+	<bean id="depotItemDao" parent="daoTemplate" class="com.jsh.dao.materials.DepotItemDAO"/>
+	<!-- 配置accountDao组件 -->
+	<bean id="accountDao" parent="daoTemplate" class="com.jsh.dao.basic.AccountDAO"/>	
+	<!-- 配置inOutItemDao组件 -->
+	<bean id="inOutItemDao" parent="daoTemplate" class="com.jsh.dao.basic.InOutItemDAO"/>	
 </beans>

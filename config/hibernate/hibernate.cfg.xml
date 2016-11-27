@@ -18,6 +18,7 @@
 		org.hibernate.dialect.MySQL5Dialect
 	</property>
 	<property name="show_sql">true</property>
+	<!-- 一般重新建库用create(慎用)，只更新字段用update -->
 	<property name="hbm2ddl.auto">update</property>
 
 	<!-- 对应的实体映射 -->
@@ -39,5 +40,7 @@
     <mapping resource="com/jsh/model/po/Building.hbm.xml" />
     <mapping resource="com/jsh/model/po/DepotHead.hbm.xml" />
     <mapping resource="com/jsh/model/po/DepotItem.hbm.xml" />
+    <mapping resource="com/jsh/model/po/Account.hbm.xml" />
+    <mapping resource="com/jsh/model/po/InOutItem.hbm.xml" />
 </session-factory>
 </hibernate-configuration>

@@ -50,12 +50,6 @@ public class DepotItemService extends BaseService<DepotItem> implements DepotIte
     	depotItemDao.findByType(pageUtil, type, MId, MonthTime,isPrev);
     }
     
-    @Override
-    public void findOrderByMaterial(PageUtil<DepotItem> pageUtil) throws JshException
-    {
-    	depotItemDao.findOrderByMaterial(pageUtil);
-    }
-    
 	/**
 	 * 导出Excel表格
 	 */

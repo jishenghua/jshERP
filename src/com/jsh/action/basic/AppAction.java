@@ -30,7 +30,10 @@ import com.jsh.service.basic.AppIService;
 import com.jsh.service.basic.UserBusinessIService;
 import com.jsh.util.common.PageUtil;
 //import com.opensymphony.xwork2.ActionContext;
-
+/**
+ * 应用
+ * @author ji_sheng_hua
+ */
 @SuppressWarnings("serial")
 public class AppAction extends BaseAction<AppModel>
 {

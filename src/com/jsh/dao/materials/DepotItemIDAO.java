@@ -8,7 +8,5 @@ import com.jsh.util.common.PageUtil;
 
 public interface DepotItemIDAO extends BaseIDAO<DepotItem>
 {
-    void findByType(PageUtil<DepotItem> pageUtil,String type,Long MId, String MonthTime,Boolean isPrev) throws JshException;
-    
-    void findOrderByMaterial(PageUtil<DepotItem> pageUtil) throws JshException;
+    void findByType(PageUtil<DepotItem> pageUtil,String type,Long MId, String MonthTime,Boolean isPrev) throws JshException; 
 }

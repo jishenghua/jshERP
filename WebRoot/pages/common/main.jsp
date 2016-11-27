@@ -12,35 +12,6 @@
     <title>ERP系统</title>
     <link href="<%=path%>/js/HoorayOS_mini/js/HoorayLibs/hooraylibs.css" rel="stylesheet" />
     <link href="<%=path%>/js/HoorayOS_mini/img/ui/index.css" rel="stylesheet" />
-    <style type="text/css">
-        .newsTitle {
-            text-align: center;
-            color: red;
-            font-weight: bold;
-            font-size: 20px;
-        }
-
-        .newsContent {
-            padding-top: 10px;
-            color: red;
-            font-weight: bold;
-            height: 140px;
-            overflow: hidden;
-            line-height: 20px;
-        }
-
-        .newsFoot { 
-            text-align: right;
-            color: red;
-            font-weight: bold;
-        }
-
-        .newsTime {
-            text-align: right;
-            color: red;
-            font-weight: bold;
-        }
-    </style>
 </head>
 <body>
     <div class="loading"></div>
@@ -133,16 +104,6 @@
                 HROS.CONFIG.wallpaper = '<%=path%>/js/HoorayOS_mini/img/wallpaper/wallpaper.jpg';
                 //加载桌面
                 HROS.base.init();
-            }
-            if ('@ViewData["News"].ToString()'.length > 0) {
-                $.messager.show({
-                    title: '公 告',
-                    msg: '最新公告',
-                    timeout: 20000,
-                    showType: 'slide',
-                    width: 500,
-                    height: 280
-                });
             }
             function JSGetCookie(Name) {
                 var search = Name + "="
