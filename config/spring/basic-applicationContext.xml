@@ -238,18 +238,6 @@
 	</bean>
 	<!--资产报表配置结束 -->
 	
-	<!--回访台帐配置开始 -->
-	<bean id="visitAccountService" class="com.jsh.service.basic.VisitAccountService">
-		<property name="baseDao" ref="baseDao"/>
-		<property name="visitAccountDao" ref="visitAccountDao"/>
-	</bean>
-	<!-- spring整合struts2需要默认为request或者 prototype，不能是单例 -->
-	<bean id="visitAccountAction" class="com.jsh.action.basic.VisitAccountAction" scope="prototype">
-		<property name="visitAccountService" ref="visitAccountService"/>
-		<property name="logService" ref="logService"/>
-	</bean>
-	<!--回访台帐配置结束 -->
-	
 	<!--经手人配置开始 -->
 	<bean id="personService" class="com.jsh.service.materials.PersonService">
 		<property name="baseDao" ref="baseDao"/>
@@ -262,7 +250,7 @@
 	</bean>
 	<!--经手人配置结束 -->
 	
-	<!--物料类别配置开始 -->
+	<!--商品类别配置开始 -->
 	<bean id="materialCategoryService" class="com.jsh.service.materials.MaterialCategoryService">
 		<property name="baseDao" ref="baseDao"/>
 		<property name="materialCategoryDao" ref="materialCategoryDao"/>
@@ -272,9 +260,9 @@
 		<property name="materialCategoryService" ref="materialCategoryService"/>
 		<property name="logService" ref="logService"/>
 	</bean>
-	<!--物料类别配置结束 -->
+	<!--商品类别配置结束 -->
 	
-	<!--物料配置开始 -->
+	<!--商品配置开始 -->
 	<bean id="materialService" class="com.jsh.service.materials.MaterialService">
 		<property name="baseDao" ref="baseDao"/>
 		<property name="materialDao" ref="materialDao"/>
@@ -284,7 +272,7 @@
 		<property name="materialService" ref="materialService"/>
 		<property name="logService" ref="logService"/>
 	</bean>
-	<!--物料配置结束 -->
+	<!--商品配置结束 -->
 	
 	<!--单元配置开始 -->
 	<bean id="buildingService" class="com.jsh.service.materials.BuildingService">

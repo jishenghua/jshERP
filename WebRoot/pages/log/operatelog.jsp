@@ -28,26 +28,26 @@
 				<tr>
 					<td>操作模块：</td>
 					<td>
-						<input type="text" name="searchOperation" id="searchOperation"  style="width:150px;"/>
+						<input type="text" name="searchOperation" id="searchOperation"  style="width:90px;"/>
 					</td>
 				
 					<td>&nbsp;</td>
 					<td>&nbsp;</td>
 					<td>操作人员：</td>
 					<td>
-						<select name="searchUsernameID" id="searchUsernameID"  style="width:150px;"/>
+						<select name="searchUsernameID" id="searchUsernameID"  style="width:90px;" />
 					</td>
 					<td>&nbsp;</td>
 					<td>&nbsp;</td>
 					<td>操作IP：</td>
 					<td>
-						<input type="text" name="searchIP" id="searchIP"  style="width:150px;"/>
+						<input type="text" name="searchIP" id="searchIP"  style="width:90px;"/>
 					</td>
 					<td>&nbsp;</td>
 					<td>&nbsp;</td>
 					<td>操作状态：</td>
 					<td>
-						<select name="searchStatus" id="searchStatus"  style="width:150px;">
+						<select name="searchStatus" id="searchStatus"  style="width:90px;">
 							<option value="">请选择</option>
 							<option value="0">成功</option>
 							<option value="1">失败</option>
@@ -57,27 +57,25 @@
 				<tr>
 					<td>开始时间：</td>
 					<td>
-						<input type="text" name="searchBeginTime" id="searchBeginTime" class="easyui-datebox" style="width:150px;"/> 
+						<input type="text" name="searchBeginTime" id="searchBeginTime" class="easyui-datebox" style="width:90px;"/> 
 					</td>
 					<td>&nbsp;</td>
 					<td>&nbsp;</td>
 					<td>结束时间：</td>
 					<td>
-						<input type="text" name="searchEndTime" id="searchEndTime" class="easyui-datebox" style="width:150px;"/> 
+						<input type="text" name="searchEndTime" id="searchEndTime" class="easyui-datebox" style="width:90px;"/> 
 					</td>
 					<td>&nbsp;</td>
 					<td>&nbsp;</td>
 					<td>操作详情：</td>
 					<td>
-						<input type="text" name="searchDesc" id="searchDesc"  style="width:150px;"/>
-					</td>
+						<input type="text" name="searchDesc" id="searchDesc"  style="width:90px;"/>
+					</td>	
 					<td>&nbsp;</td>
-					<td>&nbsp;</td>
-					<td>&nbsp;</td>
-					<td>
+					<td colspan="3">
 						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchBtn">查询</a>
 						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-redo" id="searchResetBtn">重置</a>
-					</td>
+					</td>															
 				</tr>
 			</table>
 		</div>

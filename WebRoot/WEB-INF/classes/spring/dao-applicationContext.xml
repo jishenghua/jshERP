@@ -34,8 +34,6 @@
 	<bean id="functionsDao" parent="daoTemplate" class="com.jsh.dao.basic.FunctionsDAO"/>	
 	<!-- 配置userBusinessDao组件 -->
 	<bean id="userBusinessDao" parent="daoTemplate" class="com.jsh.dao.basic.UserBusinessDAO"/>	
-	<!-- 配置visitAccountDao组件 -->
-	<bean id="visitAccountDao" parent="daoTemplate" class="com.jsh.dao.basic.VisitAccountDAO"/>	
 	<!-- 配置personDao组件 -->
 	<bean id="personDao" parent="daoTemplate" class="com.jsh.dao.materials.PersonDAO"/>	
 	<!-- 配置materialCategoryDao组件 -->

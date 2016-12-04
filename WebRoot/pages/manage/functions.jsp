@@ -28,16 +28,19 @@
 				<tr>
 					<td>名称：</td>
 					<td>
-						<input type="text" name="searchName" id="searchName"  style="width:230px;"/>
+						<input type="text" name="searchName" id="searchName"  style="width:100px;"/>
 					</td>
 					<td>&nbsp;</td>
 					<td>&nbsp;</td>
 					<td>类型: </td>
 					<td>&nbsp;</td>
-					<td><select name="searchType" id="searchType" style="width: 230px;height: 20px">
-					    <option value="">全部</option>
-	                	<option value="电脑版">电脑版</option>
-	                	<option value="手机版">手机版</option></select></td>
+					<td>
+						<select name="searchType" id="searchType" style="width:100px; height:20px">
+					    	<option value="">全部</option>
+	                		<option value="电脑版">电脑版</option>
+	                		<option value="手机版">手机版</option>
+	                	</select>
+	                </td>
 					<td>&nbsp;</td>
 					<td>&nbsp;</td>
 					<td>
@@ -128,7 +131,6 @@
 					//iconCls:'icon-save',
 					//width:700,
 					height:heightInfo,
-					nowrap: false,
 					rownumbers: false,
 					//动画效果
 					animate:false,
@@ -148,14 +150,14 @@
 					pageList: initPageNum,
 					columns:[[
 					  { field: 'Id',width:35,align:"center",checkbox:true},
-			          { title: '编号 ',field: 'Number',width:100},
-			          { title: '名称',field: 'Name',width:200},
-			          { title: '上级编号',field: 'PNumber',width:100},
-			          { title: '链接',field: 'URL',width:200},
+			          { title: '编号 ',field: 'Number',width:60},
+			          { title: '名称',field: 'Name',width:80},
+			          { title: '上级编号',field: 'PNumber',width:60},
+			          { title: '链接',field: 'URL',width:120},
 			          { title: '排序',field: 'Sort',width:50},
 			          { title: '收缩',field: 'State',width:50},
 			          { title: '启用',field: 'Enabled',width:50},
-			          { title: '类型',field: 'Type',width:100},
+			          { title: '类型',field: 'Type',width:50},
 			          { title: '操作',field: 'op',align:"center",width:130,formatter:function(value,rec)
 			         	{
 							var str = '';

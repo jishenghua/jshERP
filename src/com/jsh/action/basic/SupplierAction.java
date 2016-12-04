@@ -40,6 +40,8 @@ public class SupplierAction extends BaseAction<SupplierModel>
 		    supplier.setType(model.getType());
 		    supplier.setDescription(model.getDescription());
 		    supplier.setEmail(model.getEmail());
+            supplier.setBeginNeedGet(model.getBeginNeedGet());
+            supplier.setBeginNeedPay(model.getBeginNeedPay());
 		    supplier.setIsystem((short)1);
 		    supplier.setPhonenum(model.getPhonenum());
 		    supplier.setSupplier(model.getSupplier());
@@ -118,6 +120,8 @@ public class SupplierAction extends BaseAction<SupplierModel>
             supplier.setType(model.getType());
             supplier.setDescription(model.getDescription());
             supplier.setEmail(model.getEmail());
+            supplier.setBeginNeedGet(model.getBeginNeedGet());
+            supplier.setBeginNeedPay(model.getBeginNeedPay());
             supplier.setIsystem((short)1);
             supplier.setPhonenum(model.getPhonenum());
             supplier.setSupplier(model.getSupplier());
@@ -220,10 +224,6 @@ public class SupplierAction extends BaseAction<SupplierModel>
             supplierService.find(pageUtil);
             List<Supplier> dataList = pageUtil.getPageList();
             
-            //开始拼接json数据
-//            {"total":28,"rows":[
-//                {"productid":"AV-CB-01","attr1":"Adult Male","itemid":"EST-18"}
-//            ]}
             JSONObject outer = new JSONObject();
             outer.put("total", pageUtil.getTotalCount());
             //存放数据json数组
@@ -240,6 +240,10 @@ public class SupplierAction extends BaseAction<SupplierModel>
                     item.put("contacts",supplier.getContacts());
                     item.put("phonenum", supplier.getPhonenum());
                     item.put("email", supplier.getEmail());
+                    item.put("BeginNeedGet",supplier.getBeginNeedGet());
+                    item.put("BeginNeedPay",supplier.getBeginNeedPay());
+                    item.put("AllNeedGet",supplier.getAllNeedGet());
+                    item.put("AllNeedPay",supplier.getAllNeedPay());
                     item.put("isystem", supplier.getIsystem() == (short)0?"是":"否");
                     item.put("description", supplier.getDescription());
                     item.put("enabled", supplier.getEnabled());

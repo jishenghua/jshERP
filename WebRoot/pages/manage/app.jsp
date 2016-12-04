@@ -28,13 +28,13 @@
 				<tr>
 					<td>名称：</td>
 					<td>
-						<input type="text" name="searchName" id="searchName"  style="width:230px;"/>
+						<input type="text" name="searchName" id="searchName"  style="width:100px;"/>
 					</td>
 					<td>&nbsp;</td>
 					<td>&nbsp;</td>
 					<td>种类：</td>
 					<td>
-						<input type="text" name="searchType" id="searchType"  style="width:230px;"/>
+						<input type="text" name="searchType" id="searchType"  style="width:100px;"/>
 					</td>
 					<td>&nbsp;</td>
 					<td>&nbsp;</td>

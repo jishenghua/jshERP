@@ -33,7 +33,6 @@
 	<mapping resource="com/jsh/model/po/Role.hbm.xml" />
 	<mapping resource="com/jsh/model/po/Functions.hbm.xml" />
 	<mapping resource="com/jsh/model/po/UserBusiness.hbm.xml" />
-	<mapping resource="com/jsh/model/po/VisitAccount.hbm.xml" />
 	<mapping resource="com/jsh/model/po/Person.hbm.xml" />
 	<mapping resource="com/jsh/model/po/MaterialCategory.hbm.xml" />
 	<mapping resource="com/jsh/model/po/Material.hbm.xml" />

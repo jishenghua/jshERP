@@ -8,7 +8,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
   	<head>
-    	<title>供应商信息</title>
+    	<title>单位信息</title>
     	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<!-- 指定以IE8的方式来渲染 -->
 		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
@@ -71,7 +71,7 @@
 		</div>
 		
 		<!-- 数据显示table -->
-		<div id = "tablePanel"	class="easyui-panel" style="padding:1px;top:300px;" title="供应商列表" iconCls="icon-list" collapsible="true" closable="false">
+		<div id = "tablePanel"	class="easyui-panel" style="padding:1px;top:300px;" title="单位列表" iconCls="icon-list" collapsible="true" closable="false">
 			<table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 		</div>
 	    <div id="supplierDlg" class="easyui-dialog" style="width:380px;padding:10px 20px"
@@ -100,6 +100,23 @@
 	                <label id="emailLabel">电子邮箱&nbsp;&nbsp;</label>
 	                <input name="email" id="email" class="easyui-validatebox" validType="email" style="width: 230px;height: 20px"/>
 	            </div>
+	            
+	            <div class="fitem" style="padding:5px">
+                    <label id="BeginNeedGetLabel">期初应收</label>
+                    <input name="BeginNeedGet" id="BeginNeedGet" type="text" class="easyui-numberbox" data-options="min:0,precision:2" style="width: 230px;height: 20px"></input>
+                </div>
+                <div class="fitem" style="padding:5px">
+                    <label id="BeginNeedPayLabel">期初应付</label>
+                    <input name="BeginNeedPay" id="BeginNeedPay" type="text" class="easyui-numberbox" data-options="min:0,precision:2" style="width: 230px;height: 20px"></input>
+                </div>
+                <div class="fitem" style="padding:5px">
+                    <label id="AllNeedGetLabel">累计应收</label>
+                    <input name="AllNeedGet" id="AllNeedGet" type="text" class="easyui-numberbox" data-options="min:0,precision:2" style="width: 230px;height: 20px" disabled="true"></input>
+                </div>
+                <div class="fitem" style="padding:5px">
+                    <label id="AllNeedPayLabel">累计应付</label>
+                    <input name="AllNeedPay" id="AllNeedPay" type="text" class="easyui-numberbox" data-options="min:0,precision:2" style="width: 230px;height: 20px" disabled="true"></input>
+                </div>
 	            <div class="fitem" style="padding:5px">
 	                <label id="descriptionLabel">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述&nbsp;&nbsp;</label>
 	                <textarea name="description" id="description" rows="2" cols="2" style="width: 230px;"></textarea>
@@ -154,7 +171,7 @@
 			function initTableData()
 			{
 				$('#tableData').datagrid({
-					//title:'供应商列表',
+					//title:'单位列表',
 					//iconCls:'icon-save',
 					//width:700,
 					height:heightInfo,
@@ -180,18 +197,18 @@
 					pageList: initPageNum,
 					columns:[[
 					  { field: 'id',width:35,align:"center",checkbox:true},
-			          { title: '名称',field: 'supplier',width:200},
-			          { title: '联系人', field: 'contacts',width:100,align:"center"},
-			          { title: '联系电话', field: 'phonenum',width:115,align:"center"},
-			          { title: '电子邮箱',field: 'email',width:180,align:"center"},
-			          //{ title: '是否系统',field: 'isystem',width:70,align:"center"},
-			          { title: '描述',field: 'description',width:100},
-			          { title: '类型',field: 'type',width:100},
-			          { title: '启动',field: 'enabled',width:100},
+			          { title: '名称',field: 'supplier',width:120},
+			          { title: '联系人', field: 'contacts',width:50,align:"center"},
+			          { title: '联系电话', field: 'phonenum',width:60,align:"center"},
+			          { title: '电子邮箱',field: 'email',width:80,align:"center"},
+			          { title: '累计应收',field: 'AllNeedGet',width:70,align:"center"},
+			          { title: '累计应付',field: 'AllNeedPay',width:70,align:"center"},
+			          { title: '类型',field: 'type',width:50},
+			          { title: '启动',field: 'enabled',width:40},
 			          { title: '操作',field: 'op',align:"center",width:130,formatter:function(value,rec)
 			         	{
 							var str = '';
-							var rowInfo = rec.id + 'AaBb' + rec.supplier +'AaBb' + rec.contacts + 'AaBb'+ rec.phonenum + 'AaBb'+ rec.email + 'AaBb' + rec.isystem + 'AaBb' + rec.description+ 'AaBb' + rec.type+ 'AaBb' + rec.enabled;
+							var rowInfo = rec.id + 'AaBb' + rec.supplier +'AaBb' + rec.contacts + 'AaBb'+ rec.phonenum + 'AaBb'+ rec.email + 'AaBb'+ rec.BeginNeedGet + 'AaBb'+ rec.BeginNeedPay + 'AaBb'+ rec.AllNeedGet + 'AaBb'+ rec.AllNeedPay + 'AaBb' + rec.isystem + 'AaBb' + rec.description+ 'AaBb' + rec.type+ 'AaBb' + rec.enabled;
 	       					if(1 == value)
 	       					{
 	       						str += '<img src="<%=path%>/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editSupplier(\'' + rowInfo + '\');"/>&nbsp;<a onclick="editSupplier(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
@@ -278,10 +295,10 @@
 				}
 			}
 			
-			//删除供应商信息
+			//删除单位信息
 			function deleteSupplier(supplierInfo)
 			{
-				$.messager.confirm('删除确认','确定要删除此供应商信息吗？',function(r)
+				$.messager.confirm('删除确认','确定要删除此单位信息吗？',function(r)
 			 	{
                     if (r)
                     {
@@ -302,12 +319,12 @@
 									//加载完以后重新初始化
 									$("#searchBtn").click();
 								else
-									$.messager.alert('删除提示','删除供应商信息失败，请稍后再试！','error');
+									$.messager.alert('删除提示','删除单位信息失败，请稍后再试！','error');
 							},
 							//此处添加错误处理
 				    		error:function()
 				    		{
-				    			$.messager.alert('删除提示','删除供应商信息异常，请稍后再试！','error');
+				    			$.messager.alert('删除提示','删除单位信息异常，请稍后再试！','error');
 								return;
 							}
 						});			
@@ -315,7 +332,7 @@
                 });
 			}
 			
-			//批量删除供应商
+			//批量删除单位
 			function batDeleteSupplier()
 			{
 				var row = $('#tableData').datagrid('getChecked');
@@ -326,7 +343,7 @@
 				}
 				if(row.length > 0)
 				{
-					$.messager.confirm('删除确认','确定要删除选中的' + row.length + '条供应商信息吗？',function(r)
+					$.messager.confirm('删除确认','确定要删除选中的' + row.length + '条单位信息吗？',function(r)
 				 	{
 	                    if (r)
 	                    {
@@ -359,12 +376,12 @@
 										$(":checkbox").attr("checked",false);
 									}
 									else
-										$.messager.alert('删除提示','删除供应商信息失败，请稍后再试！','error');
+										$.messager.alert('删除提示','删除单位信息失败，请稍后再试！','error');
 								},
 								//此处添加错误处理
 					    		error:function()
 					    		{
-					    			$.messager.alert('删除提示','删除供应商信息异常，请稍后再试！','error');
+					    			$.messager.alert('删除提示','删除单位信息异常，请稍后再试！','error');
 									return;
 								}
 							});	
@@ -373,7 +390,7 @@
 				 }
 			}
 			
-			//增加供应商
+			//增加单位
 			var url;
 			var supplierID = 0;
 			//保存编辑前的名称
@@ -381,7 +398,7 @@
 			
 			function addSuppler()
 			{
-				$('#supplierDlg').dialog('open').dialog('setTitle','<img src="<%=path%>/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加供应商');
+				$('#supplierDlg').dialog('open').dialog('setTitle','<img src="<%=path%>/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加单位信息');
 				$(".window-mask").css({ width: webW ,height: webH});
 	            $('#supplierFM').form('clear');
 	            
@@ -396,7 +413,7 @@
 	            url = '<%=path %>/supplier/create.action';
 			}
 			
-			//保存供应商信息
+			//保存单位信息
 			$("#saveSupplier").unbind().bind({
 				click:function()
 				{
@@ -425,15 +442,12 @@
 		                    {
 		                        $.messager.show({
 		                            title: '错误提示',
-		                            msg: '保存供应商信息失败，请稍后重试!'
+		                            msg: '保存单位信息失败，请稍后重试!'
 		                        });
 		                    } 
 		                    else 
 		                    {
 		                        $('#supplierDlg').dialog('close');
-		                        //$('#tableData').datagrid('reload');
-		                        //加载完以后重新初始化
-								//$("#searchBtn").click(); 
 								var opts = $("#tableData").datagrid('options'); 
 								showSupplierDetails(opts.pageNumber,opts.pageSize);   
 		                    }
@@ -442,7 +456,7 @@
 				}
 			});
 			
-			//编辑供应商信息
+			//编辑单位信息
 	        function editSupplier(supplierTotalInfo)
 	        {
 	        	var supplierInfo = supplierTotalInfo.split("AaBb");
@@ -451,13 +465,17 @@
 	            	contacts : supplierInfo[2],
 	            	phonenum : supplierInfo[3],
 	            	email : supplierInfo[4],
-	            	description : supplierInfo[6],
-	            	type : supplierInfo[7],
-	            	enabled : supplierInfo[8],
+	            	BeginNeedGet : supplierInfo[5],
+	            	BeginNeedPay : supplierInfo[6],
+	            	AllNeedGet : supplierInfo[7],
+	            	AllNeedPay : supplierInfo[8],
+	            	description : supplierInfo[10],
+	            	type : supplierInfo[11],
+	            	enabled : supplierInfo[12],
 	            	clientIp:'<%=clientIp %>'
 	            };
 	            orgSupplier = supplierInfo[1];
-                $('#supplierDlg').dialog('open').dialog('setTitle','<img src="<%=path%>/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑供应商信息');
+                $('#supplierDlg').dialog('open').dialog('setTitle','<img src="<%=path%>/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑单位信息');
                 $(".window-mask").css({ width: webW ,height: webH});
                 $('#supplierFM').form('load',row);
                 supplierID = supplierInfo[0];
@@ -466,11 +484,8 @@
                 url = '<%=path %>/supplier/update.action?supplierID=' + supplierInfo[0];
 	        }
 	        
-	        //$("#supplier").unbind().bind({
-	        	//blur:checkSupplierName
-	        //});
 	        
-	        //检查供应商 名称是否存在 ++ 重名无法提示问题需要跟进
+	        //检查单位名称是否存在 ++ 重名无法提示问题需要跟进
 	        function checkSupplierName()
 	        {
 	        	var supplierName = $.trim($("#supplier").val());
@@ -493,16 +508,14 @@
 							flag = tipInfo;
 							if(tipInfo)
 							{
-								$.messager.alert('提示','供应商名称已经存在','info');
-								//alert("供应商名称已经存在");
-								//$("#supplier").val("");
+								$.messager.alert('提示','单位名称已经存在','info');
 								return;
 							}
 						},
 						//此处添加错误处理
 			    		error:function()
 			    		{
-			    			$.messager.alert('提示','检查供应商名称是否存在异常，请稍后再试！','error');
+			    			$.messager.alert('提示','检查单位名称是否存在异常，请稍后再试！','error');
 							return;
 						}
 					});	

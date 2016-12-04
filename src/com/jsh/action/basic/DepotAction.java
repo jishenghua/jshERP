@@ -21,7 +21,10 @@ import com.jsh.model.vo.basic.DepotModel;
 import com.jsh.service.basic.DepotIService;
 import com.jsh.service.basic.UserBusinessIService;
 import com.jsh.util.common.PageUtil;
-
+/**
+ * 仓库
+ * @author ji sheng hua
+ */
 @SuppressWarnings("serial")
 public class DepotAction extends BaseAction<DepotModel>
 {

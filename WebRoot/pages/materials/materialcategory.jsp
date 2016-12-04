@@ -8,7 +8,7 @@
 <!DOCTYPE html>
 <html>
   	<head>
-    	<title>物料类别管理</title>
+    	<title>商品类别管理</title>
         <meta charset="utf-8">
 		<!-- 指定以IE8的方式来渲染 -->
 		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
@@ -44,7 +44,7 @@
 		</div>
 		
 		<!-- 数据显示table -->
-		<div id = "tablePanel"	class="easyui-panel" style="padding:1px;top:300px;" title="物料类别列表" iconCls="icon-list" collapsible="true" closable="false">
+		<div id = "tablePanel"	class="easyui-panel" style="padding:1px;top:300px;" title="商品类别列表" iconCls="icon-list" collapsible="true" closable="false">
 			<table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 		</div>
 		
@@ -116,7 +116,7 @@
 						var msgTip = systemInfo.showModel.msgTip;
 						if(msgTip == "exceptoin")
 						{
-							$.messager.alert('提示','查找物料类别异常,请与管理员联系！','error');
+							$.messager.alert('提示','查找商品类别异常,请与管理员联系！','error');
 							return;
 						}	
 					}
@@ -229,7 +229,7 @@
 			function initTableData()
 			{
 				$('#tableData').datagrid({
-					//title:'物料类别列表',
+					//title:'商品类别列表',
 					//iconCls:'icon-save',
 					//width:700,
 					height:heightInfo,
@@ -341,10 +341,10 @@
 				}
 			}
 			
-			//删除物料类别信息
+			//删除商品类别信息
 			function deleteMaterialCategory(materialCategoryID)
 			{
-				$.messager.confirm('删除确认','确定要删除此物料类别信息吗？',function(r)
+				$.messager.confirm('删除确认','确定要删除此商品类别信息吗？',function(r)
 			 	{
                     if (r)
                     {
@@ -365,12 +365,12 @@
 									$("#searchBtn").click();
 								}
 								else
-									$.messager.alert('删除提示','删除物料类别信息失败，请稍后再试！','error');
+									$.messager.alert('删除提示','删除商品类别信息失败，请稍后再试！','error');
 							},
 							//此处添加错误处理
 				    		error:function()
 				    		{
-				    			$.messager.alert('删除提示','删除物料类别信息异常，请稍后再试！','error');
+				    			$.messager.alert('删除提示','删除商品类别信息异常，请稍后再试！','error');
 								return;
 							}
 						});			
@@ -378,7 +378,7 @@
                 });
 			}
 			
-			//批量删除物料类别
+			//批量删除商品类别
 			function batDeleteMaterialCategory()
 			{
 				var row = $('#tableData').datagrid('getChecked');	
@@ -389,7 +389,7 @@
 				}
 				if(row.length > 0)
 				{
-					$.messager.confirm('删除确认','确定要删除选中的' + row.length + '条物料类别信息吗？',function(r)
+					$.messager.confirm('删除确认','确定要删除选中的' + row.length + '条商品类别信息吗？',function(r)
 				 	{
 	                    if (r)
 	                    {
@@ -423,12 +423,12 @@
 										$(":checkbox").attr("checked",false);
 									}
 									else
-										$.messager.alert('删除提示','删除物料类别信息失败，请稍后再试！','error');
+										$.messager.alert('删除提示','删除商品类别信息失败，请稍后再试！','error');
 								},
 								//此处添加错误处理
 					    		error:function()
 					    		{
-					    			$.messager.alert('删除提示','删除物料类别信息异常，请稍后再试！','error');
+					    			$.messager.alert('删除提示','删除商品类别信息异常，请稍后再试！','error');
 									return;
 								}
 							});	
@@ -447,7 +447,7 @@
 			{
 				$("#clientIp").val('<%=clientIp %>');
 				$('#materialCategoryFM').form('clear');
-				$('#materialCategoryDlg').dialog('open').dialog('setTitle','<img src="<%=path%>/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加物料类别信息');
+				$('#materialCategoryDlg').dialog('open').dialog('setTitle','<img src="<%=path%>/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加商品类别信息');
 				$(".window-mask").css({ width: webW ,height: webH});
 	            $("#Name").val("").focus();
 	            
@@ -497,14 +497,14 @@
 								{
 									$.messager.show({
 			                            title: '错误提示',
-			                            msg: '保存物料类别信息失败，请稍后重试!'
+			                            msg: '保存商品类别信息失败，请稍后重试!'
 			                        });
 								}
 							},
 							//此处添加错误处理
 				    		error:function()
 				    		{
-				    			$.messager.alert('提示','保存物料类别信息异常，请稍后再试！','error');
+				    			$.messager.alert('提示','保存商品类别信息异常，请稍后再试！','error');
 								return;
 							}
 						});	
@@ -523,7 +523,7 @@
 	            $("#Name").val(materialCategoryInfo[3]);
 	            
 	            //orgMaterialCategory = materialCategoryInfo[1];
-                $('#materialCategoryDlg').dialog('open').dialog('setTitle','<img src="<%=path%>/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑物料类别信息');
+                $('#materialCategoryDlg').dialog('open').dialog('setTitle','<img src="<%=path%>/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑商品类别信息');
                 $(".window-mask").css({ width: webW ,height: webH});
                 materialCategoryID = materialCategoryInfo[0];
                 //焦点在名称输入框==定焦在输入文字后面 

@@ -8,7 +8,7 @@
 <!DOCTYPE html>
 <html>
   	<head>
-    	<title>物料管理</title>
+    	<title>商品信息</title>
         <meta charset="utf-8">
 		<!-- 指定以IE8的方式来渲染 -->
 		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
@@ -44,7 +44,7 @@
 		</div>
 		
 		<!-- 数据显示table -->
-		<div id = "tablePanel"	class="easyui-panel" style="padding:1px;top:300px;" title="物料列表" iconCls="icon-list" collapsible="true" closable="false">
+		<div id = "tablePanel"	class="easyui-panel" style="padding:1px;top:300px;" title="商品列表" iconCls="icon-list" collapsible="true" closable="false">
 			<table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 		</div>
 		
@@ -76,6 +76,22 @@
 	            <td>单位</td>
 	            <td style="padding:5px"><input name="Unit" id="Unit" class="easyui-validatebox" data-options="required:true,validType:'length[1,30]'" style="width: 180px;height: 20px"/></td>
 	            </tr>
+	            <tr>
+                <td>零售价</td>
+                <td style="padding:5px"><input name="RetailPrice" id="RetailPrice" class="easyui-validatebox" data-options="required:true,validType:'length[1,30]'" style="width: 180px;height: 20px"/></td>
+                </tr>
+	            <tr>
+                <td>最低售价</td>
+                <td style="padding:5px"><input name="LowPrice" id="LowPrice" class="easyui-validatebox" data-options="required:true,validType:'length[1,30]'" style="width: 180px;height: 20px"/></td>
+                </tr>
+	            <tr>      
+                <td>预设售价一</td>
+                <td style="padding:5px"><input name="PresetPriceOne" id="PresetPriceOne" class="easyui-validatebox" data-options="required:true,validType:'length[1,30]'" style="width: 180px;height: 20px"/></td>
+                </tr>
+	            <tr>  
+                <td>预设售价二</td>
+                <td style="padding:5px"><input name="PresetPriceTwo" id="PresetPriceTwo" class="easyui-validatebox" data-options="required:true,validType:'length[1,30]'" style="width: 180px;height: 20px"/></td>
+                </tr>
 	            <tr>
 	            <td>备注</td>
 	            <td style="padding:5px"><input name="Remark" id="Remark" style="width: 180px;height: 20px"/></td>
@@ -127,7 +143,7 @@
 						var msgTip = systemInfo.showModel.msgTip;
 						if(msgTip == "exceptoin")
 						{
-							$.messager.alert('提示','查找物料异常,请与管理员联系！','error');
+							$.messager.alert('提示','查找商品异常,请与管理员联系！','error');
 							return;
 						}	
 					}
@@ -275,7 +291,7 @@
 			function initTableData()
 			{
 				$('#tableData').datagrid({
-					//title:'物料列表',
+					//title:'商品列表',
 					//iconCls:'icon-save',
 					//width:700,
 					height:heightInfo,
@@ -299,15 +315,19 @@
 					pageList: initPageNum,
 					columns:[[
 					  { field: 'Id',width:35,align:"center",checkbox:true},
-			          { title: '名称',field: 'Name',width:150},
-			          { title: '款号',field: 'Model',width:150},
-    		          { title: '颜色',field: 'Color',width:150},
-			          { title: '单位',field: 'Unit',width:150},
-			          { title: '备注',field: 'Remark',width:150},
-			          { title: '操作',field: 'op',align:"center",width:130,formatter:function(value,rec)
+			          { title: '名称',field: 'Name',width:80},
+			          { title: '款号',field: 'Model',width:80},
+    		          { title: '颜色',field: 'Color',width:40},
+			          { title: '单位',field: 'Unit',width:50},
+			          { title: '零售价',field: 'RetailPrice',width:50},
+			          { title: '最低售价',field: 'LowPrice',width:50},
+			          { title: '预设售价一',field: 'PresetPriceOne',width:80},
+			          { title: '预设售价二',field: 'PresetPriceTwo',width:80},
+			          { title: '备注',field: 'Remark',width:120},
+			          { title: '操作',field: 'op',align:"center",width:120,formatter:function(value,rec)
 			         	{
 							var str = '';
-							var rowInfo = rec.Id + 'AaBb' + rec.Name+ 'AaBb' + rec.Model+ 'AaBb' + rec.Color+ 'AaBb' + rec.Unit+ 'AaBb' + rec.Remark;
+							var rowInfo = rec.Id + 'AaBb' + rec.Name+ 'AaBb' + rec.Model + 'AaBb' + rec.Color + 'AaBb' + rec.Unit + 'AaBb' + rec.RetailPrice + 'AaBb' + rec.LowPrice + 'AaBb' + rec.PresetPriceOne + 'AaBb' + rec.PresetPriceTwo + 'AaBb' + rec.Remark;
         					if(1 == value)
         					{
         						str += '<img src="<%=path%>/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editMaterial(\'' + rowInfo + '\');"/>&nbsp;<a onclick="editMaterial(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
@@ -391,10 +411,10 @@
 				}
 			}
 			
-			//删除物料信息
+			//删除商品信息
 			function deleteMaterial(materialID)
 			{
-				$.messager.confirm('删除确认','确定要删除此物料信息吗？',function(r)
+				$.messager.confirm('删除确认','确定要删除此商品信息吗？',function(r)
 			 	{
                     if (r)
                     {
@@ -415,12 +435,12 @@
 									$("#searchBtn").click();
 								}
 								else
-									$.messager.alert('删除提示','删除物料信息失败，请稍后再试！','error');
+									$.messager.alert('删除提示','删除商品信息失败，请稍后再试！','error');
 							},
 							//此处添加错误处理
 				    		error:function()
 				    		{
-				    			$.messager.alert('删除提示','删除物料信息异常，请稍后再试！','error');
+				    			$.messager.alert('删除提示','删除商品信息异常，请稍后再试！','error');
 								return;
 							}
 						});			
@@ -428,7 +448,7 @@
                 });
 			}
 			
-			//批量删除物料
+			//批量删除商品
 			function batDeleteMaterial()
 			{
 				var row = $('#tableData').datagrid('getChecked');	
@@ -439,7 +459,7 @@
 				}
 				if(row.length > 0)
 				{
-					$.messager.confirm('删除确认','确定要删除选中的' + row.length + '条物料信息吗？',function(r)
+					$.messager.confirm('删除确认','确定要删除选中的' + row.length + '条商品信息吗？',function(r)
 				 	{
 	                    if (r)
 	                    {
@@ -473,12 +493,12 @@
 										$(":checkbox").attr("checked",false);
 									}
 									else
-										$.messager.alert('删除提示','删除物料信息失败，请稍后再试！','error');
+										$.messager.alert('删除提示','删除商品信息失败，请稍后再试！','error');
 								},
 								//此处添加错误处理
 					    		error:function()
 					    		{
-					    			$.messager.alert('删除提示','删除物料信息异常，请稍后再试！','error');
+					    			$.messager.alert('删除提示','删除商品信息异常，请稍后再试！','error');
 									return;
 								}
 							});	
@@ -497,7 +517,7 @@
 			{
 				$("#clientIp").val('<%=clientIp %>');
 				$('#materialFM').form('clear');
-				$('#materialDlg').dialog('open').dialog('setTitle','<img src="<%=path%>/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加物料信息');
+				$('#materialDlg').dialog('open').dialog('setTitle','<img src="<%=path%>/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加商品信息');
 				$(".window-mask").css({ width: webW ,height: webH});
 	            $("#Name").val("").focus();
 	            
@@ -538,6 +558,10 @@
 								Model : $.trim($("#Model").val()),
 								Color : $.trim($("#Color").val()),
 								Unit : $.trim($("#Unit").val()),
+								RetailPrice : $.trim($("#RetailPrice").val()),
+								LowPrice : $.trim($("#LowPrice").val()),
+								PresetPriceOne : $.trim($("#PresetPriceOne").val()),
+								PresetPriceTwo : $.trim($("#PresetPriceTwo").val()),
 								Remark : $.trim($("#Remark").val()),
 								clientIp:'<%=clientIp %>'
 							}),
@@ -554,14 +578,14 @@
 								{
 									$.messager.show({
 			                            title: '错误提示',
-			                            msg: '保存物料信息失败，请稍后重试!'
+			                            msg: '保存商品信息失败，请稍后重试!'
 			                        });
 								}
 							},
 							//此处添加错误处理
 				    		error:function()
 				    		{
-				    			$.messager.alert('提示','保存物料信息异常，请稍后再试！','error');
+				    			$.messager.alert('提示','保存商品信息异常，请稍后再试！','error');
 								return;
 							}
 						});	
@@ -579,10 +603,14 @@
 	            $("#Model").val(materialInfo[2]);
 	            $("#Color").val(materialInfo[3]);
 	            $("#Unit").val(materialInfo[4]);
-	            $("#Remark").val(materialInfo[5]);
+	            $("#RetailPrice").val(materialInfo[5]);
+	            $("#LowPrice").val(materialInfo[6]);
+	            $("#PresetPriceOne").val(materialInfo[7]);
+	            $("#PresetPriceTwo").val(materialInfo[8]);
+	            $("#Remark").val(materialInfo[9]);
 	            
 	            //orgMaterial = materialInfo[1];
-                $('#materialDlg').dialog('open').dialog('setTitle','<img src="<%=path%>/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑物料信息');
+                $('#materialDlg').dialog('open').dialog('setTitle','<img src="<%=path%>/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑商品信息');
                 $(".window-mask").css({ width: webW ,height: webH});
                 materialID = materialInfo[0];
                 //焦点在名称输入框==定焦在输入文字后面 

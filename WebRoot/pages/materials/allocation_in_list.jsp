@@ -27,7 +27,7 @@
 		<div id = "searchPanel"	class="easyui-panel" style="padding:3px;" title="查询窗口" iconCls="icon-search" collapsible="true" closable="false">
 			<table id="searchTable">
 				<tr>
-			    	<td>店面：</td>
+			    	<td>仓库：</td>
 					<td>
 						<select name="searchProjectId" id="searchProjectId"  style="width:100px;"></select>
 					</td>
@@ -80,7 +80,7 @@
                 <td style="padding:5px">
                 <input type="text" name="OperTime" id="OperTime" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="txt Wdate" style="width:120px;"/>
                 </td>
-	            <td>对方店面：</td>
+	            <td>对方仓库：</td>
 	            <td style="padding:5px">
 	            <select name="AllocationProjectId" id="AllocationProjectId" style="width:120px;"></select>
 	            </td>
@@ -129,7 +129,7 @@
                 <td style="padding:5px;width:120px;">
                 <span id="OperTimeShow"></span>
                 </td>
-	            <td>对方店面：</td>
+	            <td>对方仓库：</td>
 	            <td style="padding:5px;width:120px;">
 	            <span id="AllocationProjectIdShow"></span>
 	            </td>
@@ -828,7 +828,7 @@
 				{
 					if($("#searchProjectId").val()=="")
 					{
-						$.messager.alert('查询提示','请选择一个店面！','info');		
+						$.messager.alert('查询提示','请选择一个仓库！','info');		
 					}
 					else
 					{

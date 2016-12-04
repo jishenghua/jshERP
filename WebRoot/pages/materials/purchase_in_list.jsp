@@ -27,25 +27,25 @@
 		<div id = "searchPanel"	class="easyui-panel" style="padding:3px;" title="查询窗口" iconCls="icon-search" collapsible="true" closable="false">
 			<table id="searchTable">
 				<tr>
-			    	<td>店面：</td>
+			    	<td>仓库：</td>
 					<td>
-						<select name="searchProjectId" id="searchProjectId"  style="width:100px;"></select>
+						<select name="searchProjectId" id="searchProjectId"  style="width:80px;"></select>
 					</td>
 					<td>单据号：</td>
 					<td>
-						<input type="text" name="searchNumber" id="searchNumber" style="width:100px;"/>
+						<input type="text" name="searchNumber" id="searchNumber" style="width:60px;"/>
 					</td>
 					<td>入库时间：</td>
 					<td>
-						<input type="text" name="searchBeginTime" id="searchBeginTime" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="txt Wdate" style="width:100px;"/>
+						<input type="text" name="searchBeginTime" id="searchBeginTime" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="txt Wdate" style="width:80px;"/>
 					</td>
 					<td>-</td>
 					<td>
-						<input type="text" name="searchEndTime" id="searchEndTime" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="txt Wdate" style="width:100px;"/>
+						<input type="text" name="searchEndTime" id="searchEndTime" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="txt Wdate" style="width:80px;"/>
 					</td>
 					<td>状态：</td>
 					<td>
-						<select name="searchState" id="searchState"  style="width:100px;">
+						<select name="searchState" id="searchState"  style="width:60px;">
 						<option value="">全部</option>
 						<option value="草稿">草稿</option>
 						<option value="待审核">待审核</option>
@@ -408,8 +408,8 @@
 			          { title: '入库时间 ',field: 'OperTime',width:100},
 			          { title: '创建时间',field: 'CreateTime',width:100},
 			          { title: '操作员',field: 'OperPersonName',width:100},
-			          { title: '备注',field: 'Remark',width:200},
-			          { title: '状态',field: 'State',width:100},
+			          { title: '备注',field: 'Remark',width:100},
+			          { title: '状态',field: 'State',width:50},
 			          { title: '操作',field: 'op',align:"center",width:180,formatter:function(value,rec)
 			         	{
 							var str = '';
@@ -881,7 +881,7 @@
 				{
 					if($("#searchProjectId").val()=="")
 					{
-						$.messager.alert('查询提示','请选择一个店面！','info');		
+						$.messager.alert('查询提示','请选择一个仓库！','info');		
 					}
 					else
 					{

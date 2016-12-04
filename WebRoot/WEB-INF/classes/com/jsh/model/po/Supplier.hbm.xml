@@ -32,6 +32,26 @@
                 <comment>电子邮箱</comment>
             </column>
         </property>
+        <property generated="never" lazy="false" name="BeginNeedGet" type="java.lang.Double">
+            <column name="BeginNeedGet" precision="22" scale="3">
+                <comment>期初应收</comment>
+            </column>
+        </property>
+        <property generated="never" lazy="false" name="BeginNeedPay" type="java.lang.Double">
+            <column name="BeginNeedPay" precision="22" scale="3">
+                <comment>期初应付</comment>
+            </column>
+        </property>
+        <property generated="never" lazy="false" name="AllNeedGet" type="java.lang.Double">
+            <column name="AllNeedGet" precision="22" scale="3">
+                <comment>累计应收</comment>
+            </column>
+        </property>
+        <property generated="never" lazy="false" name="AllNeedPay" type="java.lang.Double">
+            <column name="AllNeedPay" precision="22" scale="3">
+                <comment>累计应付</comment>
+            </column>
+        </property>
         <property name="description" type="java.lang.String">
             <column name="description" length="500" />
         </property>

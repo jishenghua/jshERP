@@ -26,7 +26,7 @@
 		<div id = "searchPanel"	class="easyui-panel" style="padding:10px;" title="查询窗口" iconCls="icon-search" collapsible="true" closable="false">
 			<table id="searchTable">
 				<tr>
-			    	<td>店面：</td>
+			    	<td>仓库：</td>
 					<td>
 						<select name="searchProjectId" id="searchProjectId"  style="width:230px;"></select>
 					</td>
@@ -60,7 +60,7 @@
 	        <form id="personFM" method="post"  novalidate>
 	            <table>
 	            <tr>
-	            <td>店面</td>
+	            <td>仓库</td>
 	            <td style="padding:5px">
                 <select name="ProjectId" id="ProjectId" style="width:230px;height: 20px"></select>
                 </td>
@@ -184,7 +184,7 @@
 					pageList: initPageNum,
 					columns:[[
 					  { field: 'Id',width:35,align:"center",checkbox:true},
-			          { title: '店面',field: 'ProjectName',width:180},
+			          { title: '仓库',field: 'ProjectName',width:180},
 			          { title: '类型',field: 'Type',width:180},
 			          { title: '经手人',field: 'Name',width:180},
 			          { title: '操作',field: 'op',align:"center",width:130,formatter:function(value,rec)

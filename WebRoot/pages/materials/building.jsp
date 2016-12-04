@@ -71,7 +71,7 @@
 	    </div>
 	    
 		<script type="text/javascript">
-			var depotID = getUrlParam('ProjectId');  //获取传值ProjectId（店面ProjectId）
+			var depotID = getUrlParam('ProjectId');  //获取传值ProjectId（仓库ProjectId）
 			//初始化界面
 			$(function()
 			{

@@ -29,12 +29,12 @@ public class MaterialAction extends BaseAction<MaterialModel>
     private MaterialModel model = new MaterialModel();
     
 	/**
-	 * 增加物料
+	 * 增加商品
 	 * @return
 	 */
 	public void create()
 	{
-	    Log.infoFileSync("==================开始调用增加物料信息方法create()===================");
+	    Log.infoFileSync("==================开始调用增加商品信息方法create()===================");
 	    Boolean flag = false;
 		try
 		{
@@ -45,6 +45,10 @@ public class MaterialAction extends BaseAction<MaterialModel>
 			material.setModel(model.getModel());
 			material.setColor(model.getColor());
 			material.setUnit(model.getUnit());
+            material.setRetailPrice(model.getRetailPrice());
+            material.setLowPrice(model.getLowPrice());
+            material.setPresetPriceOne(model.getPresetPriceOne());
+            material.setPresetPriceTwo(model.getPresetPriceTwo());
 			material.setRemark(model.getRemark());
 			materialService.create(material);
 			
@@ -56,7 +60,7 @@ public class MaterialAction extends BaseAction<MaterialModel>
 		}
 		catch (DataAccessException e)
 		{
-			Log.errorFileSync(">>>>>>>>>>>>>>>>>>>增加物料信息异常", e);
+			Log.errorFileSync(">>>>>>>>>>>>>>>>>>>增加商品信息异常", e);
 			flag = false;
 			tipMsg = "失败";
             tipType = 1;
@@ -69,23 +73,23 @@ public class MaterialAction extends BaseAction<MaterialModel>
             } 
 		    catch (IOException e) 
 		    {
-                Log.errorFileSync(">>>>>>>>>>>>增加物料信息回写客户端结果异常", e);
+                Log.errorFileSync(">>>>>>>>>>>>增加商品信息回写客户端结果异常", e);
             }
 		}
 		
-		logService.create(new Logdetails(getUser(), "增加物料", model.getClientIp(),
+		logService.create(new Logdetails(getUser(), "增加商品", model.getClientIp(),
                 new Timestamp(System.currentTimeMillis())
-        , tipType, "增加物料名称为  "+ model.getName() + " " + tipMsg + "！", "增加物料" + tipMsg));
-		Log.infoFileSync("==================结束调用增加物料方法create()===================");
+        , tipType, "增加商品名称为  "+ model.getName() + " " + tipMsg + "！", "增加商品" + tipMsg));
+		Log.infoFileSync("==================结束调用增加商品方法create()===================");
 	}
 	
 	/**
-	 * 删除物料
+	 * 删除商品
 	 * @return
 	 */
 	public String delete()
 	{
-	    Log.infoFileSync("====================开始调用删除物料信息方法delete()================");
+	    Log.infoFileSync("====================开始调用删除商品信息方法delete()================");
 	    try 
 	    {
 	    	materialService.delete(model.getMaterialID());
@@ -94,20 +98,20 @@ public class MaterialAction extends BaseAction<MaterialModel>
         } 
 	    catch (DataAccessException e) 
 	    {
-	        Log.errorFileSync(">>>>>>>>>>>删除ID为 " + model.getMaterialID() + "  的物料异常", e);
+	        Log.errorFileSync(">>>>>>>>>>>删除ID为 " + model.getMaterialID() + "  的商品异常", e);
 	        tipMsg = "失败";
             tipType = 1;
         }
 	    model.getShowModel().setMsgTip(tipMsg);
-	    logService.create(new Logdetails(getUser(), "删除物料", model.getClientIp(),
+	    logService.create(new Logdetails(getUser(), "删除商品", model.getClientIp(),
 	            new Timestamp(System.currentTimeMillis())
-	    , tipType, "删除物料ID为  "+ model.getMaterialID() + " " + tipMsg + "！", "删除物料" + tipMsg));
-	    Log.infoFileSync("====================结束调用删除物料信息方法delete()================");
+	    , tipType, "删除商品ID为  "+ model.getMaterialID() + " " + tipMsg + "！", "删除商品" + tipMsg));
+	    Log.infoFileSync("====================结束调用删除商品信息方法delete()================");
 	    return SUCCESS;
 	}
 	
 	/**
-	 * 更新物料
+	 * 更新商品
 	 * @return
 	 */
 	public void update()
@@ -122,6 +126,10 @@ public class MaterialAction extends BaseAction<MaterialModel>
 			material.setModel(model.getModel());
 			material.setColor(model.getColor());
 			material.setUnit(model.getUnit());
+            material.setRetailPrice(model.getRetailPrice());
+            material.setLowPrice(model.getLowPrice());
+            material.setPresetPriceOne(model.getPresetPriceOne());
+            material.setPresetPriceTwo(model.getPresetPriceTwo());
 			material.setRemark(model.getRemark());
 			material.setName(model.getName());
         	materialService.update(material);
@@ -132,7 +140,7 @@ public class MaterialAction extends BaseAction<MaterialModel>
         } 
         catch (DataAccessException e) 
         {
-            Log.errorFileSync(">>>>>>>>>>>>>修改物料ID为 ： " + model.getMaterialID() + "信息失败", e);
+            Log.errorFileSync(">>>>>>>>>>>>>修改商品ID为 ： " + model.getMaterialID() + "信息失败", e);
             flag = false;
             tipMsg = "失败";
             tipType = 1;
@@ -145,16 +153,16 @@ public class MaterialAction extends BaseAction<MaterialModel>
             } 
             catch (IOException e) 
             {
-                Log.errorFileSync(">>>>>>>>>>>>修改物料回写客户端结果异常", e);
+                Log.errorFileSync(">>>>>>>>>>>>修改商品回写客户端结果异常", e);
             }
         }
-        logService.create(new Logdetails(getUser(), "更新物料", model.getClientIp(),
+        logService.create(new Logdetails(getUser(), "更新商品", model.getClientIp(),
                 new Timestamp(System.currentTimeMillis())
-        , tipType, "更新物料ID为  "+ model.getMaterialID() + " " + tipMsg + "！", "更新物料" + tipMsg));
+        , tipType, "更新商品ID为  "+ model.getMaterialID() + " " + tipMsg + "！", "更新商品" + tipMsg));
 	}
 	
 	/**
-	 * 批量删除指定ID物料
+	 * 批量删除指定ID商品
 	 * @return
 	 */
 	public String batchDelete()
@@ -169,19 +177,19 @@ public class MaterialAction extends BaseAction<MaterialModel>
         } 
 	    catch (DataAccessException e) 
 	    {
-	        Log.errorFileSync(">>>>>>>>>>>批量删除物料ID为：" + model.getMaterialIDs() + "信息异常", e);
+	        Log.errorFileSync(">>>>>>>>>>>批量删除商品ID为：" + model.getMaterialIDs() + "信息异常", e);
 	        tipMsg = "失败";
             tipType = 1;
         }
 	    
-	    logService.create(new Logdetails(getUser(), "批量删除物料", model.getClientIp(),
+	    logService.create(new Logdetails(getUser(), "批量删除商品", model.getClientIp(),
                 new Timestamp(System.currentTimeMillis())
-        , tipType, "批量删除物料ID为  "+ model.getMaterialIDs() + " " + tipMsg + "！", "批量删除物料" + tipMsg));
+        , tipType, "批量删除商品ID为  "+ model.getMaterialIDs() + " " + tipMsg + "！", "批量删除商品" + tipMsg));
 	    return SUCCESS;
 	}
 	
 	/**
-	 * 查找物料信息
+	 * 查找商品信息
 	 * @return
 	 */
     public void findBy()
@@ -203,10 +211,6 @@ public class MaterialAction extends BaseAction<MaterialModel>
             materialService.find(pageUtil);
             List<Material> dataList = pageUtil.getPageList();
             
-            //开始拼接json数据
-//            {"total":28,"rows":[
-//                {"productid":"AV-CB-01","attr1":"Adult Male","itemid":"EST-18"}
-//            ]}
             JSONObject outer = new JSONObject();
             outer.put("total", pageUtil.getTotalCount());
             //存放数据json数组
@@ -221,6 +225,10 @@ public class MaterialAction extends BaseAction<MaterialModel>
                     item.put("Model", material.getModel());
                     item.put("Color", material.getColor());
                     item.put("Unit", material.getUnit());
+                    item.put("RetailPrice", material.getRetailPrice());
+                    item.put("LowPrice", material.getLowPrice());
+                    item.put("PresetPriceOne", material.getPresetPriceOne());
+                    item.put("PresetPriceTwo", material.getPresetPriceTwo());
                     item.put("Remark", material.getRemark());
                     item.put("op", 1);
                     dataArray.add(item);
@@ -232,16 +240,16 @@ public class MaterialAction extends BaseAction<MaterialModel>
         } 
 	    catch (DataAccessException e) 
 	    {
-	        Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找物料信息异常", e);
+	        Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找商品信息异常", e);
         } 
 	    catch (IOException e) 
 	    {
-            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询物料信息结果异常", e);
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询商品信息结果异常", e);
         }
 	}
     
 	/**
-	 * 查找物料信息-下拉框
+	 * 查找商品信息-下拉框
 	 * @return
 	 */
     public void findBySelect()
@@ -262,7 +270,7 @@ public class MaterialAction extends BaseAction<MaterialModel>
                 {
                     JSONObject item = new JSONObject();
                     item.put("Id", material.getId());
-                    //供应商名称
+                    //名称
                     item.put("MaterialName", ((material.getModel().equals(""))?"":""+material.getModel()) +" "+ material.getName() + ((material.getColor() == null)?"":"("+material.getColor() + ")"));
                     dataArray.add(item);
                 }
@@ -281,7 +289,7 @@ public class MaterialAction extends BaseAction<MaterialModel>
 	}
     
 	/**
-	 * 查找物料信息-统计排序
+	 * 查找商品信息-统计排序
 	 * @return
 	 */
     public void findByOrder()

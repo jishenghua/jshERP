@@ -31,14 +31,13 @@
 				<tr>
 					<td>用户名称：</td>
 					<td>
-						<input type="text" name="searchUsername" id="searchUsername"  style="width:190px;"/>
-					</td>
-				
+						<input type="text" name="searchUsername" id="searchUsername"  style="width:100px;"/>
+					</td>				
 					<td>&nbsp;</td>
 					<td>&nbsp;</td>
 					<td>登录名称：</td>
 					<td>
-						<input type="text" name="searchLoginame" id="searchLoginame"  style="width:190px;"/>
+						<input type="text" name="searchLoginame" id="searchLoginame"  style="width:100px;"/>
 					</td>
 					<td>&nbsp;</td>
 					<td>&nbsp;</td>

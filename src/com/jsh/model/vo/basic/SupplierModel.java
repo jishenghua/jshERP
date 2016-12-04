@@ -31,7 +31,27 @@ public class SupplierModel implements Serializable
 	/**
 	 * 电子邮箱
 	 */
-	private String email = "";
+	private String email = "";    
+    
+    /**
+     * 期初应收
+	 */
+    private Double BeginNeedGet;
+    
+    /**
+     * 期初应付
+	 */
+    private Double BeginNeedPay;
+     
+    /**
+     * 累计应收
+	 */
+    private Double AllNeedGet;
+     
+    /**
+     * 累计应付
+	 */    
+    private Double AllNeedPay;
 	
 	/**
 	 * 描述信息
@@ -115,6 +135,46 @@ public class SupplierModel implements Serializable
 	public void setEmail(String email) {
 		this.email = email;
 	}
+    
+    public void setBeginNeedGet(Double beginNeedGet)
+    {
+        BeginNeedGet = beginNeedGet;
+    }
+
+    public Double getBeginNeedGet()
+    {
+        return BeginNeedGet;
+    }
+
+    public void setBeginNeedPay(Double beginNeedPay)
+    {
+        BeginNeedPay = beginNeedPay;
+    }
+
+    public Double getBeginNeedPay()
+    {
+        return BeginNeedPay;
+    }
+
+    public void setAllNeedGet(Double allNeedGet)
+    {
+        AllNeedGet = allNeedGet;
+    }
+
+    public Double getAllNeedGet()
+    {
+        return AllNeedGet;
+    }
+
+    public void setAllNeedPay(Double allNeedPay)
+    {
+        AllNeedPay = allNeedPay;
+    }
+
+    public Double getAllNeedPay()
+    {
+        return AllNeedPay;
+    }    
 
 	public String getDescription() {
 		return description;

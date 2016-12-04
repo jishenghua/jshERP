@@ -26,7 +26,27 @@ public class MaterialModel implements Serializable
     /**
      * 单位
      */
-    private String Unit = "";
+    private String Unit = "";    
+        
+    /**
+     * 零售价
+     */
+    private Double RetailPrice;
+    
+    /**
+     * 最低售价
+     */
+    private Double LowPrice;
+     
+    /**
+     * 预设售价一
+     */
+    private Double PresetPriceOne;
+     
+    /**
+     * 预设售价二
+     */ 
+    private Double PresetPriceTwo;
     
     /**
      * 备注
@@ -107,6 +127,46 @@ public class MaterialModel implements Serializable
 	public void setUnit(String unit) {
 		Unit = unit;
 	}
+    
+    public void setRetailPrice(Double retailPrice)
+    {
+        RetailPrice = retailPrice;
+    }
+
+    public Double getRetailPrice()
+    {
+        return RetailPrice;
+    }
+
+    public void setLowPrice(Double lowPrice)
+    {
+        LowPrice = lowPrice;
+    }
+
+    public Double getLowPrice()
+    {
+        return LowPrice;
+    }
+
+    public void setPresetPriceOne(Double presetPriceOne)
+    {
+        PresetPriceOne = presetPriceOne;
+    }
+
+    public Double getPresetPriceOne()
+    {
+        return PresetPriceOne;
+    }
+
+    public void setPresetPriceTwo(Double presetPriceTwo)
+    {
+        PresetPriceTwo = presetPriceTwo;
+    }
+
+    public Double getPresetPriceTwo()
+    {
+        return PresetPriceTwo;
+    }
 
 	public String getRemark() {
 		return Remark;

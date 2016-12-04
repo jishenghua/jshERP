@@ -10,7 +10,10 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import com.jsh.util.common.PageUtil;
 import com.jsh.util.common.SearchConditionUtil;
-
+/**
+ * 基础dao
+ * @author ji_sheng_hua
+ */
 public class BaseDAO<T> extends HibernateDaoSupport implements BaseIDAO<T>
 {
 	protected Class<T> entityClass;

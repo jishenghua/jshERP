@@ -27,7 +27,7 @@
 		<div id = "searchPanel"	class="easyui-panel" style="padding:3px;" title="查询窗口" iconCls="icon-search" collapsible="true" closable="false">
 			<table id="searchTable">
 				<tr>
-			    	<td>店面：</td>
+			    	<td>仓库：</td>
 					<td>
 						<select name="searchProjectId" id="searchProjectId"  style="width:100px;"></select>
 					</td>
@@ -869,7 +869,7 @@
 				{
 					if($("#searchProjectId").val()=="")
 					{
-						$.messager.alert('查询提示','请选择一个店面！','info');		
+						$.messager.alert('查询提示','请选择一个仓库！','info');		
 					}
 					else
 					{

@@ -44,19 +44,19 @@ public class MaterialCategoryAction extends BaseAction<MaterialCategoryModel>
         }
         catch (Exception e)
         {
-            Log.errorFileSync(">>>>>>>>>>>>>查找物料类别信息异常", e);
+            Log.errorFileSync(">>>>>>>>>>>>>查找商品类别信息异常", e);
             model.getShowModel().setMsgTip("exceptoin");
         }
         return SUCCESS;
     }
     
 	/**
-	 * 增加物料类别
+	 * 增加商品类别
 	 * @return
 	 */
 	public void create()
 	{
-	    Log.infoFileSync("==================开始调用增加物料类别信息方法create()===================");
+	    Log.infoFileSync("==================开始调用增加商品类别信息方法create()===================");
 	    Boolean flag = false;
 		try
 		{
@@ -75,7 +75,7 @@ public class MaterialCategoryAction extends BaseAction<MaterialCategoryModel>
 		}
 		catch (DataAccessException e)
 		{
-			Log.errorFileSync(">>>>>>>>>>>>>>>>>>>增加物料类别信息异常", e);
+			Log.errorFileSync(">>>>>>>>>>>>>>>>>>>增加商品类别信息异常", e);
 			flag = false;
 			tipMsg = "失败";
             tipType = 1;
@@ -88,23 +88,23 @@ public class MaterialCategoryAction extends BaseAction<MaterialCategoryModel>
             } 
 		    catch (IOException e) 
 		    {
-                Log.errorFileSync(">>>>>>>>>>>>增加物料类别信息回写客户端结果异常", e);
+                Log.errorFileSync(">>>>>>>>>>>>增加商品类别信息回写客户端结果异常", e);
             }
 		}
 		
-		logService.create(new Logdetails(getUser(), "增加物料类别", model.getClientIp(),
+		logService.create(new Logdetails(getUser(), "增加商品类别", model.getClientIp(),
                 new Timestamp(System.currentTimeMillis())
-        , tipType, "增加物料类别名称为  "+ model.getName() + " " + tipMsg + "！", "增加物料类别" + tipMsg));
-		Log.infoFileSync("==================结束调用增加物料类别方法create()===================");
+        , tipType, "增加商品类别名称为  "+ model.getName() + " " + tipMsg + "！", "增加商品类别" + tipMsg));
+		Log.infoFileSync("==================结束调用增加商品类别方法create()===================");
 	}
 	
 	/**
-	 * 删除物料类别
+	 * 删除商品类别
 	 * @return
 	 */
 	public String delete()
 	{
-	    Log.infoFileSync("====================开始调用删除物料类别信息方法delete()================");
+	    Log.infoFileSync("====================开始调用删除商品类别信息方法delete()================");
 	    try 
 	    {
 	    	materialCategoryService.delete(model.getMaterialCategoryID());
@@ -113,20 +113,20 @@ public class MaterialCategoryAction extends BaseAction<MaterialCategoryModel>
         } 
 	    catch (DataAccessException e) 
 	    {
-	        Log.errorFileSync(">>>>>>>>>>>删除ID为 " + model.getMaterialCategoryID() + "  的物料类别异常", e);
+	        Log.errorFileSync(">>>>>>>>>>>删除ID为 " + model.getMaterialCategoryID() + "  的商品类别异常", e);
 	        tipMsg = "失败";
             tipType = 1;
         }
 	    model.getShowModel().setMsgTip(tipMsg);
-	    logService.create(new Logdetails(getUser(), "删除物料类别", model.getClientIp(),
+	    logService.create(new Logdetails(getUser(), "删除商品类别", model.getClientIp(),
 	            new Timestamp(System.currentTimeMillis())
-	    , tipType, "删除物料类别ID为  "+ model.getMaterialCategoryID() + " " + tipMsg + "！", "删除物料类别" + tipMsg));
-	    Log.infoFileSync("====================结束调用删除物料类别信息方法delete()================");
+	    , tipType, "删除商品类别ID为  "+ model.getMaterialCategoryID() + " " + tipMsg + "！", "删除商品类别" + tipMsg));
+	    Log.infoFileSync("====================结束调用删除商品类别信息方法delete()================");
 	    return SUCCESS;
 	}
 	
 	/**
-	 * 更新物料类别
+	 * 更新商品类别
 	 * @return
 	 */
 	public void update()
@@ -147,7 +147,7 @@ public class MaterialCategoryAction extends BaseAction<MaterialCategoryModel>
         } 
         catch (DataAccessException e) 
         {
-            Log.errorFileSync(">>>>>>>>>>>>>修改物料类别ID为 ： " + model.getMaterialCategoryID() + "信息失败", e);
+            Log.errorFileSync(">>>>>>>>>>>>>修改商品类别ID为 ： " + model.getMaterialCategoryID() + "信息失败", e);
             flag = false;
             tipMsg = "失败";
             tipType = 1;
@@ -160,16 +160,16 @@ public class MaterialCategoryAction extends BaseAction<MaterialCategoryModel>
             } 
             catch (IOException e) 
             {
-                Log.errorFileSync(">>>>>>>>>>>>修改物料类别回写客户端结果异常", e);
+                Log.errorFileSync(">>>>>>>>>>>>修改商品类别回写客户端结果异常", e);
             }
         }
-        logService.create(new Logdetails(getUser(), "更新物料类别", model.getClientIp(),
+        logService.create(new Logdetails(getUser(), "更新商品类别", model.getClientIp(),
                 new Timestamp(System.currentTimeMillis())
-        , tipType, "更新物料类别ID为  "+ model.getMaterialCategoryID() + " " + tipMsg + "！", "更新物料类别" + tipMsg));
+        , tipType, "更新商品类别ID为  "+ model.getMaterialCategoryID() + " " + tipMsg + "！", "更新商品类别" + tipMsg));
 	}
 	
 	/**
-	 * 批量删除指定ID物料类别
+	 * 批量删除指定ID商品类别
 	 * @return
 	 */
 	public String batchDelete()
@@ -184,19 +184,19 @@ public class MaterialCategoryAction extends BaseAction<MaterialCategoryModel>
         } 
 	    catch (DataAccessException e) 
 	    {
-	        Log.errorFileSync(">>>>>>>>>>>批量删除物料类别ID为：" + model.getMaterialCategoryIDs() + "信息异常", e);
+	        Log.errorFileSync(">>>>>>>>>>>批量删除商品类别ID为：" + model.getMaterialCategoryIDs() + "信息异常", e);
 	        tipMsg = "失败";
             tipType = 1;
         }
 	    
-	    logService.create(new Logdetails(getUser(), "批量删除物料类别", model.getClientIp(),
+	    logService.create(new Logdetails(getUser(), "批量删除商品类别", model.getClientIp(),
                 new Timestamp(System.currentTimeMillis())
-        , tipType, "批量删除物料类别ID为  "+ model.getMaterialCategoryIDs() + " " + tipMsg + "！", "批量删除物料类别" + tipMsg));
+        , tipType, "批量删除商品类别ID为  "+ model.getMaterialCategoryIDs() + " " + tipMsg + "！", "批量删除商品类别" + tipMsg));
 	    return SUCCESS;
 	}
 	
 	/**
-	 * 查找物料类别信息
+	 * 查找商品类别信息
 	 * @return
 	 */
     public void findBy()
@@ -238,11 +238,11 @@ public class MaterialCategoryAction extends BaseAction<MaterialCategoryModel>
         } 
 	    catch (DataAccessException e) 
 	    {
-	        Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找物料类别信息异常", e);
+	        Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找商品类别信息异常", e);
         } 
 	    catch (IOException e) 
 	    {
-            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询物料类别信息结果异常", e);
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询商品类别信息结果异常", e);
         }
 	}
     
