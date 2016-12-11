@@ -1,10 +1,10 @@
 package com.jsh.dao.materials;
 
 import com.jsh.base.BaseIDAO;
-import com.jsh.exception.JshException;
+import com.jsh.util.JshException;
 import com.jsh.model.po.DepotHead;
 import com.jsh.model.po.UserBusiness;
-import com.jsh.util.common.PageUtil;
+import com.jsh.util.PageUtil;
 
 public interface DepotHeadIDAO extends BaseIDAO<DepotHead>
 {

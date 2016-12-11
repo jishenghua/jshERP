@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.jsh.model.po.AccountHead" table="jsh_accounthead">
+        <id name="Id" type="java.lang.Long">
+            <column name="Id"/>
+            <generator class="native"/>
+        </id>
+        <property generated="never" lazy="false" name="Type" type="java.lang.String">
+ 			<column length="50" name="Type">
+		    	<comment>类型(支出/收入/收款/付款/转账)</comment>
+		    </column>
+  		</property>
+        <many-to-one name="OrganId" class="com.jsh.model.po.Supplier" lazy="false">
+            <column name="OrganId">
+                <comment>单位Id(收款/付款单位)</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="HandsPersonId" class="com.jsh.model.po.Person" lazy="false">
+            <column name="HandsPersonId">
+                <comment>经手人Id</comment>
+            </column>
+        </many-to-one>
+        <property generated="never" lazy="false" name="ChangeAmount" type="java.lang.Double">
+            <column name="ChangeAmount" precision="22" scale="3">
+                <comment>变动金额(优惠/收款/付款/实付)</comment>
+            </column>
+        </property>
+        <many-to-one name="AccountId" class="com.jsh.model.po.Account" lazy="false">
+            <column name="AccountId">
+                <comment>账户(收款/付款)</comment>
+            </column>
+        </many-to-one>
+        <property generated="never" lazy="false" name="BillNo" type="java.lang.String">
+            <column length="50" name="BillNo">
+                <comment>单据编号</comment>
+            </column>
+        </property>
+        <property name="BillTime" type="java.sql.Timestamp">
+            <column length="19" name="BillTime">
+                <comment>单据日期</comment>
+            </column>
+        </property>
+        <property generated="never" lazy="false" name="Remark" type="java.lang.String">
+            <column length="100" name="Remark">
+                <comment>备注</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

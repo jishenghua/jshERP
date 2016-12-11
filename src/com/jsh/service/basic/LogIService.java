@@ -1,7 +1,7 @@
 package com.jsh.service.basic;
 
 import com.jsh.base.BaseIService;
-import com.jsh.exception.JshException;
+import com.jsh.util.JshException;
 import com.jsh.model.po.Logdetails;
 
 public interface LogIService extends BaseIService<Logdetails>

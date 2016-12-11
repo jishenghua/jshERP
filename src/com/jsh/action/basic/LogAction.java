@@ -5,20 +5,21 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-
 import org.springframework.dao.DataAccessException;
-
 import com.jsh.base.BaseAction;
 import com.jsh.base.Log;
 import com.jsh.model.po.Logdetails;
 import com.jsh.model.vo.basic.LogModel;
 import com.jsh.service.basic.UserIService;
-import com.jsh.util.common.PageUtil;
-import com.jsh.util.common.Tools;
+import com.jsh.util.PageUtil;
+import com.jsh.util.Tools;
 
+/*
+ *日志管理
+ * @author jishenghua  qq:7-5-2-7-1-8-9-2-0
+*/
 @SuppressWarnings("serial")
 public class LogAction extends BaseAction<LogModel>
 {

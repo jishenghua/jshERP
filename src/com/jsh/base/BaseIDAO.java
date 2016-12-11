@@ -6,11 +6,11 @@ import java.util.Map;
 
 import org.springframework.dao.DataAccessException;
 
-import com.jsh.util.common.PageUtil;
+import com.jsh.util.PageUtil;
 
 /**
  * 常用增删改查操作
- * @author ji-sheng-hua 
+ * @author ji-sheng-hua qq752718920
  * @param <T>
  */
 public interface BaseIDAO<T>

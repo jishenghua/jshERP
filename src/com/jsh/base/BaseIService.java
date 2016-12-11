@@ -4,8 +4,12 @@ import java.io.Serializable;
 
 import org.springframework.dao.DataAccessException;
 
-import com.jsh.util.common.PageUtil;
-
+import com.jsh.util.PageUtil;
+/**
+ * 服务层底层接口
+ * @author ji-sheng-hua qq752718920
+ * @param <T>
+ */
 public interface BaseIService<T>
 {
 	/**

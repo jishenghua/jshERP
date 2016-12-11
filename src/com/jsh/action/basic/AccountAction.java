@@ -5,22 +5,19 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-
 import org.springframework.dao.DataAccessException;
-
 import com.jsh.base.BaseAction;
 import com.jsh.base.Log;
 import com.jsh.model.po.Logdetails;
 import com.jsh.model.po.Account;
 import com.jsh.model.vo.basic.AccountModel;
 import com.jsh.service.basic.AccountIService;
-import com.jsh.util.common.PageUtil;
+import com.jsh.util.PageUtil;
 /**
  * 结算账户
- * @author ji sheng hua
+ * @author ji sheng hua qq752718920
  */
 @SuppressWarnings("serial")
 public class AccountAction extends BaseAction<AccountModel>
@@ -28,6 +25,28 @@ public class AccountAction extends BaseAction<AccountModel>
     private AccountIService accountService;
     private AccountModel model = new AccountModel();
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public String getAccount()
+    {
+        Map<String,List> mapData = model.getShowModel().getMap();
+        PageUtil pageUtil = new  PageUtil();
+        pageUtil.setPageSize(0);
+        pageUtil.setCurPage(0);
+        try
+        {
+            Map<String,Object> condition = pageUtil.getAdvSearch();
+            condition.put("Id_s_order", "asc");
+            accountService.find(pageUtil);
+            mapData.put("accountList", pageUtil.getPageList());
+        }
+        catch (Exception e)
+        {
+            Log.errorFileSync(">>>>>>>>>>>>>查找账户信息异常", e);
+            model.getShowModel().setMsgTip("exception");
+        }
+        return SUCCESS;
+    }
+	
     /**
      * 增加结算账户
      * @return

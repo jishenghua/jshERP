@@ -2,10 +2,10 @@ package com.jsh.service.materials;
 
 import com.jsh.base.BaseService;
 import com.jsh.dao.materials.DepotHeadIDAO;
-import com.jsh.exception.JshException;
+import com.jsh.util.JshException;
 import com.jsh.model.po.DepotHead;
 import com.jsh.model.po.UserBusiness;
-import com.jsh.util.common.PageUtil;
+import com.jsh.util.PageUtil;
 
 public class DepotHeadService extends BaseService<DepotHead> implements DepotHeadIService
 {

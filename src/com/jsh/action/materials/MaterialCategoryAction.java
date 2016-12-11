@@ -5,20 +5,20 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-
 import org.springframework.dao.DataAccessException;
-
 import com.jsh.base.BaseAction;
 import com.jsh.base.Log;
 import com.jsh.model.po.MaterialCategory;
 import com.jsh.model.po.Logdetails;
 import com.jsh.model.vo.materials.MaterialCategoryModel;
 import com.jsh.service.materials.MaterialCategoryIService;
-import com.jsh.util.common.PageUtil;
-
+import com.jsh.util.PageUtil;
+/*
+ * 商品类型管理
+ * @author jishenghua  qq:752718920
+*/
 @SuppressWarnings("serial")
 public class MaterialCategoryAction extends BaseAction<MaterialCategoryModel>
 {

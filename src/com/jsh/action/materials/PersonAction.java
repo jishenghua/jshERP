@@ -5,12 +5,9 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-
 import org.springframework.dao.DataAccessException;
-
 import com.jsh.base.BaseAction;
 import com.jsh.base.Log;
 import com.jsh.model.po.Depot;
@@ -18,8 +15,11 @@ import com.jsh.model.po.Person;
 import com.jsh.model.po.Logdetails;
 import com.jsh.model.vo.materials.PersonModel;
 import com.jsh.service.materials.PersonIService;
-import com.jsh.util.common.PageUtil;
-
+import com.jsh.util.PageUtil;
+/*
+ * 经手人管理
+ * @author jishenghua  qq:752718920
+*/
 @SuppressWarnings("serial")
 public class PersonAction extends BaseAction<PersonModel>
 {
@@ -37,6 +37,29 @@ public class PersonAction extends BaseAction<PersonModel>
         {
             Map<String,Object> condition = pageUtil.getAdvSearch();
             condition.put("ProjectId_n_eq", model.getProjectId());
+            condition.put("Id_s_order", "asc");
+            personService.find(pageUtil);
+            mapData.put("personList", pageUtil.getPageList());
+        }
+        catch (Exception e)
+        {
+            Log.errorFileSync(">>>>>>>>>>>>>查找系统基础数据信息异常", e);
+            model.getShowModel().setMsgTip("exceptoin");
+        }
+        return SUCCESS;
+    }
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public String getPersonByType()
+    {
+        Map<String,List> mapData = model.getShowModel().getMap();
+        PageUtil pageUtil = new  PageUtil();
+        pageUtil.setPageSize(0);
+        pageUtil.setCurPage(0);
+        try
+        {
+            Map<String,Object> condition = pageUtil.getAdvSearch();
+            condition.put("Type_s_eq", model.getType());
             condition.put("Id_s_order", "asc");
             personService.find(pageUtil);
             mapData.put("personList", pageUtil.getPageList());

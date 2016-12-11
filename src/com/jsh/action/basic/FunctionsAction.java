@@ -5,23 +5,23 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-
 import org.springframework.dao.DataAccessException;
-
 import com.jsh.base.BaseAction;
 import com.jsh.base.Log;
-import com.jsh.exception.JshException;
+import com.jsh.util.JshException;
 import com.jsh.model.po.App;
 import com.jsh.model.po.Functions;
 import com.jsh.model.po.Logdetails;
 import com.jsh.model.vo.basic.FunctionsModel;
 import com.jsh.service.basic.FunctionsIService;
 import com.jsh.service.basic.UserBusinessIService;
-import com.jsh.util.common.PageUtil;
-
+import com.jsh.util.PageUtil;
+/*
+* 功能管理
+* @author jishenghua  qq:7-5-2-7-1-8-9-2-0
+*/
 @SuppressWarnings("serial")
 public class FunctionsAction extends BaseAction<FunctionsModel>
 {

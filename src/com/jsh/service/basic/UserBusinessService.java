@@ -2,9 +2,9 @@ package com.jsh.service.basic;
 
 import com.jsh.base.BaseService;
 import com.jsh.dao.basic.UserBusinessIDAO;
-import com.jsh.exception.JshException;
+import com.jsh.util.JshException;
 import com.jsh.model.po.UserBusiness;
-import com.jsh.util.common.PageUtil;
+import com.jsh.util.PageUtil;
 
 public class UserBusinessService extends BaseService<UserBusiness> implements UserBusinessIService
 {

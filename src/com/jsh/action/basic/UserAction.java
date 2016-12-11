@@ -6,22 +6,22 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-
 import org.springframework.dao.DataAccessException;
-
 import com.jsh.base.BaseAction;
 import com.jsh.base.Log;
-import com.jsh.constants.common.ExceptionCodeConstants;
+import com.jsh.util.ExceptionCodeConstants;
 import com.jsh.model.po.Basicuser;
 import com.jsh.model.po.Logdetails;
 import com.jsh.model.vo.basic.UserModel;
 import com.jsh.service.basic.UserIService;
-import com.jsh.util.common.PageUtil;
-import com.jsh.util.common.Tools;
-
+import com.jsh.util.PageUtil;
+import com.jsh.util.Tools;
+/*
+ * 用户管理
+ * @author jishenghua  qq:752718920
+*/
 @SuppressWarnings("serial")
 public class UserAction extends BaseAction<UserModel> 
 {

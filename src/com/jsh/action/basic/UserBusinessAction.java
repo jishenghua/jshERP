@@ -5,18 +5,18 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-
 import org.springframework.dao.DataAccessException;
-
 import com.jsh.base.BaseAction;
 import com.jsh.base.Log;
 import com.jsh.model.po.UserBusiness;
 import com.jsh.model.po.Logdetails;
 import com.jsh.model.vo.basic.UserBusinessModel;
 import com.jsh.service.basic.UserBusinessIService;
-import com.jsh.util.common.PageUtil;
-
+import com.jsh.util.PageUtil;
+/*
+ * 权限关系管理
+ * @author jishenghua  qq:752718920
+*/
 @SuppressWarnings("serial")
 public class UserBusinessAction extends BaseAction<UserBusinessModel>
 {

@@ -6,18 +6,14 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletResponse;
-
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-
 import org.springframework.dao.DataAccessException;
-
 import com.jsh.base.BaseAction;
 import com.jsh.base.Log;
-import com.jsh.constants.asset.AssetConstants;
-import com.jsh.exception.JshException;
+import com.jsh.util.AssetConstants;
+import com.jsh.util.JshException;
 import com.jsh.model.po.Asset;
 import com.jsh.model.po.DepotHead;
 import com.jsh.model.po.DepotItem;
@@ -26,9 +22,12 @@ import com.jsh.model.po.Material;
 import com.jsh.model.vo.materials.DepotItemModel;
 import com.jsh.service.materials.DepotHeadIService;
 import com.jsh.service.materials.DepotItemIService;
-import com.jsh.util.common.PageUtil;
-import com.jsh.util.common.Tools;
-
+import com.jsh.util.PageUtil;
+import com.jsh.util.Tools;
+/*
+ * 单据明细管理
+ * @author jishenghua  qq:752718920
+*/
 @SuppressWarnings("serial")
 public class DepotItemAction extends BaseAction<DepotItemModel>
 {

@@ -3,11 +3,11 @@ package com.jsh.dao.basic;
 import org.hibernate.Query;
 
 import com.jsh.base.BaseDAO;
-import com.jsh.exception.JshException;
+import com.jsh.util.JshException;
 import com.jsh.model.po.Asset;
 import com.jsh.model.po.UserBusiness;
-import com.jsh.util.common.PageUtil;
-import com.jsh.util.common.SearchConditionUtil;
+import com.jsh.util.PageUtil;
+import com.jsh.util.SearchConditionUtil;
 
 public class UserBusinessDAO extends BaseDAO<UserBusiness> implements UserBusinessIDAO
 {

@@ -7,12 +7,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-
 import org.springframework.dao.DataAccessException;
-
 import com.jsh.base.BaseAction;
 import com.jsh.base.Log;
 import com.jsh.model.po.Building;
@@ -23,9 +20,12 @@ import com.jsh.model.po.Person;
 import com.jsh.model.po.Supplier;
 import com.jsh.model.vo.materials.DepotHeadModel;
 import com.jsh.service.materials.DepotHeadIService;
-import com.jsh.util.common.PageUtil;
-import com.jsh.util.common.Tools;
-
+import com.jsh.util.PageUtil;
+import com.jsh.util.Tools;
+/*
+ * 单据表头管理
+ * @author jishenghua  qq:752718920
+*/
 @SuppressWarnings("serial")
 public class DepotHeadAction extends BaseAction<DepotHeadModel>
 {

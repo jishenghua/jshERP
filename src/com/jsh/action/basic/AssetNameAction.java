@@ -5,12 +5,9 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-
 import org.springframework.dao.DataAccessException;
-
 import com.jsh.base.BaseAction;
 import com.jsh.base.Log;
 import com.jsh.model.po.Assetname;
@@ -18,7 +15,7 @@ import com.jsh.model.po.Category;
 import com.jsh.model.po.Logdetails;
 import com.jsh.model.vo.basic.AssetNameModel;
 import com.jsh.service.basic.AssetNameIService;
-import com.jsh.util.common.PageUtil;
+import com.jsh.util.PageUtil;
 
 @SuppressWarnings("serial")
 public class AssetNameAction extends BaseAction<AssetNameModel>

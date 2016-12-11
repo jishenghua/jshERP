@@ -4,7 +4,7 @@ import org.apache.log4j.Logger;
 
 /**
  * 封装log4j日志信息，打印日志信息类
- * @author ji/sheng/hua
+ * @author ji/sheng/hua  qq_752718920
  * @since 2014-01-22
  */
 public class Log
@@ -17,7 +17,7 @@ public class Log
 	/**
 	 * 获取Log4j实例
 	 */
-	private static final  Logger log = Logger.getLogger("ams");
+	private static final  Logger log = Logger.getLogger("jsh");
 	
 	/**
 	 * Info级别日志前缀

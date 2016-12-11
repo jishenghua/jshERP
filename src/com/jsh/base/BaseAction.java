@@ -15,7 +15,7 @@ import com.jsh.model.po.Basicuser;
 import com.jsh.service.basic.LogIService;
 /**
  * struts2工具类
- * @author jishenghua
+ * @author jishenghua qq752718920
  * struts2 base action 一些常用方法获取
  */
 @SuppressWarnings("serial")

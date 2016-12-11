@@ -7,10 +7,14 @@ import java.util.Map;
 
 import org.springframework.dao.DataAccessException;
 
-import com.jsh.exception.JshException;
+import com.jsh.util.JshException;
 import com.jsh.model.po.Basicuser;
-import com.jsh.util.common.PageUtil;
-
+import com.jsh.util.PageUtil;
+/**
+ * 底层服务层
+ * @author ji-sheng-hua qq752718920
+ * @param <T>
+ */
 public abstract class BaseService<T> implements BaseIService<T>
 {
 	/**

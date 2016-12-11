@@ -5,22 +5,19 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-
 import org.springframework.dao.DataAccessException;
-
 import com.jsh.base.BaseAction;
 import com.jsh.base.Log;
 import com.jsh.model.po.Logdetails;
 import com.jsh.model.po.InOutItem;
 import com.jsh.model.vo.basic.InOutItemModel;
 import com.jsh.service.basic.InOutItemIService;
-import com.jsh.util.common.PageUtil;
+import com.jsh.util.PageUtil;
 /**
  * 收支项目
- * @author ji*sheng*hua
+ * @author ji*sheng*hua  qq 7.5.2.7.1.8.9.2.0
  */
 @SuppressWarnings("serial")
 public class InOutItemAction extends BaseAction<InOutItemModel>
@@ -266,9 +263,9 @@ public class InOutItemAction extends BaseAction<InOutItemModel>
                 for(InOutItem inOutItem:dataList)
                 {
                     JSONObject item = new JSONObject();
-                    item.put("id", inOutItem.getId());
+                    item.put("Id", inOutItem.getId());
                     //收支项目名称
-                    item.put("name", inOutItem.getName());
+                    item.put("InOutItemName", inOutItem.getName());
                     dataArray.add(item);
                 }
             }

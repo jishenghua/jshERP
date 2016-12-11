@@ -1,8 +1,8 @@
 package com.jsh.service.asset;
 
-import com.jsh.exception.JshException;
+import com.jsh.util.JshException;
 import com.jsh.model.po.Asset;
-import com.jsh.util.common.PageUtil;
+import com.jsh.util.PageUtil;
 
 public interface ReportIService
 {
