@@ -1,4 +1,4 @@
-<%@page import="com.jsh.util.common.Tools"%>
+<%@page import="com.jsh.util.Tools"%>
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
 <%
     String path = request.getContextPath();

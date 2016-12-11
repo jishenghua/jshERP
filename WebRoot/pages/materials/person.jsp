@@ -1,4 +1,4 @@
-<%@page import="com.jsh.util.common.Tools"%>
+<%@page import="com.jsh.util.Tools"%>
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
 <%
 	String path = request.getContextPath();
@@ -35,8 +35,8 @@
 						<select name="searchType" id="searchType"  style="width:230px;">
 						<option value="">全部</option>
 						<option value="仓管员">仓管员</option>
-						<option value="采购人">采购人</option>
-						<option value="领料人">领料人</option>
+						<option value="采购员">采购员</option>
+						<option value="财务员">财务员</option>
 						</select>
 					</td>
 					<td>&nbsp;</td>
@@ -71,8 +71,8 @@
 	            <select name="Type" id="Type"  style="width:230px;">
 						<option value="">请选择</option>
 						<option value="仓管员">仓管员</option>
-						<option value="采购人">采购人</option>
-						<option value="领料人">领料人</option>
+						<option value="采购员">采购员</option>
+						<option value="财务员">财务员</option>
 						</select>
 			    </td>
 	            </tr>

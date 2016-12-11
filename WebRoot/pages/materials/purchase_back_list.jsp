@@ -1,4 +1,4 @@
-<%@page import="com.jsh.util.common.Tools"%>
+<%@page import="com.jsh.util.Tools"%>
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
 <%
 	String path = request.getContextPath();
@@ -6,9 +6,9 @@
 	String clientIp = Tools.getCurrentUserIP();
 %>
 <!DOCTYPE html>
-<html> 
+<html>
   	<head>
-    	<title>回收入库</title>
+    	<title>采购退货</title>
         <meta charset="utf-8">
 		<!-- 指定以IE8的方式来渲染 -->
 		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
@@ -29,29 +29,19 @@
 				<tr>
 			    	<td>仓库：</td>
 					<td>
-						<select name="searchProjectId" id="searchProjectId"  style="width:100px;"></select>
+						<select name="searchProjectId" id="searchProjectId"  style="width:80px;"></select>
 					</td>
 					<td>单据号：</td>
 					<td>
-						<input type="text" name="searchNumber" id="searchNumber" style="width:100px;"/>
+						<input type="text" name="searchNumber" id="searchNumber" style="width:60px;"/>
 					</td>
 					<td>入库时间：</td>
 					<td>
-						<input type="text" name="searchBeginTime" id="searchBeginTime" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="txt Wdate" style="width:100px;"/>
+						<input type="text" name="searchBeginTime" id="searchBeginTime" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="txt Wdate" style="width:80px;"/>
 					</td>
 					<td>-</td>
 					<td>
-						<input type="text" name="searchEndTime" id="searchEndTime" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="txt Wdate" style="width:100px;"/>
-					</td>
-					<td>状态：</td>
-					<td>
-						<select name="searchState" id="searchState"  style="width:100px;">
-						<option value="">全部</option>
-						<option value="草稿">草稿</option>
-						<option value="待审核">待审核</option>
-						<option value="未通过">未通过</option>
-						<option value="已生效">已生效</option>
-						</select>
+						<input type="text" name="searchEndTime" id="searchEndTime" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="txt Wdate" style="width:80px;"/>
 					</td>
 					<td>&nbsp;</td>
 					<td>
@@ -63,7 +53,7 @@
 		</div>
 		
 		<!-- 数据显示table -->
-		<div id = "tablePanel"	class="easyui-panel" style="padding:1px;top:300px;" title="回收入库列表" iconCls="icon-list" collapsible="true" closable="false">
+		<div id="tablePanel" class="easyui-panel" style="padding:1px; top:300px;" title="采购退货列表" iconCls="icon-list" collapsible="true" closable="false">
 			<table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 		</div>
 		
@@ -72,7 +62,7 @@
 	        <form id="depotHeadFM" method="post"  novalidate>
 	            <table>
 	            <tr>
-	            <td>店　面：</td>
+	            <td>仓　库：</td>
 	            <td style="padding:5px">
                 <select name="ProjectId" id="ProjectId" style="width:120px;"></select>
                 </td>
@@ -80,15 +70,27 @@
                 <td style="padding:5px">
                 <input type="text" name="OperTime" id="OperTime" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="txt Wdate" style="width:120px;"/>
                 </td>
+	            <td>供应商：</td>
+	            <td style="padding:5px">
+	            <input id="OrganId" name="OrganId" style="width:120px;" />  
+	            </td>
+	            <td>采购人：</td>
+	            <td style="padding:5px">
+	            <select name="HandsPersonId" id="HandsPersonId" style="width:120px;"></select>
+	            </td>
+	            </tr>
+	            <tr>
 	            <td>仓管员：</td>
 	            <td style="padding:5px">
 	            <select name="WareHousePersonId" id="WareHousePersonId" style="width:120px;"></select>
 	            </td>
-	            <td style="width:50px;"></td>
-	            <td style="padding:5px;width:120px;">
-	            </td>
-	            </tr>
-	            <tr>
+	            <td>结算方式：</td>
+				<td style="padding:5px">
+					<select name="SettlementWay" id="SettlementWay"  style="width:120px;">
+					<option value="现金">现金</option>
+					<option value="记账">记账</option>
+					</select>
+				</td>
 	            <td>备注：</td>
 	            <td style="padding:5px">
 	            <input name="Remark" id="Remark" class="easyui-validatebox" style="width: 120px;"/>
@@ -96,17 +98,11 @@
 	            <td>单据号：</td>
 	            <td style="padding:5px"><input name="Number" id="Number" class="easyui-validatebox" data-options="required:true,validType:'length[2,30]'" style="width: 120px;"/>
 	            </td>
-	            <td></td>
-	            <td style="padding:5px">
-	            </td>
-	            <td></td>
-				<td style="padding:5px">
-				</td>
 	            </tr>
 	            <tr>
-	            <td>材料列表：</td>
+	            <td>商品列表：</td>
 	            <td colspan="7">
-			    <!-- 材料列表table -->
+			    <!-- 商品列表table -->
 				<table id="materialData" style="top:100px;border-bottom-color:#FFFFFF"></table>
 	            </td>
 	            </tr>
@@ -122,7 +118,7 @@
 	            closed="true" modal="true" cache="false" collapsible="false" closable="true">
 	            <table>
 	            <tr>
-	            <td>店　面：</td>
+	            <td>仓　库：</td>
 	            <td style="padding:5px;width:120px;">
                 <span id="ProjectIdShow"></span>
                 </td>
@@ -130,15 +126,24 @@
                 <td style="padding:5px;width:120px;">
                 <span id="OperTimeShow"></span>
                 </td>
-	            <td>仓管员：</td>
+	            <td>供应商：</td>
 	            <td style="padding:5px;width:120px;">
-	            <span id="WareHousePersonIdShow"></span>
+	            <span id="OrganIdShow"></span>
 	            </td>
-	            <td style="width:50px;"></td>
+	            <td>采购人：</td>
 	            <td style="padding:5px;width:120px;">
+	            <span id="HandsPersonIdShow"></span>
 	            </td>
 	            </tr>
 	            <tr>
+	            <td>仓管员：</td>
+	            <td style="padding:5px">
+	            <span id="WareHousePersonIdShow"></span>
+	            </td>
+	            <td>结算方式：</td>
+				<td style="padding:5px">
+				<span id="SettlementWayShow"></span>
+				</td>
 	            <td>备注：</td>
 	            <td style="padding:5px">
 	            <span id="RemarkShow"></span>
@@ -147,17 +152,11 @@
 	            <td style="padding:5px">
 	            <span id="NumberShow"></span>
 	            </td>
-	            <td></td>
-	            <td style="padding:5px">
-	            </td>
-	            <td></td>
-				<td style="padding:5px">
-				</td>
 	            </tr>
 	            <tr>
-	            <td>材料列表：</td>
+	            <td>商品列表：</td>
 	            <td colspan="7">
-			    <!-- 材料列表table -->
+			    <!-- 商品列表table -->
 				<table id="materialDataShow" style="top:100px;border-bottom-color:#FFFFFF"></table>
 	            </td>
 	            </tr>
@@ -372,7 +371,7 @@
 			function initTableData()
 			{
 				$('#tableData').datagrid({
-					//title:'回收入库列表',
+					//title:'采购退货列表',
 					//iconCls:'icon-save',
 					//width:700,
 					height:heightInfo,
@@ -399,18 +398,18 @@
 			          { title: '入库时间 ',field: 'OperTime',width:100},
 			          { title: '创建时间',field: 'CreateTime',width:100},
 			          { title: '操作员',field: 'OperPersonName',width:100},
-			          { title: '备注',field: 'Remark',width:300},
-			          { title: '状态',field: 'State',width:100},
+			          { title: '备注',field: 'Remark',width:100},
 			          { title: '操作',field: 'op',align:"center",width:180,formatter:function(value,rec)
 			         	{
 							var str = '';
 							var rowInfo = rec.Id + 'AaBb' + rec.ProjectId+ 'AaBb' + rec.Number+ 'AaBb' + rec.OperPersonName
 							+ 'AaBb' + rec.OperTime+ 'AaBb' + rec.OrganId+ 'AaBb' + rec.HandsPersonId
 							+ 'AaBb' + rec.WareHousePersonId+ 'AaBb' + rec.SettlementWay+ 'AaBb' + rec.Remark
-							+ 'AaBb' + rec.ProjectName+ 'AaBb' + rec.OrganName+ 'AaBb' + rec.HandsPersonName+ 'AaBb' + rec.WareHousePersonName;
+							+ 'AaBb' + rec.ProjectName+ 'AaBb' + rec.OrganName+ 'AaBb' + rec.HandsPersonName+ 'AaBb' + rec.WareHousePersonName
+							+ 'AaBb' + rec.ReAuditPersonName+ 'AaBb' + rec.Reason;
         					if(1 == value)
         					{
-        						str += '<img src="<%=path%>/js/easyui-1.3.5/themes/icons/list.png" style="cursor: pointer;" onclick="editDepotHead(\'' + rowInfo + '\');"/>&nbsp;<a onclick="showDepotHead(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">查看</a>&nbsp;&nbsp;';
+        						str += '<img src="<%=path%>/js/easyui-1.3.5/themes/icons/list.png" style="cursor: pointer;" onclick="showDepotHead(\'' + rowInfo + '\');"/>&nbsp;<a onclick="showDepotHead(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">查看</a>&nbsp;&nbsp;';
         						str += '<img src="<%=path%>/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editDepotHead(\'' + rowInfo + '\');"/>&nbsp;<a onclick="editDepotHead(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
         						str += '<img src="<%=path%>/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteDepotHead('+ rec.Id +');"/>&nbsp;<a onclick="deleteDepotHead('+ rec.Id +');" style="text-decoration:none;color:black;" href="javascript:void(0)">删除</a>';
         					}
@@ -436,25 +435,6 @@
 							{
 								batDeleteDepotHead();	
 							}
-						},
-						"-",
-						{
-							id:'submitDepotHead',
-							text:'提交审核',
-							iconCls:'icon-ok',
-							handler:function()
-							{
-								submitDepotHead();	
-							}
-						},
-						{
-							id:'cancelDepotHead',
-							text:'废弃',
-							iconCls:'icon-no',
-							handler:function()
-							{
-								cancelDepotHead();	
-							}
 						}
 					],
 					onLoadError:function()
@@ -465,7 +445,7 @@
 				});
 			}
 			
-			//初始化表格数据-材料列表-编辑状态
+			//初始化表格数据-商品列表-编辑状态
 			function initTableData_material()
 			{
 				$('#materialData').datagrid({
@@ -486,8 +466,8 @@
 					striped : true,
 					//loadFilter: pagerFilter,
 					onClickRow: onClickRow,
-					pageSize: 5,
-					pageList: [5,10,15],
+					pageSize: 50,
+					pageList: [50,100,150],
 					columns:[[
 					  { field: 'Id',width:35,align:"center",checkbox:true},
 			          { title: '名称',field: 'MaterialId',width:230,
@@ -505,6 +485,7 @@
 			            }
 					  },
 			          { title: '数量',field: 'OperNumber',editor:'validatebox',width:50},
+			          { title: '单价',field: 'UnitPrice',editor:'validatebox',width:50},
 			          { title: '备注',field: 'Remark',editor:'validatebox',width:150},
 			          { title: '图片',field: 'Img',editor:'validatebox',width:110},
 					]],
@@ -546,7 +527,7 @@
 			}
 			
 			
-			//初始化表格数据-材料列表-查看状态
+			//初始化表格数据-商品列表-查看状态
 			function initTableData_material_show()
 			{
 				$('#materialDataShow').datagrid({
@@ -567,12 +548,13 @@
 					striped : true,
 					//loadFilter: pagerFilter,
 					onClickRow: onClickRow,
-					pageSize: 5,
-					pageList: [5,10,15],
+					pageSize: 50,
+					pageList: [50,100,150],
 					columns:[[
 					  { field: 'Id',width:35,align:"center",checkbox:true},
 			          { title: '名称',field: 'MaterialName',width:230},
 			          { title: '数量',field: 'OperNumber',width:50},
+			          { title: '单价',field: 'UnitPrice',width:50},
 			          { title: '备注',field: 'Remark',width:150},
 			          { title: '图片',field: 'Img',width:110},
 					]],
@@ -630,10 +612,10 @@
 				}
 			}
 			
-			//删除回收入库信息
+			//删除采购退货信息
 			function deleteDepotHead(depotHeadID)
 			{
-				$.messager.confirm('删除确认','确定要删除此回收入库信息吗？',function(r)
+				$.messager.confirm('删除确认','确定要删除此采购退货信息吗？',function(r)
 			 	{
                     if (r)
                     {
@@ -654,12 +636,12 @@
 									$("#searchBtn").click();
 								}
 								else
-									$.messager.alert('删除提示','删除回收入库信息失败，请稍后再试！','error');
+									$.messager.alert('删除提示','删除采购退货信息失败，请稍后再试！','error');
 							},
 							//此处添加错误处理
 				    		error:function()
 				    		{
-				    			$.messager.alert('删除提示','删除回收入库信息异常，请稍后再试！','error');
+				    			$.messager.alert('删除提示','删除采购退货信息异常，请稍后再试！','error');
 								return;
 							}
 						});			
@@ -667,7 +649,7 @@
                 });
 			}
 			
-			//批量删除回收入库
+			//批量删除采购退货
 			function batDeleteDepotHead()
 			{
 				var row = $('#tableData').datagrid('getChecked');	
@@ -678,7 +660,7 @@
 				}
 				if(row.length > 0)
 				{
-					$.messager.confirm('删除确认','确定要删除选中的' + row.length + '条回收入库信息吗？',function(r)
+					$.messager.confirm('删除确认','确定要删除选中的' + row.length + '条采购退货信息吗？',function(r)
 				 	{
 	                    if (r)
 	                    {
@@ -712,12 +694,12 @@
 										$(":checkbox").attr("checked",false);
 									}
 									else
-										$.messager.alert('删除提示','删除回收入库信息失败，请稍后再试！','error');
+										$.messager.alert('删除提示','删除采购退货信息失败，请稍后再试！','error');
 								},
 								//此处添加错误处理
 					    		error:function()
 					    		{
-					    			$.messager.alert('删除提示','删除回收入库信息异常，请稍后再试！','error');
+					    			$.messager.alert('删除提示','删除采购退货信息异常，请稍后再试！','error');
 									return;
 								}
 							});	
@@ -736,14 +718,14 @@
 			{
 				$("#clientIp").val('<%=clientIp %>');
 				$('#depotHeadFM').form('clear');
-				$('#depotHeadDlg').dialog('open').dialog('setTitle','<img src="<%=path%>/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加回收入库信息');
+				$('#depotHeadDlg').dialog('open').dialog('setTitle','<img src="<%=path%>/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加采购退货信息');
 				$(".window-mask").css({ width: webW ,height: webH});
 	            $("#Number").val("").focus();
 	            
 	            orgDepotHead = "";
 	            depotHeadID = 0;
-	            initTableData_material(); //材料列表
-	            reject(); //撤销下、刷新材料列表
+	            initTableData_material(); //商品列表
+	            reject(); //撤销下、刷新商品列表
 	            url = '<%=path %>/depotHead/create.action';
 			}
 			
@@ -761,12 +743,15 @@
 							dataType: "json",
 							async :  false,
 							data: ({
-								Type:"入库",
-								SubType:"回收",
+								Type:"出库",
+								SubType:"采购退货",
 								ProjectId : $.trim($("#ProjectId").val()),
 								Number : $.trim($("#Number").val()),
 								OperTime: $("#OperTime").val(),
+								OrganId: $('#OrganId').combobox('getValue'),
+								HandsPersonId: $.trim($("#HandsPersonId").val()),
 								WareHousePersonId: $.trim($("#WareHousePersonId").val()),
+								SettlementWay: $.trim($("#SettlementWay").val()),
 								Remark: $.trim($("#Remark").val()),
 								clientIp:'<%=clientIp %>'
 							}),
@@ -785,6 +770,7 @@
 										accept(depotHeadID); //修改
 									}
 									
+									
 									$('#depotHeadDlg').dialog('close');
 									var opts = $("#tableData").datagrid('options'); 
 									showDepotHeadDetails(opts.pageNumber,opts.pageSize); 
@@ -793,14 +779,14 @@
 								{
 									$.messager.show({
 			                            title: '错误提示',
-			                            msg: '保存回收入库信息失败，请稍后重试!'
+			                            msg: '保存采购退货信息失败，请稍后重试!'
 			                        });
 								}
 							},
 							//此处添加错误处理
 				    		error:function()
 				    		{
-				    			$.messager.alert('提示','保存回收入库信息异常，请稍后再试！','error');
+				    			$.messager.alert('提示','保存采购退货信息异常，请稍后再试！','error');
 								return;
 							}
 						});	
@@ -829,12 +815,12 @@
 	            $("#Remark").val(depotHeadInfo[9]);
 	            
 	            //orgDepotHead = depotHeadInfo[1];
-                $('#depotHeadDlg').dialog('open').dialog('setTitle','<img src="<%=path%>/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑回收入库信息');
+                $('#depotHeadDlg').dialog('open').dialog('setTitle','<img src="<%=path%>/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑采购退货信息');
                 $(".window-mask").css({ width: webW ,height: webH});
                 depotHeadID = depotHeadInfo[0];
                 
-                initTableData_material(); //材料列表
-                reject(); //撤销下、刷新材料列表                
+                initTableData_material(); //商品列表
+                reject(); //撤销下、刷新商品列表                
                 url = '<%=path %>/depotHead/update.action?depotHeadID=' + depotHeadInfo[0];
 	        }
 	        
@@ -850,11 +836,13 @@
 	            $("#WareHousePersonIdShow").text(depotHeadInfo[13]);
 	            $("#SettlementWayShow").text(depotHeadInfo[8]);
 	            $("#RemarkShow").text(depotHeadInfo[9]);
-                $('#depotHeadDlgShow').dialog('open').dialog('setTitle','<img src="<%=path%>/js/easyui-1.3.5/themes/icons/list.png"/>&nbsp;查看回收入库信息');
+	            var audit=(depotHeadInfo[14]!="undefined"&&depotHeadInfo[15]!="undefined"&&depotHeadInfo[14]!=""&&depotHeadInfo[15]!="")?" 撤审人:"+depotHeadInfo[14]+" 撤审原因:"+depotHeadInfo[15]:"";
+	            audit="<span style='color:red;'>"+audit+"</span>";
+	            $('#depotHeadDlgShow').dialog('open').dialog('setTitle','<img src="<%=path%>/js/easyui-1.3.5/themes/icons/list.png"/>&nbsp;查看采购退货信息'+audit);
                 $(".window-mask").css({ width: webW ,height: webH});
                 
                 depotHeadID = depotHeadInfo[0];
-                initTableData_material_show(); //材料列表-查看状态
+                initTableData_material_show(); //商品列表-查看状态
 	        }
 	        
 			//搜索处理
@@ -889,8 +877,8 @@
 					dataType: "json",
 					data: ({
 						ProjectId:$.trim($("#searchProjectId").val()),
-						Type:"入库",
-						SubType:"回收",
+						Type:"出库",
+						SubType:"采购退货",
 						State:$.trim($("#searchState").val()),
 						Number:$.trim($("#searchNumber").val()),
 						BeginTime:$("#searchBeginTime").val(),
@@ -921,130 +909,6 @@
 					$("#searchBtn").click();
 			    }	
 			});
-			//提交审核
-			function submitDepotHead()
-			{
-			    var row = $("#tableData").datagrid("getChecked");
-	            if(row.length == 0)
-				{
-					$.messager.alert('提交审核提示','没有记录被选中！','info');				
-					return;	
-				}
-	            if(row.length > 0)
-				{
-					$.messager.confirm('提交审核确认','确定要提交选中的' + row.length + '条回收入库信息吗？',function(r)
-				 	{
-	                    if (r)
-	                    {
-	                    	var ids = "";
-	                        for(var i = 0;i < row.length; i++)
-	                        {
-	                        	if(i == row.length-1)
-	                        	{
-	                        		ids += row[i].Id;
-	                        		break;
-	                        	}
-	                        	ids += row[i].Id + ",";
-	                        }
-				            $.ajax({
-								type:"post",
-								url: "<%=path %>/depotHead/submit.action",
-								dataType: "json",
-								async: false,
-								data: ({
-									depotHeadIDs: ids,
-									State:"待审核",
-									clientIp:'<%=clientIp %>'
-								}),
-								success: function (tipInfo)
-								{
-									if(tipInfo)
-									{
-										$.messager.alert('提示',"提交审核成功！",'info');	
-										var opts = $("#tableData").datagrid('options'); 
-										showDepotHeadDetails(opts.pageNumber,opts.pageSize); 
-									}
-									else
-									{
-										$.messager.show({
-										    title: '错误提示',
-				                            msg: '提交审核失败，请稍后重试!'
-				                        });
-									}
-								},
-								//此处添加错误处理
-					    		error:function()
-					    		{
-					    			$.messager.alert('提示','提交审核异常，请稍后再试！','error');
-									return;
-								}
-							});	
-						  }
-					  });
-				 }
-			}
-			//废弃
-			function cancelDepotHead()
-			{
-			    var row = $("#tableData").datagrid("getChecked");
-	            if(row.length == 0)
-				{
-					$.messager.alert('废弃提示','没有记录被选中！','info');				
-					return;	
-				}
-	            if(row.length > 0)
-				{
-					$.messager.confirm('废弃确认','确定要废弃选中的' + row.length + '条回收入库信息吗？',function(r)
-				 	{
-	                    if (r)
-	                    {
-	                    	var ids = "";
-	                        for(var i = 0;i < row.length; i++)
-	                        {
-	                        	if(i == row.length-1)
-	                        	{
-	                        		ids += row[i].Id;
-	                        		break;
-	                        	}
-	                        	ids += row[i].Id + ",";
-	                        }
-				            $.ajax({
-								type:"post",
-								url: "<%=path %>/depotHead/submit.action",
-								dataType: "json",
-								async: false,
-								data: ({
-									depotHeadIDs: ids,
-									State:"废弃",
-									clientIp:'<%=clientIp %>'
-								}),
-								success: function (tipInfo)
-								{
-									if(tipInfo)
-									{
-										$.messager.alert('提示',"废弃成功！",'info');	
-										var opts = $("#tableData").datagrid('options'); 
-										showDepotHeadDetails(opts.pageNumber,opts.pageSize); 
-									}
-									else
-									{
-										$.messager.show({
-										    title: '错误提示',
-				                            msg: '废弃失败，请稍后重试!'
-				                        });
-									}
-								},
-								//此处添加错误处理
-					    		error:function()
-					    		{
-					    			$.messager.alert('提示','废弃异常，请稍后再试！','error');
-									return;
-								}
-							});	
-						  }
-					  });
-				 }
-			}
 			
 			//结束编辑
 			var editIndex = undefined;

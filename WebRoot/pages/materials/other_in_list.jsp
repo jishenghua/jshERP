@@ -1,4 +1,4 @@
-<%@page import="com.jsh.util.common.Tools"%>
+<%@page import="com.jsh.util.Tools"%>
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
 <%
 	String path = request.getContextPath();
@@ -8,7 +8,7 @@
 <!DOCTYPE html>
 <html>
   	<head>
-    	<title>采购入库审核</title>
+    	<title>其它入库</title>
         <meta charset="utf-8">
 		<!-- 指定以IE8的方式来渲染 -->
 		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
@@ -29,27 +29,19 @@
 				<tr>
 			    	<td>仓库：</td>
 					<td>
-						<select name="searchProjectId" id="searchProjectId"  style="width:100px;"></select>
+						<select name="searchProjectId" id="searchProjectId"  style="width:80px;"></select>
 					</td>
 					<td>单据号：</td>
 					<td>
-						<input type="text" name="searchNumber" id="searchNumber" style="width:100px;"/>
+						<input type="text" name="searchNumber" id="searchNumber" style="width:60px;"/>
 					</td>
 					<td>入库时间：</td>
 					<td>
-						<input type="text" name="searchBeginTime" id="searchBeginTime" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="txt Wdate" style="width:100px;"/>
+						<input type="text" name="searchBeginTime" id="searchBeginTime" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="txt Wdate" style="width:80px;"/>
 					</td>
 					<td>-</td>
 					<td>
-						<input type="text" name="searchEndTime" id="searchEndTime" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="txt Wdate" style="width:100px;"/>
-					</td>
-					<td>状态：</td>
-					<td>
-						<select name="searchState" id="searchState"  style="width:100px;">
-						<option value="待审核">待审核</option>
-						<option value="未通过">未通过</option>
-						<option value="已生效">已生效</option>
-						</select>
+						<input type="text" name="searchEndTime" id="searchEndTime" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="txt Wdate" style="width:80px;"/>
 					</td>
 					<td>&nbsp;</td>
 					<td>
@@ -61,7 +53,7 @@
 		</div>
 		
 		<!-- 数据显示table -->
-		<div id = "tablePanel"	class="easyui-panel" style="padding:1px;top:300px;" title="采购入库审核列表" iconCls="icon-list" collapsible="true" closable="false">
+		<div id="tablePanel" class="easyui-panel" style="padding:1px; top:300px;" title="其它入库列表" iconCls="icon-list" collapsible="true" closable="false">
 			<table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 		</div>
 		
@@ -70,7 +62,7 @@
 	        <form id="depotHeadFM" method="post"  novalidate>
 	            <table>
 	            <tr>
-	            <td>店　面：</td>
+	            <td>仓　库：</td>
 	            <td style="padding:5px">
                 <select name="ProjectId" id="ProjectId" style="width:120px;"></select>
                 </td>
@@ -108,9 +100,9 @@
 	            </td>
 	            </tr>
 	            <tr>
-	            <td>材料列表：</td>
+	            <td>商品列表：</td>
 	            <td colspan="7">
-			    <!-- 材料列表table -->
+			    <!-- 商品列表table -->
 				<table id="materialData" style="top:100px;border-bottom-color:#FFFFFF"></table>
 	            </td>
 	            </tr>
@@ -126,7 +118,7 @@
 	            closed="true" modal="true" cache="false" collapsible="false" closable="true">
 	            <table>
 	            <tr>
-	            <td>店　面：</td>
+	            <td>仓　库：</td>
 	            <td style="padding:5px;width:120px;">
                 <span id="ProjectIdShow"></span>
                 </td>
@@ -162,30 +154,13 @@
 	            </td>
 	            </tr>
 	            <tr>
-	            <td>材料列表：</td>
+	            <td>商品列表：</td>
 	            <td colspan="7">
-			    <!-- 材料列表table -->
+			    <!-- 商品列表table -->
 				<table id="materialDataShow" style="top:100px;border-bottom-color:#FFFFFF"></table>
 	            </td>
 	            </tr>
 	            </table>
-	    </div>
-	    <div id="depotHeadDlg-audit" class="easyui-dialog" style="width:450px;padding:10px 20px;top:200px"
-	            closed="true" buttons="#dlg-buttons-audit" modal="true" cache="false" collapsible="false" closable="true">
-	        <form id="depotHeadFM-audit" method="post"  novalidate>
-	            <table>
-	            <tr>
-	            <td>撤审原因：</td>
-	            <td style="padding:5px">
-	            <input name="Reason" id="Reason" class="easyui-validatebox" style="width: 300px;"/>
-	            </td>
-	            </tr>
-	            </table>
-	        </form>
-	    </div>
-	    <div id="dlg-buttons-audit">
-	        <a href="javascript:void(0)" id="saveDepotHead-audit" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
-	        <a href="javascript:void(0)" id="cancelDepotHead-audit" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#depotHeadDlg-audit').dialog('close')">取消</a>
 	    </div>
 	    
 		<script type="text/javascript">
@@ -396,7 +371,7 @@
 			function initTableData()
 			{
 				$('#tableData').datagrid({
-					//title:'采购入库审核列表',
+					//title:'其它入库列表',
 					//iconCls:'icon-save',
 					//width:700,
 					height:heightInfo,
@@ -423,8 +398,7 @@
 			          { title: '入库时间 ',field: 'OperTime',width:100},
 			          { title: '创建时间',field: 'CreateTime',width:100},
 			          { title: '操作员',field: 'OperPersonName',width:100},
-			          { title: '备注',field: 'Remark',width:300},
-			          { title: '状态',field: 'State',width:100},
+			          { title: '备注',field: 'Remark',width:100},
 			          { title: '操作',field: 'op',align:"center",width:180,formatter:function(value,rec)
 			         	{
 							var str = '';
@@ -436,7 +410,8 @@
         					if(1 == value)
         					{
         						str += '<img src="<%=path%>/js/easyui-1.3.5/themes/icons/list.png" style="cursor: pointer;" onclick="showDepotHead(\'' + rowInfo + '\');"/>&nbsp;<a onclick="showDepotHead(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">查看</a>&nbsp;&nbsp;';
-        						str += '<img src="<%=path%>/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editDepotHead_audit(\'' + rowInfo + '\');"/>&nbsp;<a onclick="editDepotHead_audit(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">撤审</a>&nbsp;&nbsp;';
+        						str += '<img src="<%=path%>/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editDepotHead(\'' + rowInfo + '\');"/>&nbsp;<a onclick="editDepotHead(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
+        						str += '<img src="<%=path%>/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteDepotHead('+ rec.Id +');"/>&nbsp;<a onclick="deleteDepotHead('+ rec.Id +');" style="text-decoration:none;color:black;" href="javascript:void(0)">删除</a>';
         					}
         					return str;
 						}
@@ -444,12 +419,21 @@
 					]],
 					toolbar:[
 						{
-							id:'submitDepotHead',
-							text:'审批',
-							iconCls:'icon-ok',
+							id:'addDepotHead',
+							text:'增加',
+							iconCls:'icon-add',
 							handler:function()
 							{
-								submitDepotHead();	
+								addDepotHead();
+							}
+						},
+						{
+							id:'deleteDepotHead',
+							text:'删除',
+							iconCls:'icon-remove',
+							handler:function()
+							{
+								batDeleteDepotHead();	
 							}
 						}
 					],
@@ -461,7 +445,7 @@
 				});
 			}
 			
-			//初始化表格数据-材料列表-编辑状态
+			//初始化表格数据-商品列表-编辑状态
 			function initTableData_material()
 			{
 				$('#materialData').datagrid({
@@ -482,8 +466,8 @@
 					striped : true,
 					//loadFilter: pagerFilter,
 					onClickRow: onClickRow,
-					pageSize: 5,
-					pageList: [5,10,15],
+					pageSize: 50,
+					pageList: [50,100,150],
 					columns:[[
 					  { field: 'Id',width:35,align:"center",checkbox:true},
 			          { title: '名称',field: 'MaterialId',width:230,
@@ -502,7 +486,6 @@
 					  },
 			          { title: '数量',field: 'OperNumber',editor:'validatebox',width:50},
 			          { title: '单价',field: 'UnitPrice',editor:'validatebox',width:50},
-			          { title: '运杂费',field: 'Incidentals',editor:'validatebox',width:50},
 			          { title: '备注',field: 'Remark',editor:'validatebox',width:150},
 			          { title: '图片',field: 'Img',editor:'validatebox',width:110},
 					]],
@@ -544,7 +527,7 @@
 			}
 			
 			
-			//初始化表格数据-材料列表-查看状态
+			//初始化表格数据-商品列表-查看状态
 			function initTableData_material_show()
 			{
 				$('#materialDataShow').datagrid({
@@ -565,14 +548,13 @@
 					striped : true,
 					//loadFilter: pagerFilter,
 					onClickRow: onClickRow,
-					pageSize: 5,
-					pageList: [5,10,15],
+					pageSize: 50,
+					pageList: [50,100,150],
 					columns:[[
 					  { field: 'Id',width:35,align:"center",checkbox:true},
 			          { title: '名称',field: 'MaterialName',width:230},
 			          { title: '数量',field: 'OperNumber',width:50},
 			          { title: '单价',field: 'UnitPrice',width:50},
-			          { title: '运杂费',field: 'Incidentals',width:50},
 			          { title: '备注',field: 'Remark',width:150},
 			          { title: '图片',field: 'Img',width:110},
 					]],
@@ -630,10 +612,10 @@
 				}
 			}
 			
-			//删除采购入库审核信息
+			//删除其它入库信息
 			function deleteDepotHead(depotHeadID)
 			{
-				$.messager.confirm('删除确认','确定要删除此采购入库审核信息吗？',function(r)
+				$.messager.confirm('删除确认','确定要删除此其它入库信息吗？',function(r)
 			 	{
                     if (r)
                     {
@@ -654,12 +636,12 @@
 									$("#searchBtn").click();
 								}
 								else
-									$.messager.alert('删除提示','删除采购入库审核信息失败，请稍后再试！','error');
+									$.messager.alert('删除提示','删除其它入库信息失败，请稍后再试！','error');
 							},
 							//此处添加错误处理
 				    		error:function()
 				    		{
-				    			$.messager.alert('删除提示','删除采购入库审核信息异常，请稍后再试！','error');
+				    			$.messager.alert('删除提示','删除其它入库信息异常，请稍后再试！','error');
 								return;
 							}
 						});			
@@ -667,7 +649,7 @@
                 });
 			}
 			
-			//批量删除采购入库审核
+			//批量删除其它入库
 			function batDeleteDepotHead()
 			{
 				var row = $('#tableData').datagrid('getChecked');	
@@ -678,7 +660,7 @@
 				}
 				if(row.length > 0)
 				{
-					$.messager.confirm('删除确认','确定要删除选中的' + row.length + '条采购入库审核信息吗？',function(r)
+					$.messager.confirm('删除确认','确定要删除选中的' + row.length + '条其它入库信息吗？',function(r)
 				 	{
 	                    if (r)
 	                    {
@@ -712,12 +694,12 @@
 										$(":checkbox").attr("checked",false);
 									}
 									else
-										$.messager.alert('删除提示','删除采购入库审核信息失败，请稍后再试！','error');
+										$.messager.alert('删除提示','删除其它入库信息失败，请稍后再试！','error');
 								},
 								//此处添加错误处理
 					    		error:function()
 					    		{
-					    			$.messager.alert('删除提示','删除采购入库审核信息异常，请稍后再试！','error');
+					    			$.messager.alert('删除提示','删除其它入库信息异常，请稍后再试！','error');
 									return;
 								}
 							});	
@@ -736,14 +718,14 @@
 			{
 				$("#clientIp").val('<%=clientIp %>');
 				$('#depotHeadFM').form('clear');
-				$('#depotHeadDlg').dialog('open').dialog('setTitle','<img src="<%=path%>/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加采购入库审核信息');
+				$('#depotHeadDlg').dialog('open').dialog('setTitle','<img src="<%=path%>/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加其它入库信息');
 				$(".window-mask").css({ width: webW ,height: webH});
 	            $("#Number").val("").focus();
 	            
 	            orgDepotHead = "";
 	            depotHeadID = 0;
-	            initTableData_material(); //材料列表
-	            reject(); //撤销下、刷新材料列表
+	            initTableData_material(); //商品列表
+	            reject(); //撤销下、刷新商品列表
 	            url = '<%=path %>/depotHead/create.action';
 			}
 			
@@ -762,7 +744,7 @@
 							async :  false,
 							data: ({
 								Type:"入库",
-								SubType:"采购",
+								SubType:"其它",
 								ProjectId : $.trim($("#ProjectId").val()),
 								Number : $.trim($("#Number").val()),
 								OperTime: $("#OperTime").val(),
@@ -797,14 +779,14 @@
 								{
 									$.messager.show({
 			                            title: '错误提示',
-			                            msg: '保存采购入库审核信息失败，请稍后重试!'
+			                            msg: '保存其它入库信息失败，请稍后重试!'
 			                        });
 								}
 							},
 							//此处添加错误处理
 				    		error:function()
 				    		{
-				    			$.messager.alert('提示','保存采购入库审核信息异常，请稍后再试！','error');
+				    			$.messager.alert('提示','保存其它入库信息异常，请稍后再试！','error');
 								return;
 							}
 						});	
@@ -833,68 +815,14 @@
 	            $("#Remark").val(depotHeadInfo[9]);
 	            
 	            //orgDepotHead = depotHeadInfo[1];
-                $('#depotHeadDlg').dialog('open').dialog('setTitle','<img src="<%=path%>/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑采购入库审核信息');
+                $('#depotHeadDlg').dialog('open').dialog('setTitle','<img src="<%=path%>/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑其它入库信息');
                 $(".window-mask").css({ width: webW ,height: webH});
                 depotHeadID = depotHeadInfo[0];
                 
-                initTableData_material(); //材料列表
-                reject(); //撤销下、刷新材料列表                
+                initTableData_material(); //商品列表
+                reject(); //撤销下、刷新商品列表                
                 url = '<%=path %>/depotHead/update.action?depotHeadID=' + depotHeadInfo[0];
 	        }
-			
-			var url_audit;
-	        //撤审信息
-	        function editDepotHead_audit(depotHeadTotalInfo)
-	        {
-	        	var depotHeadInfo = depotHeadTotalInfo.split("AaBb");
-	        	$('#depotHeadDlg-audit').dialog('open').dialog('setTitle','<img src="<%=path%>/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑撤审原因信息');
-                $(".window-mask").css({ width: webW ,height: webH});
-                url_audit = '<%=path %>/depotHead/submit.action?depotHeadIDs=' + depotHeadInfo[0];
-	        }
-			//保存撤审信息
-			$("#saveDepotHead-audit").unbind().bind({
-				click:function()
-				{
-					if(!$('#depotHeadFM-audit').form('validate'))
-						return;
-					else 
-					{
-						$.ajax({
-							type:"post",
-							url: url_audit,
-							dataType: "json",
-							async :  false,
-							data: ({
-								State:"未通过",
-								Reason:$.trim($("#Reason").val()),
-								clientIp:'<%=clientIp %>'
-							}),
-							success: function (tipInfo)
-							{
-								if(tipInfo)
-								{
-									$('#depotHeadDlg-audit').dialog('close');
-									var opts = $("#tableData").datagrid('options'); 
-									showDepotHeadDetails(opts.pageNumber,opts.pageSize); 
-								}
-								else
-								{
-									$.messager.show({
-			                            title: '错误提示',
-			                            msg: '保存撤审信息失败，请稍后重试!'
-			                        });
-								}
-							},
-							//此处添加错误处理
-				    		error:function()
-				    		{
-				    			$.messager.alert('提示','保存撤审信息异常，请稍后再试！','error');
-								return;
-							}
-						});	
-					}
-				}
-			});
 	        
 	        //查看信息
 	        function showDepotHead(depotHeadTotalInfo)
@@ -910,11 +838,11 @@
 	            $("#RemarkShow").text(depotHeadInfo[9]);
 	            var audit=(depotHeadInfo[14]!="undefined"&&depotHeadInfo[15]!="undefined"&&depotHeadInfo[14]!=""&&depotHeadInfo[15]!="")?" 撤审人:"+depotHeadInfo[14]+" 撤审原因:"+depotHeadInfo[15]:"";
 	            audit="<span style='color:red;'>"+audit+"</span>";
-                $('#depotHeadDlgShow').dialog('open').dialog('setTitle','<img src="<%=path%>/js/easyui-1.3.5/themes/icons/list.png"/>&nbsp;查看采购入库审核信息'+audit);
+	            $('#depotHeadDlgShow').dialog('open').dialog('setTitle','<img src="<%=path%>/js/easyui-1.3.5/themes/icons/list.png"/>&nbsp;查看其它入库信息'+audit);
                 $(".window-mask").css({ width: webW ,height: webH});
                 
                 depotHeadID = depotHeadInfo[0];
-                initTableData_material_show(); //材料列表-查看状态
+                initTableData_material_show(); //商品列表-查看状态
 	        }
 	        
 			//搜索处理
@@ -950,7 +878,7 @@
 					data: ({
 						ProjectId:$.trim($("#searchProjectId").val()),
 						Type:"入库",
-						SubType:"采购",
+						SubType:"其它",
 						State:$.trim($("#searchState").val()),
 						Number:$.trim($("#searchNumber").val()),
 						BeginTime:$("#searchBeginTime").val(),
@@ -981,68 +909,6 @@
 					$("#searchBtn").click();
 			    }	
 			});
-			//审批
-			function submitDepotHead()
-			{
-			    var row = $("#tableData").datagrid("getChecked");
-	            if(row.length == 0)
-				{
-					$.messager.alert('审批提示','没有记录被选中！','info');				
-					return;	
-				}
-	            if(row.length > 0)
-				{
-					$.messager.confirm('审批确认','确定要提交选中的' + row.length + '条采购入库审核信息吗？',function(r)
-				 	{
-	                    if (r)
-	                    {
-	                    	var ids = "";
-	                        for(var i = 0;i < row.length; i++)
-	                        {
-	                        	if(i == row.length-1)
-	                        	{
-	                        		ids += row[i].Id;
-	                        		break;
-	                        	}
-	                        	ids += row[i].Id + ",";
-	                        }
-				            $.ajax({
-								type:"post",
-								url: "<%=path %>/depotHead/submit.action",
-								dataType: "json",
-								async: false,
-								data: ({
-									depotHeadIDs: ids,
-									State:"已生效",
-									clientIp:'<%=clientIp %>'
-								}),
-								success: function (tipInfo)
-								{
-									if(tipInfo)
-									{
-										$.messager.alert('提示',"审批成功！",'info');	
-										var opts = $("#tableData").datagrid('options'); 
-										showDepotHeadDetails(opts.pageNumber,opts.pageSize); 
-									}
-									else
-									{
-										$.messager.show({
-										    title: '错误提示',
-				                            msg: '审批失败，请稍后重试!'
-				                        });
-									}
-								},
-								//此处添加错误处理
-					    		error:function()
-					    		{
-					    			$.messager.alert('提示','审批异常，请稍后再试！','error');
-									return;
-								}
-							});	
-						  }
-					  });
-				 }
-			}
 			
 			//结束编辑
 			var editIndex = undefined;

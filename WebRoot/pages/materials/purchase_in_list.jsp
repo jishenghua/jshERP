@@ -1,4 +1,4 @@
-<%@page import="com.jsh.util.common.Tools"%>
+<%@page import="com.jsh.util.Tools"%>
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
 <%
 	String path = request.getContextPath();
@@ -43,16 +43,6 @@
 					<td>
 						<input type="text" name="searchEndTime" id="searchEndTime" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="txt Wdate" style="width:80px;"/>
 					</td>
-					<td>状态：</td>
-					<td>
-						<select name="searchState" id="searchState"  style="width:60px;">
-						<option value="">全部</option>
-						<option value="草稿">草稿</option>
-						<option value="待审核">待审核</option>
-						<option value="未通过">未通过</option>
-						<option value="已生效">已生效</option>
-						</select>
-					</td>
 					<td>&nbsp;</td>
 					<td>
 						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchBtn">查询</a>&nbsp;
@@ -63,7 +53,7 @@
 		</div>
 		
 		<!-- 数据显示table -->
-		<div id = "tablePanel"	class="easyui-panel" style="padding:1px;top:300px;" title="采购入库列表" iconCls="icon-list" collapsible="true" closable="false">
+		<div id="tablePanel" class="easyui-panel" style="padding:1px; top:300px;" title="采购入库列表" iconCls="icon-list" collapsible="true" closable="false">
 			<table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 		</div>
 		
@@ -72,7 +62,7 @@
 	        <form id="depotHeadFM" method="post"  novalidate>
 	            <table>
 	            <tr>
-	            <td>店　面：</td>
+	            <td>仓　库：</td>
 	            <td style="padding:5px">
                 <select name="ProjectId" id="ProjectId" style="width:120px;"></select>
                 </td>
@@ -110,9 +100,9 @@
 	            </td>
 	            </tr>
 	            <tr>
-	            <td>材料列表：</td>
+	            <td>商品列表：</td>
 	            <td colspan="7">
-			    <!-- 材料列表table -->
+			    <!-- 商品列表table -->
 				<table id="materialData" style="top:100px;border-bottom-color:#FFFFFF"></table>
 	            </td>
 	            </tr>
@@ -128,7 +118,7 @@
 	            closed="true" modal="true" cache="false" collapsible="false" closable="true">
 	            <table>
 	            <tr>
-	            <td>店　面：</td>
+	            <td>仓　库：</td>
 	            <td style="padding:5px;width:120px;">
                 <span id="ProjectIdShow"></span>
                 </td>
@@ -164,9 +154,9 @@
 	            </td>
 	            </tr>
 	            <tr>
-	            <td>材料列表：</td>
+	            <td>商品列表：</td>
 	            <td colspan="7">
-			    <!-- 材料列表table -->
+			    <!-- 商品列表table -->
 				<table id="materialDataShow" style="top:100px;border-bottom-color:#FFFFFF"></table>
 	            </td>
 	            </tr>
@@ -409,7 +399,6 @@
 			          { title: '创建时间',field: 'CreateTime',width:100},
 			          { title: '操作员',field: 'OperPersonName',width:100},
 			          { title: '备注',field: 'Remark',width:100},
-			          { title: '状态',field: 'State',width:50},
 			          { title: '操作',field: 'op',align:"center",width:180,formatter:function(value,rec)
 			         	{
 							var str = '';
@@ -446,25 +435,6 @@
 							{
 								batDeleteDepotHead();	
 							}
-						},
-						"-",
-						{
-							id:'submitDepotHead',
-							text:'提交审核',
-							iconCls:'icon-ok',
-							handler:function()
-							{
-								submitDepotHead();	
-							}
-						},
-						{
-							id:'cancelDepotHead',
-							text:'废弃',
-							iconCls:'icon-no',
-							handler:function()
-							{
-								cancelDepotHead();	
-							}
 						}
 					],
 					onLoadError:function()
@@ -475,7 +445,7 @@
 				});
 			}
 			
-			//初始化表格数据-材料列表-编辑状态
+			//初始化表格数据-商品列表-编辑状态
 			function initTableData_material()
 			{
 				$('#materialData').datagrid({
@@ -557,7 +527,7 @@
 			}
 			
 			
-			//初始化表格数据-材料列表-查看状态
+			//初始化表格数据-商品列表-查看状态
 			function initTableData_material_show()
 			{
 				$('#materialDataShow').datagrid({
@@ -754,8 +724,8 @@
 	            
 	            orgDepotHead = "";
 	            depotHeadID = 0;
-	            initTableData_material(); //材料列表
-	            reject(); //撤销下、刷新材料列表
+	            initTableData_material(); //商品列表
+	            reject(); //撤销下、刷新商品列表
 	            url = '<%=path %>/depotHead/create.action';
 			}
 			
@@ -849,8 +819,8 @@
                 $(".window-mask").css({ width: webW ,height: webH});
                 depotHeadID = depotHeadInfo[0];
                 
-                initTableData_material(); //材料列表
-                reject(); //撤销下、刷新材料列表                
+                initTableData_material(); //商品列表
+                reject(); //撤销下、刷新商品列表                
                 url = '<%=path %>/depotHead/update.action?depotHeadID=' + depotHeadInfo[0];
 	        }
 	        
@@ -872,7 +842,7 @@
                 $(".window-mask").css({ width: webW ,height: webH});
                 
                 depotHeadID = depotHeadInfo[0];
-                initTableData_material_show(); //材料列表-查看状态
+                initTableData_material_show(); //商品列表-查看状态
 	        }
 	        
 			//搜索处理
@@ -939,130 +909,6 @@
 					$("#searchBtn").click();
 			    }	
 			});
-			//提交审核
-			function submitDepotHead()
-			{
-			    var row = $("#tableData").datagrid("getChecked");
-	            if(row.length == 0)
-				{
-					$.messager.alert('提交审核提示','没有记录被选中！','info');				
-					return;	
-				}
-	            if(row.length > 0)
-				{
-					$.messager.confirm('提交审核确认','确定要提交选中的' + row.length + '条采购入库信息吗？',function(r)
-				 	{
-	                    if (r)
-	                    {
-	                    	var ids = "";
-	                        for(var i = 0;i < row.length; i++)
-	                        {
-	                        	if(i == row.length-1)
-	                        	{
-	                        		ids += row[i].Id;
-	                        		break;
-	                        	}
-	                        	ids += row[i].Id + ",";
-	                        }
-				            $.ajax({
-								type:"post",
-								url: "<%=path %>/depotHead/submit.action",
-								dataType: "json",
-								async: false,
-								data: ({
-									depotHeadIDs: ids,
-									State:"待审核",
-									clientIp:'<%=clientIp %>'
-								}),
-								success: function (tipInfo)
-								{
-									if(tipInfo)
-									{
-										$.messager.alert('提示',"提交审核成功！",'info');	
-										var opts = $("#tableData").datagrid('options'); 
-										showDepotHeadDetails(opts.pageNumber,opts.pageSize); 
-									}
-									else
-									{
-										$.messager.show({
-										    title: '错误提示',
-				                            msg: '提交审核失败，请稍后重试!'
-				                        });
-									}
-								},
-								//此处添加错误处理
-					    		error:function()
-					    		{
-					    			$.messager.alert('提示','提交审核异常，请稍后再试！','error');
-									return;
-								}
-							});	
-						  }
-					  });
-				 }
-			}
-			//废弃
-			function cancelDepotHead()
-			{
-			    var row = $("#tableData").datagrid("getChecked");
-	            if(row.length == 0)
-				{
-					$.messager.alert('废弃提示','没有记录被选中！','info');				
-					return;	
-				}
-	            if(row.length > 0)
-				{
-					$.messager.confirm('废弃确认','确定要废弃选中的' + row.length + '条采购入库信息吗？',function(r)
-				 	{
-	                    if (r)
-	                    {
-	                    	var ids = "";
-	                        for(var i = 0;i < row.length; i++)
-	                        {
-	                        	if(i == row.length-1)
-	                        	{
-	                        		ids += row[i].Id;
-	                        		break;
-	                        	}
-	                        	ids += row[i].Id + ",";
-	                        }
-				            $.ajax({
-								type:"post",
-								url: "<%=path %>/depotHead/submit.action",
-								dataType: "json",
-								async: false,
-								data: ({
-									depotHeadIDs: ids,
-									State:"废弃",
-									clientIp:'<%=clientIp %>'
-								}),
-								success: function (tipInfo)
-								{
-									if(tipInfo)
-									{
-										$.messager.alert('提示',"废弃成功！",'info');	
-										var opts = $("#tableData").datagrid('options'); 
-										showDepotHeadDetails(opts.pageNumber,opts.pageSize); 
-									}
-									else
-									{
-										$.messager.show({
-										    title: '错误提示',
-				                            msg: '废弃失败，请稍后重试!'
-				                        });
-									}
-								},
-								//此处添加错误处理
-					    		error:function()
-					    		{
-					    			$.messager.alert('提示','废弃异常，请稍后再试！','error');
-									return;
-								}
-							});	
-						  }
-					  });
-				 }
-			}
 			
 			//结束编辑
 			var editIndex = undefined;

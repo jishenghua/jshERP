@@ -1,4 +1,4 @@
-<%@page import="com.jsh.util.common.Tools"%>
+<%@page import="com.jsh.util.Tools"%>
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
 <%
 	String path = request.getContextPath();
@@ -74,7 +74,7 @@
 				else
 				{
 					$("#passwordLabel").empty().append("原始密码&nbsp;");
-					$("#newPassword").empty().append("密&nbsp;&nbsp;&nbsp;&nbsp;码&nbsp;");
+					$("#newPassword").empty().append("密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码&nbsp;");
 					$("#repasswordLabel").empty().append("确认密码&nbsp;");
 				}
 			}

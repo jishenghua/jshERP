@@ -1,4 +1,4 @@
-<%@page import="com.jsh.util.common.Tools"%>
+<%@page import="com.jsh.util.Tools"%>
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
 <%
 	String path = request.getContextPath();
@@ -320,10 +320,10 @@
     		          { title: '颜色',field: 'Color',width:40},
 			          { title: '单位',field: 'Unit',width:50},
 			          { title: '零售价',field: 'RetailPrice',width:50},
-			          { title: '最低售价',field: 'LowPrice',width:50},
-			          { title: '预设售价一',field: 'PresetPriceOne',width:80},
-			          { title: '预设售价二',field: 'PresetPriceTwo',width:80},
-			          { title: '备注',field: 'Remark',width:120},
+			          { title: '最低售价',field: 'LowPrice',width:70},
+			          { title: '预设售价一',field: 'PresetPriceOne',width:70},
+			          { title: '预设售价二',field: 'PresetPriceTwo',width:70},
+			          { title: '备注',field: 'Remark',width:110},
 			          { title: '操作',field: 'op',align:"center",width:120,formatter:function(value,rec)
 			         	{
 							var str = '';

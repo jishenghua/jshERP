@@ -8,7 +8,7 @@
 <!DOCTYPE html>
 <html>
   	<head>
-    	<title>调拨出库</title>
+    	<title>财务管理</title>
         <meta charset="utf-8">
 		<!-- 指定以IE8的方式来渲染 -->
 		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
@@ -27,15 +27,11 @@
 		<div id = "searchPanel"	class="easyui-panel" style="padding:3px;" title="查询窗口" iconCls="icon-search" collapsible="true" closable="false">
 			<table id="searchTable">
 				<tr>
-			    	<td>仓库：</td>
-					<td>
-						<select name="searchProjectId" id="searchProjectId"  style="width:80px;"></select>
-					</td>
 					<td>单据号：</td>
 					<td>
-						<input type="text" name="searchNumber" id="searchNumber" style="width:60px;"/>
+						<input type="text" name="searchBillNo" id="searchBillNo" style="width:60px;"/>
 					</td>
-					<td>出库时间：</td>
+					<td>单据时间：</td>
 					<td>
 						<input type="text" name="searchBeginTime" id="searchBeginTime" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="txt Wdate" style="width:80px;"/>
 					</td>
@@ -53,50 +49,52 @@
 		</div>
 		
 		<!-- 数据显示table -->
-		<div id = "tablePanel"	class="easyui-panel" style="padding:1px;top:300px;" title="调拨出库列表" iconCls="icon-list" collapsible="true" closable="false">
+		<div id = "tablePanel"	class="easyui-panel" style="padding:1px;top:300px;" title="财务管理列表" iconCls="icon-list" collapsible="true" closable="false">
 			<table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 		</div>
 		
-	    <div id="depotHeadDlg" class="easyui-dialog" style="width:850px;padding:10px 20px;top:20px"
+	    <div id="accountHeadDlg" class="easyui-dialog" style="width:850px;padding:10px 20px;top:20px"
 	            closed="true" buttons="#dlg-buttons" modal="true" cache="false" collapsible="false" closable="true">
-	        <form id="depotHeadFM" method="post"  novalidate>
+	        <form id="accountHeadFM" method="post"  novalidate>
 	            <table>
-	            <tr>
-	            <td>仓　库：</td>
-	            <td style="padding:5px">
-                <select name="ProjectId" id="ProjectId" style="width:120px;"></select>
-                </td>
-                <td>出库时间：</td>
+	            <tr>	
+	            <td>单据编号：</td>
+	            <td style="padding:5px"><input name="BillNo" id="BillNo" class="easyui-validatebox" data-options="required:true,validType:'length[2,30]'" style="width: 120px;"/>
+	            </td>            
+                <td>单据日期：</td>
                 <td style="padding:5px">
-                <input type="text" name="OperTime" id="OperTime" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="txt Wdate" style="width:120px;"/>
-                </td>
-	            <td>对方仓库：</td>
+                <input type="text" name="BillTime" id="BillTime" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="txt Wdate" style="width:120px;"/>
+                </td>         
+	            <td>账户：</td>
 	            <td style="padding:5px">
-	            <select name="AllocationProjectId" id="AllocationProjectId" style="width:120px;"></select>
+	            <select id="AccountId" name="AccountId" style="width:120px;"></select>
 	            </td>
-	            <td style="width:50px;"></td>
-	            <td style="padding:5px;width:120px;"></td>
+	            <td>金额：</td>
+				<td>
+					<input type="text" name="ChangeAmount" id="ChangeAmount" class="easyui-numberbox" data-options="min:0,precision:2" style="width: 60px;"></input>
+				</td>
 	            </tr>
 	            <tr>
-	            <td>仓管员：</td>
+	            <td>单位：</td>
 	            <td style="padding:5px">
-	            <select name="WareHousePersonId" id="WareHousePersonId" style="width:120px;"></select>
+                <select name="OrganId" id="OrganId" style="width:120px;"></select>
+                </td>
+	            <td>经手人：</td>
+	            <td style="padding:5px">
+	            <select name="HandsPersonId" id="HandsPersonId" style="width:120px;"></select>
 	            </td>
 	            <td>备注：</td>
 	            <td style="padding:5px">
 	            <input name="Remark" id="Remark" class="easyui-validatebox" style="width: 120px;"/>
 	            </td>
-	            <td>单据号：</td>
-	            <td style="padding:5px"><input name="Number" id="Number" class="easyui-validatebox" data-options="required:true,validType:'length[2,30]'" style="width: 120px;"/>
-	            </td>
 	            <td></td>
-				<td style="padding:5px"></td>
+	            <td></td>
 	            </tr>
 	            <tr>
-	            <td>商品列表：</td>
+	            <td>单据明细：</td>
 	            <td colspan="7">
-			    <!-- 商品列表table -->
-				<table id="materialData" style="top:100px;border-bottom-color:#FFFFFF"></table>
+			    <!-- 单据列表table -->
+				<table id="accountData" style="top:100px;border-bottom-color:#FFFFFF"></table>
 	            </td>
 	            </tr>
 	            </table>
@@ -104,181 +102,119 @@
 	        </form>
 	    </div>
 	    <div id="dlg-buttons">
-	        <a href="javascript:void(0)" id="saveDepotHead" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
-	        <a href="javascript:void(0)" id="cancelDepotHead" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#depotHeadDlg').dialog('close')">取消</a>
+	        <a href="javascript:void(0)" id="saveAccountHead" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
+	        <a href="javascript:void(0)" id="cancelAccountHead" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#accountHeadDlg').dialog('close')">取消</a>
 	    </div>
-	    <div id="depotHeadDlgShow" class="easyui-dialog" style="width:850px;padding:10px 20px;top:20px"
+	    <div id="accountHeadDlgShow" class="easyui-dialog" style="width:850px;padding:10px 20px;top:20px"
 	            closed="true" modal="true" cache="false" collapsible="false" closable="true">
 	            <table>
 	            <tr>
-	            <td>仓　库：</td>
-	            <td style="padding:5px;width:120px;">
-                <span id="ProjectIdShow"></span>
-                </td>
-                <td>出库时间：</td>
+	            <td>单据编号：</td>
                 <td style="padding:5px;width:120px;">
-                <span id="OperTimeShow"></span>
+                <span id="BillNoShow"></span>
                 </td>
-	            <td>对方仓库：</td>
+	            <td>单据日期：</td>
 	            <td style="padding:5px;width:120px;">
-	            <span id="AllocationProjectIdShow"></span>
+                <span id="BillTimeShow"></span>
+                </td>                
+	            <td>账户：</td>
+	            <td style="padding:5px;width:120px;">
+	            <span id="AccountIdShow"></span>
 	            </td>
-	            <td style="width:50px;"></td>
+	            <td>金额：</td>
 	            <td style="padding:5px;width:120px;">
+	            <span id="ChangeAmountShow"></span>
 	            </td>
 	            </tr>
 	            <tr>
-	            <td>仓管员：</td>
+	            <td>单位：</td>
 	            <td style="padding:5px">
-	            <span id="WareHousePersonIdShow"></span>
+	            <span id="OrganIdShow"></span>
 	            </td>
+	            <td>经手人：</td>
+				<td style="padding:5px">
+				<span id="HandsPersonIdShow"></span>
+				</td>
 	            <td>备注：</td>
 	            <td style="padding:5px">
 	            <span id="RemarkShow"></span>
 	            </td>
-	            <td>单据号：</td>	            
-	            <td style="padding:5px">
-	            <span id="NumberShow"></span>
-	            </td>
+	            <td></td>	            
 	            <td></td>
-				<td style="padding:5px"></td>
 	            </tr>
 	            <tr>
-	            <td>商品列表：</td>
+	            <td>单据明细：</td>
 	            <td colspan="7">
-			    <!-- 商品列表table -->
-				<table id="materialDataShow" style="top:100px;border-bottom-color:#FFFFFF"></table>
+			    <!-- 单据列表table -->
+				<table id="accountDataShow" style="top:100px;border-bottom-color:#FFFFFF"></table>
 	            </td>
 	            </tr>
 	            </table>
 	    </div>
 	    
 		<script type="text/javascript">
-			var depotList = null;
-			var depotID = null;
+			var accountList = null;
+			var accountID = null;
 			var supplierList = null;
 			var supplierID = null;
 			var personList = null;
 			var personID = null;
 			var ProjectSearch=null;
 			var kid=${sessionScope.user.id};
-			var userBusinessList=null;
-			var userdepot=null;
-			var depotHeadMaxId=null; //获取最大的Id
+			var accountHeadMaxId=null; //获取最大的Id
 			var accepId=null; //保存的主表id
 			//初始化界面
 			$(function()
 			{
-				//初始化系统基础信息
-				initSystemData_UB();
-				initSelectInfo_UB();
-				initSystemData_depot();
-				initSelectInfo_depot();
+				initSystemData_person(); //经手人数据
+				initSelectInfo_person(); //经手人信息
+				initSystemData_account(); //账户数据
+				initSelectInfo_account(); //账户信息
 				initSupplier(); //供应商
 				initTableData();
 				ininPager();
-				initForm();
-				
-				
+				initForm();			
+				$("#searchBtn").click();	
 			});	
 			
-			//初始化系统基础信息
-			function initSystemData_UB()
+			//获取账户信息
+			function initSystemData_account()
 			{
 				$.ajax({
 					type:"post",
-					url: "<%=path%>/userBusiness/getBasicData.action",
-					data: ({
-						KeyId:kid,
-						Type:"UserDepot"
-					}),
+					url: "<%=path%>/account/getAccount.action",
 					//设置为同步
 					async:false,
 					dataType: "json",
 					success: function (systemInfo)
 					{
-						if(systemInfo)
-						{
-							userBusinessList = systemInfo.showModel.map.userBusinessList;
-							var msgTip = systemInfo.showModel.msgTip;
-							if(msgTip == "exceptoin")
-							{
-								$.messager.alert('提示','查找UserBusiness异常,请与管理员联系！','error');
-								return;
-							}
-						}
-						else
-						{
-							userBusinessList=null;
-						}
-					}
-				});		
-				
-			}
-			//初始化页面选项卡
-			function initSelectInfo_UB()
-			{
-				
-				if(userBusinessList !=null)
-				{
-					if(userBusinessList.length>0)
-					{
-						//用户对应的部门列表 [1][2][3]...
-						userdepot =userBusinessList[0].value;
-					}
-				}
-			}
-			
-			
-			//初始化系统基础信息
-			function initSystemData_depot()
-			{
-				$.ajax({
-					type:"post",
-					url: "<%=path%>/depot/getBasicData.action",
-					//设置为同步
-					async:false,
-					dataType: "json",
-					success: function (systemInfo)
-					{
-						depotList = systemInfo.showModel.map.depotList;
+						accountList = systemInfo.showModel.map.accountList;
 						var msgTip = systemInfo.showModel.msgTip;
 						if(msgTip == "exceptoin")
 						{
-							$.messager.alert('提示','查找系统基础信息异常,请与管理员联系！','error');
+							$.messager.alert('提示','查找账户信息异常,请与管理员联系！','error');
 							return;
 						}	
 					}
 				});				
 			}
-			//初始化页面选项卡
-			function initSelectInfo_depot()
+			//获取账户信息
+			function initSelectInfo_account()
 			{
-				var options = "";
-				var alloptions = "";
-				if(depotList !=null)
+				var options = "";				
+				if(accountList !=null)
 				{
 					options = "";
-					for(var i = 0 ;i < depotList.length;i ++)
+					for(var i = 0 ;i < accountList.length;i ++)
 					{
-						var depot = depotList[i];
-						
-						if(userdepot!=null)
-						{
-							if(userdepot.indexOf("["+depot.id+"]")!=-1)
-							{
-								options += '<option value="' + depot.id + '">' + depot.name + '</option>';
-							}
-							alloptions += '<option value="' + depot.id + '">' + depot.name + '</option>';
-						}
+						var account = accountList[i];
+						options += '<option value="' + account.id + '">' + account.name + '</option>';
 					}	
-					$("#ProjectId").empty().append(options);
-					$("#searchProjectId").empty().append('<option value="">全部</option>').append(options);
-					$("#AllocationProjectId").empty().append(alloptions);
+					$("#AccountId").empty().append(options);
 				}
 			}
 			
-			//初始化系统基础信息
+			//初始化单位信息
 			function initSupplier()
 			{
 				$('#OrganId').combobox({    
@@ -288,12 +224,16 @@
 				});  
 			}
 			
-			//初始化系统基础信息
-			function initSystemData_person(ProjectSearch)
+			//获取财务员
+			function initSystemData_person()
 			{
+				var type = "财务员";
 				$.ajax({
 					type:"post",
-					url: "<%=path%>/person/getBasicData.action?ProjectId="+ProjectSearch,
+					url: "<%=path%>/person/getPersonByType.action",
+					data: {
+						Type: type
+					},
 					//设置为同步
 					async:false,
 					dataType: "json",
@@ -309,11 +249,10 @@
 					}
 				});				
 			}
-			//初始化页面选项卡
+			//获取财务员
 			function initSelectInfo_person()
 			{
-				var options1 = "";
-				var options2 = "";
+				var options = "";
 				
 				if(personList !=null)
 				{
@@ -324,35 +263,19 @@
 						{
 							personID = person.id;
 						}
-						if(person.type=="采购人")
+						if(person.type=="财务员")
 						{
-							options1 += '<option value="' + person.id + '">' + person.name + '</option>';
-						}
-						else if(person.type=="仓管员")
-						{
-							options2 += '<option value="' + person.id + '">' + person.name + '</option>';
+							options += '<option value="' + person.id + '">' + person.name + '</option>';
 						}		
 					}
-					$("#HandsPersonId").empty().append(options1);
-					$("#WareHousePersonId").empty().append(options2);
+					$("#HandsPersonId").empty().append(options);
 				}
 			}
-			
-			$("#ProjectId").change(
-					function(){
-						var ProjectId=$("#ProjectId").val();
-						if(ProjectId!='')
-						{
-							initSystemData_person(ProjectId);
-							initSelectInfo_person();
-						}
-					}
-				);
 			
 			//防止表单提交重复
 			function initForm()
 			{
-				$('#depotHeadFM').form({
+				$('#accountHeadFM').form({
 				    onSubmit: function(){
 				        return false;
 				    }
@@ -363,8 +286,6 @@
 			function initTableData()
 			{
 				$('#tableData').datagrid({
-					//title:'调拨出库列表',
-					//iconCls:'icon-save',
 					//width:700,
 					height:heightInfo,
 					rownumbers: false,
@@ -377,7 +298,7 @@
 					//fitColumns:true,
 					//单击行是否选中
 					//checkOnSelect : false,
-					//url:'<%=path %>/depotHead/findBy.action?pageSize=' + initPageSize,
+					//url:'<%=path %>/accountHead/findBy.action?pageSize=' + initPageSize,
 					pagination: true,
 					//交替出现背景
 					striped : true,
@@ -386,25 +307,20 @@
 					pageList: initPageNum,
 					columns:[[
 					  { field: 'Id',width:35,align:"center",checkbox:true},
-			          { title: '单据号',field: 'Number',width:100},
-			          { title: '出库时间 ',field: 'OperTime',width:100},
-			          { title: '创建时间',field: 'CreateTime',width:100},
-			          { title: '操作员',field: 'OperPersonName',width:100},
+			          { title: '单据编号',field: 'BillNo',width:100},
+			          { title: '单据时间 ',field: 'BillTime',width:100},
 			          { title: '备注',field: 'Remark',width:100},
 			          { title: '操作',field: 'op',align:"center",width:180,formatter:function(value,rec)
 			         	{
 							var str = '';
-							var rowInfo = rec.Id + 'AaBb' + rec.ProjectId+ 'AaBb' + rec.Number+ 'AaBb' + rec.OperPersonName
-							+ 'AaBb' + rec.OperTime+ 'AaBb' + rec.OrganId+ 'AaBb' + rec.HandsPersonId
-							+ 'AaBb' + rec.WareHousePersonId+ 'AaBb' + rec.SettlementWay+ 'AaBb' + rec.Remark
-							+ 'AaBb' + rec.ProjectName+ 'AaBb' + rec.OrganName+ 'AaBb' + rec.HandsPersonName+ 'AaBb' + rec.WareHousePersonName
-							+ 'AaBb' + rec.AllocationProjectId+ 'AaBb' + rec.AllocationProjectName
-							+ 'AaBb' + rec.ReAuditPersonName+ 'AaBb' + rec.Reason;
+							var rowInfo = rec.Id + 'AaBb' + rec.BillNo+ 'AaBb' + rec.BillTime+ 'AaBb' + rec.Remark
+							+ 'AaBb' + rec.AccountId+ 'AaBb' + rec.AccountName + 'AaBb' + rec.OrganId + 'AaBb' + rec.OrganName 
+							+ 'AaBb' + rec.HandsPersonId + 'AaBb' + rec.HandsPersonName + 'AaBb' + rec.ChangeAmount;
         					if(1 == value)
         					{
-        						str += '<img src="<%=path%>/js/easyui-1.3.5/themes/icons/list.png" style="cursor: pointer;" onclick="editDepotHead(\'' + rowInfo + '\');"/>&nbsp;<a onclick="showDepotHead(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">查看</a>&nbsp;&nbsp;';
-        						str += '<img src="<%=path%>/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editDepotHead(\'' + rowInfo + '\');"/>&nbsp;<a onclick="editDepotHead(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
-        						str += '<img src="<%=path%>/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteDepotHead('+ rec.Id +');"/>&nbsp;<a onclick="deleteDepotHead('+ rec.Id +');" style="text-decoration:none;color:black;" href="javascript:void(0)">删除</a>';
+        						str += '<img src="<%=path%>/js/easyui-1.3.5/themes/icons/list.png" style="cursor: pointer;" onclick="showAccountHead(\'' + rowInfo + '\');"/>&nbsp;<a onclick="showAccountHead(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">查看</a>&nbsp;&nbsp;';
+        						str += '<img src="<%=path%>/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editAccountHead(\'' + rowInfo + '\');"/>&nbsp;<a onclick="editAccountHead(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
+        						str += '<img src="<%=path%>/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteAccountHead('+ rec.Id +');"/>&nbsp;<a onclick="deleteAccountHead('+ rec.Id +');" style="text-decoration:none;color:black;" href="javascript:void(0)">删除</a>';
         					}
         					return str;
 						}
@@ -412,21 +328,21 @@
 					]],
 					toolbar:[
 						{
-							id:'addDepotHead',
+							id:'addAccountHead',
 							text:'增加',
 							iconCls:'icon-add',
 							handler:function()
 							{
-								addDepotHead();
+								addAccountHead();
 							}
 						},
 						{
-							id:'deleteDepotHead',
+							id:'deleteAccountHead',
 							text:'删除',
 							iconCls:'icon-remove',
 							handler:function()
 							{
-								batDeleteDepotHead();	
+								batDeleteAccountHead();	
 							}
 						}
 					],
@@ -438,10 +354,10 @@
 				});
 			}
 			
-			//初始化表格数据-商品列表-编辑状态
-			function initTableData_material()
+			//初始化表格数据-明细列表-编辑状态
+			function initTableData_account()
 			{
-				$('#materialData').datagrid({
+				$('#accountData').datagrid({
 					height:300,
 					rownumbers: false,
 					//动画效果
@@ -453,33 +369,32 @@
 					//fitColumns:true,
 					//单击行是否选中
 					//checkOnSelect : false,
-					url:'<%=path %>/depotItem/findBy.action?HeaderId=' + depotHeadID,
+					url:'<%=path %>/accountItem/findBy.action?HeaderId=' + accountHeadID,
 					pagination: true,
 					//交替出现背景
 					striped : true,
 					//loadFilter: pagerFilter,
 					onClickRow: onClickRow,
-					pageSize: 5,
-					pageList: [5,10,15],
+					pageSize: 50,
+					pageList: [50,100,150],
 					columns:[[
 					  { field: 'Id',width:35,align:"center",checkbox:true},
-			          { title: '名称',field: 'MaterialId',width:230,
+			          { title: '收入项目',field: 'InOutItemId',width:230,
 						  formatter:function(value,row,index){
-								  return row.MaterialName;
+								  return row.InOutItemName;
 	                      },
 						  editor:{
                           type:'combobox',
                           options:{
                               valueField:'Id',
-                              textField:'MaterialName',
+                              textField:'InOutItemName',
                               method:'get',
-                              url: "<%=path%>/material/findBySelect.action"
+                              url: "<%=path%>/inOutItem/findBySelect.action"
                           }
 			            }
 					  },
-			          { title: '数量',field: 'OperNumber',editor:'validatebox',width:50},
-			          { title: '备注',field: 'Remark',editor:'validatebox',width:150},
-			          { title: '图片',field: 'Img',editor:'validatebox',width:110},
+			          { title: '金额',field: 'EachAmount',editor:'validatebox',width:50},
+			          { title: '备注',field: 'Remark',editor:'validatebox',width:150}
 					]],
 					toolbar:[
 						{
@@ -519,10 +434,10 @@
 			}
 			
 			
-			//初始化表格数据-商品列表-查看状态
-			function initTableData_material_show()
+			//初始化表格数据-明细列表-查看状态
+			function initTableData_account_show()
 			{
-				$('#materialDataShow').datagrid({
+				$('#accountDataShow').datagrid({
 					height:300,
 					rownumbers: false,
 					//动画效果
@@ -534,20 +449,19 @@
 					//fitColumns:true,
 					//单击行是否选中
 					//checkOnSelect : false,
-					url:'<%=path %>/depotItem/findBy.action?HeaderId=' + depotHeadID,
+					url:'<%=path %>/accountItem/findBy.action?HeaderId=' + accountHeadID,
 					pagination: true,
 					//交替出现背景
 					striped : true,
 					//loadFilter: pagerFilter,
 					onClickRow: onClickRow,
-					pageSize: 5,
-					pageList: [5,10,15],
+					pageSize: 50,
+					pageList: [50,100,150],
 					columns:[[
 					  { field: 'Id',width:35,align:"center",checkbox:true},
-			          { title: '名称',field: 'MaterialName',width:230},
-			          { title: '数量',field: 'OperNumber',width:50},
-			          { title: '备注',field: 'Remark',width:150},
-			          { title: '图片',field: 'Img',width:110},
+			          { title: '收入项目',field: 'InOutItemName',width:230},
+			          { title: '金额',field: 'EachAmount',width:50},
+			          { title: '备注',field: 'Remark',width:150}
 					]],
 					onLoadError:function()
 					{
@@ -566,12 +480,12 @@
 			    //兼容 IE,firefox 兼容  
 			    var obj = e.srcElement ? e.srcElement : e.target;  
 			    //绑定键盘事件为 id是指定的输入框才可以触发键盘事件 13键盘事件 ---遗留问题 enter键效验 对话框会关闭问题
-			    if(k == "13"&&(obj.id=="State"||obj.id=="Number"))
+			    if(k == "13"&&(obj.id=="BillNo"||obj.id=="BillTime"))
 			    {  
-			        $("#saveDepotHead").click();
+			        $("#saveAccountHead").click();
 			    }
 			    //搜索按钮添加快捷键
-			    if(k == "13"&&(obj.id=="searchState"||obj.id=="searchNumber"))
+			    if(k == "13"&&(obj.id=="searchBillNo"))
 			    {  
 			        $("#searchBtn").click();
 			    }  
@@ -593,7 +507,7 @@
 								pageNumber:pageNum,  
 								pageSize:pageSize  
 							});  
-							showDepotHeadDetails(pageNum,pageSize);
+							showAccountHeadDetails(pageNum,pageSize);
 						}  
 					}); 
 				}
@@ -603,19 +517,19 @@
 				}
 			}
 			
-			//删除调拨出库信息
-			function deleteDepotHead(depotHeadID)
+			//删除财务信息
+			function deleteAccountHead(accountHeadID)
 			{
-				$.messager.confirm('删除确认','确定要删除此调拨出库信息吗？',function(r)
+				$.messager.confirm('删除确认','确定要删除此财务信息吗？',function(r)
 			 	{
                     if (r)
                     {
 						$.ajax({
 							type:"post",
-							url: "<%=path %>/depotHead/delete.action",
+							url: "<%=path %>/accountHead/delete.action",
 							dataType: "json",
 							data: ({
-								depotHeadID : depotHeadID,
+								accountHeadID : accountHeadID,
 								clientIp:'<%=clientIp %>'
 							}),
 							success: function (tipInfo)
@@ -627,12 +541,12 @@
 									$("#searchBtn").click();
 								}
 								else
-									$.messager.alert('删除提示','删除调拨出库信息失败，请稍后再试！','error');
+									$.messager.alert('删除提示','删除财务信息失败，请稍后再试！','error');
 							},
 							//此处添加错误处理
 				    		error:function()
 				    		{
-				    			$.messager.alert('删除提示','删除调拨出库信息异常，请稍后再试！','error');
+				    			$.messager.alert('删除提示','删除财务信息异常，请稍后再试！','error');
 								return;
 							}
 						});			
@@ -640,8 +554,8 @@
                 });
 			}
 			
-			//批量删除调拨出库
-			function batDeleteDepotHead()
+			//批量删除财务信息
+			function batDeleteAccountHead()
 			{
 				var row = $('#tableData').datagrid('getChecked');	
 				if(row.length == 0)
@@ -651,7 +565,7 @@
 				}
 				if(row.length > 0)
 				{
-					$.messager.confirm('删除确认','确定要删除选中的' + row.length + '条调拨出库信息吗？',function(r)
+					$.messager.confirm('删除确认','确定要删除选中的' + row.length + '条财务信息吗？',function(r)
 				 	{
 	                    if (r)
 	                    {
@@ -668,11 +582,11 @@
 	                        }
 	                        $.ajax({
 								type:"post",
-								url: "<%=path %>/depotHead/batchDelete.action",
+								url: "<%=path %>/accountHead/batchDelete.action",
 								dataType: "json",
 								async :  false,
 								data: ({
-									depotHeadIDs : ids,
+									accountHeadIDs : ids,
 									clientIp:'<%=clientIp %>'
 								}),
 								success: function (tipInfo)
@@ -685,12 +599,12 @@
 										$(":checkbox").attr("checked",false);
 									}
 									else
-										$.messager.alert('删除提示','删除调拨出库信息失败，请稍后再试！','error');
+										$.messager.alert('删除提示','删除财务信息失败，请稍后再试！','error');
 								},
 								//此处添加错误处理
 					    		error:function()
 					    		{
-					    			$.messager.alert('删除提示','删除调拨出库信息异常，请稍后再试！','error');
+					    			$.messager.alert('删除提示','删除财务信息异常，请稍后再试！','error');
 									return;
 								}
 							});	
@@ -701,30 +615,30 @@
 			
 			//增加
 			var url;
-			var depotHeadID = 0;
+			var accountHeadID = 0;
 			//保存编辑前的名称
-			var orgDepotHead = "";
+			var orgAccountHead = "";
 			
-			function addDepotHead()
+			function addAccountHead()
 			{
 				$("#clientIp").val('<%=clientIp %>');
-				$('#depotHeadFM').form('clear');
-				$('#depotHeadDlg').dialog('open').dialog('setTitle','<img src="<%=path%>/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加调拨出库信息');
+				$('#accountHeadFM').form('clear');
+				$('#accountHeadDlg').dialog('open').dialog('setTitle','<img src="<%=path%>/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加财务信息');
 				$(".window-mask").css({ width: webW ,height: webH});
-	            $("#Number").val("").focus();
+	            $("#BillNo").val("").focus();
 	            
-	            orgDepotHead = "";
-	            depotHeadID = 0;
-	            initTableData_material(); //商品列表
-	            reject(); //撤销下、刷新商品列表
-	            url = '<%=path %>/depotHead/create.action';
+	            orgAccountHead = "";
+	            accountHeadID = 0;
+	            initTableData_account(); //明细列表
+	            reject(); //撤销下、刷新材料列表
+	            url = '<%=path %>/accountHead/create.action';
 			}
 			
 			//保存信息
-			$("#saveDepotHead").unbind().bind({
+			$("#saveAccountHead").unbind().bind({
 				click:function()
 				{
-					if(!$('#depotHeadFM').form('validate'))
+					if(!$('#accountHeadFM').form('validate'))
 						return;
 					else 
 					{
@@ -734,15 +648,13 @@
 							dataType: "json",
 							async :  false,
 							data: ({
-								Type:"出库",
-								SubType:"调拨",
-								ProjectId : $.trim($("#ProjectId").val()),
-								Number : $.trim($("#Number").val()),
-								OperTime: $("#OperTime").val(),
-								AllocationProjectId:$.trim($("#AllocationProjectId").val()),
+								Type: "收款",
+								BillNo : $.trim($("#BillNo").val()),
+								BillTime : $.trim($("#BillTime").val()),
+								AccountId: $.trim($("#AccountId").val()),
+								ChangeAmount: $.trim($("#ChangeAmount").val()),
+								OrganId: $('#OrganId').combobox('getValue'),
 								HandsPersonId: $.trim($("#HandsPersonId").val()),
-								WareHousePersonId: $.trim($("#WareHousePersonId").val()),
-								SettlementWay: $.trim($("#SettlementWay").val()),
 								Remark: $.trim($("#Remark").val()),
 								clientIp:'<%=clientIp %>'
 							}),
@@ -751,33 +663,33 @@
 								if(tipInfo)
 								{
 									//保存明细记录
-									if(depotHeadID ==0)
+									if(accountHeadID ==0)
 									{
 										getMaxId(); //查找最大的Id
-										accept(depotHeadMaxId); //新增
+										accept(accountHeadMaxId); //新增
 									}
 									else
 									{
-										accept(depotHeadID); //修改
+										accept(accountHeadID); //修改
 									}
 									
 									
-									$('#depotHeadDlg').dialog('close');
+									$('#accountHeadDlg').dialog('close');
 									var opts = $("#tableData").datagrid('options'); 
-									showDepotHeadDetails(opts.pageNumber,opts.pageSize); 
+									showAccountHeadDetails(opts.pageNumber,opts.pageSize); 
 								}
 								else
 								{
 									$.messager.show({
 			                            title: '错误提示',
-			                            msg: '保存调拨出库信息失败，请稍后重试!'
+			                            msg: '保存信息失败，请稍后重试!'
 			                        });
 								}
 							},
 							//此处添加错误处理
 				    		error:function()
 				    		{
-				    			$.messager.alert('提示','保存调拨出库信息异常，请稍后再试！','error');
+				    			$.messager.alert('提示','保存信息异常，请稍后再试！','error');
 								return;
 							}
 						});	
@@ -786,92 +698,70 @@
 			});
 			
 			//编辑信息
-	        function editDepotHead(depotHeadTotalInfo)
+	        function editAccountHead(accountHeadTotalInfo)
 	        {
-	        	var depotHeadInfo = depotHeadTotalInfo.split("AaBb");
+	        	var accountHeadInfo = accountHeadTotalInfo.split("AaBb");
 	            $("#clientIp").val('<%=clientIp %>');
-	            $("#ProjectId").focus().val(depotHeadInfo[1]);
-	            var ProjectId=depotHeadInfo[1];
-				if(ProjectId!='')
-				{
-					initSystemData_person(ProjectId);
-					initSelectInfo_person();
-				}
-	            $("#Number").val(depotHeadInfo[2]);
-	            $("#OperTime").val(depotHeadInfo[4]);
-	            $('#AllocationProjectId').val(depotHeadInfo[14]);
-	            $("#HandsPersonId").val(depotHeadInfo[6]);
-	            $("#WareHousePersonId").val(depotHeadInfo[7]);
-	            $("#SettlementWay").val(depotHeadInfo[8]);
-	            $("#Remark").val(depotHeadInfo[9]);
-	            
-	            //orgDepotHead = depotHeadInfo[1];
-                $('#depotHeadDlg').dialog('open').dialog('setTitle','<img src="<%=path%>/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑调拨出库信息');
+	            $("#BillNo").val(accountHeadInfo[1]);
+	            $("#BillTime").val(accountHeadInfo[2]);
+	            $("#Remark").val(accountHeadInfo[3]);
+	            $("#AccountId").val(accountHeadInfo[4]);
+	            $('#OrganId').combobox('setValue', accountHeadInfo[6]);
+	            $("#HandsPersonId").val(accountHeadInfo[8]);
+	            $("#ChangeAmount").val(accountHeadInfo[10]);	            	            
+                $('#accountHeadDlg').dialog('open').dialog('setTitle','<img src="<%=path%>/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑财务信息');
                 $(".window-mask").css({ width: webW ,height: webH});
-                depotHeadID = depotHeadInfo[0];
+                accountHeadID = accountHeadInfo[0];
                 
-                initTableData_material(); //商品列表
-                reject(); //撤销下、刷新商品列表                
-                url = '<%=path %>/depotHead/update.action?depotHeadID=' + depotHeadInfo[0];
+                initTableData_account(); //明细列表
+                reject(); //撤销下、刷新材料列表                
+                url = '<%=path %>/accountHead/update.action?accountHeadID=' + accountHeadInfo[0];
 	        }
 	        
 	        //查看信息
-	        function showDepotHead(depotHeadTotalInfo)
+	        function showAccountHead(accountHeadTotalInfo)
 	        {
-	        	var depotHeadInfo = depotHeadTotalInfo.split("AaBb");
-	            $("#ProjectIdShow").text(depotHeadInfo[10]);
-	            $("#NumberShow").text(depotHeadInfo[2]);
-	            $("#OperTimeShow").text(depotHeadInfo[4]);
-	            $('#AllocationProjectIdShow').text(depotHeadInfo[15]);
-	            $("#HandsPersonIdShow").text(depotHeadInfo[12]);
-	            $("#WareHousePersonIdShow").text(depotHeadInfo[13]);
-	            $("#SettlementWayShow").text(depotHeadInfo[8]);
-	            $("#RemarkShow").text(depotHeadInfo[9]);
-	            var audit=(depotHeadInfo[16]!="undefined"&&depotHeadInfo[17]!="undefined"&&depotHeadInfo[16]!=""&&depotHeadInfo[17]!="")?" 撤审人:"+depotHeadInfo[16]+" 撤审原因:"+depotHeadInfo[17]:"";
-	            audit="<span style='color:red;'>"+audit+"</span>";
-                $('#depotHeadDlgShow').dialog('open').dialog('setTitle','<img src="<%=path%>/js/easyui-1.3.5/themes/icons/list.png"/>&nbsp;查看调拨出库信息'+audit);
+	        	var accountHeadInfo = accountHeadTotalInfo.split("AaBb");
+	            $("#BillNoShow").text(accountHeadInfo[1]);
+	            $("#BillTimeShow").text(accountHeadInfo[2]);	     
+	            $("#RemarkShow").text(accountHeadInfo[3]);       
+	            $("#AccountIdShow").text(accountHeadInfo[5]);
+	            $('#OrganIdShow').text(accountHeadInfo[7]);
+	            $("#HandsPersonIdShow").text(accountHeadInfo[9]);	            
+	            $("#ChangeAmountShow").text(accountHeadInfo[10]);
+	            $('#accountHeadDlgShow').dialog('open').dialog('setTitle','<img src="<%=path%>/js/easyui-1.3.5/themes/icons/list.png"/>&nbsp;查看财务信息');
                 $(".window-mask").css({ width: webW ,height: webH});
                 
-                depotHeadID = depotHeadInfo[0];
-                initTableData_material_show(); //商品列表-查看状态
+                accountHeadID = accountHeadInfo[0];
+                initTableData_account_show(); //明细列表-查看状态
 	        }
 	        
 			//搜索处理
 			$("#searchBtn").unbind().bind({
 				click:function()
 				{
-					if($("#searchProjectId").val()=="")
-					{
-						$.messager.alert('查询提示','请选择一个仓库！','info');		
-					}
-					else
-					{
-						showDepotHeadDetails(1,initPageSize);	
-						var opts = $("#tableData").datagrid('options');  
-						var pager = $("#tableData").datagrid('getPager'); 
-						opts.pageNumber = 1;  
-						opts.pageSize = initPageSize;  
-						pager.pagination('refresh',
-						{  
-							pageNumber:1,  
-							pageSize:initPageSize  
-						});  
-					}
+					showAccountHeadDetails(1,initPageSize);	
+					var opts = $("#tableData").datagrid('options');  
+					var pager = $("#tableData").datagrid('getPager'); 
+					opts.pageNumber = 1;  
+					opts.pageSize = initPageSize;  
+					pager.pagination('refresh',
+					{  
+						pageNumber:1,  
+						pageSize:initPageSize  
+					});  
 				}
 			});
 						
-			function showDepotHeadDetails(pageNo,pageSize)
+			function showAccountHeadDetails(pageNo,pageSize)
 			{
 				$.ajax({
 					type:"post",
-					url: "<%=path %>/depotHead/findBy.action",
+					url: "<%=path %>/accountHead/findBy.action",
 					dataType: "json",
 					data: ({
-						ProjectId:$.trim($("#searchProjectId").val()),
-						Type:"出库",
-						SubType:"调拨",
-						State:$.trim($("#searchState").val()),
-						Number:$.trim($("#searchNumber").val()),
+						Type:"收款",
+						BillNo:$.trim($("#searchBillNo").val()),
 						BeginTime:$("#searchBeginTime").val(),
 						EndTime:$("#searchEndTime").val(),
 						pageNo:pageNo,
@@ -892,8 +782,7 @@
 			//重置按钮
 			$("#searchResetBtn").unbind().bind({
 				click:function(){
-					//$("#searchProjectId").val("");
-					$("#searchState").val("");
+					$("#searchBillNo").val("");
 					$("#searchBeginTime").val("");
 					$("#searchEndTime").val("");
 					//加载完以后重新初始化
@@ -905,11 +794,11 @@
 			var editIndex = undefined;
 	        function endEditing() {
 	            if (editIndex == undefined) { return true }
-	            if ($('#materialData').datagrid('validateRow', editIndex)) {
-	            	var ed = $('#materialData').datagrid('getEditor', {index:editIndex,field:'MaterialId'});
-	                var MaterialName = $(ed.target).combobox('getText');
-	                $('#materialData').datagrid('getRows')[editIndex]['MaterialName'] = MaterialName;
-	                $('#materialData').datagrid('endEdit', editIndex);
+	            if ($('#accountData').datagrid('validateRow', editIndex)) {
+	            	var ed = $('#accountData').datagrid('getEditor', {index:editIndex,field:'InOutItemId'});
+	                var InOutItemName = $(ed.target).combobox('getText');
+	                $('#accountData').datagrid('getRows')[editIndex]['InOutItemName'] = InOutItemName;
+	                $('#accountData').datagrid('endEdit', editIndex);
 	                editIndex = undefined;
 	                return true;
 	            } else {
@@ -920,11 +809,11 @@
 	        function onClickRow(index) {
 	            if (editIndex != index) {
 	                if (endEditing()) {
-	                    $('#materialData').datagrid('selectRow', index)
+	                    $('#accountData').datagrid('selectRow', index)
 	                            .datagrid('beginEdit', index);
 	                    editIndex = index;
 	                } else {
-	                    $('#materialData').datagrid('selectRow', editIndex);
+	                    $('#accountData').datagrid('selectRow', editIndex);
 	                }
 	            }
 	        }
@@ -932,30 +821,29 @@
 			function append()  
 			{
 	            if (endEditing()) {
-	                $('#materialData').datagrid('appendRow', {});
-	                editIndex = $('#materialData').datagrid('getRows').length - 1;
-	                $('#materialData').datagrid('selectRow', editIndex)
-	                        .datagrid('beginEdit', editIndex);
+	                $('#accountData').datagrid('appendRow', {});
+	                editIndex = $('#accountData').datagrid('getRows').length - 1;
+	                $('#accountData').datagrid('selectRow', editIndex).datagrid('beginEdit', editIndex);
 	            }
 			}
 			//删除
 	        function removeit() {
 	            if (editIndex == undefined) { return }
-	            $('#materialData').datagrid('cancelEdit', editIndex)
+	            $('#accountData').datagrid('cancelEdit', editIndex)
 	                    .datagrid('deleteRow', editIndex);
 	            editIndex = undefined;
 	        }
 	        //撤销
 	        function reject() {
-	            $('#materialData').datagrid('rejectChanges');
+	            $('#accountData').datagrid('rejectChanges');
 	            editIndex = undefined;
 	        }
 	        //判断
 	        function CheckData() {
-	            var row = $('#materialData').datagrid('getRows');
+	            var row = $('#accountData').datagrid('getRows');
 	            var totalRowNum = "";
 	            for (var i = 0; i < row.length; i++) {
-	                if (row[i].MaterialId == "") {
+	                if (row[i].InOutItemId == "") {
 	                    totalRowNum += (i + 1) + "、";
 	                }
 	            }
@@ -970,15 +858,15 @@
 	        function accept(accepId) {
 	            append();
 	            removeit();
-	            if ($("#materialData").datagrid('getChanges').length) {
+	            if ($("#accountData").datagrid('getChanges').length) {
 	                if (!CheckData())
 	                    return false;
-	                var inserted = $("#materialData").datagrid('getChanges', "inserted");
-	                var deleted = $("#materialData").datagrid('getChanges', "deleted");
-	                var updated = $("#materialData").datagrid('getChanges', "updated");
+	                var inserted = $("#accountData").datagrid('getChanges', "inserted");
+	                var deleted = $("#accountData").datagrid('getChanges', "deleted");
+	                var updated = $("#accountData").datagrid('getChanges', "updated");
 	                $.ajax({
 	                    type: "post",
-	                    url: "<%=path%>/depotItem/saveDetials.action",
+	                    url: "<%=path%>/accountItem/saveDetials.action",
 	                    data: {
 	                        Inserted: JSON.stringify(inserted),
 	                        Deleted: JSON.stringify(deleted),
@@ -1002,16 +890,16 @@
 	                });
 	            }
 	            if (endEditing()) {
-	                $('#materialData').datagrid('acceptChanges');
+	                $('#accountData').datagrid('acceptChanges');
 	            }
 	        }
 	        //获取MaxId
 	        function getMaxId()
 	        {
-	    	    var depotHeadMax=null;
+	    	    var accountHeadMax=null;
 	        	$.ajax({
 	        		type:"post",
-	        		url: "<%=path%>/depotHead/getMaxId.action",
+	        		url: "<%=path%>/accountHead/getMaxId.action",
 	        		//设置为同步
 	        		async:false,
 	        		dataType: "json",
@@ -1019,7 +907,7 @@
 	        		{
 	        			if(systemInfo)
 	        			{
-	        				depotHeadMax = systemInfo.showModel.map.depotHeadMax;
+	        				accountHeadMax = systemInfo.showModel.map.accountHeadMax;
 	        				var msgTip = systemInfo.showModel.msgTip;
 	        				if(msgTip == "exceptoin")
 	        				{
@@ -1029,16 +917,16 @@
 	        			}
 	        			else
 	        			{
-	        				depotHeadMax=null;
+	        				accountHeadMax=null;
 	        			}
 	        		}
 	        	});
 	        	
-	        	if(depotHeadMax !=null)
+	        	if(accountHeadMax !=null)
 	        	{
-	        		if(depotHeadMax.length>0)
+	        		if(accountHeadMax.length>0)
 	        		{
-	        			depotHeadMaxId=depotHeadMax[0];
+	        			accountHeadMaxId=accountHeadMax[0];
 	        		}
 	        	}
 	        }
