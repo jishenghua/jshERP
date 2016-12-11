@@ -29,7 +29,7 @@ com.jsh.model.vo.basic.**
 com.jsh.service.asset.**
 com.jsh.service.basic.**
 com.jsh.servlet.**
-com.jsh.util.common.**
+com.jsh.util.**
 </entry>
 <entry key="ProfilerCPUSettings_filter_value">com.jsh.action.asset.*,&#13;
 com.jsh.action.basic.*,&#13;
@@ -50,7 +50,7 @@ com.jsh.model.vo.basic.*,&#13;
 com.jsh.service.asset.*,&#13;
 com.jsh.service.basic.*,&#13;
 com.jsh.servlet.*,&#13;
-com.jsh.util.common.*</entry>
+com.jsh.util.*</entry>
 <entry key="profiler.settings.istrument.getter.setter.methods">true</entry>
 <entry key="myeclipse.profiling.mode">0</entry>
 <entry key="ProfilerMemorySettings_stacktraces">-1</entry>
