@@ -49,5 +49,9 @@
 	<!-- 配置accountDao组件 -->
 	<bean id="accountDao" parent="daoTemplate" class="com.jsh.dao.basic.AccountDAO"/>	
 	<!-- 配置inOutItemDao组件 -->
-	<bean id="inOutItemDao" parent="daoTemplate" class="com.jsh.dao.basic.InOutItemDAO"/>	
+	<bean id="inOutItemDao" parent="daoTemplate" class="com.jsh.dao.basic.InOutItemDAO"/>
+    <!-- 配置accountHeadDao组件 -->
+    <bean id="accountHeadDao" parent="daoTemplate" class="com.jsh.dao.materials.AccountHeadDAO"/>   
+    <!-- 配置accountItemDao组件 -->
+	<bean id="accountItemDao" parent="daoTemplate" class="com.jsh.dao.materials.AccountItemDAO"/>
 </beans>

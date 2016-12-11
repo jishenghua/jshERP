@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.jsh.model.po.AccountItem" table="jsh_accountitem">
+        <id name="Id" type="java.lang.Long">
+            <column name="Id"/>
+            <generator class="native"/>
+        </id>
+        <many-to-one name="HeaderId" class="com.jsh.model.po.AccountHead" lazy="false">
+            <column name="HeaderId" not-null="true">
+                <comment>表头Id</comment>
+            </column>
+        </many-to-one>
+		<many-to-one name="AccountId" class="com.jsh.model.po.Account" lazy="false">
+		  <column name="AccountId">
+		   <comment>账户Id</comment>
+		  </column>
+		</many-to-one>
+		<many-to-one name="InOutItemId" class="com.jsh.model.po.InOutItem" lazy="false">
+		  <column name="InOutItemId">
+		   <comment>收支项目Id</comment>
+		  </column>
+		</many-to-one>
+        <property generated="never" lazy="false" name="EachAmount" type="java.lang.Double">
+            <column name="EachAmount" precision="22" scale="3">
+                <comment>单项金额</comment>
+            </column>
+        </property>
+        <property generated="never" lazy="false" name="Remark" type="java.lang.String">
+            <column length="100" name="Remark">
+                <comment>单据备注</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

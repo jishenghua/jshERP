@@ -333,4 +333,28 @@
         <property name="logService" ref="logService"/>
     </bean>
 	<!--收支项目配置结束 -->
+        
+    <!--账户抬头配置开始 -->
+    <bean id="accountHeadService" class="com.jsh.service.materials.AccountHeadService">
+        <property name="baseDao" ref="baseDao"/>
+        <property name="accountHeadDao" ref="accountHeadDao"/>
+    </bean>
+    <!-- spring整合struts2需要默认为request或者 prototype，不能是单例 -->
+    <bean id="accountHeadAction" class="com.jsh.action.materials.AccountHeadAction" scope="prototype">
+        <property name="accountHeadService" ref="accountHeadService"/>
+        <property name="logService" ref="logService"/>
+    </bean>
+    <!--账户抬头配置结束 -->
+
+    <!--账户明细配置开始 -->
+    <bean id="accountItemService" class="com.jsh.service.materials.AccountItemService">
+        <property name="baseDao" ref="baseDao"/>
+        <property name="accountItemDao" ref="accountItemDao"/>
+    </bean>
+    <!-- spring整合struts2需要默认为request或者 prototype，不能是单例 -->
+    <bean id="accountItemAction" class="com.jsh.action.materials.AccountItemAction" scope="prototype">
+        <property name="accountItemService" ref="accountItemService"/>
+        <property name="logService" ref="logService"/>
+    </bean>
+	<!--账户明细配置结束 -->
 </beans>
