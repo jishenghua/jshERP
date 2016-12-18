@@ -27,7 +27,7 @@
 		<div id = "searchPanel"	class="easyui-panel" style="padding:3px;" title="查询窗口" iconCls="icon-search" collapsible="true" closable="false">
 			<table id="searchTable">
 				<tr>
-			    	<td>仓库：</td>
+			    	<td>收货仓库：</td>
 					<td>
 						<select name="searchProjectId" id="searchProjectId"  style="width:80px;"></select>
 					</td>
@@ -35,7 +35,7 @@
 					<td>
 						<input type="text" name="searchNumber" id="searchNumber" style="width:60px;"/>
 					</td>
-					<td>出库时间：</td>
+					<td>入库时间：</td>
 					<td>
 						<input type="text" name="searchBeginTime" id="searchBeginTime" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="txt Wdate" style="width:80px;"/>
 					</td>
@@ -62,7 +62,7 @@
 	        <form id="depotHeadFM" method="post"  novalidate>
 	            <table>
 	            <tr>
-	            <td>仓　库：</td>
+	            <td>收货仓库：</td>
 	            <td style="padding:5px">
                 <select name="ProjectId" id="ProjectId" style="width:120px;"></select>
                 </td>
@@ -70,7 +70,7 @@
                 <td style="padding:5px">
                 <input type="text" name="OperTime" id="OperTime" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="txt Wdate" style="width:120px;"/>
                 </td>
-	            <td>客户：</td>
+	            <td>退货单位：</td>
 	            <td style="padding:5px">
 	            <input id="OrganId" name="OrganId" style="width:120px;" />  
 	            </td>
@@ -119,7 +119,7 @@
                 <td style="padding:5px;width:120px;">
                 <span id="OperTimeShow"></span>
                 </td>
-	            <td>客户：</td>
+	            <td>退货单位：</td>
 	            <td style="padding:5px;width:120px;">
 	            <span id="OrganIdShow"></span>
 	            </td>

@@ -4,7 +4,7 @@ import org.apache.log4j.Logger;
 
 /**
  * 封装log4j日志信息，打印日志信息类
- * @author ji/sheng/hua  qq_752718920
+ * @author ji/sheng/hua  qq_7527.18920
  * @since 2014-01-22
  */
 public class Log

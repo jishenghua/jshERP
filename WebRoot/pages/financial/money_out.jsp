@@ -8,7 +8,7 @@
 <!DOCTYPE html>
 <html>
   	<head>
-    	<title>财务管理</title>
+    	<title>付款单</title>
         <meta charset="utf-8">
 		<!-- 指定以IE8的方式来渲染 -->
 		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
@@ -49,7 +49,7 @@
 		</div>
 		
 		<!-- 数据显示table -->
-		<div id = "tablePanel"	class="easyui-panel" style="padding:1px;top:300px;" title="财务管理列表" iconCls="icon-list" collapsible="true" closable="false">
+		<div id = "tablePanel"	class="easyui-panel" style="padding:1px;top:300px;" title="付款单列表" iconCls="icon-list" collapsible="true" closable="false">
 			<table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 		</div>
 		
@@ -379,17 +379,17 @@
 					pageList: [50,100,150],
 					columns:[[
 					  { field: 'Id',width:35,align:"center",checkbox:true},
-			          { title: '收入项目',field: 'InOutItemId',width:230,
+			          { title: '账户名称',field: 'AccountId',width:230,
 						  formatter:function(value,row,index){
-								  return row.InOutItemName;
+								  return row.AccountName;
 	                      },
 						  editor:{
                           type:'combobox',
                           options:{
                               valueField:'Id',
-                              textField:'InOutItemName',
+                              textField:'AccountName',
                               method:'get',
-                              url: "<%=path%>/inOutItem/findBySelect.action"
+                              url: "<%=path%>/account/findBySelect.action"
                           }
 			            }
 					  },
@@ -459,7 +459,7 @@
 					pageList: [50,100,150],
 					columns:[[
 					  { field: 'Id',width:35,align:"center",checkbox:true},
-			          { title: '收入项目',field: 'InOutItemName',width:230},
+			          { title: '账户名称',field: 'AccountName',width:230},
 			          { title: '金额',field: 'EachAmount',width:50},
 			          { title: '备注',field: 'Remark',width:150}
 					]],
@@ -795,9 +795,9 @@
 	        function endEditing() {
 	            if (editIndex == undefined) { return true }
 	            if ($('#accountData').datagrid('validateRow', editIndex)) {
-	            	var ed = $('#accountData').datagrid('getEditor', {index:editIndex,field:'InOutItemId'});
-	                var InOutItemName = $(ed.target).combobox('getText');
-	                $('#accountData').datagrid('getRows')[editIndex]['InOutItemName'] = InOutItemName;
+	            	var ed = $('#accountData').datagrid('getEditor', {index:editIndex,field:'AccountId'});
+	                var AccountName = $(ed.target).combobox('getText');
+	                $('#accountData').datagrid('getRows')[editIndex]['AccountName'] = AccountName;
 	                $('#accountData').datagrid('endEdit', editIndex);
 	                editIndex = undefined;
 	                return true;
@@ -843,7 +843,7 @@
 	            var row = $('#accountData').datagrid('getRows');
 	            var totalRowNum = "";
 	            for (var i = 0; i < row.length; i++) {
-	                if (row[i].InOutItemId == "") {
+	                if (row[i].AccountId == "") {
 	                    totalRowNum += (i + 1) + "、";
 	                }
 	            }

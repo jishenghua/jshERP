@@ -291,9 +291,9 @@ public class AccountAction extends BaseAction<AccountModel>
                 for(Account account:dataList)
                 {
                     JSONObject item = new JSONObject();
-                    item.put("id", account.getId());
+                    item.put("Id", account.getId());
                     //结算账户名称
-                    item.put("name", account.getName());
+                    item.put("AccountName", account.getName());
                     dataArray.add(item);
                 }
             }

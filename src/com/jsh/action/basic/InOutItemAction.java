@@ -308,6 +308,12 @@ public class InOutItemAction extends BaseAction<InOutItemModel>
          * 拼接搜索条件
          */
         Map<String,Object> condition = new HashMap<String,Object>();
+        if(model.getType().equals("in")) {
+        	condition.put("type_s_eq", "收入");
+        }
+        else if(model.getType().equals("out")) {
+        	condition.put("type_s_eq", "支出");
+        }        	
         condition.put("id_s_order", "desc");
         return condition;
     }

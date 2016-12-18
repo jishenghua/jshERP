@@ -8,7 +8,7 @@
 <!DOCTYPE html>
 <html>
   	<head>
-    	<title>财务管理</title>
+    	<title>支出单</title>
         <meta charset="utf-8">
 		<!-- 指定以IE8的方式来渲染 -->
 		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
@@ -49,7 +49,7 @@
 		</div>
 		
 		<!-- 数据显示table -->
-		<div id = "tablePanel"	class="easyui-panel" style="padding:1px;top:300px;" title="财务管理列表" iconCls="icon-list" collapsible="true" closable="false">
+		<div id = "tablePanel"	class="easyui-panel" style="padding:1px;top:300px;" title="支出单列表" iconCls="icon-list" collapsible="true" closable="false">
 			<table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 		</div>
 		
@@ -379,7 +379,7 @@
 					pageList: [50,100,150],
 					columns:[[
 					  { field: 'Id',width:35,align:"center",checkbox:true},
-			          { title: '收入项目',field: 'InOutItemId',width:230,
+			          { title: '支出项目',field: 'InOutItemId',width:230,
 						  formatter:function(value,row,index){
 								  return row.InOutItemName;
 	                      },
@@ -389,7 +389,7 @@
                               valueField:'Id',
                               textField:'InOutItemName',
                               method:'get',
-                              url: "<%=path%>/inOutItem/findBySelect.action"
+                              url: "<%=path%>/inOutItem/findBySelect.action?type=out"
                           }
 			            }
 					  },
