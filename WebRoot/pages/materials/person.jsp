@@ -26,16 +26,15 @@
 		<div id = "searchPanel"	class="easyui-panel" style="padding:10px;" title="查询窗口" iconCls="icon-search" collapsible="true" closable="false">
 			<table id="searchTable">
 				<tr>
-			    	<td>仓库：</td>
+			    	<td>姓名：</td>
 					<td>
-						<select name="searchProjectId" id="searchProjectId"  style="width:230px;"></select>
+						<input name="searchName" id="searchName" style="width:230px;"/>
 					</td>
 					<td>类型：</td>
 					<td>
 						<select name="searchType" id="searchType"  style="width:230px;">
 						<option value="">全部</option>
 						<option value="仓管员">仓管员</option>
-						<option value="采购员">采购员</option>
 						<option value="财务员">财务员</option>
 						</select>
 					</td>
@@ -60,25 +59,20 @@
 	        <form id="personFM" method="post"  novalidate>
 	            <table>
 	            <tr>
-	            <td>仓库</td>
-	            <td style="padding:5px">
-                <select name="ProjectId" id="ProjectId" style="width:230px;height: 20px"></select>
-                </td>
-	            </tr>
-	            <tr>
 	            <td>类型</td>
 	            <td style="padding:5px">
 	            <select name="Type" id="Type"  style="width:230px;">
 						<option value="">请选择</option>
 						<option value="仓管员">仓管员</option>
-						<option value="采购员">采购员</option>
 						<option value="财务员">财务员</option>
 						</select>
 			    </td>
 	            </tr>
 	            <tr>
 	            <td>姓名</td>
-	            <td style="padding:5px"><input name="Name" id="Name" class="easyui-validatebox" data-options="required:true,validType:'length[2,30]'" style="width: 230px;height: 20px"/></td>
+	            <td style="padding:5px">
+	            <input name="Name" id="Name" class="easyui-validatebox" data-options="required:true,validType:'length[2,30]'" style="width: 230px;height: 20px"/>
+	            </td>
 	            </tr>
 	            </table>
 	            <input type="hidden" name="clientIp" id="clientIp" value="<%=clientIp %>"/>
@@ -184,13 +178,12 @@
 					pageList: initPageNum,
 					columns:[[
 					  { field: 'Id',width:35,align:"center",checkbox:true},
-			          { title: '仓库',field: 'ProjectName',width:180},
-			          { title: '类型',field: 'Type',width:180},
-			          { title: '经手人',field: 'Name',width:180},
+					  { title: '姓名',field: 'Name',width:180},
+			          { title: '类型',field: 'Type',width:180},			          
 			          { title: '操作',field: 'op',align:"center",width:130,formatter:function(value,rec)
 			         	{
 							var str = '';
-							var rowInfo = rec.Id + 'AaBb' + rec.ProjectId+ 'AaBb' + rec.Type+ 'AaBb' + rec.Name;
+							var rowInfo = rec.Id + 'AaBb' + rec.Type+ 'AaBb' + rec.Name;
         					if(1 == value)
         					{
         						str += '<img src="<%=path%>/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editPerson(\'' + rowInfo + '\');"/>&nbsp;<a onclick="editPerson(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
@@ -403,7 +396,6 @@
 							dataType: "json",
 							async :  false,
 							data: ({
-								ProjectId : $.trim($("#ProjectId").val()),
 								Type : $.trim($("#Type").val()),
 								Name : $.trim($("#Name").val()),
 								clientIp:'<%=clientIp %>'
@@ -442,16 +434,15 @@
 	        	var personInfo = personTotalInfo.split("AaBb");
 	            
 	            $("#clientIp").val('<%=clientIp %>');
-	            $("#ProjectId").focus().val(personInfo[1]);
-	            $("#Type").val(personInfo[2]);
-	            $("#Name").val(personInfo[3]);
+	            $("#Type").val(personInfo[1]);
+	            $("#Name").val(personInfo[2]);
 	            
 	            //orgPerson = personInfo[1];
                 $('#personDlg').dialog('open').dialog('setTitle','<img src="<%=path%>/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑经手人信息');
                 $(".window-mask").css({ width: webW ,height: webH});
                 personID = personInfo[0];
                 //焦点在名称输入框==定焦在输入文字后面 
-                $("#Name").val("").focus().val(personInfo[3]);
+                $("#Name").val("").focus().val(personInfo[2]);
                 url = '<%=path %>/person/update.action?personID=' + personInfo[0];
 	        }
 	        
@@ -479,7 +470,7 @@
 					url: "<%=path %>/person/findBy.action",
 					dataType: "json",
 					data: ({
-						ProjectId:$.trim($("#searchProjectId").val()),
+						Name:$.trim($("#searchName").val()),
 						Type:$.trim($("#searchType").val()),
 						pageNo:pageNo,
 						pageSize:pageSize

@@ -39,9 +39,7 @@
 	<!-- 配置materialCategoryDao组件 -->
 	<bean id="materialCategoryDao" parent="daoTemplate" class="com.jsh.dao.materials.MaterialCategoryDAO"/>	
 	<!-- 配置materialDao组件 -->
-	<bean id="materialDao" parent="daoTemplate" class="com.jsh.dao.materials.MaterialDAO"/>	
-	<!-- 配置buildingDao组件 -->
-	<bean id="buildingDao" parent="daoTemplate" class="com.jsh.dao.materials.BuildingDAO"/>	
+	<bean id="materialDao" parent="daoTemplate" class="com.jsh.dao.materials.MaterialDAO"/>		
 	<!-- 配置depotHeadDao组件 -->
 	<bean id="depotHeadDao" parent="daoTemplate" class="com.jsh.dao.materials.DepotHeadDAO"/>	
 	<!-- 配置depotItemDao组件 -->

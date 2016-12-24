@@ -15,15 +15,11 @@ public class DepotHead implements java.io.Serializable
 	private Timestamp OperTime;	
 	private Supplier OrganId;
 	private Person HandsPersonId;
-	private Person WareHousePersonId;
-	private String SettlementWay;	
-	private Building BuildingId;
+	private Account AccountId;
+	private Double ChangeAmount;
 	private Depot AllocationProjectId;	
-	private String Remark;
-	private String State;
-	private String ReAuditPersonName;
-	private String Reason;
-	
+	private Double TotalPrice;
+	private String Remark;	
 
 	public DepotHead()
 	{
@@ -38,9 +34,7 @@ public class DepotHead implements java.io.Serializable
 	public DepotHead(String type, String subType, Depot projectId,
 			String number, String operPersonName, Timestamp createTime,
 			Timestamp operTime, Supplier organId, Person handsPersonId,
-			Person wareHousePersonId, String settlementWay,
-			Building buildingId, Depot allocationProjectId, String remark,
-			String state, String reAuditPersonName, String reason) {
+			Account accountId, Double changeAmount, Depot allocationProjectId, Double totalPrice, String remark) {
 		super();
 		Type = type;
 		SubType = subType;
@@ -51,14 +45,11 @@ public class DepotHead implements java.io.Serializable
 		OperTime = operTime;
 		OrganId = organId;
 		HandsPersonId = handsPersonId;
-		WareHousePersonId = wareHousePersonId;
-		SettlementWay = settlementWay;
-		BuildingId = buildingId;
+		AccountId = accountId;
+		ChangeAmount = changeAmount;
 		AllocationProjectId = allocationProjectId;
+		TotalPrice = totalPrice;
 		Remark = remark;
-		State = state;
-		ReAuditPersonName = reAuditPersonName;
-		Reason = reason;
 	}
 
 	public Long getId() {
@@ -140,29 +131,21 @@ public class DepotHead implements java.io.Serializable
 	public void setHandsPersonId(Person handsPersonId) {
 		HandsPersonId = handsPersonId;
 	}
-
-	public Person getWareHousePersonId() {
-		return WareHousePersonId;
+	
+	public Account getAccountId() {
+		return AccountId;
 	}
 
-	public void setWareHousePersonId(Person wareHousePersonId) {
-		WareHousePersonId = wareHousePersonId;
+	public void setAccountId(Account accountId) {
+		AccountId = accountId;
 	}
 
-	public String getSettlementWay() {
-		return SettlementWay;
+	public Double getChangeAmount() {
+		return ChangeAmount;
 	}
 
-	public void setSettlementWay(String settlementWay) {
-		SettlementWay = settlementWay;
-	}
-
-	public Building getBuildingId() {
-		return BuildingId;
-	}
-
-	public void setBuildingId(Building buildingId) {
-		BuildingId = buildingId;
+	public void setChangeAmount(Double changeAmount) {
+		ChangeAmount = changeAmount;
 	}
 
 	public Depot getAllocationProjectId() {
@@ -173,6 +156,14 @@ public class DepotHead implements java.io.Serializable
 		AllocationProjectId = allocationProjectId;
 	}
 
+	public Double getTotalPrice() {
+		return TotalPrice;
+	}
+
+	public void setTotalPrice(Double totalPrice) {
+		TotalPrice = totalPrice;
+	}
+
 	public String getRemark() {
 		return Remark;
 	}
@@ -180,31 +171,4 @@ public class DepotHead implements java.io.Serializable
 	public void setRemark(String remark) {
 		Remark = remark;
 	}
-
-	public String getState() {
-		return State;
-	}
-
-	public void setState(String state) {
-		State = state;
-	}
-
-	public String getReAuditPersonName() {
-		return ReAuditPersonName;
-	}
-
-	public void setReAuditPersonName(String reAuditPersonName) {
-		ReAuditPersonName = reAuditPersonName;
-	}
-
-	public String getReason() {
-		return Reason;
-	}
-
-	public void setReason(String reason) {
-		Reason = reason;
-	}
-	
-	
-
 }

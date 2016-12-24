@@ -4,7 +4,6 @@ package com.jsh.model.po;
 public class Person implements java.io.Serializable
 {
 	private Long Id;
-	private Depot depot;
 	private String Type;
 	private String Name;
 
@@ -18,8 +17,7 @@ public class Person implements java.io.Serializable
 		this.Id = Id;
 	}
 
-	public Person(Depot depot, String type, String name) {
-		this.depot = depot;
+	public Person(String type, String name) {
 		Type = type;
 		Name = name;
 	}
@@ -30,14 +28,6 @@ public class Person implements java.io.Serializable
 
 	public void setId(Long id) {
 		Id = id;
-	}
-
-	public Depot getDepot() {
-		return depot;
-	}
-
-	public void setDepot(Depot depot) {
-		this.depot = depot;
 	}
 
 	public String getType() {

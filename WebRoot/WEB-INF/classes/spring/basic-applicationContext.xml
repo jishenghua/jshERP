@@ -274,18 +274,6 @@
 	</bean>
 	<!--商品配置结束 -->
 	
-	<!--单元配置开始 -->
-	<bean id="buildingService" class="com.jsh.service.materials.BuildingService">
-		<property name="baseDao" ref="baseDao"/>
-		<property name="buildingDao" ref="buildingDao"/>
-	</bean>
-	<!-- spring整合struts2需要默认为request或者 prototype，不能是单例 -->
-	<bean id="buildingAction" class="com.jsh.action.materials.BuildingAction" scope="prototype">
-		<property name="buildingService" ref="buildingService"/>
-		<property name="logService" ref="logService"/>
-	</bean>
-	<!--单元配置结束 -->
-	
 	<!--仓管通配置开始 -->
 	<bean id="depotHeadService" class="com.jsh.service.materials.DepotHeadService">
 		<property name="baseDao" ref="baseDao"/>

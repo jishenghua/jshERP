@@ -9,10 +9,6 @@ public class PersonModel implements Serializable
 
     /**======开始接受页面参数=================**/
     /**
-     * ProjectId
-     */
-    private Long ProjectId;
-    /**
      * 类型
      */
     private String Type = "";
@@ -52,14 +48,6 @@ public class PersonModel implements Serializable
 
 	public void setShowModel(PersonShowModel showModel) {
 		this.showModel = showModel;
-	}
-
-	public Long getProjectId() {
-		return ProjectId;
-	}
-
-	public void setProjectId(Long projectId) {
-		ProjectId = projectId;
 	}
 
 	public String getType() {

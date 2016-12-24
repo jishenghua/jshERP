@@ -271,7 +271,10 @@ public class MaterialAction extends BaseAction<MaterialModel>
                     JSONObject item = new JSONObject();
                     item.put("Id", material.getId());
                     //名称
-                    item.put("MaterialName", ((material.getModel().equals(""))?"":""+material.getModel()) +" "+ material.getName() + ((material.getColor() == null)?"":"("+material.getColor() + ")"));
+                    String MaterialName = ((material.getModel().equals(""))?"":""+material.getModel()) +" "+ material.getName() 
+                    + ((material.getColor() == null)?"":"("+material.getColor() + ")")
+                    + ((material.getUnit() == null)?"":"("+material.getUnit() + ")");
+                    item.put("MaterialName", MaterialName);
                     dataArray.add(item);
                 }
             }

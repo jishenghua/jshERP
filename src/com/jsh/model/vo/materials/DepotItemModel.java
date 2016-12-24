@@ -13,7 +13,7 @@ public class DepotItemModel implements Serializable
 	private Long MaterialId;
 	private Double OperNumber;
 	private Double UnitPrice;
-	private Double Incidentals;
+	private Double AllPrice;
 	private String Remark = "";
 	private String Img = "";
     
@@ -100,12 +100,12 @@ public class DepotItemModel implements Serializable
 		UnitPrice = unitPrice;
 	}
 
-	public Double getIncidentals() {
-		return Incidentals;
+	public Double getAllPrice() {
+		return AllPrice;
 	}
 
-	public void setIncidentals(Double incidentals) {
-		Incidentals = incidentals;
+	public void setAllPrice(Double allPrice) {
+		AllPrice = allPrice;
 	}
 
 	public String getRemark() {

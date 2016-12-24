@@ -36,7 +36,6 @@ public class PersonAction extends BaseAction<PersonModel>
         try
         {
             Map<String,Object> condition = pageUtil.getAdvSearch();
-            condition.put("ProjectId_n_eq", model.getProjectId());
             condition.put("Id_s_order", "asc");
             personService.find(pageUtil);
             mapData.put("personList", pageUtil.getPageList());
@@ -83,7 +82,6 @@ public class PersonAction extends BaseAction<PersonModel>
 		try
 		{
 			Person person = new Person();
-			person.setDepot(new Depot(model.getProjectId()));
 			
 			person.setType(model.getType());
 			person.setName(model.getName());
@@ -157,7 +155,6 @@ public class PersonAction extends BaseAction<PersonModel>
         try
         {
         	Person person = personService.get(model.getPersonID());
-        	person.setDepot(new Depot(model.getProjectId()));
         	
 			person.setType(model.getType());
 			person.setName(model.getName());
@@ -242,8 +239,6 @@ public class PersonAction extends BaseAction<PersonModel>
                 {
                     JSONObject item = new JSONObject();
                     item.put("Id", person.getId());
-                    item.put("ProjectId", person.getDepot().getId());
-                    item.put("ProjectName", person.getDepot().getName());
                     item.put("Type", person.getType());
                     item.put("Name", person.getName());
                     item.put("op", 1);
@@ -274,7 +269,7 @@ public class PersonAction extends BaseAction<PersonModel>
          * 拼接搜索条件
          */
         Map<String,Object> condition = new HashMap<String,Object>();
-        condition.put("ProjectId_n_eq", model.getProjectId());
+        condition.put("Name_s_like", model.getName());
         condition.put("Type_s_eq", model.getType());
         return condition;
     }

@@ -12,7 +12,6 @@ import net.sf.json.JSONObject;
 import org.springframework.dao.DataAccessException;
 import com.jsh.base.BaseAction;
 import com.jsh.base.Log;
-import com.jsh.model.po.Building;
 import com.jsh.model.po.Account;
 import com.jsh.model.po.AccountHead;
 import com.jsh.model.po.Logdetails;

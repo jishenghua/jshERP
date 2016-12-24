@@ -8,7 +8,7 @@ public class DepotItem implements java.io.Serializable
 	private Material MaterialId;
 	private Double OperNumber;
 	private Double UnitPrice;
-	private Double Incidentals;
+	private Double AllPrice;
 	private String Remark;
 	private String Img;
 
@@ -23,14 +23,14 @@ public class DepotItem implements java.io.Serializable
 	}
 
 	public DepotItem(DepotHead headerId, Material materialId,
-			Double operNumber, Double unitPrice, Double incidentals,
+			Double operNumber, Double unitPrice, Double allPrice,
 			String remark, String img) {
 		super();
 		HeaderId = headerId;
 		MaterialId = materialId;
 		OperNumber = operNumber;
 		UnitPrice = unitPrice;
-		Incidentals = incidentals;
+		AllPrice = allPrice;
 		Remark = remark;
 		Img = img;
 	}
@@ -75,12 +75,12 @@ public class DepotItem implements java.io.Serializable
 		UnitPrice = unitPrice;
 	}
 
-	public Double getIncidentals() {
-		return Incidentals;
+	public Double getAllPrice() {
+		return AllPrice;
 	}
 
-	public void setIncidentals(Double incidentals) {
-		Incidentals = incidentals;
+	public void setAllPrice(Double allPrice) {
+		AllPrice = allPrice;
 	}
 
 	public String getRemark() {

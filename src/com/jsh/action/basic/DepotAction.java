@@ -40,7 +40,7 @@ public class DepotAction extends BaseAction<DepotModel>
         try
         {
             Map<String,Object> condition = pageUtil.getAdvSearch();
-            condition.put("id_s_order", "asc");
+            condition.put("sort_s_order", "asc");
             depotService.find(pageUtil);
             mapData.put("depotList", pageUtil.getPageList());
         }
@@ -237,10 +237,6 @@ public class DepotAction extends BaseAction<DepotModel>
             depotService.find(pageUtil);
             List<Depot> dataList = pageUtil.getPageList();
             
-            //开始拼接json数据
-//            {"total":28,"rows":[
-//                {"productid":"AV-CB-01","attr1":"Adult Male","itemid":"EST-18"}
-//            ]}
             JSONObject outer = new JSONObject();
             outer.put("total", pageUtil.getTotalCount());
             //存放数据json数组
@@ -274,7 +270,7 @@ public class DepotAction extends BaseAction<DepotModel>
 	}
 	
 	/**
-	 * 用户对应部门显示
+	 * 用户对应仓库显示
 	 * @return
 	 */
     public void findUserDepot()
@@ -292,7 +288,7 @@ public class DepotAction extends BaseAction<DepotModel>
             //开始拼接json数据
 			  JSONObject outer = new JSONObject();
 			  outer.put("id", 1);
-	          outer.put("text", "部门列表");
+	          outer.put("text", "仓库列表");
 	          outer.put("state", "open");
 			  //存放数据json数组
 			  JSONArray dataArray = new JSONArray();
@@ -311,7 +307,7 @@ public class DepotAction extends BaseAction<DepotModel>
 				        } 
 					    catch (DataAccessException e) 
 					    {
-				            Log.errorFileSync(">>>>>>>>>>>>>>>>>设置用户对应的部门：类型" + model.getUBType() + " KeyId为： " + model.getUBKeyId() + " 存在异常！");
+				            Log.errorFileSync(">>>>>>>>>>>>>>>>>设置用户对应的仓库：类型" + model.getUBType() + " KeyId为： " + model.getUBKeyId() + " 存在异常！");
 				        }
 				        if (flag==true){item.put("checked", true);}
 				        //结束  
@@ -324,11 +320,11 @@ public class DepotAction extends BaseAction<DepotModel>
         } 
 	    catch (DataAccessException e) 
 	    {
-	        Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找部门异常", e);
+	        Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找仓库异常", e);
         } 
 	    catch (IOException e) 
 	    {
-            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询部门结果异常", e);
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询仓库结果异常", e);
         }
 	}
     
@@ -358,7 +354,7 @@ public class DepotAction extends BaseAction<DepotModel>
          * 拼接搜索条件
          */
         Map<String,Object> condition = new HashMap<String,Object>();
-        condition.put("Id_s_order", "asc");
+        condition.put("sort_s_order", "asc");
         return condition;
     }
 	

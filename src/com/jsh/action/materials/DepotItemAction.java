@@ -66,9 +66,8 @@ public class DepotItemAction extends BaseAction<DepotItemModel>
 					depotItem.setMaterialId(new Material(tempInsertedJson.getLong("MaterialId")));
 					depotItem.setOperNumber(tempInsertedJson.getDouble("OperNumber"));
 					if(tempInsertedJson.get("UnitPrice")!=null){depotItem.setUnitPrice(tempInsertedJson.getDouble("UnitPrice"));}
-					if(tempInsertedJson.get("Incidentals")!=null){depotItem.setIncidentals(0.0);}
+					if(tempInsertedJson.get("AllPrice")!=null){depotItem.setAllPrice(tempInsertedJson.getDouble("AllPrice"));}
 					depotItem.setRemark(tempInsertedJson.getString("Remark"));
-					depotItem.setImg(tempInsertedJson.getString("Img"));
 					depotItemService.create(depotItem);
 				}
 			}
@@ -89,9 +88,8 @@ public class DepotItemAction extends BaseAction<DepotItemModel>
 					depotItem.setMaterialId(new Material(tempUpdatedJson.getLong("MaterialId")));
 					depotItem.setOperNumber(tempUpdatedJson.getDouble("OperNumber"));
 					if(tempUpdatedJson.get("UnitPrice")!=null){depotItem.setUnitPrice(tempUpdatedJson.getDouble("UnitPrice"));}
-					if(tempUpdatedJson.get("Incidentals")!=null){depotItem.setIncidentals(0.0);}
+					if(tempUpdatedJson.get("AllPrice")!=null){depotItem.setAllPrice(tempUpdatedJson.getDouble("AllPrice"));}
 					depotItem.setRemark(tempUpdatedJson.getString("Remark"));
-					depotItem.setImg(tempUpdatedJson.getString("Img"));
 					depotItemService.create(depotItem);
 				}
 			}
@@ -143,10 +141,6 @@ public class DepotItemAction extends BaseAction<DepotItemModel>
             depotItemService.find(pageUtil);
             List<DepotItem> dataList = pageUtil.getPageList();
             
-            //开始拼接json数据
-//            {"total":28,"rows":[
-//                {"productid":"AV-CB-01","attr1":"Adult Male","itemid":"EST-18"}
-//            ]}
             JSONObject outer = new JSONObject();
             outer.put("total", pageUtil.getTotalCount());
             //存放数据json数组
@@ -158,10 +152,13 @@ public class DepotItemAction extends BaseAction<DepotItemModel>
                     JSONObject item = new JSONObject();
                     item.put("Id", depotItem.getId());
                     item.put("MaterialId", depotItem.getMaterialId()==null?"":depotItem.getMaterialId().getId());
-                    item.put("MaterialName", ((depotItem.getMaterialId().getModel().equals(""))?"":""+depotItem.getMaterialId().getModel())+" "+depotItem.getMaterialId().getName()+((depotItem.getMaterialId().getColor() == null)?"(":"("+depotItem.getMaterialId().getColor()) + ")");
+                    String MaterialName = ((depotItem.getMaterialId().getModel().equals(""))?"":""+depotItem.getMaterialId().getModel())+" "+depotItem.getMaterialId().getName()
+                    +((depotItem.getMaterialId().getColor() == null)?"(":"("+depotItem.getMaterialId().getColor()) + ")"
+                    +((depotItem.getMaterialId().getUnit() == null)?"(":"("+depotItem.getMaterialId().getUnit()) + ")";
+                    item.put("MaterialName", MaterialName);
                     item.put("OperNumber", depotItem.getOperNumber());
                     item.put("UnitPrice", depotItem.getUnitPrice());
-                    item.put("Incidentals", depotItem.getIncidentals());
+                    item.put("AllPrice", depotItem.getAllPrice());
                     item.put("Remark", depotItem.getRemark());
                     item.put("Img", depotItem.getImg());
                     item.put("op", 1);

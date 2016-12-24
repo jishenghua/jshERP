@@ -80,7 +80,7 @@
 	            </td>
 	            </tr>
 	            <tr>
-	            <td>仓管员：</td>
+	            <td>经手人：</td>
 	            <td style="padding:5px">
 	            <select name="WareHousePersonId" id="WareHousePersonId" style="width:120px;"></select>
 	            </td>

@@ -27,9 +27,9 @@
     <comment>单价</comment>
    </column>
   </property>
-  <property generated="never" lazy="false" name="Incidentals" type="java.lang.Double">
-   <column name="Incidentals" precision="22" scale="3">
-    <comment>运杂费</comment>
+  <property generated="never" lazy="false" name="AllPrice" type="java.lang.Double">
+   <column name="AllPrice" precision="22" scale="3">
+    <comment>金额</comment>
    </column>
   </property>
   <property generated="never" lazy="false" name="Remark" type="java.lang.String">

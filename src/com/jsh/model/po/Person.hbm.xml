@@ -7,9 +7,6 @@
    <column name="Id"/>
    <generator class="native"/>
   </id>
-  <many-to-one name="depot" class="com.jsh.model.po.Depot" lazy="false">
-    <column name="ProjectId" not-null="true" />
-  </many-to-one>
   <property generated="never" lazy="false" name="Type" type="java.lang.String">
    <column length="20" name="Type">
     <comment>类型</comment>

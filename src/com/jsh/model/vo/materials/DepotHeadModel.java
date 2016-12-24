@@ -16,14 +16,11 @@ public class DepotHeadModel implements Serializable
 	private String OperTime;	
 	private Long OrganId;
 	private Long HandsPersonId;
-	private Long WareHousePersonId;
-	private String SettlementWay = "";	
-	private Long BuildingId;
+	private Long AccountId;
+	private Double ChangeAmount;	
 	private Long AllocationProjectId;	
+	private Double TotalPrice;
 	private String Remark = "";	
-	private String State = "";	
-	private String ReAuditPersonName = "";	
-	private String Reason = "";	
 	
 	private String BeginTime; //查询开始时间
 	private String EndTime;  //查询结束时间
@@ -117,28 +114,20 @@ public class DepotHeadModel implements Serializable
 		HandsPersonId = handsPersonId;
 	}
 
-	public Long getWareHousePersonId() {
-		return WareHousePersonId;
+	public Long getAccountId() {
+		return AccountId;
 	}
 
-	public void setWareHousePersonId(Long wareHousePersonId) {
-		WareHousePersonId = wareHousePersonId;
+	public void setAccountId(Long accountId) {
+		AccountId = accountId;
 	}
 
-	public String getSettlementWay() {
-		return SettlementWay;
+	public Double getChangeAmount() {
+		return ChangeAmount;
 	}
 
-	public void setSettlementWay(String settlementWay) {
-		SettlementWay = settlementWay;
-	}
-
-	public Long getBuildingId() {
-		return BuildingId;
-	}
-
-	public void setBuildingId(Long buildingId) {
-		BuildingId = buildingId;
+	public void setChangeAmount(Double changeAmount) {
+		ChangeAmount = changeAmount;
 	}
 
 	public Long getAllocationProjectId() {
@@ -149,36 +138,20 @@ public class DepotHeadModel implements Serializable
 		AllocationProjectId = allocationProjectId;
 	}
 
+	public Double getTotalPrice() {
+		return TotalPrice;
+	}
+
+	public void setTotalPrice(Double totalPrice) {
+		TotalPrice = totalPrice;
+	}
+
 	public String getRemark() {
 		return Remark;
 	}
 
 	public void setRemark(String remark) {
 		Remark = remark;
-	}
-
-	public String getState() {
-		return State;
-	}
-
-	public void setState(String state) {
-		State = state;
-	}
-
-	public String getReAuditPersonName() {
-		return ReAuditPersonName;
-	}
-
-	public void setReAuditPersonName(String reAuditPersonName) {
-		ReAuditPersonName = reAuditPersonName;
-	}
-
-	public String getReason() {
-		return Reason;
-	}
-
-	public void setReason(String reason) {
-		Reason = reason;
 	}
 
 	public Long getDepotHeadID() {

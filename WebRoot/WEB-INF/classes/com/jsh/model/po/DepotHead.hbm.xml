@@ -49,47 +49,32 @@
   </many-to-one>
   <many-to-one name="HandsPersonId" class="com.jsh.model.po.Person" lazy="false">
    <column name="HandsPersonId">
-    <comment>采购/领料-经手人Id</comment>
+    <comment>经手人Id</comment>
    </column>
   </many-to-one>
-  <many-to-one name="WareHousePersonId" class="com.jsh.model.po.Person" lazy="false">
-   <column name="WareHousePersonId" not-null="true">
-    <comment>仓管员-经手人Id</comment>
+  <many-to-one name="AccountId" class="com.jsh.model.po.Account" lazy="false">
+   <column name="AccountId">
+    <comment>账户Id</comment>
    </column>
   </many-to-one>
-  <property generated="never" lazy="false" name="SettlementWay" type="java.lang.String">
-   <column length="50" name="SettlementWay">
-    <comment>现金/记账</comment>
+  <property generated="never" lazy="false" name="ChangeAmount" type="java.lang.Double">
+   <column name="ChangeAmount" precision="22" scale="3">
+    <comment>变动金额(收款/付款)</comment>
    </column>
   </property>
-  <many-to-one name="BuildingId" class="com.jsh.model.po.Building" lazy="false">
-   <column name="BuildingId">
-    <comment>单元Id</comment>
-   </column>
-  </many-to-one>
   <many-to-one name="AllocationProjectId" class="com.jsh.model.po.Depot" lazy="false">
     <column name="AllocationProjectId">
      <comment>调拨时，对方项目Id</comment>
     </column>
   </many-to-one>
+  <property generated="never" lazy="false" name="TotalPrice" type="java.lang.Double">
+   <column name="TotalPrice" precision="22" scale="3">
+    <comment>合计金额</comment>
+   </column>
+  </property>
   <property generated="never" lazy="false" name="Remark" type="java.lang.String">
    <column length="1000" name="Remark">
     <comment>备注</comment>
-   </column>
-  </property>
-  <property generated="never" lazy="false" name="State" type="java.lang.String">
-   <column length="50" name="State">
-    <comment>草稿/已生效/废弃/待审核/未通过</comment>
-   </column>
-  </property>
-  <property generated="never" lazy="false" name="ReAuditPersonName" type="java.lang.String">
-   <column length="50" name="ReAuditPersonName">
-    <comment>撤审人</comment>
-   </column>
-  </property>
-  <property generated="never" lazy="false" name="Reason" type="java.lang.String">
-   <column length="100" name="Reason">
-    <comment>撤审原因</comment>
    </column>
   </property>
  </class>

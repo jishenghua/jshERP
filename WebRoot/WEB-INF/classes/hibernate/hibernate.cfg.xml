@@ -36,7 +36,6 @@
 	<mapping resource="com/jsh/model/po/Person.hbm.xml" />
 	<mapping resource="com/jsh/model/po/MaterialCategory.hbm.xml" />
 	<mapping resource="com/jsh/model/po/Material.hbm.xml" />
-    <mapping resource="com/jsh/model/po/Building.hbm.xml" />
     <mapping resource="com/jsh/model/po/DepotHead.hbm.xml" />
     <mapping resource="com/jsh/model/po/DepotItem.hbm.xml" />
     <mapping resource="com/jsh/model/po/Account.hbm.xml" />

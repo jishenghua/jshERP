@@ -12,7 +12,7 @@ import net.sf.json.JSONObject;
 import org.springframework.dao.DataAccessException;
 import com.jsh.base.BaseAction;
 import com.jsh.base.Log;
-import com.jsh.model.po.Building;
+import com.jsh.model.po.Account;
 import com.jsh.model.po.Depot;
 import com.jsh.model.po.DepotHead;
 import com.jsh.model.po.Logdetails;
@@ -81,13 +81,12 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
                 Log.errorFileSync(">>>>>>>>>>>>>>>解析购买日期格式异常", e);
             }
 			if(model.getOrganId()!=null){depotHead.setOrganId(new Supplier(model.getOrganId()));}
-			if(model.getHandsPersonId()!=null){depotHead.setHandsPersonId(new Person(model.getHandsPersonId()));}
-			if(model.getWareHousePersonId()!=null){depotHead.setWareHousePersonId(new Person(model.getWareHousePersonId()));}
+			if(model.getHandsPersonId()!=null){depotHead.setHandsPersonId(new Person(model.getHandsPersonId()));}			
+			if(model.getAccountId()!=null){depotHead.setAccountId(new Account(model.getAccountId()));}
+			depotHead.setChangeAmount(model.getChangeAmount());
 			if(model.getAllocationProjectId()!=null){depotHead.setAllocationProjectId(new Depot(model.getAllocationProjectId()));}
-			if(model.getBuildingId()!=null){depotHead.setBuildingId(new Building(model.getBuildingId()));}
-			depotHead.setSettlementWay(model.getSettlementWay());
+			depotHead.setTotalPrice(model.getTotalPrice());
 			depotHead.setRemark(model.getRemark());
-			depotHead.setState("草稿");
 			depotHeadService.create(depotHead);
 			
 			//========标识位===========
@@ -173,10 +172,10 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
             }
 			if(model.getOrganId()!=null){depotHead.setOrganId(new Supplier(model.getOrganId()));}
 			if(model.getHandsPersonId()!=null){depotHead.setHandsPersonId(new Person(model.getHandsPersonId()));}
-			if(model.getWareHousePersonId()!=null){depotHead.setWareHousePersonId(new Person(model.getWareHousePersonId()));}
+			if(model.getAccountId()!=null){depotHead.setAccountId(new Account(model.getAccountId()));}			
+			depotHead.setChangeAmount(model.getChangeAmount());
 			if(model.getAllocationProjectId()!=null){depotHead.setAllocationProjectId(new Depot(model.getAllocationProjectId()));}
-			if(model.getBuildingId()!=null){depotHead.setBuildingId(new Building(model.getBuildingId()));}
-			depotHead.setSettlementWay(model.getSettlementWay());
+			depotHead.setTotalPrice(model.getTotalPrice()); 
 			depotHead.setRemark(model.getRemark());
         	depotHeadService.update(depotHead);
             
@@ -205,58 +204,6 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
         logService.create(new Logdetails(getUser(), "更新仓管通", model.getClientIp(),
                 new Timestamp(System.currentTimeMillis())
         , tipType, "更新仓管通ID为  "+ model.getDepotHeadID() + " " + tipMsg + "！", "更新仓管通" + tipMsg));
-	}
-	
-	/**
-	 * 更新状态
-	 * @return
-	 */
-	public void submit()
-	{
-		Log.infoFileSync("====================开始调用更新状态仓管通信息方法submit()================");
-	    Boolean flag = false;
-	    String changeId="";
-        try
-        {
-        	String DepotHeadIDs=model.getDepotHeadIDs();
-        	String[] DepotHeadID=DepotHeadIDs.split(",");
-        	for(int i=0;i<DepotHeadID.length;i++)
-        	{
-        		changeId=DepotHeadID[i].toString();
-	        	DepotHead depotHead = depotHeadService.get(Long.parseLong(changeId));
-	        	String state=model.getState();
-				depotHead.setState(state);  //状态
-				String userName=state.equals("未通过")?getUser().getUsername():""; //判断状态
-				depotHead.setReAuditPersonName(userName); //撤审人
-				depotHead.setReason(model.getReason()); //撤审原因
-				depotHeadService.update(depotHead);
-        	}
-            flag = true;
-            tipMsg = "成功";
-            tipType = 0;
-        } 
-        catch (DataAccessException e) 
-        {
-            Log.errorFileSync(">>>>>>>>>>>>>更新状态仓管通ID为 ： " + model.getDepotHeadID() + "信息失败", e);
-            flag = false;
-            tipMsg = "失败";
-            tipType = 1;
-        }
-        finally
-        {
-            try 
-            {
-                toClient(flag.toString());
-            } 
-            catch (IOException e) 
-            {
-                Log.errorFileSync(">>>>>>>>>>>>更新状态仓管通回写客户端结果异常", e);
-            }
-        }
-        logService.create(new Logdetails(getUser(), "更新状态仓管通", model.getClientIp(),
-                new Timestamp(System.currentTimeMillis())
-        , tipType, "更新状态-"+model.getState()+"-ID为  "+ changeId + " " + tipMsg + "！", "更新状态仓管通" + tipMsg));
-        Log.infoFileSync("====================结束调用更新状态仓管通信息方法submit()================");
 	}
 	
 	/**
@@ -301,10 +248,6 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
             depotHeadService.find(pageUtil);
             List<DepotHead> dataList = pageUtil.getPageList();
             
-            //开始拼接json数据
-//            {"total":28,"rows":[
-//                {"productid":"AV-CB-01","attr1":"Adult Male","itemid":"EST-18"}
-//            ]}
             JSONObject outer = new JSONObject();
             outer.put("total", pageUtil.getTotalCount());
             //存放数据json数组
@@ -325,17 +268,13 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
                     item.put("OrganName", depotHead.getOrganId()==null?"":depotHead.getOrganId().getSupplier());
                     item.put("HandsPersonId", depotHead.getHandsPersonId()==null?"":depotHead.getHandsPersonId().getId());
                     item.put("HandsPersonName", depotHead.getHandsPersonId()==null?"":depotHead.getHandsPersonId().getName());
-                    item.put("WareHousePersonId", depotHead.getWareHousePersonId()==null?"":depotHead.getWareHousePersonId().getId());
-                    item.put("WareHousePersonName", depotHead.getWareHousePersonId()==null?"":depotHead.getWareHousePersonId().getName());
+                    item.put("AccountId", depotHead.getAccountId()==null?"":depotHead.getAccountId().getId());
+                    item.put("AccountName", depotHead.getAccountId()==null?"":depotHead.getAccountId().getName());
+                    item.put("ChangeAmount", depotHead.getChangeAmount());
                     item.put("AllocationProjectId", depotHead.getAllocationProjectId()==null?"":depotHead.getAllocationProjectId().getId());
-                    item.put("AllocationProjectName", depotHead.getAllocationProjectId()==null?"":depotHead.getAllocationProjectId().getName());
-                    item.put("BuildingId", depotHead.getBuildingId()==null?"":depotHead.getBuildingId().getId());
-                    item.put("BuildingName", depotHead.getBuildingId()==null?"":depotHead.getBuildingId().getName()); //单元名称
-                    item.put("SettlementWay", depotHead.getSettlementWay());
+                    item.put("AllocationProjectName", depotHead.getAllocationProjectId()==null?"":depotHead.getAllocationProjectId().getName());                    
+                    item.put("TotalPrice", depotHead.getTotalPrice());
                     item.put("Remark", depotHead.getRemark());
-                    item.put("State", depotHead.getState());
-                    item.put("ReAuditPersonName", depotHead.getReAuditPersonName());
-                    item.put("Reason", depotHead.getReason());
                     item.put("op", 1);
                     dataArray.add(item);
                 }
@@ -411,7 +350,6 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
         condition.put("Number_s_like",model.getNumber());
         condition.put("OperTime_s_gteq",model.getBeginTime());
         condition.put("OperTime_s_lteq",model.getEndTime());
-        condition.put("State_s_eq", model.getState());
         condition.put("Id_s_order","desc");
         return condition;
     }
