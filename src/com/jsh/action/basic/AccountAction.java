@@ -166,6 +166,46 @@ public class AccountAction extends BaseAction<AccountModel>
                                          new Timestamp(System.currentTimeMillis())
                                          , tipType, "更新结算账户ID为  "+ model.getAccountID() + " " + tipMsg + "！", "更新结算账户" + tipMsg));
     }
+    
+    /**
+     * 更新结算账户金额
+     * @return
+     */
+    public void updateAmount()
+    {
+        Boolean flag = false;
+        try
+        {
+            Account Account = accountService.get(model.getAccountID());
+            Account.setCurrentAmount(model.getCurrentAmount());
+            accountService.update(Account);
+
+            flag = true;
+            tipMsg = "成功";
+            tipType = 0;
+        } 
+        catch (DataAccessException e) 
+        {
+            Log.errorFileSync(">>>>>>>>>>>>>修改结算账户ID为 ： " + model.getAccountID() + "信息失败", e);
+            flag = false;
+            tipMsg = "失败";
+            tipType = 1;
+        }
+        finally
+        {
+            try 
+            {
+                toClient(flag.toString());
+            } 
+            catch (IOException e) 
+            {
+                Log.errorFileSync(">>>>>>>>>>>>修改结算账户回写客户端结果异常", e);
+            }
+        }
+        logService.create(new Logdetails(getUser(), "更新结算账户", model.getClientIp(),
+                                         new Timestamp(System.currentTimeMillis())
+                                         , tipType, "更新结算账户ID为  "+ model.getAccountID() + " " + tipMsg + "！", "更新结算账户" + tipMsg));
+    }
 
     /**
      * 批量删除指定ID结算账户

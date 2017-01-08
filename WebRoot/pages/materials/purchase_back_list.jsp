@@ -2,7 +2,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
 <%
 	String path = request.getContextPath();
-	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 	String clientIp = Tools.getCurrentUserIP();
 %>
 <!DOCTYPE html>
@@ -13,14 +12,20 @@
 		<!-- 指定以IE8的方式来渲染 -->
 		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
     	<link rel="shortcut icon" href="<%=path%>/images/favicon.ico" type="image/x-icon" />
-    	<script type="text/javascript" src="<%=path %>/js/jquery-1.8.0.min.js"></script>
 		<link rel="stylesheet" type="text/css" href="<%=path %>/js/easyui-1.3.5/themes/default/easyui.css"/>
 		<link rel="stylesheet" type="text/css" href="<%=path %>/js/easyui-1.3.5/themes/icon.css"/>
 		<link type="text/css" rel="stylesheet" href="<%=path %>/css/common.css" />
-		<script type="text/javascript" src="<%=path %>/js/easyui-1.3.5/jquery.easyui.min.js"></script>
-		<script type="text/javascript" src="<%=path %>/js/easyui-1.3.5/locale/easyui-lang-zh_CN.js"></script>
-		<script type="text/javascript" src="<%=path %>/js/My97DatePicker/WdatePicker.js"></script>
-		<script type="text/javascript" src="<%=path %>/js/common/common.js"></script>
+		<script src="<%=path %>/js/jquery-1.8.0.min.js"></script>
+		<script src="<%=path %>/js/easyui-1.3.5/jquery.easyui.min.js"></script>
+		<script src="<%=path %>/js/easyui-1.3.5/locale/easyui-lang-zh_CN.js"></script>
+		<script src="<%=path %>/js/My97DatePicker/WdatePicker.js"></script>
+		<script src="<%=path %>/js/common/common.js"></script>		
+		<script src="<%=path %>/js/pages/materials/in_out.js"></script>
+		<script>
+			var kid = ${sessionScope.user.id};
+			var path = "<%=path%>";
+			var clientIp = "<%=clientIp%>";
+		</script>
   	</head>
   	<body>
   		<!-- 查询 -->
@@ -31,11 +36,11 @@
 					<td>
 						<select name="searchProjectId" id="searchProjectId"  style="width:80px;"></select>
 					</td>
-					<td>单据号：</td>
+					<td>单据编号：</td>
 					<td>
 						<input type="text" name="searchNumber" id="searchNumber" style="width:60px;"/>
 					</td>
-					<td>入库时间：</td>
+					<td>单据日期：</td>
 					<td>
 						<input type="text" name="searchBeginTime" id="searchBeginTime" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="txt Wdate" style="width:80px;"/>
 					</td>
@@ -64,39 +69,37 @@
 	            <tr>
 	            <td>发货仓库：</td>
 	            <td style="padding:5px">
-                <select name="ProjectId" id="ProjectId" style="width:120px;"></select>
+                <select name="ProjectId" id="ProjectId" style="width:110px;"></select>
                 </td>
-                <td>入库时间：</td>
+                <td>单据日期：</td>
                 <td style="padding:5px">
-                <input type="text" name="OperTime" id="OperTime" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="txt Wdate" style="width:120px;"/>
+                <input type="text" name="OperTime" id="OperTime" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="txt Wdate" style="width:110px;"/>
                 </td>
-	            <td>供应商：</td>
+	            <td>收货单位：</td>
 	            <td style="padding:5px">
-	            <input id="OrganId" name="OrganId" style="width:120px;" />  
+	            <input id="OrganId" name="OrganId" style="width:110px;" />  
 	            </td>
-	            <td>采购人：</td>
+	            <td>经手人：</td>
 	            <td style="padding:5px">
-	            <select name="HandsPersonId" id="HandsPersonId" style="width:120px;"></select>
+	            <select name="HandsPersonId" id="HandsPersonId" style="width:110px;"></select>
 	            </td>
 	            </tr>
 	            <tr>
-	            <td>经手人：</td>
+	            <td>收款账户：</td>
 	            <td style="padding:5px">
-	            <select name="WareHousePersonId" id="WareHousePersonId" style="width:120px;"></select>
+	            <select name="AccountId" id="AccountId" style="width:110px;"></select>
 	            </td>
-	            <td>结算方式：</td>
+	            <td>收款金额：</td>
 				<td style="padding:5px">
-					<select name="SettlementWay" id="SettlementWay"  style="width:120px;">
-					<option value="现金">现金</option>
-					<option value="记账">记账</option>
-					</select>
+	            <input id="ChangeAmount" name="ChangeAmount" data-changeamount="0" style="width:110px;" />
 				</td>
-	            <td>备注：</td>
+				<td>单据编号：</td>
 	            <td style="padding:5px">
-	            <input name="Remark" id="Remark" class="easyui-validatebox" style="width: 120px;"/>
+	            <input name="Number" id="Number" class="easyui-validatebox" data-options="required:true,validType:'length[2,30]'" style="width: 110px;"/>
 	            </td>
-	            <td>单据号：</td>
-	            <td style="padding:5px"><input name="Number" id="Number" class="easyui-validatebox" data-options="required:true,validType:'length[2,30]'" style="width: 120px;"/>
+	            <td>单据备注：</td>
+	            <td style="padding:5px">
+	            <input name="Remark" id="Remark" class="easyui-validatebox" style="width: 110px;"/>
 	            </td>
 	            </tr>
 	            <tr>
@@ -119,38 +122,38 @@
 	            <table>
 	            <tr>
 	            <td>发货仓库：</td>
-	            <td style="padding:5px;width:120px;">
+	            <td style="padding:5px;width:110px;">
                 <span id="ProjectIdShow"></span>
                 </td>
-                <td>入库时间：</td>
-                <td style="padding:5px;width:120px;">
+                <td>单据日期：</td>
+                <td style="padding:5px;width:110px;">
                 <span id="OperTimeShow"></span>
                 </td>
-	            <td>供应商：</td>
-	            <td style="padding:5px;width:120px;">
+	            <td>收货单位：</td>
+	            <td style="padding:5px;width:110px;">
 	            <span id="OrganIdShow"></span>
 	            </td>
-	            <td>采购人：</td>
-	            <td style="padding:5px;width:120px;">
+	            <td>经手人：</td>
+	            <td style="padding:5px;width:110px;">
 	            <span id="HandsPersonIdShow"></span>
 	            </td>
 	            </tr>
 	            <tr>
-	            <td>仓管员：</td>
+	            <td>收款账户：</td>
 	            <td style="padding:5px">
-	            <span id="WareHousePersonIdShow"></span>
+	            <span id="AccountIdShow"></span>
 	            </td>
-	            <td>结算方式：</td>
+	            <td>收款金额：</td>
 				<td style="padding:5px">
-				<span id="SettlementWayShow"></span>
+	            <span id="ChangeAmountShow"></span>
 				</td>
-	            <td>备注：</td>
-	            <td style="padding:5px">
-	            <span id="RemarkShow"></span>
-	            </td>
-	            <td>单据号：</td>	            
+				<td>单据编号：</td>	            
 	            <td style="padding:5px">
 	            <span id="NumberShow"></span>
+	            </td>            
+	            <td>单据备注：</td>
+	            <td style="padding:5px">
+	            <span id="RemarkShow"></span>
 	            </td>
 	            </tr>
 	            <tr>
@@ -164,6 +167,7 @@
 	    </div>
 	    
 		<script type="text/javascript">
+			return;
 			var depotList = null;
 			var depotID = null;
 			var supplierList = null;
