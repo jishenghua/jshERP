@@ -311,7 +311,8 @@
 					var rowInfo = rec.Id + 'AaBb' + rec.ProjectId+ 'AaBb' + rec.Number+ 'AaBb' + rec.OperPersonName
 					+ 'AaBb' + rec.OperTime+ 'AaBb' + rec.OrganId+ 'AaBb' + rec.HandsPersonId
 					+ 'AaBb' + rec.AccountId+ 'AaBb' + rec.ChangeAmount+ 'AaBb' + rec.Remark
-					+ 'AaBb' + rec.ProjectName+ 'AaBb' + rec.OrganName+ 'AaBb' + rec.HandsPersonName+ 'AaBb' + rec.AccountName + 'AaBb' + rec.TotalPrice;
+					+ 'AaBb' + rec.ProjectName+ 'AaBb' + rec.OrganName+ 'AaBb' + rec.HandsPersonName
+					+ 'AaBb' + rec.AccountName + 'AaBb' + rec.TotalPrice + 'AaBb' + rec.AllocationProjectId + 'AaBb' + rec.AllocationProjectName;
 					if(1 == value)
 					{
 						str += '<img src="' + path + '/js/easyui-1.3.5/themes/icons/list.png" style="cursor: pointer;" onclick="showDepotHead(\'' + rowInfo + '\');"/>&nbsp;<a onclick="showDepotHead(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">查看</a>&nbsp;&nbsp;';
@@ -662,7 +663,7 @@
 	    $("#ChangeAmount").attr("data-changeamount", depotHeadInfo[8]);
 	    $("#Remark").val(depotHeadInfo[9]);
 	    var TotalPrice = depotHeadInfo[14];
-	    
+	    $("#AllocationProjectId").val(depotHeadInfo[15]);
 	    //orgDepotHead = depotHeadInfo[1];
 	    var editTitle = listTitle.replace("列表","信息");
 	    $('#depotHeadDlg').dialog('open').dialog('setTitle','<img src="' + path + '/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑' + editTitle);
@@ -686,6 +687,7 @@
 	    $("#ChangeAmountShow").text(depotHeadInfo[8]);
 	    $("#RemarkShow").text(depotHeadInfo[9]);
 	    var TotalPrice = depotHeadInfo[14];
+	    $("#AllocationProjectIdShow").text(depotHeadInfo[16]);
 	    var showTitle = listTitle.replace("列表","信息");
 	    $('#depotHeadDlgShow').dialog('open').dialog('setTitle','<img src="' + path + '/js/easyui-1.3.5/themes/icons/list.png"/>&nbsp;查看' + showTitle);
 	    $(".window-mask").css({ width: webW ,height: webH});
@@ -737,6 +739,13 @@
 					return;
 				else 
 				{
+					var OrganId = null, AllocationProjectId = null;
+					if(listSubType !=="调拨"){
+						OrganId = $('#OrganId').combobox('getValue');
+					}
+					else {
+						AllocationProjectId = $.trim($("#AllocationProjectId").val()); //收货仓库-对方
+					}
 					$.ajax({
 						type:"post",
 						url: url,
@@ -745,10 +754,11 @@
 						data: ({
 							Type: listType,
 							SubType: listSubType,
-							ProjectId : $.trim($("#ProjectId").val()),
-							Number : $.trim($("#Number").val()),
+							ProjectId: $.trim($("#ProjectId").val()),
+							AllocationProjectId: AllocationProjectId,
+							Number: $.trim($("#Number").val()),
 							OperTime: $("#OperTime").val(),
-							OrganId: $('#OrganId').combobox('getValue'),
+							OrganId: OrganId,
 							HandsPersonId: $.trim($("#HandsPersonId").val()),
 							AccountId: $.trim($("#AccountId").val()),
 							ChangeAmount: $.trim($("#ChangeAmount").val()),
@@ -760,18 +770,25 @@
 						{
 							if(tipInfo)
 							{
+								function closeDialog(){
+									$('#depotHeadDlg').dialog('close');
+									var opts = $("#tableData").datagrid('options'); 
+									showDepotHeadDetails(opts.pageNumber,opts.pageSize); 
+								}
 								//保存明细记录
 								if(depotHeadID ==0)
 								{
 									getMaxId(); //查找最大的Id
 									accept(depotHeadMaxId); //新增
-									changeAmountFn(); //改变账户金额				
+									//changeAmountFn(); //改变账户金额	
+									closeDialog();
 								}
 								else
 								{
 									accept(depotHeadID); //修改
-									changeAmountFn(); //改变账户金额
-								}																					
+									//changeAmountFn(); //改变账户金额
+									closeDialog();
+								}															
 							}
 							else
 							{
@@ -1047,9 +1064,7 @@
 				currentAmount: currentAmount + ChangeAmount - oldChangeAmount
 			},
 			success: function(res){
-				$('#depotHeadDlg').dialog('close');
-				var opts = $("#tableData").datagrid('options'); 
-				showDepotHeadDetails(opts.pageNumber,opts.pageSize); 
+				
 			},
 			error:function(){
 				$.messager.alert('提示','请检查网络连接！','error');

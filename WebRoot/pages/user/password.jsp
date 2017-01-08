@@ -30,13 +30,13 @@
 	                <span id="orgTipMsg"></span>
 	            </div>
 	            <div class="fitem" style="padding:5px">
-	                <label id="newPassword">密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码&nbsp;&nbsp;</label>
+	                <label id="newPassword">重设密码&nbsp;&nbsp;</label>
 	                <input type="password" name="password" id="password" class="easyui-validatebox" data-options="required:true,validType:'length[5,20]'" style="width: 230px;height: 20px" missingMessage="请填写新密码"/>
 	                <span id="orgTipMsg"></span>
 	            </div>
 	            <div class="fitem" style="padding:5px">
-	                <label id="repasswordLabel">确认密码&nbsp;&nbsp;</label>
-	                <input type="password" name="repassword" id="repassword" class="easyui-validatebox" style="width: 230px;height: 20px" required="true" class="easyui-validatebox" validType="equals['#password']"  missingMessage="请再次填写新密码" invalidMessage="确认密码与输入密码不一致"/>
+	                <label id="repasswordLabel">再输一遍&nbsp;&nbsp;</label>
+	                <input type="password" name="repassword" id="repassword" class="easyui-validatebox" style="width: 230px;height: 20px" required="true" class="easyui-validatebox" validType="equals['#password']"  missingMessage="请再次填写新密码" invalidMessage="两次密码输入不一致"/>
 	                <span id="tipMsg"></span>
 	            </div>
 	            <input type="hidden" name="clientIp" id="clientIp" value="<%=clientIp %>"/>
@@ -58,26 +58,8 @@
 				        return false;
 				    }
 				});
-				browserFit();
 				$("#userDlg").panel({height:webH-35});
 			});	
-			
-			//浏览器适配
-			function browserFit()
-			{
-				if(getOs()=='MSIE')
-				{
-					$("#passwordLabel").empty().append("原始密码&nbsp;&nbsp;");
-					$("#newPassword").empty().append("密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码&nbsp;&nbsp;");
-					$("#repasswordLabel").empty().append("确认密码&nbsp;&nbsp;");
-				}
-				else
-				{
-					$("#passwordLabel").empty().append("原始密码&nbsp;");
-					$("#newPassword").empty().append("密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码&nbsp;");
-					$("#repasswordLabel").empty().append("确认密码&nbsp;");
-				}
-			}
 			
 			$("#cancelpassword").unbind().bind({
 				click:function()
