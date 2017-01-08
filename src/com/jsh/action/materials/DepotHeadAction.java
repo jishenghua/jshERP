@@ -270,10 +270,10 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
                     item.put("HandsPersonName", depotHead.getHandsPersonId()==null?"":depotHead.getHandsPersonId().getName());
                     item.put("AccountId", depotHead.getAccountId()==null?"":depotHead.getAccountId().getId());
                     item.put("AccountName", depotHead.getAccountId()==null?"":depotHead.getAccountId().getName());
-                    item.put("ChangeAmount", depotHead.getChangeAmount());
+                    item.put("ChangeAmount", depotHead.getChangeAmount()==null?"":Math.abs(depotHead.getChangeAmount()));
                     item.put("AllocationProjectId", depotHead.getAllocationProjectId()==null?"":depotHead.getAllocationProjectId().getId());
                     item.put("AllocationProjectName", depotHead.getAllocationProjectId()==null?"":depotHead.getAllocationProjectId().getName());                    
-                    item.put("TotalPrice", depotHead.getTotalPrice());
+                    item.put("TotalPrice", depotHead.getTotalPrice()==null?"":Math.abs(depotHead.getTotalPrice()));
                     item.put("Remark", depotHead.getRemark());
                     item.put("op", 1);
                     dataArray.add(item);

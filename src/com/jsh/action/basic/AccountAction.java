@@ -10,10 +10,12 @@ import net.sf.json.JSONObject;
 import org.springframework.dao.DataAccessException;
 import com.jsh.base.BaseAction;
 import com.jsh.base.Log;
+import com.jsh.model.po.DepotHead;
 import com.jsh.model.po.Logdetails;
 import com.jsh.model.po.Account;
 import com.jsh.model.vo.basic.AccountModel;
 import com.jsh.service.basic.AccountIService;
+import com.jsh.service.materials.DepotHeadIService;
 import com.jsh.util.PageUtil;
 /**
  * 结算账户
@@ -23,7 +25,8 @@ import com.jsh.util.PageUtil;
 public class AccountAction extends BaseAction<AccountModel>
 {
     private AccountIService accountService;
-    private AccountModel model = new AccountModel();
+    private DepotHeadIService depotHeadService;
+	private AccountModel model = new AccountModel();
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public String getAccount()
@@ -290,7 +293,7 @@ public class AccountAction extends BaseAction<AccountModel>
                     item.put("name", account.getName());
                     item.put("serialNo", account.getSerialNo());
                     item.put("initialAmount", account.getInitialAmount());
-                    item.put("currentAmount", account.getCurrentAmount());
+                    item.put("currentAmount", getAccountSum(account.getId()) + account.getInitialAmount());
                     item.put("remark", account.getRemark());
                     item.put("op", 1);
                     dataArray.add(item);
@@ -308,6 +311,31 @@ public class AccountAction extends BaseAction<AccountModel>
         {
             Log.errorFileSync(">>>>>>>>>回写查询结算账户信息结果异常", e);
         }
+    }
+    /**
+     * 单个账户的金额求和
+     * @param id
+     * @return
+     */
+    public Double getAccountSum(Long id){
+    	Double accountSum = 0.0;
+    	try{	    	
+	    	PageUtil<DepotHead> pageUtil = new PageUtil<DepotHead>();
+	    	pageUtil.setPageSize(0);
+	        pageUtil.setCurPage(0);
+	        pageUtil.setAdvSearch(getCondition_getSum(id));        
+			depotHeadService.find(pageUtil);
+			List<DepotHead> dataList = pageUtil.getPageList();
+	        if(dataList!= null){
+	            for(DepotHead depotHead:dataList){
+	                accountSum = accountSum + depotHead.getChangeAmount();
+	            }
+	        }
+        }
+        catch (DataAccessException e){
+            Log.errorFileSync(">>>>>>>>>查找进销存信息异常", e);
+        }
+        return accountSum;
     }
 
     /**
@@ -380,6 +408,20 @@ public class AccountAction extends BaseAction<AccountModel>
         condition.put("id_s_order", "desc");
         return condition;
     }
+    
+    /**
+     * 拼接搜索条件-结算账户当前余额求和
+     * @return
+     */
+    private Map<String,Object> getCondition_getSum(Long id)
+    {
+        /**
+         * 拼接搜索条件
+         */
+        Map<String,Object> condition = new HashMap<String,Object>();
+        condition.put("AccountId_n_eq", id);
+        return condition;
+    }
 
     //=============以下spring注入以及Model驱动公共方法，与Action处理无关==================
     @Override
@@ -391,4 +433,7 @@ public class AccountAction extends BaseAction<AccountModel>
     {
         this.accountService = accountService;
     }
+    public void setDepotHeadService(DepotHeadIService depotHeadService) {
+		this.depotHeadService = depotHeadService;
+	}
 }

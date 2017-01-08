@@ -306,6 +306,7 @@
     <!-- spring整合struts2需要默认为request或者 prototype，不能是单例 -->
     <bean id="accountAction" class="com.jsh.action.basic.AccountAction" scope="prototype">
         <property name="accountService" ref="accountService"/>
+        <property name="depotHeadService" ref="depotHeadService"/>
         <property name="logService" ref="logService"/>
     </bean>
 	<!--结算账户配置结束 -->

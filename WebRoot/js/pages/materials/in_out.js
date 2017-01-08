@@ -740,11 +740,18 @@
 				else 
 				{
 					var OrganId = null, AllocationProjectId = null;
+					var ChangeAmount = $.trim($("#ChangeAmount").val());
+					var TotalPrice = $("#depotHeadFM .datagrid-footer [field='AllPrice'] div").text();					
 					if(listSubType !=="调拨"){
 						OrganId = $('#OrganId').combobox('getValue');
 					}
 					else {
 						AllocationProjectId = $.trim($("#AllocationProjectId").val()); //收货仓库-对方
+					}
+					if(listSubType === "采购"||listSubType === "销售退货"){
+						//付款为负数
+						ChangeAmount = 0 - ChangeAmount;
+						TotalPrice = 0 - TotalPrice;
 					}
 					$.ajax({
 						type:"post",
@@ -761,8 +768,8 @@
 							OrganId: OrganId,
 							HandsPersonId: $.trim($("#HandsPersonId").val()),
 							AccountId: $.trim($("#AccountId").val()),
-							ChangeAmount: $.trim($("#ChangeAmount").val()),
-							TotalPrice: $("#depotHeadFM .datagrid-footer [field='AllPrice'] div").text(),
+							ChangeAmount: ChangeAmount, //付款/收款
+							TotalPrice: TotalPrice, //合计
 							Remark: $.trim($("#Remark").val()),
 							clientIp: clientIp
 						}),

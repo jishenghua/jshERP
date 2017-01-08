@@ -323,8 +323,8 @@
 			          { title: '最低售价',field: 'LowPrice',width:70},
 			          { title: '预设售价一',field: 'PresetPriceOne',width:70},
 			          { title: '预设售价二',field: 'PresetPriceTwo',width:70},
-			          { title: '备注',field: 'Remark',width:110},
-			          { title: '操作',field: 'op',align:"center",width:120,formatter:function(value,rec)
+			          { title: '备注',field: 'Remark',width:90},
+			          { title: '操作',field: 'op',align:"center",width:150,formatter:function(value,rec)
 			         	{
 							var str = '';
 							var rowInfo = rec.Id + 'AaBb' + rec.Name+ 'AaBb' + rec.Model + 'AaBb' + rec.Color + 'AaBb' + rec.Unit + 'AaBb' + rec.RetailPrice + 'AaBb' + rec.LowPrice + 'AaBb' + rec.PresetPriceOne + 'AaBb' + rec.PresetPriceTwo + 'AaBb' + rec.Remark;
