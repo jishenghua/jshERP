@@ -34,10 +34,11 @@
 * 本系统100%开源，遵守Apache2.0协议
 
 #系统美图
+* 进销存模块
 ![输入图片说明](http://git.oschina.net/uploads/images/2017/0108/150544_853dcc2e_852955.png "进销存模块")
-
+* 报表查询模块
 ![输入图片说明](http://git.oschina.net/uploads/images/2017/0108/150620_dc5adac7_852955.png "报表查询模块")
-
+* 基础数据模块
 ![输入图片说明](http://git.oschina.net/uploads/images/2017/0108/150646_a7cbb9c9_852955.png "基础数据模块")
-
+* 系统管理模块
 ![输入图片说明](http://git.oschina.net/uploads/images/2017/0108/150703_46711f40_852955.png "系统管理模块")
