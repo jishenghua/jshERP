@@ -233,7 +233,112 @@ public class DepotItemAction extends BaseAction<DepotItemModel>
             Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询信息结果异常", e);
         }
 	}
-    
+	/**
+	 * 进货统计
+	 * @return
+	 */
+    public void buyIn()
+	{
+	    try 
+	    {	    	
+	        PageUtil<DepotItem> pageUtil = new  PageUtil<DepotItem>();
+            pageUtil.setPageSize(model.getPageSize());
+            pageUtil.setCurPage(model.getPageNo());
+            pageUtil.setAdvSearch(getConditionALL());
+            depotItemService.find(pageUtil);
+            List<DepotItem> dataList = pageUtil.getPageList();
+
+            JSONObject outer = new JSONObject();
+            outer.put("total", pageUtil.getTotalCount());
+            //存放数据json数组
+            JSONArray dataArray = new JSONArray();
+            if(null != dataList)
+            {
+                for(DepotItem depotItem:dataList)
+                {
+                    JSONObject item = new JSONObject();
+                    Integer InSum = sumNumberBuyOrSale("入库","采购",depotItem.getMaterialId().getId(),model.getMonthTime());
+                    Integer OutSum = sumNumberBuyOrSale("出库","采购退货",depotItem.getMaterialId().getId(),model.getMonthTime());  
+                    Double InSumPrice = sumPriceBuyOrSale("入库","采购",depotItem.getMaterialId().getId(),model.getMonthTime());
+                    Double OutSumPrice = sumPriceBuyOrSale("出库","采购退货",depotItem.getMaterialId().getId(),model.getMonthTime());  
+                    item.put("Id", depotItem.getId());
+                    item.put("MaterialId", depotItem.getMaterialId()==null?"":depotItem.getMaterialId().getId());
+                    item.put("MaterialName", depotItem.getMaterialId().getName());
+                    item.put("MaterialModel", depotItem.getMaterialId().getModel());
+                    item.put("MaterialColor", depotItem.getMaterialId().getColor());
+                    item.put("InSum", InSum);
+                    item.put("OutSum", OutSum);
+                    item.put("InSumPrice", InSumPrice);
+                    item.put("OutSumPrice", OutSumPrice);
+                    dataArray.add(item);
+                }
+            }
+            outer.put("rows", dataArray);
+            //回写查询结果
+            toClient(outer.toString());
+        } 
+	    catch (DataAccessException e) 
+	    {
+	        Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找信息异常", e);
+        } 
+	    catch (IOException e) 
+	    {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询信息结果异常", e);
+        }
+	}
+	/**
+	 * 销售统计
+	 * @return
+	 */
+    public void saleOut()
+	{
+	    try 
+	    {	    	
+	        PageUtil<DepotItem> pageUtil = new  PageUtil<DepotItem>();
+            pageUtil.setPageSize(model.getPageSize());
+            pageUtil.setCurPage(model.getPageNo());
+            pageUtil.setAdvSearch(getConditionALL());
+            depotItemService.find(pageUtil);
+            List<DepotItem> dataList = pageUtil.getPageList();
+
+            JSONObject outer = new JSONObject();
+            outer.put("total", pageUtil.getTotalCount());
+            //存放数据json数组
+            JSONArray dataArray = new JSONArray();
+            if(null != dataList)
+            {
+                for(DepotItem depotItem:dataList)
+                {
+                    JSONObject item = new JSONObject();
+                    Integer OutSum = sumNumberBuyOrSale("出库","销售",depotItem.getMaterialId().getId(),model.getMonthTime());   
+                    Integer InSum = sumNumberBuyOrSale("入库","销售退货",depotItem.getMaterialId().getId(),model.getMonthTime()); 
+                    Double OutSumPrice = sumPriceBuyOrSale("出库","销售",depotItem.getMaterialId().getId(),model.getMonthTime()); 
+                    Double InSumPrice = sumPriceBuyOrSale("入库","销售退货",depotItem.getMaterialId().getId(),model.getMonthTime());                    
+                    item.put("Id", depotItem.getId());
+                    item.put("MaterialId", depotItem.getMaterialId()==null?"":depotItem.getMaterialId().getId());
+                    item.put("MaterialName", depotItem.getMaterialId().getName());
+                    item.put("MaterialModel", depotItem.getMaterialId().getModel());
+                    item.put("MaterialColor", depotItem.getMaterialId().getColor());
+                    item.put("OutSum", OutSum);
+                    item.put("InSum", InSum);
+                    item.put("OutSumPrice", OutSumPrice);
+                    item.put("InSumPrice", InSumPrice);
+                    dataArray.add(item);
+                }
+            }
+            outer.put("rows", dataArray);
+            //回写查询结果
+            toClient(outer.toString());
+        } 
+	    catch (DataAccessException e) 
+	    {
+	        Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找信息异常", e);
+        } 
+	    catch (IOException e) 
+	    {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询信息结果异常", e);
+        }
+	}
 	/**
 	 * 统计总计金额
 	 * @return
@@ -350,6 +455,52 @@ public class DepotItemAction extends BaseAction<DepotItemModel>
 		}
 		sumNumber = Integer.parseInt(allNumber);
 		return sumNumber;    	     
+    }
+    @SuppressWarnings("unchecked")
+	public Integer sumNumberBuyOrSale(String type,String subType,Long MId,String MonthTime) {
+    	Integer sumNumber = 0;
+    	String allNumber = "";
+    	String sumType = "Number";
+    	PageUtil pageUtil = new  PageUtil();
+        pageUtil.setPageSize(0);
+        pageUtil.setCurPage(0);
+        try {
+			depotItemService.buyOrSale(pageUtil, type, subType, MId, MonthTime, sumType);
+			allNumber = pageUtil.getPageList().toString();
+			allNumber = allNumber.substring(1,allNumber.length()-1);
+			if(allNumber.equals("null")){
+				allNumber = "0";
+			}
+			allNumber = allNumber.replace(".0", "");
+		} catch (JshException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		sumNumber = Integer.parseInt(allNumber);
+		return sumNumber;    	     
+    }
+    @SuppressWarnings("unchecked")
+	public Double sumPriceBuyOrSale(String type,String subType,Long MId,String MonthTime) {
+    	Double sumPrice = 0.0;
+    	String allPrice = "";
+    	String sumType = "Price";
+    	PageUtil pageUtil = new  PageUtil();
+        pageUtil.setPageSize(0);
+        pageUtil.setCurPage(0);
+        try {
+			depotItemService.buyOrSale(pageUtil, type, subType, MId, MonthTime, sumType);
+			allPrice = pageUtil.getPageList().toString();
+			allPrice = allPrice.substring(1,allPrice.length()-1);
+			if(allPrice.equals("null")){
+				allPrice = "0";
+			}
+			allPrice = allPrice.replace(".0", "");
+		} catch (JshException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		sumPrice = Double.parseDouble(allPrice);
+		return sumPrice;    	     
     }
 	/**
 	 * 拼接搜索条件

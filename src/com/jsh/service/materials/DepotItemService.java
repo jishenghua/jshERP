@@ -50,6 +50,12 @@ public class DepotItemService extends BaseService<DepotItem> implements DepotIte
     	depotItemDao.findByType(pageUtil, type, MId, MonthTime,isPrev);
     }
     
+    @Override
+    public void buyOrSale(PageUtil<DepotItem> pageUtil, String type,String subType, Long MId, String MonthTime, String sumType) throws JshException
+    {
+    	depotItemDao.buyOrSale(pageUtil, type, subType, MId, MonthTime, sumType);
+    }
+    
 	/**
 	 * 导出Excel表格
 	 */

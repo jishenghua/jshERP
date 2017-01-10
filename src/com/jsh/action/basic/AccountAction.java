@@ -17,6 +17,7 @@ import com.jsh.model.vo.basic.AccountModel;
 import com.jsh.service.basic.AccountIService;
 import com.jsh.service.materials.DepotHeadIService;
 import com.jsh.util.PageUtil;
+import com.jsh.util.Tools;
 /**
  * 结算账户
  * @author ji sheng hua qq752718920
@@ -293,7 +294,9 @@ public class AccountAction extends BaseAction<AccountModel>
                     item.put("name", account.getName());
                     item.put("serialNo", account.getSerialNo());
                     item.put("initialAmount", account.getInitialAmount());
-                    item.put("currentAmount", getAccountSum(account.getId()) + account.getInitialAmount());
+                    String monthTime = Tools.getCurrentMonth();
+                    item.put("thisMonthAmount", getAccountSum(account.getId(),monthTime));  //本月发生额
+                    item.put("currentAmount", getAccountSum(account.getId(),"") + account.getInitialAmount());  //当前余额
                     item.put("remark", account.getRemark());
                     item.put("op", 1);
                     dataArray.add(item);
@@ -317,13 +320,13 @@ public class AccountAction extends BaseAction<AccountModel>
      * @param id
      * @return
      */
-    public Double getAccountSum(Long id){
+    public Double getAccountSum(Long id,String monthTime){
     	Double accountSum = 0.0;
     	try{	    	
 	    	PageUtil<DepotHead> pageUtil = new PageUtil<DepotHead>();
 	    	pageUtil.setPageSize(0);
 	        pageUtil.setCurPage(0);
-	        pageUtil.setAdvSearch(getCondition_getSum(id));        
+	        pageUtil.setAdvSearch(getCondition_getSum(id,monthTime));      
 			depotHeadService.find(pageUtil);
 			List<DepotHead> dataList = pageUtil.getPageList();
 	        if(dataList!= null){
@@ -413,13 +416,17 @@ public class AccountAction extends BaseAction<AccountModel>
      * 拼接搜索条件-结算账户当前余额求和
      * @return
      */
-    private Map<String,Object> getCondition_getSum(Long id)
+    private Map<String,Object> getCondition_getSum(Long id,String monthTime)
     {
         /**
          * 拼接搜索条件
          */
         Map<String,Object> condition = new HashMap<String,Object>();
         condition.put("AccountId_n_eq", id);
+        if(!monthTime.equals("")){
+        	condition.put("OperTime_s_gteq", monthTime + "-01 00:00:00");
+            condition.put("OperTime_s_lteq", monthTime + "-31 00:00:00");
+        }        
         return condition;
     }
 
