@@ -53,67 +53,10 @@
 			//初始化界面
 			$(function()
 			{
-				//初始化系统基础信息
-				initSystemData();
-				initSelectInfo();
 				initTableData();
 				ininPager();
-				initForm();
 				exportExcel();
 			});	
-		
-			//初始化系统基础信息
-			function initSystemData()
-			{
-				$.ajax({
-					type:"post",
-					url: "<%=path%>/depot/getBasicData.action",
-					//设置为同步
-					async:false,
-					dataType: "json",
-					success: function (systemInfo)
-					{
-						depotList = systemInfo.showModel.map.depotList;
-						var msgTip = systemInfo.showModel.msgTip;
-						if(msgTip == "exceptoin")
-						{
-							$.messager.alert('提示','查找系统基础信息异常,请与管理员联系！','error');
-							return;
-						}	
-					}
-				});				
-			}
-			//初始化页面选项卡
-			function initSelectInfo()
-			{
-				var options = "";
-				
-				if(depotList !=null)
-				{
-					options = "";
-					for(var i = 0 ;i < depotList.length;i ++)
-					{
-						var depot = depotList[i];
-						if(0 == i)
-						{
-							depotID = depot.id;
-						}
-						options += '<option value="' + depot.id + '">' + depot.name + '</option>';
-					}	
-					$("#ProjectId").empty().append(options);
-					$("#searchProjectId").empty().append('<option value="">全部</option>').append(options);
-				}
-			}
-			
-			//防止表单提交重复
-			function initForm()
-			{
-				$('#personFM').form({
-				    onSubmit: function(){
-				        return false;
-				    }
-				});
-			}
 			
 			//导出EXCEL
 			function exportExcel() {
