@@ -27,11 +27,11 @@
 		<div id = "searchPanel"	class="easyui-panel" style="padding:3px;" title="查询窗口" iconCls="icon-search" collapsible="true" closable="false">
 			<table id="searchTable">
 				<tr>
-					<td>单据号：</td>
+					<td>单据编号：</td>
 					<td>
 						<input type="text" name="searchBillNo" id="searchBillNo" style="width:60px;"/>
 					</td>
-					<td>单据时间：</td>
+					<td>单据日期：</td>
 					<td>
 						<input type="text" name="searchBeginTime" id="searchBeginTime" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="txt Wdate" style="width:80px;"/>
 					</td>
@@ -59,33 +59,34 @@
 	            <table>
 	            <tr>	
 	            <td>单据编号：</td>
-	            <td style="padding:5px"><input name="BillNo" id="BillNo" class="easyui-validatebox" data-options="required:true,validType:'length[2,30]'" style="width: 120px;"/>
+	            <td style="padding:5px">
+	            <input name="BillNo" id="BillNo" class="easyui-validatebox" data-options="required:true,validType:'length[2,30]'" style="width: 110px;"/>
 	            </td>            
                 <td>单据日期：</td>
                 <td style="padding:5px">
-                <input type="text" name="BillTime" id="BillTime" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="txt Wdate" style="width:120px;"/>
+                <input type="text" name="BillTime" id="BillTime" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="txt Wdate" style="width:110px;"/>
                 </td>         
-	            <td>账户：</td>
+	            <td>收款账户：</td>
 	            <td style="padding:5px">
-	            <select id="AccountId" name="AccountId" style="width:120px;"></select>
+	            <select id="AccountId" name="AccountId" style="width:110px;"></select>
 	            </td>
-	            <td>金额：</td>
+	            <td>收款金额：</td>
 				<td>
 					<input type="text" name="ChangeAmount" id="ChangeAmount" class="easyui-numberbox" data-options="min:0,precision:2" style="width: 60px;"></input>
 				</td>
 	            </tr>
 	            <tr>
-	            <td>单位：</td>
+	            <td>往来单位：</td>
 	            <td style="padding:5px">
-                <select name="OrganId" id="OrganId" style="width:120px;"></select>
+                <select name="OrganId" id="OrganId" style="width:110px;"></select>
                 </td>
 	            <td>经手人：</td>
 	            <td style="padding:5px">
-	            <select name="HandsPersonId" id="HandsPersonId" style="width:120px;"></select>
+	            <select name="HandsPersonId" id="HandsPersonId" style="width:110px;"></select>
 	            </td>
-	            <td>备注：</td>
+	            <td>单据备注：</td>
 	            <td style="padding:5px">
-	            <input name="Remark" id="Remark" class="easyui-validatebox" style="width: 120px;"/>
+	            <input name="Remark" id="Remark" class="easyui-validatebox" style="width: 110px;"/>
 	            </td>
 	            <td></td>
 	            <td></td>
@@ -110,24 +111,24 @@
 	            <table>
 	            <tr>
 	            <td>单据编号：</td>
-                <td style="padding:5px;width:120px;">
+                <td style="padding:5px;width:110px;">
                 <span id="BillNoShow"></span>
                 </td>
 	            <td>单据日期：</td>
-	            <td style="padding:5px;width:120px;">
+	            <td style="padding:5px;width:110px;">
                 <span id="BillTimeShow"></span>
                 </td>                
-	            <td>账户：</td>
-	            <td style="padding:5px;width:120px;">
+	            <td>收款账户：</td>
+	            <td style="padding:5px;width:110px;">
 	            <span id="AccountIdShow"></span>
 	            </td>
-	            <td>金额：</td>
-	            <td style="padding:5px;width:120px;">
+	            <td>收款金额：</td>
+	            <td style="padding:5px;width:110px;">
 	            <span id="ChangeAmountShow"></span>
 	            </td>
 	            </tr>
 	            <tr>
-	            <td>单位：</td>
+	            <td>往来单位：</td>
 	            <td style="padding:5px">
 	            <span id="OrganIdShow"></span>
 	            </td>
@@ -135,7 +136,7 @@
 				<td style="padding:5px">
 				<span id="HandsPersonIdShow"></span>
 				</td>
-	            <td>备注：</td>
+	            <td>单据备注：</td>
 	            <td style="padding:5px">
 	            <span id="RemarkShow"></span>
 	            </td>
