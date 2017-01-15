@@ -456,7 +456,7 @@
 	function initTableData_material_show(TotalPrice){
 		$('#materialDataShow').datagrid({
 			height:300,
-			rownumbers: false,
+			rownumbers: true,
 			//动画效果
 			animate:false,
 			//选中单行
@@ -471,7 +471,6 @@
 			striped : true,
 			showFooter: true,
 			//loadFilter: pagerFilter,
-			rownumbers:true,
 			onClickRow: onClickRow,
 			pageSize: 50,
 			pageList: [50,100,150],

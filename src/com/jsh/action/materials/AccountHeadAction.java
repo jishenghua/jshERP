@@ -254,7 +254,7 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel>
                     item.put("AccountName", accountHead.getAccountId()==null?"":accountHead.getAccountId().getName());
                     item.put("BillNo", accountHead.getBillNo());
                     item.put("BillTime", Tools.getCurrentMonth(accountHead.getBillTime()));
-                    item.put("ChangeAmount", accountHead.getChangeAmount());
+                    item.put("ChangeAmount", accountHead.getChangeAmount()==null?"":Math.abs(accountHead.getChangeAmount()));
                     item.put("Remark", accountHead.getRemark());
                     item.put("op", 1);
                     dataArray.add(item);

@@ -13,6 +13,13 @@
 		var accountHeadID = 0;		
 		var orgAccountHead = ""; //保存编辑前的名称
 		var editIndex = undefined;
+		var listTitle = ""; //单据标题
+		var payTypeTitle = "";//收入 支出
+		var organUrl = ""; //组织数据接口地址
+		var itemType = true; //隐藏当前列
+		var moneyType = true; //隐藏当前列
+		var inOrOut = ""; //链接类型为收入或者支出
+		getType();
 		initSystemData_person(); //经手人数据
 		initSelectInfo_person(); //经手人信息
 		initSystemData_account(); //账户数据
@@ -24,7 +31,52 @@
 		bindEvent();//绑定操作事件
 		$("#searchBtn").click();	
 	});
-			
+	//根据单据名称获取类型
+	function getType(){
+		listTitle = $("#tablePanel").prev().text();
+		var supUrl = path + "/supplier/findBySelect_sup.action"; //供应商接口
+		var cusUrl = path + "/supplier/findBySelect_cus.action"; //客户接口
+		if(listTitle === "收入单列表"){
+			listType = "收入"; 
+			itemType = false; //显示当前列
+			moneyType = true; //隐藏当前列
+			payTypeTitle = "收入项目";
+			inOrOut = "in";
+			organUrl = supUrl;
+		}
+		else if(listTitle === "支出单列表"){
+			listType = "支出"; 
+			itemType = false; //显示当前列
+			moneyType = true; //隐藏当前列
+			payTypeTitle = "支出项目";
+		    inOrOut = "out";
+			organUrl = cusUrl;
+		}
+		else if(listTitle === "收款单列表"){
+			listType = "收款"; 			
+			itemType = true; //隐藏当前列
+			moneyType = false; //显示当前列
+			payTypeTitle = "无标题";
+			inOrOut = "";
+			organUrl = supUrl;
+		}
+		else if(listTitle === "付款单列表"){
+			listType = "付款"; 
+			itemType = true; //隐藏当前列
+			moneyType = false; //显示当前列
+			payTypeTitle = "无标题";
+			inOrOut = "";
+			organUrl = cusUrl;
+		}
+		else if(listTitle === "转账单列表"){
+			listType = "转账"; 
+			itemType = true; //隐藏当前列
+			moneyType = false; //显示当前列
+			payTypeTitle = "无标题";
+			inOrOut = "";
+			organUrl = supUrl;
+		}
+	}
 	//获取账户信息
 	function initSystemData_account(){
 		$.ajax({
@@ -51,7 +103,7 @@
 		if(accountList !=null)
 		{
 			options = "";
-			for(var i = 0 ;i < accountList.length;i++)
+			for(var i = 0 ;i < accountList.length; i++)
 			{
 				var account = accountList[i];
 				options += '<option value="' + account.id + '">' + account.name + '</option>';
@@ -63,7 +115,7 @@
 	//初始化单位信息
 	function initSupplier(){
 		$('#OrganId').combobox({    
-			url: path + "/supplier/findBySelect_sup.action",
+			url: organUrl,
 		    valueField:'id',    
 		    textField:'supplier'
 		});  
@@ -218,7 +270,7 @@
 			pageList: [50,100,150],
 			columns:[[
 			  { field: 'Id',width:35,align:"center",checkbox:true},
-	          { title: '收入项目',field: 'InOutItemId',width:230,
+	          { title: payTypeTitle,field: 'InOutItemId',width:230,hidden:itemType,
 				  formatter:function(value,row,index){
 						  return row.InOutItemName;
                   },
@@ -228,7 +280,21 @@
                       valueField:'Id',
                       textField:'InOutItemName',
                       method:'get',
-                      url: path + "/inOutItem/findBySelect.action?type=in"
+                      url: path + "/inOutItem/findBySelect.action?type=" + inOrOut
+                  }
+	            }
+			  },
+			  { title: '账户名称',field: 'AccountId',width:230,hidden:moneyType,
+				  formatter:function(value,row,index){
+						  return row.AccountName;
+                  },
+				  editor:{
+                  type:'combobox',
+                  options:{
+                      valueField:'Id',
+                      textField:'AccountName',
+                      method:'get',
+                      url: path + "/account/findBySelect.action"
                   }
 	            }
 			  },
@@ -277,7 +343,7 @@
 	function initTableData_account_show(){
 		$('#accountDataShow').datagrid({
 			height:300,
-			rownumbers: false,
+			rownumbers: true,
 			//动画效果
 			animate:false,
 			//选中单行
@@ -296,8 +362,8 @@
 			pageSize: 50,
 			pageList: [50,100,150],
 			columns:[[
-			  { field: 'Id',width:35,align:"center",checkbox:true},
-	          { title: '收入项目',field: 'InOutItemName',width:230},
+	          { title: payTypeTitle, field: 'InOutItemName', width:230, hidden:itemType},
+	          { title: '账户名称', field: 'AccountName', width:230, hidden:moneyType},	         
 	          { title: '金额',field: 'EachAmount',width:50},
 	          { title: '备注',field: 'Remark',width:150}
 			]],
@@ -434,7 +500,8 @@
 	function addAccountHead(){
 		$("#clientIp").val(clientIp);
 		$('#accountHeadFM').form('clear');
-		$('#accountHeadDlg').dialog('open').dialog('setTitle','<img src="' + path + '/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加财务信息');
+		var addTitle = listTitle.replace("列表","信息");
+		$('#accountHeadDlg').dialog('open').dialog('setTitle','<img src="' + path + '/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加' + addTitle);
 		$(".window-mask").css({ width: webW ,height: webH});
         $("#BillNo").val("").focus();
         
@@ -455,13 +522,14 @@
         $("#AccountId").val(accountHeadInfo[4]);
         $('#OrganId').combobox('setValue', accountHeadInfo[6]);
         $("#HandsPersonId").val(accountHeadInfo[8]);
-        $("#ChangeAmount").val(accountHeadInfo[10]);	            	            
-        $('#accountHeadDlg').dialog('open').dialog('setTitle','<img src="' + path + '/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑财务信息');
+        $("#ChangeAmount").val(accountHeadInfo[10]);
+        var editTitle = listTitle.replace("列表","信息");
+        $('#accountHeadDlg').dialog('open').dialog('setTitle','<img src="' + path + '/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑' + editTitle);
         $(".window-mask").css({ width: webW ,height: webH});
         accountHeadID = accountHeadInfo[0];
         
         initTableData_account(); //明细列表
-        reject(); //撤销下、刷新材料列表                
+        reject(); //撤销下、刷新列表                
         url = path + '/accountHead/update.action?accountHeadID=' + accountHeadInfo[0];
     }
     
@@ -475,7 +543,8 @@
         $('#OrganIdShow').text(accountHeadInfo[7]);
         $("#HandsPersonIdShow").text(accountHeadInfo[9]);
         $("#ChangeAmountShow").text(accountHeadInfo[10]);
-        $('#accountHeadDlgShow').dialog('open').dialog('setTitle','<img src="' + path + '/js/easyui-1.3.5/themes/icons/list.png"/>&nbsp;查看财务信息');
+        var showTitle = listTitle.replace("列表","信息");
+        $('#accountHeadDlgShow').dialog('open').dialog('setTitle','<img src="' + path + '/js/easyui-1.3.5/themes/icons/list.png"/>&nbsp;查看' + showTitle);
         $(".window-mask").css({ width: webW ,height: webH});
         
         accountHeadID = accountHeadInfo[0];
@@ -520,18 +589,27 @@
 					return;
 				else 
 				{
+					var OrganId = null;
+					var ChangeAmount = $.trim($("#ChangeAmount").val());				
+					if(listType !=="转账"){
+						OrganId = $('#OrganId').combobox('getValue');
+					}
+					if(listType === "支出"){
+						//支出为负数
+						ChangeAmount = 0 - ChangeAmount;
+					}
 					$.ajax({
 						type:"post",
 						url: url,
 						dataType: "json",
 						async :  false,
 						data: ({
-							Type: "收入",
+							Type: listType,
 							BillNo : $.trim($("#BillNo").val()),
 							BillTime : $.trim($("#BillTime").val()),
 							AccountId: $.trim($("#AccountId").val()),
-							ChangeAmount: $.trim($("#ChangeAmount").val()),
-							OrganId: $('#OrganId').combobox('getValue'),
+							ChangeAmount: ChangeAmount, //付款/收款/优惠/实付
+							OrganId: OrganId,
 							HandsPersonId: $.trim($("#HandsPersonId").val()),
 							Remark: $.trim($("#Remark").val()),
 							clientIp: clientIp
@@ -601,7 +679,7 @@
 			url: path + "/accountHead/findBy.action",
 			dataType: "json",
 			data: ({
-				Type:"收入",
+				Type: listType,
 				BillNo:$.trim($("#searchBillNo").val()),
 				BeginTime:$("#searchBeginTime").val(),
 				EndTime:$("#searchEndTime").val(),
@@ -621,12 +699,21 @@
 		});
 	}
 	//结束编辑	
-    function endEditing() {
+    function endEditing() {    	
+    	var edField = "";
+    	if(!itemType){
+    		edField = "InOutItemId";
+    		edName = "InOutItemName";
+    	}
+    	else {
+    		edField = "AccountId";
+    		edName = "AccountName";
+    	}
         if (editIndex == undefined) { return true }
         if ($('#accountData').datagrid('validateRow', editIndex)) {
-        	var ed = $('#accountData').datagrid('getEditor', {index:editIndex,field:'InOutItemId'});
-            var InOutItemName = $(ed.target).combobox('getText');
-            $('#accountData').datagrid('getRows')[editIndex]['InOutItemName'] = InOutItemName;
+        	var ed = $('#accountData').datagrid('getEditor', {index: editIndex, field: edField});
+            var textName = $(ed.target).combobox('getText');
+            $('#accountData').datagrid('getRows')[editIndex][edName] = textName;
             $('#accountData').datagrid('endEdit', editIndex);
             editIndex = undefined;
             return true;
@@ -671,9 +758,16 @@
         var row = $('#accountData').datagrid('getRows');
         var totalRowNum = "";
         for (var i = 0; i < row.length; i++) {
-            if (row[i].InOutItemId == "") {
-                totalRowNum += (i + 1) + "、";
-            }
+        	if(!itemType){
+	            if (row[i].InOutItemId == "") {
+	                totalRowNum += (i + 1) + "、";
+	            }
+        	}
+        	else{
+        		if (row[i].AccountId == "") {
+	                totalRowNum += (i + 1) + "、";
+	            }
+        	}
         }
         if (totalRowNum != "") {
             var totalRowNum = totalRowNum.substring(0, totalRowNum.length - 1);
