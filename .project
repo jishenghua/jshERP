@@ -60,8 +60,14 @@
 			<arguments>
 			</arguments>
 		</buildCommand>
+		<buildCommand>
+			<name>com.genuitec.eclipse.springframework.springbuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
 	</buildSpec>
 	<natures>
+		<nature>com.genuitec.eclipse.springframework.springnature</nature>
 		<nature>com.genuitec.eclipse.hibernate.hibernatenature</nature>
 		<nature>com.genuitec.eclipse.ast.deploy.core.deploymentnature</nature>
 		<nature>org.eclipse.jem.workbench.JavaEMFNature</nature>
