@@ -105,25 +105,14 @@
                 //加载桌面
                 HROS.base.init();
             }
-            function JSGetCookie(Name) {
-                var search = Name + "="
-                if (document.cookie.length > 0) {
-                    offset = document.cookie.indexOf(search)
-                    if (offset != -1) {
-                        offset += search.length
-                        end = document.cookie.indexOf(";", offset)
-                        if (end == -1) end = document.cookie.length
-                        return unescape(document.cookie.substring(offset, end))
-                    }
-                    else return ""
+            //判断是否存在session，如果不存在就跳到登录界面
+            function UserOut() {
+                var kid = ${sessionScope.user.id};
+                if (!kid){
+                    top.location.href = '../../';
                 }
             }
-            function UserOut() {
-                if (JSGetCookie("UserId") == null)
-                    top.location.href = '../../';
-            }
-            setInterval(UserOut, 5000);
-            
+            setInterval(UserOut, 5000); //每5秒检测一次
         });
 
     </script>
