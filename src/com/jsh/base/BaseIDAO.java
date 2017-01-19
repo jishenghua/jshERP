@@ -77,14 +77,14 @@ public interface BaseIDAO<T>
 	 * @param conditon 查询条件
 	 * @return 查询列表数据
 	 */
-	List<T> find(Map<String,Object> conditon)throws DataAccessException;
+//	List<T> find(Map<String,Object> conditon)throws DataAccessException;
 	
 	/**
 	 * 根据hql查询 --没有分页信息
 	 * @param hql hibernate查询
 	 * @return 查询列表数据
 	 */
-	List<T> find(String hql)throws DataAccessException;
+//	List<T> find(String hql)throws DataAccessException;
 	
 	/**
 	 * 根据搜索条件查询--分页

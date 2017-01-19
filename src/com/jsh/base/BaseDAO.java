@@ -78,19 +78,19 @@ public class BaseDAO<T> extends HibernateDaoSupport implements BaseIDAO<T>
 		pageUtil.setPageList(query.list());
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<T> find(Map<String, Object> conditon)throws DataAccessException
-	{
-		return this.getHibernateTemplate().find(" from " + getEntityClass().getName() + " where 1=1 "+ SearchConditionUtil.getCondition(conditon));
-	}
+//	@SuppressWarnings("unchecked")
+//	@Override
+//	public List<T> find(Map<String, Object> conditon)throws DataAccessException
+//	{
+//		return this.getHibernateTemplate().find(" from " + getEntityClass().getName() + " where 1=1 "+ SearchConditionUtil.getCondition(conditon));
+//	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<T> find(String hql) throws DataAccessException
-	{
-		return this.getHibernateTemplate().find(" from " + getEntityClass().getName() + " where 1=1 "+ hql);
-	}
+//	@SuppressWarnings("unchecked")
+//	@Override
+//	public List<T> find(String hql) throws DataAccessException
+//	{
+//		return this.getHibernateTemplate().find(" from " + getEntityClass().getName() + " where 1=1 "+ hql);
+//	}
 
 	@SuppressWarnings("unchecked")
 	@Override

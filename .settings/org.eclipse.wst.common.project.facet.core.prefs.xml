@@ -1,0 +1,7 @@
+<root>
+  <facet id="me.spring">
+    <node name="libprov">
+      <attribute name="provider-id" value="spring-no-op-library-provider"/>
+    </node>
+  </facet>
+</root>
