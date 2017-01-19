@@ -9,7 +9,7 @@
 * 初学JAVA的同学可以下载源代码来进行学习交流
 
 #技术框架
-* 核心框架：Spring Framework 3.0.5
+* 核心框架：Spring Framework 4.0.0
 * 视图框架：Struts 2.2.3
 * 持久层框架：Hibernate 3.0
 * 日志管理：Log4j 1.2.16
@@ -20,14 +20,14 @@
 #开发环境
 建议开发者使用以下环境，可以避免版本带来的问题
 * IDE: MyEclipse/Eclipse
-* DB: Mysql5.0
-* JDK: JDK1.6
-* WEB: Tomcat6.0
+* DB: Mysql5.1
+* JDK: JDK1.6+
+* WEB: Tomcat6.0+
 
 #运行环境
-* WEB服务器：Tomcat6.0
-* 数据库服务器：Mysql5.0
-* JAVA平台: JRE1.6
+* WEB服务器：Tomcat6.0+
+* 数据库服务器：Mysql5.1
+* JAVA平台: JRE1.6+
 * 操作系统：Windows、Linux等
 
 #开源说明
