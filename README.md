@@ -19,7 +19,7 @@
 
 #开发环境
 建议开发者使用以下环境，可以避免版本带来的问题
-* IDE: MyEclipse/Eclipse
+* IDE: MyEclipse8.5+/Eclipse4.4+
 * DB: Mysql5.1
 * JDK: JDK1.6+
 * WEB: Tomcat6.0+
