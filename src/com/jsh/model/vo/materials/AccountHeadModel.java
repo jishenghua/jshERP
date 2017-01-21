@@ -12,6 +12,7 @@ public class AccountHeadModel implements Serializable
     private Long OrganId;
     private Long HandsPersonId;    
     private Double ChangeAmount;
+    private Double TotalPrice;
     private Long AccountId;
     private String BillNo;
     private String BillTime;  
@@ -94,7 +95,15 @@ public class AccountHeadModel implements Serializable
         return ChangeAmount;
     }
 
-    public void setAccountId(Long accountId)
+	public void setTotalPrice(Double totalPrice) {
+		TotalPrice = totalPrice;
+	}
+
+    public Double getTotalPrice() {
+		return TotalPrice;
+	}
+    
+	public void setAccountId(Long accountId)
     {
         AccountId = accountId;
     }

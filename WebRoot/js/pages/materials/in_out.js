@@ -786,13 +786,11 @@
 								{
 									getMaxId(); //查找最大的Id
 									accept(depotHeadMaxId); //新增
-									//changeAmountFn(); //改变账户金额	
 									closeDialog();
 								}
 								else
 								{
 									accept(depotHeadID); //修改
-									//changeAmountFn(); //改变账户金额
 									closeDialog();
 								}															
 							}
@@ -1055,28 +1053,6 @@
 				depotHeadMaxId=depotHeadMax[0];
 			}
 		}
-	}
-	//改变账户金额
-	function changeAmountFn(){
-		var currentAmount = $("#AccountId option:selected").attr("data-currentamount")-0;
-		var ChangeAmount = $("#ChangeAmount").val()-0;
-		var oldChangeAmount = $("#ChangeAmount").attr("data-changeamount")-0;
-		$.ajax({											
-			url: path + "/account/updateAmount.action",
-			type: "get",
-			dataType: "json",
-			data:{
-				accountID: $("#AccountId").val(),
-				currentAmount: currentAmount + ChangeAmount - oldChangeAmount
-			},
-			success: function(res){
-				
-			},
-			error:function(){
-				$.messager.alert('提示','请检查网络连接！','error');
-				return;
-			}
-		});
 	}
 
 

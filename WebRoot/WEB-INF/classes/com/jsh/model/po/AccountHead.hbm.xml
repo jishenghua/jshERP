@@ -27,6 +27,11 @@
                 <comment>变动金额(优惠/收款/付款/实付)</comment>
             </column>
         </property>
+        <property generated="never" lazy="false" name="TotalPrice" type="java.lang.Double">
+		    <column name="TotalPrice" precision="22" scale="3">
+		        <comment>合计金额</comment>
+		    </column>
+		</property>
         <many-to-one name="AccountId" class="com.jsh.model.po.Account" lazy="false">
             <column name="AccountId">
                 <comment>账户(收款/付款)</comment>

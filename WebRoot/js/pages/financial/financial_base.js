@@ -201,13 +201,14 @@
 			  { field: 'Id',width:35,align:"center",checkbox:true},
 	          { title: '单据编号',field: 'BillNo',width:100},
 	          { title: '单据时间 ',field: 'BillTime',width:100},
+	          { title: '合计',field: 'TotalPrice',width:80},
 	          { title: '备注',field: 'Remark',width:100},
 	          { title: '操作',field: 'op',align:"center",width:180,formatter:function(value,rec)
 	         	{
 					var str = '';
 					var rowInfo = rec.Id + 'AaBb' + rec.BillNo+ 'AaBb' + rec.BillTime+ 'AaBb' + rec.Remark
 					+ 'AaBb' + rec.AccountId+ 'AaBb' + rec.AccountName + 'AaBb' + rec.OrganId + 'AaBb' + rec.OrganName 
-					+ 'AaBb' + rec.HandsPersonId + 'AaBb' + rec.HandsPersonName + 'AaBb' + rec.ChangeAmount;
+					+ 'AaBb' + rec.HandsPersonId + 'AaBb' + rec.HandsPersonName + 'AaBb' + rec.ChangeAmount + 'AaBb' + rec.TotalPrice;
 					if(1 == value)
 					{
 						str += '<img src="' + path + '/js/easyui-1.3.5/themes/icons/list.png" style="cursor: pointer;" onclick="showAccountHead(\'' + rowInfo + '\');"/>&nbsp;<a onclick="showAccountHead(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">查看</a>&nbsp;&nbsp;';
@@ -247,7 +248,7 @@
 	}
 	
 	//初始化表格数据-明细列表-编辑状态
-	function initTableData_account(){
+	function initTableData_account(type,TotalPrice){
 		$('#accountData').datagrid({
 			height:300,
 			rownumbers: false,
@@ -260,10 +261,10 @@
 			//fitColumns:true,
 			//单击行是否选中
 			//checkOnSelect : false,
-			url: path + '/accountItem/findBy.action?HeaderId=' + accountHeadID,
 			pagination: true,
 			//交替出现背景
 			striped : true,
+			showFooter: true,
 			//loadFilter: pagerFilter,
 			onClickRow: onClickRow,
 			pageSize: 50,
@@ -336,11 +337,31 @@
 				return;
 			}    
 		});
+		$.ajax({
+			type:"post",
+			url: path + '/accountItem/findBy.action?HeaderId=' + accountHeadID,
+			dataType: "json",
+			success: function (res) {
+				var EachAmount = 0;
+				if(type === "edit") {
+					EachAmount = TotalPrice;							
+				}
+				var array = [];
+				array.push({
+					"EachAmount": EachAmount
+				});
+				res.footer = array;
+				$("#accountData").datagrid('loadData',res);
+			},
+			error:function() {
+				$.messager.alert('查询提示','查询数据后台异常，请稍后再试！','error');
+			}
+		});
 	}
 	
 	
 	//初始化表格数据-明细列表-查看状态
-	function initTableData_account_show(){
+	function initTableData_account_show(TotalPrice){
 		$('#accountDataShow').datagrid({
 			height:300,
 			rownumbers: true,
@@ -353,10 +374,10 @@
 			//fitColumns:true,
 			//单击行是否选中
 			//checkOnSelect : false,
-			url: path + '/accountItem/findBy.action?HeaderId=' + accountHeadID,
 			pagination: true,
 			//交替出现背景
 			striped : true,
+			showFooter: true,
 			//loadFilter: pagerFilter,
 			onClickRow: onClickRow,
 			pageSize: 50,
@@ -372,6 +393,23 @@
 				$.messager.alert('页面加载提示','页面加载异常，请稍后再试！','error');
 				return;
 			}    
+		});
+		$.ajax({
+			type:"post",
+			url: path + '/accountItem/findBy.action?HeaderId=' + accountHeadID,
+			dataType: "json",
+			success: function (res) {
+				var EachAmount = TotalPrice;			
+				var array = [];
+				array.push({
+					"EachAmount": EachAmount
+				});
+				res.footer = array;
+				$("#accountDataShow").datagrid('loadData',res);
+			},
+			error:function() {
+				$.messager.alert('查询提示','查询数据后台异常，请稍后再试！','error');
+			}
 		});
 	}
 	
@@ -507,7 +545,7 @@
         
         orgAccountHead = "";
         accountHeadID = 0;
-        initTableData_account(); //明细列表
+        initTableData_account("add"); //明细列表
         reject(); //撤销下、刷新材料列表
         url = path + '/accountHead/create.action';
 	}
@@ -523,12 +561,13 @@
         $('#OrganId').combobox('setValue', accountHeadInfo[6]);
         $("#HandsPersonId").val(accountHeadInfo[8]);
         $("#ChangeAmount").val(accountHeadInfo[10]);
+        var TotalPrice = accountHeadInfo[11];
         var editTitle = listTitle.replace("列表","信息");
         $('#accountHeadDlg').dialog('open').dialog('setTitle','<img src="' + path + '/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑' + editTitle);
         $(".window-mask").css({ width: webW ,height: webH});
         accountHeadID = accountHeadInfo[0];
         
-        initTableData_account(); //明细列表
+        initTableData_account("edit",TotalPrice); //明细列表
         reject(); //撤销下、刷新列表                
         url = path + '/accountHead/update.action?accountHeadID=' + accountHeadInfo[0];
     }
@@ -543,12 +582,13 @@
         $('#OrganIdShow').text(accountHeadInfo[7]);
         $("#HandsPersonIdShow").text(accountHeadInfo[9]);
         $("#ChangeAmountShow").text(accountHeadInfo[10]);
+        var TotalPrice = accountHeadInfo[11];
         var showTitle = listTitle.replace("列表","信息");
         $('#accountHeadDlgShow').dialog('open').dialog('setTitle','<img src="' + path + '/js/easyui-1.3.5/themes/icons/list.png"/>&nbsp;查看' + showTitle);
         $(".window-mask").css({ width: webW ,height: webH});
         
         accountHeadID = accountHeadInfo[0];
-        initTableData_account_show(); //明细列表-查看状态
+        initTableData_account_show(TotalPrice); //明细列表-查看状态
     }
 
     //绑定操作事件
@@ -590,13 +630,18 @@
 				else 
 				{
 					var OrganId = null;
-					var ChangeAmount = $.trim($("#ChangeAmount").val());				
+					var ChangeAmount = $.trim($("#ChangeAmount").val());		
+					var TotalPrice = $("#accountHeadFM .datagrid-footer [field='EachAmount'] div").text();		
 					if(listType !=="转账"){
 						OrganId = $('#OrganId').combobox('getValue');
 					}
 					if(listType === "支出"){
 						//支出为负数
 						ChangeAmount = 0 - ChangeAmount;
+					}
+					if(listType === "支出" || listType === "付款"){
+						//支出和付款为负数
+						TotalPrice = 0 - TotalPrice;
 					}
 					$.ajax({
 						type:"post",
@@ -609,6 +654,7 @@
 							BillTime : $.trim($("#BillTime").val()),
 							AccountId: $.trim($("#AccountId").val()),
 							ChangeAmount: ChangeAmount, //付款/收款/优惠/实付
+							TotalPrice: TotalPrice, //合计
 							OrganId: OrganId,
 							HandsPersonId: $.trim($("#HandsPersonId").val()),
 							Remark: $.trim($("#Remark").val()),
@@ -628,8 +674,7 @@
 								{
 									accept(accountHeadID); //修改
 								}
-								
-								
+							
 								$('#accountHeadDlg').dialog('close');
 								var opts = $("#tableData").datagrid('options'); 
 								showAccountHeadDetails(opts.pageNumber,opts.pageSize); 
@@ -698,6 +743,30 @@
 			}
 		});
 	}
+	
+	//自动计算事件
+	function autoReckon() {
+		//延时绑定事件
+	    setTimeout(function(){
+	    	var body =$("#accountHeadFM .datagrid-body");
+	    	var footer =$("#accountHeadFM .datagrid-footer");
+	    	var input = ".datagrid-editable-input";
+	    	
+	    	//修改金额，自动计算单价和合计
+	    	body.find("[field='EachAmount']").find(input).off("keyup").on("keyup",function(){
+	    		var TotalPrice = 0;
+	    		var EachAmount =$(this).val()-0; //金额
+	    		body.find("[field='EachAmount']").each(function(){
+	    			if($(this).find("div").text()!==""){
+	    				TotalPrice = TotalPrice + parseFloat($(this).find("div").text().toString());
+	    			}
+	    		});
+	    		TotalPrice = TotalPrice + EachAmount;
+	    		footer.find("[field='EachAmount']").find("div").text((TotalPrice).toFixed(2));
+	    	});
+	    },500);
+	}
+	
 	//结束编辑	
     function endEditing() {    	
     	var edField = "";
@@ -728,6 +797,7 @@
                 $('#accountData').datagrid('selectRow', index)
                         .datagrid('beginEdit', index);
                 editIndex = index;
+                autoReckon();
             } else {
                 $('#accountData').datagrid('selectRow', editIndex);
             }
@@ -739,6 +809,7 @@
             $('#accountData').datagrid('appendRow', {});
             editIndex = $('#accountData').datagrid('getRows').length - 1;
             $('#accountData').datagrid('selectRow', editIndex).datagrid('beginEdit', editIndex);
+            autoReckon();
         }
 	}
 	//删除

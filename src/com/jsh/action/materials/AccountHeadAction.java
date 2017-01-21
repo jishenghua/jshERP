@@ -69,6 +69,7 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel>
             if(model.getOrganId()!=null){accountHead.setOrganId(new Supplier(model.getOrganId()));} 
             if(model.getHandsPersonId()!=null){accountHead.setHandsPersonId(new Person(model.getHandsPersonId()));}     
             accountHead.setChangeAmount(model.getChangeAmount());
+            accountHead.setTotalPrice(model.getTotalPrice());
             if(model.getAccountId()!=null){accountHead.setAccountId(new Account(model.getAccountId()));}
             accountHead.setBillNo(model.getBillNo());
             try
@@ -154,6 +155,7 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel>
             if(model.getOrganId()!=null){accountHead.setOrganId(new Supplier(model.getOrganId()));} 
             if(model.getHandsPersonId()!=null){accountHead.setHandsPersonId(new Person(model.getHandsPersonId()));}     
             accountHead.setChangeAmount(model.getChangeAmount());
+            accountHead.setTotalPrice(model.getTotalPrice());
             if(model.getAccountId()!=null){accountHead.setAccountId(new Account(model.getAccountId()));}
             accountHead.setBillNo(model.getBillNo());
             try
@@ -255,6 +257,7 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel>
                     item.put("BillNo", accountHead.getBillNo());
                     item.put("BillTime", Tools.getCurrentMonth(accountHead.getBillTime()));
                     item.put("ChangeAmount", accountHead.getChangeAmount()==null?"":Math.abs(accountHead.getChangeAmount()));
+                    item.put("TotalPrice", accountHead.getTotalPrice()==null?"":Math.abs(accountHead.getTotalPrice()));
                     item.put("Remark", accountHead.getRemark());
                     item.put("op", 1);
                     dataArray.add(item);

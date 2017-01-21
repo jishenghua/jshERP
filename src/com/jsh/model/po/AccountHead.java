@@ -10,6 +10,7 @@ public class AccountHead implements java.io.Serializable
     private Supplier OrganId;
     private Person HandsPersonId;    
     private Double ChangeAmount;
+    private Double TotalPrice;
     private Account AccountId;
     private String BillNo;
     private Timestamp BillTime;  
@@ -26,14 +27,15 @@ public class AccountHead implements java.io.Serializable
     }
 
     public AccountHead(String type, Supplier organId,
-                       Person handsPersonId, Double changeAmount, Account accountId,
-                       String billNo, Timestamp billTime, String remark)
+    	Person handsPersonId, Double changeAmount, Double totalPrice, 
+        Account accountId, String billNo, Timestamp billTime, String remark)
     {
         super();
         Type = type;
         OrganId = organId;
         HandsPersonId = handsPersonId;
         ChangeAmount = changeAmount;
+        TotalPrice = totalPrice;
         AccountId = accountId;
         BillNo = billNo;
         BillTime = billTime;
@@ -89,8 +91,16 @@ public class AccountHead implements java.io.Serializable
     {
         return ChangeAmount;
     }
+    
+	public void setTotalPrice(Double totalPrice) {
+		TotalPrice = totalPrice;
+	}
+	
+	public Double getTotalPrice() {
+		return TotalPrice;
+	}
 
-    public void setAccountId(Account accountId)
+	public void setAccountId(Account accountId)
     {
         AccountId = accountId;
     }
