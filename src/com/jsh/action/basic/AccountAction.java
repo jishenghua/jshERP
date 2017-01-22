@@ -64,7 +64,7 @@ public class AccountAction extends BaseAction<AccountModel>
             Account Account = new Account();
             Account.setName(model.getName());
             Account.setSerialNo(model.getSerialNo());
-            Account.setInitialAmount(model.getInitialAmount());
+            Account.setInitialAmount(model.getInitialAmount()!=null ? model.getInitialAmount() : 0);
             Account.setCurrentAmount(model.getCurrentAmount());
             Account.setRemark(model.getRemark());
             accountService.create(Account);
@@ -139,7 +139,7 @@ public class AccountAction extends BaseAction<AccountModel>
             Account Account = accountService.get(model.getAccountID());
             Account.setName(model.getName());
             Account.setSerialNo(model.getSerialNo());
-            Account.setInitialAmount(model.getInitialAmount());
+            Account.setInitialAmount(model.getInitialAmount()!=null ? model.getInitialAmount() : 0);
             Account.setCurrentAmount(model.getCurrentAmount());
             Account.setRemark(model.getRemark());
             accountService.update(Account);

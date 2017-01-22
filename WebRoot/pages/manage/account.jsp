@@ -74,7 +74,7 @@
                 </div>
                 <div class="fitem" style="padding:5px">
                     <label id="currentAmountLabel">当前余额</label>
-                    <input name="currentAmount" id="currentAmount" type="text" class="easyui-numberbox" data-options="min:0,precision:2" style="width: 230px;height: 20px"></input>
+                    <input name="currentAmount" id="currentAmount" type="text" disabled="disabled" class="easyui-numberbox" data-options="min:0,precision:2" style="width: 230px;height: 20px"></input>
                 </div>
                 <div class="fitem" style="padding:5px">
                     <label id="remarkLabel">备&nbsp;&nbsp;&nbsp;&nbsp;注</label>
