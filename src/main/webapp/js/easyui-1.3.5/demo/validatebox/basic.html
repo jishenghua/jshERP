@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Basic ValidateBox - jQuery EasyUI Demo</title>
+	<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../demo.css">
+	<script type="text/javascript" src="../../jquery.min.js"></script>
+	<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+</head>
+<body>
+	<h2>Basic ValidateBox</h2>
+	<div class="demo-info">
+		<div class="demo-tip icon-tip"></div>
+		<div>It's easy to add validate logic to a input box.</div>
+	</div>
+	<div style="margin:10px 0;"></div>
+	<div class="easyui-panel" title="Register" style="width:400px;padding:10px">
+		<table>
+			<tr>
+				<td>User Name:</td>
+				<td><input class="easyui-validatebox" data-options="required:true,validType:'length[3,10]'"></td>
+			</tr>
+			<tr>
+				<td>Email:</td>
+				<td><input class="easyui-validatebox" data-options="required:true,validType:'email'"></td>
+			</tr>
+			<tr>
+				<td>Birthday:</td>
+				<td><input class="easyui-datebox"></td>
+			</tr>
+			<tr>
+				<td>URL:</td>
+				<td><input class="easyui-validatebox" data-options="required:true,validType:'url'"></td>
+			</tr>
+			<tr>
+				<td>Phone:</td>
+				<td><input class="easyui-validatebox" data-options="required:true"></td>
+			</tr>
+		</table>
+	</div>
+
+</body>
+</html>
