@@ -1,0 +1,46 @@
+<!DOCTYPE hibernate-configuration PUBLIC
+	"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+<session-factory>
+	<!--
+		<property name="hibernate.connection.driver_class">
+		com.mysql.jdbc.Driver
+		</property>
+		<property name="hibernate.connection.url">
+		jdbc:mysql:///myshop
+		</property>
+		<property name="hibernate.connection.username">root</property>
+		<property name="connection.password">root</property>
+	-->
+	<property name="hibernate.dialect">
+		org.hibernate.dialect.MySQL5Dialect
+	</property>
+	<property name="show_sql">true</property>
+	<!-- 一般重新建库用create(慎用)，只更新字段用update -->
+	<property name="hbm2ddl.auto">update</property>
+
+	<!-- 对应的实体映射 -->
+	<mapping resource="hibernate/Supplier.hbm.xml" />
+	<mapping resource="hibernate/Logdetails.hbm.xml" />
+	<mapping resource="hibernate/Assetname.hbm.xml" />
+	<mapping resource="hibernate/Category.hbm.xml" />
+	<mapping resource="hibernate/Basicuser.hbm.xml" />
+	<mapping resource="hibernate/Asset.hbm.xml" />
+	<mapping resource="hibernate/Depot.hbm.xml" />
+	<mapping resource="hibernate/App.hbm.xml" />
+	<mapping resource="hibernate/Role.hbm.xml" />
+	<mapping resource="hibernate/Functions.hbm.xml" />
+	<mapping resource="hibernate/UserBusiness.hbm.xml" />
+	<mapping resource="hibernate/Person.hbm.xml" />
+	<mapping resource="hibernate/MaterialCategory.hbm.xml" />
+	<mapping resource="hibernate/Material.hbm.xml" />
+    <mapping resource="hibernate/DepotHead.hbm.xml" />
+    <mapping resource="hibernate/DepotItem.hbm.xml" />
+    <mapping resource="hibernate/Account.hbm.xml" />
+    <mapping resource="hibernate/InOutItem.hbm.xml" />
+    <mapping resource="hibernate/AccountHead.hbm.xml" />
+    <mapping resource="hibernate/AccountItem.hbm.xml" />
+</session-factory>
+</hibernate-configuration>

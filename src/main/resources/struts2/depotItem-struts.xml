@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN"
+	"http://struts.apache.org/dtds/struts-2.1.7.dtd">
+<struts>
+	<package name="depotItem" namespace="/depotItem" extends="json-default">
+		<action name="*" class="depotItemAction" method="{1}">
+			<result type="json"/>
+		</action>
+		
+		<!--导出为excel表格 -->
+		<action name="exportExcel" class="depotItemAction" method="exportExcel">
+			<result name="excel" type="stream">
+				<param name="contentType">application/vnd.ms-excel</param>
+				<param name="inputName">excelStream</param>
+				<param name="contentDisposition">attachment;filename="${fileName}"</param>
+				<param name="bufferSize">1024</param>
+			</result>
+		</action>
+	</package>
+</struts>
