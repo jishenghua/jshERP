@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 指定Spring配置文件的Schema信息 -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+	http://www.springframework.org/schema/aop 
+	http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+	<!-- 装载属性配置文件 -->
+	<bean id="propertyConfig"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations" value="classpath:common/jdbc.properties">
+	</property>
+	</bean>
+	<!-- 配置数据源C3P0 -->
+	<bean id="dataSource"
+		class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close">
+		
+		<property name="jdbcUrl" value="${jdbcUrl}"></property>
+		<property name="driverClass" value="${driverClass}"></property>
+		<property name="user" value="${user}"></property>
+		<property name="password" value="${password}"></property>
+
+		<!--初始化时获取的连接数，取值应在minPoolSize与maxPoolSize之间。Default: 3 -->
+		<property name="initialPoolSize" value="10"/>
+		<!--连接池中保留的最大连接数。Default: 15 -->
+		<property name="maxPoolSize" value="80"/>
+		<!--连接池中保留的最小连接数。-->
+		<property name="minPoolSize" value="3"/>
+		<!--最大空闲时间,60秒内未使用则连接被丢弃。若为0则永不丢弃。Default: 0 -->
+		<property name="maxIdleTime" value="60" />
+		<property name="maxStatements" value="6000"/>
+		<!--当连接池中的连接耗尽的时候c3p0一次同时获取的连接数。Default: 3 -->
+		<property name="acquireIncrement" value="10"/>
+		<!--每60秒检查所有连接池中的空闲连接。Default: 0 -->
+		<property name="idleConnectionTestPeriod" value="60" />
+	</bean>
+	<!-- 配置SessionFactory -->
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="configLocation" value="classpath:hibernate/hibernate.cfg.xml"/>
+	</bean>
+
+	<!-- 配置Hibernate的局部事务管理器，使用HibernateTransactionManager类 -->
+	<!-- 该类实现PlatformTransactionManager接口，是针对Hibernate的特定实现-->
+	<bean id="transactionManager" 
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<!-- 配置HibernateTransactionManager时需要依注入SessionFactory的引用 -->
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<!-- 配置事务切面Bean,指定事务管理器 -->
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<!-- 用于配置详细的事务语义 -->
+		<tx:attributes>
+			<!-- 所有以'get'开头的方法是read-only的 -->
+			<tx:method name="get*" read-only="true"/>
+			<!-- 其他方法使用默认的事务设置 -->
+			<tx:method name="*"/>
+		</tx:attributes>
+	</tx:advice>
+	
+	<!-- 配置daoTemplate，作为所有DAO组件的模板 -->
+	<bean id="serviceTemplate" abstract="true">
+		<!-- 为DAO组件注入SessionFactory引用 -->
+		<property name="baseDao" ref="baseDao"/>
+	</bean>
+	
+	<!--通用baseservice配置开始 -->
+	<!-- <bean id="baseService"  class="com.jsh.base.BaseService" abstract="true">
+	为DAO组件注入SessionFactory引用
+		<property name="baseDao" ref="baseDao"/>
+	</bean> -->
+	
+	<!--用户配置开始 -->
+	<bean id="userService" class="com.jsh.service.basic.UserService">
+		<property name="baseDao" ref="baseDao"/>
+		<property name="userDao" ref="userDao"/>
+	</bean>
+	<!-- spring整合struts2需要默认为request或者 prototype，不能是单例 -->
+	<bean id="userAction" class="com.jsh.action.basic.UserAction" scope="prototype">
+		<property name="userService" ref="userService"/>
+		<property name="logService" ref="logService"/>
+	</bean>
+	<!--用户配置结束 -->
+	
+	<!--日志配置开始 -->
+	<bean id="logService" class="com.jsh.service.basic.LogService">
+		<property name="baseDao" ref="baseDao"/>
+		<property name="logDao" ref="logDao"/>
+	</bean>
+	<!-- spring整合struts2需要默认为request或者 prototype，不能是单例 -->
+	<bean id="logAction" class="com.jsh.action.basic.LogAction" scope="prototype">
+		<property name="logService" ref="logService"/>
+		<property name="userService" ref="userService"/>
+	</bean>
+	<!--日志配置结束 -->
+	
+	<!--供应商配置开始 -->
+	<bean id="supplierService" class="com.jsh.service.basic.SupplierService">
+		<property name="baseDao" ref="baseDao"/>
+		<property name="supplierDao" ref="supplierDao"/>
+	</bean>
+	<!-- spring整合struts2需要默认为request或者 prototype，不能是单例 -->
+	<bean id="supplierAction" class="com.jsh.action.basic.SupplierAction" scope="prototype">
+		<property name="supplierService" ref="supplierService"/>
+		<property name="logService" ref="logService"/>
+	</bean>
+	<!--供应商配置结束 -->
+	
+	<!--分类配置开始 -->
+	<bean id="categoryService" class="com.jsh.service.basic.CategoryService">
+		<property name="baseDao" ref="baseDao"/>
+		<property name="categoryDao" ref="categoryDao"/>
+	</bean>
+	<!-- spring整合struts2需要默认为request或者 prototype，不能是单例 -->
+	<bean id="categoryAction" class="com.jsh.action.basic.CategoryAction" scope="prototype">
+		<property name="categoryService" ref="categoryService"/>
+		<property name="logService" ref="logService"/>
+	</bean>
+	<!--分类配置结束 -->
+	
+	
+	<!--仓库配置开始 -->
+	<bean id="depotService" class="com.jsh.service.basic.DepotService">
+		<property name="baseDao" ref="baseDao"/>
+		<property name="depotDao" ref="depotDao"/>
+		<property name="userBusinessDao" ref="userBusinessDao"/>
+	</bean>
+	<!-- spring整合struts2需要默认为request或者 prototype，不能是单例 -->
+	<bean id="depotAction" class="com.jsh.action.basic.DepotAction" scope="prototype">
+		<property name="depotService" ref="depotService"/>
+		<property name="userBusinessService" ref="userBusinessService"/>
+		<property name="logService" ref="logService"/>
+	</bean>
+	<!--仓库配置结束 -->
+	
+	<!--应用配置开始 -->
+	<bean id="appService" class="com.jsh.service.basic.AppService">
+		<property name="baseDao" ref="baseDao"/>
+		<property name="appDao" ref="appDao"/>
+		<property name="userBusinessDao" ref="userBusinessDao"/>
+	</bean>
+	<!-- spring整合struts2需要默认为request或者 prototype，不能是单例 -->
+	<bean id="appAction" class="com.jsh.action.basic.AppAction" scope="prototype">
+		<property name="appService" ref="appService"/>
+		<property name="userBusinessService" ref="userBusinessService"/>
+		<property name="logService" ref="logService"/>
+	</bean>
+	<!--应用配置结束 -->
+	
+	<!--角色配置开始 -->
+	<bean id="roleService" class="com.jsh.service.basic.RoleService">
+		<property name="baseDao" ref="baseDao"/>
+		<property name="roleDao" ref="roleDao"/>
+		<property name="userBusinessDao" ref="userBusinessDao"/>
+	</bean>
+	<!-- spring整合struts2需要默认为request或者 prototype，不能是单例 -->
+	<bean id="roleAction" class="com.jsh.action.basic.RoleAction" scope="prototype">
+		<property name="roleService" ref="roleService"/>
+		<property name="userBusinessService" ref="userBusinessService"/>
+		<property name="logService" ref="logService"/>
+	</bean>
+	<!--角色配置结束 -->
+	
+	<!--功能配置开始 -->
+	<bean id="functionsService" class="com.jsh.service.basic.FunctionsService">
+		<property name="baseDao" ref="baseDao"/>
+		<property name="functionsDao" ref="functionsDao"/>	
+		<property name="userBusinessDao" ref="userBusinessDao"/>		
+	</bean>
+	<!-- spring整合struts2需要默认为request或者 prototype，不能是单例 -->
+	<bean id="functionsAction" class="com.jsh.action.basic.FunctionsAction" scope="prototype">
+		<property name="functionsService" ref="functionsService"/>
+		<property name="userBusinessService" ref="userBusinessService"/>		
+		<property name="logService" ref="logService"/>
+	</bean>
+	<!--功能配置结束 -->
+	
+	<!--用户对应关系配置开始 -->
+	<bean id="userBusinessService" class="com.jsh.service.basic.UserBusinessService">
+		<property name="baseDao" ref="baseDao"/>
+		<property name="userBusinessDao" ref="userBusinessDao"/>
+	</bean>
+	<!-- spring整合struts2需要默认为request或者 prototype，不能是单例 -->
+	<bean id="userBusinessAction" class="com.jsh.action.basic.UserBusinessAction" scope="prototype">
+		<property name="userBusinessService" ref="userBusinessService"/>
+		<property name="logService" ref="logService"/>
+	</bean>
+	<!--用户对应关系配置结束 -->
+	
+	<!--资产名称配置开始 -->
+	<bean id="assetnameService" class="com.jsh.service.basic.AssetNameService">
+		<property name="baseDao" ref="baseDao"/>
+		<property name="assetNameDao" ref="assetNameDao"/>
+	</bean>
+	<!-- spring整合struts2需要默认为request或者 prototype，不能是单例 -->
+	<bean id="assetNameAction" class="com.jsh.action.basic.AssetNameAction" scope="prototype">
+		<property name="assetnameService" ref="assetnameService"/>
+		<property name="logService" ref="logService"/>
+	</bean>
+	<!--资产名称配置结束 -->
+	
+	<!--资产配置开始 -->
+	<bean id="assetService" class="com.jsh.service.asset.AssetService">
+		<property name="baseDao" ref="baseDao"/>
+		<property name="assetDao" ref="assetDao"/>
+		<property name="assetNameDao" ref="assetNameDao"/>
+		<property name="categoryDao" ref="categoryDao"/>
+		<property name="supplierDao" ref="supplierDao"/>
+		<property name="userDao" ref="userDao"/>
+	</bean>
+	<!-- spring整合struts2需要默认为request或者 prototype，不能是单例 -->
+	<bean id="assetAction" class="com.jsh.action.asset.AssetAction" scope="prototype">
+		<property name="assetService" ref="assetService"/>
+		<property name="categoryService" ref="categoryService"/>
+		<property name="supplierService" ref="supplierService"/>
+		<property name="userService" ref="userService"/>
+		<property name="assetnameService" ref="assetnameService"/>
+		<property name="logService" ref="logService"/>
+	</bean>
+	<!--资产配置结束 -->
+	
+	<!-- 资产报表配置开始 -->
+	<bean id="reportService" class="com.jsh.service.asset.ReportService">
+		<property name="reportDao" ref="reportDao"/>
+	</bean>
+	<!-- spring整合struts2需要默认为request或者 prototype，不能是单例 -->
+	<bean id="reportAction" class="com.jsh.action.asset.ReportAction" scope="prototype">
+		<property name="reportService" ref="reportService"/>
+		<property name="logService" ref="logService"/>
+	</bean>
+	<!--资产报表配置结束 -->
+	
+	<!--经手人配置开始 -->
+	<bean id="personService" class="com.jsh.service.materials.PersonService">
+		<property name="baseDao" ref="baseDao"/>
+		<property name="personDao" ref="personDao"/>
+	</bean>
+	<!-- spring整合struts2需要默认为request或者 prototype，不能是单例 -->
+	<bean id="personAction" class="com.jsh.action.materials.PersonAction" scope="prototype">
+		<property name="personService" ref="personService"/>
+		<property name="logService" ref="logService"/>
+	</bean>
+	<!--经手人配置结束 -->
+	
+	<!--商品类别配置开始 -->
+	<bean id="materialCategoryService" class="com.jsh.service.materials.MaterialCategoryService">
+		<property name="baseDao" ref="baseDao"/>
+		<property name="materialCategoryDao" ref="materialCategoryDao"/>
+	</bean>
+	<!-- spring整合struts2需要默认为request或者 prototype，不能是单例 -->
+	<bean id="materialCategoryAction" class="com.jsh.action.materials.MaterialCategoryAction" scope="prototype">
+		<property name="materialCategoryService" ref="materialCategoryService"/>
+		<property name="logService" ref="logService"/>
+	</bean>
+	<!--商品类别配置结束 -->
+	
+	<!--商品配置开始 -->
+	<bean id="materialService" class="com.jsh.service.materials.MaterialService">
+		<property name="baseDao" ref="baseDao"/>
+		<property name="materialDao" ref="materialDao"/>
+	</bean>
+	<!-- spring整合struts2需要默认为request或者 prototype，不能是单例 -->
+	<bean id="materialAction" class="com.jsh.action.materials.MaterialAction" scope="prototype">
+		<property name="materialService" ref="materialService"/>
+		<property name="logService" ref="logService"/>
+	</bean>
+	<!--商品配置结束 -->
+	
+	<!--仓管通配置开始 -->
+	<bean id="depotHeadService" class="com.jsh.service.materials.DepotHeadService">
+		<property name="baseDao" ref="baseDao"/>
+		<property name="depotHeadDao" ref="depotHeadDao"/>
+	</bean>
+	<!-- spring整合struts2需要默认为request或者 prototype，不能是单例 -->
+	<bean id="depotHeadAction" class="com.jsh.action.materials.DepotHeadAction" scope="prototype">
+		<property name="depotHeadService" ref="depotHeadService"/>
+		<property name="logService" ref="logService"/>
+	</bean>
+	<!--仓管通配置结束 -->
+	
+	<!--仓管通明细配置开始 -->
+	<bean id="depotItemService" class="com.jsh.service.materials.DepotItemService">
+		<property name="baseDao" ref="baseDao"/>
+		<property name="depotItemDao" ref="depotItemDao"/>
+	</bean>
+	<!-- spring整合struts2需要默认为request或者 prototype，不能是单例 -->
+	<bean id="depotItemAction" class="com.jsh.action.materials.DepotItemAction" scope="prototype">
+		<property name="depotItemService" ref="depotItemService"/>
+		<property name="logService" ref="logService"/>
+	</bean>
+	<!--仓管通明细配置结束 -->
+        
+    <!--结算账户配置开始 -->
+    <bean id="accountService" class="com.jsh.service.basic.AccountService">
+        <property name="baseDao" ref="baseDao"/>
+        <property name="accountDao" ref="accountDao"/>
+    </bean>
+    <!-- spring整合struts2需要默认为request或者 prototype，不能是单例 -->
+    <bean id="accountAction" class="com.jsh.action.basic.AccountAction" scope="prototype">
+        <property name="accountService" ref="accountService"/>
+        <property name="depotHeadService" ref="depotHeadService"/>
+        <property name="logService" ref="logService"/>
+    </bean>
+	<!--结算账户配置结束 -->
+        
+    <!--收支项目配置开始 -->
+    <bean id="inOutItemService" class="com.jsh.service.basic.InOutItemService">
+        <property name="baseDao" ref="baseDao"/>
+        <property name="inOutItemDao" ref="inOutItemDao"/>
+    </bean>
+    <!-- spring整合struts2需要默认为request或者 prototype，不能是单例 -->
+    <bean id="inOutItemAction" class="com.jsh.action.basic.InOutItemAction" scope="prototype">
+        <property name="inOutItemService" ref="inOutItemService"/>
+        <property name="logService" ref="logService"/>
+    </bean>
+	<!--收支项目配置结束 -->
+        
+    <!--账户抬头配置开始 -->
+    <bean id="accountHeadService" class="com.jsh.service.materials.AccountHeadService">
+        <property name="baseDao" ref="baseDao"/>
+        <property name="accountHeadDao" ref="accountHeadDao"/>
+    </bean>
+    <!-- spring整合struts2需要默认为request或者 prototype，不能是单例 -->
+    <bean id="accountHeadAction" class="com.jsh.action.materials.AccountHeadAction" scope="prototype">
+        <property name="accountHeadService" ref="accountHeadService"/>
+        <property name="logService" ref="logService"/>
+    </bean>
+    <!--账户抬头配置结束 -->
+
+    <!--账户明细配置开始 -->
+    <bean id="accountItemService" class="com.jsh.service.materials.AccountItemService">
+        <property name="baseDao" ref="baseDao"/>
+        <property name="accountItemDao" ref="accountItemDao"/>
+    </bean>
+    <!-- spring整合struts2需要默认为request或者 prototype，不能是单例 -->
+    <bean id="accountItemAction" class="com.jsh.action.materials.AccountItemAction" scope="prototype">
+        <property name="accountItemService" ref="accountItemService"/>
+        <property name="logService" ref="logService"/>
+    </bean>
+	<!--账户明细配置结束 -->
+</beans>

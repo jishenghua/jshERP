@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+ <class name="com.jsh.model.po.Depot" table="jsh_depot">
+  <id name="id" type="java.lang.Long">
+   <column name="id"/>
+   <generator class="native"/>
+  </id>
+  <property generated="never" lazy="false" name="name" type="java.lang.String">
+   <column length="20" name="name">
+    <comment>仓库名称</comment>
+   </column>
+  </property>
+  <property generated="never" lazy="false" name="sort" type="java.lang.String">
+   <column length="10" name="sort">
+    <comment>排序</comment>
+   </column>
+  </property>
+  <property generated="never" lazy="false" name="remark" type="java.lang.String">
+   <column length="100" name="remark">
+    <comment>描述</comment>
+   </column>
+  </property>
+ </class>
+</hibernate-mapping>

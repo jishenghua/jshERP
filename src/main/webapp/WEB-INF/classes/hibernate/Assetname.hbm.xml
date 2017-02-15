@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.jsh.model.po.Assetname" table="jsh_assetname">
+        <id name="id" type="java.lang.Long">
+            <column name="id" />
+            <generator class="native" />
+        </id>
+        <property name="assetname" type="java.lang.String">
+            <column name="assetname" not-null="true">
+                <comment>资产名称</comment>
+            </column>
+        </property>
+        <many-to-one name="category" class="com.jsh.model.po.Category" lazy="false">
+            <column name="assetcategoryID" not-null="true" />
+        </many-to-one>
+        <property name="isystem" type="java.lang.Short">
+            <column name="isystem" not-null="true">
+                <comment>是否系统自带 0==系统 1==非系统</comment>
+            </column>
+        </property>
+        <property name="description" type="java.lang.String">
+            <column name="description" length="500">
+                <comment>描述信息</comment>
+            </column>
+        </property>
+        <property name="isconsumables" type="java.lang.Short">
+            <column name="isconsumables">
+                <comment>是否为耗材 0==否 1==是 耗材状态只能是消费</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

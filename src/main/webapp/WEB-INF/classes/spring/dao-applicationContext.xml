@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 指定Spring配置文件的DTD信息 -->
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN"
+	"http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>
+	<!-- 配置daoTemplate，作为所有DAO组件的模板 -->
+	<bean id="daoTemplate" abstract="true">
+		<!-- 为DAO组件注入SessionFactory引用 -->
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	<!-- 配置通用baseDao组件 -->
+	<bean id="baseDao" parent="daoTemplate" class="com.jsh.base.BaseDAO" scope="prototype"/>
+	<!-- 配置userDao组件 -->
+	<bean id="userDao" parent="daoTemplate" class="com.jsh.dao.basic.UserDAO"/>
+	<!-- 配置logDao组件 -->
+	<bean id="logDao" parent="daoTemplate" class="com.jsh.dao.basic.LogDAO"/>
+	<!-- 配置supplierDao组件 -->
+	<bean id="supplierDao" parent="daoTemplate" class="com.jsh.dao.basic.SupplierDAO"/>
+	<!-- 配置categoryDao组件 -->
+	<bean id="categoryDao" parent="daoTemplate" class="com.jsh.dao.basic.CategoryDAO"/>
+	<!-- 配置depotDao组件 -->
+	<bean id="depotDao" parent="daoTemplate" class="com.jsh.dao.basic.DepotDAO"/>
+	<!-- 配置assetDao组件 -->
+	<bean id="assetNameDao" parent="daoTemplate" class="com.jsh.dao.basic.AssetNameDAO"/>
+	<!-- 配置assetDao组件 -->
+	<bean id="assetDao" parent="daoTemplate" class="com.jsh.dao.asset.AssetDAO"/>
+	<!-- 配置assetDao组件 -->
+	<bean id="reportDao" parent="daoTemplate" class="com.jsh.dao.asset.ReportDAO"/>
+	<!-- 配置appDao组件 -->
+	<bean id="appDao" parent="daoTemplate" class="com.jsh.dao.basic.AppDAO"/>
+	<!-- 配置roleDao组件 -->
+	<bean id="roleDao" parent="daoTemplate" class="com.jsh.dao.basic.RoleDAO"/>	
+	<!-- 配置functionsDao组件 -->
+	<bean id="functionsDao" parent="daoTemplate" class="com.jsh.dao.basic.FunctionsDAO"/>	
+	<!-- 配置userBusinessDao组件 -->
+	<bean id="userBusinessDao" parent="daoTemplate" class="com.jsh.dao.basic.UserBusinessDAO"/>	
+	<!-- 配置personDao组件 -->
+	<bean id="personDao" parent="daoTemplate" class="com.jsh.dao.materials.PersonDAO"/>	
+	<!-- 配置materialCategoryDao组件 -->
+	<bean id="materialCategoryDao" parent="daoTemplate" class="com.jsh.dao.materials.MaterialCategoryDAO"/>	
+	<!-- 配置materialDao组件 -->
+	<bean id="materialDao" parent="daoTemplate" class="com.jsh.dao.materials.MaterialDAO"/>		
+	<!-- 配置depotHeadDao组件 -->
+	<bean id="depotHeadDao" parent="daoTemplate" class="com.jsh.dao.materials.DepotHeadDAO"/>	
+	<!-- 配置depotItemDao组件 -->
+	<bean id="depotItemDao" parent="daoTemplate" class="com.jsh.dao.materials.DepotItemDAO"/>
+	<!-- 配置accountDao组件 -->
+	<bean id="accountDao" parent="daoTemplate" class="com.jsh.dao.basic.AccountDAO"/>	
+	<!-- 配置inOutItemDao组件 -->
+	<bean id="inOutItemDao" parent="daoTemplate" class="com.jsh.dao.basic.InOutItemDAO"/>
+    <!-- 配置accountHeadDao组件 -->
+    <bean id="accountHeadDao" parent="daoTemplate" class="com.jsh.dao.materials.AccountHeadDAO"/>   
+    <!-- 配置accountItemDao组件 -->
+	<bean id="accountItemDao" parent="daoTemplate" class="com.jsh.dao.materials.AccountItemDAO"/>
+</beans>
