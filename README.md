@@ -16,6 +16,7 @@
 * JS框架：Jquery 1.8.0
 * UI框架: EasyUI 1.3.5
 * 桌面框架: HoorayOS
+* 项目管理框架: Maven3.2.3
 
 #开发环境
 建议开发者使用以下环境，可以避免版本带来的问题
@@ -23,6 +24,7 @@
 * DB: Mysql5.1
 * JDK: JDK1.6+
 * WEB: Tomcat6.0+
+* Maven: Maven3.2.3+
 
 #运行环境
 * WEB服务器：Tomcat6.0+
