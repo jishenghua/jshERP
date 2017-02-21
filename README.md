@@ -25,6 +25,7 @@
 * JDK: JDK1.6+
 * WEB: Tomcat6.0+
 * Maven: Maven3.2.3+
+* 为方便大家搭建开发环境，分享了下载地址 http://pan.baidu.com/s/1nuKnlNV
 
 #运行环境
 * WEB服务器：Tomcat6.0+
