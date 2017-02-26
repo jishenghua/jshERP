@@ -4,3 +4,8 @@
 	background-color:#EAF2FD;
 }
 
+.easyui-dialog .fitem label{
+	width:60px;
+	float:left;
+	padding:5px;
+}

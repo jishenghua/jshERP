@@ -61,11 +61,11 @@
                 closed="true" buttons="#dlg-buttons" modal="true" collapsible="false" closable="true">
             <form id="accountFM" method="post" novalidate>
                 <div class="fitem" style="padding:5px">
-                    <label id="nameLabel">名&nbsp;&nbsp;&nbsp;&nbsp;称</label>
+                    <label id="nameLabel">名称</label>
                     <input name="name" id="name" class="easyui-validatebox" data-options="required:true,validType:'length[2,30]'" style="width: 230px;height: 20px"/>
                 </div>
                 <div class="fitem" style="padding:5px">
-                    <label id="serialNoLabel">编&nbsp;&nbsp;&nbsp;&nbsp;号</label>
+                    <label id="serialNoLabel">编号</label>
                     <input name="serialNo" id="serialNo" class="easyui-validatebox" data-options="required:true,validType:'length[2,30]'" style="width: 230px;height: 20px"/>
                 </div>
                 <div class="fitem" style="padding:5px">
@@ -77,7 +77,7 @@
                     <input name="currentAmount" id="currentAmount" type="text" disabled="disabled" class="easyui-numberbox" data-options="min:0,precision:2" style="width: 230px;height: 20px"></input>
                 </div>
                 <div class="fitem" style="padding:5px">
-                    <label id="remarkLabel">备&nbsp;&nbsp;&nbsp;&nbsp;注</label>
+                    <label id="remarkLabel">备注</label>
                     <textarea name="remark" id="remark" rows="2" cols="2" style="width: 230px;"></textarea>
                 </div>
                 <input type="hidden" name="clientIp" id="clientIp" value="<%=clientIp %>"/>
@@ -93,34 +93,8 @@
             $(function()
             {
                 initTableData();
-                ininPager();
-                browserFit();   
+                ininPager();  
             }); 
-            
-            //浏览器适配
-            function browserFit()
-            {
-                if(getOs()=='MSIE')
-                {
-                    $("#searchSerialNoLabel").empty().append("编&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：");
-                    $("#searchRemarkLabel").empty().append("备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注：");
-                    $("#nameLabel").empty().append("名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称");
-                    $("#serialNoLabel").empty().append("编&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号");
-                    $("#initialAmountLabel").empty().append("期初金额");
-                    $("#currentAmountLabel").empty().append("当前余额");
-                    $("#remarkLabel").empty().append("备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注");
-                }
-                else
-                {
-                    $("#searchSerialNoLabel").empty().append("编&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：");
-                    $("#searchRemarkLabel").empty().append("备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注：");
-                    $("#nameLabel").empty().append("名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称");
-                    $("#serialNoLabel").empty().append("编&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号");
-                    $("#initialAmountLabel").empty().append("期初金额");
-                    $("#currentAmountLabel").empty().append("当前余额");
-                    $("#remarkLabel").empty().append("备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注");                   
-                }
-            }
             
             //初始化表格数据
             function initTableData()
