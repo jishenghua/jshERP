@@ -315,9 +315,9 @@
 					+ 'AaBb' + rec.AccountName + 'AaBb' + rec.TotalPrice + 'AaBb' + rec.AllocationProjectId + 'AaBb' + rec.AllocationProjectName;
 					if(1 == value)
 					{
-						str += '<img src="' + path + '/js/easyui-1.3.5/themes/icons/list.png" style="cursor: pointer;" onclick="showDepotHead(\'' + rowInfo + '\');"/>&nbsp;<a onclick="showDepotHead(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">查看</a>&nbsp;&nbsp;';
-						str += '<img src="' + path + '/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editDepotHead(\'' + rowInfo + '\');"/>&nbsp;<a onclick="editDepotHead(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
-						str += '<img src="' + path + '/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteDepotHead('+ rec.Id +');"/>&nbsp;<a onclick="deleteDepotHead('+ rec.Id +');" style="text-decoration:none;color:black;" href="javascript:void(0)">删除</a>';
+						str += '<a onclick="showDepotHead(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)"><span class="action-show">查看</span></a>';
+						str += '<a onclick="editDepotHead(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)"><span class="action-edit">编辑</span></a>';
+						str += '<a onclick="deleteDepotHead('+ rec.Id +');" style="text-decoration:none;color:black;" href="javascript:void(0)"><span class="action-delete">删除</span></a>';
 					}
 					return str;
 				}
