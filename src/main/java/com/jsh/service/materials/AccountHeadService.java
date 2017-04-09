@@ -4,6 +4,7 @@ import com.jsh.base.BaseService;
 import com.jsh.dao.materials.AccountHeadIDAO;
 import com.jsh.util.JshException;
 import com.jsh.model.po.AccountHead;
+import com.jsh.model.po.DepotHead;
 import com.jsh.model.po.UserBusiness;
 import com.jsh.util.PageUtil;
 
@@ -24,9 +25,13 @@ public class AccountHeadService extends BaseService<AccountHead> implements Acco
         return AccountHead.class;
     }
 
-    @Override
     public void find(PageUtil<AccountHead> pageUtil, String maxid) throws JshException
     {
         accountHeadDao.find(pageUtil, maxid);
+    }
+    
+    public void findAllMoney(PageUtil<AccountHead> pageUtil, Integer supplierId, String type, String mode) throws JshException
+    {
+    	accountHeadDao.findAllMoney(pageUtil, supplierId, type, mode);
     }
 }

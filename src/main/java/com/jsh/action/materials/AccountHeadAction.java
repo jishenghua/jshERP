@@ -7,9 +7,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+
 import org.springframework.dao.DataAccessException;
+
 import com.jsh.base.BaseAction;
 import com.jsh.base.Log;
 import com.jsh.model.po.Account;
@@ -19,6 +22,8 @@ import com.jsh.model.po.Person;
 import com.jsh.model.po.Supplier;
 import com.jsh.model.vo.materials.AccountHeadModel;
 import com.jsh.service.materials.AccountHeadIService;
+import com.jsh.service.materials.DepotHeadIService;
+import com.jsh.util.JshException;
 import com.jsh.util.PageUtil;
 import com.jsh.util.Tools;
 /*
@@ -276,6 +281,70 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel>
             Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询财务信息结果异常", e);
         }
     }
+    
+    /**
+     * 查询单位的累计应收和累计应付
+     * @return
+     */
+    public void findTotalPay() {
+    	try
+	    {
+			JSONObject outer = new JSONObject();     	
+			Double sum = 0.0;
+			String getS = model.getSupplierId();
+			//进销部分
+			sum = sum - (allMoney(getS, "付款", "合计") + allMoney(getS, "付款", "实际"));
+			sum = sum + (allMoney(getS, "收款", "合计") + allMoney(getS, "收款", "实际"));
+			sum = sum - (allMoney(getS, "收入", "合计") - allMoney(getS, "收入", "实际"));
+			sum = sum + (allMoney(getS, "支出", "合计") - allMoney(getS, "支出", "实际"));
+			//收付款部分
+			
+	    	outer.put("getAllMoney", sum);
+            toClient(outer.toString());
+        }
+	    catch (DataAccessException e) 
+	    {
+	        Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找异常", e);
+        } 
+	    catch (IOException e) 
+	    {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询结果异常", e);
+        }
+	}
+    
+    /**
+     * 统计总金额
+     * @param type
+     * @param mode 合计或者金额
+     * @return
+     */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public Double allMoney(String getS, String type, String mode) {
+		Log.infoFileSync("getS:" + getS);
+    	Double allMoney = 0.0;
+    	String allReturn = "";
+		PageUtil pageUtil = new  PageUtil();
+        pageUtil.setPageSize(0);
+        pageUtil.setCurPage(0);
+        try {        	
+        	Integer supplierId = Integer.valueOf(getS);
+        	accountHeadService.findAllMoney(pageUtil, supplierId, type, mode);
+			allReturn = pageUtil.getPageList().toString();
+			allReturn = allReturn.substring(1,allReturn.length()-1);
+			if(allReturn.equals("null")){
+				allReturn = "0";
+			}
+		} catch (JshException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        allMoney = Double.parseDouble(allReturn);
+        //返回正数，如果负数也转为正数
+        if(allMoney<0){
+        	allMoney = -allMoney;
+        }
+		return allMoney;    	     
+    }
 
     /**
      * 拼接搜索条件
@@ -296,7 +365,6 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel>
     }
 
     //=============以下spring注入以及Model驱动公共方法，与Action处理无关==================
-    @Override
     public AccountHeadModel getModel()
     {
         return model;

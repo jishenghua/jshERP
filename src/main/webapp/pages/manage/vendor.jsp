@@ -201,14 +201,14 @@
 			          { title: '联系人', field: 'contacts',width:50,align:"center"},
 			          { title: '联系电话', field: 'phonenum',width:60,align:"center"},
 			          { title: '电子邮箱',field: 'email',width:80,align:"center"},
-			          { title: '累计应收',field: 'AllNeedGet',width:70,align:"center"},
-			          { title: '累计应付',field: 'AllNeedPay',width:70,align:"center"},
+			          { title: '期初应收',field: 'BeginNeedGet',width:70,align:"center"},
+			          { title: '期初应付',field: 'BeginNeedPay',width:70,align:"center"},
 			          { title: '类型',field: 'type',width:50},
 			          { title: '启动',field: 'enabled',width:40},
 			          { title: '操作',field: 'op',align:"center",width:130,formatter:function(value,rec)
 			         	{
 							var str = '';
-							var rowInfo = rec.id + 'AaBb' + rec.supplier +'AaBb' + rec.contacts + 'AaBb'+ rec.phonenum + 'AaBb'+ rec.email + 'AaBb'+ rec.BeginNeedGet + 'AaBb'+ rec.BeginNeedPay + 'AaBb'+ rec.AllNeedGet + 'AaBb'+ rec.AllNeedPay + 'AaBb' + rec.isystem + 'AaBb' + rec.description+ 'AaBb' + rec.type+ 'AaBb' + rec.enabled;
+							var rowInfo = rec.id + 'AaBb' + rec.supplier +'AaBb' + rec.contacts + 'AaBb'+ rec.phonenum + 'AaBb'+ rec.email + 'AaBb'+ rec.BeginNeedGet + 'AaBb'+ rec.BeginNeedPay + 'AaBb' + rec.isystem + 'AaBb' + rec.description+ 'AaBb' + rec.type+ 'AaBb' + rec.enabled;
 	       					if(1 == value)
 	       					{
 	       						str += '<img src="<%=path%>/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editSupplier(\'' + rowInfo + '\');"/>&nbsp;<a onclick="editSupplier(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
@@ -428,6 +428,12 @@
 						$("#phonenum").val("").focus();
 						return;
 					}
+					var beginNeedGet = $.trim($("#BeginNeedGet").val());
+					var beginNeedPay = $.trim($("#BeginNeedPay").val());
+					if(beginNeedGet && beginNeedPay) {
+						$.messager.alert('提示','期初应收和期初应付不能同时输入','info');
+						return;
+					}
 					
 					$('#supplierFM').form('submit',{
 		                url: url,
@@ -467,11 +473,9 @@
 	            	email : supplierInfo[4],
 	            	BeginNeedGet : supplierInfo[5],
 	            	BeginNeedPay : supplierInfo[6],
-	            	AllNeedGet : supplierInfo[7],
-	            	AllNeedPay : supplierInfo[8],
-	            	description : supplierInfo[10],
-	            	type : supplierInfo[11],
-	            	enabled : supplierInfo[12],
+	            	description : supplierInfo[8],
+	            	type : supplierInfo[9],
+	            	enabled : supplierInfo[10],
 	            	clientIp:'<%=clientIp %>'
 	            };
 	            orgSupplier = supplierInfo[1];
@@ -482,6 +486,54 @@
                 //焦点在名称输入框==定焦在输入文字后面 
                 $("#supplier").val("").focus().val(supplierInfo[1]);
                 url = '<%=path %>/supplier/update.action?supplierID=' + supplierInfo[0];
+                
+                //显示累计应收和累计应付
+                $.ajax({
+                	type:"post",
+					url: "<%=path %>/depotHead/findTotalPay.action",
+					dataType: "json",
+					async:  false,
+					data: ({
+						supplierId: supplierInfo[0]
+					}),
+					success: function(res){
+						if(res) {
+							var moneyA = res.getAllMoney.toFixed(2)-0;
+							$.ajax({
+			                	type:"post",
+								url: "<%=path %>/accountHead/findTotalPay.action",
+								dataType: "json",
+								async:  false,
+								data: ({
+									supplierId: supplierInfo[0]
+								}),
+								success: function(res){
+									if(res) {
+										var moneyB = res.getAllMoney.toFixed(2)-0; 
+										var money = moneyA+moneyB;
+										var moneyBeginNeedGet = $("#BeginNeedGet").val()-0; //期初应收
+										var moneyBeginNeedPay = $("#BeginNeedPay").val()-0; //期初应付
+										money = money + moneyBeginNeedPay - moneyBeginNeedGet;
+										if(money>0) {											
+											$("#AllNeedPay").val(money); //累计应付
+										}
+										else {
+											$("#AllNeedGet").val(-money);  //累计应收
+										}
+									}
+								},
+								error: function(){
+									$.messager.alert('提示','网络异常请稍后再试！','error');
+									return;
+								}
+							});
+						}
+					},
+					error: function(){
+						$.messager.alert('提示','网络异常请稍后再试！','error');
+						return;
+					}
+                })
 	        }
 	        
 	        

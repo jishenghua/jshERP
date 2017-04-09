@@ -20,6 +20,8 @@ public class AccountHeadModel implements Serializable
     private String BeginTime; //查询开始时间
     private String EndTime;  //查询结束时间
     private String MonthTime;  //查询月份
+    
+	private String supplierId; //单位Id，用于查询单位的收付款
     /**
      * 分类ID
      */
@@ -222,4 +224,14 @@ public class AccountHeadModel implements Serializable
     public String getClientIp()
     {
         return clientIp;
-    }}
+    }
+
+	public String getSupplierId() {
+		return supplierId;
+	}
+
+	public void setSupplierId(String supplierId) {
+		this.supplierId = supplierId;
+	}
+        
+}

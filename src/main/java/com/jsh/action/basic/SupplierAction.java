@@ -5,15 +5,19 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+
 import org.springframework.dao.DataAccessException;
+
 import com.jsh.base.BaseAction;
 import com.jsh.base.Log;
 import com.jsh.model.po.Logdetails;
 import com.jsh.model.po.Supplier;
 import com.jsh.model.vo.basic.SupplierModel;
 import com.jsh.service.basic.SupplierIService;
+import com.jsh.util.JshException;
 import com.jsh.util.PageUtil;
 /*
  * 单位管理
@@ -242,8 +246,6 @@ public class SupplierAction extends BaseAction<SupplierModel>
                     item.put("email", supplier.getEmail());
                     item.put("BeginNeedGet",supplier.getBeginNeedGet());
                     item.put("BeginNeedPay",supplier.getBeginNeedPay());
-                    item.put("AllNeedGet",supplier.getAllNeedGet());
-                    item.put("AllNeedPay",supplier.getAllNeedPay());
                     item.put("isystem", supplier.getIsystem() == (short)0?"是":"否");
                     item.put("description", supplier.getDescription());
                     item.put("enabled", supplier.getEnabled());

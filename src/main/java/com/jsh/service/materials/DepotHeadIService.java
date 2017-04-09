@@ -12,4 +12,6 @@ public interface DepotHeadIService extends BaseIService<DepotHead>
 	 * 获取MaxId
 	 */
 	void find(PageUtil<DepotHead> depotHead,String maxid)throws JshException;
+	
+	void findAllMoney(PageUtil<DepotHead> depotHead, Integer supplierId, String type, String subType, String mode)throws JshException;
 }

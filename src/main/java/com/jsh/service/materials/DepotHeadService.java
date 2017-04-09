@@ -24,9 +24,13 @@ public class DepotHeadService extends BaseService<DepotHead> implements DepotHea
 		return DepotHead.class;
 	}
 	
-    @Override
     public void find(PageUtil<DepotHead> pageUtil, String maxid) throws JshException
     {
     	depotHeadDao.find(pageUtil, maxid);
+    }
+    
+    public void findAllMoney(PageUtil<DepotHead> pageUtil, Integer supplierId, String type, String subType, String mode) throws JshException
+    {
+    	depotHeadDao.findAllMoney(pageUtil, supplierId, type, subType, mode);
     }
 }

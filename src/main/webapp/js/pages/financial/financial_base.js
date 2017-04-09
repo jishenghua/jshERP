@@ -42,7 +42,7 @@
 			moneyType = true; //隐藏当前列
 			payTypeTitle = "收入项目";
 			inOrOut = "in";
-			organUrl = supUrl;
+			organUrl = cusUrl;
 		}
 		else if(listTitle === "支出单列表"){
 			listType = "支出"; 
@@ -50,7 +50,7 @@
 			moneyType = true; //隐藏当前列
 			payTypeTitle = "支出项目";
 		    inOrOut = "out";
-			organUrl = cusUrl;
+			organUrl = supUrl;
 		}
 		else if(listTitle === "收款单列表"){
 			listType = "收款"; 			
@@ -58,7 +58,7 @@
 			moneyType = false; //显示当前列
 			payTypeTitle = "无标题";
 			inOrOut = "";
-			organUrl = supUrl;
+			organUrl = cusUrl;
 		}
 		else if(listTitle === "付款单列表"){
 			listType = "付款"; 
@@ -66,7 +66,7 @@
 			moneyType = false; //显示当前列
 			payTypeTitle = "无标题";
 			inOrOut = "";
-			organUrl = cusUrl;
+			organUrl = supUrl;
 		}
 		else if(listTitle === "转账单列表"){
 			listType = "转账"; 

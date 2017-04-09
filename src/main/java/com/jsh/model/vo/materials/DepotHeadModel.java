@@ -25,7 +25,10 @@ public class DepotHeadModel implements Serializable
 	private String BeginTime; //查询开始时间
 	private String EndTime;  //查询结束时间
 	private String MonthTime;  //查询月份
-    /**
+	
+	private String supplierId; //单位Id，用于查询单位的应收应付
+
+	/**
      * 分类ID
      */
     private Long depotHeadID = 0l;
@@ -225,5 +228,14 @@ public class DepotHeadModel implements Serializable
 	public void setMonthTime(String monthTime) {
 		MonthTime = monthTime;
 	}
+
+	public String getSupplierId() {
+		return supplierId;
+	}
+
+	public void setSupplierId(String supplierId) {
+		this.supplierId = supplierId;
+	}
+	
 	
 }
