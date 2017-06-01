@@ -155,8 +155,12 @@
 			          { title: '上级编号',field: 'PNumber',width:60},
 			          { title: '链接',field: 'URL',width:120},
 			          { title: '排序',field: 'Sort',width:50},
-			          { title: '收缩',field: 'State',width:50},
-			          { title: '启用',field: 'Enabled',width:50},
+			          { title: '收缩',field: 'State',width:50,formatter:function(value){
+						  return value? "开":"关";
+					  }},
+			          { title: '启用',field: 'Enabled',width:50,formatter:function(value){
+						  return value? "开":"关";
+					  }},
 			          { title: '类型',field: 'Type',width:50},
 			          { title: '操作',field: 'op',align:"center",width:130,formatter:function(value,rec)
 			         	{

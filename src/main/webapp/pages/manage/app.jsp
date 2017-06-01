@@ -183,14 +183,21 @@
 			          { title: '链接',field: 'URL',width:100},
 			          { title: '宽度',field: 'Width',width:50},
 			          { title: '高度',field: 'Height',width:50},
-			          { title: '拉伸',field: 'ReSize',width:50},
-			          { title: '最大化',field: 'OpenMax',width:50},
-			          { title: 'Flash',field: 'Flash',width:50},
+			          { title: '拉伸',field: 'ReSize',width:50,formatter:function(value){
+						  return value? "开":"关";
+					  }},
+			          { title: '最大化',field: 'OpenMax',width:50,formatter:function(value){
+						  return value? "开":"关";
+					  }},
+			          { title: 'Flash',field: 'Flash',width:50,formatter:function(value){
+						  return value? "开":"关";
+					  }},
 			          { title: '种类',field: 'ZL',width:50},
 			          { title: '排序号',field: 'Sort',width:50},
 			          { title: '备注',field: 'Remark',width:50},
-			          { title: '启用',field: 'Enabled',width:50},
-			          
+			          { title: '启用',field: 'Enabled',width:50,formatter:function(value){
+						  return value? "开":"关";
+					  }},
 			          { title: '操作',field: 'op',align:"center",width:130,formatter:function(value,rec)
 			         	{
 							var str = '';
