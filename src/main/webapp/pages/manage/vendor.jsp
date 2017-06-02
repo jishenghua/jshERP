@@ -204,7 +204,9 @@
 			          { title: '期初应收',field: 'BeginNeedGet',width:70,align:"center"},
 			          { title: '期初应付',field: 'BeginNeedPay',width:70,align:"center"},
 			          { title: '类型',field: 'type',width:50},
-			          { title: '启动',field: 'enabled',width:40},
+			          { title: '启动',field: 'enabled',width:40,formatter:function(value){
+						  return value? "开":"关";
+					  }},
 			          { title: '操作',field: 'op',align:"center",width:130,formatter:function(value,rec)
 			         	{
 							var str = '';
