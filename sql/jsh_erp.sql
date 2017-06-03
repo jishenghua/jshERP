@@ -1,8 +1,8 @@
 /*
 MySQL Backup
-Source Server Version: 5.1.54
+Source Server Version: 5.0.22
 Source Database: jsh_erp
-Date: 2017-04-09 16:51:26
+Date: 2017-06-03 23:38:22
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -12,107 +12,107 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_account`;
 CREATE TABLE `jsh_account` (
-  `Id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `Name` varchar(50) DEFAULT NULL COMMENT '名称',
-  `SerialNo` varchar(50) DEFAULT NULL COMMENT '编号',
-  `InitialAmount` double DEFAULT NULL COMMENT '期初金额',
-  `CurrentAmount` double DEFAULT NULL COMMENT '当前余额',
-  `Remark` varchar(100) DEFAULT NULL COMMENT '备注',
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+  `Id` bigint(20) NOT NULL auto_increment,
+  `Name` varchar(50) default NULL COMMENT '名称',
+  `SerialNo` varchar(50) default NULL COMMENT '编号',
+  `InitialAmount` double default NULL COMMENT '期初金额',
+  `CurrentAmount` double default NULL COMMENT '当前余额',
+  `Remark` varchar(100) default NULL COMMENT '备注',
+  PRIMARY KEY  (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 --  Table structure for `jsh_accounthead`
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_accounthead`;
 CREATE TABLE `jsh_accounthead` (
-  `Id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `Type` varchar(50) DEFAULT NULL COMMENT '类型(支出/收入/收款/付款/转账)',
-  `OrganId` bigint(20) DEFAULT NULL COMMENT '单位Id(收款/付款单位)',
-  `HandsPersonId` bigint(20) DEFAULT NULL COMMENT '经手人Id',
-  `ChangeAmount` double DEFAULT NULL COMMENT '变动金额(优惠/收款/付款/实付)',
-  `TotalPrice` double DEFAULT NULL COMMENT '合计金额',
-  `AccountId` bigint(20) DEFAULT NULL COMMENT '账户(收款/付款)',
-  `BillNo` varchar(50) DEFAULT NULL COMMENT '单据编号',
-  `BillTime` datetime DEFAULT NULL COMMENT '单据日期',
-  `Remark` varchar(100) DEFAULT NULL COMMENT '备注',
-  PRIMARY KEY (`Id`),
+  `Id` bigint(20) NOT NULL auto_increment,
+  `Type` varchar(50) default NULL COMMENT '类型(支出/收入/收款/付款/转账)',
+  `OrganId` bigint(20) default NULL COMMENT '单位Id(收款/付款单位)',
+  `HandsPersonId` bigint(20) default NULL COMMENT '经手人Id',
+  `ChangeAmount` double default NULL COMMENT '变动金额(优惠/收款/付款/实付)',
+  `TotalPrice` double default NULL COMMENT '合计金额',
+  `AccountId` bigint(20) default NULL COMMENT '账户(收款/付款)',
+  `BillNo` varchar(50) default NULL COMMENT '单据编号',
+  `BillTime` datetime default NULL COMMENT '单据日期',
+  `Remark` varchar(100) default NULL COMMENT '备注',
+  PRIMARY KEY  (`Id`),
   KEY `FK9F4C0D8DB610FC06` (`OrganId`),
   KEY `FK9F4C0D8DAAE50527` (`AccountId`),
   KEY `FK9F4C0D8DC4170B37` (`HandsPersonId`),
   CONSTRAINT `FK9F4C0D8DAAE50527` FOREIGN KEY (`AccountId`) REFERENCES `jsh_account` (`Id`),
   CONSTRAINT `FK9F4C0D8DB610FC06` FOREIGN KEY (`OrganId`) REFERENCES `jsh_supplier` (`id`),
   CONSTRAINT `FK9F4C0D8DC4170B37` FOREIGN KEY (`HandsPersonId`) REFERENCES `jsh_person` (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 --  Table structure for `jsh_accountitem`
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_accountitem`;
 CREATE TABLE `jsh_accountitem` (
-  `Id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `Id` bigint(20) NOT NULL auto_increment,
   `HeaderId` bigint(20) NOT NULL COMMENT '表头Id',
-  `AccountId` bigint(20) DEFAULT NULL COMMENT '账户Id',
-  `InOutItemId` bigint(20) DEFAULT NULL COMMENT '收支项目Id',
-  `EachAmount` double DEFAULT NULL COMMENT '单项金额',
-  `Remark` varchar(100) DEFAULT NULL COMMENT '单据备注',
-  PRIMARY KEY (`Id`),
+  `AccountId` bigint(20) default NULL COMMENT '账户Id',
+  `InOutItemId` bigint(20) default NULL COMMENT '收支项目Id',
+  `EachAmount` double default NULL COMMENT '单项金额',
+  `Remark` varchar(100) default NULL COMMENT '单据备注',
+  PRIMARY KEY  (`Id`),
   KEY `FK9F4CBAC0AAE50527` (`AccountId`),
   KEY `FK9F4CBAC0C5FE6007` (`HeaderId`),
   KEY `FK9F4CBAC0D203EDC5` (`InOutItemId`),
   CONSTRAINT `FK9F4CBAC0AAE50527` FOREIGN KEY (`AccountId`) REFERENCES `jsh_account` (`Id`),
   CONSTRAINT `FK9F4CBAC0C5FE6007` FOREIGN KEY (`HeaderId`) REFERENCES `jsh_accounthead` (`Id`) ON DELETE CASCADE,
   CONSTRAINT `FK9F4CBAC0D203EDC5` FOREIGN KEY (`InOutItemId`) REFERENCES `jsh_inoutitem` (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 --  Table structure for `jsh_app`
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_app`;
 CREATE TABLE `jsh_app` (
-  `Id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `Number` varchar(50) DEFAULT NULL,
-  `Name` varchar(50) DEFAULT NULL,
-  `Type` varchar(50) DEFAULT NULL,
-  `Icon` varchar(50) DEFAULT NULL,
-  `URL` varchar(50) DEFAULT NULL,
-  `Width` varchar(50) DEFAULT NULL,
-  `Height` varchar(50) DEFAULT NULL,
-  `ReSize` bit(1) DEFAULT NULL,
-  `OpenMax` bit(1) DEFAULT NULL,
-  `Flash` bit(1) DEFAULT NULL,
-  `ZL` varchar(50) DEFAULT NULL,
-  `Sort` varchar(50) DEFAULT NULL,
-  `Remark` varchar(200) DEFAULT NULL,
-  `Enabled` bit(1) DEFAULT NULL,
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
+  `Id` bigint(20) NOT NULL auto_increment,
+  `Number` varchar(50) default NULL,
+  `Name` varchar(50) default NULL,
+  `Type` varchar(50) default NULL,
+  `Icon` varchar(50) default NULL,
+  `URL` varchar(50) default NULL,
+  `Width` varchar(50) default NULL,
+  `Height` varchar(50) default NULL,
+  `ReSize` bit(1) default NULL,
+  `OpenMax` bit(1) default NULL,
+  `Flash` bit(1) default NULL,
+  `ZL` varchar(50) default NULL,
+  `Sort` varchar(50) default NULL,
+  `Remark` varchar(200) default NULL,
+  `Enabled` bit(1) default NULL,
+  PRIMARY KEY  (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 --  Table structure for `jsh_asset`
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_asset`;
 CREATE TABLE `jsh_asset` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL auto_increment,
   `assetnameID` bigint(20) NOT NULL,
-  `location` varchar(255) DEFAULT NULL COMMENT '位置',
-  `labels` varchar(255) DEFAULT NULL COMMENT '标签：以空格为分隔符',
-  `status` smallint(6) DEFAULT NULL COMMENT '资产的状态：0==在库，1==在用，2==消费',
-  `userID` bigint(20) DEFAULT NULL,
-  `price` double DEFAULT NULL COMMENT '购买价格',
-  `purchasedate` datetime DEFAULT NULL COMMENT '购买日期',
-  `periodofvalidity` datetime DEFAULT NULL COMMENT '有效日期',
-  `warrantydate` datetime DEFAULT NULL COMMENT '保修日期',
-  `assetnum` varchar(255) DEFAULT NULL COMMENT '资产编号',
-  `serialnum` varchar(255) DEFAULT NULL COMMENT '资产序列号',
+  `location` varchar(255) default NULL COMMENT '位置',
+  `labels` varchar(255) default NULL COMMENT '标签：以空格为分隔符',
+  `status` smallint(6) default NULL COMMENT '资产的状态：0==在库，1==在用，2==消费',
+  `userID` bigint(20) default NULL,
+  `price` double default NULL COMMENT '购买价格',
+  `purchasedate` datetime default NULL COMMENT '购买日期',
+  `periodofvalidity` datetime default NULL COMMENT '有效日期',
+  `warrantydate` datetime default NULL COMMENT '保修日期',
+  `assetnum` varchar(255) default NULL COMMENT '资产编号',
+  `serialnum` varchar(255) default NULL COMMENT '资产序列号',
   `supplier` bigint(20) NOT NULL,
   `description` longtext COMMENT '描述信息',
   `addMonth` longtext COMMENT '资产添加时间，统计报表使用',
-  `createtime` datetime DEFAULT NULL,
-  `creator` bigint(20) DEFAULT NULL,
-  `updatetime` datetime DEFAULT NULL,
-  `updator` bigint(20) DEFAULT NULL,
-  PRIMARY KEY (`id`),
+  `createtime` datetime default NULL,
+  `creator` bigint(20) default NULL,
+  `updatetime` datetime default NULL,
+  `updator` bigint(20) default NULL,
+  PRIMARY KEY  (`id`),
   KEY `FK353690ED9B6CB285` (`assetnameID`),
   KEY `FK353690EDAD45B659` (`creator`),
   KEY `FK353690ED27D23FE4` (`supplier`),
@@ -123,69 +123,69 @@ CREATE TABLE `jsh_asset` (
   CONSTRAINT `FK353690ED61FE182C` FOREIGN KEY (`updator`) REFERENCES `jsh_user` (`id`),
   CONSTRAINT `FK353690ED9B6CB285` FOREIGN KEY (`assetnameID`) REFERENCES `jsh_assetname` (`id`),
   CONSTRAINT `FK353690EDAD45B659` FOREIGN KEY (`creator`) REFERENCES `jsh_user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 --  Table structure for `jsh_assetcategory`
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_assetcategory`;
 CREATE TABLE `jsh_assetcategory` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL auto_increment,
   `assetname` varchar(255) NOT NULL COMMENT '资产类型名称',
   `isystem` tinyint(4) NOT NULL COMMENT '是否系统自带 0==系统 1==非系统',
-  `description` varchar(500) DEFAULT NULL COMMENT '描述信息',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+  `description` varchar(500) default NULL COMMENT '描述信息',
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 --  Table structure for `jsh_assetname`
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_assetname`;
 CREATE TABLE `jsh_assetname` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL auto_increment,
   `assetname` varchar(255) NOT NULL COMMENT '资产名称',
   `assetcategoryID` bigint(20) NOT NULL,
   `isystem` smallint(6) NOT NULL COMMENT '是否系统自带 0==系统 1==非系统',
   `description` longtext COMMENT '描述信息',
-  `isconsumables` smallint(6) DEFAULT NULL COMMENT '是否为耗材 0==否 1==是 耗材状态只能是消费',
-  PRIMARY KEY (`id`),
+  `isconsumables` smallint(6) default NULL COMMENT '是否为耗材 0==否 1==是 耗材状态只能是消费',
+  PRIMARY KEY  (`id`),
   KEY `FKA4ADCCF866BC8AD3` (`assetcategoryID`),
   CONSTRAINT `FKA4ADCCF866BC8AD3` FOREIGN KEY (`assetcategoryID`) REFERENCES `jsh_assetcategory` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 --  Table structure for `jsh_depot`
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_depot`;
 CREATE TABLE `jsh_depot` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `name` varchar(20) DEFAULT NULL COMMENT '仓库名称',
-  `sort` varchar(10) DEFAULT NULL COMMENT '排序',
-  `remark` varchar(100) DEFAULT NULL COMMENT '描述',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+  `id` bigint(20) NOT NULL auto_increment COMMENT '主键',
+  `name` varchar(20) default NULL COMMENT '仓库名称',
+  `sort` varchar(10) default NULL COMMENT '排序',
+  `remark` varchar(100) default NULL COMMENT '描述',
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 --  Table structure for `jsh_depothead`
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_depothead`;
 CREATE TABLE `jsh_depothead` (
-  `Id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `Type` varchar(50) DEFAULT NULL COMMENT '类型(出库/入库)',
-  `SubType` varchar(50) DEFAULT NULL COMMENT '出入库分类',
+  `Id` bigint(20) NOT NULL auto_increment,
+  `Type` varchar(50) default NULL COMMENT '类型(出库/入库)',
+  `SubType` varchar(50) default NULL COMMENT '出入库分类',
   `ProjectId` bigint(20) NOT NULL COMMENT '项目Id',
-  `Number` varchar(50) DEFAULT NULL COMMENT '票据号',
-  `OperPersonName` varchar(50) DEFAULT NULL COMMENT '操作员名字',
-  `CreateTime` datetime DEFAULT NULL COMMENT '创建时间',
-  `OperTime` datetime DEFAULT NULL COMMENT '出入库时间',
-  `OrganId` bigint(20) DEFAULT NULL COMMENT '供应商Id',
-  `HandsPersonId` bigint(20) DEFAULT NULL COMMENT '采购/领料-经手人Id',
-  `AccountId` bigint(20) DEFAULT NULL COMMENT '账户Id',
-  `ChangeAmount` double DEFAULT NULL COMMENT '变动金额(收款/付款)',
-  `AllocationProjectId` bigint(20) DEFAULT NULL COMMENT '调拨时，对方项目Id',
-  `TotalPrice` double DEFAULT NULL COMMENT '合计金额',
-  `Remark` varchar(1000) DEFAULT NULL COMMENT '备注',
-  PRIMARY KEY (`Id`),
+  `Number` varchar(50) default NULL COMMENT '票据号',
+  `OperPersonName` varchar(50) default NULL COMMENT '操作员名字',
+  `CreateTime` datetime default NULL COMMENT '创建时间',
+  `OperTime` datetime default NULL COMMENT '出入库时间',
+  `OrganId` bigint(20) default NULL COMMENT '供应商Id',
+  `HandsPersonId` bigint(20) default NULL COMMENT '采购/领料-经手人Id',
+  `AccountId` bigint(20) default NULL COMMENT '账户Id',
+  `ChangeAmount` double default NULL COMMENT '变动金额(收款/付款)',
+  `AllocationProjectId` bigint(20) default NULL COMMENT '调拨时，对方项目Id',
+  `TotalPrice` double default NULL COMMENT '合计金额',
+  `Remark` varchar(1000) default NULL COMMENT '备注',
+  PRIMARY KEY  (`Id`),
   KEY `FK2A80F214CA633ABA` (`AllocationProjectId`),
   KEY `FK2A80F214C4170B37` (`HandsPersonId`),
   KEY `FK2A80F214B610FC06` (`OrganId`),
@@ -196,202 +196,202 @@ CREATE TABLE `jsh_depothead` (
   CONSTRAINT `jsh_depothead_ibfk_3` FOREIGN KEY (`OrganId`) REFERENCES `jsh_supplier` (`id`),
   CONSTRAINT `jsh_depothead_ibfk_4` FOREIGN KEY (`HandsPersonId`) REFERENCES `jsh_person` (`Id`),
   CONSTRAINT `jsh_depothead_ibfk_5` FOREIGN KEY (`AllocationProjectId`) REFERENCES `jsh_depot` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=72 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 --  Table structure for `jsh_depotitem`
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_depotitem`;
 CREATE TABLE `jsh_depotitem` (
-  `Id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `Id` bigint(20) NOT NULL auto_increment,
   `HeaderId` bigint(20) NOT NULL COMMENT '表头Id',
   `MaterialId` bigint(20) NOT NULL COMMENT '材料Id',
-  `OperNumber` double DEFAULT NULL COMMENT '数量',
-  `UnitPrice` double DEFAULT NULL COMMENT '单价',
-  `AllPrice` double DEFAULT NULL COMMENT '金额',
-  `Remark` varchar(200) DEFAULT NULL COMMENT '描述',
-  `Img` varchar(50) DEFAULT NULL COMMENT '图片',
-  `Incidentals` double DEFAULT NULL COMMENT '运杂费',
-  PRIMARY KEY (`Id`),
+  `OperNumber` double default NULL COMMENT '数量',
+  `UnitPrice` double default NULL COMMENT '单价',
+  `AllPrice` double default NULL COMMENT '金额',
+  `Remark` varchar(200) default NULL COMMENT '描述',
+  `Img` varchar(50) default NULL COMMENT '图片',
+  `Incidentals` double default NULL COMMENT '运杂费',
+  PRIMARY KEY  (`Id`),
   KEY `FK2A819F475D61CCF7` (`MaterialId`),
   KEY `FK2A819F474BB6190E` (`HeaderId`),
   CONSTRAINT `jsh_depotitem_ibfk_1` FOREIGN KEY (`HeaderId`) REFERENCES `jsh_depothead` (`Id`) ON DELETE CASCADE,
   CONSTRAINT `jsh_depotitem_ibfk_2` FOREIGN KEY (`MaterialId`) REFERENCES `jsh_material` (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1063 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 --  Table structure for `jsh_functions`
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_functions`;
 CREATE TABLE `jsh_functions` (
-  `Id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `Number` varchar(50) DEFAULT NULL,
-  `Name` varchar(50) DEFAULT NULL,
-  `PNumber` varchar(50) DEFAULT NULL,
-  `URL` varchar(100) DEFAULT NULL,
-  `State` bit(1) DEFAULT NULL,
-  `Sort` varchar(50) DEFAULT NULL,
-  `Enabled` bit(1) DEFAULT NULL,
-  `Type` varchar(50) DEFAULT NULL,
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=210 DEFAULT CHARSET=utf8;
+  `Id` bigint(20) NOT NULL auto_increment,
+  `Number` varchar(50) default NULL,
+  `Name` varchar(50) default NULL,
+  `PNumber` varchar(50) default NULL,
+  `URL` varchar(100) default NULL,
+  `State` bit(1) default NULL,
+  `Sort` varchar(50) default NULL,
+  `Enabled` bit(1) default NULL,
+  `Type` varchar(50) default NULL,
+  PRIMARY KEY  (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 --  Table structure for `jsh_inoutitem`
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_inoutitem`;
 CREATE TABLE `jsh_inoutitem` (
-  `Id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `Name` varchar(50) DEFAULT NULL COMMENT '名称',
-  `Type` varchar(20) DEFAULT NULL COMMENT '类型',
-  `Remark` varchar(100) DEFAULT NULL COMMENT '备注',
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+  `Id` bigint(20) NOT NULL auto_increment,
+  `Name` varchar(50) default NULL COMMENT '名称',
+  `Type` varchar(20) default NULL COMMENT '类型',
+  `Remark` varchar(100) default NULL COMMENT '备注',
+  PRIMARY KEY  (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 --  Table structure for `jsh_log`
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_log`;
 CREATE TABLE `jsh_log` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL auto_increment,
   `userID` bigint(20) NOT NULL COMMENT '操作用户ID',
-  `operation` varchar(500) DEFAULT NULL COMMENT '操作模块名称',
-  `clientIP` varchar(50) DEFAULT NULL COMMENT '客户端IP',
-  `createtime` datetime DEFAULT NULL COMMENT '创建时间',
-  `status` tinyint(4) DEFAULT NULL COMMENT '操作状态 0==成功，1==失败',
-  `contentdetails` varchar(1000) DEFAULT NULL COMMENT '操作详情',
-  `remark` varchar(500) DEFAULT NULL COMMENT '备注信息',
-  PRIMARY KEY (`id`),
+  `operation` varchar(500) default NULL COMMENT '操作模块名称',
+  `clientIP` varchar(50) default NULL COMMENT '客户端IP',
+  `createtime` datetime default NULL COMMENT '创建时间',
+  `status` tinyint(4) default NULL COMMENT '操作状态 0==成功，1==失败',
+  `contentdetails` varchar(1000) default NULL COMMENT '操作详情',
+  `remark` varchar(500) default NULL COMMENT '备注信息',
+  PRIMARY KEY  (`id`),
   KEY `FKF2696AA13E226853` (`userID`),
   CONSTRAINT `FKF2696AA13E226853` FOREIGN KEY (`userID`) REFERENCES `jsh_user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2550 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 --  Table structure for `jsh_material`
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_material`;
 CREATE TABLE `jsh_material` (
-  `Id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `CategoryId` bigint(20) DEFAULT NULL,
-  `Name` varchar(50) DEFAULT NULL COMMENT '名称',
-  `Model` varchar(50) DEFAULT NULL COMMENT '型号',
-  `Color` varchar(50) DEFAULT NULL COMMENT '颜色',
-  `Unit` varchar(50) DEFAULT NULL COMMENT '单位',
-  `Remark` varchar(100) DEFAULT NULL COMMENT '备注',
-  `RetailPrice` double DEFAULT NULL COMMENT '零售价',
-  `LowPrice` double DEFAULT NULL COMMENT '最低售价',
-  `PresetPriceOne` double DEFAULT NULL COMMENT '预设售价一',
-  `PresetPriceTwo` double DEFAULT NULL COMMENT '预设售价二',
-  PRIMARY KEY (`Id`),
+  `Id` bigint(20) NOT NULL auto_increment,
+  `CategoryId` bigint(20) default NULL,
+  `Name` varchar(50) default NULL COMMENT '名称',
+  `Model` varchar(50) default NULL COMMENT '型号',
+  `Color` varchar(50) default NULL COMMENT '颜色',
+  `Unit` varchar(50) default NULL COMMENT '单位',
+  `Remark` varchar(100) default NULL COMMENT '备注',
+  `RetailPrice` double default NULL COMMENT '零售价',
+  `LowPrice` double default NULL COMMENT '最低售价',
+  `PresetPriceOne` double default NULL COMMENT '预设售价一',
+  `PresetPriceTwo` double default NULL COMMENT '预设售价二',
+  PRIMARY KEY  (`Id`),
   KEY `FK675951272AB6672C` (`CategoryId`),
   CONSTRAINT `FK675951272AB6672C` FOREIGN KEY (`CategoryId`) REFERENCES `jsh_materialcategory` (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=499 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 --  Table structure for `jsh_materialcategory`
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_materialcategory`;
 CREATE TABLE `jsh_materialcategory` (
-  `Id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `Name` varchar(50) DEFAULT NULL COMMENT '名称',
-  `CategoryLevel` smallint(6) DEFAULT NULL COMMENT '等级',
-  `ParentId` bigint(20) DEFAULT NULL,
-  PRIMARY KEY (`Id`),
+  `Id` bigint(20) NOT NULL auto_increment,
+  `Name` varchar(50) default NULL COMMENT '名称',
+  `CategoryLevel` smallint(6) default NULL COMMENT '等级',
+  `ParentId` bigint(20) default NULL,
+  PRIMARY KEY  (`Id`),
   KEY `FK3EE7F725237A77D8` (`ParentId`),
   CONSTRAINT `FK3EE7F725237A77D8` FOREIGN KEY (`ParentId`) REFERENCES `jsh_materialcategory` (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 --  Table structure for `jsh_person`
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_person`;
 CREATE TABLE `jsh_person` (
-  `Id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `Type` varchar(20) DEFAULT NULL COMMENT '类型',
-  `Name` varchar(50) DEFAULT NULL COMMENT '姓名',
+  `Id` bigint(20) NOT NULL auto_increment,
+  `Type` varchar(20) default NULL COMMENT '类型',
+  `Name` varchar(50) default NULL COMMENT '姓名',
   `ProjectId` bigint(20) NOT NULL,
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+  PRIMARY KEY  (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 --  Table structure for `jsh_role`
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_role`;
 CREATE TABLE `jsh_role` (
-  `Id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `Name` varchar(50) DEFAULT NULL,
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+  `Id` bigint(20) NOT NULL auto_increment,
+  `Name` varchar(50) default NULL,
+  PRIMARY KEY  (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 --  Table structure for `jsh_supplier`
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_supplier`;
 CREATE TABLE `jsh_supplier` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL auto_increment,
   `supplier` varchar(255) NOT NULL COMMENT '供应商名称',
-  `contacts` varchar(100) DEFAULT NULL COMMENT '联系人',
-  `phonenum` varchar(30) DEFAULT NULL COMMENT '联系电话',
-  `email` varchar(50) DEFAULT NULL COMMENT '电子邮箱',
-  `description` varchar(500) DEFAULT NULL,
-  `isystem` tinyint(4) DEFAULT NULL,
-  `type` varchar(20) DEFAULT NULL COMMENT '类型',
-  `enabled` bit(1) DEFAULT NULL COMMENT '启用',
-  `BeginNeedGet` double DEFAULT NULL COMMENT '期初应收',
-  `BeginNeedPay` double DEFAULT NULL COMMENT '期初应付',
-  `AllNeedGet` double DEFAULT NULL COMMENT '累计应收',
-  `AllNeedPay` double DEFAULT NULL COMMENT '累计应付',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+  `contacts` varchar(100) default NULL COMMENT '联系人',
+  `phonenum` varchar(30) default NULL COMMENT '联系电话',
+  `email` varchar(50) default NULL COMMENT '电子邮箱',
+  `description` varchar(500) default NULL,
+  `isystem` tinyint(4) default NULL,
+  `type` varchar(20) default NULL COMMENT '类型',
+  `enabled` bit(1) default NULL COMMENT '启用',
+  `BeginNeedGet` double default NULL COMMENT '期初应收',
+  `BeginNeedPay` double default NULL COMMENT '期初应付',
+  `AllNeedGet` double default NULL COMMENT '累计应收',
+  `AllNeedPay` double default NULL COMMENT '累计应付',
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 --  Table structure for `jsh_user`
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_user`;
 CREATE TABLE `jsh_user` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL auto_increment,
   `username` varchar(255) NOT NULL COMMENT '用户姓名--例如张三',
-  `loginame` varchar(255) DEFAULT NULL COMMENT '登录用户名--可能为空',
-  `password` varchar(50) DEFAULT NULL COMMENT '登陆密码',
-  `position` varchar(200) DEFAULT NULL COMMENT '职位',
-  `department` varchar(255) DEFAULT NULL COMMENT '所属部门',
-  `email` varchar(100) DEFAULT NULL COMMENT '电子邮箱',
-  `phonenum` varchar(100) DEFAULT NULL COMMENT '手机号码',
-  `ismanager` tinyint(4) NOT NULL DEFAULT '1' COMMENT '是否为管理者 0==管理者 1==员工',
-  `isystem` tinyint(4) NOT NULL DEFAULT '1' COMMENT '是否系统自带数据 ',
-  `status` tinyint(4) DEFAULT NULL COMMENT '用户状态',
-  `description` varchar(500) DEFAULT NULL COMMENT '用户描述信息',
-  `remark` varchar(500) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8;
+  `loginame` varchar(255) default NULL COMMENT '登录用户名--可能为空',
+  `password` varchar(50) default NULL COMMENT '登陆密码',
+  `position` varchar(200) default NULL COMMENT '职位',
+  `department` varchar(255) default NULL COMMENT '所属部门',
+  `email` varchar(100) default NULL COMMENT '电子邮箱',
+  `phonenum` varchar(100) default NULL COMMENT '手机号码',
+  `ismanager` tinyint(4) NOT NULL default '1' COMMENT '是否为管理者 0==管理者 1==员工',
+  `isystem` tinyint(4) NOT NULL default '1' COMMENT '是否系统自带数据 ',
+  `status` tinyint(4) default NULL COMMENT '用户状态',
+  `description` varchar(500) default NULL COMMENT '用户描述信息',
+  `remark` varchar(500) default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 --  Table structure for `jsh_userbusiness`
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_userbusiness`;
 CREATE TABLE `jsh_userbusiness` (
-  `Id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `Type` varchar(50) DEFAULT NULL,
-  `KeyId` varchar(50) DEFAULT NULL,
-  `Value` varchar(10000) DEFAULT NULL,
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
+  `Id` bigint(20) NOT NULL auto_increment,
+  `Type` varchar(50) default NULL,
+  `KeyId` varchar(50) default NULL,
+  `Value` varchar(10000) default NULL,
+  PRIMARY KEY  (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 --  Table structure for `jsh_visitaccount`
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_visitaccount`;
 CREATE TABLE `jsh_visitaccount` (
-  `Id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `Id` bigint(20) NOT NULL auto_increment,
   `ProjectId` bigint(20) NOT NULL,
-  `LouHao` varchar(50) DEFAULT NULL,
-  `HuHao` varchar(50) DEFAULT NULL,
-  `HuiFang` varchar(50) DEFAULT NULL,
-  `LuoShi` varchar(50) DEFAULT NULL,
-  `Name` varchar(50) DEFAULT NULL,
-  `Tel` varchar(50) DEFAULT NULL,
-  `AddTime` datetime DEFAULT NULL,
-  PRIMARY KEY (`Id`),
+  `LouHao` varchar(50) default NULL,
+  `HuHao` varchar(50) default NULL,
+  `HuiFang` varchar(50) default NULL,
+  `LuoShi` varchar(50) default NULL,
+  `Name` varchar(50) default NULL,
+  `Tel` varchar(50) default NULL,
+  `AddTime` datetime default NULL,
+  PRIMARY KEY  (`Id`),
   KEY `FKFF4AAE822888F9A` (`ProjectId`),
   CONSTRAINT `FKFF4AAE822888F9A` FOREIGN KEY (`ProjectId`) REFERENCES `jsh_depot` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -399,16 +399,16 @@ CREATE TABLE `jsh_visitaccount` (
 -- ----------------------------
 --  Records 
 -- ----------------------------
-INSERT INTO `jsh_account` VALUES ('4','南通建行','3241423','200','0','66666'), ('9','流动总账','132123','2000','0','222');
-INSERT INTO `jsh_accounthead` VALUES ('3','收入','1','3','333',NULL,'9','33No','2016-12-10 00:00:00','444aa'), ('9','收入','1','3','213',NULL,'4','3134','2016-12-10 00:00:00','12341'), ('12','收入','1','3','123',NULL,'4','NO123','2016-12-10 00:00:00','666666'), ('14','支出','1','3','-55',NULL,'9','aa','2016-12-11 00:00:00','123'), ('15','收款','1','3','123',NULL,'9','34124','2016-12-11 00:00:00','123'), ('16','付款','1','3','1234',NULL,'4','234234','2016-12-11 00:00:00','2342'), ('17','转账','1','3','23',NULL,'4','234','2016-12-11 00:00:00','234'), ('18','收款','1','3','11',NULL,'4','123123','2016-12-18 00:00:00','123'), ('19','收入','1','3','333',NULL,'9','1234','2017-01-14 00:00:00','132'), ('21','支出','4','3','-132',NULL,'9','eqw','2017-01-14 00:00:00','12341'), ('22','收款','1','3','12',NULL,NULL,'234','2017-01-14 00:00:00','21'), ('23','付款','1','3','234',NULL,NULL,'3123','2017-01-14 00:00:00','234'), ('24','转账',NULL,'4','12',NULL,'9','sssaaa','2017-01-14 00:00:00','aaaa2323'), ('25','收入','1','4','12',NULL,'9','3214','2017-01-15 00:00:00','1234123'), ('26','收入','1','4','33',NULL,'9','1234we','2017-01-15 00:00:00','sss'), ('27','收入','1','4','11',NULL,'4','a1','2017-01-15 00:00:00','22'), ('28','支出','2','4','-333',NULL,'9','a2','2017-01-15 00:00:00','33334344'), ('29','收款','1','3','11',NULL,NULL,'123','2017-01-15 00:00:00','666666'), ('30','付款','2','4','22',NULL,NULL,'341aaa','2017-01-15 00:00:00','qwqw'), ('31','转账',NULL,'3','66',NULL,'9','aass','2017-01-15 00:00:00','a611'), ('32','支出','2','4','-77',NULL,'9','hhhh','2017-01-15 00:00:00','tt'), ('33','收入','1','4','44',NULL,'9','s1qw','2017-01-15 00:00:00','wrerw123'), ('34','收入','1','3','33',NULL,'9','123','2017-01-21 00:00:00','dddd'), ('35','收入','1','3','1223','1224','9','aabb','2017-01-21 00:00:00','55fddd'), ('36','支出','2','4','-52','-55','9','bianhao1','2017-01-21 00:00:00','bzbz'), ('37','收款','1','4','4','22',NULL,'fff','2017-01-21 00:00:00','adas'), ('38','付款','2','3','3','-44',NULL,'234eq','2017-01-21 00:00:00','52345we'), ('39','转账',NULL,'4','44','44','9','aasss','2017-01-21 00:00:00','555ddd'), ('40','收款','6','4','33','100',NULL,'aaxx11','2017-04-09 00:00:00','');
-INSERT INTO `jsh_accountitem` VALUES ('3','9',NULL,'5',NULL,'123414'), ('6','12',NULL,'8','12','啊啊啊'), ('8','3',NULL,'9','11',''), ('9','3',NULL,'8','22',''), ('10','14',NULL,'10','123','123'), ('11','15','4','7','12341','124'), ('12','16',NULL,'1','3423','2342'), ('13','17',NULL,'10','12','1'), ('14','18','9',NULL,'11','123'), ('15','18','4',NULL,'22','aaa'), ('16','19',NULL,'5','12','2222'), ('18','21',NULL,'10','22','23'), ('19','22','4',NULL,'22','2'), ('20','23','9',NULL,'12','23aaa'), ('21','24','4',NULL,'12','aabb'), ('22','25',NULL,'5','11','aaaa'), ('23','26',NULL,'7','11','aaa'), ('24','26',NULL,'5','22','bbb'), ('25','27',NULL,'7','22','333333'), ('26','28',NULL,'11','33','4444'), ('27','29','9',NULL,'22','555'), ('28','30','9',NULL,'22','fffff'), ('29','31','9',NULL,'66','adfasdf'), ('30','32',NULL,'10','55','fsdasdf'), ('31','33',NULL,'7','44',''), ('32','34',NULL,'7','33','bzbz'), ('33','35',NULL,'5','1212','fzfz'), ('34','35',NULL,'7','12','lxlx'), ('35','36',NULL,'11','22','yyyy1'), ('36','36',NULL,'10','33','gggg2'), ('37','37','9',NULL,'22',''), ('38','38','4',NULL,'44','sadfa'), ('39','39','4',NULL,'44','2342qqqq'), ('40','40','9',NULL,'100','');
+INSERT INTO `jsh_account` VALUES ('4','南通建行','652346523465234623','1200','215','建行账户'), ('9','流动总账','65234624523452364','2000','393','现在账户');
+INSERT INTO `jsh_accounthead` VALUES ('3','收入','1','3','333',NULL,'9','33No','2016-12-10 00:00:00','444aa'), ('9','收入','1','3','213',NULL,'4','3134','2016-12-10 00:00:00','12341'), ('12','收入','1','3','123',NULL,'4','NO123','2016-12-10 00:00:00','666666'), ('14','支出','1','3','-55',NULL,'9','aa','2016-12-11 00:00:00','123'), ('15','收款','1','3','123',NULL,'9','34124','2016-12-11 00:00:00','123'), ('16','付款','1','3','1234',NULL,'4','234234','2016-12-11 00:00:00','2342'), ('18','收款','1','3','11',NULL,'4','123123','2016-12-18 00:00:00','123'), ('19','收入','1','3','333',NULL,'9','1234','2017-01-14 00:00:00','132'), ('21','支出','4','3','-132',NULL,'9','eqw','2017-01-14 00:00:00','12341'), ('22','收款','1','3','12',NULL,NULL,'234','2017-01-14 00:00:00','21'), ('23','付款','1','3','234',NULL,NULL,'3123','2017-01-14 00:00:00','234'), ('25','收入','1','4','12',NULL,'9','3214','2017-01-15 00:00:00','1234123'), ('26','收入','1','4','33',NULL,'9','1234we','2017-01-15 00:00:00','sss'), ('27','收入','1','4','11',NULL,'4','a1','2017-01-15 00:00:00','22'), ('28','支出','2','4','-333',NULL,'9','a2','2017-01-15 00:00:00','33334344'), ('29','收款','1','3','11',NULL,NULL,'123','2017-01-15 00:00:00','666666'), ('30','付款','2','4','22',NULL,NULL,'341aaa','2017-01-15 00:00:00','qwqw'), ('32','支出','2','4','-77',NULL,'9','hhhh','2017-01-15 00:00:00','tt'), ('33','收入','1','4','44',NULL,'9','s1qw','2017-01-15 00:00:00','wrerw123'), ('34','收入','1','3','33',NULL,'9','123','2017-01-21 00:00:00','dddd'), ('35','收入','1','3','1223','1224','9','aabb','2017-01-21 00:00:00','55fddd'), ('36','支出','2','4','-52','-55','9','bianhao1','2017-01-21 00:00:00','bzbz'), ('37','收款','1','4','4','22',NULL,'fff','2017-01-21 00:00:00','adas'), ('38','付款','2','3','3','-44',NULL,'234eq','2017-01-21 00:00:00','52345we'), ('39','转账',NULL,'4','44','44','9','aasss','2017-01-21 00:00:00','555ddd'), ('40','收款','6','4','33','100',NULL,'aaxx11','2017-04-09 00:00:00',''), ('41','转账',NULL,'4','1','1','9','aa','2017-06-03 00:00:00','');
+INSERT INTO `jsh_accountitem` VALUES ('3','9',NULL,'5',NULL,'123414'), ('6','12',NULL,'8','12','啊啊啊'), ('8','3',NULL,'9','11',''), ('9','3',NULL,'8','22',''), ('10','14',NULL,'10','123','123'), ('11','15','4','7','12341','124'), ('12','16',NULL,'1','3423','2342'), ('14','18','9',NULL,'11','123'), ('15','18','4',NULL,'22','aaa'), ('16','19',NULL,'5','12','2222'), ('18','21',NULL,'10','22','23'), ('19','22','4',NULL,'22','2'), ('20','23','9',NULL,'12','23aaa'), ('22','25',NULL,'5','11','aaaa'), ('23','26',NULL,'7','11','aaa'), ('24','26',NULL,'5','22','bbb'), ('25','27',NULL,'7','22','333333'), ('26','28',NULL,'11','33','4444'), ('27','29','9',NULL,'22','555'), ('28','30','9',NULL,'22','fffff'), ('30','32',NULL,'10','55','fsdasdf'), ('31','33',NULL,'7','44',''), ('32','34',NULL,'7','33','bzbz'), ('33','35',NULL,'5','1212','fzfz'), ('34','35',NULL,'7','12','lxlx'), ('35','36',NULL,'11','22','yyyy1'), ('36','36',NULL,'10','33','gggg2'), ('37','37','9',NULL,'22',''), ('38','38','4',NULL,'44','sadfa'), ('39','39','4',NULL,'44','2342qqqq'), ('40','40','9',NULL,'100',''), ('41','41','4',NULL,'1','');
 INSERT INTO `jsh_app` VALUES ('1','','企业邮箱','app','0000000001.png','../EmailManage/Email','600','400','\0','\0','\0','desk','010','','\0'), ('3','00','系统管理','app','0000000004.png','','1024','600','','\0','\0','desk','198','',''), ('6','','个人信息','app','0000000005.png','../user/password.jsp','600','400','\0','\0','\0','dock','200','',''), ('7','01','基础数据','app','0000000006.png','','1024','600','','\0','\0','desk','120','',''), ('8','02','进销存','app','0000000007.png','','1024','600','','\0','\0','desk','030','',''), ('20','13','公告管理','app','0000000020.png',NULL,'1024','600','','\0','\0','desk','125',NULL,'\0'), ('21','','今日留言','app','0000000021.png','../phone/msg','1024','600','','\0','\0','dock','000','','\0'), ('22','03','报表查询','app','0000000022.png','','1024','600','','\0','\0','desk','115','','');
 INSERT INTO `jsh_asset` VALUES ('1','27','weizhi','','0',NULL,'11','2016-10-22 00:00:00','2016-10-21 00:00:00','2016-11-03 00:00:00','1231241','123124123','2','','2016-10','2016-10-22 20:04:48','63','2016-10-22 20:04:48','63');
 INSERT INTO `jsh_assetcategory` VALUES ('14','递延资产','1','递延资产'), ('15','无形资产','1','无形资产'), ('16','长期投资','1','长期投资'), ('17','固定资产','1','固定资产'), ('18','流动资产','1','流动资产');
 INSERT INTO `jsh_assetname` VALUES ('1','联想Y450','17','1','','1'), ('2','惠普打印机','15','1','','0'), ('12','乐萌水杯','16','1','','1'), ('13','机顶盒','17','1','机顶盒','0'), ('14','TCL电视','17','1','','1'), ('15','手机','17','1','','1'), ('16','硬盘','16','1','','0'), ('17','毛笔','17','1','','0'), ('18','杯子','17','1','','0'), ('19','建造师证书','15','1','','0'), ('20','算量软件','14','1','','1'), ('21','cad软件','15','1','','0'), ('22','办公桌','17','1','','0'), ('23','笔记本','17','1','笔记本','1'), ('24','打印机','17','1','打印机','0'), ('25','电脑','17','1','电脑','0'), ('26','电动车','16','1','电动车','0'), ('27','电源线','17','1','电源线','0');
-INSERT INTO `jsh_depot` VALUES ('1','上海花边店','2',''), ('2','公司总部','1','总部'), ('3','苏州花边店','3','');
-INSERT INTO `jsh_depothead` VALUES ('31','出库','销售','1','123A','季圣华','2016-11-08 22:16:11','2016-11-08 00:00:00','2','1','4','33',NULL,'61','444aaaa'), ('32','入库','采购','1','ww123','季圣华','2016-11-25 22:14:46','2016-11-25 00:00:00','1','2','4','-1',NULL,'-0.9',''), ('33','入库','其它','1','234234','季圣华','2016-12-11 18:15:39','2016-12-11 00:00:00','1','2',NULL,NULL,NULL,NULL,'12312'), ('38','入库','采购','3','123132','季圣华','2016-12-24 23:14:22','2016-12-24 00:00:00','1','1','9','-44',NULL,'-24','312'), ('39','入库','采购','3','222','季圣华','2016-12-24 23:43:50','2016-12-24 00:00:00','4','2','9','-44',NULL,'-85.8','3333'), ('41','入库','采购','1','555','季圣华','2017-01-02 15:53:30','2017-01-02 00:00:00','1','2','9','-66',NULL,'-22',''), ('46','入库','采购','1','555','季圣华','2017-01-02 21:11:45','2017-01-02 00:00:00','1','2','9','-44',NULL,'-26.4',''), ('47','入库','采购','1','66','季圣华','2017-01-02 21:13:01','2017-01-02 00:00:00','1','2','9','-66',NULL,'-66',''), ('48','入库','采购','1','344','季圣华','2017-01-02 21:27:19','2017-01-02 00:00:00','1','1','4','-22',NULL,'-176','3444'), ('49','入库','采购','1','333','季圣华','2017-01-02 21:33:19','2017-01-02 00:00:00','1','2','9','-66',NULL,'-66','333'), ('50','入库','采购','1','4444','季圣华','2017-01-02 21:58:30','2017-01-02 00:00:00','1','1','9','-55',NULL,'-44',''), ('51','入库','采购','1','aaa','季圣华','2017-01-07 18:25:33','2017-01-07 00:00:00','1','1','9','-55',NULL,'-55','bbb'), ('52','出库','销售','1','aaa','季圣华','2017-01-08 10:49:21','2017-01-08 00:00:00','2','2','9','266',NULL,'266','yayaya'), ('53','入库','销售退货','1','dddd','季圣华','2017-01-08 10:50:58','2017-01-08 00:00:00','2','2','9','-2',NULL,'-2',''), ('54','入库','其它','1','abcde22','季圣华','2017-01-08 10:56:45','2017-01-08 00:00:00','4','2',NULL,NULL,NULL,'444','aaaaa33'), ('56','入库','其它','1','AAF','季圣华','2017-01-08 11:50:13','2017-01-08 00:00:00','1','1',NULL,NULL,NULL,'64','234234aa'), ('57','出库','其它','1','666aaa','季圣华','2017-01-08 11:53:00','2017-01-08 00:00:00','2','1',NULL,NULL,NULL,'66','777bbb'), ('58','出库','采购退货','1','34234ww','季圣华','2017-01-08 11:53:58','2017-01-08 00:00:00','1','2','9','44',NULL,'44','3w3w'), ('59','入库','采购','1','22','季圣华','2017-01-08 11:55:00','2017-01-08 00:00:00','1','1','9','-1324',NULL,'-1324','33'), ('60','入库','销售退货','1','we','季圣华','2017-01-08 11:55:53','2017-01-08 00:00:00','5','1','9','-122',NULL,'-122','wewe'), ('61','出库','其它','1','rrrr','季圣华','2017-01-08 11:58:58','2017-01-08 00:00:00','2','1',NULL,NULL,NULL,'66','bbbb'), ('63','出库','调拨','1','aaaa','季圣华','2017-01-08 12:22:19','2017-01-08 00:00:00',NULL,'1',NULL,NULL,'3','42','bbbb'), ('64','出库','调拨','1','42342qqq','季圣华','2017-01-08 12:33:19','2017-01-08 00:00:00',NULL,'2',NULL,NULL,'3','255','wqer'), ('65','出库','调拨','3','42aa','季圣华','2017-01-08 12:33:46','2017-01-08 00:00:00',NULL,'2',NULL,NULL,'1','121','2323bbbbb'), ('67','入库','采购','1','abcdefg','季圣华','2017-01-08 16:46:53','2017-01-08 00:00:00','4','1','9','-120',NULL,'-120','aaawww'), ('68','出库','销售','1','asdfasdf','季圣华','2017-01-08 18:58:35','2017-01-08 00:00:00','2','1','9','44',NULL,'44','asdfasdf'), ('69','入库','采购','1','x123','季圣华','2017-01-21 10:53:57','2017-01-21 00:00:00','1','1','9','-55',NULL,'-55','aaaa1234'), ('70','出库','销售','3','aaa','季圣华','2017-04-08 13:31:17','2017-04-08 00:00:00','5','2','9','100',NULL,'633',''), ('71','出库','销售','1','aaa123','季圣华','2017-04-09 16:19:22','2017-04-09 00:00:00','6','1','9','20',NULL,'333','');
-INSERT INTO `jsh_depotitem` VALUES ('1017','31','485','100','0.61','61','','',NULL), ('1018','32','498','1','0.9','0.9','','',NULL), ('1019','33','487','1','2',NULL,'','',NULL), ('1025','38','485','12','2','24','',NULL,NULL), ('1026','39','498','22','2.1','46.2','',NULL,NULL), ('1027','39','487','33','1.2','39.6','',NULL,NULL), ('1029','41','487','11','2','22','',NULL,NULL), ('1032','46','498','22','1.2','26.4','',NULL,NULL), ('1033','47','487','66','1','66','',NULL,NULL), ('1034','48','485','44','4','176','',NULL,NULL), ('1035','49','498','33','2','66','',NULL,NULL), ('1036','50','485','44','1','44','',NULL,NULL), ('1037','51','487','11','3','33','',NULL,NULL), ('1038','51','498','22','1','22','',NULL,NULL), ('1039','52','487','2','2','4','',NULL,NULL), ('1040','53','487','1','2','2','',NULL,NULL), ('1041','54','485','222','2','444','',NULL,NULL), ('1042','56','498','33','1.94','64','',NULL,NULL), ('1043','57','498','22','3','66','',NULL,NULL), ('1044','58','498','44','1','44','',NULL,NULL), ('1045','59','498','2244','0.59','1324','',NULL,NULL), ('1046','60','485','61','2','122','aaaaaa',NULL,NULL), ('1047','52','487','31','2','62','',NULL,NULL), ('1048','61','498','33','2','66','',NULL,NULL), ('1050','63','498','21','2','42','',NULL,NULL), ('1051','64','498','233','1','233','',NULL,NULL), ('1052','65','498','33','1','33','',NULL,NULL), ('1053','65','485','44','2','88','',NULL,NULL), ('1054','64','485','22','1','22','',NULL,NULL), ('1056','67','487','60','2','120','',NULL,NULL), ('1057','52','485','100','2','200','',NULL,NULL), ('1058','68','498','22','2','44','',NULL,NULL), ('1059','69','487','22','2','44','',NULL,NULL), ('1060','69','498','11','1','11','',NULL,NULL), ('1061','70','487','211','3','633','',NULL,NULL), ('1062','71','498','333','1','333','',NULL,NULL);
+INSERT INTO `jsh_depot` VALUES ('1','上海花边店','2','上海'), ('2','公司总部','1','总部'), ('3','苏州花边店','3','苏州');
+INSERT INTO `jsh_depothead` VALUES ('31','出库','销售','1','123A','季圣华','2016-11-08 22:16:11','2016-11-08 00:00:00','2','1','4','33',NULL,'61','444aaaa'), ('32','入库','采购','1','ww123','季圣华','2016-11-25 22:14:46','2016-11-25 00:00:00','1','2','4','-1',NULL,'-0.9',''), ('33','入库','其它','1','234234','季圣华','2016-12-11 18:15:39','2016-12-11 00:00:00','1','2',NULL,NULL,NULL,NULL,'12312'), ('38','入库','采购','3','123132','季圣华','2016-12-24 23:14:22','2016-12-24 00:00:00','1','1','9','-44',NULL,'-24','312'), ('39','入库','采购','3','222','季圣华','2016-12-24 23:43:50','2016-12-24 00:00:00','4','2','9','-44',NULL,'-85.8','3333'), ('41','入库','采购','1','555','季圣华','2017-01-02 15:53:30','2017-01-02 00:00:00','1','2','9','-66',NULL,'-22',''), ('46','入库','采购','1','555','季圣华','2017-01-02 21:11:45','2017-01-02 00:00:00','1','2','9','-44',NULL,'-26.4',''), ('47','入库','采购','1','66','季圣华','2017-01-02 21:13:01','2017-01-02 00:00:00','1','2','9','-66',NULL,'-66',''), ('48','入库','采购','1','344','季圣华','2017-01-02 21:27:19','2017-01-02 00:00:00','1','1','4','-22',NULL,'-176','3444'), ('49','入库','采购','1','333','季圣华','2017-01-02 21:33:19','2017-01-02 00:00:00','1','2','9','-66',NULL,'-66','333'), ('50','入库','采购','1','4444','季圣华','2017-01-02 21:58:30','2017-01-02 00:00:00','1','1','9','-55',NULL,'-44',''), ('51','入库','采购','1','aaa','季圣华','2017-01-07 18:25:33','2017-01-07 00:00:00','1','1','9','-55',NULL,'-55','bbb'), ('52','出库','销售','1','aaa','季圣华','2017-01-08 10:49:21','2017-01-08 00:00:00','2','2','9','266',NULL,'266','yayaya'), ('53','入库','销售退货','1','dddd','季圣华','2017-01-08 10:50:58','2017-01-08 00:00:00','2','2','9','-2',NULL,'-2',''), ('54','入库','其它','1','abcde22','季圣华','2017-01-08 10:56:45','2017-01-08 00:00:00','4','2',NULL,NULL,NULL,'444','aaaaa33'), ('56','入库','其它','1','AAF','季圣华','2017-01-08 11:50:13','2017-01-08 00:00:00','1','1',NULL,NULL,NULL,'64','234234aa'), ('57','出库','其它','1','666aaa','季圣华','2017-01-08 11:53:00','2017-01-08 00:00:00','2','1',NULL,NULL,NULL,'66','777bbb'), ('58','出库','采购退货','1','34234ww','季圣华','2017-01-08 11:53:58','2017-01-08 00:00:00','1','2','9','44',NULL,'44','3w3w'), ('59','入库','采购','1','22','季圣华','2017-01-08 11:55:00','2017-01-08 00:00:00','1','1','9','-1324',NULL,'-1324','33'), ('60','入库','销售退货','1','we','季圣华','2017-01-08 11:55:53','2017-01-08 00:00:00','5','1','9','-122',NULL,'-122','wewe'), ('61','出库','其它','1','rrrr','季圣华','2017-01-08 11:58:58','2017-01-08 00:00:00','2','1',NULL,NULL,NULL,'66','bbbb'), ('63','出库','调拨','1','aaaa','季圣华','2017-01-08 12:22:19','2017-01-08 00:00:00',NULL,'1',NULL,NULL,'3','42','bbbb'), ('64','出库','调拨','1','42342qqq','季圣华','2017-01-08 12:33:19','2017-01-08 00:00:00',NULL,'2',NULL,NULL,'3','255','wqer'), ('65','出库','调拨','3','42aa','季圣华','2017-01-08 12:33:46','2017-01-08 00:00:00',NULL,'2',NULL,NULL,'1','121','2323bbbbb'), ('67','入库','采购','1','abcdefg','季圣华','2017-01-08 16:46:53','2017-01-08 00:00:00','4','1','9','-120',NULL,'-120','aaawww'), ('68','出库','销售','1','asdfasdf','季圣华','2017-01-08 18:58:35','2017-01-08 00:00:00','2','1','9','44',NULL,'44','asdfasdf'), ('69','入库','采购','1','x123','季圣华','2017-01-21 10:53:57','2017-01-21 00:00:00','1','1','9','-55',NULL,'-55','aaaa1234'), ('70','出库','销售','3','aaa','季圣华','2017-04-08 13:31:17','2017-04-08 00:00:00','5','2','9','100',NULL,'633',''), ('71','出库','销售','1','aaa123','季圣华','2017-04-09 16:19:22','2017-04-09 00:00:00','6','1','9','20',NULL,'333',''), ('72','入库','采购','1','22aa','季圣华','2017-06-03 22:25:59','2017-06-03 00:00:00','1','2','9','-18',NULL,'-18',''), ('73','出库','销售','1','afds123','季圣华','2017-06-03 22:29:35','2017-06-03 00:00:00','5','2','4','10',NULL,'10',''), ('74','入库','销售退货','1','dsfs','季圣华','2017-06-03 22:47:31','2017-06-03 00:00:00','5','2','4','-5',NULL,'-5',''), ('76','入库','采购','1','asdf','季圣华','2017-06-03 23:00:53','2017-06-03 00:00:00','1','2','4','0',NULL,'-20','');
+INSERT INTO `jsh_depotitem` VALUES ('1017','31','485','100','0.61','61','','',NULL), ('1018','32','498','1','0.9','0.9','','',NULL), ('1019','33','487','1','2',NULL,'','',NULL), ('1025','38','485','12','2','24','',NULL,NULL), ('1026','39','498','22','2.1','46.2','',NULL,NULL), ('1027','39','487','33','1.2','39.6','',NULL,NULL), ('1029','41','487','11','2','22','',NULL,NULL), ('1032','46','498','22','1.2','26.4','',NULL,NULL), ('1033','47','487','66','1','66','',NULL,NULL), ('1034','48','485','44','4','176','',NULL,NULL), ('1035','49','498','33','2','66','',NULL,NULL), ('1036','50','485','44','1','44','',NULL,NULL), ('1037','51','487','11','3','33','',NULL,NULL), ('1038','51','498','22','1','22','',NULL,NULL), ('1039','52','487','2','2','4','',NULL,NULL), ('1040','53','487','1','2','2','',NULL,NULL), ('1041','54','485','222','2','444','',NULL,NULL), ('1042','56','498','33','1.94','64','',NULL,NULL), ('1043','57','498','22','3','66','',NULL,NULL), ('1044','58','498','44','1','44','',NULL,NULL), ('1045','59','498','2244','0.59','1324','',NULL,NULL), ('1046','60','485','61','2','122','aaaaaa',NULL,NULL), ('1047','52','487','31','2','62','',NULL,NULL), ('1048','61','498','33','2','66','',NULL,NULL), ('1050','63','498','21','2','42','',NULL,NULL), ('1051','64','498','233','1','233','',NULL,NULL), ('1052','65','498','33','1','33','',NULL,NULL), ('1053','65','485','44','2','88','',NULL,NULL), ('1054','64','485','22','1','22','',NULL,NULL), ('1056','67','487','60','2','120','',NULL,NULL), ('1057','52','485','100','2','200','',NULL,NULL), ('1058','68','498','22','2','44','',NULL,NULL), ('1059','69','487','22','2','44','',NULL,NULL), ('1060','69','498','11','1','11','',NULL,NULL), ('1061','70','487','211','3','633','',NULL,NULL), ('1062','71','498','333','1','333','',NULL,NULL), ('1063','72','499','20','0.9','18','',NULL,NULL), ('1064','73','499','10','1','10','',NULL,NULL), ('1065','74','499','5','1','5','',NULL,NULL), ('1067','76','499','20','1','20','',NULL,NULL);
 INSERT INTO `jsh_functions` VALUES ('1','00','系统管理','0','','','0010','','电脑版'), ('2','01','基础数据','0','','','0020','','电脑版'), ('3','02','进销存','0','','','0030','','电脑版'), ('11','0001','系统管理','00','','\0','0110','','电脑版'), ('12','000101','应用管理','0001','../manage/app.jsp','\0','0132','','电脑版'), ('13','000102','角色管理','0001','../manage/role.jsp','\0','0130','','电脑版'), ('14','000103','用户管理','0001','../manage/user.jsp','\0','0140','','电脑版'), ('15','000104','日志管理','0001','../manage/log.jsp','\0','0160','','电脑版'), ('16','000105','功能管理','0001','../manage/functions.jsp','\0','0135','','电脑版'), ('21','0101','商品管理','01','','\0','0220','','电脑版'), ('22','010101','商品类别管理','0101','../materials/materialcategory.jsp','\0','0230','','电脑版'), ('23','010102','商品信息管理','0101','../materials/material.jsp','\0','0240','','电脑版'), ('24','0102','基本资料','01','','\0','0250','','电脑版'), ('25','010201','单位信息','0102','../manage/vendor.jsp','\0','0260','','电脑版'), ('26','010202','仓库管理','0102','../manage/depot.jsp','\0','0270','','电脑版'), ('31','010206','经手人管理','0102','../materials/person.jsp','\0','0284','','电脑版'), ('32','0202','入库管理','02','','\0','0330','','电脑版'), ('33','020201','采购入库','0202','../materials/purchase_in_list.jsp','\0','0340','','电脑版'), ('38','0203','出库管理','02','','\0','0390','','电脑版'), ('40','020302','调拨出库','0203','../materials/allocation_out_list.jsp','\0','0420','','电脑版'), ('41','020303','销售出库','0203','../materials/sale_out_list.jsp','\0','0410','','电脑版'), ('44','0204','财务管理','02','','\0','0450','','电脑版'), ('59','030101','库存状况','0301','../reports/in_out_stock_report.jsp','\0','0600','','电脑版'), ('194','010204','收支项目','0102','../manage/inOutItem.jsp','\0','0282','','电脑版'), ('195','010205','结算账户','0102','../manage/account.jsp','\0','0283','','电脑版'), ('196','03','报表查询','0','','','0040','','电脑版'), ('197','020402','收入单','0204','../financial/item_in.jsp','\0','0465','','电脑版'), ('198','0301','报表查询','03','','\0','0570','','电脑版'), ('199','020304','采购退货','0203','../materials/purchase_back_list.jsp','\0','0415','','电脑版'), ('200','020202','销售退货','0202','../materials/sale_back_list.jsp','\0','0350','','电脑版'), ('201','020203','其它入库','0202','../materials/other_in_list.jsp','\0','0360','','电脑版'), ('202','020305','其它出库','0203','../materials/other_out_list.jsp','\0','0418','','电脑版'), ('203','020403','支出单','0204','../financial/item_out.jsp','\0','0470','','电脑版'), ('204','020404','收款单','0204','../financial/money_in.jsp','\0','0475','','电脑版'), ('205','020405','付款单','0204','../financial/money_out.jsp','\0','0480','','电脑版'), ('206','020406','转账单','0204','../financial/giro.jsp','\0','0490','','电脑版'), ('207','030102','结算账户','0301','../reports/account_report.jsp','\0','0610','','电脑版'), ('208','030103','进货统计','0301','../reports/buy_in_report.jsp','\0','0620','','电脑版'), ('209','030104','销售统计','0301','../reports/sale_out_report.jsp','\0','0630','','电脑版');
 INSERT INTO `jsh_inoutitem` VALUES ('1','办公耗材','支出','办公耗材'), ('5','房租收入','收入','房租收入'), ('7','利息收入','收入','利息收入'), ('8','水电费','支出','水电费水电费'), ('9','快递费','支出','快递费'), ('10','交通报销费','支出','交通报销费'), ('11','差旅费','支出','差旅费');
 INSERT INTO `jsh_log` VALUES ('1722','63','登录系统','192.168.1.104','2016-11-27 13:17:17','0','管理用户：jsh 登录系统','jsh 登录系统'), ('1723','63','登录系统','192.168.1.104','2016-11-27 13:17:30','0','管理用户：jsh 登录系统','jsh 登录系统'), ('1724','63','退出系统','192.168.1.104','2016-11-27 13:17:48','0','管理用户：jsh 退出系统','jsh 退出系统'), ('1725','65','登录系统','192.168.1.104','2016-11-27 13:17:52','0','管理用户：ls 登录系统','ls 登录系统'), ('1726','65','退出系统','192.168.1.104','2016-11-27 13:18:18','0','管理用户：ls 退出系统','ls 退出系统'), ('1727','63','登录系统','192.168.1.104','2016-11-27 13:18:22','0','管理用户：jsh 登录系统','jsh 登录系统'), ('1728','63','更新UserBusiness','192.168.1.104','2016-11-27 13:18:44','0','更新UserBusiness的ID为  6 成功！','更新UserBusiness成功'), ('1729','63','退出系统','192.168.1.104','2016-11-27 13:18:48','0','管理用户：jsh 退出系统','jsh 退出系统'), ('1730','65','登录系统','192.168.1.104','2016-11-27 13:18:53','0','管理用户：ls 登录系统','ls 登录系统'), ('1731','63','登录系统','192.168.1.104','2016-12-04 10:38:50','0','管理用户：jsh 登录系统','jsh 登录系统'), ('1732','63','增加物料','192.168.1.104','2016-12-04 10:40:52','0','增加物料名称为  11 成功！','增加物料成功'), ('1733','63','更新物料','192.168.1.104','2016-12-04 10:59:57','0','更新物料ID为  499 成功！','更新物料成功'), ('1734','63','更新物料','192.168.1.104','2016-12-04 11:00:13','0','更新物料ID为  499 成功！','更新物料成功'), ('1735','63','删除物料','192.168.1.104','2016-12-04 11:00:38','0','删除物料ID为  499 成功！','删除物料成功'), ('1736','63','增加物料','192.168.1.104','2016-12-04 11:02:35','0','增加物料名称为  11 成功！','增加物料成功'), ('1737','63','批量删除物料','192.168.1.104','2016-12-04 11:02:41','0','批量删除物料ID为  500 成功！','批量删除物料成功'), ('1738','63','更新功能','192.168.1.104','2016-12-04 11:04:43','0','更新功能ID为  26 成功！','更新功能成功'), ('1739','63','增加供应商','192.168.1.104','2016-12-04 11:38:13','0','增加供应商名称为  aa 成功！','增加供应商成功'), ('1740','63','增加供应商','192.168.1.104','2016-12-04 11:48:36','0','增加供应商名称为  aaaa 成功！','增加供应商成功'), ('1741','63','删除供应商','192.168.1.104','2016-12-04 11:48:53','0','删除供应商ID为  3,名称为  aa成功！','删除供应商成功'), ('1742','63','更新供应商','192.168.1.104','2016-12-04 11:48:59','0','更新供应商ID为  4 成功！','更新供应商成功'), ('1743','63','更新功能','192.168.1.104','2016-12-04 13:06:24','0','更新功能ID为  31 成功！','更新功能成功'), ('1744','63','删除功能','192.168.1.104','2016-12-04 13:06:47','0','删除功能ID为  30 成功！','删除功能成功'), ('1745','63','更新功能','192.168.1.104','2016-12-04 13:08:35','0','更新功能ID为  24 成功！','更新功能成功'), ('1746','63','更新功能','192.168.1.104','2016-12-04 13:09:52','0','更新功能ID为  24 成功！','更新功能成功'), ('1747','63','更新功能','192.168.1.104','2016-12-04 13:11:00','0','更新功能ID为  21 成功！','更新功能成功'), ('1748','63','更新功能','192.168.1.104','2016-12-04 13:11:08','0','更新功能ID为  22 成功！','更新功能成功'), ('1749','63','更新功能','192.168.1.104','2016-12-04 13:11:16','0','更新功能ID为  23 成功！','更新功能成功'), ('1750','63','更新功能','192.168.1.104','2016-12-04 13:11:31','0','更新功能ID为  23 成功！','更新功能成功'), ('1751','63','更新应用','192.168.1.104','2016-12-04 13:34:39','0','更新应用ID为  22 成功！','更新应用成功'), ('1752','63','更新应用','192.168.1.104','2016-12-04 13:35:13','0','更新应用ID为  22 成功！','更新应用成功'), ('1753','63','登录系统','192.168.1.104','2016-12-04 13:36:45','0','管理用户：jsh 登录系统','jsh 登录系统'), ('1754','63','登录系统','192.168.1.104','2016-12-04 13:38:31','0','管理用户：jsh 登录系统','jsh 登录系统'), ('1755','63','增加功能','192.168.1.104','2016-12-04 13:40:10','0','增加功能名称为  报表管理 成功！','增加功能成功'), ('1756','63','更新功能','192.168.1.104','2016-12-04 13:40:38','0','更新功能ID为  58 成功！','更新功能成功'), ('1757','63','更新功能','192.168.1.104','2016-12-04 13:40:54','0','更新功能ID为  59 成功！','更新功能成功'), ('1758','63','更新应用','192.168.1.104','2016-12-04 13:42:15','0','更新应用ID为  22 成功！','更新应用成功'), ('1759','63','更新功能','192.168.1.104','2016-12-04 13:43:23','0','更新功能ID为  58 成功！','更新功能成功'), ('1760','63','更新应用','192.168.1.104','2016-12-04 13:43:44','0','更新应用ID为  22 成功！','更新应用成功'), ('1761','63','更新应用','192.168.1.104','2016-12-04 13:47:17','0','更新应用ID为  22 成功！','更新应用成功'), ('1762','63','登录系统','192.168.112.102','2016-12-04 21:00:14','0','管理用户：jsh 登录系统','jsh 登录系统'), ('1763','63','更新应用','192.168.112.102','2016-12-04 21:01:40','0','更新应用ID为  7 成功！','更新应用成功'), ('1764','63','更新应用','192.168.112.102','2016-12-04 21:02:40','0','更新应用ID为  7 成功！','更新应用成功'), ('1765','63','登录系统','192.168.112.102','2016-12-04 21:14:18','0','管理用户：jsh 登录系统','jsh 登录系统'), ('1766','63','登录系统','192.168.112.102','2016-12-04 21:49:44','0','管理用户：jsh 登录系统','jsh 登录系统'), ('1767','63','登录系统','192.168.4.108','2016-12-10 14:24:27','0','管理用户：jsh 登录系统','jsh 登录系统'), ('1768','63','登录系统','192.168.4.108','2016-12-10 14:30:33','0','管理用户：jsh 登录系统','jsh 登录系统'), ('1769','63','退出系统','192.168.4.108','2016-12-10 14:31:27','0','管理用户：jsh 退出系统','jsh 退出系统'), ('1770','63','登录系统','192.168.4.108','2016-12-10 14:31:33','0','管理用户：jsh 登录系统','jsh 登录系统'), ('1771','63','增加经手人','192.168.4.108','2016-12-10 14:55:24','0','增加经手人名称为  赵五-财务 成功！','增加经手人成功'), ('1772','63','更新经手人','192.168.4.108','2016-12-10 14:55:33','0','更新经手人ID为  2 成功！','更新经手人成功'), ('1773','63','更新经手人','192.168.4.108','2016-12-10 14:55:45','0','更新经手人ID为  1 成功！','更新经手人成功'), ('1774','63','增加功能','192.168.4.108','2016-12-10 15:29:27','0','增加功能名称为  收入单 成功！','增加功能成功'), ('1775','63','更新UserBusiness','192.168.4.108','2016-12-10 15:30:47','0','更新UserBusiness的ID为  5 成功！','更新UserBusiness成功'), ('1776','63','更新功能','192.168.4.108','2016-12-10 15:35:04','0','更新功能ID为  58 成功！','更新功能成功'), ('1777','63','更新功能','192.168.4.108','2016-12-10 15:35:59','0','更新功能ID为  58 成功！','更新功能成功'), ('1778','63','更新功能','192.168.4.108','2016-12-10 15:37:40','0','更新功能ID为  196 成功！','更新功能成功'), ('1779','63','更新功能','192.168.4.108','2016-12-10 15:39:07','0','更新功能ID为  196 成功！','更新功能成功'), ('1780','63','更新功能','192.168.4.108','2016-12-10 15:39:23','0','更新功能ID为  59 成功！','更新功能成功'), ('1781','63','删除功能','192.168.4.108','2016-12-10 15:39:45','0','删除功能ID为  58 成功！','删除功能成功'), ('1782','63','更新功能','192.168.4.108','2016-12-10 15:40:03','0','更新功能ID为  59 成功！','更新功能成功'), ('1783','63','更新UserBusiness','192.168.4.108','2016-12-10 15:41:52','0','更新UserBusiness的ID为  5 成功！','更新UserBusiness成功'), ('1784','63','增加功能','192.168.4.108','2016-12-10 15:44:39','0','增加功能名称为  报表管理 成功！','增加功能成功'), ('1785','63','更新功能','192.168.4.108','2016-12-10 15:44:51','0','更新功能ID为  59 成功！','更新功能成功'), ('1786','63','更新功能','192.168.4.108','2016-12-10 15:46:30','0','更新功能ID为  198 成功！','更新功能成功'), ('1787','63','增加经手人','192.168.4.108','2016-12-10 16:48:36','0','增加经手人名称为  赵六-财务 成功！','增加经手人成功'), ('1788','63','更新经手人','192.168.4.108','2016-12-10 16:48:43','0','更新经手人ID为  3 成功！','更新经手人成功'), ('1789','63','更新经手人','192.168.4.108','2016-12-10 16:48:49','0','更新经手人ID为  3 成功！','更新经手人成功'), ('1790','63','增加仓库','192.168.4.108','2016-12-10 16:59:41','0','增加仓库名称为  总部 成功！','增加仓库成功'), ('1791','63','更新仓库','192.168.4.108','2016-12-10 16:59:52','0','更新仓库ID为  2 成功！','更新仓库成功'), ('1792','63','更新仓库','192.168.4.108','2016-12-10 17:00:03','0','更新仓库ID为  1 成功！','更新仓库成功'), ('1793','63','更新经手人','192.168.4.108','2016-12-10 17:00:15','0','更新经手人ID为  3 成功！','更新经手人成功'), ('1794','63','更新经手人','192.168.4.108','2016-12-10 17:00:23','0','更新经手人ID为  4 成功！','更新经手人成功'), ('1795','63','登录系统','192.168.4.108','2016-12-10 17:10:40','0','管理用户：jsh 登录系统','jsh 登录系统'), ('1796','63','退出系统','192.168.4.108','2016-12-10 17:39:05','0','管理用户：jsh 退出系统','jsh 退出系统'), ('1797','63','登录系统','192.168.4.108','2016-12-10 17:39:16','0','管理用户：jsh 登录系统','jsh 登录系统'), ('1798','63','批量删除功能','192.168.4.108','2016-12-10 17:44:39','0','批量删除功能ID为  51,193 成功！','批量删除功能成功'), ('1799','63','批量删除功能','192.168.4.108','2016-12-10 17:44:54','0','批量删除功能ID为  46,47,48,49,50 成功！','批量删除功能成功'), ('1800','63','批量删除功能','192.168.4.108','2016-12-10 17:45:26','0','批量删除功能ID为  52,53,54,55 成功！','批量删除功能成功'), ('1801','63','批量删除功能','192.168.4.108','2016-12-10 17:45:49','0','批量删除功能ID为  45 成功！','批量删除功能成功'), ('1802','63','登录系统','192.168.112.102','2016-12-10 20:19:13','0','管理用户：jsh 登录系统','jsh 登录系统'), ('1803','63','增加财务','192.168.112.102','2016-12-10 20:20:06','0','增加财务编号为  33 成功！','增加财务成功'), ('1804','63','增加财务','192.168.112.102','2016-12-10 20:20:11','0','增加财务编号为  33 成功！','增加财务成功'), ('1805','63','增加财务','192.168.112.102','2016-12-10 20:20:12','0','增加财务编号为  33 成功！','增加财务成功'), ('1806','63','增加财务','192.168.112.102','2016-12-10 20:25:48','0','增加财务编号为  123 成功！','增加财务成功'), ('1807','63','登录系统','192.168.112.102','2016-12-10 20:50:11','0','管理用户：jsh 登录系统','jsh 登录系统'), ('1808','63','增加财务','192.168.112.102','2016-12-10 20:51:41','0','增加财务编号为  3123 成功！','增加财务成功'), ('1809','63','增加财务','192.168.112.102','2016-12-10 20:53:58','0','增加财务编号为  3123 成功！','增加财务成功'), ('1810','63','增加财务','192.168.112.102','2016-12-10 21:08:57','0','增加财务编号为  123 成功！','增加财务成功'), ('1811','63','增加财务','192.168.112.102','2016-12-10 21:47:45','0','增加财务编号为  123 成功！','增加财务成功'), ('1812','63','保存财务明细','192.168.112.102','2016-12-10 21:47:46','0','保存财务明细对应主表编号为  8 成功！','保存财务明细成功'), ('1813','63','登录系统','192.168.112.102','2016-12-10 22:49:54','0','管理用户：jsh 登录系统','jsh 登录系统'), ('1814','63','删除财务','192.168.112.102','2016-12-10 22:52:43','0','删除财务ID为  5 成功！','删除财务成功'), ('1815','63','批量删除财务','192.168.112.102','2016-12-10 22:52:49','0','批量删除财务ID为  4 成功！','批量删除财务成功'), ('1816','63','增加财务','192.168.112.102','2016-12-10 22:53:19','0','增加财务编号为  3134 成功！','增加财务成功'), ('1817','63','保存财务明细','192.168.112.102','2016-12-10 22:53:20','0','保存财务明细对应主表编号为  9 成功！','保存财务明细成功'), ('1818','63','删除财务','192.168.112.102','2016-12-10 22:53:35','0','删除财务ID为  7 成功！','删除财务成功'), ('1819','63','增加财务','192.168.112.102','2016-12-10 22:54:05','0','增加财务编号为  N123 成功！','增加财务成功'), ('1820','63','保存财务明细','192.168.112.102','2016-12-10 22:54:06','0','保存财务明细对应主表编号为  10 成功！','保存财务明细成功'), ('1821','63','更新财务','192.168.112.102','2016-12-10 22:54:28','0','更新财务ID为  10 成功！','更新财务成功');
@@ -419,11 +419,12 @@ INSERT INTO `jsh_log` VALUES ('2122','63','保存仓管通明细','192.168.4.108
 INSERT INTO `jsh_log` VALUES ('2222','63','更新UserBusiness','192.168.4.104','2017-01-10 22:58:23','0','更新UserBusiness的ID为  6 成功！','更新UserBusiness成功'), ('2223','63','登录系统','192.168.4.104','2017-01-10 23:01:34','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2224','63','增加功能','192.168.4.104','2017-01-10 23:12:46','0','增加功能名称为  进货统计 成功！','增加功能成功'), ('2225','63','增加功能','192.168.4.104','2017-01-10 23:13:43','0','增加功能名称为  销售统计 成功！','增加功能成功'), ('2226','63','更新功能','192.168.4.104','2017-01-10 23:13:59','0','更新功能ID为  208 成功！','更新功能成功'), ('2227','63','更新UserBusiness','192.168.4.104','2017-01-10 23:14:56','0','更新UserBusiness的ID为  5 成功！','更新UserBusiness成功'), ('2228','63','更新UserBusiness','192.168.4.104','2017-01-10 23:15:05','0','更新UserBusiness的ID为  6 成功！','更新UserBusiness成功'), ('2229','63','更新功能','192.168.4.104','2017-01-10 23:16:37','0','更新功能ID为  59 成功！','更新功能成功'), ('2230','63','更新功能','192.168.4.104','2017-01-10 23:16:44','0','更新功能ID为  207 成功！','更新功能成功'), ('2231','63','登录系统','192.168.4.104','2017-01-11 23:34:56','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2232','63','登录系统','192.168.112.100','2017-01-11 23:41:57','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2233','63','登录系统','192.168.112.100','2017-01-11 23:51:19','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2234','63','登录系统','192.168.4.104','2017-01-12 00:16:19','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2235','63','登录系统','192.168.4.104','2017-01-12 00:16:48','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2236','63','登录系统','192.168.4.104','2017-01-12 00:17:16','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2237','63','登录系统','192.168.4.104','2017-01-12 00:21:13','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2238','63','登录系统','192.168.4.104','2017-01-12 00:24:07','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2239','63','登录系统','192.168.4.104','2017-01-12 00:26:52','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2240','63','登录系统','192.168.4.104','2017-01-12 00:27:09','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2241','63','登录系统','192.168.4.104','2017-01-12 00:32:05','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2242','63','登录系统','192.168.8.108','2017-01-12 12:39:58','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2243','63','登录系统','192.168.8.108','2017-01-12 12:42:01','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2244','63','登录系统','192.168.8.108','2017-01-12 18:20:19','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2245','63','登录系统','172.16.128.41','2017-01-14 01:55:57','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2246','63','增加财务','172.16.128.41','2017-01-14 02:18:56','0','增加财务编号为  1234 成功！','增加财务成功'), ('2247','63','保存财务明细','172.16.128.41','2017-01-14 02:18:56','0','保存财务明细对应主表编号为  19 成功！','保存财务明细成功'), ('2248','63','增加财务','172.16.128.41','2017-01-14 03:44:01','0','增加财务编号为  21341 成功！','增加财务成功'), ('2249','63','保存财务明细','172.16.128.41','2017-01-14 03:44:01','0','保存财务明细对应主表编号为  20 成功！','保存财务明细成功'), ('2250','63','增加财务','172.16.128.41','2017-01-14 03:44:58','0','增加财务编号为  eqw 成功！','增加财务成功'), ('2251','63','保存财务明细','172.16.128.41','2017-01-14 03:44:59','0','保存财务明细对应主表编号为  21 成功！','保存财务明细成功'), ('2252','63','增加财务','172.16.128.41','2017-01-14 03:45:21','0','增加财务编号为  234 成功！','增加财务成功'), ('2253','63','保存财务明细','172.16.128.41','2017-01-14 03:45:21','0','保存财务明细对应主表编号为  22 成功！','保存财务明细成功'), ('2254','63','增加财务','172.16.128.41','2017-01-14 03:45:46','0','增加财务编号为  3123 成功！','增加财务成功'), ('2255','63','保存财务明细','172.16.128.41','2017-01-14 03:45:47','0','保存财务明细对应主表编号为  23 成功！','保存财务明细成功'), ('2256','63','增加财务','172.16.128.41','2017-01-14 03:52:40','0','增加财务编号为  sssaaa 成功！','增加财务成功'), ('2257','63','保存财务明细','172.16.128.41','2017-01-14 03:52:41','0','保存财务明细对应主表编号为  24 成功！','保存财务明细成功'), ('2258','63','登录系统','192.168.1.104','2017-01-15 11:38:52','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2259','63','登录系统','192.168.1.104','2017-01-15 12:46:59','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2260','63','增加财务','192.168.1.104','2017-01-15 13:44:36','0','增加财务编号为  3214 成功！','增加财务成功'), ('2261','63','保存财务明细','192.168.1.104','2017-01-15 13:44:36','0','保存财务明细对应主表编号为  25 成功！','保存财务明细成功'), ('2262','63','更新财务','192.168.1.104','2017-01-15 13:44:48','0','更新财务ID为  25 成功！','更新财务成功'), ('2263','63','保存财务明细','192.168.1.104','2017-01-15 13:44:49','0','保存财务明细对应主表编号为  25 成功！','保存财务明细成功'), ('2264','63','登录系统','192.168.112.102','2017-01-15 21:05:42','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2265','63','增加财务','192.168.112.102','2017-01-15 21:06:45','0','增加财务编号为  1234we 成功！','增加财务成功'), ('2266','63','保存财务明细','192.168.112.102','2017-01-15 21:06:46','0','保存财务明细对应主表编号为  26 成功！','保存财务明细成功'), ('2267','63','增加财务','192.168.112.102','2017-01-15 23:20:48','0','增加财务编号为  a1 成功！','增加财务成功'), ('2268','63','保存财务明细','192.168.112.102','2017-01-15 23:20:49','0','保存财务明细对应主表编号为  27 成功！','保存财务明细成功'), ('2269','63','增加财务','192.168.112.102','2017-01-15 23:21:21','0','增加财务编号为  a2 成功！','增加财务成功'), ('2270','63','保存财务明细','192.168.112.102','2017-01-15 23:21:22','0','保存财务明细对应主表编号为  28 成功！','保存财务明细成功'), ('2271','63','增加财务','192.168.112.102','2017-01-15 23:21:51','0','增加财务编号为  123 成功！','增加财务成功'), ('2272','63','保存财务明细','192.168.112.102','2017-01-15 23:21:51','0','保存财务明细对应主表编号为  29 成功！','保存财务明细成功'), ('2273','63','更新财务','192.168.112.102','2017-01-15 23:22:15','0','更新财务ID为  29 成功！','更新财务成功'), ('2274','63','保存财务明细','192.168.112.102','2017-01-15 23:22:16','0','保存财务明细对应主表编号为  29 成功！','保存财务明细成功'), ('2275','63','更新财务','192.168.112.102','2017-01-15 23:22:54','0','更新财务ID为  29 成功！','更新财务成功'), ('2276','63','保存财务明细','192.168.112.102','2017-01-15 23:22:55','0','保存财务明细对应主表编号为  29 成功！','保存财务明细成功'), ('2277','63','更新财务','192.168.112.102','2017-01-15 23:23:02','0','更新财务ID为  29 成功！','更新财务成功'), ('2278','63','增加财务','192.168.112.102','2017-01-15 23:23:28','0','增加财务编号为  341aaa 成功！','增加财务成功'), ('2279','63','保存财务明细','192.168.112.102','2017-01-15 23:23:28','0','保存财务明细对应主表编号为  30 成功！','保存财务明细成功'), ('2280','63','增加财务','192.168.112.102','2017-01-15 23:35:02','0','增加财务编号为  aass 成功！','增加财务成功'), ('2281','63','保存财务明细','192.168.112.102','2017-01-15 23:35:03','0','保存财务明细对应主表编号为  31 成功！','保存财务明细成功'), ('2282','63','增加财务','192.168.112.102','2017-01-15 23:36:00','0','增加财务编号为  hhhh 成功！','增加财务成功'), ('2283','63','保存财务明细','192.168.112.102','2017-01-15 23:36:01','0','保存财务明细对应主表编号为  32 成功！','保存财务明细成功'), ('2284','63','增加财务','192.168.112.102','2017-01-15 23:36:48','0','增加财务编号为  s1qw 成功！','增加财务成功'), ('2285','63','保存财务明细','192.168.112.102','2017-01-15 23:36:49','0','保存财务明细对应主表编号为  33 成功！','保存财务明细成功'), ('2286','63','更新财务','192.168.112.102','2017-01-15 23:40:56','0','更新财务ID为  32 成功！','更新财务成功'), ('2287','63','更新财务','192.168.112.102','2017-01-15 23:47:06','0','更新财务ID为  33 成功！','更新财务成功'), ('2288','63','更新财务','192.168.112.102','2017-01-15 23:47:28','0','更新财务ID为  32 成功！','更新财务成功'), ('2289','63','更新财务','192.168.112.102','2017-01-15 23:47:58','0','更新财务ID为  30 成功！','更新财务成功'), ('2290','63','更新财务','192.168.112.102','2017-01-15 23:48:37','0','更新财务ID为  31 成功！','更新财务成功'), ('2291','63','登录系统','192.168.4.103','2017-01-17 22:29:20','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2292','63','登录系统','192.168.4.103','2017-01-17 23:03:13','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2293','63','登录系统','192.168.4.103','2017-01-17 23:05:20','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2294','63','登录系统','192.168.4.103','2017-01-17 23:07:22','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2295','63','登录系统','192.168.4.103','2017-01-17 23:12:26','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2296','63','登录系统','192.168.4.103','2017-01-17 23:15:27','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2297','63','登录系统','192.168.4.103','2017-01-17 23:37:58','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2298','63','登录系统','192.168.4.103','2017-01-17 23:40:36','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2299','63','登录系统','192.168.4.103','2017-01-17 23:42:15','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2300','63','登录系统','192.168.4.103','2017-01-17 23:43:23','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2301','63','登录系统','192.168.4.103','2017-01-17 23:43:45','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2302','63','登录系统','192.168.4.103','2017-01-17 23:44:09','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2303','63','登录系统','192.168.4.103','2017-01-17 23:45:02','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2304','63','登录系统','192.168.4.103','2017-01-17 23:46:06','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2305','63','登录系统','192.168.4.103','2017-01-17 23:46:24','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2306','63','登录系统','192.168.112.100','2017-01-18 22:30:06','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2307','63','登录系统','192.168.112.100','2017-01-18 22:32:38','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2308','63','登录系统','192.168.112.100','2017-01-18 22:39:58','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2309','63','登录系统','192.168.4.103','2017-01-18 23:57:00','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2310','63','登录系统','192.168.4.103','2017-01-19 00:00:48','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2311','63','登录系统','192.168.4.103','2017-01-19 00:03:16','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2312','63','登录系统','192.168.4.103','2017-01-19 00:08:51','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2313','63','登录系统','192.168.4.103','2017-01-19 00:15:30','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2314','63','登录系统','192.168.4.103','2017-01-19 00:17:38','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2315','63','登录系统','192.168.4.103','2017-01-19 00:17:59','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2316','63','登录系统','192.168.4.103','2017-01-19 00:18:49','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2317','63','登录系统','192.168.4.103','2017-01-19 00:19:57','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2318','63','登录系统','192.168.4.103','2017-01-19 00:20:43','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2319','63','退出系统','192.168.4.103','2017-01-19 00:21:26','0','管理用户：jsh 退出系统','jsh 退出系统'), ('2320','63','登录系统','192.168.4.103','2017-01-19 00:21:43','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2321','63','退出系统','192.168.4.103','2017-01-19 00:21:55','0','管理用户：jsh 退出系统','jsh 退出系统');
 INSERT INTO `jsh_log` VALUES ('2322','63','登录系统','192.168.4.103','2017-01-19 00:22:08','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2323','63','登录系统','192.168.4.103','2017-01-19 00:23:47','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2324','63','登录系统','192.168.4.103','2017-01-19 00:27:30','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2325','63','登录系统','192.168.4.103','2017-01-19 00:30:19','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2326','63','登录系统','192.168.4.103','2017-01-19 22:02:39','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2327','63','登录系统','192.168.4.103','2017-01-19 22:12:47','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2328','63','登录系统','192.168.4.103','2017-01-19 22:17:18','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2329','63','登录系统','192.168.4.103','2017-01-19 22:18:04','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2330','63','登录系统','192.168.4.103','2017-01-19 22:19:01','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2331','63','登录系统','192.168.4.103','2017-01-19 22:21:44','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2332','63','登录系统','192.168.4.103','2017-01-19 22:24:20','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2333','63','登录系统','192.168.4.103','2017-01-19 22:27:37','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2334','63','登录系统','192.168.4.103','2017-01-19 22:29:50','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2335','63','登录系统','192.168.4.103','2017-01-19 22:32:00','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2336','63','登录系统','192.168.4.103','2017-01-19 22:32:08','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2337','63','登录系统','192.168.4.103','2017-01-19 22:32:55','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2338','63','登录系统','192.168.4.103','2017-01-19 22:33:06','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2339','63','登录系统','192.168.4.103','2017-01-19 22:35:59','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2340','63','登录系统','192.168.4.103','2017-01-19 22:39:37','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2341','63','登录系统','192.168.4.103','2017-01-19 22:40:36','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2342','63','登录系统','192.168.4.103','2017-01-19 22:42:36','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2343','63','登录系统','192.168.4.103','2017-01-19 22:43:00','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2344','63','登录系统','192.168.4.103','2017-01-19 22:43:28','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2345','63','登录系统','192.168.4.103','2017-01-19 22:44:17','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2346','63','登录系统','192.168.4.103','2017-01-19 22:44:51','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2347','63','登录系统','192.168.4.103','2017-01-19 22:45:30','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2348','63','登录系统','192.168.4.103','2017-01-19 22:47:22','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2349','63','登录系统','192.168.4.103','2017-01-19 22:49:12','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2350','63','登录系统','192.168.4.103','2017-01-19 23:07:32','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2351','63','登录系统','192.168.4.103','2017-01-19 23:16:06','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2352','63','更新财务','192.168.4.103','2017-01-19 23:17:43','0','更新财务ID为  33 成功！','更新财务成功'), ('2353','63','更新财务','192.168.4.103','2017-01-19 23:17:51','0','更新财务ID为  33 成功！','更新财务成功'), ('2354','63','更新供应商','192.168.4.103','2017-01-19 23:18:10','0','更新供应商ID为  2 成功！','更新供应商成功'), ('2355','63','更新供应商','192.168.4.103','2017-01-19 23:18:21','0','更新供应商ID为  2 成功！','更新供应商成功'), ('2356','63','登录系统','192.168.4.103','2017-01-19 23:44:02','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2357','63','登录系统','192.168.4.103','2017-01-19 23:49:44','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2358','63','登录系统','192.168.4.103','2017-01-19 23:55:56','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2359','63','登录系统','192.168.4.103','2017-01-20 00:11:46','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2360','63','登录系统','192.168.4.103','2017-01-20 00:15:12','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2361','63','登录系统','192.168.4.103','2017-01-20 00:15:36','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2362','63','登录系统','192.168.4.103','2017-01-20 00:19:04','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2363','63','登录系统','192.168.4.103','2017-01-21 00:30:22','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2364','63','登录系统','192.168.4.103','2017-01-21 00:30:23','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2365','63','登录系统','127.0.0.1','2017-01-21 00:34:04','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2366','63','登录系统','127.0.0.1','2017-01-21 00:42:15','0','管理用户：JSH 登录系统','JSH 登录系统'), ('2367','63','登录系统','192.168.4.103','2017-01-21 00:43:46','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2368','63','登录系统','192.168.112.104','2017-01-21 10:52:39','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2369','63','增加仓管通','192.168.112.104','2017-01-21 10:53:57','0','增加仓管通编号为  x123 成功！','增加仓管通成功'), ('2370','63','保存仓管通明细','192.168.112.104','2017-01-21 10:53:58','0','保存仓管通明细对应主表编号为  69 成功！','保存仓管通明细成功'), ('2371','63','更新仓管通','192.168.112.104','2017-01-21 10:54:53','0','更新仓管通ID为  69 成功！','更新仓管通成功'), ('2372','63','保存仓管通明细','192.168.112.104','2017-01-21 10:54:54','0','保存仓管通明细对应主表编号为  69 成功！','保存仓管通明细成功'), ('2373','63','登录系统','192.168.4.103','2017-01-21 13:39:32','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2374','63','登录系统','192.168.4.103','2017-01-21 15:23:58','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2375','63','登录系统','192.168.4.103','2017-01-21 19:02:29','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2376','63','登录系统','192.168.112.100','2017-01-21 22:05:37','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2377','63','增加财务','192.168.112.100','2017-01-21 22:39:33','0','增加财务编号为  123 成功！','增加财务成功'), ('2378','63','保存财务明细','192.168.112.100','2017-01-21 22:39:34','0','保存财务明细对应主表编号为  34 成功！','保存财务明细成功'), ('2379','63','登录系统','192.168.112.100','2017-01-21 22:41:27','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2380','63','增加财务','192.168.112.100','2017-01-21 22:42:06','0','增加财务编号为  aabb 成功！','增加财务成功'), ('2381','63','保存财务明细','192.168.112.100','2017-01-21 22:42:07','0','保存财务明细对应主表编号为  35 成功！','保存财务明细成功'), ('2382','63','更新财务','192.168.112.100','2017-01-21 22:42:54','0','更新财务ID为  35 成功！','更新财务成功'), ('2383','63','保存财务明细','192.168.112.100','2017-01-21 22:42:54','0','保存财务明细对应主表编号为  35 成功！','保存财务明细成功'), ('2384','63','更新财务','192.168.112.100','2017-01-21 22:44:36','0','更新财务ID为  35 成功！','更新财务成功'), ('2385','63','保存财务明细','192.168.112.100','2017-01-21 22:44:37','0','保存财务明细对应主表编号为  35 成功！','保存财务明细成功'), ('2386','63','增加财务','192.168.112.100','2017-01-21 22:52:46','0','增加财务编号为  bianhao1 成功！','增加财务成功'), ('2387','63','保存财务明细','192.168.112.100','2017-01-21 22:52:47','0','保存财务明细对应主表编号为  36 成功！','保存财务明细成功'), ('2388','63','更新财务','192.168.112.100','2017-01-21 22:53:42','0','更新财务ID为  36 成功！','更新财务成功'), ('2389','63','更新财务','192.168.112.100','2017-01-21 22:54:58','0','更新财务ID为  36 成功！','更新财务成功'), ('2390','63','保存财务明细','192.168.112.100','2017-01-21 22:54:59','0','保存财务明细对应主表编号为  36 成功！','保存财务明细成功'), ('2391','63','删除财务','192.168.112.100','2017-01-21 22:55:52','0','删除财务ID为  20 成功！','删除财务成功'), ('2392','63','删除财务','192.168.112.100','2017-01-21 22:55:57','0','删除财务ID为  13 成功！','删除财务成功'), ('2393','63','增加财务','192.168.112.100','2017-01-21 23:01:09','0','增加财务编号为  fff 成功！','增加财务成功'), ('2394','63','保存财务明细','192.168.112.100','2017-01-21 23:01:10','0','保存财务明细对应主表编号为  37 成功！','保存财务明细成功'), ('2395','63','增加财务','192.168.112.100','2017-01-21 23:01:40','0','增加财务编号为  234eq 成功！','增加财务成功'), ('2396','63','保存财务明细','192.168.112.100','2017-01-21 23:01:41','0','保存财务明细对应主表编号为  38 成功！','保存财务明细成功'), ('2397','63','增加财务','192.168.112.100','2017-01-21 23:04:17','0','增加财务编号为  aasss 成功！','增加财务成功'), ('2398','63','保存财务明细','192.168.112.100','2017-01-21 23:04:17','0','保存财务明细对应主表编号为  39 成功！','保存财务明细成功'), ('2399','63','登录系统','192.168.112.102','2017-01-22 22:07:39','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2400','63','增加结算账户','192.168.112.102','2017-01-22 22:08:15','0','增加结算账户名称为  1231 成功！','增加结算账户成功'), ('2401','63','增加结算账户','192.168.112.102','2017-01-22 22:16:52','0','增加结算账户名称为  模型111 成功！','增加结算账户成功'), ('2402','63','登录系统','192.168.112.102','2017-01-22 22:33:00','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2403','63','增加经手人','192.168.112.102','2017-01-22 22:33:20','1','增加经手人名称为  qaaa 失败！','增加经手人失败'), ('2404','63','增加商品类别','192.168.112.102','2017-01-22 22:35:14','0','增加商品类别名称为  aa 成功！','增加商品类别成功'), ('2405','63','删除商品类别','192.168.112.102','2017-01-22 22:35:19','0','删除商品类别ID为  3 成功！','删除商品类别成功'), ('2406','63','增加经手人','192.168.112.102','2017-01-22 22:35:51','1','增加经手人名称为  ddd 失败！','增加经手人失败'), ('2407','63','登录系统','192.168.112.102','2017-01-22 23:08:35','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2408','63','增加经手人','192.168.112.102','2017-01-22 23:09:05','1','增加经手人名称为  aaa 失败！','增加经手人失败'), ('2409','63','增加仓管通','192.168.112.102','2017-01-22 23:10:08','0','增加仓管通编号为  aa 成功！','增加仓管通成功'), ('2410','63','保存仓管通明细','192.168.112.102','2017-01-22 23:10:08','0','保存仓管通明细对应主表编号为  70 成功！','保存仓管通明细成功'), ('2411','63','更新商品类别','192.168.112.102','2017-01-22 23:10:35','0','更新商品类别ID为  2 成功！','更新商品类别成功'), ('2412','63','更新经手人','192.168.112.102','2017-01-22 23:10:50','0','更新经手人ID为  1 成功！','更新经手人成功'), ('2413','63','删除结算账户','192.168.112.102','2017-01-22 23:10:59','0','删除结算账户ID为  11,名称为  模型111成功！','删除结算账户成功'), ('2414','63','删除结算账户','192.168.112.102','2017-01-22 23:11:02','0','删除结算账户ID为  10,名称为  1231成功！','删除结算账户成功'), ('2415','63','增加结算账户','192.168.112.102','2017-01-22 23:11:13','0','增加结算账户名称为  aaaa 成功！','增加结算账户成功'), ('2416','63','删除结算账户','192.168.112.102','2017-01-22 23:11:17','0','删除结算账户ID为  14,名称为  aaaa成功！','删除结算账户成功'), ('2417','63','增加经手人','192.168.112.102','2017-01-22 23:11:30','1','增加经手人名称为  ddd 失败！','增加经手人失败'), ('2418','63','增加仓库','192.168.112.102','2017-01-22 23:12:24','0','增加仓库名称为  aa 成功！','增加仓库成功'), ('2419','63','删除仓库','192.168.112.102','2017-01-22 23:12:29','0','删除仓库ID为  4 成功！','删除仓库成功'), ('2420','63','登录系统','192.168.112.102','2017-01-22 23:21:53','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2421','63','增加结算账户','192.168.112.102','2017-01-22 23:26:48','0','增加结算账户名称为  43345q 成功！','增加结算账户成功');
 INSERT INTO `jsh_log` VALUES ('2422','63','更新结算账户','192.168.112.102','2017-01-22 23:26:57','0','更新结算账户ID为  15 成功！','更新结算账户成功'), ('2423','63','删除结算账户','192.168.112.102','2017-01-22 23:27:03','0','删除结算账户ID为  15,名称为  43345q成功！','删除结算账户成功'), ('2424','63','登录系统','192.168.112.102','2017-01-22 23:38:02','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2425','63','增加结算账户','192.168.112.102','2017-01-22 23:38:23','0','增加结算账户名称为  3253 成功！','增加结算账户成功'), ('2426','63','删除结算账户','192.168.112.102','2017-01-22 23:38:28','0','删除结算账户ID为  16,名称为  3253成功！','删除结算账户成功'), ('2427','63','登录系统','192.168.112.102','2017-01-22 23:50:36','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2428','63','登录系统','192.168.112.102','2017-01-23 00:32:23','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2429','63','登录系统','192.168.112.102','2017-01-23 00:40:36','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2430','63','登录系统','192.168.112.102','2017-01-23 00:47:30','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2431','63','登录系统','192.168.8.102','2017-02-13 15:57:22','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2432','63','登录系统','192.168.112.102','2017-02-13 22:47:15','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2433','63','退出系统','192.168.112.102','2017-02-13 22:57:22','0','管理用户：jsh 退出系统','jsh 退出系统'), ('2434','63','登录系统','192.168.4.107','2017-02-14 23:42:37','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2435','63','登录系统','192.168.8.102','2017-02-15 11:09:38','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2436','63','登录系统','192.168.8.102','2017-02-15 11:28:00','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2437','63','更新仓管通','192.168.8.102','2017-02-15 11:28:27','0','更新仓管通ID为  70 成功！','更新仓管通成功'), ('2438','63','删除仓管通','192.168.8.102','2017-02-15 11:28:35','0','删除仓管通ID为  70 成功！','删除仓管通成功'), ('2439','63','登录系统','192.168.8.102','2017-02-15 11:31:33','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2440','63','登录系统','192.168.8.102','2017-02-15 11:42:16','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2441','63','登录系统','192.168.8.102','2017-02-15 11:53:02','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2442','63','登录系统','192.168.8.102','2017-02-15 12:35:14','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2443','63','登录系统','192.168.8.102','2017-02-15 12:39:19','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2444','63','登录系统','192.168.4.108','2017-02-15 22:09:46','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2445','63','登录系统','192.168.4.108','2017-02-15 22:16:17','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2446','63','登录系统','192.168.4.108','2017-02-15 23:23:00','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2447','63','登录系统','192.168.4.108','2017-02-15 23:27:14','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2448','63','登录系统','192.168.8.102','2017-02-17 16:14:54','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2449','63','登录系统','192.168.8.100','2017-02-21 18:12:11','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2450','63','登录系统','192.168.112.102','2017-02-21 21:24:07','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2451','63','登录系统','192.168.112.100','2017-02-22 20:48:56','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2452','63','登录系统','192.168.112.101','2017-02-26 19:01:23','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2453','63','登录系统','192.168.4.106','2017-02-26 20:10:59','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2454','63','登录系统','192.168.4.106','2017-02-26 20:13:03','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2455','63','登录系统','192.168.112.101','2017-02-26 20:44:43','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2456','63','登录系统','192.168.112.101','2017-02-26 20:53:34','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2457','63','登录系统','192.168.112.101','2017-02-26 21:00:10','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2458','63','登录系统','192.168.112.101','2017-02-26 21:04:45','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2459','63','登录系统','192.168.112.101','2017-02-26 21:05:44','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2460','63','登录系统','192.168.112.101','2017-03-05 19:26:46','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2461','63','登录系统','192.168.112.101','2017-03-05 20:31:44','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2462','63','登录系统','192.168.112.101','2017-03-05 20:49:38','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2463','63','登录系统','192.168.112.101','2017-03-05 20:53:44','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2464','63','登录系统','192.168.112.101','2017-03-05 21:02:39','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2465','63','登录系统','192.168.112.101','2017-03-05 21:05:23','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2466','63','登录系统','192.168.112.101','2017-03-05 21:07:46','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2467','63','登录系统','192.168.112.101','2017-03-05 21:20:11','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2468','63','登录系统','192.168.112.101','2017-03-05 21:27:28','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2469','63','登录系统','192.168.112.101','2017-03-05 21:41:34','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2470','63','登录系统','192.168.112.101','2017-03-05 21:50:29','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2471','63','登录系统','192.168.112.101','2017-03-05 22:04:38','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2472','63','登录系统','192.168.112.101','2017-03-05 22:09:56','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2473','63','登录系统','192.168.112.101','2017-03-05 22:09:57','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2474','63','登录系统','192.168.112.101','2017-03-05 22:11:53','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2475','63','登录系统','192.168.112.102','2017-03-12 20:12:50','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2476','63','更新供应商','192.168.112.102','2017-03-12 20:16:33','0','更新供应商ID为  5 成功！','更新供应商成功'), ('2477','63','更新供应商','192.168.112.102','2017-03-12 20:29:58','0','更新供应商ID为  5 成功！','更新供应商成功'), ('2478','63','更新供应商','192.168.112.102','2017-03-12 20:31:09','0','更新供应商ID为  5 成功！','更新供应商成功'), ('2479','63','更新供应商','192.168.112.102','2017-03-12 20:31:45','0','更新供应商ID为  5 成功！','更新供应商成功'), ('2480','63','登录系统','192.168.112.102','2017-03-12 20:32:39','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2481','63','更新供应商','192.168.112.102','2017-03-12 20:33:05','0','更新供应商ID为  5 成功！','更新供应商成功'), ('2482','63','更新供应商','192.168.112.102','2017-03-12 20:33:21','0','更新供应商ID为  5 成功！','更新供应商成功'), ('2483','63','更新供应商','192.168.112.102','2017-03-12 20:33:28','0','更新供应商ID为  5 成功！','更新供应商成功'), ('2484','63','更新供应商','192.168.112.102','2017-03-12 20:40:39','0','更新供应商ID为  5 成功！','更新供应商成功'), ('2485','63','登录系统','192.168.112.102','2017-03-12 22:13:17','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2486','63','登录系统','192.168.112.102','2017-03-12 22:19:24','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2487','63','登录系统','192.168.112.102','2017-03-12 22:22:53','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2488','63','登录系统','192.168.112.102','2017-03-12 22:24:57','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2489','63','登录系统','192.168.112.102','2017-03-19 20:56:16','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2490','63','登录系统','192.168.112.102','2017-03-19 21:08:12','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2491','63','登录系统','192.168.112.102','2017-03-19 21:15:28','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2492','63','登录系统','192.168.112.102','2017-03-19 21:18:43','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2493','63','登录系统','192.168.112.102','2017-03-19 21:23:12','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2494','63','删除仓管通','192.168.112.102','2017-03-19 21:27:22','0','删除仓管通ID为  45 成功！','删除仓管通成功'), ('2495','63','删除仓管通','192.168.112.102','2017-03-19 21:27:40','0','删除仓管通ID为  30 成功！','删除仓管通成功'), ('2496','63','登录系统','192.168.112.102','2017-03-19 21:36:25','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2497','63','登录系统','192.168.1.104','2017-04-04 09:51:32','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2498','63','登录系统','192.168.1.104','2017-04-04 10:43:13','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2499','63','登录系统','192.168.1.104','2017-04-04 10:49:14','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2500','63','登录系统','192.168.1.104','2017-04-04 10:53:24','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2501','63','登录系统','192.168.1.104','2017-04-04 10:54:38','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2502','63','登录系统','192.168.1.104','2017-04-04 10:56:44','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2503','63','登录系统','192.168.1.104','2017-04-04 11:02:57','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2504','63','登录系统','192.168.1.104','2017-04-04 11:15:37','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2505','63','登录系统','192.168.1.104','2017-04-04 11:20:24','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2506','63','登录系统','192.168.1.104','2017-04-04 11:23:36','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2507','63','登录系统','192.168.1.104','2017-04-04 11:28:34','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2508','63','登录系统','192.168.112.102','2017-04-08 10:06:00','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2509','63','登录系统','192.168.112.102','2017-04-08 10:38:08','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2510','63','登录系统','192.168.112.102','2017-04-08 10:51:49','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2511','63','登录系统','192.168.112.102','2017-04-08 11:10:47','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2512','63','登录系统','192.168.112.102','2017-04-08 11:33:00','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2513','63','登录系统','192.168.112.102','2017-04-08 11:37:32','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2514','63','登录系统','192.168.112.102','2017-04-08 12:21:09','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2515','63','登录系统','192.168.112.102','2017-04-08 12:27:10','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2516','63','登录系统','192.168.112.102','2017-04-08 12:30:19','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2517','63','登录系统','192.168.112.102','2017-04-08 12:33:10','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2518','63','登录系统','192.168.112.102','2017-04-08 12:47:04','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2519','63','登录系统','192.168.112.102','2017-04-08 13:03:22','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2520','63','登录系统','192.168.112.102','2017-04-08 13:13:05','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2521','63','登录系统','192.168.112.102','2017-04-08 13:19:50','0','管理用户：jsh 登录系统','jsh 登录系统');
-INSERT INTO `jsh_log` VALUES ('2522','63','登录系统','192.168.112.102','2017-04-08 13:26:25','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2523','63','增加仓管通','192.168.112.102','2017-04-08 13:31:17','0','增加仓管通编号为  aaa 成功！','增加仓管通成功'), ('2524','63','保存仓管通明细','192.168.112.102','2017-04-08 13:31:18','0','保存仓管通明细对应主表编号为  70 成功！','保存仓管通明细成功'), ('2525','63','更新仓管通','192.168.112.102','2017-04-08 13:31:59','0','更新仓管通ID为  70 成功！','更新仓管通成功'), ('2526','63','登录系统','192.168.112.102','2017-04-08 13:36:33','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2527','63','登录系统','192.168.112.102','2017-04-08 21:09:15','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2528','63','登录系统','192.168.112.102','2017-04-08 21:21:22','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2529','63','登录系统','192.168.4.105','2017-04-09 16:08:24','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2530','63','更新供应商','192.168.4.105','2017-04-09 16:08:55','0','更新供应商ID为  5 成功！','更新供应商成功'), ('2531','63','更新供应商','192.168.4.105','2017-04-09 16:09:13','0','更新供应商ID为  5 成功！','更新供应商成功'), ('2532','63','更新供应商','192.168.4.105','2017-04-09 16:11:32','0','更新供应商ID为  5 成功！','更新供应商成功'), ('2533','63','更新供应商','192.168.4.105','2017-04-09 16:16:13','0','更新供应商ID为  5 成功！','更新供应商成功'), ('2534','63','更新供应商','192.168.4.105','2017-04-09 16:16:52','0','更新供应商ID为  4 成功！','更新供应商成功'), ('2535','63','更新供应商','192.168.4.105','2017-04-09 16:17:05','0','更新供应商ID为  4 成功！','更新供应商成功'), ('2536','63','更新供应商','192.168.4.105','2017-04-09 16:17:26','0','更新供应商ID为  4 成功！','更新供应商成功'), ('2537','63','更新供应商','192.168.4.105','2017-04-09 16:17:48','0','更新供应商ID为  1 成功！','更新供应商成功'), ('2538','63','增加供应商','192.168.4.105','2017-04-09 16:18:31','0','增加供应商名称为  南通宝贝家纺 成功！','增加供应商成功'), ('2539','63','增加仓管通','192.168.4.105','2017-04-09 16:19:22','0','增加仓管通编号为  aaa123 成功！','增加仓管通成功'), ('2540','63','保存仓管通明细','192.168.4.105','2017-04-09 16:19:22','0','保存仓管通明细对应主表编号为  71 成功！','保存仓管通明细成功'), ('2541','63','更新供应商','192.168.4.105','2017-04-09 16:19:56','0','更新供应商ID为  6 成功！','更新供应商成功'), ('2542','63','更新仓管通','192.168.4.105','2017-04-09 16:20:18','0','更新仓管通ID为  71 成功！','更新仓管通成功'), ('2543','63','登录系统','192.168.4.105','2017-04-09 16:32:49','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2544','63','增加财务','192.168.4.105','2017-04-09 16:33:32','0','增加财务编号为  aaxx11 成功！','增加财务成功'), ('2545','63','保存财务明细','192.168.4.105','2017-04-09 16:33:33','0','保存财务明细对应主表编号为  40 成功！','保存财务明细成功'), ('2546','63','更新财务','192.168.4.105','2017-04-09 16:34:52','0','更新财务ID为  40 成功！','更新财务成功'), ('2547','63','登录系统','192.168.4.105','2017-04-09 16:48:23','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2548','63','更新供应商','192.168.4.105','2017-04-09 16:48:53','0','更新供应商ID为  2 成功！','更新供应商成功'), ('2549','63','更新供应商','192.168.4.105','2017-04-09 16:49:13','0','更新供应商ID为  1 成功！','更新供应商成功');
-INSERT INTO `jsh_material` VALUES ('485','1','棉线','A21-4321','米色','码','',NULL,NULL,NULL,NULL), ('487','1','网布','12343','红色','码','',NULL,NULL,NULL,NULL), ('498','2','蕾丝','B123','蓝色','码','',NULL,NULL,NULL,NULL);
-INSERT INTO `jsh_materialcategory` VALUES ('1','根目录','1','1'), ('2','花边分类','1','1');
+INSERT INTO `jsh_log` VALUES ('2522','63','登录系统','192.168.112.102','2017-04-08 13:26:25','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2523','63','增加仓管通','192.168.112.102','2017-04-08 13:31:17','0','增加仓管通编号为  aaa 成功！','增加仓管通成功'), ('2524','63','保存仓管通明细','192.168.112.102','2017-04-08 13:31:18','0','保存仓管通明细对应主表编号为  70 成功！','保存仓管通明细成功'), ('2525','63','更新仓管通','192.168.112.102','2017-04-08 13:31:59','0','更新仓管通ID为  70 成功！','更新仓管通成功'), ('2526','63','登录系统','192.168.112.102','2017-04-08 13:36:33','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2527','63','登录系统','192.168.112.102','2017-04-08 21:09:15','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2528','63','登录系统','192.168.112.102','2017-04-08 21:21:22','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2529','63','登录系统','192.168.4.105','2017-04-09 16:08:24','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2530','63','更新供应商','192.168.4.105','2017-04-09 16:08:55','0','更新供应商ID为  5 成功！','更新供应商成功'), ('2531','63','更新供应商','192.168.4.105','2017-04-09 16:09:13','0','更新供应商ID为  5 成功！','更新供应商成功'), ('2532','63','更新供应商','192.168.4.105','2017-04-09 16:11:32','0','更新供应商ID为  5 成功！','更新供应商成功'), ('2533','63','更新供应商','192.168.4.105','2017-04-09 16:16:13','0','更新供应商ID为  5 成功！','更新供应商成功'), ('2534','63','更新供应商','192.168.4.105','2017-04-09 16:16:52','0','更新供应商ID为  4 成功！','更新供应商成功'), ('2535','63','更新供应商','192.168.4.105','2017-04-09 16:17:05','0','更新供应商ID为  4 成功！','更新供应商成功'), ('2536','63','更新供应商','192.168.4.105','2017-04-09 16:17:26','0','更新供应商ID为  4 成功！','更新供应商成功'), ('2537','63','更新供应商','192.168.4.105','2017-04-09 16:17:48','0','更新供应商ID为  1 成功！','更新供应商成功'), ('2538','63','增加供应商','192.168.4.105','2017-04-09 16:18:31','0','增加供应商名称为  南通宝贝家纺 成功！','增加供应商成功'), ('2539','63','增加仓管通','192.168.4.105','2017-04-09 16:19:22','0','增加仓管通编号为  aaa123 成功！','增加仓管通成功'), ('2540','63','保存仓管通明细','192.168.4.105','2017-04-09 16:19:22','0','保存仓管通明细对应主表编号为  71 成功！','保存仓管通明细成功'), ('2541','63','更新供应商','192.168.4.105','2017-04-09 16:19:56','0','更新供应商ID为  6 成功！','更新供应商成功'), ('2542','63','更新仓管通','192.168.4.105','2017-04-09 16:20:18','0','更新仓管通ID为  71 成功！','更新仓管通成功'), ('2543','63','登录系统','192.168.4.105','2017-04-09 16:32:49','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2544','63','增加财务','192.168.4.105','2017-04-09 16:33:32','0','增加财务编号为  aaxx11 成功！','增加财务成功'), ('2545','63','保存财务明细','192.168.4.105','2017-04-09 16:33:33','0','保存财务明细对应主表编号为  40 成功！','保存财务明细成功'), ('2546','63','更新财务','192.168.4.105','2017-04-09 16:34:52','0','更新财务ID为  40 成功！','更新财务成功'), ('2547','63','登录系统','192.168.4.105','2017-04-09 16:48:23','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2548','63','更新供应商','192.168.4.105','2017-04-09 16:48:53','0','更新供应商ID为  2 成功！','更新供应商成功'), ('2549','63','更新供应商','192.168.4.105','2017-04-09 16:49:13','0','更新供应商ID为  1 成功！','更新供应商成功'), ('2550','63','登录系统','192.168.100.163','2017-06-01 00:28:33','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2551','63','登录系统','192.168.100.163','2017-06-01 21:42:07','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2552','63','登录系统','192.168.100.163','2017-06-01 21:50:39','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2553','63','登录系统','192.168.100.163','2017-06-01 21:50:44','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2554','63','增加仓管通','192.168.100.163','2017-06-01 22:51:42','0','增加仓管通编号为  abcd1234 成功！','增加仓管通成功'), ('2555','63','保存仓管通明细','192.168.100.163','2017-06-01 22:51:42','0','保存仓管通明细对应主表编号为  72 成功！','保存仓管通明细成功'), ('2556','63','删除仓管通','192.168.100.163','2017-06-01 22:52:30','0','删除仓管通ID为  72 成功！','删除仓管通成功'), ('2557','63','登录系统','192.168.100.163','2017-06-01 23:14:48','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2558','63','登录系统','192.168.100.163','2017-06-02 22:46:54','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2559','63','登录系统','192.168.100.163','2017-06-03 20:35:43','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2560','63','登录系统','192.168.100.163','2017-06-03 22:17:24','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2561','63','增加商品','192.168.100.163','2017-06-03 22:24:55','0','增加商品名称为  棉线 成功！','增加商品成功'), ('2562','63','增加仓管通','192.168.100.163','2017-06-03 22:26:00','0','增加仓管通编号为  22aa 成功！','增加仓管通成功'), ('2563','63','保存仓管通明细','192.168.100.163','2017-06-03 22:26:00','0','保存仓管通明细对应主表编号为  72 成功！','保存仓管通明细成功'), ('2564','63','增加仓管通','192.168.100.163','2017-06-03 22:29:35','0','增加仓管通编号为  afds123 成功！','增加仓管通成功'), ('2565','63','保存仓管通明细','192.168.100.163','2017-06-03 22:29:35','0','保存仓管通明细对应主表编号为  73 成功！','保存仓管通明细成功'), ('2566','63','更新仓管通','192.168.100.163','2017-06-03 22:30:46','0','更新仓管通ID为  73 成功！','更新仓管通成功'), ('2567','63','更新仓管通','192.168.100.163','2017-06-03 22:31:09','0','更新仓管通ID为  73 成功！','更新仓管通成功'), ('2568','63','更新仓管通','192.168.100.163','2017-06-03 22:31:19','0','更新仓管通ID为  73 成功！','更新仓管通成功'), ('2569','63','增加仓管通','192.168.100.163','2017-06-03 22:47:31','0','增加仓管通编号为  dsfs 成功！','增加仓管通成功'), ('2570','63','保存仓管通明细','192.168.100.163','2017-06-03 22:47:31','0','保存仓管通明细对应主表编号为  74 成功！','保存仓管通明细成功'), ('2571','63','更新仓管通','192.168.100.163','2017-06-03 22:47:59','0','更新仓管通ID为  74 成功！','更新仓管通成功'), ('2572','63','增加财务','192.168.100.163','2017-06-03 22:53:38','0','增加财务编号为  aa 成功！','增加财务成功'), ('2573','63','保存财务明细','192.168.100.163','2017-06-03 22:53:38','0','保存财务明细对应主表编号为  41 成功！','保存财务明细成功'), ('2574','63','删除财务','192.168.100.163','2017-06-03 22:54:04','0','删除财务ID为  31 成功！','删除财务成功'), ('2575','63','删除财务','192.168.100.163','2017-06-03 22:54:05','0','删除财务ID为  24 成功！','删除财务成功'), ('2576','63','删除财务','192.168.100.163','2017-06-03 22:54:07','0','删除财务ID为  17 成功！','删除财务成功'), ('2577','63','增加仓管通','192.168.100.163','2017-06-03 22:59:46','0','增加仓管通编号为  aaa 成功！','增加仓管通成功'), ('2578','63','保存仓管通明细','192.168.100.163','2017-06-03 22:59:46','0','保存仓管通明细对应主表编号为  75 成功！','保存仓管通明细成功'), ('2579','63','删除仓管通','192.168.100.163','2017-06-03 23:00:05','0','删除仓管通ID为  75 成功！','删除仓管通成功'), ('2580','63','增加仓管通','192.168.100.163','2017-06-03 23:00:53','0','增加仓管通编号为  asdf 成功！','增加仓管通成功'), ('2581','63','保存仓管通明细','192.168.100.163','2017-06-03 23:00:53','0','保存仓管通明细对应主表编号为  76 成功！','保存仓管通明细成功'), ('2582','63','更新仓管通','192.168.100.163','2017-06-03 23:01:06','0','更新仓管通ID为  76 成功！','更新仓管通成功'), ('2583','63','保存仓管通明细','192.168.100.163','2017-06-03 23:01:06','0','保存仓管通明细对应主表编号为  76 成功！','保存仓管通明细成功'), ('2584','63','更新供应商','192.168.100.163','2017-06-03 23:01:21','0','更新供应商ID为  1 成功！','更新供应商成功'), ('2585','63','更新仓库','192.168.100.163','2017-06-03 23:02:15','0','更新仓库ID为  1 成功！','更新仓库成功'), ('2586','63','更新仓库','192.168.100.163','2017-06-03 23:02:21','0','更新仓库ID为  3 成功！','更新仓库成功'), ('2587','63','更新供应商','192.168.100.163','2017-06-03 23:03:15','0','更新供应商ID为  6 成功！','更新供应商成功'), ('2588','63','更新供应商','192.168.100.163','2017-06-03 23:03:33','0','更新供应商ID为  5 成功！','更新供应商成功'), ('2589','63','更新供应商','192.168.100.163','2017-06-03 23:03:50','0','更新供应商ID为  4 成功！','更新供应商成功'), ('2590','63','更新供应商','192.168.100.163','2017-06-03 23:04:11','0','更新供应商ID为  2 成功！','更新供应商成功'), ('2591','63','更新供应商','192.168.100.163','2017-06-03 23:04:16','0','更新供应商ID为  1 成功！','更新供应商成功'), ('2592','63','更新结算账户','192.168.100.163','2017-06-03 23:04:42','0','更新结算账户ID为  9 成功！','更新结算账户成功'), ('2593','63','更新结算账户','192.168.100.163','2017-06-03 23:04:49','0','更新结算账户ID为  4 成功！','更新结算账户成功'), ('2594','63','更新结算账户','192.168.100.163','2017-06-03 23:05:01','0','更新结算账户ID为  9 成功！','更新结算账户成功'), ('2595','63','更新结算账户','192.168.100.163','2017-06-03 23:05:05','0','更新结算账户ID为  4 成功！','更新结算账户成功'), ('2596','63','更新结算账户','192.168.100.163','2017-06-03 23:05:21','0','更新结算账户ID为  4 成功！','更新结算账户成功'), ('2597','63','增加商品类别','192.168.100.163','2017-06-03 23:07:34','0','增加商品类别名称为  其他 成功！','增加商品类别成功'), ('2598','63','增加商品类别','192.168.100.163','2017-06-03 23:08:09','0','增加商品类别名称为  其他 成功！','增加商品类别成功'), ('2599','63','增加商品类别','192.168.100.163','2017-06-03 23:08:33','0','增加商品类别名称为  其他 成功！','增加商品类别成功'), ('2600','63','更新商品','192.168.100.163','2017-06-03 23:10:50','0','更新商品ID为  499 成功！','更新商品成功'), ('2601','63','更新商品','192.168.100.163','2017-06-03 23:10:56','0','更新商品ID为  499 成功！','更新商品成功'), ('2602','63','更新商品','192.168.100.163','2017-06-03 23:11:07','0','更新商品ID为  499 成功！','更新商品成功'), ('2603','63','更新商品','192.168.100.163','2017-06-03 23:12:08','0','更新商品ID为  485 成功！','更新商品成功'), ('2604','63','更新商品','192.168.100.163','2017-06-03 23:12:13','0','更新商品ID为  487 成功！','更新商品成功'), ('2605','63','更新商品','192.168.100.163','2017-06-03 23:12:36','0','更新商品ID为  498 成功！','更新商品成功'), ('2606','63','更新用户','','2017-06-03 23:29:02','0','更新用户ID为  63密码信息 成功！','更新用户成功'), ('2607','63','登录系统','192.168.100.163','2017-06-03 23:29:08','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2608','63','退出系统','192.168.100.163','2017-06-03 23:29:12','0','管理用户：jsh 退出系统','jsh 退出系统'), ('2609','63','登录系统','192.168.100.163','2017-06-03 23:29:18','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2610','63','更新用户','','2017-06-03 23:29:32','0','更新用户ID为  63密码信息 成功！','更新用户成功'), ('2611','63','登录系统','192.168.100.163','2017-06-03 23:29:34','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2612','63','退出系统','192.168.100.163','2017-06-03 23:29:37','0','管理用户：jsh 退出系统','jsh 退出系统'), ('2613','63','登录系统','192.168.100.163','2017-06-03 23:29:50','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2614','63','更新UserBusiness','192.168.100.163','2017-06-03 23:34:30','0','更新UserBusiness的ID为  6 成功！','更新UserBusiness成功'), ('2615','63','更新UserBusiness','192.168.100.163','2017-06-03 23:34:45','0','更新UserBusiness的ID为  2 成功！','更新UserBusiness成功'), ('2616','63','更新UserBusiness','192.168.100.163','2017-06-03 23:35:01','0','更新UserBusiness的ID为  6 成功！','更新UserBusiness成功'), ('2617','63','退出系统','192.168.100.163','2017-06-03 23:35:31','0','管理用户：jsh 退出系统','jsh 退出系统'), ('2618','64','登录系统','192.168.100.163','2017-06-03 23:35:37','0','管理用户：zs 登录系统','zs 登录系统'), ('2619','64','退出系统','192.168.100.163','2017-06-03 23:36:13','0','管理用户：zs 退出系统','zs 退出系统'), ('2620','63','登录系统','192.168.100.163','2017-06-03 23:36:19','0','管理用户：jsh 登录系统','jsh 登录系统'), ('2621','63','更新UserBusiness','192.168.100.163','2017-06-03 23:36:40','0','更新UserBusiness的ID为  6 成功！','更新UserBusiness成功');
+INSERT INTO `jsh_log` VALUES ('2622','63','退出系统','192.168.100.163','2017-06-03 23:36:46','0','管理用户：jsh 退出系统','jsh 退出系统'), ('2623','64','登录系统','192.168.100.163','2017-06-03 23:36:53','0','管理用户：zs 登录系统','zs 登录系统'), ('2624','64','退出系统','192.168.100.163','2017-06-03 23:37:18','0','管理用户：zs 退出系统','zs 退出系统'), ('2625','63','登录系统','192.168.100.163','2017-06-03 23:37:26','0','管理用户：jsh 登录系统','jsh 登录系统');
+INSERT INTO `jsh_material` VALUES ('485','1','棉线','A21-4321','米色','码','','1','1','1','1'), ('487','1','网布','12343','红色','码','','1','1','1','1'), ('498','1','蕾丝','B123','蓝色','码','','1.2','1','1.3','1.4'), ('499','1','棉线','A21-1234','米红色','码','','2','2','2','2');
+INSERT INTO `jsh_materialcategory` VALUES ('1','根目录','1','1'), ('2','花边分类','1','1'), ('3','其他','1','1'), ('4','其他','2','3'), ('5','其他','3','4');
 INSERT INTO `jsh_person` VALUES ('1','仓管员','张三-仓管','0'), ('2','仓管员','李四-仓管','0'), ('3','财务员','王五-财务','0'), ('4','财务员','赵六-财务','0');
 INSERT INTO `jsh_role` VALUES ('4','管理员'), ('5','仓管员');
-INSERT INTO `jsh_supplier` VALUES ('1','上海某某花边工厂','','','','','1','供应商','\0',NULL,'30',NULL,NULL), ('2','客户AAAA','','','','','1','客户','\0',NULL,'30',NULL,NULL), ('4','苏州新源布料厂','11','22','312341@qq.com','55','1','供应商','\0','44',NULL,NULL,NULL), ('5','客户BBBB','22','333','44444@qq.com','','1','客户','\0','20',NULL,NULL,NULL), ('6','南通宝贝家纺','aaa','','','','1','客户','\0','20',NULL,NULL,NULL);
+INSERT INTO `jsh_supplier` VALUES ('1','上海某某花边工厂','乔治','','','','1','供应商','\0',NULL,'20',NULL,NULL), ('2','客户AAAA','佩琪','','','','1','客户','\0',NULL,'30',NULL,NULL), ('4','苏州新源布料厂','龙哥','13000000000','312341@qq.com','55','1','供应商','\0','44',NULL,NULL,NULL), ('5','客户BBBB','彪哥','13000000000','666@qq.com','','1','客户','\0','20',NULL,NULL,NULL), ('6','南通宝贝家纺','姗姗','','','','1','客户','\0','20',NULL,NULL,NULL);
 INSERT INTO `jsh_user` VALUES ('63','季圣华','jsh','e10adc3949ba59abbe56e057f20f883e','','','','','0','1','-1','',NULL), ('64','张三','zs','e10adc3949ba59abbe56e057f20f883e','','销售','','','0','1',NULL,'',NULL), ('65','李四','ls','e10adc3949ba59abbe56e057f20f883e','','销售','','','0','1',NULL,'',NULL);
-INSERT INTO `jsh_userbusiness` VALUES ('1','RoleAPP','4','[21][1][8][11][10][19][16][15][12][7][17][20][18][3][6][22][23][24][25]'), ('2','RoleAPP','5','[8][7][3][6]'), ('3','RoleAPP','6','[21][1][8]'), ('4','RoleAPP','7','[21][1][8][11]'), ('5','RoleFunctions','4','[13][12][16][14][15][22][23][25][26][194][195][31][33][200][201][41][199][202][40][197][203][204][205][206][59][207][208][209]'), ('6','RoleFunctions','5','[22][23][25][26][194][195][31][33][200][201][41][199][202][40][59][207][208][209]'), ('7','RoleFunctions','6','[168][13][12][16][14][15][189][18][19]'), ('8','RoleAPP','8','[21][1][8][11][10]'), ('9','RoleFunctions','7','[168][13][12][16][14][15][189][18][19][132]'), ('10','RoleFunctions','8','[168][13][12][16][14][15][189][18][19][132][22][23][25][26][27][157][158][155][156][125][31][127][126][128][33][34][35][36][37][39][40][41][42][43][46][47][48][49][50][51][52][53][54][55][56][57][192][59][60][61][62][63][65][66][68][69][70][71][73][74][76][77][79][191][81][82][83][85][89][161][86][176][165][160][28][134][91][92][29][94][95][97][104][99][100][101][102][105][107][108][110][111][113][114][116][117][118][120][121][131][135][123][122][20][130][146][147][138][148][149][153][140][145][184][152][143][170][171][169][166][167][163][164][172][173][179][178][181][182][183][186][187]'), ('11','RoleFunctions','9','[168][13][12][16][14][15][189][18][19][132][22][23][25][26][27][157][158][155][156][125][31][127][126][128][33][34][35][36][37][39][40][41][42][43][46][47][48][49][50][51][52][53][54][55][56][57][192][59][60][61][62][63][65][66][68][69][70][71][73][74][76][77][79][191][81][82][83][85][89][161][86][176][165][160][28][134][91][92][29][94][95][97][104][99][100][101][102][105][107][108][110][111][113][114][116][117][118][120][121][131][135][123][122][20][130][146][147][138][148][149][153][140][145][184][152][143][170][171][169][166][167][163][164][172][173][179][178][181][182][183][186][187][188]'), ('12','UserRole','1','[5]'), ('13','UserRole','2','[6][7]'), ('14','UserDepot','2','[1][2][6][7]'), ('15','UserDepot','1','[1][2][5][6][7][10][12][14][15][17]'), ('16','UserRole','63','[4]'), ('17','RoleFunctions','13','[46][47][48][49]'), ('18','UserDepot','63','[1][3]'), ('19','UserDepot','5','[6][45][46][50]'), ('20','UserRole','5','[5]'), ('21','UserRole','64','[5]'), ('22','UserDepot','64','[1]'), ('23','UserRole','65','[5]'), ('24','UserDepot','65','[1]');
+INSERT INTO `jsh_userbusiness` VALUES ('1','RoleAPP','4','[21][1][8][11][10][19][16][15][12][7][17][20][18][3][6][22][23][24][25]'), ('2','RoleAPP','5','[8][7][6]'), ('3','RoleAPP','6','[21][1][8]'), ('4','RoleAPP','7','[21][1][8][11]'), ('5','RoleFunctions','4','[13][12][16][14][15][22][23][25][26][194][195][31][33][200][201][41][199][202][40][197][203][204][205][206][59][207][208][209]'), ('6','RoleFunctions','5','[22][23][25][26][194][195][31][33][200][201][41][199][202]'), ('7','RoleFunctions','6','[168][13][12][16][14][15][189][18][19]'), ('8','RoleAPP','8','[21][1][8][11][10]'), ('9','RoleFunctions','7','[168][13][12][16][14][15][189][18][19][132]'), ('10','RoleFunctions','8','[168][13][12][16][14][15][189][18][19][132][22][23][25][26][27][157][158][155][156][125][31][127][126][128][33][34][35][36][37][39][40][41][42][43][46][47][48][49][50][51][52][53][54][55][56][57][192][59][60][61][62][63][65][66][68][69][70][71][73][74][76][77][79][191][81][82][83][85][89][161][86][176][165][160][28][134][91][92][29][94][95][97][104][99][100][101][102][105][107][108][110][111][113][114][116][117][118][120][121][131][135][123][122][20][130][146][147][138][148][149][153][140][145][184][152][143][170][171][169][166][167][163][164][172][173][179][178][181][182][183][186][187]'), ('11','RoleFunctions','9','[168][13][12][16][14][15][189][18][19][132][22][23][25][26][27][157][158][155][156][125][31][127][126][128][33][34][35][36][37][39][40][41][42][43][46][47][48][49][50][51][52][53][54][55][56][57][192][59][60][61][62][63][65][66][68][69][70][71][73][74][76][77][79][191][81][82][83][85][89][161][86][176][165][160][28][134][91][92][29][94][95][97][104][99][100][101][102][105][107][108][110][111][113][114][116][117][118][120][121][131][135][123][122][20][130][146][147][138][148][149][153][140][145][184][152][143][170][171][169][166][167][163][164][172][173][179][178][181][182][183][186][187][188]'), ('12','UserRole','1','[5]'), ('13','UserRole','2','[6][7]'), ('14','UserDepot','2','[1][2][6][7]'), ('15','UserDepot','1','[1][2][5][6][7][10][12][14][15][17]'), ('16','UserRole','63','[4]'), ('17','RoleFunctions','13','[46][47][48][49]'), ('18','UserDepot','63','[1][3]'), ('19','UserDepot','5','[6][45][46][50]'), ('20','UserRole','5','[5]'), ('21','UserRole','64','[5]'), ('22','UserDepot','64','[1]'), ('23','UserRole','65','[5]'), ('24','UserDepot','65','[1]');
