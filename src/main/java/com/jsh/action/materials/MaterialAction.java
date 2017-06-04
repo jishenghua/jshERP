@@ -247,6 +247,54 @@ public class MaterialAction extends BaseAction<MaterialModel>
             Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询商品信息结果异常", e);
         }
 	}
+
+    /**
+     * 根据id来查询商品名称
+     * @return
+     */
+    public void findById() {
+        try
+        {
+            PageUtil<Material> pageUtil = new  PageUtil<Material>();
+            pageUtil.setAdvSearch(getConditionById());
+            materialService.find(pageUtil);
+            List<Material> dataList = pageUtil.getPageList();
+            JSONObject outer = new JSONObject();
+            outer.put("total", pageUtil.getTotalCount());
+            //存放数据json数组
+            JSONArray dataArray = new JSONArray();
+            if(null != dataList)
+            {
+                for(Material material:dataList)
+                {
+                    JSONObject item = new JSONObject();
+                    item.put("Id", material.getId());
+                    item.put("Name", material.getName());
+                    item.put("Model", material.getModel());
+                    item.put("Color", material.getColor());
+                    item.put("Unit", material.getUnit());
+                    item.put("RetailPrice", material.getRetailPrice());
+                    item.put("LowPrice", material.getLowPrice());
+                    item.put("PresetPriceOne", material.getPresetPriceOne());
+                    item.put("PresetPriceTwo", material.getPresetPriceTwo());
+                    item.put("Remark", material.getRemark());
+                    item.put("op", 1);
+                    dataArray.add(item);
+                }
+            }
+            outer.put("rows", dataArray);
+            //回写查询结果
+            toClient(outer.toString());
+        }
+        catch (DataAccessException e)
+        {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找商品信息异常", e);
+        }
+        catch (IOException e)
+        {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询商品信息结果异常", e);
+        }
+    }
     
 	/**
 	 * 查找商品信息-下拉框
@@ -358,6 +406,20 @@ public class MaterialAction extends BaseAction<MaterialModel>
         Map<String,Object> condition = new HashMap<String,Object>();
         condition.put("CategoryId_s_in", model.getCategoryIds());
         condition.put("Id_s_order", "asc");
+        return condition;
+    }
+
+    /**
+     * 拼接搜索条件
+     * @return
+     */
+    private Map<String,Object> getConditionById()
+    {
+        /**
+         * 拼接搜索条件
+         */
+        Map<String,Object> condition = new HashMap<String,Object>();
+        condition.put("Id_n_eq", model.getMaterialID());
         return condition;
     }
 	

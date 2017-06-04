@@ -885,6 +885,62 @@
 	    		TotalPrice = TotalPrice + UnitPrice*OperNumber;
 	    		footer.find("[field='AllPrice']").find("div").text((TotalPrice).toFixed(2));
 	    	});
+			body.find("[field='UnitPrice']").find(input).off("click").on("click",function(){
+				var self = this;
+				var mValue = body.find("[field='MaterialId'] .combo-value").attr("value"); //获取选中的商品id
+				if(!mValue) {
+					return;
+				}
+				else {
+					if(listTitle!="销售出库列表" && listTitle!="采购退货列表" && listTitle!="其它出库列表" && listTitle!="调拨出库列表") {
+						return;
+					}
+					$.ajax({
+						url: path + "/material/findById.action",
+						type: "get",
+						dataType: "json",
+						data: {
+							"MaterialID": mValue - 0
+						},
+						success: function(res){
+							if(res && res.rows && res.rows[0]) {
+								var retailPrice = res.rows[0].RetailPrice;
+								var presetPriceOne = res.rows[0].PresetPriceOne;
+								var presetPriceTwo = res.rows[0].PresetPriceTwo;
+								//定义模版
+								var temp = "<div class='price-list'>";
+								temp +="<ul>";
+								temp +="<li>预设售价1：" + presetPriceOne + "</li>";
+								temp +="<li>预设售价2：" + presetPriceTwo + "</li>";
+								temp +="<li>零售价：" + retailPrice + "</li>";
+								temp +="</ul>";
+								temp +="</div>";
+								if($('.price-list').length){
+									$('.price-list').remove(); //如果存在价格列表先移除
+								}
+								else {
+									$(self).after(temp); //加载列表信息
+								}
+								$('.price-list ul li').off("click").on("click",function(){
+									var price = $(this).text();
+									price = price.substring(price.indexOf("：") + 1);
+									$(self).val(price);
+									$(self).keyup(); //模拟键盘操作
+									$('.price-list').remove(); //移除价格列表
+								});
+								//点击空白处移除价格列表
+								$(".datagrid-body").off("click").on("click",function(){
+									$('.price-list').remove(); //移除价格列表
+								});
+							}
+						},
+						error: function(){
+							$.messager.alert('错误提示','查询商品信息异常，请稍后再试！','error');
+							return;
+						}
+					});
+				}
+			});
 	    	//修改数量，自动计算金额和合计
 	    	body.find("[field='OperNumber']").find(input).off("keyup").on("keyup",function(){
 	    		var UnitPrice = body.find("[field='UnitPrice']").find(input).val(); //单价
