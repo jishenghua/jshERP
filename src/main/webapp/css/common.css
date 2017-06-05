@@ -25,21 +25,25 @@
 }
 
 #depotHeadFM .price-list {
-	width:130px;
+	width:110px;
 	float:left;
 	position:absolute;
 	border:1px solid #95B8E7;
 }
 
 #depotHeadFM .price-list ul{
-	padding-left: 5px;
-	padding-top: 5px;
+	padding: 0px;
 	margin: 0px;
+	background-color: #fff;
 }
 
 #depotHeadFM .price-list ul li{
 	list-style: none;
-	padding-bottom: 5px;
+	padding: 3px;
+}
+
+#depotHeadFM .price-list ul li:hover{
+	background-color: #e9f1fc;
 }
 
 
