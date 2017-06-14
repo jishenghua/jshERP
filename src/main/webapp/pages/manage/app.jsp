@@ -16,9 +16,12 @@
 		<link rel="stylesheet" type="text/css" href="<%=path %>/js/easyui-1.3.5/themes/default/easyui.css"/>
 		<link rel="stylesheet" type="text/css" href="<%=path %>/js/easyui-1.3.5/themes/icon.css"/>
 		<link type="text/css" rel="stylesheet" href="<%=path %>/css/common.css" />
+		<link href="<%=path %>/js/fileUploadQT/css/iconfont.css" rel="stylesheet" type="text/css" />
+		<link href="<%=path %>/js/fileUploadQT/css/fileUpload.css" rel="stylesheet" type="text/css" />
 		<script type="text/javascript" src="<%=path %>/js/jquery-1.8.0.min.js"></script>
 		<script type="text/javascript" src="<%=path %>/js/easyui-1.3.5/jquery.easyui.min.js"></script>
 		<script type="text/javascript" src="<%=path %>/js/easyui-1.3.5/locale/easyui-lang-zh_CN.js"></script>
+		<script src="<%=path %>/js/fileUploadQT/js/fileUpload.js"></script>
 		<script type="text/javascript" src="<%=path %>/js/common/common.js"></script>
   	</head>
   	<body>
@@ -52,65 +55,49 @@
 			<table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 		</div>
 		
-	    <div id="appDlg" class="easyui-dialog" style="width:380px;padding:10px 20px"
+	    <div id="appDlg" class="easyui-dialog" style="width:600px;padding:10px 20px;top:20px"
 	            closed="true" buttons="#dlg-buttons" modal="true" cache="false" collapsible="false" closable="true">
 	        <form id="appFM" method="post" enctype="multipart/form-data">
 	            <table>
 	            <tr>
-	            <td>代号</td>
-	            <td style="padding:1px"><input name="Number" id="Number" class="easyui-textbox" style="width: 230px;height: 20px"/></td>
+	            	<td style="width: 50px;height: 20px">代号</td>
+	            	<td style="padding:1px"><input name="Number" id="Number" class="easyui-textbox" style="width: 150px;height: 20px"/></td>
+	            	<td style="width: 50px;height: 20px">名称</td>
+	            	<td style="padding:1px"><input name="Name" id="Name" class="easyui-validatebox" data-options="required:true,validType:'length[2,30]'" style="width: 150px;height: 20px"/></td>
+					<td style="width: 50px;height: 20px">拉伸</td>
+					<td style="padding:1px"><input name="ReSize" id="ReSize" type="checkbox" style="width: 50px;height: 20px"/></td>
+	             </tr>
+	            <tr>
+	            	<td>类型</td>
+	            	<td style="padding:1px"><input name="Type" id="Type" class="easyui-textbox" style="width: 150px;height: 20px"/></td>
+	            	<td>链接</td>
+	            	<td style="padding:1px"><input name="URL" id="URL" class="easyui-textbox" style="width: 150px;height: 20px"/></td>
+					<td>最大化</td>
+					<td style="padding:1px"><input name="OpenMax" id="OpenMax" type="checkbox" style="width: 50px;height: 20px"/></td>
 	            </tr>
 	            <tr>
-	            <td>名称</td>
-	            <td style="padding:1px"><input name="Name" id="Name" class="easyui-validatebox" data-options="required:true,validType:'length[2,30]'" style="width: 230px;height: 20px"/></td>
+	            	<td>宽度</td>
+	           		<td style="padding:1px"><input name="Width" id="Width" class="easyui-textbox" style="width: 150px;height: 20px"/></td>
+	            	<td>高度</td>
+	           		<td style="padding:1px"><input name="Height" id="Height" class="easyui-textbox" style="width: 150px;height: 20px"/></td>
+					<td>Flash</td>
+					<td style="padding:1px"><input name="Flash" id="Flash" type="checkbox" style="width: 50px;height: 20px"/></td>
 	            </tr>
+				<tr>
+					<td>排序号</td>
+					<td style="padding:1px"><input name="Sort" id="Sort" class="easyui-textbox" style="width: 150px;height: 20px"/></td>
+					<td>种类</td>
+					<td style="padding:1px"><input name="ZL" id="ZL" class="easyui-textbox" style="width: 150px;height: 20px"/></td>
+					<td>启用</td>
+					<td style="padding:1px"><input name="Enabled" id="Enabled" type="checkbox" style="width: 50px;height: 20px"/></td>
+				</tr>
 	            <tr>
-	            <td>类型</td>
-	            <td style="padding:1px"><input name="Type" id="Type" class="easyui-textbox" style="width: 230px;height: 20px"/></td>
-	            </tr>
-	            <tr>
-	            <td>图标</td>
-	            <td style="padding:1px"><input name="Icon" id="Icon" type="file" class="easyui-textbox" style="width: 230px;height: 20px"/></td>
-	            </tr>
-	            <tr>
-	            <td>链接</td>
-	            <td style="padding:1px"><input name="URL" id="URL" class="easyui-textbox" style="width: 230px;height: 20px"/></td>
-	            </tr>
-	            <tr>
-	            <td>宽度</td>
-	            <td style="padding:1px"><input name="Width" id="Width" class="easyui-textbox" style="width: 230px;height: 20px"/></td>
-	            </tr>
-	            <tr>
-	            <td>高度</td>
-	            <td style="padding:1px"><input name="Height" id="Height" class="easyui-textbox" style="width: 230px;height: 20px"/></td>
-	            </tr>
-	            <tr>
-	            <td>拉伸</td>
-	            <td style="padding:1px"><input name="ReSize" id="ReSize" type="checkbox" style="width: 230px;height: 20px"/></td>
-	            </tr>
-	            <tr>
-	            <td>最大化</td>
-	            <td style="padding:1px"><input name="OpenMax" id="OpenMax" type="checkbox" style="width: 230px;height: 20px"/></td>
-	            </tr>
-	            <tr>
-	            <td>Flash</td>
-	            <td style="padding:1px"><input name="Flash" id="Flash" type="checkbox" style="width: 230px;height: 20px"/></td>
-	            </tr>
-	            <tr>
-	            <td>种类</td>
-	            <td style="padding:1px"><input name="ZL" id="ZL" class="easyui-textbox" style="width: 230px;height: 20px"/></td>
-	            </tr>
-	            <tr>
-	            <td>排序号</td>
-	            <td style="padding:1px"><input name="Sort" id="Sort" class="easyui-textbox" style="width: 230px;height: 20px"/></td>
-	            </tr>
-	            <tr>
-	            <td>备注</td>
-	            <td style="padding:1px"><input name="Remark" id="Remark" class="easyui-textbox" style="width: 230px;height: 20px"/></td>
-	            </tr>
-	            <tr>
-	            <td>启用</td>
-	            <td style="padding:1px"><input name="Enabled" id="Enabled" type="checkbox" style="width: 230px;height: 20px"/></td>
+				<td>备注</td>
+				<td style="padding:1px" colspan="5"><input name="Remark" id="Remark" class="easyui-textbox" style="width: 480px;height: 20px"/></td>
+				</tr>
+				<tr>
+				<td>图标</td>
+				<td style="padding:1px" colspan="5"><div id="Icon" class="fileUploadContent"></div></td>
 	            </tr>
 	            </table>
 	            <input type="hidden" name="clientIp" id="clientIp" value="<%=clientIp %>"/>
@@ -390,7 +377,7 @@
 			var appID = 0;
 			//保存编辑前的名称
 			var orgApp = "";
-			
+
 			function addApp()
 			{
 				$("#clientIp").val('<%=clientIp %>');
@@ -402,6 +389,19 @@
 	            orgApp = "";
 	            appID = 0;
 	            url = '<%=path %>/app/create.action';
+				$("#Icon").empty();//清除上传控件数据
+				$(".fileUploadContent").initUpload({
+					"uploadUrl": "<%=path %>/app/uploadImg.action",//上传文件信息地址
+					"progressUrl":"#",//获取进度信息地址，可选，注意需要返回的data格式如下（{bytesRead: 102516060, contentLength: 102516060, items: 1, percent: 100, startTime: 1489223136317, useTime: 2767}）
+					//"showSummerProgress":false,//总进度条，默认限制
+					//"size":350,//文件大小限制，单位kb,默认不限制
+					"maxFileNumber":1,//文件个数限制，为整数
+					//"filelSavePath":"",//文件上传地址，后台设置的根目录
+					//"beforeUpload":beforeUploadFun,//在上传前执行的函数
+					//"onUpload":onUploadFun, //在上传后执行的函数
+					autoCommit:true, //文件是否自动上传
+					"fileType":['png','jpg']//文件类型限制，默认不限制，注意写的是文件后缀
+				});
 			}
 			
 			//保存信息
@@ -424,7 +424,7 @@
 								Number : $.trim($("#Number").val()),
 								Name : $.trim($("#Name").val()),
 								Type : $.trim($("#Type").val()),
-								Icon : $("#Icon").val(),
+								Icon :  $.trim($("#Icon .fileItem .fileName").text()),
 								URL : $.trim($("#URL").val()),
 								Width : $.trim($("#Width").val()),
 								Height : $.trim($("#Height").val()),

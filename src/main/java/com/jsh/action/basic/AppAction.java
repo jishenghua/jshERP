@@ -35,6 +35,39 @@ public class AppAction extends BaseAction<AppModel>
     private UserBusinessIService userBusinessService;
     private AppModel model = new AppModel();
 
+	/**
+	 * 上传图片
+	 */
+	public void uploadImg()
+	{
+		Log.infoFileSync("==================开始调用上传图片方法uploadImg()===================");
+		File fileInfo = model.getFileInfo();
+		String fileName = model.getFileInfoName();  //获取文件名
+		try {
+			if(fileInfo != null ){
+				String path = ServletActionContext.getServletContext().getRealPath("/upload/images/deskIcon");
+				InputStream is = new FileInputStream(fileInfo);
+				File file = new File(path, fileName);
+				OutputStream os = new FileOutputStream(file);
+				byte[] b = new byte[1024];
+				int bs = 0;
+				while ((bs = is.read(b)) > 0) {
+					os.write(b, 0, bs);
+				}
+				is.close();
+				os.close();
+			}
+		}
+		catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			//			e.printStackTrace();
+		}
+		catch (IOException e) {
+			// TODO Auto-generated catch block
+			//			e.printStackTrace();
+		}
+		Log.infoFileSync("==================结束调用上传图片方法uploadImg()===================");
+	}
 
 	/**
 	 * 增加应用
@@ -50,35 +83,7 @@ public class AppAction extends BaseAction<AppModel>
 			app.setNumber(model.getNumber());
 			app.setName(model.getName());
 			app.setType(model.getType());
-			
-			try {
-				if(model.getIcon()!=null)
-				{
-					String path = ServletActionContext.getServletContext().getRealPath("/upload/images/deskIcon"); 
-					String iconName=model.getIcon();
-					File file1 = new File(iconName);  //文件
-					String FileName = file1.getName();  //获取文件名
-					app.setIcon(FileName); //设置图片ICON
-					InputStream is = new FileInputStream(iconName);
-					File file = new File(path, FileName);
-	       			OutputStream os = new FileOutputStream(file);
-	       			byte[] b = new byte[1024];
-	       			int bs = 0;
-	       			while ((bs = is.read(b)) > 0) {
-	       				os.write(b, 0, bs);
-	       			}
-	       			is.close();
-	       			os.close();
-				}
-				
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
+			app.setIcon(model.getIcon()); //设置图片Icon
 			app.setURL(model.getURL());
 			app.setWidth(model.getWidth());
 			app.setHeight(model.getHeight());

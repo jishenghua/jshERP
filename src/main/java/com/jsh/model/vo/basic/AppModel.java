@@ -1,5 +1,7 @@
 package com.jsh.model.vo.basic;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.File;
 import java.io.Serializable;
 
@@ -28,7 +30,9 @@ public class AppModel implements Serializable
      * 图标
      */
     private String Icon = "";
-    
+
+	private File fileInfo;
+	private String fileInfoName; //图片名称
     /**
      * 链接
      */
@@ -137,6 +141,22 @@ public class AppModel implements Serializable
 
 	public void setName(String name) {
 		Name = name;
+	}
+
+	public File getFileInfo() {
+		return fileInfo;
+	}
+
+	public void setFileInfo(File fileInfo) {
+		this.fileInfo = fileInfo;
+	}
+
+	public String getFileInfoName() {
+		return fileInfoName;
+	}
+
+	public void setFileInfoName(String fileInfoName) {
+		this.fileInfoName = fileInfoName;
 	}
 
 	public String getType() {
