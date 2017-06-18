@@ -310,19 +310,23 @@ public class DepotItemAction extends BaseAction<DepotItemModel>
                 for(DepotItem depotItem:dataList)
                 {
                     JSONObject item = new JSONObject();
-                    Integer OutSum = sumNumberBuyOrSale("出库","销售",depotItem.getMaterialId().getId(),model.getMonthTime());   
-                    Integer InSum = sumNumberBuyOrSale("入库","销售退货",depotItem.getMaterialId().getId(),model.getMonthTime()); 
-                    Double OutSumPrice = sumPriceBuyOrSale("出库","销售",depotItem.getMaterialId().getId(),model.getMonthTime()); 
+                    Integer OutSumRetail = sumNumberBuyOrSale("出库","零售",depotItem.getMaterialId().getId(),model.getMonthTime());
+                    Integer OutSum = sumNumberBuyOrSale("出库","销售",depotItem.getMaterialId().getId(),model.getMonthTime());
+                    Integer InSumRetail = sumNumberBuyOrSale("入库","零售退货",depotItem.getMaterialId().getId(),model.getMonthTime());
+                    Integer InSum = sumNumberBuyOrSale("入库","销售退货",depotItem.getMaterialId().getId(),model.getMonthTime());
+                    Double OutSumRetailPrice = sumPriceBuyOrSale("出库","零售",depotItem.getMaterialId().getId(),model.getMonthTime());
+                    Double OutSumPrice = sumPriceBuyOrSale("出库","销售",depotItem.getMaterialId().getId(),model.getMonthTime());
+                    Double InSumRetailPrice = sumPriceBuyOrSale("入库","零售退货",depotItem.getMaterialId().getId(),model.getMonthTime());
                     Double InSumPrice = sumPriceBuyOrSale("入库","销售退货",depotItem.getMaterialId().getId(),model.getMonthTime());                    
                     item.put("Id", depotItem.getId());
                     item.put("MaterialId", depotItem.getMaterialId()==null?"":depotItem.getMaterialId().getId());
                     item.put("MaterialName", depotItem.getMaterialId().getName());
                     item.put("MaterialModel", depotItem.getMaterialId().getModel());
                     item.put("MaterialColor", depotItem.getMaterialId().getColor());
-                    item.put("OutSum", OutSum);
-                    item.put("InSum", InSum);
-                    item.put("OutSumPrice", OutSumPrice);
-                    item.put("InSumPrice", InSumPrice);
+                    item.put("OutSum", OutSumRetail + OutSum);
+                    item.put("InSum", InSumRetail + InSum);
+                    item.put("OutSumPrice", OutSumRetailPrice + OutSumPrice);
+                    item.put("InSumPrice", InSumRetailPrice + InSumPrice);
                     dataArray.add(item);
                 }
             }

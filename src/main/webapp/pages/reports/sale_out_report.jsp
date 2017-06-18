@@ -35,6 +35,7 @@
 					<td>
 						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchBtn">查询</a>
 					</td>
+					<td><span class="tip">注：此处包含零售+批发销售</span></td>
 				</tr>
 			</table>
 		</div>
@@ -48,6 +49,7 @@
 			//初始化界面
 			$(function()
 			{
+				$("#searchTable .tip").css("padding-left","15px").css("color","red");
 				initTableData();
 				ininPager();
 			});			

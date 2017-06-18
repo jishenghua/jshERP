@@ -47,6 +47,12 @@
 			payTypeTitle = "付款";
 			organUrl = supUrl;
 		}
+		else if(listTitle === "零售退货列表"){
+			listType = "入库";
+			listSubType = "零售退货";
+			payTypeTitle = "付款";
+			organUrl = cusUrl;
+		}
 		else if(listTitle === "销售退货列表"){
 			listType = "入库"; 
 			listSubType = "销售退货"; 
@@ -58,6 +64,12 @@
 			listSubType = "其它"; 
 			payTypeTitle = "隐藏";
 			organUrl = supUrl;
+		}
+		else if(listTitle === "零售出库列表"){
+			listType = "出库";
+			listSubType = "零售";
+			payTypeTitle = "收款";
+			organUrl = cusUrl;
 		}
 		else if(listTitle === "销售出库列表"){
 			listType = "出库"; 
@@ -640,6 +652,18 @@
 	    initTableData_material("add"); //商品列表
 	    reject(); //撤销下、刷新商品列表
 	    url = path + '/depotHead/create.action';
+
+		//零售单据修改收款时，自动计算找零
+		if(listSubType == "零售"){
+			var getAmount = $("#depotHeadFM .get-amount");
+			getAmount.off("keyup").on("keyup",function() {
+				var changeAmount = $("#depotHeadFM .change-amount");
+				var backAmount = $("#depotHeadFM .back-amount");
+				if(changeAmount.val()){
+					backAmount.val(getAmount.val()-changeAmount.val());
+				}
+			});
+		}
 	}	
 
 	//编辑信息
@@ -693,6 +717,12 @@
 	    
 	    depotHeadID = depotHeadInfo[0];
 	    initTableData_material_show(TotalPrice); //商品列表-查看状态
+
+		//零售单据修改收款时，自动计算找零
+		if(listSubType == "零售"){
+			$("#depotHeadDlgShow .get-amount-show").text($("#depotHeadDlgShow .change-amount-show").text());
+			$("#depotHeadDlgShow .back-amount-show").text(0);
+		}
 	}
 	
 	//绑定操作事件
@@ -747,7 +777,7 @@
 					else {
 						AllocationProjectId = $.trim($("#AllocationProjectId").val()); //收货仓库-对方
 					}
-					if(listSubType === "采购"||listSubType === "销售退货"){
+					if(listSubType === "采购"||listSubType === "零售退货"||listSubType === "销售退货"){
 						//付款为负数
 						ChangeAmount = 0 - ChangeAmount;
 						TotalPrice = 0 - TotalPrice;
@@ -798,14 +828,14 @@
 							{
 								$.messager.show({
 		                            title: '错误提示',
-		                            msg: '保存采购入库信息失败，请稍后重试!'
+		                            msg: '保存信息失败，请稍后重试!'
 		                        });
 							}
 						},
 						//此处添加错误处理
 			    		error:function()
 			    		{
-			    			$.messager.alert('提示','保存采购入库信息异常，请稍后再试！','error');
+			    			$.messager.alert('提示','保存信息异常，请稍后再试！','error');
 							return;
 						}
 					});	
@@ -884,7 +914,12 @@
 	    		});
 	    		TotalPrice = TotalPrice + UnitPrice*OperNumber;
 	    		footer.find("[field='AllPrice']").find("div").text((TotalPrice).toFixed(2));
+				if(listSubType == "零售"){
+					$("#ChangeAmount, #getAmount").val(TotalPrice);
+					$("#backAmount").val(0);
+				}
 	    	});
+			//点击单价，自动提示参考价格列表
 			body.find("[field='UnitPrice']").find(input).off("click").on("click",function(){
 				var self = this;
 				var mValue = body.find("[field='MaterialId'] .combo-value").attr("value"); //获取选中的商品id
@@ -954,6 +989,10 @@
 	    		});
 	    		TotalPrice = TotalPrice + UnitPrice*OperNumber;
 	    		footer.find("[field='AllPrice']").find("div").text((TotalPrice).toFixed(2));
+				if(listSubType == "零售"){
+					$("#ChangeAmount, #getAmount").val(TotalPrice);
+					$("#backAmount").val(0);
+				}
 	    	});
 	    	//修改金额，自动计算单价和合计
 	    	body.find("[field='AllPrice']").find(input).off("keyup").on("keyup",function(){
@@ -968,6 +1007,10 @@
 	    		});
 	    		TotalPrice = TotalPrice + AllPrice;
 	    		footer.find("[field='AllPrice']").find("div").text((TotalPrice).toFixed(2));
+				if(listSubType == "零售"){
+					$("#ChangeAmount, #getAmount").val(TotalPrice);
+					$("#backAmount").val(0);
+				}
 	    	});
 	    },500);
 	}
