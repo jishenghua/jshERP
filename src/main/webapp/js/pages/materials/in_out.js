@@ -20,6 +20,7 @@
 		var listSubType = ""; //采购 销售等
 		var payTypeTitle = "";//付款 收款
 		var organUrl = ""; //组织数据接口地址
+		var amountNum = ""; //单据编号开头字符
 		//初始化系统基础信息
 		getType();
 		initSystemData_UB();
@@ -41,59 +42,69 @@
 		listTitle = $("#tablePanel").prev().text();
 		var supUrl = path + "/supplier/findBySelect_sup.action"; //供应商接口
 		var cusUrl = path + "/supplier/findBySelect_cus.action"; //客户接口
+		var retailUrl = path + "/supplier/findBySelect_retail.action"; //散户接口
 		if(listTitle === "采购入库列表"){
 			listType = "入库"; 
 			listSubType = "采购"; 
 			payTypeTitle = "付款";
 			organUrl = supUrl;
+			amountNum = "CGRK";
 		}
 		else if(listTitle === "零售退货列表"){
 			listType = "入库";
 			listSubType = "零售退货";
 			payTypeTitle = "付款";
-			organUrl = cusUrl;
+			organUrl = retailUrl;
+			amountNum = "LSTH";
 		}
 		else if(listTitle === "销售退货列表"){
 			listType = "入库"; 
 			listSubType = "销售退货"; 
 			payTypeTitle = "付款";
 			organUrl = cusUrl;
+			amountNum = "XSTH";
 		}
 		else if(listTitle === "其它入库列表"){
 			listType = "入库"; 
 			listSubType = "其它"; 
 			payTypeTitle = "隐藏";
 			organUrl = supUrl;
+			amountNum = "QTRK";
 		}
 		else if(listTitle === "零售出库列表"){
 			listType = "出库";
 			listSubType = "零售";
 			payTypeTitle = "收款";
-			organUrl = cusUrl;
+			organUrl = retailUrl;
+			amountNum = "LSCK";
 		}
 		else if(listTitle === "销售出库列表"){
 			listType = "出库"; 
 			listSubType = "销售"; 
 			payTypeTitle = "收款";
 			organUrl = cusUrl;
+			amountNum = "XSCK";
 		}
 		else if(listTitle === "采购退货列表"){
 			listType = "出库"; 
 			listSubType = "采购退货";
 			payTypeTitle = "收款";
 			organUrl = supUrl;
+			amountNum = "CGTH";
 		}
 		else if(listTitle === "其它出库列表"){
 			listType = "出库"; 
 			listSubType = "其它"; 
 			payTypeTitle = "隐藏";
 			organUrl = cusUrl;
+			amountNum = "QTCK";
 		}
 		else if(listTitle === "调拨出库列表"){
 			listType = "出库"; 
 			listSubType = "调拨"; 
 			payTypeTitle = "隐藏";
 			organUrl = supUrl;
+			amountNum = "DBCK";
 		}
 	}
 	//初始化系统基础信息
@@ -642,10 +653,13 @@
 	function addDepotHead(){
 		$("#clientIp").val(clientIp);
 		$('#depotHeadFM').form('clear');
+		var thisDate = getNowFormatDate(); //当前日期
+		$("#OperTime").val(thisDate);
+		var thisNumber = getNowFormatDateNum(); //根据时间生成编号
+		$("#Number").val(amountNum + thisNumber).focus();
 		var addTitle = listTitle.replace("列表","信息");
 		$('#depotHeadDlg').dialog('open').dialog('setTitle','<img src="' + path + '/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加' + addTitle);
 		$(".window-mask").css({ width: webW ,height: webH});
-	    $("#Number").val("").focus();
 	    
 	    orgDepotHead = "";
 	    depotHeadID = 0;
@@ -656,11 +670,12 @@
 		//零售单据修改收款时，自动计算找零
 		if(listSubType == "零售"){
 			var getAmount = $("#depotHeadFM .get-amount");
+			var changeAmount = $("#depotHeadFM .change-amount");
+			var backAmount = $("#depotHeadFM .back-amount");
+			getAmount.val(0); changeAmount.val(0); backAmount.val(0); //时间初始化
 			getAmount.off("keyup").on("keyup",function() {
-				var changeAmount = $("#depotHeadFM .change-amount");
-				var backAmount = $("#depotHeadFM .back-amount");
 				if(changeAmount.val()){
-					backAmount.val(getAmount.val()-changeAmount.val());
+					backAmount.val((getAmount.val()-changeAmount.val()).toFixed(2));
 				}
 			});
 		}
@@ -915,7 +930,7 @@
 	    		TotalPrice = TotalPrice + UnitPrice*OperNumber;
 	    		footer.find("[field='AllPrice']").find("div").text((TotalPrice).toFixed(2));
 				if(listSubType == "零售"){
-					$("#ChangeAmount, #getAmount").val(TotalPrice);
+					$("#ChangeAmount, #getAmount").val((TotalPrice).toFixed(2));
 					$("#backAmount").val(0);
 				}
 	    	});
@@ -990,7 +1005,7 @@
 	    		TotalPrice = TotalPrice + UnitPrice*OperNumber;
 	    		footer.find("[field='AllPrice']").find("div").text((TotalPrice).toFixed(2));
 				if(listSubType == "零售"){
-					$("#ChangeAmount, #getAmount").val(TotalPrice);
+					$("#ChangeAmount, #getAmount").val((TotalPrice).toFixed(2));
 					$("#backAmount").val(0);
 				}
 	    	});
@@ -1008,7 +1023,7 @@
 	    		TotalPrice = TotalPrice + AllPrice;
 	    		footer.find("[field='AllPrice']").find("div").text((TotalPrice).toFixed(2));
 				if(listSubType == "零售"){
-					$("#ChangeAmount, #getAmount").val(TotalPrice);
+					$("#ChangeAmount, #getAmount").val((TotalPrice).toFixed(2));
 					$("#backAmount").val(0);
 				}
 	    	});

@@ -68,7 +68,7 @@
 	        <form id="depotHeadFM" method="post"  novalidate>
 	            <table>
 	            <tr>
-					<td>购买单位：</td>
+					<td>会员卡号：</td>
 					<td style="padding:5px">
 	            		<input id="OrganId" name="OrganId" style="width:110px;" />
 	            	</td>
@@ -111,7 +111,7 @@
 							</tr>
 							<tr>
 								<td colspan="2">
-									<input id="getAmount" name="getAmount" class="get-amount" data-changeamount="0" />
+									<input id="getAmount" name="getAmount" onKeypress="return (/[\d.]/.test(String.fromCharCode(event.keyCode)))" class="get-amount" data-changeamount="0" />
 								</td>
 							</tr>
 							<tr>
@@ -149,7 +149,7 @@
 	            closed="true" modal="true" cache="false" collapsible="false" closable="true">
 	            <table>
 				<tr>
-					<td>购买单位：</td>
+					<td>会员卡号：</td>
 					<td style="padding:5px;width:110px;">
 						<span id="OrganIdShow"></span>
 					</td>

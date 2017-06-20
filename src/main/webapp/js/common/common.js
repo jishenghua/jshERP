@@ -82,4 +82,64 @@ function getUrlParam(name) {
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
     var r = window.location.search.substr(1).match(reg);  //匹配目标参数
     if (r != null) return unescape(r[2]); return null; //返回参数值
-} 
+}
+
+/**
+ * js获取当前时间， 格式“yyyy-MM-dd HH:MM:SS”
+ */
+function getNowFormatDateTime() {
+	var date = new Date();
+	var seperator1 = "-";
+	var seperator2 = ":";
+	var month = date.getMonth() + 1;
+	var strDate = date.getDate();
+	if (month >= 1 && month <= 9) {
+		month = "0" + month;
+	}
+	if (strDate >= 0 && strDate <= 9) {
+		strDate = "0" + strDate;
+	}
+	var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+		+ " " + date.getHours() + seperator2 + date.getMinutes()
+		+ seperator2 + date.getSeconds();
+	return currentdate;
+}
+
+/**
+ * js获取当前时间， 格式“yyyy-MM-dd”
+ */
+function getNowFormatDate() {
+	var date = new Date();
+	var seperator1 = "-";
+	var seperator2 = ":";
+	var month = date.getMonth() + 1;
+	var strDate = date.getDate();
+	if (month >= 1 && month <= 9) {
+		month = "0" + month;
+	}
+	if (strDate >= 0 && strDate <= 9) {
+		strDate = "0" + strDate;
+	}
+	var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate;
+	return currentdate;
+}
+
+/**
+ * js根据时间生成编号， 格式“yyyyMMddHHMMSS”
+ */
+function getNowFormatDateNum() {
+	var date = new Date();
+	var seperator1 = "-";
+	var seperator2 = ":";
+	var month = date.getMonth() + 1;
+	var strDate = date.getDate();
+	if (month >= 1 && month <= 9) {
+		month = "0" + month;
+	}
+	if (strDate >= 0 && strDate <= 9) {
+		strDate = "0" + strDate;
+	}
+	var currentdate = date.getFullYear() + month + strDate + date.getHours()
+		+ date.getMinutes() + date.getSeconds();
+	return currentdate;
+}

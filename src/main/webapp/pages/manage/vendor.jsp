@@ -39,6 +39,7 @@
 					    <option value="">全部</option>
 						<option value="供应商">供应商</option>
 						<option value="客户">客户</option>
+						<option value="散户">散户</option>
 				    </select>
 					</td>
 					<td>&nbsp;</td>
@@ -86,6 +87,7 @@
 	             <select name="type" id="type"  style="width:230px;">
 						<option value="供应商">供应商</option>
 						<option value="客户">客户</option>
+					 	<option value="散户">散户</option>
 				 </select>
 	            </div>
 	            <div class="fitem" style="padding:5px">
