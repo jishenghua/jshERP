@@ -211,6 +211,7 @@ public class DepotItemAction extends BaseAction<DepotItemModel>
                     item.put("MaterialName", depotItem.getMaterialId().getName());
                     item.put("MaterialModel", depotItem.getMaterialId().getModel());
                     item.put("MaterialColor", depotItem.getMaterialId().getColor());
+                    item.put("MaterialUnit", depotItem.getMaterialId().getUnit());
                     item.put("prevSum", prevSum);
                     item.put("InSum", InSum);
                     item.put("OutSum", OutSum);
@@ -266,6 +267,7 @@ public class DepotItemAction extends BaseAction<DepotItemModel>
                     item.put("MaterialName", depotItem.getMaterialId().getName());
                     item.put("MaterialModel", depotItem.getMaterialId().getModel());
                     item.put("MaterialColor", depotItem.getMaterialId().getColor());
+                    item.put("MaterialUnit", depotItem.getMaterialId().getUnit());
                     item.put("InSum", InSum);
                     item.put("OutSum", OutSum);
                     item.put("InSumPrice", InSumPrice);
@@ -323,6 +325,7 @@ public class DepotItemAction extends BaseAction<DepotItemModel>
                     item.put("MaterialName", depotItem.getMaterialId().getName());
                     item.put("MaterialModel", depotItem.getMaterialId().getModel());
                     item.put("MaterialColor", depotItem.getMaterialId().getColor());
+                    item.put("MaterialUnit", depotItem.getMaterialId().getUnit());
                     item.put("OutSum", OutSumRetail + OutSum);
                     item.put("InSum", InSumRetail + InSum);
                     item.put("OutSumPrice", OutSumRetailPrice + OutSumPrice);
@@ -416,6 +419,7 @@ public class DepotItemAction extends BaseAction<DepotItemModel>
                     item.put("MaterialName", depotItem.getMaterialId().getName());
                     item.put("MaterialModel", depotItem.getMaterialId().getModel());
                     item.put("MaterialColor", depotItem.getMaterialId().getColor());
+                    item.put("MaterialUnit", depotItem.getMaterialId().getUnit());
                     item.put("prevSum", prevSum);
                     item.put("InSum", InSum);
                     item.put("OutSum", OutSum);

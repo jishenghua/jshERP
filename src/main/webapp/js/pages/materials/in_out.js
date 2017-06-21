@@ -408,7 +408,56 @@
 	                      	valueField:'Id',
 	                      	textField:'MaterialName',
 	                      	method:'get',
-	                      	url: path + "/material/findBySelect.action"
+	                      	url: path + "/material/findBySelect.action",
+							onSelect:function(rec){
+								if(rec) {
+									$.ajax({
+										url: path + "/material/findById.action",
+										type: "get",
+										dataType: "json",
+										data: {
+											"MaterialID": rec.Id
+										},
+										success: function (res) {
+											if(res && res.rows && res.rows[0]) {
+												var retailPrice = res.rows[0].RetailPrice; //零售价格
+												var presetPriceOne = res.rows[0].PresetPriceOne; //价格1
+												var presetPriceTwo = res.rows[0].PresetPriceTwo; //价格2
+												var TotalPrice = 0;
+												var allPrice = 0;
+												var body =$("#depotHeadFM .datagrid-body");
+												var footer =$("#depotHeadFM .datagrid-footer");
+												var input = ".datagrid-editable-input";
+												body.find("[field='OperNumber']").find(input).val(1);
+												if(listSubType == "零售") {
+													body.find("[field='UnitPrice']").find(input).val(retailPrice);
+													body.find("[field='AllPrice']").find(input).val(retailPrice);
+													allPrice = retailPrice;
+												}
+												else if(listTitle == "销售出库列表" || listTitle == "采购退货列表" || listTitle == "其它出库列表" || listTitle == "调拨出库列表") {
+													body.find("[field='UnitPrice']").find(input).val(presetPriceOne);
+													body.find("[field='AllPrice']").find(input).val(presetPriceOne);
+													allPrice = presetPriceOne;
+												}
+												body.find("[field='AllPrice']").each(function(){
+													if($(this).find("div").text()!==""){
+														TotalPrice = TotalPrice + parseFloat($(this).find("div").text().toString());
+													}
+												});
+												TotalPrice = TotalPrice + allPrice;
+												footer.find("[field='AllPrice']").find("div").text((TotalPrice).toFixed(2));
+												if(listSubType == "零售"){
+													$("#ChangeAmount, #getAmount").val((TotalPrice).toFixed(2));
+													$("#backAmount").val(0);
+												}
+											}
+										},
+										error: function() {
+											$.messager.alert('页面加载提示','页面加载异常，请稍后再试！','error');
+										}
+									});
+								}
+							}
 	                  	}
 		            }
 			    },
@@ -915,7 +964,8 @@
 	    	var body =$("#depotHeadFM .datagrid-body");
 	    	var footer =$("#depotHeadFM .datagrid-footer");
 	    	var input = ".datagrid-editable-input";
-	    	
+	    	//点击商品下拉框，自动加载数量、单价、金额
+
 	    	//修改单价，自动计算金额和合计
 	    	body.find("[field='UnitPrice']").find(input).off("keyup").on("keyup",function(){
 	    		var UnitPrice =$(this).val()-0; //单价
