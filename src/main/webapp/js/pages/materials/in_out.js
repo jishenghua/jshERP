@@ -429,7 +429,7 @@
 												var footer =$("#depotHeadFM .datagrid-footer");
 												var input = ".datagrid-editable-input";
 												body.find("[field='OperNumber']").find(input).val(1);
-												if(listSubType == "零售") {
+												if(listSubType == "零售" || listSubType == "零售退货") {
 													body.find("[field='UnitPrice']").find(input).val(retailPrice);
 													body.find("[field='AllPrice']").find(input).val(retailPrice);
 													allPrice = retailPrice;
@@ -446,7 +446,7 @@
 												});
 												TotalPrice = TotalPrice + allPrice;
 												footer.find("[field='AllPrice']").find("div").text((TotalPrice).toFixed(2));
-												if(listSubType == "零售"){
+												if(listSubType == "零售" || listSubType == "零售退货") {
 													$("#ChangeAmount, #getAmount").val((TotalPrice).toFixed(2));
 													$("#backAmount").val(0);
 												}
@@ -979,7 +979,7 @@
 	    		});
 	    		TotalPrice = TotalPrice + UnitPrice*OperNumber;
 	    		footer.find("[field='AllPrice']").find("div").text((TotalPrice).toFixed(2));
-				if(listSubType == "零售"){
+				if(listSubType == "零售" || listSubType == "零售退货") {
 					$("#ChangeAmount, #getAmount").val((TotalPrice).toFixed(2));
 					$("#backAmount").val(0);
 				}
@@ -1054,7 +1054,7 @@
 	    		});
 	    		TotalPrice = TotalPrice + UnitPrice*OperNumber;
 	    		footer.find("[field='AllPrice']").find("div").text((TotalPrice).toFixed(2));
-				if(listSubType == "零售"){
+				if(listSubType == "零售" || listSubType == "零售退货") {
 					$("#ChangeAmount, #getAmount").val((TotalPrice).toFixed(2));
 					$("#backAmount").val(0);
 				}
@@ -1072,7 +1072,7 @@
 	    		});
 	    		TotalPrice = TotalPrice + AllPrice;
 	    		footer.find("[field='AllPrice']").find("div").text((TotalPrice).toFixed(2));
-				if(listSubType == "零售"){
+				if(listSubType == "零售" || listSubType == "零售退货") {
 					$("#ChangeAmount, #getAmount").val((TotalPrice).toFixed(2));
 					$("#backAmount").val(0);
 				}
