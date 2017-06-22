@@ -11,6 +11,7 @@ public class DepotHeadModel implements Serializable
 	private String Type = "";
 	private String SubType = "";
 	private Long ProjectId;
+	private String DepotIds = "";
 	private String Number = "";
 	private String OperPersonName = "";	
 	private String OperTime;	
@@ -83,6 +84,14 @@ public class DepotHeadModel implements Serializable
 
 	public void setProjectId(Long projectId) {
 		ProjectId = projectId;
+	}
+
+	public String getDepotIds() {
+		return DepotIds;
+	}
+
+	public void setDepotIds(String depotIds) {
+		DepotIds = depotIds;
 	}
 
 	public String getNumber() {

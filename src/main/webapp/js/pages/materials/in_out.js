@@ -21,6 +21,8 @@
 		var payTypeTitle = "";//付款 收款
 		var organUrl = ""; //组织数据接口地址
 		var amountNum = ""; //单据编号开头字符
+		var depotString = ""; //店铺列表
+		var orgDefaultId = 0; //单位默认编号
 		//初始化系统基础信息
 		getType();
 		initSystemData_UB();
@@ -40,6 +42,7 @@
 	//根据单据名称获取类型
 	function getType(){
 		listTitle = $("#tablePanel").prev().text();
+		depotString = "|";
 		var supUrl = path + "/supplier/findBySelect_sup.action"; //供应商接口
 		var cusUrl = path + "/supplier/findBySelect_cus.action"; //客户接口
 		var retailUrl = path + "/supplier/findBySelect_retail.action"; //散户接口
@@ -189,9 +192,11 @@
 					if(userdepot.indexOf("["+depot.id+"]")!=-1)
 					{
 						options += '<option value="' + depot.id + '">' + depot.name + '</option>';
+						depotString = depotString + depot.id + ",";
 					}
 				}
-			}	
+			}
+			depotString = depotString.substring(1, depotString.length-1);
 			$("#ProjectId").empty().append(options);
 			$("#AllocationProjectId").empty().append(options);			
 			$("#searchProjectId").empty().append('<option value="">全部</option>').append(options);
@@ -203,7 +208,15 @@
 		$('#OrganId').combobox({    
 			url: organUrl,
 		    valueField:'id',    
-		    textField:'supplier'
+		    textField:'supplier',
+			onLoadSuccess: function(res) {
+				var data = $(this).combobox('getData');
+				for(var i = 0; i<= data.length; i++){
+					if(data[i].supplier === "非会员"){
+						orgDefaultId = data[i].id;
+					}
+				}
+			}
 		});  
 	}
 	
@@ -717,7 +730,8 @@
 	    url = path + '/depotHead/create.action';
 
 		//零售单据修改收款时，自动计算找零
-		if(listSubType == "零售"){
+		if(listSubType == "零售" || listSubType == "零售退货") {
+			$("#OrganId").combobox("setValue", orgDefaultId);
 			var getAmount = $("#depotHeadFM .get-amount");
 			var changeAmount = $("#depotHeadFM .change-amount");
 			var backAmount = $("#depotHeadFM .back-amount");
@@ -791,25 +805,19 @@
 	
 	//绑定操作事件
 	function bindEvent(){
+		showDepotHeadDetails(1,initPageSize); //初始化时自动查询
 		//搜索处理
 		$("#searchBtn").off("click").on("click",function(){
-			if($("#searchProjectId").val()=="")
+			showDepotHeadDetails(1,initPageSize);
+			var opts = $("#tableData").datagrid('options');
+			var pager = $("#tableData").datagrid('getPager');
+			opts.pageNumber = 1;
+			opts.pageSize = initPageSize;
+			pager.pagination('refresh',
 			{
-				$.messager.alert('查询提示','请选择一个仓库！','info');
-			}
-			else
-			{
-				showDepotHeadDetails(1,initPageSize);	
-				var opts = $("#tableData").datagrid('options');  
-				var pager = $("#tableData").datagrid('getPager'); 
-				opts.pageNumber = 1;  
-				opts.pageSize = initPageSize;  
-				pager.pagination('refresh',
-				{  
-					pageNumber:1,  
-					pageSize:initPageSize  
-				});  
-			}
+				pageNumber:1,
+				pageSize:initPageSize
+			});
 		});
 		
 		//重置按钮
@@ -935,6 +943,7 @@
 			dataType: "json",
 			data: ({
 				ProjectId:$.trim($("#searchProjectId").val()),
+				DepotIds: depotString,
 				Type: listType,
 				SubType:listSubType,
 				State:$.trim($("#searchState").val()),

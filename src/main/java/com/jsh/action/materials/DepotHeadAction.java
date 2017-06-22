@@ -415,8 +415,12 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
         Map<String,Object> condition = new HashMap<String,Object>();
         if(model.getAllocationProjectId()!=null)
         {condition.put("AllocationProjectId_n_eq", model.getAllocationProjectId());}
-        if(model.getProjectId()!=null)
-        {condition.put("ProjectId_n_eq", model.getProjectId());}
+        if(model.getProjectId()!=null) {
+			condition.put("ProjectId_n_eq", model.getProjectId());
+		}
+		else {
+			condition.put("ProjectId_s_in", model.getDepotIds());
+		}
         condition.put("Type_s_eq",model.getType());
         condition.put("SubType_s_eq",model.getSubType());
         condition.put("Number_s_like",model.getNumber());
