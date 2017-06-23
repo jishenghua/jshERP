@@ -45,3 +45,5 @@
 ![输入图片说明](http://git.oschina.net/uploads/images/2017/0108/150646_a7cbb9c9_852955.png "基础数据模块")
 * 系统管理模块
 ![输入图片说明](http://git.oschina.net/uploads/images/2017/0108/150703_46711f40_852955.png "系统管理模块")
+* 零售出库模块
+![输入图片说明](http://git.oschina.net/uploads/images/2017/0623/222506_5a214201_852955.png "零售出库模块")
