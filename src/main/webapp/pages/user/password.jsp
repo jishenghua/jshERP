@@ -22,7 +22,7 @@
   	</head>
   	<body>
   		<div id="userDlg" class="easyui-panel" title="修改密码" style="height:370px;padding:10px 20px;background-color:#EAF2FD; "
-            buttons="#dlg-buttons" iconCls="icon-unlock" collapsible="true" closable="false">
+             iconCls="icon-unlock" collapsible="true" closable="false">
 	        <form id="passwordFM" method="post" novalidate>
 	            <div class="fitem" style="padding:5px">
 	                <label id="passwordLabel">原始密码&nbsp;&nbsp;</label>
@@ -44,7 +44,7 @@
 	        <div style="clear: both;">&nbsp;</div>
 	        <div id="dlg-buttons">
 		        <a href="javascript:void(0)" id="savepassword" class="easyui-linkbutton" iconCls="icon-save">保存</a>
-		        <a href="javascript:void(0)" id="cancelpassword" class="easyui-linkbutton" iconCls="icon-cancel">取消</a>
+		        <a href="javascript:void(0)" id="cancelpassword" class="easyui-linkbutton" iconCls="icon-redo">重置</a>
 		    </div>
 	    </div>
 	    
@@ -59,15 +59,14 @@
 				    }
 				});
 				$("#userDlg").panel({height:webH-35});
+				$("#dlg-buttons").css("padding-left","65px");
 			});	
-			
-			$("#cancelpassword").unbind().bind({
-				click:function()
-				{
-					history.go(-1);
-				}
+			//重置
+			$("#cancelpassword").off("click").on("click",function(){
+				$("#orgpassword").val("");
+				$("#password").val("");
+				$("#repassword").val("");
 			});
-			
 			//初始化键盘enter事件
 			$(document).keydown(function(event)
 			{  
