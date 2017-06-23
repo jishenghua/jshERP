@@ -21,20 +21,20 @@
 		<script type="text/javascript" src="<%=path %>/js/common/common.js"></script>
   	</head>
   	<body>
-  		<div id="userDlg" class="easyui-panel" title="修改密码" style="height:370px;padding:10px 20px;background-color:#EAF2FD; "
+  		<div id="userDlg" class="easyui-panel" title="修改密码" style="height:370px;background-color:#EAF2FD; "
              iconCls="icon-unlock" collapsible="true" closable="false">
 	        <form id="passwordFM" method="post" novalidate>
-	            <div class="fitem" style="padding:5px">
+	            <div class="fitem" style="padding:10px">
 	                <label id="passwordLabel">原始密码&nbsp;&nbsp;</label>
 	                <input type="password" name="orgpassword" id="orgpassword" class="easyui-validatebox" data-options="required:true,validType:'length[5,20]'" style="width: 230px;height: 20px" missingMessage="请输入原始密码"/>
 	                <span id="orgTipMsg"></span>
 	            </div>
-	            <div class="fitem" style="padding:5px">
+	            <div class="fitem" style="padding:10px">
 	                <label id="newPassword">重设密码&nbsp;&nbsp;</label>
 	                <input type="password" name="password" id="password" class="easyui-validatebox" data-options="required:true,validType:'length[5,20]'" style="width: 230px;height: 20px" missingMessage="请填写新密码"/>
 	                <span id="orgTipMsg"></span>
 	            </div>
-	            <div class="fitem" style="padding:5px">
+	            <div class="fitem" style="padding:10px">
 	                <label id="repasswordLabel">再输一遍&nbsp;&nbsp;</label>
 	                <input type="password" name="repassword" id="repassword" class="easyui-validatebox" style="width: 230px;height: 20px" required="true" class="easyui-validatebox" validType="equals['#password']"  missingMessage="请再次填写新密码" invalidMessage="两次密码输入不一致"/>
 	                <span id="tipMsg"></span>
@@ -58,7 +58,7 @@
 				        return false;
 				    }
 				});
-				$("#userDlg").panel({height:webH-35});
+				$("#userDlg").panel({height:webH-3, width:webW+15});
 				$("#dlg-buttons").css("padding-left","65px");
 			});	
 			//重置

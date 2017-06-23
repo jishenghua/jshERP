@@ -43,6 +43,9 @@
 	function getType(){
 		listTitle = $("#tablePanel").prev().text();
 		depotString = "|";
+		//改变宽度和高度
+		$("#searchPanel").panel({width:webW-2});
+		$("#tablePanel").panel({width:webW-2});
 		var supUrl = path + "/supplier/findBySelect_sup.action"; //供应商接口
 		var cusUrl = path + "/supplier/findBySelect_cus.action"; //客户接口
 		var retailUrl = path + "/supplier/findBySelect_retail.action"; //散户接口
