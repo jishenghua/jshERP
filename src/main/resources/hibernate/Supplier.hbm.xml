@@ -32,6 +32,11 @@
                 <comment>电子邮箱</comment>
             </column>
         </property>
+        <property generated="never" lazy="false" name="AdvanceIn" type="java.lang.Double">
+            <column name="AdvanceIn" precision="22" scale="3">
+                <comment>预收款</comment>
+            </column>
+        </property>
         <property generated="never" lazy="false" name="BeginNeedGet" type="java.lang.Double">
             <column name="BeginNeedGet" precision="22" scale="3">
                 <comment>期初应收</comment>

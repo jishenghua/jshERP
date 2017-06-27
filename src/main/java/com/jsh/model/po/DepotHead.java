@@ -19,6 +19,7 @@ public class DepotHead implements java.io.Serializable
 	private Double ChangeAmount;
 	private Depot AllocationProjectId;	
 	private Double TotalPrice;
+	private String PayType;
 	private String Remark;	
 
 	public DepotHead()
@@ -34,7 +35,7 @@ public class DepotHead implements java.io.Serializable
 	public DepotHead(String type, String subType, Depot projectId,
 			String number, String operPersonName, Timestamp createTime,
 			Timestamp operTime, Supplier organId, Person handsPersonId,
-			Account accountId, Double changeAmount, Depot allocationProjectId, Double totalPrice, String remark) {
+			Account accountId, Double changeAmount, Depot allocationProjectId, Double totalPrice,String payType, String remark) {
 		super();
 		Type = type;
 		SubType = subType;
@@ -49,6 +50,7 @@ public class DepotHead implements java.io.Serializable
 		ChangeAmount = changeAmount;
 		AllocationProjectId = allocationProjectId;
 		TotalPrice = totalPrice;
+		PayType = payType;
 		Remark = remark;
 	}
 
@@ -162,6 +164,14 @@ public class DepotHead implements java.io.Serializable
 
 	public void setTotalPrice(Double totalPrice) {
 		TotalPrice = totalPrice;
+	}
+
+	public String getPayType() {
+		return PayType;
+	}
+
+	public void setPayType(String payType) {
+		PayType = payType;
 	}
 
 	public String getRemark() {

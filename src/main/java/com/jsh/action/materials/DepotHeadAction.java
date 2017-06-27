@@ -92,6 +92,7 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
 			depotHead.setChangeAmount(model.getChangeAmount());
 			if(model.getAllocationProjectId()!=null){depotHead.setAllocationProjectId(new Depot(model.getAllocationProjectId()));}
 			depotHead.setTotalPrice(model.getTotalPrice());
+			depotHead.setPayType(model.getPayType());
 			depotHead.setRemark(model.getRemark());
 			depotHeadService.create(depotHead);
 			
@@ -181,7 +182,8 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
 			if(model.getAccountId()!=null){depotHead.setAccountId(new Account(model.getAccountId()));}			
 			depotHead.setChangeAmount(model.getChangeAmount());
 			if(model.getAllocationProjectId()!=null){depotHead.setAllocationProjectId(new Depot(model.getAllocationProjectId()));}
-			depotHead.setTotalPrice(model.getTotalPrice()); 
+			depotHead.setTotalPrice(model.getTotalPrice());
+			depotHead.setPayType(model.getPayType());
 			depotHead.setRemark(model.getRemark());
         	depotHeadService.update(depotHead);
             

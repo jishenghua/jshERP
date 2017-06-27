@@ -5,5 +5,5 @@ import com.jsh.model.po.Supplier;
 
 public interface SupplierIService extends BaseIService<Supplier>
 {
-	
+
 }

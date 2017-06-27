@@ -87,8 +87,15 @@
 	            </tr>
 	            <tr>
 					<td>单据备注：</td>
-					<td style="padding:5px" colspan="5">
+					<td style="padding:5px" colspan="3">
 						<input name="Remark" id="Remark" class="easyui-validatebox" style="width: 292px;"/>
+					</td>
+					<td>付款类型：</td>
+					<td style="padding:5px">
+						<select name="payType" id="payType" style="width:130px;">
+							<option value="现付">现付</option>
+							<option value="预付款">预付款</option>
+						</select>
 					</td>
 	            </tr>
 	            <tr>

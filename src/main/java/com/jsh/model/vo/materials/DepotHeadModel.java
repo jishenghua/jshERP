@@ -21,6 +21,7 @@ public class DepotHeadModel implements Serializable
 	private Double ChangeAmount;	
 	private Long AllocationProjectId;	
 	private Double TotalPrice;
+	private String PayType = "";
 	private String Remark = "";	
 	
 	private String BeginTime; //查询开始时间
@@ -156,6 +157,14 @@ public class DepotHeadModel implements Serializable
 
 	public void setTotalPrice(Double totalPrice) {
 		TotalPrice = totalPrice;
+	}
+
+	public String getPayType() {
+		return PayType;
+	}
+
+	public void setPayType(String payType) {
+		PayType = payType;
 	}
 
 	public String getRemark() {

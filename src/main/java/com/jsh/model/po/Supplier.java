@@ -9,6 +9,7 @@ public class Supplier implements java.io.Serializable
 	private String contacts;
 	private String phonenum;
 	private String email;
+	private Double advanceIn;
     private Double BeginNeedGet;
     private Double BeginNeedPay;
     private Double AllNeedGet;
@@ -28,7 +29,7 @@ public class Supplier implements java.io.Serializable
 	}
 
 	public Supplier(String supplier, String type, String contacts, String phonenum, 
-    String email, Short isystem, String description, Boolean enabled,
+    String email, Short isystem, String description, Boolean enabled, Double advanceIn,
                     Double beginNeedGet,Double beginNeedPay,Double allNeedGet,Double allNeedPay) {
 		super();
 		this.supplier = supplier;
@@ -43,6 +44,7 @@ public class Supplier implements java.io.Serializable
 		this.isystem = isystem;
 		this.description = description;
 		this.enabled = enabled;
+		this.advanceIn = advanceIn;
 	}
 
 	public Long getId()
@@ -158,6 +160,13 @@ public class Supplier implements java.io.Serializable
 
 	public void setEnabled(Boolean enabled) {
 		this.enabled = enabled;
-	}	
-    
+	}
+
+	public Double getAdvanceIn() {
+		return advanceIn;
+	}
+
+	public void setAdvanceIn(Double advanceIn) {
+		this.advanceIn = advanceIn;
+	}
 }

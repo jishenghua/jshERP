@@ -2,6 +2,9 @@ package com.jsh.dao.basic;
 
 import com.jsh.base.BaseDAO;
 import com.jsh.model.po.Supplier;
+import com.jsh.util.PageUtil;
+import com.jsh.util.SearchConditionUtil;
+import org.hibernate.Query;
 
 public class SupplierDAO extends BaseDAO<Supplier> implements SupplierIDAO
 {
@@ -14,6 +17,5 @@ public class SupplierDAO extends BaseDAO<Supplier> implements SupplierIDAO
 	{
 		return Supplier.class;
 	}
-	
-    
+
 }

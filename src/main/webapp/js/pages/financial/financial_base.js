@@ -10,7 +10,8 @@
 		var accountHeadMaxId = null; //获取最大的Id
 		var accepId = null; //保存的主表id
 		var url;
-		var accountHeadID = 0;		
+		var accountHeadID = 0;
+		var preTotalPrice = 0; //前一次加载的金额
 		var orgAccountHead = ""; //保存编辑前的名称
 		var editIndex = undefined;
 		var listTitle = ""; //单据标题
@@ -36,6 +37,7 @@
 		listTitle = $("#tablePanel").prev().text();
 		var supUrl = path + "/supplier/findBySelect_sup.action"; //供应商接口
 		var cusUrl = path + "/supplier/findBySelect_cus.action"; //客户接口
+		var retailUrl = path + "/supplier/findBySelect_retail.action"; //散户接口
 		if(listTitle === "收入单列表"){
 			listType = "收入"; 
 			itemType = false; //显示当前列
@@ -75,6 +77,14 @@
 			payTypeTitle = "无标题";
 			inOrOut = "";
 			organUrl = supUrl;
+		}
+		else if(listTitle === "收预付款列表"){
+			listType = "收预付款";
+			itemType = true; //隐藏当前列
+			moneyType = false; //显示当前列
+			payTypeTitle = "无标题";
+			inOrOut = "";
+			organUrl = retailUrl;
 		}
 	}
 	//获取账户信息
@@ -117,7 +127,13 @@
 		$('#OrganId').combobox({    
 			url: organUrl,
 		    valueField:'id',    
-		    textField:'supplier'
+		    textField:'supplier',
+			formatter: function(row){
+				var opts = $(this).combobox('options');
+				if(row[opts.textField]!=="非会员") {
+					return row[opts.textField];
+				}
+			}
 		});  
 	}
 	
@@ -199,6 +215,7 @@
 			pageList: initPageNum,
 			columns:[[
 			  { field: 'Id',width:35,align:"center",checkbox:true},
+			  {field: 'OrganId',width:5, hidden:true},
 	          { title: '单据编号',field: 'BillNo',width:100},
 	          { title: '单据时间 ',field: 'BillTime',width:100},
 	          { title: '合计',field: 'TotalPrice',width:80},
@@ -213,7 +230,7 @@
 					{
 						str += '<img src="' + path + '/js/easyui-1.3.5/themes/icons/list.png" style="cursor: pointer;" onclick="showAccountHead(\'' + rowInfo + '\');"/>&nbsp;<a onclick="showAccountHead(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">查看</a>&nbsp;&nbsp;';
 						str += '<img src="' + path + '/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editAccountHead(\'' + rowInfo + '\');"/>&nbsp;<a onclick="editAccountHead(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
-						str += '<img src="' + path + '/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteAccountHead('+ rec.Id +');"/>&nbsp;<a onclick="deleteAccountHead('+ rec.Id +');" style="text-decoration:none;color:black;" href="javascript:void(0)">删除</a>';
+						str += '<img src="' + path + '/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteAccountHead('+ rec.Id +',' + rec.OrganId +',' + rec.TotalPrice+ ');"/>&nbsp;<a onclick="deleteAccountHead('+ rec.Id  +',' + rec.OrganId +',' + rec.TotalPrice +');" style="text-decoration:none;color:black;" href="javascript:void(0)">删除</a>';
 					}
 					return str;
 				}
@@ -441,7 +458,7 @@
 	}
 	
 	//删除财务信息
-	function deleteAccountHead(accountHeadID){
+	function deleteAccountHead(accountHeadID, thisOrganId, totalPrice){
 		$.messager.confirm('删除确认','确定要删除此财务信息吗？',function(r)
 	 	{
             if (r)
@@ -471,7 +488,29 @@
 		    			$.messager.alert('删除提示','删除财务信息异常，请稍后再试！','error');
 						return;
 					}
-				});			
+				});
+
+				//更新会员的预收款信息
+				if(listType === "收预付款"){
+					$.ajax({
+						type:"post",
+						url: path + "/supplier/updateAdvanceIn.action",
+						dataType: "json",
+						data:{
+							SupplierID: thisOrganId, //会员id
+							AdvanceIn: 0-totalPrice  //删除时同时删除用户的预付款信息
+						},
+						success: function(res){
+							if(res) {
+								//保存会员预收款成功
+							}
+						},
+						error: function(){
+							$.messager.alert('提示','保存信息异常，请稍后再试！','error');
+							return;
+						}
+					});
+				}
             }
         });
 	}
@@ -491,16 +530,38 @@
                 if (r)
                 {
                 	var ids = "";
-                    for(var i = 0;i < row.length; i ++)
-                    {
+                    for(var i = 0;i < row.length; i ++) {
                     	if(i == row.length-1)
                     	{
                     		ids += row[i].Id;
                     		break;
                     	}
-                    	//alert(row[i].id);
                     	ids += row[i].Id + ",";
                     }
+                    //批量更新会员的预收款信息
+					for(var i = 0;i < row.length; i ++) {
+						if(listType === "收预付款"){
+							$.ajax({
+								type:"post",
+								url: path + "/supplier/updateAdvanceIn.action",
+								dataType: "json",
+								data:{
+									SupplierID: row[i].OrganId, //会员id
+									AdvanceIn: 0 - row[i].TotalPrice  //删除时同时删除用户的预付款信息
+								},
+								success: function(res){
+									if(res) {
+										//保存会员预收款成功
+									}
+								},
+								error: function(){
+									$.messager.alert('提示','保存信息异常，请稍后再试！','error');
+									return;
+								}
+							});
+						}
+					}
+					//批量删除
                     $.ajax({
 						type:"post",
 						url: path + "/accountHead/batchDelete.action",
@@ -562,6 +623,7 @@
         $("#HandsPersonId").val(accountHeadInfo[8]);
         $("#ChangeAmount").val(accountHeadInfo[10]);
         var TotalPrice = accountHeadInfo[11];
+		preTotalPrice = accountHeadInfo[11]; //记录前一次合计金额，用于收预付款
         var editTitle = listTitle.replace("列表","信息");
         $('#accountHeadDlg').dialog('open').dialog('setTitle','<img src="' + path + '/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑' + editTitle);
         $(".window-mask").css({ width: webW ,height: webH});
@@ -643,6 +705,36 @@
 						//支出和付款为负数
 						TotalPrice = 0 - TotalPrice;
 					}
+					//更新会员的预收款信息
+					if(listType === "收预付款"){
+						var advanceIn = 0; //预付款金额
+						if(accountHeadID){
+							advanceIn = TotalPrice - preTotalPrice;  //修改时，预付款=合计金额-加载金额
+						}
+						else{
+							advanceIn = TotalPrice; //新增时，预付款=合计金额
+						}
+						$.ajax({
+							type:"post",
+							url: path + "/supplier/updateAdvanceIn.action",
+							dataType: "json",
+							data:{
+								SupplierID: OrganId,
+								AdvanceIn: advanceIn
+							},
+							success: function(res){
+								if(res) {
+									//保存会员预收款成功
+								}
+							},
+							error: function(){
+								$.messager.alert('提示','保存信息异常，请稍后再试！','error');
+								return;
+							}
+						});
+					}
+
+					//保存单位信息
 					$.ajax({
 						type:"post",
 						url: url,

@@ -734,6 +734,7 @@
 
 		//零售单据修改收款时，自动计算找零
 		if(listSubType == "零售" || listSubType == "零售退货") {
+			$("#payType").val("现付");
 			$("#OrganId").combobox("setValue", orgDefaultId);
 			var getAmount = $("#depotHeadFM .get-amount");
 			var changeAmount = $("#depotHeadFM .change-amount");
@@ -857,6 +858,13 @@
 						ChangeAmount = 0 - ChangeAmount;
 						TotalPrice = 0 - TotalPrice;
 					}
+					//零售时候，可以从会员预付款中扣款
+					var thisPayType = "现付";
+					if(listSubType === "零售" || listSubType === "零售退货") {
+						if($("#payType").val() ==="预付款") {
+							thisPayType = "预付款";
+						}
+					}
 					$.ajax({
 						type:"post",
 						url: url,
@@ -874,6 +882,7 @@
 							AccountId: $.trim($("#AccountId").val()),
 							ChangeAmount: ChangeAmount, //付款/收款
 							TotalPrice: TotalPrice, //合计
+							PayType:  thisPayType, //现付/预付款
 							Remark: $.trim($("#Remark").val()),
 							clientIp: clientIp
 						}),
@@ -891,6 +900,29 @@
 								{
 									getMaxId(); //查找最大的Id
 									accept(depotHeadMaxId); //新增
+
+									if(thisPayType === "预付款") {
+										//更新用户信息-预付款
+										$.ajax({
+											type:"post",
+											url: path + "/supplier/updateAdvanceIn.action",
+											dataType: "json",
+											data:{
+												SupplierID: OrganId, //会员id
+												AdvanceIn: 0 - ChangeAmount  //保存的同时扣掉用户的预付款
+											},
+											success: function(res){
+												if(res) {
+													//保存会员预收款成功
+												}
+											},
+											error: function(){
+												$.messager.alert('提示','保存信息异常，请稍后再试！','error');
+												return;
+											}
+										});
+									}
+
 									closeDialog();
 								}
 								else

@@ -31,12 +31,17 @@ public class SupplierModel implements Serializable
 	/**
 	 * 电子邮箱
 	 */
-	private String email = "";    
-    
-    /**
-     * 期初应收
+	private String email = "";
+
+	/**
+     * 预付款
 	 */
-    private Double BeginNeedGet;
+    private Double AdvanceIn;
+
+	/**
+	 * 期初应收
+	 */
+	private Double BeginNeedGet;
     
     /**
      * 期初应付
@@ -134,6 +139,14 @@ public class SupplierModel implements Serializable
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public Double getAdvanceIn() {
+		return AdvanceIn;
+	}
+
+	public void setAdvanceIn(Double advanceIn) {
+		AdvanceIn = advanceIn;
 	}
     
     public void setBeginNeedGet(Double beginNeedGet)

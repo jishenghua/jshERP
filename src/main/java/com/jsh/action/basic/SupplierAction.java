@@ -158,6 +158,56 @@ public class SupplierAction extends BaseAction<SupplierModel>
                 new Timestamp(System.currentTimeMillis())
         , tipType, "更新供应商ID为  "+ model.getSupplierID() + " " + tipMsg + "！", "更新供应商" + tipMsg));
 	}
+
+    /**
+     * 更新供应商-只更新预付款，其余用原来的值
+     * @return
+     */
+    public void updateAdvanceIn()
+    {
+        Boolean flag = false;
+        try
+        {
+            Supplier supplier = supplierService.get(model.getSupplierID());
+            supplier.setContacts(supplier.getContacts());
+            supplier.setType(supplier.getType());
+            supplier.setDescription(supplier.getDescription());
+            supplier.setEmail(supplier.getEmail());
+            supplier.setAdvanceIn(supplier.getAdvanceIn() + model.getAdvanceIn()); //增加预收款的金额，可能增加的是负值
+            supplier.setBeginNeedGet(supplier.getBeginNeedGet());
+            supplier.setBeginNeedPay(supplier.getBeginNeedPay());
+            supplier.setIsystem((short)1);
+            supplier.setPhonenum(supplier.getPhonenum());
+            supplier.setSupplier(supplier.getSupplier());
+            supplier.setEnabled(supplier.getEnabled());
+            supplierService.update(supplier);
+
+            flag = true;
+            tipMsg = "成功";
+            tipType = 0;
+        }
+        catch (DataAccessException e)
+        {
+            Log.errorFileSync(">>>>>>>>>>>>>修改供应商ID为 ： " + model.getSupplierID() + "信息失败", e);
+            flag = false;
+            tipMsg = "失败";
+            tipType = 1;
+        }
+        finally
+        {
+            try
+            {
+                toClient(flag.toString());
+            }
+            catch (IOException e)
+            {
+                Log.errorFileSync(">>>>>>>>>>>>修改供应商回写客户端结果异常", e);
+            }
+        }
+        logService.create(new Logdetails(getUser(), "更新供应商预付款", model.getClientIp(),
+                new Timestamp(System.currentTimeMillis())
+                , tipType, "更新供应商ID为  "+ model.getSupplierID() + " " + tipMsg + "！", "更新供应商" + tipMsg));
+    }
 	
 	/**
 	 * 批量删除指定ID供应商
@@ -244,6 +294,7 @@ public class SupplierAction extends BaseAction<SupplierModel>
                     item.put("contacts",supplier.getContacts());
                     item.put("phonenum", supplier.getPhonenum());
                     item.put("email", supplier.getEmail());
+                    item.put("AdvanceIn",supplier.getAdvanceIn());
                     item.put("BeginNeedGet",supplier.getBeginNeedGet());
                     item.put("BeginNeedPay",supplier.getBeginNeedPay());
                     item.put("isystem", supplier.getIsystem() == (short)0?"是":"否");

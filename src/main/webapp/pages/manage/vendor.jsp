@@ -203,6 +203,7 @@
 			          { title: '联系人', field: 'contacts',width:50,align:"center"},
 			          { title: '联系电话', field: 'phonenum',width:60,align:"center"},
 			          { title: '电子邮箱',field: 'email',width:80,align:"center"},
+					  { title: '预付款',field: 'AdvanceIn',width:70,align:"center"},
 			          { title: '期初应收',field: 'BeginNeedGet',width:70,align:"center"},
 			          { title: '期初应付',field: 'BeginNeedPay',width:70,align:"center"},
 			          { title: '类型',field: 'type',width:50},

@@ -3,6 +3,7 @@ package com.jsh.service.basic;
 import com.jsh.base.BaseService;
 import com.jsh.dao.basic.SupplierIDAO;
 import com.jsh.model.po.Supplier;
+import com.jsh.util.JshException;
 
 public class SupplierService extends BaseService<Supplier> implements SupplierIService
 {
@@ -22,4 +23,5 @@ public class SupplierService extends BaseService<Supplier> implements SupplierIS
     {
         return Supplier.class;
     }
+
 }
