@@ -17,6 +17,7 @@
 		var listTitle = ""; //单据标题
 		var payTypeTitle = "";//收入 支出
 		var organUrl = ""; //组织数据接口地址
+		var amountNum = ""; //单据编号开头字符
 		var itemType = true; //隐藏当前列
 		var moneyType = true; //隐藏当前列
 		var inOrOut = ""; //链接类型为收入或者支出
@@ -45,6 +46,7 @@
 			payTypeTitle = "收入项目";
 			inOrOut = "in";
 			organUrl = cusUrl;
+			amountNum = "SR";
 		}
 		else if(listTitle === "支出单列表"){
 			listType = "支出"; 
@@ -53,6 +55,7 @@
 			payTypeTitle = "支出项目";
 		    inOrOut = "out";
 			organUrl = supUrl;
+			amountNum = "ZC";
 		}
 		else if(listTitle === "收款单列表"){
 			listType = "收款"; 			
@@ -61,6 +64,7 @@
 			payTypeTitle = "无标题";
 			inOrOut = "";
 			organUrl = cusUrl;
+			amountNum = "SK";
 		}
 		else if(listTitle === "付款单列表"){
 			listType = "付款"; 
@@ -69,6 +73,7 @@
 			payTypeTitle = "无标题";
 			inOrOut = "";
 			organUrl = supUrl;
+			amountNum = "FK";
 		}
 		else if(listTitle === "转账单列表"){
 			listType = "转账"; 
@@ -77,6 +82,7 @@
 			payTypeTitle = "无标题";
 			inOrOut = "";
 			organUrl = supUrl;
+			amountNum = "ZZ";
 		}
 		else if(listTitle === "收预付款列表"){
 			listType = "收预付款";
@@ -85,6 +91,7 @@
 			payTypeTitle = "无标题";
 			inOrOut = "";
 			organUrl = retailUrl;
+			amountNum = "SYF";
 		}
 	}
 	//获取账户信息
@@ -599,10 +606,13 @@
 	function addAccountHead(){
 		$("#clientIp").val(clientIp);
 		$('#accountHeadFM').form('clear');
+		var thisDate = getNowFormatDate(); //当前日期
+		$("#BillTime").val(thisDate);
+		var thisNumber = getNowFormatDateNum(); //根据时间生成编号
+		$("#BillNo").val(amountNum + thisNumber).focus();
 		var addTitle = listTitle.replace("列表","信息");
 		$('#accountHeadDlg').dialog('open').dialog('setTitle','<img src="' + path + '/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加' + addTitle);
 		$(".window-mask").css({ width: webW ,height: webH});
-        $("#BillNo").val("").focus();
         
         orgAccountHead = "";
         accountHeadID = 0;

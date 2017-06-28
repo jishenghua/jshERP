@@ -123,10 +123,6 @@
 	                <label id="descriptionLabel">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述&nbsp;&nbsp;</label>
 	                <textarea name="description" id="description" rows="2" cols="2" style="width: 230px;"></textarea>
 	            </div>
-	            <div class="fitem" style="padding:5px">
-	                <label id="enabledLabel">启&nbsp;&nbsp;&nbsp;&nbsp;动&nbsp;&nbsp;</label>
-	                <input name="enabled" id="enabled" type="checkbox" style="width: 230px;height: 20px"/>
-	            </div>
 	            <input type="hidden" name="clientIp" id="clientIp" value="<%=clientIp %>"/>
 	        </form>
 	    </div>
@@ -207,13 +203,10 @@
 			          { title: '期初应收',field: 'BeginNeedGet',width:70,align:"center"},
 			          { title: '期初应付',field: 'BeginNeedPay',width:70,align:"center"},
 			          { title: '类型',field: 'type',width:50},
-			          { title: '启动',field: 'enabled',width:40,formatter:function(value){
-						  return value? "开":"关";
-					  }},
 			          { title: '操作',field: 'op',align:"center",width:130,formatter:function(value,rec)
 			         	{
 							var str = '';
-							var rowInfo = rec.id + 'AaBb' + rec.supplier +'AaBb' + rec.contacts + 'AaBb'+ rec.phonenum + 'AaBb'+ rec.email + 'AaBb'+ rec.BeginNeedGet + 'AaBb'+ rec.BeginNeedPay + 'AaBb' + rec.isystem + 'AaBb' + rec.description+ 'AaBb' + rec.type+ 'AaBb' + rec.enabled;
+							var rowInfo = rec.id + 'AaBb' + rec.supplier +'AaBb' + rec.contacts + 'AaBb'+ rec.phonenum + 'AaBb'+ rec.email + 'AaBb'+ rec.BeginNeedGet + 'AaBb'+ rec.BeginNeedPay + 'AaBb' + rec.isystem + 'AaBb' + rec.description+ 'AaBb' + rec.type;
 	       					if(1 == value)
 	       					{
 	       						str += '<img src="<%=path%>/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editSupplier(\'' + rowInfo + '\');"/>&nbsp;<a onclick="editSupplier(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
@@ -480,7 +473,6 @@
 	            	BeginNeedPay : supplierInfo[6],
 	            	description : supplierInfo[8],
 	            	type : supplierInfo[9],
-	            	enabled : supplierInfo[10],
 	            	clientIp:'<%=clientIp %>'
 	            };
 	            orgSupplier = supplierInfo[1];

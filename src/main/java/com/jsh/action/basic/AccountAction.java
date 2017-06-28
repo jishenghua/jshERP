@@ -423,6 +423,7 @@ public class AccountAction extends BaseAction<AccountModel>
          */
         Map<String,Object> condition = new HashMap<String,Object>();
         condition.put("AccountId_n_eq", id);
+        condition.put("PayType_s_neq", "预付款");
         if(!monthTime.equals("")){
         	condition.put("OperTime_s_gteq", monthTime + "-01 00:00:00");
             condition.put("OperTime_s_lteq", monthTime + "-31 00:00:00");

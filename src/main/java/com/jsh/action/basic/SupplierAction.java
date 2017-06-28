@@ -421,6 +421,7 @@ public class SupplierAction extends BaseAction<SupplierModel>
                     item.put("id", supplier.getId());
                     //客户名称
                     item.put("supplier", supplier.getSupplier());
+                    item.put("advanceIn", supplier.getAdvanceIn()); //预付款金额
                     dataArray.add(item);
                 }
             }

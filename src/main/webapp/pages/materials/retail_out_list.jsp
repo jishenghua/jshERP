@@ -94,7 +94,6 @@
 					<td style="padding:5px">
 						<select name="payType" id="payType" style="width:130px;">
 							<option value="现付">现付</option>
-							<option value="预付款">预付款</option>
 						</select>
 					</td>
 	            </tr>
@@ -175,8 +174,12 @@
 				</tr>
 				<tr>
 					<td>单据备注：</td>
-					<td style="padding:5px;width:292px;" colspan="5">
+					<td style="padding:5px;width:292px;" colspan="3">
 						<span id="RemarkShow"></span>
+					</td>
+					<td>付款类型：</td>
+					<td style="padding:5px">
+						<span id="payTypeShow"></span>
 					</td>
 				</tr>
 				<tr>

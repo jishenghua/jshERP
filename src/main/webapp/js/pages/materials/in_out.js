@@ -12,7 +12,8 @@
 		var depotHeadMaxId=null; //获取最大的Id
 		var accepId=null; //保存的主表id
 		var url;
-		var depotHeadID = 0;	
+		var depotHeadID = 0;
+		var preTotalPrice = 0; //前一次加载的金额
 		var orgDepotHead = "";
 		var editIndex = undefined;
 		var listTitle = ""; //单据标题
@@ -58,7 +59,7 @@
 		}
 		else if(listTitle === "零售退货列表"){
 			listType = "入库";
-			listSubType = "零售退货";
+			listSubType = "零售退货"; //注：用预付款购买的产品不能退货
 			payTypeTitle = "付款";
 			organUrl = retailUrl;
 			amountNum = "LSTH";
@@ -219,6 +220,19 @@
 						orgDefaultId = data[i].id;
 					}
 				}
+			},
+			onSelect: function(rec){
+				if(listSubType === "零售"){
+					var option = "";
+					if(rec.supplier !== "非会员" && rec.advanceIn >0){
+						option = '<option value="预付款">预付款(' + rec.advanceIn + ')</option>';
+						option += '<option value="现付">现付</option>';
+					}
+					else {
+						option += '<option value="现付">现付</option>';
+					}
+					$("#payType").empty().append(option);
+				}
 			}
 		});  
 	}
@@ -337,6 +351,7 @@
 			pageList: initPageNum,
 			columns:[[
 			  { field: 'Id',width:35,align:"center",checkbox:true},
+			  {field: 'OrganId',width:5, hidden:true},
 	          { title: '单据编号',field: 'Number',width:100},
 	          { title: '单据日期 ',field: 'OperTime',width:100},
 	          { title: '创建时间',field: 'CreateTime',width:100},
@@ -351,12 +366,13 @@
 					+ 'AaBb' + rec.OperTime+ 'AaBb' + rec.OrganId+ 'AaBb' + rec.HandsPersonId
 					+ 'AaBb' + rec.AccountId+ 'AaBb' + rec.ChangeAmount+ 'AaBb' + rec.Remark
 					+ 'AaBb' + rec.ProjectName+ 'AaBb' + rec.OrganName+ 'AaBb' + rec.HandsPersonName
-					+ 'AaBb' + rec.AccountName + 'AaBb' + rec.TotalPrice + 'AaBb' + rec.AllocationProjectId + 'AaBb' + rec.AllocationProjectName;
+					+ 'AaBb' + rec.AccountName + 'AaBb' + rec.TotalPrice + 'AaBb' + rec.AllocationProjectId
+					+ 'AaBb' + rec.AllocationProjectName + 'AaBb' + rec.payType;
 					if(1 == value)
 					{
 						str += '<a onclick="showDepotHead(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)"><span class="action-show">查看</span></a>';
 						str += '<a onclick="editDepotHead(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)"><span class="action-edit">编辑</span></a>';
-						str += '<a onclick="deleteDepotHead('+ rec.Id +');" style="text-decoration:none;color:black;" href="javascript:void(0)"><span class="action-delete">删除</span></a>';
+						str += '<a onclick="deleteDepotHead('+ rec.Id +',' + rec.OrganId +',' + rec.TotalPrice+ ');" style="text-decoration:none;color:black;" href="javascript:void(0)"><span class="action-delete">删除</span></a>';
 					}
 					return str;
 				}
@@ -621,9 +637,9 @@
 		}
 	}
 	
-	//删除采购入库信息
-	function deleteDepotHead(depotHeadID){
-		$.messager.confirm('删除确认','确定要删除此采购入库信息吗？',function(r)
+	//删除单据信息
+	function deleteDepotHead(depotHeadID, thisOrganId, totalPrice){
+		$.messager.confirm('删除确认','确定要删除此单据信息吗？',function(r)
 	 	{
 	        if (r)
 	        {
@@ -644,20 +660,42 @@
 							$("#searchBtn").click();
 						}
 						else
-							$.messager.alert('删除提示','删除采购入库信息失败，请稍后再试！','error');
+							$.messager.alert('删除提示','删除单据信息失败，请稍后再试！','error');
 					},
 					//此处添加错误处理
 		    		error:function()
 		    		{
-		    			$.messager.alert('删除提示','删除采购入库信息异常，请稍后再试！','error');
+		    			$.messager.alert('删除提示','删除单据信息异常，请稍后再试！','error');
 						return;
 					}
-				});			
+				});
+
+				//更新会员的预收款信息
+				if(listSubType === "零售") {
+					$.ajax({
+						type:"post",
+						url: path + "/supplier/updateAdvanceIn.action",
+						dataType: "json",
+						data:{
+							SupplierID: thisOrganId, //会员id
+							AdvanceIn: totalPrice  //删除时同时返还用户的预付款
+						},
+						success: function(res){
+							if(res) {
+								//保存会员预收款成功
+							}
+						},
+						error: function(){
+							$.messager.alert('提示','保存信息异常，请稍后再试！','error');
+							return;
+						}
+					});
+				}
 	        }
 	    });
 	}
 
-	//批量删除采购入库
+	//批量删除单据信息
 	function batDeleteDepotHead(){
 		var row = $('#tableData').datagrid('getChecked');	
 		if(row.length == 0)
@@ -667,7 +705,7 @@
 		}
 		if(row.length > 0)
 		{
-			$.messager.confirm('删除确认','确定要删除选中的' + row.length + '条采购入库信息吗？',function(r)
+			$.messager.confirm('删除确认','确定要删除选中的' + row.length + '条单据信息吗？',function(r)
 		 	{
 	            if (r)
 	            {
@@ -682,6 +720,30 @@
 	                	//alert(row[i].id);
 	                	ids += row[i].Id + ",";
 	                }
+					//批量更新会员的预收款信息
+					for(var i = 0;i < row.length; i ++) {
+						if(listSubType === "零售") {
+							$.ajax({
+								type:"post",
+								url: path + "/supplier/updateAdvanceIn.action",
+								dataType: "json",
+								data:{
+									SupplierID: row[i].OrganId, //会员id
+									AdvanceIn: row[i].TotalPrice  //删除时同时返还用户的预付款
+								},
+								success: function(res){
+									if(res) {
+										//保存会员预收款成功
+									}
+								},
+								error: function(){
+									$.messager.alert('提示','保存信息异常，请稍后再试！','error');
+									return;
+								}
+							});
+						}
+					}
+					//批量删除
 	                $.ajax({
 						type:"post",
 						url: path + "/depotHead/batchDelete.action",
@@ -701,12 +763,12 @@
 								$(":checkbox").attr("checked",false);
 							}
 							else
-								$.messager.alert('删除提示','删除采购入库信息失败，请稍后再试！','error');
+								$.messager.alert('删除提示','删除单据信息失败，请稍后再试！','error');
 						},
 						//此处添加错误处理
 			    		error:function()
 			    		{
-			    			$.messager.alert('删除提示','删除采购入库信息异常，请稍后再试！','error');
+			    			$.messager.alert('删除提示','删除单据信息异常，请稍后再试！','error');
 							return;
 						}
 					});	
@@ -768,12 +830,25 @@
 	    $("#ChangeAmount").attr("data-changeamount", depotHeadInfo[8]);
 	    $("#Remark").val(depotHeadInfo[9]);
 	    var TotalPrice = depotHeadInfo[14];
+		preTotalPrice = depotHeadInfo[14]; //记录前一次合计金额，用于扣预付款
 	    $("#AllocationProjectId").val(depotHeadInfo[15]);
 	    //orgDepotHead = depotHeadInfo[1];
 	    var editTitle = listTitle.replace("列表","信息");
 	    $('#depotHeadDlg').dialog('open').dialog('setTitle','<img src="' + path + '/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑' + editTitle);
 	    $(".window-mask").css({ width: webW ,height: webH});
 	    depotHeadID = depotHeadInfo[0];
+
+		if(listSubType === "零售" ){
+			var option = "";
+			if(depotHeadInfo[17] === "预付款"){
+				option = '<option value="预付款">预付款</option>';
+				option += '<option value="现付">现付</option>';
+			}
+			else {
+				option += '<option value="现付">现付</option>';
+			}
+			$("#payType").empty().append(option);
+		}
 	    
 	    initTableData_material("edit",TotalPrice); //商品列表
 	    reject(); //撤销下、刷新商品列表                
@@ -791,6 +866,7 @@
 	    $("#AccountIdShow").text(depotHeadInfo[13]);
 	    $("#ChangeAmountShow").text(depotHeadInfo[8]);
 	    $("#RemarkShow").text(depotHeadInfo[9]);
+		$("#payTypeShow").text(depotHeadInfo[17]);
 	    var TotalPrice = depotHeadInfo[14];
 	    $("#AllocationProjectIdShow").text(depotHeadInfo[16]);
 	    var showTitle = listTitle.replace("列表","信息");
@@ -860,7 +936,7 @@
 					}
 					//零售时候，可以从会员预付款中扣款
 					var thisPayType = "现付";
-					if(listSubType === "零售" || listSubType === "零售退货") {
+					if(listSubType === "零售") {
 						if($("#payType").val() ==="预付款") {
 							thisPayType = "预付款";
 						}
@@ -895,34 +971,41 @@
 									var opts = $("#tableData").datagrid('options'); 
 									showDepotHeadDetails(opts.pageNumber,opts.pageSize); 
 								}
+
+								if(thisPayType === "预付款") {
+									//更新用户信息-预付款
+									var advanceIn = 0; //预付款金额
+									if(depotHeadID){
+										advanceIn = TotalPrice - preTotalPrice;  //修改时，预付款=合计金额-加载金额
+									}
+									else{
+										advanceIn = TotalPrice; //新增时，预付款=合计金额
+									}
+									$.ajax({
+										type:"post",
+										url: path + "/supplier/updateAdvanceIn.action",
+										dataType: "json",
+										data:{
+											SupplierID: OrganId, //会员id
+											AdvanceIn: 0 - advanceIn  //保存的同时扣掉用户的预付款
+										},
+										success: function(res){
+											if(res) {
+												//保存会员预收款成功
+											}
+										},
+										error: function(){
+											$.messager.alert('提示','保存信息异常，请稍后再试！','error');
+											return;
+										}
+									});
+								}
+
 								//保存明细记录
 								if(depotHeadID ==0)
 								{
 									getMaxId(); //查找最大的Id
 									accept(depotHeadMaxId); //新增
-
-									if(thisPayType === "预付款") {
-										//更新用户信息-预付款
-										$.ajax({
-											type:"post",
-											url: path + "/supplier/updateAdvanceIn.action",
-											dataType: "json",
-											data:{
-												SupplierID: OrganId, //会员id
-												AdvanceIn: 0 - ChangeAmount  //保存的同时扣掉用户的预付款
-											},
-											success: function(res){
-												if(res) {
-													//保存会员预收款成功
-												}
-											},
-											error: function(){
-												$.messager.alert('提示','保存信息异常，请稍后再试！','error');
-												return;
-											}
-										});
-									}
-
 									closeDialog();
 								}
 								else
