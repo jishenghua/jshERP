@@ -48,8 +48,11 @@
 			//初始化界面
 			$(function()
 			{
+				var thisDate = getNowFormatMonth(); //当前月份
+				$("#searchMonth").val(thisDate);
 				initTableData();
 				ininPager();
+				search();
 			});			
 			
 			//初始化表格数据
@@ -132,26 +135,28 @@
 					$.messager.alert('异常处理提示',"分页信息异常 :  " + e.name + ": " + e.message,'error');
 				}
 			}
-			
+
+			function search() {
+				showDetails(1,initPageSize);
+				var opts = $("#tableData").datagrid('options');
+				var pager = $("#tableData").datagrid('getPager');
+				opts.pageNumber = 1;
+				opts.pageSize = initPageSize;
+				pager.pagination('refresh',
+						{
+							pageNumber:1,
+							pageSize:initPageSize
+						});
+			}
 			//搜索处理
 			$("#searchBtn").unbind().bind({
 				click:function()
 				{
-					showDetails(1,initPageSize);	
-					var opts = $("#tableData").datagrid('options');  
-					var pager = $("#tableData").datagrid('getPager'); 
-					opts.pageNumber = 1;  
-					opts.pageSize = initPageSize;  
-					pager.pagination('refresh',
-					{  
-						pageNumber:1,  
-						pageSize:initPageSize  
-					});  
+					search();
 				}
 			});
 			
-			function showDetails(pageNo,pageSize)
-			{
+			function showDetails(pageNo,pageSize) {
 				$.ajax({
 					type:"post",
 					url: "<%=path %>/depotHead/findByMonth.action",
@@ -219,7 +224,7 @@
 						return;
 					}
 				});
-			}			
+			}
 		</script>
 	</body>
 </html>

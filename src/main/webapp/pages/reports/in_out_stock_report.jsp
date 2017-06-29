@@ -7,7 +7,7 @@
 <!DOCTYPE html>
 <html>
   	<head>
-    	<title>进销存管理</title>
+    	<title>库存状况</title>
         <meta charset="utf-8">
 		<!-- 指定以IE8的方式来渲染 -->
 		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
@@ -53,8 +53,11 @@
 			//初始化界面
 			$(function()
 			{
+				var thisDate = getNowFormatMonth(); //当前月份
+				$("#searchMonth").val(thisDate);
 				initTableData();
 				ininPager();
+				search();
 				exportExcel();
 			});	
 			
@@ -173,19 +176,22 @@
 			var orgPerson = "";
 
 			//搜索处理
+			function search() {
+				showPersonDetails(1,initPageSize);
+				var opts = $("#tableData").datagrid('options');
+				var pager = $("#tableData").datagrid('getPager');
+				opts.pageNumber = 1;
+				opts.pageSize = initPageSize;
+				pager.pagination('refresh',
+						{
+							pageNumber:1,
+							pageSize:initPageSize
+						});
+			}
 			$("#searchBtn").unbind().bind({
 				click:function()
 				{
-					showPersonDetails(1,initPageSize);	
-					var opts = $("#tableData").datagrid('options');  
-					var pager = $("#tableData").datagrid('getPager'); 
-					opts.pageNumber = 1;  
-					opts.pageSize = initPageSize;  
-					pager.pagination('refresh',
-					{  
-						pageNumber:1,  
-						pageSize:initPageSize  
-					});  
+					search();
 				}
 			});
 			

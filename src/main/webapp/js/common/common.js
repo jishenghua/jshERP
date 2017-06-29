@@ -106,6 +106,20 @@ function getNowFormatDateTime() {
 }
 
 /**
+ * js获取当前时间， 格式“yyyy-MM”
+ */
+function getNowFormatMonth() {
+	var date = new Date();
+	var seperator1 = "-";
+	var month = date.getMonth() + 1;
+	if (month >= 1 && month <= 9) {
+		month = "0" + month;
+	}
+	var currentdate = date.getFullYear() + seperator1 + month;
+	return currentdate;
+}
+
+/**
  * js获取当前时间， 格式“yyyy-MM-dd”
  */
 function getNowFormatDate() {

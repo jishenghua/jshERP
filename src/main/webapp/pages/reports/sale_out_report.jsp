@@ -50,8 +50,11 @@
 			$(function()
 			{
 				$("#searchTable .tip").css("padding-left","15px").css("color","red");
+				var thisDate = getNowFormatMonth(); //当前月份
+				$("#searchMonth").val(thisDate);
 				initTableData();
 				ininPager();
+				search();
 			});			
 			
 			//初始化表格数据
@@ -136,19 +139,21 @@
 			}
 			
 			//搜索处理
-			$("#searchBtn").unbind().bind({
-				click:function()
+			function search() {
+				showDetails(1,initPageSize);
+				var opts = $("#tableData").datagrid('options');
+				var pager = $("#tableData").datagrid('getPager');
+				opts.pageNumber = 1;
+				opts.pageSize = initPageSize;
+				pager.pagination('refresh',
 				{
-					showDetails(1,initPageSize);	
-					var opts = $("#tableData").datagrid('options');  
-					var pager = $("#tableData").datagrid('getPager'); 
-					opts.pageNumber = 1;  
-					opts.pageSize = initPageSize;  
-					pager.pagination('refresh',
-					{  
-						pageNumber:1,  
-						pageSize:initPageSize  
-					});  
+					pageNumber:1,
+					pageSize:initPageSize
+				});
+			}
+			$("#searchBtn").unbind().bind({
+				click:function() {
+					search();
 				}
 			});
 			

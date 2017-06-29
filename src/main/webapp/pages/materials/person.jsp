@@ -28,11 +28,11 @@
 				<tr>
 			    	<td>姓名：</td>
 					<td>
-						<input name="searchName" id="searchName" style="width:230px;"/>
+						<input name="searchName" id="searchName" style="width:70px;"/>
 					</td>
 					<td>类型：</td>
 					<td>
-						<select name="searchType" id="searchType"  style="width:230px;">
+						<select name="searchType" id="searchType"  style="width:70px;">
 						<option value="">全部</option>
 						<option value="仓管员">仓管员</option>
 						<option value="财务员">财务员</option>
