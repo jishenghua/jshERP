@@ -701,6 +701,74 @@
 					return;
 				else 
 				{
+					if(listTitle === "收入单列表"){
+						if(!$('#AccountId').val()){
+							$.messager.alert('提示','请选择收款账户！','warning');
+							return;
+						}
+						if(!$('#OrganId').combobox('getValue')){
+							$.messager.alert('提示','请选择往来单位！','warning');
+							return;
+						}
+						if(!$('#HandsPersonId').val()){
+							$.messager.alert('提示','请选择经手人！','warning');
+							return;
+						}
+					}
+					else if(listTitle === "支出单列表"){
+						if(!$('#AccountId').val()){
+							$.messager.alert('提示','请选择付款账户！','warning');
+							return;
+						}
+						if(!$('#OrganId').combobox('getValue')){
+							$.messager.alert('提示','请选择往来单位！','warning');
+							return;
+						}
+						if(!$('#HandsPersonId').val()){
+							$.messager.alert('提示','请选择经手人！','warning');
+							return;
+						}
+					}
+					else if(listTitle === "收款单列表"){
+						if(!$('#OrganId').combobox('getValue')){
+							$.messager.alert('提示','请选择付款单位！','warning');
+							return;
+						}
+						if(!$('#HandsPersonId').val()){
+							$.messager.alert('提示','请选择经手人！','warning');
+							return;
+						}
+					}
+					else if(listTitle === "付款单列表"){
+						if(!$('#OrganId').combobox('getValue')){
+							$.messager.alert('提示','请选择收款单位！','warning');
+							return;
+						}
+						if(!$('#HandsPersonId').val()){
+							$.messager.alert('提示','请选择经手人！','warning');
+							return;
+						}
+					}
+					else if(listTitle === "转账单列表"){
+						if(!$('#HandsPersonId').val()){
+							$.messager.alert('提示','请选择经手人！','warning');
+							return;
+						}
+						if(!$('#AccountId').val()){
+							$.messager.alert('提示','请选择付款账户！','warning');
+							return;
+						}
+					}
+					else if(listTitle === "收预付款列表"){
+						if(!$('#HandsPersonId').val()){
+							$.messager.alert('提示','请选择经手人！','warning');
+							return;
+						}
+						if(!$('#OrganId').combobox('getValue')){
+							$.messager.alert('提示','请选择付款会员！','warning');
+							return;
+						}
+					}
 					var OrganId = null;
 					var ChangeAmount = $.trim($("#ChangeAmount").val());		
 					var TotalPrice = $("#accountHeadFM .datagrid-footer [field='EachAmount'] div").text();		

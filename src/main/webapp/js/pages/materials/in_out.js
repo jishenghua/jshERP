@@ -918,8 +918,146 @@
 			{
 				if(!$('#depotHeadFM').form('validate'))
 					return;
-				else 
-				{
+				else {
+					//输入框提示
+					if(listTitle === "采购入库列表"){
+						if(!$("#ProjectId").val()){
+							$.messager.alert('提示','请选择收货仓库！','warning');
+							return;
+						}
+						if(!$('#OrganId').combobox('getValue')){
+							$.messager.alert('提示','请选择供货单位！','warning');
+							return;
+						}
+						if(!$('#HandsPersonId').val()){
+							$.messager.alert('提示','请选择经手人！','warning');
+							return;
+						}
+						if(!$('#AccountId').val()){
+							$.messager.alert('提示','请选择付款账户！','warning');
+							return;
+						}
+					}
+					else if(listTitle === "零售退货列表"){
+						if(!$("#ProjectId").val()){
+							$.messager.alert('提示','请选择收货仓库！','warning');
+							return;
+						}
+						if(!$('#AccountId').val()){
+							$.messager.alert('提示','请选择付款账户！','warning');
+							return;
+						}
+						if(!$('#HandsPersonId').val()){
+							$.messager.alert('提示','请选择经手人！','warning');
+							return;
+						}
+					}
+					else if(listTitle === "销售退货列表"){
+						if(!$("#ProjectId").val()){
+							$.messager.alert('提示','请选择收货仓库！','warning');
+							return;
+						}
+						if(!$('#OrganId').combobox('getValue')){
+							$.messager.alert('提示','请选择退货单位！','warning');
+							return;
+						}
+						if(!$('#HandsPersonId').val()){
+							$.messager.alert('提示','请选择经手人！','warning');
+							return;
+						}
+						if(!$('#AccountId').val()){
+							$.messager.alert('提示','请选择付款账户！','warning');
+							return;
+						}
+					}
+					else if(listTitle === "其它入库列表"){
+						if(!$("#ProjectId").val()){
+							$.messager.alert('提示','请选择收货仓库！','warning');
+							return;
+						}
+						if(!$('#OrganId').combobox('getValue')){
+							$.messager.alert('提示','请选择往来单位！','warning');
+							return;
+						}
+						if(!$('#HandsPersonId').val()){
+							$.messager.alert('提示','请选择经手人！','warning');
+							return;
+						}
+					}
+					else if(listTitle === "零售出库列表"){
+						if(!$("#ProjectId").val()){
+							$.messager.alert('提示','请选择发货仓库！','warning');
+							return;
+						}
+						if(!$('#AccountId').val()){
+							$.messager.alert('提示','请选择收款账户！','warning');
+							return;
+						}
+						if(!$('#HandsPersonId').val()){
+							$.messager.alert('提示','请选择经手人！','warning');
+							return;
+						}
+					}
+					else if(listTitle === "销售出库列表"){
+						if(!$("#ProjectId").val()){
+							$.messager.alert('提示','请选择发货仓库！','warning');
+							return;
+						}
+						if(!$('#OrganId').combobox('getValue')){
+							$.messager.alert('提示','请选择购买单位！','warning');
+							return;
+						}
+						if(!$('#AccountId').val()){
+							$.messager.alert('提示','请选择收款账户！','warning');
+							return;
+						}
+					}
+					else if(listTitle === "采购退货列表"){
+						if(!$("#ProjectId").val()){
+							$.messager.alert('提示','请选择发货仓库！','warning');
+							return;
+						}
+						if(!$('#OrganId').combobox('getValue')){
+							$.messager.alert('提示','请选择收货单位！','warning');
+							return;
+						}
+						if(!$('#HandsPersonId').val()){
+							$.messager.alert('提示','请选择经手人！','warning');
+							return;
+						}
+						if(!$('#AccountId').val()){
+							$.messager.alert('提示','请选择收款账户！','warning');
+							return;
+						}
+					}
+					else if(listTitle === "其它出库列表"){
+						if(!$("#ProjectId").val()){
+							$.messager.alert('提示','请选择发货仓库！','warning');
+							return;
+						}
+						if(!$('#OrganId').combobox('getValue')){
+							$.messager.alert('提示','请选择往来单位！','warning');
+							return;
+						}
+						if(!$('#HandsPersonId').val()){
+							$.messager.alert('提示','请选择经手人！','warning');
+							return;
+						}
+					}
+					else if(listTitle === "调拨出库列表"){
+						if(!$("#ProjectId").val()){
+							$.messager.alert('提示','请选择发货仓库！','warning');
+							return;
+						}
+						if(!$('#HandsPersonId').val()){
+							$.messager.alert('提示','请选择经手人！','warning');
+							return;
+						}
+						if(!$("#AllocationProjectId").val()){
+							$.messager.alert('提示','请选择收货仓库！','warning');
+							return;
+						}
+					}
 					var OrganId = null, AllocationProjectId = null;
 					var ChangeAmount = $.trim($("#ChangeAmount").val());
 					var TotalPrice = $("#depotHeadFM .datagrid-footer [field='AllPrice'] div").text();					
