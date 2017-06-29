@@ -417,7 +417,11 @@
 				{
 					if(checkSupplierName())
 						return;
-						
+
+					if(!$("#type").val()){
+						$.messager.alert('提示','请选择类型！','warning');
+						return;
+					}
 					var reg = /^([0-9])+$/;
 					var phonenum = $.trim($("#phonenum").val());
 					if(phonenum.length>0 && !reg.test(phonenum))

@@ -363,7 +363,10 @@
                 {
                     if(checkInOutItemName())
                         return;
-                    
+                    if(!$("#type").val()){
+                        $.messager.alert('提示','请选择类型！','warning');
+                        return;
+                    }
                     $('#inOutItemFM').form('submit',{
                         url: url,
                         onSubmit: function()

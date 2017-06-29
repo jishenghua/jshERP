@@ -390,6 +390,10 @@
 						return;
 					else 
 					{
+						if(!$("#Type").val()){
+							$.messager.alert('提示','请选择类型！','warning');
+							return;
+						}
 						$.ajax({
 							type:"post",
 							url: url,
