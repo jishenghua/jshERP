@@ -41,8 +41,7 @@
 					<td>&nbsp;</td>
 					<td>
 						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchBtn">查询</a>&nbsp;&nbsp;
-						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-redo" id="searchResetBtn">重置</a>&nbsp;&nbsp;
-						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-redo" id="setBuilding">查看单元</a>
+						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-redo" id="searchResetBtn">重置</a>
 					</td>
 				</tr>
 			</table>
