@@ -1,8 +1,8 @@
-﻿/*
+/*
 MySQL Backup
 Source Server Version: 5.0.22
 Source Database: jsh_erp
-Date: 2017-06-29 10:28:15
+Date: 2017-06-30” 10:28:15
 */
 
 SET FOREIGN_KEY_CHECKS=0;
