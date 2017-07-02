@@ -44,6 +44,7 @@ public class SupplierAction extends BaseAction<SupplierModel>
 		    supplier.setType(model.getType());
 		    supplier.setDescription(model.getDescription());
 		    supplier.setEmail(model.getEmail());
+            supplier.setAdvanceIn(0.0);
             supplier.setBeginNeedGet(model.getBeginNeedGet());
             supplier.setBeginNeedPay(model.getBeginNeedPay());
 		    supplier.setIsystem((short)1);
@@ -124,6 +125,7 @@ public class SupplierAction extends BaseAction<SupplierModel>
             supplier.setType(model.getType());
             supplier.setDescription(model.getDescription());
             supplier.setEmail(model.getEmail());
+            supplier.setAdvanceIn(supplier.getAdvanceIn());
             supplier.setBeginNeedGet(model.getBeginNeedGet());
             supplier.setBeginNeedPay(model.getBeginNeedPay());
             supplier.setIsystem((short)1);
