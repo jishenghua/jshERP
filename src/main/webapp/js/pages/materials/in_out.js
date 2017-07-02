@@ -24,6 +24,7 @@
 		var amountNum = ""; //单据编号开头字符
 		var depotString = ""; //店铺列表
 		var orgDefaultId = 0; //单位默认编号
+		var orgDefaultList; //存储查询出来的会员列表
 		//初始化系统基础信息
 		getType();
 		initSystemData_UB();
@@ -216,9 +217,12 @@
 			onLoadSuccess: function(res) {
 				var data = $(this).combobox('getData');
 				for(var i = 0; i<= data.length; i++){
-					if(data[i].supplier === "非会员"){
+					if(data && data[i] && data[i].supplier === "非会员"){
 						orgDefaultId = data[i].id;
 					}
+				}
+				if(listSubType === "零售"){
+					orgDefaultList = res;
 				}
 			},
 			onSelect: function(rec){
@@ -800,9 +804,25 @@
 			$("#OrganId").combobox("setValue", orgDefaultId); //自动默认选择非会员
 			//当会员卡号长度超过10位后，自动点击下拉框，用于兼容刷卡器
 			$("#OrganId").next().find("input").off("keyup").on("keyup",function(){
+				var self = this;
 				if($(this).val().length === 10){
 					setTimeout(function(){
 						$(".combo-panel .combobox-item-selected").click();
+						//更新付款类型，加载会员的预付款的金额
+						for(var i=0; i<orgDefaultList.length; i++){
+							var rec = orgDefaultList[i];
+							if(rec.supplier == $(self).val()){
+								var option = "";
+								if(rec.supplier !== "非会员" && rec.advanceIn >0){
+									option = '<option value="预付款">预付款(' + rec.advanceIn + ')</option>';
+									option += '<option value="现付">现付</option>';
+								}
+								else {
+									option += '<option value="现付">现付</option>';
+								}
+								$("#payType").empty().append(option);
+							}
+						}
 					},500);
 				}
 			});
