@@ -207,9 +207,9 @@
 		}
 	}
 	
-	//初始化系统基础信息
+	//初始化供应商、客户、散户信息
 	function initSupplier(){
-		$('#OrganId').combobox({    
+		$('#OrganId').combobox({
 			url: organUrl,
 		    valueField:'id',    
 		    textField:'supplier',
@@ -797,7 +797,15 @@
 		//零售单据修改收款时，自动计算找零
 		if(listSubType == "零售" || listSubType == "零售退货") {
 			$("#payType").val("现付");
-			$("#OrganId").combobox("setValue", orgDefaultId);
+			$("#OrganId").combobox("setValue", orgDefaultId); //自动默认选择非会员
+			//当会员卡号长度超过10位后，自动点击下拉框，用于兼容刷卡器
+			$("#OrganId").next().find("input").off("keyup").on("keyup",function(){
+				if($(this).val().length === 10){
+					setTimeout(function(){
+						$(".combo-panel .combobox-item-selected").click();
+					},500);
+				}
+			});
 			var getAmount = $("#depotHeadFM .get-amount");
 			var changeAmount = $("#depotHeadFM .change-amount");
 			var backAmount = $("#depotHeadFM .back-amount");
@@ -1187,7 +1195,7 @@
 		    if(k == "13"&&(obj.id=="searchState"||obj.id=="searchNumber"))
 		    {  
 		        $("#searchBtn").click();
-		    }  
+		    }
 		}); 
 	}
 	

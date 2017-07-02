@@ -619,6 +619,18 @@
         initTableData_account("add"); //明细列表
         reject(); //撤销下、刷新材料列表
         url = path + '/accountHead/create.action';
+
+		//收预付款单据支持刷卡功能
+		if(listType == "收预付款") {
+			//当会员卡号长度超过10位后，自动点击下拉框，用于兼容刷卡器
+			$("#OrganId").next().find("input").off("keyup").on("keyup",function(){
+				if($(this).val().length === 10){
+					setTimeout(function(){
+						$(".combo-panel .combobox-item-selected").click();
+					},500);
+				}
+			});
+		}
 	}
 	
 	//编辑信息
