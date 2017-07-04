@@ -65,12 +65,12 @@
                 </td>
 	            </tr>
 	            <tr>
-	            <td>款号</td>
-	            <td style="padding:5px"><input name="Model" id="Model" class="easyui-validatebox" data-options="required:true,validType:'length[2,30]'" style="width: 180px;height: 20px"/></td>
+	            <td>型号</td>
+	            <td style="padding:5px"><input name="Model" id="Model" class="easyui-validatebox" data-options="required:true,validType:'length[1,30]'" style="width: 180px;height: 20px"/></td>
 	            </tr>
 	            <tr>
 	            <td>颜色</td>
-	            <td style="padding:5px"><input name="Color" id="Color" class="easyui-validatebox" data-options="required:true,validType:'length[1,30]'" style="width: 180px;height: 20px"/></td>
+	            <td style="padding:5px"><input name="Color" id="Color" class="easyui-validatebox" data-options="validType:'length[1,30]'" style="width: 180px;height: 20px"/></td>
 	            </tr>
 	            <tr>	          
 	            <td>单位</td>
@@ -316,7 +316,7 @@
 					columns:[[
 					  { field: 'Id',width:35,align:"center",checkbox:true},
 			          { title: '名称',field: 'Name',width:80},
-			          { title: '款号',field: 'Model',width:80},
+			          { title: '型号',field: 'Model',width:80},
     		          { title: '颜色',field: 'Color',width:40},
 			          { title: '单位',field: 'Unit',width:50},
 			          { title: '零售价',field: 'RetailPrice',width:50},

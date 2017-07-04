@@ -320,8 +320,8 @@ public class MaterialAction extends BaseAction<MaterialModel>
                     item.put("Id", material.getId());
                     //名称
                     String MaterialName = ((material.getModel().equals(""))?"":""+material.getModel()) +" "+ material.getName() 
-                    + ((material.getColor() == null)?"":"("+material.getColor() + ")")
-                    + ((material.getUnit() == null)?"":"("+material.getUnit() + ")");
+                    + ((material.getColor() == null || material.getColor().equals(""))?"":"("+material.getColor() + ")")
+                    + ((material.getUnit() == null || material.getUnit().equals(""))?"":"("+material.getUnit() + ")");
                     item.put("MaterialName", MaterialName);
                     dataArray.add(item);
                 }

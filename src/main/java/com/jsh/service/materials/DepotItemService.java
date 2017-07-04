@@ -90,7 +90,7 @@ public class DepotItemService extends BaseService<DepotItem> implements DepotIte
 			WritableSheet sheet = workbook.createSheet("进销存报表", 0);
 			//增加列头
 			int[] colunmWidth = {10,10,10,10,10,15,15,15,15,15};
-			String[] colunmName = {"名称","款号","颜色","单位","单价","上月结存数量","入库数量","出库数量","本月结存数量","结存金额"};
+			String[] colunmName = {"名称","型号","颜色","单位","单价","上月结存数量","入库数量","出库数量","本月结存数量","结存金额"};
 			for(int i = 0 ;i < colunmWidth.length;i ++)
 			{
 				sheet.setColumnView(i,colunmWidth[i]);
