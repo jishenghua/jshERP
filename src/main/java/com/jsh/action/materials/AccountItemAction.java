@@ -39,6 +39,7 @@ public class AccountItemAction extends BaseAction<AccountItemModel>
         try
         {
             Long headerId=model.getHeaderId();
+            String listType = model.getListType(); //单据类型
             String inserted=model.getInserted();
             String deleted=model.getDeleted();
             String updated=model.getUpdated();
@@ -55,7 +56,13 @@ public class AccountItemAction extends BaseAction<AccountItemModel>
                     accountItem.setHeaderId(new AccountHead(headerId));
                     if(tempInsertedJson.get("AccountId")!=null&&!tempInsertedJson.get("AccountId").equals("")){accountItem.setAccountId(new Account(tempInsertedJson.getLong("AccountId")));}
                     if(tempInsertedJson.get("InOutItemId")!=null&&!tempInsertedJson.get("InOutItemId").equals("")){accountItem.setInOutItemId(new InOutItem(tempInsertedJson.getLong("InOutItemId")));}
-                    if(tempInsertedJson.get("EachAmount")!=null){accountItem.setEachAmount(tempInsertedJson.getDouble("EachAmount"));}
+                    if(tempInsertedJson.get("EachAmount")!=null){
+                        Double eachAmount = tempInsertedJson.getDouble("EachAmount");
+                        if(listType.equals("付款")) {
+                            eachAmount = 0 - eachAmount;
+                        }
+                        accountItem.setEachAmount(eachAmount);
+                    }
                     accountItem.setRemark(tempInsertedJson.getString("Remark"));                    
                     accountItemService.create(accountItem);
                 }
@@ -77,7 +84,13 @@ public class AccountItemAction extends BaseAction<AccountItemModel>
                     accountItem.setHeaderId(new AccountHead(headerId));                    
                     if(tempUpdatedJson.get("AccountId")!=null&&!tempUpdatedJson.get("AccountId").equals("")){accountItem.setAccountId(new Account(tempUpdatedJson.getLong("AccountId")));}
                     if(tempUpdatedJson.get("InOutItemId")!=null&&!tempUpdatedJson.get("InOutItemId").equals("")){accountItem.setInOutItemId(new InOutItem(tempUpdatedJson.getLong("InOutItemId")));}
-                    if(tempUpdatedJson.get("EachAmount")!=null){accountItem.setEachAmount(tempUpdatedJson.getDouble("EachAmount"));}
+                    if(tempUpdatedJson.get("EachAmount")!=null){
+                        Double eachAmount = tempUpdatedJson.getDouble("EachAmount");
+                        if(listType.equals("付款")) {
+                            eachAmount = 0 - eachAmount;
+                        }
+                        accountItem.setEachAmount(eachAmount);
+                    }
                     accountItem.setRemark(tempUpdatedJson.getString("Remark"));      
                     accountItemService.create(accountItem);
                 }
@@ -144,7 +157,8 @@ public class AccountItemAction extends BaseAction<AccountItemModel>
                     item.put("AccountName", accountItem.getAccountId()==null?"":accountItem.getAccountId().getName());
                     item.put("InOutItemId", accountItem.getInOutItemId()==null?"":accountItem.getInOutItemId().getId());
                     item.put("InOutItemName", accountItem.getInOutItemId()==null?"":accountItem.getInOutItemId().getName());
-                    item.put("EachAmount", accountItem.getEachAmount());
+                    Double eachAmount = accountItem.getEachAmount();
+                    item.put("EachAmount", eachAmount < 0 ? 0-eachAmount : eachAmount);
                     item.put("Remark", accountItem.getRemark());
                     item.put("op", 1);
                     dataArray.add(item);

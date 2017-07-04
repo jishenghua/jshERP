@@ -307,6 +307,8 @@
     <bean id="accountAction" class="com.jsh.action.basic.AccountAction" scope="prototype">
         <property name="accountService" ref="accountService"/>
         <property name="depotHeadService" ref="depotHeadService"/>
+		<property name="accountHeadService" ref="accountHeadService"/>
+		<property name="accountItemService" ref="accountItemService"/>
         <property name="logService" ref="logService"/>
     </bean>
 	<!--结算账户配置结束 -->

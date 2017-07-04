@@ -5,6 +5,10 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.text.*;
+
+import com.jsh.model.po.AccountHead;
+import com.jsh.model.po.AccountItem;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.dao.DataAccessException;
@@ -16,6 +20,8 @@ import com.jsh.model.po.Account;
 import com.jsh.model.vo.basic.AccountModel;
 import com.jsh.service.basic.AccountIService;
 import com.jsh.service.materials.DepotHeadIService;
+import com.jsh.service.materials.AccountHeadIService;
+import com.jsh.service.materials.AccountItemIService;
 import com.jsh.util.PageUtil;
 import com.jsh.util.Tools;
 /**
@@ -27,6 +33,8 @@ public class AccountAction extends BaseAction<AccountModel>
 {
     private AccountIService accountService;
     private DepotHeadIService depotHeadService;
+    private AccountHeadIService accountHeadService;
+    private AccountItemIService accountItemService;
 	private AccountModel model = new AccountModel();
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -288,6 +296,7 @@ public class AccountAction extends BaseAction<AccountModel>
             {
                 for(Account account:dataList)
                 {
+                    DecimalFormat df =new DecimalFormat(".##");
                     JSONObject item = new JSONObject();
                     item.put("id", account.getId());
                     //结算账户名称
@@ -295,8 +304,12 @@ public class AccountAction extends BaseAction<AccountModel>
                     item.put("serialNo", account.getSerialNo());
                     item.put("initialAmount", account.getInitialAmount());
                     String monthTime = Tools.getCurrentMonth();
-                    item.put("thisMonthAmount", getAccountSum(account.getId(),monthTime));  //本月发生额
-                    item.put("currentAmount", getAccountSum(account.getId(),"") + account.getInitialAmount());  //当前余额
+                    Double thisMonthAmount = getAccountSum(account.getId(), monthTime) + getAccountSumByHead(account.getId(), monthTime) +getAccountSumByDetail(account.getId(), monthTime);
+                    String thisMonthAmountFmt=df.format(thisMonthAmount);
+                    item.put("thisMonthAmount", thisMonthAmountFmt);  //本月发生额
+                    Double currentAmount = getAccountSum(account.getId(),"") + getAccountSumByHead(account.getId(), "") + getAccountSumByDetail(account.getId(), "") + account.getInitialAmount();
+                    String currentAmountFmt=df.format(currentAmount);
+                    item.put("currentAmount", currentAmountFmt);  //当前余额
                     item.put("remark", account.getRemark());
                     item.put("op", 1);
                     dataArray.add(item);
@@ -316,7 +329,7 @@ public class AccountAction extends BaseAction<AccountModel>
         }
     }
     /**
-     * 单个账户的金额求和
+     * 单个账户的金额求和-入库和出库
      * @param id
      * @return
      */
@@ -337,6 +350,79 @@ public class AccountAction extends BaseAction<AccountModel>
         }
         catch (DataAccessException e){
             Log.errorFileSync(">>>>>>>>>查找进销存信息异常", e);
+        }
+        return accountSum;
+    }
+
+    /**
+     * 单个账户的金额求和-收入、支出、转账的单据表头的合计
+     * @param id
+     * @return
+     */
+    public Double getAccountSumByHead(Long id,String monthTime){
+        Double accountSum = 0.0;
+        try{
+            PageUtil<AccountHead> pageUtil = new PageUtil<AccountHead>();
+            pageUtil.setPageSize(0);
+            pageUtil.setCurPage(0);
+            pageUtil.setAdvSearch(getCondition_getSumByHead(id, monthTime));
+            accountHeadService.find(pageUtil);
+            List<AccountHead> dataList = pageUtil.getPageList();
+            if(dataList!= null){
+                for(AccountHead accountHead:dataList){
+                    accountSum = accountSum + accountHead.getChangeAmount();
+                }
+            }
+        }
+        catch (DataAccessException e){
+            Log.errorFileSync(">>>>>>>>>查找进销存信息异常", e);
+        }
+        return accountSum;
+    }
+
+    /**
+     * 单个账户的金额求和-收款、付款、转账、收预付款的单据明细的合计
+     * @param id
+     * @return
+     */
+    public Double getAccountSumByDetail(Long id,String monthTime){
+        Double accountSum = 0.0;
+        try{
+            PageUtil<AccountHead> pageUtil = new PageUtil<AccountHead>();
+            pageUtil.setPageSize(0);
+            pageUtil.setCurPage(0);
+            pageUtil.setAdvSearch(getCondition_getSumByHead(monthTime));
+            accountHeadService.find(pageUtil);
+            List<AccountHead> dataList = pageUtil.getPageList();
+            if(dataList!= null){
+                String ids = "";
+                for(AccountHead accountHead:dataList){
+                    ids = ids + accountHead.getId() +",";
+                }
+                ids = ids.substring(0,ids.length() -1);
+
+                System.out.println(">>>>>>>>>>>>>>>>>" + ids);
+
+                PageUtil<AccountItem> pageUtilOne = new PageUtil<AccountItem>();
+                pageUtilOne.setPageSize(0);
+                pageUtilOne.setCurPage(0);
+                pageUtilOne.setAdvSearch(getCondition_getSumByDetail(id, ids));
+                accountItemService.find(pageUtilOne);
+                List<AccountItem> dataListOne = pageUtilOne.getPageList();
+                if(dataListOne!= null){
+                    for(AccountItem accountItem:dataListOne){
+                        accountSum = accountSum + accountItem.getEachAmount();
+                    }
+                }
+
+                System.out.println(">>>>>>>>>>>>>>>>>accountSum：" + accountSum);
+            }
+        }
+        catch (DataAccessException e){
+            Log.errorFileSync(">>>>>>>>>查找进销存信息异常", e);
+        }
+        catch (Exception e){
+            Log.errorFileSync(">>>>>>>>>异常信息：", e);
         }
         return accountSum;
     }
@@ -413,7 +499,7 @@ public class AccountAction extends BaseAction<AccountModel>
     }
     
     /**
-     * 拼接搜索条件-结算账户当前余额求和
+     * 拼接搜索条件
      * @return
      */
     private Map<String,Object> getCondition_getSum(Long id,String monthTime)
@@ -431,6 +517,58 @@ public class AccountAction extends BaseAction<AccountModel>
         return condition;
     }
 
+    /**
+     * 拼接搜索条件
+     * @return
+     */
+    private Map<String,Object> getCondition_getSumByHead(Long id,String monthTime)
+    {
+        /**
+         * 拼接搜索条件
+         */
+        Map<String,Object> condition = new HashMap<String,Object>();
+        condition.put("AccountId_n_eq", id);
+        if(!monthTime.equals("")){
+            condition.put("BillTime_s_gteq", monthTime + "-01 00:00:00");
+            condition.put("BillTime_s_lteq", monthTime + "-31 00:00:00");
+        }
+        return condition;
+    }
+
+    /**
+     * 拼接搜索条件
+     * @return
+     */
+    private Map<String,Object> getCondition_getSumByHead(String monthTime)
+    {
+        /**
+         * 拼接搜索条件
+         */
+        Map<String,Object> condition = new HashMap<String,Object>();
+        if(!monthTime.equals("")){
+            condition.put("BillTime_s_gteq", monthTime + "-01 00:00:00");
+            condition.put("BillTime_s_lteq", monthTime + "-31 00:00:00");
+        }
+        return condition;
+    }
+
+    /**
+     * 拼接搜索条件
+     * @return
+     */
+    private Map<String,Object> getCondition_getSumByDetail(Long id, String ids)
+    {
+        /**
+         * 拼接搜索条件
+         */
+        Map<String,Object> condition = new HashMap<String,Object>();
+        condition.put("AccountId_n_eq", id);
+        if(!ids.equals("")){
+            condition.put("HeaderId_s_in", ids);
+        }
+        return condition;
+    }
+
     //=============以下spring注入以及Model驱动公共方法，与Action处理无关==================
     @Override
     public AccountModel getModel()
@@ -444,4 +582,10 @@ public class AccountAction extends BaseAction<AccountModel>
     public void setDepotHeadService(DepotHeadIService depotHeadService) {
 		this.depotHeadService = depotHeadService;
 	}
+    public void setAccountHeadService(AccountHeadIService accountHeadService) {
+        this.accountHeadService = accountHeadService;
+    }
+    public void setAccountItemService(AccountItemIService accountItemService) {
+        this.accountItemService = accountItemService;
+    }
 }

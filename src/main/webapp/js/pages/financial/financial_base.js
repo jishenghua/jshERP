@@ -235,9 +235,10 @@
 					+ 'AaBb' + rec.HandsPersonId + 'AaBb' + rec.HandsPersonName + 'AaBb' + rec.ChangeAmount + 'AaBb' + rec.TotalPrice;
 					if(1 == value)
 					{
+						var orgId =  rec.OrganId ?  rec.OrganId : 0;
 						str += '<img src="' + path + '/js/easyui-1.3.5/themes/icons/list.png" style="cursor: pointer;" onclick="showAccountHead(\'' + rowInfo + '\');"/>&nbsp;<a onclick="showAccountHead(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">查看</a>&nbsp;&nbsp;';
 						str += '<img src="' + path + '/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editAccountHead(\'' + rowInfo + '\');"/>&nbsp;<a onclick="editAccountHead(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
-						str += '<img src="' + path + '/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteAccountHead('+ rec.Id +',' + rec.OrganId +',' + rec.TotalPrice+ ');"/>&nbsp;<a onclick="deleteAccountHead('+ rec.Id  +',' + rec.OrganId +',' + rec.TotalPrice +');" style="text-decoration:none;color:black;" href="javascript:void(0)">删除</a>';
+						str += '<img src="' + path + '/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteAccountHead('+ rec.Id +',' + orgId +',' + rec.TotalPrice+ ');"/>&nbsp;<a onclick="deleteAccountHead('+ rec.Id  +',' + orgId +',' + rec.TotalPrice +');" style="text-decoration:none;color:black;" href="javascript:void(0)">删除</a>';
 					}
 					return str;
 				}
@@ -787,11 +788,11 @@
 					if(listType !=="转账"){
 						OrganId = $('#OrganId').combobox('getValue');
 					}
-					if(listType === "支出"){
+					if(listType === "支出" || listType === "转账"){
 						//支出为负数
 						ChangeAmount = 0 - ChangeAmount;
 					}
-					if(listType === "支出" || listType === "付款"){
+					if(listType === "支出" || listType === "付款" || listType === "转账"){
 						//支出和付款为负数
 						TotalPrice = 0 - TotalPrice;
 					}
@@ -850,11 +851,11 @@
 								if(accountHeadID ==0)
 								{
 									getMaxId(); //查找最大的Id
-									accept(accountHeadMaxId); //新增
+									accept(accountHeadMaxId,listType); //新增
 								}
 								else
 								{
-									accept(accountHeadID); //修改
+									accept(accountHeadID,listType); //修改
 								}
 							
 								$('#accountHeadDlg').dialog('close');
@@ -1030,7 +1031,7 @@
         return true;
     }
     //保存
-    function accept(accepId) {
+    function accept(accepId,listType) {
         append();
         removeit();
         if ($("#accountData").datagrid('getChanges').length) {
@@ -1047,6 +1048,7 @@
                     Deleted: JSON.stringify(deleted),
                     Updated: JSON.stringify(updated),
                     HeaderId: accepId,
+					ListType: listType,
                     clientIp: clientIp
                 },
                 success: function (tipInfo) 

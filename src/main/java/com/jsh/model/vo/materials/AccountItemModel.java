@@ -20,6 +20,7 @@ public class AccountItemModel implements Serializable
     private String Updated = "";    //json修改记录
 
     private String HeadIds = "";    //表头集合列表
+    private String ListType = "";   //单据类型
     private String MonthTime = "";  //月份
     private String browserType = "";
     /**
@@ -155,6 +156,14 @@ public class AccountItemModel implements Serializable
     public String getHeadIds()
     {
         return HeadIds;
+    }
+
+    public String getListType() {
+        return ListType;
+    }
+
+    public void setListType(String listType) {
+        ListType = listType;
     }
 
     public void setMonthTime(String monthTime)
