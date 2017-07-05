@@ -153,8 +153,9 @@ public class DepotItemAction extends BaseAction<DepotItemModel>
                     item.put("Id", depotItem.getId());
                     item.put("MaterialId", depotItem.getMaterialId()==null?"":depotItem.getMaterialId().getId());
                     String MaterialName = ((depotItem.getMaterialId().getModel().equals(""))?"":""+depotItem.getMaterialId().getModel())+" "+depotItem.getMaterialId().getName()
-                    +((depotItem.getMaterialId().getColor() == null)?"(":"("+depotItem.getMaterialId().getColor()) + ")"
-                    +((depotItem.getMaterialId().getUnit() == null)?"(":"("+depotItem.getMaterialId().getUnit()) + ")";
+                    +((depotItem.getMaterialId().getStandard() == null||depotItem.getMaterialId().getStandard().equals(""))?"":"("+depotItem.getMaterialId().getStandard() + ")")
+                    +((depotItem.getMaterialId().getColor() == null||depotItem.getMaterialId().getColor().equals(""))?"":"("+depotItem.getMaterialId().getColor() + ")")
+                    +((depotItem.getMaterialId().getUnit() == null||depotItem.getMaterialId().getUnit().equals(""))?"":"("+depotItem.getMaterialId().getUnit() + ")");
                     item.put("MaterialName", MaterialName);
                     item.put("OperNumber", depotItem.getOperNumber());
                     item.put("UnitPrice", depotItem.getUnitPrice());
@@ -210,6 +211,7 @@ public class DepotItemAction extends BaseAction<DepotItemModel>
                     item.put("MaterialId", depotItem.getMaterialId()==null?"":depotItem.getMaterialId().getId());
                     item.put("MaterialName", depotItem.getMaterialId().getName());
                     item.put("MaterialModel", depotItem.getMaterialId().getModel());
+                    item.put("MaterialStandard", depotItem.getMaterialId().getStandard());
                     item.put("MaterialColor", depotItem.getMaterialId().getColor());
                     item.put("MaterialUnit", depotItem.getMaterialId().getUnit());
                     item.put("prevSum", prevSum);
@@ -266,6 +268,7 @@ public class DepotItemAction extends BaseAction<DepotItemModel>
                     item.put("MaterialId", depotItem.getMaterialId()==null?"":depotItem.getMaterialId().getId());
                     item.put("MaterialName", depotItem.getMaterialId().getName());
                     item.put("MaterialModel", depotItem.getMaterialId().getModel());
+                    item.put("MaterialStandard", depotItem.getMaterialId().getStandard());
                     item.put("MaterialColor", depotItem.getMaterialId().getColor());
                     item.put("MaterialUnit", depotItem.getMaterialId().getUnit());
                     item.put("InSum", InSum);
@@ -324,6 +327,7 @@ public class DepotItemAction extends BaseAction<DepotItemModel>
                     item.put("MaterialId", depotItem.getMaterialId()==null?"":depotItem.getMaterialId().getId());
                     item.put("MaterialName", depotItem.getMaterialId().getName());
                     item.put("MaterialModel", depotItem.getMaterialId().getModel());
+                    item.put("MaterialStandard", depotItem.getMaterialId().getStandard());
                     item.put("MaterialColor", depotItem.getMaterialId().getColor());
                     item.put("MaterialUnit", depotItem.getMaterialId().getUnit());
                     item.put("OutSum", OutSumRetail + OutSum);
@@ -418,6 +422,7 @@ public class DepotItemAction extends BaseAction<DepotItemModel>
                     item.put("MaterialId", depotItem.getMaterialId()==null?"":depotItem.getMaterialId().getId());
                     item.put("MaterialName", depotItem.getMaterialId().getName());
                     item.put("MaterialModel", depotItem.getMaterialId().getModel());
+                    item.put("MaterialStandard", depotItem.getMaterialId().getStandard());
                     item.put("MaterialColor", depotItem.getMaterialId().getColor());
                     item.put("MaterialUnit", depotItem.getMaterialId().getUnit());
                     item.put("prevSum", prevSum);

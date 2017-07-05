@@ -48,53 +48,49 @@
 			<table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 		</div>
 		
-	    <div id="materialDlg" class="easyui-dialog" style="width:380px;padding:10px 20px"
+	    <div id="materialDlg" class="easyui-dialog" style="width:580px;padding:10px 20px"
 	            closed="true" buttons="#dlg-buttons" modal="true" cache="false" collapsible="false" closable="true">
 	        <form id="materialFM" method="post"  novalidate>
 	            <table>
 	            <tr>
 	            <td>名称</td>
-	            <td style="padding:5px"><input name="Name" id="Name" class="easyui-validatebox" data-options="required:true,validType:'length[2,30]'" style="width: 180px;height: 20px"/></td>
+	            <td style="padding:5px" colspan="3"><input name="Name" id="Name" class="easyui-validatebox" data-options="required:true,validType:'length[2,30]'" style="width: 180px;height: 20px"/></td>
 	            </tr>
 	            <tr>
 	            <td>类别</td>
-	            <td style="padding:5px">
-                <select name="CategoryId_f" id="CategoryId_f" style="width:180px;height: 20px"></select><br/>
-                <select name="CategoryId_s" id="CategoryId_s" style="width:180px;height: 20px"></select><br/>
-                <select name="CategoryId_t" id="CategoryId_t" style="width:180px;height: 20px"></select>
+	            <td style="padding:5px" colspan="3">
+                <select name="CategoryId_f" id="CategoryId_f" style="width:145px;height: 20px"></select>
+                <select name="CategoryId_s" id="CategoryId_s" style="width:145px;height: 20px"></select>
+                <select name="CategoryId_t" id="CategoryId_t" style="width:145px;height: 20px"></select>
                 </td>
 	            </tr>
 	            <tr>
-	            <td>型号</td>
-	            <td style="padding:5px"><input name="Model" id="Model" class="easyui-validatebox" data-options="required:true,validType:'length[1,30]'" style="width: 180px;height: 20px"/></td>
+					<td>型号</td>
+					<td style="padding:5px"><input name="Model" id="Model" class="easyui-validatebox" data-options="required:true,validType:'length[1,30]'" style="width: 180px;height: 20px"/></td>
+					<td>规格</td>
+					<td style="padding:5px"><input name="Standard" id="Standard" class="easyui-validatebox" data-options="validType:'length[1,30]'" style="width: 180px;height: 20px"/></td>
+				</tr>
+	            <tr>
+					<td>颜色</td>
+					<td style="padding:5px"><input name="Color" id="Color" class="easyui-validatebox" data-options="validType:'length[1,30]'" style="width: 180px;height: 20px"/></td>
+					<td>单位</td>
+					<td style="padding:5px"><input name="Unit" id="Unit" class="easyui-validatebox" data-options="validType:'length[1,30]'" style="width: 180px;height: 20px"/></td>
 	            </tr>
 	            <tr>
-	            <td>颜色</td>
-	            <td style="padding:5px"><input name="Color" id="Color" class="easyui-validatebox" data-options="validType:'length[1,30]'" style="width: 180px;height: 20px"/></td>
-	            </tr>
-	            <tr>	          
-	            <td>单位</td>
-	            <td style="padding:5px"><input name="Unit" id="Unit" class="easyui-validatebox" data-options="required:true,validType:'length[1,30]'" style="width: 180px;height: 20px"/></td>
-	            </tr>
-	            <tr>
-                <td>零售价</td>
-                <td style="padding:5px"><input name="RetailPrice" id="RetailPrice" class="easyui-validatebox" data-options="required:true,validType:'length[1,30]'" style="width: 180px;height: 20px"/></td>
-                </tr>
-	            <tr>
-                <td>最低售价</td>
-                <td style="padding:5px"><input name="LowPrice" id="LowPrice" class="easyui-validatebox" data-options="required:true,validType:'length[1,30]'" style="width: 180px;height: 20px"/></td>
-                </tr>
+					<td>零售价</td>
+					<td style="padding:5px"><input name="RetailPrice" id="RetailPrice" class="easyui-validatebox" data-options="required:true,validType:'length[1,30]'" style="width: 180px;height: 20px"/></td>
+					<td>最低售价</td>
+					<td style="padding:5px"><input name="LowPrice" id="LowPrice" class="easyui-validatebox" data-options="required:true,validType:'length[1,30]'" style="width: 180px;height: 20px"/></td>
+				</tr>
 	            <tr>      
-                <td>预设售价一</td>
-                <td style="padding:5px"><input name="PresetPriceOne" id="PresetPriceOne" class="easyui-validatebox" data-options="required:true,validType:'length[1,30]'" style="width: 180px;height: 20px"/></td>
-                </tr>
-	            <tr>  
-                <td>预设售价二</td>
-                <td style="padding:5px"><input name="PresetPriceTwo" id="PresetPriceTwo" class="easyui-validatebox" data-options="required:true,validType:'length[1,30]'" style="width: 180px;height: 20px"/></td>
-                </tr>
+					<td>预设售价一</td>
+					<td style="padding:5px"><input name="PresetPriceOne" id="PresetPriceOne" class="easyui-validatebox" data-options="required:true,validType:'length[1,30]'" style="width: 180px;height: 20px"/></td>
+					<td>预设售价二</td>
+					<td style="padding:5px"><input name="PresetPriceTwo" id="PresetPriceTwo" class="easyui-validatebox" data-options="required:true,validType:'length[1,30]'" style="width: 180px;height: 20px"/></td>
+				</tr>
 	            <tr>
 	            <td>备注</td>
-	            <td style="padding:5px"><input name="Remark" id="Remark" style="width: 180px;height: 20px"/></td>
+	            <td style="padding:5px" colspan="3"><input name="Remark" id="Remark" style="width: 440px;height: 20px"/></td>
 	            </tr>
 	            </table>
 	            <input type="hidden" name="clientIp" id="clientIp" value="<%=clientIp %>"/>
@@ -317,17 +313,17 @@
 					  { field: 'Id',width:35,align:"center",checkbox:true},
 			          { title: '名称',field: 'Name',width:80},
 			          { title: '型号',field: 'Model',width:80},
-    		          { title: '颜色',field: 'Color',width:40},
-			          { title: '单位',field: 'Unit',width:50},
-			          { title: '零售价',field: 'RetailPrice',width:50},
+					  { title: '规格',field: 'Standard',width:80},
+    		          { title: '颜色',field: 'Color',width:60},
+			          { title: '单位',field: 'Unit',width:60},
+			          { title: '零售价',field: 'RetailPrice',width:60},
 			          { title: '最低售价',field: 'LowPrice',width:70},
 			          { title: '预设售价一',field: 'PresetPriceOne',width:70},
 			          { title: '预设售价二',field: 'PresetPriceTwo',width:70},
-			          { title: '备注',field: 'Remark',width:90},
-			          { title: '操作',field: 'op',align:"center",width:150,formatter:function(value,rec)
+			          { title: '操作',field: 'op',align:"center",width:110,formatter:function(value,rec)
 			         	{
 							var str = '';
-							var rowInfo = rec.Id + 'AaBb' + rec.Name+ 'AaBb' + rec.Model + 'AaBb' + rec.Color + 'AaBb' + rec.Unit + 'AaBb' + rec.RetailPrice + 'AaBb' + rec.LowPrice + 'AaBb' + rec.PresetPriceOne + 'AaBb' + rec.PresetPriceTwo + 'AaBb' + rec.Remark;
+							var rowInfo = rec.Id + 'AaBb' + rec.Name+ 'AaBb' + rec.Model + 'AaBb' + rec.Color + 'AaBb' + rec.Unit + 'AaBb' + rec.RetailPrice + 'AaBb' + rec.LowPrice + 'AaBb' + rec.PresetPriceOne + 'AaBb' + rec.PresetPriceTwo + 'AaBb' + rec.Remark + 'AaBb' + rec.Standard;
         					if(1 == value)
         					{
         						str += '<img src="<%=path%>/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editMaterial(\'' + rowInfo + '\');"/>&nbsp;<a onclick="editMaterial(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
@@ -556,6 +552,7 @@
 								CategoryId : parent,
 								Name : $.trim($("#Name").val()),
 								Model : $.trim($("#Model").val()),
+								Standard : $.trim($("#Standard").val()),
 								Color : $.trim($("#Color").val()),
 								Unit : $.trim($("#Unit").val()),
 								RetailPrice : $.trim($("#RetailPrice").val()),
@@ -601,8 +598,9 @@
 	            $("#clientIp").val('<%=clientIp %>');
 	            $("#Name").focus().val(materialInfo[1]);
 	            $("#Model").val(materialInfo[2]);
-	            $("#Color").val(materialInfo[3]);
-	            $("#Unit").val(materialInfo[4]);
+				$("#Standard").val(materialInfo[10]=="undefined"?"":materialInfo[10]);
+	            $("#Color").val(materialInfo[3]=="undefined"?"":materialInfo[3]);
+	            $("#Unit").val(materialInfo[4]=="undefined"?"":materialInfo[4]);
 	            $("#RetailPrice").val(materialInfo[5]);
 	            $("#LowPrice").val(materialInfo[6]);
 	            $("#PresetPriceOne").val(materialInfo[7]);

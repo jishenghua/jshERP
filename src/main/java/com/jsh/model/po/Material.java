@@ -7,6 +7,7 @@ public class Material implements java.io.Serializable
 	private MaterialCategory materialCategory;
 	private String Name;
 	private String Model;
+	private String Standard;
 	private String Color;
 	private String Unit;
     private Double RetailPrice;
@@ -26,13 +27,14 @@ public class Material implements java.io.Serializable
 	}
 
 	public Material(MaterialCategory materialCategory, String name,
-                    String model, String color, String unit, String remark,
+                    String model, String standard, String color, String unit, String remark,
                     Double retailPrice, Double lowPrice, Double presetPriceOne, Double presetPriceTwo)
     {
 		super();
 		this.materialCategory = materialCategory;
 		Name = name;
 		Model = model;
+		Standard = standard;
 		Color = color;
 		Unit = unit;
         RetailPrice = retailPrice;
@@ -80,6 +82,14 @@ public class Material implements java.io.Serializable
 	public void setModel(String model)
     {
 		Model = model;
+	}
+
+	public String getStandard() {
+		return Standard;
+	}
+
+	public void setStandard(String standard) {
+		Standard = standard;
 	}
 
 	public String getColor()

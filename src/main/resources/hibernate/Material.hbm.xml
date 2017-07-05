@@ -20,6 +20,11 @@
                 <comment>型号</comment>
             </column>
         </property>
+        <property generated="never" lazy="false" name="Standard" type="java.lang.String">
+            <column length="50" name="Standard">
+                <comment>规格</comment>
+            </column>
+        </property>
         <property generated="never" lazy="false" name="Color" type="java.lang.String">
             <column length="50" name="Color">
                 <comment>颜色</comment>

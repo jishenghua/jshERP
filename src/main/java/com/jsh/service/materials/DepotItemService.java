@@ -89,8 +89,8 @@ public class DepotItemService extends BaseService<DepotItem> implements DepotIte
 			workbook = Workbook.createWorkbook(os);
 			WritableSheet sheet = workbook.createSheet("进销存报表", 0);
 			//增加列头
-			int[] colunmWidth = {10,10,10,10,10,15,15,15,15,15};
-			String[] colunmName = {"名称","型号","颜色","单位","单价","上月结存数量","入库数量","出库数量","本月结存数量","结存金额"};
+			int[] colunmWidth = {10,10,10,10,10,10,15,15,15,15,15};
+			String[] colunmName = {"名称","型号","规格","颜色","单位","单价","上月结存数量","入库数量","出库数量","本月结存数量","结存金额"};
 			for(int i = 0 ;i < colunmWidth.length;i ++)
 			{
 				sheet.setColumnView(i,colunmWidth[i]);
@@ -102,16 +102,17 @@ public class DepotItemService extends BaseService<DepotItem> implements DepotIte
 			    	JSONObject jo = JSONObject.fromObject(dataArray.get(j)); 
 		    		sheet.addCell(new Label(0, j+1, jo.getString("MaterialName")));
 		    		sheet.addCell(new Label(1, j+1, jo.getString("MaterialModel")));
-		    		sheet.addCell(new Label(2, j+1, jo.getString("MaterialColor")));
-					sheet.addCell(new Label(3, j+1, jo.getString("MaterialUnit")));
-		    		sheet.addCell(new Label(4, j+1, jo.getString("UnitPrice")));
-		    		sheet.addCell(new Label(5, j+1, jo.getString("prevSum")));
-		    		sheet.addCell(new Label(6, j+1, jo.getString("InSum")));
-		    		sheet.addCell(new Label(7, j+1, jo.getString("OutSum")));
-		    		sheet.addCell(new Label(8, j+1, jo.getString("thisSum")));
+					sheet.addCell(new Label(2, j+1, jo.getString("MaterialStandard")));
+		    		sheet.addCell(new Label(3, j+1, jo.getString("MaterialColor")));
+					sheet.addCell(new Label(4, j+1, jo.getString("MaterialUnit")));
+		    		sheet.addCell(new Label(5, j+1, jo.getString("UnitPrice")));
+		    		sheet.addCell(new Label(6, j+1, jo.getString("prevSum")));
+		    		sheet.addCell(new Label(7, j+1, jo.getString("InSum")));
+		    		sheet.addCell(new Label(8, j+1, jo.getString("OutSum")));
+		    		sheet.addCell(new Label(9, j+1, jo.getString("thisSum")));
 		    		double d = Double.parseDouble(jo.getString("thisAllPrice").toString()); 
 		    		String s1 = String.format("%.2f", d);  		
-		    		sheet.addCell(new Label(9, j+1, s1));
+		    		sheet.addCell(new Label(10, j+1, s1));
 			    }
 			}			
 			workbook.write();

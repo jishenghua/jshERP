@@ -17,6 +17,11 @@ public class MaterialModel implements Serializable
      * 型号
      */
     private String Model = "";
+
+	/**
+	 * 规格
+	 */
+	private String Standard = "";
     
     /**
      * 颜色
@@ -111,7 +116,15 @@ public class MaterialModel implements Serializable
 	public void setModel(String model) {
 		Model = model;
 	}
-	
+
+	public String getStandard() {
+		return Standard;
+	}
+
+	public void setStandard(String standard) {
+		Standard = standard;
+	}
+
 	public String getColor() {
 		return Color;
 	}

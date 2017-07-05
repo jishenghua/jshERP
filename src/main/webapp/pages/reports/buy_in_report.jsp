@@ -79,6 +79,7 @@
 					columns:[[
 			          { title: '名称',field: 'MaterialName',width:60},
 			          { title: '型号',field: 'MaterialModel',width:80},
+					  { title: '规格',field: 'MaterialStandard',width:80},
 			          { title: '颜色',field: 'MaterialColor',width:80},
 					  { title: '单位',field: 'MaterialUnit',width:80},
 			          { title: '进货数量',field: 'InSum',width:60},			          
