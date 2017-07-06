@@ -236,9 +236,9 @@
 					if(1 == value)
 					{
 						var orgId =  rec.OrganId ?  rec.OrganId : 0;
-						str += '<img src="' + path + '/js/easyui-1.3.5/themes/icons/list.png" style="cursor: pointer;" onclick="showAccountHead(\'' + rowInfo + '\');"/>&nbsp;<a onclick="showAccountHead(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">查看</a>&nbsp;&nbsp;';
-						str += '<img src="' + path + '/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editAccountHead(\'' + rowInfo + '\');"/>&nbsp;<a onclick="editAccountHead(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
-						str += '<img src="' + path + '/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteAccountHead('+ rec.Id +',' + orgId +',' + rec.TotalPrice+ ');"/>&nbsp;<a onclick="deleteAccountHead('+ rec.Id  +',' + orgId +',' + rec.TotalPrice +');" style="text-decoration:none;color:black;" href="javascript:void(0)">删除</a>';
+						str += '<a onclick="showAccountHead(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)"><span class="action-show">查看</span></a>';
+						str += '<a onclick="editAccountHead(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)"><span class="action-edit">编辑</span></a>';
+						str += '<a onclick="deleteAccountHead('+ rec.Id  +',' + orgId +',' + rec.TotalPrice +');" style="text-decoration:none;color:black;" href="javascript:void(0)"><span class="action-delete">删除</span></a>';
 					}
 					return str;
 				}
