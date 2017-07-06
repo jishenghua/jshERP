@@ -341,7 +341,7 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
 	}
     
     /**
-     * 查询单位的累计应收和累计应付
+     * 查询单位的累计应收和累计应付，零售不能计入
      * @return
      */
     public void findTotalPay() {

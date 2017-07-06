@@ -73,7 +73,7 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel>
             accountHead.setType(model.getType());
             if(model.getOrganId()!=null){accountHead.setOrganId(new Supplier(model.getOrganId()));} 
             if(model.getHandsPersonId()!=null){accountHead.setHandsPersonId(new Person(model.getHandsPersonId()));}     
-            accountHead.setChangeAmount(model.getChangeAmount());
+            accountHead.setChangeAmount(model.getChangeAmount()==null ? 0:model.getChangeAmount());
             accountHead.setTotalPrice(model.getTotalPrice());
             if(model.getAccountId()!=null){accountHead.setAccountId(new Account(model.getAccountId()));}
             accountHead.setBillNo(model.getBillNo());
@@ -159,7 +159,7 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel>
             accountHead.setType(model.getType());
             if(model.getOrganId()!=null){accountHead.setOrganId(new Supplier(model.getOrganId()));} 
             if(model.getHandsPersonId()!=null){accountHead.setHandsPersonId(new Person(model.getHandsPersonId()));}     
-            accountHead.setChangeAmount(model.getChangeAmount());
+            accountHead.setChangeAmount(model.getChangeAmount()==null ? 0:model.getChangeAmount());
             accountHead.setTotalPrice(model.getTotalPrice());
             if(model.getAccountId()!=null){accountHead.setAccountId(new Account(model.getAccountId()));}
             accountHead.setBillNo(model.getBillNo());
@@ -283,7 +283,7 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel>
     }
     
     /**
-     * 查询单位的累计应收和累计应付
+     * 查询单位的累计应收和累计应付，收预付款不计入此处
      * @return
      */
     public void findTotalPay() {
@@ -292,13 +292,11 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel>
 			JSONObject outer = new JSONObject();     	
 			Double sum = 0.0;
 			String getS = model.getSupplierId();
-			//进销部分
+            //收付款部分
 			sum = sum - (allMoney(getS, "付款", "合计") + allMoney(getS, "付款", "实际"));
 			sum = sum + (allMoney(getS, "收款", "合计") + allMoney(getS, "收款", "实际"));
 			sum = sum - (allMoney(getS, "收入", "合计") - allMoney(getS, "收入", "实际"));
 			sum = sum + (allMoney(getS, "支出", "合计") - allMoney(getS, "支出", "实际"));
-			//收付款部分
-			
 	    	outer.put("getAllMoney", sum);
             toClient(outer.toString());
         }

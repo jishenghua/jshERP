@@ -26,7 +26,7 @@ import com.jsh.util.PageUtil;
 import com.jsh.util.Tools;
 /**
  * 结算账户
- * @author ji sheng hua qq752718920
+ * @author ji sheng hua qq7527-18920
  */
 @SuppressWarnings("serial")
 public class AccountAction extends BaseAction<AccountModel>

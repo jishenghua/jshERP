@@ -56,12 +56,15 @@ public class AccountItemAction extends BaseAction<AccountItemModel>
                     accountItem.setHeaderId(new AccountHead(headerId));
                     if(tempInsertedJson.get("AccountId")!=null&&!tempInsertedJson.get("AccountId").equals("")){accountItem.setAccountId(new Account(tempInsertedJson.getLong("AccountId")));}
                     if(tempInsertedJson.get("InOutItemId")!=null&&!tempInsertedJson.get("InOutItemId").equals("")){accountItem.setInOutItemId(new InOutItem(tempInsertedJson.getLong("InOutItemId")));}
-                    if(tempInsertedJson.get("EachAmount")!=null){
+                    if(tempInsertedJson.get("EachAmount")!=null&&!tempInsertedJson.get("EachAmount").equals("")){
                         Double eachAmount = tempInsertedJson.getDouble("EachAmount");
                         if(listType.equals("付款")) {
                             eachAmount = 0 - eachAmount;
                         }
                         accountItem.setEachAmount(eachAmount);
+                    }
+                    else {
+                        accountItem.setEachAmount(0.0);
                     }
                     accountItem.setRemark(tempInsertedJson.getString("Remark"));                    
                     accountItemService.create(accountItem);
@@ -84,12 +87,15 @@ public class AccountItemAction extends BaseAction<AccountItemModel>
                     accountItem.setHeaderId(new AccountHead(headerId));                    
                     if(tempUpdatedJson.get("AccountId")!=null&&!tempUpdatedJson.get("AccountId").equals("")){accountItem.setAccountId(new Account(tempUpdatedJson.getLong("AccountId")));}
                     if(tempUpdatedJson.get("InOutItemId")!=null&&!tempUpdatedJson.get("InOutItemId").equals("")){accountItem.setInOutItemId(new InOutItem(tempUpdatedJson.getLong("InOutItemId")));}
-                    if(tempUpdatedJson.get("EachAmount")!=null){
+                    if(tempUpdatedJson.get("EachAmount")!=null&&!tempUpdatedJson.get("EachAmount").equals("")){
                         Double eachAmount = tempUpdatedJson.getDouble("EachAmount");
                         if(listType.equals("付款")) {
                             eachAmount = 0 - eachAmount;
                         }
                         accountItem.setEachAmount(eachAmount);
+                    }
+                    else {
+                        accountItem.setEachAmount(0.0);
                     }
                     accountItem.setRemark(tempUpdatedJson.getString("Remark"));      
                     accountItemService.create(accountItem);
