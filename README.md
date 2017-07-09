@@ -2,7 +2,7 @@
 * 很多人说jshERP是目前唯一完整开源的进销存系统
 * 虽然目前只有进销存+财务的功能，但后面将会推出ERP的全部功能，大家一起努力吧
 * 系统部署初始账号：jsh，密码：123456，部署如有问题请联系QQ：752718920，欢迎加入jshERP交流群，群号码：120725710
-* 部署如遇到困难请参考Wiki文档 http://git.oschina.net/jishenghua/JSH_ERP/wikis/pages
+* 部署如遇到困难请参考Wiki文档  **http://git.oschina.net/jishenghua/JSH_ERP/wikis/pages** 
 
 #开发初衷
 * jshERP立志为中小企业提供免费好用的ERP软件，降低企业的信息化成本
@@ -26,7 +26,7 @@
 * JDK: JDK1.6+
 * WEB: Tomcat6.0+
 * Maven: Maven3.2.3+
-* 为方便大家搭建开发环境，分享了下载地址 http://pan.baidu.com/s/1nuKnlNV
+* 为方便大家搭建开发环境，分享了下载地址  **http://pan.baidu.com/s/1nuKnlNV** 
 
 #运行环境
 * WEB服务器：Tomcat6.0+
