@@ -356,9 +356,9 @@
 			columns:[[
 			  { field: 'Id',width:35,align:"center",checkbox:true},
 			  {field: 'OrganId',width:5, hidden:true},
-	          { title: '单据编号',field: 'Number',width:100},
-	          { title: '单据日期 ',field: 'OperTime',width:100},
-	          { title: '创建时间',field: 'CreateTime',width:100},
+	          { title: '单据编号',field: 'Number',width:140},
+	          { title: '单据日期 ',field: 'OperTime',width:80},
+	          { title: '创建时间',field: 'CreateTime',width:80},
 	          { title: '操作员',field: 'OperPersonName',width:80},			          
 	          { title: '合计',field: 'TotalPrice',width:50},
 	          { title: payTypeTitle,field: 'ChangeAmount',width:50,hidden:hideType},

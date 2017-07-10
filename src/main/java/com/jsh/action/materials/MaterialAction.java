@@ -224,14 +224,14 @@ public class MaterialAction extends BaseAction<MaterialModel>
                     JSONObject item = new JSONObject();
                     item.put("Id", material.getId());
                     item.put("Name", material.getName());
-                    item.put("Model", material.getModel());
-                    item.put("Standard", material.getStandard());
-                    item.put("Color", material.getColor());
-                    item.put("Unit", material.getUnit());
+                    item.put("Model", material.getModel()==null?"" : material.getModel());
+                    item.put("Standard", material.getStandard()==null?"": material.getStandard());
+                    item.put("Color", material.getColor()==null?"": material.getColor());
+                    item.put("Unit", material.getUnit()==null?"": material.getUnit());
                     item.put("RetailPrice", material.getRetailPrice());
                     item.put("LowPrice", material.getLowPrice());
-                    item.put("PresetPriceOne", material.getPresetPriceOne());
-                    item.put("PresetPriceTwo", material.getPresetPriceTwo());
+                    item.put("PresetPriceOne", material.getPresetPriceOne()==null? "":material.getPresetPriceOne());
+                    item.put("PresetPriceTwo", material.getPresetPriceTwo()==null? "":material.getPresetPriceTwo());
                     item.put("Remark", material.getRemark());
                     item.put("op", 1);
                     dataArray.add(item);
@@ -323,7 +323,7 @@ public class MaterialAction extends BaseAction<MaterialModel>
                     JSONObject item = new JSONObject();
                     item.put("Id", material.getId());
                     //名称
-                    String MaterialName = ((material.getModel().equals(""))?"":""+material.getModel()) +" "+ material.getName()
+                    String MaterialName = ((material.getModel() == null || material.getModel().equals(""))?"":material.getModel() +" ") + material.getName()
                     + ((material.getStandard() == null || material.getStandard().equals(""))?"":"("+material.getStandard() + ")")
                     + ((material.getColor() == null || material.getColor().equals(""))?"":"("+material.getColor() + ")")
                     + ((material.getUnit() == null || material.getUnit().equals(""))?"":"("+material.getUnit() + ")");

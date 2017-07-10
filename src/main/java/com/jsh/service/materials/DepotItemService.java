@@ -49,6 +49,12 @@ public class DepotItemService extends BaseService<DepotItem> implements DepotIte
     {
     	depotItemDao.findByType(pageUtil, type, MId, MonthTime,isPrev);
     }
+
+	@Override
+	public void findPriceByType(PageUtil<DepotItem> pageUtil, String type,Long MId, String MonthTime,Boolean isPrev) throws JshException
+	{
+		depotItemDao.findPriceByType(pageUtil, type, MId, MonthTime,isPrev);
+	}
     
     @Override
     public void buyOrSale(PageUtil<DepotItem> pageUtil, String type,String subType, Long MId, String MonthTime, String sumType) throws JshException

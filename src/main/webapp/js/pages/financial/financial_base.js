@@ -223,7 +223,7 @@
 			columns:[[
 			  { field: 'Id',width:35,align:"center",checkbox:true},
 			  {field: 'OrganId',width:5, hidden:true},
-	          { title: '单据编号',field: 'BillNo',width:100},
+	          { title: '单据编号',field: 'BillNo',width:140},
 	          { title: '单据时间 ',field: 'BillTime',width:100},
 	          { title: '合计',field: 'TotalPrice',width:80},
 	          { title: '备注',field: 'Remark',width:100},

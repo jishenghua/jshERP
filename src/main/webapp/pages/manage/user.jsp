@@ -66,7 +66,8 @@
 	            </div>
 	            <div class="fitem" style="padding:5px">
 	                <label id="loginameLabel">登录名称 &nbsp;&nbsp;</label>
-	                <input name="loginame" id="loginame" style="width: 230px;height: 20px"/>
+	                <input name="loginame" id="loginame" class="easyui-validatebox" data-options="required:true,validType:'length[2,15]'" style="width: 120px;height: 20px"/>
+					初始密码：123456
 	            </div>
 	            <div class="fitem" style="padding:5px">
 	                <label id="departmentLabel">部&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;门&nbsp;&nbsp;</label>
