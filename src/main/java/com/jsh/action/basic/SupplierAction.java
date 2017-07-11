@@ -28,7 +28,7 @@ public class SupplierAction extends BaseAction<SupplierModel>
 {
 	private SupplierIService supplierService;
 	private SupplierModel model = new SupplierModel();
-	
+	private final static Integer ISYSTEM = 1;
 	/**
 	 * 增加供应商
 	 * @return
@@ -456,6 +456,7 @@ public class SupplierAction extends BaseAction<SupplierModel>
         condition.put("phonenum_s_like", model.getPhonenum());
         condition.put("email_s_like", model.getEmail());
         condition.put("description_s_like", model.getDescription());
+        condition.put("isystem_n_eq", ISYSTEM);
         condition.put("id_s_order", "desc");
         return condition;
     }

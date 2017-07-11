@@ -168,6 +168,9 @@
 			//初始化表格数据
 			function initTableData()
 			{
+				//改变宽度和高度
+				$("#searchPanel").panel({width:webW-2});
+				$("#tablePanel").panel({width:webW-2});
 				$('#tableData').datagrid({
 					//title:'单位列表',
 					//iconCls:'icon-save',
