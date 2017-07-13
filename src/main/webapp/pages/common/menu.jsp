@@ -193,7 +193,7 @@ function ceshi()
 
 </script>
 
-    <div region="west" hide="true" split="true" title="导航菜单" style="width:155px;" id="west">
+    <div region="west" hide="true" split="true" title="导航菜单" style="width:125px;" id="west">
         <div id="nav" fit="true" border="false">
             <!--  导航内容 -->
             <div>
@@ -213,7 +213,7 @@ function ceshi()
     <div id="mainPanle" region="center" style="background: #eee; overflow-y: hidden">
         <div id="tabs" class="easyui-tabs" fit="true" border="false"></div>
     </div>
-    <div id="mm" class="easyui-menu" style="width: 150px;">
+    <div id="mm" class="easyui-menu" style="width: 120px;">
         <div id="mm-tabupdate">
                      刷新
         </div>
@@ -226,15 +226,15 @@ function ceshi()
                      全部关闭
         </div>
         <div id="mm-tabcloseother">
-                     除此之外全部关闭
+					关闭其他页
         </div>
         <div class="menu-sep">
         </div>
         <div id="mm-tabcloseright">
-                     当前页右侧全部关闭
+					关闭右侧页面
         </div>
         <div id="mm-tabcloseleft">
-                     当前页左侧全部关闭
+					关闭左侧页面
         </div>
         <div class="menu-sep">
         </div>
