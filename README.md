@@ -5,7 +5,7 @@
 * 部署如遇到困难请参考Wiki文档  **https://gitee.com/jishenghua/JSH_ERP/wikis/pages** 
 
 #开发初衷
-* jshERP立志为中小企业提供免费好用的ERP软件，降低企业的信息化成本
+* jshERP立志为中小企业提供开源好用的ERP软件，降低企业的信息化成本
 * 个人开发者也可以使用jshERP进行二次开发，承接外包ERP项目
 * 初学JAVA的小伙伴可以下载源代码来进行学习交流
 
