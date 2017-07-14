@@ -5,6 +5,7 @@ public class Depot implements java.io.Serializable
 {
 	private Long id;
 	private String name;
+	private Integer type;
 	private String sort;
 	private String remark;
 
@@ -18,9 +19,10 @@ public class Depot implements java.io.Serializable
 		this.id = id ;
 	}
 
-	public Depot(String name, String sort, String remark)
+	public Depot(String name,Integer type, String sort, String remark)
 	{
 		this.name = name;
+		this.type = type;
 		this.sort = sort;
 		this.remark = remark;
 	}
@@ -39,6 +41,14 @@ public class Depot implements java.io.Serializable
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
 	}
 
 	public String getSort() {

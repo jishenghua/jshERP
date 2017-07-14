@@ -8,7 +8,7 @@
 <!DOCTYPE html>
 <html>
   	<head>
-    	<title>部门管理</title>
+    	<title>礼品卡管理</title>
         <meta charset="utf-8">
 		<!-- 指定以IE8的方式来渲染 -->
 		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
@@ -26,7 +26,7 @@
 		<div id = "searchPanel"	class="easyui-panel" style="padding:10px;" title="查询窗口" iconCls="icon-search" collapsible="true" closable="false">
 			<table id="searchTable">
 				<tr>
-					<td>仓库名称：</td>
+					<td>礼品卡名称：</td>
 					<td>
 						<input type="text" name="searchName" id="searchName"  style="width:150px;"/>
 					</td>
@@ -48,7 +48,7 @@
 		</div>
 		
 		<!-- 数据显示table -->
-		<div id = "tablePanel"	class="easyui-panel" style="padding:1px;top:300px;" title="仓库列表" iconCls="icon-list" collapsible="true" closable="false">
+		<div id = "tablePanel"	class="easyui-panel" style="padding:1px;top:300px;" title="礼品卡列表" iconCls="icon-list" collapsible="true" closable="false">
 			<table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 		</div>
 		
@@ -57,7 +57,7 @@
 	        <form id="depotFM" method="post"  novalidate>
 	            <table>
 	            <tr>
-	            <td><label id="nameLabel">仓库名称&nbsp;&nbsp;</label></td>
+	            <td><label id="nameLabel">礼品卡名称&nbsp;&nbsp;</label></td>
 	            <td style="padding:5px"><input name="name" id="name" class="easyui-validatebox" data-options="required:true,validType:'length[2,30]'" style="width: 230px;height: 20px"/></td>
 	            </tr>
 	            <tr>
@@ -93,14 +93,14 @@
 				if(getOs()=='MSIE')
 				{
 					$("#searchRemarkLabel").empty().append("描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：");
-					$("#nameLabel").empty().append("仓库名称&nbsp;&nbsp;");
+					$("#nameLabel").empty().append("礼品卡名称&nbsp;&nbsp;");
 					$("#sortLabel").empty().append("排&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;序&nbsp;&nbsp;");
 					$("#remarkLabel").empty().append("描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述&nbsp;&nbsp;");
 				}
 				else
 				{
 					$("#searchRemarkLabel").empty().append("描&nbsp;&nbsp;&nbsp;&nbsp;述：");
-					$("#nameLabel").empty().append("仓库名称&nbsp;");
+					$("#nameLabel").empty().append("礼品卡名称&nbsp;");
 					$("#sortLabel").empty().append("排&nbsp;&nbsp;&nbsp;&nbsp;序&nbsp;");
 					$("#remarkLabel").empty().append("描&nbsp;&nbsp;&nbsp;&nbsp;述&nbsp;");
 				}
@@ -135,7 +135,7 @@
 					//fitColumns:true,
 					//单击行是否选中
 					checkOnSelect : false,
-					url:'<%=path %>/depot/findBy.action?pageSize=' + initPageSize,
+					url:'<%=path %>/depot/findBy.action?type=1&pageSize=' + initPageSize,
 					pagination: true,
 					//交替出现背景
 					striped : true,
@@ -144,7 +144,7 @@
 					pageList: initPageNum,
 					columns:[[
 					  { field: 'id',width:35,align:"center",checkbox:true},
-			          { title: '仓库名称',field: 'name',width:200},
+			          { title: '礼品卡名称',field: 'name',width:200},
 			          { title: '排序',field: 'sort',width:200},
 			          { title: '描述',field: 'remark',width:200},
 			          { title: '操作',field: 'op',align:"center",width:130,formatter:function(value,rec)
@@ -368,7 +368,7 @@
 							async :  false,
 							data: ({
 								name : $.trim($("#name").val()),
-								type : 0,
+								type : 1,
 								sort : $.trim($("#sort").val()),
 								remark : $.trim($("#remark").val()),
 								clientIp:'<%=clientIp %>'
@@ -485,7 +485,7 @@
 					dataType: "json",
 					data: ({
 						name:$.trim($("#searchName").val()),
-						type: 0,  //仓库
+						type: 1, // 礼品卡
 						remark:$.trim($("#searchRemark").val()),
 						pageNo:pageNo,
 						pageSize:pageSize

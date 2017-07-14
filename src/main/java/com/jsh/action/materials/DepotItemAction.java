@@ -198,18 +198,19 @@ public class DepotItemAction extends BaseAction<DepotItemModel>
             JSONObject outer = new JSONObject();
             outer.put("total", pageUtil.getTotalCount());
             //存放数据json数组
+            Integer pid = model.getProjectId();
             JSONArray dataArray = new JSONArray();
             if(null != dataList)
             {
                 for(DepotItem depotItem:dataList)
                 {
                     JSONObject item = new JSONObject();
-                    Integer prevSum = sumNumber("入库",depotItem.getMaterialId().getId(),model.getMonthTime(),true) - sumNumber("出库",depotItem.getMaterialId().getId(),model.getMonthTime(),true);
-                    Integer InSum = sumNumber("入库",depotItem.getMaterialId().getId(),model.getMonthTime(),false);
-                    Integer OutSum = sumNumber("出库",depotItem.getMaterialId().getId(),model.getMonthTime(),false);
-                    Double prevPrice = sumPrice("入库",depotItem.getMaterialId().getId(),model.getMonthTime(),true) - sumPrice("出库", depotItem.getMaterialId().getId(), model.getMonthTime(), true);
-                    Double InPrice = sumPrice("入库",depotItem.getMaterialId().getId(),model.getMonthTime(),false);
-                    Double OutPrice = sumPrice("出库", depotItem.getMaterialId().getId(), model.getMonthTime(), false);
+                    Integer prevSum = sumNumber("入库",pid,depotItem.getMaterialId().getId(),model.getMonthTime(),true) - sumNumber("出库",pid,depotItem.getMaterialId().getId(),model.getMonthTime(),true);
+                    Integer InSum = sumNumber("入库",pid,depotItem.getMaterialId().getId(),model.getMonthTime(),false);
+                    Integer OutSum = sumNumber("出库",pid,depotItem.getMaterialId().getId(),model.getMonthTime(),false);
+                    Double prevPrice = sumPrice("入库",pid,depotItem.getMaterialId().getId(),model.getMonthTime(),true) - sumPrice("出库",pid, depotItem.getMaterialId().getId(), model.getMonthTime(), true);
+                    Double InPrice = sumPrice("入库",pid,depotItem.getMaterialId().getId(),model.getMonthTime(),false);
+                    Double OutPrice = sumPrice("出库",pid, depotItem.getMaterialId().getId(), model.getMonthTime(), false);
                     item.put("Id", depotItem.getId());
                     item.put("MaterialId", depotItem.getMaterialId()==null?"":depotItem.getMaterialId().getId());
                     item.put("MaterialName", depotItem.getMaterialId().getName());
@@ -369,14 +370,15 @@ public class DepotItemAction extends BaseAction<DepotItemModel>
             List<DepotItem> dataList = pageUtil.getPageList();
 
             JSONObject outer = new JSONObject();
+            Integer pid = model.getProjectId();
             Double thisAllPrice = 0.0;
             if(null != dataList)
             {
                 for(DepotItem depotItem:dataList)
                 {
-                    Double prevPrice = sumPrice("入库",depotItem.getMaterialId().getId(),model.getMonthTime(),true) - sumPrice("出库", depotItem.getMaterialId().getId(), model.getMonthTime(), true);
-                    Double InPrice = sumPrice("入库",depotItem.getMaterialId().getId(),model.getMonthTime(),false);
-                    Double OutPrice = sumPrice("出库", depotItem.getMaterialId().getId(), model.getMonthTime(), false);
+                    Double prevPrice = sumPrice("入库",pid,depotItem.getMaterialId().getId(),model.getMonthTime(),true) - sumPrice("出库",pid, depotItem.getMaterialId().getId(), model.getMonthTime(), true);
+                    Double InPrice = sumPrice("入库",pid,depotItem.getMaterialId().getId(),model.getMonthTime(),false);
+                    Double OutPrice = sumPrice("出库",pid, depotItem.getMaterialId().getId(), model.getMonthTime(), false);
                     thisAllPrice = thisAllPrice + (prevPrice + InPrice - OutPrice);
                 }
             }
@@ -412,18 +414,19 @@ public class DepotItemAction extends BaseAction<DepotItemModel>
             List<DepotItem> dataList = pageUtil.getPageList();
             
             //存放数据json数组
+            Integer pid = model.getProjectId();
             JSONArray dataArray = new JSONArray();
             if(null != dataList)
             {
                 for(DepotItem depotItem:dataList)
                 {
                     JSONObject item = new JSONObject();
-                    Integer prevSum = sumNumber("入库",depotItem.getMaterialId().getId(),model.getMonthTime(),true) - sumNumber("出库",depotItem.getMaterialId().getId(),model.getMonthTime(),true);
-                    Integer InSum = sumNumber("入库",depotItem.getMaterialId().getId(),model.getMonthTime(),false);
-                    Integer OutSum = sumNumber("出库",depotItem.getMaterialId().getId(),model.getMonthTime(),false);
-                    Double prevPrice = sumPrice("入库",depotItem.getMaterialId().getId(),model.getMonthTime(),true) - sumPrice("出库", depotItem.getMaterialId().getId(), model.getMonthTime(), true);
-                    Double InPrice = sumPrice("入库",depotItem.getMaterialId().getId(),model.getMonthTime(),false);
-                    Double OutPrice = sumPrice("出库", depotItem.getMaterialId().getId(), model.getMonthTime(), false);
+                    Integer prevSum = sumNumber("入库",pid,depotItem.getMaterialId().getId(),model.getMonthTime(),true) - sumNumber("出库",pid,depotItem.getMaterialId().getId(),model.getMonthTime(),true);
+                    Integer InSum = sumNumber("入库",pid,depotItem.getMaterialId().getId(),model.getMonthTime(),false);
+                    Integer OutSum = sumNumber("出库",pid,depotItem.getMaterialId().getId(),model.getMonthTime(),false);
+                    Double prevPrice = sumPrice("入库",pid,depotItem.getMaterialId().getId(),model.getMonthTime(),true) - sumPrice("出库", pid,depotItem.getMaterialId().getId(), model.getMonthTime(), true);
+                    Double InPrice = sumPrice("入库",pid,depotItem.getMaterialId().getId(),model.getMonthTime(),false);
+                    Double OutPrice = sumPrice("出库",pid, depotItem.getMaterialId().getId(), model.getMonthTime(), false);
                     item.put("Id", depotItem.getId());
                     item.put("MaterialId", depotItem.getMaterialId()==null?"":depotItem.getMaterialId().getId());
                     item.put("MaterialName", depotItem.getMaterialId().getName());
@@ -462,14 +465,14 @@ public class DepotItemAction extends BaseAction<DepotItemModel>
      * @return
      */
     @SuppressWarnings("unchecked")
-	public Integer sumNumber(String type,Long MId,String MonthTime, Boolean isPrev) {
+	public Integer sumNumber(String type,Integer ProjectId,Long MId,String MonthTime, Boolean isPrev) {
     	Integer sumNumber = 0;
     	String allNumber = "";
     	PageUtil pageUtil = new  PageUtil();
         pageUtil.setPageSize(0);
         pageUtil.setCurPage(0);
         try {
-			depotItemService.findByType(pageUtil, type, MId, MonthTime, isPrev);
+			depotItemService.findByType(pageUtil, type, ProjectId, MId, MonthTime, isPrev);
 			allNumber = pageUtil.getPageList().toString();
 			allNumber = allNumber.substring(1,allNumber.length()-1);
 			if(allNumber.equals("null")){
@@ -493,14 +496,14 @@ public class DepotItemAction extends BaseAction<DepotItemModel>
      * @return
      */
     @SuppressWarnings("unchecked")
-    public Double sumPrice(String type,Long MId,String MonthTime, Boolean isPrev) {
+    public Double sumPrice(String type,Integer ProjectId,Long MId,String MonthTime, Boolean isPrev) {
         Double sumPrice = 0.0;
         String allPrice = "";
         PageUtil pageUtil = new  PageUtil();
         pageUtil.setPageSize(0);
         pageUtil.setCurPage(0);
         try {
-            depotItemService.findPriceByType(pageUtil, type, MId, MonthTime, isPrev);
+            depotItemService.findPriceByType(pageUtil, type, ProjectId, MId, MonthTime, isPrev);
             allPrice = pageUtil.getPageList().toString();
             allPrice = allPrice.substring(1,allPrice.length()-1);
             if(allPrice.equals("null")){

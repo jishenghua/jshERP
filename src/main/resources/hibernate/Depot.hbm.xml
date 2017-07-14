@@ -12,6 +12,11 @@
     <comment>仓库名称</comment>
    </column>
   </property>
+  <property generated="never" lazy="false" name="type" type="java.lang.Integer">
+   <column length="10" name="type">
+    <comment>类型</comment>
+   </column>
+  </property>
   <property generated="never" lazy="false" name="sort" type="java.lang.String">
    <column length="10" name="sort">
     <comment>排序</comment>

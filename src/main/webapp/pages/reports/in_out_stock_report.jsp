@@ -20,18 +20,24 @@
 		<script type="text/javascript" src="<%=path %>/js/easyui-1.3.5/locale/easyui-lang-zh_CN.js"></script>
 		<script type="text/javascript" src="<%=path %>/js/My97DatePicker/WdatePicker.js"></script>
 		<script type="text/javascript" src="<%=path %>/js/common/common.js"></script>
+		<script>
+			var kid = ${sessionScope.user.id};
+		</script>
   	</head>
   	<body>
   		<!-- 查询 -->
 		<div id = "searchPanel"	class="easyui-panel" style="padding:10px;" title="查询窗口" iconCls="icon-search" collapsible="true" closable="false">
 			<table id="searchTable">
 				<tr>
+					<td>仓库：</td>
+					<td>
+						<select name="searchProjectId" id="searchProjectId"  style="width:80px;"></select>
+					</td>
+					<td>&nbsp;</td>
 			    	<td>月份：</td>
 					<td>
 						<input type="text" name="searchMonth" id="searchMonth" onClick="WdatePicker({dateFmt:'yyyy-MM'})" class="txt Wdate" style="width:180px;"/>
 					</td>
-					<td>&nbsp;</td>
-					<td>&nbsp;</td>
 					<td>&nbsp;</td>
 					<td>
 						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchBtn">查询</a>&nbsp;&nbsp;
@@ -55,6 +61,12 @@
 			{
 				var thisDate = getNowFormatMonth(); //当前月份
 				$("#searchMonth").val(thisDate);
+				var userBusinessList=null;
+				var userdepot=null;
+				initSystemData_UB();
+				initSelectInfo_UB();
+				initSystemData_depot();
+				initSelectInfo_depot();
 				initTableData();
 				ininPager();
 				search();
@@ -73,6 +85,95 @@
 						//window.location.href = "<%=path%>/depotItem/exportExcel.action?browserType=" + getOs();
 					}
 				});				
+			}
+
+			//初始化系统基础信息
+			function initSystemData_UB(){
+				$.ajax({
+					type:"post",
+					url: "<%=path %>/userBusiness/getBasicData.action",
+					data: ({
+						KeyId:kid,
+						Type:"UserDepot"
+					}),
+					//设置为同步
+					async:false,
+					dataType: "json",
+					success: function (systemInfo)
+					{
+						if(systemInfo)
+						{
+							userBusinessList = systemInfo.showModel.map.userBusinessList;
+							var msgTip = systemInfo.showModel.msgTip;
+							if(msgTip == "exceptoin")
+							{
+								$.messager.alert('提示','查找UserBusiness异常,请与管理员联系！','error');
+								return;
+							}
+						}
+						else
+						{
+							userBusinessList=null;
+						}
+					}
+				});
+
+			}
+			//初始化页面选项卡
+			function initSelectInfo_UB(){
+
+				if(userBusinessList !=null)
+				{
+					if(userBusinessList.length>0)
+					{
+						//用户对应的仓库列表 [1][2][3]...
+						userdepot =userBusinessList[0].value;
+					}
+				}
+			}
+
+
+			//初始化系统基础信息
+			function initSystemData_depot(){
+				$.ajax({
+					type:"post",
+					url: "<%=path %>/depot/getBasicData.action",
+					//设置为同步
+					async:false,
+					dataType: "json",
+					success: function (systemInfo)
+					{
+						depotList = systemInfo.showModel.map.depotList;
+						var msgTip = systemInfo.showModel.msgTip;
+						if(msgTip == "exceptoin")
+						{
+							$.messager.alert('提示','查找系统基础信息异常,请与管理员联系！','error');
+							return;
+						}
+					}
+				});
+			}
+			//初始化页面选项卡
+			function initSelectInfo_depot(){
+				var options = "";
+
+				if(depotList !=null)
+				{
+					options = "";
+					for(var i = 0 ;i < depotList.length;i++)
+					{
+						var depot = depotList[i];
+
+						if(userdepot!=null)
+						{
+							if(userdepot.indexOf("["+depot.id+"]")!=-1)
+							{
+								options += '<option value="' + depot.id + '">' + depot.name + '</option>';
+							}
+						}
+					}
+					$("#searchProjectId").empty().append('<option value="">全部</option>').append(options);
+				}
 			}
 			
 			//初始化表格数据
@@ -203,6 +304,7 @@
 					url: "<%=path %>/depotHead/findByMonth.action",
 					dataType: "json",
 					data: ({
+						ProjectId: $.trim($("#searchProjectId").val()),
 						MonthTime:$("#searchMonth").val()
 					}),
 					success: function (res)
@@ -219,7 +321,7 @@
 									var MIds = resNew.mIds;
 									if(MIds) {
 										if(pageSize === 3000) {
-											window.location.href = "<%=path%>/depotItem/exportExcel.action?browserType=" + getOs() + "&pageNo=" + pageNo + "&pageSize=" + pageSize + "&MonthTime=" + $("#searchMonth").val() + "&HeadIds=" + HeadIds + "&MaterialIds=" + MIds;											
+											window.location.href = "<%=path%>/depotItem/exportExcel.action?browserType=" + getOs() + "&pageNo=" + pageNo + "&pageSize=" + pageSize + "&ProjectId="+ $.trim($("#searchProjectId").val()) +"&MonthTime=" + $("#searchMonth").val() + "&HeadIds=" + HeadIds + "&MaterialIds=" + MIds;
 										}
 										else {
 											$.ajax({
@@ -229,6 +331,7 @@
 												data: ({
 													pageNo:pageNo,
 													pageSize:pageSize,
+													ProjectId: $.trim($("#searchProjectId").val()),
 													MonthTime:$("#searchMonth").val(),
 													HeadIds:HeadIds,
 													MaterialIds:MIds
@@ -252,6 +355,7 @@
 												url: "<%=path %>/depotItem/totalCountMoney.action",
 												dataType: "json",
 												data: ({
+													ProjectId: $.trim($("#searchProjectId").val()),
 													MonthTime:$("#searchMonth").val(),
 													HeadIds:HeadIds,
 													MaterialIds:MIds

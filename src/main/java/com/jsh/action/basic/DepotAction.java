@@ -64,6 +64,7 @@ public class DepotAction extends BaseAction<DepotModel>
 		{
 			Depot depot = new Depot();
 			depot.setName(model.getName());
+			depot.setType(model.getType());
 			depot.setSort(model.getSort());
 			depot.setRemark(model.getRemark());
 			depotService.create(depot);
@@ -137,6 +138,7 @@ public class DepotAction extends BaseAction<DepotModel>
         {
         	Depot depot = depotService.get(model.getDepotID());
         	depot.setName(model.getName());
+			depot.setType(model.getType());
         	depot.setSort(model.getSort());
         	depot.setRemark(model.getRemark());
         	depotService.update(depot);
@@ -249,6 +251,7 @@ public class DepotAction extends BaseAction<DepotModel>
                     item.put("id", depot.getId());
                     //供应商名称
                     item.put("name", depot.getName());
+					item.put("type", depot.getType());
                     item.put("sort", depot.getSort());
                     item.put("remark", depot.getRemark());
                     item.put("op", 1);
@@ -267,6 +270,46 @@ public class DepotAction extends BaseAction<DepotModel>
 	    {
             Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询仓库信息结果异常", e);
         }
+	}
+
+	/**
+	 * 查找礼品卡-虚拟仓库
+	 * @return
+	 */
+	public void findGiftByType()
+	{
+		try
+		{
+			PageUtil<Depot> pageUtil = new  PageUtil<Depot>();
+			pageUtil.setPageSize(0);
+			pageUtil.setCurPage(0);
+			pageUtil.setAdvSearch(getConditionByType());
+			depotService.find(pageUtil);
+			List<Depot> dataList = pageUtil.getPageList();
+			//存放数据json数组
+			JSONArray dataArray = new JSONArray();
+			if(null != dataList)
+			{
+				for(Depot depot:dataList)
+				{
+					JSONObject item = new JSONObject();
+					item.put("id", depot.getId());
+					//仓库名称
+					item.put("name", depot.getName());
+					dataArray.add(item);
+				}
+			}
+			//回写查询结果
+			toClient(dataArray.toString());
+		}
+		catch (DataAccessException e)
+		{
+			Log.errorFileSync(">>>>>>>>>查找仓库信息异常", e);
+		}
+		catch (IOException e)
+		{
+			Log.errorFileSync(">>>>>>>>>回写查询仓库信息结果异常", e);
+		}
 	}
 	
 	/**
@@ -340,9 +383,25 @@ public class DepotAction extends BaseAction<DepotModel>
         Map<String,Object> condition = new HashMap<String,Object>();
         condition.put("name_s_like", model.getName());
         condition.put("remark_s_like", model.getRemark());
+		condition.put("type_n_eq", model.getType());  //0-仓库，1-礼品卡
         condition.put("sort_s_order", "asc");
         return condition;
     }
+
+	/**
+	 * 拼接搜索条件
+	 * @return
+	 */
+	private Map<String,Object> getConditionByType()
+	{
+		/**
+		 * 拼接搜索条件
+		 */
+		Map<String,Object> condition = new HashMap<String,Object>();
+		condition.put("type_n_eq", model.getType());  //0-仓库，1-礼品卡
+		condition.put("sort_s_order", "asc");
+		return condition;
+	}
 	
 	/**
 	 * 拼接搜索条件-用户对应部门

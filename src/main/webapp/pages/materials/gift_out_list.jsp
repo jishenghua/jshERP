@@ -7,11 +7,11 @@
 <!DOCTYPE html>
 <html>
   	<head>
-    	<title>采购入库</title>
+    	<title>礼品销售</title>
         <meta charset="utf-8">
 		<!-- 指定以IE8的方式来渲染 -->
 		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
-    	<link rel="shortcut icon" href="<%=path%>/images/favicon.ico" type="image/x-icon" />    	
+    	<link rel="shortcut icon" href="<%=path%>/images/favicon.ico" type="image/x-icon" />
 		<link rel="stylesheet" type="text/css" href="<%=path %>/js/easyui-1.3.5/themes/default/easyui.css"/>
 		<link rel="stylesheet" type="text/css" href="<%=path %>/js/easyui-1.3.5/themes/icon.css"/>
 		<link type="text/css" rel="stylesheet" href="<%=path %>/css/common.css" />
@@ -32,9 +32,9 @@
 		<div id = "searchPanel"	class="easyui-panel" style="padding:3px;" title="查询窗口" iconCls="icon-search" collapsible="true" closable="false">
 			<table id="searchTable">
 				<tr>
-			    	<td>收货仓库：</td>
+			    	<td>礼品卡：</td>
 					<td>
-						<select name="searchProjectId" id="searchProjectId"  style="width:80px;"></select>
+						<input id="searchGiftId" name="searchGiftId" style="width:110px;" />
 					</td>
 					<td>单据编号：</td>
 					<td>
@@ -58,7 +58,7 @@
 		</div>
 		
 		<!-- 数据显示table -->
-		<div id="tablePanel" class="easyui-panel" style="padding:1px; top:300px;" title="采购入库列表" iconCls="icon-list" collapsible="true" closable="false">
+		<div id="tablePanel" class="easyui-panel" style="padding:1px; top:300px;" title="礼品销售列表" iconCls="icon-list" collapsible="true" closable="false">
 			<table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 		</div>
 		
@@ -69,38 +69,30 @@
 	            <tr>
 	            <td>礼品卡：</td>
 	            <td style="padding:5px">
-                <select name="ProjectId" id="ProjectId" style="width:110px;"></select>
+					<input id="GiftId" name="GiftId" style="width:120px;" />
                 </td>
                 <td>单据日期：</td>
                 <td style="padding:5px">
-                <input type="text" name="OperTime" id="OperTime" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="txt Wdate" style="width:110px;"/>
+                <input type="text" name="OperTime" id="OperTime" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="txt Wdate" style="width:120px;"/>
                 </td>
-	            <td>供货单位：</td>
+	            <td>单据编号：</td>
 	            <td style="padding:5px">
-	            <input id="OrganId" name="OrganId" style="width:110px;" />  
+					<input name="Number" id="Number" class="easyui-validatebox" data-options="required:true,validType:'length[2,30]'" style="width: 120px;"/>
 	            </td>
+	            <td style="width:50px;"></td>
+	            <td style="padding:5px;width:120px;"></td>
+	            </tr>
+	            <tr>
 	            <td>经手人：</td>
 	            <td style="padding:5px">
-	            <select name="HandsPersonId" id="HandsPersonId" style="width:110px;"></select>
-	            </td>
-	            </tr>
-	            <tr>	            
-	            <td>付款账户：</td>
-	            <td style="padding:5px">
-	            <select name="AccountId" id="AccountId" style="width:110px;"></select>
-	            </td>
-	            <td>付款金额：</td>
-				<td style="padding:5px">
-	            <input id="ChangeAmount" name="ChangeAmount" data-changeamount="0" style="width:110px;" />
-				</td>
-				<td>单据编号：</td>
-	            <td style="padding:5px">
-	            <input name="Number" id="Number" class="easyui-validatebox" data-options="required:true,validType:'length[2,30]'" style="width: 110px;"/>
+	            <select name="HandsPersonId" id="HandsPersonId" style="width:120px;"></select>
 	            </td>
 	            <td>单据备注：</td>
-	            <td style="padding:5px">
-	            <input name="Remark" id="Remark" class="easyui-validatebox" style="width: 110px;"/>
+	            <td style="padding:5px" colspan="3">
+	            <input name="Remark" id="Remark" class="easyui-validatebox" style="width:320px;"/>
 	            </td>	            
+	            <td></td>
+				<td></td>
 	            </tr>
 	            <tr>
 	            <td>商品列表：</td>
@@ -119,42 +111,35 @@
 	    </div>
 	    <div id="depotHeadDlgShow" class="easyui-dialog" style="width:850px;padding:10px 20px;top:20px"
 	            closed="true" modal="true" cache="false" collapsible="false" closable="true">
-            <table>
+	            <table>
 	            <tr>
-	            <td>收货仓库：</td>
-	            <td style="padding:5px;width:110px;">
+	            <td>发货仓库：</td>
+	            <td style="padding:5px;width:120px;">
                 <span id="ProjectIdShow"></span>
                 </td>
                 <td>单据日期：</td>
-                <td style="padding:5px;width:110px;">
+                <td style="padding:5px;width:120px;">
                 <span id="OperTimeShow"></span>
                 </td>
-	            <td>供货单位：</td>
-	            <td style="padding:5px;width:110px;">
-	            <span id="OrganIdShow"></span>
+	            <td>单据编号：</td>
+	            <td style="padding:5px;width:120px;">
+					<span id="NumberShow"></span>
 	            </td>
-	            <td>经手人：</td>
-	            <td style="padding:5px;width:110px;">
-	            <span id="HandsPersonIdShow"></span>
+	            <td style="width:50px;"></td>
+	            <td style="padding:5px;width:120px;">
 	            </td>
 	            </tr>
 	            <tr>
-	            <td>付款账户：</td>
+	            <td>经手人：</td>
 	            <td style="padding:5px">
-	            <span id="AccountIdShow"></span>
+	            <span id="HandsPersonIdShow"></span>
 	            </td>
-	            <td>付款金额：</td>
-				<td style="padding:5px">
-	            <span id="ChangeAmountShow"></span>
-				</td>
-				<td>单据编号：</td>	            
-	            <td style="padding:5px">
-	            <span id="NumberShow"></span>
-	            </td>            
 	            <td>单据备注：</td>
-	            <td style="padding:5px">
+	            <td style="padding:5px" colspan="3">
 	            <span id="RemarkShow"></span>
 	            </td>	            
+	            <td></td>
+				<td></td>
 	            </tr>
 	            <tr>
 	            <td>商品列表：</td>
@@ -163,7 +148,7 @@
 				<table id="materialDataShow" style="top:100px;border-bottom-color:#FFFFFF"></table>
 	            </td>
 	            </tr>
-            </table>
-	    </div>
+	            </table>
+	    </div>	    
 	</body>
 </html>

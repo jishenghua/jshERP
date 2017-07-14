@@ -14,9 +14,9 @@ import com.jsh.util.PageUtil;
 
 public interface DepotItemIService extends BaseIService<DepotItem>
 {
-	void findByType(PageUtil<DepotItem> depotItem, String type, Long MId, String MonthTime,Boolean isPrev)throws JshException;
+	void findByType(PageUtil<DepotItem> depotItem, String type,Integer ProjectId, Long MId, String MonthTime,Boolean isPrev)throws JshException;
 
-	void findPriceByType(PageUtil<DepotItem> depotItem, String type, Long MId, String MonthTime,Boolean isPrev)throws JshException;
+	void findPriceByType(PageUtil<DepotItem> depotItem, String type,Integer ProjectId, Long MId, String MonthTime,Boolean isPrev)throws JshException;
 	
 	void buyOrSale(PageUtil<DepotItem> depotItem, String type, String subType, Long MId, String MonthTime, String sumType)throws JshException;
 	

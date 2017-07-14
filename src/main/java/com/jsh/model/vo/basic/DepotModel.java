@@ -17,6 +17,11 @@ public class DepotModel implements Serializable
      * 排序
      */
     private String sort = "";
+
+	/**
+	 * 类型
+	 */
+	private Integer type = 0;
     
     /**
      * 描述
@@ -72,6 +77,14 @@ public class DepotModel implements Serializable
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
 	}
 
 	public String getSort() {

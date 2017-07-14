@@ -439,6 +439,46 @@ public class SupplierAction extends BaseAction<SupplierModel>
             Log.errorFileSync(">>>>>>>>>回写查询客户信息结果异常", e);
         }
     }
+
+    /**
+     * 查找非会员的id
+     */
+    public void findBySelectRetailNoPeople()
+    {
+        try
+        {
+            PageUtil<Supplier> pageUtil = new  PageUtil<Supplier>();
+            pageUtil.setPageSize(0);
+            pageUtil.setCurPage(0);
+            pageUtil.setAdvSearch(getCondition_Select_retail_no_people());
+            supplierService.find(pageUtil);
+            List<Supplier> dataList = pageUtil.getPageList();
+            //存放数据json数组
+            JSONArray dataArray = new JSONArray();
+            if(null != dataList)
+            {
+                for(Supplier supplier:dataList)
+                {
+                    JSONObject item = new JSONObject();
+                    item.put("id", supplier.getId());
+                    //客户名称
+                    item.put("supplier", supplier.getSupplier());
+                    item.put("advanceIn", supplier.getAdvanceIn()); //预付款金额
+                    dataArray.add(item);
+                }
+            }
+            //回写查询结果
+            toClient(dataArray.toString());
+        }
+        catch (DataAccessException e)
+        {
+            Log.errorFileSync(">>>>>>>>>查找客户信息异常", e);
+        }
+        catch (IOException e)
+        {
+            Log.errorFileSync(">>>>>>>>>回写查询客户信息结果异常", e);
+        }
+    }
 	
 	/**
 	 * 拼接搜索条件
@@ -502,6 +542,22 @@ public class SupplierAction extends BaseAction<SupplierModel>
          */
         Map<String,Object> condition = new HashMap<String,Object>();
         condition.put("type_s_like", "散户");
+        condition.put("id_s_order", "desc");
+        return condition;
+    }
+
+    /**
+     * 拼接搜索条件-非会员
+     * @return
+     */
+    private Map<String,Object> getCondition_Select_retail_no_people()
+    {
+        /**
+         * 拼接搜索条件
+         */
+        Map<String,Object> condition = new HashMap<String,Object>();
+        condition.put("type_s_like", "散户");
+        condition.put("isystem_n_eq", 0);
         condition.put("id_s_order", "desc");
         return condition;
     }

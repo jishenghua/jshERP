@@ -24,6 +24,7 @@ public class DepotItemModel implements Serializable
 	private String HeadIds = "";	//表头集合列表
 	private String MaterialIds = "";	//材料列表
 	private String MonthTime = "";  //月份
+	private Integer ProjectId = null;
   	private String browserType = "";
   	/**
   	 * 文件名称
@@ -202,6 +203,14 @@ public class DepotItemModel implements Serializable
 
 	public void setMonthTime(String monthTime) {
 		MonthTime = monthTime;
+	}
+
+	public Integer getProjectId() {
+		return ProjectId;
+	}
+
+	public void setProjectId(Integer projectId) {
+		ProjectId = projectId;
 	}
 
 	public String getMaterialIds() {

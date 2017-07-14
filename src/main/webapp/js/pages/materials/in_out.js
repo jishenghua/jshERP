@@ -36,6 +36,7 @@
 		initSystemData_account();
 		initSelectInfo_account();
 		initSupplier(); //供应商
+		initGift(); //初始化礼品卡
 		initTableData();
 		ininPager();
 		initForm();	
@@ -113,6 +114,20 @@
 			payTypeTitle = "隐藏";
 			organUrl = supUrl;
 			amountNum = "DBCK";
+		}
+		else if(listTitle === "礼品充值列表"){
+			listType = "出库";
+			listSubType = "礼品充值";
+			payTypeTitle = "隐藏";
+			organUrl = supUrl;
+			amountNum = "LPCZ";
+		}
+		else if(listTitle === "礼品销售列表"){
+			listType = "出库";
+			listSubType = "礼品销售";
+			payTypeTitle = "隐藏";
+			organUrl = supUrl;
+			amountNum = "LPXS";
 		}
 	}
 	//初始化系统基础信息
@@ -239,6 +254,34 @@
 				}
 			}
 		});  
+	}
+
+	//初始化-礼品卡
+	function initGift(){
+		if(listSubType == "礼品充值"|| listSubType == "礼品销售"){
+			$('#GiftId').combobox({
+				url: path + "/depot/findGiftByType.action?type=1",
+				valueField:'id',
+				textField:'name'
+			});
+			$('#searchGiftId').combobox({
+				url: path + "/depot/findGiftByType.action?type=1",
+				valueField:'id',
+				textField:'name'
+			});
+		}
+		if(listSubType == "礼品销售"){
+			$.ajax({
+				type:"post",
+				url: path + "/supplier/findBySelectRetailNoPeople.action", //散户接口
+				dataType: "json",
+				success: function (res){
+					if(res && res[0]){
+						orgDefaultId = res[0].id;
+					}
+				}
+			});
+		}
 	}
 	
 	//初始化系统基础信息
@@ -842,7 +885,12 @@
 	function editDepotHead(depotHeadTotalInfo){
 		var depotHeadInfo = depotHeadTotalInfo.split("AaBb");
 	    $("#clientIp").val(clientIp);
-	    $("#ProjectId").focus().val(depotHeadInfo[1]);
+		if(listSubType==="礼品销售"){
+			$("#GiftId").combobox('setValue',depotHeadInfo[1]);
+		}
+		else{
+			$("#ProjectId").focus().val(depotHeadInfo[1]);
+		}
 	    var ProjectId=depotHeadInfo[1];
 		if(ProjectId!='')
 		{
@@ -860,6 +908,9 @@
 	    var TotalPrice = depotHeadInfo[14];
 		preTotalPrice = depotHeadInfo[14]; //记录前一次合计金额，用于扣预付款
 	    $("#AllocationProjectId").val(depotHeadInfo[15]);
+		if(listSubType==="礼品充值"){
+			$("#GiftId").combobox('setValue', depotHeadInfo[15]);
+		}
 	    //orgDepotHead = depotHeadInfo[1];
 	    var editTitle = listTitle.replace("列表","信息");
 	    $('#depotHeadDlg').dialog('open').dialog('setTitle','<img src="' + path + '/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑' + editTitle);
@@ -1086,14 +1137,26 @@
 							return;
 						}
 					}
-					var OrganId = null, AllocationProjectId = null;
+					var OrganId = null, ProjectId = null,AllocationProjectId = null;
 					var ChangeAmount = $.trim($("#ChangeAmount").val());
-					var TotalPrice = $("#depotHeadFM .datagrid-footer [field='AllPrice'] div").text();					
-					if(listSubType !=="调拨"){
-						OrganId = $('#OrganId').combobox('getValue');
+					var TotalPrice = $("#depotHeadFM .datagrid-footer [field='AllPrice'] div").text();
+					if(listSubType === "礼品销售") {
+						ProjectId = $('#GiftId').combobox('getValue'); //礼品卡
 					}
 					else {
+						ProjectId =  $.trim($("#ProjectId").val());
+					}
+					if(listSubType ==="调拨"){
 						AllocationProjectId = $.trim($("#AllocationProjectId").val()); //收货仓库-对方
+					}
+					else if(listSubType ==="礼品充值"){
+						AllocationProjectId =  $('#GiftId').combobox('getValue'); //礼品卡
+					}
+					if(listSubType === "礼品销售") {
+						OrganId = orgDefaultId;
+					}
+					else {
+						OrganId = $('#OrganId').combobox('getValue');
 					}
 					if(listSubType === "采购"||listSubType === "零售退货"||listSubType === "销售退货"){
 						//付款为负数
@@ -1115,7 +1178,7 @@
 						data: ({
 							Type: listType,
 							SubType: listSubType,
-							ProjectId: $.trim($("#ProjectId").val()),
+							ProjectId: ProjectId,
 							AllocationProjectId: AllocationProjectId,
 							Number: $.trim($("#Number").val()),
 							OperTime: $("#OperTime").val(),
@@ -1221,12 +1284,19 @@
 	
 
 	function showDepotHeadDetails(pageNo,pageSize){
+		var ProjectId = null;
+		if(listSubType === "礼品销售") {
+			ProjectId = $('#searchGiftId').combobox('getValue'); //礼品卡
+		}
+		else {
+			ProjectId = $.trim($("#searchProjectId").val());
+		}
 		$.ajax({
 			type:"post",
 			url: path + "/depotHead/findBy.action",
 			dataType: "json",
 			data: ({
-				ProjectId:$.trim($("#searchProjectId").val()),
+				ProjectId: ProjectId,
 				DepotIds: depotString,
 				Type: listType,
 				SubType:listSubType,

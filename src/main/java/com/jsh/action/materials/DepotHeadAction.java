@@ -436,6 +436,9 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
 	private Map<String,Object> getConditionHead()
     {
         Map<String,Object> condition = new HashMap<String,Object>();
+		if(model.getProjectId()!=null) {
+			condition.put("ProjectId_n_eq", model.getProjectId());
+		}
         condition.put("OperTime_s_lteq",model.getMonthTime() + "-31 00:00:00");
         return condition;
     }
