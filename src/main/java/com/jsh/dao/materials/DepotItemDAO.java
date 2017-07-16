@@ -27,23 +27,23 @@ public class DepotItemDAO extends BaseDAO<DepotItem> implements DepotItemIDAO
     {
     	//多表联查,多表连查，此处用到了createSQLQuery，可以随便写sql语句，很方便
     	Query query;
-		String queryString;
-    	if(isPrev) {
-			queryString = "select sum(OperNumber) as OperNumber from jsh_depotitem,jsh_depothead  where jsh_depotitem.HeaderId = jsh_depothead.id and type='" + type +"'";
+		StringBuffer queryString = new StringBuffer();
+		if(isPrev) {
+			queryString.append("select sum(OperNumber) as OperNumber from jsh_depotitem,jsh_depothead  where jsh_depotitem.HeaderId = jsh_depothead.id and type='" + type +"'");
 			if(ProjectId!=null) {
-				queryString += " and ProjectId='" + ProjectId +"'";
+				queryString.append(" and ProjectId='" + ProjectId +"'");
 			}
-			queryString += " and MaterialId ="+ MId + " and jsh_depothead.OperTime <'"+ MonthTime +"-01 00:00:00' ";
-    		query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
-    	}
-    	else {
-			queryString = "select sum(OperNumber) as OperNumber from jsh_depotitem,jsh_depothead  where jsh_depotitem.HeaderId = jsh_depothead.id and type='" + type +"'";
-			if(ProjectId!=null) {
-				queryString += " and ProjectId='" + ProjectId +"'";
-			}
-			queryString += " and MaterialId ="+ MId + " and jsh_depothead.OperTime >='"+ MonthTime +"-01 00:00:00' and jsh_depothead.OperTime <='"+ MonthTime +"-31 00:00:00' " ;
+			queryString.append(" and MaterialId ="+ MId + " and jsh_depothead.OperTime <'"+ MonthTime +"-01 00:00:00' ");
 			query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
-    	}        
+		}
+		else {
+			queryString.append("select sum(OperNumber) as OperNumber from jsh_depotitem,jsh_depothead  where jsh_depotitem.HeaderId = jsh_depothead.id and type='" + type +"'");
+			if(ProjectId!=null) {
+				queryString.append(" and ProjectId='" + ProjectId +"'");
+			}
+			queryString.append(" and MaterialId ="+ MId + " and jsh_depothead.OperTime >='"+ MonthTime +"-01 00:00:00' and jsh_depothead.OperTime <='"+ MonthTime +"-31 00:00:00' ");
+			query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
+		}
         pageUtil.setTotalCount(query.list().size());
         pageUtil.setPageList(query.list());
     }
@@ -54,21 +54,20 @@ public class DepotItemDAO extends BaseDAO<DepotItem> implements DepotItemIDAO
 	{
 		//多表联查,多表连查，此处用到了createSQLQuery，可以随便写sql语句，很方便
 		Query query;
-		String queryString;
-		if(isPrev) {
-			queryString = "select sum(AllPrice) as AllPrice from jsh_depotitem,jsh_depothead  where jsh_depotitem.HeaderId = jsh_depothead.id and type='" + type +"'";
-			if(ProjectId!=null) {
-				queryString += " and ProjectId='" + ProjectId +"'";
+		StringBuffer queryString = new StringBuffer();
+		if (isPrev) {
+			queryString.append("select sum(AllPrice) as AllPrice from jsh_depotitem,jsh_depothead  where jsh_depotitem.HeaderId = jsh_depothead.id and type='" + type + "'");
+			if (ProjectId != null) {
+				queryString.append(" and ProjectId='" + ProjectId + "'");
 			}
-			queryString += " and MaterialId ="+ MId + " and jsh_depothead.OperTime <'"+ MonthTime +"-01 00:00:00' ";
+			queryString.append(" and MaterialId =" + MId + " and jsh_depothead.OperTime <'" + MonthTime + "-01 00:00:00' ");
 			query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
-		}
-		else {
-			queryString = "select sum(AllPrice) as AllPrice from jsh_depotitem,jsh_depothead  where jsh_depotitem.HeaderId = jsh_depothead.id and type='" + type +"'";
-			if(ProjectId!=null) {
-				queryString += " and ProjectId='" + ProjectId +"'";
+		} else {
+			queryString.append("select sum(AllPrice) as AllPrice from jsh_depotitem,jsh_depothead  where jsh_depotitem.HeaderId = jsh_depothead.id and type='" + type + "'");
+			if (ProjectId != null) {
+				queryString.append(" and ProjectId='" + ProjectId + "'");
 			}
-			queryString += " and MaterialId ="+ MId + " and jsh_depothead.OperTime >='"+ MonthTime +"-01 00:00:00' and jsh_depothead.OperTime <='"+ MonthTime +"-31 00:00:00' ";
+			queryString.append(" and MaterialId =" + MId + " and jsh_depothead.OperTime >='" + MonthTime + "-01 00:00:00' and jsh_depothead.OperTime <='" + MonthTime + "-31 00:00:00' ");
 			query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
 		}
 		pageUtil.setTotalCount(query.list().size());
@@ -90,6 +89,28 @@ public class DepotItemDAO extends BaseDAO<DepotItem> implements DepotItemIDAO
     	pageUtil.setTotalCount(query.list().size());
         pageUtil.setPageList(query.list());
     }
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void findGiftByType(PageUtil<DepotItem> pageUtil,String subType,Integer ProjectId,Long MId,String type) throws JshException
+	{
+		//多表联查,多表连查，此处用到了createSQLQuery，可以随便写sql语句，很方便
+		Query query;
+		StringBuffer queryString = new StringBuffer();
+		queryString.append("select sum(OperNumber) as OperNumber from jsh_depotitem,jsh_depothead  where jsh_depotitem.HeaderId = jsh_depothead.id and SubType='" + subType +"'");
+		if(ProjectId!=null) {
+			if(type.equals("in")){
+				queryString.append(" and AllocationProjectId='" + ProjectId +"'"); //礼品充值时
+			}
+			else if(type.equals("out")){
+				queryString.append(" and  ProjectId='" + ProjectId +"'");
+			}
+		}
+		queryString.append(" and MaterialId ="+ MId);
+		query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
+		pageUtil.setTotalCount(query.list().size());
+		pageUtil.setPageList(query.list());
+	}
 }
 
 

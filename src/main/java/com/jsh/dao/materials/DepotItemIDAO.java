@@ -12,5 +12,7 @@ public interface DepotItemIDAO extends BaseIDAO<DepotItem>
 
     public void findPriceByType(PageUtil<DepotItem> pageUtil,String type,Integer ProjectId,Long MId, String MonthTime,Boolean isPrev) throws JshException;
 
-    public void buyOrSale(PageUtil<DepotItem> pageUtil,String type, String subType,Long MId, String MonthTime, String sumType) throws JshException; 
+    public void buyOrSale(PageUtil<DepotItem> pageUtil,String type, String subType,Long MId, String MonthTime, String sumType) throws JshException;
+
+    public void findGiftByType(PageUtil<DepotItem> pageUtil,String subType,Integer ProjectId,Long MId, String type) throws JshException;
 }

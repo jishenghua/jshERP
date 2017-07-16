@@ -417,9 +417,10 @@
 					+ 'AaBb' + rec.AllocationProjectName + 'AaBb' + rec.payType;
 					if(1 == value)
 					{
+						var orgId = rec.OrganId? rec.OrganId:0;
 						str += '<a onclick="showDepotHead(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)"><span class="action-show">查看</span></a>';
 						str += '<a onclick="editDepotHead(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)"><span class="action-edit">编辑</span></a>';
-						str += '<a onclick="deleteDepotHead('+ rec.Id +',' + rec.OrganId +',' + rec.TotalPrice+ ');" style="text-decoration:none;color:black;" href="javascript:void(0)"><span class="action-delete">删除</span></a>';
+						str += '<a onclick="deleteDepotHead('+ rec.Id +',' + orgId +',' + rec.TotalPrice+ ');" style="text-decoration:none;color:black;" href="javascript:void(0)"><span class="action-delete">删除</span></a>';
 					}
 					return str;
 				}
@@ -1154,6 +1155,9 @@
 					}
 					if(listSubType === "礼品销售") {
 						OrganId = orgDefaultId;
+					}
+					else if(listSubType ==="礼品充值"){
+						OrganId = null;
 					}
 					else {
 						OrganId = $('#OrganId').combobox('getValue');

@@ -240,6 +240,53 @@ public class DepotItemAction extends BaseAction<DepotItemModel>
             Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询信息结果异常", e);
         }
 	}
+
+    /**
+     * 查找礼品卡信息
+     * @return
+     */
+    public void findGiftByAll() {
+        try {
+            PageUtil<DepotItem> pageUtil = new  PageUtil<DepotItem>();
+            pageUtil.setPageSize(model.getPageSize());
+            pageUtil.setCurPage(model.getPageNo());
+            pageUtil.setAdvSearch(getConditionALL());
+            depotItemService.find(pageUtil);
+            List<DepotItem> dataList = pageUtil.getPageList();
+
+            JSONObject outer = new JSONObject();
+            outer.put("total", pageUtil.getTotalCount());
+            //存放数据json数组
+            Integer pid = model.getProjectId();
+            JSONArray dataArray = new JSONArray();
+            if(null != dataList) {
+                for(DepotItem depotItem:dataList){
+                    JSONObject item = new JSONObject();
+                    Integer InSum = sumNumberGift("礼品充值", pid, depotItem.getMaterialId().getId(), "in");
+                    Integer OutSum = sumNumberGift("礼品销售", pid, depotItem.getMaterialId().getId(), "out");
+                    item.put("Id", depotItem.getId());
+                    item.put("MaterialId", depotItem.getMaterialId()==null?"":depotItem.getMaterialId().getId());
+                    item.put("MaterialName", depotItem.getMaterialId().getName());
+                    item.put("MaterialModel", depotItem.getMaterialId().getModel());
+                    item.put("MaterialStandard", depotItem.getMaterialId().getStandard());
+                    item.put("MaterialColor", depotItem.getMaterialId().getColor());
+                    item.put("MaterialUnit", depotItem.getMaterialId().getUnit());
+                    item.put("thisSum",  InSum - OutSum);
+                    dataArray.add(item);
+                }
+            }
+            outer.put("rows", dataArray);
+            //回写查询结果
+            toClient(outer.toString());
+        }
+        catch (DataAccessException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找信息异常", e);
+        }
+        catch (IOException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询信息结果异常", e);
+        }
+    }
+
 	/**
 	 * 进货统计
 	 * @return
@@ -485,6 +532,37 @@ public class DepotItemAction extends BaseAction<DepotItemModel>
 		}
 		sumNumber = Integer.parseInt(allNumber);
 		return sumNumber;    	     
+    }
+
+    /**
+     * 数量合计-礼品卡
+     * @param type
+     * @param MId
+     * @param MonthTime
+     * @param isPrev
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public Integer sumNumberGift(String subType,Integer ProjectId,Long MId,String type) {
+        Integer sumNumber = 0;
+        String allNumber = "";
+        PageUtil pageUtil = new  PageUtil();
+        pageUtil.setPageSize(0);
+        pageUtil.setCurPage(0);
+        try {
+            depotItemService.findGiftByType(pageUtil, subType, ProjectId, MId,type);
+            allNumber = pageUtil.getPageList().toString();
+            allNumber = allNumber.substring(1,allNumber.length()-1);
+            if(allNumber.equals("null")){
+                allNumber = "0";
+            }
+            allNumber = allNumber.replace(".0", "");
+        } catch (JshException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        sumNumber = Integer.parseInt(allNumber);
+        return sumNumber;
     }
 
     /**

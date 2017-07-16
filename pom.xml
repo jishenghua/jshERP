@@ -21,6 +21,7 @@
 		<commons-io.version>2.0.1</commons-io.version>
 		<commons-lang.version>2.5</commons-lang.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<jdk.version>1.7</jdk.version>
 	</properties>	
 	
 	<!-- 设定主仓库，按设定顺序进行查找。 -->

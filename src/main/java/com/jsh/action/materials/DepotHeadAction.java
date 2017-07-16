@@ -339,6 +339,50 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
             Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询仓管通信息结果异常", e);
         }
 	}
+
+	/**
+	 * 查找统计信息_根据礼品卡(报表)
+	 * @return
+	 */
+	public void findGiftReport() {
+		try {
+			PageUtil<DepotHead> pageUtil_in = new  PageUtil<DepotHead>();
+			pageUtil_in.setPageSize(0);
+			pageUtil_in.setCurPage(0);
+			pageUtil_in.setAdvSearch(getConditionHead_Gift_In());
+			depotHeadService.find(pageUtil_in);
+			List<DepotHead> dataList_in = pageUtil_in.getPageList();
+			JSONObject outer = new JSONObject();
+			String headId = "";
+			if(null != dataList_in) {
+				for(DepotHead depotHead:dataList_in) {
+					headId = headId + depotHead.getId() + ",";
+				}
+				PageUtil<DepotHead> pageUtil_out = new  PageUtil<DepotHead>();
+				pageUtil_out.setPageSize(0);
+				pageUtil_out.setCurPage(0);
+				pageUtil_out.setAdvSearch(getConditionHead_Gift_Out());
+				depotHeadService.find(pageUtil_out);
+				List<DepotHead> dataList_out = pageUtil_out.getPageList();
+				if(null != dataList_out) {
+					for(DepotHead depotHead:dataList_out) {
+						headId = headId + depotHead.getId() + ",";
+					}
+				}
+			}
+			if(headId!="") {
+				headId = headId.substring(0, headId.lastIndexOf(","));
+			}
+			outer.put("HeadIds", headId);
+			toClient(outer.toString());
+		}
+		catch (DataAccessException e) {
+			Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找仓管通信息异常", e);
+		}
+		catch (IOException e) {
+			Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询仓管通信息结果异常", e);
+		}
+	}
     
     /**
      * 查询单位的累计应收和累计应付，零售不能计入
@@ -442,6 +486,22 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
         condition.put("OperTime_s_lteq",model.getMonthTime() + "-31 00:00:00");
         return condition;
     }
+
+	private Map<String,Object> getConditionHead_Gift_In() {
+		Map<String,Object> condition = new HashMap<String,Object>();
+		if(model.getProjectId()!=null) {
+			condition.put("AllocationProjectId_n_eq", model.getProjectId());
+		}
+		return condition;
+	}
+
+	private Map<String,Object> getConditionHead_Gift_Out() {
+		Map<String,Object> condition = new HashMap<String,Object>();
+		if(model.getProjectId()!=null) {
+			condition.put("ProjectId_n_eq", model.getProjectId());
+		}
+		return condition;
+	}
 	
 	//=============以下spring注入以及Model驱动公共方法，与Action处理无关==================
 	public DepotHeadModel getModel()

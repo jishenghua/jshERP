@@ -19,7 +19,9 @@ public interface DepotItemIService extends BaseIService<DepotItem>
 	void findPriceByType(PageUtil<DepotItem> depotItem, String type,Integer ProjectId, Long MId, String MonthTime,Boolean isPrev)throws JshException;
 	
 	void buyOrSale(PageUtil<DepotItem> depotItem, String type, String subType, Long MId, String MonthTime, String sumType)throws JshException;
-	
+
+	void findGiftByType(PageUtil<DepotItem> depotItem, String subType,Integer ProjectId, Long MId, String type)throws JshException;
+
 	/**
 	 * 导出信息
 	 * @return
