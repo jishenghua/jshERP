@@ -413,6 +413,7 @@ public class DepotAction extends BaseAction<DepotModel>
          * 拼接搜索条件
          */
         Map<String,Object> condition = new HashMap<String,Object>();
+		condition.put("type_n_eq", 0);
         condition.put("sort_s_order", "asc");
         return condition;
     }
