@@ -67,7 +67,7 @@
 	        <form id="depotHeadFM" method="post"  novalidate>
 	            <table>
 	            <tr>
-	            <td>礼品卡：</td>
+	            <td>收货仓库：</td>
 	            <td style="padding:5px">
                 <select name="ProjectId" id="ProjectId" style="width:110px;"></select>
                 </td>
