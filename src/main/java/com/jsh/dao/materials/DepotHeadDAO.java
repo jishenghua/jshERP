@@ -44,4 +44,69 @@ public class DepotHeadDAO extends BaseDAO<DepotHead> implements DepotHeadIDAO
         pageUtil.setTotalCount(query.list().size());
         pageUtil.setPageList(query.list());
     }
+
+    @SuppressWarnings("unchecked")
+    public void findInDetail(PageUtil pageUtil,String beginTime,String endTime,String type,Long pid,String dids) throws JshException {
+        StringBuffer queryString = new StringBuffer();
+        queryString.append("select dh.Number,m.`name`,m.Model,di.UnitPrice,di.OperNumber,di.AllPrice,s.supplier,d.dName,date_format(dh.OperTime, '%Y-%m-%d') " +
+                "from jsh_depothead dh inner join jsh_depotitem di on di.HeaderId=dh.id " +
+                "inner join jsh_material m on m.id=di.MaterialId " +
+                "inner join jsh_supplier s on s.id=dh.OrganId " +
+                "inner join (select id,name as dName from jsh_depot) d on d.id=dh.ProjectId " +
+                "where dh.Type='"+ type +"' and dh.OperTime >='"+ beginTime +"' and dh.OperTime <='"+ endTime +"' ");
+        if(pid!=null){
+            queryString.append(" and dh.ProjectId=" + pid );
+        }
+        else {
+            queryString.append(" and dh.ProjectId in (" + dids + ")" );
+        }
+        queryString.append(" ORDER BY OperTime DESC,Number desc");
+        Query query;
+        query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
+        pageUtil.setTotalCount(query.list().size());
+        // 分页查询
+        int pageNo = pageUtil.getCurPage();
+        int pageSize = pageUtil.getPageSize();
+        if (0 != pageNo && 0 != pageSize) {
+            query.setFirstResult((pageNo - 1) * pageSize);
+            query.setMaxResults(pageSize);
+        }
+        pageUtil.setPageList(query.list());
+    }
+
+    @SuppressWarnings("unchecked")
+    public void findInOutMaterialCount(PageUtil pageUtil,String beginTime,String endTime,String type,Long pid,String dids) throws JshException {
+        StringBuffer queryString = new StringBuffer();
+        queryString.append("select di.MaterialId, m.mName,m.Model,m.categoryName, "+
+        " (select sum(jsh_depotitem.AllPrice) priceSum from jsh_depothead INNER JOIN jsh_depotitem " +
+        "on jsh_depothead.id=jsh_depotitem.HeaderId where jsh_depotitem.MaterialId=di.MaterialId " +
+        "and jsh_depothead.ProjectId=1 and jsh_depothead.type='"+ type +"' and dh.OperTime >='"+ beginTime +"' and dh.OperTime <='"+ endTime +"'");
+        if(pid!=null){
+            queryString.append(" and dh.ProjectId=" + pid );
+        }
+        else {
+            queryString.append(" and dh.ProjectId in (" + dids + ")" );
+        }
+        queryString.append(" ) priceSum from jsh_depothead dh INNER JOIN jsh_depotitem di on dh.id=di.HeaderId " +
+        " INNER JOIN (SELECT jsh_material.id,jsh_material.name mName, Model,jsh_materialcategory.`Name` categoryName from jsh_material INNER JOIN jsh_materialcategory on jsh_material.CategoryId=jsh_materialcategory.Id) m " +
+        " on m.Id=di.MaterialId where dh.type='"+ type +"' and dh.OperTime >='"+ beginTime +"' and dh.OperTime <='"+ endTime +"' ");
+        if(pid!=null){
+            queryString.append(" and dh.ProjectId=" + pid );
+        }
+        else {
+            queryString.append(" and dh.ProjectId in (" + dids + ")" );
+        }
+        queryString.append(" GROUP BY di.MaterialId,m.mName,m.Model,m.categoryName ");
+        Query query;
+        query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
+        pageUtil.setTotalCount(query.list().size());
+        // 分页查询
+        int pageNo = pageUtil.getCurPage();
+        int pageSize = pageUtil.getPageSize();
+        if (0 != pageNo && 0 != pageSize) {
+            query.setFirstResult((pageNo - 1) * pageSize);
+            query.setMaxResults(pageSize);
+        }
+        pageUtil.setPageList(query.list());
+    }
 }
