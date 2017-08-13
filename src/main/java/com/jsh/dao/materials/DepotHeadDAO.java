@@ -80,7 +80,7 @@ public class DepotHeadDAO extends BaseDAO<DepotHead> implements DepotHeadIDAO
         queryString.append("select di.MaterialId, m.mName,m.Model,m.categoryName, "+
         " (select sum(jsh_depotitem.AllPrice) priceSum from jsh_depothead INNER JOIN jsh_depotitem " +
         "on jsh_depothead.id=jsh_depotitem.HeaderId where jsh_depotitem.MaterialId=di.MaterialId " +
-        "and jsh_depothead.ProjectId=1 and jsh_depothead.type='"+ type +"' and dh.OperTime >='"+ beginTime +"' and dh.OperTime <='"+ endTime +"'");
+        " and jsh_depothead.type='"+ type +"' and dh.OperTime >='"+ beginTime +"' and dh.OperTime <='"+ endTime +"'");
         if(pid!=null){
             queryString.append(" and dh.ProjectId=" + pid );
         }
