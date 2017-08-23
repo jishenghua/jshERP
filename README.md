@@ -9,7 +9,7 @@
 * 个人开发者也可以使用jshERP进行二次开发，承接外包ERP项目
 * 初学JAVA的小伙伴可以下载源代码来进行学习交流
 
-#技术框架
+## 技术框架
 * 核心框架：Spring Framework 3.0.5
 * 视图框架：Struts 2.2.3
 * 持久层框架：Hibernate 3.0
@@ -19,7 +19,7 @@
 * 桌面框架: HoorayOS
 * 项目管理框架: Maven3.2.3
 
-#开发环境
+## 开发环境
 建议开发者使用以下环境，可以避免版本带来的问题
 * IDE: MyEclipse8.5+/Eclipse4.4+
 * DB: Mysql5.1
@@ -28,16 +28,16 @@
 * Maven: Maven3.2.3+
 * 为方便大家搭建开发环境，分享了下载地址  **http://pan.baidu.com/s/1nuKnlNV** 
 
-#运行环境
+## 运行环境
 * WEB服务器：Tomcat6.0+
 * 数据库服务器：Mysql5.1
 * JAVA平台: JRE1.6+
 * 操作系统：Windows、Linux等
 
-#开源说明
+## 开源说明
 * 本系统100%开源，遵守Apache2.0协议
 
-#系统美图
+## 系统美图
 * 进销存模块
 ![输入图片说明](https://gitee.com/uploads/images/2017/0108/150544_853dcc2e_852955.png "进销存模块")
 * 报表查询模块
