@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
  <class name="com.jsh.model.po.DepotItem" table="jsh_depotitem">
   <id name="Id" type="java.lang.Long">
@@ -8,18 +8,28 @@
    <generator class="native"/>
   </id>
   <many-to-one name="HeaderId" class="com.jsh.model.po.DepotHead" lazy="false">
-    <column name="HeaderId" not-null="true">
-     <comment>表头Id</comment>
-    </column>
+   <column name="HeaderId" not-null="true">
+    <comment>主表Id</comment>
+   </column>
   </many-to-one>
   <many-to-one name="MaterialId" class="com.jsh.model.po.Material" lazy="false">
-    <column name="MaterialId" not-null="true">
-     <comment>材料Id</comment>
-    </column>
+   <column name="MaterialId" not-null="true">
+    <comment>商品Id</comment>
+   </column>
   </many-to-one>
+  <property generated="never" lazy="false" name="MUnit" type="java.lang.String">
+   <column length="20" name="MUnit">
+    <comment>商品计量单位</comment>
+   </column>
+  </property>
   <property generated="never" lazy="false" name="OperNumber" type="java.lang.Double">
    <column name="OperNumber" precision="22" scale="3">
     <comment>数量</comment>
+   </column>
+  </property>
+  <property generated="never" lazy="false" name="BasicNumber" type="java.lang.Double">
+   <column name="BasicNumber" precision="22" scale="3">
+    <comment>基础数量，如kg、瓶</comment>
    </column>
   </property>
   <property generated="never" lazy="false" name="UnitPrice" type="java.lang.Double">
@@ -27,19 +37,69 @@
     <comment>单价</comment>
    </column>
   </property>
+  <property generated="never" lazy="false" name="TaxUnitPrice" type="java.lang.Double">
+   <column name="TaxUnitPrice" precision="22" scale="3">
+    <comment>含税单价</comment>
+   </column>
+  </property>
   <property generated="never" lazy="false" name="AllPrice" type="java.lang.Double">
    <column name="AllPrice" precision="22" scale="3">
     <comment>金额</comment>
    </column>
   </property>
+  <many-to-one name="DepotId" class="com.jsh.model.po.Depot" lazy="false">
+   <column name="DepotId">
+    <comment>仓库ID（库存是统计出来的）</comment>
+   </column>
+  </many-to-one>
+  <many-to-one name="AnotherDepotId" class="com.jsh.model.po.Depot" lazy="false">
+   <column name="AnotherDepotId">
+    <comment>调拨时，对方仓库Id</comment>
+   </column>
+  </many-to-one>
+  <property generated="never" lazy="false" name="TaxRate" type="java.lang.Double">
+   <column name="TaxRate" precision="22" scale="3">
+    <comment>税率</comment>
+   </column>
+  </property>
+  <property generated="never" lazy="false" name="TaxMoney" type="java.lang.Double">
+   <column name="TaxMoney" precision="22" scale="3">
+    <comment>税额</comment>
+   </column>
+  </property>
+  <property generated="never" lazy="false" name="TaxLastMoney" type="java.lang.Double">
+   <column name="TaxLastMoney" precision="22" scale="3">
+    <comment>价税合计</comment>
+   </column>
+  </property>
+  <property generated="never" lazy="false" name="OtherField1" type="java.lang.String">
+   <column length="50" name="OtherField1">
+    <comment>自定义字段1-品名</comment>
+   </column>
+  </property>
+  <property generated="never" lazy="false" name="OtherField2" type="java.lang.String">
+   <column length="50" name="OtherField2">
+    <comment>自定义字段2-型号</comment>
+   </column>
+  </property>
+  <property generated="never" lazy="false" name="OtherField3" type="java.lang.String">
+   <column length="50" name="OtherField3">
+    <comment>自定义字段3-制造商</comment>
+   </column>
+  </property>
+  <property generated="never" lazy="false" name="OtherField4" type="java.lang.String">
+   <column length="50" name="OtherField4">
+    <comment>自定义字段4</comment>
+   </column>
+  </property>
+  <property generated="never" lazy="false" name="OtherField5" type="java.lang.String">
+   <column length="50" name="OtherField5">
+    <comment>自定义字段5</comment>
+   </column>
+  </property>
   <property generated="never" lazy="false" name="Remark" type="java.lang.String">
    <column length="200" name="Remark">
     <comment>描述</comment>
-   </column>
-  </property>
-  <property generated="never" lazy="false" name="Img" type="java.lang.String">
-   <column length="50" name="Img">
-    <comment>图片</comment>
    </column>
   </property>
  </class>

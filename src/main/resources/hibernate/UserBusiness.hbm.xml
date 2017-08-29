@@ -22,5 +22,10 @@
     <comment>值</comment>
    </column>
   </property>
+  <property generated="never" lazy="false" name="BtnStr" type="java.lang.String">
+   <column length="2000" name="BtnStr">
+    <comment>按钮权限</comment>
+   </column>
+  </property>
  </class>
 </hibernate-mapping>

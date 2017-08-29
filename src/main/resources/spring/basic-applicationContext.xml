@@ -106,10 +106,12 @@
 	<bean id="supplierService" class="com.jsh.service.basic.SupplierService">
 		<property name="baseDao" ref="baseDao"/>
 		<property name="supplierDao" ref="supplierDao"/>
+		<property name="userBusinessDao" ref="userBusinessDao"/>
 	</bean>
 	<!-- spring整合struts2需要默认为request或者 prototype，不能是单例 -->
 	<bean id="supplierAction" class="com.jsh.action.basic.SupplierAction" scope="prototype">
 		<property name="supplierService" ref="supplierService"/>
+		<property name="userBusinessService" ref="userBusinessService"/>
 		<property name="logService" ref="logService"/>
 	</bean>
 	<!--供应商配置结束 -->
@@ -140,6 +142,18 @@
 		<property name="logService" ref="logService"/>
 	</bean>
 	<!--仓库配置结束 -->
+
+	<!--计量单位开始 -->
+	<bean id="unitService" class="com.jsh.service.basic.UnitService">
+		<property name="baseDao" ref="baseDao"/>
+		<property name="unitDao" ref="unitDao"/>
+	</bean>
+	<!-- spring整合struts2需要默认为request或者 prototype，不能是单例 -->
+	<bean id="unitAction" class="com.jsh.action.basic.UnitAction" scope="prototype">
+		<property name="unitService" ref="unitService"/>
+		<property name="logService" ref="logService"/>
+	</bean>
+	<!--计量单位结束 -->
 	
 	<!--应用配置开始 -->
 	<bean id="appService" class="com.jsh.service.basic.AppService">
@@ -294,6 +308,7 @@
 	<!-- spring整合struts2需要默认为request或者 prototype，不能是单例 -->
 	<bean id="depotItemAction" class="com.jsh.action.materials.DepotItemAction" scope="prototype">
 		<property name="depotItemService" ref="depotItemService"/>
+		<property name="materialService" ref="materialService"/>
 		<property name="logService" ref="logService"/>
 	</bean>
 	<!--仓管通明细配置结束 -->

@@ -20,6 +20,8 @@
 	<bean id="categoryDao" parent="daoTemplate" class="com.jsh.dao.basic.CategoryDAO"/>
 	<!-- 配置depotDao组件 -->
 	<bean id="depotDao" parent="daoTemplate" class="com.jsh.dao.basic.DepotDAO"/>
+	<!-- 配置unitDao组件 -->
+	<bean id="unitDao" parent="daoTemplate" class="com.jsh.dao.basic.UnitDAO"/>
 	<!-- 配置assetDao组件 -->
 	<bean id="assetNameDao" parent="daoTemplate" class="com.jsh.dao.basic.AssetNameDAO"/>
 	<!-- 配置assetDao组件 -->

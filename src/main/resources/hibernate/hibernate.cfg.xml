@@ -29,6 +29,7 @@
 	<mapping resource="hibernate/Basicuser.hbm.xml" />
 	<mapping resource="hibernate/Asset.hbm.xml" />
 	<mapping resource="hibernate/Depot.hbm.xml" />
+	<mapping resource="hibernate/Unit.hbm.xml" />
 	<mapping resource="hibernate/App.hbm.xml" />
 	<mapping resource="hibernate/Role.hbm.xml" />
 	<mapping resource="hibernate/Functions.hbm.xml" />

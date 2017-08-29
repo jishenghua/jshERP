@@ -9,7 +9,7 @@
         </id>
         <property name="supplier" type="java.lang.String">
             <column name="supplier" not-null="true">
-                <comment>供应商名称</comment>
+                <comment>名称</comment>
             </column>
         </property>
         <property name="type" type="java.lang.String">
@@ -24,7 +24,17 @@
         </property>
         <property name="phonenum" type="java.lang.String">
             <column name="phonenum" length="30">
-                <comment>联系电话</comment>
+                <comment>电话</comment>
+            </column>
+        </property>
+        <property name="fax" type="java.lang.String">
+            <column name="fax" length="30">
+                <comment>传真</comment>
+            </column>
+        </property>
+        <property name="telephone" type="java.lang.String">
+            <column name="telephone" length="30">
+                <comment>手机</comment>
             </column>
         </property>
         <property name="email" type="java.lang.String">
@@ -32,9 +42,34 @@
                 <comment>电子邮箱</comment>
             </column>
         </property>
+        <property name="address" type="java.lang.String">
+            <column name="address" length="50">
+                <comment>地址</comment>
+            </column>
+        </property>
         <property generated="never" lazy="false" name="AdvanceIn" type="java.lang.Double">
             <column name="AdvanceIn" precision="22" scale="3">
                 <comment>预收款</comment>
+            </column>
+        </property>
+        <property generated="never" lazy="false" name="taxNum" type="java.lang.String">
+            <column name="taxNum " length="50">
+                <comment>纳税人识别号</comment>
+            </column>
+        </property>
+        <property generated="never" lazy="false" name="bankName" type="java.lang.String">
+            <column name="bankName " length="50">
+                <comment>开户行</comment>
+            </column>
+        </property>
+        <property generated="never" lazy="false" name="accountNumber" type="java.lang.String">
+            <column name="accountNumber" length="50">
+                <comment>账号</comment>
+            </column>
+        </property>
+        <property generated="never" lazy="false" name="taxRate" type="java.lang.Double">
+            <column name="taxRate" precision="22" scale="3">
+                <comment>税率</comment>
             </column>
         </property>
         <property generated="never" lazy="false" name="BeginNeedGet" type="java.lang.Double">
@@ -58,7 +93,9 @@
             </column>
         </property>
         <property name="description" type="java.lang.String">
-            <column name="description" length="500" />
+            <column name="description" length="500">
+                <comment>备注</comment>
+            </column>
         </property>
         <property name="isystem" type="java.lang.Short">
             <column name="isystem" not-null="true">

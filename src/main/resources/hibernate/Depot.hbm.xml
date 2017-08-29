@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
  <class name="com.jsh.model.po.Depot" table="jsh_depot">
   <id name="id" type="java.lang.Long">
@@ -10,6 +10,21 @@
   <property generated="never" lazy="false" name="name" type="java.lang.String">
    <column length="20" name="name">
     <comment>仓库名称</comment>
+   </column>
+  </property>
+  <property generated="never" lazy="false" name="address" type="java.lang.String">
+   <column length="50" name="address">
+    <comment>仓库地址</comment>
+   </column>
+  </property>
+  <property generated="never" lazy="false" name="warehousing" type="java.lang.Double">
+   <column name="warehousing" precision="22" scale="3">
+    <comment>仓储费</comment>
+   </column>
+  </property>
+  <property generated="never" lazy="false" name="truckage" type="java.lang.Double">
+   <column name="truckage" precision="22" scale="3">
+    <comment>搬运费</comment>
    </column>
   </property>
   <property generated="never" lazy="false" name="type" type="java.lang.Integer">

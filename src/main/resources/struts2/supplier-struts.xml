@@ -7,5 +7,46 @@
 		<action name="*" class="supplierAction" method="{1}">
 			<result type="json"/>
 		</action>
+
+		<!--导入excel表格 -->
+		<action name="importExcelVendor" class="supplierAction" method="importExcelVendor">
+			<result name="excel" type="stream">
+				<param name="contentType">application/vnd.ms-excel</param>
+				<param name="inputName">excelStream</param>
+				<param name="contentDisposition">attachment;filename="${fileName}"</param>
+				<param name="bufferSize">1024</param>
+			</result>
+			<result name="success">/pages/manage/vendor.jsp</result>
+		</action>
+		<!--导入excel表格 -->
+		<action name="importExcelCustomer" class="supplierAction" method="importExcelCustomer">
+			<result name="excel" type="stream">
+				<param name="contentType">application/vnd.ms-excel</param>
+				<param name="inputName">excelStream</param>
+				<param name="contentDisposition">attachment;filename="${fileName}"</param>
+				<param name="bufferSize">1024</param>
+			</result>
+			<result name="success">/pages/manage/customer.jsp</result>
+		</action>
+		<!--导入excel表格 -->
+		<action name="importExcelMember" class="supplierAction" method="importExcelMember">
+			<result name="excel" type="stream">
+				<param name="contentType">application/vnd.ms-excel</param>
+				<param name="inputName">excelStream</param>
+				<param name="contentDisposition">attachment;filename="${fileName}"</param>
+				<param name="bufferSize">1024</param>
+			</result>
+			<result name="success">/pages/manage/member.jsp</result>
+		</action>
+
+		<!--导出excel表格 -->
+		<action name="exportExcel" class="supplierAction" method="exportExcel">
+			<result name="excel" type="stream">
+				<param name="contentType">application/vnd.ms-excel</param>
+				<param name="inputName">excelStream</param>
+				<param name="contentDisposition">attachment;filename="${fileName}"</param>
+				<param name="bufferSize">1024</param>
+			</result>
+		</action>
 	</package>
 </struts>

@@ -7,5 +7,24 @@
 		<action name="*" class="materialAction" method="{1}">
 			<result type="json"/>
 		</action>
+		<!--导入excel表格 -->
+		<action name="importExcel" class="materialAction" method="importExcel">
+			<result name="excel" type="stream">
+				<param name="contentType">application/vnd.ms-excel</param>
+				<param name="inputName">excelStream</param>
+				<param name="contentDisposition">attachment;filename="${fileName}"</param>
+				<param name="bufferSize">1024</param>
+			</result>
+			<result name="success">/pages/materials/material.jsp</result>
+		</action>
+		<!--导出excel表格 -->
+		<action name="exportExcel" class="materialAction" method="exportExcel">
+			<result name="excel" type="stream">
+				<param name="contentType">application/vnd.ms-excel</param>
+				<param name="inputName">excelStream</param>
+				<param name="contentDisposition">attachment;filename="${fileName}"</param>
+				<param name="bufferSize">1024</param>
+			</result>
+		</action>
 	</package>
 </struts>

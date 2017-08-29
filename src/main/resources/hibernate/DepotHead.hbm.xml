@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
  <class name="com.jsh.model.po.DepotHead" table="jsh_depothead">
   <id name="Id" type="java.lang.Long">
@@ -14,14 +14,19 @@
   </property>
   <property generated="never" lazy="false" name="SubType" type="java.lang.String">
    <column length="50" name="SubType">
-    <comment>出入库分类</comment>
+    <comment>出入库分类（销售、采购、调拨等）</comment>
    </column>
   </property>
   <many-to-one name="ProjectId" class="com.jsh.model.po.Depot" lazy="false">
-    <column name="ProjectId" not-null="true">
-     <comment>项目Id</comment>
-    </column>
+   <column name="ProjectId">
+    <comment>仓库id（停用）</comment>
+   </column>
   </many-to-one>
+  <property generated="never" lazy="false" name="DefaultNumber" type="java.lang.String">
+   <column length="50" name="DefaultNumber">
+    <comment>初始票据号</comment>
+   </column>
+  </property>
   <property generated="never" lazy="false" name="Number" type="java.lang.String">
    <column length="50" name="Number">
     <comment>票据号</comment>
@@ -44,7 +49,7 @@
   </property>
   <many-to-one name="OrganId" class="com.jsh.model.po.Supplier" lazy="false">
    <column name="OrganId">
-    <comment>供应商Id</comment>
+    <comment>供应商或客户Id</comment>
    </column>
   </many-to-one>
   <many-to-one name="HandsPersonId" class="com.jsh.model.po.Person" lazy="false">
@@ -52,6 +57,11 @@
     <comment>经手人Id</comment>
    </column>
   </many-to-one>
+  <property generated="never" lazy="false" name="Salesman" type="java.lang.String">
+   <column length="50" name="Salesman">
+    <comment>业务员（可以多个）</comment>
+   </column>
+  </property>
   <many-to-one name="AccountId" class="com.jsh.model.po.Account" lazy="false">
    <column name="AccountId">
     <comment>账户Id</comment>
@@ -59,13 +69,58 @@
   </many-to-one>
   <property generated="never" lazy="false" name="ChangeAmount" type="java.lang.Double">
    <column name="ChangeAmount" precision="22" scale="3">
-    <comment>变动金额(收款/付款)</comment>
+    <comment>单据总金额(收款/付款)</comment>
+   </column>
+  </property>
+  <property generated="never" lazy="false" name="AccountIdList" type="java.lang.String">
+   <column length="50" name="AccountIdList">
+    <comment>多账户ID列表</comment>
+   </column>
+  </property>
+  <property generated="never" lazy="false" name="AccountMoneyList" type="java.lang.String">
+   <column length="200" name="AccountMoneyList">
+    <comment>多账户金额列表</comment>
+   </column>
+  </property>
+  <property generated="never" lazy="false" name="Discount" type="java.lang.Double">
+   <column name="Discount" precision="22" scale="3">
+    <comment>优惠率</comment>
+   </column>
+  </property>
+  <property generated="never" lazy="false" name="DiscountMoney" type="java.lang.Double">
+   <column name="DiscountMoney" precision="22" scale="3">
+    <comment>优惠金额</comment>
+   </column>
+  </property>
+  <property generated="never" lazy="false" name="DiscountLastMoney" type="java.lang.Double">
+   <column name="DiscountLastMoney" precision="22" scale="3">
+    <comment>优惠后金额</comment>
+   </column>
+  </property>
+  <property generated="never" lazy="false" name="OtherMoney" type="java.lang.Double">
+   <column name="OtherMoney" precision="22" scale="3">
+    <comment>销售或采购费用</comment>
+   </column>
+  </property>
+  <property generated="never" lazy="false" name="OtherMoneyList" type="java.lang.String">
+   <column length="200" name="OtherMoneyList">
+    <comment>销售或采购费用涉及项目Id数组（包括快递、招待等）</comment>
+   </column>
+  </property>
+  <property generated="never" lazy="false" name="OtherMoneyItem" type="java.lang.String">
+   <column length="200" name="OtherMoneyItem">
+    <comment>销售或采购费用涉及项目（包括快递、招待等）</comment>
+   </column>
+  </property>
+  <property generated="never" lazy="false" name="AccountDay" type="java.lang.Integer">
+   <column name="AccountDay" length="10">
+    <comment>结算天数</comment>
    </column>
   </property>
   <many-to-one name="AllocationProjectId" class="com.jsh.model.po.Depot" lazy="false">
-    <column name="AllocationProjectId">
-     <comment>调拨时，对方项目Id</comment>
-    </column>
+   <column name="AllocationProjectId">
+    <comment>调拨时，对方仓库Id（停用）</comment>
+   </column>
   </many-to-one>
   <property generated="never" lazy="false" name="TotalPrice" type="java.lang.Double">
    <column name="TotalPrice" precision="22" scale="3">
@@ -74,7 +129,12 @@
   </property>
   <property generated="never" lazy="false" name="PayType" type="java.lang.String">
    <column length="50" name="PayType">
-    <comment>付款类型</comment>
+    <comment>付款类型(现金、记账等)</comment>
+   </column>
+  </property>
+  <property generated="never" lazy="false" name="Status" type="boolean">
+   <column length="1" name="Status">
+    <comment>单据状态(未审核、已审核)</comment>
    </column>
   </property>
   <property generated="never" lazy="false" name="Remark" type="java.lang.String">

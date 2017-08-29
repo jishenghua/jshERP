@@ -47,6 +47,11 @@
     <comment>类型</comment>
    </column>
   </property>
+  <property generated="never" lazy="false" name="PushBtn" type="java.lang.String">
+   <column length="50" name="PushBtn">
+    <comment>功能按钮</comment>
+   </column>
+  </property>
  </class>
 </hibernate-mapping>
 
