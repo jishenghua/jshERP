@@ -47,7 +47,7 @@ public class FunctionsAction extends BaseAction<FunctionsModel>
 			functions.setSort(model.getSort());
 			functions.setEnabled(model.getEnabled());
 			functions.setType(model.getType());
-			
+			functions.setPushBtn(model.getPushBtn());
 			functionsService.create(functions);
 			
 			//========标识位===========
@@ -126,6 +126,7 @@ public class FunctionsAction extends BaseAction<FunctionsModel>
 			functions.setSort(model.getSort());
 			functions.setEnabled(model.getEnabled());
 			functions.setType(model.getType());
+			functions.setPushBtn(model.getPushBtn());
         	functionsService.update(functions);
             
             flag = true;
@@ -246,6 +247,7 @@ public class FunctionsAction extends BaseAction<FunctionsModel>
                     item.put("Sort", functions.getSort());
                     item.put("Enabled", functions.getEnabled());
                     item.put("Type", functions.getType());
+					item.put("PushBtn", functions.getPushBtn());
                     item.put("op", 1);
                     dataArray.add(item);
                 }
@@ -262,6 +264,49 @@ public class FunctionsAction extends BaseAction<FunctionsModel>
 	    {
             Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询功能信息结果异常", e);
         }
+	}
+
+	/**
+	 * 根据id列表查找功能信息
+	 * @return
+	 */
+	public void findByIds()
+	{
+		try {
+			PageUtil<Functions> pageUtil = new  PageUtil<Functions>();
+			pageUtil.setPageSize(0);
+			pageUtil.setCurPage(0);
+			pageUtil.setAdvSearch(getConditionByIds());
+			functionsService.find(pageUtil);
+			List<Functions> dataList = pageUtil.getPageList();
+			JSONObject outer = new JSONObject();
+			outer.put("total", pageUtil.getTotalCount());
+			//存放数据json数组
+			JSONArray dataArray = new JSONArray();
+			if(null != dataList)
+			{
+				for(Functions functions:dataList)
+				{
+					JSONObject item = new JSONObject();
+					item.put("Id", functions.getId());
+					item.put("Name", functions.getName());
+					item.put("PushBtn", functions.getPushBtn());
+					item.put("op", 1);
+					dataArray.add(item);
+				}
+			}
+			outer.put("rows", dataArray);
+			//回写查询结果
+			toClient(outer.toString());
+		}
+		catch (DataAccessException e)
+		{
+			Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找功能信息异常", e);
+		}
+		catch (IOException e)
+		{
+			Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询功能信息结果异常", e);
+		}
 	}
     
     
@@ -497,7 +542,7 @@ public class FunctionsAction extends BaseAction<FunctionsModel>
 											              else
 											              {
 											            	  //不是目录，有链接
-											            	  item2.put("text", "<a onclick=\"NewTab('"+functions2.getName()+"','"+functions2.getURL()+"')\">"+functions2.getName()+"</a>");
+											            	  item2.put("text", "<a onclick=\"NewTab('"+functions2.getName()+"','"+functions2.getURL()+"','"+functions2.getId()+"')\">"+functions2.getName()+"</a>");
 											              }
 											         
 												     dataArray2.add(item2);
@@ -508,7 +553,7 @@ public class FunctionsAction extends BaseAction<FunctionsModel>
 							              else
 							              {
 							            	  //不是目录，有链接
-							            	  item1.put("text", "<a onclick=\"NewTab('"+functions1.getName()+"','"+functions1.getURL()+"')\">"+functions1.getName()+"</a>");
+							            	  item1.put("text", "<a onclick=\"NewTab('"+functions1.getName()+"','"+functions1.getURL()+"','"+functions1.getId()+"')\">"+functions1.getName()+"</a>");
 							              }
 								     
 									 dataArray1.add(item1);
@@ -519,7 +564,7 @@ public class FunctionsAction extends BaseAction<FunctionsModel>
 			              else
 			              {
 			            	  //不是目录，有链接
-			            	  item.put("text", "<a onclick=\"NewTab('"+functions.getName()+"','"+functions.getURL()+"')\">"+functions.getName()+"</a>");
+			            	  item.put("text", "<a onclick=\"NewTab('"+functions.getName()+"','"+functions.getURL()+"','"+functions.getId()+"')\">"+functions.getName()+"</a>");
 			              }
 			              
 				      dataArray.add(item);
@@ -569,6 +614,18 @@ public class FunctionsAction extends BaseAction<FunctionsModel>
         condition.put("Sort_s_order", "asc");
         return condition;
     }
+
+	/**
+	 * 拼接搜索条件-角色对应功能
+	 * @return
+	 */
+	private Map<String,Object> getConditionByIds() {
+		Map<String,Object> condition = new HashMap<String,Object>();
+		condition.put("Enabled_n_eq", 1);
+		condition.put("Id_s_in", model.getFunctionsIDs());
+		condition.put("Sort_s_order", "asc");
+		return condition;
+	}
 	
 	//=============以下spring注入以及Model驱动公共方法，与Action处理无关==================
 	@Override

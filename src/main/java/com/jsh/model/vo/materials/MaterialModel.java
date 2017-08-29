@@ -1,5 +1,7 @@
 package com.jsh.model.vo.materials;
 
+import java.io.File;
+import java.io.InputStream;
 import java.io.Serializable;
 
 @SuppressWarnings("serial")
@@ -12,7 +14,12 @@ public class MaterialModel implements Serializable
      * 名称
      */
     private String Name = "";
-    
+
+	private String Mfrs = ""; //制造商
+
+	private Double Packing; //包装（KG/包）
+
+	private Double SafetyStock; //安全存量（KG）
     /**
      * 型号
      */
@@ -31,7 +38,7 @@ public class MaterialModel implements Serializable
     /**
      * 单位
      */
-    private String Unit = "";    
+    private String Unit = "";
         
     /**
      * 零售价
@@ -57,6 +64,18 @@ public class MaterialModel implements Serializable
      * 备注
      */
     private String Remark = "";
+
+	private Long UnitId;
+	private String FirstOutUnit;
+	private String FirstInUnit;
+	private String PriceStrategy;
+
+	/**
+	 * 导入excel文件
+	 */
+	private File materialFile;
+
+	private Boolean Enabled  = true; //是否启用
     
     /**
      * CategoryId
@@ -93,6 +112,10 @@ public class MaterialModel implements Serializable
      */
     private String clientIp = "";
 
+	private String browserType = ""; //浏览器类型
+	private String fileName = ""; //文件名称
+	private InputStream excelStream;  //输入流，导出excel文件
+
 	public MaterialShowModel getShowModel() {
 		return showModel;
 	}
@@ -107,6 +130,30 @@ public class MaterialModel implements Serializable
 
 	public void setName(String name) {
 		Name = name;
+	}
+
+	public String getMfrs() {
+		return Mfrs;
+	}
+
+	public void setMfrs(String mfrs) {
+		Mfrs = mfrs;
+	}
+
+	public Double getPacking() {
+		return Packing;
+	}
+
+	public void setPacking(Double packing) {
+		Packing = packing;
+	}
+
+	public Double getSafetyStock() {
+		return SafetyStock;
+	}
+
+	public void setSafetyStock(Double safetyStock) {
+		SafetyStock = safetyStock;
 	}
 
 	public String getModel() {
@@ -140,8 +187,8 @@ public class MaterialModel implements Serializable
 	public void setUnit(String unit) {
 		Unit = unit;
 	}
-    
-    public void setRetailPrice(Double retailPrice)
+
+	public void setRetailPrice(Double retailPrice)
     {
         RetailPrice = retailPrice;
     }
@@ -245,4 +292,75 @@ public class MaterialModel implements Serializable
 		CategoryIds = categoryIds;
 	}
 
+	public Long getUnitId() {
+		return UnitId;
+	}
+
+	public void setUnitId(Long unitId) {
+		UnitId = unitId;
+	}
+
+	public String getFirstOutUnit() {
+		return FirstOutUnit;
+	}
+
+	public void setFirstOutUnit(String firstOutUnit) {
+		FirstOutUnit = firstOutUnit;
+	}
+
+	public String getFirstInUnit() {
+		return FirstInUnit;
+	}
+
+	public void setFirstInUnit(String firstInUnit) {
+		FirstInUnit = firstInUnit;
+	}
+
+	public String getPriceStrategy() {
+		return PriceStrategy;
+	}
+
+	public void setPriceStrategy(String priceStrategy) {
+		PriceStrategy = priceStrategy;
+	}
+
+	public Boolean getEnabled() {
+		return Enabled;
+	}
+
+	public void setEnabled(Boolean enabled) {
+		Enabled = enabled;
+	}
+
+	public String getBrowserType() {
+		return browserType;
+	}
+
+	public void setBrowserType(String browserType) {
+		this.browserType = browserType;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+	public InputStream getExcelStream() {
+		return excelStream;
+	}
+
+	public void setExcelStream(InputStream excelStream) {
+		this.excelStream = excelStream;
+	}
+
+	public File getMaterialFile() {
+		return materialFile;
+	}
+
+	public void setMaterialFile(File materialFile) {
+		this.materialFile = materialFile;
+	}
 }

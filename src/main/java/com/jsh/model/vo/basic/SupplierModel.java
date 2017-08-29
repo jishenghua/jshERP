@@ -1,5 +1,7 @@
 package com.jsh.model.vo.basic;
 
+import java.io.File;
+import java.io.InputStream;
 import java.io.Serializable;
 
 @SuppressWarnings("serial")
@@ -9,7 +11,7 @@ public class SupplierModel implements Serializable
 	
 	/**======开始接受页面参数=================**/
 	/**
-	 * 供应商名称
+	 * 名称
 	 */
 	private String supplier = "";
 
@@ -62,6 +64,23 @@ public class SupplierModel implements Serializable
 	 * 描述信息
 	 */
 	private String description = "";
+
+	private String fax = "";
+	private String telephone = "";
+	private String address = "";
+	private String taxNum = "";
+	private String bankName = "";
+	private String accountNumber = "";
+	private Double taxRate;
+
+	private String UBType = ""; //UBType，UserBusiness类型
+
+	private String UBKeyId = ""; //UBKeyId，UserBusiness关键id
+
+	/**
+	 * 导入excel文件
+	 */
+	private File supplierFile;
 	
     /**
      * 启用
@@ -92,6 +111,9 @@ public class SupplierModel implements Serializable
      * 用户IP，用户记录操作日志
      */
     private String clientIp = "";
+	private String browserType = ""; //浏览器类型
+	private String fileName = ""; //文件名称
+	private InputStream excelStream;  //输入流，导出excel文件
 
 	public SupplierShowModel getShowModel() {
 		return showModel;
@@ -245,6 +267,107 @@ public class SupplierModel implements Serializable
 		this.clientIp = clientIp;
 	}
 
+	public String getFax() {
+		return fax;
+	}
 
+	public void setFax(String fax) {
+		this.fax = fax;
+	}
 
+	public String getTelephone() {
+		return telephone;
+	}
+
+	public void setTelephone(String telephone) {
+		this.telephone = telephone;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getTaxNum() {
+		return taxNum;
+	}
+
+	public void setTaxNum(String taxNum) {
+		this.taxNum = taxNum;
+	}
+
+	public String getBankName() {
+		return bankName;
+	}
+
+	public void setBankName(String bankName) {
+		this.bankName = bankName;
+	}
+
+	public String getAccountNumber() {
+		return accountNumber;
+	}
+
+	public void setAccountNumber(String accountNumber) {
+		this.accountNumber = accountNumber;
+	}
+
+	public Double getTaxRate() {
+		return taxRate;
+	}
+
+	public void setTaxRate(Double taxRate) {
+		this.taxRate = taxRate;
+	}
+
+	public String getUBType() {
+		return UBType;
+	}
+
+	public void setUBType(String UBType) {
+		this.UBType = UBType;
+	}
+
+	public String getUBKeyId() {
+		return UBKeyId;
+	}
+
+	public void setUBKeyId(String UBKeyId) {
+		this.UBKeyId = UBKeyId;
+	}
+
+	public String getBrowserType() {
+		return browserType;
+	}
+
+	public void setBrowserType(String browserType) {
+		this.browserType = browserType;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+	public InputStream getExcelStream() {
+		return excelStream;
+	}
+
+	public void setExcelStream(InputStream excelStream) {
+		this.excelStream = excelStream;
+	}
+
+	public File getSupplierFile() {
+		return supplierFile;
+	}
+
+	public void setSupplierFile(File supplierFile) {
+		this.supplierFile = supplierFile;
+	}
 }

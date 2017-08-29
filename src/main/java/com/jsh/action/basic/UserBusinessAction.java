@@ -5,6 +5,8 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.jsh.model.po.Functions;
 import org.springframework.dao.DataAccessException;
 import com.jsh.base.BaseAction;
 import com.jsh.base.Log;
@@ -173,6 +175,42 @@ public class UserBusinessAction extends BaseAction<UserBusinessModel>
                 new Timestamp(System.currentTimeMillis())
         , tipType, "更新UserBusiness的ID为  "+ id + " " + tipMsg + "！", "更新UserBusiness" + tipMsg));
 	}
+
+    /**
+     * 更新角色的按钮权限
+     * @return
+     */
+    public void updateBtnStr() {
+        Boolean flag = false;
+        try {
+            UserBusiness userBusiness = userBusinessService.get(model.getUserBusinessID());
+            userBusiness.setType(userBusiness.getType());
+            userBusiness.setKeyId(userBusiness.getKeyId());
+            userBusiness.setValue(userBusiness.getValue());
+            userBusiness.setBtnStr(model.getBtnStr());
+            userBusinessService.update(userBusiness);
+            flag = true;
+            tipMsg = "成功";
+            tipType = 0;
+        }
+        catch (DataAccessException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>修改角色按钮权限的ID为 ： " + model.getUserBusinessID() + "信息失败", e);
+            flag = false;
+            tipMsg = "失败";
+            tipType = 1;
+        }
+        finally {
+            try {
+                toClient(flag.toString());
+            }
+            catch (IOException e) {
+                Log.errorFileSync(">>>>>>>>>>>>修改功能回写客户端结果异常", e);
+            }
+        }
+        logService.create(new Logdetails(getUser(), "更新角色按钮权限", model.getClientIp(),
+        new Timestamp(System.currentTimeMillis()), tipType,
+        "角色按钮权限的ID为  "+ model.getUserBusinessID() + " " + tipMsg + "！", "更新角色按钮权限" + tipMsg));
+    }
 	
 	/**
 	 * 拼接搜索条件-RoleAPP

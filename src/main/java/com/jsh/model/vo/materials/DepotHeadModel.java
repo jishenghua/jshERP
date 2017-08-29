@@ -12,6 +12,7 @@ public class DepotHeadModel implements Serializable
 	private String SubType = "";
 	private Long ProjectId;
 	private String DepotIds = "";
+	private String DefaultNumber = "";
 	private String Number = "";
 	private String OperPersonName = "";	
 	private String OperTime;	
@@ -22,7 +23,19 @@ public class DepotHeadModel implements Serializable
 	private Long AllocationProjectId;	
 	private Double TotalPrice;
 	private String PayType = "";
-	private String Remark = "";	
+	private String Remark = "";
+
+	private String Salesman;
+	private String AccountIdList;
+	private String AccountMoneyList;
+	private Double Discount;
+	private Double DiscountMoney;
+	private Double DiscountLastMoney;
+	private Double OtherMoney;
+	private String OtherMoneyList;
+	private String OtherMoneyItem;
+	private Integer AccountDay;
+	private Boolean Status = false; //单据状态
 	
 	private String BeginTime; //查询开始时间
 	private String EndTime;  //查询结束时间
@@ -93,6 +106,14 @@ public class DepotHeadModel implements Serializable
 
 	public void setDepotIds(String depotIds) {
 		DepotIds = depotIds;
+	}
+
+	public String getDefaultNumber() {
+		return DefaultNumber;
+	}
+
+	public void setDefaultNumber(String defaultNumber) {
+		DefaultNumber = defaultNumber;
 	}
 
 	public String getNumber() {
@@ -254,6 +275,92 @@ public class DepotHeadModel implements Serializable
 	public void setSupplierId(String supplierId) {
 		this.supplierId = supplierId;
 	}
-	
-	
+
+	public String getSalesman() {
+		return Salesman;
+	}
+
+	public void setSalesman(String salesman) {
+		Salesman = salesman;
+	}
+
+	public String getAccountIdList() {
+		return AccountIdList;
+	}
+
+	public void setAccountIdList(String accountIdList) {
+		AccountIdList = accountIdList;
+	}
+
+	public String getAccountMoneyList() {
+		return AccountMoneyList;
+	}
+
+	public void setAccountMoneyList(String accountMoneyList) {
+		AccountMoneyList = accountMoneyList;
+	}
+
+	public Double getDiscount() {
+		return Discount;
+	}
+
+	public void setDiscount(Double discount) {
+		Discount = discount;
+	}
+
+	public Double getDiscountMoney() {
+		return DiscountMoney;
+	}
+
+	public void setDiscountMoney(Double discountMoney) {
+		DiscountMoney = discountMoney;
+	}
+
+	public Double getDiscountLastMoney() {
+		return DiscountLastMoney;
+	}
+
+	public void setDiscountLastMoney(Double discountLastMoney) {
+		DiscountLastMoney = discountLastMoney;
+	}
+
+	public Double getOtherMoney() {
+		return OtherMoney;
+	}
+
+	public void setOtherMoney(Double otherMoney) {
+		OtherMoney = otherMoney;
+	}
+
+	public String getOtherMoneyList() {
+		return OtherMoneyList;
+	}
+
+	public void setOtherMoneyList(String otherMoneyList) {
+		OtherMoneyList = otherMoneyList;
+	}
+
+	public String getOtherMoneyItem() {
+		return OtherMoneyItem;
+	}
+
+	public void setOtherMoneyItem(String otherMoneyItem) {
+		OtherMoneyItem = otherMoneyItem;
+	}
+
+	public Integer getAccountDay() {
+		return AccountDay;
+	}
+
+	public void setAccountDay(Integer accountDay) {
+		AccountDay = accountDay;
+	}
+
+	public Boolean getStatus() {
+		return Status;
+	}
+
+	public void setStatus(Boolean status) {
+		Status = status;
+	}
 }

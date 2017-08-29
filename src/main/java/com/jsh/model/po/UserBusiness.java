@@ -7,6 +7,7 @@ public class UserBusiness implements java.io.Serializable
 	private String Type;
 	private String KeyId;
 	private String Value;
+	private String BtnStr;
 
 	public UserBusiness()
 	{
@@ -44,6 +45,12 @@ public class UserBusiness implements java.io.Serializable
 	public void setValue(String value) {
 		Value = value;
 	}
-	
 
+	public String getBtnStr() {
+		return BtnStr;
+	}
+
+	public void setBtnStr(String btnStr) {
+		BtnStr = btnStr;
+	}
 }

@@ -39,7 +39,11 @@ public class FunctionsModel implements Serializable
     /**
      * 类型
      */
-    private String Type = "";       
+    private String Type = "";
+	/**
+	 * 功能按钮
+	 */
+	private String PushBtn = "";
     /**
      * 拥有的功能列表
      */
@@ -215,5 +219,11 @@ public class FunctionsModel implements Serializable
 		this.hasFunctions = hasFunctions;
 	}
 
-	
+	public String getPushBtn() {
+		return PushBtn;
+	}
+
+	public void setPushBtn(String pushBtn) {
+		PushBtn = pushBtn;
+	}
 }

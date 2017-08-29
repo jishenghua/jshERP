@@ -34,11 +34,7 @@ public class DepotHeadService extends BaseService<DepotHead> implements DepotHea
     	depotHeadDao.findAllMoney(pageUtil, supplierId, type, subType, mode);
     }
 
-	public void findInDetail(PageUtil pageUtil,String beginTime,String endTime,String type,Long pid,String dids) throws JshException {
-		depotHeadDao.findInDetail(pageUtil,beginTime,endTime,type,pid,dids);
-	}
-
-	public void findInOutMaterialCount(PageUtil pageUtil,String beginTime,String endTime,String type,Long pid,String dids) throws JshException {
-		depotHeadDao.findInOutMaterialCount(pageUtil,beginTime,endTime,type,pid,dids);
+	public void batchSetStatus(Boolean status,String depotHeadIDs){
+		depotHeadDao.batchSetStatus(status, depotHeadIDs);
 	}
 }

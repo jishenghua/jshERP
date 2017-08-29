@@ -70,6 +70,81 @@ public class PersonAction extends BaseAction<PersonModel>
         }
         return SUCCESS;
     }
+
+    /**
+     * 根据类型获取经手人信息 1-业务员，2-仓管员，3-财务员
+     * @return
+     */
+    public void getPersonByNumType() {
+        try {
+            PageUtil<Person> pageUtil = new  PageUtil<Person>();
+            pageUtil.setPageSize(0);
+            pageUtil.setCurPage(0);
+            Map<String,Object> condition = pageUtil.getAdvSearch();
+            String type = "";
+            if(model.getType().equals("1")){
+                type = "业务员";
+            }
+            else if(model.getType().equals("2")){
+                type = "仓管员";
+            }
+            else if(model.getType().equals("3")){
+                type = "财务员";
+            }
+            condition.put("Type_s_eq",type);
+            condition.put("Id_s_order", "asc");
+            personService.find(pageUtil);
+            List<Person> dataList = pageUtil.getPageList();
+            JSONArray dataArray = new JSONArray();
+            if(null != dataList) {
+                for(Person person:dataList){
+                    JSONObject item = new JSONObject();
+                    item.put("id", person.getId());
+                    item.put("name", person.getName());
+                    dataArray.add(item);
+                }
+            }
+            //回写查询结果
+            toClient(dataArray.toString());
+        }
+        catch (DataAccessException e) {
+            Log.errorFileSync(">>>>>>>>>查找信息异常", e);
+        }
+        catch (IOException e) {
+            Log.errorFileSync(">>>>>>>>>回写查询信息结果异常", e);
+        }
+    }
+
+    /**
+     * 根据Id获取经手人信息
+     * @return
+     */
+    public void getPersonByIds() {
+        try {
+            PageUtil<Person> pageUtil = new  PageUtil<Person>();
+            pageUtil.setPageSize(0);
+            pageUtil.setCurPage(0);
+            Map<String,Object> condition = pageUtil.getAdvSearch();
+            condition.put("Id_s_in", model.getPersonIDs());
+            condition.put("Id_s_order", "asc");
+            personService.find(pageUtil);
+            List<Person> dataList = pageUtil.getPageList();
+            StringBuffer sb = new StringBuffer();
+            if(null != dataList) {
+                for(Person person:dataList){
+                    sb.append(person.getName() + " ");
+                }
+            }
+            //回写查询结果
+            toClient(sb.toString());
+        }
+        catch (DataAccessException e) {
+            Log.errorFileSync(">>>>>>>>>查找信息异常", e);
+        }
+        catch (IOException e) {
+            Log.errorFileSync(">>>>>>>>>回写查询信息结果异常", e);
+        }
+    }
 	
 	/**
 	 * 增加经手人

@@ -57,5 +57,5 @@ public class MaterialCategory implements java.io.Serializable
 	public void setMaterialCategory(MaterialCategory materialCategory) {
 		this.materialCategory = materialCategory;
 	}
-	
+
 }

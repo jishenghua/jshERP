@@ -11,11 +11,25 @@ public class DepotItemModel implements Serializable
     /**======开始接受页面参数=================**/
 	private Long HeaderId;
 	private Long MaterialId;
+	private String MUnit; //计量单位
 	private Double OperNumber;
+	private Double BasicNumber;
 	private Double UnitPrice;
+	private Double TaxUnitPrice; //含税单价
 	private Double AllPrice;
 	private String Remark = "";
 	private String Img = "";
+
+	private Long DepotId;
+	private Long AnotherDepotId;
+	private Double TaxRate;
+	private Double TaxMoney;
+	private Double TaxLastMoney;
+	private String OtherField1;
+	private String OtherField2;
+	private String OtherField3;
+	private String OtherField4;
+	private String OtherField5;
     
 	private String Inserted = "";	//json插入记录
 	private String Deleted = "";	//json删除记录
@@ -85,12 +99,36 @@ public class DepotItemModel implements Serializable
 		MaterialId = materialId;
 	}
 
+	public String getMUnit() {
+		return MUnit;
+	}
+
+	public void setMUnit(String MUnit) {
+		this.MUnit = MUnit;
+	}
+
+	public Double getTaxUnitPrice() {
+		return TaxUnitPrice;
+	}
+
+	public void setTaxUnitPrice(Double taxUnitPrice) {
+		TaxUnitPrice = taxUnitPrice;
+	}
+
 	public Double getOperNumber() {
 		return OperNumber;
 	}
 
 	public void setOperNumber(Double operNumber) {
 		OperNumber = operNumber;
+	}
+
+	public Double getBasicNumber() {
+		return BasicNumber;
+	}
+
+	public void setBasicNumber(Double basicNumber) {
+		BasicNumber = basicNumber;
 	}
 
 	public Double getUnitPrice() {
@@ -243,5 +281,85 @@ public class DepotItemModel implements Serializable
 
 	public void setExcelStream(InputStream excelStream) {
 		this.excelStream = excelStream;
+	}
+
+	public Long getDepotId() {
+		return DepotId;
+	}
+
+	public void setDepotId(Long depotId) {
+		DepotId = depotId;
+	}
+
+	public Long getAnotherDepotId() {
+		return AnotherDepotId;
+	}
+
+	public void setAnotherDepotId(Long anotherDepotId) {
+		AnotherDepotId = anotherDepotId;
+	}
+
+	public Double getTaxRate() {
+		return TaxRate;
+	}
+
+	public void setTaxRate(Double taxRate) {
+		TaxRate = taxRate;
+	}
+
+	public Double getTaxMoney() {
+		return TaxMoney;
+	}
+
+	public void setTaxMoney(Double taxMoney) {
+		TaxMoney = taxMoney;
+	}
+
+	public Double getTaxLastMoney() {
+		return TaxLastMoney;
+	}
+
+	public void setTaxLastMoney(Double taxLastMoney) {
+		TaxLastMoney = taxLastMoney;
+	}
+
+	public String getOtherField1() {
+		return OtherField1;
+	}
+
+	public void setOtherField1(String otherField1) {
+		OtherField1 = otherField1;
+	}
+
+	public String getOtherField2() {
+		return OtherField2;
+	}
+
+	public void setOtherField2(String otherField2) {
+		OtherField2 = otherField2;
+	}
+
+	public String getOtherField3() {
+		return OtherField3;
+	}
+
+	public void setOtherField3(String otherField3) {
+		OtherField3 = otherField3;
+	}
+
+	public String getOtherField4() {
+		return OtherField4;
+	}
+
+	public void setOtherField4(String otherField4) {
+		OtherField4 = otherField4;
+	}
+
+	public String getOtherField5() {
+		return OtherField5;
+	}
+
+	public void setOtherField5(String otherField5) {
+		OtherField5 = otherField5;
 	}
 }

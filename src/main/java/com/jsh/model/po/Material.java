@@ -1,11 +1,16 @@
 package com.jsh.model.po;
 
+import java.util.Map;
+
 @SuppressWarnings("serial")
 public class Material implements java.io.Serializable
 {
 	private Long Id;
 	private MaterialCategory materialCategory;
 	private String Name;
+	private String Mfrs;
+	private Double Packing;
+	private Double SafetyStock;
 	private String Model;
 	private String Standard;
 	private String Color;
@@ -14,7 +19,25 @@ public class Material implements java.io.Serializable
     private Double LowPrice;
     private Double PresetPriceOne;
     private Double PresetPriceTwo;
+	private Unit UnitId;
+	private String FirstOutUnit;
+	private String FirstInUnit;
+	private String PriceStrategy;
 	private String Remark;
+	private Boolean Enabled;
+
+	//----------以下属性导入exel表格使用--------------------
+	/**
+	 * 类型 right--正确 warn--警告  wrong--错误
+	 */
+	private Map<Integer,String> cellInfo;
+
+	/**
+	 * 行号
+	 */
+	private Integer rowLineNum;
+
+	private String  safetyStockStr;
 
 	public Material()
 	{
@@ -26,13 +49,16 @@ public class Material implements java.io.Serializable
 		this.Id = Id;
 	}
 
-	public Material(MaterialCategory materialCategory, String name,
-                    String model, String standard, String color, String unit, String remark,
-                    Double retailPrice, Double lowPrice, Double presetPriceOne, Double presetPriceTwo)
-    {
+	public Material(MaterialCategory materialCategory, String name, String mfrs, Double packing,
+		Double safetyStock, String model, String standard, String color, String unit, String remark,
+		Double retailPrice, Double lowPrice, Double presetPriceOne, Double presetPriceTwo,
+		Unit unitId, String firstOutUnit, String firstInUnit, String priceStrategy, Boolean enabled) {
 		super();
 		this.materialCategory = materialCategory;
 		Name = name;
+		Mfrs = mfrs;
+		Packing = packing;
+		SafetyStock = safetyStock;
 		Model = model;
 		Standard = standard;
 		Color = color;
@@ -42,6 +68,11 @@ public class Material implements java.io.Serializable
         PresetPriceOne = presetPriceOne;
         PresetPriceTwo = presetPriceTwo;
 		Remark = remark;
+		UnitId = unitId;
+		FirstOutUnit = firstOutUnit;
+		FirstInUnit = firstInUnit;
+		PriceStrategy = priceStrategy;
+		Enabled = enabled;
 	}
 
 	public Long getId()
@@ -102,17 +133,15 @@ public class Material implements java.io.Serializable
 		Color = color;
 	}
 
-	public String getUnit()
-    {
+	public String getUnit() {
 		return Unit;
 	}
 
-	public void setUnit(String unit)
-    {
+	public void setUnit(String unit) {
 		Unit = unit;
 	}
-    
-    public void setRetailPrice(Double retailPrice)
+
+	public void setRetailPrice(Double retailPrice)
     {
         RetailPrice = retailPrice;
     }
@@ -162,4 +191,91 @@ public class Material implements java.io.Serializable
 		Remark = remark;
 	}
 
+	public String getMfrs() {
+		return Mfrs;
+	}
+
+	public void setMfrs(String mfrs) {
+		Mfrs = mfrs;
+	}
+
+	public Double getPacking() {
+		return Packing;
+	}
+
+	public void setPacking(Double packing) {
+		Packing = packing;
+	}
+
+	public Double getSafetyStock() {
+		return SafetyStock;
+	}
+
+	public void setSafetyStock(Double safetyStock) {
+		SafetyStock = safetyStock;
+	}
+
+	public Unit getUnitId() {
+		return UnitId;
+	}
+
+	public void setUnitId(Unit unitId) {
+		UnitId = unitId;
+	}
+
+	public String getFirstOutUnit() {
+		return FirstOutUnit;
+	}
+
+	public void setFirstOutUnit(String firstOutUnit) {
+		FirstOutUnit = firstOutUnit;
+	}
+
+	public String getFirstInUnit() {
+		return FirstInUnit;
+	}
+
+	public void setFirstInUnit(String firstInUnit) {
+		FirstInUnit = firstInUnit;
+	}
+
+	public String getPriceStrategy() {
+		return PriceStrategy;
+	}
+
+	public void setPriceStrategy(String priceStrategy) {
+		PriceStrategy = priceStrategy;
+	}
+
+	public Boolean getEnabled() {
+		return Enabled;
+	}
+
+	public void setEnabled(Boolean enabled) {
+		Enabled = enabled;
+	}
+
+	public Map<Integer, String> getCellInfo() {
+		return cellInfo;
+	}
+
+	public void setCellInfo(Map<Integer, String> cellInfo) {
+		this.cellInfo = cellInfo;
+	}
+
+	public Integer getRowLineNum() {
+		return rowLineNum;
+	}
+
+	public void setRowLineNum(Integer rowLineNum) {
+		this.rowLineNum = rowLineNum;
+	}
+
+	public String getSafetyStockStr() {
+		return safetyStockStr;
+	}
+
+	public void setSafetyStockStr(String safetyStockStr) {
+		this.safetyStockStr = safetyStockStr;
+	}
 }

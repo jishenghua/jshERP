@@ -1,20 +1,22 @@
 package com.jsh.action.materials;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.jsh.model.po.*;
+import com.jsh.util.JshException;
+import com.jsh.util.MaterialConstants;
+import com.jsh.util.Tools;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.dao.DataAccessException;
 import com.jsh.base.BaseAction;
 import com.jsh.base.Log;
-import com.jsh.model.po.DepotHead;
-import com.jsh.model.po.Material;
-import com.jsh.model.po.Logdetails;
-import com.jsh.model.po.MaterialCategory;
-import com.jsh.model.po.Supplier;
 import com.jsh.model.vo.materials.MaterialModel;
 import com.jsh.service.materials.MaterialIService;
 import com.jsh.util.PageUtil;
@@ -27,6 +29,7 @@ public class MaterialAction extends BaseAction<MaterialModel>
 {
     private MaterialIService materialService;
     private MaterialModel model = new MaterialModel();
+    public static final String EXCEL = "excel";  //action返回excel结果
     
 	/**
 	 * 增加商品
@@ -42,6 +45,9 @@ public class MaterialAction extends BaseAction<MaterialModel>
 			material.setMaterialCategory(new MaterialCategory(model.getCategoryId()));
 			
 			material.setName(model.getName());
+            material.setMfrs(model.getMfrs());
+            material.setPacking(model.getPacking());
+            material.setSafetyStock(model.getSafetyStock());
 			material.setModel(model.getModel());
             material.setStandard(model.getStandard());
 			material.setColor(model.getColor());
@@ -50,7 +56,17 @@ public class MaterialAction extends BaseAction<MaterialModel>
             material.setLowPrice(model.getLowPrice());
             material.setPresetPriceOne(model.getPresetPriceOne());
             material.setPresetPriceTwo(model.getPresetPriceTwo());
+            if(model.getUnitId()!=null){
+                material.setUnitId(new Unit(model.getUnitId()));
+            }
+            else {
+                material.setUnitId(null);
+            }
+            material.setFirstOutUnit(model.getFirstOutUnit());
+            material.setFirstInUnit(model.getFirstInUnit());
+            material.setPriceStrategy(model.getPriceStrategy());
 			material.setRemark(model.getRemark());
+            material.setEnabled(model.getEnabled());
 			materialService.create(material);
 			
 			//========标识位===========
@@ -124,6 +140,9 @@ public class MaterialAction extends BaseAction<MaterialModel>
         	material.setMaterialCategory(new MaterialCategory(model.getCategoryId()));
 			
 			material.setName(model.getName());
+            material.setMfrs(model.getMfrs());
+            material.setPacking(model.getPacking());
+            material.setSafetyStock(model.getSafetyStock());
 			material.setModel(model.getModel());
             material.setStandard(model.getStandard());
 			material.setColor(model.getColor());
@@ -132,8 +151,16 @@ public class MaterialAction extends BaseAction<MaterialModel>
             material.setLowPrice(model.getLowPrice());
             material.setPresetPriceOne(model.getPresetPriceOne());
             material.setPresetPriceTwo(model.getPresetPriceTwo());
+            if(model.getUnitId()!=null){
+                material.setUnitId(new Unit(model.getUnitId()));
+            }
+            else {
+                material.setUnitId(null);
+            }
+            material.setFirstOutUnit(model.getFirstOutUnit());
+            material.setFirstInUnit(model.getFirstInUnit());
+            material.setPriceStrategy(model.getPriceStrategy());
 			material.setRemark(model.getRemark());
-			material.setName(model.getName());
         	materialService.update(material);
             
             flag = true;
@@ -189,6 +216,63 @@ public class MaterialAction extends BaseAction<MaterialModel>
         , tipType, "批量删除商品ID为  "+ model.getMaterialIDs() + " " + tipMsg + "！", "批量删除商品" + tipMsg));
 	    return SUCCESS;
 	}
+
+    /**
+     * 批量设置状态-启用或者禁用
+     * @return
+     */
+    public String batchSetEnable()
+    {
+        try
+        {
+            materialService.batchSetEnable(model.getEnabled(),model.getMaterialIDs());
+            model.getShowModel().setMsgTip("成功");
+            //记录操作日志使用
+            tipMsg = "成功";
+            tipType = 0;
+        }
+        catch (DataAccessException e)
+        {
+            Log.errorFileSync(">>>>>>>>>>>批量修改状态，商品ID为：" + model.getMaterialIDs() + "信息异常", e);
+            tipMsg = "失败";
+            tipType = 1;
+        }
+
+        logService.create(new Logdetails(getUser(), "批量修改商品状态", model.getClientIp(),
+                new Timestamp(System.currentTimeMillis())
+                , tipType, "批量修改状态，商品ID为  "+ model.getMaterialIDs() + " " + tipMsg + "！", "批量修改商品状态" + tipMsg));
+        return SUCCESS;
+    }
+
+    /**
+     * 查找该商品是否存在
+     * @return
+     */
+    public void checkIsExist() {
+        try {
+            Boolean flag = false;
+            PageUtil<Material> pageUtil = new  PageUtil<Material>();
+            pageUtil.setPageSize(0);
+            pageUtil.setCurPage(0);
+            pageUtil.setAdvSearch(getConditionCheckIsExist());
+            materialService.find(pageUtil);
+            List<Material> dataList = pageUtil.getPageList();
+            if(null != dataList && dataList.size() > 0){
+                flag = true;
+            }
+            else{
+                flag = false;
+            }
+            //回写查询结果
+            toClient(flag.toString());
+        }
+        catch (DataAccessException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找商品信息异常", e);
+        }
+        catch (IOException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询商品信息结果异常", e);
+        }
+    }
 	
 	/**
 	 * 查找商品信息
@@ -211,6 +295,7 @@ public class MaterialAction extends BaseAction<MaterialModel>
                 pageUtil.setAdvSearch(getCondition());
             }
             materialService.find(pageUtil);
+            getSession().put("pageUtilMaterial", pageUtil);
             List<Material> dataList = pageUtil.getPageList();
             
             JSONObject outer = new JSONObject();
@@ -224,6 +309,11 @@ public class MaterialAction extends BaseAction<MaterialModel>
                     JSONObject item = new JSONObject();
                     item.put("Id", material.getId());
                     item.put("Name", material.getName());
+                    item.put("CategoryId", material.getMaterialCategory().getId()); //类型Id
+                    item.put("CategoryName", material.getMaterialCategory().getName()); //类型名称
+                    item.put("Mfrs", material.getMfrs()==null?"" : material.getMfrs());
+                    item.put("Packing", material.getPacking()==null?"" : material.getPacking());
+                    item.put("SafetyStock", material.getSafetyStock()==null?"" : material.getSafetyStock());
                     item.put("Model", material.getModel()==null?"" : material.getModel());
                     item.put("Standard", material.getStandard()==null?"": material.getStandard());
                     item.put("Color", material.getColor()==null?"": material.getColor());
@@ -232,6 +322,12 @@ public class MaterialAction extends BaseAction<MaterialModel>
                     item.put("LowPrice", material.getLowPrice());
                     item.put("PresetPriceOne", material.getPresetPriceOne()==null? "":material.getPresetPriceOne());
                     item.put("PresetPriceTwo", material.getPresetPriceTwo()==null? "":material.getPresetPriceTwo());
+                    item.put("UnitId",material.getUnitId()==null? "": material.getUnitId().getId()); //计量单位Id
+                    item.put("UnitName", material.getUnitId()==null? "": material.getUnitId().getUName()); //计量单位名称
+                    item.put("FirstOutUnit", material.getFirstOutUnit());
+                    item.put("FirstInUnit", material.getFirstInUnit());
+                    item.put("PriceStrategy", material.getPriceStrategy());
+                    item.put("Enabled", material.getEnabled());
                     item.put("Remark", material.getRemark());
                     item.put("op", 1);
                     dataArray.add(item);
@@ -273,6 +369,9 @@ public class MaterialAction extends BaseAction<MaterialModel>
                     JSONObject item = new JSONObject();
                     item.put("Id", material.getId());
                     item.put("Name", material.getName());
+                    item.put("Mfrs", material.getMfrs()==null?"" : material.getMfrs());
+                    item.put("Packing", material.getPacking()==null?"" : material.getPacking());
+                    item.put("SafetyStock", material.getSafetyStock()==null?"" : material.getSafetyStock());
                     item.put("Model", material.getModel());
                     item.put("Standard", material.getStandard());
                     item.put("Color", material.getColor());
@@ -281,6 +380,11 @@ public class MaterialAction extends BaseAction<MaterialModel>
                     item.put("LowPrice", material.getLowPrice());
                     item.put("PresetPriceOne", material.getPresetPriceOne());
                     item.put("PresetPriceTwo", material.getPresetPriceTwo());
+                    item.put("UnitId",material.getUnitId()==null? "": material.getUnitId().getId()); //计量单位Id
+                    item.put("UnitName", material.getUnitId()==null? "": material.getUnitId().getUName()); //计量单位名称
+                    item.put("FirstOutUnit", material.getFirstOutUnit());
+                    item.put("FirstInUnit", material.getFirstInUnit());
+                    item.put("PriceStrategy", material.getPriceStrategy());
                     item.put("Remark", material.getRemark());
                     item.put("op", 1);
                     dataArray.add(item);
@@ -304,10 +408,8 @@ public class MaterialAction extends BaseAction<MaterialModel>
 	 * 查找商品信息-下拉框
 	 * @return
 	 */
-    public void findBySelect()
-	{
-	    try 
-	    {
+    public void findBySelect() {
+	    try {
 	        PageUtil<Material> pageUtil = new  PageUtil<Material>();
             pageUtil.setPageSize(0);
             pageUtil.setCurPage(0);
@@ -316,17 +418,22 @@ public class MaterialAction extends BaseAction<MaterialModel>
             List<Material> dataList = pageUtil.getPageList();
             //存放数据json数组
             JSONArray dataArray = new JSONArray();
-            if(null != dataList)
-            {
-                for(Material material:dataList)
-                {
+            if(null != dataList) {
+                for(Material material:dataList) {
                     JSONObject item = new JSONObject();
                     item.put("Id", material.getId());
-                    //名称
-                    String MaterialName = ((material.getModel() == null || material.getModel().equals(""))?"":material.getModel() +" ") + material.getName()
-                    + ((material.getStandard() == null || material.getStandard().equals(""))?"":"("+material.getStandard() + ")")
-                    + ((material.getColor() == null || material.getColor().equals(""))?"":"("+material.getColor() + ")")
-                    + ((material.getUnit() == null || material.getUnit().equals(""))?"":"("+material.getUnit() + ")");
+                    String ratio; //比例
+                    if(material.getUnitId() == null || material.getUnitId().equals("")){
+                        ratio = "";
+                    }
+                    else {
+                        ratio = material.getUnitId().getUName();
+                        ratio = ratio.substring(ratio.indexOf("("));
+                    }
+                    //品名/型号/制造商/包装
+                    String MaterialName = material.getName() + ((material.getModel() == null || material.getModel().equals(""))?"":"("+material.getModel() + ")")
+                    + ((material.getMfrs() == null || material.getMfrs().equals(""))?"":"("+material.getMfrs() + ")")
+                    + ratio;
                     item.put("MaterialName", MaterialName);
                     dataArray.add(item);
                 }
@@ -334,12 +441,10 @@ public class MaterialAction extends BaseAction<MaterialModel>
             //回写查询结果
             toClient(dataArray.toString());
         } 
-	    catch (DataAccessException e) 
-	    {
+	    catch (DataAccessException e) {
 	        Log.errorFileSync(">>>>>>>>>查找供应商信息异常", e);
         } 
-	    catch (IOException e) 
-	    {
+	    catch (IOException e) {
             Log.errorFileSync(">>>>>>>>>回写查询供应商信息结果异常", e);
         }
 	}
@@ -384,6 +489,67 @@ public class MaterialAction extends BaseAction<MaterialModel>
             Log.errorFileSync(">>>>>>>>>回写查询供应商信息结果异常", e);
         }
 	}
+
+    /**
+     * 导入excel表格-供应商
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public String importExcel() {
+        //excel表格file
+        Boolean result = false;
+        String returnStr = "";
+        try {
+            InputStream in = materialService.importExcel(model.getMaterialFile());
+
+            if(null != in)
+            {
+                model.setFileName(Tools.getRandomChar() + Tools.getNow2(Calendar.getInstance().getTime()) + "_wrong.xls");
+                model.setExcelStream(in);
+                returnStr = MaterialConstants.BusinessForExcel.EXCEL;
+            }
+            else {
+                result = true;
+                try {
+                    toClient(result.toString());
+                } catch (IOException e) {
+                    Log.errorFileSync(">>>>>>>>>回写导入信息结果异常", e);
+                }
+                //导入数据成功
+                returnStr = SUCCESS;
+            }
+
+        }
+        catch (JshException e)
+        {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>导入excel表格信息异常", e);
+        }
+        return returnStr;
+    }
+
+    /**
+     * 导出excel表格
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public String exportExcel() {
+        Log.infoFileSync("===================调用导出信息action方法exportExcel开始=======================");
+        try {
+            String sName = "pageUtilMaterial";
+            PageUtil<Material> pageUtil = (PageUtil<Material>)getSession().get(sName);
+            pageUtil.setPageSize(model.getPageSize());
+            pageUtil.setCurPage(model.getPageNo());
+            String isCurrentPage = "allPage";
+            model.setFileName(Tools.changeUnicode("goods" + System.currentTimeMillis() + ".xls", model.getBrowserType()));
+            model.setExcelStream(materialService.exmportExcel(isCurrentPage,pageUtil));
+        }
+        catch (Exception e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>>>>调用导出信息action方法exportExcel异常",e);
+            model.getShowModel().setMsgTip("export excel exception");
+        }
+        Log.infoFileSync("===================调用导出信息action方法exportExcel结束==================");
+        return EXCEL;
+    }
     
 	/**
 	 * 拼接搜索条件(查全部)
@@ -395,6 +561,9 @@ public class MaterialAction extends BaseAction<MaterialModel>
          * 拼接搜索条件
          */
         Map<String,Object> condition = new HashMap<String,Object>();
+        condition.put("Name_s_like", model.getName());
+        condition.put("Model_s_like", model.getModel());
+        condition.put("Mfrs_s_like", model.getMfrs());
         condition.put("Id_s_order", "asc");
         return condition;
     }
@@ -403,14 +572,33 @@ public class MaterialAction extends BaseAction<MaterialModel>
 	 * 拼接搜索条件
 	 * @return
 	 */
-	private Map<String,Object> getCondition()
-    {
+	private Map<String,Object> getCondition() {
         /**
          * 拼接搜索条件
          */
         Map<String,Object> condition = new HashMap<String,Object>();
+        condition.put("Name_s_like", model.getName());
+        condition.put("Model_s_like", model.getModel());
+        condition.put("Mfrs_s_like", model.getMfrs());
         condition.put("CategoryId_s_in", model.getCategoryIds());
         condition.put("Id_s_order", "asc");
+        return condition;
+    }
+
+    private Map<String,Object> getConditionCheckIsExist() {
+        Map<String,Object> condition = new HashMap<String,Object>();
+        if(model.getMaterialID()>0){
+            condition.put("ID_n_neq", model.getMaterialID());
+        }
+        condition.put("Name_s_eq", model.getName());
+        condition.put("Model_s_eq", model.getModel());
+        condition.put("Mfrs_s_eq", model.getMfrs());
+        if(model.getUnit()!=null){
+            condition.put("Unit_s_eq", model.getUnit());
+        }
+        if(model.getUnitId()!=null){
+            condition.put("UnitId_n_eq", model.getUnitId());
+        }
         return condition;
     }
 
@@ -438,6 +626,7 @@ public class MaterialAction extends BaseAction<MaterialModel>
          * 拼接搜索条件
          */
         Map<String,Object> condition = new HashMap<String,Object>();
+        condition.put("enabled_s_eq",1);
         condition.put("Id_s_order", "asc");
         return condition;
     }

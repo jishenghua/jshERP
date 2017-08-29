@@ -5,4 +5,5 @@ import com.jsh.model.po.Supplier;
 
 public interface SupplierIDAO extends BaseIDAO<Supplier>
 {
+    public void batchSetEnable(Boolean enable,String supplierIDs);
 }

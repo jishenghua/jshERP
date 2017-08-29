@@ -245,6 +245,36 @@ public class MaterialCategoryAction extends BaseAction<MaterialCategoryModel>
             Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询商品类别信息结果异常", e);
         }
 	}
+
+    /**
+     * 根据id来查询商品名称
+     * @return
+     */
+    public void findById() {
+        try {
+            PageUtil<MaterialCategory> pageUtil = new PageUtil<MaterialCategory>();
+            pageUtil.setAdvSearch(getConditionById());
+            materialCategoryService.find(pageUtil);
+            List<MaterialCategory> dataList = pageUtil.getPageList();
+            JSONObject outer = new JSONObject();
+            if(null != dataList) {
+                for(MaterialCategory materialCategory : dataList) {
+                    outer.put("name", materialCategory.getName());
+                    outer.put("parentId", materialCategory.getMaterialCategory().getId());
+                }
+            }
+            //回写查询结果
+            toClient(outer.toString());
+        }
+        catch (DataAccessException e)
+        {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找商品类别信息异常", e);
+        }
+        catch (IOException e)
+        {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询商品类别信息结果异常", e);
+        }
+    }
     
 	/**
 	 * 拼接搜索条件
@@ -256,9 +286,23 @@ public class MaterialCategoryAction extends BaseAction<MaterialCategoryModel>
          * 拼接搜索条件
          */
         Map<String,Object> condition = new HashMap<String,Object>();
+        condition.put("Name_s_like", model.getName());
         condition.put("ParentId_n_eq", model.getParentId());
         condition.put("Id_n_neq", 1);
         condition.put("Id_s_order", "asc");
+        return condition;
+    }
+
+    /**
+     * 拼接搜索条件
+     * @return
+     */
+    private Map<String,Object> getConditionById(){
+        /**
+         * 拼接搜索条件
+         */
+        Map<String,Object> condition = new HashMap<String,Object>();
+        condition.put("Id_n_eq", model.getMaterialCategoryID());
         return condition;
     }
 	

@@ -22,6 +22,8 @@ public class UserBusinessModel implements Serializable
      * 值
      */
     private String Value = "";
+
+	private String BtnStr = "";
     
     /**
      * 分类ID
@@ -120,4 +122,11 @@ public class UserBusinessModel implements Serializable
 		this.clientIp = clientIp;
 	}
 
+	public String getBtnStr() {
+		return BtnStr;
+	}
+
+	public void setBtnStr(String btnStr) {
+		BtnStr = btnStr;
+	}
 }

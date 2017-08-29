@@ -3,6 +3,7 @@ package com.jsh.util;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.security.MessageDigest;
@@ -48,7 +49,7 @@ public class Tools
     }
     
     /**
-     * 获取指定日期格式 yyyy-MM
+     * 获取指定日期格式 yyyy-MM-dd
      * @return
      */
     public static String getCurrentMonth(Date date)
@@ -230,6 +231,31 @@ public class Tools
         }
         return valueAfterTransCode;
     }
+
+	/**
+	 * 字符转码
+	 * @param aValue
+	 * @return
+	 * @see 转码后的字符串
+	 */
+	public static String decodeValue(String aValue)
+	{
+		if(aValue.trim().length() ==0)
+		{
+			return "";
+		}
+		String valueAfterTransCode = null;
+		try
+		{
+			valueAfterTransCode = URLDecoder.decode(aValue, "UTF-8");
+		}
+		catch (UnsupportedEncodingException e)
+		{
+			e.getMessage();
+		}
+		return valueAfterTransCode;
+	}
+
 	/**
 	 * 去除str中的'
 	 * @param str

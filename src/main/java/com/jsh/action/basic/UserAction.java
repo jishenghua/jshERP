@@ -325,7 +325,40 @@ public class UserAction extends BaseAction<UserModel>
                 new Timestamp(System.currentTimeMillis())
         , tipType, "更新用户ID为  "+ model.getUserID() + "密码信息 " + tipMsg + "！", "更新用户" + tipMsg));
 	}
-	
+
+	/**
+	 * 重置用户的密码
+	 */
+	public void resetPwd() {
+		Integer flag = 0;
+		try {
+			Basicuser user = userService.get(model.getUserID());
+			String password = "123456";
+			String md5Pwd = Tools.md5Encryp(password);
+			user.setPassword(md5Pwd);
+			userService.update(user);
+			flag = 1;
+			tipMsg = "成功";
+			tipType = 0;
+		}
+		catch (Exception e) {
+			Log.errorFileSync(">>>>>>>>>>>>>修改用户ID为 ： " + model.getUserID() + "密码信息失败", e);
+			flag = 0;
+			tipMsg = "失败";
+			tipType = 1;
+		}
+		finally {
+			try {
+				toClient(flag.toString());
+			}
+			catch (IOException e) {
+				Log.errorFileSync(">>>>>>>>>>>>修改用户密码回写客户端结果异常", e);
+			}
+		}
+		logService.create(new Logdetails(getUser(), "重置用户密码", model.getClientIp(),
+		new Timestamp(System.currentTimeMillis()), tipType, "重置用户ID为  "+ model.getUserID() + "密码信息 " + tipMsg + "！", "重置用户密码" + tipMsg));
+	}
+
 	/**
 	 * 批量删除指定ID用户
 	 * @return

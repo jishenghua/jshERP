@@ -11,7 +11,8 @@ public class Functions implements java.io.Serializable
 	private Boolean State;
 	private String Sort;
 	private Boolean Enabled;
-	private String Type;	
+	private String Type;
+	private String PushBtn;
 
 	public Functions()
 	{
@@ -90,4 +91,11 @@ public class Functions implements java.io.Serializable
 		Type = type;
 	}
 
+	public String getPushBtn() {
+		return PushBtn;
+	}
+
+	public void setPushBtn(String pushBtn) {
+		PushBtn = pushBtn;
+	}
 }
