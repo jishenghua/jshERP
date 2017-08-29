@@ -7,7 +7,7 @@
 <!DOCTYPE html>
 <html>
   	<head>
-    	<title>仓库管理</title>
+    	<title>计量单位管理</title>
         <meta charset="utf-8">
 		<!-- 指定以IE8的方式来渲染 -->
 		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
@@ -25,14 +25,9 @@
 		<div id = "searchPanel"	class="easyui-panel" style="padding:10px;" title="查询窗口" iconCls="icon-search" collapsible="true" closable="false">
 			<table id="searchTable">
 				<tr>
-					<td>仓库名称：</td>
+					<td>计量单位：</td>
 					<td>
 						<input type="text" name="searchName" id="searchName"  style="width:100px;"/>
-					</td>
-					<td>&nbsp;</td>
-					<td id="searchRemarkLabel">描述：</td>
-					<td>
-						<input type="text" name="searchRemark" id="searchRemark"  style="width:100px;"/>
 					</td>
 					<td>&nbsp;</td>
 					<td>
@@ -44,57 +39,37 @@
 		</div>
 		
 		<!-- 数据显示table -->
-		<div id = "tablePanel"	class="easyui-panel" style="padding:1px;top:300px;" title="仓库列表" iconCls="icon-list" collapsible="true" closable="false">
+		<div id = "tablePanel"	class="easyui-panel" style="padding:1px;top:300px;" title="计量单位列表" iconCls="icon-list" collapsible="true" closable="false">
 			<table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 		</div>
 		
-	    <div id="depotDlg" class="easyui-dialog" style="width:380px;padding:10px 20px"
+	    <div id="unitDlg" class="easyui-dialog" style="width:380px;padding:10px 20px"
 	            closed="true" buttons="#dlg-buttons" modal="true" cache="false" collapsible="false" closable="true">
-	        <form id="depotFM" method="post"  novalidate>
+	        <form id="unitFM" method="post"  novalidate>
 	            <table>
 	            <tr>
-					<td>仓库名称</td>
+					<td>基本单位</td>
 					<td style="padding:5px">
-						<input name="name" id="name" class="easyui-validatebox" data-options="required:true,validType:'length[2,30]'" style="width: 230px;height: 20px"/>
+						<input name="basicName" id="basicName" class="easyui-validatebox" data-options="required:true,validType:'length[1,10]'" style="width: 100px;height: 20px"/>
+						基本单位应为最小度量单位
 					</td>
 	            </tr>
 				<tr>
-					<td>仓库地址</td>
+					<td>副单位</td>
 					<td style="padding:5px">
-						<input name="address" id="address" class="easyui-validatebox" data-options="validType:'length[2,30]'" style="width: 230px;height: 20px"/>
+						<input name="otherName" id="otherName" class="easyui-validatebox" data-options="required:true,validType:'length[1,5]'" style="width: 100px;height: 20px"/>
+						=
+						<input name="otherNum" id="otherNum" class="easyui-validatebox" data-options="required:true,validType:'length[1,5]'" style="width: 50px;height: 20px"/>
+						<span id="unitName"></span>
 					</td>
 				</tr>
-				<tr>
-					<td>仓储费</td>
-					<td style="padding:5px">
-						<input name="warehousing" id="warehousing" class="easyui-numberbox" data-options="min:0,precision:2" style="width: 175px;height: 20px"/>&nbsp;元/天/KG
-					</td>
-				</tr>
-				<tr>
-					<td>搬运费</td>
-					<td style="padding:5px">
-						<input name="truckage" id="truckage" class="easyui-numberbox" placeholder="如上下搬运20元,则填写10元" data-options="min:0,precision:2" style="width: 215px;height: 20px"/>&nbsp;元
-					</td>
-				</tr>
-	            <tr>
-					<td>排序</td>
-					<td style="padding:5px">
-						<input name="sort" id="sort" class="easyui-textbox" style="width: 230px;height: 20px"/>
-					</td>
-	            </tr>
-	            <tr>
-					<td>描述</td>
-					<td style="padding:5px">
-						<textarea name="remark" id="remark" rows="2" cols="2" style="width: 230px;"></textarea>
-					</td>
-	            </tr>
 	            </table>
 	            <input type="hidden" name="clientIp" id="clientIp" value="<%=clientIp %>"/>
 	        </form>
 	    </div>
 	    <div id="dlg-buttons">
-	        <a href="javascript:void(0)" id="saveDepot" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
-	        <a href="javascript:void(0)" id="cancelDepot" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#depotDlg').dialog('close')">取消</a>
+	        <a href="javascript:void(0)" id="saveUnit" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
+	        <a href="javascript:void(0)" id="cancelUnit" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#unitDlg').dialog('close')">取消</a>
 	    </div>
 	    
 		<script type="text/javascript">
@@ -109,7 +84,7 @@
 			//防止表单提交重复
 			function initForm()
 			{
-				$('#depotFM').form({
+				$('#unitFM').form({
 				    onSubmit: function(){
 				        return false;
 				    }
@@ -119,7 +94,7 @@
 			//初始化表格数据
 			function initTableData() {
 				$('#tableData').datagrid({
-					//title:'仓库列表',
+					//title:'计量单位列表',
 					//iconCls:'icon-save',
 					//width:700,
 					height:heightInfo,
@@ -134,7 +109,7 @@
 					//fitColumns:true,
 					//单击行是否选中
 					checkOnSelect : false,
-					url:'<%=path %>/depot/findBy.action?pageSize=' + initPageSize,
+					url:'<%=path %>/unit/findBy.action?pageSize=' + initPageSize,
 					pagination: true,
 					//交替出现背景
 					striped : true,
@@ -146,38 +121,32 @@
 						{ title: '操作',field: 'op',align:"center",width:60,
 							formatter:function(value,rec) {
 								var str = '';
-								var rowInfo = rec.id + 'AaBb' + rec.name + 'AaBb' + rec.sort + 'AaBb' + rec.remark + 'AaBb'
-										+ rec.address + 'AaBb' + rec.warehousing + 'AaBb' + rec.truckage;
+								var rowInfo = rec.id + 'AaBb' + rec.UName;
 								if(1 == value)
 								{
-									str += '<img title="编辑" src="<%=path%>/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editDepot(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
-									str += '<img title="删除" src="<%=path%>/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteDepot('+ rec.id +');"/>';
+									str += '<img title="编辑" src="<%=path%>/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editUnit(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
+									str += '<img title="删除" src="<%=path%>/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteUnit('+ rec.id +');"/>';
 								}
 								return str;
 							}
 						},
-						{ title: '仓库名称',field: 'name',width:200},
-						{ title: '仓库地址',field: 'address',width:200},
-						{ title: '仓储费',field: 'warehousing',width:60},
-						{ title: '搬运费',field: 'truckage',width:60},
-						{ title: '排序',field: 'sort',width:60},
-						{ title: '描述',field: 'remark',width:120}
+						{ title: '计量单位',field: 'UName',width:200}
 					]],
 					toolbar:[
 						{
-							id:'addDepot',
+							id:'addUnit',
 							text:'增加',
 							iconCls:'icon-add',
 							handler:function() {
-								addDepot();
+								addUnit();
 							}
 						},'-',
 						{
-							id:'deleteDepot',
+							id:'deleteUnit',
 							text:'删除',
 							iconCls:'icon-remove',
 							handler:function() {
-								batDeleteDepot();	
+								batDeleteUnit();
 							}
 						}
 					],
@@ -196,11 +165,11 @@
 			    //兼容 IE,firefox 兼容  
 			    var obj = e.srcElement ? e.srcElement : e.target;  
 			    //绑定键盘事件为 id是指定的输入框才可以触发键盘事件 13键盘事件 ---遗留问题 enter键效验 对话框会关闭问题
-			    if(k == "13"&&(obj.id=="name"||obj.id=="sort"|| obj.id=="remark" )) {
-			        $("#saveDepot").click();
+			    if(k == "13"&&(obj.id=="name")) {
+			        $("#saveUnit").click();
 			    }
 			    //搜索按钮添加快捷键
-			    if(k == "13"&&(obj.id=="searchName" || obj.id=="searchRemark" )) {
+			    if(k == "13"&&(obj.id=="searchName")) {
 			        $("#searchBtn").click();
 			    }  
 			}); 
@@ -217,7 +186,7 @@
 								pageNumber:pageNum,  
 								pageSize:pageSize  
 							});  
-							showDepotDetails(pageNum,pageSize);
+							showUnitDetails(pageNum,pageSize);
 						}  
 					}); 
 				}
@@ -226,16 +195,16 @@
 				}
 			}
 			
-			//删除供应商信息
-			function deleteDepot(depotID) {
-				$.messager.confirm('删除确认','确定要删除此仓库信息吗？',function(r) {
+			//删除计量单位
+			function deleteUnit(unitID) {
+				$.messager.confirm('删除确认','确定要删除此计量单位吗？',function(r) {
                     if (r) {
 						$.ajax({
 							type:"post",
-							url: "<%=path %>/depot/delete.action",
+							url: "<%=path %>/unit/delete.action",
 							dataType: "json",
 							data: ({
-								depotID : depotID,
+								unitID : unitID,
 								clientIp:'<%=clientIp %>'
 							}),
 							success: function (tipInfo) {
@@ -246,11 +215,11 @@
 									$("#searchBtn").click();
 								}
 								else
-									$.messager.alert('删除提示','删除仓库信息失败，请稍后再试！','error');
+									$.messager.alert('删除提示','删除计量单位失败，请稍后再试！','error');
 							},
 							//此处添加错误处理
 				    		error:function() {
-				    			$.messager.alert('删除提示','删除仓库信息异常，请稍后再试！','error');
+				    			$.messager.alert('删除提示','删除计量单位异常，请稍后再试！','error');
 								return;
 							}
 						});			
@@ -258,15 +227,15 @@
                 });
 			}
 			
-			//批量删除供应商
-			function batDeleteDepot() {
+			//批量删除计量单位
+			function batDeleteUnit() {
 				var row = $('#tableData').datagrid('getChecked');	
 				if(row.length == 0) {
 					$.messager.alert('删除提示','没有记录被选中！','info');				
 					return;	
 				}
 				if(row.length > 0) {
-					$.messager.confirm('删除确认','确定要删除选中的' + row.length + '条仓库信息吗？',function(r) {
+					$.messager.confirm('删除确认','确定要删除选中的' + row.length + '条计量单位信息吗？',function(r) {
 	                    if (r)
 	                    {
 	                    	var ids = "";
@@ -282,29 +251,26 @@
 	                        }
 	                        $.ajax({
 								type:"post",
-								url: "<%=path %>/depot/batchDelete.action",
+								url: "<%=path %>/unit/batchDelete.action",
 								dataType: "json",
 								async :  false,
 								data: ({
-									depotIDs : ids,
+									unitIDs : ids,
 									clientIp:'<%=clientIp %>'
 								}),
-								success: function (tipInfo)
-								{
+								success: function (tipInfo) {
 									var msg = tipInfo.showModel.msgTip;
-									if(msg == '成功')
-									{
+									if(msg == '成功'){
 										//加载完以后重新初始化
 										$("#searchBtn").click();
 										$(":checkbox").attr("checked",false);
 									}
 									else
-										$.messager.alert('删除提示','删除仓库信息失败，请稍后再试！','error');
+										$.messager.alert('删除提示','删除计量单位失败，请稍后再试！','error');
 								},
 								//此处添加错误处理
-					    		error:function()
-					    		{
-					    			$.messager.alert('删除提示','删除仓库信息异常，请稍后再试！','error');
+					    		error:function(){
+					    			$.messager.alert('删除提示','删除计量单位异常，请稍后再试！','error');
 									return;
 								}
 							});	
@@ -315,128 +281,127 @@
 			
 			//增加
 			var url;
-			var depotID = 0;
+			var unitID = 0;
 			//保存编辑前的名称
-			var orgDepot = "";
+			var orgUnit = "";
 			
-			function addDepot()
-			{
+			function addUnit(){
 				$("#clientIp").val('<%=clientIp %>');
-				$('#depotDlg').dialog('open').dialog('setTitle','<img src="<%=path%>/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加仓库信息');
+				$('#unitDlg').dialog('open').dialog('setTitle','<img src="<%=path%>/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加计量单位');
 				$(".window-mask").css({ width: webW ,height: webH});
-	            $('#depotFM').form('clear');
+	            $('#unitFM').form('clear');
 				$("#name").focus();
-	            
-	            orgDepot = "";
-	            depotID = 0;
-	            url = '<%=path %>/depot/create.action';
+	            $("#unitName").text("");
+	            orgUnit = "";
+	            unitID = 0;
+	            url = '<%=path %>/unit/create.action';
 			}
 			
 			//保存信息
-			$("#saveDepot").off("click").on("click",function() {
-				if(!$('#depotFM').form('validate'))
-					return;
-				else if(checkDepotName())
-					return;
-				else
+			$("#saveUnit").unbind().bind({
+				click:function()
 				{
-					$.ajax({
-						type:"post",
-						url: url,
-						dataType: "json",
-						async :  false,
-						data: ({
-							name : $.trim($("#name").val()),
-							address: $.trim($("#address").val()),
-							warehousing: $.trim($("#warehousing").val()),
-							truckage: $.trim($("#truckage").val()),
-							type : 0,
-							sort : $.trim($("#sort").val()),
-							remark : $.trim($("#remark").val()),
-							clientIp:'<%=clientIp %>'
-						}),
-						success: function (tipInfo)
-						{
-							if(tipInfo)
+					if(!$('#unitFM').form('validate'))
+						return;
+					else if(checkUnitName())
+						return;
+					else 
+					{
+						var basicName = $.trim($("#basicName").val());
+						var otherName = $.trim($("#otherName").val());
+						var otherNum = $.trim($("#otherNum").val());
+						var name = basicName + "," + otherName + "(1:" + otherNum + ")";
+						$.ajax({
+							type:"post",
+							url: url,
+							dataType: "json",
+							async :  false,
+							data: ({
+								UName : name,
+								clientIp:'<%=clientIp %>'
+							}),
+							success: function (tipInfo)
 							{
-								$('#depotDlg').dialog('close');
-
-								var opts = $("#tableData").datagrid('options');
-								showDepotDetails(opts.pageNumber,opts.pageSize);
+								if(tipInfo)
+								{
+									$('#unitDlg').dialog('close');
+			                        
+									var opts = $("#tableData").datagrid('options'); 
+									showUnitDetails(opts.pageNumber,opts.pageSize);
+								}
+								else
+								{
+									$.messager.show({
+			                            title: '错误提示',
+			                            msg: '保存计量单位失败，请稍后重试!'
+			                        });
+								}
+							},
+							//此处添加错误处理
+				    		error:function()
+				    		{
+				    			$.messager.alert('提示','保存计量单位异常，请稍后再试！','error');
+								return;
 							}
-							else
-							{
-								$.messager.show({
-									title: '错误提示',
-									msg: '保存仓库信息失败，请稍后重试!'
-								});
-							}
-						},
-						//此处添加错误处理
-						error:function()
-						{
-							$.messager.alert('提示','保存仓库信息异常，请稍后再试！','error');
-							return;
-						}
-					});
+						});	
+					}
 				}
 			});
 			
 			//编辑信息
-	        function editDepot(depotTotalInfo)
-	        {
-	        	var depotInfo = depotTotalInfo.split("AaBb");
+	        function editUnit(unitTotalInfo) {
+	        	var unitInfo = unitTotalInfo.split("AaBb");
 	            
 	            $("#clientIp").val('<%=clientIp %>');
-	            $("#name").focus().val(depotInfo[1]);
-	            $("#sort").val(depotInfo[2]);
-	            $("#remark").val(depotInfo[3]);
-				$("#address").val(depotInfo[4]);
-				$("#warehousing").val(depotInfo[5]);
-				$("#truckage").val(depotInfo[6]);
 	            
-	            orgDepot = depotInfo[1];
-                $('#depotDlg').dialog('open').dialog('setTitle','<img src="<%=path%>/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑仓库信息');
+	            orgUnit = unitInfo[1];
+                $('#unitDlg').dialog('open').dialog('setTitle','<img src="<%=path%>/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑计量单位');
                 $(".window-mask").css({ width: webW ,height: webH});
-                depotID = depotInfo[0];
+                unitID = unitInfo[0];
                 //焦点在名称输入框==定焦在输入文字后面 
-                $("#name").val("").focus().val(depotInfo[1]);
-                url = '<%=path %>/depot/update.action?depotID=' + depotInfo[0];
+                var name = unitInfo[1];
+				var basicName = name.substring(0, name.indexOf(",")); //基础单位
+				$("#basicName").val(basicName);
+				var otherItem = name.substring(name.indexOf(",")+1);
+				var otherName = otherItem.substring(0,otherItem.indexOf("("));
+				$("#otherName").val(otherName);
+				var lastNum =  otherItem.substring(otherItem.indexOf(":")+1);
+				lastNum = lastNum.replace(")","");
+				$("#otherNum").val(lastNum);
+				$("#unitName").text(basicName);
+                url = '<%=path %>/unit/update.action?unitID=' + unitInfo[0];
 	        }
 	        
 	        //检查名称是否存在 ++ 重名无法提示问题需要跟进
-	        function checkDepotName()
+	        function checkUnitName()
 	        {
 	        	var name = $.trim($("#name").val());
 	        	//表示是否存在 true == 存在 false = 不存在
 	        	var flag = false;
         		//开始ajax名称检验，不能重名
-        		if(name.length > 0 &&( orgDepot.length ==0 || name != orgDepot))
+        		if(name.length > 0 &&( orgUnit.length ==0 || name != orgUnit))
         		{
         			$.ajax({
 						type:"post",
-						url: "<%=path %>/depot/checkIsNameExist.action",
+						url: "<%=path %>/unit/checkIsNameExist.action",
 						dataType: "json",
 						async :  false,
 						data: ({
-							depotID : depotID,
-							name : name
+							unitID : unitID,
+							UName : name
 						}),
-						success: function (tipInfo)
-						{
+						success: function (tipInfo){
 							flag = tipInfo;
 							if(tipInfo)
 							{
-								$.messager.alert('提示','仓库名称已经存在','info');
-								//alert("仓库名称已经存在");
-								//$("#name").val("");
+								$.messager.alert('提示','计量单位名称已经存在','info');
 								return;
 							}
 						},
 						//此处添加错误处理
 			    		error:function()
 			    		{
-			    			$.messager.alert('提示','检查仓库名称是否存在异常，请稍后再试！','error');
+			    			$.messager.alert('提示','检查计量单位名称是否存在异常，请稍后再试！','error');
 							return;
 						}
 					});	
@@ -448,7 +413,7 @@
 			$("#searchBtn").unbind().bind({
 				click:function()
 				{
-					showDepotDetails(1,initPageSize);	
+					showUnitDetails(1,initPageSize);
 					var opts = $("#tableData").datagrid('options');  
 					var pager = $("#tableData").datagrid('getPager'); 
 					opts.pageNumber = 1;  
@@ -461,16 +426,14 @@
 				}
 			});
 			
-			function showDepotDetails(pageNo,pageSize)
+			function showUnitDetails(pageNo,pageSize)
 			{
 				$.ajax({
 					type:"post",
-					url: "<%=path %>/depot/findBy.action",
+					url: "<%=path %>/unit/findBy.action",
 					dataType: "json",
 					data: ({
-						name:$.trim($("#searchName").val()),
-						type: 0,  //仓库
-						remark:$.trim($("#searchRemark").val()),
+						UName:$.trim($("#searchName").val()),
 						pageNo:pageNo,
 						pageSize:pageSize
 					}),
@@ -491,23 +454,15 @@
 			$("#searchResetBtn").unbind().bind({
 				click:function(){
 					$("#searchName").val("");
-					$("#searchRemark").val("");
-					
 					//加载完以后重新初始化
 					$("#searchBtn").click();
 			    }	
 			});
-			
-            //查看单元（设置）
-			$('#setBuilding').click(function () {
-			    var currentRow = $("#tableData").datagrid("getChecked");
-	            if (currentRow.length == 0) {
-	                alert("请选择一条数据再操作！");
-	                return false;
-	            }
-	            parent.addTab(currentRow[0].id + "单元", "<%=path %>/pages/materials/building.jsp?ProjectId=" + currentRow[0].id, "");
 
-            });
+			//单位名称事件
+			$("#basicName").off("keyup").on("keyup", function(){
+				$("#unitName").text($(this).val());
+			});
 		</script>
 	</body>
 </html>

@@ -221,28 +221,27 @@
 			pageSize: 5,
 			pageList: initPageNum,
 			columns:[[
-			  { field: 'Id',width:35,align:"center",checkbox:true},
-			  {field: 'OrganId',width:5, hidden:true},
-	          { title: '单据编号',field: 'BillNo',width:140},
-	          { title: '单据时间 ',field: 'BillTime',width:100},
-	          { title: '合计',field: 'TotalPrice',width:80},
-	          { title: '备注',field: 'Remark',width:100},
-	          { title: '操作',field: 'op',align:"center",width:180,formatter:function(value,rec)
-	         	{
-					var str = '';
-					var rowInfo = rec.Id + 'AaBb' + rec.BillNo+ 'AaBb' + rec.BillTime+ 'AaBb' + rec.Remark
-					+ 'AaBb' + rec.AccountId+ 'AaBb' + rec.AccountName + 'AaBb' + rec.OrganId + 'AaBb' + rec.OrganName 
-					+ 'AaBb' + rec.HandsPersonId + 'AaBb' + rec.HandsPersonName + 'AaBb' + rec.ChangeAmount + 'AaBb' + rec.TotalPrice;
-					if(1 == value)
-					{
-						var orgId =  rec.OrganId ?  rec.OrganId : 0;
-						str += '<a onclick="showAccountHead(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)"><span class="action-show">查看</span></a>';
-						str += '<a onclick="editAccountHead(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)"><span class="action-edit">编辑</span></a>';
-						str += '<a onclick="deleteAccountHead('+ rec.Id  +',' + orgId +',' + rec.TotalPrice +');" style="text-decoration:none;color:black;" href="javascript:void(0)"><span class="action-delete">删除</span></a>';
+				{ field: 'Id',width:35,align:"center",checkbox:true},
+				{ title: '操作',field: 'op',align:"center",width:90,formatter:function(value,rec) {
+						var str = '';
+						var rowInfo = rec.Id + 'AaBb' + rec.BillNo+ 'AaBb' + rec.BillTime+ 'AaBb' + rec.Remark
+							+ 'AaBb' + rec.AccountId+ 'AaBb' + rec.AccountName + 'AaBb' + rec.OrganId + 'AaBb' + rec.OrganName
+							+ 'AaBb' + rec.HandsPersonId + 'AaBb' + rec.HandsPersonName + 'AaBb' + rec.ChangeAmount + 'AaBb' + rec.TotalPrice;
+						if(1 == value)
+						{
+							var orgId =  rec.OrganId ?  rec.OrganId : 0;
+							str += '<img title="查看" src=' + path + '"/js/easyui-1.3.5/themes/icons/list.png" style="cursor: pointer;" onclick="showAccountHead(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
+							str += '<img title="编辑" src=' + path + '"/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editAccountHead(\'' + rowInfo + '\''+',' + rec.Status + ');"/>&nbsp;&nbsp;&nbsp;';
+							str += '<img title="删除" src=' + path + '"/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteAccountHead('+ rec.Id +',' + orgId +',' + rec.TotalPrice + ');"/>';
+						}
+						return str;
 					}
-					return str;
-				}
-	          }
+				},
+				{ field: 'OrganId',width:5, hidden:true},
+				{ title: '单据编号',field: 'BillNo',width:140},
+				{ title: '单据时间 ',field: 'BillTime',width:100},
+				{ title: '合计',field: 'TotalPrice',width:80},
+				{ title: '备注',field: 'Remark',width:100}
 			]],
 			toolbar:[
 				{

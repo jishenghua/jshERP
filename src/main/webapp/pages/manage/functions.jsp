@@ -60,41 +60,47 @@
 	            closed="true" buttons="#dlg-buttons" modal="true" cache="false" collapsible="false" closable="true">
 	        <form id="functionsFM" method="post"  novalidate>
 	            <table>
-	            <tr>
-	            <td>编号</td>
-	            <td style="padding:1px"><input name="Number" id="Number" class="easyui-textbox" style="width: 230px;height: 20px"/></td>
-	            </tr>
-	            <tr>
-	            <td>名称</td>
-	            <td style="padding:1px"><input name="Name" id="Name" class="easyui-validatebox" data-options="required:true,validType:'length[2,20]'" style="width: 230px;height: 20px"/></td>
-	            </tr>
-	            <tr>
-	            <td>上级编号</td>
-	            <td style="padding:1px"><input name="PNumber" id="PNumber" class="easyui-textbox" style="width: 230px;height: 20px"/></td>
-	            </tr>
-	            <tr>
-	            <td>链接</td>
-	            <td style="padding:1px"><input name="URL" id="URL" class="easyui-textbox" style="width: 230px;height: 20px"/></td>
-	            </tr>
-	            <tr>
-	            <td>收缩</td>
-	            <td style="padding:1px"><input name="State" id="State" type="checkbox" style="width: 230px;height: 20px"/></td>
-	            </tr>
-	            <tr>
-	            <td>排序</td>
-	            <td style="padding:1px"><input name="Sort" id="Sort" class="easyui-textbox" style="width: 230px;height: 20px"/></td>
-	            </tr>
-	            <tr>
-	            <td>启用</td>
-	            <td style="padding:1px"><input name="Enabled" id="Enabled" type="checkbox" style="width: 230px;height: 20px"/></td>
-	            </tr>
-	            <tr>
-	            <td>类型</td>
-	            <td style="padding:1px"><select name="Type" id="Type" style="width: 230px;height: 20px">
-	                	<option value="电脑版">电脑版</option>
-	                	<option value="手机版">手机版</option></select>
-	            </td>
-	            </tr>
+					<tr>
+					<td style="width:65px;">编号</td>
+					<td style="padding:5px"><input name="Number" id="Number" class="easyui-textbox" style="width: 230px;height: 20px"/></td>
+					</tr>
+					<tr>
+					<td>名称</td>
+					<td style="padding:5px"><input name="Name" id="Name" class="easyui-validatebox" data-options="required:true,validType:'length[2,20]'" style="width: 230px;height: 20px"/></td>
+					</tr>
+					<tr>
+					<td>上级编号</td>
+					<td style="padding:5px"><input name="PNumber" id="PNumber" class="easyui-textbox" style="width: 230px;height: 20px"/></td>
+					</tr>
+					<tr>
+					<td>链接</td>
+					<td style="padding:5px"><input name="URL" id="URL" class="easyui-textbox" style="width: 230px;height: 20px"/></td>
+					</tr>
+					<tr>
+					<td>排序</td>
+					<td style="padding:5px"><input name="Sort" id="Sort" class="easyui-textbox" style="width: 230px;height: 20px"/></td>
+					</tr>
+					<tr>
+						<td>功能按钮</td>
+						<td style="padding:5px">
+							<input id="PushBtn" name="PushBtn" style="width:230px;" />
+						</td>
+					</tr>
+					<tr>
+						<td>收缩</td>
+						<td style="padding:5px"><input name="State" id="State" type="checkbox" style="width: 230px;height: 20px"/></td>
+					</tr>
+					<tr>
+						<td>启用</td>
+						<td style="padding:5px"><input name="Enabled" id="Enabled" type="checkbox" style="width: 230px;height: 20px"/></td>
+					</tr>
+					<tr>
+						<td>类型</td>
+						<td style="padding:5px"><select name="Type" id="Type" style="width: 230px;height: 20px">
+							<option value="电脑版">电脑版</option>
+							<option value="手机版">手机版</option></select>
+						</td>
+					</tr>
 	            </table>
 	            <input type="hidden" name="clientIp" id="clientIp" value="<%=clientIp %>"/>
 	        </form>
@@ -111,6 +117,7 @@
 				initTableData();
 				ininPager();
 				initForm();
+				bindEvent();
 			});	
 			
 			//防止表单提交重复
@@ -166,7 +173,7 @@
 			         	{
 							var str = '';
 							var rowInfo = rec.Id + 'AaBb' + rec.Number+ 'AaBb' + rec.Name+ 'AaBb' + rec.PNumber+ 'AaBb' + rec.URL
-							+ 'AaBb' + rec.State+ 'AaBb' + rec.Sort+ 'AaBb' + rec.Enabled+ 'AaBb' + rec.Type;
+							+ 'AaBb' + rec.State+ 'AaBb' + rec.Sort+ 'AaBb' + rec.Enabled+ 'AaBb' + rec.Type + 'AaBb' + rec.PushBtn;
         					if(1 == value)
         					{
         						str += '<img src="<%=path%>/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editFunctions(\'' + rowInfo + '\');"/>&nbsp;<a onclick="editFunctions(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
@@ -248,6 +255,17 @@
 				{
 					$.messager.alert('异常处理提示',"分页信息异常 :  " + e.name + ": " + e.message,'error');
 				}
+			}
+
+			//绑定事件
+			function bindEvent(){
+				$('#PushBtn').combobox({
+					url: '<%=path %>/js/pages/manage/pushBtn.json',
+					valueField:'id',
+					textField:'text',
+					panelHeight:120,
+					multiple:true
+				});
 			}
 			
 			//删除供应商信息
@@ -393,6 +411,7 @@
 								Sort : $.trim($("#Sort").val()),
 								Enabled : $("#Enabled").is(':checked'),
 								Type : $.trim($("#Type").val()),
+								PushBtn : $('#PushBtn').combobox('getValues').toString(), //功能按钮
 								clientIp:'<%=clientIp %>'
 							}),
 							success: function (tipInfo)
@@ -437,6 +456,21 @@
 	            $("#Sort").focus().val(functionsInfo[6]);
 	            $("#Enabled").attr("checked",functionsInfo[7]=='true'?true:false);
 	            $("#Type").focus().val(functionsInfo[8]);
+				if(functionsInfo[9] !== "undefined" && functionsInfo[9] !== ""){
+					var arr = functionsInfo[9].split(",");
+					var pushBtnArray = [];
+					for(var i=0;i<arr.length;i++){
+						if(arr[i]){
+							pushBtnArray.push(arr[i]);
+						}
+					}
+					if(pushBtnArray.length){
+						$("#PushBtn").combobox('setValues', pushBtnArray);
+					}
+				}
+				else {
+					$("#PushBtn").combobox('setValues', '');
+				}
 	            
 	            orgFunctions = functionsInfo[2];
                 $('#functionsDlg').dialog('open').dialog('setTitle','<img src="<%=path%>/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑功能信息');

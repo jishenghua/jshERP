@@ -2,13 +2,12 @@
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
 <%
 	String path = request.getContextPath();
-	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 	String clientIp = Tools.getCurrentUserIP();
 %>
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>角色对应应用</title>
+		<title>用户对应客户</title>
 		<meta charset="utf-8">
 		<!-- 指定以IE8的方式来渲染 -->
 		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
@@ -23,18 +22,17 @@
 	</head>
 	<body>
 		<!-- 数据显示table -->
-		<div style="padding-bottom: 10px;">
-			<a id="btnOK" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
+		<div>
+			<a id="btnOK" class="easyui-linkbutton">保存</a>
 		</div>
 		<div>
 		<ul id="tt"></ul>
 		</div>
 
 		<script type="text/javascript">
-		var url_id = getUrlParam('id');  //获取传值id（角色id）
-		var type="RoleAPP";
+		var url_id = getUrlParam('id');  //获取传值id（用户id）
+		var type="UserCustomer";
 		var url;//定义链接地址
-		
 	    function GetNode(ctype) {
 	        var node = $('#tt').tree('getChecked');
 	        var cnodes = '';
@@ -64,7 +62,7 @@
 		$(function () {
 		
 			$('#tt').tree({   
-			   url:'<%=path%>/app/findRoleAPP.action?UBType='+type+'&UBKeyId='+url_id,
+			   url:'<%=path%>/supplier/findUserCustomer.action?UBType='+type+'&UBKeyId='+url_id,
 			   animate:true,
 			   checkbox:true
 			});  
@@ -72,7 +70,7 @@
 			
 	        $("#btnOK").click(	        
 		        function() {
-			        if(!checkRoleAPP())
+			        if(!checkUserDepot())
 					{
 					    url = '<%=path%>/userBusiness/create.action';
 					}
@@ -106,7 +104,7 @@
         });
         
         //检查记录是否存在 
-        function checkRoleAPP()
+        function checkUserDepot()
         {
         	//表示是否存在 true == 存在 false = 不存在
         	var flag = false;
@@ -127,7 +125,7 @@
 				//此处添加错误处理
 	    		error:function()
 	    		{
-	    			$.messager.alert('提示','检查角色对应应用是否存在异常，请稍后再试！','error');
+	    			$.messager.alert('提示','检查用户对应功能是否存在异常，请稍后再试！','error');
 					return;
 				}
 			});	

@@ -1,0 +1,11 @@
+.first-select-unit{
+	display: none;
+}
+
+.price-list {
+	display: none;
+}
+
+.price-list input{
+	width: 120px;
+}

@@ -55,8 +55,6 @@
 .icon-filter{
 	background:url('icons/filter.png') no-repeat center center;
 }
-
-
 .icon-mini-add{
 	background:url('icons/mini_add.png') no-repeat center center;
 }
@@ -92,4 +90,10 @@
 }
 .icon-excel{
 	background:url('icons/receipt-excel.png') no-repeat center center;
+}
+.icon-excel-new{
+	background:url('icons/excel1.png') no-repeat center center;
+}
+.icon-page-excel{
+	background:url('icons/page_excel.png') no-repeat center center;
 }

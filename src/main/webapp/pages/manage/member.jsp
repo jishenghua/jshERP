@@ -7,7 +7,7 @@
 <!DOCTYPE html>
 <html>
   	<head>
-    	<title>供应商信息</title>
+    	<title>会员信息</title>
     	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<!-- 指定以IE8的方式来渲染 -->
 		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
@@ -60,10 +60,10 @@
 		</div>
 		
 		<!-- 数据显示table -->
-		<div id = "tablePanel"	class="easyui-panel" style="padding:1px;top:300px;" title="供应商信息列表" iconCls="icon-list" collapsible="true" closable="false">
+		<div id = "tablePanel"	class="easyui-panel" style="padding:1px;top:300px;" title="会员信息列表" iconCls="icon-list" collapsible="true" closable="false">
 			<table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 		</div>
-	    <div id="supplierDlg" class="easyui-dialog" style="width:580px;padding:10px 20px"
+	    <div id="supplierDlg" class="easyui-dialog" style="width:600px;padding:10px 20px"
 	            closed="true" buttons="#dlg-buttons" modal="true" collapsible="false" closable="true">
 			<form id="supplierFM">
 				<table>
@@ -159,7 +159,7 @@
 
 		<!-- 导入excel表格 -->
 		<div id="importExcelDlg" style="padding:10px 20px">
-			<form id="importExcelFM" method="post" enctype="multipart/form-data" action="<%=path%>/supplier/importExcelVendor.action">
+			<form id="importExcelFM" method="post" enctype="multipart/form-data" action="<%=path%>/supplier/importExcelMember.action">
 				<div class="fitem" style="padding:5px">
 					<label>文件名称&nbsp;&nbsp;</label>
 					<input name="supplierFile" id="supplierFile" type="file" style="width: 230px;height: 20px"/>
@@ -181,6 +181,5 @@
 				</div>
 			</form>
 		</div>
-
 	</body>
 </html>

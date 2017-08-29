@@ -85,6 +85,29 @@ function getUrlParam(name) {
 }
 
 /**
+ * 获取按钮的权限
+ */
+function getBtnStr() {
+	var funId = window.parent.window.funId; //功能id
+	var btnStrList = window.parent.window.winBtnStrList; //按钮功能列表 JSON字符串
+	var btnEnableList =""; //按钮列表
+	if(funId && btnStrList) {
+		btnStrList = JSON.parse(btnStrList);
+		for(var i=0; i<btnStrList.length; i++){
+			if(btnStrList[i].funId ==funId){
+				if(btnStrList[i].btnStr) {
+					btnEnableList = btnEnableList + btnStrList[i].btnStr + ",";
+				}
+			}
+		}
+		if(btnEnableList) {
+			btnEnableList = btnEnableList.substring(0,btnEnableList.length-1);
+		}
+	}
+	return btnEnableList;
+}
+
+/**
  * js获取当前时间， 格式“yyyy-MM-dd HH:MM:SS”
  */
 function getNowFormatDateTime() {
@@ -93,15 +116,27 @@ function getNowFormatDateTime() {
 	var seperator2 = ":";
 	var month = date.getMonth() + 1;
 	var strDate = date.getDate();
+	var strHours = date.getHours();
+	var strMinutes = date.getMinutes();
+	var strSeconds = date.getSeconds();
 	if (month >= 1 && month <= 9) {
 		month = "0" + month;
 	}
 	if (strDate >= 0 && strDate <= 9) {
 		strDate = "0" + strDate;
 	}
+	if (strHours >= 0 && strHours <= 9) {
+		strHours = "0" + strHours;
+	}
+	if (strMinutes >= 0 && strMinutes <= 9) {
+		strMinutes = "0" + strMinutes;
+	}
+	if (strSeconds >= 0 && strSeconds <= 9) {
+		strSeconds = "0" + strSeconds;
+	}
 	var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
-		+ " " + date.getHours() + seperator2 + date.getMinutes()
-		+ seperator2 + date.getSeconds();
+		+ " " + strHours + seperator2 + strMinutes
+		+ seperator2 + strSeconds;
 	return currentdate;
 }
 
@@ -139,6 +174,23 @@ function getNowFormatDate() {
 }
 
 /**
+ * js获取当前时间， 格式“yyyyMMdd”
+ */
+function getNowFormatDateTwo() {
+	var date = new Date();
+	var month = date.getMonth() + 1;
+	var strDate = date.getDate();
+	if (month >= 1 && month <= 9) {
+		month = "0" + month;
+	}
+	if (strDate >= 0 && strDate <= 9) {
+		strDate = "0" + strDate;
+	}
+	var currentdate = date.getFullYear() + month + strDate;
+	return currentdate;
+}
+
+/**
  * js根据时间生成编号， 格式“yyyyMMddHHMMSS”
  */
 function getNowFormatDateNum() {
@@ -156,4 +208,8 @@ function getNowFormatDateNum() {
 	var currentdate = date.getFullYear() + month + strDate + date.getHours()
 		+ date.getMinutes() + date.getSeconds();
 	return currentdate;
+}
+
+function encode(name){
+	return encodeURI(encodeURI(name));
 }

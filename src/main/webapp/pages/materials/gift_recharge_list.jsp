@@ -15,6 +15,7 @@
 		<link rel="stylesheet" type="text/css" href="<%=path %>/js/easyui-1.3.5/themes/default/easyui.css"/>
 		<link rel="stylesheet" type="text/css" href="<%=path %>/js/easyui-1.3.5/themes/icon.css"/>
 		<link type="text/css" rel="stylesheet" href="<%=path %>/css/common.css" />
+		<link type="text/css" rel="stylesheet" href="<%=path %>/css/in_out.css" />
 		<script src="<%=path %>/js/jquery-1.8.0.min.js"></script>
 		<script src="<%=path %>/js/easyui-1.3.5/jquery.easyui.min.js"></script>
 		<script src="<%=path %>/js/easyui-1.3.5/locale/easyui-lang-zh_CN.js"></script>

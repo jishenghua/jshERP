@@ -171,9 +171,9 @@ function tabCloseEven() {
         return false;
     });
 
-    //退出
-    $("#mm-exit").click(function () {
-        $('#mm').menu('hide');
+    //显示版权信息
+    $("#mm-version").click(function () {
+        window.open("https://gitee.com/jishenghua/JSH_ERP");
     })
 }
 

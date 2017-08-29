@@ -304,7 +304,6 @@
 					url: "<%=path %>/depotHead/findByMonth.action",
 					dataType: "json",
 					data: ({
-						ProjectId: $.trim($("#searchProjectId").val()),
 						MonthTime:$("#searchMonth").val()
 					}),
 					success: function (res)
@@ -364,8 +363,8 @@
 												{
 													if(data && data.totalCount) {
 														var count = data.totalCount.toString();
-														if(count.lastIndexOf('.')>-1) {
-															count = count.substring(0, count.lastIndexOf('.') + 3);
+														if(count.lastIndexOf('.')>-1){
+															count = count.substring(0,count.lastIndexOf('.')+3);
 														}
 														$("#searchPanel .total-count").text("本月合计金额:" + count + "元");//本月合计金额
 													}

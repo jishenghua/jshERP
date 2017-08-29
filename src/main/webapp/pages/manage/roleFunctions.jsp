@@ -23,8 +23,8 @@
 	</head>
 	<body>
 		<!-- 数据显示table -->
-		<div>
-			<a id="btnOK" class="easyui-linkbutton">保存</a>
+		<div style="padding-bottom: 10px;">
+			<a id="btnOK" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
 		</div>
 		<div>
 		<ul id="tt"></ul>
@@ -63,13 +63,12 @@
 		
 		$(function () {
 		
-			$('#tt').tree({   
+			$('#tt').tree({
 			   url:'<%=path%>/functions/findRoleFunctions.action?UBType='+type+'&UBKeyId='+url_id,
 			   animate:true,
 			   checkbox:true
-			});  
-			
-			
+			});
+
 	        $("#btnOK").click(	        
 		        function() {
 			        if(!checkRoleFunctions())

@@ -26,14 +26,17 @@
 		<div id = "searchPanel"	class="easyui-panel" style="padding:10px;" title="查询窗口" iconCls="icon-search" collapsible="true" closable="false">
 			<table id="searchTable">
 				<tr>
+					<td>名称：</td>
+					<td>
+						<input name="searchName" id="searchName" style="width:100px;"/>
+					</td>
+					<td>&nbsp;</td>
 			    	<td>类别：</td>
 					<td>
 						<select name="searchParentId_f" id="searchParentId_f"  style="width:100px;"></select>
 						<select name="searchParentId_s" id="searchParentId_s"  style="width:100px;"></select>
 						<select name="searchParentId_t" id="searchParentId_t"  style="width:100px;"></select>
 					</td>
-					<td>&nbsp;</td>
-					<td>&nbsp;</td>
 					<td>&nbsp;</td>
 					<td>
 						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchBtn">查询</a>&nbsp;&nbsp;
@@ -277,6 +280,7 @@
 								addMaterialCategory();
 							}
 						},
+						'-',
 						{
 							id:'deleteMaterialCategory',
 							text:'删除',
@@ -309,7 +313,7 @@
 			        $("#saveMaterialCategory").click();
 			    }
 			    //搜索按钮添加快捷键
-			    if(k == "13"&&(obj.id=="searchParentId"))
+			    if(k == "13"&&(obj.id=="searchParentId"||(obj.id=="searchName")))
 			    {  
 			        $("#searchBtn").click();
 			    }  
@@ -570,6 +574,7 @@
 					url: "<%=path %>/materialCategory/findBy.action",
 					dataType: "json",
 					data: ({
+						Name: $.trim($("#searchName").val()),
 						ParentId:parent,
 						pageNo:pageNo,
 						pageSize:pageSize

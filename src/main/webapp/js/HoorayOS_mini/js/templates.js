@@ -38,7 +38,7 @@ var windowTemp = template(
 					'<a class="ha-revert" btn="revert" href="javascript:;" title="还原" <% if(!isopenmax){ %>style="display:none"<% } %>><b class="revert-b"></b><b class="revert-t"></b></a>'+
 				'<% } %>'+
 				'<% if(istitlebarFullscreen){ %>'+
-					'<a class="ha-fullscreen" btn="fullscreen" href="javascript:;" title="全屏">+</a>'+
+					'<a class="ha-fullscreen" btn="fullscreen" href="javascript:;" title="全屏" style="display: none;">+</a>'+
 				'<% } %>'+
 				'<a class="ha-close" btn="close" href="javascript:;" title="关闭">×</a>'+
 			'</div>'+

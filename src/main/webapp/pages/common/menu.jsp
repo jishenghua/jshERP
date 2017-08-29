@@ -20,7 +20,8 @@
 		<script type="text/javascript" src="<%=path %>/js/easyui-1.3.5/outlook.js"></script>
 		<script type="text/javascript" src="<%=path %>/js/common/common.js"></script>
     <script type="text/javascript">
-        function NewTab(name, url) {
+        function NewTab(name, url, funId) {
+			window.funId = funId;
             addTab(name, url, '');
         }
     </script>
@@ -39,6 +40,7 @@ var kid=null;
 var lei=null;
 var last="";
 var functions="";
+var btnStrList = []; //按钮权限列表
 
 //初始化界面
 $(function()
@@ -86,25 +88,30 @@ function initSystemData(kid,type)
 	
 }
 //初始化页面选项卡
-function initSelectInfo(lei)
-{
-	
-	if(userBusinessList !=null)
-	{
-		if(userBusinessList.length>0)
-		{
+function initSelectInfo(lei) {
+	if(userBusinessList !=null) {
+		if(userBusinessList.length>0) {
 			options =userBusinessList[0].value;
-			if(options!="")
-			{
+			if(options!="") {
 				options=options.substring(1,options.length-1);
 			}
-			if(lei==1)
-			{
+			//app内列表赋值
+			if(lei==1) {
 				last+=options+'][';
 			}
-			else if(lei==2)
-			{
+			//功能菜单列表
+			else if(lei==2) {
 				functions+=options+'][';
+			}
+			//按钮权限列表
+			else if(lei==3) {
+				var btnStr =userBusinessList[0].btnStr;
+				if(btnStr!=null){
+					btnStr = JSON.parse(btnStr);
+					for(var j=0; j<btnStr.length; j++){
+						btnStrList.push(btnStr[j]);
+					}
+				}
 			}
 		}
 	}
@@ -113,41 +120,42 @@ function initSelectInfo(lei)
 //初始化页面
 function initSelect()
 {
-	  var arr = options.split('][');
-	  for(var i in arr){
-	     
-	     initSystemData(arr[i],'RoleAPP'); //根据角色找app
-	     initSelectInfo(1);
-	     
-	     initSystemData(arr[i],'RoleFunctions'); //根据角色找functions
-	     initSelectInfo(2);
-	  }
-	  if(last!="")
-	  {
-		  last="["+last.substring(0,last.length-1);
-		  //alert(last);
-		  
-		  if(last.indexOf("["+pageid+"]")!=-1)
-	      {
-			  //alert("存在");
-			  $("#west").show();
-			  $("#mainPanle").show();
-			  $("#mm").show();
-	      }
-		  else
-		  {
-			  //alert("不存在");
-			  $("div").remove();
-			  $("<div style='width:100%;text-align:center;padding-top:20px'><b>抱歉，您没有该权限！</b></div>").appendTo("body");
-		  }
-		  
-	  }
-	  if(functions!="")
-	  {
-		  functions="["+functions.substring(0,functions.length-1);
-		  //alert(functions);
-	  }
-	  
+	var arr = options.split('][');
+	for(var i in arr){
+		initSystemData(arr[i],'RoleAPP'); //根据角色找app
+		initSelectInfo(1);//app内列表赋值
+
+		initSystemData(arr[i],'RoleFunctions'); //根据角色找functions
+		initSelectInfo(2); //功能菜单列表
+		initSelectInfo(3); //查询角色对应的按钮权限
+	}
+	if(last!="")
+	{
+		last="["+last.substring(0,last.length-1);
+		//alert(last);
+
+		if(last.indexOf("["+pageid+"]")!=-1)
+		{
+			//alert("存在");
+			$("#west").show();
+			$("#mainPanle").show();
+			$("#mm").show();
+		}
+		else
+		{
+			//alert("不存在");
+			$("div").remove();
+			$("<div style='width:100%;text-align:center;padding-top:20px'><b>抱歉，您没有该权限！</b></div>").appendTo("body");
+		}
+	}
+	if(functions!="")
+	{
+		functions="["+functions.substring(0,functions.length-1);
+		//alert(functions);
+	}
+	if(btnStrList.length>0){
+		window.winBtnStrList = JSON.stringify(btnStrList); //将按钮功能列表存为全局变量
+	}
 }
 
 //测试自定义hql
@@ -238,8 +246,8 @@ function ceshi()
         </div>
         <div class="menu-sep">
         </div>
-        <div id="mm-exit">
-                     退出
+        <div id="mm-version">
+                     jshERP官网
         </div>
     </div>
 </body>

@@ -34,6 +34,7 @@
 					<td>
 						<select name="searchType" id="searchType"  style="width:70px;">
 						<option value="">全部</option>
+						<option value="业务员">业务员</option>
 						<option value="仓管员">仓管员</option>
 						<option value="财务员">财务员</option>
 						</select>
@@ -63,6 +64,7 @@
 	            <td style="padding:5px">
 	            <select name="Type" id="Type"  style="width:230px;">
 						<option value="">请选择</option>
+						<option value="业务员">业务员</option>
 						<option value="仓管员">仓管员</option>
 						<option value="财务员">财务员</option>
 						</select>

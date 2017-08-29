@@ -46,7 +46,8 @@
 						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchBtn">查询</a>&nbsp;&nbsp;
 						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-redo" id="searchResetBtn">重置</a>&nbsp;&nbsp;
 						<a id="btnSetRole" class='easyui-linkbutton iframe iframe_LargeForm' href='#' title='分配角色'>分配角色</a>&nbsp;&nbsp;
-						<a id="btnSetDepart" class='easyui-linkbutton iframe iframe_LargeForm' href='#' title='分配仓库'>分配仓库</a>
+						<a id="btnSetDepart" class='easyui-linkbutton iframe iframe_LargeForm' href='#' title='分配仓库'>分配仓库</a>&nbsp;&nbsp;
+						<a id="btnSetCustomer" class='easyui-linkbutton iframe iframe_LargeForm' href='#' title='分配客户'>分配客户</a>
 					</td>
 				</tr>
 			</table>
@@ -92,32 +93,11 @@
 	            <input type="hidden" name="clientIp" id="clientIp" value="<%=clientIp %>"/>
 	        </form>
 	    </div>
-	    <!--
-	    <div id="userLoginDlg" class="easyui-dialog" style="width:400px;height:280px;padding:10px 20px"
-            closed="true" buttons="#logindlg-buttons" modal="true" iconCls="icon-save" collapsible="false" closable="true">
-            	<div class="fitem" style="padding:5px">
-	                <label>登录名称&nbsp;&nbsp;</label>
-	                <input name="loginname" id="loginname" rows="3" cols="3" style="width: 230px;height: 20px"/>
-	            </div>	
-            	<div class="fitem" style="padding:5px">
-	                <label>登录密码&nbsp;&nbsp;</label>
-	                <input name="loginpwd" id="loginpwd" rows="3" cols="3" style="width: 230px;height: 20px"/>
-	            </div>	
-            	<div class="fitem" style="padding:5px">
-	                <label>确定密码&nbsp;&nbsp;</label>
-	                <input name="confirmloginpwd" id="confirmloginpwd" rows="3" cols="3" style="width: 230px;height: 20px"/>
-	            </div>	
-       	</div>
-	    <div id="logindlg-buttons">
-	        <a href="javascript:void(0)" id="saveloginame" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
-	        <a href="javascript:void(0)" id="canceloginame" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#userLoginDlg').dialog('close')">取消</a>
-	    </div>
-	    -->
 	    <div id="dlg-buttons">
+			<a href="javascript:void(0)" id="resetPwd" class="easyui-linkbutton" iconCls="icon-redo">重置密码</a>
 	        <a href="javascript:void(0)" id="saveusername" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
 	        <a href="javascript:void(0)" id="cancelusername" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#userDlg').dialog('close')">取消</a>
 	    </div>
-	    
 		<script type="text/javascript">
 			//初始化界面
 			$(function()
@@ -410,6 +390,35 @@
 	            userID = 0;
 	            url = '<%=path %>/user/create.action';
 			}
+
+			//重置用户密码
+			$("#resetPwd").off("click").on("click",function() {
+				$.messager.confirm('重置用户密码', '确定重置该用户的密码为123456吗？', function (r) {
+					if (r) {
+						$.ajax({
+							type: "post",
+							url: "<%=path %>/user/resetPwd.action",
+							dataType: "json",
+							data: ({
+								userID: userID
+							}),
+							success: function (res) {
+								if (res) {
+									var flag = res - 0;
+									if (flag) {
+										$.messager.alert('提示', '重置密码成功', 'info');
+									}
+								}
+							},
+							//此处添加错误处理
+							error: function () {
+								$.messager.alert('提示', '重置密码失败，请稍后再试！', 'error');
+								return;
+							}
+						});
+					}
+				});
+			});
 			
 			//保存用户信息
 			$("#saveusername").unbind().bind({
@@ -604,6 +613,16 @@
 	            }
 	            this.href = "<%=path %>/pages/user/userDepot.jsp?id=" + currentRow.id;
             });
+
+			//分配客户
+			$('#btnSetCustomer').click(function () {
+				var currentRow = $("#tableData").datagrid("getSelected");
+				if (currentRow == null) {
+					alert("请选择一条数据再操作！");
+					return false;
+				}
+				this.href = "<%=path %>/pages/user/userCustomer.jsp?id=" + currentRow.id;
+			});
 		</script>
 	</body>
 </html>

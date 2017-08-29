@@ -31,7 +31,7 @@
 				<tr>
 					<td>角色名称：</td>
 					<td>
-						<input type="text" name="searchName" id="searchName"  style="width:230px;"/>
+						<input type="text" name="searchName" id="searchName"  style="width:150px;"/>
 					</td>
 					<td>&nbsp;</td>
 					<td>&nbsp;</td>
@@ -40,7 +40,8 @@
 						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchBtn">查询</a>&nbsp;&nbsp;
 						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-redo" id="searchResetBtn">重置</a>&nbsp;&nbsp;
 						<a id="btnSetApp" class='easyui-linkbutton iframe iframe_LargeForm' href='#' title='分配应用'>分配应用</a>&nbsp;&nbsp;
-						<a id="btnSetFunctions" class='easyui-linkbutton iframe iframe_LargeForm' href='#' title='分配功能'>分配功能</a>
+						<a id="btnSetFunctions" class='easyui-linkbutton iframe iframe_LargeForm' href='#' title='分配功能'>分配功能</a>&nbsp;&nbsp;
+						<a id="btnSetPushBtn" class='easyui-linkbutton iframe iframe_LargeForm' href='#' title='分配按钮'>分配按钮</a>
 					</td>
 				</tr>
 			</table>
@@ -510,6 +511,16 @@
 	            }
 	            this.href = "<%=path %>/pages/manage/roleFunctions.jsp?id=" + currentRow.Id;
             });
+
+			//分配按钮
+			$('#btnSetPushBtn').click(function () {
+				var currentRow = $("#tableData").datagrid("getSelected");
+				if (currentRow == null) {
+					alert("请选择一条数据再操作！");
+					return false;
+				}
+				this.href = "<%=path %>/pages/manage/rolePushBtn.jsp?id=" + currentRow.Id;
+			});
 		</script>
 	</body>
 </html>
