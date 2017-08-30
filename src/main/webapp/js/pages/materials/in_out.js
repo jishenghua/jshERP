@@ -1506,7 +1506,7 @@
 	    $(".window-mask").css({ width: webW ,height: webH});
 	    depotHeadID = depotHeadInfo[0];
 
-		if(listSubType === "零售" ){
+		if(listSubType == "零售"){
 			var option = "";
 			if(depotHeadInfo[17] === "预付款"){
 				option = '<option value="预付款">预付款</option>';
@@ -1536,6 +1536,24 @@
 			$("#AccountId").val("many"); //下拉框选中多账户
 			var accountArr = depotHeadInfo[22].split(",");
 			var accountMoneyArr = depotHeadInfo[23].split(",");
+
+			if(listSubType == "零售" || listSubType == "零售退货") {
+				var manyAccountMoney = 0; //多账户合计-零售
+				for (var j = 0; j < accountArr.length; j++) {
+					if (accountList != null) {
+						for (var i = 0; i < accountList.length; i++) {
+							var account = accountList[i];
+							if (accountArr[j] == account.id) {
+								manyAccountMoney += accountMoneyArr[j] - 0; //多账户合计-零售
+							}
+						}
+					}
+				}
+				$("#getAmount").val(manyAccountMoney); //收款金额、付款金额
+				var changeAmount = $("#ChangeAmount").val()-0;
+				$("#backAmount").val((manyAccountMoney-changeAmount).toFixed(2)); //找零
+			}
+
 			$("#AccountId").attr("data-accountArr", JSON.stringify(accountArr)).attr("data-accountMoneyArr", JSON.stringify(accountMoneyArr));  //json数据存储
 			$(".many-account-ico").show(); //显示多账户的ico图标
 		}
@@ -1556,6 +1574,7 @@
 	//查看信息
 	function showDepotHead(depotHeadTotalInfo){
 		var depotHeadInfo = depotHeadTotalInfo.split("AaBb");
+		var manyAccountMoney = 0; //多账户合计-零售
 	    $("#ProjectIdShow").text(depotHeadInfo[10]);
 	    $("#NumberShow").text(depotHeadInfo[2]);
 	    $("#OperTimeShow").text(depotHeadInfo[4]);
@@ -1574,6 +1593,7 @@
 						var account = accountList[i];
 						if(accountArr[j] == account.id) {
 							accountIdShow = accountIdShow + account.name + "(" + accountMoneyArr[j] +"元) ";
+							manyAccountMoney += accountMoneyArr[j]-0; //多账户合计-零售
 						}
 					}
 				}
@@ -1616,10 +1636,11 @@
 	    depotHeadID = depotHeadInfo[0];
 	    initTableData_material_show(TotalPrice); //商品列表-查看状态
 
-		//零售单据修改收款时，自动计算找零
-		if(listSubType == "零售"){
-			$("#depotHeadDlgShow .get-amount-show").text($("#depotHeadDlgShow .change-amount-show").text());
-			$("#depotHeadDlgShow .back-amount-show").text(0);
+		//零售单据展示数据
+		if(listSubType == "零售" || listSubType == "零售退货"){
+			var changeAccount = $("#depotHeadDlgShow .change-amount-show").text() -0;
+			$("#depotHeadDlgShow .get-amount-show").text((manyAccountMoney).toFixed(2));
+			$("#depotHeadDlgShow .back-amount-show").text((manyAccountMoney -changeAccount).toFixed(2));
 		}
 		if(listSubType === "销售" || listSubType === "销售退货"){
 			if(depotHeadInfo[18]){
@@ -2100,7 +2121,14 @@
 				if(accountArr.length && accountMoneyArr.length) {
 					$("#AccountId").attr("data-accountArr",JSON.stringify(accountArr)).attr("data-accountMoneyArr",JSON.stringify(accountMoneyArr));  //json数据存储
 				}
-				$("#ChangeAmount").val(accountMoneyTotal); //给付款或者收款金额赋值
+				if(listSubType==="零售" || listSubType==="零售退货") {
+					$("#getAmount").val(accountMoneyTotal); //给付款或者收款金额赋值
+					var backAmount = $("#getAmount").val() - $("#ChangeAmount").val();
+					$("#backAmount").val((backAmount - 0).toFixed(2)); //计算找零金额
+				}
+				else {
+					$("#ChangeAmount").val(accountMoneyTotal); //给付款或者收款金额赋值
+				}
 				$("#Debt").val((discountLastMoneyNum-accountMoneyTotal).toFixed(2)); //本次欠款
 				$("#depotHeadAccountDlg").dialog('close');
 			});
@@ -2113,7 +2141,12 @@
 				else {
 					$("#depotHeadAccountDlg").dialog('close');
 					$("#AccountId").val("").removeAttr("data-accountArr").removeAttr("data-accountMoneyArr"); //将下拉置空并把缓存参数清空
-					$("#ChangeAmount").removeProp("readonly","readonly");
+					if(listSubType==="零售" || listSubType==="零售退货"){
+						$("#ChangeAmount").prop("readonly","readonly");
+					}
+					else {
+						$("#ChangeAmount").removeProp("readonly","readonly");
+					}
 					$(".many-account-ico").hide(); //隐藏多账户小图标
 				}
 			}
@@ -2137,7 +2170,12 @@
 			}
 			else{
 				$(this).removeAttr("data-accountArr").removeAttr("data-accountMoneyArr"); //将下拉置空并把缓存参数清空
-				$("#ChangeAmount").removeProp("readonly","readonly");
+				if(listSubType==="零售" || listSubType==="零售退货"){
+					$("#ChangeAmount").prop("readonly","readonly");
+				}
+				else {
+					$("#ChangeAmount").removeProp("readonly","readonly");
+				}
 				$(".many-account-ico").hide(); //隐藏多账户小图标
 			}
 		});
@@ -2155,7 +2193,12 @@
 				$(this).find(".account-id-dlg").val(accountArr[index]);
 				$(this).find(".account-money-dlg").val(accountMoneyArr[index]);
 			});
-			$("#accountMoneyTotalDlg").text($("#ChangeAmount").val());
+			if(listSubType==="零售" || listSubType==="零售退货") {
+				$("#accountMoneyTotalDlg").text($("#getAmount").val());
+			}
+			else {
+				$("#accountMoneyTotalDlg").text($("#ChangeAmount").val());
+			}
 		});
 
 		//点击采购费用、销售费用的事件
