@@ -13,6 +13,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
     	<link rel="shortcut icon" href="<%=path%>/images/favicon.ico" type="image/x-icon" />
     	<script type="text/javascript" src="<%=path %>/js/jquery-1.8.0.min.js"></script>
+		<script type="text/javascript" src="<%=path %>/js/print/print.js"></script>
 		<link rel="stylesheet" type="text/css" href="<%=path %>/js/easyui-1.3.5/themes/default/easyui.css"/>
 		<link rel="stylesheet" type="text/css" href="<%=path %>/js/easyui-1.3.5/themes/icon.css"/>
 		<link type="text/css" rel="stylesheet" href="<%=path %>/css/common.css" />
@@ -45,7 +46,8 @@
 					<td>&nbsp;</td>
 					<td>
 						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchBtn">查询</a>
-						&nbsp;&nbsp;<span class="total-count"></span>
+						&nbsp;&nbsp;
+						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-print" id="printBtn">打印</a>
 					</td>
 				</tr>
 			</table>
@@ -76,6 +78,7 @@
 				initTableData();
 				ininPager();
 				search();
+				print();
 			});	
 			
 
@@ -304,7 +307,13 @@
 						return;
 					}
 				});
-			}			
+			}
+			//报表打印
+			function print() {
+				$("#printBtn").off("click").on("click",function(){
+					CreateFormPage('打印报表', $('#tableData'));
+				});
+			}
 		</script>
 	</body>
 </html>
