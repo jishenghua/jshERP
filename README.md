@@ -38,13 +38,17 @@
 * 本系统100%开源，遵守Apache2.0协议
 
 #系统美图
-* 进销存模块
-![输入图片说明](https://gitee.com/uploads/images/2017/0108/150544_853dcc2e_852955.png "进销存模块")
-* 报表查询模块
-![输入图片说明](https://gitee.com/uploads/images/2017/0111/001730_0df99d28_852955.png "报表查询模块")
-* 基础数据模块
-![输入图片说明](https://gitee.com/uploads/images/2017/0108/150646_a7cbb9c9_852955.png "基础数据模块")
-* 系统管理模块
-![输入图片说明](https://gitee.com/uploads/images/2017/0108/150703_46711f40_852955.png "系统管理模块")
-* 零售出库模块
-![输入图片说明](https://gitee.com/uploads/images/2017/0623/222506_5a214201_852955.png "零售出库模块")
+* 零售管理
+![输入图片说明](https://git.oschina.net/uploads/images/2017/0903/232448_b4494aa1_852955.png "零售管理.png")
+* 入库管理
+![输入图片说明](https://git.oschina.net/uploads/images/2017/0903/232517_28aa442d_852955.png "入库管理.png")
+* 出库管理
+![输入图片说明](https://git.oschina.net/uploads/images/2017/0903/232535_855b77f0_852955.png "出库管理.png")
+* 财务管理
+![输入图片说明](https://git.oschina.net/uploads/images/2017/0903/232753_f048735c_852955.png "财务管理.png")
+* 报表查询
+![输入图片说明](https://git.oschina.net/uploads/images/2017/0903/232816_ea241609_852955.png "报表查询.png")
+* 基础数据
+![输入图片说明](https://git.oschina.net/uploads/images/2017/0903/232833_74725400_852955.png "基础数据.png")
+* 系统管理
+![输入图片说明](https://git.oschina.net/uploads/images/2017/0903/232851_57fcb79a_852955.png "系统管理.png")
