@@ -3,9 +3,15 @@
 function CreateFormPage(strPrintName, printDatagrid) {
     var beginDate= $("#searchBeginTime").val();
     var endDate= $("#searchEndTime").val();
-    var tableString = '<div class="div-title">上海某某某某有限责任公司\n</div>' +
-        '\n<div class="div-time">日期：' + beginDate + ' 至 ' + endDate + ' \n</div>' +
-        '\n<table cellspacing="0" class="pb">';
+    var getMonth= $("#searchMonth").val();
+    var tableString = '<div class="div-title">上海某某某某有限责任公司\n</div>';
+        if(beginDate && endDate) {
+            tableString+='\n<div class="div-time">日期：' + beginDate + ' 至 ' + endDate + ' \n</div>';
+        }
+        if(getMonth) {
+            tableString += '\n<div class="div-time">月份：' + getMonth + ' \n</div>';
+        }
+        tableString+='\n<table cellspacing="0" class="pb">';
     var frozenColumns = printDatagrid.datagrid("options").frozenColumns;  // 得到frozenColumns对象
     var columns = printDatagrid.datagrid("options").columns;    // 得到columns对象
     var nameList = '';
