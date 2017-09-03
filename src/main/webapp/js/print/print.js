@@ -4,7 +4,9 @@ function CreateFormPage(strPrintName, printDatagrid) {
     var beginDate= $("#searchBeginTime").val();
     var endDate= $("#searchEndTime").val();
     var getMonth= $("#searchMonth").val();
-    var tableString = '<div class="div-title">上海某某某某有限责任公司\n</div>';
+    var listTitle = $("#tablePanel").prev().text();
+    listTitle = listTitle.replace("列表","");
+    var tableString = '<div class="div-title">上海某某某某有限责任公司' + listTitle + '\n</div>';
         if(beginDate && endDate) {
             tableString+='\n<div class="div-time">日期：' + beginDate + ' 至 ' + endDate + ' \n</div>';
         }
