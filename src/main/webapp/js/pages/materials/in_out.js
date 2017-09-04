@@ -1639,8 +1639,14 @@
 		//零售单据展示数据
 		if(listSubType == "零售" || listSubType == "零售退货"){
 			var changeAccount = $("#depotHeadDlgShow .change-amount-show").text() -0;
-			$("#depotHeadDlgShow .get-amount-show").text((manyAccountMoney).toFixed(2));
-			$("#depotHeadDlgShow .back-amount-show").text((manyAccountMoney -changeAccount).toFixed(2));
+			if(manyAccountMoney!==0){
+				$("#depotHeadDlgShow .get-amount-show").text((manyAccountMoney).toFixed(2));
+				$("#depotHeadDlgShow .back-amount-show").text((manyAccountMoney -changeAccount).toFixed(2));
+			}
+			else {
+				$("#depotHeadDlgShow .get-amount-show").text((changeAccount).toFixed(2));
+				$("#depotHeadDlgShow .back-amount-show").text(0);
+			}
 		}
 		if(listSubType === "销售" || listSubType === "销售退货"){
 			if(depotHeadInfo[18]){
@@ -1791,6 +1797,10 @@
 					else if(listTitle === "零售出库列表"){
 						if(!$('#AccountId').val()){
 							$.messager.alert('提示','请选择收款账户！','warning');
+							return;
+						}
+						if($("#backAmount").val()-0 <0){
+							$.messager.alert('提示','找零金额不能小于0！','warning');
 							return;
 						}
 					}
