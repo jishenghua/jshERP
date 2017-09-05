@@ -174,9 +174,6 @@
 					type:"post",
 					url: "<%=path %>/depotHead/findGiftReport.action",
 					dataType: "json",
-					data: ({
-						ProjectId: searchGiftId
-					}),
 					success: function (res) {
 						var HeadIds = res.HeadIds;
 						if(HeadIds) {

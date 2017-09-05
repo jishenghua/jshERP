@@ -97,16 +97,16 @@ public class DepotItemDAO extends BaseDAO<DepotItem> implements DepotItemIDAO
 		//多表联查,多表连查，此处用到了createSQLQuery，可以随便写sql语句，很方便
 		Query query;
 		StringBuffer queryString = new StringBuffer();
-		queryString.append("select sum(OperNumber) as OperNumber from jsh_depotitem,jsh_depothead  where jsh_depotitem.HeaderId = jsh_depothead.id and SubType='" + subType +"'");
+		queryString.append("select sum(OperNumber) as OperNumber from jsh_depotitem,jsh_depothead  where jsh_depotitem.HeaderId = jsh_depothead.id and jsh_depothead.SubType='" + subType +"'");
 		if(ProjectId!=null) {
 			if(type.equals("in")){
-				queryString.append(" and AllocationProjectId='" + ProjectId +"'"); //礼品充值时
+				queryString.append(" and jsh_depotitem.AnotherDepotId='" + ProjectId +"'"); //礼品充值时
 			}
 			else if(type.equals("out")){
-				queryString.append(" and  DepotId='" + ProjectId +"'");
+				queryString.append(" and  jsh_depotitem.DepotId='" + ProjectId +"'");
 			}
 		}
-		queryString.append(" and MaterialId ="+ MId);
+		queryString.append(" and jsh_depotitem.MaterialId ="+ MId);
 		query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
 		pageUtil.setTotalCount(query.list().size());
 		pageUtil.setPageList(query.list());

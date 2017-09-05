@@ -723,9 +723,6 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
 
 	private Map<String,Object> getConditionHead_Gift_In() {
 		Map<String,Object> condition = new HashMap<String,Object>();
-		if(model.getProjectId()!=null) {
-			condition.put("AllocationProjectId_n_eq", model.getProjectId());
-		}
 		return condition;
 	}
 
