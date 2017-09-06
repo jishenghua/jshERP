@@ -3,7 +3,7 @@
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-	String clientIp = Tools.getCurrentUserIP();
+	String clientIp = Tools.getLocalIp(request);
 	String type = request.getParameter("type");
 	String location = "首页";
 	if(null != type)

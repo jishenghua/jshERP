@@ -2,7 +2,7 @@
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
 <%
 	String path = request.getContextPath();
-	String clientIp = Tools.getCurrentUserIP();
+	String clientIp = Tools.getLocalIp(request);
 %>
 <!DOCTYPE html>
 <html>

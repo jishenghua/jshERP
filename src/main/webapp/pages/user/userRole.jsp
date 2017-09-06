@@ -3,7 +3,7 @@
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-	String clientIp = Tools.getCurrentUserIP();
+	String clientIp = Tools.getLocalIp(request);
 %>
 <!DOCTYPE html>
 <html>
