@@ -20,8 +20,7 @@
   	<body id="login_body">
 		<form action="admin.html">
 		  	<div id="login_main">
-<!--		    	<div id="login_logo"><img src="<%=path%>/images/logo.png" height="18" alt="深圳市风向标信息技术有限公司" />&nbsp;资产管理系统</div>-->
-		    	<div id="login">
+				<div id="login">
 		      		<p id="login_signal"><img src="<%=path%>/images/login_tip.jpg" width="108" height="29" alt="login" /></p>
 			      	<p id="txt_username">
 			        	<label for="user_name">用户名：</label>
@@ -29,20 +28,13 @@
 		      		<p id="txt_userpwd">
 		        		<label for="user_vcode" id="user_vcodepwd">密&nbsp;&nbsp;&nbsp;&nbsp;码:</label>
 		      		</p>
-		      		<!-- <p id="txt_vcode">
-		        		<label for="user_pwd">验证码:</label>
-		      		</p> -->
 		      		<input type="text" id="user_name" />
 		      		<input type="password" id="user_pwd" />
-		      		<%-- <input type="text" id="vcode" />
-		      		<p id="vcode_pic"><img src="<%=path%>/images/valid_code.jpg" width="59" height="22" alt="vpic" /></p> --%>
 		      		<p id="tip_username" style="display: none"><span class="error_input">用户名不正确</span></p>
 		      		<p id="tip_userpwd" style="display: none">密码不能为空</p>
-		      		<!-- <p id="tip_vcode">验证码不能为空</p> -->
 		      		<input type="button" value=" " id="btn_login" />
 		    	</div>
-		    	<p id="login_tip">如果忘记密码，请与管理员联系。</p>
-		    	<!-- <p id="copyright">Copyright © 2015  季圣华  jishenghua  V1.0</p> -->
+		    	<p id="copyright">Copyright © 2017-2020  季圣华(jishenghua) <a style="color:#00458a;" href="https://gitee.com/jishenghua/JSH_ERP" target="_blank">jshERP_v1.0</a></p>
 		  	</div>
 		</form>
 		<script type="text/javascript">
