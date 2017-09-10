@@ -81,7 +81,7 @@ public class DepotItemDAO extends BaseDAO<DepotItem> implements DepotItemIDAO
     	//多表联查,多表连查，此处用到了createSQLQuery，可以随便写sql语句，很方便
     	Query query;
     	if(sumType.equals("Number")) {
-    		query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery("select sum(OperNumber) as OperNumber from jsh_depotitem,jsh_depothead  where jsh_depotitem.HeaderId = jsh_depothead.id and type='" + type +"' and subType='" + subType +"' and MaterialId ="+ MId + " and jsh_depothead.OperTime >='"+ MonthTime +"-01 00:00:00' and jsh_depothead.OperTime <='"+ MonthTime +"-31 59:59:59' " + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
+    		query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery("select sum(BasicNumber) as BasicNumber from jsh_depotitem,jsh_depothead  where jsh_depotitem.HeaderId = jsh_depothead.id and type='" + type +"' and subType='" + subType +"' and MaterialId ="+ MId + " and jsh_depothead.OperTime >='"+ MonthTime +"-01 00:00:00' and jsh_depothead.OperTime <='"+ MonthTime +"-31 59:59:59' " + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
     	}
     	else {
     		query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery("select sum(AllPrice) as AllPrice from jsh_depotitem,jsh_depothead  where jsh_depotitem.HeaderId = jsh_depothead.id and type='" + type +"' and subType='" + subType +"' and MaterialId ="+ MId + " and jsh_depothead.OperTime >='"+ MonthTime +"-01 00:00:00' and jsh_depothead.OperTime <='"+ MonthTime +"-31 59:59:59' " + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
@@ -97,7 +97,7 @@ public class DepotItemDAO extends BaseDAO<DepotItem> implements DepotItemIDAO
 		//多表联查,多表连查，此处用到了createSQLQuery，可以随便写sql语句，很方便
 		Query query;
 		StringBuffer queryString = new StringBuffer();
-		queryString.append("select sum(OperNumber) as OperNumber from jsh_depotitem,jsh_depothead  where jsh_depotitem.HeaderId = jsh_depothead.id and jsh_depothead.SubType='" + subType +"'");
+		queryString.append("select sum(BasicNumber) as BasicNumber from jsh_depotitem,jsh_depothead  where jsh_depotitem.HeaderId = jsh_depothead.id and jsh_depothead.SubType='" + subType +"'");
 		if(ProjectId!=null) {
 			if(type.equals("in")){
 				queryString.append(" and jsh_depotitem.AnotherDepotId='" + ProjectId +"'"); //礼品充值时
