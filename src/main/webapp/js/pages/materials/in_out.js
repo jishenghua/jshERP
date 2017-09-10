@@ -486,15 +486,10 @@
 			singleSelect : true,
 			collapsible:false,
 			selectOnCheck:false,
-			//fitColumns:true,
-			//单击行是否选中
-			//checkOnSelect : false,
-			//url: path + '/depotHead/findBy.action?pageSize=' + initPageSize,
 			pagination: true,
 			//交替出现背景
 			striped : true,
-			//loadFilter: pagerFilter,
-			pageSize: 5,
+			pageSize: 10,
 			pageList: initPageNum,
 			columns:[[
 				{ field: 'Id',width:35,align:"center",checkbox:true},
@@ -537,9 +532,16 @@
 				{ title: '单据备注',field: 'Remark',width:100},
 				{ title: '创建时间',field: 'CreateTime',width:130}
 			]],
+			view: detailview,
+			detailFormatter: function(rowIndex, rowData){
+				return '<table><tr>' +
+					'<td style="border:0">' +
+					'<p>商品信息: ' + rowData.MaterialsList + '</p>' +
+					'</td>' +
+					'</tr></table>';
+			},
 			toolbar:tableToolBar,
-			onLoadError:function()
-			{
+			onLoadError:function() {
 				$.messager.alert('页面加载提示','页面加载异常，请稍后再试！','error');
 				return;
 			}    

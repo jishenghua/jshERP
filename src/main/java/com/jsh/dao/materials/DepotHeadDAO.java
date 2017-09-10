@@ -115,4 +115,13 @@ public class DepotHeadDAO extends BaseDAO<DepotHead> implements DepotHeadIDAO {
         }
         pageUtil.setPageList(query.list());
     }
+
+    @SuppressWarnings("unchecked")
+    public void findMaterialsListByHeaderId(PageUtil pageUtil,Long headerId) throws JshException {
+        StringBuffer queryString = new StringBuffer();
+        queryString.append("select group_concat(concat(jsh_material.`Name`,' ',jsh_material.Model,' ',jsh_material.Mfrs)) as mName from jsh_depotitem inner join jsh_material " +
+                " on jsh_depotitem.MaterialId = jsh_material.Id where jsh_depotitem.HeaderId ="+ headerId);
+        Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
+        pageUtil.setPageList(query.list());
+    }
 }

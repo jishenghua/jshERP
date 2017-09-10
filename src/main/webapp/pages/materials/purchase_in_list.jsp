@@ -19,6 +19,7 @@
 		<script src="<%=path %>/js/jquery-1.8.0.min.js"></script>
 		<script src="<%=path %>/js/easyui-1.3.5/jquery.easyui.min.js"></script>
 		<script src="<%=path %>/js/easyui-1.3.5/locale/easyui-lang-zh_CN.js"></script>
+		<script src="<%=path %>/js/datagrid-detailview.js"></script>
 		<script src="<%=path %>/js/My97DatePicker/WdatePicker.js"></script>
 		<script src="<%=path %>/js/common/common.js"></script>		
 		<script src="<%=path %>/js/pages/materials/in_out.js"></script>

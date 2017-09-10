@@ -427,6 +427,7 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
 					item.put("payType", depotHead.getPayType()==null?"":depotHead.getPayType());
 					item.put("Status", depotHead.getStatus());
                     item.put("Remark", depotHead.getRemark());
+					item.put("MaterialsList", findMaterialsListByHeaderId(depotHead.getId()));
                     item.put("op", 1);
                     dataArray.add(item);
                 }
@@ -683,6 +684,25 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
 		catch (IOException e) {
 			Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询信息结果异常", e);
 		}
+	}
+
+	public String findMaterialsListByHeaderId(Long headerId){
+		String allReturn = "";
+		PageUtil pageUtil = new  PageUtil();
+		pageUtil.setPageSize(0);
+		pageUtil.setCurPage(0);
+		try {
+			depotHeadService.findMaterialsListByHeaderId(pageUtil, headerId);
+			allReturn = pageUtil.getPageList().toString();
+			allReturn = allReturn.substring(1,allReturn.length()-1);
+			if(allReturn.equals("null")){
+				allReturn = "";
+			}
+		}
+		catch (JshException e) {
+			Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找信息异常", e);
+		}
+		return allReturn;
 	}
     
 	/**

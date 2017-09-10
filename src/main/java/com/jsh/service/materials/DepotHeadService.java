@@ -45,4 +45,8 @@ public class DepotHeadService extends BaseService<DepotHead> implements DepotHea
 	public void findInOutMaterialCount(PageUtil pageUtil,String beginTime,String endTime,String type,Long pid,String dids) throws JshException {
 		depotHeadDao.findInOutMaterialCount(pageUtil,beginTime,endTime,type,pid,dids);
 	}
+
+	public void findMaterialsListByHeaderId(PageUtil pageUtil,Long headerId) throws JshException {
+		depotHeadDao.findMaterialsListByHeaderId(pageUtil, headerId);
+	}
 }
