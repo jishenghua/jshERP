@@ -75,7 +75,6 @@
 					animate:false,
 					//选中单行
 					singleSelect : true,
-					//url:'<%=path %>/depotItem/saleOut.action?pageSize=' + initPageSize,
 					pagination: true,
 					//交替出现背景
 					striped : true,
@@ -86,7 +85,7 @@
 			          { title: '名称',field: 'MaterialName',width:60},
 			          { title: '型号',field: 'MaterialModel',width:80},
 					  { title: '规格',field: 'MaterialStandard',width:80},
-			          { title: '颜色',field: 'MaterialColor',width:80},
+			          { title: '颜色',field: 'MaterialColor',width:80,hidden:true},
 					  { title: '单位',field: 'MaterialUnit',width:80},
 			          { title: '销售数量',field: 'OutSum',width:60},			          
 			          { title: '销售金额',field: 'OutSumPrice',width:60},
