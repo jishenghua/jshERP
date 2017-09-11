@@ -49,4 +49,8 @@ public class DepotHeadService extends BaseService<DepotHead> implements DepotHea
 	public void findMaterialsListByHeaderId(PageUtil pageUtil,Long headerId) throws JshException {
 		depotHeadDao.findMaterialsListByHeaderId(pageUtil, headerId);
 	}
+
+	public void getHeaderIdByMaterial(PageUtil pageUtil,String materialParam) throws JshException {
+		depotHeadDao.getHeaderIdByMaterial(pageUtil, materialParam);
+	}
 }

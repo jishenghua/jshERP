@@ -536,7 +536,7 @@
 			detailFormatter: function(rowIndex, rowData){
 				return '<table><tr>' +
 					'<td style="border:0">' +
-					'<p>商品信息: ' + rowData.MaterialsList + '</p>' +
+					'<p>商品信息： ' + rowData.MaterialsList + '</p>' +
 					'</td>' +
 					'</tr></table>';
 			},
@@ -2019,7 +2019,7 @@
 		        $("#saveDepotHead").click();
 		    }
 		    //搜索按钮添加快捷键
-		    if(k == "13"&&(obj.id=="searchState"||obj.id=="searchNumber"))
+		    if(k == "13"&&(obj.id=="searchState"||obj.id=="searchNumber"||obj.id=="searchMaterial"))
 		    {
 		        $("#searchBtn").click();
 		    }
@@ -2441,27 +2441,50 @@
 	}
 
 	function showDepotHeadDetails(pageNo,pageSize){
+		var materialParam = $.trim($("#searchMaterial").val());
 		$.ajax({
 			type:"post",
-			url: path + "/depotHead/findBy.action",
+			url: path + "/depotHead/getHeaderIdByMaterial.action",
 			dataType: "json",
 			data: ({
-				Type: listType,
-				SubType:listSubType,
-				State:$.trim($("#searchState").val()),
-				Number:$.trim($("#searchNumber").val()),
-				BeginTime:$("#searchBeginTime").val(),
-				EndTime:$("#searchEndTime").val(),
-				pageNo:pageNo,
-				pageSize:pageSize
+				MaterialParam: materialParam
 			}),
-			success: function (data)
-			{
-				$("#tableData").datagrid('loadData',data);
+			success: function (res) {
+				if(res) {
+					var ids = res.ret;
+					if(ids){
+						$.ajax({
+							type: "post",
+							url: path + "/depotHead/findBy.action",
+							dataType: "json",
+							data: ({
+								Type: listType,
+								SubType: listSubType,
+								State: $.trim($("#searchState").val()),
+								Number: $.trim($("#searchNumber").val()),
+								BeginTime: $("#searchBeginTime").val(),
+								EndTime: $("#searchEndTime").val(),
+								dhIds: ids,
+								pageNo: pageNo,
+								pageSize: pageSize
+							}),
+							success: function (data) {
+								$("#tableData").datagrid('loadData', data);
+							},
+							//此处添加错误处理
+							error: function () {
+								$.messager.alert('查询提示', '查询数据后台异常，请稍后再试！', 'error');
+								return;
+							}
+						});
+					}
+					else {
+						$("#tableData").datagrid('loadData', []);
+					}
+				}
 			},
 			//此处添加错误处理
-			error:function()
-			{
+			error:function() {
 				$.messager.alert('查询提示','查询数据后台异常，请稍后再试！','error');
 				return;
 			}

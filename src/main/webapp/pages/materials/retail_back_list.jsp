@@ -19,6 +19,7 @@
 	<script src="<%=path %>/js/jquery-1.8.0.min.js"></script>
 	<script src="<%=path %>/js/easyui-1.3.5/jquery.easyui.min.js"></script>
 	<script src="<%=path %>/js/easyui-1.3.5/locale/easyui-lang-zh_CN.js"></script>
+	<script src="<%=path %>/js/datagrid-detailview.js"></script>
 	<script src="<%=path %>/js/My97DatePicker/WdatePicker.js"></script>
 	<script src="<%=path %>/js/common/common.js"></script>
 	<script src="<%=path %>/js/pages/materials/in_out.js"></script>
@@ -36,6 +37,10 @@
 				<td>单据编号：</td>
 				<td>
 					<input type="text" name="searchNumber" id="searchNumber" style="width:100px;"/>
+				</td>
+				<td>商品信息：</td>
+				<td>
+					<input type="text" name="searchMaterial" id="searchMaterial" placeholder="名称，型号，制造商" style="width:120px;"/>
 				</td>
 				<td>单据日期：</td>
 				<td>

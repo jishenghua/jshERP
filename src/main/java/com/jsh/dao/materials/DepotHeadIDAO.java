@@ -22,5 +22,7 @@ public interface DepotHeadIDAO extends BaseIDAO<DepotHead>
     public void findInOutMaterialCount(PageUtil pageUtil,String beginTime,String endTime,String type,Long pid,String dids) throws JshException;
 
     public void findMaterialsListByHeaderId(PageUtil pageUtil,Long headerId) throws JshException;
+
+    public void getHeaderIdByMaterial(PageUtil pageUtil,String materialParam) throws JshException;
     
 }

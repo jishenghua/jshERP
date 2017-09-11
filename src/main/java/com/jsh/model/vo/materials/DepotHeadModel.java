@@ -42,6 +42,8 @@ public class DepotHeadModel implements Serializable
 	private String MonthTime;  //查询月份
 	
 	private String supplierId; //单位Id，用于查询单位的应收应付
+	private String MaterialParam;  //商品参数
+	private String dhIds;  //单据id列表
 
 	/**
      * 分类ID
@@ -362,5 +364,21 @@ public class DepotHeadModel implements Serializable
 
 	public void setStatus(Boolean status) {
 		Status = status;
+	}
+
+	public String getMaterialParam() {
+		return MaterialParam;
+	}
+
+	public void setMaterialParam(String materialParam) {
+		MaterialParam = materialParam;
+	}
+
+	public String getDhIds() {
+		return dhIds;
+	}
+
+	public void setDhIds(String dhIds) {
+		this.dhIds = dhIds;
 	}
 }

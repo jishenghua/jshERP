@@ -374,13 +374,39 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
 	}
 
 	/**
+	 * 根据材料信息获取
+	 */
+	public void getHeaderIdByMaterial(){
+		try {
+			String materialParam = model.getMaterialParam(); //商品参数
+			PageUtil pageUtil = new  PageUtil();
+			pageUtil.setPageSize(0);
+			pageUtil.setCurPage(0);
+			depotHeadService.getHeaderIdByMaterial(pageUtil, materialParam);
+			JSONObject outer = new JSONObject();
+			String allReturn = pageUtil.getPageList().toString();
+			allReturn = allReturn.substring(1,allReturn.length()-1);
+			if(allReturn.equals("null")){
+				allReturn = "";
+			}
+			outer.put("ret", allReturn);
+			//回写查询结果
+			toClient(outer.toString());
+		}
+		catch (JshException e) {
+			Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找信息异常", e);
+		}
+		catch (IOException e) {
+			Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询单据信息结果异常", e);
+		}
+	}
+
+	/**
 	 * 查找单据信息
 	 * @return
 	 */
-    public void findBy()
-	{
-	    try 
-	    {
+    public void findBy() {
+	    try {
 	        PageUtil<DepotHead> pageUtil = new  PageUtil<DepotHead>();
             pageUtil.setPageSize(model.getPageSize());
             pageUtil.setCurPage(model.getPageNo());
@@ -392,10 +418,8 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
             outer.put("total", pageUtil.getTotalCount());
             //存放数据json数组
             JSONArray dataArray = new JSONArray();
-            if(null != dataList)
-            {
-                for(DepotHead depotHead:dataList)
-                {
+            if(null != dataList) {
+                for(DepotHead depotHead:dataList) {
                     JSONObject item = new JSONObject();
                     item.put("Id", depotHead.getId());
                     item.put("ProjectId", depotHead.getProjectId()==null?"":depotHead.getProjectId().getId());
@@ -436,12 +460,10 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
             //回写查询结果
             toClient(outer.toString());
         } 
-	    catch (DataAccessException e) 
-	    {
+	    catch (DataAccessException e) {
 	        Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找单据信息异常", e);
         } 
-	    catch (IOException e) 
-	    {
+	    catch (IOException e) {
             Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询单据信息结果异常", e);
         }
 	}
@@ -718,6 +740,7 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
         condition.put("Type_s_eq",model.getType());
         condition.put("SubType_s_eq",model.getSubType());
         condition.put("Number_s_like",model.getNumber());
+		condition.put("Id_s_in",model.getDhIds());
         condition.put("OperTime_s_gteq",model.getBeginTime());
         condition.put("OperTime_s_lteq",model.getEndTime());
         condition.put("Id_s_order","desc");
