@@ -471,120 +471,97 @@ public class FunctionsAction extends BaseAction<FunctionsModel>
 	 * 页面显示菜单
 	 * @return
 	 */
-    public void findMenu()
-	{
-	    try 
-	    {
-	    	String fc=model.getHasFunctions(); //当前用户所拥有的功能列表，格式如：[1][2][5]
-	        PageUtil<Functions> pageUtil = new  PageUtil<Functions>();
-            pageUtil.setPageSize(200);
-            pageUtil.setAdvSearch(getCondition_RoleFunctions(model.getPNumber()));
-            functionsService.find(pageUtil);
-            List<Functions> dataList = pageUtil.getPageList();
-            
-			  //存放数据json数组
-			  JSONArray dataArray = new JSONArray();
-			  if(null != dataList)
-			  {
-			      for(Functions functions:dataList)
-			      {
-			          JSONObject item = new JSONObject();
-			          item.put("id", functions.getId());
-			          
-				          pageUtil.setAdvSearch(getCondition_RoleFunctions(functions.getNumber()));
-			              functionsService.find(pageUtil);
-			              List<Functions> dataList1 = pageUtil.getPageList();
-			              JSONArray dataArray1 = new JSONArray();
-			              if(dataList1.size()!=0)
-						  {
-			            	  item.put("text", functions.getName()); //是目录就没链接
-			            	  for(Functions functions1:dataList1)
-						      {  
-			            		 item.put("state", "open");   //如果不为空，节点展开
-						         JSONObject item1 = new JSONObject();
-						         
-							     pageUtil.setAdvSearch(getCondition_RoleFunctions(functions1.getNumber()));
-						         functionsService.find(pageUtil);
-						         List<Functions> dataList2 = pageUtil.getPageList();
-						         if(fc.indexOf("["+functions1.getId().toString()+"]")!=-1||dataList2.size()!=0)
-								 {
-							              item1.put("id", functions1.getId());
-							              JSONArray dataArray2 = new JSONArray();
-							              if(dataList2.size()!=0)
-										  {
-							            	  item1.put("text", functions1.getName());//是目录就没链接
-							            	  for(Functions functions2:dataList2)
-										      {  
-							            		 item1.put("state", "closed");   //如果不为空，节点不展开
-										         JSONObject item2 = new JSONObject();
-										         
-										          pageUtil.setAdvSearch(getCondition_RoleFunctions(functions2.getNumber()));
-									              functionsService.find(pageUtil);
-									              List<Functions> dataList3 = pageUtil.getPageList();
-									              if(fc.indexOf("["+functions2.getId().toString()+"]")!=-1||dataList3.size()!=0)
-									              {  
-											              item2.put("id", functions2.getId());
-											              JSONArray dataArray3 = new JSONArray();
-											              if(dataList3.size()!=0)
-														  {
-											            	  item2.put("text", functions2.getName());//是目录就没链接
-											            	  for(Functions functions3:dataList3)
-														      {  
-											            		 item2.put("state", "closed");   //如果不为空，节点不展开
-														         JSONObject item3 = new JSONObject();
-														         item3.put("id", functions3.getId());
-														         item3.put("text", functions3.getName());
-														         //
-														         dataArray3.add(item3);
-														         item2.put("children", dataArray3);   
-														      }
-														  }
-											              else
-											              {
-											            	  //不是目录，有链接
-											            	  item2.put("text", "<a onclick=\"NewTab('"+functions2.getName()+"','"+functions2.getURL()+"','"+functions2.getId()+"')\">"+functions2.getName()+"</a>");
-											              }
-											         
-												     dataArray2.add(item2);
-												     item1.put("children", dataArray2);   
-										         }
-										      }
-										  }
-							              else
-							              {
-							            	  //不是目录，有链接
-							            	  item1.put("text", "<a onclick=\"NewTab('"+functions1.getName()+"','"+functions1.getURL()+"','"+functions1.getId()+"')\">"+functions1.getName()+"</a>");
-							              }
-							     }
-								 else
-								 {
-									 //不是目录，有链接
-									 item1.put("text", "<a onclick=\"NewTab('"+functions1.getName()+"','"+functions1.getURL()+"','"+functions1.getId()+"')\">"+functions1.getName()+"</a>");
-								 }
-								  dataArray1.add(item1);
-								  item.put("children", dataArray1);
-							  }
-						  }
-			              else
-			              {
-			            	  //不是目录，有链接
-			            	  item.put("text", "<a onclick=\"NewTab('"+functions.getName()+"','"+functions.getURL()+"','"+functions.getId()+"')\">"+functions.getName()+"</a>");
-			              }
-			              
-				      dataArray.add(item);
-			      }
-			  }
-			  //回写查询结果
-			  toClient(dataArray.toString());
-        } 
-	    catch (DataAccessException e) 
-	    {
-	        Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找应用异常", e);
-        } 
-	    catch (IOException e) 
-	    {
-            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询应用结果异常", e);
-        }
+	public void findMenu() {
+		try {
+			String fc = model.getHasFunctions(); //当前用户所拥有的功能列表，格式如：[1][2][5]
+			PageUtil<Functions> pageUtil = new PageUtil<Functions>();
+			pageUtil.setPageSize(200);
+			pageUtil.setAdvSearch(getCondition_RoleFunctions(model.getPNumber()));
+			functionsService.find(pageUtil);
+			List<Functions> dataList = pageUtil.getPageList();
+
+			//存放数据json数组
+			JSONArray dataArray = new JSONArray();
+			if (null != dataList) {
+				for (Functions functions : dataList) {
+					JSONObject item = new JSONObject();
+
+					item.put("id", functions.getId());
+					pageUtil.setAdvSearch(getCondition_RoleFunctions(functions.getNumber()));
+					functionsService.find(pageUtil);
+					List<Functions> dataList1 = pageUtil.getPageList();
+					JSONArray dataArray1 = new JSONArray();
+					if (dataList1.size() != 0) {
+						item.put("text", functions.getName()); //是目录就没链接
+						for (Functions functions1 : dataList1) {
+							item.put("state", "open");   //如果不为空，节点展开
+							JSONObject item1 = new JSONObject();
+
+							pageUtil.setAdvSearch(getCondition_RoleFunctions(functions1.getNumber()));
+							functionsService.find(pageUtil);
+							List<Functions> dataList2 = pageUtil.getPageList();
+							if (fc.indexOf("[" + functions1.getId().toString() + "]") != -1 || dataList2.size() != 0) {
+								item1.put("id", functions1.getId());
+								JSONArray dataArray2 = new JSONArray();
+								if (dataList2.size() != 0) {
+									item1.put("text", functions1.getName());//是目录就没链接
+									for (Functions functions2 : dataList2) {
+										item1.put("state", "closed");   //如果不为空，节点不展开
+										JSONObject item2 = new JSONObject();
+
+										pageUtil.setAdvSearch(getCondition_RoleFunctions(functions2.getNumber()));
+										functionsService.find(pageUtil);
+										List<Functions> dataList3 = pageUtil.getPageList();
+										if (fc.indexOf("[" + functions2.getId().toString() + "]") != -1 || dataList3.size() != 0) {
+											item2.put("id", functions2.getId());
+											JSONArray dataArray3 = new JSONArray();
+											if (dataList3.size() != 0) {
+												item2.put("text", functions2.getName());//是目录就没链接
+												for (Functions functions3 : dataList3) {
+													item2.put("state", "closed");   //如果不为空，节点不展开
+													JSONObject item3 = new JSONObject();
+													item3.put("id", functions3.getId());
+													item3.put("text", functions3.getName());
+													//
+													dataArray3.add(item3);
+													item2.put("children", dataArray3);
+												}
+											} else {
+												//不是目录，有链接
+												item2.put("text", "<a onclick=\"NewTab('" + functions2.getName() + "','" + functions2.getURL() + "','" + functions2.getId() + "')\">" + functions2.getName() + "</a>");
+											}
+										} else {
+											//不是目录，有链接
+											item2.put("text", "<a onclick=\"NewTab('" + functions2.getName() + "','" + functions2.getURL() + "','" + functions2.getId() + "')\">" + functions2.getName() + "</a>");
+										}
+										dataArray2.add(item2);
+										item1.put("children", dataArray2);
+									}
+								} else {
+									//不是目录，有链接
+									item1.put("text", "<a onclick=\"NewTab('" + functions1.getName() + "','" + functions1.getURL() + "','" + functions1.getId() + "')\">" + functions1.getName() + "</a>");
+								}
+							} else {
+								//不是目录，有链接
+								item1.put("text", "<a onclick=\"NewTab('" + functions1.getName() + "','" + functions1.getURL() + "','" + functions1.getId() + "')\">" + functions1.getName() + "</a>");
+							}
+							dataArray1.add(item1);
+							item.put("children", dataArray1);
+						}
+					} else {
+						//不是目录，有链接
+						item.put("text", "<a onclick=\"NewTab('" + functions.getName() + "','" + functions.getURL() + "','" + functions.getId() + "')\">" + functions.getName() + "</a>");
+					}
+					dataArray.add(item);
+				}
+			}
+			//回写查询结果
+			toClient(dataArray.toString());
+		} catch (DataAccessException e) {
+			Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找应用异常", e);
+		} catch (IOException e) {
+			Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询应用结果异常", e);
+		}
 	}
 	
 	/**
