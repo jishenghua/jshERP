@@ -211,7 +211,7 @@ function ceshi()
 		   		$(function () {
 					$('#tt').tree({   
 					   url:'<%=path%>/functions/findMenu.action?PNumber='+PNumber+'&hasFunctions='+functions,
-					   animate:true,
+					   animate:true
 					}); 
 				});
 	        </script>
