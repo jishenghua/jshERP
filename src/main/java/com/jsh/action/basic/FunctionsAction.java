@@ -555,9 +555,6 @@ public class FunctionsAction extends BaseAction<FunctionsModel>
 							            	  //不是目录，有链接
 							            	  item1.put("text", "<a onclick=\"NewTab('"+functions1.getName()+"','"+functions1.getURL()+"','"+functions1.getId()+"')\">"+functions1.getName()+"</a>");
 							              }
-								     
-									 dataArray1.add(item1);
-									 item.put("children", dataArray1);  
 							     }
 								 else
 								 {
