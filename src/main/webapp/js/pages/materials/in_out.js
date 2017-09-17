@@ -477,6 +477,22 @@
 		if(listSubType == "调拨" || listSubType == "其它" || listSubType == "零售" || listSubType == "零售退货" || listSubType == "礼品充值" || listSubType == "礼品销售"){
 			isShowLastMoneyColumn = true; //隐藏
 		}
+		var isShowOrganNameColumn = false; //是否显示供应商、客户等信息,true为隐藏,false为显示
+		var organNameTitle = ""; //组织名称标题
+		if(listSubType == "调拨" || listSubType == "礼品充值" || listSubType == "礼品销售"){
+			isShowOrganNameColumn = true; //隐藏
+		}
+		else {
+			if(listTitle == "采购入库列表" || listTitle == "采购退货列表" || listTitle == "其它入库列表"){
+				organNameTitle = "供应商名称";
+			}
+			else if(listTitle == "销售退货列表" || listTitle == "销售出库列表" || listTitle == "其它出库列表"){
+				organNameTitle = "客户名称";
+			}
+			else if(listTitle == "零售出库列表" || listTitle == "零售退货列表"){
+				organNameTitle = "会员卡号";
+			}
+		}
 		$('#tableData').datagrid({
 			height:heightInfo,
 			rownumbers: false,
@@ -514,7 +530,7 @@
 						return str;
 					}
 				},
-				{field: 'OrganId',width:5, hidden:true},
+				{ title: organNameTitle, field: 'OrganName',width:120, hidden:isShowOrganNameColumn},
 				{ title: '单据编号',field: 'Number',width:140},
 				{ title: '单据日期 ',field: 'OperTime',width:130},
 				{ title: '操作员',field: 'OperPersonName',width:80},
@@ -529,14 +545,14 @@
 						return value? "<span style='color:green;'>已审核</span>":"<span style='color:red;'>未审核</span>";
 					}
 				},
-				{ title: '单据备注',field: 'Remark',width:100},
-				{ title: '创建时间',field: 'CreateTime',width:130}
+				{ title: '单据备注',field: 'Remark',width:100}
 			]],
 			view: detailview,
 			detailFormatter: function(rowIndex, rowData){
+				var mList = rowData.MaterialsList.replace(","," ， ");
 				return '<table><tr>' +
 					'<td style="border:0">' +
-					'<p>商品信息： ' + rowData.MaterialsList + '</p>' +
+					'<p>商品信息： ' + mList + '</p>' +
 					'</td>' +
 					'</tr></table>';
 			},
