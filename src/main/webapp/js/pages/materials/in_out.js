@@ -138,6 +138,20 @@
 			organUrl = supUrl;
 			amountNum = "LPXS";
 		}
+		else if(listTitle === "组装单列表"){
+			listType = "其它";
+			listSubType = "组装单";
+			payTypeTitle = "隐藏";
+			organUrl = supUrl;
+			amountNum = "ZZD";
+		}
+		else if(listTitle === "拆卸单列表"){
+			listType = "其它";
+			listSubType = "拆卸单";
+			payTypeTitle = "隐藏";
+			organUrl = supUrl;
+			amountNum = "CSD";
+		}
 	}
 	//初始化系统基础信息
 	function initSystemData_UB(){
@@ -474,12 +488,12 @@
 			});
 		}
 		var isShowLastMoneyColumn = false; //是否显示优惠后金额和价税合计,true为隐藏,false为显示
-		if(listSubType == "调拨" || listSubType == "其它" || listSubType == "零售" || listSubType == "零售退货" || listSubType == "礼品充值" || listSubType == "礼品销售"){
+		if(listSubType == "调拨" || listSubType == "其它" || listSubType == "零售" || listSubType == "零售退货" || listSubType == "礼品充值" || listSubType == "礼品销售" || listSubType == "组装单" || listSubType == "拆卸单"){
 			isShowLastMoneyColumn = true; //隐藏
 		}
 		var isShowOrganNameColumn = false; //是否显示供应商、客户等信息,true为隐藏,false为显示
 		var organNameTitle = ""; //组织名称标题
-		if(listSubType == "调拨" || listSubType == "礼品充值" || listSubType == "礼品销售"){
+		if(listSubType == "调拨" || listSubType == "礼品充值" || listSubType == "礼品销售" || listSubType == "组装单" || listSubType == "拆卸单"){
 			isShowOrganNameColumn = true; //隐藏
 		}
 		else {
@@ -715,8 +729,12 @@
 			depotTextField = "depotName";
 		}
 		var isShowTaxColumn = false; //是否显示税率相关的列,true为隐藏,false为显示
-		if(listSubType == "调拨" || listSubType == "其它" || listSubType == "零售" || listSubType == "零售退货" || listSubType == "礼品充值" || listSubType == "礼品销售"){
+		if(listSubType == "调拨" || listSubType == "其它" || listSubType == "零售" || listSubType == "零售退货" || listSubType == "礼品充值" || listSubType == "礼品销售" || listSubType == "组装单" || listSubType == "拆卸单"){
 			isShowTaxColumn = true; //隐藏
+		}
+		var isShowMaterialTypeColumn = true; //是否显示商品类型相关的列,true为隐藏,false为显示
+		if(listSubType == "组装单" || listSubType == "拆卸单"){
+			isShowMaterialTypeColumn = false; //显示
 		}
 		$('#materialData').datagrid({
 			height:245,
@@ -737,6 +755,7 @@
 			onClickRow: onClickRow,
 			columns:[[
 			  	{ field: 'Id',width:35,align:"center",checkbox:true},
+				{ title: '商品类型',field: 'MType',editor:'validatebox',hidden:isShowMaterialTypeColumn,width:80},
 				{ title: depotHeadName, field: 'DepotId', editor: 'validatebox', width: 90,
 					formatter: function (value, row, index) {
 						return row.DepotName;
@@ -1078,8 +1097,12 @@
 			depotHeadName = "仓库名称";
 		}
 		var isShowTaxColumn = false; //是否显示税率相关的列,true为隐藏,false为显示
-		if(listSubType == "调拨" || listSubType == "其它" || listSubType == "零售" || listSubType == "零售退货" || listSubType == "礼品充值" || listSubType == "礼品销售"){
+		if(listSubType == "调拨" || listSubType == "其它" || listSubType == "零售" || listSubType == "零售退货" || listSubType == "礼品充值" || listSubType == "礼品销售" || listSubType == "组装单" || listSubType == "拆卸单"){
 			isShowTaxColumn = true; //隐藏
+		}
+		var isShowMaterialTypeColumn = true; //是否显示商品类型相关的列,true为隐藏,false为显示
+		if(listSubType == "组装单" || listSubType == "拆卸单"){
+			isShowMaterialTypeColumn = false; //显示
 		}
 		$('#materialDataShow').datagrid({
 			height:245,
@@ -1096,6 +1119,7 @@
 			showFooter: true,
 			onClickRow: onClickRow,
 			columns:[[
+				{ title: '商品类型',field: 'MType',width:80, hidden:isShowMaterialTypeColumn},
 				{ title: depotHeadName,field: 'DepotName',editor:'validatebox',width:90},
 				{ title: '品名(型号)(制造商)(包装)',field: 'MaterialName',width:230},
 				{ title: anotherDepotHeadName,field: 'AnotherDepotName',hidden:isShowAnotherDepot,width:90},
@@ -2677,6 +2701,15 @@
 			else {
 				body.find("[field='TaxRate']").find(input).val(0); //默认为0
 			}
+
+			//在商品类型加载 组装件、普通子件
+			var mType = body.find("[field='MType']");
+			var rowListLength = mType.find(input).closest(".datagrid-row").attr("datagrid-row-index");
+			var mTypeValue = "组合件";
+			if(rowListLength > 0){
+				mTypeValue = "普通子件";
+			}
+			mType.find(input).val(mTypeValue).prop("readonly","readonly");
 	    },500);
 	}
 	

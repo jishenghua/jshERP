@@ -24,6 +24,7 @@ public class DepotItem implements java.io.Serializable
 	private String OtherField3; //自定义字段3-制造商
 	private String OtherField4; //自定义字段4
 	private String OtherField5; //自定义字段5
+	private String MType; //商品类型
 
 
 	public DepotItem()
@@ -39,7 +40,7 @@ public class DepotItem implements java.io.Serializable
 	public DepotItem(DepotHead headerId, Material materialId, String mUnit,
 			Double operNumber, Double basicNumber, Double unitPrice, Double taxUnitPrice, Double allPrice, String remark, String img,
 			 Depot depotId, Depot anotherDepotId, Double taxRate, Double taxMoney, Double taxLastMoney,
-			 String otherField1, String otherField2, String otherField3, String otherField4, String otherField5) {
+			 String otherField1, String otherField2, String otherField3, String otherField4, String otherField5, String mType) {
 		super();
 		HeaderId = headerId;
 		MaterialId = materialId;
@@ -61,6 +62,7 @@ public class DepotItem implements java.io.Serializable
 		OtherField3 = otherField3;
 		OtherField4 = otherField4;
 		OtherField5 = otherField5;
+		MType = mType;
 	}
 
 	public Long getId() {
@@ -229,5 +231,13 @@ public class DepotItem implements java.io.Serializable
 
 	public void setOtherField5(String otherField5) {
 		OtherField5 = otherField5;
+	}
+
+	public String getMType() {
+		return MType;
+	}
+
+	public void setMType(String MType) {
+		this.MType = MType;
 	}
 }

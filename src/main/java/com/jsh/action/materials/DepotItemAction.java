@@ -116,6 +116,7 @@ public class DepotItemAction extends BaseAction<DepotItemModel>
                     if(tempInsertedJson.get("OtherField3")!=null){depotItem.setOtherField3(tempInsertedJson.getString("OtherField3"));}
                     if(tempInsertedJson.get("OtherField4")!=null){depotItem.setOtherField4(tempInsertedJson.getString("OtherField4"));}
                     if(tempInsertedJson.get("OtherField5")!=null){depotItem.setOtherField5(tempInsertedJson.getString("OtherField5"));}
+                    if(tempInsertedJson.get("MType")!=null){depotItem.setMType(tempInsertedJson.getString("MType"));}
 					depotItemService.create(depotItem);
 				}
 			}
@@ -190,6 +191,7 @@ public class DepotItemAction extends BaseAction<DepotItemModel>
                     depotItem.setOtherField3(tempUpdatedJson.getString("OtherField3"));
                     depotItem.setOtherField4(tempUpdatedJson.getString("OtherField4"));
                     depotItem.setOtherField5(tempUpdatedJson.getString("OtherField5"));
+                    depotItem.setMType(tempUpdatedJson.getString("MType"));
 					depotItemService.create(depotItem);
 				}
 			}
@@ -303,6 +305,7 @@ public class DepotItemAction extends BaseAction<DepotItemModel>
                     item.put("OtherField3", depotItem.getOtherField3());
                     item.put("OtherField4", depotItem.getOtherField4());
                     item.put("OtherField5", depotItem.getOtherField5());
+                    item.put("MType", depotItem.getMType());
                     item.put("op", 1);
                     dataArray.add(item);
                 }

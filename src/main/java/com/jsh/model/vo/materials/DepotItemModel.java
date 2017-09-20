@@ -30,6 +30,7 @@ public class DepotItemModel implements Serializable
 	private String OtherField3;
 	private String OtherField4;
 	private String OtherField5;
+	private String MType;
     
 	private String Inserted = "";	//json插入记录
 	private String Deleted = "";	//json删除记录
@@ -361,5 +362,13 @@ public class DepotItemModel implements Serializable
 
 	public void setOtherField5(String otherField5) {
 		OtherField5 = otherField5;
+	}
+
+	public String getMType() {
+		return MType;
+	}
+
+	public void setMType(String MType) {
+		this.MType = MType;
 	}
 }

@@ -97,6 +97,11 @@
     <comment>自定义字段5</comment>
    </column>
   </property>
+  <property generated="never" lazy="false" name="MType" type="java.lang.String">
+   <column length="20" name="MType">
+    <comment>商品类型</comment>
+   </column>
+  </property>
   <property generated="never" lazy="false" name="Remark" type="java.lang.String">
    <column length="200" name="Remark">
     <comment>描述</comment>
