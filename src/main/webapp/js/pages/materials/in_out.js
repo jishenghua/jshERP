@@ -2709,7 +2709,9 @@
 			if(rowListLength > 0){
 				mTypeValue = "普通子件";
 			}
-			mType.find(input).val(mTypeValue).prop("readonly","readonly");
+			if(listSubType == "组装单" || listSubType == "拆卸单"){
+				mType.find(input).val(mTypeValue).prop("readonly","readonly");
+			}
 	    },500);
 	}
 	
