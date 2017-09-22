@@ -305,7 +305,10 @@ public class AccountAction extends BaseAction<AccountModel>
                     item.put("initialAmount", account.getInitialAmount());
                     String monthTime = Tools.getCurrentMonth();
                     Double thisMonthAmount = getAccountSum(account.getId(), monthTime) + getAccountSumByHead(account.getId(), monthTime) +getAccountSumByDetail(account.getId(), monthTime);
-                    String thisMonthAmountFmt=df.format(thisMonthAmount);
+                    String thisMonthAmountFmt = "0";
+                    if(thisMonthAmount!=0){
+                        thisMonthAmountFmt = df.format(thisMonthAmount);
+                    }
                     item.put("thisMonthAmount", thisMonthAmountFmt);  //本月发生额
                     Double currentAmount = getAccountSum(account.getId(),"") + getAccountSumByHead(account.getId(), "") + getAccountSumByDetail(account.getId(), "") + account.getInitialAmount();
                     String currentAmountFmt=df.format(currentAmount);

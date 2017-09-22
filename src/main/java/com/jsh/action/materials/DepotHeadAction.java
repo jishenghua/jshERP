@@ -194,7 +194,12 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
 			if(model.getOrganId()!=null){depotHead.setOrganId(new Supplier(model.getOrganId()));}
 			if(model.getHandsPersonId()!=null){depotHead.setHandsPersonId(new Person(model.getHandsPersonId()));}
 			depotHead.setSalesman(model.getSalesman());
-			if(model.getAccountId()!=null){depotHead.setAccountId(new Account(model.getAccountId()));}			
+			if(model.getAccountId()!=null){
+				depotHead.setAccountId(new Account(model.getAccountId()));
+			}
+			else {
+				depotHead.setAccountId(null);
+			}
 			depotHead.setChangeAmount(model.getChangeAmount());
 			depotHead.setAccountIdList(model.getAccountIdList());
 			depotHead.setAccountMoneyList(model.getAccountMoneyList());
