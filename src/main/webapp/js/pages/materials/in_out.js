@@ -2615,8 +2615,7 @@
 								//定义模版
 								var temp = "<div class='price-list'>";
 								temp +="<ul>";
-								temp +="<li>预设售价1：" + presetPriceOne + "</li>";
-								temp +="<li>预设售价2：" + presetPriceTwo + "</li>";
+								temp +="<li>批发价：" + presetPriceTwo + "</li>";
 								temp +="<li>零售价：" + retailPrice + "</li>";
 								temp +="</ul>";
 								temp +="</div>";
