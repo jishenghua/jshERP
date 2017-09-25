@@ -2623,7 +2623,9 @@
 									$('.price-list').remove(); //如果存在价格列表先移除
 								}
 								else {
-									$(self).after(temp); //加载列表信息
+									if(presetPriceTwo != undefined){ //多单位的商品
+										$(self).after(temp); //加载列表信息
+									}
 								}
 								$('.price-list ul li').off("click").on("click",function(){
 									var price = $(this).text();
