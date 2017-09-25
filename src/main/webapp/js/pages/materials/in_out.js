@@ -579,7 +579,7 @@
 	}
 
 	//查找库存的方法
-	function findStockNumById(depotId, mId, monthTime, body, input, ratio){
+	function findStockNumById(depotId, mId, monthTime, body, input, ratio, type){
 		var thisRatio = 1; //比例
 		$.ajax({
 			url: path + "/material/findById.action",
@@ -606,19 +606,19 @@
 						var unitSetInput =""; //单位
 						if(listSubType === "采购" || listSubType === "采购退货"){
 							unitSetInput = rec.rows[0].FirstInUnit;
-							if(basicUnit==unitSetInput){
+							if(basicUnit==unitSetInput){ //基础单位等于选择的单位
 								loadRatio = 1;
 							}
-							else if(otherUnit==unitSetInput){
+							else if(otherUnit==unitSetInput){ //副单位等于选择的单位
 								loadRatio = thisRatio;
 							}
 						}
 						else if(listSubType === "销售" || listSubType === "销售退货" || listTitle == "礼品充值" || listTitle == "礼品销售"){
 							unitSetInput = rec.rows[0].FirstOutUnit;
-							if(basicUnit==unitSetInput){
+							if(basicUnit==unitSetInput){ //基础单位等于选择的单位
 								loadRatio = 1;
 							}
-							else if(otherUnit==unitSetInput){
+							else if(otherUnit==unitSetInput){ //副单位等于选择的单位
 								loadRatio = thisRatio;
 							}
 						}
@@ -636,8 +636,15 @@
 						success: function (res) {
 							if(res && res.rows && res.rows[0]){
 								var thisStock = res.rows[0].thisSum;
-								if(ratio!=undefined){
-									loadRatio = ratio;
+								if(type == "select"){ //选择下拉框的时候
+									if(ratio!=undefined && ratio!=1){
+										loadRatio = ratio;
+									}
+								}
+								else if(type == "click"){ //点击库存的时候
+									if(ratio!=undefined){
+										loadRatio = ratio;
+									}
 								}
 								thisStock = (thisStock/loadRatio).toFixed(2);
 								body.find("[field='Stock']").find(input).val(thisStock).attr("data-stock",res.rows[0].thisSum); //加载库存数据
@@ -697,7 +704,8 @@
 	//初始化表格数据-商品列表-编辑状态
 	function initTableData_material(type,TotalPrice){
 		var body,footer,input; //定义表格和文本框
-		var ratio = 1; //比例
+		var ratio = 1; //比例-品名专用
+		var ratioDepot = 1; //比例-仓库用
 		var monthTime = getNowFormatMonth();
 		var isShowAnotherDepot = true; //显示对方仓库,true为隐藏,false为显示
 		var depotHeadName = ""; //仓库名称
@@ -774,7 +782,8 @@
 								input = ".datagrid-editable-input";
 								var mId = body.find("[field='MaterialId']").find(".combo-value").val();
 								if(mId){
-									findStockNumById(depotId, mId, monthTime, body, input, ratio);
+									var type = "select"; //type 类型：点击 click，选择 select
+									findStockNumById(depotId, mId, monthTime, body, input, ratioDepot, type);
 								}
 							}
 						}
@@ -841,7 +850,7 @@
 												else {
 													var unitName = res.rows[0].UnitName;
 													if(unitName) {
-														ratio = unitName.substring(unitName.indexOf(":")+1).replace(")","");
+														ratio = unitName.substring(unitName.indexOf(":")+1).replace(")",""); //给比例赋值
 														unitName = unitName.substring(0, unitName.indexOf("("));
 													}
 													var unitArr = unitName.split(",");
@@ -851,20 +860,20 @@
 													body.find("[field='Unit']").find(input).prop("readonly","readonly"); //设置计量单位为只读
 													var loadRatio = 1; //在单位输入框上面加载比例字段
 													if(listSubType === "采购" || listSubType === "采购退货"){
-														unitSetInput = res.rows[0].FirstInUnit;
-														if(basicUnit==unitSetInput){
+														unitSetInput = res.rows[0].FirstInUnit; //给单位文本框赋值
+														if(basicUnit==unitSetInput){ //基础单位等于选择的单位
 															loadRatio = 1;
 														}
-														else if(otherUnit==unitSetInput){
+														else if(otherUnit==unitSetInput){ //副单位等于选择的单位
 															loadRatio = ratio;
 														}
 													}
 													else if(listSubType === "销售" || listSubType === "销售退货" || listSubType === "礼品充值" || listSubType === "礼品销售"){
-														unitSetInput = res.rows[0].FirstOutUnit;
-														if(basicUnit==unitSetInput){
+														unitSetInput = res.rows[0].FirstOutUnit; //给单位文本框赋值
+														if(basicUnit==unitSetInput){ //基础单位等于选择的单位
 															loadRatio = 1;
 														}
-														else if(otherUnit==unitSetInput){
+														else if(otherUnit==unitSetInput){ //副单位等于选择的单位
 															loadRatio = ratio;
 														}
 													}
@@ -971,7 +980,8 @@
 												//查询库存信息
 												var depotId = body.find("[field='DepotId']").find(".combo-value").val();
 												if(depotId) {
-													findStockNumById(depotId, mId, monthTime, body, input,ratio);
+													var type = "select"; //type 类型：点击 click，选择 select
+													findStockNumById(depotId, mId, monthTime, body, input, loadRatio, type);
 												}
 											}
 										},
@@ -2549,7 +2559,8 @@
 					var ratio = body.find("[field='Unit']").find(input).attr("data-ratio");
 					body.find("[field='Stock']").find(input).prop("readonly","readonly");
 					//在新增的时候，这个ratio有值；在编辑的时候，这个ratio为undefined
-					findStockNumById(depotId, mId, monthTime, body, input,ratio);
+					var type = "click"; //type 类型：点击 click，选择 select
+					findStockNumById(depotId, mId, monthTime, body, input, ratio, type);
 				}
 				else{
 					body.find("[field='Stock']").find(input).val(0).attr("data-stock",0); //加载库存数据
