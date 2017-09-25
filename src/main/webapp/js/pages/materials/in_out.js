@@ -613,7 +613,7 @@
 								loadRatio = thisRatio;
 							}
 						}
-						else if(listSubType === "销售" || listSubType === "销售退货" || listTitle == "礼品充值" || listTitle == "礼品销售"){
+						else if(listSubType === "销售" || listSubType === "销售退货" || listTitle == "礼品充值" || listTitle == "礼品销售" || listSubType === "零售" || listSubType === "零售退货"){
 							unitSetInput = rec.rows[0].FirstOutUnit;
 							if(basicUnit==unitSetInput){ //基础单位等于选择的单位
 								loadRatio = 1;
@@ -824,16 +824,20 @@
 												var firstInUnit = res.rows[0].FirstInUnit; //首选入库单位
 												var firstOutUnit = res.rows[0].FirstOutUnit; //首选出库单位
 												var basicPresetPriceOne = ""; //多单位-入库-基础价格
-												var otherPresetPriceOne = ""; //多单位-入库-其他价格
 												var basicPresetPriceTwo = ""; //多单位-出库-基础价格
+												var retailPriceOne = ""; //多单位-入库-零售价格
+												var otherPresetPriceOne = ""; //多单位-入库-其他价格
 												var otherPresetPriceTwo = ""; //多单位-出库-其他价格
+												var retailPriceTwo = ""; //多单位-出库-零售价格
 												var basicUnit = ""; //基础单位
 												var otherUnit = ""; //其他单位
 												if(!res.rows[0].Unit){
 													basicPresetPriceOne = res.rows[0].PriceStrategy[0].basic.PresetPriceOne-0;
-													otherPresetPriceOne = res.rows[0].PriceStrategy[1].other.PresetPriceOne-0;
 													basicPresetPriceTwo = res.rows[0].PriceStrategy[0].basic.PresetPriceTwo-0;
+													retailPriceOne = res.rows[0].PriceStrategy[0].basic.RetailPrice-0;
+													otherPresetPriceOne = res.rows[0].PriceStrategy[1].other.PresetPriceOne-0;
 													otherPresetPriceTwo = res.rows[0].PriceStrategy[1].other.PresetPriceTwo-0;
+													retailPriceTwo = res.rows[0].PriceStrategy[1].other.RetailPrice-0;
 													basicUnit = res.rows[0].PriceStrategy[0].basic.Unit;
 													otherUnit = res.rows[0].PriceStrategy[1].other.Unit;
 												}
@@ -868,7 +872,7 @@
 															loadRatio = ratio;
 														}
 													}
-													else if(listSubType === "销售" || listSubType === "销售退货" || listSubType === "礼品充值" || listSubType === "礼品销售"){
+													else if(listSubType === "销售" || listSubType === "销售退货" || listSubType === "礼品充值" || listSubType === "礼品销售" || listSubType === "零售" || listSubType === "零售退货"){
 														unitSetInput = res.rows[0].FirstOutUnit; //给单位文本框赋值
 														if(basicUnit==unitSetInput){ //基础单位等于选择的单位
 															loadRatio = 1;
@@ -911,6 +915,9 @@
 																else if(listTitle == "销售出库列表" || listTitle == "采购退货列表" || listTitle == "其它出库列表" || listTitle == "调拨出库列表" || listTitle == "礼品充值列表" || listTitle == "礼品销售列表") {
 																	UnitPrice = basicPresetPriceTwo;
 																}
+																else if(listTitle == "零售出库列表" || listTitle == "零售退货列表"){
+																	UnitPrice = retailPriceOne;
+																}
 																body.find("[field='Stock']").find(input).val(stock); //修改库存
 															}
 															else if(type === "other"){
@@ -919,6 +926,9 @@
 																}
 																else if(listTitle == "销售出库列表" || listTitle == "采购退货列表" || listTitle == "其它出库列表" || listTitle == "调拨出库列表" || listTitle == "礼品充值列表" || listTitle == "礼品销售列表") {
 																	UnitPrice = otherPresetPriceTwo;
+																}
+																else if(listTitle == "零售出库列表" || listTitle == "零售退货列表"){
+																	UnitPrice = retailPriceTwo;
 																}
 																body.find("[field='Stock']").find(input).val((stock/ratio).toFixed(2)); //修改库存
 															}
@@ -939,7 +949,17 @@
 												}
 												var detailPrice = 0; //明细列表-单价
 												if(listSubType == "零售" || listSubType == "零售退货") {
-													detailPrice = retailPrice;
+													if(res.rows[0].Unit) { //如果存在计量单位信息
+														detailPrice = retailPrice;
+													}
+													else {
+														if (firstOutUnit == basicUnit) {
+															detailPrice = retailPriceOne;
+														}
+														else if (firstOutUnit == otherUnit) {
+															detailPrice = retailPriceTwo;
+														}
+													}
 												}
 												else if(listTitle == "采购入库列表" || listTitle == "销售退货列表" || listTitle == "其它入库列表") {
 													if(res.rows[0].Unit) { //如果存在计量单位信息
