@@ -545,9 +545,13 @@
 					}
 				},
 				{ title: organNameTitle, field: 'OrganName',width:120, hidden:isShowOrganNameColumn},
-				{ title: '单据编号',field: 'Number',width:140},
+				{ title: '单据编号',field: 'Number',width:130},
+				{ title: '商品信息',field: 'MaterialsList',width:180,formatter:function(value){
+						return value.replace(",","，");
+					}
+				},
 				{ title: '单据日期 ',field: 'OperTime',width:130},
-				{ title: '操作员',field: 'OperPersonName',width:80},
+				{ title: '操作员',field: 'OperPersonName',width:60},
 				{ title: '金额合计',field: 'TotalPrice',width:60},
 				{ title: '含税合计',field: 'TotalTaxLastMoney',hidden:isShowLastMoneyColumn,width:60,formatter:function(value,rec){
 						return (rec.DiscountMoney + rec.DiscountLastMoney).toFixed(2);
@@ -558,18 +562,8 @@
 				{ title: '状态',field: 'Status',width:70,align:"center",formatter:function(value){
 						return value? "<span style='color:green;'>已审核</span>":"<span style='color:red;'>未审核</span>";
 					}
-				},
-				{ title: '单据备注',field: 'Remark',width:100}
+				}
 			]],
-			view: detailview,
-			detailFormatter: function(rowIndex, rowData){
-				var mList = rowData.MaterialsList.replace(","," ， ");
-				return '<table><tr>' +
-					'<td style="border:0">' +
-					'<p>商品信息： ' + mList + '</p>' +
-					'</td>' +
-					'</tr></table>';
-			},
 			toolbar:tableToolBar,
 			onLoadError:function() {
 				$.messager.alert('页面加载提示','页面加载异常，请稍后再试！','error');
