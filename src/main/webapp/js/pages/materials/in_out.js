@@ -445,6 +445,7 @@
 	//初始化表格数据
 	function initTableData(){
 		var hideType = undefined;
+		var isHiddenStatus = true;
 		if(payTypeTitle === "隐藏"){
 			hideType = true; //隐藏当前列
 		}
@@ -470,6 +471,7 @@
 		];
 		//如果允许的按钮列表中存在就显示，3-代表审核|反审核的权限
 		if(btnEnableList && btnEnableList.indexOf(3)>-1){
+			isHiddenStatus = false;  //显示
 			tableToolBar.push({
 				id:'okDepotHead',
 				text:'审核',
@@ -486,6 +488,9 @@
 					setUnStatusFun();
 				}
 			});
+		}
+		else {
+			isHiddenStatus = true; //隐藏
 		}
 		var isShowLastMoneyColumn = false; //是否显示优惠后金额和价税合计,true为隐藏,false为显示
 		if(listSubType == "调拨" || listSubType == "其它" || listSubType == "零售" || listSubType == "零售退货" || listSubType == "礼品充值" || listSubType == "礼品销售" || listSubType == "组装单" || listSubType == "拆卸单"){
@@ -559,7 +564,7 @@
 				},
 				{ title: '优惠后金额',field: 'DiscountLastMoney',hidden:isShowLastMoneyColumn,width:80},
 				{ title: payTypeTitle,field: 'ChangeAmount',width:50,hidden:hideType},
-				{ title: '状态',field: 'Status',width:70,align:"center",formatter:function(value){
+				{ title: '状态',field: 'Status',hidden:isHiddenStatus, width:70,align:"center",formatter:function(value){
 						return value? "<span style='color:green;'>已审核</span>":"<span style='color:red;'>未审核</span>";
 					}
 				}
