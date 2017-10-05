@@ -305,7 +305,8 @@
 			//报表打印
 			function print() {
 				$("#printBtn").off("click").on("click",function(){
-					CreateFormPage('打印报表', $('#tableData'));
+					var path = "<%=path %>";
+					CreateFormPage('打印报表', $('#tableData'), path);
 				});
 			}
 		</script>

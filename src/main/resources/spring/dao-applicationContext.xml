@@ -54,4 +54,6 @@
     <bean id="accountHeadDao" parent="daoTemplate" class="com.jsh.dao.materials.AccountHeadDAO"/>   
     <!-- 配置accountItemDao组件 -->
 	<bean id="accountItemDao" parent="daoTemplate" class="com.jsh.dao.materials.AccountItemDAO"/>
+	<!-- 配置systemConfigDAO组件 -->
+	<bean id="systemConfigDAO" parent="daoTemplate" class="com.jsh.dao.basic.SystemConfigDAO"/>
 </beans>

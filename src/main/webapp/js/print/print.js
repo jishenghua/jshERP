@@ -1,12 +1,37 @@
 // strPrintName 打印任务名
 // printDatagrid 要打印的datagrid
-function CreateFormPage(strPrintName, printDatagrid) {
+function CreateFormPage(strPrintName, printDatagrid, path) {
     var beginDate= $("#searchBeginTime").val();
     var endDate= $("#searchEndTime").val();
     var getMonth= $("#searchMonth").val();
     var listTitle = $("#tablePanel").prev().text();
     listTitle = listTitle.replace("列表","");
-    var tableString = '<div class="div-title">上海某某某某有限责任公司' + listTitle + '\n</div>';
+    var companyName = "";
+    //加载公司信息
+    $.ajax({
+        type:"get",
+        url: path + "/systemConfig/findBy.action",
+        dataType: "json",
+        async: false,
+        success: function (res) {
+            if(res && res.rows) {
+                var array = res.rows;
+                for(var i=0; i<array.length; i++){
+                    var name = array[i].name;
+                    if(name === "company_name") {
+                        companyName = array[i].value;
+                    }
+                }
+            }
+        },
+        //此处添加错误处理
+        error:function() {
+            $.messager.alert('查询失败','查询系统配置信息异常，请稍后再试！','error');
+            return;
+        }
+    });
+
+    var tableString = '<div class="div-title">' + companyName + "-" + listTitle + '\n</div>';
         if(beginDate && endDate) {
             tableString+='\n<div class="div-time">日期：' + beginDate + ' 至 ' + endDate + ' \n</div>';
         }

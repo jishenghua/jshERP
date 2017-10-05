@@ -106,7 +106,6 @@
 	<bean id="supplierService" class="com.jsh.service.basic.SupplierService">
 		<property name="baseDao" ref="baseDao"/>
 		<property name="supplierDao" ref="supplierDao"/>
-		<property name="userBusinessDao" ref="userBusinessDao"/>
 	</bean>
 	<!-- spring整合struts2需要默认为request或者 prototype，不能是单例 -->
 	<bean id="supplierAction" class="com.jsh.action.basic.SupplierAction" scope="prototype">
@@ -115,6 +114,17 @@
 		<property name="logService" ref="logService"/>
 	</bean>
 	<!--供应商配置结束 -->
+
+	<!--系统配置开始 -->
+	<bean id="systemConfigService" class="com.jsh.service.basic.SystemConfigService">
+		<property name="baseDao" ref="baseDao"/>
+	</bean>
+	<!-- spring整合struts2需要默认为request或者 prototype，不能是单例 -->
+	<bean id="systemConfigAction" class="com.jsh.action.basic.SystemConfigAction" scope="prototype">
+		<property name="systemConfigService" ref="systemConfigService"/>
+		<property name="logService" ref="logService"/>
+	</bean>
+	<!--系统配置结束 -->
 	
 	<!--分类配置开始 -->
 	<bean id="categoryService" class="com.jsh.service.basic.CategoryService">
@@ -255,7 +265,6 @@
 	<!--经手人配置开始 -->
 	<bean id="personService" class="com.jsh.service.materials.PersonService">
 		<property name="baseDao" ref="baseDao"/>
-		<property name="personDao" ref="personDao"/>
 	</bean>
 	<!-- spring整合struts2需要默认为request或者 prototype，不能是单例 -->
 	<bean id="personAction" class="com.jsh.action.materials.PersonAction" scope="prototype">
@@ -363,4 +372,5 @@
         <property name="logService" ref="logService"/>
     </bean>
 	<!--账户明细配置结束 -->
+
 </beans>
