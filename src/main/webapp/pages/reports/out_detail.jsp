@@ -22,7 +22,7 @@
 		<script type="text/javascript" src="<%=path %>/js/My97DatePicker/WdatePicker.js"></script>
 		<script type="text/javascript" src="<%=path %>/js/common/common.js"></script>
 		<script>
-			var kid = ${sessionScope.user.id};
+			var uid = ${sessionScope.user.id};
 		</script>
 	</head>
 	<body>
@@ -88,7 +88,7 @@
 				type:"post",
 				url: "<%=path %>/userBusiness/getBasicData.action",
 				data: ({
-					KeyId:kid,
+					KeyId: uid,
 					Type:"UserDepot"
 				}),
 				//设置为同步

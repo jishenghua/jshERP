@@ -731,6 +731,55 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
 		}
 		return allReturn;
 	}
+
+	/**
+	 *对账单接口
+	 */
+	public void findStatementAccount(){
+		PageUtil pageUtil = new  PageUtil();
+		pageUtil.setPageSize(model.getPageSize());
+		pageUtil.setCurPage(model.getPageNo());
+		Long pid =model.getProjectId();
+		String dids =model.getDepotIds();
+		String beginTime = model.getBeginTime();
+		String endTime = model.getEndTime();
+		Long organId = model.getOrganId();
+		try{
+			depotHeadService.findStatementAccount(pageUtil, beginTime, endTime, organId, pid, dids);
+			List dataList = pageUtil.getPageList();
+			JSONObject outer = new JSONObject();
+			outer.put("total", pageUtil.getTotalCount());
+			//存放数据json数组
+			JSONArray dataArray = new JSONArray();
+			if(dataList!=null){
+				for(Integer i=0; i<dataList.size(); i++){
+					JSONObject item = new JSONObject();
+					Object dl = dataList.get(i); //获取对象
+					Object[] arr = (Object[]) dl; //转为数组
+					item.put("number", arr[0]); //单据编号
+					item.put("materialName", arr[1]); //商品名称
+					item.put("materialModel", arr[2]); //商品型号
+					item.put("unitPrice", arr[3]); //单价
+					item.put("operNumber", arr[4]); //入库出库数量
+					item.put("allPrice", arr[5]); //金额
+					item.put("supplierName", arr[6]); //供应商
+					item.put("depotName", arr[7]); //仓库
+					item.put("operTime", arr[8]); //入库出库日期
+					item.put("type", arr[9]); //单据类型
+					dataArray.add(item);
+				}
+			}
+			outer.put("rows", dataArray);
+			//回写查询结果
+			toClient(outer.toString());
+		}
+		catch (JshException e) {
+			Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找信息异常", e);
+		}
+		catch (IOException e) {
+			Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询信息结果异常", e);
+		}
+	}
     
 	/**
 	 * 拼接搜索条件

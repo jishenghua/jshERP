@@ -59,12 +59,15 @@ public class DepotHeadDAO extends BaseDAO<DepotHead> implements DepotHeadIDAO {
                 "inner join jsh_material m on m.id=di.MaterialId " +
                 "inner join jsh_supplier s on s.id=dh.OrganId " +
                 "inner join (select id,name as dName from jsh_depot) d on d.id=di.DepotId " +
-                "where dh.Type='"+ type +"' and dh.OperTime >='"+ beginTime +"' and dh.OperTime <='"+ endTime +"' ");
+                "where dh.OperTime >='"+ beginTime +"' and dh.OperTime <='"+ endTime +"' ");
         if(pid!=null){
             queryString.append(" and di.DepotId=" + pid );
         }
         else {
             queryString.append(" and di.DepotId in (" + dids + ")" );
+        }
+        if(type!=null && !type.equals("")) {
+            queryString.append(" and dh.Type='"+ type +"'");
         }
         queryString.append(" ORDER BY OperTime DESC,Number desc");
         Query query;
@@ -122,6 +125,38 @@ public class DepotHeadDAO extends BaseDAO<DepotHead> implements DepotHeadIDAO {
         queryString.append("select group_concat(concat(jsh_material.`Name`,' ',jsh_material.Model,' ',jsh_material.Mfrs)) as mName from jsh_depotitem inner join jsh_material " +
                 " on jsh_depotitem.MaterialId = jsh_material.Id where jsh_depotitem.HeaderId ="+ headerId);
         Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
+        pageUtil.setPageList(query.list());
+    }
+
+    @SuppressWarnings("unchecked")
+    public void findStatementAccount(PageUtil pageUtil,String beginTime,String endTime,Long organId,Long pid,String dids) throws JshException {
+        StringBuffer queryString = new StringBuffer();
+        queryString.append("select dh.Number,m.`name`,m.Model,di.UnitPrice,di.OperNumber,di.AllPrice,s.supplier,d.dName,date_format(dh.OperTime, '%Y-%m-%d'),dh.type " +
+                "from jsh_depothead dh inner join jsh_depotitem di on di.HeaderId=dh.id " +
+                "inner join jsh_material m on m.id=di.MaterialId " +
+                "inner join jsh_supplier s on s.id=dh.OrganId " +
+                "inner join (select id,name as dName from jsh_depot) d on d.id=di.DepotId " +
+                "where s.type!='会员' and dh.OperTime >='"+ beginTime +"' and dh.OperTime <='"+ endTime +"' ");
+        if(pid!=null){
+            queryString.append(" and di.DepotId=" + pid );
+        }
+        else {
+            queryString.append(" and di.DepotId in (" + dids + ")" );
+        }
+        if(organId!=null && !organId.equals("")) {
+            queryString.append(" and dh.OrganId='"+ organId +"'");
+        }
+        queryString.append(" ORDER BY OperTime DESC,Number desc");
+        Query query;
+        query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
+        pageUtil.setTotalCount(query.list().size());
+        // 分页查询
+        int pageNo = pageUtil.getCurPage();
+        int pageSize = pageUtil.getPageSize();
+        if (0 != pageNo && 0 != pageSize) {
+            query.setFirstResult((pageNo - 1) * pageSize);
+            query.setMaxResults(pageSize);
+        }
         pageUtil.setPageList(query.list());
     }
 
