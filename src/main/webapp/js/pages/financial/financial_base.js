@@ -239,7 +239,7 @@
 				},
 				{ field: 'OrganId',width:5, hidden:true},
 				{ title: '单据编号',field: 'BillNo',width:140},
-				{ title: '单据时间 ',field: 'BillTime',width:100},
+				{ title: '单据时间 ',field: 'BillTime',width:140},
 				{ title: '合计',field: 'TotalPrice',width:80},
 				{ title: '备注',field: 'Remark',width:100}
 			]],
@@ -274,7 +274,7 @@
 	//初始化表格数据-明细列表-编辑状态
 	function initTableData_account(type,TotalPrice){
 		$('#accountData').datagrid({
-			height:300,
+			height:280,
 			rownumbers: false,
 			//动画效果
 			animate:false,
@@ -282,17 +282,14 @@
 			singleSelect : true,
 			collapsible:false,
 			selectOnCheck:false,
-			//fitColumns:true,
 			//单击行是否选中
-			//checkOnSelect : false,
-			pagination: true,
+			checkOnSelect : false,
+			pagination: false,
 			//交替出现背景
 			striped : true,
 			showFooter: true,
 			//loadFilter: pagerFilter,
 			onClickRow: onClickRow,
-			pageSize: 50,
-			pageList: [50,100,150],
 			columns:[[
 			  { field: 'Id',width:35,align:"center",checkbox:true},
 	          { title: payTypeTitle,field: 'InOutItemId',width:230,hidden:itemType,
@@ -323,7 +320,7 @@
                   }
 	            }
 			  },
-	          { title: '金额',field: 'EachAmount',editor:'validatebox',width:50},
+	          { title: '金额',field: 'EachAmount',editor:'validatebox',width:70},
 	          { title: '备注',field: 'Remark',editor:'validatebox',width:150}
 			]],
 			toolbar:[
@@ -387,7 +384,7 @@
 	//初始化表格数据-明细列表-查看状态
 	function initTableData_account_show(TotalPrice){
 		$('#accountDataShow').datagrid({
-			height:300,
+			height:280,
 			rownumbers: true,
 			//动画效果
 			animate:false,
@@ -395,21 +392,18 @@
 			singleSelect : true,
 			collapsible:false,
 			selectOnCheck:false,
-			//fitColumns:true,
 			//单击行是否选中
-			//checkOnSelect : false,
-			pagination: true,
+			checkOnSelect : false,
+			pagination: false,
 			//交替出现背景
 			striped : true,
 			showFooter: true,
 			//loadFilter: pagerFilter,
 			onClickRow: onClickRow,
-			pageSize: 50,
-			pageList: [50,100,150],
 			columns:[[
 	          { title: payTypeTitle, field: 'InOutItemName', width:230, hidden:itemType},
 	          { title: '账户名称', field: 'AccountName', width:230, hidden:moneyType},	         
-	          { title: '金额',field: 'EachAmount',width:50},
+	          { title: '金额',field: 'EachAmount',width:70},
 	          { title: '备注',field: 'Remark',width:150}
 			]],
 			onLoadError:function()
@@ -606,8 +600,8 @@
 	function addAccountHead(){
 		$("#clientIp").val(clientIp);
 		$('#accountHeadFM').form('clear');
-		var thisDate = getNowFormatDate(); //当前日期
-		$("#BillTime").val(thisDate);
+		var thisDateTime = getNowFormatDateTime(); //当前时间
+		$("#BillTime").val(thisDateTime);
 		var thisNumber = getNowFormatDateNum(); //根据时间生成编号
 		$("#BillNo").val(amountNum + thisNumber).focus();
 		var addTitle = listTitle.replace("列表","信息");

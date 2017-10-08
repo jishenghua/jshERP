@@ -79,7 +79,7 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel>
             accountHead.setBillNo(model.getBillNo());
             try
             {
-                accountHead.setBillTime(new Timestamp(Tools.parse(model.getBillTime(), "yyyy-MM-dd").getTime()));
+                accountHead.setBillTime(new Timestamp(Tools.parse(model.getBillTime(), "yyyy-MM-dd HH:mm:ss").getTime()));
             }
             catch (ParseException e)
             {
@@ -165,7 +165,7 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel>
             accountHead.setBillNo(model.getBillNo());
             try
             {
-                accountHead.setBillTime(new Timestamp(Tools.parse(model.getBillTime(), "yyyy-MM-dd").getTime()));
+                accountHead.setBillTime(new Timestamp(Tools.parse(model.getBillTime(), "yyyy-MM-dd HH:mm:ss").getTime()));
             }
             catch (ParseException e)
             {
@@ -260,7 +260,7 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel>
                     item.put("AccountId", accountHead.getAccountId()==null?"":accountHead.getAccountId().getId());
                     item.put("AccountName", accountHead.getAccountId()==null?"":accountHead.getAccountId().getName());
                     item.put("BillNo", accountHead.getBillNo());
-                    item.put("BillTime", Tools.getCurrentMonth(accountHead.getBillTime()));
+                    item.put("BillTime", Tools.getCenternTime(accountHead.getBillTime()));
                     item.put("ChangeAmount", accountHead.getChangeAmount()==null?"":Math.abs(accountHead.getChangeAmount()));
                     item.put("TotalPrice", accountHead.getTotalPrice()==null?"":Math.abs(accountHead.getTotalPrice()));
                     item.put("Remark", accountHead.getRemark());
