@@ -608,6 +608,8 @@
             email : supplierInfo[4].replace("undefined",""),
             BeginNeedGet : supplierInfo[5],
             BeginNeedPay : supplierInfo[6],
+            AllNeedGet: "",
+            AllNeedPay: "",
             description : supplierInfo[8].replace("undefined",""),
             type : supplierInfo[9],
             fax : supplierInfo[10].replace("undefined",""),
@@ -654,12 +656,14 @@
                                 var money = moneyA+moneyB;
                                 var moneyBeginNeedGet = $("#BeginNeedGet").val()-0; //期初应收
                                 var moneyBeginNeedPay = $("#BeginNeedPay").val()-0; //期初应付
-                                money = money + moneyBeginNeedPay - moneyBeginNeedGet;
+                                money = (money + moneyBeginNeedPay - moneyBeginNeedGet).toFixed(2);
                                 if(money>0) {
+                                    $("#AllNeedGet").val(""); //累计应收-置空
                                     $("#AllNeedPay").val(money); //累计应付
                                 }
                                 else {
                                     $("#AllNeedGet").val(-money);  //累计应收
+                                    $("#AllNeedPay").val(""); //累计应付-置空
                                 }
                             }
                         },

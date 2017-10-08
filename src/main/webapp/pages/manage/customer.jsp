@@ -100,21 +100,21 @@
 					<tr>
 						<td>期初应收</td>
 						<td style="padding:1px">
-							<input name="BeginNeedGet" id="BeginNeedGet" type="text" class="easyui-numberbox" data-options="min:0,precision:2" style="width: 160px;height: 20px"></input>
+							<input name="BeginNeedGet" id="BeginNeedGet" type="text" class="easyui-numberbox" data-options="min:0,precision:2" style="width: 160px;height: 20px" />
 						</td>
 						<td>期初应付</td>
 						<td style="padding:1px">
-							<input name="BeginNeedPay" id="BeginNeedPay" type="text" class="easyui-numberbox" data-options="min:0,precision:2" style="width: 160px;height: 20px"></input>
+							<input name="BeginNeedPay" id="BeginNeedPay" type="text" class="easyui-numberbox" data-options="min:0,precision:2" style="width: 160px;height: 20px" />
 						</td>
 					</tr>
 					<tr>
 						<td>累计应收</td>
 						<td style="padding:1px">
-							<input name="AllNeedGet" id="AllNeedGet" type="text" class="easyui-numberbox" data-options="min:0,precision:2" style="width: 160px;height: 20px" disabled="true"></input>
+							<input name="AllNeedGet" id="AllNeedGet" type="text" style="width: 160px;height: 20px" readonly="readonly" />
 						</td>
 						<td>累计应付</td>
 						<td style="padding:1px">
-							<input name="AllNeedPay" id="AllNeedPay" type="text" class="easyui-numberbox" data-options="min:0,precision:2" style="width: 160px;height: 20px" disabled="true"></input>
+							<input name="AllNeedPay" id="AllNeedPay" type="text" style="width: 160px;height: 20px" readonly="readonly" />
 						</td>
 					</tr>
 					<tr>

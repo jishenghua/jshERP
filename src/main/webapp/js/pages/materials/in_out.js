@@ -1941,7 +1941,7 @@
 
 				}
 				var OrganId = null, ProjectId = null,AllocationProjectId = null;
-				var ChangeAmount = $.trim($("#ChangeAmount").val());
+				var ChangeAmount = $.trim($("#ChangeAmount").val())-0;
 				var TotalPrice = $("#depotHeadFM .datagrid-footer [field='AllPrice'] div").text();
 				if($('#OrganId').length){
 					OrganId = $('#OrganId').combobox('getValue');
