@@ -89,7 +89,7 @@ public class MaterialService extends BaseService<Material> implements MaterialIS
 			workbook = Workbook.createWorkbook(os);
 			WritableSheet sheet = workbook.createSheet("信息报表", 0);
 			//增加列头
-			String[] colunmName = {"品名","类型","型号","制造商","规格","安全存量","单位","零售价","最低售价","预计采购价","批发价","备注","状态"};
+			String[] colunmName = {"品名","类型","型号","颜色","规格","安全存量","单位","零售价","最低售价","预计采购价","批发价","备注","状态"};
 			for(int i = 0 ;i < colunmName.length;i ++) {
 				sheet.setColumnView(i, 10);
 				sheet.addCell(new Label(i, 0, colunmName[i]));
@@ -102,7 +102,7 @@ public class MaterialService extends BaseService<Material> implements MaterialIS
 					sheet.addCell(new Label(j++,i, material.getName()));
 					sheet.addCell(new Label(j++,i, material.getMaterialCategory().getName()));
 					sheet.addCell(new Label(j++,i, material.getModel() == null ?"": material.getModel()));
-					sheet.addCell(new Label(j++,i, material.getMfrs() == null ?"": material.getMfrs()));
+					sheet.addCell(new Label(j++,i, material.getColor() == null ?"": material.getColor()));
 					sheet.addCell(new Label(j++,i, material.getStandard() == null ?"": material.getStandard()));
 					sheet.addCell(getLabelInfo(cellInfo,j++,i, material.getSafetyStock() == null ?"": material.getSafetyStock().toString(),material));
 					sheet.addCell(new Label(j++,i, material.getUnit() == null ?"": material.getUnit()));
@@ -242,7 +242,7 @@ public class MaterialService extends BaseService<Material> implements MaterialIS
 
 					Log.infoFileSync("==================excel表格中第" + totalRow + "行的第 " + cellIndex + "列的值为" + cell.getStringCellValue());
 
-					//每行中数据顺序  "品名","类型","型号","制造商","规格","安全存量","单位","零售价","最低售价","预计采购价","批发价","备注","状态"
+					//每行中数据顺序  "品名","类型","型号","颜色","规格","安全存量","单位","零售价","最低售价","预计采购价","批发价","备注","状态"
 					switch(cellIndex) {
 						case MaterialConstants.BusinessForExcel.EXCEL_NAME :
 							String materialName = cell.getStringCellValue();
@@ -268,13 +268,13 @@ public class MaterialService extends BaseService<Material> implements MaterialIS
 							}
 							material.setModel(model);
 							break;
-						case MaterialConstants.BusinessForExcel.EXCEL_MFRS :
-							String mfrs = cell.getStringCellValue();
-							if(null == mfrs || "".equals(mfrs)) {
-								Log.errorFileSync(">>>>>>>>>>>>>>>>列表没有填写(制造商)信息");
+						case MaterialConstants.BusinessForExcel.EXCEL_COLOR :
+							String color = cell.getStringCellValue();
+							if(null == color || "".equals(color)) {
+								Log.errorFileSync(">>>>>>>>>>>>>>>>列表没有填写(颜色)信息");
 								break;
 							}
-							material.setMfrs(mfrs);
+							material.setColor(color);
 							break;
 						case MaterialConstants.BusinessForExcel.EXCEL_STANDARD :
 							String standard = cell.getStringCellValue();

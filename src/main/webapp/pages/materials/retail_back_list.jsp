@@ -39,7 +39,7 @@
 				</td>
 				<td>商品信息：</td>
 				<td>
-					<input type="text" name="searchMaterial" id="searchMaterial" placeholder="名称，型号，制造商" style="width:120px;"/>
+					<input type="text" name="searchMaterial" id="searchMaterial" placeholder="名称，型号，颜色" style="width:120px;"/>
 				</td>
 				<td>单据日期：</td>
 				<td>

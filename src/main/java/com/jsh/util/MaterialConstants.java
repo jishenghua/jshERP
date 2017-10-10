@@ -32,9 +32,9 @@ public interface MaterialConstants
         public static final int EXCEL_CATEGORY = 1;
 
         /**
-         * 制造商
+         * 颜色
          */
-        public static final int EXCEL_MFRS = 2;
+        public static final int EXCEL_COLOR = 2;
 
         /**
          * 型号
