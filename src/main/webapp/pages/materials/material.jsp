@@ -1006,7 +1006,7 @@
 							SafetyStock : $.trim($("#SafetyStock").val()),
 							Model : $.trim($("#Model").val()),
 							Standard : $.trim($("#Standard").val()),
-							Color : "",
+							Mfrs : "",
 							Unit : $.trim($("#Unit").val()),
 							RetailPrice : $.trim($("#RetailPrice").val()),
 							LowPrice : $.trim($("#LowPrice").val()),
