@@ -374,7 +374,7 @@ public class MaterialAction extends BaseAction<MaterialModel>
                     item.put("SafetyStock", material.getSafetyStock()==null?"" : material.getSafetyStock());
                     item.put("Model", material.getModel());
                     item.put("Standard", material.getStandard());
-                    item.put("Color", material.getColor());
+                    item.put("Color", material.getColor()==null?"": material.getColor());
                     item.put("Unit", material.getUnit());
                     item.put("RetailPrice", material.getRetailPrice());
                     item.put("LowPrice", material.getLowPrice());
@@ -430,9 +430,10 @@ public class MaterialAction extends BaseAction<MaterialModel>
                         ratio = material.getUnitId().getUName();
                         ratio = ratio.substring(ratio.indexOf("("));
                     }
-                    //品名/型号/制造商/包装
+                    //品名/型号/规格/颜色/包装
                     String MaterialName = material.getName() + ((material.getModel() == null || material.getModel().equals(""))?"":"("+material.getModel() + ")")
-                    + ((material.getMfrs() == null || material.getMfrs().equals(""))?"":"("+material.getMfrs() + ")")
+                    + ((material.getStandard() == null || material.getStandard().equals(""))?"":"("+material.getStandard() + ")")
+                    + ((material.getColor() == null || material.getColor().equals(""))?"":"("+material.getColor() + ")")
                     + ratio;
                     item.put("MaterialName", MaterialName);
                     dataArray.add(item);
@@ -563,7 +564,7 @@ public class MaterialAction extends BaseAction<MaterialModel>
         Map<String,Object> condition = new HashMap<String,Object>();
         condition.put("Name_s_like", model.getName());
         condition.put("Model_s_like", model.getModel());
-        condition.put("Mfrs_s_like", model.getMfrs());
+        condition.put("Color_s_like", model.getColor());
         condition.put("Id_s_order", "asc");
         return condition;
     }
@@ -579,7 +580,7 @@ public class MaterialAction extends BaseAction<MaterialModel>
         Map<String,Object> condition = new HashMap<String,Object>();
         condition.put("Name_s_like", model.getName());
         condition.put("Model_s_like", model.getModel());
-        condition.put("Mfrs_s_like", model.getMfrs());
+        condition.put("Color_s_like", model.getColor());
         condition.put("CategoryId_s_in", model.getCategoryIds());
         condition.put("Id_s_order", "asc");
         return condition;
@@ -592,7 +593,7 @@ public class MaterialAction extends BaseAction<MaterialModel>
         }
         condition.put("Name_s_eq", model.getName());
         condition.put("Model_s_eq", model.getModel());
-        condition.put("Mfrs_s_eq", model.getMfrs());
+        condition.put("Color_s_eq", model.getColor());
         if(model.getUnit()!=null){
             condition.put("Unit_s_eq", model.getUnit());
         }

@@ -280,9 +280,10 @@ public class DepotItemAction extends BaseAction<DepotItemModel>
                         ratio = depotItem.getMaterialId().getUnitId().getUName();
                         ratio = ratio.substring(ratio.indexOf("("));
                     }
-                    //品名/型号/制造商/包装
+                    //品名/型号/规格/颜色/包装
                     String MaterialName = depotItem.getMaterialId().getName() + ((depotItem.getMaterialId().getModel() == null||depotItem.getMaterialId().getModel().equals(""))?"":"("+depotItem.getMaterialId().getModel()+ ")")
-                            +((depotItem.getMaterialId().getMfrs() == null||depotItem.getMaterialId().getMfrs().equals(""))?"":"("+depotItem.getMaterialId().getMfrs() + ")")
+                            +((depotItem.getMaterialId().getStandard() == null||depotItem.getMaterialId().getStandard().equals(""))?"":"("+depotItem.getMaterialId().getStandard() + ")")
+                            +((depotItem.getMaterialId().getColor() == null||depotItem.getMaterialId().getColor().equals(""))?"":"("+depotItem.getMaterialId().getColor() + ")")
                             + ratio;
                     item.put("MaterialName", MaterialName);
                     item.put("Unit", depotItem.getMUnit());

@@ -788,7 +788,7 @@
 						}
 					}
 				},
-	          	{ title: '品名(型号)(制造商)(包装)',field: 'MaterialId',width:230,
+	          	{ title: '品名(型号)(规格)(颜色)(包装)',field: 'MaterialId',width:230,
 				  	formatter:function(value,row,index){
 						return row.MaterialName;
 	              	},
@@ -1039,7 +1039,7 @@
 	            { title: '备注',field: 'Remark',editor:'validatebox',width:150},
 				{ title: '品名-别',field: 'OtherField1',editor:'validatebox',hidden:otherColumns,width:60},
 				{ title: '型号-别',field: 'OtherField2',editor:'validatebox',hidden:otherColumns,width:60},
-				{ title: '制造商-别',field: 'OtherField3',editor:'validatebox',hidden:otherColumns,width:60},
+				{ title: '颜色-别',field: 'OtherField3',editor:'validatebox',hidden:otherColumns,width:60},
 				{ title: '备注1',field: 'OtherField4',editor:'validatebox',hidden:true,width:60},
 				{ title: '备注2',field: 'OtherField5',editor:'validatebox',hidden:true,width:60}
 			]],
@@ -1150,7 +1150,7 @@
 			columns:[[
 				{ title: '商品类型',field: 'MType',width:80, hidden:isShowMaterialTypeColumn},
 				{ title: depotHeadName,field: 'DepotName',editor:'validatebox',width:90},
-				{ title: '品名(型号)(制造商)(包装)',field: 'MaterialName',width:230},
+				{ title: '品名(型号)(规格)(颜色)(包装)',field: 'MaterialName',width:230},
 				{ title: anotherDepotHeadName,field: 'AnotherDepotName',hidden:isShowAnotherDepot,width:90},
 				{ title: '单位',field: 'Unit',editor:'validatebox',width:70},
 				{ title: '数量',field: 'OperNumber',editor:'validatebox',width:70},
@@ -1163,7 +1163,7 @@
 				{ title: '备注',field: 'Remark',editor:'validatebox',width:150},
 				{ title: '品名-别',field: 'OtherField1',editor:'validatebox',hidden:otherColumns,width:60},
 				{ title: '型号-别',field: 'OtherField2',editor:'validatebox',hidden:otherColumns,width:60},
-				{ title: '制造商-别',field: 'OtherField3',editor:'validatebox',hidden:otherColumns,width:60},
+				{ title: '颜色-别',field: 'OtherField3',editor:'validatebox',hidden:otherColumns,width:60},
 				{ title: '备注1',field: 'OtherField4',editor:'validatebox',hidden:true,width:60},
 				{ title: '备注2',field: 'OtherField5',editor:'validatebox',hidden:true,width:60}
 			]],

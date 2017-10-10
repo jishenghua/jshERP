@@ -35,9 +35,9 @@
 					<td>
 						<input name="searchModel" id="searchModel" style="width:80px;"/>
 					</td>
-					<td>制造商：</td>
+					<td>颜色：</td>
 					<td>
-						<input name="searchMfrs" id="searchMfrs" style="width:80px;"/>
+						<input name="searchColor" id="searchColor" style="width:80px;"/>
 					</td>
 			    	<td>类别：</td>
 					<td>
@@ -86,9 +86,9 @@
 					<td></td>
 	            </tr>
 	            <tr>
-					<td style="height:30px;">制造商</td>
+					<td style="height:30px;">颜色</td>
 					<td style="padding:5px">
-						<input name="Mfrs" id="Mfrs" class="easyui-validatebox" data-options="required:true,validType:'length[1,30]'" style="width: 180px;height: 20px"/>
+						<input name="Color" id="Color" class="easyui-validatebox" data-options="validType:'length[1,30]'" style="width: 180px;height: 20px"/>
 					</td>
 					<td>规格</td>
 					<td style="padding:5px"><input name="Standard" id="Standard" class="easyui-validatebox" data-options="validType:'length[1,30]'" style="width: 180px;height: 20px"/></td>
@@ -503,7 +503,7 @@
 							var str = '';
 							var rowInfo = rec.Id + 'AaBb' + rec.Name+ 'AaBb' + rec.Model + 'AaBb' + rec.Color + 'AaBb' + rec.Unit + 'AaBb' + rec.RetailPrice
 									+ 'AaBb' + rec.LowPrice + 'AaBb' + rec.PresetPriceOne + 'AaBb' + rec.PresetPriceTwo + 'AaBb' + rec.Remark + 'AaBb' + rec.Standard
-									+ 'AaBb' + rec.Mfrs + 'AaBb' + rec.Packing + 'AaBb' + rec.SafetyStock + 'AaBb' + rec.CategoryId + 'AaBb' + rec.CategoryName
+									+ 'AaBb' + rec.Color + 'AaBb' + rec.Packing + 'AaBb' + rec.SafetyStock + 'AaBb' + rec.CategoryId + 'AaBb' + rec.CategoryName
 									+ 'AaBb' + rec.UnitId + 'AaBb' + rec.UnitName + 'AaBb' + rec.FirstOutUnit + 'AaBb' + rec.FirstInUnit;
 							if(1 == value)
 							{
@@ -515,7 +515,7 @@
 						},
 						{ title: '品名',field: 'Name',width:80},
 						{ title: '型号',field: 'Model',width:80},
-						{ title: '制造商',field: 'Mfrs',width:150},
+						{ title: '颜色',field: 'Color',width:80},
 						{ title: '规格',field: 'Standard',width:80},
 						{ title: '单位',field: 'Unit',width:60},
 						{ title: '安全存量',field: 'SafetyStock',width:90},
@@ -872,10 +872,10 @@
 			//增加
 			var url;
 			var materialID = 0;
-			//保存编辑前的名称/型号/制造商
+			//保存编辑前的名称/型号/颜色
 			var oldName = "";
 			var oldModel = "";
-			var oldMfrs = "";
+			var oldColor = "";
 			var oldUnit = "";
 			var oldManyUnit = "";
 
@@ -901,7 +901,7 @@
 				$(".price-two").show();
 				oldName = "";
 				oldModel = "";
-				oldMfrs = "";
+				oldColor = "";
 				oldUnit = "";
 				oldManyUnit = "";
 				materialID = 0;
@@ -912,13 +912,13 @@
 			function checkIsExist() {
 				var mName = $.trim($("#Name").val());
 				var mModel = $.trim($("#Model").val());
-				var mMfrs = $.trim($("#Mfrs").val());
+				var mColor = $.trim($("#Color").val());
 				var mUnit = $.trim($("#Unit").val());
 				var mUnitId = $.trim($("#manyUnit").val());
 				//表示是否存在 true == 存在 false = 不存在
 				var flag = false;
 				//开始ajax名称检验，不能重名(新增或编辑)
-				if(materialID==0 || (materialID!=0 && (mName != oldName || mModel != oldModel || mMfrs != oldMfrs || mUnit != oldUnit || mUnitId != oldManyUnit))) {
+				if(materialID==0 || (materialID!=0 && (mName != oldName || mModel != oldModel || mColor != oldColor || mUnit != oldUnit || mUnitId != oldManyUnit))) {
 					$.ajax({
 						type:"post",
 						url: "<%=path%>/material/checkIsExist.action",
@@ -928,7 +928,7 @@
 							MaterialID : materialID,
 							Name : mName,
 							Model: mModel,
-							Mfrs: mMfrs,
+							Color: mColor,
 							Unit: mUnit,
 							UnitId: mUnitId
 						}),
@@ -1001,7 +1001,7 @@
 						data: ({
 							CategoryId : parent,
 							Name : $.trim($("#Name").val()),
-							Mfrs : $.trim($("#Mfrs").val()),
+							Color : $.trim($("#Color").val()),
 							Packing : $.trim($("#Packing").val()),
 							SafetyStock : $.trim($("#SafetyStock").val()),
 							Model : $.trim($("#Model").val()),
@@ -1075,7 +1075,7 @@
 
 				$("#clientIp").val('<%=clientIp %>');
 				$("#Name").focus().val(materialInfo[1]);
-				$("#Mfrs").focus().val(materialInfo[11]);
+				$("#Color").focus().val(materialInfo[11]);
 
 				var categoryName = ""; //类型名称
 				mId = materialInfo[14];
@@ -1191,7 +1191,7 @@
 
 				oldName = materialInfo[1];
 				oldModel = materialInfo[2];
-				oldMfrs = materialInfo[11];
+				oldColor = materialInfo[11];
 				oldUnit = materialInfo[4];
 				oldManyUnit = materialInfo[16];
 				$('#materialDlg').dialog('open').dialog('setTitle','<img src="<%=path%>/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑商品信息');
@@ -1240,7 +1240,7 @@
 					data: ({
 						Name: $.trim($("#searchName").val()),
 						Model: $.trim($("#searchModel").val()),
-						Mfrs: $.trim($("#searchMfrs").val()),
+						Color: $.trim($("#searchColor").val()),
 						CategoryId:cid,
 						CategoryIds:setCategoryId,
 						pageNo:pageNo,
