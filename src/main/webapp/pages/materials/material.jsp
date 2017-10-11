@@ -59,116 +59,133 @@
 			<table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 		</div>
 		
-	    <div id="materialDlg" class="easyui-dialog" style="width:880px;padding:10px 20px"
+	    <div id="materialDlg" class="easyui-dialog" style="width:860px;height:400px;padding:10px 20px"
 	            closed="true" buttons="#dlg-buttons" modal="true" collapsible="false" closable="true">
 	        <form id="materialFM" method="post"  novalidate>
-	            <table height="360px">
-	            <tr>
-					<td style="width:80px; height:30px;">品名</td>
-					<td style="padding:5px;width:180px;">
-						<input name="Name" id="Name" class="easyui-validatebox" data-options="required:true,validType:'length[2,30]'" style="width: 180px;height: 20px"/>
-					</td>
-					<td style="width:80px;">型号</td>
-					<td style="padding:5px;width:180px;">
-						<input name="Model" id="Model" class="easyui-validatebox" data-options="required:true,validType:'length[1,30]'" style="width: 180px;height: 20px"/>
-					</td>
-					<td style="width:200px;"></td>
-	            </tr>
-	            <tr>
-					<td style="height:30px;">类别</td>
-					<td style="padding:5px" colspan="3">
-					<select name="CategoryId_f" id="CategoryId_f" style="width:152px;height: 20px"></select>
-					<select name="CategoryId_s" id="CategoryId_s" style="width:152px;height: 20px"></select>
-					<select name="CategoryId_t" id="CategoryId_t" style="width:152px;height: 20px"></select>
-						<label id="mTypeName"></label>
-						<a href="#" id="mTypeChange">修改</a>
-					</td>
-					<td></td>
-	            </tr>
-	            <tr>
-					<td style="height:30px;">颜色</td>
-					<td style="padding:5px">
-						<input name="Color" id="Color" class="easyui-validatebox" data-options="validType:'length[1,30]'" style="width: 180px;height: 20px"/>
-					</td>
-					<td>规格</td>
-					<td style="padding:5px"><input name="Standard" id="Standard" class="easyui-validatebox" data-options="validType:'length[1,30]'" style="width: 180px;height: 20px"/></td>
-					<td></td>
-				</tr>
-	            <tr>
-					<td style="height:30px;">安全存量</td>
-					<td style="padding:5px">
-						<input name="SafetyStock" id="SafetyStock" class="easyui-validatebox" data-options="validType:'length[1,30]'" style="width: 180px;height: 20px"/>
-					</td>
-					<td>单位</td>
-					<td style="padding:5px">
-						<input name="Unit" id="Unit" class="easyui-validatebox" data-options="validType:'length[1,30]'" style="width: 180px;height: 20px; "/>
-						<select name="manyUnit" id="manyUnit" style="width:180px;height: 20px;display: none"></select>
-					</td>
-					<td>
-						<input id="manyUnitCheck" type="checkbox"/>多单位
-					</td>
-	            </tr>
-				<tr class="first-select-unit">
-					<td style="height:30px;">首选出库单位</td>
-					<td style="padding:5px">
-						<select name="FirstOutUnit" id="FirstOutUnit" style="width:180px;height: 20px"></select>
-					</td>
-					<td>首选入库单位</td>
-					<td style="padding:5px">
-						<select name="FirstInUnit" id="FirstInUnit" style="width:180px;height: 20px"></select>
-					</td>
-					<td></td>
-				</tr>
-				<tr class="price-list">
-					<td colspan="5" style="height:30px;">
-						<table width="700px">
+				<div id="tt" class="easyui-tabs" style="width:800px;height:300px;">
+					<div title="基本信息" style="padding:20px;">
+						<table>
 							<tr>
-								<td width="150px" height="25px"><b>价格列表</b></td>
-								<td width="150px">计量单位</td>
-								<td width="18%">零售价</td>
-								<td width="18%">最低售价</td>
-								<td width="18%">预计采购价</td>
-								<td width="18%">批发价</td>
+								<td style="width:60px; height:30px;">品名</td>
+								<td style="padding:5px;width:180px;">
+									<input name="Name" id="Name" class="easyui-validatebox" data-options="required:true,validType:'length[2,30]'" style="width: 180px;height: 20px"/>
+								</td>
+								<td style="width:80px;">型号</td>
+								<td style="padding:5px;width:180px;">
+									<input name="Model" id="Model" class="easyui-validatebox" data-options="required:true,validType:'length[1,30]'" style="width: 180px;height: 20px"/>
+								</td>
+								<td style="width:200px;"></td>
 							</tr>
 							<tr>
-								<td>基本单位</td>
-								<td style="border: 1px solid #aaa;"><span id="basicUnit"></span></td>
-								<td><input id="basicRetailPrice" /></td>
-								<td><input id="basicLowPrice" /></td>
-								<td><input id="basicPresetPriceOne" /></td>
-								<td><input id="basicPresetPriceTwo" /></td>
+								<td style="height:30px;">类别</td>
+								<td style="padding:5px" colspan="3">
+									<select name="CategoryId_f" id="CategoryId_f" style="width:152px;height: 20px"></select>
+									<select name="CategoryId_s" id="CategoryId_s" style="width:152px;height: 20px"></select>
+									<select name="CategoryId_t" id="CategoryId_t" style="width:152px;height: 20px"></select>
+									<label id="mTypeName"></label>
+									<a href="#" id="mTypeChange">修改</a>
+								</td>
+								<td></td>
 							</tr>
 							<tr>
-								<td>副单位</td>
-								<td style="border: 1px solid #aaa;"><span id="otherUnit"></span></td>
-								<td><input id="otherRetailPrice" /></td>
-								<td><input id="otherLowPrice" /></td>
-								<td><input id="otherPresetPriceOne" /></td>
-								<td><input id="otherPresetPriceTwo" /></td>
+								<td style="height:30px;">备注</td>
+								<td style="padding:5px" colspan="3">
+									<textarea name="Remark" id="Remark" rows="2" cols="2" placeholder="暂无备注信息" style="width: 468px; height:40px;"></textarea>
+								</td>
+								<td></td>
 							</tr>
 						</table>
-					</td>
-				</tr>
-	            <tr class="price-one">
-					<td style="height:30px;">零售价</td>
-					<td style="padding:5px"><input name="RetailPrice" id="RetailPrice" class="easyui-validatebox" data-options="validType:'length[1,30]'" style="width: 180px;height: 20px"/></td>
-					<td>最低售价</td>
-					<td style="padding:5px"><input name="LowPrice" id="LowPrice" class="easyui-validatebox" data-options="validType:'length[1,30]'" style="width: 180px;height: 20px"/></td>
-					<td></td>
-				</tr>
-	            <tr class="price-two">
-					<td style="height:30px;">预计采购价</td>
-					<td style="padding:5px"><input name="PresetPriceOne" id="PresetPriceOne" class="easyui-validatebox" data-options="validType:'length[1,30]'" style="width: 180px;height: 20px"/></td>
-					<td>批发价</td>
-					<td style="padding:5px"><input name="PresetPriceTwo" id="PresetPriceTwo" class="easyui-validatebox" data-options="validType:'length[1,30]'" style="width: 180px;height: 20px"/></td>
-					<td></td>
-				</tr>
-	            <tr>
-					<td style="height:30px;">备注</td>
-	            	<td style="padding:5px" colspan="3"><input name="Remark" id="Remark" style="width: 468px;height: 20px"/></td>
-					<td></td>
-	            </tr>
-	            </table>
+					</div>
+					<div title="价格信息" style="padding:20px;">
+						<table>
+							<tr>
+								<td style="height:30px;">安全存量</td>
+								<td style="padding:5px">
+									<input name="SafetyStock" id="SafetyStock" class="easyui-validatebox" data-options="validType:'length[1,30]'" style="width: 180px;height: 20px"/>
+								</td>
+								<td>单位</td>
+								<td style="padding:5px">
+									<input name="Unit" id="Unit" class="easyui-validatebox" data-options="validType:'length[1,30]'" style="width: 180px;height: 20px; "/>
+									<select name="manyUnit" id="manyUnit" style="width:180px;height: 20px;display: none"></select>
+								</td>
+								<td>
+									<input id="manyUnitCheck" type="checkbox"/>多单位
+								</td>
+							</tr>
+							<tr class="first-select-unit">
+								<td style="height:30px;">首选出库单位</td>
+								<td style="padding:5px">
+									<select name="FirstOutUnit" id="FirstOutUnit" style="width:180px;height: 20px"></select>
+								</td>
+								<td>首选入库单位</td>
+								<td style="padding:5px">
+									<select name="FirstInUnit" id="FirstInUnit" style="width:180px;height: 20px"></select>
+								</td>
+								<td></td>
+							</tr>
+							<tr class="price-list">
+								<td colspan="5" style="height:30px;">
+									<table width="700px">
+										<tr>
+											<td width="150px" height="25px"><b>价格列表</b></td>
+											<td width="150px">计量单位</td>
+											<td width="18%">零售价</td>
+											<td width="18%">最低售价</td>
+											<td width="18%">预计采购价</td>
+											<td width="18%">批发价</td>
+										</tr>
+										<tr>
+											<td>基本单位</td>
+											<td style="border: 1px solid #aaa;"><span id="basicUnit"></span></td>
+											<td><input id="basicRetailPrice" /></td>
+											<td><input id="basicLowPrice" /></td>
+											<td><input id="basicPresetPriceOne" /></td>
+											<td><input id="basicPresetPriceTwo" /></td>
+										</tr>
+										<tr>
+											<td>副单位</td>
+											<td style="border: 1px solid #aaa;"><span id="otherUnit"></span></td>
+											<td><input id="otherRetailPrice" /></td>
+											<td><input id="otherLowPrice" /></td>
+											<td><input id="otherPresetPriceOne" /></td>
+											<td><input id="otherPresetPriceTwo" /></td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr class="price-one">
+								<td style="height:30px;">零售价</td>
+								<td style="padding:5px"><input name="RetailPrice" id="RetailPrice" class="easyui-validatebox" data-options="validType:'length[1,30]'" style="width: 180px;height: 20px"/></td>
+								<td>最低售价</td>
+								<td style="padding:5px"><input name="LowPrice" id="LowPrice" class="easyui-validatebox" data-options="validType:'length[1,30]'" style="width: 180px;height: 20px"/></td>
+								<td></td>
+							</tr>
+							<tr class="price-two">
+								<td style="height:30px;">预计采购价</td>
+								<td style="padding:5px"><input name="PresetPriceOne" id="PresetPriceOne" class="easyui-validatebox" data-options="validType:'length[1,30]'" style="width: 180px;height: 20px"/></td>
+								<td>批发价</td>
+								<td style="padding:5px"><input name="PresetPriceTwo" id="PresetPriceTwo" class="easyui-validatebox" data-options="validType:'length[1,30]'" style="width: 180px;height: 20px"/></td>
+								<td></td>
+							</tr>
+						</table>
+					</div>
+					<div title="扩展信息" style="padding:20px;">
+						<table>
+							<tr>
+								<td style="width:60px; height:30px;">颜色</td>
+								<td style="padding:5px">
+									<input name="Color" id="Color" class="easyui-validatebox" data-options="validType:'length[1,30]'" style="width: 250px;height: 20px"/>
+								</td>
+							</tr>
+							<tr>
+								<td>规格</td>
+								<td style="padding:5px">
+									<input name="Standard" id="Standard" class="easyui-validatebox" data-options="validType:'length[1,30]'" style="width: 250px;height: 20px"/>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
 	            <input type="hidden" name="clientIp" id="clientIp" value="<%=clientIp %>"/>
 	        </form>
 	    </div>
@@ -899,6 +916,8 @@
 				$(".price-list").hide();
 				$(".price-one").show();
 				$(".price-two").show();
+				//选中基本资料tab
+				$("#materialFM #tt .tabs li").first().click();
 				oldName = "";
 				oldModel = "";
 				oldColor = "";
@@ -1199,6 +1218,8 @@
 				materialID = materialInfo[0];
 				//焦点在名称输入框==定焦在输入文字后面
 				$("#Name").val("").focus().val(materialInfo[1]);
+				//选中基本资料tab
+				$("#materialFM #tt .tabs li").first().click();
 				url = '<%=path %>/material/update.action?materialID=' + materialInfo[0];
 			}
 
