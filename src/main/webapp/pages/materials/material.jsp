@@ -59,10 +59,10 @@
 			<table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 		</div>
 		
-	    <div id="materialDlg" class="easyui-dialog" style="width:860px;height:400px;padding:10px 20px"
+	    <div id="materialDlg" class="easyui-dialog" style="width:860px;height:420px;padding:10px 20px"
 	            closed="true" buttons="#dlg-buttons" modal="true" collapsible="false" closable="true">
 	        <form id="materialFM" method="post"  novalidate>
-				<div id="tt" class="easyui-tabs" style="width:800px;height:300px;">
+				<div id="tt" class="easyui-tabs" style="width:800px;height:320px;">
 					<div title="基本信息" style="padding:20px;">
 						<table>
 							<tr>
@@ -181,6 +181,30 @@
 								<td>规格</td>
 								<td style="padding:5px">
 									<input name="Standard" id="Standard" class="easyui-validatebox" data-options="validType:'length[1,30]'" style="width: 250px;height: 20px"/>
+								</td>
+							</tr>
+							<tr>
+								<td>制造商</td>
+								<td style="padding:5px">
+									<input name="Mfrs" id="Mfrs" class="easyui-validatebox" data-options="validType:'length[1,30]'" style="width: 250px;height: 20px"/>
+								</td>
+							</tr>
+							<tr>
+								<td>自定义1</td>
+								<td style="padding:5px">
+									<input name="OtherField1" id="OtherField1" class="easyui-validatebox" data-options="validType:'length[1,30]'" style="width: 250px;height: 20px"/>
+								</td>
+							</tr>
+							<tr>
+								<td>自定义2</td>
+								<td style="padding:5px">
+									<input name="OtherField2" id="OtherField2" class="easyui-validatebox" data-options="validType:'length[1,30]'" style="width: 250px;height: 20px"/>
+								</td>
+							</tr>
+							<tr>
+								<td>自定义3</td>
+								<td style="padding:5px">
+									<input name="OtherField3" id="OtherField3" class="easyui-validatebox" data-options="validType:'length[1,30]'" style="width: 250px;height: 20px"/>
 								</td>
 							</tr>
 						</table>
@@ -521,7 +545,8 @@
 							var rowInfo = rec.Id + 'AaBb' + rec.Name+ 'AaBb' + rec.Model + 'AaBb' + rec.Color + 'AaBb' + rec.Unit + 'AaBb' + rec.RetailPrice
 									+ 'AaBb' + rec.LowPrice + 'AaBb' + rec.PresetPriceOne + 'AaBb' + rec.PresetPriceTwo + 'AaBb' + rec.Remark + 'AaBb' + rec.Standard
 									+ 'AaBb' + rec.Color + 'AaBb' + rec.Packing + 'AaBb' + rec.SafetyStock + 'AaBb' + rec.CategoryId + 'AaBb' + rec.CategoryName
-									+ 'AaBb' + rec.UnitId + 'AaBb' + rec.UnitName + 'AaBb' + rec.FirstOutUnit + 'AaBb' + rec.FirstInUnit;
+									+ 'AaBb' + rec.UnitId + 'AaBb' + rec.UnitName + 'AaBb' + rec.FirstOutUnit + 'AaBb' + rec.FirstInUnit
+									+ 'AaBb' + rec.Mfrs + 'AaBb' + rec.OtherField1 + 'AaBb' + rec.OtherField2 + 'AaBb' + rec.OtherField3;
 							if(1 == value)
 							{
 								str += '<img title="编辑" src="<%=path%>/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editMaterial(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
@@ -1025,7 +1050,10 @@
 							SafetyStock : $.trim($("#SafetyStock").val()),
 							Model : $.trim($("#Model").val()),
 							Standard : $.trim($("#Standard").val()),
-							Mfrs : "",
+							Mfrs : $.trim($("#Mfrs").val()),
+							OtherField1 : $.trim($("#OtherField1").val()),
+							OtherField2 : $.trim($("#OtherField2").val()),
+							OtherField3 : $.trim($("#OtherField3").val()),
 							Unit : $.trim($("#Unit").val()),
 							RetailPrice : $.trim($("#RetailPrice").val()),
 							LowPrice : $.trim($("#LowPrice").val()),
@@ -1136,6 +1164,10 @@
 				$("#Model").val(materialInfo[2]);
 				$("#Standard").val(materialInfo[10]=="undefined"?"":materialInfo[10]);
 				$("#Color").val(materialInfo[3]=="undefined"?"":materialInfo[3]);
+				$("#Mfrs").val(materialInfo[20]=="undefined"?"":materialInfo[20]);
+				$("#OtherField1").val(materialInfo[21]=="undefined"?"":materialInfo[21]);
+				$("#OtherField2").val(materialInfo[22]=="undefined"?"":materialInfo[22]);
+				$("#OtherField3").val(materialInfo[23]=="undefined"?"":materialInfo[23]);
 				$("#Unit").val(materialInfo[4]=="undefined"?"":materialInfo[4]);
 				$("#RetailPrice").val(materialInfo[5]=="undefined"?"":materialInfo[5]);
 				$("#LowPrice").val(materialInfo[6]=="undefined"?"":materialInfo[6]);

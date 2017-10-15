@@ -100,5 +100,20 @@
                 <comment>启用</comment>
             </column>
         </property>
+        <property generated="never" lazy="false" name="OtherField1" type="java.lang.String">
+            <column length="50" name="OtherField1">
+                <comment>自定义1</comment>
+            </column>
+        </property>
+        <property generated="never" lazy="false" name="OtherField2" type="java.lang.String">
+            <column length="50" name="OtherField2">
+                <comment>自定义2</comment>
+            </column>
+        </property>
+        <property generated="never" lazy="false" name="OtherField3" type="java.lang.String">
+            <column length="50" name="OtherField3">
+                <comment>自定义3</comment>
+            </column>
+        </property>
     </class>
 </hibernate-mapping>

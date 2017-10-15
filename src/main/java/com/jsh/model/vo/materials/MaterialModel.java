@@ -76,6 +76,12 @@ public class MaterialModel implements Serializable
 	private File materialFile;
 
 	private Boolean Enabled  = true; //是否启用
+
+	private String OtherField1;
+
+	private String OtherField2;
+
+	private String OtherField3;
     
     /**
      * CategoryId
@@ -330,6 +336,30 @@ public class MaterialModel implements Serializable
 
 	public void setEnabled(Boolean enabled) {
 		Enabled = enabled;
+	}
+
+	public String getOtherField1() {
+		return OtherField1;
+	}
+
+	public void setOtherField1(String otherField1) {
+		OtherField1 = otherField1;
+	}
+
+	public String getOtherField2() {
+		return OtherField2;
+	}
+
+	public void setOtherField2(String otherField2) {
+		OtherField2 = otherField2;
+	}
+
+	public String getOtherField3() {
+		return OtherField3;
+	}
+
+	public void setOtherField3(String otherField3) {
+		OtherField3 = otherField3;
 	}
 
 	public String getBrowserType() {

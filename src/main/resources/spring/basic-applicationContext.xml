@@ -125,6 +125,17 @@
 		<property name="logService" ref="logService"/>
 	</bean>
 	<!--系统配置结束 -->
+
+	<!--商品属性开始 -->
+	<bean id="materialPropertyService" class="com.jsh.service.materials.MaterialPropertyService">
+		<property name="baseDao" ref="baseDao"/>
+	</bean>
+	<!-- spring整合struts2需要默认为request或者 prototype，不能是单例 -->
+	<bean id="materialPropertyAction" class="com.jsh.action.materials.MaterialPropertyAction" scope="prototype">
+		<property name="materialPropertyService" ref="materialPropertyService" />
+		<property name="logService" ref="logService"/>
+	</bean>
+	<!--商品属性结束 -->
 	
 	<!--分类配置开始 -->
 	<bean id="categoryService" class="com.jsh.service.basic.CategoryService">
