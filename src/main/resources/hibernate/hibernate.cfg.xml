@@ -44,5 +44,6 @@
     <mapping resource="hibernate/AccountHead.hbm.xml" />
     <mapping resource="hibernate/AccountItem.hbm.xml" />
 	<mapping resource="hibernate/SystemConfig.hbm.xml" />
+	<mapping resource="hibernate/MaterialProperty.hbm.xml" />
 </session-factory>
 </hibernate-configuration>

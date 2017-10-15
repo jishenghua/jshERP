@@ -25,6 +25,9 @@ public class Material implements java.io.Serializable
 	private String PriceStrategy;
 	private String Remark;
 	private Boolean Enabled;
+	private String OtherField1;
+	private String OtherField2;
+	private String OtherField3;
 
 	//----------以下属性导入exel表格使用--------------------
 	/**
@@ -52,7 +55,8 @@ public class Material implements java.io.Serializable
 	public Material(MaterialCategory materialCategory, String name, String mfrs, Double packing,
 		Double safetyStock, String model, String standard, String color, String unit, String remark,
 		Double retailPrice, Double lowPrice, Double presetPriceOne, Double presetPriceTwo,
-		Unit unitId, String firstOutUnit, String firstInUnit, String priceStrategy, Boolean enabled) {
+		Unit unitId, String firstOutUnit, String firstInUnit, String priceStrategy, Boolean enabled,
+		String otherField1, String otherField2, String otherField3) {
 		super();
 		this.materialCategory = materialCategory;
 		Name = name;
@@ -73,6 +77,9 @@ public class Material implements java.io.Serializable
 		FirstInUnit = firstInUnit;
 		PriceStrategy = priceStrategy;
 		Enabled = enabled;
+		OtherField1 = otherField1;
+		OtherField2 = otherField2;
+		OtherField3 = otherField3;
 	}
 
 	public Long getId()
@@ -253,6 +260,30 @@ public class Material implements java.io.Serializable
 
 	public void setEnabled(Boolean enabled) {
 		Enabled = enabled;
+	}
+
+	public String getOtherField1() {
+		return OtherField1;
+	}
+
+	public void setOtherField1(String otherField1) {
+		OtherField1 = otherField1;
+	}
+
+	public String getOtherField3() {
+		return OtherField3;
+	}
+
+	public void setOtherField3(String otherField3) {
+		OtherField3 = otherField3;
+	}
+
+	public String getOtherField2() {
+		return OtherField2;
+	}
+
+	public void setOtherField2(String otherField2) {
+		OtherField2 = otherField2;
 	}
 
 	public Map<Integer, String> getCellInfo() {

@@ -67,6 +67,9 @@ public class MaterialAction extends BaseAction<MaterialModel>
             material.setPriceStrategy(model.getPriceStrategy());
 			material.setRemark(model.getRemark());
             material.setEnabled(model.getEnabled());
+            material.setOtherField1(model.getOtherField1());
+            material.setOtherField2(model.getOtherField2());
+            material.setOtherField3(model.getOtherField3());
 			materialService.create(material);
 			
 			//========标识位===========
@@ -161,6 +164,9 @@ public class MaterialAction extends BaseAction<MaterialModel>
             material.setFirstInUnit(model.getFirstInUnit());
             material.setPriceStrategy(model.getPriceStrategy());
 			material.setRemark(model.getRemark());
+            material.setOtherField1(model.getOtherField1());
+            material.setOtherField2(model.getOtherField2());
+            material.setOtherField3(model.getOtherField3());
         	materialService.update(material);
             
             flag = true;
@@ -329,6 +335,9 @@ public class MaterialAction extends BaseAction<MaterialModel>
                     item.put("PriceStrategy", material.getPriceStrategy());
                     item.put("Enabled", material.getEnabled());
                     item.put("Remark", material.getRemark());
+                    item.put("OtherField1", material.getOtherField1());
+                    item.put("OtherField2", material.getOtherField2());
+                    item.put("OtherField3", material.getOtherField3());
                     item.put("op", 1);
                     dataArray.add(item);
                 }
