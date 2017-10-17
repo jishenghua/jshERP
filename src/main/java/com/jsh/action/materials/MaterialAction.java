@@ -412,8 +412,8 @@ public class MaterialAction extends BaseAction<MaterialModel>
             Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询商品信息结果异常", e);
         }
     }
-    
-	/**
+
+    /**
 	 * 查找商品信息-下拉框
 	 * @return
 	 */
@@ -425,6 +425,8 @@ public class MaterialAction extends BaseAction<MaterialModel>
             pageUtil.setAdvSearch(getCondition_Select());
             materialService.find(pageUtil);
             List<Material> dataList = pageUtil.getPageList();
+            String mpList = model.getMpList(); //商品属性
+            String[] mpArr = mpList.split(",");
             //存放数据json数组
             JSONArray dataArray = new JSONArray();
             if(null != dataList) {
@@ -439,11 +441,29 @@ public class MaterialAction extends BaseAction<MaterialModel>
                         ratio = material.getUnitId().getUName();
                         ratio = ratio.substring(ratio.indexOf("("));
                     }
-                    //品名/型号/规格/颜色/包装
-                    String MaterialName = material.getName() + ((material.getModel() == null || material.getModel().equals(""))?"":"("+material.getModel() + ")")
-                    + ((material.getStandard() == null || material.getStandard().equals(""))?"":"("+material.getStandard() + ")")
-                    + ((material.getColor() == null || material.getColor().equals(""))?"":"("+material.getColor() + ")")
-                    + ratio;
+                    //品名/型号/扩展信息/包装
+                    String MaterialName = material.getName() + ((material.getModel() == null || material.getModel().equals(""))?"":"("+material.getModel() + ")");
+                    for(int i=0; i< mpArr.length; i++) {
+                        if(mpArr[i].equals("颜色")) {
+                            MaterialName = MaterialName + ((material.getColor() == null || material.getColor().equals(""))?"":"("+material.getColor() + ")");
+                        }
+                        if(mpArr[i].equals("规格")) {
+                            MaterialName = MaterialName + ((material.getStandard() == null || material.getStandard().equals(""))?"":"("+material.getStandard() + ")");
+                        }
+                        if(mpArr[i].equals("制造商")) {
+                            MaterialName = MaterialName + ((material.getMfrs() == null || material.getMfrs().equals(""))?"":"("+material.getMfrs() + ")");
+                        }
+                        if(mpArr[i].equals("自定义1")) {
+                            MaterialName = MaterialName + ((material.getOtherField1() == null || material.getOtherField1().equals(""))?"":"("+material.getOtherField1() + ")");
+                        }
+                        if(mpArr[i].equals("自定义2")) {
+                            MaterialName = MaterialName + ((material.getOtherField2() == null || material.getOtherField2().equals(""))?"":"("+material.getOtherField2() + ")");
+                        }
+                        if(mpArr[i].equals("自定义3")) {
+                            MaterialName = MaterialName + ((material.getOtherField3() == null || material.getOtherField3().equals(""))?"":"("+material.getOtherField3() + ")");
+                        }
+                    }
+                    MaterialName = MaterialName + ratio;
                     item.put("MaterialName", MaterialName);
                     dataArray.add(item);
                 }
@@ -456,8 +476,10 @@ public class MaterialAction extends BaseAction<MaterialModel>
         } 
 	    catch (IOException e) {
             Log.errorFileSync(">>>>>>>>>回写查询供应商信息结果异常", e);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-	}
+    }
     
 	/**
 	 * 查找商品信息-统计排序

@@ -122,6 +122,8 @@ public class MaterialModel implements Serializable
 	private String fileName = ""; //文件名称
 	private InputStream excelStream;  //输入流，导出excel文件
 
+	private String mpList = ""; //商品属性
+
 	public MaterialShowModel getShowModel() {
 		return showModel;
 	}
@@ -392,5 +394,13 @@ public class MaterialModel implements Serializable
 
 	public void setMaterialFile(File materialFile) {
 		this.materialFile = materialFile;
+	}
+
+	public String getMpList() {
+		return mpList;
+	}
+
+	public void setMpList(String mpList) {
+		this.mpList = mpList;
 	}
 }

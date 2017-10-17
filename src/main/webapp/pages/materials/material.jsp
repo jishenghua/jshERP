@@ -170,38 +170,38 @@
 						</table>
 					</div>
 					<div title="扩展信息" style="padding:20px;">
-						<table>
-							<tr>
+						<table class="tb-other-info">
+							<tr class="tr-color">
 								<td style="width:60px; height:30px;">颜色</td>
 								<td style="padding:5px">
 									<input name="Color" id="Color" class="easyui-validatebox" data-options="validType:'length[1,30]'" style="width: 250px;height: 20px"/>
 								</td>
 							</tr>
-							<tr>
+							<tr class="tr-standard">
 								<td>规格</td>
 								<td style="padding:5px">
 									<input name="Standard" id="Standard" class="easyui-validatebox" data-options="validType:'length[1,30]'" style="width: 250px;height: 20px"/>
 								</td>
 							</tr>
-							<tr>
+							<tr class="tr-mfrs">
 								<td>制造商</td>
 								<td style="padding:5px">
 									<input name="Mfrs" id="Mfrs" class="easyui-validatebox" data-options="validType:'length[1,30]'" style="width: 250px;height: 20px"/>
 								</td>
 							</tr>
-							<tr>
+							<tr class="tr-otherField1">
 								<td>自定义1</td>
 								<td style="padding:5px">
 									<input name="OtherField1" id="OtherField1" class="easyui-validatebox" data-options="validType:'length[1,30]'" style="width: 250px;height: 20px"/>
 								</td>
 							</tr>
-							<tr>
+							<tr class="tr-otherField2">
 								<td>自定义2</td>
 								<td style="padding:5px">
 									<input name="OtherField2" id="OtherField2" class="easyui-validatebox" data-options="validType:'length[1,30]'" style="width: 250px;height: 20px"/>
 								</td>
 							</tr>
-							<tr>
+							<tr class="tr-otherField3">
 								<td>自定义3</td>
 								<td style="padding:5px">
 									<input name="OtherField3" id="OtherField3" class="easyui-validatebox" data-options="validType:'length[1,30]'" style="width: 250px;height: 20px"/>
@@ -252,10 +252,12 @@
 			var setCategoryId="1";
 			var cid=1;
 			var multiple = 0;  //倍数
+			var mPropertyList = null; //商品属性列表
 			//初始化界面
 			$(function()
 			{
 				//初始化系统基础信息
+				initMProperty();
 				initSystemData(1);
 				initSelectInfo("search_first");
 				initSelectInfo("edit_first");
@@ -268,6 +270,23 @@
 			});
 
 			//初始化系统基础信息
+			function initMProperty() {
+				$.ajax({
+					type: "post",
+					url: "<%=path%>/materialProperty/findBy.action",
+					dataType: "json",
+					success: function (res) {
+						if (res && res.rows) {
+							mPropertyList = res.rows; //属性列表
+						}
+					},
+					//此处添加错误处理
+					error:function() {
+						$.messager.alert('查询提示','查询信息异常，请稍后再试！','error');
+						return;
+					}
+				});
+			}
 			function initSystemData(parentid_search) {
 				$.ajax({
 					type:"post",
@@ -921,10 +940,92 @@
 			var oldUnit = "";
 			var oldManyUnit = "";
 
-			function addMaterial()
-			{
+			//根据商品属性架子啊
+			function bindMProperty(){
+				var trColor =  $(".tr-color").html();
+				trColor = '<tr class="tr-color">' + trColor + '</tr>';
+				var trStandard =  $(".tr-standard").html();
+				trStandard = '<tr class="tr-standard">' + trStandard + '</tr>';
+				var trMfrs =  $(".tr-mfrs").html();
+				trMfrs = '<tr class="tr-mfrs">' + trMfrs + '</tr>';
+				var trOtherField1 =  $(".tr-otherField1").html();
+				trOtherField1 = '<tr class="tr-otherField1">' + trOtherField1 + '</tr>';
+				var trOtherField2 =  $(".tr-otherField2").html();
+				trOtherField2 = '<tr class="tr-otherField2">' + trOtherField2 + '</tr>';
+				var trOtherField3 =  $(".tr-otherField3").html();
+				trOtherField3 = '<tr class="tr-otherField3">' + trOtherField3 + '</tr>';
+				//表格模板变更
+				$(".tb-other-info").html("");
+				for(var i=0; i < mPropertyList.length; i++) {
+					if(mPropertyList[i].nativeName === "颜色"){
+						$(".tb-other-info").append(trColor);
+						$(".tr-color td").first().text(mPropertyList[i].anotherName);
+						if(mPropertyList[i].enabled) {
+							$(".tr-color").show();
+						}
+						else {
+							$(".tr-color").hide();
+						}
+					}
+					if(mPropertyList[i].nativeName === "规格"){
+						$(".tb-other-info").append(trStandard);
+						$(".tr-standard td").first().text(mPropertyList[i].anotherName);
+						if(mPropertyList[i].enabled) {
+							$(".tr-standard").show();
+						}
+						else {
+							$(".tr-standard").hide();
+						}
+					}
+					if(mPropertyList[i].nativeName === "制造商"){
+						$(".tb-other-info").append(trMfrs);
+						$(".tr-mfrs td").first().text(mPropertyList[i].anotherName);
+						if(mPropertyList[i].enabled) {
+							$(".tr-mfrs").show();
+						}
+						else {
+							$(".tr-mfrs").hide();
+						}
+					}
+					if(mPropertyList[i].nativeName === "自定义1"){
+						$(".tb-other-info").append(trOtherField1);
+						$(".tr-otherField1 td").first().text(mPropertyList[i].anotherName);
+						if(mPropertyList[i].enabled) {
+							$(".tr-otherField1").show();
+						}
+						else {
+							$(".tr-otherField1").hide();
+						}
+					}
+					if(mPropertyList[i].nativeName === "自定义2"){
+						$(".tb-other-info").append(trOtherField2);
+						$(".tr-otherField2 td").first().text(mPropertyList[i].anotherName);
+						if(mPropertyList[i].enabled) {
+							$(".tr-otherField2").show();
+						}
+						else {
+							$(".tr-otherField2").hide();
+						}
+					}
+					if(mPropertyList[i].nativeName === "自定义3"){
+						$(".tb-other-info").append(trOtherField3);
+						$(".tr-otherField3 td").first().text(mPropertyList[i].anotherName);
+						if(mPropertyList[i].enabled) {
+							$(".tr-otherField3").show();
+						}
+						else {
+							$(".tr-otherField3").hide();
+						}
+					}
+				}
+			}
+
+			function addMaterial() {
 				$("#clientIp").val('<%=clientIp %>');
-				$('#materialFM').form('clear');
+				$('#materialFM input').val(""); //将输入框全部清空
+
+				bindMProperty(); //根据商品属性绑定
+
 				$('#materialDlg').dialog('open').dialog('setTitle','<img src="<%=path%>/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加商品信息');
 				$(".window-mask").css({ width: webW ,height: webH});
 				$("#Name").val("").focus();
@@ -1121,6 +1222,9 @@
 				var materialInfo = materialTotalInfo.split("AaBb");
 
 				$("#clientIp").val('<%=clientIp %>');
+
+				bindMProperty(); //根据商品属性绑定
+
 				$("#Name").focus().val(materialInfo[1]);
 				$("#Color").focus().val(materialInfo[11]);
 

@@ -76,6 +76,8 @@ public class DepotItemModel implements Serializable
      */
   	private InputStream excelStream;
 
+	private String mpList = ""; //商品属性
+
 	public DepotItemShowModel getShowModel() {
 		return showModel;
 	}
@@ -370,5 +372,13 @@ public class DepotItemModel implements Serializable
 
 	public void setMType(String MType) {
 		this.MType = MType;
+	}
+
+	public String getMpList() {
+		return mpList;
+	}
+
+	public void setMpList(String mpList) {
+		this.mpList = mpList;
 	}
 }

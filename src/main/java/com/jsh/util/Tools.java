@@ -11,10 +11,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.math.BigInteger;
 /**
@@ -576,7 +573,7 @@ public class Tools
     {
         return new SimpleDateFormat(pattern).parse(strDate);
     }
-    
+
 //	/**
 //	 * 过滤html文件中的图片文件
 //	 * @param content
