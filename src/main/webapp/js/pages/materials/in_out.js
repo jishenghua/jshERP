@@ -31,6 +31,7 @@
 	var oldId = 0; //编辑前的单据Id
 	var otherColumns = true; //明细中的‘别名’列是否显示
 	var btnEnableList = getBtnStr(); //获取按钮的权限
+	var mPropertyList = ""; //商品属性列表
 	$(function(){
 		//初始化系统基础信息
 		getType();
@@ -46,6 +47,7 @@
 		initSalesman(); //销售人员
 		initGift(); //初始化礼品卡
 		initOutItemList(); //初始化支出项目
+		initMProperty(); //初始化商品属性
 		initTableData();
 		ininPager();
 		initForm();	
@@ -354,6 +356,33 @@
 			},
 			error:function(){
 
+			}
+		});
+	}
+
+	//初始化商品属性
+	function initMProperty(){
+		$.ajax({
+			type: "post",
+			url: path + "/materialProperty/findBy.action",
+			dataType: "json",
+			success: function (res) {
+				if (res && res.rows) {
+					var thisRows = res.rows;
+					for(var i=0; i < thisRows.length; i++) {
+						if(thisRows[i].enabled){
+							mPropertyList += thisRows[i].nativeName +",";
+						}
+					}
+					if(mPropertyList){
+						mPropertyList = mPropertyList.substring(0,mPropertyList.length-1);
+					}
+				}
+			},
+			//此处添加错误处理
+			error:function() {
+				$.messager.alert('查询提示','查询信息异常，请稍后再试！','error');
+				return;
 			}
 		});
 	}
@@ -788,7 +817,7 @@
 						}
 					}
 				},
-	          	{ title: '品名(型号)(规格)(颜色)(包装)',field: 'MaterialId',width:230,
+	          	{ title: '品名(型号)(扩展信息)(包装)',field: 'MaterialId',width:230,
 				  	formatter:function(value,row,index){
 						return row.MaterialName;
 	              	},
@@ -797,13 +826,16 @@
 	                  	options:{
 	                      	valueField:'Id',
 	                      	textField:'MaterialName',
-	                      	method:'get',
+	                      	method:'post',
 	                      	url: path + "/material/findBySelect.action",
 							panelWidth: 300, //下拉框的宽度
 							//全面模糊匹配，过滤字段
 							filter: function(q, row){
 								var opts = $(this).combobox('options');
 								return row[opts.textField].indexOf(q) >-1;
+							},
+							onBeforeLoad: function(param){
+								param.mpList = mPropertyList; //商品属性
 							},
 							onSelect:function(rec){
 								if(rec) {
@@ -1081,6 +1113,9 @@
 		$.ajax({
 			type:"post",
 			url: path + '/depotItem/findBy.action?HeaderId=' + depotHeadID,
+			data: {
+				mpList: mPropertyList
+			},
 			dataType: "json",
 			success: function (res) {
 				var AllPrice = 0;
@@ -1150,7 +1185,7 @@
 			columns:[[
 				{ title: '商品类型',field: 'MType',width:80, hidden:isShowMaterialTypeColumn},
 				{ title: depotHeadName,field: 'DepotName',editor:'validatebox',width:90},
-				{ title: '品名(型号)(规格)(颜色)(包装)',field: 'MaterialName',width:230},
+				{ title: '品名(型号)(扩展信息)(包装)',field: 'MaterialName',width:230},
 				{ title: anotherDepotHeadName,field: 'AnotherDepotName',hidden:isShowAnotherDepot,width:90},
 				{ title: '单位',field: 'Unit',editor:'validatebox',width:70},
 				{ title: '数量',field: 'OperNumber',editor:'validatebox',width:70},
@@ -1175,6 +1210,9 @@
 		$.ajax({
 			type:"post",
 			url: path + '/depotItem/findBy.action?HeaderId=' + depotHeadID,
+			data: {
+				mpList: mPropertyList
+			},
 			dataType: "json",
 			success: function (res) {
 				var AllPrice = TotalPrice;
