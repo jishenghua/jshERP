@@ -1095,103 +1095,105 @@
 			}
 
 			//保存信息
-			$("#saveMaterial").unbind().bind({
-				click:function()
-				{
-					if(!$('#materialFM').form('validate')){
-						return;
-					}
-					if(checkIsExist()){
-						return;
-					}
-					var parent=1;
-					if($("#CategoryId_f").val()!=""&&$("#CategoryId_f").val()!=null)
-					{
-						parent=$("#CategoryId_f").val();
-					}
-					if($("#CategoryId_s").val()!=""&&$("#CategoryId_s").val()!=null)
-					{
-						parent=$("#CategoryId_s").val();
-					}
-					if($("#CategoryId_t").val()!=""&&$("#CategoryId_t").val()!=null)
-					{
-						parent=$("#CategoryId_t").val();
-					}
-					//构造价格列表json
-					var priceStrategy = [];
-					var basicList = {};
-					var otherList = {};
-					basicList.Unit = $("#basicUnit").text();
-					basicList.RetailPrice = $("#basicRetailPrice").val();
-					basicList.LowPrice = $("#basicLowPrice").val();
-					basicList.PresetPriceOne = $("#basicPresetPriceOne").val();
-					basicList.PresetPriceTwo = $("#basicPresetPriceTwo").val();
-					otherList.Unit = $("#otherUnit").text();
-					otherList.RetailPrice = $("#otherRetailPrice").val();
-					otherList.LowPrice = $("#otherLowPrice").val();
-					otherList.PresetPriceOne = $("#otherPresetPriceOne").val();
-					otherList.PresetPriceTwo = $("#otherPresetPriceTwo").val();
-					var basic = {};
-					var other = {};
-					basic.basic = basicList;
-					other.other = otherList;
-					priceStrategy.push(basic);
-					priceStrategy.push(other);
-
-					$.ajax({
-						type:"post",
-						url: url,
-						dataType: "json",
-						async :  false,
-						data: ({
-							CategoryId : parent,
-							Name : $.trim($("#Name").val()),
-							Color : $.trim($("#Color").val()),
-							Packing : $.trim($("#Packing").val()),
-							SafetyStock : $.trim($("#SafetyStock").val()),
-							Model : $.trim($("#Model").val()),
-							Standard : $.trim($("#Standard").val()),
-							Mfrs : $.trim($("#Mfrs").val()),
-							OtherField1 : $.trim($("#OtherField1").val()),
-							OtherField2 : $.trim($("#OtherField2").val()),
-							OtherField3 : $.trim($("#OtherField3").val()),
-							Unit : $.trim($("#Unit").val()),
-							RetailPrice : $.trim($("#RetailPrice").val()),
-							LowPrice : $.trim($("#LowPrice").val()),
-							PresetPriceOne : $.trim($("#PresetPriceOne").val()),
-							PresetPriceTwo : $.trim($("#PresetPriceTwo").val()),
-							UnitId : $("#manyUnit").val(),
-							FirstOutUnit : $.trim($("#FirstOutUnit").val()),
-							FirstInUnit : $.trim($("#FirstInUnit").val()),
-							PriceStrategy : JSON.stringify(priceStrategy), //价格列表
-							Remark : $.trim($("#Remark").val()),
-							clientIp:'<%=clientIp %>'
-						}),
-						success: function (tipInfo)
-						{
-							if(tipInfo)
-							{
-								$('#materialDlg').dialog('close');
-
-								var opts = $("#tableData").datagrid('options');
-								showMaterialDetails(opts.pageNumber,opts.pageSize);
-							}
-							else
-							{
-								$.messager.show({
-									title: '错误提示',
-									msg: '保存商品信息失败，请稍后重试!'
-								});
-							}
-						},
-						//此处添加错误处理
-						error:function()
-						{
-							$.messager.alert('提示','保存商品信息异常，请稍后再试！','error');
-							return;
-						}
-					});
+			$("#saveMaterial").off("click").on("click",function() {
+				if(!$('#Name').val()){
+					$.messager.alert('提示','品名不能为空！','warning');
+					return;
 				}
+				if(!$('#Model').val()){
+					$.messager.alert('提示','型号不能为空！','warning');
+					return;
+				}
+				if(checkIsExist()){
+					return;
+				}
+				var parent=1;
+				if($("#CategoryId_f").val()!=""&&$("#CategoryId_f").val()!=null)
+				{
+					parent=$("#CategoryId_f").val();
+				}
+				if($("#CategoryId_s").val()!=""&&$("#CategoryId_s").val()!=null)
+				{
+					parent=$("#CategoryId_s").val();
+				}
+				if($("#CategoryId_t").val()!=""&&$("#CategoryId_t").val()!=null)
+				{
+					parent=$("#CategoryId_t").val();
+				}
+				//构造价格列表json
+				var priceStrategy = [];
+				var basicList = {};
+				var otherList = {};
+				basicList.Unit = $("#basicUnit").text();
+				basicList.RetailPrice = $("#basicRetailPrice").val();
+				basicList.LowPrice = $("#basicLowPrice").val();
+				basicList.PresetPriceOne = $("#basicPresetPriceOne").val();
+				basicList.PresetPriceTwo = $("#basicPresetPriceTwo").val();
+				otherList.Unit = $("#otherUnit").text();
+				otherList.RetailPrice = $("#otherRetailPrice").val();
+				otherList.LowPrice = $("#otherLowPrice").val();
+				otherList.PresetPriceOne = $("#otherPresetPriceOne").val();
+				otherList.PresetPriceTwo = $("#otherPresetPriceTwo").val();
+				var basic = {};
+				var other = {};
+				basic.basic = basicList;
+				other.other = otherList;
+				priceStrategy.push(basic);
+				priceStrategy.push(other);
+
+				$.ajax({
+					type:"post",
+					url: url,
+					dataType: "json",
+					async :  false,
+					data: ({
+						CategoryId : parent,
+						Name : $.trim($("#Name").val()),
+						Color : $.trim($("#Color").val()),
+						Packing : $.trim($("#Packing").val()),
+						SafetyStock : $.trim($("#SafetyStock").val()),
+						Model : $.trim($("#Model").val()),
+						Standard : $.trim($("#Standard").val()),
+						Mfrs : $.trim($("#Mfrs").val()),
+						OtherField1 : $.trim($("#OtherField1").val()),
+						OtherField2 : $.trim($("#OtherField2").val()),
+						OtherField3 : $.trim($("#OtherField3").val()),
+						Unit : $.trim($("#Unit").val()),
+						RetailPrice : $.trim($("#RetailPrice").val()),
+						LowPrice : $.trim($("#LowPrice").val()),
+						PresetPriceOne : $.trim($("#PresetPriceOne").val()),
+						PresetPriceTwo : $.trim($("#PresetPriceTwo").val()),
+						UnitId : $("#manyUnit").val(),
+						FirstOutUnit : $.trim($("#FirstOutUnit").val()),
+						FirstInUnit : $.trim($("#FirstInUnit").val()),
+						PriceStrategy : JSON.stringify(priceStrategy), //价格列表
+						Remark : $.trim($("#Remark").val()),
+						clientIp:'<%=clientIp %>'
+					}),
+					success: function (tipInfo)
+					{
+						if(tipInfo)
+						{
+							$('#materialDlg').dialog('close');
+
+							var opts = $("#tableData").datagrid('options');
+							showMaterialDetails(opts.pageNumber,opts.pageSize);
+						}
+						else
+						{
+							$.messager.show({
+								title: '错误提示',
+								msg: '保存商品信息失败，请稍后重试!'
+							});
+						}
+					},
+					//此处添加错误处理
+					error:function()
+					{
+						$.messager.alert('提示','保存商品信息异常，请稍后再试！','error');
+						return;
+					}
+				});
 			});
 
 			var mId=0,mName="";
@@ -1473,27 +1475,23 @@
 				});
 
 				//导入excel表格
-				$("#saveimport").unbind().bind({
-					click:function()
-					{
-						if($("#materialFile").val().length == 0)
-						{
-							$.messager.alert('提示','请选择文件！','info');
-							return;
-						}
-						$("#importExcelFM").submit();
-						$('#importExcelDlg').dialog('close');
-
-						$.messager.progress({
-							title:'请稍候',
-							msg:'数据处理ing...'
-						});
-						setTimeout(function(){
-							$.messager.progress('close');
-							var opts = $("#tableData").datagrid('options');
-							showMaterialDetails(opts.pageNumber,opts.pageSize);
-						},3300);
+				$("#saveimport").off("click").on("click",function() {
+					if($("#materialFile").val().length == 0) {
+						$.messager.alert('提示','请选择文件！','info');
+						return;
 					}
+					$("#importExcelFM").submit();
+					$('#importExcelDlg').dialog('close');
+
+					$.messager.progress({
+						title:'请稍候',
+						msg:'数据处理ing...'
+					});
+					setTimeout(function(){
+						$.messager.progress('close');
+						var opts = $("#tableData").datagrid('options');
+						showMaterialDetails(opts.pageNumber,opts.pageSize);
+					},3300);
 				});
 			}
 
