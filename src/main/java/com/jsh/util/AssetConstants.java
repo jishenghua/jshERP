@@ -115,5 +115,6 @@ public interface AssetConstants
          * action返回excel结果
          */
         public static final String EXCEL = "excel";
+		
     }
 }
