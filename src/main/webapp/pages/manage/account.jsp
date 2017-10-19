@@ -90,15 +90,13 @@
         
         <script type="text/javascript">
             //初始化界面
-            $(function()
-            {
+            $(function(){
                 initTableData();
                 ininPager();  
             }); 
             
             //初始化表格数据
-            function initTableData()
-            {
+            function initTableData(){
                 $('#tableData').datagrid({
                     //title:'结算账户',
                     //iconCls:'icon-save',
