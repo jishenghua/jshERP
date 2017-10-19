@@ -99,16 +99,14 @@
 	    
 		<script type="text/javascript">
 			//初始化界面
-			$(function()
-			{
+			$(function(){
 				initTableData();
 				ininPager();
 				initForm();
 			});
 			
 			//防止表单提交重复
-			function initForm()
-			{
+			function initForm(){
 				$('#depotFM').form({
 				    onSubmit: function(){
 				        return false;
