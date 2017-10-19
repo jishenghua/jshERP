@@ -171,8 +171,7 @@
             }
             
             //初始化键盘enter事件
-            $(document).keydown(function(event)
-            {  
+            $(document).keydown(function(event){  
                 //兼容 IE和firefox 事件 
                 var e = window.event || event;  
                 var k = e.keyCode||e.which||e.charCode;  
@@ -191,8 +190,7 @@
                 }  
             }); 
             //分页信息处理
-            function ininPager()
-            {
+            function ininPager(){
                 try
                 {
                     var opts = $("#tableData").datagrid('options');  
@@ -218,8 +216,7 @@
             }
             
             //删除结算账户
-            function deleteAccount(accountInfo)
-            {
+            function deleteAccount(accountInfo){
                 $.messager.confirm('删除确认','确定要删除此结算账户吗？',function(r)
                 {
                     if (r)
@@ -255,8 +252,7 @@
             }
             
             //批量删除结算账户
-            function batDeleteAccount()
-            {
+            function batDeleteAccount(){
                 var row = $('#tableData').datagrid('getChecked');
                 if(row.length == 0)
                 {
@@ -318,8 +314,7 @@
             //保存编辑前的名称
             var orgaccount = "";
             
-            function addAccount()
-            {
+            function addAccount(){
                 $('#accountDlg').dialog('open').dialog('setTitle','<img src="<%=path%>/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加结算账户');
                 $(".window-mask").css({ width: webW ,height: webH});
                 $('#accountFM').form('clear');
@@ -373,8 +368,7 @@
             });
             
             //编辑结算账户
-            function editAccount(accountTotalInfo)
-            {
+            function editAccount(accountTotalInfo){
                 var accountInfo = accountTotalInfo.split("AaBb");
                 var row = {
                     name : accountInfo[1],
@@ -395,8 +389,7 @@
             }
             
             //检查结算账户 名称是否存在 ++ 重名无法提示问题需要跟进
-            function checkAccountName()
-            {
+            function checkAccountName(){
                 var accountName = $.trim($("#name").val());
                 //表示是否存在 true == 存在 false = 不存在
                 var flag = false;
@@ -449,8 +442,7 @@
                 }
             });
             
-            function showAccountDetails(pageNo,pageSize)
-            {
+            function showAccountDetails(pageNo,pageSize){
                 $.ajax({
                     type:"post",
                     url: "<%=path %>/account/findBy.action",
