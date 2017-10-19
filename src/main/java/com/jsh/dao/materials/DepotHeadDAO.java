@@ -122,7 +122,7 @@ public class DepotHeadDAO extends BaseDAO<DepotHead> implements DepotHeadIDAO {
     @SuppressWarnings("unchecked")
     public void findMaterialsListByHeaderId(PageUtil pageUtil,Long headerId) throws JshException {
         StringBuffer queryString = new StringBuffer();
-        queryString.append("select group_concat(concat(jsh_material.`Name`,' ',jsh_material.Model,' ',jsh_material.Color)) as mName from jsh_depotitem inner join jsh_material " +
+        queryString.append("select group_concat(concat(jsh_material.`Name`,' ',jsh_material.Model)) as mName from jsh_depotitem inner join jsh_material " +
                 " on jsh_depotitem.MaterialId = jsh_material.Id where jsh_depotitem.HeaderId ="+ headerId);
         Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
         pageUtil.setPageList(query.list());
@@ -164,7 +164,7 @@ public class DepotHeadDAO extends BaseDAO<DepotHead> implements DepotHeadIDAO {
     public void getHeaderIdByMaterial(PageUtil pageUtil,String materialParam) throws JshException {
         StringBuffer queryString = new StringBuffer();
         queryString.append("select group_concat(CAST(dt.HeaderId AS CHAR)) as ids from jsh_depotitem dt INNER JOIN jsh_material m on dt.MaterialId = m.Id where m.`Name` "+
-                " like '%" + materialParam + "%' or m.Model like '%" + materialParam + "%' or m.Color like '%" + materialParam + "%'");
+                " like '%" + materialParam + "%' or m.Model like '%" + materialParam + "%'");
         Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
         pageUtil.setPageList(query.list());
     }
