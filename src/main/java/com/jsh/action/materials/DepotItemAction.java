@@ -283,27 +283,8 @@ public class DepotItemAction extends BaseAction<DepotItemModel>
                     }
                     //品名/型号/扩展信息/包装
                     String MaterialName = depotItem.getMaterialId().getName() + ((depotItem.getMaterialId().getModel() == null || depotItem.getMaterialId().getModel().equals(""))?"":"("+depotItem.getMaterialId().getModel() + ")");
-                    for(int i=0; i< mpArr.length; i++) {
-                        if(mpArr[i].equals("颜色")) {
-                            MaterialName = MaterialName + ((depotItem.getMaterialId().getColor() == null || depotItem.getMaterialId().getColor().equals(""))?"":"("+depotItem.getMaterialId().getColor() + ")");
-                        }
-                        if(mpArr[i].equals("规格")) {
-                            MaterialName = MaterialName + ((depotItem.getMaterialId().getStandard() == null || depotItem.getMaterialId().getStandard().equals(""))?"":"("+depotItem.getMaterialId().getStandard() + ")");
-                        }
-                        if(mpArr[i].equals("制造商")) {
-                            MaterialName = MaterialName + ((depotItem.getMaterialId().getMfrs() == null || depotItem.getMaterialId().getMfrs().equals(""))?"":"("+depotItem.getMaterialId().getMfrs() + ")");
-                        }
-                        if(mpArr[i].equals("自定义1")) {
-                            MaterialName = MaterialName + ((depotItem.getMaterialId().getOtherField1() == null || depotItem.getMaterialId().getOtherField1().equals(""))?"":"("+depotItem.getMaterialId().getOtherField1() + ")");
-                        }
-                        if(mpArr[i].equals("自定义2")) {
-                            MaterialName = MaterialName + ((depotItem.getMaterialId().getOtherField2() == null || depotItem.getMaterialId().getOtherField2().equals(""))?"":"("+depotItem.getMaterialId().getOtherField2() + ")");
-                        }
-                        if(mpArr[i].equals("自定义3")) {
-                            MaterialName = MaterialName + ((depotItem.getMaterialId().getOtherField3() == null || depotItem.getMaterialId().getOtherField3().equals(""))?"":"("+depotItem.getMaterialId().getOtherField3() + ")");
-                        }
-                    }
-                    MaterialName = MaterialName + ratio;
+                    String materialOther = getOtherInfo(mpArr, depotItem);
+                    MaterialName = MaterialName + materialOther + ratio;
                     item.put("MaterialName", MaterialName);
                     item.put("Unit", depotItem.getMUnit());
                     item.put("OperNumber", depotItem.getOperNumber());
@@ -354,7 +335,8 @@ public class DepotItemAction extends BaseAction<DepotItemModel>
             pageUtil.setAdvSearch(getConditionALL());
             depotItemService.find(pageUtil);
             List<DepotItem> dataList = pageUtil.getPageList();
-
+            String mpList = model.getMpList(); //商品属性
+            String[] mpArr = mpList.split(",");
             JSONObject outer = new JSONObject();
             outer.put("total", pageUtil.getTotalCount());
             //存放数据json数组
@@ -373,7 +355,9 @@ public class DepotItemAction extends BaseAction<DepotItemModel>
                     item.put("MaterialId", depotItem.getMaterialId()==null?"":depotItem.getMaterialId().getId());
                     item.put("MaterialName", depotItem.getMaterialId().getName());
                     item.put("MaterialModel", depotItem.getMaterialId().getModel());
-                    item.put("MaterialStandard", depotItem.getMaterialId().getStandard());
+                    //扩展信息
+                    String materialOther = getOtherInfo(mpArr, depotItem);
+                    item.put("MaterialOther", materialOther);
                     item.put("MaterialColor", depotItem.getMaterialId().getColor());
                     item.put("MaterialUnit", depotItem.getMaterialId().getUnit());
                     Double unitPrice = 0.0;
@@ -459,7 +443,8 @@ public class DepotItemAction extends BaseAction<DepotItemModel>
             pageUtil.setAdvSearch(getConditionALL());
             depotItemService.find(pageUtil);
             List<DepotItem> dataList = pageUtil.getPageList();
-
+            String mpList = model.getMpList(); //商品属性
+            String[] mpArr = mpList.split(",");
             JSONObject outer = new JSONObject();
             outer.put("total", pageUtil.getTotalCount());
             //存放数据json数组
@@ -474,7 +459,9 @@ public class DepotItemAction extends BaseAction<DepotItemModel>
                     item.put("MaterialId", depotItem.getMaterialId()==null?"":depotItem.getMaterialId().getId());
                     item.put("MaterialName", depotItem.getMaterialId().getName());
                     item.put("MaterialModel", depotItem.getMaterialId().getModel());
-                    item.put("MaterialStandard", depotItem.getMaterialId().getStandard());
+                    //扩展信息
+                    String materialOther = getOtherInfo(mpArr, depotItem);
+                    item.put("MaterialOther", materialOther);
                     item.put("MaterialColor", depotItem.getMaterialId().getColor());
                     item.put("MaterialUnit", depotItem.getMaterialId().getUnit());
                     item.put("thisSum",  InSum - OutSum);
@@ -507,7 +494,8 @@ public class DepotItemAction extends BaseAction<DepotItemModel>
             pageUtil.setAdvSearch(getConditionALL());
             depotItemService.find(pageUtil);
             List<DepotItem> dataList = pageUtil.getPageList();
-
+            String mpList = model.getMpList(); //商品属性
+            String[] mpArr = mpList.split(",");
             JSONObject outer = new JSONObject();
             outer.put("total", pageUtil.getTotalCount());
             //存放数据json数组
@@ -525,7 +513,9 @@ public class DepotItemAction extends BaseAction<DepotItemModel>
                     item.put("MaterialId", depotItem.getMaterialId()==null?"":depotItem.getMaterialId().getId());
                     item.put("MaterialName", depotItem.getMaterialId().getName());
                     item.put("MaterialModel", depotItem.getMaterialId().getModel());
-                    item.put("MaterialStandard", depotItem.getMaterialId().getStandard());
+                    //扩展信息
+                    String materialOther = getOtherInfo(mpArr, depotItem);
+                    item.put("MaterialOther", materialOther);
                     item.put("MaterialColor", depotItem.getMaterialId().getColor());
                     item.put("MaterialUnit", depotItem.getMaterialId().getUnit());
                     item.put("InSum", InSum);
@@ -562,7 +552,8 @@ public class DepotItemAction extends BaseAction<DepotItemModel>
             pageUtil.setAdvSearch(getConditionALL());
             depotItemService.find(pageUtil);
             List<DepotItem> dataList = pageUtil.getPageList();
-
+            String mpList = model.getMpList(); //商品属性
+            String[] mpArr = mpList.split(",");
             JSONObject outer = new JSONObject();
             outer.put("total", pageUtil.getTotalCount());
             //存放数据json数组
@@ -584,7 +575,9 @@ public class DepotItemAction extends BaseAction<DepotItemModel>
                     item.put("MaterialId", depotItem.getMaterialId()==null?"":depotItem.getMaterialId().getId());
                     item.put("MaterialName", depotItem.getMaterialId().getName());
                     item.put("MaterialModel", depotItem.getMaterialId().getModel());
-                    item.put("MaterialStandard", depotItem.getMaterialId().getStandard());
+                    //扩展信息
+                    String materialOther = getOtherInfo(mpArr, depotItem);
+                    item.put("MaterialOther", materialOther);
                     item.put("MaterialColor", depotItem.getMaterialId().getColor());
                     item.put("MaterialUnit", depotItem.getMaterialId().getUnit());
                     item.put("OutSum", OutSumRetail + OutSum);
@@ -842,6 +835,35 @@ public class DepotItemAction extends BaseAction<DepotItemModel>
 		}
 		sumPrice = Double.parseDouble(allPrice);
 		return sumPrice;    	     
+    }
+
+    /**
+     * 获取扩展信息
+     * @return
+     */
+    public String getOtherInfo(String[] mpArr, DepotItem depotItem){
+        String materialOther = "";
+        for(int i=0; i< mpArr.length; i++) {
+            if(mpArr[i].equals("颜色")) {
+                materialOther = materialOther + ((depotItem.getMaterialId().getColor() == null || depotItem.getMaterialId().getColor().equals(""))?"":"("+depotItem.getMaterialId().getColor() + ")");
+            }
+            if(mpArr[i].equals("规格")) {
+                materialOther = materialOther + ((depotItem.getMaterialId().getStandard() == null || depotItem.getMaterialId().getStandard().equals(""))?"":"("+depotItem.getMaterialId().getStandard() + ")");
+            }
+            if(mpArr[i].equals("制造商")) {
+                materialOther = materialOther + ((depotItem.getMaterialId().getMfrs() == null || depotItem.getMaterialId().getMfrs().equals(""))?"":"("+depotItem.getMaterialId().getMfrs() + ")");
+            }
+            if(mpArr[i].equals("自定义1")) {
+                materialOther = materialOther + ((depotItem.getMaterialId().getOtherField1() == null || depotItem.getMaterialId().getOtherField1().equals(""))?"":"("+depotItem.getMaterialId().getOtherField1() + ")");
+            }
+            if(mpArr[i].equals("自定义2")) {
+                materialOther = materialOther + ((depotItem.getMaterialId().getOtherField2() == null || depotItem.getMaterialId().getOtherField2().equals(""))?"":"("+depotItem.getMaterialId().getOtherField2() + ")");
+            }
+            if(mpArr[i].equals("自定义3")) {
+                materialOther = materialOther + ((depotItem.getMaterialId().getOtherField3() == null || depotItem.getMaterialId().getOtherField3().equals(""))?"":"("+depotItem.getMaterialId().getOtherField3() + ")");
+            }
+        }
+        return  materialOther;
     }
 	/**
 	 * 拼接搜索条件

@@ -48,24 +48,50 @@
 		</div>
 			    
 		<script type="text/javascript">
+			var mPropertyList = ""; //商品属性列表
 			//初始化界面
 			$(function()
 			{
 				var thisDate = getNowFormatMonth(); //当前月份
 				$("#searchMonth").val(thisDate);
+				initMProperty(); //初始化商品属性
 				initTableData();
 				ininPager();
 				search();
 				print();
-			});			
+			});
+
+			//初始化商品属性
+			function initMProperty(){
+				$.ajax({
+					type: "post",
+					url: "<%=path %>/materialProperty/findBy.action",
+					dataType: "json",
+					success: function (res) {
+						if (res && res.rows) {
+							var thisRows = res.rows;
+							for(var i=0; i < thisRows.length; i++) {
+								if(thisRows[i].enabled){
+									mPropertyList += thisRows[i].nativeName +",";
+								}
+							}
+							if(mPropertyList){
+								mPropertyList = mPropertyList.substring(0,mPropertyList.length-1);
+							}
+						}
+					},
+					//此处添加错误处理
+					error:function() {
+						$.messager.alert('查询提示','查询信息异常，请稍后再试！','error');
+						return;
+					}
+				});
+			}
 			
 			//初始化表格数据
 			function initTableData()
 			{
 				$('#tableData').datagrid({
-					//title:'列表',
-					//iconCls:'icon-save',
-					//width:700,
 					height:heightInfo,
 					nowrap: false,
 					rownumbers: true,
@@ -82,8 +108,7 @@
 					columns:[[
 			          { title: '名称',field: 'MaterialName',width:60},
 			          { title: '型号',field: 'MaterialModel',width:80},
-					  { title: '规格',field: 'MaterialStandard',width:80},
-			          { title: '颜色',field: 'MaterialColor',width:80,hidden:true},
+					  { title: '扩展信息',field: 'MaterialOther',width:150},
 					  { title: '单位',field: 'MaterialUnit',width:80},
 			          { title: '进货数量',field: 'InSum',width:60},			          
 			          { title: '进货金额',field: 'InSumPrice',width:60},
@@ -146,11 +171,10 @@
 				var pager = $("#tableData").datagrid('getPager');
 				opts.pageNumber = 1;
 				opts.pageSize = initPageSize;
-				pager.pagination('refresh',
-						{
-							pageNumber:1,
-							pageSize:initPageSize
-						});
+				pager.pagination('refresh', {
+					pageNumber:1,
+					pageSize:initPageSize
+				});
 			}
 			//搜索处理
 			$("#searchBtn").unbind().bind({
@@ -182,7 +206,7 @@
 									var MIds = resNew.mIds;
 									if(MIds) {
 										$.ajax({
-											type:"get",
+											type:"post",
 											url: "<%=path %>/depotItem/buyIn.action",
 											dataType: "json",
 											data: ({
@@ -190,7 +214,8 @@
 												pageSize:pageSize,
 												MonthTime:$("#searchMonth").val(),
 												HeadIds:HeadIds,
-												MaterialIds:MIds
+												MaterialIds:MIds,
+												mpList: mPropertyList
 											}),
 											success: function (data)
 											{

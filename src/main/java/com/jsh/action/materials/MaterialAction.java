@@ -303,7 +303,8 @@ public class MaterialAction extends BaseAction<MaterialModel>
             materialService.find(pageUtil);
             getSession().put("pageUtilMaterial", pageUtil);
             List<Material> dataList = pageUtil.getPageList();
-            
+            String mpList = model.getMpList(); //商品属性
+            String[] mpArr = mpList.split(",");
             JSONObject outer = new JSONObject();
             outer.put("total", pageUtil.getTotalCount());
             //存放数据json数组
@@ -317,12 +318,32 @@ public class MaterialAction extends BaseAction<MaterialModel>
                     item.put("Name", material.getName());
                     item.put("CategoryId", material.getMaterialCategory().getId()); //类型Id
                     item.put("CategoryName", material.getMaterialCategory().getName()); //类型名称
-                    item.put("Mfrs", material.getMfrs()==null?"" : material.getMfrs());
                     item.put("Packing", material.getPacking()==null?"" : material.getPacking());
                     item.put("SafetyStock", material.getSafetyStock()==null?"" : material.getSafetyStock());
                     item.put("Model", material.getModel()==null?"" : material.getModel());
-                    item.put("Standard", material.getStandard()==null?"": material.getStandard());
-                    item.put("Color", material.getColor()==null?"": material.getColor());
+                    //扩展信息
+                    String materialOther = "";
+                    for(int i=0; i< mpArr.length; i++) {
+                        if(mpArr[i].equals("颜色")) {
+                            materialOther = materialOther + ((material.getColor() == null || material.getColor().equals(""))?"":"("+material.getColor() + ")");
+                        }
+                        if(mpArr[i].equals("规格")) {
+                            materialOther = materialOther + ((material.getStandard() == null || material.getStandard().equals(""))?"":"("+material.getStandard() + ")");
+                        }
+                        if(mpArr[i].equals("制造商")) {
+                            materialOther = materialOther + ((material.getMfrs() == null || material.getMfrs().equals(""))?"":"("+material.getMfrs() + ")");
+                        }
+                        if(mpArr[i].equals("自定义1")) {
+                            materialOther = materialOther + ((material.getOtherField1() == null || material.getOtherField1().equals(""))?"":"("+material.getOtherField1() + ")");
+                        }
+                        if(mpArr[i].equals("自定义2")) {
+                            materialOther = materialOther + ((material.getOtherField2() == null || material.getOtherField2().equals(""))?"":"("+material.getOtherField2() + ")");
+                        }
+                        if(mpArr[i].equals("自定义3")) {
+                            materialOther = materialOther + ((material.getOtherField3() == null || material.getOtherField3().equals(""))?"":"("+material.getOtherField3() + ")");
+                        }
+                    }
+                    item.put("MaterialOther", materialOther);
                     item.put("Unit", material.getUnit()==null?"": material.getUnit());
                     item.put("RetailPrice", material.getRetailPrice());
                     item.put("LowPrice", material.getLowPrice());
@@ -335,9 +356,12 @@ public class MaterialAction extends BaseAction<MaterialModel>
                     item.put("PriceStrategy", material.getPriceStrategy());
                     item.put("Enabled", material.getEnabled());
                     item.put("Remark", material.getRemark());
-                    item.put("OtherField1", material.getOtherField1());
-                    item.put("OtherField2", material.getOtherField2());
-                    item.put("OtherField3", material.getOtherField3());
+                    item.put("Color", material.getColor()==null?"" : material.getColor());
+                    item.put("Standard", material.getStandard()==null?"" : material.getStandard());
+                    item.put("Mfrs", material.getMfrs()==null?"" : material.getMfrs());
+                    item.put("OtherField1", material.getOtherField1()==null?"" : material.getOtherField1());
+                    item.put("OtherField2", material.getOtherField2()==null?"" : material.getOtherField2());
+                    item.put("OtherField3", material.getOtherField3()==null?"" : material.getOtherField3());
                     item.put("op", 1);
                     dataArray.add(item);
                 }

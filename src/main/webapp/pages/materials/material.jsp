@@ -35,10 +35,7 @@
 					<td>
 						<input name="searchModel" id="searchModel" style="width:80px;"/>
 					</td>
-					<td>颜色：</td>
-					<td>
-						<input name="searchColor" id="searchColor" style="width:80px;"/>
-					</td>
+					<td>&nbsp;</td>
 			    	<td>类别：</td>
 					<td>
 						<select name="searchCategoryId_f" id="searchCategoryId_f"  style="width:100px;"></select>
@@ -253,6 +250,7 @@
 			var cid=1;
 			var multiple = 0;  //倍数
 			var mPropertyList = null; //商品属性列表
+			var mPropertyListShort = ""; //商品属性列表-传值
 			//初始化界面
 			$(function()
 			{
@@ -263,6 +261,7 @@
 				initSelectInfo("edit_first");
 				manyUnitFun();
 				priceKeyUp();//价格触发事件
+				initMPropertyShort(); //初始化商品属性
 				initTableData();
 				ininPager();
 				initForm();
@@ -529,6 +528,34 @@
 				});
 			}
 
+			//初始化商品属性
+			function initMPropertyShort(){
+				$.ajax({
+					type: "post",
+					url: "<%=path %>/materialProperty/findBy.action",
+					dataType: "json",
+					async: false,
+					success: function (res) {
+						if (res && res.rows) {
+							var thisRows = res.rows;
+							for(var i=0; i < thisRows.length; i++) {
+								if(thisRows[i].enabled){
+									mPropertyListShort += thisRows[i].nativeName +",";
+								}
+							}
+							if(mPropertyListShort){
+								mPropertyListShort = mPropertyListShort.substring(0,mPropertyListShort.length-1);
+							}
+						}
+					},
+					//此处添加错误处理
+					error:function() {
+						$.messager.alert('查询提示','查询信息异常，请稍后再试！','error');
+						return;
+					}
+				});
+			}
+
 			//初始化表格数据
 			function initTableData() {
 				//改变宽度和高度
@@ -550,7 +577,6 @@
 					//fitColumns:true,
 					//单击行是否选中
 					//checkOnSelect : false,
-					url:'<%=path %>/material/findBy.action?pageSize=' + initPageSize+'&CategoryIds='+setCategoryId+'&CategoryId='+cid,
 					pagination: true,
 					//交替出现背景
 					striped : true,
@@ -576,8 +602,7 @@
 						},
 						{ title: '品名',field: 'Name',width:80},
 						{ title: '型号',field: 'Model',width:80},
-						{ title: '颜色',field: 'Color',width:80},
-						{ title: '规格',field: 'Standard',width:80},
+						{ title: '扩展信息',field: 'MaterialOther',width:150},
 						{ title: '单位',field: 'Unit',width:60},
 						{ title: '安全存量',field: 'SafetyStock',width:90},
 						{ title: '零售价',field: 'RetailPrice',width:60},
@@ -651,6 +676,7 @@
 						return;
 					}
 				});
+				showMaterialDetails(1,initPageSize);
 			}
 
 			//初始化键盘enter事件
@@ -1384,8 +1410,7 @@
 			});
 
 
-			function showMaterialDetails(pageNo,pageSize)
-			{
+			function showMaterialDetails(pageNo,pageSize) {
 				if(setCategoryId!="1") {
 					cid = 2;
 				}
@@ -1402,6 +1427,7 @@
 						Color: $.trim($("#searchColor").val()),
 						CategoryId:cid,
 						CategoryIds:setCategoryId,
+						mpList: mPropertyListShort,
 						pageNo:pageNo,
 						pageSize:pageSize
 					}),
