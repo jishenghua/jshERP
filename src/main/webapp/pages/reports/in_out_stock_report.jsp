@@ -60,6 +60,7 @@
 		<script type="text/javascript">
 			var depotList = null;
 			var depotID = null;
+			var mPropertyList = ""; //商品属性列表
 			//初始化界面
 			$(function()
 			{
@@ -71,6 +72,7 @@
 				initSelectInfo_UB();
 				initSystemData_depot();
 				initSelectInfo_depot();
+				initMProperty(); //初始化商品属性
 				initTableData();
 				ininPager();
 				search();
@@ -180,14 +182,38 @@
 					$("#searchProjectId").empty().append('<option value="">全部</option>').append(options);
 				}
 			}
+
+			//初始化商品属性
+			function initMProperty(){
+				$.ajax({
+					type: "post",
+					url: "<%=path %>/materialProperty/findBy.action",
+					dataType: "json",
+					success: function (res) {
+						if (res && res.rows) {
+							var thisRows = res.rows;
+							for(var i=0; i < thisRows.length; i++) {
+								if(thisRows[i].enabled){
+									mPropertyList += thisRows[i].nativeName +",";
+								}
+							}
+							if(mPropertyList){
+								mPropertyList = mPropertyList.substring(0,mPropertyList.length-1);
+							}
+						}
+					},
+					//此处添加错误处理
+					error:function() {
+						$.messager.alert('查询提示','查询信息异常，请稍后再试！','error');
+						return;
+					}
+				});
+			}
 			
 			//初始化表格数据
 			function initTableData()
 			{
 				$('#tableData').datagrid({
-					//title:'列表',
-					//iconCls:'icon-save',
-					//width:700,
 					height:heightInfo,
 					nowrap: false,
 					rownumbers: true,
@@ -204,8 +230,7 @@
 					columns:[[
 			          { title: '名称',field: 'MaterialName',width:60},
 			          { title: '型号',field: 'MaterialModel',width:80},
-					  { title: '规格',field: 'MaterialStandard',width:80},
-			          { title: '颜色',field: 'MaterialColor',width:80,hidden:true},
+					  { title: '扩展信息',field: 'MaterialOther',width:150},
 					  { title: '单位',field: 'MaterialUnit',width:80},
 			          { title: '单价',field: 'UnitPrice',width:60,formatter: function(value,row,index){
 							return value.toFixed(2);
@@ -328,7 +353,7 @@
 										}
 										else {
 											$.ajax({
-												type:"get",
+												type:"post",
 												url: "<%=path %>/depotItem/findByAll.action",
 												dataType: "json",
 												data: ({
@@ -337,7 +362,8 @@
 													ProjectId: $.trim($("#searchProjectId").val()),
 													MonthTime:$("#searchMonth").val(),
 													HeadIds:HeadIds,
-													MaterialIds:MIds
+													MaterialIds:MIds,
+													mpList: mPropertyList
 												}),
 												success: function (data)
 												{
