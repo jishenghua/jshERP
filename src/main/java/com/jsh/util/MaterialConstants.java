@@ -32,54 +32,44 @@ public interface MaterialConstants
         public static final int EXCEL_CATEGORY = 1;
 
         /**
-         * 颜色
-         */
-        public static final int EXCEL_COLOR = 2;
-
-        /**
          * 型号
          */
-        public static final int EXCEL_MODEL = 3;
-
-        /**
-         * 规格
-         */
-        public static final int EXCEL_STANDARD = 4;
+        public static final int EXCEL_MODEL = 2;
 
         /**
          * 安全存量
          */
-        public static final int EXCEL_SAFETY_STOCK = 5;
+        public static final int EXCEL_SAFETY_STOCK = 3;
 
         /**
          * 单位
          */
-        public static final int EXCEL_UNIT = 6;
+        public static final int EXCEL_UNIT = 4;
 
         /**
          * 零售价
          */
-        public static final int EXCEL_RETAILPRICE = 7;
+        public static final int EXCEL_RETAILPRICE = 5;
 
         /**
          * 最低售价
          */
-        public static final int EXCEL_LOWPRICE = 8;
+        public static final int EXCEL_LOWPRICE = 6;
 
         /**
-         * 预设售价一
+         * 预计采购价
          */
-        public static final int EXCEL_PRESETPRICEONE = 9;
+        public static final int EXCEL_PRESETPRICEONE = 7;
 
         /**
-         * 预设售价二
+         * 批发价
          */
-        public static final int EXCEL_PRESETPRICETWO = 10;
+        public static final int EXCEL_PRESETPRICETWO = 8;
 
         /**
          * 备注
          */
-        public static final int EXCEL_REMARK = 11;
+        public static final int EXCEL_REMARK = 9;
 
         /**
          * 表头
