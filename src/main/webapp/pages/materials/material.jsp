@@ -617,18 +617,18 @@
 									MaterialId: mId,
 									MonthTime: monthTime
 								},
-								async: false,
 								dataType: "json",
 								success: function (res) {
 									if (res && res.rows && res.rows[0]) {
 										thisStock = res.rows[0].thisSum;
+										$("#tablePanel .class-" + rec.Id).text(thisStock); //延迟加载库存数据
 									}
 								},
 								error:function() {
 									$.messager.alert('查询提示','查询数据后台异常，请稍后再试！','error');
 								}
 							});
-							return thisStock;
+							return "<span class='class-" + rec.Id +"'>" + thisStock + "</span>";
 						}},
 						{ title: '零售价',field: 'RetailPrice',width:60},
 						{ title: '最低售价',field: 'LowPrice',width:70},
