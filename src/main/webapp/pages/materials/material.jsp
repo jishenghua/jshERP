@@ -604,7 +604,32 @@
 						{ title: '型号',field: 'Model',width:80},
 						{ title: '扩展信息',field: 'MaterialOther',width:150},
 						{ title: '单位',field: 'Unit',width:60},
-						{ title: '安全存量',field: 'SafetyStock',width:90},
+						{ title: '安全存量',field: 'SafetyStock',width:70},
+						{ title: '库存',field: 'abc',width:70, formatter:function(value,rec){
+							var monthTime = getNowFormatMonth();
+							var mId = rec.Id; //商品id
+							var thisStock = 0;
+							//查询库存
+							$.ajax({
+								type: "get",
+								url: '<%=path %>/depotItem/findStockNumById.action',
+								data: {
+									MaterialId: mId,
+									MonthTime: monthTime
+								},
+								async: false,
+								dataType: "json",
+								success: function (res) {
+									if (res && res.rows && res.rows[0]) {
+										thisStock = res.rows[0].thisSum;
+									}
+								},
+								error:function() {
+									$.messager.alert('查询提示','查询数据后台异常，请稍后再试！','error');
+								}
+							});
+							return thisStock;
+						}},
 						{ title: '零售价',field: 'RetailPrice',width:60},
 						{ title: '最低售价',field: 'LowPrice',width:70},
 						{ title: '预计采购价',field: 'PresetPriceOne',width:70},
