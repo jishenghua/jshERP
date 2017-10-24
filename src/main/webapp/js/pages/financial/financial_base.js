@@ -201,6 +201,23 @@
 	
 	//初始化表格数据
 	function initTableData(){
+		var organNameTitle = "";
+		var organNameHidden = false;
+		if(listType === "收入" || listType === "支出") {
+			organNameTitle = "往来单位";
+		}
+		else if(listType === "收款") {
+			organNameTitle = "付款单位";
+		}
+		else if(listType === "付款") {
+			organNameTitle = "收款单位";
+		}
+		else if(listType === "收预付款") {
+			organNameTitle = "付款会员";
+		}
+		if(listType === "转账") {
+			organNameHidden = true;
+		}
 		$('#tableData').datagrid({
 			//width:700,
 			height:heightInfo,
@@ -238,7 +255,9 @@
 					}
 				},
 				{ field: 'OrganId',width:5, hidden:true},
+				{ title: organNameTitle,field: 'OrganName',width:140,hidden:organNameHidden},
 				{ title: '单据编号',field: 'BillNo',width:140},
+				{ title: '经手人',field: 'HandsPersonName',width:80},
 				{ title: '单据时间 ',field: 'BillTime',width:140},
 				{ title: '合计',field: 'TotalPrice',width:80},
 				{ title: '备注',field: 'Remark',width:100}
