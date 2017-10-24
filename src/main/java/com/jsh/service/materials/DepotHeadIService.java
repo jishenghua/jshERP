@@ -23,7 +23,7 @@ public interface DepotHeadIService extends BaseIService<DepotHead>
 
 	public void findMaterialsListByHeaderId(PageUtil pageUtil,Long headerId)throws JshException;
 
-	public void findStatementAccount(PageUtil pageUtil,String beginTime,String endTime, Long organId, Long pid,String dids)throws JshException;
+	public void findStatementAccount(PageUtil pageUtil,String beginTime,String endTime, Long organId)throws JshException;
 
 	public void getHeaderIdByMaterial(PageUtil pageUtil,String materialParam)throws JshException;
 }

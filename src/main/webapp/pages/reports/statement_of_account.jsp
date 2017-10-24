@@ -30,11 +30,6 @@
 		<div id = "searchPanel"	class="easyui-panel" style="padding:10px;" title="查询窗口" iconCls="icon-search" collapsible="true" closable="false">
 			<table id="searchTable">
 				<tr>
-					<td>仓库：</td>
-					<td>
-						<select name="searchProjectId" id="searchProjectId"  style="width:100px;"></select>
-					</td>
-					<td>&nbsp;</td>
 					<td>单位名称：</td>
 					<td>
 						<input id="OrganId" name="OrganId" style="width:100px;" />
@@ -65,9 +60,6 @@
 			    
 		<script type="text/javascript">
 			var path = "<%=path %>";
-			var depotList = null;
-			var depotID = null;
-			var depotString = ""; //仓库列表
 			var cusUrl = path + "/supplier/findBySelect_cus.action?UBType=UserCustomer&UBKeyId=" + uid; //客户接口
 			//初始化界面
 			$(function()
@@ -76,111 +68,13 @@
 				var thisDateTime = getNowFormatDateTime(); //当前时间
 				$("#searchBeginTime").val(thisDate + "-01 00:00:00");
 				$("#searchEndTime").val(thisDateTime);
-				var userBusinessList=null;
-				var userdepot=null;
-				initSystemData_UB();
-				initSelectInfo_UB();
-				initSystemData_depot();
-				initSelectInfo_depot();
 				initSupplier(); //初始化供应商、客户信息
 				initTableData();
 				ininPager();
 				search();
 				print();
 			});	
-			
 
-
-			//初始化系统基础信息
-			function initSystemData_UB(){
-				$.ajax({
-					type:"post",
-					url: "<%=path %>/userBusiness/getBasicData.action",
-					data: ({
-						KeyId: uid,
-						Type:"UserDepot"
-					}),
-					//设置为同步
-					async:false,
-					dataType: "json",
-					success: function (systemInfo)
-					{
-						if(systemInfo)
-						{
-							userBusinessList = systemInfo.showModel.map.userBusinessList;
-							var msgTip = systemInfo.showModel.msgTip;
-							if(msgTip == "exceptoin")
-							{
-								$.messager.alert('提示','查找UserBusiness异常,请与管理员联系！','error');
-								return;
-							}
-						}
-						else
-						{
-							userBusinessList=null;
-						}
-					}
-				});
-
-			}
-			//初始化页面选项卡
-			function initSelectInfo_UB(){
-
-				if(userBusinessList !=null)
-				{
-					if(userBusinessList.length>0)
-					{
-						//用户对应的仓库列表 [1][2][3]...
-						userdepot =userBusinessList[0].value;
-					}
-				}
-			}
-
-
-			//初始化系统基础信息
-			function initSystemData_depot(){
-				$.ajax({
-					type:"post",
-					url: "<%=path %>/depot/getBasicData.action",
-					//设置为同步
-					async:false,
-					dataType: "json",
-					success: function (systemInfo)
-					{
-						depotList = systemInfo.showModel.map.depotList;
-						var msgTip = systemInfo.showModel.msgTip;
-						if(msgTip == "exceptoin")
-						{
-							$.messager.alert('提示','查找系统基础信息异常,请与管理员联系！','error');
-							return;
-						}
-					}
-				});
-			}
-			//初始化页面选项卡
-			function initSelectInfo_depot(){
-				var options = "";
-
-				if(depotList !=null)
-				{
-					options = "";
-					for(var i = 0 ;i < depotList.length;i++)
-					{
-						var depot = depotList[i];
-
-						if(userdepot!=null)
-						{
-							if(userdepot.indexOf("["+depot.id+"]")!=-1)
-							{
-								options += '<option value="' + depot.id + '">' + depot.name + '</option>';
-								depotString = depotString + depot.id + ",";
-							}
-						}
-					}
-					depotString = depotString.substring(0, depotString.length-1);
-					$("#searchProjectId").empty().append('<option value="">全部</option>').append(options);
-				}
-			}
 
 			//初始化供应商、客户
 			function initSupplier(){
@@ -213,28 +107,11 @@
 					pageList: [10,50,100],
 					columns:[[
 			          	{ title: '单据编号',field: 'number',width:140},
-						{ title: '商品名称',field: 'materialName',width:120},
-						{ title: '商品型号',field: 'materialModel',width:100},
-						{ title: '单价',field: 'unitPrice',width:60},
-						{ title: '数量',field: 'operNumber',width:60,formatter:function(value,rec){
-							if(rec.type==="出库"){
-								return rec.operNumber;
-							}
-							else if(rec.type==="入库"){
-								return 0-rec.operNumber;
-							}
-						}},
-						{ title: '金额',field: 'allPrice',width:60,formatter: function(value,rec){
-							if(rec.type==="出库"){
-								return rec.allPrice;
-							}
-							else if(rec.type==="入库"){
-								return 0-rec.allPrice;
-							}
-						}},
 						{ title: '单位名称',field: 'supplierName',width:200},
-						{ title: '仓库',field: 'depotName',width:120},
-						{ title: '入库日期',field: 'operTime',width:80}
+						{ title: '金额',field: 'allPrice',width:60,formatter: function(value,rec){
+							return (rec.changeAmount-rec.totalPrice).toFixed(2);
+						}},
+						{ title: '单据日期',field: 'operTime',width:140}
 					]],
 					onLoadError:function()
 					{
@@ -325,8 +202,6 @@
 					data: ({
 						pageNo:pageNo,
 						pageSize:pageSize,
-						ProjectId: $.trim($("#searchProjectId").val()),
-						DepotIds: depotString,
 						BeginTime: $("#searchBeginTime").val(),
 						EndTime: $("#searchEndTime").val(),
 						OrganId: $('#OrganId').combobox('getValue')

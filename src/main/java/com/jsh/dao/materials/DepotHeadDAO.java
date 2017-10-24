@@ -129,24 +129,22 @@ public class DepotHeadDAO extends BaseDAO<DepotHead> implements DepotHeadIDAO {
     }
 
     @SuppressWarnings("unchecked")
-    public void findStatementAccount(PageUtil pageUtil,String beginTime,String endTime,Long organId,Long pid,String dids) throws JshException {
+    public void findStatementAccount(PageUtil pageUtil,String beginTime,String endTime,Long organId) throws JshException {
         StringBuffer queryString = new StringBuffer();
-        queryString.append("select dh.Number,m.`name`,m.Model,di.UnitPrice,di.OperNumber,di.AllPrice,s.supplier,d.dName,date_format(dh.OperTime, '%Y-%m-%d'),dh.type " +
-                "from jsh_depothead dh inner join jsh_depotitem di on di.HeaderId=dh.id " +
-                "inner join jsh_material m on m.id=di.MaterialId " +
-                "inner join jsh_supplier s on s.id=dh.OrganId " +
-                "inner join (select id,name as dName from jsh_depot) d on d.id=di.DepotId " +
-                "where s.type!='会员' and dh.OperTime >='"+ beginTime +"' and dh.OperTime <='"+ endTime +"' ");
-        if(pid!=null){
-            queryString.append(" and di.DepotId=" + pid );
-        }
-        else {
-            queryString.append(" and di.DepotId in (" + dids + ")" );
-        }
+        queryString.append("select dh.Number,dh.ChangeAmount,dh.TotalPrice,s.supplier,date_format(dh.OperTime,'%Y-%m-%d %H:%i:%S') as oTime from jsh_depothead dh " +
+                "inner join jsh_supplier s on s.id=dh.OrganId where s.type!='会员' " +
+                "and dh.OperTime >='"+ beginTime +"' and dh.OperTime<='"+ endTime +"' ");
         if(organId!=null && !organId.equals("")) {
-            queryString.append(" and dh.OrganId='"+ organId +"'");
+            queryString.append(" and dh.OrganId='"+ organId +"' ");
         }
-        queryString.append(" ORDER BY OperTime DESC,Number desc");
+        queryString.append("UNION ALL " +
+                "select ah.BillNo,ah.ChangeAmount,ah.TotalPrice,s.supplier,date_format(ah.BillTime,'%Y-%m-%d %H:%i:%S') as oTime from jsh_accounthead ah " +
+                "inner join jsh_supplier s on s.id=ah.OrganId where s.type!='会员' " +
+                "and ah.BillTime >='"+ beginTime +"' and ah.BillTime<='"+ endTime +"' ");
+        if(organId!=null && !organId.equals("")) {
+            queryString.append(" and ah.OrganId='"+ organId +"' ");
+        }
+        queryString.append(" ORDER BY oTime");
         Query query;
         query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
         pageUtil.setTotalCount(query.list().size());

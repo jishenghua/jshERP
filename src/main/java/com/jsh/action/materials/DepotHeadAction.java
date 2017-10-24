@@ -739,13 +739,11 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
 		PageUtil pageUtil = new  PageUtil();
 		pageUtil.setPageSize(model.getPageSize());
 		pageUtil.setCurPage(model.getPageNo());
-		Long pid =model.getProjectId();
-		String dids =model.getDepotIds();
 		String beginTime = model.getBeginTime();
 		String endTime = model.getEndTime();
 		Long organId = model.getOrganId();
 		try{
-			depotHeadService.findStatementAccount(pageUtil, beginTime, endTime, organId, pid, dids);
+			depotHeadService.findStatementAccount(pageUtil, beginTime, endTime, organId);
 			List dataList = pageUtil.getPageList();
 			JSONObject outer = new JSONObject();
 			outer.put("total", pageUtil.getTotalCount());
@@ -757,15 +755,10 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
 					Object dl = dataList.get(i); //获取对象
 					Object[] arr = (Object[]) dl; //转为数组
 					item.put("number", arr[0]); //单据编号
-					item.put("materialName", arr[1]); //商品名称
-					item.put("materialModel", arr[2]); //商品型号
-					item.put("unitPrice", arr[3]); //单价
-					item.put("operNumber", arr[4]); //入库出库数量
-					item.put("allPrice", arr[5]); //金额
-					item.put("supplierName", arr[6]); //供应商
-					item.put("depotName", arr[7]); //仓库
-					item.put("operTime", arr[8]); //入库出库日期
-					item.put("type", arr[9]); //单据类型
+					item.put("changeAmount", arr[1]); //金额
+					item.put("totalPrice", arr[2]); //金额
+					item.put("supplierName", arr[3]); //供应商
+					item.put("operTime", arr[4]); //入库出库日期
 					dataArray.add(item);
 				}
 			}
