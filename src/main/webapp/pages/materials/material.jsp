@@ -600,7 +600,7 @@
 							return str;
 						}
 						},
-						{ title: '品名',field: 'Name',width:80},
+						{ title: '品名',field: 'Name',width:100},
 						{ title: '型号',field: 'Model',width:80},
 						{ title: '扩展信息',field: 'MaterialOther',width:150},
 						{ title: '单位',field: 'Unit',width:60},
@@ -1098,6 +1098,11 @@
 				oldName = "";
 				oldModel = "";
 				oldColor = "";
+				oldStandard = "";
+				oldMfrs = "";
+				oldOtherField1 = "";
+				oldOtherField2 = "";
+				oldOtherField3 = "";
 				oldUnit = "";
 				oldManyUnit = "";
 				materialID = 0;
@@ -1109,12 +1114,20 @@
 				var mName = $.trim($("#Name").val());
 				var mModel = $.trim($("#Model").val());
 				var mColor = $.trim($("#Color").val());
+				var mStandard = $.trim($("#Standard").val());
+				var mMfrs = $.trim($("#Mfrs").val());
+				var mOtherField1 = $.trim($("#OtherField1").val());
+				var mOtherField2 = $.trim($("#OtherField2").val());
+				var mOtherField3 = $.trim($("#OtherField3").val());
 				var mUnit = $.trim($("#Unit").val());
 				var mUnitId = $.trim($("#manyUnit").val());
 				//表示是否存在 true == 存在 false = 不存在
 				var flag = false;
 				//开始ajax名称检验，不能重名(新增或编辑)
-				if(materialID==0 || (materialID!=0 && (mName != oldName || mModel != oldModel || mColor != oldColor || mUnit != oldUnit || mUnitId != oldManyUnit))) {
+				if(materialID==0 || (materialID!=0 && (mName != oldName || mModel != oldModel
+						|| mColor != oldColor || mStandard != oldStandard || mMfrs != oldMfrs
+						|| mOtherField1 != oldOtherField1 || mOtherField2 != oldOtherField2 || mOtherField3 != oldOtherField3
+						|| mUnit != oldUnit || mUnitId != oldManyUnit))) {
 					$.ajax({
 						type:"post",
 						url: "<%=path%>/material/checkIsExist.action",
@@ -1125,6 +1138,11 @@
 							Name : mName,
 							Model: mModel,
 							Color: mColor,
+							Standard: mStandard,
+							Mfrs: mMfrs,
+							OtherField1: mOtherField1,
+							OtherField2: mOtherField2,
+							OtherField3: mOtherField3,
 							Unit: mUnit,
 							UnitId: mUnitId
 						}),
@@ -1400,6 +1418,11 @@
 				oldName = materialInfo[1];
 				oldModel = materialInfo[2];
 				oldColor = materialInfo[11];
+				oldStandard = materialInfo[10];
+				oldMfrs = materialInfo[20];
+				oldOtherField1 = materialInfo[21];
+				oldOtherField2 = materialInfo[22];
+				oldOtherField3 = materialInfo[23];
 				oldUnit = materialInfo[4];
 				oldManyUnit = materialInfo[16];
 				$('#materialDlg').dialog('open').dialog('setTitle','<img src="<%=path%>/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑商品信息');

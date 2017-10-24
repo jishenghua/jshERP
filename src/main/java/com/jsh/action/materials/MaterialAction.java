@@ -649,6 +649,11 @@ public class MaterialAction extends BaseAction<MaterialModel>
         condition.put("Name_s_eq", model.getName());
         condition.put("Model_s_eq", model.getModel());
         condition.put("Color_s_eq", model.getColor());
+        condition.put("Standard_s_eq", model.getStandard());
+        condition.put("Mfrs_s_eq", model.getMfrs());
+        condition.put("OtherField1_s_eq", model.getOtherField1());
+        condition.put("OtherField2_s_eq", model.getOtherField2());
+        condition.put("OtherField3_s_eq", model.getOtherField3());
         if(model.getUnit()!=null){
             condition.put("Unit_s_eq", model.getUnit());
         }
