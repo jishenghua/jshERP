@@ -631,13 +631,23 @@
         url = path + '/supplier/update.action?supplierID=' + supplierInfo[0];
 
         //显示累计应收和累计应付
+        var thisDateTime = getNowFormatDateTime(); //当前时间
+        var supType = "customer";
+        if(listType === "客户"){
+            supType = "customer"
+        }
+        else if(listType === "供应商"){
+            supType = "vendor"
+        }
         $.ajax({
             type:"post",
             url: path + "/depotHead/findTotalPay.action",
             dataType: "json",
             async:  false,
             data: ({
-                supplierId: supplierInfo[0]
+                supplierId: supplierInfo[0],
+                EndTime:thisDateTime,
+                supType: supType
             }),
             success: function(res){
                 if(res) {
@@ -648,7 +658,9 @@
                         dataType: "json",
                         async:  false,
                         data: ({
-                            supplierId: supplierInfo[0]
+                            supplierId: supplierInfo[0],
+                            EndTime:thisDateTime,
+                            supType: supType
                         }),
                         success: function(res){
                             if(res) {
@@ -656,14 +668,13 @@
                                 var money = moneyA+moneyB;
                                 var moneyBeginNeedGet = $("#BeginNeedGet").val()-0; //期初应收
                                 var moneyBeginNeedPay = $("#BeginNeedPay").val()-0; //期初应付
-                                money = (money + moneyBeginNeedPay - moneyBeginNeedGet).toFixed(2);
-                                if(money>0) {
-                                    $("#AllNeedGet").val(""); //累计应收-置空
-                                    $("#AllNeedPay").val(money); //累计应付
+                                if(listType === "客户"){
+                                    money = (money + moneyBeginNeedGet - moneyBeginNeedPay).toFixed(2);
+                                    $("#AllNeedGet").val(money);  //累计应收
                                 }
-                                else {
-                                    $("#AllNeedGet").val(-money);  //累计应收
-                                    $("#AllNeedPay").val(""); //累计应付-置空
+                                else if(listType === "供应商"){
+                                    money = (money + moneyBeginNeedPay - moneyBeginNeedGet).toFixed(2);
+                                    $("#AllNeedPay").val(money); //累计应付
                                 }
                             }
                         },

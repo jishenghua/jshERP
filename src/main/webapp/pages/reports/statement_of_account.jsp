@@ -7,7 +7,7 @@
 <!DOCTYPE html>
 <html>
   	<head>
-    	<title>对账单</title>
+    	<title>客户对账</title>
         <meta charset="utf-8">
 		<!-- 指定以IE8的方式来渲染 -->
 		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
@@ -49,12 +49,17 @@
 						&nbsp;&nbsp;
 						<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-print" id="printBtn">打印</a>
 					</td>
+					<td>&nbsp;</td>
+					<td>
+						期初应收：<span class="first-total">0</span>&nbsp;&nbsp;
+						期末应收：<span class="last-total">0</span>
+					</td>
 				</tr>
 			</table>
 		</div>
 		
 		<!-- 数据显示table -->
-		<div id = "tablePanel"	class="easyui-panel" style="padding:1px;top:300px;" title="对账单列表" iconCls="icon-list" collapsible="true" closable="false">
+		<div id = "tablePanel"	class="easyui-panel" style="padding:1px;top:300px;" title="客户对账列表" iconCls="icon-list" collapsible="true" closable="false">
 			<table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 		</div>
 			    
@@ -76,7 +81,7 @@
 			});	
 
 
-			//初始化供应商、客户
+			//初始化客户
 			function initSupplier(){
 				$('#OrganId').combobox({
 					url: cusUrl,
@@ -107,10 +112,11 @@
 					pageList: [10,50,100],
 					columns:[[
 			          	{ title: '单据编号',field: 'number',width:140},
+						{ title: '类型',field: 'type',width:100},
 						{ title: '单位名称',field: 'supplierName',width:200},
-						{ title: '金额',field: 'allPrice',width:60,formatter: function(value,rec){
-							return (rec.changeAmount-rec.totalPrice).toFixed(2);
-						}},
+						{ title: '单据金额',field: 'totalPrice',width:80},
+						{ title: '实际支付',field: 'changeAmount',width:80},
+						{ title: '本期变化',field: 'allPrice',width:80},
 						{ title: '单据日期',field: 'operTime',width:140}
 					]],
 					onLoadError:function()
@@ -209,6 +215,131 @@
 					success: function (res) {
 						if(res){
 							$("#tableData").datagrid('loadData',res);
+							//如果选择了单位信息，就进行计算期初和期末
+							var supplierId = $('#OrganId').combobox('getValue');
+							if(supplierId) {
+								//先查找期初信息
+								var beginNeedGet = 0;
+								var beginNeedPay = 0;
+								$.ajax({
+									type:"post",
+									url: "<%=path %>/supplier/findById.action",
+									dataType: "json",
+									async:  false,
+									data: ({
+										supplierID: supplierId
+									}),
+									success: function(res){
+										if(res && res.rows && res.rows[0]) {
+											if(res.rows[0].BeginNeedGet) {
+												beginNeedGet = res.rows[0].BeginNeedGet;
+											}
+											if(res.rows[0].BeginNeedPay) {
+												beginNeedPay = res.rows[0].BeginNeedPay;
+											}
+											//显示期初结存
+											var searchBeginTime = $("#searchBeginTime").val(); //开始时间
+											$.ajax({
+												type:"post",
+												url: "<%=path %>/depotHead/findTotalPay.action",
+												dataType: "json",
+												async:  false,
+												data: ({
+													supplierId: supplierId,
+													EndTime:searchBeginTime,
+													supType: "customer"
+												}),
+												success: function(res){
+													if(res) {
+														var moneyA = res.getAllMoney.toFixed(2)-0;
+														$.ajax({
+															type:"post",
+															url: "<%=path %>/accountHead/findTotalPay.action",
+															dataType: "json",
+															async:  false,
+															data: ({
+																supplierId: supplierId,
+																EndTime:searchBeginTime,
+																supType: "customer"
+															}),
+															success: function(res){
+																if(res) {
+																	var moneyB = res.getAllMoney.toFixed(2)-0;
+																	var money = moneyA+moneyB;
+																	var moneyBeginNeedGet = beginNeedGet-0; //期初应收
+																	var moneyBeginNeedPay = beginNeedPay-0; //期初应付
+																	money = (money + moneyBeginNeedGet - moneyBeginNeedPay).toFixed(2);
+																	$(".first-total").text(money); //期初结存
+																}
+															},
+															error: function(){
+																$.messager.alert('提示','网络异常请稍后再试！','error');
+																return;
+															}
+														});
+													}
+												},
+												error: function(){
+													$.messager.alert('提示','网络异常请稍后再试！','error');
+													return;
+												}
+											})
+
+											//显示期末合计
+											var searchEndTime = $("#searchEndTime").val(); //结束时间
+											$.ajax({
+												type:"post",
+												url: "<%=path %>/depotHead/findTotalPay.action",
+												dataType: "json",
+												async:  false,
+												data: ({
+													supplierId: supplierId,
+													EndTime:searchEndTime,
+													supType: "customer"
+												}),
+												success: function(res){
+													if(res) {
+														var moneyA = res.getAllMoney.toFixed(2)-0;
+														$.ajax({
+															type:"post",
+															url: "<%=path %>/accountHead/findTotalPay.action",
+															dataType: "json",
+															async:  false,
+															data: ({
+																supplierId: supplierId,
+																EndTime:searchEndTime,
+																supType: "customer"
+															}),
+															success: function(res){
+																if(res) {
+																	var moneyB = res.getAllMoney.toFixed(2)-0;
+																	var money = moneyA+moneyB;
+																	var moneyBeginNeedGet = beginNeedGet-0; //期初应收
+																	var moneyBeginNeedPay = beginNeedPay-0; //期初应付
+																	money = (money + moneyBeginNeedGet - moneyBeginNeedPay).toFixed(2);
+																	$(".last-total").text(money); //期末合计
+																}
+															},
+															error: function(){
+																$.messager.alert('提示','网络异常请稍后再试！','error');
+																return;
+															}
+														});
+													}
+												},
+												error: function(){
+													$.messager.alert('提示','网络异常请稍后再试！','error');
+													return;
+												}
+											})
+										}
+									},
+									error: function(){
+										$.messager.alert('提示','网络异常请稍后再试！','error');
+										return;
+									}
+								});
+							}
 						}
 					},
 					//此处添加错误处理

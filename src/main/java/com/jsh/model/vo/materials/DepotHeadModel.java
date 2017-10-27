@@ -44,6 +44,7 @@ public class DepotHeadModel implements Serializable
 	private String supplierId; //单位Id，用于查询单位的应收应付
 	private String MaterialParam;  //商品参数
 	private String dhIds;  //单据id列表
+	private String supType; //单位类型，客户、供应商
 
 	/**
      * 分类ID
@@ -380,5 +381,13 @@ public class DepotHeadModel implements Serializable
 
 	public void setDhIds(String dhIds) {
 		this.dhIds = dhIds;
+	}
+
+	public String getSupType() {
+		return supType;
+	}
+
+	public void setSupType(String supType) {
+		this.supType = supType;
 	}
 }

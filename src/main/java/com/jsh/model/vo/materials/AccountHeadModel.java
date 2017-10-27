@@ -22,6 +22,8 @@ public class AccountHeadModel implements Serializable
     private String MonthTime;  //查询月份
     
 	private String supplierId; //单位Id，用于查询单位的收付款
+
+    private String supType; //单位类型，客户、供应商
     /**
      * 分类ID
      */
@@ -233,5 +235,12 @@ public class AccountHeadModel implements Serializable
 	public void setSupplierId(String supplierId) {
 		this.supplierId = supplierId;
 	}
-        
+
+    public String getSupType() {
+        return supType;
+    }
+
+    public void setSupType(String supType) {
+        this.supType = supType;
+    }
 }

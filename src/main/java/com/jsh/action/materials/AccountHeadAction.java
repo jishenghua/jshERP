@@ -292,11 +292,19 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel>
 			JSONObject outer = new JSONObject();     	
 			Double sum = 0.0;
 			String getS = model.getSupplierId();
+            String supType = model.getSupType(); //单位类型：客户、供应商
+            int i = 1;
+            if(supType.equals("customer")){ //客户
+                i = 1;
+            }
+            else if(supType.equals("vendor")){ //供应商
+                i = -1;
+            }
             //收付款部分
-			sum = sum - (allMoney(getS, "付款", "合计") + allMoney(getS, "付款", "实际"));
-			sum = sum + (allMoney(getS, "收款", "合计") + allMoney(getS, "收款", "实际"));
-			sum = sum - (allMoney(getS, "收入", "合计") - allMoney(getS, "收入", "实际"));
-			sum = sum + (allMoney(getS, "支出", "合计") - allMoney(getS, "支出", "实际"));
+			sum = sum + (allMoney(getS, "付款", "合计") + allMoney(getS, "付款", "实际"))*i;
+			sum = sum - (allMoney(getS, "收款", "合计") + allMoney(getS, "收款", "实际"))*i;
+			sum = sum + (allMoney(getS, "收入", "合计") - allMoney(getS, "收入", "实际"))*i;
+			sum = sum - (allMoney(getS, "支出", "合计") - allMoney(getS, "支出", "实际"))*i;
 	    	outer.put("getAllMoney", sum);
             toClient(outer.toString());
         }
@@ -321,9 +329,10 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel>
 		Log.infoFileSync("getS:" + getS);
     	Double allMoney = 0.0;
     	String allReturn = "";
-		PageUtil pageUtil = new  PageUtil();
+        PageUtil<AccountHead> pageUtil = new PageUtil<AccountHead>();
         pageUtil.setPageSize(0);
         pageUtil.setCurPage(0);
+        pageUtil.setAdvSearch(getConditionHead_byEndTime());
         try {        	
         	Integer supplierId = Integer.valueOf(getS);
         	accountHeadService.findAllMoney(pageUtil, supplierId, type, mode);
@@ -359,6 +368,13 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel>
         condition.put("BillTime_s_gteq",model.getBeginTime());
         condition.put("BillTime_s_lteq",model.getEndTime());
         condition.put("Id_s_order","desc");
+        return condition;
+    }
+
+    private Map<String,Object> getConditionHead_byEndTime()
+    {
+        Map<String,Object> condition = new HashMap<String,Object>();
+        condition.put("BillTime_s_lteq", model.getEndTime());
         return condition;
     }
 

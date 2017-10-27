@@ -131,14 +131,14 @@ public class DepotHeadDAO extends BaseDAO<DepotHead> implements DepotHeadIDAO {
     @SuppressWarnings("unchecked")
     public void findStatementAccount(PageUtil pageUtil,String beginTime,String endTime,Long organId) throws JshException {
         StringBuffer queryString = new StringBuffer();
-        queryString.append("select dh.Number,dh.ChangeAmount,dh.TotalPrice,s.supplier,date_format(dh.OperTime,'%Y-%m-%d %H:%i:%S') as oTime from jsh_depothead dh " +
+        queryString.append("select dh.Number,concat(dh.SubType,dh.Type) as newType,dh.ChangeAmount,dh.TotalPrice,s.supplier,date_format(dh.OperTime,'%Y-%m-%d %H:%i:%S') as oTime from jsh_depothead dh " +
                 "inner join jsh_supplier s on s.id=dh.OrganId where s.type!='会员' " +
                 "and dh.OperTime >='"+ beginTime +"' and dh.OperTime<='"+ endTime +"' ");
         if(organId!=null && !organId.equals("")) {
             queryString.append(" and dh.OrganId='"+ organId +"' ");
         }
         queryString.append("UNION ALL " +
-                "select ah.BillNo,ah.ChangeAmount,ah.TotalPrice,s.supplier,date_format(ah.BillTime,'%Y-%m-%d %H:%i:%S') as oTime from jsh_accounthead ah " +
+                "select ah.BillNo,ah.Type as newType,ah.ChangeAmount,ah.TotalPrice,s.supplier,date_format(ah.BillTime,'%Y-%m-%d %H:%i:%S') as oTime from jsh_accounthead ah " +
                 "inner join jsh_supplier s on s.id=ah.OrganId where s.type!='会员' " +
                 "and ah.BillTime >='"+ beginTime +"' and ah.BillTime<='"+ endTime +"' ");
         if(organId!=null && !organId.equals("")) {

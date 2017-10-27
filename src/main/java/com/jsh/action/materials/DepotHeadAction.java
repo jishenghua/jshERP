@@ -565,13 +565,21 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
 			JSONObject outer = new JSONObject();     	
 			Double sum = 0.0;
 			String getS = model.getSupplierId();
+			String supType = model.getSupType(); //单位类型：客户、供应商
+			int i = 1;
+			if(supType.equals("customer")){ //客户
+				i = 1;
+			}
+			else if(supType.equals("vendor")){ //供应商
+				i = -1;
+			}
 			//进销部分
-			sum = sum + (allMoney(getS, "入库", "采购", "合计") - allMoney(getS, "入库", "采购", "实际"));
-			sum = sum + (allMoney(getS, "入库", "销售退货", "合计") - allMoney(getS, "入库", "销售退货", "实际"));	
-			sum = sum + (allMoney(getS, "入库", "其他", "合计") - allMoney(getS, "入库", "其他", "实际"));	
-			sum = sum - (allMoney(getS, "出库", "销售", "合计") - allMoney(getS, "出库", "销售", "实际"));	
-			sum = sum - (allMoney(getS, "出库", "采购退货", "合计") - allMoney(getS, "出库", "采购退货", "实际"));	
-			sum = sum - (allMoney(getS, "出库", "其他", "合计") - allMoney(getS, "出库", "其他", "实际"));			
+			sum = sum - (allMoney(getS, "入库", "采购", "合计") - allMoney(getS, "入库", "采购", "实际"))*i;
+			sum = sum - (allMoney(getS, "入库", "销售退货", "合计") - allMoney(getS, "入库", "销售退货", "实际"))*i;
+			sum = sum - (allMoney(getS, "入库", "其他", "合计") - allMoney(getS, "入库", "其他", "实际"))*i;
+			sum = sum + (allMoney(getS, "出库", "销售", "合计") - allMoney(getS, "出库", "销售", "实际"))*i;
+			sum = sum + (allMoney(getS, "出库", "采购退货", "合计") - allMoney(getS, "出库", "采购退货", "实际"))*i;
+			sum = sum + (allMoney(getS, "出库", "其他", "合计") - allMoney(getS, "出库", "其他", "实际"))*i;
 	    	outer.put("getAllMoney", sum);
             toClient(outer.toString());
         }
@@ -598,9 +606,10 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
 		Log.infoFileSync("getS:" + getS);
     	Double allMoney = 0.0;
     	String allReturn = "";
-		PageUtil pageUtil = new  PageUtil();
+		PageUtil<DepotHead> pageUtil = new  PageUtil<DepotHead>();
         pageUtil.setPageSize(0);
         pageUtil.setCurPage(0);
+		pageUtil.setAdvSearch(getConditionHead_byEndTime());
         try {        	
         	Integer supplierId = Integer.valueOf(getS);
         	depotHeadService.findAllMoney(pageUtil, supplierId, type, subType, mode);
@@ -755,10 +764,58 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
 					Object dl = dataList.get(i); //获取对象
 					Object[] arr = (Object[]) dl; //转为数组
 					item.put("number", arr[0]); //单据编号
-					item.put("changeAmount", arr[1]); //金额
-					item.put("totalPrice", arr[2]); //金额
-					item.put("supplierName", arr[3]); //供应商
-					item.put("operTime", arr[4]); //入库出库日期
+					item.put("type", arr[1]); //类型
+					item.put("changeAmount", arr[2]); //金额
+					item.put("totalPrice", arr[3]); //金额
+					String type = arr[1].toString();
+					Double p1 = 0.0;
+					Double p2 = 0.0;
+					if(arr[3]!=null){
+						p1 = Double.parseDouble(arr[3].toString());
+					}
+					if(arr[2]!=null){
+						p2 = Double.parseDouble(arr[2].toString());
+					}
+					Double allPrice = 0.0;
+					if(p1<0) {
+						p1 = -p1;
+					}
+					if(p2<0) {
+						p2 = -p2;
+					}
+					if(type.equals("采购入库")) {
+						allPrice = -(p1-p2);
+					}
+					else if(type.equals("销售退货入库")) {
+						allPrice = -(p1-p2);
+					}
+					else if(type.equals("其他入库")) {
+						allPrice = -(p1-p2);
+					}
+					else if(type.equals("销售出库")) {
+						allPrice = p1-p2;
+					}
+					else if(type.equals("采购退货出库")) {
+						allPrice = p1-p2;
+					}
+					else if(type.equals("其他出库")) {
+						allPrice = p1-p2;
+					}
+					else if(type.equals("付款")) {
+						allPrice = p1+p2;
+					}
+					else if(type.equals("收款")) {
+						allPrice = -(p1+p2);
+					}
+					else if(type.equals("收入")) {
+						allPrice = p1-p2;
+					}
+					else if(type.equals("支出")) {
+						allPrice = -(p1-p2);
+					}
+					item.put("allPrice", String .format("%.2f",allPrice)); //计算后的金额
+					item.put("supplierName", arr[4]); //供应商
+					item.put("operTime", arr[5]); //入库出库日期
 					dataArray.add(item);
 				}
 			}
@@ -821,6 +878,13 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
 		if(model.getProjectId()!=null) {
 			condition.put("ProjectId_n_eq", model.getProjectId());
 		}
+		return condition;
+	}
+
+	private Map<String,Object> getConditionHead_byEndTime()
+	{
+		Map<String,Object> condition = new HashMap<String,Object>();
+		condition.put("OperTime_s_lteq", model.getEndTime());
 		return condition;
 	}
 	
