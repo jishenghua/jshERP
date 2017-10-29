@@ -576,10 +576,8 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
 			//进销部分
 			sum = sum - (allMoney(getS, "入库", "采购", "合计") - allMoney(getS, "入库", "采购", "实际"))*i;
 			sum = sum - (allMoney(getS, "入库", "销售退货", "合计") - allMoney(getS, "入库", "销售退货", "实际"))*i;
-			sum = sum - (allMoney(getS, "入库", "其他", "合计") - allMoney(getS, "入库", "其他", "实际"))*i;
 			sum = sum + (allMoney(getS, "出库", "销售", "合计") - allMoney(getS, "出库", "销售", "实际"))*i;
 			sum = sum + (allMoney(getS, "出库", "采购退货", "合计") - allMoney(getS, "出库", "采购退货", "实际"))*i;
-			sum = sum + (allMoney(getS, "出库", "其他", "合计") - allMoney(getS, "出库", "其他", "实际"))*i;
 	    	outer.put("getAllMoney", sum);
             toClient(outer.toString());
         }
@@ -765,16 +763,14 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
 					Object[] arr = (Object[]) dl; //转为数组
 					item.put("number", arr[0]); //单据编号
 					item.put("type", arr[1]); //类型
-					item.put("changeAmount", arr[2]); //金额
-					item.put("totalPrice", arr[3]); //金额
 					String type = arr[1].toString();
 					Double p1 = 0.0;
 					Double p2 = 0.0;
-					if(arr[3]!=null){
-						p1 = Double.parseDouble(arr[3].toString());
-					}
 					if(arr[2]!=null){
-						p2 = Double.parseDouble(arr[2].toString());
+						p1 = Double.parseDouble(arr[2].toString());
+					}
+					if(arr[3]!=null){
+						p2 = Double.parseDouble(arr[3].toString());
 					}
 					Double allPrice = 0.0;
 					if(p1<0) {
@@ -789,16 +785,10 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
 					else if(type.equals("销售退货入库")) {
 						allPrice = -(p1-p2);
 					}
-					else if(type.equals("其他入库")) {
-						allPrice = -(p1-p2);
-					}
 					else if(type.equals("销售出库")) {
 						allPrice = p1-p2;
 					}
 					else if(type.equals("采购退货出库")) {
-						allPrice = p1-p2;
-					}
-					else if(type.equals("其他出库")) {
 						allPrice = p1-p2;
 					}
 					else if(type.equals("付款")) {
@@ -813,6 +803,8 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
 					else if(type.equals("支出")) {
 						allPrice = -(p1-p2);
 					}
+					item.put("discountLastMoney", p1); //金额
+					item.put("changeAmount", p2); //金额
 					item.put("allPrice", String .format("%.2f",allPrice)); //计算后的金额
 					item.put("supplierName", arr[4]); //供应商
 					item.put("operTime", arr[5]); //入库出库日期

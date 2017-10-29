@@ -114,7 +114,7 @@
 			          	{ title: '单据编号',field: 'number',width:140},
 						{ title: '类型',field: 'type',width:100},
 						{ title: '单位名称',field: 'supplierName',width:200},
-						{ title: '单据金额',field: 'totalPrice',width:80},
+						{ title: '单据金额',field: 'discountLastMoney',width:80},
 						{ title: '实际支付',field: 'changeAmount',width:80},
 						{ title: '本期变化',field: 'allPrice',width:80},
 						{ title: '单据日期',field: 'operTime',width:140}
