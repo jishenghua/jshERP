@@ -749,8 +749,16 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
 		String beginTime = model.getBeginTime();
 		String endTime = model.getEndTime();
 		Long organId = model.getOrganId();
+		String supType = model.getSupType(); //单位类型：客户、供应商
+		int j = 1;
+		if(supType.equals("客户")){ //客户
+			j = 1;
+		}
+		else if(supType.equals("供应商")){ //供应商
+			j = -1;
+		}
 		try{
-			depotHeadService.findStatementAccount(pageUtil, beginTime, endTime, organId);
+			depotHeadService.findStatementAccount(pageUtil, beginTime, endTime, organId, supType);
 			List dataList = pageUtil.getPageList();
 			JSONObject outer = new JSONObject();
 			outer.put("total", pageUtil.getTotalCount());
@@ -805,7 +813,7 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
 					}
 					item.put("discountLastMoney", p1); //金额
 					item.put("changeAmount", p2); //金额
-					item.put("allPrice", String .format("%.2f",allPrice)); //计算后的金额
+					item.put("allPrice", String .format("%.2f",allPrice*j)); //计算后的金额
 					item.put("supplierName", arr[4]); //供应商
 					item.put("operTime", arr[5]); //入库出库日期
 					dataArray.add(item);

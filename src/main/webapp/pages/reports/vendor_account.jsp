@@ -7,7 +7,7 @@
 <!DOCTYPE html>
 <html>
   	<head>
-    	<title>客户对账</title>
+    	<title>供应商对账</title>
         <meta charset="utf-8">
 		<!-- 指定以IE8的方式来渲染 -->
 		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
@@ -32,7 +32,7 @@
 				<tr>
 					<td>单位名称：</td>
 					<td>
-						<input id="OrganId" name="OrganId" style="width:100px;" />
+						<input id="OrganId" name="OrganId" style="width:120px;" />
 					</td>
 					<td>&nbsp;</td>
 					<td>单据日期：</td>
@@ -51,21 +51,21 @@
 					</td>
 					<td>&nbsp;</td>
 					<td>
-						期初应收：<span class="first-total">0</span>&nbsp;&nbsp;
-						期末应收：<span class="last-total">0</span>
+						期初应付：<span class="first-total">0</span>&nbsp;&nbsp;
+						期末应付：<span class="last-total">0</span>
 					</td>
 				</tr>
 			</table>
 		</div>
 		
 		<!-- 数据显示table -->
-		<div id = "tablePanel"	class="easyui-panel" style="padding:1px;top:300px;" title="客户对账列表" iconCls="icon-list" collapsible="true" closable="false">
+		<div id = "tablePanel"	class="easyui-panel" style="padding:1px;top:300px;" title="供应商对账列表" iconCls="icon-list" collapsible="true" closable="false">
 			<table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 		</div>
 			    
 		<script type="text/javascript">
 			var path = "<%=path %>";
-			var cusUrl = path + "/supplier/findBySelect_cus.action?UBType=UserCustomer&UBKeyId=" + uid; //客户接口
+			var supUrl = path + "/supplier/findBySelect_sup.action"; //供应商接口
 			//初始化界面
 			$(function()
 			{
@@ -73,7 +73,7 @@
 				var thisDateTime = getNowFormatDateTime(); //当前时间
 				$("#searchBeginTime").val(thisDate + "-01 00:00:00");
 				$("#searchEndTime").val(thisDateTime);
-				initSupplier(); //初始化供应商、客户信息
+				initSupplier(); //初始化供应商信息
 				initTableData();
 				ininPager();
 				search();
@@ -81,10 +81,10 @@
 			});	
 
 
-			//初始化客户
+			//初始化供应商
 			function initSupplier(){
 				$('#OrganId').combobox({
-					url: cusUrl,
+					url: supUrl,
 					valueField:'id',
 					textField:'supplier',
 					filter: function(q, row){
@@ -210,7 +210,8 @@
 						pageSize:pageSize,
 						BeginTime: $("#searchBeginTime").val(),
 						EndTime: $("#searchEndTime").val(),
-						OrganId: $('#OrganId').combobox('getValue')
+						OrganId: $('#OrganId').combobox('getValue'),
+						supType: "供应商"
 					}),
 					success: function (res) {
 						if(res){
@@ -247,7 +248,7 @@
 												data: ({
 													supplierId: supplierId,
 													EndTime:searchBeginTime,
-													supType: "customer"
+													supType: "vendor"
 												}),
 												success: function(res){
 													if(res) {
@@ -260,7 +261,7 @@
 															data: ({
 																supplierId: supplierId,
 																EndTime:searchBeginTime,
-																supType: "customer"
+																supType: "vendor"
 															}),
 															success: function(res){
 																if(res) {
@@ -268,7 +269,7 @@
 																	var money = moneyA+moneyB;
 																	var moneyBeginNeedGet = beginNeedGet-0; //期初应收
 																	var moneyBeginNeedPay = beginNeedPay-0; //期初应付
-																	money = (money + moneyBeginNeedGet - moneyBeginNeedPay).toFixed(2);
+																	money = (money + moneyBeginNeedPay - moneyBeginNeedGet).toFixed(2);
 																	$(".first-total").text(money); //期初结存
 																}
 															},
@@ -295,7 +296,7 @@
 												data: ({
 													supplierId: supplierId,
 													EndTime:searchEndTime,
-													supType: "customer"
+													supType: "vendor"
 												}),
 												success: function(res){
 													if(res) {
@@ -308,7 +309,7 @@
 															data: ({
 																supplierId: supplierId,
 																EndTime:searchEndTime,
-																supType: "customer"
+																supType: "vendor"
 															}),
 															success: function(res){
 																if(res) {
@@ -316,7 +317,7 @@
 																	var money = moneyA+moneyB;
 																	var moneyBeginNeedGet = beginNeedGet-0; //期初应收
 																	var moneyBeginNeedPay = beginNeedPay-0; //期初应付
-																	money = (money + moneyBeginNeedGet - moneyBeginNeedPay).toFixed(2);
+																	money = (money + moneyBeginNeedPay - moneyBeginNeedGet).toFixed(2);
 																	$(".last-total").text(money); //期末合计
 																}
 															},

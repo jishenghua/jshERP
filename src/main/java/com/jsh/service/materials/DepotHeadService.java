@@ -50,8 +50,8 @@ public class DepotHeadService extends BaseService<DepotHead> implements DepotHea
 		depotHeadDao.findMaterialsListByHeaderId(pageUtil, headerId);
 	}
 
-	public void findStatementAccount(PageUtil pageUtil,String beginTime,String endTime,Long organId) throws JshException {
-		depotHeadDao.findStatementAccount(pageUtil, beginTime, endTime, organId);
+	public void findStatementAccount(PageUtil pageUtil,String beginTime,String endTime,Long organId, String supType) throws JshException {
+		depotHeadDao.findStatementAccount(pageUtil, beginTime, endTime, organId, supType);
 	}
 
 	public void getHeaderIdByMaterial(PageUtil pageUtil,String materialParam) throws JshException {
