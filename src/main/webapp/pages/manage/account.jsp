@@ -125,7 +125,7 @@
                     columns:[[
                       { field: 'id',width:35,align:"center",checkbox:true},
                       { title: '名称',field: 'name',width:100},
-                      { title: '编号', field: 'serialNo',width:100,align:"center"},
+                      { title: '编号', field: 'serialNo',width:150,align:"center"},
                       { title: '期初金额', field: 'initialAmount',width:100,align:"center"},
                       { title: '当前余额', field: 'currentAmount',width:100,align:"center"},
                       { title: '备注',field: 'remark',width:100},

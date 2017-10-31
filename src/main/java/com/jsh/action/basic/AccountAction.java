@@ -9,6 +9,7 @@ import java.text.*;
 
 import com.jsh.model.po.AccountHead;
 import com.jsh.model.po.AccountItem;
+import com.jsh.util.JshException;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.dao.DataAccessException;
@@ -467,6 +468,46 @@ public class AccountAction extends BaseAction<AccountModel>
         catch (IOException e) 
         {
             Log.errorFileSync(">>>>>>>>>回写查询结算账户信息结果异常", e);
+        }
+    }
+
+    /**
+     * 账户流水信息
+     */
+    public void findAccountInOutList(){
+        PageUtil pageUtil = new  PageUtil();
+        pageUtil.setPageSize(model.getPageSize());
+        pageUtil.setCurPage(model.getPageNo());
+        Long accountId = model.getAccountID();
+        try{
+            accountService.findAccountInOutList(pageUtil, accountId);
+            List dataList = pageUtil.getPageList();
+            JSONObject outer = new JSONObject();
+            outer.put("total", pageUtil.getTotalCount());
+            //存放数据json数组
+            JSONArray dataArray = new JSONArray();
+            if(dataList!=null){
+                for(Integer i=0; i<dataList.size(); i++){
+                    JSONObject item = new JSONObject();
+                    Object dl = dataList.get(i); //获取对象
+                    Object[] arr = (Object[]) dl; //转为数组
+                    item.put("number", arr[0]); //单据编号
+                    item.put("type", arr[1]); //类型
+                    item.put("supplierName", arr[2]); //单位信息
+                    item.put("changeAmount", arr[3]); //金额
+                    item.put("operTime", arr[4]); //入库出库日期
+                    dataArray.add(item);
+                }
+            }
+            outer.put("rows", dataArray);
+            //回写查询结果
+            toClient(outer.toString());
+        }
+        catch (JshException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找信息异常", e);
+        }
+        catch (IOException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询信息结果异常", e);
         }
     }
 
