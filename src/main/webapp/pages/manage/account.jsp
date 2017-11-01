@@ -87,6 +87,9 @@
             <a href="javascript:void(0)" id="saveAccount" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
             <a href="javascript:void(0)" id="cancelAccount" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#accountDlg').dialog('close')">取消</a>
         </div>
+        <div id="accountDetailListDlg" class="easyui-dialog" style="width:900px;height:500px;padding:10px 20px" closed="true" modal="true" collapsible="false" closable="true">
+            <table id="accountTableData" style="top:50px;border-bottom-color:#FFFFFF"></table>
+        </div>
         
         <script type="text/javascript">
             //初始化界面
@@ -129,12 +132,13 @@
                       { title: '期初金额', field: 'initialAmount',width:100,align:"center"},
                       { title: '当前余额', field: 'currentAmount',width:100,align:"center"},
                       { title: '备注',field: 'remark',width:100},
-                      { title: '操作',field: 'op',align:"center",width:130,formatter:function(value,rec)
+                      { title: '操作',field: 'op',align:"center",width:180,formatter:function(value,rec)
                         {
                             var str = '';
                             var rowInfo = rec.id + 'AaBb' + rec.name +'AaBb' + rec.serialNo +'AaBb' + rec.initialAmount +'AaBb' + rec.currentAmount + 'AaBb'+ rec.remark;
                             if(1 == value)
                             {
+                                str += '<img src="<%=path%>/js/easyui-1.3.5/themes/icons/list.png" style="cursor: pointer;" onclick="showAccountInOutList(\'' + rowInfo + '\');"/>&nbsp;<a onclick="showAccountInOutList(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">流水</a>&nbsp;&nbsp;';
                                 str += '<img src="<%=path%>/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editAccount(\'' + rowInfo + '\');"/>&nbsp;<a onclick="editAccount(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
                                 str += '<img src="<%=path%>/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteAccount(\'' + rowInfo + '\');"/>&nbsp;<a onclick="deleteAccount(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">删除</a>&nbsp;&nbsp;';
                             }
@@ -461,6 +465,92 @@
                     //此处添加错误处理
                     error:function()
                     {
+                        $.messager.alert('查询提示','查询数据后台异常，请稍后再试！','error');
+                        return;
+                    }
+                });
+            }
+
+            function showAccountInOutList(accountInfo){
+                var info = accountInfo.split("AaBb");
+                var accountId = info[0];
+                $('#accountDetailListDlg').dialog('open').dialog('setTitle','<img src="<%=path%>/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;查看账户流水');
+                $(".window-mask").css({ width: webW ,height: webH});
+                initAccountDetailData(accountId);
+                getAccountInOutList(accountId,1,initPageSize);
+                ininAccountDetailPager(accountId);
+            }
+
+            //初始化表格数据
+            function initAccountDetailData(accountId){
+                $('#accountTableData').datagrid({
+                    height:heightInfo,
+                    nowrap: false,
+                    rownumbers: false,
+                    //动画效果
+                    animate:false,
+                    //选中单行
+                    singleSelect : true,
+                    collapsible:false,
+                    selectOnCheck:false,
+                    //单击行是否选中
+                    checkOnSelect : false,
+                    //交替出现背景
+                    striped : true,
+                    pagination: true,
+                    pageSize: initPageSize,
+                    pageList: initPageNum,
+                    columns:[[
+                        { title: '单据编号',field: 'number',width:150},
+                        { title: '类型', field: 'type',width:100},
+                        { title: '单位信息', field: 'supplierName',width:150},
+                        { title: '金额', field: 'changeAmount',width:80},
+                        { title: '入库出库日期',field: 'operTime',width:180}
+                    ]],
+                    onLoadError:function() {
+                        $.messager.alert('页面加载提示','页面加载异常，请稍后再试！','error');
+                        return;
+                    }
+                });
+            }
+
+            //分页信息处理
+            function ininAccountDetailPager(accountId){
+                try {
+                    var opts = $("#accountTableData").datagrid('options');
+                    var pager = $("#accountTableData").datagrid('getPager');
+                    pager.pagination({
+                        onSelectPage:function(pageNum, pageSize) {
+                            opts.pageNumber = pageNum;
+                            opts.pageSize = pageSize;
+                            pager.pagination('refresh', {
+                                pageNumber:pageNum,
+                                pageSize:pageSize
+                            });
+                            getAccountInOutList(accountId,pageNum,pageSize);
+                        }
+                    });
+                }
+                catch (e) {
+                    $.messager.alert('异常处理提示',"分页信息异常 :  " + e.name + ": " + e.message,'error');
+                }
+            }
+
+            function getAccountInOutList(accountId,pageNo,pageSize){
+                $.ajax({
+                    type:"get",
+                    url: "<%=path %>/account/findAccountInOutList.action",
+                    dataType: "json",
+                    data: ({
+                        accountID: accountId,
+                        pageNo:pageNo,
+                        pageSize:pageSize
+                    }),
+                    success: function (res) {
+                        $("#accountTableData").datagrid('loadData',res);
+                    },
+                    //此处添加错误处理
+                    error:function() {
                         $.messager.alert('查询提示','查询数据后台异常，请稍后再试！','error');
                         return;
                     }
