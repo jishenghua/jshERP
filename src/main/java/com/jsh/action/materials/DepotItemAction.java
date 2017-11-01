@@ -432,6 +432,88 @@ public class DepotItemAction extends BaseAction<DepotItemModel>
     }
 
     /**
+     * 只根据商品id查询库存数量
+     * @return
+     */
+    public void findStockNumByMaterialId() {
+        try {
+            PageUtil<DepotItem> pageUtil = new  PageUtil<DepotItem>();
+            pageUtil.setPageSize(model.getPageSize());
+            pageUtil.setCurPage(model.getPageNo());
+            pageUtil.setAdvSearch(getConditionById());
+            depotItemService.find(pageUtil);
+            List<DepotItem> dataList = pageUtil.getPageList();
+            JSONObject outer = new JSONObject();
+            outer.put("total", pageUtil.getTotalCount());
+            //存放数据json数组
+            JSONArray dataArray = new JSONArray();
+            if(null != dataList) {
+                for(DepotItem depotItem:dataList) {
+                    JSONObject item = new JSONObject();
+                    Integer InSum = sumNumberByMaterialId("入库", depotItem.getMaterialId().getId());
+                    Integer OutSum = sumNumberByMaterialId("出库", depotItem.getMaterialId().getId());
+                    item.put("MaterialId", depotItem.getMaterialId()==null?"":depotItem.getMaterialId().getId());
+                    item.put("MaterialName", depotItem.getMaterialId().getName());
+                    item.put("MaterialModel", depotItem.getMaterialId().getModel());
+                    item.put("thisSum", InSum - OutSum);
+                    dataArray.add(item);
+                }
+            }
+            outer.put("rows", dataArray);
+            //回写查询结果
+            toClient(outer.toString());
+        }
+        catch (DataAccessException e)
+        {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找信息异常", e);
+        }
+        catch (IOException e)
+        {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询信息结果异常", e);
+        }
+    }
+
+    /**
+     * 只根据商品id查询单据列表
+     * @return
+     */
+    public void findDetailByTypeAndMaterialId() {
+        try {
+            PageUtil pageUtil = new  PageUtil();
+            pageUtil.setPageSize(model.getPageSize());
+            pageUtil.setCurPage(model.getPageNo());
+            Long mId = model.getMaterialId();
+            depotItemService.findDetailByTypeAndMaterialId(pageUtil, mId);
+            List dataList = pageUtil.getPageList();
+            JSONObject outer = new JSONObject();
+            outer.put("total", pageUtil.getTotalCount());
+            //存放数据json数组
+            JSONArray dataArray = new JSONArray();
+            if(dataList!=null){
+                for(Integer i=0; i<dataList.size(); i++){
+                    JSONObject item = new JSONObject();
+                    Object dl = dataList.get(i); //获取对象
+                    Object[] arr = (Object[]) dl; //转为数组
+                    item.put("Number", arr[0]); //商品编号
+                    item.put("Type", arr[1]); //进出类型
+                    item.put("BasicNumber", arr[2]); //数量
+                    item.put("OperTime", arr[3]); //时间
+                    dataArray.add(item);
+                }
+            }
+            outer.put("rows", dataArray);
+            //回写查询结果
+            toClient(outer.toString());
+        }
+        catch (IOException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询信息结果异常", e);
+        }
+        catch (JshException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * 查找礼品卡信息
      * @return
      */
@@ -726,6 +808,35 @@ public class DepotItemAction extends BaseAction<DepotItemModel>
 		}
 		sumNumber = Integer.parseInt(allNumber);
 		return sumNumber;    	     
+    }
+
+    /**
+     * 仅根据商品Id进行数量合计
+     * @param type
+     * @param MId
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public Integer sumNumberByMaterialId(String type,Long MId) {
+        Integer sumNumber = 0;
+        String allNumber = "";
+        PageUtil pageUtil = new  PageUtil();
+        pageUtil.setPageSize(0);
+        pageUtil.setCurPage(0);
+        try {
+            depotItemService.findByTypeAndMaterialId(pageUtil, type, MId);
+            allNumber = pageUtil.getPageList().toString();
+            allNumber = allNumber.substring(1,allNumber.length()-1);
+            if(allNumber.equals("null")){
+                allNumber = "0";
+            }
+            allNumber = allNumber.replace(".0", "");
+        } catch (JshException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        sumNumber = Integer.parseInt(allNumber);
+        return sumNumber;
     }
 
     /**

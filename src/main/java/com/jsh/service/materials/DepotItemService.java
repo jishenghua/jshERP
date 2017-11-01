@@ -51,6 +51,18 @@ public class DepotItemService extends BaseService<DepotItem> implements DepotIte
     }
 
 	@Override
+	public void findByTypeAndMaterialId(PageUtil<DepotItem> pageUtil, String type,Long MId) throws JshException
+	{
+		depotItemDao.findByTypeAndMaterialId(pageUtil, type, MId);
+	}
+
+	@Override
+	public void findDetailByTypeAndMaterialId(PageUtil<DepotItem> pageUtil,Long MId) throws JshException
+	{
+		depotItemDao.findDetailByTypeAndMaterialId(pageUtil, MId);
+	}
+
+	@Override
 	public void findPriceByType(PageUtil<DepotItem> pageUtil, String type,Integer ProjectId,Long MId, String MonthTime,Boolean isPrev) throws JshException
 	{
 		depotItemDao.findPriceByType(pageUtil, type, ProjectId, MId, MonthTime,isPrev);

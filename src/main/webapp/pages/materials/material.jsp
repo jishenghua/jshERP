@@ -612,7 +612,7 @@
 							//查询库存
 							$.ajax({
 								type: "get",
-								url: '<%=path %>/depotItem/findStockNumById.action',
+								url: '<%=path %>/depotItem/findStockNumByMaterialId.action',
 								data: {
 									MaterialId: mId,
 									MonthTime: monthTime

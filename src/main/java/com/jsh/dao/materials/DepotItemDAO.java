@@ -23,8 +23,7 @@ public class DepotItemDAO extends BaseDAO<DepotItem> implements DepotItemIDAO
 
     @SuppressWarnings("unchecked")
     @Override
-	public void findByType(PageUtil<DepotItem> pageUtil,String type,Integer ProjectId,Long MId,String MonthTime,Boolean isPrev) throws JshException
-    {
+	public void findByType(PageUtil<DepotItem> pageUtil,String type,Integer ProjectId,Long MId,String MonthTime,Boolean isPrev) throws JshException {
     	//多表联查,多表连查，此处用到了createSQLQuery，可以随便写sql语句，很方便
     	Query query;
 		StringBuffer queryString = new StringBuffer();
@@ -47,6 +46,42 @@ public class DepotItemDAO extends BaseDAO<DepotItem> implements DepotItemIDAO
         pageUtil.setTotalCount(query.list().size());
         pageUtil.setPageList(query.list());
     }
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void findByTypeAndMaterialId(PageUtil<DepotItem> pageUtil,String type,Long MId) throws JshException {
+		//多表联查,多表连查，此处用到了createSQLQuery，可以随便写sql语句，很方便
+		Query query;
+		StringBuffer queryString = new StringBuffer();
+		if(type.equals("入库")) {
+			queryString.append("select sum(BasicNumber) as BasicNumber from jsh_depothead dh INNER JOIN jsh_depotitem di on dh.id=di.HeaderId where type='" + type +"'");
+			queryString.append(" and MaterialId ="+ MId);
+			query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
+		}
+		else {
+			queryString.append("select sum(BasicNumber) as BasicNumber from jsh_depothead dh INNER JOIN jsh_depotitem di on dh.id=di.HeaderId where type='" + type +"'");
+			queryString.append(" and SubType!='调拨' and SubType!='礼品充值' and MaterialId ="+ MId);
+			query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
+		}
+		pageUtil.setTotalCount(query.list().size());
+		pageUtil.setPageList(query.list());
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void findDetailByTypeAndMaterialId(PageUtil<DepotItem> pageUtil,Long MId) throws JshException {
+		//多表联查,多表连查，此处用到了createSQLQuery，可以随便写sql语句，很方便
+		Query query;
+		StringBuffer queryString = new StringBuffer();
+		queryString.append("select dh.Number,concat(dh.SubType,dh.Type) as newType,di.BasicNumber,date_format(dh.OperTime,'%Y-%m-%d %H:%i:%S') as oTime from jsh_depothead dh INNER JOIN jsh_depotitem di on dh.id=di.HeaderId where type='入库' ");
+		queryString.append(" and MaterialId ="+ MId);
+		queryString.append(" union all ");
+		queryString.append("select dh.Number,concat(dh.SubType,dh.Type) as newType,0-di.BasicNumber,date_format(dh.OperTime,'%Y-%m-%d %H:%i:%S') as oTime from jsh_depothead dh INNER JOIN jsh_depotitem di on dh.id=di.HeaderId where type='出库' ");
+		queryString.append(" and SubType!='调拨' and SubType!='礼品充值' and MaterialId ="+ MId);
+		query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
+		pageUtil.setTotalCount(query.list().size());
+		pageUtil.setPageList(query.list());
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
