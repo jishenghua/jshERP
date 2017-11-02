@@ -80,6 +80,13 @@ public class DepotItemDAO extends BaseDAO<DepotItem> implements DepotItemIDAO
 		queryString.append(" and SubType!='调拨' and SubType!='礼品充值' and MaterialId ="+ MId);
 		query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
 		pageUtil.setTotalCount(query.list().size());
+		// 分页查询
+		int pageNo = pageUtil.getCurPage();
+		int pageSize = pageUtil.getPageSize();
+		if (0 != pageNo && 0 != pageSize) {
+			query.setFirstResult((pageNo - 1) * pageSize);
+			query.setMaxResults(pageSize);
+		}
 		pageUtil.setPageList(query.list());
 	}
 

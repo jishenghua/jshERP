@@ -55,6 +55,10 @@
 		<div id = "tablePanel"	class="easyui-panel" style="padding:1px;top:300px;" title="商品列表" iconCls="icon-list" collapsible="true" closable="false">
 			<table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 		</div>
+
+		<div id="materialDetailListDlg" class="easyui-dialog" style="width:900px;height:500px;padding:10px 20px" closed="true" modal="true" collapsible="false" closable="true">
+			<table id="materialTableData" style="top:50px;border-bottom-color:#FFFFFF"></table>
+		</div>
 		
 	    <div id="materialDlg" class="easyui-dialog" style="width:860px;height:420px;padding:10px 20px"
 	            closed="true" buttons="#dlg-buttons" modal="true" collapsible="false" closable="true">
@@ -620,8 +624,18 @@
 								dataType: "json",
 								success: function (res) {
 									if (res && res.rows && res.rows[0]) {
-										thisStock = res.rows[0].thisSum;
-										$("#tablePanel .class-" + rec.Id).text(thisStock); //延迟加载库存数据
+										thisStock = res.rows[0].thisSum-0;
+										if(thisStock>0){
+											$("#tablePanel .class-" + rec.Id).text(thisStock); //延迟加载库存数据
+											$("#tablePanel .class-" + rec.Id).css("color","blue").css("text-decoration","underline").css("cursor","pointer");
+											$("#tablePanel .class-" + rec.Id).off("click").on("click",function(){
+												$('#materialDetailListDlg').dialog('open').dialog('setTitle','<img src="<%=path%>/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;查看出入库明细');
+												$(".window-mask").css({ width: webW ,height: webH});
+												initMaterialDetailData(mId);
+												getMaterialInOutList(mId,1,initPageSize);
+												ininMaterialDetailPager(mId);
+											});
+										}
 									}
 								},
 								error:function() {
@@ -702,6 +716,81 @@
 					}
 				});
 				showMaterialDetails(1,initPageSize);
+			}
+
+			//初始化表格数据
+			function initMaterialDetailData(mId){
+				$('#materialTableData').datagrid({
+					height:heightInfo,
+					nowrap: false,
+					rownumbers: false,
+					//动画效果
+					animate:false,
+					//选中单行
+					singleSelect : true,
+					collapsible:false,
+					selectOnCheck:false,
+					//单击行是否选中
+					checkOnSelect : false,
+					//交替出现背景
+					striped : true,
+					pagination: true,
+					pageSize: initPageSize,
+					pageList: initPageNum,
+					columns:[[
+						{ title: '单据编号',field: 'Number',width:150},
+						{ title: '类型', field: 'Type',width:100},
+						{ title: '数量', field: 'BasicNumber',width:80},
+						{ title: '日期',field: 'OperTime',width:180}
+					]],
+					onLoadError:function() {
+						$.messager.alert('页面加载提示','页面加载异常，请稍后再试！','error');
+						return;
+					}
+				});
+			}
+
+			//分页信息处理
+			function ininMaterialDetailPager(mId){
+				try {
+					var opts = $("#materialTableData").datagrid('options');
+					var pager = $("#materialTableData").datagrid('getPager');
+					pager.pagination({
+						onSelectPage:function(pageNum, pageSize) {
+							opts.pageNumber = pageNum;
+							opts.pageSize = pageSize;
+							pager.pagination('refresh', {
+								pageNumber:pageNum,
+								pageSize:pageSize
+							});
+							getMaterialInOutList(mId,pageNum,pageSize);
+						}
+					});
+				}
+				catch (e) {
+					$.messager.alert('异常处理提示',"分页信息异常 :  " + e.name + ": " + e.message,'error');
+				}
+			}
+
+			function getMaterialInOutList(mId,pageNo,pageSize){
+				$.ajax({
+					type:"get",
+					url: "<%=path %>/depotItem/findDetailByTypeAndMaterialId.action",
+					dataType: "json",
+					data: ({
+						MaterialId: mId,
+						pageNo:pageNo,
+						pageSize:pageSize
+					}),
+					success: function (res) {
+						$("#materialTableData").datagrid('loadData',res);
+					},
+					//此处添加错误处理
+					error:function() {
+						$.messager.alert('查询提示','查询数据后台异常，请稍后再试！','error');
+						return;
+					}
+				});
 			}
 
 			//初始化键盘enter事件
