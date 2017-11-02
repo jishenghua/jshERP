@@ -87,7 +87,7 @@
 						$.messager.alert('导出提示','请先选择月份再进行查询！','error');
 					}
 					else {
-						showPersonDetails(1,3000);
+						showEachDetails(1,3000);
 						//此处直接去做get请求，用下面的查询每月统计的方法，去获取list，参数长度虽长，但还是可以用get
 						//window.location.href = "<%=path%>/depotItem/exportExcel.action?browserType=" + getOs();
 					}
@@ -179,7 +179,7 @@
 							}
 						}
 					}
-					$("#searchProjectId").empty().append('<option value="">全部</option>').append(options);
+					$("#searchProjectId").empty().append(options);
 				}
 			}
 
@@ -289,8 +289,8 @@
 							{  
 								pageNumber:pageNum,  
 								pageSize:pageSize  
-							});  
-							showPersonDetails(pageNum,pageSize);
+							});
+							showEachDetails(pageNum,pageSize);
 						}  
 					}); 
 				}
@@ -308,7 +308,7 @@
 
 			//搜索处理
 			function search() {
-				showPersonDetails(1,initPageSize);
+				showEachDetails(1,initPageSize);
 				var opts = $("#tableData").datagrid('options');
 				var pager = $("#tableData").datagrid('getPager');
 				opts.pageNumber = 1;
@@ -326,7 +326,7 @@
 				}
 			});
 			
-			function showPersonDetails(pageNo,pageSize)
+			function showEachDetails(pageNo,pageSize)
 			{
 				$.ajax({
 					type:"post",
