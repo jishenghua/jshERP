@@ -1683,6 +1683,7 @@
 			$("#AccountId").val("many"); //下拉框选中多账户
 			var accountArr = depotHeadInfo[22].split(",");
 			var accountMoneyArr = depotHeadInfo[23].split(",");
+			accountMoneyArr = changeListFmtPlus(accountMoneyArr)  //将数组单个金额中的数值转为正数
 
 			if(listSubType == "零售" || listSubType == "零售退货") {
 				var manyAccountMoney = 0; //多账户合计-零售
@@ -1739,7 +1740,11 @@
 					for(var i = 0 ;i < accountList.length;i++){
 						var account = accountList[i];
 						if(accountArr[j] == account.id) {
-							accountIdShow = accountIdShow + account.name + "(" + accountMoneyArr[j] +"元) ";
+							var currentAccountMoney = accountMoneyArr[j]-0;
+							if(currentAccountMoney < 0){
+								currentAccountMoney = 0-currentAccountMoney;
+							}
+							accountIdShow = accountIdShow + account.name + "(" + currentAccountMoney +"元) ";
 							manyAccountMoney += accountMoneyArr[j]-0; //多账户合计-零售
 						}
 					}
@@ -1984,10 +1989,16 @@
 				if($('#OrganId').length){
 					OrganId = $('#OrganId').combobox('getValue');
 				}
+				var accountMoneyList = $("#AccountId").attr("data-accountmoneyarr"); //账户金额列表-多账户
+				accountMoneyList = accountMoneyList.replace("[","").replace("]","").toString();
+				var reg=new RegExp("\"","g"); //创建正则RegExp对象
+				accountMoneyList = accountMoneyList.replace(reg,""); //替换所有的双引号
+				var accountMoneyArr = accountMoneyList.split(","); //转为数组
 				if(listSubType === "采购"||listSubType === "零售退货"||listSubType === "销售退货"){
 					//付款为负数
 					ChangeAmount = 0 - ChangeAmount;
 					TotalPrice = 0 - TotalPrice;
+					accountMoneyArr = changeListFmtMinus(accountMoneyArr); //将数组单个金额中的数值转为负数
 				}
 				//零售时候，可以从会员预付款中扣款
 				var thisPayType = "现付";
@@ -2035,7 +2046,7 @@
 						PayType: thisPayType, //现付/预付款
 						Remark: $.trim($("#Remark").val()),
 						AccountIdList: $("#AccountId").attr("data-accountarr"), //账户列表-多账户
-						AccountMoneyList: $("#AccountId").attr("data-accountmoneyarr"), //账户金额列表-多账户
+						AccountMoneyList: JSON.stringify(accountMoneyArr), //账户金额列表-多账户
 						Discount: $.trim($("#Discount").val()),
 						DiscountMoney: $.trim($("#DiscountMoney").val()),
 						DiscountLastMoney: $.trim($("#DiscountLastMoney").val()),
