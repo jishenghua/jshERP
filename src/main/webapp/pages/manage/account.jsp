@@ -504,7 +504,24 @@
                         { title: '单据编号',field: 'number',width:150},
                         { title: '类型', field: 'type',width:100},
                         { title: '单位信息', field: 'supplierName',width:150},
-                        { title: '金额', field: 'changeAmount',width:80},
+                        { title: '金额', field: 'changeAmount',width:80,
+                            formatter: function (value, row) {
+                                if(row.aList && row.amList) {
+                                    var aListArr = row.aList.toString().split(",");
+                                    var amListArr = row.amList.toString().split(",");
+                                    var res = "";
+                                    for(var i=0; i<aListArr.length; i++) {
+                                        if(aListArr[i] == accountId) {
+                                            res = amListArr[i];
+                                        }
+                                    }
+                                    return res + "[多账户]";
+                                }
+                                else {
+                                    return row.changeAmount;
+                                }
+                            }
+                        },
                         { title: '入库出库日期',field: 'operTime',width:180}
                     ]],
                     onLoadError:function() {

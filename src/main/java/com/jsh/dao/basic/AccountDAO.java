@@ -22,38 +22,50 @@ public class AccountDAO extends BaseDAO<Account> implements AccountIDAO
     @SuppressWarnings("unchecked")
     public void findAccountInOutList(PageUtil<Account> pageUtil, Long accountId) throws JshException {
         StringBuffer queryString = new StringBuffer();
-        queryString.append("select dh.Number,concat(dh.SubType,dh.Type) as newType,s.supplier,dh.ChangeAmount,date_format(dh.OperTime,'%Y-%m-%d %H:%i:%S') as oTime " +
+        //主表出入库涉及的账户
+        queryString.append("select dh.Number,concat(dh.SubType,dh.Type) as newType,s.supplier,dh.ChangeAmount,date_format(dh.OperTime,'%Y-%m-%d %H:%i:%S') as oTime,'' as AList,'' as AMList " +
                 " from jsh_depothead dh inner join jsh_supplier s on dh.OrganId = s.id where 1=1 ");
         if(accountId!=null && !accountId.equals("")) {
             queryString.append(" and dh.AccountId='"+ accountId +"' ");
         }
+        //主表收入和支出涉及的账户
         queryString.append("UNION ALL " +
-                "select ah.BillNo,ah.Type as newType,s.supplier,ah.ChangeAmount,date_format(ah.BillTime,'%Y-%m-%d %H:%i:%S') as oTime " +
+                "select ah.BillNo,ah.Type as newType,s.supplier,ah.ChangeAmount,date_format(ah.BillTime,'%Y-%m-%d %H:%i:%S') as oTime,'' as AList,'' as AMList " +
                 "  from jsh_accounthead ah inner join jsh_supplier s on ah.OrganId=s.id where 1=1 ");
         if(accountId!=null && !accountId.equals("")) {
             queryString.append(" and ah.AccountId='"+ accountId +"' ");
         }
+        //明细中涉及的账户（收款,付款,收预付款）
         queryString.append("UNION ALL " +
-                "select ah.BillNo,ah.Type as newType,s.supplier,ai.EachAmount,date_format(ah.BillTime,'%Y-%m-%d %H:%i:%S') as oTime " +
+                "select ah.BillNo,ah.Type as newType,s.supplier,ai.EachAmount,date_format(ah.BillTime,'%Y-%m-%d %H:%i:%S') as oTime,'' as AList,'' as AMList " +
                 " from jsh_accounthead ah inner join jsh_supplier s on ah.OrganId=s.id " +
                 " inner join jsh_accountitem ai on ai.HeaderId=ah.Id " +
                 " where ah.Type in ('收款','付款','收预付款') ");
         if(accountId!=null && !accountId.equals("")) {
             queryString.append(" and ai.AccountId='"+ accountId +"' ");
         }
+        //主表中转出的账户
         queryString.append("UNION ALL " +
-                "select ah.BillNo,ah.Type as newType, '' as sName,ah.ChangeAmount,date_format(ah.BillTime,'%Y-%m-%d %H:%i:%S') as oTime " +
+                "select ah.BillNo,ah.Type as newType, '' as sName,ah.ChangeAmount,date_format(ah.BillTime,'%Y-%m-%d %H:%i:%S') as oTime,'' as AList,'' as AMList " +
                 " from jsh_accounthead ah inner join jsh_accountitem ai on ai.HeaderId=ah.Id " +
                 " where ah.Type='转账' ");
         if(accountId!=null && !accountId.equals("")) {
             queryString.append(" and ah.AccountId='"+ accountId +"' ");
         }
+        //明细中被转入的账户
         queryString.append("UNION ALL " +
-                "select ah.BillNo,ah.Type as newType, '' as sName,ai.EachAmount,date_format(ah.BillTime,'%Y-%m-%d %H:%i:%S') as oTime " +
+                "select ah.BillNo,ah.Type as newType, '' as sName,ai.EachAmount,date_format(ah.BillTime,'%Y-%m-%d %H:%i:%S') as oTime,'' as AList,'' as AMList " +
                 " from jsh_accounthead ah inner join jsh_accountitem ai on ai.HeaderId=ah.Id " +
                 " where ah.Type='转账' ");
         if(accountId!=null && !accountId.equals("")) {
             queryString.append(" and ai.AccountId='"+ accountId +"' ");
+        }
+        //多账户的情况
+        queryString.append("UNION ALL " +
+                "select dh.Number,concat(dh.SubType,dh.Type) as newType,s.supplier,dh.ChangeAmount,date_format(dh.OperTime,'%Y-%m-%d %H:%i:%S') as oTime,dh.AccountIdList,dh.AccountMoneyList" +
+                " from jsh_depothead dh inner join jsh_supplier s on dh.OrganId = s.id where 1=1 ");
+        if(accountId!=null && !accountId.equals("")) {
+            queryString.append(" and dh.AccountIdList like '%\""+ accountId +"\"%' ");
         }
         queryString.append(" ORDER BY oTime desc");
         Query query;

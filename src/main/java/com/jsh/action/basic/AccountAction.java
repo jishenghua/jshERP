@@ -305,13 +305,13 @@ public class AccountAction extends BaseAction<AccountModel>
                     item.put("serialNo", account.getSerialNo());
                     item.put("initialAmount", account.getInitialAmount());
                     String monthTime = Tools.getCurrentMonth();
-                    Double thisMonthAmount = getAccountSum(account.getId(), monthTime) + getAccountSumByHead(account.getId(), monthTime) +getAccountSumByDetail(account.getId(), monthTime);
+                    Double thisMonthAmount = getAccountSum(account.getId(), monthTime) + getAccountSumByHead(account.getId(), monthTime) +getAccountSumByDetail(account.getId(), monthTime) + getManyAccountSum(account.getId(), monthTime);
                     String thisMonthAmountFmt = "0";
                     if(thisMonthAmount!=0){
                         thisMonthAmountFmt = df.format(thisMonthAmount);
                     }
                     item.put("thisMonthAmount", thisMonthAmountFmt);  //本月发生额
-                    Double currentAmount = getAccountSum(account.getId(),"") + getAccountSumByHead(account.getId(), "") + getAccountSumByDetail(account.getId(), "") + account.getInitialAmount();
+                    Double currentAmount = getAccountSum(account.getId(),"") + getAccountSumByHead(account.getId(), "") + getAccountSumByDetail(account.getId(), "") + getManyAccountSum(account.getId(), "") + account.getInitialAmount();
                     String currentAmountFmt=df.format(currentAmount);
                     item.put("currentAmount", currentAmountFmt);  //当前余额
                     item.put("remark", account.getRemark());
@@ -405,8 +405,6 @@ public class AccountAction extends BaseAction<AccountModel>
                 }
                 ids = ids.substring(0,ids.length() -1);
 
-                System.out.println(">>>>>>>>>>>>>>>>>" + ids);
-
                 PageUtil<AccountItem> pageUtilOne = new PageUtil<AccountItem>();
                 pageUtilOne.setPageSize(0);
                 pageUtilOne.setCurPage(0);
@@ -418,8 +416,6 @@ public class AccountAction extends BaseAction<AccountModel>
                         accountSum = accountSum + accountItem.getEachAmount();
                     }
                 }
-
-                System.out.println(">>>>>>>>>>>>>>>>>accountSum：" + accountSum);
             }
         }
         catch (DataAccessException e){
@@ -427,6 +423,42 @@ public class AccountAction extends BaseAction<AccountModel>
         }
         catch (Exception e){
             Log.errorFileSync(">>>>>>>>>异常信息：", e);
+        }
+        return accountSum;
+    }
+
+    /**
+     * 单个账户的金额求和-多账户的明细合计
+     * @param id
+     * @return
+     */
+    public Double getManyAccountSum(Long id,String monthTime){
+        Double accountSum = 0.0;
+        try{
+            PageUtil<DepotHead> pageUtil = new PageUtil<DepotHead>();
+            pageUtil.setPageSize(0);
+            pageUtil.setCurPage(0);
+            pageUtil.setAdvSearch(getCondition_getManyAccountSum(id,monthTime));
+            depotHeadService.find(pageUtil);
+            List<DepotHead> dataList = pageUtil.getPageList();
+            if(dataList!= null){
+                for(DepotHead depotHead:dataList){
+                    String accountIdList = depotHead.getAccountIdList();
+                    String accountMoneyList = depotHead.getAccountMoneyList();
+                    accountIdList = accountIdList.replace("[","").replace("]", "").replace("\"","");
+                    accountMoneyList = accountMoneyList.replace("[","").replace("]", "").replace("\"","");
+                    String[] aList = accountIdList.split(",");
+                    String[] amList = accountMoneyList.split(",");
+                    for(int i=0; i<aList.length; i++){
+                        if(aList[i].toString().equals(id.toString())){
+                            accountSum = accountSum + Integer.parseInt(amList[i].toString());
+                        }
+                    }
+                }
+            }
+        }
+        catch (DataAccessException e){
+            Log.errorFileSync(">>>>>>>>>查找信息异常", e);
         }
         return accountSum;
     }
@@ -496,6 +528,8 @@ public class AccountAction extends BaseAction<AccountModel>
                     item.put("supplierName", arr[2]); //单位信息
                     item.put("changeAmount", arr[3]); //金额
                     item.put("operTime", arr[4]); //入库出库日期
+                    item.put("aList", arr[5]); //多账户的id列表
+                    item.put("amList", arr[6]); //多账户的金额列表
                     dataArray.add(item);
                 }
             }
@@ -558,6 +592,24 @@ public class AccountAction extends BaseAction<AccountModel>
         	condition.put("OperTime_s_gteq", monthTime + "-01 00:00:00");
             condition.put("OperTime_s_lteq", monthTime + "-31 00:00:00");
         }        
+        return condition;
+    }
+
+    /**
+     * 拼接搜索条件
+     * @return
+     */
+    private Map<String,Object> getCondition_getManyAccountSum(Long id,String monthTime)
+    {
+        /**
+         * 拼接搜索条件
+         */
+        Map<String,Object> condition = new HashMap<String,Object>();
+        condition.put("AccountIdList_s_like", "\"" + id.toString() + "\"");
+        if(!monthTime.equals("")){
+            condition.put("OperTime_s_gteq", monthTime + "-01 00:00:00");
+            condition.put("OperTime_s_lteq", monthTime + "-31 00:00:00");
+        }
         return condition;
     }
 
