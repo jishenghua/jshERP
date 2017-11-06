@@ -1927,6 +1927,10 @@
 						$.messager.alert('提示','请选择付款账户！','warning');
 						return;
 					}
+					if($("#AccountId").val() == "many" && $("#backAmount").val()-0 >0) {
+						$.messager.alert('提示', '选择多账户时的找零金额不能大于0！', 'warning');
+						return;
+					}
 				}
 				else if(listTitle === "销售退货列表"){
 					if(!$('#OrganId').combobox('getValue')){
@@ -1951,6 +1955,10 @@
 					}
 					if($("#backAmount").val()-0 <0){
 						$.messager.alert('提示','找零金额不能小于0！','warning');
+						return;
+					}
+					if($("#AccountId").val() == "many" && $("#backAmount").val()-0 >0) {
+						$.messager.alert('提示', '选择多账户时的找零金额不能大于0！', 'warning');
 						return;
 					}
 				}
