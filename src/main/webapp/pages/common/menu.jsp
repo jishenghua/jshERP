@@ -247,7 +247,7 @@ function ceshi()
         <div class="menu-sep">
         </div>
         <div id="mm-version">
-                     jshERP官网
+                     华夏ERP官网
         </div>
     </div>
 </body>
