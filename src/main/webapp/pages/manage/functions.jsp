@@ -160,7 +160,7 @@
 			          { title: '编号 ',field: 'Number',width:60},
 			          { title: '名称',field: 'Name',width:80},
 			          { title: '上级编号',field: 'PNumber',width:60},
-			          { title: '链接',field: 'URL',width:120},
+			          { title: '链接',field: 'URL',width:200},
 			          { title: '排序',field: 'Sort',width:50},
 			          { title: '收缩',field: 'State',width:50,formatter:function(value){
 						  return value? "开":"关";
