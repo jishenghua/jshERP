@@ -915,67 +915,69 @@
 													body.find("[field='Unit']").find(input).val(unitSetInput).attr("data-ratio", loadRatio); //设置-首选单位
 
 													body.find("[field='Unit']").find(input).off("click").on("click",function(){
-														var self = this;
-														//定义模版
-														var temp = "<div class='unit-list'>";
-														temp +="<ul>";
-														temp +="<li data-type='basic' data-ratio='1'>" + basicUnit + "</li>";
-														temp +="<li data-type='other' data-ratio='" + ratio + "'>" + otherUnit + "</li>";
-														temp +="</ul>";
-														temp +="</div>";
-														if($('.unit-list').length){
-															$('.unit-list').remove(); //如果存在计量单位列表先移除
-														}
-														else {
-															$(self).after(temp); //加载列表信息
-														}
-														//计量单位列表的单击事件
-														$('.unit-list ul li').off("click").on("click",function(){
-															var unit = $(this).text();
-															var thisRatio = $(this).attr("data-ratio"); //获取比例
-															$(self).val(unit).attr("data-ratio", thisRatio);
-															$(self).keyup(); //模拟键盘操作
-															$('.unit-list').remove(); //移除计量单位列表
-															var stock = body.find("[field='Stock']").find(input).attr("data-stock"); //从缓存中取值
-															var type = $(this).attr("data-type");
-															var UnitPrice = 0;
-															if(type === "basic"){
-																if(listTitle == "采购入库列表" || listTitle == "销售退货列表" || listTitle == "其它入库列表") {
-																	UnitPrice = basicPresetPriceOne;
-																}
-																else if(listTitle == "销售出库列表" || listTitle == "采购退货列表" || listTitle == "其它出库列表" || listTitle == "调拨出库列表" || listTitle == "礼品充值列表" || listTitle == "礼品销售列表") {
-																	UnitPrice = basicPresetPriceTwo;
-																}
-																else if(listTitle == "零售出库列表" || listTitle == "零售退货列表"){
-																	UnitPrice = retailPriceOne;
-																}
-																body.find("[field='Stock']").find(input).val(stock); //修改库存
+														if(basicUnit && otherUnit) {
+															var self = this;
+															//定义模版
+															var temp = "<div class='unit-list'>";
+															temp +="<ul>";
+															temp +="<li data-type='basic' data-ratio='1'>" + basicUnit + "</li>";
+															temp +="<li data-type='other' data-ratio='" + ratio + "'>" + otherUnit + "</li>";
+															temp +="</ul>";
+															temp +="</div>";
+															if($('.unit-list').length){
+																$('.unit-list').remove(); //如果存在计量单位列表先移除
 															}
-															else if(type === "other"){
-																if(listTitle == "采购入库列表" || listTitle == "销售退货列表" || listTitle == "其它入库列表") {
-																	UnitPrice = otherPresetPriceOne;
-																}
-																else if(listTitle == "销售出库列表" || listTitle == "采购退货列表" || listTitle == "其它出库列表" || listTitle == "调拨出库列表" || listTitle == "礼品充值列表" || listTitle == "礼品销售列表") {
-																	UnitPrice = otherPresetPriceTwo;
-																}
-																else if(listTitle == "零售出库列表" || listTitle == "零售退货列表"){
-																	UnitPrice = retailPriceTwo;
-																}
-																body.find("[field='Stock']").find(input).val((stock/ratio).toFixed(2)); //修改库存
+															else {
+																$(self).after(temp); //加载列表信息
 															}
-															body.find("[field='UnitPrice']").find(input).val(UnitPrice); //单价
-															var OperNumber = body.find("[field='OperNumber']").find(input).val(); //获取数量
-															var taxRate = body.find("[field='TaxRate']").find(input).val(); //获取税率
-															body.find("[field='TaxUnitPrice']").find(input).val((UnitPrice*(1+taxRate/100)).toFixed(2)); //含税单价
-															body.find("[field='AllPrice']").find(input).val((UnitPrice*OperNumber).toFixed(2)); //金额
-															body.find("[field='TaxMoney']").find(input).val((UnitPrice*OperNumber*(taxRate/100)).toFixed(2)); //税额
-															body.find("[field='TaxLastMoney']").find(input).val((UnitPrice*OperNumber*(1+taxRate/100)).toFixed(2)); //价税合计
-															statisticsFun(body,UnitPrice,OperNumber,footer,taxRate);
-														});
-														//点击空白处移除计量单位列表
-														$(".datagrid-body").off("click").on("click",function(){
-															$('.unit-list').remove(); //移除计量单位列表
-														});
+															//计量单位列表的单击事件
+															$('.unit-list ul li').off("click").on("click",function(){
+																var unit = $(this).text();
+																var thisRatio = $(this).attr("data-ratio"); //获取比例
+																$(self).val(unit).attr("data-ratio", thisRatio);
+																$(self).keyup(); //模拟键盘操作
+																$('.unit-list').remove(); //移除计量单位列表
+																var stock = body.find("[field='Stock']").find(input).attr("data-stock"); //从缓存中取值
+																var type = $(this).attr("data-type");
+																var UnitPrice = 0;
+																if(type === "basic"){
+																	if(listTitle == "采购入库列表" || listTitle == "销售退货列表" || listTitle == "其它入库列表") {
+																		UnitPrice = basicPresetPriceOne;
+																	}
+																	else if(listTitle == "销售出库列表" || listTitle == "采购退货列表" || listTitle == "其它出库列表" || listTitle == "调拨出库列表" || listTitle == "礼品充值列表" || listTitle == "礼品销售列表") {
+																		UnitPrice = basicPresetPriceTwo;
+																	}
+																	else if(listTitle == "零售出库列表" || listTitle == "零售退货列表"){
+																		UnitPrice = retailPriceOne;
+																	}
+																	body.find("[field='Stock']").find(input).val(stock); //修改库存
+																}
+																else if(type === "other"){
+																	if(listTitle == "采购入库列表" || listTitle == "销售退货列表" || listTitle == "其它入库列表") {
+																		UnitPrice = otherPresetPriceOne;
+																	}
+																	else if(listTitle == "销售出库列表" || listTitle == "采购退货列表" || listTitle == "其它出库列表" || listTitle == "调拨出库列表" || listTitle == "礼品充值列表" || listTitle == "礼品销售列表") {
+																		UnitPrice = otherPresetPriceTwo;
+																	}
+																	else if(listTitle == "零售出库列表" || listTitle == "零售退货列表"){
+																		UnitPrice = retailPriceTwo;
+																	}
+																	body.find("[field='Stock']").find(input).val((stock/ratio).toFixed(2)); //修改库存
+																}
+																body.find("[field='UnitPrice']").find(input).val(UnitPrice); //单价
+																var OperNumber = body.find("[field='OperNumber']").find(input).val(); //获取数量
+																var taxRate = body.find("[field='TaxRate']").find(input).val(); //获取税率
+																body.find("[field='TaxUnitPrice']").find(input).val((UnitPrice*(1+taxRate/100)).toFixed(2)); //含税单价
+																body.find("[field='AllPrice']").find(input).val((UnitPrice*OperNumber).toFixed(2)); //金额
+																body.find("[field='TaxMoney']").find(input).val((UnitPrice*OperNumber*(taxRate/100)).toFixed(2)); //税额
+																body.find("[field='TaxLastMoney']").find(input).val((UnitPrice*OperNumber*(1+taxRate/100)).toFixed(2)); //价税合计
+																statisticsFun(body,UnitPrice,OperNumber,footer,taxRate);
+															});
+															//点击空白处移除计量单位列表
+															$(".datagrid-body").off("click").on("click",function(){
+																$('.unit-list').remove(); //移除计量单位列表
+															});
+														}
 													});
 												}
 												var detailPrice = 0; //明细列表-单价
