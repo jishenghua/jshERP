@@ -11,6 +11,7 @@ import java.util.Map;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.dao.DataAccessException;
 
 import com.jsh.base.BaseAction;
@@ -389,8 +390,16 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
 			pageUtil.setCurPage(0);
 			depotHeadService.getHeaderIdByMaterial(pageUtil, materialParam);
 			JSONObject outer = new JSONObject();
-			String allReturn = pageUtil.getPageList().toString();
-			allReturn = allReturn.substring(1,allReturn.length()-1);
+			String allReturn = "";
+			List dataList = pageUtil.getPageList();
+			if(dataList!=null) {
+				System.out.println("dataList:"+ dataList.size());
+				for (Integer i = 0; i < dataList.size(); i++) {
+					Object dl = dataList.get(i); //获取对象
+					allReturn = allReturn + dl.toString() + ",";
+				}
+			}
+			allReturn = allReturn.substring(0,allReturn.length()-1);
 			if(allReturn.equals("null")){
 				allReturn = "";
 			}
