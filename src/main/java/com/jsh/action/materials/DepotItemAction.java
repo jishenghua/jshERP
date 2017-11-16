@@ -284,7 +284,7 @@ public class DepotItemAction extends BaseAction<DepotItemModel>
                     //品名/型号/扩展信息/包装
                     String MaterialName = depotItem.getMaterialId().getName() + ((depotItem.getMaterialId().getModel() == null || depotItem.getMaterialId().getModel().equals(""))?"":"("+depotItem.getMaterialId().getModel() + ")");
                     String materialOther = getOtherInfo(mpArr, depotItem);
-                    MaterialName = MaterialName + materialOther + ratio;
+                    MaterialName = MaterialName + materialOther  + ((depotItem.getMaterialId().getUnit() == null || depotItem.getMaterialId().getUnit().equals(""))?"":"("+depotItem.getMaterialId().getUnit() + ")") + ratio;
                     item.put("MaterialName", MaterialName);
                     item.put("Unit", depotItem.getMUnit());
                     item.put("OperNumber", depotItem.getOperNumber());

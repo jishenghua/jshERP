@@ -487,7 +487,7 @@ public class MaterialAction extends BaseAction<MaterialModel>
                             MaterialName = MaterialName + ((material.getOtherField3() == null || material.getOtherField3().equals(""))?"":"("+material.getOtherField3() + ")");
                         }
                     }
-                    MaterialName = MaterialName + ratio;
+                    MaterialName = MaterialName + ((material.getUnit() == null || material.getUnit().equals(""))?"":"("+material.getUnit() + ")") + ratio;
                     item.put("MaterialName", MaterialName);
                     dataArray.add(item);
                 }

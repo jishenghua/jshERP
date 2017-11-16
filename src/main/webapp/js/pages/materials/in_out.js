@@ -817,7 +817,7 @@
 						}
 					}
 				},
-	          	{ title: '品名(型号)(扩展信息)(包装)',field: 'MaterialId',width:230,
+	          	{ title: '品名(型号)(扩展信息)(单位)',field: 'MaterialId',width:230,
 				  	formatter:function(value,row,index){
 						return row.MaterialName;
 	              	},
@@ -1187,7 +1187,7 @@
 			columns:[[
 				{ title: '商品类型',field: 'MType',width:80, hidden:isShowMaterialTypeColumn},
 				{ title: depotHeadName,field: 'DepotName',editor:'validatebox',width:90},
-				{ title: '品名(型号)(扩展信息)(包装)',field: 'MaterialName',width:230},
+				{ title: '品名(型号)(扩展信息)(单位)',field: 'MaterialName',width:230},
 				{ title: anotherDepotHeadName,field: 'AnotherDepotName',hidden:isShowAnotherDepot,width:90},
 				{ title: '单位',field: 'Unit',editor:'validatebox',width:60},
 				{ title: '数量',field: 'OperNumber',editor:'validatebox',width:60},

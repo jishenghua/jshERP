@@ -393,7 +393,6 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
 			String allReturn = "";
 			List dataList = pageUtil.getPageList();
 			if(dataList!=null) {
-				System.out.println("dataList:"+ dataList.size());
 				for (Integer i = 0; i < dataList.size(); i++) {
 					Object dl = dataList.get(i); //获取对象
 					allReturn = allReturn + dl.toString() + ",";
