@@ -1022,6 +1022,9 @@
 												}
 												body.find("[field='OperNumber']").find(input).val(1); //数量初始化为1
 												//单价和总价赋值
+												if(!detailPrice) {
+													detailPrice = 0;
+												}
 												body.find("[field='UnitPrice']").find(input).val(detailPrice);
 												body.find("[field='AllPrice']").find(input).val(detailPrice);
 												var taxRate = body.find("[field='TaxRate']").find(input).val()-0; //获取税率
