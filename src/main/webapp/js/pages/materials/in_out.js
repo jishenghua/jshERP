@@ -2870,7 +2870,7 @@
 	    var row = $('#materialData').datagrid('getRows');
 	    var totalRowNum = "";
 	    for (var i = 0; i < row.length; i++) {
-	        if (row[i].MaterialId == "" || row[i].OperNumber == "" || row[i].UnitPrice == "" || row[i].AllPrice == "") {
+	        if (row[i].MaterialId == "" || row[i].OperNumber == "" || row[i].UnitPrice === "" || row[i].AllPrice === "") {
 	            totalRowNum += (i + 1) + "、";
 	        }
 	    }
