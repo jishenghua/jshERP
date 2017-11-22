@@ -206,10 +206,10 @@ function ceshi()
             <!--  导航内容 -->
             <div>
 			<ul id="tt"></ul>
-	        <script type="text/javascript">      
+	        <script>
 	          var PNumber = getUrlParam('appID');  //获取传值appid
-		   		$(function () {
-					$('#tt').tree({   
+		   		$(function(){
+					$('#tt').tree({
 					   url:'<%=path%>/functions/findMenu.action?PNumber='+PNumber+'&hasFunctions='+functions,
 					   animate:true
 					}); 
