@@ -25,6 +25,6 @@ public interface DepotHeadIDAO extends BaseIDAO<DepotHead>
 
     public void findStatementAccount(PageUtil pageUtil,String beginTime,String endTime,Long organId, String supType) throws JshException;
 
-    public void getHeaderIdByMaterial(PageUtil pageUtil,String materialParam) throws JshException;
+    public void getHeaderIdByMaterial(PageUtil pageUtil,String materialParam,String depotIds) throws JshException;
     
 }

@@ -159,10 +159,13 @@ public class DepotHeadDAO extends BaseDAO<DepotHead> implements DepotHeadIDAO {
     }
 
     @SuppressWarnings("unchecked")
-    public void getHeaderIdByMaterial(PageUtil pageUtil,String materialParam) throws JshException {
+    public void getHeaderIdByMaterial(PageUtil pageUtil,String materialParam,String depotIds) throws JshException {
         StringBuffer queryString = new StringBuffer();
-        queryString.append("select dt.HeaderId from jsh_depotitem dt INNER JOIN jsh_material m on dt.MaterialId = m.Id where m.`Name` "+
-                " like '%" + materialParam + "%' or m.Model like '%" + materialParam + "%'");
+        queryString.append("select dt.HeaderId from jsh_depotitem dt INNER JOIN jsh_material m on dt.MaterialId = m.Id where ( m.`Name` "+
+                " like '%" + materialParam + "%' or m.Model like '%" + materialParam + "%') ");
+        if(!depotIds.equals("")){
+            queryString.append(" and dt.DepotId in (" + depotIds + ") ");
+        }
         Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
         pageUtil.setPageList(query.list());
     }

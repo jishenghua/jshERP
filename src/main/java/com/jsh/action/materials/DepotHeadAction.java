@@ -385,10 +385,11 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
 	public void getHeaderIdByMaterial(){
 		try {
 			String materialParam = model.getMaterialParam(); //商品参数
+			String depotIds = model.getDepotIds(); //拥有的仓库信息
 			PageUtil pageUtil = new  PageUtil();
 			pageUtil.setPageSize(0);
 			pageUtil.setCurPage(0);
-			depotHeadService.getHeaderIdByMaterial(pageUtil, materialParam);
+			depotHeadService.getHeaderIdByMaterial(pageUtil, materialParam, depotIds);
 			JSONObject outer = new JSONObject();
 			String allReturn = "";
 			List dataList = pageUtil.getPageList();

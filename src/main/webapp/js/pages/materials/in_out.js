@@ -21,7 +21,7 @@
 	var payTypeTitle = "";//付款 收款
 	var organUrl = ""; //组织数据接口地址
 	var amountNum = ""; //单据编号开头字符
-	var depotString = ""; //店铺列表
+	var depotString = ""; //店铺id列表
 	var orgDefaultId = 0; //单位默认编号
 	var orgDefaultList; //存储查询出来的会员列表
 	var accountList; //账户列表
@@ -2583,7 +2583,8 @@
 			url: path + "/depotHead/getHeaderIdByMaterial.action",
 			dataType: "json",
 			data: ({
-				MaterialParam: materialParam
+				MaterialParam: materialParam,
+				DepotIds: depotString
 			}),
 			success: function (res) {
 				if(res) {
