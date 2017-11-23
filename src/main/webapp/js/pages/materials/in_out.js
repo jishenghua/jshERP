@@ -1576,6 +1576,10 @@
 		if(listSubType == "零售" || listSubType == "零售退货") {
 			$("#payType").val("现付");
 			$("#OrganId").combobox("setValue", orgDefaultId); //自动默认选择非会员
+			// 鼠标点下时清空选择项
+			$("#OrganId").next().find("input").off("mousedown").on("mousedown",function(){
+				$("#OrganId").combobox("setValue", "");
+			});
 			//当会员卡号长度超过10位后，自动点击下拉框，用于兼容刷卡器
 			$("#OrganId").next().find("input").off("keyup").on("keyup",function(){
 				var self = this;
@@ -1597,7 +1601,7 @@
 								$("#payType").empty().append(option);
 							}
 						}
-					},500);
+					},1000);
 				}
 			});
 			var getAmount = $("#depotHeadFM .get-amount");
