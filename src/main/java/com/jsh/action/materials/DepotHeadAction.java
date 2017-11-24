@@ -76,19 +76,13 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
 			depotHead.setSubType(model.getSubType());
 			if(model.getProjectId()!=null){depotHead.setProjectId(new Depot(model.getProjectId()));}
 			//构造新的编号
-			String number = model.getNumber();
-			String allNewNumber = "";
-			if(number.equals(model.getDefaultNumber())){ //两个编号一致说明没有修改过
-				number = number.substring(0,12); //截取前缀
-				String beginTime = Tools.getNow() + " 00:00:00";
-				String endTime =  Tools.getNow() + " 23:59:59";
-				String newNumber = buildNumberFun(model.getType(), model.getSubType(), beginTime, endTime);  //从数据库查询最新的编号+1,这样能防止重复
-				allNewNumber = number + newNumber;
-				depotHead.setNumber(allNewNumber);
-			}
-			else { //修改过的编号
-				depotHead.setNumber(model.getNumber());
-			}
+			String dNumber = model.getDefaultNumber();
+			String number = dNumber.substring(0,12); //截取前缀
+			String beginTime = Tools.getNow() + " 00:00:00";
+			String endTime =  Tools.getNow() + " 23:59:59";
+			String newNumber = buildNumberFun(model.getType(), model.getSubType(), beginTime, endTime);  //从数据库查询最新的编号+1,这样能防止重复
+			String allNewNumber = number + newNumber;
+			depotHead.setNumber(model.getNumber()); //一直从前端文本框里面获取
 			depotHead.setDefaultNumber(allNewNumber); //初始编号，一直都从后台取值
 
 			depotHead.setOperPersonName(getUser().getUsername());
