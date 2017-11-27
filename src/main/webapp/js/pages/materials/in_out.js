@@ -2121,11 +2121,11 @@
 							if(depotHeadID ==0)
 							{
 								getMaxId(); //查找最大的Id
-								accept(depotHeadMaxId,closeDialog); //新增
+								accept(depotHeadMaxId,closeDialog,"add"); //新增
 							}
 							else
 							{
-								accept(depotHeadID,closeDialog); //修改
+								accept(depotHeadID,closeDialog,"edit"); //修改
 							}
 						}
 						else
@@ -2873,9 +2873,13 @@
 	//判断
 	function CheckData() {
 	    var row = $('#materialData').datagrid('getRows');
+		if(!row.length){
+			$.messager.alert('提示',"请输入明细信息！",'info');
+			return false;
+		}
 	    var totalRowNum = "";
 	    for (var i = 0; i < row.length; i++) {
-	        if (row[i].MaterialId == "" || row[i].OperNumber == "" || row[i].UnitPrice === "" || row[i].AllPrice === "") {
+	        if (row[i].DepotId == "" || row[i].MaterialId == "" || row[i].OperNumber == "" || row[i].UnitPrice === "" || row[i].AllPrice === "") {
 	            totalRowNum += (i + 1) + "、";
 	        }
 	    }
@@ -2887,10 +2891,15 @@
 	    return true;
 	}
 	//保存
-	function accept(accepId,fun) {
+	function accept(accepId,fun,type) {
 	    append();
 	    removeit();
-	    if ($("#materialData").datagrid('getChanges').length) {
+		var change = $('#materialData').datagrid('getChanges').length;
+		if(type =="add" && !change) {
+			$.messager.alert('提示','请输入明细信息！','warning');
+			return;
+		}
+	    if (change) {
 	        if (!CheckData()) {
 				return;
 			}
