@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.jsh</groupId>
   <artifactId>jshERP</artifactId>
-  <version>2017.11.28</version>
+  <version>2017.11.29</version>
   <packaging>war</packaging>  
   <name>jshERP</name> 
   <url>http://git.oschina.net/jishenghua/JSH_ERP</url>
