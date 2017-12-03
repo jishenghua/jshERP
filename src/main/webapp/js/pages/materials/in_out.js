@@ -2000,6 +2000,19 @@
 				else if(listTitle === "调拨出库列表"){
 
 				}
+				//进行明细的校验
+				if(depotHeadID ==0) {
+					//新增模式下
+					if (!CheckData("add")) {
+						return;
+					}
+				}
+				else {
+					//编辑模式下
+					if (!CheckData("edit")) {
+						return;
+					}
+				}
 				var OrganId = null, ProjectId = null,AllocationProjectId = null;
 				var ChangeAmount = $.trim($("#ChangeAmount").val())-0;
 				var TotalPrice = $("#depotHeadFM .datagrid-footer [field='AllPrice'] div").text();
@@ -2121,11 +2134,11 @@
 							if(depotHeadID ==0)
 							{
 								getMaxId(); //查找最大的Id
-								accept(depotHeadMaxId,closeDialog,"add"); //新增
+								accept(depotHeadMaxId,closeDialog); //新增
 							}
 							else
 							{
-								accept(depotHeadID,closeDialog,"edit"); //修改
+								accept(depotHeadID,closeDialog); //修改
 							}
 						}
 						else
@@ -2871,7 +2884,14 @@
 	    editIndex = undefined;
 	}
 	//判断
-	function CheckData() {
+	function CheckData(type) {
+		append();
+		removeit();
+		var change = $('#materialData').datagrid('getChanges').length;
+		if(type =="add" && !change) {
+			$.messager.alert('提示','请输入明细信息！','warning');
+			return false;
+		}
 	    var row = $('#materialData').datagrid('getRows');
 		if(!row.length){
 			$.messager.alert('提示',"请输入明细信息！",'info');
@@ -2891,51 +2911,36 @@
 	    return true;
 	}
 	//保存
-	function accept(accepId,fun,type) {
-	    append();
-	    removeit();
-		var change = $('#materialData').datagrid('getChanges').length;
-		if(type =="add" && !change) {
-			$.messager.alert('提示','请输入明细信息！','warning');
-			return;
-		}
-	    if (change) {
-	        if (!CheckData()) {
-				return;
+	function accept(accepId,fun) {
+		var inserted = $("#materialData").datagrid('getChanges', "inserted");
+		var deleted = $("#materialData").datagrid('getChanges', "deleted");
+		var updated = $("#materialData").datagrid('getChanges', "updated");
+		$.ajax({
+			type: "post",
+			url: path + "/depotItem/saveDetials.action",
+			data: {
+				Inserted: JSON.stringify(inserted),
+				Deleted: JSON.stringify(deleted),
+				Updated: JSON.stringify(updated),
+				HeaderId:accepId,
+				clientIp: clientIp
+			},
+			success: function (tipInfo)
+			{
+				if (tipInfo) {
+					$.messager.alert('提示','保存成功！','info');
+				}
+				else {
+					$.messager.alert('提示', '保存失败！', 'error');
+				}
+				fun && fun();
+			},
+			error: function (XmlHttpRequest, textStatus, errorThrown)
+			{
+				$.messager.alert('提示',XmlHttpRequest.responseText,'error');
+				fun && fun();
 			}
-	        var inserted = $("#materialData").datagrid('getChanges', "inserted");
-	        var deleted = $("#materialData").datagrid('getChanges', "deleted");
-	        var updated = $("#materialData").datagrid('getChanges', "updated");
-	        $.ajax({
-	            type: "post",
-	            url: path + "/depotItem/saveDetials.action",
-	            data: {
-	                Inserted: JSON.stringify(inserted),
-	                Deleted: JSON.stringify(deleted),
-	                Updated: JSON.stringify(updated),
-	                HeaderId:accepId,
-	                clientIp: clientIp
-	            },
-	            success: function (tipInfo) 
-	            { 
-	                if (tipInfo) {
-	                    $.messager.alert('提示','保存成功！','info');	
-	                }
-	                else {
-						$.messager.alert('提示', '保存失败！', 'error');
-					}
-					fun && fun();
-	            },
-	            error: function (XmlHttpRequest, textStatus, errorThrown) 
-	            {
-	                $.messager.alert('提示',XmlHttpRequest.responseText,'error');
-					fun && fun();
-	            }
-	        });
-	    }
-		else {
-			fun && fun();
-		}
+		});
 	    if (endEditing()) {
 	        $('#materialData').datagrid('acceptChanges');
 	    }
