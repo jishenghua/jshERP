@@ -38,12 +38,12 @@ public class DepotHeadService extends BaseService<DepotHead> implements DepotHea
 		depotHeadDao.batchSetStatus(status, depotHeadIDs);
 	}
 
-	public void findInDetail(PageUtil pageUtil,String beginTime,String endTime,String type,Long pid,String dids) throws JshException {
-		depotHeadDao.findInDetail(pageUtil,beginTime,endTime,type,pid,dids);
+	public void findInDetail(PageUtil pageUtil,String beginTime,String endTime,String type,Long pid,String dids,Long oId) throws JshException {
+		depotHeadDao.findInDetail(pageUtil,beginTime,endTime,type,pid,dids,oId);
 	}
 
-	public void findInOutMaterialCount(PageUtil pageUtil,String beginTime,String endTime,String type,Long pid,String dids) throws JshException {
-		depotHeadDao.findInOutMaterialCount(pageUtil,beginTime,endTime,type,pid,dids);
+	public void findInOutMaterialCount(PageUtil pageUtil,String beginTime,String endTime,String type,Long pid,String dids,Long oId) throws JshException {
+		depotHeadDao.findInOutMaterialCount(pageUtil,beginTime,endTime,type,pid,dids,oId);
 	}
 
 	public void findMaterialsListByHeaderId(PageUtil pageUtil,Long headerId) throws JshException {

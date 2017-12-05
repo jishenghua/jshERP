@@ -22,7 +22,7 @@
 		<script type="text/javascript" src="<%=path %>/js/My97DatePicker/WdatePicker.js"></script>
 		<script type="text/javascript" src="<%=path %>/js/common/common.js"></script>
 		<script>
-			var kid = ${sessionScope.user.id};
+			var uid = ${sessionScope.user.id};
 		</script>
   	</head>
   	<body>
@@ -30,6 +30,11 @@
 		<div id = "searchPanel"	class="easyui-panel" style="padding:10px;" title="查询窗口" iconCls="icon-search" collapsible="true" closable="false">
 			<table id="searchTable">
 				<tr>
+					<td>客户：</td>
+					<td>
+						<input id="OrganId" name="OrganId" style="width:120px;" />
+					</td>
+					<td>&nbsp;</td>
 					<td>仓库：</td>
 					<td>
 						<select name="searchProjectId" id="searchProjectId"  style="width:100px;"></select>
@@ -62,6 +67,8 @@
 			var depotList = null;
 			var depotID = null;
 			var depotString = ""; //仓库列表
+			var path = "<%=path %>";
+			var cusUrl = path + "/supplier/findBySelect_cus.action?UBType=UserCustomer&UBKeyId=" + uid; //客户接口
 			//初始化界面
 			$(function()
 			{
@@ -71,6 +78,7 @@
 				$("#searchEndTime").val(thisDateTime);
 				var userBusinessList=null;
 				var userdepot=null;
+				initSupplier(); //初始化客户信息
 				initSystemData_UB();
 				initSelectInfo_UB();
 				initSystemData_depot();
@@ -79,8 +87,20 @@
 				ininPager();
 				search();
 				print();
-			});	
+			});
 
+			//初始化客户
+			function initSupplier(){
+				$('#OrganId').combobox({
+					url: cusUrl,
+					valueField:'id',
+					textField:'supplier',
+					filter: function(q, row){
+						var opts = $(this).combobox('options');
+						return row[opts.textField].indexOf(q) >-1;
+					}
+				});
+			}
 
 			//初始化系统基础信息
 			function initSystemData_UB(){
@@ -88,7 +108,7 @@
 					type:"post",
 					url: "<%=path %>/userBusiness/getBasicData.action",
 					data: ({
-						KeyId:kid,
+						KeyId:uid,
 						Type:"UserDepot"
 					}),
 					//设置为同步
@@ -193,6 +213,7 @@
 						{ title: '商品名称',field: 'mName',width:150},
 						{ title: '商品型号',field: 'Model',width:150},
 						{ title: '商品类型',field: 'categoryName',width:120},
+						{ title: '出库数量',field: 'numSum',width:120},
 						{ title: '出库金额',field: 'priceSum',width:120}
 					]],
 					onLoadError:function()
@@ -284,6 +305,7 @@
 					data: ({
 						pageNo:pageNo,
 						pageSize:pageSize,
+						OrganId: $('#OrganId').combobox('getValue'),
 						ProjectId: $.trim($("#searchProjectId").val()),
 						DepotIds: depotString,
 						BeginTime: $("#searchBeginTime").val(),

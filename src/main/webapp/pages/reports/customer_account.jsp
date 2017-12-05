@@ -30,7 +30,7 @@
 		<div id = "searchPanel"	class="easyui-panel" style="padding:10px;" title="查询窗口" iconCls="icon-search" collapsible="true" closable="false">
 			<table id="searchTable">
 				<tr>
-					<td>单位名称：</td>
+					<td>客户：</td>
 					<td>
 						<input id="OrganId" name="OrganId" style="width:120px;" />
 					</td>

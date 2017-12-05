@@ -52,7 +52,7 @@ public class DepotHeadDAO extends BaseDAO<DepotHead> implements DepotHeadIDAO {
     }
 
     @SuppressWarnings("unchecked")
-    public void findInDetail(PageUtil pageUtil,String beginTime,String endTime,String type,Long pid,String dids) throws JshException {
+    public void findInDetail(PageUtil pageUtil,String beginTime,String endTime,String type,Long pid,String dids,Long oId) throws JshException {
         StringBuffer queryString = new StringBuffer();
         queryString.append("select dh.Number,m.`name`,m.Model,di.UnitPrice,di.OperNumber,di.AllPrice,s.supplier,d.dName,date_format(dh.OperTime, '%Y-%m-%d') " +
                 "from jsh_depothead dh inner join jsh_depotitem di on di.HeaderId=dh.id " +
@@ -60,6 +60,9 @@ public class DepotHeadDAO extends BaseDAO<DepotHead> implements DepotHeadIDAO {
                 "inner join jsh_supplier s on s.id=dh.OrganId " +
                 "inner join (select id,name as dName from jsh_depot) d on d.id=di.DepotId " +
                 "where dh.OperTime >='"+ beginTime +"' and dh.OperTime <='"+ endTime +"' ");
+        if(oId!=null){
+            queryString.append(" and dh.OrganId = "+ oId );
+        }
         if(pid!=null){
             queryString.append(" and di.DepotId=" + pid );
         }
@@ -84,21 +87,44 @@ public class DepotHeadDAO extends BaseDAO<DepotHead> implements DepotHeadIDAO {
     }
 
     @SuppressWarnings("unchecked")
-    public void findInOutMaterialCount(PageUtil pageUtil,String beginTime,String endTime,String type,Long pid,String dids) throws JshException {
+    public void findInOutMaterialCount(PageUtil pageUtil,String beginTime,String endTime,String type,Long pid,String dids,Long oId) throws JshException {
         StringBuffer queryString = new StringBuffer();
-        queryString.append("select di.MaterialId, m.mName,m.Model,m.categoryName, "+
-                " (select sum(jsh_depotitem.AllPrice) priceSum from jsh_depothead INNER JOIN jsh_depotitem " +
-                "on jsh_depothead.id=jsh_depotitem.HeaderId where jsh_depotitem.MaterialId=di.MaterialId " +
-                " and jsh_depothead.type='"+ type +"' and dh.OperTime >='"+ beginTime +"' and dh.OperTime <='"+ endTime +"'");
+        queryString.append("select di.MaterialId, m.mName,m.Model,m.categoryName, ");
+        //数量汇总
+        queryString.append(" (select sum(jdi.BasicNumber) numSum from jsh_depothead jdh INNER JOIN jsh_depotitem jdi " +
+                "on jdh.id=jdi.HeaderId where jdi.MaterialId=di.MaterialId " +
+                " and jdh.type='"+ type +"' and jdh.OperTime >='"+ beginTime +"' and jdh.OperTime <='"+ endTime +"'");
+        if(oId!=null){
+            queryString.append(" and jdh.OrganId = "+ oId );
+        }
         if(pid!=null){
-            queryString.append(" and di.DepotId=" + pid );
+            queryString.append(" and jdi.DepotId=" + pid );
         }
         else {
-            queryString.append(" and di.DepotId in (" + dids + ")" );
+            queryString.append(" and jdi.DepotId in (" + dids + ")" );
         }
-        queryString.append(" ) priceSum from jsh_depothead dh INNER JOIN jsh_depotitem di on dh.id=di.HeaderId " +
+        queryString.append(" ) numSum, ");
+        //金额汇总
+        queryString.append(" (select sum(jdi.AllPrice) priceSum from jsh_depothead jdh INNER JOIN jsh_depotitem jdi " +
+                "on jdh.id=jdi.HeaderId where jdi.MaterialId=di.MaterialId " +
+                " and jdh.type='"+ type +"' and jdh.OperTime >='"+ beginTime +"' and jdh.OperTime <='"+ endTime +"'");
+        if(oId!=null){
+            queryString.append(" and jdh.OrganId = "+ oId );
+        }
+        if(pid!=null){
+            queryString.append(" and jdi.DepotId=" + pid );
+        }
+        else {
+            queryString.append(" and jdi.DepotId in (" + dids + ")" );
+        }
+        queryString.append(" ) priceSum ");
+
+        queryString.append(" from jsh_depothead dh INNER JOIN jsh_depotitem di on dh.id=di.HeaderId " +
                 " INNER JOIN (SELECT jsh_material.id,jsh_material.name mName, Model,jsh_materialcategory.`Name` categoryName from jsh_material INNER JOIN jsh_materialcategory on jsh_material.CategoryId=jsh_materialcategory.Id) m " +
                 " on m.Id=di.MaterialId where dh.type='"+ type +"' and dh.OperTime >='"+ beginTime +"' and dh.OperTime <='"+ endTime +"' ");
+        if(oId!=null){
+            queryString.append(" and dh.OrganId = "+ oId );
+        }
         if(pid!=null){
             queryString.append(" and di.DepotId=" + pid );
         }

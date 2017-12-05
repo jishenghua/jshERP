@@ -640,11 +640,12 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
 		pageUtil.setCurPage(model.getPageNo());
 		Long pid =model.getProjectId();
 		String dids =model.getDepotIds();
+		Long oId = model.getOrganId();
 		String beginTime = model.getBeginTime();
 		String endTime = model.getEndTime();
 		String type = model.getType();
 		try{
-			depotHeadService.findInDetail(pageUtil,beginTime,endTime,type,pid,dids);
+			depotHeadService.findInDetail(pageUtil,beginTime,endTime,type,pid,dids,oId);
 			List dataList = pageUtil.getPageList();
 			JSONObject outer = new JSONObject();
 			outer.put("total", pageUtil.getTotalCount());
@@ -688,11 +689,12 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
 		pageUtil.setCurPage(model.getPageNo());
 		Long pid =model.getProjectId();
 		String dids =model.getDepotIds();
+		Long oId = model.getOrganId();
 		String beginTime = model.getBeginTime();
 		String endTime = model.getEndTime();
 		String type = model.getType();
 		try{
-			depotHeadService.findInOutMaterialCount(pageUtil, beginTime, endTime, type, pid, dids);
+			depotHeadService.findInOutMaterialCount(pageUtil, beginTime, endTime, type, pid, dids, oId);
 			List dataList = pageUtil.getPageList();
 			JSONObject outer = new JSONObject();
 			outer.put("total", pageUtil.getTotalCount());
@@ -707,7 +709,8 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
 					item.put("mName", arr[1]); //商品名称
 					item.put("Model", arr[2]); //商品型号
 					item.put("categoryName", arr[3]); //商品类型
-					item.put("priceSum", arr[4]); //金额
+					item.put("numSum", arr[4]); //数量
+					item.put("priceSum", arr[5]); //金额
 					dataArray.add(item);
 				}
 			}

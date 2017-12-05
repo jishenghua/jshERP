@@ -17,9 +17,9 @@ public interface DepotHeadIDAO extends BaseIDAO<DepotHead>
 
     public void batchSetStatus(Boolean status,String depotHeadIDs);
 
-    public void findInDetail(PageUtil pageUtil,String beginTime,String endTime,String type,Long pid,String dids) throws JshException;
+    public void findInDetail(PageUtil pageUtil,String beginTime,String endTime,String type,Long pid,String dids,Long oId) throws JshException;
 
-    public void findInOutMaterialCount(PageUtil pageUtil,String beginTime,String endTime,String type,Long pid,String dids) throws JshException;
+    public void findInOutMaterialCount(PageUtil pageUtil,String beginTime,String endTime,String type,Long pid,String dids, Long oId) throws JshException;
 
     public void findMaterialsListByHeaderId(PageUtil pageUtil,Long headerId) throws JshException;
 
