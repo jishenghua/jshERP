@@ -751,6 +751,10 @@ public class DepotItemAction extends BaseAction<DepotItemModel>
                     Double prevPrice = sumPrice("入库",pid,depotItem.getMaterialId().getId(),model.getMonthTime(),true) - sumPrice("出库", pid,depotItem.getMaterialId().getId(), model.getMonthTime(), true);
                     Double InPrice = sumPrice("入库",pid,depotItem.getMaterialId().getId(),model.getMonthTime(),false);
                     Double OutPrice = sumPrice("出库",pid, depotItem.getMaterialId().getId(), model.getMonthTime(), false);
+                    Double unitPrice = 0.0;
+                    if(prevSum + InSum - OutSum != 0) {
+                        unitPrice = (prevPrice + InPrice - OutPrice)/(prevSum + InSum - OutSum);
+                    }
                     item.put("Id", depotItem.getId());
                     item.put("MaterialId", depotItem.getMaterialId()==null?"":depotItem.getMaterialId().getId());
                     item.put("MaterialName", depotItem.getMaterialId().getName());
@@ -758,7 +762,7 @@ public class DepotItemAction extends BaseAction<DepotItemModel>
                     item.put("MaterialStandard", depotItem.getMaterialId().getStandard());
                     item.put("MaterialColor", depotItem.getMaterialId().getColor());
                     item.put("MaterialUnit", depotItem.getMaterialId().getUnit());
-                    item.put("UnitPrice", (prevPrice + InPrice - OutPrice)/(prevSum + InSum - OutSum));
+                    item.put("UnitPrice", unitPrice);
                     item.put("prevSum", prevSum);
                     item.put("InSum", InSum);
                     item.put("OutSum", OutSum);
