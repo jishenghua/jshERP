@@ -32,6 +32,7 @@
 	var otherColumns = true; //明细中的‘别名’列是否显示
 	var btnEnableList = getBtnStr(); //获取按钮的权限
 	var mPropertyList = ""; //商品属性列表
+	var defaultAccountId = 0; //默认账户id
 	$(function(){
 		//初始化系统基础信息
 		getType();
@@ -457,6 +458,9 @@
 			for(var i = 0 ;i < accountList.length;i++) {
 				var account = accountList[i];
 				options += '<option value="' + account.id + '" data-currentAmount="' + account.currentAmount + '">' + account.name + '</option>';
+				if(account.isDefault) {
+					defaultAccountId = account.id; //给账户赋值默认id
+				}
 			}	
 			$("#AccountId").empty().append(options);
 		}
@@ -1559,6 +1563,7 @@
 		$("#DiscountLastMoney").val(0);
 		$("#ChangeAmount").val(0);
 		$("#Debt").val(0);
+		$("#AccountId").val(defaultAccountId); //初始化默认的账户Id
 		var addTitle = listTitle.replace("列表","信息");
 		$('#depotHeadDlg').dialog('open').dialog('setTitle','<img src="' + path + '/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加' + addTitle);
 		$(".window-mask").css({ width: webW ,height: webH});

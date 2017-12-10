@@ -2,7 +2,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
 <%
     String path = request.getContextPath();
-    String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
     String clientIp = Tools.getLocalIp(request);
 %>
 <!DOCTYPE html>
@@ -101,9 +100,6 @@
             //初始化表格数据
             function initTableData(){
                 $('#tableData').datagrid({
-                    //title:'结算账户',
-                    //iconCls:'icon-save',
-                    //width:700,
                     height:heightInfo,
                     nowrap: false,
                     rownumbers: false,
@@ -112,17 +108,10 @@
                     //选中单行
                     singleSelect : true,
                     collapsible:false,
-                    selectOnCheck:false,
-                    //fitColumns:true,
-                    //单击行是否选中
-                    checkOnSelect : false,
                     //交替出现背景
                     striped : true,
                     url:'<%=path %>/account/findBy.action?pageSize=' + initPageSize,
                     pagination: true,
-                    //自动截取数据
-                    //nowrap : true,
-                    //loadFilter: pagerFilter,
                     pageSize: initPageSize,
                     pageList: initPageNum,
                     columns:[[
@@ -131,6 +120,16 @@
                       { title: '编号', field: 'serialNo',width:150,align:"center"},
                       { title: '期初金额', field: 'initialAmount',width:100,align:"center"},
                       { title: '当前余额', field: 'currentAmount',width:100,align:"center"},
+                      { title: '是否默认', field: 'isDefault',width:100,align:"center",
+                          formatter:function(value,rec){
+                            if(rec.isDefault) {
+                                return "<b style='color:green'>是</b>";
+                            }
+                            else {
+                                return "否";
+                            }
+                          }
+                      },
                       { title: '备注',field: 'remark',width:100},
                       { title: '操作',field: 'op',align:"center",width:180,formatter:function(value,rec)
                         {
@@ -163,6 +162,15 @@
                             handler:function()
                             {
                                 batDeleteAccount();    
+                            }
+                        },
+                        {
+                            id:'setAccountIsDefault',
+                            text:'设为默认',
+                            iconCls:'icon-ok',
+                            handler:function()
+                            {
+                                setAccountIsDefault();
                             }
                         }
                     ],
@@ -332,6 +340,60 @@
                 orgAccount = "";
                 accountID = 0;
                 url = '<%=path %>/account/create.action';
+            }
+
+            //设为默认操作事件
+            function setAccountIsDefault(){
+                var allRow = $('#tableData').datagrid('getRows');
+                var row = $('#tableData').datagrid('getChecked');
+                if(row.length == 0)
+                {
+                    $.messager.alert('设置提示','没有记录被选中！','info');
+                    return;
+                }
+                if(row.length > 0)
+                {
+                    function setDefault(accountID, isDefault) {
+                        $.ajax({
+                            type:"post",
+                            url: "<%=path %>/account/updateAmountIsDefault.action",
+                            dataType: "json",
+                            async :  false,
+                            data: ({
+                                AccountID : accountID,
+                                IsDefault : isDefault,
+                                clientIp:'<%=clientIp %>'
+                            }),
+                            success: function (res) {
+                                if(res == "true" && isDefault) {
+
+                                }
+                                else {
+
+                                }
+                            },
+                            //此处添加错误处理
+                            error:function()
+                            {
+                                $.messager.alert('删除提示','删除结算账户异常，请稍后再试！','error');
+                                return;
+                            }
+                        });
+                    }
+                    if(row.length == 1) {
+                        setDefault(row[0].id, true); //设置默认
+                        for(var i = 0;i < allRow.length; i++) {
+                            if(allRow[i].id != row[0].id) {
+                                setDefault(allRow[i].id, false);
+                            }
+                        }
+                        setTimeout(function(){
+                            $("#searchBtn").click();
+                        },1000);
+                    }
+
+                    return;
+                }
             }
             
             //保存结算账户

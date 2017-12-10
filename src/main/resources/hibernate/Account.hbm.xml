@@ -27,6 +27,11 @@
                 <comment>当前余额</comment>
             </column>
         </property>
+        <property generated="never" lazy="false" name="IsDefault" type="boolean">
+            <column length="1" name="IsDefault">
+                <comment>是否设为默认</comment>
+            </column>
+        </property>
         <property generated="never" lazy="false" name="Remark" type="java.lang.String">
             <column length="100" name="Remark">
                 <comment>备注</comment>

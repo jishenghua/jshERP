@@ -142,9 +142,6 @@
 			function initTableData()
 			{
 				$('#tableData').datagrid({
-					//title:'用户列表',
-					//iconCls:'icon-save',
-					//width:widthInfo,
 					height:heightInfo,
 					nowrap: false,
 					rownumbers: false,
@@ -153,15 +150,10 @@
 					//选中单行
 					singleSelect : true,
 					collapsible:false,
-					//selectOnCheck:false,
-					//fitColumns:true,
-					//单击行是否选中
-					//checkOnSelect : false,
 					url:'<%=path %>/user/findBy.action?pageSize=' + initPageSize,
 					pagination: true,
 					//交替出现背景
 					striped : true,
-					//loadFilter: pagerFilter,
 					pageSize: initPageSize,
 					pageList: initPageNum,
 					columns:[[   

@@ -8,6 +8,7 @@ public class Account implements java.io.Serializable
     private String SerialNo;
     private Double InitialAmount;
     private Double CurrentAmount;
+    private Boolean IsDefault;
     private String Remark;
 
     public Account()
@@ -20,11 +21,12 @@ public class Account implements java.io.Serializable
         this.Id = Id;
     }
 
-    public Account(String name, String serialNo, Double initialAmount, Double currentAmount, String remark) {
+    public Account(String name, String serialNo, Double initialAmount, Double currentAmount, Boolean isDefault, String remark) {
         Name = name;
         SerialNo = serialNo;
         InitialAmount = initialAmount;
         CurrentAmount = currentAmount;
+        IsDefault = isDefault;
         Remark = remark;
     }
 
@@ -76,6 +78,14 @@ public class Account implements java.io.Serializable
     public Double getCurrentAmount()
     {
         return CurrentAmount;
+    }
+
+    public Boolean getIsDefault() {
+        return IsDefault;
+    }
+
+    public void setIsDefault(Boolean isDefault) {
+        IsDefault = isDefault;
     }
 
     public void setRemark(String remark)

@@ -29,6 +29,11 @@ public class AccountModel implements Serializable
     private Double currentAmount;
 
     /**
+     * 是否设为默认
+     */
+    private Boolean isDefault;
+
+    /**
      * 备注
      */
     private String remark = "";
@@ -106,6 +111,14 @@ public class AccountModel implements Serializable
     public Double getCurrentAmount()
     {
         return currentAmount;
+    }
+
+    public Boolean getIsDefault() {
+        return isDefault;
+    }
+
+    public void setIsDefault(Boolean isDefault) {
+        this.isDefault = isDefault;
     }
 
     public void setRemark(String remark)

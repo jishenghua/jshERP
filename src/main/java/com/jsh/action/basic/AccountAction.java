@@ -221,6 +221,41 @@ public class AccountAction extends BaseAction<AccountModel>
     }
 
     /**
+     * 更新结算账户-设置是否默认
+     * @return
+     */
+    public void updateAmountIsDefault() {
+        Boolean flag = false;
+        try {
+            Account Account = accountService.get(model.getAccountID());
+            Account.setIsDefault(model.getIsDefault());
+            accountService.update(Account);
+            flag = true;
+            tipMsg = "成功";
+            tipType = 0;
+        }
+        catch (DataAccessException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>修改结算账户ID为 ： " + model.getAccountID() + "信息失败", e);
+            flag = false;
+            tipMsg = "失败";
+            tipType = 1;
+        }
+        finally {
+            try {
+                toClient(flag.toString());
+            }
+            catch (IOException e) {
+                Log.errorFileSync(">>>>>>>>>>>>修改结算账户回写客户端结果异常", e);
+            }
+        }
+        //如果改为默认账户时记录日志
+        if(model.getIsDefault()) {
+            logService.create(new Logdetails(getUser(), "更新默认账户", model.getClientIp(), new Timestamp(System.currentTimeMillis()),
+                    tipType, "更新账户ID"+ model.getAccountID() + "为默认账户" + tipMsg + "！", "更新默认账户" + tipMsg));
+        }
+    }
+
+    /**
      * 批量删除指定ID结算账户
      * @return
      */
@@ -314,6 +349,7 @@ public class AccountAction extends BaseAction<AccountModel>
                     Double currentAmount = getAccountSum(account.getId(),"") + getAccountSumByHead(account.getId(), "") + getAccountSumByDetail(account.getId(), "") + getManyAccountSum(account.getId(), "") + account.getInitialAmount();
                     String currentAmountFmt=df.format(currentAmount);
                     item.put("currentAmount", currentAmountFmt);  //当前余额
+                    item.put("isDefault", account.getIsDefault());  //是否默认
                     item.put("remark", account.getRemark());
                     item.put("op", 1);
                     dataArray.add(item);
