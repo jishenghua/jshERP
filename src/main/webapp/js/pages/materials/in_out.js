@@ -2050,13 +2050,15 @@
 				var SalesmanStr = "";
 				if(listSubType === "销售" || listSubType === "销售退货"){
 					var Salesman = $('#Salesman').combobox('getValues').toString(); //销售人员
-					var SalesmanArray = Salesman.split(",");
-					for (var i = 0; i < SalesmanArray.length; i++) {
-						if (i === SalesmanArray.length - 1) {
-							SalesmanStr += "<" + SalesmanArray[i] + ">";
-						}
-						else {
-							SalesmanStr += "<" + SalesmanArray[i] + ">,";
+					if(Salesman) {
+						var SalesmanArray = Salesman.split(",");
+						for (var i = 0; i < SalesmanArray.length; i++) {
+							if (i === SalesmanArray.length - 1) {
+								SalesmanStr += "<" + SalesmanArray[i] + ">";
+							}
+							else {
+								SalesmanStr += "<" + SalesmanArray[i] + ">,";
+							}
 						}
 					}
 				}
