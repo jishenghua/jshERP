@@ -99,7 +99,7 @@
 						{ title: '当前余额', field: 'currentAmount',width:100,align:"center"},
 						{ title: '操作', field: 'op',width:100,align:"center",formatter:function(value,rec) {
 								var str = '';
-								var rowInfo = rec.id;
+								var rowInfo = rec.id + 'AaBb' + rec.name +'AaBb' + rec.serialNo +'AaBb' + rec.initialAmount +'AaBb' + rec.currentAmount;
 								str += '<img src="<%=path%>/js/easyui-1.3.5/themes/icons/list.png" style="cursor: pointer;" onclick="showAccountInOutList(\'' + rowInfo + '\');"/>&nbsp;<a onclick="showAccountInOutList(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">流水</a>&nbsp;&nbsp;';
 								return str;
 							}
@@ -199,11 +199,12 @@
 			function showAccountInOutList(accountInfo){
 				var info = accountInfo.split("AaBb");
 				var accountId = info[0];
+				var initialAmount = info[3];
 				$('#accountDetailListDlg').dialog('open').dialog('setTitle','<img src="<%=path%>/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;查看账户流水');
 				$(".window-mask").css({ width: webW ,height: webH});
 				initAccountDetailData(accountId);
-				getAccountInOutList(accountId,1,initPageSize);
-				ininAccountDetailPager(accountId);
+				getAccountInOutList(accountId,initialAmount,1,initPageSize);
+				ininAccountDetailPager(accountId,initialAmount);
 			}
 
 			//初始化表格数据
@@ -247,6 +248,7 @@
 								}
 							}
 						},
+						{ title: '余额', field: 'balance',width:80},
 						{ title: '入库出库日期',field: 'operTime',width:180}
 					]],
 					onLoadError:function() {
@@ -257,7 +259,7 @@
 			}
 
 			//分页信息处理
-			function ininAccountDetailPager(accountId){
+			function ininAccountDetailPager(accountId,initialAmount){
 				try {
 					var opts = $("#accountTableData").datagrid('options');
 					var pager = $("#accountTableData").datagrid('getPager');
@@ -269,7 +271,7 @@
 								pageNumber:pageNum,
 								pageSize:pageSize
 							});
-							getAccountInOutList(accountId,pageNum,pageSize);
+							getAccountInOutList(accountId,initialAmount,pageNum,pageSize);
 						}
 					});
 				}
@@ -278,13 +280,14 @@
 				}
 			}
 
-			function getAccountInOutList(accountId,pageNo,pageSize){
+			function getAccountInOutList(accountId,initialAmount,pageNo,pageSize){
 				$.ajax({
 					type:"get",
 					url: "<%=path %>/account/findAccountInOutList.action",
 					dataType: "json",
 					data: ({
 						accountID: accountId,
+						initialAmount: initialAmount,
 						pageNo:pageNo,
 						pageSize:pageSize
 					}),

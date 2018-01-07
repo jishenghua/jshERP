@@ -339,14 +339,14 @@ public class AccountAction extends BaseAction<AccountModel>
                     item.put("name", account.getName());
                     item.put("serialNo", account.getSerialNo());
                     item.put("initialAmount", account.getInitialAmount());
-                    String monthTime = Tools.getCurrentMonth();
-                    Double thisMonthAmount = getAccountSum(account.getId(), monthTime) + getAccountSumByHead(account.getId(), monthTime) +getAccountSumByDetail(account.getId(), monthTime) + getManyAccountSum(account.getId(), monthTime);
+                    String timeStr = Tools.getCurrentMonth();
+                    Double thisMonthAmount = getAccountSum(account.getId(), timeStr, "month") + getAccountSumByHead(account.getId(), timeStr, "month") +getAccountSumByDetail(account.getId(), timeStr, "month") + getManyAccountSum(account.getId(), timeStr, "month");
                     String thisMonthAmountFmt = "0";
                     if(thisMonthAmount!=0){
                         thisMonthAmountFmt = df.format(thisMonthAmount);
                     }
                     item.put("thisMonthAmount", thisMonthAmountFmt);  //本月发生额
-                    Double currentAmount = getAccountSum(account.getId(),"") + getAccountSumByHead(account.getId(), "") + getAccountSumByDetail(account.getId(), "") + getManyAccountSum(account.getId(), "") + account.getInitialAmount();
+                    Double currentAmount = getAccountSum(account.getId(),"", "month") + getAccountSumByHead(account.getId(), "", "month") + getAccountSumByDetail(account.getId(), "", "month") + getManyAccountSum(account.getId(), "", "month") + account.getInitialAmount();
                     String currentAmountFmt=df.format(currentAmount);
                     item.put("currentAmount", currentAmountFmt);  //当前余额
                     item.put("isDefault", account.getIsDefault());  //是否默认
@@ -373,13 +373,13 @@ public class AccountAction extends BaseAction<AccountModel>
      * @param id
      * @return
      */
-    public Double getAccountSum(Long id,String monthTime){
+    public Double getAccountSum(Long id,String timeStr,String type){
     	Double accountSum = 0.0;
     	try{	    	
 	    	PageUtil<DepotHead> pageUtil = new PageUtil<DepotHead>();
 	    	pageUtil.setPageSize(0);
 	        pageUtil.setCurPage(0);
-	        pageUtil.setAdvSearch(getCondition_getSum(id,monthTime));      
+	        pageUtil.setAdvSearch(getCondition_getSum(id,timeStr,type));
 			depotHeadService.find(pageUtil);
 			List<DepotHead> dataList = pageUtil.getPageList();
 	        if(dataList!= null){
@@ -399,13 +399,13 @@ public class AccountAction extends BaseAction<AccountModel>
      * @param id
      * @return
      */
-    public Double getAccountSumByHead(Long id,String monthTime){
+    public Double getAccountSumByHead(Long id,String timeStr,String type){
         Double accountSum = 0.0;
         try{
             PageUtil<AccountHead> pageUtil = new PageUtil<AccountHead>();
             pageUtil.setPageSize(0);
             pageUtil.setCurPage(0);
-            pageUtil.setAdvSearch(getCondition_getSumByHead(id, monthTime));
+            pageUtil.setAdvSearch(getCondition_getSumByHead(id, timeStr, type));
             accountHeadService.find(pageUtil);
             List<AccountHead> dataList = pageUtil.getPageList();
             if(dataList!= null){
@@ -425,13 +425,13 @@ public class AccountAction extends BaseAction<AccountModel>
      * @param id
      * @return
      */
-    public Double getAccountSumByDetail(Long id,String monthTime){
+    public Double getAccountSumByDetail(Long id,String timeStr, String type){
         Double accountSum = 0.0;
         try{
             PageUtil<AccountHead> pageUtil = new PageUtil<AccountHead>();
             pageUtil.setPageSize(0);
             pageUtil.setCurPage(0);
-            pageUtil.setAdvSearch(getCondition_getSumByHead(monthTime));
+            pageUtil.setAdvSearch(getCondition_getSumByHead(timeStr, type));
             accountHeadService.find(pageUtil);
             List<AccountHead> dataList = pageUtil.getPageList();
             if(dataList!= null){
@@ -468,13 +468,13 @@ public class AccountAction extends BaseAction<AccountModel>
      * @param id
      * @return
      */
-    public Double getManyAccountSum(Long id,String monthTime){
+    public Double getManyAccountSum(Long id,String timeStr, String type){
         Double accountSum = 0.0;
         try{
             PageUtil<DepotHead> pageUtil = new PageUtil<DepotHead>();
             pageUtil.setPageSize(0);
             pageUtil.setCurPage(0);
-            pageUtil.setAdvSearch(getCondition_getManyAccountSum(id,monthTime));
+            pageUtil.setAdvSearch(getCondition_getManyAccountSum(id,timeStr,type));
             depotHeadService.find(pageUtil);
             List<DepotHead> dataList = pageUtil.getPageList();
             if(dataList!= null){
@@ -547,6 +547,7 @@ public class AccountAction extends BaseAction<AccountModel>
         pageUtil.setPageSize(model.getPageSize());
         pageUtil.setCurPage(model.getPageNo());
         Long accountId = model.getAccountID();
+        Double initialAmount = model.getInitialAmount();
         try{
             accountService.findAccountInOutList(pageUtil, accountId);
             List dataList = pageUtil.getPageList();
@@ -563,6 +564,10 @@ public class AccountAction extends BaseAction<AccountModel>
                     item.put("type", arr[1]); //类型
                     item.put("supplierName", arr[2]); //单位信息
                     item.put("changeAmount", arr[3]); //金额
+                    String timeStr = arr[4].toString();
+                    Double balance = getAccountSum(accountId, timeStr, "date") + getAccountSumByHead(accountId, timeStr, "date")
+                            + getAccountSumByDetail(accountId, timeStr, "date") + getManyAccountSum(accountId, timeStr, "date") + initialAmount;
+                    item.put("balance", balance); //余额
                     item.put("operTime", arr[4]); //入库出库日期
                     item.put("aList", arr[5]); //多账户的id列表
                     item.put("amList", arr[6]); //多账户的金额列表
@@ -616,7 +621,7 @@ public class AccountAction extends BaseAction<AccountModel>
      * 拼接搜索条件
      * @return
      */
-    private Map<String,Object> getCondition_getSum(Long id,String monthTime)
+    private Map<String,Object> getCondition_getSum(Long id,String timeStr,String type)
     {
         /**
          * 拼接搜索条件
@@ -624,9 +629,14 @@ public class AccountAction extends BaseAction<AccountModel>
         Map<String,Object> condition = new HashMap<String,Object>();
         condition.put("AccountId_n_eq", id);
         condition.put("PayType_s_neq", "预付款");
-        if(!monthTime.equals("")){
-        	condition.put("OperTime_s_gteq", monthTime + "-01 00:00:00");
-            condition.put("OperTime_s_lteq", monthTime + "-31 00:00:00");
+        if(!timeStr.equals("")){
+            if(type.equals("month")){
+                condition.put("OperTime_s_gteq", timeStr + "-01 00:00:00");
+                condition.put("OperTime_s_lteq", timeStr + "-31 00:00:00");
+            }
+            else if(type.equals("date")){
+                condition.put("OperTime_s_lteq", timeStr);
+            }
         }        
         return condition;
     }
@@ -635,16 +645,21 @@ public class AccountAction extends BaseAction<AccountModel>
      * 拼接搜索条件
      * @return
      */
-    private Map<String,Object> getCondition_getManyAccountSum(Long id,String monthTime)
+    private Map<String,Object> getCondition_getManyAccountSum(Long id,String timeStr,String type)
     {
         /**
          * 拼接搜索条件
          */
         Map<String,Object> condition = new HashMap<String,Object>();
         condition.put("AccountIdList_s_like", "\"" + id.toString() + "\"");
-        if(!monthTime.equals("")){
-            condition.put("OperTime_s_gteq", monthTime + "-01 00:00:00");
-            condition.put("OperTime_s_lteq", monthTime + "-31 00:00:00");
+        if(!timeStr.equals("")){
+            if(type.equals("month")){
+                condition.put("OperTime_s_gteq", timeStr + "-01 00:00:00");
+                condition.put("OperTime_s_lteq", timeStr + "-31 00:00:00");
+            }
+            else if(type.equals("date")){
+                condition.put("OperTime_s_lteq", timeStr);
+            }
         }
         return condition;
     }
@@ -653,16 +668,21 @@ public class AccountAction extends BaseAction<AccountModel>
      * 拼接搜索条件
      * @return
      */
-    private Map<String,Object> getCondition_getSumByHead(Long id,String monthTime)
+    private Map<String,Object> getCondition_getSumByHead(Long id,String timeStr, String type)
     {
         /**
          * 拼接搜索条件
          */
         Map<String,Object> condition = new HashMap<String,Object>();
         condition.put("AccountId_n_eq", id);
-        if(!monthTime.equals("")){
-            condition.put("BillTime_s_gteq", monthTime + "-01 00:00:00");
-            condition.put("BillTime_s_lteq", monthTime + "-31 00:00:00");
+        if(!timeStr.equals("")){
+            if(type.equals("month")) {
+                condition.put("BillTime_s_gteq", timeStr + "-01 00:00:00");
+                condition.put("BillTime_s_lteq", timeStr + "-31 00:00:00");
+            }
+            else if(type.equals("date")) {
+                condition.put("BillTime_s_lteq", timeStr);
+            }
         }
         return condition;
     }
@@ -671,15 +691,20 @@ public class AccountAction extends BaseAction<AccountModel>
      * 拼接搜索条件
      * @return
      */
-    private Map<String,Object> getCondition_getSumByHead(String monthTime)
+    private Map<String,Object> getCondition_getSumByHead(String timeStr, String type)
     {
         /**
          * 拼接搜索条件
          */
         Map<String,Object> condition = new HashMap<String,Object>();
-        if(!monthTime.equals("")){
-            condition.put("BillTime_s_gteq", monthTime + "-01 00:00:00");
-            condition.put("BillTime_s_lteq", monthTime + "-31 00:00:00");
+        if(!timeStr.equals("")){
+            if(type.equals("month")) {
+                condition.put("BillTime_s_gteq", timeStr + "-01 00:00:00");
+                condition.put("BillTime_s_lteq", timeStr + "-31 00:00:00");
+            }
+            else if(type.equals("date")) {
+                condition.put("BillTime_s_lteq", timeStr);
+            }
         }
         return condition;
     }
