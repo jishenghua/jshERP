@@ -2,7 +2,7 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
                                    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
- <class name="com.jsh.model.po.UserBusiness" table="jsh_userBusiness">
+ <class name="com.jsh.model.po.UserBusiness" table="jsh_userbusiness">
   <id name="Id" type="java.lang.Long">
    <column name="Id"/>
    <generator class="native"/>
