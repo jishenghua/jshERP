@@ -425,6 +425,17 @@
 				<artifactId>maven-clean-plugin</artifactId>
 				<version>2.6.1</version>
 			</plugin>
+
+			<!-- 部署插件的使用，maven3.0.4会默认使用2.7版本的deploy插件 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>2.7</version>
+				<configuration>
+					<!-- 更新元数据 -->
+					<updateReleaseInfo>true</updateReleaseInfo>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 </project>
