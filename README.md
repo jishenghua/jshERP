@@ -40,16 +40,18 @@
 
 # 系统美图
 * 零售管理
-![输入图片说明](https://git.oschina.net/uploads/images/2017/0903/232448_b4494aa1_852955.png "零售管理.png")
-* 入库管理
-![输入图片说明](https://git.oschina.net/uploads/images/2017/0903/232517_28aa442d_852955.png "入库管理.png")
-* 出库管理
-![输入图片说明](https://git.oschina.net/uploads/images/2017/0903/232535_855b77f0_852955.png "出库管理.png")
+![零售管理](https://gitee.com/uploads/images/2018/0301/235206_aa0cf6bd_852955.jpeg "11.jpg")
+* 采购管理
+![采购管理](https://gitee.com/uploads/images/2018/0301/235233_a6526c30_852955.jpeg "22.jpg")
+* 销售管理
+![销售管理](https://gitee.com/uploads/images/2018/0301/235249_ffe09285_852955.jpeg "33.jpg")
+* 仓库管理
+![仓库管理](https://gitee.com/uploads/images/2018/0301/235310_2cb07810_852955.jpeg "44.jpg")
 * 财务管理
-![输入图片说明](https://git.oschina.net/uploads/images/2017/0903/232753_f048735c_852955.png "财务管理.png")
+![财务管理](https://gitee.com/uploads/images/2018/0301/235322_9e0a893c_852955.jpeg "55.jpg")
 * 报表查询
-![输入图片说明](https://git.oschina.net/uploads/images/2017/0903/232816_ea241609_852955.png "报表查询.png")
+![报表查询](https://gitee.com/uploads/images/2018/0301/235348_a800117c_852955.jpeg "66.jpg")
 * 基础数据
-![输入图片说明](https://git.oschina.net/uploads/images/2017/0903/232833_74725400_852955.png "基础数据.png")
+![基础数据](https://gitee.com/uploads/images/2018/0301/235401_db9f4fd8_852955.jpeg "77.jpg")
 * 系统管理
-![输入图片说明](https://git.oschina.net/uploads/images/2017/0903/232851_57fcb79a_852955.png "系统管理.png")
+![系统管理](https://gitee.com/uploads/images/2018/0301/235414_e0c21b9a_852955.jpeg "88.jpg")
