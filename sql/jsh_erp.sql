@@ -2,7 +2,7 @@
 MySQL Backup
 Source Server Version: 5.0.22
 Source Database: jsh_erp
-Date: 2018-02-25 22:59:55
+Date: 2018/3/4 23:27:08
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -42,22 +42,22 @@ CREATE TABLE `databasechangeloglock` (
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_account`;
 CREATE TABLE `jsh_account` (
-  `Id` bigint(20) NOT NULL auto_increment,
+  `Id` bigint(20) NOT NULL auto_increment COMMENT '主键',
   `Name` varchar(50) default NULL COMMENT '名称',
   `SerialNo` varchar(50) default NULL COMMENT '编号',
   `InitialAmount` double default NULL COMMENT '期初金额',
   `CurrentAmount` double default NULL COMMENT '当前余额',
   `Remark` varchar(100) default NULL COMMENT '备注',
-  `IsDefault` bit(1) default NULL,
+  `IsDefault` bit(1) default NULL COMMENT '是否默认',
   PRIMARY KEY  (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='账户信息';
 
 -- ----------------------------
 --  Table structure for `jsh_accounthead`
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_accounthead`;
 CREATE TABLE `jsh_accounthead` (
-  `Id` bigint(20) NOT NULL auto_increment,
+  `Id` bigint(20) NOT NULL auto_increment COMMENT '主键',
   `Type` varchar(50) default NULL COMMENT '类型(支出/收入/收款/付款/转账)',
   `OrganId` bigint(20) default NULL COMMENT '单位Id(收款/付款单位)',
   `HandsPersonId` bigint(20) default NULL COMMENT '经手人Id',
@@ -74,14 +74,14 @@ CREATE TABLE `jsh_accounthead` (
   CONSTRAINT `FK9F4C0D8DAAE50527` FOREIGN KEY (`AccountId`) REFERENCES `jsh_account` (`Id`),
   CONSTRAINT `FK9F4C0D8DB610FC06` FOREIGN KEY (`OrganId`) REFERENCES `jsh_supplier` (`id`),
   CONSTRAINT `FK9F4C0D8DC4170B37` FOREIGN KEY (`HandsPersonId`) REFERENCES `jsh_person` (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='财务主表';
 
 -- ----------------------------
 --  Table structure for `jsh_accountitem`
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_accountitem`;
 CREATE TABLE `jsh_accountitem` (
-  `Id` bigint(20) NOT NULL auto_increment,
+  `Id` bigint(20) NOT NULL auto_increment COMMENT '主键',
   `HeaderId` bigint(20) NOT NULL COMMENT '表头Id',
   `AccountId` bigint(20) default NULL COMMENT '账户Id',
   `InOutItemId` bigint(20) default NULL COMMENT '收支项目Id',
@@ -94,55 +94,55 @@ CREATE TABLE `jsh_accountitem` (
   CONSTRAINT `FK9F4CBAC0AAE50527` FOREIGN KEY (`AccountId`) REFERENCES `jsh_account` (`Id`),
   CONSTRAINT `FK9F4CBAC0C5FE6007` FOREIGN KEY (`HeaderId`) REFERENCES `jsh_accounthead` (`Id`) ON DELETE CASCADE,
   CONSTRAINT `FK9F4CBAC0D203EDC5` FOREIGN KEY (`InOutItemId`) REFERENCES `jsh_inoutitem` (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='财务子表';
 
 -- ----------------------------
 --  Table structure for `jsh_app`
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_app`;
 CREATE TABLE `jsh_app` (
-  `Id` bigint(20) NOT NULL auto_increment,
-  `Number` varchar(50) default NULL,
-  `Name` varchar(50) default NULL,
-  `Type` varchar(50) default NULL,
-  `Icon` varchar(50) default NULL,
-  `URL` varchar(50) default NULL,
-  `Width` varchar(50) default NULL,
-  `Height` varchar(50) default NULL,
-  `ReSize` bit(1) default NULL,
-  `OpenMax` bit(1) default NULL,
-  `Flash` bit(1) default NULL,
-  `ZL` varchar(50) default NULL,
-  `Sort` varchar(50) default NULL,
-  `Remark` varchar(200) default NULL,
-  `Enabled` bit(1) default NULL,
+  `Id` bigint(20) NOT NULL auto_increment COMMENT '主键',
+  `Number` varchar(50) default NULL COMMENT '编号',
+  `Name` varchar(50) default NULL COMMENT '名称',
+  `Type` varchar(50) default NULL COMMENT '类型',
+  `Icon` varchar(50) default NULL COMMENT '图标',
+  `URL` varchar(50) default NULL COMMENT '编号',
+  `Width` varchar(50) default NULL COMMENT '宽度',
+  `Height` varchar(50) default NULL COMMENT '高度',
+  `ReSize` bit(1) default NULL COMMENT '是否可改变大小',
+  `OpenMax` bit(1) default NULL COMMENT '最大化',
+  `Flash` bit(1) default NULL COMMENT '是否切换',
+  `ZL` varchar(50) default NULL COMMENT '类型',
+  `Sort` varchar(50) default NULL COMMENT '排序',
+  `Remark` varchar(200) default NULL COMMENT '备注',
+  `Enabled` bit(1) default NULL COMMENT '是否启用',
   PRIMARY KEY  (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='应用表';
 
 -- ----------------------------
 --  Table structure for `jsh_asset`
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_asset`;
 CREATE TABLE `jsh_asset` (
-  `id` bigint(20) NOT NULL auto_increment,
-  `assetnameID` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL auto_increment COMMENT '主键',
+  `assetnameID` bigint(20) NOT NULL COMMENT '资产名称id',
   `location` varchar(255) default NULL COMMENT '位置',
   `labels` varchar(255) default NULL COMMENT '标签：以空格为分隔符',
   `status` smallint(6) default NULL COMMENT '资产的状态：0==在库，1==在用，2==消费',
-  `userID` bigint(20) default NULL,
+  `userID` bigint(20) default NULL COMMENT '用户ID',
   `price` double default NULL COMMENT '购买价格',
   `purchasedate` datetime default NULL COMMENT '购买日期',
   `periodofvalidity` datetime default NULL COMMENT '有效日期',
   `warrantydate` datetime default NULL COMMENT '保修日期',
   `assetnum` varchar(255) default NULL COMMENT '资产编号',
   `serialnum` varchar(255) default NULL COMMENT '资产序列号',
-  `supplier` bigint(20) NOT NULL,
+  `supplier` bigint(20) NOT NULL COMMENT '供应商',
   `description` longtext COMMENT '描述信息',
   `addMonth` longtext COMMENT '资产添加时间，统计报表使用',
-  `createtime` datetime default NULL,
-  `creator` bigint(20) default NULL,
-  `updatetime` datetime default NULL,
-  `updator` bigint(20) default NULL,
+  `createtime` datetime default NULL COMMENT '创建时间',
+  `creator` bigint(20) default NULL COMMENT '创建人',
+  `updatetime` datetime default NULL COMMENT '更新时间',
+  `updator` bigint(20) default NULL COMMENT '更新人',
   PRIMARY KEY  (`id`),
   KEY `FK353690ED9B6CB285` (`assetnameID`),
   KEY `FK353690EDAD45B659` (`creator`),
@@ -154,35 +154,35 @@ CREATE TABLE `jsh_asset` (
   CONSTRAINT `FK353690ED61FE182C` FOREIGN KEY (`updator`) REFERENCES `jsh_user` (`id`),
   CONSTRAINT `FK353690ED9B6CB285` FOREIGN KEY (`assetnameID`) REFERENCES `jsh_assetname` (`id`),
   CONSTRAINT `FK353690EDAD45B659` FOREIGN KEY (`creator`) REFERENCES `jsh_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='资产记录表';
 
 -- ----------------------------
 --  Table structure for `jsh_assetcategory`
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_assetcategory`;
 CREATE TABLE `jsh_assetcategory` (
-  `id` bigint(20) NOT NULL auto_increment,
+  `id` bigint(20) NOT NULL auto_increment COMMENT '主键',
   `assetname` varchar(255) NOT NULL COMMENT '资产类型名称',
   `isystem` tinyint(4) NOT NULL COMMENT '是否系统自带 0==系统 1==非系统',
   `description` varchar(500) default NULL COMMENT '描述信息',
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='资产类型';
 
 -- ----------------------------
 --  Table structure for `jsh_assetname`
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_assetname`;
 CREATE TABLE `jsh_assetname` (
-  `id` bigint(20) NOT NULL auto_increment,
+  `id` bigint(20) NOT NULL auto_increment COMMENT '主键',
   `assetname` varchar(255) NOT NULL COMMENT '资产名称',
-  `assetcategoryID` bigint(20) NOT NULL,
+  `assetcategoryID` bigint(20) NOT NULL COMMENT '资产类型',
   `isystem` smallint(6) NOT NULL COMMENT '是否系统自带 0==系统 1==非系统',
   `description` longtext COMMENT '描述信息',
   `isconsumables` smallint(6) default NULL COMMENT '是否为耗材 0==否 1==是 耗材状态只能是消费',
   PRIMARY KEY  (`id`),
   KEY `FKA4ADCCF866BC8AD3` (`assetcategoryID`),
   CONSTRAINT `FKA4ADCCF866BC8AD3` FOREIGN KEY (`assetcategoryID`) REFERENCES `jsh_assetcategory` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='资产信息';
 
 -- ----------------------------
 --  Table structure for `jsh_depot`
@@ -198,14 +198,14 @@ CREATE TABLE `jsh_depot` (
   `sort` varchar(10) default NULL COMMENT '排序',
   `remark` varchar(100) default NULL COMMENT '描述',
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='仓库表';
 
 -- ----------------------------
 --  Table structure for `jsh_depothead`
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_depothead`;
 CREATE TABLE `jsh_depothead` (
-  `Id` bigint(20) NOT NULL auto_increment,
+  `Id` bigint(20) NOT NULL auto_increment COMMENT '主键',
   `Type` varchar(50) default NULL COMMENT '类型(出库/入库)',
   `SubType` varchar(50) default NULL COMMENT '出入库分类',
   `ProjectId` bigint(20) default NULL COMMENT '项目Id',
@@ -220,7 +220,7 @@ CREATE TABLE `jsh_depothead` (
   `ChangeAmount` double default NULL COMMENT '变动金额(收款/付款)',
   `AllocationProjectId` bigint(20) default NULL COMMENT '调拨时，对方项目Id',
   `TotalPrice` double default NULL COMMENT '合计金额',
-  `PayType` varchar(50) default NULL,
+  `PayType` varchar(50) default NULL COMMENT '付款类型(现金、记账等)',
   `Remark` varchar(1000) default NULL COMMENT '备注',
   `Salesman` varchar(50) default NULL COMMENT '业务员（可以多个）',
   `AccountIdList` varchar(50) default NULL COMMENT '多账户ID列表',
@@ -244,14 +244,14 @@ CREATE TABLE `jsh_depothead` (
   CONSTRAINT `jsh_depothead_ibfk_3` FOREIGN KEY (`OrganId`) REFERENCES `jsh_supplier` (`id`),
   CONSTRAINT `jsh_depothead_ibfk_4` FOREIGN KEY (`HandsPersonId`) REFERENCES `jsh_person` (`Id`),
   CONSTRAINT `jsh_depothead_ibfk_5` FOREIGN KEY (`AllocationProjectId`) REFERENCES `jsh_depot` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='单据主表';
 
 -- ----------------------------
 --  Table structure for `jsh_depotitem`
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_depotitem`;
 CREATE TABLE `jsh_depotitem` (
-  `Id` bigint(20) NOT NULL auto_increment,
+  `Id` bigint(20) NOT NULL auto_increment COMMENT '主键',
   `HeaderId` bigint(20) NOT NULL COMMENT '表头Id',
   `MaterialId` bigint(20) NOT NULL COMMENT '材料Id',
   `MUnit` varchar(20) default NULL COMMENT '商品计量单位',
@@ -283,44 +283,44 @@ CREATE TABLE `jsh_depotitem` (
   CONSTRAINT `FK2A819F479485B3F5` FOREIGN KEY (`DepotId`) REFERENCES `jsh_depot` (`id`),
   CONSTRAINT `jsh_depotitem_ibfk_1` FOREIGN KEY (`HeaderId`) REFERENCES `jsh_depothead` (`Id`) ON DELETE CASCADE,
   CONSTRAINT `jsh_depotitem_ibfk_2` FOREIGN KEY (`MaterialId`) REFERENCES `jsh_material` (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='单据子表';
 
 -- ----------------------------
 --  Table structure for `jsh_functions`
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_functions`;
 CREATE TABLE `jsh_functions` (
-  `Id` bigint(20) NOT NULL auto_increment,
-  `Number` varchar(50) default NULL,
-  `Name` varchar(50) default NULL,
-  `PNumber` varchar(50) default NULL,
-  `URL` varchar(100) default NULL,
-  `State` bit(1) default NULL,
-  `Sort` varchar(50) default NULL,
-  `Enabled` bit(1) default NULL,
-  `Type` varchar(50) default NULL,
+  `Id` bigint(20) NOT NULL auto_increment COMMENT '主键',
+  `Number` varchar(50) default NULL COMMENT '编号',
+  `Name` varchar(50) default NULL COMMENT '名称',
+  `PNumber` varchar(50) default NULL COMMENT '上级编号',
+  `URL` varchar(100) default NULL COMMENT '链接',
+  `State` bit(1) default NULL COMMENT '收缩',
+  `Sort` varchar(50) default NULL COMMENT '排序',
+  `Enabled` bit(1) default NULL COMMENT '启用',
+  `Type` varchar(50) default NULL COMMENT '类型',
   `PushBtn` varchar(50) default NULL COMMENT '功能按钮',
   PRIMARY KEY  (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='功能模块表';
 
 -- ----------------------------
 --  Table structure for `jsh_inoutitem`
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_inoutitem`;
 CREATE TABLE `jsh_inoutitem` (
-  `Id` bigint(20) NOT NULL auto_increment,
+  `Id` bigint(20) NOT NULL auto_increment COMMENT '主键',
   `Name` varchar(50) default NULL COMMENT '名称',
   `Type` varchar(20) default NULL COMMENT '类型',
   `Remark` varchar(100) default NULL COMMENT '备注',
   PRIMARY KEY  (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='收支项目';
 
 -- ----------------------------
 --  Table structure for `jsh_log`
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_log`;
 CREATE TABLE `jsh_log` (
-  `id` bigint(20) NOT NULL auto_increment,
+  `id` bigint(20) NOT NULL auto_increment COMMENT '主键',
   `userID` bigint(20) NOT NULL COMMENT '操作用户ID',
   `operation` varchar(500) default NULL COMMENT '操作模块名称',
   `clientIP` varchar(50) default NULL COMMENT '客户端IP',
@@ -331,15 +331,15 @@ CREATE TABLE `jsh_log` (
   PRIMARY KEY  (`id`),
   KEY `FKF2696AA13E226853` (`userID`),
   CONSTRAINT `FKF2696AA13E226853` FOREIGN KEY (`userID`) REFERENCES `jsh_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='操作日志';
 
 -- ----------------------------
 --  Table structure for `jsh_material`
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_material`;
 CREATE TABLE `jsh_material` (
-  `Id` bigint(20) NOT NULL auto_increment,
-  `CategoryId` bigint(20) default NULL,
+  `Id` bigint(20) NOT NULL auto_increment COMMENT '主键',
+  `CategoryId` bigint(20) default NULL COMMENT '产品类型',
   `Name` varchar(50) default NULL COMMENT '名称',
   `Mfrs` varchar(50) default NULL COMMENT '制造商',
   `Packing` double default NULL COMMENT '包装（KG/包）',
@@ -366,74 +366,74 @@ CREATE TABLE `jsh_material` (
   KEY `UnitId` (`UnitId`),
   CONSTRAINT `FK675951272AB6672C` FOREIGN KEY (`CategoryId`) REFERENCES `jsh_materialcategory` (`Id`),
   CONSTRAINT `jsh_material_ibfk_1` FOREIGN KEY (`UnitId`) REFERENCES `jsh_unit` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='产品表';
 
 -- ----------------------------
 --  Table structure for `jsh_materialcategory`
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_materialcategory`;
 CREATE TABLE `jsh_materialcategory` (
-  `Id` bigint(20) NOT NULL auto_increment,
+  `Id` bigint(20) NOT NULL auto_increment COMMENT '主键',
   `Name` varchar(50) default NULL COMMENT '名称',
   `CategoryLevel` smallint(6) default NULL COMMENT '等级',
-  `ParentId` bigint(20) default NULL,
+  `ParentId` bigint(20) default NULL COMMENT '上级ID',
   PRIMARY KEY  (`Id`),
   KEY `FK3EE7F725237A77D8` (`ParentId`),
   CONSTRAINT `FK3EE7F725237A77D8` FOREIGN KEY (`ParentId`) REFERENCES `jsh_materialcategory` (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='产品类型表';
 
 -- ----------------------------
 --  Table structure for `jsh_materialproperty`
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_materialproperty`;
 CREATE TABLE `jsh_materialproperty` (
-  `id` bigint(20) NOT NULL auto_increment,
+  `id` bigint(20) NOT NULL auto_increment COMMENT '主键',
   `nativeName` varchar(50) default NULL COMMENT '原始名称',
   `enabled` bit(1) default NULL COMMENT '是否启用',
   `sort` varchar(10) default NULL COMMENT '排序',
   `anotherName` varchar(50) default NULL COMMENT '别名',
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='产品扩展字段表';
 
 -- ----------------------------
 --  Table structure for `jsh_person`
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_person`;
 CREATE TABLE `jsh_person` (
-  `Id` bigint(20) NOT NULL auto_increment,
+  `Id` bigint(20) NOT NULL auto_increment COMMENT '主键',
   `Type` varchar(20) default NULL COMMENT '类型',
   `Name` varchar(50) default NULL COMMENT '姓名',
   PRIMARY KEY  (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='经手人表';
 
 -- ----------------------------
 --  Table structure for `jsh_role`
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_role`;
 CREATE TABLE `jsh_role` (
-  `Id` bigint(20) NOT NULL auto_increment,
-  `Name` varchar(50) default NULL,
+  `Id` bigint(20) NOT NULL auto_increment COMMENT '主键',
+  `Name` varchar(50) default NULL COMMENT '名称',
   `type` varchar(50) default NULL COMMENT '类型',
   `value` varchar(200) default NULL COMMENT '值',
   `description` varchar(100) default NULL COMMENT '描述',
   PRIMARY KEY  (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色表';
 
 -- ----------------------------
 --  Table structure for `jsh_supplier`
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_supplier`;
 CREATE TABLE `jsh_supplier` (
-  `id` bigint(20) NOT NULL auto_increment,
+  `id` bigint(20) NOT NULL auto_increment COMMENT '主键',
   `supplier` varchar(255) NOT NULL COMMENT '供应商名称',
   `contacts` varchar(100) default NULL COMMENT '联系人',
   `phonenum` varchar(30) default NULL COMMENT '联系电话',
   `email` varchar(50) default NULL COMMENT '电子邮箱',
-  `description` varchar(500) default NULL,
-  `isystem` tinyint(4) default NULL,
+  `description` varchar(500) default NULL COMMENT '备注',
+  `isystem` tinyint(4) default NULL COMMENT '是否系统自带 0==系统 1==非系统',
   `type` varchar(20) default NULL COMMENT '类型',
   `enabled` bit(1) default NULL COMMENT '启用',
-  `AdvanceIn` double default '0',
+  `AdvanceIn` double default '0' COMMENT '预收款',
   `BeginNeedGet` double default NULL COMMENT '期初应收',
   `BeginNeedPay` double default NULL COMMENT '期初应付',
   `AllNeedGet` double default NULL COMMENT '累计应收',
@@ -446,14 +446,14 @@ CREATE TABLE `jsh_supplier` (
   `accountNumber` varchar(50) default NULL COMMENT '账号',
   `taxRate` double default NULL COMMENT '税率',
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='供应商/客户信息表';
 
 -- ----------------------------
 --  Table structure for `jsh_systemconfig`
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_systemconfig`;
 CREATE TABLE `jsh_systemconfig` (
-  `id` bigint(20) NOT NULL auto_increment COMMENT '编号',
+  `id` bigint(20) NOT NULL auto_increment COMMENT '主键',
   `type` varchar(50) default NULL COMMENT '类型',
   `name` varchar(100) default NULL COMMENT '名称',
   `value` varchar(200) default NULL COMMENT '值',
@@ -466,17 +466,17 @@ CREATE TABLE `jsh_systemconfig` (
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_unit`;
 CREATE TABLE `jsh_unit` (
-  `id` bigint(20) NOT NULL auto_increment,
+  `id` bigint(20) NOT NULL auto_increment COMMENT '主键',
   `UName` varchar(50) default NULL COMMENT '名称，支持多单位',
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='多单位表';
 
 -- ----------------------------
 --  Table structure for `jsh_user`
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_user`;
 CREATE TABLE `jsh_user` (
-  `id` bigint(20) NOT NULL auto_increment,
+  `id` bigint(20) NOT NULL auto_increment COMMENT '主键',
   `username` varchar(255) NOT NULL COMMENT '用户姓名--例如张三',
   `loginame` varchar(255) default NULL COMMENT '登录用户名--可能为空',
   `password` varchar(50) default NULL COMMENT '登陆密码',
@@ -488,41 +488,22 @@ CREATE TABLE `jsh_user` (
   `isystem` tinyint(4) NOT NULL default '1' COMMENT '是否系统自带数据 ',
   `status` tinyint(4) default NULL COMMENT '用户状态',
   `description` varchar(500) default NULL COMMENT '用户描述信息',
-  `remark` varchar(500) default NULL,
+  `remark` varchar(500) default NULL COMMENT '备注',
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户表';
 
 -- ----------------------------
 --  Table structure for `jsh_userbusiness`
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_userbusiness`;
 CREATE TABLE `jsh_userbusiness` (
-  `Id` bigint(20) NOT NULL auto_increment,
+  `Id` bigint(20) NOT NULL auto_increment COMMENT '主键',
   `Type` varchar(50) default NULL COMMENT '类别',
   `KeyId` varchar(50) default NULL COMMENT '主ID',
   `Value` varchar(10000) default NULL COMMENT '值',
   `BtnStr` varchar(2000) default NULL COMMENT '按钮权限',
   PRIMARY KEY  (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
---  Table structure for `jsh_visitaccount`
--- ----------------------------
-DROP TABLE IF EXISTS `jsh_visitaccount`;
-CREATE TABLE `jsh_visitaccount` (
-  `Id` bigint(20) NOT NULL auto_increment,
-  `ProjectId` bigint(20) NOT NULL,
-  `LouHao` varchar(50) default NULL,
-  `HuHao` varchar(50) default NULL,
-  `HuiFang` varchar(50) default NULL,
-  `LuoShi` varchar(50) default NULL,
-  `Name` varchar(50) default NULL,
-  `Tel` varchar(50) default NULL,
-  `AddTime` datetime default NULL,
-  PRIMARY KEY  (`Id`),
-  KEY `FKFF4AAE822888F9A` (`ProjectId`),
-  CONSTRAINT `FKFF4AAE822888F9A` FOREIGN KEY (`ProjectId`) REFERENCES `jsh_depot` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户/角色/模块关系表';
 
 -- ----------------------------
 --  Records 
@@ -582,7 +563,7 @@ INSERT INTO `jsh_log` VALUES ('5422','63','更新角色按钮权限','','2017-09
 INSERT INTO `jsh_log` VALUES ('5522','63','更新应用','127.0.0.1','2017-10-08 20:47:54','0','更新应用ID为  26 成功！','更新应用成功'), ('5523','63','更新财务','127.0.0.1','2017-10-08 23:27:25','0','更新财务ID为  80 成功！','更新财务成功'), ('5524','63','增加财务','127.0.0.1','2017-10-08 23:28:36','0','增加财务编号为  FK20171008232825 成功！','增加财务成功'), ('5525','63','保存财务明细','127.0.0.1','2017-10-08 23:28:37','0','保存财务明细对应主表编号为  83 成功！','保存财务明细成功'), ('5526','63','登录系统','127.0.0.1','2017-10-09 00:02:52','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5527','63','增加财务','127.0.0.1','2017-10-09 00:03:13','0','增加财务编号为  SR20171009000300 成功！','增加财务成功'), ('5528','63','保存财务明细','127.0.0.1','2017-10-09 00:03:13','0','保存财务明细对应主表编号为  84 成功！','保存财务明细成功'), ('5529','63','登录系统','127.0.0.1','2017-10-09 00:04:44','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5530','63','登录系统','127.0.0.1','2017-10-09 00:06:27','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5531','63','增加财务','127.0.0.1','2017-10-09 00:06:57','0','增加财务编号为  SR20171009000637 成功！','增加财务成功'), ('5532','63','保存财务明细','127.0.0.1','2017-10-09 00:06:57','0','保存财务明细对应主表编号为  85 成功！','保存财务明细成功'), ('5533','63','删除财务','127.0.0.1','2017-10-09 00:07:16','0','删除财务ID为  68 成功！','删除财务成功'), ('5534','63','增加财务','127.0.0.1','2017-10-09 00:07:28','0','增加财务编号为  ZZ20171009000719 成功！','增加财务成功'), ('5535','63','保存财务明细','127.0.0.1','2017-10-09 00:07:28','0','保存财务明细对应主表编号为  86 成功！','保存财务明细成功'), ('5536','63','更新财务','127.0.0.1','2017-10-09 00:07:40','0','更新财务ID为  86 成功！','更新财务成功'), ('5537','63','增加财务','127.0.0.1','2017-10-09 00:08:00','0','增加财务编号为  FK20171009000747 成功！','增加财务成功'), ('5538','63','保存财务明细','127.0.0.1','2017-10-09 00:08:00','0','保存财务明细对应主表编号为  87 成功！','保存财务明细成功'), ('5539','63','更新财务','127.0.0.1','2017-10-09 00:08:13','0','更新财务ID为  82 成功！','更新财务成功'), ('5540','63','登录系统','127.0.0.1','2017-10-11 00:05:55','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5541','63','更新商品','127.0.0.1','2017-10-11 00:06:22','0','更新商品ID为  485 成功！','更新商品成功'), ('5542','63','更新商品','127.0.0.1','2017-10-11 00:06:38','0','更新商品ID为  485 成功！','更新商品成功'), ('5543','63','更新商品','127.0.0.1','2017-10-11 00:09:05','0','更新商品ID为  485 成功！','更新商品成功'), ('5544','63','登录系统','127.0.0.1','2017-10-11 00:14:40','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5545','63','更新商品','127.0.0.1','2017-10-11 00:14:53','0','更新商品ID为  485 成功！','更新商品成功'), ('5546','63','登录系统','127.0.0.1','2017-10-12 00:18:58','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5547','63','登录系统','127.0.0.1','2017-10-16 00:32:46','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5548','63','更新商品','127.0.0.1','2017-10-16 00:33:03','0','更新商品ID为  485 成功！','更新商品成功'), ('5549','63','更新商品','127.0.0.1','2017-10-16 00:33:23','0','更新商品ID为  485 成功！','更新商品成功'), ('5550','63','登录系统','127.0.0.1','2017-10-18 22:24:06','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5551','63','更新UserBusiness','127.0.0.1','2017-10-18 22:37:56','0','更新UserBusiness的ID为  5 成功！','更新UserBusiness成功'), ('5552','63','登录系统','127.0.0.1','2017-10-18 22:43:49','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5553','63','登录系统','127.0.0.1','2017-10-18 23:16:19','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5554','63','更新商品','127.0.0.1','2017-10-18 23:16:41','0','更新商品ID为  485 成功！','更新商品成功'), ('5555','63','更新商品','127.0.0.1','2017-10-18 23:16:55','0','更新商品ID为  518 成功！','更新商品成功'), ('5556','63','更新商品属性','127.0.0.1','2017-10-18 23:17:47','0','更新商品属性ID为  2 成功！','更新商品属性成功'), ('5557','63','更新商品属性','127.0.0.1','2017-10-18 23:17:52','0','更新商品属性ID为  1 成功！','更新商品属性成功'), ('5558','63','增加单据','127.0.0.1','2017-10-18 23:21:24','0','增加单据编号为  CGRK201710180001 成功！','增加单据成功'), ('5559','63','保存仓管通明细','127.0.0.1','2017-10-18 23:21:24','0','保存仓管通明细对应主表编号为  95 成功！','保存仓管通明细成功'), ('5560','63','登录系统','127.0.0.1','2017-10-19 23:48:51','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5561','63','登录系统','127.0.0.1','2017-10-23 20:36:15','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5562','63','更新商品','127.0.0.1','2017-10-23 20:37:15','0','更新商品ID为  485 成功！','更新商品成功'), ('5563','63','删除商品','127.0.0.1','2017-10-23 20:40:02','0','删除商品ID为  560 成功！','删除商品成功'), ('5564','63','登录系统','127.0.0.1','2017-10-23 23:37:21','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5565','63','登录系统','127.0.0.1','2017-10-24 19:46:53','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5566','63','增加商品','127.0.0.1','2017-10-24 19:51:06','0','增加商品名称为  网布 成功！','增加商品成功'), ('5567','63','更新商品','127.0.0.1','2017-10-24 19:51:38','0','更新商品ID为  560 成功！','更新商品成功'), ('5568','63','登录系统','127.0.0.1','2017-10-24 21:01:11','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5569','63','批量删除商品','127.0.0.1','2017-10-24 21:02:08','0','批量删除商品ID为  560 成功！','批量删除商品成功'), ('5570','63','增加商品','127.0.0.1','2017-10-24 21:05:54','0','增加商品名称为  棉线 成功！','增加商品成功'), ('5571','63','更新商品','127.0.0.1','2017-10-24 21:06:06','0','更新商品ID为  561 成功！','更新商品成功'), ('5572','63','更新商品','127.0.0.1','2017-10-24 21:06:36','0','更新商品ID为  561 成功！','更新商品成功'), ('5573','63','更新商品','127.0.0.1','2017-10-24 21:06:43','0','更新商品ID为  561 成功！','更新商品成功'), ('5574','63','删除商品','127.0.0.1','2017-10-24 21:06:57','0','删除商品ID为  561 成功！','删除商品成功'), ('5575','63','增加商品','127.0.0.1','2017-10-24 21:07:25','0','增加商品名称为  奶酪 成功！','增加商品成功'), ('5576','63','更新商品','127.0.0.1','2017-10-24 21:07:43','0','更新商品ID为  562 成功！','更新商品成功'), ('5577','63','更新商品','127.0.0.1','2017-10-24 21:08:24','0','更新商品ID为  562 成功！','更新商品成功'), ('5578','63','更新商品','127.0.0.1','2017-10-24 21:08:39','0','更新商品ID为  562 成功！','更新商品成功'), ('5579','63','更新商品','127.0.0.1','2017-10-24 21:08:48','0','更新商品ID为  562 成功！','更新商品成功'), ('5580','63','更新商品','127.0.0.1','2017-10-24 21:08:53','0','更新商品ID为  562 成功！','更新商品成功'), ('5581','63','更新商品','127.0.0.1','2017-10-24 21:11:46','0','更新商品ID为  562 成功！','更新商品成功'), ('5582','63','增加商品','127.0.0.1','2017-10-24 21:13:22','0','增加商品名称为  红苹果（蛇果） 成功！','增加商品成功'), ('5583','63','更新商品','127.0.0.1','2017-10-24 21:14:11','0','更新商品ID为  563 成功！','更新商品成功'), ('5584','63','删除商品','127.0.0.1','2017-10-24 21:14:24','0','删除商品ID为  563 成功！','删除商品成功'), ('5585','63','删除商品','127.0.0.1','2017-10-24 21:16:56','0','删除商品ID为  559 成功！','删除商品成功'), ('5586','63','批量修改商品状态','127.0.0.1','2017-10-24 21:18:55','0','批量修改状态，商品ID为  562 成功！','批量修改商品状态成功'), ('5587','63','批量修改商品状态','127.0.0.1','2017-10-24 21:18:59','0','批量修改状态，商品ID为  562 成功！','批量修改商品状态成功'), ('5588','63','批量修改商品状态','127.0.0.1','2017-10-24 21:19:04','0','批量修改状态，商品ID为  562 成功！','批量修改商品状态成功'), ('5589','63','登录系统','127.0.0.1','2017-10-24 21:33:34','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5590','63','增加商品类别','127.0.0.1','2017-10-24 21:37:38','0','增加商品类别名称为  111 成功！','增加商品类别成功'), ('5591','63','更新商品类别','127.0.0.1','2017-10-24 21:37:55','0','更新商品类别ID为  11 成功！','更新商品类别成功'), ('5592','63','删除商品类别','127.0.0.1','2017-10-24 21:38:09','0','删除商品类别ID为  11 成功！','删除商品类别成功'), ('5593','63','增加单据','127.0.0.1','2017-10-24 22:04:06','0','增加单据编号为  XSCK201710240001 成功！','增加单据成功'), ('5594','63','保存仓管通明细','127.0.0.1','2017-10-24 22:04:07','0','保存仓管通明细对应主表编号为  96 成功！','保存仓管通明细成功'), ('5595','63','更新单据','127.0.0.1','2017-10-24 22:05:04','0','更新单据ID为  96 成功！','更新单据成功'), ('5596','63','更新单据','127.0.0.1','2017-10-24 22:05:11','0','更新单据ID为  96 成功！','更新单据成功'), ('5597','63','增加财务','127.0.0.1','2017-10-24 22:08:21','0','增加财务编号为  SK20171024220754 成功！','增加财务成功'), ('5598','63','保存财务明细','127.0.0.1','2017-10-24 22:08:22','0','保存财务明细对应主表编号为  88 成功！','保存财务明细成功'), ('5599','63','更新财务','127.0.0.1','2017-10-24 22:48:40','0','更新财务ID为  88 成功！','更新财务成功'), ('5600','63','保存财务明细','127.0.0.1','2017-10-24 22:48:40','0','保存财务明细对应主表编号为  88 成功！','保存财务明细成功'), ('5601','63','更新财务','127.0.0.1','2017-10-24 22:48:47','0','更新财务ID为  88 成功！','更新财务成功'), ('5602','63','保存财务明细','127.0.0.1','2017-10-24 22:48:47','0','保存财务明细对应主表编号为  88 成功！','保存财务明细成功'), ('5603','63','更新单据','127.0.0.1','2017-10-24 23:03:17','0','更新单据ID为  96 成功！','更新单据成功'), ('5604','63','更新单据','127.0.0.1','2017-10-24 23:03:34','0','更新单据ID为  96 成功！','更新单据成功'), ('5605','63','登录系统','127.0.0.1','2017-10-24 23:39:27','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5606','63','登录系统','127.0.0.1','2017-10-24 23:47:01','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5607','63','登录系统','127.0.0.1','2017-10-24 23:48:59','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5608','63','登录系统','127.0.0.1','2017-10-25 00:07:52','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5609','63','登录系统','127.0.0.1','2017-10-25 00:15:04','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5610','63','登录系统','127.0.0.1','2017-10-25 00:21:23','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5611','63','登录系统','127.0.0.1','2017-10-25 20:49:34','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5612','63','登录系统','127.0.0.1','2017-10-25 21:43:16','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5613','63','登录系统','127.0.0.1','2017-10-25 21:57:47','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5614','63','登录系统','127.0.0.1','2017-10-25 22:02:52','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5615','63','登录系统','127.0.0.1','2017-10-25 22:18:55','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5616','63','登录系统','127.0.0.1','2017-10-25 23:58:44','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5617','63','登录系统','127.0.0.1','2017-10-26 00:02:20','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5618','63','登录系统','127.0.0.1','2017-10-26 22:24:27','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5619','63','登录系统','127.0.0.1','2017-10-26 22:47:31','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5620','63','登录系统','127.0.0.1','2017-10-26 23:25:19','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5621','63','登录系统','127.0.0.1','2017-10-26 23:41:57','0','管理用户：jsh 登录系统','jsh 登录系统');
 INSERT INTO `jsh_log` VALUES ('5622','63','登录系统','127.0.0.1','2017-10-26 23:49:19','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5623','63','登录系统','127.0.0.1','2017-10-27 00:19:30','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5624','63','登录系统','127.0.0.1','2017-10-27 00:46:10','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5625','63','登录系统','127.0.0.1','2017-10-27 00:52:56','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5626','63','登录系统','127.0.0.1','2017-10-27 22:19:31','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5627','63','更新功能','127.0.0.1','2017-10-27 22:22:20','0','更新功能ID为  235 成功！','更新功能成功'), ('5628','63','登录系统','127.0.0.1','2017-10-27 22:45:08','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5629','63','删除财务','127.0.0.1','2017-10-27 22:48:33','0','删除财务ID为  81 成功！','删除财务成功'), ('5630','63','登录系统','127.0.0.1','2017-10-27 23:05:42','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5631','63','登录系统','127.0.0.1','2017-10-27 23:09:02','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5632','63','登录系统','127.0.0.1','2017-10-27 23:12:10','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5633','63','更新供应商','127.0.0.1','2017-10-27 23:32:39','0','更新供应商ID为  2 成功！','更新供应商成功'), ('5634','63','更新供应商','127.0.0.1','2017-10-27 23:41:02','0','更新供应商ID为  4 成功！','更新供应商成功'), ('5635','63','更新供应商','127.0.0.1','2017-10-27 23:41:14','0','更新供应商ID为  46 成功！','更新供应商成功'), ('5636','63','更新供应商','127.0.0.1','2017-10-27 23:41:20','0','更新供应商ID为  46 成功！','更新供应商成功'), ('5637','63','更新供应商','127.0.0.1','2017-10-27 23:42:46','0','更新供应商ID为  6 成功！','更新供应商成功'), ('5638','63','更新供应商','127.0.0.1','2017-10-27 23:42:58','0','更新供应商ID为  6 成功！','更新供应商成功'), ('5639','63','登录系统','127.0.0.1','2017-10-27 23:51:59','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5640','63','登录系统','127.0.0.1','2017-10-29 19:24:00','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5641','63','登录系统','127.0.0.1','2017-10-29 19:50:24','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5642','63','登录系统','127.0.0.1','2017-10-29 19:53:45','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5643','63','登录系统','127.0.0.1','2017-10-29 20:34:18','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5644','63','登录系统','127.0.0.1','2017-10-29 20:46:31','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5645','63','登录系统','127.0.0.1','2017-10-29 20:48:56','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5646','63','更新单据','127.0.0.1','2017-10-29 21:10:40','0','更新单据ID为  29 成功！','更新单据成功'), ('5647','63','保存仓管通明细','127.0.0.1','2017-10-29 21:10:41','0','保存仓管通明细对应主表编号为  29 成功！','保存仓管通明细成功'), ('5648','63','更新单据','127.0.0.1','2017-10-29 21:11:05','0','更新单据ID为  29 成功！','更新单据成功'), ('5649','63','更新单据','127.0.0.1','2017-10-29 21:11:27','0','更新单据ID为  29 成功！','更新单据成功'), ('5650','63','增加功能','127.0.0.1','2017-10-29 21:38:18','0','增加功能名称为  供应商对账 成功！','增加功能成功'), ('5651','63','更新功能','127.0.0.1','2017-10-29 21:38:33','0','更新功能ID为  235 成功！','更新功能成功'), ('5652','63','更新UserBusiness','127.0.0.1','2017-10-29 21:40:09','0','更新UserBusiness的ID为  5 成功！','更新UserBusiness成功'), ('5653','63','更新UserBusiness','127.0.0.1','2017-10-29 21:43:27','0','更新UserBusiness的ID为  27 成功！','更新UserBusiness成功'), ('5654','63','登录系统','127.0.0.1','2017-10-29 22:28:15','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5655','63','登录系统','127.0.0.1','2017-10-29 22:53:32','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5656','63','增加单据','127.0.0.1','2017-10-29 23:30:47','0','增加单据编号为  CGRK201710290001 成功！','增加单据成功'), ('5657','63','保存仓管通明细','127.0.0.1','2017-10-29 23:30:48','0','保存仓管通明细对应主表编号为  97 成功！','保存仓管通明细成功'), ('5658','63','增加单据','127.0.0.1','2017-10-29 23:32:07','0','增加单据编号为  CGRK201710290002 成功！','增加单据成功'), ('5659','63','保存仓管通明细','127.0.0.1','2017-10-29 23:32:08','0','保存仓管通明细对应主表编号为  98 成功！','保存仓管通明细成功'), ('5660','63','增加单据','127.0.0.1','2017-10-29 23:33:45','0','增加单据编号为  CGRK201710290003 成功！','增加单据成功'), ('5661','63','保存仓管通明细','127.0.0.1','2017-10-29 23:33:45','0','保存仓管通明细对应主表编号为  99 成功！','保存仓管通明细成功'), ('5662','63','登录系统','127.0.0.1','2017-10-30 00:00:46','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5663','63','更新应用','127.0.0.1','2017-10-30 00:01:02','0','更新应用ID为  8 成功！','更新应用成功'), ('5664','63','登录系统','127.0.0.1','2017-10-30 21:46:00','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5665','63','增加财务','127.0.0.1','2017-10-30 23:25:48','0','增加财务编号为  SK20171030232535 成功！','增加财务成功'), ('5666','63','保存财务明细','127.0.0.1','2017-10-30 23:25:48','0','保存财务明细对应主表编号为  89 成功！','保存财务明细成功'), ('5667','63','更新财务','127.0.0.1','2017-10-30 23:26:57','0','更新财务ID为  89 成功！','更新财务成功'), ('5668','63','保存财务明细','127.0.0.1','2017-10-30 23:26:57','0','保存财务明细对应主表编号为  89 成功！','保存财务明细成功'), ('5669','63','登录系统','127.0.0.1','2017-10-31 00:01:08','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5670','63','登录系统','127.0.0.1','2017-10-31 00:11:26','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5671','63','登录系统','127.0.0.1','2017-10-31 21:14:14','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5672','63','登录系统','127.0.0.1','2017-10-31 23:30:48','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5673','63','登录系统','127.0.0.1','2017-10-31 23:50:38','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5674','63','登录系统','127.0.0.1','2017-10-31 23:57:35','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5675','63','登录系统','127.0.0.1','2017-10-31 23:58:52','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5676','63','登录系统','127.0.0.1','2017-11-01 20:46:21','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5677','63','增加单据','127.0.0.1','2017-11-01 23:06:40','0','增加单据编号为  LPXS201711010001 成功！','增加单据成功'), ('5678','63','保存仓管通明细','127.0.0.1','2017-11-01 23:06:41','0','保存仓管通明细对应主表编号为  100 成功！','保存仓管通明细成功'), ('5679','63','登录系统','127.0.0.1','2017-11-01 23:37:58','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5680','63','登录系统','127.0.0.1','2017-11-02 00:06:23','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5681','63','登录系统','127.0.0.1','2017-11-02 00:09:08','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5682','63','登录系统','127.0.0.1','2017-11-02 21:10:57','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5683','63','登录系统','127.0.0.1','2017-11-02 21:50:30','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5684','63','登录系统','127.0.0.1','2017-11-02 22:46:49','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5685','63','增加单据','127.0.0.1','2017-11-02 22:51:17','0','增加单据编号为  DBCK201711020001 成功！','增加单据成功'), ('5686','63','保存仓管通明细','127.0.0.1','2017-11-02 22:51:17','0','保存仓管通明细对应主表编号为  101 成功！','保存仓管通明细成功'), ('5687','63','登录系统','127.0.0.1','2017-11-02 23:02:53','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5688','63','登录系统','127.0.0.1','2017-11-02 23:24:19','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5689','63','登录系统','127.0.0.1','2017-11-02 23:57:52','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5690','63','更新UserBusiness','127.0.0.1','2017-11-02 23:59:48','0','更新UserBusiness的ID为  18 成功！','更新UserBusiness成功'), ('5691','63','更新UserBusiness','127.0.0.1','2017-11-03 00:07:32','0','更新UserBusiness的ID为  18 成功！','更新UserBusiness成功'), ('5692','63','登录系统','127.0.0.1','2017-11-03 00:14:40','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5693','63','登录系统','127.0.0.1','2017-11-03 00:22:23','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5694','63','登录系统','127.0.0.1','2017-11-03 23:13:11','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5695','63','批量修改单据状态','127.0.0.1','2017-11-03 23:33:39','0','批量修改状态，单据ID为  98 成功！','批量修改单据状态成功'), ('5696','63','登录系统','127.0.0.1','2017-11-05 17:51:02','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5697','63','登录系统','127.0.0.1','2017-11-05 19:24:27','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5698','63','退出系统','127.0.0.1','2017-11-05 19:42:30','0','管理用户：jsh 退出系统','jsh 退出系统'), ('5699','63','登录系统','127.0.0.1','2017-11-05 19:42:34','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5700','63','更新单据','127.0.0.1','2017-11-05 21:38:01','0','更新单据ID为  65 成功！','更新单据成功'), ('5701','63','更新单据','127.0.0.1','2017-11-05 21:38:40','0','更新单据ID为  65 成功！','更新单据成功'), ('5702','63','登录系统','127.0.0.1','2017-11-05 21:47:22','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5703','63','登录系统','127.0.0.1','2017-11-05 22:00:16','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5704','63','登录系统','127.0.0.1','2017-11-05 22:56:58','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5705','63','登录系统','127.0.0.1','2017-11-05 23:15:35','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5706','63','登录系统','127.0.0.1','2017-11-05 23:19:20','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5707','63','登录系统','127.0.0.1','2017-11-05 23:25:49','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5708','63','登录系统','127.0.0.1','2017-11-06 20:24:34','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5709','63','增加单据','127.0.0.1','2017-11-06 20:38:46','0','增加单据编号为  LSCK201711060001 成功！','增加单据成功'), ('5710','63','保存仓管通明细','127.0.0.1','2017-11-06 20:38:46','0','保存仓管通明细对应主表编号为  102 成功！','保存仓管通明细成功'), ('5711','63','更新单据','127.0.0.1','2017-11-06 20:39:00','0','更新单据ID为  102 成功！','更新单据成功'), ('5712','63','登录系统','127.0.0.1','2017-11-07 21:00:48','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5713','63','增加单据','127.0.0.1','2017-11-07 21:07:05','0','增加单据编号为  CGRK201711070001 成功！','增加单据成功'), ('5714','63','保存仓管通明细','127.0.0.1','2017-11-07 21:07:06','0','保存仓管通明细对应主表编号为  103 成功！','保存仓管通明细成功'), ('5715','63','增加单据','127.0.0.1','2017-11-07 21:07:40','0','增加单据编号为  CGRK201711070002 成功！','增加单据成功'), ('5716','63','保存仓管通明细','127.0.0.1','2017-11-07 21:07:40','0','保存仓管通明细对应主表编号为  104 成功！','保存仓管通明细成功'), ('5717','63','增加单据','127.0.0.1','2017-11-07 21:08:48','0','增加单据编号为  XSCK201711070001 成功！','增加单据成功'), ('5718','63','保存仓管通明细','127.0.0.1','2017-11-07 21:08:48','0','保存仓管通明细对应主表编号为  105 成功！','保存仓管通明细成功'), ('5719','63','增加单据','127.0.0.1','2017-11-07 21:09:20','0','增加单据编号为  XSCK201711070002 成功！','增加单据成功'), ('5720','63','保存仓管通明细','127.0.0.1','2017-11-07 21:09:20','0','保存仓管通明细对应主表编号为  106 成功！','保存仓管通明细成功'), ('5721','63','更新单据','127.0.0.1','2017-11-19 23:09:26','0','更新单据ID为  82 成功！','更新单据成功');
 INSERT INTO `jsh_log` VALUES ('5722','63','更新单据','127.0.0.1','2017-11-19 23:10:00','0','更新单据ID为  90 成功！','更新单据成功'), ('5723','63','更新单据','127.0.0.1','2017-11-19 23:11:11','0','更新单据ID为  70 成功！','更新单据成功'), ('5724','63','更新单据','127.0.0.1','2017-11-19 23:12:07','0','更新单据ID为  19 成功！','更新单据成功'), ('5725','63','增加财务','127.0.0.1','2017-11-19 23:15:02','0','增加财务编号为  SK20171119231440 成功！','增加财务成功'), ('5726','63','保存财务明细','127.0.0.1','2017-11-19 23:15:02','0','保存财务明细对应主表编号为  90 成功！','保存财务明细成功'), ('5727','63','增加单据','127.0.0.1','2017-12-03 22:38:36','0','增加单据编号为  CGRK201712030001 成功！','增加单据成功'), ('5728','63','保存仓管通明细','127.0.0.1','2017-12-03 22:38:36','0','保存仓管通明细对应主表编号为  107 成功！','保存仓管通明细成功'), ('5729','63','更新单据','127.0.0.1','2017-12-03 22:39:55','0','更新单据ID为  107 成功！','更新单据成功'), ('5730','63','保存仓管通明细','127.0.0.1','2017-12-03 22:39:55','0','保存仓管通明细对应主表编号为  107 成功！','保存仓管通明细成功'), ('5731','63','更新单据','127.0.0.1','2017-12-03 22:40:21','0','更新单据ID为  107 成功！','更新单据成功'), ('5732','63','增加单据','127.0.0.1','2017-12-03 22:40:57','0','增加单据编号为  sdfasdfa 成功！','增加单据成功'), ('5733','63','保存仓管通明细','127.0.0.1','2017-12-03 22:40:57','0','保存仓管通明细对应主表编号为  108 成功！','保存仓管通明细成功'), ('5734','63','增加单据','127.0.0.1','2017-12-03 22:41:38','0','增加单据编号为  CGRK201712030003 成功！','增加单据成功'), ('5735','63','保存仓管通明细','127.0.0.1','2017-12-03 22:41:38','0','保存仓管通明细对应主表编号为  109 成功！','保存仓管通明细成功'), ('5736','63','登录系统','127.0.0.1','2017-12-05 22:01:49','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5737','63','登录系统','127.0.0.1','2017-12-05 22:25:02','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5738','63','登录系统','127.0.0.1','2017-12-05 22:49:37','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5739','63','更新单据','127.0.0.1','2017-12-05 22:53:07','0','更新单据ID为  107 成功！','更新单据成功'), ('5740','63','保存仓管通明细','127.0.0.1','2017-12-05 22:53:07','0','保存仓管通明细对应主表编号为  107 成功！','保存仓管通明细成功'), ('5741','63','登录系统','127.0.0.1','2017-12-05 23:03:23','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5742','63','增加单据','127.0.0.1','2017-12-05 23:05:48','0','增加单据编号为  CGRK201712050001 成功！','增加单据成功'), ('5743','63','保存仓管通明细','127.0.0.1','2017-12-05 23:05:48','0','保存仓管通明细对应主表编号为  110 成功！','保存仓管通明细成功'), ('5744','63','登录系统','127.0.0.1','2017-12-05 23:08:46','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5745','63','登录系统','127.0.0.1','2017-12-05 23:11:26','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5746','63','增加单据','127.0.0.1','2017-12-05 23:12:53','0','增加单据编号为  CGRK201712050002 成功！','增加单据成功'), ('5747','63','保存仓管通明细','127.0.0.1','2017-12-05 23:12:53','0','保存仓管通明细对应主表编号为  111 成功！','保存仓管通明细成功'), ('5748','63','登录系统','127.0.0.1','2017-12-07 23:08:01','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5749','63','更新单据','127.0.0.1','2017-12-07 23:09:21','0','更新单据ID为  111 成功！','更新单据成功'), ('5750','63','保存仓管通明细','127.0.0.1','2017-12-07 23:09:21','0','保存仓管通明细对应主表编号为  111 成功！','保存仓管通明细成功'), ('5751','63','删除财务','127.0.0.1','2017-12-07 23:12:23','0','删除财务ID为  80 成功！','删除财务成功'), ('5752','63','删除财务','127.0.0.1','2017-12-07 23:12:52','0','删除财务ID为  75 成功！','删除财务成功'), ('5753','63','删除财务','127.0.0.1','2017-12-07 23:12:55','0','删除财务ID为  72 成功！','删除财务成功'), ('5754','63','登录系统','127.0.0.1','2017-12-07 23:39:54','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5755','63','登录系统','127.0.0.1','2017-12-10 18:40:21','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5756','63','增加单据','127.0.0.1','2017-12-10 21:07:46','0','增加单据编号为  XSCK201712100001 成功！','增加单据成功'), ('5757','63','保存仓管通明细','127.0.0.1','2017-12-10 21:07:46','0','保存仓管通明细对应主表编号为  112 成功！','保存仓管通明细成功'), ('5758','63','批量修改单据状态','127.0.0.1','2017-12-10 21:08:51','0','批量修改状态，单据ID为  112 成功！','批量修改单据状态成功'), ('5759','63','批量修改单据状态','127.0.0.1','2017-12-10 21:08:54','0','批量修改状态，单据ID为  112 成功！','批量修改单据状态成功'), ('5760','63','登录系统','127.0.0.1','2017-12-10 22:11:13','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5761','63','登录系统','127.0.0.1','2017-12-10 22:33:26','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5762','63','更新默认账户','127.0.0.1','2017-12-10 22:33:58','0','更新账户ID11为默认账户成功！','更新默认账户成功'), ('5763','63','更新默认账户','127.0.0.1','2017-12-10 22:34:11','0','更新账户ID11为默认账户成功！','更新默认账户成功'), ('5764','63','更新默认账户','127.0.0.1','2017-12-10 22:34:26','0','更新账户ID10为默认账户成功！','更新默认账户成功'), ('5765','63','更新默认账户','127.0.0.1','2017-12-10 22:40:10','0','更新账户ID12为默认账户成功！','更新默认账户成功'), ('5766','63','更新默认账户','127.0.0.1','2017-12-10 22:40:15','0','更新账户ID4为默认账户成功！','更新默认账户成功'), ('5767','63','更新默认账户','127.0.0.1','2017-12-10 22:40:21','0','更新账户ID12为默认账户成功！','更新默认账户成功'), ('5768','63','更新默认账户','127.0.0.1','2017-12-10 22:40:29','0','更新账户ID11为默认账户成功！','更新默认账户成功'), ('5769','63','更新默认账户','127.0.0.1','2017-12-10 22:41:22','0','更新账户ID10为默认账户成功！','更新默认账户成功'), ('5770','63','更新默认账户','127.0.0.1','2017-12-10 22:41:26','0','更新账户ID9为默认账户成功！','更新默认账户成功'), ('5771','63','更新默认账户','127.0.0.1','2017-12-10 22:41:49','0','更新账户ID11为默认账户成功！','更新默认账户成功'), ('5772','63','更新默认账户','127.0.0.1','2017-12-10 22:41:52','0','更新账户ID12为默认账户成功！','更新默认账户成功'), ('5773','63','更新默认账户','127.0.0.1','2017-12-10 22:42:00','0','更新账户ID4为默认账户成功！','更新默认账户成功'), ('5774','63','更新默认账户','127.0.0.1','2017-12-10 22:42:57','0','更新账户ID11为默认账户成功！','更新默认账户成功'), ('5775','63','更新默认账户','127.0.0.1','2017-12-10 22:43:18','0','更新账户ID11为默认账户成功！','更新默认账户成功'), ('5776','63','更新默认账户','127.0.0.1','2017-12-10 22:43:22','0','更新账户ID11为默认账户成功！','更新默认账户成功'), ('5777','63','更新默认账户','127.0.0.1','2017-12-10 22:52:37','0','更新账户ID11为默认账户成功！','更新默认账户成功'), ('5778','63','更新默认账户','127.0.0.1','2017-12-10 22:52:48','0','更新账户ID12为默认账户成功！','更新默认账户成功'), ('5779','63','更新默认账户','127.0.0.1','2017-12-10 22:53:44','0','更新账户ID9为默认账户成功！','更新默认账户成功'), ('5780','63','更新默认账户','127.0.0.1','2017-12-10 23:07:40','0','更新账户ID10为默认账户成功！','更新默认账户成功'), ('5781','63','更新默认账户','127.0.0.1','2017-12-10 23:08:10','0','更新账户ID12为默认账户成功！','更新默认账户成功'), ('5782','63','更新默认账户','127.0.0.1','2017-12-10 23:08:45','0','更新账户ID9为默认账户成功！','更新默认账户成功'), ('5783','63','增加单据','127.0.0.1','2017-12-10 23:11:20','0','增加单据编号为  CGRK201712100001 成功！','增加单据成功'), ('5784','63','保存仓管通明细','127.0.0.1','2017-12-10 23:11:20','0','保存仓管通明细对应主表编号为  113 成功！','保存仓管通明细成功'), ('5785','63','登录系统','0:0:0:0:0:0:0:1','2018-02-25 22:05:49','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5786','63','更新应用','0:0:0:0:0:0:0:1','2018-02-25 22:11:44','0','更新应用ID为  24 成功！','更新应用成功'), ('5787','63','更新应用','0:0:0:0:0:0:0:1','2018-02-25 22:11:53','0','更新应用ID为  25 成功！','更新应用成功'), ('5788','63','更新功能','0:0:0:0:0:0:0:1','2018-02-25 22:13:30','0','更新功能ID为  222 成功！','更新功能成功'), ('5789','63','更新功能','0:0:0:0:0:0:0:1','2018-02-25 22:13:48','0','更新功能ID为  223 成功！','更新功能成功'), ('5790','63','增加应用','0:0:0:0:0:0:0:1','2018-02-25 22:17:45','0','增加应用名称为  仓库管理 成功！','增加应用成功'), ('5791','63','更新应用','0:0:0:0:0:0:0:1','2018-02-25 22:22:05','0','更新应用ID为  27 成功！','更新应用成功'), ('5792','63','登录系统','0:0:0:0:0:0:0:1','2018-02-25 22:26:03','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5793','63','增加功能','0:0:0:0:0:0:0:1','2018-02-25 22:28:48','0','增加功能名称为  仓库管理 成功！','增加功能成功'), ('5794','63','更新功能','0:0:0:0:0:0:0:1','2018-02-25 22:30:32','0','更新功能ID为  32 成功！','更新功能成功'), ('5795','63','更新功能','0:0:0:0:0:0:0:1','2018-02-25 22:31:17','0','更新功能ID为  38 成功！','更新功能成功'), ('5796','63','增加功能','0:0:0:0:0:0:0:1','2018-02-25 22:32:53','0','增加功能名称为  仓库管理 成功！','增加功能成功'), ('5797','63','更新功能','0:0:0:0:0:0:0:1','2018-02-25 22:35:21','0','更新功能ID为  201 成功！','更新功能成功'), ('5798','63','更新功能','0:0:0:0:0:0:0:1','2018-02-25 22:35:35','0','更新功能ID为  201 成功！','更新功能成功'), ('5799','63','更新功能','0:0:0:0:0:0:0:1','2018-02-25 22:36:24','0','更新功能ID为  202 成功！','更新功能成功'), ('5800','63','更新功能','0:0:0:0:0:0:0:1','2018-02-25 22:37:14','0','更新功能ID为  40 成功！','更新功能成功'), ('5801','63','更新功能','0:0:0:0:0:0:0:1','2018-02-25 22:38:53','0','更新功能ID为  200 成功！','更新功能成功'), ('5802','63','更新功能','0:0:0:0:0:0:0:1','2018-02-25 22:39:16','0','更新功能ID为  200 成功！','更新功能成功'), ('5803','63','更新功能','0:0:0:0:0:0:0:1','2018-02-25 22:40:15','0','更新功能ID为  200 成功！','更新功能成功'), ('5804','63','更新功能','0:0:0:0:0:0:0:1','2018-02-25 22:40:44','0','更新功能ID为  199 成功！','更新功能成功'), ('5805','63','更新功能','0:0:0:0:0:0:0:1','2018-02-25 22:41:10','0','更新功能ID为  199 成功！','更新功能成功'), ('5806','63','更新功能','0:0:0:0:0:0:0:1','2018-02-25 22:45:02','0','更新功能ID为  41 成功！','更新功能成功'), ('5807','63','更新功能','0:0:0:0:0:0:0:1','2018-02-25 22:45:13','0','更新功能ID为  200 成功！','更新功能成功'), ('5808','63','更新UserBusiness','0:0:0:0:0:0:0:1','2018-02-25 22:46:05','0','更新UserBusiness的ID为  1 成功！','更新UserBusiness成功'), ('5809','63','批量修改单据状态','0:0:0:0:0:0:0:1','2018-02-25 22:47:10','0','批量修改状态，单据ID为  72 成功！','批量修改单据状态成功'), ('5810','63','批量修改单据状态','0:0:0:0:0:0:0:1','2018-02-25 22:47:14','0','批量修改状态，单据ID为  72 成功！','批量修改单据状态成功'), ('5811','63','增加单据','0:0:0:0:0:0:0:1','2018-02-25 22:48:33','0','增加单据编号为  CGRK201802250001 成功！','增加单据成功'), ('5812','63','保存仓管通明细','0:0:0:0:0:0:0:1','2018-02-25 22:48:33','0','保存仓管通明细对应主表编号为  114 成功！','保存仓管通明细成功'), ('5813','63','删除单据','0:0:0:0:0:0:0:1','2018-02-25 22:48:39','0','删除单据ID为  114 成功！','删除单据成功'), ('5814','63','更新功能','0:0:0:0:0:0:0:1','2018-02-25 22:51:46','0','更新功能ID为  232 成功！','更新功能成功'), ('5815','63','更新功能','0:0:0:0:0:0:0:1','2018-02-25 22:52:05','0','更新功能ID为  233 成功！','更新功能成功'), ('5816','63','更新功能','0:0:0:0:0:0:0:1','2018-02-25 22:52:24','0','更新功能ID为  232 成功！','更新功能成功'), ('5817','63','更新功能','0:0:0:0:0:0:0:1','2018-02-25 22:52:32','0','更新功能ID为  233 成功！','更新功能成功'), ('5818','63','更新功能','0:0:0:0:0:0:0:1','2018-02-25 22:52:47','0','更新功能ID为  232 成功！','更新功能成功'), ('5819','63','删除功能','0:0:0:0:0:0:0:1','2018-02-25 22:53:25','0','删除功能ID为  231 成功！','删除功能成功'), ('5820','63','删除功能','0:0:0:0:0:0:0:1','2018-02-25 22:53:34','0','删除功能ID为  230 成功！','删除功能成功'), ('5821','63','删除应用','0:0:0:0:0:0:0:1','2018-02-25 22:53:46','0','删除应用ID为  8 成功！','删除应用成功');
-INSERT INTO `jsh_log` VALUES ('5822','63','登录系统','0:0:0:0:0:0:0:1','2018-02-25 22:55:14','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5823','63','登录系统','0:0:0:0:0:0:0:1','2018-02-25 22:56:34','0','管理用户：jsh 登录系统','jsh 登录系统');
+INSERT INTO `jsh_log` VALUES ('5822','63','登录系统','0:0:0:0:0:0:0:1','2018-02-25 22:55:14','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5823','63','登录系统','0:0:0:0:0:0:0:1','2018-02-25 22:56:34','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5824','63','登录系统','127.0.0.1','2018-03-04 14:09:45','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5825','63','退出系统','127.0.0.1','2018-03-04 14:10:04','0','管理用户：jsh 退出系统','jsh 退出系统'), ('5826','63','登录系统','0:0:0:0:0:0:0:1','2018-03-04 14:15:10','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5827','63','登录系统','0:0:0:0:0:0:0:1','2018-03-04 14:18:29','0','管理用户：jsh 登录系统','jsh 登录系统'), ('5828','63','退出系统','0:0:0:0:0:0:0:1','2018-03-04 14:19:28','0','管理用户：jsh 退出系统','jsh 退出系统'), ('5829','63','登录系统','0:0:0:0:0:0:0:1','2018-03-04 15:35:10','0','管理用户：jsh 登录系统','jsh 登录系统');
 INSERT INTO `jsh_material` VALUES ('485','2','棉线','a1',NULL,'100','A21-4321','5g','白色','码','','1','1','1','1',NULL,'','','[{\"basic\":{\"Unit\":\"\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\"}},{\"other\":{\"Unit\":\"\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\"}}]','','b2','c3','d4'), ('487','1','网布','制造商b',NULL,'100','12343','10g','','码','','1','1','1','1',NULL,'','','[{\"basic\":{\"Unit\":\"kg\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\"}},{\"other\":{\"Unit\":\"包\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\"}}]','',NULL,NULL,NULL), ('498','1','蕾丝','制造商c',NULL,NULL,'B123a','6g','','码','','1.2','1','1.3','1.4',NULL,'','','[{\"basic\":{\"Unit\":\"kg\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\"}},{\"other\":{\"Unit\":\"包\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\"}}]','',NULL,NULL,NULL), ('499','1','棉线','制造商d',NULL,NULL,'A21-1234','7g','','码','','2.2','2','2.4','2.6',NULL,'','','[{\"basic\":{\"Unit\":\"kg\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\"}},{\"other\":{\"Unit\":\"包\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\"}}]','',NULL,NULL,NULL), ('500','1','纯棉线','制造商e',NULL,NULL,'AAA666','11g','','码','','1.1','1','1.2','1.3',NULL,'','','[{\"basic\":{\"Unit\":\"kg\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\"}},{\"other\":{\"Unit\":\"包\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\"}}]','',NULL,NULL,NULL), ('517','1','奶酪','制造商',NULL,NULL,'AAAA','12ml','','','',NULL,NULL,NULL,NULL,'8','瓶','箱','[{\"basic\":{\"Unit\":\"瓶\",\"RetailPrice\":\"1.5\",\"LowPrice\":\"2\",\"PresetPriceOne\":\"3\",\"PresetPriceTwo\":\"4\"}},{\"other\":{\"Unit\":\"箱\",\"RetailPrice\":\"18\",\"LowPrice\":\"24\",\"PresetPriceOne\":\"36\",\"PresetPriceTwo\":\"48\"}}]','',NULL,NULL,NULL), ('518','1','安慕希','伊利',NULL,NULL,'abcd','350ml','银白色','','',NULL,NULL,NULL,NULL,'2','kg','包','[{\"basic\":{\"Unit\":\"kg\",\"RetailPrice\":\"2\",\"LowPrice\":\"1\",\"PresetPriceOne\":\"3\",\"PresetPriceTwo\":\"4\"}},{\"other\":{\"Unit\":\"包\",\"RetailPrice\":\"50\",\"LowPrice\":\"25\",\"PresetPriceOne\":\"75\",\"PresetPriceTwo\":\"100\"}}]','','','',''), ('562','1','红苹果（蛇果）','',NULL,NULL,'60#','大铁筐','','','',NULL,NULL,NULL,NULL,NULL,'','','[{\"basic\":{\"Unit\":\"\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\"}},{\"other\":{\"Unit\":\"\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\"}}]','','','','');
 INSERT INTO `jsh_materialcategory` VALUES ('1','根目录','1','1'), ('2','花边一级A','1','1'), ('3','花边一级B','1','1'), ('4','其他','2','3'), ('5','其他','3','4'), ('6','花边二级A','2','2'), ('7','花边三级A','3','6'), ('8','花边二级B','2','2'), ('9','花边一级C','1','1'), ('10','花边三级B','3','6');
 INSERT INTO `jsh_materialproperty` VALUES ('1','规格','','02','规格'), ('2','颜色','','01','颜色'), ('3','制造商','\0','03','制造商'), ('4','自定义1','\0','04','自定义1'), ('5','自定义2','\0','05','自定义2'), ('6','自定义3','\0','06','自定义3');
