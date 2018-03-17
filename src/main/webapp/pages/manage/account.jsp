@@ -18,6 +18,7 @@
         <script type="text/javascript" src="<%=path %>/js/jquery-1.8.0.min.js"></script>
         <script type="text/javascript" src="<%=path %>/js/easyui-1.3.5/jquery.easyui.min.js"></script>
         <script type="text/javascript" src="<%=path %>/js/easyui-1.3.5/locale/easyui-lang-zh_CN.js"></script>
+        <script type="text/javascript" src="<%=path %>/js/common/outlook_in.js"></script>
         <script type="text/javascript" src="<%=path %>/js/common/common.js"></script>
     </head>
     <body>
@@ -564,7 +565,12 @@
                     pageSize: initPageSize,
                     pageList: initPageNum,
                     columns:[[
-                        { title: '单据编号',field: 'number',width:150},
+                        { title: '单据编号',field: 'number',width:150,
+                            formatter: function (value, row) {
+                                return "<a class='n-link' onclick=\"newTab('" + row.number + "','../materials/bill_detail.jsp?n=" + row.number + "&type=" + row.type + "','')\">"
+                                    + row.number + "</a>";
+                            }
+                        },
                         { title: '类型', field: 'type',width:100},
                         { title: '单位信息', field: 'supplierName',width:150},
                         { title: '金额', field: 'changeAmount',width:80,

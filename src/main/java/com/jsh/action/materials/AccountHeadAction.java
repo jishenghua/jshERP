@@ -252,7 +252,7 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel>
                 for(AccountHead accountHead:dataList)
                 {
                     JSONObject item = new JSONObject();
-                    item.put("Id", accountHead.getId());                  
+                    item.put("Id", accountHead.getId());
                     item.put("OrganId", accountHead.getOrganId()==null?"":accountHead.getOrganId().getId());
                     item.put("OrganName", accountHead.getOrganId()==null?"":accountHead.getOrganId().getSupplier());
                     item.put("HandsPersonId", accountHead.getHandsPersonId()==null?"":accountHead.getHandsPersonId().getId());
@@ -279,6 +279,44 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel>
         catch (IOException e) 
         {
             Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询财务信息结果异常", e);
+        }
+    }
+
+    /**
+     * 根据编号查询单据信息
+     */
+    public void getDetailByNumber(){
+        try {
+            PageUtil<AccountHead> pageUtil = new  PageUtil<AccountHead>();
+            pageUtil.setPageSize(0);
+            pageUtil.setCurPage(0);
+            pageUtil.setAdvSearch(getConditionByNumber());
+            accountHeadService.find(pageUtil);
+            List<AccountHead> dataList = pageUtil.getPageList();
+            JSONObject item = new JSONObject();
+            if(dataList!=null && dataList.get(0)!=null) {
+                AccountHead accountHead = dataList.get(0);
+                item.put("Id", accountHead.getId());
+                item.put("OrganId", accountHead.getOrganId()==null?"":accountHead.getOrganId().getId());
+                item.put("OrganName", accountHead.getOrganId()==null?"":accountHead.getOrganId().getSupplier());
+                item.put("HandsPersonId", accountHead.getHandsPersonId()==null?"":accountHead.getHandsPersonId().getId());
+                item.put("HandsPersonName", accountHead.getHandsPersonId()==null?"":accountHead.getHandsPersonId().getName());
+                item.put("AccountId", accountHead.getAccountId()==null?"":accountHead.getAccountId().getId());
+                item.put("AccountName", accountHead.getAccountId()==null?"":accountHead.getAccountId().getName());
+                item.put("BillNo", accountHead.getBillNo());
+                item.put("BillTime", Tools.getCenternTime(accountHead.getBillTime()));
+                item.put("ChangeAmount", accountHead.getChangeAmount()==null?"":Math.abs(accountHead.getChangeAmount()));
+                item.put("TotalPrice", accountHead.getTotalPrice()==null?"":Math.abs(accountHead.getTotalPrice()));
+                item.put("Remark", accountHead.getRemark());
+            }
+            //回写查询结果
+            toClient(item.toString());
+        }
+        catch (DataAccessException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找单据信息异常", e);
+        }
+        catch (IOException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询单据信息结果异常", e);
         }
     }
     
@@ -351,6 +389,12 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel>
         	allMoney = -allMoney;
         }
 		return allMoney;    	     
+    }
+
+    private Map<String,Object> getConditionByNumber() {
+        Map<String,Object> condition = new HashMap<String,Object>();
+        condition.put("BillNo_s_eq",model.getBillNo());
+        return condition;
     }
 
     /**

@@ -421,7 +421,7 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
             pageUtil.setAdvSearch(getCondition());
             depotHeadService.find(pageUtil);
             List<DepotHead> dataList = pageUtil.getPageList();
-            
+
             JSONObject outer = new JSONObject();
             outer.put("total", pageUtil.getTotalCount());
             //存放数据json数组
@@ -454,7 +454,7 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
 					item.put("OtherMoneyItem", depotHead.getOtherMoneyItem()); //money列表
 					item.put("AccountDay", depotHead.getAccountDay()); //结算天数
                     item.put("AllocationProjectId", depotHead.getAllocationProjectId()==null?"":depotHead.getAllocationProjectId().getId());
-                    item.put("AllocationProjectName", depotHead.getAllocationProjectId()==null?"":depotHead.getAllocationProjectId().getName());                    
+                    item.put("AllocationProjectName", depotHead.getAllocationProjectId()==null?"":depotHead.getAllocationProjectId().getName());
                     item.put("TotalPrice", depotHead.getTotalPrice()==null?"":Math.abs(depotHead.getTotalPrice()));
 					item.put("payType", depotHead.getPayType()==null?"":depotHead.getPayType());
 					item.put("Status", depotHead.getStatus());
@@ -474,6 +474,63 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
 	    catch (IOException e) {
             Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询单据信息结果异常", e);
         }
+	}
+
+	/**
+	 * 根据编号查询单据信息
+	 */
+	public void getDetailByNumber(){
+		try {
+			PageUtil<DepotHead> pageUtil = new  PageUtil<DepotHead>();
+			pageUtil.setPageSize(0);
+			pageUtil.setCurPage(0);
+			pageUtil.setAdvSearch(getConditionByNumber());
+			depotHeadService.find(pageUtil);
+			List<DepotHead> dataList = pageUtil.getPageList();
+			JSONObject item = new JSONObject();
+			if(dataList!=null && dataList.get(0)!=null) {
+				DepotHead depotHead = dataList.get(0);
+				item.put("Id", depotHead.getId());
+				item.put("ProjectId", depotHead.getProjectId()==null?"":depotHead.getProjectId().getId());
+				item.put("ProjectName", depotHead.getProjectId()==null?"":depotHead.getProjectId().getName());
+				item.put("Number", depotHead.getNumber());
+				item.put("OperPersonName", depotHead.getOperPersonName());
+				item.put("CreateTime", Tools.getCenternTime(depotHead.getCreateTime()));
+				item.put("OperTime", Tools.getCenternTime(depotHead.getOperTime()));
+				item.put("OrganId", depotHead.getOrganId()==null?"":depotHead.getOrganId().getId());
+				item.put("OrganName", depotHead.getOrganId()==null?"":depotHead.getOrganId().getSupplier());
+				item.put("HandsPersonId", depotHead.getHandsPersonId()==null?"":depotHead.getHandsPersonId().getId());
+				item.put("Salesman", depotHead.getSalesman().toString());
+				item.put("HandsPersonName", depotHead.getHandsPersonId()==null?"":depotHead.getHandsPersonId().getName());
+				item.put("AccountId", depotHead.getAccountId()==null?"":depotHead.getAccountId().getId());
+				item.put("AccountName", depotHead.getAccountId()==null?"":depotHead.getAccountId().getName());
+				item.put("ChangeAmount", depotHead.getChangeAmount()==null?"":Math.abs(depotHead.getChangeAmount()));
+				item.put("AccountIdList", depotHead.getAccountIdList());
+				item.put("AccountMoneyList", depotHead.getAccountMoneyList());
+				item.put("Discount", depotHead.getDiscount());
+				item.put("DiscountMoney", depotHead.getDiscountMoney());
+				item.put("DiscountLastMoney", depotHead.getDiscountLastMoney());
+				item.put("OtherMoney", depotHead.getOtherMoney());
+				item.put("OtherMoneyList", depotHead.getOtherMoneyList()); //id列表
+				item.put("OtherMoneyItem", depotHead.getOtherMoneyItem()); //money列表
+				item.put("AccountDay", depotHead.getAccountDay()); //结算天数
+				item.put("AllocationProjectId", depotHead.getAllocationProjectId()==null?"":depotHead.getAllocationProjectId().getId());
+				item.put("AllocationProjectName", depotHead.getAllocationProjectId()==null?"":depotHead.getAllocationProjectId().getName());
+				item.put("TotalPrice", depotHead.getTotalPrice()==null?"":Math.abs(depotHead.getTotalPrice()));
+				item.put("payType", depotHead.getPayType()==null?"":depotHead.getPayType());
+				item.put("Status", depotHead.getStatus());
+				item.put("Remark", depotHead.getRemark());
+				item.put("MaterialsList", findMaterialsListByHeaderId(depotHead.getId()));
+			}
+			//回写查询结果
+			toClient(item.toString());
+		}
+		catch (DataAccessException e) {
+			Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找单据信息异常", e);
+		}
+		catch (IOException e) {
+			Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询单据信息结果异常", e);
+		}
 	}
     
 	/**
@@ -835,6 +892,12 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
 		catch (IOException e) {
 			Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询信息结果异常", e);
 		}
+	}
+
+	private Map<String,Object> getConditionByNumber() {
+		Map<String,Object> condition = new HashMap<String,Object>();
+		condition.put("Number_s_eq",model.getNumber());
+		return condition;
 	}
     
 	/**
