@@ -90,7 +90,7 @@
             billType = "material";
             $("#bill .purchase_in").show();
         }
-        else if(listSubType == "采购退货") {
+        else if(listSubType == "采购退货出库") {
             billType = "material";
             $("#bill .purchase_back").show();
         }
@@ -98,7 +98,7 @@
             billType = "material";
             $("#bill .sale_out").show();
         }
-        else if(listSubType == "销售退货") {
+        else if(listSubType == "销售退货入库") {
             billType = "material";
             $("#bill .sale_back").show();
         }

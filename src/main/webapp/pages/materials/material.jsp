@@ -19,6 +19,7 @@
 		<link type="text/css" rel="stylesheet" href="<%=path %>/css/material.css" />
 		<script type="text/javascript" src="<%=path %>/js/easyui-1.3.5/jquery.easyui.min.js"></script>
 		<script type="text/javascript" src="<%=path %>/js/easyui-1.3.5/locale/easyui-lang-zh_CN.js"></script>
+		<script type="text/javascript" src="<%=path %>/js/common/outlook_in.js"></script>
 		<script type="text/javascript" src="<%=path %>/js/common/common.js"></script>
   	</head>
   	<body>
@@ -738,7 +739,12 @@
 					pageSize: initPageSize,
 					pageList: initPageNum,
 					columns:[[
-						{ title: '单据编号',field: 'Number',width:150},
+						{ title: '单据编号',field: 'Number',width:150,
+                            formatter: function (value, row) {
+                                return "<a class='n-link' onclick=\"newTab('" + row.Number + "','../materials/bill_detail.jsp?n=" + row.Number + "&type=" + row.Type + "','')\">"
+                                    + row.Number + "</a>";
+                            }
+                        },
 						{ title: '类型', field: 'Type',width:100},
 						{ title: '数量', field: 'BasicNumber',width:80},
 						{ title: '日期',field: 'OperTime',width:180}

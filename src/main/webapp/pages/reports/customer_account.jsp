@@ -19,6 +19,7 @@
 		<link type="text/css" rel="stylesheet" href="<%=path %>/css/common.css" />
 		<script type="text/javascript" src="<%=path %>/js/easyui-1.3.5/jquery.easyui.min.js"></script>
 		<script type="text/javascript" src="<%=path %>/js/easyui-1.3.5/locale/easyui-lang-zh_CN.js"></script>
+		<script type="text/javascript" src="<%=path %>/js/common/outlook_in.js"></script>
 		<script type="text/javascript" src="<%=path %>/js/My97DatePicker/WdatePicker.js"></script>
 		<script type="text/javascript" src="<%=path %>/js/common/common.js"></script>
 		<script>
@@ -111,7 +112,12 @@
 					pageSize: 10,
 					pageList: [10,50,100],
 					columns:[[
-			          	{ title: '单据编号',field: 'number',width:140},
+			          	{ title: '单据编号',field: 'number',width:140,
+                            formatter: function (value, row) {
+                                return "<a class='n-link' onclick=\"newTab('" + row.number + "','../materials/bill_detail.jsp?n=" + row.number + "&type=" + row.type + "','')\">"
+                                    + row.number + "</a>";
+                            }
+                        },
 						{ title: '类型',field: 'type',width:100},
 						{ title: '单位名称',field: 'supplierName',width:200},
 						{ title: '单据金额',field: 'discountLastMoney',width:80},

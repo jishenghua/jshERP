@@ -38,3 +38,15 @@
 	text-decoration:underline;
 	cursor:pointer;
 }
+
+#tablePanel .n-link{
+	color:blue;
+	text-decoration:underline;
+	cursor:pointer;
+}
+
+#materialDetailListDlg .n-link{
+	color:blue;
+	text-decoration:underline;
+	cursor:pointer;
+}
