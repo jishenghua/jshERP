@@ -126,7 +126,7 @@
             billType = "material";
             $("#bill .gift_recharge").show();
         }
-        else if(listSubType == "礼品销售") {
+        else if(listSubType == "礼品销售出库") {
             billType = "material";
             $("#bill .gift_out").show();
         }
