@@ -241,6 +241,9 @@
 						depotString = depotString + depot.id + ",";
 					}
 				}
+				if(depot.type === 1){
+                    depotString = depotString + depot.id + ",";
+				}
 			}
 			depotString = depotString.substring(1, depotString.length-1);
 			$("#ProjectId").empty().append(options);
