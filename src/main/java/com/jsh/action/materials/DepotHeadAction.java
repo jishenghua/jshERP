@@ -722,6 +722,7 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
 					item.put("supplierName", arr[6]); //供应商
 					item.put("depotName", arr[7]); //仓库
 					item.put("operTime", arr[8]); //入库出库日期
+					item.put("type", arr[9]); //入库出库日期
 					dataArray.add(item);
 				}
 			}

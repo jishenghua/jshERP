@@ -54,7 +54,8 @@ public class DepotHeadDAO extends BaseDAO<DepotHead> implements DepotHeadIDAO {
     @SuppressWarnings("unchecked")
     public void findInDetail(PageUtil pageUtil,String beginTime,String endTime,String type,Long pid,String dids,Long oId) throws JshException {
         StringBuffer queryString = new StringBuffer();
-        queryString.append("select dh.Number,m.`name`,m.Model,di.UnitPrice,di.OperNumber,di.AllPrice,s.supplier,d.dName,date_format(dh.OperTime, '%Y-%m-%d') " +
+        queryString.append("select dh.Number,m.`name`,m.Model,di.UnitPrice,di.OperNumber,di.AllPrice,s.supplier,d.dName," +
+                "date_format(dh.OperTime, '%Y-%m-%d'), concat(dh.SubType,dh.Type) as newType " +
                 "from jsh_depothead dh inner join jsh_depotitem di on di.HeaderId=dh.id " +
                 "inner join jsh_material m on m.id=di.MaterialId " +
                 "inner join jsh_supplier s on s.id=dh.OrganId " +
