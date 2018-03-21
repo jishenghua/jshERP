@@ -439,8 +439,9 @@ public class AccountAction extends BaseAction<AccountModel>
                 for(AccountHead accountHead:dataList){
                     ids = ids + accountHead.getId() +",";
                 }
-                ids = ids.substring(0,ids.length() -1);
-
+                if(!ids.equals("")) {
+                    ids = ids.substring(0,ids.length() -1);
+                }
                 PageUtil<AccountItem> pageUtilOne = new PageUtil<AccountItem>();
                 pageUtilOne.setPageSize(0);
                 pageUtilOne.setCurPage(0);
@@ -487,7 +488,7 @@ public class AccountAction extends BaseAction<AccountModel>
                     String[] amList = accountMoneyList.split(",");
                     for(int i=0; i<aList.length; i++){
                         if(aList[i].toString().equals(id.toString())){
-                            accountSum = accountSum + Integer.parseInt(amList[i].toString());
+                            accountSum = accountSum + Double.parseDouble(amList[i].toString());
                         }
                     }
                 }
