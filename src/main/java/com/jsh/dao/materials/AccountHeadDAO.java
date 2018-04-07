@@ -10,6 +10,9 @@ import com.jsh.model.po.UserBusiness;
 import com.jsh.util.PageUtil;
 import com.jsh.util.SearchConditionUtil;
 
+/**
+ * @author alan
+ */
 public class AccountHeadDAO extends BaseDAO<AccountHead> implements AccountHeadIDAO
 {
     /**
@@ -23,6 +26,7 @@ public class AccountHeadDAO extends BaseDAO<AccountHead> implements AccountHeadI
     }
     
     @SuppressWarnings("unchecked")
+    @Override
     public void find(PageUtil<AccountHead> pageUtil,String maxid) throws JshException
     {
         Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createQuery("select max(Id) as Id from AccountHead accountHead where 1=1 " + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
@@ -31,6 +35,7 @@ public class AccountHeadDAO extends BaseDAO<AccountHead> implements AccountHeadI
     }
     
     @SuppressWarnings("unchecked")
+    @Override
     public void findAllMoney(PageUtil<AccountHead> pageUtil, Integer supplierId, String type, String mode) throws JshException
     {
         Query query;
