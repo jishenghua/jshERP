@@ -20,6 +20,7 @@ public class DepotHeadDAO extends BaseDAO<DepotHead> implements DepotHeadIDAO {
     }
 	
     @SuppressWarnings("unchecked")
+    @Override
     public void find(PageUtil<DepotHead> pageUtil,String maxid) throws JshException
     {
         Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createQuery("select max(Id) as Id from DepotHead depotHead where 1=1 " + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
@@ -28,6 +29,7 @@ public class DepotHeadDAO extends BaseDAO<DepotHead> implements DepotHeadIDAO {
     }
     
     @SuppressWarnings("unchecked")
+    @Override
     public void findAllMoney(PageUtil<DepotHead> pageUtil, Integer supplierId, String type, String subType, String mode) throws JshException
     {
         Query query;
@@ -51,6 +53,7 @@ public class DepotHeadDAO extends BaseDAO<DepotHead> implements DepotHeadIDAO {
         query.executeUpdate();
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public void findInDetail(PageUtil pageUtil,String beginTime,String endTime,String type,Long pid,String dids,Long oId) throws JshException {
         StringBuffer queryString = new StringBuffer();
@@ -87,6 +90,7 @@ public class DepotHeadDAO extends BaseDAO<DepotHead> implements DepotHeadIDAO {
         pageUtil.setPageList(query.list());
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public void findInOutMaterialCount(PageUtil pageUtil,String beginTime,String endTime,String type,Long pid,String dids,Long oId) throws JshException {
         StringBuffer queryString = new StringBuffer();
@@ -185,6 +189,7 @@ public class DepotHeadDAO extends BaseDAO<DepotHead> implements DepotHeadIDAO {
         pageUtil.setPageList(query.list());
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public void getHeaderIdByMaterial(PageUtil pageUtil,String materialParam,String depotIds) throws JshException {
         StringBuffer queryString = new StringBuffer();

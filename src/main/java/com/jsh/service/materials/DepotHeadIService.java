@@ -15,15 +15,15 @@ public interface DepotHeadIService extends BaseIService<DepotHead>
 	
 	void findAllMoney(PageUtil<DepotHead> depotHead, Integer supplierId, String type, String subType, String mode)throws JshException;
 
-	public void batchSetStatus(Boolean status,String depotHeadIDs);
+	void batchSetStatus(Boolean status,String depotHeadIDs);
 
-	public void findInDetail(PageUtil pageUtil,String beginTime,String endTime, String type, Long pid,String dids,Long oId)throws JshException;
+	void findInDetail(PageUtil pageUtil,String beginTime,String endTime, String type, Long pid,String dids,Long oId)throws JshException;
 
-	public void findInOutMaterialCount(PageUtil pageUtil,String beginTime,String endTime, String type, Long pid,String dids,Long oId)throws JshException;
+	void findInOutMaterialCount(PageUtil pageUtil,String beginTime,String endTime, String type, Long pid,String dids,Long oId)throws JshException;
 
-	public void findMaterialsListByHeaderId(PageUtil pageUtil,Long headerId)throws JshException;
+	void findMaterialsListByHeaderId(PageUtil pageUtil,Long headerId)throws JshException;
 
-	public void findStatementAccount(PageUtil pageUtil,String beginTime,String endTime, Long organId, String supType)throws JshException;
+	void findStatementAccount(PageUtil pageUtil,String beginTime,String endTime, Long organId, String supType)throws JshException;
 
-	public void getHeaderIdByMaterial(PageUtil pageUtil,String materialParam,String depotIds)throws JshException;
+	void getHeaderIdByMaterial(PageUtil pageUtil,String materialParam,String depotIds)throws JshException;
 }

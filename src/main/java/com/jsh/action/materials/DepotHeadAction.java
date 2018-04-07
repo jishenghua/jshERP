@@ -86,7 +86,7 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel>
 			depotHead.setDefaultNumber(allNewNumber); //初始编号，一直都从后台取值
 
 			depotHead.setOperPersonName(getUser().getUsername());
-			depotHead.setCreateTime(new Timestamp(new Date().getTime()));
+			depotHead.setCreateTime(new Timestamp(System.currentTimeMillis()));
 			try{
 				depotHead.setOperTime(new Timestamp(Tools.parse(model.getOperTime(), "yyyy-MM-dd HH:mm:ss").getTime()));
             }
