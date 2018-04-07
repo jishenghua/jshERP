@@ -704,20 +704,23 @@
     //返回统计类型字符串
     function getReportType() {
         var reportType = $("#searchReportType").val();
-        if (reportType == 0) {
-            return '按资产状态统计';
-        }
-        else if (reportType == 1) {
-            return '按资产类型统计';
-        }
-        else if (reportType == 2) {
-            return '按供应商统计';
-        }
-        else if (reportType == 3) {
-            return '按资产名称统计';
-        }
-        else if (reportType == 4) {
-            return '按所属用户统计';
+        var reportName = undefined;
+        switch (reportType) {
+            case 1:
+                reportName = '按资产类型统计';
+                break;
+            case 2:
+                reportName = '按供应商统计';
+                break;
+            case 3:
+                reportName = '按资产名称统计';
+                break;
+            case 4:
+                reportName = '按所属用户统计';
+                break;
+            default:
+                reportName = '按资产状态统计';
+                break;
         }
     }
 </script>
