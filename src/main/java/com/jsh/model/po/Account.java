@@ -1,8 +1,7 @@
 package com.jsh.model.po;
 
 @SuppressWarnings("serial")
-public class Account implements java.io.Serializable
-{
+public class Account implements java.io.Serializable {
     private Long Id;
     private String Name;
     private String SerialNo;
@@ -11,13 +10,11 @@ public class Account implements java.io.Serializable
     private Boolean IsDefault;
     private String Remark;
 
-    public Account()
-    {
+    public Account() {
 
     }
 
-    public Account(Long Id)
-    {
+    public Account(Long Id) {
         this.Id = Id;
     }
 
@@ -30,54 +27,44 @@ public class Account implements java.io.Serializable
         Remark = remark;
     }
 
-    public void setId(Long id)
-    {
-        Id = id;
-    }
-
-    public Long getId()
-    {
+    public Long getId() {
         return Id;
     }
 
-    public void setName(String name)
-    {
-        Name = name;
+    public void setId(Long id) {
+        Id = id;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return Name;
     }
 
-    public void setSerialNo(String serialNo)
-    {
-        SerialNo = serialNo;
+    public void setName(String name) {
+        Name = name;
     }
 
-    public String getSerialNo()
-    {
+    public String getSerialNo() {
         return SerialNo;
     }
 
-    public void setInitialAmount(Double initialAmount)
-    {
-        InitialAmount = initialAmount;
+    public void setSerialNo(String serialNo) {
+        SerialNo = serialNo;
     }
 
-    public Double getInitialAmount()
-    {
+    public Double getInitialAmount() {
         return InitialAmount;
     }
 
-    public void setCurrentAmount(Double currentAmount)
-    {
-        CurrentAmount = currentAmount;
+    public void setInitialAmount(Double initialAmount) {
+        InitialAmount = initialAmount;
     }
 
-    public Double getCurrentAmount()
-    {
+    public Double getCurrentAmount() {
         return CurrentAmount;
+    }
+
+    public void setCurrentAmount(Double currentAmount) {
+        CurrentAmount = currentAmount;
     }
 
     public Boolean getIsDefault() {
@@ -88,13 +75,11 @@ public class Account implements java.io.Serializable
         IsDefault = isDefault;
     }
 
-    public void setRemark(String remark)
-    {
-        Remark = remark;
+    public String getRemark() {
+        return Remark;
     }
 
-    public String getRemark()
-    {
-        return Remark;
-    } 
+    public void setRemark(String remark) {
+        Remark = remark;
+    }
 }

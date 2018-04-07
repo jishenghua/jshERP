@@ -2,25 +2,25 @@ package com.jsh.util;
 
 /**
  * 定义供应商、客户管理常量
+ *
  * @author jishenghua
  */
-public interface SupplierConstants
-{
+public interface SupplierConstants {
     /**
      * 公共常量
+     *
      * @author jishenghua
      */
-    public class Common
-    {
+    public class Common {
 
     }
 
     /**
      * 常量--导入导出excel表格业务相关
+     *
      * @author jishenghua
      */
-    public class BusinessForExcel
-    {
+    public class BusinessForExcel {
         /**
          * 名称
          */

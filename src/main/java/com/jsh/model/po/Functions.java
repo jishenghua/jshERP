@@ -1,101 +1,99 @@
 package com.jsh.model.po;
 
 @SuppressWarnings("serial")
-public class Functions implements java.io.Serializable
-{
-	private Long Id;
-	private String Number;
-	private String Name;
-	private String PNumber;
-	private String URL;
-	private Boolean State;
-	private String Sort;
-	private Boolean Enabled;
-	private String Type;
-	private String PushBtn;
+public class Functions implements java.io.Serializable {
+    private Long Id;
+    private String Number;
+    private String Name;
+    private String PNumber;
+    private String URL;
+    private Boolean State;
+    private String Sort;
+    private Boolean Enabled;
+    private String Type;
+    private String PushBtn;
 
-	public Functions()
-	{
-		
-	}
+    public Functions() {
 
-	public Long getId() {
-		return Id;
-	}
+    }
 
-	public void setId(Long id) {
-		Id = id;
-	}
+    public Long getId() {
+        return Id;
+    }
 
-	public String getNumber() {
-		return Number;
-	}
+    public void setId(Long id) {
+        Id = id;
+    }
 
-	public void setNumber(String number) {
-		Number = number;
-	}
+    public String getNumber() {
+        return Number;
+    }
 
-	public String getName() {
-		return Name;
-	}
+    public void setNumber(String number) {
+        Number = number;
+    }
 
-	public void setName(String name) {
-		Name = name;
-	}
+    public String getName() {
+        return Name;
+    }
 
-	public String getPNumber() {
-		return PNumber;
-	}
+    public void setName(String name) {
+        Name = name;
+    }
 
-	public void setPNumber(String pNumber) {
-		PNumber = pNumber;
-	}
+    public String getPNumber() {
+        return PNumber;
+    }
 
-	public String getURL() {
-		return URL;
-	}
+    public void setPNumber(String pNumber) {
+        PNumber = pNumber;
+    }
 
-	public void setURL(String uRL) {
-		URL = uRL;
-	}
+    public String getURL() {
+        return URL;
+    }
 
-	public Boolean getState() {
-		return State;
-	}
+    public void setURL(String uRL) {
+        URL = uRL;
+    }
 
-	public void setState(Boolean state) {
-		State = state;
-	}
+    public Boolean getState() {
+        return State;
+    }
 
-	public String getSort() {
-		return Sort;
-	}
+    public void setState(Boolean state) {
+        State = state;
+    }
 
-	public void setSort(String sort) {
-		Sort = sort;
-	}
+    public String getSort() {
+        return Sort;
+    }
 
-	public Boolean getEnabled() {
-		return Enabled;
-	}
+    public void setSort(String sort) {
+        Sort = sort;
+    }
 
-	public void setEnabled(Boolean enabled) {
-		Enabled = enabled;
-	}
+    public Boolean getEnabled() {
+        return Enabled;
+    }
 
-	public String getType() {
-		return Type;
-	}
+    public void setEnabled(Boolean enabled) {
+        Enabled = enabled;
+    }
 
-	public void setType(String type) {
-		Type = type;
-	}
+    public String getType() {
+        return Type;
+    }
 
-	public String getPushBtn() {
-		return PushBtn;
-	}
+    public void setType(String type) {
+        Type = type;
+    }
 
-	public void setPushBtn(String pushBtn) {
-		PushBtn = pushBtn;
-	}
+    public String getPushBtn() {
+        return PushBtn;
+    }
+
+    public void setPushBtn(String pushBtn) {
+        PushBtn = pushBtn;
+    }
 }

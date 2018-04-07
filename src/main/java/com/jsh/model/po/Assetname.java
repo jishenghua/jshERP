@@ -1,93 +1,77 @@
 package com.jsh.model.po;
 
 @SuppressWarnings("serial")
-public class Assetname implements java.io.Serializable
-{
-	private Long id;
-	private String assetname;
-	private Short isystem;
-	private Category category;
-	private String description;
-	private Short isconsumables;
+public class Assetname implements java.io.Serializable {
+    private Long id;
+    private String assetname;
+    private Short isystem;
+    private Category category;
+    private String description;
+    private Short isconsumables;
 
-	public Assetname()
-	{
-		
-	}
-	
-	public Assetname(Long id)
-	{
-		this.id = id;
-	}
+    public Assetname() {
 
-	public Assetname(String assetname, Short isystem, String description,
-			Short isconsumables,Category category)
-	{
-		this.assetname = assetname;
-		this.isystem = isystem;
-		this.description = description;
-		this.isconsumables = isconsumables;
-		this.category = category;
-	}
+    }
 
-	public Long getId()
-	{
-		return this.id;
-	}
+    public Assetname(Long id) {
+        this.id = id;
+    }
 
-	public void setId(Long id)
-	{
-		this.id = id;
-	}
+    public Assetname(String assetname, Short isystem, String description,
+                     Short isconsumables, Category category) {
+        this.assetname = assetname;
+        this.isystem = isystem;
+        this.description = description;
+        this.isconsumables = isconsumables;
+        this.category = category;
+    }
 
-	public String getAssetname()
-	{
-		return this.assetname;
-	}
+    public Long getId() {
+        return this.id;
+    }
 
-	public void setAssetname(String assetname)
-	{
-		this.assetname = assetname;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public Short getIsystem()
-	{
-		return this.isystem;
-	}
+    public String getAssetname() {
+        return this.assetname;
+    }
 
-	public void setIsystem(Short isystem)
-	{
-		this.isystem = isystem;
-	}
+    public void setAssetname(String assetname) {
+        this.assetname = assetname;
+    }
 
-	public String getDescription()
-	{
-		return this.description;
-	}
+    public Short getIsystem() {
+        return this.isystem;
+    }
 
-	public void setDescription(String description)
-	{
-		this.description = description;
-	}
+    public void setIsystem(Short isystem) {
+        this.isystem = isystem;
+    }
 
-	public Short getIsconsumables()
-	{
-		return this.isconsumables;
-	}
+    public String getDescription() {
+        return this.description;
+    }
 
-	public void setIsconsumables(Short isconsumables)
-	{
-		this.isconsumables = isconsumables;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-    public Category getCategory()
-    {
+    public Short getIsconsumables() {
+        return this.isconsumables;
+    }
+
+    public void setIsconsumables(Short isconsumables) {
+        this.isconsumables = isconsumables;
+    }
+
+    public Category getCategory() {
         return category;
     }
 
-    public void setCategory(Category category)
-    {
+    public void setCategory(Category category) {
         this.category = category;
     }
-	
+
 }

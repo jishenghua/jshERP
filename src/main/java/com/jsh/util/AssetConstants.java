@@ -2,26 +2,26 @@ package com.jsh.util;
 
 /**
  * 定义资产管理常量
+ *
  * @author jishenghua
  */
-public interface AssetConstants
-{
+public interface AssetConstants {
     /**
      * 公共常量
+     *
      * @author jishenghua
      */
-    public class Common
-    {
+    public class Common {
 
-	
+
     }
 
     /**
      * 资产常量--导入导出excel表格业务相关
+     *
      * @author jishenghua
      */
-    public class BusinessForExcel
-    {
+    public class BusinessForExcel {
         /**
          * 资产名称常量
          */
@@ -65,17 +65,17 @@ public interface AssetConstants
         /**
          * 序列号
          */
-        public static final int EXCEL_SERIALNO = 8; 
+        public static final int EXCEL_SERIALNO = 8;
 
         /**
          * 有效日期
          */
-        public static final int EXCEL_EXPIRATION_DATE = 9; 
+        public static final int EXCEL_EXPIRATION_DATE = 9;
 
         /**
          * 保修日期
          */
-        public static final int EXCEL_WARRANTY_DATE = 10; 
+        public static final int EXCEL_WARRANTY_DATE = 10;
 
         /**
          * 供应商
@@ -116,6 +116,6 @@ public interface AssetConstants
          * action返回excel结果
          */
         public static final String EXCEL = "excel";
-		
+
     }
 }

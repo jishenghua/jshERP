@@ -1,79 +1,71 @@
 package com.jsh.action.basic;
 
-import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.text.*;
-
-import com.jsh.model.po.AccountHead;
-import com.jsh.model.po.AccountItem;
+import com.jsh.base.BaseAction;
+import com.jsh.base.Log;
+import com.jsh.model.po.*;
+import com.jsh.model.vo.basic.AccountModel;
+import com.jsh.service.basic.AccountIService;
+import com.jsh.service.materials.AccountHeadIService;
+import com.jsh.service.materials.AccountItemIService;
+import com.jsh.service.materials.DepotHeadIService;
 import com.jsh.util.JshException;
+import com.jsh.util.PageUtil;
+import com.jsh.util.Tools;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.dao.DataAccessException;
-import com.jsh.base.BaseAction;
-import com.jsh.base.Log;
-import com.jsh.model.po.DepotHead;
-import com.jsh.model.po.Logdetails;
-import com.jsh.model.po.Account;
-import com.jsh.model.vo.basic.AccountModel;
-import com.jsh.service.basic.AccountIService;
-import com.jsh.service.materials.DepotHeadIService;
-import com.jsh.service.materials.AccountHeadIService;
-import com.jsh.service.materials.AccountItemIService;
-import com.jsh.util.PageUtil;
-import com.jsh.util.Tools;
+
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * 结算账户
+ *
  * @author ji sheng hua qq7527-18920
  */
 @SuppressWarnings("serial")
-public class AccountAction extends BaseAction<AccountModel>
-{
+public class AccountAction extends BaseAction<AccountModel> {
     private AccountIService accountService;
     private DepotHeadIService depotHeadService;
     private AccountHeadIService accountHeadService;
     private AccountItemIService accountItemService;
-	private AccountModel model = new AccountModel();
+    private AccountModel model = new AccountModel();
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public String getAccount()
-    {
-        Map<String,List> mapData = model.getShowModel().getMap();
-        PageUtil pageUtil = new  PageUtil();
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public String getAccount() {
+        Map<String, List> mapData = model.getShowModel().getMap();
+        PageUtil pageUtil = new PageUtil();
         pageUtil.setPageSize(0);
         pageUtil.setCurPage(0);
-        try
-        {
-            Map<String,Object> condition = pageUtil.getAdvSearch();
+        try {
+            Map<String, Object> condition = pageUtil.getAdvSearch();
             condition.put("Id_s_order", "asc");
             accountService.find(pageUtil);
             mapData.put("accountList", pageUtil.getPageList());
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             Log.errorFileSync(">>>>>>>>>>>>>查找账户信息异常", e);
             model.getShowModel().setMsgTip("exception");
         }
         return SUCCESS;
     }
-	
+
     /**
      * 增加结算账户
+     *
      * @return
      */
-    public void create()
-    {
+    public void create() {
         Log.infoFileSync("==================开始调用增加结算账户方法===================");
         Boolean flag = false;
-        try
-        {
+        try {
             Account Account = new Account();
             Account.setName(model.getName());
             Account.setSerialNo(model.getSerialNo());
-            Account.setInitialAmount(model.getInitialAmount()!=null ? model.getInitialAmount() : 0);
+            Account.setInitialAmount(model.getInitialAmount() != null ? model.getInitialAmount() : 0);
             Account.setCurrentAmount(model.getCurrentAmount());
             Account.setRemark(model.getRemark());
             accountService.create(Account);
@@ -83,72 +75,61 @@ public class AccountAction extends BaseAction<AccountModel>
             //记录操作日志使用
             tipMsg = "成功";
             tipType = 0;
-        }
-        catch (DataAccessException e)
-        {
+        } catch (DataAccessException e) {
             Log.errorFileSync(">>>>>>>>>>>>>>>>>>>增加结算账户异常", e);
             flag = false;
             tipMsg = "失败";
             tipType = 1;
-        }
-        finally
-        {
-            try 
-            {
+        } finally {
+            try {
                 toClient(flag.toString());
-            } 
-            catch (IOException e) 
-            {
+            } catch (IOException e) {
                 Log.errorFileSync(">>>>>>>>>>>>增加结算账户回写客户端结果异常", e);
             }
         }
 
         logService.create(new Logdetails(getUser(), "增加结算账户", model.getClientIp(),
-                                         new Timestamp(System.currentTimeMillis())
-                                         , tipType, "增加结算账户名称为  "+ model.getName() + " " + tipMsg + "！", "增加结算账户" + tipMsg));
+                new Timestamp(System.currentTimeMillis())
+                , tipType, "增加结算账户名称为  " + model.getName() + " " + tipMsg + "！", "增加结算账户" + tipMsg));
         Log.infoFileSync("==================结束调用增加结算账户方法===================");
     }
 
     /**
      * 删除结算账户
+     *
      * @return
      */
-    public String delete()
-    {
+    public String delete() {
         Log.infoFileSync("====================开始调用删除结算账户信息方法delete()================");
-        try 
-        {
+        try {
             accountService.delete(model.getAccountID());
             tipMsg = "成功";
             tipType = 0;
-        } 
-        catch (DataAccessException e) 
-        {
+        } catch (DataAccessException e) {
             Log.errorFileSync(">>>>>>>>>>>删除ID为 " + model.getAccountID() + "  的结算账户异常", e);
             tipMsg = "失败";
             tipType = 1;
         }
         model.getShowModel().setMsgTip(tipMsg);
         logService.create(new Logdetails(getUser(), "删除结算账户", model.getClientIp(),
-                                         new Timestamp(System.currentTimeMillis())
-                                         , tipType, "删除结算账户ID为  "+ model.getAccountID() + ",名称为  " + model.getName() + tipMsg + "！", "删除结算账户" + tipMsg));
+                new Timestamp(System.currentTimeMillis())
+                , tipType, "删除结算账户ID为  " + model.getAccountID() + ",名称为  " + model.getName() + tipMsg + "！", "删除结算账户" + tipMsg));
         Log.infoFileSync("====================结束调用删除结算账户信息方法delete()================");
         return SUCCESS;
     }
 
     /**
      * 更新结算账户
+     *
      * @return
      */
-    public void update()
-    {
+    public void update() {
         Boolean flag = false;
-        try
-        {
+        try {
             Account Account = accountService.get(model.getAccountID());
             Account.setName(model.getName());
             Account.setSerialNo(model.getSerialNo());
-            Account.setInitialAmount(model.getInitialAmount()!=null ? model.getInitialAmount() : 0);
+            Account.setInitialAmount(model.getInitialAmount() != null ? model.getInitialAmount() : 0);
             Account.setCurrentAmount(model.getCurrentAmount());
             Account.setRemark(model.getRemark());
             accountService.update(Account);
@@ -156,39 +137,31 @@ public class AccountAction extends BaseAction<AccountModel>
             flag = true;
             tipMsg = "成功";
             tipType = 0;
-        } 
-        catch (DataAccessException e) 
-        {
+        } catch (DataAccessException e) {
             Log.errorFileSync(">>>>>>>>>>>>>修改结算账户ID为 ： " + model.getAccountID() + "信息失败", e);
             flag = false;
             tipMsg = "失败";
             tipType = 1;
-        }
-        finally
-        {
-            try 
-            {
+        } finally {
+            try {
                 toClient(flag.toString());
-            } 
-            catch (IOException e) 
-            {
+            } catch (IOException e) {
                 Log.errorFileSync(">>>>>>>>>>>>修改结算账户回写客户端结果异常", e);
             }
         }
         logService.create(new Logdetails(getUser(), "更新结算账户", model.getClientIp(),
-                                         new Timestamp(System.currentTimeMillis())
-                                         , tipType, "更新结算账户ID为  "+ model.getAccountID() + " " + tipMsg + "！", "更新结算账户" + tipMsg));
+                new Timestamp(System.currentTimeMillis())
+                , tipType, "更新结算账户ID为  " + model.getAccountID() + " " + tipMsg + "！", "更新结算账户" + tipMsg));
     }
-    
+
     /**
      * 更新结算账户金额
+     *
      * @return
      */
-    public void updateAmount()
-    {
+    public void updateAmount() {
         Boolean flag = false;
-        try
-        {
+        try {
             Account Account = accountService.get(model.getAccountID());
             Account.setCurrentAmount(model.getCurrentAmount());
             accountService.update(Account);
@@ -196,32 +169,26 @@ public class AccountAction extends BaseAction<AccountModel>
             flag = true;
             tipMsg = "成功";
             tipType = 0;
-        } 
-        catch (DataAccessException e) 
-        {
+        } catch (DataAccessException e) {
             Log.errorFileSync(">>>>>>>>>>>>>修改结算账户ID为 ： " + model.getAccountID() + "信息失败", e);
             flag = false;
             tipMsg = "失败";
             tipType = 1;
-        }
-        finally
-        {
-            try 
-            {
+        } finally {
+            try {
                 toClient(flag.toString());
-            } 
-            catch (IOException e) 
-            {
+            } catch (IOException e) {
                 Log.errorFileSync(">>>>>>>>>>>>修改结算账户回写客户端结果异常", e);
             }
         }
         logService.create(new Logdetails(getUser(), "更新结算账户", model.getClientIp(),
-                                         new Timestamp(System.currentTimeMillis())
-                                         , tipType, "更新结算账户ID为  "+ model.getAccountID() + " " + tipMsg + "！", "更新结算账户" + tipMsg));
+                new Timestamp(System.currentTimeMillis())
+                , tipType, "更新结算账户ID为  " + model.getAccountID() + " " + tipMsg + "！", "更新结算账户" + tipMsg));
     }
 
     /**
      * 更新结算账户-设置是否默认
+     *
      * @return
      */
     public void updateAmountIsDefault() {
@@ -233,91 +200,75 @@ public class AccountAction extends BaseAction<AccountModel>
             flag = true;
             tipMsg = "成功";
             tipType = 0;
-        }
-        catch (DataAccessException e) {
+        } catch (DataAccessException e) {
             Log.errorFileSync(">>>>>>>>>>>>>修改结算账户ID为 ： " + model.getAccountID() + "信息失败", e);
             flag = false;
             tipMsg = "失败";
             tipType = 1;
-        }
-        finally {
+        } finally {
             try {
                 toClient(flag.toString());
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 Log.errorFileSync(">>>>>>>>>>>>修改结算账户回写客户端结果异常", e);
             }
         }
         //如果改为默认账户时记录日志
-        if(model.getIsDefault()) {
+        if (model.getIsDefault()) {
             logService.create(new Logdetails(getUser(), "更新默认账户", model.getClientIp(), new Timestamp(System.currentTimeMillis()),
-                    tipType, "更新账户ID"+ model.getAccountID() + "为默认账户" + tipMsg + "！", "更新默认账户" + tipMsg));
+                    tipType, "更新账户ID" + model.getAccountID() + "为默认账户" + tipMsg + "！", "更新默认账户" + tipMsg));
         }
     }
 
     /**
      * 批量删除指定ID结算账户
+     *
      * @return
      */
-    public String batchDelete()
-    {
-        try
-        {
+    public String batchDelete() {
+        try {
             accountService.batchDelete(model.getAccountIDs());
             model.getShowModel().setMsgTip("成功");
             //记录操作日志使用
             tipMsg = "成功";
             tipType = 0;
-        } 
-        catch (DataAccessException e) 
-        {
+        } catch (DataAccessException e) {
             Log.errorFileSync(">>>>>>>>>>>批量删除结算账户ID为：" + model.getAccountIDs() + "信息异常", e);
             tipMsg = "失败";
             tipType = 1;
         }
 
         logService.create(new Logdetails(getUser(), "批量删除结算账户", model.getClientIp(),
-                                         new Timestamp(System.currentTimeMillis())
-                                         , tipType, "批量删除结算账户ID为  "+ model.getAccountIDs() + " " + tipMsg + "！", "批量删除结算账户" + tipMsg));
+                new Timestamp(System.currentTimeMillis())
+                , tipType, "批量删除结算账户ID为  " + model.getAccountIDs() + " " + tipMsg + "！", "批量删除结算账户" + tipMsg));
         return SUCCESS;
     }
 
     /**
      * 检查输入名称是否存在
      */
-    public void checkIsNameExist()
-    {
+    public void checkIsNameExist() {
         Boolean flag = false;
-        try 
-        {
+        try {
             flag = accountService.checkIsNameExist("name", model.getName(), "id", model.getAccountID());
-        } 
-        catch (DataAccessException e) 
-        {
+        } catch (DataAccessException e) {
             Log.errorFileSync(">>>>>>>>>>>>>>>>>检查结算账户名称为：" + model.getName() + " ID为： " + model.getAccountID() + " 是否存在异常！");
-        }
-        finally
-        {
-            try 
-            {
+        } finally {
+            try {
                 toClient(flag.toString());
-            }
-            catch (IOException e) 
-            {
-                Log.errorFileSync(">>>>>>>>>>>>回写检查结算账户名称为：" + model.getName() + " ID为： " + model.getAccountID() + " 是否存在异常！",e);
+            } catch (IOException e) {
+                Log.errorFileSync(">>>>>>>>>>>>回写检查结算账户名称为：" + model.getName() + " ID为： " + model.getAccountID() + " 是否存在异常！", e);
             }
         }
     }
 
     /**
      * 查找结算账户信息
+     *
      * @return
      */
-    public void findBy()
-    {
-        try 
-        {
-            PageUtil<Account> pageUtil = new  PageUtil<Account>();
+    public void findBy() {
+        try {
+            PageUtil<Account> pageUtil = new PageUtil<Account>();
             pageUtil.setPageSize(model.getPageSize());
             pageUtil.setCurPage(model.getPageNo());
             pageUtil.setAdvSearch(getCondition());
@@ -328,11 +279,9 @@ public class AccountAction extends BaseAction<AccountModel>
             outer.put("total", pageUtil.getTotalCount());
             //存放数据json数组
             JSONArray dataArray = new JSONArray();
-            if(null != dataList)
-            {
-                for(Account account:dataList)
-                {
-                    DecimalFormat df =new DecimalFormat(".##");
+            if (null != dataList) {
+                for (Account account : dataList) {
+                    DecimalFormat df = new DecimalFormat(".##");
                     JSONObject item = new JSONObject();
                     item.put("id", account.getId());
                     //结算账户名称
@@ -340,14 +289,14 @@ public class AccountAction extends BaseAction<AccountModel>
                     item.put("serialNo", account.getSerialNo());
                     item.put("initialAmount", account.getInitialAmount());
                     String timeStr = Tools.getCurrentMonth();
-                    Double thisMonthAmount = getAccountSum(account.getId(), timeStr, "month") + getAccountSumByHead(account.getId(), timeStr, "month") +getAccountSumByDetail(account.getId(), timeStr, "month") + getManyAccountSum(account.getId(), timeStr, "month");
+                    Double thisMonthAmount = getAccountSum(account.getId(), timeStr, "month") + getAccountSumByHead(account.getId(), timeStr, "month") + getAccountSumByDetail(account.getId(), timeStr, "month") + getManyAccountSum(account.getId(), timeStr, "month");
                     String thisMonthAmountFmt = "0";
-                    if(thisMonthAmount!=0){
+                    if (thisMonthAmount != 0) {
                         thisMonthAmountFmt = df.format(thisMonthAmount);
                     }
                     item.put("thisMonthAmount", thisMonthAmountFmt);  //本月发生额
-                    Double currentAmount = getAccountSum(account.getId(),"", "month") + getAccountSumByHead(account.getId(), "", "month") + getAccountSumByDetail(account.getId(), "", "month") + getManyAccountSum(account.getId(), "", "month") + account.getInitialAmount();
-                    String currentAmountFmt=df.format(currentAmount);
+                    Double currentAmount = getAccountSum(account.getId(), "", "month") + getAccountSumByHead(account.getId(), "", "month") + getAccountSumByDetail(account.getId(), "", "month") + getManyAccountSum(account.getId(), "", "month") + account.getInitialAmount();
+                    String currentAmountFmt = df.format(currentAmount);
                     item.put("currentAmount", currentAmountFmt);  //当前余额
                     item.put("isDefault", account.getIsDefault());  //是否默认
                     item.put("remark", account.getRemark());
@@ -358,37 +307,34 @@ public class AccountAction extends BaseAction<AccountModel>
             outer.put("rows", dataArray);
             //回写查询结果
             toClient(outer.toString());
-        } 
-        catch (DataAccessException e) 
-        {
+        } catch (DataAccessException e) {
             Log.errorFileSync(">>>>>>>>>查找结算账户信息异常", e);
-        } 
-        catch (IOException e) 
-        {
+        } catch (IOException e) {
             Log.errorFileSync(">>>>>>>>>回写查询结算账户信息结果异常", e);
         }
     }
+
     /**
      * 单个账户的金额求和-入库和出库
+     *
      * @param id
      * @return
      */
-    public Double getAccountSum(Long id,String timeStr,String type){
-    	Double accountSum = 0.0;
-    	try{	    	
-	    	PageUtil<DepotHead> pageUtil = new PageUtil<DepotHead>();
-	    	pageUtil.setPageSize(0);
-	        pageUtil.setCurPage(0);
-	        pageUtil.setAdvSearch(getCondition_getSum(id,timeStr,type));
-			depotHeadService.find(pageUtil);
-			List<DepotHead> dataList = pageUtil.getPageList();
-	        if(dataList!= null){
-	            for(DepotHead depotHead:dataList){
-	                accountSum = accountSum + depotHead.getChangeAmount();
-	            }
-	        }
-        }
-        catch (DataAccessException e){
+    public Double getAccountSum(Long id, String timeStr, String type) {
+        Double accountSum = 0.0;
+        try {
+            PageUtil<DepotHead> pageUtil = new PageUtil<DepotHead>();
+            pageUtil.setPageSize(0);
+            pageUtil.setCurPage(0);
+            pageUtil.setAdvSearch(getCondition_getSum(id, timeStr, type));
+            depotHeadService.find(pageUtil);
+            List<DepotHead> dataList = pageUtil.getPageList();
+            if (dataList != null) {
+                for (DepotHead depotHead : dataList) {
+                    accountSum = accountSum + depotHead.getChangeAmount();
+                }
+            }
+        } catch (DataAccessException e) {
             Log.errorFileSync(">>>>>>>>>查找进销存信息异常", e);
         }
         return accountSum;
@@ -396,25 +342,25 @@ public class AccountAction extends BaseAction<AccountModel>
 
     /**
      * 单个账户的金额求和-收入、支出、转账的单据表头的合计
+     *
      * @param id
      * @return
      */
-    public Double getAccountSumByHead(Long id,String timeStr,String type){
+    public Double getAccountSumByHead(Long id, String timeStr, String type) {
         Double accountSum = 0.0;
-        try{
+        try {
             PageUtil<AccountHead> pageUtil = new PageUtil<AccountHead>();
             pageUtil.setPageSize(0);
             pageUtil.setCurPage(0);
             pageUtil.setAdvSearch(getCondition_getSumByHead(id, timeStr, type));
             accountHeadService.find(pageUtil);
             List<AccountHead> dataList = pageUtil.getPageList();
-            if(dataList!= null){
-                for(AccountHead accountHead:dataList){
+            if (dataList != null) {
+                for (AccountHead accountHead : dataList) {
                     accountSum = accountSum + accountHead.getChangeAmount();
                 }
             }
-        }
-        catch (DataAccessException e){
+        } catch (DataAccessException e) {
             Log.errorFileSync(">>>>>>>>>查找进销存信息异常", e);
         }
         return accountSum;
@@ -422,25 +368,26 @@ public class AccountAction extends BaseAction<AccountModel>
 
     /**
      * 单个账户的金额求和-收款、付款、转账、收预付款的单据明细的合计
+     *
      * @param id
      * @return
      */
-    public Double getAccountSumByDetail(Long id,String timeStr, String type){
+    public Double getAccountSumByDetail(Long id, String timeStr, String type) {
         Double accountSum = 0.0;
-        try{
+        try {
             PageUtil<AccountHead> pageUtil = new PageUtil<AccountHead>();
             pageUtil.setPageSize(0);
             pageUtil.setCurPage(0);
             pageUtil.setAdvSearch(getCondition_getSumByHead(timeStr, type));
             accountHeadService.find(pageUtil);
             List<AccountHead> dataList = pageUtil.getPageList();
-            if(dataList!= null){
+            if (dataList != null) {
                 String ids = "";
-                for(AccountHead accountHead:dataList){
-                    ids = ids + accountHead.getId() +",";
+                for (AccountHead accountHead : dataList) {
+                    ids = ids + accountHead.getId() + ",";
                 }
-                if(!ids.equals("")) {
-                    ids = ids.substring(0,ids.length() -1);
+                if (!ids.equals("")) {
+                    ids = ids.substring(0, ids.length() - 1);
                 }
                 PageUtil<AccountItem> pageUtilOne = new PageUtil<AccountItem>();
                 pageUtilOne.setPageSize(0);
@@ -448,17 +395,15 @@ public class AccountAction extends BaseAction<AccountModel>
                 pageUtilOne.setAdvSearch(getCondition_getSumByDetail(id, ids));
                 accountItemService.find(pageUtilOne);
                 List<AccountItem> dataListOne = pageUtilOne.getPageList();
-                if(dataListOne!= null){
-                    for(AccountItem accountItem:dataListOne){
+                if (dataListOne != null) {
+                    for (AccountItem accountItem : dataListOne) {
                         accountSum = accountSum + accountItem.getEachAmount();
                     }
                 }
             }
-        }
-        catch (DataAccessException e){
+        } catch (DataAccessException e) {
             Log.errorFileSync(">>>>>>>>>查找进销存信息异常", e);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             Log.errorFileSync(">>>>>>>>>异常信息：", e);
         }
         return accountSum;
@@ -466,35 +411,35 @@ public class AccountAction extends BaseAction<AccountModel>
 
     /**
      * 单个账户的金额求和-多账户的明细合计
+     *
      * @param id
      * @return
      */
-    public Double getManyAccountSum(Long id,String timeStr, String type){
+    public Double getManyAccountSum(Long id, String timeStr, String type) {
         Double accountSum = 0.0;
-        try{
+        try {
             PageUtil<DepotHead> pageUtil = new PageUtil<DepotHead>();
             pageUtil.setPageSize(0);
             pageUtil.setCurPage(0);
-            pageUtil.setAdvSearch(getCondition_getManyAccountSum(id,timeStr,type));
+            pageUtil.setAdvSearch(getCondition_getManyAccountSum(id, timeStr, type));
             depotHeadService.find(pageUtil);
             List<DepotHead> dataList = pageUtil.getPageList();
-            if(dataList!= null){
-                for(DepotHead depotHead:dataList){
+            if (dataList != null) {
+                for (DepotHead depotHead : dataList) {
                     String accountIdList = depotHead.getAccountIdList();
                     String accountMoneyList = depotHead.getAccountMoneyList();
-                    accountIdList = accountIdList.replace("[","").replace("]", "").replace("\"","");
-                    accountMoneyList = accountMoneyList.replace("[","").replace("]", "").replace("\"","");
+                    accountIdList = accountIdList.replace("[", "").replace("]", "").replace("\"", "");
+                    accountMoneyList = accountMoneyList.replace("[", "").replace("]", "").replace("\"", "");
                     String[] aList = accountIdList.split(",");
                     String[] amList = accountMoneyList.split(",");
-                    for(int i=0; i<aList.length; i++){
-                        if(aList[i].toString().equals(id.toString())){
+                    for (int i = 0; i < aList.length; i++) {
+                        if (aList[i].toString().equals(id.toString())) {
                             accountSum = accountSum + Double.parseDouble(amList[i].toString());
                         }
                     }
                 }
             }
-        }
-        catch (DataAccessException e){
+        } catch (DataAccessException e) {
             Log.errorFileSync(">>>>>>>>>查找信息异常", e);
         }
         return accountSum;
@@ -502,13 +447,12 @@ public class AccountAction extends BaseAction<AccountModel>
 
     /**
      * 查找结算账户信息-下拉框
+     *
      * @return
      */
-    public void findBySelect()
-    {
-        try 
-        {
-            PageUtil<Account> pageUtil = new  PageUtil<Account>();
+    public void findBySelect() {
+        try {
+            PageUtil<Account> pageUtil = new PageUtil<Account>();
             pageUtil.setPageSize(0);
             pageUtil.setCurPage(0);
             pageUtil.setAdvSearch(getCondition_select());
@@ -516,10 +460,8 @@ public class AccountAction extends BaseAction<AccountModel>
             List<Account> dataList = pageUtil.getPageList();
             //存放数据json数组
             JSONArray dataArray = new JSONArray();
-            if(null != dataList)
-            {
-                for(Account account:dataList)
-                {
+            if (null != dataList) {
+                for (Account account : dataList) {
                     JSONObject item = new JSONObject();
                     item.put("Id", account.getId());
                     //结算账户名称
@@ -529,13 +471,9 @@ public class AccountAction extends BaseAction<AccountModel>
             }
             //回写查询结果
             toClient(dataArray.toString());
-        } 
-        catch (DataAccessException e) 
-        {
+        } catch (DataAccessException e) {
             Log.errorFileSync(">>>>>>>>>查找结算账户信息异常", e);
-        } 
-        catch (IOException e) 
-        {
+        } catch (IOException e) {
             Log.errorFileSync(">>>>>>>>>回写查询结算账户信息结果异常", e);
         }
     }
@@ -543,21 +481,21 @@ public class AccountAction extends BaseAction<AccountModel>
     /**
      * 账户流水信息
      */
-    public void findAccountInOutList(){
-        PageUtil pageUtil = new  PageUtil();
+    public void findAccountInOutList() {
+        PageUtil pageUtil = new PageUtil();
         pageUtil.setPageSize(model.getPageSize());
         pageUtil.setCurPage(model.getPageNo());
         Long accountId = model.getAccountID();
         Double initialAmount = model.getInitialAmount();
-        try{
+        try {
             accountService.findAccountInOutList(pageUtil, accountId);
             List dataList = pageUtil.getPageList();
             JSONObject outer = new JSONObject();
             outer.put("total", pageUtil.getTotalCount());
             //存放数据json数组
             JSONArray dataArray = new JSONArray();
-            if(dataList!=null){
-                for(Integer i=0; i<dataList.size(); i++){
+            if (dataList != null) {
+                for (Integer i = 0; i < dataList.size(); i++) {
                     JSONObject item = new JSONObject();
                     Object dl = dataList.get(i); //获取对象
                     Object[] arr = (Object[]) dl; //转为数组
@@ -578,25 +516,23 @@ public class AccountAction extends BaseAction<AccountModel>
             outer.put("rows", dataArray);
             //回写查询结果
             toClient(outer.toString());
-        }
-        catch (JshException e) {
+        } catch (JshException e) {
             Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找信息异常", e);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询信息结果异常", e);
         }
     }
 
     /**
      * 拼接搜索条件
+     *
      * @return
      */
-    private Map<String,Object> getCondition()
-    {
+    private Map<String, Object> getCondition() {
         /**
          * 拼接搜索条件
          */
-        Map<String,Object> condition = new HashMap<String,Object>();
+        Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("name_s_like", model.getName());
         condition.put("serialNo_s_like", model.getSerialNo());
         condition.put("remark_s_like", model.getRemark());
@@ -606,59 +542,57 @@ public class AccountAction extends BaseAction<AccountModel>
 
     /**
      * 拼接搜索条件-下拉框-结算账户
+     *
      * @return
      */
-    private Map<String,Object> getCondition_select()
-    {
+    private Map<String, Object> getCondition_select() {
         /**
          * 拼接搜索条件
          */
-        Map<String,Object> condition = new HashMap<String,Object>();
+        Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("id_s_order", "desc");
         return condition;
     }
-    
+
     /**
      * 拼接搜索条件
+     *
      * @return
      */
-    private Map<String,Object> getCondition_getSum(Long id,String timeStr,String type)
-    {
+    private Map<String, Object> getCondition_getSum(Long id, String timeStr, String type) {
         /**
          * 拼接搜索条件
          */
-        Map<String,Object> condition = new HashMap<String,Object>();
+        Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("AccountId_n_eq", id);
         condition.put("PayType_s_neq", "预付款");
-        if(!timeStr.equals("")){
-            if(type.equals("month")){
+        if (!timeStr.equals("")) {
+            if (type.equals("month")) {
                 condition.put("OperTime_s_gteq", timeStr + "-01 00:00:00");
                 condition.put("OperTime_s_lteq", timeStr + "-31 00:00:00");
-            }
-            else if(type.equals("date")){
+            } else if (type.equals("date")) {
                 condition.put("OperTime_s_lteq", timeStr);
             }
-        }        
+        }
         return condition;
     }
 
     /**
      * 拼接搜索条件
+     *
      * @return
      */
-    private Map<String,Object> getCondition_getManyAccountSum(Long id,String timeStr,String type)
-    {
+    private Map<String, Object> getCondition_getManyAccountSum(Long id, String timeStr, String type) {
         /**
          * 拼接搜索条件
          */
-        Map<String,Object> condition = new HashMap<String,Object>();
+        Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("AccountIdList_s_like", "\"" + id.toString() + "\"");
-        if(!timeStr.equals("")){
-            if(type.equals("month")){
+        if (!timeStr.equals("")) {
+            if (type.equals("month")) {
                 condition.put("OperTime_s_gteq", timeStr + "-01 00:00:00");
                 condition.put("OperTime_s_lteq", timeStr + "-31 00:00:00");
-            }
-            else if(type.equals("date")){
+            } else if (type.equals("date")) {
                 condition.put("OperTime_s_lteq", timeStr);
             }
         }
@@ -667,21 +601,20 @@ public class AccountAction extends BaseAction<AccountModel>
 
     /**
      * 拼接搜索条件
+     *
      * @return
      */
-    private Map<String,Object> getCondition_getSumByHead(Long id,String timeStr, String type)
-    {
+    private Map<String, Object> getCondition_getSumByHead(Long id, String timeStr, String type) {
         /**
          * 拼接搜索条件
          */
-        Map<String,Object> condition = new HashMap<String,Object>();
+        Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("AccountId_n_eq", id);
-        if(!timeStr.equals("")){
-            if(type.equals("month")) {
+        if (!timeStr.equals("")) {
+            if (type.equals("month")) {
                 condition.put("BillTime_s_gteq", timeStr + "-01 00:00:00");
                 condition.put("BillTime_s_lteq", timeStr + "-31 00:00:00");
-            }
-            else if(type.equals("date")) {
+            } else if (type.equals("date")) {
                 condition.put("BillTime_s_lteq", timeStr);
             }
         }
@@ -690,20 +623,19 @@ public class AccountAction extends BaseAction<AccountModel>
 
     /**
      * 拼接搜索条件
+     *
      * @return
      */
-    private Map<String,Object> getCondition_getSumByHead(String timeStr, String type)
-    {
+    private Map<String, Object> getCondition_getSumByHead(String timeStr, String type) {
         /**
          * 拼接搜索条件
          */
-        Map<String,Object> condition = new HashMap<String,Object>();
-        if(!timeStr.equals("")){
-            if(type.equals("month")) {
+        Map<String, Object> condition = new HashMap<String, Object>();
+        if (!timeStr.equals("")) {
+            if (type.equals("month")) {
                 condition.put("BillTime_s_gteq", timeStr + "-01 00:00:00");
                 condition.put("BillTime_s_lteq", timeStr + "-31 00:00:00");
-            }
-            else if(type.equals("date")) {
+            } else if (type.equals("date")) {
                 condition.put("BillTime_s_lteq", timeStr);
             }
         }
@@ -712,16 +644,16 @@ public class AccountAction extends BaseAction<AccountModel>
 
     /**
      * 拼接搜索条件
+     *
      * @return
      */
-    private Map<String,Object> getCondition_getSumByDetail(Long id, String ids)
-    {
+    private Map<String, Object> getCondition_getSumByDetail(Long id, String ids) {
         /**
          * 拼接搜索条件
          */
-        Map<String,Object> condition = new HashMap<String,Object>();
+        Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("AccountId_n_eq", id);
-        if(!ids.equals("")){
+        if (!ids.equals("")) {
             condition.put("HeaderId_s_in", ids);
         }
         return condition;
@@ -729,20 +661,22 @@ public class AccountAction extends BaseAction<AccountModel>
 
     //=============以下spring注入以及Model驱动公共方法，与Action处理无关==================
     @Override
-    public AccountModel getModel()
-    {
+    public AccountModel getModel() {
         return model;
     }
-    public void setAccountService(AccountIService accountService)
-    {
+
+    public void setAccountService(AccountIService accountService) {
         this.accountService = accountService;
     }
+
     public void setDepotHeadService(DepotHeadIService depotHeadService) {
-		this.depotHeadService = depotHeadService;
-	}
+        this.depotHeadService = depotHeadService;
+    }
+
     public void setAccountHeadService(AccountHeadIService accountHeadService) {
         this.accountHeadService = accountHeadService;
     }
+
     public void setAccountItemService(AccountItemIService accountItemService) {
         this.accountItemService = accountItemService;
     }

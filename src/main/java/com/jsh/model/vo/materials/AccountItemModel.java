@@ -4,11 +4,12 @@ import java.io.InputStream;
 import java.io.Serializable;
 
 @SuppressWarnings("serial")
-public class AccountItemModel implements Serializable
-{
+public class AccountItemModel implements Serializable {
     private AccountItemShowModel showModel = new AccountItemShowModel();
 
-    /**======开始接受页面参数=================**/
+    /**
+     * ======开始接受页面参数=================
+     **/
     private Long HeaderId;
     private Long AccountId;
     private Long InOutItemId;
@@ -58,104 +59,84 @@ public class AccountItemModel implements Serializable
      */
     private InputStream excelStream;
 
-    public void setShowModel(AccountItemShowModel showModel)
-    {
-        this.showModel = showModel;
-    }
-
-    public AccountItemShowModel getShowModel()
-    {
+    public AccountItemShowModel getShowModel() {
         return showModel;
     }
 
-    public void setHeaderId(Long headerId)
-    {
-        HeaderId = headerId;
+    public void setShowModel(AccountItemShowModel showModel) {
+        this.showModel = showModel;
     }
 
-    public Long getHeaderId()
-    {
+    public Long getHeaderId() {
         return HeaderId;
     }
 
-    public void setAccountId(Long accountId)
-    {
-        AccountId = accountId;
+    public void setHeaderId(Long headerId) {
+        HeaderId = headerId;
     }
 
-    public Long getAccountId()
-    {
+    public Long getAccountId() {
         return AccountId;
     }
 
-    public void setInOutItemId(Long inOutItemId)
-    {
-        InOutItemId = inOutItemId;
+    public void setAccountId(Long accountId) {
+        AccountId = accountId;
     }
 
-    public Long getInOutItemId()
-    {
+    public Long getInOutItemId() {
         return InOutItemId;
     }
 
-    public void setEachAmount(Double eachAmount)
-    {
-        EachAmount = eachAmount;
+    public void setInOutItemId(Long inOutItemId) {
+        InOutItemId = inOutItemId;
     }
 
-    public Double getEachAmount()
-    {
+    public Double getEachAmount() {
         return EachAmount;
     }
 
-    public void setRemark(String remark)
-    {
-        Remark = remark;
+    public void setEachAmount(Double eachAmount) {
+        EachAmount = eachAmount;
     }
 
-    public String getRemark()
-    {
+    public String getRemark() {
         return Remark;
     }
 
-    public void setInserted(String inserted)
-    {
-        Inserted = inserted;
+    public void setRemark(String remark) {
+        Remark = remark;
     }
 
-    public String getInserted()
-    {
+    public String getInserted() {
         return Inserted;
     }
 
-    public void setDeleted(String deleted)
-    {
-        Deleted = deleted;
+    public void setInserted(String inserted) {
+        Inserted = inserted;
     }
 
-    public String getDeleted()
-    {
+    public String getDeleted() {
         return Deleted;
     }
 
-    public void setUpdated(String updated)
-    {
-        Updated = updated;
+    public void setDeleted(String deleted) {
+        Deleted = deleted;
     }
 
-    public String getUpdated()
-    {
+    public String getUpdated() {
         return Updated;
     }
 
-    public void setHeadIds(String headIds)
-    {
-        HeadIds = headIds;
+    public void setUpdated(String updated) {
+        Updated = updated;
     }
 
-    public String getHeadIds()
-    {
+    public String getHeadIds() {
         return HeadIds;
+    }
+
+    public void setHeadIds(String headIds) {
+        HeadIds = headIds;
     }
 
     public String getListType() {
@@ -166,95 +147,75 @@ public class AccountItemModel implements Serializable
         ListType = listType;
     }
 
-    public void setMonthTime(String monthTime)
-    {
-        MonthTime = monthTime;
-    }
-
-    public String getMonthTime()
-    {
+    public String getMonthTime() {
         return MonthTime;
     }
 
-    public void setBrowserType(String browserType)
-    {
-        this.browserType = browserType;
+    public void setMonthTime(String monthTime) {
+        MonthTime = monthTime;
     }
 
-    public String getBrowserType()
-    {
+    public String getBrowserType() {
         return browserType;
     }
 
-    public void setFileName(String fileName)
-    {
-        this.fileName = fileName;
+    public void setBrowserType(String browserType) {
+        this.browserType = browserType;
     }
 
-    public String getFileName()
-    {
+    public String getFileName() {
         return fileName;
     }
 
-    public void setAccountItemID(Long accountItemID)
-    {
-        this.accountItemID = accountItemID;
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
-    public Long getAccountItemID()
-    {
+    public Long getAccountItemID() {
         return accountItemID;
     }
 
-    public void setAccountItemIDs(String accountItemIDs)
-    {
-        this.accountItemIDs = accountItemIDs;
+    public void setAccountItemID(Long accountItemID) {
+        this.accountItemID = accountItemID;
     }
 
-    public String getAccountItemIDs()
-    {
+    public String getAccountItemIDs() {
         return accountItemIDs;
     }
 
-    public void setPageSize(int pageSize)
-    {
-        this.pageSize = pageSize;
+    public void setAccountItemIDs(String accountItemIDs) {
+        this.accountItemIDs = accountItemIDs;
     }
 
-    public int getPageSize()
-    {
+    public int getPageSize() {
         return pageSize;
     }
 
-    public void setPageNo(int pageNo)
-    {
-        this.pageNo = pageNo;
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
     }
 
-    public int getPageNo()
-    {
+    public int getPageNo() {
         return pageNo;
     }
 
-    public void setClientIp(String clientIp)
-    {
+    public void setPageNo(int pageNo) {
+        this.pageNo = pageNo;
+    }
+
+    public String getClientIp() {
+        return clientIp;
+    }
+
+    public void setClientIp(String clientIp) {
         this.clientIp = clientIp;
     }
 
-    public String getClientIp()
-    {
-        return clientIp;
-    }
-    
-
-
-    public void setExcelStream(InputStream excelStream)
-    {
-        this.excelStream = excelStream;
-    }
-
-    public InputStream getExcelStream()
-    {
+    public InputStream getExcelStream() {
         return excelStream;
+    }
+
+    public void setExcelStream(InputStream excelStream) {
+        this.excelStream = excelStream;
     }
 }

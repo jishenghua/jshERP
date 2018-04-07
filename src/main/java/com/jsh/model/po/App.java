@@ -1,174 +1,170 @@
 package com.jsh.model.po;
 
 @SuppressWarnings("serial")
-public class App implements java.io.Serializable
-{
-	private Long Id;
-	private String Number;
-	private String Name;
-	private String Type;
-	private String Icon;
-	private String URL;
-	private String Width;
-	private String Height;
-	private Boolean ReSize;
-	private Boolean OpenMax;
-	private Boolean Flash;
-	private String ZL;
-	private String Sort;
-	private String Remark;
-	private Boolean Enabled;
-	
-	
-	public App()
-	{
-		
-	}
-	
-	public App(Long Id)
-	{
-		this.Id = Id ;
-	}
+public class App implements java.io.Serializable {
+    private Long Id;
+    private String Number;
+    private String Name;
+    private String Type;
+    private String Icon;
+    private String URL;
+    private String Width;
+    private String Height;
+    private Boolean ReSize;
+    private Boolean OpenMax;
+    private Boolean Flash;
+    private String ZL;
+    private String Sort;
+    private String Remark;
+    private Boolean Enabled;
 
-	public App(String Number, String Name, String Type, String Icon, String URL, String Width, 
-			String Height, Boolean ReSize, Boolean OpenMax, Boolean Flash, String ZL, String Sort, 
-			String Remark, Boolean Enabled)
-	{
-		this.Number = Number;
-		this.Name = Name;
-		this.Type = Type;
-		this.Icon = Icon;
-		this.URL = URL;
-		this.Width = Width;
-		this.Height = Height;
-		this.ReSize = ReSize;
-		this.OpenMax = OpenMax;
-		this.Flash = Flash;
-		this.ZL = ZL;
-		this.Sort = Sort;
-		this.Remark = Remark;
-		this.Enabled = Enabled;
-	}
 
-	public Long getId() {
-		return Id;
-	}
+    public App() {
 
-	public void setId(Long id) {
-		Id = id;
-	}
+    }
 
-	public String getNumber() {
-		return Number;
-	}
+    public App(Long Id) {
+        this.Id = Id;
+    }
 
-	public void setNumber(String number) {
-		Number = number;
-	}
+    public App(String Number, String Name, String Type, String Icon, String URL, String Width,
+               String Height, Boolean ReSize, Boolean OpenMax, Boolean Flash, String ZL, String Sort,
+               String Remark, Boolean Enabled) {
+        this.Number = Number;
+        this.Name = Name;
+        this.Type = Type;
+        this.Icon = Icon;
+        this.URL = URL;
+        this.Width = Width;
+        this.Height = Height;
+        this.ReSize = ReSize;
+        this.OpenMax = OpenMax;
+        this.Flash = Flash;
+        this.ZL = ZL;
+        this.Sort = Sort;
+        this.Remark = Remark;
+        this.Enabled = Enabled;
+    }
 
-	public String getName() {
-		return Name;
-	}
+    public Long getId() {
+        return Id;
+    }
 
-	public void setName(String name) {
-		Name = name;
-	}
+    public void setId(Long id) {
+        Id = id;
+    }
 
-	public String getType() {
-		return Type;
-	}
+    public String getNumber() {
+        return Number;
+    }
 
-	public void setType(String type) {
-		Type = type;
-	}
+    public void setNumber(String number) {
+        Number = number;
+    }
 
-	public String getIcon() {
-		return Icon;
-	}
+    public String getName() {
+        return Name;
+    }
 
-	public void setIcon(String icon) {
-		Icon = icon;
-	}
+    public void setName(String name) {
+        Name = name;
+    }
 
-	public String getURL() {
-		return URL;
-	}
+    public String getType() {
+        return Type;
+    }
 
-	public void setURL(String uRL) {
-		URL = uRL;
-	}
+    public void setType(String type) {
+        Type = type;
+    }
 
-	public String getWidth() {
-		return Width;
-	}
+    public String getIcon() {
+        return Icon;
+    }
 
-	public void setWidth(String width) {
-		Width = width;
-	}
+    public void setIcon(String icon) {
+        Icon = icon;
+    }
 
-	public String getHeight() {
-		return Height;
-	}
+    public String getURL() {
+        return URL;
+    }
 
-	public void setHeight(String height) {
-		Height = height;
-	}
+    public void setURL(String uRL) {
+        URL = uRL;
+    }
 
-	public Boolean getReSize() {
-		return ReSize;
-	}
+    public String getWidth() {
+        return Width;
+    }
 
-	public void setReSize(Boolean reSize) {
-		ReSize = reSize;
-	}
+    public void setWidth(String width) {
+        Width = width;
+    }
 
-	public Boolean getOpenMax() {
-		return OpenMax;
-	}
+    public String getHeight() {
+        return Height;
+    }
 
-	public void setOpenMax(Boolean openMax) {
-		OpenMax = openMax;
-	}
+    public void setHeight(String height) {
+        Height = height;
+    }
 
-	public Boolean getFlash() {
-		return Flash;
-	}
+    public Boolean getReSize() {
+        return ReSize;
+    }
 
-	public void setFlash(Boolean flash) {
-		Flash = flash;
-	}
+    public void setReSize(Boolean reSize) {
+        ReSize = reSize;
+    }
 
-	public String getZL() {
-		return ZL;
-	}
+    public Boolean getOpenMax() {
+        return OpenMax;
+    }
 
-	public void setZL(String zL) {
-		ZL = zL;
-	}
+    public void setOpenMax(Boolean openMax) {
+        OpenMax = openMax;
+    }
 
-	public String getSort() {
-		return Sort;
-	}
+    public Boolean getFlash() {
+        return Flash;
+    }
 
-	public void setSort(String sort) {
-		Sort = sort;
-	}
+    public void setFlash(Boolean flash) {
+        Flash = flash;
+    }
 
-	public String getRemark() {
-		return Remark;
-	}
+    public String getZL() {
+        return ZL;
+    }
 
-	public void setRemark(String remark) {
-		Remark = remark;
-	}
+    public void setZL(String zL) {
+        ZL = zL;
+    }
 
-	public Boolean getEnabled() {
-		return Enabled;
-	}
+    public String getSort() {
+        return Sort;
+    }
 
-	public void setEnabled(Boolean enabled) {
-		Enabled = enabled;
-	}
+    public void setSort(String sort) {
+        Sort = sort;
+    }
+
+    public String getRemark() {
+        return Remark;
+    }
+
+    public void setRemark(String remark) {
+        Remark = remark;
+    }
+
+    public Boolean getEnabled() {
+        return Enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        Enabled = enabled;
+    }
 
 
 }

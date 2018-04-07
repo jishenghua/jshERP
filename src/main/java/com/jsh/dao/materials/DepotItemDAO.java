@@ -8,6 +8,11 @@ import com.jsh.util.SearchConditionUtil;
 import org.hibernate.Query;
 
 public class DepotItemDAO extends BaseDAO<DepotItem> implements DepotItemIDAO {
+    private final static String TYPE = "入库";
+    private final static String SUM_TYPE = "Number";
+    private final static String IN = "in";
+    private final static String OUT = "out";
+
     /**
      * 设置dao映射基类
      *
@@ -17,8 +22,6 @@ public class DepotItemDAO extends BaseDAO<DepotItem> implements DepotItemIDAO {
     public Class<DepotItem> getEntityClass() {
         return DepotItem.class;
     }
-
-    private final static String TYPE = "入库";
 
     @SuppressWarnings("unchecked")
     @Override
@@ -133,8 +136,6 @@ public class DepotItemDAO extends BaseDAO<DepotItem> implements DepotItemIDAO {
         pageUtil.setPageList(query.list());
     }
 
-    private final static String SUM_TYPE = "Number";
-
     @SuppressWarnings("unchecked")
     @Override
     public void buyOrSale(PageUtil<DepotItem> pageUtil, String type, String subType, Long MId, String MonthTime, String sumType) throws JshException {
@@ -148,9 +149,6 @@ public class DepotItemDAO extends BaseDAO<DepotItem> implements DepotItemIDAO {
         pageUtil.setTotalCount(query.list().size());
         pageUtil.setPageList(query.list());
     }
-
-    private final static String IN = "in";
-    private final static String OUT = "out";
 
     @SuppressWarnings("unchecked")
     @Override

@@ -1,12 +1,10 @@
 package com.jsh.util;
 
-public interface ExceptionCodeConstants
-{
+public interface ExceptionCodeConstants {
     /**
      * 用户错误码定义
      */
-    public class UserExceptionCode
-    {
+    public class UserExceptionCode {
         /**
          * 用户不存在
          */

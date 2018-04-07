@@ -2,25 +2,25 @@ package com.jsh.util;
 
 /**
  * 定义商品信息常量
+ *
  * @author jishenghua
  */
-public interface MaterialConstants
-{
+public interface MaterialConstants {
     /**
      * 公共常量
+     *
      * @author ji  sheng hua
      */
-    public class Common
-    {
+    public class Common {
 
     }
 
     /**
      * 常量--导入导出excel表格业务相关
+     *
      * @author jishenghua
      */
-    public class BusinessForExcel
-    {
+    public class BusinessForExcel {
         /**
          * 名称
          */

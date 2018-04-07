@@ -1,8 +1,7 @@
 package com.jsh.model.po;
 
 @SuppressWarnings("serial")
-public class AccountItem implements java.io.Serializable
-{
+public class AccountItem implements java.io.Serializable {
     private Long Id;
     private AccountHead HeaderId;
     private Account AccountId;
@@ -10,19 +9,16 @@ public class AccountItem implements java.io.Serializable
     private Double EachAmount;
     private String Remark;
 
-    public AccountItem()
-    {
+    public AccountItem() {
 
     }
 
-    public AccountItem(Long Id)
-    {
-        this.Id = Id ;
+    public AccountItem(Long Id) {
+        this.Id = Id;
     }
 
     public AccountItem(AccountHead headerId, Account accountId,
-                       InOutItem inOutItemId, Double eachAmount, String remark)
-    {
+                       InOutItem inOutItemId, Double eachAmount, String remark) {
         super();
         HeaderId = headerId;
         AccountId = accountId;
@@ -31,64 +27,52 @@ public class AccountItem implements java.io.Serializable
         Remark = remark;
     }
 
-    public void setId(Long id)
-    {
-        Id = id;
-    }
-
-    public Long getId()
-    {
+    public Long getId() {
         return Id;
     }
 
-    public void setHeaderId(AccountHead headerId)
-    {
-        HeaderId = headerId;
+    public void setId(Long id) {
+        Id = id;
     }
 
-    public AccountHead getHeaderId()
-    {
+    public AccountHead getHeaderId() {
         return HeaderId;
     }
 
-    public void setAccountId(Account accountId)
-    {
-        AccountId = accountId;
+    public void setHeaderId(AccountHead headerId) {
+        HeaderId = headerId;
     }
 
-    public Account getAccountId()
-    {
+    public Account getAccountId() {
         return AccountId;
     }
 
-    public void setInOutItemId(InOutItem inOutItemId)
-    {
-        InOutItemId = inOutItemId;
+    public void setAccountId(Account accountId) {
+        AccountId = accountId;
     }
 
-    public InOutItem getInOutItemId()
-    {
+    public InOutItem getInOutItemId() {
         return InOutItemId;
     }
 
-    public void setEachAmount(Double eachAmount)
-    {
-        EachAmount = eachAmount;
+    public void setInOutItemId(InOutItem inOutItemId) {
+        InOutItemId = inOutItemId;
     }
 
-    public Double getEachAmount()
-    {
+    public Double getEachAmount() {
         return EachAmount;
     }
 
-    public void setRemark(String remark)
-    {
-        Remark = remark;
+    public void setEachAmount(Double eachAmount) {
+        EachAmount = eachAmount;
     }
 
-    public String getRemark()
-    {
+    public String getRemark() {
         return Remark;
+    }
+
+    public void setRemark(String remark) {
+        Remark = remark;
     }
 
 }
