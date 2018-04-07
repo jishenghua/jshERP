@@ -1,34 +1,35 @@
-<%@page import="com.jsh.util.Tools"%>
-<%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
+<%@page import="com.jsh.util.Tools" %>
+<%@ page language="java" pageEncoding="utf-8" %>
 <%
     String path = request.getContextPath();
     String clientIp = Tools.getLocalIp(request);
 %>
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>单据明细</title>
-        <meta charset="utf-8">
-        <!-- 指定以IE8的方式来渲染 -->
-        <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
-        <link rel="shortcut icon" href="<%=path%>/images/favicon.ico" type="image/x-icon" />
-        <link rel="stylesheet" type="text/css" href="<%=path %>/js/easyui-1.3.5/themes/default/easyui.css"/>
-        <link rel="stylesheet" type="text/css" href="<%=path %>/js/easyui-1.3.5/themes/icon.css"/>
-        <link type="text/css" rel="stylesheet" href="<%=path %>/css/common.css" />
-        <link type="text/css" rel="stylesheet" href="<%=path %>/css/bill_detail.css" />
-        <script src="<%=path %>/js/jquery-1.8.0.min.js"></script>
-        <script src="<%=path %>/js/easyui-1.3.5/jquery.easyui.min.js"></script>
-        <script src="<%=path %>/js/easyui-1.3.5/locale/easyui-lang-zh_CN.js"></script>
-        <script src="<%=path %>/js/common/common.js"></script>
-        <script src="<%=path %>/js/pages/materials/bill_detail.js"></script>
-        <script>
-            var kid = ${sessionScope.user.id};
-            var path = "<%=path%>";
-            var clientIp = "<%=clientIp%>";
-        </script>
-    </head>
+<head>
+    <title>单据明细</title>
+    <meta charset="utf-8">
+    <!-- 指定以IE8的方式来渲染 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
+    <link rel="shortcut icon" href="<%=path%>/images/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" type="text/css" href="<%=path %>/js/easyui-1.3.5/themes/default/easyui.css"/>
+    <link rel="stylesheet" type="text/css" href="<%=path %>/js/easyui-1.3.5/themes/icon.css"/>
+    <link type="text/css" rel="stylesheet" href="<%=path %>/css/common.css"/>
+    <link type="text/css" rel="stylesheet" href="<%=path %>/css/bill_detail.css"/>
+    <script src="<%=path %>/js/jquery-1.8.0.min.js"></script>
+    <script src="<%=path %>/js/easyui-1.3.5/jquery.easyui.min.js"></script>
+    <script src="<%=path %>/js/easyui-1.3.5/locale/easyui-lang-zh_CN.js"></script>
+    <script src="<%=path %>/js/common/common.js"></script>
+    <script src="<%=path %>/js/pages/materials/bill_detail.js"></script>
+    <script>
+        var kid = ${sessionScope.user.id};
+        var path = "<%=path%>";
+        var clientIp = "<%=clientIp%>";
+    </script>
+</head>
 <body>
-<div id="bill" class="easyui-panel" style="padding:10px;height:500px;" title="单据明细" iconCls="icon-list" collapsible="true" closable="false">
+<div id="bill" class="easyui-panel" style="padding:10px;height:500px;" title="单据明细" iconCls="icon-list"
+     collapsible="true" closable="false">
     <%--零售出库--%>
     <div class="retail_out" style="width:1100px;padding:10px 20px;top:50px"
          closed="true" modal="true" cache="false" collapsible="false" closable="true">
