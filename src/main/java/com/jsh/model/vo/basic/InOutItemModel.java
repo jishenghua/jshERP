@@ -3,8 +3,7 @@ package com.jsh.model.vo.basic;
 import java.io.Serializable;
 
 @SuppressWarnings("serial")
-public class InOutItemModel implements Serializable
-{
+public class InOutItemModel implements Serializable {
     private InOutItemShowModel showModel = new InOutItemShowModel();
 
     /**======开始接受页面参数=================**/
@@ -48,93 +47,75 @@ public class InOutItemModel implements Serializable
      */
     private String clientIp = "";
 
-    public void setShowModel(InOutItemShowModel showModel)
-    {
-        this.showModel = showModel;
-    }
-
-    public InOutItemShowModel getShowModel()
-    {
+    public InOutItemShowModel getShowModel() {
         return showModel;
     }
 
-    public void setName(String name)
-    {
-        this.name = name;
+    public void setShowModel(InOutItemShowModel showModel) {
+        this.showModel = showModel;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
-    public void setType(String type)
-    {
-        this.type = type;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getType()
-    {
+    public String getType() {
         return type;
     }
 
-    public void setRemark(String remark)
-    {
-        this.remark = remark;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public String getRemark()
-    {
+    public String getRemark() {
         return remark;
     }
 
-    public void setInOutItemID(Long inOutItemID)
-    {
-        this.inOutItemID = inOutItemID;
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
-    public Long getInOutItemID()
-    {
+    public Long getInOutItemID() {
         return inOutItemID;
     }
 
-    public void setInOutItemIDs(String inOutItemIDs)
-    {
-        this.inOutItemIDs = inOutItemIDs;
+    public void setInOutItemID(Long inOutItemID) {
+        this.inOutItemID = inOutItemID;
     }
 
-    public String getInOutItemIDs()
-    {
+    public String getInOutItemIDs() {
         return inOutItemIDs;
     }
 
-    public void setPageSize(int pageSize)
-    {
-        this.pageSize = pageSize;
+    public void setInOutItemIDs(String inOutItemIDs) {
+        this.inOutItemIDs = inOutItemIDs;
     }
 
-    public int getPageSize()
-    {
+    public int getPageSize() {
         return pageSize;
     }
 
-    public void setPageNo(int pageNo)
-    {
-        this.pageNo = pageNo;
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
     }
 
-    public int getPageNo()
-    {
+    public int getPageNo() {
         return pageNo;
     }
 
-    public void setClientIp(String clientIp)
-    {
-        this.clientIp = clientIp;
+    public void setPageNo(int pageNo) {
+        this.pageNo = pageNo;
     }
 
-    public String getClientIp()
-    {
+    public String getClientIp() {
         return clientIp;
     }
- }
+
+    public void setClientIp(String clientIp) {
+        this.clientIp = clientIp;
+    }
+}

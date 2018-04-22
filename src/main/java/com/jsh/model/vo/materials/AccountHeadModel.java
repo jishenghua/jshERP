@@ -3,25 +3,26 @@ package com.jsh.model.vo.materials;
 import java.io.Serializable;
 
 @SuppressWarnings("serial")
-public class AccountHeadModel implements Serializable
-{
+public class AccountHeadModel implements Serializable {
     private AccountHeadShowModel showModel = new AccountHeadShowModel();
 
-    /**======开始接受页面参数=================**/
+    /**
+     * ======开始接受页面参数=================
+     **/
     private String Type;
     private Long OrganId;
-    private Long HandsPersonId;    
+    private Long HandsPersonId;
     private Double ChangeAmount;
     private Double TotalPrice;
     private Long AccountId;
     private String BillNo;
-    private String BillTime;  
+    private String BillTime;
     private String Remark;
     private String BeginTime; //查询开始时间
     private String EndTime;  //查询结束时间
     private String MonthTime;  //查询月份
-    
-	private String supplierId; //单位Id，用于查询单位的收付款
+
+    private String supplierId; //单位Id，用于查询单位的收付款
 
     private String supType; //单位类型，客户、供应商
     /**
@@ -49,192 +50,157 @@ public class AccountHeadModel implements Serializable
      */
     private String clientIp = "";
 
-    public void setShowModel(AccountHeadShowModel showModel)
-    {
-        this.showModel = showModel;
-    }
-
-    public AccountHeadShowModel getShowModel()
-    {
+    public AccountHeadShowModel getShowModel() {
         return showModel;
     }
 
-    public void setType(String type)
-    {
-        Type = type;
+    public void setShowModel(AccountHeadShowModel showModel) {
+        this.showModel = showModel;
     }
 
-    public String getType()
-    {
+    public String getType() {
         return Type;
     }
 
-    public void setOrganId(Long organId)
-    {
-        OrganId = organId;
+    public void setType(String type) {
+        Type = type;
     }
 
-    public Long getOrganId()
-    {
+    public Long getOrganId() {
         return OrganId;
     }
 
-    public void setHandsPersonId(Long handsPersonId)
-    {
-        HandsPersonId = handsPersonId;
+    public void setOrganId(Long organId) {
+        OrganId = organId;
     }
 
-    public Long getHandsPersonId()
-    {
+    public Long getHandsPersonId() {
         return HandsPersonId;
     }
 
-    public void setChangeAmount(Double changeAmount)
-    {
-        ChangeAmount = changeAmount;
+    public void setHandsPersonId(Long handsPersonId) {
+        HandsPersonId = handsPersonId;
     }
 
-    public Double getChangeAmount()
-    {
+    public Double getChangeAmount() {
         return ChangeAmount;
     }
 
-	public void setTotalPrice(Double totalPrice) {
-		TotalPrice = totalPrice;
-	}
-
-    public Double getTotalPrice() {
-		return TotalPrice;
-	}
-    
-	public void setAccountId(Long accountId)
-    {
-        AccountId = accountId;
+    public void setChangeAmount(Double changeAmount) {
+        ChangeAmount = changeAmount;
     }
 
-    public Long getAccountId()
-    {
+    public Double getTotalPrice() {
+        return TotalPrice;
+    }
+
+    public void setTotalPrice(Double totalPrice) {
+        TotalPrice = totalPrice;
+    }
+
+    public Long getAccountId() {
         return AccountId;
     }
 
-    public void setBillNo(String billNo)
-    {
-        BillNo = billNo;
+    public void setAccountId(Long accountId) {
+        AccountId = accountId;
     }
 
-    public String getBillNo()
-    {
+    public String getBillNo() {
         return BillNo;
     }
 
-    public void setBillTime(String billTime)
-    {
-        BillTime = billTime;
+    public void setBillNo(String billNo) {
+        BillNo = billNo;
     }
 
-    public String getBillTime()
-    {
+    public String getBillTime() {
         return BillTime;
     }
 
-    public void setRemark(String remark)
-    {
-        Remark = remark;
+    public void setBillTime(String billTime) {
+        BillTime = billTime;
     }
 
-    public String getRemark()
-    {
+    public String getRemark() {
         return Remark;
     }
 
-    public void setBeginTime(String beginTime)
-    {
-        BeginTime = beginTime;
+    public void setRemark(String remark) {
+        Remark = remark;
     }
 
-    public String getBeginTime()
-    {
+    public String getBeginTime() {
         return BeginTime;
     }
 
-    public void setEndTime(String endTime)
-    {
-        EndTime = endTime;
+    public void setBeginTime(String beginTime) {
+        BeginTime = beginTime;
     }
 
-    public String getEndTime()
-    {
+    public String getEndTime() {
         return EndTime;
     }
 
-    public void setMonthTime(String monthTime)
-    {
-        MonthTime = monthTime;
+    public void setEndTime(String endTime) {
+        EndTime = endTime;
     }
 
-    public String getMonthTime()
-    {
+    public String getMonthTime() {
         return MonthTime;
     }
 
-    public void setAccountHeadID(Long accountHeadID)
-    {
-        this.accountHeadID = accountHeadID;
+    public void setMonthTime(String monthTime) {
+        MonthTime = monthTime;
     }
 
-    public Long getAccountHeadID()
-    {
+    public Long getAccountHeadID() {
         return accountHeadID;
     }
 
-    public void setAccountHeadIDs(String accountHeadIDs)
-    {
-        this.accountHeadIDs = accountHeadIDs;
+    public void setAccountHeadID(Long accountHeadID) {
+        this.accountHeadID = accountHeadID;
     }
 
-    public String getAccountHeadIDs()
-    {
+    public String getAccountHeadIDs() {
         return accountHeadIDs;
     }
 
-    public void setPageSize(int pageSize)
-    {
-        this.pageSize = pageSize;
+    public void setAccountHeadIDs(String accountHeadIDs) {
+        this.accountHeadIDs = accountHeadIDs;
     }
 
-    public int getPageSize()
-    {
+    public int getPageSize() {
         return pageSize;
     }
 
-    public void setPageNo(int pageNo)
-    {
-        this.pageNo = pageNo;
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
     }
 
-    public int getPageNo()
-    {
+    public int getPageNo() {
         return pageNo;
     }
 
-
-    public void setClientIp(String clientIp)
-    {
-        this.clientIp = clientIp;
+    public void setPageNo(int pageNo) {
+        this.pageNo = pageNo;
     }
 
-    public String getClientIp()
-    {
+    public String getClientIp() {
         return clientIp;
     }
 
-	public String getSupplierId() {
-		return supplierId;
-	}
+    public void setClientIp(String clientIp) {
+        this.clientIp = clientIp;
+    }
 
-	public void setSupplierId(String supplierId) {
-		this.supplierId = supplierId;
-	}
+    public String getSupplierId() {
+        return supplierId;
+    }
+
+    public void setSupplierId(String supplierId) {
+        this.supplierId = supplierId;
+    }
 
     public String getSupType() {
         return supType;

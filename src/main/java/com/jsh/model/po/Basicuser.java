@@ -1,177 +1,147 @@
 package com.jsh.model.po;
 
 @SuppressWarnings("serial")
-public class Basicuser implements java.io.Serializable
-{
-	private Long id;
-	private String username;
-	private String loginame;
-	private String password;
-	private String position;
-	private String department;
-	private String email;
-	private String phonenum;
-	private Short ismanager;
-	private Short isystem;
-	private Short status;
-	private String description;
-	private String remark;
+public class Basicuser implements java.io.Serializable {
+    private Long id;
+    private String username;
+    private String loginame;
+    private String password;
+    private String position;
+    private String department;
+    private String email;
+    private String phonenum;
+    private Short ismanager;
+    private Short isystem;
+    private Short status;
+    private String description;
+    private String remark;
 
-	public Basicuser()
-	{
-	}
+    public Basicuser() {
+    }
 
-	public Basicuser(Long id)
-	{
-	    this.id = id;
-	}
-	
-	public Basicuser(String username, String loginame, String password,
-			String position, String department, String email, String phonenum,
-			Short ismanager, Short isystem, Short status, String description,
-			String remark)
-	{
-		this.username = username;
-		this.loginame = loginame;
-		this.password = password;
-		this.position = position;
-		this.department = department;
-		this.email = email;
-		this.phonenum = phonenum;
-		this.ismanager = ismanager;
-		this.isystem = isystem;
-		this.status = status;
-		this.description = description;
-		this.remark = remark;
-	}
+    public Basicuser(Long id) {
+        this.id = id;
+    }
 
-	public Long getId()
-	{
-		return this.id;
-	}
+    public Basicuser(String username, String loginame, String password,
+                     String position, String department, String email, String phonenum,
+                     Short ismanager, Short isystem, Short status, String description,
+                     String remark) {
+        this.username = username;
+        this.loginame = loginame;
+        this.password = password;
+        this.position = position;
+        this.department = department;
+        this.email = email;
+        this.phonenum = phonenum;
+        this.ismanager = ismanager;
+        this.isystem = isystem;
+        this.status = status;
+        this.description = description;
+        this.remark = remark;
+    }
 
-	public void setId(Long id)
-	{
-		this.id = id;
-	}
+    public Long getId() {
+        return this.id;
+    }
 
-	public String getUsername()
-	{
-		return this.username;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setUsername(String username)
-	{
-		this.username = username;
-	}
+    public String getUsername() {
+        return this.username;
+    }
 
-	public String getLoginame()
-	{
-		return this.loginame;
-	}
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-	public void setLoginame(String loginame)
-	{
-		this.loginame = loginame;
-	}
+    public String getLoginame() {
+        return this.loginame;
+    }
 
-	public String getPassword()
-	{
-		return this.password;
-	}
+    public void setLoginame(String loginame) {
+        this.loginame = loginame;
+    }
 
-	public void setPassword(String password)
-	{
-		this.password = password;
-	}
+    public String getPassword() {
+        return this.password;
+    }
 
-	public String getPosition()
-	{
-		return this.position;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	public void setPosition(String position)
-	{
-		this.position = position;
-	}
+    public String getPosition() {
+        return this.position;
+    }
 
-	public String getDepartment()
-	{
-		return this.department;
-	}
+    public void setPosition(String position) {
+        this.position = position;
+    }
 
-	public void setDepartment(String department)
-	{
-		this.department = department;
-	}
+    public String getDepartment() {
+        return this.department;
+    }
 
-	public String getEmail()
-	{
-		return this.email;
-	}
+    public void setDepartment(String department) {
+        this.department = department;
+    }
 
-	public void setEmail(String email)
-	{
-		this.email = email;
-	}
+    public String getEmail() {
+        return this.email;
+    }
 
-	public String getPhonenum()
-	{
-		return this.phonenum;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public void setPhonenum(String phonenum)
-	{
-		this.phonenum = phonenum;
-	}
+    public String getPhonenum() {
+        return this.phonenum;
+    }
 
-	public Short getIsmanager()
-	{
-		return this.ismanager;
-	}
+    public void setPhonenum(String phonenum) {
+        this.phonenum = phonenum;
+    }
 
-	public void setIsmanager(Short ismanager)
-	{
-		this.ismanager = ismanager;
-	}
+    public Short getIsmanager() {
+        return this.ismanager;
+    }
 
-	public Short getIsystem()
-	{
-		return this.isystem;
-	}
+    public void setIsmanager(Short ismanager) {
+        this.ismanager = ismanager;
+    }
 
-	public void setIsystem(Short isystem)
-	{
-		this.isystem = isystem;
-	}
+    public Short getIsystem() {
+        return this.isystem;
+    }
 
-	public Short getStatus()
-	{
-		return this.status;
-	}
+    public void setIsystem(Short isystem) {
+        this.isystem = isystem;
+    }
 
-	public void setStatus(Short status)
-	{
-		this.status = status;
-	}
+    public Short getStatus() {
+        return this.status;
+    }
 
-	public String getDescription()
-	{
-		return this.description;
-	}
+    public void setStatus(Short status) {
+        this.status = status;
+    }
 
-	public void setDescription(String description)
-	{
-		this.description = description;
-	}
+    public String getDescription() {
+        return this.description;
+    }
 
-	public String getRemark()
-	{
-		return this.remark;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public void setRemark(String remark)
-	{
-		this.remark = remark;
-	}
+    public String getRemark() {
+        return this.remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 }

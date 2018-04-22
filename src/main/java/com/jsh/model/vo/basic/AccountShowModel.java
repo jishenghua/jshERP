@@ -6,8 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("serial")
-public class AccountShowModel implements Serializable
-{
+public class AccountShowModel implements Serializable {
     /**
      * 提示信息
      */
@@ -17,15 +16,13 @@ public class AccountShowModel implements Serializable
      * 系统数据
      */
     @SuppressWarnings("rawtypes")
-    private Map<String,List> map = new HashMap<String,List>();
+    private Map<String, List> map = new HashMap<String, List>();
 
-    public String getMsgTip() 
-    {
+    public String getMsgTip() {
         return msgTip;
     }
 
-    public void setMsgTip(String msgTip) 
-    {
+    public void setMsgTip(String msgTip) {
         this.msgTip = msgTip;
     }
 

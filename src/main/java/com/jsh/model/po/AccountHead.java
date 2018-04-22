@@ -3,33 +3,29 @@ package com.jsh.model.po;
 import java.sql.Timestamp;
 
 @SuppressWarnings("serial")
-public class AccountHead implements java.io.Serializable
-{
+public class AccountHead implements java.io.Serializable {
     private Long Id;
     private String Type;
     private Supplier OrganId;
-    private Person HandsPersonId;    
+    private Person HandsPersonId;
     private Double ChangeAmount;
     private Double TotalPrice;
     private Account AccountId;
     private String BillNo;
-    private Timestamp BillTime;  
+    private Timestamp BillTime;
     private String Remark;
 
-    public AccountHead()
-    {
+    public AccountHead() {
 
     }
 
-    public AccountHead(Long Id)
-    {
-        this.Id = Id ;
+    public AccountHead(Long Id) {
+        this.Id = Id;
     }
 
     public AccountHead(String type, Supplier organId,
-    	Person handsPersonId, Double changeAmount, Double totalPrice, 
-        Account accountId, String billNo, Timestamp billTime, String remark)
-    {
+                       Person handsPersonId, Double changeAmount, Double totalPrice,
+                       Account accountId, String billNo, Timestamp billTime, String remark) {
         super();
         Type = type;
         OrganId = organId;
@@ -42,102 +38,84 @@ public class AccountHead implements java.io.Serializable
         Remark = remark;
     }
 
-    public void setId(Long id)
-    {
-        Id = id;
-    }
-
-    public Long getId()
-    {
+    public Long getId() {
         return Id;
     }
 
-    public void setType(String type)
-    {
-        Type = type;
+    public void setId(Long id) {
+        Id = id;
     }
 
-    public String getType()
-    {
+    public String getType() {
         return Type;
     }
 
-    public void setOrganId(Supplier organId)
-    {
-        OrganId = organId;
+    public void setType(String type) {
+        Type = type;
     }
 
-    public Supplier getOrganId()
-    {
+    public Supplier getOrganId() {
         return OrganId;
     }
 
-    public void setHandsPersonId(Person handsPersonId)
-    {
-        HandsPersonId = handsPersonId;
+    public void setOrganId(Supplier organId) {
+        OrganId = organId;
     }
 
-    public Person getHandsPersonId()
-    {
+    public Person getHandsPersonId() {
         return HandsPersonId;
     }
 
-    public void setChangeAmount(Double changeAmount)
-    {
+    public void setHandsPersonId(Person handsPersonId) {
+        HandsPersonId = handsPersonId;
+    }
+
+    public Double getChangeAmount() {
+        return ChangeAmount;
+    }
+
+    public void setChangeAmount(Double changeAmount) {
         ChangeAmount = changeAmount;
     }
 
-    public Double getChangeAmount()
-    {
-        return ChangeAmount;
-    }
-    
-	public void setTotalPrice(Double totalPrice) {
-		TotalPrice = totalPrice;
-	}
-	
-	public Double getTotalPrice() {
-		return TotalPrice;
-	}
-
-	public void setAccountId(Account accountId)
-    {
-        AccountId = accountId;
+    public Double getTotalPrice() {
+        return TotalPrice;
     }
 
-    public Account getAccountId()
-    {
+    public void setTotalPrice(Double totalPrice) {
+        TotalPrice = totalPrice;
+    }
+
+    public Account getAccountId() {
         return AccountId;
     }
 
-    public void setBillNo(String billNo)
-    {
-        BillNo = billNo;
+    public void setAccountId(Account accountId) {
+        AccountId = accountId;
     }
 
-    public String getBillNo()
-    {
+    public String getBillNo() {
         return BillNo;
     }
 
-    public void setBillTime(Timestamp billTime)
-    {
-        BillTime = billTime;
+    public void setBillNo(String billNo) {
+        BillNo = billNo;
     }
 
-    public Timestamp getBillTime()
-    {
+    public Timestamp getBillTime() {
         return BillTime;
     }
 
-    public void setRemark(String remark)
-    {
-        Remark = remark;
+    public void setBillTime(Timestamp billTime) {
+        BillTime = billTime;
     }
 
-    public String getRemark()
-    {
+    public String getRemark() {
         return Remark;
+    }
+
+    public void setRemark(String remark) {
+        Remark = remark;
     }
 
 }

@@ -1,13 +1,10 @@
 package com.jsh.model.vo.basic;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.io.Serializable;
 
 @SuppressWarnings("serial")
-public class AppModel implements Serializable
-{
+public class AppModel implements Serializable {
     private AppShowModel showModel = new AppShowModel();
 
     /**======开始接受页面参数=================**/
@@ -20,54 +17,54 @@ public class AppModel implements Serializable
      * 名称
      */
     private String Name = "";
-    
+
     /**
      * 类型
      */
     private String Type = "";
-    
+
     /**
      * 图标
      */
     private String Icon = "";
 
-	private File fileInfo;
-	private String fileInfoName; //图片名称
+    private File fileInfo;
+    private String fileInfoName; //图片名称
     /**
      * 链接
      */
     private String URL = "";
-    
+
     /**
      * 宽度
      */
     private String Width = "";
-    
+
     /**
      * 高度
      */
     private String Height = "";
-    
+
     /**
      * 拉伸
      */
     private Boolean ReSize = false;
-    
+
     /**
      * 最大化
      */
     private Boolean OpenMax = false;
-    
+
     /**
      * Flash
      */
     private Boolean Flash = false;
-    
+
     /**
      * 种类
      */
     private String ZL = "";
-    
+
     /**
      * 排序号
      */
@@ -77,238 +74,238 @@ public class AppModel implements Serializable
      * 备注
      */
     private String Remark = "";
-    
+
     /**
      * 启用
      */
     private Boolean Enabled = false;
-    
+
     /**
      * 分类ID
      */
     private Long appID = 0l;
-    
+
     /**
      * 分类IDs 批量操作使用
      */
     private String appIDs = "";
-    
+
     /**
      * 每页显示的个数
      */
     private int pageSize = 10;
-    
+
     /**
      * 当前页码
      */
     private int pageNo = 1;
-    
+
     /**
      * 用户IP，用户记录操作日志
      */
     private String clientIp = "";
-    
+
     /**
      * UBType，UserBusiness类型
      */
     private String UBType = "";
-    
+
     /**
      * UBKeyId，UserBusiness关键id
      */
     private String UBKeyId = "";
-    
 
-	public AppShowModel getShowModel() {
-		return showModel;
-	}
 
-	public void setShowModel(AppShowModel showModel) {
-		this.showModel = showModel;
-	}
+    public AppShowModel getShowModel() {
+        return showModel;
+    }
 
-	public String getNumber() {
-		return Number;
-	}
+    public void setShowModel(AppShowModel showModel) {
+        this.showModel = showModel;
+    }
 
-	public void setNumber(String number) {
-		Number = number;
-	}
+    public String getNumber() {
+        return Number;
+    }
 
-	public String getName() {
-		return Name;
-	}
+    public void setNumber(String number) {
+        Number = number;
+    }
 
-	public void setName(String name) {
-		Name = name;
-	}
+    public String getName() {
+        return Name;
+    }
 
-	public File getFileInfo() {
-		return fileInfo;
-	}
+    public void setName(String name) {
+        Name = name;
+    }
 
-	public void setFileInfo(File fileInfo) {
-		this.fileInfo = fileInfo;
-	}
+    public File getFileInfo() {
+        return fileInfo;
+    }
 
-	public String getFileInfoName() {
-		return fileInfoName;
-	}
+    public void setFileInfo(File fileInfo) {
+        this.fileInfo = fileInfo;
+    }
 
-	public void setFileInfoName(String fileInfoName) {
-		this.fileInfoName = fileInfoName;
-	}
+    public String getFileInfoName() {
+        return fileInfoName;
+    }
 
-	public String getType() {
-		return Type;
-	}
+    public void setFileInfoName(String fileInfoName) {
+        this.fileInfoName = fileInfoName;
+    }
 
-	public void setType(String type) {
-		Type = type;
-	}
+    public String getType() {
+        return Type;
+    }
 
-	public String getIcon() {
-		return Icon;
-	}
+    public void setType(String type) {
+        Type = type;
+    }
 
-	public void setIcon(String icon) {
-		Icon = icon;
-	}
+    public String getIcon() {
+        return Icon;
+    }
 
-	public String getURL() {
-		return URL;
-	}
+    public void setIcon(String icon) {
+        Icon = icon;
+    }
 
-	public void setURL(String uRL) {
-		URL = uRL;
-	}
+    public String getURL() {
+        return URL;
+    }
 
-	public String getWidth() {
-		return Width;
-	}
+    public void setURL(String uRL) {
+        URL = uRL;
+    }
 
-	public void setWidth(String width) {
-		Width = width;
-	}
+    public String getWidth() {
+        return Width;
+    }
 
-	public String getHeight() {
-		return Height;
-	}
+    public void setWidth(String width) {
+        Width = width;
+    }
 
-	public void setHeight(String height) {
-		Height = height;
-	}
+    public String getHeight() {
+        return Height;
+    }
 
-	public Boolean getReSize() {
-		return ReSize;
-	}
+    public void setHeight(String height) {
+        Height = height;
+    }
 
-	public void setReSize(Boolean reSize) {
-		ReSize = reSize;
-	}
+    public Boolean getReSize() {
+        return ReSize;
+    }
 
-	public Boolean getOpenMax() {
-		return OpenMax;
-	}
+    public void setReSize(Boolean reSize) {
+        ReSize = reSize;
+    }
 
-	public void setOpenMax(Boolean openMax) {
-		OpenMax = openMax;
-	}
+    public Boolean getOpenMax() {
+        return OpenMax;
+    }
 
-	public Boolean getFlash() {
-		return Flash;
-	}
+    public void setOpenMax(Boolean openMax) {
+        OpenMax = openMax;
+    }
 
-	public void setFlash(Boolean flash) {
-		Flash = flash;
-	}
+    public Boolean getFlash() {
+        return Flash;
+    }
 
-	public String getZL() {
-		return ZL;
-	}
+    public void setFlash(Boolean flash) {
+        Flash = flash;
+    }
 
-	public void setZL(String zL) {
-		ZL = zL;
-	}
+    public String getZL() {
+        return ZL;
+    }
 
-	public String getSort() {
-		return Sort;
-	}
+    public void setZL(String zL) {
+        ZL = zL;
+    }
 
-	public void setSort(String sort) {
-		Sort = sort;
-	}
+    public String getSort() {
+        return Sort;
+    }
 
-	public String getRemark() {
-		return Remark;
-	}
+    public void setSort(String sort) {
+        Sort = sort;
+    }
 
-	public void setRemark(String remark) {
-		Remark = remark;
-	}
+    public String getRemark() {
+        return Remark;
+    }
 
-	public Boolean getEnabled() {
-		return Enabled;
-	}
+    public void setRemark(String remark) {
+        Remark = remark;
+    }
 
-	public void setEnabled(Boolean enabled) {
-		Enabled = enabled;
-	}
+    public Boolean getEnabled() {
+        return Enabled;
+    }
 
-	public Long getAppID() {
-		return appID;
-	}
+    public void setEnabled(Boolean enabled) {
+        Enabled = enabled;
+    }
 
-	public void setAppID(Long appID) {
-		this.appID = appID;
-	}
+    public Long getAppID() {
+        return appID;
+    }
 
-	public String getAppIDs() {
-		return appIDs;
-	}
+    public void setAppID(Long appID) {
+        this.appID = appID;
+    }
 
-	public void setAppIDs(String appIDs) {
-		this.appIDs = appIDs;
-	}
+    public String getAppIDs() {
+        return appIDs;
+    }
 
-	public int getPageSize() {
-		return pageSize;
-	}
+    public void setAppIDs(String appIDs) {
+        this.appIDs = appIDs;
+    }
 
-	public void setPageSize(int pageSize) {
-		this.pageSize = pageSize;
-	}
+    public int getPageSize() {
+        return pageSize;
+    }
 
-	public int getPageNo() {
-		return pageNo;
-	}
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
+    }
 
-	public void setPageNo(int pageNo) {
-		this.pageNo = pageNo;
-	}
+    public int getPageNo() {
+        return pageNo;
+    }
 
-	public String getClientIp() {
-		return clientIp;
-	}
+    public void setPageNo(int pageNo) {
+        this.pageNo = pageNo;
+    }
 
-	public void setClientIp(String clientIp) {
-		this.clientIp = clientIp;
-	}
+    public String getClientIp() {
+        return clientIp;
+    }
 
-	public String getUBType() {
-		return UBType;
-	}
+    public void setClientIp(String clientIp) {
+        this.clientIp = clientIp;
+    }
 
-	public void setUBType(String uBType) {
-		UBType = uBType;
-	}
+    public String getUBType() {
+        return UBType;
+    }
 
-	public String getUBKeyId() {
-		return UBKeyId;
-	}
+    public void setUBType(String uBType) {
+        UBType = uBType;
+    }
 
-	public void setUBKeyId(String uBKeyId) {
-		UBKeyId = uBKeyId;
-	}
+    public String getUBKeyId() {
+        return UBKeyId;
+    }
+
+    public void setUBKeyId(String uBKeyId) {
+        UBKeyId = uBKeyId;
+    }
 
 }

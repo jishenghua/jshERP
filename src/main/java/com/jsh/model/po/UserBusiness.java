@@ -1,56 +1,54 @@
 package com.jsh.model.po;
 
 @SuppressWarnings("serial")
-public class UserBusiness implements java.io.Serializable
-{
-	private Long Id;
-	private String Type;
-	private String KeyId;
-	private String Value;
-	private String BtnStr;
+public class UserBusiness implements java.io.Serializable {
+    private Long Id;
+    private String Type;
+    private String KeyId;
+    private String Value;
+    private String BtnStr;
 
-	public UserBusiness()
-	{
-		
-	}
+    public UserBusiness() {
 
-	public Long getId() {
-		return Id;
-	}
+    }
 
-	public void setId(Long id) {
-		Id = id;
-	}
+    public Long getId() {
+        return Id;
+    }
 
-	public String getType() {
-		return Type;
-	}
+    public void setId(Long id) {
+        Id = id;
+    }
 
-	public void setType(String type) {
-		Type = type;
-	}
+    public String getType() {
+        return Type;
+    }
 
-	public String getKeyId() {
-		return KeyId;
-	}
+    public void setType(String type) {
+        Type = type;
+    }
 
-	public void setKeyId(String keyId) {
-		KeyId = keyId;
-	}
+    public String getKeyId() {
+        return KeyId;
+    }
 
-	public String getValue() {
-		return Value;
-	}
+    public void setKeyId(String keyId) {
+        KeyId = keyId;
+    }
 
-	public void setValue(String value) {
-		Value = value;
-	}
+    public String getValue() {
+        return Value;
+    }
 
-	public String getBtnStr() {
-		return BtnStr;
-	}
+    public void setValue(String value) {
+        Value = value;
+    }
 
-	public void setBtnStr(String btnStr) {
-		BtnStr = btnStr;
-	}
+    public String getBtnStr() {
+        return BtnStr;
+    }
+
+    public void setBtnStr(String btnStr) {
+        BtnStr = btnStr;
+    }
 }

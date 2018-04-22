@@ -3,301 +3,298 @@ package com.jsh.model.po;
 import java.sql.Timestamp;
 
 @SuppressWarnings("serial")
-public class DepotHead implements java.io.Serializable
-{
-	private Long Id;
-	private String Type;
-	private String SubType;
-	private Depot ProjectId;
-	private String DefaultNumber;
-	private String Number;
-	private String OperPersonName;	
-	private Timestamp CreateTime;	
-	private Timestamp OperTime;	
-	private Supplier OrganId;
-	private Person HandsPersonId;
-	private String Salesman;  //业务员（可以多个）[2][3]
-	private Account AccountId;
-	private Double ChangeAmount;
-	private String AccountIdList; //多账户ID列表 [2][3]
-	private String AccountMoneyList; //多账户金额列表 [{"[2]",22},{"[3]",33}]
-	private Double Discount; //优惠率  0.10
-	private Double DiscountMoney; //优惠金额 10
-	private Double DiscountLastMoney; //优惠后金额  90
-	private Double OtherMoney; //销售或采购费用 100
-	private String OtherMoneyList; //销售或采购费用涉及项目Id数组（包括快递、招待等）[2][3]
-	private String OtherMoneyItem; //销售费用涉及项目（包括快递、招待等） [{"[2]",22},{"[3]",33}]
-	private Integer AccountDay; //结算天数
-	private Depot AllocationProjectId;	
-	private Double TotalPrice;
-	private String PayType;
-	private Boolean Status = false; //单据状态
-	private String Remark;	
+public class DepotHead implements java.io.Serializable {
+    private Long Id;
+    private String Type;
+    private String SubType;
+    private Depot ProjectId;
+    private String DefaultNumber;
+    private String Number;
+    private String OperPersonName;
+    private Timestamp CreateTime;
+    private Timestamp OperTime;
+    private Supplier OrganId;
+    private Person HandsPersonId;
+    private String Salesman;  //业务员（可以多个）[2][3]
+    private Account AccountId;
+    private Double ChangeAmount;
+    private String AccountIdList; //多账户ID列表 [2][3]
+    private String AccountMoneyList; //多账户金额列表 [{"[2]",22},{"[3]",33}]
+    private Double Discount; //优惠率  0.10
+    private Double DiscountMoney; //优惠金额 10
+    private Double DiscountLastMoney; //优惠后金额  90
+    private Double OtherMoney; //销售或采购费用 100
+    private String OtherMoneyList; //销售或采购费用涉及项目Id数组（包括快递、招待等）[2][3]
+    private String OtherMoneyItem; //销售费用涉及项目（包括快递、招待等） [{"[2]",22},{"[3]",33}]
+    private Integer AccountDay; //结算天数
+    private Depot AllocationProjectId;
+    private Double TotalPrice;
+    private String PayType;
+    private Boolean Status = false; //单据状态
+    private String Remark;
 
-	public DepotHead()
-	{
-		
-	}
+    public DepotHead() {
 
-	public DepotHead(Long Id)
-	{
-		this.Id = Id ;
-	}
+    }
 
-	public DepotHead(String type, String subType, Depot projectId, String defaultNumber, String number, String operPersonName, Timestamp createTime,
-			Timestamp operTime, Supplier organId, Person handsPersonId, String salesman, String accountIdList,String accountMoneyList,
-			Double discount, Double discountMoney,Double discountLastMoney, Double otherMoney, String otherMoneyItem,Integer accountDay,
-			Account accountId, Double changeAmount, Depot allocationProjectId, Double totalPrice,String payType, Boolean status, String remark) {
-		super();
-		Type = type;
-		SubType = subType;
-		ProjectId = projectId;
-		DefaultNumber = defaultNumber;
-		Number = number;
-		OperPersonName = operPersonName;
-		CreateTime = createTime;
-		OperTime = operTime;
-		OrganId = organId;
-		HandsPersonId = handsPersonId;
-		Salesman= salesman;
-		AccountIdList= accountIdList;
-		AccountMoneyList= accountMoneyList;
-		Discount= discount;
-		DiscountMoney = discountMoney;
-		DiscountLastMoney = discountLastMoney;
-		OtherMoney = otherMoney;
-		OtherMoneyItem = otherMoneyItem;
-		AccountDay = accountDay;
-		AccountId = accountId;
-		ChangeAmount = changeAmount;
-		AllocationProjectId = allocationProjectId;
-		TotalPrice = totalPrice;
-		PayType = payType;
-		Status = status;
-		Remark = remark;
-	}
+    public DepotHead(Long Id) {
+        this.Id = Id;
+    }
 
-	public Long getId() {
-		return Id;
-	}
+    public DepotHead(String type, String subType, Depot projectId, String defaultNumber, String number, String operPersonName, Timestamp createTime,
+                     Timestamp operTime, Supplier organId, Person handsPersonId, String salesman, String accountIdList, String accountMoneyList,
+                     Double discount, Double discountMoney, Double discountLastMoney, Double otherMoney, String otherMoneyItem, Integer accountDay,
+                     Account accountId, Double changeAmount, Depot allocationProjectId, Double totalPrice, String payType, Boolean status, String remark) {
+        super();
+        Type = type;
+        SubType = subType;
+        ProjectId = projectId;
+        DefaultNumber = defaultNumber;
+        Number = number;
+        OperPersonName = operPersonName;
+        CreateTime = createTime;
+        OperTime = operTime;
+        OrganId = organId;
+        HandsPersonId = handsPersonId;
+        Salesman = salesman;
+        AccountIdList = accountIdList;
+        AccountMoneyList = accountMoneyList;
+        Discount = discount;
+        DiscountMoney = discountMoney;
+        DiscountLastMoney = discountLastMoney;
+        OtherMoney = otherMoney;
+        OtherMoneyItem = otherMoneyItem;
+        AccountDay = accountDay;
+        AccountId = accountId;
+        ChangeAmount = changeAmount;
+        AllocationProjectId = allocationProjectId;
+        TotalPrice = totalPrice;
+        PayType = payType;
+        Status = status;
+        Remark = remark;
+    }
 
-	public void setId(Long id) {
-		Id = id;
-	}
+    public Long getId() {
+        return Id;
+    }
 
-	public String getType() {
-		return Type;
-	}
+    public void setId(Long id) {
+        Id = id;
+    }
 
-	public void setType(String type) {
-		Type = type;
-	}
+    public String getType() {
+        return Type;
+    }
 
-	public String getSubType() {
-		return SubType;
-	}
+    public void setType(String type) {
+        Type = type;
+    }
 
-	public void setSubType(String subType) {
-		SubType = subType;
-	}
+    public String getSubType() {
+        return SubType;
+    }
 
-	public Depot getProjectId() {
-		return ProjectId;
-	}
+    public void setSubType(String subType) {
+        SubType = subType;
+    }
 
-	public void setProjectId(Depot projectId) {
-		ProjectId = projectId;
-	}
+    public Depot getProjectId() {
+        return ProjectId;
+    }
 
-	public String getDefaultNumber() {
-		return DefaultNumber;
-	}
+    public void setProjectId(Depot projectId) {
+        ProjectId = projectId;
+    }
 
-	public void setDefaultNumber(String defaultNumber) {
-		DefaultNumber = defaultNumber;
-	}
+    public String getDefaultNumber() {
+        return DefaultNumber;
+    }
 
-	public String getNumber() {
-		return Number;
-	}
+    public void setDefaultNumber(String defaultNumber) {
+        DefaultNumber = defaultNumber;
+    }
 
-	public void setNumber(String number) {
-		Number = number;
-	}
+    public String getNumber() {
+        return Number;
+    }
 
-	public String getOperPersonName() {
-		return OperPersonName;
-	}
+    public void setNumber(String number) {
+        Number = number;
+    }
 
-	public void setOperPersonName(String operPersonName) {
-		OperPersonName = operPersonName;
-	}
+    public String getOperPersonName() {
+        return OperPersonName;
+    }
 
-	public Timestamp getCreateTime() {
-		return CreateTime;
-	}
+    public void setOperPersonName(String operPersonName) {
+        OperPersonName = operPersonName;
+    }
 
-	public void setCreateTime(Timestamp createTime) {
-		CreateTime = createTime;
-	}
+    public Timestamp getCreateTime() {
+        return CreateTime;
+    }
 
-	public Timestamp getOperTime() {
-		return OperTime;
-	}
+    public void setCreateTime(Timestamp createTime) {
+        CreateTime = createTime;
+    }
 
-	public void setOperTime(Timestamp operTime) {
-		OperTime = operTime;
-	}
+    public Timestamp getOperTime() {
+        return OperTime;
+    }
 
-	public Supplier getOrganId() {
-		return OrganId;
-	}
+    public void setOperTime(Timestamp operTime) {
+        OperTime = operTime;
+    }
 
-	public void setOrganId(Supplier organId) {
-		OrganId = organId;
-	}
+    public Supplier getOrganId() {
+        return OrganId;
+    }
 
-	public Person getHandsPersonId() {
-		return HandsPersonId;
-	}
+    public void setOrganId(Supplier organId) {
+        OrganId = organId;
+    }
 
-	public void setHandsPersonId(Person handsPersonId) {
-		HandsPersonId = handsPersonId;
-	}
-	
-	public Account getAccountId() {
-		return AccountId;
-	}
+    public Person getHandsPersonId() {
+        return HandsPersonId;
+    }
 
-	public void setAccountId(Account accountId) {
-		AccountId = accountId;
-	}
+    public void setHandsPersonId(Person handsPersonId) {
+        HandsPersonId = handsPersonId;
+    }
 
-	public Double getChangeAmount() {
-		return ChangeAmount;
-	}
+    public Account getAccountId() {
+        return AccountId;
+    }
 
-	public void setChangeAmount(Double changeAmount) {
-		ChangeAmount = changeAmount;
-	}
+    public void setAccountId(Account accountId) {
+        AccountId = accountId;
+    }
 
-	public Depot getAllocationProjectId() {
-		return AllocationProjectId;
-	}
+    public Double getChangeAmount() {
+        return ChangeAmount;
+    }
 
-	public void setAllocationProjectId(Depot allocationProjectId) {
-		AllocationProjectId = allocationProjectId;
-	}
+    public void setChangeAmount(Double changeAmount) {
+        ChangeAmount = changeAmount;
+    }
 
-	public Double getTotalPrice() {
-		return TotalPrice;
-	}
+    public Depot getAllocationProjectId() {
+        return AllocationProjectId;
+    }
 
-	public void setTotalPrice(Double totalPrice) {
-		TotalPrice = totalPrice;
-	}
+    public void setAllocationProjectId(Depot allocationProjectId) {
+        AllocationProjectId = allocationProjectId;
+    }
 
-	public String getPayType() {
-		return PayType;
-	}
+    public Double getTotalPrice() {
+        return TotalPrice;
+    }
 
-	public void setPayType(String payType) {
-		PayType = payType;
-	}
+    public void setTotalPrice(Double totalPrice) {
+        TotalPrice = totalPrice;
+    }
 
-	public String getRemark() {
-		return Remark;
-	}
+    public String getPayType() {
+        return PayType;
+    }
 
-	public void setRemark(String remark) {
-		Remark = remark;
-	}
+    public void setPayType(String payType) {
+        PayType = payType;
+    }
 
-	public String getSalesman() {
-		return Salesman;
-	}
+    public String getRemark() {
+        return Remark;
+    }
 
-	public void setSalesman(String salesman) {
-		Salesman = salesman;
-	}
+    public void setRemark(String remark) {
+        Remark = remark;
+    }
 
-	public String getAccountIdList() {
-		return AccountIdList;
-	}
+    public String getSalesman() {
+        return Salesman;
+    }
 
-	public void setAccountIdList(String accountIdList) {
-		AccountIdList = accountIdList;
-	}
+    public void setSalesman(String salesman) {
+        Salesman = salesman;
+    }
 
-	public String getAccountMoneyList() {
-		return AccountMoneyList;
-	}
+    public String getAccountIdList() {
+        return AccountIdList;
+    }
 
-	public void setAccountMoneyList(String accountMoneyList) {
-		AccountMoneyList = accountMoneyList;
-	}
+    public void setAccountIdList(String accountIdList) {
+        AccountIdList = accountIdList;
+    }
 
-	public Double getDiscount() {
-		return Discount;
-	}
+    public String getAccountMoneyList() {
+        return AccountMoneyList;
+    }
 
-	public void setDiscount(Double discount) {
-		Discount = discount;
-	}
+    public void setAccountMoneyList(String accountMoneyList) {
+        AccountMoneyList = accountMoneyList;
+    }
 
-	public Double getDiscountMoney() {
-		return DiscountMoney;
-	}
+    public Double getDiscount() {
+        return Discount;
+    }
 
-	public void setDiscountMoney(Double discountMoney) {
-		DiscountMoney = discountMoney;
-	}
+    public void setDiscount(Double discount) {
+        Discount = discount;
+    }
 
-	public Double getDiscountLastMoney() {
-		return DiscountLastMoney;
-	}
+    public Double getDiscountMoney() {
+        return DiscountMoney;
+    }
 
-	public void setDiscountLastMoney(Double discountLastMoney) {
-		DiscountLastMoney = discountLastMoney;
-	}
+    public void setDiscountMoney(Double discountMoney) {
+        DiscountMoney = discountMoney;
+    }
 
-	public Double getOtherMoney() {
-		return OtherMoney;
-	}
+    public Double getDiscountLastMoney() {
+        return DiscountLastMoney;
+    }
 
-	public void setOtherMoney(Double otherMoney) {
-		OtherMoney = otherMoney;
-	}
+    public void setDiscountLastMoney(Double discountLastMoney) {
+        DiscountLastMoney = discountLastMoney;
+    }
 
-	public String getOtherMoneyList() {
-		return OtherMoneyList;
-	}
+    public Double getOtherMoney() {
+        return OtherMoney;
+    }
 
-	public void setOtherMoneyList(String otherMoneyList) {
-		OtherMoneyList = otherMoneyList;
-	}
+    public void setOtherMoney(Double otherMoney) {
+        OtherMoney = otherMoney;
+    }
 
-	public String getOtherMoneyItem() {
-		return OtherMoneyItem;
-	}
+    public String getOtherMoneyList() {
+        return OtherMoneyList;
+    }
 
-	public void setOtherMoneyItem(String otherMoneyItem) {
-		OtherMoneyItem = otherMoneyItem;
-	}
+    public void setOtherMoneyList(String otherMoneyList) {
+        OtherMoneyList = otherMoneyList;
+    }
 
-	public Integer getAccountDay() {
-		return AccountDay;
-	}
+    public String getOtherMoneyItem() {
+        return OtherMoneyItem;
+    }
 
-	public void setAccountDay(Integer accountDay) {
-		AccountDay = accountDay;
-	}
+    public void setOtherMoneyItem(String otherMoneyItem) {
+        OtherMoneyItem = otherMoneyItem;
+    }
 
-	public Boolean getStatus() {
-		return Status;
-	}
+    public Integer getAccountDay() {
+        return AccountDay;
+    }
 
-	public void setStatus(Boolean status) {
-		Status = status;
-	}
+    public void setAccountDay(Integer accountDay) {
+        AccountDay = accountDay;
+    }
+
+    public Boolean getStatus() {
+        return Status;
+    }
+
+    public void setStatus(Boolean status) {
+        Status = status;
+    }
 }

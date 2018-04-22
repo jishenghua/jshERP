@@ -1,49 +1,46 @@
 package com.jsh.model.po;
 
 @SuppressWarnings("serial")
-public class Person implements java.io.Serializable
-{
-	private Long Id;
-	private String Type;
-	private String Name;
+public class Person implements java.io.Serializable {
+    private Long Id;
+    private String Type;
+    private String Name;
 
-	public Person()
-	{
-		
-	}
-	
-	public Person(Long Id)
-	{
-		this.Id = Id;
-	}
+    public Person() {
 
-	public Person(String type, String name) {
-		Type = type;
-		Name = name;
-	}
+    }
 
-	public Long getId() {
-		return Id;
-	}
+    public Person(Long Id) {
+        this.Id = Id;
+    }
 
-	public void setId(Long id) {
-		Id = id;
-	}
+    public Person(String type, String name) {
+        Type = type;
+        Name = name;
+    }
 
-	public String getType() {
-		return Type;
-	}
+    public Long getId() {
+        return Id;
+    }
 
-	public void setType(String type) {
-		Type = type;
-	}
+    public void setId(Long id) {
+        Id = id;
+    }
 
-	public String getName() {
-		return Name;
-	}
+    public String getType() {
+        return Type;
+    }
 
-	public void setName(String name) {
-		Name = name;
-	}
-	
+    public void setType(String type) {
+        Type = type;
+    }
+
+    public String getName() {
+        return Name;
+    }
+
+    public void setName(String name) {
+        Name = name;
+    }
+
 }
