@@ -142,7 +142,7 @@
                 },
                 {title: '备注', field: 'remark', width: 100},
                 {
-                    title: '操作', field: 'op', align: "center", width: 180, formatter: function (value, rec) {
+                    title: '操作', field: 'op', align: "center", width: 210, formatter: function (value, rec) {
                         var str = '';
                         var rowInfo = rec.id + 'AaBb' + rec.name + 'AaBb' + rec.serialNo + 'AaBb' + rec.initialAmount + 'AaBb' + rec.currentAmount + 'AaBb' + rec.remark;
                         if (1 == value) {

@@ -126,9 +126,9 @@
             pageList: initPageNum,
             columns: [[
                 {title: '操作模块', field: 'operation', width: 120},
-                {title: '操作人员', field: 'username', width: 100, align: "center"},
+                {title: '操作人员', field: 'username', width: 80, align: "center"},
                 {title: '操作IP', field: 'clientIP', width: 90, align: "center"},
-                {title: '操作时间', field: 'createTime', width: 150, align: "center"},
+                {title: '操作时间', field: 'createTime', width: 130, align: "center"},
                 {title: '操作详情', field: 'details', width: 380},
                 {title: '操作状态', field: 'status', width: 70},
                 {title: '备注', field: 'remark', width: 180}
