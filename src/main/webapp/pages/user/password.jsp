@@ -106,6 +106,10 @@
                         $("#orgTipMsg").empty().append("<font color='red'>原始密码输入错误</font>");
                         return;
                     }
+                    else if (3 == tipInfo) {
+                        $.messager.alert('提示', '管理员jsh密码不能修改！', 'warning');
+                        return;
+                    }
                     else {
                         $.messager.alert('提示', '更新密码异常，请稍后再试！', 'error');
                         return;

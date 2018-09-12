@@ -122,9 +122,8 @@ public class UserAction extends BaseAction<UserModel> {
             user.setDepartment(model.getDepartment());
             user.setDescription(model.getDescription());
             user.setEmail(model.getEmail());
-//		    user.setIsmanager(model.getIsmanager());
-            user.setIsystem((short) 1);
             user.setIsmanager((short) 1);
+            user.setIsystem((short) 0);
             user.setLoginame(model.getLoginame());
             String password = "123456";
             //因密码用MD5加密，需要对密码进行转化
@@ -244,7 +243,11 @@ public class UserAction extends BaseAction<UserModel> {
             String orgPassword = Tools.md5Encryp(model.getOrgpwd());
             String md5Pwd = Tools.md5Encryp(model.getPassword());
             //必须和原始密码一致才可以更新密码
-            if (orgPassword.equalsIgnoreCase(user.getPassword())) {
+            if(user.getLoginame().equals("jsh")){
+                flag = 3;
+                tipMsg = "管理员jsh不能修改密码";
+                tipType = 1;
+            } else if (orgPassword.equalsIgnoreCase(user.getPassword())) {
 
                 user.setPassword(md5Pwd);
                 userService.update(user);
@@ -401,7 +404,7 @@ public class UserAction extends BaseAction<UserModel> {
                     item.put("status", user.getStatus());
                     item.put("description", Tools.dealNullStr(user.getDescription()));
                     item.put("remark", user.getRemark());
-                    item.put("op", user.getIsystem());
+                    item.put("op", user.getIsmanager());
                     dataArray.add(item);
                 }
             }

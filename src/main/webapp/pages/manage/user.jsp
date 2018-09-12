@@ -158,7 +158,7 @@
             pageSize: initPageSize,
             pageList: initPageNum,
             columns: [[
-                {field: 'id', width: 35, align: "center", checkbox: true},
+                {field: 'id', width: 35, align: "center", checkbox:true},
                 {title: '用户名称', field: 'username', width: 80},
                 {title: '登录名称', field: 'loginame', width: 80, align: "center"},
                 {title: '职位', field: 'position', width: 115, align: "center"},
@@ -176,12 +176,10 @@
                         if (1 == value) {
                             str += '<img src="<%=path%>/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editUser(\'' + rowInfo + '\');"/>&nbsp;<a onclick="editUser(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
                             str += '<img src="<%=path%>/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteUser(' + rec.id + ');"/>&nbsp;<a onclick="deleteUser(' + rec.id + ');" style="text-decoration:none;color:black;" href="javascript:void(0)">删除</a>&nbsp;&nbsp;';
-                            //str += '<img src="<%=path%>/images/user.png" style="cursor: pointer;width: 16px;height: 16px" onclick="editUser(\'' + rowInfo + '\');"/>&nbsp;<a onclick="editUser(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">用户</a>&nbsp;&nbsp;';
                         }
-                        //else
-                        //{
-                        //str += '<img src="<%=path%>/images/admin.png" style="cursor: pointer;width: 16px;height: 16px" onclick="editUser(\'' + rowInfo + '\');"/>&nbsp;<a onclick="editUser(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">管理</a>&nbsp;&nbsp;';
-                        //}
+                        else {
+                            str += '';
+                        }
                         return str;
                     }
                 }
@@ -306,32 +304,37 @@
                         }
                         ids += row[i].id + ",";
                     }
-                    $.ajax({
-                        type: "post",
-                        url: "<%=path %>/user/batchDelete.action",
-                        dataType: "json",
-                        async: false,
-                        data: ({
-                            userIDs: ids,
-                            clientIp: '<%=clientIp %>'
-                        }),
-                        success: function (tipInfo) {
-                            var msg = tipInfo.showModel.msgTip;
-                            if (msg == '成功') {
-                                //$('#tableData').datagrid('reload');
-                                //加载完以后重新初始化
-                                $("#searchBtn").click();
-                                $(":checkbox").attr("checked", false);
+                    if(row[i].loginame == "jsh"){
+                        $.messager.alert('提示', '管理员jsh不能删除！', 'warning');
+                        return;
+                    } else {
+                        $.ajax({
+                            type: "post",
+                            url: "<%=path %>/user/batchDelete.action",
+                            dataType: "json",
+                            async: false,
+                            data: ({
+                                userIDs: ids,
+                                clientIp: '<%=clientIp %>'
+                            }),
+                            success: function (tipInfo) {
+                                var msg = tipInfo.showModel.msgTip;
+                                if (msg == '成功') {
+                                    //$('#tableData').datagrid('reload');
+                                    //加载完以后重新初始化
+                                    $("#searchBtn").click();
+                                    $(":checkbox").attr("checked", false);
+                                }
+                                else
+                                    $.messager.alert('删除提示', '删除用户信息失败，请稍后再试！', 'error');
+                            },
+                            //此处添加错误处理
+                            error: function () {
+                                $.messager.alert('删除提示', '删除用户信息异常，请稍后再试！', 'error');
+                                return;
                             }
-                            else
-                                $.messager.alert('删除提示', '删除用户信息失败，请稍后再试！', 'error');
-                        },
-                        //此处添加错误处理
-                        error: function () {
-                            $.messager.alert('删除提示', '删除用户信息异常，请稍后再试！', 'error');
-                            return;
-                        }
-                    });
+                        });
+                    }
                 }
             });
         }
