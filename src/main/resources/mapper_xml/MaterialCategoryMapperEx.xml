@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsh.erp.datasource.mappers.MaterialCategoryMapper">
+    <select id="selectByConditionMaterialCategory" parameterType="com.jsh.erp.datasource.entities.MaterialCategoryExample" resultMap="BaseResultMap">
+        select *
+        FROM jsh_materialcategory
+        where 1=1
+        <if test="name != null">
+            and name like '%${name}%'
+        </if>
+        <if test="parentId != null">
+            and parentId = ${parentId}
+        </if>
+        <if test="offset != null and rows != null">
+            limit #{offset},#{rows}
+        </if>
+    </select>
+    <select id="countsByMaterialCategory" resultType="java.lang.Integer">
+        SELECT
+        COUNT(id)
+        FROM jsh_materialcategory
+        WHERE 1=1
+        <if test="name != null">
+            and name like '%${name}%'
+        </if>
+        <if test="parentId != null">
+            and parentId = ${parentId}
+        </if>
+    </select>
+</mapper>

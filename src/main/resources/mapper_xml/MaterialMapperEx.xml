@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsh.erp.datasource.mappers.MaterialMapper">
+    <resultMap extends="BaseResultMap" id="ResultAndUnitMap" type="com.jsh.erp.datasource.entities.MaterialVo4Unit">
+        <result column="UName" jdbcType="VARCHAR" property="unitName" />
+    </resultMap>
+
+    <select id="selectByConditionMaterial" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="BaseResultMap">
+        select *
+        FROM jsh_material
+        where 1=1
+        <if test="name != null">
+            and name like '%${name}%'
+        </if>
+        <if test="model != null">
+            and model like '%${model}%'
+        </if>
+        <if test="offset != null and rows != null">
+            limit #{offset},#{rows}
+        </if>
+    </select>
+
+    <select id="countsByMaterial" resultType="java.lang.Integer">
+        SELECT
+        COUNT(id)
+        FROM jsh_material
+        WHERE 1=1
+        <if test="name != null">
+            and name like '%${name}%'
+        </if>
+        <if test="model != null">
+            and model like '%${model}%'
+        </if>
+    </select>
+
+    <select id="findUnitName" resultType="java.lang.String">
+        select jsh_unit.UName  from jsh_unit left join jsh_material on UnitId=jsh_unit.id where jsh_material.id = ${mId}
+    </select>
+
+    <select id="findById" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultAndUnitMap">
+        select m.*,u.UName from jsh_material m left join jsh_unit u on m.UnitId=u.id where m.id = ${id}
+    </select>
+
+    <select id="findBySelect" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultAndUnitMap">
+        select m.*,u.UName from jsh_material m left join jsh_unit u on m.UnitId=u.id where m.enabled=1 ORDER BY Id asc
+    </select>
+</mapper>

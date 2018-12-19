@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsh.erp.datasource.mappers.AccountItemMapper">
+
+    <resultMap extends="BaseResultMap" id="ResultWithInfoExMap" type="com.jsh.erp.datasource.vo.AccountItemVo4List">
+        <result column="AccountName" jdbcType="VARCHAR" property="accountName" />
+        <result column="InOutItemName" jdbcType="VARCHAR" property="inOutItemName" />
+    </resultMap>
+
+    <select id="selectByConditionAccountItem" parameterType="com.jsh.erp.datasource.entities.AccountItemExample" resultMap="BaseResultMap">
+        select *
+        FROM jsh_accountitem
+        where 1=1
+        <if test="name != null">
+            and name like '%${name}%'
+        </if>
+        <if test="type != null">
+            and type=${type}
+        </if>
+        <if test="remark != null">
+            and remark like '%${remark}%'
+        </if>
+        <if test="offset != null and rows != null">
+            limit #{offset},#{rows}
+        </if>
+    </select>
+    <select id="countsByAccountItem" resultType="java.lang.Integer">
+        SELECT
+        COUNT(id)
+        FROM jsh_accountitem
+        WHERE 1=1
+        <if test="name != null">
+            and name like '%${name}%'
+        </if>
+        <if test="type != null">
+            and type=${type}
+        </if>
+        <if test="remark != null">
+            and remark like '%${remark}%'
+        </if>
+    </select>
+
+    <select id="getDetailList" parameterType="com.jsh.erp.datasource.entities.AccountItemExample" resultMap="ResultWithInfoExMap">
+        select ai.*,a.Name AccountName,ioi.Name InOutItemName
+        from jsh_accountitem ai left join jsh_account a on ai.AccountId=a.id
+        left join jsh_inoutitem ioi on ai.InOutItemId = ioi.id
+        where ai.HeaderId = ${headerId}
+        order by ai.id asc
+    </select>
+</mapper>

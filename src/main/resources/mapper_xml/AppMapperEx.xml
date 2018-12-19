@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsh.erp.datasource.mappers.AppMapper">
+    <select id="selectByConditionApp" parameterType="com.jsh.erp.datasource.entities.AppExample" resultMap="BaseResultMap">
+        select *
+        FROM jsh_app
+        where 1=1
+        <if test="name != null">
+            and name like '%${name}%'
+        </if>
+        <if test="type != null">
+            and type='${type}'
+        </if>
+        <if test="offset != null and rows != null">
+            limit #{offset},#{rows}
+        </if>
+    </select>
+    <select id="countsByApp" resultType="java.lang.Integer">
+        SELECT
+        COUNT(id)
+        FROM jsh_app
+        WHERE 1=1
+        <if test="name != null">
+            and name like '%${name}%'
+        </if>
+        <if test="type != null">
+            and type='${type}'
+        </if>
+    </select>
+</mapper>

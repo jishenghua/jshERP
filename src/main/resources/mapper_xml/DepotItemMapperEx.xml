@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsh.erp.datasource.mappers.DepotItemMapper">
+    <resultMap id="HeaderIdResultMap" type="com.jsh.erp.datasource.entities.DepotItemVo4HeaderId">
+        <result column="HeaderId" jdbcType="BIGINT" property="headerid" />
+    </resultMap>
+
+    <resultMap id="DetailByTypeAndMIdResultMap" type="com.jsh.erp.datasource.entities.DepotItemVo4DetailByTypeAndMId">
+        <result column="Number" jdbcType="VARCHAR" property="number" />
+        <result column="newType" jdbcType="VARCHAR" property="newtype" />
+        <result column="b_num" jdbcType="BIGINT" property="bnum" />
+        <result column="oTime" jdbcType="TIMESTAMP" property="otime" />
+    </resultMap>
+
+    <resultMap extends="BaseResultMap" id="ResultAndMaterialMap" type="com.jsh.erp.datasource.entities.DepotItemVo4Material">
+        <result column="mName" jdbcType="VARCHAR" property="mname" />
+        <result column="mModel" jdbcType="VARCHAR" property="mmodel" />
+    </resultMap>
+
+    <resultMap extends="BaseResultMap" id="ResultWithInfoExMap" type="com.jsh.erp.datasource.entities.DepotItemVo4WithInfoEx">
+        <result column="MName" jdbcType="VARCHAR" property="MName" />
+        <result column="MModel" jdbcType="VARCHAR" property="MModel" />
+        <result column="MaterialUnit" jdbcType="VARCHAR" property="MaterialUnit" />
+        <result column="MColor" jdbcType="VARCHAR" property="MColor" />
+        <result column="MStandard" jdbcType="VARCHAR" property="MStandard" />
+        <result column="MMfrs" jdbcType="VARCHAR" property="MMfrs" />
+        <result column="MOtherField1" jdbcType="VARCHAR" property="MOtherField1" />
+        <result column="MOtherField2" jdbcType="VARCHAR" property="MOtherField2" />
+        <result column="MOtherField3" jdbcType="VARCHAR" property="MOtherField3" />
+        <result column="DepotName" jdbcType="VARCHAR" property="DepotName" />
+        <result column="AnotherDepotName" jdbcType="VARCHAR" property="AnotherDepotName" />
+        <result column="UnitId" jdbcType="BIGINT" property="UnitId" />
+        <result column="UName" jdbcType="VARCHAR" property="UName" />
+    </resultMap>
+
+    <select id="selectByConditionDepotItem" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="BaseResultMap">
+        select *
+        FROM jsh_depotitem
+        where 1=1
+        <if test="name != null">
+            and name like '%${name}%'
+        </if>
+        <if test="type != null">
+            and type=${type}
+        </if>
+        <if test="remark != null">
+            and remark like '%${remark}%'
+        </if>
+        <if test="offset != null and rows != null">
+            limit #{offset},#{rows}
+        </if>
+    </select>
+    <select id="countsByDepotItem" resultType="java.lang.Integer">
+        SELECT
+        COUNT(id)
+        FROM jsh_depotitem
+        WHERE 1=1
+        <if test="name != null">
+            and name like '%${name}%'
+        </if>
+        <if test="type != null">
+            and type=${type}
+        </if>
+        <if test="remark != null">
+            and remark like '%${remark}%'
+        </if>
+    </select>
+    <select id="getHeaderIdByMaterial" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="HeaderIdResultMap">
+        select dt.HeaderId from jsh_depotitem dt INNER JOIN jsh_material m on dt.MaterialId = m.Id
+        where (m.`Name` like '%${materialParam}%' or m.Model like '%${materialParam}%')
+        <if test="depotIds != null">
+            and dt.DepotId in (${depotIds})
+        </if>
+    </select>
+
+    <select id="findDetailByTypeAndMaterialIdList" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="DetailByTypeAndMIdResultMap">
+        select dh.Number,concat(dh.SubType,dh.Type) as newType,
+        case when type='入库' then di.BasicNumber when type='出库' then 0-di.BasicNumber else 0 end as b_num,
+        date_format(dh.OperTime,'%Y-%m-%d %H:%i:%S') as oTime
+        from jsh_depothead dh INNER JOIN jsh_depotitem di on dh.id=di.HeaderId where type!='其它'
+        and SubType!='调拨' and SubType!='礼品充值'
+        and MaterialId =${mId} ORDER BY oTime desc
+        <if test="offset != null and rows != null">
+            limit #{offset},#{rows}
+        </if>
+    </select>
+    <select id="findDetailByTypeAndMaterialIdCounts" resultType="java.lang.Integer">
+        select count(1)
+        from jsh_depothead dh INNER JOIN jsh_depotitem di on dh.id=di.HeaderId where type!='其它'
+        and SubType!='调拨' and SubType!='礼品充值'
+        and MaterialId =${mId}
+    </select>
+
+
+    <select id="findStockNumByMaterialIdList" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultAndMaterialMap">
+        select di.*,m.Name mName,m.Model mModel from jsh_depotitem di inner join jsh_material m on di.MaterialId=m.Id  where 1=1
+        <if test="mId != null">
+            and MaterialId=${mId}
+        </if>
+        <if test="offset != null and rows != null">
+            limit #{offset},#{rows}
+        </if>
+    </select>
+    <select id="findStockNumByMaterialIdCounts" resultType="java.lang.Integer">
+        select count(*) from jsh_depotitem where 1=1
+        <if test="mId != null">
+            and MaterialId=${mId}
+        </if>
+    </select>
+
+    <select id="findByTypeAndMaterialIdIn" resultType="java.lang.Integer">
+        select ifnull(sum(BasicNumber),0) as BasicNumber from jsh_depothead dh INNER JOIN jsh_depotitem di on dh.id=di.HeaderId where type='入库'
+        and MaterialId = ${mId}
+    </select>
+
+    <select id="findByTypeAndMaterialIdOut" resultType="java.lang.Integer">
+        select ifnull(sum(BasicNumber),0) as BasicNumber from jsh_depothead dh INNER JOIN jsh_depotitem di on dh.id=di.HeaderId where type='出库'
+        and SubType!='调拨' and SubType!='礼品充值' and MaterialId = ${mId}
+    </select>
+
+    <select id="getDetailList" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
+        select di.*,m.Name MName,m.Model MModel,m.Unit MaterialUnit,m.Color MColor,m.Standard MStandard,m.Mfrs MMfrs,
+        m.OtherField1 MOtherField1,m.OtherField2 MOtherField2,m.OtherField3 MOtherField3,
+        dp1.name DepotName,dp2.name AnotherDepotName, u.id UnitId, u.UName
+        from jsh_depotitem di left join jsh_material m on di.MaterialId=m.id
+        left join jsh_unit u on m.UnitId = u.id
+        left join jsh_depot dp1 on di.DepotId=dp1.id
+        left join jsh_depot dp2 on di.AnotherDepotId=dp1.id
+        where di.HeaderId = ${headerId}
+        order by di.id asc
+    </select>
+
+    <select id="findByAll" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
+        select di.*, m.Name MName, m.Model MModel, m.Unit MaterialUnit, m.Color MColor
+        from jsh_depotitem di
+        inner join jsh_material m on di.MaterialId=m.id
+        where 1=1
+        <if test="headIds != null">
+            and HeaderId in (${headIds})
+        </if>
+        <if test="materialIds != null">
+            and MaterialId in (${materialIds})
+        </if>
+        group by MaterialId
+        <if test="offset != null and rows != null">
+            limit #{offset},#{rows}
+        </if>
+    </select>
+
+    <select id="findByAllCount" resultType="java.lang.Integer">
+        select count(1)
+        from jsh_depotitem di
+        inner join jsh_material m on di.MaterialId=m.id
+        where 1=1
+        <if test="headIds != null">
+            and HeaderId in (${headIds})
+        </if>
+        <if test="materialIds != null">
+            and MaterialId in (${materialIds})
+        </if>
+    </select>
+
+    <select id="findByTypeInIsPrev" resultType="java.lang.Double">
+        select sum(BasicNumber) as BasicNumber from jsh_depotitem di,jsh_depothead dh
+        where di.HeaderId = dh.id and
+        ((type='入库' and DepotId=${ProjectId})
+        or
+        (SubType='调拨' and AnotherDepotId=${ProjectId})
+        or
+        (SubType='礼品充值' and AnotherDepotId=${ProjectId}))
+        and MaterialId = ${MId}  and dh.OperTime &lt; '${MonthTime}-01 00:00:00'
+    </select>
+
+    <select id="findByTypeInIsNotPrev" resultType="java.lang.Double">
+        select sum(BasicNumber) as BasicNumber from jsh_depotitem di,jsh_depothead dh
+        where di.HeaderId = dh.id and
+        ((type='入库' and DepotId=${ProjectId})
+        or
+        (SubType='调拨' and AnotherDepotId=${ProjectId})
+        or
+        (SubType='礼品充值' and AnotherDepotId=${ProjectId}))
+        and MaterialId = ${MId}  and dh.OperTime &gt;= '${MonthTime}-01 00:00:00'
+        and dh.OperTime &lt;= '${MonthTime}-31 59:59:59'
+    </select>
+
+    <select id="findByTypeOutIsPrev" resultType="java.lang.Double">
+        select sum(BasicNumber) as BasicNumber from jsh_depotitem,jsh_depothead  where jsh_depotitem.HeaderId = jsh_depothead.id and type='出库'
+        and DepotId= ${ProjectId}
+        and MaterialId = ${MId}
+        and jsh_depothead.OperTime &lt; '${MonthTime}-01 00:00:00'
+    </select>
+
+    <select id="findByTypeOutIsNotPrev" resultType="java.lang.Double">
+        select sum(BasicNumber) as BasicNumber from jsh_depotitem,jsh_depothead  where jsh_depotitem.HeaderId = jsh_depothead.id and type='出库'
+        and DepotId= ${ProjectId}
+        and MaterialId = ${MId}
+        and jsh_depothead.OperTime &gt;= '${MonthTime}-01 00:00:00'
+        and jsh_depothead.OperTime &lt;= '${MonthTime}-31 59:59:59'
+    </select>
+
+
+    <select id="findPriceByTypeInIsPrev" resultType="java.lang.Double">
+        select sum(AllPrice) as AllPrice from jsh_depotitem di,jsh_depothead dh
+        where di.HeaderId = dh.id and
+        ((type='入库' and DepotId=${ProjectId})
+        or
+        (SubType='调拨' and AnotherDepotId=${ProjectId})
+        or
+        (SubType='礼品充值' and AnotherDepotId=${ProjectId}))
+        and MaterialId = ${MId}  and dh.OperTime &lt; '${MonthTime}-01 00:00:00'
+    </select>
+
+    <select id="findPriceByTypeInIsNotPrev" resultType="java.lang.Double">
+        select sum(AllPrice) as AllPrice from jsh_depotitem di,jsh_depothead dh
+        where di.HeaderId = dh.id and
+        ((type='入库' and DepotId=${ProjectId})
+        or
+        (SubType='调拨' and AnotherDepotId=${ProjectId})
+        or
+        (SubType='礼品充值' and AnotherDepotId=${ProjectId}))
+        and MaterialId = ${MId}  and dh.OperTime &gt;= '${MonthTime}-01 00:00:00'
+        and dh.OperTime &lt;= '${MonthTime}-31 59:59:59'
+    </select>
+
+    <select id="findPriceByTypeOutIsPrev" resultType="java.lang.Double">
+        select sum(AllPrice) as AllPrice from jsh_depotitem,jsh_depothead  where jsh_depotitem.HeaderId = jsh_depothead.id and type='出库'
+        and DepotId= ${ProjectId}
+        and MaterialId = ${MId}
+        and jsh_depothead.OperTime &lt; '${MonthTime}-01 00:00:00'
+    </select>
+
+    <select id="findPriceByTypeOutIsNotPrev" resultType="java.lang.Double">
+        select sum(AllPrice) as AllPrice from jsh_depotitem,jsh_depothead  where jsh_depotitem.HeaderId = jsh_depothead.id and type='出库'
+        and DepotId= ${ProjectId}
+        and MaterialId = ${MId}
+        and jsh_depothead.OperTime &gt;= '${MonthTime}-01 00:00:00'
+        and jsh_depothead.OperTime &lt;= '${MonthTime}-31 59:59:59'
+    </select>
+
+    <select id="buyOrSaleNumber" resultType="java.lang.Double">
+        select sum(BasicNumber) as BasicNumber from jsh_depotitem,jsh_depothead
+        where jsh_depotitem.HeaderId = jsh_depothead.id and type='${type}' and subType='${subType}'
+        and MaterialId =${MId} and jsh_depothead.OperTime &gt;= '${MonthTime}-01 00:00:00'
+        and jsh_depothead.OperTime &lt;= '${MonthTime}-31 59:59:59'
+    </select>
+
+    <select id="buyOrSalePrice" resultType="java.lang.Double">
+        select sum(AllPrice) as AllPrice from jsh_depotitem,jsh_depothead
+        where jsh_depotitem.HeaderId = jsh_depothead.id and type='${type}' and subType='${subType}'
+        and MaterialId =${MId} and jsh_depothead.OperTime &gt;= '${MonthTime}-01 00:00:00'
+        and jsh_depothead.OperTime &lt;= '${MonthTime}-31 59:59:59'
+    </select>
+
+    <select id="findGiftByTypeIn" resultType="java.lang.Double">
+        select sum(BasicNumber) as BasicNumber from jsh_depotitem,jsh_depothead
+        where jsh_depotitem.HeaderId = jsh_depothead.id and jsh_depothead.SubType='${subType}'
+        and jsh_depotitem.AnotherDepotId=${ProjectId}
+        and jsh_depotitem.MaterialId =${MId}
+    </select>
+
+    <select id="findGiftByTypeOut" resultType="java.lang.Double">
+        select sum(BasicNumber) as BasicNumber from jsh_depotitem,jsh_depothead
+        where jsh_depotitem.HeaderId = jsh_depothead.id and jsh_depothead.SubType='${subType}'
+        and jsh_depotitem.DepotId=${ProjectId}
+        and jsh_depotitem.MaterialId =${MId}
+    </select>
+
+</mapper>

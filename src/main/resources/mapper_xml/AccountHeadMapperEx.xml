@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsh.erp.datasource.mappers.AccountHeadMapper">
+
+    <resultMap extends="BaseResultMap" id="ResultMapEx" type="com.jsh.erp.datasource.entities.AccountHeadVo4ListEx">
+        <result column="OrganName" jdbcType="VARCHAR" property="organname" />
+        <result column="HandsPersonName" jdbcType="VARCHAR" property="handspersonname" />
+        <result column="AccountName" jdbcType="VARCHAR" property="accountname" />
+    </resultMap>
+
+    <select id="selectByConditionAccountHead" parameterType="com.jsh.erp.datasource.entities.AccountHeadExample" resultMap="ResultMapEx">
+        select ah.*, s.supplier OrganName, p.Name HandsPersonName, a.Name AccountName
+        from jsh_accounthead ah
+        left join jsh_supplier s on ah.OrganId=s.id
+        left join jsh_person p on ah.HandsPersonId=p.id
+        left join jsh_account a on ah.AccountId=a.id
+        where 1=1
+        <if test="billNo != null">
+            and ah.BillNo like '%${billNo}%'
+        </if>
+        <if test="type != null">
+            and ah.Type='${type}'
+        </if>
+        <if test="beginTime != null">
+            and ah.BillTime gt;= '%${beginTime}%'
+        </if>
+        <if test="endTime != null">
+            and ah.BillTime lt;= '%${endTime}%'
+        </if>
+        order by ah.Id desc
+        <if test="offset != null and rows != null">
+            limit #{offset},#{rows}
+        </if>
+    </select>
+
+
+    <select id="countsByAccountHead" resultType="java.lang.Integer">
+        SELECT
+        COUNT(id)
+        FROM jsh_accounthead
+        WHERE 1=1
+        <if test="billNo != null">
+            and BillNo like '%${billNo}%'
+        </if>
+        <if test="type != null">
+            and Type='${type}'
+        </if>
+        <if test="beginTime != null">
+            and BillTime gt;= '%${beginTime}%'
+        </if>
+        <if test="endTime != null">
+            and BillTime lt;= '%${endTime}%'
+        </if>
+    </select>
+
+    <select id="getMaxId" resultType="java.lang.Long">
+        select max(Id) as Id from jsh_accounthead
+    </select>
+
+    <select id="findAllMoney" resultType="java.lang.Double">
+        select sum(${modeName}) as allMoney from jsh_accounthead where Type='${type}'
+        and OrganId =${supplierId} and BillTime &lt;='${endTime}'
+    </select>
+
+    <select id="getDetailByNumber" parameterType="com.jsh.erp.datasource.entities.AccountHeadExample" resultMap="ResultMapEx">
+        select ah.*, s.supplier OrganName, p.Name HandsPersonName, a.Name AccountName
+        from jsh_accounthead ah
+        left join jsh_supplier s on ah.OrganId=s.id
+        left join jsh_person p on ah.HandsPersonId=p.id
+        left join jsh_account a on ah.AccountId=a.id
+        where 1=1
+        <if test="billNo != null">
+            and ah.BillNo = '${billNo}'
+        </if>
+    </select>
+</mapper>

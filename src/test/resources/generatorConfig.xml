@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <classPathEntry
+            location="E:/maven-repository/mysql/mysql-connector-java/5.1.28/mysql-connector-java-5.1.28.jar"/>
+
+    <context id="DB2Tables" targetRuntime="MyBatis3" defaultModelType="flat">
+        <commentGenerator>
+            <property name="suppressAllComments" value="false"/>
+            <property name="suppressDate" value="true"/>
+        </commentGenerator>
+
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost:3306/jsh_erp?generateSimpleParameterMetadata=true"
+                        userId="root" password="1234">
+        </jdbcConnection>
+
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <!-- generate Model -->
+        <javaModelGenerator targetPackage="com.jsh.erp.datasource.entities"
+                            targetProject="src\main\java">
+            <property name="enableSubPackages" value="false"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <!-- generate xml -->
+        <sqlMapGenerator targetPackage="mapper_xml" targetProject="src\main\resources">
+            <property name="enableSubPackages" value="false"/>
+        </sqlMapGenerator>
+
+        <!-- generate Mapper -->
+        <javaClientGenerator type="XMLMAPPER"
+                             targetPackage="com.jsh.erp.datasource.mappers"
+                             targetProject="src\main\java" implementationPackage="">
+            <property name="enableSubPackages" value="false"/>
+            <property name="exampleMethodVisibility" value="public"/>
+        </javaClientGenerator>
+        <table tableName="jsh_account" domainObjectName="Account"></table>
+        <table tableName="jsh_accounthead" domainObjectName="AccountHead"></table>
+        <table tableName="jsh_accountitem" domainObjectName="AccountItem"></table>
+        <table tableName="jsh_app" domainObjectName="App"></table>
+        <table tableName="jsh_asset" domainObjectName="Asset"></table>
+        <table tableName="jsh_assetcategory" domainObjectName="AssetCategory"></table>
+        <table tableName="jsh_assetname" domainObjectName="AssetName"></table>
+        <table tableName="jsh_depot" domainObjectName="Depot"></table>
+        <table tableName="jsh_depothead" domainObjectName="DepotHead"></table>
+        <table tableName="jsh_depotitem" domainObjectName="DepotItem"></table>
+        <table tableName="jsh_functions" domainObjectName="Functions"></table>
+        <table tableName="jsh_inoutitem" domainObjectName="InOutItem"></table>
+        <table tableName="jsh_log" domainObjectName="Log"></table>
+        <table tableName="jsh_material" domainObjectName="Material"></table>
+        <table tableName="jsh_materialcategory" domainObjectName="MaterialCategory"></table>
+        <table tableName="jsh_materialproperty" domainObjectName="MaterialProperty"></table>
+        <table tableName="jsh_person" domainObjectName="Person"></table>
+        <table tableName="jsh_role" domainObjectName="Role"></table>
+        <table tableName="jsh_supplier" domainObjectName="Supplier"></table>
+        <table tableName="jsh_systemconfig" domainObjectName="SystemConfig"></table>
+        <table tableName="jsh_unit" domainObjectName="Unit"></table>
+        <table tableName="jsh_user" domainObjectName="User"></table>
+        <table tableName="jsh_userbusiness" domainObjectName="UserBusiness"></table>
+    </context>
+</generatorConfiguration>

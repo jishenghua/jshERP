@@ -1,0 +1,124 @@
+package com.jsh.erp.controller;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.jsh.erp.datasource.entities.Account;
+import com.jsh.erp.datasource.vo.AccountVo4InOutList;
+import com.jsh.erp.service.account.AccountService;
+import com.jsh.erp.utils.BaseResponseInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@RestController
+@RequestMapping(value = "/account")
+public class AccountController {
+    private Logger logger = LoggerFactory.getLogger(AccountController.class);
+
+    @Resource
+    private AccountService accountService;
+
+    /**
+     * 查找结算账户信息-下拉框
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/findBySelect")
+    public String findBySelect(HttpServletRequest request) {
+        String res = null;
+        try {
+            List<Account> dataList = accountService.findBySelect();
+            //存放数据json数组
+            JSONArray dataArray = new JSONArray();
+            if (null != dataList) {
+                for (Account account : dataList) {
+                    JSONObject item = new JSONObject();
+                    item.put("Id", account.getId());
+                    //结算账户名称
+                    item.put("AccountName", account.getName());
+                    dataArray.add(item);
+                }
+            }
+            res = dataArray.toJSONString();
+        } catch(Exception e){
+            e.printStackTrace();
+            res = "获取数据失败";
+        }
+        return res;
+    }
+
+    /**
+     * 获取所有结算账户
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/getAccount")
+    public BaseResponseInfo getAccount(HttpServletRequest request) {
+        BaseResponseInfo res = new BaseResponseInfo();
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            List<Account> accountList = accountService.getAccount();
+            map.put("accountList", accountList);
+            res.code = 200;
+            res.data = map;
+        } catch(Exception e){
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
+    }
+
+    /**
+     * 账户流水信息
+     * @param currentPage
+     * @param pageSize
+     * @param accountId
+     * @param initialAmount
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/findAccountInOutList")
+    public BaseResponseInfo findAccountInOutList(@RequestParam("currentPage") Integer currentPage,
+                                                 @RequestParam("pageSize") Integer pageSize,
+                                                 @RequestParam("accountId") Long accountId,
+                                                 @RequestParam("initialAmount") Double initialAmount,
+                                                 HttpServletRequest request) {
+        BaseResponseInfo res = new BaseResponseInfo();
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            List<AccountVo4InOutList> dataList = accountService.findAccountInOutList(accountId, (currentPage-1)*pageSize, pageSize);
+            int total = accountService.findAccountInOutListCount(accountId);
+            map.put("total", total);
+            //存放数据json数组
+            JSONArray dataArray = new JSONArray();
+            if (null != dataList) {
+                for (AccountVo4InOutList aEx : dataList) {
+                    String timeStr = aEx.getOperTime().toString();
+                    Double balance = accountService.getAccountSum(accountId, timeStr, "date") + accountService.getAccountSumByHead(accountId, timeStr, "date")
+                            + accountService.getAccountSumByDetail(accountId, timeStr, "date") + accountService.getManyAccountSum(accountId, timeStr, "date") + initialAmount;
+                    aEx.setBalance(balance);
+                    dataArray.add(aEx);
+                }
+            }
+            map.put("rows", dataArray);
+            res.code = 200;
+            res.data = map;
+        } catch(Exception e){
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
+    }
+
+}

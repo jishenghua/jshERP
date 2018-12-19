@@ -1,0 +1,1 @@
+java -XX:+CreateMinidumpOnCrash -cp ./conf:./lib/*: com.jsh.erp.ErpApplication
