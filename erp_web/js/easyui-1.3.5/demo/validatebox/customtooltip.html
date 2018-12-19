@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Custom ValidateBox Tooltip - jQuery EasyUI Demo</title>
+	<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../demo.css">
+	<script type="text/javascript" src="../../jquery.min.js"></script>
+	<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+</head>
+<body>
+	<h2>Custom ValidateBox Tooltip</h2>
+	<div class="demo-info">
+		<div class="demo-tip icon-tip"></div>
+		<div>This sample shows how to display another tooltip message on a valid textbox.</div>
+	</div>
+	<div style="margin:10px 0;"></div>
+	<div class="easyui-panel" title="Register" style="width:400px;padding:10px">
+		<table>
+			<tr>
+				<td>User Name:</td>
+				<td><input class="easyui-validatebox" data-options="prompt:'Enter User Name.',required:true,validType:'length[3,10]'"></td>
+			</tr>
+			<tr>
+				<td>Email:</td>
+				<td><input class="easyui-validatebox" data-options="prompt:'Enter a valid email.',required:true,validType:'email'"></td>
+			</tr>
+			<tr>
+				<td>Birthday:</td>
+				<td><input class="easyui-datebox"></td>
+			</tr>
+			<tr>
+				<td>URL:</td>
+				<td><input class="easyui-validatebox" data-options="prompt:'Enter your URL.',required:true,validType:'url'"></td>
+			</tr>
+			<tr>
+				<td>Phone:</td>
+				<td><input class="easyui-validatebox" data-options="prompt:'Enter your phone number.',required:true"></td>
+			</tr>
+		</table>
+	</div>
+	<script>
+		$(function(){
+			$('input.easyui-validatebox').validatebox({
+				tipOptions: {	// the options to create tooltip
+					showEvent: 'mouseenter',
+					hideEvent: 'mouseleave',
+					showDelay: 0,
+					hideDelay: 0,
+					zIndex: '',
+					onShow: function(){
+						if (!$(this).hasClass('validatebox-invalid')){
+							if ($(this).tooltip('options').prompt){
+								$(this).tooltip('update', $(this).tooltip('options').prompt);
+							} else {
+								$(this).tooltip('tip').hide();
+							}
+						} else {
+							$(this).tooltip('tip').css({
+								color: '#000',
+								borderColor: '#CC9933',
+								backgroundColor: '#FFFFCC'
+							});
+						}
+					},
+					onHide: function(){
+						if (!$(this).tooltip('options').prompt){
+							$(this).tooltip('destroy');
+						}
+					}
+				}
+			}).tooltip({
+				position: 'right',
+				content: function(){
+					var opts = $(this).validatebox('options');
+					return opts.prompt;
+				},
+				onShow: function(){
+					$(this).tooltip('tip').css({
+						color: '#000',
+						borderColor: '#CC9933',
+						backgroundColor: '#FFFFCC'
+					});
+				}
+			});
+		});
+	</script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+#depotHeadFM .retail-amount tr td{
+    padding: 5px;
+}
+
+#depotHeadFM .retail-amount tr td input{
+    width: 185px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 24px;
+    border-color: #878787;
+    border-style: solid;
+    border-top-width: 0px;
+    border-right-width: 0px;
+    border-bottom-width: 1px;
+    border-left-width: 0px
+}
+
+#depotHeadFM .retail-amount .change-amount{
+    color:purple;
+}
+
+#depotHeadFM .retail-amount .get-amount{
+    color:red;
+}
+
+#depotHeadFM .retail-amount .back-amount{
+    color: green;
+    text-align: right;
+}
+
+#depotHeadDlgShow .retail-amount-show tr td{
+    padding: 5px;
+}
+
+#depotHeadDlgShow .retail-amount-show .change-amount-show{
+    color:purple;
+    font-size: 24px;
+}
+
+#depotHeadDlgShow .retail-amount-show .get-amount-show{
+    color:red;
+    font-size: 24px;
+}
+
+#depotHeadDlgShow .retail-amount-show .back-amount-show{
+    color: green;
+    text-align: right;
+    font-size: 24px;
+}

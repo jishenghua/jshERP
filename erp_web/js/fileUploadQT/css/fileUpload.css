@@ -1,0 +1,130 @@
+.fileUploadContent .box{
+    border: solid thin #DDDDDD;
+    min-height: 200px;
+    min-width: 200px;
+    margin-top: 0px;
+}
+.fileUploadContent .fileItem{
+    border: solid thin #DDDDDD;
+    width: 150px;
+    height: 215px;
+    display: inline-block;
+    margin: 10px;
+    text-align: center;
+    border-radius: 5px;
+    vertical-align:top;
+}
+.fileUploadContent .fileItem .imgShow{
+    width: 140px;
+    height: 140px;
+    margin: 5px auto;
+    text-align: center;
+}
+.fileUploadContent .fileItem .imgShow i{
+    font-size: 120px;
+    position: relative;
+    top:-30px;
+    z-index: 2;
+}
+.fileUploadContent .fileItem .imgShow img{
+    width: 100%;
+    height: 100%;
+}
+.fileUploadContent .fileItem .imgShow .fileType{
+    color: #FFFFFF;
+    font-size: 20px;;
+    position: relative;
+    top:63px;
+    z-index: 3;
+    left: -18px;
+}
+.fileUploadContent .fileItem .progress{
+    height: 10px;
+    width: 100%;
+}
+.fileUploadContent .fileItem .progress>.progress_inner{
+    background-color: #0099FF;
+    width: 0%;
+    height: 10px;
+    border-radius: 10px;
+}
+.fileUploadContent .fileItem .progress .error{
+    background-color: red;
+}
+.fileUploadContent .fileItem .status{
+    font-size: 15px;
+    text-align: center;
+}
+.fileUploadContent .fileItem .status i{
+    display: block;
+    float: left;
+    padding: 2px 5px;
+    color: red;
+    margin-left: 3px;
+    border-radius: 5px;;
+    font-size: 15px;
+    cursor: pointer;
+}
+.fileUploadContent .fileItem .fileName{
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    -ms-text-overflow: ellipsis;
+    overflow: hidden;
+    clear: both;
+    padding: 2px 2px;
+}
+.fileUploadContent .uploadBts {
+    text-align: left;
+    height: 40px
+}
+.fileUploadContent .uploadBts>div{
+    float: left;
+    margin-right: 15px;
+}
+.fileUploadContent .uploadBts>div .selectFileBt{
+    border: none;
+    background-color: #0099FF;
+    color: #FFFFFF;
+    padding: 6px;
+    font-size: 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.fileUploadContent .uploadBts>div .selectFileBt:hover{
+    color: #DDDDDD;
+}
+.fileUploadContent .uploadBts>div i{
+    font-size: 30px;
+    color: #0099FF;
+    cursor: pointer;
+
+}
+.fileUploadContent .subberProgress{
+    padding: 5px;
+    display: none;
+}
+.fileUploadContent .subberProgress .progress{
+    border:solid thin #0099FF;
+    height: 20px;
+    width: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+}
+.fileUploadContent .subberProgress .progress>div{
+    background-color: #0099FF;
+    width: 0%;
+    height: 20px;
+    border-bottom-left-radius: 20px;
+    border-top-left-radius: 20px;
+    text-align: center;
+    color: #FFFFFF;
+    transition: width 0.5s;
+    -moz-transition: width 0.5s;	/* Firefox 4 */
+    -webkit-transition: width 0.5s;	/* Safari 和 Chrome */
+    -o-transition: width 0.5s;	/* Opera */
+    transition-timing-function: linear;
+    -moz-transition-timing-function: linear;
+    -webkit-transition-timing-function: linear;
+    -o-transition-timing-function: linear;
+}

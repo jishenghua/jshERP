@@ -1,0 +1,54 @@
+#bill {
+	width: 100%;
+}
+#bill .retail_out{
+	display: none;
+}
+#bill .retail_back{
+	display: none;
+}
+#bill .purchase_in{
+	display: none;
+}
+#bill .purchase_back{
+	display: none;
+}
+#bill .sale_out{
+	display: none;
+}
+#bill .sale_back{
+	display: none;
+}
+#bill .other_in{
+	display: none;
+}
+#bill .other_out{
+	display: none;
+}
+#bill .allocation_out{
+	display: none;
+}
+#bill .gift_recharge{
+	display: none;
+}
+#bill .gift_out{
+	display: none;
+}
+#bill .item_in{
+	display: none;
+}
+#bill .item_out{
+	display: none;
+}
+#bill .money_in{
+	display: none;
+}
+#bill .money_out{
+	display: none;
+}
+#bill .giro{
+	display: none;
+}
+#bill .advance_in{
+	display: none;
+}

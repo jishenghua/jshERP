@@ -1,0 +1,1 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="WeatherProxy.aspx.cs" Inherits="MultiConsultCRM.Web.Resources.WeatherProxy" %>

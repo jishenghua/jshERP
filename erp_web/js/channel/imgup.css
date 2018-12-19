@@ -1,0 +1,199 @@
+.preview {
+	position: relative;
+	display: block;
+	margin: auto;
+}
+.thumb {
+	border: 1px solid #ccc;
+	position: relative;
+	overflow: hidden;
+}
+.thumb div {
+	position: relative;
+	margin: -50px;
+	left: -50%;
+	top: -50%;
+	zoom: 1;
+}
+.cropaera * {
+	background: none;
+	float: none;
+	padding: 0;
+	margin: 0;
+}
+.cropaera {
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	display: inline-block;
+	position: relative;
+	user-select: none;
+	margin: auto;
+}
+.cropmask {
+	position: absolute;
+	overflow: hidden;
+	height: 100%;
+	width: 100%;
+	left: 0;
+	top: 0;
+}
+.cropmask .mask_top,
+.cropmask .mask_left,
+.cropmask .mask_right,
+.cropmask .mask_bottom  {
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorStr=#66000000,endColorStr=#66000000);
+	background: rgba(0,0,0,.4);
+	overflow: hidden;
+}
+.cropmask .mask_top {
+	height: 25%;
+}
+.cropmask .mask_middle {
+	height: 50%;
+}
+.cropmask .mask_middle {
+	display: table;
+	width: 100%;
+}
+.cropmask .mask_middle .mask_left,
+.cropmask .mask_middle .mask_right {
+	width: 25%;
+}
+.cropmask .mask_middle .mask_left,
+.cropmask .mask_middle .mask_right,
+.cropmask .mask_middle .mask_center {
+	display: table-cell;
+}
+.cropmask .mask_center {
+	height: 100%;
+}
+.cropmask .mask_bottom {
+	height: 100%;
+	clear: both;
+}
+.cropmask .viewport {
+	border: 1px dashed #ccc;
+	position: relative;
+	cursor: move;
+	margin: -1px;
+	height: 100%;
+	width: 100%;
+}
+.cropmask .resize_n,
+.cropmask .resize_e,
+.cropmask .resize_s,
+.cropmask .resize_w {
+	position: absolute;
+	height: 5px;
+	width: 5px;
+}
+.cropmask .resize_e,
+.cropmask .resize_w {
+	margin: 0 -3px;
+	height: 100%;
+	top: 0;
+}
+.cropmask .resize_n,
+.cropmask .resize_s {
+	margin: -3px 0;
+	width: 100%;
+	left: 0;
+}
+.cropmask .resize_n {
+	cursor: n-resize;
+	top: 0;
+}
+.cropmask .resize_e {
+	cursor: e-resize;
+	right: 0;
+}
+.cropmask .resize_s {
+	cursor: s-resize;
+	bottom: 0;
+}
+.cropmask .resize_w {
+	cursor: w-resize;
+	left: 0;
+}
+.cropmask .point {
+	border: 1px solid #fff;
+	position: absolute;
+	background: #000;
+	overflow: hidden;
+	margin: -4px;
+	opacity: .4;
+	height: 7px;
+	width: 7px;
+	filter: Alpha(Opacity=40);
+}
+.cropmask .resize .point {
+	left: 50%;
+	top: 50%;
+}
+.cropmask .point_ne {
+	cursor: ne-resize;
+	right: 0;
+	top: 0;
+}
+.cropmask .point_nw {
+	cursor: nw-resize;
+	left: 0;
+	top: 0;
+}
+.cropmask .point_se {
+	cursor: se-resize;
+	bottom: 0;
+	right: 0;
+}
+.cropmask .point_sw {
+	cursor: sw-resize;
+	bottom: 0;
+	left: 0;
+}
+.cropaera .ondrag .point,
+.cropaera .ondrag .resize,
+.cropaera .ondrag .viewport {
+	cursor: inherit;
+}
+.cropaera .low .resize_e .point,
+.cropaera .low .resize_w .point,
+.cropaera .narrow .resize_n .point,
+.cropaera .narrow .resize_s .point {
+	display: none;
+}
+:root .cropmask .mask_top,
+:root .cropmask .mask_left,
+:root .cropmask .mask_right,
+:root .cropmask .mask_bottom,
+:root .cropmask .viewport .point {
+	filter: none;
+}
+.cropaera {
+	*height: expression(firstChild.offsetHeight);
+	*width: expression(firstChild.offsetWidth);
+	*display: inline;
+	*zoom: 1;
+}
+.cropmask {
+	*height: expression(offsetParent.clientHeight);
+	*width: expression(offsetParent.clientWidth);
+}
+.cropmask .mask_middle {
+	*overflow: hidden;
+}
+.cropmask .mask_left {
+	*float: left;
+	_margin-right: -3px;
+}
+.cropmask .mask_right {
+	*float: right;
+	_margin-left: -3px;
+}
+.cropmask .mask_left,
+.cropmask .mask_right {
+	*padding-bottom: 999em;
+	*margin-bottom: -999em;
+}
+.cropmask .mask_center {
+	*zoom: 1;
+}
