@@ -189,4 +189,24 @@ public class SupplierController {
         }
         return res;
     }
+
+    /**
+     * 批量设置状态-启用或者禁用
+     * @param enabled
+     * @param supplierIDs
+     * @param request
+     * @return
+     */
+    @PostMapping(value = "/batchSetEnable")
+    public String batchSetEnable(@RequestParam("enabled") Boolean enabled,
+                                 @RequestParam("supplierIDs") String supplierIDs,
+                                 HttpServletRequest request) {
+        Map<String, Object> objectMap = new HashMap<String, Object>();
+        int res = supplierService.batchSetEnable(enabled, supplierIDs);
+        if(res > 0) {
+            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+        } else {
+            return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
+        }
+    }
 }

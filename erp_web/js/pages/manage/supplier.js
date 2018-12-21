@@ -293,23 +293,20 @@
                     }
                     $.ajax({
                         type:"post",
-                        url: "/supplier/batchSetEnable.action",
+                        url: "/supplier/batchSetEnable",
                         dataType: "json",
                         async :  false,
                         data: ({
                             enabled: true,
                             supplierIDs : ids
                         }),
-                        success: function (tipInfo) {
-                            var msg = tipInfo.showModel.msgTip;
-                            if(msg == '成功')
-                            {
-                                //加载完以后重新初始化
+                        success: function (res) {
+                            if(res && res.code === 200) {
                                 $("#searchBtn").click();
-                                $(":checkbox").attr("checked",false);
+                                $(":checkbox").attr("checked", false);
+                            } else {
+                                $.messager.alert('启用提示', '启用信息失败，请稍后再试！', 'error');
                             }
-                            else
-                                $.messager.alert('启用提示','启用信息失败，请稍后再试！','error');
                         },
                         //此处添加错误处理
                         error:function() {
@@ -342,22 +339,20 @@
                     }
                     $.ajax({
                         type:"post",
-                        url: "/supplier/batchSetEnable.action",
+                        url: "/supplier/batchSetEnable",
                         dataType: "json",
                         async :  false,
                         data: ({
                             enabled: false,
                             supplierIDs : ids
                         }),
-                        success: function (tipInfo) {
-                            var msg = tipInfo.showModel.msgTip;
-                            if(msg == '成功') {
-                                //加载完以后重新初始化
+                        success: function (res) {
+                            if(res && res.code === 200) {
                                 $("#searchBtn").click();
-                                $(":checkbox").attr("checked",false);
+                                $(":checkbox").attr("checked", false);
+                            } else {
+                                $.messager.alert('禁用提示', '禁用信息失败，请稍后再试！', 'error');
                             }
-                            else
-                                $.messager.alert('禁用提示','禁用信息失败，请稍后再试！','error');
                         },
                         //此处添加错误处理
                         error:function() {

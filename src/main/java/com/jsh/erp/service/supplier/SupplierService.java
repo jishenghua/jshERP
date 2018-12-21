@@ -99,4 +99,13 @@ public class SupplierService {
         example.setOrderByClause("id desc");
         return supplierMapper.selectByExample(example);
     }
+
+    public int batchSetEnable(Boolean enabled, String supplierIDs) {
+        List<Long> ids = StringUtil.strToLongList(supplierIDs);
+        Supplier supplier = new Supplier();
+        supplier.setEnabled(enabled);
+        SupplierExample example = new SupplierExample();
+        example.createCriteria().andIdIn(ids);
+        return supplierMapper.updateByExampleSelective(supplier, example);
+    }
 }
