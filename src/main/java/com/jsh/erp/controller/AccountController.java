@@ -6,18 +6,18 @@ import com.jsh.erp.datasource.entities.Account;
 import com.jsh.erp.datasource.vo.AccountVo4InOutList;
 import com.jsh.erp.service.account.AccountService;
 import com.jsh.erp.utils.BaseResponseInfo;
+import com.jsh.erp.utils.ErpInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 
 @RestController
 @RequestMapping(value = "/account")
@@ -119,6 +119,20 @@ public class AccountController {
             res.data = "获取数据失败";
         }
         return res;
+    }
+
+
+    @PostMapping(value = "/updateAmountIsDefault")
+    public String updateAmountIsDefault(@RequestParam("isDefault") Boolean isDefault,
+                                 @RequestParam("accountId") Long accountId,
+                                 HttpServletRequest request) {
+        Map<String, Object> objectMap = new HashMap<String, Object>();
+        int res = accountService.updateAmountIsDefault(isDefault, accountId);
+        if(res > 0) {
+            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+        } else {
+            return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
+        }
     }
 
 }

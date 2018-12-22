@@ -321,24 +321,21 @@
             function setDefault(accountID, isDefault) {
                 $.ajax({
                     type: "post",
-                    url: "/account/updateAmountIsDefault.action",
+                    url: "/account/updateAmountIsDefault",
                     dataType: "json",
                     async: false,
                     data: ({
-                        AccountID: accountID,
-                        IsDefault: isDefault
+                        accountId: accountID,
+                        isDefault: isDefault
                     }),
                     success: function (res) {
                         if (res == "true" && isDefault) {
 
                         }
-                        else {
-
-                        }
                     },
                     //此处添加错误处理
                     error: function () {
-                        $.messager.alert('删除提示', '删除结算账户异常，请稍后再试！', 'error');
+                        $.messager.alert('提示', '设为默认账户异常，请稍后再试！', 'error');
                         return;
                     }
                 });

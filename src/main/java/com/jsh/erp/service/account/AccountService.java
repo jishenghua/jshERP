@@ -75,6 +75,10 @@ public class AccountService {
 
     public int insertAccount(String beanJson, HttpServletRequest request) {
         Account account = JSONObject.parseObject(beanJson, Account.class);
+        if(account.getInitialamount() == null) {
+            account.setInitialamount(0d);
+        }
+        account.setIsdefault(false);
         return accountMapper.insertSelective(account);
     }
 
@@ -290,6 +294,14 @@ public class AccountService {
 
     public int findAccountInOutListCount(Long accountId) {
         return accountMapper.findAccountInOutListCount(accountId);
+    }
+
+    public int updateAmountIsDefault(Boolean isDefault, Long accountId) {
+        Account account = new Account();
+        account.setIsdefault(isDefault);
+        AccountExample example = new AccountExample();
+        example.createCriteria().andIdEqualTo(accountId);
+        return accountMapper.updateByExampleSelective(account, example);
     }
 
 }
