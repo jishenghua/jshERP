@@ -274,7 +274,7 @@ public class DepotItemController {
                             Long mId = Long.parseLong(tempInsertedJson.get("MaterialId").toString());
                             //以下进行单位换算
                             String UnitName = findUnitName(mId); //查询计量单位名称
-                            if (!UnitName.equals("")) {
+                            if (!StringUtil.isEmpty(UnitName)) {
                                 String UnitList = UnitName.substring(0, UnitName.indexOf("("));
                                 String RatioList = UnitName.substring(UnitName.indexOf("("));
                                 String basicUnit = UnitList.substring(0, UnitList.indexOf(",")); //基本单位
