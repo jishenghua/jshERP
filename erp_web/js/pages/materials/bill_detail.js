@@ -224,8 +224,8 @@
                         $("#bill .DiscountLastMoneyShow").text(data.discountlastmoney);
                         $("#bill .ChangeAmountShow").text(data.changeamount);
                         $("#bill .DebtShow").text((data.discountlastmoney-data.changeamount).toFixed(2));
-                        $("#bill .OtherMoneyShow").text(data.othermoney);
-                        $("#bill .AccountDayShow").text(data.accountday); //结算天数
+                        $("#bill .OtherMoneyShow").text(data.othermoney==null ? "": data.othermoney);
+                        $("#bill .AccountDayShow").text(data.accountday==null ? "": data.accountday); //结算天数
                         var otherMoney = data.othermoney + "";
                         var otherMoneyList = data.othermoneylist + "";
                         var otherMoneyItem = data.othermoneyitem + "";
