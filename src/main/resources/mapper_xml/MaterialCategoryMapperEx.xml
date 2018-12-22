@@ -11,6 +11,7 @@
         <if test="parentId != null">
             and parentId = ${parentId}
         </if>
+        and Id !=1
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
         </if>
@@ -26,5 +27,6 @@
         <if test="parentId != null">
             and parentId = ${parentId}
         </if>
+        and Id !=1
     </select>
 </mapper>

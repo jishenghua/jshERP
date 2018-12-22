@@ -31,7 +31,7 @@ public class MaterialCategoryService {
 
     public List<MaterialCategory> getAllList(Long parentId) {
         MaterialCategoryExample example = new MaterialCategoryExample();
-        example.createCriteria().andParentidEqualTo(parentId);
+        example.createCriteria().andParentidEqualTo(parentId).andIdNotEqualTo(1l);
         example.setOrderByClause("id");
         return materialCategoryMapper.selectByExample(example);
     }
