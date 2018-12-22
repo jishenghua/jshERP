@@ -148,7 +148,7 @@
     </select>
 
     <select id="findByAllCount" resultType="java.lang.Integer">
-        select count(1)
+        select count(1) from (select di.Id
         from jsh_depotitem di
         inner join jsh_material m on di.MaterialId=m.id
         where 1=1
@@ -158,6 +158,7 @@
         <if test="materialIds != null">
             and MaterialId in (${materialIds})
         </if>
+        group by MaterialId) cc
     </select>
 
     <select id="findByTypeInIsPrev" resultType="java.lang.Double">
@@ -180,7 +181,7 @@
         or
         (SubType='礼品充值' and AnotherDepotId=${ProjectId}))
         and MaterialId = ${MId}  and dh.OperTime &gt;= '${MonthTime}-01 00:00:00'
-        and dh.OperTime &lt;= '${MonthTime}-31 59:59:59'
+        and dh.OperTime &lt;= '${MonthTime}-31 23:59:59'
     </select>
 
     <select id="findByTypeOutIsPrev" resultType="java.lang.Double">
@@ -195,7 +196,7 @@
         and DepotId= ${ProjectId}
         and MaterialId = ${MId}
         and jsh_depothead.OperTime &gt;= '${MonthTime}-01 00:00:00'
-        and jsh_depothead.OperTime &lt;= '${MonthTime}-31 59:59:59'
+        and jsh_depothead.OperTime &lt;= '${MonthTime}-31 23:59:59'
     </select>
 
 
@@ -219,7 +220,7 @@
         or
         (SubType='礼品充值' and AnotherDepotId=${ProjectId}))
         and MaterialId = ${MId}  and dh.OperTime &gt;= '${MonthTime}-01 00:00:00'
-        and dh.OperTime &lt;= '${MonthTime}-31 59:59:59'
+        and dh.OperTime &lt;= '${MonthTime}-31 23:59:59'
     </select>
 
     <select id="findPriceByTypeOutIsPrev" resultType="java.lang.Double">
@@ -234,21 +235,21 @@
         and DepotId= ${ProjectId}
         and MaterialId = ${MId}
         and jsh_depothead.OperTime &gt;= '${MonthTime}-01 00:00:00'
-        and jsh_depothead.OperTime &lt;= '${MonthTime}-31 59:59:59'
+        and jsh_depothead.OperTime &lt;= '${MonthTime}-31 23:59:59'
     </select>
 
     <select id="buyOrSaleNumber" resultType="java.lang.Double">
         select sum(BasicNumber) as BasicNumber from jsh_depotitem,jsh_depothead
         where jsh_depotitem.HeaderId = jsh_depothead.id and type='${type}' and subType='${subType}'
         and MaterialId =${MId} and jsh_depothead.OperTime &gt;= '${MonthTime}-01 00:00:00'
-        and jsh_depothead.OperTime &lt;= '${MonthTime}-31 59:59:59'
+        and jsh_depothead.OperTime &lt;= '${MonthTime}-31 23:59:59'
     </select>
 
     <select id="buyOrSalePrice" resultType="java.lang.Double">
         select sum(AllPrice) as AllPrice from jsh_depotitem,jsh_depothead
         where jsh_depotitem.HeaderId = jsh_depothead.id and type='${type}' and subType='${subType}'
         and MaterialId =${MId} and jsh_depothead.OperTime &gt;= '${MonthTime}-01 00:00:00'
-        and jsh_depothead.OperTime &lt;= '${MonthTime}-31 59:59:59'
+        and jsh_depothead.OperTime &lt;= '${MonthTime}-31 23:59:59'
     </select>
 
     <select id="findGiftByTypeIn" resultType="java.lang.Double">
