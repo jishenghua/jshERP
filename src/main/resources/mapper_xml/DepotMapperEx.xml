@@ -14,6 +14,7 @@
         <if test="remark != null">
             and remark like '%${remark}%'
         </if>
+        order by sort asc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
         </if>

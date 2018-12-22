@@ -312,6 +312,8 @@
 
     //保存信息
     $("#saveDepot").off("click").on("click", function () {
+        var infoObj = $("#depotFM").serializeObject();
+        infoObj.type = 0;
         if (checkDepotName()) {
             return;
         }
@@ -320,7 +322,7 @@
             type: "post",
             dataType: "json",
             data: ({
-                info: JSON.stringify($("#depotFM").serializeObject())
+                info: JSON.stringify(infoObj)
             }),
             success: function(res) {
                 if(res && res.code === 200) {
