@@ -4,7 +4,6 @@
         var listType = ""; //类型
         var listTypeEn = ""; //英文类型
         getType();
-        getPersonList(); //获取业务员
         initTableData();
         ininPager();
         bindEvent();
@@ -25,43 +24,6 @@
             listType = "会员";
             listTypeEn = "Member";
         }
-    }
-
-    //获取业务员
-    function getPersonList(){
-        $.ajax({
-            type:"post",
-            url: "/person/getBasicData.action",
-            dataType: "json",
-            success: function (systemInfo)
-            {
-                var msgTip = systemInfo.showModel.msgTip;
-                if(msgTip !== "exceptoin"){
-                    var personList = systemInfo.showModel.map.personList;
-                    var personID,options;
-                    if(personList !=null)
-                    {
-                        for(var i = 0 ;i < personList.length;i++)
-                        {
-                            var person = personList[i];
-                            if(0 == i)
-                            {
-                                personID = person.id;
-                            }
-                            if(person.type=="仓管员")
-                            {
-                                options += '<option value="' + person.id + '">' + person.name + '</option>';
-                            }
-                        }
-                        $("#personId").empty().append('<option>不关联业务员</option>').append(options);
-                    }
-                }
-                else {
-                    $.messager.alert('提示','查找系统基础信息异常,请与管理员联系！','error');
-                    return;
-                }
-            }
-        });
     }
 
     //初始化表格数据
@@ -503,11 +465,10 @@
                 var pager = $("#tableData").datagrid('getPager');
                 opts.pageNumber = 1;
                 opts.pageSize = initPageSize;
-                pager.pagination('refresh',
-                    {
-                        pageNumber:1,
-                        pageSize:initPageSize
-                    });
+                pager.pagination('refresh', {
+                    pageNumber:1,
+                    pageSize:initPageSize
+                });
             }
         });
 
@@ -571,31 +532,31 @@
             supType = "vendor"
         }
         $.ajax({
-            type:"post",
-            url: "/depotHead/findTotalPay.action",
+            type:"get",
+            url: "/depotHead/findTotalPay",
             dataType: "json",
             async:  false,
             data: ({
                 supplierId: supplierInfo[0],
-                EndTime:thisDateTime,
+                endTime:thisDateTime,
                 supType: supType
             }),
             success: function(res){
-                if(res) {
-                    var moneyA = res.getAllMoney.toFixed(2)-0;
+                if (res && res.code === 200 && res.data && res.data.rows && res.data.rows.getAllMoney) {
+                    var moneyA = res.data.rows.getAllMoney.toFixed(2)-0;
                     $.ajax({
-                        type:"post",
-                        url: path +"/accountHead/findTotalPay.action",
+                        type:"get",
+                        url: "/accountHead/findTotalPay",
                         dataType: "json",
                         async:  false,
                         data: ({
                             supplierId: supplierInfo[0],
-                            EndTime:thisDateTime,
+                            endTime:thisDateTime,
                             supType: supType
                         }),
                         success: function(res){
-                            if(res) {
-                                var moneyB = res.getAllMoney.toFixed(2)-0;
+                            if (res && res.code === 200 && res.data && res.data.rows && res.data.rows.getAllMoney) {
+                                var moneyB = res.data.rows.getAllMoney.toFixed(2)-0;
                                 var money = moneyA+moneyB;
                                 var moneyBeginNeedGet = $("#BeginNeedGet").val()-0; //期初应收
                                 var moneyBeginNeedPay = $("#BeginNeedPay").val()-0; //期初应付
