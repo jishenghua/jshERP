@@ -81,4 +81,13 @@ public class FunctionsService {
         List<Functions> list = functionsMapper.selectByExample(example);
         return list;
     }
+
+    public List<Functions> findByIds(String functionsIds){
+        List<Long> idList = StringUtil.strToLongList(functionsIds);
+        FunctionsExample example = new FunctionsExample();
+        example.createCriteria().andEnabledEqualTo(true).andIdIn(idList);
+        example.setOrderByClause("Sort asc");
+        List<Functions> list = functionsMapper.selectByExample(example);
+        return list;
+    }
 }

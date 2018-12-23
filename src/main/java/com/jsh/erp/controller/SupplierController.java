@@ -209,4 +209,51 @@ public class SupplierController {
             return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
         }
     }
+
+    /**
+     * 用户对应客户显示
+     * @param type
+     * @param keyId
+     * @param request
+     * @return
+     */
+    @PostMapping(value = "/findUserCustomer")
+    public JSONArray findUserCustomer(@RequestParam("UBType") String type, @RequestParam("UBKeyId") String keyId,
+                                   HttpServletRequest request) {
+        JSONArray arr = new JSONArray();
+        try {
+            List<Supplier> dataList = supplierService.findUserCustomer();
+            //开始拼接json数据
+            JSONObject outer = new JSONObject();
+            outer.put("id", 1);
+            outer.put("text", "客户列表");
+            outer.put("state", "open");
+            //存放数据json数组
+            JSONArray dataArray = new JSONArray();
+            if (null != dataList) {
+                for (Supplier supplier : dataList) {
+                    JSONObject item = new JSONObject();
+                    item.put("id", supplier.getId());
+                    item.put("text", supplier.getSupplier());
+                    //勾选判断1
+                    Boolean flag = false;
+                    try {
+                        flag = userBusinessService.checkIsUserBusinessExist(type, keyId, "[" + supplier.getId().toString() + "]");
+                    } catch (Exception e) {
+                        logger.error(">>>>>>>>>>>>>>>>>设置用户对应的客户：类型" + type + " KeyId为： " + keyId + " 存在异常！");
+                    }
+                    if (flag == true) {
+                        item.put("checked", true);
+                    }
+                    //结束
+                    dataArray.add(item);
+                }
+            }
+            outer.put("children", dataArray);
+            arr.add(outer);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return arr;
+    }
 }

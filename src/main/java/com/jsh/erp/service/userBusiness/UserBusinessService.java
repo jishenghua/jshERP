@@ -89,4 +89,12 @@ public class UserBusinessService {
         }
     }
 
+    public int updateBtnStr(Long userBusinessId, String btnStr) {
+        UserBusiness userBusiness = new UserBusiness();
+        userBusiness.setBtnstr(btnStr);
+        UserBusinessExample example = new UserBusinessExample();
+        example.createCriteria().andIdEqualTo(userBusinessId);
+        return userBusinessMapper.updateByExampleSelective(userBusiness, example);
+    }
+
 }

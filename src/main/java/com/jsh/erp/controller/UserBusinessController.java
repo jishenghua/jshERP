@@ -57,4 +57,30 @@ public class UserBusinessController {
         }
         return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
     }
+
+    /**
+     * 更新角色的按钮权限
+     * @param userBusinessId
+     * @param btnStr
+     * @param request
+     * @return
+     */
+    @PostMapping(value = "/updateBtnStr")
+    public BaseResponseInfo updateBtnStr(@RequestParam(value ="userBusinessId", required = false) Long userBusinessId,
+                                    @RequestParam(value ="btnStr", required = false) String btnStr,
+                                    HttpServletRequest request) {
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            int back = userBusinessService.updateBtnStr(userBusinessId, btnStr);
+            if(back > 0) {
+                res.code = 200;
+                res.data = "成功";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "查询权限失败";
+        }
+        return res;
+    }
 }

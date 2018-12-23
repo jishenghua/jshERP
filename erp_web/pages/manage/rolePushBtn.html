@@ -111,11 +111,10 @@
                 onSelectPage: function (pageNum, pageSize) {
                     opts.pageNumber = pageNum;
                     opts.pageSize = pageSize;
-                    pager.pagination('refresh',
-                        {
-                            pageNumber: pageNum,
-                            pageSize: pageSize
-                        });
+                    pager.pagination('refresh', {
+                        pageNumber: pageNum,
+                        pageSize: pageSize
+                    });
                     showDetails(pageNum, pageSize);
                 }
             });
@@ -127,29 +126,32 @@
 
     function showDetails(pageNo, pageSize) {
         $.ajax({
-            url: "/userBusiness/getBasicData.action",
+            url: "/userBusiness/getBasicData",
             type: "get",
             data: {
                 Type: 'RoleFunctions',
                 KeyId: keyId
             },
             success: function (res) {
-                if (res && res.showModel && res.showModel.map && res.showModel.map.userBusinessList && res.showModel.map.userBusinessList[0]) {
-                    userBusinessId = res.showModel.map.userBusinessList[0].id;
-                    roleBtnStr = res.showModel.map.userBusinessList[0].btnStr;
-                    var getValue = res.showModel.map.userBusinessList[0].value;
+                if (res && res.code === 200) {
+                    var ubList = res.data.userBusinessList;
+                    userBusinessId = ubList[0].id;
+                    roleBtnStr = ubList[0].btnstr;
+                    var getValue = ubList[0].value;
                     getValue = getValue.substring(1, getValue.length - 1);
                     if (getValue.indexOf("][")) {
                         var arr = getValue.split("][");
                         arr = arr.toString();
                         $.ajax({
-                            url: "/functions/findByIds.action",
+                            url: "/functions/findByIds",
                             type: "get",
                             data: {
-                                FunctionsIDs: arr
+                                functionsIds: arr
                             },
-                            success: function (rec) {
-                                $("#tableData").datagrid('loadData', JSON.parse(rec));
+                            success: function (res) {
+                                if(res && res.code === 200) {
+                                    $("#tableData").datagrid('loadData', res.data);
+                                }
                             },
                             error: function () {
                                 $.messager.alert('提示', '查询数据异常，请稍后再试！', 'error');
@@ -228,14 +230,14 @@
                     btnStr = JSON.stringify(bindArr);
                 }
                 $.ajax({
-                    url: "/userBusiness/updateBtnStr.action",
-                    type: "get",
+                    url: "/userBusiness/updateBtnStr",
+                    type: "post",
                     data: {
-                        UserBusinessID: userBusinessId,
-                        BtnStr: btnStr
+                        userBusinessId: userBusinessId,
+                        btnStr: btnStr
                     },
                     success: function (res) {
-                        if (res) {
+                        if (res && res.code === 200) {
                             self.parent.$.colorbox.close();
                             alert("操作成功！");
                         }

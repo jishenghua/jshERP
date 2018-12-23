@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.datasource.entities.Functions;
 import com.jsh.erp.service.functions.FunctionsService;
 import com.jsh.erp.service.userBusiness.UserBusinessService;
+import com.jsh.erp.utils.BaseResponseInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -231,5 +232,42 @@ public class FunctionsController {
             e.printStackTrace();
         }
         return arr;
+    }
+
+    /**
+     * 根据id列表查找功能信息
+     * @param functionsIds
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/findByIds")
+    public BaseResponseInfo findByIds(@RequestParam("functionsIds") String functionsIds,
+                                      HttpServletRequest request) {
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            List<Functions> dataList = functionsService.findByIds(functionsIds);
+            JSONObject outer = new JSONObject();
+            outer.put("total", dataList.size());
+            //存放数据json数组
+            JSONArray dataArray = new JSONArray();
+            if (null != dataList) {
+                for (Functions functions : dataList) {
+                    JSONObject item = new JSONObject();
+                    item.put("Id", functions.getId());
+                    item.put("Name", functions.getName());
+                    item.put("PushBtn", functions.getPushbtn());
+                    item.put("op", 1);
+                    dataArray.add(item);
+                }
+            }
+            outer.put("rows", dataArray);
+            res.code = 200;
+            res.data = outer;
+        } catch (Exception e) {
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
     }
 }

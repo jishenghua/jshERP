@@ -108,4 +108,12 @@ public class SupplierService {
         example.createCriteria().andIdIn(ids);
         return supplierMapper.updateByExampleSelective(supplier, example);
     }
+
+    public List<Supplier> findUserCustomer(){
+        SupplierExample example = new SupplierExample();
+        example.createCriteria().andTypeEqualTo("客户");
+        example.setOrderByClause("id desc");
+        List<Supplier> list = supplierMapper.selectByExample(example);
+        return list;
+    }
 }
