@@ -800,7 +800,7 @@
     function getMaterialInOutList(mId, pageNo, pageSize) {
         $.ajax({
             type: "get",
-            url: "/depotItem/findDetailByTypeAndMaterialId.action",
+            url: "/depotItem/findDetailByTypeAndMaterialId",
             dataType: "json",
             data: ({
                 materialId: mId,

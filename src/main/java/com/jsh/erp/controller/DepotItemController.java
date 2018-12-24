@@ -100,13 +100,13 @@ public class DepotItemController {
                 dataArray.add(item);
             }
         }
-        objectMap.put("page", dataArray);
+        objectMap.put("page", queryInfo);
         if (list == null) {
             queryInfo.setRows(new ArrayList<Object>());
             queryInfo.setTotal(0);
             return returnJson(objectMap, "查找不到数据", ErpInfo.OK.code);
         }
-        queryInfo.setRows(list);
+        queryInfo.setRows(dataArray);
         queryInfo.setTotal(depotItemService.findDetailByTypeAndMaterialIdCounts(parameterMap));
         return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
     }
