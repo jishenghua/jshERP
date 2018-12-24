@@ -55,7 +55,7 @@ public class MaterialCategoryController {
                 }
             }
             res.code = 200;
-            res.data = dataList;
+            res.data = outer;
         } catch(Exception e){
             e.printStackTrace();
             res.code = 500;

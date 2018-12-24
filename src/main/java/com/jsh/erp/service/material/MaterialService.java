@@ -31,12 +31,43 @@ public class MaterialService {
         return materialMapper.selectByExample(example);
     }
 
-    public List<Material> select(String name, String model, int offset, int rows) {
-        return materialMapper.selectByConditionMaterial(name, model, offset, rows);
+    public List<MaterialVo4Unit> select(String name, String model,Long categoryId, String categoryIds,String mpList, int offset, int rows) {
+        String[] mpArr = mpList.split(",");
+        List<MaterialVo4Unit> resList = new ArrayList<MaterialVo4Unit>();
+        List<MaterialVo4Unit> list = materialMapper.selectByConditionMaterial(name, model,categoryId,categoryIds,mpList, offset, rows);
+        if (null != list) {
+            for (MaterialVo4Unit m : list) {
+                //扩展信息
+                String materialOther = "";
+                for (int i = 0; i < mpArr.length; i++) {
+                    if (mpArr[i].equals("颜色")) {
+                        materialOther = materialOther + ((m.getColor() == null || m.getColor().equals("")) ? "" : "(" + m.getColor() + ")");
+                    }
+                    if (mpArr[i].equals("规格")) {
+                        materialOther = materialOther + ((m.getStandard() == null || m.getStandard().equals("")) ? "" : "(" + m.getStandard() + ")");
+                    }
+                    if (mpArr[i].equals("制造商")) {
+                        materialOther = materialOther + ((m.getMfrs() == null || m.getMfrs().equals("")) ? "" : "(" + m.getMfrs() + ")");
+                    }
+                    if (mpArr[i].equals("自定义1")) {
+                        materialOther = materialOther + ((m.getOtherfield1() == null || m.getOtherfield1().equals("")) ? "" : "(" + m.getOtherfield1() + ")");
+                    }
+                    if (mpArr[i].equals("自定义2")) {
+                        materialOther = materialOther + ((m.getOtherfield2() == null || m.getOtherfield2().equals("")) ? "" : "(" + m.getOtherfield2() + ")");
+                    }
+                    if (mpArr[i].equals("自定义3")) {
+                        materialOther = materialOther + ((m.getOtherfield3() == null || m.getOtherfield3().equals("")) ? "" : "(" + m.getOtherfield3() + ")");
+                    }
+                }
+                m.setMaterialOther(materialOther);
+                resList.add(m);
+            }
+        }
+        return resList;
     }
 
-    public int countMaterial(String name, String model) {
-        return materialMapper.countsByMaterial(name, model);
+    public int countMaterial(String name, String model,Long categoryId, String categoryIds,String mpList) {
+        return materialMapper.countsByMaterial(name, model,categoryId,categoryIds,mpList);
     }
 
     public int insertMaterial(String beanJson, HttpServletRequest request) {

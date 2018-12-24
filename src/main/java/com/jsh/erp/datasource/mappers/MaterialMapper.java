@@ -96,15 +96,21 @@ public interface MaterialMapper {
      */
     int updateByPrimaryKey(Material record);
 
-    List<Material> selectByConditionMaterial(
+    List<MaterialVo4Unit> selectByConditionMaterial(
             @Param("name") String name,
             @Param("model") String model,
+            @Param("categoryId") Long categoryId,
+            @Param("categoryIds") String categoryIds,
+            @Param("mpList") String mpList,
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
     int countsByMaterial(
             @Param("name") String name,
-            @Param("model") String model);
+            @Param("model") String model,
+            @Param("categoryId") Long categoryId,
+            @Param("categoryIds") String categoryIds,
+            @Param("mpList") String mpList);
 
     String findUnitName(@Param("mId") Long mId);
 

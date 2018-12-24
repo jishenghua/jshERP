@@ -50,6 +50,10 @@ public class MaterialVo4Unit {
 
     private String unitName;
 
+    private String categoryName;
+
+    private String materialOther;
+
     public Long getId() {
         return id;
     }
@@ -240,5 +244,21 @@ public class MaterialVo4Unit {
 
     public void setUnitName(String unitName) {
         this.unitName = unitName;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public String getMaterialOther() {
+        return materialOther;
+    }
+
+    public void setMaterialOther(String materialOther) {
+        this.materialOther = materialOther;
     }
 }
