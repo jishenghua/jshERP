@@ -16,6 +16,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * @author ji sheng hua 752*718*920
+ */
 @RestController
 @RequestMapping(value = "/depot")
 public class DepotController {

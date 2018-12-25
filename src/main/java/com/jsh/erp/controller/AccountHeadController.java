@@ -19,6 +19,9 @@ import java.util.Map;
 
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 
+/**
+ * @author jishenghua 752*718*920
+ */
 @RestController
 @RequestMapping(value = "/accountHead")
 public class AccountHeadController {

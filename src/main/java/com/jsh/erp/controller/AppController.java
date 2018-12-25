@@ -13,6 +13,9 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+/**
+ * @author ji_sheng_hua 752*718*920
+ */
 @RestController
 @RequestMapping(value = "/app")
 public class AppController {
