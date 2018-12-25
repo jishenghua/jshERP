@@ -15,6 +15,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author jishenghua  华夏ERP 2018年12月25日14:38:08
+ */
 @RestController
 @RequestMapping(value = "/inOutItem")
 public class InOutItemController {
