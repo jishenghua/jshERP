@@ -19,6 +19,9 @@ import java.util.Map;
 
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 
+/**
+ * @author ji|sheng|hua 华夏ERP
+ */
 @RestController
 @RequestMapping(value = "/material")
 public class MaterialController {

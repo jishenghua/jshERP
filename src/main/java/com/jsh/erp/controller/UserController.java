@@ -17,8 +17,7 @@ import java.util.Map;
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 
 /**
- * 用户管理 2018-10-13 21:24:06
- * @author jishenghua  qq:752718920
+ * @author ji_sheng_hua 华夏erp
  */
 @RestController
 @RequestMapping(value = "/user")

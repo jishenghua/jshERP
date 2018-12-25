@@ -20,6 +20,9 @@ import java.util.Map;
 
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 
+/**
+ * @author ji|sheng|hua 华夏erp
+ */
 @RestController
 @RequestMapping(value = "/supplier")
 public class SupplierController {

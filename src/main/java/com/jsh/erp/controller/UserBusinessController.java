@@ -17,6 +17,9 @@ import java.util.Map;
 
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 
+/**
+ * @author ji_sheng_hua 华夏ERP
+ */
 @RestController
 @RequestMapping(value = "/userBusiness")
 public class UserBusinessController {

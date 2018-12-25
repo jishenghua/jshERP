@@ -15,6 +15,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author ji|sheng|hua 华夏erp
+ */
 @RestController
 @RequestMapping(value = "/person")
 public class PersonController {

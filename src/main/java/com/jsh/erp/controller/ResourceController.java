@@ -14,7 +14,7 @@ import java.util.*;
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 
 /**
- * by jishenghua 2018-9-12 23:58:10
+ * by jishenghua 2018-9-12 23:58:10 华夏erp
  */
 @RestController
 public class ResourceController {
