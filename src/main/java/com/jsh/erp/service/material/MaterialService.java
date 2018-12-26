@@ -72,13 +72,21 @@ public class MaterialService {
 
     public int insertMaterial(String beanJson, HttpServletRequest request) {
         Material material = JSONObject.parseObject(beanJson, Material.class);
+        material.setEnabled(true);
         return materialMapper.insertSelective(material);
     }
 
     public int updateMaterial(String beanJson, Long id) {
         Material material = JSONObject.parseObject(beanJson, Material.class);
         material.setId(id);
-        return materialMapper.updateByPrimaryKeySelective(material);
+        int res = materialMapper.updateByPrimaryKeySelective(material);
+        Long unitId = material.getUnitid();
+        if(unitId != null) {
+            materialMapper.updatePriceNullByPrimaryKey(id); //将价格置空
+        } else {
+            materialMapper.updateUnitIdNullByPrimaryKey(id); //将多单位置空
+        }
+        return res;
     }
 
     public int deleteMaterial(Long id) {
@@ -102,17 +110,18 @@ public class MaterialService {
     public int checkIsExist(Long id, String name, String model, String color, String standard, String mfrs,
                             String otherField1, String otherField2, String otherField3, String unit, Long unitId) {
         MaterialExample example = new MaterialExample();
+        MaterialExample.Criteria criteria = example.createCriteria();
+        criteria.andNameEqualTo(name).andModelEqualTo(model).andColorEqualTo(color)
+                .andStandardEqualTo(standard).andMfrsEqualTo(mfrs)
+                .andOtherfield1EqualTo(otherField1).andOtherfield2EqualTo(otherField2).andOtherfield2EqualTo(otherField3);
         if (id > 0) {
-            example.createCriteria().andIdNotEqualTo(id);
+            criteria.andIdNotEqualTo(id);
         }
-        example.createCriteria().andNameEqualTo(name).andModelEqualTo(model).andColorEqualTo(color)
-                                .andStandardEqualTo(standard).andMfrsEqualTo(mfrs)
-                                .andOtherfield1EqualTo(otherField1).andOtherfield2EqualTo(otherField2).andOtherfield2EqualTo(otherField3);
-        if (unit !=null) {
-            example.createCriteria().andUnitEqualTo(unit);
+        if (!StringUtil.isEmpty(unit)) {
+            criteria.andUnitEqualTo(unit);
         }
         if (unitId !=null) {
-            example.createCriteria().andUnitidEqualTo(unitId);
+            criteria.andUnitidEqualTo(unitId);
         }
         List<Material> list = materialMapper.selectByExample(example);
         return list.size();

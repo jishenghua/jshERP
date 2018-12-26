@@ -118,4 +118,7 @@ public interface MaterialMapper {
 
     List<MaterialVo4Unit> findBySelect();
 
+    int updatePriceNullByPrimaryKey(Long id);
+
+    int updateUnitIdNullByPrimaryKey(Long id);
 }

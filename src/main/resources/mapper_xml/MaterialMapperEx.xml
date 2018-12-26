@@ -60,4 +60,21 @@
     <select id="findBySelect" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultAndUnitMap">
         select m.*,u.UName from jsh_material m left join jsh_unit u on m.UnitId=u.id where m.enabled=1 ORDER BY Id asc
     </select>
+
+    <update id="updatePriceNullByPrimaryKey" parameterType="java.lang.Long">
+        update jsh_material
+        set
+        RetailPrice = null,
+        LowPrice = null,
+        PresetPriceOne = null,
+        PresetPriceTwo = null
+        where Id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateUnitIdNullByPrimaryKey" parameterType="java.lang.Long">
+        update jsh_material
+        set
+        UnitId = null
+        where Id = #{id,jdbcType=BIGINT}
+    </update>
 </mapper>

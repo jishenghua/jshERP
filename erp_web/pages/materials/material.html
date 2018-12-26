@@ -349,7 +349,7 @@
             for (var i = 0; i < materialCategoryList.length; i++) {
                 var materialCategory = materialCategoryList[i];
                 if (0 == i) {
-                    materialID = materialCategory.id;
+                    mcId = materialCategory.id;
                 }
                 options += '<option value="' + materialCategory.id + '">' + materialCategory.name + '</option>';
                 if (lei == "search_second" || lei == "type_second" || lei == "search_three") {
@@ -1276,7 +1276,8 @@
         priceStrategy.push(basic);
         priceStrategy.push(other);
 
-        var objInfo = JSON.stringify($("#materialFM").serializeObject());
+        var objInfo = $("#materialFM").serializeObject();
+        objInfo.UnitId = $("#manyUnit").val();
         objInfo.CategoryId = parent;
         objInfo.PriceStrategy = JSON.stringify(priceStrategy);  //价格列表
         $.ajax({
@@ -1285,7 +1286,7 @@
             dataType: "json",
             async: false,
             data: ({
-                info: objInfo
+                info: JSON.stringify(objInfo)
             }),
             success: function(res) {
                 if(res && res.code === 200) {
@@ -1384,8 +1385,8 @@
         $("#Unit").val(materialInfo[4] == "undefined" ? "" : materialInfo[4]);
         $("#RetailPrice").val(materialInfo[5] == "undefined" ? "" : materialInfo[5]);
         $("#LowPrice").val(materialInfo[6] == "undefined" ? "" : materialInfo[6]);
-        $("#PresetPriceOne").val(materialInfo[7]);
-        $("#PresetPriceTwo").val(materialInfo[8]);
+        $("#PresetPriceOne").val(materialInfo[7] == "undefined" ? "" : materialInfo[7]);
+        $("#PresetPriceTwo").val(materialInfo[8] == "undefined" ? "" : materialInfo[8]);
         $("#Remark").val(materialInfo[9]);
         $("#manyUnit").val(materialInfo[16]);
         if (materialInfo[16] != "undefined") {

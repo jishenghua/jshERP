@@ -31,7 +31,7 @@ public class MaterialController {
     private MaterialService materialService;
 
     @GetMapping(value = "/checkIsExist")
-    public String checkIsExist(@RequestParam("materialId") Long id, @RequestParam("name") String name,
+    public String checkIsExist(@RequestParam("id") Long id, @RequestParam("name") String name,
                                @RequestParam("model") String model, @RequestParam("color") String color,
                                @RequestParam("standard") String standard, @RequestParam("mfrs") String mfrs,
                                @RequestParam("otherField1") String otherField1, @RequestParam("otherField2") String otherField2,
