@@ -9,7 +9,7 @@
 	<packaging>jar</packaging>
 
 	<name>jshERP</name>
-	<description>jsh project for Spring Boot</description>
+	<description>华夏ERP</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
