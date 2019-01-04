@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -837,6 +839,70 @@ public class DepotItemController {
             e.printStackTrace();
             res.code = 500;
             res.data = "获取数据失败";
+        }
+        return res;
+    }
+
+    /**
+     * 导出excel表格
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/exportExcel")
+    public BaseResponseInfo exportExcel(@RequestParam("currentPage") Integer currentPage,
+                                        @RequestParam("pageSize") Integer pageSize,
+                                        @RequestParam("projectId") Integer projectId,
+                                        @RequestParam("monthTime") String monthTime,
+                                        @RequestParam("headIds") String headIds,
+                                        @RequestParam("materialIds") String materialIds,
+                                        HttpServletRequest request, HttpServletResponse response) {
+        BaseResponseInfo res = new BaseResponseInfo();
+        Map<String, Object> map = new HashMap<String, Object>();
+        String message = "成功";
+        try {
+            List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(headIds, materialIds, currentPage, pageSize);
+            //存放数据json数组
+            Integer pid = projectId;
+            String[] names = {"名称", "型号", "单位", "单价", "上月结存数量", "入库数量", "出库数量", "本月结存数量", "结存金额"};
+            String title = "库存报表";
+            List<String[]> objects = new ArrayList<String[]>();
+            if (null != dataList) {
+                for (DepotItemVo4WithInfoEx diEx : dataList) {
+                    String[] objs = new String[13];
+                    Double prevSum = sumNumber("入库", pid, diEx.getMaterialid(), monthTime, true) - sumNumber("出库", pid, diEx.getMaterialid(), monthTime, true);
+                    Double InSum = sumNumber("入库", pid, diEx.getMaterialid(), monthTime, false);
+                    Double OutSum = sumNumber("出库", pid, diEx.getMaterialid(), monthTime, false);
+                    Double prevPrice = sumPrice("入库", pid, diEx.getMaterialid(), monthTime, true) - sumPrice("出库", pid, diEx.getMaterialid(), monthTime, true);
+                    Double InPrice = sumPrice("入库", pid, diEx.getMaterialid(), monthTime, false);
+                    Double OutPrice = sumPrice("出库", pid, diEx.getMaterialid(), monthTime, false);
+                    Double unitPrice = 0.0;
+                    if (prevSum + InSum - OutSum != 0.0) {
+                        unitPrice = (prevPrice + InPrice - OutPrice) / (prevSum + InSum - OutSum);
+                    }
+                    Double thisSum = prevSum + InSum - OutSum;
+                    Double thisAllPrice = prevPrice + InPrice - OutPrice;
+                    objs[0] = diEx.getMName().toString();
+                    objs[1] = diEx.getMModel().toString();
+                    objs[2] = diEx.getMaterialUnit().toString();
+                    objs[3] = unitPrice.toString();
+                    objs[4] = prevSum.toString();
+                    objs[5] = InSum.toString();
+                    objs[6] = OutSum.toString();
+                    objs[7] = thisSum.toString();
+                    objs[8] = thisAllPrice.toString();
+                    objects.add(objs);
+                }
+            }
+            File file = ExcelUtils.exportObjectsWithoutTitle(title, names, title, objects);
+            ExportExecUtil.showExec(file, file.getName() + "-" + monthTime, response);
+            res.code = 200;
+        } catch (Exception e) {
+            e.printStackTrace();
+            message = "导出失败";
+            res.code = 500;
+        } finally {
+            map.put("message", message);
+            res.data = map;
         }
         return res;
     }
