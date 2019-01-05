@@ -184,6 +184,5 @@ public class MaterialService {
         }
         info.data = data;
         return info;
-
     }
 }

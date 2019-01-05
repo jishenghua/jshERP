@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.datasource.entities.Supplier;
 import com.jsh.erp.datasource.entities.SupplierExample;
 import com.jsh.erp.datasource.mappers.SupplierMapper;
+import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +12,9 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class SupplierService {
@@ -119,5 +122,23 @@ public class SupplierService {
 
     public List<Supplier> findByAll(String supplier, String type, String phonenum, String telephone, String description) {
         return supplierMapper.findByAll(supplier, type, phonenum, telephone, description);
+    }
+
+    public BaseResponseInfo importExcel(List<Supplier> mList) throws Exception {
+        BaseResponseInfo info = new BaseResponseInfo();
+        Map<String, Object> data = new HashMap<String, Object>();
+        try {
+            for(Supplier s: mList) {
+                supplierMapper.insertSelective(s);
+            }
+            info.code = 200;
+            data.put("message", "成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            info.code = 500;
+            data.put("message", e.getMessage());
+        }
+        info.data = data;
+        return info;
     }
 }
