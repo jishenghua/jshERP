@@ -116,4 +116,8 @@ public class SupplierService {
         List<Supplier> list = supplierMapper.selectByExample(example);
         return list;
     }
+
+    public List<Supplier> findByAll(String supplier, String type, String phonenum, String telephone, String description) {
+        return supplierMapper.findByAll(supplier, type, phonenum, telephone, description);
+    }
 }

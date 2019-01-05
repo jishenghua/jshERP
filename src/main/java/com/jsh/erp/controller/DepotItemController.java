@@ -845,7 +845,14 @@ public class DepotItemController {
 
     /**
      * 导出excel表格
+     * @param currentPage
+     * @param pageSize
+     * @param projectId
+     * @param monthTime
+     * @param headIds
+     * @param materialIds
      * @param request
+     * @param response
      * @return
      */
     @GetMapping(value = "/exportExcel")
@@ -868,7 +875,7 @@ public class DepotItemController {
             List<String[]> objects = new ArrayList<String[]>();
             if (null != dataList) {
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
-                    String[] objs = new String[13];
+                    String[] objs = new String[9];
                     Double prevSum = sumNumber("入库", pid, diEx.getMaterialid(), monthTime, true) - sumNumber("出库", pid, diEx.getMaterialid(), monthTime, true);
                     Double InSum = sumNumber("入库", pid, diEx.getMaterialid(), monthTime, false);
                     Double OutSum = sumNumber("出库", pid, diEx.getMaterialid(), monthTime, false);

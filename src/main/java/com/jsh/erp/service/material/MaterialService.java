@@ -5,6 +5,7 @@ import com.jsh.erp.datasource.entities.Material;
 import com.jsh.erp.datasource.entities.MaterialExample;
 import com.jsh.erp.datasource.entities.MaterialVo4Unit;
 import com.jsh.erp.datasource.mappers.MaterialMapper;
+import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +14,9 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class MaterialService {
@@ -154,4 +157,33 @@ public class MaterialService {
         return materialMapper.selectByExample(example);
     }
 
+    public List<MaterialVo4Unit> findByAll(String name, String model, Long categoryId, String categoryIds) {
+        List<MaterialVo4Unit> resList = new ArrayList<MaterialVo4Unit>();
+        List<MaterialVo4Unit> list = materialMapper.findByAll(name, model, categoryId, categoryIds);
+        if (null != list) {
+            for (MaterialVo4Unit m : list) {
+                resList.add(m);
+            }
+        }
+        return resList;
+    }
+
+    public BaseResponseInfo importExcel(List<Material> mList) throws Exception {
+        BaseResponseInfo info = new BaseResponseInfo();
+        Map<String, Object> data = new HashMap<String, Object>();
+        try {
+            for(Material m: mList) {
+                materialMapper.insertSelective(m);
+            }
+            info.code = 200;
+            data.put("message", "成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            info.code = 500;
+            data.put("message", e.getMessage());
+        }
+        info.data = data;
+        return info;
+
+    }
 }

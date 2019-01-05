@@ -343,7 +343,12 @@
 
     //导出数据
     function setOutputFun(){
-        window.location.href = "/supplier/exportExcel.action?browserType=" + getOs() + "&type=" + listTypeEn;
+        var supplier = $.trim($("#searchSupplier").val());
+        var phonenum = $.trim($("#searchPhonenum").val());
+        var telephone = $.trim($("#searchTelephone").val());
+        var description = $.trim($("#searchDesc").val());
+        window.location.href = "/supplier/exportExcel?browserType=" + getOs()
+            + "&supplier=" + supplier + "&type=" + listType + "&phonenum=" + phonenum + "&telephone=" + telephone + "&description=" + description;
     }
 
     //增加单位

@@ -77,4 +77,22 @@
         UnitId = null
         where Id = #{id,jdbcType=BIGINT}
     </update>
+
+    <select id="findByAll" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultMapList">
+        select m.*,u.uname unitName, mc.name categoryName
+        FROM jsh_material m
+        left JOIN jsh_unit u on m.UnitId = u.id
+        left JOIN jsh_materialcategory mc on m.CategoryId = mc.id
+        where 1=1
+        <if test="name != null">
+            and m.name like '%${name}%'
+        </if>
+        <if test="model != null">
+            and m.model like '%${model}%'
+        </if>
+        <if test="categoryId != 1">
+            and m.CategoryId in (${categoryIds})
+        </if>
+        order by m.id asc
+    </select>
 </mapper>

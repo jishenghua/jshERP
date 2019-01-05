@@ -109,4 +109,11 @@ public interface SupplierMapper {
             @Param("phonenum") String phonenum,
             @Param("telephone") String telephone,
             @Param("description") String description);
+
+    List<Supplier> findByAll(
+            @Param("supplier") String supplier,
+            @Param("type") String type,
+            @Param("phonenum") String phonenum,
+            @Param("telephone") String telephone,
+            @Param("description") String description);
 }
