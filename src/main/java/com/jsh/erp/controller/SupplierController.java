@@ -408,8 +408,8 @@ public class SupplierController {
                 s.setAccountnumber(ExcelUtils.getContent(src, i, 14));
                 s.setTaxrate(parseDoubleEx(ExcelUtils.getContent(src, i, 15)));
                 String enabled = ExcelUtils.getContent(src, i, 16);
-                s.setIsystem(Byte.parseByte("1"));
                 s.setEnabled(enabled.equals("启用")? true: false);
+                s.setIsystem(Byte.parseByte("1"));
                 sList.add(s);
             }
             info = supplierService.importExcel(sList);
