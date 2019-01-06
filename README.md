@@ -22,13 +22,13 @@
 # 开发环境
 建议开发者使用以下环境，可以避免版本带来的问题
 * IDE: IntelliJ IDEA 2017+
-* DB: Mysql5.1
+* DB: Mysql5.7.4
 * JDK: JDK1.8
 * Maven: Maven3.2.3+
 * 为方便大家搭建开发环境，分享了下载地址  **http://pan.baidu.com/s/1nuKnlNV** 
 
 # 运行环境
-* 数据库服务器：Mysql5.1
+* 数据库服务器：Mysql5.7.4
 * JAVA平台: JRE1.8
 * 操作系统：Windows、Linux等
 
