@@ -580,14 +580,12 @@ public class DepotItemController {
             if (null != dataList) {
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
                     JSONObject item = new JSONObject();
-                    Double prevSum = sumNumber("入库", pid, diEx.getMaterialid(), monthTime, true) - sumNumber("出库", pid, diEx.getMaterialid(), monthTime, true);
-                    Double InSum = sumNumber("入库", pid, diEx.getMaterialid(), monthTime, false);
-                    Double OutSum = sumNumber("出库", pid, diEx.getMaterialid(), monthTime, false);
-                    Double prevPrice = sumPrice("入库", pid, diEx.getMaterialid(), monthTime, true) - sumPrice("出库", pid, diEx.getMaterialid(), monthTime, true);
-                    Double InPrice = sumPrice("入库", pid, diEx.getMaterialid(), monthTime, false);
-                    Double OutPrice = sumPrice("出库", pid, diEx.getMaterialid(), monthTime, false);
-                    item.put("Id", diEx.getId());
-                    item.put("MaterialId", diEx.getMaterialid());
+                    Double prevSum = sumNumber("入库", pid, diEx.getMId(), monthTime, true) - sumNumber("出库", pid, diEx.getMId(), monthTime, true);
+                    Double InSum = sumNumber("入库", pid, diEx.getMId(), monthTime, false);
+                    Double OutSum = sumNumber("出库", pid, diEx.getMId(), monthTime, false);
+                    Double prevPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, true) - sumPrice("出库", pid, diEx.getMId(), monthTime, true);
+                    Double InPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, false);
+                    Double OutPrice = sumPrice("出库", pid, diEx.getMId(), monthTime, false);
                     item.put("MaterialName", diEx.getMName());
                     item.put("MaterialModel", diEx.getMColor());
                     //扩展信息
@@ -641,9 +639,9 @@ public class DepotItemController {
             Double thisAllPrice = 0.0;
             if (null != dataList) {
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
-                    Double prevPrice = sumPrice("入库", pid, diEx.getMaterialid(), monthTime, true) - sumPrice("出库", pid, diEx.getMaterialid(), monthTime, true);
-                    Double InPrice = sumPrice("入库", pid, diEx.getMaterialid(), monthTime, false);
-                    Double OutPrice = sumPrice("出库", pid, diEx.getMaterialid(), monthTime, false);
+                    Double prevPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, true) - sumPrice("出库", pid, diEx.getMId(), monthTime, true);
+                    Double InPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, false);
+                    Double OutPrice = sumPrice("出库", pid, diEx.getMId(), monthTime, false);
                     thisAllPrice = thisAllPrice + (prevPrice + InPrice - OutPrice);
                 }
             }
@@ -689,12 +687,10 @@ public class DepotItemController {
             if (null != dataList) {
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
                     JSONObject item = new JSONObject();
-                    Double InSum = sumNumberBuyOrSale("入库", "采购", diEx.getMaterialid(), monthTime);
-                    Double OutSum = sumNumberBuyOrSale("出库", "采购退货", diEx.getMaterialid(), monthTime);
-                    Double InSumPrice = sumPriceBuyOrSale("入库", "采购", diEx.getMaterialid(), monthTime);
-                    Double OutSumPrice = sumPriceBuyOrSale("出库", "采购退货", diEx.getMaterialid(), monthTime);
-                    item.put("Id", diEx.getId());
-                    item.put("MaterialId", diEx.getMaterialid());
+                    Double InSum = sumNumberBuyOrSale("入库", "采购", diEx.getMId(), monthTime);
+                    Double OutSum = sumNumberBuyOrSale("出库", "采购退货", diEx.getMId(), monthTime);
+                    Double InSumPrice = sumPriceBuyOrSale("入库", "采购", diEx.getMId(), monthTime);
+                    Double OutSumPrice = sumPriceBuyOrSale("出库", "采购退货", diEx.getMId(), monthTime);
                     item.put("MaterialName", diEx.getMName());
                     item.put("MaterialModel", diEx.getMModel());
                     //扩展信息
@@ -751,16 +747,14 @@ public class DepotItemController {
             if (null != dataList) {
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
                     JSONObject item = new JSONObject();
-                    Double OutSumRetail = sumNumberBuyOrSale("出库", "零售", diEx.getMaterialid(), monthTime);
-                    Double OutSum = sumNumberBuyOrSale("出库", "销售", diEx.getMaterialid(), monthTime);
-                    Double InSumRetail = sumNumberBuyOrSale("入库", "零售退货", diEx.getMaterialid(), monthTime);
-                    Double InSum = sumNumberBuyOrSale("入库", "销售退货", diEx.getMaterialid(), monthTime);
-                    Double OutSumRetailPrice = sumPriceBuyOrSale("出库", "零售", diEx.getMaterialid(), monthTime);
-                    Double OutSumPrice = sumPriceBuyOrSale("出库", "销售", diEx.getMaterialid(), monthTime);
-                    Double InSumRetailPrice = sumPriceBuyOrSale("入库", "零售退货", diEx.getMaterialid(), monthTime);
-                    Double InSumPrice = sumPriceBuyOrSale("入库", "销售退货", diEx.getMaterialid(), monthTime);
-                    item.put("Id", diEx.getId());
-                    item.put("MaterialId", diEx.getMaterialid());
+                    Double OutSumRetail = sumNumberBuyOrSale("出库", "零售", diEx.getMId(), monthTime);
+                    Double OutSum = sumNumberBuyOrSale("出库", "销售", diEx.getMId(), monthTime);
+                    Double InSumRetail = sumNumberBuyOrSale("入库", "零售退货", diEx.getMId(), monthTime);
+                    Double InSum = sumNumberBuyOrSale("入库", "销售退货", diEx.getMId(), monthTime);
+                    Double OutSumRetailPrice = sumPriceBuyOrSale("出库", "零售", diEx.getMId(), monthTime);
+                    Double OutSumPrice = sumPriceBuyOrSale("出库", "销售", diEx.getMId(), monthTime);
+                    Double InSumRetailPrice = sumPriceBuyOrSale("入库", "零售退货", diEx.getMId(), monthTime);
+                    Double InSumPrice = sumPriceBuyOrSale("入库", "销售退货", diEx.getMId(), monthTime);
                     item.put("MaterialName", diEx.getMName());
                     item.put("MaterialModel", diEx.getMModel());
                     //扩展信息
@@ -817,10 +811,8 @@ public class DepotItemController {
             if (null != dataList) {
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
                     JSONObject item = new JSONObject();
-                    Double InSum = sumNumberGift("礼品充值", pid, diEx.getMaterialid(), "in");
-                    Double OutSum = sumNumberGift("礼品销售", pid, diEx.getMaterialid(), "out");
-                    item.put("Id", diEx.getId());
-                    item.put("MaterialId", diEx.getMaterialid());
+                    Double InSum = sumNumberGift("礼品充值", pid, diEx.getMId(), "in");
+                    Double OutSum = sumNumberGift("礼品销售", pid, diEx.getMId(), "out");
                     item.put("MaterialName", diEx.getMName());
                     item.put("MaterialModel", diEx.getMModel());
                     //扩展信息
@@ -876,12 +868,12 @@ public class DepotItemController {
             if (null != dataList) {
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
                     String[] objs = new String[9];
-                    Double prevSum = sumNumber("入库", pid, diEx.getMaterialid(), monthTime, true) - sumNumber("出库", pid, diEx.getMaterialid(), monthTime, true);
-                    Double InSum = sumNumber("入库", pid, diEx.getMaterialid(), monthTime, false);
-                    Double OutSum = sumNumber("出库", pid, diEx.getMaterialid(), monthTime, false);
-                    Double prevPrice = sumPrice("入库", pid, diEx.getMaterialid(), monthTime, true) - sumPrice("出库", pid, diEx.getMaterialid(), monthTime, true);
-                    Double InPrice = sumPrice("入库", pid, diEx.getMaterialid(), monthTime, false);
-                    Double OutPrice = sumPrice("出库", pid, diEx.getMaterialid(), monthTime, false);
+                    Double prevSum = sumNumber("入库", pid, diEx.getMId(), monthTime, true) - sumNumber("出库", pid, diEx.getMId(), monthTime, true);
+                    Double InSum = sumNumber("入库", pid, diEx.getMId(), monthTime, false);
+                    Double OutSum = sumNumber("出库", pid, diEx.getMId(), monthTime, false);
+                    Double prevPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, true) - sumPrice("出库", pid, diEx.getMId(), monthTime, true);
+                    Double InPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, false);
+                    Double OutPrice = sumPrice("出库", pid, diEx.getMId(), monthTime, false);
                     Double unitPrice = 0.0;
                     if (prevSum + InSum - OutSum != 0.0) {
                         unitPrice = (prevPrice + InPrice - OutPrice) / (prevSum + InSum - OutSum);
