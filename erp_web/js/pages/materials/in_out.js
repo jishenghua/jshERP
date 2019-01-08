@@ -572,6 +572,7 @@
 							+ 'AaBb' + rec.accountidlist + 'AaBb' + rec.accountmoneylist
 							+ 'AaBb' + rec.othermoney + 'AaBb' + rec.othermoneylist + 'AaBb' + rec.othermoneyitem + 'AaBb' + rec.accountday;
 						rowInfo = rowInfo.replace(/\"/g, "");
+                        rowInfo = rowInfo.replace(/\[|]/g,"");
 						var orgId = rec.organid? rec.organid:0;
 						str += '<img title="查看" src="/js/easyui-1.3.5/themes/icons/list.png" style="cursor: pointer;" onclick="showDepotHead(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
 						str += '<img title="编辑" src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editDepotHead(\'' + rowInfo + '\''+',' + rec.status + ');"/>&nbsp;&nbsp;&nbsp;';
