@@ -82,13 +82,17 @@ public class DepotHeadService {
         }
         depotHead.setCreatetime(new Timestamp(System.currentTimeMillis()));
         depotHead.setStatus(false);
-        return depotHeadMapper.insertSelective(depotHead);
+        return depotHeadMapper.insert(depotHead);
     }
 
     public int updateDepotHead(String beanJson, Long id) {
+        DepotHead dh = depotHeadMapper.selectByPrimaryKey(id);
         DepotHead depotHead = JSONObject.parseObject(beanJson, DepotHead.class);
         depotHead.setId(id);
-        return depotHeadMapper.updateByPrimaryKeySelective(depotHead);
+        depotHead.setStatus(dh.getStatus());
+        depotHead.setCreatetime(dh.getCreatetime());
+        depotHead.setOperpersonname(dh.getOperpersonname());
+        return depotHeadMapper.updateByPrimaryKey(depotHead);
     }
 
     public int deleteDepotHead(Long id) {

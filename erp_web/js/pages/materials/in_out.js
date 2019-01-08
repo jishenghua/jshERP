@@ -1727,7 +1727,9 @@
 	    $("#OperTimeShow").text(depotHeadInfo[4]);
 	    $('#OrganIdShow').text(depotHeadInfo[11]);
 	    $("#HandsPersonIdShow").text(depotHeadInfo[12]);
-	    if(depotHeadInfo[22]!="undefined" && depotHeadInfo[23]!="undefined"){
+        if(depotHeadInfo[13] && depotHeadInfo[13]!="undefined"){
+            $("#AccountIdShow").text(depotHeadInfo[13]); //结算账户
+        } else {
 			var accountArr = depotHeadInfo[22].split(","); //账户id列表
 			var accountMoneyArr = depotHeadInfo[23].split(","); //账户金额列表
 			var accountIdShow = "";
@@ -1747,9 +1749,7 @@
 				}
 			}
 			$("#AccountIdShow").text(accountIdShow);
-		} else if(depotHeadInfo[13]){
-            $("#AccountIdShow").text(depotHeadInfo[13]); //结算账户
-        }
+		}
 	    $("#ChangeAmountShow").text(depotHeadInfo[8]);
 	    $("#RemarkShow").text(depotHeadInfo[9]);
 		$("#DiscountShow").text(depotHeadInfo[19]);
