@@ -252,12 +252,14 @@
 
     //绑定事件
     function bindEvent() {
+        var url = '/js/pages/manage/pushBtn.json';
         $('#PushBtn').combobox({
-            url: '/js/pages/manage/pushBtn.json',
+            url: url,
             valueField: 'id',
             textField: 'text',
             panelHeight: 120,
-            multiple: true
+            multiple: true,
+            method: 'get'
         });
     }
 
@@ -353,12 +355,17 @@
         if (checkFunctionsName()) {
             return;
         }
+        var infoObj = $("#functionsFM").serializeObject();
+        infoObj.State = $("#State").is(':checked');
+        infoObj.Enabled = $("#Enabled").is(':checked');
+        var PushBtn = JSON.stringify($("#PushBtn").combobox('getValues'));
+        infoObj.PushBtn = PushBtn.replace(/\"/g, "").replace(/\[|]/g,"");
         $.ajax({
             url: url,
             type: "post",
             dataType: "json",
             data: ({
-                info: JSON.stringify($("#functionsFM").serializeObject())
+                info: JSON.stringify(infoObj)
             }),
             success: function(res) {
                 if(res && res.code === 200) {

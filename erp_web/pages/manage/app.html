@@ -369,13 +369,18 @@
         if (checkAppName()) {
             return;
         }
+        var infoObj = $("#appFM").serializeObject();
+        infoObj.ReSize = $("#ReSize").is(':checked');
+        infoObj.OpenMax = $("#OpenMax").is(':checked');
+        infoObj.Flash = $("#Flash").is(':checked');
+        infoObj.Enabled = $("#Enabled").is(':checked');
         $.ajax({
             url: url,
             type: "post",
             dataType: "json",
             fileElementId: 'Icon',
             data: ({
-                info: JSON.stringify($("#appFM").serializeObject())
+                info: JSON.stringify(infoObj)
             }),
             success: function(res) {
                 if(res && res.code === 200) {
@@ -420,7 +425,7 @@
         appID = appInfo[0];
         //焦点在名称输入框==定焦在输入文字后面
         $("#name").val("").focus().val(appInfo[1]);
-        url = '/depot/update?id=' + appInfo[0];
+        url = '/app/update?id=' + appInfo[0];
     }
 
     //检查名称是否存在 ++ 重名无法提示问题需要跟进
