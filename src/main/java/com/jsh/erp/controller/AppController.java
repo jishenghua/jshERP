@@ -26,7 +26,14 @@ public class AppController {
 
     @Resource
     private UserBusinessService userBusinessService;
-
+    /**
+     * create by: cjl
+     * description:
+     *  桌面菜单按钮初始化
+     * create time: 2019/1/11 17:01
+     * @Param: request
+     * @return com.alibaba.fastjson.JSONObject
+     */
     @GetMapping(value = "/findDesk")
     public JSONObject findDesk(HttpServletRequest request) {
         JSONObject obj = new JSONObject();

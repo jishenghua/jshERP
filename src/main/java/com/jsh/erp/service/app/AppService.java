@@ -28,7 +28,14 @@ public class AppService {
         List<App> list = appMapper.selectByExample(example);
         return list;
     }
-
+    /**
+     * create by: cjl
+     * description:
+     *  桌面功能菜单初始化列表
+     * create time: 2019/1/11 16:59
+     * @Param: null
+     * @return
+     */
     public List<App> findDesk(){
         AppExample example = new AppExample();
         example.createCriteria().andZlEqualTo("desk").andEnabledEqualTo(true);
