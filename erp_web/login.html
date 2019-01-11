@@ -19,7 +19,7 @@
                 <label for="user_name">用户名：</label>
             </p>
             <p id="txt_userpwd">
-                <label for="user_vcode" id="user_vcodepwd">密&nbsp;&nbsp;&nbsp;&nbsp;码:</label>
+                <label for="user_vcodepwd" id="user_vcodepwd">密&nbsp;&nbsp;&nbsp;&nbsp;码:</label>
             </p>
             <input type="text" id="user_name"/>
             <input type="password" id="user_pwd"/>
@@ -123,7 +123,8 @@
                         }
                         //跳转到用户管理界面
                         else if (loginInfoTip.indexOf("user can login") != -1 || loginInfoTip == "user already login") {
-                            window.location.href = "/";
+                            //window.location.href = "/";
+                            window.location.href = "/pages/common/main.html";
                         }
                     }
                 },
