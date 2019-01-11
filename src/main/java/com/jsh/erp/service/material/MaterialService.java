@@ -9,6 +9,7 @@ import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -70,12 +71,14 @@ public class MaterialService {
         return materialMapper.countsByMaterial(name, model,categoryId,categoryIds,mpList);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertMaterial(String beanJson, HttpServletRequest request) {
         Material material = JSONObject.parseObject(beanJson, Material.class);
         material.setEnabled(true);
         return materialMapper.insertSelective(material);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateMaterial(String beanJson, Long id) {
         Material material = JSONObject.parseObject(beanJson, Material.class);
         material.setId(id);
@@ -89,10 +92,12 @@ public class MaterialService {
         return res;
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int deleteMaterial(Long id) {
         return materialMapper.deleteByPrimaryKey(id);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteMaterial(String ids) {
         List<Long> idList = StringUtil.strToLongList(ids);
         MaterialExample example = new MaterialExample();
@@ -127,6 +132,7 @@ public class MaterialService {
         return list.size();
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchSetEnable(Boolean enabled, String materialIDs) {
         List<Long> ids = StringUtil.strToLongList(materialIDs);
         Material material = new Material();

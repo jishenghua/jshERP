@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -73,6 +74,7 @@ public class AccountService {
         return accountMapper.countsByAccount(name, serialNo, remark);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertAccount(String beanJson, HttpServletRequest request) {
         Account account = JSONObject.parseObject(beanJson, Account.class);
         if(account.getInitialamount() == null) {
@@ -82,16 +84,19 @@ public class AccountService {
         return accountMapper.insertSelective(account);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateAccount(String beanJson, Long id) {
         Account account = JSONObject.parseObject(beanJson, Account.class);
         account.setId(id);
         return accountMapper.updateByPrimaryKeySelective(account);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int deleteAccount(Long id) {
         return accountMapper.deleteByPrimaryKey(id);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteAccount(String ids) {
         List<Long> idList = StringUtil.strToLongList(ids);
         AccountExample example = new AccountExample();
@@ -296,6 +301,7 @@ public class AccountService {
         return accountMapper.findAccountInOutListCount(accountId);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateAmountIsDefault(Boolean isDefault, Long accountId) {
         Account account = new Account();
         account.setIsdefault(isDefault);

@@ -8,6 +8,7 @@ import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -36,21 +37,25 @@ public class MaterialPropertyService {
         return materialPropertyMapper.countsByMaterialProperty(name);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertMaterialProperty(String beanJson, HttpServletRequest request) {
         MaterialProperty materialProperty = JSONObject.parseObject(beanJson, MaterialProperty.class);
         return materialPropertyMapper.insertSelective(materialProperty);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateMaterialProperty(String beanJson, Long id) {
         MaterialProperty materialProperty = JSONObject.parseObject(beanJson, MaterialProperty.class);
         materialProperty.setId(id);
         return materialPropertyMapper.updateByPrimaryKeySelective(materialProperty);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int deleteMaterialProperty(Long id) {
         return materialPropertyMapper.deleteByPrimaryKey(id);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteMaterialProperty(String ids) {
         List<Long> idList = StringUtil.strToLongList(ids);
         MaterialPropertyExample example = new MaterialPropertyExample();

@@ -9,6 +9,7 @@ import com.jsh.erp.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -31,7 +32,19 @@ public class AccountItemController {
 
     @Resource
     private AccountItemService accountItemService;
-
+    /**
+     * create by: cjl
+     * description:
+     *  业务逻辑操作放在service层，controller只做参数解析和视图封装
+     * create time: 2019/1/11 15:08
+     * @Param: inserted
+     * @Param: deleted
+     * @Param: updated
+     * @Param: headerId
+     * @Param: listType
+     * @Param: request
+     * @return java.lang.String
+     */
     @PostMapping(value = "/saveDetials")
     public String saveDetials(@RequestParam("inserted") String inserted,
                               @RequestParam("deleted") String deleted,
@@ -39,67 +52,10 @@ public class AccountItemController {
                               @RequestParam("headerId") Long headerId,
                               @RequestParam("listType") String listType,
                               HttpServletRequest request) {
+
         Map<String, Object> objectMap = new HashMap<String, Object>();
         try {
-            //转为json
-            JSONArray insertedJson = JSONArray.parseArray(inserted);
-            JSONArray deletedJson = JSONArray.parseArray(deleted);
-            JSONArray updatedJson = JSONArray.parseArray(updated);
-            if (null != insertedJson) {
-                for (int i = 0; i < insertedJson.size(); i++) {
-                    AccountItem accountItem = new AccountItem();
-                    JSONObject tempInsertedJson = JSONObject.parseObject(insertedJson.getString(i));
-                    accountItem.setHeaderid(headerId);
-                    if (tempInsertedJson.get("AccountId") != null && !tempInsertedJson.get("AccountId").equals("")) {
-                        accountItem.setAccountid(tempInsertedJson.getLong("AccountId"));
-                    }
-                    if (tempInsertedJson.get("InOutItemId") != null && !tempInsertedJson.get("InOutItemId").equals("")) {
-                        accountItem.setInoutitemid(tempInsertedJson.getLong("InOutItemId"));
-                    }
-                    if (tempInsertedJson.get("EachAmount") != null && !tempInsertedJson.get("EachAmount").equals("")) {
-                        Double eachAmount = tempInsertedJson.getDouble("EachAmount");
-                        if (listType.equals("付款")) {
-                            eachAmount = 0 - eachAmount;
-                        }
-                        accountItem.setEachamount(eachAmount);
-                    } else {
-                        accountItem.setEachamount(0.0);
-                    }
-                    accountItem.setRemark(tempInsertedJson.getString("Remark"));
-                    accountItemService.insertAccountItemWithObj(accountItem);
-                }
-            }
-            if (null != deletedJson) {
-                for (int i = 0; i < deletedJson.size(); i++) {
-                    JSONObject tempDeletedJson = JSONObject.parseObject(deletedJson.getString(i));
-                    accountItemService.deleteAccountItem(tempDeletedJson.getLong("Id"));
-                }
-            }
-            if (null != updatedJson) {
-                for (int i = 0; i < updatedJson.size(); i++) {
-                    JSONObject tempUpdatedJson = JSONObject.parseObject(updatedJson.getString(i));
-                    AccountItem accountItem = accountItemService.getAccountItem(tempUpdatedJson.getLong("Id"));
-                    accountItem.setId(tempUpdatedJson.getLong("Id"));
-                    accountItem.setHeaderid(headerId);
-                    if (tempUpdatedJson.get("AccountId") != null && !tempUpdatedJson.get("AccountId").equals("")) {
-                        accountItem.setAccountid(tempUpdatedJson.getLong("AccountId"));
-                    }
-                    if (tempUpdatedJson.get("InOutItemId") != null && !tempUpdatedJson.get("InOutItemId").equals("")) {
-                        accountItem.setInoutitemid(tempUpdatedJson.getLong("InOutItemId"));
-                    }
-                    if (tempUpdatedJson.get("EachAmount") != null && !tempUpdatedJson.get("EachAmount").equals("")) {
-                        Double eachAmount = tempUpdatedJson.getDouble("EachAmount");
-                        if (listType.equals("付款")) {
-                            eachAmount = 0 - eachAmount;
-                        }
-                        accountItem.setEachamount(eachAmount);
-                    } else {
-                        accountItem.setEachamount(0.0);
-                    }
-                    accountItem.setRemark(tempUpdatedJson.getString("Remark"));
-                    accountItemService.updateAccountItemWithObj(accountItem);
-                }
-            }
+            accountItemService.saveDetials(inserted,deleted,updated,headerId,listType);
             return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
         } catch (DataAccessException e) {
             e.printStackTrace();

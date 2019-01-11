@@ -8,6 +8,7 @@ import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -53,21 +54,25 @@ public class AppService {
         return appMapper.countsByApp(name, type);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertApp(String beanJson, HttpServletRequest request) {
         App app = JSONObject.parseObject(beanJson, App.class);
         return appMapper.insertSelective(app);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateApp(String beanJson, Long id) {
         App app = JSONObject.parseObject(beanJson, App.class);
         app.setId(id);
         return appMapper.updateByPrimaryKeySelective(app);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int deleteApp(Long id) {
         return appMapper.deleteByPrimaryKey(id);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteApp(String ids) {
         List<Long> idList = StringUtil.strToLongList(ids);
         AppExample example = new AppExample();

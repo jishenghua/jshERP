@@ -11,6 +11,7 @@ import com.jsh.erp.utils.Tools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -43,21 +44,25 @@ public class LogService {
         return logMapper.countsByLog(operation, usernameID, clientIp, status, beginTime, endTime, contentdetails);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertLog(String beanJson, HttpServletRequest request) {
         Log log = JSONObject.parseObject(beanJson, Log.class);
         return logMapper.insertSelective(log);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateLog(String beanJson, Long id) {
         Log log = JSONObject.parseObject(beanJson, Log.class);
         log.setId(id);
         return logMapper.updateByPrimaryKeySelective(log);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int deleteLog(Long id) {
         return logMapper.deleteByPrimaryKey(id);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteLog(String ids) {
         List<Long> idList = StringUtil.strToLongList(ids);
         LogExample example = new LogExample();

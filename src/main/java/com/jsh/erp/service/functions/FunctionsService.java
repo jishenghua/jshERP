@@ -8,6 +8,7 @@ import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -37,21 +38,25 @@ public class FunctionsService {
         return functionsMapper.countsByFunctions(name, type);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertFunctions(String beanJson, HttpServletRequest request) {
         Functions depot = JSONObject.parseObject(beanJson, Functions.class);
         return functionsMapper.insertSelective(depot);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateFunctions(String beanJson, Long id) {
         Functions depot = JSONObject.parseObject(beanJson, Functions.class);
         depot.setId(id);
         return functionsMapper.updateByPrimaryKeySelective(depot);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int deleteFunctions(Long id) {
         return functionsMapper.deleteByPrimaryKey(id);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteFunctions(String ids) {
         List<Long> idList = StringUtil.strToLongList(ids);
         FunctionsExample example = new FunctionsExample();

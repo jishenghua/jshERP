@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -71,6 +72,7 @@ public class DepotHeadService {
         return depotHeadMapper.countsByDepotHead(type, subType, number, beginTime, endTime, dhIds);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertDepotHead(String beanJson, HttpServletRequest request) {
         DepotHead depotHead = JSONObject.parseObject(beanJson, DepotHead.class);
         //判断用户是否已经登录过，登录过不再处理
@@ -85,16 +87,19 @@ public class DepotHeadService {
         return depotHeadMapper.insertSelective(depotHead);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateDepotHead(String beanJson, Long id) {
         DepotHead depotHead = JSONObject.parseObject(beanJson, DepotHead.class);
         depotHead.setId(id);
         return depotHeadMapper.updateByPrimaryKeySelective(depotHead);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int deleteDepotHead(Long id) {
         return depotHeadMapper.deleteByPrimaryKey(id);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteDepotHead(String ids) {
         List<Long> idList = StringUtil.strToLongList(ids);
         DepotHeadExample example = new DepotHeadExample();
@@ -109,6 +114,7 @@ public class DepotHeadService {
         return list.size();
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchSetStatus(Boolean status, String depotHeadIDs) {
         List<Long> ids = StringUtil.strToLongList(depotHeadIDs);
         DepotHead depotHead = new DepotHead();

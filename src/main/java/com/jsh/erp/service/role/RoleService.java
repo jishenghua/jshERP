@@ -40,21 +40,25 @@ public class RoleService {
         return roleMapper.countsByRole(name);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertRole(String beanJson, HttpServletRequest request) {
         Role role = JSONObject.parseObject(beanJson, Role.class);
         return roleMapper.insertSelective(role);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateRole(String beanJson, Long id) {
         Role role = JSONObject.parseObject(beanJson, Role.class);
         role.setId(id);
         return roleMapper.updateByPrimaryKeySelective(role);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int deleteRole(Long id) {
         return roleMapper.deleteByPrimaryKey(id);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteRole(String ids) {
         List<Long> idList = StringUtil.strToLongList(ids);
         RoleExample example = new RoleExample();

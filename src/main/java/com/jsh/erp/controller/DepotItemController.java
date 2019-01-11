@@ -9,6 +9,7 @@ import com.jsh.erp.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -31,8 +32,7 @@ public class DepotItemController {
     @Resource
     private DepotItemService depotItemService;
 
-    @Resource
-    private MaterialService materialService;
+
 
     /**
      * 根据材料信息获取
@@ -258,163 +258,7 @@ public class DepotItemController {
                               HttpServletRequest request) {
         Map<String, Object> objectMap = new HashMap<String, Object>();
         try {
-            //转为json
-            JSONArray insertedJson = JSONArray.parseArray(inserted);
-            JSONArray deletedJson = JSONArray.parseArray(deleted);
-            JSONArray updatedJson = JSONArray.parseArray(updated);
-            if (null != insertedJson) {
-                for (int i = 0; i < insertedJson.size(); i++) {
-                    DepotItem depotItem = new DepotItem();
-                    JSONObject tempInsertedJson = JSONObject.parseObject(insertedJson.getString(i));
-                    depotItem.setHeaderid(headerId);
-                    depotItem.setMaterialid(tempInsertedJson.getLong("MaterialId"));
-                    depotItem.setMunit(tempInsertedJson.getString("Unit"));
-                    if (!StringUtil.isEmpty(tempInsertedJson.get("OperNumber").toString())) {
-                        depotItem.setOpernumber(tempInsertedJson.getDouble("OperNumber"));
-                        try {
-                            String Unit = tempInsertedJson.get("Unit").toString();
-                            Double oNumber = tempInsertedJson.getDouble("OperNumber");
-                            Long mId = Long.parseLong(tempInsertedJson.get("MaterialId").toString());
-                            //以下进行单位换算
-                            String UnitName = findUnitName(mId); //查询计量单位名称
-                            if (!StringUtil.isEmpty(UnitName)) {
-                                String UnitList = UnitName.substring(0, UnitName.indexOf("("));
-                                String RatioList = UnitName.substring(UnitName.indexOf("("));
-                                String basicUnit = UnitList.substring(0, UnitList.indexOf(",")); //基本单位
-                                String otherUnit = UnitList.substring(UnitList.indexOf(",") + 1); //副单位
-                                Integer ratio = Integer.parseInt(RatioList.substring(RatioList.indexOf(":") + 1).replace(")", "")); //比例
-                                if (Unit.equals(basicUnit)) { //如果等于基础单位
-                                    depotItem.setBasicnumber(oNumber); //数量一致
-                                } else if (Unit.equals(otherUnit)) { //如果等于副单位
-                                    depotItem.setBasicnumber(oNumber * ratio); //数量乘以比例
-                                }
-                            } else {
-                                depotItem.setBasicnumber(oNumber); //其他情况
-                            }
-                        } catch (Exception e) {
-                            logger.error(">>>>>>>>>>>>>>>>>>>设置基础数量异常", e);
-                        }
-                    }
-                    if (!StringUtil.isEmpty(tempInsertedJson.get("UnitPrice").toString())) {
-                        depotItem.setUnitprice(tempInsertedJson.getDouble("UnitPrice"));
-                    }
-                    if (!StringUtil.isEmpty(tempInsertedJson.get("TaxUnitPrice").toString())) {
-                        depotItem.setTaxunitprice(tempInsertedJson.getDouble("TaxUnitPrice"));
-                    }
-                    if (!StringUtil.isEmpty(tempInsertedJson.get("AllPrice").toString())) {
-                        depotItem.setAllprice(tempInsertedJson.getDouble("AllPrice"));
-                    }
-                    depotItem.setRemark(tempInsertedJson.getString("Remark"));
-                    if (tempInsertedJson.get("DepotId") != null && !StringUtil.isEmpty(tempInsertedJson.get("DepotId").toString())) {
-                        depotItem.setDepotid(tempInsertedJson.getLong("DepotId"));
-                    }
-                    if (tempInsertedJson.get("AnotherDepotId") != null && !StringUtil.isEmpty(tempInsertedJson.get("AnotherDepotId").toString())) {
-                        depotItem.setAnotherdepotid(tempInsertedJson.getLong("AnotherDepotId"));
-                    }
-                    if (!StringUtil.isEmpty(tempInsertedJson.get("TaxRate").toString())) {
-                        depotItem.setTaxrate(tempInsertedJson.getDouble("TaxRate"));
-                    }
-                    if (!StringUtil.isEmpty(tempInsertedJson.get("TaxMoney").toString())) {
-                        depotItem.setTaxmoney(tempInsertedJson.getDouble("TaxMoney"));
-                    }
-                    if (!StringUtil.isEmpty(tempInsertedJson.get("TaxLastMoney").toString())) {
-                        depotItem.setTaxlastmoney(tempInsertedJson.getDouble("TaxLastMoney"));
-                    }
-                    if (tempInsertedJson.get("OtherField1") != null) {
-                        depotItem.setOtherfield1(tempInsertedJson.getString("OtherField1"));
-                    }
-                    if (tempInsertedJson.get("OtherField2") != null) {
-                        depotItem.setOtherfield2(tempInsertedJson.getString("OtherField2"));
-                    }
-                    if (tempInsertedJson.get("OtherField3") != null) {
-                        depotItem.setOtherfield3(tempInsertedJson.getString("OtherField3"));
-                    }
-                    if (tempInsertedJson.get("OtherField4") != null) {
-                        depotItem.setOtherfield4(tempInsertedJson.getString("OtherField4"));
-                    }
-                    if (tempInsertedJson.get("OtherField5") != null) {
-                        depotItem.setOtherfield5(tempInsertedJson.getString("OtherField5"));
-                    }
-                    if (tempInsertedJson.get("MType") != null) {
-                        depotItem.setMtype(tempInsertedJson.getString("MType"));
-                    }
-                    depotItemService.insertDepotItemWithObj(depotItem);
-                }
-            }
-            if (null != deletedJson) {
-                for (int i = 0; i < deletedJson.size(); i++) {
-                    JSONObject tempDeletedJson = JSONObject.parseObject(deletedJson.getString(i));
-                    depotItemService.deleteDepotItem(tempDeletedJson.getLong("Id"));
-                }
-            }
-            if (null != updatedJson) {
-                for (int i = 0; i < updatedJson.size(); i++) {
-                    JSONObject tempUpdatedJson = JSONObject.parseObject(updatedJson.getString(i));
-                    DepotItem depotItem = depotItemService.getDepotItem(tempUpdatedJson.getLong("Id"));
-                    depotItem.setId(tempUpdatedJson.getLong("Id"));
-                    depotItem.setMaterialid(tempUpdatedJson.getLong("MaterialId"));
-                    depotItem.setMunit(tempUpdatedJson.getString("Unit"));
-                    if (!StringUtil.isEmpty(tempUpdatedJson.get("OperNumber").toString())) {
-                        depotItem.setOpernumber(tempUpdatedJson.getDouble("OperNumber"));
-                        try {
-                            String Unit = tempUpdatedJson.get("Unit").toString();
-                            Double oNumber = tempUpdatedJson.getDouble("OperNumber");
-                            Long mId = Long.parseLong(tempUpdatedJson.get("MaterialId").toString());
-                            //以下进行单位换算
-                            String UnitName = findUnitName(mId); //查询计量单位名称
-                            if (!StringUtil.isEmpty(UnitName)) {
-                                String UnitList = UnitName.substring(0, UnitName.indexOf("("));
-                                String RatioList = UnitName.substring(UnitName.indexOf("("));
-                                String basicUnit = UnitList.substring(0, UnitList.indexOf(",")); //基本单位
-                                String otherUnit = UnitList.substring(UnitList.indexOf(",") + 1); //副单位
-                                Integer ratio = Integer.parseInt(RatioList.substring(RatioList.indexOf(":") + 1).replace(")", "")); //比例
-                                if (Unit.equals(basicUnit)) { //如果等于基础单位
-                                    depotItem.setBasicnumber(oNumber); //数量一致
-                                } else if (Unit.equals(otherUnit)) { //如果等于副单位
-                                    depotItem.setBasicnumber(oNumber * ratio); //数量乘以比例
-                                }
-                            } else {
-                                depotItem.setBasicnumber(oNumber); //其他情况
-                            }
-                        } catch (Exception e) {
-                            logger.error(">>>>>>>>>>>>>>>>>>>设置基础数量异常", e);
-                        }
-                    }
-                    if (!StringUtil.isEmpty(tempUpdatedJson.get("UnitPrice").toString())) {
-                        depotItem.setUnitprice(tempUpdatedJson.getDouble("UnitPrice"));
-                    }
-                    if (!StringUtil.isEmpty(tempUpdatedJson.get("TaxUnitPrice").toString())) {
-                        depotItem.setTaxunitprice(tempUpdatedJson.getDouble("TaxUnitPrice"));
-                    }
-                    if (!StringUtil.isEmpty(tempUpdatedJson.get("AllPrice").toString())) {
-                        depotItem.setAllprice(tempUpdatedJson.getDouble("AllPrice"));
-                    }
-                    depotItem.setRemark(tempUpdatedJson.getString("Remark"));
-                    if (tempUpdatedJson.get("DepotId") != null && !StringUtil.isEmpty(tempUpdatedJson.get("DepotId").toString())) {
-                        depotItem.setDepotid(tempUpdatedJson.getLong("DepotId"));
-                    }
-                    if (tempUpdatedJson.get("AnotherDepotId") != null && !StringUtil.isEmpty(tempUpdatedJson.get("AnotherDepotId").toString())) {
-                        depotItem.setAnotherdepotid(tempUpdatedJson.getLong("AnotherDepotId"));
-                    }
-                    if (!StringUtil.isEmpty(tempUpdatedJson.get("TaxRate").toString())) {
-                        depotItem.setTaxrate(tempUpdatedJson.getDouble("TaxRate"));
-                    }
-                    if (!StringUtil.isEmpty(tempUpdatedJson.get("TaxMoney").toString())) {
-                        depotItem.setTaxmoney(tempUpdatedJson.getDouble("TaxMoney"));
-                    }
-                    if (!StringUtil.isEmpty(tempUpdatedJson.get("TaxLastMoney").toString())) {
-                        depotItem.setTaxlastmoney(tempUpdatedJson.getDouble("TaxLastMoney"));
-                    }
-                    depotItem.setOtherfield1(tempUpdatedJson.getString("OtherField1"));
-                    depotItem.setOtherfield2(tempUpdatedJson.getString("OtherField2"));
-                    depotItem.setOtherfield3(tempUpdatedJson.getString("OtherField3"));
-                    depotItem.setOtherfield4(tempUpdatedJson.getString("OtherField4"));
-                    depotItem.setOtherfield5(tempUpdatedJson.getString("OtherField5"));
-                    depotItem.setMtype(tempUpdatedJson.getString("MType"));
-                    depotItemService.updateDepotItemWithObj(depotItem);
-                }
-            }
-
+            depotItemService.saveDetials(inserted,deleted,updated,headerId);
             return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
         } catch (DataAccessException e) {
             e.printStackTrace();
@@ -423,26 +267,7 @@ public class DepotItemController {
         }
     }
 
-    /**
-     * 查询计量单位信息
-     *
-     * @return
-     */
-    public String findUnitName(Long mId) {
-        String unitName = "";
-        try {
-            unitName = materialService.findUnitName(mId);
-            if (unitName != null) {
-                unitName = unitName.substring(1, unitName.length() - 1);
-                if (unitName.equals("null")) {
-                    unitName = "";
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return unitName;
-    }
+
 
     @GetMapping(value = "/getDetailList")
     public BaseResponseInfo getDetailList(@RequestParam("headerId") Long headerId,

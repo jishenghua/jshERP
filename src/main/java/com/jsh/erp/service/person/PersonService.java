@@ -8,6 +8,7 @@ import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -37,21 +38,25 @@ public class PersonService {
         return personMapper.countsByPerson(name, type);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertPerson(String beanJson, HttpServletRequest request) {
         Person person = JSONObject.parseObject(beanJson, Person.class);
         return personMapper.insertSelective(person);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updatePerson(String beanJson, Long id) {
         Person person = JSONObject.parseObject(beanJson, Person.class);
         person.setId(id);
         return personMapper.updateByPrimaryKeySelective(person);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int deletePerson(Long id) {
         return personMapper.deleteByPrimaryKey(id);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeletePerson(String ids) {
         List<Long> idList = StringUtil.strToLongList(ids);
         PersonExample example = new PersonExample();

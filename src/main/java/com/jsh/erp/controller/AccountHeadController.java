@@ -96,7 +96,7 @@ public class AccountHeadController {
 
     /**
      * 根据编号查询单据信息
-     * @param number
+     * @param billNo
      * @param request
      * @return
      */
@@ -124,8 +124,8 @@ public class AccountHeadController {
      * 统计总金额
      * @param getS
      * @param type
-     * @param subType
      * @param mode 合计或者金额
+     * @param endTime
      * @return
      */
     public Double allMoney(String getS, String type, String mode, String endTime) {

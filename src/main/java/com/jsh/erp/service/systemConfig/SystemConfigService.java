@@ -8,6 +8,7 @@ import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -36,21 +37,25 @@ public class SystemConfigService {
         return systemConfigMapper.countsBySystemConfig();
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertSystemConfig(String beanJson, HttpServletRequest request) {
         SystemConfig systemConfig = JSONObject.parseObject(beanJson, SystemConfig.class);
         return systemConfigMapper.insertSelective(systemConfig);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateSystemConfig(String beanJson, Long id) {
         SystemConfig systemConfig = JSONObject.parseObject(beanJson, SystemConfig.class);
         systemConfig.setId(id);
         return systemConfigMapper.updateByPrimaryKeySelective(systemConfig);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int deleteSystemConfig(Long id) {
         return systemConfigMapper.deleteByPrimaryKey(id);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteSystemConfig(String ids) {
         List<Long> idList = StringUtil.strToLongList(ids);
         SystemConfigExample example = new SystemConfigExample();
