@@ -133,7 +133,7 @@
         from jsh_depotitem di left join jsh_material m on di.MaterialId=m.id
         left join jsh_unit u on m.UnitId = u.id
         left join jsh_depot dp1 on di.DepotId=dp1.id
-        left join jsh_depot dp2 on di.AnotherDepotId=dp1.id
+        left join jsh_depot dp2 on di.AnotherDepotId=dp2.id
         where di.HeaderId = ${headerId}
         order by di.id asc
     </select>
