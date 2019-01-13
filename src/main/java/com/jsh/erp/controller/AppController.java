@@ -5,13 +5,18 @@ import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.datasource.entities.App;
 import com.jsh.erp.service.app.AppService;
 import com.jsh.erp.service.userBusiness.UserBusinessService;
+import com.jsh.erp.utils.BaseResponseInfo;
+import com.jsh.erp.utils.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.io.*;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * @author ji_sheng_hua 752*718*920
@@ -115,5 +120,39 @@ public class AppController {
             e.printStackTrace();
         }
         return arr;
+    }
+
+    /**
+     * 上传图片
+     * @param fileInfo
+     * @param request
+     */
+    @PostMapping(value = "/uploadImg")
+    public BaseResponseInfo uploadImg(MultipartFile fileInfo, @RequestParam("fileInfoName") String fileName,
+                                      HttpServletRequest request) {
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            if (fileInfo != null) {
+                String basePath = request.getSession().getServletContext().getRealPath("/"); //默认windows文件路径，linux环境下生成的目录与项目同级，而不是下级
+                String path = basePath + "upload/images/deskIcon/"; //windows环境下的路径
+                Properties pro = System.getProperties();
+                String osName = pro.getProperty("os.name");//获得当前操作系统的名称
+                if("Linux".equals(osName) || "linux".equals(osName) || "LINUX".equals(osName)){
+                    path = basePath + "/upload/images/deskIcon/"; //linux环境下的路径
+                }
+                FileUtils.SaveFileFromInputStream(fileInfo.getInputStream(), path, fileName);
+                res.code = 200;
+                res.data = "上传图片成功";
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取图片失败";
+        } catch (IOException e) {
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "上传图片失败";
+        }
+        return res;
     }
 }
