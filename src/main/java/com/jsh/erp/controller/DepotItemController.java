@@ -15,6 +15,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -440,6 +441,11 @@ public class DepotItemController {
                     Double unitPrice = 0.0;
                     if (prevSum + InSum - OutSum != 0.0) {
                         unitPrice = (prevPrice + InPrice - OutPrice) / (prevSum + InSum - OutSum);
+                        /**
+                         * 2019-01-15通过除法算出金额后，保留两位小数
+                         * */
+                        DecimalFormat    df   = new DecimalFormat("#.00");
+                        unitPrice= Double.parseDouble(df.format(unitPrice));
                     }
                     item.put("UnitPrice", unitPrice);
                     item.put("prevSum", prevSum);
@@ -721,6 +727,11 @@ public class DepotItemController {
                     Double unitPrice = 0.0;
                     if (prevSum + InSum - OutSum != 0.0) {
                         unitPrice = (prevPrice + InPrice - OutPrice) / (prevSum + InSum - OutSum);
+                        /**
+                         * 2019-01-15通过除法算出金额后，保留两位小数
+                         * */
+                        DecimalFormat    df   = new DecimalFormat("#.00");
+                        unitPrice= Double.parseDouble(df.format(unitPrice));
                     }
                     Double thisSum = prevSum + InSum - OutSum;
                     Double thisAllPrice = prevPrice + InPrice - OutPrice;
@@ -743,10 +754,10 @@ public class DepotItemController {
             e.printStackTrace();
             message = "导出失败";
             res.code = 500;
-        } finally {
-            map.put("message", message);
-            res.data = map;
         }
+        /**
+         * 2019-01-15response已经返回，finally部分完全没必要
+         * */
         return res;
     }
 
