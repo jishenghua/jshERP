@@ -9,11 +9,12 @@ import com.jsh.erp.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +33,8 @@ public class DepotItemController {
     @Resource
     private DepotItemService depotItemService;
 
-
+    @Resource
+    private MaterialService materialService;
 
     /**
      * 根据材料信息获取
@@ -267,7 +269,26 @@ public class DepotItemController {
         }
     }
 
-
+    /**
+     * 查询计量单位信息
+     *
+     * @return
+     */
+    public String findUnitName(Long mId) {
+        String unitName = "";
+        try {
+            unitName = materialService.findUnitName(mId);
+            if (unitName != null) {
+                unitName = unitName.substring(1, unitName.length() - 1);
+                if (unitName.equals("null")) {
+                    unitName = "";
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return unitName;
+    }
 
     @GetMapping(value = "/getDetailList")
     public BaseResponseInfo getDetailList(@RequestParam("headerId") Long headerId,
@@ -403,14 +424,12 @@ public class DepotItemController {
             if (null != dataList) {
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
                     JSONObject item = new JSONObject();
-                    Double prevSum = sumNumber("入库", pid, diEx.getMaterialid(), monthTime, true) - sumNumber("出库", pid, diEx.getMaterialid(), monthTime, true);
-                    Double InSum = sumNumber("入库", pid, diEx.getMaterialid(), monthTime, false);
-                    Double OutSum = sumNumber("出库", pid, diEx.getMaterialid(), monthTime, false);
-                    Double prevPrice = sumPrice("入库", pid, diEx.getMaterialid(), monthTime, true) - sumPrice("出库", pid, diEx.getMaterialid(), monthTime, true);
-                    Double InPrice = sumPrice("入库", pid, diEx.getMaterialid(), monthTime, false);
-                    Double OutPrice = sumPrice("出库", pid, diEx.getMaterialid(), monthTime, false);
-                    item.put("Id", diEx.getId());
-                    item.put("MaterialId", diEx.getMaterialid());
+                    Double prevSum = sumNumber("入库", pid, diEx.getMId(), monthTime, true) - sumNumber("出库", pid, diEx.getMId(), monthTime, true);
+                    Double InSum = sumNumber("入库", pid, diEx.getMId(), monthTime, false);
+                    Double OutSum = sumNumber("出库", pid, diEx.getMId(), monthTime, false);
+                    Double prevPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, true) - sumPrice("出库", pid, diEx.getMId(), monthTime, true);
+                    Double InPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, false);
+                    Double OutPrice = sumPrice("出库", pid, diEx.getMId(), monthTime, false);
                     item.put("MaterialName", diEx.getMName());
                     item.put("MaterialModel", diEx.getMColor());
                     //扩展信息
@@ -464,9 +483,9 @@ public class DepotItemController {
             Double thisAllPrice = 0.0;
             if (null != dataList) {
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
-                    Double prevPrice = sumPrice("入库", pid, diEx.getMaterialid(), monthTime, true) - sumPrice("出库", pid, diEx.getMaterialid(), monthTime, true);
-                    Double InPrice = sumPrice("入库", pid, diEx.getMaterialid(), monthTime, false);
-                    Double OutPrice = sumPrice("出库", pid, diEx.getMaterialid(), monthTime, false);
+                    Double prevPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, true) - sumPrice("出库", pid, diEx.getMId(), monthTime, true);
+                    Double InPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, false);
+                    Double OutPrice = sumPrice("出库", pid, diEx.getMId(), monthTime, false);
                     thisAllPrice = thisAllPrice + (prevPrice + InPrice - OutPrice);
                 }
             }
@@ -512,12 +531,10 @@ public class DepotItemController {
             if (null != dataList) {
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
                     JSONObject item = new JSONObject();
-                    Double InSum = sumNumberBuyOrSale("入库", "采购", diEx.getMaterialid(), monthTime);
-                    Double OutSum = sumNumberBuyOrSale("出库", "采购退货", diEx.getMaterialid(), monthTime);
-                    Double InSumPrice = sumPriceBuyOrSale("入库", "采购", diEx.getMaterialid(), monthTime);
-                    Double OutSumPrice = sumPriceBuyOrSale("出库", "采购退货", diEx.getMaterialid(), monthTime);
-                    item.put("Id", diEx.getId());
-                    item.put("MaterialId", diEx.getMaterialid());
+                    Double InSum = sumNumberBuyOrSale("入库", "采购", diEx.getMId(), monthTime);
+                    Double OutSum = sumNumberBuyOrSale("出库", "采购退货", diEx.getMId(), monthTime);
+                    Double InSumPrice = sumPriceBuyOrSale("入库", "采购", diEx.getMId(), monthTime);
+                    Double OutSumPrice = sumPriceBuyOrSale("出库", "采购退货", diEx.getMId(), monthTime);
                     item.put("MaterialName", diEx.getMName());
                     item.put("MaterialModel", diEx.getMModel());
                     //扩展信息
@@ -574,16 +591,14 @@ public class DepotItemController {
             if (null != dataList) {
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
                     JSONObject item = new JSONObject();
-                    Double OutSumRetail = sumNumberBuyOrSale("出库", "零售", diEx.getMaterialid(), monthTime);
-                    Double OutSum = sumNumberBuyOrSale("出库", "销售", diEx.getMaterialid(), monthTime);
-                    Double InSumRetail = sumNumberBuyOrSale("入库", "零售退货", diEx.getMaterialid(), monthTime);
-                    Double InSum = sumNumberBuyOrSale("入库", "销售退货", diEx.getMaterialid(), monthTime);
-                    Double OutSumRetailPrice = sumPriceBuyOrSale("出库", "零售", diEx.getMaterialid(), monthTime);
-                    Double OutSumPrice = sumPriceBuyOrSale("出库", "销售", diEx.getMaterialid(), monthTime);
-                    Double InSumRetailPrice = sumPriceBuyOrSale("入库", "零售退货", diEx.getMaterialid(), monthTime);
-                    Double InSumPrice = sumPriceBuyOrSale("入库", "销售退货", diEx.getMaterialid(), monthTime);
-                    item.put("Id", diEx.getId());
-                    item.put("MaterialId", diEx.getMaterialid());
+                    Double OutSumRetail = sumNumberBuyOrSale("出库", "零售", diEx.getMId(), monthTime);
+                    Double OutSum = sumNumberBuyOrSale("出库", "销售", diEx.getMId(), monthTime);
+                    Double InSumRetail = sumNumberBuyOrSale("入库", "零售退货", diEx.getMId(), monthTime);
+                    Double InSum = sumNumberBuyOrSale("入库", "销售退货", diEx.getMId(), monthTime);
+                    Double OutSumRetailPrice = sumPriceBuyOrSale("出库", "零售", diEx.getMId(), monthTime);
+                    Double OutSumPrice = sumPriceBuyOrSale("出库", "销售", diEx.getMId(), monthTime);
+                    Double InSumRetailPrice = sumPriceBuyOrSale("入库", "零售退货", diEx.getMId(), monthTime);
+                    Double InSumPrice = sumPriceBuyOrSale("入库", "销售退货", diEx.getMId(), monthTime);
                     item.put("MaterialName", diEx.getMName());
                     item.put("MaterialModel", diEx.getMModel());
                     //扩展信息
@@ -640,10 +655,8 @@ public class DepotItemController {
             if (null != dataList) {
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
                     JSONObject item = new JSONObject();
-                    Double InSum = sumNumberGift("礼品充值", pid, diEx.getMaterialid(), "in");
-                    Double OutSum = sumNumberGift("礼品销售", pid, diEx.getMaterialid(), "out");
-                    item.put("Id", diEx.getId());
-                    item.put("MaterialId", diEx.getMaterialid());
+                    Double InSum = sumNumberGift("礼品充值", pid, diEx.getMId(), "in");
+                    Double OutSum = sumNumberGift("礼品销售", pid, diEx.getMId(), "out");
                     item.put("MaterialName", diEx.getMName());
                     item.put("MaterialModel", diEx.getMModel());
                     //扩展信息
@@ -662,6 +675,77 @@ public class DepotItemController {
             e.printStackTrace();
             res.code = 500;
             res.data = "获取数据失败";
+        }
+        return res;
+    }
+
+    /**
+     * 导出excel表格
+     * @param currentPage
+     * @param pageSize
+     * @param projectId
+     * @param monthTime
+     * @param headIds
+     * @param materialIds
+     * @param request
+     * @param response
+     * @return
+     */
+    @GetMapping(value = "/exportExcel")
+    public BaseResponseInfo exportExcel(@RequestParam("currentPage") Integer currentPage,
+                                        @RequestParam("pageSize") Integer pageSize,
+                                        @RequestParam("projectId") Integer projectId,
+                                        @RequestParam("monthTime") String monthTime,
+                                        @RequestParam("headIds") String headIds,
+                                        @RequestParam("materialIds") String materialIds,
+                                        HttpServletRequest request, HttpServletResponse response) {
+        BaseResponseInfo res = new BaseResponseInfo();
+        Map<String, Object> map = new HashMap<String, Object>();
+        String message = "成功";
+        try {
+            List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(headIds, materialIds, currentPage, pageSize);
+            //存放数据json数组
+            Integer pid = projectId;
+            String[] names = {"名称", "型号", "单位", "单价", "上月结存数量", "入库数量", "出库数量", "本月结存数量", "结存金额"};
+            String title = "库存报表";
+            List<String[]> objects = new ArrayList<String[]>();
+            if (null != dataList) {
+                for (DepotItemVo4WithInfoEx diEx : dataList) {
+                    String[] objs = new String[9];
+                    Double prevSum = sumNumber("入库", pid, diEx.getMId(), monthTime, true) - sumNumber("出库", pid, diEx.getMId(), monthTime, true);
+                    Double InSum = sumNumber("入库", pid, diEx.getMId(), monthTime, false);
+                    Double OutSum = sumNumber("出库", pid, diEx.getMId(), monthTime, false);
+                    Double prevPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, true) - sumPrice("出库", pid, diEx.getMId(), monthTime, true);
+                    Double InPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, false);
+                    Double OutPrice = sumPrice("出库", pid, diEx.getMId(), monthTime, false);
+                    Double unitPrice = 0.0;
+                    if (prevSum + InSum - OutSum != 0.0) {
+                        unitPrice = (prevPrice + InPrice - OutPrice) / (prevSum + InSum - OutSum);
+                    }
+                    Double thisSum = prevSum + InSum - OutSum;
+                    Double thisAllPrice = prevPrice + InPrice - OutPrice;
+                    objs[0] = diEx.getMName().toString();
+                    objs[1] = diEx.getMModel().toString();
+                    objs[2] = diEx.getMaterialUnit().toString();
+                    objs[3] = unitPrice.toString();
+                    objs[4] = prevSum.toString();
+                    objs[5] = InSum.toString();
+                    objs[6] = OutSum.toString();
+                    objs[7] = thisSum.toString();
+                    objs[8] = thisAllPrice.toString();
+                    objects.add(objs);
+                }
+            }
+            File file = ExcelUtils.exportObjectsWithoutTitle(title, names, title, objects);
+            ExportExecUtil.showExec(file, file.getName() + "-" + monthTime, response);
+            res.code = 200;
+        } catch (Exception e) {
+            e.printStackTrace();
+            message = "导出失败";
+            res.code = 500;
+        } finally {
+            map.put("message", message);
+            res.data = map;
         }
         return res;
     }

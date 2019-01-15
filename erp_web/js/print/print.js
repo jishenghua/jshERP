@@ -1,6 +1,6 @@
 // strPrintName 打印任务名
 // printDatagrid 要打印的datagrid
-function CreateFormPage(strPrintName, printDatagrid, path) {
+function CreateFormPage(strPrintName, printDatagrid) {
     var beginDate= $("#searchBeginTime").val();
     var endDate= $("#searchEndTime").val();
     var getMonth= $("#searchMonth").val();
@@ -10,16 +10,22 @@ function CreateFormPage(strPrintName, printDatagrid, path) {
     //加载公司信息
     $.ajax({
         type:"get",
-        url: path + "/systemConfig/findBy.action",
+        url: "/systemConfig/list",
         dataType: "json",
+        data: ({
+            currentPage: 1,
+            pageSize: 100
+        }),
         async: false,
         success: function (res) {
-            if(res && res.rows) {
-                var array = res.rows;
-                for(var i=0; i<array.length; i++){
-                    var name = array[i].name;
-                    if(name === "company_name") {
-                        companyName = array[i].value;
+            if (res && res.code === 200) {
+                if(res.data && res.data.page) {
+                    var array = res.data.page.rows;
+                    for (var i = 0; i < array.length; i++) {
+                        var name = array[i].name;
+                        if (name === "company_name") {
+                            companyName = array[i].value;
+                        }
                     }
                 }
             }

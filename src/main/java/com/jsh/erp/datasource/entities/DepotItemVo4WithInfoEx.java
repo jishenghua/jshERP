@@ -48,6 +48,8 @@ public class DepotItemVo4WithInfoEx {
 
     private String mtype;
 
+    private Long MId;
+
     private String MName;
 
     private String MModel;
@@ -256,6 +258,14 @@ public class DepotItemVo4WithInfoEx {
 
     public void setMtype(String mtype) {
         this.mtype = mtype;
+    }
+
+    public Long getMId() {
+        return MId;
+    }
+
+    public void setMId(Long MId) {
+        this.MId = MId;
     }
 
     public String getMName() {

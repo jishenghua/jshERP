@@ -160,7 +160,7 @@
 <!-- 导入excel表格 -->
 <div id="importExcelDlg" style="padding:10px 20px">
     <form id="importExcelFM" method="post" enctype="multipart/form-data"
-          action="/supplier/importExcelVendor.action">
+          action="/supplier/importExcelVendor">
         <div class="fitem" style="padding:5px">
             <label>文件名称&nbsp;&nbsp;</label>
             <input name="supplierFile" id="supplierFile" type="file" style="width: 230px;height: 20px"/>
@@ -175,7 +175,6 @@
                 <option value="1" selected="selected">否</option>
             </select>
         </div>
-        <input type="hidden" name="clientIp" id="clientIp" value="<%=clientIp %>"/>
         <div id="dlg-buttons5">
             <a href="javascript:void(0)" id="saveimport" class="easyui-linkbutton" iconCls="icon-ok">导入</a>
             <a href="javascript:void(0)" id="cancelimport" class="easyui-linkbutton" iconCls="icon-cancel"

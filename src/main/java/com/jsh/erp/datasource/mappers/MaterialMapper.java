@@ -121,4 +121,10 @@ public interface MaterialMapper {
     int updatePriceNullByPrimaryKey(Long id);
 
     int updateUnitIdNullByPrimaryKey(Long id);
+
+    List<MaterialVo4Unit> findByAll(
+            @Param("name") String name,
+            @Param("model") String model,
+            @Param("categoryId") Long categoryId,
+            @Param("categoryIds") String categoryIds);
 }

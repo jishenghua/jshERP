@@ -571,6 +571,8 @@
 							+ 'AaBb' + rec.discount + 'AaBb' + rec.discountmoney + 'AaBb' + rec.discountlastmoney
 							+ 'AaBb' + rec.accountidlist + 'AaBb' + rec.accountmoneylist
 							+ 'AaBb' + rec.othermoney + 'AaBb' + rec.othermoneylist + 'AaBb' + rec.othermoneyitem + 'AaBb' + rec.accountday;
+						rowInfo = rowInfo.replace(/\"/g, "");
+                        rowInfo = rowInfo.replace(/\[|]/g,"");
 						var orgId = rec.organid? rec.organid:0;
 						str += '<img title="查看" src="/js/easyui-1.3.5/themes/icons/list.png" style="cursor: pointer;" onclick="showDepotHead(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
 						str += '<img title="编辑" src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editDepotHead(\'' + rowInfo + '\''+',' + rec.status + ');"/>&nbsp;&nbsp;&nbsp;';
@@ -1556,7 +1558,7 @@
 	    initTableData_material("add"); //商品列表
 	    reject(); //撤销下、刷新商品列表
 		$("#addOrgan").off("click").on("click",function(){
-			$('#supplierDlg').dialog('open').dialog('setTitle','<img src="/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加供应商');
+			$('#supplierDlg').dialog('open').dialog('setTitle','<img src="/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加供应商信息');
 		});
 	    url = '/depotHead/add';
 
@@ -1725,10 +1727,9 @@
 	    $("#OperTimeShow").text(depotHeadInfo[4]);
 	    $('#OrganIdShow').text(depotHeadInfo[11]);
 	    $("#HandsPersonIdShow").text(depotHeadInfo[12]);
-		if(depotHeadInfo[13]){
-			$("#AccountIdShow").text(depotHeadInfo[13]); //结算账户
-		}
-	    else if(depotHeadInfo[22] && depotHeadInfo[23]){
+        if(depotHeadInfo[13] && depotHeadInfo[13]!="undefined"){
+            $("#AccountIdShow").text(depotHeadInfo[13]); //结算账户
+        } else {
 			var accountArr = depotHeadInfo[22].split(","); //账户id列表
 			var accountMoneyArr = depotHeadInfo[23].split(","); //账户金额列表
 			var accountIdShow = "";
@@ -2553,28 +2554,15 @@
 					return;
 				}
 				var url = '/supplier/add';
+                var supObj = $("#supplierFM").serializeObject();
+                supObj.type = "供应商";
+                supObj.enabled = 1;
 				$.ajax({
 					url: url,
 					type:"post",
 					dataType: "json",
 					data:{
-						supplier:$("#supplier").val(),
-						type: "供应商",
-						contacts:$("#contacts").val(),
-						phonenum:$("#phonenum").val(),
-						telephone:$("#telephone").val(),
-						email:$("#email").val(),
-						address:$("#address").val(),
-						fax:$("#fax").val(),
-						BeginNeedGet:$("#BeginNeedGet").val(),
-						BeginNeedPay:$("#BeginNeedPay").val(),
-						taxNum:$("#taxNum").val(),
-						taxRate:$("#taxRate").val(),
-						bankName:$("#bankName").val(),
-						accountNumber:$("#accountNumber").val(),
-						description:$("#description").val(),
-						enabled:1,
-						clientIp: clientIp
+                        info: JSON.stringify(supObj)
 					},
 					success: function(res) {
 						if (res) {

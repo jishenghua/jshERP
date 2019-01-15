@@ -1,18 +1,24 @@
 package com.jsh.erp.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.datasource.entities.Material;
 import com.jsh.erp.datasource.entities.MaterialVo4Unit;
 import com.jsh.erp.service.material.MaterialService;
-import com.jsh.erp.utils.BaseResponseInfo;
-import com.jsh.erp.utils.ErpInfo;
+import com.jsh.erp.utils.*;
+import jxl.Sheet;
+import jxl.Workbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -176,5 +182,128 @@ public class MaterialController {
             res.data = "获取数据失败";
         }
         return res;
+    }
+
+    /**
+     * 生成excel表格
+     * @param name
+     * @param model
+     * @param categoryId
+     * @param categoryIds
+     * @param request
+     * @param response
+     * @return
+     */
+    @GetMapping(value = "/exportExcel")
+    public BaseResponseInfo exportExcel(@RequestParam("name") String name,
+                                        @RequestParam("model") String model,
+                                        @RequestParam("categoryId") Long categoryId,
+                                        @RequestParam("categoryIds") String categoryIds,
+                                        HttpServletRequest request, HttpServletResponse response) {
+        BaseResponseInfo res = new BaseResponseInfo();
+        Map<String, Object> map = new HashMap<String, Object>();
+        String message = "成功";
+        try {
+            List<MaterialVo4Unit> dataList = materialService.findByAll(name, model, categoryId, categoryIds);
+            String[] names = {"品名", "类型", "型号", "安全存量", "单位", "零售价", "最低售价", "预计采购价", "批发价", "备注", "状态"};
+            String title = "商品信息";
+            List<String[]> objects = new ArrayList<String[]>();
+            if (null != dataList) {
+                for (MaterialVo4Unit m : dataList) {
+                    String[] objs = new String[11];
+                    objs[0] = m.getName();
+                    objs[1] = m.getCategoryName();
+                    objs[2] = m.getModel();
+                    objs[3] = m.getSafetystock() == null? "" : m.getSafetystock().toString();
+                    objs[4] = m.getUnit();
+                    objs[5] = m.getRetailprice() == null ? "" : m.getRetailprice().toString();
+                    objs[6] = m.getLowprice() == null ? "" : m.getLowprice().toString();
+                    objs[7] = m.getPresetpriceone() == null ? "" : m.getPresetpriceone().toString();
+                    objs[8] = m.getPresetpricetwo() == null ? "" : m.getPresetpricetwo().toString();
+                    objs[9] = m.getRemark();
+                    objs[10] = m.getEnabled() ? "启用" : "禁用";
+                    objects.add(objs);
+                }
+            }
+            File file = ExcelUtils.exportObjectsWithoutTitle(title, names, title, objects);
+            ExportExecUtil.showExec(file, file.getName(), response);
+            res.code = 200;
+        } catch (Exception e) {
+            e.printStackTrace();
+            message = "导出失败";
+            res.code = 500;
+        } finally {
+            map.put("message", message);
+            res.data = map;
+        }
+        return res;
+    }
+
+    /**
+     * excel表格导入
+     * @param materialFile
+     * @param request
+     * @param response
+     * @return
+     */
+    @PostMapping(value = "/importExcel")
+    public void importExcel(MultipartFile materialFile,
+                            HttpServletRequest request, HttpServletResponse response) throws Exception{
+        BaseResponseInfo info = new BaseResponseInfo();
+        Map<String, Object> data = new HashMap<String, Object>();
+        String message = "成功";
+        try {
+            Sheet src = null;
+            //文件合法性校验
+            try {
+                Workbook workbook = Workbook.getWorkbook(materialFile.getInputStream());
+                src = workbook.getSheet(0);
+            } catch (Exception e) {
+                message = "导入文件不合法，请检查";
+                data.put("message", message);
+                info.code = 400;
+                info.data = data;
+            }
+            //读取所有的摄像机编码
+            //每行中数据顺序  "品名","类型","型号","安全存量","单位","零售价","最低售价","预计采购价","批发价","备注","状态"
+            List<Material> mList = new ArrayList<Material>();
+            for (int i = 1; i < src.getRows(); i++) {
+                Material m = new Material();
+                m.setName(ExcelUtils.getContent(src, i, 0));
+                m.setCategoryid(1l); //根目录
+                m.setModel(ExcelUtils.getContent(src, i, 2));
+                String safetyStock = ExcelUtils.getContent(src, i, 3);
+                m.setSafetystock(parseDoubleEx(safetyStock));
+                m.setUnit(ExcelUtils.getContent(src, i, 4));
+                String retailprice = ExcelUtils.getContent(src, i, 5);
+                m.setRetailprice(parseDoubleEx(retailprice));
+                String lowPrice = ExcelUtils.getContent(src, i, 6);
+                m.setLowprice(parseDoubleEx(lowPrice));
+                String presetpriceone = ExcelUtils.getContent(src, i, 7);
+                m.setPresetpriceone(parseDoubleEx(presetpriceone));
+                String presetpricetwo = ExcelUtils.getContent(src, i, 8);
+                m.setPresetpricetwo(parseDoubleEx(presetpricetwo));
+                m.setRemark(ExcelUtils.getContent(src, i, 9));
+                String enabled = ExcelUtils.getContent(src, i, 10);
+                m.setEnabled(enabled.equals("启用")? true: false);
+                mList.add(m);
+            }
+            info = materialService.importExcel(mList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            message = "导入失败";
+            info.code = 500;
+            data.put("message", message);
+            info.data = data;
+        }
+        response.sendRedirect("../pages/materials/material.html");
+    }
+
+    public Double parseDoubleEx(String str){
+        if(!StringUtil.isEmpty(str)) {
+            return Double.parseDouble(str);
+        } else {
+            return null;
+        }
     }
 }

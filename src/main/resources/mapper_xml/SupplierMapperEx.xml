@@ -45,4 +45,25 @@
             and description like '%${description}%'
         </if>
     </select>
+
+    <select id="findByAll" parameterType="com.jsh.erp.datasource.entities.SupplierExample" resultMap="BaseResultMap">
+        select *
+        FROM jsh_supplier
+        where 1=1
+        <if test="supplier != null">
+            and supplier like '%${supplier}%'
+        </if>
+        <if test="type != null">
+            and type='${type}'
+        </if>
+        <if test="phonenum != null">
+            and phonenum like '%${phonenum}%'
+        </if>
+        <if test="telephone != null">
+            and telephone like '%${telephone}%'
+        </if>
+        <if test="description != null">
+            and description like '%${description}%'
+        </if>
+    </select>
 </mapper>

@@ -244,7 +244,7 @@
 <!-- 导入excel表格 -->
 <div id="importExcelDlg" class="easyui-dialog" style="width:400px; padding:10px 20px;"
      closed="true" buttons="#dlg-buttons5" modal="true" collapsible="false" closable="true">
-    <form id="importExcelFM" method="post" enctype="multipart/form-data" action="/material/importExcel.action">
+    <form id="importExcelFM" method="post" enctype="multipart/form-data" action="/material/importExcel">
         <div class="fitem" style="padding:5px">
             <label>文件名称&nbsp;&nbsp;</label>
             <input name="materialFile" id="materialFile" type="file" style="width: 230px;height: 20px"/>
@@ -259,7 +259,6 @@
                 <option value="1" selected="selected">否</option>
             </select>
         </div>
-        <input type="hidden" name="clientIp" id="clientIp" value="<%=clientIp %>"/>
         <div id="dlg-buttons5">
             <a href="javascript:void(0)" id="saveimport" class="easyui-linkbutton" iconCls="icon-ok">导入</a>
             <a href="javascript:void(0)" id="cancelimport" class="easyui-linkbutton" iconCls="icon-cancel"
@@ -1041,7 +1040,15 @@
 
     //导出数据
     function setOutputFun() {
-        window.location.href = "/material/exportExcel.action?browserType=" + getOs();
+        var name = $.trim($("#searchName").val());
+        var model = $.trim($("#searchModel").val());
+        if (setCategoryId != "1") {
+            cid = 2;
+        } else {
+            cid = 1;
+        }
+        window.location.href = "/material/exportExcel?browserType=" + getOs()
+            + "&name=" + name + "&model=" + model + "&categoryId=" + cid + "&categoryIds=" + setCategoryId;
     }
 
     //增加

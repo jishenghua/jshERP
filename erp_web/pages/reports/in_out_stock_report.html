@@ -325,7 +325,7 @@
                                     var mIds = res.data.mIds;
                                     if (mIds) {
                                         if (pageSize === 3000) {
-                                            window.location.href = "/depotItem/exportExcel.action?browserType=" + getOs() + "&pageNo=" + pageNo + "&pageSize=" + pageSize + "&ProjectId=" + $.trim($("#searchProjectId").val()) + "&MonthTime=" + $("#searchMonth").val() + "&HeadIds=" + HeadIds + "&MaterialIds=" + MIds;
+                                            window.location.href = "/depotItem/exportExcel?browserType=" + getOs() + "&currentPage=" + pageNo + "&pageSize=" + pageSize + "&projectId=" + $.trim($("#searchProjectId").val()) + "&monthTime=" + $("#searchMonth").val() + "&headIds=" + HeadIds + "&materialIds=" + mIds;
                                         }
                                         else {
                                             $.ajax({
@@ -411,8 +411,7 @@
     //报表打印
     function print() {
         $("#printBtn").off("click").on("click", function () {
-            var path = "<%=path %>";
-            CreateFormPage('打印报表', $('#tableData'), path);
+            CreateFormPage('打印报表', $('#tableData'));
         });
     }
 </script>
