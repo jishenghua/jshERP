@@ -17,7 +17,6 @@
 			<properties>
 				<activatedProperties>test</activatedProperties>
 			</properties>
-
 		</profile>
 		<profile>
 			<id>prod</id>
