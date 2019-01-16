@@ -172,6 +172,24 @@ public class StringUtil {
         return idList;
     }
 
+    /**
+     * String字符串转成List<String>数据格式
+     * String str = "1,2,3,4,5,6" -> List<Long> listLong [1,2,3,4,5,6];
+     *
+     * @param strArr
+     * @return
+     */
+    public static List<String> strToStringList(String strArr) {
+        List<String> idList=new ArrayList<String>();
+        String[] d=strArr.split(",");
+        for (int i = 0, size = d.length; i < size; i++) {
+            if(d[i]!=null) {
+                idList.add(d[i].toString());
+            }
+        }
+        return idList;
+    }
+
     public static List<String> searchCondition(String search) {
         if (isEmpty(search)) {
             return new ArrayList<String>();

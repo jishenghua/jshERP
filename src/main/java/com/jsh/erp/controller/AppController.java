@@ -3,6 +3,7 @@ package com.jsh.erp.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.datasource.entities.App;
+import com.jsh.erp.datasource.entities.UserBusiness;
 import com.jsh.erp.service.app.AppService;
 import com.jsh.erp.service.userBusiness.UserBusinessService;
 import com.jsh.erp.utils.BaseResponseInfo;
@@ -31,6 +32,73 @@ public class AppController {
 
     @Resource
     private UserBusinessService userBusinessService;
+
+    /**
+     * 根据用户查询有权限的app
+     * @param userId
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/findAppByUserId")
+    public JSONObject findAppByUserId(@RequestParam("userId") String userId, HttpServletRequest request) {
+        List<UserBusiness> roleList = userBusinessService.findRoleByUserId(userId);
+        String roles = null;
+        if(roleList!=null && roleList.size()>0 && roleList.get(0)!=null){
+            roles = roleList.get(0).getValue();
+        }
+        if(roles!=null) {
+            roles = roles.replaceAll("\\]\\[",",").replaceAll("\\]","").replaceAll("\\[",""); //转为逗号隔开的
+        }
+        List<UserBusiness> appList = userBusinessService.findAppByRoles(roles);
+        String apps = null;
+        if(appList!=null && appList.size()>0 && appList.get(0)!=null){
+            apps = appList.get(0).getValue();
+        }
+        if(apps!=null) {
+            apps = apps.replaceAll("\\]\\[",",").replaceAll("\\]","").replaceAll("\\[",""); //转为逗号隔开的
+        }
+        JSONObject obj = new JSONObject();
+        List<App> dockList = appService.findAppInIds(apps,"dock");
+        JSONArray dockArray = new JSONArray();
+        if (null != dockList) {
+            for (App app : dockList) {
+                JSONObject item = new JSONObject();
+                item.put("id", app.getId());
+                item.put("title", app.getName());
+                item.put("type", app.getType());
+                item.put("icon", "../../upload/images/deskIcon/" + app.getIcon());
+                item.put("url", app.getUrl());
+                item.put("width", app.getWidth());
+                item.put("height", app.getHeight());
+                item.put("isresize", app.getResize());
+                item.put("isopenmax", app.getOpenmax());
+                item.put("isflash", app.getFlash());
+                dockArray.add(item);
+            }
+        }
+        obj.put("dock",dockArray);
+
+        List<App> deskList = appService.findAppInIds(apps,"desk");
+        JSONArray deskArray = new JSONArray();
+        if (null != deskList) {
+            for (App app : deskList) {
+                JSONObject item = new JSONObject();
+                item.put("id", app.getId());
+                item.put("title", app.getName());
+                item.put("type", app.getType());
+                item.put("icon", "../../upload/images/deskIcon/" + app.getIcon());
+                item.put("url", "../../pages/common/menu.html?appID=" + app.getNumber() + "&id=" + app.getId());
+                item.put("width", app.getWidth());
+                item.put("height", app.getHeight());
+                item.put("isresize", app.getResize());
+                item.put("isopenmax", app.getOpenmax());
+                item.put("isflash", app.getFlash());
+                deskArray.add(item);
+            }
+        }
+        obj.put("desk",deskArray);
+        return obj;
+    }
 
     @GetMapping(value = "/findDesk")
     public JSONObject findDesk(HttpServletRequest request) {

@@ -97,4 +97,19 @@ public class UserBusinessService {
         return userBusinessMapper.updateByExampleSelective(userBusiness, example);
     }
 
+    public List<UserBusiness> findRoleByUserId(String userId){
+        UserBusinessExample example = new UserBusinessExample();
+        example.createCriteria().andKeyidEqualTo(userId).andTypeEqualTo("UserRole");
+        List<UserBusiness> list = userBusinessMapper.selectByExample(example);
+        return list;
+    }
+
+    public List<UserBusiness> findAppByRoles(String roles){
+        List<String> rolesList = StringUtil.strToStringList(roles);
+        UserBusinessExample example = new UserBusinessExample();
+        example.createCriteria().andKeyidIn(rolesList).andTypeEqualTo("RoleAPP");
+        List<UserBusiness> list = userBusinessMapper.selectByExample(example);
+        return list;
+    }
+
 }
