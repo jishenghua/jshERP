@@ -22,10 +22,10 @@
             and ah.Type='${type}'
         </if>
         <if test="beginTime != null">
-            and ah.BillTime gt;= '%${beginTime}%'
+            and ah.BillTime &gt;= '%${beginTime}%'
         </if>
         <if test="endTime != null">
-            and ah.BillTime lt;= '%${endTime}%'
+            and ah.BillTime &lt;= '%${endTime}%'
         </if>
         order by ah.Id desc
         <if test="offset != null and rows != null">
@@ -46,10 +46,10 @@
             and Type='${type}'
         </if>
         <if test="beginTime != null">
-            and BillTime gt;= '%${beginTime}%'
+            and BillTime &gt;= '%${beginTime}%'
         </if>
         <if test="endTime != null">
-            and BillTime lt;= '%${endTime}%'
+            and BillTime &lt;= '%${endTime}%'
         </if>
     </select>
 
@@ -57,9 +57,9 @@
         select max(Id) as Id from jsh_accounthead
     </select>
 
-    <select id="findAllMoney" resultType="java.lang.Double">
+    <select id="findAllMoney" resultType="java.math.BigDecimal">
         select sum(${modeName}) as allMoney from jsh_accounthead where Type='${type}'
-        and OrganId =${supplierId} and BillTime &lt;='${endTime}'
+        and OrganId =${supplierId} and BillTime <![CDATA[ <='${endTime}']]>
     </select>
 
     <select id="getDetailByNumber" parameterType="com.jsh.erp.datasource.entities.AccountHeadExample" resultMap="ResultMapEx">

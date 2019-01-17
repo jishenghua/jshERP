@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -157,7 +158,7 @@ public class DepotItemService {
         return depotItemMapper.findByAllCount(headIds, materialIds);
     }
 
-    public Double findByType(String type, Integer ProjectId, Long MId, String MonthTime, Boolean isPrev) {
+    public BigDecimal findByType(String type, Integer ProjectId, Long MId, String MonthTime, Boolean isPrev) {
         if (TYPE.equals(type)) {
             if (isPrev) {
                 return depotItemMapper.findByTypeInIsPrev(ProjectId, MId, MonthTime);
@@ -173,7 +174,7 @@ public class DepotItemService {
         }
     }
 
-    public Double findPriceByType(String type, Integer ProjectId, Long MId, String MonthTime, Boolean isPrev) {
+    public BigDecimal findPriceByType(String type, Integer ProjectId, Long MId, String MonthTime, Boolean isPrev) {
         if (TYPE.equals(type)) {
             if (isPrev) {
                 return depotItemMapper.findPriceByTypeInIsPrev(ProjectId, MId, MonthTime);
@@ -189,7 +190,7 @@ public class DepotItemService {
         }
     }
 
-    public Double buyOrSale(String type, String subType, Long MId, String MonthTime, String sumType) {
+    public BigDecimal buyOrSale(String type, String subType, Long MId, String MonthTime, String sumType) {
         if (SUM_TYPE.equals(sumType)) {
             return depotItemMapper.buyOrSaleNumber(type, subType, MId, MonthTime, sumType);
         } else {
@@ -197,7 +198,7 @@ public class DepotItemService {
         }
     }
 
-    public Double findGiftByType(String subType, Integer ProjectId, Long MId, String type) {
+    public BigDecimal findGiftByType(String subType, Integer ProjectId, Long MId, String type) {
         if (IN.equals(type)) {
             return depotItemMapper.findGiftByTypeIn(subType, ProjectId, MId);
         } else {
@@ -219,10 +220,10 @@ public class DepotItemService {
                     depotItem.setMaterialid(tempInsertedJson.getLong("MaterialId"));
                     depotItem.setMunit(tempInsertedJson.getString("Unit"));
                     if (!StringUtil.isEmpty(tempInsertedJson.get("OperNumber").toString())) {
-                        depotItem.setOpernumber(tempInsertedJson.getDouble("OperNumber"));
+                        depotItem.setOpernumber(tempInsertedJson.getBigDecimal("OperNumber"));
                         try {
                             String Unit = tempInsertedJson.get("Unit").toString();
-                            Double oNumber = tempInsertedJson.getDouble("OperNumber");
+                            BigDecimal oNumber = tempInsertedJson.getBigDecimal("OperNumber");
                             Long mId = Long.parseLong(tempInsertedJson.get("MaterialId").toString());
                             //以下进行单位换算
                             String UnitName = findUnitName(mId); //查询计量单位名称
@@ -235,7 +236,7 @@ public class DepotItemService {
                                 if (Unit.equals(basicUnit)) { //如果等于基础单位
                                     depotItem.setBasicnumber(oNumber); //数量一致
                                 } else if (Unit.equals(otherUnit)) { //如果等于副单位
-                                    depotItem.setBasicnumber(oNumber * ratio); //数量乘以比例
+                                    depotItem.setBasicnumber(oNumber.multiply(new BigDecimal(ratio)) ); //数量乘以比例
                                 }
                             } else {
                                 depotItem.setBasicnumber(oNumber); //其他情况
@@ -245,13 +246,13 @@ public class DepotItemService {
                         }
                     }
                     if (!StringUtil.isEmpty(tempInsertedJson.get("UnitPrice").toString())) {
-                        depotItem.setUnitprice(tempInsertedJson.getDouble("UnitPrice"));
+                        depotItem.setUnitprice(tempInsertedJson.getBigDecimal("UnitPrice"));
                     }
                     if (!StringUtil.isEmpty(tempInsertedJson.get("TaxUnitPrice").toString())) {
-                        depotItem.setTaxunitprice(tempInsertedJson.getDouble("TaxUnitPrice"));
+                        depotItem.setTaxunitprice(tempInsertedJson.getBigDecimal("TaxUnitPrice"));
                     }
                     if (!StringUtil.isEmpty(tempInsertedJson.get("AllPrice").toString())) {
-                        depotItem.setAllprice(tempInsertedJson.getDouble("AllPrice"));
+                        depotItem.setAllprice(tempInsertedJson.getBigDecimal("AllPrice"));
                     }
                     depotItem.setRemark(tempInsertedJson.getString("Remark"));
                     if (tempInsertedJson.get("DepotId") != null && !StringUtil.isEmpty(tempInsertedJson.get("DepotId").toString())) {
@@ -261,13 +262,13 @@ public class DepotItemService {
                         depotItem.setAnotherdepotid(tempInsertedJson.getLong("AnotherDepotId"));
                     }
                     if (!StringUtil.isEmpty(tempInsertedJson.get("TaxRate").toString())) {
-                        depotItem.setTaxrate(tempInsertedJson.getDouble("TaxRate"));
+                        depotItem.setTaxrate(tempInsertedJson.getBigDecimal("TaxRate"));
                     }
                     if (!StringUtil.isEmpty(tempInsertedJson.get("TaxMoney").toString())) {
-                        depotItem.setTaxmoney(tempInsertedJson.getDouble("TaxMoney"));
+                        depotItem.setTaxmoney(tempInsertedJson.getBigDecimal("TaxMoney"));
                     }
                     if (!StringUtil.isEmpty(tempInsertedJson.get("TaxLastMoney").toString())) {
-                        depotItem.setTaxlastmoney(tempInsertedJson.getDouble("TaxLastMoney"));
+                        depotItem.setTaxlastmoney(tempInsertedJson.getBigDecimal("TaxLastMoney"));
                     }
                     if (tempInsertedJson.get("OtherField1") != null) {
                         depotItem.setOtherfield1(tempInsertedJson.getString("OtherField1"));
@@ -304,10 +305,10 @@ public class DepotItemService {
                     depotItem.setMaterialid(tempUpdatedJson.getLong("MaterialId"));
                     depotItem.setMunit(tempUpdatedJson.getString("Unit"));
                     if (!StringUtil.isEmpty(tempUpdatedJson.get("OperNumber").toString())) {
-                        depotItem.setOpernumber(tempUpdatedJson.getDouble("OperNumber"));
+                        depotItem.setOpernumber(tempUpdatedJson.getBigDecimal("OperNumber"));
                         try {
                             String Unit = tempUpdatedJson.get("Unit").toString();
-                            Double oNumber = tempUpdatedJson.getDouble("OperNumber");
+                            BigDecimal oNumber = tempUpdatedJson.getBigDecimal("OperNumber");
                             Long mId = Long.parseLong(tempUpdatedJson.get("MaterialId").toString());
                             //以下进行单位换算
                             String UnitName = findUnitName(mId); //查询计量单位名称
@@ -320,7 +321,7 @@ public class DepotItemService {
                                 if (Unit.equals(basicUnit)) { //如果等于基础单位
                                     depotItem.setBasicnumber(oNumber); //数量一致
                                 } else if (Unit.equals(otherUnit)) { //如果等于副单位
-                                    depotItem.setBasicnumber(oNumber * ratio); //数量乘以比例
+                                    depotItem.setBasicnumber(oNumber.multiply(new BigDecimal(ratio))); //数量乘以比例
                                 }
                             } else {
                                 depotItem.setBasicnumber(oNumber); //其他情况
@@ -330,13 +331,13 @@ public class DepotItemService {
                         }
                     }
                     if (!StringUtil.isEmpty(tempUpdatedJson.get("UnitPrice").toString())) {
-                        depotItem.setUnitprice(tempUpdatedJson.getDouble("UnitPrice"));
+                        depotItem.setUnitprice(tempUpdatedJson.getBigDecimal("UnitPrice"));
                     }
                     if (!StringUtil.isEmpty(tempUpdatedJson.get("TaxUnitPrice").toString())) {
-                        depotItem.setTaxunitprice(tempUpdatedJson.getDouble("TaxUnitPrice"));
+                        depotItem.setTaxunitprice(tempUpdatedJson.getBigDecimal("TaxUnitPrice"));
                     }
                     if (!StringUtil.isEmpty(tempUpdatedJson.get("AllPrice").toString())) {
-                        depotItem.setAllprice(tempUpdatedJson.getDouble("AllPrice"));
+                        depotItem.setAllprice(tempUpdatedJson.getBigDecimal("AllPrice"));
                     }
                     depotItem.setRemark(tempUpdatedJson.getString("Remark"));
                     if (tempUpdatedJson.get("DepotId") != null && !StringUtil.isEmpty(tempUpdatedJson.get("DepotId").toString())) {
@@ -346,13 +347,13 @@ public class DepotItemService {
                         depotItem.setAnotherdepotid(tempUpdatedJson.getLong("AnotherDepotId"));
                     }
                     if (!StringUtil.isEmpty(tempUpdatedJson.get("TaxRate").toString())) {
-                        depotItem.setTaxrate(tempUpdatedJson.getDouble("TaxRate"));
+                        depotItem.setTaxrate(tempUpdatedJson.getBigDecimal("TaxRate"));
                     }
                     if (!StringUtil.isEmpty(tempUpdatedJson.get("TaxMoney").toString())) {
-                        depotItem.setTaxmoney(tempUpdatedJson.getDouble("TaxMoney"));
+                        depotItem.setTaxmoney(tempUpdatedJson.getBigDecimal("TaxMoney"));
                     }
                     if (!StringUtil.isEmpty(tempUpdatedJson.get("TaxLastMoney").toString())) {
-                        depotItem.setTaxlastmoney(tempUpdatedJson.getDouble("TaxLastMoney"));
+                        depotItem.setTaxlastmoney(tempUpdatedJson.getBigDecimal("TaxLastMoney"));
                     }
                     depotItem.setOtherfield1(tempUpdatedJson.getString("OtherField1"));
                     depotItem.setOtherfield2(tempUpdatedJson.getString("OtherField2"));

@@ -18,6 +18,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -270,19 +271,19 @@ public class MaterialController {
             for (int i = 1; i < src.getRows(); i++) {
                 Material m = new Material();
                 m.setName(ExcelUtils.getContent(src, i, 0));
-                m.setCategoryid(1l); //根目录
+                m.setCategoryid(1L); //根目录
                 m.setModel(ExcelUtils.getContent(src, i, 2));
                 String safetyStock = ExcelUtils.getContent(src, i, 3);
-                m.setSafetystock(parseDoubleEx(safetyStock));
+                m.setSafetystock(parseBigDecimalEx(safetyStock));
                 m.setUnit(ExcelUtils.getContent(src, i, 4));
                 String retailprice = ExcelUtils.getContent(src, i, 5);
-                m.setRetailprice(parseDoubleEx(retailprice));
+                m.setRetailprice(parseBigDecimalEx(retailprice));
                 String lowPrice = ExcelUtils.getContent(src, i, 6);
-                m.setLowprice(parseDoubleEx(lowPrice));
+                m.setLowprice(parseBigDecimalEx(lowPrice));
                 String presetpriceone = ExcelUtils.getContent(src, i, 7);
-                m.setPresetpriceone(parseDoubleEx(presetpriceone));
+                m.setPresetpriceone(parseBigDecimalEx(presetpriceone));
                 String presetpricetwo = ExcelUtils.getContent(src, i, 8);
-                m.setPresetpricetwo(parseDoubleEx(presetpricetwo));
+                m.setPresetpricetwo(parseBigDecimalEx(presetpricetwo));
                 m.setRemark(ExcelUtils.getContent(src, i, 9));
                 String enabled = ExcelUtils.getContent(src, i, 10);
                 m.setEnabled(enabled.equals("启用")? true: false);
@@ -299,9 +300,9 @@ public class MaterialController {
         response.sendRedirect("../pages/materials/material.html");
     }
 
-    public Double parseDoubleEx(String str){
+    public BigDecimal parseBigDecimalEx(String str){
         if(!StringUtil.isEmpty(str)) {
-            return Double.parseDouble(str);
+            return  new BigDecimal(str);
         } else {
             return null;
         }

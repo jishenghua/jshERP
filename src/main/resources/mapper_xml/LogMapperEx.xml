@@ -18,10 +18,10 @@
             and status=${status}
         </if>
         <if test="beginTime != null">
-            and createtime gt;= '%${beginTime}%'
+            and createtime &gt;= '%${beginTime}%'
         </if>
         <if test="endTime != null">
-            and createtime lt;= '%${endTime}%'
+            and createtime &lt;= '%${endTime}%'
         </if>
         <if test="contentdetails != null">
             and contentdetails like '%${contentdetails}%'
@@ -48,12 +48,12 @@
         <if test="status != null">
             and status = ${status}
         </if>
-        <if test="beginTime != null">
-            and createtime &gt;= '${beginTime}'
-        </if>
-        <if test="endTime != null">
-            and createtime &lt;= '${endTime}'
-        </if>
+        <if test="beginTime != null"><![CDATA[
+            and createtime >= '${beginTime}'
+        ]]></if>
+        <if test="endTime != null"><![CDATA[
+            and createtime <= '${endTime}'
+        ]]></if>
         <if test="contentdetails != null">
             and contentdetails like '%${contentdetails}%'
         </if>

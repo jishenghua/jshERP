@@ -1,17 +1,19 @@
 package com.jsh.erp.datasource.vo;
 
 
+import java.math.BigDecimal;
+
 public class DepotHeadVo4StatementAccount {
 
     private String number;
 
     private String type;
 
-    private Double discountLastMoney;
+    private BigDecimal discountLastMoney;
 
-    private Double changeAmount;
+    private BigDecimal changeAmount;
 
-    private Double allPrice;
+    private BigDecimal allPrice;
 
     private String supplierName;
 
@@ -33,27 +35,27 @@ public class DepotHeadVo4StatementAccount {
         this.type = type;
     }
 
-    public Double getDiscountLastMoney() {
+    public BigDecimal getDiscountLastMoney() {
         return discountLastMoney;
     }
 
-    public void setDiscountLastMoney(Double discountLastMoney) {
+    public void setDiscountLastMoney(BigDecimal discountLastMoney) {
         this.discountLastMoney = discountLastMoney;
     }
 
-    public Double getChangeAmount() {
+    public BigDecimal getChangeAmount() {
         return changeAmount;
     }
 
-    public void setChangeAmount(Double changeAmount) {
+    public void setChangeAmount(BigDecimal changeAmount) {
         this.changeAmount = changeAmount;
     }
 
-    public Double getAllPrice() {
+    public BigDecimal getAllPrice() {
         return allPrice;
     }
 
-    public void setAllPrice(Double allPrice) {
+    public void setAllPrice(BigDecimal allPrice) {
         this.allPrice = allPrice;
     }
 

@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.List;
 
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
@@ -108,13 +109,13 @@ public class AccountItemService {
                         accountItem.setInoutitemid(tempInsertedJson.getLong("InOutItemId"));
                     }
                     if (tempInsertedJson.get("EachAmount") != null && !tempInsertedJson.get("EachAmount").equals("")) {
-                        Double eachAmount = tempInsertedJson.getDouble("EachAmount");
+                        BigDecimal eachAmount = tempInsertedJson.getBigDecimal("EachAmount");
                         if (listType.equals("付款")) {
-                            eachAmount = 0 - eachAmount;
+                            eachAmount = BigDecimal.ZERO.subtract(eachAmount);
                         }
                         accountItem.setEachamount(eachAmount);
                     } else {
-                        accountItem.setEachamount(0.0);
+                        accountItem.setEachamount(BigDecimal.ZERO);
                     }
                     accountItem.setRemark(tempInsertedJson.getString("Remark"));
                     this.insertAccountItemWithObj(accountItem);
@@ -139,13 +140,13 @@ public class AccountItemService {
                         accountItem.setInoutitemid(tempUpdatedJson.getLong("InOutItemId"));
                     }
                     if (tempUpdatedJson.get("EachAmount") != null && !tempUpdatedJson.get("EachAmount").equals("")) {
-                        Double eachAmount = tempUpdatedJson.getDouble("EachAmount");
+                        BigDecimal eachAmount = tempUpdatedJson.getBigDecimal("EachAmount");
                         if (listType.equals("付款")) {
-                            eachAmount = 0 - eachAmount;
+                            eachAmount = BigDecimal.ZERO.subtract(eachAmount);
                         }
                         accountItem.setEachamount(eachAmount);
                     } else {
-                        accountItem.setEachamount(0.0);
+                        accountItem.setEachamount(BigDecimal.ZERO);
                     }
                     accountItem.setRemark(tempUpdatedJson.getString("Remark"));
                     this.updateAccountItemWithObj(accountItem);

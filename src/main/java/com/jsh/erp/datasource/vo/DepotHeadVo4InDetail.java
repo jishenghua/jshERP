@@ -1,6 +1,7 @@
 package com.jsh.erp.datasource.vo;
 
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class DepotHeadVo4InDetail {
@@ -11,11 +12,11 @@ public class DepotHeadVo4InDetail {
 
     private String Model;
 
-    private Double UnitPrice;
+    private BigDecimal UnitPrice;
 
-    private Double OperNumber;
+    private BigDecimal OperNumber;
 
-    private Double AllPrice;
+    private BigDecimal AllPrice;
 
     private String SName;
 
@@ -49,27 +50,27 @@ public class DepotHeadVo4InDetail {
         Model = model;
     }
 
-    public Double getUnitPrice() {
+    public BigDecimal getUnitPrice() {
         return UnitPrice;
     }
 
-    public void setUnitPrice(Double unitPrice) {
+    public void setUnitPrice(BigDecimal unitPrice) {
         UnitPrice = unitPrice;
     }
 
-    public Double getOperNumber() {
+    public BigDecimal getOperNumber() {
         return OperNumber;
     }
 
-    public void setOperNumber(Double operNumber) {
+    public void setOperNumber(BigDecimal operNumber) {
         OperNumber = operNumber;
     }
 
-    public Double getAllPrice() {
+    public BigDecimal getAllPrice() {
         return AllPrice;
     }
 
-    public void setAllPrice(Double allPrice) {
+    public void setAllPrice(BigDecimal allPrice) {
         AllPrice = allPrice;
     }
 

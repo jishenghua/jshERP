@@ -10,19 +10,19 @@
     <result column="HeaderId" jdbcType="BIGINT" property="headerid" />
     <result column="MaterialId" jdbcType="BIGINT" property="materialid" />
     <result column="MUnit" jdbcType="VARCHAR" property="munit" />
-    <result column="OperNumber" jdbcType="DOUBLE" property="opernumber" />
-    <result column="BasicNumber" jdbcType="DOUBLE" property="basicnumber" />
-    <result column="UnitPrice" jdbcType="DOUBLE" property="unitprice" />
-    <result column="TaxUnitPrice" jdbcType="DOUBLE" property="taxunitprice" />
-    <result column="AllPrice" jdbcType="DOUBLE" property="allprice" />
+    <result column="OperNumber" jdbcType="DECIMAL" property="opernumber" />
+    <result column="BasicNumber" jdbcType="DECIMAL" property="basicnumber" />
+    <result column="UnitPrice" jdbcType="DECIMAL" property="unitprice" />
+    <result column="TaxUnitPrice" jdbcType="DECIMAL" property="taxunitprice" />
+    <result column="AllPrice" jdbcType="DECIMAL" property="allprice" />
     <result column="Remark" jdbcType="VARCHAR" property="remark" />
     <result column="Img" jdbcType="VARCHAR" property="img" />
-    <result column="Incidentals" jdbcType="DOUBLE" property="incidentals" />
+    <result column="Incidentals" jdbcType="DECIMAL" property="incidentals" />
     <result column="DepotId" jdbcType="BIGINT" property="depotid" />
     <result column="AnotherDepotId" jdbcType="BIGINT" property="anotherdepotid" />
-    <result column="TaxRate" jdbcType="DOUBLE" property="taxrate" />
-    <result column="TaxMoney" jdbcType="DOUBLE" property="taxmoney" />
-    <result column="TaxLastMoney" jdbcType="DOUBLE" property="taxlastmoney" />
+    <result column="TaxRate" jdbcType="DECIMAL" property="taxrate" />
+    <result column="TaxMoney" jdbcType="DECIMAL" property="taxmoney" />
+    <result column="TaxLastMoney" jdbcType="DECIMAL" property="taxlastmoney" />
     <result column="OtherField1" jdbcType="VARCHAR" property="otherfield1" />
     <result column="OtherField2" jdbcType="VARCHAR" property="otherfield2" />
     <result column="OtherField3" jdbcType="VARCHAR" property="otherfield3" />
@@ -165,11 +165,11 @@
       OtherField2, OtherField3, OtherField4, 
       OtherField5, MType)
     values (#{id,jdbcType=BIGINT}, #{headerid,jdbcType=BIGINT}, #{materialid,jdbcType=BIGINT}, 
-      #{munit,jdbcType=VARCHAR}, #{opernumber,jdbcType=DOUBLE}, #{basicnumber,jdbcType=DOUBLE}, 
-      #{unitprice,jdbcType=DOUBLE}, #{taxunitprice,jdbcType=DOUBLE}, #{allprice,jdbcType=DOUBLE}, 
-      #{remark,jdbcType=VARCHAR}, #{img,jdbcType=VARCHAR}, #{incidentals,jdbcType=DOUBLE}, 
-      #{depotid,jdbcType=BIGINT}, #{anotherdepotid,jdbcType=BIGINT}, #{taxrate,jdbcType=DOUBLE}, 
-      #{taxmoney,jdbcType=DOUBLE}, #{taxlastmoney,jdbcType=DOUBLE}, #{otherfield1,jdbcType=VARCHAR}, 
+      #{munit,jdbcType=VARCHAR}, #{opernumber,jdbcType=DECIMAL}, #{basicnumber,jdbcType=DECIMAL}, 
+      #{unitprice,jdbcType=DECIMAL}, #{taxunitprice,jdbcType=DECIMAL}, #{allprice,jdbcType=DECIMAL}, 
+      #{remark,jdbcType=VARCHAR}, #{img,jdbcType=VARCHAR}, #{incidentals,jdbcType=DECIMAL}, 
+      #{depotid,jdbcType=BIGINT}, #{anotherdepotid,jdbcType=BIGINT}, #{taxrate,jdbcType=DECIMAL}, 
+      #{taxmoney,jdbcType=DECIMAL}, #{taxlastmoney,jdbcType=DECIMAL}, #{otherfield1,jdbcType=VARCHAR}, 
       #{otherfield2,jdbcType=VARCHAR}, #{otherfield3,jdbcType=VARCHAR}, #{otherfield4,jdbcType=VARCHAR}, 
       #{otherfield5,jdbcType=VARCHAR}, #{mtype,jdbcType=VARCHAR})
   </insert>
@@ -264,19 +264,19 @@
         #{munit,jdbcType=VARCHAR},
       </if>
       <if test="opernumber != null">
-        #{opernumber,jdbcType=DOUBLE},
+        #{opernumber,jdbcType=DECIMAL},
       </if>
       <if test="basicnumber != null">
-        #{basicnumber,jdbcType=DOUBLE},
+        #{basicnumber,jdbcType=DECIMAL},
       </if>
       <if test="unitprice != null">
-        #{unitprice,jdbcType=DOUBLE},
+        #{unitprice,jdbcType=DECIMAL},
       </if>
       <if test="taxunitprice != null">
-        #{taxunitprice,jdbcType=DOUBLE},
+        #{taxunitprice,jdbcType=DECIMAL},
       </if>
       <if test="allprice != null">
-        #{allprice,jdbcType=DOUBLE},
+        #{allprice,jdbcType=DECIMAL},
       </if>
       <if test="remark != null">
         #{remark,jdbcType=VARCHAR},
@@ -285,7 +285,7 @@
         #{img,jdbcType=VARCHAR},
       </if>
       <if test="incidentals != null">
-        #{incidentals,jdbcType=DOUBLE},
+        #{incidentals,jdbcType=DECIMAL},
       </if>
       <if test="depotid != null">
         #{depotid,jdbcType=BIGINT},
@@ -294,13 +294,13 @@
         #{anotherdepotid,jdbcType=BIGINT},
       </if>
       <if test="taxrate != null">
-        #{taxrate,jdbcType=DOUBLE},
+        #{taxrate,jdbcType=DECIMAL},
       </if>
       <if test="taxmoney != null">
-        #{taxmoney,jdbcType=DOUBLE},
+        #{taxmoney,jdbcType=DECIMAL},
       </if>
       <if test="taxlastmoney != null">
-        #{taxlastmoney,jdbcType=DOUBLE},
+        #{taxlastmoney,jdbcType=DECIMAL},
       </if>
       <if test="otherfield1 != null">
         #{otherfield1,jdbcType=VARCHAR},
@@ -352,19 +352,19 @@
         MUnit = #{record.munit,jdbcType=VARCHAR},
       </if>
       <if test="record.opernumber != null">
-        OperNumber = #{record.opernumber,jdbcType=DOUBLE},
+        OperNumber = #{record.opernumber,jdbcType=DECIMAL},
       </if>
       <if test="record.basicnumber != null">
-        BasicNumber = #{record.basicnumber,jdbcType=DOUBLE},
+        BasicNumber = #{record.basicnumber,jdbcType=DECIMAL},
       </if>
       <if test="record.unitprice != null">
-        UnitPrice = #{record.unitprice,jdbcType=DOUBLE},
+        UnitPrice = #{record.unitprice,jdbcType=DECIMAL},
       </if>
       <if test="record.taxunitprice != null">
-        TaxUnitPrice = #{record.taxunitprice,jdbcType=DOUBLE},
+        TaxUnitPrice = #{record.taxunitprice,jdbcType=DECIMAL},
       </if>
       <if test="record.allprice != null">
-        AllPrice = #{record.allprice,jdbcType=DOUBLE},
+        AllPrice = #{record.allprice,jdbcType=DECIMAL},
       </if>
       <if test="record.remark != null">
         Remark = #{record.remark,jdbcType=VARCHAR},
@@ -373,7 +373,7 @@
         Img = #{record.img,jdbcType=VARCHAR},
       </if>
       <if test="record.incidentals != null">
-        Incidentals = #{record.incidentals,jdbcType=DOUBLE},
+        Incidentals = #{record.incidentals,jdbcType=DECIMAL},
       </if>
       <if test="record.depotid != null">
         DepotId = #{record.depotid,jdbcType=BIGINT},
@@ -382,13 +382,13 @@
         AnotherDepotId = #{record.anotherdepotid,jdbcType=BIGINT},
       </if>
       <if test="record.taxrate != null">
-        TaxRate = #{record.taxrate,jdbcType=DOUBLE},
+        TaxRate = #{record.taxrate,jdbcType=DECIMAL},
       </if>
       <if test="record.taxmoney != null">
-        TaxMoney = #{record.taxmoney,jdbcType=DOUBLE},
+        TaxMoney = #{record.taxmoney,jdbcType=DECIMAL},
       </if>
       <if test="record.taxlastmoney != null">
-        TaxLastMoney = #{record.taxlastmoney,jdbcType=DOUBLE},
+        TaxLastMoney = #{record.taxlastmoney,jdbcType=DECIMAL},
       </if>
       <if test="record.otherfield1 != null">
         OtherField1 = #{record.otherfield1,jdbcType=VARCHAR},
@@ -423,19 +423,19 @@
       HeaderId = #{record.headerid,jdbcType=BIGINT},
       MaterialId = #{record.materialid,jdbcType=BIGINT},
       MUnit = #{record.munit,jdbcType=VARCHAR},
-      OperNumber = #{record.opernumber,jdbcType=DOUBLE},
-      BasicNumber = #{record.basicnumber,jdbcType=DOUBLE},
-      UnitPrice = #{record.unitprice,jdbcType=DOUBLE},
-      TaxUnitPrice = #{record.taxunitprice,jdbcType=DOUBLE},
-      AllPrice = #{record.allprice,jdbcType=DOUBLE},
+      OperNumber = #{record.opernumber,jdbcType=DECIMAL},
+      BasicNumber = #{record.basicnumber,jdbcType=DECIMAL},
+      UnitPrice = #{record.unitprice,jdbcType=DECIMAL},
+      TaxUnitPrice = #{record.taxunitprice,jdbcType=DECIMAL},
+      AllPrice = #{record.allprice,jdbcType=DECIMAL},
       Remark = #{record.remark,jdbcType=VARCHAR},
       Img = #{record.img,jdbcType=VARCHAR},
-      Incidentals = #{record.incidentals,jdbcType=DOUBLE},
+      Incidentals = #{record.incidentals,jdbcType=DECIMAL},
       DepotId = #{record.depotid,jdbcType=BIGINT},
       AnotherDepotId = #{record.anotherdepotid,jdbcType=BIGINT},
-      TaxRate = #{record.taxrate,jdbcType=DOUBLE},
-      TaxMoney = #{record.taxmoney,jdbcType=DOUBLE},
-      TaxLastMoney = #{record.taxlastmoney,jdbcType=DOUBLE},
+      TaxRate = #{record.taxrate,jdbcType=DECIMAL},
+      TaxMoney = #{record.taxmoney,jdbcType=DECIMAL},
+      TaxLastMoney = #{record.taxlastmoney,jdbcType=DECIMAL},
       OtherField1 = #{record.otherfield1,jdbcType=VARCHAR},
       OtherField2 = #{record.otherfield2,jdbcType=VARCHAR},
       OtherField3 = #{record.otherfield3,jdbcType=VARCHAR},
@@ -463,19 +463,19 @@
         MUnit = #{munit,jdbcType=VARCHAR},
       </if>
       <if test="opernumber != null">
-        OperNumber = #{opernumber,jdbcType=DOUBLE},
+        OperNumber = #{opernumber,jdbcType=DECIMAL},
       </if>
       <if test="basicnumber != null">
-        BasicNumber = #{basicnumber,jdbcType=DOUBLE},
+        BasicNumber = #{basicnumber,jdbcType=DECIMAL},
       </if>
       <if test="unitprice != null">
-        UnitPrice = #{unitprice,jdbcType=DOUBLE},
+        UnitPrice = #{unitprice,jdbcType=DECIMAL},
       </if>
       <if test="taxunitprice != null">
-        TaxUnitPrice = #{taxunitprice,jdbcType=DOUBLE},
+        TaxUnitPrice = #{taxunitprice,jdbcType=DECIMAL},
       </if>
       <if test="allprice != null">
-        AllPrice = #{allprice,jdbcType=DOUBLE},
+        AllPrice = #{allprice,jdbcType=DECIMAL},
       </if>
       <if test="remark != null">
         Remark = #{remark,jdbcType=VARCHAR},
@@ -484,7 +484,7 @@
         Img = #{img,jdbcType=VARCHAR},
       </if>
       <if test="incidentals != null">
-        Incidentals = #{incidentals,jdbcType=DOUBLE},
+        Incidentals = #{incidentals,jdbcType=DECIMAL},
       </if>
       <if test="depotid != null">
         DepotId = #{depotid,jdbcType=BIGINT},
@@ -493,13 +493,13 @@
         AnotherDepotId = #{anotherdepotid,jdbcType=BIGINT},
       </if>
       <if test="taxrate != null">
-        TaxRate = #{taxrate,jdbcType=DOUBLE},
+        TaxRate = #{taxrate,jdbcType=DECIMAL},
       </if>
       <if test="taxmoney != null">
-        TaxMoney = #{taxmoney,jdbcType=DOUBLE},
+        TaxMoney = #{taxmoney,jdbcType=DECIMAL},
       </if>
       <if test="taxlastmoney != null">
-        TaxLastMoney = #{taxlastmoney,jdbcType=DOUBLE},
+        TaxLastMoney = #{taxlastmoney,jdbcType=DECIMAL},
       </if>
       <if test="otherfield1 != null">
         OtherField1 = #{otherfield1,jdbcType=VARCHAR},
@@ -531,19 +531,19 @@
     set HeaderId = #{headerid,jdbcType=BIGINT},
       MaterialId = #{materialid,jdbcType=BIGINT},
       MUnit = #{munit,jdbcType=VARCHAR},
-      OperNumber = #{opernumber,jdbcType=DOUBLE},
-      BasicNumber = #{basicnumber,jdbcType=DOUBLE},
-      UnitPrice = #{unitprice,jdbcType=DOUBLE},
-      TaxUnitPrice = #{taxunitprice,jdbcType=DOUBLE},
-      AllPrice = #{allprice,jdbcType=DOUBLE},
+      OperNumber = #{opernumber,jdbcType=DECIMAL},
+      BasicNumber = #{basicnumber,jdbcType=DECIMAL},
+      UnitPrice = #{unitprice,jdbcType=DECIMAL},
+      TaxUnitPrice = #{taxunitprice,jdbcType=DECIMAL},
+      AllPrice = #{allprice,jdbcType=DECIMAL},
       Remark = #{remark,jdbcType=VARCHAR},
       Img = #{img,jdbcType=VARCHAR},
-      Incidentals = #{incidentals,jdbcType=DOUBLE},
+      Incidentals = #{incidentals,jdbcType=DECIMAL},
       DepotId = #{depotid,jdbcType=BIGINT},
       AnotherDepotId = #{anotherdepotid,jdbcType=BIGINT},
-      TaxRate = #{taxrate,jdbcType=DOUBLE},
-      TaxMoney = #{taxmoney,jdbcType=DOUBLE},
-      TaxLastMoney = #{taxlastmoney,jdbcType=DOUBLE},
+      TaxRate = #{taxrate,jdbcType=DECIMAL},
+      TaxMoney = #{taxmoney,jdbcType=DECIMAL},
+      TaxLastMoney = #{taxlastmoney,jdbcType=DECIMAL},
       OtherField1 = #{otherfield1,jdbcType=VARCHAR},
       OtherField2 = #{otherfield2,jdbcType=VARCHAR},
       OtherField3 = #{otherfield3,jdbcType=VARCHAR},

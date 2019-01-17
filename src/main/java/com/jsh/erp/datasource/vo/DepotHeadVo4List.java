@@ -1,5 +1,6 @@
 package com.jsh.erp.datasource.vo;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class DepotHeadVo4List {
@@ -28,11 +29,11 @@ public class DepotHeadVo4List {
 
     private Long accountid;
 
-    private Double changeamount;
+    private BigDecimal changeamount;
 
     private Long allocationprojectid;
 
-    private Double totalprice;
+    private BigDecimal totalprice;
 
     private String paytype;
 
@@ -44,13 +45,13 @@ public class DepotHeadVo4List {
 
     private String accountmoneylist;
 
-    private Double discount;
+    private BigDecimal discount;
 
-    private Double discountmoney;
+    private BigDecimal discountmoney;
 
-    private Double discountlastmoney;
+    private BigDecimal discountlastmoney;
 
-    private Double othermoney;
+    private BigDecimal othermoney;
 
     private String othermoneylist;
 
@@ -168,11 +169,11 @@ public class DepotHeadVo4List {
         this.accountid = accountid;
     }
 
-    public Double getChangeamount() {
+    public BigDecimal getChangeamount() {
         return changeamount;
     }
 
-    public void setChangeamount(Double changeamount) {
+    public void setChangeamount(BigDecimal changeamount) {
         this.changeamount = changeamount;
     }
 
@@ -184,11 +185,11 @@ public class DepotHeadVo4List {
         this.allocationprojectid = allocationprojectid;
     }
 
-    public Double getTotalprice() {
+    public BigDecimal getTotalprice() {
         return totalprice;
     }
 
-    public void setTotalprice(Double totalprice) {
+    public void setTotalprice(BigDecimal totalprice) {
         this.totalprice = totalprice;
     }
 
@@ -232,35 +233,35 @@ public class DepotHeadVo4List {
         this.accountmoneylist = accountmoneylist;
     }
 
-    public Double getDiscount() {
+    public BigDecimal getDiscount() {
         return discount;
     }
 
-    public void setDiscount(Double discount) {
+    public void setDiscount(BigDecimal discount) {
         this.discount = discount;
     }
 
-    public Double getDiscountmoney() {
+    public BigDecimal getDiscountmoney() {
         return discountmoney;
     }
 
-    public void setDiscountmoney(Double discountmoney) {
+    public void setDiscountmoney(BigDecimal discountmoney) {
         this.discountmoney = discountmoney;
     }
 
-    public Double getDiscountlastmoney() {
+    public BigDecimal getDiscountlastmoney() {
         return discountlastmoney;
     }
 
-    public void setDiscountlastmoney(Double discountlastmoney) {
+    public void setDiscountlastmoney(BigDecimal discountlastmoney) {
         this.discountlastmoney = discountlastmoney;
     }
 
-    public Double getOthermoney() {
+    public BigDecimal getOthermoney() {
         return othermoney;
     }
 
-    public void setOthermoney(Double othermoney) {
+    public void setOthermoney(BigDecimal othermoney) {
         this.othermoney = othermoney;
     }
 

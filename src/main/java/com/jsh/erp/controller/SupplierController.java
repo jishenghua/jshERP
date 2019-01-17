@@ -18,6 +18,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,7 +49,7 @@ public class SupplierController {
      */
     @PostMapping(value = "/updateAdvanceIn")
     public String updateAdvanceIn(@RequestParam("supplierId") Long supplierId,
-                                            @RequestParam("advanceIn") Double advanceIn,
+                                            @RequestParam("advanceIn") BigDecimal advanceIn,
                                             HttpServletRequest request) {
         Map<String, Object> objectMap = new HashMap<String, Object>();
         int res = supplierService.updateAdvanceIn(supplierId, advanceIn);
@@ -396,9 +397,9 @@ public class SupplierController {
                 s.setContacts(ExcelUtils.getContent(src, i, 2));
                 s.setPhonenum(ExcelUtils.getContent(src, i, 3));
                 s.setEmail(ExcelUtils.getContent(src, i, 4));
-                s.setAdvancein(parseDoubleEx(ExcelUtils.getContent(src, i, 5)));
-                s.setBeginneedget(parseDoubleEx(ExcelUtils.getContent(src, i, 6)));
-                s.setBeginneedpay(parseDoubleEx(ExcelUtils.getContent(src, i, 7)));
+                s.setAdvancein(parseBigDecimalEx(ExcelUtils.getContent(src, i, 5)));
+                s.setBeginneedget(parseBigDecimalEx(ExcelUtils.getContent(src, i, 6)));
+                s.setBeginneedpay(parseBigDecimalEx(ExcelUtils.getContent(src, i, 7)));
                 s.setDescription(ExcelUtils.getContent(src, i, 8));
                 s.setFax(ExcelUtils.getContent(src, i, 9));
                 s.setTelephone(ExcelUtils.getContent(src, i, 10));
@@ -406,7 +407,7 @@ public class SupplierController {
                 s.setTaxnum(ExcelUtils.getContent(src, i, 12));
                 s.setBankname(ExcelUtils.getContent(src, i, 13));
                 s.setAccountnumber(ExcelUtils.getContent(src, i, 14));
-                s.setTaxrate(parseDoubleEx(ExcelUtils.getContent(src, i, 15)));
+                s.setTaxrate(parseBigDecimalEx(ExcelUtils.getContent(src, i, 15)));
                 String enabled = ExcelUtils.getContent(src, i, 16);
                 s.setEnabled(enabled.equals("启用")? true: false);
                 s.setIsystem(Byte.parseByte("1"));
@@ -423,9 +424,9 @@ public class SupplierController {
         return null;
     }
 
-    public Double parseDoubleEx(String str){
+    public BigDecimal parseBigDecimalEx(String str){
         if(!StringUtil.isEmpty(str)) {
-            return Double.parseDouble(str);
+            return new BigDecimal(str);
         } else {
             return null;
         }

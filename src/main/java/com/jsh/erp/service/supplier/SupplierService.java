@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,9 +76,9 @@ public class SupplierService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateAdvanceIn(Long supplierId, Double advanceIn){
+    public int updateAdvanceIn(Long supplierId, BigDecimal advanceIn){
         Supplier supplier = supplierMapper.selectByPrimaryKey(supplierId);
-        supplier.setAdvancein(supplier.getAdvancein() + advanceIn);  //增加预收款的金额，可能增加的是负值
+        supplier.setAdvancein(supplier.getAdvancein().add(advanceIn));  //增加预收款的金额，可能增加的是负值
         return supplierMapper.updateByPrimaryKeySelective(supplier);
     }
 

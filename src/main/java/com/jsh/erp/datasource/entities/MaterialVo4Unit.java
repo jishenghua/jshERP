@@ -1,5 +1,7 @@
 package com.jsh.erp.datasource.entities;
 
+import java.math.BigDecimal;
+
 public class MaterialVo4Unit {
 
     private Long id;
@@ -10,9 +12,9 @@ public class MaterialVo4Unit {
 
     private String mfrs;
 
-    private Double packing;
+    private BigDecimal packing;
 
-    private Double safetystock;
+    private BigDecimal safetystock;
 
     private String model;
 
@@ -24,13 +26,13 @@ public class MaterialVo4Unit {
 
     private String remark;
 
-    private Double retailprice;
+    private BigDecimal retailprice;
 
-    private Double lowprice;
+    private BigDecimal lowprice;
 
-    private Double presetpriceone;
+    private BigDecimal presetpriceone;
 
-    private Double presetpricetwo;
+    private BigDecimal presetpricetwo;
 
     private Long unitid;
 
@@ -86,19 +88,19 @@ public class MaterialVo4Unit {
         this.mfrs = mfrs;
     }
 
-    public Double getPacking() {
+    public BigDecimal getPacking() {
         return packing;
     }
 
-    public void setPacking(Double packing) {
+    public void setPacking(BigDecimal packing) {
         this.packing = packing;
     }
 
-    public Double getSafetystock() {
+    public BigDecimal getSafetystock() {
         return safetystock;
     }
 
-    public void setSafetystock(Double safetystock) {
+    public void setSafetystock(BigDecimal safetystock) {
         this.safetystock = safetystock;
     }
 
@@ -142,35 +144,35 @@ public class MaterialVo4Unit {
         this.remark = remark;
     }
 
-    public Double getRetailprice() {
+    public BigDecimal getRetailprice() {
         return retailprice;
     }
 
-    public void setRetailprice(Double retailprice) {
+    public void setRetailprice(BigDecimal retailprice) {
         this.retailprice = retailprice;
     }
 
-    public Double getLowprice() {
+    public BigDecimal getLowprice() {
         return lowprice;
     }
 
-    public void setLowprice(Double lowprice) {
+    public void setLowprice(BigDecimal lowprice) {
         this.lowprice = lowprice;
     }
 
-    public Double getPresetpriceone() {
+    public BigDecimal getPresetpriceone() {
         return presetpriceone;
     }
 
-    public void setPresetpriceone(Double presetpriceone) {
+    public void setPresetpriceone(BigDecimal presetpriceone) {
         this.presetpriceone = presetpriceone;
     }
 
-    public Double getPresetpricetwo() {
+    public BigDecimal getPresetpricetwo() {
         return presetpricetwo;
     }
 
-    public void setPresetpricetwo(Double presetpricetwo) {
+    public void setPresetpricetwo(BigDecimal presetpricetwo) {
         this.presetpricetwo = presetpricetwo;
     }
 

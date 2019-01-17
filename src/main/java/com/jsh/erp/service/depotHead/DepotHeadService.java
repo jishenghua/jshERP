@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -54,10 +55,10 @@ public class DepotHeadService {
                     dh.setOthermoneyitem(otherMoneyItemStr);
                 }
                 if(dh.getChangeamount() != null) {
-                    dh.setChangeamount(Math.abs(dh.getChangeamount()));
+                    dh.setChangeamount(dh.getChangeamount().abs());
                 }
                 if(dh.getTotalprice() != null) {
-                    dh.setTotalprice(Math.abs(dh.getTotalprice()));
+                    dh.setTotalprice(dh.getTotalprice().abs());
                 }
                 dh.setMaterialsList(findMaterialsListByHeaderId(dh.getId()));
                 resList.add(dh);
@@ -213,7 +214,7 @@ public class DepotHeadService {
         return depotHeadMapper.findStatementAccountCount(beginTime, endTime, organId, supType);
     }
 
-    public Double findAllMoney(Integer supplierId, String type, String subType, String mode, String endTime) {
+    public BigDecimal findAllMoney(Integer supplierId, String type, String subType, String mode, String endTime) {
         String modeName = "";
         if (mode.equals("实际")) {
             modeName = "ChangeAmount";
@@ -237,10 +238,10 @@ public class DepotHeadService {
                     dh.setOthermoneyitem(otherMoneyItemStr);
                 }
                 if(dh.getChangeamount() != null) {
-                    dh.setChangeamount(Math.abs(dh.getChangeamount()));
+                    dh.setChangeamount(dh.getChangeamount().abs());
                 }
                 if(dh.getTotalprice() != null) {
-                    dh.setTotalprice(Math.abs(dh.getTotalprice()));
+                    dh.setTotalprice(dh.getTotalprice().abs());
                 }
                 dh.setMaterialsList(findMaterialsListByHeaderId(dh.getId()));
                 resList.add(dh);

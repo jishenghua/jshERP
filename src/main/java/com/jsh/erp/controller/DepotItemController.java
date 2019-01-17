@@ -15,6 +15,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -152,13 +153,13 @@ public class DepotItemController {
         if (null != list) {
             for (DepotItemVo4Material di : list) {
                 JSONObject item = new JSONObject();
-                double prevSum = sumNumber("入库", pid, materialId, monthTime, true) - sumNumber("出库", pid, materialId, monthTime, true);
-                double InSum = sumNumber("入库", pid, materialId, monthTime, false);
-                double OutSum = sumNumber("出库", pid, materialId, monthTime, false);
+                BigDecimal prevSum = sumNumber("入库", pid, materialId, monthTime, true).subtract(sumNumber("出库", pid, materialId, monthTime, true));
+                BigDecimal InSum = sumNumber("入库", pid, materialId, monthTime, false);
+                BigDecimal OutSum = sumNumber("出库", pid, materialId, monthTime, false);
                 item.put("MaterialId", di.getMaterialid() == null ? "" : di.getMaterialid());
                 item.put("MaterialName", di.getMname());
                 item.put("MaterialModel", di.getMmodel());
-                item.put("thisSum", prevSum + InSum - OutSum);
+                item.put("thisSum", prevSum.add(InSum).subtract(OutSum));
                 dataArray.add(item);
             }
         }
@@ -425,12 +426,12 @@ public class DepotItemController {
             if (null != dataList) {
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
                     JSONObject item = new JSONObject();
-                    Double prevSum = sumNumber("入库", pid, diEx.getMId(), monthTime, true) - sumNumber("出库", pid, diEx.getMId(), monthTime, true);
-                    Double InSum = sumNumber("入库", pid, diEx.getMId(), monthTime, false);
-                    Double OutSum = sumNumber("出库", pid, diEx.getMId(), monthTime, false);
-                    Double prevPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, true) - sumPrice("出库", pid, diEx.getMId(), monthTime, true);
-                    Double InPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, false);
-                    Double OutPrice = sumPrice("出库", pid, diEx.getMId(), monthTime, false);
+                    BigDecimal prevSum = sumNumber("入库", pid, diEx.getMId(), monthTime, true).subtract(sumNumber("出库", pid, diEx.getMId(), monthTime, true));
+                    BigDecimal InSum = sumNumber("入库", pid, diEx.getMId(), monthTime, false);
+                    BigDecimal OutSum = sumNumber("出库", pid, diEx.getMId(), monthTime, false);
+                    BigDecimal prevPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, true).subtract(sumPrice("出库", pid, diEx.getMId(), monthTime, true));
+                    BigDecimal InPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, false);
+                    BigDecimal OutPrice = sumPrice("出库", pid, diEx.getMId(), monthTime, false);
                     item.put("MaterialName", diEx.getMName());
                     item.put("MaterialModel", diEx.getMColor());
                     //扩展信息
@@ -438,21 +439,21 @@ public class DepotItemController {
                     item.put("MaterialOther", materialOther);
                     item.put("MaterialColor", diEx.getMColor());
                     item.put("MaterialUnit", diEx.getMaterialUnit());
-                    Double unitPrice = 0.0;
-                    if (prevSum + InSum - OutSum != 0.0) {
-                        unitPrice = (prevPrice + InPrice - OutPrice) / (prevSum + InSum - OutSum);
+                    BigDecimal unitPrice = BigDecimal.ZERO;
+                    if ((prevSum .add(InSum).subtract(OutSum)).compareTo(BigDecimal.ZERO)!= 0) {
+                        unitPrice = (prevPrice.add(InPrice).subtract(OutPrice)).divide(prevSum.add(InSum).subtract(OutSum),2, BigDecimal.ROUND_HALF_UP);
                         /**
                          * 2019-01-15通过除法算出金额后，保留两位小数
                          * */
                         DecimalFormat    df   = new DecimalFormat("#.00");
-                        unitPrice= Double.parseDouble(df.format(unitPrice));
+                        unitPrice= new BigDecimal(df.format(unitPrice));
                     }
                     item.put("UnitPrice", unitPrice);
                     item.put("prevSum", prevSum);
                     item.put("InSum", InSum);
                     item.put("OutSum", OutSum);
-                    item.put("thisSum", prevSum + InSum - OutSum);
-                    item.put("thisAllPrice", prevPrice + InPrice - OutPrice);
+                    item.put("thisSum", prevSum.add(InSum).subtract(OutSum));
+                    item.put("thisAllPrice", prevPrice.add(InPrice).subtract(OutPrice));
                     dataArray.add(item);
                 }
             }
@@ -486,13 +487,13 @@ public class DepotItemController {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
             List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(headIds, materialIds, null, null);
-            Double thisAllPrice = 0.0;
+            BigDecimal thisAllPrice = BigDecimal.ZERO;
             if (null != dataList) {
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
-                    Double prevPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, true) - sumPrice("出库", pid, diEx.getMId(), monthTime, true);
-                    Double InPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, false);
-                    Double OutPrice = sumPrice("出库", pid, diEx.getMId(), monthTime, false);
-                    thisAllPrice = thisAllPrice + (prevPrice + InPrice - OutPrice);
+                    BigDecimal prevPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, true).subtract(sumPrice("出库", pid, diEx.getMId(), monthTime, true));
+                    BigDecimal InPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, false);
+                    BigDecimal OutPrice = sumPrice("出库", pid, diEx.getMId(), monthTime, false);
+                    thisAllPrice = thisAllPrice .add(prevPrice.add(InPrice).subtract(OutPrice));
                 }
             }
             map.put("totalCount", thisAllPrice);
@@ -537,10 +538,10 @@ public class DepotItemController {
             if (null != dataList) {
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
                     JSONObject item = new JSONObject();
-                    Double InSum = sumNumberBuyOrSale("入库", "采购", diEx.getMId(), monthTime);
-                    Double OutSum = sumNumberBuyOrSale("出库", "采购退货", diEx.getMId(), monthTime);
-                    Double InSumPrice = sumPriceBuyOrSale("入库", "采购", diEx.getMId(), monthTime);
-                    Double OutSumPrice = sumPriceBuyOrSale("出库", "采购退货", diEx.getMId(), monthTime);
+                    BigDecimal InSum = sumNumberBuyOrSale("入库", "采购", diEx.getMId(), monthTime);
+                    BigDecimal OutSum = sumNumberBuyOrSale("出库", "采购退货", diEx.getMId(), monthTime);
+                    BigDecimal InSumPrice = sumPriceBuyOrSale("入库", "采购", diEx.getMId(), monthTime);
+                    BigDecimal OutSumPrice = sumPriceBuyOrSale("出库", "采购退货", diEx.getMId(), monthTime);
                     item.put("MaterialName", diEx.getMName());
                     item.put("MaterialModel", diEx.getMModel());
                     //扩展信息
@@ -597,14 +598,14 @@ public class DepotItemController {
             if (null != dataList) {
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
                     JSONObject item = new JSONObject();
-                    Double OutSumRetail = sumNumberBuyOrSale("出库", "零售", diEx.getMId(), monthTime);
-                    Double OutSum = sumNumberBuyOrSale("出库", "销售", diEx.getMId(), monthTime);
-                    Double InSumRetail = sumNumberBuyOrSale("入库", "零售退货", diEx.getMId(), monthTime);
-                    Double InSum = sumNumberBuyOrSale("入库", "销售退货", diEx.getMId(), monthTime);
-                    Double OutSumRetailPrice = sumPriceBuyOrSale("出库", "零售", diEx.getMId(), monthTime);
-                    Double OutSumPrice = sumPriceBuyOrSale("出库", "销售", diEx.getMId(), monthTime);
-                    Double InSumRetailPrice = sumPriceBuyOrSale("入库", "零售退货", diEx.getMId(), monthTime);
-                    Double InSumPrice = sumPriceBuyOrSale("入库", "销售退货", diEx.getMId(), monthTime);
+                    BigDecimal OutSumRetail = sumNumberBuyOrSale("出库", "零售", diEx.getMId(), monthTime);
+                    BigDecimal OutSum = sumNumberBuyOrSale("出库", "销售", diEx.getMId(), monthTime);
+                    BigDecimal InSumRetail = sumNumberBuyOrSale("入库", "零售退货", diEx.getMId(), monthTime);
+                    BigDecimal InSum = sumNumberBuyOrSale("入库", "销售退货", diEx.getMId(), monthTime);
+                    BigDecimal OutSumRetailPrice = sumPriceBuyOrSale("出库", "零售", diEx.getMId(), monthTime);
+                    BigDecimal OutSumPrice = sumPriceBuyOrSale("出库", "销售", diEx.getMId(), monthTime);
+                    BigDecimal InSumRetailPrice = sumPriceBuyOrSale("入库", "零售退货", diEx.getMId(), monthTime);
+                    BigDecimal InSumPrice = sumPriceBuyOrSale("入库", "销售退货", diEx.getMId(), monthTime);
                     item.put("MaterialName", diEx.getMName());
                     item.put("MaterialModel", diEx.getMModel());
                     //扩展信息
@@ -612,10 +613,10 @@ public class DepotItemController {
                     item.put("MaterialOther", materialOther);
                     item.put("MaterialColor", diEx.getMColor());
                     item.put("MaterialUnit", diEx.getMaterialUnit());
-                    item.put("OutSum", OutSumRetail + OutSum);
-                    item.put("InSum", InSumRetail + InSum);
-                    item.put("OutSumPrice", OutSumRetailPrice + OutSumPrice);
-                    item.put("InSumPrice", InSumRetailPrice + InSumPrice);
+                    item.put("OutSum", OutSumRetail.add(OutSum));
+                    item.put("InSum", InSumRetail.add(InSum));
+                    item.put("OutSumPrice", OutSumRetailPrice.add(OutSumPrice));
+                    item.put("InSumPrice", InSumRetailPrice.add(InSumPrice));
                     dataArray.add(item);
                 }
             }
@@ -661,8 +662,8 @@ public class DepotItemController {
             if (null != dataList) {
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
                     JSONObject item = new JSONObject();
-                    Double InSum = sumNumberGift("礼品充值", pid, diEx.getMId(), "in");
-                    Double OutSum = sumNumberGift("礼品销售", pid, diEx.getMId(), "out");
+                    BigDecimal InSum = sumNumberGift("礼品充值", pid, diEx.getMId(), "in");
+                    BigDecimal OutSum = sumNumberGift("礼品销售", pid, diEx.getMId(), "out");
                     item.put("MaterialName", diEx.getMName());
                     item.put("MaterialModel", diEx.getMModel());
                     //扩展信息
@@ -670,7 +671,7 @@ public class DepotItemController {
                     item.put("MaterialOther", materialOther);
                     item.put("MaterialColor", diEx.getMColor());
                     item.put("MaterialUnit", diEx.getMaterialUnit());
-                    item.put("thisSum", InSum - OutSum);
+                    item.put("thisSum", InSum.subtract(OutSum));
                     dataArray.add(item);
                 }
             }
@@ -718,23 +719,23 @@ public class DepotItemController {
             if (null != dataList) {
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
                     String[] objs = new String[9];
-                    Double prevSum = sumNumber("入库", pid, diEx.getMId(), monthTime, true) - sumNumber("出库", pid, diEx.getMId(), monthTime, true);
-                    Double InSum = sumNumber("入库", pid, diEx.getMId(), monthTime, false);
-                    Double OutSum = sumNumber("出库", pid, diEx.getMId(), monthTime, false);
-                    Double prevPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, true) - sumPrice("出库", pid, diEx.getMId(), monthTime, true);
-                    Double InPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, false);
-                    Double OutPrice = sumPrice("出库", pid, diEx.getMId(), monthTime, false);
-                    Double unitPrice = 0.0;
-                    if (prevSum + InSum - OutSum != 0.0) {
-                        unitPrice = (prevPrice + InPrice - OutPrice) / (prevSum + InSum - OutSum);
+                    BigDecimal prevSum = sumNumber("入库", pid, diEx.getMId(), monthTime, true).subtract(sumNumber("出库", pid, diEx.getMId(), monthTime, true));
+                    BigDecimal InSum = sumNumber("入库", pid, diEx.getMId(), monthTime, false);
+                    BigDecimal OutSum = sumNumber("出库", pid, diEx.getMId(), monthTime, false);
+                    BigDecimal prevPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, true).subtract(sumPrice("出库", pid, diEx.getMId(), monthTime, true));
+                    BigDecimal InPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, false);
+                    BigDecimal OutPrice = sumPrice("出库", pid, diEx.getMId(), monthTime, false);
+                    BigDecimal unitPrice = BigDecimal.ZERO;
+                    if ((prevSum.add(InSum).subtract(OutSum)).compareTo(BigDecimal.ZERO) != 0) {
+                        unitPrice = (prevPrice.add(InPrice).subtract(OutPrice)).divide(prevSum.add(InSum).subtract(OutSum),2, BigDecimal.ROUND_HALF_UP);
                         /**
                          * 2019-01-15通过除法算出金额后，保留两位小数
                          * */
                         DecimalFormat    df   = new DecimalFormat("#.00");
-                        unitPrice= Double.parseDouble(df.format(unitPrice));
+                        unitPrice= new BigDecimal(df.format(unitPrice));
                     }
-                    Double thisSum = prevSum + InSum - OutSum;
-                    Double thisAllPrice = prevPrice + InPrice - OutPrice;
+                    BigDecimal thisSum = prevSum.add(InSum).subtract(OutSum);
+                    BigDecimal thisAllPrice = prevPrice.add(InPrice).subtract(OutPrice);
                     objs[0] = diEx.getMName().toString();
                     objs[1] = diEx.getMModel().toString();
                     objs[2] = diEx.getMaterialUnit().toString();
@@ -770,10 +771,10 @@ public class DepotItemController {
      * @param isPrev
      * @return
      */
-    public Double sumNumber(String type, Integer ProjectId, Long MId, String MonthTime, Boolean isPrev) {
-        Double sumNumber = 0.0;
+    public BigDecimal sumNumber(String type, Integer ProjectId, Long MId, String MonthTime, Boolean isPrev) {
+        BigDecimal sumNumber = BigDecimal.ZERO;
         try {
-            Double sum = depotItemService.findByType(type, ProjectId, MId, MonthTime, isPrev);
+            BigDecimal sum = depotItemService.findByType(type, ProjectId, MId, MonthTime, isPrev);
             if(sum != null) {
                 sumNumber = sum;
             }
@@ -792,10 +793,10 @@ public class DepotItemController {
      * @param isPrev
      * @return
      */
-    public Double sumPrice(String type, Integer ProjectId, Long MId, String MonthTime, Boolean isPrev) {
-        Double sumPrice = 0.0;
+    public BigDecimal sumPrice(String type, Integer ProjectId, Long MId, String MonthTime, Boolean isPrev) {
+        BigDecimal sumPrice = BigDecimal.ZERO;
         try {
-            Double sum = depotItemService.findPriceByType(type, ProjectId, MId, MonthTime, isPrev);
+            BigDecimal sum = depotItemService.findPriceByType(type, ProjectId, MId, MonthTime, isPrev);
             if(sum != null) {
                 sumPrice = sum;
             }
@@ -805,11 +806,11 @@ public class DepotItemController {
         return sumPrice;
     }
 
-    public Double sumNumberBuyOrSale(String type, String subType, Long MId, String MonthTime) {
-        Double sumNumber = 0.0;
+    public BigDecimal sumNumberBuyOrSale(String type, String subType, Long MId, String MonthTime) {
+        BigDecimal sumNumber = BigDecimal.ZERO;
         String sumType = "Number";
         try {
-            Double sum = depotItemService.buyOrSale(type, subType, MId, MonthTime, sumType);
+            BigDecimal sum = depotItemService.buyOrSale(type, subType, MId, MonthTime, sumType);
             if(sum != null) {
                 sumNumber = sum;
             }
@@ -819,11 +820,11 @@ public class DepotItemController {
         return sumNumber;
     }
 
-    public Double sumPriceBuyOrSale(String type, String subType, Long MId, String MonthTime) {
-        Double sumPrice = 0.0;
+    public BigDecimal sumPriceBuyOrSale(String type, String subType, Long MId, String MonthTime) {
+        BigDecimal sumPrice = BigDecimal.ZERO;
         String sumType = "Price";
         try {
-            Double sum = depotItemService.buyOrSale(type, subType, MId, MonthTime, sumType);
+            BigDecimal sum = depotItemService.buyOrSale(type, subType, MId, MonthTime, sumType);
             if(sum != null) {
                 sumPrice = sum;
             }
@@ -841,12 +842,12 @@ public class DepotItemController {
      * @param type
      * @return
      */
-    public Double sumNumberGift(String subType, Integer ProjectId, Long MId, String type) {
-        Double sumNumber = 0.0;
+    public BigDecimal sumNumberGift(String subType, Integer ProjectId, Long MId, String type) {
+        BigDecimal sumNumber = BigDecimal.ZERO;
         String allNumber = "";
         try {
             if (ProjectId != null) {
-                Double sum = depotItemService.findGiftByType(subType, ProjectId, MId, type);
+                BigDecimal sum = depotItemService.findGiftByType(subType, ProjectId, MId, type);
                 if(sum != null) {
                     sumNumber = sum;
                 }

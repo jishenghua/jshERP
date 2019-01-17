@@ -2,6 +2,7 @@ package com.jsh.erp.datasource.mappers;
 
 import com.jsh.erp.datasource.entities.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -148,68 +149,68 @@ public interface DepotItemMapper {
             @Param("headIds") String headIds,
             @Param("materialIds") String materialIds);
 
-    Double findByTypeInIsPrev(
+    BigDecimal findByTypeInIsPrev(
             @Param("ProjectId") Integer ProjectId,
             @Param("MId") Long MId,
             @Param("MonthTime") String MonthTime);
 
-    Double findByTypeInIsNotPrev(
+    BigDecimal findByTypeInIsNotPrev(
             @Param("ProjectId") Integer ProjectId,
             @Param("MId") Long MId,
             @Param("MonthTime") String MonthTime);
 
-    Double findByTypeOutIsPrev(
+    BigDecimal findByTypeOutIsPrev(
             @Param("ProjectId") Integer ProjectId,
             @Param("MId") Long MId,
             @Param("MonthTime") String MonthTime);
 
-    Double findByTypeOutIsNotPrev(
+    BigDecimal findByTypeOutIsNotPrev(
             @Param("ProjectId") Integer ProjectId,
             @Param("MId") Long MId,
             @Param("MonthTime") String MonthTime);
 
 
 
-    Double findPriceByTypeInIsPrev(
+    BigDecimal findPriceByTypeInIsPrev(
             @Param("ProjectId") Integer ProjectId,
             @Param("MId") Long MId,
             @Param("MonthTime") String MonthTime);
 
-    Double findPriceByTypeInIsNotPrev(
+    BigDecimal findPriceByTypeInIsNotPrev(
             @Param("ProjectId") Integer ProjectId,
             @Param("MId") Long MId,
             @Param("MonthTime") String MonthTime);
 
-    Double findPriceByTypeOutIsPrev(
+    BigDecimal findPriceByTypeOutIsPrev(
             @Param("ProjectId") Integer ProjectId,
             @Param("MId") Long MId,
             @Param("MonthTime") String MonthTime);
 
-    Double findPriceByTypeOutIsNotPrev(
+    BigDecimal findPriceByTypeOutIsNotPrev(
             @Param("ProjectId") Integer ProjectId,
             @Param("MId") Long MId,
             @Param("MonthTime") String MonthTime);
 
-    Double buyOrSaleNumber(
+    BigDecimal buyOrSaleNumber(
             @Param("type") String type,
             @Param("subType") String subType,
             @Param("MId") Long MId,
             @Param("MonthTime") String MonthTime,
             @Param("sumType") String sumType);
 
-    Double buyOrSalePrice(
+    BigDecimal buyOrSalePrice(
             @Param("type") String type,
             @Param("subType") String subType,
             @Param("MId") Long MId,
             @Param("MonthTime") String MonthTime,
             @Param("sumType") String sumType);
 
-    Double findGiftByTypeIn(
+    BigDecimal findGiftByTypeIn(
             @Param("subType") String subType,
             @Param("ProjectId") Integer ProjectId,
             @Param("MId") Long MId);
 
-    Double findGiftByTypeOut(
+    BigDecimal findGiftByTypeOut(
             @Param("subType") String subType,
             @Param("ProjectId") Integer ProjectId,
             @Param("MId") Long MId);

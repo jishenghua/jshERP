@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,10 +40,10 @@ public class AccountHeadService {
         if (null != list) {
             for (AccountHeadVo4ListEx ah : list) {
                 if(ah.getChangeamount() != null) {
-                    ah.setChangeamount(Math.abs(ah.getChangeamount()));
+                    ah.setChangeamount(ah.getChangeamount().abs());
                 }
                 if(ah.getTotalprice() != null) {
-                    ah.setTotalprice(Math.abs(ah.getTotalprice()));
+                    ah.setTotalprice(ah.getTotalprice().abs());
                 }
                 resList.add(ah);
             }
@@ -91,7 +92,7 @@ public class AccountHeadService {
         return accountHeadMapper.getMaxId();
     }
 
-    public Double findAllMoney(Integer supplierId, String type, String mode, String endTime) {
+    public BigDecimal findAllMoney(Integer supplierId, String type, String mode, String endTime) {
         String modeName = "";
         if (mode.equals("实际")) {
             modeName = "ChangeAmount";
@@ -107,10 +108,10 @@ public class AccountHeadService {
         if (null != list) {
             for (AccountHeadVo4ListEx ah : list) {
                 if(ah.getChangeamount() != null) {
-                    ah.setChangeamount(Math.abs(ah.getChangeamount()));
+                    ah.setChangeamount(ah.getChangeamount().abs());
                 }
                 if(ah.getTotalprice() != null) {
-                    ah.setTotalprice(Math.abs(ah.getTotalprice()));
+                    ah.setTotalprice(ah.getTotalprice().abs());
                 }
                 resList.add(ah);
             }

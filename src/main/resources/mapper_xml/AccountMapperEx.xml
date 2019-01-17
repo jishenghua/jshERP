@@ -9,7 +9,7 @@
         <result column="Number" jdbcType="VARCHAR" property="number" />
         <result column="newType" jdbcType="VARCHAR" property="type" />
         <result column="supplier" jdbcType="VARCHAR" property="supplierName" />
-        <result column="ChangeAmount" jdbcType="DOUBLE" property="changeAmount" />
+        <result column="ChangeAmount" jdbcType="DECIMAL" property="changeAmount" />
         <result column="oTime" jdbcType="VARCHAR" property="operTime" />
         <result column="AList" jdbcType="VARCHAR" property="aList" />
         <result column="AMList" jdbcType="VARCHAR" property="amList" />

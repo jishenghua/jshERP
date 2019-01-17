@@ -10,7 +10,7 @@
     <result column="HeaderId" jdbcType="BIGINT" property="headerid" />
     <result column="AccountId" jdbcType="BIGINT" property="accountid" />
     <result column="InOutItemId" jdbcType="BIGINT" property="inoutitemid" />
-    <result column="EachAmount" jdbcType="DOUBLE" property="eachamount" />
+    <result column="EachAmount" jdbcType="DECIMAL" property="eachamount" />
     <result column="Remark" jdbcType="VARCHAR" property="remark" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -141,7 +141,7 @@
       InOutItemId, EachAmount, Remark
       )
     values (#{id,jdbcType=BIGINT}, #{headerid,jdbcType=BIGINT}, #{accountid,jdbcType=BIGINT}, 
-      #{inoutitemid,jdbcType=BIGINT}, #{eachamount,jdbcType=DOUBLE}, #{remark,jdbcType=VARCHAR}
+      #{inoutitemid,jdbcType=BIGINT}, #{eachamount,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.AccountItem">
@@ -184,7 +184,7 @@
         #{inoutitemid,jdbcType=BIGINT},
       </if>
       <if test="eachamount != null">
-        #{eachamount,jdbcType=DOUBLE},
+        #{eachamount,jdbcType=DECIMAL},
       </if>
       <if test="remark != null">
         #{remark,jdbcType=VARCHAR},
@@ -221,7 +221,7 @@
         InOutItemId = #{record.inoutitemid,jdbcType=BIGINT},
       </if>
       <if test="record.eachamount != null">
-        EachAmount = #{record.eachamount,jdbcType=DOUBLE},
+        EachAmount = #{record.eachamount,jdbcType=DECIMAL},
       </if>
       <if test="record.remark != null">
         Remark = #{record.remark,jdbcType=VARCHAR},
@@ -241,7 +241,7 @@
       HeaderId = #{record.headerid,jdbcType=BIGINT},
       AccountId = #{record.accountid,jdbcType=BIGINT},
       InOutItemId = #{record.inoutitemid,jdbcType=BIGINT},
-      EachAmount = #{record.eachamount,jdbcType=DOUBLE},
+      EachAmount = #{record.eachamount,jdbcType=DECIMAL},
       Remark = #{record.remark,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -264,7 +264,7 @@
         InOutItemId = #{inoutitemid,jdbcType=BIGINT},
       </if>
       <if test="eachamount != null">
-        EachAmount = #{eachamount,jdbcType=DOUBLE},
+        EachAmount = #{eachamount,jdbcType=DECIMAL},
       </if>
       <if test="remark != null">
         Remark = #{remark,jdbcType=VARCHAR},
@@ -281,7 +281,7 @@
     set HeaderId = #{headerid,jdbcType=BIGINT},
       AccountId = #{accountid,jdbcType=BIGINT},
       InOutItemId = #{inoutitemid,jdbcType=BIGINT},
-      EachAmount = #{eachamount,jdbcType=DOUBLE},
+      EachAmount = #{eachamount,jdbcType=DECIMAL},
       Remark = #{remark,jdbcType=VARCHAR}
     where Id = #{id,jdbcType=BIGINT}
   </update>

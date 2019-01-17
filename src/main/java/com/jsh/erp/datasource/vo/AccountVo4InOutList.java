@@ -1,5 +1,7 @@
 package com.jsh.erp.datasource.vo;
 
+import java.math.BigDecimal;
+
 public class AccountVo4InOutList {
 
     private String number;
@@ -8,9 +10,9 @@ public class AccountVo4InOutList {
 
     private String supplierName;
 
-    private Double changeAmount;
+    private BigDecimal changeAmount;
 
-    private Double balance;
+    private BigDecimal balance;
 
     private String operTime;
 
@@ -42,19 +44,19 @@ public class AccountVo4InOutList {
         this.supplierName = supplierName;
     }
 
-    public Double getChangeAmount() {
+    public BigDecimal getChangeAmount() {
         return changeAmount;
     }
 
-    public void setChangeAmount(Double changeAmount) {
+    public void setChangeAmount(BigDecimal changeAmount) {
         this.changeAmount = changeAmount;
     }
 
-    public Double getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
-    public void setBalance(Double balance) {
+    public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
 

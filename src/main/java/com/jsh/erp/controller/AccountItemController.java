@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -86,8 +87,8 @@ public class AccountItemController {
                     item.put("AccountName", ai.getAccountName());
                     item.put("InOutItemId", ai.getInoutitemid());
                     item.put("InOutItemName", ai.getInOutItemName());
-                    Double eachAmount = ai.getEachamount();
-                    item.put("EachAmount", eachAmount < 0 ? 0 - eachAmount : eachAmount);
+                    BigDecimal eachAmount = ai.getEachamount();
+                    item.put("EachAmount", (eachAmount.compareTo(BigDecimal.ZERO))==-1 ? BigDecimal.ZERO.subtract(eachAmount): eachAmount);
                     item.put("Remark", ai.getRemark());
                     dataArray.add(item);
                 }
