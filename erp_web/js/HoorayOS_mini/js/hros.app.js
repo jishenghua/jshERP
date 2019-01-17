@@ -14,7 +14,8 @@ HROS.app = (function(){
 			HROS.app.get();
 		},
 		get : function(){
-		    $.getJSON('../../app/findDesk', function (sc) {
+			var userId = sessionStorage.getItem("userId");
+		    $.getJSON('../../app/findAppByUserId?userId=' + userId, function (sc) {
 				HROS.VAR.dock = sc['dock'];
 				HROS.VAR.desk = sc['desk'];
 				//输出桌面应用

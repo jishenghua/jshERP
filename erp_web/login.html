@@ -62,8 +62,8 @@
     });
 
     //登录按钮绑定处理事件
-    $('#btn_login').bind({
-        click: checkUserInput
+    $('#btn_login').off("click").on("click", function () {
+        checkUserInput();
     });
 
     //检测用户输入数据
@@ -123,8 +123,24 @@
                         }
                         //跳转到用户管理界面
                         else if (loginInfoTip.indexOf("user can login") != -1 || loginInfoTip == "user already login") {
-                            //window.location.href = "/";
-                            window.location.href = "/pages/common/main.html";
+                            $.ajax({
+                                type: "get",
+                                url: "/user/getUserSession",
+                                dataType: "json",
+                                success: function (res) {
+                                    if(res && res.code === 200) {
+                                        if(res.data.user) {
+                                            var user = res.data.user;
+                                            sessionStorage.setItem("userId", user.id);
+                                            window.location.href = "/";
+                                        }
+                                    }
+                                },
+                                //此处添加错误处理
+                                error: function () {
+                                    alert("后台访问错误，请联系管理员！");
+                                }
+                            });
                         }
                     }
                 },

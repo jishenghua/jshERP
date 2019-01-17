@@ -94,4 +94,13 @@ public class AppService {
         List<App> list = appMapper.selectByExample(example);
         return list;
     }
+
+    public List<App> findAppInIds(String ids, String type){
+        List<Long> idList = StringUtil.strToLongList(ids);
+        AppExample example = new AppExample();
+        example.createCriteria().andZlEqualTo(type).andEnabledEqualTo(true).andIdIn(idList);
+        example.setOrderByClause("Sort");
+        List<App> list = appMapper.selectByExample(example);
+        return list;
+    }
 }
