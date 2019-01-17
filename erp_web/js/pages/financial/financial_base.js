@@ -545,10 +545,10 @@
                     for(var i = 0;i < row.length; i ++) {
                     	if(i == row.length-1)
                     	{
-                    		ids += row[i].Id;
+                    		ids += row[i].id;
                     		break;
                     	}
-                    	ids += row[i].Id + ",";
+                    	ids += row[i].id + ",";
                     }
                     //批量更新会员的预收款信息
 					for(var i = 0;i < row.length; i ++) {

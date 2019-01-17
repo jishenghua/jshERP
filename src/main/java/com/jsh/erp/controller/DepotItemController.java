@@ -53,13 +53,16 @@ public class DepotItemController {
         try {
             List<DepotItemVo4HeaderId> depotItemList = depotItemService.getHeaderIdByMaterial(materialParam, depotIds);
             String allReturn = "";
-            if (depotItemList != null) {
+            if (depotItemList != null&&depotItemList.size()>0) {
                 for (DepotItemVo4HeaderId d : depotItemList) {
                     Long dl = d.getHeaderid(); //获取对象
                     allReturn = allReturn + dl.toString() + ",";
                 }
+                /**
+                 * 2019-01-17修复depotItemList集合为空时，程序异常
+                 * */
+                allReturn = allReturn.substring(0, allReturn.length() - 1);
             }
-            allReturn = allReturn.substring(0, allReturn.length() - 1);
             if (allReturn.equals("null")) {
                 allReturn = "";
             }
