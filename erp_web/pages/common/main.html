@@ -106,6 +106,7 @@
 
         $('#loginOut').click(function () {
             if (confirm("确认要退出系统吗？"))
+                sessionStorage.removeItem("userId");
                 location.href = '/user/logout';
         })
         //IE下禁止选中
