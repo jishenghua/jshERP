@@ -52,8 +52,7 @@ public class UserController {
             if (userInfo != null) {
                 sessionUser = (User) userInfo;
             }
-            if (sessionUser != null && username.equalsIgnoreCase(sessionUser.getLoginame())
-                    && sessionUser.getPassword().equals(password)) {
+            if (sessionUser != null && username.equalsIgnoreCase(sessionUser.getLoginame())) {
                 logger.info("====用户 " + username + "已经登录过, login 方法调用结束====");
                 msgTip = "user already login";
             }

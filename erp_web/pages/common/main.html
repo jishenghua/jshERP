@@ -5,21 +5,6 @@
     <title>ERP系统</title>
     <link href="/js/HoorayOS_mini/js/HoorayLibs/hooraylibs.css" rel="stylesheet"/>
     <link href="/js/HoorayOS_mini/img/ui/index.css" rel="stylesheet"/>
-    <style>
-        #user-name-span{
-            text-align:center;
-            color:white;
-            position:absolute;
-            top:435px;
-            left:0px;
-            display:inline-block;
-            max-width:100%;
-            float: left;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: normal;
-        }
-    </style>
 </head>
 <body>
 <div class="loading"></div>
@@ -58,7 +43,7 @@
                         <a id="loginOut" href="#">
                             <img src="/js/HoorayOS_mini/img/exit.png" style="height:50px;width:50px;">
                         </a>
-                        <span id="user-name-span">
+                        <span style="text-align:center;color:white; position:absolute;top:435px; left:15px;">
                         </span>
                     </div>
                 </div>
@@ -121,6 +106,7 @@
 
         $('#loginOut').click(function () {
             if (confirm("确认要退出系统吗？"))
+                sessionStorage.removeItem("userId");
                 location.href = '/user/logout';
         })
         //IE下禁止选中
