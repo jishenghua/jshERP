@@ -169,7 +169,7 @@
         group by m.id) cc
     </select>
 
-    <select id="findByTypeInIsPrev" resultType="java.lang.Double">
+    <select id="findByTypeInIsPrev" resultType="java.math.BigDecimal">
         select sum(BasicNumber) as BasicNumber from jsh_depotitem di,jsh_depothead dh
         where di.HeaderId = dh.id and
         ((type='入库' and DepotId=${ProjectId})
@@ -180,7 +180,7 @@
         and MaterialId = ${MId}  and dh.OperTime &lt; '${MonthTime}-01 00:00:00'
     </select>
 
-    <select id="findByTypeInIsNotPrev" resultType="java.lang.Double">
+    <select id="findByTypeInIsNotPrev" resultType="java.math.BigDecimal">
         select sum(BasicNumber) as BasicNumber from jsh_depotitem di,jsh_depothead dh
         where di.HeaderId = dh.id and
         ((type='入库' and DepotId=${ProjectId})
@@ -192,14 +192,14 @@
         and dh.OperTime &lt;= '${MonthTime}-31 23:59:59'
     </select>
 
-    <select id="findByTypeOutIsPrev" resultType="java.lang.Double">
+    <select id="findByTypeOutIsPrev" resultType="java.math.BigDecimal">
         select sum(BasicNumber) as BasicNumber from jsh_depotitem,jsh_depothead  where jsh_depotitem.HeaderId = jsh_depothead.id and type='出库'
         and DepotId= ${ProjectId}
         and MaterialId = ${MId}
         and jsh_depothead.OperTime &lt; '${MonthTime}-01 00:00:00'
     </select>
 
-    <select id="findByTypeOutIsNotPrev" resultType="java.lang.Double">
+    <select id="findByTypeOutIsNotPrev" resultType="java.math.BigDecimal">
         select sum(BasicNumber) as BasicNumber from jsh_depotitem,jsh_depothead  where jsh_depotitem.HeaderId = jsh_depothead.id and type='出库'
         and DepotId= ${ProjectId}
         and MaterialId = ${MId}
@@ -208,7 +208,7 @@
     </select>
 
 
-    <select id="findPriceByTypeInIsPrev" resultType="java.lang.Double">
+    <select id="findPriceByTypeInIsPrev" resultType="java.math.BigDecimal">
         select sum(AllPrice) as AllPrice from jsh_depotitem di,jsh_depothead dh
         where di.HeaderId = dh.id and
         ((type='入库' and DepotId=${ProjectId})
@@ -219,7 +219,7 @@
         and MaterialId = ${MId}  and dh.OperTime &lt; '${MonthTime}-01 00:00:00'
     </select>
 
-    <select id="findPriceByTypeInIsNotPrev" resultType="java.lang.Double">
+    <select id="findPriceByTypeInIsNotPrev" resultType="java.math.BigDecimal">
         select sum(AllPrice) as AllPrice from jsh_depotitem di,jsh_depothead dh
         where di.HeaderId = dh.id and
         ((type='入库' and DepotId=${ProjectId})
@@ -231,14 +231,14 @@
         and dh.OperTime &lt;= '${MonthTime}-31 23:59:59'
     </select>
 
-    <select id="findPriceByTypeOutIsPrev" resultType="java.lang.Double">
+    <select id="findPriceByTypeOutIsPrev" resultType="java.math.BigDecimal">
         select sum(AllPrice) as AllPrice from jsh_depotitem,jsh_depothead  where jsh_depotitem.HeaderId = jsh_depothead.id and type='出库'
         and DepotId= ${ProjectId}
         and MaterialId = ${MId}
         and jsh_depothead.OperTime &lt; '${MonthTime}-01 00:00:00'
     </select>
 
-    <select id="findPriceByTypeOutIsNotPrev" resultType="java.lang.Double">
+    <select id="findPriceByTypeOutIsNotPrev" resultType="java.math.BigDecimal">
         select sum(AllPrice) as AllPrice from jsh_depotitem,jsh_depothead  where jsh_depotitem.HeaderId = jsh_depothead.id and type='出库'
         and DepotId= ${ProjectId}
         and MaterialId = ${MId}
@@ -246,28 +246,28 @@
         and jsh_depothead.OperTime &lt;= '${MonthTime}-31 23:59:59'
     </select>
 
-    <select id="buyOrSaleNumber" resultType="java.lang.Double">
+    <select id="buyOrSaleNumber" resultType="java.math.BigDecimal">
         select sum(BasicNumber) as BasicNumber from jsh_depotitem,jsh_depothead
         where jsh_depotitem.HeaderId = jsh_depothead.id and type='${type}' and subType='${subType}'
         and MaterialId =${MId} and jsh_depothead.OperTime &gt;= '${MonthTime}-01 00:00:00'
         and jsh_depothead.OperTime &lt;= '${MonthTime}-31 23:59:59'
     </select>
 
-    <select id="buyOrSalePrice" resultType="java.lang.Double">
+    <select id="buyOrSalePrice" resultType="java.math.BigDecimal">
         select sum(AllPrice) as AllPrice from jsh_depotitem,jsh_depothead
         where jsh_depotitem.HeaderId = jsh_depothead.id and type='${type}' and subType='${subType}'
         and MaterialId =${MId} and jsh_depothead.OperTime &gt;= '${MonthTime}-01 00:00:00'
         and jsh_depothead.OperTime &lt;= '${MonthTime}-31 23:59:59'
     </select>
 
-    <select id="findGiftByTypeIn" resultType="java.lang.Double">
+    <select id="findGiftByTypeIn" resultType="java.math.BigDecimal">
         select sum(BasicNumber) as BasicNumber from jsh_depotitem,jsh_depothead
         where jsh_depotitem.HeaderId = jsh_depothead.id and jsh_depothead.SubType='${subType}'
         and jsh_depotitem.AnotherDepotId=${ProjectId}
         and jsh_depotitem.MaterialId =${MId}
     </select>
 
-    <select id="findGiftByTypeOut" resultType="java.lang.Double">
+    <select id="findGiftByTypeOut" resultType="java.math.BigDecimal">
         select sum(BasicNumber) as BasicNumber from jsh_depotitem,jsh_depothead
         where jsh_depotitem.HeaderId = jsh_depothead.id and jsh_depothead.SubType='${subType}'
         and jsh_depotitem.DepotId=${ProjectId}

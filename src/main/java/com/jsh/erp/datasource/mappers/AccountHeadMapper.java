@@ -2,6 +2,8 @@ package com.jsh.erp.datasource.mappers;
 
 import com.jsh.erp.datasource.entities.AccountHead;
 import com.jsh.erp.datasource.entities.AccountHeadExample;
+
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.jsh.erp.datasource.entities.AccountHeadVo4ListEx;
@@ -112,7 +114,7 @@ public interface AccountHeadMapper {
 
     Long getMaxId();
 
-    Double findAllMoney(
+    BigDecimal findAllMoney(
             @Param("supplierId") Integer supplierId,
             @Param("type") String type,
             @Param("modeName") String modeName,

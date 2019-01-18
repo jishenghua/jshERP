@@ -1,5 +1,6 @@
 package com.jsh.erp.datasource.entities;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class AccountHeadVo4ListEx {
@@ -12,9 +13,9 @@ public class AccountHeadVo4ListEx {
 
     private Long handspersonid;
 
-    private Double changeamount;
+    private BigDecimal changeamount;
 
-    private Double totalprice;
+    private BigDecimal totalprice;
 
     private Long accountid;
 
@@ -62,19 +63,19 @@ public class AccountHeadVo4ListEx {
         this.handspersonid = handspersonid;
     }
 
-    public Double getChangeamount() {
+    public BigDecimal getChangeamount() {
         return changeamount;
     }
 
-    public void setChangeamount(Double changeamount) {
+    public void setChangeamount(BigDecimal changeamount) {
         this.changeamount = changeamount;
     }
 
-    public Double getTotalprice() {
+    public BigDecimal getTotalprice() {
         return totalprice;
     }
 
-    public void setTotalprice(Double totalprice) {
+    public void setTotalprice(BigDecimal totalprice) {
         this.totalprice = totalprice;
     }
 

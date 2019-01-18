@@ -10,9 +10,11 @@ import com.jsh.erp.utils.Tools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,10 +40,10 @@ public class AccountHeadService {
         if (null != list) {
             for (AccountHeadVo4ListEx ah : list) {
                 if(ah.getChangeamount() != null) {
-                    ah.setChangeamount(Math.abs(ah.getChangeamount()));
+                    ah.setChangeamount(ah.getChangeamount().abs());
                 }
                 if(ah.getTotalprice() != null) {
-                    ah.setTotalprice(Math.abs(ah.getTotalprice()));
+                    ah.setTotalprice(ah.getTotalprice().abs());
                 }
                 resList.add(ah);
             }
@@ -53,21 +55,25 @@ public class AccountHeadService {
         return accountHeadMapper.countsByAccountHead(type, billNo, beginTime, endTime);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertAccountHead(String beanJson, HttpServletRequest request) {
         AccountHead accountHead = JSONObject.parseObject(beanJson, AccountHead.class);
         return accountHeadMapper.insertSelective(accountHead);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateAccountHead(String beanJson, Long id) {
         AccountHead accountHead = JSONObject.parseObject(beanJson, AccountHead.class);
         accountHead.setId(id);
         return accountHeadMapper.updateByPrimaryKeySelective(accountHead);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int deleteAccountHead(Long id) {
         return accountHeadMapper.deleteByPrimaryKey(id);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteAccountHead(String ids) {
         List<Long> idList = StringUtil.strToLongList(ids);
         AccountHeadExample example = new AccountHeadExample();
@@ -86,7 +92,7 @@ public class AccountHeadService {
         return accountHeadMapper.getMaxId();
     }
 
-    public Double findAllMoney(Integer supplierId, String type, String mode, String endTime) {
+    public BigDecimal findAllMoney(Integer supplierId, String type, String mode, String endTime) {
         String modeName = "";
         if (mode.equals("实际")) {
             modeName = "ChangeAmount";
@@ -102,10 +108,10 @@ public class AccountHeadService {
         if (null != list) {
             for (AccountHeadVo4ListEx ah : list) {
                 if(ah.getChangeamount() != null) {
-                    ah.setChangeamount(Math.abs(ah.getChangeamount()));
+                    ah.setChangeamount(ah.getChangeamount().abs());
                 }
                 if(ah.getTotalprice() != null) {
-                    ah.setTotalprice(Math.abs(ah.getTotalprice()));
+                    ah.setTotalprice(ah.getTotalprice().abs());
                 }
                 resList.add(ah);
             }

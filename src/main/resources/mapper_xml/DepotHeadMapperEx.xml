@@ -14,9 +14,9 @@
         <result column="Number" jdbcType="VARCHAR" property="Number" />
         <result column="MName" jdbcType="VARCHAR" property="MName" />
         <result column="Model" jdbcType="VARCHAR" property="Model" />
-        <result column="UnitPrice" jdbcType="DOUBLE" property="UnitPrice" />
-        <result column="OperNumber" jdbcType="DOUBLE" property="OperNumber" />
-        <result column="AllPrice" jdbcType="DOUBLE" property="AllPrice" />
+        <result column="UnitPrice" jdbcType="DECIMAL" property="UnitPrice" />
+        <result column="OperNumber" jdbcType="DECIMAL" property="OperNumber" />
+        <result column="AllPrice" jdbcType="DECIMAL" property="AllPrice" />
         <result column="SName" jdbcType="VARCHAR" property="SName" />
         <result column="DName" jdbcType="VARCHAR" property="DName" />
         <result column="OperTime" jdbcType="VARCHAR" property="OperTime" />
@@ -28,15 +28,15 @@
         <result column="mName" jdbcType="VARCHAR" property="mName" />
         <result column="Model" jdbcType="VARCHAR" property="Model" />
         <result column="categoryName" jdbcType="VARCHAR" property="categoryName" />
-        <result column="numSum" jdbcType="DOUBLE" property="numSum" />
-        <result column="priceSum" jdbcType="DOUBLE" property="priceSum" />
+        <result column="numSum" jdbcType="DECIMAL" property="numSum" />
+        <result column="priceSum" jdbcType="DECIMAL" property="priceSum" />
     </resultMap>
 
     <resultMap id="ResultStatementAccount" type="com.jsh.erp.datasource.vo.DepotHeadVo4StatementAccount">
         <result column="Number" jdbcType="VARCHAR" property="number" />
         <result column="type" jdbcType="VARCHAR" property="type" />
-        <result column="DiscountLastMoney" jdbcType="DOUBLE" property="discountLastMoney" />
-        <result column="ChangeAmount" jdbcType="DOUBLE" property="changeAmount" />
+        <result column="DiscountLastMoney" jdbcType="DECIMAL" property="discountLastMoney" />
+        <result column="ChangeAmount" jdbcType="DECIMAL" property="changeAmount" />
         <result column="supplierName" jdbcType="VARCHAR" property="supplierName" />
         <result column="oTime" jdbcType="VARCHAR" property="oTime" />
     </resultMap>
@@ -262,7 +262,7 @@
         ) cc
     </select>
 
-    <select id="findAllMoney" resultType="java.lang.Double">
+    <select id="findAllMoney" resultType="java.math.BigDecimal">
         select sum(${modeName}) as allMoney from jsh_depothead where Type='${type}' and SubType = '${subType}'
         and OrganId =${supplierId} and OperTime &lt;='${endTime}'
     </select>

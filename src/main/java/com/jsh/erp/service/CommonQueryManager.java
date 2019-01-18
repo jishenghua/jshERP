@@ -2,6 +2,7 @@ package com.jsh.erp.service;
 
 import com.jsh.erp.utils.StringUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -63,6 +64,7 @@ public class CommonQueryManager {
      * @param beanJson
      * @return
      */
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insert(String apiName, String beanJson, HttpServletRequest request) {
         if (StringUtil.isNotEmpty(apiName)) {
             return container.getCommonQuery(apiName).insert(beanJson, request);
@@ -77,6 +79,7 @@ public class CommonQueryManager {
      * @param id
      * @return
      */
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int update(String apiName, String beanJson, Long id) {
         if (StringUtil.isNotEmpty(apiName)) {
             return container.getCommonQuery(apiName).update(beanJson, id);
@@ -90,6 +93,7 @@ public class CommonQueryManager {
      * @param id
      * @return
      */
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int delete(String apiName, Long id) {
         if (StringUtil.isNotEmpty(apiName)) {
             return container.getCommonQuery(apiName).delete(id);
@@ -103,6 +107,7 @@ public class CommonQueryManager {
      * @param ids
      * @return
      */
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDelete(String apiName, String ids) {
         if (StringUtil.isNotEmpty(apiName)) {
             return container.getCommonQuery(apiName).batchDelete(ids);

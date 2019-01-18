@@ -9,9 +9,11 @@ import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,21 +42,25 @@ public class SupplierService {
         return supplierMapper.countsBySupplier(supplier, type, phonenum, telephone, description);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertSupplier(String beanJson, HttpServletRequest request) {
         Supplier supplier = JSONObject.parseObject(beanJson, Supplier.class);
         return supplierMapper.insertSelective(supplier);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateSupplier(String beanJson, Long id) {
         Supplier supplier = JSONObject.parseObject(beanJson, Supplier.class);
         supplier.setId(id);
         return supplierMapper.updateByPrimaryKeySelective(supplier);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int deleteSupplier(Long id) {
         return supplierMapper.deleteByPrimaryKey(id);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteSupplier(String ids) {
         List<Long> idList = StringUtil.strToLongList(ids);
         SupplierExample example = new SupplierExample();
@@ -69,9 +75,10 @@ public class SupplierService {
         return list.size();
     }
 
-    public int updateAdvanceIn(Long supplierId, Double advanceIn){
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int updateAdvanceIn(Long supplierId, BigDecimal advanceIn){
         Supplier supplier = supplierMapper.selectByPrimaryKey(supplierId);
-        supplier.setAdvancein(supplier.getAdvancein() + advanceIn);  //增加预收款的金额，可能增加的是负值
+        supplier.setAdvancein(supplier.getAdvancein().add(advanceIn));  //增加预收款的金额，可能增加的是负值
         return supplierMapper.updateByPrimaryKeySelective(supplier);
     }
 
@@ -103,6 +110,7 @@ public class SupplierService {
         return supplierMapper.selectByExample(example);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchSetEnable(Boolean enabled, String supplierIDs) {
         List<Long> ids = StringUtil.strToLongList(supplierIDs);
         Supplier supplier = new Supplier();

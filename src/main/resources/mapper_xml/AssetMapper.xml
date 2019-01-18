@@ -12,7 +12,7 @@
     <result column="labels" jdbcType="VARCHAR" property="labels" />
     <result column="status" jdbcType="SMALLINT" property="status" />
     <result column="userID" jdbcType="BIGINT" property="userid" />
-    <result column="price" jdbcType="DOUBLE" property="price" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
     <result column="purchasedate" jdbcType="TIMESTAMP" property="purchasedate" />
     <result column="periodofvalidity" jdbcType="TIMESTAMP" property="periodofvalidity" />
     <result column="warrantydate" jdbcType="TIMESTAMP" property="warrantydate" />
@@ -195,7 +195,7 @@
       addMonth)
     values (#{id,jdbcType=BIGINT}, #{assetnameid,jdbcType=BIGINT}, #{location,jdbcType=VARCHAR}, 
       #{labels,jdbcType=VARCHAR}, #{status,jdbcType=SMALLINT}, #{userid,jdbcType=BIGINT}, 
-      #{price,jdbcType=DOUBLE}, #{purchasedate,jdbcType=TIMESTAMP}, #{periodofvalidity,jdbcType=TIMESTAMP}, 
+      #{price,jdbcType=DECIMAL}, #{purchasedate,jdbcType=TIMESTAMP}, #{periodofvalidity,jdbcType=TIMESTAMP}, 
       #{warrantydate,jdbcType=TIMESTAMP}, #{assetnum,jdbcType=VARCHAR}, #{serialnum,jdbcType=VARCHAR}, 
       #{supplier,jdbcType=BIGINT}, #{createtime,jdbcType=TIMESTAMP}, #{creator,jdbcType=BIGINT}, 
       #{updatetime,jdbcType=TIMESTAMP}, #{updator,jdbcType=BIGINT}, #{description,jdbcType=LONGVARCHAR}, 
@@ -286,7 +286,7 @@
         #{userid,jdbcType=BIGINT},
       </if>
       <if test="price != null">
-        #{price,jdbcType=DOUBLE},
+        #{price,jdbcType=DECIMAL},
       </if>
       <if test="purchasedate != null">
         #{purchasedate,jdbcType=TIMESTAMP},
@@ -362,7 +362,7 @@
         userID = #{record.userid,jdbcType=BIGINT},
       </if>
       <if test="record.price != null">
-        price = #{record.price,jdbcType=DOUBLE},
+        price = #{record.price,jdbcType=DECIMAL},
       </if>
       <if test="record.purchasedate != null">
         purchasedate = #{record.purchasedate,jdbcType=TIMESTAMP},
@@ -417,7 +417,7 @@
       labels = #{record.labels,jdbcType=VARCHAR},
       status = #{record.status,jdbcType=SMALLINT},
       userID = #{record.userid,jdbcType=BIGINT},
-      price = #{record.price,jdbcType=DOUBLE},
+      price = #{record.price,jdbcType=DECIMAL},
       purchasedate = #{record.purchasedate,jdbcType=TIMESTAMP},
       periodofvalidity = #{record.periodofvalidity,jdbcType=TIMESTAMP},
       warrantydate = #{record.warrantydate,jdbcType=TIMESTAMP},
@@ -446,7 +446,7 @@
       labels = #{record.labels,jdbcType=VARCHAR},
       status = #{record.status,jdbcType=SMALLINT},
       userID = #{record.userid,jdbcType=BIGINT},
-      price = #{record.price,jdbcType=DOUBLE},
+      price = #{record.price,jdbcType=DECIMAL},
       purchasedate = #{record.purchasedate,jdbcType=TIMESTAMP},
       periodofvalidity = #{record.periodofvalidity,jdbcType=TIMESTAMP},
       warrantydate = #{record.warrantydate,jdbcType=TIMESTAMP},
@@ -484,7 +484,7 @@
         userID = #{userid,jdbcType=BIGINT},
       </if>
       <if test="price != null">
-        price = #{price,jdbcType=DOUBLE},
+        price = #{price,jdbcType=DECIMAL},
       </if>
       <if test="purchasedate != null">
         purchasedate = #{purchasedate,jdbcType=TIMESTAMP},
@@ -536,7 +536,7 @@
       labels = #{labels,jdbcType=VARCHAR},
       status = #{status,jdbcType=SMALLINT},
       userID = #{userid,jdbcType=BIGINT},
-      price = #{price,jdbcType=DOUBLE},
+      price = #{price,jdbcType=DECIMAL},
       purchasedate = #{purchasedate,jdbcType=TIMESTAMP},
       periodofvalidity = #{periodofvalidity,jdbcType=TIMESTAMP},
       warrantydate = #{warrantydate,jdbcType=TIMESTAMP},
@@ -562,7 +562,7 @@
       labels = #{labels,jdbcType=VARCHAR},
       status = #{status,jdbcType=SMALLINT},
       userID = #{userid,jdbcType=BIGINT},
-      price = #{price,jdbcType=DOUBLE},
+      price = #{price,jdbcType=DECIMAL},
       purchasedate = #{purchasedate,jdbcType=TIMESTAMP},
       periodofvalidity = #{periodofvalidity,jdbcType=TIMESTAMP},
       warrantydate = #{warrantydate,jdbcType=TIMESTAMP},

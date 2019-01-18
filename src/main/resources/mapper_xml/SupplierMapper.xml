@@ -15,18 +15,18 @@
     <result column="isystem" jdbcType="TINYINT" property="isystem" />
     <result column="type" jdbcType="VARCHAR" property="type" />
     <result column="enabled" jdbcType="BIT" property="enabled" />
-    <result column="AdvanceIn" jdbcType="DOUBLE" property="advancein" />
-    <result column="BeginNeedGet" jdbcType="DOUBLE" property="beginneedget" />
-    <result column="BeginNeedPay" jdbcType="DOUBLE" property="beginneedpay" />
-    <result column="AllNeedGet" jdbcType="DOUBLE" property="allneedget" />
-    <result column="AllNeedPay" jdbcType="DOUBLE" property="allneedpay" />
+    <result column="AdvanceIn" jdbcType="DECIMAL" property="advancein" />
+    <result column="BeginNeedGet" jdbcType="DECIMAL" property="beginneedget" />
+    <result column="BeginNeedPay" jdbcType="DECIMAL" property="beginneedpay" />
+    <result column="AllNeedGet" jdbcType="DECIMAL" property="allneedget" />
+    <result column="AllNeedPay" jdbcType="DECIMAL" property="allneedpay" />
     <result column="fax" jdbcType="VARCHAR" property="fax" />
     <result column="telephone" jdbcType="VARCHAR" property="telephone" />
     <result column="address" jdbcType="VARCHAR" property="address" />
     <result column="taxNum" jdbcType="VARCHAR" property="taxnum" />
     <result column="bankName" jdbcType="VARCHAR" property="bankname" />
     <result column="accountNumber" jdbcType="VARCHAR" property="accountnumber" />
-    <result column="taxRate" jdbcType="DOUBLE" property="taxrate" />
+    <result column="taxRate" jdbcType="DECIMAL" property="taxrate" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -165,10 +165,10 @@
     values (#{id,jdbcType=BIGINT}, #{supplier,jdbcType=VARCHAR}, #{contacts,jdbcType=VARCHAR}, 
       #{phonenum,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
       #{isystem,jdbcType=TINYINT}, #{type,jdbcType=VARCHAR}, #{enabled,jdbcType=BIT}, 
-      #{advancein,jdbcType=DOUBLE}, #{beginneedget,jdbcType=DOUBLE}, #{beginneedpay,jdbcType=DOUBLE}, 
-      #{allneedget,jdbcType=DOUBLE}, #{allneedpay,jdbcType=DOUBLE}, #{fax,jdbcType=VARCHAR}, 
+      #{advancein,jdbcType=DECIMAL}, #{beginneedget,jdbcType=DECIMAL}, #{beginneedpay,jdbcType=DECIMAL}, 
+      #{allneedget,jdbcType=DECIMAL}, #{allneedpay,jdbcType=DECIMAL}, #{fax,jdbcType=VARCHAR}, 
       #{telephone,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{taxnum,jdbcType=VARCHAR}, 
-      #{bankname,jdbcType=VARCHAR}, #{accountnumber,jdbcType=VARCHAR}, #{taxrate,jdbcType=DOUBLE}
+      #{bankname,jdbcType=VARCHAR}, #{accountnumber,jdbcType=VARCHAR}, #{taxrate,jdbcType=DECIMAL}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.Supplier">
@@ -271,19 +271,19 @@
         #{enabled,jdbcType=BIT},
       </if>
       <if test="advancein != null">
-        #{advancein,jdbcType=DOUBLE},
+        #{advancein,jdbcType=DECIMAL},
       </if>
       <if test="beginneedget != null">
-        #{beginneedget,jdbcType=DOUBLE},
+        #{beginneedget,jdbcType=DECIMAL},
       </if>
       <if test="beginneedpay != null">
-        #{beginneedpay,jdbcType=DOUBLE},
+        #{beginneedpay,jdbcType=DECIMAL},
       </if>
       <if test="allneedget != null">
-        #{allneedget,jdbcType=DOUBLE},
+        #{allneedget,jdbcType=DECIMAL},
       </if>
       <if test="allneedpay != null">
-        #{allneedpay,jdbcType=DOUBLE},
+        #{allneedpay,jdbcType=DECIMAL},
       </if>
       <if test="fax != null">
         #{fax,jdbcType=VARCHAR},
@@ -304,7 +304,7 @@
         #{accountnumber,jdbcType=VARCHAR},
       </if>
       <if test="taxrate != null">
-        #{taxrate,jdbcType=DOUBLE},
+        #{taxrate,jdbcType=DECIMAL},
       </if>
     </trim>
   </insert>
@@ -353,19 +353,19 @@
         enabled = #{record.enabled,jdbcType=BIT},
       </if>
       <if test="record.advancein != null">
-        AdvanceIn = #{record.advancein,jdbcType=DOUBLE},
+        AdvanceIn = #{record.advancein,jdbcType=DECIMAL},
       </if>
       <if test="record.beginneedget != null">
-        BeginNeedGet = #{record.beginneedget,jdbcType=DOUBLE},
+        BeginNeedGet = #{record.beginneedget,jdbcType=DECIMAL},
       </if>
       <if test="record.beginneedpay != null">
-        BeginNeedPay = #{record.beginneedpay,jdbcType=DOUBLE},
+        BeginNeedPay = #{record.beginneedpay,jdbcType=DECIMAL},
       </if>
       <if test="record.allneedget != null">
-        AllNeedGet = #{record.allneedget,jdbcType=DOUBLE},
+        AllNeedGet = #{record.allneedget,jdbcType=DECIMAL},
       </if>
       <if test="record.allneedpay != null">
-        AllNeedPay = #{record.allneedpay,jdbcType=DOUBLE},
+        AllNeedPay = #{record.allneedpay,jdbcType=DECIMAL},
       </if>
       <if test="record.fax != null">
         fax = #{record.fax,jdbcType=VARCHAR},
@@ -386,7 +386,7 @@
         accountNumber = #{record.accountnumber,jdbcType=VARCHAR},
       </if>
       <if test="record.taxrate != null">
-        taxRate = #{record.taxrate,jdbcType=DOUBLE},
+        taxRate = #{record.taxrate,jdbcType=DECIMAL},
       </if>
     </set>
     <if test="_parameter != null">
@@ -408,18 +408,18 @@
       isystem = #{record.isystem,jdbcType=TINYINT},
       type = #{record.type,jdbcType=VARCHAR},
       enabled = #{record.enabled,jdbcType=BIT},
-      AdvanceIn = #{record.advancein,jdbcType=DOUBLE},
-      BeginNeedGet = #{record.beginneedget,jdbcType=DOUBLE},
-      BeginNeedPay = #{record.beginneedpay,jdbcType=DOUBLE},
-      AllNeedGet = #{record.allneedget,jdbcType=DOUBLE},
-      AllNeedPay = #{record.allneedpay,jdbcType=DOUBLE},
+      AdvanceIn = #{record.advancein,jdbcType=DECIMAL},
+      BeginNeedGet = #{record.beginneedget,jdbcType=DECIMAL},
+      BeginNeedPay = #{record.beginneedpay,jdbcType=DECIMAL},
+      AllNeedGet = #{record.allneedget,jdbcType=DECIMAL},
+      AllNeedPay = #{record.allneedpay,jdbcType=DECIMAL},
       fax = #{record.fax,jdbcType=VARCHAR},
       telephone = #{record.telephone,jdbcType=VARCHAR},
       address = #{record.address,jdbcType=VARCHAR},
       taxNum = #{record.taxnum,jdbcType=VARCHAR},
       bankName = #{record.bankname,jdbcType=VARCHAR},
       accountNumber = #{record.accountnumber,jdbcType=VARCHAR},
-      taxRate = #{record.taxrate,jdbcType=DOUBLE}
+      taxRate = #{record.taxrate,jdbcType=DECIMAL}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -456,19 +456,19 @@
         enabled = #{enabled,jdbcType=BIT},
       </if>
       <if test="advancein != null">
-        AdvanceIn = #{advancein,jdbcType=DOUBLE},
+        AdvanceIn = #{advancein,jdbcType=DECIMAL},
       </if>
       <if test="beginneedget != null">
-        BeginNeedGet = #{beginneedget,jdbcType=DOUBLE},
+        BeginNeedGet = #{beginneedget,jdbcType=DECIMAL},
       </if>
       <if test="beginneedpay != null">
-        BeginNeedPay = #{beginneedpay,jdbcType=DOUBLE},
+        BeginNeedPay = #{beginneedpay,jdbcType=DECIMAL},
       </if>
       <if test="allneedget != null">
-        AllNeedGet = #{allneedget,jdbcType=DOUBLE},
+        AllNeedGet = #{allneedget,jdbcType=DECIMAL},
       </if>
       <if test="allneedpay != null">
-        AllNeedPay = #{allneedpay,jdbcType=DOUBLE},
+        AllNeedPay = #{allneedpay,jdbcType=DECIMAL},
       </if>
       <if test="fax != null">
         fax = #{fax,jdbcType=VARCHAR},
@@ -489,7 +489,7 @@
         accountNumber = #{accountnumber,jdbcType=VARCHAR},
       </if>
       <if test="taxrate != null">
-        taxRate = #{taxrate,jdbcType=DOUBLE},
+        taxRate = #{taxrate,jdbcType=DECIMAL},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -508,18 +508,18 @@
       isystem = #{isystem,jdbcType=TINYINT},
       type = #{type,jdbcType=VARCHAR},
       enabled = #{enabled,jdbcType=BIT},
-      AdvanceIn = #{advancein,jdbcType=DOUBLE},
-      BeginNeedGet = #{beginneedget,jdbcType=DOUBLE},
-      BeginNeedPay = #{beginneedpay,jdbcType=DOUBLE},
-      AllNeedGet = #{allneedget,jdbcType=DOUBLE},
-      AllNeedPay = #{allneedpay,jdbcType=DOUBLE},
+      AdvanceIn = #{advancein,jdbcType=DECIMAL},
+      BeginNeedGet = #{beginneedget,jdbcType=DECIMAL},
+      BeginNeedPay = #{beginneedpay,jdbcType=DECIMAL},
+      AllNeedGet = #{allneedget,jdbcType=DECIMAL},
+      AllNeedPay = #{allneedpay,jdbcType=DECIMAL},
       fax = #{fax,jdbcType=VARCHAR},
       telephone = #{telephone,jdbcType=VARCHAR},
       address = #{address,jdbcType=VARCHAR},
       taxNum = #{taxnum,jdbcType=VARCHAR},
       bankName = #{bankname,jdbcType=VARCHAR},
       accountNumber = #{accountnumber,jdbcType=VARCHAR},
-      taxRate = #{taxrate,jdbcType=DOUBLE}
+      taxRate = #{taxrate,jdbcType=DECIMAL}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

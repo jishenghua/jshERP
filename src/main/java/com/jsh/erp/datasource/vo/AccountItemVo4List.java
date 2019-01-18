@@ -1,5 +1,7 @@
 package com.jsh.erp.datasource.vo;
 
+import java.math.BigDecimal;
+
 public class AccountItemVo4List {
 
     private Long id;
@@ -10,7 +12,7 @@ public class AccountItemVo4List {
 
     private Long inoutitemid;
 
-    private Double eachamount;
+    private BigDecimal eachamount;
 
     private String remark;
 
@@ -50,11 +52,11 @@ public class AccountItemVo4List {
         this.inoutitemid = inoutitemid;
     }
 
-    public Double getEachamount() {
+    public BigDecimal getEachamount() {
         return eachamount;
     }
 
-    public void setEachamount(Double eachamount) {
+    public void setEachamount(BigDecimal eachamount) {
         this.eachamount = eachamount;
     }
 

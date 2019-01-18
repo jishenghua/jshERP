@@ -8,6 +8,7 @@ import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -29,21 +30,25 @@ public class UserBusinessService {
         return userBusinessMapper.selectByExample(example);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertUserBusiness(String beanJson, HttpServletRequest request) {
         UserBusiness userBusiness = JSONObject.parseObject(beanJson, UserBusiness.class);
         return userBusinessMapper.insertSelective(userBusiness);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateUserBusiness(String beanJson, Long id) {
         UserBusiness userBusiness = JSONObject.parseObject(beanJson, UserBusiness.class);
         userBusiness.setId(id);
         return userBusinessMapper.updateByPrimaryKeySelective(userBusiness);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int deleteUserBusiness(Long id) {
         return userBusinessMapper.deleteByPrimaryKey(id);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteUserBusiness(String ids) {
         List<Long> idList = StringUtil.strToLongList(ids);
         UserBusinessExample example = new UserBusinessExample();
@@ -89,6 +94,7 @@ public class UserBusinessService {
         }
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateBtnStr(Long userBusinessId, String btnStr) {
         UserBusiness userBusiness = new UserBusiness();
         userBusiness.setBtnstr(btnStr);

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -69,7 +70,7 @@ public class AccountHeadController {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
             JSONObject outer = new JSONObject();
-            Double sum = 0.0;
+            BigDecimal sum = BigDecimal.ZERO;
             String getS = supplierId.toString();
             int i = 1;
             if (supType.equals("customer")) { //客户
@@ -78,10 +79,14 @@ public class AccountHeadController {
                 i = -1;
             }
             //收付款部分
-            sum = sum + (allMoney(getS, "付款", "合计",endTime) + allMoney(getS, "付款", "实际",endTime)) * i;
-            sum = sum - (allMoney(getS, "收款", "合计",endTime) + allMoney(getS, "收款", "实际",endTime)) * i;
-            sum = sum + (allMoney(getS, "收入", "合计",endTime) - allMoney(getS, "收入", "实际",endTime)) * i;
-            sum = sum - (allMoney(getS, "支出", "合计",endTime) - allMoney(getS, "支出", "实际",endTime)) * i;
+//            sum = sum + (allMoney(getS, "付款", "合计",endTime) + allMoney(getS, "付款", "实际",endTime)) * i;
+            sum = sum.add((allMoney(getS, "付款", "合计",endTime).add(allMoney(getS, "付款", "实际",endTime))).multiply(new BigDecimal(i)));
+//            sum = sum - (allMoney(getS, "收款", "合计",endTime) + allMoney(getS, "收款", "实际",endTime)) * i;
+            sum = sum.subtract((allMoney(getS, "收款", "合计",endTime).add(allMoney(getS, "收款", "实际",endTime))).multiply(new BigDecimal(i)));
+//            sum = sum + (allMoney(getS, "收入", "合计",endTime) - allMoney(getS, "收入", "实际",endTime)) * i;
+            sum = sum.add((allMoney(getS, "收入", "合计",endTime).subtract(allMoney(getS, "收入", "实际",endTime))).multiply(new BigDecimal(i)));
+//            sum = sum - (allMoney(getS, "支出", "合计",endTime) - allMoney(getS, "支出", "实际",endTime)) * i;
+            sum = sum.subtract((allMoney(getS, "支出", "合计",endTime).subtract(allMoney(getS, "支出", "实际",endTime))).multiply(new BigDecimal(i)));
             outer.put("getAllMoney", sum);
             map.put("rows", outer);
             res.code = 200;
@@ -96,7 +101,7 @@ public class AccountHeadController {
 
     /**
      * 根据编号查询单据信息
-     * @param number
+     * @param billNo
      * @param request
      * @return
      */
@@ -124,15 +129,15 @@ public class AccountHeadController {
      * 统计总金额
      * @param getS
      * @param type
-     * @param subType
      * @param mode 合计或者金额
+     * @param endTime
      * @return
      */
-    public Double allMoney(String getS, String type, String mode, String endTime) {
-        Double allMoney = 0.0;
+    public BigDecimal allMoney(String getS, String type, String mode, String endTime) {
+        BigDecimal allMoney = BigDecimal.ZERO;
         try {
             Integer supplierId = Integer.valueOf(getS);
-            Double sum = accountHeadService.findAllMoney(supplierId, type, mode, endTime);
+            BigDecimal sum = accountHeadService.findAllMoney(supplierId, type, mode, endTime);
             if(sum != null) {
                 allMoney = sum;
             }
@@ -140,8 +145,8 @@ public class AccountHeadController {
             e.printStackTrace();
         }
         //返回正数，如果负数也转为正数
-        if (allMoney < 0) {
-            allMoney = -allMoney;
+        if ((allMoney.compareTo(BigDecimal.ZERO))==-1) {
+            allMoney = allMoney.abs();
         }
         return allMoney;
     }

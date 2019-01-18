@@ -6,12 +6,12 @@ import java.io.*;
 import java.util.*;
 
 /**
- * 
+ *
  * 文件处理工具类
  *
  */
 public class FileUtils {
-	
+
 	/**
 	 * 功　能: 创建文件夹
 	 *
@@ -57,7 +57,7 @@ public class FileUtils {
 		}
 	}
 
-	
+
 	/**
 	 * 列出某个目录下的所有文件,子目录不列出
 	 * @param folderPath:文件夹路径
@@ -76,7 +76,7 @@ public class FileUtils {
 
 	/**
 	 * 判断文件是否存在
-	 * 
+	 *
 	 * @param fileName
 	 * @return
 	 */
@@ -91,7 +91,7 @@ public class FileUtils {
 
 	/**
 	 * 取当前路径
-	 * 
+	 *
 	 * @return
 	 */
 	public static String getCurrentPath() {
@@ -107,7 +107,7 @@ public class FileUtils {
 
 	/**
 	 * 获取文件扩展名
-	 * 
+	 *
 	 * @param fileName
 	 * @return
 	 * */
@@ -122,7 +122,7 @@ public class FileUtils {
 
 	/**
 	 * 创建一个新文件，如果存在则报错
-	 * 
+	 *
 	 * @param filePath
 	 * @param fileName
 	 * @return
@@ -140,7 +140,7 @@ public class FileUtils {
 
 	/**
 	 * 创建一个新文件(含路径)，如果存在则报错
-	 * 
+	 *
 	 * @param fileName
 	 *            含有路径的文件名
 	 * @return
@@ -161,11 +161,11 @@ public class FileUtils {
 			}
 		}
 	}
- 
+
 
 	/**
 	 * 创建目录，如果存在则不创建
-	 * 
+	 *
 	 * @param path
 	 * @return 返回结果null则创建成功，否则返回的是错误信息
 	 * @return
@@ -191,10 +191,10 @@ public class FileUtils {
 		}
 		return msg;
 	}
-	
+
 	/**
 	 * 删除指定目录或文件。 如果要删除是目录，同时删除子目录下所有的文件
-	 * 
+	 *
 	 * @file:File 目录
 	 * */
 	public static void delFileOrFolder(String fileName) {
@@ -206,7 +206,7 @@ public class FileUtils {
 
 	/**
 	 * 删除指定目录或文件。 如果要删除是目录，同时删除子目录下所有的文件
-	 * 
+	 *
 	 * @file:File 目录
 	 * */
 	public static void delFileOrFolder(File file) {
@@ -226,11 +226,11 @@ public class FileUtils {
 			}
 		}
 	}
-	
+
 	/**
 	 * 从Properties格式配置文件中获取所有参数并保存到HashMap中。
 	 * 配置中的key值即map表中的key值，如果配置文件保存时用的中文，则返回结果也会转成中文。
-	 * 
+	 *
 	 * @param file
 	 * @return
 	 * @throws IOException

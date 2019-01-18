@@ -1,5 +1,7 @@
 package com.jsh.erp.datasource.entities;
 
+import java.math.BigDecimal;
+
 public class DepotItemVo4WithInfoEx {
 
     private Long id;
@@ -10,31 +12,31 @@ public class DepotItemVo4WithInfoEx {
 
     private String munit;
 
-    private Double opernumber;
+    private BigDecimal opernumber;
 
-    private Double basicnumber;
+    private BigDecimal basicnumber;
 
-    private Double unitprice;
+    private BigDecimal unitprice;
 
-    private Double taxunitprice;
+    private BigDecimal taxunitprice;
 
-    private Double allprice;
+    private BigDecimal allprice;
 
     private String remark;
 
     private String img;
 
-    private Double incidentals;
+    private BigDecimal incidentals;
 
     private Long depotid;
 
     private Long anotherdepotid;
 
-    private Double taxrate;
+    private BigDecimal taxrate;
 
-    private Double taxmoney;
+    private BigDecimal taxmoney;
 
-    private Double taxlastmoney;
+    private BigDecimal taxlastmoney;
 
     private String otherfield1;
 
@@ -108,43 +110,43 @@ public class DepotItemVo4WithInfoEx {
         this.munit = munit;
     }
 
-    public Double getOpernumber() {
+    public BigDecimal getOpernumber() {
         return opernumber;
     }
 
-    public void setOpernumber(Double opernumber) {
+    public void setOpernumber(BigDecimal opernumber) {
         this.opernumber = opernumber;
     }
 
-    public Double getBasicnumber() {
+    public BigDecimal getBasicnumber() {
         return basicnumber;
     }
 
-    public void setBasicnumber(Double basicnumber) {
+    public void setBasicnumber(BigDecimal basicnumber) {
         this.basicnumber = basicnumber;
     }
 
-    public Double getUnitprice() {
+    public BigDecimal getUnitprice() {
         return unitprice;
     }
 
-    public void setUnitprice(Double unitprice) {
+    public void setUnitprice(BigDecimal unitprice) {
         this.unitprice = unitprice;
     }
 
-    public Double getTaxunitprice() {
+    public BigDecimal getTaxunitprice() {
         return taxunitprice;
     }
 
-    public void setTaxunitprice(Double taxunitprice) {
+    public void setTaxunitprice(BigDecimal taxunitprice) {
         this.taxunitprice = taxunitprice;
     }
 
-    public Double getAllprice() {
+    public BigDecimal getAllprice() {
         return allprice;
     }
 
-    public void setAllprice(Double allprice) {
+    public void setAllprice(BigDecimal allprice) {
         this.allprice = allprice;
     }
 
@@ -164,11 +166,11 @@ public class DepotItemVo4WithInfoEx {
         this.img = img;
     }
 
-    public Double getIncidentals() {
+    public BigDecimal getIncidentals() {
         return incidentals;
     }
 
-    public void setIncidentals(Double incidentals) {
+    public void setIncidentals(BigDecimal incidentals) {
         this.incidentals = incidentals;
     }
 
@@ -188,27 +190,27 @@ public class DepotItemVo4WithInfoEx {
         this.anotherdepotid = anotherdepotid;
     }
 
-    public Double getTaxrate() {
+    public BigDecimal getTaxrate() {
         return taxrate;
     }
 
-    public void setTaxrate(Double taxrate) {
+    public void setTaxrate(BigDecimal taxrate) {
         this.taxrate = taxrate;
     }
 
-    public Double getTaxmoney() {
+    public BigDecimal getTaxmoney() {
         return taxmoney;
     }
 
-    public void setTaxmoney(Double taxmoney) {
+    public void setTaxmoney(BigDecimal taxmoney) {
         this.taxmoney = taxmoney;
     }
 
-    public Double getTaxlastmoney() {
+    public BigDecimal getTaxlastmoney() {
         return taxlastmoney;
     }
 
-    public void setTaxlastmoney(Double taxlastmoney) {
+    public void setTaxlastmoney(BigDecimal taxlastmoney) {
         this.taxlastmoney = taxlastmoney;
     }
 

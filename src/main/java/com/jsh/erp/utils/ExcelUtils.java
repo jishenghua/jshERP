@@ -60,7 +60,7 @@ public class ExcelUtils {
 
 	/**
 	 * 导出excel，不需要第一行的title
-	 * 
+	 *
 	 * @param fileName
 	 * @param names
 	 * @param title
@@ -209,7 +209,7 @@ public class ExcelUtils {
 
 	/**
 	 * 从第i行开始到最后检测指定列的唯一性
-	 * 
+	 *
 	 * @param src
 	 * @param colNum
 	 * @param fromRow

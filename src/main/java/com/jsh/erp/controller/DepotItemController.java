@@ -15,6 +15,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,13 +53,16 @@ public class DepotItemController {
         try {
             List<DepotItemVo4HeaderId> depotItemList = depotItemService.getHeaderIdByMaterial(materialParam, depotIds);
             String allReturn = "";
-            if (depotItemList != null) {
+            if (depotItemList != null&&depotItemList.size()>0) {
                 for (DepotItemVo4HeaderId d : depotItemList) {
                     Long dl = d.getHeaderid(); //获取对象
                     allReturn = allReturn + dl.toString() + ",";
                 }
+                /**
+                 * 2019-01-17修复depotItemList集合为空时，程序异常
+                 * */
+                allReturn = allReturn.substring(0, allReturn.length() - 1);
             }
-            allReturn = allReturn.substring(0, allReturn.length() - 1);
             if (allReturn.equals("null")) {
                 allReturn = "";
             }
@@ -151,13 +156,13 @@ public class DepotItemController {
         if (null != list) {
             for (DepotItemVo4Material di : list) {
                 JSONObject item = new JSONObject();
-                double prevSum = sumNumber("入库", pid, materialId, monthTime, true) - sumNumber("出库", pid, materialId, monthTime, true);
-                double InSum = sumNumber("入库", pid, materialId, monthTime, false);
-                double OutSum = sumNumber("出库", pid, materialId, monthTime, false);
+                BigDecimal prevSum = sumNumber("入库", pid, materialId, monthTime, true).subtract(sumNumber("出库", pid, materialId, monthTime, true));
+                BigDecimal InSum = sumNumber("入库", pid, materialId, monthTime, false);
+                BigDecimal OutSum = sumNumber("出库", pid, materialId, monthTime, false);
                 item.put("MaterialId", di.getMaterialid() == null ? "" : di.getMaterialid());
                 item.put("MaterialName", di.getMname());
                 item.put("MaterialModel", di.getMmodel());
-                item.put("thisSum", prevSum + InSum - OutSum);
+                item.put("thisSum", prevSum.add(InSum).subtract(OutSum));
                 dataArray.add(item);
             }
         }
@@ -260,163 +265,7 @@ public class DepotItemController {
                               HttpServletRequest request) {
         Map<String, Object> objectMap = new HashMap<String, Object>();
         try {
-            //转为json
-            JSONArray insertedJson = JSONArray.parseArray(inserted);
-            JSONArray deletedJson = JSONArray.parseArray(deleted);
-            JSONArray updatedJson = JSONArray.parseArray(updated);
-            if (null != insertedJson) {
-                for (int i = 0; i < insertedJson.size(); i++) {
-                    DepotItem depotItem = new DepotItem();
-                    JSONObject tempInsertedJson = JSONObject.parseObject(insertedJson.getString(i));
-                    depotItem.setHeaderid(headerId);
-                    depotItem.setMaterialid(tempInsertedJson.getLong("MaterialId"));
-                    depotItem.setMunit(tempInsertedJson.getString("Unit"));
-                    if (!StringUtil.isEmpty(tempInsertedJson.get("OperNumber").toString())) {
-                        depotItem.setOpernumber(tempInsertedJson.getDouble("OperNumber"));
-                        try {
-                            String Unit = tempInsertedJson.get("Unit").toString();
-                            Double oNumber = tempInsertedJson.getDouble("OperNumber");
-                            Long mId = Long.parseLong(tempInsertedJson.get("MaterialId").toString());
-                            //以下进行单位换算
-                            String UnitName = findUnitName(mId); //查询计量单位名称
-                            if (!StringUtil.isEmpty(UnitName)) {
-                                String UnitList = UnitName.substring(0, UnitName.indexOf("("));
-                                String RatioList = UnitName.substring(UnitName.indexOf("("));
-                                String basicUnit = UnitList.substring(0, UnitList.indexOf(",")); //基本单位
-                                String otherUnit = UnitList.substring(UnitList.indexOf(",") + 1); //副单位
-                                Integer ratio = Integer.parseInt(RatioList.substring(RatioList.indexOf(":") + 1).replace(")", "")); //比例
-                                if (Unit.equals(basicUnit)) { //如果等于基础单位
-                                    depotItem.setBasicnumber(oNumber); //数量一致
-                                } else if (Unit.equals(otherUnit)) { //如果等于副单位
-                                    depotItem.setBasicnumber(oNumber * ratio); //数量乘以比例
-                                }
-                            } else {
-                                depotItem.setBasicnumber(oNumber); //其他情况
-                            }
-                        } catch (Exception e) {
-                            logger.error(">>>>>>>>>>>>>>>>>>>设置基础数量异常", e);
-                        }
-                    }
-                    if (!StringUtil.isEmpty(tempInsertedJson.get("UnitPrice").toString())) {
-                        depotItem.setUnitprice(tempInsertedJson.getDouble("UnitPrice"));
-                    }
-                    if (!StringUtil.isEmpty(tempInsertedJson.get("TaxUnitPrice").toString())) {
-                        depotItem.setTaxunitprice(tempInsertedJson.getDouble("TaxUnitPrice"));
-                    }
-                    if (!StringUtil.isEmpty(tempInsertedJson.get("AllPrice").toString())) {
-                        depotItem.setAllprice(tempInsertedJson.getDouble("AllPrice"));
-                    }
-                    depotItem.setRemark(tempInsertedJson.getString("Remark"));
-                    if (tempInsertedJson.get("DepotId") != null && !StringUtil.isEmpty(tempInsertedJson.get("DepotId").toString())) {
-                        depotItem.setDepotid(tempInsertedJson.getLong("DepotId"));
-                    }
-                    if (tempInsertedJson.get("AnotherDepotId") != null && !StringUtil.isEmpty(tempInsertedJson.get("AnotherDepotId").toString())) {
-                        depotItem.setAnotherdepotid(tempInsertedJson.getLong("AnotherDepotId"));
-                    }
-                    if (!StringUtil.isEmpty(tempInsertedJson.get("TaxRate").toString())) {
-                        depotItem.setTaxrate(tempInsertedJson.getDouble("TaxRate"));
-                    }
-                    if (!StringUtil.isEmpty(tempInsertedJson.get("TaxMoney").toString())) {
-                        depotItem.setTaxmoney(tempInsertedJson.getDouble("TaxMoney"));
-                    }
-                    if (!StringUtil.isEmpty(tempInsertedJson.get("TaxLastMoney").toString())) {
-                        depotItem.setTaxlastmoney(tempInsertedJson.getDouble("TaxLastMoney"));
-                    }
-                    if (tempInsertedJson.get("OtherField1") != null) {
-                        depotItem.setOtherfield1(tempInsertedJson.getString("OtherField1"));
-                    }
-                    if (tempInsertedJson.get("OtherField2") != null) {
-                        depotItem.setOtherfield2(tempInsertedJson.getString("OtherField2"));
-                    }
-                    if (tempInsertedJson.get("OtherField3") != null) {
-                        depotItem.setOtherfield3(tempInsertedJson.getString("OtherField3"));
-                    }
-                    if (tempInsertedJson.get("OtherField4") != null) {
-                        depotItem.setOtherfield4(tempInsertedJson.getString("OtherField4"));
-                    }
-                    if (tempInsertedJson.get("OtherField5") != null) {
-                        depotItem.setOtherfield5(tempInsertedJson.getString("OtherField5"));
-                    }
-                    if (tempInsertedJson.get("MType") != null) {
-                        depotItem.setMtype(tempInsertedJson.getString("MType"));
-                    }
-                    depotItemService.insertDepotItemWithObj(depotItem);
-                }
-            }
-            if (null != deletedJson) {
-                for (int i = 0; i < deletedJson.size(); i++) {
-                    JSONObject tempDeletedJson = JSONObject.parseObject(deletedJson.getString(i));
-                    depotItemService.deleteDepotItem(tempDeletedJson.getLong("Id"));
-                }
-            }
-            if (null != updatedJson) {
-                for (int i = 0; i < updatedJson.size(); i++) {
-                    JSONObject tempUpdatedJson = JSONObject.parseObject(updatedJson.getString(i));
-                    DepotItem depotItem = depotItemService.getDepotItem(tempUpdatedJson.getLong("Id"));
-                    depotItem.setId(tempUpdatedJson.getLong("Id"));
-                    depotItem.setMaterialid(tempUpdatedJson.getLong("MaterialId"));
-                    depotItem.setMunit(tempUpdatedJson.getString("Unit"));
-                    if (!StringUtil.isEmpty(tempUpdatedJson.get("OperNumber").toString())) {
-                        depotItem.setOpernumber(tempUpdatedJson.getDouble("OperNumber"));
-                        try {
-                            String Unit = tempUpdatedJson.get("Unit").toString();
-                            Double oNumber = tempUpdatedJson.getDouble("OperNumber");
-                            Long mId = Long.parseLong(tempUpdatedJson.get("MaterialId").toString());
-                            //以下进行单位换算
-                            String UnitName = findUnitName(mId); //查询计量单位名称
-                            if (!StringUtil.isEmpty(UnitName)) {
-                                String UnitList = UnitName.substring(0, UnitName.indexOf("("));
-                                String RatioList = UnitName.substring(UnitName.indexOf("("));
-                                String basicUnit = UnitList.substring(0, UnitList.indexOf(",")); //基本单位
-                                String otherUnit = UnitList.substring(UnitList.indexOf(",") + 1); //副单位
-                                Integer ratio = Integer.parseInt(RatioList.substring(RatioList.indexOf(":") + 1).replace(")", "")); //比例
-                                if (Unit.equals(basicUnit)) { //如果等于基础单位
-                                    depotItem.setBasicnumber(oNumber); //数量一致
-                                } else if (Unit.equals(otherUnit)) { //如果等于副单位
-                                    depotItem.setBasicnumber(oNumber * ratio); //数量乘以比例
-                                }
-                            } else {
-                                depotItem.setBasicnumber(oNumber); //其他情况
-                            }
-                        } catch (Exception e) {
-                            logger.error(">>>>>>>>>>>>>>>>>>>设置基础数量异常", e);
-                        }
-                    }
-                    if (!StringUtil.isEmpty(tempUpdatedJson.get("UnitPrice").toString())) {
-                        depotItem.setUnitprice(tempUpdatedJson.getDouble("UnitPrice"));
-                    }
-                    if (!StringUtil.isEmpty(tempUpdatedJson.get("TaxUnitPrice").toString())) {
-                        depotItem.setTaxunitprice(tempUpdatedJson.getDouble("TaxUnitPrice"));
-                    }
-                    if (!StringUtil.isEmpty(tempUpdatedJson.get("AllPrice").toString())) {
-                        depotItem.setAllprice(tempUpdatedJson.getDouble("AllPrice"));
-                    }
-                    depotItem.setRemark(tempUpdatedJson.getString("Remark"));
-                    if (tempUpdatedJson.get("DepotId") != null && !StringUtil.isEmpty(tempUpdatedJson.get("DepotId").toString())) {
-                        depotItem.setDepotid(tempUpdatedJson.getLong("DepotId"));
-                    }
-                    if (tempUpdatedJson.get("AnotherDepotId") != null && !StringUtil.isEmpty(tempUpdatedJson.get("AnotherDepotId").toString())) {
-                        depotItem.setAnotherdepotid(tempUpdatedJson.getLong("AnotherDepotId"));
-                    }
-                    if (!StringUtil.isEmpty(tempUpdatedJson.get("TaxRate").toString())) {
-                        depotItem.setTaxrate(tempUpdatedJson.getDouble("TaxRate"));
-                    }
-                    if (!StringUtil.isEmpty(tempUpdatedJson.get("TaxMoney").toString())) {
-                        depotItem.setTaxmoney(tempUpdatedJson.getDouble("TaxMoney"));
-                    }
-                    if (!StringUtil.isEmpty(tempUpdatedJson.get("TaxLastMoney").toString())) {
-                        depotItem.setTaxlastmoney(tempUpdatedJson.getDouble("TaxLastMoney"));
-                    }
-                    depotItem.setOtherfield1(tempUpdatedJson.getString("OtherField1"));
-                    depotItem.setOtherfield2(tempUpdatedJson.getString("OtherField2"));
-                    depotItem.setOtherfield3(tempUpdatedJson.getString("OtherField3"));
-                    depotItem.setOtherfield4(tempUpdatedJson.getString("OtherField4"));
-                    depotItem.setOtherfield5(tempUpdatedJson.getString("OtherField5"));
-                    depotItem.setMtype(tempUpdatedJson.getString("MType"));
-                    depotItemService.updateDepotItemWithObj(depotItem);
-                }
-            }
-
+            depotItemService.saveDetials(inserted,deleted,updated,headerId);
             return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
         } catch (DataAccessException e) {
             e.printStackTrace();
@@ -580,12 +429,12 @@ public class DepotItemController {
             if (null != dataList) {
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
                     JSONObject item = new JSONObject();
-                    Double prevSum = sumNumber("入库", pid, diEx.getMId(), monthTime, true) - sumNumber("出库", pid, diEx.getMId(), monthTime, true);
-                    Double InSum = sumNumber("入库", pid, diEx.getMId(), monthTime, false);
-                    Double OutSum = sumNumber("出库", pid, diEx.getMId(), monthTime, false);
-                    Double prevPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, true) - sumPrice("出库", pid, diEx.getMId(), monthTime, true);
-                    Double InPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, false);
-                    Double OutPrice = sumPrice("出库", pid, diEx.getMId(), monthTime, false);
+                    BigDecimal prevSum = sumNumber("入库", pid, diEx.getMId(), monthTime, true).subtract(sumNumber("出库", pid, diEx.getMId(), monthTime, true));
+                    BigDecimal InSum = sumNumber("入库", pid, diEx.getMId(), monthTime, false);
+                    BigDecimal OutSum = sumNumber("出库", pid, diEx.getMId(), monthTime, false);
+                    BigDecimal prevPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, true).subtract(sumPrice("出库", pid, diEx.getMId(), monthTime, true));
+                    BigDecimal InPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, false);
+                    BigDecimal OutPrice = sumPrice("出库", pid, diEx.getMId(), monthTime, false);
                     item.put("MaterialName", diEx.getMName());
                     item.put("MaterialModel", diEx.getMColor());
                     //扩展信息
@@ -593,16 +442,21 @@ public class DepotItemController {
                     item.put("MaterialOther", materialOther);
                     item.put("MaterialColor", diEx.getMColor());
                     item.put("MaterialUnit", diEx.getMaterialUnit());
-                    Double unitPrice = 0.0;
-                    if (prevSum + InSum - OutSum != 0.0) {
-                        unitPrice = (prevPrice + InPrice - OutPrice) / (prevSum + InSum - OutSum);
+                    BigDecimal unitPrice = BigDecimal.ZERO;
+                    if ((prevSum .add(InSum).subtract(OutSum)).compareTo(BigDecimal.ZERO)!= 0) {
+                        unitPrice = (prevPrice.add(InPrice).subtract(OutPrice)).divide(prevSum.add(InSum).subtract(OutSum),2, BigDecimal.ROUND_HALF_UP);
+                        /**
+                         * 2019-01-15通过除法算出金额后，保留两位小数
+                         * */
+                        DecimalFormat    df   = new DecimalFormat("#.00");
+                        unitPrice= new BigDecimal(df.format(unitPrice));
                     }
                     item.put("UnitPrice", unitPrice);
                     item.put("prevSum", prevSum);
                     item.put("InSum", InSum);
                     item.put("OutSum", OutSum);
-                    item.put("thisSum", prevSum + InSum - OutSum);
-                    item.put("thisAllPrice", prevPrice + InPrice - OutPrice);
+                    item.put("thisSum", prevSum.add(InSum).subtract(OutSum));
+                    item.put("thisAllPrice", prevPrice.add(InPrice).subtract(OutPrice));
                     dataArray.add(item);
                 }
             }
@@ -636,13 +490,13 @@ public class DepotItemController {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
             List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(headIds, materialIds, null, null);
-            Double thisAllPrice = 0.0;
+            BigDecimal thisAllPrice = BigDecimal.ZERO;
             if (null != dataList) {
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
-                    Double prevPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, true) - sumPrice("出库", pid, diEx.getMId(), monthTime, true);
-                    Double InPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, false);
-                    Double OutPrice = sumPrice("出库", pid, diEx.getMId(), monthTime, false);
-                    thisAllPrice = thisAllPrice + (prevPrice + InPrice - OutPrice);
+                    BigDecimal prevPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, true).subtract(sumPrice("出库", pid, diEx.getMId(), monthTime, true));
+                    BigDecimal InPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, false);
+                    BigDecimal OutPrice = sumPrice("出库", pid, diEx.getMId(), monthTime, false);
+                    thisAllPrice = thisAllPrice .add(prevPrice.add(InPrice).subtract(OutPrice));
                 }
             }
             map.put("totalCount", thisAllPrice);
@@ -687,10 +541,10 @@ public class DepotItemController {
             if (null != dataList) {
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
                     JSONObject item = new JSONObject();
-                    Double InSum = sumNumberBuyOrSale("入库", "采购", diEx.getMId(), monthTime);
-                    Double OutSum = sumNumberBuyOrSale("出库", "采购退货", diEx.getMId(), monthTime);
-                    Double InSumPrice = sumPriceBuyOrSale("入库", "采购", diEx.getMId(), monthTime);
-                    Double OutSumPrice = sumPriceBuyOrSale("出库", "采购退货", diEx.getMId(), monthTime);
+                    BigDecimal InSum = sumNumberBuyOrSale("入库", "采购", diEx.getMId(), monthTime);
+                    BigDecimal OutSum = sumNumberBuyOrSale("出库", "采购退货", diEx.getMId(), monthTime);
+                    BigDecimal InSumPrice = sumPriceBuyOrSale("入库", "采购", diEx.getMId(), monthTime);
+                    BigDecimal OutSumPrice = sumPriceBuyOrSale("出库", "采购退货", diEx.getMId(), monthTime);
                     item.put("MaterialName", diEx.getMName());
                     item.put("MaterialModel", diEx.getMModel());
                     //扩展信息
@@ -747,14 +601,14 @@ public class DepotItemController {
             if (null != dataList) {
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
                     JSONObject item = new JSONObject();
-                    Double OutSumRetail = sumNumberBuyOrSale("出库", "零售", diEx.getMId(), monthTime);
-                    Double OutSum = sumNumberBuyOrSale("出库", "销售", diEx.getMId(), monthTime);
-                    Double InSumRetail = sumNumberBuyOrSale("入库", "零售退货", diEx.getMId(), monthTime);
-                    Double InSum = sumNumberBuyOrSale("入库", "销售退货", diEx.getMId(), monthTime);
-                    Double OutSumRetailPrice = sumPriceBuyOrSale("出库", "零售", diEx.getMId(), monthTime);
-                    Double OutSumPrice = sumPriceBuyOrSale("出库", "销售", diEx.getMId(), monthTime);
-                    Double InSumRetailPrice = sumPriceBuyOrSale("入库", "零售退货", diEx.getMId(), monthTime);
-                    Double InSumPrice = sumPriceBuyOrSale("入库", "销售退货", diEx.getMId(), monthTime);
+                    BigDecimal OutSumRetail = sumNumberBuyOrSale("出库", "零售", diEx.getMId(), monthTime);
+                    BigDecimal OutSum = sumNumberBuyOrSale("出库", "销售", diEx.getMId(), monthTime);
+                    BigDecimal InSumRetail = sumNumberBuyOrSale("入库", "零售退货", diEx.getMId(), monthTime);
+                    BigDecimal InSum = sumNumberBuyOrSale("入库", "销售退货", diEx.getMId(), monthTime);
+                    BigDecimal OutSumRetailPrice = sumPriceBuyOrSale("出库", "零售", diEx.getMId(), monthTime);
+                    BigDecimal OutSumPrice = sumPriceBuyOrSale("出库", "销售", diEx.getMId(), monthTime);
+                    BigDecimal InSumRetailPrice = sumPriceBuyOrSale("入库", "零售退货", diEx.getMId(), monthTime);
+                    BigDecimal InSumPrice = sumPriceBuyOrSale("入库", "销售退货", diEx.getMId(), monthTime);
                     item.put("MaterialName", diEx.getMName());
                     item.put("MaterialModel", diEx.getMModel());
                     //扩展信息
@@ -762,10 +616,10 @@ public class DepotItemController {
                     item.put("MaterialOther", materialOther);
                     item.put("MaterialColor", diEx.getMColor());
                     item.put("MaterialUnit", diEx.getMaterialUnit());
-                    item.put("OutSum", OutSumRetail + OutSum);
-                    item.put("InSum", InSumRetail + InSum);
-                    item.put("OutSumPrice", OutSumRetailPrice + OutSumPrice);
-                    item.put("InSumPrice", InSumRetailPrice + InSumPrice);
+                    item.put("OutSum", OutSumRetail.add(OutSum));
+                    item.put("InSum", InSumRetail.add(InSum));
+                    item.put("OutSumPrice", OutSumRetailPrice.add(OutSumPrice));
+                    item.put("InSumPrice", InSumRetailPrice.add(InSumPrice));
                     dataArray.add(item);
                 }
             }
@@ -811,8 +665,8 @@ public class DepotItemController {
             if (null != dataList) {
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
                     JSONObject item = new JSONObject();
-                    Double InSum = sumNumberGift("礼品充值", pid, diEx.getMId(), "in");
-                    Double OutSum = sumNumberGift("礼品销售", pid, diEx.getMId(), "out");
+                    BigDecimal InSum = sumNumberGift("礼品充值", pid, diEx.getMId(), "in");
+                    BigDecimal OutSum = sumNumberGift("礼品销售", pid, diEx.getMId(), "out");
                     item.put("MaterialName", diEx.getMName());
                     item.put("MaterialModel", diEx.getMModel());
                     //扩展信息
@@ -820,7 +674,7 @@ public class DepotItemController {
                     item.put("MaterialOther", materialOther);
                     item.put("MaterialColor", diEx.getMColor());
                     item.put("MaterialUnit", diEx.getMaterialUnit());
-                    item.put("thisSum", InSum - OutSum);
+                    item.put("thisSum", InSum.subtract(OutSum));
                     dataArray.add(item);
                 }
             }
@@ -868,18 +722,23 @@ public class DepotItemController {
             if (null != dataList) {
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
                     String[] objs = new String[9];
-                    Double prevSum = sumNumber("入库", pid, diEx.getMId(), monthTime, true) - sumNumber("出库", pid, diEx.getMId(), monthTime, true);
-                    Double InSum = sumNumber("入库", pid, diEx.getMId(), monthTime, false);
-                    Double OutSum = sumNumber("出库", pid, diEx.getMId(), monthTime, false);
-                    Double prevPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, true) - sumPrice("出库", pid, diEx.getMId(), monthTime, true);
-                    Double InPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, false);
-                    Double OutPrice = sumPrice("出库", pid, diEx.getMId(), monthTime, false);
-                    Double unitPrice = 0.0;
-                    if (prevSum + InSum - OutSum != 0.0) {
-                        unitPrice = (prevPrice + InPrice - OutPrice) / (prevSum + InSum - OutSum);
+                    BigDecimal prevSum = sumNumber("入库", pid, diEx.getMId(), monthTime, true).subtract(sumNumber("出库", pid, diEx.getMId(), monthTime, true));
+                    BigDecimal InSum = sumNumber("入库", pid, diEx.getMId(), monthTime, false);
+                    BigDecimal OutSum = sumNumber("出库", pid, diEx.getMId(), monthTime, false);
+                    BigDecimal prevPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, true).subtract(sumPrice("出库", pid, diEx.getMId(), monthTime, true));
+                    BigDecimal InPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, false);
+                    BigDecimal OutPrice = sumPrice("出库", pid, diEx.getMId(), monthTime, false);
+                    BigDecimal unitPrice = BigDecimal.ZERO;
+                    if ((prevSum.add(InSum).subtract(OutSum)).compareTo(BigDecimal.ZERO) != 0) {
+                        unitPrice = (prevPrice.add(InPrice).subtract(OutPrice)).divide(prevSum.add(InSum).subtract(OutSum),2, BigDecimal.ROUND_HALF_UP);
+                        /**
+                         * 2019-01-15通过除法算出金额后，保留两位小数
+                         * */
+                        DecimalFormat    df   = new DecimalFormat("#.00");
+                        unitPrice= new BigDecimal(df.format(unitPrice));
                     }
-                    Double thisSum = prevSum + InSum - OutSum;
-                    Double thisAllPrice = prevPrice + InPrice - OutPrice;
+                    BigDecimal thisSum = prevSum.add(InSum).subtract(OutSum);
+                    BigDecimal thisAllPrice = prevPrice.add(InPrice).subtract(OutPrice);
                     objs[0] = diEx.getMName().toString();
                     objs[1] = diEx.getMModel().toString();
                     objs[2] = diEx.getMaterialUnit().toString();
@@ -899,10 +758,10 @@ public class DepotItemController {
             e.printStackTrace();
             message = "导出失败";
             res.code = 500;
-        } finally {
-            map.put("message", message);
-            res.data = map;
         }
+        /**
+         * 2019-01-15response已经返回，finally部分完全没必要
+         * */
         return res;
     }
 
@@ -915,10 +774,10 @@ public class DepotItemController {
      * @param isPrev
      * @return
      */
-    public Double sumNumber(String type, Integer ProjectId, Long MId, String MonthTime, Boolean isPrev) {
-        Double sumNumber = 0.0;
+    public BigDecimal sumNumber(String type, Integer ProjectId, Long MId, String MonthTime, Boolean isPrev) {
+        BigDecimal sumNumber = BigDecimal.ZERO;
         try {
-            Double sum = depotItemService.findByType(type, ProjectId, MId, MonthTime, isPrev);
+            BigDecimal sum = depotItemService.findByType(type, ProjectId, MId, MonthTime, isPrev);
             if(sum != null) {
                 sumNumber = sum;
             }
@@ -937,10 +796,10 @@ public class DepotItemController {
      * @param isPrev
      * @return
      */
-    public Double sumPrice(String type, Integer ProjectId, Long MId, String MonthTime, Boolean isPrev) {
-        Double sumPrice = 0.0;
+    public BigDecimal sumPrice(String type, Integer ProjectId, Long MId, String MonthTime, Boolean isPrev) {
+        BigDecimal sumPrice = BigDecimal.ZERO;
         try {
-            Double sum = depotItemService.findPriceByType(type, ProjectId, MId, MonthTime, isPrev);
+            BigDecimal sum = depotItemService.findPriceByType(type, ProjectId, MId, MonthTime, isPrev);
             if(sum != null) {
                 sumPrice = sum;
             }
@@ -950,11 +809,11 @@ public class DepotItemController {
         return sumPrice;
     }
 
-    public Double sumNumberBuyOrSale(String type, String subType, Long MId, String MonthTime) {
-        Double sumNumber = 0.0;
+    public BigDecimal sumNumberBuyOrSale(String type, String subType, Long MId, String MonthTime) {
+        BigDecimal sumNumber = BigDecimal.ZERO;
         String sumType = "Number";
         try {
-            Double sum = depotItemService.buyOrSale(type, subType, MId, MonthTime, sumType);
+            BigDecimal sum = depotItemService.buyOrSale(type, subType, MId, MonthTime, sumType);
             if(sum != null) {
                 sumNumber = sum;
             }
@@ -964,11 +823,11 @@ public class DepotItemController {
         return sumNumber;
     }
 
-    public Double sumPriceBuyOrSale(String type, String subType, Long MId, String MonthTime) {
-        Double sumPrice = 0.0;
+    public BigDecimal sumPriceBuyOrSale(String type, String subType, Long MId, String MonthTime) {
+        BigDecimal sumPrice = BigDecimal.ZERO;
         String sumType = "Price";
         try {
-            Double sum = depotItemService.buyOrSale(type, subType, MId, MonthTime, sumType);
+            BigDecimal sum = depotItemService.buyOrSale(type, subType, MId, MonthTime, sumType);
             if(sum != null) {
                 sumPrice = sum;
             }
@@ -986,12 +845,12 @@ public class DepotItemController {
      * @param type
      * @return
      */
-    public Double sumNumberGift(String subType, Integer ProjectId, Long MId, String type) {
-        Double sumNumber = 0.0;
+    public BigDecimal sumNumberGift(String subType, Integer ProjectId, Long MId, String type) {
+        BigDecimal sumNumber = BigDecimal.ZERO;
         String allNumber = "";
         try {
             if (ProjectId != null) {
-                Double sum = depotItemService.findGiftByType(subType, ProjectId, MId, type);
+                BigDecimal sum = depotItemService.findGiftByType(subType, ProjectId, MId, type);
                 if(sum != null) {
                     sumNumber = sum;
                 }

@@ -1,6 +1,5 @@
 package com.jsh.erp.service.account;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.mappers.AccountHeadMapper;
@@ -15,9 +14,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -55,13 +56,13 @@ public class AccountService {
         if (null != list && null !=timeStr) {
             for (AccountVo4List al : list) {
                 DecimalFormat df = new DecimalFormat(".##");
-                Double thisMonthAmount = getAccountSum(al.getId(), timeStr, "month") + getAccountSumByHead(al.getId(), timeStr, "month") + getAccountSumByDetail(al.getId(), timeStr, "month") + getManyAccountSum(al.getId(), timeStr, "month");
+                BigDecimal thisMonthAmount = getAccountSum(al.getId(), timeStr, "month").add(getAccountSumByHead(al.getId(), timeStr, "month")).add(getAccountSumByDetail(al.getId(), timeStr, "month")).add(getManyAccountSum(al.getId(), timeStr, "month"));
                 String thisMonthAmountFmt = "0";
-                if (thisMonthAmount != 0) {
+                if ((thisMonthAmount.compareTo(BigDecimal.ZERO))!=0) {
                     thisMonthAmountFmt = df.format(thisMonthAmount);
                 }
                 al.setThismonthamount(thisMonthAmountFmt);  //本月发生额
-                Double currentAmount = getAccountSum(al.getId(), "", "month") + getAccountSumByHead(al.getId(), "", "month") + getAccountSumByDetail(al.getId(), "", "month") + getManyAccountSum(al.getId(), "", "month") + al.getInitialamount();
+                BigDecimal currentAmount = getAccountSum(al.getId(), "", "month").add(getAccountSumByHead(al.getId(), "", "month")).add(getAccountSumByDetail(al.getId(), "", "month")).add(getManyAccountSum(al.getId(), "", "month")) .add(al.getInitialamount()) ;
                 al.setCurrentamount(currentAmount);
                 resList.add(al);
             }
@@ -73,25 +74,29 @@ public class AccountService {
         return accountMapper.countsByAccount(name, serialNo, remark);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertAccount(String beanJson, HttpServletRequest request) {
         Account account = JSONObject.parseObject(beanJson, Account.class);
         if(account.getInitialamount() == null) {
-            account.setInitialamount(0d);
+            account.setInitialamount(BigDecimal.ZERO);
         }
         account.setIsdefault(false);
         return accountMapper.insertSelective(account);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateAccount(String beanJson, Long id) {
         Account account = JSONObject.parseObject(beanJson, Account.class);
         account.setId(id);
         return accountMapper.updateByPrimaryKeySelective(account);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int deleteAccount(Long id) {
         return accountMapper.deleteByPrimaryKey(id);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteAccount(String ids) {
         List<Long> idList = StringUtil.strToLongList(ids);
         AccountExample example = new AccountExample();
@@ -118,8 +123,8 @@ public class AccountService {
      * @param id
      * @return
      */
-    public Double getAccountSum(Long id, String timeStr, String type) {
-        Double accountSum = 0.0;
+    public BigDecimal getAccountSum(Long id, String timeStr, String type) {
+        BigDecimal accountSum = BigDecimal.ZERO;
         try {
             DepotHeadExample example = new DepotHeadExample();
             if (!timeStr.equals("")) {
@@ -140,7 +145,7 @@ public class AccountService {
             if (dataList != null) {
                 for (DepotHead depotHead : dataList) {
                     if(depotHead.getChangeamount()!=null) {
-                        accountSum = accountSum + depotHead.getChangeamount();
+                        accountSum = accountSum .add(depotHead.getChangeamount()) ;
                     }
                 }
             }
@@ -156,8 +161,8 @@ public class AccountService {
      * @param id
      * @return
      */
-    public Double getAccountSumByHead(Long id, String timeStr, String type) {
-        Double accountSum = 0.0;
+    public BigDecimal getAccountSumByHead(Long id, String timeStr, String type) {
+        BigDecimal accountSum = BigDecimal.ZERO;
         try {
             AccountHeadExample example = new AccountHeadExample();
             if (!timeStr.equals("")) {
@@ -178,7 +183,7 @@ public class AccountService {
             if (dataList != null) {
                 for (AccountHead accountHead : dataList) {
                     if(accountHead.getChangeamount()!=null) {
-                        accountSum = accountSum + accountHead.getChangeamount();
+                        accountSum = accountSum.add(accountHead.getChangeamount());
                     }
                 }
             }
@@ -194,8 +199,8 @@ public class AccountService {
      * @param id
      * @return
      */
-    public Double getAccountSumByDetail(Long id, String timeStr, String type) {
-        Double accountSum = 0.0;
+    public BigDecimal getAccountSumByDetail(Long id, String timeStr, String type) {
+        BigDecimal accountSum =BigDecimal.ZERO ;
         try {
             AccountHeadExample example = new AccountHeadExample();
             if (!timeStr.equals("")) {
@@ -229,7 +234,7 @@ public class AccountService {
                 if (dataListOne != null) {
                     for (AccountItem accountItem : dataListOne) {
                         if(accountItem.getEachamount()!=null) {
-                            accountSum = accountSum + accountItem.getEachamount();
+                            accountSum = accountSum.add(accountItem.getEachamount());
                         }
                     }
                 }
@@ -248,8 +253,8 @@ public class AccountService {
      * @param id
      * @return
      */
-    public Double getManyAccountSum(Long id, String timeStr, String type) {
-        Double accountSum = 0.0;
+    public BigDecimal getManyAccountSum(Long id, String timeStr, String type) {
+        BigDecimal accountSum = BigDecimal.ZERO;
         try {
             DepotHeadExample example = new DepotHeadExample();
             if (!timeStr.equals("")) {
@@ -277,7 +282,7 @@ public class AccountService {
                     String[] amList = accountMoneyList.split(",");
                     for (int i = 0; i < aList.length; i++) {
                         if (aList[i].toString().equals(id.toString())) {
-                            accountSum = accountSum + Double.parseDouble(amList[i].toString());
+                            accountSum = accountSum .add(new BigDecimal(amList[i]));
                         }
                     }
                 }
@@ -296,6 +301,7 @@ public class AccountService {
         return accountMapper.findAccountInOutListCount(accountId);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateAmountIsDefault(Boolean isDefault, Long accountId) {
         Account account = new Account();
         account.setIsdefault(isDefault);

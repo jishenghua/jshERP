@@ -1,5 +1,6 @@
 package com.jsh.erp.datasource.entities;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -444,52 +445,52 @@ public class AccountItemExample {
             return (Criteria) this;
         }
 
-        public Criteria andEachamountEqualTo(Double value) {
+        public Criteria andEachamountEqualTo(BigDecimal value) {
             addCriterion("EachAmount =", value, "eachamount");
             return (Criteria) this;
         }
 
-        public Criteria andEachamountNotEqualTo(Double value) {
+        public Criteria andEachamountNotEqualTo(BigDecimal value) {
             addCriterion("EachAmount <>", value, "eachamount");
             return (Criteria) this;
         }
 
-        public Criteria andEachamountGreaterThan(Double value) {
+        public Criteria andEachamountGreaterThan(BigDecimal value) {
             addCriterion("EachAmount >", value, "eachamount");
             return (Criteria) this;
         }
 
-        public Criteria andEachamountGreaterThanOrEqualTo(Double value) {
+        public Criteria andEachamountGreaterThanOrEqualTo(BigDecimal value) {
             addCriterion("EachAmount >=", value, "eachamount");
             return (Criteria) this;
         }
 
-        public Criteria andEachamountLessThan(Double value) {
+        public Criteria andEachamountLessThan(BigDecimal value) {
             addCriterion("EachAmount <", value, "eachamount");
             return (Criteria) this;
         }
 
-        public Criteria andEachamountLessThanOrEqualTo(Double value) {
+        public Criteria andEachamountLessThanOrEqualTo(BigDecimal value) {
             addCriterion("EachAmount <=", value, "eachamount");
             return (Criteria) this;
         }
 
-        public Criteria andEachamountIn(List<Double> values) {
+        public Criteria andEachamountIn(List<BigDecimal> values) {
             addCriterion("EachAmount in", values, "eachamount");
             return (Criteria) this;
         }
 
-        public Criteria andEachamountNotIn(List<Double> values) {
+        public Criteria andEachamountNotIn(List<BigDecimal> values) {
             addCriterion("EachAmount not in", values, "eachamount");
             return (Criteria) this;
         }
 
-        public Criteria andEachamountBetween(Double value1, Double value2) {
+        public Criteria andEachamountBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("EachAmount between", value1, value2, "eachamount");
             return (Criteria) this;
         }
 
-        public Criteria andEachamountNotBetween(Double value1, Double value2) {
+        public Criteria andEachamountNotBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("EachAmount not between", value1, value2, "eachamount");
             return (Criteria) this;
         }

@@ -8,6 +8,7 @@ import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -37,21 +38,25 @@ public class UnitService {
         return unitMapper.countsByUnit(name);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertUnit(String beanJson, HttpServletRequest request) {
         Unit unit = JSONObject.parseObject(beanJson, Unit.class);
         return unitMapper.insertSelective(unit);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateUnit(String beanJson, Long id) {
         Unit unit = JSONObject.parseObject(beanJson, Unit.class);
         unit.setId(id);
         return unitMapper.updateByPrimaryKeySelective(unit);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int deleteUnit(Long id) {
         return unitMapper.deleteByPrimaryKey(id);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteUnit(String ids) {
         List<Long> idList = StringUtil.strToLongList(ids);
         UnitExample example = new UnitExample();

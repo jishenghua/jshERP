@@ -1,5 +1,6 @@
 package com.jsh.erp.datasource.entities;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -464,52 +465,52 @@ public class MaterialExample {
             return (Criteria) this;
         }
 
-        public Criteria andPackingEqualTo(Double value) {
+        public Criteria andPackingEqualTo(BigDecimal value) {
             addCriterion("Packing =", value, "packing");
             return (Criteria) this;
         }
 
-        public Criteria andPackingNotEqualTo(Double value) {
+        public Criteria andPackingNotEqualTo(BigDecimal value) {
             addCriterion("Packing <>", value, "packing");
             return (Criteria) this;
         }
 
-        public Criteria andPackingGreaterThan(Double value) {
+        public Criteria andPackingGreaterThan(BigDecimal value) {
             addCriterion("Packing >", value, "packing");
             return (Criteria) this;
         }
 
-        public Criteria andPackingGreaterThanOrEqualTo(Double value) {
+        public Criteria andPackingGreaterThanOrEqualTo(BigDecimal value) {
             addCriterion("Packing >=", value, "packing");
             return (Criteria) this;
         }
 
-        public Criteria andPackingLessThan(Double value) {
+        public Criteria andPackingLessThan(BigDecimal value) {
             addCriterion("Packing <", value, "packing");
             return (Criteria) this;
         }
 
-        public Criteria andPackingLessThanOrEqualTo(Double value) {
+        public Criteria andPackingLessThanOrEqualTo(BigDecimal value) {
             addCriterion("Packing <=", value, "packing");
             return (Criteria) this;
         }
 
-        public Criteria andPackingIn(List<Double> values) {
+        public Criteria andPackingIn(List<BigDecimal> values) {
             addCriterion("Packing in", values, "packing");
             return (Criteria) this;
         }
 
-        public Criteria andPackingNotIn(List<Double> values) {
+        public Criteria andPackingNotIn(List<BigDecimal> values) {
             addCriterion("Packing not in", values, "packing");
             return (Criteria) this;
         }
 
-        public Criteria andPackingBetween(Double value1, Double value2) {
+        public Criteria andPackingBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("Packing between", value1, value2, "packing");
             return (Criteria) this;
         }
 
-        public Criteria andPackingNotBetween(Double value1, Double value2) {
+        public Criteria andPackingNotBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("Packing not between", value1, value2, "packing");
             return (Criteria) this;
         }
@@ -524,52 +525,52 @@ public class MaterialExample {
             return (Criteria) this;
         }
 
-        public Criteria andSafetystockEqualTo(Double value) {
+        public Criteria andSafetystockEqualTo(BigDecimal value) {
             addCriterion("SafetyStock =", value, "safetystock");
             return (Criteria) this;
         }
 
-        public Criteria andSafetystockNotEqualTo(Double value) {
+        public Criteria andSafetystockNotEqualTo(BigDecimal value) {
             addCriterion("SafetyStock <>", value, "safetystock");
             return (Criteria) this;
         }
 
-        public Criteria andSafetystockGreaterThan(Double value) {
+        public Criteria andSafetystockGreaterThan(BigDecimal value) {
             addCriterion("SafetyStock >", value, "safetystock");
             return (Criteria) this;
         }
 
-        public Criteria andSafetystockGreaterThanOrEqualTo(Double value) {
+        public Criteria andSafetystockGreaterThanOrEqualTo(BigDecimal value) {
             addCriterion("SafetyStock >=", value, "safetystock");
             return (Criteria) this;
         }
 
-        public Criteria andSafetystockLessThan(Double value) {
+        public Criteria andSafetystockLessThan(BigDecimal value) {
             addCriterion("SafetyStock <", value, "safetystock");
             return (Criteria) this;
         }
 
-        public Criteria andSafetystockLessThanOrEqualTo(Double value) {
+        public Criteria andSafetystockLessThanOrEqualTo(BigDecimal value) {
             addCriterion("SafetyStock <=", value, "safetystock");
             return (Criteria) this;
         }
 
-        public Criteria andSafetystockIn(List<Double> values) {
+        public Criteria andSafetystockIn(List<BigDecimal> values) {
             addCriterion("SafetyStock in", values, "safetystock");
             return (Criteria) this;
         }
 
-        public Criteria andSafetystockNotIn(List<Double> values) {
+        public Criteria andSafetystockNotIn(List<BigDecimal> values) {
             addCriterion("SafetyStock not in", values, "safetystock");
             return (Criteria) this;
         }
 
-        public Criteria andSafetystockBetween(Double value1, Double value2) {
+        public Criteria andSafetystockBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("SafetyStock between", value1, value2, "safetystock");
             return (Criteria) this;
         }
 
-        public Criteria andSafetystockNotBetween(Double value1, Double value2) {
+        public Criteria andSafetystockNotBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("SafetyStock not between", value1, value2, "safetystock");
             return (Criteria) this;
         }
@@ -934,52 +935,52 @@ public class MaterialExample {
             return (Criteria) this;
         }
 
-        public Criteria andRetailpriceEqualTo(Double value) {
+        public Criteria andRetailpriceEqualTo(BigDecimal value) {
             addCriterion("RetailPrice =", value, "retailprice");
             return (Criteria) this;
         }
 
-        public Criteria andRetailpriceNotEqualTo(Double value) {
+        public Criteria andRetailpriceNotEqualTo(BigDecimal value) {
             addCriterion("RetailPrice <>", value, "retailprice");
             return (Criteria) this;
         }
 
-        public Criteria andRetailpriceGreaterThan(Double value) {
+        public Criteria andRetailpriceGreaterThan(BigDecimal value) {
             addCriterion("RetailPrice >", value, "retailprice");
             return (Criteria) this;
         }
 
-        public Criteria andRetailpriceGreaterThanOrEqualTo(Double value) {
+        public Criteria andRetailpriceGreaterThanOrEqualTo(BigDecimal value) {
             addCriterion("RetailPrice >=", value, "retailprice");
             return (Criteria) this;
         }
 
-        public Criteria andRetailpriceLessThan(Double value) {
+        public Criteria andRetailpriceLessThan(BigDecimal value) {
             addCriterion("RetailPrice <", value, "retailprice");
             return (Criteria) this;
         }
 
-        public Criteria andRetailpriceLessThanOrEqualTo(Double value) {
+        public Criteria andRetailpriceLessThanOrEqualTo(BigDecimal value) {
             addCriterion("RetailPrice <=", value, "retailprice");
             return (Criteria) this;
         }
 
-        public Criteria andRetailpriceIn(List<Double> values) {
+        public Criteria andRetailpriceIn(List<BigDecimal> values) {
             addCriterion("RetailPrice in", values, "retailprice");
             return (Criteria) this;
         }
 
-        public Criteria andRetailpriceNotIn(List<Double> values) {
+        public Criteria andRetailpriceNotIn(List<BigDecimal> values) {
             addCriterion("RetailPrice not in", values, "retailprice");
             return (Criteria) this;
         }
 
-        public Criteria andRetailpriceBetween(Double value1, Double value2) {
+        public Criteria andRetailpriceBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("RetailPrice between", value1, value2, "retailprice");
             return (Criteria) this;
         }
 
-        public Criteria andRetailpriceNotBetween(Double value1, Double value2) {
+        public Criteria andRetailpriceNotBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("RetailPrice not between", value1, value2, "retailprice");
             return (Criteria) this;
         }
@@ -994,52 +995,52 @@ public class MaterialExample {
             return (Criteria) this;
         }
 
-        public Criteria andLowpriceEqualTo(Double value) {
+        public Criteria andLowpriceEqualTo(BigDecimal value) {
             addCriterion("LowPrice =", value, "lowprice");
             return (Criteria) this;
         }
 
-        public Criteria andLowpriceNotEqualTo(Double value) {
+        public Criteria andLowpriceNotEqualTo(BigDecimal value) {
             addCriterion("LowPrice <>", value, "lowprice");
             return (Criteria) this;
         }
 
-        public Criteria andLowpriceGreaterThan(Double value) {
+        public Criteria andLowpriceGreaterThan(BigDecimal value) {
             addCriterion("LowPrice >", value, "lowprice");
             return (Criteria) this;
         }
 
-        public Criteria andLowpriceGreaterThanOrEqualTo(Double value) {
+        public Criteria andLowpriceGreaterThanOrEqualTo(BigDecimal value) {
             addCriterion("LowPrice >=", value, "lowprice");
             return (Criteria) this;
         }
 
-        public Criteria andLowpriceLessThan(Double value) {
+        public Criteria andLowpriceLessThan(BigDecimal value) {
             addCriterion("LowPrice <", value, "lowprice");
             return (Criteria) this;
         }
 
-        public Criteria andLowpriceLessThanOrEqualTo(Double value) {
+        public Criteria andLowpriceLessThanOrEqualTo(BigDecimal value) {
             addCriterion("LowPrice <=", value, "lowprice");
             return (Criteria) this;
         }
 
-        public Criteria andLowpriceIn(List<Double> values) {
+        public Criteria andLowpriceIn(List<BigDecimal> values) {
             addCriterion("LowPrice in", values, "lowprice");
             return (Criteria) this;
         }
 
-        public Criteria andLowpriceNotIn(List<Double> values) {
+        public Criteria andLowpriceNotIn(List<BigDecimal> values) {
             addCriterion("LowPrice not in", values, "lowprice");
             return (Criteria) this;
         }
 
-        public Criteria andLowpriceBetween(Double value1, Double value2) {
+        public Criteria andLowpriceBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("LowPrice between", value1, value2, "lowprice");
             return (Criteria) this;
         }
 
-        public Criteria andLowpriceNotBetween(Double value1, Double value2) {
+        public Criteria andLowpriceNotBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("LowPrice not between", value1, value2, "lowprice");
             return (Criteria) this;
         }
@@ -1054,52 +1055,52 @@ public class MaterialExample {
             return (Criteria) this;
         }
 
-        public Criteria andPresetpriceoneEqualTo(Double value) {
+        public Criteria andPresetpriceoneEqualTo(BigDecimal value) {
             addCriterion("PresetPriceOne =", value, "presetpriceone");
             return (Criteria) this;
         }
 
-        public Criteria andPresetpriceoneNotEqualTo(Double value) {
+        public Criteria andPresetpriceoneNotEqualTo(BigDecimal value) {
             addCriterion("PresetPriceOne <>", value, "presetpriceone");
             return (Criteria) this;
         }
 
-        public Criteria andPresetpriceoneGreaterThan(Double value) {
+        public Criteria andPresetpriceoneGreaterThan(BigDecimal value) {
             addCriterion("PresetPriceOne >", value, "presetpriceone");
             return (Criteria) this;
         }
 
-        public Criteria andPresetpriceoneGreaterThanOrEqualTo(Double value) {
+        public Criteria andPresetpriceoneGreaterThanOrEqualTo(BigDecimal value) {
             addCriterion("PresetPriceOne >=", value, "presetpriceone");
             return (Criteria) this;
         }
 
-        public Criteria andPresetpriceoneLessThan(Double value) {
+        public Criteria andPresetpriceoneLessThan(BigDecimal value) {
             addCriterion("PresetPriceOne <", value, "presetpriceone");
             return (Criteria) this;
         }
 
-        public Criteria andPresetpriceoneLessThanOrEqualTo(Double value) {
+        public Criteria andPresetpriceoneLessThanOrEqualTo(BigDecimal value) {
             addCriterion("PresetPriceOne <=", value, "presetpriceone");
             return (Criteria) this;
         }
 
-        public Criteria andPresetpriceoneIn(List<Double> values) {
+        public Criteria andPresetpriceoneIn(List<BigDecimal> values) {
             addCriterion("PresetPriceOne in", values, "presetpriceone");
             return (Criteria) this;
         }
 
-        public Criteria andPresetpriceoneNotIn(List<Double> values) {
+        public Criteria andPresetpriceoneNotIn(List<BigDecimal> values) {
             addCriterion("PresetPriceOne not in", values, "presetpriceone");
             return (Criteria) this;
         }
 
-        public Criteria andPresetpriceoneBetween(Double value1, Double value2) {
+        public Criteria andPresetpriceoneBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("PresetPriceOne between", value1, value2, "presetpriceone");
             return (Criteria) this;
         }
 
-        public Criteria andPresetpriceoneNotBetween(Double value1, Double value2) {
+        public Criteria andPresetpriceoneNotBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("PresetPriceOne not between", value1, value2, "presetpriceone");
             return (Criteria) this;
         }
@@ -1114,52 +1115,52 @@ public class MaterialExample {
             return (Criteria) this;
         }
 
-        public Criteria andPresetpricetwoEqualTo(Double value) {
+        public Criteria andPresetpricetwoEqualTo(BigDecimal value) {
             addCriterion("PresetPriceTwo =", value, "presetpricetwo");
             return (Criteria) this;
         }
 
-        public Criteria andPresetpricetwoNotEqualTo(Double value) {
+        public Criteria andPresetpricetwoNotEqualTo(BigDecimal value) {
             addCriterion("PresetPriceTwo <>", value, "presetpricetwo");
             return (Criteria) this;
         }
 
-        public Criteria andPresetpricetwoGreaterThan(Double value) {
+        public Criteria andPresetpricetwoGreaterThan(BigDecimal value) {
             addCriterion("PresetPriceTwo >", value, "presetpricetwo");
             return (Criteria) this;
         }
 
-        public Criteria andPresetpricetwoGreaterThanOrEqualTo(Double value) {
+        public Criteria andPresetpricetwoGreaterThanOrEqualTo(BigDecimal value) {
             addCriterion("PresetPriceTwo >=", value, "presetpricetwo");
             return (Criteria) this;
         }
 
-        public Criteria andPresetpricetwoLessThan(Double value) {
+        public Criteria andPresetpricetwoLessThan(BigDecimal value) {
             addCriterion("PresetPriceTwo <", value, "presetpricetwo");
             return (Criteria) this;
         }
 
-        public Criteria andPresetpricetwoLessThanOrEqualTo(Double value) {
+        public Criteria andPresetpricetwoLessThanOrEqualTo(BigDecimal value) {
             addCriterion("PresetPriceTwo <=", value, "presetpricetwo");
             return (Criteria) this;
         }
 
-        public Criteria andPresetpricetwoIn(List<Double> values) {
+        public Criteria andPresetpricetwoIn(List<BigDecimal> values) {
             addCriterion("PresetPriceTwo in", values, "presetpricetwo");
             return (Criteria) this;
         }
 
-        public Criteria andPresetpricetwoNotIn(List<Double> values) {
+        public Criteria andPresetpricetwoNotIn(List<BigDecimal> values) {
             addCriterion("PresetPriceTwo not in", values, "presetpricetwo");
             return (Criteria) this;
         }
 
-        public Criteria andPresetpricetwoBetween(Double value1, Double value2) {
+        public Criteria andPresetpricetwoBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("PresetPriceTwo between", value1, value2, "presetpricetwo");
             return (Criteria) this;
         }
 
-        public Criteria andPresetpricetwoNotBetween(Double value1, Double value2) {
+        public Criteria andPresetpricetwoNotBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("PresetPriceTwo not between", value1, value2, "presetpricetwo");
             return (Criteria) this;
         }

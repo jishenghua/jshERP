@@ -1,5 +1,7 @@
 package com.jsh.erp.datasource.vo;
 
+import java.math.BigDecimal;
+
 public class AccountVo4List {
 
     private Long id;
@@ -8,9 +10,9 @@ public class AccountVo4List {
 
     private String serialno;
 
-    private Double initialamount;
+    private BigDecimal initialamount;
 
-    private Double currentamount;
+    private BigDecimal currentamount;
 
     private String remark;
 
@@ -42,19 +44,19 @@ public class AccountVo4List {
         this.serialno = serialno;
     }
 
-    public Double getInitialamount() {
+    public BigDecimal getInitialamount() {
         return initialamount;
     }
 
-    public void setInitialamount(Double initialamount) {
+    public void setInitialamount(BigDecimal initialamount) {
         this.initialamount = initialamount;
     }
 
-    public Double getCurrentamount() {
+    public BigDecimal getCurrentamount() {
         return currentamount;
     }
 
-    public void setCurrentamount(Double currentamount) {
+    public void setCurrentamount(BigDecimal currentamount) {
         this.currentamount = currentamount;
     }
 

@@ -8,6 +8,7 @@ import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -37,21 +38,25 @@ public class InOutItemService {
         return inOutItemMapper.countsByInOutItem(name, type, remark);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertInOutItem(String beanJson, HttpServletRequest request) {
         InOutItem depot = JSONObject.parseObject(beanJson, InOutItem.class);
         return inOutItemMapper.insertSelective(depot);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateInOutItem(String beanJson, Long id) {
         InOutItem depot = JSONObject.parseObject(beanJson, InOutItem.class);
         depot.setId(id);
         return inOutItemMapper.updateByPrimaryKeySelective(depot);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int deleteInOutItem(Long id) {
         return inOutItemMapper.deleteByPrimaryKey(id);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteInOutItem(String ids) {
         List<Long> idList = StringUtil.strToLongList(ids);
         InOutItemExample example = new InOutItemExample();

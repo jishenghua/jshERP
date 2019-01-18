@@ -1,6 +1,8 @@
 package com.jsh.erp.datasource.vo;
 
 
+import java.math.BigDecimal;
+
 public class DepotHeadVo4InOutMCount {
 
     private Long MaterialId;
@@ -11,9 +13,9 @@ public class DepotHeadVo4InOutMCount {
 
     private String categoryName;
 
-    private Double numSum;
+    private BigDecimal numSum;
 
-    private Double priceSum;
+    private BigDecimal priceSum;
 
     public Long getMaterialId() {
         return MaterialId;
@@ -47,19 +49,19 @@ public class DepotHeadVo4InOutMCount {
         this.categoryName = categoryName;
     }
 
-    public Double getNumSum() {
+    public BigDecimal getNumSum() {
         return numSum;
     }
 
-    public void setNumSum(Double numSum) {
+    public void setNumSum(BigDecimal numSum) {
         this.numSum = numSum;
     }
 
-    public Double getPriceSum() {
+    public BigDecimal getPriceSum() {
         return priceSum;
     }
 
-    public void setPriceSum(Double priceSum) {
+    public void setPriceSum(BigDecimal priceSum) {
         this.priceSum = priceSum;
     }
 }

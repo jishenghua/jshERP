@@ -15,9 +15,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -53,10 +55,10 @@ public class DepotHeadService {
                     dh.setOthermoneyitem(otherMoneyItemStr);
                 }
                 if(dh.getChangeamount() != null) {
-                    dh.setChangeamount(Math.abs(dh.getChangeamount()));
+                    dh.setChangeamount(dh.getChangeamount().abs());
                 }
                 if(dh.getTotalprice() != null) {
-                    dh.setTotalprice(Math.abs(dh.getTotalprice()));
+                    dh.setTotalprice(dh.getTotalprice().abs());
                 }
                 dh.setMaterialsList(findMaterialsListByHeaderId(dh.getId()));
                 resList.add(dh);
@@ -71,6 +73,7 @@ public class DepotHeadService {
         return depotHeadMapper.countsByDepotHead(type, subType, number, beginTime, endTime, dhIds);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertDepotHead(String beanJson, HttpServletRequest request) {
         DepotHead depotHead = JSONObject.parseObject(beanJson, DepotHead.class);
         //判断用户是否已经登录过，登录过不再处理
@@ -85,6 +88,7 @@ public class DepotHeadService {
         return depotHeadMapper.insert(depotHead);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateDepotHead(String beanJson, Long id) {
         DepotHead dh = depotHeadMapper.selectByPrimaryKey(id);
         DepotHead depotHead = JSONObject.parseObject(beanJson, DepotHead.class);
@@ -95,10 +99,12 @@ public class DepotHeadService {
         return depotHeadMapper.updateByPrimaryKey(depotHead);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int deleteDepotHead(Long id) {
         return depotHeadMapper.deleteByPrimaryKey(id);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteDepotHead(String ids) {
         List<Long> idList = StringUtil.strToLongList(ids);
         DepotHeadExample example = new DepotHeadExample();
@@ -113,6 +119,7 @@ public class DepotHeadService {
         return list.size();
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchSetStatus(Boolean status, String depotHeadIDs) {
         List<Long> ids = StringUtil.strToLongList(depotHeadIDs);
         DepotHead depotHead = new DepotHead();
@@ -207,7 +214,7 @@ public class DepotHeadService {
         return depotHeadMapper.findStatementAccountCount(beginTime, endTime, organId, supType);
     }
 
-    public Double findAllMoney(Integer supplierId, String type, String subType, String mode, String endTime) {
+    public BigDecimal findAllMoney(Integer supplierId, String type, String subType, String mode, String endTime) {
         String modeName = "";
         if (mode.equals("实际")) {
             modeName = "ChangeAmount";
@@ -231,10 +238,10 @@ public class DepotHeadService {
                     dh.setOthermoneyitem(otherMoneyItemStr);
                 }
                 if(dh.getChangeamount() != null) {
-                    dh.setChangeamount(Math.abs(dh.getChangeamount()));
+                    dh.setChangeamount(dh.getChangeamount().abs());
                 }
                 if(dh.getTotalprice() != null) {
-                    dh.setTotalprice(Math.abs(dh.getTotalprice()));
+                    dh.setTotalprice(dh.getTotalprice().abs());
                 }
                 dh.setMaterialsList(findMaterialsListByHeaderId(dh.getId()));
                 resList.add(dh);

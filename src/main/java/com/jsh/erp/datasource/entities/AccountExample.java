@@ -1,5 +1,6 @@
 package com.jsh.erp.datasource.entities;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -404,52 +405,52 @@ public class AccountExample {
             return (Criteria) this;
         }
 
-        public Criteria andInitialamountEqualTo(Double value) {
+        public Criteria andInitialamountEqualTo(BigDecimal value) {
             addCriterion("InitialAmount =", value, "initialamount");
             return (Criteria) this;
         }
 
-        public Criteria andInitialamountNotEqualTo(Double value) {
+        public Criteria andInitialamountNotEqualTo(BigDecimal value) {
             addCriterion("InitialAmount <>", value, "initialamount");
             return (Criteria) this;
         }
 
-        public Criteria andInitialamountGreaterThan(Double value) {
+        public Criteria andInitialamountGreaterThan(BigDecimal value) {
             addCriterion("InitialAmount >", value, "initialamount");
             return (Criteria) this;
         }
 
-        public Criteria andInitialamountGreaterThanOrEqualTo(Double value) {
+        public Criteria andInitialamountGreaterThanOrEqualTo(BigDecimal value) {
             addCriterion("InitialAmount >=", value, "initialamount");
             return (Criteria) this;
         }
 
-        public Criteria andInitialamountLessThan(Double value) {
+        public Criteria andInitialamountLessThan(BigDecimal value) {
             addCriterion("InitialAmount <", value, "initialamount");
             return (Criteria) this;
         }
 
-        public Criteria andInitialamountLessThanOrEqualTo(Double value) {
+        public Criteria andInitialamountLessThanOrEqualTo(BigDecimal value) {
             addCriterion("InitialAmount <=", value, "initialamount");
             return (Criteria) this;
         }
 
-        public Criteria andInitialamountIn(List<Double> values) {
+        public Criteria andInitialamountIn(List<BigDecimal> values) {
             addCriterion("InitialAmount in", values, "initialamount");
             return (Criteria) this;
         }
 
-        public Criteria andInitialamountNotIn(List<Double> values) {
+        public Criteria andInitialamountNotIn(List<BigDecimal> values) {
             addCriterion("InitialAmount not in", values, "initialamount");
             return (Criteria) this;
         }
 
-        public Criteria andInitialamountBetween(Double value1, Double value2) {
+        public Criteria andInitialamountBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("InitialAmount between", value1, value2, "initialamount");
             return (Criteria) this;
         }
 
-        public Criteria andInitialamountNotBetween(Double value1, Double value2) {
+        public Criteria andInitialamountNotBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("InitialAmount not between", value1, value2, "initialamount");
             return (Criteria) this;
         }
@@ -464,52 +465,52 @@ public class AccountExample {
             return (Criteria) this;
         }
 
-        public Criteria andCurrentamountEqualTo(Double value) {
+        public Criteria andCurrentamountEqualTo(BigDecimal value) {
             addCriterion("CurrentAmount =", value, "currentamount");
             return (Criteria) this;
         }
 
-        public Criteria andCurrentamountNotEqualTo(Double value) {
+        public Criteria andCurrentamountNotEqualTo(BigDecimal value) {
             addCriterion("CurrentAmount <>", value, "currentamount");
             return (Criteria) this;
         }
 
-        public Criteria andCurrentamountGreaterThan(Double value) {
+        public Criteria andCurrentamountGreaterThan(BigDecimal value) {
             addCriterion("CurrentAmount >", value, "currentamount");
             return (Criteria) this;
         }
 
-        public Criteria andCurrentamountGreaterThanOrEqualTo(Double value) {
+        public Criteria andCurrentamountGreaterThanOrEqualTo(BigDecimal value) {
             addCriterion("CurrentAmount >=", value, "currentamount");
             return (Criteria) this;
         }
 
-        public Criteria andCurrentamountLessThan(Double value) {
+        public Criteria andCurrentamountLessThan(BigDecimal value) {
             addCriterion("CurrentAmount <", value, "currentamount");
             return (Criteria) this;
         }
 
-        public Criteria andCurrentamountLessThanOrEqualTo(Double value) {
+        public Criteria andCurrentamountLessThanOrEqualTo(BigDecimal value) {
             addCriterion("CurrentAmount <=", value, "currentamount");
             return (Criteria) this;
         }
 
-        public Criteria andCurrentamountIn(List<Double> values) {
+        public Criteria andCurrentamountIn(List<BigDecimal> values) {
             addCriterion("CurrentAmount in", values, "currentamount");
             return (Criteria) this;
         }
 
-        public Criteria andCurrentamountNotIn(List<Double> values) {
+        public Criteria andCurrentamountNotIn(List<BigDecimal> values) {
             addCriterion("CurrentAmount not in", values, "currentamount");
             return (Criteria) this;
         }
 
-        public Criteria andCurrentamountBetween(Double value1, Double value2) {
+        public Criteria andCurrentamountBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("CurrentAmount between", value1, value2, "currentamount");
             return (Criteria) this;
         }
 
-        public Criteria andCurrentamountNotBetween(Double value1, Double value2) {
+        public Criteria andCurrentamountNotBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("CurrentAmount not between", value1, value2, "currentamount");
             return (Criteria) this;
         }

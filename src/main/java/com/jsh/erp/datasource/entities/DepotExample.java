@@ -1,5 +1,6 @@
 package com.jsh.erp.datasource.entities;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -404,52 +405,52 @@ public class DepotExample {
             return (Criteria) this;
         }
 
-        public Criteria andWarehousingEqualTo(Double value) {
+        public Criteria andWarehousingEqualTo(BigDecimal value) {
             addCriterion("warehousing =", value, "warehousing");
             return (Criteria) this;
         }
 
-        public Criteria andWarehousingNotEqualTo(Double value) {
+        public Criteria andWarehousingNotEqualTo(BigDecimal value) {
             addCriterion("warehousing <>", value, "warehousing");
             return (Criteria) this;
         }
 
-        public Criteria andWarehousingGreaterThan(Double value) {
+        public Criteria andWarehousingGreaterThan(BigDecimal value) {
             addCriterion("warehousing >", value, "warehousing");
             return (Criteria) this;
         }
 
-        public Criteria andWarehousingGreaterThanOrEqualTo(Double value) {
+        public Criteria andWarehousingGreaterThanOrEqualTo(BigDecimal value) {
             addCriterion("warehousing >=", value, "warehousing");
             return (Criteria) this;
         }
 
-        public Criteria andWarehousingLessThan(Double value) {
+        public Criteria andWarehousingLessThan(BigDecimal value) {
             addCriterion("warehousing <", value, "warehousing");
             return (Criteria) this;
         }
 
-        public Criteria andWarehousingLessThanOrEqualTo(Double value) {
+        public Criteria andWarehousingLessThanOrEqualTo(BigDecimal value) {
             addCriterion("warehousing <=", value, "warehousing");
             return (Criteria) this;
         }
 
-        public Criteria andWarehousingIn(List<Double> values) {
+        public Criteria andWarehousingIn(List<BigDecimal> values) {
             addCriterion("warehousing in", values, "warehousing");
             return (Criteria) this;
         }
 
-        public Criteria andWarehousingNotIn(List<Double> values) {
+        public Criteria andWarehousingNotIn(List<BigDecimal> values) {
             addCriterion("warehousing not in", values, "warehousing");
             return (Criteria) this;
         }
 
-        public Criteria andWarehousingBetween(Double value1, Double value2) {
+        public Criteria andWarehousingBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("warehousing between", value1, value2, "warehousing");
             return (Criteria) this;
         }
 
-        public Criteria andWarehousingNotBetween(Double value1, Double value2) {
+        public Criteria andWarehousingNotBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("warehousing not between", value1, value2, "warehousing");
             return (Criteria) this;
         }
@@ -464,52 +465,52 @@ public class DepotExample {
             return (Criteria) this;
         }
 
-        public Criteria andTruckageEqualTo(Double value) {
+        public Criteria andTruckageEqualTo(BigDecimal value) {
             addCriterion("truckage =", value, "truckage");
             return (Criteria) this;
         }
 
-        public Criteria andTruckageNotEqualTo(Double value) {
+        public Criteria andTruckageNotEqualTo(BigDecimal value) {
             addCriterion("truckage <>", value, "truckage");
             return (Criteria) this;
         }
 
-        public Criteria andTruckageGreaterThan(Double value) {
+        public Criteria andTruckageGreaterThan(BigDecimal value) {
             addCriterion("truckage >", value, "truckage");
             return (Criteria) this;
         }
 
-        public Criteria andTruckageGreaterThanOrEqualTo(Double value) {
+        public Criteria andTruckageGreaterThanOrEqualTo(BigDecimal value) {
             addCriterion("truckage >=", value, "truckage");
             return (Criteria) this;
         }
 
-        public Criteria andTruckageLessThan(Double value) {
+        public Criteria andTruckageLessThan(BigDecimal value) {
             addCriterion("truckage <", value, "truckage");
             return (Criteria) this;
         }
 
-        public Criteria andTruckageLessThanOrEqualTo(Double value) {
+        public Criteria andTruckageLessThanOrEqualTo(BigDecimal value) {
             addCriterion("truckage <=", value, "truckage");
             return (Criteria) this;
         }
 
-        public Criteria andTruckageIn(List<Double> values) {
+        public Criteria andTruckageIn(List<BigDecimal> values) {
             addCriterion("truckage in", values, "truckage");
             return (Criteria) this;
         }
 
-        public Criteria andTruckageNotIn(List<Double> values) {
+        public Criteria andTruckageNotIn(List<BigDecimal> values) {
             addCriterion("truckage not in", values, "truckage");
             return (Criteria) this;
         }
 
-        public Criteria andTruckageBetween(Double value1, Double value2) {
+        public Criteria andTruckageBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("truckage between", value1, value2, "truckage");
             return (Criteria) this;
         }
 
-        public Criteria andTruckageNotBetween(Double value1, Double value2) {
+        public Criteria andTruckageNotBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("truckage not between", value1, value2, "truckage");
             return (Criteria) this;
         }

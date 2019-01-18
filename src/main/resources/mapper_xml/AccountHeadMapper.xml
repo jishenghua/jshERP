@@ -10,8 +10,8 @@
     <result column="Type" jdbcType="VARCHAR" property="type" />
     <result column="OrganId" jdbcType="BIGINT" property="organid" />
     <result column="HandsPersonId" jdbcType="BIGINT" property="handspersonid" />
-    <result column="ChangeAmount" jdbcType="DOUBLE" property="changeamount" />
-    <result column="TotalPrice" jdbcType="DOUBLE" property="totalprice" />
+    <result column="ChangeAmount" jdbcType="DECIMAL" property="changeamount" />
+    <result column="TotalPrice" jdbcType="DECIMAL" property="totalprice" />
     <result column="AccountId" jdbcType="BIGINT" property="accountid" />
     <result column="BillNo" jdbcType="VARCHAR" property="billno" />
     <result column="BillTime" jdbcType="TIMESTAMP" property="billtime" />
@@ -147,7 +147,7 @@
       AccountId, BillNo, BillTime, 
       Remark)
     values (#{id,jdbcType=BIGINT}, #{type,jdbcType=VARCHAR}, #{organid,jdbcType=BIGINT}, 
-      #{handspersonid,jdbcType=BIGINT}, #{changeamount,jdbcType=DOUBLE}, #{totalprice,jdbcType=DOUBLE}, 
+      #{handspersonid,jdbcType=BIGINT}, #{changeamount,jdbcType=DECIMAL}, #{totalprice,jdbcType=DECIMAL},
       #{accountid,jdbcType=BIGINT}, #{billno,jdbcType=VARCHAR}, #{billtime,jdbcType=TIMESTAMP}, 
       #{remark,jdbcType=VARCHAR})
   </insert>
@@ -203,10 +203,10 @@
         #{handspersonid,jdbcType=BIGINT},
       </if>
       <if test="changeamount != null">
-        #{changeamount,jdbcType=DOUBLE},
+        #{changeamount,jdbcType=DECIMAL},
       </if>
       <if test="totalprice != null">
-        #{totalprice,jdbcType=DOUBLE},
+        #{totalprice,jdbcType=DECIMAL},
       </if>
       <if test="accountid != null">
         #{accountid,jdbcType=BIGINT},
@@ -252,10 +252,10 @@
         HandsPersonId = #{record.handspersonid,jdbcType=BIGINT},
       </if>
       <if test="record.changeamount != null">
-        ChangeAmount = #{record.changeamount,jdbcType=DOUBLE},
+        ChangeAmount = #{record.changeamount,jdbcType=DECIMAL},
       </if>
       <if test="record.totalprice != null">
-        TotalPrice = #{record.totalprice,jdbcType=DOUBLE},
+        TotalPrice = #{record.totalprice,jdbcType=DECIMAL},
       </if>
       <if test="record.accountid != null">
         AccountId = #{record.accountid,jdbcType=BIGINT},
@@ -284,8 +284,8 @@
       Type = #{record.type,jdbcType=VARCHAR},
       OrganId = #{record.organid,jdbcType=BIGINT},
       HandsPersonId = #{record.handspersonid,jdbcType=BIGINT},
-      ChangeAmount = #{record.changeamount,jdbcType=DOUBLE},
-      TotalPrice = #{record.totalprice,jdbcType=DOUBLE},
+      ChangeAmount = #{record.changeamount,jdbcType=DECIMAL},
+      TotalPrice = #{record.totalprice,jdbcType=DECIMAL},
       AccountId = #{record.accountid,jdbcType=BIGINT},
       BillNo = #{record.billno,jdbcType=VARCHAR},
       BillTime = #{record.billtime,jdbcType=TIMESTAMP},
@@ -311,10 +311,10 @@
         HandsPersonId = #{handspersonid,jdbcType=BIGINT},
       </if>
       <if test="changeamount != null">
-        ChangeAmount = #{changeamount,jdbcType=DOUBLE},
+        ChangeAmount = #{changeamount,jdbcType=DECIMAL},
       </if>
       <if test="totalprice != null">
-        TotalPrice = #{totalprice,jdbcType=DOUBLE},
+        TotalPrice = #{totalprice,jdbcType=DECIMAL},
       </if>
       <if test="accountid != null">
         AccountId = #{accountid,jdbcType=BIGINT},
@@ -340,8 +340,8 @@
     set Type = #{type,jdbcType=VARCHAR},
       OrganId = #{organid,jdbcType=BIGINT},
       HandsPersonId = #{handspersonid,jdbcType=BIGINT},
-      ChangeAmount = #{changeamount,jdbcType=DOUBLE},
-      TotalPrice = #{totalprice,jdbcType=DOUBLE},
+      ChangeAmount = #{changeamount,jdbcType=DECIMAL},
+      TotalPrice = #{totalprice,jdbcType=DECIMAL},
       AccountId = #{accountid,jdbcType=BIGINT},
       BillNo = #{billno,jdbcType=VARCHAR},
       BillTime = #{billtime,jdbcType=TIMESTAMP},

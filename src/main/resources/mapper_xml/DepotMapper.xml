@@ -9,8 +9,8 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="address" jdbcType="VARCHAR" property="address" />
-    <result column="warehousing" jdbcType="DOUBLE" property="warehousing" />
-    <result column="truckage" jdbcType="DOUBLE" property="truckage" />
+    <result column="warehousing" jdbcType="DECIMAL" property="warehousing" />
+    <result column="truckage" jdbcType="DECIMAL" property="truckage" />
     <result column="type" jdbcType="INTEGER" property="type" />
     <result column="sort" jdbcType="VARCHAR" property="sort" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
@@ -143,7 +143,7 @@
       warehousing, truckage, type, 
       sort, remark)
     values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
-      #{warehousing,jdbcType=DOUBLE}, #{truckage,jdbcType=DOUBLE}, #{type,jdbcType=INTEGER}, 
+      #{warehousing,jdbcType=DECIMAL}, #{truckage,jdbcType=DECIMAL}, #{type,jdbcType=INTEGER}, 
       #{sort,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.Depot">
@@ -189,10 +189,10 @@
         #{address,jdbcType=VARCHAR},
       </if>
       <if test="warehousing != null">
-        #{warehousing,jdbcType=DOUBLE},
+        #{warehousing,jdbcType=DECIMAL},
       </if>
       <if test="truckage != null">
-        #{truckage,jdbcType=DOUBLE},
+        #{truckage,jdbcType=DECIMAL},
       </if>
       <if test="type != null">
         #{type,jdbcType=INTEGER},
@@ -232,10 +232,10 @@
         address = #{record.address,jdbcType=VARCHAR},
       </if>
       <if test="record.warehousing != null">
-        warehousing = #{record.warehousing,jdbcType=DOUBLE},
+        warehousing = #{record.warehousing,jdbcType=DECIMAL},
       </if>
       <if test="record.truckage != null">
-        truckage = #{record.truckage,jdbcType=DOUBLE},
+        truckage = #{record.truckage,jdbcType=DECIMAL},
       </if>
       <if test="record.type != null">
         type = #{record.type,jdbcType=INTEGER},
@@ -260,8 +260,8 @@
     set id = #{record.id,jdbcType=BIGINT},
       name = #{record.name,jdbcType=VARCHAR},
       address = #{record.address,jdbcType=VARCHAR},
-      warehousing = #{record.warehousing,jdbcType=DOUBLE},
-      truckage = #{record.truckage,jdbcType=DOUBLE},
+      warehousing = #{record.warehousing,jdbcType=DECIMAL},
+      truckage = #{record.truckage,jdbcType=DECIMAL},
       type = #{record.type,jdbcType=INTEGER},
       sort = #{record.sort,jdbcType=VARCHAR},
       remark = #{record.remark,jdbcType=VARCHAR}
@@ -283,10 +283,10 @@
         address = #{address,jdbcType=VARCHAR},
       </if>
       <if test="warehousing != null">
-        warehousing = #{warehousing,jdbcType=DOUBLE},
+        warehousing = #{warehousing,jdbcType=DECIMAL},
       </if>
       <if test="truckage != null">
-        truckage = #{truckage,jdbcType=DOUBLE},
+        truckage = #{truckage,jdbcType=DECIMAL},
       </if>
       <if test="type != null">
         type = #{type,jdbcType=INTEGER},
@@ -308,8 +308,8 @@
     update jsh_depot
     set name = #{name,jdbcType=VARCHAR},
       address = #{address,jdbcType=VARCHAR},
-      warehousing = #{warehousing,jdbcType=DOUBLE},
-      truckage = #{truckage,jdbcType=DOUBLE},
+      warehousing = #{warehousing,jdbcType=DECIMAL},
+      truckage = #{truckage,jdbcType=DECIMAL},
       type = #{type,jdbcType=INTEGER},
       sort = #{sort,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR}

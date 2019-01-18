@@ -10,17 +10,17 @@
     <result column="CategoryId" jdbcType="BIGINT" property="categoryid" />
     <result column="Name" jdbcType="VARCHAR" property="name" />
     <result column="Mfrs" jdbcType="VARCHAR" property="mfrs" />
-    <result column="Packing" jdbcType="DOUBLE" property="packing" />
-    <result column="SafetyStock" jdbcType="DOUBLE" property="safetystock" />
+    <result column="Packing" jdbcType="DECIMAL" property="packing" />
+    <result column="SafetyStock" jdbcType="DECIMAL" property="safetystock" />
     <result column="Model" jdbcType="VARCHAR" property="model" />
     <result column="Standard" jdbcType="VARCHAR" property="standard" />
     <result column="Color" jdbcType="VARCHAR" property="color" />
     <result column="Unit" jdbcType="VARCHAR" property="unit" />
     <result column="Remark" jdbcType="VARCHAR" property="remark" />
-    <result column="RetailPrice" jdbcType="DOUBLE" property="retailprice" />
-    <result column="LowPrice" jdbcType="DOUBLE" property="lowprice" />
-    <result column="PresetPriceOne" jdbcType="DOUBLE" property="presetpriceone" />
-    <result column="PresetPriceTwo" jdbcType="DOUBLE" property="presetpricetwo" />
+    <result column="RetailPrice" jdbcType="DECIMAL" property="retailprice" />
+    <result column="LowPrice" jdbcType="DECIMAL" property="lowprice" />
+    <result column="PresetPriceOne" jdbcType="DECIMAL" property="presetpriceone" />
+    <result column="PresetPriceTwo" jdbcType="DECIMAL" property="presetpricetwo" />
     <result column="UnitId" jdbcType="BIGINT" property="unitid" />
     <result column="FirstOutUnit" jdbcType="VARCHAR" property="firstoutunit" />
     <result column="FirstInUnit" jdbcType="VARCHAR" property="firstinunit" />
@@ -165,10 +165,10 @@
       PriceStrategy, Enabled, OtherField1, 
       OtherField2, OtherField3)
     values (#{id,jdbcType=BIGINT}, #{categoryid,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, 
-      #{mfrs,jdbcType=VARCHAR}, #{packing,jdbcType=DOUBLE}, #{safetystock,jdbcType=DOUBLE}, 
+      #{mfrs,jdbcType=VARCHAR}, #{packing,jdbcType=DECIMAL}, #{safetystock,jdbcType=DECIMAL}, 
       #{model,jdbcType=VARCHAR}, #{standard,jdbcType=VARCHAR}, #{color,jdbcType=VARCHAR}, 
-      #{unit,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{retailprice,jdbcType=DOUBLE}, 
-      #{lowprice,jdbcType=DOUBLE}, #{presetpriceone,jdbcType=DOUBLE}, #{presetpricetwo,jdbcType=DOUBLE}, 
+      #{unit,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{retailprice,jdbcType=DECIMAL}, 
+      #{lowprice,jdbcType=DECIMAL}, #{presetpriceone,jdbcType=DECIMAL}, #{presetpricetwo,jdbcType=DECIMAL}, 
       #{unitid,jdbcType=BIGINT}, #{firstoutunit,jdbcType=VARCHAR}, #{firstinunit,jdbcType=VARCHAR}, 
       #{pricestrategy,jdbcType=VARCHAR}, #{enabled,jdbcType=BIT}, #{otherfield1,jdbcType=VARCHAR}, 
       #{otherfield2,jdbcType=VARCHAR}, #{otherfield3,jdbcType=VARCHAR})
@@ -264,10 +264,10 @@
         #{mfrs,jdbcType=VARCHAR},
       </if>
       <if test="packing != null">
-        #{packing,jdbcType=DOUBLE},
+        #{packing,jdbcType=DECIMAL},
       </if>
       <if test="safetystock != null">
-        #{safetystock,jdbcType=DOUBLE},
+        #{safetystock,jdbcType=DECIMAL},
       </if>
       <if test="model != null">
         #{model,jdbcType=VARCHAR},
@@ -285,16 +285,16 @@
         #{remark,jdbcType=VARCHAR},
       </if>
       <if test="retailprice != null">
-        #{retailprice,jdbcType=DOUBLE},
+        #{retailprice,jdbcType=DECIMAL},
       </if>
       <if test="lowprice != null">
-        #{lowprice,jdbcType=DOUBLE},
+        #{lowprice,jdbcType=DECIMAL},
       </if>
       <if test="presetpriceone != null">
-        #{presetpriceone,jdbcType=DOUBLE},
+        #{presetpriceone,jdbcType=DECIMAL},
       </if>
       <if test="presetpricetwo != null">
-        #{presetpricetwo,jdbcType=DOUBLE},
+        #{presetpricetwo,jdbcType=DECIMAL},
       </if>
       <if test="unitid != null">
         #{unitid,jdbcType=BIGINT},
@@ -352,10 +352,10 @@
         Mfrs = #{record.mfrs,jdbcType=VARCHAR},
       </if>
       <if test="record.packing != null">
-        Packing = #{record.packing,jdbcType=DOUBLE},
+        Packing = #{record.packing,jdbcType=DECIMAL},
       </if>
       <if test="record.safetystock != null">
-        SafetyStock = #{record.safetystock,jdbcType=DOUBLE},
+        SafetyStock = #{record.safetystock,jdbcType=DECIMAL},
       </if>
       <if test="record.model != null">
         Model = #{record.model,jdbcType=VARCHAR},
@@ -373,16 +373,16 @@
         Remark = #{record.remark,jdbcType=VARCHAR},
       </if>
       <if test="record.retailprice != null">
-        RetailPrice = #{record.retailprice,jdbcType=DOUBLE},
+        RetailPrice = #{record.retailprice,jdbcType=DECIMAL},
       </if>
       <if test="record.lowprice != null">
-        LowPrice = #{record.lowprice,jdbcType=DOUBLE},
+        LowPrice = #{record.lowprice,jdbcType=DECIMAL},
       </if>
       <if test="record.presetpriceone != null">
-        PresetPriceOne = #{record.presetpriceone,jdbcType=DOUBLE},
+        PresetPriceOne = #{record.presetpriceone,jdbcType=DECIMAL},
       </if>
       <if test="record.presetpricetwo != null">
-        PresetPriceTwo = #{record.presetpricetwo,jdbcType=DOUBLE},
+        PresetPriceTwo = #{record.presetpricetwo,jdbcType=DECIMAL},
       </if>
       <if test="record.unitid != null">
         UnitId = #{record.unitid,jdbcType=BIGINT},
@@ -423,17 +423,17 @@
       CategoryId = #{record.categoryid,jdbcType=BIGINT},
       Name = #{record.name,jdbcType=VARCHAR},
       Mfrs = #{record.mfrs,jdbcType=VARCHAR},
-      Packing = #{record.packing,jdbcType=DOUBLE},
-      SafetyStock = #{record.safetystock,jdbcType=DOUBLE},
+      Packing = #{record.packing,jdbcType=DECIMAL},
+      SafetyStock = #{record.safetystock,jdbcType=DECIMAL},
       Model = #{record.model,jdbcType=VARCHAR},
       Standard = #{record.standard,jdbcType=VARCHAR},
       Color = #{record.color,jdbcType=VARCHAR},
       Unit = #{record.unit,jdbcType=VARCHAR},
       Remark = #{record.remark,jdbcType=VARCHAR},
-      RetailPrice = #{record.retailprice,jdbcType=DOUBLE},
-      LowPrice = #{record.lowprice,jdbcType=DOUBLE},
-      PresetPriceOne = #{record.presetpriceone,jdbcType=DOUBLE},
-      PresetPriceTwo = #{record.presetpricetwo,jdbcType=DOUBLE},
+      RetailPrice = #{record.retailprice,jdbcType=DECIMAL},
+      LowPrice = #{record.lowprice,jdbcType=DECIMAL},
+      PresetPriceOne = #{record.presetpriceone,jdbcType=DECIMAL},
+      PresetPriceTwo = #{record.presetpricetwo,jdbcType=DECIMAL},
       UnitId = #{record.unitid,jdbcType=BIGINT},
       FirstOutUnit = #{record.firstoutunit,jdbcType=VARCHAR},
       FirstInUnit = #{record.firstinunit,jdbcType=VARCHAR},
@@ -463,10 +463,10 @@
         Mfrs = #{mfrs,jdbcType=VARCHAR},
       </if>
       <if test="packing != null">
-        Packing = #{packing,jdbcType=DOUBLE},
+        Packing = #{packing,jdbcType=DECIMAL},
       </if>
       <if test="safetystock != null">
-        SafetyStock = #{safetystock,jdbcType=DOUBLE},
+        SafetyStock = #{safetystock,jdbcType=DECIMAL},
       </if>
       <if test="model != null">
         Model = #{model,jdbcType=VARCHAR},
@@ -484,16 +484,16 @@
         Remark = #{remark,jdbcType=VARCHAR},
       </if>
       <if test="retailprice != null">
-        RetailPrice = #{retailprice,jdbcType=DOUBLE},
+        RetailPrice = #{retailprice,jdbcType=DECIMAL},
       </if>
       <if test="lowprice != null">
-        LowPrice = #{lowprice,jdbcType=DOUBLE},
+        LowPrice = #{lowprice,jdbcType=DECIMAL},
       </if>
       <if test="presetpriceone != null">
-        PresetPriceOne = #{presetpriceone,jdbcType=DOUBLE},
+        PresetPriceOne = #{presetpriceone,jdbcType=DECIMAL},
       </if>
       <if test="presetpricetwo != null">
-        PresetPriceTwo = #{presetpricetwo,jdbcType=DOUBLE},
+        PresetPriceTwo = #{presetpricetwo,jdbcType=DECIMAL},
       </if>
       <if test="unitid != null">
         UnitId = #{unitid,jdbcType=BIGINT},
@@ -531,17 +531,17 @@
     set CategoryId = #{categoryid,jdbcType=BIGINT},
       Name = #{name,jdbcType=VARCHAR},
       Mfrs = #{mfrs,jdbcType=VARCHAR},
-      Packing = #{packing,jdbcType=DOUBLE},
-      SafetyStock = #{safetystock,jdbcType=DOUBLE},
+      Packing = #{packing,jdbcType=DECIMAL},
+      SafetyStock = #{safetystock,jdbcType=DECIMAL},
       Model = #{model,jdbcType=VARCHAR},
       Standard = #{standard,jdbcType=VARCHAR},
       Color = #{color,jdbcType=VARCHAR},
       Unit = #{unit,jdbcType=VARCHAR},
       Remark = #{remark,jdbcType=VARCHAR},
-      RetailPrice = #{retailprice,jdbcType=DOUBLE},
-      LowPrice = #{lowprice,jdbcType=DOUBLE},
-      PresetPriceOne = #{presetpriceone,jdbcType=DOUBLE},
-      PresetPriceTwo = #{presetpricetwo,jdbcType=DOUBLE},
+      RetailPrice = #{retailprice,jdbcType=DECIMAL},
+      LowPrice = #{lowprice,jdbcType=DECIMAL},
+      PresetPriceOne = #{presetpriceone,jdbcType=DECIMAL},
+      PresetPriceTwo = #{presetpricetwo,jdbcType=DECIMAL},
       UnitId = #{unitid,jdbcType=BIGINT},
       FirstOutUnit = #{firstoutunit,jdbcType=VARCHAR},
       FirstInUnit = #{firstinunit,jdbcType=VARCHAR},

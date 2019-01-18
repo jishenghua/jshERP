@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -94,7 +95,7 @@ public class AccountController {
     public BaseResponseInfo findAccountInOutList(@RequestParam("currentPage") Integer currentPage,
                                                  @RequestParam("pageSize") Integer pageSize,
                                                  @RequestParam("accountId") Long accountId,
-                                                 @RequestParam("initialAmount") Double initialAmount,
+                                                 @RequestParam("initialAmount") BigDecimal initialAmount,
                                                  HttpServletRequest request) {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
@@ -107,8 +108,8 @@ public class AccountController {
             if (null != dataList) {
                 for (AccountVo4InOutList aEx : dataList) {
                     String timeStr = aEx.getOperTime().toString();
-                    Double balance = accountService.getAccountSum(accountId, timeStr, "date") + accountService.getAccountSumByHead(accountId, timeStr, "date")
-                            + accountService.getAccountSumByDetail(accountId, timeStr, "date") + accountService.getManyAccountSum(accountId, timeStr, "date") + initialAmount;
+                    BigDecimal balance = accountService.getAccountSum(accountId, timeStr, "date").add(accountService.getAccountSumByHead(accountId, timeStr, "date"))
+                            .add(accountService.getAccountSumByDetail(accountId, timeStr, "date")).add(accountService.getManyAccountSum(accountId, timeStr, "date")).add(initialAmount);
                     aEx.setBalance(balance);
                     dataArray.add(aEx);
                 }

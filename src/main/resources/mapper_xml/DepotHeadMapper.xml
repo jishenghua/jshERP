@@ -18,18 +18,18 @@
     <result column="OrganId" jdbcType="BIGINT" property="organid" />
     <result column="HandsPersonId" jdbcType="BIGINT" property="handspersonid" />
     <result column="AccountId" jdbcType="BIGINT" property="accountid" />
-    <result column="ChangeAmount" jdbcType="DOUBLE" property="changeamount" />
+    <result column="ChangeAmount" jdbcType="DECIMAL" property="changeamount" />
     <result column="AllocationProjectId" jdbcType="BIGINT" property="allocationprojectid" />
-    <result column="TotalPrice" jdbcType="DOUBLE" property="totalprice" />
+    <result column="TotalPrice" jdbcType="DECIMAL" property="totalprice" />
     <result column="PayType" jdbcType="VARCHAR" property="paytype" />
     <result column="Remark" jdbcType="VARCHAR" property="remark" />
     <result column="Salesman" jdbcType="VARCHAR" property="salesman" />
     <result column="AccountIdList" jdbcType="VARCHAR" property="accountidlist" />
     <result column="AccountMoneyList" jdbcType="VARCHAR" property="accountmoneylist" />
-    <result column="Discount" jdbcType="DOUBLE" property="discount" />
-    <result column="DiscountMoney" jdbcType="DOUBLE" property="discountmoney" />
-    <result column="DiscountLastMoney" jdbcType="DOUBLE" property="discountlastmoney" />
-    <result column="OtherMoney" jdbcType="DOUBLE" property="othermoney" />
+    <result column="Discount" jdbcType="DECIMAL" property="discount" />
+    <result column="DiscountMoney" jdbcType="DECIMAL" property="discountmoney" />
+    <result column="DiscountLastMoney" jdbcType="DECIMAL" property="discountlastmoney" />
+    <result column="OtherMoney" jdbcType="DECIMAL" property="othermoney" />
     <result column="OtherMoneyList" jdbcType="VARCHAR" property="othermoneylist" />
     <result column="OtherMoneyItem" jdbcType="VARCHAR" property="othermoneyitem" />
     <result column="AccountDay" jdbcType="INTEGER" property="accountday" />
@@ -176,10 +176,10 @@
       #{projectid,jdbcType=BIGINT}, #{defaultnumber,jdbcType=VARCHAR}, #{number,jdbcType=VARCHAR}, 
       #{operpersonname,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, #{opertime,jdbcType=TIMESTAMP}, 
       #{organid,jdbcType=BIGINT}, #{handspersonid,jdbcType=BIGINT}, #{accountid,jdbcType=BIGINT}, 
-      #{changeamount,jdbcType=DOUBLE}, #{allocationprojectid,jdbcType=BIGINT}, #{totalprice,jdbcType=DOUBLE}, 
+      #{changeamount,jdbcType=DECIMAL}, #{allocationprojectid,jdbcType=BIGINT}, #{totalprice,jdbcType=DECIMAL}, 
       #{paytype,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{salesman,jdbcType=VARCHAR}, 
-      #{accountidlist,jdbcType=VARCHAR}, #{accountmoneylist,jdbcType=VARCHAR}, #{discount,jdbcType=DOUBLE}, 
-      #{discountmoney,jdbcType=DOUBLE}, #{discountlastmoney,jdbcType=DOUBLE}, #{othermoney,jdbcType=DOUBLE}, 
+      #{accountidlist,jdbcType=VARCHAR}, #{accountmoneylist,jdbcType=VARCHAR}, #{discount,jdbcType=DECIMAL}, 
+      #{discountmoney,jdbcType=DECIMAL}, #{discountlastmoney,jdbcType=DECIMAL}, #{othermoney,jdbcType=DECIMAL}, 
       #{othermoneylist,jdbcType=VARCHAR}, #{othermoneyitem,jdbcType=VARCHAR}, #{accountday,jdbcType=INTEGER}, 
       #{status,jdbcType=BIT})
   </insert>
@@ -313,13 +313,13 @@
         #{accountid,jdbcType=BIGINT},
       </if>
       <if test="changeamount != null">
-        #{changeamount,jdbcType=DOUBLE},
+        #{changeamount,jdbcType=DECIMAL},
       </if>
       <if test="allocationprojectid != null">
         #{allocationprojectid,jdbcType=BIGINT},
       </if>
       <if test="totalprice != null">
-        #{totalprice,jdbcType=DOUBLE},
+        #{totalprice,jdbcType=DECIMAL},
       </if>
       <if test="paytype != null">
         #{paytype,jdbcType=VARCHAR},
@@ -337,16 +337,16 @@
         #{accountmoneylist,jdbcType=VARCHAR},
       </if>
       <if test="discount != null">
-        #{discount,jdbcType=DOUBLE},
+        #{discount,jdbcType=DECIMAL},
       </if>
       <if test="discountmoney != null">
-        #{discountmoney,jdbcType=DOUBLE},
+        #{discountmoney,jdbcType=DECIMAL},
       </if>
       <if test="discountlastmoney != null">
-        #{discountlastmoney,jdbcType=DOUBLE},
+        #{discountlastmoney,jdbcType=DECIMAL},
       </if>
       <if test="othermoney != null">
-        #{othermoney,jdbcType=DOUBLE},
+        #{othermoney,jdbcType=DECIMAL},
       </if>
       <if test="othermoneylist != null">
         #{othermoneylist,jdbcType=VARCHAR},
@@ -416,13 +416,13 @@
         AccountId = #{record.accountid,jdbcType=BIGINT},
       </if>
       <if test="record.changeamount != null">
-        ChangeAmount = #{record.changeamount,jdbcType=DOUBLE},
+        ChangeAmount = #{record.changeamount,jdbcType=DECIMAL},
       </if>
       <if test="record.allocationprojectid != null">
         AllocationProjectId = #{record.allocationprojectid,jdbcType=BIGINT},
       </if>
       <if test="record.totalprice != null">
-        TotalPrice = #{record.totalprice,jdbcType=DOUBLE},
+        TotalPrice = #{record.totalprice,jdbcType=DECIMAL},
       </if>
       <if test="record.paytype != null">
         PayType = #{record.paytype,jdbcType=VARCHAR},
@@ -440,16 +440,16 @@
         AccountMoneyList = #{record.accountmoneylist,jdbcType=VARCHAR},
       </if>
       <if test="record.discount != null">
-        Discount = #{record.discount,jdbcType=DOUBLE},
+        Discount = #{record.discount,jdbcType=DECIMAL},
       </if>
       <if test="record.discountmoney != null">
-        DiscountMoney = #{record.discountmoney,jdbcType=DOUBLE},
+        DiscountMoney = #{record.discountmoney,jdbcType=DECIMAL},
       </if>
       <if test="record.discountlastmoney != null">
-        DiscountLastMoney = #{record.discountlastmoney,jdbcType=DOUBLE},
+        DiscountLastMoney = #{record.discountlastmoney,jdbcType=DECIMAL},
       </if>
       <if test="record.othermoney != null">
-        OtherMoney = #{record.othermoney,jdbcType=DOUBLE},
+        OtherMoney = #{record.othermoney,jdbcType=DECIMAL},
       </if>
       <if test="record.othermoneylist != null">
         OtherMoneyList = #{record.othermoneylist,jdbcType=VARCHAR},
@@ -486,18 +486,18 @@
       OrganId = #{record.organid,jdbcType=BIGINT},
       HandsPersonId = #{record.handspersonid,jdbcType=BIGINT},
       AccountId = #{record.accountid,jdbcType=BIGINT},
-      ChangeAmount = #{record.changeamount,jdbcType=DOUBLE},
+      ChangeAmount = #{record.changeamount,jdbcType=DECIMAL},
       AllocationProjectId = #{record.allocationprojectid,jdbcType=BIGINT},
-      TotalPrice = #{record.totalprice,jdbcType=DOUBLE},
+      TotalPrice = #{record.totalprice,jdbcType=DECIMAL},
       PayType = #{record.paytype,jdbcType=VARCHAR},
       Remark = #{record.remark,jdbcType=VARCHAR},
       Salesman = #{record.salesman,jdbcType=VARCHAR},
       AccountIdList = #{record.accountidlist,jdbcType=VARCHAR},
       AccountMoneyList = #{record.accountmoneylist,jdbcType=VARCHAR},
-      Discount = #{record.discount,jdbcType=DOUBLE},
-      DiscountMoney = #{record.discountmoney,jdbcType=DOUBLE},
-      DiscountLastMoney = #{record.discountlastmoney,jdbcType=DOUBLE},
-      OtherMoney = #{record.othermoney,jdbcType=DOUBLE},
+      Discount = #{record.discount,jdbcType=DECIMAL},
+      DiscountMoney = #{record.discountmoney,jdbcType=DECIMAL},
+      DiscountLastMoney = #{record.discountlastmoney,jdbcType=DECIMAL},
+      OtherMoney = #{record.othermoney,jdbcType=DECIMAL},
       OtherMoneyList = #{record.othermoneylist,jdbcType=VARCHAR},
       OtherMoneyItem = #{record.othermoneyitem,jdbcType=VARCHAR},
       AccountDay = #{record.accountday,jdbcType=INTEGER},
@@ -547,13 +547,13 @@
         AccountId = #{accountid,jdbcType=BIGINT},
       </if>
       <if test="changeamount != null">
-        ChangeAmount = #{changeamount,jdbcType=DOUBLE},
+        ChangeAmount = #{changeamount,jdbcType=DECIMAL},
       </if>
       <if test="allocationprojectid != null">
         AllocationProjectId = #{allocationprojectid,jdbcType=BIGINT},
       </if>
       <if test="totalprice != null">
-        TotalPrice = #{totalprice,jdbcType=DOUBLE},
+        TotalPrice = #{totalprice,jdbcType=DECIMAL},
       </if>
       <if test="paytype != null">
         PayType = #{paytype,jdbcType=VARCHAR},
@@ -571,16 +571,16 @@
         AccountMoneyList = #{accountmoneylist,jdbcType=VARCHAR},
       </if>
       <if test="discount != null">
-        Discount = #{discount,jdbcType=DOUBLE},
+        Discount = #{discount,jdbcType=DECIMAL},
       </if>
       <if test="discountmoney != null">
-        DiscountMoney = #{discountmoney,jdbcType=DOUBLE},
+        DiscountMoney = #{discountmoney,jdbcType=DECIMAL},
       </if>
       <if test="discountlastmoney != null">
-        DiscountLastMoney = #{discountlastmoney,jdbcType=DOUBLE},
+        DiscountLastMoney = #{discountlastmoney,jdbcType=DECIMAL},
       </if>
       <if test="othermoney != null">
-        OtherMoney = #{othermoney,jdbcType=DOUBLE},
+        OtherMoney = #{othermoney,jdbcType=DECIMAL},
       </if>
       <if test="othermoneylist != null">
         OtherMoneyList = #{othermoneylist,jdbcType=VARCHAR},
@@ -614,18 +614,18 @@
       OrganId = #{organid,jdbcType=BIGINT},
       HandsPersonId = #{handspersonid,jdbcType=BIGINT},
       AccountId = #{accountid,jdbcType=BIGINT},
-      ChangeAmount = #{changeamount,jdbcType=DOUBLE},
+      ChangeAmount = #{changeamount,jdbcType=DECIMAL},
       AllocationProjectId = #{allocationprojectid,jdbcType=BIGINT},
-      TotalPrice = #{totalprice,jdbcType=DOUBLE},
+      TotalPrice = #{totalprice,jdbcType=DECIMAL},
       PayType = #{paytype,jdbcType=VARCHAR},
       Remark = #{remark,jdbcType=VARCHAR},
       Salesman = #{salesman,jdbcType=VARCHAR},
       AccountIdList = #{accountidlist,jdbcType=VARCHAR},
       AccountMoneyList = #{accountmoneylist,jdbcType=VARCHAR},
-      Discount = #{discount,jdbcType=DOUBLE},
-      DiscountMoney = #{discountmoney,jdbcType=DOUBLE},
-      DiscountLastMoney = #{discountlastmoney,jdbcType=DOUBLE},
-      OtherMoney = #{othermoney,jdbcType=DOUBLE},
+      Discount = #{discount,jdbcType=DECIMAL},
+      DiscountMoney = #{discountmoney,jdbcType=DECIMAL},
+      DiscountLastMoney = #{discountlastmoney,jdbcType=DECIMAL},
+      OtherMoney = #{othermoney,jdbcType=DECIMAL},
       OtherMoneyList = #{othermoneylist,jdbcType=VARCHAR},
       OtherMoneyItem = #{othermoneyitem,jdbcType=VARCHAR},
       AccountDay = #{accountday,jdbcType=INTEGER},

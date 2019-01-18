@@ -9,6 +9,7 @@ import com.jsh.erp.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -38,7 +39,16 @@ public class UserService {
     public int countUser(String userName, String loginName) {
         return userMapper.countsByUser(userName, loginName);
     }
-
+    /**
+     * create by: cjl
+     * description:
+     * 添加事务控制
+     * create time: 2019/1/11 14:30
+     * @Param: beanJson
+     * @Param: request
+     * @return int
+     */
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertUser(String beanJson, HttpServletRequest request) {
         User user = JSONObject.parseObject(beanJson, User.class);
         String password = "123456";
@@ -52,17 +62,43 @@ public class UserService {
         }
         return userMapper.insertSelective(user);
     }
-
+    /**
+     * create by: cjl
+     * description:
+     * 添加事务控制
+     * create time: 2019/1/11 14:31
+     * @Param: beanJson
+     * @Param: id
+     * @return int
+     */
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateUser(String beanJson, Long id) {
         User user = JSONObject.parseObject(beanJson, User.class);
         user.setId(id);
         return userMapper.updateByPrimaryKeySelective(user);
     }
-
+    /**
+     * create by: cjl
+     * description:
+     * 添加事务控制
+     * create time: 2019/1/11 14:32
+     * @Param: user
+     * @return int
+     */
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateUserByObj(User user) {
         return userMapper.updateByPrimaryKeySelective(user);
     }
-
+    /**
+     * create by: cjl
+     * description:
+     *  添加事务控制
+     * create time: 2019/1/11 14:33
+     * @Param: md5Pwd
+     * @Param: id
+     * @return int
+     */
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int resetPwd(String md5Pwd, Long id) {
         User user = new User();
         user.setId(id);
@@ -70,10 +106,12 @@ public class UserService {
         return userMapper.updateByPrimaryKeySelective(user);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int deleteUser(Long id) {
         return userMapper.deleteByPrimaryKey(id);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteUser(String ids) {
         List<Long> idList = StringUtil.strToLongList(ids);
         UserExample example = new UserExample();

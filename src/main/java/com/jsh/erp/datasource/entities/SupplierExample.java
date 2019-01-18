@@ -1,5 +1,6 @@
 package com.jsh.erp.datasource.entities;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -804,52 +805,52 @@ public class SupplierExample {
             return (Criteria) this;
         }
 
-        public Criteria andAdvanceinEqualTo(Double value) {
+        public Criteria andAdvanceinEqualTo(BigDecimal value) {
             addCriterion("AdvanceIn =", value, "advancein");
             return (Criteria) this;
         }
 
-        public Criteria andAdvanceinNotEqualTo(Double value) {
+        public Criteria andAdvanceinNotEqualTo(BigDecimal value) {
             addCriterion("AdvanceIn <>", value, "advancein");
             return (Criteria) this;
         }
 
-        public Criteria andAdvanceinGreaterThan(Double value) {
+        public Criteria andAdvanceinGreaterThan(BigDecimal value) {
             addCriterion("AdvanceIn >", value, "advancein");
             return (Criteria) this;
         }
 
-        public Criteria andAdvanceinGreaterThanOrEqualTo(Double value) {
+        public Criteria andAdvanceinGreaterThanOrEqualTo(BigDecimal value) {
             addCriterion("AdvanceIn >=", value, "advancein");
             return (Criteria) this;
         }
 
-        public Criteria andAdvanceinLessThan(Double value) {
+        public Criteria andAdvanceinLessThan(BigDecimal value) {
             addCriterion("AdvanceIn <", value, "advancein");
             return (Criteria) this;
         }
 
-        public Criteria andAdvanceinLessThanOrEqualTo(Double value) {
+        public Criteria andAdvanceinLessThanOrEqualTo(BigDecimal value) {
             addCriterion("AdvanceIn <=", value, "advancein");
             return (Criteria) this;
         }
 
-        public Criteria andAdvanceinIn(List<Double> values) {
+        public Criteria andAdvanceinIn(List<BigDecimal> values) {
             addCriterion("AdvanceIn in", values, "advancein");
             return (Criteria) this;
         }
 
-        public Criteria andAdvanceinNotIn(List<Double> values) {
+        public Criteria andAdvanceinNotIn(List<BigDecimal> values) {
             addCriterion("AdvanceIn not in", values, "advancein");
             return (Criteria) this;
         }
 
-        public Criteria andAdvanceinBetween(Double value1, Double value2) {
+        public Criteria andAdvanceinBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("AdvanceIn between", value1, value2, "advancein");
             return (Criteria) this;
         }
 
-        public Criteria andAdvanceinNotBetween(Double value1, Double value2) {
+        public Criteria andAdvanceinNotBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("AdvanceIn not between", value1, value2, "advancein");
             return (Criteria) this;
         }
@@ -864,52 +865,52 @@ public class SupplierExample {
             return (Criteria) this;
         }
 
-        public Criteria andBeginneedgetEqualTo(Double value) {
+        public Criteria andBeginneedgetEqualTo(BigDecimal value) {
             addCriterion("BeginNeedGet =", value, "beginneedget");
             return (Criteria) this;
         }
 
-        public Criteria andBeginneedgetNotEqualTo(Double value) {
+        public Criteria andBeginneedgetNotEqualTo(BigDecimal value) {
             addCriterion("BeginNeedGet <>", value, "beginneedget");
             return (Criteria) this;
         }
 
-        public Criteria andBeginneedgetGreaterThan(Double value) {
+        public Criteria andBeginneedgetGreaterThan(BigDecimal value) {
             addCriterion("BeginNeedGet >", value, "beginneedget");
             return (Criteria) this;
         }
 
-        public Criteria andBeginneedgetGreaterThanOrEqualTo(Double value) {
+        public Criteria andBeginneedgetGreaterThanOrEqualTo(BigDecimal value) {
             addCriterion("BeginNeedGet >=", value, "beginneedget");
             return (Criteria) this;
         }
 
-        public Criteria andBeginneedgetLessThan(Double value) {
+        public Criteria andBeginneedgetLessThan(BigDecimal value) {
             addCriterion("BeginNeedGet <", value, "beginneedget");
             return (Criteria) this;
         }
 
-        public Criteria andBeginneedgetLessThanOrEqualTo(Double value) {
+        public Criteria andBeginneedgetLessThanOrEqualTo(BigDecimal value) {
             addCriterion("BeginNeedGet <=", value, "beginneedget");
             return (Criteria) this;
         }
 
-        public Criteria andBeginneedgetIn(List<Double> values) {
+        public Criteria andBeginneedgetIn(List<BigDecimal> values) {
             addCriterion("BeginNeedGet in", values, "beginneedget");
             return (Criteria) this;
         }
 
-        public Criteria andBeginneedgetNotIn(List<Double> values) {
+        public Criteria andBeginneedgetNotIn(List<BigDecimal> values) {
             addCriterion("BeginNeedGet not in", values, "beginneedget");
             return (Criteria) this;
         }
 
-        public Criteria andBeginneedgetBetween(Double value1, Double value2) {
+        public Criteria andBeginneedgetBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("BeginNeedGet between", value1, value2, "beginneedget");
             return (Criteria) this;
         }
 
-        public Criteria andBeginneedgetNotBetween(Double value1, Double value2) {
+        public Criteria andBeginneedgetNotBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("BeginNeedGet not between", value1, value2, "beginneedget");
             return (Criteria) this;
         }
@@ -924,52 +925,52 @@ public class SupplierExample {
             return (Criteria) this;
         }
 
-        public Criteria andBeginneedpayEqualTo(Double value) {
+        public Criteria andBeginneedpayEqualTo(BigDecimal value) {
             addCriterion("BeginNeedPay =", value, "beginneedpay");
             return (Criteria) this;
         }
 
-        public Criteria andBeginneedpayNotEqualTo(Double value) {
+        public Criteria andBeginneedpayNotEqualTo(BigDecimal value) {
             addCriterion("BeginNeedPay <>", value, "beginneedpay");
             return (Criteria) this;
         }
 
-        public Criteria andBeginneedpayGreaterThan(Double value) {
+        public Criteria andBeginneedpayGreaterThan(BigDecimal value) {
             addCriterion("BeginNeedPay >", value, "beginneedpay");
             return (Criteria) this;
         }
 
-        public Criteria andBeginneedpayGreaterThanOrEqualTo(Double value) {
+        public Criteria andBeginneedpayGreaterThanOrEqualTo(BigDecimal value) {
             addCriterion("BeginNeedPay >=", value, "beginneedpay");
             return (Criteria) this;
         }
 
-        public Criteria andBeginneedpayLessThan(Double value) {
+        public Criteria andBeginneedpayLessThan(BigDecimal value) {
             addCriterion("BeginNeedPay <", value, "beginneedpay");
             return (Criteria) this;
         }
 
-        public Criteria andBeginneedpayLessThanOrEqualTo(Double value) {
+        public Criteria andBeginneedpayLessThanOrEqualTo(BigDecimal value) {
             addCriterion("BeginNeedPay <=", value, "beginneedpay");
             return (Criteria) this;
         }
 
-        public Criteria andBeginneedpayIn(List<Double> values) {
+        public Criteria andBeginneedpayIn(List<BigDecimal> values) {
             addCriterion("BeginNeedPay in", values, "beginneedpay");
             return (Criteria) this;
         }
 
-        public Criteria andBeginneedpayNotIn(List<Double> values) {
+        public Criteria andBeginneedpayNotIn(List<BigDecimal> values) {
             addCriterion("BeginNeedPay not in", values, "beginneedpay");
             return (Criteria) this;
         }
 
-        public Criteria andBeginneedpayBetween(Double value1, Double value2) {
+        public Criteria andBeginneedpayBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("BeginNeedPay between", value1, value2, "beginneedpay");
             return (Criteria) this;
         }
 
-        public Criteria andBeginneedpayNotBetween(Double value1, Double value2) {
+        public Criteria andBeginneedpayNotBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("BeginNeedPay not between", value1, value2, "beginneedpay");
             return (Criteria) this;
         }
@@ -984,52 +985,52 @@ public class SupplierExample {
             return (Criteria) this;
         }
 
-        public Criteria andAllneedgetEqualTo(Double value) {
+        public Criteria andAllneedgetEqualTo(BigDecimal value) {
             addCriterion("AllNeedGet =", value, "allneedget");
             return (Criteria) this;
         }
 
-        public Criteria andAllneedgetNotEqualTo(Double value) {
+        public Criteria andAllneedgetNotEqualTo(BigDecimal value) {
             addCriterion("AllNeedGet <>", value, "allneedget");
             return (Criteria) this;
         }
 
-        public Criteria andAllneedgetGreaterThan(Double value) {
+        public Criteria andAllneedgetGreaterThan(BigDecimal value) {
             addCriterion("AllNeedGet >", value, "allneedget");
             return (Criteria) this;
         }
 
-        public Criteria andAllneedgetGreaterThanOrEqualTo(Double value) {
+        public Criteria andAllneedgetGreaterThanOrEqualTo(BigDecimal value) {
             addCriterion("AllNeedGet >=", value, "allneedget");
             return (Criteria) this;
         }
 
-        public Criteria andAllneedgetLessThan(Double value) {
+        public Criteria andAllneedgetLessThan(BigDecimal value) {
             addCriterion("AllNeedGet <", value, "allneedget");
             return (Criteria) this;
         }
 
-        public Criteria andAllneedgetLessThanOrEqualTo(Double value) {
+        public Criteria andAllneedgetLessThanOrEqualTo(BigDecimal value) {
             addCriterion("AllNeedGet <=", value, "allneedget");
             return (Criteria) this;
         }
 
-        public Criteria andAllneedgetIn(List<Double> values) {
+        public Criteria andAllneedgetIn(List<BigDecimal> values) {
             addCriterion("AllNeedGet in", values, "allneedget");
             return (Criteria) this;
         }
 
-        public Criteria andAllneedgetNotIn(List<Double> values) {
+        public Criteria andAllneedgetNotIn(List<BigDecimal> values) {
             addCriterion("AllNeedGet not in", values, "allneedget");
             return (Criteria) this;
         }
 
-        public Criteria andAllneedgetBetween(Double value1, Double value2) {
+        public Criteria andAllneedgetBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("AllNeedGet between", value1, value2, "allneedget");
             return (Criteria) this;
         }
 
-        public Criteria andAllneedgetNotBetween(Double value1, Double value2) {
+        public Criteria andAllneedgetNotBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("AllNeedGet not between", value1, value2, "allneedget");
             return (Criteria) this;
         }
@@ -1044,52 +1045,52 @@ public class SupplierExample {
             return (Criteria) this;
         }
 
-        public Criteria andAllneedpayEqualTo(Double value) {
+        public Criteria andAllneedpayEqualTo(BigDecimal value) {
             addCriterion("AllNeedPay =", value, "allneedpay");
             return (Criteria) this;
         }
 
-        public Criteria andAllneedpayNotEqualTo(Double value) {
+        public Criteria andAllneedpayNotEqualTo(BigDecimal value) {
             addCriterion("AllNeedPay <>", value, "allneedpay");
             return (Criteria) this;
         }
 
-        public Criteria andAllneedpayGreaterThan(Double value) {
+        public Criteria andAllneedpayGreaterThan(BigDecimal value) {
             addCriterion("AllNeedPay >", value, "allneedpay");
             return (Criteria) this;
         }
 
-        public Criteria andAllneedpayGreaterThanOrEqualTo(Double value) {
+        public Criteria andAllneedpayGreaterThanOrEqualTo(BigDecimal value) {
             addCriterion("AllNeedPay >=", value, "allneedpay");
             return (Criteria) this;
         }
 
-        public Criteria andAllneedpayLessThan(Double value) {
+        public Criteria andAllneedpayLessThan(BigDecimal value) {
             addCriterion("AllNeedPay <", value, "allneedpay");
             return (Criteria) this;
         }
 
-        public Criteria andAllneedpayLessThanOrEqualTo(Double value) {
+        public Criteria andAllneedpayLessThanOrEqualTo(BigDecimal value) {
             addCriterion("AllNeedPay <=", value, "allneedpay");
             return (Criteria) this;
         }
 
-        public Criteria andAllneedpayIn(List<Double> values) {
+        public Criteria andAllneedpayIn(List<BigDecimal> values) {
             addCriterion("AllNeedPay in", values, "allneedpay");
             return (Criteria) this;
         }
 
-        public Criteria andAllneedpayNotIn(List<Double> values) {
+        public Criteria andAllneedpayNotIn(List<BigDecimal> values) {
             addCriterion("AllNeedPay not in", values, "allneedpay");
             return (Criteria) this;
         }
 
-        public Criteria andAllneedpayBetween(Double value1, Double value2) {
+        public Criteria andAllneedpayBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("AllNeedPay between", value1, value2, "allneedpay");
             return (Criteria) this;
         }
 
-        public Criteria andAllneedpayNotBetween(Double value1, Double value2) {
+        public Criteria andAllneedpayNotBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("AllNeedPay not between", value1, value2, "allneedpay");
             return (Criteria) this;
         }
@@ -1524,52 +1525,52 @@ public class SupplierExample {
             return (Criteria) this;
         }
 
-        public Criteria andTaxrateEqualTo(Double value) {
+        public Criteria andTaxrateEqualTo(BigDecimal value) {
             addCriterion("taxRate =", value, "taxrate");
             return (Criteria) this;
         }
 
-        public Criteria andTaxrateNotEqualTo(Double value) {
+        public Criteria andTaxrateNotEqualTo(BigDecimal value) {
             addCriterion("taxRate <>", value, "taxrate");
             return (Criteria) this;
         }
 
-        public Criteria andTaxrateGreaterThan(Double value) {
+        public Criteria andTaxrateGreaterThan(BigDecimal value) {
             addCriterion("taxRate >", value, "taxrate");
             return (Criteria) this;
         }
 
-        public Criteria andTaxrateGreaterThanOrEqualTo(Double value) {
+        public Criteria andTaxrateGreaterThanOrEqualTo(BigDecimal value) {
             addCriterion("taxRate >=", value, "taxrate");
             return (Criteria) this;
         }
 
-        public Criteria andTaxrateLessThan(Double value) {
+        public Criteria andTaxrateLessThan(BigDecimal value) {
             addCriterion("taxRate <", value, "taxrate");
             return (Criteria) this;
         }
 
-        public Criteria andTaxrateLessThanOrEqualTo(Double value) {
+        public Criteria andTaxrateLessThanOrEqualTo(BigDecimal value) {
             addCriterion("taxRate <=", value, "taxrate");
             return (Criteria) this;
         }
 
-        public Criteria andTaxrateIn(List<Double> values) {
+        public Criteria andTaxrateIn(List<BigDecimal> values) {
             addCriterion("taxRate in", values, "taxrate");
             return (Criteria) this;
         }
 
-        public Criteria andTaxrateNotIn(List<Double> values) {
+        public Criteria andTaxrateNotIn(List<BigDecimal> values) {
             addCriterion("taxRate not in", values, "taxrate");
             return (Criteria) this;
         }
 
-        public Criteria andTaxrateBetween(Double value1, Double value2) {
+        public Criteria andTaxrateBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("taxRate between", value1, value2, "taxrate");
             return (Criteria) this;
         }
 
-        public Criteria andTaxrateNotBetween(Double value1, Double value2) {
+        public Criteria andTaxrateNotBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("taxRate not between", value1, value2, "taxrate");
             return (Criteria) this;
         }

@@ -9,8 +9,8 @@
     <id column="Id" jdbcType="BIGINT" property="id" />
     <result column="Name" jdbcType="VARCHAR" property="name" />
     <result column="SerialNo" jdbcType="VARCHAR" property="serialno" />
-    <result column="InitialAmount" jdbcType="DOUBLE" property="initialamount" />
-    <result column="CurrentAmount" jdbcType="DOUBLE" property="currentamount" />
+    <result column="InitialAmount" jdbcType="DECIMAL" property="initialamount" />
+    <result column="CurrentAmount" jdbcType="DECIMAL" property="currentamount" />
     <result column="Remark" jdbcType="VARCHAR" property="remark" />
     <result column="IsDefault" jdbcType="BIT" property="isdefault" />
   </resultMap>
@@ -142,7 +142,7 @@
       InitialAmount, CurrentAmount, Remark, 
       IsDefault)
     values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{serialno,jdbcType=VARCHAR}, 
-      #{initialamount,jdbcType=DOUBLE}, #{currentamount,jdbcType=DOUBLE}, #{remark,jdbcType=VARCHAR}, 
+      #{initialamount,jdbcType=DECIMAL}, #{currentamount,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, 
       #{isdefault,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.Account">
@@ -185,10 +185,10 @@
         #{serialno,jdbcType=VARCHAR},
       </if>
       <if test="initialamount != null">
-        #{initialamount,jdbcType=DOUBLE},
+        #{initialamount,jdbcType=DECIMAL},
       </if>
       <if test="currentamount != null">
-        #{currentamount,jdbcType=DOUBLE},
+        #{currentamount,jdbcType=DECIMAL},
       </if>
       <if test="remark != null">
         #{remark,jdbcType=VARCHAR},
@@ -225,10 +225,10 @@
         SerialNo = #{record.serialno,jdbcType=VARCHAR},
       </if>
       <if test="record.initialamount != null">
-        InitialAmount = #{record.initialamount,jdbcType=DOUBLE},
+        InitialAmount = #{record.initialamount,jdbcType=DECIMAL},
       </if>
       <if test="record.currentamount != null">
-        CurrentAmount = #{record.currentamount,jdbcType=DOUBLE},
+        CurrentAmount = #{record.currentamount,jdbcType=DECIMAL},
       </if>
       <if test="record.remark != null">
         Remark = #{record.remark,jdbcType=VARCHAR},
@@ -250,8 +250,8 @@
     set Id = #{record.id,jdbcType=BIGINT},
       Name = #{record.name,jdbcType=VARCHAR},
       SerialNo = #{record.serialno,jdbcType=VARCHAR},
-      InitialAmount = #{record.initialamount,jdbcType=DOUBLE},
-      CurrentAmount = #{record.currentamount,jdbcType=DOUBLE},
+      InitialAmount = #{record.initialamount,jdbcType=DECIMAL},
+      CurrentAmount = #{record.currentamount,jdbcType=DECIMAL},
       Remark = #{record.remark,jdbcType=VARCHAR},
       IsDefault = #{record.isdefault,jdbcType=BIT}
     <if test="_parameter != null">
@@ -272,10 +272,10 @@
         SerialNo = #{serialno,jdbcType=VARCHAR},
       </if>
       <if test="initialamount != null">
-        InitialAmount = #{initialamount,jdbcType=DOUBLE},
+        InitialAmount = #{initialamount,jdbcType=DECIMAL},
       </if>
       <if test="currentamount != null">
-        CurrentAmount = #{currentamount,jdbcType=DOUBLE},
+        CurrentAmount = #{currentamount,jdbcType=DECIMAL},
       </if>
       <if test="remark != null">
         Remark = #{remark,jdbcType=VARCHAR},
@@ -294,8 +294,8 @@
     update jsh_account
     set Name = #{name,jdbcType=VARCHAR},
       SerialNo = #{serialno,jdbcType=VARCHAR},
-      InitialAmount = #{initialamount,jdbcType=DOUBLE},
-      CurrentAmount = #{currentamount,jdbcType=DOUBLE},
+      InitialAmount = #{initialamount,jdbcType=DECIMAL},
+      CurrentAmount = #{currentamount,jdbcType=DECIMAL},
       Remark = #{remark,jdbcType=VARCHAR},
       IsDefault = #{isdefault,jdbcType=BIT}
     where Id = #{id,jdbcType=BIGINT}

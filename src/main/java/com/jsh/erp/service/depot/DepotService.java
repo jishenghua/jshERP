@@ -8,6 +8,7 @@ import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -43,21 +44,25 @@ public class DepotService {
         return depotMapper.countsByDepot(name, type, remark);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertDepot(String beanJson, HttpServletRequest request) {
         Depot depot = JSONObject.parseObject(beanJson, Depot.class);
         return depotMapper.insertSelective(depot);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateDepot(String beanJson, Long id) {
         Depot depot = JSONObject.parseObject(beanJson, Depot.class);
         depot.setId(id);
         return depotMapper.updateByPrimaryKeySelective(depot);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int deleteDepot(Long id) {
         return depotMapper.deleteByPrimaryKey(id);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteDepot(String ids) {
         List<Long> idList = StringUtil.strToLongList(ids);
         DepotExample example = new DepotExample();

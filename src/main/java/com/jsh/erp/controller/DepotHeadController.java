@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.sql.Date;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -312,41 +314,42 @@ public class DepotHeadController {
                     dha.setNumber(dha.getNumber()); //单据编号
                     dha.setType(dha.getType()); //类型
                     String type = dha.getType();
-                    Double p1 = 0.0;
-                    Double p2 = 0.0;
+                    BigDecimal p1 = BigDecimal.ZERO ;
+                    BigDecimal p2 = BigDecimal.ZERO;
                     if (dha.getDiscountLastMoney() != null) {
                         p1 = dha.getDiscountLastMoney();
                     }
                     if (dha.getChangeAmount() != null) {
                         p2 = dha.getChangeAmount();
                     }
-                    Double allPrice = 0.0;
-                    if (p1 < 0) {
-                        p1 = -p1;
+                    BigDecimal allPrice = BigDecimal.ZERO;
+                    if ((p1.compareTo(BigDecimal.ZERO))==-1) {
+                        p1 = p1.abs();
                     }
-                    if (p2 < 0) {
-                        p2 = -p2;
+                    if ((p2 .compareTo(BigDecimal.ZERO))==-1) {
+                        p2 = p2.abs();
                     }
                     if (type.equals("采购入库")) {
-                        allPrice = -(p1 - p2);
+                        allPrice = p2 .subtract(p1);
                     } else if (type.equals("销售退货入库")) {
-                        allPrice = -(p1 - p2);
+                        allPrice = p2 .subtract(p1);
                     } else if (type.equals("销售出库")) {
-                        allPrice = p1 - p2;
+                        allPrice = p1 .subtract(p2);
                     } else if (type.equals("采购退货出库")) {
-                        allPrice = p1 - p2;
+                        allPrice = p1 .subtract(p2);
                     } else if (type.equals("付款")) {
-                        allPrice = p1 + p2;
+                        allPrice = p1.add(p2);
                     } else if (type.equals("收款")) {
-                        allPrice = -(p1 + p2);
+                        allPrice = BigDecimal.ZERO.subtract(p1.add(p2));
                     } else if (type.equals("收入")) {
-                        allPrice = p1 - p2;
+                        allPrice =  p1 .subtract(p2);
                     } else if (type.equals("支出")) {
-                        allPrice = -(p1 - p2);
+                        allPrice = p2 .subtract(p1);
                     }
                     dha.setDiscountLastMoney(p1); //金额
                     dha.setChangeAmount(p2); //金额
-                    dha.setAllPrice(Double.parseDouble(String.format("%.2f", allPrice * j))); //计算后的金额
+                    DecimalFormat df = new DecimalFormat(".##");
+                    dha.setAllPrice(new BigDecimal(df.format(allPrice .multiply(new BigDecimal(j))))); //计算后的金额
                     dha.setSupplierName(dha.getSupplierName()); //供应商
                     dha.setoTime(dha.getoTime()); //入库出库日期
                     resList.add(dha);
@@ -380,7 +383,7 @@ public class DepotHeadController {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
             JSONObject outer = new JSONObject();
-            Double sum = 0.0;
+            BigDecimal sum = BigDecimal.ZERO;
             String getS = supplierId.toString();
             int i = 1;
             if (supType.equals("customer")) { //客户
@@ -389,10 +392,14 @@ public class DepotHeadController {
                 i = -1;
             }
             //进销部分
-            sum = sum - (allMoney(getS, "入库", "采购", "合计",endTime) - allMoney(getS, "入库", "采购", "实际",endTime)) * i;
-            sum = sum - (allMoney(getS, "入库", "销售退货", "合计",endTime) - allMoney(getS, "入库", "销售退货", "实际",endTime)) * i;
-            sum = sum + (allMoney(getS, "出库", "销售", "合计",endTime) - allMoney(getS, "出库", "销售", "实际",endTime)) * i;
-            sum = sum + (allMoney(getS, "出库", "采购退货", "合计",endTime) - allMoney(getS, "出库", "采购退货", "实际",endTime)) * i;
+//            sum = sum - (allMoney(getS, "入库", "采购", "合计",endTime) - allMoney(getS, "入库", "采购", "实际",endTime)) * i;
+            sum = sum.subtract((allMoney(getS, "入库", "采购", "合计",endTime).subtract(allMoney(getS, "入库", "采购", "实际",endTime))).multiply(new BigDecimal(i)));
+//            sum = sum - (allMoney(getS, "入库", "销售退货", "合计",endTime) - allMoney(getS, "入库", "销售退货", "实际",endTime)) * i;
+            sum = sum.subtract((allMoney(getS, "入库", "销售退货", "合计",endTime).subtract(allMoney(getS, "入库", "销售退货", "实际",endTime))).multiply(new BigDecimal(i)));
+//            sum = sum + (allMoney(getS, "出库", "销售", "合计",endTime) - allMoney(getS, "出库", "销售", "实际",endTime)) * i;
+            sum = sum.add((allMoney(getS, "出库", "销售", "合计",endTime).subtract(allMoney(getS, "出库", "销售", "实际",endTime))).multiply(new BigDecimal(i)));
+//            sum = sum + (allMoney(getS, "出库", "采购退货", "合计",endTime) - allMoney(getS, "出库", "采购退货", "实际",endTime)) * i;
+            sum = sum.add((allMoney(getS, "出库", "采购退货", "合计",endTime).subtract(allMoney(getS, "出库", "采购退货", "实际",endTime))).multiply(new BigDecimal(i)));
             outer.put("getAllMoney", sum);
             map.put("rows", outer);
             res.code = 200;
@@ -440,11 +447,11 @@ public class DepotHeadController {
      * @param mode 合计或者金额
      * @return
      */
-    public Double allMoney(String getS, String type, String subType, String mode, String endTime) {
-        Double allMoney = 0.0;
+    public BigDecimal allMoney(String getS, String type, String subType, String mode, String endTime) {
+        BigDecimal allMoney = BigDecimal.ZERO;
         try {
             Integer supplierId = Integer.valueOf(getS);
-            Double sum = depotHeadService.findAllMoney(supplierId, type, subType, mode, endTime);
+            BigDecimal sum = depotHeadService.findAllMoney(supplierId, type, subType, mode, endTime);
             if(sum != null) {
                 allMoney = sum;
             }
@@ -452,8 +459,8 @@ public class DepotHeadController {
             e.printStackTrace();
         }
         //返回正数，如果负数也转为正数
-        if (allMoney < 0) {
-            allMoney = -allMoney;
+        if ((allMoney.compareTo(BigDecimal.ZERO))==-1) {
+            allMoney = allMoney.abs();
         }
         return allMoney;
     }

@@ -1,5 +1,6 @@
 package com.jsh.erp.datasource.entities;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -455,52 +456,52 @@ public class AccountHeadExample {
             return (Criteria) this;
         }
 
-        public Criteria andChangeamountEqualTo(Double value) {
+        public Criteria andChangeamountEqualTo(BigDecimal value) {
             addCriterion("ChangeAmount =", value, "changeamount");
             return (Criteria) this;
         }
 
-        public Criteria andChangeamountNotEqualTo(Double value) {
+        public Criteria andChangeamountNotEqualTo(BigDecimal value) {
             addCriterion("ChangeAmount <>", value, "changeamount");
             return (Criteria) this;
         }
 
-        public Criteria andChangeamountGreaterThan(Double value) {
+        public Criteria andChangeamountGreaterThan(BigDecimal value) {
             addCriterion("ChangeAmount >", value, "changeamount");
             return (Criteria) this;
         }
 
-        public Criteria andChangeamountGreaterThanOrEqualTo(Double value) {
+        public Criteria andChangeamountGreaterThanOrEqualTo(BigDecimal value) {
             addCriterion("ChangeAmount >=", value, "changeamount");
             return (Criteria) this;
         }
 
-        public Criteria andChangeamountLessThan(Double value) {
+        public Criteria andChangeamountLessThan(BigDecimal value) {
             addCriterion("ChangeAmount <", value, "changeamount");
             return (Criteria) this;
         }
 
-        public Criteria andChangeamountLessThanOrEqualTo(Double value) {
+        public Criteria andChangeamountLessThanOrEqualTo(BigDecimal value) {
             addCriterion("ChangeAmount <=", value, "changeamount");
             return (Criteria) this;
         }
 
-        public Criteria andChangeamountIn(List<Double> values) {
+        public Criteria andChangeamountIn(List<BigDecimal> values) {
             addCriterion("ChangeAmount in", values, "changeamount");
             return (Criteria) this;
         }
 
-        public Criteria andChangeamountNotIn(List<Double> values) {
+        public Criteria andChangeamountNotIn(List<BigDecimal> values) {
             addCriterion("ChangeAmount not in", values, "changeamount");
             return (Criteria) this;
         }
 
-        public Criteria andChangeamountBetween(Double value1, Double value2) {
+        public Criteria andChangeamountBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("ChangeAmount between", value1, value2, "changeamount");
             return (Criteria) this;
         }
 
-        public Criteria andChangeamountNotBetween(Double value1, Double value2) {
+        public Criteria andChangeamountNotBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("ChangeAmount not between", value1, value2, "changeamount");
             return (Criteria) this;
         }
@@ -515,52 +516,52 @@ public class AccountHeadExample {
             return (Criteria) this;
         }
 
-        public Criteria andTotalpriceEqualTo(Double value) {
+        public Criteria andTotalpriceEqualTo(BigDecimal value) {
             addCriterion("TotalPrice =", value, "totalprice");
             return (Criteria) this;
         }
 
-        public Criteria andTotalpriceNotEqualTo(Double value) {
+        public Criteria andTotalpriceNotEqualTo(BigDecimal value) {
             addCriterion("TotalPrice <>", value, "totalprice");
             return (Criteria) this;
         }
 
-        public Criteria andTotalpriceGreaterThan(Double value) {
+        public Criteria andTotalpriceGreaterThan(BigDecimal value) {
             addCriterion("TotalPrice >", value, "totalprice");
             return (Criteria) this;
         }
 
-        public Criteria andTotalpriceGreaterThanOrEqualTo(Double value) {
+        public Criteria andTotalpriceGreaterThanOrEqualTo(BigDecimal value) {
             addCriterion("TotalPrice >=", value, "totalprice");
             return (Criteria) this;
         }
 
-        public Criteria andTotalpriceLessThan(Double value) {
+        public Criteria andTotalpriceLessThan(BigDecimal value) {
             addCriterion("TotalPrice <", value, "totalprice");
             return (Criteria) this;
         }
 
-        public Criteria andTotalpriceLessThanOrEqualTo(Double value) {
+        public Criteria andTotalpriceLessThanOrEqualTo(BigDecimal value) {
             addCriterion("TotalPrice <=", value, "totalprice");
             return (Criteria) this;
         }
 
-        public Criteria andTotalpriceIn(List<Double> values) {
+        public Criteria andTotalpriceIn(List<BigDecimal> values) {
             addCriterion("TotalPrice in", values, "totalprice");
             return (Criteria) this;
         }
 
-        public Criteria andTotalpriceNotIn(List<Double> values) {
+        public Criteria andTotalpriceNotIn(List<BigDecimal> values) {
             addCriterion("TotalPrice not in", values, "totalprice");
             return (Criteria) this;
         }
 
-        public Criteria andTotalpriceBetween(Double value1, Double value2) {
+        public Criteria andTotalpriceBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("TotalPrice between", value1, value2, "totalprice");
             return (Criteria) this;
         }
 
-        public Criteria andTotalpriceNotBetween(Double value1, Double value2) {
+        public Criteria andTotalpriceNotBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("TotalPrice not between", value1, value2, "totalprice");
             return (Criteria) this;
         }

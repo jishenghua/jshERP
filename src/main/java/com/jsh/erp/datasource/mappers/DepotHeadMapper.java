@@ -2,6 +2,8 @@ package com.jsh.erp.datasource.mappers;
 
 import com.jsh.erp.datasource.entities.DepotHead;
 import com.jsh.erp.datasource.entities.DepotHeadExample;
+
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.jsh.erp.datasource.vo.DepotHeadVo4InDetail;
@@ -172,7 +174,7 @@ public interface DepotHeadMapper {
             @Param("organId") Integer organId,
             @Param("supType") String supType);
 
-    Double findAllMoney(
+    BigDecimal findAllMoney(
             @Param("supplierId") Integer supplierId,
             @Param("type") String type,
             @Param("subType") String subType,
