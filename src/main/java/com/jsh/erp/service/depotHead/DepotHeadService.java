@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.jsh.erp.utils.Tools.getCenternTime;
+
 @Service
 public class DepotHeadService {
     private Logger logger = LoggerFactory.getLogger(DepotHeadService.class);
@@ -60,6 +62,7 @@ public class DepotHeadService {
                 if(dh.getTotalprice() != null) {
                     dh.setTotalprice(dh.getTotalprice().abs());
                 }
+                dh.setOpertimeStr(getCenternTime(dh.getOpertime()));
                 dh.setMaterialsList(findMaterialsListByHeaderId(dh.getId()));
                 resList.add(dh);
             }
@@ -243,6 +246,7 @@ public class DepotHeadService {
                 if(dh.getTotalprice() != null) {
                     dh.setTotalprice(dh.getTotalprice().abs());
                 }
+                dh.setOpertimeStr(getCenternTime(dh.getOpertime()));
                 dh.setMaterialsList(findMaterialsListByHeaderId(dh.getId()));
                 resList.add(dh);
             }

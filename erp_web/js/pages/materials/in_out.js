@@ -563,7 +563,7 @@
 					formatter:function(value,rec) {
 						var str = '';
 						var rowInfo = rec.id + 'AaBb' + rec.projectid+ 'AaBb' + rec.number+ 'AaBb' + rec.operpersonname
-							+ 'AaBb' + rec.opertime+ 'AaBb' + rec.organid+ 'AaBb' + rec.handspersonid
+							+ 'AaBb' + rec.opertimeStr+ 'AaBb' + rec.organid+ 'AaBb' + rec.handspersonid
 							+ 'AaBb' + rec.accountid+ 'AaBb' + rec.changeamount+ 'AaBb' + rec.remark
 							+ 'AaBb' + rec.projectName+ 'AaBb' + rec.organName+ 'AaBb' + rec.handsPersonName
 							+ 'AaBb' + rec.accountName + 'AaBb' + rec.totalprice + 'AaBb' + rec.allocationprojectid
@@ -588,7 +588,7 @@
 						}
 					}
 				},
-				{ title: '单据日期 ',field: 'opertime',width:130},
+				{ title: '单据日期',field: 'opertimeStr',width:130},
 				{ title: '操作员',field: 'operpersonname',width:60},
 				{ title: '金额合计',field: 'totalprice',width:60},
 				{ title: '含税合计',field: 'totaltaxlastmoney',hidden:isShowLastMoneyColumn,width:60,formatter:function(value,rec){

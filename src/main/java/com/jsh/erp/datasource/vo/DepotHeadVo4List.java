@@ -73,6 +73,8 @@ public class DepotHeadVo4List {
 
     private String materialsList;
 
+    private String opertimeStr;
+
     public Long getId() {
         return id;
     }
@@ -343,5 +345,13 @@ public class DepotHeadVo4List {
 
     public void setMaterialsList(String materialsList) {
         this.materialsList = materialsList;
+    }
+
+    public String getOpertimeStr() {
+        return opertimeStr;
+    }
+
+    public void setOpertimeStr(String opertimeStr) {
+        this.opertimeStr = opertimeStr;
     }
 }

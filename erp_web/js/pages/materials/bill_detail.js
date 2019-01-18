@@ -216,7 +216,7 @@
                             $("#bill .AccountIdShow").text(accountIdShow);
                         }
                         $("#bill .OrganIdShow").text(data.organName);
-                        $("#bill .OperTimeShow").text(data.opertime);
+                        $("#bill .OperTimeShow").text(data.opertimeStr);
                         $("#bill .NumberShow").text(data.number);
                         $("#bill .RemarkShow").text(data.remark);
                         $("#bill .DiscountShow").text(data.discount);
