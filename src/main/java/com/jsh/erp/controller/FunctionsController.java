@@ -77,24 +77,24 @@ public class FunctionsController {
                                             } else {
                                                 //不是目录，有链接
                                                 item2.put("text", "<a onclick=\"NewTab('" + functions2.getName() + "','" + functions2.getUrl() + "','" + functions2.getId() + "')\">" + functions2.getName() + "</a>");
+                                                dataArray2.add(item2);
+                                                item1.put("children", dataArray2);
                                             }
                                         } else {
                                             //不是目录，有链接
-                                            item2.put("text", "<a onclick=\"NewTab('" + functions2.getName() + "','" + functions2.getUrl() + "','" + functions2.getId() + "')\">" + functions2.getName() + "</a>");
+                                            //item2.put("text", "<a onclick=\"NewTab('" + functions2.getName() + "','" + functions2.getUrl() + "','" + functions2.getId() + "')\">" + functions2.getName() + "</a>");
                                         }
-                                        dataArray2.add(item2);
-                                        item1.put("children", dataArray2);
                                     }
                                 } else {
                                     //不是目录，有链接
                                     item1.put("text", "<a onclick=\"NewTab('" + functions1.getName() + "','" + functions1.getUrl() + "','" + functions1.getId() + "')\">" + functions1.getName() + "</a>");
+                                    dataArray1.add(item1);
+                                    item.put("children", dataArray1);
                                 }
                             } else {
                                 //不是目录，有链接
-                                item1.put("text", "<a onclick=\"NewTab('" + functions1.getName() + "','" + functions1.getUrl() + "','" + functions1.getId() + "')\">" + functions1.getName() + "</a>");
+                                //item1.put("text", "<a onclick=\"NewTab('" + functions1.getName() + "','" + functions1.getUrl() + "','" + functions1.getId() + "')\">" + functions1.getName() + "</a>");
                             }
-                            dataArray1.add(item1);
-                            item.put("children", dataArray1);
                         }
                     } else {
                         //不是目录，有链接
