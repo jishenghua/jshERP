@@ -122,7 +122,9 @@
                 {title: '操作IP', field: 'clientip', width: 90, align: "center"},
                 {title: '操作时间', field: 'createtime', width: 130, align: "center"},
                 {title: '操作详情', field: 'remark', width: 380},
-                {title: '操作状态', field: 'status', width: 70},
+                {title: '操作状态',field: 'status',width:70,align:"center",formatter:function(value){
+                    return value? "失败":"成功";
+                }},
                 {title: '备注', field: 'remark', width: 180}
             ]],
             onLoadError: function () {

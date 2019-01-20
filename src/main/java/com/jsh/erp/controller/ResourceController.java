@@ -74,7 +74,7 @@ public class ResourceController {
                               @RequestParam("info") String beanJson,
                               @RequestParam("id") Long id, HttpServletRequest request) {
         Map<String, Object> objectMap = new HashMap<String, Object>();
-        int update = configResourceManager.update(apiName, beanJson, id);
+        int update = configResourceManager.update(apiName, beanJson, id, request);
         if(update > 0) {
             return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
         } else {
@@ -86,7 +86,7 @@ public class ResourceController {
     public String deleteResource(@PathVariable("apiName") String apiName,
                                  @PathVariable Long id, HttpServletRequest request) {
         Map<String, Object> objectMap = new HashMap<String, Object>();
-        int delete = configResourceManager.delete(apiName, id);
+        int delete = configResourceManager.delete(apiName, id, request);
         if(delete > 0) {
             return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
         } else {
@@ -98,7 +98,7 @@ public class ResourceController {
     public String batchDeleteResource(@PathVariable("apiName") String apiName,
                                       @RequestParam("ids") String ids, HttpServletRequest request) {
         Map<String, Object> objectMap = new HashMap<String, Object>();
-        int delete = configResourceManager.batchDelete(apiName, ids);
+        int delete = configResourceManager.batchDelete(apiName, ids, request);
         if(delete > 0) {
             return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
         } else {
