@@ -509,7 +509,7 @@
 						url: "/supplier/updateAdvanceIn",
 						dataType: "json",
 						data:{
-							supplierID: thisOrganId, //会员id
+                            supplierId: thisOrganId, //会员id
 							advanceIn: 0-totalPrice  //删除时同时删除用户的预付款信息
 						},
 						success: function(res){
@@ -558,8 +558,8 @@
 								url: "/supplier/updateAdvanceIn",
 								dataType: "json",
 								data:{
-                                    supplierID: row[i].OrganId, //会员id
-                                    advanceIn: 0 - row[i].TotalPrice  //删除时同时删除用户的预付款信息
+                                    supplierId: row[i].organid, //会员id
+                                    advanceIn: 0 - row[i].totalprice  //删除时同时删除用户的预付款信息
 								},
 								success: function(res){
                                     if(res && res.code === 200) {
@@ -812,7 +812,7 @@
                         url: "/supplier/updateAdvanceIn",
                         dataType: "json",
                         data: {
-                            supplierID: OrganId,
+                            supplierId: OrganId,
                             advanceIn: advanceIn
                         },
                         success: function (res) {
