@@ -209,7 +209,9 @@ public class DepotHeadController {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
             List<DepotHeadVo4InDetail> resList = new ArrayList<DepotHeadVo4InDetail>();
-            List<DepotHeadVo4InDetail> list = depotHeadService.findByAll(beginTime, endTime, type, pid, dids, oId, currentPage, pageSize);
+            Integer limitStart = (currentPage-1)*pageSize;
+            Integer limitEnd = pageSize;
+            List<DepotHeadVo4InDetail> list = depotHeadService.findByAll(beginTime, endTime, type, pid, dids, oId, limitStart, limitEnd);
             int total = depotHeadService.findByAllCount(beginTime, endTime, type, pid, dids, oId);
             map.put("total", total);
             //存放数据json数组
