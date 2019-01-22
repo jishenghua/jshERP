@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 
@@ -182,5 +183,29 @@ public class UserController {
             objectMap.put("status", flag);
             return returnJson(objectMap, message, ErpInfo.ERROR.code);
         }
+    }
+
+    /**
+     * 获取全部用户数据列表
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/getAllList")
+    public BaseResponseInfo getAllList(HttpServletRequest request) {
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            Map<String, Object> data = new HashMap<String, Object>();
+            List<User> dataList = userService.getUser();
+            if(dataList!=null) {
+                data.put("userList", dataList);
+            }
+            res.code = 200;
+            res.data = data;
+        } catch(Exception e){
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取失败";
+        }
+        return res;
     }
 }
