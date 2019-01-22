@@ -205,8 +205,8 @@
     </select>
 
     <select id="findInOutMaterialCountTotal" resultType="java.lang.Integer">
-        select count(1)
-        from jsh_depothead dh INNER JOIN jsh_depotitem di on dh.id=di.HeaderId
+        select count(1) from
+        (select di.MaterialId, m.mName,m.Model,m.categoryName from jsh_depothead dh INNER JOIN jsh_depotitem di on dh.id=di.HeaderId
         INNER JOIN (SELECT jsh_material.id,jsh_material.name mName, Model,jsh_materialcategory.`Name` categoryName
         from jsh_material INNER JOIN jsh_materialcategory on jsh_material.CategoryId=jsh_materialcategory.Id) m
         on m.Id=di.MaterialId where dh.type='${type}' and dh.OperTime >='${beginTime}' and dh.OperTime &lt;='${endTime}'
@@ -219,6 +219,7 @@
         <if test="pid == null">
             and di.DepotId in (${dids})
         </if>
+        GROUP BY di.MaterialId,m.mName,m.Model,m.categoryName) a
     </select>
 
     <select id="findStatementAccount" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultStatementAccount">

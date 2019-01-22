@@ -281,7 +281,7 @@
             }),
             success: function (res) {
                 if(res && res.code === 200 && res.data) {
-                    $("#tableData").datagrid('loadData', res.data.rows);
+                    $("#tableData").datagrid('loadData', res.data);
                 }
             },
             //此处添加错误处理
