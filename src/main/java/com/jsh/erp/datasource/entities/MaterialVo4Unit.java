@@ -55,6 +55,11 @@ public class MaterialVo4Unit {
     private String categoryName;
 
     private String materialOther;
+    /**
+     * 2019-01-21新增字段enableSerialNumber
+     *是否开启序列号
+     * */
+    private Boolean enableSerialNumber;
 
     public Long getId() {
         return id;
@@ -262,5 +267,13 @@ public class MaterialVo4Unit {
 
     public void setMaterialOther(String materialOther) {
         this.materialOther = materialOther;
+    }
+
+    public Boolean getEnableSerialNumber() {
+        return enableSerialNumber;
+    }
+
+    public void setEnableSerialNumber(Boolean enableSerialNumber) {
+        this.enableSerialNumber = enableSerialNumber;
     }
 }

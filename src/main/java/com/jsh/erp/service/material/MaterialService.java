@@ -5,6 +5,7 @@ import com.jsh.erp.datasource.entities.Material;
 import com.jsh.erp.datasource.entities.MaterialExample;
 import com.jsh.erp.datasource.entities.MaterialVo4Unit;
 import com.jsh.erp.datasource.mappers.MaterialMapper;
+import com.jsh.erp.datasource.mappers.MaterialMapperEx;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
@@ -25,6 +26,8 @@ public class MaterialService {
 
     @Resource
     private MaterialMapper materialMapper;
+    @Resource
+    private MaterialMapperEx materialMapperEx;
 
     public Material getMaterial(long id) {
         return materialMapper.selectByPrimaryKey(id);
@@ -38,7 +41,7 @@ public class MaterialService {
     public List<MaterialVo4Unit> select(String name, String model,Long categoryId, String categoryIds,String mpList, int offset, int rows) {
         String[] mpArr = mpList.split(",");
         List<MaterialVo4Unit> resList = new ArrayList<MaterialVo4Unit>();
-        List<MaterialVo4Unit> list = materialMapper.selectByConditionMaterial(name, model,categoryId,categoryIds,mpList, offset, rows);
+        List<MaterialVo4Unit> list = materialMapperEx.selectByConditionMaterial(name, model,categoryId,categoryIds,mpList, offset, rows);
         if (null != list) {
             for (MaterialVo4Unit m : list) {
                 //扩展信息
@@ -71,7 +74,7 @@ public class MaterialService {
     }
 
     public int countMaterial(String name, String model,Long categoryId, String categoryIds,String mpList) {
-        return materialMapper.countsByMaterial(name, model,categoryId,categoryIds,mpList);
+        return materialMapperEx.countsByMaterial(name, model,categoryId,categoryIds,mpList);
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
@@ -88,9 +91,9 @@ public class MaterialService {
         int res = materialMapper.updateByPrimaryKeySelective(material);
         Long unitId = material.getUnitid();
         if(unitId != null) {
-            materialMapper.updatePriceNullByPrimaryKey(id); //将价格置空
+            materialMapperEx.updatePriceNullByPrimaryKey(id); //将价格置空
         } else {
-            materialMapper.updateUnitIdNullByPrimaryKey(id); //将多单位置空
+            materialMapperEx.updateUnitIdNullByPrimaryKey(id); //将多单位置空
         }
         return res;
     }
@@ -146,15 +149,15 @@ public class MaterialService {
     }
 
     public String findUnitName(Long mId){
-        return materialMapper.findUnitName(mId);
+        return materialMapperEx.findUnitName(mId);
     }
 
     public List<MaterialVo4Unit> findById(Long id){
-        return materialMapper.findById(id);
+        return materialMapperEx.findById(id);
     }
 
     public List<MaterialVo4Unit> findBySelect(){
-        return materialMapper.findBySelect();
+        return materialMapperEx.findBySelect();
     }
 
     public List<Material> findByOrder(){
@@ -165,7 +168,7 @@ public class MaterialService {
 
     public List<MaterialVo4Unit> findByAll(String name, String model, Long categoryId, String categoryIds) {
         List<MaterialVo4Unit> resList = new ArrayList<MaterialVo4Unit>();
-        List<MaterialVo4Unit> list = materialMapper.findByAll(name, model, categoryId, categoryIds);
+        List<MaterialVo4Unit> list = materialMapperEx.findByAll(name, model, categoryId, categoryIds);
         if (null != list) {
             for (MaterialVo4Unit m : list) {
                 resList.add(m);

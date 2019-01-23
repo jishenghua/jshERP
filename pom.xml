@@ -101,6 +101,12 @@
 			<artifactId>jxl</artifactId>
 			<version>2.6.3</version>
 		</dependency>
+		<!-- lombok -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.16.12</version>
+		</dependency>
 	</dependencies>
 
 	<repositories>

@@ -5,7 +5,7 @@
 
 <generatorConfiguration>
     <classPathEntry
-            location="E:/maven-repository/mysql/mysql-connector-java/5.1.28/mysql-connector-java-5.1.28.jar"/>
+            location="C:\Users\cjl\.m2\repository\mysql\mysql-connector-java\5.1.47\mysql-connector-java-5.1.47.jar"/>
 
     <context id="DB2Tables" targetRuntime="MyBatis3" defaultModelType="flat">
         <commentGenerator>
@@ -15,7 +15,7 @@
 
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
                         connectionURL="jdbc:mysql://localhost:3306/jsh_erp?generateSimpleParameterMetadata=true"
-                        userId="root" password="1234">
+                        userId="root" password="123456">
         </jdbcConnection>
 
         <javaTypeResolver>
@@ -41,7 +41,7 @@
             <property name="enableSubPackages" value="false"/>
             <property name="exampleMethodVisibility" value="public"/>
         </javaClientGenerator>
-        <table tableName="jsh_account" domainObjectName="Account"></table>
+       <!-- <table tableName="jsh_account" domainObjectName="Account"></table>
         <table tableName="jsh_accounthead" domainObjectName="AccountHead"></table>
         <table tableName="jsh_accountitem" domainObjectName="AccountItem"></table>
         <table tableName="jsh_app" domainObjectName="App"></table>
@@ -63,6 +63,7 @@
         <table tableName="jsh_systemconfig" domainObjectName="SystemConfig"></table>
         <table tableName="jsh_unit" domainObjectName="Unit"></table>
         <table tableName="jsh_user" domainObjectName="User"></table>
-        <table tableName="jsh_userbusiness" domainObjectName="UserBusiness"></table>
+        <table tableName="jsh_userbusiness" domainObjectName="UserBusiness"></table>-->
+        <table tableName="jsh_serial_number" domainObjectName="SerialNumber"></table>
     </context>
 </generatorConfiguration>
