@@ -29,6 +29,7 @@
     <result column="OtherField1" jdbcType="VARCHAR" property="otherfield1" />
     <result column="OtherField2" jdbcType="VARCHAR" property="otherfield2" />
     <result column="OtherField3" jdbcType="VARCHAR" property="otherfield3" />
+    <result column="enableSerialNumber" jdbcType="BIT" property="enableSerialNumber" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -103,7 +104,7 @@
     -->
     Id, CategoryId, Name, Mfrs, Packing, SafetyStock, Model, Standard, Color, Unit, Remark, 
     RetailPrice, LowPrice, PresetPriceOne, PresetPriceTwo, UnitId, FirstOutUnit, FirstInUnit, 
-    PriceStrategy, Enabled, OtherField1, OtherField2, OtherField3
+    PriceStrategy, Enabled, OtherField1, OtherField2, OtherField3,enableSerialNumber
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="BaseResultMap">
     <!--
@@ -163,7 +164,7 @@
       LowPrice, PresetPriceOne, PresetPriceTwo, 
       UnitId, FirstOutUnit, FirstInUnit, 
       PriceStrategy, Enabled, OtherField1, 
-      OtherField2, OtherField3)
+      OtherField2, OtherField3,enableSerialNumber)
     values (#{id,jdbcType=BIGINT}, #{categoryid,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, 
       #{mfrs,jdbcType=VARCHAR}, #{packing,jdbcType=DECIMAL}, #{safetystock,jdbcType=DECIMAL}, 
       #{model,jdbcType=VARCHAR}, #{standard,jdbcType=VARCHAR}, #{color,jdbcType=VARCHAR}, 
@@ -171,7 +172,7 @@
       #{lowprice,jdbcType=DECIMAL}, #{presetpriceone,jdbcType=DECIMAL}, #{presetpricetwo,jdbcType=DECIMAL}, 
       #{unitid,jdbcType=BIGINT}, #{firstoutunit,jdbcType=VARCHAR}, #{firstinunit,jdbcType=VARCHAR}, 
       #{pricestrategy,jdbcType=VARCHAR}, #{enabled,jdbcType=BIT}, #{otherfield1,jdbcType=VARCHAR}, 
-      #{otherfield2,jdbcType=VARCHAR}, #{otherfield3,jdbcType=VARCHAR})
+      #{otherfield2,jdbcType=VARCHAR}, #{otherfield3,jdbcType=VARCHAR},#{enableSerialNumber,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.Material">
     <!--
@@ -249,6 +250,9 @@
       <if test="otherfield3 != null">
         OtherField3,
       </if>
+      <if test="enableSerialNumber != null">
+        enableSerialNumber,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -319,6 +323,9 @@
       </if>
       <if test="otherfield3 != null">
         #{otherfield3,jdbcType=VARCHAR},
+      </if>
+      <if test="enableSerialNumber != null">
+        #{enableSerialNumber,jdbcType=BIT},
       </if>
     </trim>
   </insert>
@@ -408,6 +415,9 @@
       <if test="record.otherfield3 != null">
         OtherField3 = #{record.otherfield3,jdbcType=VARCHAR},
       </if>
+      <if test="record.enableSerialNumber != null">
+        enableSerialNumber = #{record.enableSerialNumber,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -442,6 +452,7 @@
       OtherField1 = #{record.otherfield1,jdbcType=VARCHAR},
       OtherField2 = #{record.otherfield2,jdbcType=VARCHAR},
       OtherField3 = #{record.otherfield3,jdbcType=VARCHAR}
+      enableSerialNumber = #{record.enableSerialNumber,jdbcType=BIT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -519,6 +530,9 @@
       <if test="otherfield3 != null">
         OtherField3 = #{otherfield3,jdbcType=VARCHAR},
       </if>
+      <if test="enableSerialNumber != null">
+        enableSerialNumber = #{enableSerialNumber,jdbcType=VARCHAR},
+      </if>
     </set>
     where Id = #{id,jdbcType=BIGINT}
   </update>
@@ -550,6 +564,7 @@
       OtherField1 = #{otherfield1,jdbcType=VARCHAR},
       OtherField2 = #{otherfield2,jdbcType=VARCHAR},
       OtherField3 = #{otherfield3,jdbcType=VARCHAR}
+      enableSerialNumber = #{enableSerialNumber,jdbcType=VARCHAR}
     where Id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

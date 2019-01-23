@@ -5179,3 +5179,23 @@ INSERT INTO `jsh_userbusiness` VALUES ('24', 'UserDepot', '65', '[1]', null);
 INSERT INTO `jsh_userbusiness` VALUES ('25', 'UserCustomer', '64', '[5][2]', null);
 INSERT INTO `jsh_userbusiness` VALUES ('26', 'UserCustomer', '65', '[6]', null);
 INSERT INTO `jsh_userbusiness` VALUES ('27', 'UserCustomer', '63', '[5][2]', null);
+
+--添加序列号表
+DROP TABLE IF EXISTS `jsh_serial_number`;
+CREATE TABLE `jsh_serial_number` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `material_Id` bigint(20) DEFAULT NULL COMMENT '产品表id',
+  `serial_Number` varchar(64) DEFAULT NULL COMMENT '序列号',
+  `is_Sell` bit(1) DEFAULT 0 COMMENT '是否卖出，0未卖出，1卖出',
+  `remark` varchar(1024) DEFAULT NULL COMMENT '备注',
+  `delete_Flag` bit(1) DEFAULT 0 COMMENT '删除标记，0未删除，1删除',
+  `create_Time` datetime DEFAULT NULL COMMENT '创建时间',
+  `creator` bigint(20) DEFAULT NULL COMMENT '创建人',
+  `update_Time` datetime DEFAULT NULL COMMENT '更新时间',
+  `updater` bigint(20) DEFAULT NULL COMMENT '更新人',
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='序列号表';
+
+--产品表新增字段是否启用序列号
+alter table jsh_material add enableSerialNumber bit(1) DEFAULT 0 COMMENT '是否开启序列号，0否，1是';
+

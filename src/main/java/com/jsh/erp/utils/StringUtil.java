@@ -1,5 +1,6 @@
 package com.jsh.erp.utils;
 
+import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
@@ -180,6 +181,9 @@ public class StringUtil {
      * @return
      */
     public static List<String> strToStringList(String strArr) {
+        if(StringUtils.isEmpty(strArr)){
+            return null;
+        }
         List<String> idList=new ArrayList<String>();
         String[] d=strArr.split(",");
         for (int i = 0, size = d.length; i < size; i++) {
