@@ -178,18 +178,15 @@
     //初始化系统基础信息
     function initSystemData() {
         $.ajax({
-            type: "post",
-            url: "/log/getBasicData.action",
+            type: "get",
+            url: "/user/getAllList",
             //设置为同步
             async: false,
             dataType: "json",
-            success: function (systemInfo) {
+            success: function (res) {
                 //成功关闭loading
-                userList = systemInfo.showModel.map.userList;
-                var msgTip = systemInfo.showModel.msgTip;
-                if (msgTip == "exceptoin") {
-                    $.messager.alert('提示', '查找系统基础信息异常,请与管理员联系！', 'error');
-                    return;
+                if(res && res.code === 200){
+                    userList = res.data.userList;
                 }
             }
         });
@@ -198,7 +195,6 @@
     //初始化页面选项卡
     function initSelectInfo() {
         var options = "";
-
         if (userList != null) {
             options = "";
             for (var i = 0; i < userList.length; i++) {

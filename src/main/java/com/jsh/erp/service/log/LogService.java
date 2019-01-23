@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.datasource.entities.Log;
 import com.jsh.erp.datasource.entities.LogExample;
 import com.jsh.erp.datasource.mappers.LogMapper;
+import com.jsh.erp.datasource.vo.LogVo4List;
 import com.jsh.erp.utils.ExceptionCodeConstants;
 import com.jsh.erp.utils.JshException;
 import com.jsh.erp.utils.StringUtil;
@@ -33,8 +34,8 @@ public class LogService {
         return logMapper.selectByExample(example);
     }
 
-    public List<Log> select(String operation, Integer usernameID, String clientIp, Integer status, String beginTime, String endTime,
-                            String contentdetails, int offset, int rows) {
+    public List<LogVo4List> select(String operation, Integer usernameID, String clientIp, Integer status, String beginTime, String endTime,
+                                   String contentdetails, int offset, int rows) {
         return logMapper.selectByConditionLog(operation, usernameID, clientIp, status, beginTime, endTime,
                             contentdetails, offset, rows);
     }

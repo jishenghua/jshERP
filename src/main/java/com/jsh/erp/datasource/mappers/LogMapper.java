@@ -3,6 +3,8 @@ package com.jsh.erp.datasource.mappers;
 import com.jsh.erp.datasource.entities.Log;
 import com.jsh.erp.datasource.entities.LogExample;
 import java.util.List;
+
+import com.jsh.erp.datasource.vo.LogVo4List;
 import org.apache.ibatis.annotations.Param;
 
 public interface LogMapper {
@@ -94,7 +96,7 @@ public interface LogMapper {
      */
     int updateByPrimaryKey(Log record);
 
-    List<Log> selectByConditionLog(
+    List<LogVo4List> selectByConditionLog(
             @Param("operation") String operation,
             @Param("usernameID") Integer usernameID,
             @Param("clientIp") String clientIp,
