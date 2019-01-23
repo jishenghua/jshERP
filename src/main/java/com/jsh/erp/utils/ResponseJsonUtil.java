@@ -23,7 +23,7 @@ public class ResponseJsonUtil {
     public static final class ResponseFilter extends ExtJsonUtils.ExtFilter implements ValueFilter {
         @Override
         public Object process(Object object, String name, Object value) {
-            if (name.equals("createTime") || name.equals("modifyTime")) {
+            if (name.equals("createTime") || name.equals("modifyTime")||name.equals("updateTime")) {
                 return value;
             } else if (value instanceof Date) {
                 return FORMAT.format(value);
