@@ -93,7 +93,7 @@
                     <tr>
                         <td style="width:80px;">序列号</td>
                         <td style="padding:5px;width:180px;">
-                            <select name="enableSerialNumber" id="enableSerialNumber" class="easyui-combobox" style="width:152px;height: 20px">
+                            <select name="enableSerialNumber" id="enableSerialNumber" style="width:152px;height: 20px">
                                 <option value="1">启用</option>
                                 <option value="0">禁用</option>
                             </select>
@@ -1160,7 +1160,9 @@
         $('#materialFM input').val(""); //将输入框全部清空
 
         bindMProperty(); //根据商品属性绑定
-        $("#enableSerialNumber").combobox('setValue','0');
+        // $("#enableSerialNumber").combobox('setValue','0');
+        $("#enableSerialNumber").val('0');
+
         $('#materialDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加商品信息');
         $(".window-mask").css({width: webW, height: webH});
         $("#Name").val("").focus();
@@ -1286,7 +1288,7 @@
         basicList.LowPrice = $("#basicLowPrice").val();
         basicList.PresetPriceOne = $("#basicPresetPriceOne").val();
         basicList.PresetPriceTwo = $("#basicPresetPriceTwo").val();
-        basicList.enableSerialNumber=$("#enableSerialNumber").combobox('getValue');
+        basicList.enableSerialNumber=$("#enableSerialNumber").val();
         otherList.Unit = $("#otherUnit").text();
         otherList.RetailPrice = $("#otherRetailPrice").val();
         otherList.LowPrice = $("#otherLowPrice").val();
@@ -1360,7 +1362,8 @@
         $("#Color").focus().val(materialInfo[11]);
         // console.log("enableSerialNumber:"+(materialInfo[24]=='true'?'1':'0'));
         // console.log("enableSerialNumber:"+materialInfo[24]);
-        $("#enableSerialNumber").combobox('setValue',materialInfo[24]=='true'?'1':'0');
+        // $("#enableSerialNumber").combobox('setValue',materialInfo[24]=='true'?'1':'0');
+        $("#enableSerialNumber").val(materialInfo[24]=='true'?'1':'0');
         // console.log($("#enableSerialNumber").val());
 
         var categoryName = ""; //类型名称
