@@ -1,12 +1,14 @@
 package com.jsh.erp.service.serialNumber;
 
 import com.alibaba.fastjson.JSONObject;
+import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.mappers.MaterialMapperEx;
 import com.jsh.erp.datasource.mappers.SerialNumberMapper;
 import com.jsh.erp.datasource.mappers.SerialNumberMapperEx;
 import com.jsh.erp.exception.BusinessRunTimeException;
+import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
@@ -39,6 +41,8 @@ public class SerialNumberService {
     private SerialNumberMapperEx serialNumberMapperEx;
     @Resource
     private MaterialMapperEx materialMapperEx;
+    @Resource
+    private DepotItemService depotItemService;
 
 
     public SerialNumber getSerialNumber(long id) {
@@ -121,11 +125,11 @@ public class SerialNumberService {
                if(mlist==null||mlist.size()<1){
                    //商品名称不存在
                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_NOT_EXISTS_CODE,
-                           ExceptionConstants.MATERIAL_NOT_EXISTS__MSG);
+                           ExceptionConstants.MATERIAL_NOT_EXISTS_MSG);
                }else if(mlist.size()>1){
                    //商品信息不唯一
                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_NOT_ONLY_CODE,
-                           ExceptionConstants.MATERIAL_NOT_ONLY__MSG);
+                           ExceptionConstants.MATERIAL_NOT_ONLY_MSG);
 
                }
             }
@@ -167,21 +171,7 @@ public class SerialNumberService {
         }
         /**处理商品id*/
         if(serialNumberEx.getMaterialId()==null){
-            if(StringUtil.isNotEmpty(serialNumberEx.getMaterialName())){
-                List<Material> mlist = materialMapperEx.findByMaterialName(serialNumberEx.getMaterialName());
-                if(mlist==null||mlist.size()<1){
-                    //商品名称不存在
-                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_NOT_EXISTS_CODE,
-                            ExceptionConstants.MATERIAL_NOT_EXISTS__MSG);
-                }else if(mlist.size()>1){
-                    //商品信息不唯一
-                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_NOT_ONLY_CODE,
-                            ExceptionConstants.MATERIAL_NOT_ONLY__MSG);
-
-                }else{
-                    serialNumberEx.setMaterialId(mlist.get(0).getId());
-                }
-            }
+            serialNumberEx.setMaterialId(getSerialNumberMaterialIdByMaterialName(serialNumberEx.getMaterialName()));
         }
         //删除标记,默认未删除
         serialNumberEx.setDeleteFlag(false);
@@ -206,21 +196,7 @@ public class SerialNumberService {
             return null;
         }
         /**处理商品id*/
-        if(StringUtil.isNotEmpty(serialNumberEx.getMaterialName())){
-            List<Material> mlist = materialMapperEx.findByMaterialName(serialNumberEx.getMaterialName());
-            if(mlist==null||mlist.size()<1){
-                //商品名称不存在
-                throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_NOT_EXISTS_CODE,
-                        ExceptionConstants.MATERIAL_NOT_EXISTS__MSG);
-            }else if(mlist.size()>1){
-                //商品信息不唯一
-                throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_NOT_ONLY_CODE,
-                        ExceptionConstants.MATERIAL_NOT_ONLY__MSG);
-
-            }else{
-                serialNumberEx.setMaterialId(mlist.get(0).getId());
-            }
-        }
+        serialNumberEx.setMaterialId(getSerialNumberMaterialIdByMaterialName(serialNumberEx.getMaterialName()));
         Date date=new Date();
         serialNumberEx.setUpdateTime(date);
         HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
@@ -232,4 +208,53 @@ public class SerialNumberService {
         }
         return null;
     }
+    /**
+     * create by: cjl
+     * description:
+     *  根据商品名称判断给商品添加序列号是否可行
+     *  1、根据商品名称必须查询到唯一的商品
+     *  2、该商品必须已经启用序列号
+     *  3、该商品已绑定序列号数量小于商品现有库存
+     * create time: 2019/1/23 17:04
+     * @Param: materialName
+     * @return Long 满足使用条件的商品的id
+     */
+    public Long getSerialNumberMaterialIdByMaterialName(String materialName){
+        if(StringUtil.isNotEmpty(materialName)){
+            List<Material> mlist = materialMapperEx.findByMaterialName(materialName);
+            if(mlist==null||mlist.size()<1){
+                //商品名称不存在
+                throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_NOT_EXISTS_CODE,
+                        ExceptionConstants.MATERIAL_NOT_EXISTS_MSG);
+            }
+            if(mlist.size()>1){
+                //商品信息不唯一
+                throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_NOT_ONLY_CODE,
+                        ExceptionConstants.MATERIAL_NOT_ONLY_MSG);
+
+            }
+            //获得唯一商品
+            if(BusinessConstants.MATERIAL_NOT_ENABLE_SERIAL_NUMBER==mlist.get(0).getEnableSerialNumber()){
+                //商品未开启序列号
+                throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_NOT_ENABLE_SERIAL_NUMBER_CODE,
+                        ExceptionConstants.MATERIAL_NOT_ENABLE_SERIAL_NUMBER_MSG);
+            }
+            //计算商品库存和目前占用的可用序列号数量关系
+            //库存=入库-出库
+            //入库数量
+            Long materialId=mlist.get(0).getId();
+            int inSum = depotItemService.findByTypeAndMaterialId(BusinessConstants.DEPOTHEAD_TYPE_STORAGE, materialId);
+            //出库数量
+            int outSum = depotItemService.findByTypeAndMaterialId(BusinessConstants.DEPOTHEAD_TYPE_OUT, materialId);
+            //查询当前商品下有效的序列号
+            int serialNumberSum = serialNumberMapperEx.findSerialNumberByMaterialId(materialId);
+            if((inSum-outSum)<=serialNumberSum){
+                throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_SERIAL_NUMBERE_NOT_MORE_THAN_STORAGE_CODE,
+                        ExceptionConstants.MATERIAL_SERIAL_NUMBERE_NOT_MORE_THAN_STORAGE_MSG);
+            }
+            return materialId;
+        }
+        return null;
+    }
+
 }

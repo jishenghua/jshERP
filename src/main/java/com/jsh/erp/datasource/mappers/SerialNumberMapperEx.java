@@ -37,4 +37,9 @@ public interface SerialNumberMapperEx {
      * 修改序列号信息
      * */
     int updateSerialNumber(SerialNumberEx serialNumberEx);
+    /**
+     * 查询指定商品下有效的序列号数量
+     * 未删除为卖出的视为有效
+     * */
+    int findSerialNumberByMaterialId(@Param("materialId") Long materialId);
 }

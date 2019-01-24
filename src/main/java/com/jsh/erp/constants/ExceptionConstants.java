@@ -43,10 +43,16 @@ public class ExceptionConstants {
      * */
     //商品信息不存在
     public static final int MATERIAL_NOT_EXISTS_CODE = 8000000;
-    public static final String MATERIAL_NOT_EXISTS__MSG = "商品信息不存在";
+    public static final String MATERIAL_NOT_EXISTS_MSG = "商品信息不存在";
     //商品信息不唯一
     public static final int MATERIAL_NOT_ONLY_CODE = 8000001;
-    public static final String MATERIAL_NOT_ONLY__MSG = "商品信息不唯一";
+    public static final String MATERIAL_NOT_ONLY_MSG = "商品信息不唯一";
+    //该商品未开启序列号
+    public static final int MATERIAL_NOT_ENABLE_SERIAL_NUMBER_CODE = 8000002;
+    public static final String MATERIAL_NOT_ENABLE_SERIAL_NUMBER_MSG = "该商品未开启序列号功能";
+    //该商品已绑定序列号数量小于等于商品现有库存
+    public static final int MATERIAL_SERIAL_NUMBERE_NOT_MORE_THAN_STORAGE_CODE = 8000003;
+    public static final String MATERIAL_SERIAL_NUMBERE_NOT_MORE_THAN_STORAGE_MSG = "该商品已绑定序列号数量大于等于商品现有库存";
 
     /**
      * 标准正常返回/操作成功返回
