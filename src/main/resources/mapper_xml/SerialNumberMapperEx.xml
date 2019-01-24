@@ -113,4 +113,16 @@
         </set>
         where id = #{id,jdbcType=BIGINT}
     </update>
+    <select id="findSerialNumberByMaterialId" resultType="java.lang.Integer">
+        SELECT
+        count(ser.id)
+        FROM jsh_serial_number ser
+        where 1=1
+        <if test="materialId != null">
+            and ser.material_Id=#{materialId}
+        </if>
+        and ser.delete_Flag !='1'
+        and ser.is_Sell !='1'
+    </select>
+
 </mapper>

@@ -5179,6 +5179,12 @@ INSERT INTO `jsh_userbusiness` VALUES ('24', 'UserDepot', '65', '[1]', null);
 INSERT INTO `jsh_userbusiness` VALUES ('25', 'UserCustomer', '64', '[5][2]', null);
 INSERT INTO `jsh_userbusiness` VALUES ('26', 'UserCustomer', '65', '[6]', null);
 INSERT INTO `jsh_userbusiness` VALUES ('27', 'UserCustomer', '63', '[5][2]', null);
+-- ----------------------------
+-- 时间：2019年1月21日
+-- version：1.0.0
+-- 此次更新添加序列号功能
+-- 特别提醒：之后的sql都是在之前基础上迭代，可以对已存在的系统进行数据保留更新
+-- ----------------------------
 
 -- ----------------------------
 -- 添加序列号表
@@ -5202,4 +5208,16 @@ CREATE TABLE `jsh_serial_number` (
 -- 产品表新增字段是否启用序列号
 -- ----------------------------
 alter table jsh_material add enableSerialNumber bit(1) DEFAULT 0 COMMENT '是否开启序列号，0否，1是';
+-- ----------------------------
+-- 时间：2019年1月24日
+-- version：1.0.1
+-- 此次更新添加序列号菜单
+-- 特别提醒：之后的sql都是在之前基础上迭代，可以对已存在的系统进行数据保留更新
+-- ----------------------------
+-- ----------------------------
+-- 添加序列号菜单
+-- ----------------------------
+delete from `jsh_functions` where Name='序列号';
+INSERT INTO `jsh_functions`(`Number`, `Name`, `PNumber`, `URL`, `State`, `Sort`, `Enabled`, `Type`, `PushBtn`) VALUES ('010104', '序列号', '0101', '../manage/serialNumber.html', b'0', '0246', b'1', '电脑版', '');
+
 
