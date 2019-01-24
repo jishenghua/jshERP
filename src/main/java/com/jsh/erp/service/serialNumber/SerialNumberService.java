@@ -10,20 +10,17 @@ import com.jsh.erp.datasource.mappers.SerialNumberMapperEx;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.material.MaterialService;
+import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Description
@@ -43,6 +40,8 @@ public class SerialNumberService {
     private MaterialMapperEx materialMapperEx;
     @Resource
     private DepotItemService depotItemService;
+    @Resource
+    private UserService userService;
 
 
     public SerialNumber getSerialNumber(long id) {
@@ -180,8 +179,7 @@ public class SerialNumberService {
         Date date=new Date();
         serialNumberEx.setCreateTime(date);
         serialNumberEx.setUpdateTime(date);
-        HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
-        User userInfo=(User)request.getSession().getAttribute("user");
+        User userInfo=userService.getCurrentUser();
         serialNumberEx.setCreator(userInfo==null?null:userInfo.getId());
         serialNumberEx.setUpdater(userInfo==null?null:userInfo.getId());
         int result=serialNumberMapperEx.addSerialNumber(serialNumberEx);
@@ -199,8 +197,7 @@ public class SerialNumberService {
         serialNumberEx.setMaterialId(getSerialNumberMaterialIdByMaterialName(serialNumberEx.getMaterialName()));
         Date date=new Date();
         serialNumberEx.setUpdateTime(date);
-        HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
-        User userInfo=(User)request.getSession().getAttribute("user");
+        User userInfo=userService.getCurrentUser();
         serialNumberEx.setUpdater(userInfo==null?null:userInfo.getId());
         int result = serialNumberMapperEx.updateSerialNumber(serialNumberEx);
         if(result==1){

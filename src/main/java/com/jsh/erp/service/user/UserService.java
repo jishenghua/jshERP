@@ -10,12 +10,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class UserService {
@@ -167,5 +170,17 @@ public class UserService {
         example.createCriteria().andIdNotEqualTo(id).andLoginameEqualTo(name);
         List<User> list = userMapper.selectByExample(example);
         return list.size();
+    }
+    /**
+     * create by: cjl
+     * description:
+     *  获取当前用户信息
+     * create time: 2019/1/24 10:01
+     * @Param:
+     * @return com.jsh.erp.datasource.entities.User
+     */
+    public User getCurrentUser(){
+        HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
+        return (User)request.getSession().getAttribute("user");
     }
 }
