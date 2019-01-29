@@ -41,12 +41,12 @@ public class UserController {
             String username = loginame.trim();
             password = password.trim();
             //因密码用MD5加密，需要对密码进行转化
-            try {
-                password = Tools.md5Encryp(password);
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-                logger.error(">>>>>>>>>>>>>>转化MD5字符串错误 ：" + e.getMessage(), e);
-            }
+//            try {
+//                password = Tools.md5Encryp(password);
+//            } catch (NoSuchAlgorithmException e) {
+//                e.printStackTrace();
+//                logger.error(">>>>>>>>>>>>>>转化MD5字符串错误 ：" + e.getMessage(), e);
+//            }
             //判断用户是否已经登录过，登录过不再处理
             Object userInfo = request.getSession().getAttribute("user");
             User sessionUser = new User();

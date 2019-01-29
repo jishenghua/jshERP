@@ -342,6 +342,7 @@ public class SerialNumberService {
      * @Param: remark
      * @return java.lang.Object
      */
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void batAddSerialNumber(String materialName, String serialNumberPrefix, Integer batAddTotal, String remark) {
         if(StringUtil.isNotEmpty(materialName)){
             //查询商品id
