@@ -56,5 +56,8 @@ public interface SerialNumberMapperEx {
      *      and depothead_Id='depotheadId' and is_Sell ！='0' and delete_Flag !='1' {limit 0，count}
      * */
     int cancelSerialNumber(@Param("materialId")Long materialId, @Param("depotheadId")Long depotheadId, @Param("count")Integer count, @Param("updateTime") Date updateTime,@Param("updater") Long updater);
-
+    /**
+     * 批量添加序列号
+     * */
+    int batAddSerialNumber(@Param("list") List<SerialNumberEx> list);
 }

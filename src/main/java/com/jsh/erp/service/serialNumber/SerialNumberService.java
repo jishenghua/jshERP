@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -210,6 +211,38 @@ public class SerialNumberService {
     /**
      * create by: cjl
      * description:
+     *  根据商品名称判断商品名称是否有效
+     * create time: 2019/1/23 17:04
+     * @Param: materialName
+     * @return Long 满足使用条件的商品的id
+     */
+    public Long checkMaterialName(String materialName){
+        if(StringUtil.isNotEmpty(materialName)) {
+            List<Material> mlist = materialMapperEx.findByMaterialName(materialName);
+            if (mlist == null || mlist.size() < 1) {
+                //商品名称不存在
+                throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_NOT_EXISTS_CODE,
+                        ExceptionConstants.MATERIAL_NOT_EXISTS_MSG);
+            }
+            if (mlist.size() > 1) {
+                //商品信息不唯一
+                throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_NOT_ONLY_CODE,
+                        ExceptionConstants.MATERIAL_NOT_ONLY_MSG);
+
+            }
+            //获得唯一商品
+            if (BusinessConstants.ENABLE_SERIAL_NUMBER_NOT_ENABLED.equals(mlist.get(0).getEnableSerialNumber())) {
+                //商品未开启序列号
+                throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_NOT_ENABLE_SERIAL_NUMBER_CODE,
+                        ExceptionConstants.MATERIAL_NOT_ENABLE_SERIAL_NUMBER_MSG);
+            }
+            return mlist.get(0).getId();
+        }
+        return null;
+    }
+    /**
+     * create by: cjl
+     * description:
      *  根据商品名称判断给商品添加序列号是否可行
      *  1、根据商品名称必须查询到唯一的商品
      *  2、该商品必须已经启用序列号
@@ -219,29 +252,11 @@ public class SerialNumberService {
      * @return Long 满足使用条件的商品的id
      */
     public Long getSerialNumberMaterialIdByMaterialName(String materialName){
-        if(StringUtil.isNotEmpty(materialName)){
-            List<Material> mlist = materialMapperEx.findByMaterialName(materialName);
-            if(mlist==null||mlist.size()<1){
-                //商品名称不存在
-                throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_NOT_EXISTS_CODE,
-                        ExceptionConstants.MATERIAL_NOT_EXISTS_MSG);
-            }
-            if(mlist.size()>1){
-                //商品信息不唯一
-                throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_NOT_ONLY_CODE,
-                        ExceptionConstants.MATERIAL_NOT_ONLY_MSG);
-
-            }
-            //获得唯一商品
-            if(BusinessConstants.ENABLE_SERIAL_NUMBER_NOT_ENABLED.equals(mlist.get(0).getEnableSerialNumber())){
-                //商品未开启序列号
-                throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_NOT_ENABLE_SERIAL_NUMBER_CODE,
-                        ExceptionConstants.MATERIAL_NOT_ENABLE_SERIAL_NUMBER_MSG);
-            }
+            if(StringUtil.isNotEmpty(materialName)){
             //计算商品库存和目前占用的可用序列号数量关系
             //库存=入库-出库
             //入库数量
-            Long materialId=mlist.get(0).getId();
+            Long materialId=checkMaterialName(materialName);
             int inSum = depotItemService.findByTypeAndMaterialId(BusinessConstants.DEPOTHEAD_TYPE_STORAGE, materialId);
             //出库数量
             int outSum = depotItemService.findByTypeAndMaterialId(BusinessConstants.DEPOTHEAD_TYPE_OUT, materialId);
@@ -316,6 +331,47 @@ public class SerialNumberService {
         return serialNumberMapperEx.cancelSerialNumber(materialId,depotheadId,count,new Date(),user==null?null:user.getId());
     }
 
-
-
+    /**
+     * create by: cjl
+     * description:
+     *批量添加序列号
+     * create time: 2019/1/29 15:11
+     * @Param: materialName
+     * @Param: serialNumberPrefix
+     * @Param: batAddTotal
+     * @Param: remark
+     * @return java.lang.Object
+     */
+    public void batAddSerialNumber(String materialName, String serialNumberPrefix, Integer batAddTotal, String remark) {
+        if(StringUtil.isNotEmpty(materialName)){
+            //查询商品id
+            Long materialId = checkMaterialName(materialName);
+            List<SerialNumberEx> list=null;
+            //当前用户
+            User userInfo=userService.getCurrentUser();
+            Long userId=userInfo==null?null:userInfo.getId();
+            Date date = new Date();
+            Long million=date.getTime();
+            int insertNum=0;
+            StringBuffer prefixBuf=new StringBuffer(serialNumberPrefix).append(million);
+            do{
+                list=new ArrayList<SerialNumberEx>();
+                int forNum = BusinessConstants.BATCH_INSERT_MAX_NUMBER>=batAddTotal?batAddTotal:BusinessConstants.BATCH_INSERT_MAX_NUMBER;
+               for(int i=0;i<forNum;i++){
+                   insertNum++;
+                   SerialNumberEx each=new SerialNumberEx();
+                   each.setMaterialId(materialId);
+                   each.setCreator(userId);
+                   each.setCreateTime(date);
+                   each.setUpdater(userId);
+                   each.setUpdateTime(date);
+                   each.setRemark(remark);
+                   each.setSerialNumber(new StringBuffer(prefixBuf.toString()).append(insertNum).toString());
+                   list.add(each);
+               }
+                serialNumberMapperEx.batAddSerialNumber(list);
+                batAddTotal -= BusinessConstants.BATCH_INSERT_MAX_NUMBER;
+            }while(batAddTotal>0);
+        }
+    }
 }

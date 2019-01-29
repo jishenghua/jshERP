@@ -204,6 +204,18 @@
             )
         </if>
     </update>
+    <insert id="batAddSerialNumber"
+            useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+       insert into jsh_serial_number
+        (material_Id, serial_Number, is_Sell, remark,delete_Flag,
+        create_Time, creator,update_Time, updater)
+        values
+        <foreach collection='list' item='each' separator=','>
+        (#{each.materialId},#{each.serialNumber},'0',#{each.remark},'0',
+        #{each.createTime},#{each.creator},#{each.updateTime},#{each.updater}
+        )
+        </foreach>
+    </insert>
 
 
 

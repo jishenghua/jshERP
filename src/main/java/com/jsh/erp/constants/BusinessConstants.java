@@ -57,6 +57,10 @@ public class BusinessConstants {
     public static final String SUB_TYPE_RETAIL = "零售";
     public static final String SUB_TYPE_SALES = "销售";
     public static final String SUB_TYPE_TRANSFER = "调拨";
+    /**
+     * 批量插入sql时最大的数据条数
+     * */
+    public static final int BATCH_INSERT_MAX_NUMBER = 500;
 
 
 
