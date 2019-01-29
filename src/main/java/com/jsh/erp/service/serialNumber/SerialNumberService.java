@@ -350,8 +350,13 @@ public class SerialNumberService {
             //当前用户
             User userInfo=userService.getCurrentUser();
             Long userId=userInfo==null?null:userInfo.getId();
-            Date date = new Date();
-            Long million=date.getTime();
+            Date date = null;
+            Long million=null;
+            synchronized(this){
+                date = new Date();
+                million=date.getTime();
+            }
+
             int insertNum=0;
             StringBuffer prefixBuf=new StringBuffer(serialNumberPrefix).append(million);
             do{
