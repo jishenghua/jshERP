@@ -684,7 +684,7 @@
                 },
                 {
                     title: '序列号', field: 'enableSerialNumber', width: 70, align: "center", formatter: function (value) {
-                        return value ? "启用" : "禁用";
+                        return value=='1' ? "启用" : "禁用";
                     }
                 }
             ]],
@@ -1363,7 +1363,7 @@
         // console.log("enableSerialNumber:"+(materialInfo[24]=='true'?'1':'0'));
         // console.log("enableSerialNumber:"+materialInfo[24]);
         // $("#enableSerialNumber").combobox('setValue',materialInfo[24]=='true'?'1':'0');
-        $("#enableSerialNumber").val(materialInfo[24]=='true'?'1':'0');
+        $("#enableSerialNumber").val(materialInfo[24]=='1'?'1':'0');
         // console.log($("#enableSerialNumber").val());
 
         var categoryName = ""; //类型名称

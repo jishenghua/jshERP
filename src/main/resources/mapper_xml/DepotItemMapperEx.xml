@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.jsh.erp.datasource.mappers.DepotItemMapper">
+<mapper  namespace="com.jsh.erp.datasource.mappers.DepotItemMapperEx">
+
     <resultMap id="HeaderIdResultMap" type="com.jsh.erp.datasource.entities.DepotItemVo4HeaderId">
         <result column="HeaderId" jdbcType="BIGINT" property="headerid" />
     </resultMap>
@@ -12,12 +13,12 @@
         <result column="oTime" jdbcType="TIMESTAMP" property="otime" />
     </resultMap>
 
-    <resultMap extends="BaseResultMap" id="ResultAndMaterialMap" type="com.jsh.erp.datasource.entities.DepotItemVo4Material">
+    <resultMap extends="com.jsh.erp.datasource.mappers.DepotItemMapper.BaseResultMap" id="ResultAndMaterialMap" type="com.jsh.erp.datasource.entities.DepotItemVo4Material">
         <result column="mName" jdbcType="VARCHAR" property="mname" />
         <result column="mModel" jdbcType="VARCHAR" property="mmodel" />
     </resultMap>
 
-    <resultMap extends="BaseResultMap" id="ResultWithInfoExMap" type="com.jsh.erp.datasource.entities.DepotItemVo4WithInfoEx">
+    <resultMap extends="com.jsh.erp.datasource.mappers.DepotItemMapper.BaseResultMap" id="ResultWithInfoExMap" type="com.jsh.erp.datasource.entities.DepotItemVo4WithInfoEx">
         <result column="MName" jdbcType="VARCHAR" property="MName" />
         <result column="MModel" jdbcType="VARCHAR" property="MModel" />
         <result column="MaterialUnit" jdbcType="VARCHAR" property="MaterialUnit" />
@@ -33,7 +34,7 @@
         <result column="UName" jdbcType="VARCHAR" property="UName" />
     </resultMap>
 
-    <resultMap extends="BaseResultMap" id="ResultByMaterial" type="com.jsh.erp.datasource.entities.DepotItemVo4WithInfoEx">
+    <resultMap extends="com.jsh.erp.datasource.mappers.DepotItemMapper.BaseResultMap" id="ResultByMaterial" type="com.jsh.erp.datasource.entities.DepotItemVo4WithInfoEx">
         <result column="MId" jdbcType="VARCHAR" property="MId" />
         <result column="MName" jdbcType="VARCHAR" property="MName" />
         <result column="MModel" jdbcType="VARCHAR" property="MModel" />
@@ -41,7 +42,7 @@
         <result column="MColor" jdbcType="VARCHAR" property="MColor" />
     </resultMap>
 
-    <select id="selectByConditionDepotItem" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="BaseResultMap">
+    <select id="selectByConditionDepotItem" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="com.jsh.erp.datasource.mappers.DepotItemMapper.BaseResultMap">
         select *
         FROM jsh_depotitem
         where 1=1
@@ -273,5 +274,36 @@
         and jsh_depotitem.DepotId=${ProjectId}
         and jsh_depotitem.MaterialId =${MId}
     </select>
+
+    <select id="findDepotItemListBydepotheadId"  resultType="com.jsh.erp.datasource.entities.DepotItem">
+        select
+        dep.id,dep.headerId,dep.materialid,dep.munit,dep.opernumber,
+        dep.basicnumber,dep.unitprice,dep.taxunitprice,dep.allprice,dep.remark,
+        dep.img,dep.incidentals,dep.depotid,dep.anotherdepotid,dep.taxrate,
+        dep.taxmoney,dep.taxlastmoney,dep.otherfield1,dep.otherfield2,dep.otherfield3,
+        dep.otherfield4,dep.otherfield5,dep.mtype
+        from jsh_depotitem dep,jsh_material mat
+        where 1=1
+        <if test="depotheadId != null">
+           and HeaderId = #{depotheadId}
+        </if>
+            and dep.materialid=mat.id
+        <if test="enableSerialNumber != null">
+           and mat.enableSerialNumber = #{enableSerialNumber}
+        </if>
+    </select>
+    <delete id="deleteDepotItemByDepotHeadIds">
+        delete from jsh_depotitem
+        where 1=1
+        and HeaderId in
+        (
+        <foreach collection="depotheadIds" item="depotheadId" separator=",">
+            #{depotheadId}
+        </foreach>
+        )
+    </delete>
+
+
+
 
 </mapper>

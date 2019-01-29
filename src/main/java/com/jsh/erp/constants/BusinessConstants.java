@@ -22,17 +22,48 @@ public class BusinessConstants {
      */
     public static final String DEFAULT_PAGINATION_PAGE_SIZE = "10";
     /**
-     * 商品是否开启序列号标识enableSerialNumber 0否false，1是true
-     *
-     * */
-    public static final boolean MATERIAL_ENABLE_SERIAL_NUMBER = true;
-    public static final boolean MATERIAL_NOT_ENABLE_SERIAL_NUMBER = false;
-    /**
      * 单据主表出入库类型 type 入库 出库
      * depothead
      * */
     public static final String DEPOTHEAD_TYPE_STORAGE = "入库";
     public static final String DEPOTHEAD_TYPE_OUT = "出库";
+    /**
+     * 付款类型 payType //现付/预付款
+     * */
+    public static final String PAY_TYPE_PREPAID = "预付款";
+    public static final String PAY_TYPE_BY_CASH = "现付";
+    /**
+     * 删除标记 deleteFlag  '0'未删除 '1'已删除
+     * */
+    public static final String DELETE_FLAG_DELETED = "1";
+    public static final String DELETE_FLAG_EXISTS = "0";
+    /**
+     * 是否卖出 isSell  '0'未卖出 '1'已卖出
+     * */
+    public static final String IS_SELL_SELLED = "1";
+    public static final String IS_SELL_HOLD = "0";
+    /**
+     * 商品是否开启序列号标识enableSerialNumber  '0'未启用 '1'启用
+     * */
+    public static final String ENABLE_SERIAL_NUMBER_ENABLED = "1";
+    public static final String ENABLE_SERIAL_NUMBER_NOT_ENABLED = "0";
+    /**
+     * 出入库分类
+     *采购、采购退货、其它、零售、销售、调拨、礼品充值
+     * */
+    public static final String SUB_TYPE_PURCHASE = "采购";
+    public static final String SUB_TYPE_PURCHASE_TETURNS = "采购退货";
+    public static final String SUB_TYPE_OTHER = "其它";
+    public static final String SUB_TYPE_RETAIL = "零售";
+    public static final String SUB_TYPE_SALES = "销售";
+    public static final String SUB_TYPE_TRANSFER = "调拨";
+    /**
+     * 批量插入sql时最大的数据条数
+     * */
+    public static final int BATCH_INSERT_MAX_NUMBER = 500;
+
+
+
 
 
 

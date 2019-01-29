@@ -29,7 +29,7 @@
     <result column="OtherField1" jdbcType="VARCHAR" property="otherfield1" />
     <result column="OtherField2" jdbcType="VARCHAR" property="otherfield2" />
     <result column="OtherField3" jdbcType="VARCHAR" property="otherfield3" />
-    <result column="enableSerialNumber" jdbcType="BIT" property="enableSerialNumber" />
+    <result column="enableSerialNumber" jdbcType="VARCHAR" property="enableSerialNumber" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -172,7 +172,7 @@
       #{lowprice,jdbcType=DECIMAL}, #{presetpriceone,jdbcType=DECIMAL}, #{presetpricetwo,jdbcType=DECIMAL}, 
       #{unitid,jdbcType=BIGINT}, #{firstoutunit,jdbcType=VARCHAR}, #{firstinunit,jdbcType=VARCHAR}, 
       #{pricestrategy,jdbcType=VARCHAR}, #{enabled,jdbcType=BIT}, #{otherfield1,jdbcType=VARCHAR}, 
-      #{otherfield2,jdbcType=VARCHAR}, #{otherfield3,jdbcType=VARCHAR},#{enableSerialNumber,jdbcType=BIT})
+      #{otherfield2,jdbcType=VARCHAR}, #{otherfield3,jdbcType=VARCHAR},#{enableSerialNumber,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.Material">
     <!--
@@ -325,7 +325,7 @@
         #{otherfield3,jdbcType=VARCHAR},
       </if>
       <if test="enableSerialNumber != null">
-        #{enableSerialNumber,jdbcType=BIT},
+        #{enableSerialNumber,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -452,7 +452,7 @@
       OtherField1 = #{record.otherfield1,jdbcType=VARCHAR},
       OtherField2 = #{record.otherfield2,jdbcType=VARCHAR},
       OtherField3 = #{record.otherfield3,jdbcType=VARCHAR}
-      enableSerialNumber = #{record.enableSerialNumber,jdbcType=BIT}
+      enableSerialNumber = #{record.enableSerialNumber,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>

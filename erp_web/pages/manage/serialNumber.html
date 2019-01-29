@@ -87,11 +87,58 @@
         </div>
     </form>
 </div>
-
 <div id="dlg-buttons">
     <a href="javascript:void(0)" id="saveSerialNumber" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
     <a href="javascript:void(0)" id="cancelSerialNumber" class="easyui-linkbutton" iconCls="icon-cancel"
        onclick="javascript:$('#serialNumberDlg').dialog('close')">取消</a>
+</div>
+<div id="batAddSerialNumberDlg" class="easyui-dialog" style="width:860px;height:420px;padding:10px 20px"
+     closed="true" buttons="#bat-dlg-buttons" modal="true" collapsible="false" closable="true">
+    <form id="batAddserialNumberFM" method="post" novalidate>
+        <div id="batAddtt" class="easyui-tabs" style="width:800px;height:320px;">
+            <div title="批量自定义序列号" style="padding:20px;">
+                <table>
+                    <tr>
+                        <td style="width:60px; height:30px;">商品名称</td>
+                        <td style="padding:5px;width:180px;">
+                            <input name="materialName" id="batAddMaterialName" class="easyui-validatebox"
+                                   data-options="required:true,validType:'length[2,30]'"
+                                   style="width: 180px;height: 20px"/>
+                        </td>
+                        <td style="width:80px;">序列号前缀</td>
+                        <td style="padding:5px;width:180px;">
+                            <input name="serialNumber" id="batAddSerialNumberInput" class="easyui-validatebox"
+                                   data-options="required:true,validType:'length[1,30]'"
+                                   style="width: 180px;height: 20px"/>
+                        </td>
+                        <td style="width:200px;"></td>
+                    </tr>
+                    <tr>
+                        <td style="width:80px;">序列号数量</td>
+                        <td style="padding:5px;width:180px;">
+                            <input name="batAddTotal" id="batAddTotal" class="easyui-numberbox"
+                                   data-options="min:0,max:10000"
+                                   style="width: 180px;height: 20px"/>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td style="height:30px;">备注</td>
+                        <td style="padding:5px" colspan="3">
+                            <textarea name="remark" id="batAddremark" rows="2" cols="2" placeholder="暂无备注信息"
+                                      style="width: 468px; height:40px;"></textarea>
+                        </td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </form>
+</div>
+<div id="bat-dlg-buttons">
+    <a href="javascript:void(0)" id="batAddSerialNumberBtn" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
+    <a href="javascript:void(0)" id="batCancelSerialNumberBtn" class="easyui-linkbutton" iconCls="icon-cancel"
+       onclick="javascript:$('#batAddSerialNumberDlg').dialog('close')">取消</a>
 </div>
 
 
@@ -153,13 +200,13 @@
                     }
                 },
                 {title: '商品名称', field: 'materialName', width: 100},
-                {title: '序列号', field: 'serialNumber', width: 80},
-                {title: '已卖出', field: 'isSell', width: 150 , formatter: function (value) {
-                        return value ? "是" : "否";
+                {title: '序列号', field: 'serialNumber', width: 200},
+                {title: '已卖出', field: 'isSell', width: 60 , formatter: function (value) {
+                        return value=='1' ? "是" : "否";
                     }
                 },
                 {title: '已删除', field: 'deleteFlag', width: 60, formatter: function (value) {
-                        return value ? "是" : "否";
+                        return value=='1' ? "是" : "否";
                     }
                 },
                 {title: '创建时间', field: 'createTime', width: 140,formatter: formatDatebox},
@@ -182,6 +229,15 @@
                     iconCls: 'icon-remove',
                     handler: function () {
                         batDeleteSerialNumber();
+                    }
+                },
+                '-',
+                {
+                    id: 'batAddSerialNumber',
+                    text: '批量添加',
+                    iconCls: 'icon-basket_add',
+                    handler: function () {
+                        batAddSerialNumber();
                     }
                 },
             ],
@@ -489,6 +545,70 @@
 
         return dt.format("yyyy-MM-dd hh:mm:ss"); //扩展的Date的format方法(上述插件实现)
     }
+    /**
+     * 批量添加序列号
+     * */
+    function batAddSerialNumber(){
+        $('#batAddSerialNumberDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;批量添加序列号信息');
+        $(".window-mask").css({width: webW, height: webH});
+        $('#batAddMaterialName').val('');
+        $('#batAddSerialNumberInput').val('');
+        $('#batAddTotal').val('100');
+        $('#batAddremark').val('');
+        url = '/serialNumber/batAddSerialNumber';
+    }
+    //保存信息
+    $("#batAddSerialNumberBtn").off("click").on("click", function () {
+        if (!$('#batAddMaterialName').val()) {
+            $.messager.alert('提示', '商品名称不能为空！', 'warning');
+            return;
+        }
+        if (!$('#batAddSerialNumberInput').val()) {
+            $.messager.alert('提示', '序列号前缀不能为空！', 'warning');
+            return;
+        }
+        if (!$('#batAddTotal').val()) {
+            $.messager.alert('提示', '序列号数量不能为空！', 'warning');
+            return;
+        }
+        var materialName=$('#batAddMaterialName').val();
+        var serialNumberPrefix=$('#batAddSerialNumberInput').val();
+        var batAddTotal= $('#batAddTotal').val();
+        var remark=$('#batAddremark').val();
+        $.ajax({
+            type: "post",
+            url: url,
+            dataType: "json",
+            async: false,
+            data: ({
+                materialName:materialName,
+                serialNumberPrefix:serialNumberPrefix,
+                batAddTotal:batAddTotal,
+                remark:remark
+            }),
+            success: function(res) {
+                if(res){
+                    if(res.code!=200){
+                        $.messager.alert('提示', res.msg, 'error');
+                        return;
+                    }
+                    if(res.code === 200) {
+                        $('#batAddSerialNumberDlg').dialog('close');
+                        //加载完以后重新初始化
+                        var opts = $("#tableData").datagrid('options');
+                        showSerialNumberDetails(opts.pageNumber, opts.pageSize);
+                    }
+
+                }
+
+            },
+            //此处添加错误处理
+            error: function () {
+                $.messager.alert('提示', '保存序列化信息异常，请稍后再试！', 'error');
+                return;
+            }
+        });
+    });
 
 </script>
 </body>

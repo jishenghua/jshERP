@@ -88,6 +88,27 @@ public class SerialNumberController {
         return result;
 
     }
+    /**
+     * create by: cjl
+     * description:
+     *批量添加序列号
+     * create time: 2019/1/29 15:11
+     * @Param: materialName
+     * @Param: serialNumberPrefix
+     * @Param: batAddTotal
+     * @Param: remark
+     * @return java.lang.Object
+     */
+    @PostMapping("/serialNumber/batAddSerialNumber")
+    @ResponseBody
+    public Object batAddSerialNumber(@RequestParam("materialName") String materialName, @RequestParam("serialNumberPrefix") String serialNumberPrefix,
+                                     @RequestParam("batAddTotal") Integer batAddTotal,@RequestParam("remark") String remark){
+
+        JSONObject result = ExceptionConstants.standardSuccess();
+        serialNumberService.batAddSerialNumber(materialName,serialNumberPrefix,batAddTotal,remark);
+        return result;
+
+    }
 
 
 

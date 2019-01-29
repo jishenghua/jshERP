@@ -2,9 +2,15 @@ package com.jsh.erp.service.depotItem;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.*;
+import com.jsh.erp.datasource.mappers.DepotHeadMapper;
 import com.jsh.erp.datasource.mappers.DepotItemMapper;
+import com.jsh.erp.datasource.mappers.DepotItemMapperEx;
+import com.jsh.erp.datasource.mappers.SerialNumberMapperEx;
 import com.jsh.erp.service.material.MaterialService;
+import com.jsh.erp.service.serialNumber.SerialNumberService;
+import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.ErpInfo;
 import com.jsh.erp.utils.QueryUtils;
 import com.jsh.erp.utils.StringUtil;
@@ -17,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +41,17 @@ public class DepotItemService {
     @Resource
     private DepotItemMapper depotItemMapper;
     @Resource
+    private DepotItemMapperEx depotItemMapperEx;
+    @Resource
     private MaterialService materialService;
+    @Resource
+    SerialNumberMapperEx serialNumberMapperEx;
+    @Resource
+    private DepotHeadMapper depotHeadMapper;
+    @Resource
+    SerialNumberService serialNumberService;
+    @Resource
+    private UserService userService;
 
     public DepotItem getDepotItem(long id) {
         return depotItemMapper.selectByPrimaryKey(id);
@@ -46,11 +63,11 @@ public class DepotItemService {
     }
 
     public List<DepotItem> select(String name, Integer type, String remark, int offset, int rows) {
-        return depotItemMapper.selectByConditionDepotItem(name, type, remark, offset, rows);
+        return depotItemMapperEx.selectByConditionDepotItem(name, type, remark, offset, rows);
     }
 
     public int countDepotItem(String name, Integer type, String remark) {
-        return depotItemMapper.countsByDepotItem(name, type, remark);
+        return depotItemMapperEx.countsByDepotItem(name, type, remark);
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
@@ -87,7 +104,7 @@ public class DepotItemService {
     }
 
     public List<DepotItemVo4HeaderId> getHeaderIdByMaterial(String materialParam, String depotIds) {
-        return depotItemMapper.getHeaderIdByMaterial(materialParam, depotIds);
+        return depotItemMapperEx.getHeaderIdByMaterial(materialParam, depotIds);
     }
 
     public List<DepotItemVo4DetailByTypeAndMId> findDetailByTypeAndMaterialIdList(Map<String, String> map) {
@@ -96,7 +113,7 @@ public class DepotItemService {
         if(!StringUtil.isEmpty(mIdStr)) {
             mId = Long.parseLong(mIdStr);
         }
-        return depotItemMapper.findDetailByTypeAndMaterialIdList(mId, QueryUtils.offset(map), QueryUtils.rows(map));
+        return depotItemMapperEx.findDetailByTypeAndMaterialIdList(mId, QueryUtils.offset(map), QueryUtils.rows(map));
     }
 
     public int findDetailByTypeAndMaterialIdCounts(Map<String, String> map) {
@@ -105,7 +122,7 @@ public class DepotItemService {
         if(!StringUtil.isEmpty(mIdStr)) {
             mId = Long.parseLong(mIdStr);
         }
-        return depotItemMapper.findDetailByTypeAndMaterialIdCounts(mId);
+        return depotItemMapperEx.findDetailByTypeAndMaterialIdCounts(mId);
     }
 
     public List<DepotItemVo4Material> findStockNumByMaterialIdList(Map<String, String> map) {
@@ -115,7 +132,7 @@ public class DepotItemService {
             mId = Long.parseLong(mIdStr);
         }
         String monthTime = map.get("monthTime");
-        return depotItemMapper.findStockNumByMaterialIdList(mId, monthTime, QueryUtils.offset(map), QueryUtils.rows(map));
+        return depotItemMapperEx.findStockNumByMaterialIdList(mId, monthTime, QueryUtils.offset(map), QueryUtils.rows(map));
     }
 
     public int findStockNumByMaterialIdCounts(Map<String, String> map) {
@@ -125,7 +142,7 @@ public class DepotItemService {
             mId = Long.parseLong(mIdStr);
         }
         String monthTime = map.get("monthTime");
-        return depotItemMapper.findStockNumByMaterialIdCounts(mId, monthTime);
+        return depotItemMapperEx.findStockNumByMaterialIdCounts(mId, monthTime);
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
@@ -140,36 +157,36 @@ public class DepotItemService {
 
     public int findByTypeAndMaterialId(String type, Long mId) {
         if(type.equals(TYPE)) {
-            return depotItemMapper.findByTypeAndMaterialIdIn(mId);
+            return depotItemMapperEx.findByTypeAndMaterialIdIn(mId);
         } else {
-            return depotItemMapper.findByTypeAndMaterialIdOut(mId);
+            return depotItemMapperEx.findByTypeAndMaterialIdOut(mId);
         }
     }
 
     public List<DepotItemVo4WithInfoEx> getDetailList(Long headerId) {
-        return depotItemMapper.getDetailList(headerId);
+        return depotItemMapperEx.getDetailList(headerId);
     }
 
     public List<DepotItemVo4WithInfoEx> findByAll(String headIds, String materialIds, Integer offset, Integer rows) {
-        return depotItemMapper.findByAll(headIds, materialIds, offset, rows);
+        return depotItemMapperEx.findByAll(headIds, materialIds, offset, rows);
     }
 
     public int findByAllCount(String headIds, String materialIds) {
-        return depotItemMapper.findByAllCount(headIds, materialIds);
+        return depotItemMapperEx.findByAllCount(headIds, materialIds);
     }
 
     public BigDecimal findByType(String type, Integer ProjectId, Long MId, String MonthTime, Boolean isPrev) {
         if (TYPE.equals(type)) {
             if (isPrev) {
-                return depotItemMapper.findByTypeInIsPrev(ProjectId, MId, MonthTime);
+                return depotItemMapperEx.findByTypeInIsPrev(ProjectId, MId, MonthTime);
             } else {
-                return depotItemMapper.findByTypeInIsNotPrev(ProjectId, MId, MonthTime);
+                return depotItemMapperEx.findByTypeInIsNotPrev(ProjectId, MId, MonthTime);
             }
         } else {
             if (isPrev) {
-                return depotItemMapper.findByTypeOutIsPrev(ProjectId, MId, MonthTime);
+                return depotItemMapperEx.findByTypeOutIsPrev(ProjectId, MId, MonthTime);
             } else {
-                return depotItemMapper.findByTypeOutIsNotPrev(ProjectId, MId, MonthTime);
+                return depotItemMapperEx.findByTypeOutIsNotPrev(ProjectId, MId, MonthTime);
             }
         }
     }
@@ -177,41 +194,64 @@ public class DepotItemService {
     public BigDecimal findPriceByType(String type, Integer ProjectId, Long MId, String MonthTime, Boolean isPrev) {
         if (TYPE.equals(type)) {
             if (isPrev) {
-                return depotItemMapper.findPriceByTypeInIsPrev(ProjectId, MId, MonthTime);
+                return depotItemMapperEx.findPriceByTypeInIsPrev(ProjectId, MId, MonthTime);
             } else {
-                return depotItemMapper.findPriceByTypeInIsNotPrev(ProjectId, MId, MonthTime);
+                return depotItemMapperEx.findPriceByTypeInIsNotPrev(ProjectId, MId, MonthTime);
             }
         } else {
             if (isPrev) {
-                return depotItemMapper.findPriceByTypeOutIsPrev(ProjectId, MId, MonthTime);
+                return depotItemMapperEx.findPriceByTypeOutIsPrev(ProjectId, MId, MonthTime);
             } else {
-                return depotItemMapper.findPriceByTypeOutIsNotPrev(ProjectId, MId, MonthTime);
+                return depotItemMapperEx.findPriceByTypeOutIsNotPrev(ProjectId, MId, MonthTime);
             }
         }
     }
 
     public BigDecimal buyOrSale(String type, String subType, Long MId, String MonthTime, String sumType) {
         if (SUM_TYPE.equals(sumType)) {
-            return depotItemMapper.buyOrSaleNumber(type, subType, MId, MonthTime, sumType);
+            return depotItemMapperEx.buyOrSaleNumber(type, subType, MId, MonthTime, sumType);
         } else {
-            return depotItemMapper.buyOrSalePrice(type, subType, MId, MonthTime, sumType);
+            return depotItemMapperEx.buyOrSalePrice(type, subType, MId, MonthTime, sumType);
         }
     }
 
     public BigDecimal findGiftByType(String subType, Integer ProjectId, Long MId, String type) {
         if (IN.equals(type)) {
-            return depotItemMapper.findGiftByTypeIn(subType, ProjectId, MId);
+            return depotItemMapperEx.findGiftByTypeIn(subType, ProjectId, MId);
         } else {
-            return depotItemMapper.findGiftByTypeOut(subType, ProjectId, MId);
+            return depotItemMapperEx.findGiftByTypeOut(subType, ProjectId, MId);
         }
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public String saveDetials(String inserted, String deleted, String updated, Long headerId) throws DataAccessException{
-            //转为json
+    public String saveDetials(String inserted, String deleted, String updated, Long headerId) throws Exception{
+        //查询单据主表信息
+        DepotHead depotHead=depotHeadMapper.selectByPrimaryKey(headerId);
+        //获得当前操作人
+        User userInfo=userService.getCurrentUser();
+        //转为json
             JSONArray insertedJson = JSONArray.parseArray(inserted);
             JSONArray deletedJson = JSONArray.parseArray(deleted);
             JSONArray updatedJson = JSONArray.parseArray(updated);
+            /**
+             * 2019-01-28优先处理删除的
+             * 删除的可以继续卖，删除的需要将使用的序列号回收
+             * 插入的需要判断当前货源是否充足
+             * 更新的需要判断货源是否充足
+             * */
+            if (null != deletedJson) {
+                for (int i = 0; i < deletedJson.size(); i++) {
+                    //首先回收序列号，如果是调拨，不用处理序列号
+                    JSONObject tempDeletedJson = JSONObject.parseObject(deletedJson.getString(i));
+                    if(BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())
+                            &&!BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubtype())){
+                        DepotItem depotItem = getDepotItem(tempDeletedJson.getLong("Id"));
+                        serialNumberMapperEx.cancelSerialNumber(depotItem.getMaterialid(),depotItem.getHeaderid(),depotItem.getOpernumber().intValue(),
+                                new Date(),userInfo==null?null:userInfo.getId());
+                    }
+                    this.deleteDepotItem(tempDeletedJson.getLong("Id"));
+                }
+            }
             if (null != insertedJson) {
                 for (int i = 0; i < insertedJson.size(); i++) {
                     DepotItem depotItem = new DepotItem();
@@ -289,18 +329,25 @@ public class DepotItemService {
                         depotItem.setMtype(tempInsertedJson.getString("MType"));
                     }
                     this.insertDepotItemWithObj(depotItem);
+                    /**出库时处理序列号*/
+                    if(BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())
+                            &&!BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubtype())){
+                        //查询单据子表中开启序列号的数据列表
+                        serialNumberService.checkAndUpdateSerialNumber(depotItem,userInfo);
+                    }
                 }
             }
-            if (null != deletedJson) {
-                for (int i = 0; i < deletedJson.size(); i++) {
-                    JSONObject tempDeletedJson = JSONObject.parseObject(deletedJson.getString(i));
-                    this.deleteDepotItem(tempDeletedJson.getLong("Id"));
-                }
-            }
+
             if (null != updatedJson) {
                 for (int i = 0; i < updatedJson.size(); i++) {
                     JSONObject tempUpdatedJson = JSONObject.parseObject(updatedJson.getString(i));
                     DepotItem depotItem = this.getDepotItem(tempUpdatedJson.getLong("Id"));
+                    //首先回收序列号
+                    if(BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())
+                            &&!BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubtype())) {
+                        serialNumberMapperEx.cancelSerialNumber(depotItem.getMaterialid(), depotItem.getHeaderid(), depotItem.getOpernumber().intValue(),
+                                new Date(),userInfo==null?null:userInfo.getId());
+                    }
                     depotItem.setId(tempUpdatedJson.getLong("Id"));
                     depotItem.setMaterialid(tempUpdatedJson.getLong("MaterialId"));
                     depotItem.setMunit(tempUpdatedJson.getString("Unit"));
@@ -362,6 +409,12 @@ public class DepotItemService {
                     depotItem.setOtherfield5(tempUpdatedJson.getString("OtherField5"));
                     depotItem.setMtype(tempUpdatedJson.getString("MType"));
                     this.updateDepotItemWithObj(depotItem);
+                    /**出库时处理序列号*/
+                    if(BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())
+                            &&!BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubtype())){
+                        //查询单据子表中开启序列号的数据列表
+                        serialNumberService.checkAndUpdateSerialNumber(depotItem,userInfo);
+                    }
                 }
             }
         return null;
@@ -386,4 +439,5 @@ public class DepotItemService {
         }
         return unitName;
     }
+
 }

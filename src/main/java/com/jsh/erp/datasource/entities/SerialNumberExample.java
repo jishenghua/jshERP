@@ -395,52 +395,61 @@ public class SerialNumberExample {
             return (Criteria) this;
         }
 
-        public Criteria andIsSellEqualTo(Boolean value) {
+        public Criteria andIsSellEqualTo(String value) {
             addCriterion("is_Sell =", value, "isSell");
             return (Criteria) this;
         }
 
-        public Criteria andIsSellNotEqualTo(Boolean value) {
+        public Criteria andIsSellNotEqualTo(String value) {
             addCriterion("is_Sell <>", value, "isSell");
             return (Criteria) this;
         }
 
-        public Criteria andIsSellGreaterThan(Boolean value) {
+        public Criteria andIsSellGreaterThan(String value) {
             addCriterion("is_Sell >", value, "isSell");
             return (Criteria) this;
         }
 
-        public Criteria andIsSellGreaterThanOrEqualTo(Boolean value) {
+        public Criteria andIsSellGreaterThanOrEqualTo(String value) {
             addCriterion("is_Sell >=", value, "isSell");
             return (Criteria) this;
         }
 
-        public Criteria andIsSellLessThan(Boolean value) {
+        public Criteria andIsSellLessThan(String value) {
             addCriterion("is_Sell <", value, "isSell");
             return (Criteria) this;
         }
 
-        public Criteria andIsSellLessThanOrEqualTo(Boolean value) {
+        public Criteria andIsSellLessThanOrEqualTo(String value) {
             addCriterion("is_Sell <=", value, "isSell");
             return (Criteria) this;
         }
 
-        public Criteria andIsSellIn(List<Boolean> values) {
+        public Criteria andIsSellLike(String value) {
+            addCriterion("isSell like", value, "isSell");
+            return (Criteria) this;
+        }
+        public Criteria andIsSellNotLike(String value) {
+            addCriterion("isSell not like", value, "isSell");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsSellIn(List<String> values) {
             addCriterion("is_Sell in", values, "isSell");
             return (Criteria) this;
         }
 
-        public Criteria andIsSellNotIn(List<Boolean> values) {
+        public Criteria andIsSellNotIn(List<String> values) {
             addCriterion("is_Sell not in", values, "isSell");
             return (Criteria) this;
         }
 
-        public Criteria andIsSellBetween(Boolean value1, Boolean value2) {
+        public Criteria andIsSellBetween(String value1, String value2) {
             addCriterion("is_Sell between", value1, value2, "isSell");
             return (Criteria) this;
         }
 
-        public Criteria andIsSellNotBetween(Boolean value1, Boolean value2) {
+        public Criteria andIsSellNotBetween(String value1, String value2) {
             addCriterion("is_Sell not between", value1, value2, "isSell");
             return (Criteria) this;
         }
@@ -525,52 +534,59 @@ public class SerialNumberExample {
             return (Criteria) this;
         }
 
-        public Criteria andDeleteFlagEqualTo(Boolean value) {
+        public Criteria andDeleteFlagEqualTo(String value) {
             addCriterion("delete_Flag =", value, "deleteFlag");
             return (Criteria) this;
         }
 
-        public Criteria andDeleteFlagNotEqualTo(Boolean value) {
+        public Criteria andDeleteFlagNotEqualTo(String value) {
             addCriterion("delete_Flag <>", value, "deleteFlag");
             return (Criteria) this;
         }
 
-        public Criteria andDeleteFlagGreaterThan(Boolean value) {
+        public Criteria andDeleteFlagGreaterThan(String value) {
             addCriterion("delete_Flag >", value, "deleteFlag");
             return (Criteria) this;
         }
 
-        public Criteria andDeleteFlagGreaterThanOrEqualTo(Boolean value) {
+        public Criteria andDeleteFlagGreaterThanOrEqualTo(String value) {
             addCriterion("delete_Flag >=", value, "deleteFlag");
             return (Criteria) this;
         }
 
-        public Criteria andDeleteFlagLessThan(Boolean value) {
+        public Criteria andDeleteFlagLessThan(String value) {
             addCriterion("delete_Flag <", value, "deleteFlag");
             return (Criteria) this;
         }
 
-        public Criteria andDeleteFlagLessThanOrEqualTo(Boolean value) {
+        public Criteria andDeleteFlagLessThanOrEqualTo(String value) {
             addCriterion("delete_Flag <=", value, "deleteFlag");
             return (Criteria) this;
         }
-
-        public Criteria andDeleteFlagIn(List<Boolean> values) {
+        public Criteria andDeleteFlagLike(String value) {
+            addCriterion("deleteFlag like", value, "deleteFlag");
+            return (Criteria) this;
+        }
+        public Criteria andDeleteFlagNotLike(String value) {
+            addCriterion("deleteFlag not like", value, "deleteFlag");
+            return (Criteria) this;
+        }
+        public Criteria andDeleteFlagIn(List<String> values) {
             addCriterion("delete_Flag in", values, "deleteFlag");
             return (Criteria) this;
         }
 
-        public Criteria andDeleteFlagNotIn(List<Boolean> values) {
+        public Criteria andDeleteFlagNotIn(List<String> values) {
             addCriterion("delete_Flag not in", values, "deleteFlag");
             return (Criteria) this;
         }
 
-        public Criteria andDeleteFlagBetween(Boolean value1, Boolean value2) {
+        public Criteria andDeleteFlagBetween(String value1, String value2) {
             addCriterion("delete_Flag between", value1, value2, "deleteFlag");
             return (Criteria) this;
         }
 
-        public Criteria andDeleteFlagNotBetween(Boolean value1, Boolean value2) {
+        public Criteria andDeleteFlagNotBetween(String value1, String value2) {
             addCriterion("delete_Flag not between", value1, value2, "deleteFlag");
             return (Criteria) this;
         }
@@ -814,6 +830,68 @@ public class SerialNumberExample {
             addCriterion("updater not between", value1, value2, "updater");
             return (Criteria) this;
         }
+        public Criteria andDepotheadIdIsNull() {
+            addCriterion("depotheadId is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDepotheadIdIsNotNull() {
+            addCriterion("depotheadId is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDepotheadIdEqualTo(Long value) {
+            addCriterion("depotheadId =", value, "depotheadId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDepotheadIdNotEqualTo(Long value) {
+            addCriterion("depotheadId <>", value, "depotheadId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDepotheadIdGreaterThan(Long value) {
+            addCriterion("depotheadId >", value, "depotheadId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDepotheadIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("depotheadId >=", value, "depotheadId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDepotheadIdLessThan(Long value) {
+            addCriterion("depotheadId <", value, "depotheadId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDepotheadIdLessThanOrEqualTo(Long value) {
+            addCriterion("depotheadId <=", value, "depotheadId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDepotheadIdIn(List<Long> values) {
+            addCriterion("depotheadId in", values, "depotheadId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDepotheadIdNotIn(List<Long> values) {
+            addCriterion("depotheadId not in", values, "depotheadId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDepotheadIdBetween(Long value1, Long value2) {
+            addCriterion("depotheadId between", value1, value2, "depotheadId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDepotheadIdNotBetween(Long value1, Long value2) {
+            addCriterion("depotheadId not between", value1, value2, "depotheadId");
+            return (Criteria) this;
+        }
+
+
+
     }
 
     /**

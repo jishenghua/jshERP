@@ -2,14 +2,22 @@ package com.jsh.erp.service.depotHead;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.DepotHead;
 import com.jsh.erp.datasource.entities.DepotHeadExample;
+import com.jsh.erp.datasource.entities.DepotItem;
 import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.mappers.DepotHeadMapper;
+import com.jsh.erp.datasource.mappers.DepotHeadMapperEx;
+import com.jsh.erp.datasource.mappers.DepotItemMapperEx;
 import com.jsh.erp.datasource.vo.DepotHeadVo4InDetail;
 import com.jsh.erp.datasource.vo.DepotHeadVo4InOutMCount;
 import com.jsh.erp.datasource.vo.DepotHeadVo4List;
 import com.jsh.erp.datasource.vo.DepotHeadVo4StatementAccount;
+import com.jsh.erp.service.depotItem.DepotItemService;
+import com.jsh.erp.service.serialNumber.SerialNumberService;
+import com.jsh.erp.service.supplier.SupplierService;
+import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +41,19 @@ public class DepotHeadService {
 
     @Resource
     private DepotHeadMapper depotHeadMapper;
+    @Resource
+    private DepotHeadMapperEx depotHeadMapperEx;
+    @Resource
+    private UserService userService;
+    @Resource
+    DepotItemService depotItemService;
+    @Resource
+    private SupplierService supplierService;
+    @Resource
+    private SerialNumberService serialNumberService;
+    @Resource
+    DepotItemMapperEx depotItemMapperEx;
+
 
     public DepotHead getDepotHead(long id) {
         return depotHeadMapper.selectByPrimaryKey(id);
@@ -45,7 +66,7 @@ public class DepotHeadService {
 
     public List<DepotHeadVo4List> select(String type, String subType, String number, String beginTime, String endTime, String dhIds, int offset, int rows) {
         List<DepotHeadVo4List> resList = new ArrayList<DepotHeadVo4List>();
-        List<DepotHeadVo4List> list = depotHeadMapper.selectByConditionDepotHead(type, subType, number, beginTime, endTime, dhIds, offset, rows);
+        List<DepotHeadVo4List> list = depotHeadMapperEx.selectByConditionDepotHead(type, subType, number, beginTime, endTime, dhIds, offset, rows);
         if (null != list) {
             for (DepotHeadVo4List dh : list) {
                 if(dh.getOthermoneylist() != null) {
@@ -73,7 +94,7 @@ public class DepotHeadService {
 
 
     public int countDepotHead(String type, String subType, String number, String beginTime, String endTime, String dhIds) {
-        return depotHeadMapper.countsByDepotHead(type, subType, number, beginTime, endTime, dhIds);
+        return depotHeadMapperEx.countsByDepotHead(type, subType, number, beginTime, endTime, dhIds);
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
@@ -169,11 +190,11 @@ public class DepotHeadService {
     }
 
     public Long getMaxId() {
-        return depotHeadMapper.getMaxId();
+        return depotHeadMapperEx.getMaxId();
     }
 
     public String findMaterialsListByHeaderId(Long id) {
-        String allReturn = depotHeadMapper.findMaterialsListByHeaderId(id);
+        String allReturn = depotHeadMapperEx.findMaterialsListByHeaderId(id);
         return allReturn;
     }
 
@@ -194,27 +215,27 @@ public class DepotHeadService {
     }
 
     public List<DepotHeadVo4InDetail> findByAll(String beginTime, String endTime, String type, Integer pid, String dids, Integer oId, Integer offset, Integer rows) {
-        return depotHeadMapper.findByAll(beginTime, endTime, type, pid, dids, oId, offset, rows);
+        return depotHeadMapperEx.findByAll(beginTime, endTime, type, pid, dids, oId, offset, rows);
     }
 
     public int findByAllCount(String beginTime, String endTime, String type, Integer pid, String dids, Integer oId) {
-        return depotHeadMapper.findByAllCount(beginTime, endTime, type, pid, dids, oId);
+        return depotHeadMapperEx.findByAllCount(beginTime, endTime, type, pid, dids, oId);
     }
 
     public List<DepotHeadVo4InOutMCount> findInOutMaterialCount(String beginTime, String endTime, String type, Integer pid, String dids, Integer oId, Integer offset, Integer rows) {
-        return depotHeadMapper.findInOutMaterialCount(beginTime, endTime, type, pid, dids, oId, offset, rows);
+        return depotHeadMapperEx.findInOutMaterialCount(beginTime, endTime, type, pid, dids, oId, offset, rows);
     }
 
     public int findInOutMaterialCountTotal(String beginTime, String endTime, String type, Integer pid, String dids, Integer oId) {
-        return depotHeadMapper.findInOutMaterialCountTotal(beginTime, endTime, type, pid, dids, oId);
+        return depotHeadMapperEx.findInOutMaterialCountTotal(beginTime, endTime, type, pid, dids, oId);
     }
 
     public List<DepotHeadVo4StatementAccount> findStatementAccount(String beginTime, String endTime, Integer organId, String supType, Integer offset, Integer rows) {
-        return depotHeadMapper.findStatementAccount(beginTime, endTime, organId, supType, offset, rows);
+        return depotHeadMapperEx.findStatementAccount(beginTime, endTime, organId, supType, offset, rows);
     }
 
     public int findStatementAccountCount(String beginTime, String endTime, Integer organId, String supType) {
-        return depotHeadMapper.findStatementAccountCount(beginTime, endTime, organId, supType);
+        return depotHeadMapperEx.findStatementAccountCount(beginTime, endTime, organId, supType);
     }
 
     public BigDecimal findAllMoney(Integer supplierId, String type, String subType, String mode, String endTime) {
@@ -224,12 +245,12 @@ public class DepotHeadService {
         } else if (mode.equals("合计")) {
             modeName = "DiscountLastMoney";
         }
-        return depotHeadMapper.findAllMoney(supplierId, type, subType, modeName, endTime);
+        return depotHeadMapperEx.findAllMoney(supplierId, type, subType, modeName, endTime);
     }
 
     public List<DepotHeadVo4List> getDetailByNumber(String number) {
         List<DepotHeadVo4List> resList = new ArrayList<DepotHeadVo4List>();
-        List<DepotHeadVo4List> list = depotHeadMapper.getDetailByNumber(number);
+        List<DepotHeadVo4List> list = depotHeadMapperEx.getDetailByNumber(number);
         if (null != list) {
             for (DepotHeadVo4List dh : list) {
                 if(dh.getOthermoneylist() != null) {
@@ -254,4 +275,115 @@ public class DepotHeadService {
         return resList;
     }
 
+    /**
+     * create by: cjl
+     * description:
+     *  新增单据主表及单据子表信息
+     * create time: 2019/1/25 14:36
+     * @Param: beanJson
+     * @Param: inserted
+     * @Param: deleted
+     * @Param: updated
+     * @return java.lang.String
+     */
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public void addDepotHeadAndDetail(String beanJson, String inserted, String deleted, String updated) throws Exception {
+        /**处理单据主表数据*/
+        DepotHead depotHead = JSONObject.parseObject(beanJson, DepotHead.class);
+        //判断用户是否已经登录过，登录过不再处理
+        User userInfo=userService.getCurrentUser();
+        depotHead.setOperpersonname(userInfo==null?null:userInfo.getUsername());
+        depotHead.setCreatetime(new Timestamp(System.currentTimeMillis()));
+        depotHead.setStatus(false);
+        depotHeadMapperEx.adddepotHead(depotHead);
+
+        /**入库和出库处理预付款信息*/
+        if(BusinessConstants.PAY_TYPE_PREPAID.equals(depotHead.getPaytype())){
+            if(depotHead.getOrganid()!=null) {
+                supplierService.updateAdvanceIn(depotHead.getOrganid(), BigDecimal.ZERO.subtract(depotHead.getTotalprice()));
+            }
+        }
+        /**入库和出库处理单据子表信息*/
+        depotItemService.saveDetials(inserted,deleted,updated,depotHead.getId());
+    }
+    /**
+     * create by: cjl
+     * description:
+     * 更新单据主表及单据子表信息
+     * create time: 2019/1/28 14:47
+     * @Param: id
+     * @Param: beanJson
+     * @Param: inserted
+     * @Param: deleted
+     * @Param: updated
+     * @Param: preTotalPrice
+     * @return java.lang.Object
+     */
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public void updateDepotHeadAndDetail(Long id, String beanJson, String inserted, String deleted, String updated, BigDecimal preTotalPrice)throws Exception {
+        /**更新单据主表信息*/
+        DepotHead depotHead = JSONObject.parseObject(beanJson, DepotHead.class);
+        //判断用户是否已经登录过，登录过不再处理
+        depotHead.setId(id);
+        User userInfo=userService.getCurrentUser();
+        depotHead.setOperpersonname(userInfo==null?null:userInfo.getUsername());
+        depotHead.setOpertime(new Timestamp(System.currentTimeMillis()));
+        depotHeadMapperEx.updatedepotHead(depotHead);
+        /**入库和出库处理预付款信息*/
+        if(BusinessConstants.PAY_TYPE_PREPAID.equals(depotHead.getPaytype())){
+            if(depotHead.getOrganid()!=null){
+                supplierService.updateAdvanceIn(depotHead.getOrganid(), BigDecimal.ZERO.subtract(depotHead.getTotalprice().subtract(preTotalPrice)));
+            }
+        }
+        /**入库和出库处理单据子表信息*/
+        depotItemService.saveDetials(inserted,deleted,updated,depotHead.getId());
+    }
+
+    /**
+     * create by: cjl
+     * description:
+     *  删除单据主表及子表信息
+     * create time: 2019/1/28 17:29
+     * @Param: id
+     * @return java.lang.Object
+     */
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public void deleteDepotHeadAndDetail(Long id) throws Exception {
+        //查询单据主表信息
+        DepotHead depotHead =getDepotHead(id);
+        User userInfo=userService.getCurrentUser();
+        //删除出库数据回收序列号
+        if(BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())
+                &&!BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubtype())){
+            //查询单据子表列表
+            List<DepotItem> depotItemList = depotItemMapperEx.findDepotItemListBydepotheadId(id,BusinessConstants.ENABLE_SERIAL_NUMBER_ENABLED);
+            /**回收序列号*/
+            if(depotItemList!=null&&depotItemList.size()>0){
+                for(DepotItem depotItem:depotItemList){
+                    serialNumberService.cancelSerialNumber(depotItem.getMaterialid(), depotItem.getHeaderid(),depotItem.getOpernumber().intValue(),userInfo);
+                }
+            }
+        }
+        /**删除单据子表数据*/
+        depotItemMapperEx.deleteDepotItemByDepotHeadIds(new Long []{id});
+        /**删除单据主表信息*/
+        deleteDepotHead(id);
+    }
+    /**
+     * create by: cjl
+     * description:
+     *  批量删除单据主表及子表信息
+     * create time: 2019/1/28 17:29
+     * @Param: id
+     * @return java.lang.Object
+     */
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public void batchDeleteDepotHeadAndDetail(String ids) throws Exception{
+        if(StringUtil.isNotEmpty(ids)){
+            String [] headIds=ids.split(",");
+            for(int i=0;i<headIds.length;i++){
+                deleteDepotHeadAndDetail(new Long(headIds[i]));
+            }
+        }
+    }
 }

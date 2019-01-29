@@ -2,6 +2,7 @@ package com.jsh.erp.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.DepotHead;
 import com.jsh.erp.datasource.vo.DepotHeadVo4InDetail;
 import com.jsh.erp.datasource.vo.DepotHeadVo4InOutMCount;
@@ -464,5 +465,75 @@ public class DepotHeadController {
         }
         return allMoney;
     }
+    /**
+     * create by: cjl
+     * description:
+     *  新增单据主表及单据子表信息
+     * create time: 2019/1/25 14:36
+     * @Param: beanJson
+     * @Param: inserted
+     * @Param: deleted
+     * @Param: updated
+     * @return java.lang.String
+     */
+    @RequestMapping(value = "/addDepotHeadAndDetail")
+    public Object addDepotHeadAndDetail(@RequestParam("info") String beanJson,@RequestParam("inserted") String inserted,
+                          @RequestParam("deleted") String deleted,
+                          @RequestParam("updated") String updated) throws  Exception{
+        JSONObject result = ExceptionConstants.standardSuccess();
+        depotHeadService.addDepotHeadAndDetail(beanJson,inserted,deleted,updated);
+        return result;
+    }
+    /**
+     * create by: cjl
+     * description:
+     * 更新单据主表及单据子表信息
+     * create time: 2019/1/28 14:47
+     * @Param: id
+     * @Param: beanJson
+     * @Param: inserted
+     * @Param: deleted
+     * @Param: updated
+     * @Param: preTotalPrice
+     * @return java.lang.Object
+     */
+    @RequestMapping(value = "/updateDepotHeadAndDetail")
+    public Object updateDepotHeadAndDetail(@RequestParam("id") Long id,@RequestParam("info") String beanJson,@RequestParam("inserted") String inserted,
+                          @RequestParam("deleted") String deleted,
+                          @RequestParam("updated") String updated,@RequestParam("preTotalPrice") BigDecimal preTotalPrice) throws  Exception{
 
+        JSONObject result = ExceptionConstants.standardSuccess();
+        depotHeadService.updateDepotHeadAndDetail(id,beanJson,inserted,deleted,updated,preTotalPrice);
+        return result;
+    }
+    /**
+     * create by: cjl
+     * description:
+     *  删除单据主表及子表信息
+     * create time: 2019/1/28 17:29
+     * @Param: id
+     * @return java.lang.Object
+     */
+    @RequestMapping(value = "/deleteDepotHeadAndDetail")
+    public Object deleteDepotHeadAndDetail(@RequestParam("id") Long id) throws  Exception{
+
+        JSONObject result = ExceptionConstants.standardSuccess();
+        depotHeadService.deleteDepotHeadAndDetail(id);
+        return result;
+    }
+    /**
+     * create by: cjl
+     * description:
+     *  删除单据主表及子表信息
+     * create time: 2019/1/28 17:29
+     * @Param: id
+     * @return java.lang.Object
+     */
+    @RequestMapping(value = "/batchDeleteDepotHeadAndDetail")
+    public Object batchDeleteDepotHeadAndDetail(@RequestParam("ids") String ids) throws  Exception{
+
+        JSONObject result = ExceptionConstants.standardSuccess();
+        depotHeadService.batchDeleteDepotHeadAndDetail(ids);
+        return result;
+    }
 }

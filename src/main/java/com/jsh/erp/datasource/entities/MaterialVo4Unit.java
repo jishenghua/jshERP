@@ -59,7 +59,7 @@ public class MaterialVo4Unit {
      * 2019-01-21新增字段enableSerialNumber
      *是否开启序列号
      * */
-    private Boolean enableSerialNumber;
+    private String enableSerialNumber;
 
     public Long getId() {
         return id;
@@ -269,11 +269,11 @@ public class MaterialVo4Unit {
         this.materialOther = materialOther;
     }
 
-    public Boolean getEnableSerialNumber() {
+    public String getEnableSerialNumber() {
         return enableSerialNumber;
     }
 
-    public void setEnableSerialNumber(Boolean enableSerialNumber) {
+    public void setEnableSerialNumber(String enableSerialNumber) {
         this.enableSerialNumber = enableSerialNumber;
     }
 }

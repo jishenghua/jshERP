@@ -5219,5 +5219,25 @@ alter table jsh_material add enableSerialNumber bit(1) DEFAULT 0 COMMENT '是否
 -- ----------------------------
 delete from `jsh_functions` where Name='序列号';
 INSERT INTO `jsh_functions`(`Number`, `Name`, `PNumber`, `URL`, `State`, `Sort`, `Enabled`, `Type`, `PushBtn`) VALUES ('010104', '序列号', '0101', '../manage/serialNumber.html', b'0', '0246', b'1', '电脑版', '');
-
-
+-- ----------------------------
+-- 删除单据主表供应商id字段对应外键约束
+-- ----------------------------
+ALTER TABLE jsh_depothead DROP FOREIGN KEY jsh_depothead_ibfk_3;
+-- ----------------------------
+-- 序列号表添加单据主表id字段，用于跟踪序列号流向
+-- ----------------------------
+alter table jsh_serial_number add depothead_Id bigint(20) DEFAULT null COMMENT '单据主表id，用于跟踪序列号流向';
+-- ----------------------------
+-- 修改商品表enableSerialNumber字段类型为varchar(1)
+-- ----------------------------
+alter table jsh_material change enableSerialNumber enableSerialNumber varchar(1) DEFAULT '0' COMMENT '是否开启序列号，0否，1是';
+-- ----------------------------
+-- 修改序列号表is_Sell字段类型为varchar(1)
+-- 修改序列号表delete_Flag字段类型为varchar(1)
+-- ----------------------------
+alter table jsh_serial_number change is_Sell is_Sell varchar(1) DEFAULT '0' COMMENT '是否卖出，0未卖出，1卖出';
+alter table jsh_serial_number change delete_Flag delete_Flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
+-- ----------------------------
+-- 删除单据子表单据主表id字段对应外键约束
+-- ----------------------------
+ALTER TABLE jsh_depotitem DROP FOREIGN KEY jsh_depotitem_ibfk_1;

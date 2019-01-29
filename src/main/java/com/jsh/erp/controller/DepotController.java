@@ -92,7 +92,7 @@ public class DepotController {
         return arr;
     }
 
-    @GetMapping(value = "/findDepotByUserId")
+    @RequestMapping(value = "/findDepotByUserId")
     public JSONArray findDepotByUserId(@RequestParam("UBType") String type, @RequestParam("UBKeyId") String keyId,
                                        HttpServletRequest request) {
         JSONArray arr = new JSONArray();
@@ -128,7 +128,7 @@ public class DepotController {
      * @param request
      * @return
      */
-    @PostMapping(value = "/findGiftByType")
+    @RequestMapping(value = "/findGiftByType")
     public JSONArray findGiftByType(@RequestParam("type") Integer type,
                                        HttpServletRequest request) {
         JSONArray arr = new JSONArray();

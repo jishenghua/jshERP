@@ -262,7 +262,7 @@ public class DepotItemController {
                               @RequestParam("deleted") String deleted,
                               @RequestParam("updated") String updated,
                               @RequestParam("headerId") Long headerId,
-                              HttpServletRequest request) {
+                              HttpServletRequest request) throws Exception{
         Map<String, Object> objectMap = new HashMap<String, Object>();
         try {
             depotItemService.saveDetials(inserted,deleted,updated,headerId);
