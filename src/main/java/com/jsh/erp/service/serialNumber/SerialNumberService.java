@@ -4,9 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.*;
-import com.jsh.erp.datasource.mappers.MaterialMapperEx;
-import com.jsh.erp.datasource.mappers.SerialNumberMapper;
-import com.jsh.erp.datasource.mappers.SerialNumberMapperEx;
+import com.jsh.erp.datasource.mappers.*;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.material.MaterialService;
@@ -39,9 +37,13 @@ public class SerialNumberService {
     @Resource
     private MaterialMapperEx materialMapperEx;
     @Resource
+    private MaterialMapper materialMapper;
+    @Resource
     private DepotItemService depotItemService;
     @Resource
     private UserService userService;
+    @Resource
+    private DepotItemMapperEx depotItemMapperEx;
 
 
     public SerialNumber getSerialNumber(long id) {
@@ -173,9 +175,9 @@ public class SerialNumberService {
             serialNumberEx.setMaterialId(getSerialNumberMaterialIdByMaterialName(serialNumberEx.getMaterialName()));
         }
         //删除标记,默认未删除
-        serialNumberEx.setDeleteFlag(false);
+        serialNumberEx.setDeleteFlag(BusinessConstants.DELETE_FLAG_EXISTS);
         //已卖出，默认未否
-        serialNumberEx.setIsSell(false);
+        serialNumberEx.setIsSell(BusinessConstants.IS_SELL_HOLD);
         Date date=new Date();
         serialNumberEx.setCreateTime(date);
         serialNumberEx.setUpdateTime(date);
@@ -231,7 +233,7 @@ public class SerialNumberService {
 
             }
             //获得唯一商品
-            if(BusinessConstants.MATERIAL_NOT_ENABLE_SERIAL_NUMBER==mlist.get(0).getEnableSerialNumber()){
+            if(BusinessConstants.ENABLE_SERIAL_NUMBER_NOT_ENABLED.equals(mlist.get(0).getEnableSerialNumber())){
                 //商品未开启序列号
                 throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_NOT_ENABLE_SERIAL_NUMBER_CODE,
                         ExceptionConstants.MATERIAL_NOT_ENABLE_SERIAL_NUMBER_MSG);
@@ -253,5 +255,67 @@ public class SerialNumberService {
         }
         return null;
     }
+
+    /**
+     * create by: cjl
+     * description:
+     * 出库时判断序列号库存是否足够，
+     * 同时将对应的序列号绑定单据
+     * create time: 2019/1/24 16:24
+     * @Param: List<DepotItem>
+     * @return void
+     */
+    public void checkAndUpdateSerialNumber(DepotItem depotItem,User userInfo) throws Exception{
+                if(depotItem!=null){
+                    //查询商品下已分配的可用序列号数量
+                    int SerialNumberSum= serialNumberMapperEx.countSerialNumberByMaterialIdAndDepotheadId(depotItem.getMaterialid(),null,BusinessConstants.IS_SELL_HOLD);
+                    if(depotItem.getOpernumber().intValue()>SerialNumberSum){
+                        //获取商品名称
+                        Material material= materialMapper.selectByPrimaryKey(depotItem.getMaterialid());
+                        throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_SERIAL_NUMBERE_NOT_ENOUGH_CODE,
+                                String.format(ExceptionConstants.MATERIAL_SERIAL_NUMBERE_NOT_ENOUGH_MSG,material==null?"":material.getName()));
+                    }
+                    //商品下序列号充足，分配序列号
+                    sellSerialNumber(depotItem.getMaterialid(),depotItem.getHeaderid(),depotItem.getOpernumber().intValue(),userInfo);
+                }
+
+    }
+    /**
+     *
+     *
+     * */
+    /**
+     * create by: cjl
+     * description:
+     * 卖出序列号
+     * create time: 2019/1/25 9:17
+     * @Param: materialId
+     * @Param: depotheadId
+     * @Param: isSell 卖出'1'
+     * @Param: Count 卖出或者赎回的数量
+     * @return com.jsh.erp.datasource.entities.SerialNumberEx
+     */
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int sellSerialNumber(Long materialId, Long depotheadId,int count,User user) throws Exception{
+        return serialNumberMapperEx.sellSerialNumber(materialId,depotheadId,count,new Date(),user==null?null:user.getId());
+    }
+
+    /**
+     * create by: cjl
+     * description:
+     * 赎回序列号
+     * create time: 2019/1/25 9:17
+     * @Param: materialId
+     * @Param: depotheadId
+     * @Param: isSell 赎回'0'
+     * @Param: Count 卖出或者赎回的数量
+     * @return com.jsh.erp.datasource.entities.SerialNumberEx
+     */
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int cancelSerialNumber(Long materialId, Long depotheadId,int count,User user) throws Exception{
+        return serialNumberMapperEx.cancelSerialNumber(materialId,depotheadId,count,new Date(),user==null?null:user.getId());
+    }
+
+
 
 }

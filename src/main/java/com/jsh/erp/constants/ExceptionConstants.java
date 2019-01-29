@@ -34,6 +34,9 @@ public class ExceptionConstants {
     /**序列号不能为为空*/
     public static final int SERIAL_NUMBERE_NOT_BE_EMPTY_CODE = 10500000;
     public static final String SERIAL_NUMBERE_NOT_BE_EMPTY_MSG = "序列号不能为为空";
+    /**商品%s下序列号不充足，请补充后重试*/
+    public static final int MATERIAL_SERIAL_NUMBERE_NOT_ENOUGH_CODE = 10500000;
+    public static final String MATERIAL_SERIAL_NUMBERE_NOT_ENOUGH_MSG = "商品:%s下序列号不充足，请补充后重试";
 
 
 

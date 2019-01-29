@@ -1704,6 +1704,72 @@ public class MaterialExample {
             addCriterion("OtherField3 not between", value1, value2, "otherfield3");
             return (Criteria) this;
         }
+        public Criteria andEnableSerialNumberIsNull() {
+            addCriterion("enableSerialNumber is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnableSerialNumberIsNotNull() {
+            addCriterion("enableSerialNumber is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnableSerialNumberEqualTo(String value) {
+            addCriterion("enableSerialNumber =", value, "enableSerialNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnableSerialNumberNotEqualTo(String value) {
+            addCriterion("enableSerialNumber <>", value, "enableSerialNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnableSerialNumberGreaterThan(String value) {
+            addCriterion("enableSerialNumber >", value, "enableSerialNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnableSerialNumberGreaterThanOrEqualTo(String value) {
+            addCriterion("enableSerialNumber >=", value, "enableSerialNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnableSerialNumberLessThan(String value) {
+            addCriterion("enableSerialNumber <", value, "enableSerialNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnableSerialNumberLessThanOrEqualTo(String value) {
+            addCriterion("enableSerialNumber <=", value, "enableSerialNumber");
+            return (Criteria) this;
+        }
+        public Criteria andEnableSerialNumberLike(String value) {
+            addCriterion("enableSerialNumber like", value, "enableSerialNumber");
+            return (Criteria) this;
+        }
+        public Criteria andEnableSerialNumberNotLike(String value) {
+            addCriterion("enableSerialNumber not like", value, "enableSerialNumber");
+            return (Criteria) this;
+        }
+        public Criteria andEnableSerialNumberIn(List<String> values) {
+            addCriterion("enableSerialNumber in", values, "enableSerialNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnableSerialNumberNotIn(List<String> values) {
+            addCriterion("enableSerialNumber not in", values, "enableSerialNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnableSerialNumberBetween(String value1, String value2) {
+            addCriterion("enableSerialNumber between", value1, value2, "enableSerialNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnableSerialNumberNotBetween(String value1, String value2) {
+            addCriterion("enableSerialNumber not between", value1, value2, "enableSerialNumber");
+            return (Criteria) this;
+        }
     }
 
     /**

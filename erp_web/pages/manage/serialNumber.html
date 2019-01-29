@@ -155,11 +155,11 @@
                 {title: '商品名称', field: 'materialName', width: 100},
                 {title: '序列号', field: 'serialNumber', width: 80},
                 {title: '已卖出', field: 'isSell', width: 150 , formatter: function (value) {
-                        return value ? "是" : "否";
+                        return value=='1' ? "是" : "否";
                     }
                 },
                 {title: '已删除', field: 'deleteFlag', width: 60, formatter: function (value) {
-                        return value ? "是" : "否";
+                        return value=='1' ? "是" : "否";
                     }
                 },
                 {title: '创建时间', field: 'createTime', width: 140,formatter: formatDatebox},

@@ -1,9 +1,9 @@
 package com.jsh.erp.datasource.mappers;
 
-import com.jsh.erp.datasource.entities.SerialNumber;
 import com.jsh.erp.datasource.entities.SerialNumberEx;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -42,4 +42,19 @@ public interface SerialNumberMapperEx {
      * 未删除为卖出的视为有效
      * */
     int findSerialNumberByMaterialId(@Param("materialId") Long materialId);
+    /**
+     * 查询符合条件的序列号数量
+     * */
+    int countSerialNumberByMaterialIdAndDepotheadId(@Param("materialId")Long materialId, @Param("depotheadId")Long depotheadId, @Param("isSell")String isSell);
+    /**
+     * 卖出： update jsh_serial_number set is_Sell='1' ,depothead_Id='depotheadId' where 1=1 and material_Id='materialId'
+     * and is_Sell !='1' and delete_Flag !='1'  {limit 0，count}
+     * */
+    int sellSerialNumber(@Param("materialId")Long materialId, @Param("depotheadId")Long depotheadId,@Param("count")Integer count, @Param("updateTime") Date updateTime,@Param("updater") Long updater);
+    /**
+     * 赎回：update jsh_serial_number set is_Sell='0'  where 1=1 and material_Id='materialId'
+     *      and depothead_Id='depotheadId' and is_Sell ！='0' and delete_Flag !='1' {limit 0，count}
+     * */
+    int cancelSerialNumber(@Param("materialId")Long materialId, @Param("depotheadId")Long depotheadId, @Param("count")Integer count, @Param("updateTime") Date updateTime,@Param("updater") Long updater);
+
 }

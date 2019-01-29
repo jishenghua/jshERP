@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.jsh.erp.datasource.mappers.DepotHeadMapper">
+<mapper namespace="com.jsh.erp.datasource.mappers.DepotHeadMapperEx">
 
-    <resultMap extends="BaseResultMap" id="ResultMapEx" type="com.jsh.erp.datasource.vo.DepotHeadVo4List">
+    <resultMap extends="com.jsh.erp.datasource.mappers.DepotHeadMapper.BaseResultMap" id="ResultMapEx" type="com.jsh.erp.datasource.vo.DepotHeadVo4List">
         <result column="ProjectName" jdbcType="VARCHAR" property="projectName" />
         <result column="OrganName" jdbcType="VARCHAR" property="organName" />
         <result column="HandsPersonName" jdbcType="VARCHAR" property="handsPersonName" />
@@ -281,5 +281,113 @@
             and dh.Number='${number}'
         </if>
     </select>
+
+    <insert id="adddepotHead" parameterType="com.jsh.erp.datasource.entities.DepotHead"
+            useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into jsh_depothead (Type, SubType,
+        ProjectId, DefaultNumber, Number,
+        OperPersonName, CreateTime, OperTime,
+        OrganId, HandsPersonId, AccountId,
+        ChangeAmount, AllocationProjectId, TotalPrice,
+        PayType, Remark, Salesman,
+        AccountIdList, AccountMoneyList, Discount,
+        DiscountMoney, DiscountLastMoney, OtherMoney,
+        OtherMoneyList, OtherMoneyItem, AccountDay,
+        Status)
+        values (#{type,jdbcType=VARCHAR}, #{subtype,jdbcType=VARCHAR},
+        #{projectid,jdbcType=BIGINT}, #{defaultnumber,jdbcType=VARCHAR}, #{number,jdbcType=VARCHAR},
+        #{operpersonname,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, #{opertime,jdbcType=TIMESTAMP},
+        #{organid,jdbcType=BIGINT}, #{handspersonid,jdbcType=BIGINT}, #{accountid,jdbcType=BIGINT},
+        #{changeamount,jdbcType=DECIMAL}, #{allocationprojectid,jdbcType=BIGINT}, #{totalprice,jdbcType=DECIMAL},
+        #{paytype,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{salesman,jdbcType=VARCHAR},
+        #{accountidlist,jdbcType=VARCHAR}, #{accountmoneylist,jdbcType=VARCHAR}, #{discount,jdbcType=DECIMAL},
+        #{discountmoney,jdbcType=DECIMAL}, #{discountlastmoney,jdbcType=DECIMAL}, #{othermoney,jdbcType=DECIMAL},
+        #{othermoneylist,jdbcType=VARCHAR}, #{othermoneyitem,jdbcType=VARCHAR}, #{accountday,jdbcType=INTEGER},
+        #{status,jdbcType=BIT})
+    </insert>
+    <update id="updatedepotHead" parameterType="com.jsh.erp.datasource.entities.DepotHead">
+        update jsh_depothead
+        <set>
+            <if test="type != null">
+                Type = #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="subtype != null">
+                SubType = #{subtype,jdbcType=VARCHAR},
+            </if>
+            <if test="projectid != null">
+                ProjectId = #{projectid,jdbcType=BIGINT},
+            </if>
+            <if test="defaultnumber != null">
+                DefaultNumber = #{defaultnumber,jdbcType=VARCHAR},
+            </if>
+            <if test="number != null">
+                Number = #{number,jdbcType=VARCHAR},
+            </if>
+            <if test="operpersonname != null">
+                OperPersonName = #{operpersonname,jdbcType=VARCHAR},
+            </if>
+            <if test="opertime != null">
+                OperTime = #{opertime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="organid != null">
+                OrganId = #{organid,jdbcType=BIGINT},
+            </if>
+            <if test="handspersonid != null">
+                HandsPersonId = #{handspersonid,jdbcType=BIGINT},
+            </if>
+            <if test="accountid != null">
+                AccountId = #{accountid,jdbcType=BIGINT},
+            </if>
+            <if test="changeamount != null">
+                ChangeAmount = #{changeamount,jdbcType=DECIMAL},
+            </if>
+            <if test="allocationprojectid != null">
+                AllocationProjectId = #{allocationprojectid,jdbcType=BIGINT},
+            </if>
+            <if test="totalprice != null">
+                TotalPrice = #{totalprice,jdbcType=DECIMAL},
+            </if>
+            <if test="paytype != null">
+                PayType = #{paytype,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                Remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="salesman != null">
+                Salesman = #{salesman,jdbcType=VARCHAR},
+            </if>
+            <if test="accountidlist != null">
+                AccountIdList = #{accountidlist,jdbcType=VARCHAR},
+            </if>
+            <if test="accountmoneylist != null">
+                AccountMoneyList = #{accountmoneylist,jdbcType=VARCHAR},
+            </if>
+            <if test="discount != null">
+                Discount = #{discount,jdbcType=DECIMAL},
+            </if>
+            <if test="discountmoney != null">
+                DiscountMoney = #{discountmoney,jdbcType=DECIMAL},
+            </if>
+            <if test="discountlastmoney != null">
+                DiscountLastMoney = #{discountlastmoney,jdbcType=DECIMAL},
+            </if>
+            <if test="othermoney != null">
+                OtherMoney = #{othermoney,jdbcType=DECIMAL},
+            </if>
+            <if test="othermoneylist != null">
+                OtherMoneyList = #{othermoneylist,jdbcType=VARCHAR},
+            </if>
+            <if test="othermoneyitem != null">
+                OtherMoneyItem = #{othermoneyitem,jdbcType=VARCHAR},
+            </if>
+            <if test="accountday != null">
+                AccountDay = #{accountday,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                Status = #{status,jdbcType=BIT},
+            </if>
+        </set>
+        where Id = #{id,jdbcType=BIGINT}
+    </update>
 
 </mapper>

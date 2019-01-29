@@ -1,25 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jsh.erp.datasource.mappers.SerialNumberMapperEx">
-    <resultMap id="BaseResultMap" type="com.jsh.erp.datasource.entities.SerialNumberEx">
+    <resultMap extends="com.jsh.erp.datasource.mappers.SerialNumberMapper.BaseResultMap"  id="SerialNumberExBaseResultMap" type="com.jsh.erp.datasource.entities.SerialNumberEx">
         <id column="id" jdbcType="BIGINT" property="id" />
-        <result column="material_Id" jdbcType="BIGINT" property="materialId" />
         <result column="materialName" jdbcType="VARCHAR" property="materialName" />
-        <result column="serial_Number" jdbcType="VARCHAR" property="serialNumber" />
-        <result column="is_Sell" jdbcType="BIT" property="isSell" />
-        <result column="remark" jdbcType="VARCHAR" property="remark" />
-        <result column="delete_Flag" jdbcType="BIT" property="deleteFlag" />
-        <result column="create_Time" jdbcType="TIMESTAMP" property="createTime" />
-        <result column="update_Time" jdbcType="TIMESTAMP" property="updateTime" />
-        <result column="creator" jdbcType="BIGINT" property="creator" />
-        <result column="updater" jdbcType="BIGINT" property="updater" />
         <result column="creatorName" jdbcType="VARCHAR" property="creatorName" />
         <result column="updaterName" jdbcType="VARCHAR" property="updaterName" />
     </resultMap>
-    <select id="selectByConditionSerialNumber"   resultMap="BaseResultMap">
+    <select id="selectByConditionSerialNumber"   resultMap="SerialNumberExBaseResultMap">
         select
         ser.id, ser.material_Id, ser.serial_Number, ser.is_Sell, ser.remark, ser.delete_Flag, ser.create_Time,
-        ser.update_Time,mat.name as materialName,null as creator,null as updater,null as creatorName, null as updaterName
+        ser.update_Time,mat.name as materialName,null as creator,null as updater,null as creatorName,
+        null as updaterName,ser.depothead_Id
         FROM jsh_serial_number ser
         left JOIN jsh_material mat on mat.id = ser.material_Id
         where 1=1
@@ -52,11 +44,11 @@
         </if>
         order by ser.id desc
     </select>
-    <select id="findById" resultMap="BaseResultMap">
+    <select id="findById" resultMap="SerialNumberExBaseResultMap">
         SELECT
         ser.id, ser.material_Id, ser.serial_Number, ser.is_Sell, ser.remark, ser.delete_Flag, ser.create_Time,
         ser.update_Time,ser.creator,ser.updater,mat.name as materialName,cr.username as creatorName,
-        ur.username as updaterName
+        ur.username as updaterName,ser.depothead_Id
         FROM jsh_serial_number ser
         left JOIN jsh_material mat on mat.id = ser.material_Id
         left join jsh_user cr on ser.creator=cr.id
@@ -65,10 +57,10 @@
         and ser.id=#{id}
         order by ser.id desc
     </select>
-    <select id="findBySerialNumber" resultMap="BaseResultMap">
+    <select id="findBySerialNumber" resultMap="SerialNumberExBaseResultMap">
         SELECT
         ser.id, ser.material_Id, ser.serial_Number, ser.is_Sell, ser.remark, ser.delete_Flag, ser.create_Time,
-        ser.update_Time,ser.creator,ser.updater
+        ser.update_Time,ser.creator,ser.updater,ser.depothead_Id
         FROM jsh_serial_number ser
         where 1=1
         <if test="serialNumber != null">
@@ -80,10 +72,10 @@
             useGeneratedKeys="true" keyProperty="id" keyColumn="id">
        insert into jsh_serial_number
         (material_Id, serial_Number, is_Sell, remark,delete_Flag,
-        create_Time, creator,update_Time, updater)
+        create_Time, creator,update_Time, updater,depothead_Id)
         values
         (#{materialId},#{serialNumber},#{isSell},#{remark},#{deleteFlag},
-        #{createTime},#{creator},#{updateTime},#{updater}
+        #{createTime},#{creator},#{updateTime},#{updater},#{depotheadId}
         )
     </insert>
     <update id="updateSerialNumber" parameterType="com.jsh.erp.datasource.entities.SerialNumberEx">
@@ -96,13 +88,13 @@
                 serial_Number = #{serialNumber,jdbcType=VARCHAR},
             </if>
             <if test="isSell != null">
-                is_Sell = #{isSell,jdbcType=BIT},
+                is_Sell = #{isSell,jdbcType=VARCHAR},
             </if>
             <if test="remark != null">
                 remark = #{remark,jdbcType=VARCHAR},
             </if>
             <if test="deleteFlag != null">
-                delete_Flag = #{deleteFlag,jdbcType=BIT},
+                delete_Flag = #{deleteFlag,jdbcType=VARCHAR},
             </if>
             <if test="updateTime != null">
                 update_Time = #{updateTime,jdbcType=TIMESTAMP},
@@ -110,9 +102,13 @@
             <if test="updater != null">
                 updater = #{updater,jdbcType=BIGINT},
             </if>
+            <if test="depotheadId != null">
+                depothead_Id = #{depotheadId,jdbcType=BIGINT},
+            </if>
         </set>
         where id = #{id,jdbcType=BIGINT}
     </update>
+
     <select id="findSerialNumberByMaterialId" resultType="java.lang.Integer">
         SELECT
         count(ser.id)
@@ -124,5 +120,93 @@
         and ser.delete_Flag !='1'
         and ser.is_Sell !='1'
     </select>
+    <select id="countSerialNumberByMaterialIdAndDepotheadId" resultType="java.lang.Integer">
+        SELECT
+        count(ser.id)
+        FROM jsh_serial_number ser
+        where 1=1
+        <if test="materialId != null">
+            and ser.material_Id=#{materialId}
+        </if>
+        <if test="depotheadId != null">
+            and ser.depothead_Id=#{depotheadId}
+        </if>
+        and ser.is_Sell =#{isSell,jdbcType=VARCHAR}
+        and ser.delete_Flag !='1'
+    </select>
+    <update id="sellSerialNumber">
+        update jsh_serial_number
+        <set>
+                is_Sell = '1',
+            <if test="depotheadId !=null ">
+                depothead_Id = #{depotheadId},
+            </if>
+            <if test="updateTime !=null ">
+                update_Time = #{updateTime},
+            </if>
+            <if test="updater != null">
+                updater = #{updater},
+            </if>
+        </set>
+        where 1=1
+        <if test="materialId != null">
+            and material_Id = #{materialId}
+        </if>
+            and is_Sell != '1'
+        <if test="count != null">
+        and id in
+            ( select batchSN.id from
+                ( select selFrom.id from jsh_serial_number selFrom
+                    where 1=1
+                    <if test="materialId != null">
+                        and selFrom.material_Id = #{materialId}
+                    </if>
+                        and selFrom.is_Sell != '1'
+                    limit 0,#{count}
+                ) batchSN
+            )
+        </if>
+    </update>
+
+    <update id="cancelSerialNumber">
+        update jsh_serial_number
+        <set>
+                is_Sell = '0',
+            <if test="updateTime !=null ">
+                update_Time = #{updateTime},
+            </if>
+            <if test="updater != null">
+                updater = #{updater},
+            </if>
+        </set>
+        where 1=1
+        <if test="materialId != null">
+            and material_Id = #{materialId}
+        </if>
+        <if test="depotheadId !=null ">
+            and depothead_Id = #{depotheadId,jdbcType=BIGINT}
+        </if>
+            and is_Sell != '0'
+        <if test="count != null">
+            and id in
+            ( select batchSN.id from
+            ( select selFrom.id from jsh_serial_number selFrom
+            where 1=1
+            <if test="materialId != null">
+                and selFrom.material_Id = #{materialId}
+            </if>
+            <if test="depotheadId !=null ">
+                and selFrom.depothead_Id = #{depotheadId,jdbcType=BIGINT}
+            </if>
+                and selFrom.is_Sell !='0'
+            limit 0,#{count}
+            ) batchSN
+            )
+        </if>
+    </update>
+
+
+
+
 
 </mapper>

@@ -23,7 +23,8 @@
 	var organUrl = ""; //组织数据接口地址
 	var amountNum = ""; //单据编号开头字符
 	var depotString = ""; //店铺id列表
-	var orgDefaultId = 0; //单位默认编号
+	/**默认编号有意义吗，不如空着吧*/
+	var orgDefaultId=''; //单位默认编号
 	var orgDefaultList; //存储查询出来的会员列表
 	var accountList; //账户列表
 	var outItemList; //支出项目列表
@@ -682,7 +683,7 @@
                                         }
                                     }
                                     thisStock = (thisStock / loadRatio).toFixed(2);
-                                    body.find("[field='Stock']").find(input).val(thisStock).attr("data-stock", res.rows[0].thisSum); //加载库存数据
+									body.find("[field='Stock']").find(input).val(thisStock).attr("data-stock", res.data.page[0].thisSum); //加载库存数据
                                 }
                                 else {
                                     body.find("[field='Stock']").find(input).val(0).attr("data-stock", 0); //加载库存数据
@@ -757,14 +758,20 @@
 			anotherDepotTextField = "depotName";
 		}
 		if(listSubType == "礼品充值"){
+			/**
+			 * who added the .action
+			 * */
 			isShowAnotherDepot = false; //礼品充值时候显示礼品卡
 			anotherDepotHeadName = "礼品卡";
-			anotherDepotUrl = "/depot/findGiftByType.action?type=1";
+			anotherDepotUrl = "/depot/findGiftByType?type=1";
 			anotherDepotTextField = "name";
 		}
 		if(listSubType == "礼品销售"){
+			/**
+			 * who added the .action
+			 * */
 			depotHeadName = "礼品卡";
-			depotUrl = "/depot/findGiftByType.action?type=1";
+			depotUrl = "/depot/findGiftByType?type=1";
 			depotTextField = "name";
 		}
 		else {
@@ -1290,8 +1297,12 @@
 	        if (r) {
 				$.ajax({
 					type:"post",
-                    url: "/depotHead/" + depotHeadID + "/delete",
+                    // url: "/depotHead/" + depotHeadID + "/delete",
+                    url: "/depotHead/deleteDepotHeadAndDetail",
 					dataType: "json",
+					data:{
+						id: depotHeadID
+					},
                     success: function (res) {
                         if(res && res.code == 200) {
                             $("#searchBtn").click();
@@ -1382,7 +1393,8 @@
 					//批量删除
 	                $.ajax({
 						type:"post",
-						url: "/depotHead/batchDelete",
+						// url: "/depotHead/batchDelete",
+						url: "/depotHead/batchDeleteDepotHeadAndDetail",
 						dataType: "json",
 						async :  false,
 						data: ({
@@ -1560,7 +1572,7 @@
 		$("#addOrgan").off("click").on("click",function(){
 			$('#supplierDlg').dialog('open').dialog('setTitle','<img src="/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加供应商信息');
 		});
-	    url = '/depotHead/add';
+	    url = '/depotHead/addDepotHeadAndDetail';
 
 		//零售单据修改收款时，自动计算找零
 		if(listSubType == "零售" || listSubType == "零售退货") {
@@ -1628,7 +1640,7 @@
 		}
 	    $("#Number").val(depotHeadInfo[2]).attr("data-defaultNumber",depotHeadInfo[2]);
 	    $("#OperTime").val(depotHeadInfo[4]);
-	    $('#OrganId').combobox('setValue', depotHeadInfo[5]);
+	    $('#OrganId').combobox('setValue', depotHeadInfo[5]=='undefined'?'':depotHeadInfo[5]);
 	    $("#HandsPersonId").val(depotHeadInfo[6]);
 	    $("#AccountId").val(depotHeadInfo[7]);
 	    $("#ChangeAmount").val(depotHeadInfo[8]);
@@ -1715,7 +1727,7 @@
 	    
 	    initTableData_material("edit",TotalPrice); //商品列表
 	    reject(); //撤销下、刷新商品列表                
-	    url = '/depotHead/update?id=' + depotHeadInfo[0];
+	    url = '/depotHead/updateDepotHeadAndDetail?id=' + depotHeadInfo[0];
 	}
 	
 	//查看信息
@@ -1899,6 +1911,18 @@
 			return flag;
 		}
 		//保存信息
+		/**
+		 * 2019-01-25
+		 * 我对这个方法的实现结果存在严重怀疑，决定重构
+		 * 有如下疑点：
+		 * 1、保存完主表，返回结果后，再发起请求去操作子表，如何保证事务的一致性（业务数据一致性）
+		 * 2、保存完主表后，再通过selectmax的方式去获取主表主键id完全就是看人品的不可靠的思路
+		 * 修改计划：
+		 * 2019-01-25修改零售出库相关操作
+		 * 修改方式，重写url，将主从表操作合并
+		 *
+		 *
+		 * **/
 		$("#saveDepotHead").off("click").on("click",function(){
 			if(!$('#depotHeadFM').form('validate')){
 				return;
@@ -1961,6 +1985,7 @@
 						$.messager.alert('提示', '选择多账户时的找零金额不能大于0！', 'warning');
 						return;
 					}
+
 				}
 				else if(listTitle === "销售出库列表"){
 					if(!$('#OrganId').combobox('getValue')){
@@ -2052,38 +2077,49 @@
 				if($("#AccountId").val() === "many"){ //多账户
 					getAccountID = null;
 				}
+				var infoStr=JSON.stringify({
+					Type: listType,
+					SubType: listSubType,
+					ProjectId: ProjectId,
+					AllocationProjectId: AllocationProjectId,
+					DefaultNumber: $.trim($("#Number").attr("data-defaultNumber")),//初始编号
+					Number: $.trim($("#Number").val()),
+					OperTime: $("#OperTime").val(),
+					OrganId: OrganId,
+					HandsPersonId: $.trim($("#HandsPersonId").val()),
+					Salesman: SalesmanStr, //销售人员
+					AccountId: getAccountID,
+					ChangeAmount: ChangeAmount, //付款/收款
+					TotalPrice: TotalPrice, //合计
+					PayType: thisPayType, //现付/预付款
+					Remark: $.trim($("#Remark").val()),
+					AccountIdList: $("#AccountId").attr("data-accountarr"), //账户列表-多账户
+					AccountMoneyList: accountMoneyArr ? JSON.stringify(accountMoneyArr) : "", //账户金额列表-多账户
+					Discount: $.trim($("#Discount").val()),
+					DiscountMoney: $.trim($("#DiscountMoney").val()),
+					DiscountLastMoney: $.trim($("#DiscountLastMoney").val()),
+					OtherMoney: $.trim($("#OtherMoney").val()), //采购费用、销售费用
+					OtherMoneyList: $("#OtherMoney").attr("data-itemarr"), //支出项目列表-涉及费用
+					OtherMoneyItem: $("#OtherMoney").attr("data-itemmoneyarr"), //支出项目金额列表-涉及费用
+					AccountDay: $("#AccountDay").val() //结算天数
+				});
+				/**
+				 * 零售出库，单独操作
+				 * */
+				if(url.indexOf("/depotHead/addDepotHeadAndDetail")>=0){
+					addDepotHeadAndDetail(url,infoStr);
+					return;
+				}else if(url.indexOf("/depotHead/updateDepotHeadAndDetail")>=0){
+					updateDepotHeadAndDetail(url,infoStr,preTotalPrice);
+					return;
+				}
 				$.ajax({
 					type:"post",
 					url: url,
 					dataType: "json",
 					async :  false,
 					data: ({
-                        info : JSON.stringify({
-                            Type: listType,
-                            SubType: listSubType,
-                            ProjectId: ProjectId,
-                            AllocationProjectId: AllocationProjectId,
-                            DefaultNumber: $.trim($("#Number").attr("data-defaultNumber")),//初始编号
-                            Number: $.trim($("#Number").val()),
-                            OperTime: $("#OperTime").val(),
-                            OrganId: OrganId,
-                            HandsPersonId: $.trim($("#HandsPersonId").val()),
-                            Salesman: SalesmanStr, //销售人员
-                            AccountId: getAccountID,
-                            ChangeAmount: ChangeAmount, //付款/收款
-                            TotalPrice: TotalPrice, //合计
-                            PayType: thisPayType, //现付/预付款
-                            Remark: $.trim($("#Remark").val()),
-                            AccountIdList: $("#AccountId").attr("data-accountarr"), //账户列表-多账户
-                            AccountMoneyList: accountMoneyArr ? JSON.stringify(accountMoneyArr) : "", //账户金额列表-多账户
-                            Discount: $.trim($("#Discount").val()),
-                            DiscountMoney: $.trim($("#DiscountMoney").val()),
-                            DiscountLastMoney: $.trim($("#DiscountLastMoney").val()),
-                            OtherMoney: $.trim($("#OtherMoney").val()), //采购费用、销售费用
-                            OtherMoneyList: $("#OtherMoney").attr("data-itemarr"), //支出项目列表-涉及费用
-                            OtherMoneyItem: $("#OtherMoney").attr("data-itemmoneyarr"), //支出项目金额列表-涉及费用
-                            AccountDay: $("#AccountDay").val() //结算天数
-                        })
+                        info:infoStr
 					}),
 					success: function (tipInfo)
 					{
@@ -2955,7 +2991,103 @@
 		}
 	}
 
+	/**
+	 * 新增单据主表及单据子表
+	 * */
+	function addDepotHeadAndDetail(url,infoStr){
+		var inserted = $("#materialData").datagrid('getChanges', "inserted");
+		var deleted = $("#materialData").datagrid('getChanges', "deleted");
+		var updated = $("#materialData").datagrid('getChanges', "updated");
+		$.ajax({
+			type:"post",
+			url: url,
+			dataType: "json",
+			async :  false,
+			data: ({
+				info:infoStr,
+				inserted: JSON.stringify(inserted),
+				deleted: JSON.stringify(deleted),
+				updated: JSON.stringify(updated)
+			}),
+			success: function (tipInfo){
 
+				if(tipInfo){
+					if(tipInfo.code!=200){
+						$.messager.alert('提示', tipInfo.msg, 'error');
+						return;
+					}
+					$.messager.alert('提示','保存成功！','info');
+					$('#depotHeadDlg').dialog('close');
+					var opts = $("#tableData").datagrid('options');
+					showDepotHeadDetails(opts.pageNumber,opts.pageSize);
+
+				}else {
+					$.messager.show({
+						title: '错误提示',
+						msg: '保存信息失败，请稍后重试!'
+					});
+				}
+
+			},
+			//此处添加错误处理
+			error:function()
+			{
+				$.messager.alert('提示','保存信息异常，请稍后再试！','error');
+				return;
+			}
+
+
+		});
+	}
+	/**
+	 * 修改单据主表及单据子表
+	 * */
+	function updateDepotHeadAndDetail(url,infoStr,preTotalPrice){
+		var inserted = $("#materialData").datagrid('getChanges', "inserted");
+		var deleted = $("#materialData").datagrid('getChanges', "deleted");
+		var updated = $("#materialData").datagrid('getChanges', "updated");
+		$.ajax({
+			type:"post",
+			url: url,
+			dataType: "json",
+			async :  false,
+			data: ({
+				id:url.substring(url.lastIndexOf("?id=")+4,url.length),
+				info:infoStr,
+				inserted: JSON.stringify(inserted),
+				deleted: JSON.stringify(deleted),
+				updated: JSON.stringify(updated),
+				preTotalPrice:preTotalPrice
+			}),
+			success: function (tipInfo){
+				if(tipInfo){
+					if(tipInfo.code!=200){
+						$.messager.alert('提示', tipInfo.msg, 'error');
+						return;
+					}
+					$.messager.alert('提示','保存成功！','info');
+					$('#depotHeadDlg').dialog('close');
+					var opts = $("#tableData").datagrid('options');
+					showDepotHeadDetails(opts.pageNumber,opts.pageSize);
+					if (endEditing()) {
+						$('#materialData').datagrid('acceptChanges');
+					}
+				}else {
+					$.messager.show({
+						title: '错误提示',
+						msg: '保存信息失败，请稍后重试!'
+					});
+				}
+
+			},
+			//此处添加错误处理
+			error:function()
+			{
+				$.messager.alert('提示','保存信息异常，请稍后再试！','error');
+				return;
+			}
+		});
+	}
 
 
 
