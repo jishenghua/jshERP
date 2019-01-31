@@ -6,14 +6,17 @@
         <result column="materialName" jdbcType="VARCHAR" property="materialName" />
         <result column="creatorName" jdbcType="VARCHAR" property="creatorName" />
         <result column="updaterName" jdbcType="VARCHAR" property="updaterName" />
+        <result column="depotHeadNumber" jdbcType="VARCHAR" property="depotHeadNumber" />
+        <result column="depotHeadType" jdbcType="VARCHAR" property="depotHeadType" />
     </resultMap>
     <select id="selectByConditionSerialNumber"   resultMap="SerialNumberExBaseResultMap">
         select
         ser.id, ser.material_Id, ser.serial_Number, ser.is_Sell, ser.remark, ser.delete_Flag, ser.create_Time,
         ser.update_Time,mat.name as materialName,null as creator,null as updater,null as creatorName,
-        null as updaterName,ser.depothead_Id
+        null as updaterName,ser.depothead_Id, dh.number as depotHeadNumber,concat(dh.SubType,dh.Type) as depotHeadType
         FROM jsh_serial_number ser
-        left JOIN jsh_material mat on mat.id = ser.material_Id
+        left join jsh_material mat on mat.id = ser.material_Id
+        left join jsh_depothead dh on dh.id= ser.depothead_Id
         where 1=1
         <if test="serialNumber != null">
             <bind name="serialNumber" value="'%' + _parameter.serialNumber + '%'" />

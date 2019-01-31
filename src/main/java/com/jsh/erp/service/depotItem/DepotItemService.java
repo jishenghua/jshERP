@@ -3,11 +3,13 @@ package com.jsh.erp.service.depotItem;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
+import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.mappers.DepotHeadMapper;
 import com.jsh.erp.datasource.mappers.DepotItemMapper;
 import com.jsh.erp.datasource.mappers.DepotItemMapperEx;
 import com.jsh.erp.datasource.mappers.SerialNumberMapperEx;
+import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.service.serialNumber.SerialNumberService;
 import com.jsh.erp.service.user.UserService;
@@ -246,8 +248,20 @@ public class DepotItemService {
                     if(BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())
                             &&!BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubtype())){
                         DepotItem depotItem = getDepotItem(tempDeletedJson.getLong("Id"));
-                        serialNumberMapperEx.cancelSerialNumber(depotItem.getMaterialid(),depotItem.getHeaderid(),depotItem.getOpernumber().intValue(),
-                                new Date(),userInfo==null?null:userInfo.getId());
+                        if(depotItem==null){
+                            continue;
+                        }
+                        /**
+                         * 判断商品是否开启序列号，开启的收回序列号，未开启的跳过
+                         * */
+                        Material material= materialService.getMaterial(depotItem.getMaterialid());
+                        if(material==null){
+                            continue;
+                        }
+                        if(BusinessConstants.ENABLE_SERIAL_NUMBER_ENABLED.equals(material.getEnableSerialNumber())){
+                            serialNumberMapperEx.cancelSerialNumber(depotItem.getMaterialid(),depotItem.getHeaderid(),depotItem.getOpernumber().intValue(),
+                                    new Date(),userInfo==null?null:userInfo.getId());
+                        }
                     }
                     this.deleteDepotItem(tempDeletedJson.getLong("Id"));
                 }
@@ -328,13 +342,34 @@ public class DepotItemService {
                     if (tempInsertedJson.get("MType") != null) {
                         depotItem.setMtype(tempInsertedJson.getString("MType"));
                     }
-                    this.insertDepotItemWithObj(depotItem);
-                    /**出库时处理序列号*/
-                    if(BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())
-                            &&!BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubtype())){
-                        //查询单据子表中开启序列号的数据列表
-                        serialNumberService.checkAndUpdateSerialNumber(depotItem,userInfo);
+                    /**
+                     * 出库时判断库存是否充足
+                     * */
+                    if(BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())){
+                        if(depotItem==null){
+                            continue;
+                        }
+                        Material material= materialService.getMaterial(depotItem.getMaterialid());
+                        if(material==null){
+                            continue;
+                        }
+                        if(getCurrentInStock(depotItem.getMaterialid())<depotItem.getOpernumber().intValue()){
+                            throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_STOCK_NOT_ENOUGH_CODE,
+                                    String.format(ExceptionConstants.MATERIAL_STOCK_NOT_ENOUGH_MSG,material==null?"":material.getName()));
+                        }
+
+                            /**出库时处理序列号*/
+                        if(!BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubtype())) {
+                            /**
+                             * 判断商品是否开启序列号，开启的收回序列号，未开启的跳过
+                             * */
+                            if(BusinessConstants.ENABLE_SERIAL_NUMBER_ENABLED.equals(material.getEnableSerialNumber())) {
+                                //查询单据子表中开启序列号的数据列表
+                                serialNumberService.checkAndUpdateSerialNumber(depotItem, userInfo);
+                            }
+                        }
                     }
+                    this.insertDepotItemWithObj(depotItem);
                 }
             }
 
@@ -342,11 +377,23 @@ public class DepotItemService {
                 for (int i = 0; i < updatedJson.size(); i++) {
                     JSONObject tempUpdatedJson = JSONObject.parseObject(updatedJson.getString(i));
                     DepotItem depotItem = this.getDepotItem(tempUpdatedJson.getLong("Id"));
+                    if(depotItem==null){
+                        continue;
+                    }
+                    Material material= materialService.getMaterial(depotItem.getMaterialid());
+                    if(material==null){
+                        continue;
+                    }
                     //首先回收序列号
                     if(BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())
                             &&!BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubtype())) {
-                        serialNumberMapperEx.cancelSerialNumber(depotItem.getMaterialid(), depotItem.getHeaderid(), depotItem.getOpernumber().intValue(),
-                                new Date(),userInfo==null?null:userInfo.getId());
+                        /**
+                         * 判断商品是否开启序列号，开启的收回序列号，未开启的跳过
+                         * */
+                        if(BusinessConstants.ENABLE_SERIAL_NUMBER_ENABLED.equals(material.getEnableSerialNumber())) {
+                            serialNumberMapperEx.cancelSerialNumber(depotItem.getMaterialid(), depotItem.getHeaderid(), depotItem.getOpernumber().intValue(),
+                                    new Date(), userInfo == null ? null : userInfo.getId());
+                        }
                     }
                     depotItem.setId(tempUpdatedJson.getLong("Id"));
                     depotItem.setMaterialid(tempUpdatedJson.getLong("MaterialId"));
@@ -408,13 +455,23 @@ public class DepotItemService {
                     depotItem.setOtherfield4(tempUpdatedJson.getString("OtherField4"));
                     depotItem.setOtherfield5(tempUpdatedJson.getString("OtherField5"));
                     depotItem.setMtype(tempUpdatedJson.getString("MType"));
-                    this.updateDepotItemWithObj(depotItem);
                     /**出库时处理序列号*/
-                    if(BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())
-                            &&!BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubtype())){
-                        //查询单据子表中开启序列号的数据列表
-                        serialNumberService.checkAndUpdateSerialNumber(depotItem,userInfo);
+                    if(BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())){
+                        if(getCurrentInStock(depotItem.getMaterialid())<depotItem.getOpernumber().intValue()){
+                            throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_STOCK_NOT_ENOUGH_CODE,
+                                    String.format(ExceptionConstants.MATERIAL_STOCK_NOT_ENOUGH_MSG,material==null?"":material.getName()));
+                        }
+                        if(!BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubtype())) {
+                                /**
+                                 * 判断商品是否开启序列号，开启的收回序列号，未开启的跳过
+                                 * */
+                            if(BusinessConstants.ENABLE_SERIAL_NUMBER_ENABLED.equals(material.getEnableSerialNumber())) {
+                                //查询单据子表中开启序列号的数据列表
+                                serialNumberService.checkAndUpdateSerialNumber(depotItem, userInfo);
+                            }
+                        }
                     }
+                    this.updateDepotItemWithObj(depotItem);
                 }
             }
         return null;
@@ -438,6 +495,17 @@ public class DepotItemService {
             e.printStackTrace();
         }
         return unitName;
+    }
+    /**
+     * 查询商品当前库存数量是否充足，
+     *
+     * */
+    public int getCurrentInStock(Long materialId){
+        //入库数量
+        int inSum = findByTypeAndMaterialId(BusinessConstants.DEPOTHEAD_TYPE_STORAGE, materialId);
+        //出库数量
+        int outSum = findByTypeAndMaterialId(BusinessConstants.DEPOTHEAD_TYPE_OUT, materialId);
+        return (inSum-outSum);
     }
 
 }

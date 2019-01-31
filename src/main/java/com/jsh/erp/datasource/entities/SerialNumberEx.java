@@ -19,6 +19,10 @@ public class SerialNumberEx extends SerialNumber{
      * 更新者名称
      * */
     private String updaterName;
+    /**单据编号*/
+    private String depotHeadNumber;
+    /**单据类型（出库入库）*/
+    private String depotHeadType;
 
     public String getMaterialName() {
         return materialName;
@@ -42,5 +46,21 @@ public class SerialNumberEx extends SerialNumber{
 
     public void setUpdaterName(String updaterName) {
         this.updaterName = updaterName;
+    }
+
+    public String getDepotHeadNumber() {
+        return depotHeadNumber;
+    }
+
+    public void setDepotHeadNumber(String depotHeadNumber) {
+        this.depotHeadNumber = depotHeadNumber;
+    }
+
+    public String getDepotHeadType() {
+        return depotHeadType;
+    }
+
+    public void setDepotHeadType(String depotHeadType) {
+        this.depotHeadType = depotHeadType;
     }
 }

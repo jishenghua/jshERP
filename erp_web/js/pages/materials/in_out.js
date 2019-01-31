@@ -1737,7 +1737,7 @@
 	    $("#ProjectIdShow").text(depotHeadInfo[10]);
 	    $("#NumberShow").text(depotHeadInfo[2]);
 	    $("#OperTimeShow").text(depotHeadInfo[4]);
-	    $('#OrganIdShow').text(depotHeadInfo[11]);
+	    $('#OrganIdShow').text(depotHeadInfo[11]=="undefined"?'':depotHeadInfo[11]);
 	    $("#HandsPersonIdShow").text(depotHeadInfo[12]);
         if(depotHeadInfo[13] && depotHeadInfo[13]!="undefined"){
             $("#AccountIdShow").text(depotHeadInfo[13]); //结算账户
