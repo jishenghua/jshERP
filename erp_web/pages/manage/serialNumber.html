@@ -205,8 +205,12 @@
                 {title: '序列号',align: "center", field: 'serialNumber', width: 200},
                 {title: '单据编号', align: "center", field: 'depotHeadNumber', width: 140,
                     formatter: function (value, row) {
-                        return "<a class='n-link' onclick=\"newTab('" + row.depotHeadNumber + "','../materials/bill_detail.html?n=" + row.depotHeadNumber + "&type=" + row.depotHeadType + "','')\">"
-                            + row.depotHeadNumber + "</a>";
+                        if(row.depotHeadNumber){
+
+                            return "<a class='n-link' onclick=\"newTab('" + row.depotHeadNumber + "','../materials/bill_detail.html?n=" + row.depotHeadNumber + "&type=" + row.depotHeadType + "','')\">"
+                                + row.depotHeadNumber + "</a>";
+                        }
+                        return '';
                     }
                 },
                 {title: '已卖出', align: "center", field: 'isSell', width: 60 , formatter: function (value) {
