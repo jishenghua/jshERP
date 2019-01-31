@@ -189,12 +189,13 @@
             columns: [[
                 {field: 'id', width: 35, align: "center", checkbox: true},
                 {field: 'depotheadId', hidden: true},
+                {field: 'depotHeadType', hidden: true},
                 {
                     title: '操作', field: 'op', align: "center", width: 60, formatter: function (value, rec) {
                         var str = '';
                         var rowInfo = rec.id + 'AaBb' + rec.materialId + 'AaBb' + rec.materialName + 'AaBb' + rec.serialNumber + 'AaBb' + rec.isSell + 'AaBb' + rec.remark
                             + 'AaBb' + rec.deleteFlag + 'AaBb' + rec.createTime + 'AaBb' + rec.updateTime + 'AaBb' + rec.creator + 'AaBb' + rec.updater
-                            + 'AaBb' + rec.creatorName + 'AaBb' + rec.updaterName +'AaBb' + rec.depotheadId+'AaBb' + rec.depotHeadNumber;
+                            + 'AaBb' + rec.creatorName + 'AaBb' + rec.updaterName +'AaBb' + rec.depotheadId+'AaBb' + rec.depotHeadNumber +'AaBb' + rec.depotHeadType;
                         str += '<img title="编辑" src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editSerialNumber(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
                         str += '<img title="删除" src="/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteSerialNumber(' + rec.id + ');"/>';
                         return str;
@@ -202,7 +203,12 @@
                 },
                 {title: '商品名称', align: "center",field: 'materialName', width: 100},
                 {title: '序列号',align: "center", field: 'serialNumber', width: 200},
-                {title: '单据编号', align: "center", field: 'depotHeadNumber', width: 200},
+                {title: '单据编号', align: "center", field: 'depotHeadNumber', width: 140,
+                    formatter: function (value, row) {
+                        return "<a class='n-link' onclick=\"newTab('" + row.depotHeadNumber + "','../materials/bill_detail.html?n=" + row.depotHeadNumber + "&type=" + row.depotHeadType + "','')\">"
+                            + row.depotHeadNumber + "</a>";
+                    }
+                },
                 {title: '已卖出', align: "center", field: 'isSell', width: 60 , formatter: function (value) {
                         return value=='1' ? "是" : "否";
                     }
