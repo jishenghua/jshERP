@@ -19,6 +19,7 @@ import com.jsh.erp.service.serialNumber.SerialNumberService;
 import com.jsh.erp.service.supplier.SupplierService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
+import com.jsh.erp.utils.Tools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -293,6 +294,20 @@ public class DepotHeadService {
         //判断用户是否已经登录过，登录过不再处理
         User userInfo=userService.getCurrentUser();
         depotHead.setOperpersonname(userInfo==null?null:userInfo.getUsername());
+        //构造新的编号
+        String dNumber = depotHead.getDefaultnumber();
+        String number = dNumber.substring(0, 12); //截取前缀
+        String beginTime = Tools.getNow() + " 00:00:00";
+        String endTime = Tools.getNow() + " 23:59:59";
+        String newNumber = buildNumber(depotHead.getType(), depotHead.getSubtype(), beginTime, endTime);  //从数据库查询最新的编号+1,这样能防止重复
+        String allNewNumber = number + newNumber;
+        String frontNumber = depotHead.getNumber();
+        if(frontNumber.indexOf(number) > -1) {
+            depotHead.setNumber(allNewNumber); //从后台取值
+        } else {
+            depotHead.setNumber(frontNumber); //从前端文本框里面获取
+        }
+        depotHead.setDefaultnumber(allNewNumber); //初始编号，一直都从后台取值
         depotHead.setCreatetime(new Timestamp(System.currentTimeMillis()));
         depotHead.setStatus(false);
         depotHeadMapperEx.adddepotHead(depotHead);
