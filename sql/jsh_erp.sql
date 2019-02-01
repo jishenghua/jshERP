@@ -5277,7 +5277,7 @@ declare _maxvalue bigint;  -- 接收最大值
 declare _increment int; -- 接收增长步数
 set _increment = (select increment_val from tbl_sequence where seq_name = name);
 set _maxvalue = (select maxvalue from tbl_sequence where seq_name = name);
-set _cur = (select current_val from tbl_sequence where seq_name = name);
+set _cur = (select current_val from tbl_sequence where seq_name = name for update);
 update tbl_sequence                      -- 更新当前值
  set current_val = _cur + increment_val
  where seq_name = name ;
