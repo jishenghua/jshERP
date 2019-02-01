@@ -5241,3 +5241,53 @@ alter table jsh_serial_number change delete_Flag delete_Flag varchar(1) DEFAULT 
 -- 删除单据子表单据主表id字段对应外键约束
 -- ----------------------------
 ALTER TABLE jsh_depotitem DROP FOREIGN KEY jsh_depotitem_ibfk_1;
+-- ----------------------------
+-- 时间：2019年2月1日
+-- version：1.0.2
+-- 此次更新添加sequence表，用于获取一个唯一的数值
+-- 特别提醒：之后的sql都是在之前基础上迭代，可以对已存在的系统进行数据保留更新
+-- ----------------------------
+-- ----------------------------
+-- 添加表tbl_sequence
+-- ----------------------------
+DROP TABLE IF EXISTS `tbl_sequence`;
+CREATE TABLE tbl_sequence (
+  seq_name VARCHAR(50) NOT NULL COMMENT '序列名称',
+  minvalue bigint(20) NOT NULL COMMENT '最小值',
+  maxvalue bigint(20) NOT NULL COMMENT '最大值',
+  current_val bigint(20) NOT NULL COMMENT '当前值',
+  increment_val INT DEFAULT '1' NOT NULL COMMENT '增长步数',
+  remark VARCHAR(500) DEFAULT null  COMMENT '备注',
+  PRIMARY KEY (seq_name)
+  )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='sequence表';
+
+-- ----------------------------
+-- 添加表单据编号sequence
+-- ----------------------------
+insert into tbl_sequence (seq_name, minvalue, maxvalue, current_val, increment_val,remark) values ('depot_number_seq', 1, 999999999999999999, 1, 1,'单据编号sequence');
+-- ----------------------------
+-- 创建function _nextval() 用于获取当前序列号
+-- ----------------------------
+DELIMITER //
+create function _nextval(name varchar(50))
+returns long
+begin
+declare _cur bigint;
+declare _maxvalue bigint;  -- 接收最大值
+declare _increment int; -- 接收增长步数
+set _increment = (select increment_val from tbl_sequence where seq_name = name);
+set _maxvalue = (select maxvalue from tbl_sequence where seq_name = name);
+set _cur = (select current_val from tbl_sequence where seq_name = name for update);
+update tbl_sequence                      -- 更新当前值
+ set current_val = _cur + increment_val
+ where seq_name = name ;
+if(_cur + _increment >= _maxvalue) then  -- 判断是都达到最大值
+      update tbl_sequence
+        set current_val = minvalue
+        where seq_name = name ;
+end if;
+return _cur;
+end;
+//
+DELIMITER ;
+

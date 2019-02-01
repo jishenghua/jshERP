@@ -247,6 +247,8 @@ public class SerialNumberService {
      *  1、根据商品名称必须查询到唯一的商品
      *  2、该商品必须已经启用序列号
      *  3、该商品已绑定序列号数量小于商品现有库存
+     *  2019-02-01
+     *  用商品的库存去限制序列号的添加有点不合乎道理，去掉此限制
      * create time: 2019/1/23 17:04
      * @Param: materialName
      * @return Long 满足使用条件的商品的id
@@ -257,15 +259,15 @@ public class SerialNumberService {
             //库存=入库-出库
             //入库数量
             Long materialId=checkMaterialName(materialName);
-            int inSum = depotItemService.findByTypeAndMaterialId(BusinessConstants.DEPOTHEAD_TYPE_STORAGE, materialId);
-            //出库数量
-            int outSum = depotItemService.findByTypeAndMaterialId(BusinessConstants.DEPOTHEAD_TYPE_OUT, materialId);
-            //查询当前商品下有效的序列号
-            int serialNumberSum = serialNumberMapperEx.findSerialNumberByMaterialId(materialId);
-            if((inSum-outSum)<=serialNumberSum){
-                throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_SERIAL_NUMBERE_NOT_MORE_THAN_STORAGE_CODE,
-                        ExceptionConstants.MATERIAL_SERIAL_NUMBERE_NOT_MORE_THAN_STORAGE_MSG);
-            }
+//            int inSum = depotItemService.findByTypeAndMaterialId(BusinessConstants.DEPOTHEAD_TYPE_STORAGE, materialId);
+//            //出库数量
+//            int outSum = depotItemService.findByTypeAndMaterialId(BusinessConstants.DEPOTHEAD_TYPE_OUT, materialId);
+//            //查询当前商品下有效的序列号
+//            int serialNumberSum = serialNumberMapperEx.findSerialNumberByMaterialId(materialId);
+//            if((inSum-outSum)<=serialNumberSum){
+//                throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_SERIAL_NUMBERE_NOT_MORE_THAN_STORAGE_CODE,
+//                        ExceptionConstants.MATERIAL_SERIAL_NUMBERE_NOT_MORE_THAN_STORAGE_MSG);
+//            }
             return materialId;
         }
         return null;

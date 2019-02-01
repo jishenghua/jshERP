@@ -61,6 +61,16 @@ public class BusinessConstants {
      * 批量插入sql时最大的数据条数
      * */
     public static final int BATCH_INSERT_MAX_NUMBER = 500;
+    /**
+     * sequence名称
+     * */
+    //sequence返回字符串的最小长度
+    public static final Long SEQ_TO_STRING_MIN_LENGTH = 1000000L;
+    //sequence长度小于基准长度时前追加基础值
+    public static final String SEQ_TO_STRING_LESS_INSERT = "0";
+    //单据编号
+    public static final String DEPOT_NUMBER_SEQ = "depot_number_seq";
+
 
 
 

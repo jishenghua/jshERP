@@ -389,5 +389,8 @@
         </set>
         where Id = #{id,jdbcType=BIGINT}
     </update>
+    <select id="getBuildOnlyNumber" resultType="java.lang.Long">
+      select _nextval(#{seq_name}) from dual;
+    </select>
 
 </mapper>

@@ -20,6 +20,7 @@ import com.jsh.erp.service.supplier.SupplierService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
 import com.jsh.erp.utils.Tools;
+import lombok.Synchronized;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -153,6 +154,26 @@ public class DepotHeadService {
         example.createCriteria().andIdIn(ids);
         return depotHeadMapper.updateByExampleSelective(depotHead, example);
     }
+    /**
+     * 创建一个唯一的序列号
+     * */
+    public  String buildOnlyNumber(){
+        Long buildOnlyNumber=null;
+        synchronized (this){
+            buildOnlyNumber= depotHeadMapperEx.getBuildOnlyNumber(BusinessConstants.DEPOT_NUMBER_SEQ);
+        }
+        if(buildOnlyNumber<BusinessConstants.SEQ_TO_STRING_MIN_LENGTH){
+           StringBuffer sb=new StringBuffer(buildOnlyNumber.toString());
+           int len=BusinessConstants.SEQ_TO_STRING_MIN_LENGTH.toString().length()-sb.length();
+            for(int i=0;i<len;i++){
+                sb.insert(0,BusinessConstants.SEQ_TO_STRING_LESS_INSERT);
+            }
+            return sb.toString();
+        }else{
+            return buildOnlyNumber.toString();
+        }
+    }
+
 
     public String buildNumber(String type, String subType, String beginTime, String endTime) {
         String newNumber = "0001"; //新编号
