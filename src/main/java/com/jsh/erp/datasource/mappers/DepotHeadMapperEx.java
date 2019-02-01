@@ -107,4 +107,9 @@ public interface DepotHeadMapperEx {
      * 更新单据主表信息
      * */
     void updatedepotHead(DepotHead depotHead);
+
+    /**
+     * 获得一个全局唯一的数作为订单号的追加
+     * */
+     Long  getBuildOnlyNumber(@Param("seq_name") String seq_name);
 }

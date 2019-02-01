@@ -77,7 +77,8 @@ public class DepotHeadController {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         try {
-            String number = depotHeadService.buildNumber(type, subType, beginTime, endTime);
+//            String number = depotHeadService.buildNumber(type, subType, beginTime, endTime);
+            String number = depotHeadService.buildOnlyNumber();
             map.put("DefaultNumber", number);
             res.code = 200;
             res.data = map;
