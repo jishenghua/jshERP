@@ -611,7 +611,6 @@
 
 	//增加
 	function addAccountHead(){
-		$("#clientIp").val(clientIp);
 		$('#accountHeadFM').form('clear');
 		var thisDateTime = getNowFormatDateTime(); //当前时间
 		$("#BillTime").val(thisDateTime);
@@ -643,7 +642,6 @@
 	//编辑信息
     function editAccountHead(accountHeadTotalInfo){
     	var accountHeadInfo = accountHeadTotalInfo.split("AaBb");
-        $("#clientIp").val(clientIp);
         $("#BillNo").val(accountHeadInfo[1]);
         $("#BillTime").val(accountHeadInfo[2]);
         $("#Remark").val(accountHeadInfo[3]);

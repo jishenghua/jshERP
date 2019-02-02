@@ -1523,7 +1523,6 @@
 
 	//新增信息
 	function addDepotHead(){
-		$("#clientIp").val(clientIp);
 		$('#depotHeadFM').form('clear');
 		var thisDateTime = getNowFormatDateTime(); //当前时间
 		$("#OperTime").val(thisDateTime);
@@ -1625,7 +1624,6 @@
 			return;
 		}
 		var depotHeadInfo = depotHeadTotalInfo.split("AaBb");
-	    $("#clientIp").val(clientIp);
 		if(listSubType==="礼品销售"){
 			$("#GiftId").combobox('setValue',depotHeadInfo[1]);
 		}
