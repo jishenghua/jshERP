@@ -5253,8 +5253,8 @@ ALTER TABLE jsh_depotitem DROP FOREIGN KEY jsh_depotitem_ibfk_1;
 DROP TABLE IF EXISTS `tbl_sequence`;
 CREATE TABLE tbl_sequence (
   seq_name VARCHAR(50) NOT NULL COMMENT '序列名称',
-  minvalue bigint(20) NOT NULL COMMENT '最小值',
-  maxvalue bigint(20) NOT NULL COMMENT '最大值',
+  min_value bigint(20) NOT NULL COMMENT '最小值',
+  max_value bigint(20) NOT NULL COMMENT '最大值',
   current_val bigint(20) NOT NULL COMMENT '当前值',
   increment_val INT DEFAULT '1' NOT NULL COMMENT '增长步数',
   remark VARCHAR(500) DEFAULT null  COMMENT '备注',
@@ -5264,7 +5264,7 @@ CREATE TABLE tbl_sequence (
 -- ----------------------------
 -- 添加表单据编号sequence
 -- ----------------------------
-insert into tbl_sequence (seq_name, minvalue, maxvalue, current_val, increment_val,remark) values ('depot_number_seq', 1, 999999999999999999, 1, 1,'单据编号sequence');
+insert into tbl_sequence (seq_name, min_value, max_value, current_val, increment_val,remark) values ('depot_number_seq', 1, 999999999999999999, 1, 1,'单据编号sequence');
 -- ----------------------------
 -- 创建function _nextval() 用于获取当前序列号
 -- ----------------------------
@@ -5276,7 +5276,7 @@ declare _cur bigint;
 declare _maxvalue bigint;  -- 接收最大值
 declare _increment int; -- 接收增长步数
 set _increment = (select increment_val from tbl_sequence where seq_name = name);
-set _maxvalue = (select maxvalue from tbl_sequence where seq_name = name);
+set _maxvalue = (select max_value from tbl_sequence where seq_name = name);
 set _cur = (select current_val from tbl_sequence where seq_name = name for update);
 update tbl_sequence                      -- 更新当前值
  set current_val = _cur + increment_val
