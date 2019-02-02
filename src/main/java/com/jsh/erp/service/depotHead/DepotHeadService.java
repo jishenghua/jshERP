@@ -396,7 +396,8 @@ public class DepotHeadService {
             /**回收序列号*/
             if(depotItemList!=null&&depotItemList.size()>0){
                 for(DepotItem depotItem:depotItemList){
-                    serialNumberService.cancelSerialNumber(depotItem.getMaterialid(), depotItem.getHeaderid(),depotItem.getOpernumber().intValue(),userInfo);
+                    //BasicNumber=OperNumber*ratio
+                    serialNumberService.cancelSerialNumber(depotItem.getMaterialid(), depotItem.getHeaderid(),depotItem.getBasicnumber().intValue(),userInfo);
                 }
             }
         }

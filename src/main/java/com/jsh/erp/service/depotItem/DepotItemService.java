@@ -224,7 +224,11 @@ public class DepotItemService {
             return depotItemMapperEx.findGiftByTypeOut(subType, ProjectId, MId);
         }
     }
-
+    /**
+     * 2019-02-02修改
+     * 我之前对操作数量的理解有偏差
+     * 这里重点重申一下：BasicNumber=OperNumber*ratio
+     * */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public String saveDetials(String inserted, String deleted, String updated, Long headerId) throws Exception{
         //查询单据主表信息
@@ -259,7 +263,7 @@ public class DepotItemService {
                             continue;
                         }
                         if(BusinessConstants.ENABLE_SERIAL_NUMBER_ENABLED.equals(material.getEnableSerialNumber())){
-                            serialNumberMapperEx.cancelSerialNumber(depotItem.getMaterialid(),depotItem.getHeaderid(),depotItem.getOpernumber().intValue(),
+                            serialNumberMapperEx.cancelSerialNumber(depotItem.getMaterialid(),depotItem.getHeaderid(),depotItem.getBasicnumber().intValue(),
                                     new Date(),userInfo==null?null:userInfo.getId());
                         }
                     }
@@ -279,14 +283,18 @@ public class DepotItemService {
                             String Unit = tempInsertedJson.get("Unit").toString();
                             BigDecimal oNumber = tempInsertedJson.getBigDecimal("OperNumber");
                             Long mId = Long.parseLong(tempInsertedJson.get("MaterialId").toString());
+                            /***
+                             * 为什么调用的方法要先把基础单位去掉，去掉之后后续还能获取到？
+                             * */
                             //以下进行单位换算
-                            String UnitName = findUnitName(mId); //查询计量单位名称
-                            if (!StringUtil.isEmpty(UnitName)) {
-                                String UnitList = UnitName.substring(0, UnitName.indexOf("("));
-                                String RatioList = UnitName.substring(UnitName.indexOf("("));
-                                String basicUnit = UnitList.substring(0, UnitList.indexOf(",")); //基本单位
-                                String otherUnit = UnitList.substring(UnitList.indexOf(",") + 1); //副单位
-                                Integer ratio = Integer.parseInt(RatioList.substring(RatioList.indexOf(":") + 1).replace(")", "")); //比例
+//                            String UnitName = findUnitName(mId); //查询计量单位名称
+                            String unitName = materialService.findUnitName(mId);
+                            if (!StringUtil.isEmpty(unitName)) {
+                                String unitList = unitName.substring(0, unitName.indexOf("("));
+                                String ratioList = unitName.substring(unitName.indexOf("("));
+                                String basicUnit = unitList.substring(0, unitList.indexOf(",")); //基本单位
+                                String otherUnit = unitList.substring(unitList.indexOf(",") + 1); //副单位
+                                Integer ratio = Integer.parseInt(ratioList.substring(ratioList.indexOf(":") + 1).replace(")", "")); //比例
                                 if (Unit.equals(basicUnit)) { //如果等于基础单位
                                     depotItem.setBasicnumber(oNumber); //数量一致
                                 } else if (Unit.equals(otherUnit)) { //如果等于副单位
@@ -353,7 +361,7 @@ public class DepotItemService {
                         if(material==null){
                             continue;
                         }
-                        if(getCurrentInStock(depotItem.getMaterialid())<depotItem.getOpernumber().intValue()){
+                        if(getCurrentInStock(depotItem.getMaterialid())<depotItem.getBasicnumber().intValue()){
                             throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_STOCK_NOT_ENOUGH_CODE,
                                     String.format(ExceptionConstants.MATERIAL_STOCK_NOT_ENOUGH_MSG,material==null?"":material.getName()));
                         }
@@ -391,9 +399,13 @@ public class DepotItemService {
                          * 判断商品是否开启序列号，开启的收回序列号，未开启的跳过
                          * */
                         if(BusinessConstants.ENABLE_SERIAL_NUMBER_ENABLED.equals(material.getEnableSerialNumber())) {
-                            serialNumberMapperEx.cancelSerialNumber(depotItem.getMaterialid(), depotItem.getHeaderid(), depotItem.getOpernumber().intValue(),
+                            serialNumberMapperEx.cancelSerialNumber(depotItem.getMaterialid(), depotItem.getHeaderid(), depotItem.getBasicnumber().intValue(),
                                     new Date(), userInfo == null ? null : userInfo.getId());
                         }
+                        /**收回序列号的时候释放库存*/
+                        depotItem.setOpernumber(BigDecimal.ZERO);
+                        depotItem.setBasicnumber(BigDecimal.ZERO);
+                        this.updateDepotItemWithObj(depotItem);
                     }
                     depotItem.setId(tempUpdatedJson.getLong("Id"));
                     depotItem.setMaterialid(tempUpdatedJson.getLong("MaterialId"));
@@ -405,13 +417,14 @@ public class DepotItemService {
                             BigDecimal oNumber = tempUpdatedJson.getBigDecimal("OperNumber");
                             Long mId = Long.parseLong(tempUpdatedJson.get("MaterialId").toString());
                             //以下进行单位换算
-                            String UnitName = findUnitName(mId); //查询计量单位名称
-                            if (!StringUtil.isEmpty(UnitName)) {
-                                String UnitList = UnitName.substring(0, UnitName.indexOf("("));
-                                String RatioList = UnitName.substring(UnitName.indexOf("("));
-                                String basicUnit = UnitList.substring(0, UnitList.indexOf(",")); //基本单位
-                                String otherUnit = UnitList.substring(UnitList.indexOf(",") + 1); //副单位
-                                Integer ratio = Integer.parseInt(RatioList.substring(RatioList.indexOf(":") + 1).replace(")", "")); //比例
+//                            String UnitName = findUnitName(mId); //查询计量单位名称
+                            String unitName = materialService.findUnitName(mId);
+                            if (!StringUtil.isEmpty(unitName)) {
+                                String unitList = unitName.substring(0, unitName.indexOf("("));
+                                String ratioList = unitName.substring(unitName.indexOf("("));
+                                String basicUnit = unitList.substring(0, unitList.indexOf(",")); //基本单位
+                                String otherUnit = unitList.substring(unitList.indexOf(",") + 1); //副单位
+                                Integer ratio = Integer.parseInt(ratioList.substring(ratioList.indexOf(":") + 1).replace(")", "")); //比例
                                 if (Unit.equals(basicUnit)) { //如果等于基础单位
                                     depotItem.setBasicnumber(oNumber); //数量一致
                                 } else if (Unit.equals(otherUnit)) { //如果等于副单位
@@ -457,7 +470,7 @@ public class DepotItemService {
                     depotItem.setMtype(tempUpdatedJson.getString("MType"));
                     /**出库时处理序列号*/
                     if(BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())){
-                        if(getCurrentInStock(depotItem.getMaterialid())<depotItem.getOpernumber().intValue()){
+                        if(getCurrentInStock(depotItem.getMaterialid())<depotItem.getBasicnumber().intValue()){
                             throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_STOCK_NOT_ENOUGH_CODE,
                                     String.format(ExceptionConstants.MATERIAL_STOCK_NOT_ENOUGH_MSG,material==null?"":material.getName()));
                         }
