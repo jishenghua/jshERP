@@ -286,14 +286,15 @@ public class SerialNumberService {
                 if(depotItem!=null){
                     //查询商品下已分配的可用序列号数量
                     int SerialNumberSum= serialNumberMapperEx.countSerialNumberByMaterialIdAndDepotheadId(depotItem.getMaterialid(),null,BusinessConstants.IS_SELL_HOLD);
-                    if(depotItem.getOpernumber().intValue()>SerialNumberSum){
+                    //BasicNumber=OperNumber*ratio
+                    if(depotItem.getBasicnumber().intValue()>SerialNumberSum){
                         //获取商品名称
                         Material material= materialMapper.selectByPrimaryKey(depotItem.getMaterialid());
                         throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_SERIAL_NUMBERE_NOT_ENOUGH_CODE,
                                 String.format(ExceptionConstants.MATERIAL_SERIAL_NUMBERE_NOT_ENOUGH_MSG,material==null?"":material.getName()));
                     }
                     //商品下序列号充足，分配序列号
-                    sellSerialNumber(depotItem.getMaterialid(),depotItem.getHeaderid(),depotItem.getOpernumber().intValue(),userInfo);
+                    sellSerialNumber(depotItem.getMaterialid(),depotItem.getHeaderid(),depotItem.getBasicnumber().intValue(),userInfo);
                 }
 
     }

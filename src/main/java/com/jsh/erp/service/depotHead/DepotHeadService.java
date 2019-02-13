@@ -315,20 +315,25 @@ public class DepotHeadService {
         //判断用户是否已经登录过，登录过不再处理
         User userInfo=userService.getCurrentUser();
         depotHead.setOperpersonname(userInfo==null?null:userInfo.getUsername());
-        //构造新的编号
-        String dNumber = depotHead.getDefaultnumber();
-        String number = dNumber.substring(0, 12); //截取前缀
-        String beginTime = Tools.getNow() + " 00:00:00";
-        String endTime = Tools.getNow() + " 23:59:59";
-        String newNumber = buildNumber(depotHead.getType(), depotHead.getSubtype(), beginTime, endTime);  //从数据库查询最新的编号+1,这样能防止重复
-        String allNewNumber = number + newNumber;
-        String frontNumber = depotHead.getNumber();
-        if(frontNumber.indexOf(number) > -1) {
-            depotHead.setNumber(allNewNumber); //从后台取值
-        } else {
-            depotHead.setNumber(frontNumber); //从前端文本框里面获取
-        }
-        depotHead.setDefaultnumber(allNewNumber); //初始编号，一直都从后台取值
+        /**
+         * 2019-02-02
+         * 使用最新生成的唯一单据编号，理论上可以保证唯一性
+         * 保存时就不再加判断，提高程序的效率
+         * */
+//        //构造新的编号
+//        String dNumber = depotHead.getDefaultnumber();
+//        String number = dNumber.substring(0, 12); //截取前缀
+//        String beginTime = Tools.getNow() + " 00:00:00";
+//        String endTime = Tools.getNow() + " 23:59:59";
+//        String newNumber = buildNumber(depotHead.getType(), depotHead.getSubtype(), beginTime, endTime);  //从数据库查询最新的编号+1,这样能防止重复
+//        String allNewNumber = number + newNumber;
+//        String frontNumber = depotHead.getNumber();
+//        if(frontNumber.indexOf(number) > -1) {
+//            depotHead.setNumber(allNewNumber); //从后台取值
+//        } else {
+//            depotHead.setNumber(frontNumber); //从前端文本框里面获取
+//        }
+//        depotHead.setDefaultnumber(allNewNumber); //初始编号，一直都从后台取值
         depotHead.setCreatetime(new Timestamp(System.currentTimeMillis()));
         depotHead.setStatus(false);
         depotHeadMapperEx.adddepotHead(depotHead);
@@ -396,7 +401,8 @@ public class DepotHeadService {
             /**回收序列号*/
             if(depotItemList!=null&&depotItemList.size()>0){
                 for(DepotItem depotItem:depotItemList){
-                    serialNumberService.cancelSerialNumber(depotItem.getMaterialid(), depotItem.getHeaderid(),depotItem.getOpernumber().intValue(),userInfo);
+                    //BasicNumber=OperNumber*ratio
+                    serialNumberService.cancelSerialNumber(depotItem.getMaterialid(), depotItem.getHeaderid(),depotItem.getBasicnumber().intValue(),userInfo);
                 }
             }
         }

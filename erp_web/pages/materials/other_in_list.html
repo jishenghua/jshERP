@@ -75,12 +75,12 @@
                 <td style="padding:5px">
                     <input type="text" name="OperTime" id="OperTime"
                            onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" class="txt Wdate"
-                           style="width:140px;"/>
+                           style="width:140px;" readonly/>
                 </td>
                 <td style="width:80px;">单据编号：</td>
                 <td style="padding:5px">
                     <input name="Number" id="Number" class="easyui-validatebox"
-                           data-options="required:true,validType:'length[2,30]'" style="width: 140px;"/>
+                           data-options="required:true,validType:'length[2,30]'" style="width: 140px;" readonly/>
                 </td>
                 <td style="width:70px;"></td>
                 <td style="padding:5px">
@@ -100,7 +100,6 @@
                 </td>
             </tr>
         </table>
-        <input type="hidden" name="clientIp" id="clientIp" value="<%=clientIp %>"/>
     </form>
 </div>
 <div id="dlg-buttons">
