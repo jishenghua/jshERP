@@ -222,7 +222,7 @@
                         $("#bill .DiscountShow").text(data.discount);
                         $("#bill .DiscountMoneyShow").text(data.discountmoney);
                         $("#bill .DiscountLastMoneyShow").text(data.discountlastmoney);
-                        $("#bill .ChangeAmountShow").text(data.changeamount);
+                        $("#bill .ChangeAmountShow").text(data.changeamount==null ? "":data.changeamount);
                         $("#bill .DebtShow").text((data.discountlastmoney-data.changeamount).toFixed(2));
                         $("#bill .OtherMoneyShow").text(data.othermoney==null ? "": data.othermoney);
                         $("#bill .AccountDayShow").text(data.accountday==null ? "": data.accountday); //结算天数
@@ -316,7 +316,7 @@
                         $("#bill .AccountIdShow").text(data.accountname);
                         $('#bill .OrganIdShow').text(data.organname);
                         $("#bill .HandsPersonIdShow").text(data.handspersonname);
-                        $("#bill .ChangeAmountShow").text(data.changeamount);
+                        $("#bill .ChangeAmountShow").text(data.changeamount==null ? "":data.changeamount);
                         var totalprice = data.totalprice;
                         var accountHeadID  = data.id;
                         initTableData_account_show(totalprice, accountHeadID); //明细列表-查看状态
