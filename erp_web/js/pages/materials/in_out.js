@@ -582,7 +582,7 @@
 					}
 				},
 				{ title: organNameTitle, field: 'organName',width:120, hidden:isShowOrganNameColumn},
-				{ title: '单据编号',field: 'number',width:145},
+				{ title: '单据编号',field: 'number',width:125},
 				{ title: '商品信息',field: 'materialsList',width:180,formatter:function(value){
 						if(value) {
                             return value.replace(",","，");
@@ -1544,8 +1544,7 @@
 				if(res && res.code === 200){
 					var obj = res.data;
 					var defaultNumber = obj.DefaultNumber;
-					var thisDateTwo = getNowFormatDateTwo(); //当前日期
-					var newNumber = amountNum + thisDateTwo + defaultNumber
+					var newNumber = amountNum + defaultNumber
 					$("#Number").val(newNumber).attr("data-defaultNumber",newNumber);
 				}
 			},

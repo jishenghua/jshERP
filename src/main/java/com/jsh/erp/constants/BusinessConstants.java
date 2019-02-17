@@ -65,7 +65,7 @@ public class BusinessConstants {
      * sequence名称
      * */
     //sequence返回字符串的最小长度
-    public static final Long SEQ_TO_STRING_MIN_LENGTH = 1000000L;
+    public static final Long SEQ_TO_STRING_MIN_LENGTH = 100000000L;
     //sequence长度小于基准长度时前追加基础值
     public static final String SEQ_TO_STRING_LESS_INSERT = "0";
     //单据编号
