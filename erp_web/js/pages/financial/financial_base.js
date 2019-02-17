@@ -670,7 +670,7 @@
         $("#AccountIdShow").text(accountHeadInfo[5]);
         $('#OrganIdShow').text(accountHeadInfo[7]);
         $("#HandsPersonIdShow").text(accountHeadInfo[9]);
-        $("#ChangeAmountShow").text(accountHeadInfo[10]);
+        $("#ChangeAmountShow").text(accountHeadInfo[10].replace("undefined","0"));
         var TotalPrice = accountHeadInfo[11];
         var showTitle = listTitle.replace("列表","信息");
         $('#accountHeadDlgShow').dialog('open').dialog('setTitle','<img src="/js/easyui-1.3.5/themes/icons/list.png"/>&nbsp;查看' + showTitle);
