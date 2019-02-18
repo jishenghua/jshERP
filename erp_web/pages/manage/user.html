@@ -523,7 +523,7 @@
     $('#btnSetRole').click(function () {
         var currentRow = $("#tableData").datagrid("getSelected");
         if (currentRow == null) {
-            alert("请选择一条数据再操作！");
+            $.messager.alert('提示',"请选择一条数据再操作！",'warning');
             return false;
         }
         this.href = "/pages/user/userRole.html?id=" + currentRow.id;
@@ -533,7 +533,7 @@
     $('#btnSetDepart').click(function () {
         var currentRow = $("#tableData").datagrid("getSelected");
         if (currentRow == null) {
-            alert("请选择一条数据再操作！");
+            $.messager.alert('提示',"请选择一条数据再操作！",'warning');
             return false;
         }
         this.href = "/pages/user/userDepot.html?id=" + currentRow.id;
@@ -543,7 +543,7 @@
     $('#btnSetCustomer').click(function () {
         var currentRow = $("#tableData").datagrid("getSelected");
         if (currentRow == null) {
-            alert("请选择一条数据再操作！");
+            $.messager.alert('提示',"请选择一条数据再操作！",'warning');
             return false;
         }
         this.href = "/pages/user/userCustomer.html?id=" + currentRow.id;

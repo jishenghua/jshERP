@@ -460,7 +460,7 @@
     $('#setBuilding').click(function () {
         var currentRow = $("#tableData").datagrid("getChecked");
         if (currentRow.length == 0) {
-            alert("请选择一条数据再操作！");
+            $.messager.alert('提示',"请选择一条数据再操作！",'warning');
             return false;
         }
         parent.addTab(currentRow[0].id + "单元", "/pages/materials/building.jsp?ProjectId=" + currentRow[0].id, "");
