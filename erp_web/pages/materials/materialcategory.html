@@ -15,65 +15,53 @@
     <script type="text/javascript" src="/js/common/common.js"></script>
 </head>
 <body>
-<!-- 查询 -->
-<div id="searchPanel" class="easyui-panel" style="padding:10px;" title="查询窗口" iconCls="icon-search" collapsible="true"
-     closable="false">
-    <table id="searchTable">
-        <tr>
-            <td>名称：</td>
-            <td>
-                <input name="searchName" id="searchName" style="width:100px;"/>
-            </td>
-            <td>&nbsp;</td>
-            <td>类别：</td>
-            <td>
-                <select name="searchParentId_f" id="searchParentId_f" style="width:100px;"></select>
-                <select name="searchParentId_s" id="searchParentId_s" style="width:100px;"></select>
-                <select name="searchParentId_t" id="searchParentId_t" style="width:100px;"></select>
-            </td>
-            <td>&nbsp;</td>
-            <td>
-                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchBtn">查询</a>&nbsp;&nbsp;
-                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-redo" id="searchResetBtn">重置</a>
-            </td>
-        </tr>
-    </table>
-</div>
-
 <!-- 数据显示table -->
 <div id="tablePanel" class="easyui-panel" style="padding:1px;top:300px;" title="商品类别列表" iconCls="icon-list"
      collapsible="true" closable="false">
-    <table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
+    <table id="tableData" style="top:300px;border-bottom-color:#FFFFFF">
+    </table>
 </div>
-
 <div id="materialCategoryDlg" class="easyui-dialog" style="width:380px;padding:10px 20px"
      closed="true" buttons="#dlg-buttons" modal="true" cache="false" collapsible="false" closable="true">
     <form id="materialCategoryFM" method="post" novalidate>
         <table>
             <tr>
+                <td>上级目录</td>
+                <td style="padding:5px">
+                    <input name="parentName" id="parentName"   style="width: 200px;height: 20px" readonly="readonly"/>
+                    <a href="javascript:void(0)" class="l-btn l-btn-plain" group="" id="lookForSelectMaterialCategory">
+                        <span class="l-btn-left"><span class="l-btn-text icon-search l-btn-icon-left"></span></span></a>
+                    <input name="parentid" id="parentid" type="hidden"/>
+                </td>
+            </tr>
+            <tr>
                 <td>名称</td>
                 <td style="padding:5px">
                     <input name="Name" id="Name" class="easyui-validatebox"
-                   data-options="required:true,validType:'length[2,30]'" style="width: 100px;height: 20px"/>
+                           data-options="required:true,validType:'length[2,30]'" style="width: 200px;height: 20px"/>
+                    <input name="id" id="id" type="hidden"/>
                 </td>
             </tr>
             <tr>
-                <td>层次</td>
+                <td>编号</td>
                 <td style="padding:5px">
-                    <select name="CategoryLevel" id="CategoryLevel" style="width:100px;">
-                        <option value="1">一级分类</option>
-                        <option value="2">二级分类</option>
-                        <option value="3">三级分类</option>
-                    </select>
+                    <input name="serialNo" id="serialNo"  style="width: 200px;height: 20px"/>
                 </td>
             </tr>
             <tr>
-                <td>上级</td>
+                <td>序号</td>
                 <td style="padding:5px">
-                    <select name="ParentId_f" id="ParentId_f" style="width:100px;height: 20px"></select>
-                    <select name="ParentId_s" id="ParentId_s" style="width:100px;height: 20px"></select>
+                    <input name="sort" id="sort"  style="width: 200px;height: 20px"/>
                 </td>
             </tr>
+            <tr>
+                <td>备注</td>
+                <td style="padding:5px">
+                    <textarea name="remark" id="remark" placeholder="暂无备注信息"
+                              style="width: 200px; height:40px;"></textarea>
+                </td>
+            </tr>
+
         </table>
     </form>
 </div>
@@ -82,169 +70,18 @@
     <a href="javascript:void(0)" id="cancelMaterialCategory" class="easyui-linkbutton" iconCls="icon-cancel"
        onclick="javascript:$('#materialCategoryDlg').dialog('close')">取消</a>
 </div>
+<div id="forSelectMaterialCategoryDlg" class="easyui-dialog" style="width:380px;padding:10px 20px"
+     closed="true" modal="true" cache="false" collapsible="false" closable="true">
+</div>
 
 <script type="text/javascript">
-    var materialCategoryList = null;
-    var materialCategoryID = null;
-    var parentid_search = null;
-    var lei = null;
+    var url;
     //初始化界面
     $(function () {
+        var treeHeight=webH-35;
         //初始化系统基础信息
-        initSystemData(1);
-        initSelectInfo(1);
-        initTableData();
-        ininPager();
-        initForm();
-    });
-
-    //初始化系统基础信息
-    function initSystemData(parentid_search) {
-        $.ajax({
-            type: "get",
-            url: "/materialCategory/getAllList",
-            data: ({
-                parentId: parentid_search
-            }),
-            //设置为同步
-            async: false,
-            dataType: "json",
-            success: function (res) {
-                if(res && res.code === 200){
-                    materialCategoryList = res.data;
-                } else {
-                    $.messager.alert('提示', '查找系统基础信息异常,请与管理员联系！', 'error');
-                    return;
-                }
-            }
-        });
-    }
-
-    //初始化页面选项卡
-    function initSelectInfo(lei) {
-        var options = "";
-
-        if (materialCategoryList != null) {
-            options = "";
-            for (var i = 0; i < materialCategoryList.length; i++) {
-                var materialCategory = materialCategoryList[i];
-                if (0 == i) {
-                    materialCategoryID = materialCategory.id;
-                }
-                options += '<option value="' + materialCategory.id + '">' + materialCategory.name + '</option>';
-            }
-            //$("#ParentId").empty().append(options);
-            if (lei == 1) {
-                $("#searchParentId_f").empty().append('<option value="">全部</option>').append(options);
-            }
-            else if (lei == 2) {
-                $("#searchParentId_s").empty().append('<option value="">全部</option>').append(options);
-            }
-            else if (lei == 3) {
-                $("#searchParentId_t").empty().append('<option value="">全部</option>').append(options);
-            }
-            else if (lei == 11) {
-                $("#ParentId_f").empty().append('<option value="">全部</option>').append(options);
-            }
-            else if (lei == 12) {
-                $("#ParentId_s").empty().append('<option value="">全部</option>').append(options);
-            }
-        }
-    }
-
-    $("#searchParentId_f").change(
-        function () {
-            var parentid_search = $("#searchParentId_f").val();
-            if (parentid_search != '') {
-                initSystemData(parentid_search);
-                initSelectInfo(2);
-            }
-        }
-    );
-
-    $("#searchParentId_s").change(
-        function () {
-            var parentid_search = $("#searchParentId_s").val();
-            if (parentid_search != '') {
-                initSystemData(parentid_search);
-                initSelectInfo(3);
-            }
-        }
-    );
-
-    $("#CategoryLevel").change(
-        function () {
-            var CategoryLevel = $("#CategoryLevel").val();
-            if (CategoryLevel == 1) {
-                $("#ParentId_f").empty();
-                $("#ParentId_s").empty();
-            }
-            else if (CategoryLevel == 2) {
-                initSystemData(1);
-                initSelectInfo(11);
-                $("#ParentId_s").enabled = false;
-            }
-            else if (CategoryLevel == 3) {
-                initSystemData(1);
-                initSelectInfo(11);
-            }
-        }
-    );
-
-    $("#ParentId_f").change(
-        function () {
-            var ParentId_f = $("#ParentId_f").val();
-            initSystemData(ParentId_f);
-            initSelectInfo(12);
-        }
-    );
-
-    //防止表单提交重复
-    function initForm() {
-        $('#materialCategoryFM').form({
-            onSubmit: function () {
-                return false;
-            }
-        });
-    }
-
-    //初始化表格数据
-    function initTableData() {
         $('#tableData').datagrid({
-            //title:'商品类别列表',
-            //iconCls:'icon-save',
-            //width:700,
-            height: heightInfo,
-            nowrap: false,
-            rownumbers: false,
-            //动画效果
-            animate: false,
-            //选中单行
-            singleSelect: true,
-            collapsible: false,
-            selectOnCheck: false,
-            //fitColumns:true,
-            //单击行是否选中
-            //checkOnSelect : false,
-            pagination: true,
-            //交替出现背景
-            striped: true,
-            //loadFilter: pagerFilter,
-            pageSize: initPageSize,
-            pageList: initPageNum,
-            columns: [[
-                {field: 'id', width: 35, align: "center", checkbox: true},
-                {title: '名称', field: 'name', width: 250},
-                {
-                    title: '操作', field: 'op', align: "center", width: 130, formatter: function (value, rec) {
-                        var str = '';
-                        var rowInfo = rec.id + 'AaBb' + rec.parentId + 'AaBb' + rec.categoryLevel + 'AaBb' + rec.name;
-                        str += '<img src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editMaterialCategory(\'' + rowInfo + '\');"/>&nbsp;<a onclick="editMaterialCategory(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
-                        str += '<img src="/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteMaterialCategory(' + rec.id + ');"/>&nbsp;<a onclick="deleteMaterialCategory(' + rec.id + ');" style="text-decoration:none;color:black;" href="javascript:void(0)">删除</a>&nbsp;&nbsp;';
-                        return str;
-                    }
-                }
-            ]],
+            height: treeHeight,
             toolbar: [
                 {
                     id: 'addMaterialCategory',
@@ -264,100 +101,91 @@
                     }
                 }
             ],
-            onLoadError: function () {
-                $.messager.alert('页面加载提示', '页面加载异常，请稍后再试！', 'error');
+        });
+        $('#tableData').prev('.datagrid-view2').find(".datagrid-body").append("<ul id='tt'><ul>");
+        $('#tt').tree({
+            url: '/materialCategory/getMaterialCategoryTree',
+            animate: true,
+            checkbox: true,
+            onDblClick: function(node){
+                //双击修改
+                editMaterialCategory(node);
+            }
+        });
+    });
+
+    function addMaterialCategory() {
+        $('#materialCategoryFM').form('clear');
+        $('#materialCategoryDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加商品类别信息');
+        $(".window-mask").css({width: webW, height: webH});
+        $("#Name").val("").focus();
+        $("#parentName").val("");
+        $("#parentid").val("");
+        $("#serialNo").val("");
+        $("#sort").val("");
+        $("#remark").val("");
+        $("#id").val("");
+        url = '/materialCategory/addMaterialCategory';
+    }
+    function editMaterialCategory(node) {
+        var id=node.id;
+        $.ajax({
+            type: "post",
+            url: '/materialCategory/findById',
+            dataType: "json",
+            data: ({
+                id: id
+            }),
+            success: function(res) {
+                if(res) {
+                    if(res.code!=200){
+                        $.messager.alert('提示', res.msg, 'error');
+                        return;
+                    }
+                    $('#materialCategoryFM').form('clear');
+                    $('#materialCategoryDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;修改商品类别信息');
+                    $(".window-mask").css({width: webW, height: webH});
+                    $("#Name").val(res.data.name).focus();
+                    $("#parentName").val(res.data.parentName);
+                    $("#parentid").val(res.data.parentId);
+                    $("#serialNo").val(res.data.serialNo);
+                    $("#sort").val(res.data.sort);
+                    $("#remark").val(res.data.remark);
+                    $("#id").val(res.data.id);
+                    url = '/materialCategory/editMaterialCategory';
+                }
+            },
+            //此处添加错误处理
+            error: function () {
+                $.messager.alert('提示', '修改商品类别信息异常，请稍后再试！', 'error');
                 return;
             }
         });
-        showMaterialCategoryDetails(1, initPageSize);
-    }
 
-    //初始化键盘enter事件
-    $(document).keydown(function (event) {
-        //兼容 IE和firefox 事件
-        var e = window.event || event;
-        var k = e.keyCode || e.which || e.charCode;
-        //兼容 IE,firefox 兼容
-        var obj = e.srcElement ? e.srcElement : e.target;
-        //绑定键盘事件为 id是指定的输入框才可以触发键盘事件 13键盘事件 ---遗留问题 enter键效验 对话框会关闭问题
-        if (k == "13" && (obj.id == "CategoryLevel" || obj.id == "Name")) {
-            $("#saveMaterialCategory").click();
-        }
-        //搜索按钮添加快捷键
-        if (k == "13" && (obj.id == "searchParentId" || (obj.id == "searchName"))) {
-            $("#searchBtn").click();
-        }
-    });
-
-    //分页信息处理
-    function ininPager() {
-        try {
-            var opts = $("#tableData").datagrid('options');
-            var pager = $("#tableData").datagrid('getPager');
-            pager.pagination({
-                onSelectPage: function (pageNum, pageSize) {
-                    opts.pageNumber = pageNum;
-                    opts.pageSize = pageSize;
-                    pager.pagination('refresh', {
-                        pageNumber: pageNum,
-                        pageSize: pageSize
-                    });
-                    showMaterialCategoryDetails(pageNum, pageSize);
-                }
-            });
-        }
-        catch (e) {
-            $.messager.alert('异常处理提示', "分页信息异常 :  " + e.name + ": " + e.message, 'error');
-        }
-    }
-
-    //删除商品类别信息
-    function deleteMaterialCategory(materialCategoryID) {
-        $.messager.confirm('删除确认', '确定要删除此商品类别信息吗？', function (r) {
-            if (r) {
-                $.ajax({
-                    type: "post",
-                    url: "/materialCategory/" + materialCategoryID + "/delete",
-                    dataType: "json",
-                    success: function (res) {
-                        if(res && res.code == 200) {
-                            $("#searchBtn").click();
-                        } else {
-                            $.messager.alert('删除提示', '删除商品类别信息失败，请稍后再试！', 'error');
-                        }
-                    },
-                    //此处添加错误处理
-                    error: function () {
-                        $.messager.alert('删除提示', '删除商品类别信息异常，请稍后再试！', 'error');
-                        return;
-                    }
-                });
-            }
-        });
     }
 
     //批量删除商品类别
     function batDeleteMaterialCategory() {
-        var row = $('#tableData').datagrid('getChecked');
-        if (row.length == 0) {
+        var nodes = $('#tt').tree('getChecked');
+        if (nodes.length == 0) {
             $.messager.alert('删除提示', '没有记录被选中！', 'info');
             return;
         }
-        if (row.length > 0) {
-            $.messager.confirm('删除确认', '确定要删除选中的' + row.length + '条商品类别信息吗？', function (r) {
+        if (nodes.length > 0) {
+            $.messager.confirm('删除确认', '确定要删除选中的' + nodes.length + '条商品类别信息吗？', function (r) {
                 if (r) {
                     var ids = "";
-                    for (var i = 0; i < row.length; i++) {
-                        if (i == row.length - 1) {
-                            ids += row[i].id;
+                    for (var i = 0; i < nodes.length; i++) {
+                        if (i == nodes.length - 1) {
+                            ids += nodes[i].id;
                             break;
                         }
                         //alert(row[i].id);
-                        ids += row[i].id + ",";
+                        ids += nodes[i].id + ",";
                     }
                     $.ajax({
                         type: "post",
-                        url: "/materialCategory/batchDelete",
+                        url: "/materialCategory/batchDeleteMaterialCategory",
                         dataType: "json",
                         async: false,
                         data: ({
@@ -365,8 +193,7 @@
                         }),
                         success: function (res) {
                             if(res && res.code === 200) {
-                                $("#searchBtn").click();
-                                $(":checkbox").attr("checked", false);
+                                $('#tt').tree('reload');
                             } else {
                                 $.messager.alert('删除提示', '删除商品类别信息失败，请稍后再试！', 'error');
                             }
@@ -382,49 +209,29 @@
         }
     }
 
-    //增加
-    var url;
-    var materialCategoryID = 0;
-    //保存编辑前的名称
-    var orgMaterialCategory = "";
-
-    function addMaterialCategory() {
-        $('#materialCategoryFM').form('clear');
-        $('#materialCategoryDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加商品类别信息');
-        $(".window-mask").css({width: webW, height: webH});
-        $("#Name").val("").focus();
-
-        orgMaterialCategory = "";
-        materialCategoryID = 0;
-        url = '/materialCategory/add';
-    }
-
     //保存信息
     $("#saveMaterialCategory").off("click").on("click", function () {
-        var parent = 1;
-        if ($("#ParentId_f").val() != "" && $("#ParentId_f").val() != null) {
-            parent = $("#ParentId_f").val();
+        if (!$("#Name").val()) {
+            $.messager.alert('提示', '商品类别名称不能为空！', 'warning');
+            return;
         }
-        if ($("#ParentId_s").val() != "" && $("#ParentId_s").val() != null) {
-            parent = $("#ParentId_s").val();
-        }
+        var objInfo = $("#materialCategoryFM").serializeObject();
         $.ajax({
             type: "post",
             url: url,
             dataType: "json",
             data: ({
-                info: JSON.stringify({
-                    ParentId: parent,
-                    CategoryLevel: $("#CategoryLevel").val(),
-                    Name: $.trim($("#Name").val())
-                })
+                info: JSON.stringify(objInfo)
             }),
             success: function(res) {
-                if(res && res.code === 200) {
+                if(res) {
+                    if(res.code!=200){
+                        $.messager.alert('提示', res.msg, 'error');
+                        return;
+                    }
                     $('#materialCategoryDlg').dialog('close');
                     //加载完以后重新初始化
-                    var opts = $("#tableData").datagrid('options');
-                    showMaterialCategoryDetails(opts.pageNumber, opts.pageSize);
+                    $('#tt').tree('reload');
                 }
             },
             //此处添加错误处理
@@ -434,88 +241,26 @@
             }
         });
     });
-
-    //编辑信息
-    function editMaterialCategory(materialCategoryTotalInfo) {
-        var materialCategoryInfo = materialCategoryTotalInfo.split("AaBb");
-
-        $("#ParentId").focus().val(materialCategoryInfo[1]);
-        $("#CategoryLevel").val(materialCategoryInfo[2]);
-        $("#Name").val(materialCategoryInfo[3]);
-
-        //orgMaterialCategory = materialCategoryInfo[1];
-        $('#materialCategoryDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑商品类别信息');
-        $(".window-mask").css({width: webW, height: webH});
-        materialCategoryID = materialCategoryInfo[0];
-        //焦点在名称输入框==定焦在输入文字后面
-        $("#Name").val("").focus().val(materialCategoryInfo[3]);
-        url = '/materialCategory/update?id=' + materialCategoryInfo[0];
-    }
-
-    //搜索处理
-    $("#searchBtn").unbind().bind({
-        click: function () {
-            showMaterialCategoryDetails(1, initPageSize);
-            var opts = $("#tableData").datagrid('options');
-            var pager = $("#tableData").datagrid('getPager');
-            opts.pageNumber = 1;
-            opts.pageSize = initPageSize;
-            pager.pagination('refresh', {
-                pageNumber: 1,
-                pageSize: initPageSize
-            });
+    $('#btnSetFunctions').click(function () {
+        var currentRow = $("#tableData").datagrid("getSelected");
+        if (currentRow == null) {
+            $.messager.alert('提示',"请选择一条数据再操作！",'warning');
+            return false;
         }
+        this.href = "/pages/manage/roleFunctions.html?id=" + currentRow.id;
     });
-
-
-    function showMaterialCategoryDetails(pageNo, pageSize) {
-        var parent = 1;
-        if ($("#searchParentId_f").val() != "" && $("#searchParentId_f").val() != null) {
-            parent = $("#searchParentId_f").val();
-        }
-        if ($("#searchParentId_s").val() != "" && $("#searchParentId_s").val() != null) {
-            parent = $("#searchParentId_s").val();
-        }
-        if ($("#searchParentId_t").val() != "" && $("#searchParentId_t").val() != null) {
-            parent = $("#searchParentId_t").val();
-
-        }
-        $.ajax({
-            type: "get",
-            url: "/materialCategory/list",
-            dataType: "json",
-            data: ({
-                search: JSON.stringify({
-                    name: $.trim($("#searchName").val()),
-                    parentId: parent,
-                }),
-                currentPage: pageNo,
-                pageSize: pageSize
-            }),
-            success: function (res) {
-                if(res && res.code === 200){
-                    if(res.data && res.data.page) {
-                        $("#tableData").datagrid('loadData', res.data.page);
-                    }
-                }
-            },
-            //此处添加错误处理
-            error: function () {
-                $.messager.alert('查询提示', '查询数据后台异常，请稍后再试！', 'error');
-                return;
-            }
+    //查询父级商品类别
+    $("#lookForSelectMaterialCategory").on("click", function () {
+        $('#forSelectMaterialCategoryDlg').dialog({
+            title: '商品类别选择',
+            width: webW/2,
+            height: webH/2,
+            closed: false,
+            cache: false,
+            href: '/pages/materials/materialcategory_forselect.html',
+            modal: true,
+            resizable:true
         });
-    }
-
-    //重置按钮
-    $("#searchResetBtn").unbind().bind({
-        click: function () {
-            $("#searchParentId_f").val("");
-            $("#searchParentId_s").val("");
-            $("#searchParentId_t").val("");
-            //加载完以后重新初始化
-            $("#searchBtn").click();
-        }
     });
 
 </script>

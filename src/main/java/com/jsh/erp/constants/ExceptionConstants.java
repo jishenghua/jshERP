@@ -59,6 +59,19 @@ public class ExceptionConstants {
     //商品库存不足
     public static final int MATERIAL_STOCK_NOT_ENOUGH_CODE = 8000004;
     public static final String MATERIAL_STOCK_NOT_ENOUGH_MSG = "商品:%s库存不足";
+    /**
+     * 商品类别信息
+     * type = 75
+     * */
+    //添加商品类别信息失败
+    public static final int MATERIAL_CATEGORY_ADD_FAILED_CODE = 7500000;
+    public static final String MATERIAL_CATEGORY_ADD_FAILED_MSG = "添加商品类别信息失败";
+    //删除商品类别信息失败
+    public static final int MATERIAL_CATEGORY_DELETE_FAILED_CODE = 7500001;
+    public static final String MATERIAL_CATEGORY_DELETE_FAILED_MSG = "删除商品类别信息失败";
+    //修改商品类别信息失败
+    public static final int MATERIAL_CATEGORY_EDIT_FAILED_CODE = 7500002;
+    public static final String MATERIAL_CATEGORY_EDIT_FAILED_MSG = "添加商品类别信息失败";
 
     /**
      * 标准正常返回/操作成功返回

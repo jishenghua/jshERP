@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.jsh.erp.datasource.mappers.MaterialCategoryMapper">
-    <select id="selectByConditionMaterialCategory" parameterType="com.jsh.erp.datasource.entities.MaterialCategoryExample" resultMap="BaseResultMap">
+<mapper namespace="com.jsh.erp.datasource.mappers.MaterialCategoryMapperEx">
+    <select id="selectByConditionMaterialCategory" parameterType="com.jsh.erp.datasource.entities.MaterialCategoryExample" resultMap="com.jsh.erp.datasource.mappers.MaterialCategoryMapper.BaseResultMap">
         select *
         FROM jsh_materialcategory
         where 1=1
@@ -29,4 +29,67 @@
         </if>
         and Id !=1
     </select>
+
+    <resultMap id="BaseTreeResultMap" type="com.jsh.erp.datasource.vo.TreeNode">
+        <result column="id" property="id"/>
+        <result column="name" property="text"/>
+        <collection column="id" property="children" javaType="java.util.ArrayList"
+                    ofType="com.jsh.erp.datasource.vo.TreeNode" select="getNextNodeTree"/>
+    </resultMap>
+
+    <resultMap id="NextTreeResultMap" type="com.jsh.erp.datasource.vo.TreeNode">
+        <result column="id" property="id"/>
+        <result column="name" property="text"/>
+        <collection column="id" property="children" javaType="java.util.ArrayList"
+                    ofType="com.jsh.erp.datasource.vo.TreeNode" select="getNextNodeTree"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, name
+    </sql>
+
+    <select id="getNextNodeTree" resultMap="NextTreeResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM jsh_materialcategory
+        WHERE ParentId = #{id}
+        and status !='2'
+        order by sort asc
+    </select>
+
+    <select id="getNodeTree" resultMap="BaseTreeResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM jsh_materialcategory
+        WHERE ParentId = -1
+        and status !='2'
+        order by sort asc
+    </select>
+    <insert id="addMaterialCategory" parameterType="com.jsh.erp.datasource.entities.MaterialCategory"
+            useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+       insert into jsh_materialcategory
+        (Name, CategoryLevel, ParentId, sort,status,serial_no,remark,
+        create_Time, creator,update_Time, updater)
+        values
+        (#{name},#{categorylevel},#{parentid},#{sort},#{status},#{serialNo},#{remark},
+        #{createTime},#{creator},#{updateTime},#{updater}
+        )
+    </insert>
+    <update id="batchDeleteMaterialCategoryByIds">
+       update jsh_materialcategory
+       set update_Time=#{updateTime},updater=#{updater},status='2'
+       where id in (
+        <foreach collection="ids" item="id" separator=",">
+            #{id}
+        </foreach>
+       )
+    </update>
+    <update id="editMaterialCategory">
+       update jsh_materialcategory
+       set update_Time=#{updateTime},updater=#{updater},
+        ParentId=#{parentid},sort=#{sort},serial_no=#{serialNo},
+        name=#{name},remark=#{remark}
+       where id =#{id}
+    </update>
+
 </mapper>

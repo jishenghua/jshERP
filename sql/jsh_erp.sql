@@ -5291,3 +5291,51 @@ end;
 //
 DELIMITER ;
 
+-- ----------------------------
+-- 时间：2019年2月18日
+-- version：1.0.3
+-- 此次更新修改产品类型表jsh_materialcategory，添加一些字段
+-- 特别提醒：之后的sql都是在之前基础上迭代，可以对已存在的系统进行数据保留更新
+-- ----------------------------
+-- ----------------------------
+-- 产品类型表添加字段sort，显示顺序
+-- ----------------------------
+alter table jsh_materialcategory add sort varchar(10) DEFAULT null COMMENT '显示顺序';
+-- ----------------------------
+-- 产品类型表添加字段status，状态，0系统默认，1启用，2删除
+-- ----------------------------
+alter table jsh_materialcategory add status varchar(1) DEFAULT '0' COMMENT '状态，0系统默认，1启用，2删除';
+-- ----------------------------
+-- 产品类型表添加字段serial_no，编号
+-- ----------------------------
+alter table jsh_materialcategory add serial_no varchar(100) DEFAULT null COMMENT '编号';
+-- ----------------------------
+-- 产品类型表添加字段remark，备注
+-- ----------------------------
+alter table jsh_materialcategory add remark varchar(1024) DEFAULT null COMMENT '备注';
+-- ----------------------------
+-- 产品类型表添加字段create_time，创建时间
+-- ----------------------------
+alter table jsh_materialcategory add create_time datetime DEFAULT null COMMENT '创建时间';
+-- ----------------------------
+-- 产品类型表添加字段creator，创建人
+-- ----------------------------
+alter table jsh_materialcategory add creator bigint(20) DEFAULT null COMMENT '创建人';
+-- ----------------------------
+-- 产品类型表添加字段update_time，更新时间
+-- ----------------------------
+alter table jsh_materialcategory add update_time datetime DEFAULT null COMMENT '更新时间';
+-- ----------------------------
+-- 产品类型表添加字段updater，更新人
+-- ----------------------------
+alter table jsh_materialcategory add updater bigint(20) DEFAULT null COMMENT '更新人';
+
+-- ----------------------------
+-- 去掉jsh_materialcategory外键
+-- ----------------------------
+ALTER TABLE jsh_materialcategory DROP FOREIGN KEY FK3EE7F725237A77D8;
+
+-- ----------------------------
+-- 修改根目录父节点id为-1
+-- ----------------------------
+update jsh_materialcategory set ParentId='-1' where id='1'
