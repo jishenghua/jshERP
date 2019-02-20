@@ -72,6 +72,9 @@ public class ExceptionConstants {
     //修改商品类别信息失败
     public static final int MATERIAL_CATEGORY_EDIT_FAILED_CODE = 7500002;
     public static final String MATERIAL_CATEGORY_EDIT_FAILED_MSG = "添加商品类别信息失败";
+    //商品类别编号已存在
+    public static final int MATERIAL_CATEGORY_SERIAL_ALREADY_EXISTS_CODE = 7500003;
+    public static final String MATERIAL_CATEGORY_SERIAL_ALREADY_EXISTS_MSG = "商品类别编号已存在";
 
     /**
      * 标准正常返回/操作成功返回

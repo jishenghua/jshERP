@@ -2,12 +2,14 @@ package com.jsh.erp.service.materialCategory;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
+import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.MaterialCategory;
 import com.jsh.erp.datasource.entities.MaterialCategoryExample;
 import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.mappers.MaterialCategoryMapper;
 import com.jsh.erp.datasource.mappers.MaterialCategoryMapperEx;
 import com.jsh.erp.datasource.vo.TreeNode;
+import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
@@ -117,6 +119,8 @@ public class MaterialCategoryService {
             //没有给定父级目录的id，默认设置父级目录为根目录
             mc.setParentid(BusinessConstants.MATERIAL_CATEGORY_ROOT_ID);
         }
+        //检查商品类型编号是否已存在
+        checkMaterialCategorySerialNo(mc);
         //数据状态新增时默认设置为启用
         mc.setStatus(BusinessConstants.MATERIAL_CATEGORY_STATUS_ENABLE);
         Date date=new Date();
@@ -147,6 +151,8 @@ public class MaterialCategoryService {
     }
 
     public int editMaterialCategory(MaterialCategory mc) {
+        //检查商品类型编号是否已存在
+        checkMaterialCategorySerialNo(mc);
         //更新时间
         mc.setUpdateTime(new Date());
         //更新人
@@ -154,4 +160,37 @@ public class MaterialCategoryService {
         mc.setUpdater(userInfo==null?null:userInfo.getId());
         return materialCategoryMapperEx.editMaterialCategory(mc);
     }
+    /**
+     * 根据商品类别编号判断商品类别是否已存在
+     * */
+    public void  checkMaterialCategorySerialNo(MaterialCategory mc) {
+        if(mc==null){
+            return;
+        }
+        if(StringUtil.isEmpty(mc.getSerialNo())){
+            return;
+        }
+        //根据商品类别编号查询商品类别
+        List<MaterialCategory> mList=materialCategoryMapperEx.getMaterialCategoryBySerialNo(mc.getSerialNo());
+        if(mList==null||mList.size()<1){
+            //未查询到对应数据，编号可用
+            return;
+        }
+        if(mList.size()>1){
+            //查询到的数据条数大于1，编号已存在
+            throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_CATEGORY_SERIAL_ALREADY_EXISTS_CODE,
+                    ExceptionConstants.MATERIAL_CATEGORY_SERIAL_ALREADY_EXISTS_MSG);
+        }
+        if(mc.getId()==null){
+            //新增时，编号已存在
+            throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_CATEGORY_SERIAL_ALREADY_EXISTS_CODE,
+                    ExceptionConstants.MATERIAL_CATEGORY_SERIAL_ALREADY_EXISTS_MSG);
+        }
+        if(mc.getId()!=mList.get(0).getId()){
+            //修改时，相同编号，id不同
+            throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_CATEGORY_SERIAL_ALREADY_EXISTS_CODE,
+                    ExceptionConstants.MATERIAL_CATEGORY_SERIAL_ALREADY_EXISTS_MSG);
+        }
+    }
+
 }

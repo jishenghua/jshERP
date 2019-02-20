@@ -32,4 +32,6 @@ public interface MaterialCategoryMapperEx {
     int batchDeleteMaterialCategoryByIds(@Param("updateTime") Date updateTime, @Param("updater") Long updater, @Param("ids") String ids[]);
 
     int editMaterialCategory(MaterialCategory mc);
+
+    List<MaterialCategory> getMaterialCategoryBySerialNo(@Param("serialNo") String serialNo);
 }
