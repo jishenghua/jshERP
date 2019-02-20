@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>礼品销售</title>
+    <title>销售订单</title>
     <meta charset="utf-8">
     <!-- 指定以IE8的方式来渲染 -->
     <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
@@ -51,17 +51,25 @@
 </div>
 
 <!-- 数据显示table -->
-<div id="tablePanel" class="easyui-panel" style="padding:1px; top:300px;" title="礼品销售列表" iconCls="icon-list"
+<div id="tablePanel" class="easyui-panel" style="padding:1px; top:300px;" title="销售订单列表" iconCls="icon-list"
      collapsible="true" closable="false">
     <table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 </div>
 
-<div id="depotHeadDlg" class="easyui-dialog" style="width:1200px;padding:10px 20px;top:50px"
+<div id="depotHeadDlg" class="easyui-dialog" style="width:1200px;padding:10px 20px;top:60px"
      closed="true" buttons="#dlg-buttons" modal="true" cache="false" collapsible="false" closable="true">
     <form id="depotHeadFM" method="post" novalidate>
         <table>
             <tr>
-                <td style="width:70px;">单据日期：</td>
+                <td style="width:60px;">客户：</td>
+                <td style="padding:5px">
+                    <input id="OrganId" name="OrganId" style="width:130px;"/>
+                </td>
+                <td style="width:70px;">销售人员：</td>
+                <td style="padding:5px">
+                    <input id="Salesman" name="Salesman" style="width:130px;"/>
+                </td>
+                <td style="width:80px;">单据日期：</td>
                 <td style="padding:5px">
                     <input type="text" name="OperTime" id="OperTime"
                            onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" class="txt Wdate"
@@ -70,12 +78,8 @@
                 <td style="width:70px;">单据编号：</td>
                 <td style="padding:5px">
                     <input name="Number" id="Number" class="easyui-validatebox"
-                           data-options="required:true,validType:'length[2,30]'" style="width: 140px;" readonly/>
+                           data-options="required:true,validType:'length[2,30]'" style="width: 150px;" readonly/>
                 </td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
                 <td style="width:100px;"></td>
             </tr>
             <tr>
@@ -102,7 +106,15 @@
      closed="true" modal="true" cache="false" collapsible="false" closable="true">
     <table>
         <tr>
-            <td style="width:70px;">单据日期：</td>
+            <td style="width:60px;">客户：</td>
+            <td style="padding:5px;width:130px;">
+                <span id="OrganIdShow"></span>
+            </td>
+            <td style="width:70px;">销售人员：</td>
+            <td style="padding:5px;width:130px;">
+                <span id="SalesmanShow"></span>
+            </td>
+            <td style="width:80px;">单据日期：</td>
             <td style="padding:5px;width:140px;">
                 <span id="OperTimeShow"></span>
             </td>
@@ -110,10 +122,6 @@
             <td style="padding:5px;width:140px;">
                 <span id="NumberShow"></span>
             </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
             <td style="width:100px;"></td>
         </tr>
         <tr>
@@ -130,5 +138,58 @@
         </tr>
     </table>
 </div>
+<div id="depotHeadAccountDlg" class="easyui-dialog" style="width:380px;padding:10px 20px;top:80px"
+     closed="true" modal="true" buttons="#accountDlgButtons" cache="false" collapsible="false" closable="true">
+    <table class="account-dlg">
+        <tr class="account-head-tmp">
+            <td style="width:30px;"></td>
+            <td style="width:140px; padding:5px;">结算账户</td>
+            <td style="width:100px; padding:5px;">金额</td>
+        </tr>
+        <tr>
+            <td style="width:30px;"></td>
+            <td style="width:140px;text-align: center;">合计：</td>
+            <td style="width:100px;"><span id="accountMoneyTotalDlg"></span></td>
+        </tr>
+    </table>
+    <table class="tabs-tmp">
+        <tr class="account-content-tmp">
+            <td style="width:30px;"></td>
+            <td style="width:140px; padding:3px;"><select class="account-id-dlg" style="width:140px;"></select></td>
+            <td style="width:100px; padding:3px;"><input class="account-money-dlg" style="width:100px;"/></td>
+        </tr>
+    </table>
+</div>
+<div id="accountDlgButtons">
+    <a href="javascript:void(0)" id="saveDepotHeadAccountDlg" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
+    <a href="javascript:void(0)" id="cancelDepotHeadAccountDlg" class="easyui-linkbutton" iconCls="icon-cancel">取消</a>
+</div>
+<div id="otherMoneyDlg" class="easyui-dialog" style="width:380px;padding:10px 20px;top:80px"
+     closed="true" modal="true" buttons="#otherMoneyDlgBtn" cache="false" collapsible="false" closable="true">
+    <table class="money-dlg">
+        <tr class="money-head-tmp">
+            <td style="width:30px;"></td>
+            <td style="width:140px; padding:5px;">结算账户</td>
+            <td style="width:100px; padding:5px;">金额</td>
+        </tr>
+        <tr>
+            <td style="width:30px;"></td>
+            <td style="width:140px;text-align: center;">合计：</td>
+            <td style="width:100px;"><span id="otherMoneyTotalDlg"></span></td>
+        </tr>
+    </table>
+    <table class="tabs-tmp">
+        <tr class="money-content-tmp">
+            <td style="width:30px;"></td>
+            <td style="width:140px; padding:3px;"><select class="money-id-dlg" style="width:140px;"></select></td>
+            <td style="width:100px; padding:3px;"><input class="other-money-dlg" style="width:100px;"/></td>
+        </tr>
+    </table>
+</div>
+<div id="otherMoneyDlgBtn">
+    <a href="javascript:void(0)" id="saveOtherMoneyDlg" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
+    <a href="javascript:void(0)" id="cancelOtherMoneyDlg" class="easyui-linkbutton" iconCls="icon-cancel">取消</a>
+</div>
+
 </body>
 </html>

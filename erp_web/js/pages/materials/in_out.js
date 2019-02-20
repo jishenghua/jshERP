@@ -48,7 +48,6 @@
 		initSelectInfo_account();
 		initSupplier(); //供应商
 		initSalesman(); //销售人员
-		initGift(); //初始化礼品卡
 		initOutItemList(); //初始化支出项目
 		initMProperty(); //初始化商品属性
 		initTableData();
@@ -66,7 +65,14 @@
 		var supUrl = "/supplier/findBySelect_sup"; //供应商接口
 		var cusUrl = "/supplier/findBySelect_cus?UBType=UserCustomer&UBKeyId=" + kid; //客户接口
 		var retailUrl = "/supplier/findBySelect_retail"; //散户接口
-		if(listTitle === "采购入库列表"){
+        if(listTitle === "采购订单列表"){
+            listType = "其它";
+            listSubType = "采购订单";
+            payTypeTitle = "隐藏";
+            organUrl = supUrl;
+            amountNum = "CGDD";
+        }
+		else if(listTitle === "采购入库列表"){
 			listType = "入库"; 
 			listSubType = "采购"; 
 			payTypeTitle = "付款";
@@ -101,6 +107,13 @@
 			organUrl = retailUrl;
 			amountNum = "LSCK";
 		}
+        else if(listTitle === "销售订单列表"){
+            listType = "其它";
+            listSubType = "销售订单";
+            payTypeTitle = "隐藏";
+            organUrl = cusUrl;
+            amountNum = "XSDD";
+        }
 		else if(listTitle === "销售出库列表"){
 			listType = "出库"; 
 			listSubType = "销售"; 
@@ -128,20 +141,6 @@
 			payTypeTitle = "隐藏";
 			organUrl = supUrl;
 			amountNum = "DBCK";
-		}
-		else if(listTitle === "礼品充值列表"){
-			listType = "出库";
-			listSubType = "礼品充值";
-			payTypeTitle = "隐藏";
-			organUrl = supUrl;
-			amountNum = "LPCZ";
-		}
-		else if(listTitle === "礼品销售列表"){
-			listType = "出库";
-			listSubType = "礼品销售";
-			payTypeTitle = "隐藏";
-			organUrl = supUrl;
-			amountNum = "LPXS";
 		}
 		else if(listTitle === "组装单列表"){
 			listType = "其它";
@@ -308,34 +307,6 @@
 			textField:'name',
 			multiple: true
 		});
-	}
-
-	//初始化-礼品卡
-	function initGift(){
-		if(listSubType == "礼品充值"|| listSubType == "礼品销售"){
-			$('#GiftId').combobox({
-				url: "/depot/findGiftByType?type=1",
-				valueField:'id',
-				textField:'name'
-			});
-			$('#searchGiftId').combobox({
-				url: "/depot/findGiftByType?type=1",
-				valueField:'id',
-				textField:'name'
-			});
-		}
-		if(listSubType == "礼品销售"){
-			$.ajax({
-				type:"post",
-				url: "/supplier/findBySelectRetailNoPeople.action", //散户接口
-				dataType: "json",
-				success: function (res){
-					if(res && res[0]){
-						orgDefaultId = res[0].id;
-					}
-				}
-			});
-		}
 	}
 
 	//初始化收入项目列表
@@ -525,19 +496,19 @@
 			isHiddenStatus = true; //隐藏
 		}
 		var isShowLastMoneyColumn = false; //是否显示优惠后金额和价税合计,true为隐藏,false为显示
-		if(listSubType == "调拨" || listSubType == "其它" || listSubType == "零售" || listSubType == "零售退货" || listSubType == "礼品充值" || listSubType == "礼品销售" || listSubType == "组装单" || listSubType == "拆卸单"){
+		if(listSubType == "调拨" || listSubType == "其它" || listSubType == "零售" || listSubType == "零售退货" || listSubType == "采购订单" || listSubType == "销售订单" || listSubType == "组装单" || listSubType == "拆卸单"){
 			isShowLastMoneyColumn = true; //隐藏
 		}
 		var isShowOrganNameColumn = false; //是否显示供应商、客户等信息,true为隐藏,false为显示
 		var organNameTitle = ""; //组织名称标题
-		if(listSubType == "调拨" || listSubType == "礼品充值" || listSubType == "礼品销售" || listSubType == "组装单" || listSubType == "拆卸单"){
+		if(listSubType == "调拨" || listSubType == "组装单" || listSubType == "拆卸单"){
 			isShowOrganNameColumn = true; //隐藏
 		}
 		else {
-			if(listTitle == "采购入库列表" || listTitle == "采购退货列表" || listTitle == "其它入库列表"){
+			if(listTitle == "采购订单列表" || listTitle == "采购入库列表" || listTitle == "采购退货列表" || listTitle == "其它入库列表"){
 				organNameTitle = "供应商名称";
 			}
-			else if(listTitle == "销售退货列表" || listTitle == "销售出库列表" || listTitle == "其它出库列表"){
+			else if(listTitle == "销售订单列表" || listTitle == "销售退货列表" || listTitle == "销售出库列表" || listTitle == "其它出库列表"){
 				organNameTitle = "客户名称";
 			}
 			else if(listTitle == "零售出库列表" || listTitle == "零售退货列表"){
@@ -637,7 +608,7 @@
 						var basicUnit = unitArr[0]; //基础单位
 						var otherUnit = unitArr[1]; //副单位
 						var unitSetInput =""; //单位
-						if(listSubType === "采购" || listSubType === "采购退货"){
+						if(listSubType === "采购订单" || listSubType === "采购" || listSubType === "采购退货"){
 							unitSetInput = rec.data[0].firstinunit;
 							if(basicUnit==unitSetInput){ //基础单位等于选择的单位
 								loadRatio = 1;
@@ -646,7 +617,7 @@
 								loadRatio = thisRatio;
 							}
 						}
-						else if(listSubType === "销售" || listSubType === "销售退货" || listTitle == "礼品充值" || listTitle == "礼品销售" || listSubType === "零售" || listSubType === "零售退货"){
+						else if(listSubType === "销售订单" || listSubType === "销售" || listSubType === "销售退货" || listSubType === "零售" || listSubType === "零售退货"){
 							unitSetInput = rec.data[0].firstoutunit;
 							if(basicUnit==unitSetInput){ //基础单位等于选择的单位
 								loadRatio = 1;
@@ -757,30 +728,11 @@
 			anotherDepotUrl = '/depot/findDepotByUserId?UBType=UserDepot&UBKeyId='+kid;
 			anotherDepotTextField = "depotName";
 		}
-		if(listSubType == "礼品充值"){
-			/**
-			 * who added the .action
-			 * */
-			isShowAnotherDepot = false; //礼品充值时候显示礼品卡
-			anotherDepotHeadName = "礼品卡";
-			anotherDepotUrl = "/depot/findGiftByType?type=1";
-			anotherDepotTextField = "name";
-		}
-		if(listSubType == "礼品销售"){
-			/**
-			 * who added the .action
-			 * */
-			depotHeadName = "礼品卡";
-			depotUrl = "/depot/findGiftByType?type=1";
-			depotTextField = "name";
-		}
-		else {
-			depotHeadName = "仓库名称";
-			depotUrl = '/depot/findDepotByUserId?UBType=UserDepot&UBKeyId='+kid;
-			depotTextField = "depotName";
-		}
+		depotHeadName = "仓库名称";
+		depotUrl = '/depot/findDepotByUserId?UBType=UserDepot&UBKeyId='+kid;
+		depotTextField = "depotName";
 		var isShowTaxColumn = false; //是否显示税率相关的列,true为隐藏,false为显示
-		if(listSubType == "调拨" || listSubType == "其它" || listSubType == "零售" || listSubType == "零售退货" || listSubType == "礼品充值" || listSubType == "礼品销售" || listSubType == "组装单" || listSubType == "拆卸单"){
+		if(listSubType == "调拨" || listSubType == "其它" || listSubType == "零售" || listSubType == "零售退货" || listSubType == "采购订单" || listSubType == "销售订单" || listSubType == "组装单" || listSubType == "拆卸单"){
 			isShowTaxColumn = true; //隐藏
 		}
 		var isShowMaterialTypeColumn = true; //是否显示商品类型相关的列,true为隐藏,false为显示
@@ -911,7 +863,7 @@
 													var unitSetInput =""; //单位
 													body.find("[field='Unit']").find(input).prop("readonly","readonly"); //设置计量单位为只读
 													var loadRatio = 1; //在单位输入框上面加载比例字段
-													if(listSubType === "采购" || listSubType === "采购退货"){
+													if(listSubType === "采购" || listSubType === "采购退货" || listSubType === "采购订单"){
 														unitSetInput = res.data[0].firstinunit; //给单位文本框赋值
 														if(basicUnit==unitSetInput){ //基础单位等于选择的单位
 															loadRatio = 1;
@@ -920,7 +872,7 @@
 															loadRatio = ratio;
 														}
 													}
-													else if(listSubType === "销售" || listSubType === "销售退货" || listSubType === "礼品充值" || listSubType === "礼品销售" || listSubType === "零售" || listSubType === "零售退货"){
+													else if(listSubType === "销售" || listSubType === "销售退货" || listSubType === "销售订单" || listSubType === "零售" || listSubType === "零售退货"){
 														unitSetInput = res.data[0].firstoutunit; //给单位文本框赋值
 														if(basicUnit==unitSetInput){ //基础单位等于选择的单位
 															loadRatio = 1;
@@ -958,10 +910,10 @@
 																var type = $(this).attr("data-type");
 																var UnitPrice = 0;
 																if(type === "basic"){
-																	if(listTitle == "采购入库列表" || listTitle == "销售退货列表" || listTitle == "其它入库列表") {
+																	if(listTitle == "采购订单列表" || listTitle == "采购入库列表" || listTitle == "销售退货列表" || listTitle == "其它入库列表") {
 																		UnitPrice = basicPresetPriceOne;
 																	}
-																	else if(listTitle == "销售出库列表" || listTitle == "采购退货列表" || listTitle == "其它出库列表" || listTitle == "调拨出库列表" || listTitle == "礼品充值列表" || listTitle == "礼品销售列表") {
+																	else if(listTitle == "销售订单列表" || listTitle == "销售出库列表" || listTitle == "采购退货列表" || listTitle == "其它出库列表" || listTitle == "调拨出库列表") {
 																		UnitPrice = basicPresetPriceTwo;
 																	}
 																	else if(listTitle == "零售出库列表" || listTitle == "零售退货列表"){
@@ -970,10 +922,10 @@
 																	body.find("[field='Stock']").find(input).val(stock); //修改库存
 																}
 																else if(type === "other"){
-																	if(listTitle == "采购入库列表" || listTitle == "销售退货列表" || listTitle == "其它入库列表") {
+																	if(listTitle == "采购订单列表" || listTitle == "采购入库列表" || listTitle == "销售退货列表" || listTitle == "其它入库列表") {
 																		UnitPrice = otherPresetPriceOne;
 																	}
-																	else if(listTitle == "销售出库列表" || listTitle == "采购退货列表" || listTitle == "其它出库列表" || listTitle == "调拨出库列表" || listTitle == "礼品充值列表" || listTitle == "礼品销售列表") {
+																	else if(listTitle == "销售订单列表" || listTitle == "销售出库列表" || listTitle == "采购退货列表" || listTitle == "其它出库列表" || listTitle == "调拨出库列表") {
 																		UnitPrice = otherPresetPriceTwo;
 																	}
 																	else if(listTitle == "零售出库列表" || listTitle == "零售退货列表"){
@@ -1011,7 +963,7 @@
 														}
 													}
 												}
-												else if(listTitle == "采购入库列表" || listTitle == "销售退货列表" || listTitle == "其它入库列表") {
+												else if(listTitle == "采购订单列表" || listTitle == "采购入库列表" || listTitle == "销售退货列表" || listTitle == "其它入库列表") {
 													if(res.data[0].unit) { //如果存在计量单位信息
 														detailPrice = presetPriceOne;
 													}
@@ -1024,7 +976,7 @@
 														}
 													}
 												}
-												else if(listTitle == "销售出库列表" || listTitle == "采购退货列表" || listTitle == "其它出库列表" || listTitle == "调拨出库列表" || listTitle == "礼品充值列表" || listTitle == "礼品销售列表") {
+												else if(listTitle == "销售订单列表" || listTitle == "销售出库列表" || listTitle == "采购退货列表" || listTitle == "其它出库列表" || listTitle == "调拨出库列表") {
 													if(res.data[0].unit) { //如果存在计量单位信息
 														detailPrice = presetPriceTwo;
 													}
@@ -1175,18 +1127,9 @@
 			isShowAnotherDepot = false; //调拨时候显示对方仓库
 			anotherDepotHeadName = "调入仓库";
 		}
-		if(listSubType == "礼品充值"){
-			isShowAnotherDepot = false; //礼品充值时候显示礼品卡
-			anotherDepotHeadName = "礼品卡";
-		}
-		if(listSubType == "礼品销售"){
-			depotHeadName = "礼品卡";
-		}
-		else {
-			depotHeadName = "仓库名称";
-		}
+		depotHeadName = "仓库名称";
 		var isShowTaxColumn = false; //是否显示税率相关的列,true为隐藏,false为显示
-		if(listSubType == "调拨" || listSubType == "其它" || listSubType == "零售" || listSubType == "零售退货" || listSubType == "礼品充值" || listSubType == "礼品销售" || listSubType == "组装单" || listSubType == "拆卸单"){
+		if(listSubType == "调拨" || listSubType == "其它" || listSubType == "零售" || listSubType == "零售退货" || listSubType == "采购订单" || listSubType == "销售订单" || listSubType == "组装单" || listSubType == "拆卸单"){
 			isShowTaxColumn = true; //隐藏
 		}
 		var isShowMaterialTypeColumn = true; //是否显示商品类型相关的列,true为隐藏,false为显示
@@ -1623,15 +1566,9 @@
 			return;
 		}
 		var depotHeadInfo = depotHeadTotalInfo.split("AaBb");
-		if(listSubType==="礼品销售"){
-			$("#GiftId").combobox('setValue',depotHeadInfo[1]);
-		}
-		else{
-			$("#ProjectId").focus().val(depotHeadInfo[1]);
-		}
+		$("#ProjectId").focus().val(depotHeadInfo[1]);
 	    var ProjectId=depotHeadInfo[1];
-		if(ProjectId!='')
-		{
+		if(ProjectId!='') {
 			initSystemData_person(ProjectId);
 			initSelectInfo_person();
 		}
@@ -1651,9 +1588,6 @@
 	    var TotalPrice = depotHeadInfo[14];
 		preTotalPrice = depotHeadInfo[14]; //记录前一次合计金额，用于扣预付款
 	    $("#AllocationProjectId").val(depotHeadInfo[15]);
-		if(listSubType==="礼品充值"){
-			$("#GiftId").combobox('setValue', depotHeadInfo[15]);
-		}
 	    oldNumber = depotHeadInfo[2]; //记录编辑前的单据编号
 		oldId = depotHeadInfo[0]; //记录单据Id
 	    var editTitle = listTitle.replace("列表","信息");
@@ -1933,7 +1867,13 @@
 					}
 				}
 				//输入框提示
-				if(listTitle === "采购入库列表"){
+                if(listTitle === "采购订单列表"){
+                    if(!$('#OrganId').combobox('getValue')){
+                        $.messager.alert('提示','请选择供应商！','warning');
+                        return;
+                    }
+                }
+				else if(listTitle === "采购入库列表"){
 					if(!$('#OrganId').combobox('getValue')){
 						$.messager.alert('提示','请选择供应商！','warning');
 						return;
@@ -1984,6 +1924,12 @@
 					}
 
 				}
+                else if(listTitle === "销售订单列表"){
+                    if(!$('#OrganId').combobox('getValue')){
+                        $.messager.alert('提示','请选择购买单位！','warning');
+                        return;
+                    }
+                }
 				else if(listTitle === "销售出库列表"){
 					if(!$('#OrganId').combobox('getValue')){
 						$.messager.alert('提示','请选择购买单位！','warning');
@@ -2040,7 +1986,7 @@
 					accountMoneyList = accountMoneyList.replace(reg,""); //替换所有的双引号
 					accountMoneyArr = accountMoneyList.split(","); //转为数组
 				}
-				if(listSubType === "采购"||listSubType === "零售退货"||listSubType === "销售退货"){
+				if(listSubType === "采购订单"||listSubType === "采购"||listSubType === "零售退货"||listSubType === "销售退货"){
 					//付款为负数
 					ChangeAmount = 0 - ChangeAmount;
 					TotalPrice = 0 - TotalPrice;
