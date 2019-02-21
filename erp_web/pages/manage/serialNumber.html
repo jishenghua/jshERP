@@ -260,22 +260,6 @@
         });
         showSerialNumberDetails(1, initPageSize);
     }
-    //初始化键盘enter事件
-    $(document).keydown(function (event) {
-        //兼容 IE和firefox 事件
-        var e = window.event || event;
-        var k = e.keyCode || e.which || e.charCode;
-        //兼容 IE,firefox 兼容
-        var obj = e.srcElement ? e.srcElement : e.target;
-        //绑定键盘事件为 id是指定的输入框才可以触发键盘事件 13键盘事件 ---遗留问题 enter键效验 对话框会关闭问题
-        if (k == "13" && (obj.id == "CategoryLevel" || obj.id == "Name")) {
-            $("#saveMaterial").click();
-        }
-        //搜索按钮添加快捷键
-        if (k == "13" && (obj.id == "searchCategoryId" || (obj.id == "searchName"))) {
-            $("#searchBtn").click();
-        }
-    });
     //分页信息处理
     function ininPager() {
         try {
@@ -290,9 +274,21 @@
                             pageNumber: pageNum,
                             pageSize: pageSize
                         });
-                    showMaterialDetails(pageNum, pageSize);
-                }
-            });
+                    showSerialNumberDetails(pageNum, pageSize);
+                },
+                onBeforeRefresh:function(pageNum, pageSize){
+                    opts.pageSize = pageSize;
+                    var pageNumberTemp=parseInt($($("input.pagination-num").get(0)).val());
+
+                    opts.pageNumber = pageNumberTemp;
+                    pager.pagination('refresh',
+                        {
+                            pageNumber: pageNumberTemp,
+                            pageSize: pageSize
+                        });
+                },
+            }
+            );
         }
         catch (e) {
             $.messager.alert('异常处理提示', "分页信息异常 :  " + e.name + ": " + e.message, 'error');

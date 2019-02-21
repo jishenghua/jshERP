@@ -111,6 +111,7 @@ public class MaterialCategoryService {
      * @Param: mc
      * @return void
      */
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int addMaterialCategory(MaterialCategory mc) throws Exception {
         if(mc==null){
             return 0;
@@ -135,7 +136,7 @@ public class MaterialCategoryService {
         mc.setUpdater(userInfo==null?null:userInfo.getId());
         return materialCategoryMapperEx.addMaterialCategory(mc);
     }
-
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteMaterialCategoryByIds(String ids) throws Exception {
         //更新时间
         Date updateDate =new Date();
@@ -149,7 +150,7 @@ public class MaterialCategoryService {
         }
        return materialCategoryMapperEx.batchDeleteMaterialCategoryByIds(updateDate,updater,strArray);
     }
-
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int editMaterialCategory(MaterialCategory mc) {
         //检查商品类型编号是否已存在
         checkMaterialCategorySerialNo(mc);
