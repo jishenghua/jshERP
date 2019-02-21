@@ -5338,12 +5338,12 @@ ALTER TABLE jsh_materialcategory DROP FOREIGN KEY FK3EE7F725237A77D8;
 -- ----------------------------
 -- 修改根目录父节点id为-1
 -- ----------------------------
-update jsh_materialcategory set ParentId='-1' where id='1'
+update jsh_materialcategory set ParentId='-1' where id='1';
 
 -- ----------------------------
 -- 删除礼品卡管理、礼品充值、礼品销售、礼品卡统计的功能数据
 -- ----------------------------
-delete from jsh_functions where id in (213,214,215,216)
+delete from jsh_functions where id in (213,214,215,216);
 
 -- ----------------------------
 -- 新增采购订单、销售订单的功能数据
