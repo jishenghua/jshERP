@@ -1,1 +1,1 @@
-nohup  ./jshERPStart.sh  &
+nohup java -XX:+CreateMinidumpOnCrash -cp ./conf:./lib/*: com.jsh.erp.ErpApplication > /dev/null 2>&1 &
