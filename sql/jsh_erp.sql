@@ -5347,6 +5347,7 @@ delete from jsh_functions where id in (213,214,215,216);
 
 -- ----------------------------
 -- 新增采购订单、销售订单的功能数据
+--主键自增长，直接指定主键插入数据的方式可能会和本地数据冲突
 -- ----------------------------
-insert into `jsh_functions` values ('242', '050202', '采购订单', '0502', '../materials/purchase_orders_list.html', b'0', '0335',b'1', '电脑版', '');
-insert into `jsh_functions` values ('243', '060301', '销售订单', '0603', '../materials/sale_orders_list.html', b'0', '0392', b'1', '电脑版', '');
+insert into `jsh_functions`(`Number`, `Name`, `PNumber`, `URL`, `State`, `Sort`, `Enabled`, `Type`, `PushBtn`) VALUES ('050202', '采购订单', '0502', '../materials/purchase_orders_list.html', b'0', '0335',b'1', '电脑版', '');
+insert into `jsh_functions`(`Number`, `Name`, `PNumber`, `URL`, `State`, `Sort`, `Enabled`, `Type`, `PushBtn`) VALUES ('060301', '销售订单', '0603', '../materials/sale_orders_list.html', b'0', '0392', b'1', '电脑版', '');
