@@ -27,7 +27,11 @@ http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 ">
     </fileSets>
     <files>
         <file>
-            <source>src/main/resources/application.yml</source>
+            <source>src/main/resources/application.properties</source>
+            <outputDirectory>/conf</outputDirectory>
+        </file>
+        <file>
+            <source>src/main/resources/logback-spring.xml</source>
             <outputDirectory>/conf</outputDirectory>
         </file>
     </files>
