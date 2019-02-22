@@ -4,13 +4,8 @@
 <!-- scanPeriod:设置监测配置文件是否有修改的时间间隔，如果没有给出时间单位，默认单位是毫秒。当scan为true时，此属性生效。默认的时间间隔为1分钟。 -->
 <!-- debug:当此属性设置为true时，将打印出logback内部日志信息，实时查看logback运行状态。默认值为false。 -->
 <configuration  scan="true" scanPeriod="10 seconds">
-
-    <!--<include resource="org/springframework/boot/logging/logback/base.xml" />-->
-
-    <contextName>logback</contextName>
-    <!-- name的值是变量的名称，value的值时变量定义的值。通过定义的值会被插入到logger上下文中。定义变量后，可以使“${}”来使用变量。 -->
-    <property name="log.path" value="logs/jshERP" />
-
+     <include resource="log4j.xml" />
+     <!--<contextName>logback</contextName>-->
     <!-- 彩色日志 -->
     <!-- 彩色日志依赖的渲染类 -->
     <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
