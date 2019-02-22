@@ -121,32 +121,4 @@ public class DepotController {
         }
         return arr;
     }
-
-    /**
-     * 查找礼品卡-虚拟仓库
-     * @param type
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "/findGiftByType")
-    public JSONArray findGiftByType(@RequestParam("type") Integer type,
-                                       HttpServletRequest request) {
-        JSONArray arr = new JSONArray();
-        try {
-            List<Depot> dataList = depotService.findGiftByType(type);
-            //存放数据json数组
-            if (null != dataList) {
-                for (Depot depot : dataList) {
-                    JSONObject item = new JSONObject();
-                    item.put("id", depot.getId());
-                    //仓库名称
-                    item.put("name", depot.getName());
-                    arr.add(item);
-                }
-            }
-        } catch (Exception e) {
-            logger.error(">>>>>>>>>查找仓库信息异常", e);
-        }
-        return arr;
-    }
 }

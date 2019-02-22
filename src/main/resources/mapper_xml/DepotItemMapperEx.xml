@@ -87,7 +87,7 @@
         case when type='入库' then di.BasicNumber when type='出库' then 0-di.BasicNumber else 0 end as b_num,
         date_format(dh.OperTime,'%Y-%m-%d %H:%i:%S') as oTime
         from jsh_depothead dh INNER JOIN jsh_depotitem di on dh.id=di.HeaderId where type!='其它'
-        and SubType!='调拨' and SubType!='礼品充值'
+        and SubType!='调拨'
         and MaterialId =${mId} ORDER BY oTime desc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
@@ -96,7 +96,7 @@
     <select id="findDetailByTypeAndMaterialIdCounts" resultType="java.lang.Integer">
         select count(1)
         from jsh_depothead dh INNER JOIN jsh_depotitem di on dh.id=di.HeaderId where type!='其它'
-        and SubType!='调拨' and SubType!='礼品充值'
+        and SubType!='调拨'
         and MaterialId =${mId}
     </select>
 
@@ -124,7 +124,7 @@
 
     <select id="findByTypeAndMaterialIdOut" resultType="java.lang.Integer">
         select ifnull(sum(BasicNumber),0) as BasicNumber from jsh_depothead dh INNER JOIN jsh_depotitem di on dh.id=di.HeaderId where type='出库'
-        and SubType!='调拨' and SubType!='礼品充值' and MaterialId = ${mId}
+        and SubType!='调拨' and MaterialId = ${mId}
     </select>
 
     <select id="getDetailList" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
@@ -177,7 +177,7 @@
         or
         (SubType='调拨' and AnotherDepotId=${ProjectId})
         or
-        (SubType='礼品充值' and AnotherDepotId=${ProjectId}))
+        (AnotherDepotId=${ProjectId}))
         and MaterialId = ${MId}  and dh.OperTime &lt; '${MonthTime}-01 00:00:00'
     </select>
 
@@ -188,7 +188,7 @@
         or
         (SubType='调拨' and AnotherDepotId=${ProjectId})
         or
-        (SubType='礼品充值' and AnotherDepotId=${ProjectId}))
+        (AnotherDepotId=${ProjectId}))
         and MaterialId = ${MId}  and dh.OperTime &gt;= '${MonthTime}-01 00:00:00'
         and dh.OperTime &lt;= '${MonthTime}-31 23:59:59'
     </select>
@@ -216,7 +216,7 @@
         or
         (SubType='调拨' and AnotherDepotId=${ProjectId})
         or
-        (SubType='礼品充值' and AnotherDepotId=${ProjectId}))
+        (AnotherDepotId=${ProjectId}))
         and MaterialId = ${MId}  and dh.OperTime &lt; '${MonthTime}-01 00:00:00'
     </select>
 
@@ -227,7 +227,7 @@
         or
         (SubType='调拨' and AnotherDepotId=${ProjectId})
         or
-        (SubType='礼品充值' and AnotherDepotId=${ProjectId}))
+        (AnotherDepotId=${ProjectId}))
         and MaterialId = ${MId}  and dh.OperTime &gt;= '${MonthTime}-01 00:00:00'
         and dh.OperTime &lt;= '${MonthTime}-31 23:59:59'
     </select>

@@ -635,61 +635,6 @@ public class DepotItemController {
     }
 
     /**
-     * 查找礼品卡信息
-     * @param currentPage
-     * @param pageSize
-     * @param projectId
-     * @param headIds
-     * @param materialIds
-     * @param mpList
-     * @param request
-     * @return
-     */
-    @GetMapping(value = "/findGiftByAll")
-    public BaseResponseInfo findGiftByAll(@RequestParam("currentPage") Integer currentPage,
-                                          @RequestParam("pageSize") Integer pageSize,
-                                          @RequestParam("projectId") Integer projectId,
-                                          @RequestParam("headIds") String headIds,
-                                          @RequestParam("materialIds") String materialIds,
-                                          @RequestParam("mpList") String mpList,
-                                          HttpServletRequest request) {
-        BaseResponseInfo res = new BaseResponseInfo();
-        Map<String, Object> map = new HashMap<String, Object>();
-        try {
-            List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(headIds, materialIds, currentPage, pageSize);
-            String[] mpArr = mpList.split(",");
-            int total = depotItemService.findByAllCount(headIds, materialIds);
-            map.put("total", total);
-            Integer pid = projectId;
-            JSONArray dataArray = new JSONArray();
-            if (null != dataList) {
-                for (DepotItemVo4WithInfoEx diEx : dataList) {
-                    JSONObject item = new JSONObject();
-                    BigDecimal InSum = sumNumberGift("礼品充值", pid, diEx.getMId(), "in");
-                    BigDecimal OutSum = sumNumberGift("礼品销售", pid, diEx.getMId(), "out");
-                    item.put("MaterialName", diEx.getMName());
-                    item.put("MaterialModel", diEx.getMModel());
-                    //扩展信息
-                    String materialOther = getOtherInfo(mpArr, diEx);
-                    item.put("MaterialOther", materialOther);
-                    item.put("MaterialColor", diEx.getMColor());
-                    item.put("MaterialUnit", diEx.getMaterialUnit());
-                    item.put("thisSum", InSum.subtract(OutSum));
-                    dataArray.add(item);
-                }
-            }
-            map.put("rows", dataArray);
-            res.code = 200;
-            res.data = map;
-        } catch(Exception e){
-            e.printStackTrace();
-            res.code = 500;
-            res.data = "获取数据失败";
-        }
-        return res;
-    }
-
-    /**
      * 导出excel表格
      * @param currentPage
      * @param pageSize
@@ -835,29 +780,5 @@ public class DepotItemController {
             e.printStackTrace();
         }
         return sumPrice;
-    }
-
-    /**
-     * 数量合计-礼品卡
-     * @param subType
-     * @param ProjectId
-     * @param MId
-     * @param type
-     * @return
-     */
-    public BigDecimal sumNumberGift(String subType, Integer ProjectId, Long MId, String type) {
-        BigDecimal sumNumber = BigDecimal.ZERO;
-        String allNumber = "";
-        try {
-            if (ProjectId != null) {
-                BigDecimal sum = depotItemService.findGiftByType(subType, ProjectId, MId, type);
-                if(sum != null) {
-                    sumNumber = sum;
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return sumNumber;
     }
 }

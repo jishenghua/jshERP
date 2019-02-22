@@ -128,14 +128,6 @@
             billType = "material";
             $("#bill .allocation_out").show();
         }
-        else if(listSubType == "礼品充值") {
-            billType = "material";
-            $("#bill .gift_recharge").show();
-        }
-        else if(listSubType == "礼品销售出库") {
-            billType = "material";
-            $("#bill .gift_out").show();
-        }
         else if(listSubType == "收入") {
             billType = "account";
             payTypeTitle = "收入项目";
@@ -334,19 +326,11 @@
         if(listSubType == "调拨出库"){
             isShowAnotherDepot = false; //调拨时候显示对方仓库
             anotherDepotHeadName = "调入仓库";
-        }
-        if(listSubType == "礼品充值"){
-            isShowAnotherDepot = false; //礼品充值时候显示礼品卡
-            anotherDepotHeadName = "礼品卡";
-        }
-        if(listSubType == "礼品销售"){
-            depotHeadName = "礼品卡";
-        }
-        else {
+        } else {
             depotHeadName = "仓库名称";
         }
         var isShowTaxColumn = false; //是否显示税率相关的列,true为隐藏,false为显示
-        if(listSubType == "调拨出库" || listSubType == "其它出库" || listSubType == "其它入库" || listSubType == "零售出库" || listSubType == "零售退货入库" || listSubType == "礼品充值" || listSubType == "礼品销售"){
+        if(listSubType == "调拨出库" || listSubType == "其它出库" || listSubType == "其它入库" || listSubType == "零售出库" || listSubType == "零售退货入库"){
             isShowTaxColumn = true; //隐藏
         }
         var isShowMaterialTypeColumn = true; //是否显示商品类型相关的列,true为隐藏,false为显示

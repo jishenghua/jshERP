@@ -146,45 +146,6 @@ public class DepotHeadController {
     }
 
     /**
-     * 查找统计信息_根据礼品卡(报表)
-     * @param projectId
-     * @param request
-     * @return
-     */
-    @GetMapping(value = "/findGiftReport")
-    public BaseResponseInfo findGiftReport(@RequestParam("projectId") String projectId,
-                                        HttpServletRequest request) {
-        BaseResponseInfo res = new BaseResponseInfo();
-        Map<String, Object> map = new HashMap<String, Object>();
-        try {
-            List<DepotHead> dataList_in = depotHeadService.getDepotHead();
-            String headId = "";
-            if (null != dataList_in) {
-                for (DepotHead depotHead : dataList_in) {
-                    headId = headId + depotHead.getId() + ",";
-                }
-                List<DepotHead> dataList_out = depotHeadService.getDepotHeadGiftOut(projectId);
-                if (null != dataList_out) {
-                    for (DepotHead depotHead : dataList_out) {
-                        headId = headId + depotHead.getId() + ",";
-                    }
-                }
-            }
-            if (headId != "") {
-                headId = headId.substring(0, headId.lastIndexOf(","));
-            }
-            map.put("HeadIds", headId);
-            res.code = 200;
-            res.data = map;
-        } catch(Exception e){
-            e.printStackTrace();
-            res.code = 500;
-            res.data = "获取数据失败";
-        }
-        return res;
-    }
-
-    /**
      * 入库出库明细接口
      * @param currentPage
      * @param pageSize

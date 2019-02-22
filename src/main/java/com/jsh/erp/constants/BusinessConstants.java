@@ -49,7 +49,7 @@ public class BusinessConstants {
     public static final String ENABLE_SERIAL_NUMBER_NOT_ENABLED = "0";
     /**
      * 出入库分类
-     *采购、采购退货、其它、零售、销售、调拨、礼品充值
+     *采购、采购退货、其它、零售、销售、调拨
      * */
     public static final String SUB_TYPE_PURCHASE = "采购";
     public static final String SUB_TYPE_PURCHASE_TETURNS = "采购退货";
