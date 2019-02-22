@@ -212,7 +212,7 @@
         }, 500);
 
         $("#btnOK").off("click").on("click", function () {
-            if (confirm("您确定要保存吗？")) {
+            $.messager.confirm("提示","您确定要保存吗？",function(data){
                 var bindList = $("#pushList .datagrid-view2 .datagrid-body .datagrid-row");
                 var bindArr = [];
                 var btnStr = "";
@@ -239,7 +239,7 @@
                     success: function (res) {
                         if (res && res.code === 200) {
                             self.parent.$.colorbox.close();
-                            alert("操作成功！");
+                            $.messager.alert('提示',"操作成功！","info");
                         }
                         else {
                             $.messager.show({
@@ -253,7 +253,7 @@
                         return;
                     }
                 });
-            }
+            });
         });
     }
 </script>
