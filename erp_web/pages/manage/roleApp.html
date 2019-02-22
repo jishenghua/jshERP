@@ -77,9 +77,7 @@
                 else {
                     url = '/userBusiness/update?id=' + id;
                 }
-
-                if (confirm("您确定要保存吗？")) {
-
+                $.messager.confirm("提示","您确定要保存吗？",function(data){
                     $.ajax({
                         url: url,
                         type: "post",
@@ -95,14 +93,14 @@
                         success: function (res) {
                             if(res && res.code === 200) {
                                 self.parent.$.colorbox.close();
-                                alert("操作成功！");
+                                $.messager.alert('提示',"操作成功！","info");
                             }
                             else {
-                                alert("操作失败！");
+                                $.messager.alert('提示',"操作失败！","error");
                             }
                         }
                     });
-                }
+                });
             }
         );
 
@@ -135,6 +133,7 @@
         });
         return flag;
     }
+
 </script>
 </body>
 </html>
