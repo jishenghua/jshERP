@@ -11,6 +11,7 @@
         <if test="type != null">
             and type='${type}'
         </if>
+        order by sort asc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
         </if>
