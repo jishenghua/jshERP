@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.jsh.erp.datasource.mappers.AccountHeadMapper">
+<mapper namespace="com.jsh.erp.datasource.mappers.AccountHeadMapperEx">
 
-    <resultMap extends="BaseResultMap" id="ResultMapEx" type="com.jsh.erp.datasource.entities.AccountHeadVo4ListEx">
+    <resultMap extends="com.jsh.erp.datasource.mappers.AccountHeadMapper.BaseResultMap" id="ResultMapEx" type="com.jsh.erp.datasource.entities.AccountHeadVo4ListEx">
         <result column="OrganName" jdbcType="VARCHAR" property="organname" />
         <result column="HandsPersonName" jdbcType="VARCHAR" property="handspersonname" />
         <result column="AccountName" jdbcType="VARCHAR" property="accountname" />

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.jsh.erp.datasource.mappers.SupplierMapper">
-    <select id="selectByConditionSupplier" parameterType="com.jsh.erp.datasource.entities.SupplierExample" resultMap="BaseResultMap">
+<mapper namespace="com.jsh.erp.datasource.mappers.SupplierMapperEx">
+    <select id="selectByConditionSupplier" parameterType="com.jsh.erp.datasource.entities.SupplierExample" resultMap="com.jsh.erp.datasource.mappers.SupplierMapper.BaseResultMap">
         select *
         FROM jsh_supplier
         where 1=1
@@ -46,7 +46,7 @@
         </if>
     </select>
 
-    <select id="findByAll" parameterType="com.jsh.erp.datasource.entities.SupplierExample" resultMap="BaseResultMap">
+    <select id="findByAll" parameterType="com.jsh.erp.datasource.entities.SupplierExample" resultMap="com.jsh.erp.datasource.mappers.SupplierMapper.BaseResultMap">
         select *
         FROM jsh_supplier
         where 1=1

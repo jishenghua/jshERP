@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.jsh.erp.datasource.mappers.LogMapper">
-    <resultMap extends="BaseResultMap" id="ResultExMap" type="com.jsh.erp.datasource.vo.LogVo4List">
+<mapper namespace="com.jsh.erp.datasource.mappers.LogMapperEx">
+    <resultMap extends="com.jsh.erp.datasource.mappers.LogMapper.BaseResultMap" id="ResultExMap" type="com.jsh.erp.datasource.vo.LogVo4List">
         <result column="userName" jdbcType="VARCHAR" property="username" />
     </resultMap>
 

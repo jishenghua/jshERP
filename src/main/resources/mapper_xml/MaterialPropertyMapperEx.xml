@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.jsh.erp.datasource.mappers.MaterialPropertyMapper">
-    <select id="selectByConditionMaterialProperty" parameterType="com.jsh.erp.datasource.entities.MaterialPropertyExample" resultMap="BaseResultMap">
+<mapper namespace="com.jsh.erp.datasource.mappers.MaterialPropertyMapperEx">
+    <select id="selectByConditionMaterialProperty" parameterType="com.jsh.erp.datasource.entities.MaterialPropertyExample" resultMap="com.jsh.erp.datasource.mappers.MaterialPropertyMapper.BaseResultMap">
         select *
         FROM jsh_materialproperty
         where 1=1

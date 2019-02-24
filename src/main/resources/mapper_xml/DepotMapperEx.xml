@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.jsh.erp.datasource.mappers.DepotMapper">
-    <select id="selectByConditionDepot" parameterType="com.jsh.erp.datasource.entities.DepotExample" resultMap="BaseResultMap">
+<mapper namespace="com.jsh.erp.datasource.mappers.DepotMapperEx">
+    <select id="selectByConditionDepot" parameterType="com.jsh.erp.datasource.entities.DepotExample" resultMap="com.jsh.erp.datasource.mappers.DepotMapper.BaseResultMap">
         select *
         FROM jsh_depot
         where 1=1

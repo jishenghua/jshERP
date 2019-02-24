@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.jsh.erp.datasource.mappers.AccountMapper">
-    <resultMap extends="BaseResultMap" id="ResultListMap" type="com.jsh.erp.datasource.vo.AccountVo4List">
+<mapper namespace="com.jsh.erp.datasource.mappers.AccountMapperEx">
+    <resultMap extends="com.jsh.erp.datasource.mappers.AccountMapper.BaseResultMap" id="ResultListMap" type="com.jsh.erp.datasource.vo.AccountVo4List">
         <result column="thismonthamount" jdbcType="VARCHAR" property="thismonthamount" />
     </resultMap>
 
