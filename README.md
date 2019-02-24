@@ -11,9 +11,9 @@
 * 初学JAVA的小伙伴可以下载源代码来进行学习交流
 
 # 技术框架
-* 核心框架：SpringBoot 1.5.1
+* 核心框架：SpringBoot 2.0.0
 * 持久层框架：Mybatis 1.3.2
-* 日志管理：Log4j 1.2.16
+* 日志管理：Log4j 2.10.0
 * JS框架：Jquery 1.8.0
 * UI框架: EasyUI 1.3.5
 * 桌面框架: HoorayOS 2.0.0
