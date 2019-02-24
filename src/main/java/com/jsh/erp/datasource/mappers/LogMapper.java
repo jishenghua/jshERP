@@ -95,24 +95,4 @@ public interface LogMapper {
      * @mbggenerated
      */
     int updateByPrimaryKey(Log record);
-
-    List<LogVo4List> selectByConditionLog(
-            @Param("operation") String operation,
-            @Param("usernameID") Integer usernameID,
-            @Param("clientIp") String clientIp,
-            @Param("status") Integer status,
-            @Param("beginTime") String beginTime,
-            @Param("endTime") String endTime,
-            @Param("contentdetails") String contentdetails,
-            @Param("offset") Integer offset,
-            @Param("rows") Integer rows);
-
-    int countsByLog(
-            @Param("operation") String operation,
-            @Param("usernameID") Integer usernameID,
-            @Param("clientIp") String clientIp,
-            @Param("status") Integer status,
-            @Param("beginTime") String beginTime,
-            @Param("endTime") String endTime,
-            @Param("contentdetails") String contentdetails);
 }

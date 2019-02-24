@@ -95,7 +95,4 @@ public interface DepotItemMapper {
      * @mbggenerated
      */
     int updateByPrimaryKey(DepotItem record);
-
-
-
 }

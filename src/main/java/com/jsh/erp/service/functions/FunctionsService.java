@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.datasource.entities.Functions;
 import com.jsh.erp.datasource.entities.FunctionsExample;
 import com.jsh.erp.datasource.mappers.FunctionsMapper;
+import com.jsh.erp.datasource.mappers.FunctionsMapperEx;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,9 @@ public class FunctionsService {
     @Resource
     private FunctionsMapper functionsMapper;
 
+    @Resource
+    private FunctionsMapperEx functionsMapperEx;
+
     public Functions getFunctions(long id) {
         return functionsMapper.selectByPrimaryKey(id);
     }
@@ -31,11 +35,11 @@ public class FunctionsService {
     }
 
     public List<Functions> select(String name, String type, int offset, int rows) {
-        return functionsMapper.selectByConditionFunctions(name, type, offset, rows);
+        return functionsMapperEx.selectByConditionFunctions(name, type, offset, rows);
     }
 
     public int countFunctions(String name, String type) {
-        return functionsMapper.countsByFunctions(name, type);
+        return functionsMapperEx.countsByFunctions(name, type);
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)

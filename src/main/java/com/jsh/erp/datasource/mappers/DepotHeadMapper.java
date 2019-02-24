@@ -100,7 +100,4 @@ public interface DepotHeadMapper {
      * @mbggenerated
      */
     int updateByPrimaryKey(DepotHead record);
-
-
-
 }

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.datasource.entities.App;
 import com.jsh.erp.datasource.entities.AppExample;
 import com.jsh.erp.datasource.mappers.AppMapper;
+import com.jsh.erp.datasource.mappers.AppMapperEx;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,8 @@ public class AppService {
 
     @Resource
     private AppMapper appMapper;
+    @Resource
+    private AppMapperEx appMapperEx;
 
     public List<App> findDock(){
         AppExample example = new AppExample();
@@ -54,11 +57,11 @@ public class AppService {
     }
 
     public List<App> select(String name, String type, int offset, int rows) {
-        return appMapper.selectByConditionApp(name, type, offset, rows);
+        return appMapperEx.selectByConditionApp(name, type, offset, rows);
     }
 
     public int countApp(String name, String type) {
-        return appMapper.countsByApp(name, type);
+        return appMapperEx.countsByApp(name, type);
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)

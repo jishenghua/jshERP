@@ -96,24 +96,4 @@ public interface AccountMapper {
      * @mbggenerated
      */
     int updateByPrimaryKey(Account record);
-
-    List<AccountVo4List> selectByConditionAccount(
-            @Param("name") String name,
-            @Param("serialNo") String serialNo,
-            @Param("remark") String remark,
-            @Param("offset") Integer offset,
-            @Param("rows") Integer rows);
-
-    int countsByAccount(
-            @Param("name") String name,
-            @Param("serialNo") String serialNo,
-            @Param("remark") String remark);
-
-    List<AccountVo4InOutList> findAccountInOutList(
-            @Param("accountId") Long accountId,
-            @Param("offset") Integer offset,
-            @Param("rows") Integer rows);
-
-    int findAccountInOutListCount(
-            @Param("accountId") Long accountId);
 }

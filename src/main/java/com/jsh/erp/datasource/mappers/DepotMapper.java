@@ -93,16 +93,4 @@ public interface DepotMapper {
      * @mbggenerated
      */
     int updateByPrimaryKey(Depot record);
-
-    List<Depot> selectByConditionDepot(
-            @Param("name") String name,
-            @Param("type") Integer type,
-            @Param("remark") String remark,
-            @Param("offset") Integer offset,
-            @Param("rows") Integer rows);
-
-    int countsByDepot(
-            @Param("name") String name,
-            @Param("type") Integer type,
-            @Param("remark") String remark);
 }

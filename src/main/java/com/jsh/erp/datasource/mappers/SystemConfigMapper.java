@@ -93,10 +93,4 @@ public interface SystemConfigMapper {
      * @mbggenerated
      */
     int updateByPrimaryKey(SystemConfig record);
-
-    List<SystemConfig> selectByConditionSystemConfig(
-            @Param("offset") Integer offset,
-            @Param("rows") Integer rows);
-
-    int countsBySystemConfig();
 }

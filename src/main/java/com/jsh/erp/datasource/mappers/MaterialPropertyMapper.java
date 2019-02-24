@@ -93,11 +93,4 @@ public interface MaterialPropertyMapper {
      * @mbggenerated
      */
     int updateByPrimaryKey(MaterialProperty record);
-
-    List<MaterialProperty> selectByConditionMaterialProperty(
-            @Param("name") String name,
-            @Param("offset") Integer offset,
-            @Param("rows") Integer rows);
-
-    int countsByMaterialProperty(@Param("name") String name);
 }

@@ -93,14 +93,4 @@ public interface UserMapper {
      * @mbggenerated
      */
     int updateByPrimaryKey(User record);
-
-    List<User> selectByConditionUser(
-            @Param("userName") String userName,
-            @Param("loginName") String loginName,
-            @Param("offset") Integer offset,
-            @Param("rows") Integer rows);
-
-    int countsByUser(
-            @Param("userName") String userName,
-            @Param("loginName") String loginName);
 }

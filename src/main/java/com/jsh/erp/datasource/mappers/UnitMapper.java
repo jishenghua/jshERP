@@ -93,12 +93,4 @@ public interface UnitMapper {
      * @mbggenerated
      */
     int updateByPrimaryKey(Unit record);
-
-    List<Unit> selectByConditionUnit(
-            @Param("name") String name,
-            @Param("offset") Integer offset,
-            @Param("rows") Integer rows);
-
-    int countsByUnit(
-            @Param("name") String name);
 }

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.datasource.entities.InOutItem;
 import com.jsh.erp.datasource.entities.InOutItemExample;
 import com.jsh.erp.datasource.mappers.InOutItemMapper;
+import com.jsh.erp.datasource.mappers.InOutItemMapperEx;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,9 @@ public class InOutItemService {
     @Resource
     private InOutItemMapper inOutItemMapper;
 
+    @Resource
+    private InOutItemMapperEx inOutItemMapperEx;
+
     public InOutItem getInOutItem(long id) {
         return inOutItemMapper.selectByPrimaryKey(id);
     }
@@ -31,11 +35,11 @@ public class InOutItemService {
     }
 
     public List<InOutItem> select(String name, String type, String remark, int offset, int rows) {
-        return inOutItemMapper.selectByConditionInOutItem(name, type, remark, offset, rows);
+        return inOutItemMapperEx.selectByConditionInOutItem(name, type, remark, offset, rows);
     }
 
     public int countInOutItem(String name, String type, String remark) {
-        return inOutItemMapper.countsByInOutItem(name, type, remark);
+        return inOutItemMapperEx.countsByInOutItem(name, type, remark);
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)

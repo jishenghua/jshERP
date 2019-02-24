@@ -93,12 +93,4 @@ public interface RoleMapper {
      * @mbggenerated
      */
     int updateByPrimaryKey(Role record);
-
-    List<Role> selectByConditionRole(
-            @Param("name") String name,
-            @Param("offset") Integer offset,
-            @Param("rows") Integer rows);
-
-    int countsByRole(
-            @Param("name") String name);
 }

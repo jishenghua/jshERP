@@ -6,6 +6,7 @@ import com.jsh.erp.datasource.entities.RoleExample;
 import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.entities.UserExample;
 import com.jsh.erp.datasource.mappers.RoleMapper;
+import com.jsh.erp.datasource.mappers.RoleMapperEx;
 import com.jsh.erp.datasource.mappers.UserMapper;
 import com.jsh.erp.utils.QueryUtils;
 import com.jsh.erp.utils.RegExpTools;
@@ -23,6 +24,9 @@ public class RoleService {
     @Resource
     private RoleMapper roleMapper;
 
+    @Resource
+    private RoleMapperEx roleMapperEx;
+
     public Role getRole(long id) {
         return roleMapper.selectByPrimaryKey(id);
     }
@@ -33,11 +37,11 @@ public class RoleService {
     }
 
     public List<Role> select(String name, int offset, int rows) {
-        return roleMapper.selectByConditionRole(name, offset, rows);
+        return roleMapperEx.selectByConditionRole(name, offset, rows);
     }
 
     public int countRole(String name) {
-        return roleMapper.countsByRole(name);
+        return roleMapperEx.countsByRole(name);
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)

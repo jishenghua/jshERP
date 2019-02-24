@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.datasource.entities.Depot;
 import com.jsh.erp.datasource.entities.DepotExample;
 import com.jsh.erp.datasource.mappers.DepotMapper;
+import com.jsh.erp.datasource.mappers.DepotMapperEx;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,9 @@ public class DepotService {
     @Resource
     private DepotMapper depotMapper;
 
+    @Resource
+    private DepotMapperEx depotMapperEx;
+
     public Depot getDepot(long id) {
         return depotMapper.selectByPrimaryKey(id);
     }
@@ -37,11 +41,11 @@ public class DepotService {
     }
 
     public List<Depot> select(String name, Integer type, String remark, int offset, int rows) {
-        return depotMapper.selectByConditionDepot(name, type, remark, offset, rows);
+        return depotMapperEx.selectByConditionDepot(name, type, remark, offset, rows);
     }
 
     public int countDepot(String name, Integer type, String remark) {
-        return depotMapper.countsByDepot(name, type, remark);
+        return depotMapperEx.countsByDepot(name, type, remark);
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)

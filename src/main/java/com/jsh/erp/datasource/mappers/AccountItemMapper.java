@@ -95,20 +95,4 @@ public interface AccountItemMapper {
      * @mbggenerated
      */
     int updateByPrimaryKey(AccountItem record);
-
-    List<AccountItem> selectByConditionAccountItem(
-            @Param("name") String name,
-            @Param("type") Integer type,
-            @Param("remark") String remark,
-            @Param("offset") Integer offset,
-            @Param("rows") Integer rows);
-
-    int countsByAccountItem(
-            @Param("name") String name,
-            @Param("type") Integer type,
-            @Param("remark") String remark);
-
-    List<AccountItemVo4List> getDetailList(
-            @Param("headerId") Long headerId);
-
 }

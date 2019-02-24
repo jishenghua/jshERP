@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.entities.UserExample;
 import com.jsh.erp.datasource.mappers.UserMapper;
+import com.jsh.erp.datasource.mappers.UserMapperEx;
 import com.jsh.erp.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,9 @@ public class UserService {
     @Resource
     private UserMapper userMapper;
 
+    @Resource
+    private UserMapperEx userMapperEx;
+
     public User getUser(long id) {
         return userMapper.selectByPrimaryKey(id);
     }
@@ -36,11 +40,11 @@ public class UserService {
     }
 
     public List<User> select(String userName, String loginName, int offset, int rows) {
-        return userMapper.selectByConditionUser(userName, loginName, offset, rows);
+        return userMapperEx.selectByConditionUser(userName, loginName, offset, rows);
     }
 
     public int countUser(String userName, String loginName) {
-        return userMapper.countsByUser(userName, loginName);
+        return userMapperEx.countsByUser(userName, loginName);
     }
     /**
      * create by: cjl

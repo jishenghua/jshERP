@@ -94,13 +94,4 @@ public interface AppMapper {
      */
     int updateByPrimaryKey(App record);
 
-    List<App> selectByConditionApp(
-            @Param("name") String name,
-            @Param("type") String type,
-            @Param("offset") Integer offset,
-            @Param("rows") Integer rows);
-
-    int countsByApp(
-            @Param("name") String name,
-            @Param("type") String type);
 }

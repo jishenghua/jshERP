@@ -93,14 +93,4 @@ public interface FunctionsMapper {
      * @mbggenerated
      */
     int updateByPrimaryKey(Functions record);
-
-    List<Functions> selectByConditionFunctions(
-            @Param("name") String name,
-            @Param("type") String type,
-            @Param("offset") Integer offset,
-            @Param("rows") Integer rows);
-
-    int countsByFunctions(
-            @Param("name") String name,
-            @Param("type") String type);
 }

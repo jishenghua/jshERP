@@ -5,6 +5,7 @@ import com.jsh.erp.datasource.entities.AccountHead;
 import com.jsh.erp.datasource.entities.AccountHeadExample;
 import com.jsh.erp.datasource.entities.AccountHeadVo4ListEx;
 import com.jsh.erp.datasource.mappers.AccountHeadMapper;
+import com.jsh.erp.datasource.mappers.AccountHeadMapperEx;
 import com.jsh.erp.utils.StringUtil;
 import com.jsh.erp.utils.Tools;
 import org.slf4j.Logger;
@@ -25,6 +26,9 @@ public class AccountHeadService {
     @Resource
     private AccountHeadMapper accountHeadMapper;
 
+    @Resource
+    private AccountHeadMapperEx accountHeadMapperEx;
+
     public AccountHead getAccountHead(long id) {
         return accountHeadMapper.selectByPrimaryKey(id);
     }
@@ -36,7 +40,7 @@ public class AccountHeadService {
 
     public List<AccountHeadVo4ListEx> select(String type, String billNo, String beginTime, String endTime, int offset, int rows) {
         List<AccountHeadVo4ListEx> resList = new ArrayList<AccountHeadVo4ListEx>();
-        List<AccountHeadVo4ListEx> list = accountHeadMapper.selectByConditionAccountHead(type, billNo, beginTime, endTime, offset, rows);
+        List<AccountHeadVo4ListEx> list = accountHeadMapperEx.selectByConditionAccountHead(type, billNo, beginTime, endTime, offset, rows);
         if (null != list) {
             for (AccountHeadVo4ListEx ah : list) {
                 if(ah.getChangeamount() != null) {
@@ -52,7 +56,7 @@ public class AccountHeadService {
     }
 
     public int countAccountHead(String type, String billNo, String beginTime, String endTime) {
-        return accountHeadMapper.countsByAccountHead(type, billNo, beginTime, endTime);
+        return accountHeadMapperEx.countsByAccountHead(type, billNo, beginTime, endTime);
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
@@ -89,7 +93,7 @@ public class AccountHeadService {
     }
 
     public Long getMaxId() {
-        return accountHeadMapper.getMaxId();
+        return accountHeadMapperEx.getMaxId();
     }
 
     public BigDecimal findAllMoney(Integer supplierId, String type, String mode, String endTime) {
@@ -99,12 +103,12 @@ public class AccountHeadService {
         } else if (mode.equals("合计")) {
             modeName = "TotalPrice";
         }
-        return accountHeadMapper.findAllMoney(supplierId, type, modeName, endTime);
+        return accountHeadMapperEx.findAllMoney(supplierId, type, modeName, endTime);
     }
 
     public List<AccountHeadVo4ListEx> getDetailByNumber(String billNo) {
         List<AccountHeadVo4ListEx> resList = new ArrayList<AccountHeadVo4ListEx>();
-        List<AccountHeadVo4ListEx> list = accountHeadMapper.getDetailByNumber(billNo);
+        List<AccountHeadVo4ListEx> list = accountHeadMapperEx.getDetailByNumber(billNo);
         if (null != list) {
             for (AccountHeadVo4ListEx ah : list) {
                 if(ah.getChangeamount() != null) {

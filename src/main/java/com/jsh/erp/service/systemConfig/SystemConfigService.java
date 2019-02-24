@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.datasource.entities.SystemConfig;
 import com.jsh.erp.datasource.entities.SystemConfigExample;
 import com.jsh.erp.datasource.mappers.SystemConfigMapper;
+import com.jsh.erp.datasource.mappers.SystemConfigMapperEx;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,9 @@ public class SystemConfigService {
     @Resource
     private SystemConfigMapper systemConfigMapper;
 
+    @Resource
+    private SystemConfigMapperEx systemConfigMapperEx;
+
     public SystemConfig getSystemConfig(long id) {
         return systemConfigMapper.selectByPrimaryKey(id);
     }
@@ -30,11 +34,11 @@ public class SystemConfigService {
         return systemConfigMapper.selectByExample(example);
     }
     public List<SystemConfig> select(int offset, int rows) {
-        return systemConfigMapper.selectByConditionSystemConfig(offset, rows);
+        return systemConfigMapperEx.selectByConditionSystemConfig(offset, rows);
     }
 
     public int countSystemConfig() {
-        return systemConfigMapper.countsBySystemConfig();
+        return systemConfigMapperEx.countsBySystemConfig();
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)

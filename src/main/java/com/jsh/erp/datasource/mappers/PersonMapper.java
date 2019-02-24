@@ -93,14 +93,4 @@ public interface PersonMapper {
      * @mbggenerated
      */
     int updateByPrimaryKey(Person record);
-
-    List<Person> selectByConditionPerson(
-            @Param("name") String name,
-            @Param("type") String type,
-            @Param("offset") Integer offset,
-            @Param("rows") Integer rows);
-
-    int countsByPerson(
-            @Param("name") String name,
-            @Param("type") String type);
 }

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.datasource.entities.MaterialProperty;
 import com.jsh.erp.datasource.entities.MaterialPropertyExample;
 import com.jsh.erp.datasource.mappers.MaterialPropertyMapper;
+import com.jsh.erp.datasource.mappers.MaterialPropertyMapperEx;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,9 @@ public class MaterialPropertyService {
     @Resource
     private MaterialPropertyMapper materialPropertyMapper;
 
+    @Resource
+    private MaterialPropertyMapperEx materialPropertyMapperEx;
+
     public MaterialProperty getMaterialProperty(long id) {
         return materialPropertyMapper.selectByPrimaryKey(id);
     }
@@ -30,11 +34,11 @@ public class MaterialPropertyService {
         return materialPropertyMapper.selectByExample(example);
     }
     public List<MaterialProperty> select(String name, int offset, int rows) {
-        return materialPropertyMapper.selectByConditionMaterialProperty(name, offset, rows);
+        return materialPropertyMapperEx.selectByConditionMaterialProperty(name, offset, rows);
     }
 
     public int countMaterialProperty(String name) {
-        return materialPropertyMapper.countsByMaterialProperty(name);
+        return materialPropertyMapperEx.countsByMaterialProperty(name);
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)

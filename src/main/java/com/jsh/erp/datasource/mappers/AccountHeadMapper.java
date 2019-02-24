@@ -97,29 +97,4 @@ public interface AccountHeadMapper {
      * @mbggenerated
      */
     int updateByPrimaryKey(AccountHead record);
-
-    List<AccountHeadVo4ListEx> selectByConditionAccountHead(
-            @Param("type") String type,
-            @Param("billNo") String billNo,
-            @Param("beginTime") String beginTime,
-            @Param("endTime") String endTime,
-            @Param("offset") Integer offset,
-            @Param("rows") Integer rows);
-
-    int countsByAccountHead(
-            @Param("type") String type,
-            @Param("billNo") String billNo,
-            @Param("beginTime") String beginTime,
-            @Param("endTime") String endTime);
-
-    Long getMaxId();
-
-    BigDecimal findAllMoney(
-            @Param("supplierId") Integer supplierId,
-            @Param("type") String type,
-            @Param("modeName") String modeName,
-            @Param("endTime") String endTime);
-
-    List<AccountHeadVo4ListEx> getDetailByNumber(
-            @Param("billNo") String billNo);
 }

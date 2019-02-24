@@ -2,10 +2,7 @@ package com.jsh.erp.service.account;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.datasource.entities.*;
-import com.jsh.erp.datasource.mappers.AccountHeadMapper;
-import com.jsh.erp.datasource.mappers.AccountItemMapper;
-import com.jsh.erp.datasource.mappers.AccountMapper;
-import com.jsh.erp.datasource.mappers.DepotHeadMapper;
+import com.jsh.erp.datasource.mappers.*;
 import com.jsh.erp.datasource.vo.AccountVo4InOutList;
 import com.jsh.erp.datasource.vo.AccountVo4List;
 import com.jsh.erp.utils.StringUtil;
@@ -32,6 +29,9 @@ public class AccountService {
     private AccountMapper accountMapper;
 
     @Resource
+    private AccountMapperEx accountMapperEx;
+
+    @Resource
     private DepotHeadMapper depotHeadMapper;
 
     @Resource
@@ -51,7 +51,7 @@ public class AccountService {
 
     public List<AccountVo4List> select(String name, String serialNo, String remark, int offset, int rows) {
         List<AccountVo4List> resList = new ArrayList<AccountVo4List>();
-        List<AccountVo4List> list = accountMapper.selectByConditionAccount(name, serialNo, remark, offset, rows);
+        List<AccountVo4List> list = accountMapperEx.selectByConditionAccount(name, serialNo, remark, offset, rows);
         String timeStr = Tools.getCurrentMonth();
         if (null != list && null !=timeStr) {
             for (AccountVo4List al : list) {
@@ -71,7 +71,7 @@ public class AccountService {
     }
 
     public int countAccount(String name, String serialNo, String remark) {
-        return accountMapper.countsByAccount(name, serialNo, remark);
+        return accountMapperEx.countsByAccount(name, serialNo, remark);
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
@@ -294,11 +294,11 @@ public class AccountService {
     }
 
     public List<AccountVo4InOutList> findAccountInOutList(Long accountId, Integer offset, Integer rows) {
-        return accountMapper.findAccountInOutList(accountId, offset, rows);
+        return accountMapperEx.findAccountInOutList(accountId, offset, rows);
     }
 
     public int findAccountInOutListCount(Long accountId) {
-        return accountMapper.findAccountInOutListCount(accountId);
+        return accountMapperEx.findAccountInOutListCount(accountId);
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)

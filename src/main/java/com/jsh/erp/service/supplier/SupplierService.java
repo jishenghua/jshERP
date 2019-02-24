@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.datasource.entities.Supplier;
 import com.jsh.erp.datasource.entities.SupplierExample;
 import com.jsh.erp.datasource.mappers.SupplierMapper;
+import com.jsh.erp.datasource.mappers.SupplierMapperEx;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
@@ -25,6 +26,9 @@ public class SupplierService {
     @Resource
     private SupplierMapper supplierMapper;
 
+    @Resource
+    private SupplierMapperEx supplierMapperEx;
+
     public Supplier getSupplier(long id) {
         return supplierMapper.selectByPrimaryKey(id);
     }
@@ -35,11 +39,11 @@ public class SupplierService {
     }
 
     public List<Supplier> select(String supplier, String type, String phonenum, String telephone, String description, int offset, int rows) {
-        return supplierMapper.selectByConditionSupplier(supplier, type, phonenum, telephone, description, offset, rows);
+        return supplierMapperEx.selectByConditionSupplier(supplier, type, phonenum, telephone, description, offset, rows);
     }
 
     public int countSupplier(String supplier, String type, String phonenum, String telephone, String description) {
-        return supplierMapper.countsBySupplier(supplier, type, phonenum, telephone, description);
+        return supplierMapperEx.countsBySupplier(supplier, type, phonenum, telephone, description);
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
@@ -134,7 +138,7 @@ public class SupplierService {
     }
 
     public List<Supplier> findByAll(String supplier, String type, String phonenum, String telephone, String description) {
-        return supplierMapper.findByAll(supplier, type, phonenum, telephone, description);
+        return supplierMapperEx.findByAll(supplier, type, phonenum, telephone, description);
     }
 
     public BaseResponseInfo importExcel(List<Supplier> mList) throws Exception {

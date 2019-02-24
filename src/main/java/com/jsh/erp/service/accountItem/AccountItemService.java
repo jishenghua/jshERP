@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.datasource.entities.AccountItem;
 import com.jsh.erp.datasource.entities.AccountItemExample;
 import com.jsh.erp.datasource.mappers.AccountItemMapper;
+import com.jsh.erp.datasource.mappers.AccountItemMapperEx;
 import com.jsh.erp.datasource.vo.AccountItemVo4List;
 import com.jsh.erp.utils.ErpInfo;
 import com.jsh.erp.utils.StringUtil;
@@ -28,6 +29,9 @@ public class AccountItemService {
     @Resource
     private AccountItemMapper accountItemMapper;
 
+    @Resource
+    private AccountItemMapperEx accountItemMapperEx;
+
     public AccountItem getAccountItem(long id) {
         return accountItemMapper.selectByPrimaryKey(id);
     }
@@ -38,11 +42,11 @@ public class AccountItemService {
     }
 
     public List<AccountItem> select(String name, Integer type, String remark, int offset, int rows) {
-        return accountItemMapper.selectByConditionAccountItem(name, type, remark, offset, rows);
+        return accountItemMapperEx.selectByConditionAccountItem(name, type, remark, offset, rows);
     }
 
     public int countAccountItem(String name, Integer type, String remark) {
-        return accountItemMapper.countsByAccountItem(name, type, remark);
+        return accountItemMapperEx.countsByAccountItem(name, type, remark);
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
@@ -89,7 +93,7 @@ public class AccountItemService {
     }
 
     public List<AccountItemVo4List> getDetailList(Long headerId) {
-        return accountItemMapper.getDetailList(headerId);
+        return accountItemMapperEx.getDetailList(headerId);
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public String saveDetials(String inserted, String deleted, String updated, Long headerId, String listType) throws DataAccessException {

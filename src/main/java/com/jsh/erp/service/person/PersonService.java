@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.datasource.entities.Person;
 import com.jsh.erp.datasource.entities.PersonExample;
 import com.jsh.erp.datasource.mappers.PersonMapper;
+import com.jsh.erp.datasource.mappers.PersonMapperEx;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,9 @@ public class PersonService {
     @Resource
     private PersonMapper personMapper;
 
+    @Resource
+    private PersonMapperEx personMapperEx;
+
     public Person getPerson(long id) {
         return personMapper.selectByPrimaryKey(id);
     }
@@ -31,11 +35,11 @@ public class PersonService {
     }
 
     public List<Person> select(String name, String type, int offset, int rows) {
-        return personMapper.selectByConditionPerson(name, type, offset, rows);
+        return personMapperEx.selectByConditionPerson(name, type, offset, rows);
     }
 
     public int countPerson(String name, String type) {
-        return personMapper.countsByPerson(name, type);
+        return personMapperEx.countsByPerson(name, type);
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)

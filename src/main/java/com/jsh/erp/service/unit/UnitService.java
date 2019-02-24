@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.datasource.entities.Unit;
 import com.jsh.erp.datasource.entities.UnitExample;
 import com.jsh.erp.datasource.mappers.UnitMapper;
+import com.jsh.erp.datasource.mappers.UnitMapperEx;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,9 @@ public class UnitService {
     @Resource
     private UnitMapper unitMapper;
 
+    @Resource
+    private UnitMapperEx unitMapperEx;
+
     public Unit getUnit(long id) {
         return unitMapper.selectByPrimaryKey(id);
     }
@@ -31,11 +35,11 @@ public class UnitService {
     }
 
     public List<Unit> select(String name, int offset, int rows) {
-        return unitMapper.selectByConditionUnit(name, offset, rows);
+        return unitMapperEx.selectByConditionUnit(name, offset, rows);
     }
 
     public int countUnit(String name) {
-        return unitMapper.countsByUnit(name);
+        return unitMapperEx.countsByUnit(name);
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
