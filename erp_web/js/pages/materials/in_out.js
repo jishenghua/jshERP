@@ -2840,10 +2840,29 @@
 	}
 	//删除
 	function removeit(){
-	    if (editIndex == undefined) { return }
-	    $('#materialData').datagrid('cancelEdit', editIndex)
-	            .datagrid('deleteRow', editIndex);
-	    editIndex = undefined;
+		/**
+		 * 重写一下删除的逻辑
+		 * 获取所有选中行,直接从列表中移除
+		 * 点击保存时，将需要后台删除的数据提交到服务器
+		 * **/
+		var materialData=$('#materialData');
+        var row = materialData.datagrid('getChecked');
+        if(row.length == 0)
+        {
+            $.messager.alert('删除提示','没有记录被选中！','info');
+            return;
+        }
+        if(row.length > 0)
+        {
+            $.messager.confirm('删除确认','确定要删除选中的' + row.length + '条单据信息吗？',function(r)
+            {
+                if (r) {
+                    for(var i = 0 ;i < row.length;i++) {
+                        materialData.datagrid('deleteRow',materialData.datagrid("getRowIndex",row[i]));
+                    }
+                }
+            });
+        }
 	}
 	//撤销
 	function reject() {
