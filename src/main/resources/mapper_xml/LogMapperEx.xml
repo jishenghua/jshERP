@@ -36,7 +36,7 @@
             limit #{offset},#{rows}
         </if>
     </select>
-    <select id="countsByLog" resultType="java.lang.Integer">
+    <select id="countsByLog" resultType="java.lang.Long">
         SELECT
         COUNT(id)
         FROM jsh_log

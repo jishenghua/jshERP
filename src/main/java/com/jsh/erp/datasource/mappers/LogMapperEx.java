@@ -20,7 +20,7 @@ public interface LogMapperEx {
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
-    int countsByLog(
+    Long countsByLog(
             @Param("operation") String operation,
             @Param("usernameID") Integer usernameID,
             @Param("clientIp") String clientIp,

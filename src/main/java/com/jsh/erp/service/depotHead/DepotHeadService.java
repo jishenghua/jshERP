@@ -95,7 +95,7 @@ public class DepotHeadService {
 
 
 
-    public int countDepotHead(String type, String subType, String number, String beginTime, String endTime, String dhIds) {
+    public Long countDepotHead(String type, String subType, String number, String beginTime, String endTime, String dhIds) {
         return depotHeadMapperEx.countsByDepotHead(type, subType, number, beginTime, endTime, dhIds);
     }
 

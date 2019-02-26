@@ -37,7 +37,7 @@ public class UserComponent implements ICommonQuery {
     }
 
     @Override
-    public int counts(Map<String, String> map) {
+    public Long counts(Map<String, String> map) {
         String search = map.get(Constants.SEARCH);
         String userName = StringUtil.getInfo(search, "userName");
         String loginName = StringUtil.getInfo(search, "loginName");

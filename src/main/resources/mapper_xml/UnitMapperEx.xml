@@ -12,7 +12,7 @@
             limit #{offset},#{rows}
         </if>
     </select>
-    <select id="countsByUnit" resultType="java.lang.Integer">
+    <select id="countsByUnit" resultType="java.lang.Long">
         SELECT
         COUNT(id)
         FROM jsh_unit

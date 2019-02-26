@@ -33,7 +33,7 @@
         </if>
     </select>
 
-    <select id="countsByAccount" resultType="java.lang.Integer">
+    <select id="countsByAccount" resultType="java.lang.Long">
         SELECT
         COUNT(id)
         FROM jsh_account

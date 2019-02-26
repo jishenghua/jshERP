@@ -20,7 +20,7 @@ public interface DepotItemMapperEx {
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
-    int countsByDepotItem(
+    Long countsByDepotItem(
             @Param("name") String name,
             @Param("type") Integer type,
             @Param("remark") String remark);
@@ -34,7 +34,7 @@ public interface DepotItemMapperEx {
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
-    int findDetailByTypeAndMaterialIdCounts(
+    Long findDetailByTypeAndMaterialIdCounts(
             @Param("mId") Long mId);
 
     List<DepotItemVo4Material> findStockNumByMaterialIdList(
@@ -43,7 +43,7 @@ public interface DepotItemMapperEx {
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
-    int findStockNumByMaterialIdCounts(
+    Long findStockNumByMaterialIdCounts(
             @Param("mId") Long mId,
             @Param("monthTime") String monthTime);
 

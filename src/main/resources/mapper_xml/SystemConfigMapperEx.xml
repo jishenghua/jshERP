@@ -9,7 +9,7 @@
             limit #{offset},#{rows}
         </if>
     </select>
-    <select id="countsBySystemConfig" resultType="java.lang.Integer">
+    <select id="countsBySystemConfig" resultType="java.lang.Long">
         SELECT
         COUNT(id)
         FROM jsh_systemconfig

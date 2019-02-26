@@ -73,7 +73,7 @@ public class MaterialService {
         return resList;
     }
 
-    public int countMaterial(String name, String model,Long categoryId, String categoryIds,String mpList) {
+    public Long countMaterial(String name, String model,Long categoryId, String categoryIds,String mpList) {
         return materialMapperEx.countsByMaterial(name, model,categoryId,categoryIds,mpList);
     }
 

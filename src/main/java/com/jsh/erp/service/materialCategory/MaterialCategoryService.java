@@ -53,7 +53,7 @@ public class MaterialCategoryService {
         return materialCategoryMapperEx.selectByConditionMaterialCategory(name, parentId, offset, rows);
     }
 
-    public int countMaterialCategory(String name, Integer parentId) {
+    public Long countMaterialCategory(String name, Integer parentId) {
         return materialCategoryMapperEx.countsByMaterialCategory(name, parentId);
     }
 

@@ -36,7 +36,7 @@ public class SystemConfigComponent implements ICommonQuery {
     }
 
     @Override
-    public int counts(Map<String, String> map) {
+    public Long counts(Map<String, String> map) {
         return systemConfigService.countSystemConfig();
     }
 

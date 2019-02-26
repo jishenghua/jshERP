@@ -13,5 +13,5 @@ public interface MaterialPropertyMapperEx {
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
-    int countsByMaterialProperty(@Param("name") String name);
+    Long countsByMaterialProperty(@Param("name") String name);
 }

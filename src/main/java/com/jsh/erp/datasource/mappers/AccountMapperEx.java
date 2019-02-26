@@ -17,7 +17,7 @@ public interface AccountMapperEx {
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
-    int countsByAccount(
+    Long countsByAccount(
             @Param("name") String name,
             @Param("serialNo") String serialNo,
             @Param("remark") String remark);

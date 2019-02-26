@@ -38,7 +38,7 @@ public class InOutItemService {
         return inOutItemMapperEx.selectByConditionInOutItem(name, type, remark, offset, rows);
     }
 
-    public int countInOutItem(String name, String type, String remark) {
+    public Long countInOutItem(String name, String type, String remark) {
         return inOutItemMapperEx.countsByInOutItem(name, type, remark);
     }
 

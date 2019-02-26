@@ -34,7 +34,7 @@ public interface ICommonQuery {
      * @param parameterMap 查询参数
      * @return 查询结果
      */
-    int counts(Map<String, String> parameterMap);
+    Long counts(Map<String, String> parameterMap);
 
     /**
      * 新增数据

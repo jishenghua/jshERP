@@ -12,7 +12,7 @@
             limit #{offset},#{rows}
         </if>;
     </select>
-    <select id="countsByRole" resultType="java.lang.Integer">
+    <select id="countsByRole" resultType="java.lang.Long">
         SELECT
         COUNT(id)
         FROM jsh_role

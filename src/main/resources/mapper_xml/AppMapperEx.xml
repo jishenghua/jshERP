@@ -16,7 +16,7 @@
             limit #{offset},#{rows}
         </if>
     </select>
-    <select id="countsByApp" resultType="java.lang.Integer">
+    <select id="countsByApp" resultType="java.lang.Long">
         SELECT
         COUNT(id)
         FROM jsh_app

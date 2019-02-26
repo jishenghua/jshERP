@@ -14,7 +14,7 @@ public interface UserMapperEx {
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
-    int countsByUser(
+    Long countsByUser(
             @Param("userName") String userName,
             @Param("loginName") String loginName);
 }

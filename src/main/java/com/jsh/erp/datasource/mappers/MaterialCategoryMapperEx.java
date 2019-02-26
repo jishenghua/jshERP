@@ -20,7 +20,7 @@ public interface MaterialCategoryMapperEx {
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
-    int countsByMaterialCategory(
+    Long countsByMaterialCategory(
             @Param("name") String name,
             @Param("parentId") Integer parentId);
 

@@ -18,7 +18,7 @@
             limit #{offset},#{rows}
         </if>
     </select>
-    <select id="countsByInOutItem" resultType="java.lang.Integer">
+    <select id="countsByInOutItem" resultType="java.lang.Long">
         SELECT
         COUNT(id)
         FROM jsh_inoutitem

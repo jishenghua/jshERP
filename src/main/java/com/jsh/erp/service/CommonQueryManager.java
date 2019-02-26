@@ -1,5 +1,6 @@
 package com.jsh.erp.service;
 
+import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.Log;
 import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.mappers.LogMapper;
@@ -60,11 +61,11 @@ public class CommonQueryManager {
      * @param parameterMap
      * @return
      */
-    public int counts(String apiName, Map<String, String> parameterMap) {
+    public Long counts(String apiName, Map<String, String> parameterMap) {
         if (StringUtil.isNotEmpty(apiName)) {
             return container.getCommonQuery(apiName).counts(parameterMap);
         }
-        return 0;
+        return BusinessConstants.DEFAULT_LIST_NULL_NUMBER;
     }
 
     /**

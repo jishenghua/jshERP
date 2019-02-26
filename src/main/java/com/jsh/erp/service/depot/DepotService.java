@@ -2,6 +2,7 @@ package com.jsh.erp.service.depot;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.datasource.entities.Depot;
+import com.jsh.erp.datasource.entities.DepotEx;
 import com.jsh.erp.datasource.entities.DepotExample;
 import com.jsh.erp.datasource.mappers.DepotMapper;
 import com.jsh.erp.datasource.mappers.DepotMapperEx;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class DepotService {
@@ -44,7 +46,7 @@ public class DepotService {
         return depotMapperEx.selectByConditionDepot(name, type, remark, offset, rows);
     }
 
-    public int countDepot(String name, Integer type, String remark) {
+    public Long countDepot(String name, Integer type, String remark) {
         return depotMapperEx.countsByDepot(name, type, remark);
     }
 
@@ -95,6 +97,10 @@ public class DepotService {
         example.setOrderByClause("Sort");
         List<Depot> list = depotMapper.selectByExample(example);
         return list;
+    }
+
+    public List<DepotEx> getDepotList(Map<String, Object> parameterMap) {
+        return depotMapperEx.getDepotList(parameterMap);
     }
 
 }

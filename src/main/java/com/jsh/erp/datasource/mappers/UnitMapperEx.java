@@ -13,6 +13,6 @@ public interface UnitMapperEx {
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
-    int countsByUnit(
+    Long countsByUnit(
             @Param("name") String name);
 }

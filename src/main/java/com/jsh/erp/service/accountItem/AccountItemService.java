@@ -45,7 +45,7 @@ public class AccountItemService {
         return accountItemMapperEx.selectByConditionAccountItem(name, type, remark, offset, rows);
     }
 
-    public int countAccountItem(String name, Integer type, String remark) {
+    public Long countAccountItem(String name, Integer type, String remark) {
         return accountItemMapperEx.countsByAccountItem(name, type, remark);
     }
 

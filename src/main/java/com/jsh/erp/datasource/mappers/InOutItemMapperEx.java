@@ -15,7 +15,7 @@ public interface InOutItemMapperEx {
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
-    int countsByInOutItem(
+    Long countsByInOutItem(
             @Param("name") String name,
             @Param("type") String type,
             @Param("remark") String remark);

@@ -12,10 +12,32 @@ public class ParamUtils {
     public static String getPageOffset(Integer currentPage, Integer pageSize) {
         if (currentPage != null && pageSize != null) {
             int offset = (currentPage - 1) * pageSize;
-            if (offset < 0) {
-                return 0 + "";
+            if (offset <= 0) {
+                return "0";
             } else {
-                return offset + "";
+                return new StringBuffer().append(offset).toString();
+            }
+        }
+        return null;
+    }
+    public static Integer getNumberPageOffset(Integer currentPage, Integer pageSize) {
+        if (currentPage != null && pageSize != null) {
+            int offset = (currentPage - 1) * pageSize;
+            if (offset <= 0) {
+                return 0;
+            } else {
+                return offset;
+            }
+        }
+        return null;
+    }
+    public static Integer getNumberPageRows(Integer currentPage, Integer pageSize) {
+        if (currentPage != null && pageSize != null) {
+            int rows = (currentPage) * pageSize;
+            if (rows <= 0) {
+                return 0;
+            } else {
+                return rows;
             }
         }
         return null;

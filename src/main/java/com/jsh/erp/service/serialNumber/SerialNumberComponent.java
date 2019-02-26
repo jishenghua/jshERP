@@ -43,7 +43,7 @@ public class SerialNumberComponent implements ICommonQuery {
     }
 
     @Override
-    public int counts(Map<String, String> map) {
+    public Long counts(Map<String, String> map) {
         String search = map.get(Constants.SEARCH);
         String serialNumber = StringUtil.getInfo(search, "serialNumber");
         String materialName = StringUtil.getInfo(search, "materialName");

@@ -27,7 +27,7 @@ public interface DepotHeadMapperEx {
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
-    int countsByDepotHead(
+    Long countsByDepotHead(
             @Param("type") String type,
             @Param("subType") String subType,
             @Param("number") String number,

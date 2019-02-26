@@ -16,11 +16,15 @@ public class BusinessConstants {
     /**
      * 默认的分页起始页页码
      */
-    public static final String DEFAULT_PAGINATION_PAGE_NUMBER = "1";
+    public static final Integer DEFAULT_PAGINATION_PAGE_NUMBER = 1;
     /**
-     * 默认的分页页数
+     * 无数据时列表返回的默认数据条数
      */
-    public static final String DEFAULT_PAGINATION_PAGE_SIZE = "10";
+    public static final Long DEFAULT_LIST_NULL_NUMBER = 0L;
+    /**
+     * 默认的分页条数
+     */
+    public static final Integer DEFAULT_PAGINATION_PAGE_SIZE = 10;
     /**
      * 单据主表出入库类型 type 入库 出库
      * depothead

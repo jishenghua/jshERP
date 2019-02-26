@@ -60,7 +60,7 @@ public class AppService {
         return appMapperEx.selectByConditionApp(name, type, offset, rows);
     }
 
-    public int countApp(String name, String type) {
+    public Long countApp(String name, String type) {
         return appMapperEx.countsByApp(name, type);
     }
 

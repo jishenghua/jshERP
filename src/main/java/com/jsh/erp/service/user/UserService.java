@@ -43,7 +43,7 @@ public class UserService {
         return userMapperEx.selectByConditionUser(userName, loginName, offset, rows);
     }
 
-    public int countUser(String userName, String loginName) {
+    public Long countUser(String userName, String loginName) {
         return userMapperEx.countsByUser(userName, loginName);
     }
     /**

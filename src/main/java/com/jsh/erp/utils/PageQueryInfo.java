@@ -9,14 +9,14 @@ import java.util.List;
  */
 public class PageQueryInfo {
 
-    private Integer total;
+    private Long total;
     private List<?> rows;
 
-    public Integer getTotal() {
+    public Long getTotal() {
         return total;
     }
 
-    public void setTotal(Integer total) {
+    public void setTotal(Long total) {
         this.total = total;
     }
 

@@ -2,6 +2,7 @@ package com.jsh.erp.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.material.MaterialService;
@@ -113,7 +114,7 @@ public class DepotItemController {
         objectMap.put("page", queryInfo);
         if (list == null) {
             queryInfo.setRows(new ArrayList<Object>());
-            queryInfo.setTotal(0);
+            queryInfo.setTotal(BusinessConstants.DEFAULT_LIST_NULL_NUMBER);
             return returnJson(objectMap, "查找不到数据", ErpInfo.OK.code);
         }
         queryInfo.setRows(dataArray);
@@ -169,7 +170,7 @@ public class DepotItemController {
         objectMap.put("page", dataArray);
         if (list == null) {
             queryInfo.setRows(new ArrayList<Object>());
-            queryInfo.setTotal(0);
+            queryInfo.setTotal(BusinessConstants.DEFAULT_LIST_NULL_NUMBER);
             return returnJson(objectMap, "查找不到数据", ErpInfo.OK.code);
         }
         queryInfo.setRows(list);
@@ -223,7 +224,7 @@ public class DepotItemController {
         objectMap.put("page", dataArray);
         if (list == null) {
             queryInfo.setRows(new ArrayList<Object>());
-            queryInfo.setTotal(0);
+            queryInfo.setTotal(BusinessConstants.DEFAULT_LIST_NULL_NUMBER);
             return returnJson(objectMap, "查找不到数据", ErpInfo.OK.code);
         }
         queryInfo.setRows(list);

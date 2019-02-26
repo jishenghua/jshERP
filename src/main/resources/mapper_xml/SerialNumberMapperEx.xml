@@ -31,7 +31,7 @@
             limit #{offset},#{rows}
         </if>
     </select>
-    <select id="countSerialNumber"  resultType="java.lang.Integer">
+    <select id="countSerialNumber"  resultType="java.lang.Long">
         SELECT
         COUNT(ser.id)
         FROM jsh_serial_number ser

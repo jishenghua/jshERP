@@ -38,7 +38,7 @@ public class FunctionsService {
         return functionsMapperEx.selectByConditionFunctions(name, type, offset, rows);
     }
 
-    public int countFunctions(String name, String type) {
+    public Long countFunctions(String name, String type) {
         return functionsMapperEx.countsByFunctions(name, type);
     }
 

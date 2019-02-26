@@ -55,7 +55,7 @@ public class AccountHeadService {
         return resList;
     }
 
-    public int countAccountHead(String type, String billNo, String beginTime, String endTime) {
+    public Long countAccountHead(String type, String billNo, String beginTime, String endTime) {
         return accountHeadMapperEx.countsByAccountHead(type, billNo, beginTime, endTime);
     }
 

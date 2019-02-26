@@ -14,7 +14,7 @@ public interface FunctionsMapperEx {
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
-    int countsByFunctions(
+    Long countsByFunctions(
             @Param("name") String name,
             @Param("type") String type);
 }
