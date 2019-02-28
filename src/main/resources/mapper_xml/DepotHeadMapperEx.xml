@@ -225,7 +225,7 @@
     <select id="findStatementAccount" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultStatementAccount">
         select dh.Number,concat(dh.SubType,dh.Type) as type,dh.DiscountLastMoney,dh.ChangeAmount,s.supplier supplierName,
         date_format(dh.OperTime,'%Y-%m-%d %H:%i:%S') as oTime from jsh_depothead dh
-        inner join jsh_supplier s on s.id=dh.OrganId where s.type='${supType}' and dh.SubType!='其它'
+        inner join jsh_supplier s on s.id=dh.OrganId where s.type='${supType}' and (dh.SubType!='其它' and dh.SubType!='采购订单' and dh.SubType!='销售订单')
         and dh.OperTime >='${beginTime}' and dh.OperTime &lt;='${endTime}'
         <if test="organId != null">
             and dh.OrganId=${organId}
@@ -248,7 +248,7 @@
         select sum(a) from
         (
             select count(1) a from jsh_depothead dh
-            inner join jsh_supplier s on s.id=dh.OrganId where s.type='${supType}' and dh.SubType!='其它'
+            inner join jsh_supplier s on s.id=dh.OrganId where s.type='${supType}' and (dh.SubType!='其它' and dh.SubType!='采购订单' and dh.SubType!='销售订单')
             and dh.OperTime >='${beginTime}' and dh.OperTime &lt;='${endTime}'
             <if test="organId != null">
                 and dh.OrganId=${organId}
