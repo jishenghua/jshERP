@@ -36,6 +36,7 @@ public class UserController {
                         HttpServletRequest request) {
         logger.info("============用户登录 login 方法调用开始==============");
         String msgTip = "";
+        User user=null;
         BaseResponseInfo res = new BaseResponseInfo();
         try {
             String username = loginame.trim();
@@ -81,7 +82,7 @@ public class UserController {
                 default:
                     try {
                         //验证通过 ，可以登录，放入session，记录登录日志
-                        User user = userService.getUserByUserName(username);
+                        user = userService.getUserByUserName(username);
     //                    logService.create(new Logdetails(user, "登录系统", model.getClientIp(),
     //                            new Timestamp(System.currentTimeMillis()), (short) 0, "管理用户：" + username + " 登录系统", username + " 登录系统"));
                         msgTip = "user can login";
@@ -93,6 +94,13 @@ public class UserController {
             }
             Map<String, Object> data = new HashMap<String, Object>();
             data.put("msgTip", msgTip);
+            /**
+             * 在IE模式下，无法获取到user数据，
+             * 在此处明确添加上user信息
+             * */
+            if(user!=null){
+                data.put("user",user);
+            }
             res.code = 200;
             res.data = data;
             logger.info("===============用户登录 login 方法调用结束===============");

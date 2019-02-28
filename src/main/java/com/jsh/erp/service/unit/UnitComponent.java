@@ -37,7 +37,7 @@ public class UnitComponent implements ICommonQuery {
     }
 
     @Override
-    public int counts(Map<String, String> map) {
+    public Long counts(Map<String, String> map) {
         String search = map.get(Constants.SEARCH);
         String name = StringUtil.getInfo(search, "name");
         return unitService.countUnit(name);

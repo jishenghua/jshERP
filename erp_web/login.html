@@ -3,6 +3,7 @@
 <head>
     <title>ERP系统</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=8" >
     <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon"/>
     <link type="text/css" rel="stylesheet" href="/css/css.css"/>
     <script type="text/javascript" src="/js/jquery-1.8.0.min.js"></script>
@@ -122,6 +123,7 @@
                         }
                         //跳转到用户管理界面
                         else if (loginInfoTip.indexOf("user can login") != -1 || loginInfoTip == "user already login") {
+                            console.log("user can login");
                             $.ajax({
                                 type: "get",
                                 url: "/user/getUserSession",
@@ -129,8 +131,10 @@
                                 success: function (res) {
                                     if(res && res.code === 200) {
                                         if(res.data.user) {
+                                            console.log("user");
                                             var user = res.data.user;
                                             sessionStorage.setItem("userId", user.id);
+                                            console.log("http://" + location.host + "/index.html");
                                             top.location.href = "http://" + location.host + "/index.html";
                                         }
                                     }

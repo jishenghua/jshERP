@@ -59,7 +59,7 @@
             limit #{offset},#{rows}
         </if>
     </select>
-    <select id="countsByDepotItem" resultType="java.lang.Integer">
+    <select id="countsByDepotItem" resultType="java.lang.Long">
         SELECT
         COUNT(id)
         FROM jsh_depotitem
@@ -93,7 +93,7 @@
             limit #{offset},#{rows}
         </if>
     </select>
-    <select id="findDetailByTypeAndMaterialIdCounts" resultType="java.lang.Integer">
+    <select id="findDetailByTypeAndMaterialIdCounts" resultType="java.lang.Long">
         select count(1)
         from jsh_depothead dh INNER JOIN jsh_depotitem di on dh.id=di.HeaderId where type!='其它'
         and SubType!='调拨'
@@ -110,7 +110,7 @@
             limit #{offset},#{rows}
         </if>
     </select>
-    <select id="findStockNumByMaterialIdCounts" resultType="java.lang.Integer">
+    <select id="findStockNumByMaterialIdCounts" resultType="java.lang.Long">
         select count(*) from jsh_depotitem where 1=1
         <if test="mId != null">
             and MaterialId=${mId}

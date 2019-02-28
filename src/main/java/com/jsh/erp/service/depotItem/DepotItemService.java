@@ -68,7 +68,7 @@ public class DepotItemService {
         return depotItemMapperEx.selectByConditionDepotItem(name, type, remark, offset, rows);
     }
 
-    public int countDepotItem(String name, Integer type, String remark) {
+    public Long countDepotItem(String name, Integer type, String remark) {
         return depotItemMapperEx.countsByDepotItem(name, type, remark);
     }
 
@@ -118,7 +118,7 @@ public class DepotItemService {
         return depotItemMapperEx.findDetailByTypeAndMaterialIdList(mId, QueryUtils.offset(map), QueryUtils.rows(map));
     }
 
-    public int findDetailByTypeAndMaterialIdCounts(Map<String, String> map) {
+    public Long findDetailByTypeAndMaterialIdCounts(Map<String, String> map) {
         String mIdStr = map.get("mId");
         Long mId = null;
         if(!StringUtil.isEmpty(mIdStr)) {
@@ -137,7 +137,7 @@ public class DepotItemService {
         return depotItemMapperEx.findStockNumByMaterialIdList(mId, monthTime, QueryUtils.offset(map), QueryUtils.rows(map));
     }
 
-    public int findStockNumByMaterialIdCounts(Map<String, String> map) {
+    public Long findStockNumByMaterialIdCounts(Map<String, String> map) {
         String mIdStr = map.get("mId");
         Long mId = null;
         if(!StringUtil.isEmpty(mIdStr)) {

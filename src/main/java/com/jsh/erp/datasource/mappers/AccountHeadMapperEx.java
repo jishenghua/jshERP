@@ -18,7 +18,7 @@ public interface AccountHeadMapperEx {
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
-    int countsByAccountHead(
+    Long countsByAccountHead(
             @Param("type") String type,
             @Param("billNo") String billNo,
             @Param("beginTime") String beginTime,

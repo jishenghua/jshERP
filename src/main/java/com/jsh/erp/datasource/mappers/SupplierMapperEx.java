@@ -17,7 +17,7 @@ public interface SupplierMapperEx {
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
-    int countsBySupplier(
+    Long countsBySupplier(
             @Param("supplier") String supplier,
             @Param("type") String type,
             @Param("phonenum") String phonenum,

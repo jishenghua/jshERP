@@ -61,7 +61,7 @@ public class SerialNumberService {
 
     }
 
-    public int countSerialNumber(String serialNumber,String materialName) {
+    public Long countSerialNumber(String serialNumber,String materialName) {
         return serialNumberMapperEx.countSerialNumber(serialNumber, materialName);
     }
 

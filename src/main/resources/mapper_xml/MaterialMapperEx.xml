@@ -31,7 +31,7 @@
         </if>
     </select>
 
-    <select id="countsByMaterial" resultType="java.lang.Integer">
+    <select id="countsByMaterial" resultType="java.lang.Long">
         SELECT
         COUNT(m.id)
         FROM jsh_material m

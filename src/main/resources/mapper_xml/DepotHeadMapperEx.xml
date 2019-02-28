@@ -73,7 +73,7 @@
             limit #{offset},#{rows}
         </if>
     </select>
-    <select id="countsByDepotHead" resultType="java.lang.Integer">
+    <select id="countsByDepotHead" resultType="java.lang.Long">
         SELECT
         COUNT(id)
         FROM jsh_depothead

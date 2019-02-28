@@ -43,7 +43,7 @@ public class LogComponent implements ICommonQuery {
     }
 
     @Override
-    public int counts(Map<String, String> map) {
+    public Long counts(Map<String, String> map) {
         String search = map.get(Constants.SEARCH);
         String operation = StringUtil.getInfo(search, "operation");
         Integer usernameID = StringUtil.parseInteger(StringUtil.getInfo(search, "usernameID"));

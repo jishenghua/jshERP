@@ -20,7 +20,7 @@ public interface SerialNumberMapperEx {
     /**
      * 根据条件查询序列号数量
      * */
-     int countSerialNumber(@Param("serialNumber")String serialNumber,@Param("materialName")String materialName);
+    Long countSerialNumber(@Param("serialNumber")String serialNumber,@Param("materialName")String materialName);
      /**
       * 通过id查询序列号复合信息
       * */

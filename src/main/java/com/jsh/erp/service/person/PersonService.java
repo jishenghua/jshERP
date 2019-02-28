@@ -38,7 +38,7 @@ public class PersonService {
         return personMapperEx.selectByConditionPerson(name, type, offset, rows);
     }
 
-    public int countPerson(String name, String type) {
+    public Long countPerson(String name, String type) {
         return personMapperEx.countsByPerson(name, type);
     }
 

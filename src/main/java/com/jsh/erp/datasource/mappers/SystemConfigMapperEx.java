@@ -12,5 +12,5 @@ public interface SystemConfigMapperEx {
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
-    int countsBySystemConfig();
+    Long countsBySystemConfig();
 }

@@ -1,5 +1,6 @@
 package com.jsh.erp.service.userBusiness;
 
+import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.service.ICommonQuery;
 import com.jsh.erp.service.depot.DepotResource;
 import com.jsh.erp.service.depot.DepotService;
@@ -35,8 +36,8 @@ public class UserBusinessComponent implements ICommonQuery {
     }
 
     @Override
-    public int counts(Map<String, String> map) {
-        return 0;
+    public Long counts(Map<String, String> map) {
+        return BusinessConstants.DEFAULT_LIST_NULL_NUMBER;
     }
 
     @Override

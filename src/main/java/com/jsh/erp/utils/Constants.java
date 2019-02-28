@@ -16,6 +16,7 @@ public class Constants {
     public final static String SEARCH = "search";
     public final static String DEVICE_ID = "deviceId";
     public final static String OFFSET = "offset";
+    public final static String ROWS = "rows";
     public final static String IS_RECURSION = "isRecursion";
     public final static String IS_RECURSION_VALUE = "1";
     public final static String IS_QUERYBYNODEID = "isquerybyid";

@@ -37,7 +37,7 @@ public class MaterialPropertyService {
         return materialPropertyMapperEx.selectByConditionMaterialProperty(name, offset, rows);
     }
 
-    public int countMaterialProperty(String name) {
+    public Long countMaterialProperty(String name) {
         return materialPropertyMapperEx.countsByMaterialProperty(name);
     }
 

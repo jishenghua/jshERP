@@ -38,7 +38,7 @@ public class UnitService {
         return unitMapperEx.selectByConditionUnit(name, offset, rows);
     }
 
-    public int countUnit(String name) {
+    public Long countUnit(String name) {
         return unitMapperEx.countsByUnit(name);
     }
 

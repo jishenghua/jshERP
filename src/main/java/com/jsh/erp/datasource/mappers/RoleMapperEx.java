@@ -13,6 +13,6 @@ public interface RoleMapperEx {
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
-    int countsByRole(
+    Long countsByRole(
             @Param("name") String name);
 }

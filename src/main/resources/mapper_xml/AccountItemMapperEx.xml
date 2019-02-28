@@ -24,7 +24,7 @@
             limit #{offset},#{rows}
         </if>
     </select>
-    <select id="countsByAccountItem" resultType="java.lang.Integer">
+    <select id="countsByAccountItem" resultType="java.lang.Long">
         SELECT
         COUNT(id)
         FROM jsh_accountitem

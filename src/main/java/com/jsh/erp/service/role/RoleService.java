@@ -40,7 +40,7 @@ public class RoleService {
         return roleMapperEx.selectByConditionRole(name, offset, rows);
     }
 
-    public int countRole(String name) {
+    public Long countRole(String name) {
         return roleMapperEx.countsByRole(name);
     }
 

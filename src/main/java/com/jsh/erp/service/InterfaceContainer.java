@@ -34,8 +34,9 @@ public class InterfaceContainer {
     }
 
     public int getResourceType(String apiName) {
-        if (!nameTypeMap.containsKey(apiName))
+        if (!nameTypeMap.containsKey(apiName)) {
             throw new RuntimeException("资源:" + apiName + "的组件不存在");
+        }
         return nameTypeMap.get(apiName);
     }
 

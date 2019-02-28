@@ -44,7 +44,7 @@ public class LogService {
                             contentdetails, offset, rows);
     }
 
-    public int countLog(String operation, Integer usernameID, String clientIp, Integer status, String beginTime, String endTime,
+    public Long countLog(String operation, Integer usernameID, String clientIp, Integer status, String beginTime, String endTime,
                         String contentdetails) {
         return logMapperEx.countsByLog(operation, usernameID, clientIp, status, beginTime, endTime, contentdetails);
     }

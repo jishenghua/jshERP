@@ -42,7 +42,7 @@ public class SupplierService {
         return supplierMapperEx.selectByConditionSupplier(supplier, type, phonenum, telephone, description, offset, rows);
     }
 
-    public int countSupplier(String supplier, String type, String phonenum, String telephone, String description) {
+    public Long countSupplier(String supplier, String type, String phonenum, String telephone, String description) {
         return supplierMapperEx.countsBySupplier(supplier, type, phonenum, telephone, description);
     }
 

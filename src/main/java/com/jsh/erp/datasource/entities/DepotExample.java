@@ -714,6 +714,66 @@ public class DepotExample {
             addCriterion("remark not between", value1, value2, "remark");
             return (Criteria) this;
         }
+
+        public Criteria andPrincipalIsNull() {
+            addCriterion("principal is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrincipalIsNotNull() {
+            addCriterion("principal is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrincipalEqualTo(Long value) {
+            addCriterion("principal =", value, "principal");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrincipalNotEqualTo(Long value) {
+            addCriterion("principal <>", value, "principal");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrincipalGreaterThan(Long value) {
+            addCriterion("principal >", value, "principal");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrincipalGreaterThanOrEqualTo(Long value) {
+            addCriterion("principal >=", value, "principal");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrincipalLessThan(Long value) {
+            addCriterion("principal <", value, "principal");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrincipalLessThanOrEqualTo(Long value) {
+            addCriterion("principal <=", value, "principal");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrincipalIn(List<Long> values) {
+            addCriterion("principal in", values, "principal");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrincipalNotIn(List<Long> values) {
+            addCriterion("principal not in", values, "principal");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrincipalBetween(Long value1, Long value2) {
+            addCriterion("principal between", value1, value2, "principal");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrincipalNotBetween(Long value1, Long value2) {
+            addCriterion("principal not between", value1, value2, "principal");
+            return (Criteria) this;
+        }
     }
 
     /**

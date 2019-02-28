@@ -16,7 +16,7 @@ public interface AccountItemMapperEx {
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
-    int countsByAccountItem(
+    Long countsByAccountItem(
             @Param("name") String name,
             @Param("type") Integer type,
             @Param("remark") String remark);

@@ -70,7 +70,7 @@ public class AccountService {
         return resList;
     }
 
-    public int countAccount(String name, String serialNo, String remark) {
+    public Long countAccount(String name, String serialNo, String remark) {
         return accountMapperEx.countsByAccount(name, serialNo, remark);
     }
 

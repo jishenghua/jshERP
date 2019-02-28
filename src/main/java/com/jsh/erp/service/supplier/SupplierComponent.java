@@ -42,7 +42,7 @@ public class SupplierComponent implements ICommonQuery {
     }
 
     @Override
-    public int counts(Map<String, String> map) {
+    public Long counts(Map<String, String> map) {
         String search = map.get(Constants.SEARCH);
         String supplier = StringUtil.getInfo(search, "supplier");
         String type = StringUtil.getInfo(search, "type");

@@ -1230,9 +1230,10 @@ delete from jsh_functions where id in (213,214,215,216);
 
 -- ----------------------------
 -- 新增采购订单、销售订单的功能数据
+-- 主键自增长，直接指定主键插入数据的方式可能会和本地数据冲突
 -- ----------------------------
-insert into `jsh_functions` values ('242', '050202', '采购订单', '0502', '../materials/purchase_orders_list.html', b'0', '0335',b'1', '电脑版', '');
-insert into `jsh_functions` values ('243', '060301', '销售订单', '0603', '../materials/sale_orders_list.html', b'0', '0392', b'1', '电脑版', '');
+insert into `jsh_functions`(`Number`, `Name`, `PNumber`, `URL`, `State`, `Sort`, `Enabled`, `Type`, `PushBtn`) VALUES ('050202', '采购订单', '0502', '../materials/purchase_orders_list.html', b'0', '0335',b'1', '电脑版', '');
+insert into `jsh_functions`(`Number`, `Name`, `PNumber`, `URL`, `State`, `Sort`, `Enabled`, `Type`, `PushBtn`) VALUES ('060301', '销售订单', '0603', '../materials/sale_orders_list.html', b'0', '0392', b'1', '电脑版', '');
 
 -- ----------------------------
 -- 改管理员的功能权限
@@ -1240,3 +1241,15 @@ insert into `jsh_functions` values ('243', '060301', '销售订单', '0603', '..
 update jsh_userbusiness SET Type = 'RoleFunctions', KeyId = '4', 
 Value = '[13][12][16][14][15][234][236][22][23][220][240][25][217][218][26][194][195][31][59][207][208][209][226][227][228][229][235][237][210][211][242][33][199][243][41][200][201][202][40][232][233][197][203][204][205][206][212]' 
 where Id = 5;
+
+-- ----------------------------
+-- 时间：2019年2月25日
+-- version：1.0.4
+-- 此次更新仓库添加负责人信息，负责人信息从用户表获取
+-- 特别提醒：之后的sql都是在之前基础上迭代，可以对已存在的系统进行数据保留更新
+-- ----------------------------
+-- ----------------------------
+-- 仓库表添加字段principal，负责人
+-- ----------------------------
+alter table jsh_depot add principal bigint(20) DEFAULT null COMMENT '负责人';
+

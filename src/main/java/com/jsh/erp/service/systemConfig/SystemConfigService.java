@@ -37,7 +37,7 @@ public class SystemConfigService {
         return systemConfigMapperEx.selectByConditionSystemConfig(offset, rows);
     }
 
-    public int countSystemConfig() {
+    public Long countSystemConfig() {
         return systemConfigMapperEx.countsBySystemConfig();
     }
 

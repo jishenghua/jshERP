@@ -16,7 +16,7 @@
             limit #{offset},#{rows}
         </if>
     </select>
-    <select id="countsByMaterialCategory" resultType="java.lang.Integer">
+    <select id="countsByMaterialCategory" resultType="java.lang.Long">
         SELECT
         COUNT(id)
         FROM jsh_materialcategory
