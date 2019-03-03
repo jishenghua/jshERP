@@ -9,6 +9,7 @@ import com.jsh.erp.datasource.vo.DepotHeadVo4InOutMCount;
 import com.jsh.erp.datasource.vo.DepotHeadVo4List;
 import com.jsh.erp.datasource.vo.DepotHeadVo4StatementAccount;
 import com.jsh.erp.service.depotHead.DepotHeadService;
+import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.ErpInfo;
 import com.jsh.erp.utils.StringUtil;
@@ -38,6 +39,9 @@ public class DepotHeadController {
 
     @Resource
     private DepotHeadService depotHeadService;
+
+    @Resource
+    private LogService logService;
 
     /**
      * 批量设置状态-审核或者反审核
@@ -441,9 +445,10 @@ public class DepotHeadController {
     @RequestMapping(value = "/addDepotHeadAndDetail")
     public Object addDepotHeadAndDetail(@RequestParam("info") String beanJson,@RequestParam("inserted") String inserted,
                           @RequestParam("deleted") String deleted,
-                          @RequestParam("updated") String updated) throws  Exception{
+                          @RequestParam("updated") String updated, HttpServletRequest request) throws  Exception{
         JSONObject result = ExceptionConstants.standardSuccess();
         depotHeadService.addDepotHeadAndDetail(beanJson,inserted,deleted,updated);
+        logService.insertLog("depotHead", "新增", request);
         return result;
     }
     /**
