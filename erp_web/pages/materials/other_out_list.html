@@ -102,7 +102,7 @@
        onclick="javascript:$('#depotHeadDlg').dialog('close')">取消</a>
 </div>
 <div id="depotHeadDlgShow" class="easyui-dialog" style="width:1200px;padding:10px 20px;top:70px"
-     closed="true" modal="true" cache="false" collapsible="false" closable="true">
+     closed="true" buttons="#dlg-buttons-show" modal="true" cache="false" collapsible="false" closable="true">
     <table>
         <tr>
             <td style="width:60px;">客户：</td>
@@ -134,6 +134,11 @@
             </td>
         </tr>
     </table>
+</div>
+<div id="dlg-buttons-show">
+    <a href="javascript:void(0)" id="printDepotHeadShow" class="easyui-linkbutton" iconCls="icon-ok">打印</a>
+    <a href="javascript:void(0)" id="cancelDepotHeadShow" class="easyui-linkbutton" iconCls="icon-cancel"
+       onclick="javascript:$('#depotHeadDlgShow').dialog('close')">取消</a>
 </div>
 </body>
 </html>

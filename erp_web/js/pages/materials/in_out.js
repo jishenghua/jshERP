@@ -2132,6 +2132,13 @@
 			}
 		});
 
+		//打印单据
+        $("#printDepotHeadShow").off("click").on("click",function(){
+            var tableString = $("#depotHeadDlgShow").html();
+            localStorage.setItem("tableString",tableString);
+            window.open("../../js/print/print_form.html","location:No;status:No;help:No;dialogWidth:800px;dialogHeight:600px;scroll:auto;");
+		});
+
 		//初始化键盘enter事件
 		$(document).keydown(function(event){
 		   	//兼容 IE和firefox 事件

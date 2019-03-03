@@ -145,7 +145,7 @@
        onclick="javascript:$('#depotHeadDlg').dialog('close')">取消</a>
 </div>
 <div id="depotHeadDlgShow" class="easyui-dialog" style="width:1200px;padding:10px 20px;top:50px"
-     closed="true" modal="true" cache="false" collapsible="false" closable="true">
+     closed="true" buttons="#dlg-buttons-show" modal="true" cache="false" collapsible="false" closable="true">
     <table>
         <tr>
             <td style="width:60px;height:50px;">会员卡号：</td>
@@ -211,6 +211,11 @@
             </td>
         </tr>
     </table>
+</div>
+<div id="dlg-buttons-show">
+    <a href="javascript:void(0)" id="printDepotHeadShow" class="easyui-linkbutton" iconCls="icon-ok">打印</a>
+    <a href="javascript:void(0)" id="cancelDepotHeadShow" class="easyui-linkbutton" iconCls="icon-cancel"
+       onclick="javascript:$('#depotHeadDlgShow').dialog('close')">取消</a>
 </div>
 <div id="depotHeadAccountDlg" class="easyui-dialog" style="width:380px;padding:10px 20px;top:80px"
      closed="true" modal="true" buttons="#accountDlgButtons" cache="false" collapsible="false" closable="true">

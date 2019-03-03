@@ -874,6 +874,14 @@
                 });
 			}
 		});
+
+        //打印单据
+        $("#printAccountHeadShow").off("click").on("click",function(){
+            var tableString = $("#accountHeadDlgShow").html();
+            localStorage.setItem("tableString",tableString);
+            window.open("../../js/print/print_form.html","location:No;status:No;help:No;dialogWidth:800px;dialogHeight:600px;scroll:auto;");
+        });
+
 		//初始化键盘enter事件
 		$(document).keydown(function(event)
 		{
