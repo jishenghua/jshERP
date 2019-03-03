@@ -2474,7 +2474,7 @@
 			$("#otherMoneyTotalDlg").text($("#OtherMoney").val());
 		});
 
-		if(listTitle === "采购入库列表"){
+		if(listTitle === "采购入库列表" || listTitle === "采购订单列表"){
 			//检查单位名称是否存在 ++ 重名无法提示问题需要跟进
 			function checkSupplierName() {
 				var supplierName = $.trim($("#supplier").val());
