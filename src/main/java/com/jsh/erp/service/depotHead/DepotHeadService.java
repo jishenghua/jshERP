@@ -1,6 +1,5 @@
 package com.jsh.erp.service.depotHead;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.DepotHead;
@@ -19,11 +18,8 @@ import com.jsh.erp.service.serialNumber.SerialNumberService;
 import com.jsh.erp.service.supplier.SupplierService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
-import com.jsh.erp.utils.Tools;
-import lombok.Synchronized;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -174,43 +170,6 @@ public class DepotHeadService {
         }
     }
 
-
-    public String buildNumber(String type, String subType, String beginTime, String endTime) {
-        String newNumber = "0001"; //新编号
-        try {
-            DepotHeadExample example = new DepotHeadExample();
-            example.createCriteria().andTypeEqualTo(type).andSubtypeEqualTo(subType)
-                    .andOpertimeGreaterThanOrEqualTo(StringUtil.getDateByString(beginTime,null))
-                    .andOpertimeLessThanOrEqualTo(StringUtil.getDateByString(endTime,null));
-            example.setOrderByClause("Id desc");
-            List<DepotHead> dataList = depotHeadMapper.selectByExample(example);
-            //存放数据json数组
-            if (null != dataList && dataList.size() > 0) {
-                DepotHead depotHead = dataList.get(0);
-                if (depotHead != null) {
-                    String number = depotHead.getDefaultnumber(); //最大的单据编号
-                    if (number != null) {
-                        Integer lastNumber = Integer.parseInt(number.substring(12, 16)); //末四尾
-                        lastNumber = lastNumber + 1;
-                        Integer nLen = lastNumber.toString().length();
-                        if (nLen == 1) {
-                            newNumber = "000" + lastNumber.toString();
-                        } else if (nLen == 2) {
-                            newNumber = "00" + lastNumber.toString();
-                        } else if (nLen == 3) {
-                            newNumber = "0" + lastNumber.toString();
-                        } else if (nLen == 4) {
-                            newNumber = lastNumber.toString();
-                        }
-                    }
-                }
-            }
-        } catch (DataAccessException e) {
-            logger.error(">>>>>>>>>>>>>>>>>>>单据编号生成异常", e);
-        }
-        return newNumber;
-    }
-
     public Long getMaxId() {
         return depotHeadMapperEx.getMaxId();
     }
@@ -315,29 +274,9 @@ public class DepotHeadService {
         //判断用户是否已经登录过，登录过不再处理
         User userInfo=userService.getCurrentUser();
         depotHead.setOperpersonname(userInfo==null?null:userInfo.getUsername());
-        /**
-         * 2019-02-02
-         * 使用最新生成的唯一单据编号，理论上可以保证唯一性
-         * 保存时就不再加判断，提高程序的效率
-         * */
-//        //构造新的编号
-//        String dNumber = depotHead.getDefaultnumber();
-//        String number = dNumber.substring(0, 12); //截取前缀
-//        String beginTime = Tools.getNow() + " 00:00:00";
-//        String endTime = Tools.getNow() + " 23:59:59";
-//        String newNumber = buildNumber(depotHead.getType(), depotHead.getSubtype(), beginTime, endTime);  //从数据库查询最新的编号+1,这样能防止重复
-//        String allNewNumber = number + newNumber;
-//        String frontNumber = depotHead.getNumber();
-//        if(frontNumber.indexOf(number) > -1) {
-//            depotHead.setNumber(allNewNumber); //从后台取值
-//        } else {
-//            depotHead.setNumber(frontNumber); //从前端文本框里面获取
-//        }
-//        depotHead.setDefaultnumber(allNewNumber); //初始编号，一直都从后台取值
         depotHead.setCreatetime(new Timestamp(System.currentTimeMillis()));
         depotHead.setStatus(false);
         depotHeadMapperEx.adddepotHead(depotHead);
-
         /**入库和出库处理预付款信息*/
         if(BusinessConstants.PAY_TYPE_PREPAID.equals(depotHead.getPaytype())){
             if(depotHead.getOrganid()!=null) {

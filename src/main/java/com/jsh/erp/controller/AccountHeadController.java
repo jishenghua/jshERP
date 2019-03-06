@@ -79,13 +79,9 @@ public class AccountHeadController {
                 i = -1;
             }
             //收付款部分
-//            sum = sum + (allMoney(getS, "付款", "合计",endTime) + allMoney(getS, "付款", "实际",endTime)) * i;
             sum = sum.add((allMoney(getS, "付款", "合计",endTime).add(allMoney(getS, "付款", "实际",endTime))).multiply(new BigDecimal(i)));
-//            sum = sum - (allMoney(getS, "收款", "合计",endTime) + allMoney(getS, "收款", "实际",endTime)) * i;
             sum = sum.subtract((allMoney(getS, "收款", "合计",endTime).add(allMoney(getS, "收款", "实际",endTime))).multiply(new BigDecimal(i)));
-//            sum = sum + (allMoney(getS, "收入", "合计",endTime) - allMoney(getS, "收入", "实际",endTime)) * i;
             sum = sum.add((allMoney(getS, "收入", "合计",endTime).subtract(allMoney(getS, "收入", "实际",endTime))).multiply(new BigDecimal(i)));
-//            sum = sum - (allMoney(getS, "支出", "合计",endTime) - allMoney(getS, "支出", "实际",endTime)) * i;
             sum = sum.subtract((allMoney(getS, "支出", "合计",endTime).subtract(allMoney(getS, "支出", "实际",endTime))).multiply(new BigDecimal(i)));
             outer.put("getAllMoney", sum);
             map.put("rows", outer);
