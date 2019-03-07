@@ -217,13 +217,6 @@ public class DepotItemService {
         }
     }
 
-    public BigDecimal findGiftByType(String subType, Integer ProjectId, Long MId, String type) {
-        if (IN.equals(type)) {
-            return depotItemMapperEx.findGiftByTypeIn(subType, ProjectId, MId);
-        } else {
-            return depotItemMapperEx.findGiftByTypeOut(subType, ProjectId, MId);
-        }
-    }
     /**
      * 2019-02-02修改
      * 我之前对操作数量的理解有偏差

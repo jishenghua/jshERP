@@ -81,7 +81,6 @@ public class DepotHeadController {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         try {
-//            String number = depotHeadService.buildNumber(type, subType, beginTime, endTime);
             String number = depotHeadService.buildOnlyNumber();
             map.put("DefaultNumber", number);
             res.code = 200;
@@ -359,13 +358,9 @@ public class DepotHeadController {
                 i = -1;
             }
             //进销部分
-//            sum = sum - (allMoney(getS, "入库", "采购", "合计",endTime) - allMoney(getS, "入库", "采购", "实际",endTime)) * i;
             sum = sum.subtract((allMoney(getS, "入库", "采购", "合计",endTime).subtract(allMoney(getS, "入库", "采购", "实际",endTime))).multiply(new BigDecimal(i)));
-//            sum = sum - (allMoney(getS, "入库", "销售退货", "合计",endTime) - allMoney(getS, "入库", "销售退货", "实际",endTime)) * i;
             sum = sum.subtract((allMoney(getS, "入库", "销售退货", "合计",endTime).subtract(allMoney(getS, "入库", "销售退货", "实际",endTime))).multiply(new BigDecimal(i)));
-//            sum = sum + (allMoney(getS, "出库", "销售", "合计",endTime) - allMoney(getS, "出库", "销售", "实际",endTime)) * i;
             sum = sum.add((allMoney(getS, "出库", "销售", "合计",endTime).subtract(allMoney(getS, "出库", "销售", "实际",endTime))).multiply(new BigDecimal(i)));
-//            sum = sum + (allMoney(getS, "出库", "采购退货", "合计",endTime) - allMoney(getS, "出库", "采购退货", "实际",endTime)) * i;
             sum = sum.add((allMoney(getS, "出库", "采购退货", "合计",endTime).subtract(allMoney(getS, "出库", "采购退货", "实际",endTime))).multiply(new BigDecimal(i)));
             outer.put("getAllMoney", sum);
             map.put("rows", outer);
