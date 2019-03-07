@@ -55,7 +55,7 @@ public class OrganizationController {
                     outer.put("orgFullName", org.getOrgFullName());
                     outer.put("orgAbr", org.getOrgAbr());
                     outer.put("orgParentNo", org.getOrgParentNo());
-                    List<Organization> dataParentList = organizationService.findByOrgNo(org.getOrgNo());
+                    List<Organization> dataParentList = organizationService.findByOrgNo(org.getOrgParentNo());
                     if(dataParentList!=null&&dataParentList.size()>0){
                         //父级机构名称显示简称
                         outer.put("orgParentName", dataParentList.get(0).getOrgAbr());
@@ -64,8 +64,15 @@ public class OrganizationController {
                     outer.put("orgStcd", org.getOrgStcd());
                     outer.put("orgNo", org.getOrgNo());
                     outer.put("sort", org.getSort());
-                    outer.put("orgCreateTime", sdf.format(org.getOrgCreateTime()));
-                    outer.put("orgStopTime", sdf.format(org.getOrgStopTime()));
+                    /**
+                     * 判断时间不为空再做转化
+                     * */
+                    if(org.getOrgCreateTime()!=null){
+                        outer.put("orgCreateTime", sdf.format(org.getOrgCreateTime()));
+                    }
+                    if(org.getOrgStopTime()!=null){
+                        outer.put("orgStopTime", sdf.format(org.getOrgStopTime()));
+                    }
                     outer.put("remark", org.getRemark());
                 }
             }
