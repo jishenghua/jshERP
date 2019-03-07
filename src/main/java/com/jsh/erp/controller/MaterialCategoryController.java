@@ -137,8 +137,8 @@ public class MaterialCategoryController {
         MaterialCategory mc= JSON.parseObject(beanJson, MaterialCategory.class);
         int i= materialCategoryService.editMaterialCategory(mc);
         if(i<1){
-            throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_CATEGORY_ADD_FAILED_CODE,
-                    ExceptionConstants.MATERIAL_CATEGORY_ADD_FAILED_MSG);
+            throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_CATEGORY_EDIT_FAILED_CODE,
+                    ExceptionConstants.MATERIAL_CATEGORY_EDIT_FAILED_MSG);
         }
         return result;
     }

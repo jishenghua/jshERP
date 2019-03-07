@@ -48,7 +48,7 @@
         <table tableName="jsh_asset" domainObjectName="Asset"></table>
         <table tableName="jsh_assetcategory" domainObjectName="AssetCategory"></table>
         <table tableName="jsh_assetname" domainObjectName="AssetName"></table>-->
-        <table tableName="jsh_depot" domainObjectName="Depot"></table>
+        <!--<table tableName="jsh_depot" domainObjectName="Depot"></table>-->
         <!--<table tableName="jsh_depothead" domainObjectName="DepotHead"></table>
         <table tableName="jsh_depotitem" domainObjectName="DepotItem"></table>
         <table tableName="jsh_functions" domainObjectName="Functions"></table>
@@ -65,5 +65,7 @@
         <table tableName="jsh_user" domainObjectName="User"></table>
         <table tableName="jsh_userbusiness" domainObjectName="UserBusiness"></table>-->
         <!--<table tableName="jsh_serial_number" domainObjectName="SerialNumber"></table>-->
+        <table tableName="jsh_organization" domainObjectName="Organization"></table>
+        <!--<table tableName="jsh_orga_user_rel" domainObjectName="OrgaUserRel"></table>-->
     </context>
 </generatorConfiguration>

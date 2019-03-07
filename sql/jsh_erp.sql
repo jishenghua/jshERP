@@ -1253,3 +1253,59 @@ where Id = 5;
 -- ----------------------------
 alter table jsh_depot add principal bigint(20) DEFAULT null COMMENT '负责人';
 
+-- ----------------------------
+-- 时间：2019年3月6日
+-- version：1.0.5
+-- 此次更新
+-- 1、添加机构表
+-- 2、添加机构用户关系表
+-- 特别提醒：之后的sql都是在之前基础上迭代，可以对已存在的系统进行数据保留更新
+-- ----------------------------
+-- ----------------------------
+-- 添加机构表
+-- ----------------------------
+DROP TABLE IF EXISTS `jsh_organization`;
+CREATE TABLE `jsh_organization` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `org_no` varchar(20) DEFAULT NULL COMMENT '机构编号',
+  `org_full_name` varchar(500) DEFAULT NULL COMMENT '机构全称',
+  `org_abr` varchar(20) DEFAULT NULL COMMENT '机构简称',
+  `org_tpcd` varchar(9) DEFAULT NULL COMMENT '机构类型',
+  `org_stcd` char(1) DEFAULT NULL COMMENT '机构状态,1未营业、2正常营业、3暂停营业、4终止营业、5已除名',
+  `org_parent_no` varchar(20) DEFAULT NULL COMMENT '机构父节点编号',
+  `sort` varchar(20) DEFAULT NULL COMMENT '机构显示顺序',
+  remark VARCHAR(500) DEFAULT null  COMMENT '备注',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `creator` bigint(20) DEFAULT NULL COMMENT '创建人',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `updater` bigint(20) DEFAULT NULL COMMENT '更新人',
+  `org_create_time` datetime DEFAULT NULL COMMENT '机构创建时间',
+  `org_stop_time` datetime DEFAULT NULL COMMENT '机构停运时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='机构表';
+-- ----------------------------
+-- 添加机构用户关系表
+-- ----------------------------
+DROP TABLE IF EXISTS `jsh_orga_user_rel`;
+CREATE TABLE `jsh_orga_user_rel` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `orga_id` bigint(20) NOT NULL  COMMENT '机构id',
+  `user_id` bigint(20) NOT NULL COMMENT '用户id',
+  `user_blng_orga_dspl_seq` varchar(20) DEFAULT NULL COMMENT '用户在所属机构中显示顺序',
+  `delete_flag` char(1) DEFAULT 0 COMMENT '删除标记，0未删除，1删除',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `creator` bigint(20) DEFAULT NULL COMMENT '创建人',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `updater` bigint(20) DEFAULT NULL COMMENT '更新人',
+   PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='机构用户关系表';
+-- ----------------------------
+-- 添加机构管理菜单
+-- ----------------------------
+INSERT INTO `jsh_functions`(`Number`, `Name`, `PNumber`, `URL`, `State`, `Sort`, `Enabled`, `Type`, `PushBtn`) VALUES ('000108', '机构管理', '0001', '../manage/organization.html', b'1', '0139', b'1', '电脑版', '');
+-- ----------------------------
+-- 添加根机构
+-- ----------------------------
+INSERT INTO `jsh_organization`(`org_no`, `org_full_name`, `org_abr`, `org_tpcd`, `org_stcd`, `org_parent_no`, `sort`, `remark`, `create_time`, `creator`, `update_time`, `updater`, `org_create_time`, `org_stop_time`) VALUES ('01', '根机构', '根机构', NULL, '2', '-1', '1', '根机构，初始化存在', NULL, NULL, NULL, NULL, NULL, NULL);
+
+
