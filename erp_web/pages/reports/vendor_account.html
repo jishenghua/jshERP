@@ -240,7 +240,7 @@
                                             supType: "vendor"
                                         }),
                                         success: function (res) {
-                                            if (res && res.code === 200 && res.data && res.data.rows && res.data.rows.getAllMoney) {
+                                            if (res && res.code === 200 && res.data && res.data.rows) {
                                                 var moneyA = res.data.rows.getAllMoney.toFixed(2) - 0;
                                                 $.ajax({
                                                     type: "get",
@@ -253,7 +253,7 @@
                                                         supType: "vendor"
                                                     }),
                                                     success: function (res) {
-                                                        if (res && res.code === 200 && res.data && res.data.rows && res.data.rows.getAllMoney) {
+                                                        if (res && res.code === 200 && res.data && res.data.rows) {
                                                             var moneyB = res.data.rows.getAllMoney.toFixed(2) - 0;
                                                             var money = moneyA + moneyB;
                                                             var moneyBeginNeedGet = beginNeedGet - 0; //期初应收
@@ -288,7 +288,7 @@
                                             supType: "vendor"
                                         }),
                                         success: function (res) {
-                                            if (res && res.code === 200 && res.data && res.data.rows && res.data.rows.getAllMoney) {
+                                            if (res && res.code === 200 && res.data && res.data.rows) {
                                                 var moneyA = res.data.rows.getAllMoney.toFixed(2) - 0;
                                                 $.ajax({
                                                     type: "get",
@@ -301,7 +301,7 @@
                                                         supType: "vendor"
                                                     }),
                                                     success: function (res) {
-                                                        if (res && res.code === 200 && res.data && res.data.rows && res.data.rows.getAllMoney) {
+                                                        if (res && res.code === 200 && res.data && res.data.rows) {
                                                             var moneyB = res.data.rows.getAllMoney.toFixed(2) - 0;
                                                             var money = moneyA + moneyB;
                                                             var moneyBeginNeedGet = beginNeedGet - 0; //期初应收
