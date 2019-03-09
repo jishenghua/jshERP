@@ -47,7 +47,7 @@
             <td>&nbsp;</td>
             <td>
                 期初应付：<span class="first-total">0</span>&nbsp;&nbsp;
-                期末应付：<span class="last-total">0</span>
+                期末应付：<span class="last-total">0</span><span id="pleaseSelect">（请选择供应商）</span>
             </td>
         </tr>
     </table>
@@ -260,6 +260,7 @@
                                                             var moneyBeginNeedPay = beginNeedPay - 0; //期初应付
                                                             money = (money + moneyBeginNeedPay - moneyBeginNeedGet).toFixed(2);
                                                             $(".first-total").text(money); //期初结存
+                                                            $("#pleaseSelect").hide();
                                                         }
                                                     },
                                                     error: function () {
@@ -308,6 +309,7 @@
                                                             var moneyBeginNeedPay = beginNeedPay - 0; //期初应付
                                                             money = (money + moneyBeginNeedPay - moneyBeginNeedGet).toFixed(2);
                                                             $(".last-total").text(money); //期末合计
+                                                            $("#pleaseSelect").hide();
                                                         }
                                                     },
                                                     error: function () {
