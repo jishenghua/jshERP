@@ -5,7 +5,7 @@
 
 <generatorConfiguration>
     <classPathEntry
-            location="C:\Users\cjl\.m2\repository\mysql\mysql-connector-java\5.1.47\mysql-connector-java-5.1.47.jar"/>
+            location="E:\maven-repository\mysql\mysql-connector-java\5.1.47\mysql-connector-java-5.1.47.jar"/>
 
     <context id="DB2Tables" targetRuntime="MyBatis3" defaultModelType="flat">
         <commentGenerator>
@@ -59,12 +59,12 @@
         <table tableName="jsh_materialproperty" domainObjectName="MaterialProperty"></table>
         <table tableName="jsh_person" domainObjectName="Person"></table>
         <table tableName="jsh_role" domainObjectName="Role"></table>
-        <table tableName="jsh_supplier" domainObjectName="Supplier"></table>
+        <table tableName="jsh_supplier" domainObjectName="Supplier"></table>-->
         <table tableName="jsh_systemconfig" domainObjectName="SystemConfig"></table>
-        <table tableName="jsh_unit" domainObjectName="Unit"></table>
+        <!--<table tableName="jsh_unit" domainObjectName="Unit"></table>
         <table tableName="jsh_user" domainObjectName="User"></table>
-        <table tableName="jsh_userbusiness" domainObjectName="UserBusiness"></table>-->
-        <!--<table tableName="jsh_serial_number" domainObjectName="SerialNumber"></table>-->
+        <table tableName="jsh_userbusiness" domainObjectName="UserBusiness"></table>
+        <table tableName="jsh_serial_number" domainObjectName="SerialNumber"></table>-->
         <table tableName="jsh_organization" domainObjectName="Organization"></table>
         <!--<table tableName="jsh_orga_user_rel" domainObjectName="OrgaUserRel"></table>-->
     </context>

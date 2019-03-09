@@ -1308,4 +1308,22 @@ INSERT INTO `jsh_functions`(`Number`, `Name`, `PNumber`, `URL`, `State`, `Sort`,
 -- ----------------------------
 INSERT INTO `jsh_organization`(`org_no`, `org_full_name`, `org_abr`, `org_tpcd`, `org_stcd`, `org_parent_no`, `sort`, `remark`, `create_time`, `creator`, `update_time`, `updater`, `org_create_time`, `org_stop_time`) VALUES ('01', '根机构', '根机构', NULL, '2', '-1', '1', '根机构，初始化存在', NULL, NULL, NULL, NULL, NULL, NULL);
 
+-- ----------------------------
+-- 时间：2019年3月9日
+-- version：1.0.6
+-- 此次更新
+-- 整改jsh_systemconfig表的字段
+-- ----------------------------
+alter table jsh_systemconfig drop type;
+alter table jsh_systemconfig drop name;
+alter table jsh_systemconfig drop value;
+alter table jsh_systemconfig drop description;
+alter table jsh_systemconfig add company_name varchar(50) DEFAULT null COMMENT '公司名称';
+alter table jsh_systemconfig add company_contacts varchar(20) DEFAULT null COMMENT '公司联系人';
+alter table jsh_systemconfig add company_address varchar(50) DEFAULT null COMMENT '公司地址';
+alter table jsh_systemconfig add company_tel varchar(20) DEFAULT null COMMENT '公司电话';
+alter table jsh_systemconfig add company_fax varchar(20) DEFAULT null COMMENT '公司传真';
+alter table jsh_systemconfig add company_post_code varchar(20) DEFAULT null COMMENT '公司邮编';
+delete from jsh_systemconfig;
+insert into jsh_systemconfig (`company_name`, `company_contacts`, `company_address`, `company_tel`, `company_fax`, `company_post_code`) values("南通jshERP公司","张三","南通市通州区某某路","0513-10101010","0513-18181818","226300");
 

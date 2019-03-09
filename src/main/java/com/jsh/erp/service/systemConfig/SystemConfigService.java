@@ -33,12 +33,12 @@ public class SystemConfigService {
         SystemConfigExample example = new SystemConfigExample();
         return systemConfigMapper.selectByExample(example);
     }
-    public List<SystemConfig> select(int offset, int rows) {
-        return systemConfigMapperEx.selectByConditionSystemConfig(offset, rows);
+    public List<SystemConfig> select(String companyName, int offset, int rows) {
+        return systemConfigMapperEx.selectByConditionSystemConfig(companyName, offset, rows);
     }
 
-    public Long countSystemConfig() {
-        return systemConfigMapperEx.countsBySystemConfig();
+    public Long countSystemConfig(String companyName) {
+        return systemConfigMapperEx.countsBySystemConfig(companyName);
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
@@ -69,7 +69,7 @@ public class SystemConfigService {
 
     public int checkIsNameExist(Long id, String name) {
         SystemConfigExample example = new SystemConfigExample();
-        example.createCriteria().andIdNotEqualTo(id).andNameEqualTo(name);
+        example.createCriteria().andIdNotEqualTo(id).andCompanyNameEqualTo(name);
         List<SystemConfig> list = systemConfigMapper.selectByExample(example);
         return list.size();
     }

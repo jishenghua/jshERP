@@ -31,13 +31,17 @@ public class SystemConfigComponent implements ICommonQuery {
     }
 
     private List<?> getSystemConfigList(Map<String, String> map) {
+        String search = map.get(Constants.SEARCH);
+        String companyName = StringUtil.getInfo(search, "companyName");
         String order = QueryUtils.order(map);
-        return systemConfigService.select(QueryUtils.offset(map), QueryUtils.rows(map));
+        return systemConfigService.select(companyName, QueryUtils.offset(map), QueryUtils.rows(map));
     }
 
     @Override
     public Long counts(Map<String, String> map) {
-        return systemConfigService.countSystemConfig();
+        String search = map.get(Constants.SEARCH);
+        String companyName = StringUtil.getInfo(search, "companyName");
+        return systemConfigService.countSystemConfig(companyName);
     }
 
     @Override

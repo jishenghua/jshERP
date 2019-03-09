@@ -9,8 +9,10 @@ import java.util.List;
 public interface SystemConfigMapperEx {
 
     List<SystemConfig> selectByConditionSystemConfig(
+            @Param("companyName") String companyName,
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
-    Long countsBySystemConfig();
+    Long countsBySystemConfig(
+            @Param("companyName") String companyName);
 }
