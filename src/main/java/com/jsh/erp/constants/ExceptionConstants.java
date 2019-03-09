@@ -75,6 +75,28 @@ public class ExceptionConstants {
     //商品类别编号已存在
     public static final int MATERIAL_CATEGORY_SERIAL_ALREADY_EXISTS_CODE = 7500003;
     public static final String MATERIAL_CATEGORY_SERIAL_ALREADY_EXISTS_MSG = "商品类别编号已存在";
+    /**
+     * 机构
+     * type = 110
+     * */
+    //添加机构信息失败
+    public static final int ORGANIZATION_ADD_FAILED_CODE = 11000000;
+    public static final String ORGANIZATION_ADD_FAILED_MSG = "添加机构信息失败";
+    //删除机构信息失败
+    public static final int ORGANIZATION_DELETE_FAILED_CODE = 11000001;
+    public static final String ORGANIZATION_DELETE_FAILED_MSG = "删除机构信息失败";
+    //修改机构信息失败
+    public static final int ORGANIZATION_EDIT_FAILED_CODE = 11000002;
+    public static final String ORGANIZATION_EDIT_FAILED_MSG = "修改机构信息失败";
+    //机构编号已存在
+    public static final int ORGANIZATION_NO_ALREADY_EXISTS_CODE = 11000003;
+    public static final String ORGANIZATION_NO_ALREADY_EXISTS_MSG = "机构编号已存在";
+    //根机构不允许删除
+    public static final int ORGANIZATION_ROOT_NOT_ALLOWED_DELETE_CODE = 11000004;
+    public static final String ORGANIZATION_ROOT_NOT_ALLOWED_DELETE_MSG = "根机构不允许删除";
+    //根机构不允许修改
+    public static final int ORGANIZATION_ROOT_NOT_ALLOWED_EDIT_CODE = 11000005;
+    public static final String ORGANIZATION_ROOT_NOT_ALLOWED_EDIT_MSG = "根机构不允许修改";
 
     /**
      * 标准正常返回/操作成功返回

@@ -3,8 +3,8 @@ package com.jsh.erp.constants;
 /**
  * @ClassName:BusinessConstants
  * @Description 业务字典类
- * @Author linshengming
- * @Date 2018-9-15 17:58
+ * @Author qiankunpingtai
+ * @Date 2019-3-6 17:58
  * @Version 1.0
  **/
 public class BusinessConstants {
@@ -85,6 +85,21 @@ public class BusinessConstants {
     public static final String MATERIAL_CATEGORY_STATUS_DEFAULT = "0";
     public static final String MATERIAL_CATEGORY_STATUS_ENABLE = "1";
     public static final String MATERIAL_CATEGORY_STATUS_DELETE = "2";
+    /**
+     * 机构状态
+     *  1未营业、2正常营业、3暂停营业、4终止营业,5已除名
+     * */
+    public static final String ORGANIZATION_STCD_NOT_OPEN = "1";
+    public static final String ORGANIZATION_STCD_OPEN = "2";
+    public static final String ORGANIZATION_STCD_BUSINESS_SUSPENDED = "3";
+    public static final String ORGANIZATION_STCD_BUSINESS_TERMINATED = "4";
+    public static final String ORGANIZATION_STCD_REMOVED = "5";
+    /**
+     * 根机构编号
+     * 根机构编号默认为01
+     * */
+    public static final String ORGANIZATION_ROOT_NO = "01";
+
 
 
 
