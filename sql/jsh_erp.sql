@@ -1332,6 +1332,17 @@ insert into jsh_systemconfig (`company_name`, `company_contacts`, `company_addre
 -- version：1.0.7
 -- 改管理员的功能权限
 -- ----------------------------
-update jsh_userbusiness SET Type = 'RoleFunctions', KeyId = '4',
+update jsh_userbusiness SET
 Value = '[13][12][16][243][14][15][234][236][22][23][220][240][25][217][218][26][194][195][31][59][207][208][209][226][227][228][229][235][237][210][211][241][33][199][242][41][200][201][202][40][232][233][197][203][204][205][206][212]'
+where Id = 5;
+-- ----------------------------
+-- 给订单功能加审核和反审核的功能按钮权限
+-- ----------------------------
+update jsh_functions SET PushBtn = '3' where Number = '050202' and PNumber = '0502';
+update jsh_functions SET PushBtn = '3' where Number = '060301' and PNumber = '0603';
+-- ----------------------------
+-- 改管理员的按钮权限
+-- ----------------------------
+update jsh_userbusiness SET
+BtnStr = '[{"funId":"25","btnStr":"1"},{"funId":"217","btnStr":"1"},{"funId":"218","btnStr":"1"},{"funId":"241","btnStr":"3"},{"funId":"242","btnStr":"3"}]'
 where Id = 5;
