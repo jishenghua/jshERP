@@ -1327,3 +1327,11 @@ alter table jsh_systemconfig add company_post_code varchar(20) DEFAULT null COMM
 delete from jsh_systemconfig;
 insert into jsh_systemconfig (`company_name`, `company_contacts`, `company_address`, `company_tel`, `company_fax`, `company_post_code`) values("南通jshERP公司","张三","南通市通州区某某路","0513-10101010","0513-18181818","226300");
 
+-- ----------------------------
+-- 时间：2019年3月9日
+-- version：1.0.7
+-- 改管理员的功能权限
+-- ----------------------------
+update jsh_userbusiness SET Type = 'RoleFunctions', KeyId = '4',
+Value = '[13][12][16][244][14][15][234][236][22][23][220][240][25][217][218][26][194][195][31][59][207][208][209][226][227][228][229][235][237][210][211][242][33][199][243][41][200][201][202][40][232][233][197][203][204][205][206][212]'
+where Id = 5;
