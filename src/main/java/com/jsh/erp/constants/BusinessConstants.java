@@ -52,6 +52,12 @@ public class BusinessConstants {
     public static final String ENABLE_SERIAL_NUMBER_ENABLED = "1";
     public static final String ENABLE_SERIAL_NUMBER_NOT_ENABLED = "0";
     /**
+     * 单据状态 billsStatus '0'未审核 '1'审核 '2'已转采购|销售
+     * */
+    public static final String BILLS_STATUS_UN_AUDIT = "0";
+    public static final String BILLS_STATUS_AUDIT = "1";
+    public static final String BILLS_STATUS_SKIP = "2";
+    /**
      * 出入库分类
      *采购、采购退货、其它、零售、销售、调拨
      * */

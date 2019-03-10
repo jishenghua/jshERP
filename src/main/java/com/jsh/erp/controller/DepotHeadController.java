@@ -51,7 +51,7 @@ public class DepotHeadController {
      * @return
      */
     @PostMapping(value = "/batchSetStatus")
-    public String batchSetStatus(@RequestParam("status") Boolean status,
+    public String batchSetStatus(@RequestParam("status") String status,
                                  @RequestParam("depotHeadIDs") String depotHeadIDs,
                                  HttpServletRequest request) {
         Map<String, Object> objectMap = new HashMap<String, Object>();
@@ -64,20 +64,12 @@ public class DepotHeadController {
     }
 
     /**
-     * 单据编号生成接口，规则：查找当前类型单据下的当天最大的单据号，并加1
-     * @param type
-     * @param subType
-     * @param beginTime
-     * @param endTime
+     * 单据编号生成接口
      * @param request
      * @return
      */
     @GetMapping(value = "/buildNumber")
-    public BaseResponseInfo buildNumber(@RequestParam("type") String type,
-                              @RequestParam("subType") String subType,
-                              @RequestParam("beginTime") String beginTime,
-                              @RequestParam("endTime") String endTime,
-                              HttpServletRequest request) {
+    public BaseResponseInfo buildNumber(HttpServletRequest request) {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         try {

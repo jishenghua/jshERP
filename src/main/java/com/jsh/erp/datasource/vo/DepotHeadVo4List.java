@@ -59,7 +59,9 @@ public class DepotHeadVo4List {
 
     private Integer accountday;
 
-    private Boolean status;
+    private String status;
+
+    private String linknumber;
 
     private String projectName;
 
@@ -291,12 +293,20 @@ public class DepotHeadVo4List {
         this.accountday = accountday;
     }
 
-    public Boolean getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getLinknumber() {
+        return linknumber;
+    }
+
+    public void setLinknumber(String linknumber) {
+        this.linknumber = linknumber;
     }
 
     public String getProjectName() {

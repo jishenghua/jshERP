@@ -1346,3 +1346,11 @@ update jsh_functions SET PushBtn = '3' where Number = '060301' and PNumber = '06
 update jsh_userbusiness SET
 BtnStr = '[{"funId":"25","btnStr":"1"},{"funId":"217","btnStr":"1"},{"funId":"218","btnStr":"1"},{"funId":"241","btnStr":"3"},{"funId":"242","btnStr":"3"}]'
 where Id = 5;
+
+-- ----------------------------
+-- 时间：2019年3月10日
+-- version：1.0.8
+-- 改状态字段的类型，增加关联单据字段
+-- ----------------------------
+alter table jsh_depothead change Status Status varchar(1) DEFAULT '0' COMMENT '状态，0未审核、1已审核、2已转采购|销售';
+alter table jsh_depothead add `LinkNumber` varchar(50) DEFAULT null COMMENT '关联订单号';

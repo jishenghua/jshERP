@@ -106,7 +106,7 @@ public class DepotHeadService {
             depotHead.setOperpersonname(uName);
         }
         depotHead.setCreatetime(new Timestamp(System.currentTimeMillis()));
-        depotHead.setStatus(false);
+        depotHead.setStatus(BusinessConstants.BILLS_STATUS_UN_AUDIT);
         return depotHeadMapper.insert(depotHead);
     }
 
@@ -142,7 +142,7 @@ public class DepotHeadService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchSetStatus(Boolean status, String depotHeadIDs) {
+    public int batchSetStatus(String status, String depotHeadIDs) {
         List<Long> ids = StringUtil.strToLongList(depotHeadIDs);
         DepotHead depotHead = new DepotHead();
         depotHead.setStatus(status);
@@ -275,7 +275,7 @@ public class DepotHeadService {
         User userInfo=userService.getCurrentUser();
         depotHead.setOperpersonname(userInfo==null?null:userInfo.getUsername());
         depotHead.setCreatetime(new Timestamp(System.currentTimeMillis()));
-        depotHead.setStatus(false);
+        depotHead.setStatus(BusinessConstants.BILLS_STATUS_UN_AUDIT);
         depotHeadMapperEx.adddepotHead(depotHead);
         /**入库和出库处理预付款信息*/
         if(BusinessConstants.PAY_TYPE_PREPAID.equals(depotHead.getPaytype())){
@@ -285,6 +285,14 @@ public class DepotHeadService {
         }
         /**入库和出库处理单据子表信息*/
         depotItemService.saveDetials(inserted,deleted,updated,depotHead.getId());
+        /**如果关联单据号非空则更新订单的状态为2 */
+        if(depotHead.getLinknumber()!=null) {
+            DepotHead depotHeadOrders = new DepotHead();
+            depotHeadOrders.setStatus(BusinessConstants.BILLS_STATUS_SKIP);
+            DepotHeadExample example = new DepotHeadExample();
+            example.createCriteria().andNumberEqualTo(depotHead.getLinknumber());
+            depotHeadMapper.updateByExampleSelective(depotHeadOrders, example);
+        }
     }
     /**
      * create by: cjl
