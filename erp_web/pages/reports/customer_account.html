@@ -47,7 +47,7 @@
             <td>&nbsp;</td>
             <td>
                 期初应收：<span class="first-total">0</span>&nbsp;&nbsp;
-                期末应收：<span class="last-total">0</span>
+                期末应收：<span class="last-total">0</span><span id="pleaseSelect">（请选择客户）</span>
             </td>
         </tr>
     </table>
@@ -241,7 +241,7 @@
                                             supType: "customer"
                                         }),
                                         success: function (res) {
-                                            if (res && res.code === 200 && res.data && res.data.rows && res.data.rows.getAllMoney) {
+                                            if (res && res.code === 200 && res.data && res.data.rows) {
                                                 var moneyA = res.data.rows.getAllMoney.toFixed(2) - 0;
                                                 $.ajax({
                                                     type: "get",
@@ -254,13 +254,14 @@
                                                         supType: "customer"
                                                     }),
                                                     success: function (res) {
-                                                        if (res && res.code === 200 && res.data && res.data.rows && res.data.rows.getAllMoney) {
+                                                        if (res && res.code === 200 && res.data && res.data.rows) {
                                                             var moneyB = res.data.rows.getAllMoney.toFixed(2) - 0;
                                                             var money = moneyA + moneyB;
                                                             var moneyBeginNeedGet = beginNeedGet - 0; //期初应收
                                                             var moneyBeginNeedPay = beginNeedPay - 0; //期初应付
                                                             money = (money + moneyBeginNeedGet - moneyBeginNeedPay).toFixed(2);
                                                             $(".first-total").text(money); //期初结存
+                                                            $("#pleaseSelect").hide();
                                                         }
                                                     },
                                                     error: function () {
@@ -289,7 +290,7 @@
                                             supType: "customer"
                                         }),
                                         success: function (res) {
-                                            if (res && res.code === 200 && res.data && res.data.rows && res.data.rows.getAllMoney) {
+                                            if (res && res.code === 200 && res.data && res.data.rows) {
                                                 var moneyA = res.data.rows.getAllMoney.toFixed(2) - 0;
                                                 $.ajax({
                                                     type: "get",
@@ -302,13 +303,14 @@
                                                         supType: "customer"
                                                     }),
                                                     success: function (res) {
-                                                        if (res && res.code === 200 && res.data && res.data.rows && res.data.rows.getAllMoney) {
+                                                        if (res && res.code === 200 && res.data && res.data.rows) {
                                                             var moneyB = res.data.rows.getAllMoney.toFixed(2) - 0;
                                                             var money = moneyA + moneyB;
                                                             var moneyBeginNeedGet = beginNeedGet - 0; //期初应收
                                                             var moneyBeginNeedPay = beginNeedPay - 0; //期初应付
                                                             money = (money + moneyBeginNeedGet - moneyBeginNeedPay).toFixed(2);
                                                             $(".last-total").text(money); //期末合计
+                                                            $("#pleaseSelect").hide();
                                                         }
                                                     },
                                                     error: function () {

@@ -33,7 +33,8 @@
     <result column="OtherMoneyList" jdbcType="VARCHAR" property="othermoneylist" />
     <result column="OtherMoneyItem" jdbcType="VARCHAR" property="othermoneyitem" />
     <result column="AccountDay" jdbcType="INTEGER" property="accountday" />
-    <result column="Status" jdbcType="BIT" property="status" />
+    <result column="Status" jdbcType="VARCHAR" property="status" />
+    <result column="LinkNumber" jdbcType="VARCHAR" property="linknumber" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -109,7 +110,8 @@
     Id, Type, SubType, ProjectId, DefaultNumber, Number, OperPersonName, CreateTime, 
     OperTime, OrganId, HandsPersonId, AccountId, ChangeAmount, AllocationProjectId, TotalPrice, 
     PayType, Remark, Salesman, AccountIdList, AccountMoneyList, Discount, DiscountMoney, 
-    DiscountLastMoney, OtherMoney, OtherMoneyList, OtherMoneyItem, AccountDay, Status
+    DiscountLastMoney, OtherMoney, OtherMoneyList, OtherMoneyItem, AccountDay, Status, 
+    LinkNumber
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.DepotHeadExample" resultMap="BaseResultMap">
     <!--
@@ -171,7 +173,7 @@
       AccountIdList, AccountMoneyList, Discount, 
       DiscountMoney, DiscountLastMoney, OtherMoney, 
       OtherMoneyList, OtherMoneyItem, AccountDay, 
-      Status)
+      Status, LinkNumber)
     values (#{id,jdbcType=BIGINT}, #{type,jdbcType=VARCHAR}, #{subtype,jdbcType=VARCHAR}, 
       #{projectid,jdbcType=BIGINT}, #{defaultnumber,jdbcType=VARCHAR}, #{number,jdbcType=VARCHAR}, 
       #{operpersonname,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, #{opertime,jdbcType=TIMESTAMP}, 
@@ -181,7 +183,7 @@
       #{accountidlist,jdbcType=VARCHAR}, #{accountmoneylist,jdbcType=VARCHAR}, #{discount,jdbcType=DECIMAL}, 
       #{discountmoney,jdbcType=DECIMAL}, #{discountlastmoney,jdbcType=DECIMAL}, #{othermoney,jdbcType=DECIMAL}, 
       #{othermoneylist,jdbcType=VARCHAR}, #{othermoneyitem,jdbcType=VARCHAR}, #{accountday,jdbcType=INTEGER}, 
-      #{status,jdbcType=BIT})
+      #{status,jdbcType=VARCHAR}, #{linknumber,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.DepotHead">
     <!--
@@ -274,6 +276,9 @@
       <if test="status != null">
         Status,
       </if>
+      <if test="linknumber != null">
+        LinkNumber,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -358,7 +363,10 @@
         #{accountday,jdbcType=INTEGER},
       </if>
       <if test="status != null">
-        #{status,jdbcType=BIT},
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="linknumber != null">
+        #{linknumber,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -461,7 +469,10 @@
         AccountDay = #{record.accountday,jdbcType=INTEGER},
       </if>
       <if test="record.status != null">
-        Status = #{record.status,jdbcType=BIT},
+        Status = #{record.status,jdbcType=VARCHAR},
+      </if>
+      <if test="record.linknumber != null">
+        LinkNumber = #{record.linknumber,jdbcType=VARCHAR},
       </if>
     </set>
     <if test="_parameter != null">
@@ -501,7 +512,8 @@
       OtherMoneyList = #{record.othermoneylist,jdbcType=VARCHAR},
       OtherMoneyItem = #{record.othermoneyitem,jdbcType=VARCHAR},
       AccountDay = #{record.accountday,jdbcType=INTEGER},
-      Status = #{record.status,jdbcType=BIT}
+      Status = #{record.status,jdbcType=VARCHAR},
+      LinkNumber = #{record.linknumber,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -592,7 +604,10 @@
         AccountDay = #{accountday,jdbcType=INTEGER},
       </if>
       <if test="status != null">
-        Status = #{status,jdbcType=BIT},
+        Status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="linknumber != null">
+        LinkNumber = #{linknumber,jdbcType=VARCHAR},
       </if>
     </set>
     where Id = #{id,jdbcType=BIGINT}
@@ -629,7 +644,8 @@
       OtherMoneyList = #{othermoneylist,jdbcType=VARCHAR},
       OtherMoneyItem = #{othermoneyitem,jdbcType=VARCHAR},
       AccountDay = #{accountday,jdbcType=INTEGER},
-      Status = #{status,jdbcType=BIT}
+      Status = #{status,jdbcType=VARCHAR},
+      LinkNumber = #{linknumber,jdbcType=VARCHAR}
     where Id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

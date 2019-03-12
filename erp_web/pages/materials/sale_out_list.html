@@ -65,20 +65,20 @@
                 <td style="padding:5px">
                     <input id="OrganId" name="OrganId" style="width:130px;"/>
                 </td>
-                <td style="width:70px;">销售人员：</td>
-                <td style="padding:5px">
-                    <input id="Salesman" name="Salesman" style="width:130px;"/>
-                </td>
-                <td style="width:80px;">单据日期：</td>
+                <td style="width:70px;">单据日期：</td>
                 <td style="padding:5px">
                     <input type="text" name="OperTime" id="OperTime"
                            onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" class="txt Wdate"
                            style="width:140px;" readonly/>
                 </td>
-                <td style="width:70px;">单据编号：</td>
+                <td style="width:80px;">单据编号：</td>
                 <td style="padding:5px">
                     <input name="Number" id="Number" class="easyui-validatebox"
                            data-options="required:true,validType:'length[2,30]'" style="width: 150px;" readonly/>
+                </td>
+                <td style="width:70px;">关联订单：</td>
+                <td style="padding:5px">
+                    <input name="LinkNumber" id="LinkNumber" class="easyui-validatebox" style="width: 150px;" readonly/>
                 </td>
                 <td style="width:100px;"></td>
             </tr>
@@ -130,10 +130,9 @@
                     <input id="OtherMoney" name="OtherMoney" style="width:120px;" readonly="readonly"/>
                     <img class="other-money-ico" src="/js/easyui-1.3.5/themes/icons/filelist.jpg"/>
                 </td>
-                <td>结算天数：</td>
+                <td>销售人员：</td>
                 <td style="padding:5px">
-                    <input id="AccountDay" name="AccountDay" class="easyui-numberbox"
-                           data-options="validType:'length[1,3]'" style="width:120px;"/>
+                    <input id="Salesman" name="Salesman" style="width:130px;"/>
                 </td>
                 <td style="width:100px;"></td>
             </tr>
@@ -153,17 +152,17 @@
             <td style="padding:5px;width:130px;">
                 <span id="OrganIdShow"></span>
             </td>
-            <td style="width:70px;">销售人员：</td>
-            <td style="padding:5px;width:130px;">
-                <span id="SalesmanShow"></span>
-            </td>
-            <td style="width:80px;">单据日期：</td>
+            <td style="width:70px;">单据日期：</td>
             <td style="padding:5px;width:140px;">
                 <span id="OperTimeShow"></span>
             </td>
-            <td style="width:70px;">单据编号：</td>
+            <td style="width:80px;">单据编号：</td>
             <td style="padding:5px;width:140px;">
                 <span id="NumberShow"></span>
+            </td>
+            <td style="width:70px;">关联订单：</td>
+            <td style="padding:5px;width:130px;">
+                <span id="LinkNumberShow"></span>
             </td>
             <td style="width:100px;"></td>
         </tr>
@@ -212,9 +211,9 @@
             <td style="padding:5px">
                 <span id="OtherMoneyShow"></span>
             </td>
-            <td>结算天数：</td>
+            <td>销售人员：</td>
             <td style="padding:5px">
-                <span id="AccountDayShow"></span>
+                <span id="SalesmanShow"></span>
             </td>
             <td style="width:100px;"></td>
         </tr>

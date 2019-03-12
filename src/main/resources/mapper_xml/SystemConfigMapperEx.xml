@@ -5,6 +5,9 @@
         select *
         FROM jsh_systemconfig
         where 1=1
+        <if test="companyName != null">
+            and company_name like '%${companyName}%'
+        </if>
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
         </if>
@@ -14,5 +17,8 @@
         COUNT(id)
         FROM jsh_systemconfig
         WHERE 1=1
+        <if test="companyName != null">
+            and company_name like '%${companyName}%'
+        </if>
     </select>
 </mapper>

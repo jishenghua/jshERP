@@ -210,6 +210,7 @@
                         $("#bill .OrganIdShow").text(data.organName);
                         $("#bill .OperTimeShow").text(data.opertimeStr);
                         $("#bill .NumberShow").text(data.number);
+                        $("#bill .LinkNumberShow").text(data.linknumber? data.linknumber : "");
                         $("#bill .RemarkShow").text(data.remark);
                         $("#bill .DiscountShow").text(data.discount);
                         $("#bill .DiscountMoneyShow").text(data.discountmoney);

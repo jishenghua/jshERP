@@ -1307,9 +1307,56 @@ INSERT INTO `jsh_functions`(`Number`, `Name`, `PNumber`, `URL`, `State`, `Sort`,
 -- 添加根机构
 -- ----------------------------
 INSERT INTO `jsh_organization`(`org_no`, `org_full_name`, `org_abr`, `org_tpcd`, `org_stcd`, `org_parent_no`, `sort`, `remark`, `create_time`, `creator`, `update_time`, `updater`, `org_create_time`, `org_stop_time`) VALUES ('01', '根机构', '根机构', NULL, '2', '-1', '1', '根机构，初始化存在', NULL, NULL, NULL, NULL, NULL, NULL);
+
 -- ----------------------------
--- 时间：2019年3月8日
+-- 时间：2019年3月9日
 -- version：1.0.6
+-- 此次更新
+-- 整改jsh_systemconfig表的字段
+-- ----------------------------
+alter table jsh_systemconfig drop type;
+alter table jsh_systemconfig drop name;
+alter table jsh_systemconfig drop value;
+alter table jsh_systemconfig drop description;
+alter table jsh_systemconfig add company_name varchar(50) DEFAULT null COMMENT '公司名称';
+alter table jsh_systemconfig add company_contacts varchar(20) DEFAULT null COMMENT '公司联系人';
+alter table jsh_systemconfig add company_address varchar(50) DEFAULT null COMMENT '公司地址';
+alter table jsh_systemconfig add company_tel varchar(20) DEFAULT null COMMENT '公司电话';
+alter table jsh_systemconfig add company_fax varchar(20) DEFAULT null COMMENT '公司传真';
+alter table jsh_systemconfig add company_post_code varchar(20) DEFAULT null COMMENT '公司邮编';
+delete from jsh_systemconfig;
+insert into jsh_systemconfig (`company_name`, `company_contacts`, `company_address`, `company_tel`, `company_fax`, `company_post_code`) values("南通jshERP公司","张三","南通市通州区某某路","0513-10101010","0513-18181818","226300");
+
+-- ----------------------------
+-- 时间：2019年3月9日
+-- version：1.0.7
+-- 改管理员的功能权限
+-- ----------------------------
+update jsh_userbusiness SET
+Value = '[13][12][16][243][14][15][234][236][22][23][220][240][25][217][218][26][194][195][31][59][207][208][209][226][227][228][229][235][237][210][211][241][33][199][242][41][200][201][202][40][232][233][197][203][204][205][206][212]'
+where Id = 5;
+-- ----------------------------
+-- 给订单功能加审核和反审核的功能按钮权限
+-- ----------------------------
+update jsh_functions SET PushBtn = '3' where Number = '050202' and PNumber = '0502';
+update jsh_functions SET PushBtn = '3' where Number = '060301' and PNumber = '0603';
+-- ----------------------------
+-- 改管理员的按钮权限
+-- ----------------------------
+update jsh_userbusiness SET
+BtnStr = '[{"funId":"25","btnStr":"1"},{"funId":"217","btnStr":"1"},{"funId":"218","btnStr":"1"},{"funId":"241","btnStr":"3"},{"funId":"242","btnStr":"3"}]'
+where Id = 5;
+
+-- ----------------------------
+-- 时间：2019年3月10日
+-- version：1.0.8
+-- 改状态字段的类型，增加关联单据字段
+-- ----------------------------
+alter table jsh_depothead change Status Status varchar(1) DEFAULT '0' COMMENT '状态，0未审核、1已审核、2已转采购|销售';
+alter table jsh_depothead add `LinkNumber` varchar(50) DEFAULT null COMMENT '关联订单号';
+-- ----------------------------
+-- 时间：2019年3月12日
+-- version：1.0.9
 -- 此次更新
 -- 1、根据本地用户表中现有部门生成机构表数据，同时重建机构和用户的关联关系
 -- 特别提醒：之后的sql都是在之前基础上迭代，可以对已存在的系统进行数据保留更新

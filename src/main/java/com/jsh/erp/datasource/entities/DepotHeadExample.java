@@ -1946,53 +1946,133 @@ public class DepotHeadExample {
             return (Criteria) this;
         }
 
-        public Criteria andStatusEqualTo(Boolean value) {
+        public Criteria andStatusEqualTo(String value) {
             addCriterion("Status =", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusNotEqualTo(Boolean value) {
+        public Criteria andStatusNotEqualTo(String value) {
             addCriterion("Status <>", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusGreaterThan(Boolean value) {
+        public Criteria andStatusGreaterThan(String value) {
             addCriterion("Status >", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusGreaterThanOrEqualTo(Boolean value) {
+        public Criteria andStatusGreaterThanOrEqualTo(String value) {
             addCriterion("Status >=", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusLessThan(Boolean value) {
+        public Criteria andStatusLessThan(String value) {
             addCriterion("Status <", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusLessThanOrEqualTo(Boolean value) {
+        public Criteria andStatusLessThanOrEqualTo(String value) {
             addCriterion("Status <=", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusIn(List<Boolean> values) {
+        public Criteria andStatusLike(String value) {
+            addCriterion("Status like", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusNotLike(String value) {
+            addCriterion("Status not like", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusIn(List<String> values) {
             addCriterion("Status in", values, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusNotIn(List<Boolean> values) {
+        public Criteria andStatusNotIn(List<String> values) {
             addCriterion("Status not in", values, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusBetween(Boolean value1, Boolean value2) {
+        public Criteria andStatusBetween(String value1, String value2) {
             addCriterion("Status between", value1, value2, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusNotBetween(Boolean value1, Boolean value2) {
+        public Criteria andStatusNotBetween(String value1, String value2) {
             addCriterion("Status not between", value1, value2, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andLinknumberIsNull() {
+            addCriterion("LinkNumber is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLinknumberIsNotNull() {
+            addCriterion("LinkNumber is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLinknumberEqualTo(String value) {
+            addCriterion("LinkNumber =", value, "linknumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andLinknumberNotEqualTo(String value) {
+            addCriterion("LinkNumber <>", value, "linknumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andLinknumberGreaterThan(String value) {
+            addCriterion("LinkNumber >", value, "linknumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andLinknumberGreaterThanOrEqualTo(String value) {
+            addCriterion("LinkNumber >=", value, "linknumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andLinknumberLessThan(String value) {
+            addCriterion("LinkNumber <", value, "linknumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andLinknumberLessThanOrEqualTo(String value) {
+            addCriterion("LinkNumber <=", value, "linknumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andLinknumberLike(String value) {
+            addCriterion("LinkNumber like", value, "linknumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andLinknumberNotLike(String value) {
+            addCriterion("LinkNumber not like", value, "linknumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andLinknumberIn(List<String> values) {
+            addCriterion("LinkNumber in", values, "linknumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andLinknumberNotIn(List<String> values) {
+            addCriterion("LinkNumber not in", values, "linknumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andLinknumberBetween(String value1, String value2) {
+            addCriterion("LinkNumber between", value1, value2, "linknumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andLinknumberNotBetween(String value1, String value2) {
+            addCriterion("LinkNumber not between", value1, value2, "linknumber");
             return (Criteria) this;
         }
     }

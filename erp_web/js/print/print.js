@@ -21,11 +21,9 @@ function CreateFormPage(strPrintName, printDatagrid) {
             if (res && res.code === 200) {
                 if(res.data && res.data.page) {
                     var array = res.data.page.rows;
-                    for (var i = 0; i < array.length; i++) {
-                        var name = array[i].name;
-                        if (name === "company_name") {
-                            companyName = array[i].value;
-                        }
+                    if(array.length > 0) {
+                        var info = array[0];
+                        companyName = info.companyName;
                     }
                 }
             }
