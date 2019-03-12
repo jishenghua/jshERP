@@ -64,8 +64,12 @@
             <tr>
                 <td>状态</td>
                 <td style="padding:5px">
-                    <input name="orgStcd" id="orgStcd" class="easyui-validatebox"
-                           data-options="required:true,validType:'length[2,30]'" style="width: 200px;height: 20px"/>
+                    <select name="orgStcd" id="orgStcd" style="width: 200px;height: 20px">
+                        <option value="1">未营业</option>
+                        <option value="2">正常营业</option>
+                        <option value="3">暂停营业</option>
+                        <option value="4">终止营业</option>
+                    </select>
                 </td>
             </tr>
             <tr>
