@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jsh.erp.datasource.mappers.UserMapperEx">
+    <resultMap extends="com.jsh.erp.datasource.mappers.UserMapper.BaseResultMap" id="ResultMapEx" type="com.jsh.erp.datasource.entities.UserEx">
+        <result column="orgaId" jdbcType="BIGINT" property="orgaId" />
+        <result column="org_abr" jdbcType="VARCHAR" property="orgAbr" />
+        <result column="user_blng_orga_dspl_seq" jdbcType="VARCHAR" property="userBlngOrgaDsplSeq" />
+        <result column="orgaUserRelId" jdbcType="BIGINT" property="orgaUserRelId" />
+    </resultMap>
     <select id="selectByConditionUser" parameterType="com.jsh.erp.datasource.entities.UserExample" resultMap="com.jsh.erp.datasource.mappers.UserMapper.BaseResultMap">
         select *
         FROM jsh_user
         where 1=1
+        and user.status not in('1','2')
         <if test="userName != null">
             and username like '%${userName}%'
         </if>
@@ -20,6 +27,7 @@
         COUNT(id)
         FROM jsh_user
         WHERE 1=1
+        and user.status not in('1','2')
         <if test="userName != null">
             and username like '%${userName}%'
         </if>
@@ -27,4 +35,101 @@
             and loginame like '%${loginName}%'
         </if>
     </select>
+    <select id="getUserList" parameterType="java.util.Map" resultMap="ResultMapEx">
+        select user.id, user.username, user.loginame, user.position, user.email, user.phonenum,
+         user.description, user.remark,user.isystem,org.id as orgaId,org.org_abr,rel.user_blng_orga_dspl_seq,
+        rel.id as orgaUserRelId
+        FROM jsh_user user
+        left join jsh_orga_user_rel rel on user.id=rel.user_id and rel.delete_flag!='1'
+        left join jsh_organization org on rel.orga_id=org.id
+        where 1=1
+        and user.status not in('1','2')
+        <if test="userName != null and userName != ''">
+            <bind name="userName" value="'%' + _parameter.userName + '%'" />
+            and user.userName like #{userName}
+        </if>
+        <if test="loginName != null and loginName != ''">
+            <bind name="loginName" value="'%' + _parameter.loginName + '%'" />
+            and user.loginName like #{loginName}
+        </if>
+        order by user.id desc
+    </select>
+    <insert id="addUser" parameterType="com.jsh.erp.datasource.entities.UserEx"
+        useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into jsh_user (username, loginame,
+        password, position,
+        email, phonenum, ismanager,
+        isystem, status, description,
+        remark)
+        values (#{username,jdbcType=VARCHAR}, #{loginame,jdbcType=VARCHAR},
+        #{password,jdbcType=VARCHAR}, #{position,jdbcType=VARCHAR},
+        #{email,jdbcType=VARCHAR}, #{phonenum,jdbcType=VARCHAR}, #{ismanager,jdbcType=TINYINT},
+        #{isystem,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, #{description,jdbcType=VARCHAR},
+        #{remark,jdbcType=VARCHAR})
+    </insert>
+    <update id="updateUser" parameterType="com.jsh.erp.datasource.entities.UserEx">
+        update jsh_user
+        <set>
+            <if test="username != null">
+                username = #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="loginame != null">
+                loginame = #{loginame,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="position != null">
+                position = #{position,jdbcType=VARCHAR},
+            </if>
+            <if test="department != null">
+                department = #{department,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="phonenum != null">
+                phonenum = #{phonenum,jdbcType=VARCHAR},
+            </if>
+            <if test="ismanager != null">
+                ismanager = #{ismanager,jdbcType=TINYINT},
+            </if>
+            <if test="isystem != null">
+                isystem = #{isystem,jdbcType=TINYINT},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=TINYINT},
+            </if>
+            <if test="description != null">
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <select id="getUserListByUserNameOrLoginName" resultMap="com.jsh.erp.datasource.mappers.UserMapper.BaseResultMap">
+        select user.id, user.username, user.loginame, user.position, user.email, user.phonenum,
+        user.description, user.remark,user.isystem
+        FROM jsh_user user
+        where 1=1
+        and user.status not in('1','2')
+        <if test="userName != null and userName != ''">
+            and user.userName = #{userName}
+        </if>
+        <if test="loginame != null and loginame != ''">
+            and user.loginame = #{loginame}
+        </if>
+        order by user.id desc
+    </select>
+    <update id="batDeleteOrUpdateUser">
+        update jsh_user
+        set status=#{status}
+        where id in (
+        <foreach collection="ids" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
 </mapper>

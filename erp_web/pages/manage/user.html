@@ -63,13 +63,22 @@
             初始密码：123456
         </div>
         <div class="fitem" style="padding:5px">
+            <label id="orgAbrLabel">部&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;门&nbsp;&nbsp;</label>
+            <input name="orgAbr" id="orgAbr" style="width: 120px;height: 20px"/>
+            <a href="javascript:void(0)" class="l-btn l-btn-plain" group="" id="lookForSelectOrganization">
+                <span class="l-btn-left"><span class="l-btn-text icon-search l-btn-icon-left"></span></span></a>
+            <input name="orgaId" id="orgaId" type="hidden"/>
+            <input name="selectType" id="selectType" type="hidden"/>
+            <input name="orgaUserRelId" id="orgaUserRelId" type="hidden"/>
+        </div>
+        <div class="fitem" style="padding:5px">
+            <label id="userBlngOrgaDsplSeqLabel">用户排序&nbsp;&nbsp;</label>
+            <input name="userBlngOrgaDsplSeq" id="userBlngOrgaDsplSeq"  style="width: 230px;height: 20px"/>
+        </div>
+        <div class="fitem" style="padding:5px">
             <label id="usernameLabel">用户名称&nbsp;&nbsp;</label>
             <input name="username" id="username" class="easyui-validatebox"
                    data-options="required:true,validType:'length[2,30]'" style="width: 230px;height: 20px"/>
-        </div>
-        <div class="fitem" style="padding:5px">
-            <label id="departmentLabel">部&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;门&nbsp;&nbsp;</label>
-            <input name="department" id="department" style="width: 230px;height: 20px"/>
         </div>
         <div class="fitem" style="padding:5px">
             <label id="positionLabel">职&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;位&nbsp;&nbsp;</label>
@@ -96,6 +105,9 @@
     <a href="javascript:void(0)" id="cancelusername" class="easyui-linkbutton" iconCls="icon-cancel"
        onclick="javascript:$('#userDlg').dialog('close')">取消</a>
 </div>
+<div id="forSelectOrganizationDlg" class="easyui-dialog" style="width:380px;padding:10px 20px"
+     closed="true" modal="true" cache="false" collapsible="false" closable="true">
+</div>
 <script type="text/javascript">
     //初始化界面
     $(function () {
@@ -109,7 +121,8 @@
         if (getOs() == 'MSIE') {
             $("#usernameLabel").empty().append("用户名称&nbsp;&nbsp;");
             $("#loginameLabel").empty().append("登录名称&nbsp;&nbsp;");
-            $("#departmentLabel").empty().append("部&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;门&nbsp;&nbsp;");
+            $("#orgAbrLabel").empty().append("部&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;门&nbsp;&nbsp;");
+            $("#userBlngOrgaDsplSeqLabel").empty().append("用户排序&nbsp;&nbsp;");
             $("#positionLabel").empty().append("职&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;位&nbsp;&nbsp;");
             $("#phonenumLabel").empty().append("联系电话&nbsp;&nbsp;");
             $("#emailLabel").empty().append("电子邮箱&nbsp;&nbsp;");
@@ -121,7 +134,8 @@
         else {
             $("#usernameLabel").empty().append("用户名称&nbsp;");
             $("#loginameLabel").empty().append("登录名称&nbsp;");
-            $("#departmentLabel").empty().append("部&nbsp;&nbsp;&nbsp;&nbsp;门&nbsp;");
+            $("#orgAbrLabel").empty().append("部&nbsp;&nbsp;&nbsp;&nbsp;门&nbsp;");
+            $("#userBlngOrgaDsplSeqLabel").empty().append("用户排序&nbsp;");
             $("#positionLabel").empty().append("职&nbsp;&nbsp;&nbsp;&nbsp;位&nbsp;");
             $("#phonenumLabel").empty().append("联系电话&nbsp;");
             $("#emailLabel").empty().append("电子邮箱&nbsp;");
@@ -153,16 +167,19 @@
                 {title: '登录名称', field: 'loginame', width: 80},
                 {title: '用户名称', field: 'username', width: 80, align: "center"},
                 {title: '职位', field: 'position', width: 115, align: "center"},
-                {title: '部门', field: 'department', width: 115, align: "center"},
+                {title: '部门', field: 'orgAbr', width: 115, align: "center"},
                 {title: '电子邮箱', field: 'email', width: 150, align: "center"},
                 {title: '电话号码', field: 'phonenum', width: 150, align: "center"},
+                {title: '用户排序', field: 'userBlngOrgaDsplSeq', width: 50, align: "center"},
                 {title: '描述', field: 'description', width: 150},
+                {field: 'orgaId',hidden:true, width: 10},
                 {
-                    title: '操作', field: 'isystem', width: 160, formatter: function (value, rec) {
+                    title: '操作', field: 'isystem', width: 150, formatter: function (value, rec) {
                         var str = '';
                         var rowInfo = rec.id + 'AaBb' + rec.username + 'AaBb' + rec.loginame + 'AaBb' + rec.position
-                            + 'AaBb' + rec.department + 'AaBb' + rec.email + 'AaBb' + rec.phonenum + 'AaBb' + rec.ismanager
-                            + 'AaBb' + rec.isystem + 'AaBb' + rec.description;
+                            + 'AaBb' + rec.orgAbr + 'AaBb' + rec.email + 'AaBb' + rec.phonenum + 'AaBb' + rec.ismanager
+                            + 'AaBb' + rec.isystem + 'AaBb' + rec.description+'AaBb'+rec.orgaId+'AaBb'+rec.orgaUserRelId
+                            +'AaBb' + rec.userBlngOrgaDsplSeq ;
                         if (0 == value) {
                             str += '<img src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editUser(\'' + rowInfo + '\');"/>&nbsp;<a onclick="editUser(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
                             str += '<img src="/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteUser(' + rec.id + ');"/>&nbsp;<a onclick="deleteUser(' + rec.id + ');" style="text-decoration:none;color:black;" href="javascript:void(0)">删除</a>&nbsp;&nbsp;';
@@ -249,14 +266,18 @@
             if (r) {
                 $.ajax({
                     type: "post",
-                    url: "/user/" + userID + "/delete",
+                    url: "/user/deleteUser",
                     dataType: "json",
+                    data: ({
+                        ids: userID,
+                    }),
                     success: function (res) {
-                        if(res && res.code == 200) {
-                            $("#searchBtn").click();
-                        } else {
-                            $.messager.alert('删除提示', '删除用户信息失败，请稍后再试！', 'error');
+                        if(res && res.code != 200) {
+                            $.messager.alert('提示', res.msg, 'error');
+                            return;
                         }
+                        $.messager.alert('提示', res.msg, 'info');
+                        $("#searchBtn").click();
                     },
                     //此处添加错误处理
                     error: function () {
@@ -292,19 +313,20 @@
                     } else {
                         $.ajax({
                             type: "post",
-                            url: "/user/batchDelete",
+                            url: "/user/batchDeleteUser",
                             dataType: "json",
                             async: false,
                             data: ({
                                 ids: ids,
                             }),
                             success: function (res) {
-                                if(res && res.code === 200) {
-                                    $("#searchBtn").click();
-                                    $(":checkbox").attr("checked", false);
-                                } else {
-                                    $.messager.alert('删除提示', '删除用户信息失败，请稍后再试！', 'error');
+                                if(res && res.code != 200) {
+                                    $.messager.alert('提示', res.msg, 'error');
+                                    return;
                                 }
+                                $.messager.alert('提示', res.msg, 'info');
+                                $("#searchBtn").click();
+                                $(":checkbox").attr("checked", false);
                             },
                             //此处添加错误处理
                             error: function () {
@@ -333,7 +355,9 @@
         $("#username").focus();
         oldLoginName = "";
         userID = 0;
-        url = '/user/add';
+        /**机构选择*/
+        $("#selectType").val("org");
+        url = '/user/addUser';
     }
 
     //重置用户密码
@@ -364,9 +388,10 @@
 
     //保存用户信息
     $("#saveusername").off("click").on("click", function () {
-        if (checkusernameName()) {
-            return;
-        }
+        /**
+         * 2019-03-12
+         * 此处用户名和登录名是否重复的校验在保存操作时处理
+         * */
         var reg = /^([0-9])+$/;
         var phonenum = $.trim($("#phonenum").val());
         if (phonenum.length > 0 && !reg.test(phonenum)) {
@@ -382,12 +407,14 @@
                 info: JSON.stringify($("#usernameFM").serializeObject())
             },
             success: function(res) {
-                if(res && res.code === 200) {
-                    $('#userDlg').dialog('close');
-                    //加载完以后重新初始化
-                    var opts = $("#tableData").datagrid('options');
-                    showUserDetails(opts.pageNumber, opts.pageSize);
+                if(res && res.code != 200) {
+                    $.messager.alert('提示', res.msg, 'error');
+                    return;
                 }
+                $('#userDlg').dialog('close');
+                //加载完以后重新初始化
+                var opts = $("#tableData").datagrid('options');
+                showUserDetails(opts.pageNumber, opts.pageSize);
             },
             //此处添加错误处理
             error: function () {
@@ -404,10 +431,14 @@
             username: usernameInfo[1],
             loginame: usernameInfo[2],
             position: usernameInfo[3],
-            department: usernameInfo[4],
             email: usernameInfo[5],
             phonenum: usernameInfo[6],
-            description: usernameInfo[9]
+            description: usernameInfo[9],
+            orgAbr: usernameInfo[4]=='undefined'?'':usernameInfo[4],
+            orgaId: usernameInfo[10]=='undefined'?'':usernameInfo[10],
+            orgaUserRelId:usernameInfo[11]=='undefined'?'':usernameInfo[11],
+            userBlngOrgaDsplSeq:usernameInfo[12]=='undefined'?'':usernameInfo[12]
+
         };
         oldLoginName = usernameInfo[1];
         $('#userDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑用户信息');
@@ -416,45 +447,11 @@
         userID = usernameInfo[0];
         //焦点在名称输入框==定焦在输入文字后面
         $("#username").val("").focus().val(usernameInfo[1]);
-        url = '/user/update?id=' + usernameInfo[0];
+        /**机构选择*/
+        $("#selectType").val("org");
+        url = '/user/updateUser?id=' + usernameInfo[0];
     }
 
-    //检查用户 名称是否存在 ++ 重名无法提示问题需要跟进
-    function checkusernameName() {
-        var loginName = $.trim($("#loginame").val());
-        //表示是否存在 true == 存在 false = 不存在
-        var flag = false;
-        //开始ajax名称检验，不能重名
-        if (loginName.length > 0 && (oldLoginName.length == 0 || loginName != oldLoginName)) {
-            $.ajax({
-                type: "get",
-                url: "/user/checkIsNameExist",
-                dataType: "json",
-                async: false,
-                data: ({
-                    id: userID,
-                    name: loginName
-                }),
-                success: function (res) {
-                    if(res && res.code === 200) {
-                        if(res.data && res.data.status) {
-                            flag = res.data.status;
-                            if (flag) {
-                                $.messager.alert('提示', '用户名称已经存在', 'info');
-                                return;
-                            }
-                        }
-                    }
-                },
-                //此处添加错误处理
-                error: function () {
-                    $.messager.alert('提示', '检查用户名称是否存在异常，请稍后再试！', 'error');
-                    return;
-                }
-            });
-        }
-        return flag;
-    }
 
     //搜索处理
     $("#searchBtn").unbind().bind({
@@ -477,7 +474,7 @@
         var loginName = $.trim($("#searchLoginame").val());
         $.ajax({
             type: "get",
-            url: "/user/list",
+            url: "/user/getUserList",
             dataType: "json",
             data: ({
                 search: JSON.stringify({
@@ -547,6 +544,21 @@
             return false;
         }
         this.href = "/pages/user/userCustomer.html?id=" + currentRow.id;
+    });
+    /**
+     * 用户选择机构
+     * */
+    $("#lookForSelectOrganization").on("click", function () {
+        $('#forSelectOrganizationDlg').dialog({
+            title: '机构选择',
+            width: webW/2,
+            height: webH/2,
+            closed: false,
+            cache: false,
+            href: '/pages/manage/organization_forselect.html',
+            modal: true,
+            resizable:true
+        });
     });
 </script>
 </body>
