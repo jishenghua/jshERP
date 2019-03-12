@@ -1430,7 +1430,8 @@ declare continue handler for not found set done = 1;
 
 -- 清空用户表中的部门信息
 update jsh_user set department=null;
-
+-- 设置status为0
+update jsh_user set status=0;
 return _success_msg;
 end
 ;;
