@@ -1,6 +1,15 @@
 package com.jsh.erp.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.jsh.erp.constants.BusinessConstants;
+import com.jsh.erp.constants.ExceptionConstants;
+import com.jsh.erp.datasource.entities.DepotEx;
+import com.jsh.erp.datasource.entities.SerialNumberEx;
 import com.jsh.erp.datasource.entities.User;
+import com.jsh.erp.datasource.entities.UserEx;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.*;
 import org.slf4j.Logger;
@@ -12,9 +21,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 
 /**
@@ -209,4 +217,99 @@ public class UserController {
         }
         return res;
     }
+    /**
+     * create by: cjl
+     * description:
+     *  查询分页用户列表
+     * create time: 2019/3/8 15:08
+     * @Param: pageSize
+     * @Param: currentPage
+     * @Param: search
+     * @return java.lang.String
+     */
+    @GetMapping(value = "/getUserList")
+    public String getUserList(@RequestParam(value = Constants.PAGE_SIZE, required = false) Integer pageSize,
+                                       @RequestParam(value = Constants.CURRENT_PAGE, required = false) Integer currentPage,
+                                       @RequestParam(value = Constants.SEARCH, required = false) String search)throws Exception {
+
+        Map<String, Object> parameterMap = new HashMap<String, Object>();
+        //查询参数
+        JSONObject obj= JSON.parseObject(search);
+        Set<String> key= obj.keySet();
+        for(String keyEach: key){
+            parameterMap.put(keyEach,obj.getString(keyEach));
+        }
+        PageQueryInfo queryInfo = new PageQueryInfo();
+        Map<String, Object> objectMap = new HashMap<String, Object>();
+        if (pageSize == null || pageSize <= 0) {
+            pageSize = BusinessConstants.DEFAULT_PAGINATION_PAGE_SIZE;
+        }
+        if (currentPage == null || currentPage <= 0) {
+            currentPage = BusinessConstants.DEFAULT_PAGINATION_PAGE_NUMBER;
+        }
+        PageHelper.startPage(currentPage,pageSize,false);
+        List<UserEx> list = userService.getUserList(parameterMap);
+        //获取分页查询后的数据
+        PageInfo<UserEx> pageInfo = new PageInfo<>(list);
+        objectMap.put("page", queryInfo);
+        if (list == null) {
+            queryInfo.setRows(new ArrayList<Object>());
+            queryInfo.setTotal(BusinessConstants.DEFAULT_LIST_NULL_NUMBER);
+            return returnJson(objectMap, "查找不到数据", ErpInfo.OK.code);
+        }
+        queryInfo.setRows(list);
+        queryInfo.setTotal(pageInfo.getTotal());
+        return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+    }
+
+    /**
+     * create by: cjl
+     * description:
+     *  新增用户及机构和用户关系
+     * create time: 2019/3/8 16:06
+     * @Param: beanJson
+     * @return java.lang.Object
+     */
+    @PostMapping("/addUser")
+    @ResponseBody
+    public Object addUser(@RequestParam("info") String beanJson)throws Exception{
+
+        JSONObject result = ExceptionConstants.standardSuccess();
+        UserEx ue= JSON.parseObject(beanJson, UserEx.class);
+        userService.addUserAndOrgUserRel(ue);
+        return result;
+
+    }
+    /**
+     * create by: cjl
+     * description:
+     *  修改用户及机构和用户关系
+     * create time: 2019/3/8 16:06
+     * @Param: beanJson
+     * @return java.lang.Object
+     */
+    @PostMapping("/updateUser")
+    @ResponseBody
+    public Object updateUser(@RequestParam("info") String beanJson,@RequestParam("id") Long id)throws Exception{
+        JSONObject result = ExceptionConstants.standardSuccess();
+        UserEx ue= JSON.parseObject(beanJson, UserEx.class);
+        ue.setId(id);
+        userService.updateUserAndOrgUserRel(ue);
+        return result;
+    }
+    @PostMapping("/deleteUser")
+    @ResponseBody
+    public Object deleteUser(@RequestParam("ids") String ids)throws Exception{
+        JSONObject result = ExceptionConstants.standardSuccess();
+        userService.batDeleteUser(ids);
+        return result;
+    }
+    @PostMapping("/batchDeleteUser")
+    @ResponseBody
+    public Object batchDeleteUser(@RequestParam("ids") String ids)throws Exception{
+        JSONObject result = ExceptionConstants.standardSuccess();
+        userService.batDeleteUser(ids);
+        return result;
+    }
+
 }

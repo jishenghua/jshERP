@@ -1,10 +1,13 @@
 package com.jsh.erp.datasource.mappers;
 
 import com.jsh.erp.datasource.entities.User;
+import com.jsh.erp.datasource.entities.UserEx;
 import com.jsh.erp.datasource.entities.UserExample;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public interface UserMapperEx {
 
@@ -17,4 +20,15 @@ public interface UserMapperEx {
     Long countsByUser(
             @Param("userName") String userName,
             @Param("loginName") String loginName);
+
+    List<UserEx> getUserList(Map<String, Object> parameterMap);
+
+    int addUser(UserEx ue);
+
+    int updateUser(UserEx ue);
+
+    List<User> getUserListByUserNameOrLoginName(@Param("userName") String userName,
+                                                @Param("loginame") String loginame);
+
+    int batDeleteOrUpdateUser(@Param("ids") String ids[], @Param("status") byte status);
 }

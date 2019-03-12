@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jsh.erp.datasource.mappers.OrgaUserRelMapperEx" >
+  <resultMap extends="com.jsh.erp.datasource.mappers.OrgaUserRelMapper.BaseResultMap" id="BaseResultMapEx" type="com.jsh.erp.datasource.entities.OrgaUserRelEx" >
+  </resultMap>
+  <insert id="addOrgaUserRel" parameterType="com.jsh.erp.datasource.entities.OrgaUserRel"
+          useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+    insert into jsh_orga_user_rel (orga_id, user_id,
+    user_blng_orga_dspl_seq, delete_flag, create_time,
+    creator, update_time, updater
+    )
+    values (#{orgaId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT},
+    #{userBlngOrgaDsplSeq,jdbcType=VARCHAR}, #{deleteFlag,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP},
+    #{creator,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, #{updater,jdbcType=BIGINT}
+    )
+  </insert>
+  <update id="updateOrgaUserRel" parameterType="com.jsh.erp.datasource.entities.OrgaUserRel" >
+    update jsh_orga_user_rel
+    <set >
+      <if test="orgaId != null" >
+        orga_id = #{orgaId},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId},
+      </if>
+      <if test="userBlngOrgaDsplSeq != null" >
+        user_blng_orga_dspl_seq = #{userBlngOrgaDsplSeq},
+      </if>
+      <if test="deleteFlag != null" >
+        delete_flag = #{deleteFlag},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime},
+      </if>
+      <if test="updater != null" >
+        updater = #{updater},
+      </if>
+    </set>
+    where 1=1
+    and id=#{id}
+  </update>
+
+
+</mapper>

@@ -36,6 +36,7 @@
                     <a href="javascript:void(0)" class="l-btn l-btn-plain" group="" id="lookForSelectOrganization">
                         <span class="l-btn-left"><span class="l-btn-text icon-search l-btn-icon-left"></span></span></a>
                     <input name="orgParentNo" id="orgParentNo" type="hidden"/>
+                    <input name="selectType" id="selectType" type="hidden"/>
                 </td>
             </tr>
             <tr>
@@ -63,8 +64,12 @@
             <tr>
                 <td>状态</td>
                 <td style="padding:5px">
-                    <input name="orgStcd" id="orgStcd" class="easyui-validatebox"
-                           data-options="required:true,validType:'length[2,30]'" style="width: 200px;height: 20px"/>
+                    <select name="orgStcd" id="orgStcd" style="width: 200px;height: 20px">
+                        <option value="1">未营业</option>
+                        <option value="2">正常营业</option>
+                        <option value="3">暂停营业</option>
+                        <option value="4">终止营业</option>
+                    </select>
                 </td>
             </tr>
             <tr>
@@ -169,6 +174,8 @@
         $("#orgStopTime").val("");
         $("#remark").val("");
         $("#id").val("");
+        //机构父级选择
+        $("#selectType").val("orgParent");
         url = '/organization/addOrganization';
     }
     function editOrganization(node) {
@@ -202,6 +209,8 @@
                     $("#orgStopTime").val(res.data.orgStopTime);
                     $("#remark").val(res.data.remark);
                     $("#id").val(res.data.id);
+                    //机构父级选择
+                    $("#selectType").val("orgParent");
                     url = '/organization/editOrganization';
                 }
             },

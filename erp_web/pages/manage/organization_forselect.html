@@ -33,9 +33,14 @@
         });
 
         function forSelectOrganization(node) {
-            console.log(node);
-            $("#orgParentName").val(node.text);
-            $("#orgParentNo").val(node.attributes);
+            var selectType=$("#selectType").val();
+            if(selectType=='orgParent'){
+                $("#orgParentName").val(node.text);
+                $("#orgParentNo").val(node.attributes);
+            }else if(selectType=='org'){
+                $("#orgAbr").val(node.text);
+                $("#orgaId").val(node.id);
+            }
             $('#forSelectOrganizationDlg').dialog('close');
         }
     });

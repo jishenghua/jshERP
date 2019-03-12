@@ -1354,3 +1354,92 @@ where Id = 5;
 -- ----------------------------
 alter table jsh_depothead change Status Status varchar(1) DEFAULT '0' COMMENT '状态，0未审核、1已审核、2已转采购|销售';
 alter table jsh_depothead add `LinkNumber` varchar(50) DEFAULT null COMMENT '关联订单号';
+-- ----------------------------
+-- 时间：2019年3月12日
+-- version：1.0.9
+-- 此次更新
+-- 1、根据本地用户表中现有部门生成机构表数据，同时重建机构和用户的关联关系
+-- 特别提醒：之后的sql都是在之前基础上迭代，可以对已存在的系统进行数据保留更新
+-- ----------------------------
+DROP FUNCTION IF EXISTS `_buildOrgAndOrgUserRel`;
+DELIMITER ;;
+CREATE FUNCTION `_buildOrgAndOrgUserRel` (name varchar(50)) RETURNS mediumtext CHARSET utf8
+begin
+
+declare _org_full_name varchar(500); -- 机构全称
+declare _org_abr varchar(20);  -- 机构简称
+declare _sort int default 0;
+declare _success_msg varchar(50) default '重建机构及机构用户关系成功'; -- 机构全称
+ -- 遍历数据结束标志
+declare done int DEFAULT 0;
+-- 获取用户表中唯一的部门信息列表
+declare orgCur cursor for select distinct department from jsh_user where department!='' and department is not null;
+
+ -- 将结束标志绑定到游标
+declare continue handler for not found set done = 1;
+  -- 循环部门信息列表在机构表插入数据
+  -- 打开游标
+  open orgCur;
+  -- 开始循环
+  read_loop: loop
+    -- 提取游标里的数据，这里只有一个，多个的话也一样；
+    fetch orgCur into _org_full_name;
+    -- 声明结束的时候
+    if done=1 then
+      leave read_loop;
+    end if;
+    -- 这里做你想做的循环的事件
+    if length(_org_full_name)<=20 then
+			set _org_abr=_org_full_name;
+		else
+			set _org_abr=left(_org_full_name,20);
+	end if;
+	set _sort=_sort+1;
+	insert into jsh_organization (org_full_name, org_abr,  org_stcd, org_parent_no, sort, remark)
+	values (_org_full_name,_org_abr, '1', '01', _sort, '机构表初始化');
+		begin
+			declare _userId bigint;
+			declare _orgId bigint;
+			 -- 遍历数据结束标志
+			declare ogrUserRelDone int DEFAULT 0;
+			-- 根据用户表和机构表部门关联关系，重建用户和机构关联关系
+			declare ogrUserRelCur cursor for select user.id as userId,org.id as orgId from jsh_user user,jsh_organization org
+			where 1=1  and user.department=org.org_full_name and user.department =_org_full_name;
+			 -- 将结束标志绑定到游标
+			declare continue handler for not found set ogrUserRelDone = 1;
+			-- 打开游标
+			  open ogrUserRelCur;
+			  -- 开始循环
+			  rel_read_loop: loop
+			    -- 提取游标里的数据，这里只有一个，多个的话也一样；
+			    fetch ogrUserRelCur into _userId,_orgId;
+			    -- 声明结束的时候
+			    if ogrUserRelDone=1 then
+			      leave rel_read_loop;
+			    end if;
+				insert into `jsh_orga_user_rel`(`orga_id`, `user_id`, `delete_flag`) VALUES (_orgId,_userId,'0');
+
+			  end loop rel_read_loop;
+		  -- 关闭游标
+		  close ogrUserRelCur;
+		end;
+
+  end loop read_loop;
+  -- 关闭游标
+  close orgCur;
+
+-- 清空用户表中的部门信息
+update jsh_user set department=null;
+
+return _success_msg;
+end
+;;
+DELIMITER ;
+-- ----------------------------
+-- 初始化机构数据，重建机构用户关系
+-- ----------------------------
+select _buildOrgAndOrgUserRel('初始化机构数据，重建机构用户关系') from dual;
+-- ----------------------------
+-- 删除一次性函数
+-- ----------------------------
+DROP FUNCTION _buildOrgAndOrgUserRel;
