@@ -1466,3 +1466,4 @@ DROP FUNCTION _buildOrgAndOrgUserRel;
 -- ----------------------------
 
 alter table jsh_user change Status Status tinyint(4) DEFAULT '0' COMMENT '状态，0：正常，1：删除，2封禁';
+update jsh_user set status='0' where status is null;
