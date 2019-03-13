@@ -138,20 +138,50 @@ public class MaterialCategoryService {
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteMaterialCategoryByIds(String ids) throws Exception {
+
         //更新时间
         Date updateDate =new Date();
         //更新人
         User userInfo=userService.getCurrentUser();
         Long updater=userInfo==null?null:userInfo.getId();
-        StringBuffer sb=new StringBuffer();
         String strArray[]=ids.split(",");
         if(strArray.length<1){
             return 0;
+        }
+        /**
+         * create by: qiankunpingtai
+         * create time: 2019/3/13 14:49
+         * description:
+         * 添加一个限制，根目录不允许删除
+         */
+        String rootIdStr=BusinessConstants.MATERIAL_CATEGORY_ROOT_ID.toString();
+        for(String s:strArray){
+            if(rootIdStr.equals(s)){
+                logger.error("异常码[{}],异常提示[{}],参数,id:[{}]",
+                        ExceptionConstants.MATERIAL_CATEGORY_ROOT_NOT_SUPPORT_DELETE_CODE,
+                        ExceptionConstants.MATERIAL_CATEGORY_ROOT_NOT_SUPPORT_DELETE_MSG,s);
+                throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_CATEGORY_ROOT_NOT_SUPPORT_DELETE_CODE,
+                        ExceptionConstants.MATERIAL_CATEGORY_ROOT_NOT_SUPPORT_DELETE_MSG);
+            }
         }
        return materialCategoryMapperEx.batchDeleteMaterialCategoryByIds(updateDate,updater,strArray);
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int editMaterialCategory(MaterialCategory mc) {
+        /**
+         * create by: qiankunpingtai
+         * create time: 2019/3/13 14:49
+         * description:
+         * 添加一个限制根目录不允许修改
+         */
+        if(BusinessConstants.MATERIAL_CATEGORY_ROOT_ID.equals(mc.getId())){
+            logger.error("异常码[{}],异常提示[{}],参数,id:[{}]",
+                    ExceptionConstants.MATERIAL_CATEGORY_ROOT_NOT_SUPPORT_EDIT_CODE,
+                    ExceptionConstants.MATERIAL_CATEGORY_ROOT_NOT_SUPPORT_EDIT_MSG,mc.getId());
+            throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_CATEGORY_ROOT_NOT_SUPPORT_EDIT_CODE,
+                    ExceptionConstants.MATERIAL_CATEGORY_ROOT_NOT_SUPPORT_EDIT_MSG);
+
+        }
         //检查商品类型编号是否已存在
         checkMaterialCategorySerialNo(mc);
         //更新时间
@@ -187,11 +217,15 @@ public class MaterialCategoryService {
             throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_CATEGORY_SERIAL_ALREADY_EXISTS_CODE,
                     ExceptionConstants.MATERIAL_CATEGORY_SERIAL_ALREADY_EXISTS_MSG);
         }
-        if(mc.getId()!=mList.get(0).getId()){
+        /**
+         * 包装类型用equals来比较
+         * */
+        if(mc.getId().equals(mList.get(0).getId())){
             //修改时，相同编号，id不同
             throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_CATEGORY_SERIAL_ALREADY_EXISTS_CODE,
                     ExceptionConstants.MATERIAL_CATEGORY_SERIAL_ALREADY_EXISTS_MSG);
         }
     }
+
 
 }

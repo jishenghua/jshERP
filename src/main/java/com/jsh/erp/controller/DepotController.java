@@ -159,7 +159,7 @@ public class DepotController {
         if (currentPage == null || currentPage <= 0) {
             currentPage = BusinessConstants.DEFAULT_PAGINATION_PAGE_NUMBER;
         }
-        PageHelper.startPage(currentPage,pageSize,false);
+        PageHelper.startPage(currentPage,pageSize,true);
         List<DepotEx> list = depotService.getDepotList(parameterMap);
         //获取分页查询后的数据
        PageInfo<DepotEx> pageInfo = new PageInfo<>(list);

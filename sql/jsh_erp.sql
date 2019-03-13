@@ -1146,8 +1146,11 @@ CREATE TABLE tbl_sequence (
 
 -- ----------------------------
 -- 添加表单据编号sequence
+-- 插入数据前判断，防止数据重复插入
 -- ----------------------------
-insert into tbl_sequence (seq_name, min_value, max_value, current_val, increment_val,remark) values ('depot_number_seq', 1, 999999999999999999, 1, 1,'单据编号sequence');
+insert into tbl_sequence (seq_name, min_value, max_value, current_val, increment_val,remark)
+select 'depot_number_seq', 1, 999999999999999999, 1, 1,'单据编号sequence' from dual where not exists
+(select * from tbl_sequence where  seq_name='depot_number_seq');
 -- ----------------------------
 -- 创建function _nextval() 用于获取当前序列号
 -- ----------------------------
@@ -1220,6 +1223,7 @@ ALTER TABLE jsh_materialcategory DROP FOREIGN KEY FK3EE7F725237A77D8;
 
 -- ----------------------------
 -- 修改根目录父节点id为-1
+-- 设置根目录编号为1
 -- ----------------------------
 update jsh_materialcategory set ParentId='-1' where id='1';
 
@@ -1231,9 +1235,14 @@ delete from jsh_functions where id in (213,214,215,216);
 -- ----------------------------
 -- 新增采购订单、销售订单的功能数据
 -- 主键自增长，直接指定主键插入数据的方式可能会和本地数据冲突
+-- 插入数据前判断，防止数据重复插入
 -- ----------------------------
-insert into `jsh_functions`(`Number`, `Name`, `PNumber`, `URL`, `State`, `Sort`, `Enabled`, `Type`, `PushBtn`) VALUES ('050202', '采购订单', '0502', '../materials/purchase_orders_list.html', b'0', '0335',b'1', '电脑版', '');
-insert into `jsh_functions`(`Number`, `Name`, `PNumber`, `URL`, `State`, `Sort`, `Enabled`, `Type`, `PushBtn`) VALUES ('060301', '销售订单', '0603', '../materials/sale_orders_list.html', b'0', '0392', b'1', '电脑版', '');
+insert into `jsh_functions`(`Number`, `Name`, `PNumber`, `URL`, `State`, `Sort`, `Enabled`, `Type`, `PushBtn`)
+select '050202', '采购订单', '0502', '../materials/purchase_orders_list.html', b'0', '0335',b'1', '电脑版', '' from dual where not exists
+(select * from jsh_functions where  Number='050202' and PNumber='0502');
+insert into `jsh_functions`(`Number`, `Name`, `PNumber`, `URL`, `State`, `Sort`, `Enabled`, `Type`, `PushBtn`)
+select '060301', '销售订单', '0603', '../materials/sale_orders_list.html', b'0', '0392', b'1', '电脑版', '' from dual where not exists
+(select * from jsh_functions where  Number='060301' and PNumber='0603');
 
 -- ----------------------------
 -- 改管理员的功能权限
@@ -1301,13 +1310,18 @@ CREATE TABLE `jsh_orga_user_rel` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='机构用户关系表';
 -- ----------------------------
 -- 添加机构管理菜单
+-- 插入数据前判断，防止数据重复插入
 -- ----------------------------
-INSERT INTO `jsh_functions`(`Number`, `Name`, `PNumber`, `URL`, `State`, `Sort`, `Enabled`, `Type`, `PushBtn`) VALUES ('000108', '机构管理', '0001', '../manage/organization.html', b'1', '0139', b'1', '电脑版', '');
+INSERT INTO `jsh_functions`(`Number`, `Name`, `PNumber`, `URL`, `State`, `Sort`, `Enabled`, `Type`, `PushBtn`)
+select '000108', '机构管理', '0001', '../manage/organization.html', b'1', '0139', b'1', '电脑版', '' from dual where not exists
+(select * from jsh_functions where  Number='000108' and PNumber='0001');
 -- ----------------------------
 -- 添加根机构
+-- 插入时判断对应数据是否存在，防止多次执行产生重复数据
 -- ----------------------------
-INSERT INTO `jsh_organization`(`org_no`, `org_full_name`, `org_abr`, `org_tpcd`, `org_stcd`, `org_parent_no`, `sort`, `remark`, `create_time`, `creator`, `update_time`, `updater`, `org_create_time`, `org_stop_time`) VALUES ('01', '根机构', '根机构', NULL, '2', '-1', '1', '根机构，初始化存在', NULL, NULL, NULL, NULL, NULL, NULL);
-
+INSERT INTO jsh_organization (org_no, org_full_name, org_abr, org_tpcd, org_stcd, org_parent_no, sort, remark, create_time, creator, update_time, updater, org_create_time, org_stop_time)
+select '01', '根机构', '根机构', NULL, '2', '-1', '1', '根机构，初始化存在', NULL, NULL, NULL, NULL, NULL, NULL from dual where not exists
+(select * from jsh_organization where org_no='01' and org_abr='根机构' and org_parent_no='-1'  );
 -- ----------------------------
 -- 时间：2019年3月9日
 -- version：1.0.6
@@ -1430,8 +1444,7 @@ declare continue handler for not found set done = 1;
 
 -- 清空用户表中的部门信息
 update jsh_user set department=null;
--- 设置status为0
-update jsh_user set status=0;
+
 return _success_msg;
 end
 ;;
@@ -1444,3 +1457,18 @@ select _buildOrgAndOrgUserRel('初始化机构数据，重建机构用户关系'
 -- 删除一次性函数
 -- ----------------------------
 DROP FUNCTION _buildOrgAndOrgUserRel;
+
+-- ----------------------------
+-- 时间：2019年3月13日
+-- version：1.0.10
+-- 此次更新
+-- 1、设置用户表的用户状态status默认值为0
+-- 特别提醒：之后的sql都是在之前基础上迭代，可以对已存在的系统进行数据保留更新
+-- ----------------------------
+
+alter table jsh_user change Status Status tinyint(4) DEFAULT '0' COMMENT '状态，0：正常，1：删除，2封禁';
+update jsh_user set status='0' where status is null;
+-- ----------------------------
+-- 设置根目录编号为1
+-- ----------------------------
+update jsh_materialcategory set serial_no='1' where id='1';
