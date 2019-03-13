@@ -247,7 +247,7 @@ public class UserController {
         if (currentPage == null || currentPage <= 0) {
             currentPage = BusinessConstants.DEFAULT_PAGINATION_PAGE_NUMBER;
         }
-        PageHelper.startPage(currentPage,pageSize,false);
+        PageHelper.startPage(currentPage,pageSize,true);
         List<UserEx> list = userService.getUserList(parameterMap);
         //获取分页查询后的数据
         PageInfo<UserEx> pageInfo = new PageInfo<>(list);
