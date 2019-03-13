@@ -195,11 +195,11 @@
                             ids: ids
                         }),
                         success: function (res) {
-                            if(res && res.code === 200) {
-                                $('#tt').tree('reload');
-                            } else {
-                                $.messager.alert('删除提示', '删除商品类别信息失败，请稍后再试！', 'error');
+                            if(res.code!=200){
+                                $.messager.alert('提示', res.msg, 'error');
+                                return;
                             }
+                            $('#tt').tree('reload');
                         },
                         //此处添加错误处理
                         error: function () {

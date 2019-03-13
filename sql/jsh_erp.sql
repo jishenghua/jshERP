@@ -1223,6 +1223,7 @@ ALTER TABLE jsh_materialcategory DROP FOREIGN KEY FK3EE7F725237A77D8;
 
 -- ----------------------------
 -- 修改根目录父节点id为-1
+-- 设置根目录编号为1
 -- ----------------------------
 update jsh_materialcategory set ParentId='-1' where id='1';
 
@@ -1467,3 +1468,7 @@ DROP FUNCTION _buildOrgAndOrgUserRel;
 
 alter table jsh_user change Status Status tinyint(4) DEFAULT '0' COMMENT '状态，0：正常，1：删除，2封禁';
 update jsh_user set status='0' where status is null;
+-- ----------------------------
+-- 设置根目录编号为1
+-- ----------------------------
+update jsh_materialcategory set serial_no='1' where id='1';
