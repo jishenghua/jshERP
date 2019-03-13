@@ -1443,6 +1443,7 @@ declare continue handler for not found set done = 1;
 
 -- 清空用户表中的部门信息
 update jsh_user set department=null;
+
 return _success_msg;
 end
 ;;
