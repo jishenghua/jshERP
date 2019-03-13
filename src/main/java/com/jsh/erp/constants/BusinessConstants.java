@@ -102,9 +102,9 @@ public class BusinessConstants {
     public static final String ORGANIZATION_STCD_REMOVED = "5";
     /**
      * 根机构编号
-     * 根机构编号默认为01
+     * 根机构编号默认为-1
      * */
-    public static final String ORGANIZATION_ROOT_NO = "01";
+    public static final String ORGANIZATION_ROOT_NO = "-1";
     /**
      * 新增用户默认密码
      * */

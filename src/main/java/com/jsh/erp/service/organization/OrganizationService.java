@@ -79,7 +79,7 @@ public class OrganizationService {
             checkOrgNoIsExists(org.getOrgNo(),null);
         }
         /**
-         * 未指定父级机构的时候默认放在根机构下
+         * 未指定父级机构的时候默认为根机构
          * */
         if(StringUtil.isEmpty(org.getOrgParentNo())){
             org.setOrgParentNo(BusinessConstants.ORGANIZATION_ROOT_NO);
@@ -100,19 +100,10 @@ public class OrganizationService {
             checkOrgNoIsExists(org.getOrgNo(),org.getId());
         }
         /**
-         * 未指定父级机构的时候默认放在根机构下
+         * 未指定父级机构的时候默认为根机构
          * */
         if(StringUtil.isEmpty(org.getOrgParentNo())){
             org.setOrgParentNo(BusinessConstants.ORGANIZATION_ROOT_NO);
-        }
-        /**
-         * 添加一个限制，根机构不允许修改
-         * */
-        if(BusinessConstants.ORGANIZATION_ROOT_NO.equals(org.getOrgNo())){
-            logger.error("异常码[{}],异常提示[{}],参数,orgNo[{}]",
-                    ExceptionConstants.ORGANIZATION_ROOT_NOT_ALLOWED_EDIT_CODE,ExceptionConstants.ORGANIZATION_ROOT_NOT_ALLOWED_EDIT_MSG,org.getOrgNo());
-            throw new BusinessRunTimeException(ExceptionConstants.ORGANIZATION_ROOT_NOT_ALLOWED_EDIT_CODE,
-                    ExceptionConstants.ORGANIZATION_ROOT_NOT_ALLOWED_EDIT_MSG);
         }
         return organizationMapperEx.editOrganization(org);
     }
@@ -172,17 +163,6 @@ public class OrganizationService {
     public int batchDeleteOrganizationByIds(String ids) throws Exception{
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");
-        /**
-         * 添加一个限制，根机构不允许删除
-         * */
-        List<Organization> orgRootList=organizationMapperEx.getOrganizationRootByIds(idArray);
-        if(orgRootList!=null&&orgRootList.size()>0){
-            logger.error("异常码[{}],异常提示[{}],参数,ids[{}]",
-                    ExceptionConstants.ORGANIZATION_ROOT_NOT_ALLOWED_DELETE_CODE,ExceptionConstants.ORGANIZATION_ROOT_NOT_ALLOWED_DELETE_MSG,ids);
-            throw new BusinessRunTimeException(ExceptionConstants.ORGANIZATION_ROOT_NOT_ALLOWED_DELETE_CODE,
-                    ExceptionConstants.ORGANIZATION_ROOT_NOT_ALLOWED_DELETE_MSG);
-        }
-
         return organizationMapperEx.batchDeleteOrganizationByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
     }
 }

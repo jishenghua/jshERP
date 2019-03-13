@@ -54,13 +54,6 @@
                            data-options="required:true,validType:'length[2,30]'" style="width: 200px;height: 20px"/>
                 </td>
             </tr>
-            <!--<tr>
-                <td>类型</td>
-                <td style="padding:5px">
-                    <input name="orgTpcd" id="orgTpcd" class="easyui-validatebox"
-                           data-options="required:true,validType:'length[2,30]'" style="width: 200px;height: 20px"/>
-                </td>
-            </tr>-->
             <tr>
                 <td>状态</td>
                 <td style="padding:5px">
@@ -75,7 +68,8 @@
             <tr>
                 <td>编号</td>
                 <td style="padding:5px">
-                    <input name="orgNo" id="orgNo"  style="width: 200px;height: 20px"/>
+                    <input name="orgNo" id="orgNo" class="easyui-validatebox"
+                           data-options="required:true,validType:'length[2,30]'" style="width: 200px;height: 20px"/>
                 </td>
             </tr>
             <tr>
@@ -270,8 +264,16 @@
 
     //保存信息
     $("#saveOrganization").off("click").on("click", function () {
+        if (!$("#orgFullName").val()) {
+            $.messager.alert('提示', '全称不能为空！', 'warning');
+            return;
+        }
         if (!$("#orgAbr").val()) {
-            $.messager.alert('提示', '机构名称不能为空！', 'warning');
+            $.messager.alert('提示', '简称不能为空！', 'warning');
+            return;
+        }
+        if (!$("#orgNo").val()) {
+            $.messager.alert('提示', '编号不能为空！', 'warning');
             return;
         }
         var objInfo = $("#organizationFM").serializeObject();
