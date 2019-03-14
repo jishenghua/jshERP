@@ -3,6 +3,8 @@ package com.jsh.erp.datasource.mappers;
 import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.entities.UserEx;
 import com.jsh.erp.datasource.entities.UserExample;
+import com.jsh.erp.datasource.vo.TreeNode;
+import com.jsh.erp.datasource.vo.TreeNodeEx;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
@@ -31,4 +33,7 @@ public interface UserMapperEx {
                                                 @Param("loginame") String loginame);
 
     int batDeleteOrUpdateUser(@Param("ids") String ids[], @Param("status") byte status);
+
+    List<TreeNodeEx> getNodeTree();
+    List<TreeNodeEx> getNextNodeTree(Map<String, Object> parameterMap);
 }

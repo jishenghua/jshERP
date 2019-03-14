@@ -132,4 +132,56 @@
         </foreach>
         )
     </update>
+    <resultMap id="BaseTreeResultMap" type="com.jsh.erp.datasource.vo.TreeNodeEx">
+        <result column="id" property="id"/>
+        <result column="text" property="text"/>
+        <association property="attributes" javaType="com.jsh.erp.datasource.vo.NodeAttributes">
+            <id column="orgNo" property="no"></id>
+            <result column="type" property="type"></result>
+        </association>
+        <collection column="{orgId=id,orgNo=orgNo}" property="children" javaType="java.util.ArrayList"
+                    ofType="com.jsh.erp.datasource.vo.TreeNode" select="getNextNodeTree"/>
+    </resultMap>
+
+    <resultMap id="NextTreeResultMap" type="com.jsh.erp.datasource.vo.TreeNodeEx">
+        <result column="id" property="id"/>
+        <result column="text" property="text"/>
+        <result column="iconCls" property="iconCls"/>
+        <association property="attributes" javaType="com.jsh.erp.datasource.vo.NodeAttributes">
+            <id column="orgNo" property="no"></id>
+            <result column="type" property="type"></result>
+        </association>
+        <collection column="{orgId=id,orgNo=orgNo}" property="children" javaType="java.util.ArrayList"
+                    ofType="com.jsh.erp.datasource.vo.TreeNode" select="getNextNodeTree"/>
+    </resultMap>
+
+    <select id="getNextNodeTree" resultMap="NextTreeResultMap">
+        select id ,	text,orgNo,sort ,iconCls,type from (
+            SELECT
+            org.id, org.org_abr as text,org.org_no as orgNo,org.sort as sort,null as iconCls,'0' as type
+            FROM jsh_organization org
+            WHERE org.org_parent_no = #{orgNo}
+            and org.org_stcd !='5'
+            union all
+            select
+            user.id,user.username as text, null as orgNo,rel.user_blng_orga_dspl_seq as sort,'icon-user' as iconCls,'1' as type
+            from jsh_user user,jsh_orga_user_rel rel
+            where
+            1=1
+            and user.id=rel.user_id
+            and rel.orga_id=#{orgId}
+            and rel.delete_flag !='1'
+            and user.status not in ('1','2')
+          ) node
+          order by sort asc
+    </select>
+
+    <select id="getNodeTree" resultMap="BaseTreeResultMap">
+        SELECT
+         id, org_abr as text,org_no as orgNo,'0' as type
+        FROM jsh_organization
+        WHERE org_parent_no = -1
+        and org_stcd !='5'
+        order by sort asc
+    </select>
 </mapper>

@@ -80,8 +80,11 @@
                 <td>负责人</td>
                 <td style="padding:5px">
                     <input name="principalName" id="principalName"
-                            style="width: 230px;height: 20px" readonly="readonly"/>
+                            style="width: 175px;height: 20px" readonly="readonly"/>
+                    <a href="javascript:void(0)" class="l-btn l-btn-plain" group="" id="lookForSelectUser">
+                        <span class="l-btn-left"><span class="l-btn-text icon-search l-btn-icon-left"></span></span></a>
                     <input name="principal" id="principal" type="hidden"/>
+                    <input name="selectType" id="selectType" type="hidden"/>
                 </td>
             </tr>
             <tr>
@@ -103,6 +106,9 @@
     <a href="javascript:void(0)" id="saveDepot" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
     <a href="javascript:void(0)" id="cancelDepot" class="easyui-linkbutton" iconCls="icon-cancel"
        onclick="javascript:$('#depotDlg').dialog('close')">取消</a>
+</div>
+<div id="forSelectUserDlg" class="easyui-dialog" style="width:380px;padding:10px 20px"
+     closed="true" modal="true" cache="false" collapsible="false" closable="true">
 </div>
 
 <script type="text/javascript">
@@ -164,7 +170,7 @@
                     formatter: function (value, rec) {
                         var str = '';
                         var rowInfo = rec.id + 'AaBb' + rec.name + 'AaBb' + rec.sort + 'AaBb' + rec.remark + 'AaBb'
-                            + rec.address + 'AaBb' + rec.warehousing + 'AaBb' + rec.truckage+ transferUndefined(rec.principalName)+transferUndefined(rec.principal);
+                            + rec.address + 'AaBb' + rec.warehousing + 'AaBb' + rec.truckage+'AaBb'+ transferUndefined(rec.principalName)+'AaBb'+transferUndefined(rec.principal);
                         str += '<img title="编辑" src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editDepot(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
                         str += '<img title="删除" src="/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteDepot(' + rec.id + ');"/>';
                         return str;
@@ -324,7 +330,7 @@
         $(".window-mask").css({width: webW, height: webH});
         $('#depotFM').form('clear');
         $("#name").focus();
-
+        $("#selectType").val("principal");
         oldDepot = "";
         depotID = 0;
         url = '/depot/add';
@@ -370,7 +376,9 @@
         $("#address").val(depotInfo[4]);
         $("#warehousing").val(depotInfo[5]);
         $("#truckage").val(depotInfo[6]);
-
+        $("#principalName").val(depotInfo[7]);
+        $("#principal").val(depotInfo[8]);
+        $("#selectType").val("principal");
         oldDepot = depotInfo[1];
         $('#depotDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑仓库信息');
         $(".window-mask").css({width: webW, height: webH});
@@ -485,6 +493,19 @@
         }
         parent.addTab(currentRow[0].id + "单元", "/pages/materials/building.jsp?ProjectId=" + currentRow[0].id, "");
 
+    });
+    //查询负责人信息
+    $("#lookForSelectUser").on("click", function () {
+        $('#forSelectUserDlg').dialog({
+            title: '负责人选择',
+            width: webW/2,
+            height: webH/2,
+            closed: false,
+            cache: false,
+            href: '/pages/manage/user_forselect.html',
+            modal: true,
+            resizable:true
+        });
     });
 </script>
 </body>

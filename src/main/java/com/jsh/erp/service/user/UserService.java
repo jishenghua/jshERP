@@ -10,6 +10,8 @@ import com.jsh.erp.datasource.entities.UserEx;
 import com.jsh.erp.datasource.entities.UserExample;
 import com.jsh.erp.datasource.mappers.UserMapper;
 import com.jsh.erp.datasource.mappers.UserMapperEx;
+import com.jsh.erp.datasource.vo.TreeNode;
+import com.jsh.erp.datasource.vo.TreeNodeEx;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.orgaUserRel.OrgaUserRelService;
 import com.jsh.erp.utils.ExceptionCodeConstants;
@@ -398,4 +400,7 @@ public class UserService {
         }
     }
 
+    public List<TreeNodeEx> getOrganizationUserTree() {
+        return userMapperEx.getNodeTree();
+    }
 }
