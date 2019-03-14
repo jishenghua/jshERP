@@ -23,8 +23,9 @@
 <script type="text/javascript">
 
     $(function () {
+        var id=$("#id").val();
         $('#ttForSelect').tree({
-            url: '/organization/getOrganizationTree',
+            url: '/organization/getOrganizationTree?id='+id,
             animate: true,
             onDblClick: function (node) {
                 //双击修改

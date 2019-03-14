@@ -100,8 +100,8 @@ public class MaterialCategoryService {
      * @Param:
      * @return java.util.List<com.jsh.erp.datasource.vo.TreeNode>
      */
-    public List<TreeNode> getMaterialCategoryTree() throws Exception{
-       return materialCategoryMapperEx.getNodeTree();
+    public List<TreeNode> getMaterialCategoryTree(Long id) throws Exception{
+       return materialCategoryMapperEx.getNodeTree(id);
     }
     /**
      * create by: cjl
@@ -117,8 +117,8 @@ public class MaterialCategoryService {
             return 0;
         }
         if(mc.getParentid()==null){
-            //没有给定父级目录的id，默认设置父级目录为根目录
-            mc.setParentid(BusinessConstants.MATERIAL_CATEGORY_ROOT_ID);
+            //没有给定父级目录的id，默认设置父级目录为根目录的父目录
+            mc.setParentid(BusinessConstants.MATERIAL_CATEGORY_ROOT_PARENT_ID);
         }
         //检查商品类型编号是否已存在
         checkMaterialCategorySerialNo(mc);
@@ -148,40 +148,16 @@ public class MaterialCategoryService {
         if(strArray.length<1){
             return 0;
         }
-        /**
-         * create by: qiankunpingtai
-         * create time: 2019/3/13 14:49
-         * description:
-         * 添加一个限制，根目录不允许删除
-         */
-        String rootIdStr=BusinessConstants.MATERIAL_CATEGORY_ROOT_ID.toString();
-        for(String s:strArray){
-            if(rootIdStr.equals(s)){
-                logger.error("异常码[{}],异常提示[{}],参数,id:[{}]",
-                        ExceptionConstants.MATERIAL_CATEGORY_ROOT_NOT_SUPPORT_DELETE_CODE,
-                        ExceptionConstants.MATERIAL_CATEGORY_ROOT_NOT_SUPPORT_DELETE_MSG,s);
-                throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_CATEGORY_ROOT_NOT_SUPPORT_DELETE_CODE,
-                        ExceptionConstants.MATERIAL_CATEGORY_ROOT_NOT_SUPPORT_DELETE_MSG);
-            }
-        }
+
        return materialCategoryMapperEx.batchDeleteMaterialCategoryByIds(updateDate,updater,strArray);
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int editMaterialCategory(MaterialCategory mc) {
-        /**
-         * create by: qiankunpingtai
-         * create time: 2019/3/13 14:49
-         * description:
-         * 添加一个限制根目录不允许修改
-         */
-        if(BusinessConstants.MATERIAL_CATEGORY_ROOT_ID.equals(mc.getId())){
-            logger.error("异常码[{}],异常提示[{}],参数,id:[{}]",
-                    ExceptionConstants.MATERIAL_CATEGORY_ROOT_NOT_SUPPORT_EDIT_CODE,
-                    ExceptionConstants.MATERIAL_CATEGORY_ROOT_NOT_SUPPORT_EDIT_MSG,mc.getId());
-            throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_CATEGORY_ROOT_NOT_SUPPORT_EDIT_CODE,
-                    ExceptionConstants.MATERIAL_CATEGORY_ROOT_NOT_SUPPORT_EDIT_MSG);
-
+        if(mc.getParentid()==null){
+            //没有给定父级目录的id，默认设置父级目录为根目录的父目录
+            mc.setParentid(BusinessConstants.MATERIAL_CATEGORY_ROOT_PARENT_ID);
         }
+
         //检查商品类型编号是否已存在
         checkMaterialCategorySerialNo(mc);
         //更新时间

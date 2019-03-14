@@ -82,6 +82,7 @@
     //初始化界面
     $(function () {
         var treeHeight=webH-35;
+        var id=$("#id").val();
         //初始化系统基础信息
         $('#tableData').datagrid({
             height: treeHeight,
@@ -107,7 +108,7 @@
         });
         $('#tableData').prev('.datagrid-view2').find(".datagrid-body").append("<ul id='tt'><ul>");
         $('#tt').tree({
-            url: '/materialCategory/getMaterialCategoryTree',
+            url: '/materialCategory/getMaterialCategoryTree?id='+id,
             animate: true,
             checkbox: true,
             onDblClick: function(node){

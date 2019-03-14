@@ -95,9 +95,9 @@ public class OrganizationController {
      * @return com.alibaba.fastjson.JSONArray
      */
     @RequestMapping(value = "/getOrganizationTree")
-    public JSONArray getOrganizationTree() throws Exception{
+    public JSONArray getOrganizationTree(@RequestParam("id") Long id) throws Exception{
        JSONArray arr=new JSONArray();
-       List<TreeNode> organizationTree= organizationService.getOrganizationTree();
+       List<TreeNode> organizationTree= organizationService.getOrganizationTree(id);
        if(organizationTree!=null&&organizationTree.size()>0){
            for(TreeNode node:organizationTree){
                String str=JSON.toJSONString(node);

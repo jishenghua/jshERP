@@ -83,7 +83,14 @@ public class BusinessConstants {
     /**
      * 商品类别根目录id
      * */
-    public static final Long MATERIAL_CATEGORY_ROOT_ID = 1L;
+    /**
+     * create by: qiankunpingtai
+     * create time: 2019/3/14 11:41
+     * description: 
+     * 为了使用户可以自己建初始目录，设定根目录的父级目录id为-1
+     *
+     */
+    public static final Long MATERIAL_CATEGORY_ROOT_PARENT_ID = -1L;
     /**
      * 商品类别状态
      * 0系统默认，1启用，2删除
@@ -101,10 +108,10 @@ public class BusinessConstants {
     public static final String ORGANIZATION_STCD_BUSINESS_TERMINATED = "4";
     public static final String ORGANIZATION_STCD_REMOVED = "5";
     /**
-     * 根机构编号
-     * 根机构编号默认为-1
+     * 根机构父级编号
+     * 根机父级构编号默认为-1
      * */
-    public static final String ORGANIZATION_ROOT_NO = "-1";
+    public static final String ORGANIZATION_ROOT_PARENT_NO = "-1";
     /**
      * 新增用户默认密码
      * */
