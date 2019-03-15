@@ -1,6 +1,7 @@
 package com.jsh.erp.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -10,6 +11,8 @@ import com.jsh.erp.datasource.entities.DepotEx;
 import com.jsh.erp.datasource.entities.SerialNumberEx;
 import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.entities.UserEx;
+import com.jsh.erp.datasource.vo.TreeNode;
+import com.jsh.erp.datasource.vo.TreeNodeEx;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.*;
 import org.slf4j.Logger;
@@ -310,6 +313,19 @@ public class UserController {
         JSONObject result = ExceptionConstants.standardSuccess();
         userService.batDeleteUser(ids);
         return result;
+    }
+    @RequestMapping("/getOrganizationUserTree")
+    public JSONArray getOrganizationUserTree()throws Exception{
+        JSONArray arr=new JSONArray();
+        List<TreeNodeEx> organizationUserTree= userService.getOrganizationUserTree();
+        if(organizationUserTree!=null&&organizationUserTree.size()>0){
+            for(TreeNodeEx node:organizationUserTree){
+                String str=JSON.toJSONString(node);
+                JSONObject obj=JSON.parseObject(str);
+                arr.add(obj) ;
+            }
+        }
+        return arr;
     }
 
 }

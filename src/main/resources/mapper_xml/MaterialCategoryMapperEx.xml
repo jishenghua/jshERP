@@ -33,14 +33,14 @@
     <resultMap id="BaseTreeResultMap" type="com.jsh.erp.datasource.vo.TreeNode">
         <result column="id" property="id"/>
         <result column="name" property="text"/>
-        <collection column="id" property="children" javaType="java.util.ArrayList"
+        <collection column="{currentId=currentId,id=id}" property="children" javaType="java.util.ArrayList"
                     ofType="com.jsh.erp.datasource.vo.TreeNode" select="getNextNodeTree"/>
     </resultMap>
 
     <resultMap id="NextTreeResultMap" type="com.jsh.erp.datasource.vo.TreeNode">
         <result column="id" property="id"/>
         <result column="name" property="text"/>
-        <collection column="id" property="children" javaType="java.util.ArrayList"
+        <collection column="{currentId=currentId,id=id}" property="children" javaType="java.util.ArrayList"
                     ofType="com.jsh.erp.datasource.vo.TreeNode" select="getNextNodeTree"/>
     </resultMap>
 
@@ -50,19 +50,25 @@
 
     <select id="getNextNodeTree" resultMap="NextTreeResultMap">
         SELECT
-        <include refid="Base_Column_List"/>
+        <include refid="Base_Column_List"/>,#{currentId} as currentId
         FROM jsh_materialcategory
         WHERE ParentId = #{id}
+        <if test="currentId != null">
+            and id !=#{currentId}
+        </if>
         and status !='2'
         order by sort asc
     </select>
 
     <select id="getNodeTree" resultMap="BaseTreeResultMap">
         SELECT
-        <include refid="Base_Column_List"/>
+        <include refid="Base_Column_List"/>,#{currentId} as currentId
         FROM jsh_materialcategory
         WHERE ParentId = -1
         and status !='2'
+        <if test="currentId != null">
+            and id !=#{currentId}
+        </if>
         order by sort asc
     </select>
     <insert id="addMaterialCategory" parameterType="com.jsh.erp.datasource.entities.MaterialCategory"

@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Description
@@ -17,8 +18,8 @@ import java.util.List;
 public interface OrganizationMapperEx {
 
 
-    List<TreeNode> getNodeTree();
-    List<TreeNode> getNextNodeTree(@Param("id") Long id);
+    List<TreeNode> getNodeTree(@Param("currentId")Long currentId);
+    List<TreeNode> getNextNodeTree(Map<String, Object> parameterMap);
 
     int addOrganization(Organization org);
 

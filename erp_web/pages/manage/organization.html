@@ -116,6 +116,7 @@
     var url;
     //初始化界面
     $(function () {
+        var id=$("#id").val();
         var treeHeight=webH-35;
         //初始化系统基础信息
         $('#tableData').datagrid({
@@ -142,7 +143,7 @@
         });
         $('#tableData').prev('.datagrid-view2').find(".datagrid-body").append("<ul id='tt'><ul>");
         $('#tt').tree({
-            url: '/organization/getOrganizationTree',
+            url: '/organization/getOrganizationTree?id='+id,
             animate: true,
             checkbox: true,
             onDblClick: function(node){

@@ -23,26 +23,29 @@
 <script type="text/javascript">
 
     $(function () {
-        var id=$("#id").val();
         $('#ttForSelect').tree({
-            url: '/organization/getOrganizationTree?id='+id,
+            url: '/user/getOrganizationUserTree',
             animate: true,
             onDblClick: function (node) {
                 //双击修改
-                forSelectOrganization(node);
+                forSelectUser(node);
             }
         });
 
-        function forSelectOrganization(node) {
+        function forSelectUser(node) {
             var selectType=$("#selectType").val();
-            if(selectType=='orgParent'){
-                $("#orgParentName").val(node.text);
-                $("#orgParentNo").val(node.attributes);
+            console.log(node);
+            if(!node.attributes.type){
+                return;
+            }
+            if(selectType=='principal'){
+                $("#principalName").val(node.text);
+                $("#principal").val(node.id);
             }else if(selectType=='org'){
                 $("#orgAbr").val(node.text);
                 $("#orgaId").val(node.id);
             }
-            $('#forSelectOrganizationDlg').dialog('close');
+            $('#forSelectUserDlg').dialog('close');
         }
     });
 

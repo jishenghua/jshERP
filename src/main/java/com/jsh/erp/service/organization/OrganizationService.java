@@ -82,7 +82,7 @@ public class OrganizationService {
          * 未指定父级机构的时候默认为根机构
          * */
         if(StringUtil.isEmpty(org.getOrgParentNo())){
-            org.setOrgParentNo(BusinessConstants.ORGANIZATION_ROOT_NO);
+            org.setOrgParentNo(BusinessConstants.ORGANIZATION_ROOT_PARENT_NO);
         }
         return organizationMapperEx.addOrganization(org);
     }
@@ -103,13 +103,13 @@ public class OrganizationService {
          * 未指定父级机构的时候默认为根机构
          * */
         if(StringUtil.isEmpty(org.getOrgParentNo())){
-            org.setOrgParentNo(BusinessConstants.ORGANIZATION_ROOT_NO);
+            org.setOrgParentNo(BusinessConstants.ORGANIZATION_ROOT_PARENT_NO);
         }
         return organizationMapperEx.editOrganization(org);
     }
 
-    public List<TreeNode> getOrganizationTree()throws Exception {
-        return organizationMapperEx.getNodeTree();
+    public List<TreeNode> getOrganizationTree(Long id)throws Exception {
+        return organizationMapperEx.getNodeTree(id);
     }
 
     public List<Organization> findById(Long id) throws Exception{
