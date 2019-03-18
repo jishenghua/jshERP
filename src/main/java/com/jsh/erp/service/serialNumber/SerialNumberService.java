@@ -172,9 +172,7 @@ public class SerialNumberService {
             return null;
         }
         /**处理商品id*/
-        if(serialNumberEx.getMaterialId()==null){
-            serialNumberEx.setMaterialId(getSerialNumberMaterialIdByMaterialName(serialNumberEx.getMaterialName()));
-        }
+        serialNumberEx.setMaterialId(getSerialNumberMaterialIdByMaterialName(serialNumberEx.getMaterialName()));
         //删除标记,默认未删除
         serialNumberEx.setDeleteFlag(BusinessConstants.DELETE_FLAG_EXISTS);
         //已卖出，默认未否

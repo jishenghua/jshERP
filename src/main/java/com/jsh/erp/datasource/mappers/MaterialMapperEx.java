@@ -5,6 +5,7 @@ import com.jsh.erp.datasource.entities.MaterialVo4Unit;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Description
@@ -49,5 +50,8 @@ public interface MaterialMapperEx {
      * 通过商品名称查询商品信息
      * */
     List<Material> findByMaterialName(@Param("name") String name);
-
+    /**
+     * 获取开启序列号并且状态正常的商品列表
+     * */
+    List<Material> getMaterialEnableSerialNumberList(Map<String, Object> parameterMap);
 }
