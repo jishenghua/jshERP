@@ -93,5 +93,4 @@ public interface AppMapper {
      * @mbggenerated
      */
     int updateByPrimaryKey(App record);
-
 }

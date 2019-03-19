@@ -3,8 +3,6 @@ package com.jsh.erp.datasource.mappers;
 import com.jsh.erp.datasource.entities.AccountItem;
 import com.jsh.erp.datasource.entities.AccountItemExample;
 import java.util.List;
-
-import com.jsh.erp.datasource.vo.AccountItemVo4List;
 import org.apache.ibatis.annotations.Param;
 
 public interface AccountItemMapper {

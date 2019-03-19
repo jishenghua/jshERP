@@ -1,72 +1,12 @@
 package com.jsh.erp.datasource.vo;
 
-import java.math.BigDecimal;
+import com.jsh.erp.datasource.entities.AccountItem;
 
-public class AccountItemVo4List {
-
-    private Long id;
-
-    private Long headerid;
-
-    private Long accountid;
-
-    private Long inoutitemid;
-
-    private BigDecimal eachamount;
-
-    private String remark;
+public class AccountItemVo4List extends AccountItem {
 
     private String accountName;
 
     private String inOutItemName;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getHeaderid() {
-        return headerid;
-    }
-
-    public void setHeaderid(Long headerid) {
-        this.headerid = headerid;
-    }
-
-    public Long getAccountid() {
-        return accountid;
-    }
-
-    public void setAccountid(Long accountid) {
-        this.accountid = accountid;
-    }
-
-    public Long getInoutitemid() {
-        return inoutitemid;
-    }
-
-    public void setInoutitemid(Long inoutitemid) {
-        this.inoutitemid = inoutitemid;
-    }
-
-    public BigDecimal getEachamount() {
-        return eachamount;
-    }
-
-    public void setEachamount(BigDecimal eachamount) {
-        this.eachamount = eachamount;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
 
     public String getAccountName() {
         return accountName;

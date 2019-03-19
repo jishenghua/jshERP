@@ -25,6 +25,8 @@ public class AccountHeadVo4ListEx {
 
     private String remark;
 
+    private Long tenantId;
+
     private String organname;
 
     private String handspersonname;
@@ -109,6 +111,14 @@ public class AccountHeadVo4ListEx {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public Long getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(Long tenantId) {
+        this.tenantId = tenantId;
     }
 
     public String getOrganname() {

@@ -71,4 +71,9 @@ public class RoleController {
         }
         return arr;
     }
+
+    @PostMapping(value = "/list")
+    public List<Role> list(HttpServletRequest request) {
+        return roleService.getRole();
+    }
 }

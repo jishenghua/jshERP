@@ -3,8 +3,6 @@ package com.jsh.erp.datasource.mappers;
 import com.jsh.erp.datasource.entities.Log;
 import com.jsh.erp.datasource.entities.LogExample;
 import java.util.List;
-
-import com.jsh.erp.datasource.vo.LogVo4List;
 import org.apache.ibatis.annotations.Param;
 
 public interface LogMapper {

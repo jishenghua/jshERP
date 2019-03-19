@@ -255,7 +255,7 @@ public class DepotItemService {
                         if(material==null){
                             continue;
                         }
-                        if(BusinessConstants.ENABLE_SERIAL_NUMBER_ENABLED.equals(material.getEnableSerialNumber())){
+                        if(BusinessConstants.ENABLE_SERIAL_NUMBER_ENABLED.equals(material.getEnableserialnumber())){
                             serialNumberMapperEx.cancelSerialNumber(depotItem.getMaterialid(),depotItem.getHeaderid(),depotItem.getBasicnumber().intValue(),
                                     new Date(),userInfo==null?null:userInfo.getId());
                         }
@@ -364,7 +364,7 @@ public class DepotItemService {
                             /**
                              * 判断商品是否开启序列号，开启的收回序列号，未开启的跳过
                              * */
-                            if(BusinessConstants.ENABLE_SERIAL_NUMBER_ENABLED.equals(material.getEnableSerialNumber())) {
+                            if(BusinessConstants.ENABLE_SERIAL_NUMBER_ENABLED.equals(material.getEnableserialnumber())) {
                                 //查询单据子表中开启序列号的数据列表
                                 serialNumberService.checkAndUpdateSerialNumber(depotItem, userInfo);
                             }
@@ -391,7 +391,7 @@ public class DepotItemService {
                         /**
                          * 判断商品是否开启序列号，开启的收回序列号，未开启的跳过
                          * */
-                        if(BusinessConstants.ENABLE_SERIAL_NUMBER_ENABLED.equals(material.getEnableSerialNumber())) {
+                        if(BusinessConstants.ENABLE_SERIAL_NUMBER_ENABLED.equals(material.getEnableserialnumber())) {
                             serialNumberMapperEx.cancelSerialNumber(depotItem.getMaterialid(), depotItem.getHeaderid(), depotItem.getBasicnumber().intValue(),
                                     new Date(), userInfo == null ? null : userInfo.getId());
                         }
@@ -471,7 +471,7 @@ public class DepotItemService {
                                 /**
                                  * 判断商品是否开启序列号，开启的收回序列号，未开启的跳过
                                  * */
-                            if(BusinessConstants.ENABLE_SERIAL_NUMBER_ENABLED.equals(material.getEnableSerialNumber())) {
+                            if(BusinessConstants.ENABLE_SERIAL_NUMBER_ENABLED.equals(material.getEnableserialnumber())) {
                                 //查询单据子表中开启序列号的数据列表
                                 serialNumberService.checkAndUpdateSerialNumber(depotItem, userInfo);
                             }

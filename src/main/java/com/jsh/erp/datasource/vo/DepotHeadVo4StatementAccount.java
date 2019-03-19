@@ -19,6 +19,8 @@ public class DepotHeadVo4StatementAccount {
 
     private String oTime;
 
+    private Long tenantId;
+
     public String getNumber() {
         return number;
     }
@@ -73,5 +75,13 @@ public class DepotHeadVo4StatementAccount {
 
     public void setoTime(String oTime) {
         this.oTime = oTime;
+    }
+
+    public Long getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(Long tenantId) {
+        this.tenantId = tenantId;
     }
 }

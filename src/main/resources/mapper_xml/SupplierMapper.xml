@@ -27,6 +27,7 @@
     <result column="bankName" jdbcType="VARCHAR" property="bankname" />
     <result column="accountNumber" jdbcType="VARCHAR" property="accountnumber" />
     <result column="taxRate" jdbcType="DECIMAL" property="taxrate" />
+    <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -101,7 +102,7 @@
     -->
     id, supplier, contacts, phonenum, email, description, isystem, type, enabled, AdvanceIn, 
     BeginNeedGet, BeginNeedPay, AllNeedGet, AllNeedPay, fax, telephone, address, taxNum, 
-    bankName, accountNumber, taxRate
+    bankName, accountNumber, taxRate, tenant_id
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.SupplierExample" resultMap="BaseResultMap">
     <!--
@@ -160,16 +161,16 @@
       AdvanceIn, BeginNeedGet, BeginNeedPay, 
       AllNeedGet, AllNeedPay, fax, 
       telephone, address, taxNum, 
-      bankName, accountNumber, taxRate
-      )
+      bankName, accountNumber, taxRate, 
+      tenant_id)
     values (#{id,jdbcType=BIGINT}, #{supplier,jdbcType=VARCHAR}, #{contacts,jdbcType=VARCHAR}, 
       #{phonenum,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
       #{isystem,jdbcType=TINYINT}, #{type,jdbcType=VARCHAR}, #{enabled,jdbcType=BIT}, 
       #{advancein,jdbcType=DECIMAL}, #{beginneedget,jdbcType=DECIMAL}, #{beginneedpay,jdbcType=DECIMAL}, 
       #{allneedget,jdbcType=DECIMAL}, #{allneedpay,jdbcType=DECIMAL}, #{fax,jdbcType=VARCHAR}, 
       #{telephone,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{taxnum,jdbcType=VARCHAR}, 
-      #{bankname,jdbcType=VARCHAR}, #{accountnumber,jdbcType=VARCHAR}, #{taxrate,jdbcType=DECIMAL}
-      )
+      #{bankname,jdbcType=VARCHAR}, #{accountnumber,jdbcType=VARCHAR}, #{taxrate,jdbcType=DECIMAL}, 
+      #{tenantId,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.Supplier">
     <!--
@@ -241,6 +242,9 @@
       <if test="taxrate != null">
         taxRate,
       </if>
+      <if test="tenantId != null">
+        tenant_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -305,6 +309,9 @@
       </if>
       <if test="taxrate != null">
         #{taxrate,jdbcType=DECIMAL},
+      </if>
+      <if test="tenantId != null">
+        #{tenantId,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -388,6 +395,9 @@
       <if test="record.taxrate != null">
         taxRate = #{record.taxrate,jdbcType=DECIMAL},
       </if>
+      <if test="record.tenantId != null">
+        tenant_id = #{record.tenantId,jdbcType=BIGINT},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -419,7 +429,8 @@
       taxNum = #{record.taxnum,jdbcType=VARCHAR},
       bankName = #{record.bankname,jdbcType=VARCHAR},
       accountNumber = #{record.accountnumber,jdbcType=VARCHAR},
-      taxRate = #{record.taxrate,jdbcType=DECIMAL}
+      taxRate = #{record.taxrate,jdbcType=DECIMAL},
+      tenant_id = #{record.tenantId,jdbcType=BIGINT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -491,6 +502,9 @@
       <if test="taxrate != null">
         taxRate = #{taxrate,jdbcType=DECIMAL},
       </if>
+      <if test="tenantId != null">
+        tenant_id = #{tenantId,jdbcType=BIGINT},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -519,7 +533,8 @@
       taxNum = #{taxnum,jdbcType=VARCHAR},
       bankName = #{bankname,jdbcType=VARCHAR},
       accountNumber = #{accountnumber,jdbcType=VARCHAR},
-      taxRate = #{taxrate,jdbcType=DECIMAL}
+      taxRate = #{taxrate,jdbcType=DECIMAL},
+      tenant_id = #{tenantId,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

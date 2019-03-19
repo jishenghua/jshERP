@@ -41,15 +41,15 @@
             <property name="enableSubPackages" value="false"/>
             <property name="exampleMethodVisibility" value="public"/>
         </javaClientGenerator>
-       <!-- <table tableName="jsh_account" domainObjectName="Account"></table>
+        <!-- <table tableName="jsh_account" domainObjectName="Account"></table>
         <table tableName="jsh_accounthead" domainObjectName="AccountHead"></table>
         <table tableName="jsh_accountitem" domainObjectName="AccountItem"></table>
         <table tableName="jsh_app" domainObjectName="App"></table>
         <table tableName="jsh_asset" domainObjectName="Asset"></table>
         <table tableName="jsh_assetcategory" domainObjectName="AssetCategory"></table>
-        <table tableName="jsh_assetname" domainObjectName="AssetName"></table>-->
-        <!--<table tableName="jsh_depot" domainObjectName="Depot"></table>-->
-        <!--<table tableName="jsh_depothead" domainObjectName="DepotHead"></table>
+        <table tableName="jsh_assetname" domainObjectName="AssetName"></table>
+        <table tableName="jsh_depot" domainObjectName="Depot"></table>
+        <table tableName="jsh_depothead" domainObjectName="DepotHead"></table>
         <table tableName="jsh_depotitem" domainObjectName="DepotItem"></table>
         <table tableName="jsh_functions" domainObjectName="Functions"></table>
         <table tableName="jsh_inoutitem" domainObjectName="InOutItem"></table>
@@ -59,13 +59,13 @@
         <table tableName="jsh_materialproperty" domainObjectName="MaterialProperty"></table>
         <table tableName="jsh_person" domainObjectName="Person"></table>
         <table tableName="jsh_role" domainObjectName="Role"></table>
-        <table tableName="jsh_supplier" domainObjectName="Supplier"></table>-->
+        <table tableName="jsh_supplier" domainObjectName="Supplier"></table>
         <table tableName="jsh_systemconfig" domainObjectName="SystemConfig"></table>
-        <!--<table tableName="jsh_unit" domainObjectName="Unit"></table>
+        <table tableName="jsh_unit" domainObjectName="Unit"></table>
         <table tableName="jsh_user" domainObjectName="User"></table>
         <table tableName="jsh_userbusiness" domainObjectName="UserBusiness"></table>
-        <table tableName="jsh_serial_number" domainObjectName="SerialNumber"></table>-->
+        <table tableName="jsh_serial_number" domainObjectName="SerialNumber"></table>
         <table tableName="jsh_organization" domainObjectName="Organization"></table>
-        <!--<table tableName="jsh_orga_user_rel" domainObjectName="OrgaUserRel"></table>-->
+        <table tableName="jsh_orga_user_rel" domainObjectName="OrgaUserRel"></table> -->
     </context>
 </generatorConfiguration>

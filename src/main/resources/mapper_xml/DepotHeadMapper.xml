@@ -35,6 +35,7 @@
     <result column="AccountDay" jdbcType="INTEGER" property="accountday" />
     <result column="Status" jdbcType="VARCHAR" property="status" />
     <result column="LinkNumber" jdbcType="VARCHAR" property="linknumber" />
+    <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -111,7 +112,7 @@
     OperTime, OrganId, HandsPersonId, AccountId, ChangeAmount, AllocationProjectId, TotalPrice, 
     PayType, Remark, Salesman, AccountIdList, AccountMoneyList, Discount, DiscountMoney, 
     DiscountLastMoney, OtherMoney, OtherMoneyList, OtherMoneyItem, AccountDay, Status, 
-    LinkNumber
+    LinkNumber, tenant_id
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.DepotHeadExample" resultMap="BaseResultMap">
     <!--
@@ -173,7 +174,8 @@
       AccountIdList, AccountMoneyList, Discount, 
       DiscountMoney, DiscountLastMoney, OtherMoney, 
       OtherMoneyList, OtherMoneyItem, AccountDay, 
-      Status, LinkNumber)
+      Status, LinkNumber, tenant_id
+      )
     values (#{id,jdbcType=BIGINT}, #{type,jdbcType=VARCHAR}, #{subtype,jdbcType=VARCHAR}, 
       #{projectid,jdbcType=BIGINT}, #{defaultnumber,jdbcType=VARCHAR}, #{number,jdbcType=VARCHAR}, 
       #{operpersonname,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, #{opertime,jdbcType=TIMESTAMP}, 
@@ -183,7 +185,8 @@
       #{accountidlist,jdbcType=VARCHAR}, #{accountmoneylist,jdbcType=VARCHAR}, #{discount,jdbcType=DECIMAL}, 
       #{discountmoney,jdbcType=DECIMAL}, #{discountlastmoney,jdbcType=DECIMAL}, #{othermoney,jdbcType=DECIMAL}, 
       #{othermoneylist,jdbcType=VARCHAR}, #{othermoneyitem,jdbcType=VARCHAR}, #{accountday,jdbcType=INTEGER}, 
-      #{status,jdbcType=VARCHAR}, #{linknumber,jdbcType=VARCHAR})
+      #{status,jdbcType=VARCHAR}, #{linknumber,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.DepotHead">
     <!--
@@ -279,6 +282,9 @@
       <if test="linknumber != null">
         LinkNumber,
       </if>
+      <if test="tenantId != null">
+        tenant_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -367,6 +373,9 @@
       </if>
       <if test="linknumber != null">
         #{linknumber,jdbcType=VARCHAR},
+      </if>
+      <if test="tenantId != null">
+        #{tenantId,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -474,6 +483,9 @@
       <if test="record.linknumber != null">
         LinkNumber = #{record.linknumber,jdbcType=VARCHAR},
       </if>
+      <if test="record.tenantId != null">
+        tenant_id = #{record.tenantId,jdbcType=BIGINT},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -513,7 +525,8 @@
       OtherMoneyItem = #{record.othermoneyitem,jdbcType=VARCHAR},
       AccountDay = #{record.accountday,jdbcType=INTEGER},
       Status = #{record.status,jdbcType=VARCHAR},
-      LinkNumber = #{record.linknumber,jdbcType=VARCHAR}
+      LinkNumber = #{record.linknumber,jdbcType=VARCHAR},
+      tenant_id = #{record.tenantId,jdbcType=BIGINT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -609,6 +622,9 @@
       <if test="linknumber != null">
         LinkNumber = #{linknumber,jdbcType=VARCHAR},
       </if>
+      <if test="tenantId != null">
+        tenant_id = #{tenantId,jdbcType=BIGINT},
+      </if>
     </set>
     where Id = #{id,jdbcType=BIGINT}
   </update>
@@ -645,7 +661,8 @@
       OtherMoneyItem = #{othermoneyitem,jdbcType=VARCHAR},
       AccountDay = #{accountday,jdbcType=INTEGER},
       Status = #{status,jdbcType=VARCHAR},
-      LinkNumber = #{linknumber,jdbcType=VARCHAR}
+      LinkNumber = #{linknumber,jdbcType=VARCHAR},
+      tenant_id = #{tenantId,jdbcType=BIGINT}
     where Id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

@@ -20,6 +20,8 @@ public class AccountVo4InOutList {
 
     private String amList;
 
+    private Long tenantId;
+
     public String getNumber() {
         return number;
     }
@@ -82,5 +84,13 @@ public class AccountVo4InOutList {
 
     public void setAmList(String amList) {
         this.amList = amList;
+    }
+
+    public Long getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(Long tenantId) {
+        this.tenantId = tenantId;
     }
 }

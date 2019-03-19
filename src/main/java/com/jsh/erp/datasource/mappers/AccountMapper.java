@@ -3,9 +3,6 @@ package com.jsh.erp.datasource.mappers;
 import com.jsh.erp.datasource.entities.Account;
 import com.jsh.erp.datasource.entities.AccountExample;
 import java.util.List;
-
-import com.jsh.erp.datasource.vo.AccountVo4InOutList;
-import com.jsh.erp.datasource.vo.AccountVo4List;
 import org.apache.ibatis.annotations.Param;
 
 public interface AccountMapper {

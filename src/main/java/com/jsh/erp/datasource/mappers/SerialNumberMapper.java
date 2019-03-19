@@ -93,5 +93,4 @@ public interface SerialNumberMapper {
      * @mbggenerated
      */
     int updateByPrimaryKey(SerialNumber record);
-
 }

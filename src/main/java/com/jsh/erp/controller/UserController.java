@@ -17,11 +17,13 @@ import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
@@ -35,6 +37,9 @@ import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 @RequestMapping(value = "/user")
 public class UserController {
     private Logger logger = LoggerFactory.getLogger(ResourceController.class);
+
+    @Value("${mybatis-plus.status}")
+    private String mybatisPlusStatus;
 
     @Resource
     private UserService userService;
@@ -91,6 +96,8 @@ public class UserController {
     //                            new Timestamp(System.currentTimeMillis()), (short) 0, "管理用户：" + username + " 登录系统", username + " 登录系统"));
                         msgTip = "user can login";
                         request.getSession().setAttribute("user",user);
+                        request.getSession().setAttribute("tenantId",1L); //租户id
+                        request.getSession().setAttribute("mybatisPlusStatus",mybatisPlusStatus); //开启状态
                     } catch (Exception e) {
                         logger.error(">>>>>>>>>>>>>>>查询用户名为:" + username + " ，用户信息异常", e);
                     }

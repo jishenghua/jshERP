@@ -3,8 +3,6 @@ package com.jsh.erp.datasource.mappers;
 import com.jsh.erp.datasource.entities.Material;
 import com.jsh.erp.datasource.entities.MaterialExample;
 import java.util.List;
-
-import com.jsh.erp.datasource.entities.MaterialVo4Unit;
 import org.apache.ibatis.annotations.Param;
 
 public interface MaterialMapper {
@@ -95,6 +93,4 @@ public interface MaterialMapper {
      * @mbggenerated
      */
     int updateByPrimaryKey(Material record);
-
-
 }

@@ -426,11 +426,12 @@ public class SerialNumberExample {
         }
 
         public Criteria andIsSellLike(String value) {
-            addCriterion("isSell like", value, "isSell");
+            addCriterion("is_Sell like", value, "isSell");
             return (Criteria) this;
         }
+
         public Criteria andIsSellNotLike(String value) {
-            addCriterion("isSell not like", value, "isSell");
+            addCriterion("is_Sell not like", value, "isSell");
             return (Criteria) this;
         }
 
@@ -563,14 +564,17 @@ public class SerialNumberExample {
             addCriterion("delete_Flag <=", value, "deleteFlag");
             return (Criteria) this;
         }
+
         public Criteria andDeleteFlagLike(String value) {
-            addCriterion("deleteFlag like", value, "deleteFlag");
+            addCriterion("delete_Flag like", value, "deleteFlag");
             return (Criteria) this;
         }
+
         public Criteria andDeleteFlagNotLike(String value) {
-            addCriterion("deleteFlag not like", value, "deleteFlag");
+            addCriterion("delete_Flag not like", value, "deleteFlag");
             return (Criteria) this;
         }
+
         public Criteria andDeleteFlagIn(List<String> values) {
             addCriterion("delete_Flag in", values, "deleteFlag");
             return (Criteria) this;
@@ -830,68 +834,126 @@ public class SerialNumberExample {
             addCriterion("updater not between", value1, value2, "updater");
             return (Criteria) this;
         }
+
         public Criteria andDepotheadIdIsNull() {
-            addCriterion("depotheadId is null");
+            addCriterion("depothead_Id is null");
             return (Criteria) this;
         }
 
         public Criteria andDepotheadIdIsNotNull() {
-            addCriterion("depotheadId is not null");
+            addCriterion("depothead_Id is not null");
             return (Criteria) this;
         }
 
         public Criteria andDepotheadIdEqualTo(Long value) {
-            addCriterion("depotheadId =", value, "depotheadId");
+            addCriterion("depothead_Id =", value, "depotheadId");
             return (Criteria) this;
         }
 
         public Criteria andDepotheadIdNotEqualTo(Long value) {
-            addCriterion("depotheadId <>", value, "depotheadId");
+            addCriterion("depothead_Id <>", value, "depotheadId");
             return (Criteria) this;
         }
 
         public Criteria andDepotheadIdGreaterThan(Long value) {
-            addCriterion("depotheadId >", value, "depotheadId");
+            addCriterion("depothead_Id >", value, "depotheadId");
             return (Criteria) this;
         }
 
         public Criteria andDepotheadIdGreaterThanOrEqualTo(Long value) {
-            addCriterion("depotheadId >=", value, "depotheadId");
+            addCriterion("depothead_Id >=", value, "depotheadId");
             return (Criteria) this;
         }
 
         public Criteria andDepotheadIdLessThan(Long value) {
-            addCriterion("depotheadId <", value, "depotheadId");
+            addCriterion("depothead_Id <", value, "depotheadId");
             return (Criteria) this;
         }
 
         public Criteria andDepotheadIdLessThanOrEqualTo(Long value) {
-            addCriterion("depotheadId <=", value, "depotheadId");
+            addCriterion("depothead_Id <=", value, "depotheadId");
             return (Criteria) this;
         }
 
         public Criteria andDepotheadIdIn(List<Long> values) {
-            addCriterion("depotheadId in", values, "depotheadId");
+            addCriterion("depothead_Id in", values, "depotheadId");
             return (Criteria) this;
         }
 
         public Criteria andDepotheadIdNotIn(List<Long> values) {
-            addCriterion("depotheadId not in", values, "depotheadId");
+            addCriterion("depothead_Id not in", values, "depotheadId");
             return (Criteria) this;
         }
 
         public Criteria andDepotheadIdBetween(Long value1, Long value2) {
-            addCriterion("depotheadId between", value1, value2, "depotheadId");
+            addCriterion("depothead_Id between", value1, value2, "depotheadId");
             return (Criteria) this;
         }
 
         public Criteria andDepotheadIdNotBetween(Long value1, Long value2) {
-            addCriterion("depotheadId not between", value1, value2, "depotheadId");
+            addCriterion("depothead_Id not between", value1, value2, "depotheadId");
             return (Criteria) this;
         }
 
+        public Criteria andTenantIdIsNull() {
+            addCriterion("tenant_id is null");
+            return (Criteria) this;
+        }
 
+        public Criteria andTenantIdIsNotNull() {
+            addCriterion("tenant_id is not null");
+            return (Criteria) this;
+        }
 
+        public Criteria andTenantIdEqualTo(Long value) {
+            addCriterion("tenant_id =", value, "tenantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenantIdNotEqualTo(Long value) {
+            addCriterion("tenant_id <>", value, "tenantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenantIdGreaterThan(Long value) {
+            addCriterion("tenant_id >", value, "tenantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenantIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("tenant_id >=", value, "tenantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenantIdLessThan(Long value) {
+            addCriterion("tenant_id <", value, "tenantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenantIdLessThanOrEqualTo(Long value) {
+            addCriterion("tenant_id <=", value, "tenantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenantIdIn(List<Long> values) {
+            addCriterion("tenant_id in", values, "tenantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenantIdNotIn(List<Long> values) {
+            addCriterion("tenant_id not in", values, "tenantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenantIdBetween(Long value1, Long value2) {
+            addCriterion("tenant_id between", value1, value2, "tenantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenantIdNotBetween(Long value1, Long value2) {
+            addCriterion("tenant_id not between", value1, value2, "tenantId");
+            return (Criteria) this;
+        }
     }
 
     /**

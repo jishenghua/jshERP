@@ -1704,70 +1704,134 @@ public class MaterialExample {
             addCriterion("OtherField3 not between", value1, value2, "otherfield3");
             return (Criteria) this;
         }
-        public Criteria andEnableSerialNumberIsNull() {
+
+        public Criteria andEnableserialnumberIsNull() {
             addCriterion("enableSerialNumber is null");
             return (Criteria) this;
         }
 
-        public Criteria andEnableSerialNumberIsNotNull() {
+        public Criteria andEnableserialnumberIsNotNull() {
             addCriterion("enableSerialNumber is not null");
             return (Criteria) this;
         }
 
-        public Criteria andEnableSerialNumberEqualTo(String value) {
-            addCriterion("enableSerialNumber =", value, "enableSerialNumber");
+        public Criteria andEnableserialnumberEqualTo(String value) {
+            addCriterion("enableSerialNumber =", value, "enableserialnumber");
             return (Criteria) this;
         }
 
-        public Criteria andEnableSerialNumberNotEqualTo(String value) {
-            addCriterion("enableSerialNumber <>", value, "enableSerialNumber");
+        public Criteria andEnableserialnumberNotEqualTo(String value) {
+            addCriterion("enableSerialNumber <>", value, "enableserialnumber");
             return (Criteria) this;
         }
 
-        public Criteria andEnableSerialNumberGreaterThan(String value) {
-            addCriterion("enableSerialNumber >", value, "enableSerialNumber");
+        public Criteria andEnableserialnumberGreaterThan(String value) {
+            addCriterion("enableSerialNumber >", value, "enableserialnumber");
             return (Criteria) this;
         }
 
-        public Criteria andEnableSerialNumberGreaterThanOrEqualTo(String value) {
-            addCriterion("enableSerialNumber >=", value, "enableSerialNumber");
+        public Criteria andEnableserialnumberGreaterThanOrEqualTo(String value) {
+            addCriterion("enableSerialNumber >=", value, "enableserialnumber");
             return (Criteria) this;
         }
 
-        public Criteria andEnableSerialNumberLessThan(String value) {
-            addCriterion("enableSerialNumber <", value, "enableSerialNumber");
+        public Criteria andEnableserialnumberLessThan(String value) {
+            addCriterion("enableSerialNumber <", value, "enableserialnumber");
             return (Criteria) this;
         }
 
-        public Criteria andEnableSerialNumberLessThanOrEqualTo(String value) {
-            addCriterion("enableSerialNumber <=", value, "enableSerialNumber");
-            return (Criteria) this;
-        }
-        public Criteria andEnableSerialNumberLike(String value) {
-            addCriterion("enableSerialNumber like", value, "enableSerialNumber");
-            return (Criteria) this;
-        }
-        public Criteria andEnableSerialNumberNotLike(String value) {
-            addCriterion("enableSerialNumber not like", value, "enableSerialNumber");
-            return (Criteria) this;
-        }
-        public Criteria andEnableSerialNumberIn(List<String> values) {
-            addCriterion("enableSerialNumber in", values, "enableSerialNumber");
+        public Criteria andEnableserialnumberLessThanOrEqualTo(String value) {
+            addCriterion("enableSerialNumber <=", value, "enableserialnumber");
             return (Criteria) this;
         }
 
-        public Criteria andEnableSerialNumberNotIn(List<String> values) {
-            addCriterion("enableSerialNumber not in", values, "enableSerialNumber");
+        public Criteria andEnableserialnumberLike(String value) {
+            addCriterion("enableSerialNumber like", value, "enableserialnumber");
             return (Criteria) this;
         }
 
-        public Criteria andEnableSerialNumberBetween(String value1, String value2) {
-            addCriterion("enableSerialNumber between", value1, value2, "enableSerialNumber");
+        public Criteria andEnableserialnumberNotLike(String value) {
+            addCriterion("enableSerialNumber not like", value, "enableserialnumber");
             return (Criteria) this;
         }
 
-        public Criteria andEnableSerialNumberNotBetween(String value1, String value2) {
-            addCriterion("enableSerialNumber not between", value1, value2, "enableSerialNumber");
+        public Criteria andEnableserialnumberIn(List<String> values) {
+            addCriterion("enableSerialNumber in", values, "enableserialnumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnableserialnumberNotIn(List<String> values) {
+            addCriterion("enableSerialNumber not in", values, "enableserialnumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnableserialnumberBetween(String value1, String value2) {
+            addCriterion("enableSerialNumber between", value1, value2, "enableserialnumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnableserialnumberNotBetween(String value1, String value2) {
+            addCriterion("enableSerialNumber not between", value1, value2, "enableserialnumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenantIdIsNull() {
+            addCriterion("tenant_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenantIdIsNotNull() {
+            addCriterion("tenant_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenantIdEqualTo(Long value) {
+            addCriterion("tenant_id =", value, "tenantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenantIdNotEqualTo(Long value) {
+            addCriterion("tenant_id <>", value, "tenantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenantIdGreaterThan(Long value) {
+            addCriterion("tenant_id >", value, "tenantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenantIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("tenant_id >=", value, "tenantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenantIdLessThan(Long value) {
+            addCriterion("tenant_id <", value, "tenantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenantIdLessThanOrEqualTo(Long value) {
+            addCriterion("tenant_id <=", value, "tenantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenantIdIn(List<Long> values) {
+            addCriterion("tenant_id in", values, "tenantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenantIdNotIn(List<Long> values) {
+            addCriterion("tenant_id not in", values, "tenantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenantIdBetween(Long value1, Long value2) {
+            addCriterion("tenant_id between", value1, value2, "tenantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTenantIdNotBetween(Long value1, Long value2) {
+            addCriterion("tenant_id not between", value1, value2, "tenantId");
             return (Criteria) this;
         }
     }

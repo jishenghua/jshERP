@@ -229,7 +229,7 @@ public class SerialNumberService {
 
             }
             //获得唯一商品
-            if (BusinessConstants.ENABLE_SERIAL_NUMBER_NOT_ENABLED.equals(mlist.get(0).getEnableSerialNumber())) {
+            if (BusinessConstants.ENABLE_SERIAL_NUMBER_NOT_ENABLED.equals(mlist.get(0).getEnableserialnumber())) {
                 //商品未开启序列号
                 throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_NOT_ENABLE_SERIAL_NUMBER_CODE,
                         ExceptionConstants.MATERIAL_NOT_ENABLE_SERIAL_NUMBER_MSG);

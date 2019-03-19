@@ -29,6 +29,7 @@
     <result column="OtherField4" jdbcType="VARCHAR" property="otherfield4" />
     <result column="OtherField5" jdbcType="VARCHAR" property="otherfield5" />
     <result column="MType" jdbcType="VARCHAR" property="mtype" />
+    <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -103,7 +104,7 @@
     -->
     Id, HeaderId, MaterialId, MUnit, OperNumber, BasicNumber, UnitPrice, TaxUnitPrice, 
     AllPrice, Remark, Img, Incidentals, DepotId, AnotherDepotId, TaxRate, TaxMoney, TaxLastMoney, 
-    OtherField1, OtherField2, OtherField3, OtherField4, OtherField5, MType
+    OtherField1, OtherField2, OtherField3, OtherField4, OtherField5, MType, tenant_id
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="BaseResultMap">
     <!--
@@ -163,7 +164,8 @@
       DepotId, AnotherDepotId, TaxRate, 
       TaxMoney, TaxLastMoney, OtherField1, 
       OtherField2, OtherField3, OtherField4, 
-      OtherField5, MType)
+      OtherField5, MType, tenant_id
+      )
     values (#{id,jdbcType=BIGINT}, #{headerid,jdbcType=BIGINT}, #{materialid,jdbcType=BIGINT}, 
       #{munit,jdbcType=VARCHAR}, #{opernumber,jdbcType=DECIMAL}, #{basicnumber,jdbcType=DECIMAL}, 
       #{unitprice,jdbcType=DECIMAL}, #{taxunitprice,jdbcType=DECIMAL}, #{allprice,jdbcType=DECIMAL}, 
@@ -171,7 +173,8 @@
       #{depotid,jdbcType=BIGINT}, #{anotherdepotid,jdbcType=BIGINT}, #{taxrate,jdbcType=DECIMAL}, 
       #{taxmoney,jdbcType=DECIMAL}, #{taxlastmoney,jdbcType=DECIMAL}, #{otherfield1,jdbcType=VARCHAR}, 
       #{otherfield2,jdbcType=VARCHAR}, #{otherfield3,jdbcType=VARCHAR}, #{otherfield4,jdbcType=VARCHAR}, 
-      #{otherfield5,jdbcType=VARCHAR}, #{mtype,jdbcType=VARCHAR})
+      #{otherfield5,jdbcType=VARCHAR}, #{mtype,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.DepotItem">
     <!--
@@ -249,6 +252,9 @@
       <if test="mtype != null">
         MType,
       </if>
+      <if test="tenantId != null">
+        tenant_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -319,6 +325,9 @@
       </if>
       <if test="mtype != null">
         #{mtype,jdbcType=VARCHAR},
+      </if>
+      <if test="tenantId != null">
+        #{tenantId,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -408,6 +417,9 @@
       <if test="record.mtype != null">
         MType = #{record.mtype,jdbcType=VARCHAR},
       </if>
+      <if test="record.tenantId != null">
+        tenant_id = #{record.tenantId,jdbcType=BIGINT},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -441,7 +453,8 @@
       OtherField3 = #{record.otherfield3,jdbcType=VARCHAR},
       OtherField4 = #{record.otherfield4,jdbcType=VARCHAR},
       OtherField5 = #{record.otherfield5,jdbcType=VARCHAR},
-      MType = #{record.mtype,jdbcType=VARCHAR}
+      MType = #{record.mtype,jdbcType=VARCHAR},
+      tenant_id = #{record.tenantId,jdbcType=BIGINT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -519,6 +532,9 @@
       <if test="mtype != null">
         MType = #{mtype,jdbcType=VARCHAR},
       </if>
+      <if test="tenantId != null">
+        tenant_id = #{tenantId,jdbcType=BIGINT},
+      </if>
     </set>
     where Id = #{id,jdbcType=BIGINT}
   </update>
@@ -549,7 +565,8 @@
       OtherField3 = #{otherfield3,jdbcType=VARCHAR},
       OtherField4 = #{otherfield4,jdbcType=VARCHAR},
       OtherField5 = #{otherfield5,jdbcType=VARCHAR},
-      MType = #{mtype,jdbcType=VARCHAR}
+      MType = #{mtype,jdbcType=VARCHAR},
+      tenant_id = #{tenantId,jdbcType=BIGINT}
     where Id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

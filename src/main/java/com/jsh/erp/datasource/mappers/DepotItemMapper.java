@@ -1,10 +1,8 @@
 package com.jsh.erp.datasource.mappers;
 
-import com.jsh.erp.datasource.entities.*;
-
-import java.math.BigDecimal;
+import com.jsh.erp.datasource.entities.DepotItem;
+import com.jsh.erp.datasource.entities.DepotItemExample;
 import java.util.List;
-
 import org.apache.ibatis.annotations.Param;
 
 public interface DepotItemMapper {

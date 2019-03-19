@@ -85,7 +85,7 @@
                     <tr>
                         <td style="width:80px;">序列号</td>
                         <td style="padding:5px;width:180px;">
-                            <select name="enableSerialNumber" id="enableSerialNumber" style="width: 180px;height: 20px">
+                            <select name="EnableSerialNumber" id="EnableSerialNumber" style="width: 180px;height: 20px">
                                 <option value="1">启用</option>
                                 <option value="0">禁用</option>
                             </select>
@@ -509,7 +509,7 @@
                                 + 'AaBb' + rec.lowprice + 'AaBb' + rec.presetpriceone + 'AaBb' + rec.presetpricetwo + 'AaBb' + rec.remark + 'AaBb' + rec.standard
                                 + 'AaBb' + rec.color + 'AaBb' + rec.packing + 'AaBb' + rec.safetystock + 'AaBb' + rec.categoryid + 'AaBb' + rec.categoryName
                                 + 'AaBb' + rec.unitid + 'AaBb' + rec.unitName + 'AaBb' + rec.firstoutunit + 'AaBb' + rec.firstinunit
-                                + 'AaBb' + rec.mfrs + 'AaBb' + rec.otherfield1 + 'AaBb' + rec.otherfield2 + 'AaBb' + rec.otherfield3+ 'AaBb' + rec.enableSerialNumber;
+                                + 'AaBb' + rec.mfrs + 'AaBb' + rec.otherfield1 + 'AaBb' + rec.otherfield2 + 'AaBb' + rec.otherfield3+ 'AaBb' + rec.enableserialnumber;
                             str += '<img title="编辑" src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editMaterial(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
                             str += '<img title="删除" src="/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteMaterial(' + rec.id + ');"/>';
                             return str;
@@ -572,7 +572,7 @@
                         }
                     },
                     {
-                        title: '序列号', field: 'enableSerialNumber', width: 70, align: "center", formatter: function (value) {
+                        title: '序列号', field: 'enableserialnumber', width: 70, align: "center", formatter: function (value) {
                             return value=='1' ? "启用" : "禁用";
                         }
                     }
@@ -1048,8 +1048,8 @@
             $('#materialFM input').val(""); //将输入框全部清空
 
             bindMProperty(); //根据商品属性绑定
-            // $("#enableSerialNumber").combobox('setValue','0');
-            $("#enableSerialNumber").val('0');
+            // $("#EnableSerialNumber").combobox('setValue','0');
+            $("#EnableSerialNumber").val('0');
             $('#materialDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加商品信息');
             $(".window-mask").css({width: webW, height: webH});
             $("#Name").val("").focus();
@@ -1157,7 +1157,7 @@
             basicList.LowPrice = $("#basicLowPrice").val();
             basicList.PresetPriceOne = $("#basicPresetPriceOne").val();
             basicList.PresetPriceTwo = $("#basicPresetPriceTwo").val();
-            basicList.enableSerialNumber=$("#enableSerialNumber").val();
+            basicList.EnableSerialNumber=$("#EnableSerialNumber").val();
             otherList.Unit = $("#otherUnit").text();
             otherList.RetailPrice = $("#otherRetailPrice").val();
             otherList.LowPrice = $("#otherLowPrice").val();
@@ -1226,7 +1226,7 @@
             bindMProperty(); //根据商品属性绑定
             $("#Name").focus().val(materialInfo[1]);
             $("#Color").focus().val(materialInfo[11]);
-            $("#enableSerialNumber").val(materialInfo[24]=='1'?'1':'0');
+            $("#EnableSerialNumber").val(materialInfo[24]=='1'?'1':'0');
             //商品类别id
             $("#parentid").val(materialInfo[14]);
             //商品类别名称

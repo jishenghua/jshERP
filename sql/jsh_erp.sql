@@ -1472,3 +1472,33 @@ update jsh_user set status='0' where status is null;
 -- 设置根目录编号为1
 -- ----------------------------
 update jsh_materialcategory set serial_no='1' where id='1';
+
+-- ----------------------------
+-- 时间：2019年3月18日
+-- version：1.0.11
+-- 此次更新
+-- 1、批量增加大部分表的tenant_id租户字段
+-- 特别提醒：之后的sql都是在之前基础上迭代，可以对已存在的系统进行数据保留更新
+-- ----------------------------
+alter table jsh_account add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
+alter table jsh_accounthead add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
+alter table jsh_accountitem add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
+alter table jsh_asset add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
+alter table jsh_assetcategory add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
+alter table jsh_assetname add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
+alter table jsh_depot add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
+alter table jsh_depothead add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
+alter table jsh_depotitem add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
+alter table jsh_inoutitem add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
+alter table jsh_log add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
+alter table jsh_material add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
+alter table jsh_materialcategory add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
+alter table jsh_orga_user_rel add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
+alter table jsh_organization add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
+alter table jsh_person add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
+alter table jsh_role add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
+alter table jsh_serial_number add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
+alter table jsh_supplier add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
+alter table jsh_systemconfig add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
+alter table jsh_unit add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
+alter table jsh_user add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
