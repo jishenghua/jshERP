@@ -11,7 +11,7 @@
         select *
         FROM jsh_user
         where 1=1
-        and user.status not in('1','2')
+        and status not in('1','2')
         <if test="userName != null">
             and username like '%${userName}%'
         </if>
@@ -27,7 +27,7 @@
         COUNT(id)
         FROM jsh_user
         WHERE 1=1
-        and user.status not in('1','2')
+        and status not in('1','2')
         <if test="userName != null">
             and username like '%${userName}%'
         </if>

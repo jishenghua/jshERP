@@ -31,6 +31,9 @@
      */
     $(function () {
         var id=$("#id").val();
+        if(id==undefined){
+            id='';
+        }
         console.log(id);
         $('#ttForSelect').tree({
             url: '/materialCategory/getMaterialCategoryTree?id='+id,

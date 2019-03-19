@@ -23,5 +23,4 @@ public interface DepotMapperEx {
             @Param("remark") String remark);
 
     List<DepotEx> getDepotList(Map<String, Object> params);
-    Long getDepotListCount(Map<String, Object> params);
 }

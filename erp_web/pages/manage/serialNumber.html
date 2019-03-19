@@ -44,6 +44,7 @@
 <div id="tablePanel" class="easyui-panel" style="padding:1px;top:300px;" title="序列号列表" iconCls="icon-list"
      collapsible="true" closable="false">
     <table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
+    <input id="selectType" hidden="hidden" />
 </div>
 
 <div id="serialNumberDetailListDlg" class="easyui-dialog" style="width:900px;height:500px;padding:10px 20px" closed="true"
@@ -59,12 +60,15 @@
                 <table>
                     <tr>
                         <td style="width:60px; height:30px;">商品名称</td>
-                        <td style="padding:5px;width:180px;">
+                        <td style="padding:5px;width:300px;">
                             <input name="materialId" id="materialId" type="hidden" />
-                            <input name="materialName" id="materialName" class="easyui-validatebox"
-                                   data-options="required:false,validType:'length[2,30]'"
+                            <input name="materialName" id="materialName" readonly="readonly"
                                    style="width: 180px;height: 20px"/>
+                            <a href="javascript:void(0)" class="l-btn l-btn-plain" group="" id="lookForSelectMaterial">
+                                <span class="l-btn-left"><span class="l-btn-text icon-search l-btn-icon-left"></span></span></a>
                         </td>
+                    </tr>
+                    <tr>
                         <td style="width:80px;">序列号</td>
                         <td style="padding:5px;width:180px;">
                             <input name="serialNumberId" id="serialNumberId" type="hidden" />
@@ -100,20 +104,20 @@
                 <table>
                     <tr>
                         <td style="width:60px; height:30px;">商品名称</td>
-                        <td style="padding:5px;width:180px;">
-                            <input name="materialName" id="batAddMaterialName" class="easyui-validatebox"
-                                   data-options="required:true,validType:'length[2,30]'"
+                        <td style="padding:5px;width:300px;">
+                            <input name="materialName" id="batAddMaterialName" readonly="readonly"
                                    style="width: 180px;height: 20px"/>
+                            <a href="javascript:void(0)" class="l-btn l-btn-plain" group="" id="batLookForSelectMaterial">
+                                <span class="l-btn-left"><span class="l-btn-text icon-search l-btn-icon-left"></span></span></a>
                         </td>
+                    </tr>
+                    <tr>
                         <td style="width:80px;">序列号前缀</td>
                         <td style="padding:5px;width:180px;">
                             <input name="serialNumber" id="batAddSerialNumberInput" class="easyui-validatebox"
                                    data-options="required:true,validType:'length[1,30]'"
                                    style="width: 180px;height: 20px"/>
                         </td>
-                        <td style="width:200px;"></td>
-                    </tr>
-                    <tr>
                         <td style="width:80px;">序列号数量</td>
                         <td style="padding:5px;width:180px;">
                             <input name="batAddTotal" id="batAddTotal" class="easyui-numberbox"
@@ -141,6 +145,9 @@
        onclick="javascript:$('#batAddSerialNumberDlg').dialog('close')">取消</a>
 </div>
 
+<div id="forSelectMaterialDlg" class="easyui-dialog" style="width:380px;padding:10px 20px"
+     closed="true" modal="true" cache="false" collapsible="false" closable="true">
+</div>
 
 <script type="text/javascript">
     var url;
@@ -615,6 +622,34 @@
                 $.messager.alert('提示', '保存序列化信息异常，请稍后再试！', 'error');
                 return;
             }
+        });
+    });
+    //查询商品名称
+    $("#lookForSelectMaterial").on("click", function () {
+        $("#selectType").val("lookForSelectMaterial");
+        $('#forSelectMaterialDlg').dialog({
+            title: '商品名称选择',
+            width: webW/2,
+            height: webH/2,
+            closed: false,
+            cache: false,
+            href: '/pages/materials/material_forselect.html',
+            modal: true,
+            resizable:true
+        });
+    });
+    //查询商品名称批量添加
+    $("#batLookForSelectMaterial").on("click", function () {
+        $("#selectType").val("batLookForSelectMaterial");
+        $('#forSelectMaterialDlg').dialog({
+            title: '商品名称选择',
+            width: webW/2,
+            height: webH/2,
+            closed: false,
+            cache: false,
+            href: '/pages/materials/material_forselect.html',
+            modal: true,
+            resizable:true
         });
     });
 

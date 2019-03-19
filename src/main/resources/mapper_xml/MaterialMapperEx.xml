@@ -104,6 +104,25 @@
         </if>
 
     </select>
+    <select id="getMaterialEnableSerialNumberList" parameterType="java.util.Map" resultMap="com.jsh.erp.datasource.mappers.MaterialMapper.BaseResultMap">
+        select
+        Id, CategoryId, name, Mfrs, Packing, SafetyStock, Model, Standard, Color, Unit, Remark,
+        RetailPrice, LowPrice, PresetPriceOne, PresetPriceTwo, UnitId, FirstOutUnit, FirstInUnit,
+        PriceStrategy, Enabled,enableSerialNumber
+        FROM jsh_material
+        where 1=1
+        and enabled ='1'
+        and enableSerialNumber ='1'
+        <if test="name != null and name != ''">
+            <bind name="name" value="'%' + _parameter.name + '%'" />
+            and name like #{name}
+        </if>
+        <if test="model != null and model != ''">
+            <bind name="model" value="'%' + _parameter.model + '%'" />
+            and model like #{model}
+        </if>
+        order by id desc
+    </select>
 
 
 </mapper>

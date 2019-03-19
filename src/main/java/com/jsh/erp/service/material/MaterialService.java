@@ -1,6 +1,7 @@
 package com.jsh.erp.service.material;
 
 import com.alibaba.fastjson.JSONObject;
+import com.jsh.erp.datasource.entities.DepotEx;
 import com.jsh.erp.datasource.entities.Material;
 import com.jsh.erp.datasource.entities.MaterialExample;
 import com.jsh.erp.datasource.entities.MaterialVo4Unit;
@@ -193,5 +194,9 @@ public class MaterialService {
         }
         info.data = data;
         return info;
+    }
+
+    public List<Material> getMaterialEnableSerialNumberList(Map<String, Object> parameterMap) {
+        return materialMapperEx.getMaterialEnableSerialNumberList(parameterMap);
     }
 }
