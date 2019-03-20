@@ -2940,23 +2940,31 @@
          * 获取所有选中行,直接从列表中移除
          * 点击保存时，将需要后台删除的数据提交到服务器
          * **/
-        var materialData=$('#materialData');
-        var row = materialData.datagrid('getChecked');
-        if(row.length == 0)
-        {
-            $.messager.alert('删除提示','没有记录被选中！','info');
-            return;
-        }
-        if(row.length > 0)
-        {
-            $.messager.confirm('删除确认','确定要删除选中的' + row.length + '条单据信息吗？',function(r)
-            {
-                if (r) {
-                    for(var i = 0 ;i < row.length;i++) {
-                        materialData.datagrid('deleteRow',materialData.datagrid("getRowIndex",row[i]));
+        /**
+         * create by: qiankunpingtai
+         * create time: 2019/3/20 16:26
+         * description:
+         *	这个地方比较坑的，花了一个多小时才搞明白为什么
+		 *	1、删除之前必须先调用endEditing结束编辑
+		 *	2、如果只是调用endEditing结束编辑那么正在编辑行的被选中状态会被去掉
+		 *	所以要在调用endEditing先获取选中的行
+         */
+            //如果编辑的行一开始是选中状态，结束编辑后仍然是选中状态
+        var row = $('#materialData').datagrid('getChecked');
+        if (endEditing()) {
+            if (row.length == 0) {
+                $.messager.alert('删除提示', '没有记录被选中！', 'info');
+                return;
+            }
+            if (row.length > 0) {
+                $.messager.confirm('删除确认', '确定要删除选中的' + row.length + '条单据信息吗？', function (r) {
+                    if (r) {
+                        for (var i = 0; i < row.length; i++) {
+                            $('#materialData').datagrid('deleteRow', $('#materialData').datagrid("getRowIndex", row[i]));
+                        }
                     }
-                }
-            });
+                });
+            }
         }
 	}
 	function removeit(){
