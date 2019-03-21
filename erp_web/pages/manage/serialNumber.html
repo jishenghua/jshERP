@@ -198,12 +198,19 @@
                 {field: 'depotheadId', hidden: true},
                 {field: 'depotHeadType', hidden: true},
                 {
-                    title: '操作', field: 'op', align: "center", width: 60, formatter: function (value, rec) {
+                    title: '操作', field: 'op', align: "center", width: 60, formatter: function (value, rec,index) {
                         var str = '';
-                        var rowInfo = rec.id + 'AaBb' + rec.materialId + 'AaBb' + rec.materialName + 'AaBb' + rec.serialNumber + 'AaBb' + rec.isSell + 'AaBb' + rec.remark
-                            + 'AaBb' + rec.deleteFlag + 'AaBb' + rec.createTime + 'AaBb' + rec.updateTime + 'AaBb' + rec.creator + 'AaBb' + rec.updater
-                            + 'AaBb' + rec.creatorName + 'AaBb' + rec.updaterName +'AaBb' + rec.depotheadId+'AaBb' + rec.depotHeadNumber +'AaBb' + rec.depotHeadType;
-                        str += '<img title="编辑" src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editSerialNumber(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
+                        /**
+                         * create by: qiankunpingtai
+                         * create time: 2019/3/21 11:23
+                         * website：http://39.105.146.63/symphony/
+                         * description:
+                         *  对于每次拼接字符串作为参数传递
+                         *  再对字符串分解获取数据的方式，个人感觉效率是很高，实现也不优雅
+                         *  在此使用传递index，然后根据index获取数据的方式替代
+                         *
+                         */
+                        str += '<img title="编辑" src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editSerialNumber(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
                         str += '<img title="删除" src="/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteSerialNumber(' + rec.id + ');"/>';
                         return str;
                     }
@@ -458,14 +465,14 @@
         });
     });
     //编辑信息
-    function editSerialNumber(serialNumberInfo) {
-        var serialNumberInfo = serialNumberInfo.split("AaBb");
-
-        $("#serialNumberId").focus().val(serialNumberInfo[0]);
-        $("#materialId").focus().val(serialNumberInfo[1]);
-        $("#materialName").focus().val(serialNumberInfo[2]);
-        $("#serialNumber").focus().val(serialNumberInfo[3]);
-        $("#remark").focus().val(serialNumberInfo[5]);
+    function editSerialNumber(index) {
+        //获取当前行
+        var rowsdata = $("#tableData").datagrid("getRows")[index];
+        $("#serialNumberId").focus().val(rowsdata.serialNumberId);
+        $("#materialId").focus().val(rowsdata.materialId);
+        $("#materialName").focus().val(rowsdata.materialName);
+        $("#serialNumber").focus().val(rowsdata.serialNumber);
+        $("#remark").focus().val(rowsdata.remark);
         $('#serialNumberDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑序列号信息');
         $(".window-mask").css({width: webW, height: webH});
         //选中基本资料tab
