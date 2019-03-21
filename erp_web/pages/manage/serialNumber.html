@@ -206,7 +206,7 @@
                          * website：http://39.105.146.63/symphony/
                          * description:
                          *  对于每次拼接字符串作为参数传递
-                         *  再对字符串分解获取数据的方式，个人感觉效率是很高，实现也不优雅
+                         *  再对字符串分解获取数据的方式，个人感觉效率不是很高，实现也不优雅
                          *  在此使用传递index，然后根据index获取数据的方式替代
                          *
                          */
@@ -468,11 +468,11 @@
     function editSerialNumber(index) {
         //获取当前行
         var rowsdata = $("#tableData").datagrid("getRows")[index];
-        $("#serialNumberId").focus().val(rowsdata.serialNumberId);
-        $("#materialId").focus().val(rowsdata.materialId);
+        $("#serialNumberId").val(rowsdata.serialNumberId);
+        $("#materialId").val(rowsdata.materialId);
         $("#materialName").focus().val(rowsdata.materialName);
-        $("#serialNumber").focus().val(rowsdata.serialNumber);
-        $("#remark").focus().val(rowsdata.remark);
+        $("#serialNumber").val(rowsdata.serialNumber);
+        $("#remark").val(rowsdata.remark);
         $('#serialNumberDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑序列号信息');
         $(".window-mask").css({width: webW, height: webH});
         //选中基本资料tab
