@@ -51,7 +51,7 @@
                 <td>简称</td>
                 <td style="padding:5px">
                     <input name="orgAbr" id="orgAbr" class="easyui-validatebox"
-                           data-options="required:true,validType:'length[2,30]'" style="width: 200px;height: 20px"/>
+                           data-options="required:true,validType:'length[2,20]'" style="width: 200px;height: 20px"/>
                 </td>
             </tr>
             <tr>
@@ -69,13 +69,14 @@
                 <td>编号</td>
                 <td style="padding:5px">
                     <input name="orgNo" id="orgNo" class="easyui-validatebox"
-                           data-options="required:true,validType:'length[2,30]'" style="width: 200px;height: 20px"/>
+                           data-options="required:true,validType:'length[2,20]'" style="width: 200px;height: 20px"/>
                 </td>
             </tr>
             <tr>
                 <td>序号</td>
                 <td style="padding:5px">
-                    <input name="sort" id="sort"  style="width: 200px;height: 20px"/>
+                    <input name="sort" id="sort"  class="easyui-validatebox"
+                           data-options="required:true,validType:'length[2,20]'" style="width: 200px;height: 20px"/>
                 </td>
             </tr>
             <tr>
@@ -277,6 +278,18 @@
             $.messager.alert('提示', '编号不能为空！', 'warning');
             return;
         }
+        /**
+         * create by: qiankunpingtai
+         * create time: 2019/3/21 14:56
+         * website：http://39.105.146.63/symphony/
+         * description:
+         *  提交时需要对表格内容进行校验，校验通过后提交后台处理
+         */
+        var isValid = $("#organizationFM").form('validate');
+        if(!isValid){
+            return;
+        }
+
         var objInfo = $("#organizationFM").serializeObject();
         $.ajax({
             type: "post",
