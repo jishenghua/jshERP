@@ -7,6 +7,7 @@ import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.mappers.*;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.depotItem.DepotItemService;
+import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
@@ -45,6 +46,8 @@ public class SerialNumberService {
     private UserService userService;
     @Resource
     private DepotItemMapperEx depotItemMapperEx;
+    @Resource
+    private LogService logService;
 
 
     public SerialNumber getSerialNumber(long id) {
@@ -68,6 +71,7 @@ public class SerialNumberService {
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertSerialNumber(String beanJson, HttpServletRequest request) {
         SerialNumber serialNumber = JSONObject.parseObject(beanJson, SerialNumber.class);
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_SERIAL_NUMBER, BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
         return serialNumberMapper.insertSelective(serialNumber);
     }
 
