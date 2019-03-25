@@ -15,6 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -172,6 +174,7 @@ public class SerialNumberService {
      * */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public SerialNumberEx addSerialNumber(SerialNumberEx serialNumberEx) {
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_SERIAL_NUMBER,BusinessConstants.LOG_OPERATION_TYPE_ADD,((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         if(serialNumberEx==null){
             return null;
         }

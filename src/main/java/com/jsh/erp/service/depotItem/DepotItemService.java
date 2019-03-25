@@ -461,6 +461,20 @@ public class DepotItemService {
                     depotItem.setOtherfield4(tempUpdatedJson.getString("OtherField4"));
                     depotItem.setOtherfield5(tempUpdatedJson.getString("OtherField5"));
                     depotItem.setMtype(tempUpdatedJson.getString("MType"));
+                    /**
+                     * create by: qiankunpingtai
+                     * create time: 2019/3/25 15:18
+                     * website：http://39.105.146.63/symphony/
+                     * description:
+                     * 修改了商品类型时，库中的商品和页面传递的不同
+                     * 这里需要重新获取页面传递的商品信息
+                     */
+                    if(!material.getId().equals(depotItem.getMaterialid())){
+                        material= materialService.getMaterial(depotItem.getMaterialid());
+                        if(material==null){
+                            continue;
+                        }
+                    }
                     /**出库时处理序列号*/
                     if(BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())){
                         if(getCurrentInStock(depotItem.getMaterialid())<depotItem.getBasicnumber().intValue()){

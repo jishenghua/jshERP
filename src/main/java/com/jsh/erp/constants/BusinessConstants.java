@@ -140,8 +140,8 @@ public class BusinessConstants {
      * 新增、修改、删除
      * */
     public static final String LOG_OPERATION_TYPE_ADD = "新增";
-    public static final String LOG_OPERATION_TYPE_EDIT = "修改";
-    public static final String LOG_OPERATION_TYPE_DELETE = "删除";
+    public static final String LOG_OPERATION_TYPE_EDIT = "修改,id:";
+    public static final String LOG_OPERATION_TYPE_DELETE = "删除,id:";
     /**
      * 模块中文名称
      * 模块对应的标识
