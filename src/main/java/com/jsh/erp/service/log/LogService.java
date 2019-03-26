@@ -138,6 +138,8 @@ public class LogService {
                 moduleName = BusinessConstants.LOG_MODULE_NAME_ACCOUNT_ITEM; break;
             case BusinessConstants.LOG_INTERFACE_NAME_SERIAL_NUMBER:
                 moduleName = BusinessConstants.LOG_MODULE_NAME_SERIAL_NUMBER; break;
+            case BusinessConstants.LOG_INTERFACE_NAME_ORGANIZATION:
+                moduleName = BusinessConstants.LOG_MODULE_NAME_ORGANIZATION; break;
         }
         return moduleName;
     }

@@ -43,11 +43,7 @@ public class SerialNumberService {
     @Resource
     private MaterialMapper materialMapper;
     @Resource
-    private DepotItemService depotItemService;
-    @Resource
     private UserService userService;
-    @Resource
-    private DepotItemMapperEx depotItemMapperEx;
     @Resource
     private LogService logService;
 
@@ -174,7 +170,8 @@ public class SerialNumberService {
      * */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public SerialNumberEx addSerialNumber(SerialNumberEx serialNumberEx) {
-        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_SERIAL_NUMBER,BusinessConstants.LOG_OPERATION_TYPE_ADD,((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_SERIAL_NUMBER,BusinessConstants.LOG_OPERATION_TYPE_ADD,
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         if(serialNumberEx==null){
             return null;
         }
@@ -198,6 +195,9 @@ public class SerialNumberService {
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public SerialNumberEx updateSerialNumber(SerialNumberEx serialNumberEx) {
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_SERIAL_NUMBER,
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(serialNumberEx.getId()).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         if(serialNumberEx==null){
             return null;
         }
@@ -352,6 +352,9 @@ public class SerialNumberService {
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void batAddSerialNumber(String materialName, String serialNumberPrefix, Integer batAddTotal, String remark) {
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_SERIAL_NUMBER,
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_BATCH_ADD).append(batAddTotal).append(BusinessConstants.LOG_DATA_UNIT).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         if(StringUtil.isNotEmpty(materialName)){
             //查询商品id
             Long materialId = checkMaterialName(materialName);

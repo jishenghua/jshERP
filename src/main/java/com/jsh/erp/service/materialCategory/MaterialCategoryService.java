@@ -10,12 +10,15 @@ import com.jsh.erp.datasource.mappers.MaterialCategoryMapper;
 import com.jsh.erp.datasource.mappers.MaterialCategoryMapperEx;
 import com.jsh.erp.datasource.vo.TreeNode;
 import com.jsh.erp.exception.BusinessRunTimeException;
+import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -32,6 +35,8 @@ public class MaterialCategoryService {
     private MaterialCategoryMapperEx materialCategoryMapperEx;
     @Resource
     private UserService userService;
+    @Resource
+    private LogService logService;
 
     public MaterialCategory getMaterialCategory(long id) {
         return materialCategoryMapper.selectByPrimaryKey(id);
@@ -113,6 +118,9 @@ public class MaterialCategoryService {
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int addMaterialCategory(MaterialCategory mc) throws Exception {
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_MATERIAL_CATEGORY,
+                BusinessConstants.LOG_OPERATION_TYPE_ADD,
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         if(mc==null){
             return 0;
         }
@@ -138,7 +146,9 @@ public class MaterialCategoryService {
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteMaterialCategoryByIds(String ids) throws Exception {
-
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_MATERIAL_CATEGORY,
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         //更新时间
         Date updateDate =new Date();
         //更新人
@@ -153,6 +163,9 @@ public class MaterialCategoryService {
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int editMaterialCategory(MaterialCategory mc) {
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_MATERIAL_CATEGORY,
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(mc.getId()).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         if(mc.getParentid()==null){
             //没有给定父级目录的id，默认设置父级目录为根目录的父目录
             mc.setParentid(BusinessConstants.MATERIAL_CATEGORY_ROOT_PARENT_ID);

@@ -14,6 +14,7 @@ import com.jsh.erp.datasource.vo.DepotHeadVo4InOutMCount;
 import com.jsh.erp.datasource.vo.DepotHeadVo4List;
 import com.jsh.erp.datasource.vo.DepotHeadVo4StatementAccount;
 import com.jsh.erp.service.depotItem.DepotItemService;
+import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.serialNumber.SerialNumberService;
 import com.jsh.erp.service.supplier.SupplierService;
 import com.jsh.erp.service.user.UserService;
@@ -22,6 +23,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -51,6 +54,8 @@ public class DepotHeadService {
     private SerialNumberService serialNumberService;
     @Resource
     DepotItemMapperEx depotItemMapperEx;
+    @Resource
+    private LogService logService;
 
 
     public DepotHead getDepotHead(long id) {
@@ -143,6 +148,9 @@ public class DepotHeadService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchSetStatus(String status, String depotHeadIDs) {
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_DEPOT_HEAD,
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(depotHeadIDs).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         List<Long> ids = StringUtil.strToLongList(depotHeadIDs);
         DepotHead depotHead = new DepotHead();
         depotHead.setStatus(status);
@@ -269,6 +277,9 @@ public class DepotHeadService {
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void addDepotHeadAndDetail(String beanJson, String inserted, String deleted, String updated) throws Exception {
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_DEPOT_HEAD,
+                BusinessConstants.LOG_OPERATION_TYPE_ADD,
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         /**处理单据主表数据*/
         DepotHead depotHead = JSONObject.parseObject(beanJson, DepotHead.class);
         //判断用户是否已经登录过，登录过不再处理
@@ -309,6 +320,9 @@ public class DepotHeadService {
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void updateDepotHeadAndDetail(Long id, String beanJson, String inserted, String deleted, String updated, BigDecimal preTotalPrice)throws Exception {
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_DEPOT_HEAD,
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         /**更新单据主表信息*/
         DepotHead depotHead = JSONObject.parseObject(beanJson, DepotHead.class);
         //判断用户是否已经登录过，登录过不再处理
@@ -337,6 +351,9 @@ public class DepotHeadService {
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void deleteDepotHeadAndDetail(Long id) throws Exception {
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_DEPOT_HEAD,
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(id).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         //查询单据主表信息
         DepotHead depotHead =getDepotHead(id);
         User userInfo=userService.getCurrentUser();
@@ -368,6 +385,9 @@ public class DepotHeadService {
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void batchDeleteDepotHeadAndDetail(String ids) throws Exception{
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_DEPOT_HEAD,
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         if(StringUtil.isNotEmpty(ids)){
             String [] headIds=ids.split(",");
             for(int i=0;i<headIds.length;i++){

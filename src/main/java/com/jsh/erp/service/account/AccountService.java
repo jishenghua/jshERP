@@ -309,7 +309,8 @@ public class AccountService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateAmountIsDefault(Boolean isDefault, Long accountId) {
-        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_ACCOUNT,BusinessConstants.LOG_OPERATION_TYPE_EDIT+accountId,((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_ACCOUNT,BusinessConstants.LOG_OPERATION_TYPE_EDIT+accountId,
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         Account account = new Account();
         account.setIsdefault(isDefault);
         AccountExample example = new AccountExample();

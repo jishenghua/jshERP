@@ -1,18 +1,22 @@
 package com.jsh.erp.service.material;
 
 import com.alibaba.fastjson.JSONObject;
+import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.DepotEx;
 import com.jsh.erp.datasource.entities.Material;
 import com.jsh.erp.datasource.entities.MaterialExample;
 import com.jsh.erp.datasource.entities.MaterialVo4Unit;
 import com.jsh.erp.datasource.mappers.MaterialMapper;
 import com.jsh.erp.datasource.mappers.MaterialMapperEx;
+import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +33,8 @@ public class MaterialService {
     private MaterialMapper materialMapper;
     @Resource
     private MaterialMapperEx materialMapperEx;
+    @Resource
+    private LogService logService;
 
     public Material getMaterial(long id) {
         return materialMapper.selectByPrimaryKey(id);
@@ -141,6 +147,9 @@ public class MaterialService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchSetEnable(Boolean enabled, String materialIDs) {
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_MATERIAL,
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(materialIDs).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         List<Long> ids = StringUtil.strToLongList(materialIDs);
         Material material = new Material();
         material.setEnabled(enabled);
@@ -177,8 +186,11 @@ public class MaterialService {
         }
         return resList;
     }
-
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public BaseResponseInfo importExcel(List<Material> mList) throws Exception {
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_MATERIAL,
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_IMPORT).append(mList.size()).append(BusinessConstants.LOG_DATA_UNIT).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         BaseResponseInfo info = new BaseResponseInfo();
         Map<String, Object> data = new HashMap<String, Object>();
         try {

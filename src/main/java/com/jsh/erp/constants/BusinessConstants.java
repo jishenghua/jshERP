@@ -140,8 +140,16 @@ public class BusinessConstants {
      * 新增、修改、删除
      * */
     public static final String LOG_OPERATION_TYPE_ADD = "新增";
+    public static final String LOG_OPERATION_TYPE_BATCH_ADD = "批量新增";
     public static final String LOG_OPERATION_TYPE_EDIT = "修改,id:";
     public static final String LOG_OPERATION_TYPE_DELETE = "删除,id:";
+    public static final String LOG_OPERATION_TYPE_IMPORT = "导入";
+
+    /**
+     * 数据数量单位
+     * 条
+     * */
+    public static final String LOG_DATA_UNIT = "条";
     /**
      * 模块中文名称
      * 模块对应的标识
@@ -186,6 +194,8 @@ public class BusinessConstants {
     public static final String LOG_INTERFACE_NAME_ACCOUNT_ITEM= "accountItem";
     public static final String LOG_MODULE_NAME_SERIAL_NUMBER= "序列号";
     public static final String LOG_INTERFACE_NAME_SERIAL_NUMBER= "serialNumber";
+    public static final String LOG_MODULE_NAME_ORGANIZATION= "机构";
+    public static final String LOG_INTERFACE_NAME_ORGANIZATION= "organization";
 
 
 

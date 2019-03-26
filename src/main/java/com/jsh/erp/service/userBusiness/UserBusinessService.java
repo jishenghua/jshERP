@@ -1,14 +1,18 @@
 package com.jsh.erp.service.userBusiness;
 
 import com.alibaba.fastjson.JSONObject;
+import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.UserBusiness;
 import com.jsh.erp.datasource.entities.UserBusinessExample;
 import com.jsh.erp.datasource.mappers.UserBusinessMapper;
+import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +24,8 @@ public class UserBusinessService {
 
     @Resource
     private UserBusinessMapper userBusinessMapper;
+    @Resource
+    private LogService logService;
 
     public UserBusiness getUserBusiness(long id) {
         return userBusinessMapper.selectByPrimaryKey(id);
@@ -96,6 +102,9 @@ public class UserBusinessService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateBtnStr(Long userBusinessId, String btnStr) {
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_USER_BUSINESS,
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(userBusinessId).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         UserBusiness userBusiness = new UserBusiness();
         userBusiness.setBtnstr(btnStr);
         UserBusinessExample example = new UserBusinessExample();

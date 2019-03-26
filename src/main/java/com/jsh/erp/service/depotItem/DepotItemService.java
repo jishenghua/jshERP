@@ -10,6 +10,7 @@ import com.jsh.erp.datasource.mappers.DepotItemMapper;
 import com.jsh.erp.datasource.mappers.DepotItemMapperEx;
 import com.jsh.erp.datasource.mappers.SerialNumberMapperEx;
 import com.jsh.erp.exception.BusinessRunTimeException;
+import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.service.serialNumber.SerialNumberService;
 import com.jsh.erp.service.user.UserService;
@@ -21,6 +22,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -54,6 +57,8 @@ public class DepotItemService {
     SerialNumberService serialNumberService;
     @Resource
     private UserService userService;
+    @Resource
+    private LogService logService;
 
     public DepotItem getDepotItem(long id) {
         return depotItemMapper.selectByPrimaryKey(id);
@@ -224,6 +229,10 @@ public class DepotItemService {
      * */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public String saveDetials(String inserted, String deleted, String updated, Long headerId) throws Exception{
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_DEPOT_ITEM,
+                BusinessConstants.LOG_OPERATION_TYPE_ADD,
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+
         //查询单据主表信息
         DepotHead depotHead=depotHeadMapper.selectByPrimaryKey(headerId);
         //获得当前操作人

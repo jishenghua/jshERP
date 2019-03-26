@@ -40,8 +40,6 @@ public class DepotHeadController {
     @Resource
     private DepotHeadService depotHeadService;
 
-    @Resource
-    private LogService logService;
 
     /**
      * 批量设置状态-审核或者反审核
@@ -435,7 +433,7 @@ public class DepotHeadController {
                           @RequestParam("updated") String updated, HttpServletRequest request) throws  Exception{
         JSONObject result = ExceptionConstants.standardSuccess();
         depotHeadService.addDepotHeadAndDetail(beanJson,inserted,deleted,updated);
-        logService.insertLog("depotHead", "新增", request);
+
         return result;
     }
     /**
