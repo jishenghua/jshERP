@@ -10,12 +10,15 @@ import com.jsh.erp.datasource.mappers.OrganizationMapper;
 import com.jsh.erp.datasource.mappers.OrganizationMapperEx;
 import com.jsh.erp.datasource.vo.TreeNode;
 import com.jsh.erp.exception.BusinessRunTimeException;
+import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -38,6 +41,8 @@ public class OrganizationService {
     private OrganizationMapperEx organizationMapperEx;
     @Resource
     private UserService userService;
+    @Resource
+    private LogService logService;
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertOrganization(String beanJson, HttpServletRequest request) {
         Organization organization = JSONObject.parseObject(beanJson, Organization.class);
@@ -62,6 +67,9 @@ public class OrganizationService {
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int addOrganization(Organization org) throws Exception{
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_ORGANIZATION,
+                BusinessConstants.LOG_OPERATION_TYPE_ADD,
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         //新增时间
         Date date=new Date();
         User userInfo=userService.getCurrentUser();
@@ -88,6 +96,9 @@ public class OrganizationService {
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int editOrganization(Organization org)throws Exception {
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_ORGANIZATION,
+               new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(org.getId()).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         //修改时间
         org.setUpdateTime(new Date());
         User userInfo=userService.getCurrentUser();
@@ -161,6 +172,9 @@ public class OrganizationService {
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteOrganizationByIds(String ids) throws Exception{
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_ORGANIZATION,
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");
         return organizationMapperEx.batchDeleteOrganizationByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);

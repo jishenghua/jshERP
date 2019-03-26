@@ -1,10 +1,12 @@
 package com.jsh.erp.service.account;
 
 import com.alibaba.fastjson.JSONObject;
+import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.mappers.*;
 import com.jsh.erp.datasource.vo.AccountVo4InOutList;
 import com.jsh.erp.datasource.vo.AccountVo4List;
+import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.utils.StringUtil;
 import com.jsh.erp.utils.Tools;
 import org.slf4j.Logger;
@@ -12,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -39,6 +43,8 @@ public class AccountService {
 
     @Resource
     private AccountItemMapper accountItemMapper;
+    @Resource
+    private LogService logService;
 
     public Account getAccount(long id) {
         return accountMapper.selectByPrimaryKey(id);
@@ -303,6 +309,8 @@ public class AccountService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateAmountIsDefault(Boolean isDefault, Long accountId) {
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_ACCOUNT,BusinessConstants.LOG_OPERATION_TYPE_EDIT+accountId,
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         Account account = new Account();
         account.setIsdefault(isDefault);
         AccountExample example = new AccountExample();

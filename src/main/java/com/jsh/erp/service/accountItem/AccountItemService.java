@@ -2,11 +2,13 @@ package com.jsh.erp.service.accountItem;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.AccountItem;
 import com.jsh.erp.datasource.entities.AccountItemExample;
 import com.jsh.erp.datasource.mappers.AccountItemMapper;
 import com.jsh.erp.datasource.mappers.AccountItemMapperEx;
 import com.jsh.erp.datasource.vo.AccountItemVo4List;
+import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.utils.ErpInfo;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
@@ -14,6 +16,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +35,8 @@ public class AccountItemService {
 
     @Resource
     private AccountItemMapperEx accountItemMapperEx;
+    @Resource
+    private LogService logService;
 
     public AccountItem getAccountItem(long id) {
         return accountItemMapper.selectByPrimaryKey(id);
@@ -97,7 +103,10 @@ public class AccountItemService {
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public String saveDetials(String inserted, String deleted, String updated, Long headerId, String listType) throws DataAccessException {
-            //转为json
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_ACCOUNT_ITEM,
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(",headerId:").append(headerId).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+        //转为json
             JSONArray insertedJson = JSONArray.parseArray(inserted);
             JSONArray deletedJson = JSONArray.parseArray(deleted);
             JSONArray updatedJson = JSONArray.parseArray(updated);

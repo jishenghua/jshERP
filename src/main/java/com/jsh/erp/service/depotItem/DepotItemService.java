@@ -10,6 +10,7 @@ import com.jsh.erp.datasource.mappers.DepotItemMapper;
 import com.jsh.erp.datasource.mappers.DepotItemMapperEx;
 import com.jsh.erp.datasource.mappers.SerialNumberMapperEx;
 import com.jsh.erp.exception.BusinessRunTimeException;
+import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.service.serialNumber.SerialNumberService;
 import com.jsh.erp.service.user.UserService;
@@ -21,6 +22,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -54,6 +57,8 @@ public class DepotItemService {
     SerialNumberService serialNumberService;
     @Resource
     private UserService userService;
+    @Resource
+    private LogService logService;
 
     public DepotItem getDepotItem(long id) {
         return depotItemMapper.selectByPrimaryKey(id);
@@ -224,6 +229,10 @@ public class DepotItemService {
      * */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public String saveDetials(String inserted, String deleted, String updated, Long headerId) throws Exception{
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_DEPOT_ITEM,
+                BusinessConstants.LOG_OPERATION_TYPE_ADD,
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+
         //查询单据主表信息
         DepotHead depotHead=depotHeadMapper.selectByPrimaryKey(headerId);
         //获得当前操作人
@@ -461,6 +470,20 @@ public class DepotItemService {
                     depotItem.setOtherfield4(tempUpdatedJson.getString("OtherField4"));
                     depotItem.setOtherfield5(tempUpdatedJson.getString("OtherField5"));
                     depotItem.setMtype(tempUpdatedJson.getString("MType"));
+                    /**
+                     * create by: qiankunpingtai
+                     * create time: 2019/3/25 15:18
+                     * website：http://39.105.146.63/symphony/
+                     * description:
+                     * 修改了商品类型时，库中的商品和页面传递的不同
+                     * 这里需要重新获取页面传递的商品信息
+                     */
+                    if(!material.getId().equals(depotItem.getMaterialid())){
+                        material= materialService.getMaterial(depotItem.getMaterialid());
+                        if(material==null){
+                            continue;
+                        }
+                    }
                     /**出库时处理序列号*/
                     if(BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())){
                         if(getCurrentInStock(depotItem.getMaterialid())<depotItem.getBasicnumber().intValue()){

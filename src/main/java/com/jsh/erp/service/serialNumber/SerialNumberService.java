@@ -7,6 +7,7 @@ import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.mappers.*;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.depotItem.DepotItemService;
+import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
@@ -14,6 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -40,11 +43,9 @@ public class SerialNumberService {
     @Resource
     private MaterialMapper materialMapper;
     @Resource
-    private DepotItemService depotItemService;
-    @Resource
     private UserService userService;
     @Resource
-    private DepotItemMapperEx depotItemMapperEx;
+    private LogService logService;
 
 
     public SerialNumber getSerialNumber(long id) {
@@ -68,6 +69,7 @@ public class SerialNumberService {
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertSerialNumber(String beanJson, HttpServletRequest request) {
         SerialNumber serialNumber = JSONObject.parseObject(beanJson, SerialNumber.class);
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_SERIAL_NUMBER, BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
         return serialNumberMapper.insertSelective(serialNumber);
     }
 
@@ -168,6 +170,8 @@ public class SerialNumberService {
      * */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public SerialNumberEx addSerialNumber(SerialNumberEx serialNumberEx) {
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_SERIAL_NUMBER,BusinessConstants.LOG_OPERATION_TYPE_ADD,
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         if(serialNumberEx==null){
             return null;
         }
@@ -191,6 +195,9 @@ public class SerialNumberService {
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public SerialNumberEx updateSerialNumber(SerialNumberEx serialNumberEx) {
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_SERIAL_NUMBER,
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(serialNumberEx.getId()).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         if(serialNumberEx==null){
             return null;
         }
@@ -345,6 +352,9 @@ public class SerialNumberService {
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void batAddSerialNumber(String materialName, String serialNumberPrefix, Integer batAddTotal, String remark) {
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_SERIAL_NUMBER,
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_BATCH_ADD).append(batAddTotal).append(BusinessConstants.LOG_DATA_UNIT).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         if(StringUtil.isNotEmpty(materialName)){
             //查询商品id
             Long materialId = checkMaterialName(materialName);

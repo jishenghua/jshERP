@@ -1,16 +1,20 @@
 package com.jsh.erp.service.supplier;
 
 import com.alibaba.fastjson.JSONObject;
+import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.Supplier;
 import com.jsh.erp.datasource.entities.SupplierExample;
 import com.jsh.erp.datasource.mappers.SupplierMapper;
 import com.jsh.erp.datasource.mappers.SupplierMapperEx;
+import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +32,8 @@ public class SupplierService {
 
     @Resource
     private SupplierMapperEx supplierMapperEx;
+    @Resource
+    private LogService logService;
 
     public Supplier getSupplier(long id) {
         return supplierMapper.selectByPrimaryKey(id);
@@ -81,6 +87,9 @@ public class SupplierService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateAdvanceIn(Long supplierId, BigDecimal advanceIn){
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_SUPPLIER,
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(supplierId).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         Supplier supplier = supplierMapper.selectByPrimaryKey(supplierId);
         if(supplier!=null){
             supplier.setAdvancein(supplier.getAdvancein().add(advanceIn));  //增加预收款的金额，可能增加的是负值
@@ -121,6 +130,9 @@ public class SupplierService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchSetEnable(Boolean enabled, String supplierIDs) {
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_SUPPLIER,
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(supplierIDs).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         List<Long> ids = StringUtil.strToLongList(supplierIDs);
         Supplier supplier = new Supplier();
         supplier.setEnabled(enabled);
@@ -140,8 +152,11 @@ public class SupplierService {
     public List<Supplier> findByAll(String supplier, String type, String phonenum, String telephone, String description) {
         return supplierMapperEx.findByAll(supplier, type, phonenum, telephone, description);
     }
-
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public BaseResponseInfo importExcel(List<Supplier> mList) throws Exception {
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_SUPPLIER,
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_IMPORT).append(mList.size()).append(BusinessConstants.LOG_DATA_UNIT).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         BaseResponseInfo info = new BaseResponseInfo();
         Map<String, Object> data = new HashMap<String, Object>();
         try {

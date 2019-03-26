@@ -78,7 +78,7 @@ public class CommonQueryManager {
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insert(String apiName, String beanJson, HttpServletRequest request) {
         if (StringUtil.isNotEmpty(apiName)) {
-            logService.insertLog(apiName, "新增", request);
+            logService.insertLog(apiName, BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
             return container.getCommonQuery(apiName).insert(beanJson, request);
         }
         return 0;
@@ -94,7 +94,8 @@ public class CommonQueryManager {
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int update(String apiName, String beanJson, Long id, HttpServletRequest request) {
         if (StringUtil.isNotEmpty(apiName)) {
-            logService.insertLog(apiName, "更新,id:" + id, request);
+            logService.insertLog(apiName,
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
             return container.getCommonQuery(apiName).update(beanJson, id);
         }
         return 0;
@@ -109,7 +110,8 @@ public class CommonQueryManager {
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int delete(String apiName, Long id, HttpServletRequest request) {
         if (StringUtil.isNotEmpty(apiName)) {
-            logService.insertLog(apiName, "删除,id:" + id, request);
+            logService.insertLog(apiName,
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(id).toString(), request);
             return container.getCommonQuery(apiName).delete(id);
         }
         return 0;

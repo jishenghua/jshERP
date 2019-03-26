@@ -1,6 +1,7 @@
 package com.jsh.erp.service.log;
 
 import com.alibaba.fastjson.JSONObject;
+import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.Log;
 import com.jsh.erp.datasource.entities.LogExample;
 import com.jsh.erp.datasource.entities.User;
@@ -97,44 +98,48 @@ public class LogService {
     public String getModule(String apiName){
         String moduleName = null;
         switch (apiName) {
-            case "user":
-                moduleName = "用户"; break;
-            case "role":
-                moduleName = "角色"; break;
-            case "app":
-                moduleName = "应用"; break;
-            case "depot":
-                moduleName = "仓库"; break;
-            case "functions":
-                moduleName = "功能"; break;
-            case "inOutItem":
-                moduleName = "收支项目"; break;
-            case "unit":
-                moduleName = "计量单位"; break;
-            case "person":
-                moduleName = "经手人"; break;
-            case "userBusiness":
-                moduleName = "关联关系"; break;
-            case "systemConfig":
-                moduleName = "系统配置"; break;
-            case "materialProperty":
-                moduleName = "商品属性"; break;
-            case "account":
-                moduleName = "账户"; break;
-            case "supplier":
-                moduleName = "商家"; break;
-            case "materialCategory":
-                moduleName = "商品类型"; break;
-            case "material":
-                moduleName = "商品"; break;
-            case "depotHead":
-                moduleName = "单据"; break;
-            case "depotItem":
-                moduleName = "单据明细"; break;
-            case "accountHead":
-                moduleName = "财务"; break;
-            case "accountItem":
-                moduleName = "财务明细"; break;
+            case BusinessConstants.LOG_INTERFACE_NAME_USER:
+                moduleName = BusinessConstants.LOG_MODULE_NAME_USER; break;
+            case BusinessConstants.LOG_INTERFACE_NAME_ROLE:
+                moduleName = BusinessConstants.LOG_MODULE_NAME_ROLE; break;
+            case BusinessConstants.LOG_INTERFACE_NAME_APP:
+                moduleName =BusinessConstants.LOG_MODULE_NAME_APP; break;
+            case BusinessConstants.LOG_INTERFACE_NAME_DEPOT:
+                moduleName = BusinessConstants.LOG_MODULE_NAME_DEPOT; break;
+            case BusinessConstants.LOG_INTERFACE_NAME_FUNCTIONS:
+                moduleName = BusinessConstants.LOG_MODULE_NAME_FUNCTIONS; break;
+            case BusinessConstants.LOG_INTERFACE_NAME_IN_OUT_ITEM:
+                moduleName = BusinessConstants.LOG_MODULE_NAME_IN_OUT_ITEM; break;
+            case BusinessConstants.LOG_INTERFACE_NAME_UNIT:
+                moduleName = BusinessConstants.LOG_MODULE_NAME_UNIT; break;
+            case BusinessConstants.LOG_INTERFACE_NAME_PERSON:
+                moduleName = BusinessConstants.LOG_MODULE_NAME_PERSON; break;
+            case BusinessConstants.LOG_INTERFACE_NAME_USER_BUSINESS:
+                moduleName = BusinessConstants.LOG_MODULE_NAME_USER_BUSINESS; break;
+            case BusinessConstants.LOG_INTERFACE_NAME_SYSTEM_CONFIG:
+                moduleName = BusinessConstants.LOG_MODULE_NAME_SYSTEM_CONFIG; break;
+            case BusinessConstants.LOG_INTERFACE_NAME_MATERIAL_PROPERTY:
+                moduleName = BusinessConstants.LOG_MODULE_NAME_MATERIAL_PROPERTY; break;
+            case BusinessConstants.LOG_INTERFACE_NAME_ACCOUNT:
+                moduleName = BusinessConstants.LOG_MODULE_NAME_ACCOUNT; break;
+            case BusinessConstants.LOG_INTERFACE_NAME_SUPPLIER:
+                moduleName = BusinessConstants.LOG_MODULE_NAME_SUPPLIER; break;
+            case BusinessConstants.LOG_INTERFACE_NAME_MATERIAL_CATEGORY:
+                moduleName = BusinessConstants.LOG_MODULE_NAME_MATERIAL_CATEGORY; break;
+            case BusinessConstants.LOG_INTERFACE_NAME_MATERIAL:
+                moduleName = BusinessConstants.LOG_MODULE_NAME_MATERIAL; break;
+            case BusinessConstants.LOG_INTERFACE_NAME_DEPOT_HEAD:
+                moduleName = BusinessConstants.LOG_MODULE_NAME_DEPOT_HEAD; break;
+            case BusinessConstants.LOG_INTERFACE_NAME_DEPOT_ITEM:
+                moduleName = BusinessConstants.LOG_MODULE_NAME_DEPOT_ITEM; break;
+            case BusinessConstants.LOG_INTERFACE_NAME_ACCOUNT_HEAD:
+                moduleName = BusinessConstants.LOG_MODULE_NAME_ACCOUNT_HEAD; break;
+            case BusinessConstants.LOG_INTERFACE_NAME_ACCOUNT_ITEM:
+                moduleName = BusinessConstants.LOG_MODULE_NAME_ACCOUNT_ITEM; break;
+            case BusinessConstants.LOG_INTERFACE_NAME_SERIAL_NUMBER:
+                moduleName = BusinessConstants.LOG_MODULE_NAME_SERIAL_NUMBER; break;
+            case BusinessConstants.LOG_INTERFACE_NAME_ORGANIZATION:
+                moduleName = BusinessConstants.LOG_MODULE_NAME_ORGANIZATION; break;
         }
         return moduleName;
     }

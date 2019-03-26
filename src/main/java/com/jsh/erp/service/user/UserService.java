@@ -13,6 +13,7 @@ import com.jsh.erp.datasource.mappers.UserMapperEx;
 import com.jsh.erp.datasource.vo.TreeNode;
 import com.jsh.erp.datasource.vo.TreeNodeEx;
 import com.jsh.erp.exception.BusinessRunTimeException;
+import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.orgaUserRel.OrgaUserRelService;
 import com.jsh.erp.utils.ExceptionCodeConstants;
 import com.jsh.erp.utils.JshException;
@@ -44,6 +45,8 @@ public class UserService {
     private UserMapperEx userMapperEx;
     @Resource
     private OrgaUserRelService orgaUserRelService;
+    @Resource
+    private LogService logService;
 
     public User getUser(long id) {
         return userMapper.selectByPrimaryKey(id);
@@ -109,6 +112,9 @@ public class UserService {
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateUserByObj(User user) {
+        logService.insertLog(BusinessConstants.LOG_MODULE_NAME_USER,
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(user.getId()).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         return userMapper.updateByPrimaryKeySelective(user);
     }
     /**
@@ -122,6 +128,9 @@ public class UserService {
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int resetPwd(String md5Pwd, Long id) {
+        logService.insertLog(BusinessConstants.LOG_MODULE_NAME_USER,
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User user = new User();
         user.setId(id);
         user.setPassword(md5Pwd);
@@ -208,6 +217,9 @@ public class UserService {
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void addUserAndOrgUserRel(UserEx ue) throws Exception{
+        logService.insertLog(BusinessConstants.LOG_MODULE_NAME_USER,
+                BusinessConstants.LOG_OPERATION_TYPE_ADD,
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         //检查用户名和登录名
         checkUserNameAndLoginName(ue);
         //新增用户信息
@@ -262,6 +274,9 @@ public class UserService {
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void updateUserAndOrgUserRel(UserEx ue) throws Exception{
+        logService.insertLog(BusinessConstants.LOG_MODULE_NAME_USER,
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(ue.getId()).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         //检查用户名和登录名
         checkUserNameAndLoginName(ue);
         //更新用户信息
@@ -390,6 +405,9 @@ public class UserService {
      * */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void batDeleteUser(String ids) {
+        logService.insertLog(BusinessConstants.LOG_MODULE_NAME_USER,
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         String idsArray[]=ids.split(",");
         int i= userMapperEx.batDeleteOrUpdateUser(idsArray,BusinessConstants.USER_STATUS_DELETE);
         if(i<1){

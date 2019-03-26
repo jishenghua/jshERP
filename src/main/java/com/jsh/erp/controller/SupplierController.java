@@ -11,6 +11,7 @@ import jxl.Workbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -375,8 +376,8 @@ public class SupplierController {
         importFun(supplierFile);
         response.sendRedirect("../pages/manage/member.html");
     }
-
     public String importFun(MultipartFile supplierFile){
+
         BaseResponseInfo info = new BaseResponseInfo();
         Map<String, Object> data = new HashMap<String, Object>();
         String message = "成功";
