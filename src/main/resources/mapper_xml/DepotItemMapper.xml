@@ -30,6 +30,7 @@
     <result column="OtherField5" jdbcType="VARCHAR" property="otherfield5" />
     <result column="MType" jdbcType="VARCHAR" property="mtype" />
     <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
+    <result column="delete_Flag" jdbcType="VARCHAR" property="deleteFlag" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -104,7 +105,8 @@
     -->
     Id, HeaderId, MaterialId, MUnit, OperNumber, BasicNumber, UnitPrice, TaxUnitPrice, 
     AllPrice, Remark, Img, Incidentals, DepotId, AnotherDepotId, TaxRate, TaxMoney, TaxLastMoney, 
-    OtherField1, OtherField2, OtherField3, OtherField4, OtherField5, MType, tenant_id
+    OtherField1, OtherField2, OtherField3, OtherField4, OtherField5, MType, tenant_id, 
+    delete_Flag
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="BaseResultMap">
     <!--
@@ -164,8 +166,8 @@
       DepotId, AnotherDepotId, TaxRate, 
       TaxMoney, TaxLastMoney, OtherField1, 
       OtherField2, OtherField3, OtherField4, 
-      OtherField5, MType, tenant_id
-      )
+      OtherField5, MType, tenant_id, 
+      delete_Flag)
     values (#{id,jdbcType=BIGINT}, #{headerid,jdbcType=BIGINT}, #{materialid,jdbcType=BIGINT}, 
       #{munit,jdbcType=VARCHAR}, #{opernumber,jdbcType=DECIMAL}, #{basicnumber,jdbcType=DECIMAL}, 
       #{unitprice,jdbcType=DECIMAL}, #{taxunitprice,jdbcType=DECIMAL}, #{allprice,jdbcType=DECIMAL}, 
@@ -173,8 +175,8 @@
       #{depotid,jdbcType=BIGINT}, #{anotherdepotid,jdbcType=BIGINT}, #{taxrate,jdbcType=DECIMAL}, 
       #{taxmoney,jdbcType=DECIMAL}, #{taxlastmoney,jdbcType=DECIMAL}, #{otherfield1,jdbcType=VARCHAR}, 
       #{otherfield2,jdbcType=VARCHAR}, #{otherfield3,jdbcType=VARCHAR}, #{otherfield4,jdbcType=VARCHAR}, 
-      #{otherfield5,jdbcType=VARCHAR}, #{mtype,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}
-      )
+      #{otherfield5,jdbcType=VARCHAR}, #{mtype,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, 
+      #{deleteFlag,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.DepotItem">
     <!--
@@ -255,6 +257,9 @@
       <if test="tenantId != null">
         tenant_id,
       </if>
+      <if test="deleteFlag != null">
+        delete_Flag,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -328,6 +333,9 @@
       </if>
       <if test="tenantId != null">
         #{tenantId,jdbcType=BIGINT},
+      </if>
+      <if test="deleteFlag != null">
+        #{deleteFlag,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -420,6 +428,9 @@
       <if test="record.tenantId != null">
         tenant_id = #{record.tenantId,jdbcType=BIGINT},
       </if>
+      <if test="record.deleteFlag != null">
+        delete_Flag = #{record.deleteFlag,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -454,7 +465,8 @@
       OtherField4 = #{record.otherfield4,jdbcType=VARCHAR},
       OtherField5 = #{record.otherfield5,jdbcType=VARCHAR},
       MType = #{record.mtype,jdbcType=VARCHAR},
-      tenant_id = #{record.tenantId,jdbcType=BIGINT}
+      tenant_id = #{record.tenantId,jdbcType=BIGINT},
+      delete_Flag = #{record.deleteFlag,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -535,6 +547,9 @@
       <if test="tenantId != null">
         tenant_id = #{tenantId,jdbcType=BIGINT},
       </if>
+      <if test="deleteFlag != null">
+        delete_Flag = #{deleteFlag,jdbcType=VARCHAR},
+      </if>
     </set>
     where Id = #{id,jdbcType=BIGINT}
   </update>
@@ -566,7 +581,8 @@
       OtherField4 = #{otherfield4,jdbcType=VARCHAR},
       OtherField5 = #{otherfield5,jdbcType=VARCHAR},
       MType = #{mtype,jdbcType=VARCHAR},
-      tenant_id = #{tenantId,jdbcType=BIGINT}
+      tenant_id = #{tenantId,jdbcType=BIGINT},
+      delete_Flag = #{deleteFlag,jdbcType=VARCHAR}
     where Id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>
