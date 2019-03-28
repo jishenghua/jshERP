@@ -60,4 +60,6 @@ public interface SerialNumberMapperEx {
      * 批量添加序列号
      * */
     int batAddSerialNumber(@Param("list") List<SerialNumberEx> list);
+
+    int batchDeleteSerialNumberByIds(@Param("updateTime") Date updateTime, @Param("updater") Long updater, @Param("ids") String ids[]);
 }

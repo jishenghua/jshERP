@@ -7,8 +7,8 @@
 
     <select id="selectByConditionLog" parameterType="com.jsh.erp.datasource.entities.LogExample" resultMap="ResultExMap">
         select l.*,u.username userName
-        FROM jsh_log l left join jsh_user u
-        on l.userID = u.id
+        FROM jsh_log l
+        left join jsh_user u on l.userID = u.id and ifnull(u.status,'0') not in('1','2')
         where 1=1
         <if test="operation != null">
             and l.operation like '%${operation}%'

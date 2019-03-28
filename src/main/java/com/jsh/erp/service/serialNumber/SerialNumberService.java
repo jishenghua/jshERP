@@ -391,4 +391,23 @@ public class SerialNumberService {
             }while(batAddTotal>0);
         }
     }
+    /**
+     * create by: qiankunpingtai
+     * website：http://39.105.146.63/symphony/
+     * description:
+     *  逻辑删除序列号信息
+     * create time: 2019/3/27 17:43
+     * @Param: ids
+     * @return
+     */
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int batchDeleteSerialNumberByIds(String ids) {
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_SERIAL_NUMBER,
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+        User userInfo=userService.getCurrentUser();
+        String [] idArray=ids.split(",");
+        return serialNumberMapperEx.batchDeleteSerialNumberByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+
+    }
 }

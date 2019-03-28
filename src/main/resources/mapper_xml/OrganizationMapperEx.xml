@@ -30,7 +30,7 @@
         <if test="currentId != null">
             and id !=#{currentId}
         </if>
-        and org_stcd !='5'
+        and ifnull(org_stcd,'0') !='5'
         order by sort asc
     </select>
 
@@ -42,7 +42,7 @@
         <if test="currentId != null">
             and id !=#{currentId}
         </if>
-        and org_stcd !='5'
+        and ifnull(org_stcd,'0') !='5'
         order by sort asc
     </select>
     <insert id="addOrganization" parameterType="com.jsh.erp.datasource.entities.Organization"
@@ -85,7 +85,7 @@
         select * from  jsh_organization
         where
         1=1
-        and org_stcd!='5'
+        and ifnull(org_stcd,'0') !='5'
         and org_parent_no='-1'
         and org_abr='根机构'
         and id in (

@@ -11,7 +11,7 @@
         select *
         FROM jsh_user
         where 1=1
-        and status not in('1','2')
+        and ifnull(status,'0') not in('1','2')
         <if test="userName != null">
             and username like '%${userName}%'
         </if>
@@ -27,7 +27,7 @@
         COUNT(id)
         FROM jsh_user
         WHERE 1=1
-        and status not in('1','2')
+        and ifnull(status,'0') not in('1','2')
         <if test="userName != null">
             and username like '%${userName}%'
         </if>
@@ -40,10 +40,10 @@
          user.description, user.remark,user.isystem,org.id as orgaId,org.org_abr,rel.user_blng_orga_dspl_seq,
         rel.id as orgaUserRelId
         FROM jsh_user user
-        left join jsh_orga_user_rel rel on user.id=rel.user_id and rel.delete_flag!='1'
-        left join jsh_organization org on rel.orga_id=org.id
+        left join jsh_orga_user_rel rel on user.id=rel.user_id and ifnull(rel.delete_flag,'0') !='1'
+        left join jsh_organization org on rel.orga_id=org.id and  ifnull(org.org_stcd,'0') !='5'
         where 1=1
-        and user.status not in('1','2')
+        and ifnull(user.status,'0') not in('1','2')
         <if test="userName != null and userName != ''">
             <bind name="userName" value="'%' + _parameter.userName + '%'" />
             and user.userName like #{userName}
@@ -114,7 +114,7 @@
         user.description, user.remark,user.isystem
         FROM jsh_user user
         where 1=1
-        and user.status not in('1','2')
+        and ifnull(user.status,'0') not in('1','2')
         <if test="userName != null and userName != ''">
             and user.userName = #{userName}
         </if>
@@ -161,7 +161,7 @@
             org.id, org.org_abr as text,org.org_no as orgNo,org.sort as sort,null as iconCls,'0' as type
             FROM jsh_organization org
             WHERE org.org_parent_no = #{orgNo}
-            and org.org_stcd !='5'
+            and ifnull(org.org_stcd,'0') !='5'
             union all
             select
             user.id,user.username as text, null as orgNo,rel.user_blng_orga_dspl_seq as sort,'icon-user' as iconCls,'1' as type
@@ -170,8 +170,8 @@
             1=1
             and user.id=rel.user_id
             and rel.orga_id=#{orgId}
-            and rel.delete_flag !='1'
-            and user.status not in ('1','2')
+            and ifnull(rel.delete_flag,'0') !='1'
+            and ifnull(user.status,'0') not in('1','2')
           ) node
           order by sort asc
     </select>
@@ -181,7 +181,7 @@
          id, org_abr as text,org_no as orgNo,'0' as type
         FROM jsh_organization
         WHERE org_parent_no = -1
-        and org_stcd !='5'
+        and ifnull(org_stcd,'0') !='5'
         order by sort asc
     </select>
 </mapper>

@@ -26,6 +26,7 @@
             <bind name="materialName" value="'%' + _parameter.materialName + '%'" />
             and mat.name like  #{materialName}
         </if>
+        and ifnull(ser.delete_Flag,'0') !='1'
         order by ser.id desc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
@@ -45,6 +46,7 @@
             <bind name="materialName" value="'%' + _parameter.materialName + '%'" />
             and mat.name like  #{materialName}
         </if>
+        and ifnull(ser.delete_Flag,'0') !='1'
         order by ser.id desc
     </select>
     <select id="findById" resultMap="SerialNumberExBaseResultMap">
@@ -54,10 +56,11 @@
         ur.username as updaterName,ser.depothead_Id
         FROM jsh_serial_number ser
         left JOIN jsh_material mat on mat.id = ser.material_Id
-        left join jsh_user cr on ser.creator=cr.id
-        left join jsh_user ur on ser.updater=ur.id
+        left join jsh_user cr on ser.creator=cr.id and ifnull(cr.status,'0') not in('1','2')
+        left join jsh_user ur on ser.updater=ur.id and ifnull(ur.status,'0') not in('1','2')
         where 1=1
         and ser.id=#{id}
+        and ifnull(ser.delete_Flag,'0') !='1'
         order by ser.id desc
     </select>
     <select id="findBySerialNumber" resultMap="SerialNumberExBaseResultMap">
@@ -69,6 +72,7 @@
         <if test="serialNumber != null">
             and ser.serial_Number=#{serialNumber}
         </if>
+        and ifnull(ser.delete_Flag,'0') !='1'
         order by ser.id desc
     </select>
     <insert id="addSerialNumber" parameterType="com.jsh.erp.datasource.entities.SerialNumberEx"
@@ -120,7 +124,7 @@
         <if test="materialId != null">
             and ser.material_Id=#{materialId}
         </if>
-        and ser.delete_Flag !='1'
+        and ifnull(ser.delete_Flag,'0') !='1'
         and ser.is_Sell !='1'
     </select>
     <select id="countSerialNumberByMaterialIdAndDepotheadId" resultType="java.lang.Integer">
@@ -135,7 +139,7 @@
             and ser.depothead_Id=#{depotheadId}
         </if>
         and ser.is_Sell =#{isSell,jdbcType=VARCHAR}
-        and ser.delete_Flag !='1'
+        and ifnull(ser.delete_Flag,'0') !='1'
     </select>
     <update id="sellSerialNumber">
         update jsh_serial_number
@@ -156,6 +160,7 @@
             and material_Id = #{materialId}
         </if>
             and is_Sell != '1'
+            and ifnull(delete_Flag,'0') !='1'
         <if test="count != null">
         and id in
             ( select batchSN.id from
@@ -165,6 +170,7 @@
                         and selFrom.material_Id = #{materialId}
                     </if>
                         and selFrom.is_Sell != '1'
+                        and ifnull(selFrom.delete_Flag,'0') !='1'
                     limit 0,#{count}
                 ) batchSN
             )
@@ -190,6 +196,7 @@
             and depothead_Id = #{depotheadId,jdbcType=BIGINT}
         </if>
             and is_Sell != '0'
+            and ifnull(delete_Flag,'0') !='1'
         <if test="count != null">
             and id in
             ( select batchSN.id from
@@ -202,6 +209,7 @@
                 and selFrom.depothead_Id = #{depotheadId,jdbcType=BIGINT}
             </if>
                 and selFrom.is_Sell !='0'
+                and ifnull(selFrom.delete_Flag,'0') !='1'
             limit 0,#{count}
             ) batchSN
             )
@@ -219,6 +227,17 @@
         )
         </foreach>
     </insert>
+    <update id="batchDeleteSerialNumberByIds">
+        update jsh_serial_number
+        set update_Time=#{updateTime},updater=#{updater},delete_Flag='1'
+        where 1=1
+        and ifnull(delete_Flag,'0') !='1'
+        and id in (
+        <foreach collection="ids" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
 
 
 

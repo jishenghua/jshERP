@@ -101,6 +101,9 @@ public class ExceptionConstants {
     /**商品%s下序列号不充足，请补充后重试*/
     public static final int MATERIAL_SERIAL_NUMBERE_NOT_ENOUGH_CODE = 10500002;
     public static final String MATERIAL_SERIAL_NUMBERE_NOT_ENOUGH_MSG = "商品:%s下序列号不充足，请补充后重试";
+    /**删序列号信息失败*/
+    public static final int SERIAL_NUMBERE_DELETE_FAILED_CODE = 10500003;
+    public static final String SERIAL_NUMBERE_DELETE_FAILED_MSG = "删序列号信息失败";
     /**
      * 机构
      * type = 110
