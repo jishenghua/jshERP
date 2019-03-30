@@ -5,14 +5,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.SerialNumberEx;
 import com.jsh.erp.exception.BusinessParamCheckingException;
+import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.serialNumber.SerialNumberService;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -109,19 +107,26 @@ public class SerialNumberController {
         return result;
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    /**
+     * create by: qiankunpingtai
+     * website：http://39.105.146.63/symphony/
+     * description:
+     *  逻辑删除序列号信息
+     * create time: 2019/3/27 17:43
+     * @Param: ids
+     * @return java.lang.Object
+     */
+    @RequestMapping(value = "/serialNumber/batchDeleteSerialNumberByIds")
+    public Object batchDeleteSerialNumberByIds(@RequestParam("ids") String ids) throws Exception {
+        JSONObject result = ExceptionConstants.standardSuccess();
+        int i= serialNumberService.batchDeleteSerialNumberByIds(ids);
+        if(i<1){
+            logger.error("异常码[{}],异常提示[{}],参数,ids[{}]",
+                    ExceptionConstants.SERIAL_NUMBERE_DELETE_FAILED_CODE,ExceptionConstants.SERIAL_NUMBERE_DELETE_FAILED_MSG,ids);
+            throw new BusinessRunTimeException(ExceptionConstants.SERIAL_NUMBERE_DELETE_FAILED_CODE,
+                    ExceptionConstants.SERIAL_NUMBERE_DELETE_FAILED_MSG);
+        }
+        return result;
+    }
 
 }

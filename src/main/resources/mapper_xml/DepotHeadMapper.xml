@@ -36,6 +36,7 @@
     <result column="Status" jdbcType="VARCHAR" property="status" />
     <result column="LinkNumber" jdbcType="VARCHAR" property="linknumber" />
     <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
+    <result column="delete_Flag" jdbcType="VARCHAR" property="deleteFlag" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -112,7 +113,7 @@
     OperTime, OrganId, HandsPersonId, AccountId, ChangeAmount, AllocationProjectId, TotalPrice, 
     PayType, Remark, Salesman, AccountIdList, AccountMoneyList, Discount, DiscountMoney, 
     DiscountLastMoney, OtherMoney, OtherMoneyList, OtherMoneyItem, AccountDay, Status, 
-    LinkNumber, tenant_id
+    LinkNumber, tenant_id, delete_Flag
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.DepotHeadExample" resultMap="BaseResultMap">
     <!--
@@ -174,8 +175,8 @@
       AccountIdList, AccountMoneyList, Discount, 
       DiscountMoney, DiscountLastMoney, OtherMoney, 
       OtherMoneyList, OtherMoneyItem, AccountDay, 
-      Status, LinkNumber, tenant_id
-      )
+      Status, LinkNumber, tenant_id, 
+      delete_Flag)
     values (#{id,jdbcType=BIGINT}, #{type,jdbcType=VARCHAR}, #{subtype,jdbcType=VARCHAR}, 
       #{projectid,jdbcType=BIGINT}, #{defaultnumber,jdbcType=VARCHAR}, #{number,jdbcType=VARCHAR}, 
       #{operpersonname,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, #{opertime,jdbcType=TIMESTAMP}, 
@@ -185,8 +186,8 @@
       #{accountidlist,jdbcType=VARCHAR}, #{accountmoneylist,jdbcType=VARCHAR}, #{discount,jdbcType=DECIMAL}, 
       #{discountmoney,jdbcType=DECIMAL}, #{discountlastmoney,jdbcType=DECIMAL}, #{othermoney,jdbcType=DECIMAL}, 
       #{othermoneylist,jdbcType=VARCHAR}, #{othermoneyitem,jdbcType=VARCHAR}, #{accountday,jdbcType=INTEGER}, 
-      #{status,jdbcType=VARCHAR}, #{linknumber,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}
-      )
+      #{status,jdbcType=VARCHAR}, #{linknumber,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, 
+      #{deleteFlag,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.DepotHead">
     <!--
@@ -285,6 +286,9 @@
       <if test="tenantId != null">
         tenant_id,
       </if>
+      <if test="deleteFlag != null">
+        delete_Flag,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -376,6 +380,9 @@
       </if>
       <if test="tenantId != null">
         #{tenantId,jdbcType=BIGINT},
+      </if>
+      <if test="deleteFlag != null">
+        #{deleteFlag,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -486,6 +493,9 @@
       <if test="record.tenantId != null">
         tenant_id = #{record.tenantId,jdbcType=BIGINT},
       </if>
+      <if test="record.deleteFlag != null">
+        delete_Flag = #{record.deleteFlag,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -526,7 +536,8 @@
       AccountDay = #{record.accountday,jdbcType=INTEGER},
       Status = #{record.status,jdbcType=VARCHAR},
       LinkNumber = #{record.linknumber,jdbcType=VARCHAR},
-      tenant_id = #{record.tenantId,jdbcType=BIGINT}
+      tenant_id = #{record.tenantId,jdbcType=BIGINT},
+      delete_Flag = #{record.deleteFlag,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -625,6 +636,9 @@
       <if test="tenantId != null">
         tenant_id = #{tenantId,jdbcType=BIGINT},
       </if>
+      <if test="deleteFlag != null">
+        delete_Flag = #{deleteFlag,jdbcType=VARCHAR},
+      </if>
     </set>
     where Id = #{id,jdbcType=BIGINT}
   </update>
@@ -662,7 +676,8 @@
       AccountDay = #{accountday,jdbcType=INTEGER},
       Status = #{status,jdbcType=VARCHAR},
       LinkNumber = #{linknumber,jdbcType=VARCHAR},
-      tenant_id = #{tenantId,jdbcType=BIGINT}
+      tenant_id = #{tenantId,jdbcType=BIGINT},
+      delete_Flag = #{deleteFlag,jdbcType=VARCHAR}
     where Id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

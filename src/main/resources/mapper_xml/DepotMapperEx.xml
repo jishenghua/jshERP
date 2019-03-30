@@ -41,7 +41,7 @@
     <select id="getDepotList" parameterType="java.util.Map" resultMap="ResultMapEx">
         select dep.*,usr.username as principalName
         FROM jsh_depot dep
-        left join jsh_user usr on usr.id=dep.principal
+        left join jsh_user usr on usr.id=dep.principal and ifnull(usr.status,'0') not in('1','2')
         where 1=1
         <if test="name != null and name != ''">
             <bind name="name" value="'%' + _parameter.name + '%'" />

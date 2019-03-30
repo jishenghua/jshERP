@@ -24,6 +24,7 @@
     <result column="updatetime" jdbcType="TIMESTAMP" property="updatetime" />
     <result column="updator" jdbcType="BIGINT" property="updator" />
     <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
+    <result column="delete_Flag" jdbcType="VARCHAR" property="deleteFlag" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.jsh.erp.datasource.entities.Asset">
     <!--
@@ -106,7 +107,7 @@
     -->
     id, assetnameID, location, labels, status, userID, price, purchasedate, periodofvalidity, 
     warrantydate, assetnum, serialnum, supplier, createtime, creator, updatetime, updator, 
-    tenant_id
+    tenant_id, delete_Flag
   </sql>
   <sql id="Blob_Column_List">
     <!--
@@ -194,14 +195,16 @@
       warrantydate, assetnum, serialnum, 
       supplier, createtime, creator, 
       updatetime, updator, tenant_id, 
-      description, addMonth)
+      delete_Flag, description, addMonth
+      )
     values (#{id,jdbcType=BIGINT}, #{assetnameid,jdbcType=BIGINT}, #{location,jdbcType=VARCHAR}, 
       #{labels,jdbcType=VARCHAR}, #{status,jdbcType=SMALLINT}, #{userid,jdbcType=BIGINT}, 
       #{price,jdbcType=DECIMAL}, #{purchasedate,jdbcType=TIMESTAMP}, #{periodofvalidity,jdbcType=TIMESTAMP}, 
       #{warrantydate,jdbcType=TIMESTAMP}, #{assetnum,jdbcType=VARCHAR}, #{serialnum,jdbcType=VARCHAR}, 
       #{supplier,jdbcType=BIGINT}, #{createtime,jdbcType=TIMESTAMP}, #{creator,jdbcType=BIGINT}, 
       #{updatetime,jdbcType=TIMESTAMP}, #{updator,jdbcType=BIGINT}, #{tenantId,jdbcType=BIGINT}, 
-      #{description,jdbcType=LONGVARCHAR}, #{addmonth,jdbcType=LONGVARCHAR})
+      #{deleteFlag,jdbcType=VARCHAR}, #{description,jdbcType=LONGVARCHAR}, #{addmonth,jdbcType=LONGVARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.Asset">
     <!--
@@ -264,6 +267,9 @@
       <if test="tenantId != null">
         tenant_id,
       </if>
+      <if test="deleteFlag != null">
+        delete_Flag,
+      </if>
       <if test="description != null">
         description,
       </if>
@@ -325,6 +331,9 @@
       </if>
       <if test="tenantId != null">
         #{tenantId,jdbcType=BIGINT},
+      </if>
+      <if test="deleteFlag != null">
+        #{deleteFlag,jdbcType=VARCHAR},
       </if>
       <if test="description != null">
         #{description,jdbcType=LONGVARCHAR},
@@ -405,6 +414,9 @@
       <if test="record.tenantId != null">
         tenant_id = #{record.tenantId,jdbcType=BIGINT},
       </if>
+      <if test="record.deleteFlag != null">
+        delete_Flag = #{record.deleteFlag,jdbcType=VARCHAR},
+      </if>
       <if test="record.description != null">
         description = #{record.description,jdbcType=LONGVARCHAR},
       </if>
@@ -440,6 +452,7 @@
       updatetime = #{record.updatetime,jdbcType=TIMESTAMP},
       updator = #{record.updator,jdbcType=BIGINT},
       tenant_id = #{record.tenantId,jdbcType=BIGINT},
+      delete_Flag = #{record.deleteFlag,jdbcType=VARCHAR},
       description = #{record.description,jdbcType=LONGVARCHAR},
       addMonth = #{record.addmonth,jdbcType=LONGVARCHAR}
     <if test="_parameter != null">
@@ -469,7 +482,8 @@
       creator = #{record.creator,jdbcType=BIGINT},
       updatetime = #{record.updatetime,jdbcType=TIMESTAMP},
       updator = #{record.updator,jdbcType=BIGINT},
-      tenant_id = #{record.tenantId,jdbcType=BIGINT}
+      tenant_id = #{record.tenantId,jdbcType=BIGINT},
+      delete_Flag = #{record.deleteFlag,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -532,6 +546,9 @@
       <if test="tenantId != null">
         tenant_id = #{tenantId,jdbcType=BIGINT},
       </if>
+      <if test="deleteFlag != null">
+        delete_Flag = #{deleteFlag,jdbcType=VARCHAR},
+      </if>
       <if test="description != null">
         description = #{description,jdbcType=LONGVARCHAR},
       </if>
@@ -564,6 +581,7 @@
       updatetime = #{updatetime,jdbcType=TIMESTAMP},
       updator = #{updator,jdbcType=BIGINT},
       tenant_id = #{tenantId,jdbcType=BIGINT},
+      delete_Flag = #{deleteFlag,jdbcType=VARCHAR},
       description = #{description,jdbcType=LONGVARCHAR},
       addMonth = #{addmonth,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=BIGINT}
@@ -590,7 +608,8 @@
       creator = #{creator,jdbcType=BIGINT},
       updatetime = #{updatetime,jdbcType=TIMESTAMP},
       updator = #{updator,jdbcType=BIGINT},
-      tenant_id = #{tenantId,jdbcType=BIGINT}
+      tenant_id = #{tenantId,jdbcType=BIGINT},
+      delete_Flag = #{deleteFlag,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

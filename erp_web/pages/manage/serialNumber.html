@@ -314,8 +314,11 @@
             if (r) {
                 $.ajax({
                     type: "post",
-                    url: "/serialNumber/" + id + "/delete",
+                    url: "/serialNumber/batchDeleteSerialNumberByIds",
                     dataType: "json",
+                    data: ({
+                        ids: id
+                    }),
                     success: function (res) {
                         if(res && res.code == 200) {
                             $("#searchBtn").click();
@@ -353,7 +356,7 @@
                     }
                     $.ajax({
                         type: "post",
-                        url: "/serialNumber/batchDelete",
+                        url: "/serialNumber/batchDeleteSerialNumberByIds",
                         dataType: "json",
                         async: false,
                         data: ({

@@ -1502,3 +1502,51 @@ alter table jsh_supplier add tenant_id bigint(20) DEFAULT null COMMENT '租户id
 alter table jsh_systemconfig add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
 alter table jsh_unit add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
 alter table jsh_user add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
+
+-- ----------------------------
+-- 时间：2019年3月27日
+-- version：1.0.12
+-- 此次更新
+-- 添加删除标记，将物理删除修改为逻辑删除
+-- 特别提醒：之后的sql都是在之前基础上迭代，可以对已存在的系统进行数据保留更新
+-- ----------------------------
+-- 角色表	jsh_role
+alter table jsh_role add  delete_Flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
+-- 用户 角色 模块关系表	jsh_userbusiness
+alter table jsh_userbusiness add  delete_Flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
+-- 功能模块表	jsh_functions
+alter table jsh_functions add  delete_Flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
+-- 应用表	jsh_app
+alter table jsh_app add  delete_Flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
+-- 产品表	jsh_material
+alter table jsh_material add  delete_Flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
+-- 产品扩展字段表	jsh_materialproperty
+alter table jsh_materialproperty add  delete_Flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
+-- 经手人表	jsh_person
+alter table jsh_person add  delete_Flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
+-- 供应商 客户信息表	jsh_supplier
+alter table jsh_supplier add  delete_Flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
+-- 系统参数表	jsh_systemconfig
+alter table jsh_systemconfig add  delete_Flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
+-- 多单位表	jsh_unit
+alter table jsh_unit add  delete_Flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
+-- 仓库表	jsh_depot
+alter table jsh_depot add  delete_Flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
+-- 账户信息表	jsh_account
+alter table jsh_account add  delete_Flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
+-- 财务主表	jsh_accounthead
+alter table jsh_accounthead add  delete_Flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
+-- 财务子表	jsh_accountitem
+alter table jsh_accountitem add  delete_Flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
+-- 资产记录表	jsh_asset
+alter table jsh_asset add  delete_Flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
+-- 资产类型表	jsh_assetcategory
+alter table jsh_assetcategory add  delete_Flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
+-- 资产信息表	jsh_assetname
+alter table jsh_assetname add  delete_Flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
+-- 单据主表	jsh_depothead
+alter table jsh_depothead add  delete_Flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
+-- 单据子表	jsh_depotitem
+alter table jsh_depotitem add  delete_Flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
+-- 收支项目表	jsh_inoutitem
+alter table jsh_inoutitem add  delete_Flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';

@@ -76,4 +76,5 @@ public class RoleController {
     public List<Role> list(HttpServletRequest request) {
         return roleService.getRole();
     }
+
 }
