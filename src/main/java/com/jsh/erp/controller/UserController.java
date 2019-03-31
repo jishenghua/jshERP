@@ -112,7 +112,7 @@ public class UserController {
     //                            new Timestamp(System.currentTimeMillis()), (short) 0, "管理用户：" + username + " 登录系统", username + " 登录系统"));
                         msgTip = "user can login";
                         request.getSession().setAttribute("user",user);
-                        String url = HTTP + manageIp + ":" + managePort + "/tenant/getTenant?tenantId=" + user.getId();
+                        String url = HTTP + manageIp + ":" + managePort + "/tenant/getTenant?tenantId=" + user.getTenantId();
                         JSONObject obj = HttpClient.httpGet(url);
                         if(obj!=null && obj.getString("code").equals(CODE_OK)) {
                             JSONObject dataObj = obj.getJSONObject("data");
