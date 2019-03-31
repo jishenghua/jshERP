@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.PerformanceInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.tenant.TenantHandler;
 import com.baomidou.mybatisplus.extension.plugins.tenant.TenantSqlParser;
+import com.jsh.erp.datasource.entities.User;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.LongValue;
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
@@ -42,16 +43,27 @@ public class TenantConfig {
 
             @Override
             public boolean doTableFilter(String tableName) {
-                //从session中获取租户id
+                //获取开启状态
                 Object mybatisPlusStatus = request.getSession().getAttribute("mybatisPlusStatus");
                 if(mybatisPlusStatus !=null && mybatisPlusStatus.toString().equals("open")) {
-                    // 这里可以判断是否过滤表
-                    if ("databasechangelog".equals(tableName) || "databasechangeloglock".equals(tableName)
-                            || "jsh_materialproperty".equals(tableName) || "tbl_sequence".equals(tableName) || "dual".equals(tableName)
-                            || "jsh_userbusiness".equals(tableName) || "jsh_app".equals(tableName) || "jsh_functions".equals(tableName)) {
+                    //从session中获取租户id
+                    String loginName = null;
+                    Object userInfo = request.getSession().getAttribute("user");
+                    if(userInfo != null) {
+                        User user = (User) userInfo;
+                        loginName = user.getLoginame();
+                    }
+                    if(("admin").equals(loginName)) {
                         return true;
                     } else {
-                        return false;
+                        // 这里可以判断是否过滤表
+                        if ("databasechangelog".equals(tableName) || "databasechangeloglock".equals(tableName)
+                                || "jsh_materialproperty".equals(tableName) || "tbl_sequence".equals(tableName) || "dual".equals(tableName)
+                                || "jsh_userbusiness".equals(tableName) || "jsh_app".equals(tableName) || "jsh_functions".equals(tableName)) {
+                            return true;
+                        } else {
+                            return false;
+                        }
                     }
                 } else {
                     return true;

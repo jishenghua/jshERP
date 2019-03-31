@@ -26,7 +26,10 @@
             <input type="password" id="user_pwd"/>
             <p id="tip_username" style="display: none"><span class="error_input">用户名不正确</span></p>
             <p id="tip_userpwd" style="display: none">密码不能为空</p>
-            <input type="button" value=" " id="btn_login"/>
+            <div class="login_btn">
+                <input type="button" value="登录" id="btn_login"/>
+                <input type="button" value="立即注册" id="btn_register"/>
+            </div>
         </div>
         <p id="copyright">
             Copyright © 2017-2020 季圣华(jishenghua)
@@ -40,6 +43,7 @@
         //进入页面聚焦在username输入框,方便 用户输入
         $("#user_name").focus();
         browserFit();
+        checkTenantStatus();
     });
 
     //浏览器适配
@@ -48,6 +52,32 @@
             $("#user_vcodepwd").empty().append("密&nbsp;&nbsp;&nbsp;&nbsp;码：");
         else
             $("#user_vcodepwd").empty().append("密&nbsp;&nbsp;&nbsp;&nbsp;码：");
+    }
+
+    //判断是否开启多租户
+    function checkTenantStatus(){
+        $("#btn_register").hide();
+        $.ajax({
+            type: "get",
+            url: "/user/getTenantStatus",
+            dataType: "json",
+            success: function (res) {
+                if(res && res.code === 200) {
+                    if(res.data) {
+                        if(res.data.status == "open") {
+                            $("#btn_register").show();
+                        } else if(res.data.status == "close") {
+                            $("#btn_register").hide();
+                        }
+                    }
+                } else {
+                    $("#btn_register").hide();
+                }
+            },
+            error: function () {
+                $("#btn_register").hide();
+            }
+        });
     }
 
     //初始化键盘enter事件
@@ -65,6 +95,10 @@
     //登录按钮绑定处理事件
     $('#btn_login').off("click").on("click", function () {
         checkUserInput();
+    });
+    
+    $("#btn_register").off("click").on("click", function () {
+        location.href = "register.html";
     });
 
     //检测用户输入数据

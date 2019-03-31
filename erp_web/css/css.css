@@ -651,6 +651,18 @@ input.inputstyle:hover{
 	position:relative;
 	background:url(../images/bg_loginmain.jpg) no-repeat;
 }
+#login .login_btn{
+	float:left;
+	width:230px;
+	height:50px;
+	margin:160px auto 0 120px;
+}
+#login .register_btn{
+	float:left;
+	width:230px;
+	height:50px;
+	margin:218px auto 0 120px;
+}
 #login_signal{
 	position:absolute;
 	left: 63px;
@@ -666,6 +678,18 @@ input.inputstyle:hover{
 	position:absolute;
 	left: 65px;
 	top: 119px;
+	width: 54px;
+}
+#txt_userpwd_repeat{
+	position:absolute;
+	left: 65px;
+	top: 154px;
+	width: 54px;
+}
+#txt_captcha{
+	position:absolute;
+	left: 65px;
+	top: 189px;
 	width: 54px;
 }
 #txt_vcode{
@@ -698,6 +722,40 @@ input.inputstyle:hover{
 	left: 118px;
 	top: 118px;
 }
+#user_pwd_repeat{
+	position:absolute;
+	width:132px;
+	padding:0 4px;
+	height:23px;
+	line-height:23px;
+	border:none;
+	font-family:Arial, Helvetica, sans-serif;
+	background:url(../images/bg_logininout.jpg) no-repeat;
+	left: 118px;
+	top: 152px;
+}
+#user_captcha{
+	position:absolute;
+	width:132px;
+	padding:0 4px;
+	height:23px;
+	line-height:23px;
+	border:none;
+	font-family:Arial, Helvetica, sans-serif;
+	background:url(../images/bg_logininout.jpg) no-repeat;
+	left: 118px;
+	top: 186px;
+}
+#imgCaptcha{
+	position:absolute;
+	width:132px;
+	padding:0 4px;
+	height:40px;
+	line-height:23px;
+	border:none;
+	left: 270px;
+	top: 170px;
+}
 #vcode{
 	position:absolute;
 	width:67px;
@@ -716,17 +774,32 @@ input.inputstyle:hover{
 	top: 151px;
 }
 #btn_login{
-	position:absolute;
-	width:81px;
+	width:100px;
 	height:30px;
 	border:none;
 	cursor:pointer;
-	background:url(../images/btn_login.jpg) no-repeat;
+	color: white;
+	background:#318dff;
 	left: 120px;
 	top: 170px;
+	margin-right: 10px;
 }
 #btn_login:hover{
-	background:url(../images/btn_loginon.jpg) no-repeat;
+	background:#54a0ff;
+}
+#btn_register{
+	width:100px;
+	height:30px;
+	border:none;
+	cursor:pointer;
+	color: white;
+	background:#318dff;
+	left: 120px;
+	top: 170px;
+	margin-right: 10px;
+}
+#btn_register:hover{
+	background:#54a0ff;
 }
 #tip_username{
 	position:absolute;

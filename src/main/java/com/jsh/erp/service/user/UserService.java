@@ -15,10 +15,7 @@ import com.jsh.erp.datasource.vo.TreeNodeEx;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.orgaUserRel.OrgaUserRelService;
-import com.jsh.erp.utils.ExceptionCodeConstants;
-import com.jsh.erp.utils.JshException;
-import com.jsh.erp.utils.StringUtil;
-import com.jsh.erp.utils.Tools;
+import com.jsh.erp.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +26,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.net.URLEncoder;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.List;
@@ -272,6 +270,29 @@ public class UserService {
         }
         return null;
     }
+
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public UserEx registerUser(UserEx ue) throws Exception{
+        ue.setPassword(Tools.md5Encryp(ue.getPassword()));
+        ue.setIsystem(BusinessConstants.USER_NOT_SYSTEM);
+        if(ue.getIsmanager()==null){
+            ue.setIsmanager(BusinessConstants.USER_NOT_MANAGER);
+        }
+        ue.setStatus(BusinessConstants.USER_STATUS_NORMAL);
+        int i=userMapperEx.addUser(ue);
+        if(i>0){
+            return ue;
+        }
+        return null;
+    }
+
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public void updateUserTenant(User user) throws Exception{
+        UserExample example = new UserExample();
+        example.createCriteria().andIdEqualTo(user.getId());
+        userMapper.updateByPrimaryKeySelective(user);
+    }
+
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void updateUserAndOrgUserRel(UserEx ue) throws Exception{
         logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_USER,

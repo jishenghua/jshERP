@@ -165,21 +165,23 @@ public class AppController {
             JSONArray dataArray = new JSONArray();
             if (null != dataList) {
                 for (App app : dataList) {
-                    JSONObject item = new JSONObject();
-                    item.put("id", app.getId());
-                    item.put("text", app.getName());
-                    //勾选判断1
-                    Boolean flag = false;
-                    try {
-                        flag = userBusinessService.checkIsUserBusinessExist(type, keyId, "[" + app.getId().toString() + "]");
-                    } catch (Exception e) {
-                        logger.error(">>>>>>>>>>>>>>>>>设置角色对应的应用：类型" + type + " KeyId为： " + keyId + " 存在异常！");
+                    if(!("系统管理").equals(app.getName())) {
+                        JSONObject item = new JSONObject();
+                        item.put("id", app.getId());
+                        item.put("text", app.getName());
+                        //勾选判断1
+                        Boolean flag = false;
+                        try {
+                            flag = userBusinessService.checkIsUserBusinessExist(type, keyId, "[" + app.getId().toString() + "]");
+                        } catch (Exception e) {
+                            logger.error(">>>>>>>>>>>>>>>>>设置角色对应的应用：类型" + type + " KeyId为： " + keyId + " 存在异常！");
+                        }
+                        if (flag == true) {
+                            item.put("checked", true);
+                        }
+                        //结束
+                        dataArray.add(item);
                     }
-                    if (flag == true) {
-                        item.put("checked", true);
-                    }
-                    //结束
-                    dataArray.add(item);
                 }
             }
             outer.put("children", dataArray);

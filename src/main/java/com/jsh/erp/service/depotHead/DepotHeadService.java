@@ -189,7 +189,7 @@ public class DepotHeadService {
 
     public List<DepotHead> findByMonth(String monthTime) {
         DepotHeadExample example = new DepotHeadExample();
-        monthTime = monthTime + "-31 00:00:00";
+        monthTime = monthTime + "-31 23:59:59";
         Date month = StringUtil.getDateByString(monthTime, null);
         example.createCriteria().andOpertimeLessThanOrEqualTo(month);
         return depotHeadMapper.selectByExample(example);

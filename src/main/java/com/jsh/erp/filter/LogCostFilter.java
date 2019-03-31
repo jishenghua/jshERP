@@ -1,8 +1,6 @@
 package com.jsh.erp.filter;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.StringUtils;
-
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.annotation.WebInitParam;
@@ -16,7 +14,8 @@ import java.util.regex.Pattern;
 
 @WebFilter(filterName = "LogCostFilter", urlPatterns = {"/*"},
         initParams = {@WebInitParam(name = "ignoredUrl", value = ".css#.js#.jpg#.png#.gif#.ico"),
-                      @WebInitParam(name = "filterPath", value = "/user/login")})
+                      @WebInitParam(name = "filterPath",
+                              value = "/user/login#/user/registerUser#/user/getTenantStatus")})
 public class LogCostFilter implements Filter {
 
     private static final String FILTER_PATH = "filterPath";
@@ -53,7 +52,7 @@ public class LogCostFilter implements Filter {
             chain.doFilter(request, response);
             return;
         }
-        if (requestUrl != null && requestUrl.contains("/login.html")) {
+        if (requestUrl != null && (requestUrl.contains("/login.html") || requestUrl.contains("/register.html"))) {
             chain.doFilter(request, response);
             return;
         }

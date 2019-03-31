@@ -129,104 +129,106 @@ public class FunctionsController {
             JSONArray dataArray = new JSONArray();
             if (null != dataList) {
                 for (Functions functions : dataList) {
-                    JSONObject item = new JSONObject();
-                    item.put("id", functions.getId());
-                    item.put("text", functions.getName());
+                    if(!("系统管理").equals(functions.getName())) {
+                        JSONObject item = new JSONObject();
+                        item.put("id", functions.getId());
+                        item.put("text", functions.getName());
 
-                    //勾选判断1
-                    Boolean flag = false;
-                    try {
-                        flag = userBusinessService.checkIsUserBusinessExist(type, keyId, "[" + functions.getId().toString() + "]");
-                    } catch (Exception e) {
-                        logger.error(">>>>>>>>>>>>>>>>>设置角色对应的功能：类型" + type + " KeyId为： " + keyId + " 存在异常！");
-                    }
-                    if (flag == true) {
-                        item.put("checked", true);
-                    }
-                    //结束
-
-                    List<Functions> dataList1 = functionsService.findRoleFunctions(functions.getNumber());
-                    JSONArray dataArray1 = new JSONArray();
-                    if (null != dataList1) {
-
-                        for (Functions functions1 : dataList1) {
-                            item.put("state", "open");   //如果不为空，节点不展开
-                            JSONObject item1 = new JSONObject();
-                            item1.put("id", functions1.getId());
-                            item1.put("text", functions1.getName());
-
-                            //勾选判断2
-                            //Boolean flag = false;
-                            try {
-                                flag = userBusinessService.checkIsUserBusinessExist(type, keyId, "[" + functions1.getId().toString() + "]");
-                            } catch (Exception e) {
-                                logger.error(">>>>>>>>>>>>>>>>>设置角色对应的功能：类型" + type + " KeyId为： " + keyId + " 存在异常！");
-                            }
-                            if (flag == true) {
-                                item1.put("checked", true);
-                            }
-                            //结束
-
-                            List<Functions> dataList2 = functionsService.findRoleFunctions(functions1.getNumber());
-                            JSONArray dataArray2 = new JSONArray();
-                            if (null != dataList2) {
-
-                                for (Functions functions2 : dataList2) {
-                                    item1.put("state", "closed");   //如果不为空，节点不展开
-                                    JSONObject item2 = new JSONObject();
-                                    item2.put("id", functions2.getId());
-                                    item2.put("text", functions2.getName());
-
-                                    //勾选判断3
-                                    //Boolean flag = false;
-                                    try {
-                                        flag = userBusinessService.checkIsUserBusinessExist(type, keyId, "[" + functions2.getId().toString() + "]");
-                                    } catch (Exception e) {
-                                        logger.error(">>>>>>>>>>>>>>>>>设置角色对应的功能：类型" + type + " KeyId为： " + keyId + " 存在异常！");
-                                    }
-                                    if (flag == true) {
-                                        item2.put("checked", true);
-                                    }
-                                    //结束
-
-                                    List<Functions> dataList3 = functionsService.findRoleFunctions(functions2.getNumber());
-                                    JSONArray dataArray3 = new JSONArray();
-                                    if (null != dataList3) {
-
-                                        for (Functions functions3 : dataList3) {
-                                            item2.put("state", "closed");   //如果不为空，节点不展开
-                                            JSONObject item3 = new JSONObject();
-                                            item3.put("id", functions3.getId());
-                                            item3.put("text", functions3.getName());
-
-                                            //勾选判断4
-                                            //Boolean flag = false;
-                                            try {
-                                                flag = userBusinessService.checkIsUserBusinessExist(type, keyId, "[" + functions3.getId().toString() + "]");
-                                            } catch (Exception e) {
-                                                logger.error(">>>>>>>>>>>>>>>>>设置角色对应的功能：类型" + type + " KeyId为： " + keyId + " 存在异常！");
-                                            }
-                                            if (flag == true) {
-                                                item3.put("checked", true);
-                                            }
-                                            //结束
-
-                                            dataArray3.add(item3);
-                                            item2.put("children", dataArray3);
-                                        }
-                                    }
-
-                                    dataArray2.add(item2);
-                                    item1.put("children", dataArray2);
-                                }
-                            }
-
-                            dataArray1.add(item1);
-                            item.put("children", dataArray1);
+                        //勾选判断1
+                        Boolean flag = false;
+                        try {
+                            flag = userBusinessService.checkIsUserBusinessExist(type, keyId, "[" + functions.getId().toString() + "]");
+                        } catch (Exception e) {
+                            logger.error(">>>>>>>>>>>>>>>>>设置角色对应的功能：类型" + type + " KeyId为： " + keyId + " 存在异常！");
                         }
+                        if (flag == true) {
+                            item.put("checked", true);
+                        }
+                        //结束
 
+                        List<Functions> dataList1 = functionsService.findRoleFunctions(functions.getNumber());
+                        JSONArray dataArray1 = new JSONArray();
+                        if (null != dataList1) {
+
+                            for (Functions functions1 : dataList1) {
+                                item.put("state", "open");   //如果不为空，节点不展开
+                                JSONObject item1 = new JSONObject();
+                                item1.put("id", functions1.getId());
+                                item1.put("text", functions1.getName());
+
+                                //勾选判断2
+                                //Boolean flag = false;
+                                try {
+                                    flag = userBusinessService.checkIsUserBusinessExist(type, keyId, "[" + functions1.getId().toString() + "]");
+                                } catch (Exception e) {
+                                    logger.error(">>>>>>>>>>>>>>>>>设置角色对应的功能：类型" + type + " KeyId为： " + keyId + " 存在异常！");
+                                }
+                                if (flag == true) {
+                                    item1.put("checked", true);
+                                }
+                                //结束
+
+                                List<Functions> dataList2 = functionsService.findRoleFunctions(functions1.getNumber());
+                                JSONArray dataArray2 = new JSONArray();
+                                if (null != dataList2) {
+
+                                    for (Functions functions2 : dataList2) {
+                                        item1.put("state", "closed");   //如果不为空，节点不展开
+                                        JSONObject item2 = new JSONObject();
+                                        item2.put("id", functions2.getId());
+                                        item2.put("text", functions2.getName());
+
+                                        //勾选判断3
+                                        //Boolean flag = false;
+                                        try {
+                                            flag = userBusinessService.checkIsUserBusinessExist(type, keyId, "[" + functions2.getId().toString() + "]");
+                                        } catch (Exception e) {
+                                            logger.error(">>>>>>>>>>>>>>>>>设置角色对应的功能：类型" + type + " KeyId为： " + keyId + " 存在异常！");
+                                        }
+                                        if (flag == true) {
+                                            item2.put("checked", true);
+                                        }
+                                        //结束
+
+                                        List<Functions> dataList3 = functionsService.findRoleFunctions(functions2.getNumber());
+                                        JSONArray dataArray3 = new JSONArray();
+                                        if (null != dataList3) {
+
+                                            for (Functions functions3 : dataList3) {
+                                                item2.put("state", "closed");   //如果不为空，节点不展开
+                                                JSONObject item3 = new JSONObject();
+                                                item3.put("id", functions3.getId());
+                                                item3.put("text", functions3.getName());
+
+                                                //勾选判断4
+                                                //Boolean flag = false;
+                                                try {
+                                                    flag = userBusinessService.checkIsUserBusinessExist(type, keyId, "[" + functions3.getId().toString() + "]");
+                                                } catch (Exception e) {
+                                                    logger.error(">>>>>>>>>>>>>>>>>设置角色对应的功能：类型" + type + " KeyId为： " + keyId + " 存在异常！");
+                                                }
+                                                if (flag == true) {
+                                                    item3.put("checked", true);
+                                                }
+                                                //结束
+
+                                                dataArray3.add(item3);
+                                                item2.put("children", dataArray3);
+                                            }
+                                        }
+
+                                        dataArray2.add(item2);
+                                        item1.put("children", dataArray2);
+                                    }
+                                }
+
+                                dataArray1.add(item1);
+                                item.put("children", dataArray1);
+                            }
+
+                        }
+                        dataArray.add(item);
                     }
-                    dataArray.add(item);
                 }
                 outer.put("children", dataArray);
                 arr.add(outer);

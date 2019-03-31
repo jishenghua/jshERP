@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ERP系统</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=8" >
+    <meta name="referrer" content="Webkit">
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon"/>
+    <link type="text/css" rel="stylesheet" href="/css/css.css"/>
+    <script type="text/javascript" src="/js/jquery-1.8.0.min.js"></script>
+    <script type="text/javascript" src="/js/common/common.js"></script>
+    <script type="text/javascript" src="/js/md5/md5.js"></script>
+    <script type="text/javascript" src="/js/gVerify.js"></script>
+</head>
+<body id="login_body">
+<div id="login_main">
+    <div id="login">
+        <p id="login_signal"><img src="/images/register_tip.jpg" width="108" height="29" alt="login"/></p>
+        <p id="txt_username">
+            <label for="user_name">用户名：</label>
+        </p>
+        <p id="txt_userpwd">
+            <label for="user_vcodepwd" id="user_vcodepwd">密&nbsp;&nbsp;&nbsp;&nbsp;码：</label>
+        </p>
+        <p id="txt_userpwd_repeat">
+            <label for="user_vcodepwd" id="user_vcodepwd_repeat">确认密码:</label>
+        </p>
+        <p id="txt_captcha">
+            <label>验证码：</label>
+        </p>
+        <input type="text" id="user_name"/>
+        <input type="password" id="user_pwd"/>
+        <input type="password" id="user_pwd_repeat"/>
+        <input type="text" id="user_captcha"/>
+        <div id="imgCaptcha"></div>
+        <p id="tip_username" style="display: none"><span class="error_input">用户名不正确</span></p>
+        <p id="tip_userpwd" style="display: none">密码不能为空</p>
+        <div class="register_btn">
+            <input type="button" value="注册" id="btn_register"/>
+            <input type="button" value="立即登录" id="btn_login"/>
+        </div>
+    </div>
+    <p id="copyright">
+        Copyright © 2017-2020 季圣华(jishenghua)
+        <a style="color:#00458a;" href="https://gitee.com/jishenghua/JSH_ERP" target="_blank">华夏ERP_v2.0</a>
+    </p>
+</div>
+<script type="text/javascript">
+    var verifyCode = new GVerify("imgCaptcha");
+    //注册按钮绑定处理事件
+    $("#btn_register").off("click").on("click", function () {
+        if($("#user_captcha").val()) {
+            var res = verifyCode.validate($("#user_captcha").val());
+            if(res){
+                if(!$("#user_name").val()) {
+                    alert("用户名不能为空!");
+                } else if(!$("#user_pwd").val()) {
+                    alert("密码不能为空!");
+                } else if(!$("#user_pwd_repeat").val()) {
+                    alert("确认密码不能为空!");
+                } else if($("#user_pwd").val()!=$("#user_pwd_repeat").val()) {
+                    $("#user_pwd_repeat").val("");
+                    alert("确认密码不一致!");
+                } else {
+                    //执行注册
+                    $.ajax({
+                        type: "post",
+                        url: "/user/registerUser",
+                        dataType: "json",
+                        data: ({
+                            loginame: $("#user_name").val(),
+                            password: $("#user_pwd").val()
+                        }),
+                        success: function (res) {
+                            if (res && res.code === 200) {
+                                alert("注册成功！");
+                            } else {
+                                alert("注册失败！");
+                            }
+                        },
+                        //此处添加错误处理
+                        error: function () {
+                            alert("后台访问错误，请联系管理员！");
+                        }
+                    });
+                }
+            } else{
+                alert("验证码错误!");
+            }
+        } else {
+            alert("验证码为空!");
+        }
+    });
+
+    $('#btn_login').off("click").on("click", function () {
+        location.href = "login.html";
+    });
+</script>
+</body>
+</html>

@@ -356,6 +356,7 @@
                     //加载完以后重新初始化
                     var opts = $("#tableData").datagrid('options');
                     showDepotDetails(opts.pageNumber, opts.pageSize);
+                    $.messager.alert('提示', '保存成功，请给用户分配该仓库才能使用！', 'info');
                 }
             },
             //此处添加错误处理

@@ -14,6 +14,7 @@ import com.jsh.erp.datasource.entities.UserEx;
 import com.jsh.erp.datasource.vo.TreeNode;
 import com.jsh.erp.datasource.vo.TreeNodeEx;
 import com.jsh.erp.service.user.UserService;
+import com.jsh.erp.service.userBusiness.UserBusinessService;
 import com.jsh.erp.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
@@ -41,10 +43,24 @@ public class UserController {
     @Value("${mybatis-plus.status}")
     private String mybatisPlusStatus;
 
+    @Value("${manage.ip}")
+    private String manageIp;
+
+    @Value("${manage.port}")
+    private Integer managePort;
+
+    @Value("${manage.roleId}")
+    private Integer manageRoleId;
+
     @Resource
     private UserService userService;
 
+    @Resource
+    private UserBusinessService userBusinessService;
+
     private static String message = "成功";
+    private static final String HTTP = "http://";
+    private static final String CODE_OK = "200";
 
     @PostMapping(value = "/login")
     public BaseResponseInfo login(@RequestParam(value = "loginame", required = false) String loginame,
@@ -96,7 +112,17 @@ public class UserController {
     //                            new Timestamp(System.currentTimeMillis()), (short) 0, "管理用户：" + username + " 登录系统", username + " 登录系统"));
                         msgTip = "user can login";
                         request.getSession().setAttribute("user",user);
-                        request.getSession().setAttribute("tenantId",1L); //租户id
+                        String url = HTTP + manageIp + ":" + managePort + "/tenant/getTenant?tenantId=" + user.getId();
+                        JSONObject obj = HttpClient.httpGet(url);
+                        if(obj!=null && obj.getString("code").equals(CODE_OK)) {
+                            JSONObject dataObj = obj.getJSONObject("data");
+                            if(dataObj!=null) {
+                                String id = dataObj.getString("tenantId");
+                                if(id!=null) {
+                                    request.getSession().setAttribute("tenantId",id); //租户id
+                                }
+                            }
+                        }
                         request.getSession().setAttribute("mybatisPlusStatus",mybatisPlusStatus); //开启状态
                     } catch (Exception e) {
                         logger.error(">>>>>>>>>>>>>>>查询用户名为:" + username + " ，用户信息异常", e);
@@ -149,6 +175,8 @@ public class UserController {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
             request.getSession().removeAttribute("user");
+            request.getSession().removeAttribute("tenantId");
+            request.getSession().removeAttribute("mybatisPlusStatus");
             response.sendRedirect("/login.html");
         } catch(Exception e){
             e.printStackTrace();
@@ -283,12 +311,55 @@ public class UserController {
     @PostMapping("/addUser")
     @ResponseBody
     public Object addUser(@RequestParam("info") String beanJson)throws Exception{
-
         JSONObject result = ExceptionConstants.standardSuccess();
         UserEx ue= JSON.parseObject(beanJson, UserEx.class);
         userService.addUserAndOrgUserRel(ue);
         return result;
+    }
 
+
+    /**
+     * 注册用户
+     * @param loginame
+     * @param password
+     * @return
+     * @throws Exception
+     */
+    @PostMapping(value = "/registerUser")
+    public Object registerUser(@RequestParam(value = "loginame", required = false) String loginame,
+                               @RequestParam(value = "password", required = false) String password,
+                               HttpServletRequest request)throws Exception{
+        JSONObject result = ExceptionConstants.standardSuccess();
+        UserEx ue= new UserEx();
+        ue.setUsername(loginame);
+        ue.setLoginame(loginame);
+        ue.setPassword(password);
+        ue = userService.registerUser(ue);
+
+        //调第三方接口创建租户管理信息
+        String url = HTTP + manageIp + ":" + managePort + "/tenant/add";
+        JSONObject tenantObj = new JSONObject();
+        tenantObj.put("tenantId", ue.getId());
+        tenantObj.put("loginName",ue.getLoginame());
+        String param = URLEncoder.encode(tenantObj.toString());
+        HttpClient.httpPost(url + "?info=" + param, param);
+        logger.info("===============创建租户信息完成===============");
+
+        //更新租户id
+        User user = new User();
+        user.setId(ue.getId());
+        user.setTenantId(ue.getId());
+        userService.updateUserTenant(user);
+
+        //新增用户与角色的关系
+        JSONObject ubObj = new JSONObject();
+        ubObj.put("type", "UserRole");
+        ubObj.put("keyid", ue.getId());
+        JSONArray ubArr = new JSONArray();
+        ubArr.add(manageRoleId);
+        ubObj.put("value", ubArr.toString());
+        userBusinessService.insertUserBusiness(ubObj.toString(), request);
+        return result;
     }
     /**
      * create by: cjl
@@ -335,4 +406,19 @@ public class UserController {
         return arr;
     }
 
+    @GetMapping("/getTenantStatus")
+    public BaseResponseInfo getTenantStatus(HttpServletRequest request) {
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            Map<String, Object> data = new HashMap<String, Object>();
+            data.put("status", mybatisPlusStatus);
+            res.code = 200;
+            res.data = data;
+        } catch(Exception e){
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取失败";
+        }
+        return res;
+    }
 }
