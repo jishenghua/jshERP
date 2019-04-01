@@ -2,8 +2,11 @@ package com.jsh.erp.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.Role;
+import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.role.RoleService;
+import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.service.userBusiness.UserBusinessService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,6 +78,28 @@ public class RoleController {
     @PostMapping(value = "/list")
     public List<Role> list(HttpServletRequest request) {
         return roleService.getRole();
+    }
+
+    /**
+     * create by: qiankunpingtai
+     * website：http://39.105.146.63/symphony/
+     * description:
+     *  逻辑删除角色信息
+     * create time: 2019/3/28 15:39
+     * @Param: ids
+     * @return java.lang.Object
+     */
+    @RequestMapping(value = "/batchDeleteRoleByIds")
+    public Object batchDeleteRoleByIds(@RequestParam("ids") String ids) throws Exception {
+        JSONObject result = ExceptionConstants.standardSuccess();
+        int i= roleService.batchDeleteRoleByIds(ids);
+        if(i<1){
+            logger.error("异常码[{}],异常提示[{}],参数,ids[{}]",
+                    ExceptionConstants.ROLE_DELETE_FAILED_CODE,ExceptionConstants.ROLE_DELETE_FAILED_MSG,ids);
+            throw new BusinessRunTimeException(ExceptionConstants.ROLE_DELETE_FAILED_CODE,
+                    ExceptionConstants.ROLE_DELETE_FAILED_MSG);
+        }
+        return result;
     }
 
 }

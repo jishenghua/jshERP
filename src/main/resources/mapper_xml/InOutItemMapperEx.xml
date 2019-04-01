@@ -14,6 +14,7 @@
         <if test="remark != null">
             and remark like '%${remark}%'
         </if>
+        and ifnull(delete_Flag,'0') !='1'
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
         </if>
@@ -32,5 +33,16 @@
         <if test="remark != null">
             and remark like '%${remark}%'
         </if>
+        and ifnull(delete_Flag,'0') !='1'
     </select>
+    <update id="batchDeleteInOutItemByIds">
+        update jsh_inoutitem
+        set delete_Flag='1'
+        where 1=1
+        and id in (
+        <foreach collection="ids" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
 </mapper>

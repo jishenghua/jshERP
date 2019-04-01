@@ -170,8 +170,11 @@
                 var supplierTotalInfo = supplierInfo.split("AaBb");
                 $.ajax({
                     type:"post",
-                    url: "/supplier/" + supplierTotalInfo[0] + "/delete",
+                    url: "/supplier/batchDeleteSupplierByIds",
                     dataType: "json",
+                    data: ({
+                        ids : supplierTotalInfo[0]
+                    }),
                     success: function (res) {
                         if(res && res.code == 200) {
                             $("#searchBtn").click();
@@ -210,7 +213,7 @@
                     }
                     $.ajax({
                         type:"post",
-                        url: "/supplier/batchDelete",
+                        url: "/supplier/batchDeleteSupplierByIds",
                         dataType: "json",
                         async :  false,
                         data: ({

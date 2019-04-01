@@ -225,8 +225,11 @@
                 var inOutItemTotalInfo = inOutItemInfo.split("AaBb");
                 $.ajax({
                     type: "post",
-                    url: "/inOutItem/" + inOutItemTotalInfo[0] + "/delete",
+                    url: "/inOutItem/batchDeleteInOutItemByIds",
                     dataType: "json",
+                    data: ({
+                        ids: inOutItemTotalInfo[0]
+                    }),
                     success: function (res) {
                         if(res && res.code == 200) {
                             $("#searchBtn").click();
@@ -264,7 +267,7 @@
                     }
                     $.ajax({
                         type: "post",
-                        url: "/inOutItem/batchDelete",
+                        url: "/inOutItem/batchDeleteInOutItemByIds",
                         dataType: "json",
                         async: false,
                         data: ({

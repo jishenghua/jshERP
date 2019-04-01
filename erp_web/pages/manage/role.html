@@ -203,8 +203,11 @@
             if (r) {
                 $.ajax({
                     type: "post",
-                    url: "/role/" + roleID + "/delete",
+                    url: "/role/batchDeleteRoleByIds",
                     dataType: "json",
+                    data: ({
+                        ids: roleID,
+                    }),
                     success: function (res) {
                         if(res && res.code == 200) {
                             $("#searchBtn").click();
@@ -242,7 +245,7 @@
                     }
                     $.ajax({
                         type: "post",
-                        url: "/role/batchDelete",
+                        url: "/role/batchDeleteRoleByIds",
                         dataType: "json",
                         async: false,
                         data: ({

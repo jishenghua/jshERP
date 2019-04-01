@@ -141,7 +141,7 @@ public class DepotHeadService {
 
     public int checkIsNameExist(Long id, String name) {
         DepotHeadExample example = new DepotHeadExample();
-        example.createCriteria().andIdNotEqualTo(id);
+        example.createCriteria().andIdNotEqualTo(id).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<DepotHead> list = depotHeadMapper.selectByExample(example);
         return list.size();
     }
@@ -366,14 +366,14 @@ public class DepotHeadService {
             if(depotItemList!=null&&depotItemList.size()>0){
                 for(DepotItem depotItem:depotItemList){
                     //BasicNumber=OperNumber*ratio
-                    serialNumberService.cancelSerialNumber(depotItem.getMaterialid(), depotItem.getHeaderid(),depotItem.getBasicnumber().intValue(),userInfo);
+                    serialNumberService.cancelSerialNumber(depotItem.getMaterialid(), depotItem.getHeaderid(),(depotItem.getBasicnumber()==null?0:depotItem.getBasicnumber()).intValue(),userInfo);
                 }
             }
         }
         /**删除单据子表数据*/
-        depotItemMapperEx.deleteDepotItemByDepotHeadIds(new Long []{id});
+        depotItemMapperEx.batchDeleteDepotItemByDepotHeadIds(new Long []{id});
         /**删除单据主表信息*/
-        deleteDepotHead(id);
+        batchDeleteDepotHeadByIds(id.toString());
     }
     /**
      * create by: cjl
@@ -391,8 +391,17 @@ public class DepotHeadService {
         if(StringUtil.isNotEmpty(ids)){
             String [] headIds=ids.split(",");
             for(int i=0;i<headIds.length;i++){
-                deleteDepotHeadAndDetail(new Long(headIds[i]));
+                deleteDepotHeadAndDetail(Long.valueOf(headIds[i]));
             }
         }
+    }
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int batchDeleteDepotHeadByIds(String ids) {
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_DEPOT_HEAD,
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+        User userInfo=userService.getCurrentUser();
+        String [] idArray=ids.split(",");
+        return depotHeadMapperEx.batchDeleteDepotHeadByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
     }
 }

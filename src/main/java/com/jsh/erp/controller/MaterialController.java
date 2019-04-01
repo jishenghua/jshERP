@@ -6,9 +6,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jsh.erp.constants.BusinessConstants;
+import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.DepotEx;
 import com.jsh.erp.datasource.entities.Material;
 import com.jsh.erp.datasource.entities.MaterialVo4Unit;
+import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.utils.*;
 import jxl.Sheet;
@@ -340,5 +342,26 @@ public class MaterialController {
         queryInfo.setRows(list);
         queryInfo.setTotal(pageInfo.getTotal());
         return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+    }
+    /**
+     * create by: qiankunpingtai
+     * website：http://39.105.146.63/symphony/
+     * description:
+     *  批量删除商品信息
+     * create time: 2019/3/29 11:15
+     * @Param: ids
+     * @return java.lang.Object
+     */
+    @RequestMapping(value = "/batchDeleteMaterialByIds")
+    public Object batchDeleteMaterialByIds(@RequestParam("ids") String ids) throws Exception {
+        JSONObject result = ExceptionConstants.standardSuccess();
+        int i= materialService.batchDeleteMaterialByIds(ids);
+        if(i<1){
+            logger.error("异常码[{}],异常提示[{}],参数,ids[{}]",
+                    ExceptionConstants.MATERIAL_DELETE_FAILED_CODE,ExceptionConstants.MATERIAL_DELETE_FAILED_MSG,ids);
+            throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_DELETE_FAILED_CODE,
+                    ExceptionConstants.MATERIAL_DELETE_FAILED_MSG);
+        }
+        return result;
     }
 }

@@ -225,8 +225,11 @@
                 var accountTotalInfo = accountInfo.split("AaBb");
                 $.ajax({
                     type: "post",
-                    url: "/account/" + accountTotalInfo[0] + "/delete",
+                    url: "/account/batchDeleteAccountByIds",
                     dataType: "json",
+                    data: ({
+                        ids: accountTotalInfo[0]
+                    }),
                     success: function (res) {
                         if(res && res.code == 200) {
                             $("#searchBtn").click();
@@ -264,7 +267,7 @@
                     }
                     $.ajax({
                         type: "post",
-                        url: "/account/batchDelete",
+                        url: "/account/batchDeleteAccountByIds",
                         dataType: "json",
                         async: false,
                         data: ({

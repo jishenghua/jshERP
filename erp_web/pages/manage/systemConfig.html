@@ -192,8 +192,11 @@
             if (r) {
                 $.ajax({
                     type: "post",
-                    url: "/systemConfig/" + systemConfigId + "/delete",
+                    url: "/systemConfig/batchDeleteSystemConfigByIds",
                     dataType: "json",
+                    data: ({
+                        ids: systemConfigId
+                    }),
                     success: function (res) {
                         if(res && res.code == 200) {
                             $("#searchBtn").click();
@@ -235,7 +238,7 @@
                     } else {
                         $.ajax({
                             type: "post",
-                            url: "/systemConfig/batchDelete",
+                            url: "/systemConfig/batchDeleteSystemConfigByIds",
                             dataType: "json",
                             async: false,
                             data: ({

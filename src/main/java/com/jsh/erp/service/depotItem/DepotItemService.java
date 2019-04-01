@@ -105,7 +105,7 @@ public class DepotItemService {
 
     public int checkIsNameExist(Long id, String name) {
         DepotItemExample example = new DepotItemExample();
-        example.createCriteria().andIdNotEqualTo(id);
+        example.createCriteria().andIdNotEqualTo(id).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<DepotItem> list = depotItemMapper.selectByExample(example);
         return list.size();
     }
@@ -248,6 +248,7 @@ public class DepotItemService {
              * 更新的需要判断货源是否充足
              * */
             if (null != deletedJson) {
+                StringBuffer bf=new StringBuffer();
                 for (int i = 0; i < deletedJson.size(); i++) {
                     //首先回收序列号，如果是调拨，不用处理序列号
                     JSONObject tempDeletedJson = JSONObject.parseObject(deletedJson.getString(i));
@@ -265,12 +266,17 @@ public class DepotItemService {
                             continue;
                         }
                         if(BusinessConstants.ENABLE_SERIAL_NUMBER_ENABLED.equals(material.getEnableserialnumber())){
-                            serialNumberMapperEx.cancelSerialNumber(depotItem.getMaterialid(),depotItem.getHeaderid(),depotItem.getBasicnumber().intValue(),
+                            serialNumberMapperEx.cancelSerialNumber(depotItem.getMaterialid(),depotItem.getHeaderid(),(depotItem.getBasicnumber()==null?0:depotItem.getBasicnumber()).intValue(),
                                     new Date(),userInfo==null?null:userInfo.getId());
                         }
                     }
                     this.deleteDepotItem(tempDeletedJson.getLong("Id"));
+                    bf.append(tempDeletedJson.getLong("Id"));
+                    if(i<(deletedJson.size()-1)){
+                        bf.append(",");
+                    }
                 }
+                this.batchDeleteDepotItemByIds(bf.toString());
             }
             if (null != insertedJson) {
                 for (int i = 0; i < insertedJson.size(); i++) {
@@ -363,7 +369,7 @@ public class DepotItemService {
                         if(material==null){
                             continue;
                         }
-                        if(getCurrentInStock(depotItem.getMaterialid())<depotItem.getBasicnumber().intValue()){
+                        if(getCurrentInStock(depotItem.getMaterialid())<(depotItem.getBasicnumber()==null?0:depotItem.getBasicnumber()).intValue()){
                             throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_STOCK_NOT_ENOUGH_CODE,
                                     String.format(ExceptionConstants.MATERIAL_STOCK_NOT_ENOUGH_MSG,material==null?"":material.getName()));
                         }
@@ -401,7 +407,7 @@ public class DepotItemService {
                          * 判断商品是否开启序列号，开启的收回序列号，未开启的跳过
                          * */
                         if(BusinessConstants.ENABLE_SERIAL_NUMBER_ENABLED.equals(material.getEnableserialnumber())) {
-                            serialNumberMapperEx.cancelSerialNumber(depotItem.getMaterialid(), depotItem.getHeaderid(), depotItem.getBasicnumber().intValue(),
+                            serialNumberMapperEx.cancelSerialNumber(depotItem.getMaterialid(), depotItem.getHeaderid(), (depotItem.getBasicnumber()==null?0:depotItem.getBasicnumber()).intValue(),
                                     new Date(), userInfo == null ? null : userInfo.getId());
                         }
                         /**收回序列号的时候释放库存*/
@@ -486,7 +492,7 @@ public class DepotItemService {
                     }
                     /**出库时处理序列号*/
                     if(BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())){
-                        if(getCurrentInStock(depotItem.getMaterialid())<depotItem.getBasicnumber().intValue()){
+                        if(getCurrentInStock(depotItem.getMaterialid())<(depotItem.getBasicnumber()==null?0:depotItem.getBasicnumber()).intValue()){
                             throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_STOCK_NOT_ENOUGH_CODE,
                                     String.format(ExceptionConstants.MATERIAL_STOCK_NOT_ENOUGH_MSG,material==null?"":material.getName()));
                         }
@@ -536,5 +542,13 @@ public class DepotItemService {
         int outSum = findByTypeAndMaterialId(BusinessConstants.DEPOTHEAD_TYPE_OUT, materialId);
         return (inSum-outSum);
     }
-
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int batchDeleteDepotItemByIds(String ids) {
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_DEPOT_ITEM,
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+        User userInfo=userService.getCurrentUser();
+        String [] idArray=ids.split(",");
+        return depotItemMapperEx.batchDeleteDepotItemByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+    }
 }

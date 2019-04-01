@@ -1,20 +1,27 @@
 package com.jsh.erp.service.app;
 
 import com.alibaba.fastjson.JSONObject;
+import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.App;
 import com.jsh.erp.datasource.entities.AppExample;
+import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.entities.UserBusiness;
 import com.jsh.erp.datasource.mappers.AppMapper;
 import com.jsh.erp.datasource.mappers.AppMapperEx;
+import com.jsh.erp.service.log.LogService;
+import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.service.userBusiness.UserBusinessService;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -25,6 +32,10 @@ public class AppService {
     private AppMapper appMapper;
     @Resource
     private AppMapperEx appMapperEx;
+    @Resource
+    private UserService userService;
+    @Resource
+    private LogService logService;
 
     @Resource
     private UserBusinessService userBusinessService;
@@ -110,6 +121,15 @@ public class AppService {
         example.setOrderByClause("Sort");
         List<App> list = appMapper.selectByExample(example);
         return list;
+    }
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int batchDeleteAppByIds(String ids) {
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_APP,
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+        User userInfo=userService.getCurrentUser();
+        String [] idArray=ids.split(",");
+        return appMapperEx.batchDeleteAppByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
     }
 
     public List<App> findAppByUserId(String userId) {

@@ -771,8 +771,11 @@
                 if (r) {
                     $.ajax({
                         type: "post",
-                        url: "/material/" + materialID + "/delete",
+                        url: "/material/batchDeleteMaterialByIds",
                         dataType: "json",
+                        data: ({
+                            ids: materialID
+                        }),
                         success: function (res) {
                             if(res && res.code == 200) {
                                 $("#searchBtn").click();
@@ -811,7 +814,7 @@
                         }
                         $.ajax({
                             type: "post",
-                            url: "/material/batchDelete",
+                            url: "/material/batchDeleteMaterialByIds",
                             dataType: "json",
                             async: false,
                             data: ({

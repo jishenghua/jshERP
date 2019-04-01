@@ -11,6 +11,7 @@
         <if test="type != null">
             and type='${type}'
         </if>
+        and ifnull(delete_Flag,'0') !='1'
         order by sort asc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
@@ -27,5 +28,16 @@
         <if test="type != null">
             and type='${type}'
         </if>
+        and ifnull(delete_Flag,'0') !='1'
     </select>
+    <update id="batchDeleteAppByIds">
+        update jsh_app
+        set delete_Flag='1'
+        where 1=1
+        and id in (
+        <foreach collection="ids" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
 </mapper>

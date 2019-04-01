@@ -4,6 +4,7 @@ import com.jsh.erp.datasource.entities.Supplier;
 import com.jsh.erp.datasource.entities.SupplierExample;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 public interface SupplierMapperEx {
@@ -30,4 +31,6 @@ public interface SupplierMapperEx {
             @Param("phonenum") String phonenum,
             @Param("telephone") String telephone,
             @Param("description") String description);
+
+    int batchDeleteSupplierByIds(@Param("updateTime") Date updateTime, @Param("updater") Long updater, @Param("ids") String ids[]);
 }

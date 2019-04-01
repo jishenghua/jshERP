@@ -255,8 +255,11 @@
             if (r) {
                 $.ajax({
                     type: "post",
-                    url: "/depot/" + depotID + "/delete",
+                    url: "/depot/batchDeleteDepotByIds",
                     dataType: "json",
+                    data: ({
+                        ids: depotID
+                    }),
                     success: function (res) {
                         if(res && res.code == 200) {
                             $("#searchBtn").click();
@@ -294,7 +297,7 @@
                     }
                     $.ajax({
                         type: "post",
-                        url: "/depot/batchDelete",
+                        url: "/depot/batchDeleteDepotByIds",
                         dataType: "json",
                         async: false,
                         data: ({

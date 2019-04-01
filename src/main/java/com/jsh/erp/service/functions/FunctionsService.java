@@ -1,18 +1,25 @@
 package com.jsh.erp.service.functions;
 
 import com.alibaba.fastjson.JSONObject;
+import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.Functions;
 import com.jsh.erp.datasource.entities.FunctionsExample;
+import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.mappers.FunctionsMapper;
 import com.jsh.erp.datasource.mappers.FunctionsMapperEx;
+import com.jsh.erp.service.log.LogService;
+import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -24,6 +31,10 @@ public class FunctionsService {
 
     @Resource
     private FunctionsMapperEx functionsMapperEx;
+    @Resource
+    private UserService userService;
+    @Resource
+    private LogService logService;
 
     public Functions getFunctions(long id) {
         return functionsMapper.selectByPrimaryKey(id);
@@ -70,7 +81,7 @@ public class FunctionsService {
 
     public int checkIsNameExist(Long id, String name) {
         FunctionsExample example = new FunctionsExample();
-        example.createCriteria().andIdNotEqualTo(id).andNameEqualTo(name);
+        example.createCriteria().andIdNotEqualTo(id).andNameEqualTo(name).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<Functions> list = functionsMapper.selectByExample(example);
         return list.size();
     }
@@ -98,5 +109,14 @@ public class FunctionsService {
         example.setOrderByClause("Sort asc");
         List<Functions> list = functionsMapper.selectByExample(example);
         return list;
+    }
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int batchDeleteFunctionsByIds(String ids) {
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_FUNCTIONS,
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+        User userInfo=userService.getCurrentUser();
+        String [] idArray=ids.split(",");
+        return functionsMapperEx.batchDeleteFunctionsByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
     }
 }

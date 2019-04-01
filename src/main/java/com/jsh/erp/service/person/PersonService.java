@@ -1,18 +1,25 @@
 package com.jsh.erp.service.person;
 
 import com.alibaba.fastjson.JSONObject;
+import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.Person;
 import com.jsh.erp.datasource.entities.PersonExample;
+import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.mappers.PersonMapper;
 import com.jsh.erp.datasource.mappers.PersonMapperEx;
+import com.jsh.erp.service.log.LogService;
+import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -24,6 +31,10 @@ public class PersonService {
 
     @Resource
     private PersonMapperEx personMapperEx;
+    @Resource
+    private UserService userService;
+    @Resource
+    private LogService logService;
 
     public Person getPerson(long id) {
         return personMapper.selectByPrimaryKey(id);
@@ -70,7 +81,7 @@ public class PersonService {
 
     public int checkIsNameExist(Long id, String name) {
         PersonExample example = new PersonExample();
-        example.createCriteria().andIdNotEqualTo(id).andNameEqualTo(name);
+        example.createCriteria().andIdNotEqualTo(id).andNameEqualTo(name).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<Person> list = personMapper.selectByExample(example);
         return list.size();
     }
@@ -97,6 +108,13 @@ public class PersonService {
         return personMapper.selectByExample(example);
     }
 
-
-
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int batchDeletePersonByIds(String ids) {
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_PERSON,
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+        User userInfo=userService.getCurrentUser();
+        String [] idArray=ids.split(",");
+        return personMapperEx.batchDeletePersonByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+    }
 }
