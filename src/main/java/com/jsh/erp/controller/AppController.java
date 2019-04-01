@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.App;
+import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.entities.UserBusiness;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.app.AppService;
@@ -12,12 +13,14 @@ import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -28,6 +31,9 @@ import java.util.Properties;
 @RequestMapping(value = "/app")
 public class AppController {
     private Logger logger = LoggerFactory.getLogger(AppController.class);
+
+    @Value("${mybatis-plus.status}")
+    private String mybatisPlusStatus;
 
     @Resource
     private AppService appService;
@@ -157,7 +163,7 @@ public class AppController {
                                   HttpServletRequest request) {
         JSONArray arr = new JSONArray();
         try {
-            List<App> dataList = appService.findRoleAPP();
+            List<App> dataListApp = appService.findRoleAPP();
             //开始拼接json数据
             JSONObject outer = new JSONObject();
             outer.put("id", 1);
@@ -165,25 +171,47 @@ public class AppController {
             outer.put("state", "open");
             //存放数据json数组
             JSONArray dataArray = new JSONArray();
-            if (null != dataList) {
-                for (App app : dataList) {
-                    if(!("系统管理").equals(app.getName())) {
-                        JSONObject item = new JSONObject();
-                        item.put("id", app.getId());
-                        item.put("text", app.getName());
-                        //勾选判断1
-                        Boolean flag = false;
-                        try {
-                            flag = userBusinessService.checkIsUserBusinessExist(type, keyId, "[" + app.getId().toString() + "]");
-                        } catch (Exception e) {
-                            logger.error(">>>>>>>>>>>>>>>>>设置角色对应的应用：类型" + type + " KeyId为： " + keyId + " 存在异常！");
+            if (null != dataListApp) {
+                //根据条件从列表里面移除"系统管理"
+                List<App> dataList = new ArrayList<App>();
+                for (App appOne : dataListApp) {
+                    if(("open").equals(mybatisPlusStatus)){
+                        //从session中获取租户id
+                        String loginName = null;
+                        Object userInfo = request.getSession().getAttribute("user");
+                        if(userInfo != null) {
+                            User user = (User) userInfo;
+                            loginName = user.getLoginame();
                         }
-                        if (flag == true) {
-                            item.put("checked", true);
+                        if(("admin").equals(loginName)) {
+                            dataList.add(appOne);
+                        } else {
+                            if(!("系统管理").equals(appOne.getName())) {
+                                dataList.add(appOne);
+                            }
                         }
-                        //结束
-                        dataArray.add(item);
+                    } else {
+                        dataList.add(appOne);
                     }
+                }
+
+                //筛选应用列表
+                for (App app : dataList) {
+                    JSONObject item = new JSONObject();
+                    item.put("id", app.getId());
+                    item.put("text", app.getName());
+                    //勾选判断1
+                    Boolean flag = false;
+                    try {
+                        flag = userBusinessService.checkIsUserBusinessExist(type, keyId, "[" + app.getId().toString() + "]");
+                    } catch (Exception e) {
+                        logger.error(">>>>>>>>>>>>>>>>>设置角色对应的应用：类型" + type + " KeyId为： " + keyId + " 存在异常！");
+                    }
+                    if (flag == true) {
+                        item.put("checked", true);
+                    }
+                    //结束
+                    dataArray.add(item);
                 }
             }
             outer.put("children", dataArray);
