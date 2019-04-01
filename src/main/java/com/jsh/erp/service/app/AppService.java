@@ -3,8 +3,10 @@ package com.jsh.erp.service.app;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.datasource.entities.App;
 import com.jsh.erp.datasource.entities.AppExample;
+import com.jsh.erp.datasource.entities.UserBusiness;
 import com.jsh.erp.datasource.mappers.AppMapper;
 import com.jsh.erp.datasource.mappers.AppMapperEx;
+import com.jsh.erp.service.userBusiness.UserBusinessService;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +25,9 @@ public class AppService {
     private AppMapper appMapper;
     @Resource
     private AppMapperEx appMapperEx;
+
+    @Resource
+    private UserBusinessService userBusinessService;
 
     public List<App> findDock(){
         AppExample example = new AppExample();
@@ -105,5 +110,40 @@ public class AppService {
         example.setOrderByClause("Sort");
         List<App> list = appMapper.selectByExample(example);
         return list;
+    }
+
+    public List<App> findAppByUserId(String userId) {
+        List<UserBusiness> roleList = userBusinessService.findRoleByUserId(userId);
+        String roles = null;
+        if(roleList!=null && roleList.size()>0 && roleList.get(0)!=null){
+            roles = roleList.get(0).getValue();
+        }
+        if(roles!=null) {
+            roles = roles.replaceAll("\\]\\[",",").replaceAll("\\]","").replaceAll("\\[",""); //转为逗号隔开的
+        }
+        List<UserBusiness> appList = userBusinessService.findAppByRoles(roles);
+        String apps = null;
+        if(appList!=null && appList.size()>0 && appList.get(0)!=null){
+            apps = appList.get(0).getValue();
+        }
+        if(apps!=null) {
+            apps = apps.replaceAll("\\]\\[",",").replaceAll("\\]","").replaceAll("\\[",""); //转为逗号隔开的
+        }
+
+        List<App> deskList = findAppInIds(apps,"desk");
+
+        return deskList;
+    }
+
+    /**
+     * 通过number列表查询app list
+     * @param numberList
+     * @return
+     */
+    public List<App> findAppByNumber(List<String> numberList) {
+
+        AppExample example = new AppExample();
+        example.createCriteria().andEnabledEqualTo(true).andNumberIn(numberList);
+        return appMapper.selectByExample(example);
     }
 }
