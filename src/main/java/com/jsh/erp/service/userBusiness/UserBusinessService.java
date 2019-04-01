@@ -65,19 +65,22 @@ public class UserBusinessService {
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertUserBusiness(String beanJson, HttpServletRequest request) {
         UserBusiness userBusiness = JSONObject.parseObject(beanJson, UserBusiness.class);
-        return userBusinessMapper.insertSelective(userBusiness);
+        int inserts = userBusinessMapper.insertSelective(userBusiness);
+        // 更新应用权限
+        if (inserts > 0) {
+            inserts = insertOrUpdateAppValue(BusinessConstants.TYPE_NAME_ROLE_APP, userBusiness.getKeyid(), userBusiness.getValue());
+        }
+        return inserts;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateUserBusiness(String beanJson, Long id) {
         UserBusiness userBusiness = JSONObject.parseObject(beanJson, UserBusiness.class);
         userBusiness.setId(id);
-
         int updates = userBusinessMapper.updateByPrimaryKeySelective(userBusiness);
-
         // 更新应用权限
         if (updates > 0) {
-            updates = updateAppValue(BusinessConstants.TYPE_NAME_ROLE_APP, userBusiness.getKeyid(), userBusiness.getValue());
+            updates = insertOrUpdateAppValue(BusinessConstants.TYPE_NAME_ROLE_APP, userBusiness.getKeyid(), userBusiness.getValue());
         }
         return updates;
     }
@@ -176,7 +179,7 @@ public class UserBusinessService {
      * @param functionIds
      * @return
      */
-    public int updateAppValue(String type, String keyId, String functionIds) {
+    public int insertOrUpdateAppValue(String type, String keyId, String functionIds) {
 
         int updates = 0;
 
@@ -209,8 +212,13 @@ public class UserBusinessService {
                 if(userBusinessList.size() > 0) {
                     UserBusiness userBusiness = userBusinessList.get(0);
                     userBusiness.setValue(appIdSb.toString());
-
                     updates = userBusinessMapper.updateByPrimaryKeySelective(userBusiness);
+                } else {
+                    UserBusiness userBusiness = new UserBusiness();
+                    userBusiness.setType(type);
+                    userBusiness.setKeyid(keyId);
+                    userBusiness.setValue(appIdSb.toString());
+                    updates = userBusinessMapper.insertSelective(userBusiness);
                 }
             }
         }
