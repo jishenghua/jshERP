@@ -2,10 +2,15 @@ package com.jsh.erp.service.userBusiness;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
+import com.jsh.erp.datasource.entities.App;
+import com.jsh.erp.datasource.entities.Functions;
 import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.entities.UserBusiness;
 import com.jsh.erp.datasource.entities.UserBusinessExample;
 import com.jsh.erp.datasource.mappers.UserBusinessMapper;
+import com.jsh.erp.service.CommonQueryManager;
+import com.jsh.erp.service.app.AppService;
+import com.jsh.erp.service.functions.FunctionsService;
 import com.jsh.erp.datasource.mappers.UserBusinessMapperEx;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
@@ -14,13 +19,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserBusinessService {
@@ -34,6 +43,15 @@ public class UserBusinessService {
     private LogService logService;
     @Resource
     private UserService userService;
+
+    @Resource
+    private FunctionsService functionsService;
+
+    @Resource
+    private AppService appService;
+
+    @Resource
+    private CommonQueryManager configResourceManager;
 
     public UserBusiness getUserBusiness(long id) {
         return userBusinessMapper.selectByPrimaryKey(id);
@@ -54,7 +72,14 @@ public class UserBusinessService {
     public int updateUserBusiness(String beanJson, Long id) {
         UserBusiness userBusiness = JSONObject.parseObject(beanJson, UserBusiness.class);
         userBusiness.setId(id);
-        return userBusinessMapper.updateByPrimaryKeySelective(userBusiness);
+
+        int updates = userBusinessMapper.updateByPrimaryKeySelective(userBusiness);
+
+        // 更新应用权限
+        if (updates > 0) {
+            updates = updateAppValue(BusinessConstants.TYPE_NAME_ROLE_APP, userBusiness.getKeyid(), userBusiness.getValue());
+        }
+        return updates;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
@@ -142,5 +167,53 @@ public class UserBusinessService {
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");
         return userBusinessMapperEx.batchDeleteUserBusinessByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+    }
+
+    /**
+     * 通过功能（RoleFunctions）权限更新应用（RoleApp）权限
+     * @param type
+     * @param keyId
+     * @param functionIds
+     * @return
+     */
+    public int updateAppValue(String type, String keyId, String functionIds) {
+
+        int updates = 0;
+
+        functionIds = functionIds.replaceAll("\\]\\[", ",").
+                replaceAll("\\[","").replaceAll("\\]","");
+
+        List<Functions> functionsList = functionsService.findByIds(functionIds);
+
+        if (!CollectionUtils.isEmpty(functionsList)) {
+
+            Set<String> appNumbers = new HashSet<>();
+            String appNumber;
+            for (Functions functions : functionsList) {
+
+                appNumber = functions.getNumber().substring(0, 2);
+                appNumbers.add(appNumber);
+            }
+
+            List<String> appNumberList = new ArrayList<>(appNumbers);
+            List<App> appList = appService.findAppByNumber(appNumberList);
+
+            StringBuilder appIdSb = new StringBuilder();
+
+            if (!CollectionUtils.isEmpty(appList)) {
+                for (App app : appList) {
+                    appIdSb.append("[" + app.getId() + "]");
+                }
+
+                List<UserBusiness> userBusinessList = getBasicData(keyId, type);
+                if(userBusinessList.size() > 0) {
+                    UserBusiness userBusiness = userBusinessList.get(0);
+                    userBusiness.setValue(appIdSb.toString());
+
+                    updates = userBusinessMapper.updateByPrimaryKeySelective(userBusiness);
+                }
+            }
+        }
+        return updates;
     }
 }
