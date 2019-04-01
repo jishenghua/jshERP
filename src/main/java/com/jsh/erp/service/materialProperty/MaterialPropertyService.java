@@ -1,18 +1,25 @@
 package com.jsh.erp.service.materialProperty;
 
 import com.alibaba.fastjson.JSONObject;
+import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.MaterialProperty;
 import com.jsh.erp.datasource.entities.MaterialPropertyExample;
+import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.mappers.MaterialPropertyMapper;
 import com.jsh.erp.datasource.mappers.MaterialPropertyMapperEx;
+import com.jsh.erp.service.log.LogService;
+import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -24,6 +31,10 @@ public class MaterialPropertyService {
 
     @Resource
     private MaterialPropertyMapperEx materialPropertyMapperEx;
+    @Resource
+    private UserService userService;
+    @Resource
+    private LogService logService;
 
     public MaterialProperty getMaterialProperty(long id) {
         return materialPropertyMapper.selectByPrimaryKey(id);
@@ -69,5 +80,15 @@ public class MaterialPropertyService {
 
     public int checkIsNameExist(Long id, String name) {
         return 0;
+    }
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int batchDeleteMaterialPropertyByIds(String ids) {
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_MATERIAL_PROPERTY,
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+        User userInfo=userService.getCurrentUser();
+        String [] idArray=ids.split(",");
+        return materialPropertyMapperEx.batchDeleteMaterialPropertyByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+
     }
 }

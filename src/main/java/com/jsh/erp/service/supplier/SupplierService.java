@@ -4,9 +4,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.Supplier;
 import com.jsh.erp.datasource.entities.SupplierExample;
+import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.mappers.SupplierMapper;
 import com.jsh.erp.datasource.mappers.SupplierMapperEx;
 import com.jsh.erp.service.log.LogService;
+import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
@@ -19,6 +21,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +37,8 @@ public class SupplierService {
     private SupplierMapperEx supplierMapperEx;
     @Resource
     private LogService logService;
+    @Resource
+    private UserService userService;
 
     public Supplier getSupplier(long id) {
         return supplierMapper.selectByPrimaryKey(id);
@@ -80,7 +85,7 @@ public class SupplierService {
 
     public int checkIsNameExist(Long id, String name) {
         SupplierExample example = new SupplierExample();
-        example.createCriteria().andIdNotEqualTo(id).andSupplierEqualTo(name);
+        example.createCriteria().andIdNotEqualTo(id).andSupplierEqualTo(name).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<Supplier> list = supplierMapper.selectByExample(example);
         return list.size();
     }
@@ -172,5 +177,14 @@ public class SupplierService {
         }
         info.data = data;
         return info;
+    }
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int batchDeleteSupplierByIds(String ids) {
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_SUPPLIER,
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+        User userInfo=userService.getCurrentUser();
+        String [] idArray=ids.split(",");
+        return supplierMapperEx.batchDeleteSupplierByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
     }
 }

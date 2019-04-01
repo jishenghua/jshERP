@@ -8,6 +8,7 @@ import com.jsh.erp.datasource.vo.DepotHeadVo4StatementAccount;
 import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -112,4 +113,6 @@ public interface DepotHeadMapperEx {
      * 获得一个全局唯一的数作为订单号的追加
      * */
      Long  getBuildOnlyNumber(@Param("seq_name") String seq_name);
+
+    int batchDeleteDepotHeadByIds(@Param("updateTime") Date updateTime, @Param("updater") Long updater, @Param("ids") String ids[]);
 }

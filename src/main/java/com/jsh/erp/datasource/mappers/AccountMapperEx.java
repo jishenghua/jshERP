@@ -6,6 +6,7 @@ import com.jsh.erp.datasource.vo.AccountVo4InOutList;
 import com.jsh.erp.datasource.vo.AccountVo4List;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 public interface AccountMapperEx {
@@ -29,4 +30,6 @@ public interface AccountMapperEx {
 
     int findAccountInOutListCount(
             @Param("accountId") Long accountId);
+
+    int batchDeleteAccountByIds(@Param("updateTime") Date updateTime, @Param("updater") Long updater, @Param("ids") String ids[]);
 }

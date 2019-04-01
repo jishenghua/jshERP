@@ -1,7 +1,10 @@
 package com.jsh.erp.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.UserBusiness;
+import com.jsh.erp.exception.BusinessRunTimeException;
+import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.service.userBusiness.UserBusinessService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.ErpInfo;
@@ -27,6 +30,8 @@ public class UserBusinessController {
 
     @Resource
     private UserBusinessService userBusinessService;
+    @Resource
+    private UserService userService;
 
     @GetMapping(value = "/getBasicData")
     public BaseResponseInfo getBasicData(@RequestParam(value = "KeyId") String keyId,
@@ -85,5 +90,27 @@ public class UserBusinessController {
             res.data = "查询权限失败";
         }
         return res;
+    }
+    /**
+     * create by: qiankunpingtai
+     * website：http://39.105.146.63/symphony/
+     * description:
+     *  批量删除用户角色模块关系信息
+     * create time: 2019/3/28 15:47
+     * @Param: ids
+     * @return java.lang.Object
+     */
+    @RequestMapping(value = "/batchDeleteUserBusinessByIds")
+    public Object batchDeleteUserBusinessByIds(@RequestParam("ids") String ids) throws Exception {
+
+        JSONObject result = ExceptionConstants.standardSuccess();
+        int i= userBusinessService.batchDeleteUserBusinessByIds(ids);
+        if(i<1){
+            logger.error("异常码[{}],异常提示[{}],参数,ids[{}]",
+                    ExceptionConstants.USER_BUSINESS_DELETE_FAILED_CODE,ExceptionConstants.USER_BUSINESS_DELETE_FAILED_MSG,ids);
+            throw new BusinessRunTimeException(ExceptionConstants.USER_BUSINESS_DELETE_FAILED_CODE,
+                    ExceptionConstants.USER_BUSINESS_DELETE_FAILED_MSG);
+        }
+        return result;
     }
 }

@@ -2,7 +2,9 @@ package com.jsh.erp.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.InOutItem;
+import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.inOutItem.InOutItemService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import org.slf4j.Logger;
@@ -53,6 +55,27 @@ public class InOutItemController {
             res = "获取数据失败";
         }
         return res;
+    }
+    /**
+     * create by: qiankunpingtai
+     * website：http://39.105.146.63/symphony/
+     * description:
+     *  批量删除收支项目信息
+     * create time: 2019/3/29 11:15
+     * @Param: ids
+     * @return java.lang.Object
+     */
+    @RequestMapping(value = "/batchDeleteInOutItemByIds")
+    public Object batchDeleteInOutItemByIds(@RequestParam("ids") String ids) throws Exception {
+        JSONObject result = ExceptionConstants.standardSuccess();
+        int i= inOutItemService.batchDeleteInOutItemByIds(ids);
+        if(i<1){
+            logger.error("异常码[{}],异常提示[{}],参数,ids[{}]",
+                    ExceptionConstants.IN_OUT_ITEM_DELETE_FAILED_CODE,ExceptionConstants.IN_OUT_ITEM_DELETE_FAILED_MSG,ids);
+            throw new BusinessRunTimeException(ExceptionConstants.IN_OUT_ITEM_DELETE_FAILED_CODE,
+                    ExceptionConstants.IN_OUT_ITEM_DELETE_FAILED_MSG);
+        }
+        return result;
     }
 
 }

@@ -13,8 +13,8 @@
     <select id="selectByConditionMaterial" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultMapList">
         select m.*,u.uname unitName, mc.name categoryName
         FROM jsh_material m
-        left JOIN jsh_unit u on m.UnitId = u.id
-        left JOIN jsh_materialcategory mc on m.CategoryId = mc.id
+        left JOIN jsh_unit u on m.UnitId = u.id and ifnull(u.delete_Flag,'0') !='1'
+        left JOIN jsh_materialcategory mc on m.CategoryId = mc.id and ifnull(mc.status,'0') !='2'
         where 1=1
         <if test="name != null">
             and m.name like '%${name}%'
@@ -25,6 +25,7 @@
         <if test="categoryId != 1">
             and m.CategoryId in (${categoryIds})
         </if>
+        and ifnull(m.delete_Flag,'0') !='1'
         order by m.id asc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
@@ -35,8 +36,8 @@
         SELECT
         COUNT(m.id)
         FROM jsh_material m
-        left JOIN jsh_unit u on m.UnitId = u.id
-        left JOIN jsh_materialcategory mc on m.CategoryId = mc.id
+        left JOIN jsh_unit u on m.UnitId = u.id and ifnull(u.delete_Flag,'0') !='1'
+        left JOIN jsh_materialcategory mc on m.CategoryId = mc.id and ifnull(mc.status,'0') !='2'
         WHERE 1=1
         <if test="name != null">
             and m.name like '%${name}%'
@@ -47,18 +48,29 @@
         <if test="categoryId != 1">
             and m.CategoryId in (${categoryIds})
         </if>
+        and ifnull(m.delete_Flag,'0') !='1'
     </select>
 
     <select id="findUnitName" resultType="java.lang.String">
-        select jsh_unit.UName  from jsh_unit left join jsh_material on UnitId=jsh_unit.id where jsh_material.id = ${mId}
+        select jsh_unit.UName  from jsh_unit u
+        left join jsh_material m on m.UnitId=u.id and ifnull(m.delete_Flag,'0') !='1'
+        where m.id = ${mId}
+        and ifnull(u.delete_Flag,'0') !='1'
     </select>
 
     <select id="findById" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultAndUnitMap">
-        select m.*,u.UName from jsh_material m left join jsh_unit u on m.UnitId=u.id where m.id = ${id}
+        select m.*,u.UName from jsh_material m
+        left join jsh_unit u on m.UnitId=u.id and ifnull(u.delete_Flag,'0') !='1'
+        where m.id = ${id}
+        and ifnull(m.delete_Flag,'0') !='1'
     </select>
 
     <select id="findBySelect" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultAndUnitMap">
-        select m.*,u.UName from jsh_material m left join jsh_unit u on m.UnitId=u.id where m.enabled=1 ORDER BY Id asc
+        select m.*,u.UName from jsh_material m
+        left join jsh_unit u on m.UnitId=u.id and ifnull(u.delete_Flag,'0') !='1'
+        where m.enabled=1
+        and ifnull(m.delete_Flag,'0') !='1'
+        ORDER BY Id asc
     </select>
 
     <update id="updatePriceNullByPrimaryKey" parameterType="java.lang.Long">
@@ -81,8 +93,8 @@
     <select id="findByAll" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultMapList">
         select m.*,u.uname unitName, mc.name categoryName
         FROM jsh_material m
-        left JOIN jsh_unit u on m.UnitId = u.id
-        left JOIN jsh_materialcategory mc on m.CategoryId = mc.id
+        left JOIN jsh_unit u on m.UnitId = u.id and ifnull(u.delete_Flag,'0') !='1'
+        left JOIN jsh_materialcategory mc on m.CategoryId = mc.id and ifnull(mc.status,'0') !='2'
         where 1=1
         <if test="name != null">
             and m.name like '%${name}%'
@@ -93,6 +105,7 @@
         <if test="categoryId != 1">
             and m.CategoryId in (${categoryIds})
         </if>
+        and ifnull(m.delete_Flag,'0') !='1'
         order by m.id asc
     </select>
     <select id="findByMaterialName"  resultType="com.jsh.erp.datasource.entities.Material">
@@ -102,6 +115,7 @@
         <if test="name != null">
             and m.name =#{name}
         </if>
+        and ifnull(m.delete_Flag,'0') !='1'
 
     </select>
     <select id="getMaterialEnableSerialNumberList" parameterType="java.util.Map" resultMap="com.jsh.erp.datasource.mappers.MaterialMapper.BaseResultMap">
@@ -121,8 +135,20 @@
             <bind name="model" value="'%' + _parameter.model + '%'" />
             and model like #{model}
         </if>
+        and ifnull(delete_Flag,'0') !='1'
         order by id desc
     </select>
+    <update id="batchDeleteMaterialByIds">
+        update jsh_material
+        set delete_Flag='1'
+        where 1=1
+        and ifnull(delete_Flag,'0') !='1'
+        and id in (
+        <foreach collection="ids" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
 
 
 </mapper>

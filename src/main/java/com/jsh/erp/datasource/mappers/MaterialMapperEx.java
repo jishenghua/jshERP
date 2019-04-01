@@ -4,6 +4,7 @@ import com.jsh.erp.datasource.entities.Material;
 import com.jsh.erp.datasource.entities.MaterialVo4Unit;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -54,4 +55,6 @@ public interface MaterialMapperEx {
      * 获取开启序列号并且状态正常的商品列表
      * */
     List<Material> getMaterialEnableSerialNumberList(Map<String, Object> parameterMap);
+
+    int batchDeleteMaterialByIds(@Param("updateTime") Date updateTime, @Param("updater") Long updater, @Param("ids") String ids[]);
 }

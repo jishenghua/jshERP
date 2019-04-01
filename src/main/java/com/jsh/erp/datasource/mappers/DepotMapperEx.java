@@ -5,6 +5,7 @@ import com.jsh.erp.datasource.entities.DepotEx;
 import com.jsh.erp.datasource.entities.DepotExample;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -23,4 +24,6 @@ public interface DepotMapperEx {
             @Param("remark") String remark);
 
     List<DepotEx> getDepotList(Map<String, Object> params);
+
+    int batchDeleteDepotByIds(@Param("updateTime") Date updateTime, @Param("updater") Long updater, @Param("ids") String ids[]);
 }

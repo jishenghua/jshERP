@@ -1,22 +1,29 @@
 package com.jsh.erp.service.accountHead;
 
 import com.alibaba.fastjson.JSONObject;
+import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.AccountHead;
 import com.jsh.erp.datasource.entities.AccountHeadExample;
 import com.jsh.erp.datasource.entities.AccountHeadVo4ListEx;
+import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.mappers.AccountHeadMapper;
 import com.jsh.erp.datasource.mappers.AccountHeadMapperEx;
+import com.jsh.erp.service.log.LogService;
+import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
 import com.jsh.erp.utils.Tools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -28,6 +35,10 @@ public class AccountHeadService {
 
     @Resource
     private AccountHeadMapperEx accountHeadMapperEx;
+    @Resource
+    private UserService userService;
+    @Resource
+    private LogService logService;
 
     public AccountHead getAccountHead(long id) {
         return accountHeadMapper.selectByPrimaryKey(id);
@@ -87,7 +98,7 @@ public class AccountHeadService {
 
     public int checkIsNameExist(Long id, String name) {
         AccountHeadExample example = new AccountHeadExample();
-        example.createCriteria().andIdNotEqualTo(id);
+        example.createCriteria().andIdNotEqualTo(id).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<AccountHead> list = accountHeadMapper.selectByExample(example);
         return list.size();
     }
@@ -122,5 +133,13 @@ public class AccountHeadService {
         }
         return resList;
     }
-
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int batchDeleteAccountHeadByIds(String ids) {
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_ACCOUNT_HEAD,
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+        User userInfo=userService.getCurrentUser();
+        String [] idArray=ids.split(",");
+        return accountHeadMapperEx.batchDeleteAccountHeadByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+    }
 }

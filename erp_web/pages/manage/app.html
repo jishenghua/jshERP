@@ -270,8 +270,11 @@
             if (r) {
                 $.ajax({
                     type: "post",
-                    url: "/app/" + appID + "/delete",
+                    url: "/app/batchDeleteAppByIds",
                     dataType: "json",
+                    data: ({
+                        ids: appID
+                    }),
                     success: function (res) {
                         if(res && res.code == 200) {
                             $("#searchBtn").click();
@@ -309,7 +312,7 @@
                     }
                     $.ajax({
                         type: "post",
-                        url: "/app/batchDelete",
+                        url: "/app/batchDeleteAppByIds",
                         dataType: "json",
                         async: false,
                         data: ({

@@ -197,8 +197,11 @@
             if (r) {
                 $.ajax({
                     type: "post",
-                    url: "/unit/" + unitID + "/delete",
+                    url: "/unit/batchDeleteUnitByIds",
                     dataType: "json",
+                    data: ({
+                        ids: unitID
+                    }),
                     success: function (res) {
                         if(res && res.code == 200) {
                             $("#searchBtn").click();
@@ -237,7 +240,7 @@
                     }
                     $.ajax({
                         type: "post",
-                        url: "/unit/batchDelete",
+                        url: "/unit/batchDeleteUnitByIds",
                         dataType: "json",
                         async: false,
                         data: ({

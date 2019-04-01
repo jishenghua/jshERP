@@ -1,18 +1,25 @@
 package com.jsh.erp.service.systemConfig;
 
 import com.alibaba.fastjson.JSONObject;
+import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.SystemConfig;
 import com.jsh.erp.datasource.entities.SystemConfigExample;
+import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.mappers.SystemConfigMapper;
 import com.jsh.erp.datasource.mappers.SystemConfigMapperEx;
+import com.jsh.erp.service.log.LogService;
+import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -24,6 +31,10 @@ public class SystemConfigService {
 
     @Resource
     private SystemConfigMapperEx systemConfigMapperEx;
+    @Resource
+    private UserService userService;
+    @Resource
+    private LogService logService;
 
     public SystemConfig getSystemConfig(long id) {
         return systemConfigMapper.selectByPrimaryKey(id);
@@ -69,8 +80,17 @@ public class SystemConfigService {
 
     public int checkIsNameExist(Long id, String name) {
         SystemConfigExample example = new SystemConfigExample();
-        example.createCriteria().andIdNotEqualTo(id).andCompanyNameEqualTo(name);
+        example.createCriteria().andIdNotEqualTo(id).andCompanyNameEqualTo(name).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<SystemConfig> list = systemConfigMapper.selectByExample(example);
         return list.size();
+    }
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int batchDeleteSystemConfigByIds(String ids) {
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_SYSTEM_CONFIG,
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+        User userInfo=userService.getCurrentUser();
+        String [] idArray=ids.split(",");
+        return systemConfigMapperEx.batchDeleteSystemConfigByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
     }
 }
