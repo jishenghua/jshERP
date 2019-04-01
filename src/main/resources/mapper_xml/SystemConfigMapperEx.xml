@@ -8,6 +8,7 @@
         <if test="companyName != null">
             and company_name like '%${companyName}%'
         </if>
+        and ifnull(delete_Flag,'0') !='1'
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
         </if>
@@ -20,5 +21,16 @@
         <if test="companyName != null">
             and company_name like '%${companyName}%'
         </if>
+        and ifnull(delete_Flag,'0') !='1'
     </select>
+    <update id="batchDeleteSystemConfigByIds">
+        update jsh_systemconfig
+        set delete_Flag='1'
+        where 1=1
+        and id in (
+        <foreach collection="ids" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
 </mapper>

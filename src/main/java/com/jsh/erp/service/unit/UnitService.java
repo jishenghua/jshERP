@@ -1,18 +1,25 @@
 package com.jsh.erp.service.unit;
 
 import com.alibaba.fastjson.JSONObject;
+import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.Unit;
 import com.jsh.erp.datasource.entities.UnitExample;
+import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.mappers.UnitMapper;
 import com.jsh.erp.datasource.mappers.UnitMapperEx;
+import com.jsh.erp.service.log.LogService;
+import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -24,6 +31,10 @@ public class UnitService {
 
     @Resource
     private UnitMapperEx unitMapperEx;
+    @Resource
+    private UserService userService;
+    @Resource
+    private LogService logService;
 
     public Unit getUnit(long id) {
         return unitMapper.selectByPrimaryKey(id);
@@ -70,8 +81,19 @@ public class UnitService {
 
     public int checkIsNameExist(Long id, String name) {
         UnitExample example = new UnitExample();
-        example.createCriteria().andIdNotEqualTo(id).andUnameEqualTo(name);
+        example.createCriteria().andIdNotEqualTo(id).andUnameEqualTo(name).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<Unit> list = unitMapper.selectByExample(example);
         return list.size();
     }
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int batchDeleteUnitByIds(String ids) {
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_UNIT,
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+        User userInfo=userService.getCurrentUser();
+        String [] idArray=ids.split(",");
+        return unitMapperEx.batchDeleteUnitByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+    }
+
+
 }

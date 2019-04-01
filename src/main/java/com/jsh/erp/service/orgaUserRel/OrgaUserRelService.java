@@ -5,6 +5,7 @@ import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.mappers.OrgaUserRelMapper;
 import com.jsh.erp.datasource.mappers.OrgaUserRelMapperEx;
+import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.organization.OrganizationService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
@@ -34,6 +35,8 @@ public class OrgaUserRelService {
     private OrgaUserRelMapperEx orgaUserRelMapperEx;
     @Resource
     private UserService userService;
+    @Resource
+    private LogService logService;
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertOrgaUserRel(String beanJson, HttpServletRequest request) {
         OrgaUserRel orgaUserRel = JSONObject.parseObject(beanJson, OrgaUserRel.class);

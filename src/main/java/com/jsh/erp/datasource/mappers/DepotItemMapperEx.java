@@ -4,6 +4,7 @@ import com.jsh.erp.datasource.entities.*;
 import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -143,6 +144,14 @@ public interface DepotItemMapperEx {
                                                     @Param("enableSerialNumber")String enableSerialNumber);
      /**
       * 根据单据主表id删除单据子表数据
+      * 物理删除，已弃用
       * */
+     @Deprecated
      int deleteDepotItemByDepotHeadIds(@Param("depotheadIds")Long []depotHeadIds);
+     /**
+      * 根据单据主表id删除单据子表数据
+      * */
+     int batchDeleteDepotItemByDepotHeadIds(@Param("depotheadIds")Long []depotHeadIds);
+
+    int batchDeleteDepotItemByIds(@Param("updateTime") Date updateTime, @Param("updater") Long updater, @Param("ids") String ids[]);
 }

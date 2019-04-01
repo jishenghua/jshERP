@@ -7,6 +7,7 @@ import com.jsh.erp.datasource.mappers.*;
 import com.jsh.erp.datasource.vo.AccountVo4InOutList;
 import com.jsh.erp.datasource.vo.AccountVo4List;
 import com.jsh.erp.service.log.LogService;
+import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
 import com.jsh.erp.utils.Tools;
 import org.slf4j.Logger;
@@ -45,6 +46,8 @@ public class AccountService {
     private AccountItemMapper accountItemMapper;
     @Resource
     private LogService logService;
+    @Resource
+    private UserService userService;
 
     public Account getAccount(long id) {
         return accountMapper.selectByPrimaryKey(id);
@@ -112,7 +115,8 @@ public class AccountService {
 
     public int checkIsNameExist(Long id, String name) {
         AccountExample example = new AccountExample();
-        example.createCriteria().andIdNotEqualTo(id).andNameEqualTo(name);
+        example.createCriteria().andIdNotEqualTo(id).andNameEqualTo(name).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+
         List<Account> list = accountMapper.selectByExample(example);
         return list.size();
     }
@@ -317,5 +321,13 @@ public class AccountService {
         example.createCriteria().andIdEqualTo(accountId);
         return accountMapper.updateByExampleSelective(account, example);
     }
-
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int batchDeleteAccountByIds(String ids) {
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_ACCOUNT,
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+        User userInfo=userService.getCurrentUser();
+        String [] idArray=ids.split(",");
+        return accountMapperEx.batchDeleteAccountByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+    }
 }

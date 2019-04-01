@@ -2,8 +2,11 @@ package com.jsh.erp.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.Supplier;
+import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.supplier.SupplierService;
+import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.service.userBusiness.UserBusinessService;
 import com.jsh.erp.utils.*;
 import jxl.Sheet;
@@ -40,6 +43,8 @@ public class SupplierController {
 
     @Resource
     private UserBusinessService userBusinessService;
+    @Resource
+    private UserService userService;
 
     /**
      * 更新供应商-只更新预付款，其余用原来的值
@@ -436,6 +441,27 @@ public class SupplierController {
         } else {
             return null;
         }
+    }
+    /**
+     * create by: qiankunpingtai
+     * website：http://39.105.146.63/symphony/
+     * description:
+     *  批量删除供应商信息
+     * create time: 2019/3/29 11:15
+     * @Param: ids
+     * @return java.lang.Object
+     */
+    @RequestMapping(value = "/batchDeleteSupplierByIds")
+    public Object batchDeleteSupplierByIds(@RequestParam("ids") String ids) throws Exception {
+        JSONObject result = ExceptionConstants.standardSuccess();
+        int i= supplierService.batchDeleteSupplierByIds(ids);
+        if(i<1){
+            logger.error("异常码[{}],异常提示[{}],参数,ids[{}]",
+                    ExceptionConstants.SUPPLIER_DELETE_FAILED_CODE,ExceptionConstants.SUPPLIER_DELETE_FAILED_MSG,ids);
+            throw new BusinessRunTimeException(ExceptionConstants.SUPPLIER_DELETE_FAILED_CODE,
+                    ExceptionConstants.SUPPLIER_DELETE_FAILED_MSG);
+        }
+        return result;
     }
 
 }

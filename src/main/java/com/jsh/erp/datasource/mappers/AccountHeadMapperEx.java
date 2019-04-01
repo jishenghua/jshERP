@@ -6,6 +6,7 @@ import com.jsh.erp.datasource.entities.AccountHeadVo4ListEx;
 import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 public interface AccountHeadMapperEx {
@@ -34,4 +35,6 @@ public interface AccountHeadMapperEx {
 
     List<AccountHeadVo4ListEx> getDetailByNumber(
             @Param("billNo") String billNo);
+
+    int batchDeleteAccountHeadByIds(@Param("updateTime") Date updateTime, @Param("updater") Long updater, @Param("ids") String ids[]);
 }

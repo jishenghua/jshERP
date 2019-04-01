@@ -5,10 +5,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.AccountItem;
 import com.jsh.erp.datasource.entities.AccountItemExample;
+import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.mappers.AccountItemMapper;
 import com.jsh.erp.datasource.mappers.AccountItemMapperEx;
 import com.jsh.erp.datasource.vo.AccountItemVo4List;
 import com.jsh.erp.service.log.LogService;
+import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.ErpInfo;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
@@ -22,6 +24,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
@@ -37,6 +40,8 @@ public class AccountItemService {
     private AccountItemMapperEx accountItemMapperEx;
     @Resource
     private LogService logService;
+    @Resource
+    private UserService userService;
 
     public AccountItem getAccountItem(long id) {
         return accountItemMapper.selectByPrimaryKey(id);
@@ -83,7 +88,7 @@ public class AccountItemService {
 
     public int checkIsNameExist(Long id, String name) {
         AccountItemExample example = new AccountItemExample();
-        example.createCriteria().andIdNotEqualTo(id);
+        example.createCriteria().andIdNotEqualTo(id).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<AccountItem> list = accountItemMapper.selectByExample(example);
         return list.size();
     }
@@ -135,10 +140,16 @@ public class AccountItemService {
                 }
             }
             if (null != deletedJson) {
+                StringBuffer bf=new StringBuffer();
                 for (int i = 0; i < deletedJson.size(); i++) {
                     JSONObject tempDeletedJson = JSONObject.parseObject(deletedJson.getString(i));
-                    this.deleteAccountItem(tempDeletedJson.getLong("Id"));
+                    bf.append(tempDeletedJson.getLong("Id"));
+                    if(i<(deletedJson.size()-1)){
+                        bf.append(",");
+                    }
+
                 }
+                this.batchDeleteAccountItemByIds(bf.toString());
             }
             if (null != updatedJson) {
                 for (int i = 0; i < updatedJson.size(); i++) {
@@ -168,5 +179,13 @@ public class AccountItemService {
 
         return null;
     }
-
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int batchDeleteAccountItemByIds(String ids) {
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_ACCOUNT_ITEM,
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+        User userInfo=userService.getCurrentUser();
+        String [] idArray=ids.split(",");
+        return accountItemMapperEx.batchDeleteAccountItemByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+    }
 }

@@ -30,10 +30,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -195,7 +192,10 @@ public class UserService {
 
     public int checkIsNameExist(Long id, String name) {
         UserExample example = new UserExample();
-        example.createCriteria().andIdNotEqualTo(id).andLoginameEqualTo(name);
+        List <Byte> userStatus=new ArrayList<Byte>();
+        userStatus.add(BusinessConstants.USER_STATUS_DELETE);
+        userStatus.add(BusinessConstants.USER_STATUS_BANNED);
+        example.createCriteria().andIdNotEqualTo(id).andLoginameEqualTo(name).andStatusNotIn(userStatus);
         List<User> list = userMapper.selectByExample(example);
         return list.size();
     }

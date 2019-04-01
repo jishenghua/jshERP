@@ -486,8 +486,11 @@
             {
 				$.ajax({
 					type:"post",
-                    url: "/accountHead/" + accountHeadID + "/delete",
+                    url: "/accountHead/batchDeleteAccountHeadByIds",
 					dataType: "json",
+                    data:{
+                        ids: accountHeadID
+                    },
                     success: function (res) {
                         if(res && res.code == 200) {
                             $("#searchBtn").click();
@@ -576,7 +579,7 @@
 					//批量删除
                     $.ajax({
 						type:"post",
-						url: "/accountHead/batchDelete",
+						url: "/accountHead/batchDeleteAccountHeadByIds",
 						dataType: "json",
 						async :  false,
 						data: ({

@@ -15,8 +15,8 @@
         ser.update_Time,mat.name as materialName,null as creator,null as updater,null as creatorName,
         null as updaterName,ser.depothead_Id, dh.number as depotHeadNumber,concat(dh.SubType,dh.Type) as depotHeadType
         FROM jsh_serial_number ser
-        left join jsh_material mat on mat.id = ser.material_Id
-        left join jsh_depothead dh on dh.id= ser.depothead_Id
+        left join jsh_material mat on mat.id = ser.material_Id and ifnull(mat.delete_Flag,'0') !='1'
+        left join jsh_depothead dh on dh.id= ser.depothead_Id and ifnull(dh.delete_Flag,'0') !='1'
         where 1=1
         <if test="serialNumber != null">
             <bind name="serialNumber" value="'%' + _parameter.serialNumber + '%'" />
@@ -36,7 +36,7 @@
         SELECT
         COUNT(ser.id)
         FROM jsh_serial_number ser
-        left JOIN jsh_material mat on mat.id = ser.material_Id
+        left JOIN jsh_material mat on mat.id = ser.material_Id and ifnull(mat.delete_Flag,'0') !='1'
         where 1=1
         <if test="serialNumber != null">
             <bind name="serialNumber" value="'%' + _parameter.serialNumber + '%'" />
@@ -55,7 +55,7 @@
         ser.update_Time,ser.creator,ser.updater,mat.name as materialName,cr.username as creatorName,
         ur.username as updaterName,ser.depothead_Id
         FROM jsh_serial_number ser
-        left JOIN jsh_material mat on mat.id = ser.material_Id
+        left JOIN jsh_material mat on mat.id = ser.material_Id and ifnull(mat.delete_Flag,'0') !='1'
         left join jsh_user cr on ser.creator=cr.id and ifnull(cr.status,'0') not in('1','2')
         left join jsh_user ur on ser.updater=ur.id and ifnull(ur.status,'0') not in('1','2')
         where 1=1
@@ -231,7 +231,6 @@
         update jsh_serial_number
         set update_Time=#{updateTime},updater=#{updater},delete_Flag='1'
         where 1=1
-        and ifnull(delete_Flag,'0') !='1'
         and id in (
         <foreach collection="ids" item="id" separator=",">
             #{id}

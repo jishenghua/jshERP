@@ -2,8 +2,10 @@ package com.jsh.erp.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.Account;
 import com.jsh.erp.datasource.vo.AccountVo4InOutList;
+import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.account.AccountService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.ErpInfo;
@@ -137,6 +139,28 @@ public class AccountController {
         } else {
             return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
         }
+    }
+    /**
+     * create by: qiankunpingtai
+     * website：http://39.105.146.63/symphony/
+     * description:
+     *  批量删除账户信息
+     * create time: 2019/3/29 10:49
+     * @Param: ids
+     * @return java.lang.Object
+     */
+    @RequestMapping(value = "/batchDeleteAccountByIds")
+    public Object batchDeleteAccountByIds(@RequestParam("ids") String ids) throws Exception {
+
+        JSONObject result = ExceptionConstants.standardSuccess();
+        int i= accountService.batchDeleteAccountByIds(ids);
+        if(i<1){
+            logger.error("异常码[{}],异常提示[{}],参数,ids[{}]",
+                    ExceptionConstants.ACCOUNT_DELETE_FAILED_CODE,ExceptionConstants.ACCOUNT_DELETE_FAILED_MSG,ids);
+            throw new BusinessRunTimeException(ExceptionConstants.ACCOUNT_DELETE_FAILED_CODE,
+                    ExceptionConstants.ACCOUNT_DELETE_FAILED_MSG);
+        }
+        return result;
     }
 
 }

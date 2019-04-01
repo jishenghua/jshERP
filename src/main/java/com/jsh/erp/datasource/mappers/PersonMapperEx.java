@@ -4,6 +4,7 @@ import com.jsh.erp.datasource.entities.Person;
 import com.jsh.erp.datasource.entities.PersonExample;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 public interface PersonMapperEx {
@@ -17,4 +18,6 @@ public interface PersonMapperEx {
     Long countsByPerson(
             @Param("name") String name,
             @Param("type") String type);
+
+    int batchDeletePersonByIds(@Param("updateTime") Date updateTime, @Param("updater") Long updater, @Param("ids") String ids[]);
 }

@@ -2,10 +2,13 @@ package com.jsh.erp.service.userBusiness;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
+import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.entities.UserBusiness;
 import com.jsh.erp.datasource.entities.UserBusinessExample;
 import com.jsh.erp.datasource.mappers.UserBusinessMapper;
+import com.jsh.erp.datasource.mappers.UserBusinessMapperEx;
 import com.jsh.erp.service.log.LogService;
+import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +19,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -25,7 +29,11 @@ public class UserBusinessService {
     @Resource
     private UserBusinessMapper userBusinessMapper;
     @Resource
+    private UserBusinessMapperEx userBusinessMapperEx;
+    @Resource
     private LogService logService;
+    @Resource
+    private UserService userService;
 
     public UserBusiness getUserBusiness(long id) {
         return userBusinessMapper.selectByPrimaryKey(id);
@@ -126,5 +134,13 @@ public class UserBusinessService {
         List<UserBusiness> list = userBusinessMapper.selectByExample(example);
         return list;
     }
-
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int batchDeleteUserBusinessByIds(String ids) {
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_USER_BUSINESS,
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+        User userInfo=userService.getCurrentUser();
+        String [] idArray=ids.split(",");
+        return userBusinessMapperEx.batchDeleteUserBusinessByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+    }
 }

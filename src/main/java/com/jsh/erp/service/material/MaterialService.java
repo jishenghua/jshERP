@@ -2,13 +2,11 @@ package com.jsh.erp.service.material;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
-import com.jsh.erp.datasource.entities.DepotEx;
-import com.jsh.erp.datasource.entities.Material;
-import com.jsh.erp.datasource.entities.MaterialExample;
-import com.jsh.erp.datasource.entities.MaterialVo4Unit;
+import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.mappers.MaterialMapper;
 import com.jsh.erp.datasource.mappers.MaterialMapperEx;
 import com.jsh.erp.service.log.LogService;
+import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
@@ -20,10 +18,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class MaterialService {
@@ -35,6 +30,8 @@ public class MaterialService {
     private MaterialMapperEx materialMapperEx;
     @Resource
     private LogService logService;
+    @Resource
+    private UserService userService;
 
     public Material getMaterial(long id) {
         return materialMapper.selectByPrimaryKey(id);
@@ -120,7 +117,7 @@ public class MaterialService {
 
     public int checkIsNameExist(Long id, String name) {
         MaterialExample example = new MaterialExample();
-        example.createCriteria().andIdNotEqualTo(id).andNameEqualTo(name);
+        example.createCriteria().andIdNotEqualTo(id).andNameEqualTo(name).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<Material> list = materialMapper.selectByExample(example);
         return list.size();
     }
@@ -210,5 +207,14 @@ public class MaterialService {
 
     public List<Material> getMaterialEnableSerialNumberList(Map<String, Object> parameterMap) {
         return materialMapperEx.getMaterialEnableSerialNumberList(parameterMap);
+    }
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int batchDeleteMaterialByIds(String ids) {
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_MATERIAL,
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+        User userInfo=userService.getCurrentUser();
+        String [] idArray=ids.split(",");
+        return materialMapperEx.batchDeleteMaterialByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
     }
 }

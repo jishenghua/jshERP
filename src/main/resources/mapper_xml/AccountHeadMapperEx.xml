@@ -11,9 +11,9 @@
     <select id="selectByConditionAccountHead" parameterType="com.jsh.erp.datasource.entities.AccountHeadExample" resultMap="ResultMapEx">
         select ah.*, s.supplier OrganName, p.Name HandsPersonName, a.Name AccountName
         from jsh_accounthead ah
-        left join jsh_supplier s on ah.OrganId=s.id
-        left join jsh_person p on ah.HandsPersonId=p.id
-        left join jsh_account a on ah.AccountId=a.id
+        left join jsh_supplier s on ah.OrganId=s.id and ifnull(s.delete_Flag,'0') !='1'
+        left join jsh_person p on ah.HandsPersonId=p.id and ifnull(p.delete_Flag,'0') !='1'
+        left join jsh_account a on ah.AccountId=a.id and ifnull(a.delete_Flag,'0') !='1'
         where 1=1
         <if test="billNo != null">
             and ah.BillNo like '%${billNo}%'
@@ -27,6 +27,7 @@
         <if test="endTime != null">
             and ah.BillTime &lt;= '%${endTime}%'
         </if>
+        and ifnull(ah.delete_Flag,'0') !='1'
         order by ah.Id desc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
@@ -51,6 +52,7 @@
         <if test="endTime != null">
             and BillTime &lt;= '%${endTime}%'
         </if>
+        and ifnull(delete_Flag,'0') !='1'
     </select>
 
     <select id="getMaxId" resultType="java.lang.Long">
@@ -58,19 +60,32 @@
     </select>
 
     <select id="findAllMoney" resultType="java.math.BigDecimal">
-        select sum(${modeName}) as allMoney from jsh_accounthead where Type='${type}'
+        select sum(${modeName}) as allMoney from jsh_accounthead
+        where Type='${type}'
         and OrganId =${supplierId} and BillTime <![CDATA[ <='${endTime}']]>
+        and ifnull(delete_Flag,'0') !='1'
     </select>
 
     <select id="getDetailByNumber" parameterType="com.jsh.erp.datasource.entities.AccountHeadExample" resultMap="ResultMapEx">
         select ah.*, s.supplier OrganName, p.Name HandsPersonName, a.Name AccountName
         from jsh_accounthead ah
-        left join jsh_supplier s on ah.OrganId=s.id
-        left join jsh_person p on ah.HandsPersonId=p.id
-        left join jsh_account a on ah.AccountId=a.id
+        left join jsh_supplier s on ah.OrganId=s.id and ifnull(s.delete_Flag,'0') !='1'
+        left join jsh_person p on ah.HandsPersonId=p.id and ifnull(p.delete_Flag,'0') !='1'
+        left join jsh_account a on ah.AccountId=a.id and ifnull(a.delete_Flag,'0') !='1'
         where 1=1
         <if test="billNo != null">
             and ah.BillNo = '${billNo}'
         </if>
+        and ifnull(ah.delete_Flag,'0') !='1'
     </select>
+    <update id="batchDeleteAccountHeadByIds">
+        update jsh_accounthead
+        set delete_Flag='1'
+        where 1=1
+        and id in (
+        <foreach collection="ids" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
 </mapper>

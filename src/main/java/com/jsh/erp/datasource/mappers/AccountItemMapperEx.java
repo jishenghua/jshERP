@@ -5,6 +5,7 @@ import com.jsh.erp.datasource.entities.AccountItemExample;
 import com.jsh.erp.datasource.vo.AccountItemVo4List;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 public interface AccountItemMapperEx {
@@ -24,4 +25,5 @@ public interface AccountItemMapperEx {
     List<AccountItemVo4List> getDetailList(
             @Param("headerId") Long headerId);
 
+    int batchDeleteAccountItemByIds(@Param("updateTime") Date updateTime, @Param("updater") Long updater, @Param("ids") String ids[]);
 }

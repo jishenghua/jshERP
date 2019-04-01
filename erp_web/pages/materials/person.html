@@ -249,8 +249,11 @@
             if (r) {
                 $.ajax({
                     type: "post",
-                    url: "/person/" + personID + "/delete",
+                    url: "/person/batchDeletePersonByIds",
                     dataType: "json",
+                    data: ({
+                        ids: personID
+                    }),
                     success: function (res) {
                         if(res && res.code == 200) {
                             $("#searchBtn").click();
@@ -289,7 +292,7 @@
                     }
                     $.ajax({
                         type: "post",
-                        url: "/person/batchDelete",
+                        url: "/person/batchDeletePersonByIds",
                         dataType: "json",
                         async: false,
                         data: ({
