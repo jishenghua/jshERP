@@ -13,6 +13,7 @@ import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.entities.UserEx;
 import com.jsh.erp.datasource.vo.TreeNode;
 import com.jsh.erp.datasource.vo.TreeNodeEx;
+import com.jsh.erp.exception.BusinessParamCheckingException;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.service.userBusiness.UserBusinessService;
 import com.jsh.erp.utils.*;
@@ -117,9 +118,13 @@ public class UserController {
                         if(obj!=null && obj.getString("code").equals(CODE_OK)) {
                             JSONObject dataObj = obj.getJSONObject("data");
                             if(dataObj!=null) {
-                                String id = dataObj.getString("tenantId");
-                                if(id!=null) {
-                                    request.getSession().setAttribute("tenantId",id); //租户id
+                                String tenantId = dataObj.getString("tenantId");
+                                String userNumLimit = dataObj.getString("userNumLimit");
+                                String billsNumLimit = dataObj.getString("billsNumLimit");
+                                if(tenantId!=null) {
+                                    request.getSession().setAttribute("tenantId",tenantId); //租户tenantId
+                                    request.getSession().setAttribute("userNumLimit",userNumLimit); //用户限制数
+                                    request.getSession().setAttribute("billsNumLimit",billsNumLimit); //单据限制数
                                 }
                             }
                         }
@@ -176,6 +181,8 @@ public class UserController {
         try {
             request.getSession().removeAttribute("user");
             request.getSession().removeAttribute("tenantId");
+            request.getSession().removeAttribute("userNumLimit");
+            request.getSession().removeAttribute("billsNumLimit");
             request.getSession().removeAttribute("mybatisPlusStatus");
             response.sendRedirect("/login.html");
         } catch(Exception e){
@@ -310,10 +317,17 @@ public class UserController {
      */
     @PostMapping("/addUser")
     @ResponseBody
-    public Object addUser(@RequestParam("info") String beanJson)throws Exception{
+    public Object addUser(@RequestParam("info") String beanJson, HttpServletRequest request)throws Exception{
         JSONObject result = ExceptionConstants.standardSuccess();
-        UserEx ue= JSON.parseObject(beanJson, UserEx.class);
-        userService.addUserAndOrgUserRel(ue);
+        Long userNumLimit = Long.parseLong(request.getSession().getAttribute("userNumLimit").toString());
+        Long count = userService.countUser(null,null);
+        if(("open").equals(mybatisPlusStatus) && count>= userNumLimit) {
+            throw new BusinessParamCheckingException(ExceptionConstants.USER_OVER_LIMIT_FAILED_CODE,
+                    ExceptionConstants.USER_OVER_LIMIT_FAILED_MSG);
+        } else {
+            UserEx ue= JSON.parseObject(beanJson, UserEx.class);
+            userService.addUserAndOrgUserRel(ue);
+        }
         return result;
     }
 

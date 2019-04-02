@@ -8,6 +8,7 @@ import com.jsh.erp.datasource.vo.DepotHeadVo4InDetail;
 import com.jsh.erp.datasource.vo.DepotHeadVo4InOutMCount;
 import com.jsh.erp.datasource.vo.DepotHeadVo4List;
 import com.jsh.erp.datasource.vo.DepotHeadVo4StatementAccount;
+import com.jsh.erp.exception.BusinessParamCheckingException;
 import com.jsh.erp.service.depotHead.DepotHeadService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.utils.BaseResponseInfo;
@@ -15,6 +16,7 @@ import com.jsh.erp.utils.ErpInfo;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -37,9 +39,11 @@ import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 public class DepotHeadController {
     private Logger logger = LoggerFactory.getLogger(DepotHeadController.class);
 
+    @Value("${mybatis-plus.status}")
+    private String mybatisPlusStatus;
+
     @Resource
     private DepotHeadService depotHeadService;
-
 
     /**
      * 批量设置状态-审核或者反审核
@@ -432,8 +436,14 @@ public class DepotHeadController {
                           @RequestParam("deleted") String deleted,
                           @RequestParam("updated") String updated, HttpServletRequest request) throws  Exception{
         JSONObject result = ExceptionConstants.standardSuccess();
-        depotHeadService.addDepotHeadAndDetail(beanJson,inserted,deleted,updated);
-
+        Long billsNumLimit = Long.parseLong(request.getSession().getAttribute("billsNumLimit").toString());
+        Long count = depotHeadService.countDepotHead(null,null,null,null,null,null);
+        if(("open").equals(mybatisPlusStatus) && count>= billsNumLimit) {
+            throw new BusinessParamCheckingException(ExceptionConstants.DEPOT_HEAD_OVER_LIMIT_FAILED_CODE,
+                    ExceptionConstants.DEPOT_HEAD_OVER_LIMIT_FAILED_MSG);
+        } else {
+            depotHeadService.addDepotHeadAndDetail(beanJson,inserted,deleted,updated);
+        }
         return result;
     }
     /**

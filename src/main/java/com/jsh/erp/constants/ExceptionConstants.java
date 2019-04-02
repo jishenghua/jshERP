@@ -42,6 +42,10 @@ public class ExceptionConstants {
     //登录名已存在
     public static final int USER_LOGIN_NAME_ALREADY_EXISTS_CODE = 500003;
     public static final String USER_LOGIN_NAME_ALREADY_EXISTS_MSG = "登录名已存在";
+    //用户录入数量超出限制
+    public static final int USER_OVER_LIMIT_FAILED_CODE = 500004;
+    public static final String USER_OVER_LIMIT_FAILED_MSG = "用户录入数量超出限制，请联系管理员续费";
+
     /**
      * 角色信息
      * type = 10
@@ -262,6 +266,9 @@ public class ExceptionConstants {
     //修改单据信息失败
     public static final int DEPOT_HEAD_EDIT_FAILED_CODE = 8500002;
     public static final String DEPOT_HEAD_EDIT_FAILED_MSG = "修改单据信息失败";
+    //单据录入数量超出限制
+    public static final int DEPOT_HEAD_OVER_LIMIT_FAILED_CODE = 8500003;
+    public static final String DEPOT_HEAD_OVER_LIMIT_FAILED_MSG = "单据录入数量超出限制，请联系管理员续费";
     /**
      *  单据明细信息
      * type = 90
@@ -354,7 +361,6 @@ public class ExceptionConstants {
     public static final String ORGA_USER_REL_EDIT_FAILED_MSG = "修改机构用户关联关系失败";
 
 
-
     /**
      * 标准正常返回/操作成功返回
      * @return
@@ -363,6 +369,13 @@ public class ExceptionConstants {
         JSONObject success = new JSONObject();
         success.put(GLOBAL_RETURNS_CODE, SERVICE_SUCCESS_CODE);
         success.put(GLOBAL_RETURNS_MESSAGE, SERVICE_SUCCESS_MSG);
+        return success;
+    }
+
+    public static JSONObject standardErrorUserOver () {
+        JSONObject success = new JSONObject();
+        success.put(GLOBAL_RETURNS_CODE, USER_OVER_LIMIT_FAILED_CODE);
+        success.put(GLOBAL_RETURNS_MESSAGE, USER_OVER_LIMIT_FAILED_MSG);
         return success;
     }
 }
