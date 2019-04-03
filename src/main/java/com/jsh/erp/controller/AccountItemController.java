@@ -108,7 +108,7 @@ public class AccountItemController {
     }
     /**
      * create by: qiankunpingtai
-     * website：http://39.105.146.63/symphony/
+     * website：https://qiankunpingtai.cn
      * description:
      *  批量删除财务明细信息
      * create time: 2019/3/29 10:56

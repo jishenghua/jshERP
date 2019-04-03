@@ -93,7 +93,7 @@ public class UserBusinessController {
     }
     /**
      * create by: qiankunpingtai
-     * website：http://39.105.146.63/symphony/
+     * website：https://qiankunpingtai.cn
      * description:
      *  批量删除用户角色模块关系信息
      * create time: 2019/3/28 15:47
