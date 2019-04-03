@@ -436,11 +436,15 @@ public class DepotHeadController {
                           @RequestParam("deleted") String deleted,
                           @RequestParam("updated") String updated, HttpServletRequest request) throws  Exception{
         JSONObject result = ExceptionConstants.standardSuccess();
-        Long billsNumLimit = Long.parseLong(request.getSession().getAttribute("billsNumLimit").toString());
-        Long count = depotHeadService.countDepotHead(null,null,null,null,null,null);
-        if(("open").equals(mybatisPlusStatus) && count>= billsNumLimit) {
-            throw new BusinessParamCheckingException(ExceptionConstants.DEPOT_HEAD_OVER_LIMIT_FAILED_CODE,
-                    ExceptionConstants.DEPOT_HEAD_OVER_LIMIT_FAILED_MSG);
+        if(("open").equals(mybatisPlusStatus)) {
+            Long billsNumLimit = Long.parseLong(request.getSession().getAttribute("billsNumLimit").toString());
+            Long count = depotHeadService.countDepotHead(null,null,null,null,null,null);
+            if(count>= billsNumLimit) {
+                throw new BusinessParamCheckingException(ExceptionConstants.DEPOT_HEAD_OVER_LIMIT_FAILED_CODE,
+                        ExceptionConstants.DEPOT_HEAD_OVER_LIMIT_FAILED_MSG);
+            } else {
+                depotHeadService.addDepotHeadAndDetail(beanJson,inserted,deleted,updated);
+            }
         } else {
             depotHeadService.addDepotHeadAndDetail(beanJson,inserted,deleted,updated);
         }

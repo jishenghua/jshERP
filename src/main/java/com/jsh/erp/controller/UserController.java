@@ -323,11 +323,16 @@ public class UserController {
     @ResponseBody
     public Object addUser(@RequestParam("info") String beanJson, HttpServletRequest request)throws Exception{
         JSONObject result = ExceptionConstants.standardSuccess();
-        Long userNumLimit = Long.parseLong(request.getSession().getAttribute("userNumLimit").toString());
-        Long count = userService.countUser(null,null);
-        if(("open").equals(mybatisPlusStatus) && count>= userNumLimit) {
-            throw new BusinessParamCheckingException(ExceptionConstants.USER_OVER_LIMIT_FAILED_CODE,
-                    ExceptionConstants.USER_OVER_LIMIT_FAILED_MSG);
+        if(("open").equals(mybatisPlusStatus)) {
+            Long userNumLimit = Long.parseLong(request.getSession().getAttribute("userNumLimit").toString());
+            Long count = userService.countUser(null,null);
+            if(count>= userNumLimit) {
+                throw new BusinessParamCheckingException(ExceptionConstants.USER_OVER_LIMIT_FAILED_CODE,
+                        ExceptionConstants.USER_OVER_LIMIT_FAILED_MSG);
+            } else {
+                UserEx ue= JSON.parseObject(beanJson, UserEx.class);
+                userService.addUserAndOrgUserRel(ue);
+            }
         } else {
             UserEx ue= JSON.parseObject(beanJson, UserEx.class);
             userService.addUserAndOrgUserRel(ue);
