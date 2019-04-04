@@ -109,7 +109,7 @@ public class SerialNumberController {
     }
     /**
      * create by: qiankunpingtai
-     * website：http://39.105.146.63/symphony/
+     * website：https://qiankunpingtai.cn
      * description:
      *  逻辑删除序列号信息
      * create time: 2019/3/27 17:43

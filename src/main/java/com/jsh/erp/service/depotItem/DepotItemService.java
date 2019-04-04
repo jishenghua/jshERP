@@ -479,7 +479,7 @@ public class DepotItemService {
                     /**
                      * create by: qiankunpingtai
                      * create time: 2019/3/25 15:18
-                     * website：http://39.105.146.63/symphony/
+                     * website：https://qiankunpingtai.cn
                      * description:
                      * 修改了商品类型时，库中的商品和页面传递的不同
                      * 这里需要重新获取页面传递的商品信息
