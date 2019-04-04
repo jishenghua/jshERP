@@ -83,6 +83,7 @@ public class RoleService {
     public List<Role> findUserRole(){
         RoleExample example = new RoleExample();
         example.setOrderByClause("Id");
+        example.createCriteria().andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<Role> list = roleMapper.selectByExample(example);
         return list;
     }
