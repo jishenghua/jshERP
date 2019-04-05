@@ -182,8 +182,8 @@
                             + 'AaBb' + rec.orgAbr + 'AaBb' + rec.email + 'AaBb' + rec.phonenum + 'AaBb' + rec.ismanager
                             + 'AaBb' + rec.isystem + 'AaBb' + rec.description+'AaBb'+rec.orgaId+'AaBb'+rec.orgaUserRelId
                             +'AaBb' + rec.userBlngOrgaDsplSeq ;
-                        if (0 == value) {
-                            str += '<img src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editUser(\'' + rowInfo + '\');"/>&nbsp;<a onclick="editUser(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
+                        str += '<img src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editUser(\'' + rowInfo + '\');"/>&nbsp;<a onclick="editUser(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
+                        if (rec.id != rec.tenantId) {
                             str += '<img src="/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteUser(' + rec.id + ');"/>&nbsp;<a onclick="deleteUser(' + rec.id + ');" style="text-decoration:none;color:black;" href="javascript:void(0)">删除</a>&nbsp;&nbsp;';
                         }
                         else {
@@ -311,6 +311,9 @@
                     }
                     if(row[i].loginame == "jsh"){
                         $.messager.alert('提示', '管理员jsh不能删除！', 'warning');
+                        return;
+                    } else if(row[i].id == row[i].tenantId) {
+                        $.messager.alert('提示', '不能删除自己！', 'warning');
                         return;
                     } else {
                         $.ajax({
@@ -523,6 +526,10 @@
         var currentRow = $("#tableData").datagrid("getSelected");
         if (currentRow == null) {
             $.messager.alert('提示',"请选择一条数据再操作！",'warning');
+            return false;
+        }
+        if (currentRow.id == currentRow.tenantId) {
+            $.messager.alert('提示',"不能给自己配置角色！",'warning');
             return false;
         }
         this.href = "/pages/user/userRole.html?id=" + currentRow.id;

@@ -37,7 +37,7 @@
     </select>
     <select id="getUserList" parameterType="java.util.Map" resultMap="ResultMapEx">
         select user.id, user.username, user.loginame, user.position, user.email, user.phonenum,
-         user.description, user.remark,user.isystem,org.id as orgaId,org.org_abr,rel.user_blng_orga_dspl_seq,
+         user.description, user.remark,user.isystem,org.id as orgaId,user.tenant_id,org.org_abr,rel.user_blng_orga_dspl_seq,
         rel.id as orgaUserRelId
         FROM jsh_user user
         left join jsh_orga_user_rel rel on user.id=rel.user_id and ifnull(rel.delete_flag,'0') !='1'
