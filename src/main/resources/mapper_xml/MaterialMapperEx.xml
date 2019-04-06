@@ -52,7 +52,7 @@
     </select>
 
     <select id="findUnitName" resultType="java.lang.String">
-        select jsh_unit.UName  from jsh_unit u
+        select u.UName  from jsh_unit u
         left join jsh_material m on m.UnitId=u.id and ifnull(m.delete_Flag,'0') !='1'
         where m.id = ${mId}
         and ifnull(u.delete_Flag,'0') !='1'
