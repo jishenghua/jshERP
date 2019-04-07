@@ -296,6 +296,29 @@
         and ifnull(di.delete_Flag,'0') !='1'
     </select>
 
+    <select id="findAssembleIsPrev" resultType="java.math.BigDecimal">
+        select sum(BasicNumber) as BasicNumber from jsh_depotitem di,jsh_depothead dh
+        where di.HeaderId = dh.id
+        and dh.SubType= '${subType}'
+        and di.MType= '${mType}'
+        and di.MaterialId = ${MId}
+        and dh.OperTime &lt; '${MonthTime}-01 00:00:00'
+        and ifnull(dh.delete_Flag,'0') !='1'
+        and ifnull(di.delete_Flag,'0') !='1'
+    </select>
+
+    <select id="findAssembleIsNotPrev" resultType="java.math.BigDecimal">
+        select sum(BasicNumber) as BasicNumber from jsh_depotitem di,jsh_depothead dh
+        where di.HeaderId = dh.id
+        and dh.SubType= '${subType}'
+        and di.MType= '${mType}'
+        and di.MaterialId = ${MId}
+        and dh.OperTime &gt;= '${MonthTime}-01 00:00:00'
+        and dh.OperTime &lt;= '${MonthTime}-31 23:59:59'
+        and ifnull(dh.delete_Flag,'0') !='1'
+        and ifnull(di.delete_Flag,'0') !='1'
+    </select>
+
     <select id="buyOrSaleNumber" resultType="java.math.BigDecimal">
         select sum(BasicNumber) as BasicNumber from jsh_depotitem di,jsh_depothead dh
         where di.HeaderId = dh.id

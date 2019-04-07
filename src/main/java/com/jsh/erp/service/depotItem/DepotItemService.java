@@ -214,6 +214,14 @@ public class DepotItemService {
         }
     }
 
+    public BigDecimal findAssembleByType(String subType, String mType, Integer ProjectId, Long MId, String MonthTime, Boolean isPrev) {
+        if (isPrev) {
+            return depotItemMapperEx.findAssembleIsPrev(subType, mType, ProjectId, MId, MonthTime);
+        } else {
+            return depotItemMapperEx.findAssembleIsNotPrev(subType, mType, ProjectId, MId, MonthTime);
+        }
+    }
+
     public BigDecimal buyOrSale(String type, String subType, Long MId, String MonthTime, String sumType) {
         if (SUM_TYPE.equals(sumType)) {
             return depotItemMapperEx.buyOrSaleNumber(type, subType, MId, MonthTime, sumType);

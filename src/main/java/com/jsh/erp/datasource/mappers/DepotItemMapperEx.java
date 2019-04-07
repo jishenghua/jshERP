@@ -109,6 +109,20 @@ public interface DepotItemMapperEx {
             @Param("MId") Long MId,
             @Param("MonthTime") String MonthTime);
 
+    BigDecimal findAssembleIsPrev(
+            @Param("subType") String subType,
+            @Param("mType") String mType,
+            @Param("ProjectId") Integer ProjectId,
+            @Param("MId") Long MId,
+            @Param("MonthTime") String MonthTime);
+
+    BigDecimal findAssembleIsNotPrev(
+            @Param("subType") String subType,
+            @Param("mType") String mType,
+            @Param("ProjectId") Integer ProjectId,
+            @Param("MId") Long MId,
+            @Param("MonthTime") String MonthTime);
+
     BigDecimal buyOrSaleNumber(
             @Param("type") String type,
             @Param("subType") String subType,

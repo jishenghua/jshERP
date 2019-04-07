@@ -162,10 +162,19 @@ public class DepotItemController {
                 BigDecimal prevSum = sumNumber("入库", pid, materialId, monthTime, true).subtract(sumNumber("出库", pid, materialId, monthTime, true));
                 BigDecimal InSum = sumNumber("入库", pid, materialId, monthTime, false);
                 BigDecimal OutSum = sumNumber("出库", pid, materialId, monthTime, false);
+                // +组装(组合件)-组装(普通子件)+拆卸(普通子件)-拆卸(组合件)
+                BigDecimal prevAssembleSum = assembleNumber("组装单","组合件", pid, materialId, monthTime, true)
+                                            .subtract(assembleNumber("组装单","普通子件", pid, materialId, monthTime, true))
+                                            .add(assembleNumber("拆卸单","普通子件", pid, materialId, monthTime, true))
+                                            .subtract(assembleNumber("拆卸单","组合件", pid, materialId, monthTime, true));
+                BigDecimal notPrevAssembleSum = assembleNumber("组装单","组合件", pid, materialId, monthTime, false)
+                                            .subtract(assembleNumber("组装单","普通子件", pid, materialId, monthTime, false))
+                                            .add(assembleNumber("拆卸单","普通子件", pid, materialId, monthTime, false))
+                                            .subtract(assembleNumber("拆卸单","组合件", pid, materialId, monthTime, false));
                 item.put("MaterialId", di.getMaterialid() == null ? "" : di.getMaterialid());
                 item.put("MaterialName", di.getMname());
                 item.put("MaterialModel", di.getMmodel());
-                item.put("thisSum", prevSum.add(InSum).subtract(OutSum));
+                item.put("thisSum", prevSum.add(InSum).subtract(OutSum).add(prevAssembleSum).add(notPrevAssembleSum));
                 dataArray.add(item);
             }
         }
@@ -733,6 +742,19 @@ public class DepotItemController {
             e.printStackTrace();
         }
         return sumNumber;
+    }
+
+    public BigDecimal assembleNumber(String subType, String mType, Integer ProjectId, Long MId, String MonthTime, Boolean isPrev) {
+        BigDecimal assembleNumber = BigDecimal.ZERO;
+        try {
+            BigDecimal sum = depotItemService.findAssembleByType(subType, mType, ProjectId, MId, MonthTime, isPrev);
+            if(sum != null) {
+                assembleNumber = sum;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return assembleNumber;
     }
 
     /**

@@ -155,7 +155,7 @@
 			listSubType = "拆卸单";
 			payTypeTitle = "隐藏";
 			organUrl = supUrl;
-			amountNum = "CSD";
+			amountNum = "CXD";
 		}
 	}
 	//初始化系统基础信息
