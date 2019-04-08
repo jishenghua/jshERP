@@ -67,7 +67,7 @@ public class UserBusinessService {
         UserBusiness userBusiness = JSONObject.parseObject(beanJson, UserBusiness.class);
         int inserts = userBusinessMapper.insertSelective(userBusiness);
         // 更新应用权限
-        if (inserts > 0) {
+        if (("RoleFunctions").equals(userBusiness.getType()) && inserts > 0) {
             inserts = insertOrUpdateAppValue(BusinessConstants.TYPE_NAME_ROLE_APP, userBusiness.getKeyid(), userBusiness.getValue());
         }
         return inserts;
@@ -79,7 +79,7 @@ public class UserBusinessService {
         userBusiness.setId(id);
         int updates = userBusinessMapper.updateByPrimaryKeySelective(userBusiness);
         // 更新应用权限
-        if (updates > 0) {
+        if (("RoleFunctions").equals(userBusiness.getType()) && updates > 0) {
             updates = insertOrUpdateAppValue(BusinessConstants.TYPE_NAME_ROLE_APP, userBusiness.getKeyid(), userBusiness.getValue());
         }
         return updates;
