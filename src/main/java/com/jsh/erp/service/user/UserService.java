@@ -1,6 +1,7 @@
 package com.jsh.erp.service.user;
 
 import com.alibaba.druid.util.StringUtils;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
@@ -15,6 +16,7 @@ import com.jsh.erp.datasource.vo.TreeNodeEx;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.orgaUserRel.OrgaUserRelService;
+import com.jsh.erp.service.userBusiness.UserBusinessService;
 import com.jsh.erp.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +44,12 @@ public class UserService {
     private OrgaUserRelService orgaUserRelService;
     @Resource
     private LogService logService;
+    @Resource
+    private UserService userService;
+
+    @Resource
+    private UserBusinessService userBusinessService;
+
 
     public User getUser(long id) {
         return userMapper.selectByPrimaryKey(id);
@@ -272,7 +280,14 @@ public class UserService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public UserEx registerUser(UserEx ue) throws Exception{
+    public UserEx registerUser(UserEx ue, Integer manageRoleId) throws Exception{
+        /**
+         * create by: qiankunpingtai
+         * create time: 2019/4/9 18:00
+         * website：https://qiankunpingtai.cn
+         * description:
+         * 多次创建事务，事物之间无法协同，应该在入口处创建一个事务以做协调
+         */
         ue.setPassword(Tools.md5Encryp(ue.getPassword()));
         ue.setIsystem(BusinessConstants.USER_NOT_SYSTEM);
         if(ue.getIsmanager()==null){
@@ -280,6 +295,19 @@ public class UserService {
         }
         ue.setStatus(BusinessConstants.USER_STATUS_NORMAL);
         int i=userMapperEx.addUser(ue);
+        //更新租户id
+        User user = new User();
+        user.setId(ue.getId());
+        user.setTenantId(ue.getId());
+        userService.updateUserTenant(user);
+        //新增用户与角色的关系
+        JSONObject ubObj = new JSONObject();
+        ubObj.put("type", "UserRole");
+        ubObj.put("keyid", ue.getId());
+        JSONArray ubArr = new JSONArray();
+        ubArr.add(manageRoleId);
+        ubObj.put("value", ubArr.toString());
+        userBusinessService.insertUserBusiness(ubObj.toString(), ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         if(i>0){
             return ue;
         }
