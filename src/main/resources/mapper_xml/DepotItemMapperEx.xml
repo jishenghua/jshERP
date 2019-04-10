@@ -411,6 +411,18 @@
         </foreach>
         )
     </update>
+    <select id="getDepotItemListListByDepotIds" resultMap="com.jsh.erp.datasource.mappers.DepotItemMapper.BaseResultMap">
+        select
+        <include refid="com.jsh.erp.datasource.mappers.DepotItemMapper.Base_Column_List" />
+        from jsh_depotitem
+        where 1=1
+        and DepotId in (
+        <foreach collection="depotIds" item="depotId" separator=",">
+            #{depotId}
+        </foreach>
+        )
+        and ifnull(delete_Flag,'0') !='1'
+    </select>
 
 
 

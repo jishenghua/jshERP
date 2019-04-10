@@ -121,4 +121,6 @@ public interface DepotHeadMapperEx {
     List<DepotHead> getDepotHeadListByOrganIds(@Param("organIds") String[] organIds);
 
     List<DepotHead> getDepotHeadListByHandsPersonIds(@Param("handsPersonIds") String[] handsPersonIds);
+
+    List<DepotHead> getDepotHeadListByDepotIds(@Param("depotIds") String[] depotIds);
 }

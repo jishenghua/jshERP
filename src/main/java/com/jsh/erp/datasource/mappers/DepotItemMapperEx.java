@@ -168,4 +168,6 @@ public interface DepotItemMapperEx {
      int batchDeleteDepotItemByDepotHeadIds(@Param("depotheadIds")Long []depotHeadIds);
 
     int batchDeleteDepotItemByIds(@Param("updateTime") Date updateTime, @Param("updater") Long updater, @Param("ids") String ids[]);
+
+    List<DepotItem> getDepotItemListListByDepotIds(@Param("depotIds") String[] depotIds);
 }
