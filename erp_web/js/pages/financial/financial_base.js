@@ -495,7 +495,19 @@
                         if(res && res.code == 200) {
                             $("#searchBtn").click();
                         } else {
-                            $.messager.alert('删除提示', '删除财务信息失败，请稍后再试！', 'error');
+                            if(res && res.code == 601){
+                                var jsondata={};
+                                jsondata.ids=accountHeadID;
+                                jsondata.deleteType='2';
+                                var type='single';
+                                batDeleteAccountHeadForceConfirm(res,"/accountHead/batchDeleteAccountHeadByIds",jsondata,type);
+                            }else if(res && res.code == 600){
+                                $.messager.alert('删除提示', res.msg, 'error');
+                                return;
+                            }else{
+                                $.messager.alert('删除提示', '删除信息失败，请稍后再试！', 'error');
+                                return;
+                            }
                         }
                     },
 					//此处添加错误处理
@@ -553,29 +565,7 @@
                     	}
                     	ids += row[i].id + ",";
                     }
-                    //批量更新会员的预收款信息
-					for(var i = 0;i < row.length; i ++) {
-						if(listType === "收预付款"){
-							$.ajax({
-								type:"post",
-								url: "/supplier/updateAdvanceIn",
-								dataType: "json",
-								data:{
-                                    supplierId: row[i].organid, //会员id
-                                    advanceIn: 0 - row[i].totalprice  //删除时同时删除用户的预付款信息
-								},
-								success: function(res){
-                                    if(res && res.code === 200) {
-										//保存会员预收款成功
-									}
-								},
-								error: function(){
-									$.messager.alert('提示','保存信息异常，请稍后再试！','error');
-									return;
-								}
-							});
-						}
-					}
+
 					//批量删除
                     $.ajax({
 						type:"post",
@@ -590,15 +580,19 @@
                                 $("#searchBtn").click();
                                 $(":checkbox").attr("checked", false);
                             } else {
-                                $.messager.alert('删除提示', '删除财务信息失败，请稍后再试！', 'error');
-                            }
-                        },
-                        success: function (res) {
-                            if(res && res.code === 200) {
-                                $("#searchBtn").click();
-                                $(":checkbox").attr("checked", false);
-                            } else {
-                                $.messager.alert('删除提示', '删除财务信息失败，请稍后再试！', 'error');
+                                if(res && res.code == 601){
+                                    var jsondata={};
+                                    jsondata.ids=ids;
+                                    jsondata.deleteType='2';
+                                    var type='batch';
+                                    batDeleteAccountHeadForceConfirm(res,"/accountHead/batchDeleteAccountHeadByIds",jsondata,type);
+                                }else if(res && res.code == 600){
+                                    $.messager.alert('删除提示', res.msg, 'error');
+                                    return;
+                                }else{
+                                    $.messager.alert('删除提示', '删除信息失败，请稍后再试！', 'error');
+                                    return;
+                                }
                             }
                         },
 						//此处添加错误处理
@@ -606,13 +600,71 @@
 			    			$.messager.alert('删除提示','删除财务信息异常，请稍后再试！','error');
 							return;
 						}
-					});	
+					});
+                    //批量更新会员的预收款信息
+                    for(var i = 0;i < row.length; i ++) {
+                        if(listType === "收预付款"){
+                            $.ajax({
+                                type:"post",
+                                url: "/supplier/updateAdvanceIn",
+                                dataType: "json",
+                                data:{
+                                    supplierId: row[i].organid, //会员id
+                                    advanceIn: 0 - row[i].totalprice  //删除时同时删除用户的预付款信息
+                                },
+                                success: function(res){
+                                    if(res && res.code === 200) {
+                                        //保存会员预收款成功
+                                    }
+                                },
+                                error: function(){
+                                    $.messager.alert('提示','保存信息异常，请稍后再试！','error');
+                                    return;
+                                }
+                            });
+                        }
+                    }
                 }
             });
 		 }
 	}
+    /**
+     * 确认强制删除
+     * */
+    function batDeleteAccountHeadForceConfirm(res,url,jsondata) {
+        $.messager.confirm('删除确认', res.msg, function (r) {
+            if (r) {
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    dataType: "json",
+                    data: (jsondata),
+                    success: function (res) {
+                        if(res && res.code == 200) {
+                            $("#searchBtn").click();
+                            if(type=='batch'){
+                                $(":checkbox").attr("checked", false);
+                            }
+                        }else if(res && res.code == 600){
+                            $.messager.alert('删除提示', res.msg, 'error');
+                            return;
+                        }else {
+                            $.messager.alert('删除提示','删除财务信息异常，请稍后再试！','error');
+                            return;
+                        }
+                    },
+                    //此处添加错误处理
+                    error: function () {
+                        $.messager.alert('删除提示','删除财务信息异常，请稍后再试！','error');
+                        return;
+                    }
+                });
+            }
+        });
+    }
 
-	//增加
+
+    //增加
 	function addAccountHead(){
 		$('#accountHeadFM').form('clear');
 		var thisDateTime = getNowFormatDateTime(); //当前时间

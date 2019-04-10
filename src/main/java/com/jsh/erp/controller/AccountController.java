@@ -1,7 +1,9 @@
 package com.jsh.erp.controller;
 
+import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.Account;
 import com.jsh.erp.datasource.vo.AccountVo4InOutList;
@@ -150,10 +152,28 @@ public class AccountController {
      * @return java.lang.Object
      */
     @RequestMapping(value = "/batchDeleteAccountByIds")
-    public Object batchDeleteAccountByIds(@RequestParam("ids") String ids) throws Exception {
+    public Object batchDeleteAccountByIds(@RequestParam("ids") String ids,@RequestParam(value="deleteType",
+            required =false,defaultValue=BusinessConstants.DELETE_TYPE_NORMAL)String deleteType) throws Exception {
 
         JSONObject result = ExceptionConstants.standardSuccess();
-        int i= accountService.batchDeleteAccountByIds(ids);
+        /**
+         * create by: qiankunpingtai
+         * create time: 2019/4/10 10:19
+         * website：https://qiankunpingtai.cn
+         * description:
+         *  出于兼容性考虑，没有传递删除类型时，默认为正常删除
+         */
+        int i=0;
+        if(BusinessConstants.DELETE_TYPE_NORMAL.equals(deleteType)){
+             i= accountService.batchDeleteAccountByIdsNormal(ids);
+        }else if(BusinessConstants.DELETE_TYPE_FORCE.equals(deleteType)){
+             i= accountService.batchDeleteAccountByIds(ids);
+        }else{
+            logger.error("异常码[{}],异常提示[{}],参数,ids[{}],deleteType[{}]",
+                    ExceptionConstants.DELETE_REFUSED_CODE,ExceptionConstants.DELETE_REFUSED_MSG,ids,deleteType);
+            throw new BusinessRunTimeException(ExceptionConstants.DELETE_REFUSED_CODE,
+                    ExceptionConstants.DELETE_REFUSED_MSG);
+        }
         if(i<1){
             logger.error("异常码[{}],异常提示[{}],参数,ids[{}]",
                     ExceptionConstants.ACCOUNT_DELETE_FAILED_CODE,ExceptionConstants.ACCOUNT_DELETE_FAILED_MSG,ids);

@@ -7,15 +7,11 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
-import com.jsh.erp.datasource.entities.DepotEx;
-import com.jsh.erp.datasource.entities.SerialNumberEx;
 import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.entities.UserEx;
-import com.jsh.erp.datasource.vo.TreeNode;
 import com.jsh.erp.datasource.vo.TreeNodeEx;
 import com.jsh.erp.exception.BusinessParamCheckingException;
 import com.jsh.erp.service.user.UserService;
-import com.jsh.erp.service.userBusiness.UserBusinessService;
 import com.jsh.erp.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,11 +21,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
 import java.net.URLEncoder;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 
@@ -39,7 +35,7 @@ import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 @RestController
 @RequestMapping(value = "/user")
 public class UserController {
-    private Logger logger = LoggerFactory.getLogger(ResourceController.class);
+    private Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Value("${mybatis-plus.status}")
     private String mybatisPlusStatus;
@@ -55,9 +51,6 @@ public class UserController {
 
     @Resource
     private UserService userService;
-
-    @Resource
-    private UserBusinessService userBusinessService;
 
     private static String message = "成功";
     private static final String HTTP = "http://";
@@ -357,31 +350,33 @@ public class UserController {
         ue.setUsername(loginame);
         ue.setLoginame(loginame);
         ue.setPassword(password);
-        ue = userService.registerUser(ue);
+        ue = userService.registerUser(ue,manageRoleId);
+        /**
+         * create by: qiankunpingtai
+         * create time: 2019/4/9 17:17
+         * website：https://qiankunpingtai.cn
+         * description:
+         * 这里涉及到多个项目，需要用分布式事务去处理
+         * 为了不使问题复杂化，暂时另外开启一个线程去处理其它项目的数据操作
+         */
+        final UserEx ueFinal=ue;
+        final ExecutorService executorService = Executors.newFixedThreadPool(1);
+        executorService.execute(() -> {
+                    try{
+                        //调第三方接口创建租户管理信息
+                        String url = HTTP + manageIp + ":" + managePort + "/tenant/add";
+                        JSONObject tenantObj = new JSONObject();
+                        tenantObj.put("tenantId", ueFinal.getId());
+                        tenantObj.put("loginName",ueFinal.getLoginame());
+                        String param = URLEncoder.encode(tenantObj.toString());
+                        HttpClient.httpPost(url + "?info=" + param, param);
+                        logger.info("===============创建租户信息完成===============");
+                    }catch(Exception e){
+                        //记录一下第三方接口创建租户管理信息创建失败
+                        logger.debug("调用第三方接口创建租户管理信息失败：tenantId：[{}],loginName:[{}]",ueFinal.getId(),ueFinal.getLoginame());
+                    }
+                });
 
-        //调第三方接口创建租户管理信息
-        String url = HTTP + manageIp + ":" + managePort + "/tenant/add";
-        JSONObject tenantObj = new JSONObject();
-        tenantObj.put("tenantId", ue.getId());
-        tenantObj.put("loginName",ue.getLoginame());
-        String param = URLEncoder.encode(tenantObj.toString());
-        HttpClient.httpPost(url + "?info=" + param, param);
-        logger.info("===============创建租户信息完成===============");
-
-        //更新租户id
-        User user = new User();
-        user.setId(ue.getId());
-        user.setTenantId(ue.getId());
-        userService.updateUserTenant(user);
-
-        //新增用户与角色的关系
-        JSONObject ubObj = new JSONObject();
-        ubObj.put("type", "UserRole");
-        ubObj.put("keyid", ue.getId());
-        JSONArray ubArr = new JSONArray();
-        ubArr.add(manageRoleId);
-        ubObj.put("value", ubArr.toString());
-        userBusinessService.insertUserBusiness(ubObj.toString(), request);
         return result;
     }
     /**

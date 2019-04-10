@@ -200,6 +200,14 @@ public class BusinessConstants {
     public static final String TYPE_NAME_ROLE_APP = "RoleAPP";
     public static final String TYPE_NAME_ROLE_FUNCTIONS = "RoleFunctions";
 
+    /**
+     * 删除类型
+     * 1正常删除
+     * 2强制删除
+     * */
+    public static final String DELETE_TYPE_NORMAL = "1";
+    public static final String DELETE_TYPE_FORCE = "2";
+
 
 
 

@@ -1,12 +1,15 @@
 package com.jsh.erp.service.person;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.jsh.erp.constants.BusinessConstants;
-import com.jsh.erp.datasource.entities.Person;
-import com.jsh.erp.datasource.entities.PersonExample;
-import com.jsh.erp.datasource.entities.User;
+import com.jsh.erp.constants.ExceptionConstants;
+import com.jsh.erp.datasource.entities.*;
+import com.jsh.erp.datasource.mappers.AccountHeadMapperEx;
+import com.jsh.erp.datasource.mappers.DepotHeadMapperEx;
 import com.jsh.erp.datasource.mappers.PersonMapper;
 import com.jsh.erp.datasource.mappers.PersonMapperEx;
+import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
@@ -35,6 +38,10 @@ public class PersonService {
     private UserService userService;
     @Resource
     private LogService logService;
+    @Resource
+    private AccountHeadMapperEx accountHeadMapperEx;
+    @Resource
+    private DepotHeadMapperEx depotHeadMapperEx;
 
     public Person getPerson(long id) {
         return personMapper.selectByPrimaryKey(id);
@@ -116,5 +123,53 @@ public class PersonService {
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");
         return personMapperEx.batchDeletePersonByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+    }
+    /**
+     * create by: qiankunpingtai
+     * website：https://qiankunpingtai.cn
+     * description:
+     *  正常删除，要考虑数据完整性，进行完整性校验
+     * create time: 2019/4/10 15:14
+     * @Param: ids
+     * @return int
+     */
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int batchDeletePersonByIdsNormal(String ids) throws Exception {
+        /**
+         * 校验
+         * 1、财务主表	jsh_accounthead
+         * 2、单据主表	jsh_depothead
+         * 是否有相关数据
+         * */
+        int deleteTotal=0;
+        if(StringUtils.isEmpty(ids)){
+            return deleteTotal;
+        }
+        String [] idArray=ids.split(",");
+        /**
+         * 校验财务主表	jsh_accounthead
+         * */
+        List<AccountHead> accountHeadList=accountHeadMapperEx.getAccountHeadListByHandsPersonIds(idArray);
+        if(accountHeadList!=null&&accountHeadList.size()>0){
+            logger.error("异常码[{}],异常提示[{}],参数,HandsPersonIds[{}]",
+                    ExceptionConstants.DELETE_FORCE_CONFIRM_CODE,ExceptionConstants.DELETE_FORCE_CONFIRM_MSG,ids);
+            throw new BusinessRunTimeException(ExceptionConstants.DELETE_FORCE_CONFIRM_CODE,
+                    ExceptionConstants.DELETE_FORCE_CONFIRM_MSG);
+        }
+        /**
+         * 校验单据主表	jsh_depothead
+         * */
+        List<DepotHead> depotHeadList=depotHeadMapperEx.getDepotHeadListByHandsPersonIds(idArray);
+        if(depotHeadList!=null&&depotHeadList.size()>0){
+            logger.error("异常码[{}],异常提示[{}],参数,HandsPersonIds[{}]",
+                    ExceptionConstants.DELETE_FORCE_CONFIRM_CODE,ExceptionConstants.DELETE_FORCE_CONFIRM_MSG,ids);
+            throw new BusinessRunTimeException(ExceptionConstants.DELETE_FORCE_CONFIRM_CODE,
+                    ExceptionConstants.DELETE_FORCE_CONFIRM_MSG);
+        }
+        /**
+         * 校验通过执行删除操作
+         * */
+        deleteTotal= batchDeletePersonByIds(ids);
+        return deleteTotal;
     }
 }

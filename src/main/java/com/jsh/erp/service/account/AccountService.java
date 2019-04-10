@@ -1,11 +1,14 @@
 package com.jsh.erp.service.account;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.jsh.erp.constants.BusinessConstants;
+import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.mappers.*;
 import com.jsh.erp.datasource.vo.AccountVo4InOutList;
 import com.jsh.erp.datasource.vo.AccountVo4List;
+import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
@@ -38,12 +41,18 @@ public class AccountService {
 
     @Resource
     private DepotHeadMapper depotHeadMapper;
+    @Resource
+    private DepotHeadMapperEx depotHeadMapperEx;
 
     @Resource
     private AccountHeadMapper accountHeadMapper;
+    @Resource
+    private AccountHeadMapperEx accountHeadMapperEx;
 
     @Resource
     private AccountItemMapper accountItemMapper;
+    @Resource
+    private AccountItemMapperEx accountItemMapperEx;
     @Resource
     private LogService logService;
     @Resource
@@ -329,5 +338,65 @@ public class AccountService {
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");
         return accountMapperEx.batchDeleteAccountByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+    }
+    /**
+     * create by: qiankunpingtai
+     * website：https://qiankunpingtai.cn
+     * description:
+     *  正常删除，要考虑数据完整性，进行完整性校验
+     * create time: 2019/4/10 10:31
+     * @Param: ids
+     * @return int
+     */
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int batchDeleteAccountByIdsNormal(String ids) throws Exception{
+        /**
+         * 校验：
+         * 1、财务主表	jsh_accounthead
+         * 2、财务子表	jsh_accountitem
+         * 3、单据主表	jsh_depothead
+         * 是否有相关数据
+         * */
+        int deleteTotal=0;
+        if(StringUtils.isEmpty(ids)){
+            return deleteTotal;
+        }
+        String [] idArray=ids.split(",");
+        /**
+         * 校验财务主表	jsh_accounthead
+         * */
+        List<AccountHead> accountHeadList=accountHeadMapperEx.getAccountHeadListByAccountIds(idArray);
+        if(accountHeadList!=null&&accountHeadList.size()>0){
+            logger.error("异常码[{}],异常提示[{}],参数,AccountIds[{}]",
+                    ExceptionConstants.DELETE_FORCE_CONFIRM_CODE,ExceptionConstants.DELETE_FORCE_CONFIRM_MSG,ids);
+            throw new BusinessRunTimeException(ExceptionConstants.DELETE_FORCE_CONFIRM_CODE,
+                    ExceptionConstants.DELETE_FORCE_CONFIRM_MSG);
+        }
+        /**
+         * 校验财务子表	jsh_accountitem
+         * */
+        List<AccountItem> accountItemList=accountItemMapperEx.getAccountItemListByAccountIds(idArray);
+        if(accountItemList!=null&&accountItemList.size()>0){
+            logger.error("异常码[{}],异常提示[{}],参数,AccountIds[{}]",
+                    ExceptionConstants.DELETE_FORCE_CONFIRM_CODE,ExceptionConstants.DELETE_FORCE_CONFIRM_MSG,ids);
+            throw new BusinessRunTimeException(ExceptionConstants.DELETE_FORCE_CONFIRM_CODE,
+                    ExceptionConstants.DELETE_FORCE_CONFIRM_MSG);
+        }
+        /**
+         * 校验单据主表	jsh_depothead
+         * */
+        List<DepotHead> depotHeadList=depotHeadMapperEx.getDepotHeadListByAccountIds(idArray);
+        if(depotHeadList!=null&&depotHeadList.size()>0){
+            logger.error("异常码[{}],异常提示[{}],参数,AccountIds[{}]",
+                    ExceptionConstants.DELETE_FORCE_CONFIRM_CODE,ExceptionConstants.DELETE_FORCE_CONFIRM_MSG,ids);
+            throw new BusinessRunTimeException(ExceptionConstants.DELETE_FORCE_CONFIRM_CODE,
+                    ExceptionConstants.DELETE_FORCE_CONFIRM_MSG);
+        }
+        /**
+         * 校验通过执行删除操作
+         * */
+        deleteTotal= batchDeleteAccountByIds(ids);
+        return deleteTotal;
+
     }
 }

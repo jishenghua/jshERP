@@ -179,7 +179,17 @@
                         if(res && res.code == 200) {
                             $("#searchBtn").click();
                         } else {
-                            $.messager.alert('删除提示', '删除信息失败，请稍后再试！', 'error');
+                            if(res && res.code == 601){
+                                var jsondata={};
+                                jsondata.ids=supplierTotalInfo[0];
+                                jsondata.deleteType='2';
+                                var type='single';
+                                batDeleteSupplierForceConfirm(res,"/supplier/batchDeleteSupplierByIds",jsondata,type);
+                            }else if(res && res.code == 600){
+                                $.messager.alert('删除提示', res.msg, 'error');
+                            }else{
+                                $.messager.alert('删除提示', '删除信息失败，请稍后再试！', 'error');
+                            }
                         }
                     },
                     //此处添加错误处理
@@ -224,7 +234,17 @@
                                 $("#searchBtn").click();
                                 $(":checkbox").attr("checked", false);
                             } else {
-                                $.messager.alert('删除提示', '删除信息失败，请稍后再试！', 'error');
+                                if(res && res.code == 601){
+                                    var jsondata={};
+                                    jsondata.ids=ids;
+                                    jsondata.deleteType='2';
+                                    var type='batch';
+                                    batDeleteSupplierForceConfirm(res,"/supplier/batchDeleteSupplierByIds",jsondata,type);
+                                }else if(res && res.code == 600){
+                                    $.messager.alert('删除提示', res.msg, 'error');
+                                }else{
+                                    $.messager.alert('删除提示', '删除信息失败，请稍后再试！', 'error');
+                                }
                             }
                         },
                         //此处添加错误处理
@@ -236,6 +256,38 @@
                 }
             });
         }
+    }
+    /**
+     * 确认强制删除
+     * */
+    function batDeleteSupplierForceConfirm(res,url,jsondata) {
+        $.messager.confirm('删除确认', res.msg, function (r) {
+            if (r) {
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    dataType: "json",
+                    data: (jsondata),
+                    success: function (res) {
+                        if(res && res.code == 200) {
+                            $("#searchBtn").click();
+                            if(type=='batch'){
+                                $(":checkbox").attr("checked", false);
+                            }
+                        }else if(res && res.code == 600){
+                            $.messager.alert('删除提示', res.msg, 'error');
+                        }else {
+                            $.messager.alert('删除提示', '删除信息失败，请稍后再试！', 'error');
+                        }
+                    },
+                    //此处添加错误处理
+                    error: function () {
+                        $.messager.alert('删除提示', '删除信息失败，请稍后再试！', 'error');
+                        return;
+                    }
+                });
+            }
+        });
     }
 
     //批量启用

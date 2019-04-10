@@ -1,17 +1,17 @@
 package com.jsh.erp.service.accountHead;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.jsh.erp.constants.BusinessConstants;
-import com.jsh.erp.datasource.entities.AccountHead;
-import com.jsh.erp.datasource.entities.AccountHeadExample;
-import com.jsh.erp.datasource.entities.AccountHeadVo4ListEx;
-import com.jsh.erp.datasource.entities.User;
+import com.jsh.erp.constants.ExceptionConstants;
+import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.mappers.AccountHeadMapper;
 import com.jsh.erp.datasource.mappers.AccountHeadMapperEx;
+import com.jsh.erp.datasource.mappers.AccountItemMapperEx;
+import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
-import com.jsh.erp.utils.Tools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -39,6 +39,8 @@ public class AccountHeadService {
     private UserService userService;
     @Resource
     private LogService logService;
+    @Resource
+    private AccountItemMapperEx accountItemMapperEx;
 
     public AccountHead getAccountHead(long id) {
         return accountHeadMapper.selectByPrimaryKey(id);
@@ -141,5 +143,42 @@ public class AccountHeadService {
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");
         return accountHeadMapperEx.batchDeleteAccountHeadByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+    }
+    /**
+     * create by: qiankunpingtai
+     * website：https://qiankunpingtai.cn
+     * description:
+     *  正常删除，要考虑数据完整性，进行完整性校验
+     * create time: 2019/4/10 15:49
+     * @Param: ids
+     * @return int
+     */
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int batchDeleteAccountHeadByIdsNormal(String ids) throws Exception {
+        /**
+         * 校验
+         * 1、财务子表	jsh_accountitem
+         * 是否有相关数据
+         * */
+        int deleteTotal=0;
+        if(StringUtils.isEmpty(ids)){
+            return deleteTotal;
+        }
+        String [] idArray=ids.split(",");
+        /**
+         * 校验财务子表	jsh_accountitem
+         * */
+        List<AccountItem> accountItemList=accountItemMapperEx.getAccountItemListByHeaderIds(idArray);
+        if(accountItemList!=null&&accountItemList.size()>0){
+            logger.error("异常码[{}],异常提示[{}],参数,HeaderIds[{}]",
+                    ExceptionConstants.DELETE_FORCE_CONFIRM_CODE,ExceptionConstants.DELETE_FORCE_CONFIRM_MSG,ids);
+            throw new BusinessRunTimeException(ExceptionConstants.DELETE_FORCE_CONFIRM_CODE,
+                    ExceptionConstants.DELETE_FORCE_CONFIRM_MSG);
+        }
+        /**
+         * 校验通过执行删除操作
+         * */
+        deleteTotal= batchDeleteAccountHeadByIds(ids);
+        return deleteTotal;
     }
 }

@@ -1,13 +1,12 @@
 package com.jsh.erp.service.depot;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.jsh.erp.constants.BusinessConstants;
-import com.jsh.erp.datasource.entities.Depot;
-import com.jsh.erp.datasource.entities.DepotEx;
-import com.jsh.erp.datasource.entities.DepotExample;
-import com.jsh.erp.datasource.entities.User;
-import com.jsh.erp.datasource.mappers.DepotMapper;
-import com.jsh.erp.datasource.mappers.DepotMapperEx;
+import com.jsh.erp.constants.ExceptionConstants;
+import com.jsh.erp.datasource.entities.*;
+import com.jsh.erp.datasource.mappers.*;
+import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
@@ -37,6 +36,10 @@ public class DepotService {
     private UserService userService;
     @Resource
     private LogService logService;
+    @Resource
+    private DepotHeadMapperEx depotHeadMapperEx;
+    @Resource
+    private DepotItemMapperEx depotItemMapperEx;
 
     public Depot getDepot(long id) {
         return depotMapper.selectByPrimaryKey(id);
@@ -121,5 +124,55 @@ public class DepotService {
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");
         return depotMapperEx.batchDeleteDepotByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+    }
+    /**
+     * create by: qiankunpingtai
+     * website：https://qiankunpingtai.cn
+     * description:
+     *  正常删除，要考虑数据完整性，进行完整性校验
+     * create time: 2019/4/10 16:52
+     * @Param: ids
+     * @return int
+     */
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int batchDeleteDepotByIdsNormal(String ids) throws Exception {
+        /**
+         * 校验
+         * 1、单据主表	jsh_depothead
+         * 2、单据子表	jsh_depotitem
+         * 是否有相关数据
+         * */
+        int deleteTotal=0;
+        if(StringUtils.isEmpty(ids)){
+            return deleteTotal;
+        }
+        String [] idArray=ids.split(",");
+
+        /**
+         * 校验单据主表	jsh_depothead
+         * */
+        List<DepotHead> depotHeadList=depotHeadMapperEx.getDepotHeadListByDepotIds(idArray);
+        if(depotHeadList!=null&&depotHeadList.size()>0){
+            logger.error("异常码[{}],异常提示[{}],参数,DepotIds[{}]",
+                    ExceptionConstants.DELETE_FORCE_CONFIRM_CODE,ExceptionConstants.DELETE_FORCE_CONFIRM_MSG,ids);
+            throw new BusinessRunTimeException(ExceptionConstants.DELETE_FORCE_CONFIRM_CODE,
+                    ExceptionConstants.DELETE_FORCE_CONFIRM_MSG);
+        }
+        /**
+         * 校验单据子表	jsh_depotitem
+         * */
+        List<DepotItem> depotItemList=depotItemMapperEx.getDepotItemListListByDepotIds(idArray);
+        if(depotItemList!=null&&depotItemList.size()>0){
+            logger.error("异常码[{}],异常提示[{}],参数,DepotIds[{}]",
+                    ExceptionConstants.DELETE_FORCE_CONFIRM_CODE,ExceptionConstants.DELETE_FORCE_CONFIRM_MSG,ids);
+            throw new BusinessRunTimeException(ExceptionConstants.DELETE_FORCE_CONFIRM_CODE,
+                    ExceptionConstants.DELETE_FORCE_CONFIRM_MSG);
+        }
+        /**
+         * 校验通过执行删除操作
+         * */
+        deleteTotal= batchDeleteDepotByIds(ids);
+        return deleteTotal;
+
     }
 }

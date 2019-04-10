@@ -23,6 +23,17 @@ public class ExceptionConstants {
      **/
     public static final int SERVICE_SYSTEM_ERROR_CODE = 500;
     public static final String SERVICE_SYSTEM_ERROR_MSG = "未知异常";
+
+    /**
+     * 删除操作被拒绝，请联系管理员
+     **/
+    public static final int DELETE_REFUSED_CODE = 600;
+    public static final String DELETE_REFUSED_MSG = "删除操作被拒绝，请联系管理员";
+    /**
+     * 检测到存在依赖数据，是否强制删除？
+     **/
+    public static final int DELETE_FORCE_CONFIRM_CODE = 601;
+    public static final String DELETE_FORCE_CONFIRM_MSG = "检测到存在依赖数据，是否强制删除？";
     /**
      * 用户信息
      * type = 5
