@@ -25,5 +25,7 @@ public interface AccountItemMapperEx {
     List<AccountItemVo4List> getDetailList(
             @Param("headerId") Long headerId);
 
-    int batchDeleteAccountItemByIds(@Param("updateTime") Date updateTime, @Param("updater") Long updater, @Param("ids") String ids[]);
+    int batchDeleteAccountItemByIds(@Param("updateTime") Date updateTime, @Param("updater") Long updater, @Param("ids") String[] ids);
+
+    List<AccountItem> getAccountItemListByAccountIds(@Param("accountIds") String[] accountIds);
 }

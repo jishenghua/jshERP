@@ -438,5 +438,17 @@
         </foreach>
         )
     </update>
+    <select id="getDepotHeadListByAccountIds" resultMap="com.jsh.erp.datasource.mappers.DepotHeadMapper.BaseResultMap">
+        select
+        <include refid="com.jsh.erp.datasource.mappers.DepotHeadMapper.Base_Column_List" />
+        from jsh_depothead
+        where 1=1
+        and accountId in (
+        <foreach collection="accountIds" item="accountId" separator=",">
+            #{accountId}
+        </foreach>
+        )
+        and ifnull(delete_Flag,'0') !='1'
+    </select>
 
 </mapper>

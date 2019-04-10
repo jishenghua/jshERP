@@ -115,4 +115,6 @@ public interface DepotHeadMapperEx {
      Long  getBuildOnlyNumber(@Param("seq_name") String seq_name);
 
     int batchDeleteDepotHeadByIds(@Param("updateTime") Date updateTime, @Param("updater") Long updater, @Param("ids") String ids[]);
+
+    List<DepotHead> getDepotHeadListByAccountIds(@Param("accountIds") String[] accountIds);
 }
