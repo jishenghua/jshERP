@@ -238,7 +238,10 @@
                                 var jsondata={};
                                 jsondata.ids=accountTotalInfo[0];
                                 jsondata.deleteType='2';
-                                batDeleteAccountForceConfirm(res,"/account/batchDeleteAccountByIds",jsondata);
+                                var type='single';
+                                batDeleteAccountForceConfirm(res,"/account/batchDeleteAccountByIds",jsondata,type);
+                            }else if(res && res.code == 600){
+                                $.messager.alert('删除提示', res.msg, 'error');
                             }else{
                                 $.messager.alert('删除提示', '删除结算账户失败，请稍后再试！', 'error');
                             }
@@ -289,7 +292,10 @@
                                     var jsondata={};
                                     jsondata.ids=ids;
                                     jsondata.deleteType='2';
-                                    batDeleteAccountForceConfirm(res,"/account/batchDeleteAccountByIds",jsondata);
+                                    var type='batch';
+                                    batDeleteAccountForceConfirm(res,"/account/batchDeleteAccountByIds",jsondata,type);
+                                }else if(res && res.code == 600){
+                                    $.messager.alert('删除提示', res.msg, 'error');
                                 }else{
                                     $.messager.alert('删除提示', '删除结算账户失败，请稍后再试！', 'error');
                                 }
@@ -308,7 +314,7 @@
     /**
      * 确认强制删除
      * */
-    function batDeleteAccountForceConfirm(res,url,jsondata) {
+    function batDeleteAccountForceConfirm(res,url,jsondata,type) {
         $.messager.confirm('删除确认', res.msg, function (r) {
             if (r) {
                 $.ajax({
@@ -319,7 +325,12 @@
                     success: function (res) {
                         if(res && res.code == 200) {
                             $("#searchBtn").click();
-                        } else {
+                            if(type=='batch'){
+                                $(":checkbox").attr("checked", false);
+                            }
+                        }else if(res && res.code == 600){
+                            $.messager.alert('删除提示', res.msg, 'error');
+                        }else {
                             $.messager.alert('删除提示', '删除结算账户失败，请稍后再试！', 'error');
                         }
                     },

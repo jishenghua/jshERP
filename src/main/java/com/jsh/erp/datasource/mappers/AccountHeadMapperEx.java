@@ -39,4 +39,8 @@ public interface AccountHeadMapperEx {
     int batchDeleteAccountHeadByIds(@Param("updateTime") Date updateTime, @Param("updater") Long updater, @Param("ids") String[] ids);
 
     List<AccountHead> getAccountHeadListByAccountIds(@Param("accountIds") String[] accountIds);
+
+    List<AccountHead> getAccountHeadListByOrganIds(@Param("organIds") String[] organIds);
+
+    List<AccountHead> getAccountHeadListByHandsPersonIds(@Param("handsPersonIds") String[] handsPersonIds);
 }

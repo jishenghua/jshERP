@@ -117,4 +117,8 @@ public interface DepotHeadMapperEx {
     int batchDeleteDepotHeadByIds(@Param("updateTime") Date updateTime, @Param("updater") Long updater, @Param("ids") String ids[]);
 
     List<DepotHead> getDepotHeadListByAccountIds(@Param("accountIds") String[] accountIds);
+
+    List<DepotHead> getDepotHeadListByOrganIds(@Param("organIds") String[] organIds);
+
+    List<DepotHead> getDepotHeadListByHandsPersonIds(@Param("handsPersonIds") String[] handsPersonIds);
 }

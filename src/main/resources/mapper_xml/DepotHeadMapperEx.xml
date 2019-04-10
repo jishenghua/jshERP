@@ -450,5 +450,29 @@
         )
         and ifnull(delete_Flag,'0') !='1'
     </select>
+    <select id="getDepotHeadListByOrganIds" resultMap="com.jsh.erp.datasource.mappers.DepotHeadMapper.BaseResultMap">
+        select
+        <include refid="com.jsh.erp.datasource.mappers.DepotHeadMapper.Base_Column_List" />
+        from jsh_depothead
+        where 1=1
+        and organId in (
+        <foreach collection="organIds" item="organId" separator=",">
+            #{organId}
+        </foreach>
+        )
+        and ifnull(delete_Flag,'0') !='1'
+    </select>
+    <select id="getDepotHeadListByHandsPersonIds" resultMap="com.jsh.erp.datasource.mappers.DepotHeadMapper.BaseResultMap">
+        select
+        <include refid="com.jsh.erp.datasource.mappers.DepotHeadMapper.Base_Column_List" />
+        from jsh_depothead
+        where 1=1
+        and handsPersonId in (
+        <foreach collection="handsPersonIds" item="handsPersonId" separator=",">
+            #{handsPersonId}
+        </foreach>
+        )
+        and ifnull(delete_Flag,'0') !='1'
+    </select>
 
 </mapper>
