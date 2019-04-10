@@ -72,4 +72,16 @@
         )
         and ifnull(delete_Flag,'0') !='1'
     </select>
+    <select id="getAccountItemListByHeaderIds" resultMap="com.jsh.erp.datasource.mappers.AccountItemMapper.BaseResultMap">
+        select
+        <include refid="com.jsh.erp.datasource.mappers.AccountItemMapper.Base_Column_List" />
+        from jsh_accountitem
+        where 1=1
+        and headerId in (
+        <foreach collection="headerIds" item="headerId" separator=",">
+            #{headerId}
+        </foreach>
+        )
+        and ifnull(delete_Flag,'0') !='1'
+    </select>
 </mapper>

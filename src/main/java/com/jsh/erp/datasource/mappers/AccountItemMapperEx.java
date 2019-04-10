@@ -28,4 +28,6 @@ public interface AccountItemMapperEx {
     int batchDeleteAccountItemByIds(@Param("updateTime") Date updateTime, @Param("updater") Long updater, @Param("ids") String[] ids);
 
     List<AccountItem> getAccountItemListByAccountIds(@Param("accountIds") String[] accountIds);
+
+    List<AccountItem> getAccountItemListByHeaderIds(@Param("headerIds") String[] headerIds);
 }

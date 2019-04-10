@@ -134,7 +134,7 @@ public class PersonService {
      * @return int
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeletePersonByIdsNormal(String ids) {
+    public int batchDeletePersonByIdsNormal(String ids) throws Exception {
         /**
          * 校验
          * 1、财务主表	jsh_accounthead
