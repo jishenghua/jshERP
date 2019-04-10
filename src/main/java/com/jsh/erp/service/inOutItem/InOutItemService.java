@@ -1,12 +1,17 @@
 package com.jsh.erp.service.inOutItem;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.jsh.erp.constants.BusinessConstants;
+import com.jsh.erp.constants.ExceptionConstants;
+import com.jsh.erp.datasource.entities.AccountItem;
 import com.jsh.erp.datasource.entities.InOutItem;
 import com.jsh.erp.datasource.entities.InOutItemExample;
 import com.jsh.erp.datasource.entities.User;
+import com.jsh.erp.datasource.mappers.AccountItemMapperEx;
 import com.jsh.erp.datasource.mappers.InOutItemMapper;
 import com.jsh.erp.datasource.mappers.InOutItemMapperEx;
+import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
@@ -35,6 +40,8 @@ public class InOutItemService {
     private UserService userService;
     @Resource
     private LogService logService;
+    @Resource
+    private AccountItemMapperEx accountItemMapperEx;
 
     public InOutItem getInOutItem(long id) {
         return inOutItemMapper.selectByPrimaryKey(id);
@@ -104,5 +111,43 @@ public class InOutItemService {
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");
         return inOutItemMapperEx.batchDeleteInOutItemByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+    }
+    /**
+     * create by: qiankunpingtai
+     * website：https://qiankunpingtai.cn
+     * description:
+     *  正常删除，要考虑数据完整性，进行完整性校验
+     * create time: 2019/4/10 16:23
+     * @Param: ids
+     * @return int
+     */
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int batchDeleteInOutItemByIdsNormal(String ids) throws Exception {
+        /**
+         * 校验
+         * 1、财务子表	jsh_accountitem
+         * 是否有相关数据
+         * */
+        int deleteTotal=0;
+        if(StringUtils.isEmpty(ids)){
+            return deleteTotal;
+        }
+        String [] idArray=ids.split(",");
+        /**
+         * 校验财务子表	jsh_accountitem
+         * */
+        List<AccountItem> accountItemList=accountItemMapperEx.getAccountItemListByInOutItemIds(idArray);
+        if(accountItemList!=null&&accountItemList.size()>0){
+            logger.error("异常码[{}],异常提示[{}],参数,InOutItemIds[{}]",
+                    ExceptionConstants.DELETE_FORCE_CONFIRM_CODE,ExceptionConstants.DELETE_FORCE_CONFIRM_MSG,ids);
+            throw new BusinessRunTimeException(ExceptionConstants.DELETE_FORCE_CONFIRM_CODE,
+                    ExceptionConstants.DELETE_FORCE_CONFIRM_MSG);
+        }
+        /**
+         * 校验通过执行删除操作
+         * */
+        deleteTotal= batchDeleteInOutItemByIds(ids);
+        return deleteTotal;
+
     }
 }

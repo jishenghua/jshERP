@@ -2,6 +2,7 @@ package com.jsh.erp.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.InOutItem;
 import com.jsh.erp.exception.BusinessRunTimeException;
@@ -66,9 +67,20 @@ public class InOutItemController {
      * @return java.lang.Object
      */
     @RequestMapping(value = "/batchDeleteInOutItemByIds")
-    public Object batchDeleteInOutItemByIds(@RequestParam("ids") String ids) throws Exception {
+    public Object batchDeleteInOutItemByIds(@RequestParam("ids") String ids,@RequestParam(value="deleteType",
+            required =false,defaultValue= BusinessConstants.DELETE_TYPE_NORMAL)String deleteType) throws Exception {
         JSONObject result = ExceptionConstants.standardSuccess();
-        int i= inOutItemService.batchDeleteInOutItemByIds(ids);
+        int i=0;
+        if(BusinessConstants.DELETE_TYPE_NORMAL.equals(deleteType)){
+           i= inOutItemService.batchDeleteInOutItemByIdsNormal(ids);
+        }else if(BusinessConstants.DELETE_TYPE_FORCE.equals(deleteType)){
+           i= inOutItemService.batchDeleteInOutItemByIds(ids);
+        }else{
+            logger.error("异常码[{}],异常提示[{}],参数,ids[{}],deleteType[{}]",
+                    ExceptionConstants.DELETE_REFUSED_CODE,ExceptionConstants.DELETE_REFUSED_MSG,ids,deleteType);
+            throw new BusinessRunTimeException(ExceptionConstants.DELETE_REFUSED_CODE,
+                    ExceptionConstants.DELETE_REFUSED_MSG);
+        }
         if(i<1){
             logger.error("异常码[{}],异常提示[{}],参数,ids[{}]",
                     ExceptionConstants.IN_OUT_ITEM_DELETE_FAILED_CODE,ExceptionConstants.IN_OUT_ITEM_DELETE_FAILED_MSG,ids);

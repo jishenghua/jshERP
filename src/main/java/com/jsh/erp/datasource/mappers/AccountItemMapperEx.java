@@ -30,4 +30,6 @@ public interface AccountItemMapperEx {
     List<AccountItem> getAccountItemListByAccountIds(@Param("accountIds") String[] accountIds);
 
     List<AccountItem> getAccountItemListByHeaderIds(@Param("headerIds") String[] headerIds);
+
+    List<AccountItem> getAccountItemListByInOutItemIds(@Param("inOutItemIds") String[] inOutItemIds);
 }
