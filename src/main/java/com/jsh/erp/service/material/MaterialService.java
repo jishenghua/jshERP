@@ -1,10 +1,14 @@
 package com.jsh.erp.service.material;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.jsh.erp.constants.BusinessConstants;
+import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.*;
+import com.jsh.erp.datasource.mappers.DepotItemMapperEx;
 import com.jsh.erp.datasource.mappers.MaterialMapper;
 import com.jsh.erp.datasource.mappers.MaterialMapperEx;
+import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.BaseResponseInfo;
@@ -32,6 +36,8 @@ public class MaterialService {
     private LogService logService;
     @Resource
     private UserService userService;
+    @Resource
+    private DepotItemMapperEx depotItemMapperEx;
 
     public Material getMaterial(long id) {
         return materialMapper.selectByPrimaryKey(id);
@@ -216,5 +222,44 @@ public class MaterialService {
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");
         return materialMapperEx.batchDeleteMaterialByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+    }
+    /**
+     * create by: qiankunpingtai
+     * website：https://qiankunpingtai.cn
+     * description:
+     *  正常删除，要考虑数据完整性，进行完整性校验
+     * create time: 2019/4/10 18:00
+     * @Param: ids
+     * @return int
+     */
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int batchDeleteMaterialByIdsNormal(String ids) throws Exception{
+        /**
+         * 校验
+         * 1、单据子表	jsh_depotitem
+         * 是否有相关数据
+         * */
+        int deleteTotal=0;
+        if(StringUtils.isEmpty(ids)){
+            return deleteTotal;
+        }
+        String [] idArray=ids.split(",");
+
+        /**
+         * 校验单据子表	jsh_depotitem
+         * */
+        List<DepotItem> depotItemList=depotItemMapperEx.getDepotItemListListByMaterialIds(idArray);
+        if(depotItemList!=null&&depotItemList.size()>0){
+            logger.error("异常码[{}],异常提示[{}],参数,MaterialIds[{}]",
+                    ExceptionConstants.DELETE_FORCE_CONFIRM_CODE,ExceptionConstants.DELETE_FORCE_CONFIRM_MSG,ids);
+            throw new BusinessRunTimeException(ExceptionConstants.DELETE_FORCE_CONFIRM_CODE,
+                    ExceptionConstants.DELETE_FORCE_CONFIRM_MSG);
+        }
+        /**
+         * 校验通过执行删除操作
+         * */
+        deleteTotal= batchDeleteMaterialByIds(ids);
+        return deleteTotal;
+
     }
 }

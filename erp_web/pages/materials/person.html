@@ -315,7 +315,7 @@
                             } else {
                                 if(res && res.code == 601){
                                     var jsondata={};
-                                    jsondata.ids=personID;
+                                    jsondata.ids=ids;
                                     jsondata.deleteType='2';
                                     var type='batch';
                                     batDeletePersonForceConfirm(res,"/person/batchDeletePersonByIds",jsondata,type);

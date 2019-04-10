@@ -353,9 +353,20 @@ public class MaterialController {
      * @return java.lang.Object
      */
     @RequestMapping(value = "/batchDeleteMaterialByIds")
-    public Object batchDeleteMaterialByIds(@RequestParam("ids") String ids) throws Exception {
+    public Object batchDeleteMaterialByIds(@RequestParam("ids") String ids,@RequestParam(value="deleteType",
+            required =false,defaultValue= BusinessConstants.DELETE_TYPE_NORMAL)String deleteType) throws Exception {
         JSONObject result = ExceptionConstants.standardSuccess();
-        int i= materialService.batchDeleteMaterialByIds(ids);
+        int i=0;
+        if(BusinessConstants.DELETE_TYPE_NORMAL.equals(deleteType)){
+            i= materialService.batchDeleteMaterialByIdsNormal(ids);
+        }else if(BusinessConstants.DELETE_TYPE_FORCE.equals(deleteType)){
+            i= materialService.batchDeleteMaterialByIds(ids);
+        }else{
+            logger.error("异常码[{}],异常提示[{}],参数,ids[{}],deleteType[{}]",
+                    ExceptionConstants.DELETE_REFUSED_CODE,ExceptionConstants.DELETE_REFUSED_MSG,ids,deleteType);
+            throw new BusinessRunTimeException(ExceptionConstants.DELETE_REFUSED_CODE,
+                    ExceptionConstants.DELETE_REFUSED_MSG);
+        }
         if(i<1){
             logger.error("异常码[{}],异常提示[{}],参数,ids[{}]",
                     ExceptionConstants.MATERIAL_DELETE_FAILED_CODE,ExceptionConstants.MATERIAL_DELETE_FAILED_MSG,ids);
