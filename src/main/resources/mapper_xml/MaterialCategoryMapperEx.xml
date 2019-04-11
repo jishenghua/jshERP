@@ -107,5 +107,17 @@
         and serial_no=#{serialNo}
         and ifnull(status,'0') !='2'
     </select>
+    <select id="getMaterialCategoryListByCategoryIds"  resultMap="com.jsh.erp.datasource.mappers.MaterialCategoryMapper.BaseResultMap">
+        select
+        <include refid="com.jsh.erp.datasource.mappers.MaterialCategoryMapper.Base_Column_List" />
+        from jsh_materialcategory
+        where 1=1
+        and parentId in (
+        <foreach collection="parentIds" item="parentId" separator=",">
+            #{parentId}
+        </foreach>
+        )
+        and ifnull(status,'0') !='2'
+    </select>
 
 </mapper>

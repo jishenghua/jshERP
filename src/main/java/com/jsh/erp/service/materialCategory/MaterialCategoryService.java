@@ -1,13 +1,13 @@
 package com.jsh.erp.service.materialCategory;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
-import com.jsh.erp.datasource.entities.MaterialCategory;
-import com.jsh.erp.datasource.entities.MaterialCategoryExample;
-import com.jsh.erp.datasource.entities.User;
+import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.mappers.MaterialCategoryMapper;
 import com.jsh.erp.datasource.mappers.MaterialCategoryMapperEx;
+import com.jsh.erp.datasource.mappers.MaterialMapperEx;
 import com.jsh.erp.datasource.vo.TreeNode;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.log.LogService;
@@ -37,6 +37,8 @@ public class MaterialCategoryService {
     private UserService userService;
     @Resource
     private LogService logService;
+    @Resource
+    private MaterialMapperEx materialMapperEx;
 
     public MaterialCategory getMaterialCategory(long id) {
         return materialCategoryMapper.selectByPrimaryKey(id);
@@ -216,5 +218,52 @@ public class MaterialCategoryService {
         }
     }
 
-
+    /**
+     * create by: qiankunpingtai
+     * website：https://qiankunpingtai.cn
+     * description:
+     *  正常删除，要考虑数据完整性，进行完整性校验
+     * create time: 2019/4/11 9:26
+     * @Param: ids
+     * @return int
+     */
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int batchDeleteMaterialCategoryByIdsNormal(String ids) throws Exception {
+        /**
+         * 校验
+         * 1、产品表	jsh_material
+         * 2、产品类型表	jsh_materialcategory
+         * 是否有相关数据
+         * */
+        int deleteTotal=0;
+        if(StringUtils.isEmpty(ids)){
+            return deleteTotal;
+        }
+        String [] idArray=ids.split(",");
+        /**
+         * 校验产品表	jsh_material
+         * */
+        List<Material> materialList=materialMapperEx.getMaterialListByCategoryIds(idArray);
+        if(materialList!=null&&materialList.size()>0){
+            logger.error("异常码[{}],异常提示[{}],参数,CategoryIds[{}]",
+                    ExceptionConstants.DELETE_FORCE_CONFIRM_CODE,ExceptionConstants.DELETE_FORCE_CONFIRM_MSG,ids);
+            throw new BusinessRunTimeException(ExceptionConstants.DELETE_FORCE_CONFIRM_CODE,
+                    ExceptionConstants.DELETE_FORCE_CONFIRM_MSG);
+        }
+        /**
+         * 校验产品类型表	jsh_materialcategory
+         * */
+        List<MaterialCategory> materialCategoryList=materialCategoryMapperEx.getMaterialCategoryListByCategoryIds(idArray);
+        if(materialCategoryList!=null&&materialCategoryList.size()>0){
+            logger.error("异常码[{}],异常提示[{}],参数,CategoryIds[{}]",
+                    ExceptionConstants.DELETE_FORCE_CONFIRM_CODE,ExceptionConstants.DELETE_FORCE_CONFIRM_MSG,ids);
+            throw new BusinessRunTimeException(ExceptionConstants.DELETE_FORCE_CONFIRM_CODE,
+                    ExceptionConstants.DELETE_FORCE_CONFIRM_MSG);
+        }
+        /**
+         * 校验通过执行删除操作
+         * */
+        deleteTotal= batchDeleteMaterialCategoryByIds(ids);
+        return deleteTotal;
+    }
 }
