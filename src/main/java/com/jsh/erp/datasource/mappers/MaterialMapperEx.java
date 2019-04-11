@@ -1,5 +1,6 @@
 package com.jsh.erp.datasource.mappers;
 
+import com.jsh.erp.datasource.entities.AccountHead;
 import com.jsh.erp.datasource.entities.Material;
 import com.jsh.erp.datasource.entities.MaterialVo4Unit;
 import org.apache.ibatis.annotations.Param;
@@ -57,4 +58,8 @@ public interface MaterialMapperEx {
     List<Material> getMaterialEnableSerialNumberList(Map<String, Object> parameterMap);
 
     int batchDeleteMaterialByIds(@Param("updateTime") Date updateTime, @Param("updater") Long updater, @Param("ids") String ids[]);
+
+    List<Material> getMaterialListByCategoryIds(@Param("categoryIds") String[] categoryIds);
+
+    List<Material> getMaterialListByUnitIds(@Param("unitIds") String[] unitIds);
 }

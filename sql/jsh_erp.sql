@@ -1550,3 +1550,59 @@ alter table jsh_depothead add  delete_Flag varchar(1) DEFAULT '0' COMMENT '删�
 alter table jsh_depotitem add  delete_Flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
 -- 收支项目表	jsh_inoutitem
 alter table jsh_inoutitem add  delete_Flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
+
+-- ----------------------------
+-- 时间：2019年4月11日
+-- version：1.0.13
+-- 此次更新
+-- 删除所有外键
+-- 特别提醒：之后的sql都是在之前基础上迭代，可以对已存在的系统进行数据保留更新
+-- ----------------------------
+
+-- ----------------------------
+-- 删除财务主表对应外键约束
+-- ----------------------------
+ALTER TABLE jsh_accounthead DROP FOREIGN KEY FK9F4C0D8DAAE50527;
+ALTER TABLE jsh_accounthead DROP FOREIGN KEY FK9F4C0D8DB610FC06;
+ALTER TABLE jsh_accounthead DROP FOREIGN KEY FK9F4C0D8DC4170B37;
+-- ----------------------------
+-- 删除财务子表对应外键约束
+-- ----------------------------
+ALTER TABLE jsh_accountitem DROP FOREIGN KEY FK9F4CBAC0AAE50527;
+ALTER TABLE jsh_accountitem DROP FOREIGN KEY FK9F4CBAC0C5FE6007;
+ALTER TABLE jsh_accountitem DROP FOREIGN KEY FK9F4CBAC0D203EDC5;
+-- ----------------------------
+-- 删除资产记录表对应外键约束
+-- ----------------------------
+ALTER TABLE jsh_asset DROP FOREIGN KEY FK353690ED27D23FE4;
+ALTER TABLE jsh_asset DROP FOREIGN KEY FK353690ED3E226853;
+ALTER TABLE jsh_asset DROP FOREIGN KEY FK353690ED61FE182C;
+ALTER TABLE jsh_asset DROP FOREIGN KEY FK353690ED9B6CB285;
+ALTER TABLE jsh_asset DROP FOREIGN KEY FK353690EDAD45B659;
+-- ----------------------------
+-- 删除资产信息表对应外键约束
+-- ----------------------------
+ALTER TABLE jsh_assetname DROP FOREIGN KEY FKA4ADCCF866BC8AD3;
+-- ----------------------------
+-- 删除单据主表对应外键约束
+-- ----------------------------
+ALTER TABLE jsh_depothead DROP FOREIGN KEY FK2A80F214AAE50527;
+ALTER TABLE jsh_depothead DROP FOREIGN KEY jsh_depothead_ibfk_1;
+ALTER TABLE jsh_depothead DROP FOREIGN KEY jsh_depothead_ibfk_4;
+ALTER TABLE jsh_depothead DROP FOREIGN KEY jsh_depothead_ibfk_5;
+-- ----------------------------
+-- 删除单据子表对应外键约束
+-- ----------------------------
+ALTER TABLE jsh_depotitem DROP FOREIGN KEY FK2A819F47729F5392;
+ALTER TABLE jsh_depotitem DROP FOREIGN KEY FK2A819F479485B3F5;
+ALTER TABLE jsh_depotitem DROP FOREIGN KEY jsh_depotitem_ibfk_2;
+-- ----------------------------
+-- 删除操作日志表对应外键约束
+-- ----------------------------
+ALTER TABLE jsh_log DROP FOREIGN KEY FKF2696AA13E226853;
+-- ----------------------------
+-- 删除产品表对应外键约束
+-- ----------------------------
+ALTER TABLE jsh_material DROP FOREIGN KEY FK675951272AB6672C;
+ALTER TABLE jsh_material DROP FOREIGN KEY jsh_material_ibfk_1;
+
