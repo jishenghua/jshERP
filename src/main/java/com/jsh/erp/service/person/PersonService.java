@@ -49,6 +49,7 @@ public class PersonService {
 
     public List<Person> getPerson() {
         PersonExample example = new PersonExample();
+        example.createCriteria().andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         return personMapper.selectByExample(example);
     }
 
@@ -96,7 +97,7 @@ public class PersonService {
     public String getPersonByIds(String personIDs) {
         List<Long> ids = StringUtil.strToLongList(personIDs);
         PersonExample example = new PersonExample();
-        example.createCriteria().andIdIn(ids);
+        example.createCriteria().andIdIn(ids).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         example.setOrderByClause("Id asc");
         List<Person> list = personMapper.selectByExample(example);
         StringBuffer sb = new StringBuffer();
@@ -110,7 +111,7 @@ public class PersonService {
 
     public List<Person> getPersonByType(String type) {
         PersonExample example = new PersonExample();
-        example.createCriteria().andTypeEqualTo(type);
+        example.createCriteria().andTypeEqualTo(type).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         example.setOrderByClause("Id asc");
         return personMapper.selectByExample(example);
     }

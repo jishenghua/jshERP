@@ -49,6 +49,7 @@ public class UnitService {
 
     public List<Unit> getUnit() {
         UnitExample example = new UnitExample();
+        example.createCriteria().andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         return unitMapper.selectByExample(example);
     }
 

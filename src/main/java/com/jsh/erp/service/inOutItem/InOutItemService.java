@@ -49,6 +49,7 @@ public class InOutItemService {
 
     public List<InOutItem> getInOutItem() {
         InOutItemExample example = new InOutItemExample();
+        example.createCriteria().andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         return inOutItemMapper.selectByExample(example);
     }
 
@@ -96,9 +97,9 @@ public class InOutItemService {
     public List<InOutItem> findBySelect(String type) {
         InOutItemExample example = new InOutItemExample();
         if (type.equals("in")) {
-            example.createCriteria().andTypeEqualTo("收入");
+            example.createCriteria().andTypeEqualTo("收入").andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         } else if (type.equals("out")) {
-            example.createCriteria().andTypeEqualTo("支出");
+            example.createCriteria().andTypeEqualTo("支出").andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         }
         example.setOrderByClause("id desc");
         return inOutItemMapper.selectByExample(example);

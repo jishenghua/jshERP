@@ -45,6 +45,7 @@ public class MaterialService {
 
     public List<Material> getMaterial() {
         MaterialExample example = new MaterialExample();
+        example.createCriteria().andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         return materialMapper.selectByExample(example);
     }
 
@@ -175,6 +176,7 @@ public class MaterialService {
 
     public List<Material> findByOrder(){
         MaterialExample example = new MaterialExample();
+        example.createCriteria().andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         example.setOrderByClause("Name,Model asc");
         return materialMapper.selectByExample(example);
     }

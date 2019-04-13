@@ -59,6 +59,7 @@ public class UserBusinessService {
 
     public List<UserBusiness> getUserBusiness() {
         UserBusinessExample example = new UserBusinessExample();
+        example.createCriteria().andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         return userBusinessMapper.selectByExample(example);
     }
 
@@ -104,14 +105,16 @@ public class UserBusinessService {
 
     public List<UserBusiness> getBasicData(String keyId, String type){
         UserBusinessExample example = new UserBusinessExample();
-        example.createCriteria().andKeyidEqualTo(keyId).andTypeEqualTo(type);
+        example.createCriteria().andKeyidEqualTo(keyId).andTypeEqualTo(type)
+                .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<UserBusiness> list = userBusinessMapper.selectByExample(example);
         return list;
     }
 
     public Long checkIsValueExist(String type, String keyId) {
         UserBusinessExample example = new UserBusinessExample();
-        example.createCriteria().andTypeEqualTo(type).andKeyidEqualTo(keyId);
+        example.createCriteria().andTypeEqualTo(type).andKeyidEqualTo(keyId)
+                .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<UserBusiness> list = userBusinessMapper.selectByExample(example);
         Long id = null;
         if(list.size() > 0) {
@@ -124,9 +127,11 @@ public class UserBusinessService {
         UserBusinessExample example = new UserBusinessExample();
         String newVaule = "%" + UBValue + "%";
         if(TypeVale !=null && KeyIdValue !=null) {
-            example.createCriteria().andTypeEqualTo(TypeVale).andKeyidEqualTo(KeyIdValue).andValueLike(newVaule);
+            example.createCriteria().andTypeEqualTo(TypeVale).andKeyidEqualTo(KeyIdValue).andValueLike(newVaule)
+                    .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         } else {
-            example.createCriteria().andValueLike(newVaule);
+            example.createCriteria().andValueLike(newVaule)
+                    .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         }
         List<UserBusiness> list = userBusinessMapper.selectByExample(example);
         if(list.size() > 0) {
@@ -150,7 +155,8 @@ public class UserBusinessService {
 
     public List<UserBusiness> findRoleByUserId(String userId){
         UserBusinessExample example = new UserBusinessExample();
-        example.createCriteria().andKeyidEqualTo(userId).andTypeEqualTo("UserRole");
+        example.createCriteria().andKeyidEqualTo(userId).andTypeEqualTo("UserRole")
+                .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<UserBusiness> list = userBusinessMapper.selectByExample(example);
         return list;
     }
@@ -158,10 +164,12 @@ public class UserBusinessService {
     public List<UserBusiness> findAppByRoles(String roles){
         List<String> rolesList = StringUtil.strToStringList(roles);
         UserBusinessExample example = new UserBusinessExample();
-        example.createCriteria().andKeyidIn(rolesList).andTypeEqualTo("RoleAPP");
+        example.createCriteria().andKeyidIn(rolesList).andTypeEqualTo("RoleAPP")
+                .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<UserBusiness> list = userBusinessMapper.selectByExample(example);
         return list;
     }
+
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteUserBusinessByIds(String ids) {
         logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_USER_BUSINESS,

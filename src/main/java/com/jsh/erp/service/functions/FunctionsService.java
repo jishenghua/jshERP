@@ -42,6 +42,7 @@ public class FunctionsService {
 
     public List<Functions> getFunctions() {
         FunctionsExample example = new FunctionsExample();
+        example.createCriteria().andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         return functionsMapper.selectByExample(example);
     }
 
@@ -88,7 +89,8 @@ public class FunctionsService {
 
     public List<Functions> getRoleFunctions(String pNumber) {
         FunctionsExample example = new FunctionsExample();
-        example.createCriteria().andEnabledEqualTo(true).andPnumberEqualTo(pNumber);
+        example.createCriteria().andEnabledEqualTo(true).andPnumberEqualTo(pNumber)
+                .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         example.setOrderByClause("Sort");
         List<Functions> list = functionsMapper.selectByExample(example);
         return list;
@@ -96,7 +98,8 @@ public class FunctionsService {
 
     public List<Functions> findRoleFunctions(String pnumber){
         FunctionsExample example = new FunctionsExample();
-        example.createCriteria().andEnabledEqualTo(true).andPnumberEqualTo(pnumber);
+        example.createCriteria().andEnabledEqualTo(true).andPnumberEqualTo(pnumber)
+                .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         example.setOrderByClause("Sort");
         List<Functions> list = functionsMapper.selectByExample(example);
         return list;
@@ -105,11 +108,13 @@ public class FunctionsService {
     public List<Functions> findByIds(String functionsIds){
         List<Long> idList = StringUtil.strToLongList(functionsIds);
         FunctionsExample example = new FunctionsExample();
-        example.createCriteria().andEnabledEqualTo(true).andIdIn(idList);
+        example.createCriteria().andEnabledEqualTo(true).andIdIn(idList)
+                .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         example.setOrderByClause("Sort asc");
         List<Functions> list = functionsMapper.selectByExample(example);
         return list;
     }
+
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteFunctionsByIds(String ids) {
         logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_FUNCTIONS,
