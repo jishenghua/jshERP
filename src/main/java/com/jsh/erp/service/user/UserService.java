@@ -223,38 +223,43 @@ public class UserService {
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void addUserAndOrgUserRel(UserEx ue) throws Exception{
-        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_USER,
-                BusinessConstants.LOG_OPERATION_TYPE_ADD,
-                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
-        //检查用户名和登录名
-        checkUserNameAndLoginName(ue);
-        //新增用户信息
-        ue= this.addUser(ue);
-        if(ue==null){
-            logger.error("异常码[{}],异常提示[{}],参数,[{}]",
-                    ExceptionConstants.USER_ADD_FAILED_CODE,ExceptionConstants.USER_ADD_FAILED_MSG);
-            throw new BusinessRunTimeException(ExceptionConstants.USER_ADD_FAILED_CODE,
-                    ExceptionConstants.USER_ADD_FAILED_MSG);
-        }
-        if(ue.getOrgaId()==null){
-            //如果没有选择机构，就不建机构和用户的关联关系
-            return;
-        }
-        //新增用户和机构关联关系
-        OrgaUserRel oul=new OrgaUserRel();
-        //机构id
-        oul.setOrgaId(ue.getOrgaId());
-        //用户id
-        oul.setUserId(ue.getId());
-        //用户在机构中的排序
-        oul.setUserBlngOrgaDsplSeq(ue.getUserBlngOrgaDsplSeq());
+        if(BusinessConstants.DEFAULT_MANAGER.equals(ue.getLoginame())) {
+            throw new BusinessRunTimeException(ExceptionConstants.USER_NAME_LIMIT_USE_CODE,
+                    ExceptionConstants.USER_NAME_LIMIT_USE_MSG);
+        } else {
+            logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_USER,
+                    BusinessConstants.LOG_OPERATION_TYPE_ADD,
+                    ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+            //检查用户名和登录名
+            checkUserNameAndLoginName(ue);
+            //新增用户信息
+            ue= this.addUser(ue);
+            if(ue==null){
+                logger.error("异常码[{}],异常提示[{}],参数,[{}]",
+                        ExceptionConstants.USER_ADD_FAILED_CODE,ExceptionConstants.USER_ADD_FAILED_MSG);
+                throw new BusinessRunTimeException(ExceptionConstants.USER_ADD_FAILED_CODE,
+                        ExceptionConstants.USER_ADD_FAILED_MSG);
+            }
+            if(ue.getOrgaId()==null){
+                //如果没有选择机构，就不建机构和用户的关联关系
+                return;
+            }
+            //新增用户和机构关联关系
+            OrgaUserRel oul=new OrgaUserRel();
+            //机构id
+            oul.setOrgaId(ue.getOrgaId());
+            //用户id
+            oul.setUserId(ue.getId());
+            //用户在机构中的排序
+            oul.setUserBlngOrgaDsplSeq(ue.getUserBlngOrgaDsplSeq());
 
-        oul=orgaUserRelService.addOrgaUserRel(oul);
-        if(oul==null){
-            logger.error("异常码[{}],异常提示[{}],参数,[{}]",
-                    ExceptionConstants.ORGA_USER_REL_ADD_FAILED_CODE,ExceptionConstants.ORGA_USER_REL_ADD_FAILED_MSG);
-            throw new BusinessRunTimeException(ExceptionConstants.ORGA_USER_REL_ADD_FAILED_CODE,
-                    ExceptionConstants.ORGA_USER_REL_ADD_FAILED_MSG);
+            oul=orgaUserRelService.addOrgaUserRel(oul);
+            if(oul==null){
+                logger.error("异常码[{}],异常提示[{}],参数,[{}]",
+                        ExceptionConstants.ORGA_USER_REL_ADD_FAILED_CODE,ExceptionConstants.ORGA_USER_REL_ADD_FAILED_MSG);
+                throw new BusinessRunTimeException(ExceptionConstants.ORGA_USER_REL_ADD_FAILED_CODE,
+                        ExceptionConstants.ORGA_USER_REL_ADD_FAILED_MSG);
+            }
         }
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
@@ -288,30 +293,35 @@ public class UserService {
          * description:
          * 多次创建事务，事物之间无法协同，应该在入口处创建一个事务以做协调
          */
-        ue.setPassword(Tools.md5Encryp(ue.getPassword()));
-        ue.setIsystem(BusinessConstants.USER_NOT_SYSTEM);
-        if(ue.getIsmanager()==null){
-            ue.setIsmanager(BusinessConstants.USER_NOT_MANAGER);
+        if(BusinessConstants.DEFAULT_MANAGER.equals(ue.getLoginame())) {
+            throw new BusinessRunTimeException(ExceptionConstants.USER_NAME_LIMIT_USE_CODE,
+                    ExceptionConstants.USER_NAME_LIMIT_USE_MSG);
+        } else {
+            ue.setPassword(Tools.md5Encryp(ue.getPassword()));
+            ue.setIsystem(BusinessConstants.USER_NOT_SYSTEM);
+            if (ue.getIsmanager() == null) {
+                ue.setIsmanager(BusinessConstants.USER_NOT_MANAGER);
+            }
+            ue.setStatus(BusinessConstants.USER_STATUS_NORMAL);
+            int i = userMapperEx.addUser(ue);
+            //更新租户id
+            User user = new User();
+            user.setId(ue.getId());
+            user.setTenantId(ue.getId());
+            userService.updateUserTenant(user);
+            //新增用户与角色的关系
+            JSONObject ubObj = new JSONObject();
+            ubObj.put("type", "UserRole");
+            ubObj.put("keyid", ue.getId());
+            JSONArray ubArr = new JSONArray();
+            ubArr.add(manageRoleId);
+            ubObj.put("value", ubArr.toString());
+            userBusinessService.insertUserBusiness(ubObj.toString(), ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+            if (i > 0) {
+                return ue;
+            }
+            return null;
         }
-        ue.setStatus(BusinessConstants.USER_STATUS_NORMAL);
-        int i=userMapperEx.addUser(ue);
-        //更新租户id
-        User user = new User();
-        user.setId(ue.getId());
-        user.setTenantId(ue.getId());
-        userService.updateUserTenant(user);
-        //新增用户与角色的关系
-        JSONObject ubObj = new JSONObject();
-        ubObj.put("type", "UserRole");
-        ubObj.put("keyid", ue.getId());
-        JSONArray ubArr = new JSONArray();
-        ubArr.add(manageRoleId);
-        ubObj.put("value", ubArr.toString());
-        userBusinessService.insertUserBusiness(ubObj.toString(), ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
-        if(i>0){
-            return ue;
-        }
-        return null;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
@@ -323,47 +333,51 @@ public class UserService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void updateUserAndOrgUserRel(UserEx ue) throws Exception{
-        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_USER,
-                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(ue.getId()).toString(),
-                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
-        //检查用户名和登录名
-        checkUserNameAndLoginName(ue);
-        //更新用户信息
-        ue=this.updateUser(ue);
-        if(ue==null){
-            logger.error("异常码[{}],异常提示[{}],参数,[{}]",
-                    ExceptionConstants.USER_EDIT_FAILED_CODE,ExceptionConstants.USER_EDIT_FAILED_MSG);
-            throw new BusinessRunTimeException(ExceptionConstants.USER_EDIT_FAILED_CODE,
-                    ExceptionConstants.USER_EDIT_FAILED_MSG);
+        if(BusinessConstants.DEFAULT_MANAGER.equals(ue.getLoginame())) {
+            throw new BusinessRunTimeException(ExceptionConstants.USER_NAME_LIMIT_USE_CODE,
+                    ExceptionConstants.USER_NAME_LIMIT_USE_MSG);
+        } else {
+            logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_USER,
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(ue.getId()).toString(),
+                    ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+            //检查用户名和登录名
+            checkUserNameAndLoginName(ue);
+            //更新用户信息
+            ue = this.updateUser(ue);
+            if (ue == null) {
+                logger.error("异常码[{}],异常提示[{}],参数,[{}]",
+                        ExceptionConstants.USER_EDIT_FAILED_CODE, ExceptionConstants.USER_EDIT_FAILED_MSG);
+                throw new BusinessRunTimeException(ExceptionConstants.USER_EDIT_FAILED_CODE,
+                        ExceptionConstants.USER_EDIT_FAILED_MSG);
+            }
+            if (ue.getOrgaId() == null) {
+                //如果没有选择机构，就不建机构和用户的关联关系
+                return;
+            }
+            //更新用户和机构关联关系
+            OrgaUserRel oul = new OrgaUserRel();
+            //机构和用户关联关系id
+            oul.setId(ue.getOrgaUserRelId());
+            //机构id
+            oul.setOrgaId(ue.getOrgaId());
+            //用户id
+            oul.setUserId(ue.getId());
+            //用户在机构中的排序
+            oul.setUserBlngOrgaDsplSeq(ue.getUserBlngOrgaDsplSeq());
+            if (oul.getId() != null) {
+                //已存在机构和用户的关联关系，更新
+                oul = orgaUserRelService.updateOrgaUserRel(oul);
+            } else {
+                //不存在机构和用户的关联关系，新建
+                oul = orgaUserRelService.addOrgaUserRel(oul);
+            }
+            if (oul == null) {
+                logger.error("异常码[{}],异常提示[{}],参数,[{}]",
+                        ExceptionConstants.ORGA_USER_REL_EDIT_FAILED_CODE, ExceptionConstants.ORGA_USER_REL_EDIT_FAILED_MSG);
+                throw new BusinessRunTimeException(ExceptionConstants.ORGA_USER_REL_EDIT_FAILED_CODE,
+                        ExceptionConstants.ORGA_USER_REL_EDIT_FAILED_MSG);
+            }
         }
-        if(ue.getOrgaId()==null){
-            //如果没有选择机构，就不建机构和用户的关联关系
-            return;
-        }
-        //更新用户和机构关联关系
-        OrgaUserRel oul=new OrgaUserRel();
-        //机构和用户关联关系id
-        oul.setId(ue.getOrgaUserRelId());
-        //机构id
-        oul.setOrgaId(ue.getOrgaId());
-        //用户id
-        oul.setUserId(ue.getId());
-        //用户在机构中的排序
-        oul.setUserBlngOrgaDsplSeq(ue.getUserBlngOrgaDsplSeq());
-        if(oul.getId()!=null){
-            //已存在机构和用户的关联关系，更新
-            oul=orgaUserRelService.updateOrgaUserRel(oul);
-        }else{
-            //不存在机构和用户的关联关系，新建
-            oul=orgaUserRelService.addOrgaUserRel(oul);
-        }
-        if(oul==null){
-            logger.error("异常码[{}],异常提示[{}],参数,[{}]",
-                    ExceptionConstants.ORGA_USER_REL_EDIT_FAILED_CODE,ExceptionConstants.ORGA_USER_REL_EDIT_FAILED_MSG);
-            throw new BusinessRunTimeException(ExceptionConstants.ORGA_USER_REL_EDIT_FAILED_CODE,
-                    ExceptionConstants.ORGA_USER_REL_EDIT_FAILED_MSG);
-        }
-
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public UserEx updateUser(UserEx ue){
