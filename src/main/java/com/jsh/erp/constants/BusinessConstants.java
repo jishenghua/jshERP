@@ -208,6 +208,11 @@ public class BusinessConstants {
     public static final String DELETE_TYPE_NORMAL = "1";
     public static final String DELETE_TYPE_FORCE = "2";
 
+    /**
+     * 默认管理员账号
+     */
+    public static final String DEFAULT_MANAGER = "admin";
+
 
 
 

@@ -64,6 +64,7 @@ public class DepotHeadService {
 
     public List<DepotHead> getDepotHead() {
         DepotHeadExample example = new DepotHeadExample();
+        example.createCriteria().andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         return depotHeadMapper.selectByExample(example);
     }
 
@@ -191,7 +192,7 @@ public class DepotHeadService {
         DepotHeadExample example = new DepotHeadExample();
         monthTime = monthTime + "-31 23:59:59";
         Date month = StringUtil.getDateByString(monthTime, null);
-        example.createCriteria().andOpertimeLessThanOrEqualTo(month);
+        example.createCriteria().andOpertimeLessThanOrEqualTo(month).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         return depotHeadMapper.selectByExample(example);
     }
 

@@ -42,7 +42,7 @@ public class AppService {
 
     public List<App> findDock(){
         AppExample example = new AppExample();
-        example.createCriteria().andZlEqualTo("dock").andEnabledEqualTo(true);
+        example.createCriteria().andZlEqualTo("dock").andEnabledEqualTo(true).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         example.setOrderByClause("Sort");
         List<App> list = appMapper.selectByExample(example);
         return list;
@@ -57,7 +57,7 @@ public class AppService {
      */
     public List<App> findDesk(){
         AppExample example = new AppExample();
-        example.createCriteria().andZlEqualTo("desk").andEnabledEqualTo(true);
+        example.createCriteria().andZlEqualTo("desk").andEnabledEqualTo(true).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         example.setOrderByClause("Sort");
         List<App> list = appMapper.selectByExample(example);
         return list;
@@ -69,6 +69,7 @@ public class AppService {
 
     public List<App> getApp() {
         AppExample example = new AppExample();
+        example.createCriteria().andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         return appMapper.selectByExample(example);
     }
 
@@ -108,7 +109,7 @@ public class AppService {
 
     public List<App> findRoleAPP(){
         AppExample example = new AppExample();
-        example.createCriteria().andEnabledEqualTo(true);
+        example.createCriteria().andEnabledEqualTo(true).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         example.setOrderByClause("Sort");
         List<App> list = appMapper.selectByExample(example);
         return list;
@@ -117,7 +118,8 @@ public class AppService {
     public List<App> findAppInIds(String ids, String type){
         List<Long> idList = StringUtil.strToLongList(ids);
         AppExample example = new AppExample();
-        example.createCriteria().andZlEqualTo(type).andEnabledEqualTo(true).andIdIn(idList);
+        example.createCriteria().andZlEqualTo(type).andEnabledEqualTo(true).andIdIn(idList)
+                .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         example.setOrderByClause("Sort");
         List<App> list = appMapper.selectByExample(example);
         return list;

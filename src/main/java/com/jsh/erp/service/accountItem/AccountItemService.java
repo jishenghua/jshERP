@@ -49,6 +49,7 @@ public class AccountItemService {
 
     public List<AccountItem> getAccountItem() {
         AccountItemExample example = new AccountItemExample();
+        example.createCriteria().andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         return accountItemMapper.selectByExample(example);
     }
 

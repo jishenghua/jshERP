@@ -66,6 +66,7 @@ public class DepotItemService {
 
     public List<DepotItem> getDepotItem() {
         DepotItemExample example = new DepotItemExample();
+        example.createCriteria().andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         return depotItemMapper.selectByExample(example);
     }
 

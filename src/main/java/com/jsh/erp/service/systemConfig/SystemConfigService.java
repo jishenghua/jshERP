@@ -42,6 +42,7 @@ public class SystemConfigService {
 
     public List<SystemConfig> getSystemConfig() {
         SystemConfigExample example = new SystemConfigExample();
+        example.createCriteria().andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         return systemConfigMapper.selectByExample(example);
     }
     public List<SystemConfig> select(String companyName, int offset, int rows) {
@@ -84,6 +85,7 @@ public class SystemConfigService {
         List<SystemConfig> list = systemConfigMapper.selectByExample(example);
         return list.size();
     }
+
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteSystemConfigByIds(String ids) {
         logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_SYSTEM_CONFIG,
