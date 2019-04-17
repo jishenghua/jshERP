@@ -55,7 +55,7 @@ public class AccountItemController {
                               @RequestParam("updated") String updated,
                               @RequestParam("headerId") Long headerId,
                               @RequestParam("listType") String listType,
-                              HttpServletRequest request) {
+                              HttpServletRequest request) throws Exception{
 
         Map<String, Object> objectMap = new HashMap<String, Object>();
         try {
@@ -70,7 +70,7 @@ public class AccountItemController {
 
     @GetMapping(value = "/getDetailList")
     public BaseResponseInfo getDetailList(@RequestParam("headerId") Long headerId,
-                                          HttpServletRequest request) {
+                                          HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         try {
