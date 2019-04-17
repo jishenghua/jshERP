@@ -64,7 +64,7 @@ public class UserBusinessService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int insertUserBusiness(String beanJson, HttpServletRequest request) {
+    public int insertUserBusiness(String beanJson, HttpServletRequest request) throws Exception {
         UserBusiness userBusiness = JSONObject.parseObject(beanJson, UserBusiness.class);
         int inserts = userBusinessMapper.insertSelective(userBusiness);
         // 更新应用权限
@@ -75,7 +75,7 @@ public class UserBusinessService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateUserBusiness(String beanJson, Long id) {
+    public int updateUserBusiness(String beanJson, Long id) throws Exception {
         UserBusiness userBusiness = JSONObject.parseObject(beanJson, UserBusiness.class);
         userBusiness.setId(id);
         int updates = userBusinessMapper.updateByPrimaryKeySelective(userBusiness);
@@ -187,7 +187,7 @@ public class UserBusinessService {
      * @param functionIds
      * @return
      */
-    public int insertOrUpdateAppValue(String type, String keyId, String functionIds) {
+    public int insertOrUpdateAppValue(String type, String keyId, String functionIds) throws Exception{
 
         int updates = 0;
 

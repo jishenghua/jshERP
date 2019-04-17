@@ -2,12 +2,14 @@ package com.jsh.erp.service.app;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
+import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.App;
 import com.jsh.erp.datasource.entities.AppExample;
 import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.entities.UserBusiness;
 import com.jsh.erp.datasource.mappers.AppMapper;
 import com.jsh.erp.datasource.mappers.AppMapperEx;
+import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.service.userBusiness.UserBusinessService;
@@ -40,11 +42,19 @@ public class AppService {
     @Resource
     private UserBusinessService userBusinessService;
 
-    public List<App> findDock(){
+    public List<App> findDock()throws Exception{
         AppExample example = new AppExample();
         example.createCriteria().andZlEqualTo("dock").andEnabledEqualTo(true).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         example.setOrderByClause("Sort");
-        List<App> list = appMapper.selectByExample(example);
+        List<App> list=null;
+        try{
+            list=appMapper.selectByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
         return list;
     }
     /**
@@ -55,86 +65,191 @@ public class AppService {
      * @Param: null
      * @return
      */
-    public List<App> findDesk(){
+    public List<App> findDesk()throws Exception{
         AppExample example = new AppExample();
         example.createCriteria().andZlEqualTo("desk").andEnabledEqualTo(true).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         example.setOrderByClause("Sort");
-        List<App> list = appMapper.selectByExample(example);
+        List<App> list=null;
+        try{
+            list=appMapper.selectByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
         return list;
     }
 
-    public App getApp(long id) {
-        return appMapper.selectByPrimaryKey(id);
+    public App getApp(long id)throws Exception {
+        App result=null;
+        try{
+            result=appMapper.selectByPrimaryKey(id);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return result;
     }
 
-    public List<App> getApp() {
+    public List<App> getApp()throws Exception {
         AppExample example = new AppExample();
         example.createCriteria().andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        return appMapper.selectByExample(example);
+        List<App> list=null;
+        try{
+            list=appMapper.selectByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list;
     }
 
-    public List<App> select(String name, String type, int offset, int rows) {
-        return appMapperEx.selectByConditionApp(name, type, offset, rows);
+    public List<App> select(String name, String type, int offset, int rows)throws Exception {
+        List<App> list=null;
+        try{
+            list=appMapperEx.selectByConditionApp(name, type, offset, rows);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list;
     }
 
-    public Long countApp(String name, String type) {
-        return appMapperEx.countsByApp(name, type);
+    public Long countApp(String name, String type)throws Exception {
+        Long result=null;
+        try{
+            result=appMapperEx.countsByApp(name, type);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int insertApp(String beanJson, HttpServletRequest request) {
+    public int insertApp(String beanJson, HttpServletRequest request)throws Exception {
         App app = JSONObject.parseObject(beanJson, App.class);
-        return appMapper.insertSelective(app);
+        int result=0;
+        try{
+            result=appMapper.insertSelective(app);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateApp(String beanJson, Long id) {
+    public int updateApp(String beanJson, Long id) throws Exception{
         App app = JSONObject.parseObject(beanJson, App.class);
         app.setId(id);
-        return appMapper.updateByPrimaryKeySelective(app);
+        int result=0;
+        try{
+            result=appMapper.updateByPrimaryKeySelective(app);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int deleteApp(Long id) {
-        return appMapper.deleteByPrimaryKey(id);
+    public int deleteApp(Long id)throws Exception {
+        int result=0;
+        try{
+            result=appMapper.deleteByPrimaryKey(id);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteApp(String ids) {
+    public int batchDeleteApp(String ids)throws Exception {
         List<Long> idList = StringUtil.strToLongList(ids);
         AppExample example = new AppExample();
         example.createCriteria().andIdIn(idList);
-        return appMapper.deleteByExample(example);
+        int result=0;
+        try{
+            result=appMapper.deleteByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 
-    public List<App> findRoleAPP(){
+    public List<App> findRoleAPP()throws Exception{
         AppExample example = new AppExample();
         example.createCriteria().andEnabledEqualTo(true).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         example.setOrderByClause("Sort");
-        List<App> list = appMapper.selectByExample(example);
+        List<App> list=null;
+        try{
+            list=appMapper.selectByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
         return list;
     }
 
-    public List<App> findAppInIds(String ids, String type){
+    public List<App> findAppInIds(String ids, String type)throws Exception{
         List<Long> idList = StringUtil.strToLongList(ids);
         AppExample example = new AppExample();
         example.createCriteria().andZlEqualTo(type).andEnabledEqualTo(true).andIdIn(idList)
                 .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         example.setOrderByClause("Sort");
-        List<App> list = appMapper.selectByExample(example);
+        List<App> list=null;
+        try{
+            list=appMapper.selectByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
         return list;
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteAppByIds(String ids) {
+    public int batchDeleteAppByIds(String ids) throws Exception{
         logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_APP,
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");
-        return appMapperEx.batchDeleteAppByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+        int  result=0;
+        try{
+            result=appMapperEx.batchDeleteAppByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 
-    public List<App> findAppByUserId(String userId) {
+    public List<App> findAppByUserId(String userId)throws Exception {
         List<UserBusiness> roleList = userBusinessService.findRoleByUserId(userId);
         String roles = null;
         if(roleList!=null && roleList.size()>0 && roleList.get(0)!=null){
@@ -162,10 +277,19 @@ public class AppService {
      * @param numberList
      * @return
      */
-    public List<App> findAppByNumber(List<String> numberList) {
+    public List<App> findAppByNumber(List<String> numberList) throws Exception{
 
         AppExample example = new AppExample();
         example.createCriteria().andEnabledEqualTo(true).andNumberIn(numberList);
-        return appMapper.selectByExample(example);
+        List<App> list=null;
+        try{
+            list=appMapper.selectByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list;
     }
 }

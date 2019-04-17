@@ -41,12 +41,12 @@ public class UserBusinessComponent implements ICommonQuery {
     }
 
     @Override
-    public int insert(String beanJson, HttpServletRequest request) {
+    public int insert(String beanJson, HttpServletRequest request) throws Exception {
         return userBusinessService.insertUserBusiness(beanJson, request);
     }
 
     @Override
-    public int update(String beanJson, Long id) {
+    public int update(String beanJson, Long id)throws Exception {
         return userBusinessService.updateUserBusiness(beanJson, id);
     }
 

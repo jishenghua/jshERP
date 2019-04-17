@@ -48,7 +48,7 @@ public class AppController {
      * @return
      */
     @GetMapping(value = "/findAppByUserId")
-    public JSONObject findAppByUserId(@RequestParam("userId") String userId, HttpServletRequest request) {
+    public JSONObject findAppByUserId(@RequestParam("userId") String userId, HttpServletRequest request)throws Exception {
         List<UserBusiness> roleList = userBusinessService.findRoleByUserId(userId);
         String roles = null;
         if(roleList!=null && roleList.size()>0 && roleList.get(0)!=null){
@@ -109,7 +109,7 @@ public class AppController {
     }
 
     @GetMapping(value = "/findDesk")
-    public JSONObject findDesk(HttpServletRequest request) {
+    public JSONObject findDesk(HttpServletRequest request)throws Exception {
         JSONObject obj = new JSONObject();
         List<App> dockList = appService.findDock();
         JSONArray dockArray = new JSONArray();
@@ -160,7 +160,7 @@ public class AppController {
      */
     @PostMapping(value = "/findRoleAPP")
     public JSONArray findRoleAPP(@RequestParam("UBType") String type, @RequestParam("UBKeyId") String keyId,
-                                  HttpServletRequest request) {
+                                  HttpServletRequest request)throws Exception {
         JSONArray arr = new JSONArray();
         try {
             List<App> dataListApp = appService.findRoleAPP();
@@ -229,7 +229,7 @@ public class AppController {
      */
     @PostMapping(value = "/uploadImg")
     public BaseResponseInfo uploadImg(MultipartFile fileInfo, @RequestParam("fileInfoName") String fileName,
-                                      HttpServletRequest request) {
+                                      HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
             if (fileInfo != null) {
