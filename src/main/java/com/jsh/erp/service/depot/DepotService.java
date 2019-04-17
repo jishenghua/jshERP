@@ -41,91 +41,214 @@ public class DepotService {
     @Resource
     private DepotItemMapperEx depotItemMapperEx;
 
-    public Depot getDepot(long id) {
-        return depotMapper.selectByPrimaryKey(id);
+    public Depot getDepot(long id)throws Exception {
+        Depot result=null;
+        try{
+            result=depotMapper.selectByPrimaryKey(id);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return result;
     }
 
-    public List<Depot> getDepot() {
+    public List<Depot> getDepot()throws Exception {
         DepotExample example = new DepotExample();
         example.createCriteria().andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        return depotMapper.selectByExample(example);
+        List<Depot> list=null;
+        try{
+            list=depotMapper.selectByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list;
     }
 
-    public List<Depot> getAllList() {
+    public List<Depot> getAllList()throws Exception {
         DepotExample example = new DepotExample();
         example.createCriteria().andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         example.setOrderByClause("sort");
-        return depotMapper.selectByExample(example);
+        List<Depot> list=null;
+        try{
+            list=depotMapper.selectByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list;
     }
 
-    public List<Depot> select(String name, Integer type, String remark, int offset, int rows) {
-        return depotMapperEx.selectByConditionDepot(name, type, remark, offset, rows);
+    public List<Depot> select(String name, Integer type, String remark, int offset, int rows)throws Exception {
+        List<Depot> list=null;
+        try{
+            list=depotMapperEx.selectByConditionDepot(name, type, remark, offset, rows);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list;
     }
 
-    public Long countDepot(String name, Integer type, String remark) {
-        return depotMapperEx.countsByDepot(name, type, remark);
+    public Long countDepot(String name, Integer type, String remark)throws Exception {
+        Long result=null;
+        try{
+            result=depotMapperEx.countsByDepot(name, type, remark);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int insertDepot(String beanJson, HttpServletRequest request) {
+    public int insertDepot(String beanJson, HttpServletRequest request)throws Exception {
         Depot depot = JSONObject.parseObject(beanJson, Depot.class);
-        return depotMapper.insertSelective(depot);
+        int result=0;
+        try{
+            result=depotMapper.insertSelective(depot);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateDepot(String beanJson, Long id) {
+    public int updateDepot(String beanJson, Long id) throws Exception{
         Depot depot = JSONObject.parseObject(beanJson, Depot.class);
         depot.setId(id);
-        return depotMapper.updateByPrimaryKeySelective(depot);
+        int result=0;
+        try{
+            result= depotMapper.updateByPrimaryKeySelective(depot);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int deleteDepot(Long id) {
-        return depotMapper.deleteByPrimaryKey(id);
+    public int deleteDepot(Long id)throws Exception {
+        int result=0;
+        try{
+            result= depotMapper.deleteByPrimaryKey(id);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteDepot(String ids) {
+    public int batchDeleteDepot(String ids) throws Exception{
         List<Long> idList = StringUtil.strToLongList(ids);
         DepotExample example = new DepotExample();
         example.createCriteria().andIdIn(idList);
-        return depotMapper.deleteByExample(example);
+        int result=0;
+        try{
+            result= depotMapper.deleteByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 
-    public int checkIsNameExist(Long id, String name) {
+    public int checkIsNameExist(Long id, String name)throws Exception {
         DepotExample example = new DepotExample();
         example.createCriteria().andIdNotEqualTo(id).andNameEqualTo(name).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        List<Depot> list = depotMapper.selectByExample(example);
-        return list.size();
+        List<Depot> list=null;
+        try{
+            list= depotMapper.selectByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list==null?0:list.size();
     }
 
-    public List<Depot> findUserDepot(){
+    public List<Depot> findUserDepot()throws Exception{
         DepotExample example = new DepotExample();
         example.createCriteria().andTypeEqualTo(0).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         example.setOrderByClause("Sort");
-        List<Depot> list = depotMapper.selectByExample(example);
+        List<Depot> list=null;
+        try{
+            list= depotMapper.selectByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
         return list;
     }
 
-    public List<Depot> findGiftByType(Integer type){
+    public List<Depot> findGiftByType(Integer type)throws Exception{
         DepotExample example = new DepotExample();
         example.createCriteria().andTypeEqualTo(type);
         example.setOrderByClause("Sort");
-        List<Depot> list = depotMapper.selectByExample(example);
+        List<Depot> list=null;
+        try{
+            list=  depotMapper.selectByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
         return list;
     }
 
-    public List<DepotEx> getDepotList(Map<String, Object> parameterMap) {
-        return depotMapperEx.getDepotList(parameterMap);
+    public List<DepotEx> getDepotList(Map<String, Object> parameterMap)throws Exception {
+        List<DepotEx> list=null;
+        try{
+            list=  depotMapperEx.getDepotList(parameterMap);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list;
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteDepotByIds(String ids) {
+    public int batchDeleteDepotByIds(String ids)throws Exception {
         logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_DEPOT,
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");
-        return depotMapperEx.batchDeleteDepotByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+        int result=0;
+        try{
+            result=  depotMapperEx.batchDeleteDepotByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
     /**
      * create by: qiankunpingtai
@@ -153,7 +276,15 @@ public class DepotService {
         /**
          * 校验单据主表	jsh_depothead
          * */
-        List<DepotHead> depotHeadList=depotHeadMapperEx.getDepotHeadListByDepotIds(idArray);
+        List<DepotHead> depotHeadList=null;
+        try{
+            depotHeadList=  depotHeadMapperEx.getDepotHeadListByDepotIds(idArray);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
         if(depotHeadList!=null&&depotHeadList.size()>0){
             logger.error("异常码[{}],异常提示[{}],参数,DepotIds[{}]",
                     ExceptionConstants.DELETE_FORCE_CONFIRM_CODE,ExceptionConstants.DELETE_FORCE_CONFIRM_MSG,ids);
@@ -163,7 +294,15 @@ public class DepotService {
         /**
          * 校验单据子表	jsh_depotitem
          * */
-        List<DepotItem> depotItemList=depotItemMapperEx.getDepotItemListListByDepotIds(idArray);
+        List<DepotItem> depotItemList=null;
+        try{
+            depotItemList=  depotItemMapperEx.getDepotItemListListByDepotIds(idArray);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
         if(depotItemList!=null&&depotItemList.size()>0){
             logger.error("异常码[{}],异常提示[{}],参数,DepotIds[{}]",
                     ExceptionConstants.DELETE_FORCE_CONFIRM_CODE,ExceptionConstants.DELETE_FORCE_CONFIRM_MSG,ids);

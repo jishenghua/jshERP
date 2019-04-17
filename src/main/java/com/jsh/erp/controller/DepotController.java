@@ -41,7 +41,7 @@ public class DepotController {
     private UserBusinessService userBusinessService;
 
     @GetMapping(value = "/getAllList")
-    public BaseResponseInfo getAllList(HttpServletRequest request) {
+    public BaseResponseInfo getAllList(HttpServletRequest request) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();
         try {
             List<Depot> depotList = depotService.getAllList();
@@ -64,7 +64,7 @@ public class DepotController {
      */
     @PostMapping(value = "/findUserDepot")
     public JSONArray findUserDepot(@RequestParam("UBType") String type, @RequestParam("UBKeyId") String keyId,
-                                 HttpServletRequest request) {
+                                 HttpServletRequest request) throws Exception{
         JSONArray arr = new JSONArray();
         try {
             List<Depot> dataList = depotService.findUserDepot();
@@ -104,7 +104,7 @@ public class DepotController {
 
     @RequestMapping(value = "/findDepotByUserId")
     public JSONArray findDepotByUserId(@RequestParam("UBType") String type, @RequestParam("UBKeyId") String keyId,
-                                       HttpServletRequest request) {
+                                       HttpServletRequest request) throws Exception{
         JSONArray arr = new JSONArray();
         try {
             List<Depot> dataList = depotService.findUserDepot();
@@ -145,7 +145,7 @@ public class DepotController {
     public String getDepotList(
             @RequestParam(value = Constants.PAGE_SIZE, required = false) Integer pageSize,
             @RequestParam(value = Constants.CURRENT_PAGE, required = false) Integer currentPage,
-            @RequestParam(value = Constants.SEARCH, required = false) String search) {
+            @RequestParam(value = Constants.SEARCH, required = false) String search) throws Exception{
         Map<String, Object> parameterMap = new HashMap<String, Object>();
         //查询参数
         JSONObject obj=JSON.parseObject(search);
