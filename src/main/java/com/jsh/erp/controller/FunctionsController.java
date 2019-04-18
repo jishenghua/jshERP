@@ -41,7 +41,7 @@ public class FunctionsController {
     @PostMapping(value = "/findMenu")
     public JSONArray findMenu(@RequestParam(value="pNumber") String pNumber,
                             @RequestParam(value="hasFunctions") String hasFunctions,
-                            HttpServletRequest request) {
+                            HttpServletRequest request)throws Exception {
         //存放数据json数组
         JSONArray dataArray = new JSONArray();
         try {
@@ -124,7 +124,7 @@ public class FunctionsController {
      */
     @PostMapping(value = "/findRoleFunctions")
     public JSONArray findRoleFunctions(@RequestParam("UBType") String type, @RequestParam("UBKeyId") String keyId,
-                                 HttpServletRequest request) {
+                                 HttpServletRequest request)throws Exception {
         JSONArray arr = new JSONArray();
         try {
             List<Functions> dataListFun = functionsService.findRoleFunctions("0");
@@ -277,7 +277,7 @@ public class FunctionsController {
      */
     @GetMapping(value = "/findByIds")
     public BaseResponseInfo findByIds(@RequestParam("functionsIds") String functionsIds,
-                                      HttpServletRequest request) {
+                                      HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
             List<Functions> dataList = functionsService.findByIds(functionsIds);
