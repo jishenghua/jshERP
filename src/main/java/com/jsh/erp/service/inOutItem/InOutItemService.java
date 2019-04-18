@@ -4,10 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
-import com.jsh.erp.datasource.entities.AccountItem;
-import com.jsh.erp.datasource.entities.InOutItem;
-import com.jsh.erp.datasource.entities.InOutItemExample;
-import com.jsh.erp.datasource.entities.User;
+import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.mappers.AccountItemMapperEx;
 import com.jsh.erp.datasource.mappers.InOutItemMapper;
 import com.jsh.erp.datasource.mappers.InOutItemMapperEx;
@@ -43,58 +40,139 @@ public class InOutItemService {
     @Resource
     private AccountItemMapperEx accountItemMapperEx;
 
-    public InOutItem getInOutItem(long id) {
-        return inOutItemMapper.selectByPrimaryKey(id);
+    public InOutItem getInOutItem(long id)throws Exception {
+        InOutItem result=null;
+        try{
+            result=inOutItemMapper.selectByPrimaryKey(id);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return result;
     }
 
-    public List<InOutItem> getInOutItem() {
+    public List<InOutItem> getInOutItem()throws Exception {
         InOutItemExample example = new InOutItemExample();
         example.createCriteria().andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        return inOutItemMapper.selectByExample(example);
+        List<InOutItem> list=null;
+        try{
+            list=inOutItemMapper.selectByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list;
     }
 
-    public List<InOutItem> select(String name, String type, String remark, int offset, int rows) {
-        return inOutItemMapperEx.selectByConditionInOutItem(name, type, remark, offset, rows);
+    public List<InOutItem> select(String name, String type, String remark, int offset, int rows)throws Exception {
+        List<InOutItem> list=null;
+        try{
+            list=inOutItemMapperEx.selectByConditionInOutItem(name, type, remark, offset, rows);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list;
     }
 
-    public Long countInOutItem(String name, String type, String remark) {
-        return inOutItemMapperEx.countsByInOutItem(name, type, remark);
+    public Long countInOutItem(String name, String type, String remark)throws Exception {
+        Long result=null;
+        try{
+            result=inOutItemMapperEx.countsByInOutItem(name, type, remark);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int insertInOutItem(String beanJson, HttpServletRequest request) {
+    public int insertInOutItem(String beanJson, HttpServletRequest request)throws Exception {
         InOutItem depot = JSONObject.parseObject(beanJson, InOutItem.class);
-        return inOutItemMapper.insertSelective(depot);
+        int result=0;
+        try{
+            result=inOutItemMapper.insertSelective(depot);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateInOutItem(String beanJson, Long id) {
+    public int updateInOutItem(String beanJson, Long id)throws Exception {
         InOutItem depot = JSONObject.parseObject(beanJson, InOutItem.class);
         depot.setId(id);
-        return inOutItemMapper.updateByPrimaryKeySelective(depot);
+        int result=0;
+        try{
+            result=inOutItemMapper.updateByPrimaryKeySelective(depot);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int deleteInOutItem(Long id) {
-        return inOutItemMapper.deleteByPrimaryKey(id);
+    public int deleteInOutItem(Long id)throws Exception {
+        int result=0;
+        try{
+            result=inOutItemMapper.deleteByPrimaryKey(id);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteInOutItem(String ids) {
+    public int batchDeleteInOutItem(String ids)throws Exception {
         List<Long> idList = StringUtil.strToLongList(ids);
         InOutItemExample example = new InOutItemExample();
         example.createCriteria().andIdIn(idList);
-        return inOutItemMapper.deleteByExample(example);
+        int result=0;
+        try{
+            result=inOutItemMapper.deleteByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 
-    public int checkIsNameExist(Long id, String name) {
+    public int checkIsNameExist(Long id, String name)throws Exception {
         InOutItemExample example = new InOutItemExample();
         example.createCriteria().andIdNotEqualTo(id).andNameEqualTo(name).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        List<InOutItem> list = inOutItemMapper.selectByExample(example);
-        return list.size();
+        List<InOutItem> list = null;
+        try{
+            list=inOutItemMapper.selectByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+
+        return list==null?0:list.size();
     }
 
-    public List<InOutItem> findBySelect(String type) {
+    public List<InOutItem> findBySelect(String type)throws Exception {
         InOutItemExample example = new InOutItemExample();
         if (type.equals("in")) {
             example.createCriteria().andTypeEqualTo("收入").andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
@@ -102,16 +180,34 @@ public class InOutItemService {
             example.createCriteria().andTypeEqualTo("支出").andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         }
         example.setOrderByClause("id desc");
-        return inOutItemMapper.selectByExample(example);
+        List<InOutItem> list = null;
+        try{
+            list=inOutItemMapper.selectByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list;
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteInOutItemByIds(String ids) {
+    public int batchDeleteInOutItemByIds(String ids)throws Exception {
         logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_IN_OUT_ITEM,
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");
-        return inOutItemMapperEx.batchDeleteInOutItemByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+        int result = 0;
+        try{
+            result=inOutItemMapperEx.batchDeleteInOutItemByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return result;
     }
     /**
      * create by: qiankunpingtai
@@ -137,7 +233,15 @@ public class InOutItemService {
         /**
          * 校验财务子表	jsh_accountitem
          * */
-        List<AccountItem> accountItemList=accountItemMapperEx.getAccountItemListByInOutItemIds(idArray);
+        List<AccountItem> accountItemList=null;
+        try{
+            accountItemList=accountItemMapperEx.getAccountItemListByInOutItemIds(idArray);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
         if(accountItemList!=null&&accountItemList.size()>0){
             logger.error("异常码[{}],异常提示[{}],参数,InOutItemIds[{}]",
                     ExceptionConstants.DELETE_FORCE_CONFIRM_CODE,ExceptionConstants.DELETE_FORCE_CONFIRM_MSG,ids);

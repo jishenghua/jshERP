@@ -35,7 +35,7 @@ public class InOutItemController {
      * @return
      */
     @GetMapping(value = "/findBySelect")
-    public String findBySelect(@RequestParam("type") String type, HttpServletRequest request) {
+    public String findBySelect(@RequestParam("type") String type, HttpServletRequest request) throws Exception{
         String res = null;
         try {
             List<InOutItem> dataList = inOutItemService.findBySelect(type);
