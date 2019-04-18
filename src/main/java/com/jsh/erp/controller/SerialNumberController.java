@@ -61,7 +61,7 @@ public class SerialNumberController {
      */
     @PostMapping("/serialNumber/addSerialNumber")
     @ResponseBody
-    public Object addSerialNumber(@RequestParam("info") String beanJson){
+    public Object addSerialNumber(@RequestParam("info") String beanJson)throws Exception{
         JSONObject result = ExceptionConstants.standardSuccess();
         SerialNumberEx sne= JSON.parseObject(beanJson, SerialNumberEx.class);
         serialNumberService.addSerialNumber(sne);
@@ -78,7 +78,7 @@ public class SerialNumberController {
      */
     @PostMapping("/serialNumber/updateSerialNumber")
     @ResponseBody
-    public Object updateSerialNumber(@RequestParam("info") String beanJson){
+    public Object updateSerialNumber(@RequestParam("info") String beanJson)throws Exception{
 
         JSONObject result = ExceptionConstants.standardSuccess();
         SerialNumberEx sne= JSON.parseObject(beanJson, SerialNumberEx.class);
@@ -100,7 +100,7 @@ public class SerialNumberController {
     @PostMapping("/serialNumber/batAddSerialNumber")
     @ResponseBody
     public Object batAddSerialNumber(@RequestParam("materialName") String materialName, @RequestParam("serialNumberPrefix") String serialNumberPrefix,
-                                     @RequestParam("batAddTotal") Integer batAddTotal,@RequestParam("remark") String remark){
+                                     @RequestParam("batAddTotal") Integer batAddTotal,@RequestParam("remark") String remark)throws Exception{
 
         JSONObject result = ExceptionConstants.standardSuccess();
         serialNumberService.batAddSerialNumber(materialName,serialNumberPrefix,batAddTotal,remark);

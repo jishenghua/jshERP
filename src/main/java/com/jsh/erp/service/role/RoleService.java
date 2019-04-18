@@ -98,7 +98,7 @@ public class RoleService {
      * @return int
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteRoleByIds(String ids) {
+    public int batchDeleteRoleByIds(String ids) throws Exception{
         logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_SERIAL_NUMBER,
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());

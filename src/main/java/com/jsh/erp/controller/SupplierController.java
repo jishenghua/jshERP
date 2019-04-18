@@ -57,7 +57,7 @@ public class SupplierController {
     @PostMapping(value = "/updateAdvanceIn")
     public String updateAdvanceIn(@RequestParam("supplierId") Long supplierId,
                                             @RequestParam("advanceIn") BigDecimal advanceIn,
-                                            HttpServletRequest request) {
+                                            HttpServletRequest request)throws Exception {
         Map<String, Object> objectMap = new HashMap<String, Object>();
         int res = supplierService.updateAdvanceIn(supplierId, advanceIn);
         if(res > 0) {
@@ -221,7 +221,7 @@ public class SupplierController {
     @PostMapping(value = "/batchSetEnable")
     public String batchSetEnable(@RequestParam("enabled") Boolean enabled,
                                  @RequestParam("supplierIDs") String supplierIDs,
-                                 HttpServletRequest request) {
+                                 HttpServletRequest request)throws Exception {
         Map<String, Object> objectMap = new HashMap<String, Object>();
         int res = supplierService.batchSetEnable(enabled, supplierIDs);
         if(res > 0) {

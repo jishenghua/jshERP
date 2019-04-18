@@ -67,7 +67,7 @@ public class SerialNumberService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int insertSerialNumber(String beanJson, HttpServletRequest request) {
+    public int insertSerialNumber(String beanJson, HttpServletRequest request)throws Exception {
         SerialNumber serialNumber = JSONObject.parseObject(beanJson, SerialNumber.class);
         logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_SERIAL_NUMBER, BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
         return serialNumberMapper.insertSelective(serialNumber);
@@ -169,7 +169,7 @@ public class SerialNumberService {
      * 新增序列号信息
      * */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public SerialNumberEx addSerialNumber(SerialNumberEx serialNumberEx) {
+    public SerialNumberEx addSerialNumber(SerialNumberEx serialNumberEx) throws Exception{
         logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_SERIAL_NUMBER,BusinessConstants.LOG_OPERATION_TYPE_ADD,
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         if(serialNumberEx==null){
@@ -194,7 +194,7 @@ public class SerialNumberService {
         return null;
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public SerialNumberEx updateSerialNumber(SerialNumberEx serialNumberEx) {
+    public SerialNumberEx updateSerialNumber(SerialNumberEx serialNumberEx)throws Exception {
         logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_SERIAL_NUMBER,
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(serialNumberEx.getId()).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
@@ -351,7 +351,7 @@ public class SerialNumberService {
      * @return java.lang.Object
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public void batAddSerialNumber(String materialName, String serialNumberPrefix, Integer batAddTotal, String remark) {
+    public void batAddSerialNumber(String materialName, String serialNumberPrefix, Integer batAddTotal, String remark)throws Exception {
         logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_SERIAL_NUMBER,
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_BATCH_ADD).append(batAddTotal).append(BusinessConstants.LOG_DATA_UNIT).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
@@ -401,7 +401,7 @@ public class SerialNumberService {
      * @return
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteSerialNumberByIds(String ids) {
+    public int batchDeleteSerialNumberByIds(String ids) throws Exception{
         logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_SERIAL_NUMBER,
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());

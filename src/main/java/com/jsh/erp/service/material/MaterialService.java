@@ -150,7 +150,7 @@ public class MaterialService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchSetEnable(Boolean enabled, String materialIDs) {
+    public int batchSetEnable(Boolean enabled, String materialIDs)throws Exception {
         logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_MATERIAL,
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(materialIDs).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
@@ -217,7 +217,7 @@ public class MaterialService {
         return materialMapperEx.getMaterialEnableSerialNumberList(parameterMap);
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteMaterialByIds(String ids) {
+    public int batchDeleteMaterialByIds(String ids) throws Exception{
         logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_MATERIAL,
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());

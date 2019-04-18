@@ -99,7 +99,7 @@ public class SupplierService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateAdvanceIn(Long supplierId, BigDecimal advanceIn){
+    public int updateAdvanceIn(Long supplierId, BigDecimal advanceIn)throws Exception{
         logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_SUPPLIER,
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(supplierId).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
@@ -145,7 +145,7 @@ public class SupplierService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchSetEnable(Boolean enabled, String supplierIDs) {
+    public int batchSetEnable(Boolean enabled, String supplierIDs)throws Exception {
         logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_SUPPLIER,
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(supplierIDs).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
@@ -191,7 +191,7 @@ public class SupplierService {
         return info;
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteSupplierByIds(String ids) {
+    public int batchDeleteSupplierByIds(String ids)throws Exception {
         logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_SUPPLIER,
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());

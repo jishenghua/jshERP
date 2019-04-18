@@ -192,7 +192,7 @@ public class UserController {
 
     @PostMapping(value = "/resetPwd")
     public String resetPwd(@RequestParam("id") Long id,
-                                     HttpServletRequest request) throws NoSuchAlgorithmException {
+                                     HttpServletRequest request) throws Exception {
         Map<String, Object> objectMap = new HashMap<String, Object>();
         String password = "123456";
         String md5Pwd = Tools.md5Encryp(password);

@@ -68,7 +68,7 @@ public class MaterialController {
     @PostMapping(value = "/batchSetEnable")
     public String batchSetEnable(@RequestParam("enabled") Boolean enabled,
                                  @RequestParam("materialIDs") String materialIDs,
-                                 HttpServletRequest request) {
+                                 HttpServletRequest request)throws Exception {
         Map<String, Object> objectMap = new HashMap<String, Object>();
         int res = materialService.batchSetEnable(enabled, materialIDs);
         if(res > 0) {

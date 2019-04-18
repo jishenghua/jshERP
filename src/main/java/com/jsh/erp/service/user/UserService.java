@@ -114,7 +114,7 @@ public class UserService {
      * @return int
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateUserByObj(User user) {
+    public int updateUserByObj(User user) throws Exception{
         logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_USER,
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(user.getId()).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
@@ -130,7 +130,7 @@ public class UserService {
      * @return int
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int resetPwd(String md5Pwd, Long id) {
+    public int resetPwd(String md5Pwd, Long id) throws Exception{
         logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_USER,
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
@@ -467,7 +467,7 @@ public class UserService {
      * 批量删除用户
      * */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public void batDeleteUser(String ids) {
+    public void batDeleteUser(String ids) throws Exception{
         logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_USER,
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());

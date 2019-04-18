@@ -142,7 +142,7 @@ public class UserBusinessService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateBtnStr(Long userBusinessId, String btnStr) {
+    public int updateBtnStr(Long userBusinessId, String btnStr) throws Exception{
         logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_USER_BUSINESS,
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(userBusinessId).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
@@ -171,7 +171,7 @@ public class UserBusinessService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteUserBusinessByIds(String ids) {
+    public int batchDeleteUserBusinessByIds(String ids) throws Exception{
         logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_USER_BUSINESS,
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());

@@ -84,7 +84,7 @@ public class MaterialPropertyService {
         return 0;
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteMaterialPropertyByIds(String ids) {
+    public int batchDeleteMaterialPropertyByIds(String ids) throws Exception{
         logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_MATERIAL_PROPERTY,
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());

@@ -164,7 +164,7 @@ public class MaterialCategoryService {
        return materialCategoryMapperEx.batchDeleteMaterialCategoryByIds(updateDate,updater,strArray);
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int editMaterialCategory(MaterialCategory mc) {
+    public int editMaterialCategory(MaterialCategory mc) throws Exception{
         logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_MATERIAL_CATEGORY,
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(mc.getId()).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());

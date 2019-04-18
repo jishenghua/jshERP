@@ -51,7 +51,7 @@ public class SerialNumberComponent implements ICommonQuery {
     }
 
     @Override
-    public int insert(String beanJson, HttpServletRequest request) {
+    public int insert(String beanJson, HttpServletRequest request)throws Exception {
         return serialNumberService.insertSerialNumber(beanJson, request);
     }
 

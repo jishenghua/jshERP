@@ -94,7 +94,7 @@ public class UnitService {
         return list.size();
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteUnitByIds(String ids) {
+    public int batchDeleteUnitByIds(String ids)throws Exception {
         logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_UNIT,
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
