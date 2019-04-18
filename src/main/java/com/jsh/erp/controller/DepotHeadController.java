@@ -55,7 +55,7 @@ public class DepotHeadController {
     @PostMapping(value = "/batchSetStatus")
     public String batchSetStatus(@RequestParam("status") String status,
                                  @RequestParam("depotHeadIDs") String depotHeadIDs,
-                                 HttpServletRequest request) {
+                                 HttpServletRequest request) throws Exception{
         Map<String, Object> objectMap = new HashMap<String, Object>();
         int res = depotHeadService.batchSetStatus(status, depotHeadIDs);
         if(res > 0) {

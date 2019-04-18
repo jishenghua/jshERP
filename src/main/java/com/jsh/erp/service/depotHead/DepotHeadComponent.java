@@ -19,16 +19,16 @@ public class DepotHeadComponent implements ICommonQuery {
     private DepotHeadService depotHeadService;
 
     @Override
-    public Object selectOne(String condition) {
+    public Object selectOne(String condition)throws Exception {
         return null;
     }
 
     @Override
-    public List<?> select(Map<String, String> map) {
+    public List<?> select(Map<String, String> map)throws Exception {
         return getDepotHeadList(map);
     }
 
-    private List<?> getDepotHeadList(Map<String, String> map) {
+    private List<?> getDepotHeadList(Map<String, String> map)throws Exception {
         String search = map.get(Constants.SEARCH);
         String type = StringUtil.getInfo(search, "type");
         String subType = StringUtil.getInfo(search, "subType");
@@ -41,7 +41,7 @@ public class DepotHeadComponent implements ICommonQuery {
     }
 
     @Override
-    public Long counts(Map<String, String> map) {
+    public Long counts(Map<String, String> map)throws Exception {
         String search = map.get(Constants.SEARCH);
         String type = StringUtil.getInfo(search, "type");
         String subType = StringUtil.getInfo(search, "subType");
@@ -53,27 +53,27 @@ public class DepotHeadComponent implements ICommonQuery {
     }
 
     @Override
-    public int insert(String beanJson, HttpServletRequest request) {
+    public int insert(String beanJson, HttpServletRequest request) throws Exception{
         return depotHeadService.insertDepotHead(beanJson, request);
     }
 
     @Override
-    public int update(String beanJson, Long id) {
+    public int update(String beanJson, Long id)throws Exception {
         return depotHeadService.updateDepotHead(beanJson, id);
     }
 
     @Override
-    public int delete(Long id) {
+    public int delete(Long id)throws Exception {
         return depotHeadService.deleteDepotHead(id);
     }
 
     @Override
-    public int batchDelete(String ids) {
+    public int batchDelete(String ids)throws Exception {
         return depotHeadService.batchDeleteDepotHead(ids);
     }
 
     @Override
-    public int checkIsNameExist(Long id, String name) {
+    public int checkIsNameExist(Long id, String name)throws Exception {
         return depotHeadService.checkIsNameExist(id, name);
     }
 
