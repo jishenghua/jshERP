@@ -51,7 +51,7 @@ public class DepotItemController {
     @GetMapping(value = "/getHeaderIdByMaterial")
     public BaseResponseInfo getHeaderIdByMaterial(@RequestParam("materialParam") String materialParam,
                                                   @RequestParam("depotIds") String depotIds,
-                                                  HttpServletRequest request) {
+                                                  HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
             List<DepotItemVo4HeaderId> depotItemList = depotItemService.getHeaderIdByMaterial(materialParam, depotIds);
@@ -89,7 +89,7 @@ public class DepotItemController {
     public String findDetailByTypeAndMaterialId(
             @RequestParam(value = Constants.PAGE_SIZE, required = false) Integer pageSize,
             @RequestParam(value = Constants.CURRENT_PAGE, required = false) Integer currentPage,
-            @RequestParam("materialId") String mId, HttpServletRequest request) {
+            @RequestParam("materialId") String mId, HttpServletRequest request)throws Exception {
         Map<String, String> parameterMap = ParamUtils.requestToMap(request);
         parameterMap.put("mId", mId);
         PageQueryInfo queryInfo = new PageQueryInfo();
@@ -139,7 +139,7 @@ public class DepotItemController {
             @RequestParam("projectId") Integer pid,
             @RequestParam("materialId") String mId,
             @RequestParam("monthTime") String monthTime,
-            HttpServletRequest request) {
+            HttpServletRequest request) throws Exception{
         Map<String, String> parameterMap = ParamUtils.requestToMap(request);
         parameterMap.put("mId", mId);
         parameterMap.put("monthTime", monthTime);
@@ -203,7 +203,7 @@ public class DepotItemController {
             @RequestParam(value = Constants.CURRENT_PAGE, required = false) Integer currentPage,
             @RequestParam("materialId") String mId,
             @RequestParam("monthTime") String monthTime,
-            HttpServletRequest request) {
+            HttpServletRequest request)  throws Exception{
         Map<String, String> parameterMap = ParamUtils.requestToMap(request);
         parameterMap.put("mId", mId);
         parameterMap.put("monthTime", monthTime);
@@ -250,7 +250,7 @@ public class DepotItemController {
      * @param mId
      * @return
      */
-    public int sumNumberByMaterialId(String type, Long mId) {
+    public int sumNumberByMaterialId(String type, Long mId)throws Exception {
         int allNumber = 0;
         try {
             allNumber = depotItemService.findByTypeAndMaterialId(type, mId);
@@ -291,7 +291,7 @@ public class DepotItemController {
      *
      * @return
      */
-    public String findUnitName(Long mId) {
+    public String findUnitName(Long mId)throws Exception {
         String unitName = "";
         try {
             unitName = materialService.findUnitName(mId);
@@ -310,7 +310,7 @@ public class DepotItemController {
     @GetMapping(value = "/getDetailList")
     public BaseResponseInfo getDetailList(@RequestParam("headerId") Long headerId,
                               @RequestParam("mpList") String mpList,
-                              HttpServletRequest request) {
+                              HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         try {
@@ -382,7 +382,7 @@ public class DepotItemController {
      *
      * @return
      */
-    public String getOtherInfo(String[] mpArr, DepotItemVo4WithInfoEx diEx) {
+    public String getOtherInfo(String[] mpArr, DepotItemVo4WithInfoEx diEx)throws Exception {
         String materialOther = "";
         for (int i = 0; i < mpArr.length; i++) {
             if (mpArr[i].equals("颜色")) {
@@ -427,7 +427,7 @@ public class DepotItemController {
                                       @RequestParam("headIds") String headIds,
                                       @RequestParam("materialIds") String materialIds,
                                       @RequestParam("mpList") String mpList,
-                                      HttpServletRequest request) {
+                                      HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         try {
@@ -497,7 +497,7 @@ public class DepotItemController {
                                                         @RequestParam("monthTime") String monthTime,
                                                         @RequestParam("headIds") String headIds,
                                                         @RequestParam("materialIds") String materialIds,
-                                                        HttpServletRequest request) {
+                                                        HttpServletRequest request) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         try {
@@ -540,7 +540,7 @@ public class DepotItemController {
                                       @RequestParam("headIds") String headIds,
                                       @RequestParam("materialIds") String materialIds,
                                       @RequestParam("mpList") String mpList,
-                                      HttpServletRequest request) {
+                                      HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         try {
@@ -600,7 +600,7 @@ public class DepotItemController {
                                   @RequestParam("headIds") String headIds,
                                   @RequestParam("materialIds") String materialIds,
                                   @RequestParam("mpList") String mpList,
-                                  HttpServletRequest request) {
+                                  HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         try {
@@ -665,7 +665,7 @@ public class DepotItemController {
                                         @RequestParam("monthTime") String monthTime,
                                         @RequestParam("headIds") String headIds,
                                         @RequestParam("materialIds") String materialIds,
-                                        HttpServletRequest request, HttpServletResponse response) {
+                                        HttpServletRequest request, HttpServletResponse response)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         String message = "成功";
@@ -731,7 +731,7 @@ public class DepotItemController {
      * @param isPrev
      * @return
      */
-    public BigDecimal sumNumber(String type, Integer ProjectId, Long MId, String MonthTime, Boolean isPrev) {
+    public BigDecimal sumNumber(String type, Integer ProjectId, Long MId, String MonthTime, Boolean isPrev)throws Exception {
         BigDecimal sumNumber = BigDecimal.ZERO;
         try {
             BigDecimal sum = depotItemService.findByType(type, ProjectId, MId, MonthTime, isPrev);
@@ -744,7 +744,7 @@ public class DepotItemController {
         return sumNumber;
     }
 
-    public BigDecimal assembleNumber(String subType, String mType, Integer ProjectId, Long MId, String MonthTime, Boolean isPrev) {
+    public BigDecimal assembleNumber(String subType, String mType, Integer ProjectId, Long MId, String MonthTime, Boolean isPrev) throws Exception{
         BigDecimal assembleNumber = BigDecimal.ZERO;
         try {
             BigDecimal sum = depotItemService.findAssembleByType(subType, mType, ProjectId, MId, MonthTime, isPrev);
@@ -766,7 +766,7 @@ public class DepotItemController {
      * @param isPrev
      * @return
      */
-    public BigDecimal sumPrice(String type, Integer ProjectId, Long MId, String MonthTime, Boolean isPrev) {
+    public BigDecimal sumPrice(String type, Integer ProjectId, Long MId, String MonthTime, Boolean isPrev) throws Exception{
         BigDecimal sumPrice = BigDecimal.ZERO;
         try {
             BigDecimal sum = depotItemService.findPriceByType(type, ProjectId, MId, MonthTime, isPrev);
@@ -779,7 +779,7 @@ public class DepotItemController {
         return sumPrice;
     }
 
-    public BigDecimal sumNumberBuyOrSale(String type, String subType, Long MId, String MonthTime) {
+    public BigDecimal sumNumberBuyOrSale(String type, String subType, Long MId, String MonthTime)throws Exception {
         BigDecimal sumNumber = BigDecimal.ZERO;
         String sumType = "Number";
         try {
@@ -793,7 +793,7 @@ public class DepotItemController {
         return sumNumber;
     }
 
-    public BigDecimal sumPriceBuyOrSale(String type, String subType, Long MId, String MonthTime) {
+    public BigDecimal sumPriceBuyOrSale(String type, String subType, Long MId, String MonthTime)throws Exception {
         BigDecimal sumPrice = BigDecimal.ZERO;
         String sumType = "Price";
         try {
