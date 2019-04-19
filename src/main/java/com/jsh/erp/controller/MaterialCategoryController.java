@@ -35,7 +35,7 @@ public class MaterialCategoryController {
     private MaterialCategoryService materialCategoryService;
 
     @GetMapping(value = "/getAllList")
-    public BaseResponseInfo getAllList(@RequestParam("parentId") Long parentId, HttpServletRequest request) {
+    public BaseResponseInfo getAllList(@RequestParam("parentId") Long parentId, HttpServletRequest request) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();
         try {
             List<MaterialCategory> materialCategoryList = materialCategoryService.getAllList(parentId);
@@ -56,7 +56,7 @@ public class MaterialCategoryController {
      * @return
      */
     @RequestMapping(value = "/findById")
-    public BaseResponseInfo findById(@RequestParam("id") Long id, HttpServletRequest request) {
+    public BaseResponseInfo findById(@RequestParam("id") Long id, HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
             List<MaterialCategory> dataList = materialCategoryService.findById(id);
