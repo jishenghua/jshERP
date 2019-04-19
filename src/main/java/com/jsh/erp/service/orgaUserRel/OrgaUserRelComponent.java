@@ -22,44 +22,44 @@ public class OrgaUserRelComponent implements ICommonQuery {
     @Resource
     private OrgaUserRelService orgaUserRelService;
     @Override
-    public Object selectOne(String condition) {
+    public Object selectOne(String condition)throws Exception {
         return null;
     }
 
     @Override
-    public List<?> select(Map<String, String> parameterMap) {
+    public List<?> select(Map<String, String> parameterMap)throws Exception {
         return getOrgaUserRelList(parameterMap);
     }
-    private List<?> getOrgaUserRelList(Map<String, String> map) {
+    private List<?> getOrgaUserRelList(Map<String, String> map)throws Exception {
         return null;
     }
     @Override
-    public Long counts(Map<String, String> parameterMap) {
+    public Long counts(Map<String, String> parameterMap)throws Exception {
         return null;
     }
 
     @Override
-    public int insert(String beanJson, HttpServletRequest request) {
+    public int insert(String beanJson, HttpServletRequest request)throws Exception {
         return orgaUserRelService.insertOrgaUserRel(beanJson,request);
     }
 
     @Override
-    public int update(String beanJson, Long id) {
+    public int update(String beanJson, Long id)throws Exception {
         return orgaUserRelService.updateOrgaUserRel(beanJson,id);
     }
 
     @Override
-    public int delete(Long id) {
+    public int delete(Long id)throws Exception {
         return orgaUserRelService.deleteOrgaUserRel(id);
     }
 
     @Override
-    public int batchDelete(String ids) {
+    public int batchDelete(String ids)throws Exception {
         return orgaUserRelService.batchDeleteOrgaUserRel(ids);
     }
 
     @Override
-    public int checkIsNameExist(Long id, String name) {
+    public int checkIsNameExist(Long id, String name)throws Exception {
         return 0;
     }
 }

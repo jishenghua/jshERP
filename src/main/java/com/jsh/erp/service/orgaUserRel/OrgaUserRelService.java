@@ -2,9 +2,13 @@ package com.jsh.erp.service.orgaUserRel;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
-import com.jsh.erp.datasource.entities.*;
+import com.jsh.erp.constants.ExceptionConstants;
+import com.jsh.erp.datasource.entities.OrgaUserRel;
+import com.jsh.erp.datasource.entities.OrgaUserRelExample;
+import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.mappers.OrgaUserRelMapper;
 import com.jsh.erp.datasource.mappers.OrgaUserRelMapperEx;
+import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.organization.OrganizationService;
 import com.jsh.erp.service.user.UserService;
@@ -38,26 +42,62 @@ public class OrgaUserRelService {
     @Resource
     private LogService logService;
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int insertOrgaUserRel(String beanJson, HttpServletRequest request) {
+    public int insertOrgaUserRel(String beanJson, HttpServletRequest request) throws Exception{
         OrgaUserRel orgaUserRel = JSONObject.parseObject(beanJson, OrgaUserRel.class);
-        return orgaUserRelMapper.insertSelective(orgaUserRel);
+        int result=0;
+        try{
+            result=orgaUserRelMapper.insertSelective(orgaUserRel);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateOrgaUserRel(String beanJson, Long id) {
+    public int updateOrgaUserRel(String beanJson, Long id) throws Exception{
         OrgaUserRel orgaUserRel = JSONObject.parseObject(beanJson, OrgaUserRel.class);
         orgaUserRel.setId(id);
-        return orgaUserRelMapper.updateByPrimaryKeySelective(orgaUserRel);
+        int result=0;
+        try{
+            result=orgaUserRelMapper.updateByPrimaryKeySelective(orgaUserRel);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int deleteOrgaUserRel(Long id) {
-        return orgaUserRelMapper.deleteByPrimaryKey(id);
+    public int deleteOrgaUserRel(Long id)throws Exception {
+        int result=0;
+        try{
+            result=orgaUserRelMapper.deleteByPrimaryKey(id);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteOrgaUserRel(String ids) {
+    public int batchDeleteOrgaUserRel(String ids)throws Exception {
         List<Long> idList = StringUtil.strToLongList(ids);
         OrgaUserRelExample example = new OrgaUserRelExample();
         example.createCriteria().andIdIn(idList);
-        return orgaUserRelMapper.deleteByExample(example);
+        int result=0;
+        try{
+            result=orgaUserRelMapper.deleteByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
     /**
      * create by: cjl
@@ -88,8 +128,16 @@ public class OrgaUserRelService {
             orgaUserRel.setUpdater(userInfo==null?null:userInfo.getId());
         }
         orgaUserRel.setDeleteFlag(BusinessConstants.DELETE_FLAG_EXISTS);
-        int i=orgaUserRelMapperEx.addOrgaUserRel(orgaUserRel);
-        if(i>0){
+        int result=0;
+        try{
+            result=orgaUserRelMapperEx.addOrgaUserRel(orgaUserRel);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        if(result>0){
             return orgaUserRel;
         }
         return null;
@@ -103,7 +151,7 @@ public class OrgaUserRelService {
      * @return void
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public OrgaUserRel updateOrgaUserRel(OrgaUserRel orgaUserRel) {
+    public OrgaUserRel updateOrgaUserRel(OrgaUserRel orgaUserRel) throws Exception{
         User userInfo=userService.getCurrentUser();
         //更新时间
         if(orgaUserRel.getUpdateTime()==null){
@@ -113,8 +161,16 @@ public class OrgaUserRelService {
         if(orgaUserRel.getUpdater()==null){
             orgaUserRel.setUpdater(userInfo==null?null:userInfo.getId());
         }
-       int i= orgaUserRelMapperEx.updateOrgaUserRel(orgaUserRel);
-        if(i>0){
+        int result=0;
+        try{
+            result=orgaUserRelMapperEx.updateOrgaUserRel(orgaUserRel);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        if(result>0){
             return orgaUserRel;
         }
         return null;
