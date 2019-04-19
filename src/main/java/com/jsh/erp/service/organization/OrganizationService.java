@@ -3,6 +3,7 @@ package com.jsh.erp.service.organization;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
+import com.jsh.erp.datasource.entities.MaterialProperty;
 import com.jsh.erp.datasource.entities.Organization;
 import com.jsh.erp.datasource.entities.OrganizationExample;
 import com.jsh.erp.datasource.entities.User;
@@ -44,26 +45,62 @@ public class OrganizationService {
     @Resource
     private LogService logService;
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int insertOrganization(String beanJson, HttpServletRequest request) {
+    public int insertOrganization(String beanJson, HttpServletRequest request)throws Exception {
         Organization organization = JSONObject.parseObject(beanJson, Organization.class);
-        return organizationMapper.insertSelective(organization);
+        int result=0;
+        try{
+            result=organizationMapper.insertSelective(organization);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateOrganization(String beanJson, Long id) {
+    public int updateOrganization(String beanJson, Long id)throws Exception {
         Organization organization = JSONObject.parseObject(beanJson, Organization.class);
         organization.setId(id);
-        return organizationMapper.updateByPrimaryKeySelective(organization);
+        int result=0;
+        try{
+            result=organizationMapper.updateByPrimaryKeySelective(organization);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int deleteOrganization(Long id) {
-        return organizationMapper.deleteByPrimaryKey(id);
+    public int deleteOrganization(Long id)throws Exception {
+        int result=0;
+        try{
+            result=organizationMapper.deleteByPrimaryKey(id);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteOrganization(String ids) {
+    public int batchDeleteOrganization(String ids)throws Exception {
         List<Long> idList = StringUtil.strToLongList(ids);
         OrganizationExample example = new OrganizationExample();
         example.createCriteria().andIdIn(idList);
-        return organizationMapper.deleteByExample(example);
+        int result=0;
+        try{
+            result=organizationMapper.deleteByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int addOrganization(Organization org) throws Exception{
@@ -92,7 +129,16 @@ public class OrganizationService {
         if(StringUtil.isEmpty(org.getOrgParentNo())){
             org.setOrgParentNo(BusinessConstants.ORGANIZATION_ROOT_PARENT_NO);
         }
-        return organizationMapperEx.addOrganization(org);
+        int result=0;
+        try{
+            result=organizationMapperEx.addOrganization(org);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int editOrganization(Organization org)throws Exception {
@@ -116,23 +162,59 @@ public class OrganizationService {
         if(StringUtil.isEmpty(org.getOrgParentNo())){
             org.setOrgParentNo(BusinessConstants.ORGANIZATION_ROOT_PARENT_NO);
         }
-        return organizationMapperEx.editOrganization(org);
+        int result=0;
+        try{
+            result=organizationMapperEx.editOrganization(org);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 
     public List<TreeNode> getOrganizationTree(Long id)throws Exception {
-        return organizationMapperEx.getNodeTree(id);
+        List<TreeNode> list=null;
+        try{
+            list=organizationMapperEx.getNodeTree(id);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list;
     }
 
     public List<Organization> findById(Long id) throws Exception{
         OrganizationExample example = new OrganizationExample();
         example.createCriteria().andIdEqualTo(id);
-        return organizationMapper.selectByExample(example);
+        List<Organization> list=null;
+        try{
+            list=organizationMapper.selectByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list;
     }
 
     public List<Organization> findByOrgNo(String orgNo)throws Exception {
         OrganizationExample example = new OrganizationExample();
         example.createCriteria().andOrgNoEqualTo(orgNo).andOrgStcdNotEqualTo(BusinessConstants.ORGANIZATION_STCD_REMOVED);
-        return organizationMapper.selectByExample(example);
+        List<Organization> list=null;
+        try{
+            list=organizationMapper.selectByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list;
     }
     /**
      * create by: cjl
@@ -177,6 +259,16 @@ public class OrganizationService {
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");
-        return organizationMapperEx.batchDeleteOrganizationByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+        int result=0;
+        try{
+            result=organizationMapperEx.batchDeleteOrganizationByIds(
+                    new Date(),userInfo==null?null:userInfo.getId(),idArray);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 }

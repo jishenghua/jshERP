@@ -23,44 +23,44 @@ public class OrganizationComponent implements ICommonQuery {
     @Resource
     private OrganizationService organizationService;
     @Override
-    public Object selectOne(String condition) {
+    public Object selectOne(String condition)throws Exception {
         return null;
     }
 
     @Override
-    public List<?> select(Map<String, String> parameterMap) {
+    public List<?> select(Map<String, String> parameterMap)throws Exception {
         return getOrganizationList(parameterMap);
     }
-    private List<?> getOrganizationList(Map<String, String> map) {
+    private List<?> getOrganizationList(Map<String, String> map)throws Exception {
         return null;
     }
     @Override
-    public Long counts(Map<String, String> parameterMap) {
+    public Long counts(Map<String, String> parameterMap)throws Exception {
         return null;
     }
 
     @Override
-    public int insert(String beanJson, HttpServletRequest request) {
+    public int insert(String beanJson, HttpServletRequest request)throws Exception {
         return organizationService.insertOrganization(beanJson,request);
     }
 
     @Override
-    public int update(String beanJson, Long id) {
+    public int update(String beanJson, Long id)throws Exception {
         return organizationService.updateOrganization(beanJson,id);
     }
 
     @Override
-    public int delete(Long id) {
+    public int delete(Long id)throws Exception {
         return organizationService.deleteOrganization(id);
     }
 
     @Override
-    public int batchDelete(String ids) {
+    public int batchDelete(String ids)throws Exception {
         return organizationService.batchDeleteOrganization(ids);
     }
 
     @Override
-    public int checkIsNameExist(Long id, String name) {
+    public int checkIsNameExist(Long id, String name)throws Exception {
         return 0;
     }
 }
