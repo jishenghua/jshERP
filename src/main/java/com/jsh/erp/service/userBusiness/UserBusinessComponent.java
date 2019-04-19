@@ -22,46 +22,46 @@ public class UserBusinessComponent implements ICommonQuery {
     private UserBusinessService userBusinessService;
 
     @Override
-    public Object selectOne(String condition) {
+    public Object selectOne(String condition)throws Exception {
         return null;
     }
 
     @Override
-    public List<?> select(Map<String, String> map) {
+    public List<?> select(Map<String, String> map)throws Exception {
         return getUserBusinessList(map);
     }
 
-    private List<?> getUserBusinessList(Map<String, String> map) {
+    private List<?> getUserBusinessList(Map<String, String> map)throws Exception {
         return null;
     }
 
     @Override
-    public Long counts(Map<String, String> map) {
+    public Long counts(Map<String, String> map)throws Exception {
         return BusinessConstants.DEFAULT_LIST_NULL_NUMBER;
     }
 
     @Override
-    public int insert(String beanJson, HttpServletRequest request) {
+    public int insert(String beanJson, HttpServletRequest request) throws Exception {
         return userBusinessService.insertUserBusiness(beanJson, request);
     }
 
     @Override
-    public int update(String beanJson, Long id) {
+    public int update(String beanJson, Long id)throws Exception {
         return userBusinessService.updateUserBusiness(beanJson, id);
     }
 
     @Override
-    public int delete(Long id) {
+    public int delete(Long id)throws Exception {
         return userBusinessService.deleteUserBusiness(id);
     }
 
     @Override
-    public int batchDelete(String ids) {
+    public int batchDelete(String ids)throws Exception {
         return userBusinessService.batchDeleteUserBusiness(ids);
     }
 
     @Override
-    public int checkIsNameExist(Long id, String name) {
+    public int checkIsNameExist(Long id, String name)throws Exception {
         return userBusinessService.checkIsNameExist(id, name);
     }
 

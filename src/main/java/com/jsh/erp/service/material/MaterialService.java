@@ -39,20 +39,47 @@ public class MaterialService {
     @Resource
     private DepotItemMapperEx depotItemMapperEx;
 
-    public Material getMaterial(long id) {
-        return materialMapper.selectByPrimaryKey(id);
+    public Material getMaterial(long id)throws Exception {
+        Material result=null;
+        try{
+            result=materialMapper.selectByPrimaryKey(id);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return result;
     }
 
-    public List<Material> getMaterial() {
+    public List<Material> getMaterial() throws Exception{
         MaterialExample example = new MaterialExample();
         example.createCriteria().andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        return materialMapper.selectByExample(example);
+        List<Material> list=null;
+        try{
+            list=materialMapper.selectByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list;
     }
 
-    public List<MaterialVo4Unit> select(String name, String model,Long categoryId, String categoryIds,String mpList, int offset, int rows) {
+    public List<MaterialVo4Unit> select(String name, String model,Long categoryId, String categoryIds,String mpList, int offset, int rows)
+            throws Exception{
         String[] mpArr = mpList.split(",");
         List<MaterialVo4Unit> resList = new ArrayList<MaterialVo4Unit>();
-        List<MaterialVo4Unit> list = materialMapperEx.selectByConditionMaterial(name, model,categoryId,categoryIds,mpList, offset, rows);
+        List<MaterialVo4Unit> list =null;
+        try{
+            list= materialMapperEx.selectByConditionMaterial(name, model,categoryId,categoryIds,mpList, offset, rows);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
         if (null != list) {
             for (MaterialVo4Unit m : list) {
                 //扩展信息
@@ -84,53 +111,106 @@ public class MaterialService {
         return resList;
     }
 
-    public Long countMaterial(String name, String model,Long categoryId, String categoryIds,String mpList) {
-        return materialMapperEx.countsByMaterial(name, model,categoryId,categoryIds,mpList);
+    public Long countMaterial(String name, String model,Long categoryId, String categoryIds,String mpList)throws Exception {
+        Long result =null;
+        try{
+            result= materialMapperEx.countsByMaterial(name, model,categoryId,categoryIds,mpList);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int insertMaterial(String beanJson, HttpServletRequest request) {
+    public int insertMaterial(String beanJson, HttpServletRequest request)throws Exception {
         Material material = JSONObject.parseObject(beanJson, Material.class);
         material.setEnabled(true);
-        return materialMapper.insertSelective(material);
+        int result =0;
+        try{
+            result= materialMapper.insertSelective(material);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateMaterial(String beanJson, Long id) {
+    public int updateMaterial(String beanJson, Long id) throws Exception{
         Material material = JSONObject.parseObject(beanJson, Material.class);
         material.setId(id);
-        int res = materialMapper.updateByPrimaryKeySelective(material);
-        Long unitId = material.getUnitid();
-        if(unitId != null) {
-            materialMapperEx.updatePriceNullByPrimaryKey(id); //将价格置空
-        } else {
-            materialMapperEx.updateUnitIdNullByPrimaryKey(id); //将多单位置空
+        int res =0;
+        try{
+            res= materialMapper.updateByPrimaryKeySelective(material);
+            Long unitId = material.getUnitid();
+            if(unitId != null) {
+                materialMapperEx.updatePriceNullByPrimaryKey(id); //将价格置空
+            } else {
+                materialMapperEx.updateUnitIdNullByPrimaryKey(id); //将多单位置空
+            }
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
         }
+
         return res;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int deleteMaterial(Long id) {
-        return materialMapper.deleteByPrimaryKey(id);
+    public int deleteMaterial(Long id)throws Exception {
+        int result =0;
+        try{
+            result= materialMapper.deleteByPrimaryKey(id);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteMaterial(String ids) {
+    public int batchDeleteMaterial(String ids)throws Exception {
         List<Long> idList = StringUtil.strToLongList(ids);
         MaterialExample example = new MaterialExample();
         example.createCriteria().andIdIn(idList);
-        return materialMapper.deleteByExample(example);
+        int result =0;
+        try{
+            result= materialMapper.deleteByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 
-    public int checkIsNameExist(Long id, String name) {
+    public int checkIsNameExist(Long id, String name)throws Exception {
         MaterialExample example = new MaterialExample();
         example.createCriteria().andIdNotEqualTo(id).andNameEqualTo(name).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        List<Material> list = materialMapper.selectByExample(example);
-        return list.size();
+        List<Material> list =null;
+        try{
+            list=  materialMapper.selectByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list==null?0:list.size();
     }
 
     public int checkIsExist(Long id, String name, String model, String color, String standard, String mfrs,
-                            String otherField1, String otherField2, String otherField3, String unit, Long unitId) {
+                            String otherField1, String otherField2, String otherField3, String unit, Long unitId)throws Exception {
         MaterialExample example = new MaterialExample();
         MaterialExample.Criteria criteria = example.createCriteria();
         criteria.andNameEqualTo(name).andModelEqualTo(model).andColorEqualTo(color)
@@ -145,12 +225,20 @@ public class MaterialService {
         if (unitId !=null) {
             criteria.andUnitidEqualTo(unitId);
         }
-        List<Material> list = materialMapper.selectByExample(example);
-        return list.size();
+        List<Material> list =null;
+        try{
+            list=  materialMapper.selectByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list==null?0:list.size();
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchSetEnable(Boolean enabled, String materialIDs) {
+    public int batchSetEnable(Boolean enabled, String materialIDs)throws Exception {
         logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_MATERIAL,
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(materialIDs).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
@@ -159,31 +247,84 @@ public class MaterialService {
         material.setEnabled(enabled);
         MaterialExample example = new MaterialExample();
         example.createCriteria().andIdIn(ids);
-        return materialMapper.updateByExampleSelective(material, example);
+        int result =0;
+        try{
+            result=  materialMapper.updateByExampleSelective(material, example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return result;
     }
 
-    public String findUnitName(Long mId){
-        return materialMapperEx.findUnitName(mId);
+    public String findUnitName(Long mId)throws Exception{
+        String result =null;
+        try{
+            result=  materialMapperEx.findUnitName(mId);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return result;
     }
 
-    public List<MaterialVo4Unit> findById(Long id){
-        return materialMapperEx.findById(id);
+    public List<MaterialVo4Unit> findById(Long id)throws Exception{
+        List<MaterialVo4Unit> list =null;
+        try{
+            list=  materialMapperEx.findById(id);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list;
     }
 
-    public List<MaterialVo4Unit> findBySelect(){
-        return materialMapperEx.findBySelect();
+    public List<MaterialVo4Unit> findBySelect()throws Exception{
+        List<MaterialVo4Unit> list =null;
+        try{
+            list=  materialMapperEx.findBySelect();
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list;
     }
 
-    public List<Material> findByOrder(){
+    public List<Material> findByOrder()throws Exception{
         MaterialExample example = new MaterialExample();
         example.createCriteria().andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         example.setOrderByClause("Name,Model asc");
-        return materialMapper.selectByExample(example);
+        List<Material> list =null;
+        try{
+            list=  materialMapper.selectByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list;
     }
 
-    public List<MaterialVo4Unit> findByAll(String name, String model, Long categoryId, String categoryIds) {
+    public List<MaterialVo4Unit> findByAll(String name, String model, Long categoryId, String categoryIds)throws Exception {
         List<MaterialVo4Unit> resList = new ArrayList<MaterialVo4Unit>();
-        List<MaterialVo4Unit> list = materialMapperEx.findByAll(name, model, categoryId, categoryIds);
+        List<MaterialVo4Unit> list =null;
+        try{
+            list=  materialMapperEx.findByAll(name, model, categoryId, categoryIds);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
         if (null != list) {
             for (MaterialVo4Unit m : list) {
                 resList.add(m);
@@ -205,6 +346,8 @@ public class MaterialService {
             info.code = 200;
             data.put("message", "成功");
         } catch (Exception e) {
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
             e.printStackTrace();
             info.code = 500;
             data.put("message", e.getMessage());
@@ -213,17 +356,35 @@ public class MaterialService {
         return info;
     }
 
-    public List<Material> getMaterialEnableSerialNumberList(Map<String, Object> parameterMap) {
-        return materialMapperEx.getMaterialEnableSerialNumberList(parameterMap);
+    public List<Material> getMaterialEnableSerialNumberList(Map<String, Object> parameterMap)throws Exception {
+        List<Material> list =null;
+        try{
+            list=  materialMapperEx.getMaterialEnableSerialNumberList(parameterMap);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list;
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteMaterialByIds(String ids) {
+    public int batchDeleteMaterialByIds(String ids) throws Exception{
         logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_MATERIAL,
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");
-        return materialMapperEx.batchDeleteMaterialByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+        int result =0;
+        try{
+            result=  materialMapperEx.batchDeleteMaterialByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
     /**
      * create by: qiankunpingtai
@@ -250,7 +411,15 @@ public class MaterialService {
         /**
          * 校验单据子表	jsh_depotitem
          * */
-        List<DepotItem> depotItemList=depotItemMapperEx.getDepotItemListListByMaterialIds(idArray);
+        List<DepotItem> depotItemList =null;
+        try{
+            depotItemList=  depotItemMapperEx.getDepotItemListListByMaterialIds(idArray);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
         if(depotItemList!=null&&depotItemList.size()>0){
             logger.error("异常码[{}],异常提示[{}],参数,MaterialIds[{}]",
                     ExceptionConstants.DELETE_FORCE_CONFIRM_CODE,ExceptionConstants.DELETE_FORCE_CONFIRM_MSG,ids);

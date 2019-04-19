@@ -1,6 +1,5 @@
 package com.jsh.erp.controller;
 
-import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
@@ -41,7 +40,7 @@ public class AccountController {
      * @return
      */
     @GetMapping(value = "/findBySelect")
-    public String findBySelect(HttpServletRequest request) {
+    public String findBySelect(HttpServletRequest request) throws Exception {
         String res = null;
         try {
             List<Account> dataList = accountService.findBySelect();
@@ -70,7 +69,7 @@ public class AccountController {
      * @return
      */
     @GetMapping(value = "/getAccount")
-    public BaseResponseInfo getAccount(HttpServletRequest request) {
+    public BaseResponseInfo getAccount(HttpServletRequest request) throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         try {
@@ -100,7 +99,7 @@ public class AccountController {
                                                  @RequestParam("pageSize") Integer pageSize,
                                                  @RequestParam("accountId") Long accountId,
                                                  @RequestParam("initialAmount") BigDecimal initialAmount,
-                                                 HttpServletRequest request) {
+                                                 HttpServletRequest request) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         try {
@@ -133,7 +132,7 @@ public class AccountController {
     @PostMapping(value = "/updateAmountIsDefault")
     public String updateAmountIsDefault(@RequestParam("isDefault") Boolean isDefault,
                                  @RequestParam("accountId") Long accountId,
-                                 HttpServletRequest request) {
+                                 HttpServletRequest request) throws Exception{
         Map<String, Object> objectMap = new HashMap<String, Object>();
         int res = accountService.updateAmountIsDefault(isDefault, accountId);
         if(res > 0) {

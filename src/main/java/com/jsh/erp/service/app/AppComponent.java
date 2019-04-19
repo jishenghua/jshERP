@@ -19,16 +19,16 @@ public class AppComponent implements ICommonQuery {
     private AppService appService;
 
     @Override
-    public Object selectOne(String condition) {
+    public Object selectOne(String condition)throws Exception {
         return null;
     }
 
     @Override
-    public List<?> select(Map<String, String> map) {
+    public List<?> select(Map<String, String> map)throws Exception {
         return getAppList(map);
     }
 
-    private List<?> getAppList(Map<String, String> map) {
+    private List<?> getAppList(Map<String, String> map)throws Exception {
         String search = map.get(Constants.SEARCH);
         String name = StringUtil.getInfo(search, "name");
         String type = StringUtil.getInfo(search, "type");
@@ -37,7 +37,7 @@ public class AppComponent implements ICommonQuery {
     }
 
     @Override
-    public Long counts(Map<String, String> map) {
+    public Long counts(Map<String, String> map)throws Exception {
         String search = map.get(Constants.SEARCH);
         String name = StringUtil.getInfo(search, "name");
         String type = StringUtil.getInfo(search, "type");
@@ -45,27 +45,27 @@ public class AppComponent implements ICommonQuery {
     }
 
     @Override
-    public int insert(String beanJson, HttpServletRequest request) {
+    public int insert(String beanJson, HttpServletRequest request)throws Exception {
         return appService.insertApp(beanJson, request);
     }
 
     @Override
-    public int update(String beanJson, Long id) {
+    public int update(String beanJson, Long id)throws Exception {
         return appService.updateApp(beanJson, id);
     }
 
     @Override
-    public int delete(Long id) {
+    public int delete(Long id)throws Exception {
         return appService.deleteApp(id);
     }
 
     @Override
-    public int batchDelete(String ids) {
+    public int batchDelete(String ids)throws Exception {
         return appService.batchDeleteApp(ids);
     }
 
     @Override
-    public int checkIsNameExist(Long id, String name) {
+    public int checkIsNameExist(Long id, String name)throws Exception {
         return 0;
     }
 

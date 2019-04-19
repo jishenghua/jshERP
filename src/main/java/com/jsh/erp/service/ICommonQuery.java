@@ -18,7 +18,7 @@ public interface ICommonQuery {
      * @param condition 资源id
      * @return 资源
      */
-    Object selectOne(String condition);
+    Object selectOne(String condition) throws Exception;
 
     /**
      * 自定义查询
@@ -26,7 +26,7 @@ public interface ICommonQuery {
      * @param parameterMap 查询参数
      * @return 查询结果
      */
-    List<?> select(Map<String, String> parameterMap);
+    List<?> select(Map<String, String> parameterMap) throws Exception;
 
     /**
      * 查询数量
@@ -34,7 +34,7 @@ public interface ICommonQuery {
      * @param parameterMap 查询参数
      * @return 查询结果
      */
-    Long counts(Map<String, String> parameterMap);
+    Long counts(Map<String, String> parameterMap) throws Exception;
 
     /**
      * 新增数据
@@ -42,7 +42,7 @@ public interface ICommonQuery {
      * @param beanJson
      * @return
      */
-    int insert(String beanJson, HttpServletRequest request);
+    int insert(String beanJson, HttpServletRequest request) throws Exception;
 
     /**
      * 更新数据
@@ -50,7 +50,7 @@ public interface ICommonQuery {
      * @param beanJson
      * @return
      */
-    int update(String beanJson, Long id);
+    int update(String beanJson, Long id) throws Exception;
 
     /**
      * 删除数据
@@ -58,7 +58,7 @@ public interface ICommonQuery {
      * @param id
      * @return
      */
-    int delete(Long id);
+    int delete(Long id) throws Exception;
 
     /**
      * 批量删除数据
@@ -66,7 +66,7 @@ public interface ICommonQuery {
      * @param ids
      * @return
      */
-    int batchDelete(String ids);
+    int batchDelete(String ids) throws Exception;
 
     /**
      * 查询名称是否存在
@@ -74,5 +74,5 @@ public interface ICommonQuery {
      * @param id
      * @return
      */
-    int checkIsNameExist(Long id, String name);
+    int checkIsNameExist(Long id, String name) throws Exception;
 }

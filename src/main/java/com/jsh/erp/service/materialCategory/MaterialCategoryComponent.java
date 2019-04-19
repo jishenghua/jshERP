@@ -21,16 +21,16 @@ public class MaterialCategoryComponent implements ICommonQuery {
     private MaterialCategoryService materialCategoryService;
 
     @Override
-    public Object selectOne(String condition) {
+    public Object selectOne(String condition)throws Exception {
         return null;
     }
 
     @Override
-    public List<?> select(Map<String, String> map) {
+    public List<?> select(Map<String, String> map)throws Exception {
         return getMaterialCategoryList(map);
     }
 
-    private List<?> getMaterialCategoryList(Map<String, String> map) {
+    private List<?> getMaterialCategoryList(Map<String, String> map) throws Exception{
         String search = map.get(Constants.SEARCH);
         String name = StringUtil.getInfo(search, "name");
         Integer parentId = StringUtil.parseInteger(StringUtil.getInfo(search, "parentId"));
@@ -39,7 +39,7 @@ public class MaterialCategoryComponent implements ICommonQuery {
     }
 
     @Override
-    public Long counts(Map<String, String> map) {
+    public Long counts(Map<String, String> map)throws Exception {
         String search = map.get(Constants.SEARCH);
         String name = StringUtil.getInfo(search, "name");
         Integer parentId = StringUtil.parseInteger(StringUtil.getInfo(search, "parentId"));
@@ -47,27 +47,27 @@ public class MaterialCategoryComponent implements ICommonQuery {
     }
 
     @Override
-    public int insert(String beanJson, HttpServletRequest request) {
+    public int insert(String beanJson, HttpServletRequest request)throws Exception {
         return materialCategoryService.insertMaterialCategory(beanJson, request);
     }
 
     @Override
-    public int update(String beanJson, Long id) {
+    public int update(String beanJson, Long id)throws Exception {
         return materialCategoryService.updateMaterialCategory(beanJson, id);
     }
 
     @Override
-    public int delete(Long id) {
+    public int delete(Long id)throws Exception {
         return materialCategoryService.deleteMaterialCategory(id);
     }
 
     @Override
-    public int batchDelete(String ids) {
+    public int batchDelete(String ids)throws Exception {
         return materialCategoryService.batchDeleteMaterialCategory(ids);
     }
 
     @Override
-    public int checkIsNameExist(Long id, String name) {
+    public int checkIsNameExist(Long id, String name)throws Exception {
         return materialCategoryService.checkIsNameExist(id, name);
     }
 

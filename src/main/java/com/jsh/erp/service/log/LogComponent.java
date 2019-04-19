@@ -19,16 +19,16 @@ public class LogComponent implements ICommonQuery {
     private LogService logService;
 
     @Override
-    public Object selectOne(String condition) {
+    public Object selectOne(String condition)throws Exception {
         return null;
     }
 
     @Override
-    public List<?> select(Map<String, String> map) {
+    public List<?> select(Map<String, String> map)throws Exception {
         return getUserList(map);
     }
 
-    private List<?> getUserList(Map<String, String> map) {
+    private List<?> getUserList(Map<String, String> map)throws Exception {
         String search = map.get(Constants.SEARCH);
         String operation = StringUtil.getInfo(search, "operation");
         Integer usernameID = StringUtil.parseInteger(StringUtil.getInfo(search, "usernameID"));
@@ -43,7 +43,7 @@ public class LogComponent implements ICommonQuery {
     }
 
     @Override
-    public Long counts(Map<String, String> map) {
+    public Long counts(Map<String, String> map)throws Exception {
         String search = map.get(Constants.SEARCH);
         String operation = StringUtil.getInfo(search, "operation");
         Integer usernameID = StringUtil.parseInteger(StringUtil.getInfo(search, "usernameID"));
@@ -56,27 +56,27 @@ public class LogComponent implements ICommonQuery {
     }
 
     @Override
-    public int insert(String beanJson, HttpServletRequest request) {
+    public int insert(String beanJson, HttpServletRequest request)throws Exception {
         return logService.insertLog(beanJson, request);
     }
 
     @Override
-    public int update(String beanJson, Long id) {
+    public int update(String beanJson, Long id)throws Exception {
         return logService.updateLog(beanJson, id);
     }
 
     @Override
-    public int delete(Long id) {
+    public int delete(Long id)throws Exception {
         return logService.deleteLog(id);
     }
 
     @Override
-    public int batchDelete(String ids) {
+    public int batchDelete(String ids)throws Exception {
         return logService.batchDeleteLog(ids);
     }
 
     @Override
-    public int checkIsNameExist(Long id, String name) {
+    public int checkIsNameExist(Long id, String name)throws Exception {
         return 0;
     }
 

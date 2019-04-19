@@ -284,14 +284,6 @@
             }
         });
     });
-    $('#btnSetFunctions').click(function () {
-        var currentRow = $("#tableData").datagrid("getSelected");
-        if (currentRow == null) {
-            $.messager.alert('提示',"请选择一条数据再操作！",'warning');
-            return false;
-        }
-        this.href = "/pages/manage/roleFunctions.html?id=" + currentRow.id;
-    });
     //查询父级商品类别
     $("#lookForSelectMaterialCategory").on("click", function () {
         $('#forSelectMaterialCategoryDlg').dialog({

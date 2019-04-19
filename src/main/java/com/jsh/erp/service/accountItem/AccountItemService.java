@@ -3,12 +3,15 @@ package com.jsh.erp.service.accountItem;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
+import com.jsh.erp.constants.ExceptionConstants;
+import com.jsh.erp.datasource.entities.AccountHead;
 import com.jsh.erp.datasource.entities.AccountItem;
 import com.jsh.erp.datasource.entities.AccountItemExample;
 import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.mappers.AccountItemMapper;
 import com.jsh.erp.datasource.mappers.AccountItemMapperEx;
 import com.jsh.erp.datasource.vo.AccountItemVo4List;
+import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.ErpInfo;
@@ -43,72 +46,179 @@ public class AccountItemService {
     @Resource
     private UserService userService;
 
-    public AccountItem getAccountItem(long id) {
-        return accountItemMapper.selectByPrimaryKey(id);
+    public AccountItem getAccountItem(long id)throws Exception {
+        AccountItem result=null;
+        try{
+            result=accountItemMapper.selectByPrimaryKey(id);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return result;
     }
 
-    public List<AccountItem> getAccountItem() {
+    public List<AccountItem> getAccountItem()throws Exception {
         AccountItemExample example = new AccountItemExample();
         example.createCriteria().andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        return accountItemMapper.selectByExample(example);
+        List<AccountItem> list=null;
+        try{
+            list=accountItemMapper.selectByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list;
     }
 
-    public List<AccountItem> select(String name, Integer type, String remark, int offset, int rows) {
-        return accountItemMapperEx.selectByConditionAccountItem(name, type, remark, offset, rows);
+    public List<AccountItem> select(String name, Integer type, String remark, int offset, int rows)throws Exception {
+        List<AccountItem> list=null;
+        try{
+            list = accountItemMapperEx.selectByConditionAccountItem(name, type, remark, offset, rows);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list;
     }
 
-    public Long countAccountItem(String name, Integer type, String remark) {
-        return accountItemMapperEx.countsByAccountItem(name, type, remark);
+    public Long countAccountItem(String name, Integer type, String remark)throws Exception {
+        Long result=null;
+        try{
+            result = accountItemMapperEx.countsByAccountItem(name, type, remark);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int insertAccountItem(String beanJson, HttpServletRequest request) {
+    public int insertAccountItem(String beanJson, HttpServletRequest request) throws Exception{
         AccountItem accountItem = JSONObject.parseObject(beanJson, AccountItem.class);
-        return accountItemMapper.insertSelective(accountItem);
+        int result=0;
+        try{
+            result = accountItemMapper.insertSelective(accountItem);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateAccountItem(String beanJson, Long id) {
+    public int updateAccountItem(String beanJson, Long id)throws Exception {
         AccountItem accountItem = JSONObject.parseObject(beanJson, AccountItem.class);
         accountItem.setId(id);
-        return accountItemMapper.updateByPrimaryKeySelective(accountItem);
+        int result=0;
+        try{
+            result = accountItemMapper.updateByPrimaryKeySelective(accountItem);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int deleteAccountItem(Long id) {
-        return accountItemMapper.deleteByPrimaryKey(id);
+    public int deleteAccountItem(Long id)throws Exception {
+        int result=0;
+        try{
+            result = accountItemMapper.deleteByPrimaryKey(id);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteAccountItem(String ids) {
+    public int batchDeleteAccountItem(String ids)throws Exception {
         List<Long> idList = StringUtil.strToLongList(ids);
         AccountItemExample example = new AccountItemExample();
         example.createCriteria().andIdIn(idList);
-        return accountItemMapper.deleteByExample(example);
+        int result=0;
+        try{
+            result = accountItemMapper.deleteByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 
-    public int checkIsNameExist(Long id, String name) {
+    public int checkIsNameExist(Long id, String name)throws Exception {
         AccountItemExample example = new AccountItemExample();
         example.createCriteria().andIdNotEqualTo(id).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        List<AccountItem> list = accountItemMapper.selectByExample(example);
-        return list.size();
+        List<AccountItem> list = null;
+        try{
+            list = accountItemMapper.selectByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list==null?0:list.size();
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int insertAccountItemWithObj(AccountItem accountItem) {
-        return accountItemMapper.insertSelective(accountItem);
+    public int insertAccountItemWithObj(AccountItem accountItem)throws Exception {
+        int result=0;
+        try{
+            result = accountItemMapper.insertSelective(accountItem);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateAccountItemWithObj(AccountItem accountItem) {
-        return accountItemMapper.updateByPrimaryKeySelective(accountItem);
+    public int updateAccountItemWithObj(AccountItem accountItem)throws Exception {
+        int result=0;
+        try{
+            result = accountItemMapper.updateByPrimaryKeySelective(accountItem);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 
     public List<AccountItemVo4List> getDetailList(Long headerId) {
-        return accountItemMapperEx.getDetailList(headerId);
+        List<AccountItemVo4List> list=null;
+        try{
+            list = accountItemMapperEx.getDetailList(headerId);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list;
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public String saveDetials(String inserted, String deleted, String updated, Long headerId, String listType) throws DataAccessException {
+    public String saveDetials(String inserted, String deleted, String updated, Long headerId, String listType) throws Exception {
         logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_ACCOUNT_ITEM,
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(",headerId:").append(headerId).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
@@ -181,12 +291,21 @@ public class AccountItemService {
         return null;
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteAccountItemByIds(String ids) {
+    public int batchDeleteAccountItemByIds(String ids) throws Exception{
         logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_ACCOUNT_ITEM,
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");
-        return accountItemMapperEx.batchDeleteAccountItemByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+        int result=0;
+        try{
+            result = accountItemMapperEx.batchDeleteAccountItemByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 }

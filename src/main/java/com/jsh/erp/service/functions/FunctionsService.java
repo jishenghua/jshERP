@@ -2,11 +2,14 @@ package com.jsh.erp.service.functions;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
+import com.jsh.erp.constants.ExceptionConstants;
+import com.jsh.erp.datasource.entities.DepotItem;
 import com.jsh.erp.datasource.entities.Functions;
 import com.jsh.erp.datasource.entities.FunctionsExample;
 import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.mappers.FunctionsMapper;
 import com.jsh.erp.datasource.mappers.FunctionsMapperEx;
+import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
@@ -36,92 +39,205 @@ public class FunctionsService {
     @Resource
     private LogService logService;
 
-    public Functions getFunctions(long id) {
-        return functionsMapper.selectByPrimaryKey(id);
+    public Functions getFunctions(long id)throws Exception {
+        Functions result=null;
+        try{
+            result=functionsMapper.selectByPrimaryKey(id);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return result;
     }
 
-    public List<Functions> getFunctions() {
+    public List<Functions> getFunctions()throws Exception {
         FunctionsExample example = new FunctionsExample();
         example.createCriteria().andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        return functionsMapper.selectByExample(example);
+        List<Functions> list=null;
+        try{
+            list=functionsMapper.selectByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list;
     }
 
-    public List<Functions> select(String name, String type, int offset, int rows) {
-        return functionsMapperEx.selectByConditionFunctions(name, type, offset, rows);
+    public List<Functions> select(String name, String type, int offset, int rows)throws Exception {
+        List<Functions> list=null;
+        try{
+            list=functionsMapperEx.selectByConditionFunctions(name, type, offset, rows);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list;
     }
 
-    public Long countFunctions(String name, String type) {
-        return functionsMapperEx.countsByFunctions(name, type);
+    public Long countFunctions(String name, String type)throws Exception {
+        Long result=null;
+        try{
+            result=functionsMapperEx.countsByFunctions(name, type);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int insertFunctions(String beanJson, HttpServletRequest request) {
+    public int insertFunctions(String beanJson, HttpServletRequest request)throws Exception {
         Functions depot = JSONObject.parseObject(beanJson, Functions.class);
-        return functionsMapper.insertSelective(depot);
+        int result=0;
+        try{
+            result=functionsMapper.insertSelective(depot);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateFunctions(String beanJson, Long id) {
+    public int updateFunctions(String beanJson, Long id) throws Exception{
         Functions depot = JSONObject.parseObject(beanJson, Functions.class);
         depot.setId(id);
-        return functionsMapper.updateByPrimaryKeySelective(depot);
+        int result=0;
+        try{
+            result=functionsMapper.updateByPrimaryKeySelective(depot);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int deleteFunctions(Long id) {
-        return functionsMapper.deleteByPrimaryKey(id);
+    public int deleteFunctions(Long id)throws Exception {
+        int result=0;
+        try{
+            result=functionsMapper.deleteByPrimaryKey(id);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteFunctions(String ids) {
+    public int batchDeleteFunctions(String ids)throws Exception {
         List<Long> idList = StringUtil.strToLongList(ids);
         FunctionsExample example = new FunctionsExample();
         example.createCriteria().andIdIn(idList);
-        return functionsMapper.deleteByExample(example);
+        int result=0;
+        try{
+            result=functionsMapper.deleteByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 
-    public int checkIsNameExist(Long id, String name) {
+    public int checkIsNameExist(Long id, String name)throws Exception {
         FunctionsExample example = new FunctionsExample();
         example.createCriteria().andIdNotEqualTo(id).andNameEqualTo(name).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        List<Functions> list = functionsMapper.selectByExample(example);
-        return list.size();
+        List<Functions> list=null;
+        try{
+            list = functionsMapper.selectByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list==null?0:list.size();
     }
 
-    public List<Functions> getRoleFunctions(String pNumber) {
+    public List<Functions> getRoleFunctions(String pNumber)throws Exception {
         FunctionsExample example = new FunctionsExample();
         example.createCriteria().andEnabledEqualTo(true).andPnumberEqualTo(pNumber)
                 .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         example.setOrderByClause("Sort");
-        List<Functions> list = functionsMapper.selectByExample(example);
+        List<Functions> list=null;
+        try{
+            list = functionsMapper.selectByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
         return list;
     }
 
-    public List<Functions> findRoleFunctions(String pnumber){
+    public List<Functions> findRoleFunctions(String pnumber)throws Exception{
         FunctionsExample example = new FunctionsExample();
         example.createCriteria().andEnabledEqualTo(true).andPnumberEqualTo(pnumber)
                 .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         example.setOrderByClause("Sort");
-        List<Functions> list = functionsMapper.selectByExample(example);
+        List<Functions> list=null;
+        try{
+            list =functionsMapper.selectByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
         return list;
     }
 
-    public List<Functions> findByIds(String functionsIds){
+    public List<Functions> findByIds(String functionsIds)throws Exception{
         List<Long> idList = StringUtil.strToLongList(functionsIds);
         FunctionsExample example = new FunctionsExample();
         example.createCriteria().andEnabledEqualTo(true).andIdIn(idList)
                 .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         example.setOrderByClause("Sort asc");
-        List<Functions> list = functionsMapper.selectByExample(example);
+        List<Functions> list=null;
+        try{
+            list =functionsMapper.selectByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
         return list;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteFunctionsByIds(String ids) {
+    public int batchDeleteFunctionsByIds(String ids)throws Exception {
         logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_FUNCTIONS,
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");
-        return functionsMapperEx.batchDeleteFunctionsByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+        int result=0;
+        try{
+            result =functionsMapperEx.batchDeleteFunctionsByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 }

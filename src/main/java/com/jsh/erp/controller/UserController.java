@@ -59,7 +59,7 @@ public class UserController {
     @PostMapping(value = "/login")
     public BaseResponseInfo login(@RequestParam(value = "loginame", required = false) String loginame,
                         @RequestParam(value = "password", required = false) String password,
-                        HttpServletRequest request) {
+                        HttpServletRequest request)throws Exception {
         logger.info("============用户登录 login 方法调用开始==============");
         String msgTip = "";
         User user=null;
@@ -150,7 +150,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/getUserSession")
-    public BaseResponseInfo getSessionUser(HttpServletRequest request) {
+    public BaseResponseInfo getSessionUser(HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
             Map<String, Object> data = new HashMap<String, Object>();
@@ -171,7 +171,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/logout")
-    public BaseResponseInfo logout(HttpServletRequest request, HttpServletResponse response) {
+    public BaseResponseInfo logout(HttpServletRequest request, HttpServletResponse response)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
             request.getSession().removeAttribute("user");
@@ -192,7 +192,7 @@ public class UserController {
 
     @PostMapping(value = "/resetPwd")
     public String resetPwd(@RequestParam("id") Long id,
-                                     HttpServletRequest request) throws NoSuchAlgorithmException {
+                                     HttpServletRequest request) throws Exception {
         Map<String, Object> objectMap = new HashMap<String, Object>();
         String password = "123456";
         String md5Pwd = Tools.md5Encryp(password);
@@ -206,7 +206,7 @@ public class UserController {
 
     @PostMapping(value = "/updatePwd")
     public String updatePwd(@RequestParam("userId") Long userId, @RequestParam("password") String password,
-                            @RequestParam("oldpwd") String oldpwd, HttpServletRequest request) {
+                            @RequestParam("oldpwd") String oldpwd, HttpServletRequest request)throws Exception {
         Integer flag = 0;
         Map<String, Object> objectMap = new HashMap<String, Object>();
         try {
@@ -242,7 +242,7 @@ public class UserController {
      * @return
      */
     @GetMapping(value = "/getAllList")
-    public BaseResponseInfo getAllList(HttpServletRequest request) {
+    public BaseResponseInfo getAllList(HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
             Map<String, Object> data = new HashMap<String, Object>();
@@ -425,7 +425,7 @@ public class UserController {
     }
 
     @GetMapping("/getTenantStatus")
-    public BaseResponseInfo getTenantStatus(HttpServletRequest request) {
+    public BaseResponseInfo getTenantStatus(HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
             Map<String, Object> data = new HashMap<String, Object>();

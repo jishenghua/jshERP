@@ -30,7 +30,7 @@ public class PersonController {
     private PersonService personService;
 
     @GetMapping(value = "/getAllList")
-    public BaseResponseInfo getAllList(HttpServletRequest request) {
+    public BaseResponseInfo getAllList(HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         try {
@@ -53,7 +53,8 @@ public class PersonController {
      * @return
      */
     @GetMapping(value = "/getPersonByIds")
-    public BaseResponseInfo getPersonByIds(@RequestParam("personIDs") String personIDs, HttpServletRequest request) {
+    public BaseResponseInfo getPersonByIds(@RequestParam("personIDs") String personIDs,
+                                           HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         try {
@@ -76,7 +77,8 @@ public class PersonController {
      * @return
      */
     @GetMapping(value = "/getPersonByType")
-    public BaseResponseInfo getPersonByType(@RequestParam("type") String type, HttpServletRequest request) {
+    public BaseResponseInfo getPersonByType(@RequestParam("type") String type,
+                                            HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         try {
@@ -99,7 +101,8 @@ public class PersonController {
      * @return
      */
     @PostMapping(value = "/getPersonByNumType")
-    public JSONArray getPersonByNumType(@RequestParam("type") String typeNum, HttpServletRequest request) {
+    public JSONArray getPersonByNumType(@RequestParam("type") String typeNum,
+                                        HttpServletRequest request)throws Exception {
         JSONArray dataArray = new JSONArray();
         try {
             String type = "";

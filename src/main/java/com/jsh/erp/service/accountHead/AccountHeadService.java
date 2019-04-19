@@ -42,18 +42,44 @@ public class AccountHeadService {
     @Resource
     private AccountItemMapperEx accountItemMapperEx;
 
-    public AccountHead getAccountHead(long id) {
-        return accountHeadMapper.selectByPrimaryKey(id);
+    public AccountHead getAccountHead(long id) throws Exception {
+        AccountHead result=null;
+        try{
+            result=accountHeadMapper.selectByPrimaryKey(id);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return result;
     }
 
-    public List<AccountHead> getAccountHead() {
+    public List<AccountHead> getAccountHead() throws Exception{
         AccountHeadExample example = new AccountHeadExample();
-        return accountHeadMapper.selectByExample(example);
+        List<AccountHead> list=null;
+        try{
+            list=accountHeadMapper.selectByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list;
     }
 
-    public List<AccountHeadVo4ListEx> select(String type, String billNo, String beginTime, String endTime, int offset, int rows) {
+    public List<AccountHeadVo4ListEx> select(String type, String billNo, String beginTime, String endTime, int offset, int rows) throws Exception{
         List<AccountHeadVo4ListEx> resList = new ArrayList<AccountHeadVo4ListEx>();
-        List<AccountHeadVo4ListEx> list = accountHeadMapperEx.selectByConditionAccountHead(type, billNo, beginTime, endTime, offset, rows);
+        List<AccountHeadVo4ListEx> list=null;
+        try{
+            list = accountHeadMapperEx.selectByConditionAccountHead(type, billNo, beginTime, endTime, offset, rows);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
         if (null != list) {
             for (AccountHeadVo4ListEx ah : list) {
                 if(ah.getChangeamount() != null) {
@@ -68,45 +94,107 @@ public class AccountHeadService {
         return resList;
     }
 
-    public Long countAccountHead(String type, String billNo, String beginTime, String endTime) {
-        return accountHeadMapperEx.countsByAccountHead(type, billNo, beginTime, endTime);
+    public Long countAccountHead(String type, String billNo, String beginTime, String endTime) throws Exception{
+        Long result=null;
+        try{
+            result = accountHeadMapperEx.countsByAccountHead(type, billNo, beginTime, endTime);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int insertAccountHead(String beanJson, HttpServletRequest request) {
+    public int insertAccountHead(String beanJson, HttpServletRequest request) throws Exception{
         AccountHead accountHead = JSONObject.parseObject(beanJson, AccountHead.class);
-        return accountHeadMapper.insertSelective(accountHead);
+        int result=0;
+        try{
+            result = accountHeadMapper.insertSelective(accountHead);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateAccountHead(String beanJson, Long id) {
+    public int updateAccountHead(String beanJson, Long id)throws Exception {
         AccountHead accountHead = JSONObject.parseObject(beanJson, AccountHead.class);
         accountHead.setId(id);
-        return accountHeadMapper.updateByPrimaryKeySelective(accountHead);
+        int result=0;
+        try{
+            result = accountHeadMapper.updateByPrimaryKeySelective(accountHead);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int deleteAccountHead(Long id) {
-        return accountHeadMapper.deleteByPrimaryKey(id);
+    public int deleteAccountHead(Long id)throws Exception {
+        int result=0;
+        try{
+            result = accountHeadMapper.deleteByPrimaryKey(id);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteAccountHead(String ids) {
+    public int batchDeleteAccountHead(String ids)throws Exception {
         List<Long> idList = StringUtil.strToLongList(ids);
         AccountHeadExample example = new AccountHeadExample();
         example.createCriteria().andIdIn(idList);
-        return accountHeadMapper.deleteByExample(example);
+        int result=0;
+        try{
+            result = accountHeadMapper.deleteByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 
-    public int checkIsNameExist(Long id, String name) {
+    public int checkIsNameExist(Long id, String name)throws Exception {
         AccountHeadExample example = new AccountHeadExample();
         example.createCriteria().andIdNotEqualTo(id).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        List<AccountHead> list = accountHeadMapper.selectByExample(example);
-        return list.size();
+        List<AccountHead> list = null;
+        try{
+            list = accountHeadMapper.selectByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list==null?0:list.size();
     }
 
-    public Long getMaxId() {
-        return accountHeadMapperEx.getMaxId();
+    public Long getMaxId()throws Exception {
+        Long result = null;
+        try{
+            result = accountHeadMapperEx.getMaxId();
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return result;
     }
 
     public BigDecimal findAllMoney(Integer supplierId, String type, String mode, String endTime) {
@@ -116,12 +204,29 @@ public class AccountHeadService {
         } else if (mode.equals("合计")) {
             modeName = "TotalPrice";
         }
-        return accountHeadMapperEx.findAllMoney(supplierId, type, modeName, endTime);
+        BigDecimal result = null;
+        try{
+            result = accountHeadMapperEx.findAllMoney(supplierId, type, modeName, endTime);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return result;
     }
 
-    public List<AccountHeadVo4ListEx> getDetailByNumber(String billNo) {
+    public List<AccountHeadVo4ListEx> getDetailByNumber(String billNo)throws Exception {
         List<AccountHeadVo4ListEx> resList = new ArrayList<AccountHeadVo4ListEx>();
-        List<AccountHeadVo4ListEx> list = accountHeadMapperEx.getDetailByNumber(billNo);
+        List<AccountHeadVo4ListEx> list = null;
+        try{
+            list = accountHeadMapperEx.getDetailByNumber(billNo);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
         if (null != list) {
             for (AccountHeadVo4ListEx ah : list) {
                 if(ah.getChangeamount() != null) {
@@ -136,13 +241,22 @@ public class AccountHeadService {
         return resList;
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteAccountHeadByIds(String ids) {
+    public int batchDeleteAccountHeadByIds(String ids)throws Exception {
         logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_ACCOUNT_HEAD,
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");
-        return accountHeadMapperEx.batchDeleteAccountHeadByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+        int result = 0;
+        try{
+            result = accountHeadMapperEx.batchDeleteAccountHeadByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
     /**
      * create by: qiankunpingtai
@@ -168,7 +282,15 @@ public class AccountHeadService {
         /**
          * 校验财务子表	jsh_accountitem
          * */
-        List<AccountItem> accountItemList=accountItemMapperEx.getAccountItemListByHeaderIds(idArray);
+        List<AccountItem> accountItemList = null;
+        try{
+            accountItemList = accountItemMapperEx.getAccountItemListByHeaderIds(idArray);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
         if(accountItemList!=null&&accountItemList.size()>0){
             logger.error("异常码[{}],异常提示[{}],参数,HeaderIds[{}]",
                     ExceptionConstants.DELETE_FORCE_CONFIRM_CODE,ExceptionConstants.DELETE_FORCE_CONFIRM_MSG,ids);

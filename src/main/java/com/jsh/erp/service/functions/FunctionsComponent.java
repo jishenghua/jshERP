@@ -21,16 +21,16 @@ public class FunctionsComponent implements ICommonQuery {
     private FunctionsService functionsService;
 
     @Override
-    public Object selectOne(String condition) {
+    public Object selectOne(String condition)throws Exception {
         return null;
     }
 
     @Override
-    public List<?> select(Map<String, String> map) {
+    public List<?> select(Map<String, String> map)throws Exception {
         return getFunctionsList(map);
     }
 
-    private List<?> getFunctionsList(Map<String, String> map) {
+    private List<?> getFunctionsList(Map<String, String> map) throws Exception{
         String search = map.get(Constants.SEARCH);
         String name = StringUtil.getInfo(search, "name");
         String type = StringUtil.getInfo(search, "type");
@@ -39,7 +39,7 @@ public class FunctionsComponent implements ICommonQuery {
     }
 
     @Override
-    public Long counts(Map<String, String> map) {
+    public Long counts(Map<String, String> map) throws Exception{
         String search = map.get(Constants.SEARCH);
         String name = StringUtil.getInfo(search, "name");
         String type = StringUtil.getInfo(search, "type");
@@ -47,27 +47,27 @@ public class FunctionsComponent implements ICommonQuery {
     }
 
     @Override
-    public int insert(String beanJson, HttpServletRequest request) {
+    public int insert(String beanJson, HttpServletRequest request)throws Exception {
         return functionsService.insertFunctions(beanJson, request);
     }
 
     @Override
-    public int update(String beanJson, Long id) {
+    public int update(String beanJson, Long id)throws Exception {
         return functionsService.updateFunctions(beanJson, id);
     }
 
     @Override
-    public int delete(Long id) {
+    public int delete(Long id)throws Exception {
         return functionsService.deleteFunctions(id);
     }
 
     @Override
-    public int batchDelete(String ids) {
+    public int batchDelete(String ids)throws Exception {
         return functionsService.batchDeleteFunctions(ids);
     }
 
     @Override
-    public int checkIsNameExist(Long id, String name) {
+    public int checkIsNameExist(Long id, String name)throws Exception {
         return functionsService.checkIsNameExist(id, name);
     }
 

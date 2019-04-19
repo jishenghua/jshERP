@@ -11,16 +11,17 @@ import com.jsh.erp.datasource.entities.UserEx;
 import com.jsh.erp.datasource.entities.UserExample;
 import com.jsh.erp.datasource.mappers.UserMapper;
 import com.jsh.erp.datasource.mappers.UserMapperEx;
-import com.jsh.erp.datasource.vo.TreeNode;
 import com.jsh.erp.datasource.vo.TreeNodeEx;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.orgaUserRel.OrgaUserRelService;
 import com.jsh.erp.service.userBusiness.UserBusinessService;
-import com.jsh.erp.utils.*;
+import com.jsh.erp.utils.ExceptionCodeConstants;
+import com.jsh.erp.utils.JshException;
+import com.jsh.erp.utils.StringUtil;
+import com.jsh.erp.utils.Tools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -28,9 +29,11 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.net.URLEncoder;
 import java.security.NoSuchAlgorithmException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class UserService {
@@ -51,21 +54,57 @@ public class UserService {
     private UserBusinessService userBusinessService;
 
 
-    public User getUser(long id) {
-        return userMapper.selectByPrimaryKey(id);
+    public User getUser(long id)throws Exception {
+        User result=null;
+        try{
+            result=userMapper.selectByPrimaryKey(id);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return result;
     }
 
-    public List<User> getUser() {
+    public List<User> getUser()throws Exception {
         UserExample example = new UserExample();
-        return userMapper.selectByExample(example);
+        List<User> list=null;
+        try{
+            list=userMapper.selectByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list;
     }
 
-    public List<User> select(String userName, String loginName, int offset, int rows) {
-        return userMapperEx.selectByConditionUser(userName, loginName, offset, rows);
+    public List<User> select(String userName, String loginName, int offset, int rows)throws Exception {
+        List<User> list=null;
+        try{
+            list=userMapperEx.selectByConditionUser(userName, loginName, offset, rows);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list;
     }
 
-    public Long countUser(String userName, String loginName) {
-        return userMapperEx.countsByUser(userName, loginName);
+    public Long countUser(String userName, String loginName)throws Exception {
+        Long result=null;
+        try{
+            result=userMapperEx.countsByUser(userName, loginName);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return result;
     }
     /**
      * create by: cjl
@@ -77,7 +116,7 @@ public class UserService {
      * @return int
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int insertUser(String beanJson, HttpServletRequest request) {
+    public int insertUser(String beanJson, HttpServletRequest request)throws Exception {
         User user = JSONObject.parseObject(beanJson, User.class);
         String password = "123456";
         //因密码用MD5加密，需要对密码进行转化
@@ -88,7 +127,16 @@ public class UserService {
             e.printStackTrace();
             logger.error(">>>>>>>>>>>>>>转化MD5字符串错误 ：" + e.getMessage());
         }
-        return userMapper.insertSelective(user);
+        int result=0;
+        try{
+            result=userMapper.insertSelective(user);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
     /**
      * create by: cjl
@@ -100,10 +148,19 @@ public class UserService {
      * @return int
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateUser(String beanJson, Long id) {
+    public int updateUser(String beanJson, Long id) throws Exception{
         User user = JSONObject.parseObject(beanJson, User.class);
         user.setId(id);
-        return userMapper.updateByPrimaryKeySelective(user);
+        int result=0;
+        try{
+            result=userMapper.updateByPrimaryKeySelective(user);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
     /**
      * create by: cjl
@@ -114,11 +171,20 @@ public class UserService {
      * @return int
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateUserByObj(User user) {
+    public int updateUserByObj(User user) throws Exception{
         logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_USER,
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(user.getId()).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
-        return userMapper.updateByPrimaryKeySelective(user);
+        int result=0;
+        try{
+            result=userMapper.updateByPrimaryKeySelective(user);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
     /**
      * create by: cjl
@@ -130,27 +196,54 @@ public class UserService {
      * @return int
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int resetPwd(String md5Pwd, Long id) {
+    public int resetPwd(String md5Pwd, Long id) throws Exception{
         logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_USER,
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User user = new User();
         user.setId(id);
         user.setPassword(md5Pwd);
-        return userMapper.updateByPrimaryKeySelective(user);
+        int result=0;
+        try{
+            result=userMapper.updateByPrimaryKeySelective(user);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int deleteUser(Long id) {
-        return userMapper.deleteByPrimaryKey(id);
+    public int deleteUser(Long id)throws Exception {
+        int result=0;
+        try{
+            result= userMapper.deleteByPrimaryKey(id);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteUser(String ids) {
+    public int batchDeleteUser(String ids)throws Exception {
         List<Long> idList = StringUtil.strToLongList(ids);
         UserExample example = new UserExample();
         example.createCriteria().andIdIn(idList);
-        return userMapper.deleteByExample(example);
+        int result=0;
+        try{
+            result= userMapper.deleteByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 
     public int validateUser(String username, String password) throws JshException {
@@ -162,6 +255,8 @@ public class UserService {
                 example.createCriteria().andLoginameEqualTo(username);
                 list = userMapper.selectByExample(example);
             } catch (Exception e) {
+                logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                        ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
                 logger.error(">>>>>>>>访问验证用户姓名是否存在后台信息异常", e);
                 return ExceptionCodeConstants.UserExceptionCode.USER_ACCESS_EXCEPTION;
             }
@@ -188,22 +283,41 @@ public class UserService {
         }
     }
 
-    public User getUserByUserName(String username) {
+    public User getUserByUserName(String username)throws Exception {
         UserExample example = new UserExample();
         example.createCriteria().andLoginameEqualTo(username);
-        List<User> list = userMapper.selectByExample(example);
-        User user = list.get(0);
+        List<User> list=null;
+        try{
+            list= userMapper.selectByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        User user =null;
+        if(list!=null&&list.size()>0){
+            user = list.get(0);
+        }
         return user;
     }
 
-    public int checkIsNameExist(Long id, String name) {
+    public int checkIsNameExist(Long id, String name)throws Exception {
         UserExample example = new UserExample();
         List <Byte> userStatus=new ArrayList<Byte>();
         userStatus.add(BusinessConstants.USER_STATUS_DELETE);
         userStatus.add(BusinessConstants.USER_STATUS_BANNED);
         example.createCriteria().andIdNotEqualTo(id).andLoginameEqualTo(name).andStatusNotIn(userStatus);
-        List<User> list = userMapper.selectByExample(example);
-        return list.size();
+        List<User> list=null;
+        try{
+            list= userMapper.selectByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list==null?0:list.size();
     }
     /**
      * create by: cjl
@@ -213,13 +327,22 @@ public class UserService {
      * @Param:
      * @return com.jsh.erp.datasource.entities.User
      */
-    public User getCurrentUser(){
+    public User getCurrentUser()throws Exception{
         HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
         return (User)request.getSession().getAttribute("user");
     }
 
     public List<UserEx> getUserList(Map<String, Object> parameterMap) throws Exception{
-        return userMapperEx.getUserList(parameterMap);
+        List<UserEx> list=null;
+        try{
+            list= userMapperEx.getUserList(parameterMap);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list;
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void addUserAndOrgUserRel(UserEx ue) throws Exception{
@@ -277,8 +400,16 @@ public class UserService {
             ue.setIsmanager(BusinessConstants.USER_NOT_MANAGER);
         }
         ue.setStatus(BusinessConstants.USER_STATUS_NORMAL);
-        int i=userMapperEx.addUser(ue);
-        if(i>0){
+        int result=0;
+        try{
+            result= userMapperEx.addUser(ue);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        if(result>0){
             return ue;
         }
         return null;
@@ -303,7 +434,15 @@ public class UserService {
                 ue.setIsmanager(BusinessConstants.USER_NOT_MANAGER);
             }
             ue.setStatus(BusinessConstants.USER_STATUS_NORMAL);
-            int i = userMapperEx.addUser(ue);
+            int result=0;
+            try{
+                result= userMapperEx.addUser(ue);
+            }catch(Exception e){
+                logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                        ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+                throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                        ExceptionConstants.DATA_WRITE_FAIL_MSG);
+            }
             //更新租户id
             User user = new User();
             user.setId(ue.getId());
@@ -317,7 +456,7 @@ public class UserService {
             ubArr.add(manageRoleId);
             ubObj.put("value", ubArr.toString());
             userBusinessService.insertUserBusiness(ubObj.toString(), ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
-            if (i > 0) {
+            if (result > 0) {
                 return ue;
             }
             return null;
@@ -328,7 +467,14 @@ public class UserService {
     public void updateUserTenant(User user) throws Exception{
         UserExample example = new UserExample();
         example.createCriteria().andIdEqualTo(user.getId());
-        userMapper.updateByPrimaryKeySelective(user);
+        try{
+            userMapper.updateByPrimaryKeySelective(user);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
@@ -380,9 +526,17 @@ public class UserService {
         }
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public UserEx updateUser(UserEx ue){
-        int i=userMapperEx.updateUser(ue);
-        if(i>0){
+    public UserEx updateUser(UserEx ue)throws Exception{
+        int result =0;
+        try{
+            result=userMapperEx.updateUser(ue);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        if(result>0){
             return ue;
         }
         return null;
@@ -395,7 +549,7 @@ public class UserService {
      * @Param: userEx
      * @return void
      */
-    public void checkUserNameAndLoginName(UserEx userEx){
+    public void checkUserNameAndLoginName(UserEx userEx)throws Exception{
         List<User> list=null;
         if(userEx==null){
             return;
@@ -454,26 +608,52 @@ public class UserService {
     /**
      * 通过用户名获取用户列表
      * */
-    public List<User> getUserListByUserName(String userName){
-        return userMapperEx.getUserListByUserNameOrLoginName(userName,null);
+    public List<User> getUserListByUserName(String userName)throws Exception{
+        List<User> list =null;
+        try{
+            list=userMapperEx.getUserListByUserNameOrLoginName(userName,null);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list;
     }
     /**
      * 通过登录名获取用户列表
      * */
     public List<User> getUserListByloginName(String loginName){
-        return userMapperEx.getUserListByUserNameOrLoginName(null,loginName);
+        List<User> list =null;
+        try{
+            list=userMapperEx.getUserListByUserNameOrLoginName(null,loginName);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list;
     }
     /**
      * 批量删除用户
      * */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public void batDeleteUser(String ids) {
+    public void batDeleteUser(String ids) throws Exception{
         logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_USER,
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         String idsArray[]=ids.split(",");
-        int i= userMapperEx.batDeleteOrUpdateUser(idsArray,BusinessConstants.USER_STATUS_DELETE);
-        if(i<1){
+        int result =0;
+        try{
+            result=userMapperEx.batDeleteOrUpdateUser(idsArray,BusinessConstants.USER_STATUS_DELETE);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        if(result<1){
             logger.error("异常码[{}],异常提示[{}],参数,ids:[{}]",
                     ExceptionConstants.USER_DELETE_FAILED_CODE,ExceptionConstants.USER_DELETE_FAILED_MSG,ids);
             throw new BusinessRunTimeException(ExceptionConstants.USER_DELETE_FAILED_CODE,
@@ -481,7 +661,16 @@ public class UserService {
         }
     }
 
-    public List<TreeNodeEx> getOrganizationUserTree() {
-        return userMapperEx.getNodeTree();
+    public List<TreeNodeEx> getOrganizationUserTree()throws Exception {
+        List<TreeNodeEx> list =null;
+        try{
+            list=userMapperEx.getNodeTree();
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list;
     }
 }

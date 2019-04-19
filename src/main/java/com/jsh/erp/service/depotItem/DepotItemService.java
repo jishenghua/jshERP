@@ -60,175 +60,394 @@ public class DepotItemService {
     @Resource
     private LogService logService;
 
-    public DepotItem getDepotItem(long id) {
-        return depotItemMapper.selectByPrimaryKey(id);
+    public DepotItem getDepotItem(long id)throws Exception {
+        DepotItem result=null;
+        try{
+            result=depotItemMapper.selectByPrimaryKey(id);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return result;
     }
 
-    public List<DepotItem> getDepotItem() {
+    public List<DepotItem> getDepotItem()throws Exception {
         DepotItemExample example = new DepotItemExample();
         example.createCriteria().andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        return depotItemMapper.selectByExample(example);
+        List<DepotItem> list=null;
+        try{
+            list=depotItemMapper.selectByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list;
     }
 
-    public List<DepotItem> select(String name, Integer type, String remark, int offset, int rows) {
-        return depotItemMapperEx.selectByConditionDepotItem(name, type, remark, offset, rows);
+    public List<DepotItem> select(String name, Integer type, String remark, int offset, int rows)throws Exception {
+        List<DepotItem> list=null;
+        try{
+            list=depotItemMapperEx.selectByConditionDepotItem(name, type, remark, offset, rows);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list;
     }
 
-    public Long countDepotItem(String name, Integer type, String remark) {
-        return depotItemMapperEx.countsByDepotItem(name, type, remark);
+    public Long countDepotItem(String name, Integer type, String remark) throws Exception{
+        Long result =null;
+        try{
+            result=depotItemMapperEx.countsByDepotItem(name, type, remark);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int insertDepotItem(String beanJson, HttpServletRequest request) {
+    public int insertDepotItem(String beanJson, HttpServletRequest request)throws Exception {
         DepotItem depotItem = JSONObject.parseObject(beanJson, DepotItem.class);
-        return depotItemMapper.insertSelective(depotItem);
+        int result =0;
+        try{
+            result=depotItemMapper.insertSelective(depotItem);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateDepotItem(String beanJson, Long id) {
+    public int updateDepotItem(String beanJson, Long id)throws Exception {
         DepotItem depotItem = JSONObject.parseObject(beanJson, DepotItem.class);
         depotItem.setId(id);
-        return depotItemMapper.updateByPrimaryKeySelective(depotItem);
+        int result =0;
+        try{
+            result=depotItemMapper.updateByPrimaryKeySelective(depotItem);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int deleteDepotItem(Long id) {
-        return depotItemMapper.deleteByPrimaryKey(id);
+    public int deleteDepotItem(Long id)throws Exception {
+        int result =0;
+        try{
+            result=depotItemMapper.deleteByPrimaryKey(id);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteDepotItem(String ids) {
+    public int batchDeleteDepotItem(String ids)throws Exception {
         List<Long> idList = StringUtil.strToLongList(ids);
         DepotItemExample example = new DepotItemExample();
         example.createCriteria().andIdIn(idList);
-        return depotItemMapper.deleteByExample(example);
+        int result =0;
+        try{
+            result=depotItemMapper.deleteByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 
-    public int checkIsNameExist(Long id, String name) {
+    public int checkIsNameExist(Long id, String name)throws Exception {
         DepotItemExample example = new DepotItemExample();
         example.createCriteria().andIdNotEqualTo(id).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        List<DepotItem> list = depotItemMapper.selectByExample(example);
-        return list.size();
+        List<DepotItem> list =null;
+        try{
+            list=depotItemMapper.selectByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list==null?0:list.size();
     }
 
-    public List<DepotItemVo4HeaderId> getHeaderIdByMaterial(String materialParam, String depotIds) {
-        return depotItemMapperEx.getHeaderIdByMaterial(materialParam, depotIds);
+    public List<DepotItemVo4HeaderId> getHeaderIdByMaterial(String materialParam, String depotIds)throws Exception {
+        List<DepotItemVo4HeaderId> list =null;
+        try{
+            list = depotItemMapperEx.getHeaderIdByMaterial(materialParam, depotIds);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list;
     }
 
-    public List<DepotItemVo4DetailByTypeAndMId> findDetailByTypeAndMaterialIdList(Map<String, String> map) {
+    public List<DepotItemVo4DetailByTypeAndMId> findDetailByTypeAndMaterialIdList(Map<String, String> map)throws Exception {
         String mIdStr = map.get("mId");
         Long mId = null;
         if(!StringUtil.isEmpty(mIdStr)) {
             mId = Long.parseLong(mIdStr);
         }
-        return depotItemMapperEx.findDetailByTypeAndMaterialIdList(mId, QueryUtils.offset(map), QueryUtils.rows(map));
+        List<DepotItemVo4DetailByTypeAndMId> list =null;
+        try{
+            list = depotItemMapperEx.findDetailByTypeAndMaterialIdList(mId, QueryUtils.offset(map), QueryUtils.rows(map));
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list;
     }
 
-    public Long findDetailByTypeAndMaterialIdCounts(Map<String, String> map) {
+    public Long findDetailByTypeAndMaterialIdCounts(Map<String, String> map)throws Exception {
         String mIdStr = map.get("mId");
         Long mId = null;
         if(!StringUtil.isEmpty(mIdStr)) {
             mId = Long.parseLong(mIdStr);
         }
-        return depotItemMapperEx.findDetailByTypeAndMaterialIdCounts(mId);
+        Long result =null;
+        try{
+            result = depotItemMapperEx.findDetailByTypeAndMaterialIdCounts(mId);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return result;
     }
 
-    public List<DepotItemVo4Material> findStockNumByMaterialIdList(Map<String, String> map) {
+    public List<DepotItemVo4Material> findStockNumByMaterialIdList(Map<String, String> map)throws Exception {
         String mIdStr = map.get("mId");
         Long mId = null;
         if(!StringUtil.isEmpty(mIdStr)) {
             mId = Long.parseLong(mIdStr);
         }
         String monthTime = map.get("monthTime");
-        return depotItemMapperEx.findStockNumByMaterialIdList(mId, monthTime, QueryUtils.offset(map), QueryUtils.rows(map));
+        List<DepotItemVo4Material> list =null;
+        try{
+            list = depotItemMapperEx.findStockNumByMaterialIdList(mId, monthTime, QueryUtils.offset(map), QueryUtils.rows(map));
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list;
     }
 
-    public Long findStockNumByMaterialIdCounts(Map<String, String> map) {
+    public Long findStockNumByMaterialIdCounts(Map<String, String> map)throws Exception {
         String mIdStr = map.get("mId");
         Long mId = null;
         if(!StringUtil.isEmpty(mIdStr)) {
             mId = Long.parseLong(mIdStr);
         }
         String monthTime = map.get("monthTime");
-        return depotItemMapperEx.findStockNumByMaterialIdCounts(mId, monthTime);
+        Long result =null;
+        try{
+            result = depotItemMapperEx.findStockNumByMaterialIdCounts(mId, monthTime);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int insertDepotItemWithObj(DepotItem depotItem) {
-        return depotItemMapper.insertSelective(depotItem);
+    public int insertDepotItemWithObj(DepotItem depotItem)throws Exception {
+        int result =0;
+        try{
+            result = depotItemMapper.insertSelective(depotItem);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateDepotItemWithObj(DepotItem depotItem) {
+    public int updateDepotItemWithObj(DepotItem depotItem)throws Exception {
+        int result =0;
+        try{
+            result = depotItemMapper.updateByPrimaryKeySelective(depotItem);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
         return depotItemMapper.updateByPrimaryKeySelective(depotItem);
     }
 
-    public int findByTypeAndMaterialId(String type, Long mId) {
-        if(type.equals(TYPE)) {
-            return depotItemMapperEx.findByTypeAndMaterialIdIn(mId);
-        } else {
-            return depotItemMapperEx.findByTypeAndMaterialIdOut(mId);
-        }
-    }
-
-    public List<DepotItemVo4WithInfoEx> getDetailList(Long headerId) {
-        return depotItemMapperEx.getDetailList(headerId);
-    }
-
-    public List<DepotItemVo4WithInfoEx> findByAll(String headIds, String materialIds, Integer offset, Integer rows) {
-        return depotItemMapperEx.findByAll(headIds, materialIds, offset, rows);
-    }
-
-    public int findByAllCount(String headIds, String materialIds) {
-        return depotItemMapperEx.findByAllCount(headIds, materialIds);
-    }
-
-    public BigDecimal findByType(String type, Integer ProjectId, Long MId, String MonthTime, Boolean isPrev) {
-        if (TYPE.equals(type)) {
-            if (isPrev) {
-                return depotItemMapperEx.findByTypeInIsPrev(ProjectId, MId, MonthTime);
+    public int findByTypeAndMaterialId(String type, Long mId) throws Exception{
+        int result =0;
+        try{
+            if(type.equals(TYPE)) {
+                result= depotItemMapperEx.findByTypeAndMaterialIdIn(mId);
             } else {
-                return depotItemMapperEx.findByTypeInIsNotPrev(ProjectId, MId, MonthTime);
+                result= depotItemMapperEx.findByTypeAndMaterialIdOut(mId);
             }
-        } else {
-            if (isPrev) {
-                return depotItemMapperEx.findByTypeOutIsPrev(ProjectId, MId, MonthTime);
-            } else {
-                return depotItemMapperEx.findByTypeOutIsNotPrev(ProjectId, MId, MonthTime);
-            }
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
         }
+        return result;
     }
 
-    public BigDecimal findPriceByType(String type, Integer ProjectId, Long MId, String MonthTime, Boolean isPrev) {
-        if (TYPE.equals(type)) {
-            if (isPrev) {
-                return depotItemMapperEx.findPriceByTypeInIsPrev(ProjectId, MId, MonthTime);
-            } else {
-                return depotItemMapperEx.findPriceByTypeInIsNotPrev(ProjectId, MId, MonthTime);
-            }
-        } else {
-            if (isPrev) {
-                return depotItemMapperEx.findPriceByTypeOutIsPrev(ProjectId, MId, MonthTime);
-            } else {
-                return depotItemMapperEx.findPriceByTypeOutIsNotPrev(ProjectId, MId, MonthTime);
-            }
+    public List<DepotItemVo4WithInfoEx> getDetailList(Long headerId)throws Exception {
+        List<DepotItemVo4WithInfoEx> list =null;
+        try{
+            list = depotItemMapperEx.getDetailList(headerId);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
         }
+        return list;
     }
 
-    public BigDecimal findAssembleByType(String subType, String mType, Integer ProjectId, Long MId, String MonthTime, Boolean isPrev) {
-        if (isPrev) {
-            return depotItemMapperEx.findAssembleIsPrev(subType, mType, ProjectId, MId, MonthTime);
-        } else {
-            return depotItemMapperEx.findAssembleIsNotPrev(subType, mType, ProjectId, MId, MonthTime);
+    public List<DepotItemVo4WithInfoEx> findByAll(String headIds, String materialIds, Integer offset, Integer rows)throws Exception {
+        List<DepotItemVo4WithInfoEx> list =null;
+        try{
+            list = depotItemMapperEx.findByAll(headIds, materialIds, offset, rows);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
         }
+        return list;
     }
 
-    public BigDecimal buyOrSale(String type, String subType, Long MId, String MonthTime, String sumType) {
-        if (SUM_TYPE.equals(sumType)) {
-            return depotItemMapperEx.buyOrSaleNumber(type, subType, MId, MonthTime, sumType);
-        } else {
-            return depotItemMapperEx.buyOrSalePrice(type, subType, MId, MonthTime, sumType);
+    public int findByAllCount(String headIds, String materialIds)throws Exception {
+        int result=0;
+        try{
+            result = depotItemMapperEx.findByAllCount(headIds, materialIds);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
         }
+        return result;
+    }
+
+    public BigDecimal findByType(String type, Integer ProjectId, Long MId, String MonthTime, Boolean isPrev)throws Exception {
+        BigDecimal result=null;
+        try{
+            if (TYPE.equals(type)) {
+                if (isPrev) {
+                    result= depotItemMapperEx.findByTypeInIsPrev(ProjectId, MId, MonthTime);
+                } else {
+                    result= depotItemMapperEx.findByTypeInIsNotPrev(ProjectId, MId, MonthTime);
+                }
+            } else {
+                if (isPrev) {
+                    result= depotItemMapperEx.findByTypeOutIsPrev(ProjectId, MId, MonthTime);
+                } else {
+                    result= depotItemMapperEx.findByTypeOutIsNotPrev(ProjectId, MId, MonthTime);
+                }
+            }
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return result;
+
+    }
+
+    public BigDecimal findPriceByType(String type, Integer ProjectId, Long MId, String MonthTime, Boolean isPrev)throws Exception {
+        BigDecimal result=null;
+        try{
+            if (TYPE.equals(type)) {
+                if (isPrev) {
+                    result= depotItemMapperEx.findPriceByTypeInIsPrev(ProjectId, MId, MonthTime);
+                } else {
+                    result= depotItemMapperEx.findPriceByTypeInIsNotPrev(ProjectId, MId, MonthTime);
+                }
+            } else {
+                if (isPrev) {
+                    result= depotItemMapperEx.findPriceByTypeOutIsPrev(ProjectId, MId, MonthTime);
+                } else {
+                    result= depotItemMapperEx.findPriceByTypeOutIsNotPrev(ProjectId, MId, MonthTime);
+                }
+            }
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return result;
+
+    }
+
+    public BigDecimal findAssembleByType(String subType, String mType, Integer ProjectId, Long MId, String MonthTime, Boolean isPrev)throws Exception {
+        BigDecimal result=null;
+        try{
+            if (isPrev) {
+                result= depotItemMapperEx.findAssembleIsPrev(subType, mType, ProjectId, MId, MonthTime);
+            } else {
+                result= depotItemMapperEx.findAssembleIsNotPrev(subType, mType, ProjectId, MId, MonthTime);
+            }
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return result;
+
+    }
+
+    public BigDecimal buyOrSale(String type, String subType, Long MId, String MonthTime, String sumType) throws Exception{
+        BigDecimal result=null;
+        try{
+            if (SUM_TYPE.equals(sumType)) {
+                result= depotItemMapperEx.buyOrSaleNumber(type, subType, MId, MonthTime, sumType);
+            } else {
+                result= depotItemMapperEx.buyOrSalePrice(type, subType, MId, MonthTime, sumType);
+            }
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return result;
+
     }
 
     /**
@@ -241,9 +460,16 @@ public class DepotItemService {
         logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_DEPOT_ITEM,
                 BusinessConstants.LOG_OPERATION_TYPE_ADD,
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
-
         //查询单据主表信息
-        DepotHead depotHead=depotHeadMapper.selectByPrimaryKey(headerId);
+        DepotHead depotHead=null;
+        try{
+            depotHead =depotHeadMapper.selectByPrimaryKey(headerId);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
         //获得当前操作人
         User userInfo=userService.getCurrentUser();
         //转为json
@@ -275,8 +501,8 @@ public class DepotItemService {
                             continue;
                         }
                         if(BusinessConstants.ENABLE_SERIAL_NUMBER_ENABLED.equals(material.getEnableserialnumber())){
-                            serialNumberMapperEx.cancelSerialNumber(depotItem.getMaterialid(),depotItem.getHeaderid(),(depotItem.getBasicnumber()==null?0:depotItem.getBasicnumber()).intValue(),
-                                    new Date(),userInfo==null?null:userInfo.getId());
+                            serialNumberService.cancelSerialNumber(depotItem.getMaterialid(),depotItem.getHeaderid(),(depotItem.getBasicnumber()==null?0:depotItem.getBasicnumber()).intValue(),
+                                    userInfo);
                         }
                     }
                     this.deleteDepotItem(tempDeletedJson.getLong("Id"));
@@ -416,8 +642,8 @@ public class DepotItemService {
                          * 判断商品是否开启序列号，开启的收回序列号，未开启的跳过
                          * */
                         if(BusinessConstants.ENABLE_SERIAL_NUMBER_ENABLED.equals(material.getEnableserialnumber())) {
-                            serialNumberMapperEx.cancelSerialNumber(depotItem.getMaterialid(), depotItem.getHeaderid(), (depotItem.getBasicnumber()==null?0:depotItem.getBasicnumber()).intValue(),
-                                    new Date(), userInfo == null ? null : userInfo.getId());
+                            serialNumberService.cancelSerialNumber(depotItem.getMaterialid(), depotItem.getHeaderid(), (depotItem.getBasicnumber()==null?0:depotItem.getBasicnumber()).intValue(),
+                                    userInfo);
                         }
                         /**收回序列号的时候释放库存*/
                         depotItem.setOpernumber(BigDecimal.ZERO);
@@ -525,7 +751,7 @@ public class DepotItemService {
      *
      * @return
      */
-    public String findUnitName(Long mId) {
+    public String findUnitName(Long mId) throws Exception{
         String unitName = "";
         try {
             unitName = materialService.findUnitName(mId);
@@ -544,7 +770,7 @@ public class DepotItemService {
      * 查询商品当前库存数量是否充足，
      *
      * */
-    public int getCurrentInStock(Long materialId){
+    public int getCurrentInStock(Long materialId)throws Exception{
         //入库数量
         int inSum = findByTypeAndMaterialId(BusinessConstants.DEPOTHEAD_TYPE_STORAGE, materialId);
         //出库数量
@@ -552,12 +778,21 @@ public class DepotItemService {
         return (inSum-outSum);
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteDepotItemByIds(String ids) {
+    public int batchDeleteDepotItemByIds(String ids)throws Exception {
         logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_DEPOT_ITEM,
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");
-        return depotItemMapperEx.batchDeleteDepotItemByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+        int  result =0;
+        try{
+            result =depotItemMapperEx.batchDeleteDepotItemByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 }
