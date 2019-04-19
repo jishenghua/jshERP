@@ -73,7 +73,7 @@ public class SupplierController {
      * @return
      */
     @PostMapping(value = "/findBySelect_cus")
-    public JSONArray findBySelectCus(HttpServletRequest request) {
+    public JSONArray findBySelectCus(HttpServletRequest request)throws Exception {
         JSONArray arr = new JSONArray();
         try {
             List<Supplier> supplierList = supplierService.findBySelectCus();
@@ -108,7 +108,7 @@ public class SupplierController {
      * @return
      */
     @PostMapping(value = "/findBySelect_sup")
-    public JSONArray findBySelectSup(HttpServletRequest request) {
+    public JSONArray findBySelectSup(HttpServletRequest request) throws Exception{
         JSONArray arr = new JSONArray();
         try {
             List<Supplier> supplierList = supplierService.findBySelectSup();
@@ -135,7 +135,7 @@ public class SupplierController {
      * @return
      */
     @PostMapping(value = "/findBySelect_retail")
-    public JSONArray findBySelectRetail(HttpServletRequest request) {
+    public JSONArray findBySelectRetail(HttpServletRequest request)throws Exception {
         JSONArray arr = new JSONArray();
         try {
             List<Supplier> supplierList = supplierService.findBySelectRetail();
@@ -165,7 +165,7 @@ public class SupplierController {
      */
     @GetMapping(value = "/findById")
     public BaseResponseInfo findById(@RequestParam("supplierId") Long supplierId,
-                              HttpServletRequest request) {
+                              HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
             JSONArray dataArray = new JSONArray();
@@ -240,7 +240,7 @@ public class SupplierController {
      */
     @PostMapping(value = "/findUserCustomer")
     public JSONArray findUserCustomer(@RequestParam("UBType") String type, @RequestParam("UBKeyId") String keyId,
-                                   HttpServletRequest request) {
+                                   HttpServletRequest request) throws Exception{
         JSONArray arr = new JSONArray();
         try {
             List<Supplier> dataList = supplierService.findUserCustomer();
@@ -295,7 +295,7 @@ public class SupplierController {
                                         @RequestParam("phonenum") String phonenum,
                                         @RequestParam("telephone") String telephone,
                                         @RequestParam("description") String description,
-                                        HttpServletRequest request, HttpServletResponse response) {
+                                        HttpServletRequest request, HttpServletResponse response)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         String message = "成功";
@@ -382,7 +382,7 @@ public class SupplierController {
         importFun(supplierFile);
         response.sendRedirect("../pages/manage/member.html");
     }
-    public String importFun(MultipartFile supplierFile){
+    public String importFun(MultipartFile supplierFile)throws Exception{
 
         BaseResponseInfo info = new BaseResponseInfo();
         Map<String, Object> data = new HashMap<String, Object>();
@@ -436,7 +436,7 @@ public class SupplierController {
         return null;
     }
 
-    public BigDecimal parseBigDecimalEx(String str){
+    public BigDecimal parseBigDecimalEx(String str)throws Exception{
         if(!StringUtil.isEmpty(str)) {
             return new BigDecimal(str);
         } else {

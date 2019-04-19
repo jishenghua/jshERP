@@ -21,16 +21,16 @@ public class SupplierComponent implements ICommonQuery {
     private SupplierService supplierService;
 
     @Override
-    public Object selectOne(String condition) {
+    public Object selectOne(String condition)throws Exception {
         return null;
     }
 
     @Override
-    public List<?> select(Map<String, String> map) {
+    public List<?> select(Map<String, String> map)throws Exception {
         return getSupplierList(map);
     }
 
-    private List<?> getSupplierList(Map<String, String> map) {
+    private List<?> getSupplierList(Map<String, String> map)throws Exception {
         String search = map.get(Constants.SEARCH);
         String supplier = StringUtil.getInfo(search, "supplier");
         String type = StringUtil.getInfo(search, "type");
@@ -42,7 +42,7 @@ public class SupplierComponent implements ICommonQuery {
     }
 
     @Override
-    public Long counts(Map<String, String> map) {
+    public Long counts(Map<String, String> map)throws Exception {
         String search = map.get(Constants.SEARCH);
         String supplier = StringUtil.getInfo(search, "supplier");
         String type = StringUtil.getInfo(search, "type");
@@ -53,27 +53,27 @@ public class SupplierComponent implements ICommonQuery {
     }
 
     @Override
-    public int insert(String beanJson, HttpServletRequest request) {
+    public int insert(String beanJson, HttpServletRequest request)throws Exception {
         return supplierService.insertSupplier(beanJson, request);
     }
 
     @Override
-    public int update(String beanJson, Long id) {
+    public int update(String beanJson, Long id)throws Exception {
         return supplierService.updateSupplier(beanJson, id);
     }
 
     @Override
-    public int delete(Long id) {
+    public int delete(Long id)throws Exception {
         return supplierService.deleteSupplier(id);
     }
 
     @Override
-    public int batchDelete(String ids) {
+    public int batchDelete(String ids)throws Exception {
         return supplierService.batchDeleteSupplier(ids);
     }
 
     @Override
-    public int checkIsNameExist(Long id, String name) {
+    public int checkIsNameExist(Long id, String name)throws Exception {
         return supplierService.checkIsNameExist(id, name);
     }
 
