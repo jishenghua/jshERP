@@ -26,16 +26,16 @@ public class SerialNumberComponent implements ICommonQuery {
     private SerialNumberService serialNumberService;
 
     @Override
-    public Object selectOne(String condition) {
+    public Object selectOne(String condition)throws Exception {
         return null;
     }
 
     @Override
-    public List<?> select(Map<String, String> map) {
+    public List<?> select(Map<String, String> map)throws Exception {
         return getSerialNumberList(map);
     }
 
-    private List<?> getSerialNumberList(Map<String, String> map) {
+    private List<?> getSerialNumberList(Map<String, String> map) throws Exception{
         String search = map.get(Constants.SEARCH);
         String serialNumber = StringUtil.getInfo(search, "serialNumber");
         String materialName = StringUtil.getInfo(search, "materialName");
@@ -43,7 +43,7 @@ public class SerialNumberComponent implements ICommonQuery {
     }
 
     @Override
-    public Long counts(Map<String, String> map) {
+    public Long counts(Map<String, String> map)throws Exception {
         String search = map.get(Constants.SEARCH);
         String serialNumber = StringUtil.getInfo(search, "serialNumber");
         String materialName = StringUtil.getInfo(search, "materialName");
@@ -56,22 +56,22 @@ public class SerialNumberComponent implements ICommonQuery {
     }
 
     @Override
-    public int update(String beanJson, Long id) {
+    public int update(String beanJson, Long id)throws Exception {
         return serialNumberService.updateSerialNumber(beanJson, id);
     }
 
     @Override
-    public int delete(Long id) {
+    public int delete(Long id)throws Exception {
         return serialNumberService.deleteSerialNumber(id);
     }
 
     @Override
-    public int batchDelete(String ids) {
+    public int batchDelete(String ids)throws Exception {
         return serialNumberService.batchDeleteSerialNumber(ids);
     }
 
     @Override
-    public int checkIsNameExist(Long id, String serialNumber) {
+    public int checkIsNameExist(Long id, String serialNumber) throws Exception{
         return serialNumberService.checkIsNameExist(id, serialNumber);
     }
 }

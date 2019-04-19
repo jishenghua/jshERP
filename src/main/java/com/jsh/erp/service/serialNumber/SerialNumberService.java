@@ -32,7 +32,7 @@ import java.util.List;
  */
 @Service
 public class SerialNumberService {
-    private Logger logger = LoggerFactory.getLogger(MaterialService.class);
+    private Logger logger = LoggerFactory.getLogger(SerialNumberService.class);
 
     @Resource
     private SerialNumberMapper serialNumberMapper;
@@ -48,84 +48,190 @@ public class SerialNumberService {
     private LogService logService;
 
 
-    public SerialNumber getSerialNumber(long id) {
-        return serialNumberMapper.selectByPrimaryKey(id);
+    public SerialNumber getSerialNumber(long id)throws Exception {
+        SerialNumber result=null;
+        try{
+            result=serialNumberMapper.selectByPrimaryKey(id);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return result;
     }
 
-    public List<SerialNumber> getSerialNumber() {
+    public List<SerialNumber> getSerialNumber()throws Exception {
         SerialNumberExample example = new SerialNumberExample();
-        return serialNumberMapper.selectByExample(example);
+        List<SerialNumber> list=null;
+        try{
+            list=serialNumberMapper.selectByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list;
     }
 
-    public List<SerialNumberEx> select(String serialNumber, String materialName, Integer offset, Integer rows) {
-        return serialNumberMapperEx.selectByConditionSerialNumber(serialNumber, materialName,offset, rows);
+    public List<SerialNumberEx> select(String serialNumber, String materialName, Integer offset, Integer rows)throws Exception {
+        List<SerialNumberEx> list=null;
+        try{
+            list=serialNumberMapperEx.selectByConditionSerialNumber(serialNumber, materialName,offset, rows);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list;
 
     }
 
-    public Long countSerialNumber(String serialNumber,String materialName) {
-        return serialNumberMapperEx.countSerialNumber(serialNumber, materialName);
+    public Long countSerialNumber(String serialNumber,String materialName)throws Exception {
+        Long result=null;
+        try{
+            result=serialNumberMapperEx.countSerialNumber(serialNumber, materialName);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertSerialNumber(String beanJson, HttpServletRequest request)throws Exception {
         SerialNumber serialNumber = JSONObject.parseObject(beanJson, SerialNumber.class);
         logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_SERIAL_NUMBER, BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
-        return serialNumberMapper.insertSelective(serialNumber);
+        int result=0;
+        try{
+            result=serialNumberMapper.insertSelective(serialNumber);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateSerialNumber(String beanJson, Long id) {
+    public int updateSerialNumber(String beanJson, Long id) throws Exception{
         SerialNumber serialNumber = JSONObject.parseObject(beanJson, SerialNumber.class);
         serialNumber.setId(id);
-        int res = serialNumberMapper.updateByPrimaryKeySelective(serialNumber);
-        return res;
+        int result=0;
+        try{
+            result=serialNumberMapper.updateByPrimaryKeySelective(serialNumber);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int deleteSerialNumber(Long id) {
-        return serialNumberMapper.deleteByPrimaryKey(id);
+    public int deleteSerialNumber(Long id)throws Exception {
+        int result=0;
+        try{
+            result=serialNumberMapper.deleteByPrimaryKey(id);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteSerialNumber(String ids) {
+    public int batchDeleteSerialNumber(String ids)throws Exception {
         List<Long> idList = StringUtil.strToLongList(ids);
         SerialNumberExample example = new SerialNumberExample();
         example.createCriteria().andIdIn(idList);
-        return serialNumberMapper.deleteByExample(example);
+        int result=0;
+        try{
+            result=serialNumberMapper.deleteByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 
-    public int checkIsNameExist(Long id, String serialNumber) {
+    public int checkIsNameExist(Long id, String serialNumber)throws Exception {
         SerialNumberExample example = new SerialNumberExample();
         example.createCriteria().andIdNotEqualTo(id).andSerialNumberEqualTo(serialNumber).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        List<SerialNumber> list = serialNumberMapper.selectByExample(example);
-        return list.size();
+        List<SerialNumber> list=null;
+        try{
+            list=serialNumberMapper.selectByExample(example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list==null?0:list.size();
     }
 
 
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchSetEnable(Boolean enabled, String materialIDs) {
+    public int batchSetEnable(Boolean enabled, String materialIDs)throws Exception{
         List<Long> ids = StringUtil.strToLongList(materialIDs);
         SerialNumber serialNumber = new SerialNumber();
         SerialNumberExample example = new SerialNumberExample();
         example.createCriteria().andIdIn(ids);
-        return serialNumberMapper.updateByExampleSelective(serialNumber, example);
+        int result=0;
+        try{
+            result=serialNumberMapper.updateByExampleSelective(serialNumber, example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 
 
-    public List<SerialNumberEx> findById(Long id){
-        return serialNumberMapperEx.findById(id);
+    public List<SerialNumberEx> findById(Long id)throws Exception{
+        List<SerialNumberEx> list=null;
+        try{
+            list=serialNumberMapperEx.findById(id);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list;
     }
 
 
 
 
-    public void checkIsExist(Long id, String materialName, String serialNumber) {
+    public void checkIsExist(Long id, String materialName, String serialNumber) throws Exception{
         /**
          * 商品名称不为空时，检查商品名称是否存在
          * */
             if(StringUtil.isNotEmpty(materialName)){
-                List<Material> mlist = materialMapperEx.findByMaterialName(materialName);
+                List<Material> mlist=null;
+                try{
+                     mlist = materialMapperEx.findByMaterialName(materialName);
+                }catch(Exception e){
+                    logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                            ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+                    throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                            ExceptionConstants.DATA_READ_FAIL_MSG);
+                }
+
                if(mlist==null||mlist.size()<1){
                    //商品名称不存在
                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_NOT_EXISTS_CODE,
@@ -140,7 +246,15 @@ public class SerialNumberService {
             /***
              * 判断序列号是否已存在
              * */
-            List <SerialNumberEx> list = serialNumberMapperEx.findBySerialNumber(serialNumber);
+            List <SerialNumberEx> list=null;
+            try{
+                 list = serialNumberMapperEx.findBySerialNumber(serialNumber);
+            }catch(Exception e){
+                logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                        ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+                throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                        ExceptionConstants.DATA_READ_FAIL_MSG);
+            }
             if(list!=null&&list.size()>0){
                 if(list.size()>1){
                     //存在多个同名序列号
@@ -187,8 +301,16 @@ public class SerialNumberService {
         User userInfo=userService.getCurrentUser();
         serialNumberEx.setCreator(userInfo==null?null:userInfo.getId());
         serialNumberEx.setUpdater(userInfo==null?null:userInfo.getId());
-        int result=serialNumberMapperEx.addSerialNumber(serialNumberEx);
-        if(result==1){
+        int result=0;
+        try{
+            result = serialNumberMapperEx.addSerialNumber(serialNumberEx);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        if(result>0){
             return serialNumberEx;
         }
         return null;
@@ -207,8 +329,16 @@ public class SerialNumberService {
         serialNumberEx.setUpdateTime(date);
         User userInfo=userService.getCurrentUser();
         serialNumberEx.setUpdater(userInfo==null?null:userInfo.getId());
-        int result = serialNumberMapperEx.updateSerialNumber(serialNumberEx);
-        if(result==1){
+        int result=0;
+        try{
+            result = serialNumberMapperEx.updateSerialNumber(serialNumberEx);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        if(result>0){
             return serialNumberEx;
         }
         return null;
@@ -221,9 +351,17 @@ public class SerialNumberService {
      * @Param: materialName
      * @return Long 满足使用条件的商品的id
      */
-    public Long checkMaterialName(String materialName){
+    public Long checkMaterialName(String materialName)throws Exception{
         if(StringUtil.isNotEmpty(materialName)) {
-            List<Material> mlist = materialMapperEx.findByMaterialName(materialName);
+            List<Material> mlist=null;
+            try{
+                mlist = materialMapperEx.findByMaterialName(materialName);
+            }catch(Exception e){
+                logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                        ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+                throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                        ExceptionConstants.DATA_READ_FAIL_MSG);
+            }
             if (mlist == null || mlist.size() < 1) {
                 //商品名称不存在
                 throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_NOT_EXISTS_CODE,
@@ -258,7 +396,7 @@ public class SerialNumberService {
      * @Param: materialName
      * @return Long 满足使用条件的商品的id
      */
-    public Long getSerialNumberMaterialIdByMaterialName(String materialName){
+    public Long getSerialNumberMaterialIdByMaterialName(String materialName)throws Exception{
             if(StringUtil.isNotEmpty(materialName)){
             //计算商品库存和目前占用的可用序列号数量关系
             //库存=入库-出库
@@ -290,14 +428,22 @@ public class SerialNumberService {
     public void checkAndUpdateSerialNumber(DepotItem depotItem,User userInfo) throws Exception{
                 if(depotItem!=null){
                     //查询商品下已分配的可用序列号数量
-                    int SerialNumberSum= serialNumberMapperEx.countSerialNumberByMaterialIdAndDepotheadId(depotItem.getMaterialid(),null,BusinessConstants.IS_SELL_HOLD);
-                    //BasicNumber=OperNumber*ratio
-                    if((depotItem.getBasicnumber()==null?0:depotItem.getBasicnumber()).intValue()>SerialNumberSum){
-                        //获取商品名称
-                        Material material= materialMapper.selectByPrimaryKey(depotItem.getMaterialid());
-                        throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_SERIAL_NUMBERE_NOT_ENOUGH_CODE,
-                                String.format(ExceptionConstants.MATERIAL_SERIAL_NUMBERE_NOT_ENOUGH_MSG,material==null?"":material.getName()));
+                    try{
+                        int SerialNumberSum= serialNumberMapperEx.countSerialNumberByMaterialIdAndDepotheadId(depotItem.getMaterialid(),null,BusinessConstants.IS_SELL_HOLD);
+                        //BasicNumber=OperNumber*ratio
+                        if((depotItem.getBasicnumber()==null?0:depotItem.getBasicnumber()).intValue()>SerialNumberSum){
+                            //获取商品名称
+                            Material material= materialMapper.selectByPrimaryKey(depotItem.getMaterialid());
+                            throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_SERIAL_NUMBERE_NOT_ENOUGH_CODE,
+                                    String.format(ExceptionConstants.MATERIAL_SERIAL_NUMBERE_NOT_ENOUGH_MSG,material==null?"":material.getName()));
+                        }
+                    }catch(Exception e){
+                        logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                                ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+                        throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                                ExceptionConstants.DATA_READ_FAIL_MSG);
                     }
+
                     //商品下序列号充足，分配序列号
                     sellSerialNumber(depotItem.getMaterialid(),depotItem.getHeaderid(),(depotItem.getBasicnumber()==null?0:depotItem.getBasicnumber()).intValue(),userInfo);
                 }
@@ -320,7 +466,16 @@ public class SerialNumberService {
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int sellSerialNumber(Long materialId, Long depotheadId,int count,User user) throws Exception{
-        return serialNumberMapperEx.sellSerialNumber(materialId,depotheadId,count,new Date(),user==null?null:user.getId());
+        int result=0;
+        try{
+            result = serialNumberMapperEx.sellSerialNumber(materialId,depotheadId,count,new Date(),user==null?null:user.getId());
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 
     /**
@@ -336,7 +491,16 @@ public class SerialNumberService {
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int cancelSerialNumber(Long materialId, Long depotheadId,int count,User user) throws Exception{
-        return serialNumberMapperEx.cancelSerialNumber(materialId,depotheadId,count,new Date(),user==null?null:user.getId());
+        int result=0;
+        try{
+            result = serialNumberMapperEx.cancelSerialNumber(materialId,depotheadId,count,new Date(),user==null?null:user.getId());
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
     }
 
     /**
@@ -386,6 +550,15 @@ public class SerialNumberService {
                    each.setSerialNumber(new StringBuffer(prefixBuf.toString()).append(insertNum).toString());
                    list.add(each);
                }
+                int result=0;
+                try{
+                    result = serialNumberMapperEx.batAddSerialNumber(list);
+                }catch(Exception e){
+                    logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                            ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+                    throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                            ExceptionConstants.DATA_WRITE_FAIL_MSG);
+                }
                 serialNumberMapperEx.batAddSerialNumber(list);
                 batAddTotal -= BusinessConstants.BATCH_INSERT_MAX_NUMBER;
             }while(batAddTotal>0);
@@ -407,7 +580,16 @@ public class SerialNumberService {
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");
-        return serialNumberMapperEx.batchDeleteSerialNumberByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+        int result=0;
+        try{
+            result = serialNumberMapperEx.batchDeleteSerialNumberByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
 
     }
 }
