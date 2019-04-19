@@ -20,16 +20,16 @@ public class UnitComponent implements ICommonQuery {
     private UnitService unitService;
 
     @Override
-    public Object selectOne(String condition) {
+    public Object selectOne(String condition)throws Exception {
         return null;
     }
 
     @Override
-    public List<?> select(Map<String, String> map) {
+    public List<?> select(Map<String, String> map)throws Exception {
         return getUnitList(map);
     }
 
-    private List<?> getUnitList(Map<String, String> map) {
+    private List<?> getUnitList(Map<String, String> map)throws Exception {
         String search = map.get(Constants.SEARCH);
         String name = StringUtil.getInfo(search, "name");
         String order = QueryUtils.order(map);
@@ -37,34 +37,34 @@ public class UnitComponent implements ICommonQuery {
     }
 
     @Override
-    public Long counts(Map<String, String> map) {
+    public Long counts(Map<String, String> map)throws Exception {
         String search = map.get(Constants.SEARCH);
         String name = StringUtil.getInfo(search, "name");
         return unitService.countUnit(name);
     }
 
     @Override
-    public int insert(String beanJson, HttpServletRequest request) {
+    public int insert(String beanJson, HttpServletRequest request)throws Exception {
         return unitService.insertUnit(beanJson, request);
     }
 
     @Override
-    public int update(String beanJson, Long id) {
+    public int update(String beanJson, Long id)throws Exception {
         return unitService.updateUnit(beanJson, id);
     }
 
     @Override
-    public int delete(Long id) {
+    public int delete(Long id)throws Exception {
         return unitService.deleteUnit(id);
     }
 
     @Override
-    public int batchDelete(String ids) {
+    public int batchDelete(String ids)throws Exception {
         return unitService.batchDeleteUnit(ids);
     }
 
     @Override
-    public int checkIsNameExist(Long id, String name) {
+    public int checkIsNameExist(Long id, String name)throws Exception {
         return unitService.checkIsNameExist(id, name);
     }
 
