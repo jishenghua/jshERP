@@ -63,10 +63,10 @@
             and dh.Id in (${dhIds})
         </if>
         <if test="beginTime != null">
-            and dh.OperTime >= (${beginTime})
+            and dh.OperTime >= '${beginTime}'
         </if>
         <if test="endTime != null">
-            and dh.OperTime &lt;= (${endTime})
+            and dh.OperTime &lt;= '${endTime}'
         </if>
         and ifnull(dh.delete_Flag,'0') !='1'
         order by dh.Id desc
@@ -92,10 +92,10 @@
             and Id in (${dhIds})
         </if>
         <if test="beginTime != null">
-            and OperTime >= (${beginTime})
+            and OperTime >= '${beginTime}'
         </if>
         <if test="endTime != null">
-            and OperTime &lt;= (${endTime})
+            and OperTime &lt;= '${endTime}'
         </if>
         and ifnull(delete_Flag,'0') !='1'
     </select>
