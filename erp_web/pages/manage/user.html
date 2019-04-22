@@ -358,6 +358,7 @@
         var row = {};
         $('#usernameFM').form('load', row);
         $("#username").focus();
+        $("#loginame").removeAttr("readonly");
         oldLoginName = "";
         userID = 0;
         /**机构选择*/
@@ -452,6 +453,7 @@
         userID = usernameInfo[0];
         //焦点在名称输入框==定焦在输入文字后面
         $("#username").val("").focus().val(usernameInfo[1]);
+        $("#loginame").attr("readonly","readonly");
         /**机构选择*/
         $("#selectType").val("org");
         url = '/user/updateUser?id=' + usernameInfo[0];
