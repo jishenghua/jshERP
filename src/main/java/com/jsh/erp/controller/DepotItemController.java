@@ -448,7 +448,7 @@ public class DepotItemController {
                     BigDecimal InPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, false);
                     BigDecimal OutPrice = sumPrice("出库", pid, diEx.getMId(), monthTime, false);
                     item.put("MaterialName", diEx.getMName());
-                    item.put("MaterialModel", diEx.getMColor());
+                    item.put("MaterialModel", diEx.getMModel());
                     //扩展信息
                     String materialOther = getOtherInfo(mpArr, diEx);
                     item.put("MaterialOther", materialOther);

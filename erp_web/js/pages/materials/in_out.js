@@ -1,4 +1,5 @@
 	//初始化界面
+	var defDepotId = null;
 	var kid = sessionStorage.getItem("userId");
     var pageType = getUrlParam('t');  //获取页面类型传值
 	var depotList = null;
@@ -53,7 +54,7 @@
 		initMProperty(); //初始化商品属性
 		initTableData();
 		ininPager();
-		initForm();	
+		initForm();
 		bindEvent();//绑定操作事件
 	});
 	//根据单据名称获取类型
@@ -74,8 +75,8 @@
             amountNum = "CGDD";
         }
 		else if(listTitle === "采购入库列表"){
-			listType = "入库"; 
-			listSubType = "采购"; 
+			listType = "入库";
+			listSubType = "采购";
 			payTypeTitle = "付款";
 			organUrl = supUrl;
 			amountNum = "CGRK";
@@ -88,15 +89,15 @@
 			amountNum = "LSTH";
 		}
 		else if(listTitle === "销售退货列表"){
-			listType = "入库"; 
-			listSubType = "销售退货"; 
+			listType = "入库";
+			listSubType = "销售退货";
 			payTypeTitle = "付款";
 			organUrl = cusUrl;
 			amountNum = "XSTH";
 		}
 		else if(listTitle === "其它入库列表"){
-			listType = "入库"; 
-			listSubType = "其它"; 
+			listType = "入库";
+			listSubType = "其它";
 			payTypeTitle = "隐藏";
 			organUrl = supUrl;
 			amountNum = "QTRK";
@@ -116,29 +117,29 @@
             amountNum = "XSDD";
         }
 		else if(listTitle === "销售出库列表"){
-			listType = "出库"; 
-			listSubType = "销售"; 
+			listType = "出库";
+			listSubType = "销售";
 			payTypeTitle = "收款";
 			organUrl = cusUrl;
 			amountNum = "XSCK";
 		}
 		else if(listTitle === "采购退货列表"){
-			listType = "出库"; 
+			listType = "出库";
 			listSubType = "采购退货";
 			payTypeTitle = "收款";
 			organUrl = supUrl;
 			amountNum = "CGTH";
 		}
 		else if(listTitle === "其它出库列表"){
-			listType = "出库"; 
-			listSubType = "其它"; 
+			listType = "出库";
+			listSubType = "其它";
 			payTypeTitle = "隐藏";
 			organUrl = cusUrl;
 			amountNum = "QTCK";
 		}
 		else if(listTitle === "调拨出库列表"){
-			listType = "出库"; 
-			listSubType = "调拨"; 
+			listType = "出库";
+			listSubType = "调拨";
 			payTypeTitle = "隐藏";
 			organUrl = supUrl;
 			amountNum = "DBCK";
@@ -178,12 +179,12 @@
                     userBusinessList = null;
                 }
             }
-		});		
-		
+		});
+
 	}
 	//初始化页面选项卡
 	function initSelectInfo_UB(){
-		
+
 		if(userBusinessList !=null)
 		{
 			if(userBusinessList.length>0)
@@ -193,8 +194,8 @@
 			}
 		}
 	}
-	
-	
+
+
 	//初始化系统基础信息
 	function initSystemData_depot(){
 		$.ajax({
@@ -211,24 +212,27 @@
                     return;
                 }
             }
-		});				
+		});
 	}
 	//初始化页面选项卡
 	function initSelectInfo_depot(){
 		var options = "";
-		
+
 		if(depotList !=null)
 		{
 			options = "";
 			for(var i = 0 ;i < depotList.length;i++)
 			{
 				var depot = depotList[i];
-				
+
 				if(userdepot!=null)
 				{
 					if(userdepot.indexOf("["+depot.id+"]")!=-1)
 					{
-						options += '<option value="' + depot.id + '">' + depot.name + '</option>';
+						if(depot.isdefault){
+                            defDepotId =  depot.id;
+						}
+                        options += '<option value="' + depot.id + '">' + depot.name + '</option>';
 						depotString = depotString + depot.id + ",";
 					}
 				}
@@ -238,16 +242,16 @@
 			}
 			depotString = depotString.substring(1, depotString.length-1);
 			$("#ProjectId").empty().append(options);
-			$("#AllocationProjectId").empty().append(options);			
+			$("#AllocationProjectId").empty().append(options);
 			$("#searchProjectId").empty().append('<option value="">全部</option>').append(options);
 		}
 	}
-	
+
 	//初始化供应商、客户、散户信息
 	function initSupplier(){
 		$('#OrganId').combobox({
 			url: organUrl,
-		    valueField:'id',    
+		    valueField:'id',
 		    textField:'supplier',
 			filter: function(q, row){
 				var opts = $(this).combobox('options');
@@ -297,7 +301,7 @@
 					});
 				}
 			}
-		});  
+		});
 	}
 
 	//初始化销售人员
@@ -364,7 +368,7 @@
 			}
 		});
 	}
-	
+
 	//初始化系统基础信息
 	function initSystemData_person(){
 		$.ajax({
@@ -380,12 +384,12 @@
                     }
                 }
             }
-		});				
+		});
 	}
 	//初始化页面选项卡
 	function initSelectInfo_person(){
 		var options1 = "";
-		
+
 		if(personList !=null)
 		{
 			for(var i = 0 ;i < personList.length;i++)
@@ -398,7 +402,7 @@
 				if(person.type=="仓管员")
 				{
 					options1 += '<option value="' + person.id + '">' + person.name + '</option>';
-				}	
+				}
 			}
 			$("#HandsPersonId").empty().append(options1);
 		}
@@ -418,11 +422,11 @@
 					}
 				}
 			}
-		});				
+		});
 	}
 	//获取账户信息
 	function initSelectInfo_account(){
-		var options = "";				
+		var options = "";
 		if(accountList !=null){
 			options = "<option value=''>(空)</option>";
 			options += "<option value='many' class='many' data-manyAmount=''>多账户</option>";
@@ -432,11 +436,11 @@
 				if(account.isdefault) {
 					defaultAccountId = account.id; //给账户赋值默认id
 				}
-			}	
+			}
 			$("#AccountId").empty().append(options);
 		}
 	}
-	
+
 	//防止表单提交重复
 	function initForm(){
 		$('#depotHeadFM').form({
@@ -445,7 +449,7 @@
 		    }
 		});
 	}
-	
+
 	//初始化表格数据
 	function initTableData(){
 		if(pageType === "skip") {
@@ -616,7 +620,7 @@
 			onLoadError:function() {
 				$.messager.alert('页面加载提示','页面加载异常，请稍后再试！','error');
 				return;
-			}    
+			}
 		});
 	}
 
@@ -1112,7 +1116,7 @@
 					iconCls:'icon-undo',
 					handler:function()
 					{
-						reject(); //撤销	
+						reject(); //撤销
 					}
 				}
 			],
@@ -1120,7 +1124,7 @@
 			{
 				$.messager.alert('页面加载提示','页面加载异常，请稍后再试！','error');
 				return;
-			}    
+			}
 		});
 		$.ajax({
 			type:"get",
@@ -1164,8 +1168,8 @@
 				$.messager.alert('查询提示','查询数据后台异常，请稍后再试！','error');
 			}
 		});
-	}			
-	
+	}
+
 	//初始化表格数据-商品列表-查看状态
 	function initTableData_material_show(TotalPrice){
 		var isShowAnotherDepot = true; //显示对方仓库,true为隐藏,false为显示
@@ -1221,7 +1225,7 @@
 			onLoadError:function() {
 				$.messager.alert('页面加载提示','页面加载异常，请稍后再试！','error');
 				return;
-			}    
+			}
 		});
 		$.ajax({
 			type:"get",
@@ -1256,28 +1260,28 @@
 	function ininPager(){
 		try
 		{
-			var opts = $("#tableData").datagrid('options');  
-			var pager = $("#tableData").datagrid('getPager'); 
-			pager.pagination({  
+			var opts = $("#tableData").datagrid('options');
+			var pager = $("#tableData").datagrid('getPager');
+			pager.pagination({
 				onSelectPage:function(pageNum, pageSize)
-				{  
-					opts.pageNumber = pageNum;  
-					opts.pageSize = pageSize;  
+				{
+					opts.pageNumber = pageNum;
+					opts.pageSize = pageSize;
 					pager.pagination('refresh',
-					{  
-						pageNumber:pageNum,  
-						pageSize:pageSize  
-					});  
+					{
+						pageNumber:pageNum,
+						pageSize:pageSize
+					});
 					showDepotHeadDetails(pageNum,pageSize);
-				}  
-			}); 
+				}
+			});
 		}
-		catch (e) 
+		catch (e)
 		{
 			$.messager.alert('异常处理提示',"分页信息异常 :  " + e.name + ": " + e.message,'error');
 		}
 	}
-	
+
 	//删除单据信息
 	function deleteDepotHead(depotHeadID, thisOrganId, totalPrice, status){
 		if(status == "1" || status == "2") {
@@ -1349,11 +1353,11 @@
 
 	//批量删除单据信息
 	function batDeleteDepotHead(){
-		var row = $('#tableData').datagrid('getChecked');	
+		var row = $('#tableData').datagrid('getChecked');
 		if(row.length == 0)
 		{
-			$.messager.alert('删除提示','没有记录被选中！','info');				
-			return;	
+			$.messager.alert('删除提示','没有记录被选中！','info');
+			return;
 		}
 		if(row.length > 0)
 		{
@@ -1575,7 +1579,7 @@
 		var addTitle = listTitle.replace("列表","信息");
 		$('#depotHeadDlg').dialog('open').dialog('setTitle','<img src="/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加' + addTitle);
 		$(".window-mask").css({ width: webW ,height: webH});
-	    
+
 	    orgDepotHead = "";
 	    depotHeadID = 0;
 	    initTableData_material("add"); //商品列表
@@ -1583,6 +1587,13 @@
 		$("#addOrgan").off("click").on("click",function(){
 			$('#supplierDlg').dialog('open').dialog('setTitle','<img src="/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加供应商信息');
 		});
+
+        $("#addMember").off("click").on("click",function(){
+            $('#supplierDlg').dialog('open').dialog('setTitle','<img src="/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加会员信息');
+        });
+        $("#addCustomer").off("click").on("click",function(){
+            $('#supplierDlg').dialog('open').dialog('setTitle','<img src="/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加客户信息');
+        });
 	    url = '/depotHead/addDepotHeadAndDetail';
 
 		//零售单据修改收款时，自动计算找零
@@ -1627,7 +1638,7 @@
 				}
 			});
 		}
-	}	
+	}
 
 	//编辑信息
 	function editDepotHead(depotHeadTotalInfo, status){
@@ -1735,7 +1746,7 @@
 			var itemMoneyArr = depotHeadInfo[26].split(",");
 			$("#OtherMoney").attr("data-itemArr",JSON.stringify(itemArr)).attr("data-itemMoneyArr",JSON.stringify(itemMoneyArr));  //json数据存储
 		}
-	    
+
 	    initTableData_material("edit",TotalPrice); //商品列表
 	    reject(); //撤销下、刷新商品列表
 		if(pageType === "skip") {
@@ -1746,7 +1757,7 @@
             url = '/depotHead/updateDepotHeadAndDetail?id=' + depotHeadInfo[0]; //更新接口
 		}
 	}
-	
+
 	//查看信息
 	function showDepotHead(depotHeadTotalInfo){
 		var depotHeadInfo = depotHeadTotalInfo.split("AaBb");
@@ -1812,7 +1823,7 @@
 	    var showTitle = listTitle.replace("列表","信息");
 	    $('#depotHeadDlgShow').dialog('open').dialog('setTitle','<img src="/js/easyui-1.3.5/themes/icons/list.png"/>&nbsp;查看' + showTitle);
 	    $(".window-mask").css({ width: webW ,height: webH});
-	    
+
 	    depotHeadID = depotHeadInfo[0];
 	    initTableData_material_show(TotalPrice); //商品列表-查看状态
 
@@ -1862,7 +1873,7 @@
 			}
 		}
 	}
-	
+
 	//绑定操作事件
 	function bindEvent(){
 		showDepotHeadDetails(1,initPageSize); //初始化时自动查询
@@ -2569,7 +2580,13 @@
 			$("#otherMoneyTotalDlg").text($("#OtherMoney").val());
 		});
 
-		if(listTitle === "采购入库列表" || listTitle === "其它入库列表" || listTitle === "采购订单列表"){
+		if(listTitle === "采购入库列表" || listTitle === "其它入库列表" || listTitle === "采购订单列表"|| listTitle === "零售出库列表"|| listTitle === "销售出库列表"|| listTitle === "销售订单列表"){
+			var supplierType = "供应商";
+			if(listTitle === "零售出库列表"){
+                supplierType = "会员";
+			}else if(listTitle === "销售出库列表" || listTitle === "销售订单列表"){
+            supplierType = "客户";
+			}
 			//检查单位名称是否存在 ++ 重名无法提示问题需要跟进
 			function checkSupplierName() {
 				var supplierName = $.trim($("#supplier").val());
@@ -2608,6 +2625,7 @@
 				}
 				return flag;
 			}
+
 			//保存供应商信息
 			$("#saveSupplier").off("click").on("click",function() {
 				if(checkSupplierName()){
@@ -2629,7 +2647,7 @@
 				}
 				var url = '/supplier/add';
                 var supObj = $("#supplierFM").serializeObject();
-                supObj.type = "供应商";
+                supObj.type = supplierType;
                 supObj.enabled = 1;
 				$.ajax({
 					url: url,
@@ -2706,7 +2724,7 @@
 			}
 		});
 	}
-	
+
 	//自动计算事件
 	function autoReckon() {
 		//延时绑定事件
@@ -2892,8 +2910,8 @@
 			}
 	    },500);
 	}
-	
-	//结束编辑	
+
+	//结束编辑
 	function endEditing() {
 	    if (editIndex == undefined) { return true }
 	    if ($('#materialData').datagrid('validateRow', editIndex)) {
@@ -2927,7 +2945,7 @@
 	//新增
 	function append(){
 	    if (endEditing()) {
-	        $('#materialData').datagrid('appendRow', {});
+	        $('#materialData').datagrid('appendRow', {DepotId:defDepotId});
 	        editIndex = $('#materialData').datagrid('getRows').length - 1;
 	        $('#materialData').datagrid('selectRow', editIndex).datagrid('beginEdit', editIndex);
 	        autoReckon();
@@ -3000,7 +3018,7 @@
 	    }
 	    if (totalRowNum != "") {
 	        var totalRowNum = totalRowNum.substring(0, totalRowNum.length - 1);
-	        $.messager.alert('提示',"第" + totalRowNum + "行数据填写不完整！",'info');	
+	        $.messager.alert('提示',"第" + totalRowNum + "行数据填写不完整！",'info');
 	        return false;
 	    }
 	    return true;
@@ -3056,7 +3074,7 @@
                 }
 			}
 		});
-		
+
 		if(depotHeadMax !=null) {
             depotHeadMaxId=depotHeadMax;
 		}

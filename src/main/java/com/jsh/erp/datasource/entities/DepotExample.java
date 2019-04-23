@@ -235,6 +235,7 @@ public class DepotExample {
             return (Criteria) this;
         }
 
+
         public Criteria andIdIn(List<Long> values) {
             addCriterion("id in", values, "id");
             return (Criteria) this;
@@ -664,7 +665,65 @@ public class DepotExample {
             addCriterion("remark <>", value, "remark");
             return (Criteria) this;
         }
+        public Criteria andIsdefaultIsNull() {
+            addCriterion("IsDefault is null");
+            return (Criteria) this;
+        }
 
+        public Criteria andIsdefaultIsNotNull() {
+            addCriterion("IsDefault is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsdefaultEqualTo(Boolean value) {
+            addCriterion("IsDefault =", value, "isdefault");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsdefaultNotEqualTo(Boolean value) {
+            addCriterion("IsDefault <>", value, "isdefault");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsdefaultGreaterThan(Boolean value) {
+            addCriterion("IsDefault >", value, "isdefault");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsdefaultGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("IsDefault >=", value, "isdefault");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsdefaultLessThan(Boolean value) {
+            addCriterion("IsDefault <", value, "isdefault");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsdefaultLessThanOrEqualTo(Boolean value) {
+            addCriterion("IsDefault <=", value, "isdefault");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsdefaultIn(List<Boolean> values) {
+            addCriterion("IsDefault in", values, "isdefault");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsdefaultNotIn(List<Boolean> values) {
+            addCriterion("IsDefault not in", values, "isdefault");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsdefaultBetween(Boolean value1, Boolean value2) {
+            addCriterion("IsDefault between", value1, value2, "isdefault");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsdefaultNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("IsDefault not between", value1, value2, "isdefault");
+            return (Criteria) this;
+        }
         public Criteria andRemarkGreaterThan(String value) {
             addCriterion("remark >", value, "remark");
             return (Criteria) this;
