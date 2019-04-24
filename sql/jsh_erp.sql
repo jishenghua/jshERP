@@ -1605,4 +1605,17 @@ ALTER TABLE jsh_log DROP FOREIGN KEY FKF2696AA13E226853;
 -- ----------------------------
 ALTER TABLE jsh_material DROP FOREIGN KEY FK675951272AB6672C;
 ALTER TABLE jsh_material DROP FOREIGN KEY jsh_material_ibfk_1;
+-- ----------------------------
+-- 时间：2019年4月24日
+-- version：1.0.14
+-- 此次更新
+-- 1、批量增加部分表的tenant_id租户字段
+-- 特别提醒：之后的sql都是在之前基础上迭代，可以对已存在的系统进行数据保留更新
+-- ----------------------------
+alter table databasechangelog add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
+alter table databasechangeloglock add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
+alter table jsh_app add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
+alter table jsh_functions add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
+alter table jsh_materialproperty add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
+alter table jsh_userbusiness add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
 
