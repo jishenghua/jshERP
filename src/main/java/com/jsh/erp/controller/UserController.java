@@ -47,7 +47,7 @@ public class UserController {
     private Integer managePort;
 
     @Value("${manage.roleId}")
-    private Integer manageRoleId;
+    private Long manageRoleId;
 
     @Resource
     private UserService userService;

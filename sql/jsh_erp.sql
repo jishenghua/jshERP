@@ -1618,4 +1618,79 @@ alter table jsh_app add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
 alter table jsh_functions add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
 alter table jsh_materialproperty add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
 alter table jsh_userbusiness add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
-
+-- ----------------------------
+-- 时间：2019年4月25日
+-- version：1.0.15
+-- 此次更新
+-- 添加一个函数，用于处理新用户注册的逻辑
+-- 传入参数用户的id、租户id、角色模板Id
+-- 返回状态码
+-- 执行逻辑
+-- 创建超级管理员角色，然后根据角色模板Id对应的应用、功能创建新租户对应的应用、功能、角色
+-- 设置新用户的角色对应关系、应用对应关系、功能对应关系
+-- 复制一份产品扩展信息给新用户
+-- 1、分配应用
+-- 2、分配功能模块
+-- 3、分配产品扩展字段
+-- 4、分配角色（默认添加超级管理员角色，不可修改）
+-- 5、写入用户角色模块关系
+-- 特别提醒：之后的sql都是在之前基础上迭代，可以对已存在的系统进行数据保留更新
+-- ----------------------------
+DROP FUNCTION IF EXISTS registerUserTemplate;
+DELIMITER ;;
+CREATE FUNCTION registerUserTemplate (userId bigint(20),tenantId bigint(20),roleId bigint(20)) RETURNS varchar(50)
+begin
+-- 返回1成功或者0失败
+declare _success_msg varchar(50) default '0';
+-- 创建超级管理员角色
+INSERT INTO jsh_role(Name, type, value, description, tenant_id, delete_Flag) VALUES ('超级管理员', NULL, NULL, '多租户超级管理员', tenantId, '0');
+set  @roleId= (SELECT LAST_INSERT_ID());
+-- 根据角色模板id获取对应的应用列表,为新租户创建对应的应用列表
+set @appIdList = (select left(replace(replace(value,'[',''),']',','),length(replace(replace(value,'[',''),']',','))-1) from jsh_userbusiness where 1=1 and type='RoleAPP' and KeyId=roleId and ifnull(delete_Flag,'0') !='1');
+	begin
+		set @i=length(@appIdList)-length(replace(@appIdList,',',''));
+		set @left_str=@appIdList;
+		while @i>0
+		do
+			set @sub_str=substr(@left_str,1,instr(@left_str,',')-1);
+			set @left_str=substr(@left_str,length(@sub_str)+length(',')+1);
+			set @n=trim(@sub_str);
+			-- 创建应用
+			 insert into jsh_app (Number, Name, Type, Icon, URL, Width, Height, ReSize, OpenMax, Flash, ZL, Sort, Remark, Enabled,delete_Flag, tenant_id) select Number, Name, Type, Icon, URL, Width, Height, ReSize, OpenMax, Flash, ZL, Sort, Remark, Enabled,delete_Flag, tenantId from jsh_app where id=@n;
+			set @i=@i-1;
+		end while;
+		set @n=trim(@left_str);
+		insert into jsh_app (Number, Name, Type, Icon, URL, Width, Height, ReSize, OpenMax, Flash, ZL, Sort, Remark, Enabled,delete_Flag, tenant_id) select Number, Name, Type, Icon, URL, Width, Height, ReSize, OpenMax, Flash, ZL, Sort, Remark, Enabled,delete_Flag, tenantId from jsh_app where id=@n;
+	end;
+	-- 根据角色模板id获取对应的功能列表,为新租户创建对应的功能列表
+set @functionIdList = (select left(replace(replace(value,'[',''),']',','),length(replace(replace(value,'[',''),']',','))-1) from jsh_userbusiness where 1=1 and type='RoleFunctions' and KeyId=roleId and ifnull(delete_Flag,'0') !='1');
+	begin
+		set @i=length(@functionIdList)-length(replace(@functionIdList,',',''));
+		set @left_str=@functionIdList;
+		while @i>0
+		do
+			set @sub_str=substr(@left_str,1,instr(@left_str,',')-1);
+			set @left_str=substr(@left_str,length(@sub_str)+length(',')+1);
+			set @n=trim(@sub_str);
+			-- 创建应用
+			 insert into jsh_functions (Number, Name, PNumber, URL, State, Sort, Enabled, Type, PushBtn, delete_Flag, tenant_id) select Number, Name, PNumber, URL, State, Sort, Enabled, Type, PushBtn, delete_Flag, tenantId from jsh_functions where id=@n;
+			set @i=@i-1;
+		end while;
+		set @n=trim(@left_str);
+			 insert into jsh_functions (Number, Name, PNumber, URL, State, Sort, Enabled, Type, PushBtn, delete_Flag, tenant_id) select Number, Name, PNumber, URL, State, Sort, Enabled, Type, PushBtn, delete_Flag, tenantId from jsh_functions where id=@n;
+	end;
+	-- 设置新用户的角色对应关系
+	INSERT INTO jsh_userbusiness ( Type, KeyId, Value, BtnStr, delete_Flag, tenant_id) VALUES ( 'UserRole', userId, CONCAT('[',@roleId,']') , NULL, '0', tenantId);
+	set @appStr=(select  GROUP_CONCAT(id separator '][')  from jsh_app where tenant_id=tenantId and ifnull(delete_Flag,'0') !='1');
+	-- 设置角色应用对应关系
+		INSERT INTO jsh_userbusiness ( Type, KeyId, Value, BtnStr, delete_Flag, tenant_id) VALUES ( 'RoleAPP', @roleId, CONCAT('[',@appStr,']') , NULL, '0', tenantId);
+		 set @functionStr=(select  GROUP_CONCAT(id separator '][')  from jsh_functions where tenant_id=tenantId and ifnull(delete_Flag,'0') !='1');
+		 set @functionBtnStr=(select  GROUP_CONCAT((CONCAT('"funId":"',id,'","btnStr":"',PushBtn,'"')) separator '},{')  from jsh_functions where 1=1 and  number in ('01020101','01020102','01020103','050202','060301') and tenant_id=tenantId and ifnull(delete_Flag,'0') !='1');
+		-- 设置角色功能对应关系
+		 INSERT INTO jsh_userbusiness ( Type, KeyId, Value, BtnStr, delete_Flag, tenant_id) VALUES ( 'RoleFunctions', @roleId, CONCAT('[',@functionStr,']') , CONCAT('[{',@functionBtnStr,'}]'), '0', tenantId);
+		 -- 设置租户的产品扩展信息
+		 INSERT INTO jsh_materialproperty( nativeName, enabled, sort, anotherName, delete_Flag, tenant_id) select nativeName, enabled, sort, anotherName, delete_Flag, tenantId from jsh_materialproperty where id in(1,2,3,4,5,6);
+return _success_msg;
+end
+;;
+DELIMITER ;

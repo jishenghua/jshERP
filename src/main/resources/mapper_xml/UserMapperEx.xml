@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jsh.erp.datasource.mappers.UserMapperEx">
-    <resultMap extends="com.jsh.erp.datasource.mappers.UserMapper.BaseResultMap" id="ResultMapEx" type="com.jsh.erp.datasource.entities.UserEx">
-        <result column="orgaId" jdbcType="BIGINT" property="orgaId" />
-        <result column="org_abr" jdbcType="VARCHAR" property="orgAbr" />
-        <result column="user_blng_orga_dspl_seq" jdbcType="VARCHAR" property="userBlngOrgaDsplSeq" />
-        <result column="orgaUserRelId" jdbcType="BIGINT" property="orgaUserRelId" />
+    <resultMap extends="com.jsh.erp.datasource.mappers.UserMapper.BaseResultMap" id="ResultMapEx"
+               type="com.jsh.erp.datasource.entities.UserEx">
+        <result column="orgaId" jdbcType="BIGINT" property="orgaId"/>
+        <result column="org_abr" jdbcType="VARCHAR" property="orgAbr"/>
+        <result column="user_blng_orga_dspl_seq" jdbcType="VARCHAR" property="userBlngOrgaDsplSeq"/>
+        <result column="orgaUserRelId" jdbcType="BIGINT" property="orgaUserRelId"/>
     </resultMap>
-    <select id="selectByConditionUser" parameterType="com.jsh.erp.datasource.entities.UserExample" resultMap="com.jsh.erp.datasource.mappers.UserMapper.BaseResultMap">
+    <select id="selectByConditionUser" parameterType="com.jsh.erp.datasource.entities.UserExample"
+            resultMap="com.jsh.erp.datasource.mappers.UserMapper.BaseResultMap">
         select *
         FROM jsh_user
         where 1=1
@@ -37,25 +39,26 @@
     </select>
     <select id="getUserList" parameterType="java.util.Map" resultMap="ResultMapEx">
         select user.id, user.username, user.loginame, user.position, user.email, user.phonenum,
-         user.description, user.remark,user.isystem,org.id as orgaId,user.tenant_id,org.org_abr,rel.user_blng_orga_dspl_seq,
+        user.description, user.remark,user.isystem,org.id as
+        orgaId,user.tenant_id,org.org_abr,rel.user_blng_orga_dspl_seq,
         rel.id as orgaUserRelId
         FROM jsh_user user
         left join jsh_orga_user_rel rel on user.id=rel.user_id and ifnull(rel.delete_flag,'0') !='1'
-        left join jsh_organization org on rel.orga_id=org.id and  ifnull(org.org_stcd,'0') !='5'
+        left join jsh_organization org on rel.orga_id=org.id and ifnull(org.org_stcd,'0') !='5'
         where 1=1
         and ifnull(user.status,'0') not in('1','2')
         <if test="userName != null and userName != ''">
-            <bind name="userName" value="'%' + _parameter.userName + '%'" />
+            <bind name="userName" value="'%' + _parameter.userName + '%'"/>
             and user.userName like #{userName}
         </if>
         <if test="loginName != null and loginName != ''">
-            <bind name="loginName" value="'%' + _parameter.loginName + '%'" />
+            <bind name="loginName" value="'%' + _parameter.loginName + '%'"/>
             and user.loginName like #{loginName}
         </if>
         order by user.id desc
     </select>
     <insert id="addUser" parameterType="com.jsh.erp.datasource.entities.UserEx"
-        useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+            useGeneratedKeys="true" keyProperty="id" keyColumn="id">
         insert into jsh_user (username, loginame,
         password, position,
         email, phonenum, ismanager,
@@ -184,4 +187,28 @@
         and ifnull(org_stcd,'0') !='5'
         order by sort asc
     </select>
+    <select id="getUserListByUserNameAndTenantId" resultMap="com.jsh.erp.datasource.mappers.UserMapper.BaseResultMap">
+        select user.id, user.username, user.loginame, user.position, user.email, user.phonenum,
+        user.description, user.remark,user.isystem
+        FROM jsh_user user
+        where 1=1
+        and ifnull(user.status,'0') not in('1','2')
+        <if test="userName != null and userName != ''">
+            and user.userName = #{userName}
+        </if>
+        <choose>
+            <when test="tenantId != null">
+                and user.tenant_id = #{tenantId}
+            </when>
+            <otherwise>
+                AND user.tenant_id is null
+            </otherwise>
+        </choose>
+        order by user.id desc
+    </select>
+    <select id="addRegisterUserNotInclueUser" resultType="String">
+      select registerUserTemplate(#{userId},#{tenantId},#{roleId}) from dual;
+    </select>
+
+
 </mapper>

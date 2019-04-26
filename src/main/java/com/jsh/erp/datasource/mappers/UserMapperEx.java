@@ -36,4 +36,8 @@ public interface UserMapperEx {
 
     List<TreeNodeEx> getNodeTree();
     List<TreeNodeEx> getNextNodeTree(Map<String, Object> parameterMap);
+
+    List<User> getUserListByUserNameAndTenantId(@Param("userName")String userName, @Param("tenantId")Long tenantId);
+
+    String addRegisterUserNotInclueUser(@Param("userId") Long userId,@Param("tenantId") Long tenantId,@Param("roleId") Long roleId);
 }

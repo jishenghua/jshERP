@@ -3,10 +3,7 @@ package com.jsh.erp.service.app;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
-import com.jsh.erp.datasource.entities.App;
-import com.jsh.erp.datasource.entities.AppExample;
-import com.jsh.erp.datasource.entities.User;
-import com.jsh.erp.datasource.entities.UserBusiness;
+import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.mappers.AppMapper;
 import com.jsh.erp.datasource.mappers.AppMapperEx;
 import com.jsh.erp.exception.BusinessRunTimeException;
@@ -292,4 +289,6 @@ public class AppService {
         }
         return list;
     }
+
+
 }

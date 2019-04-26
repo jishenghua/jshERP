@@ -11,6 +11,7 @@
     <script type="text/javascript" src="/js/common/common.js"></script>
     <script type="text/javascript" src="/js/md5/md5.js"></script>
     <script type="text/javascript" src="/js/gVerify.js"></script>
+    <script type="text/javascript" src="/js/md5/md5.js"></script>
 </head>
 <body id="login_body">
 <div id="login_main">
@@ -63,13 +64,20 @@
                     alert("确认密码不一致!");
                 } else {
                     //执行注册
+                    /**
+                     * create by: qiankunpingtai
+                     * create time: 2019/4/24 15:01
+                     * website：https://qiankunpingtai.cn
+                     * description:
+                     *  密码加密后发送到后台
+                     */
                     $.ajax({
                         type: "post",
                         url: "/user/registerUser",
                         dataType: "json",
                         data: ({
                             loginame: $("#user_name").val(),
-                            password: $("#user_pwd").val()
+                            password: hex_md5($.trim($("#user_pwd").val()))
                         }),
                         success: function (res) {
                             if (res && res.code === 200) {
