@@ -1,6 +1,10 @@
 package com.jsh.erp.config;
 
+import com.baomidou.mybatisplus.core.conditions.AbstractWrapper;
 import com.baomidou.mybatisplus.core.parser.ISqlParser;
+import com.baomidou.mybatisplus.core.parser.ISqlParserFilter;
+import com.baomidou.mybatisplus.core.parser.SqlParserHelper;
+import com.baomidou.mybatisplus.core.toolkit.PluginUtils;
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.PerformanceInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.tenant.TenantHandler;
@@ -8,6 +12,8 @@ import com.baomidou.mybatisplus.extension.plugins.tenant.TenantSqlParser;
 import com.jsh.erp.datasource.entities.User;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.LongValue;
+import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.reflection.MetaObject;
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +24,16 @@ import java.util.List;
 
 @Configuration
 public class TenantConfig {
-
+    /**
+     * create by: qiankunpingtai
+     * create time: 2019/4/28 14:28
+     * website：https://qiankunpingtai.cn
+     * description:
+     * 实现多租户和无租户模式数据可以兼容在一个数据库中
+     * 多租户模式：根据tenant_id=租户id来筛选个人数据
+     * 无租户模式：根据tenant_id is null来筛选数据
+     * mybatis-plus不支持多租户租户同时id为null的情况
+     */
     @Bean
     public PaginationInterceptor paginationInterceptor(HttpServletRequest request) {
         PaginationInterceptor paginationInterceptor = new PaginationInterceptor();
@@ -30,8 +45,10 @@ public class TenantConfig {
                 //从session中获取租户id
                 Object tenantId = request.getSession().getAttribute("tenantId");
                 if(tenantId!=null){
+                    //多租户模式，租户id从当前用户获取
                     return new LongValue(Long.parseLong(tenantId.toString()));
                 } else {
+                    //多租户模式，租户id为null
                     return null;
                 }
             }
@@ -47,25 +64,14 @@ public class TenantConfig {
                 Object mybatisPlusStatus = request.getSession().getAttribute("mybatisPlusStatus");
                 if(mybatisPlusStatus !=null && mybatisPlusStatus.toString().equals("open")) {
                     //从session中获取租户id
-                    String loginName = null;
-                    Object userInfo = request.getSession().getAttribute("user");
-                    if(userInfo != null) {
-                        User user = (User) userInfo;
-                        loginName = user.getLoginame();
-                    }
-                    if(("admin").equals(loginName)) {
+                    // 这里可以判断是否过滤表
+                    if ("tbl_sequence".equals(tableName) || "dual".equals(tableName)) {
                         return true;
                     } else {
-                        // 这里可以判断是否过滤表
-                        if ("databasechangelog".equals(tableName) || "databasechangeloglock".equals(tableName)
-                                || "jsh_materialproperty".equals(tableName) || "tbl_sequence".equals(tableName) || "dual".equals(tableName)
-                                || "jsh_userbusiness".equals(tableName) || "jsh_app".equals(tableName) || "jsh_functions".equals(tableName)) {
-                            return true;
-                        } else {
-                            return false;
-                        }
+                        return false;
                     }
                 } else {
+                    //无租户模式
                     return true;
                 }
             }
@@ -73,17 +79,25 @@ public class TenantConfig {
 
         sqlParserList.add(tenantSqlParser);
         paginationInterceptor.setSqlParserList(sqlParserList);
-//        paginationInterceptor.setSqlParserFilter(new ISqlParserFilter() {
-//            @Override
-//            public boolean doFilter(MetaObject metaObject) {
-//                MappedStatement ms = PluginUtils.realTarget(metaObject);
-//                // 过滤自定义查询此时无租户信息约束出现
-//                if ("com.jsh.erp.datasource.mappers.DepotHeadMapperEx.getBuildOnlyNumber".equals(ms.getId())) {
-//                    return true;
-//                }
-//                return false;
-//            }
-//        });
+        paginationInterceptor.setSqlParserFilter(new ISqlParserFilter() {
+            @Override
+            public boolean doFilter(MetaObject metaObject) {
+                MappedStatement ms = SqlParserHelper.getMappedStatement(metaObject);
+                //获取开启状态
+                Object mybatisPlusStatus = request.getSession().getAttribute("mybatisPlusStatus");
+                if(mybatisPlusStatus !=null && mybatisPlusStatus.toString().equals("open")) {
+                    //多租户模式
+                    // 过滤自定义查询，此处跳过指定id的查询（不追加租户id过滤条件）
+                    if ("com.jsh.erp.datasource.mappers.UserMapperEx.getUserListByUserNameOrLoginName".equals(ms.getId())) {
+                        return true;
+                    }
+                    return false;
+                } else {
+                    //无租户模式
+                    return true;
+                }
+            }
+        });
         return paginationInterceptor;
     }
 

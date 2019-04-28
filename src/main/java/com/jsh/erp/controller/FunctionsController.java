@@ -150,9 +150,18 @@ public class FunctionsController {
                         if(("admin").equals(loginName)) {
                             dataList.add(fun);
                         } else {
-                            if(!("系统管理").equals(fun.getName())) {
-                                dataList.add(fun);
-                            }
+                            /**
+                             * create by: qiankunpingtai
+                             * create time: 2019/4/28 11:24
+                             * website：https://qiankunpingtai.cn
+                             * description:
+                             * 为什么要移除系统管理？
+                             * 我觉得应该允许多级管理的存在
+                             */
+//                            if(!("系统管理").equals(fun.getName())) {
+//                                dataList.add(fun);
+//                            }
+                            dataList.add(fun);
                         }
                     } else {
                         dataList.add(fun);

@@ -658,21 +658,6 @@ public class UserService {
     }
 
     /**
-     * 通过用户名获取用户列表
-     * */
-    public List<User> getUserListByUserName(String userName)throws Exception{
-        List<User> list =null;
-        try{
-            list=userMapperEx.getUserListByUserNameOrLoginName(userName,null);
-        }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                    ExceptionConstants.DATA_READ_FAIL_MSG);
-        }
-        return list;
-    }
-    /**
      * 通过登录名获取用户列表
      * */
     public List<User> getUserListByloginName(String loginName){

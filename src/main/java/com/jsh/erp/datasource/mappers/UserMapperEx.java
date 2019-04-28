@@ -1,5 +1,6 @@
 package com.jsh.erp.datasource.mappers;
 
+import com.baomidou.mybatisplus.annotation.SqlParser;
 import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.entities.UserEx;
 import com.jsh.erp.datasource.entities.UserExample;
@@ -28,7 +29,10 @@ public interface UserMapperEx {
     int addUser(UserEx ue);
 
     int updateUser(UserEx ue);
-
+    /**
+     * 这个查询不添加租户id，保证登录名全局唯一
+     * */
+    @SqlParser(filter = true)
     List<User> getUserListByUserNameOrLoginName(@Param("userName") String userName,
                                                 @Param("loginame") String loginame);
 
