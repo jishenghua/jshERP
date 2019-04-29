@@ -487,7 +487,7 @@
         <if test="pid != null">
             and di.DepotId= ${pid}
         </if>
-        AND ifnull(dh.delete_Flag, '0') != '1'
+        AND ifnull(dh.delete_Flag, '0') != '1' group by di.MaterialId
         ) intype ON intype.MaterialId = m.id
         LEFT JOIN (
         SELECT
@@ -503,7 +503,7 @@
         <if test="pid != null">
             and di.DepotId= ${pid}
         </if>
-        AND ifnull(dh.delete_Flag, '0') != '1'
+        AND ifnull(dh.delete_Flag, '0') != '1' group by di.MaterialId
         ) outtype ON outtype.MaterialId = m.id
         WHERE
         1 = 1
@@ -532,7 +532,7 @@
         <if test="pid != null">
             and di.DepotId= ${pid}
         </if>
-        AND ifnull(dh.delete_Flag, '0') != '1'
+        AND ifnull(dh.delete_Flag, '0') != '1' group by di.MaterialId
         ) intype ON intype.MaterialId = m.id
 
         WHERE
