@@ -328,7 +328,6 @@ CREATE TABLE `jsh_depot` (
   `type` int(10) DEFAULT NULL COMMENT '类型',
   `sort` varchar(10) DEFAULT NULL COMMENT '排序',
   `remark` varchar(100) DEFAULT NULL COMMENT '描述',
-  `IsDefault` bit(1) DEFAULT NULL COMMENT '是否默认',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='仓库表';
 
@@ -1607,3 +1606,11 @@ ALTER TABLE jsh_log DROP FOREIGN KEY FKF2696AA13E226853;
 ALTER TABLE jsh_material DROP FOREIGN KEY FK675951272AB6672C;
 ALTER TABLE jsh_material DROP FOREIGN KEY jsh_material_ibfk_1;
 
+-- ----------------------------
+-- 时间：2019年4月30日
+-- version：1.0.14
+-- 此次更新
+-- 删除所有外键
+-- 特别提醒：之后的sql都是在之前基础上迭代，可以对已存在的系统进行数据保留更新
+-- ----------------------------
+alter table jsh_depot add  is_default bit(1) DEFAULT NULL COMMENT '是否默认';

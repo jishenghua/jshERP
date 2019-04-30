@@ -229,7 +229,7 @@
 				{
 					if(userdepot.indexOf("["+depot.id+"]")!=-1)
 					{
-						if(depot.isdefault){
+						if(depot.isDefault){
                             defDepotId =  depot.id;
 						}
                         options += '<option value="' + depot.id + '">' + depot.name + '</option>';

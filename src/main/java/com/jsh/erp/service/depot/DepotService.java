@@ -322,7 +322,7 @@ public class DepotService {
         logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_DEPOT,BusinessConstants.LOG_OPERATION_TYPE_EDIT+depotID,
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         Depot depot = new Depot();
-        depot.setIsdefault(isDefault);
+        depot.setIsDefault(isDefault);
         DepotExample example = new DepotExample();
         example.createCriteria().andIdEqualTo(depotID);
         int result=0;
