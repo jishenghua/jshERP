@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.*;
+import com.jsh.erp.datasource.vo.DepotItemStockWarningCount;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.material.MaterialService;
@@ -448,7 +449,7 @@ public class DepotItemController {
                     BigDecimal InPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, false);
                     BigDecimal OutPrice = sumPrice("出库", pid, diEx.getMId(), monthTime, false);
                     item.put("MaterialName", diEx.getMName());
-                    item.put("MaterialModel", diEx.getMColor());
+                    item.put("MaterialModel", diEx.getMModel());
                     //扩展信息
                     String materialOther = getOtherInfo(mpArr, diEx);
                     item.put("MaterialOther", materialOther);
@@ -827,4 +828,81 @@ public class DepotItemController {
         }
         return result;
     }
-}
+    /**
+     * 库存预警报表
+     * @param currentPage
+     * @param pageSize
+     * @return
+     */
+    @GetMapping(value = "/findStockWarningCount")
+    public BaseResponseInfo findStockWarningCount(@RequestParam("currentPage") Integer currentPage,
+                                                  @RequestParam("pageSize") Integer pageSize,  @RequestParam("projectId") Integer pid )throws Exception {
+        BaseResponseInfo res = new BaseResponseInfo();
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            List<DepotItemStockWarningCount> resList = new ArrayList<DepotItemStockWarningCount>();
+            List<DepotItemStockWarningCount> list = depotItemService.findStockWarningCount((currentPage-1)*pageSize, pageSize,pid);
+            int total = depotItemService.findStockWarningCountTotal(pid);
+            map.put("total", total);
+            map.put("rows", list);
+            res.code = 200;
+            res.data = map;
+        } catch(Exception e){
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
+    }
+    /**
+     * 导出库存预警excel表格
+     * @param currentPage
+     * @param pageSize
+     * @param projectId
+     * @param monthTime
+     * @param request
+     * @param response
+     * @return
+     */
+    @GetMapping(value = "/exportWarningExcel")
+    public BaseResponseInfo exportWarningExcel(@RequestParam("currentPage") Integer currentPage,
+                                        @RequestParam("pageSize") Integer pageSize,
+                                        @RequestParam("projectId") Integer projectId,
+                                        HttpServletRequest request, HttpServletResponse response)throws Exception {
+        BaseResponseInfo res = new BaseResponseInfo();
+        Map<String, Object> map = new HashMap<String, Object>();
+        String message = "成功";
+        try {
+            List<DepotItemStockWarningCount> dataList = depotItemService.findStockWarningCount((currentPage - 1) * pageSize, pageSize, projectId);
+            //存放数据json数组
+            Integer pid = projectId;
+            String[] names = {"名称", "型号", "扩展信息", "单位", "入库数量", "出库数量", "库存数量", "安全库存量", "临界库存量"};
+            String title = "库存预警报表";
+            List<String[]> objects = new ArrayList<String[]>();
+            if (null != dataList) {
+                for (DepotItemStockWarningCount diEx : dataList) {
+                    String[] objs = new String[9];
+
+                    objs[0] = diEx.getMaterialName().toString();
+                    objs[1] = diEx.getMaterialModel().toString();
+                    objs[2] = diEx.getMaterialOther().toString();
+                    objs[3] = diEx.getMaterialUnit().toString();
+                    objs[4] = diEx.getBasicInNumber().toString();
+                    objs[5] = diEx.getBasicOutNumber() == null ? "0" : diEx.getBasicOutNumber().toString();
+                    objs[6] = diEx.getBasicNumber() == null ? "0" : diEx.getBasicNumber().toString();
+                    objs[7] = diEx.getSafetystock() == null ? "0" : diEx.getSafetystock().toString();
+                    objs[8] = diEx.getBasicLinjieNumber() == null ? "0" : diEx.getBasicLinjieNumber().toString();
+                    objects.add(objs);
+                }
+            }
+            File file = ExcelUtils.exportObjectsWithoutTitle(title+pid, names, title, objects);
+            ExportExecUtil.showExec(file, file.getName(), response);
+            res.code = 200;
+        } catch (Exception e) {
+            e.printStackTrace();
+            message = "导出失败";
+            res.code = 500;
+        }
+        return res;
+    }
+    }

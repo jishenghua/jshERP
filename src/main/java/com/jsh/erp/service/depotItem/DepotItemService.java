@@ -9,17 +9,16 @@ import com.jsh.erp.datasource.mappers.DepotHeadMapper;
 import com.jsh.erp.datasource.mappers.DepotItemMapper;
 import com.jsh.erp.datasource.mappers.DepotItemMapperEx;
 import com.jsh.erp.datasource.mappers.SerialNumberMapperEx;
+import com.jsh.erp.datasource.vo.DepotItemStockWarningCount;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.service.serialNumber.SerialNumberService;
 import com.jsh.erp.service.user.UserService;
-import com.jsh.erp.utils.ErpInfo;
 import com.jsh.erp.utils.QueryUtils;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -31,8 +30,6 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 
 @Service
 public class DepotItemService {
@@ -792,6 +789,34 @@ public class DepotItemService {
                     ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
             throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
                     ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
+    }
+
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public List<DepotItemStockWarningCount> findStockWarningCount(int offset, Integer rows, Integer pid) {
+
+        List<DepotItemStockWarningCount> list = null;
+        try{
+            list =depotItemMapperEx.findStockWarningCount( offset, rows, pid);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return list;
+    }
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int findStockWarningCountTotal(Integer pid) {
+        int result = 0;
+        try{
+            result =depotItemMapperEx.findStockWarningCountTotal(pid);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
         }
         return result;
     }

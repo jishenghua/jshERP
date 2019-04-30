@@ -207,5 +207,16 @@ public class DepotController {
         }
         return result;
     }
-
+    @PostMapping(value = "/updateDepotIsDefault")
+    public String updateDepotIsDefault(@RequestParam("isDefault") Boolean isDefault,
+                                        @RequestParam("depotID") Long depotID,
+                                        HttpServletRequest request) throws Exception{
+        Map<String, Object> objectMap = new HashMap<String, Object>();
+        int res = depotService.updateDepotIsDefault(isDefault, depotID);
+        if(res > 0) {
+            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+        } else {
+            return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
+        }
+    }
 }

@@ -1,6 +1,7 @@
 package com.jsh.erp.datasource.mappers;
 
 import com.jsh.erp.datasource.entities.*;
+import com.jsh.erp.datasource.vo.DepotItemStockWarningCount;
 import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
@@ -172,4 +173,10 @@ public interface DepotItemMapperEx {
     List<DepotItem> getDepotItemListListByDepotIds(@Param("depotIds") String[] depotIds);
 
     List<DepotItem> getDepotItemListListByMaterialIds(@Param("materialIds") String[] materialIds);
+
+
+    List<DepotItemStockWarningCount> findStockWarningCount(@Param("offset") Integer offset,
+                                                           @Param("rows") Integer rows, @Param("pid") Integer pid);
+
+    int findStockWarningCountTotal( @Param("pid") Integer pid);
 }

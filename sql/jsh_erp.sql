@@ -328,6 +328,7 @@ CREATE TABLE `jsh_depot` (
   `type` int(10) DEFAULT NULL COMMENT '类型',
   `sort` varchar(10) DEFAULT NULL COMMENT '排序',
   `remark` varchar(100) DEFAULT NULL COMMENT '描述',
+  `IsDefault` bit(1) DEFAULT NULL COMMENT '是否默认',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='仓库表';
 

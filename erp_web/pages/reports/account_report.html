@@ -39,6 +39,10 @@
                 &nbsp;&nbsp;
                 <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-print" id="printBtn">打印</a>
             </td>
+            <td>&nbsp;</td>
+            <td>
+                当前总余额：<span class="first-total">0</span>&nbsp;&nbsp;
+            </td>
         </tr>
     </table>
 </div>
@@ -182,6 +186,13 @@
                 if(res && res.code === 200){
                     if(res.data && res.data.page) {
                         $("#tableData").datagrid('loadData', res.data.page);
+                        var total = 0;
+                        res.data.page.rows.forEach(function(value, index, array){
+                            //执行某些操作
+                            total += value.currentamount;
+                        })
+
+                        $(".first-total").text(total); //当前总余额
                     }
                 }
             },
