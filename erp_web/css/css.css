@@ -714,7 +714,7 @@ input.inputstyle:hover{
 	border:none;
 	font-family:Arial, Helvetica, sans-serif;
 	background:url(../images/bg_logininout.jpg) no-repeat;
-	left: 118px;
+	left: 120px;
 	top: 84px;
 }
 #user_pwd{
@@ -726,7 +726,7 @@ input.inputstyle:hover{
 	border:none;
 	font-family:Arial, Helvetica, sans-serif;
 	background:url(../images/bg_logininout.jpg) no-repeat;
-	left: 118px;
+	left: 120px;
 	top: 118px;
 }
 #user_pwd_repeat{
@@ -738,7 +738,7 @@ input.inputstyle:hover{
 	border:none;
 	font-family:Arial, Helvetica, sans-serif;
 	background:url(../images/bg_logininout.jpg) no-repeat;
-	left: 118px;
+	left: 120px;
 	top: 152px;
 }
 #user_captcha{
@@ -750,7 +750,7 @@ input.inputstyle:hover{
 	border:none;
 	font-family:Arial, Helvetica, sans-serif;
 	background:url(../images/bg_logininout.jpg) no-repeat;
-	left: 118px;
+	left: 120px;
 	top: 186px;
 }
 #imgCaptcha{

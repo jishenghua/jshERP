@@ -32,7 +32,7 @@
         <input type="password" id="user_pwd"/>
         <input type="password" id="user_pwd_repeat"/>
         <input type="text" id="user_captcha"/>
-        <div id="imgCaptcha"></div>
+        <div id="imgCaptcha" title="点击刷新验证码"></div>
         <p id="tip_username" style="display: none"><span class="error_input">用户名不正确</span></p>
         <p id="tip_userpwd" style="display: none">密码不能为空</p>
         <div class="register_btn">
@@ -77,6 +77,7 @@
                                 location.href = "login.html";
                             } else {
                                 alert(res.msg);
+                                verifyCode.refresh(); //刷新
                             }
                         },
                         //此处添加错误处理
