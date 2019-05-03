@@ -1586,13 +1586,16 @@
 	    reject(); //撤销下、刷新商品列表
 		$("#addOrgan").off("click").on("click",function(){
 			$('#supplierDlg').dialog('open').dialog('setTitle','<img src="/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加供应商信息');
+            $('#supplierFM').form('clear');
 		});
 
         $("#addMember").off("click").on("click",function(){
             $('#supplierDlg').dialog('open').dialog('setTitle','<img src="/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加会员信息');
+            $('#supplierFM').form('clear');
         });
         $("#addCustomer").off("click").on("click",function(){
             $('#supplierDlg').dialog('open').dialog('setTitle','<img src="/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加客户信息');
+            $('#supplierFM').form('clear');
         });
 	    url = '/depotHead/addDepotHeadAndDetail';
 
@@ -2628,6 +2631,9 @@
 
 			//保存供应商信息
 			$("#saveSupplier").off("click").on("click",function() {
+                if(validateForm("supplierFM")) {
+                    return;
+                }
 				if(checkSupplierName()){
 					return;
 				}
