@@ -457,6 +457,9 @@
         });
         //保存信息
         $("#saveSupplier").off("click").on("click", function () {
+            if(validateForm("supplierFM")) {
+                return;
+            }
             if (checkSupplierName()) {
                 return;
             }

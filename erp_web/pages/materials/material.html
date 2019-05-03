@@ -1109,6 +1109,7 @@
             $(".window-mask").css({width: webW, height: webH});
             $("#Name").val("").focus();
             $("#manyUnitCheck").prop("checked", false);
+            $("#manyUnit").val(""); //置空
             //当前为不选中状态
             $("#Unit").show();
             $("#manyUnit").hide();
@@ -1200,6 +1201,10 @@
                 $.messager.alert('提示', '型号不能为空！', 'warning');
                 return;
             }
+            if(!$("#Unit").val() && !$("#manyUnit").val()) {
+                $.messager.alert('提示', '单位为必填项！', 'warning');
+                return;
+            }
             if (checkIsExist()) {
                 return;
             }
@@ -1283,9 +1288,9 @@
             $("#Color").focus().val(materialInfo[11]);
             $("#EnableSerialNumber").val(materialInfo[24]=='1'?'1':'0');
             //商品类别id
-            $("#parentid").val(materialInfo[14]);
+            $("#parentid").val(materialInfo[14] == "undefined" ? "" : materialInfo[14]);
             //商品类别名称
-            $("#parentName").val(materialInfo[15]);
+            $("#parentName").val(materialInfo[15] == "undefined" ? "" : materialInfo[15]);
             mId = materialInfo[14];
             mName = materialInfo[15];
             $("#Packing").focus().val(materialInfo[12]);
