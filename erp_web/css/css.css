@@ -636,10 +636,10 @@ input.inputstyle:hover{
 	background:#EAF2FD;
 	z-index:90;
 }
-#login_body{
+#login_body,#register_body{
 	background:#93bbe5 url(../images/bg_login.jpg) top center no-repeat;
 }
-#login_main{
+#login_main,#register_main{
 	width:459px;
 	overflow:hidden;
 	margin:160px auto 0 auto;
@@ -649,7 +649,14 @@ input.inputstyle:hover{
 	height:263px;
 	overflow:hidden;
 	position:relative;
-	background:url(../images/bg_loginmain.jpg) no-repeat;
+	background:url(../images/bg_login_main.jpg) no-repeat;
+}
+#register{
+	width:459px;
+	height:300px;
+	overflow:hidden;
+	position:relative;
+	background:url(../images/bg_register_main.jpg) no-repeat;
 }
 #login .login_btn{
 	float:left;
@@ -657,13 +664,13 @@ input.inputstyle:hover{
 	height:50px;
 	margin:160px auto 0 120px;
 }
-#login .register_btn{
+#register .register_btn{
 	float:left;
 	width:230px;
 	height:50px;
-	margin:218px auto 0 120px;
+	margin:228px auto 0px 120px;
 }
-#login_signal{
+#login_signal,#register_signal{
 	position:absolute;
 	left: 63px;
 	top: 19px;
