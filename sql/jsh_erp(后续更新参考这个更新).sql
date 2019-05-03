@@ -1624,3 +1624,11 @@ select '030112', '库存预警', '0301', '../reports/stock_warning_report.html',
 update jsh_userbusiness SET Type = 'RoleFunctions', KeyId = '4',
 Value = '[13][12][16][243][14][15][234][236][22][23][220][240][25][217][218][26][194][195][31][59][207][208][209][226][227][228][229][235][237][244][210][211][241][33][199][242][41][200][201][202][40][232][233][197][203][204][205][206][212]'
 where Id = 5;
+
+-- ----------------------------
+-- 给app的功能增加代号 在功能表增加个人信息
+-- ----------------------------
+update jsh_app SET Number = '02' where name='个人信息';
+insert into `jsh_functions`(`Number`, `Name`, `PNumber`, `URL`, `State`, `Sort`, `Enabled`, `Type`, `PushBtn`)
+select '02', '个人信息', '0', '', b'1', '0005', b'1', '电脑版', '' from dual where not exists
+(select * from jsh_functions where  Number='02' and PNumber='0');
