@@ -142,11 +142,18 @@
                 {title: '类型', field: 'type', width: 100, align: "center"},
                 {title: '描述', field: 'remark', width: 200},
                 {
-                    title: '操作', field: 'op', align: "center", width: 130, formatter: function (value, rec) {
+                    title: '操作', field: 'op', align: "center", width: 130, formatter: function (value, rec,index) {
+                        /**
+                         * create by: qiankunpingtai
+                         * create time: 2019/5/5 10:30
+                         * website：https://qiankunpingtai.cn
+                         * description:
+                         *  修改效率低下的js实现
+                         */
                         var str = '';
-                        var rowInfo = rec.id + 'AaBb' + rec.name + 'AaBb' + rec.type + 'AaBb' + rec.remark;
-                        str += '<img src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editInOutItem(\'' + rowInfo + '\');"/>&nbsp;<a onclick="editInOutItem(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
-                        str += '<img src="/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteInOutItem(\'' + rowInfo + '\');"/>&nbsp;<a onclick="deleteInOutItem(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">删除</a>&nbsp;&nbsp;';
+                        // var rowInfo = rec.id + 'AaBb' + rec.name + 'AaBb' + rec.type + 'AaBb' + rec.remark;
+                        str += '<img src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editInOutItem(\'' + index + '\');"/>&nbsp;<a onclick="editInOutItem(\'' + index + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
+                        str += '<img src="/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteInOutItem(\'' + rec.id + '\');"/>&nbsp;<a onclick="deleteInOutItem(\'' + rec.id + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">删除</a>&nbsp;&nbsp;';
                         return str;
                     }
                 }
@@ -219,16 +226,16 @@
     }
 
     //删除收支项目
-    function deleteInOutItem(inOutItemInfo) {
+    function deleteInOutItem(id) {
         $.messager.confirm('删除确认', '确定要删除此收支项目吗？', function (r) {
             if (r) {
-                var inOutItemTotalInfo = inOutItemInfo.split("AaBb");
+                // var inOutItemTotalInfo = inOutItemInfo.split("AaBb");
                 $.ajax({
                     type: "post",
                     url: "/inOutItem/batchDeleteInOutItemByIds",
                     dataType: "json",
                     data: ({
-                        ids: inOutItemTotalInfo[0]
+                        ids: id
                     }),
                     success: function (res) {
                         if(res && res.code == 200) {
@@ -236,7 +243,7 @@
                         } else {
                             if(res && res.code == 601){
                                 var jsondata={};
-                                jsondata.ids=inOutItemTotalInfo[0];
+                                jsondata.ids=id;
                                 jsondata.deleteType='2';
                                 var type='single';
                                 batDeleteInOutItemForceConfirm(res,"/inOutItem/batchDeleteInOutItemByIds",jsondata,type);
@@ -398,21 +405,23 @@
     });
 
     //编辑收支项目
-    function editInOutItem(inOutItemTotalInfo) {
-        var inOutItemInfo = inOutItemTotalInfo.split("AaBb");
+    function editInOutItem(index) {
+        // var inOutItemInfo = inOutItemTotalInfo.split("AaBb");
+        //获取当前行
+        var rowsdata = $("#tableData").datagrid("getRows")[index];
         var row = {
-            name: inOutItemInfo[1],
-            type: inOutItemInfo[2],
-            remark: inOutItemInfo[3]
+            name: rowsdata.name,
+            type: rowsdata.type,
+            remark: rowsdata.remark
         };
-        oldInOutItem = inOutItemInfo[1];
+        oldInOutItem = rowsdata.name;
         $('#inOutItemDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑收支项目');
         $(".window-mask").css({width: webW, height: webH});
         $('#inOutItemFM').form('load', row);
-        inOutItemID = inOutItemInfo[0];
+        inOutItemID = rowsdata.id;
         //焦点在名称输入框==定焦在输入文字后面
-        $("#inOutItem").val("").focus().val(inOutItemInfo[1]);
-        url = '/inOutItem/update?id=' + inOutItemInfo[0];
+        $("#inOutItem").val("").focus().val(rowsdata.name);
+        url = '/inOutItem/update?id=' + rowsdata.id;
     }
 
     //检查收支项目 名称是否存在 ++ 重名无法提示问题需要跟进
