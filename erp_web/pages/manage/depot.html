@@ -167,11 +167,11 @@
                 {field: 'id', width: 35, align: "center", checkbox: true},
                 {
                     title: '操作', field: 'op', align: "center", width: 60,
-                    formatter: function (value, rec) {
+                    formatter: function (value, rec,index) {
                         var str = '';
-                        var rowInfo = rec.id + 'AaBb' + rec.name + 'AaBb' + rec.sort + 'AaBb' + rec.remark + 'AaBb'
-                            + rec.address + 'AaBb' + rec.warehousing + 'AaBb' + rec.truckage+'AaBb'+ transferUndefined(rec.principalName)+'AaBb'+transferUndefined(rec.principal);
-                        str += '<img title="编辑" src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editDepot(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
+                        // var rowInfo = rec.id + 'AaBb' + rec.name + 'AaBb' + rec.sort + 'AaBb' + rec.remark + 'AaBb'
+                        //     + rec.address + 'AaBb' + rec.warehousing + 'AaBb' + rec.truckage+'AaBb'+ transferUndefined(rec.principalName)+'AaBb'+transferUndefined(rec.principal);
+                        str += '<img title="编辑" src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editDepot(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
                         str += '<img title="删除" src="/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteDepot(' + rec.id + ');"/>';
                         return str;
                     }
@@ -489,25 +489,26 @@
     });
 
     //编辑信息
-    function editDepot(depotTotalInfo) {
-        var depotInfo = depotTotalInfo.split("AaBb");
+    function editDepot(index) {
+        // var depotInfo = depotTotalInfo.split("AaBb");
+        var rowsdata = $("#tableData").datagrid("getRows")[index];
 
-        $("#name").focus().val(depotInfo[1]);
-        $("#sort").val(depotInfo[2]);
-        $("#remark").val(depotInfo[3]);
-        $("#address").val(depotInfo[4]);
-        $("#warehousing").val(depotInfo[5]);
-        $("#truckage").val(depotInfo[6]);
-        $("#principalName").val(depotInfo[7]);
-        $("#principal").val(depotInfo[8]);
+        $("#name").focus().val(rowsdata.name);
+        $("#sort").val(rowsdata.sort);
+        $("#remark").val(rowsdata.remark);
+        $("#address").val(rowsdata.address);
+        $("#warehousing").val(rowsdata.warehousing);
+        $("#truckage").val(rowsdata.truckage);
+        $("#principalName").val(transferUndefined(rowsdata.principalName));
+        $("#principal").val(transferUndefined(rowsdata.principal));
         $("#selectType").val("principal");
-        oldDepot = depotInfo[1];
+        oldDepot = rowsdata.name;
         $('#depotDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑仓库信息');
         $(".window-mask").css({width: webW, height: webH});
-        depotID = depotInfo[0];
+        depotID = rowsdata.id;
         //焦点在名称输入框==定焦在输入文字后面
-        $("#name").val("").focus().val(depotInfo[1]);
-        url = '/depot/update?id=' + depotInfo[0];
+        $("#name").val("").focus().val(rowsdata.name);
+        url = '/depot/update?id=' + rowsdata.id;
     }
 
     //检查名称是否存在 ++ 重名无法提示问题需要跟进
