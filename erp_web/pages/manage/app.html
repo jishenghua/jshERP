@@ -187,12 +187,19 @@
                     }
                 },
                 {
-                    title: '操作', field: 'op', align: "center", width: 130, formatter: function (value, rec) {
+                    title: '操作', field: 'op', align: "center", width: 130, formatter: function (value, rec,index) {
+                        /**
+                         * create by: qiankunpingtai
+                         * create time: 2019/5/5 10:30
+                         * website：https://qiankunpingtai.cn
+                         * description:
+                         *  修改效率低下的js实现
+                         */
                         var str = '';
-                        var rowInfo = rec.id + 'AaBb' + rec.number + 'AaBb' + rec.name + 'AaBb' + rec.type + 'AaBb' + rec.icon
-                            + 'AaBb' + rec.url + 'AaBb' + rec.width + 'AaBb' + rec.height + 'AaBb' + rec.resize + 'AaBb' + rec.openmax
-                            + 'AaBb' + rec.flash + 'AaBb' + rec.zl + 'AaBb' + rec.sort + 'AaBb' + rec.remark + 'AaBb' + rec.enabled;
-                        str += '<img src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editApp(\'' + rowInfo + '\');"/>&nbsp;<a onclick="editApp(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
+                        // var rowInfo = rec.id + 'AaBb' + rec.number + 'AaBb' + rec.name + 'AaBb' + rec.type + 'AaBb' + rec.icon
+                        //     + 'AaBb' + rec.url + 'AaBb' + rec.width + 'AaBb' + rec.height + 'AaBb' + rec.resize + 'AaBb' + rec.openmax
+                        //     + 'AaBb' + rec.flash + 'AaBb' + rec.zl + 'AaBb' + rec.sort + 'AaBb' + rec.remark + 'AaBb' + rec.enabled;
+                        str += '<img src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editApp(\'' + index + '\');"/>&nbsp;<a onclick="editApp(\'' + index + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
                         str += '<img src="/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteApp(' + rec.id + ');"/>&nbsp;<a onclick="deleteApp(' + rec.id + ');" style="text-decoration:none;color:black;" href="javascript:void(0)">删除</a>&nbsp;&nbsp;';
                         return str;
                     }
@@ -407,30 +414,32 @@
     });
 
     //编辑信息
-    function editApp(appTotalInfo) {
-        var appInfo = appTotalInfo.split("AaBb");
-        $("#Number").focus().val(appInfo[1]);
-        $("#Name").val(appInfo[2]);
-        $("#Type").val(appInfo[3]);
+    function editApp(index) {
+        //获取当前行
+        var rowsdata = $("#tableData").datagrid("getRows")[index];
+        // var appInfo = appTotalInfo.split("AaBb");
+        $("#Number").focus().val(rowsdata.number);
+        $("#Name").val(rowsdata.name);
+        $("#Type").val(rowsdata.type);
         //$("#Icon").val(appInfo[4]);
-        $("#URL").val(appInfo[5]);
-        $("#Width").val(appInfo[6]);
-        $("#Height").val(appInfo[7]);
-        $("#ReSize").attr("checked", appInfo[8] == 'true' ? true : false);
-        $("#OpenMax").attr("checked", appInfo[9] == 'true' ? true : false);
-        $("#Flash").attr("checked", appInfo[10] == 'true' ? true : false);
-        $("#ZL").val(appInfo[11]);
-        $("#Sort").val(appInfo[12]);
-        $("#Remark").val(appInfo[13]);
-        $("#Enabled").attr("checked", appInfo[14] == 'true' ? true : false);
+        $("#URL").val(rowsdata.url);
+        $("#Width").val(rowsdata.width);
+        $("#Height").val(rowsdata.height);
+        $("#ReSize").attr("checked", rowsdata.resize == 'true' ? true : false);
+        $("#OpenMax").attr("checked", rowsdata.openmax == 'true' ? true : false);
+        $("#Flash").attr("checked", rowsdata.flash == 'true' ? true : false);
+        $("#ZL").val(rowsdata.zl);
+        $("#Sort").val(rowsdata.sort);
+        $("#Remark").val(rowsdata.remark);
+        $("#Enabled").attr("checked", rowsdata.enabled == 'true' ? true : false);
 
-        orgApp = appInfo[2];
+        orgApp = rowsdata.name;
         $('#appDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑应用信息');
         $(".window-mask").css({width: webW, height: webH});
-        appID = appInfo[0];
+        appID = rowsdata.id;
         //焦点在名称输入框==定焦在输入文字后面
-        $("#name").val("").focus().val(appInfo[1]);
-        url = '/app/update?id=' + appInfo[0];
+        $("#name").val("").focus().val(rowsdata.name);
+        url = '/app/update?id=' + rowsdata.id;
     }
 
     //检查名称是否存在 ++ 重名无法提示问题需要跟进
