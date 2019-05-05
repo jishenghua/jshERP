@@ -425,13 +425,13 @@
         $("#URL").val(rowsdata.url);
         $("#Width").val(rowsdata.width);
         $("#Height").val(rowsdata.height);
-        $("#ReSize").attr("checked", rowsdata.resize == 'true' ? true : false);
-        $("#OpenMax").attr("checked", rowsdata.openmax == 'true' ? true : false);
-        $("#Flash").attr("checked", rowsdata.flash == 'true' ? true : false);
+        $("#ReSize").attr("checked", rowsdata.resize === true ? true : false);
+        $("#OpenMax").attr("checked", rowsdata.openmax === true ? true : false);
+        $("#Flash").attr("checked", rowsdata.flash === true ? true : false);
         $("#ZL").val(rowsdata.zl);
         $("#Sort").val(rowsdata.sort);
         $("#Remark").val(rowsdata.remark);
-        $("#Enabled").attr("checked", rowsdata.enabled == 'true' ? true : false);
+        $("#Enabled").attr("checked", rowsdata.enabled === true ? true : false);
 
         orgApp = rowsdata.name;
         $('#appDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑应用信息');
