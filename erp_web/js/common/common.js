@@ -276,3 +276,15 @@
 		}
 		return newArr;
 	}
+
+    /**
+	 * 验证单据
+     * @param id
+     */
+    function validateForm(id) {
+        if(!$('#'+ id).form('validate')) {
+        	return true;
+		} else {
+        	return false;
+		}
+	}

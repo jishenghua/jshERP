@@ -105,13 +105,12 @@
         });
 
         $('#loginOut').click(function () {
-            if (confirm("确认要退出系统吗？")){
-                //确定
-                sessionStorage.removeItem("userId");
-                location.href = '/user/logout';
-            }else{
-                //取消
-            }
+            $.messager.confirm("提示","确认要退出系统吗？",function(r){
+                if(r) {
+                    sessionStorage.removeItem("userId");
+                    location.href = '/user/logout';
+                }
+            });
         })
         //IE下禁止选中
         document.body.onselectstart = document.body.ondrag = function () {

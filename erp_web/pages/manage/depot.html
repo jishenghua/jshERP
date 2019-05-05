@@ -182,7 +182,19 @@
                 {title: '搬运费', field: 'truckage', width: 60},
                 {title: '负责人', field: 'principalName', width: 60},
                 {title: '排序', field: 'sort', width: 60},
+                {
+                    title: '是否默认', field: 'isDefault', width: 100, align: "center",
+                    formatter: function (value, rec) {
+                        if (rec.isDefault) {
+                            return "<b style='color:green'>是</b>";
+                        }
+                        else {
+                            return "否";
+                        }
+                    }
+                },
                 {title: '描述', field: 'remark', width: 120}
+
             ]],
             toolbar: [
                 {
@@ -199,6 +211,14 @@
                     iconCls: 'icon-remove',
                     handler: function () {
                         batDeleteDepot();
+                    }
+                },
+                {
+                    id: 'setDepotIsDefault',
+                    text: '设为默认',
+                    iconCls: 'icon-ok',
+                    handler: function () {
+                        setDepotIsDefault();
                     }
                 }
             ],
@@ -286,7 +306,53 @@
             }
         });
     }
+    //设为默认操作事件
+    function setDepotIsDefault() {
+        var allRow = $('#tableData').datagrid('getRows');
+        var row = $('#tableData').datagrid('getChecked');
+        if (row.length == 0) {
+            $.messager.alert('设置提示', '没有记录被选中！', 'info');
+            return;
+        }
+        if (row.length > 0) {
+            function setDefault(depotID, isDefault) {
+                $.ajax({
+                    type: "post",
+                    url: "/depot/updateDepotIsDefault",
+                    dataType: "json",
+                    async: false,
+                    data: ({
+                        depotID: depotID,
+                        isDefault: isDefault
+                    }),
+                    success: function (res) {
+                        if (res == "true" && isDefault) {
 
+                        }
+                    },
+                    //此处添加错误处理
+                    error: function () {
+                        $.messager.alert('提示', '设为默认账户异常，请稍后再试！', 'error');
+                        return;
+                    }
+                });
+            }
+
+            if (row.length == 1) {
+                setDefault(row[0].id, true); //设置默认
+                for (var i = 0; i < allRow.length; i++) {
+                    if (allRow[i].id != row[0].id) {
+                        setDefault(allRow[i].id, false);
+                    }
+                }
+                setTimeout(function () {
+                    $("#searchBtn").click();
+                }, 1000);
+            }
+
+            return;
+        }
+    }
     //批量删除仓库
     function batDeleteDepot() {
         var row = $('#tableData').datagrid('getChecked');

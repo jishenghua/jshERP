@@ -115,7 +115,9 @@ public class DepotHeadService {
                 if(dh.getTotalprice() != null) {
                     dh.setTotalprice(dh.getTotalprice().abs());
                 }
-                dh.setOpertimeStr(getCenternTime(dh.getOpertime()));
+                if(dh.getOpertime() != null) {
+                    dh.setOpertimeStr(getCenternTime(dh.getOpertime()));
+                }
                 dh.setMaterialsList(findMaterialsListByHeaderId(dh.getId()));
                 resList.add(dh);
             }

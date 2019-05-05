@@ -13,10 +13,10 @@
     <script type="text/javascript" src="/js/gVerify.js"></script>
     <script type="text/javascript" src="/js/md5/md5.js"></script>
 </head>
-<body id="login_body">
-<div id="login_main">
-    <div id="login">
-        <p id="login_signal"><img src="/images/register_tip.jpg" width="108" height="29" alt="login"/></p>
+<body id="register_body">
+<div id="register_main">
+    <div id="register">
+        <p id="register_signal"><img src="/images/register_tip.jpg" width="108" height="29" alt="login"/></p>
         <p id="txt_username">
             <label for="user_name">用户名：</label>
         </p>
@@ -33,7 +33,7 @@
         <input type="password" id="user_pwd"/>
         <input type="password" id="user_pwd_repeat"/>
         <input type="text" id="user_captcha"/>
-        <div id="imgCaptcha"></div>
+        <div id="imgCaptcha" title="点击刷新验证码"></div>
         <p id="tip_username" style="display: none"><span class="error_input">用户名不正确</span></p>
         <p id="tip_userpwd" style="display: none">密码不能为空</p>
         <div class="register_btn">
@@ -81,9 +81,11 @@
                         }),
                         success: function (res) {
                             if (res && res.code === 200) {
-                                alert("注册成功！");
+                                alert("注册成功，请进行登录！");
+                                location.href = "login.html";
                             } else {
                                 alert(res.msg);
+                                verifyCode.refresh(); //刷新
                             }
                         },
                         //此处添加错误处理

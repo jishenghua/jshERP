@@ -316,4 +316,24 @@ public class DepotService {
         return deleteTotal;
 
     }
+
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int updateDepotIsDefault(Boolean isDefault, Long depotID) throws Exception{
+        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_DEPOT,BusinessConstants.LOG_OPERATION_TYPE_EDIT+depotID,
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+        Depot depot = new Depot();
+        depot.setIsDefault(isDefault);
+        DepotExample example = new DepotExample();
+        example.createCriteria().andIdEqualTo(depotID);
+        int result=0;
+        try{
+            result = depotMapper.updateByExampleSelective(depot, example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        return result;
+    }
 }

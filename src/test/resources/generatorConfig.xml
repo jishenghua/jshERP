@@ -5,7 +5,7 @@
 
 <generatorConfiguration>
     <classPathEntry
-            location="E:\maven-repository\mysql\mysql-connector-java\5.1.47\mysql-connector-java-5.1.47.jar"/>
+            location="C:\Users\cjl\.m2\repository\mysql\mysql-connector-java\5.1.47\mysql-connector-java-5.1.47.jar"/>
 
     <context id="DB2Tables" targetRuntime="MyBatis3" defaultModelType="flat">
         <commentGenerator>
@@ -67,5 +67,6 @@
         <table tableName="jsh_serial_number" domainObjectName="SerialNumber"></table>
         <table tableName="jsh_organization" domainObjectName="Organization"></table>
         <table tableName="jsh_orga_user_rel" domainObjectName="OrgaUserRel"></table> -->
+        <table tableName="jsh_userbusiness" domainObjectName="UserBusiness"></table>
     </context>
 </generatorConfiguration>

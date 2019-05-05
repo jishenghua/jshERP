@@ -350,6 +350,7 @@ public class UserController {
         ue.setUsername(loginame);
         ue.setLoginame(loginame);
         ue.setPassword(password);
+        userService.checkUserNameAndLoginName(ue); //检查用户名和登录名
         ue = userService.registerUser(ue,manageRoleId);
         /**
          * create by: qiankunpingtai

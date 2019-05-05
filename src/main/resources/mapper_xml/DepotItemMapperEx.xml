@@ -41,6 +41,18 @@
         <result column="MaterialUnit" jdbcType="VARCHAR" property="MaterialUnit" />
         <result column="MColor" jdbcType="VARCHAR" property="MColor" />
     </resultMap>
+    <resultMap id="ResultStockWarningCount" type="com.jsh.erp.datasource.vo.DepotItemStockWarningCount">
+        <result column="MaterialName" jdbcType="VARCHAR" property="MaterialName" />
+        <result column="MaterialModel" jdbcType="VARCHAR" property="MaterialModel" />
+        <result column="categoryName" jdbcType="VARCHAR" property="categoryName" />
+        <result column="MaterialOther" jdbcType="VARCHAR" property="MaterialOther" />
+        <result column="MaterialUnit" jdbcType="VARCHAR" property="MaterialUnit" />
+        <result column="safetystock" jdbcType="DECIMAL" property="safetystock" />
+        <result column="BasicInNumber" jdbcType="DECIMAL" property="BasicInNumber" />
+        <result column="BasicOutNumber" jdbcType="DECIMAL" property="BasicOutNumber" />
+        <result column="BasicNumber" jdbcType="DECIMAL" property="BasicNumber" />
+        <result column="BasicLinjieNumber" jdbcType="DECIMAL" property="BasicLinjieNumber" />
+    </resultMap>
 
     <select id="selectByConditionDepotItem" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="com.jsh.erp.datasource.mappers.DepotItemMapper.BaseResultMap">
         select *
@@ -438,5 +450,95 @@
 
 
 
+    <select id="findStockWarningCount" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultStockWarningCount">
+        SELECT
+        m. NAME MaterialName,
+        m.Model MaterialModel,
+        mc.`Name` categoryName,
+        CONCAT(
+        '(',
+        m.Standard,
+        ')',
+        '(',
+        m.Color,
+        ')'
+        ) AS MaterialOther,
+        m.unit MaterialUnit,
+        ifnull(m.safetystock,0) safetystock,
+        IFNULL(intype.BasicInNumber ,0) BasicInNumber,
+        IFNULL(outtype.BasicOutNumber ,0) BasicOutNumber,
+        (
+        IFNULL(intype.BasicInNumber ,0) - IFNULL(outtype.BasicOutNumber ,0)
+        ) BasicNumber,
+        (IFNULL(intype.BasicInNumber ,0) - IFNULL(outtype.BasicOutNumber ,0) - ifnull(m.safetystock,0)) BasicLinjieNumber
+        FROM
+        jsh_material m
+        LEFT JOIN jsh_materialcategory mc ON mc.Id = m.CategoryId
+        LEFT JOIN (
+        SELECT
+        di.MaterialId,
+        ifnull(sum(BasicNumber), 0) AS BasicInNumber
+        FROM
+        jsh_depothead dh
+        INNER JOIN jsh_depotitem di ON dh.id = di.HeaderId
+        AND ifnull(di.delete_Flag, '0') != '1'
+        WHERE
+        dh.type = '入库'
+        <if test="pid != null">
+            and di.DepotId= ${pid}
+        </if>
+        AND ifnull(dh.delete_Flag, '0') != '1' group by di.MaterialId
+        ) intype ON intype.MaterialId = m.id
+        LEFT JOIN (
+        SELECT
+        di.MaterialId,
+        ifnull(sum(BasicNumber), 0) AS BasicOutNumber
+        FROM
+        jsh_depothead dh
+        INNER JOIN jsh_depotitem di ON dh.id = di.HeaderId
+        AND ifnull(di.delete_Flag, '0') != '1'
+        WHERE
+        dh.type = '出库'
+        AND dh.SubType != '调拨'
+        <if test="pid != null">
+            and di.DepotId= ${pid}
+        </if>
+        AND ifnull(dh.delete_Flag, '0') != '1' group by di.MaterialId
+        ) outtype ON outtype.MaterialId = m.id
+        WHERE
+        1 = 1
+        AND ifnull(m.delete_Flag, '0') != '1'
+        AND intype.BasicInNumber > 0
+        ORDER BY
+        (IFNULL(intype.BasicInNumber ,0) - IFNULL(outtype.BasicOutNumber ,0) - ifnull(m.safetystock,0))
+        <if test="offset != null and rows != null">
+            limit #{offset},#{rows}
+        </if>
+    </select>
+
+    <select id="findStockWarningCountTotal" resultType="java.lang.Integer">
+        select count(1) from
+        jsh_material m
+        LEFT JOIN (
+        SELECT
+        di.MaterialId,
+        ifnull(sum(BasicNumber), 0) AS BasicInNumber
+        FROM
+        jsh_depothead dh
+        INNER JOIN jsh_depotitem di ON dh.id = di.HeaderId
+        AND ifnull(di.delete_Flag, '0') != '1'
+        WHERE
+        dh.type = '入库'
+        <if test="pid != null">
+            and di.DepotId= ${pid}
+        </if>
+        AND ifnull(dh.delete_Flag, '0') != '1' group by di.MaterialId
+        ) intype ON intype.MaterialId = m.id
+
+        WHERE
+        1 = 1
+        AND ifnull(m.delete_Flag, '0') != '1'
+        AND intype.BasicInNumber > 0
+    </select>
 
 </mapper>

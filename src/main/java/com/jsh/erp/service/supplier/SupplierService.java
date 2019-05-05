@@ -120,6 +120,12 @@ public class SupplierService {
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateSupplier(String beanJson, Long id)throws Exception {
         Supplier supplier = JSONObject.parseObject(beanJson, Supplier.class);
+        if(supplier.getBeginneedpay() == null) {
+            supplier.setBeginneedpay(BigDecimal.ZERO);
+        }
+        if(supplier.getBeginneedget() == null) {
+            supplier.setBeginneedget(BigDecimal.ZERO);
+        }
         supplier.setId(id);
         int result=0;
         try{

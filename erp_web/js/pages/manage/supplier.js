@@ -76,7 +76,7 @@
                 { title: '预付款',field: 'advancein',width:70,align:"center"},
                 { title: '期初应收',field: 'beginneedget',width:70,align:"center"},
                 { title: '期初应付',field: 'beginneedpay',width:70,align:"center"},
-                { title: '税率', field: 'taxrate',width:50,align:"center"},
+                { title: '税率(%)', field: 'taxrate',width:50,align:"center"},
                 { title: '状态',field: 'enabled',width:70,align:"center",formatter:function(value){
                     return value? "启用":"禁用";
                 }}
@@ -457,6 +457,9 @@
         });
         //保存信息
         $("#saveSupplier").off("click").on("click", function () {
+            if(validateForm("supplierFM")) {
+                return;
+            }
             if (checkSupplierName()) {
                 return;
             }
@@ -554,13 +557,15 @@
     //编辑信息
     function editSupplier(supplierTotalInfo) {
         var supplierInfo = supplierTotalInfo.split("AaBb");
+        var beginNeedGet = supplierInfo[5];
+        var beginNeedPay = supplierInfo[6];
         var row = {
             supplier : supplierInfo[1],
             contacts : supplierInfo[2].replace("undefined",""),
             phonenum : supplierInfo[3].replace("undefined",""),
             email : supplierInfo[4].replace("undefined",""),
-            BeginNeedGet : supplierInfo[5],
-            BeginNeedPay : supplierInfo[6],
+            BeginNeedGet : beginNeedGet == "0"? "":beginNeedGet,
+            BeginNeedPay : beginNeedPay == "0"? "":beginNeedPay,
             AllNeedGet: "",
             AllNeedPay: "",
             description : supplierInfo[8].replace("undefined",""),
@@ -602,7 +607,7 @@
                 supType: supType
             }),
             success: function(res){
-                if (res && res.code === 200 && res.data && res.data.rows && res.data.rows.getAllMoney) {
+                if (res && res.code === 200 && res.data && res.data.rows && res.data.rows.getAllMoney !== "") {
                     var moneyA = res.data.rows.getAllMoney.toFixed(2)-0;
                     $.ajax({
                         type:"get",
@@ -615,7 +620,7 @@
                             supType: supType
                         }),
                         success: function(res){
-                            if (res && res.code === 200 && res.data && res.data.rows && res.data.rows.getAllMoney) {
+                            if (res && res.code === 200 && res.data && res.data.rows && res.data.rows.getAllMoney !== "") {
                                 var moneyB = res.data.rows.getAllMoney.toFixed(2)-0;
                                 var money = moneyA+moneyB;
                                 var moneyBeginNeedGet = $("#BeginNeedGet").val()-0; //期初应收

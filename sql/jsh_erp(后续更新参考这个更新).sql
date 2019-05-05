@@ -1694,3 +1694,30 @@ return _success_msg;
 end
 ;;
 DELIMITER ;
+
+-- ----------------------------
+-- 时间：2019年4月30日
+-- version：1.0.14
+-- 此次更新
+-- 增加仓库默认功能 增加库存预警功能
+-- 特别提醒：之后的sql都是在之前基础上迭代，可以对已存在的系统进行数据保留更新
+-- ----------------------------
+alter table jsh_depot add  is_default bit(1) DEFAULT NULL COMMENT '是否默认';
+insert into `jsh_functions`(`Number`, `Name`, `PNumber`, `URL`, `State`, `Sort`, `Enabled`, `Type`, `PushBtn`)
+select '030112', '库存预警', '0301', '../reports/stock_warning_report.html', b'0', '0670', b'1', '电脑版', '' from dual where not exists
+(select * from jsh_functions where  Number='030112' and PNumber='0301');
+
+-- ----------------------------
+-- 改管理员的功能权限
+-- ----------------------------
+update jsh_userbusiness SET Type = 'RoleFunctions', KeyId = '4',
+Value = '[13][12][16][243][14][15][234][236][22][23][220][240][25][217][218][26][194][195][31][59][207][208][209][226][227][228][229][235][237][244][210][211][241][33][199][242][41][200][201][202][40][232][233][197][203][204][205][206][212]'
+where Id = 5;
+
+-- ----------------------------
+-- 给app的功能增加代号 在功能表增加个人信息
+-- ----------------------------
+update jsh_app SET Number = '02' where name='个人信息';
+insert into `jsh_functions`(`Number`, `Name`, `PNumber`, `URL`, `State`, `Sort`, `Enabled`, `Type`, `PushBtn`)
+select '02', '个人信息', '0', '', b'1', '0005', b'1', '电脑版', '' from dual where not exists
+(select * from jsh_functions where  Number='02' and PNumber='0');
