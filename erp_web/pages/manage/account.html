@@ -134,12 +134,20 @@
                 },
                 {title: '备注', field: 'remark', width: 100},
                 {
-                    title: '操作', field: 'op', align: "center", width: 210, formatter: function (value, rec) {
+                    title: '操作', field: 'op', align: "center", width: 210, formatter: function (value, rec,index) {
+                        /**
+                         * create by: qiankunpingtai
+                         * create time: 2019/5/5 10:30
+                         * website：https://qiankunpingtai.cn
+                         * description:
+                         *  修改效率低下的js实现
+                         */
                         var str = '';
-                        var rowInfo = rec.id + 'AaBb' + rec.name + 'AaBb' + rec.serialno + 'AaBb' + rec.initialamount + 'AaBb' + rec.currentamount + 'AaBb' + rec.remark;
-                        str += '<img src="/js/easyui-1.3.5/themes/icons/list.png" style="cursor: pointer;" onclick="showAccountInOutList(\'' + rowInfo + '\');"/>&nbsp;<a onclick="showAccountInOutList(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">流水</a>&nbsp;&nbsp;';
-                        str += '<img src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editAccount(\'' + rowInfo + '\');"/>&nbsp;<a onclick="editAccount(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
-                        str += '<img src="/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteAccount(\'' + rowInfo + '\');"/>&nbsp;<a onclick="deleteAccount(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">删除</a>&nbsp;&nbsp;';
+                        // var rowInfo = rec.id + 'AaBb' + rec.name + 'AaBb' + rec.serialno + 'AaBb' + rec.initialamount + 'AaBb' + rec.currentamount + 'AaBb' + rec.remark;
+
+                        str += '<img src="/js/easyui-1.3.5/themes/icons/list.png" style="cursor: pointer;" onclick="showAccountInOutList(\'' + index + '\');"/>&nbsp;<a onclick="showAccountInOutList(\'' + index + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">流水</a>&nbsp;&nbsp;';
+                        str += '<img src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editAccount(\'' + index + '\');"/>&nbsp;<a onclick="editAccount(\'' + index + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
+                        str += '<img src="/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteAccount(\'' + rec.id  + '\');"/>&nbsp;<a onclick="deleteAccount(\'' + rec.id  + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">删除</a>&nbsp;&nbsp;';
                         return str;
                     }
                 }
@@ -219,16 +227,16 @@
     }
 
     //删除结算账户
-    function deleteAccount(accountInfo) {
+    function deleteAccount(id) {
         $.messager.confirm('删除确认', '确定要删除此结算账户吗？', function (r) {
             if (r) {
-                var accountTotalInfo = accountInfo.split("AaBb");
+                // var accountTotalInfo = accountInfo.split("AaBb");
                 $.ajax({
                     type: "post",
                     url: "/account/batchDeleteAccountByIds",
                     dataType: "json",
                     data: ({
-                        ids: accountTotalInfo[0]
+                        ids: id
                     }),
                     success: function (res) {
                         if(res && res.code == 200) {
@@ -236,7 +244,7 @@
                         } else {
                             if(res && res.code == 601){
                                 var jsondata={};
-                                jsondata.ids=accountTotalInfo[0];
+                                jsondata.ids=id;
                                 jsondata.deleteType='2';
                                 var type='single';
                                 batDeleteAccountForceConfirm(res,"/account/batchDeleteAccountByIds",jsondata,type);
@@ -441,23 +449,24 @@
     });
 
     //编辑结算账户
-    function editAccount(accountTotalInfo) {
-        var accountInfo = accountTotalInfo.split("AaBb");
+    function editAccount(index) {
+        var rowsdata = $("#tableData").datagrid("getRows")[index];
+        // var accountInfo = accountTotalInfo.split("AaBb");
         var row = {
-            name: accountInfo[1],
-            serialNo: accountInfo[2],
-            initialAmount: accountInfo[3],
-            currentAmount: accountInfo[4],
-            remark: accountInfo[5]
+            name: rowsdata.name,
+            serialNo: rowsdata.serialNo,
+            initialAmount: rowsdata.initialamount,
+            currentAmount: rowsdata.currentamount,
+            remark: rowsdata.remark
         };
-        oldAccount = accountInfo[1];
+        oldAccount = rowsdata.name;
         $('#accountDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑结算账户');
         $(".window-mask").css({width: webW, height: webH});
         $('#accountFM').form('load', row);
         accountID = accountInfo[0];
         //焦点在名称输入框==定焦在输入文字后面
-        $("#account").val("").focus().val(accountInfo[1]);
-        url = '/account/update?id=' + accountInfo[0];
+        $("#account").val("").focus().val(rowsdata.name);
+        url = '/account/update?id=' + rowsdata.id;
     }
 
     //检查结算账户 名称是否存在 ++ 重名无法提示问题需要跟进
@@ -544,10 +553,11 @@
         });
     }
 
-    function showAccountInOutList(accountInfo) {
-        var info = accountInfo.split("AaBb");
-        var accountId = info[0];
-        var initialAmount = info[3];
+    function showAccountInOutList(index) {
+        //获取当前行
+        var rowsdata = $("#tableData").datagrid("getRows")[index];
+        var accountId = rowsdata.id;
+        var initialAmount = rowsdata.serialno;
         $('#accountDetailListDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;查看账户流水');
         $(".window-mask").css({width: webW, height: webH});
         initAccountDetailData(accountId);
