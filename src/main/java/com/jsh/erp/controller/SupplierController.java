@@ -290,7 +290,7 @@ public class SupplierController {
      * @return
      */
     @GetMapping(value = "/exportExcel")
-    public BaseResponseInfo exportExcel(@RequestParam("supplier") String supplier,
+    public void exportExcel(@RequestParam("supplier") String supplier,
                                         @RequestParam("type") String type,
                                         @RequestParam("phonenum") String phonenum,
                                         @RequestParam("telephone") String telephone,
@@ -338,7 +338,6 @@ public class SupplierController {
             map.put("message", message);
             res.data = map;
         }
-        return res;
     }
 
     /**
