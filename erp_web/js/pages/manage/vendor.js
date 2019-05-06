@@ -1,30 +1,12 @@
 //初始化界面
+var listType = "供应商"; //类型
+var listTypeEn = "Vendor"; //英文类型
 $(function() {
-    var listTitle = ""; //单据标题
-    var listType = ""; //类型
-    var listTypeEn = ""; //英文类型
-    getType();
     initTableData();
     ininPager();
     bindEvent();
 });
 
-//根据名称获取类型
-function getType(){
-    listTitle = $("#tablePanel").prev().text();
-    if(listTitle === "供应商信息列表"){
-        listType = "供应商";
-        listTypeEn = "Vendor";
-    }
-    else if(listTitle === "客户信息列表"){
-        listType = "客户";
-        listTypeEn = "Customer";
-    }
-    else if(listTitle === "会员信息列表"){
-        listType = "会员";
-        listTypeEn = "Member";
-    }
-}
 
 //初始化表格数据
 function initTableData() {
@@ -599,13 +581,7 @@ function editSupplier(index) {
 
     //显示累计应收和累计应付
     var thisDateTime = getNowFormatDateTime(); //当前时间
-    var supType = "customer";
-    if(listType === "客户"){
-        supType = "customer"
-    }
-    else if(listType === "供应商"){
-        supType = "vendor"
-    }
+    var supType = "vendor";
     $.ajax({
         type:"get",
         url: "/depotHead/findTotalPay",
@@ -635,14 +611,8 @@ function editSupplier(index) {
                             var money = moneyA+moneyB;
                             var moneyBeginNeedGet = $("#BeginNeedGet").val()-0; //期初应收
                             var moneyBeginNeedPay = $("#BeginNeedPay").val()-0; //期初应付
-                            if(listType === "客户"){
-                                money = (money + moneyBeginNeedGet - moneyBeginNeedPay).toFixed(2);
-                                $("#AllNeedGet").val(money);  //累计应收
-                            }
-                            else if(listType === "供应商"){
-                                money = (money + moneyBeginNeedPay - moneyBeginNeedGet).toFixed(2);
-                                $("#AllNeedPay").val(money); //累计应付
-                            }
+                            money = (money + moneyBeginNeedPay - moneyBeginNeedGet).toFixed(2);
+                            $("#AllNeedPay").val(money); //累计应付
                         }
                     },
                     error: function(){
