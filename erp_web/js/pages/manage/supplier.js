@@ -57,13 +57,20 @@
             pageList: initPageNum,
             columns:[[
                 { field: 'id',width:35,align:"center",checkbox:true},
-                { title: '操作',field: 'op',align:"center",width:60,formatter:function(value,rec)
+                { title: '操作',field: 'op',align:"center",width:60,formatter:function(value, rec,index)
                     {
+                        /**
+                         * create by: qiankunpingtai
+                         * create time: 2019/5/6 9:33
+                         * website：https://qiankunpingtai.cn
+                         * description:
+                         *  修改效率低下的js实现
+                         */
                         var str = '';
-                        var rowInfo = rec.id + 'AaBb' + rec.supplier +'AaBb' + rec.contacts + 'AaBb'+ rec.phonenum + 'AaBb'+ rec.email + 'AaBb'+ rec.beginneedget + 'AaBb'+ rec.beginneedpay + 'AaBb' + rec.isystem + 'AaBb' + rec.description+ 'AaBb' + rec.type
-                            + 'AaBb' + rec.fax + 'AaBb' + rec.telephone + 'AaBb' + rec.address + 'AaBb' + rec.taxnum + 'AaBb' + rec.bankname + 'AaBb' + rec.accountnumber + 'AaBb' + rec.taxrate;
-                        str += '<img title="编辑" src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editSupplier(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
-                        str += '<img title="删除" src="/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteSupplier(\'' + rowInfo + '\');"/>';
+                        // var rowInfo = rec.id + 'AaBb' + rec.supplier +'AaBb' + rec.contacts + 'AaBb'+ rec.phonenum + 'AaBb'+ rec.email + 'AaBb'+ rec.beginneedget + 'AaBb'+ rec.beginneedpay + 'AaBb' + rec.isystem + 'AaBb' + rec.description+ 'AaBb' + rec.type
+                        //     + 'AaBb' + rec.fax + 'AaBb' + rec.telephone + 'AaBb' + rec.address + 'AaBb' + rec.taxnum + 'AaBb' + rec.bankname + 'AaBb' + rec.accountnumber + 'AaBb' + rec.taxrate;
+                        str += '<img title="编辑" src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editSupplier(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
+                        str += '<img title="删除" src="/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteSupplier(\'' + rec.id + '\');"/>';
                         return str;
                     }
                 },
@@ -164,16 +171,16 @@
     }
 
     //删除信息
-    function deleteSupplier(supplierInfo) {
+    function deleteSupplier(id) {
         $.messager.confirm('删除确认','确定要删除此条信息吗？',function(r) {
             if (r) {
-                var supplierTotalInfo = supplierInfo.split("AaBb");
+                // var supplierTotalInfo = supplierInfo.split("AaBb");
                 $.ajax({
                     type:"post",
                     url: "/supplier/batchDeleteSupplierByIds",
                     dataType: "json",
                     data: ({
-                        ids : supplierTotalInfo[0]
+                        ids : id
                     }),
                     success: function (res) {
                         if(res && res.code == 200) {
@@ -181,7 +188,7 @@
                         } else {
                             if(res && res.code == 601){
                                 var jsondata={};
-                                jsondata.ids=supplierTotalInfo[0];
+                                jsondata.ids=id;
                                 jsondata.deleteType='2';
                                 var type='single';
                                 batDeleteSupplierForceConfirm(res,"/supplier/batchDeleteSupplierByIds",jsondata,type);
@@ -402,7 +409,8 @@
         var phonenum = $.trim($("#searchPhonenum").val());
         var telephone = $.trim($("#searchTelephone").val());
         var description = $.trim($("#searchDesc").val());
-        window.location.href = "/supplier/exportExcel?browserType=" + getOs()
+        var browserType=getOs();
+        window.location.href = "/supplier/exportExcel?browserType=" + browserType
             + "&supplier=" + supplier + "&type=" + listType + "&phonenum=" + phonenum + "&telephone=" + telephone + "&description=" + description;
     }
 
@@ -555,37 +563,39 @@
 
 
     //编辑信息
-    function editSupplier(supplierTotalInfo) {
-        var supplierInfo = supplierTotalInfo.split("AaBb");
-        var beginNeedGet = supplierInfo[5];
-        var beginNeedPay = supplierInfo[6];
+    function editSupplier(index) {
+        // var supplierInfo = supplierTotalInfo.split("AaBb");
+        //获取当前行
+        var rowsdata = $("#tableData").datagrid("getRows")[index];
+        var beginNeedGet = rowsdata.beginneedget;
+        var beginNeedPay = rowsdata.beginneedpay;
         var row = {
-            supplier : supplierInfo[1],
-            contacts : supplierInfo[2].replace("undefined",""),
-            phonenum : supplierInfo[3].replace("undefined",""),
-            email : supplierInfo[4].replace("undefined",""),
+            supplier : rowsdata.supplier,
+            contacts : (rowsdata.contacts).replace("undefined",""),
+            phonenum : (rowsdata.phonenum).replace("undefined",""),
+            email : (rowsdata.email).replace("undefined",""),
             BeginNeedGet : beginNeedGet == "0"? "":beginNeedGet,
             BeginNeedPay : beginNeedPay == "0"? "":beginNeedPay,
             AllNeedGet: "",
             AllNeedPay: "",
-            description : supplierInfo[8].replace("undefined",""),
-            type : supplierInfo[9],
-            fax : supplierInfo[10].replace("undefined",""),
-            telephone : supplierInfo[11].replace("undefined",""),
-            address : supplierInfo[12].replace("undefined",""),
-            taxNum : supplierInfo[13].replace("undefined",""),
-            bankName : supplierInfo[14].replace("undefined",""),
-            accountNumber : supplierInfo[15].replace("undefined",""),
-            taxRate : supplierInfo[16].replace("undefined","")
+            description : (rowsdata.description).replace("undefined",""),
+            type : rowsdata.type,
+            fax : (rowsdata.fax).replace("undefined",""),
+            telephone : (rowsdata.telephone).replace("undefined",""),
+            address : (rowsdata.address).replace("undefined",""),
+            taxNum : (rowsdata.taxnum).replace("undefined",""),
+            bankName : (rowsdata.bankname).replace("undefined",""),
+            accountNumber : (rowsdata.accountnumber).replace("undefined",""),
+            taxRate : rowsdata.taxrate==undefined?"":rowsdata.taxrate
         };
-        oldSupplier = supplierInfo[1];
+        oldSupplier = rowsdata.supplier;
         $('#supplierDlg').dialog('open').dialog('setTitle','<img src="/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑'+listType +"信息");
         $(".window-mask").css({ width: webW ,height: webH});
         $('#supplierFM').form('load',row);
-        supplierID = supplierInfo[0];
+        supplierID = rowsdata.id;
         //焦点在名称输入框==定焦在输入文字后面
-        $("#supplier").val("").focus().val(supplierInfo[1]);
-        url = '/supplier/update?id=' + supplierInfo[0];
+        $("#supplier").val("").focus().val(rowsdata.supplier);
+        url = '/supplier/update?id=' + rowsdata.id;
 
         //显示累计应收和累计应付
         var thisDateTime = getNowFormatDateTime(); //当前时间
@@ -602,7 +612,7 @@
             dataType: "json",
             async:  false,
             data: ({
-                supplierId: supplierInfo[0],
+                supplierId: rowsdata.id,
                 endTime:thisDateTime,
                 supType: supType
             }),
@@ -615,7 +625,7 @@
                         dataType: "json",
                         async:  false,
                         data: ({
-                            supplierId: supplierInfo[0],
+                            supplierId: rowsdata.id,
                             endTime:thisDateTime,
                             supType: supType
                         }),
