@@ -199,7 +199,7 @@ public class MaterialController {
      * @return
      */
     @GetMapping(value = "/exportExcel")
-    public BaseResponseInfo exportExcel(@RequestParam("name") String name,
+    public void exportExcel(@RequestParam("name") String name,
                                         @RequestParam("model") String model,
                                         @RequestParam("categoryId") Long categoryId,
                                         @RequestParam("categoryIds") String categoryIds,
@@ -240,7 +240,6 @@ public class MaterialController {
             map.put("message", message);
             res.data = map;
         }
-        return res;
     }
 
     /**

@@ -660,7 +660,7 @@ public class DepotItemController {
      * @return
      */
     @GetMapping(value = "/exportExcel")
-    public BaseResponseInfo exportExcel(@RequestParam("currentPage") Integer currentPage,
+    public void exportExcel(@RequestParam("currentPage") Integer currentPage,
                                         @RequestParam("pageSize") Integer pageSize,
                                         @RequestParam("projectId") Integer projectId,
                                         @RequestParam("monthTime") String monthTime,
@@ -717,10 +717,6 @@ public class DepotItemController {
             message = "导出失败";
             res.code = 500;
         }
-        /**
-         * 2019-01-15response已经返回，finally部分完全没必要
-         * */
-        return res;
     }
 
     /**
