@@ -130,10 +130,17 @@
                 {title: '排序', field: 'sort', width: 100},
                 {title: '别名', field: 'anothername', width: 100},
                 {
-                    title: '操作', field: 'op', align: "center", width: 80, formatter: function (value, rec) {
+                    title: '操作', field: 'op', align: "center", width: 80, formatter: function (value, rec,index) {
+                        /**
+                         * create by: qiankunpingtai
+                         * create time: 2019/5/6 9:33
+                         * website：https://qiankunpingtai.cn
+                         * description:
+                         *  修改效率低下的js实现
+                         */
                         var str = '';
-                        var rowInfo = rec.id + 'AaBb' + rec.nativename + 'AaBb' + rec.enabled + 'AaBb' + rec.sort + 'AaBb' + rec.anothername;
-                        str += '<img src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editMaterialProperty(\'' + rowInfo + '\');"/>&nbsp;<a onclick="editMaterialProperty(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
+                        // var rowInfo = rec.id + 'AaBb' + rec.nativename + 'AaBb' + rec.enabled + 'AaBb' + rec.sort + 'AaBb' + rec.anothername;
+                        str += '<img src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editMaterialProperty(\'' + index + '\');"/>&nbsp;<a onclick="editMaterialProperty(\'' + index + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
                         return str;
                     }
                 }
@@ -216,19 +223,20 @@
     });
 
     //编辑信息
-    function editMaterialProperty(totalInfo) {
-        var materialPropertyInfo = totalInfo.split("AaBb");
-
-        $("#nativeName").text(materialPropertyInfo[1]);
-        $("#enabled").attr("checked", materialPropertyInfo[2] == 'true' ? true : false);
-        $("#sort").val(materialPropertyInfo[3]);
-        $("#anotherName").val(materialPropertyInfo[4]);
+    function editMaterialProperty(index) {
+        // var materialPropertyInfo = totalInfo.split("AaBb");
+        //获取当前行
+        var rowsdata = $("#tableData").datagrid("getRows")[index];
+        $("#nativeName").text(rowsdata.nativename);
+        $("#enabled").attr("checked", rowsdata.enabled == true ? true : false);
+        $("#sort").val(rowsdata.sort);
+        $("#anotherName").val(rowsdata.anothername);
 
         $('#materialPropertyDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑商品属性');
         $(".window-mask").css({width: webW, height: webH});
         //焦点在名称输入框==定焦在输入文字后面
-        $("#nativeName").val("").focus().val(materialPropertyInfo[1]);
-        url = '/materialProperty/update?id=' + materialPropertyInfo[0];
+        $("#nativeName").val("").focus().val(rowsdata.nativename);
+        url = '/materialProperty/update?id=' + rowsdata.id;
     }
 
     //搜索处理
