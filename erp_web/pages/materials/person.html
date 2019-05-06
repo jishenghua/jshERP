@@ -169,10 +169,17 @@
                 {title: '姓名', field: 'name', width: 180},
                 {title: '类型', field: 'type', width: 180},
                 {
-                    title: '操作', field: 'op', align: "center", width: 130, formatter: function (value, rec) {
+                    title: '操作', field: 'op', align: "center", width: 130, formatter: function (value, rec,index) {
+                        /**
+                         * create by: qiankunpingtai
+                         * create time: 2019/5/6 9:33
+                         * website：https://qiankunpingtai.cn
+                         * description:
+                         *  修改效率低下的js实现
+                         */
                         var str = '';
-                        var rowInfo = rec.id + 'AaBb' + rec.name + 'AaBb' + rec.type;
-                        str += '<img src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editPerson(\'' + rowInfo + '\');"/>&nbsp;<a onclick="editPerson(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
+                        // var rowInfo = rec.id + 'AaBb' + rec.name + 'AaBb' + rec.type;
+                        str += '<img src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editPerson(\'' + index + '\');"/>&nbsp;<a onclick="editPerson(\'' + index + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
                         str += '<img src="/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deletePerson(' + rec.id + ');"/>&nbsp;<a onclick="deletePerson(' + rec.id + ');" style="text-decoration:none;color:black;" href="javascript:void(0)">删除</a>&nbsp;&nbsp;';
                         return str;
                     }
@@ -417,19 +424,20 @@
     });
 
     //编辑信息
-    function editPerson(personTotalInfo) {
-        var personInfo = personTotalInfo.split("AaBb");
-
-        $("#Name").val(personInfo[1]);
-        $("#Type").val(personInfo[2]);
+    function editPerson(index) {
+        // var personInfo = personTotalInfo.split("AaBb");
+        //获取当前行
+        var rowsdata = $("#tableData").datagrid("getRows")[index];
+        $("#Name").val(rowsdata.name);
+        $("#Type").val(rowsdata.type);
 
         //oldPerson = personInfo[1];
         $('#personDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑经手人信息');
         $(".window-mask").css({width: webW, height: webH});
-        personID = personInfo[0];
+        personID = rowsdata.id;
         //焦点在名称输入框==定焦在输入文字后面
-        $("#Name").val("").focus().val(personInfo[1]);
-        url = '/person/update?id=' + personInfo[0];
+        $("#Name").val("").focus().val(rowsdata.name);
+        url = '/person/update?id=' + rowsdata.id;
     }
 
     //搜索处理
