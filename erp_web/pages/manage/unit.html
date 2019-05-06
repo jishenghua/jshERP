@@ -116,10 +116,17 @@
                 {field: 'id', width: 35, align: "center", checkbox: true},
                 {
                     title: '操作', field: 'op', align: "center", width: 60,
-                    formatter: function (value, rec) {
+                    formatter: function (value, rec,index) {
+                        /**
+                         * create by: qiankunpingtai
+                         * create time: 2019/5/6 9:33
+                         * website：https://qiankunpingtai.cn
+                         * description:
+                         *  修改效率低下的js实现
+                         */
                         var str = '';
-                        var rowInfo = rec.id + 'AaBb' + rec.uname;
-                        str += '<img title="编辑" src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editUnit(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
+                        // var rowInfo = rec.id + 'AaBb' + rec.uname;
+                        str += '<img title="编辑" src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editUnit(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
                         str += '<img title="删除" src="/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteUnit(' + rec.id + ');"/>';
                         return str;
                     }
@@ -370,15 +377,16 @@
     });
 
     //编辑信息
-    function editUnit(unitTotalInfo) {
-        var unitInfo = unitTotalInfo.split("AaBb");
-
-        oldUnit = unitInfo[1];
+    function editUnit(index) {
+        // var unitInfo = unitTotalInfo.split("AaBb");
+        //获取当前行
+        var rowsdata = $("#tableData").datagrid("getRows")[index];
+        oldUnit = rowsdata.uname;
         $('#unitDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑计量单位');
         $(".window-mask").css({width: webW, height: webH});
-        unitID = unitInfo[0];
+        unitID = rowsdata.id;
         //焦点在名称输入框==定焦在输入文字后面
-        var name = unitInfo[1];
+        var name = rowsdata.uname;
         var basicName = name.substring(0, name.indexOf(",")); //基础单位
         $("#basicName").val(basicName);
         var otherItem = name.substring(name.indexOf(",") + 1);
@@ -388,7 +396,7 @@
         lastNum = lastNum.replace(")", "");
         $("#otherNum").val(lastNum);
         $("#unitName").text(basicName);
-        url = '/unit/update?id=' + unitInfo[0];
+        url = '/unit/update?id=' + rowsdata.id;
     }
 
     //检查名称是否存在 ++ 重名无法提示问题需要跟进
