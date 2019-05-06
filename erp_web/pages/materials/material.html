@@ -503,14 +503,21 @@
                 columns: [[
                     {field: 'id', width: 35, align: "center", checkbox: true},
                     {
-                        title: '操作', field: 'op', align: "center", width: 60, formatter: function (value, rec) {
+                        title: '操作', field: 'op', align: "center", width: 60, formatter: function (value, rec,index) {
+                            /**
+                             * create by: qiankunpingtai
+                             * create time: 2019/5/6 9:33
+                             * website：https://qiankunpingtai.cn
+                             * description:
+                             *  修改效率低下的js实现
+                             */
                             var str = '';
-                            var rowInfo = rec.id + 'AaBb' + rec.name + 'AaBb' + rec.model + 'AaBb' + rec.color + 'AaBb' + rec.unit + 'AaBb' + rec.retailprice
-                                + 'AaBb' + rec.lowprice + 'AaBb' + rec.presetpriceone + 'AaBb' + rec.presetpricetwo + 'AaBb' + rec.remark + 'AaBb' + rec.standard
-                                + 'AaBb' + rec.color + 'AaBb' + rec.packing + 'AaBb' + rec.safetystock + 'AaBb' + rec.categoryid + 'AaBb' + rec.categoryName
-                                + 'AaBb' + rec.unitid + 'AaBb' + rec.unitName + 'AaBb' + rec.firstoutunit + 'AaBb' + rec.firstinunit
-                                + 'AaBb' + rec.mfrs + 'AaBb' + rec.otherfield1 + 'AaBb' + rec.otherfield2 + 'AaBb' + rec.otherfield3+ 'AaBb' + rec.enableserialnumber;
-                            str += '<img title="编辑" src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editMaterial(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
+                            // var rowInfo = rec.id + 'AaBb' + rec.name + 'AaBb' + rec.model + 'AaBb' + rec.color + 'AaBb' + rec.unit + 'AaBb' + rec.retailprice
+                            //     + 'AaBb' + rec.lowprice + 'AaBb' + rec.presetpriceone + 'AaBb' + rec.presetpricetwo + 'AaBb' + rec.remark + 'AaBb' + rec.standard
+                            //     + 'AaBb' + rec.color + 'AaBb' + rec.packing + 'AaBb' + rec.safetystock + 'AaBb' + rec.categoryid + 'AaBb' + rec.categoryName
+                            //     + 'AaBb' + rec.unitid + 'AaBb' + rec.unitName + 'AaBb' + rec.firstoutunit + 'AaBb' + rec.firstinunit
+                            //     + 'AaBb' + rec.mfrs + 'AaBb' + rec.otherfield1 + 'AaBb' + rec.otherfield2 + 'AaBb' + rec.otherfield3+ 'AaBb' + rec.enableserialnumber;
+                            str += '<img title="编辑" src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editMaterial(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
                             str += '<img title="删除" src="/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteMaterial(' + rec.id + ');"/>';
                             return str;
                         }
@@ -1281,35 +1288,37 @@
         }
 
         //编辑信息
-        function editMaterial(materialTotalInfo) {
-            var materialInfo = materialTotalInfo.split("AaBb");
+        function editMaterial(index) {
+            // var materialInfo = materialTotalInfo.split("AaBb");
+            //获取当前行
+            var rowsdata = $("#tableData").datagrid("getRows")[index];
             bindMProperty(); //根据商品属性绑定
-            $("#Name").focus().val(materialInfo[1]);
-            $("#Color").focus().val(materialInfo[11]);
-            $("#EnableSerialNumber").val(materialInfo[24]=='1'?'1':'0');
+            $("#Name").focus().val(rowsdata.name);
+            $("#Color").focus().val(rowsdata.color);
+            $("#EnableSerialNumber").val(rowsdata.enableserialnumber=='1'?'1':'0');
             //商品类别id
-            $("#parentid").val(materialInfo[14] == "undefined" ? "" : materialInfo[14]);
+            $("#parentid").val(rowsdata.categoryid == undefined ? "" : rowsdata.categoryid );
             //商品类别名称
-            $("#parentName").val(materialInfo[15] == "undefined" ? "" : materialInfo[15]);
-            mId = materialInfo[14];
-            mName = materialInfo[15];
-            $("#Packing").focus().val(materialInfo[12]);
-            $("#SafetyStock").focus().val(materialInfo[13]=="undefined" ? "" : materialInfo[13]);
-            $("#Model").val(materialInfo[2]);
-            $("#Standard").val(materialInfo[10] == "undefined" ? "" : materialInfo[10]);
-            $("#Color").val(materialInfo[3] == "undefined" ? "" : materialInfo[3]);
-            $("#Mfrs").val(materialInfo[20] == "undefined" ? "" : materialInfo[20]);
-            $("#OtherField1").val(materialInfo[21] == "undefined" ? "" : materialInfo[21]);
-            $("#OtherField2").val(materialInfo[22] == "undefined" ? "" : materialInfo[22]);
-            $("#OtherField3").val(materialInfo[23] == "undefined" ? "" : materialInfo[23]);
-            $("#Unit").val(materialInfo[4] == "undefined" ? "" : materialInfo[4]);
-            $("#RetailPrice").val(materialInfo[5] == "undefined" ? "" : materialInfo[5]);
-            $("#LowPrice").val(materialInfo[6] == "undefined" ? "" : materialInfo[6]);
-            $("#PresetPriceOne").val(materialInfo[7] == "undefined" ? "" : materialInfo[7]);
-            $("#PresetPriceTwo").val(materialInfo[8] == "undefined" ? "" : materialInfo[8]);
-            $("#Remark").val(materialInfo[9]);
-            $("#manyUnit").val(materialInfo[16]);
-            if (materialInfo[16] != "undefined") {
+            $("#parentName").val(rowsdata.categoryName == undefined ? "" : rowsdata.categoryName );
+            mId = rowsdata.categoryid;
+            mName =rowsdata.categoryName;
+            $("#Packing").focus().val(rowsdata.packing);
+            $("#SafetyStock").focus().val(rowsdata.safetystock==undefined ? "" : rowsdata.safetystock);
+            $("#Model").val(rowsdata.model);
+            $("#Standard").val(rowsdata.standard == "undefined" ? "" : rowsdata.standard );
+            $("#Color").val(rowsdata.color == "undefined" ? "" : rowsdata.color );
+            $("#Mfrs").val(rowsdata.mfrs == "undefined" ? "" : rowsdata.mfrs );
+            $("#OtherField1").val(rowsdata.otherfield1 == "undefined" ? "" : rowsdata.otherfield1);
+            $("#OtherField2").val(rowsdata.otherfield2 == "undefined" ? "" : rowsdata.otherfield2 );
+            $("#OtherField3").val(rowsdata.otherfield3 == "undefined" ? "" : rowsdata.otherfield3);
+            $("#Unit").val(rowsdata.unit == "undefined" ? "" : rowsdata.unit);
+            $("#RetailPrice").val(rowsdata.retailprice == "undefined" ? "" : rowsdata.retailprice);
+            $("#LowPrice").val(rowsdata.lowprice == "undefined" ? "" : rowsdata.lowprice);
+            $("#PresetPriceOne").val(rowsdata.presetpriceone == "undefined" ? "" : rowsdata.presetpriceone);
+            $("#PresetPriceTwo").val(rowsdata.presetpricetwo == "undefined" ? "" :rowsdata.presetpricetwo);
+            $("#Remark").val(rowsdata.remark);
+            $("#manyUnit").val(rowsdata.unitid);
+            if (rowsdata.unitid != "undefined") {
                 $("#manyUnitCheck").prop("checked", true);
                 //当前为选中状态
                 $("#Unit").hide();
@@ -1328,8 +1337,8 @@
                     firstOptions = firstOptions + basic + other;
                     $("#FirstOutUnit").empty().append('<option value="">(空)</option>').append(firstOptions); //首选出库单位
                     $("#FirstInUnit").empty().append('<option value="">(空)</option>').append(firstOptions); //首选入库单位
-                    $("#FirstOutUnit").val(materialInfo[18]);//首选出库单位
-                    $("#FirstInUnit").val(materialInfo[19]);//首选入库单位
+                    $("#FirstOutUnit").val(rowsdata.firstoutunit);//首选出库单位
+                    $("#FirstInUnit").val(rowsdata.firstinunit);//首选入库单位
                 }
             }
             else {
@@ -1346,7 +1355,7 @@
             $.ajax({
                 url: '/material/findById',
                 data: {
-                    id: materialInfo[0]
+                    id: rowsdata.id
                 },
                 type: "get",
                 dataType: "json",
@@ -1375,24 +1384,24 @@
                 }
             });
 
-            oldName = materialInfo[1];
-            oldModel = materialInfo[2];
-            oldColor = materialInfo[11];
-            oldStandard = materialInfo[10];
-            oldMfrs = materialInfo[20];
-            oldOtherField1 = materialInfo[21];
-            oldOtherField2 = materialInfo[22];
-            oldOtherField3 = materialInfo[23];
-            oldUnit = materialInfo[4];
-            oldManyUnit = materialInfo[16];
+            oldName = rowsdata.name;
+            oldModel = rowsdata.model;
+            oldColor = rowsdata.color;
+            oldStandard = rowsdata.standard;
+            oldMfrs = rowsdata.mfrs;
+            oldOtherField1 = rowsdata.otherfield1;
+            oldOtherField2 = rowsdata.otherfield2;
+            oldOtherField3 = rowsdata.otherfield3;
+            oldUnit = rowsdata.unit;
+            oldManyUnit = rowsdata.unitid;
             $('#materialDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑商品信息');
             $(".window-mask").css({width: webW, height: webH});
-            materialID = materialInfo[0];
+            materialID = rowsdata.id;
             //焦点在名称输入框==定焦在输入文字后面
-            $("#Name").val("").focus().val(materialInfo[1]);
+            $("#Name").val("").focus().val(rowsdata.name);
             //选中基本资料tab
             $("#materialFM #tt .tabs li").first().click();
-            url = '/material/update?id=' + materialInfo[0];
+            url = '/material/update?id=' + rowsdata.id;
         }
 
 
