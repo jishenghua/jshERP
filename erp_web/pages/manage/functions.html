@@ -398,7 +398,7 @@
         $("#Enabled").attr("checked", rowsdata.enabled === true ? true : false);
         $("#Type").focus().val(rowsdata.type);
         var pushbtn=rowsdata.pushbtn;
-        if (pushbtn !== "undefined" && pushbtn !== "") {
+        if (pushbtn) {
             var arr = pushbtn.split(",");
             var pushBtnArray = [];
             for (var i = 0; i < arr.length; i++) {
