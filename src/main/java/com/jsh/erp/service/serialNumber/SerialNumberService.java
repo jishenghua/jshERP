@@ -428,20 +428,21 @@ public class SerialNumberService {
     public void checkAndUpdateSerialNumber(DepotItem depotItem,User userInfo) throws Exception{
                 if(depotItem!=null){
                     //查询商品下已分配的可用序列号数量
+                    int serialNumberSum=0;
                     try{
-                        int SerialNumberSum= serialNumberMapperEx.countSerialNumberByMaterialIdAndDepotheadId(depotItem.getMaterialid(),null,BusinessConstants.IS_SELL_HOLD);
+                        serialNumberSum= serialNumberMapperEx.countSerialNumberByMaterialIdAndDepotheadId(depotItem.getMaterialid(),null,BusinessConstants.IS_SELL_HOLD);
                         //BasicNumber=OperNumber*ratio
-                        if((depotItem.getBasicnumber()==null?0:depotItem.getBasicnumber()).intValue()>SerialNumberSum){
-                            //获取商品名称
-                            Material material= materialMapper.selectByPrimaryKey(depotItem.getMaterialid());
-                            throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_SERIAL_NUMBERE_NOT_ENOUGH_CODE,
-                                    String.format(ExceptionConstants.MATERIAL_SERIAL_NUMBERE_NOT_ENOUGH_MSG,material==null?"":material.getName()));
-                        }
                     }catch(Exception e){
                         logger.error("异常码[{}],异常提示[{}],异常[{}]",
                                 ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
                         throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
                                 ExceptionConstants.DATA_READ_FAIL_MSG);
+                    }
+                    if((depotItem.getBasicnumber()==null?0:depotItem.getBasicnumber()).intValue()>serialNumberSum){
+                        //获取商品名称
+                        Material material= materialMapper.selectByPrimaryKey(depotItem.getMaterialid());
+                        throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_SERIAL_NUMBERE_NOT_ENOUGH_CODE,
+                                String.format(ExceptionConstants.MATERIAL_SERIAL_NUMBERE_NOT_ENOUGH_MSG,material==null?"":material.getName()));
                     }
 
                     //商品下序列号充足，分配序列号
