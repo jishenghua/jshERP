@@ -553,26 +553,26 @@
 			columns:[[
 				{ field: 'id',width:35,align:"center",checkbox:true},
 				{ title: '操作',field: 'op',align:"center",width:opWidth,
-					formatter:function(value,rec) {
+					formatter:function(value, rec,index) {
 						var str = '';
-						var rowInfo = rec.id + 'AaBb' + rec.projectid+ 'AaBb' + rec.number+ 'AaBb' + rec.operpersonname
-							+ 'AaBb' + rec.opertimeStr+ 'AaBb' + rec.organid+ 'AaBb' + rec.handspersonid
-							+ 'AaBb' + rec.accountid+ 'AaBb' + rec.changeamount+ 'AaBb' + rec.remark
-							+ 'AaBb' + rec.projectName+ 'AaBb' + rec.organName+ 'AaBb' + rec.handsPersonName
-							+ 'AaBb' + rec.accountName + 'AaBb' + rec.totalprice + 'AaBb' + rec.allocationprojectid
-							+ 'AaBb' + rec.allocationProjectName + 'AaBb' + rec.paytype + 'AaBb' + rec.salesman
-							+ 'AaBb' + rec.discount + 'AaBb' + rec.discountmoney + 'AaBb' + rec.discountlastmoney
-							+ 'AaBb' + rec.accountidlist + 'AaBb' + rec.accountmoneylist
-							+ 'AaBb' + rec.othermoney + 'AaBb' + rec.othermoneylist + 'AaBb' + rec.othermoneyitem
-							+ 'AaBb' + rec.accountday + 'AaBb' + rec.linknumber;
-						rowInfo = rowInfo.replace(/\"/g, "");
-                        rowInfo = rowInfo.replace(/\[|]/g,"");
+						// var rowInfo = rec.id + 'AaBb' + rec.projectid+ 'AaBb' + rec.number+ 'AaBb' + rec.operpersonname
+						// 	+ 'AaBb' + rec.opertimeStr+ 'AaBb' + rec.organid+ 'AaBb' + rec.handspersonid
+						// 	+ 'AaBb' + rec.accountid+ 'AaBb' + rec.changeamount+ 'AaBb' + rec.remark
+						// 	+ 'AaBb' + rec.projectName+ 'AaBb' + rec.organName+ 'AaBb' + rec.handsPersonName
+						// 	+ 'AaBb' + rec.accountName + 'AaBb' + rec.totalprice + 'AaBb' + rec.allocationprojectid
+						// 	+ 'AaBb' + rec.allocationProjectName + 'AaBb' + rec.paytype + 'AaBb' + rec.salesman
+						// 	+ 'AaBb' + rec.discount + 'AaBb' + rec.discountmoney + 'AaBb' + rec.discountlastmoney
+						// 	+ 'AaBb' + rec.accountidlist + 'AaBb' + rec.accountmoneylist
+						// 	+ 'AaBb' + rec.othermoney + 'AaBb' + rec.othermoneylist + 'AaBb' + rec.othermoneyitem
+						// 	+ 'AaBb' + rec.accountday + 'AaBb' + rec.linknumber;
+                        // rowInfo = rowInfo.replace(/\"/g, "");
+                        // rowInfo = rowInfo.replace(/\[|]/g,"");
 						var orgId = rec.organid? rec.organid:0;
-						str += '<img title="查看" src="/js/easyui-1.3.5/themes/icons/list.png" style="cursor: pointer;" onclick="showDepotHead(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
-						str += '<img title="编辑" src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editDepotHead(\'' + rowInfo + '\''+',' + rec.status + ');"/>&nbsp;&nbsp;&nbsp;';
+						str += '<img title="查看" src="/js/easyui-1.3.5/themes/icons/list.png" style="cursor: pointer;" onclick="showDepotHead(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
+						str += '<img title="编辑" src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editDepotHead(\'' + index + '\''+',' + rec.status + ');"/>&nbsp;&nbsp;&nbsp;';
 						str += '<img title="删除" src="/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteDepotHead('+ rec.id +',' + orgId +',' + rec.totalprice+',' + rec.status + ');"/>';
                         if(isShowSkip) {
-                            str += '&nbsp;&nbsp;&nbsp;<img title="' + opTitle + '" src="/js/easyui-1.3.5/themes/icons/redo.png" style="cursor: pointer;" onclick="skipDepotHead(\'' + rowInfo + '\''+',' + rec.status + ');"/>';
+                            str += '&nbsp;&nbsp;&nbsp;<img title="' + opTitle + '" src="/js/easyui-1.3.5/themes/icons/redo.png" style="cursor: pointer;" onclick="skipDepotHead(\'' + index + '\''+',' + rec.status + ');"/>';
 						}
 						return str;
 					}
@@ -1338,11 +1338,13 @@
 	}
 
     //订单转采购或销售
-    function skipDepotHead(rowInfo, status){
+    function skipDepotHead(index, status){
+        //获取当前行
+        var rowsdata = $("#tableData").datagrid("getRows")[index];
 		if(status == "0" || status == "2") {
             $.messager.alert('提示','未审核和已转的单据禁止操作！','warning');
         } else {
-            sessionStorage.setItem("rowInfo", rowInfo); //将单据信息存入缓存中
+            sessionStorage.setItem("rowInfo", JSON.stringify(rowsdata)); //将单据信息存入缓存中
             if(listTitle == "采购订单列表") {
                 parent.addTab("订单转采购", "../materials/purchase_in_list.html?t=skip", "");
             } else if(listTitle == "销售订单列表") {
@@ -1644,54 +1646,61 @@
 	}
 
 	//编辑信息
-	function editDepotHead(depotHeadTotalInfo, status){
+	function editDepotHead(index, status){
         if(status == "1" || status == "2") {
 			$.messager.alert('编辑提示','已审核和已转的单据不能编辑！','warning');
 			return;
 		}
-		var depotHeadInfo = depotHeadTotalInfo.split("AaBb");
-		$("#ProjectId").focus().val(depotHeadInfo[1]);
-	    var ProjectId=depotHeadInfo[1];
+		// var depotHeadInfo = depotHeadTotalInfo.split("AaBb");
+        //获取当前行
+        var rowsdata ='';
+        if(Number(index).toString()=='NaN'){
+            rowsdata=$.parseJSON(index);
+        }else{
+            rowsdata=$("#tableData").datagrid("getRows")[index];
+        }
+		$("#ProjectId").focus().val(rowsdata.projectid);
+	    var ProjectId=rowsdata.projectid;
 		if(ProjectId!='') {
 			initSystemData_person(ProjectId);
 			initSelectInfo_person();
 		}
-        var TotalPrice = depotHeadInfo[14]; //合计金额
+        var TotalPrice = rowsdata.totalprice; //合计金额
         if(pageType === "skip") { //从订单跳转过来
             buildNumber(); //生成单据编号
             var thisDateTime = getNowFormatDateTime(); //当前时间
             $("#OperTime").val(thisDateTime);
-            $("#LinkNumber").val(depotHeadInfo[2]);  //关联订单号
+            $("#LinkNumber").val(rowsdata.number);  //关联订单号
             $("#AccountId").val(defaultAccountId); //初始化默认的账户Id
             $("#DiscountLastMoney").val(TotalPrice); //优惠后金额
             $("#ChangeAmount").val(TotalPrice).attr("data-changeamount", TotalPrice);
         } else {
-            $("#Number").val(depotHeadInfo[2]).attr("data-defaultNumber",depotHeadInfo[2]);
-            $("#OperTime").val(depotHeadInfo[4]);
-            $("#LinkNumber").val(depotHeadInfo[28].replace("undefined","")); //关联订单号
-            $("#AccountId").val(depotHeadInfo[7]); //账户Id
-            $("#DiscountLastMoney").val(depotHeadInfo[21].replace("undefined","0.00")); //优惠后金额
-            $("#ChangeAmount").val(depotHeadInfo[8]).attr("data-changeamount", depotHeadInfo[8]);
+            $("#Number").val(rowsdata.number).attr("data-defaultNumber",rowsdata.number);
+            $("#OperTime").val(rowsdata.opertimeStr);
+            $("#LinkNumber").val(rowsdata.linknumber==undefined?"":rowsdata.linknumber); //关联订单号
+            $("#AccountId").val(rowsdata.accountid); //账户Id
+            $("#DiscountLastMoney").val(rowsdata.discountlastmoney==undefined?"0.00":rowsdata.discountlastmoney); //优惠后金额
+            $("#ChangeAmount").val(rowsdata.changeamount).attr("data-changeamount", rowsdata.changeamount);
 		}
-	    $('#OrganId').combobox('setValue', depotHeadInfo[5]=='undefined'?'':depotHeadInfo[5]);
-	    $("#HandsPersonId").val(depotHeadInfo[6]);
-	    $("#Remark").val(depotHeadInfo[9]);
-		$("#Discount").val(depotHeadInfo[19].replace("undefined","0"));
-		$("#DiscountMoney").val(depotHeadInfo[20].replace("undefined","0.00"));
-        $("#Debt").val((depotHeadInfo[21].replace("undefined","0.00")-depotHeadInfo[8]).toFixed(2));
-		$("#AccountDay").val(depotHeadInfo[27].replace("undefined","")); //结算天数
-		preTotalPrice = depotHeadInfo[14]; //记录前一次合计金额，用于扣预付款
-	    $("#AllocationProjectId").val(depotHeadInfo[15]);
-	    oldNumber = depotHeadInfo[2]; //记录编辑前的单据编号
-		oldId = depotHeadInfo[0]; //记录单据Id
+	    $('#OrganId').combobox('setValue', rowsdata.organid==undefined?'':rowsdata.organid);
+	    $("#HandsPersonId").val(rowsdata.handspersonid);
+	    $("#Remark").val(rowsdata.remark);
+		$("#Discount").val(rowsdata.discount==undefined?"0":rowsdata.discount);
+		$("#DiscountMoney").val(rowsdata.discountmoney==undefined?"0.00":rowsdata.discountmoney);
+        $("#Debt").val(Number((rowsdata.discountlastmoney==undefined?'0.00':rowsdata.discountlastmoney-rowsdata.changeamount)).toFixed(2));
+		$("#AccountDay").val(rowsdata.accountday==undefined?"":rowsdata.accountday); //结算天数
+		preTotalPrice = rowsdata.totalprice; //记录前一次合计金额，用于扣预付款
+	    $("#AllocationProjectId").val(rowsdata.allocationprojectid);
+	    oldNumber = rowsdata.number; //记录编辑前的单据编号
+		oldId = rowsdata.id; //记录单据Id
 	    var editTitle = listTitle.replace("列表","信息");
 	    $('#depotHeadDlg').dialog('open').dialog('setTitle','<img src="/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑' + editTitle);
 	    $(".window-mask").css({ width: webW ,height: webH});
-	    depotHeadID = depotHeadInfo[0];
+	    depotHeadID = rowsdata.id;
 
 		if(listSubType == "零售"){
 			var option = "";
-			if(depotHeadInfo[17] === "预付款"){
+			if(rowsdata.paytype == "预付款"){
 				option = '<option value="预付款">预付款</option>';
 				option += '<option value="现付">现付</option>';
 			}
@@ -1701,9 +1710,9 @@
 			$("#payType").empty().append(option);
 		}
 
-		if(listSubType === "销售" || listSubType === "销售退货"){
-			if(depotHeadInfo[18]){
-				var arr = depotHeadInfo[18].split(",");
+		if(listSubType == "销售" || listSubType == "销售退货"){
+			if(rowsdata.salesman){
+				var arr = rowsdata.salesman.split(",");
 				var salesmanArray = [];
 				for(var i=0;i<arr.length;i++){
 					if(arr[i]){
@@ -1715,10 +1724,10 @@
 		}
 
 		//采购入库、销售出库的多账户加载
-		if(depotHeadInfo[22]!="undefined" && depotHeadInfo[23]!="undefined"){
+		if(rowsdata.accountidlist!=undefined && rowsdata.accountmoneylist!=undefined){
 			$("#AccountId").val("many"); //下拉框选中多账户
-			var accountArr = depotHeadInfo[22].split(",");
-			var accountMoneyArr = depotHeadInfo[23].split(",");
+			var accountArr = rowsdata.accountidlist.split(",");
+			var accountMoneyArr = rowsdata.accountmoneylist.split(",");
 			accountMoneyArr = changeListFmtPlus(accountMoneyArr)  //将数组单个金额中的数值转为正数
 
 			if(listSubType == "零售" || listSubType == "零售退货") {
@@ -1743,10 +1752,10 @@
 		}
 
 		//采购入库、销售出库的费用数据加载
-		if(depotHeadInfo[25] && depotHeadInfo[26]){
-			$("#OtherMoney").val(depotHeadInfo[24].replace("undefined","0")); //采购费用、销售费用
-			var itemArr = depotHeadInfo[25].split(",");
-			var itemMoneyArr = depotHeadInfo[26].split(",");
+		if(rowsdata.othermoneylist &&rowsdata.othermoneyitem){
+			$("#OtherMoney").val(rowsdata.othermoney==undefined?"0":rowsdata.othermoney); //采购费用、销售费用
+			var itemArr = rowsdata.othermoneylist.split(",");
+			var itemMoneyArr = rowsdata.othermoneyitem.split(",");
 			$("#OtherMoney").attr("data-itemArr",JSON.stringify(itemArr)).attr("data-itemMoneyArr",JSON.stringify(itemMoneyArr));  //json数据存储
 		}
 
@@ -1757,24 +1766,26 @@
 			//jshjshjsh
             $("#depotHeadFM .datagrid-body").find("[field='DepotId']").click();
 		} else {
-            url = '/depotHead/updateDepotHeadAndDetail?id=' + depotHeadInfo[0]; //更新接口
+            url = '/depotHead/updateDepotHeadAndDetail?id=' + rowsdata.id; //更新接口
 		}
 	}
 
 	//查看信息
-	function showDepotHead(depotHeadTotalInfo){
-		var depotHeadInfo = depotHeadTotalInfo.split("AaBb");
+	function showDepotHead(index){
+		// var depotHeadInfo = depotHeadTotalInfo.split("AaBb");
+        //获取当前行
+        var rowsdata = $("#tableData").datagrid("getRows")[index];
 		var manyAccountMoney = 0; //多账户合计-零售
-	    $("#ProjectIdShow").text(depotHeadInfo[10]);
-	    $("#NumberShow").text(depotHeadInfo[2]);
-	    $("#OperTimeShow").text(depotHeadInfo[4]);
-	    $('#OrganIdShow').text(depotHeadInfo[11]=="undefined"?'':depotHeadInfo[11]);
-	    $("#HandsPersonIdShow").text(depotHeadInfo[12]);
-        if(depotHeadInfo[13] && depotHeadInfo[13]!="undefined"){
-            $("#AccountIdShow").text(depotHeadInfo[13]); //结算账户
+	    $("#ProjectIdShow").text(rowsdata.projectName);
+	    $("#NumberShow").text(rowsdata.number);
+	    $("#OperTimeShow").text(rowsdata.opertimeStr);
+	    $('#OrganIdShow').text(rowsdata.organName==undefined?'':rowsdata.organName);
+	    $("#HandsPersonIdShow").text(rowsdata.handsPersonName);
+        if(rowsdata.accountName && rowsdata.accountName!=undefined){
+            $("#AccountIdShow").text(rowsdata.accountName); //结算账户
         } else {
-			var accountArr = depotHeadInfo[22].split(","); //账户id列表
-			var accountMoneyArr = depotHeadInfo[23].split(","); //账户金额列表
+			var accountArr = (rowsdata.accountidlist==undefined?"":rowsdata.accountidlist).split(","); //账户id列表
+			var accountMoneyArr =(rowsdata.accountmoneylist==undefined?"":rowsdata.accountmoneylist).split(","); //账户金额列表
 			var accountIdShow = "";
 			for(var j =0;j<accountArr.length; j++){
 				if(accountList !=null){
@@ -1793,17 +1804,17 @@
 			}
 			$("#AccountIdShow").text(accountIdShow);
 		}
-	    $("#ChangeAmountShow").text(depotHeadInfo[8]);
-	    $("#RemarkShow").text(depotHeadInfo[9]);
-		$("#DiscountShow").text(depotHeadInfo[19]);
-		$("#DiscountMoneyShow").text(depotHeadInfo[20]);
-		$("#DiscountLastMoneyShow").text(depotHeadInfo[21]);
-		$("#DebtShow").text((depotHeadInfo[21]-depotHeadInfo[8]).toFixed(2));
-		$("#AccountDayShow").text(depotHeadInfo[27].replace("undefined",""));  //结算天数
-		$("#LinkNumberShow").text(depotHeadInfo[28].replace("undefined","")); //关联订单号
-		if(depotHeadInfo[25] && depotHeadInfo[26]){
-			var itemArr = depotHeadInfo[25].split(","); //支出项目id列表
-			var itemMoneyArr = depotHeadInfo[26].split(","); //支出项目金额列表
+	    $("#ChangeAmountShow").text(rowsdata.changeamount);
+	    $("#RemarkShow").text(rowsdata.remark);
+		$("#DiscountShow").text(rowsdata.discount);
+		$("#DiscountMoneyShow").text(rowsdata.discountmoney);
+		$("#DiscountLastMoneyShow").text(rowsdata.discountlastmoney);
+		$("#DebtShow").text((rowsdata.discountlastmoney-rowsdata.changeamount).toFixed(2));
+		$("#AccountDayShow").text(rowsdata.accountday==undefined?"":rowsdata.accountday);  //结算天数
+		$("#LinkNumberShow").text(rowsdata.linknumber==undefined?"":rowsdata.linknumber); //关联订单号
+		if(rowsdata.othermoneylist && rowsdata.othermoneyitem){
+			var itemArr = rowsdata.othermoneylist.split(","); //支出项目id列表
+			var itemMoneyArr = rowsdata.othermoneyitem.split(","); //支出项目金额列表
 			var otherMoneyShow = "";
 			for(var j =0;j<itemArr.length; j++) {
 				if (outItemList != null) {
@@ -1815,19 +1826,19 @@
 					}
 				}
 			}
-			$("#OtherMoneyShow").text(otherMoneyShow +"总计："+ depotHeadInfo[24].replace("undefined","0") + "元 "); //采购费用、销售费用
+			$("#OtherMoneyShow").text(otherMoneyShow +"总计："+ rowsdata.othermoney==undefined?"0":rowsdata.othermoney + "元 "); //采购费用、销售费用
 		}
 		else {
-			$("#OtherMoneyShow").text(depotHeadInfo[24].replace("undefined","0")); //采购费用、销售费用
+			$("#OtherMoneyShow").text(rowsdata.othermoney==undefined?"0":rowsdata.othermoney); //采购费用、销售费用
 		}
-		$("#payTypeShow").text(depotHeadInfo[17]);
-	    var TotalPrice = depotHeadInfo[14];
-	    $("#AllocationProjectIdShow").text(depotHeadInfo[16]);
+		$("#payTypeShow").text(rowsdata.paytype);
+	    var TotalPrice = rowsdata.totalprice;
+	    $("#AllocationProjectIdShow").text(rowsdata.allocationProjectName);
 	    var showTitle = listTitle.replace("列表","信息");
 	    $('#depotHeadDlgShow').dialog('open').dialog('setTitle','<img src="/js/easyui-1.3.5/themes/icons/list.png"/>&nbsp;查看' + showTitle);
 	    $(".window-mask").css({ width: webW ,height: webH});
 
-	    depotHeadID = depotHeadInfo[0];
+	    depotHeadID = rowsdata.id;
 	    initTableData_material_show(TotalPrice); //商品列表-查看状态
 
 		//零售单据展示数据
@@ -1843,8 +1854,8 @@
 			}
 		}
 		if(listSubType === "销售" || listSubType === "销售退货"){
-			if(depotHeadInfo[18]){
-				var arr = depotHeadInfo[18].split(",");
+			if(rowsdata.salesman){
+				var arr = rowsdata.salesman.split(",");
 				var salesmanStr = "";
 				for(var i=0;i<arr.length;i++){
 					if(arr[i]){
