@@ -231,14 +231,21 @@
 			pageList: initPageNum,
 			columns:[[
 				{ field: 'id',width:35,align:"center",checkbox:true},
-				{ title: '操作',field: 'op',align:"center",width:90,formatter:function(value,rec) {
+				{ title: '操作',field: 'op',align:"center",width:90,formatter:function(value, rec,index) {
+                        /**
+                         * create by: qiankunpingtai
+                         * create time: 2019/5/7 10:48
+                         * website：https://qiankunpingtai.cn
+                         * description:
+                         *	修改效率低下的js
+                         */
 						var str = '';
-						var rowInfo = rec.id + 'AaBb' + rec.billno+ 'AaBb' + rec.billtime+ 'AaBb' + rec.remark
-							+ 'AaBb' + rec.accountid+ 'AaBb' + rec.accountname + 'AaBb' + rec.organid + 'AaBb' + rec.organname
-							+ 'AaBb' + rec.handspersonid + 'AaBb' + rec.handspersonname + 'AaBb' + rec.changeamount + 'AaBb' + rec.totalprice;
+						// var rowInfo = rec.id + 'AaBb' + rec.billno+ 'AaBb' + rec.billtime+ 'AaBb' + rec.remark
+						// 	+ 'AaBb' + rec.accountid+ 'AaBb' + rec.accountname + 'AaBb' + rec.organid + 'AaBb' + rec.organname
+						// 	+ 'AaBb' + rec.handspersonid + 'AaBb' + rec.handspersonname + 'AaBb' + rec.changeamount + 'AaBb' + rec.totalprice;
 						var orgId =  rec.organid ?  rec.organid : 0;
-						str += '<img title="查看" src="/js/easyui-1.3.5/themes/icons/list.png" style="cursor: pointer;" onclick="showAccountHead(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
-						str += '<img title="编辑" src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editAccountHead(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
+						str += '<img title="查看" src="/js/easyui-1.3.5/themes/icons/list.png" style="cursor: pointer;" onclick="showAccountHead(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
+						str += '<img title="编辑" src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editAccountHead(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
 						str += '<img title="删除" src="/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteAccountHead('+ rec.id +',' + orgId +',' + rec.totalprice + ');"/>';
 						return str;
 					}
@@ -695,43 +702,47 @@
 	}
 	
 	//编辑信息
-    function editAccountHead(accountHeadTotalInfo){
-    	var accountHeadInfo = accountHeadTotalInfo.split("AaBb");
-        $("#BillNo").val(accountHeadInfo[1]);
-        $("#BillTime").val(accountHeadInfo[2]);
-        $("#Remark").val(accountHeadInfo[3]);
-        $("#AccountId").val(accountHeadInfo[4]);
-        $('#OrganId').combobox('setValue', accountHeadInfo[6]);
-        $("#HandsPersonId").val(accountHeadInfo[8]);
-        $("#ChangeAmount").val(accountHeadInfo[10]);
-        var TotalPrice = accountHeadInfo[11];
-		preTotalPrice = accountHeadInfo[11]; //记录前一次合计金额，用于收预付款
+    function editAccountHead(index){
+    	// var accountHeadInfo = accountHeadTotalInfo.split("AaBb");
+        //获取当前行
+        var rowsdata = $("#tableData").datagrid("getRows")[index];
+        $("#BillNo").val(rowsdata.billno);
+        $("#BillTime").val(rowsdata.billtime);
+        $("#Remark").val(rowsdata.remark);
+        $("#AccountId").val(rowsdata.accountid);
+        $('#OrganId').combobox('setValue', rowsdata.organid);
+        $("#HandsPersonId").val(rowsdata.handspersonid);
+        $("#ChangeAmount").val(rowsdata.changeamount);
+        var TotalPrice = rowsdata.totalprice;
+		preTotalPrice = rowsdata.totalprice; //记录前一次合计金额，用于收预付款
         var editTitle = listTitle.replace("列表","信息");
         $('#accountHeadDlg').dialog('open').dialog('setTitle','<img src="' + '/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑' + editTitle);
         $(".window-mask").css({ width: webW ,height: webH});
-        accountHeadID = accountHeadInfo[0];
+        accountHeadID = rowsdata.id;
         
         initTableData_account("edit",TotalPrice); //明细列表
         reject(); //撤销下、刷新列表                
-        url = '/accountHead/update?id=' + accountHeadInfo[0];
+        url = '/accountHead/update?id=' + rowsdata.id;
     }
     
     //查看信息
-    function showAccountHead(accountHeadTotalInfo){
-    	var accountHeadInfo = accountHeadTotalInfo.split("AaBb");
-        $("#BillNoShow").text(accountHeadInfo[1]);
-        $("#BillTimeShow").text(accountHeadInfo[2]);	     
-        $("#RemarkShow").text(accountHeadInfo[3]);       
-        $("#AccountIdShow").text(accountHeadInfo[5]);
-        $('#OrganIdShow').text(accountHeadInfo[7]);
-        $("#HandsPersonIdShow").text(accountHeadInfo[9]);
-        $("#ChangeAmountShow").text(accountHeadInfo[10].replace("undefined","0"));
-        var TotalPrice = accountHeadInfo[11];
+    function showAccountHead(index){
+    	// var accountHeadInfo = accountHeadTotalInfo.split("AaBb");
+        //获取当前行
+        var rowsdata = $("#tableData").datagrid("getRows")[index];
+        $("#BillNoShow").text(rowsdata.billno);
+        $("#BillTimeShow").text(rowsdata.billtime);
+        $("#RemarkShow").text(rowsdata.remark);
+        $("#AccountIdShow").text(rowsdata.accountname);
+        $('#OrganIdShow').text(rowsdata.organname);
+        $("#HandsPersonIdShow").text(rowsdata.handspersonname);
+        $("#ChangeAmountShow").text(rowsdata.rowsdata==undefined?'0':rowsdata.rowsdata);
+        var TotalPrice = rowsdata.totalprice;
         var showTitle = listTitle.replace("列表","信息");
         $('#accountHeadDlgShow').dialog('open').dialog('setTitle','<img src="/js/easyui-1.3.5/themes/icons/list.png"/>&nbsp;查看' + showTitle);
         $(".window-mask").css({ width: webW ,height: webH});
         
-        accountHeadID = accountHeadInfo[0];
+        accountHeadID = rowsdata.id;
         initTableData_account_show(TotalPrice); //明细列表-查看状态
     }
 
