@@ -5,10 +5,7 @@ var moneyType = false; //显示当前列
 var payTypeTitle = "无标题";
 var inOrOut = "";
 var amountNum = "SYF";
-var supUrl = "/supplier/findBySelect_sup"; //供应商接口
-var cusUrl = "/supplier/findBySelect_cus"; //客户接口
-var retailUrl = "/supplier/findBySelect_retail"; //散户接口
-var organUrl = retailUrl;
+var organUrl = "/supplier/findBySelect_retail"; //散户接口
 var listTitle='收预付款列表';
 $(function(){
     initSystemData_person(); //经手人数据

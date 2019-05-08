@@ -1,6 +1,4 @@
 //初始化界面
-var supUrl = "/supplier/findBySelect_sup"; //供应商接口
-var retailUrl = "/supplier/findBySelect_retail"; //散户接口
 var listTitle="转账单列表";
 var listType = "转账";
 var itemType = true; //隐藏当前列
