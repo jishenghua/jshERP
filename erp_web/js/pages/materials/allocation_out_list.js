@@ -18,12 +18,6 @@ var depotHeadID = 0;
 var preTotalPrice = 0; //前一次加载的金额
 var orgDepotHead = "";
 var editIndex = undefined;
-var listType = ""; //入库 出库
-var listSubType = ""; //采购 销售等
-var payTypeTitle = "";//付款 收款
-var organUrl = ""; //组织数据接口地址
-var amountNum = ""; //单据编号开头字符
-var depotString = ""; //店铺id列表
 /**默认编号有意义吗，不如空着吧*/
 var orgDefaultId=''; //单位默认编号
 var orgDefaultList; //存储查询出来的会员列表
@@ -40,12 +34,12 @@ var defaultAccountId = 0; //默认账户id
 $("#searchPanel").panel({width:webW-2});
 $("#tablePanel").panel({width:webW-2});
 var listTitle = "调拨出库列表"; //单据标题
-depotString = "|";
-listType = "出库";
-listSubType = "调拨";
-payTypeTitle = "隐藏";
-organUrl = "/supplier/findBySelect_sup"; //供应商接口
-amountNum = "DBCK";
+var depotString = "|"; //店铺id列表
+var listType = "出库"; //入库 出库
+var listSubType = "调拨"; //采购 销售等
+var payTypeTitle = "隐藏"; //付款 收款
+var organUrl = "/supplier/findBySelect_sup"; //组织数据接口地址
+var amountNum = "DBCK"; //单据编号开头字符
 $(function(){
     //初始化系统基础信息
     initSystemData_UB();
