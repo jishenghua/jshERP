@@ -1,27 +1,13 @@
 //初始化界面
+var listTitle ="支出单列表";
+var listType = "支出";
+var itemType = false; //显示当前列
+var moneyType = true; //隐藏当前列
+var payTypeTitle = "支出项目";
+var inOrOut = "out";
+var organUrl = "/supplier/findBySelect_sup"; //供应商接口
+var amountNum = "ZC";
 $(function(){
-    var accountList = null;
-    var accountID = null;
-    var supplierList = null;
-    var supplierID = null;
-    var personList = null;
-    var personID = null;
-    var ProjectSearch = null;
-    var accountHeadMaxId = null; //获取最大的Id
-    var accepId = null; //保存的主表id
-    var url;
-    var accountHeadID = 0;
-    var preTotalPrice = 0; //前一次加载的金额
-    var orgAccountHead = ""; //保存编辑前的名称
-    var editIndex = undefined;
-    var listTitle = ""; //单据标题
-    var payTypeTitle = "";//收入 支出
-    var organUrl = ""; //组织数据接口地址
-    var amountNum = ""; //单据编号开头字符
-    var itemType = true; //隐藏当前列
-    var moneyType = true; //隐藏当前列
-    var inOrOut = ""; //链接类型为收入或者支出
-    getType();
     initSystemData_person(); //经手人数据
     initSelectInfo_person(); //经手人信息
     initSystemData_account(); //账户数据
@@ -33,67 +19,7 @@ $(function(){
     bindEvent();//绑定操作事件
     $("#searchBtn").click();
 });
-//根据单据名称获取类型
-function getType(){
-    listTitle = $("#tablePanel").prev().text();
-    var supUrl = "/supplier/findBySelect_sup"; //供应商接口
-    var cusUrl = "/supplier/findBySelect_cus"; //客户接口
-    var retailUrl = "/supplier/findBySelect_retail"; //散户接口
-    if(listTitle === "收入单列表"){
-        listType = "收入";
-        itemType = false; //显示当前列
-        moneyType = true; //隐藏当前列
-        payTypeTitle = "收入项目";
-        inOrOut = "in";
-        organUrl = cusUrl;
-        amountNum = "SR";
-    }
-    else if(listTitle === "支出单列表"){
-        listType = "支出";
-        itemType = false; //显示当前列
-        moneyType = true; //隐藏当前列
-        payTypeTitle = "支出项目";
-        inOrOut = "out";
-        organUrl = supUrl;
-        amountNum = "ZC";
-    }
-    else if(listTitle === "收款单列表"){
-        listType = "收款";
-        itemType = true; //隐藏当前列
-        moneyType = false; //显示当前列
-        payTypeTitle = "无标题";
-        inOrOut = "";
-        organUrl = cusUrl;
-        amountNum = "SK";
-    }
-    else if(listTitle === "付款单列表"){
-        listType = "付款";
-        itemType = true; //隐藏当前列
-        moneyType = false; //显示当前列
-        payTypeTitle = "无标题";
-        inOrOut = "";
-        organUrl = supUrl;
-        amountNum = "FK";
-    }
-    else if(listTitle === "转账单列表"){
-        listType = "转账";
-        itemType = true; //隐藏当前列
-        moneyType = false; //显示当前列
-        payTypeTitle = "无标题";
-        inOrOut = "";
-        organUrl = supUrl;
-        amountNum = "ZZ";
-    }
-    else if(listTitle === "收预付款列表"){
-        listType = "收预付款";
-        itemType = true; //隐藏当前列
-        moneyType = false; //显示当前列
-        payTypeTitle = "无标题";
-        inOrOut = "";
-        organUrl = retailUrl;
-        amountNum = "SYF";
-    }
-}
+
 //获取账户信息
 function initSystemData_account(){
     $.ajax({
@@ -193,23 +119,8 @@ function initForm(){
 
 //初始化表格数据
 function initTableData(){
-    var organNameTitle = "";
+    var organNameTitle = "往来单位";
     var organNameHidden = false;
-    if(listType === "收入" || listType === "支出") {
-        organNameTitle = "往来单位";
-    }
-    else if(listType === "收款") {
-        organNameTitle = "付款单位";
-    }
-    else if(listType === "付款") {
-        organNameTitle = "收款单位";
-    }
-    else if(listType === "收预付款") {
-        organNameTitle = "付款会员";
-    }
-    if(listType === "转账") {
-        organNameHidden = true;
-    }
     $('#tableData').datagrid({
         //width:700,
         height:heightInfo,
@@ -524,27 +435,6 @@ function deleteAccountHead(accountHeadID, thisOrganId, totalPrice){
                 }
             });
 
-            //更新会员的预收款信息
-            if(listType === "收预付款"){
-                $.ajax({
-                    type:"post",
-                    url: "/supplier/updateAdvanceIn",
-                    dataType: "json",
-                    data:{
-                        supplierId: thisOrganId, //会员id
-                        advanceIn: 0-totalPrice  //删除时同时删除用户的预付款信息
-                    },
-                    success: function(res){
-                        if(res && res.code === 200) {
-                            //保存会员预收款成功
-                        }
-                    },
-                    error: function(){
-                        $.messager.alert('提示','保存信息异常，请稍后再试！','error');
-                        return;
-                    }
-                });
-            }
         }
     });
 }
@@ -608,29 +498,6 @@ function batDeleteAccountHead(){
                         return;
                     }
                 });
-                //批量更新会员的预收款信息
-                for(var i = 0;i < row.length; i ++) {
-                    if(listType === "收预付款"){
-                        $.ajax({
-                            type:"post",
-                            url: "/supplier/updateAdvanceIn",
-                            dataType: "json",
-                            data:{
-                                supplierId: row[i].organid, //会员id
-                                advanceIn: 0 - row[i].totalprice  //删除时同时删除用户的预付款信息
-                            },
-                            success: function(res){
-                                if(res && res.code === 200) {
-                                    //保存会员预收款成功
-                                }
-                            },
-                            error: function(){
-                                $.messager.alert('提示','保存信息异常，请稍后再试！','error');
-                                return;
-                            }
-                        });
-                    }
-                }
             }
         });
     }
@@ -688,17 +555,6 @@ function addAccountHead(){
     reject(); //撤销下、刷新材料列表
     url = '/accountHead/add';
 
-    //收预付款单据支持刷卡功能
-    if(listType == "收预付款") {
-        //当会员卡号长度超过10位后，自动点击下拉框，用于兼容刷卡器
-        $("#OrganId").next().find("input").off("keyup").on("keyup",function(){
-            if($(this).val().length === 10){
-                setTimeout(function(){
-                    $(".combo-panel .combobox-item-selected").click();
-                },500);
-            }
-        });
-    }
 }
 
 //编辑信息
@@ -780,116 +636,26 @@ function bindEvent(){
         if(!$('#accountHeadFM').form('validate')){
             return;
         } else {
-            if (listTitle === "收入单列表") {
-                if (!$('#AccountId').val()) {
-                    $.messager.alert('提示', '请选择收款账户！', 'warning');
-                    return;
-                }
-                if (!$('#OrganId').combobox('getValue')) {
-                    $.messager.alert('提示', '请选择往来单位！', 'warning');
-                    return;
-                }
-                if (!$('#HandsPersonId').val()) {
-                    $.messager.alert('提示', '请选择经手人！', 'warning');
-                    return;
-                }
+            if (!$('#AccountId').val()) {
+                $.messager.alert('提示', '请选择付款账户！', 'warning');
+                return;
             }
-            else if (listTitle === "支出单列表") {
-                if (!$('#AccountId').val()) {
-                    $.messager.alert('提示', '请选择付款账户！', 'warning');
-                    return;
-                }
-                if (!$('#OrganId').combobox('getValue')) {
-                    $.messager.alert('提示', '请选择往来单位！', 'warning');
-                    return;
-                }
-                if (!$('#HandsPersonId').val()) {
-                    $.messager.alert('提示', '请选择经手人！', 'warning');
-                    return;
-                }
+            if (!$('#OrganId').combobox('getValue')) {
+                $.messager.alert('提示', '请选择往来单位！', 'warning');
+                return;
             }
-            else if (listTitle === "收款单列表") {
-                if (!$('#OrganId').combobox('getValue')) {
-                    $.messager.alert('提示', '请选择付款单位！', 'warning');
-                    return;
-                }
-                if (!$('#HandsPersonId').val()) {
-                    $.messager.alert('提示', '请选择经手人！', 'warning');
-                    return;
-                }
-            }
-            else if (listTitle === "付款单列表") {
-                if (!$('#OrganId').combobox('getValue')) {
-                    $.messager.alert('提示', '请选择收款单位！', 'warning');
-                    return;
-                }
-                if (!$('#HandsPersonId').val()) {
-                    $.messager.alert('提示', '请选择经手人！', 'warning');
-                    return;
-                }
-            }
-            else if (listTitle === "转账单列表") {
-                if (!$('#HandsPersonId').val()) {
-                    $.messager.alert('提示', '请选择经手人！', 'warning');
-                    return;
-                }
-                if (!$('#AccountId').val()) {
-                    $.messager.alert('提示', '请选择付款账户！', 'warning');
-                    return;
-                }
-            }
-            else if (listTitle === "收预付款列表") {
-                if (!$('#HandsPersonId').val()) {
-                    $.messager.alert('提示', '请选择经手人！', 'warning');
-                    return;
-                }
-                if (!$('#OrganId').combobox('getValue')) {
-                    $.messager.alert('提示', '请选择付款会员！', 'warning');
-                    return;
-                }
+            if (!$('#HandsPersonId').val()) {
+                $.messager.alert('提示', '请选择经手人！', 'warning');
+                return;
             }
             var OrganId = null;
             var ChangeAmount = $.trim($("#ChangeAmount").val());
             var TotalPrice = $("#accountHeadFM .datagrid-footer [field='EachAmount'] div").text();
-            if (listType !== "转账") {
-                OrganId = $('#OrganId').combobox('getValue');
-            }
-            if (listType === "支出" || listType === "转账") {
+            OrganId = $('#OrganId').combobox('getValue');
                 //支出为负数
-                ChangeAmount = 0 - ChangeAmount;
-            }
-            if (listType === "支出" || listType === "付款" || listType === "转账") {
+            ChangeAmount = 0 - ChangeAmount;
                 //支出和付款为负数
-                TotalPrice = 0 - TotalPrice;
-            }
-            //更新会员的预收款信息
-            if (listType === "收预付款") {
-                var advanceIn = 0; //预付款金额
-                if (accountHeadID) {
-                    advanceIn = TotalPrice - preTotalPrice;  //修改时，预付款=合计金额-加载金额
-                }
-                else {
-                    advanceIn = TotalPrice; //新增时，预付款=合计金额
-                }
-                $.ajax({
-                    type: "post",
-                    url: "/supplier/updateAdvanceIn",
-                    dataType: "json",
-                    data: {
-                        supplierId: OrganId,
-                        advanceIn: advanceIn
-                    },
-                    success: function (res) {
-                        if (res && res.code === 200) {
-                            //保存会员预收款成功
-                        }
-                    },
-                    error: function () {
-                        $.messager.alert('提示', '保存信息异常，请稍后再试！', 'error');
-                        return;
-                    }
-                });
-            }
+            TotalPrice = 0 - TotalPrice;
 
             //保存单位信息
             $.ajax({
