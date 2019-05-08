@@ -454,11 +454,6 @@ function initTableData(){
                     } else if(value === "1") {
                         return "<span style='color:green;'>已审核</span>";
                     } else if(value === "2") {
-                        if(listTitle == "采购订单列表") {
-                            return "<span style='color:blue;'>已转采购</span>";
-                        } else if(listTitle == "销售订单列表") {
-                            return "<span style='color:blue;'>已转销售</span>";
-                        }
                     }
                 }
             }
@@ -570,11 +565,6 @@ function statisticsFun(body,UnitPrice,OperNumber,footer,taxRate){
     }
     var changeAmountNum = $("#ChangeAmount").val()-0; //本次付款或者收款
     $("#Debt").val((discountLastMoney-changeAmountNum).toFixed(2)); //本次欠款
-
-    if(listSubType == "零售" || listSubType == "零售退货") {
-        $("#ChangeAmount, #getAmount").val((TotalPrice).toFixed(2));
-        $("#backAmount").val(0);
-    }
 }
 //初始化表格数据-商品列表-编辑状态
 function initTableData_material(type,TotalPrice){
@@ -1812,14 +1802,7 @@ function bindEvent(){
             if(accountArr.length && accountMoneyArr.length) {
                 $("#AccountId").attr("data-accountArr",JSON.stringify(accountArr)).attr("data-accountMoneyArr",JSON.stringify(accountMoneyArr));  //json数据存储
             }
-            if(listSubType==="零售" || listSubType==="零售退货") {
-                $("#getAmount").val(accountMoneyTotal); //给付款或者收款金额赋值
-                var backAmount = $("#getAmount").val() - $("#ChangeAmount").val();
-                $("#backAmount").val((backAmount - 0).toFixed(2)); //计算找零金额
-            }
-            else {
-                $("#ChangeAmount").val(accountMoneyTotal); //给付款或者收款金额赋值
-            }
+            $("#ChangeAmount").val(accountMoneyTotal); //给付款或者收款金额赋值
             $("#Debt").val((discountLastMoneyNum-accountMoneyTotal).toFixed(2)); //本次欠款
             $("#depotHeadAccountDlg").dialog('close');
         });
