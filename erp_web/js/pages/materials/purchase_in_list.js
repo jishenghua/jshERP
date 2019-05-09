@@ -2201,51 +2201,7 @@ function autoReckon() {
                 return;
             }
             else {
-                $.ajax({
-                    url: "/material/findById",
-                    type: "get",
-                    dataType: "json",
-                    data: {
-                        id: mValue - 0
-                    },
-                    success: function(res){
-                        if(res && res.rows && res.rows[0]) {
-                            var retailPrice = res.rows[0].RetailPrice;
-                            var presetPriceOne = res.rows[0].PresetPriceOne;
-                            var presetPriceTwo = res.rows[0].PresetPriceTwo;
-                            //定义模版
-                            var temp = "<div class='price-list'>";
-                            temp +="<ul>";
-                            temp +="<li>批发价：" + presetPriceTwo + "</li>";
-                            temp +="<li>零售价：" + retailPrice + "</li>";
-                            temp +="</ul>";
-                            temp +="</div>";
-                            if($('.price-list').length){
-                                $('.price-list').remove(); //如果存在价格列表先移除
-                            }
-                            else {
-                                if(presetPriceTwo != undefined){ //多单位的商品
-                                    $(self).after(temp); //加载列表信息
-                                }
-                            }
-                            $('.price-list ul li').off("click").on("click",function(){
-                                var price = $(this).text();
-                                price = price.substring(price.indexOf("：") + 1);
-                                $(self).val(price);
-                                $(self).keyup(); //模拟键盘操作
-                                $('.price-list').remove(); //移除价格列表
-                            });
-                            //点击空白处移除价格列表
-                            $(".datagrid-body").off("click").on("click",function(){
-                                $('.price-list').remove(); //移除价格列表
-                            });
-                        }
-                    },
-                    error: function(){
-                        $.messager.alert('错误提示','查询商品信息异常，请稍后再试！','error');
-                        return;
-                    }
-                });
+                return;
             }
         });
         //修改含税单价，自动计算单价、金额、税额、价税合计和合计
