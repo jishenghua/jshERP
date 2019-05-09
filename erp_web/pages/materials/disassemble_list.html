@@ -17,7 +17,7 @@
     <script src="/js/common/common.js"></script>
     <script src="/js/pages/materials/disassemble_list.js"></script>
     <script>
-        var kid = ${sessionScope.user.id};
+        var kid = sessionStorage.getItem("userId");
         var path = "<%=path%>";
         var clientIp = "<%=clientIp%>";
     </script>
