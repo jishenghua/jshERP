@@ -479,13 +479,15 @@ function findStockNumById(depotId, mId, monthTime, body, input, ratio, type){
                 }
                 else{
                     var unitName = rec.data[0].unitName;
+                    var basicUnit="";
+                    var otherUnit="";
                     if(unitName) {
                         thisRatio = unitName.substring(unitName.indexOf(":")+1).replace(")","");
                         unitName = unitName.substring(0, unitName.indexOf("("));
+                        var unitArr = unitName.split(",");
+                        basicUnit = unitArr[0]; //基础单位
+                        otherUnit = unitArr[1]; //副单位
                     }
-                    var unitArr = unitName.split(",");
-                    var basicUnit = unitArr[0]; //基础单位
-                    var otherUnit = unitArr[1]; //副单位
                     var unitSetInput =""; //单位
                     unitSetInput = rec.data[0].firstinunit;
                     if(basicUnit==unitSetInput){ //基础单位等于选择的单位
@@ -705,13 +707,15 @@ function initTableData_material(type,TotalPrice){
                                             }
                                             else {
                                                 var unitName = res.data[0].unitName;
+                                                var basicUnit="";
+                                                var otherUnit="";
                                                 if(unitName) {
                                                     ratio = unitName.substring(unitName.indexOf(":")+1).replace(")",""); //给比例赋值
                                                     unitName = unitName.substring(0, unitName.indexOf("("));
+                                                    var unitArr = unitName.split(",");
+                                                    basicUnit = unitArr[0]; //基础单位
+                                                    otherUnit = unitArr[1]; //副单位
                                                 }
-                                                var unitArr = unitName.split(",");
-                                                var basicUnit = unitArr[0]; //基础单位
-                                                var otherUnit = unitArr[1]; //副单位
                                                 var unitSetInput =""; //单位
                                                 body.find("[field='Unit']").find(input).prop("readonly","readonly"); //设置计量单位为只读
                                                 var loadRatio = 1; //在单位输入框上面加载比例字段
