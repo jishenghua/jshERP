@@ -14,11 +14,13 @@
         FROM jsh_user
         where 1=1
         and ifnull(status,'0') not in('1','2')
-        <if test="userName != null">
-            and username like '%${userName}%'
+        <if test="userName != null and userName != ''">
+            <bind name="userName" value="'%' + _parameter.userName + '%'"/>
+            and username like #{userName}
         </if>
-        <if test="loginName != null">
-            and loginame like '%${loginName}%'
+        <if test="loginName != null and loginName != ''">
+            <bind name="loginName" value="'%' + _parameter.loginName + '%'"/>
+            and loginame like #{loginName}
         </if>
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
@@ -30,11 +32,13 @@
         FROM jsh_user
         WHERE 1=1
         and ifnull(status,'0') not in('1','2')
-        <if test="userName != null">
-            and username like '%${userName}%'
+        <if test="userName != null and userName != ''">
+            <bind name="userName" value="'%' + _parameter.userName + '%'"/>
+            and username like #{userName}
         </if>
-        <if test="loginName != null">
-            and loginame like '%${loginName}%'
+        <if test="loginName != null and loginName != ''">
+            <bind name="loginName" value="'%' + _parameter.loginName + '%'"/>
+            and loginame like #{loginName}
         </if>
     </select>
     <select id="getUserList" parameterType="java.util.Map" resultMap="ResultMapEx">
@@ -206,7 +210,7 @@
         </choose>
         order by user.id desc
     </select>
-    <select id="addRegisterUserNotInclueUser" resultType="String">
+    <select id="addRegisterUserNotInclueUser" resultType="java.lang.String">
       select registerUserTemplate(#{userId},#{tenantId},#{roleId}) from dual;
     </select>
 

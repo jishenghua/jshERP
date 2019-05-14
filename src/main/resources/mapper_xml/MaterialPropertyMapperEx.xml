@@ -5,8 +5,9 @@
         select *
         FROM jsh_materialproperty
         where 1=1
-        <if test="name != null">
-            and nativeName like '%${name}%'
+        <if test="name != null and name != ''">
+            <bind name="nativeName" value="'%' + _parameter.name + '%'"/>
+            and nativeName like #{nativeName}
         </if>
         and ifnull(delete_Flag,'0') !='1'
         <if test="offset != null and rows != null">
@@ -18,8 +19,9 @@
         COUNT(id)
         FROM jsh_materialproperty
         WHERE 1=1
-        <if test="name != null">
-            and nativeName like '%${name}%'
+        <if test="name != null and name != ''">
+            <bind name="nativeName" value="'%' + _parameter.name + '%'"/>
+            and nativeName like #{nativeName}
         </if>
         and ifnull(delete_Flag,'0') !='1'
     </select>

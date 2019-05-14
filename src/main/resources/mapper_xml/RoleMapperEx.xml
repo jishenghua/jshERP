@@ -6,8 +6,9 @@
         FROM jsh_role
         WHERE 1=1
         and ifnull(delete_Flag,'0') !='1'
-        <if test="name != null">
-            and name like '%${name}%'
+        <if test="name != null and name != ''">
+            <bind name="name" value="'%' + _parameter.name + '%'"/>
+            and name like #{name}
         </if>
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
@@ -19,8 +20,9 @@
         FROM jsh_role
         WHERE 1=1
         and ifnull(delete_Flag,'0') !='1'
-        <if test="name != null">
-            and name like '%${name}%'
+        <if test="name != null and name != ''">
+            <bind name="name" value="'%' + _parameter.name + '%'"/>
+            and name like #{name}
         </if>
     </select>
     <update id="batchDeleteRoleByIds">
