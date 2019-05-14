@@ -143,8 +143,6 @@
                          *  修改效率低下的js实现
                          */
                         var str = '';
-                        // var rowInfo = rec.id + 'AaBb' + rec.name + 'AaBb' + rec.serialno + 'AaBb' + rec.initialamount + 'AaBb' + rec.currentamount + 'AaBb' + rec.remark;
-
                         str += '<img src="/js/easyui-1.3.5/themes/icons/list.png" style="cursor: pointer;" onclick="showAccountInOutList(\'' + index + '\');"/>&nbsp;<a onclick="showAccountInOutList(\'' + index + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">流水</a>&nbsp;&nbsp;';
                         str += '<img src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editAccount(\'' + index + '\');"/>&nbsp;<a onclick="editAccount(\'' + index + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
                         str += '<img src="/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteAccount(\'' + rec.id  + '\');"/>&nbsp;<a onclick="deleteAccount(\'' + rec.id  + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">删除</a>&nbsp;&nbsp;';
@@ -451,7 +449,6 @@
     //编辑结算账户
     function editAccount(index) {
         var rowsdata = $("#tableData").datagrid("getRows")[index];
-        // var accountInfo = accountTotalInfo.split("AaBb");
         var row = {
             name: rowsdata.name,
             serialNo: rowsdata.serialNo,
@@ -463,7 +460,6 @@
         $('#accountDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑结算账户');
         $(".window-mask").css({width: webW, height: webH});
         $('#accountFM').form('load', row);
-        accountID = accountInfo[0];
         //焦点在名称输入框==定焦在输入文字后面
         $("#account").val("").focus().val(rowsdata.name);
         url = '/account/update?id=' + rowsdata.id;
