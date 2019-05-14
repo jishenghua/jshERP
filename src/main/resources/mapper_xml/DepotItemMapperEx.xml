@@ -58,14 +58,16 @@
         select *
         FROM jsh_depotitem
         where 1=1
-        <if test="name != null">
-            and name like '%${name}%'
+        <if test="name != null and name != ''">
+            <bind name="name" value="'%' + _parameter.name + '%'"/>
+            and name like #{name}
         </if>
         <if test="type != null">
-            and type=${type}
+            and type=#{type}
         </if>
-        <if test="remark != null">
-            and remark like '%${remark}%'
+        <if test="remark != null and remark != ''">
+            <bind name="remark" value="'%' + _parameter.remark + '%'"/>
+            and remark like #{remark}
         </if>
         and ifnull(delete_Flag,'0') !='1'
         <if test="offset != null and rows != null">
@@ -77,23 +79,34 @@
         COUNT(id)
         FROM jsh_depotitem
         WHERE 1=1
-        <if test="name != null">
-            and name like '%${name}%'
+        <if test="name != null and name != ''">
+            <bind name="name" value="'%' + _parameter.name + '%'"/>
+            and name like #{name}
         </if>
         <if test="type != null">
-            and type=${type}
+            and type=#{type}
         </if>
-        <if test="remark != null">
-            and remark like '%${remark}%'
+        <if test="remark != null and remark != ''">
+            <bind name="remark" value="'%' + _parameter.remark + '%'"/>
+            and remark like #{remark}
         </if>
         and ifnull(delete_Flag,'0') !='1'
     </select>
     <select id="getHeaderIdByMaterial" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="HeaderIdResultMap">
         select dt.HeaderId from jsh_depotitem dt
         INNER JOIN jsh_material m on dt.MaterialId = m.Id and ifnull(m.delete_Flag,'0') !='1'
-        where (m.`Name` like '%${materialParam}%' or m.Model like '%${materialParam}%')
-        <if test="depotIds != null">
-            and dt.DepotId in (${depotIds})
+        where 1=1
+        <if test="materialParam != null and materialParam != ''">
+            <bind name="materialParam" value="'%' + _parameter.materialParam + '%'"/>
+            and ( m.Name like #{materialParam}
+            or m.Model like #{materialParam} )
+        </if>
+
+        <if test="depotIds != null and depotIds != ''">
+            and dt.DepotId in
+            <foreach item="depotId" index="index" collection="depotIds.split(',')" open="(" separator="," close=")">
+                #{depotId}
+            </foreach>
         </if>
         and ifnull(dt.delete_Flag,'0') !='1'
     </select>
@@ -106,7 +119,7 @@
         INNER JOIN jsh_depotitem di on dh.id=di.HeaderId and ifnull(di.delete_Flag,'0') !='1'
         where dh.type!='其它'
         and dh.SubType!='调拨'
-        and di.MaterialId =${mId}
+        and di.MaterialId =#{mId}
         and ifnull(dh.delete_Flag,'0') !='1'
         ORDER BY oTime desc
         <if test="offset != null and rows != null">
@@ -119,7 +132,7 @@
         INNER JOIN jsh_depotitem di on dh.id=di.HeaderId and ifnull(di.delete_Flag,'0') !='1'
         where dh.type!='其它'
         and dh.SubType!='调拨'
-        and di.MaterialId =${mId}
+        and di.MaterialId =#{mId}
         and ifnull(dh.delete_Flag,'0') !='1'
     </select>
 
@@ -129,7 +142,7 @@
         inner join jsh_material m on di.MaterialId=m.Id  and ifnull(m.delete_Flag,'0') !='1'
         where 1=1
         <if test="mId != null">
-            and di.MaterialId=${mId}
+            and di.MaterialId=#{mId}
         </if>
         and ifnull(di.delete_Flag,'0') !='1'
         <if test="offset != null and rows != null">
@@ -139,7 +152,7 @@
     <select id="findStockNumByMaterialIdCounts" resultType="java.lang.Long">
         select count(*) from jsh_depotitem where 1=1
         <if test="mId != null">
-            and MaterialId=${mId}
+            and MaterialId=#{mId}
         </if>
         and ifnull(delete_Flag,'0') !='1'
     </select>
@@ -148,7 +161,7 @@
         select ifnull(sum(BasicNumber),0) as BasicNumber from jsh_depothead dh
           INNER JOIN jsh_depotitem di on dh.id=di.HeaderId  and ifnull(di.delete_Flag,'0') !='1'
           where dh.type='入库'
-          and di.MaterialId = ${mId}
+          and di.MaterialId = #{mId}
           and ifnull(dh.delete_Flag,'0') !='1'
     </select>
 
@@ -157,7 +170,7 @@
         INNER JOIN jsh_depotitem di on dh.id=di.HeaderId  and ifnull(di.delete_Flag,'0') !='1'
         where dh.type='出库'
         and dh.SubType!='调拨'
-        and di.MaterialId = ${mId}
+        and di.MaterialId = #{mId}
         and ifnull(dh.delete_Flag,'0') !='1'
     </select>
 
@@ -170,7 +183,7 @@
         left join jsh_unit u on m.UnitId = u.id and ifnull(u.delete_Flag,'0') !='1'
         left join jsh_depot dp1 on di.DepotId=dp1.id and ifnull(dp1.delete_Flag,'0') !='1'
         left join jsh_depot dp2 on di.AnotherDepotId=dp2.id and ifnull(dp2.delete_Flag,'0') !='1'
-        where di.HeaderId = ${headerId}
+        where di.HeaderId = #{headerId}
         and ifnull(di.delete_Flag,'0') !='1'
         order by di.id asc
     </select>
@@ -180,11 +193,17 @@
         from jsh_depotitem di
         inner join jsh_material m on di.MaterialId=m.id  and ifnull(m.delete_Flag,'0') !='1'
         where 1=1
-        <if test="headIds != null">
-            and di.HeaderId in (${headIds})
+        <if test="headIds != null and headIds != ''">
+            and di.HeaderId in
+            <foreach item="headId" index="index" collection="headIds.split(',')" open="(" separator="," close=")">
+                #{headId}
+            </foreach>
         </if>
-        <if test="materialIds != null">
-            and di.MaterialId in (${materialIds})
+        <if test="materialIds != null and materialIds != ''">
+            and di.MaterialId in
+            <foreach item="materialId" index="index" collection="materialIds.split(',')" open="(" separator="," close=")">
+                #{materialId}
+            </foreach>
         </if>
         and ifnull(di.delete_Flag,'0') !='1'
         group by m.id,m.Name, m.Model, m.Unit, m.Color
@@ -198,11 +217,17 @@
         from jsh_depotitem di
         inner join jsh_material m on di.MaterialId=m.id  and ifnull(m.delete_Flag,'0') !='1'
         where 1=1
-        <if test="headIds != null">
-            and di.HeaderId in (${headIds})
+        <if test="headIds != null and headIds != ''">
+            and di.HeaderId in
+            <foreach item="headId" index="index" collection="headIds.split(',')" open="(" separator="," close=")">
+                #{headId}
+            </foreach>
         </if>
-        <if test="materialIds != null">
-            and di.MaterialId in (${materialIds})
+        <if test="materialIds != null and materialIds != ''">
+            and di.MaterialId in
+            <foreach item="materialId" index="index" collection="materialIds.split(',')" open="(" separator="," close=")">
+                #{materialId}
+            </foreach>
         </if>
         and ifnull(di.delete_Flag,'0') !='1'
         group by m.id) cc
@@ -211,13 +236,16 @@
     <select id="findByTypeInIsPrev" resultType="java.math.BigDecimal">
         select sum(BasicNumber) as BasicNumber from jsh_depotitem di,jsh_depothead dh
         where di.HeaderId = dh.id and
-        ((dh.type='入库' and di.DepotId=${ProjectId})
+        ((dh.type='入库' and di.DepotId=#{ProjectId})
         or
-        (dh.SubType='调拨' and di.AnotherDepotId=${ProjectId})
+        (dh.SubType='调拨' and di.AnotherDepotId=#{ProjectId})
         or
-        (di.AnotherDepotId=${ProjectId}))
-        and di.MaterialId = ${MId}
-        and dh.OperTime &lt; '${MonthTime}-01 00:00:00'
+        (di.AnotherDepotId=#{ProjectId}))
+        and di.MaterialId = #{MId}
+        <if test="MonthTime != null and MonthTime != ''">
+            <bind name="MonthTime" value="_parameter.MonthTime + '-01 00:00:00'"/>
+            and dh.OperTime &lt; #{MonthTime}
+        </if>
         and ifnull(dh.delete_Flag,'0') !='1'
         and ifnull(di.delete_Flag,'0') !='1'
     </select>
@@ -225,13 +253,18 @@
     <select id="findByTypeInIsNotPrev" resultType="java.math.BigDecimal">
         select sum(BasicNumber) as BasicNumber from jsh_depotitem di,jsh_depothead dh
         where di.HeaderId = dh.id and
-        ((dh.type='入库' and di.DepotId=${ProjectId})
+        ((dh.type='入库' and di.DepotId=#{ProjectId})
         or
-        (dh.SubType='调拨' and di.AnotherDepotId=${ProjectId})
+        (dh.SubType='调拨' and di.AnotherDepotId=#{ProjectId})
         or
-        (di.AnotherDepotId=${ProjectId}))
-        and di.MaterialId = ${MId}  and dh.OperTime &gt;= '${MonthTime}-01 00:00:00'
-        and dh.OperTime &lt;= '${MonthTime}-31 23:59:59'
+        (di.AnotherDepotId=#{ProjectId}))
+        and di.MaterialId = #{MId}
+        <if test="MonthTime != null and MonthTime != ''">
+            <bind name="MonthTimeStart" value="_parameter.MonthTime + '-01 00:00:00'"/>
+            and dh.OperTime &gt;= #{MonthTimeStart}
+            <bind name="MonthTimeEnd" value="_parameter.MonthTime + '-31 23:59:59'"/>
+            and dh.OperTime &lt;= #{MonthTimeEnd}
+        </if>
         and ifnull(dh.delete_Flag,'0') !='1'
         and ifnull(di.delete_Flag,'0') !='1'
     </select>
@@ -240,9 +273,12 @@
         select sum(BasicNumber) as BasicNumber from jsh_depotitem di,jsh_depothead dh
         where di.HeaderId = dh.id
         and dh.type='出库'
-        and di.DepotId= ${ProjectId}
-        and di.MaterialId = ${MId}
-        and dh.OperTime &lt; '${MonthTime}-01 00:00:00'
+        and di.DepotId= #{ProjectId}
+        and di.MaterialId = #{MId}
+        <if test="MonthTime != null and MonthTime != ''">
+            <bind name="MonthTime" value="_parameter.MonthTime + '-01 00:00:00'"/>
+            and dh.OperTime &lt; #{MonthTime}
+        </if>
         and ifnull(dh.delete_Flag,'0') !='1'
         and ifnull(di.delete_Flag,'0') !='1'
     </select>
@@ -250,10 +286,14 @@
     <select id="findByTypeOutIsNotPrev" resultType="java.math.BigDecimal">
         select sum(BasicNumber) as BasicNumber from jsh_depotitem di,jsh_depothead dh
         where di.HeaderId = dh.id and dh.type='出库'
-        and di.DepotId= ${ProjectId}
-        and di.MaterialId = ${MId}
-        and dh.OperTime &gt;= '${MonthTime}-01 00:00:00'
-        and dh.OperTime &lt;= '${MonthTime}-31 23:59:59'
+        and di.DepotId= #{ProjectId}
+        and di.MaterialId = #{MId}
+        <if test="MonthTime != null and MonthTime != ''">
+            <bind name="MonthTimeStart" value="_parameter.MonthTime + '-01 00:00:00'"/>
+            and dh.OperTime &gt;= #{MonthTimeStart}
+            <bind name="MonthTimeEnd" value="_parameter.MonthTime + '-31 23:59:59'"/>
+            and dh.OperTime &lt;= #{MonthTimeEnd}
+        </if>
         and ifnull(dh.delete_Flag,'0') !='1'
         and ifnull(di.delete_Flag,'0') !='1'
     </select>
@@ -262,13 +302,16 @@
     <select id="findPriceByTypeInIsPrev" resultType="java.math.BigDecimal">
         select sum(AllPrice) as AllPrice from jsh_depotitem di,jsh_depothead dh
         where di.HeaderId = dh.id and
-        ((dh.type='入库' and di.DepotId=${ProjectId})
+        ((dh.type='入库' and di.DepotId=#{ProjectId})
         or
-        (dh.SubType='调拨' and di.AnotherDepotId=${ProjectId})
+        (dh.SubType='调拨' and di.AnotherDepotId=#{ProjectId})
         or
-        (di.AnotherDepotId=${ProjectId}))
-        and di.MaterialId = ${MId}
-        and dh.OperTime &lt; '${MonthTime}-01 00:00:00'
+        (di.AnotherDepotId=#{ProjectId}))
+        and di.MaterialId = #{MId}
+        <if test="MonthTime != null and MonthTime != ''">
+            <bind name="MonthTime" value="_parameter.MonthTime + '-01 00:00:00'"/>
+            and dh.OperTime &lt; #{MonthTime}
+        </if>
         and ifnull(dh.delete_Flag,'0') !='1'
         and ifnull(di.delete_Flag,'0') !='1'
     </select>
@@ -276,13 +319,18 @@
     <select id="findPriceByTypeInIsNotPrev" resultType="java.math.BigDecimal">
         select sum(AllPrice) as AllPrice from jsh_depotitem di,jsh_depothead dh
         where di.HeaderId = dh.id and
-        ((dh.type='入库' and di.DepotId=${ProjectId})
+        ((dh.type='入库' and di.DepotId=#{ProjectId})
         or
-        (dh.SubType='调拨' and di.AnotherDepotId=${ProjectId})
+        (dh.SubType='调拨' and di.AnotherDepotId=#{ProjectId})
         or
-        (di.AnotherDepotId=${ProjectId}))
-        and di.MaterialId = ${MId}  and dh.OperTime &gt;= '${MonthTime}-01 00:00:00'
-        and dh.OperTime &lt;= '${MonthTime}-31 23:59:59'
+        (di.AnotherDepotId=#{ProjectId}))
+        and di.MaterialId = #{MId}
+        <if test="MonthTime != null and MonthTime != ''">
+            <bind name="MonthTimeStart" value="_parameter.MonthTime + '-01 00:00:00'"/>
+            and dh.OperTime &gt;= #{MonthTimeStart}
+            <bind name="MonthTimeEnd" value="_parameter.MonthTime + '-31 23:59:59'"/>
+            and dh.OperTime &lt;= #{MonthTimeEnd}
+        </if>
         and ifnull(dh.delete_Flag,'0') !='1'
         and ifnull(di.delete_Flag,'0') !='1'
     </select>
@@ -290,9 +338,12 @@
     <select id="findPriceByTypeOutIsPrev" resultType="java.math.BigDecimal">
         select sum(AllPrice) as AllPrice from jsh_depotitem di,jsh_depothead dh
         where di.HeaderId = dh.id and dh.type='出库'
-        and di.DepotId= ${ProjectId}
-        and di.MaterialId = ${MId}
-        and dh.OperTime &lt; '${MonthTime}-01 00:00:00'
+        and di.DepotId= #{ProjectId}
+        and di.MaterialId = #{MId}
+        <if test="MonthTime != null and MonthTime != ''">
+            <bind name="MonthTime" value="_parameter.MonthTime + '-01 00:00:00'"/>
+            and dh.OperTime &lt; #{MonthTime}
+        </if>
         and ifnull(dh.delete_Flag,'0') !='1'
         and ifnull(di.delete_Flag,'0') !='1'
     </select>
@@ -300,10 +351,14 @@
     <select id="findPriceByTypeOutIsNotPrev" resultType="java.math.BigDecimal">
         select sum(AllPrice) as AllPrice from jsh_depotitem di,jsh_depothead dh
         where di.HeaderId = dh.id and dh.type='出库'
-        and di.DepotId= ${ProjectId}
-        and di.MaterialId = ${MId}
-        and dh.OperTime &gt;= '${MonthTime}-01 00:00:00'
-        and dh.OperTime &lt;= '${MonthTime}-31 23:59:59'
+        and di.DepotId= #{ProjectId}
+        and di.MaterialId = #{MId}
+        <if test="MonthTime != null and MonthTime != ''">
+            <bind name="MonthTimeStart" value="_parameter.MonthTime + '-01 00:00:00'"/>
+            and dh.OperTime &gt;= #{MonthTimeStart}
+            <bind name="MonthTimeEnd" value="_parameter.MonthTime + '-31 23:59:59'"/>
+            and dh.OperTime &lt;= #{MonthTimeEnd}
+        </if>
         and ifnull(dh.delete_Flag,'0') !='1'
         and ifnull(di.delete_Flag,'0') !='1'
     </select>
@@ -311,10 +366,13 @@
     <select id="findAssembleIsPrev" resultType="java.math.BigDecimal">
         select sum(BasicNumber) as BasicNumber from jsh_depotitem di,jsh_depothead dh
         where di.HeaderId = dh.id
-        and dh.SubType= '${subType}'
-        and di.MType= '${mType}'
-        and di.MaterialId = ${MId}
-        and dh.OperTime &lt; '${MonthTime}-01 00:00:00'
+        and dh.SubType= #{subType}
+        and di.MType= #{mType}
+        and di.MaterialId = #{MId}
+        <if test="MonthTime != null and MonthTime != ''">
+            <bind name="MonthTime" value="_parameter.MonthTime + '-01 00:00:00'"/>
+            and dh.OperTime &lt; #{MonthTime}
+        </if>
         and ifnull(dh.delete_Flag,'0') !='1'
         and ifnull(di.delete_Flag,'0') !='1'
     </select>
@@ -322,11 +380,15 @@
     <select id="findAssembleIsNotPrev" resultType="java.math.BigDecimal">
         select sum(BasicNumber) as BasicNumber from jsh_depotitem di,jsh_depothead dh
         where di.HeaderId = dh.id
-        and dh.SubType= '${subType}'
-        and di.MType= '${mType}'
-        and di.MaterialId = ${MId}
-        and dh.OperTime &gt;= '${MonthTime}-01 00:00:00'
-        and dh.OperTime &lt;= '${MonthTime}-31 23:59:59'
+        and dh.SubType= #{subType}
+        and di.MType= #{mType}
+        and di.MaterialId = #{MId}
+        <if test="MonthTime != null and MonthTime != ''">
+            <bind name="MonthTimeStart" value="_parameter.MonthTime + '-01 00:00:00'"/>
+            and dh.OperTime &gt;= #{MonthTimeStart}
+            <bind name="MonthTimeEnd" value="_parameter.MonthTime + '-31 23:59:59'"/>
+            and dh.OperTime &lt;= #{MonthTimeEnd}
+        </if>
         and ifnull(dh.delete_Flag,'0') !='1'
         and ifnull(di.delete_Flag,'0') !='1'
     </select>
@@ -334,10 +396,14 @@
     <select id="buyOrSaleNumber" resultType="java.math.BigDecimal">
         select sum(BasicNumber) as BasicNumber from jsh_depotitem di,jsh_depothead dh
         where di.HeaderId = dh.id
-        and dh.type='${type}' and dh.subType='${subType}'
-        and di.MaterialId =${MId}
-        and dh.OperTime &gt;= '${MonthTime}-01 00:00:00'
-        and dh.OperTime &lt;= '${MonthTime}-31 23:59:59'
+        and dh.type=#{type} and dh.subType=#{subType}
+        and di.MaterialId =#{MId}
+        <if test="MonthTime != null and MonthTime != ''">
+            <bind name="MonthTimeStart" value="_parameter.MonthTime + '-01 00:00:00'"/>
+            and dh.OperTime &gt;= #{MonthTimeStart}
+            <bind name="MonthTimeEnd" value="_parameter.MonthTime + '-31 23:59:59'"/>
+            and dh.OperTime &lt;= #{MonthTimeEnd}
+        </if>
         and ifnull(dh.delete_Flag,'0') !='1'
         and ifnull(di.delete_Flag,'0') !='1'
     </select>
@@ -345,10 +411,14 @@
     <select id="buyOrSalePrice" resultType="java.math.BigDecimal">
         select sum(AllPrice) as AllPrice from jsh_depotitem di,jsh_depothead dh
         where di.HeaderId = dh.id
-        and dh.type='${type}' and dh.subType='${subType}'
-        and di.MaterialId =${MId}
-        and dh.OperTime &gt;= '${MonthTime}-01 00:00:00'
-        and dh.OperTime &lt;= '${MonthTime}-31 23:59:59'
+        and dh.type=#{type} and dh.subType=#{subType}
+        and di.MaterialId =#{MId}
+        <if test="MonthTime != null and MonthTime != ''">
+            <bind name="MonthTimeStart" value="_parameter.MonthTime + '-01 00:00:00'"/>
+            and dh.OperTime &gt;= #{MonthTimeStart}
+            <bind name="MonthTimeEnd" value="_parameter.MonthTime + '-31 23:59:59'"/>
+            and dh.OperTime &lt;= #{MonthTimeEnd}
+        </if>
         and ifnull(dh.delete_Flag,'0') !='1'
         and ifnull(di.delete_Flag,'0') !='1'
     </select>
@@ -356,9 +426,9 @@
     <select id="findGiftByTypeIn" resultType="java.math.BigDecimal">
         select sum(BasicNumber) as BasicNumber from jsh_depotitem di,jsh_depothead dh
         where di.HeaderId = dh.id
-        and dh.SubType='${subType}'
-        and di.AnotherDepotId=${ProjectId}
-        and di.MaterialId =${MId}
+        and dh.SubType=#{subType}
+        and di.AnotherDepotId=#{ProjectId}
+        and di.MaterialId =#{MId}
         and ifnull(dh.delete_Flag,'0') !='1'
         and ifnull(di.delete_Flag,'0') !='1'
     </select>
@@ -366,9 +436,9 @@
     <select id="findGiftByTypeOut" resultType="java.math.BigDecimal">
         select sum(BasicNumber) as BasicNumber from jsh_depotitem di,jsh_depothead dh
         where di.HeaderId = dh.id
-        and dh.SubType='${subType}'
-        and di.DepotId=${ProjectId}
-        and di.MaterialId =${MId}
+        and dh.SubType=#{subType}
+        and di.DepotId=#{ProjectId}
+        and di.MaterialId =#{MId}
         and ifnull(dh.delete_Flag,'0') !='1'
         and ifnull(di.delete_Flag,'0') !='1'
     </select>
@@ -485,7 +555,7 @@
         WHERE
         dh.type = '入库'
         <if test="pid != null">
-            and di.DepotId= ${pid}
+            and di.DepotId= #{pid}
         </if>
         AND ifnull(dh.delete_Flag, '0') != '1' group by di.MaterialId
         ) intype ON intype.MaterialId = m.id
@@ -501,7 +571,7 @@
         dh.type = '出库'
         AND dh.SubType != '调拨'
         <if test="pid != null">
-            and di.DepotId= ${pid}
+            and di.DepotId= #{pid}
         </if>
         AND ifnull(dh.delete_Flag, '0') != '1' group by di.MaterialId
         ) outtype ON outtype.MaterialId = m.id
@@ -530,7 +600,7 @@
         WHERE
         dh.type = '入库'
         <if test="pid != null">
-            and di.DepotId= ${pid}
+            and di.DepotId= #{pid}
         </if>
         AND ifnull(dh.delete_Flag, '0') != '1' group by di.MaterialId
         ) intype ON intype.MaterialId = m.id
