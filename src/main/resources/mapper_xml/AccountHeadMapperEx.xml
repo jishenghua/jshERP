@@ -15,17 +15,18 @@
         left join jsh_person p on ah.HandsPersonId=p.id and ifnull(p.delete_Flag,'0') !='1'
         left join jsh_account a on ah.AccountId=a.id and ifnull(a.delete_Flag,'0') !='1'
         where 1=1
-        <if test="billNo != null">
-            and ah.BillNo like '%${billNo}%'
+        <if test="billNo != null and billNo != ''">
+            <bind name="billNo" value="'%' + _parameter.billNo + '%'"/>
+            and ah.BillNo like #{billNo}
         </if>
-        <if test="type != null">
-            and ah.Type='${type}'
+        <if test="type != null and type != ''">
+            and ah.Type= #{type}
         </if>
-        <if test="beginTime != null">
-            and ah.BillTime &gt;= '%${beginTime}%'
+        <if test="beginTime != null and beginTime != ''">
+            and ah.BillTime &gt;= #{beginTime}
         </if>
-        <if test="endTime != null">
-            and ah.BillTime &lt;= '%${endTime}%'
+        <if test="endTime != null and endTime != ''">
+            and ah.BillTime &lt;= #{endTime}
         </if>
         and ifnull(ah.delete_Flag,'0') !='1'
         order by ah.Id desc
@@ -40,17 +41,18 @@
         COUNT(id)
         FROM jsh_accounthead
         WHERE 1=1
-        <if test="billNo != null">
-            and BillNo like '%${billNo}%'
+        <if test="billNo != null and billNo != ''">
+            <bind name="billNo" value="'%' + _parameter.billNo + '%'"/>
+            and BillNo like #{billNo}
         </if>
-        <if test="type != null">
-            and Type='${type}'
+        <if test="type != null and type != ''">
+            and Type=#{type}
         </if>
-        <if test="beginTime != null">
-            and BillTime &gt;= '%${beginTime}%'
+        <if test="beginTime != null and beginTime != ''">
+            and BillTime &gt;= #{beginTime}
         </if>
-        <if test="endTime != null">
-            and BillTime &lt;= '%${endTime}%'
+        <if test="endTime != null and endTime != ''">
+            and BillTime &lt;= #{endTime}
         </if>
         and ifnull(delete_Flag,'0') !='1'
     </select>
@@ -60,9 +62,9 @@
     </select>
 
     <select id="findAllMoney" resultType="java.math.BigDecimal">
-        select sum(${modeName}) as allMoney from jsh_accounthead
-        where Type='${type}'
-        and OrganId =${supplierId} and BillTime <![CDATA[ <='${endTime}']]>
+        select sum(#{modeName}) as allMoney from jsh_accounthead
+        where Type=#{type}
+        and OrganId =#{supplierId} and BillTime <![CDATA[ <=#{endTime}]]>
         and ifnull(delete_Flag,'0') !='1'
     </select>
 
@@ -74,7 +76,7 @@
         left join jsh_account a on ah.AccountId=a.id and ifnull(a.delete_Flag,'0') !='1'
         where 1=1
         <if test="billNo != null">
-            and ah.BillNo = '${billNo}'
+            and ah.BillNo = #{billNo}
         </if>
         and ifnull(ah.delete_Flag,'0') !='1'
     </select>
