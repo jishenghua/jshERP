@@ -166,11 +166,9 @@
                                 success: function (res) {
                                     if(res && res.code === 200) {
                                         if(res.data.user) {
-                                            console.log("user");
                                             var user = res.data.user;
                                             sessionStorage.setItem("userId", user.id);
-                                            console.log("http://" + location.host + "/index.html");
-                                            top.location.href = "http://" + location.host + "/index.html";
+                                            top.location.href = "/index.html";
                                         }
                                     }
                                 },
