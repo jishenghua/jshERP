@@ -179,4 +179,6 @@ public interface DepotItemMapperEx {
                                                            @Param("rows") Integer rows, @Param("pid") Integer pid);
 
     int findStockWarningCountTotal( @Param("pid") Integer pid);
+
+    BigDecimal getCurrentRepByMaterialIdAndDepotId(@Param("materialId")Long materialId,@Param("depotId") Long depotId);
 }

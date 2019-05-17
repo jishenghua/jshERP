@@ -610,5 +610,25 @@
         AND ifnull(m.delete_Flag, '0') != '1'
         AND intype.BasicInNumber > 0
     </select>
+    <select id="getCurrentRepByMaterialIdAndDepotId" resultType="java.math.BigDecimal">
+        select  ((curep.inTotal+curep.transfInTotal+curep.assemInTotal+curep.disAssemInTotal)
+        -(curep.transfOutTotal+curep.outTotal+curep.assemOutTotal+curep.disAssemOutTotal)) as currentRepo
+        from
+        (select sum(dh.type='入库' and di.DepotId=#{depotId}) as inTotal,
+        sum(dh.SubType='调拨' and di.AnotherDepotId=#{depotId}) as transfInTotal,
+        sum(dh.SubType='调拨' and di.DepotId=#{depotId}) as transfOutTotal,
+        sum(dh.type='出库' and dh.SubType!='调拨' and di.DepotId=#{depotId}) as outTotal,
+        sum(dh.SubType='组装单' and di.MType='组合件' and di.DepotId=#{depotId}) as assemInTotal,
+        sum(dh.SubType='组装单' and di.MType='普通子件' and di.DepotId=#{depotId}) as assemOutTotal,
+        sum(dh.SubType='拆卸单' and di.MType='普通子件' and di.DepotId=#{depotId}) as disAssemInTotal,
+        sum(dh.SubType='拆卸单' and di.MType='组合件' and di.DepotId=#{depotId}) as disAssemOutTotal
+        from
+        jsh_depothead dh,jsh_depotitem di
+        where 1=1
+        and dh.id=di.HeaderId
+        and di.MaterialId=#{materialId}
+        and ifnull(dh.delete_Flag,'0') !='1'
+        and ifnull(di.delete_Flag,'0') !='1') curep
+    </select>
 
 </mapper>
