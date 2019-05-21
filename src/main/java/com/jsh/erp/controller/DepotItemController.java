@@ -261,31 +261,6 @@ public class DepotItemController {
         return allNumber;
     }
 
-    /**
-     * 保存明细
-     * @param inserted
-     * @param deleted
-     * @param updated
-     * @param headerId
-     * @param request
-     * @return
-     */
-    @PostMapping(value = "/saveDetials")
-    public String saveDetials(@RequestParam("inserted") String inserted,
-                              @RequestParam("deleted") String deleted,
-                              @RequestParam("updated") String updated,
-                              @RequestParam("headerId") Long headerId,
-                              HttpServletRequest request) throws Exception{
-        Map<String, Object> objectMap = new HashMap<String, Object>();
-        try {
-            depotItemService.saveDetials(inserted,deleted,updated,headerId);
-            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
-        } catch (DataAccessException e) {
-            e.printStackTrace();
-            logger.error(">>>>>>>>>>>>>>>>>>>保存明细信息异常", e);
-            return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
-        }
-    }
 
     /**
      * 查询计量单位信息
