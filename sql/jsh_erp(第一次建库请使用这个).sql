@@ -1989,9 +1989,12 @@ INSERT INTO `tbl_sequence` VALUES ('depot_number_seq', '1', '999999999999999999'
 -- ----------------------------
 -- Function structure for `_nextval`
 -- ----------------------------
-DROP FUNCTION IF EXISTS `_nextval`;
+DROP FUNCTION IF EXISTS _nextval;
 DELIMITER ;;
-CREATE DEFINER=`root`@`%` FUNCTION `_nextval`(name varchar(50)) RETURNS mediumtext CHARSET utf8
+CREATE
+definer = 'root'@'%'
+FUNCTION _nextval(name varchar(50)) RETURNS mediumtext CHARSET utf8
+sql security invoker -- 以调用者的权限来执行
 begin
 declare _cur bigint;
 declare _maxvalue bigint;  -- 接收最大值

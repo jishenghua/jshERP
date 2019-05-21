@@ -1154,9 +1154,14 @@ select 'depot_number_seq', 1, 999999999999999999, 1, 1,'单据编号sequence' fr
 -- ----------------------------
 -- 创建function _nextval() 用于获取当前序列号
 -- ----------------------------
-DROP FUNCTION IF EXISTS `_nextval`;
+DROP FUNCTION IF EXISTS _nextval;
 DELIMITER ;;
-CREATE FUNCTION `_nextval`(name varchar(50)) RETURNS mediumtext CHARSET utf8
+CREATE
+ definer = 'root'@'%'
+ FUNCTION _nextval (name varchar(50))
+ RETURNS mediumtext CHARSET utf8
+ comment '生成单据编号'
+ sql security invoker -- 以调用者的权限来执行
 begin
 declare _cur bigint;
 declare _maxvalue bigint;  -- 接收最大值
@@ -1173,10 +1178,10 @@ if(_cur + _increment >= _maxvalue) then  -- 判断是都达到最大值
         where seq_name = name ;
 end if;
 return _cur;
+
 end
 ;;
 DELIMITER ;
-
 -- ----------------------------
 -- 时间：2019年2月18日
 -- version：1.0.3
@@ -1375,9 +1380,9 @@ alter table jsh_depothead add `LinkNumber` varchar(50) DEFAULT null COMMENT '关
 -- 1、根据本地用户表中现有部门生成机构表数据，同时重建机构和用户的关联关系
 -- 特别提醒：之后的sql都是在之前基础上迭代，可以对已存在的系统进行数据保留更新
 -- ----------------------------
-DROP FUNCTION IF EXISTS `_buildOrgAndOrgUserRel`;
+DROP FUNCTION IF EXISTS _buildOrgAndOrgUserRel;
 DELIMITER ;;
-CREATE FUNCTION `_buildOrgAndOrgUserRel` (name varchar(50)) RETURNS mediumtext CHARSET utf8
+CREATE FUNCTION _buildOrgAndOrgUserRel (name varchar(50)) RETURNS mediumtext CHARSET utf8
 begin
 
 declare _org_full_name varchar(500); -- 机构全称
@@ -1638,7 +1643,10 @@ alter table jsh_userbusiness add tenant_id bigint(20) DEFAULT null COMMENT '租�
 -- ----------------------------
 DROP FUNCTION IF EXISTS registerUserTemplate;
 DELIMITER ;;
-CREATE FUNCTION registerUserTemplate (userId bigint(20),tenantId bigint(20),roleId bigint(20)) RETURNS varchar(50)
+CREATE
+definer = 'root'@'%'
+FUNCTION registerUserTemplate (userId bigint(20),tenantId bigint(20),roleId bigint(20)) RETURNS varchar(50)
+sql security invoker -- 以调用者的权限来执行
 begin
 -- 返回1成功或者0失败
 declare _success_msg varchar(50) default '0';
