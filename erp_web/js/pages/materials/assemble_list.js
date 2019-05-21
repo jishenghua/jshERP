@@ -11,8 +11,6 @@ var personID = null;
 var ProjectSearch=null;
 var userBusinessList=null;
 var userdepot=null;
-var depotHeadMaxId=null; //获取最大的Id
-var accepId=null; //保存的主表id
 var url;
 var depotHeadID = 0;
 var preTotalPrice = 0; //前一次加载的金额
@@ -1602,50 +1600,6 @@ function bindEvent(){
                 updateDepotHeadAndDetail(url,infoStr,preTotalPrice);
                 return;
             }
-            $.ajax({
-                type:"post",
-                url: url,
-                dataType: "json",
-                async :  false,
-                data: ({
-                    info:infoStr
-                }),
-                success: function (tipInfo)
-                {
-                    if(tipInfo)
-                    {
-                        function closeDialog(){
-                            $('#depotHeadDlg').dialog('close');
-                            var opts = $("#tableData").datagrid('options');
-                            showDepotHeadDetails(opts.pageNumber,opts.pageSize);
-                        }
-
-                        //保存明细记录
-                        if(depotHeadID ==0)
-                        {
-                            getMaxId(); //查找最大的Id
-                            accept(depotHeadMaxId,closeDialog); //新增
-                        }
-                        else
-                        {
-                            accept(depotHeadID,closeDialog); //修改
-                        }
-                    }
-                    else
-                    {
-                        $.messager.show({
-                            title: '错误提示',
-                            msg: '保存信息失败，请稍后重试!'
-                        });
-                    }
-                },
-                //此处添加错误处理
-                error:function()
-                {
-                    $.messager.alert('提示','保存信息异常，请稍后再试！','error');
-                    return;
-                }
-            });
         }
     });
 
@@ -2283,62 +2237,6 @@ function CheckData(type) {
         return false;
     }
     return true;
-}
-//保存
-function accept(accepId,fun) {
-    var inserted = $("#materialData").datagrid('getChanges', "inserted");
-    var deleted = $("#materialData").datagrid('getChanges', "deleted");
-    var updated = $("#materialData").datagrid('getChanges', "updated");
-    $.ajax({
-        type: "post",
-        url: "/depotItem/saveDetials",
-        data: {
-            inserted: JSON.stringify(inserted),
-            deleted: JSON.stringify(deleted),
-            updated: JSON.stringify(updated),
-            headerId:accepId
-        },
-        success: function (tipInfo)
-        {
-            if (tipInfo) {
-                $.messager.alert('提示','保存成功！','info');
-            }
-            else {
-                $.messager.alert('提示', '保存失败！', 'error');
-            }
-            fun && fun();
-        },
-        error: function (XmlHttpRequest, textStatus, errorThrown)
-        {
-            $.messager.alert('提示',XmlHttpRequest.responseText,'error');
-            fun && fun();
-        }
-    });
-    if (endEditing()) {
-        $('#materialData').datagrid('acceptChanges');
-    }
-}
-//获取MaxId
-function getMaxId(){
-    var depotHeadMax=null;
-    $.ajax({
-        type:"get",
-        url: "/depotHead/getMaxId",
-        //设置为同步
-        async:false,
-        dataType: "json",
-        success: function (res) {
-            if(res && res.code === 200) {
-                if(res.data) {
-                    depotHeadMax = res.data.maxId;
-                }
-            }
-        }
-    });
-
-    if(depotHeadMax !=null) {
-        depotHeadMaxId=depotHeadMax;
-    }
 }
 
 /**
