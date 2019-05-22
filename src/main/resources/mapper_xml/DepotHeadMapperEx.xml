@@ -108,9 +108,6 @@
         and ifnull(delete_Flag,'0') !='1'
     </select>
 
-    <select id="getMaxId" resultType="java.lang.Long">
-        select max(Id) as Id from jsh_depothead
-    </select>
 
     <select id="findMaterialsListByHeaderId" resultType="java.lang.String">
         select group_concat(concat(jsh_material.`Name`,' ',jsh_material.Model)) as mName

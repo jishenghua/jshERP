@@ -35,27 +35,6 @@ public class AccountHeadController {
     @Resource
     private AccountHeadService accountHeadService;
 
-    /**
-     * 获取最大的id
-     * @param request
-     * @return
-     */
-    @GetMapping(value = "/getMaxId")
-    public BaseResponseInfo getMaxId(HttpServletRequest request)throws Exception {
-        BaseResponseInfo res = new BaseResponseInfo();
-        Map<String, Object> map = new HashMap<String, Object>();
-        try {
-            Long maxId = accountHeadService.getMaxId();
-            map.put("maxId", maxId);
-            res.code = 200;
-            res.data = map;
-        } catch(Exception e){
-            e.printStackTrace();
-            res.code = 500;
-            res.data = "获取数据失败";
-        }
-        return res;
-    }
 
     /**
      * 查询单位的累计应收和累计应付，收预付款不计入此处

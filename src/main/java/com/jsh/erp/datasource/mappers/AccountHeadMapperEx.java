@@ -25,7 +25,6 @@ public interface AccountHeadMapperEx {
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime);
 
-    Long getMaxId();
 
     BigDecimal findAllMoney(
             @Param("supplierId") Integer supplierId,

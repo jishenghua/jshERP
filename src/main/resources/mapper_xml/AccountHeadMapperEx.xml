@@ -57,9 +57,6 @@
         and ifnull(delete_Flag,'0') !='1'
     </select>
 
-    <select id="getMaxId" resultType="java.lang.Long">
-        select max(Id) as Id from jsh_accounthead
-    </select>
 
     <select id="findAllMoney" resultType="java.math.BigDecimal">
         select sum(#{modeName}) as allMoney from jsh_accounthead

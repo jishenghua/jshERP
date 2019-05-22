@@ -287,18 +287,6 @@ public class DepotHeadService {
         }
     }
 
-    public Long getMaxId()throws Exception {
-        Long result = null;
-        try{
-            result = depotHeadMapperEx.getMaxId();
-        }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                    ExceptionConstants.DATA_READ_FAIL_MSG);
-        }
-        return result;
-    }
 
     public String findMaterialsListByHeaderId(Long id)throws Exception {
         String result = null;

@@ -36,7 +36,6 @@ public interface DepotHeadMapperEx {
             @Param("endTime") String endTime,
             @Param("dhIds") String dhIds);
 
-    Long getMaxId();
 
     String findMaterialsListByHeaderId(
             @Param("id") Long id);
