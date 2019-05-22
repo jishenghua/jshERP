@@ -1991,7 +1991,7 @@ INSERT INTO `tbl_sequence` VALUES ('depot_number_seq', '1', '999999999999999999'
 -- ----------------------------
 DROP FUNCTION IF EXISTS `_nextval`;
 DELIMITER ;;
-CREATE DEFINER=`root`@`%` FUNCTION `_nextval`(name varchar(50)) RETURNS mediumtext CHARSET utf8
+CREATE FUNCTION `_nextval`(name varchar(50)) RETURNS mediumtext CHARSET utf8
 begin
 declare _cur bigint;
 declare _maxvalue bigint;  -- 接收最大值
