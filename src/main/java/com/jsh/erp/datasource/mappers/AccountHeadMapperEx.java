@@ -43,4 +43,7 @@ public interface AccountHeadMapperEx {
     List<AccountHead> getAccountHeadListByOrganIds(@Param("organIds") String[] organIds);
 
     List<AccountHead> getAccountHeadListByHandsPersonIds(@Param("handsPersonIds") String[] handsPersonIds);
+
+    int addAccountHead(AccountHead accountHead);
+    int updateAccountHead(AccountHead accountHead);
 }

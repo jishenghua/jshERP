@@ -126,4 +126,56 @@
         )
         and ifnull(delete_Flag,'0') !='1'
     </select>
+    <insert id="addAccountHead"  parameterType="com.jsh.erp.datasource.entities.AccountHead"
+            useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into jsh_accounthead (Id, Type, OrganId,
+        HandsPersonId, ChangeAmount, TotalPrice,
+        AccountId, BillNo, BillTime,
+        Remark, tenant_id, delete_Flag
+        )
+        values (#{id,jdbcType=BIGINT}, #{type,jdbcType=VARCHAR}, #{organid,jdbcType=BIGINT},
+        #{handspersonid,jdbcType=BIGINT}, #{changeamount,jdbcType=DECIMAL}, #{totalprice,jdbcType=DECIMAL},
+        #{accountid,jdbcType=BIGINT}, #{billno,jdbcType=VARCHAR}, #{billtime,jdbcType=TIMESTAMP},
+        #{remark,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR}
+        )
+    </insert>
+    <update id="updateAccountHead" parameterType="com.jsh.erp.datasource.entities.AccountHead">
+        update jsh_accounthead
+        <set>
+            <if test="type != null">
+                Type = #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="organid != null">
+                OrganId = #{organid,jdbcType=BIGINT},
+            </if>
+            <if test="handspersonid != null">
+                HandsPersonId = #{handspersonid,jdbcType=BIGINT},
+            </if>
+            <if test="changeamount != null">
+                ChangeAmount = #{changeamount,jdbcType=DECIMAL},
+            </if>
+            <if test="totalprice != null">
+                TotalPrice = #{totalprice,jdbcType=DECIMAL},
+            </if>
+            <if test="accountid != null">
+                AccountId = #{accountid,jdbcType=BIGINT},
+            </if>
+            <if test="billno != null">
+                BillNo = #{billno,jdbcType=VARCHAR},
+            </if>
+            <if test="billtime != null">
+                BillTime = #{billtime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="remark != null">
+                Remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="tenantId != null">
+                tenant_id = #{tenantId,jdbcType=BIGINT},
+            </if>
+            <if test="deleteFlag != null">
+                delete_Flag = #{deleteFlag,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where Id = #{id,jdbcType=BIGINT}
+    </update>
 </mapper>

@@ -9,6 +9,7 @@ import com.jsh.erp.datasource.mappers.AccountHeadMapper;
 import com.jsh.erp.datasource.mappers.AccountHeadMapperEx;
 import com.jsh.erp.datasource.mappers.AccountItemMapperEx;
 import com.jsh.erp.exception.BusinessRunTimeException;
+import com.jsh.erp.service.accountItem.AccountItemService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
@@ -22,6 +23,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -41,6 +43,8 @@ public class AccountHeadService {
     private LogService logService;
     @Resource
     private AccountItemMapperEx accountItemMapperEx;
+    @Resource
+    private AccountItemService accountItemService;
 
     public AccountHead getAccountHead(long id) throws Exception {
         AccountHead result=null;
@@ -302,5 +306,50 @@ public class AccountHeadService {
          * */
         deleteTotal= batchDeleteAccountHeadByIds(ids);
         return deleteTotal;
+    }
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public void addAccountHeadAndDetail(String beanJson, String inserted, String deleted, String updated, String listType) throws Exception {
+        /**处理财务信息*/
+        AccountHead accountHead = JSONObject.parseObject(beanJson, AccountHead.class);
+        try{
+            accountHeadMapperEx.addAccountHead(accountHead);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        /**
+         * create by: qiankunpingtai
+         * create time: 2019/5/22 10:30
+         * website：https://qiankunpingtai.cn
+         * description:
+         * 处理财务明细信息
+         *
+         */
+        accountItemService.saveDetials(inserted, deleted, updated, accountHead.getId(), listType);
+
+    }
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public void updateAccountHeadAndDetail(Long id, String beanJson, String inserted, String deleted, String updated, String listType)throws Exception {
+        /**更新财务信息*/
+        AccountHead accountHead = JSONObject.parseObject(beanJson, AccountHead.class);
+        accountHead.setId(id);
+        try{
+            accountHeadMapperEx.updateAccountHead(accountHead);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+        /**
+         * create by: qiankunpingtai
+         * create time: 2019/5/22 10:30
+         * website：https://qiankunpingtai.cn
+         * description:
+         * 更新财务明细信息
+         */
+        accountItemService.saveDetials(inserted, deleted, updated, accountHead.getId(), listType);
     }
 }

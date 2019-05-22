@@ -150,9 +150,6 @@ function initTableData(){
                      *	修改效率低下的js
                      */
                     var str = '';
-                    // var rowInfo = rec.id + 'AaBb' + rec.billno+ 'AaBb' + rec.billtime+ 'AaBb' + rec.remark
-                    // 	+ 'AaBb' + rec.accountid+ 'AaBb' + rec.accountname + 'AaBb' + rec.organid + 'AaBb' + rec.organname
-                    // 	+ 'AaBb' + rec.handspersonid + 'AaBb' + rec.handspersonname + 'AaBb' + rec.changeamount + 'AaBb' + rec.totalprice;
                     var orgId =  rec.organid ?  rec.organid : 0;
                     str += '<img title="查看" src="/js/easyui-1.3.5/themes/icons/list.png" style="cursor: pointer;" onclick="showAccountHead(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
                     str += '<img title="编辑" src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editAccountHead(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
@@ -552,7 +549,7 @@ function addAccountHead(){
     accountHeadID = 0;
     initTableData_account("add"); //明细列表
     reject(); //撤销下、刷新材料列表
-    url = '/accountHead/add';
+    url = '/accountHead/addAccountHeadAndDetail';
 
 }
 
@@ -577,7 +574,7 @@ function editAccountHead(index){
 
     initTableData_account("edit",TotalPrice); //明细列表
     reject(); //撤销下、刷新列表
-    url = '/accountHead/update?id=' + rowsdata.id;
+    url = '/accountHead/updateAccountHeadAndDetail?id=' + rowsdata.id;
 }
 
 //查看信息
@@ -647,53 +644,7 @@ function bindEvent(){
             var ChangeAmount = $.trim($("#ChangeAmount").val());
             var TotalPrice = $("#accountHeadFM .datagrid-footer [field='EachAmount'] div").text();
             OrganId = $('#OrganId').combobox('getValue');
-            //保存单位信息
-            $.ajax({
-                type: "post",
-                url: url,
-                dataType: "json",
-                async: false,
-                data: ({
-                    info : JSON.stringify({
-                        Type: listType,
-                        BillNo: $.trim($("#BillNo").val()),
-                        BillTime: $.trim($("#BillTime").val()),
-                        AccountId: $.trim($("#AccountId").val()),
-                        ChangeAmount: ChangeAmount, //付款/收款/优惠/实付
-                        TotalPrice: TotalPrice, //合计
-                        OrganId: OrganId,
-                        HandsPersonId: $.trim($("#HandsPersonId").val()),
-                        Remark: $.trim($("#Remark").val())
-                    })
-                }),
-                success: function (tipInfo) {
-                    if (tipInfo) {
-                        //保存明细记录
-                        if (accountHeadID == 0) {
-                            getMaxId(); //查找最大的Id
-                            accept(accountHeadMaxId, listType); //新增
-                        }
-                        else {
-                            accept(accountHeadID, listType); //修改
-                        }
-
-                        $('#accountHeadDlg').dialog('close');
-                        var opts = $("#tableData").datagrid('options');
-                        showAccountHeadDetails(opts.pageNumber, opts.pageSize);
-                    }
-                    else {
-                        $.messager.show({
-                            title: '错误提示',
-                            msg: '保存信息失败，请稍后重试!'
-                        });
-                    }
-                },
-                //此处添加错误处理
-                error: function () {
-                    $.messager.alert('提示', '保存信息异常，请稍后再试！', 'error');
-                    return;
-                }
-            });
+            saveAccountHeadAndDetail(listType,ChangeAmount,TotalPrice,OrganId);
         }
     });
 
@@ -792,7 +743,10 @@ function endEditing() {
     if (editIndex == undefined) { return true }
     if ($('#accountData').datagrid('validateRow', editIndex)) {
         var ed = $('#accountData').datagrid('getEditor', {index: editIndex, field: edField});
-        var textName = $(ed.target).combobox('getText');
+        var textName =null;
+        if($(ed.target)){
+            textName = $(ed.target).combobox('getText');
+        }
         $('#accountData').datagrid('getRows')[editIndex][edName] = textName;
         $('#accountData').datagrid('endEdit', editIndex);
         editIndex = undefined;
@@ -858,8 +812,7 @@ function CheckData() {
     }
     return true;
 }
-//保存
-function accept(accepId,listType) {
+function saveAccountHeadAndDetail(listType,ChangeAmount,TotalPrice,OrganId) {
     append();
     removeit();
     if ($("#accountData").datagrid('getChanges').length) {
@@ -870,21 +823,43 @@ function accept(accepId,listType) {
         var updated = $("#accountData").datagrid('getChanges', "updated");
         $.ajax({
             type: "post",
-            url: "/accountItem/saveDetials",
+            url: url,
+            dataType: "json",
             data: {
                 inserted: JSON.stringify(inserted),
                 deleted: JSON.stringify(deleted),
                 updated: JSON.stringify(updated),
-                headerId: accepId,
+                info : JSON.stringify({
+                    Type: listType,
+                    BillNo: $.trim($("#BillNo").val()),
+                    BillTime: $.trim($("#BillTime").val()),
+                    AccountId: $.trim($("#AccountId").val()),
+                    ChangeAmount: ChangeAmount, //付款/收款/优惠/实付
+                    TotalPrice: TotalPrice, //合计
+                    OrganId: OrganId,
+                    HandsPersonId: $.trim($("#HandsPersonId").val()),
+                    Remark: $.trim($("#Remark").val())
+                }),
                 listType: listType
             },
             success: function (tipInfo)
             {
                 if (tipInfo) {
                     $.messager.alert('提示','保存成功！','info');
+                    $('#accountHeadDlg').dialog('close');
+                    var opts = $("#tableData").datagrid('options');
+                    showAccountHeadDetails(opts.pageNumber, opts.pageSize);
+                    if (endEditing()) {
+                        $('#accountData').datagrid('acceptChanges');
+                    }
                 }
-                else
-                    $.messager.alert('提示','保存失败！','error');
+                else{
+
+                    $.messager.show({
+                        title: '错误提示',
+                        msg: '保存信息失败，请稍后重试!'
+                    });
+                }
 
             },
             error: function (XmlHttpRequest, textStatus, errorThrown)
@@ -893,29 +868,5 @@ function accept(accepId,listType) {
             }
         });
     }
-    if (endEditing()) {
-        $('#accountData').datagrid('acceptChanges');
-    }
-}
-//获取MaxId
-function getMaxId(){
-    var accountHeadMax=null;
-    $.ajax({
-        type:"get",
-        url: "/accountHead/getMaxId",
-        //设置为同步
-        async:false,
-        dataType: "json",
-        success: function (res) {
-            if(res && res.code === 200) {
-                if(res.data) {
-                    accountHeadMax = res.data.maxId;
-                }
-            }
-        }
-    });
 
-    if(accountHeadMax !=null) {
-        accountHeadMaxId=accountHeadMax;
-    }
 }
