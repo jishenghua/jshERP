@@ -202,7 +202,7 @@ public class SupplierService {
         int result=0;
         try{
             if(supplier!=null){
-                supplier.setAdvancein(supplier.getAdvancein().add(advanceIn));  //增加预收款的金额，可能增加的是负值
+                supplier.setAdvancein((supplier.getAdvancein()==null?BigDecimal.ZERO:supplier.getAdvancein()).add(advanceIn));  //增加预收款的金额，可能增加的是负值
                  result=supplierMapper.updateByPrimaryKeySelective(supplier);
             }
         }catch(Exception e){

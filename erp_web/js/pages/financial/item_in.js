@@ -819,58 +819,56 @@ function CheckData() {
 function saveAccountHeadAndDetail(listType,ChangeAmount,TotalPrice,OrganId) {
     append();
     removeit();
-    if ($("#accountData").datagrid('getChanges').length) {
-        if (!CheckData())
-            return false;
-        var inserted = $("#accountData").datagrid('getChanges', "inserted");
-        var deleted = $("#accountData").datagrid('getChanges', "deleted");
-        var updated = $("#accountData").datagrid('getChanges', "updated");
-        $.ajax({
-            type: "post",
-            url: url,
-            dataType: "json",
-            data: {
-                inserted: JSON.stringify(inserted),
-                deleted: JSON.stringify(deleted),
-                updated: JSON.stringify(updated),
-                info : JSON.stringify({
-                    Type: listType,
-                    BillNo: $.trim($("#BillNo").val()),
-                    BillTime: $.trim($("#BillTime").val()),
-                    AccountId: $.trim($("#AccountId").val()),
-                    ChangeAmount: ChangeAmount, //付款/收款/优惠/实付
-                    TotalPrice: TotalPrice, //合计
-                    OrganId: OrganId,
-                    HandsPersonId: $.trim($("#HandsPersonId").val()),
-                    Remark: $.trim($("#Remark").val())
-                }),
-                listType: listType
-            },
-            success: function (tipInfo)
-            {
-                if (tipInfo) {
-                    $.messager.alert('提示','保存成功！','info');
-                    $('#accountHeadDlg').dialog('close');
-                    var opts = $("#tableData").datagrid('options');
-                    showAccountHeadDetails(opts.pageNumber, opts.pageSize);
-                    if (endEditing()) {
-                        $('#accountData').datagrid('acceptChanges');
-                    }
+    if (!CheckData())
+        return false;
+    var inserted = $("#accountData").datagrid('getChanges', "inserted");
+    var deleted = $("#accountData").datagrid('getChanges', "deleted");
+    var updated = $("#accountData").datagrid('getChanges', "updated");
+    $.ajax({
+        type: "post",
+        url: url,
+        dataType: "json",
+        data: {
+            inserted: JSON.stringify(inserted),
+            deleted: JSON.stringify(deleted),
+            updated: JSON.stringify(updated),
+            info : JSON.stringify({
+                Type: listType,
+                BillNo: $.trim($("#BillNo").val()),
+                BillTime: $.trim($("#BillTime").val()),
+                AccountId: $.trim($("#AccountId").val()),
+                ChangeAmount: ChangeAmount, //付款/收款/优惠/实付
+                TotalPrice: TotalPrice, //合计
+                OrganId: OrganId,
+                HandsPersonId: $.trim($("#HandsPersonId").val()),
+                Remark: $.trim($("#Remark").val())
+            }),
+            listType: listType
+        },
+        success: function (tipInfo)
+        {
+            if (tipInfo) {
+                $.messager.alert('提示','保存成功！','info');
+                $('#accountHeadDlg').dialog('close');
+                var opts = $("#tableData").datagrid('options');
+                showAccountHeadDetails(opts.pageNumber, opts.pageSize);
+                if (endEditing()) {
+                    $('#accountData').datagrid('acceptChanges');
                 }
-                else{
-
-                    $.messager.show({
-                        title: '错误提示',
-                        msg: '保存信息失败，请稍后重试!'
-                    });
-                }
-
-            },
-            error: function (XmlHttpRequest, textStatus, errorThrown)
-            {
-                $.messager.alert('提示',XmlHttpRequest.responseText,'error');
             }
-        });
-    }
+            else{
+
+                $.messager.show({
+                    title: '错误提示',
+                    msg: '保存信息失败，请稍后重试!'
+                });
+            }
+
+        },
+        error: function (XmlHttpRequest, textStatus, errorThrown)
+        {
+            $.messager.alert('提示',XmlHttpRequest.responseText,'error');
+        }
+    });
 
 }
