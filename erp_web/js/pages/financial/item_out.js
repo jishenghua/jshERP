@@ -823,8 +823,10 @@ function CheckData() {
     return true;
 }
 function saveAccountHeadAndDetail(listType,ChangeAmount,TotalPrice,OrganId) {
-    append();
-    removeit();
+    if (editIndex != undefined) {
+        $('#accountData').datagrid('endEdit', editIndex);
+        editIndex = undefined;
+    }
     if (!CheckData())
         return false;
     var inserted = $("#accountData").datagrid('getChanges', "inserted");
@@ -858,9 +860,6 @@ function saveAccountHeadAndDetail(listType,ChangeAmount,TotalPrice,OrganId) {
                 $('#accountHeadDlg').dialog('close');
                 var opts = $("#tableData").datagrid('options');
                 showAccountHeadDetails(opts.pageNumber, opts.pageSize);
-                if (endEditing()) {
-                    $('#accountData').datagrid('acceptChanges');
-                }
             }
             else{
 
@@ -876,5 +875,4 @@ function saveAccountHeadAndDetail(listType,ChangeAmount,TotalPrice,OrganId) {
             $.messager.alert('提示',XmlHttpRequest.responseText,'error');
         }
     });
-
 }
