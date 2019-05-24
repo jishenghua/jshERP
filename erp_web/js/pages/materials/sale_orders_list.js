@@ -1553,6 +1553,10 @@ function bindEvent(){
                 $.messager.alert('提示','请选择购买单位！','warning');
                 return;
             }
+            if (editIndex != undefined) {
+                $('#materialData').datagrid('endEdit', editIndex);
+                editIndex = undefined;
+            }
             //进行明细的校验
             if(depotHeadID ==0) {
                 //新增模式下
@@ -2319,8 +2323,6 @@ function reject() {
 }
 //判断
 function CheckData(type) {
-    append();
-    removeit();
     var change = $('#materialData').datagrid('getChanges').length;
     if(type =="add" && !change) {
         $.messager.alert('提示','请输入明细信息！','warning');
