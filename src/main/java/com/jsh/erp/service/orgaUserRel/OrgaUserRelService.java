@@ -41,6 +41,11 @@ public class OrgaUserRelService {
     private UserService userService;
     @Resource
     private LogService logService;
+
+    public OrgaUserRel getOrgaUserRel(long id) throws Exception{
+        return orgaUserRelMapper.selectByPrimaryKey(id);
+    }
+
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertOrgaUserRel(String beanJson, HttpServletRequest request) throws Exception{
         OrgaUserRel orgaUserRel = JSONObject.parseObject(beanJson, OrgaUserRel.class);

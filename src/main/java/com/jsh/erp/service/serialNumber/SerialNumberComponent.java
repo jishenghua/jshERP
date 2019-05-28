@@ -26,8 +26,8 @@ public class SerialNumberComponent implements ICommonQuery {
     private SerialNumberService serialNumberService;
 
     @Override
-    public Object selectOne(String condition)throws Exception {
-        return null;
+    public Object selectOne(Long id) throws Exception {
+        return serialNumberService.getSerialNumber(id);
     }
 
     @Override

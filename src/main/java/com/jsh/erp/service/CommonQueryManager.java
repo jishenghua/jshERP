@@ -30,8 +30,8 @@ public class CommonQueryManager {
      * @param apiName 接口名称
      * @param id      ID
      */
-    public Object selectOne(String apiName, String id) throws Exception{
-        if (StringUtil.isNotEmpty(apiName) && StringUtil.isNotEmpty(id)) {
+    public Object selectOne(String apiName, Long id) throws Exception {
+        if (StringUtil.isNotEmpty(apiName) && id!=null) {
             return container.getCommonQuery(apiName).selectOne(id);
         }
         return null;

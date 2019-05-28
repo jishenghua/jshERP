@@ -21,8 +21,8 @@ public class FunctionsComponent implements ICommonQuery {
     private FunctionsService functionsService;
 
     @Override
-    public Object selectOne(String condition)throws Exception {
-        return null;
+    public Object selectOne(Long id) throws Exception {
+        return functionsService.getFunctions(id);
     }
 
     @Override

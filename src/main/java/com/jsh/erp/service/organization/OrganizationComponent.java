@@ -22,9 +22,10 @@ import java.util.Map;
 public class OrganizationComponent implements ICommonQuery {
     @Resource
     private OrganizationService organizationService;
+
     @Override
-    public Object selectOne(String condition)throws Exception {
-        return null;
+    public Object selectOne(Long id) throws Exception {
+        return organizationService.getOrganization(id);
     }
 
     @Override

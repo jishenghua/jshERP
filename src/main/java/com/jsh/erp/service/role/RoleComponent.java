@@ -19,8 +19,8 @@ public class RoleComponent implements ICommonQuery {
     private RoleService roleService;
 
     @Override
-    public Object selectOne(String condition)throws Exception {
-        return null;
+    public Object selectOne(Long id) throws Exception {
+        return roleService.getRole(id);
     }
 
     @Override

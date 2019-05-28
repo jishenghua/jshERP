@@ -19,8 +19,8 @@ public class AccountComponent implements ICommonQuery {
     private AccountService accountService;
 
     @Override
-    public Object selectOne(String condition) {
-        return null;
+    public Object selectOne(Long id) throws Exception {
+        return accountService.getAccount(id);
     }
 
     @Override

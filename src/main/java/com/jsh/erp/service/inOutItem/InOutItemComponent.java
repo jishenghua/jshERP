@@ -19,8 +19,8 @@ public class InOutItemComponent implements ICommonQuery {
     private InOutItemService inOutItemService;
 
     @Override
-    public Object selectOne(String condition)throws Exception {
-        return null;
+    public Object selectOne(Long id) throws Exception {
+        return inOutItemService.getInOutItem(id);
     }
 
     @Override

@@ -32,6 +32,20 @@ public class ResourceController {
         return JsonUtils.ok();
     }
 
+    @GetMapping(value = "/{apiName}/info")
+    public String getList(@PathVariable("apiName") String apiName,
+                          @RequestParam("id") Long id,
+                          HttpServletRequest request) throws Exception {
+        Object obj = configResourceManager.selectOne(apiName, id);
+        Map<String, Object> objectMap = new HashMap<String, Object>();
+        if(obj != null) {
+            objectMap.put("info", obj);
+            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+        } else {
+            return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
+        }
+    }
+
     @GetMapping(value = "/{apiName}/list")
     public String getList(@PathVariable("apiName") String apiName,
                         @RequestParam(value = Constants.PAGE_SIZE, required = false) Integer pageSize,

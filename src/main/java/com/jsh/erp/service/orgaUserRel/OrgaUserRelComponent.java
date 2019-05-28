@@ -21,9 +21,10 @@ import java.util.Map;
 public class OrgaUserRelComponent implements ICommonQuery {
     @Resource
     private OrgaUserRelService orgaUserRelService;
+
     @Override
-    public Object selectOne(String condition)throws Exception {
-        return null;
+    public Object selectOne(Long id) throws Exception {
+        return orgaUserRelService.getOrgaUserRel(id);
     }
 
     @Override

@@ -44,6 +44,11 @@ public class OrganizationService {
     private UserService userService;
     @Resource
     private LogService logService;
+
+    public Organization getOrganization(long id) throws Exception {
+        return organizationMapper.selectByPrimaryKey(id);
+    }
+
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertOrganization(String beanJson, HttpServletRequest request)throws Exception {
         Organization organization = JSONObject.parseObject(beanJson, Organization.class);

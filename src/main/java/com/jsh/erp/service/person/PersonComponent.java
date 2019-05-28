@@ -21,8 +21,8 @@ public class PersonComponent implements ICommonQuery {
     private PersonService personService;
 
     @Override
-    public Object selectOne(String condition)throws Exception {
-        return null;
+    public Object selectOne(Long id) throws Exception {
+        return personService.getPerson(id);
     }
 
     @Override

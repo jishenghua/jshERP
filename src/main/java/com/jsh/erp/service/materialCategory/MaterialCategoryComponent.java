@@ -21,8 +21,8 @@ public class MaterialCategoryComponent implements ICommonQuery {
     private MaterialCategoryService materialCategoryService;
 
     @Override
-    public Object selectOne(String condition)throws Exception {
-        return null;
+    public Object selectOne(Long id) throws Exception {
+        return materialCategoryService.getMaterialCategory(id);
     }
 
     @Override
