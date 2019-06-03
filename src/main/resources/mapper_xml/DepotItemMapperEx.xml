@@ -2,10 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper  namespace="com.jsh.erp.datasource.mappers.DepotItemMapperEx">
 
-    <resultMap id="HeaderIdResultMap" type="com.jsh.erp.datasource.entities.DepotItemVo4HeaderId">
-        <result column="HeaderId" jdbcType="BIGINT" property="headerid" />
-    </resultMap>
-
     <resultMap id="DetailByTypeAndMIdResultMap" type="com.jsh.erp.datasource.entities.DepotItemVo4DetailByTypeAndMId">
         <result column="Number" jdbcType="VARCHAR" property="number" />
         <result column="newType" jdbcType="VARCHAR" property="newtype" />
@@ -87,15 +83,6 @@
             and remark like '%${remark}%'
         </if>
         and ifnull(delete_Flag,'0') !='1'
-    </select>
-    <select id="getHeaderIdByMaterial" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="HeaderIdResultMap">
-        select dt.HeaderId from jsh_depotitem dt
-        INNER JOIN jsh_material m on dt.MaterialId = m.Id and ifnull(m.delete_Flag,'0') !='1'
-        where (m.`Name` like '%${materialParam}%' or m.Model like '%${materialParam}%')
-        <if test="depotIds != null">
-            and dt.DepotId in (${depotIds})
-        </if>
-        and ifnull(dt.delete_Flag,'0') !='1'
     </select>
 
     <select id="findDetailByTypeAndMaterialIdList" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="DetailByTypeAndMIdResultMap">

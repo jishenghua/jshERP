@@ -43,44 +43,6 @@ public class DepotItemController {
     private MaterialService materialService;
 
     /**
-     * 根据材料信息获取
-     * @param materialParam  商品参数
-     * @param depotIds  拥有的仓库信息
-     * @param request
-     * @return
-     */
-    @GetMapping(value = "/getHeaderIdByMaterial")
-    public BaseResponseInfo getHeaderIdByMaterial(@RequestParam("materialParam") String materialParam,
-                                                  @RequestParam("depotIds") String depotIds,
-                                                  HttpServletRequest request)throws Exception {
-        BaseResponseInfo res = new BaseResponseInfo();
-        try {
-            List<DepotItemVo4HeaderId> depotItemList = depotItemService.getHeaderIdByMaterial(materialParam, depotIds);
-            String allReturn = "";
-            if (depotItemList != null&&depotItemList.size()>0) {
-                for (DepotItemVo4HeaderId d : depotItemList) {
-                    Long dl = d.getHeaderid(); //获取对象
-                    allReturn = allReturn + dl.toString() + ",";
-                }
-                /**
-                 * 2019-01-17修复depotItemList集合为空时，程序异常
-                 * */
-                allReturn = allReturn.substring(0, allReturn.length() - 1);
-            }
-            if (allReturn.equals("null")) {
-                allReturn = "";
-            }
-            res.code = 200;
-            res.data = allReturn;
-        } catch(Exception e){
-            e.printStackTrace();
-            res.code = 500;
-            res.data = "获取数据失败";
-        }
-        return res;
-    }
-
-    /**
      * 只根据商品id查询单据列表
      * @param mId
      * @param request

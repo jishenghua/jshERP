@@ -27,10 +27,6 @@ public interface DepotItemMapperEx {
             @Param("type") Integer type,
             @Param("remark") String remark);
 
-    List<DepotItemVo4HeaderId> getHeaderIdByMaterial(
-            @Param("materialParam") String materialParam,
-            @Param("depotIds") String depotIds);
-
     List<DepotItemVo4DetailByTypeAndMId> findDetailByTypeAndMaterialIdList(
             @Param("mId") Long mId,
             @Param("offset") Integer offset,
