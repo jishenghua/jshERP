@@ -60,12 +60,6 @@
             <bind name="number" value="'%' + _parameter.number + '%'"/>
             and dh.Number like #{number}
         </if>
-        <if test="dhIds != null and dhIds != ''">
-            and dh.Id in
-            <foreach item="dhId" index="index" collection="dhIds.split(',')"  open="(" separator="," close=")">
-                #{dhId}
-            </foreach>
-        </if>
         <if test="beginTime != null and beginTime != ''">
             and dh.OperTime >= #{beginTime}
         </if>
@@ -93,19 +87,19 @@
             <bind name="number" value="'%' + _parameter.number + '%'"/>
             and Number like #{number}
         </if>
-        <if test="dhIds != null and dhIds != ''">
-            and Id in
-            <foreach item="dhId" index="index" collection="dhIds.split(',')"  open="(" separator="," close=")">
-                #{dhId}
-            </foreach>
-        </if>
         <if test="beginTime != null and beginTime != ''">
             and OperTime >= #{beginTime}
         </if>
         <if test="endTime != null and endTime != ''">
             and OperTime &lt;= #{endTime}
         </if>
-        and ifnull(delete_Flag,'0') !='1'
+        <if test="materialParam != null">
+            and (m.`Name` like '%${materialParam}%' or m.Model like '%${materialParam}%')
+        </if>
+        <if test="depotIds != null">
+            and di.DepotId in (${depotIds})
+        </if>
+        and ifnull(jsh_depothead.delete_Flag,'0') !='1'
     </select>
 
 

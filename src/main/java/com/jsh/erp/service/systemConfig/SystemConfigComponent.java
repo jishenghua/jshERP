@@ -21,8 +21,8 @@ public class SystemConfigComponent implements ICommonQuery {
     private SystemConfigService systemConfigService;
 
     @Override
-    public Object selectOne(String condition)throws Exception {
-        return null;
+    public Object selectOne(Long id) throws Exception {
+        return systemConfigService.getSystemConfig(id);
     }
 
     @Override

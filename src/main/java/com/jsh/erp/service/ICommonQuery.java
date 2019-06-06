@@ -13,12 +13,12 @@ import java.util.Map;
  */
 public interface ICommonQuery {
     /**
-     * 查询：解析JSON，查询资源。
+     * 根据id查询明细。
      *
-     * @param condition 资源id
+     * @param id 资源id
      * @return 资源
      */
-    Object selectOne(String condition) throws Exception;
+    Object selectOne(Long id) throws Exception;
 
     /**
      * 自定义查询

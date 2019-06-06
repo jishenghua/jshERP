@@ -2,15 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper  namespace="com.jsh.erp.datasource.mappers.DepotItemMapperEx">
 
-    <resultMap id="HeaderIdResultMap" type="com.jsh.erp.datasource.entities.DepotItemVo4HeaderId">
-        <result column="HeaderId" jdbcType="BIGINT" property="headerid" />
-    </resultMap>
-
     <resultMap id="DetailByTypeAndMIdResultMap" type="com.jsh.erp.datasource.entities.DepotItemVo4DetailByTypeAndMId">
         <result column="Number" jdbcType="VARCHAR" property="number" />
         <result column="newType" jdbcType="VARCHAR" property="newtype" />
         <result column="b_num" jdbcType="BIGINT" property="bnum" />
         <result column="oTime" jdbcType="TIMESTAMP" property="otime" />
+    </resultMap>
+    <resultMap id="HeaderIdResultMap" type="com.jsh.erp.datasource.entities.DepotItemVo4HeaderId">
+        <result column="HeaderId" jdbcType="BIGINT" property="headerid" />
     </resultMap>
 
     <resultMap extends="com.jsh.erp.datasource.mappers.DepotItemMapper.BaseResultMap" id="ResultAndMaterialMap" type="com.jsh.erp.datasource.entities.DepotItemVo4Material">

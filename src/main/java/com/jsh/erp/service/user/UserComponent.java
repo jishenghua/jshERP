@@ -18,8 +18,8 @@ public class UserComponent implements ICommonQuery {
     private UserService userService;
 
     @Override
-    public Object selectOne(String condition)throws Exception {
-        return null;
+    public Object selectOne(Long id) throws Exception {
+        return userService.getUser(id);
     }
 
     @Override

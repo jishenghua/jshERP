@@ -20,8 +20,8 @@ public class UnitComponent implements ICommonQuery {
     private UnitService unitService;
 
     @Override
-    public Object selectOne(String condition)throws Exception {
-        return null;
+    public Object selectOne(Long id) throws Exception {
+        return unitService.getUnit(id);
     }
 
     @Override

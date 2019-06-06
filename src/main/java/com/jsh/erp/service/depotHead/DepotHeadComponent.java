@@ -19,8 +19,8 @@ public class DepotHeadComponent implements ICommonQuery {
     private DepotHeadService depotHeadService;
 
     @Override
-    public Object selectOne(String condition)throws Exception {
-        return null;
+    public Object selectOne(Long id) throws Exception {
+        return depotHeadService.getDepotHead(id);
     }
 
     @Override
@@ -35,9 +35,9 @@ public class DepotHeadComponent implements ICommonQuery {
         String number = StringUtil.getInfo(search, "number");
         String beginTime = StringUtil.getInfo(search, "beginTime");
         String endTime = StringUtil.getInfo(search, "endTime");
-        String dhIds = StringUtil.getInfo(search, "dhIds");
-        String order = QueryUtils.order(map);
-        return depotHeadService.select(type, subType, number, beginTime, endTime, dhIds, QueryUtils.offset(map), QueryUtils.rows(map));
+        String materialParam = StringUtil.getInfo(search, "materialParam");
+        String depotIds = StringUtil.getInfo(search, "depotIds");
+        return depotHeadService.select(type, subType, number, beginTime, endTime, materialParam, depotIds, QueryUtils.offset(map), QueryUtils.rows(map));
     }
 
     @Override
@@ -48,8 +48,9 @@ public class DepotHeadComponent implements ICommonQuery {
         String number = StringUtil.getInfo(search, "number");
         String beginTime = StringUtil.getInfo(search, "beginTime");
         String endTime = StringUtil.getInfo(search, "endTime");
-        String dhIds = StringUtil.getInfo(search, "dhIds");
-        return depotHeadService.countDepotHead(type, subType, number, beginTime, endTime, dhIds);
+        String materialParam = StringUtil.getInfo(search, "materialParam");
+        String depotIds = StringUtil.getInfo(search, "depotIds");
+        return depotHeadService.countDepotHead(type, subType, number, beginTime, endTime, materialParam, depotIds);
     }
 
     @Override

@@ -19,8 +19,8 @@ public class LogComponent implements ICommonQuery {
     private LogService logService;
 
     @Override
-    public Object selectOne(String condition)throws Exception {
-        return null;
+    public Object selectOne(Long id) throws Exception {
+        return logService.getLog(id);
     }
 
     @Override

@@ -88,11 +88,12 @@ public class DepotHeadService {
         return list;
     }
 
-    public List<DepotHeadVo4List> select(String type, String subType, String number, String beginTime, String endTime, String dhIds, int offset, int rows)throws Exception {
+    public List<DepotHeadVo4List> select(String type, String subType, String number, String beginTime, String endTime,
+                                         String materialParam, String depotIds, int offset, int rows)throws Exception {
         List<DepotHeadVo4List> resList = new ArrayList<DepotHeadVo4List>();
         List<DepotHeadVo4List> list=null;
         try{
-            list=depotHeadMapperEx.selectByConditionDepotHead(type, subType, number, beginTime, endTime, dhIds, offset, rows);
+            list=depotHeadMapperEx.selectByConditionDepotHead(type, subType, number, beginTime, endTime, materialParam, depotIds, offset, rows);
         }catch(Exception e){
             logger.error("异常码[{}],异常提示[{}],异常[{}]",
                     ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
@@ -127,10 +128,11 @@ public class DepotHeadService {
 
 
 
-    public Long countDepotHead(String type, String subType, String number, String beginTime, String endTime, String dhIds) throws Exception{
+    public Long countDepotHead(String type, String subType, String number, String beginTime, String endTime,
+                               String materialParam, String depotIds) throws Exception{
         Long result=null;
         try{
-            result=depotHeadMapperEx.countsByDepotHead(type, subType, number, beginTime, endTime, dhIds);
+            result=depotHeadMapperEx.countsByDepotHead(type, subType, number, beginTime, endTime, materialParam, depotIds);
         }catch(Exception e){
             logger.error("异常码[{}],异常提示[{}],异常[{}]",
                     ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);

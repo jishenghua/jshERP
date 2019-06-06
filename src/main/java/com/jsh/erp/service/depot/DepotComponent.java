@@ -20,8 +20,8 @@ public class DepotComponent implements ICommonQuery {
     private DepotService depotService;
 
     @Override
-    public Object selectOne(String condition)throws Exception {
-        return null;
+    public Object selectOne(Long id) throws Exception {
+        return depotService.getDepot(id);
     }
 
     @Override

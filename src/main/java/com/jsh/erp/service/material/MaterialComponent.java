@@ -21,8 +21,8 @@ public class MaterialComponent implements ICommonQuery {
     private MaterialService materialService;
 
     @Override
-    public Object selectOne(String condition)throws Exception {
-        return null;
+    public Object selectOne(Long id) throws Exception {
+        return materialService.getMaterial(id);
     }
 
     @Override

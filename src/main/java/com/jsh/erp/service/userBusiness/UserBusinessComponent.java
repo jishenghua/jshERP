@@ -22,8 +22,8 @@ public class UserBusinessComponent implements ICommonQuery {
     private UserBusinessService userBusinessService;
 
     @Override
-    public Object selectOne(String condition)throws Exception {
-        return null;
+    public Object selectOne(Long id) throws Exception {
+        return userBusinessService.getUserBusiness(id);
     }
 
     @Override

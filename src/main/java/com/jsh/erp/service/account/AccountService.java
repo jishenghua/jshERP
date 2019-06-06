@@ -58,7 +58,7 @@ public class AccountService {
     @Resource
     private UserService userService;
 
-    public Account getAccount(long id) {
+    public Account getAccount(long id) throws Exception{
         return accountMapper.selectByPrimaryKey(id);
     }
 

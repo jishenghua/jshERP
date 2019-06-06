@@ -24,7 +24,8 @@ public interface DepotHeadMapperEx {
             @Param("number") String number,
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
-            @Param("dhIds") String dhIds,
+            @Param("materialParam") String materialParam,
+            @Param("depotIds") String depotIds,
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
@@ -34,7 +35,8 @@ public interface DepotHeadMapperEx {
             @Param("number") String number,
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
-            @Param("dhIds") String dhIds);
+            @Param("materialParam") String materialParam,
+            @Param("depotIds") String depotIds);
 
 
     String findMaterialsListByHeaderId(

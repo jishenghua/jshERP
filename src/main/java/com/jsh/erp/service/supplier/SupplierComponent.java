@@ -21,8 +21,8 @@ public class SupplierComponent implements ICommonQuery {
     private SupplierService supplierService;
 
     @Override
-    public Object selectOne(String condition)throws Exception {
-        return null;
+    public Object selectOne(Long id) throws Exception {
+        return supplierService.getSupplier(id);
     }
 
     @Override
