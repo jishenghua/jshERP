@@ -32,9 +32,7 @@ public interface UserMapperEx {
     /**
      * 这个查询不添加租户id，保证登录名全局唯一
      * */
-    @SqlParser(filter = true)
-    List<User> getUserListByUserNameOrLoginName(@Param("userName") String userName,
-                                                @Param("loginame") String loginame);
+    List<User> getUserListByLoginName(@Param("loginame") String loginame);
 
     int batDeleteOrUpdateUser(@Param("ids") String ids[], @Param("status") byte status);
 
@@ -44,4 +42,5 @@ public interface UserMapperEx {
     List<User> getUserListByUserNameAndTenantId(@Param("userName")String userName, @Param("tenantId")Long tenantId);
 
     String addRegisterUserNotInclueUser(@Param("userId") Long userId,@Param("tenantId") Long tenantId,@Param("roleId") Long roleId);
+    List<User> getUserListByloginNameAndPassword(@Param("loginame")String loginame, @Param("password")String password);
 }

@@ -116,15 +116,12 @@
         </set>
         where id = #{id,jdbcType=BIGINT}
     </update>
-    <select id="getUserListByUserNameOrLoginName" resultMap="com.jsh.erp.datasource.mappers.UserMapper.BaseResultMap">
+    <select id="getUserListByLoginName" resultMap="com.jsh.erp.datasource.mappers.UserMapper.BaseResultMap">
         select user.id, user.username, user.loginame, user.position, user.email, user.phonenum,
-        user.description, user.remark,user.isystem
+        user.description, user.remark,user.isystem,user.tenant_id
         FROM jsh_user user
         where 1=1
         and ifnull(user.status,'0') not in('1','2')
-        <if test="userName != null and userName != ''">
-            and user.userName = #{userName}
-        </if>
         <if test="loginame != null and loginame != ''">
             and user.loginame = #{loginame}
         </if>
@@ -212,6 +209,20 @@
     </select>
     <select id="addRegisterUserNotInclueUser" resultType="java.lang.String">
       select registerUserTemplate(#{userId},#{tenantId},#{roleId}) from dual;
+    </select>
+    <select id="getUserListByloginNameAndPassword" resultMap="com.jsh.erp.datasource.mappers.UserMapper.BaseResultMap">
+        select user.id, user.username, user.loginame, user.position, user.email, user.phonenum,
+        user.description, user.remark,user.isystem,user.tenant_id
+        FROM jsh_user user
+        where 1=1
+        and ifnull(user.status,'0') not in('1','2')
+        <if test="loginame != null and loginame != ''">
+            and user.loginame = #{loginame}
+        </if>
+        <if test="password != null and password != ''">
+            and user.password = #{password}
+        </if>
+        order by user.id desc
     </select>
 
 

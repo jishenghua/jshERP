@@ -101,7 +101,7 @@ public class UserController {
                 default:
                     try {
                         //验证通过 ，可以登录，放入session，记录登录日志
-                        user = userService.getUserByUserName(username);
+                        user = userService.getUserListByloginNameAndPassword(username,password);
     //                    logService.create(new Logdetails(user, "登录系统", model.getClientIp(),
     //                            new Timestamp(System.currentTimeMillis()), (short) 0, "管理用户：" + username + " 登录系统", username + " 登录系统"));
                         msgTip = "user can login";

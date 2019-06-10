@@ -2047,6 +2047,14 @@ function bindEvent(){
 
 function showDepotHeadDetails(pageNo,pageSize){
     var materialParam = $.trim($("#searchMaterial").val());
+    var beginTime = $.trim($("#searchBeginTime").val());
+    var endTime = $.trim($("#searchEndTime").val());
+    if(beginTime) {
+        beginTime = beginTime + ' 00:00:00';
+    }
+    if(endTime) {
+        endTime = endTime + ' 23:59:59';
+    }
     $.ajax({
         type: "get",
         url: "/depotHead/list",
@@ -2057,8 +2065,8 @@ function showDepotHeadDetails(pageNo,pageSize){
                 subType: listSubType,
                 state: $.trim($("#searchState").val()),
                 number: $.trim($("#searchNumber").val()),
-                beginTime: $("#searchBeginTime").val(),
-                endTime: $("#searchEndTime").val(),
+                beginTime: beginTime,
+                endTime: endTime,
                 materialParam: materialParam,
                 depotIds: depotString
             }),

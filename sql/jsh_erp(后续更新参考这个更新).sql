@@ -1729,3 +1729,38 @@ update jsh_app SET Number = '02' where name='个人信息';
 insert into `jsh_functions`(`Number`, `Name`, `PNumber`, `URL`, `State`, `Sort`, `Enabled`, `Type`, `PushBtn`)
 select '02', '个人信息', '0', '', b'1', '0005', b'1', '电脑版', '' from dual where not exists
 (select * from jsh_functions where  Number='02' and PNumber='0');
+-- ----------------------------
+-- 时间：2019年6月4日
+-- version：1.0.15
+-- 此次更新
+-- 更新无租户数据的租户id为-1，以保证无租户和有租户数据能够共存
+-- 特别提醒：之后的sql都是在之前基础上迭代，可以对已存在的系统进行数据保留更新
+-- ----------------------------
+update databasechangelog set tenant_id=-1  where tenant_id is null;
+update databasechangeloglock set tenant_id=-1  where tenant_id is null;
+update jsh_account set tenant_id=-1  where tenant_id is null;
+update jsh_accounthead set tenant_id=-1  where tenant_id is null;
+update jsh_accountitem set tenant_id=-1  where tenant_id is null;
+update jsh_app set tenant_id=-1  where tenant_id is null;
+update jsh_asset set tenant_id=-1  where tenant_id is null;
+update jsh_assetcategory set tenant_id=-1  where tenant_id is null;
+update jsh_assetname set tenant_id=-1  where tenant_id is null;
+update jsh_depot set tenant_id=-1  where tenant_id is null;
+update jsh_depothead set tenant_id=-1  where tenant_id is null;
+update jsh_depotitem set tenant_id=-1  where tenant_id is null;
+update jsh_functions set tenant_id=-1  where tenant_id is null;
+update jsh_inoutitem set tenant_id=-1  where tenant_id is null;
+update jsh_log set tenant_id=-1  where tenant_id is null;
+update jsh_material set tenant_id=-1  where tenant_id is null;
+update jsh_materialcategory set tenant_id=-1  where tenant_id is null;
+update jsh_materialproperty set tenant_id=-1  where tenant_id is null;
+update jsh_orga_user_rel set tenant_id=-1  where tenant_id is null;
+update jsh_organization set tenant_id=-1  where tenant_id is null;
+update jsh_person set tenant_id=-1  where tenant_id is null;
+update jsh_role set tenant_id=-1  where tenant_id is null;
+update jsh_serial_number set tenant_id=-1  where tenant_id is null;
+update jsh_supplier set tenant_id=-1  where tenant_id is null;
+update jsh_systemconfig set tenant_id=-1  where tenant_id is null;
+update jsh_unit set tenant_id=-1  where tenant_id is null;
+update jsh_user set tenant_id=-1  where tenant_id is null;
+update jsh_userbusiness set tenant_id=-1  where tenant_id is null;

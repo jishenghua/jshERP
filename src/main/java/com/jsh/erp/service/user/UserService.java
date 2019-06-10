@@ -252,12 +252,10 @@ public class UserService {
             /**默认是可以登录的*/
             List<User> list = null;
             try {
-                UserExample example = new UserExample();
-                example.createCriteria().andLoginameEqualTo(username);
-                list = userMapper.selectByExample(example);
+                list=this.getUserListByloginName(username);
             } catch (Exception e) {
                 logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                        ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+                        ExceptionConstants.DATA_READ_FAIL_CODE, ExceptionConstants.DATA_READ_FAIL_MSG,e);
                 logger.error(">>>>>>>>访问验证用户姓名是否存在后台信息异常", e);
                 return ExceptionCodeConstants.UserExceptionCode.USER_ACCESS_EXCEPTION;
             }
@@ -265,17 +263,15 @@ public class UserService {
             if (null != list && list.size() == 0) {
                 return ExceptionCodeConstants.UserExceptionCode.USER_NOT_EXIST;
             }
-
+            User user=null;
             try {
-                UserExample example = new UserExample();
-                example.createCriteria().andLoginameEqualTo(username).andPasswordEqualTo(password);
-                list = userMapper.selectByExample(example);
+                user = this.getUserListByloginNameAndPassword(username,password);
             } catch (Exception e) {
                 logger.error(">>>>>>>>>>访问验证用户密码后台信息异常", e);
                 return ExceptionCodeConstants.UserExceptionCode.USER_ACCESS_EXCEPTION;
             }
 
-            if (null != list && list.size() == 0) {
+            if (null == user ) {
                 return ExceptionCodeConstants.UserExceptionCode.USER_PASSWORD_ERROR;
             }
             return ExceptionCodeConstants.UserExceptionCode.USER_CONDITION_FIT;
@@ -663,14 +659,32 @@ public class UserService {
     public List<User> getUserListByloginName(String loginName){
         List<User> list =null;
         try{
-            list=userMapperEx.getUserListByUserNameOrLoginName(null,loginName);
+            list=userMapperEx.getUserListByLoginName(loginName);
         }catch(Exception e){
             logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+                    ExceptionConstants.DATA_READ_FAIL_CODE, ExceptionConstants.DATA_READ_FAIL_MSG,e);
             throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
                     ExceptionConstants.DATA_READ_FAIL_MSG);
         }
         return list;
+    }
+    /**
+     * 通过登录名和密码获取用户列表
+     * */
+    public User getUserListByloginNameAndPassword(String loginName,String password){
+        List<User> list =null;
+        try{
+            list=userMapperEx.getUserListByloginNameAndPassword(loginName,password);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE, ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        if(list!=null&&list.size()>0){
+            return list.get(0);
+        }
+        return null;
     }
     /**
      * 批量删除用户

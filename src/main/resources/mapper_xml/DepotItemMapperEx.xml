@@ -606,7 +606,7 @@
     and dh.id=di.HeaderId
     and di.MaterialId=#{materialId}
     and ifnull(dh.delete_Flag,'0') !='1'
-    and ifnull(di.delete_Flag,'0') !='1') curep
+    and ifnull(di.delete_Flag,'0') !='1')  curep
     </select>
 
 </mapper>
