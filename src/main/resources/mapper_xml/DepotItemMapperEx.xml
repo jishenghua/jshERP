@@ -148,6 +148,23 @@
         and ifnull(dh.delete_Flag,'0') !='1'
     </select>
 
+    <select id="findByTypeAndDepotIdAndMaterialIdIn" resultType="java.lang.Integer">
+        select ifnull(sum(BasicNumber),0) as BasicNumber from jsh_depothead dh
+        INNER JOIN jsh_depotitem di on dh.id=di.HeaderId  and ifnull(di.delete_Flag,'0') !='1'
+        where dh.type='入库'
+        and di.MaterialId = ${mId} and di.DepotId = ${depotId}
+        and ifnull(dh.delete_Flag,'0') !='1'
+    </select>
+
+    <select id="findByTypeAndDepotIdAndMaterialIdOut" resultType="java.lang.Integer">
+        select ifnull(sum(BasicNumber),0) as BasicNumber from jsh_depothead dh
+        INNER JOIN jsh_depotitem di on dh.id=di.HeaderId  and ifnull(di.delete_Flag,'0') !='1'
+        where dh.type='出库'
+        and dh.SubType!='调拨'
+        and di.MaterialId = ${mId} and di.DepotId = ${depotId}
+        and ifnull(dh.delete_Flag,'0') !='1'
+    </select>
+
     <select id="getDetailList" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
         select di.*,m.Name MName,m.Model MModel,m.Unit MaterialUnit,m.Color MColor,m.Standard MStandard,m.Mfrs MMfrs,
         m.OtherField1 MOtherField1,m.OtherField2 MOtherField2,m.OtherField3 MOtherField3,
