@@ -68,11 +68,15 @@
         <if test="endTime != null and endTime != ''">
             and dh.OperTime &lt;= #{endTime}
         </if>
-        <if test="materialParam != null">
-            and (m.`Name` like '%${materialParam}%' or m.Model like '%${materialParam}%')
+        <if test="materialParam != null and materialParam != ''">
+            <bind name="materialParam" value="'%' + _parameter.materialParam + '%'"/>
+            and (m.Name like #{materialParam} or m.Model like #{materialParam})
         </if>
-        <if test="depotIds != null">
-            and di.DepotId in (${depotIds})
+        <if test="depotIds != null and depotIds != ''">
+            and di.DepotId in
+            <foreach item="did" index="index" collection="depotIds.split(',')" open="(" separator="," close=")">
+                #{did}
+            </foreach>
         </if>
         and ifnull(dh.delete_Flag,'0') !='1'
         order by dh.Id desc
@@ -103,11 +107,15 @@
         <if test="endTime != null and endTime != ''">
             and dh.OperTime &lt;= #{endTime}
         </if>
-        <if test="materialParam != null">
-            and (m.`Name` like '%${materialParam}%' or m.Model like '%${materialParam}%')
+        <if test="materialParam != null and materialParam != ''">
+            <bind name="materialParam" value="'%' + _parameter.materialParam + '%'"/>
+            and (m.Name like #{materialParam} or m.Model like #{materialParam})
         </if>
-        <if test="depotIds != null">
-            and di.DepotId in (${depotIds})
+        <if test="depotIds != null and depotIds != ''">
+            and di.DepotId in
+            <foreach item="did" index="index" collection="depotIds.split(',')" open="(" separator="," close=")">
+                #{did}
+            </foreach>
         </if>
         and ifnull(dh.delete_Flag,'0') !='1'
     </select>
