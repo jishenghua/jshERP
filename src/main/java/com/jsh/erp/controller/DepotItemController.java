@@ -89,66 +89,25 @@ public class DepotItemController {
 
     /**
      * 根据商品id和仓库id查询库存数量
-     * @param pageSize
-     * @param currentPage
      * @param mId
      * @param request
      * @return
      */
-    @GetMapping(value = "/findStockNumById")
+    @RequestMapping(value = "/findStockNumById")
     public String findStockNumById(
-            @RequestParam(value = Constants.PAGE_SIZE, required = false) Integer pageSize,
-            @RequestParam(value = Constants.CURRENT_PAGE, required = false) Integer currentPage,
             @RequestParam("projectId") Integer pid,
             @RequestParam("materialId") String mId,
-            @RequestParam("monthTime") String monthTime,
             HttpServletRequest request) throws Exception{
-        Map<String, String> parameterMap = ParamUtils.requestToMap(request);
-        parameterMap.put("mId", mId);
-        parameterMap.put("monthTime", monthTime);
-        PageQueryInfo queryInfo = new PageQueryInfo();
         Map<String, Object> objectMap = new HashMap<String, Object>();
-        if (pageSize != null && pageSize <= 0) {
-            pageSize = 10;
-        }
-        String offset = ParamUtils.getPageOffset(currentPage, pageSize);
-        if (StringUtil.isNotEmpty(offset)) {
-            parameterMap.put(Constants.OFFSET, offset);
-        }
-        List<DepotItemVo4Material> list = depotItemService.findStockNumByMaterialIdList(parameterMap);
         //存放数据json数组
-        Long materialId = Long.parseLong(mId);
+        Long materialId = Long.valueOf(mId);
+        Long depotId = Long.valueOf(pid);
         JSONArray dataArray = new JSONArray();
-        if (null != list) {
-            for (DepotItemVo4Material di : list) {
-                JSONObject item = new JSONObject();
-                BigDecimal prevSum = sumNumber("入库", pid, materialId, monthTime, true).subtract(sumNumber("出库", pid, materialId, monthTime, true));
-                BigDecimal InSum = sumNumber("入库", pid, materialId, monthTime, false);
-                BigDecimal OutSum = sumNumber("出库", pid, materialId, monthTime, false);
-                // +组装(组合件)-组装(普通子件)+拆卸(普通子件)-拆卸(组合件)
-                BigDecimal prevAssembleSum = assembleNumber("组装单","组合件", pid, materialId, monthTime, true)
-                                            .subtract(assembleNumber("组装单","普通子件", pid, materialId, monthTime, true))
-                                            .add(assembleNumber("拆卸单","普通子件", pid, materialId, monthTime, true))
-                                            .subtract(assembleNumber("拆卸单","组合件", pid, materialId, monthTime, true));
-                BigDecimal notPrevAssembleSum = assembleNumber("组装单","组合件", pid, materialId, monthTime, false)
-                                            .subtract(assembleNumber("组装单","普通子件", pid, materialId, monthTime, false))
-                                            .add(assembleNumber("拆卸单","普通子件", pid, materialId, monthTime, false))
-                                            .subtract(assembleNumber("拆卸单","组合件", pid, materialId, monthTime, false));
-                item.put("MaterialId", di.getMaterialid() == null ? "" : di.getMaterialid());
-                item.put("MaterialName", di.getMname());
-                item.put("MaterialModel", di.getMmodel());
-                item.put("thisSum", prevSum.add(InSum).subtract(OutSum).add(prevAssembleSum).add(notPrevAssembleSum));
-                dataArray.add(item);
-            }
-        }
+        JSONObject item = new JSONObject();
+        /**查询指定仓库下指定材料的库存数量*/
+        item.put("thisSum", depotItemService.getCurrentRepByMaterialIdAndDepotId(materialId,depotId));
+        dataArray.add(item);
         objectMap.put("page", dataArray);
-        if (list == null) {
-            queryInfo.setRows(new ArrayList<Object>());
-            queryInfo.setTotal(BusinessConstants.DEFAULT_LIST_NULL_NUMBER);
-            return returnJson(objectMap, "查找不到数据", ErpInfo.OK.code);
-        }
-        queryInfo.setRows(list);
-        queryInfo.setTotal(depotItemService.findStockNumByMaterialIdCounts(parameterMap));
         return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
     }
 

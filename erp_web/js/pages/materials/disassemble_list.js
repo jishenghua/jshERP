@@ -488,10 +488,7 @@ function findStockNumById(depotId, mId, monthTime, body, input, ratio, type){
                     url: '/depotItem/findStockNumById',
                     data:{
                         projectId: depotId,
-                        materialId: mId,
-                        monthTime: monthTime,
-                        currentPage: 1,
-                        pageSize: 10
+                        materialId: mId
                     },
                     dataType: "json",
                     success: function (res) {
