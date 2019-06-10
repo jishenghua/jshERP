@@ -234,7 +234,7 @@ function initMProperty(){
                     var thisRows = res.data.page.rows;
                     for (var i = 0; i < thisRows.length; i++) {
                         if (thisRows[i].enabled) {
-                            mPropertyList += thisRows[i].nativeName + ",";
+                            mPropertyList += thisRows[i].nativename + ",";
                         }
                     }
                     if (mPropertyList) {
