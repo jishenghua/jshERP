@@ -1936,56 +1936,33 @@ function bindEvent(){
 function showDepotHeadDetails(pageNo,pageSize){
     var materialParam = $.trim($("#searchMaterial").val());
     $.ajax({
-        type:"get",
-        url: "/depotItem/getHeaderIdByMaterial",
+        type: "get",
+        url: "/depotHead/list",
         dataType: "json",
         data: ({
-            materialParam: materialParam,
-            depotIds: depotString
+            search: JSON.stringify({
+                type: listType,
+                subType: listSubType,
+                state: $.trim($("#searchState").val()),
+                number: $.trim($("#searchNumber").val()),
+                beginTime: $("#searchBeginTime").val(),
+                endTime: $("#searchEndTime").val(),
+                materialParam: materialParam,
+                depotIds: depotString
+            }),
+            currentPage: pageNo,
+            pageSize: pageSize
         }),
         success: function (res) {
-            if(res && res.code === 200) {
-                var ids = res.data;
-                if(ids){
-                    $.ajax({
-                        type: "get",
-                        url: "/depotHead/list",
-                        dataType: "json",
-                        data: ({
-                            search: JSON.stringify({
-                                type: listType,
-                                subType: listSubType,
-                                state: $.trim($("#searchState").val()),
-                                number: $.trim($("#searchNumber").val()),
-                                beginTime: $("#searchBeginTime").val(),
-                                endTime: $("#searchEndTime").val(),
-                                dhIds: ids
-                            }),
-                            currentPage: pageNo,
-                            pageSize: pageSize
-                        }),
-                        success: function (res) {
-                            if(res && res.code === 200){
-                                if(res.data && res.data.page) {
-                                    $("#tableData").datagrid('loadData', res.data.page);
-                                }
-                            }
-                        },
-                        //此处添加错误处理
-                        error: function () {
-                            $.messager.alert('查询提示', '查询数据后台异常，请稍后再试！', 'error');
-                            return;
-                        }
-                    });
-                }
-                else {
-                    $("#tableData").datagrid('loadData', []);
+            if(res && res.code === 200){
+                if(res.data && res.data.page) {
+                    $("#tableData").datagrid('loadData', res.data.page);
                 }
             }
         },
         //此处添加错误处理
-        error:function() {
-            $.messager.alert('查询提示','查询数据后台异常，请稍后再试！','error');
+        error: function () {
+            $.messager.alert('查询提示', '查询数据后台异常，请稍后再试！', 'error');
             return;
         }
     });
