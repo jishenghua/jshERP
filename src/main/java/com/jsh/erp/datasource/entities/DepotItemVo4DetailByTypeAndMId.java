@@ -11,6 +11,10 @@ public class DepotItemVo4DetailByTypeAndMId {
     private Integer bnum;
 
     private Date otime;
+    //仓库名称
+    private String depotName;
+    //调入仓库名称
+    private String depotInName;
 
     public String getNumber() {
         return number;
@@ -42,5 +46,21 @@ public class DepotItemVo4DetailByTypeAndMId {
 
     public void setOtime(Date otime) {
         this.otime = otime;
+    }
+
+    public String getDepotName() {
+        return depotName;
+    }
+
+    public void setDepotName(String depotName) {
+        this.depotName = depotName;
+    }
+
+    public String getDepotInName() {
+        return depotInName;
+    }
+
+    public void setDepotInName(String depotInName) {
+        this.depotInName = depotInName;
     }
 }

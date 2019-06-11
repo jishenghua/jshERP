@@ -538,10 +538,7 @@
                                 type: "get",
                                 url: '/depotItem/findStockNumByMaterialId',
                                 data: {
-                                    materialId: mId,
-                                    monthTime: monthTime,
-                                    currentPage: 1,
-                                    pageSize: 10
+                                    materialId: mId
                                 },
                                 dataType: "json",
                                 success: function (res) {
@@ -667,6 +664,7 @@
                 pageSize: initPageSize,
                 pageList: initPageNum,
                 columns: [[
+
                     {
                         title: '单据编号', field: 'Number', width: 150,
                         formatter: function (value, row) {
@@ -676,7 +674,10 @@
                     },
                     {title: '类型', field: 'Type', width: 100},
                     {title: '数量', field: 'BasicNumber', width: 80},
-                    {title: '日期', field: 'OperTime', width: 180}
+                    {title: '仓库', field: 'depotName', width: 180},
+                    {title: '日期', field: 'OperTime', width: 180},
+                    {title: '调入仓库', field: 'depotInName', width: 180}
+
                 ]],
                 onLoadError: function () {
                     $.messager.alert('页面加载提示', '页面加载异常，请稍后再试！', 'error');

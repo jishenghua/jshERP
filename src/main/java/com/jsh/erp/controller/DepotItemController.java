@@ -4,7 +4,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
-import com.jsh.erp.datasource.entities.*;
+import com.jsh.erp.datasource.entities.DepotItemVo4DetailByTypeAndMId;
+import com.jsh.erp.datasource.entities.DepotItemVo4WithInfoEx;
 import com.jsh.erp.datasource.vo.DepotItemStockWarningCount;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.depotItem.DepotItemService;
@@ -12,8 +13,10 @@ import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataAccessException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -73,6 +76,8 @@ public class DepotItemController {
                 item.put("Type", d.getNewtype()); //进出类型
                 item.put("BasicNumber", d.getBnum()); //数量
                 item.put("OperTime", d.getOtime()); //时间
+                item.put("depotName", d.getDepotName()); //仓库名称
+                item.put("depotInName", d.getDepotInName()); //调入仓库名称
                 dataArray.add(item);
             }
         }
@@ -113,55 +118,21 @@ public class DepotItemController {
 
     /**
      * 只根据商品id查询库存数量
-     * @param pageSize
-     * @param currentPage
      * @param mId
      * @param request
      * @return
      */
-    @GetMapping(value = "/findStockNumByMaterialId")
+    @RequestMapping(value = "/findStockNumByMaterialId")
     public String findStockNumByMaterialId(
-            @RequestParam(value = Constants.PAGE_SIZE, required = false) Integer pageSize,
-            @RequestParam(value = Constants.CURRENT_PAGE, required = false) Integer currentPage,
             @RequestParam("materialId") String mId,
-            @RequestParam("monthTime") String monthTime,
             HttpServletRequest request)  throws Exception{
-        Map<String, String> parameterMap = ParamUtils.requestToMap(request);
-        parameterMap.put("mId", mId);
-        parameterMap.put("monthTime", monthTime);
-        PageQueryInfo queryInfo = new PageQueryInfo();
         Map<String, Object> objectMap = new HashMap<String, Object>();
-        if (pageSize != null && pageSize <= 0) {
-            pageSize = 10;
-        }
-        String offset = ParamUtils.getPageOffset(currentPage, pageSize);
-        if (StringUtil.isNotEmpty(offset)) {
-            parameterMap.put(Constants.OFFSET, offset);
-        }
-        List<DepotItemVo4Material> list = depotItemService.findStockNumByMaterialIdList(parameterMap);
-
         //存放数据json数组
         JSONArray dataArray = new JSONArray();
-        if (null != list) {
-            for (DepotItemVo4Material di : list) {
-                JSONObject item = new JSONObject();
-                int InSum = sumNumberByMaterialId("入库", di.getMaterialid());
-                int OutSum = sumNumberByMaterialId("出库", di.getMaterialid());
-                item.put("MaterialId", di.getMaterialid() == null ? "" : di.getMaterialid());
-                item.put("MaterialName", di.getMname());
-                item.put("MaterialModel", di.getMmodel());
-                item.put("thisSum", InSum - OutSum);
-                dataArray.add(item);
-            }
-        }
+        JSONObject item = new JSONObject();
+        item.put("thisSum", depotItemService.getCurrentRepByMaterialIdAndDepotId(Long.valueOf(mId),null));
+        dataArray.add(item);
         objectMap.put("page", dataArray);
-        if (list == null) {
-            queryInfo.setRows(new ArrayList<Object>());
-            queryInfo.setTotal(BusinessConstants.DEFAULT_LIST_NULL_NUMBER);
-            return returnJson(objectMap, "查找不到数据", ErpInfo.OK.code);
-        }
-        queryInfo.setRows(list);
-        queryInfo.setTotal(depotItemService.findStockNumByMaterialIdCounts(parameterMap));
         return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
     }
 
