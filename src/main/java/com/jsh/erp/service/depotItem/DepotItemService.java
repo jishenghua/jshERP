@@ -308,6 +308,14 @@ public class DepotItemService {
         return result;
     }
 
+    public int findByTypeAndMaterialIdAndDepotId(String type, Long mId, Long depotId) {
+        if(type.equals(TYPE)) {
+            return depotItemMapperEx.findByTypeAndDepotIdAndMaterialIdIn(depotId, mId);
+        } else {
+            return depotItemMapperEx.findByTypeAndDepotIdAndMaterialIdOut(depotId, mId);
+        }
+    }
+
     public List<DepotItemVo4WithInfoEx> getDetailList(Long headerId)throws Exception {
         List<DepotItemVo4WithInfoEx> list =null;
         try{
@@ -758,11 +766,11 @@ public class DepotItemService {
      * 查询商品当前库存数量是否充足，
      *
      * */
-    public int getCurrentInStock(Long materialId)throws Exception{
+    public int getCurrentInStock(Long materialId, Long depotId){
         //入库数量
-        int inSum = findByTypeAndMaterialId(BusinessConstants.DEPOTHEAD_TYPE_STORAGE, materialId);
+        int inSum = findByTypeAndMaterialIdAndDepotId(BusinessConstants.DEPOTHEAD_TYPE_STORAGE, materialId, depotId);
         //出库数量
-        int outSum = findByTypeAndMaterialId(BusinessConstants.DEPOTHEAD_TYPE_OUT, materialId);
+        int outSum = findByTypeAndMaterialIdAndDepotId(BusinessConstants.DEPOTHEAD_TYPE_OUT, materialId ,depotId);
         return (inSum-outSum);
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)

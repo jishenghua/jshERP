@@ -51,6 +51,14 @@ public interface DepotItemMapperEx {
     int findByTypeAndMaterialIdOut(
             @Param("mId") Long mId);
 
+    int findByTypeAndDepotIdAndMaterialIdIn(
+            @Param("depotId") Long depotId,
+            @Param("mId") Long mId);
+
+    int findByTypeAndDepotIdAndMaterialIdOut(
+            @Param("depotId") Long depotId,
+            @Param("mId") Long mId);
+
     List<DepotItemVo4WithInfoEx> getDetailList(
             @Param("headerId") Long headerId);
 
