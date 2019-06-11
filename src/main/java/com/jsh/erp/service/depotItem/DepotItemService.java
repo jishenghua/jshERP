@@ -30,6 +30,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class DepotItemService {
@@ -819,8 +820,18 @@ public class DepotItemService {
      */
     public BigDecimal getCurrentRepByMaterialIdAndDepotId(Long materialId,Long depotId) {
         BigDecimal result = BigDecimal.ZERO;
+        HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
+        Long tenantId=null;
+        Object tenantIdO = request.getSession().getAttribute("tenantId");
+        if(tenantIdO!=null){
+            //多租户模式，租户id从当前用户获取
+            tenantId=Long.valueOf(tenantId.toString());
+        } else {
+            //无租户模式，租户id为-1
+            tenantId=Long.valueOf(-1);
+        }
         try{
-            result =depotItemMapperEx.getCurrentRepByMaterialIdAndDepotId(materialId,depotId);
+            result =depotItemMapperEx.getCurrentRepByMaterialIdAndDepotId(materialId,depotId,tenantId);
         }catch(Exception e){
             logger.error("异常码[{}],异常提示[{}],异常[{}]",
                     ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);

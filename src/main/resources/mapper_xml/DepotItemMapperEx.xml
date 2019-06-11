@@ -618,6 +618,8 @@
         jsh_depothead dh,jsh_depotitem di
         where 1=1
         and dh.id=di.HeaderId
+        and dh.tenant_id=#{tenantId}
+        and di.tenant_id=#{tenantId}
         and di.MaterialId=#{materialId}
         and ifnull(dh.delete_Flag,'0') !='1'
         and ifnull(di.delete_Flag,'0') !='1') as curep
