@@ -3,11 +3,9 @@
 <mapper namespace="com.jsh.erp.datasource.mappers.DepotHeadMapperEx">
 
     <resultMap extends="com.jsh.erp.datasource.mappers.DepotHeadMapper.BaseResultMap" id="ResultMapEx" type="com.jsh.erp.datasource.vo.DepotHeadVo4List">
-        <result column="ProjectName" jdbcType="VARCHAR" property="projectName" />
         <result column="OrganName" jdbcType="VARCHAR" property="organName" />
         <result column="HandsPersonName" jdbcType="VARCHAR" property="handsPersonName" />
         <result column="AccountName" jdbcType="VARCHAR" property="accountName" />
-        <result column="AllocationProjectName" jdbcType="VARCHAR" property="allocationProjectName" />
     </resultMap>
 
     <resultMap id="ResultWithInfoExMap" type="com.jsh.erp.datasource.vo.DepotHeadVo4InDetail">
@@ -42,15 +40,11 @@
     </resultMap>
 
     <select id="selectByConditionDepotHead" parameterType="com.jsh.erp.datasource.entities.DepotHeadExample" resultMap="ResultMapEx">
-        select dh.*, d.name ProjectName, s.supplier OrganName, p.name HandsPersonName, a.name AccountName, dd.name AllocationProjectName
+        select dh.*, s.supplier OrganName, p.name HandsPersonName, a.name AccountName
         from jsh_depothead dh
-        left join jsh_depot d on dh.ProjectId=d.id and ifnull(d.delete_Flag,'0') !='1'
         left join jsh_supplier s on dh.OrganId=s.id and ifnull(s.delete_Flag,'0') !='1'
         left join jsh_person p on dh.HandsPersonId=p.id and ifnull(p.delete_Flag,'0') !='1'
         left join jsh_account a on dh.AccountId=a.id and ifnull(a.delete_Flag,'0') !='1'
-        left join jsh_depot dd on dh.AllocationProjectId=dd.id and ifnull(dd.delete_Flag,'0') !='1'
-        inner join jsh_depotitem di on dh.Id = di.HeaderId and ifnull(di.delete_Flag,'0') !='1'
-        inner join jsh_material m on di.MaterialId = m.Id and ifnull(m.delete_Flag,'0') !='1'
         where 1=1
         <if test="type != null and type != ''">
             and dh.Type=#{type}
@@ -68,6 +62,14 @@
         <if test="endTime != null and endTime != ''">
             and dh.OperTime &lt;= #{endTime}
         </if>
+        and ifnull(dh.delete_Flag,'0') !='1'
+        and exists (
+        select 0  from jsh_depotitem di
+        left join jsh_material m on di.MaterialId = m.Id and ifnull(m.delete_Flag,'0') !='1' and di.tenant_id=m.tenant_id
+        where 1=1
+        and dh.Id = di.HeaderId
+        and dh.tenant_id=di.tenant_id
+        and ifnull(di.delete_Flag,'0') !='1'
         <if test="materialParam != null and materialParam != ''">
             <bind name="materialParam" value="'%' + _parameter.materialParam + '%'"/>
             and (m.Name like #{materialParam} or m.Model like #{materialParam})
@@ -78,7 +80,7 @@
                 #{did}
             </foreach>
         </if>
-        and ifnull(dh.delete_Flag,'0') !='1'
+        )
         order by dh.Id desc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
@@ -88,8 +90,9 @@
         SELECT
         COUNT(dh.id)
         FROM jsh_depothead dh
-        inner join jsh_depotitem di on dh.Id = di.HeaderId and ifnull(di.delete_Flag,'0') !='1'
-        inner join jsh_material m on di.MaterialId = m.Id and ifnull(m.delete_Flag,'0') !='1'
+        left join jsh_supplier s on dh.OrganId=s.id and ifnull(s.delete_Flag,'0') !='1'
+        left join jsh_person p on dh.HandsPersonId=p.id and ifnull(p.delete_Flag,'0') !='1'
+        left join jsh_account a on dh.AccountId=a.id and ifnull(a.delete_Flag,'0') !='1'
         WHERE 1=1
         <if test="type != null and type != ''">
             and dh.Type=#{type}
@@ -107,6 +110,14 @@
         <if test="endTime != null and endTime != ''">
             and dh.OperTime &lt;= #{endTime}
         </if>
+        and ifnull(dh.delete_Flag,'0') !='1'
+        and exists (
+        select 0  from jsh_depotitem di
+        left join jsh_material m on di.MaterialId = m.Id and ifnull(m.delete_Flag,'0') !='1' and di.tenant_id=m.tenant_id
+        where 1=1
+        and dh.Id = di.HeaderId
+        and dh.tenant_id=di.tenant_id
+        and ifnull(di.delete_Flag,'0') !='1'
         <if test="materialParam != null and materialParam != ''">
             <bind name="materialParam" value="'%' + _parameter.materialParam + '%'"/>
             and (m.Name like #{materialParam} or m.Model like #{materialParam})
@@ -117,7 +128,7 @@
                 #{did}
             </foreach>
         </if>
-        and ifnull(dh.delete_Flag,'0') !='1'
+        )
     </select>
 
 
