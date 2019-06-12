@@ -5,7 +5,7 @@
 * 欢迎加入乾坤平台-华夏ERP群，群号码：693725296
 扫码加群：
 ![乾坤平台-华夏ERP群二维码.png](https://qkpt.top/mnt/upload/2019/04/乾坤平台-华夏ERP群二维码-5ca242ee.png)
-* [交流社区](https://qiankunpingtai.cn/symphony/domain/%E8%BF%9B%E9%94%80%E5%AD%98)
+* [交流社区](https://qiankunpingtai.cn/domain/%E8%BF%9B%E9%94%80%E5%AD%98)
 * 联系方式二：QQ：752718920，交流群二，群号码：120725710
 * 部署如遇到困难请参考Wiki文档  **https://gitee.com/jishenghua/JSH_ERP/wikis/pages** 
 * **[本系统演示地址一](http://39.105.146.63:8080) 如需试用，欢迎注册** 
