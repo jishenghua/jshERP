@@ -22,10 +22,10 @@
             and ah.Type='${type}'
         </if>
         <if test="beginTime != null">
-            and ah.BillTime &gt;= '%${beginTime}%'
+            and ah.BillTime &gt;= '${beginTime}'
         </if>
         <if test="endTime != null">
-            and ah.BillTime &lt;= '%${endTime}%'
+            and ah.BillTime &lt;= '${endTime}'
         </if>
         and ifnull(ah.delete_Flag,'0') !='1'
         order by ah.Id desc
@@ -47,10 +47,10 @@
             and Type='${type}'
         </if>
         <if test="beginTime != null">
-            and BillTime &gt;= '%${beginTime}%'
+            and BillTime &gt;= '${beginTime}'
         </if>
         <if test="endTime != null">
-            and BillTime &lt;= '%${endTime}%'
+            and BillTime &lt;= '${endTime}'
         </if>
         and ifnull(delete_Flag,'0') !='1'
     </select>
