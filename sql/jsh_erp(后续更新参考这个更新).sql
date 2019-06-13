@@ -1772,6 +1772,10 @@ update jsh_userbusiness set tenant_id=-1  where tenant_id is null;
 -- 特别提醒：之后的sql都是在之前基础上迭代，可以对已存在的系统进行数据保留更新
 -- ----------------------------
 -- ----------------------------
+-- 修改按钮列长度
+-- ----------------------------
+alter table jsh_userbusiness change BtnStr BtnStr varchar(10000) DEFAULT null COMMENT '按钮权限';
+-- ----------------------------
 -- 多租户基础角色模板
 -- ----------------------------
 INSERT INTO  jsh_role(Id, Name, type, value, description, tenant_id, delete_Flag) VALUES (10, '多租户', NULL, NULL, NULL, -1, '0');
@@ -1787,7 +1791,7 @@ begin
 
 declare _apps varchar(1000); -- 所有应用
 declare _functions varchar(10000);  -- 所有功能
-declare _functionBtns varchar(2000);  -- 所有功能
+declare _functionBtns varchar(10000);  -- 所有功能
 declare _success_msg varchar(50) default '设置多租户角色的应用和菜单成功';
 -- 获取应用列表
 set _apps=(select  GROUP_CONCAT(id separator '][')  from jsh_app where tenant_id=-1 and ifnull(delete_Flag,'0') !='1');
