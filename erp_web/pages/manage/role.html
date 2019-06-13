@@ -398,9 +398,7 @@
             url: "/role/list",
             dataType: "json",
             data: ({
-                search: JSON.stringify({
-                    name: searchName
-                }),
+                name: searchName,
                 currentPage: pageNo,
                 pageSize: pageSize
             }),
