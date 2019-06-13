@@ -1764,3 +1764,52 @@ update jsh_systemconfig set tenant_id=-1  where tenant_id is null;
 update jsh_unit set tenant_id=-1  where tenant_id is null;
 update jsh_user set tenant_id=-1  where tenant_id is null;
 update jsh_userbusiness set tenant_id=-1  where tenant_id is null;
+-- ----------------------------
+-- 时间：2019年6月12日
+-- version：1.0.16
+-- 此次更新
+-- 设置注册多租户时基础菜单列表
+-- 特别提醒：之后的sql都是在之前基础上迭代，可以对已存在的系统进行数据保留更新
+-- ----------------------------
+-- ----------------------------
+-- 多租户基础角色模板
+-- ----------------------------
+INSERT INTO  jsh_role(Id, Name, type, value, description, tenant_id, delete_Flag) VALUES (10, '多租户', NULL, NULL, NULL, -1, '0');
+SET GLOBAL group_concat_max_len=10240;
+-- ----------------------------
+-- 设置多租户角色拥有的应用和菜单
+-- ----------------------------
+
+DROP FUNCTION IF EXISTS _setTenantRoleAppsAndFunctions;
+DELIMITER ;;
+CREATE FUNCTION _setTenantRoleAppsAndFunctions () RETURNS mediumtext CHARSET utf8
+begin
+
+declare _apps varchar(1000); -- 所有应用
+declare _functions varchar(10000);  -- 所有功能
+declare _functionBtns varchar(2000);  -- 所有功能
+declare _success_msg varchar(50) default '设置多租户角色的应用和菜单成功';
+-- 获取应用列表
+set _apps=(select  GROUP_CONCAT(id separator '][')  from jsh_app where tenant_id=-1 and ifnull(delete_Flag,'0') !='1');
+-- 获取功能列表
+set _functions=(select  GROUP_CONCAT(id separator '][')  from jsh_functions where tenant_id=-1 and ifnull(delete_Flag,'0') !='1');
+-- 获取功能按钮列表
+set _functionBtns=(select  GROUP_CONCAT((CONCAT('"funId":"',id,'","btnStr":"',PushBtn,'"')) separator '},{')  from jsh_functions where 1=1 and  PushBtn is not null and tenant_id=-1 and ifnull(delete_Flag,'0') !='1');
+delete from jsh_userbusiness where Type='RoleAPP' and KeyId=10 and tenant_id=-1;
+delete from jsh_userbusiness where Type='RoleFunctions' and KeyId=10 and tenant_id=-1;
+-- 创建多租户的应用模板
+INSERT INTO jsh_userbusiness ( Type, KeyId, Value, BtnStr, delete_Flag, tenant_id) VALUES ( 'RoleAPP', 10, CONCAT('[',_apps,']') , NULL, '0', -1);
+-- 创建多租户的菜单模板
+INSERT INTO jsh_userbusiness ( Type, KeyId, Value, BtnStr, delete_Flag, tenant_id) VALUES ( 'RoleFunctions', 10, CONCAT('[',_functions,']') , CONCAT('[{',_functionBtns,'}]'), '0', -1);
+return _success_msg;
+end
+;;
+DELIMITER ;
+-- ----------------------------
+-- 设置多租户角色拥有的应用和菜单
+-- ----------------------------
+select _setTenantRoleAppsAndFunctions() from dual;
+-- ----------------------------
+-- 删除一次性函数
+-- ----------------------------
+DROP FUNCTION _setTenantRoleAppsAndFunctions;
