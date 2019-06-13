@@ -110,10 +110,6 @@
         dh.AccountIdList as AList,dh.AccountMoneyList as AMList
         from jsh_depothead dh inner join jsh_supplier s on dh.OrganId = s.id and ifnull(s.delete_Flag,'0') !='1'
         where 1=1
-        <if test="accountId != null and remark != ''">
-            <bind name="remark" value="'%' + _parameter.remark + '%'"/>
-            and remark like #{remark}
-        </if>
         <if test="accountId != null">
             <bind name="accountId" value="'%' + _parameter.accountId + '%'"/>
             and dh.AccountIdList like #{accountId}
