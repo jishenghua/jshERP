@@ -2,19 +2,28 @@ package com.jsh.erp.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.Role;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.role.RoleService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.service.userBusiness.UserBusinessService;
+import com.jsh.erp.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 
 /**
  * @author ji sheng hua 华夏ERP
@@ -75,11 +84,35 @@ public class RoleController {
         return arr;
     }
 
-    @PostMapping(value = "/list")
-    public List<Role> list(HttpServletRequest request)throws Exception {
-        return roleService.getRole();
+    @RequestMapping(value = "/list")
+    public String list(@RequestParam(value = Constants.PAGE_SIZE, required = false) Integer pageSize,
+                       @RequestParam(value = Constants.CURRENT_PAGE, required = false) Integer currentPage,
+                       @RequestParam("name") String name,
+                       HttpServletRequest request)throws Exception {
+        Map<String, String> parameterMap = ParamUtils.requestToMap(request);
+        parameterMap.put("name", name);
+        PageQueryInfo queryInfo = new PageQueryInfo();
+        Map<String, Object> objectMap = new HashMap<String, Object>();
+        if (pageSize == null || pageSize <= 0) {
+            pageSize = BusinessConstants.DEFAULT_PAGINATION_PAGE_SIZE;
+        }
+        if (currentPage == null || currentPage <= 0) {
+            currentPage = BusinessConstants.DEFAULT_PAGINATION_PAGE_NUMBER;
+        }
+        PageHelper.startPage(currentPage,pageSize,true);
+        List<Role> list = roleService.getRoleList(parameterMap);
+        //获取分页查询后的数据
+        PageInfo<Role> pageInfo = new PageInfo<>(list);
+        objectMap.put("page", queryInfo);
+        if (list == null) {
+            queryInfo.setRows(new ArrayList<Object>());
+            queryInfo.setTotal(BusinessConstants.DEFAULT_LIST_NULL_NUMBER);
+            return returnJson(objectMap, "查找不到数据", ErpInfo.OK.code);
+        }
+        queryInfo.setRows(list);
+        queryInfo.setTotal(pageInfo.getTotal());
+        return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
     }
-
     /**
      * create by: qiankunpingtai
      * website：https://qiankunpingtai.cn

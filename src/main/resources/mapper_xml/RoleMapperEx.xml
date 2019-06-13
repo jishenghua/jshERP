@@ -35,4 +35,14 @@
         </foreach>
         )
     </update>
+    <select id="getRoleList" resultMap="com.jsh.erp.datasource.mappers.RoleMapper.BaseResultMap">
+        SELECT *
+        FROM jsh_role
+        WHERE 1=1
+        and ifnull(delete_Flag,'0') !='1'
+        <if test="name != null and name != ''">
+            <bind name="name" value="'%' + _parameter.name + '%'"/>
+            and name like #{name}
+        </if>
+    </select>
 </mapper>

@@ -23,6 +23,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class RoleService {
@@ -50,12 +51,10 @@ public class RoleService {
         return result;
     }
 
-    public List<Role> getRole()throws Exception {
-        RoleExample example = new RoleExample();
-        example.createCriteria().andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+    public List<Role> getRoleList(Map<String, String> parameterMap)throws Exception {
         List<Role> list=null;
         try{
-            list=roleMapper.selectByExample(example);
+            list=roleMapperEx.getRoleList(parameterMap);
         }catch(Exception e){
             logger.error("异常码[{}],异常提示[{}],异常[{}]",
                     ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
