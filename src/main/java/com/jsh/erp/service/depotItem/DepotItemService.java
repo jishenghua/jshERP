@@ -513,34 +513,35 @@ public class DepotItemService {
                     depotItem.setHeaderid(headerId);
                     depotItem.setMaterialid(tempInsertedJson.getLong("MaterialId"));
                     depotItem.setMunit(tempInsertedJson.getString("Unit"));
+                    Material material= materialService.getMaterial(depotItem.getMaterialid());
                     if (!StringUtil.isEmpty(tempInsertedJson.get("OperNumber").toString())) {
                         depotItem.setOpernumber(tempInsertedJson.getBigDecimal("OperNumber"));
-                        try {
-                            String Unit = tempInsertedJson.get("Unit").toString();
-                            BigDecimal oNumber = tempInsertedJson.getBigDecimal("OperNumber");
-                            Long mId = Long.parseLong(tempInsertedJson.get("MaterialId").toString());
-                            /***
-                             * 为什么调用的方法要先把基础单位去掉，去掉之后后续还能获取到？
-                             * */
-                            //以下进行单位换算
-//                            String UnitName = findUnitName(mId); //查询计量单位名称
-                            String unitName = materialService.findUnitName(mId);
-                            if (!StringUtil.isEmpty(unitName)) {
-                                String unitList = unitName.substring(0, unitName.indexOf("("));
-                                String ratioList = unitName.substring(unitName.indexOf("("));
-                                String basicUnit = unitList.substring(0, unitList.indexOf(",")); //基本单位
-                                String otherUnit = unitList.substring(unitList.indexOf(",") + 1); //副单位
-                                Integer ratio = Integer.parseInt(ratioList.substring(ratioList.indexOf(":") + 1).replace(")", "")); //比例
-                                if (Unit.equals(basicUnit)) { //如果等于基础单位
-                                    depotItem.setBasicnumber(oNumber); //数量一致
-                                } else if (Unit.equals(otherUnit)) { //如果等于副单位
-                                    depotItem.setBasicnumber(oNumber.multiply(new BigDecimal(ratio)) ); //数量乘以比例
-                                }
-                            } else {
-                                depotItem.setBasicnumber(oNumber); //其他情况
+                        String Unit = tempInsertedJson.get("Unit").toString();
+                        BigDecimal oNumber = tempInsertedJson.getBigDecimal("OperNumber");
+                        Long mId = Long.parseLong(tempInsertedJson.get("MaterialId").toString());
+                        /***
+                         * 为什么调用的方法要先把基础单位去掉，去掉之后后续还能获取到？
+                         * */
+                        //以下进行单位换算
+    //                            String UnitName = findUnitName(mId); //查询计量单位名称
+                        String unitName = materialService.findUnitName(mId);
+                        if (!StringUtil.isEmpty(unitName)) {
+                            String unitList = unitName.substring(0, unitName.indexOf("("));
+                            String ratioList = unitName.substring(unitName.indexOf("("));
+                            String basicUnit = unitList.substring(0, unitList.indexOf(",")); //基本单位
+                            String otherUnit = unitList.substring(unitList.indexOf(",") + 1); //副单位
+                            Integer ratio = Integer.parseInt(ratioList.substring(ratioList.indexOf(":") + 1).replace(")", "")); //比例
+                            if (Unit.equals(basicUnit)) { //如果等于基础单位
+                                depotItem.setBasicnumber(oNumber); //数量一致
+                            } else if (Unit.equals(otherUnit)) { //如果等于副单位
+                                depotItem.setBasicnumber(oNumber.multiply(new BigDecimal(ratio)) ); //数量乘以比例
+                            }else{
+                                //不等于基础单位也不等于副单位，单位存在问题
+                                throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_UNIT_NOT_RIGHT_CODE,
+                                        String.format(ExceptionConstants.MATERIAL_UNIT_NOT_RIGHT_MSG,material==null?"":material.getName(),Unit,basicUnit,otherUnit));
                             }
-                        } catch (Exception e) {
-                            logger.error(">>>>>>>>>>>>>>>>>>>设置基础数量异常", e);
+                        } else {
+                            depotItem.setBasicnumber(oNumber); //其他情况
                         }
                     }
                     if (!StringUtil.isEmpty(tempInsertedJson.get("UnitPrice").toString())) {
@@ -593,7 +594,6 @@ public class DepotItemService {
                         if(depotItem==null){
                             continue;
                         }
-                        Material material= materialService.getMaterial(depotItem.getMaterialid());
                         if(material==null){
                             continue;
                         }
@@ -648,31 +648,34 @@ public class DepotItemService {
                     depotItem.setId(tempUpdatedJson.getLong("Id"));
                     depotItem.setMaterialid(tempUpdatedJson.getLong("MaterialId"));
                     depotItem.setMunit(tempUpdatedJson.getString("Unit"));
+                    if(!material.getId().equals(depotItem.getMaterialid())){
+                        material= materialService.getMaterial(depotItem.getMaterialid());
+                    }
                     if (!StringUtil.isEmpty(tempUpdatedJson.get("OperNumber").toString())) {
                         depotItem.setOpernumber(tempUpdatedJson.getBigDecimal("OperNumber"));
-                        try {
-                            String Unit = tempUpdatedJson.get("Unit").toString();
-                            BigDecimal oNumber = tempUpdatedJson.getBigDecimal("OperNumber");
-                            Long mId = Long.parseLong(tempUpdatedJson.get("MaterialId").toString());
-                            //以下进行单位换算
-//                            String UnitName = findUnitName(mId); //查询计量单位名称
-                            String unitName = materialService.findUnitName(mId);
-                            if (!StringUtil.isEmpty(unitName)) {
-                                String unitList = unitName.substring(0, unitName.indexOf("("));
-                                String ratioList = unitName.substring(unitName.indexOf("("));
-                                String basicUnit = unitList.substring(0, unitList.indexOf(",")); //基本单位
-                                String otherUnit = unitList.substring(unitList.indexOf(",") + 1); //副单位
-                                Integer ratio = Integer.parseInt(ratioList.substring(ratioList.indexOf(":") + 1).replace(")", "")); //比例
-                                if (Unit.equals(basicUnit)) { //如果等于基础单位
-                                    depotItem.setBasicnumber(oNumber); //数量一致
-                                } else if (Unit.equals(otherUnit)) { //如果等于副单位
-                                    depotItem.setBasicnumber(oNumber.multiply(new BigDecimal(ratio))); //数量乘以比例
-                                }
-                            } else {
-                                depotItem.setBasicnumber(oNumber); //其他情况
+                        String Unit = tempUpdatedJson.get("Unit").toString();
+                        BigDecimal oNumber = tempUpdatedJson.getBigDecimal("OperNumber");
+                        Long mId = Long.parseLong(tempUpdatedJson.get("MaterialId").toString());
+                        //以下进行单位换算
+    //                            String UnitName = findUnitName(mId); //查询计量单位名称
+                        String unitName = materialService.findUnitName(mId);
+                        if (!StringUtil.isEmpty(unitName)) {
+                            String unitList = unitName.substring(0, unitName.indexOf("("));
+                            String ratioList = unitName.substring(unitName.indexOf("("));
+                            String basicUnit = unitList.substring(0, unitList.indexOf(",")); //基本单位
+                            String otherUnit = unitList.substring(unitList.indexOf(",") + 1); //副单位
+                            Integer ratio = Integer.parseInt(ratioList.substring(ratioList.indexOf(":") + 1).replace(")", "")); //比例
+                            if (Unit.equals(basicUnit)) { //如果等于基础单位
+                                depotItem.setBasicnumber(oNumber); //数量一致
+                            } else if (Unit.equals(otherUnit)) { //如果等于副单位
+                                depotItem.setBasicnumber(oNumber.multiply(new BigDecimal(ratio))); //数量乘以比例
+                            }else{
+                                //不等于基础单位也不等于副单位，单位存在问题
+                                throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_UNIT_NOT_RIGHT_CODE,
+                                        String.format(ExceptionConstants.MATERIAL_UNIT_NOT_RIGHT_MSG,material==null?"":material.getName(),Unit,basicUnit,otherUnit));
                             }
-                        } catch (Exception e) {
-                            logger.error(">>>>>>>>>>>>>>>>>>>设置基础数量异常", e);
+                        } else {
+                            depotItem.setBasicnumber(oNumber); //其他情况
                         }
                     }
                     if (!StringUtil.isEmpty(tempUpdatedJson.get("UnitPrice").toString())) {
@@ -715,7 +718,6 @@ public class DepotItemService {
                      * 这里需要重新获取页面传递的商品信息
                      */
                     if(!material.getId().equals(depotItem.getMaterialid())){
-                        material= materialService.getMaterial(depotItem.getMaterialid());
                         if(material==null){
                             continue;
                         }
