@@ -1054,9 +1054,7 @@ function batDeleteDepotHead(){
                 var ids = "";
                 for (var i = 0; i < row.length; i++) {
                     if (i == row.length - 1) {
-                        if (row[i].status == 0) {
-                            ids += row[i].id;
-                        }
+                        ids += row[i].id;
                         break;
                     }
                     ids += row[i].id + ",";
