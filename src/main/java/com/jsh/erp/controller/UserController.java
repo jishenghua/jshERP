@@ -107,20 +107,34 @@ public class UserController {
                         msgTip = "user can login";
                         request.getSession().setAttribute("user",user);
                         if(("open").equals(mybatisPlusStatus)) {
-                            String url = HTTP + manageIp + ":" + managePort + "/tenant/getTenant?tenantId=" + user.getTenantId();
-                            JSONObject obj = HttpClient.httpGet(url);
-                            if(obj!=null && obj.getString("code").equals(CODE_OK)) {
-                                JSONObject dataObj = obj.getJSONObject("data");
-                                if(dataObj!=null) {
-                                    String tenantId = dataObj.getString("tenantId");
-                                    String userNumLimit = dataObj.getString("userNumLimit");
-                                    String billsNumLimit = dataObj.getString("billsNumLimit");
-                                    if(tenantId!=null) {
-                                        request.getSession().setAttribute("tenantId",tenantId); //租户tenantId
-                                        request.getSession().setAttribute("userNumLimit",userNumLimit); //用户限制数
-                                        request.getSession().setAttribute("billsNumLimit",billsNumLimit); //单据限制数
+                            String tenantId = null;
+                            String userNumLimit = null;
+                            String billsNumLimit = null;
+                            if(user.getTenantId()==null){
+                                msgTip="用户数据错误，请联系管理员！";
+                                break;
+                            }
+                            JSONObject obj=null;
+                            if(user.getTenantId()!=-1){
+                                String url = HTTP + manageIp + ":" + managePort + "/tenant/getTenant?tenantId=" + user.getTenantId();
+                                obj = HttpClient.httpGet(url);
+                                if(obj!=null && obj.getString("code").equals(CODE_OK)) {
+                                    JSONObject dataObj = obj.getJSONObject("data");
+                                    if(dataObj!=null) {
+                                        tenantId = dataObj.getString("tenantId");
+                                        userNumLimit = dataObj.getString("userNumLimit");
+                                        billsNumLimit = dataObj.getString("billsNumLimit");
                                     }
                                 }
+                            }else{
+                                tenantId=user.getTenantId().toString();
+                                userNumLimit=BusinessConstants.TEST_USER_NUM_LIMIT;
+                                billsNumLimit=BusinessConstants.TEST_BILLS_NUM_LIMIT;
+                            }
+                            if(tenantId!=null) {
+                                request.getSession().setAttribute("tenantId",tenantId); //租户tenantId
+                                request.getSession().setAttribute("userNumLimit",userNumLimit); //用户限制数
+                                request.getSession().setAttribute("billsNumLimit",billsNumLimit); //单据限制数
                             }
                         }
                         request.getSession().setAttribute("mybatisPlusStatus",mybatisPlusStatus); //开启状态

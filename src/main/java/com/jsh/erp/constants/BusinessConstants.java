@@ -212,7 +212,11 @@ public class BusinessConstants {
      * 默认管理员账号
      */
     public static final String DEFAULT_MANAGER = "admin";
-
+    /**
+     * 测试用户的基础数据设定
+     * */
+    public static final String TEST_USER_NUM_LIMIT="2000";
+    public static final String TEST_BILLS_NUM_LIMIT="200000";
 
 
 

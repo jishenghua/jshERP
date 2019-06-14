@@ -833,7 +833,7 @@ public class DepotItemService {
         Object tenantIdO = request.getSession().getAttribute("tenantId");
         if(tenantIdO!=null){
             //多租户模式，租户id从当前用户获取
-            tenantId=Long.valueOf(tenantId.toString());
+            tenantId=Long.valueOf(tenantIdO.toString());
         } else {
             //无租户模式，租户id为-1
             tenantId=Long.valueOf(-1);
