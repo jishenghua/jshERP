@@ -76,6 +76,8 @@
                 { title: '预付款',field: 'advancein',width:70,align:"center"},
                 { title: '期初应收',field: 'beginneedget',width:70,align:"center"},
                 { title: '期初应付',field: 'beginneedpay',width:70,align:"center"},
+                { title: '期末应收',field: 'allneedget',width:70,align:"center"},
+                { title: '期末应付',field: 'allneedpay',width:70,align:"center"},
                 { title: '税率(%)', field: 'taxrate',width:50,align:"center"},
                 { title: '状态',field: 'enabled',width:70,align:"center",formatter:function(value){
                     return value? "启用":"禁用";

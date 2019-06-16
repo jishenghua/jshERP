@@ -10,6 +10,8 @@ import com.jsh.erp.datasource.mappers.DepotHeadMapperEx;
 import com.jsh.erp.datasource.mappers.SupplierMapper;
 import com.jsh.erp.datasource.mappers.SupplierMapperEx;
 import com.jsh.erp.exception.BusinessRunTimeException;
+import com.jsh.erp.service.accountHead.AccountHeadService;
+import com.jsh.erp.service.depotHead.DepotHeadService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.BaseResponseInfo;
@@ -24,10 +26,9 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import static com.jsh.erp.utils.Tools.getNow3;
 
 @Service
 public class SupplierService {
@@ -46,6 +47,10 @@ public class SupplierService {
     private AccountHeadMapperEx accountHeadMapperEx;
     @Resource
     private DepotHeadMapperEx depotHeadMapperEx;
+    @Resource
+    private DepotHeadService depotHeadService;
+    @Resource
+    private AccountHeadService accountHeadService;
 
     public Supplier getSupplier(long id)throws Exception {
         Supplier result=null;
@@ -77,16 +82,47 @@ public class SupplierService {
 
     public List<Supplier> select(String supplier, String type, String phonenum,
                                  String telephone, String description, int offset, int rows) throws Exception{
-        List<Supplier> list=null;
+        List<Supplier> resList = new ArrayList<Supplier>();
         try{
-            list=supplierMapperEx.selectByConditionSupplier(supplier, type, phonenum, telephone, description, offset, rows);
+            List<Supplier> list = supplierMapperEx.selectByConditionSupplier(supplier, type, phonenum, telephone, description, offset, rows);
+            for(Supplier s : list) {
+                Integer supplierId = s.getId().intValue();
+                String endTime = getNow3();
+                String supType = null;
+                if(("客户").equals(s.getType())) {
+                    supType = "customer";
+                } else if(("供应商").equals(s.getType())) {
+                    supType = "vendor";
+                }
+                BigDecimal sum = BigDecimal.ZERO;
+                BigDecimal beginNeedGet = s.getBeginneedget();
+                if(beginNeedGet==null) {
+                    beginNeedGet = BigDecimal.ZERO;
+                }
+                BigDecimal beginNeedPay = s.getBeginneedpay();
+                if(beginNeedPay==null) {
+                    beginNeedPay = BigDecimal.ZERO;
+                }
+                sum = sum.add(depotHeadService.findTotalPay(supplierId, endTime, supType));
+                sum = sum.add(accountHeadService.findTotalPay(supplierId, endTime, supType));
+                if(("客户").equals(s.getType())) {
+                    sum = sum.add(beginNeedGet).subtract(beginNeedPay);
+                    s.setAllneedget(sum);
+                    s.setAllneedpay(BigDecimal.ZERO);
+                } else if(("供应商").equals(s.getType())) {
+                    sum = sum.add(beginNeedPay).subtract(beginNeedGet);
+                    s.setAllneedget(BigDecimal.ZERO);
+                    s.setAllneedpay(sum);
+                }
+                resList.add(s);
+            }
         }catch(Exception e){
             logger.error("异常码[{}],异常提示[{}],异常[{}]",
                     ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
             throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
                     ExceptionConstants.DATA_READ_FAIL_MSG);
         }
-        return list;
+        return resList;
     }
 
     public Long countSupplier(String supplier, String type, String phonenum, String telephone, String description) throws Exception{

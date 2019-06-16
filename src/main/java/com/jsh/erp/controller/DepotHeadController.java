@@ -343,19 +343,7 @@ public class DepotHeadController {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
             JSONObject outer = new JSONObject();
-            BigDecimal sum = BigDecimal.ZERO;
-            String getS = supplierId.toString();
-            int i = 1;
-            if (supType.equals("customer")) { //客户
-                i = 1;
-            } else if (supType.equals("vendor")) { //供应商
-                i = -1;
-            }
-            //进销部分
-            sum = sum.subtract((allMoney(getS, "入库", "采购", "合计",endTime).subtract(allMoney(getS, "入库", "采购", "实际",endTime))).multiply(new BigDecimal(i)));
-            sum = sum.subtract((allMoney(getS, "入库", "销售退货", "合计",endTime).subtract(allMoney(getS, "入库", "销售退货", "实际",endTime))).multiply(new BigDecimal(i)));
-            sum = sum.add((allMoney(getS, "出库", "销售", "合计",endTime).subtract(allMoney(getS, "出库", "销售", "实际",endTime))).multiply(new BigDecimal(i)));
-            sum = sum.add((allMoney(getS, "出库", "采购退货", "合计",endTime).subtract(allMoney(getS, "出库", "采购退货", "实际",endTime))).multiply(new BigDecimal(i)));
+            BigDecimal sum = depotHeadService.findTotalPay(supplierId, endTime, supType);
             outer.put("getAllMoney", sum);
             map.put("rows", outer);
             res.code = 200;
@@ -394,32 +382,6 @@ public class DepotHeadController {
         return res;
     }
 
-
-    /**
-     * 统计总金额
-     * @param getS
-     * @param type
-     * @param subType
-     * @param mode 合计或者金额
-     * @return
-     */
-    public BigDecimal allMoney(String getS, String type, String subType, String mode, String endTime)throws Exception {
-        BigDecimal allMoney = BigDecimal.ZERO;
-        try {
-            Integer supplierId = Integer.valueOf(getS);
-            BigDecimal sum = depotHeadService.findAllMoney(supplierId, type, subType, mode, endTime);
-            if(sum != null) {
-                allMoney = sum;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        //返回正数，如果负数也转为正数
-        if ((allMoney.compareTo(BigDecimal.ZERO))==-1) {
-            allMoney = allMoney.abs();
-        }
-        return allMoney;
-    }
     /**
      * create by: cjl
      * description:
