@@ -87,7 +87,7 @@
 
     <select id="findDetailByTypeAndMaterialIdList" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="DetailByTypeAndMIdResultMap">
         select dh.Number,concat(dh.SubType,dh.Type) as newType,
-        case when type='入库' then di.BasicNumber when type='出库' then 0-di.BasicNumber else 0 end as b_num,
+        case when type='入库' then ifnull(di.BasicNumber,0) when type='出库' then 0-di.BasicNumber else 0 end as b_num,
         date_format(dh.OperTime,'%Y-%m-%d %H:%i:%S') as oTime
         from jsh_depothead dh
         INNER JOIN jsh_depotitem di on dh.id=di.HeaderId and ifnull(di.delete_Flag,'0') !='1'
@@ -131,7 +131,7 @@
         and ifnull(delete_Flag,'0') !='1'
     </select>
 
-    <select id="findByTypeAndMaterialIdIn" resultType="java.lang.Integer">
+    <select id="findByTypeAndMaterialIdIn" resultType="java.lang.Long">
         select ifnull(sum(BasicNumber),0) as BasicNumber from jsh_depothead dh
           INNER JOIN jsh_depotitem di on dh.id=di.HeaderId  and ifnull(di.delete_Flag,'0') !='1'
           where dh.type='入库'
@@ -139,7 +139,7 @@
           and ifnull(dh.delete_Flag,'0') !='1'
     </select>
 
-    <select id="findByTypeAndMaterialIdOut" resultType="java.lang.Integer">
+    <select id="findByTypeAndMaterialIdOut" resultType="java.lang.Long">
         select ifnull(sum(BasicNumber),0) as BasicNumber from jsh_depothead dh
         INNER JOIN jsh_depotitem di on dh.id=di.HeaderId  and ifnull(di.delete_Flag,'0') !='1'
         where dh.type='出库'

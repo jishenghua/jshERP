@@ -9,6 +9,7 @@ import com.jsh.erp.datasource.mappers.DepotItemMapperEx;
 import com.jsh.erp.datasource.mappers.MaterialMapper;
 import com.jsh.erp.datasource.mappers.MaterialMapperEx;
 import com.jsh.erp.exception.BusinessRunTimeException;
+import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.BaseResponseInfo;
@@ -38,6 +39,8 @@ public class MaterialService {
     private UserService userService;
     @Resource
     private DepotItemMapperEx depotItemMapperEx;
+    @Resource
+    private DepotItemService depotItemService;
 
     public Material getMaterial(long id)throws Exception {
         Material result=null;
@@ -105,6 +108,9 @@ public class MaterialService {
                     }
                 }
                 m.setMaterialOther(materialOther);
+                Long InSum = depotItemService.findByTypeAndMaterialId("入库", m.getId());
+                Long OutSum = depotItemService.findByTypeAndMaterialId("出库", m.getId());
+                m.setStock(InSum - OutSum);
                 resList.add(m);
             }
         }

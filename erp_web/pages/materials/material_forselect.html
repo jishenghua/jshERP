@@ -94,48 +94,7 @@
                     {title: '品名', field: 'name', width: 150},
                     {title: '型号', field: 'model', width: 100},
                     {title: '类别', field: 'categoryName', width: 130},
-                    {title: '单位', field: 'unit', width: 60},
-                    {
-                        title: '库存', field: 'abc', width: 70, formatter: function (value, rec) {
-                            var monthTime = getNowFormatMonth();
-                            var mId = rec.id; //商品id
-                            var thisStock = 0;
-                            //查询库存
-                            $.ajax({
-                                type: "get",
-                                url: '/depotItem/findStockNumByMaterialId',
-                                data: {
-                                    materialId: mId,
-                                    monthTime: monthTime,
-                                    currentPage: 1,
-                                    pageSize: 10
-                                },
-                                dataType: "json",
-                                success: function (res) {
-                                    if(res && res.code === 200) {
-                                        if (res.data && res.data.page && res.data.page[0]) {
-                                            thisStock = res.data.page[0].thisSum - 0;
-                                            if (thisStock > 0) {
-                                                $("#tablePanel .class-" + rec.id).text(thisStock); //延迟加载库存数据
-                                                $("#tablePanel .class-" + rec.id).css("color", "blue").css("text-decoration", "underline").css("cursor", "pointer");
-                                                $("#tablePanel .class-" + rec.id).off("click").on("click", function () {
-                                                    $('#materialDetailListDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;查看出入库明细');
-                                                    $(".window-mask").css({width: webW, height: webH});
-                                                    initMaterialDetailData(mId);
-                                                    getMaterialInOutList(mId, 1, initPageSize);
-                                                    ininMaterialDetailPager(mId);
-                                                });
-                                            }
-                                        }
-                                    }
-                                },
-                                error: function () {
-                                    $.messager.alert('查询提示', '查询数据后台异常，请稍后再试！', 'error');
-                                }
-                            });
-                            return "<span class='class-" + rec.id + "'>" + thisStock + "</span>";
-                        }
-                    },
+                    {title: '单位', field: 'unit', width: 60}
                 ]],
                 toolbar: [
                 ],
@@ -160,54 +119,6 @@
                 }
             });
             showMaterialDetails(1, initPageSize);
-        }
-
-
-        //分页信息处理
-        function ininMaterialDetailPager(mId) {
-            try {
-                var opts = $("#materialTableData").datagrid('options');
-                var pager = $("#materialTableData").datagrid('getPager');
-                pager.pagination({
-                    onSelectPage: function (pageNum, pageSize) {
-                        opts.pageNumber = pageNum;
-                        opts.pageSize = pageSize;
-                        pager.pagination('refresh', {
-                            pageNumber: pageNum,
-                            pageSize: pageSize
-                        });
-                        getMaterialInOutList(mId, pageNum, pageSize);
-                    }
-                });
-            }
-            catch (e) {
-                $.messager.alert('异常处理提示', "分页信息异常 :  " + e.name + ": " + e.message, 'error');
-            }
-        }
-
-        function getMaterialInOutList(mId, pageNo, pageSize) {
-            $.ajax({
-                type: "get",
-                url: "/depotItem/findDetailByTypeAndMaterialId",
-                dataType: "json",
-                data: ({
-                    materialId: mId,
-                    currentPage: pageNo,
-                    pageSize: pageSize
-                }),
-                success: function (res) {
-                    if(res && res.code === 200){
-                        if(res.data && res.data.page) {
-                            $("#materialTableData").datagrid('loadData', res.data.page);
-                        }
-                    }
-                },
-                //此处添加错误处理
-                error: function () {
-                    $.messager.alert('查询提示', '查询数据后台异常，请稍后再试！', 'error');
-                    return;
-                }
-            });
         }
 
         //初始化键盘enter事件

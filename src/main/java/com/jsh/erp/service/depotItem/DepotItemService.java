@@ -290,8 +290,8 @@ public class DepotItemService {
         return depotItemMapper.updateByPrimaryKeySelective(depotItem);
     }
 
-    public int findByTypeAndMaterialId(String type, Long mId) throws Exception{
-        int result =0;
+    public Long findByTypeAndMaterialId(String type, Long mId) throws Exception{
+        Long result = 0l;
         try{
             if(type.equals(TYPE)) {
                 result= depotItemMapperEx.findByTypeAndMaterialIdIn(mId);

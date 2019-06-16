@@ -522,44 +522,10 @@
                     {title: '单位', field: 'unit', width: 60},
                     {title: '安全存量', field: 'safetystock', width: 70},
                     {
-                        title: '库存', field: 'abc', width: 70, formatter: function (value, rec) {
-                            var monthTime = getNowFormatMonth();
-                            var mId = rec.id; //商品id
-                            var thisStock = 0;
-                            //查询库存
-                            $.ajax({
-                                type: "get",
-                                url: '/depotItem/findStockNumByMaterialId',
-                                data: {
-                                    materialId: mId,
-                                    monthTime: monthTime,
-                                    currentPage: 1,
-                                    pageSize: 10
-                                },
-                                dataType: "json",
-                                success: function (res) {
-                                    if(res && res.code === 200) {
-                                        if (res.data && res.data.page && res.data.page[0]) {
-                                            thisStock = res.data.page[0].thisSum - 0;
-                                            if (thisStock > 0) {
-                                                $("#tablePanel .class-" + rec.id).text(thisStock); //延迟加载库存数据
-                                                $("#tablePanel .class-" + rec.id).css("color", "blue").css("text-decoration", "underline").css("cursor", "pointer");
-                                                $("#tablePanel .class-" + rec.id).off("click").on("click", function () {
-                                                    $('#materialDetailListDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;查看出入库明细');
-                                                    $(".window-mask").css({width: webW, height: webH});
-                                                    initMaterialDetailData(mId);
-                                                    getMaterialInOutList(mId, 1, initPageSize);
-                                                    ininMaterialDetailPager(mId);
-                                                });
-                                            }
-                                        }
-                                    }
-                                },
-                                error: function () {
-                                    $.messager.alert('查询提示', '查询数据后台异常，请稍后再试！', 'error');
-                                }
-                            });
-                            return "<span class='class-" + rec.id + "'>" + thisStock + "</span>";
+                        title: '库存', field: 'stock', width: 70, formatter: function (value, rec) {
+                            var str = '';
+                            str += '<span title="查看出入库明细" class="n-link" onclick="findStockList(' + rec.id + ');">' + rec.stock + '</span>';
+                            return str;
                         }
                     },
                     {title: '零售价', field: 'retailprice', width: 60},
@@ -763,6 +729,14 @@
             catch (e) {
                 $.messager.alert('异常处理提示', "分页信息异常 :  " + e.name + ": " + e.message, 'error');
             }
+        }
+
+        function findStockList(mId) {
+            $('#materialDetailListDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;查看出入库明细');
+            $(".window-mask").css({width: webW, height: webH});
+            initMaterialDetailData(mId);
+            getMaterialInOutList(mId, 1, initPageSize);
+            ininMaterialDetailPager(mId);
         }
 
         //删除商品信息
