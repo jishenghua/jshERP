@@ -34,7 +34,7 @@
                 &nbsp;&nbsp;
                 <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-print" id="printBtn">打印</a>
             </td>
-            <td><span class="tip">注：此处包含零售+批发销售</span></td>
+            <td>当前销售总额：<span class="first-total">0</span>&nbsp;&nbsp;<span class="tip">注：此处包含零售+批发销售</span></td>
         </tr>
     </table>
 </div>
@@ -110,14 +110,16 @@
             pageSize: 10,
             pageList: [10, 50, 100],
             columns: [[
-                {title: '名称', field: 'MaterialName', width: 60},
-                {title: '型号', field: 'MaterialModel', width: 80},
-                {title: '扩展信息', field: 'MaterialOther', width: 150},
-                {title: '单位', field: 'MaterialUnit', width: 80},
-                {title: '销售数量', field: 'OutSum', width: 60},
-                {title: '销售金额', field: 'OutSumPrice', width: 60},
-                {title: '退货数量', field: 'InSum', width: 60},
-                {title: '退货金额', field: 'InSumPrice', width: 60}
+                {title: '名称', field: 'MaterialName', width: 60, align: "center"},
+                {title: '型号', field: 'MaterialModel', width: 80, align: "center"},
+                {title: '扩展信息', field: 'MaterialOther', width: 150, align: "center"},
+                {title: '单位', field: 'MaterialUnit', width: 80, align: "center"},
+                {title: '销售数量', field: 'OutSum', width: 60, align: "center"},
+                {title: '销售金额', field: 'OutSumPrice', width: 60, align: "center"},
+                {title: '退货数量', field: 'InSum', width: 60, align: "center"},
+                {title: '退货金额', field: 'InSumPrice', width: 60, align: "center"},
+                {title: '实际销售金额', field: 'OutInSumPrice', width: 80, align: "center"}
+
             ]],
             onLoadError: function () {
                 $.messager.alert('页面加载提示', '页面加载异常，请稍后再试！', 'error');
@@ -219,6 +221,13 @@
                                                 if (res && res.code === 200 && res.data) {
                                                     $("#tableData").datagrid('loadData', res.data.rows);
                                                 }
+                                                var total = 0;
+                                                res.data.rows.forEach(function(value, index, array){
+                                                    //执行某些操作
+                                                    total += value.OutInSumPrice;
+                                                })
+
+                                                $(".first-total").text(total); //当前总余额
                                             },
                                             //此处添加错误处理
                                             error: function () {
