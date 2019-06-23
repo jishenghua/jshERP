@@ -10,13 +10,13 @@ Target Server Type    : MYSQL
 Target Server Version : 50704
 File Encoding         : 65001
 
-Date: 2019-05-03 17:07:44
+Date: 2019-06-23 18:27:53
 */
 
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
--- Table structure for `databasechangelog`
+-- Table structure for databasechangelog
 -- ----------------------------
 DROP TABLE IF EXISTS `databasechangelog`;
 CREATE TABLE `databasechangelog` (
@@ -45,7 +45,7 @@ INSERT INTO `databasechangelog` VALUES ('201712102245', 'jishenghua', 'liquibase
 INSERT INTO `databasechangelog` VALUES ('201809122201', 'jishenghua', 'liquibase/jsh_erp/db.changelog-jsh_erp-1.0.xml', '2018-10-28 19:56:28', '7', 'EXECUTED', '7:62bde21df811efc41b146eac39da7994', 'sql', '更新用户表-是否系统列', null, '3.1.1');
 
 -- ----------------------------
--- Table structure for `databasechangeloglock`
+-- Table structure for databasechangeloglock
 -- ----------------------------
 DROP TABLE IF EXISTS `databasechangeloglock`;
 CREATE TABLE `databasechangeloglock` (
@@ -59,10 +59,10 @@ CREATE TABLE `databasechangeloglock` (
 -- ----------------------------
 -- Records of databasechangeloglock
 -- ----------------------------
-INSERT INTO `databasechangeloglock` VALUES ('1', '', null, null);
+INSERT INTO `databasechangeloglock` VALUES ('1', '\0', null, null);
 
 -- ----------------------------
--- Table structure for `jsh_account`
+-- Table structure for jsh_account
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_account`;
 CREATE TABLE `jsh_account` (
@@ -81,20 +81,20 @@ CREATE TABLE `jsh_account` (
 -- ----------------------------
 -- Records of jsh_account
 -- ----------------------------
-INSERT INTO `jsh_account` VALUES ('4', '南通建行', '652346523465234623', '1200.000000', '215.000000', '建行账户', '', null, '0');
+INSERT INTO `jsh_account` VALUES ('4', '南通建行', '652346523465234623', '1200.000000', '215.000000', '建行账户', '\0', null, '0');
 INSERT INTO `jsh_account` VALUES ('9', '流动总账', '65234624523452364', '2000.000000', '393.000000', '现在账户', '', null, '0');
-INSERT INTO `jsh_account` VALUES ('10', '支付宝', '123456789@qq.com', '10000.000000', null, '', '', null, '0');
-INSERT INTO `jsh_account` VALUES ('11', '微信', '13000000000', '10000.000000', null, '', '', null, '0');
-INSERT INTO `jsh_account` VALUES ('12', '上海农行', '65324345234523211', '10000.000000', '0.000000', '', '', null, '0');
+INSERT INTO `jsh_account` VALUES ('10', '支付宝', '123456789@qq.com', '10000.000000', null, '', '\0', null, '0');
+INSERT INTO `jsh_account` VALUES ('11', '微信', '13000000000', '10000.000000', null, '', '\0', null, '0');
+INSERT INTO `jsh_account` VALUES ('12', '上海农行', '65324345234523211', '10000.000000', '0.000000', '', '\0', null, '0');
 INSERT INTO `jsh_account` VALUES ('13', '账户1', 'abcd123', '0.000000', null, '', '', '1', '0');
 INSERT INTO `jsh_account` VALUES ('14', '账户1', 'zhanghu1', '0.000000', null, '', '', '117', '0');
-INSERT INTO `jsh_account` VALUES ('15', '账户2222', 'zh2222', '0.000000', null, '', '', '117', '0');
+INSERT INTO `jsh_account` VALUES ('15', '账户2222', 'zh2222', '0.000000', null, '', '\0', '117', '0');
 INSERT INTO `jsh_account` VALUES ('16', '账户1', '1231241244', '0.000000', null, '', '', '115', '0');
 INSERT INTO `jsh_account` VALUES ('17', '账户1', 'zzz111', '0.000000', null, '', '', '63', '0');
-INSERT INTO `jsh_account` VALUES ('18', '账户2', '1234131324', '0.000000', null, '', '', '63', '0');
+INSERT INTO `jsh_account` VALUES ('18', '账户2', '1234131324', '0.000000', null, '', '\0', '63', '0');
 
 -- ----------------------------
--- Table structure for `jsh_accounthead`
+-- Table structure for jsh_accounthead
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_accounthead`;
 CREATE TABLE `jsh_accounthead` (
@@ -144,7 +144,7 @@ INSERT INTO `jsh_accounthead` VALUES ('95', '收预付款', '49', '9', null, '6.
 INSERT INTO `jsh_accounthead` VALUES ('96', '收入', '5', '4', '22.000000', '22.000000', '12', 'SR20190321235925', '2019-03-21 23:59:25', '', null, '0');
 
 -- ----------------------------
--- Table structure for `jsh_accountitem`
+-- Table structure for jsh_accountitem
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_accountitem`;
 CREATE TABLE `jsh_accountitem` (
@@ -190,7 +190,7 @@ INSERT INTO `jsh_accountitem` VALUES ('96', '95', '13', null, '6.000000', '', '1
 INSERT INTO `jsh_accountitem` VALUES ('97', '96', null, '14', '22.000000', '', null, '0');
 
 -- ----------------------------
--- Table structure for `jsh_app`
+-- Table structure for jsh_app
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_app`;
 CREATE TABLE `jsh_app` (
@@ -211,23 +211,24 @@ CREATE TABLE `jsh_app` (
   `Enabled` bit(1) DEFAULT NULL COMMENT '是否启用',
   `delete_Flag` varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除',
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8 COMMENT='应用表';
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8 COMMENT='应用表';
 
 -- ----------------------------
 -- Records of jsh_app
 -- ----------------------------
-INSERT INTO `jsh_app` VALUES ('3', '00', '系统管理', 'app', '0000000004.png', '', '1240', '600', '', '', '', 'desk', '198', '', '', '0');
-INSERT INTO `jsh_app` VALUES ('6', '02', '个人信息', 'app', '0000000005.png', '../user/password.html', '600', '400', '', '', '', 'dock', '200', '', '', '0');
-INSERT INTO `jsh_app` VALUES ('7', '01', '基础数据', 'app', '0000000006.png', '', '1350', '630', '', '', '', 'desk', '120', '', '', '0');
-INSERT INTO `jsh_app` VALUES ('22', '03', '报表查询', 'app', '0000000022.png', '', '1350', '630', '', '', '', 'desk', '115', '', '', '0');
-INSERT INTO `jsh_app` VALUES ('23', '04', '零售管理', 'app', 'resizeApi.png', '', '1350', '630', '', '', '', 'desk', '025', '', '', '0');
-INSERT INTO `jsh_app` VALUES ('24', '05', '采购管理', 'app', 'buy.png', '', '1350', '630', '', '', '', 'desk', '027', '', '', '0');
-INSERT INTO `jsh_app` VALUES ('25', '06', '销售管理', 'app', 'sale.png', '', '1350', '630', '', '', '', 'desk', '028', '', '', '0');
-INSERT INTO `jsh_app` VALUES ('26', '07', '财务管理', 'app', 'money.png', '', '1350', '630', '', '', '', 'desk', '035', '', '', '0');
-INSERT INTO `jsh_app` VALUES ('27', '08', '仓库管理', 'app', 'depot.png', '', '1350', '630', '', '', '', 'desk', '029', '', '', '0');
+INSERT INTO `jsh_app` VALUES ('3', '00', '系统管理', 'app', '0000000004.png', '', '1240', '600', '', '\0', '\0', 'desk', '198', '', '', '0');
+INSERT INTO `jsh_app` VALUES ('6', '02', '个人信息', 'app', '0000000005.png', '../user/password.html', '600', '400', '\0', '\0', '\0', 'dock', '200', '', '', '0');
+INSERT INTO `jsh_app` VALUES ('7', '01', '基础数据', 'app', '0000000006.png', '', '1350', '630', '', '\0', '\0', 'desk', '120', '', '', '0');
+INSERT INTO `jsh_app` VALUES ('22', '03', '报表查询', 'app', '0000000022.png', '', '1350', '630', '', '\0', '\0', 'desk', '115', '', '', '0');
+INSERT INTO `jsh_app` VALUES ('23', '04', '零售管理', 'app', 'resizeApi.png', '', '1350', '630', '', '\0', '', 'desk', '025', '', '', '0');
+INSERT INTO `jsh_app` VALUES ('24', '05', '采购管理', 'app', 'buy.png', '', '1350', '630', '', '\0', '', 'desk', '027', '', '', '0');
+INSERT INTO `jsh_app` VALUES ('25', '06', '销售管理', 'app', 'sale.png', '', '1350', '630', '', '\0', '', 'desk', '028', '', '', '0');
+INSERT INTO `jsh_app` VALUES ('26', '07', '财务管理', 'app', 'money.png', '', '1350', '630', '', '\0', '\0', 'desk', '035', '', '', '0');
+INSERT INTO `jsh_app` VALUES ('27', '08', '仓库管理', 'app', 'depot.png', '', '1350', '630', '', '\0', '', 'desk', '029', '', '', '0');
+INSERT INTO `jsh_app` VALUES ('28', '09', '新手引导', 'app', 'userHelp.png', '../user/userHelp.html', '1000', '500', '\0', '\0', '\0', 'dock', '210', '', '', '0');
 
 -- ----------------------------
--- Table structure for `jsh_asset`
+-- Table structure for jsh_asset
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_asset`;
 CREATE TABLE `jsh_asset` (
@@ -267,7 +268,7 @@ INSERT INTO `jsh_asset` VALUES ('1', '27', 'weizhi', '', '0', null, '11.000000',
 INSERT INTO `jsh_asset` VALUES ('3', '29', 'weizhi', null, '0', null, '11.000000', '2016-10-22 00:00:00', '2016-10-21 00:00:00', '2016-11-03 00:00:00', '1231241', '123124123', '2', null, null, '2017-07-22 18:42:14', null, '2017-07-22 18:42:14', null, null, '0');
 
 -- ----------------------------
--- Table structure for `jsh_assetcategory`
+-- Table structure for jsh_assetcategory
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_assetcategory`;
 CREATE TABLE `jsh_assetcategory` (
@@ -290,7 +291,7 @@ INSERT INTO `jsh_assetcategory` VALUES ('17', '固定资产', '1', '固定资产
 INSERT INTO `jsh_assetcategory` VALUES ('18', '流动资产', '1', '流动资产', null, '0');
 
 -- ----------------------------
--- Table structure for `jsh_assetname`
+-- Table structure for jsh_assetname
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_assetname`;
 CREATE TABLE `jsh_assetname` (
@@ -333,7 +334,7 @@ INSERT INTO `jsh_assetname` VALUES ('30', '电源线8', '17', '1', '', '0', null
 INSERT INTO `jsh_assetname` VALUES ('31', '电源线9', '17', '1', '', '0', null, '0');
 
 -- ----------------------------
--- Table structure for `jsh_depot`
+-- Table structure for jsh_depot
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_depot`;
 CREATE TABLE `jsh_depot` (
@@ -369,10 +370,10 @@ INSERT INTO `jsh_depot` VALUES ('11', '仓库321321', '', null, null, '0', '', '
 INSERT INTO `jsh_depot` VALUES ('12', '仓库111222', '', null, null, '0', '', '', null, '117', '0', null);
 INSERT INTO `jsh_depot` VALUES ('13', '仓库1', '', null, null, '0', '', '', null, '115', '0', null);
 INSERT INTO `jsh_depot` VALUES ('14', '仓库1', '', null, null, '0', '', '', null, '63', '0', '');
-INSERT INTO `jsh_depot` VALUES ('15', '仓库2', '', null, null, '0', '', '', null, '63', '0', '');
+INSERT INTO `jsh_depot` VALUES ('15', '仓库2', '', null, null, '0', '', '', null, '63', '0', '\0');
 
 -- ----------------------------
--- Table structure for `jsh_depothead`
+-- Table structure for jsh_depothead
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_depothead`;
 CREATE TABLE `jsh_depothead` (
@@ -561,7 +562,7 @@ INSERT INTO `jsh_depothead` VALUES ('197', '出库', '销售', null, 'XSCK000000
 INSERT INTO `jsh_depothead` VALUES ('198', '入库', '采购', null, 'CGRK00000000292', 'CGRK00000000292', '季圣华', '2019-05-03 14:20:56', '2019-05-03 14:19:38', '57', null, '17', '-1.120000', null, '-1.000000', '现付', '', '', null, '', '0.000000', '0.000000', '1.120000', null, null, null, null, '0', '', '63', '0');
 
 -- ----------------------------
--- Table structure for `jsh_depotitem`
+-- Table structure for jsh_depotitem
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_depotitem`;
 CREATE TABLE `jsh_depotitem` (
@@ -759,7 +760,7 @@ INSERT INTO `jsh_depotitem` VALUES ('214', '196', '569', '只', '6.000000', '6.0
 INSERT INTO `jsh_depotitem` VALUES ('215', '198', '578', '箱', '1.000000', '12.000000', '1.000000', '1.120000', '1.000000', '', null, null, '14', null, '12.000000', '0.120000', '1.120000', '', '', '', '', '', '', '63', '0');
 
 -- ----------------------------
--- Table structure for `jsh_functions`
+-- Table structure for jsh_functions
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_functions`;
 CREATE TABLE `jsh_functions` (
@@ -775,82 +776,83 @@ CREATE TABLE `jsh_functions` (
   `PushBtn` varchar(50) DEFAULT NULL COMMENT '功能按钮',
   `delete_Flag` varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除',
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=246 DEFAULT CHARSET=utf8 COMMENT='功能模块表';
+) ENGINE=InnoDB AUTO_INCREMENT=247 DEFAULT CHARSET=utf8 COMMENT='功能模块表';
 
 -- ----------------------------
 -- Records of jsh_functions
 -- ----------------------------
 INSERT INTO `jsh_functions` VALUES ('1', '00', '系统管理', '0', '', '', '0010', '', '电脑版', '', '0');
 INSERT INTO `jsh_functions` VALUES ('2', '01', '基础数据', '0', '', '', '0020', '', '电脑版', '', '0');
-INSERT INTO `jsh_functions` VALUES ('11', '0001', '系统管理', '00', '', '', '0110', '', '电脑版', null, '0');
-INSERT INTO `jsh_functions` VALUES ('12', '000101', '应用管理', '0001', '../manage/app.html', '', '0132', '', '电脑版', '', '0');
-INSERT INTO `jsh_functions` VALUES ('13', '000102', '角色管理', '0001', '../manage/role.html', '', '0130', '', '电脑版', '', '0');
-INSERT INTO `jsh_functions` VALUES ('14', '000103', '用户管理', '0001', '../manage/user.html', '', '0140', '', '电脑版', null, '0');
-INSERT INTO `jsh_functions` VALUES ('15', '000104', '日志管理', '0001', '../manage/log.html', '', '0160', '', '电脑版', null, '0');
-INSERT INTO `jsh_functions` VALUES ('16', '000105', '功能管理', '0001', '../manage/functions.html', '', '0135', '', '电脑版', null, '0');
-INSERT INTO `jsh_functions` VALUES ('21', '0101', '商品管理', '01', '', '', '0220', '', '电脑版', null, '0');
-INSERT INTO `jsh_functions` VALUES ('22', '010101', '商品类别', '0101', '../materials/materialcategory.html', '', '0230', '', '电脑版', null, '0');
-INSERT INTO `jsh_functions` VALUES ('23', '010102', '商品信息', '0101', '../materials/material.html', '', '0240', '', '电脑版', null, '0');
-INSERT INTO `jsh_functions` VALUES ('24', '0102', '基本资料', '01', '', '', '0250', '', '电脑版', null, '0');
-INSERT INTO `jsh_functions` VALUES ('25', '01020101', '供应商信息', '0102', '../manage/vendor.html', '', '0260', '', '电脑版', '1,2', '0');
-INSERT INTO `jsh_functions` VALUES ('26', '010202', '仓库信息', '0102', '../manage/depot.html', '', '0270', '', '电脑版', null, '0');
-INSERT INTO `jsh_functions` VALUES ('31', '010206', '经手人管理', '0102', '../materials/person.html', '', '0284', '', '电脑版', null, '0');
-INSERT INTO `jsh_functions` VALUES ('32', '0502', '采购管理', '05', '', '', '0330', '', '电脑版', '', '0');
-INSERT INTO `jsh_functions` VALUES ('33', '050201', '采购入库', '0502', '../materials/purchase_in_list.html', '', '0340', '', '电脑版', '3,4,5', '0');
-INSERT INTO `jsh_functions` VALUES ('38', '0603', '销售管理', '06', '', '', '0390', '', '电脑版', '', '0');
-INSERT INTO `jsh_functions` VALUES ('40', '080107', '调拨出库', '0801', '../materials/allocation_out_list.html', '', '0807', '', '电脑版', '3,4,5', '0');
-INSERT INTO `jsh_functions` VALUES ('41', '060303', '销售出库', '0603', '../materials/sale_out_list.html', '', '0394', '', '电脑版', '3,4,5', '0');
-INSERT INTO `jsh_functions` VALUES ('44', '0704', '财务管理', '07', '', '', '0450', '', '电脑版', '', '0');
-INSERT INTO `jsh_functions` VALUES ('59', '030101', '库存状况', '0301', '../reports/in_out_stock_report.html', '', '0600', '', '电脑版', null, '0');
-INSERT INTO `jsh_functions` VALUES ('194', '010204', '收支项目', '0102', '../manage/inOutItem.html', '', '0282', '', '电脑版', null, '0');
-INSERT INTO `jsh_functions` VALUES ('195', '010205', '结算账户', '0102', '../manage/account.html', '', '0283', '', '电脑版', null, '0');
+INSERT INTO `jsh_functions` VALUES ('11', '0001', '系统管理', '00', '', '\0', '0110', '', '电脑版', null, '0');
+INSERT INTO `jsh_functions` VALUES ('12', '000101', '应用管理', '0001', '../manage/app.html', '\0', '0132', '', '电脑版', '', '0');
+INSERT INTO `jsh_functions` VALUES ('13', '000102', '角色管理', '0001', '../manage/role.html', '\0', '0130', '', '电脑版', '', '0');
+INSERT INTO `jsh_functions` VALUES ('14', '000103', '用户管理', '0001', '../manage/user.html', '\0', '0140', '', '电脑版', null, '0');
+INSERT INTO `jsh_functions` VALUES ('15', '000104', '日志管理', '0001', '../manage/log.html', '\0', '0160', '', '电脑版', null, '0');
+INSERT INTO `jsh_functions` VALUES ('16', '000105', '功能管理', '0001', '../manage/functions.html', '\0', '0135', '', '电脑版', null, '0');
+INSERT INTO `jsh_functions` VALUES ('21', '0101', '商品管理', '01', '', '\0', '0220', '', '电脑版', null, '0');
+INSERT INTO `jsh_functions` VALUES ('22', '010101', '商品类别', '0101', '../materials/materialcategory.html', '\0', '0230', '', '电脑版', null, '0');
+INSERT INTO `jsh_functions` VALUES ('23', '010102', '商品信息', '0101', '../materials/material.html', '\0', '0240', '', '电脑版', null, '0');
+INSERT INTO `jsh_functions` VALUES ('24', '0102', '基本资料', '01', '', '\0', '0250', '', '电脑版', null, '0');
+INSERT INTO `jsh_functions` VALUES ('25', '01020101', '供应商信息', '0102', '../manage/vendor.html', '\0', '0260', '', '电脑版', '1,2', '0');
+INSERT INTO `jsh_functions` VALUES ('26', '010202', '仓库信息', '0102', '../manage/depot.html', '\0', '0270', '', '电脑版', null, '0');
+INSERT INTO `jsh_functions` VALUES ('31', '010206', '经手人管理', '0102', '../materials/person.html', '\0', '0284', '', '电脑版', null, '0');
+INSERT INTO `jsh_functions` VALUES ('32', '0502', '采购管理', '05', '', '\0', '0330', '', '电脑版', '', '0');
+INSERT INTO `jsh_functions` VALUES ('33', '050201', '采购入库', '0502', '../materials/purchase_in_list.html', '\0', '0340', '', '电脑版', '3,4,5', '0');
+INSERT INTO `jsh_functions` VALUES ('38', '0603', '销售管理', '06', '', '\0', '0390', '', '电脑版', '', '0');
+INSERT INTO `jsh_functions` VALUES ('40', '080107', '调拨出库', '0801', '../materials/allocation_out_list.html', '\0', '0807', '', '电脑版', '3,4,5', '0');
+INSERT INTO `jsh_functions` VALUES ('41', '060303', '销售出库', '0603', '../materials/sale_out_list.html', '\0', '0394', '', '电脑版', '3,4,5', '0');
+INSERT INTO `jsh_functions` VALUES ('44', '0704', '财务管理', '07', '', '\0', '0450', '', '电脑版', '', '0');
+INSERT INTO `jsh_functions` VALUES ('59', '030101', '库存状况', '0301', '../reports/in_out_stock_report.html', '\0', '0600', '', '电脑版', null, '0');
+INSERT INTO `jsh_functions` VALUES ('194', '010204', '收支项目', '0102', '../manage/inOutItem.html', '\0', '0282', '', '电脑版', null, '0');
+INSERT INTO `jsh_functions` VALUES ('195', '010205', '结算账户', '0102', '../manage/account.html', '\0', '0283', '', '电脑版', null, '0');
 INSERT INTO `jsh_functions` VALUES ('196', '03', '报表查询', '0', '', '', '0025', '', '电脑版', '', '0');
-INSERT INTO `jsh_functions` VALUES ('197', '070402', '收入单', '0704', '../financial/item_in.html', '', '0465', '', '电脑版', '', '0');
-INSERT INTO `jsh_functions` VALUES ('198', '0301', '报表查询', '03', '', '', '0570', '', '电脑版', null, '0');
-INSERT INTO `jsh_functions` VALUES ('199', '050204', '采购退货', '0502', '../materials/purchase_back_list.html', '', '0345', '', '电脑版', '3,4,5', '0');
-INSERT INTO `jsh_functions` VALUES ('200', '060305', '销售退货', '0603', '../materials/sale_back_list.html', '', '0396', '', '电脑版', '3,4,5', '0');
-INSERT INTO `jsh_functions` VALUES ('201', '080103', '其它入库', '0801', '../materials/other_in_list.html', '', '0803', '', '电脑版', '3,4,5', '0');
-INSERT INTO `jsh_functions` VALUES ('202', '080105', '其它出库', '0801', '../materials/other_out_list.html', '', '0805', '', '电脑版', '3,4,5', '0');
-INSERT INTO `jsh_functions` VALUES ('203', '070403', '支出单', '0704', '../financial/item_out.html', '', '0470', '', '电脑版', '', '0');
-INSERT INTO `jsh_functions` VALUES ('204', '070404', '收款单', '0704', '../financial/money_in.html', '', '0475', '', '电脑版', '', '0');
-INSERT INTO `jsh_functions` VALUES ('205', '070405', '付款单', '0704', '../financial/money_out.html', '', '0480', '', '电脑版', '', '0');
-INSERT INTO `jsh_functions` VALUES ('206', '070406', '转账单', '0704', '../financial/giro.html', '', '0490', '', '电脑版', '', '0');
-INSERT INTO `jsh_functions` VALUES ('207', '030102', '结算账户', '0301', '../reports/account_report.html', '', '0610', '', '电脑版', null, '0');
-INSERT INTO `jsh_functions` VALUES ('208', '030103', '进货统计', '0301', '../reports/buy_in_report.html', '', '0620', '', '电脑版', null, '0');
-INSERT INTO `jsh_functions` VALUES ('209', '030104', '销售统计', '0301', '../reports/sale_out_report.html', '', '0630', '', '电脑版', null, '0');
-INSERT INTO `jsh_functions` VALUES ('210', '040102', '零售出库', '0401', '../materials/retail_out_list.html', '', '0405', '', '电脑版', '3,4,5', '0');
-INSERT INTO `jsh_functions` VALUES ('211', '040104', '零售退货', '0401', '../materials/retail_back_list.html', '', '0407', '', '电脑版', '3,4,5', '0');
-INSERT INTO `jsh_functions` VALUES ('212', '070407', '收预付款', '0704', '../financial/advance_in.html', '', '0495', '', '电脑版', '', '0');
-INSERT INTO `jsh_functions` VALUES ('217', '01020102', '客户信息', '0102', '../manage/customer.html', '', '0262', '', '电脑版', '1,2', '0');
-INSERT INTO `jsh_functions` VALUES ('218', '01020103', '会员信息', '0102', '../manage/member.html', '', '0263', '', '电脑版', '1,2', '0');
-INSERT INTO `jsh_functions` VALUES ('219', '000107', '资产管理', '0001', '../asset/asset.html', '', '0170', '', '电脑版', null, '0');
-INSERT INTO `jsh_functions` VALUES ('220', '010103', '计量单位', '0101', '../manage/unit.html', '', '0245', '', '电脑版', null, '0');
+INSERT INTO `jsh_functions` VALUES ('197', '070402', '收入单', '0704', '../financial/item_in.html', '\0', '0465', '', '电脑版', '', '0');
+INSERT INTO `jsh_functions` VALUES ('198', '0301', '报表查询', '03', '', '\0', '0570', '', '电脑版', null, '0');
+INSERT INTO `jsh_functions` VALUES ('199', '050204', '采购退货', '0502', '../materials/purchase_back_list.html', '\0', '0345', '', '电脑版', '3,4,5', '0');
+INSERT INTO `jsh_functions` VALUES ('200', '060305', '销售退货', '0603', '../materials/sale_back_list.html', '\0', '0396', '', '电脑版', '3,4,5', '0');
+INSERT INTO `jsh_functions` VALUES ('201', '080103', '其它入库', '0801', '../materials/other_in_list.html', '\0', '0803', '', '电脑版', '3,4,5', '0');
+INSERT INTO `jsh_functions` VALUES ('202', '080105', '其它出库', '0801', '../materials/other_out_list.html', '\0', '0805', '', '电脑版', '3,4,5', '0');
+INSERT INTO `jsh_functions` VALUES ('203', '070403', '支出单', '0704', '../financial/item_out.html', '\0', '0470', '', '电脑版', '', '0');
+INSERT INTO `jsh_functions` VALUES ('204', '070404', '收款单', '0704', '../financial/money_in.html', '\0', '0475', '', '电脑版', '', '0');
+INSERT INTO `jsh_functions` VALUES ('205', '070405', '付款单', '0704', '../financial/money_out.html', '\0', '0480', '', '电脑版', '', '0');
+INSERT INTO `jsh_functions` VALUES ('206', '070406', '转账单', '0704', '../financial/giro.html', '\0', '0490', '', '电脑版', '', '0');
+INSERT INTO `jsh_functions` VALUES ('207', '030102', '结算账户', '0301', '../reports/account_report.html', '\0', '0610', '', '电脑版', null, '0');
+INSERT INTO `jsh_functions` VALUES ('208', '030103', '进货统计', '0301', '../reports/buy_in_report.html', '\0', '0620', '', '电脑版', null, '0');
+INSERT INTO `jsh_functions` VALUES ('209', '030104', '销售统计', '0301', '../reports/sale_out_report.html', '\0', '0630', '', '电脑版', null, '0');
+INSERT INTO `jsh_functions` VALUES ('210', '040102', '零售出库', '0401', '../materials/retail_out_list.html', '\0', '0405', '', '电脑版', '3,4,5', '0');
+INSERT INTO `jsh_functions` VALUES ('211', '040104', '零售退货', '0401', '../materials/retail_back_list.html', '\0', '0407', '', '电脑版', '3,4,5', '0');
+INSERT INTO `jsh_functions` VALUES ('212', '070407', '收预付款', '0704', '../financial/advance_in.html', '\0', '0495', '', '电脑版', '', '0');
+INSERT INTO `jsh_functions` VALUES ('217', '01020102', '客户信息', '0102', '../manage/customer.html', '\0', '0262', '', '电脑版', '1,2', '0');
+INSERT INTO `jsh_functions` VALUES ('218', '01020103', '会员信息', '0102', '../manage/member.html', '\0', '0263', '', '电脑版', '1,2', '0');
+INSERT INTO `jsh_functions` VALUES ('219', '000107', '资产管理', '0001', '../asset/asset.html', '\0', '0170', '\0', '电脑版', null, '0');
+INSERT INTO `jsh_functions` VALUES ('220', '010103', '计量单位', '0101', '../manage/unit.html', '\0', '0245', '', '电脑版', null, '0');
 INSERT INTO `jsh_functions` VALUES ('221', '04', '零售管理', '0', '', '', '0028', '', '电脑版', '', '0');
 INSERT INTO `jsh_functions` VALUES ('222', '05', '采购管理', '0', '', '', '0030', '', '电脑版', '', '0');
 INSERT INTO `jsh_functions` VALUES ('223', '06', '销售管理', '0', '', '', '0035', '', '电脑版', '', '0');
 INSERT INTO `jsh_functions` VALUES ('224', '07', '财务管理', '0', '', '', '0040', '', '电脑版', '', '0');
-INSERT INTO `jsh_functions` VALUES ('225', '0401', '零售管理', '04', '', '', '0401', '', '电脑版', '', '0');
-INSERT INTO `jsh_functions` VALUES ('226', '030106', '入库明细', '0301', '../reports/in_detail.html', '', '0640', '', '电脑版', '', '0');
-INSERT INTO `jsh_functions` VALUES ('227', '030107', '出库明细', '0301', '../reports/out_detail.html', '', '0645', '', '电脑版', '', '0');
-INSERT INTO `jsh_functions` VALUES ('228', '030108', '入库汇总', '0301', '../reports/in_material_count.html', '', '0650', '', '电脑版', '', '0');
-INSERT INTO `jsh_functions` VALUES ('229', '030109', '出库汇总', '0301', '../reports/out_material_count.html', '', '0655', '', '电脑版', '', '0');
-INSERT INTO `jsh_functions` VALUES ('232', '080109', '组装单', '0801', '../materials/assemble_list.html', '', '0809', '', '电脑版', '3,4,5', '0');
-INSERT INTO `jsh_functions` VALUES ('233', '080111', '拆卸单', '0801', '../materials/disassemble_list.html', '', '0811', '', '电脑版', '3,4,5', '0');
-INSERT INTO `jsh_functions` VALUES ('234', '000105', '系统配置', '0001', '../manage/systemConfig.html', '', '0165', '', '电脑版', '', '0');
-INSERT INTO `jsh_functions` VALUES ('235', '030110', '客户对账', '0301', '../reports/customer_account.html', '', '0660', '', '电脑版', '', '0');
-INSERT INTO `jsh_functions` VALUES ('236', '000106', '商品属性', '0001', '../materials/materialProperty.html', '', '0168', '', '电脑版', '', '0');
-INSERT INTO `jsh_functions` VALUES ('237', '030111', '供应商对账', '0301', '../reports/vendor_account.html', '', '0665', '', '电脑版', '', '0');
+INSERT INTO `jsh_functions` VALUES ('225', '0401', '零售管理', '04', '', '\0', '0401', '', '电脑版', '', '0');
+INSERT INTO `jsh_functions` VALUES ('226', '030106', '入库明细', '0301', '../reports/in_detail.html', '\0', '0640', '', '电脑版', '', '0');
+INSERT INTO `jsh_functions` VALUES ('227', '030107', '出库明细', '0301', '../reports/out_detail.html', '\0', '0645', '', '电脑版', '', '0');
+INSERT INTO `jsh_functions` VALUES ('228', '030108', '入库汇总', '0301', '../reports/in_material_count.html', '\0', '0650', '', '电脑版', '', '0');
+INSERT INTO `jsh_functions` VALUES ('229', '030109', '出库汇总', '0301', '../reports/out_material_count.html', '\0', '0655', '', '电脑版', '', '0');
+INSERT INTO `jsh_functions` VALUES ('232', '080109', '组装单', '0801', '../materials/assemble_list.html', '\0', '0809', '', '电脑版', '3,4,5', '0');
+INSERT INTO `jsh_functions` VALUES ('233', '080111', '拆卸单', '0801', '../materials/disassemble_list.html', '\0', '0811', '', '电脑版', '3,4,5', '0');
+INSERT INTO `jsh_functions` VALUES ('234', '000105', '系统配置', '0001', '../manage/systemConfig.html', '\0', '0165', '', '电脑版', '', '0');
+INSERT INTO `jsh_functions` VALUES ('235', '030110', '客户对账', '0301', '../reports/customer_account.html', '\0', '0660', '', '电脑版', '', '0');
+INSERT INTO `jsh_functions` VALUES ('236', '000106', '商品属性', '0001', '../materials/materialProperty.html', '\0', '0168', '', '电脑版', '', '0');
+INSERT INTO `jsh_functions` VALUES ('237', '030111', '供应商对账', '0301', '../reports/vendor_account.html', '\0', '0665', '', '电脑版', '', '0');
 INSERT INTO `jsh_functions` VALUES ('238', '08', '仓库管理', '0', '', '', '0038', '', '电脑版', '', '0');
-INSERT INTO `jsh_functions` VALUES ('239', '0801', '仓库管理', '08', '', '', '0801', '', '电脑版', '', '0');
-INSERT INTO `jsh_functions` VALUES ('240', '010104', '序列号', '0101', '../manage/serialNumber.html', '', '0246', '', '电脑版', '', '0');
-INSERT INTO `jsh_functions` VALUES ('241', '050202', '采购订单', '0502', '../materials/purchase_orders_list.html', '', '0335', '', '电脑版', '3', '0');
-INSERT INTO `jsh_functions` VALUES ('242', '060301', '销售订单', '0603', '../materials/sale_orders_list.html', '', '0392', '', '电脑版', '3', '0');
+INSERT INTO `jsh_functions` VALUES ('239', '0801', '仓库管理', '08', '', '\0', '0801', '', '电脑版', '', '0');
+INSERT INTO `jsh_functions` VALUES ('240', '010104', '序列号', '0101', '../manage/serialNumber.html', '\0', '0246', '', '电脑版', '', '0');
+INSERT INTO `jsh_functions` VALUES ('241', '050202', '采购订单', '0502', '../materials/purchase_orders_list.html', '\0', '0335', '', '电脑版', '3', '0');
+INSERT INTO `jsh_functions` VALUES ('242', '060301', '销售订单', '0603', '../materials/sale_orders_list.html', '\0', '0392', '', '电脑版', '3', '0');
 INSERT INTO `jsh_functions` VALUES ('243', '000108', '机构管理', '0001', '../manage/organization.html', '', '0139', '', '电脑版', '', '0');
-INSERT INTO `jsh_functions` VALUES ('244', '030112', '库存预警', '0301', '../reports/stock_warning_report.html', '', '0670', '', '电脑版', '', '0');
+INSERT INTO `jsh_functions` VALUES ('244', '030112', '库存预警', '0301', '../reports/stock_warning_report.html', '\0', '0670', '', '电脑版', '', '0');
 INSERT INTO `jsh_functions` VALUES ('245', '02', '个人信息', '0', '', '', '0005', '', '电脑版', '', '0');
+INSERT INTO `jsh_functions` VALUES ('246', '09', '新手引导', '0', '', '', '0115', '', '电脑版', '', '0');
 
 -- ----------------------------
--- Table structure for `jsh_inoutitem`
+-- Table structure for jsh_inoutitem
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_inoutitem`;
 CREATE TABLE `jsh_inoutitem` (
@@ -884,7 +886,7 @@ INSERT INTO `jsh_inoutitem` VALUES ('19', '支出1', '支出', '', '117', '0');
 INSERT INTO `jsh_inoutitem` VALUES ('20', '支出2', '支出', '', '117', '0');
 
 -- ----------------------------
--- Table structure for `jsh_log`
+-- Table structure for jsh_log
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_log`;
 CREATE TABLE `jsh_log` (
@@ -1330,7 +1332,7 @@ INSERT INTO `jsh_log` VALUES ('6346', '120', '功能', '127.0.0.1', '2019-05-03 
 INSERT INTO `jsh_log` VALUES ('6347', '63', '角色', '127.0.0.1', '2019-05-03 17:06:47', '0', '新增角色', '新增角色', '63');
 
 -- ----------------------------
--- Table structure for `jsh_material`
+-- Table structure for jsh_material
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_material`;
 CREATE TABLE `jsh_material` (
@@ -1401,7 +1403,7 @@ INSERT INTO `jsh_material` VALUES ('584', null, 'sfds', '', null, null, 'a2233',
 INSERT INTO `jsh_material` VALUES ('585', null, 'asdf', '', null, null, 'adsfasdf', '', '', '', '', null, null, null, null, '15', '', '', '[{\"basic\":{\"Unit\":\"个\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\",\"EnableSerialNumber\":\"0\"}},{\"other\":{\"Unit\":\"箱\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\"}}]', '', '', '', '', '0', '63', '0');
 
 -- ----------------------------
--- Table structure for `jsh_materialcategory`
+-- Table structure for jsh_materialcategory
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_materialcategory`;
 CREATE TABLE `jsh_materialcategory` (
@@ -1444,7 +1446,7 @@ INSERT INTO `jsh_materialcategory` VALUES ('16', 'aaaa', null, '-1', '', '1', ''
 INSERT INTO `jsh_materialcategory` VALUES ('17', '目录1', null, '-1', '', '1', '', '', '2019-04-10 22:18:12', '63', '2019-04-10 22:18:12', '63', '63');
 
 -- ----------------------------
--- Table structure for `jsh_materialproperty`
+-- Table structure for jsh_materialproperty
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_materialproperty`;
 CREATE TABLE `jsh_materialproperty` (
@@ -1462,13 +1464,13 @@ CREATE TABLE `jsh_materialproperty` (
 -- ----------------------------
 INSERT INTO `jsh_materialproperty` VALUES ('1', '规格', '', '02', '规格', '0');
 INSERT INTO `jsh_materialproperty` VALUES ('2', '颜色', '', '01', '颜色', '0');
-INSERT INTO `jsh_materialproperty` VALUES ('3', '制造商', '', '03', '制造商', '0');
-INSERT INTO `jsh_materialproperty` VALUES ('4', '自定义1', '', '04', '自定义1', '0');
-INSERT INTO `jsh_materialproperty` VALUES ('5', '自定义2', '', '05', '自定义2', '0');
-INSERT INTO `jsh_materialproperty` VALUES ('6', '自定义3', '', '06', '自定义3', '0');
+INSERT INTO `jsh_materialproperty` VALUES ('3', '制造商', '\0', '03', '制造商', '0');
+INSERT INTO `jsh_materialproperty` VALUES ('4', '自定义1', '\0', '04', '自定义1', '0');
+INSERT INTO `jsh_materialproperty` VALUES ('5', '自定义2', '\0', '05', '自定义2', '0');
+INSERT INTO `jsh_materialproperty` VALUES ('6', '自定义3', '\0', '06', '自定义3', '0');
 
 -- ----------------------------
--- Table structure for `jsh_organization`
+-- Table structure for jsh_organization
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_organization`;
 CREATE TABLE `jsh_organization` (
@@ -1507,7 +1509,7 @@ INSERT INTO `jsh_organization` VALUES ('10', '23124', 'gaga', 'gaga', null, '1',
 INSERT INTO `jsh_organization` VALUES ('11', '12312', 'fsadfasdf', 'fsadfasdf', null, '1', '23124', '12312', '', '2019-03-31 21:52:52', '117', '2019-03-31 21:52:52', '117', null, null, '117');
 
 -- ----------------------------
--- Table structure for `jsh_orga_user_rel`
+-- Table structure for jsh_orga_user_rel
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_orga_user_rel`;
 CREATE TABLE `jsh_orga_user_rel` (
@@ -1538,7 +1540,7 @@ INSERT INTO `jsh_orga_user_rel` VALUES ('8', '9', '96', '', '0', '2019-03-17 23:
 INSERT INTO `jsh_orga_user_rel` VALUES ('9', '10', '117', '', '0', '2019-03-31 21:53:03', '117', '2019-03-31 21:53:12', '117', '117');
 
 -- ----------------------------
--- Table structure for `jsh_person`
+-- Table structure for jsh_person
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_person`;
 CREATE TABLE `jsh_person` (
@@ -1566,7 +1568,7 @@ INSERT INTO `jsh_person` VALUES ('12', '财务员', '小草', '117', '0');
 INSERT INTO `jsh_person` VALUES ('13', '业务员', '经手人1', '115', '0');
 
 -- ----------------------------
--- Table structure for `jsh_role`
+-- Table structure for jsh_role
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_role`;
 CREATE TABLE `jsh_role` (
@@ -1593,7 +1595,7 @@ INSERT INTO `jsh_role` VALUES ('15', 'laoba角色', null, null, null, '115', '0'
 INSERT INTO `jsh_role` VALUES ('16', '测试角色123', null, null, null, '63', '0');
 
 -- ----------------------------
--- Table structure for `jsh_serial_number`
+-- Table structure for jsh_serial_number
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_serial_number`;
 CREATE TABLE `jsh_serial_number` (
@@ -1720,7 +1722,7 @@ INSERT INTO `jsh_serial_number` VALUES ('103', '565', '2222222', '0', '', '0', '
 INSERT INTO `jsh_serial_number` VALUES ('104', '563', '234213123', '0', '', '0', '2019-03-21 23:58:00', '63', '2019-03-21 23:58:00', '63', null, null);
 
 -- ----------------------------
--- Table structure for `jsh_supplier`
+-- Table structure for jsh_supplier
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_supplier`;
 CREATE TABLE `jsh_supplier` (
@@ -1793,7 +1795,7 @@ INSERT INTO `jsh_supplier` VALUES ('72', 'sdfafadsf', '', '', '', '', null, '供
 INSERT INTO `jsh_supplier` VALUES ('73', 'sadvczXCvz', '', '', '', '', null, '供应商', '', '0.000000', null, null, null, null, '', '', '', '', '', '', null, '63', '1');
 
 -- ----------------------------
--- Table structure for `jsh_systemconfig`
+-- Table structure for jsh_systemconfig
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_systemconfig`;
 CREATE TABLE `jsh_systemconfig` (
@@ -1816,7 +1818,7 @@ INSERT INTO `jsh_systemconfig` VALUES ('7', '南通jshERP公司', '张三', '南
 INSERT INTO `jsh_systemconfig` VALUES ('8', '公司123', '', '', '', '', '', '117', '0');
 
 -- ----------------------------
--- Table structure for `jsh_unit`
+-- Table structure for jsh_unit
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_unit`;
 CREATE TABLE `jsh_unit` (
@@ -1839,7 +1841,7 @@ INSERT INTO `jsh_unit` VALUES ('14', '个,箱(1:12)', '117', '0');
 INSERT INTO `jsh_unit` VALUES ('15', '个,箱(1:12)', '63', '0');
 
 -- ----------------------------
--- Table structure for `jsh_user`
+-- Table structure for jsh_user
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_user`;
 CREATE TABLE `jsh_user` (
@@ -1892,7 +1894,7 @@ INSERT INTO `jsh_user` VALUES ('128', 'q12341243', 'q12341243', 'e10adc3949ba59a
 INSERT INTO `jsh_user` VALUES ('130', 'jsh666', 'jsh666', 'e10adc3949ba59abbe56e057f20f883e', null, null, null, null, '1', '0', '0', null, null, '130');
 
 -- ----------------------------
--- Table structure for `jsh_userbusiness`
+-- Table structure for jsh_userbusiness
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_userbusiness`;
 CREATE TABLE `jsh_userbusiness` (
@@ -1908,11 +1910,11 @@ CREATE TABLE `jsh_userbusiness` (
 -- ----------------------------
 -- Records of jsh_userbusiness
 -- ----------------------------
-INSERT INTO `jsh_userbusiness` VALUES ('1', 'RoleAPP', '4', '[3][6][7][22][23][24][25][26][27]', null, '0');
+INSERT INTO `jsh_userbusiness` VALUES ('1', 'RoleAPP', '4', '[3][6][7][22][23][24][25][26][27][28]', null, '0');
 INSERT INTO `jsh_userbusiness` VALUES ('2', 'RoleAPP', '5', '[8][7][6]', null, '0');
 INSERT INTO `jsh_userbusiness` VALUES ('3', 'RoleAPP', '6', '[23][24][25][27][26][22][7][3][6]', null, '0');
 INSERT INTO `jsh_userbusiness` VALUES ('4', 'RoleAPP', '7', '[21][1][8][11]', null, '0');
-INSERT INTO `jsh_userbusiness` VALUES ('5', 'RoleFunctions', '4', '[13][12][16][243][14][15][234][236][22][23][220][240][25][217][218][26][194][195][31][245][59][207][208][209][226][227][228][229][235][237][244][210][211][241][33][199][242][41][200][201][202][40][232][233][197][203][204][205][206][212]', '[{\"funId\":\"25\",\"btnStr\":\"1\"},{\"funId\":\"217\",\"btnStr\":\"1\"},{\"funId\":\"218\",\"btnStr\":\"1\"},{\"funId\":\"241\",\"btnStr\":\"3\"},{\"funId\":\"242\",\"btnStr\":\"3\"}]', '0');
+INSERT INTO `jsh_userbusiness` VALUES ('5', 'RoleFunctions', '4', '[245][13][12][16][243][14][15][234][236][22][23][220][240][25][217][218][26][194][195][31][59][207][208][209][226][227][228][229][235][237][244][210][211][241][33][199][242][41][200][201][202][40][232][233][197][203][204][205][206][212][246]', '[{\"funId\":\"25\",\"btnStr\":\"1\"},{\"funId\":\"217\",\"btnStr\":\"1\"},{\"funId\":\"218\",\"btnStr\":\"1\"},{\"funId\":\"241\",\"btnStr\":\"3\"},{\"funId\":\"242\",\"btnStr\":\"3\"}]', '0');
 INSERT INTO `jsh_userbusiness` VALUES ('6', 'RoleFunctions', '5', '[22][23][25][26][194][195][31][33][200][201][41][199][202]', null, '0');
 INSERT INTO `jsh_userbusiness` VALUES ('7', 'RoleFunctions', '6', '[22][23][220][240][25][217][218][26][194][195][31][59][207][208][209][226][227][228][229][235][237][210][211][241][33][199][242][41][200][201][202][40][232][233][197][203][204][205][206][212]', '[{\"funId\":\"33\",\"btnStr\":\"4\"}]', '0');
 INSERT INTO `jsh_userbusiness` VALUES ('8', 'RoleAPP', '8', '[21][1][8][11][10]', null, '0');
@@ -1937,8 +1939,8 @@ INSERT INTO `jsh_userbusiness` VALUES ('27', 'UserCustomer', '63', '[58]', null,
 INSERT INTO `jsh_userbusiness` VALUES ('28', 'UserDepot', '96', '[7]', null, '0');
 INSERT INTO `jsh_userbusiness` VALUES ('29', 'UserRole', '96', '[6]', null, '0');
 INSERT INTO `jsh_userbusiness` VALUES ('30', 'UserRole', '113', '[10]', null, '0');
-INSERT INTO `jsh_userbusiness` VALUES ('31', 'RoleAPP', '10', '[3][6][7][22][23][24][25][26][27]', null, '0');
-INSERT INTO `jsh_userbusiness` VALUES ('32', 'RoleFunctions', '10', '[13][243][14][15][234][22][23][220][240][25][217][218][26][194][195][31][245][59][207][208][209][226][227][228][229][235][237][244][210][211][241][33][199][242][41][200][201][202][40][232][233][197][203][204][205][206][212]', '[{\"funId\":\"25\",\"btnStr\":\"1\"},{\"funId\":\"217\",\"btnStr\":\"1\"},{\"funId\":\"218\",\"btnStr\":\"1\"},{\"funId\":\"241\",\"btnStr\":\"3\"},{\"funId\":\"242\",\"btnStr\":\"3\"}]', '0');
+INSERT INTO `jsh_userbusiness` VALUES ('31', 'RoleAPP', '10', '[3][6][7][22][23][24][25][26][27][28]', null, '0');
+INSERT INTO `jsh_userbusiness` VALUES ('32', 'RoleFunctions', '10', '[245][13][243][14][15][234][22][23][220][240][25][217][218][26][194][195][31][59][207][208][209][226][227][228][229][235][237][244][210][211][241][33][199][242][41][200][201][202][40][232][233][197][203][204][205][206][212][246]', '[{\"funId\":\"25\",\"btnStr\":\"1\"},{\"funId\":\"217\",\"btnStr\":\"1\"},{\"funId\":\"218\",\"btnStr\":\"1\"},{\"funId\":\"241\",\"btnStr\":\"3\"},{\"funId\":\"242\",\"btnStr\":\"3\"}]', '0');
 INSERT INTO `jsh_userbusiness` VALUES ('34', 'UserRole', '115', '[10]', null, '0');
 INSERT INTO `jsh_userbusiness` VALUES ('35', 'UserRole', '117', '[10]', null, '0');
 INSERT INTO `jsh_userbusiness` VALUES ('36', 'UserDepot', '117', '[8][9]', null, '0');
@@ -1968,7 +1970,7 @@ INSERT INTO `jsh_userbusiness` VALUES ('65', 'UserRole', '129', '[10]', null, '0
 INSERT INTO `jsh_userbusiness` VALUES ('66', 'UserRole', '130', '[10]', null, '0');
 
 -- ----------------------------
--- Table structure for `tbl_sequence`
+-- Table structure for tbl_sequence
 -- ----------------------------
 DROP TABLE IF EXISTS `tbl_sequence`;
 CREATE TABLE `tbl_sequence` (
