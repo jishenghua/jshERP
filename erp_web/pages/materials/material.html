@@ -22,6 +22,14 @@
      closable="false">
     <table id="searchTable">
         <tr>
+            <td>类别：</td>
+            <td>
+                <input name="searchParentName" id="searchParentName" style="width: 100px;" readonly="readonly"/>
+                <a href="javascript:void(0)" class="l-btn l-btn-plain" group="" style="height: 25px;" id="lookForSelectMaterialCategory">
+                    <span class="l-btn-left"><span class="l-btn-text icon-search l-btn-icon-left"></span></span></a>
+                <input name="searchParentId" id="searchParentId" type="hidden"/>
+            </td>
+            <td>&nbsp;</td>
             <td>品名：</td>
             <td>
                 <input name="searchName" id="searchName" style="width:80px;"/>
@@ -76,7 +84,7 @@
                         <td style="height:30px;">类别</td>
                         <td style="padding:5px" colspan="3">
                             <input name="parentName" id="parentName"   style="width: 180px;height: 20px" readonly="readonly"/>
-                            <a href="javascript:void(0)" class="l-btn l-btn-plain" group="" id="lookForSelectMaterialCategory">
+                            <a href="javascript:void(0)" class="l-btn l-btn-plain" group="" id="lookForMaterialCategory">
                                 <span class="l-btn-left"><span class="l-btn-text icon-search l-btn-icon-left"></span></span></a>
                             <input name="parentid" id="parentid" type="hidden"/>
                         </td>
@@ -274,18 +282,14 @@
     <script type="text/javascript">
         var materialCategoryList = null;
         var types = "";
-        var setCategoryId = "1";
-        var cid = 1;
         var multiple = 0;  //倍数
         var mPropertyList = null; //商品属性列表
         var mPropertyListShort = ""; //商品属性列表-传值
+        var clickType = ""; //记录从哪里点击的类别弹窗
         //初始化界面
         $(function () {
             //初始化系统基础信息
             initMProperty();
-            initSystemData(1);
-            initSelectInfo("search_first");
-            initSelectInfo("edit_first");
             manyUnitFun();
             priceKeyUp();//价格触发事件
             initMPropertyShort(); //初始化商品属性
@@ -320,7 +324,7 @@
             });
         }
 
-        function initSystemData(parentid_search) {
+        function initMCData(parentid_search) {
             $.ajax({
                 type: "get",
                 url: "/materialCategory/getAllList",
@@ -333,6 +337,16 @@
                 success: function (res) {
                     if(res && res.code === 200){
                         materialCategoryList = res.data;
+                        if (materialCategoryList != null) {
+                            options = "";
+                            for (var i = 0; i < materialCategoryList.length; i++) {
+                                var materialCategory = materialCategoryList[i];
+                                types += materialCategory.id + ',';
+                            }
+                            types += parentid_search;
+                        } else {
+                            types = parentid_search;
+                        }
                     } else {
                         $.messager.alert('提示', '查找系统基础信息异常,请与管理员联系！', 'error');
                         return;
@@ -340,26 +354,6 @@
                 }
             });
         }
-
-        //初始化页面选项卡
-        function initSelectInfo(lei) {
-            var options = "";
-
-            if (materialCategoryList != null) {
-                options = "";
-                for (var i = 0; i < materialCategoryList.length; i++) {
-                    var materialCategory = materialCategoryList[i];
-                    if (0 == i) {
-                        mcId = materialCategory.id;
-                    }
-                    options += '<option value="' + materialCategory.id + '">' + materialCategory.name + '</option>';
-                    if (lei == "search_second" || lei == "type_second" || lei == "search_three") {
-                        types += materialCategory.id + ',';
-                    }
-                }
-            }
-        }
-
 
         //防止表单提交重复
         function initForm() {
@@ -975,13 +969,8 @@
         function setOutputFun() {
             var name = $.trim($("#searchName").val());
             var model = $.trim($("#searchModel").val());
-            if (setCategoryId != "1") {
-                cid = 2;
-            } else {
-                cid = 1;
-            }
             window.location.href = "/material/exportExcel?browserType=" + getOs()
-                + "&name=" + name + "&model=" + model + "&categoryId=" + cid + "&categoryIds=" + setCategoryId;
+                + "&name=" + name + "&model=" + model + "&categoryIds=" + types;
         }
         //增加
         var url;
@@ -1389,12 +1378,6 @@
         function showMaterialDetails(pageNo, pageSize) {
             var name = $.trim($("#searchName").val());
             var model = $.trim($("#searchModel").val());
-            if (setCategoryId != "1") {
-                cid = 2;
-            }
-            else {
-                cid = 1;
-            }
             $.ajax({
                 type: "get",
                 url: "/material/list",
@@ -1403,8 +1386,7 @@
                     search: JSON.stringify({
                         name: name,
                         model: model,
-                        categoryId: cid,
-                        categoryIds: setCategoryId,
+                        categoryIds: types,
                         mpList: mPropertyListShort
                     }),
                     currentPage: pageNo,
@@ -1428,8 +1410,10 @@
         //重置按钮
         $("#searchResetBtn").unbind().bind({
             click: function () {
+                $("#searchParentName").val("");
+                $("#searchParentId").val("");
                 $("#searchName").val("");
-                setCategoryId = "1";
+                types = ""; //清空类别
                 //加载完以后重新初始化
                 $("#searchBtn").click();
             }
@@ -1505,8 +1489,9 @@
                 }, 3300);
             });
         }
-        //查询父级商品类别
-        $("#lookForSelectMaterialCategory").on("click", function () {
+
+        //商品类别选择
+        function materialCategoryDlgFun() {
             $('#forSelectMaterialCategoryDlg').dialog({
                 title: '商品类别选择',
                 width: webW/2,
@@ -1517,6 +1502,16 @@
                 modal: true,
                 resizable:true
             });
+        }
+
+        //查询父级商品类别
+        $("#lookForSelectMaterialCategory").on("click", function () {
+            clickType = "selectBtn";
+            materialCategoryDlgFun();
+        });
+        $("#lookForMaterialCategory").on("click", function () {
+            clickType = "editBtn";
+            materialCategoryDlgFun();
         });
 
     </script>

@@ -20,7 +20,6 @@ public interface MaterialMapperEx {
     List<MaterialVo4Unit> selectByConditionMaterial(
             @Param("name") String name,
             @Param("model") String model,
-            @Param("categoryId") Long categoryId,
             @Param("categoryIds") String categoryIds,
             @Param("mpList") String mpList,
             @Param("offset") Integer offset,
@@ -29,7 +28,6 @@ public interface MaterialMapperEx {
     Long countsByMaterial(
             @Param("name") String name,
             @Param("model") String model,
-            @Param("categoryId") Long categoryId,
             @Param("categoryIds") String categoryIds,
             @Param("mpList") String mpList);
 
@@ -46,7 +44,6 @@ public interface MaterialMapperEx {
     List<MaterialVo4Unit> findByAll(
             @Param("name") String name,
             @Param("model") String model,
-            @Param("categoryId") Long categoryId,
             @Param("categoryIds") String categoryIds);
     /**
      * 通过商品名称查询商品信息

@@ -22,7 +22,7 @@
         <if test="model != null">
             and m.model like '%${model}%'
         </if>
-        <if test="categoryId != 1">
+        <if test="categoryIds != null">
             and m.CategoryId in (${categoryIds})
         </if>
         and ifnull(m.delete_Flag,'0') !='1'
@@ -45,7 +45,7 @@
         <if test="model != null">
             and m.model like '%${model}%'
         </if>
-        <if test="categoryId != 1">
+        <if test="categoryIds != null">
             and m.CategoryId in (${categoryIds})
         </if>
         and ifnull(m.delete_Flag,'0') !='1'
@@ -102,7 +102,7 @@
         <if test="model != null">
             and m.model like '%${model}%'
         </if>
-        <if test="categoryId != 1">
+        <if test="categoryIds != null">
             and m.CategoryId in (${categoryIds})
         </if>
         and ifnull(m.delete_Flag,'0') !='1'
