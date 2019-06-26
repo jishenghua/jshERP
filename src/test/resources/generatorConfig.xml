@@ -45,9 +45,6 @@
         <table tableName="jsh_accounthead" domainObjectName="AccountHead"></table>
         <table tableName="jsh_accountitem" domainObjectName="AccountItem"></table>
         <table tableName="jsh_app" domainObjectName="App"></table>
-        <table tableName="jsh_asset" domainObjectName="Asset"></table>
-        <table tableName="jsh_assetcategory" domainObjectName="AssetCategory"></table>
-        <table tableName="jsh_assetname" domainObjectName="AssetName"></table>
         <table tableName="jsh_depot" domainObjectName="Depot"></table>
         <table tableName="jsh_depothead" domainObjectName="DepotHead"></table>
         <table tableName="jsh_depotitem" domainObjectName="DepotItem"></table>
