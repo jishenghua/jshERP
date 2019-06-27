@@ -24,6 +24,10 @@ import java.lang.annotation.*;
  * depotItem-90
  * accountHead-95
  * accountItem-100
+ * serialNumber-105
+ * organization-110
+ * orgaUserRel-115
+ * tenant-120
  */
 @Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)

@@ -15,6 +15,7 @@ import com.jsh.erp.datasource.vo.TreeNodeEx;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.orgaUserRel.OrgaUserRelService;
+import com.jsh.erp.service.tenant.TenantService;
 import com.jsh.erp.service.userBusiness.UserBusinessService;
 import com.jsh.erp.utils.ExceptionCodeConstants;
 import com.jsh.erp.utils.JshException;
@@ -49,7 +50,8 @@ public class UserService {
     private LogService logService;
     @Resource
     private UserService userService;
-
+    @Resource
+    private TenantService tenantService;
     @Resource
     private UserBusinessService userBusinessService;
 
@@ -416,7 +418,7 @@ public class UserService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public UserEx registerUser(UserEx ue, Integer manageRoleId) throws Exception{
+    public UserEx registerUser(UserEx ue, Integer manageRoleId, HttpServletRequest request) throws Exception{
         /**
          * create by: qiankunpingtai
          * create time: 2019/4/9 18:00
@@ -456,6 +458,13 @@ public class UserService {
             ubArr.add(manageRoleId);
             ubObj.put("value", ubArr.toString());
             userBusinessService.insertUserBusiness(ubObj.toString(), ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+            //创建租户信息
+            JSONObject tenantObj = new JSONObject();
+            tenantObj.put("tenantId", ue.getId());
+            tenantObj.put("loginName",ue.getLoginame());
+            String param = tenantObj.toJSONString();
+            tenantService.insertTenant(param, request);
+            logger.info("===============创建租户信息完成===============");
             if (result > 0) {
                 return ue;
             }

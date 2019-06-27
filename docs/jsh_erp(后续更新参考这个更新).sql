@@ -1656,3 +1656,25 @@ where Type = 'RoleFunctions' and KeyId = '10';
 drop table jsh_asset;
 drop table jsh_assetcategory;
 drop table jsh_assetname;
+
+
+-- ----------------------------
+-- 时间：2019年6月27日
+-- 增加租户表
+-- ----------------------------
+DROP TABLE IF EXISTS `jsh_tenant`;
+CREATE TABLE `jsh_tenant` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `tenant_id` bigint(20) DEFAULT NULL COMMENT '用户id',
+  `login_name` varchar(255) DEFAULT NULL COMMENT '登录名',
+  `user_num_limit` int(11) DEFAULT NULL COMMENT '用户数量限制',
+  `bills_num_limit` int(11) DEFAULT NULL COMMENT '单据数量限制',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=81 DEFAULT CHARSET=utf8 COMMENT='租户';
+
+-- ----------------------------
+-- 时间：2019年6月27日
+-- 给租户表增加数据
+-- ----------------------------
+INSERT INTO `jsh_tenant` VALUES ('13', '63', 'jsh', '20', '2000', null);

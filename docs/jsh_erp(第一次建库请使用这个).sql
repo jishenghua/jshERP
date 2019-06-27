@@ -1883,6 +1883,29 @@ CREATE TABLE `tbl_sequence` (
 INSERT INTO `tbl_sequence` VALUES ('depot_number_seq', '1', '999999999999999999', '304', '1', '单据编号sequence');
 
 -- ----------------------------
+-- Table structure for jsh_tenant
+-- ----------------------------
+DROP TABLE IF EXISTS `jsh_tenant`;
+CREATE TABLE `jsh_tenant` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `tenant_id` bigint(20) DEFAULT NULL COMMENT '用户id',
+  `login_name` varchar(255) DEFAULT NULL COMMENT '登录名',
+  `user_num_limit` int(11) DEFAULT NULL COMMENT '用户数量限制',
+  `bills_num_limit` int(11) DEFAULT NULL COMMENT '单据数量限制',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=81 DEFAULT CHARSET=utf8 COMMENT='租户';
+
+-- ----------------------------
+-- Records of jsh_tenant
+-- ----------------------------
+INSERT INTO `jsh_tenant` VALUES ('13', '63', 'jsh', '20', '2000', null);
+INSERT INTO `jsh_tenant` VALUES ('14', '92', 'abc123', '2', '200', null);
+INSERT INTO `jsh_tenant` VALUES ('15', '94', 'jzh', '2', '200', null);
+INSERT INTO `jsh_tenant` VALUES ('16', '95', 'qiankun', '2', '200', null);
+INSERT INTO `jsh_tenant` VALUES ('17', '96', 'czq', '2', '200', null);
+
+-- ----------------------------
 -- Function structure for `_nextval`
 -- ----------------------------
 DROP FUNCTION IF EXISTS `_nextval`;

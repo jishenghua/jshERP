@@ -59,7 +59,8 @@ public class TenantConfig {
                         // 这里可以判断是否过滤表
                         if ("databasechangelog".equals(tableName) || "databasechangeloglock".equals(tableName)
                                 || "jsh_materialproperty".equals(tableName) || "tbl_sequence".equals(tableName) || "dual".equals(tableName)
-                                || "jsh_userbusiness".equals(tableName) || "jsh_app".equals(tableName) || "jsh_functions".equals(tableName)) {
+                                || "jsh_userbusiness".equals(tableName) || "jsh_app".equals(tableName) || "jsh_functions".equals(tableName)
+                                || "jsh_tenant".equals(tableName)) {
                             return true;
                         } else {
                             return false;
