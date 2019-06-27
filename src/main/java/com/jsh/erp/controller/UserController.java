@@ -42,12 +42,6 @@ public class UserController {
     @Value("${mybatis-plus.status}")
     private String mybatisPlusStatus;
 
-    @Value("${manage.ip}")
-    private String manageIp;
-
-    @Value("${manage.port}")
-    private Integer managePort;
-
     @Value("${manage.roleId}")
     private Integer manageRoleId;
 

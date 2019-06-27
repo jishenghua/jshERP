@@ -1900,10 +1900,14 @@ CREATE TABLE `jsh_tenant` (
 -- Records of jsh_tenant
 -- ----------------------------
 INSERT INTO `jsh_tenant` VALUES ('13', '63', 'jsh', '20', '2000', null);
-INSERT INTO `jsh_tenant` VALUES ('14', '92', 'abc123', '2', '200', null);
-INSERT INTO `jsh_tenant` VALUES ('15', '94', 'jzh', '2', '200', null);
-INSERT INTO `jsh_tenant` VALUES ('16', '95', 'qiankun', '2', '200', null);
-INSERT INTO `jsh_tenant` VALUES ('17', '96', 'czq', '2', '200', null);
+INSERT INTO `jsh_tenant` VALUES ('14', '113', 'abc123', '2', '200', null);
+INSERT INTO `jsh_tenant` VALUES ('15', '115', 'jzh', '2', '200', null);
+INSERT INTO `jsh_tenant` VALUES ('16', '123', 'caoyuli', '2', '200', null);
+INSERT INTO `jsh_tenant` VALUES ('17', '124', 'jchb', '2', '200', null);
+INSERT INTO `jsh_tenant` VALUES ('17', '126', '123123', '2', '200', null);
+INSERT INTO `jsh_tenant` VALUES ('17', '127', '2345123', '2', '200', null);
+INSERT INTO `jsh_tenant` VALUES ('17', '128', 'q12341243', '2', '200', null);
+INSERT INTO `jsh_tenant` VALUES ('17', '130', 'jsh666', '2', '200', null);
 
 -- ----------------------------
 -- Function structure for `_nextval`
