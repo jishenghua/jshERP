@@ -1,6 +1,8 @@
 package com.jsh.erp.config;
 
 import com.baomidou.mybatisplus.core.parser.ISqlParser;
+import com.baomidou.mybatisplus.core.parser.ISqlParserFilter;
+import com.baomidou.mybatisplus.core.parser.SqlParserHelper;
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.PerformanceInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.tenant.TenantHandler;
@@ -8,6 +10,8 @@ import com.baomidou.mybatisplus.extension.plugins.tenant.TenantSqlParser;
 import com.jsh.erp.datasource.entities.User;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.LongValue;
+import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.reflection.MetaObject;
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -77,7 +81,7 @@ public class TenantConfig {
 //        paginationInterceptor.setSqlParserFilter(new ISqlParserFilter() {
 //            @Override
 //            public boolean doFilter(MetaObject metaObject) {
-//                MappedStatement ms = PluginUtils.realTarget(metaObject);
+//                MappedStatement ms = SqlParserHelper.getMappedStatement(metaObject);
 //                // 过滤自定义查询此时无租户信息约束出现
 //                if ("com.jsh.erp.datasource.mappers.DepotHeadMapperEx.getBuildOnlyNumber".equals(ms.getId())) {
 //                    return true;
