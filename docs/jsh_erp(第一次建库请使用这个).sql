@@ -1908,29 +1908,3 @@ INSERT INTO `jsh_tenant` VALUES ('17', '126', '123123', '2', '200', null);
 INSERT INTO `jsh_tenant` VALUES ('17', '127', '2345123', '2', '200', null);
 INSERT INTO `jsh_tenant` VALUES ('17', '128', 'q12341243', '2', '200', null);
 INSERT INTO `jsh_tenant` VALUES ('17', '130', 'jsh666', '2', '200', null);
-
--- ----------------------------
--- Function structure for `_nextval`
--- ----------------------------
-DROP FUNCTION IF EXISTS `_nextval`;
-DELIMITER ;;
-CREATE FUNCTION `_nextval`(name varchar(50)) RETURNS mediumtext CHARSET utf8
-begin
-declare _cur bigint;
-declare _maxvalue bigint;  -- 接收最大值
-declare _increment int; -- 接收增长步数
-set _increment = (select increment_val from tbl_sequence where seq_name = name);
-set _maxvalue = (select max_value from tbl_sequence where seq_name = name);
-set _cur = (select current_val from tbl_sequence where seq_name = name for update);
-update tbl_sequence                      -- 更新当前值
- set current_val = _cur + increment_val
- where seq_name = name ;
-if(_cur + _increment >= _maxvalue) then  -- 判断是都达到最大值
-      update tbl_sequence
-        set current_val = minvalue
-        where seq_name = name ;
-end if;
-return _cur;
-end
-;;
-DELIMITER ;
