@@ -78,17 +78,17 @@ public class TenantConfig {
 
         sqlParserList.add(tenantSqlParser);
         paginationInterceptor.setSqlParserList(sqlParserList);
-//        paginationInterceptor.setSqlParserFilter(new ISqlParserFilter() {
-//            @Override
-//            public boolean doFilter(MetaObject metaObject) {
-//                MappedStatement ms = SqlParserHelper.getMappedStatement(metaObject);
-//                // 过滤自定义查询此时无租户信息约束出现
-//                if ("com.jsh.erp.datasource.mappers.DepotHeadMapperEx.getBuildOnlyNumber".equals(ms.getId())) {
-//                    return true;
-//                }
-//                return false;
-//            }
-//        });
+        paginationInterceptor.setSqlParserFilter(new ISqlParserFilter() {
+            @Override
+            public boolean doFilter(MetaObject metaObject) {
+                MappedStatement ms = SqlParserHelper.getMappedStatement(metaObject);
+                // 过滤自定义查询此时无租户信息约束出现
+                //if ("com.jsh.erp.datasource.mappers.DepotHeadMapperEx.getBuildOnlyNumber".equals(ms.getId())) {
+                //    return true;
+                //}
+                return false;
+            }
+        });
         return paginationInterceptor;
     }
 
@@ -108,10 +108,10 @@ public class TenantConfig {
     /**
      * 性能分析拦截器，不建议生产使用
      */
-    @Bean
-    public PerformanceInterceptor performanceInterceptor(){
-        return new PerformanceInterceptor();
-    }
+//    @Bean
+//    public PerformanceInterceptor performanceInterceptor(){
+//        return new PerformanceInterceptor();
+//    }
 
 
 }
