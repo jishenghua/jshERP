@@ -106,15 +106,17 @@ public class UserController {
                         msgTip = "user can login";
                         request.getSession().setAttribute("user",user);
                         if(("open").equals(mybatisPlusStatus)) {
-                            Tenant tenant = tenantService.getTenantByTenantId(user.getTenantId());
-                            if(tenant!=null) {
-                                Long tenantId = tenant.getTenantId();
-                                Integer userNumLimit = tenant.getUserNumLimit();
-                                Integer billsNumLimit = tenant.getBillsNumLimit();
-                                if(tenantId!=null) {
-                                    request.getSession().setAttribute("tenantId",tenantId); //租户tenantId
-                                    request.getSession().setAttribute("userNumLimit",userNumLimit); //用户限制数
-                                    request.getSession().setAttribute("billsNumLimit",billsNumLimit); //单据限制数
+                            if(user.getTenantId()!=null) {
+                                Tenant tenant = tenantService.getTenantByTenantId(user.getTenantId());
+                                if(tenant!=null) {
+                                    Long tenantId = tenant.getTenantId();
+                                    Integer userNumLimit = tenant.getUserNumLimit();
+                                    Integer billsNumLimit = tenant.getBillsNumLimit();
+                                    if(tenantId!=null) {
+                                        request.getSession().setAttribute("tenantId",tenantId); //租户tenantId
+                                        request.getSession().setAttribute("userNumLimit",userNumLimit); //用户限制数
+                                        request.getSession().setAttribute("billsNumLimit",billsNumLimit); //单据限制数
+                                    }
                                 }
                             }
                         }
