@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service(value = "tenant_component")
-@UserResource
+@TenantResource
 public class TenantComponent implements ICommonQuery {
 
     @Resource
