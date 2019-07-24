@@ -1,4 +1,4 @@
-FILE_PATH=
+FILE_PATH=/home/jshERP2.0
 SERVER_NAME=jshERP
 readonly APP_HOME=${FILE_PATH:-$(dirname $(cd `dirname $0`; pwd))}
 
@@ -13,7 +13,7 @@ readonly APP_MAIN_CLASS="jshERP2.0.jar"
 readonly LOG_CONFIG="$CONFIG_HOME/logback-spring.xml"
 
 readonly JAVA_RUN="-Dlogs.home=$LOGS_HOME -Dlogging.config=$LOG_CONFIG -Dspring.config.location=file:$CONFIG_HOME -Dspring.pid.file=$PID_FILE -Dspring.pid.fail-on-write-error=true"
-readonly JAVA_OPTS="-server -Xms128m -Xmx376m -XX:PermSize=128M -XX:MaxPermSize=256M $JAVA_RUN"
+readonly JAVA_OPTS="-server -Xms128m -Xmx320m -XX:PermSize=128M -XX:MaxPermSize=256M $JAVA_RUN"
 
 readonly JAVA="java"
 
@@ -47,7 +47,7 @@ fi
 function install(){
 
   if [[ ! -n $FILE_PATH ]];then
-    sed -i "s#FILE_PATH=#FILE_PATH=$APP_HOME#" $APP_HOME/$0
+    sed -i "s#FILE_PATH=/home/jshERP2.0#FILE_PATH=$APP_HOME#" $APP_HOME/$0
 
     if [[ -e /usr/sbin/$SERVER_NAME || -L /usr/sbin/$SERVER_NAME ]];then
 
