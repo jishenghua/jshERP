@@ -3081,8 +3081,8 @@
 		} else {
             inserted = $("#materialData").datagrid('getChanges', "inserted");
 		}
-		var deleted = $("#materialData").datagrid('getChanges', "deleted");
-		var updated = $("#materialData").datagrid('getChanges', "updated");
+        var deleted = [];
+        var updated = [];
 		$.ajax({
 			type:"post",
 			url: url,
