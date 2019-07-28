@@ -482,7 +482,7 @@
 			}
 		];
 		//如果允许的按钮列表中存在就显示，3-代表审核|反审核的权限
-		if(btnEnableList && btnEnableList.indexOf(3)>-1){
+		if(btnEnableList && btnEnableList.indexOf(3)>-1 && listTitle.indexOf("订单")>-1){
 			isHiddenStatus = false;  //显示
 			tableToolBar.push({
 				id:'okDepotHead',
