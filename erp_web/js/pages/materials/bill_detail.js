@@ -7,12 +7,17 @@
     var payTypeTitle = "";//收入 支出
     var itemType = true; //隐藏当前列
     var moneyType = true; //隐藏当前列
+
     $(function() {
         initSystemData_account(); //获取账户信息
         initMProperty(); //初始化商品属性
         initOutItemList(); //初始化支出项目
         initialize();//初始化系统基础信息
+
     });
+
+
+
     //获取账户信息
     function initSystemData_account(){
         $.ajax({
@@ -95,38 +100,47 @@
         if(listSubType == "采购入库") {
             billType = "material";
             $("#bill .purchase_in").show();
+            tableString = $(".purchase_in").html();
         }
         else if(listSubType == "采购退货出库") {
             billType = "material";
             $("#bill .purchase_back").show();
+            tableString = $(".purchase_back").html();
         }
         else if(listSubType == "销售出库") {
             billType = "material";
             $("#bill .sale_out").show();
+            tableString = $(".sale_out").html();
         }
         else if(listSubType == "销售退货入库") {
             billType = "material";
             $("#bill .sale_back").show();
+            tableString = $(".sale_back").html();
         }
         else if(listSubType == "零售出库") {
             billType = "material";
             $("#bill .retail_out").show();
+            tableString = $(".retail_out").html();
         }
         else if(listSubType == "零售退货入库") {
             billType = "material";
             $("#bill .retail_back").show();
+            tableString = $(".retail_back").html();
         }
         else if(listSubType == "其它入库") {
             billType = "material";
             $("#bill .other_in").show();
+            tableString = $(".other_in").html();
         }
         else if(listSubType == "其它出库") {
             billType = "material";
             $("#bill .other_out").show();
+            tableString = $(".other_out").html();
         }
         else if(listSubType == "调拨出库") {
             billType = "material";
             $("#bill .allocation_out").show();
+            tableString = $(".allocation_out").html();
         }
         else if(listSubType == "收入") {
             billType = "account";
@@ -134,6 +148,7 @@
             itemType = false; //显示当前列
             moneyType = true; //隐藏当前列
             $("#bill .item_in").show();
+            tableString = $(".item_in").html();
         }
         else if(listSubType == "支出") {
             billType = "account";
@@ -141,6 +156,7 @@
             itemType = false; //显示当前列
             moneyType = true; //隐藏当前列
             $("#bill .item_out").show();
+            tableString = $(".item_out").html();
         }
         else if(listSubType == "收款") {
             billType = "account";
@@ -148,6 +164,7 @@
             itemType = true; //隐藏当前列
             moneyType = false; //显示当前列
             $("#bill .money_in").show();
+            tableString = $(".money_in").html();
         }
         else if(listSubType == "付款") {
             billType = "account";
@@ -155,6 +172,7 @@
             itemType = true; //隐藏当前列
             moneyType = false; //显示当前列
             $("#bill .money_out").show();
+            tableString = $(".money_out").html();
         }
         else if(listSubType == "转账") {
             billType = "account";
@@ -162,6 +180,7 @@
             itemType = true; //隐藏当前列
             moneyType = false; //显示当前列
             $("#bill .giro").show();
+            tableString = $(".giro").html();
         }
         else if(listSubType == "收预付款") {
             billType = "account";
@@ -169,7 +188,11 @@
             itemType = true; //隐藏当前列
             moneyType = false; //显示当前列
             $("#bill .advance_in").show();
+            tableString = $(".advance_in").html();
         }
+
+
+
 
         //如果是进货、销售
         if(billType == "material"){
@@ -317,6 +340,57 @@
                 }
             });
         }
+        //打印table
+        $("#print_bill_detail").off("click").on("click",function(){
+            var tableString = "";//打印table
+            if(listSubType == "采购入库") {
+                tableString = $(".purchase_in").html();
+            }
+            else if(listSubType == "采购退货出库") {
+                tableString = $(".purchase_back").html();
+            }
+            else if(listSubType == "销售出库") {
+                tableString = $(".sale_out").html();
+            }
+            else if(listSubType == "销售退货入库") {
+                tableString = $(".sale_back").html();
+            }
+            else if(listSubType == "零售出库") {
+                tableString = $(".retail_out").html();
+            }
+            else if(listSubType == "零售退货入库") {
+                tableString = $(".retail_back").html();
+            }
+            else if(listSubType == "其它入库") {
+                tableString = $(".other_in").html();
+            }
+            else if(listSubType == "其它出库") {
+                tableString = $(".other_out").html();
+            }
+            else if(listSubType == "调拨出库") {
+                tableString = $(".allocation_out").html();
+            }
+            else if(listSubType == "收入") {
+                tableString = $(".item_in").html();
+            }
+            else if(listSubType == "支出") {
+                tableString = $(".item_out").html();
+            }
+            else if(listSubType == "收款") {
+                tableString = $(".money_in").html();
+            }
+            else if(listSubType == "付款") {
+                tableString = $(".money_out").html();
+            }
+            else if(listSubType == "转账") {
+                tableString = $(".giro").html();
+            }
+            else if(listSubType == "收预付款") {
+                tableString = $(".advance_in").html();
+            }
+            localStorage.setItem("tableString",tableString);
+            window.open("../../js/print/print_form.html","location:No;status:No;help:No;dialogWidth:800px;dialogHeight:600px;scroll:auto;");
+        });
     }
 
     //初始化表格数据-商品列表-查看状态
@@ -459,3 +533,6 @@
         });
     }
 
+    function print(){
+        alert(listSubType);
+    }

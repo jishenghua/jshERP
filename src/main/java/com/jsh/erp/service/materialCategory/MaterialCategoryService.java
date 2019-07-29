@@ -22,6 +22,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -68,12 +69,9 @@ public class MaterialCategoryService {
     }
 
     public List<MaterialCategory> getAllList(Long parentId)throws Exception {
-        MaterialCategoryExample example = new MaterialCategoryExample();
-        example.createCriteria().andParentidEqualTo(parentId).andIdNotEqualTo(1l);
-        example.setOrderByClause("id");
         List<MaterialCategory> list=null;
         try{
-            list=materialCategoryMapper.selectByExample(example);
+            list = getMCList(parentId);
         }catch(Exception e){
             logger.error("异常码[{}],异常提示[{}],异常[{}]",
                     ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
@@ -81,6 +79,25 @@ public class MaterialCategoryService {
                     ExceptionConstants.DATA_READ_FAIL_MSG);
         }
         return list;
+    }
+
+    public List<MaterialCategory> getMCList(Long parentId)throws Exception {
+        List<MaterialCategory> res= new ArrayList<MaterialCategory>();
+        List<MaterialCategory> list=null;
+        MaterialCategoryExample example = new MaterialCategoryExample();
+        example.createCriteria().andParentidEqualTo(parentId).andIdNotEqualTo(1l);
+        example.setOrderByClause("id");
+        list=materialCategoryMapper.selectByExample(example);
+        if(list!=null && list.size()>0) {
+            res.addAll(list);
+            for(MaterialCategory mc : list) {
+                List<MaterialCategory> mcList = getMCList(mc.getId());
+                if(mcList!=null && mcList.size()>0) {
+                    res.addAll(mcList);
+                }
+            }
+        }
+        return res;
     }
 
     public List<MaterialCategory> select(String name, Integer parentId, int offset, int rows) throws Exception{

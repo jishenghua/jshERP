@@ -1,0 +1,48 @@
+#tt .title {
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    color: green;
+    height: 30px;
+}
+
+#tt .content {
+    font-size: 14px;
+    text-align: center;
+    height: 30px;
+}
+
+#tt .list {
+    width: 100%;
+    margin: 20px 0px 20px 0px;
+}
+
+#tt .list .row{
+    width: 20%;
+    float: left;
+}
+
+#tt .list .row ul{
+    list-style:none;
+    float: left;
+}
+
+#tt .list .row ul li{
+    text-align: center;
+    height: 40px;
+}
+
+#tt .list .row ul .module{
+    font-size: 14px;
+    color: blue;
+    cursor:pointer;
+}
+
+#tt .list .row ul .module:hover{
+    text-decoration: underline;
+}
+
+#tt .list .row ul .remark{
+    font-size: 12px;
+    text-align: left;
+}

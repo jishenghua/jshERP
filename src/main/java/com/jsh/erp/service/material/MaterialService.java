@@ -9,6 +9,7 @@ import com.jsh.erp.datasource.mappers.DepotItemMapperEx;
 import com.jsh.erp.datasource.mappers.MaterialMapper;
 import com.jsh.erp.datasource.mappers.MaterialMapperEx;
 import com.jsh.erp.exception.BusinessRunTimeException;
+import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.BaseResponseInfo;
@@ -38,6 +39,8 @@ public class MaterialService {
     private UserService userService;
     @Resource
     private DepotItemMapperEx depotItemMapperEx;
+    @Resource
+    private DepotItemService depotItemService;
 
     public Material getMaterial(long id)throws Exception {
         Material result=null;
@@ -67,13 +70,13 @@ public class MaterialService {
         return list;
     }
 
-    public List<MaterialVo4Unit> select(String name, String model,Long categoryId, String categoryIds,String mpList, int offset, int rows)
+    public List<MaterialVo4Unit> select(String name, String model, String categoryIds,String mpList, int offset, int rows)
             throws Exception{
         String[] mpArr = mpList.split(",");
         List<MaterialVo4Unit> resList = new ArrayList<MaterialVo4Unit>();
         List<MaterialVo4Unit> list =null;
         try{
-            list= materialMapperEx.selectByConditionMaterial(name, model,categoryId,categoryIds,mpList, offset, rows);
+            list= materialMapperEx.selectByConditionMaterial(name, model,categoryIds,mpList, offset, rows);
         }catch(Exception e){
             logger.error("异常码[{}],异常提示[{}],异常[{}]",
                     ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
@@ -105,16 +108,19 @@ public class MaterialService {
                     }
                 }
                 m.setMaterialOther(materialOther);
+                Long InSum = depotItemService.findByTypeAndMaterialId("入库", m.getId());
+                Long OutSum = depotItemService.findByTypeAndMaterialId("出库", m.getId());
+                m.setStock(InSum - OutSum);
                 resList.add(m);
             }
         }
         return resList;
     }
 
-    public Long countMaterial(String name, String model,Long categoryId, String categoryIds,String mpList)throws Exception {
+    public Long countMaterial(String name, String model, String categoryIds,String mpList)throws Exception {
         Long result =null;
         try{
-            result= materialMapperEx.countsByMaterial(name, model,categoryId,categoryIds,mpList);
+            result= materialMapperEx.countsByMaterial(name, model,categoryIds,mpList);
         }catch(Exception e){
             logger.error("异常码[{}],异常提示[{}],异常[{}]",
                     ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
@@ -314,11 +320,11 @@ public class MaterialService {
         return list;
     }
 
-    public List<MaterialVo4Unit> findByAll(String name, String model, Long categoryId, String categoryIds)throws Exception {
+    public List<MaterialVo4Unit> findByAll(String name, String model, String categoryIds)throws Exception {
         List<MaterialVo4Unit> resList = new ArrayList<MaterialVo4Unit>();
         List<MaterialVo4Unit> list =null;
         try{
-            list=  materialMapperEx.findByAll(name, model, categoryId, categoryIds);
+            list=  materialMapperEx.findByAll(name, model, categoryIds);
         }catch(Exception e){
             logger.error("异常码[{}],异常提示[{}],异常[{}]",
                     ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);

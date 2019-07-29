@@ -10,6 +10,8 @@ public class MaterialVo4Unit extends Material{
 
     private String materialOther;
 
+    private Long stock;
+
     public String getUnitName() {
         return unitName;
     }
@@ -32,5 +34,13 @@ public class MaterialVo4Unit extends Material{
 
     public void setMaterialOther(String materialOther) {
         this.materialOther = materialOther;
+    }
+
+    public Long getStock() {
+        return stock;
+    }
+
+    public void setStock(Long stock) {
+        this.stock = stock;
     }
 }

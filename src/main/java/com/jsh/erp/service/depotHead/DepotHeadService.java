@@ -264,10 +264,12 @@ public class DepotHeadService {
     /**
      * 创建一个唯一的序列号
      * */
-    public  String buildOnlyNumber()throws Exception{
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public String buildOnlyNumber()throws Exception{
         Long buildOnlyNumber=null;
         synchronized (this){
             try{
+                depotHeadMapperEx.updateBuildOnlyNumber(); //编号+1
                 buildOnlyNumber= depotHeadMapperEx.getBuildOnlyNumber(BusinessConstants.DEPOT_NUMBER_SEQ);
             }catch(Exception e){
                 logger.error("异常码[{}],异常提示[{}],异常[{}]",
@@ -275,7 +277,6 @@ public class DepotHeadService {
                 throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
                         ExceptionConstants.DATA_WRITE_FAIL_MSG);
             }
-
         }
         if(buildOnlyNumber<BusinessConstants.SEQ_TO_STRING_MIN_LENGTH){
            StringBuffer sb=new StringBuffer(buildOnlyNumber.toString());
@@ -432,6 +433,56 @@ public class DepotHeadService {
                     ExceptionConstants.DATA_READ_FAIL_MSG);
         }
         return result;
+    }
+
+    /**
+     * 统计总金额
+     * @param getS
+     * @param type
+     * @param subType
+     * @param mode 合计或者金额
+     * @return
+     */
+    public BigDecimal allMoney(String getS, String type, String subType, String mode, String endTime) {
+        BigDecimal allMoney = BigDecimal.ZERO;
+        try {
+            Integer supplierId = Integer.valueOf(getS);
+            BigDecimal sum = findAllMoney(supplierId, type, subType, mode, endTime);
+            if(sum != null) {
+                allMoney = sum;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //返回正数，如果负数也转为正数
+        if ((allMoney.compareTo(BigDecimal.ZERO))==-1) {
+            allMoney = allMoney.abs();
+        }
+        return allMoney;
+    }
+
+    /**
+     * 查询单位的累计应收和累计应付，零售不能计入
+     * @param supplierId
+     * @param endTime
+     * @param supType
+     * @return
+     */
+    public BigDecimal findTotalPay(Integer supplierId, String endTime, String supType) {
+        BigDecimal sum = BigDecimal.ZERO;
+        String getS = supplierId.toString();
+        int i = 1;
+        if (("customer").equals(supType)) { //客户
+            i = 1;
+        } else if (("vendor").equals(supType)) { //供应商
+            i = -1;
+        }
+        //进销部分
+        sum = sum.subtract((allMoney(getS, "入库", "采购", "合计",endTime).subtract(allMoney(getS, "入库", "采购", "实际",endTime))).multiply(new BigDecimal(i)));
+        sum = sum.subtract((allMoney(getS, "入库", "销售退货", "合计",endTime).subtract(allMoney(getS, "入库", "销售退货", "实际",endTime))).multiply(new BigDecimal(i)));
+        sum = sum.add((allMoney(getS, "出库", "销售", "合计",endTime).subtract(allMoney(getS, "出库", "销售", "实际",endTime))).multiply(new BigDecimal(i)));
+        sum = sum.add((allMoney(getS, "出库", "采购退货", "合计",endTime).subtract(allMoney(getS, "出库", "采购退货", "实际",endTime))).multiply(new BigDecimal(i)));
+        return sum;
     }
 
     public List<DepotHeadVo4List> getDetailByNumber(String number)throws Exception {

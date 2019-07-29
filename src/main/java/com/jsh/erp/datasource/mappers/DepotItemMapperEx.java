@@ -45,10 +45,10 @@ public interface DepotItemMapperEx {
             @Param("mId") Long mId,
             @Param("monthTime") String monthTime);
 
-    int findByTypeAndMaterialIdIn(
+    Long findByTypeAndMaterialIdIn(
             @Param("mId") Long mId);
 
-    int findByTypeAndMaterialIdOut(
+    Long findByTypeAndMaterialIdOut(
             @Param("mId") Long mId);
 
     int findByTypeAndDepotIdAndMaterialIdIn(

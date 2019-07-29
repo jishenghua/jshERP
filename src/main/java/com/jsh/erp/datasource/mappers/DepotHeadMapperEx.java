@@ -110,10 +110,11 @@ public interface DepotHeadMapperEx {
      * */
     void updatedepotHead(DepotHead depotHead);
 
+    void updateBuildOnlyNumber();
     /**
      * 获得一个全局唯一的数作为订单号的追加
      * */
-     Long  getBuildOnlyNumber(@Param("seq_name") String seq_name);
+    Long getBuildOnlyNumber(@Param("seq_name") String seq_name);
 
     int batchDeleteDepotHeadByIds(@Param("updateTime") Date updateTime, @Param("updater") Long updater, @Param("ids") String ids[]);
 

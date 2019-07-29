@@ -192,7 +192,6 @@ public class MaterialController {
      * 生成excel表格
      * @param name
      * @param model
-     * @param categoryId
      * @param categoryIds
      * @param request
      * @param response
@@ -201,14 +200,13 @@ public class MaterialController {
     @GetMapping(value = "/exportExcel")
     public void exportExcel(@RequestParam("name") String name,
                                         @RequestParam("model") String model,
-                                        @RequestParam("categoryId") Long categoryId,
                                         @RequestParam("categoryIds") String categoryIds,
                                         HttpServletRequest request, HttpServletResponse response)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         String message = "成功";
         try {
-            List<MaterialVo4Unit> dataList = materialService.findByAll(name, model, categoryId, categoryIds);
+            List<MaterialVo4Unit> dataList = materialService.findByAll(name, model, categoryIds);
             String[] names = {"品名", "类型", "型号", "安全存量", "单位", "零售价", "最低售价", "预计采购价", "批发价", "备注", "状态"};
             String title = "商品信息";
             List<String[]> objects = new ArrayList<String[]>();
