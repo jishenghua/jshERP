@@ -136,22 +136,7 @@ public class DepotItemController {
         return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
     }
 
-    /**
-     * 仅根据商品Id进行数量合计
-     *
-     * @param type
-     * @param mId
-     * @return
-     */
-    public int sumNumberByMaterialId(String type, Long mId)throws Exception {
-        int allNumber = 0;
-        try {
-            allNumber = depotItemService.findByTypeAndMaterialId(type, mId);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return allNumber;
-    }
+
 
 
     /**

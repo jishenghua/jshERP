@@ -264,12 +264,10 @@ public class DepotHeadService {
     /**
      * 创建一个唯一的序列号
      * */
-    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public String buildOnlyNumber()throws Exception{
+    public  String buildOnlyNumber()throws Exception{
         Long buildOnlyNumber=null;
         synchronized (this){
             try{
-                depotHeadMapperEx.updateBuildOnlyNumber(); //编号+1
                 buildOnlyNumber= depotHeadMapperEx.getBuildOnlyNumber(BusinessConstants.DEPOT_NUMBER_SEQ);
             }catch(Exception e){
                 logger.error("异常码[{}],异常提示[{}],异常[{}]",
@@ -277,6 +275,7 @@ public class DepotHeadService {
                 throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
                         ExceptionConstants.DATA_WRITE_FAIL_MSG);
             }
+
         }
         if(buildOnlyNumber<BusinessConstants.SEQ_TO_STRING_MIN_LENGTH){
            StringBuffer sb=new StringBuffer(buildOnlyNumber.toString());
