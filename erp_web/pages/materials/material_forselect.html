@@ -89,37 +89,7 @@
                 {title: '品名', field: 'name', width: 150},
                 {title: '型号', field: 'model', width: 100},
                 {title: '类别', field: 'categoryName', width: 130},
-                {title: '单位', field: 'unit', width: 60},
-                {
-                    title: '库存', field: 'abc', width: 70, formatter: function (value, rec) {
-                        var monthTime = getNowFormatMonth();
-                        var mId = rec.id; //商品id
-                        var thisStock = 0;
-                        //查询库存
-                        $.ajax({
-                            type: "get",
-                            url: '/depotItem/findStockNumByMaterialId',
-                            data: {
-                                materialId: mId
-                            },
-                            dataType: "json",
-                            success: function (res) {
-                                if(res && res.code === 200) {
-                                    if (res.data && res.data.page && res.data.page[0]) {
-                                        thisStock = res.data.page[0].thisSum - 0;
-                                        if (thisStock > 0) {
-                                            $("#tableForSelectPanel .class-" + rec.id).text(thisStock); //延迟加载库存数据
-                                        }
-                                    }
-                                }
-                            },
-                            error: function () {
-                                $.messager.alert('查询提示', '查询数据后台异常，请稍后再试！', 'error');
-                            }
-                        });
-                        return "<span class='class-" + rec.id + "'>" + thisStock + "</span>";
-                    }
-                },
+                {title: '单位', field: 'unit', width: 60}
             ]],
             toolbar: [
             ],

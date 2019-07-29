@@ -46,21 +46,8 @@
 
         function forSelectMaterialCategory(node) {
             console.log(node);
-            if(clickType) {
-                if(clickType == "selectBtn") {
-                    $("#searchParentName").val(node.text);
-                    $("#searchParentId").val(node.id);
-                    types = "";
-                    initMCData(node.id);
-                } else if(clickType == "editBtn") {
-                    $("#parentName").val(node.text);
-                    $("#parentid").val(node.id);
-                }
-            }
-             else {
-                $("#parentName").val(node.text);
-                $("#parentid").val(node.id);
-            }
+            $("#parentName").val(node.text);
+            $("#parentid").val(node.id);
             $('#forSelectMaterialCategoryDlg').dialog('close');
         }
     });

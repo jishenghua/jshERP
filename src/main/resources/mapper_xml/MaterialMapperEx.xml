@@ -24,8 +24,11 @@
             <bind name="model" value="'%' + _parameter.model + '%'"/>
             and m.model like #{model}
         </if>
-        <if test="categoryId != 1">
-            and m.CategoryId in (#{categoryIds})
+        <if test="categoryIds != null and categoryIds != ''">
+            and m.CategoryId in
+            <foreach item="did" index="index" collection="categoryIds.split(',')" open="(" separator="," close=")">
+                #{did}
+            </foreach>
         </if>
         and ifnull(m.delete_Flag,'0') !='1'
         order by m.id asc
@@ -49,8 +52,11 @@
             <bind name="model" value="'%' + _parameter.model + '%'"/>
             and m.model like #{model}
         </if>
-        <if test="categoryId != 1">
-            and m.CategoryId in (#{categoryIds})
+        <if test="categoryIds != null and categoryIds != ''">
+            and m.CategoryId in
+            <foreach item="did" index="index" collection="categoryIds.split(',')" open="(" separator="," close=")">
+                #{did}
+            </foreach>
         </if>
         and ifnull(m.delete_Flag,'0') !='1'
     </select>
@@ -108,8 +114,11 @@
             <bind name="model" value="'%' + _parameter.model + '%'"/>
             and m.model like #{model}
         </if>
-        <if test="categoryId != 1">
-            and m.CategoryId in (#{categoryIds})
+        <if test="categoryIds != null and categoryIds != ''">
+            and m.CategoryId in
+            <foreach item="did" index="index" collection="categoryIds.split(',')" open="(" separator="," close=")">
+                #{did}
+            </foreach>
         </if>
         and ifnull(m.delete_Flag,'0') !='1'
         order by m.id asc
