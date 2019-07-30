@@ -553,16 +553,13 @@ public class DepotItemController {
      * @return
      */
     @GetMapping(value = "/exportExcel")
-    public BaseResponseInfo exportExcel(@RequestParam("currentPage") Integer currentPage,
+    public void exportExcel(@RequestParam("currentPage") Integer currentPage,
                                         @RequestParam("pageSize") Integer pageSize,
                                         @RequestParam("projectId") Integer projectId,
                                         @RequestParam("monthTime") String monthTime,
                                         @RequestParam("headIds") String headIds,
                                         @RequestParam("materialIds") String materialIds,
-                                        HttpServletRequest request, HttpServletResponse response)throws Exception {
-        BaseResponseInfo res = new BaseResponseInfo();
-        Map<String, Object> map = new HashMap<String, Object>();
-        String message = "成功";
+                                        HttpServletRequest request, HttpServletResponse response) {
         try {
             List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(headIds, materialIds, (currentPage-1)*pageSize, pageSize);
             //存放数据json数组
@@ -604,16 +601,9 @@ public class DepotItemController {
             }
             File file = ExcelUtils.exportObjectsWithoutTitle(title, names, title, objects);
             ExportExecUtil.showExec(file, file.getName() + "-" + monthTime, response);
-            res.code = 200;
         } catch (Exception e) {
             e.printStackTrace();
-            message = "导出失败";
-            res.code = 500;
         }
-        /**
-         * 2019-01-15response已经返回，finally部分完全没必要
-         * */
-        return res;
     }
 
     /**

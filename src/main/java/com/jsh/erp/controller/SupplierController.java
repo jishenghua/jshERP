@@ -292,15 +292,12 @@ public class SupplierController {
      * @return
      */
     @GetMapping(value = "/exportExcel")
-    public BaseResponseInfo exportExcel(@RequestParam("supplier") String supplier,
+    public void exportExcel(@RequestParam("supplier") String supplier,
                                         @RequestParam("type") String type,
                                         @RequestParam("phonenum") String phonenum,
                                         @RequestParam("telephone") String telephone,
                                         @RequestParam("description") String description,
-                                        HttpServletRequest request, HttpServletResponse response)throws Exception {
-        BaseResponseInfo res = new BaseResponseInfo();
-        Map<String, Object> map = new HashMap<String, Object>();
-        String message = "成功";
+                                        HttpServletRequest request, HttpServletResponse response) {
         try {
             List<Supplier> dataList = supplierService.findByAll(supplier, type, phonenum, telephone, description);
             String[] names = {"名称", "类型", "联系人", "电话", "电子邮箱", "预收款", "期初应收", "期初应付", "备注", "传真", "手机", "地址", "纳税人识别号", "开户行", "账号", "税率", "状态"};
@@ -331,16 +328,9 @@ public class SupplierController {
             }
             File file = ExcelUtils.exportObjectsWithoutTitle(title, names, title, objects);
             ExportExecUtil.showExec(file, file.getName(), response);
-            res.code = 200;
         } catch (Exception e) {
             e.printStackTrace();
-            message = "导出失败";
-            res.code = 500;
-        } finally {
-            map.put("message", message);
-            res.data = map;
         }
-        return res;
     }
 
     /**
