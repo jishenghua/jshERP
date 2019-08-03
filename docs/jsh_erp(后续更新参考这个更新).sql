@@ -1684,3 +1684,10 @@ INSERT INTO `jsh_tenant` VALUES ('13', '63', 'jsh', '20', '2000', null);
 -- 删除函数
 -- ----------------------------
 DROP FUNCTION IF EXISTS `_nextval`;
+
+-- ----------------------------
+-- 时间：2019年8月1日
+-- 增加仓库和客户的启用标记
+-- ----------------------------
+alter table jsh_systemconfig add  customer_flag varchar(1) DEFAULT '0' COMMENT '客户启用标记，0未启用，1启用' after company_post_code;
+alter table jsh_systemconfig add  depot_flag varchar(1) DEFAULT '0' COMMENT '仓库启用标记，0未启用，1启用' after company_post_code;

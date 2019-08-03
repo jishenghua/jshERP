@@ -1700,6 +1700,8 @@ CREATE TABLE `jsh_systemconfig` (
   `company_tel` varchar(20) DEFAULT NULL COMMENT '公司电话',
   `company_fax` varchar(20) DEFAULT NULL COMMENT '公司传真',
   `company_post_code` varchar(20) DEFAULT NULL COMMENT '公司邮编',
+  `depot_flag`  varchar(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '仓库启用标记，0未启用，1启用' ,
+  `customer_flag`  varchar(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '客户启用标记，0未启用，1启用' ,
   `tenant_id` bigint(20) DEFAULT NULL COMMENT '租户id',
   `delete_Flag` varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除',
   PRIMARY KEY (`id`)

@@ -6,35 +6,11 @@ function CreateFormPage(strPrintName, printDatagrid) {
     var getMonth= $("#searchMonth").val();
     var listTitle = $("#tablePanel").prev().text();
     listTitle = listTitle.replace("列表","");
+    var config = getSystemConfig();
     var companyName = "";
-    //加载公司信息
-    $.ajax({
-        type:"get",
-        url: "/systemConfig/list",
-        dataType: "json",
-        data: ({
-            currentPage: 1,
-            pageSize: 100
-        }),
-        async: false,
-        success: function (res) {
-            if (res && res.code === 200) {
-                if(res.data && res.data.page) {
-                    var array = res.data.page.rows;
-                    if(array.length > 0) {
-                        var info = array[0];
-                        companyName = info.companyName;
-                    }
-                }
-            }
-        },
-        //此处添加错误处理
-        error:function() {
-            $.messager.alert('查询失败','查询系统配置信息异常，请稍后再试！','error');
-            return;
-        }
-    });
-
+    if(config) {
+        companyName = config.companyName;
+    }
     var tableString = '<div class="div-title">' + companyName + "-" + listTitle + '\n</div>';
         if(beginDate && endDate) {
             tableString+='\n<div class="div-time">日期：' + beginDate + ' 至 ' + endDate + ' \n</div>';
