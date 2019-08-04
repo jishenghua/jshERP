@@ -154,17 +154,21 @@
     //初始化页面选项卡
     function initSelectInfo_depot() {
         var options = "";
-
         if (depotList != null) {
             options = "";
             for (var i = 0; i < depotList.length; i++) {
                 var depot = depotList[i];
-
-                if (userdepot != null) {
-                    if (userdepot.indexOf("[" + depot.id + "]") != -1) {
-                        options += '<option value="' + depot.id + '">' + depot.name + '</option>';
-                        depotString = depotString + depot.id + ",";
+                var config = getSystemConfig();
+                if(config && config.depotFlag == "1") {
+                    if (userdepot != null) {
+                        if (userdepot.indexOf("[" + depot.id + "]") != -1) {
+                            options += '<option value="' + depot.id + '">' + depot.name + '</option>';
+                            depotString = depotString + depot.id + ",";
+                        }
                     }
+                } else {
+                    options += '<option value="' + depot.id + '">' + depot.name + '</option>';
+                    depotString = depotString + depot.id + ",";
                 }
             }
             depotString = depotString.substring(0, depotString.length - 1);

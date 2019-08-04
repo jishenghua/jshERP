@@ -7,6 +7,7 @@ import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.Supplier;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.supplier.SupplierService;
+import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.service.userBusiness.UserBusinessService;
 import com.jsh.erp.utils.*;
@@ -44,6 +45,10 @@ public class SupplierController {
 
     @Resource
     private UserBusinessService userBusinessService;
+
+    @Resource
+    private SystemConfigService systemConfigService;
+
     @Resource
     private UserService userService;
 
@@ -81,6 +86,7 @@ public class SupplierController {
             List<Supplier> supplierList = supplierService.findBySelectCus();
             JSONArray dataArray = new JSONArray();
             if (null != supplierList) {
+                boolean depotFlag = systemConfigService.getDepotFlag();
                 for (Supplier supplier : supplierList) {
                     JSONObject item = new JSONObject();
                     //勾选判断1
@@ -90,7 +96,7 @@ public class SupplierController {
                     } catch (DataAccessException e) {
                         logger.error(">>>>>>>>>>>>>>>>>查询用户对应的客户：存在异常！");
                     }
-                    if (flag == true) {
+                    if (!depotFlag || flag) {
                         item.put("id", supplier.getId());
                         item.put("supplier", supplier.getSupplier()); //客户名称
                         dataArray.add(item);

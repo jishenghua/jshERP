@@ -217,28 +217,27 @@
 	//初始化页面选项卡
 	function initSelectInfo_depot(){
 		var options = "";
-
-		if(depotList !=null)
-		{
+		if(depotList !=null) {
 			options = "";
-			for(var i = 0 ;i < depotList.length;i++)
-			{
-				var depot = depotList[i];
-
-				if(userdepot!=null)
-				{
-					if(userdepot.indexOf("["+depot.id+"]")!=-1)
-					{
-						if(depot.isDefault){
-                            defDepotId =  depot.id;
-						}
-                        options += '<option value="' + depot.id + '">' + depot.name + '</option>';
-						depotString = depotString + depot.id + ",";
-					}
-				}
-				if(depot.type === 1){
+			for(var i = 0 ;i < depotList.length;i++) {
+                var depot = depotList[i];
+                if(depot.isDefault){
+                    defDepotId =  depot.id;
+                }
+                var config = getSystemConfig();
+                if(config && config.depotFlag == "1") {
+                    if(userdepot!=null) {
+                        if(userdepot.indexOf("["+depot.id+"]")!=-1) {
+                            options += '<option value="' + depot.id + '">' + depot.name + '</option>';
+                            depotString = depotString + depot.id + ",";
+                        }
+                    }
+                } else {
                     depotString = depotString + depot.id + ",";
 				}
+                if(depot.type === 1){
+                    depotString = depotString + depot.id + ",";
+                }
 			}
 			depotString = depotString.substring(1, depotString.length-1);
 			$("#ProjectId").empty().append(options);

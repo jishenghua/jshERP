@@ -187,4 +187,38 @@ public class SystemConfigService {
         }
         return result;
     }
+
+    /**
+     * 获取仓库开关
+     * @return
+     * @throws Exception
+     */
+    public boolean getDepotFlag() throws Exception {
+        boolean depotFlag = false;
+        List<SystemConfig> list = getSystemConfig();
+        if(list.size()>0) {
+            String flag = list.get(0).getDepotFlag();
+            if(("1").equals(flag)) {
+                depotFlag = true;
+            }
+        }
+        return depotFlag;
+    }
+
+    /**
+     * 获取客户开关
+     * @return
+     * @throws Exception
+     */
+    public boolean getCustomerFlag() throws Exception {
+        boolean customerFlag = false;
+        List<SystemConfig> list = getSystemConfig();
+        if(list.size()>0) {
+            String flag = list.get(0).getCustomerFlag();
+            if(("1").equals(flag)) {
+                customerFlag = true;
+            }
+        }
+        return customerFlag;
+    }
 }
