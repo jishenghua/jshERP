@@ -477,7 +477,6 @@
                     //加载完以后重新初始化
                     var opts = $("#tableData").datagrid('options');
                     showDepotDetails(opts.pageNumber, opts.pageSize);
-                    $.messager.alert('提示', '保存成功，请给用户分配该仓库才能使用！', 'info');
                 }
             },
             //此处添加错误处理
@@ -496,8 +495,8 @@
         $("#sort").val(depotInfo[2]);
         $("#remark").val(depotInfo[3]);
         $("#address").val(depotInfo[4]);
-        $("#warehousing").val(depotInfo[5]);
-        $("#truckage").val(depotInfo[6]);
+        $("#warehousing").val(depotInfo[5].replace("undefined",""));
+        $("#truckage").val(depotInfo[6].replace("undefined",""));
         $("#principalName").val(depotInfo[7]);
         $("#principal").val(depotInfo[8]);
         $("#selectType").val("principal");
