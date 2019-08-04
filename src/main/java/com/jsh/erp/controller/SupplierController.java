@@ -86,7 +86,7 @@ public class SupplierController {
             List<Supplier> supplierList = supplierService.findBySelectCus();
             JSONArray dataArray = new JSONArray();
             if (null != supplierList) {
-                boolean depotFlag = systemConfigService.getDepotFlag();
+                boolean customerFlag = systemConfigService.getCustomerFlag();
                 for (Supplier supplier : supplierList) {
                     JSONObject item = new JSONObject();
                     //勾选判断1
@@ -96,7 +96,7 @@ public class SupplierController {
                     } catch (DataAccessException e) {
                         logger.error(">>>>>>>>>>>>>>>>>查询用户对应的客户：存在异常！");
                     }
-                    if (!depotFlag || flag) {
+                    if (!customerFlag || flag) {
                         item.put("id", supplier.getId());
                         item.put("supplier", supplier.getSupplier()); //客户名称
                         dataArray.add(item);
