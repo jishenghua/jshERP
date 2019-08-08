@@ -1710,8 +1710,8 @@ CREATE TABLE `jsh_systemconfig` (
 -- ----------------------------
 -- Records of jsh_systemconfig
 -- ----------------------------
-INSERT INTO `jsh_systemconfig` VALUES ('7', '南通jshERP公司', '张三', '南通市通州区某某路', '0513-10101010', '0513-18181818', '226300', null, '0');
-INSERT INTO `jsh_systemconfig` VALUES ('8', '公司123', '', '', '', '', '', '117', '0');
+INSERT INTO `jsh_systemconfig` VALUES ('7', '南通jshERP公司', '张三', '南通市通州区某某路', '0513-10101010', '0513-18181818', '226300', '0', '0', null, '0');
+INSERT INTO `jsh_systemconfig` VALUES ('8', '公司123', '', '', '', '', '', '0', '0', '117', '0');
 
 -- ----------------------------
 -- Table structure for jsh_unit
