@@ -221,18 +221,21 @@
 			options = "";
 			for(var i = 0 ;i < depotList.length;i++) {
                 var depot = depotList[i];
-                if(depot.isDefault){
-                    defDepotId =  depot.id;
-                }
                 var config = getSystemConfig();
                 if(config && config.depotFlag == "1") {
                     if(userdepot!=null) {
                         if(userdepot.indexOf("["+depot.id+"]")!=-1) {
+                            if(depot.isDefault){
+                                defDepotId =  depot.id;
+                            }
                             options += '<option value="' + depot.id + '">' + depot.name + '</option>';
                             depotString = depotString + depot.id + ",";
                         }
                     }
                 } else {
+                    if(depot.isDefault){
+                        defDepotId =  depot.id;
+                    }
                     depotString = depotString + depot.id + ",";
 				}
                 if(depot.type === 1){
