@@ -3097,7 +3097,7 @@
 
 				if(tipInfo){
 					if(tipInfo.code!=200){
-						$.messager.alert('提示', tipInfo.msg, 'error');
+						$.messager.alert('提示', tipInfo.msg, 'warning');
 						return;
 					}
 					$.messager.alert('提示','保存成功！','info');
@@ -3146,7 +3146,7 @@
 			success: function (tipInfo){
 				if(tipInfo){
 					if(tipInfo.code!=200){
-						$.messager.alert('提示', tipInfo.msg, 'error');
+						$.messager.alert('提示', tipInfo.msg, 'warning');
 						return;
 					}
 					$.messager.alert('提示','保存成功！','info');
