@@ -332,7 +332,7 @@
                                         }
                                         else {
                                             $.ajax({
-                                                type: "get",
+                                                type: "post",
                                                 url: "/depotItem/findByAll",
                                                 dataType: "json",
                                                 data: ({
@@ -358,7 +358,7 @@
 
                                             //总金额
                                             $.ajax({
-                                                type: "get",
+                                                type: "post",
                                                 url: "/depotItem/totalCountMoney",
                                                 dataType: "json",
                                                 data: ({

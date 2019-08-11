@@ -81,6 +81,7 @@ public class UserController {
             try {
                 userStatus = userService.validateUser(username, password);
             } catch (Exception e) {
+                e.printStackTrace();
                 logger.error(">>>>>>>>>>>>>用户  " + username + " 登录 login 方法 访问服务层异常====", e);
                 msgTip = "access service exception";
             }
@@ -122,6 +123,7 @@ public class UserController {
                         }
                         request.getSession().setAttribute("mybatisPlusStatus",mybatisPlusStatus); //开启状态
                     } catch (Exception e) {
+                        e.printStackTrace();
                         logger.error(">>>>>>>>>>>>>>>查询用户名为:" + username + " ，用户信息异常", e);
                     }
                     break;
@@ -140,6 +142,7 @@ public class UserController {
             logger.info("===============用户登录 login 方法调用结束===============");
         } catch(Exception e){
             e.printStackTrace();
+            logger.error(e.getMessage());
             res.code = 500;
             res.data = "用户登录失败";
         }

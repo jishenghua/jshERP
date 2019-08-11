@@ -311,7 +311,7 @@ public class DepotItemController {
      * @param request
      * @return
      */
-    @GetMapping(value = "/findByAll")
+    @PostMapping(value = "/findByAll")
     public BaseResponseInfo findByAll(@RequestParam("currentPage") Integer currentPage,
                                       @RequestParam("pageSize") Integer pageSize,
                                       @RequestParam("projectId") Integer projectId,
@@ -384,7 +384,7 @@ public class DepotItemController {
      * @param request
      * @return
      */
-    @GetMapping(value = "/totalCountMoney")
+    @PostMapping(value = "/totalCountMoney")
     public BaseResponseInfo totalCountMoney(@RequestParam("projectId") Integer pid,
                                                         @RequestParam("monthTime") String monthTime,
                                                         @RequestParam("headIds") String headIds,
@@ -425,7 +425,7 @@ public class DepotItemController {
      * @param request
      * @return
      */
-    @GetMapping(value = "/buyIn")
+    @PostMapping(value = "/buyIn")
     public BaseResponseInfo buyIn(@RequestParam("currentPage") Integer currentPage,
                                       @RequestParam("pageSize") Integer pageSize,
                                       @RequestParam("monthTime") String monthTime,
@@ -485,7 +485,7 @@ public class DepotItemController {
      * @param request
      * @return
      */
-    @GetMapping(value = "/saleOut")
+    @PostMapping(value = "/saleOut")
     public BaseResponseInfo saleOut(@RequestParam("currentPage") Integer currentPage,
                                   @RequestParam("pageSize") Integer pageSize,
                                   @RequestParam("monthTime") String monthTime,
