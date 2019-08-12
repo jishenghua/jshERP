@@ -1,5 +1,7 @@
 package com.jsh.erp.datasource.entities;
 
+import java.math.BigDecimal;
+
 public class DepotItemVo4WithInfoEx extends DepotItem{
 
     private Long MId;
@@ -29,6 +31,10 @@ public class DepotItemVo4WithInfoEx extends DepotItem{
     private Long UnitId;
 
     private String UName;
+
+    private BigDecimal presetPriceOne;
+
+    private String priceStrategy;
 
     public Long getMId() {
         return MId;
@@ -140,5 +146,21 @@ public class DepotItemVo4WithInfoEx extends DepotItem{
 
     public void setUName(String UName) {
         this.UName = UName;
+    }
+
+    public BigDecimal getPresetPriceOne() {
+        return presetPriceOne;
+    }
+
+    public void setPresetPriceOne(BigDecimal presetPriceOne) {
+        this.presetPriceOne = presetPriceOne;
+    }
+
+    public String getPriceStrategy() {
+        return priceStrategy;
+    }
+
+    public void setPriceStrategy(String priceStrategy) {
+        this.priceStrategy = priceStrategy;
     }
 }

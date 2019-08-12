@@ -336,31 +336,20 @@ public class DepotItemController {
                     BigDecimal prevSum = sumNumber("入库", pid, diEx.getMId(), monthTime, true).subtract(sumNumber("出库", pid, diEx.getMId(), monthTime, true));
                     BigDecimal InSum = sumNumber("入库", pid, diEx.getMId(), monthTime, false);
                     BigDecimal OutSum = sumNumber("出库", pid, diEx.getMId(), monthTime, false);
-                    BigDecimal prevPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, true).subtract(sumPrice("出库", pid, diEx.getMId(), monthTime, true));
-                    BigDecimal InPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, false);
-                    BigDecimal OutPrice = sumPrice("出库", pid, diEx.getMId(), monthTime, false);
                     item.put("MaterialName", diEx.getMName());
                     item.put("MaterialModel", diEx.getMModel());
                     //扩展信息
                     String materialOther = getOtherInfo(mpArr, diEx);
                     item.put("MaterialOther", materialOther);
                     item.put("MaterialColor", diEx.getMColor());
-                    item.put("MaterialUnit", diEx.getMaterialUnit());
-                    BigDecimal unitPrice = BigDecimal.ZERO;
-                    if ((prevSum .add(InSum).subtract(OutSum)).compareTo(BigDecimal.ZERO)!= 0) {
-                        unitPrice = (prevPrice.add(InPrice).subtract(OutPrice)).divide(prevSum.add(InSum).subtract(OutSum),2, BigDecimal.ROUND_HALF_UP);
-                        /**
-                         * 2019-01-15通过除法算出金额后，保留两位小数
-                         * */
-                        DecimalFormat    df   = new DecimalFormat("#.00");
-                        unitPrice= new BigDecimal(df.format(unitPrice));
-                    }
-                    item.put("UnitPrice", unitPrice);
+                    item.put("unitName", getUName(diEx.getMaterialUnit(), diEx.getUName()));
+                    item.put("UnitPrice", getUnitPrice(diEx.getPresetPriceOne(), diEx.getPriceStrategy()));
                     item.put("prevSum", prevSum);
                     item.put("InSum", InSum);
                     item.put("OutSum", OutSum);
-                    item.put("thisSum", prevSum.add(InSum).subtract(OutSum));
-                    item.put("thisAllPrice", prevPrice.add(InPrice).subtract(OutPrice));
+                    BigDecimal thisSum = prevSum.add(InSum).subtract(OutSum);
+                    item.put("thisSum", thisSum);
+                    item.put("thisAllPrice", thisSum.multiply(getUnitPrice(diEx.getPresetPriceOne(), diEx.getPriceStrategy())));
                     dataArray.add(item);
                 }
             }
@@ -690,6 +679,47 @@ public class DepotItemController {
         }
         return sumPrice;
     }
+
+    /**
+     * 获取单位
+     * @param materialUnit
+     * @param uName
+     * @return
+     */
+    public String getUName(String materialUnit, String uName) {
+        String unitName = null;
+        if(!StringUtil.isEmpty(materialUnit)) {
+            unitName = materialUnit;
+        } else if(!StringUtil.isEmpty(uName)) {
+            unitName = uName.substring(0,uName.indexOf(","));
+        }
+        return unitName;
+    }
+
+    /**
+     * 获取单价
+     * @param presetPriceOne
+     * @param priceStrategy
+     * @return
+     */
+    public BigDecimal getUnitPrice(BigDecimal presetPriceOne, String priceStrategy) {
+        BigDecimal unitPrice = BigDecimal.ZERO;
+        if(presetPriceOne != null) {
+            DecimalFormat df = new DecimalFormat("#.00");
+            unitPrice = new BigDecimal(df.format(presetPriceOne));
+        } else {
+            JSONArray priceArr = JSONArray.parseArray(priceStrategy);
+            if(priceArr!=null && priceArr.get(0)!=null) {
+                JSONObject priceObj = JSONObject.parseObject(priceArr.get(0).toString());
+                BigDecimal basicPresetPriceOne = priceObj.getJSONObject("basic").getBigDecimal("PresetPriceOne");
+                if(basicPresetPriceOne!=null) {
+                    unitPrice = basicPresetPriceOne;
+                }
+            }
+        }
+        return unitPrice;
+    }
+
     /**
      * create by: qiankunpingtai
      * website：https://qiankunpingtai.cn

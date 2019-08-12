@@ -35,7 +35,10 @@
         <result column="MName" jdbcType="VARCHAR" property="MName" />
         <result column="MModel" jdbcType="VARCHAR" property="MModel" />
         <result column="MaterialUnit" jdbcType="VARCHAR" property="MaterialUnit" />
+        <result column="UName" jdbcType="VARCHAR" property="UName" />
         <result column="MColor" jdbcType="VARCHAR" property="MColor" />
+        <result column="PresetPriceOne" jdbcType="DECIMAL" property="presetPriceOne" />
+        <result column="PriceStrategy" jdbcType="VARCHAR" property="priceStrategy" />
     </resultMap>
     <resultMap id="ResultStockWarningCount" type="com.jsh.erp.datasource.vo.DepotItemStockWarningCount">
         <result column="MaterialName" jdbcType="VARCHAR" property="MaterialName" />
@@ -180,9 +183,11 @@
     </select>
 
     <select id="findByAll" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultByMaterial">
-        select m.id MId, m.Name MName, m.Model MModel, m.Unit MaterialUnit, m.Color MColor
+        select m.id MId, m.Name MName, m.Model MModel, m.Unit MaterialUnit, m.Color MColor,
+        m.PresetPriceOne, m.PriceStrategy, u.UName UName
         from jsh_depotitem di
         inner join jsh_material m on di.MaterialId=m.id  and ifnull(m.delete_Flag,'0') !='1'
+        left join jsh_unit u on m.UnitId=u.id and ifnull(u.delete_Flag,'0') !='1'
         where 1=1
         <if test="headIds != null">
             and di.HeaderId in (${headIds})
@@ -191,7 +196,7 @@
             and di.MaterialId in (${materialIds})
         </if>
         and ifnull(di.delete_Flag,'0') !='1'
-        group by m.id,m.Name, m.Model, m.Unit, m.Color
+        group by m.id,m.Name, m.Model, m.Unit, m.Color, m.PresetPriceOne, m.PriceStrategy, u.UName
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
         </if>
