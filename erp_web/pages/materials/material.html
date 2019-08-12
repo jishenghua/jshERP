@@ -94,8 +94,8 @@
                         <td style="width:80px;">序列号</td>
                         <td style="padding:5px;width:180px;">
                             <select name="EnableSerialNumber" id="EnableSerialNumber" style="width: 180px;height: 20px">
-                                <option value="1">启用</option>
-                                <option value="0">禁用</option>
+                                <option value="1">有</option>
+                                <option value="0">无</option>
                             </select>
                         </td>
                         <td></td>
@@ -533,7 +533,7 @@
                     },
                     {
                         title: '序列号', field: 'enableserialnumber', width: 70, align: "center", formatter: function (value) {
-                            return value=='1' ? "启用" : "禁用";
+                            return value=='1' ? "有" : "无";
                         }
                     }
                 ]],
