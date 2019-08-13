@@ -111,7 +111,16 @@
                 {title: '名称', field: 'MaterialName', width: 60},
                 {title: '型号', field: 'MaterialModel', width: 80},
                 {title: '扩展信息', field: 'MaterialOther', width: 150},
-                {title: '单位', field: 'MaterialUnit', width: 80},
+                {title: '单位', field: 'MaterialUnit', width: 80,
+                    formatter: function (value, row) {
+                        if(value) {
+                            return value;
+                        } else if(row.UName) {
+                            var uName = row.UName;
+                            return uName.substring(0,uName.indexOf(","));
+                        }
+                    }
+                },
                 {title: '进货数量', field: 'InSum', width: 60},
                 {title: '进货金额', field: 'InSumPrice', width: 60},
                 {title: '退货数量', field: 'OutSum', width: 60},

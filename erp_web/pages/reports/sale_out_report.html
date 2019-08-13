@@ -110,15 +110,24 @@
             pageSize: 10,
             pageList: [10, 50, 100],
             columns: [[
-                {title: '名称', field: 'MaterialName', width: 60, align: "center"},
-                {title: '型号', field: 'MaterialModel', width: 80, align: "center"},
-                {title: '扩展信息', field: 'MaterialOther', width: 150, align: "center"},
-                {title: '单位', field: 'MaterialUnit', width: 80, align: "center"},
-                {title: '销售数量', field: 'OutSum', width: 60, align: "center"},
-                {title: '销售金额', field: 'OutSumPrice', width: 60, align: "center"},
-                {title: '退货数量', field: 'InSum', width: 60, align: "center"},
-                {title: '退货金额', field: 'InSumPrice', width: 60, align: "center"},
-                {title: '实际销售金额', field: 'OutInSumPrice', width: 80, align: "center"}
+                {title: '名称', field: 'MaterialName', width: 60},
+                {title: '型号', field: 'MaterialModel', width: 80},
+                {title: '扩展信息', field: 'MaterialOther', width: 150},
+                {title: '单位', field: 'MaterialUnit', width: 80,
+                    formatter: function (value, row) {
+                        if(value) {
+                            return value;
+                        } else if(row.UName) {
+                            var uName = row.UName;
+                            return uName.substring(0,uName.indexOf(","));
+                        }
+                    }
+                },
+                {title: '销售数量', field: 'OutSum', width: 60},
+                {title: '销售金额', field: 'OutSumPrice', width: 60},
+                {title: '退货数量', field: 'InSum', width: 60},
+                {title: '退货金额', field: 'InSumPrice', width: 60},
+                {title: '实际销售金额', field: 'OutInSumPrice', width: 80}
 
             ]],
             onLoadError: function () {

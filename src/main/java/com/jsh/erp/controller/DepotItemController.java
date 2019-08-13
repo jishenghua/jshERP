@@ -445,6 +445,7 @@ public class DepotItemController {
                     item.put("MaterialOther", materialOther);
                     item.put("MaterialColor", diEx.getMColor());
                     item.put("MaterialUnit", diEx.getMaterialUnit());
+                    item.put("UName", diEx.getUName());
                     item.put("InSum", InSum);
                     item.put("OutSum", OutSum);
                     item.put("InSumPrice", InSumPrice);
@@ -510,6 +511,7 @@ public class DepotItemController {
                     item.put("MaterialOther", materialOther);
                     item.put("MaterialColor", diEx.getMColor());
                     item.put("MaterialUnit", diEx.getMaterialUnit());
+                    item.put("UName", diEx.getUName());
                     item.put("OutSum", OutSumRetail.add(OutSum));
                     item.put("InSum", InSumRetail.add(InSum));
                     item.put("OutSumPrice", OutSumRetailPrice.add(OutSumPrice));

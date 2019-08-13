@@ -149,7 +149,7 @@
                                     <td width="18%">零售价</td>
                                     <td width="18%">最低售价</td>
                                     <td width="18%">预计采购价</td>
-                                    <td width="18%">批发价</td>
+                                    <td width="18%">销售价</td>
                                 </tr>
                                 <tr>
                                     <td>基本单位</td>
@@ -187,7 +187,7 @@
                                                        class="easyui-validatebox"
                                                        data-options="validType:'length[1,30]'"
                                                        style="width: 180px;height: 20px"/></td>
-                        <td>批发价</td>
+                        <td>销售价</td>
                         <td style="padding:5px"><input name="PresetPriceTwo" id="PresetPriceTwo"
                                                        class="easyui-validatebox"
                                                        data-options="validType:'length[1,30]'"
@@ -467,6 +467,29 @@
             });
         }
 
+        //价格转换
+        function parsePrice(value, rec, type) {
+            var res = "";
+            if(rec.unit) {
+                res = value;
+            } else {
+                var ps = rec.pricestrategy;
+                var arr = JSON.parse(ps);
+                var basic = "";
+                if(type == "lowprice") {
+                    basic = arr[0].basic.LowPrice;
+                } else if(type == "presetpriceone") {
+                    basic = arr[0].basic.PresetPriceOne;
+                } else if(type == "presetpricetwo") {
+                    basic = arr[0].basic.PresetPriceTwo;
+                } else if(type == "retailprice") {
+                    basic = arr[0].basic.RetailPrice;
+                }
+                res = basic;
+            }
+            return res;
+        }
+
         //初始化表格数据
         function initTableData() {
             //改变宽度和高度
@@ -513,7 +536,15 @@
                     {title: '型号', field: 'model', width: 80},
                     {title: '类别', field: 'categoryName', width: 80},
                     {title: '扩展信息', field: 'materialOther', width: 150},
-                    {title: '单位', field: 'unit', width: 60},
+                    {title: '单位', field: 'unit', width: 100,
+                        formatter: function (value, rec) {
+                            if(value) {
+                                return value;
+                            } else {
+                                return rec.unitName;
+                            }
+                        }
+                    },
                     {title: '安全存量', field: 'safetystock', width: 70},
                     {
                         title: '库存', field: 'stock', width: 70, formatter: function (value, rec) {
@@ -522,10 +553,26 @@
                             return str;
                         }
                     },
-                    {title: '零售价', field: 'retailprice', width: 60},
-                    {title: '最低售价', field: 'lowprice', width: 70},
-                    {title: '预计采购价', field: 'presetpriceone', width: 70},
-                    {title: '批发价', field: 'presetpricetwo', width: 70},
+                    {title: '零售价', field: 'retailprice', width: 60,
+                        formatter: function (value, rec) {
+                            return parsePrice(value, rec, "retailprice");
+                        }
+                    },
+                    {title: '最低售价', field: 'lowprice', width: 70,
+                        formatter: function (value, rec) {
+                            return parsePrice(value, rec, "lowprice");
+                        }
+                    },
+                    {title: '预计采购价', field: 'presetpriceone', width: 70,
+                        formatter: function (value, rec) {
+                            return parsePrice(value, rec, "presetpriceone");
+                        }
+                    },
+                    {title: '销售价', field: 'presetpricetwo', width: 70,
+                        formatter: function (value, rec) {
+                            return parsePrice(value, rec, "presetpricetwo");
+                        }
+                    },
                     {
                         title: '状态', field: 'enabled', width: 50, align: "center", formatter: function (value) {
                             return value ? "启用" : "禁用";
