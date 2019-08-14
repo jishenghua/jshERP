@@ -120,12 +120,11 @@
                 {title: '操作模块', field: 'operation', width: 120},
                 {title: '操作人员', field: 'username', width: 80, align: "center"},
                 {title: '操作IP', field: 'clientip', width: 90, align: "center"},
-                {title: '操作时间', field: 'createtime', width: 130, align: "center"},
-                {title: '操作详情', field: 'remark', width: 260},
+                {title: '操作时间', field: 'createTimeStr', width: 130, align: "center"},
+                {title: '操作详情', field: 'remark', width: 350},
                 {title: '操作状态',field: 'status',width:70,align:"center",formatter:function(value){
                     return value? "失败":"成功";
-                }},
-                {title: '备注', field: 'remark', width: 150}
+                }}
             ]],
             onLoadError: function () {
                 $.messager.alert('页面加载提示', '页面加载异常，请稍后再试！', 'error');

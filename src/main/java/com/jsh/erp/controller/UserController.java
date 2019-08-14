@@ -12,6 +12,7 @@ import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.entities.UserEx;
 import com.jsh.erp.datasource.vo.TreeNodeEx;
 import com.jsh.erp.exception.BusinessParamCheckingException;
+import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.tenant.TenantService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.*;
@@ -19,6 +20,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -50,6 +53,9 @@ public class UserController {
 
     @Resource
     private TenantService tenantService;
+
+    @Resource
+    private LogService logService;
 
     private static String message = "成功";
     private static final String HTTP = "http://";
@@ -100,11 +106,9 @@ public class UserController {
                     break;
                 default:
                     try {
+                        msgTip = "user can login";
                         //验证通过 ，可以登录，放入session，记录登录日志
                         user = userService.getUserByUserName(username);
-    //                    logService.create(new Logdetails(user, "登录系统", model.getClientIp(),
-    //                            new Timestamp(System.currentTimeMillis()), (short) 0, "管理用户：" + username + " 登录系统", username + " 登录系统"));
-                        msgTip = "user can login";
                         request.getSession().setAttribute("user",user);
                         if(("open").equals(mybatisPlusStatus)) {
                             if(user.getTenantId()!=null) {
@@ -122,6 +126,9 @@ public class UserController {
                             }
                         }
                         request.getSession().setAttribute("mybatisPlusStatus",mybatisPlusStatus); //开启状态
+                        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_USER,
+                                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_LOGIN).append(user.getId()).toString(),
+                                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
                     } catch (Exception e) {
                         e.printStackTrace();
                         logger.error(">>>>>>>>>>>>>>>查询用户名为:" + username + " ，用户信息异常", e);

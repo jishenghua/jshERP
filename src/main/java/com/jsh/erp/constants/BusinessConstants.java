@@ -137,12 +137,13 @@ public class BusinessConstants {
     public static final byte USER_STATUS_BANNED = 2;
     /**
      * 日志操作
-     * 新增、修改、删除
+     * 新增、修改、删除、登录、导入
      * */
     public static final String LOG_OPERATION_TYPE_ADD = "新增";
     public static final String LOG_OPERATION_TYPE_BATCH_ADD = "批量新增";
     public static final String LOG_OPERATION_TYPE_EDIT = "修改,id:";
     public static final String LOG_OPERATION_TYPE_DELETE = "删除,id:";
+    public static final String LOG_OPERATION_TYPE_LOGIN = "登录,id:";
     public static final String LOG_OPERATION_TYPE_IMPORT = "导入";
 
     /**

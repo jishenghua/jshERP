@@ -11,6 +11,7 @@ import com.jsh.erp.datasource.mappers.LogMapperEx;
 import com.jsh.erp.datasource.vo.LogVo4List;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.utils.StringUtil;
+import com.jsh.erp.utils.Tools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -65,6 +66,11 @@ public class LogService {
         try{
             list=logMapperEx.selectByConditionLog(operation, usernameID, clientIp, status, beginTime, endTime,
                     contentdetails, offset, rows);
+            if (null != list) {
+                for (LogVo4List log : list) {
+                    log.setCreateTimeStr(Tools.getCenternTime(log.getCreatetime()));
+                }
+            }
         }catch(Exception e){
             logger.error("异常码[{}],异常提示[{}],异常[{}]",
                     ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
