@@ -212,7 +212,7 @@
         INNER JOIN jsh_depotitem di on dh.id=di.HeaderId and ifnull(di.delete_Flag,'0') !='1'
         INNER JOIN (SELECT jsh_material.id,jsh_material.name mName, Model,jsh_materialcategory.`Name` categoryName
         from jsh_material
-        INNER JOIN jsh_materialcategory on jsh_material.CategoryId=jsh_materialcategory.Id and ifnull(jsh_materialcategory.status,'0') !='2'
+        LEFT JOIN jsh_materialcategory on jsh_material.CategoryId=jsh_materialcategory.Id and ifnull(jsh_materialcategory.status,'0') !='2'
         where ifnull(jsh_material.delete_Flag,'0') !='1'
         ) m
         on m.Id=di.MaterialId where dh.type='${type}' and dh.OperTime >='${beginTime}' and dh.OperTime &lt;='${endTime}'
@@ -238,7 +238,7 @@
         INNER JOIN jsh_depotitem di on dh.id=di.HeaderId  and ifnull(di.delete_Flag,'0') !='1'
         INNER JOIN (SELECT jsh_material.id,jsh_material.name mName, Model,jsh_materialcategory.`Name` categoryName
         from jsh_material
-        INNER JOIN jsh_materialcategory on jsh_material.CategoryId=jsh_materialcategory.Id and ifnull(jsh_materialcategory.status,'0') !='2'
+        LEFT JOIN jsh_materialcategory on jsh_material.CategoryId=jsh_materialcategory.Id and ifnull(jsh_materialcategory.status,'0') !='2'
         where ifnull(jsh_material.delete_Flag,'0') !='1'
         ) m on m.Id=di.MaterialId where dh.type='${type}' and dh.OperTime >='${beginTime}' and dh.OperTime &lt;='${endTime}'
         <if test="oId != null">
