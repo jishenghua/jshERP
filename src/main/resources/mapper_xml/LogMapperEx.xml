@@ -23,10 +23,10 @@
             and l.status=${status}
         </if>
         <if test="beginTime != null">
-            and l.createtime &gt;= '%${beginTime}%'
+            and l.createtime &gt;= '${beginTime}'
         </if>
         <if test="endTime != null">
-            and l.createtime &lt;= '%${endTime}%'
+            and l.createtime &lt;= '${endTime}'
         </if>
         <if test="contentdetails != null">
             and l.contentdetails like '%${contentdetails}%'

@@ -26,18 +26,30 @@
             </td>
 
             <td>&nbsp;</td>
-            <td>&nbsp;</td>
             <td>操作人员：</td>
             <td>
                 <select name="searchUsernameID" id="searchUsernameID" style="width:90px;"/>
             </td>
             <td>&nbsp;</td>
+            <td>开始时间：</td>
+            <td>
+                <input type="text" name="searchBeginTime" id="searchBeginTime" class="easyui-datetimebox"
+                       style="width:135px;"/>
+            </td>
             <td>&nbsp;</td>
             <td>操作IP：</td>
             <td>
                 <input type="text" name="searchIP" id="searchIP" style="width:90px;"/>
             </td>
             <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>操作详情：</td>
+            <td>
+                <input type="text" name="searchDesc" id="searchDesc" style="width:90px;"/>
+            </td>
             <td>&nbsp;</td>
             <td>操作状态：</td>
             <td>
@@ -47,30 +59,19 @@
                     <option value="1">失败</option>
                 </select>
             </td>
-        </tr>
-        <tr>
-            <td>开始时间：</td>
-            <td>
-                <input type="text" name="searchBeginTime" id="searchBeginTime" class="easyui-datebox"
-                       style="width:90px;"/>
-            </td>
-            <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td>结束时间：</td>
             <td>
-                <input type="text" name="searchEndTime" id="searchEndTime" class="easyui-datebox" style="width:90px;"/>
-            </td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td>操作详情：</td>
-            <td>
-                <input type="text" name="searchDesc" id="searchDesc" style="width:90px;"/>
+                <input type="text" name="searchEndTime" id="searchEndTime" class="easyui-datetimebox"
+                       style="width:135px;"/>
             </td>
             <td>&nbsp;</td>
             <td colspan="3">
                 <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchBtn">查询</a>
                 <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-redo" id="searchResetBtn">重置</a>
             </td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
         </tr>
     </table>
 </div>
@@ -118,13 +119,13 @@
             pageList: initPageNum,
             columns: [[
                 {title: '操作模块', field: 'operation', width: 120},
-                {title: '操作人员', field: 'username', width: 80, align: "center"},
-                {title: '操作IP', field: 'clientip', width: 90, align: "center"},
-                {title: '操作时间', field: 'createTimeStr', width: 130, align: "center"},
                 {title: '操作详情', field: 'remark', width: 350},
-                {title: '操作状态',field: 'status',width:70,align:"center",formatter:function(value){
+                {title: '操作人员', field: 'username', width: 100, align: "center"},
+                {title: '操作状态',field: 'status',width:80,align:"center",formatter:function(value){
                     return value? "失败":"成功";
-                }}
+                }},
+                {title: '操作IP', field: 'clientip', width: 100, align: "center"},
+                {title: '操作时间', field: 'createTimeStr', width: 150, align: "center"}
             ]],
             onLoadError: function () {
                 $.messager.alert('页面加载提示', '页面加载异常，请稍后再试！', 'error');
