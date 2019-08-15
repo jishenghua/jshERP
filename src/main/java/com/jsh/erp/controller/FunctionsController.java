@@ -29,9 +29,6 @@ import java.util.List;
 public class FunctionsController {
     private Logger logger = LoggerFactory.getLogger(FunctionsController.class);
 
-    @Value("${mybatis-plus.status}")
-    private String mybatisPlusStatus;
-
     @Resource
     private FunctionsService functionsService;
 
@@ -139,23 +136,19 @@ public class FunctionsController {
                 //根据条件从列表里面移除"系统管理"
                 List<Functions> dataList = new ArrayList<Functions>();
                 for (Functions fun : dataListFun) {
-                    if(("open").equals(mybatisPlusStatus)){
-                        //从session中获取租户id
-                        String loginName = null;
-                        Object userInfo = request.getSession().getAttribute("user");
-                        if(userInfo != null) {
-                            User user = (User) userInfo;
-                            loginName = user.getLoginame();
-                        }
-                        if(("admin").equals(loginName)) {
-                            dataList.add(fun);
-                        } else {
-                            if(!("系统管理").equals(fun.getName())) {
-                                dataList.add(fun);
-                            }
-                        }
-                    } else {
+                    //从session中获取租户id
+                    String loginName = null;
+                    Object userInfo = request.getSession().getAttribute("user");
+                    if(userInfo != null) {
+                        User user = (User) userInfo;
+                        loginName = user.getLoginame();
+                    }
+                    if(("admin").equals(loginName)) {
                         dataList.add(fun);
+                    } else {
+                        if(!("系统管理").equals(fun.getName())) {
+                            dataList.add(fun);
+                        }
                     }
                 }
 

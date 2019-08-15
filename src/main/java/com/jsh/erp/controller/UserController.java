@@ -42,9 +42,6 @@ import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 public class UserController {
     private Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    @Value("${mybatis-plus.status}")
-    private String mybatisPlusStatus;
-
     @Value("${manage.roleId}")
     private Integer manageRoleId;
 
@@ -110,22 +107,19 @@ public class UserController {
                         //验证通过 ，可以登录，放入session，记录登录日志
                         user = userService.getUserByUserName(username);
                         request.getSession().setAttribute("user",user);
-                        if(("open").equals(mybatisPlusStatus)) {
-                            if(user.getTenantId()!=null) {
-                                Tenant tenant = tenantService.getTenantByTenantId(user.getTenantId());
-                                if(tenant!=null) {
-                                    Long tenantId = tenant.getTenantId();
-                                    Integer userNumLimit = tenant.getUserNumLimit();
-                                    Integer billsNumLimit = tenant.getBillsNumLimit();
-                                    if(tenantId!=null) {
-                                        request.getSession().setAttribute("tenantId",tenantId); //租户tenantId
-                                        request.getSession().setAttribute("userNumLimit",userNumLimit); //用户限制数
-                                        request.getSession().setAttribute("billsNumLimit",billsNumLimit); //单据限制数
-                                    }
+                        if(user.getTenantId()!=null) {
+                            Tenant tenant = tenantService.getTenantByTenantId(user.getTenantId());
+                            if(tenant!=null) {
+                                Long tenantId = tenant.getTenantId();
+                                Integer userNumLimit = tenant.getUserNumLimit();
+                                Integer billsNumLimit = tenant.getBillsNumLimit();
+                                if(tenantId!=null) {
+                                    request.getSession().setAttribute("tenantId",tenantId); //租户tenantId
+                                    request.getSession().setAttribute("userNumLimit",userNumLimit); //用户限制数
+                                    request.getSession().setAttribute("billsNumLimit",billsNumLimit); //单据限制数
                                 }
                             }
                         }
-                        request.getSession().setAttribute("mybatisPlusStatus",mybatisPlusStatus); //开启状态
                         logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_USER,
                                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_LOGIN).append(user.getId()).toString(),
                                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
@@ -182,12 +176,9 @@ public class UserController {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
             request.getSession().removeAttribute("user");
-            request.getSession().removeAttribute("mybatisPlusStatus");
-            if(("open").equals(mybatisPlusStatus)) {
-                request.getSession().removeAttribute("tenantId");
-                request.getSession().removeAttribute("userNumLimit");
-                request.getSession().removeAttribute("billsNumLimit");
-            }
+            request.getSession().removeAttribute("tenantId");
+            request.getSession().removeAttribute("userNumLimit");
+            request.getSession().removeAttribute("billsNumLimit");
             response.sendRedirect("/login.html");
         } catch(Exception e){
             e.printStackTrace();
@@ -323,16 +314,11 @@ public class UserController {
     @ResponseBody
     public Object addUser(@RequestParam("info") String beanJson, HttpServletRequest request)throws Exception{
         JSONObject result = ExceptionConstants.standardSuccess();
-        if(("open").equals(mybatisPlusStatus)) {
-            Long userNumLimit = Long.parseLong(request.getSession().getAttribute("userNumLimit").toString());
-            Long count = userService.countUser(null,null);
-            if(count>= userNumLimit) {
-                throw new BusinessParamCheckingException(ExceptionConstants.USER_OVER_LIMIT_FAILED_CODE,
-                        ExceptionConstants.USER_OVER_LIMIT_FAILED_MSG);
-            } else {
-                UserEx ue= JSON.parseObject(beanJson, UserEx.class);
-                userService.addUserAndOrgUserRel(ue);
-            }
+        Long userNumLimit = Long.parseLong(request.getSession().getAttribute("userNumLimit").toString());
+        Long count = userService.countUser(null,null);
+        if(count>= userNumLimit) {
+            throw new BusinessParamCheckingException(ExceptionConstants.USER_OVER_LIMIT_FAILED_CODE,
+                    ExceptionConstants.USER_OVER_LIMIT_FAILED_MSG);
         } else {
             UserEx ue= JSON.parseObject(beanJson, UserEx.class);
             userService.addUserAndOrgUserRel(ue);
@@ -404,21 +390,5 @@ public class UserController {
             }
         }
         return arr;
-    }
-
-    @GetMapping("/getTenantStatus")
-    public BaseResponseInfo getTenantStatus(HttpServletRequest request)throws Exception {
-        BaseResponseInfo res = new BaseResponseInfo();
-        try {
-            Map<String, Object> data = new HashMap<String, Object>();
-            data.put("status", mybatisPlusStatus);
-            res.code = 200;
-            res.data = data;
-        } catch(Exception e){
-            e.printStackTrace();
-            res.code = 500;
-            res.data = "获取失败";
-        }
-        return res;
     }
 }

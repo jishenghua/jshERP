@@ -48,8 +48,8 @@ public class TenantConfig {
             @Override
             public boolean doTableFilter(String tableName) {
                 //获取开启状态
-                Object mybatisPlusStatus = request.getSession().getAttribute("mybatisPlusStatus");
-                if(mybatisPlusStatus !=null && mybatisPlusStatus.toString().equals("open")) {
+                Object tenantId = request.getSession().getAttribute("tenantId");
+                if(tenantId!=null) {
                     //从session中获取租户id
                     String loginName = null;
                     Object userInfo = request.getSession().getAttribute("user");
@@ -62,7 +62,7 @@ public class TenantConfig {
                     } else {
                         // 这里可以判断是否过滤表
                         if ("databasechangelog".equals(tableName) || "databasechangeloglock".equals(tableName)
-                                || "jsh_materialproperty".equals(tableName) || "tbl_sequence".equals(tableName) || "dual".equals(tableName)
+                                || "jsh_materialproperty".equals(tableName) || "tbl_sequence".equals(tableName)
                                 || "jsh_userbusiness".equals(tableName) || "jsh_app".equals(tableName) || "jsh_functions".equals(tableName)
                                 || "jsh_tenant".equals(tableName)) {
                             return true;

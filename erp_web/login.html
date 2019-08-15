@@ -46,7 +46,6 @@
         //进入页面聚焦在username输入框,方便 用户输入
         $("#user_name").focus();
         browserFit();
-        checkTenantStatus();
     });
 
     //浏览器适配
@@ -55,32 +54,6 @@
             $("#user_vcodepwd").empty().append("密&nbsp;&nbsp;&nbsp;&nbsp;码：");
         else
             $("#user_vcodepwd").empty().append("密&nbsp;&nbsp;&nbsp;&nbsp;码：");
-    }
-
-    //判断是否开启多租户
-    function checkTenantStatus(){
-        $("#btn_register").hide();
-        $.ajax({
-            type: "get",
-            url: "/user/getTenantStatus",
-            dataType: "json",
-            success: function (res) {
-                if(res && res.code === 200) {
-                    if(res.data) {
-                        if(res.data.status == "open") {
-                            $("#btn_register").show();
-                        } else if(res.data.status == "close") {
-                            $("#btn_register").hide();
-                        }
-                    }
-                } else {
-                    $("#btn_register").hide();
-                }
-            },
-            error: function () {
-                $("#btn_register").hide();
-            }
-        });
     }
 
     //初始化键盘enter事件

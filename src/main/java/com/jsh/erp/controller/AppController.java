@@ -32,9 +32,6 @@ import java.util.Properties;
 public class AppController {
     private Logger logger = LoggerFactory.getLogger(AppController.class);
 
-    @Value("${mybatis-plus.status}")
-    private String mybatisPlusStatus;
-
     @Resource
     private AppService appService;
 
@@ -175,23 +172,19 @@ public class AppController {
                 //根据条件从列表里面移除"系统管理"
                 List<App> dataList = new ArrayList<App>();
                 for (App appOne : dataListApp) {
-                    if(("open").equals(mybatisPlusStatus)){
-                        //从session中获取租户id
-                        String loginName = null;
-                        Object userInfo = request.getSession().getAttribute("user");
-                        if(userInfo != null) {
-                            User user = (User) userInfo;
-                            loginName = user.getLoginame();
-                        }
-                        if(("admin").equals(loginName)) {
-                            dataList.add(appOne);
-                        } else {
-                            if(!("系统管理").equals(appOne.getName())) {
-                                dataList.add(appOne);
-                            }
-                        }
-                    } else {
+                    //从session中获取租户id
+                    String loginName = null;
+                    Object userInfo = request.getSession().getAttribute("user");
+                    if(userInfo != null) {
+                        User user = (User) userInfo;
+                        loginName = user.getLoginame();
+                    }
+                    if(("admin").equals(loginName)) {
                         dataList.add(appOne);
+                    } else {
+                        if(!("系统管理").equals(appOne.getName())) {
+                            dataList.add(appOne);
+                        }
                     }
                 }
 
