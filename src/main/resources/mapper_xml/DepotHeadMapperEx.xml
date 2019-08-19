@@ -49,8 +49,8 @@
         left join jsh_person p on dh.HandsPersonId=p.id and ifnull(p.delete_Flag,'0') !='1'
         left join jsh_account a on dh.AccountId=a.id and ifnull(a.delete_Flag,'0') !='1'
         left join jsh_depot dd on dh.AllocationProjectId=dd.id and ifnull(dd.delete_Flag,'0') !='1'
-        inner join jsh_depotitem di on dh.Id = di.HeaderId and ifnull(di.delete_Flag,'0') !='1'
-        inner join jsh_material m on di.MaterialId = m.Id and ifnull(m.delete_Flag,'0') !='1'
+        left join jsh_depotitem di on dh.Id = di.HeaderId and ifnull(di.delete_Flag,'0') !='1'
+        left join jsh_material m on di.MaterialId = m.Id and ifnull(m.delete_Flag,'0') !='1'
         where 1=1
         <if test="type != null">
             and dh.Type='${type}'
@@ -83,8 +83,8 @@
         SELECT
         COUNT(1) from
         (select distinct jsh_depothead.* FROM jsh_depothead
-        inner join jsh_depotitem di on jsh_depothead.Id = di.HeaderId and ifnull(di.delete_Flag,'0') !='1'
-        inner join jsh_material m on di.MaterialId = m.Id and ifnull(m.delete_Flag,'0') !='1'
+        left join jsh_depotitem di on jsh_depothead.Id = di.HeaderId and ifnull(di.delete_Flag,'0') !='1'
+        left join jsh_material m on di.MaterialId = m.Id and ifnull(m.delete_Flag,'0') !='1'
         WHERE 1=1
         <if test="type != null">
             and Type='${type}'

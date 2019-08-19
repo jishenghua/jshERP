@@ -228,10 +228,11 @@ public class DepotItemController {
                         ratio = ratio.substring(ratio.indexOf("("));
                     }
                     //品名/型号/扩展信息/包装
-                    String MaterialName = diEx.getMName() + ((diEx.getMModel() == null || diEx.getMModel().equals("")) ? "" : "(" + diEx.getMModel() + ")");
+                    String MaterialName = (diEx.getMName() == null || diEx.getMName().equals("")) ? "" : diEx.getMName()
+                            + ((diEx.getMModel() == null || diEx.getMModel().equals("")) ? "" : "(" + diEx.getMModel() + ")");
                     String materialOther = getOtherInfo(mpArr, diEx);
                     MaterialName = MaterialName + materialOther + ((diEx.getUName() == null || diEx.getUName().equals("")) ? "" : "(" + diEx.getUName() + ")") + ratio;
-                    item.put("MaterialName", MaterialName);
+                    item.put("MaterialName", MaterialName == null ? "" : MaterialName);
                     item.put("Unit", diEx.getMunit());
                     item.put("OperNumber", diEx.getOpernumber());
                     item.put("BasicNumber", diEx.getBasicnumber());
