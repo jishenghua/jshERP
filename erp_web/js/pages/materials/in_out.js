@@ -1096,31 +1096,44 @@
 			toolbar:[
 				{
 					id:'append',
-					text:'新增',
+					text:'新增行',
 					iconCls:'icon-add',
-					handler:function()
-					{
-						append(); //新增
+					handler:function() {
+						append(); //新增行
 					}
 				},
 				{
 					id:'delete',
-					text:'删除',
+					text:'删除行',
 					iconCls:'icon-remove',
-					handler:function()
-					{
-						batchDel(); //删除
+					handler:function() {
+						batchDel(); //删除行
 					}
 				},
 				{
 					id:'reject',
 					text:'撤销',
 					iconCls:'icon-undo',
-					handler:function()
-					{
+					handler:function() {
 						reject(); //撤销
 					}
-				}
+				},
+                {
+                    id:'appendDepot',
+                    text:'新增仓库',
+                    iconCls:'icon-add',
+                    handler:function() {
+                        appendDepot(); //新增仓库
+                    }
+                },
+                {
+                    id:'appendMaterial',
+                    text:'新增商品',
+                    iconCls:'icon-add',
+                    handler:function() {
+                        appendMaterial(); //新增商品
+                    }
+                }
 			],
 			onLoadError:function()
 			{
@@ -1586,18 +1599,19 @@
 	    depotHeadID = 0;
 	    initTableData_material("add"); //商品列表
 	    reject(); //撤销下、刷新商品列表
+		function supplierDlgFun(type) {
+            $('#supplierDlg').dialog('open').dialog('setTitle','<img src="/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加' + type + '信息');
+            $('#supplierFM').form('clear');
+            bindSupplierEvent();
+        }
 		$("#addOrgan").off("click").on("click",function(){
-			$('#supplierDlg').dialog('open').dialog('setTitle','<img src="/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加供应商信息');
-            $('#supplierFM').form('clear');
+            supplierDlgFun("供应商");
 		});
-
         $("#addMember").off("click").on("click",function(){
-            $('#supplierDlg').dialog('open').dialog('setTitle','<img src="/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加会员信息');
-            $('#supplierFM').form('clear');
+            supplierDlgFun("会员");
         });
         $("#addCustomer").off("click").on("click",function(){
-            $('#supplierDlg').dialog('open').dialog('setTitle','<img src="/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加客户信息');
-            $('#supplierFM').form('clear');
+            supplierDlgFun("客户");
         });
 	    url = '/depotHead/addDepotHeadAndDetail';
 
@@ -2585,31 +2599,38 @@
 			$("#otherMoneyTotalDlg").text($("#OtherMoney").val());
 		});
 
-		if(listTitle === "采购入库列表" || listTitle === "其它入库列表" || listTitle === "采购订单列表"|| listTitle === "零售出库列表"|| listTitle === "销售出库列表"|| listTitle === "销售订单列表"){
-			var supplierType = "供应商";
-			if(listTitle === "零售出库列表"){
+	}
+
+    /**
+	 * 绑定供应商、客户事件
+     */
+	function bindSupplierEvent() {
+        if(listTitle === "采购入库列表" || listTitle === "其它入库列表" || listTitle === "采购订单列表"
+            || listTitle === "零售出库列表"|| listTitle === "销售出库列表"|| listTitle === "销售订单列表"){
+            var supplierType = "供应商";
+            if(listTitle === "零售出库列表"){
                 supplierType = "会员";
-			}else if(listTitle === "销售出库列表" || listTitle === "销售订单列表"){
-            supplierType = "客户";
-			}
-			//检查单位名称是否存在 ++ 重名无法提示问题需要跟进
-			function checkSupplierName() {
-				var supplierName = $.trim($("#supplier").val());
-				var orgSupplier = "";
-				//表示是否存在 true == 存在 false = 不存在
-				var flag = false;
-				//开始ajax名称检验，不能重名
-				if(supplierName.length > 0 &&( orgSupplier.length ==0 || supplierName != orgSupplier))
-				{
-					$.ajax({
-						type:"get",
-						url: "/supplier/checkIsNameExist",
-						dataType: "json",
-						async :  false,
-						data: ({
+            }else if(listTitle === "销售出库列表" || listTitle === "销售订单列表"){
+                supplierType = "客户";
+            }
+            //检查单位名称是否存在 ++ 重名无法提示问题需要跟进
+            function checkSupplierName() {
+                var supplierName = $.trim($("#supplier").val());
+                var orgSupplier = "";
+                //表示是否存在 true == 存在 false = 不存在
+                var flag = false;
+                //开始ajax名称检验，不能重名
+                if(supplierName.length > 0 &&( orgSupplier.length ==0 || supplierName != orgSupplier))
+                {
+                    $.ajax({
+                        type:"get",
+                        url: "/supplier/checkIsNameExist",
+                        dataType: "json",
+                        async :  false,
+                        data: ({
                             id : 0,
                             name : supplierName
-						}),
+                        }),
                         success: function (res) {
                             if(res && res.code === 200) {
                                 if(res.data && res.data.status) {
@@ -2621,59 +2642,59 @@
                                 }
                             }
                         },
-						//此处添加错误处理
-						error:function() {
-							$.messager.alert('提示','检查单位名称是否存在异常，请稍后再试！','error');
-							return;
-						}
-					});
-				}
-				return flag;
-			}
+                        //此处添加错误处理
+                        error:function() {
+                            $.messager.alert('提示','检查单位名称是否存在异常，请稍后再试！','error');
+                            return;
+                        }
+                    });
+                }
+                return flag;
+            }
 
-			//保存供应商信息
-			$("#saveSupplier").off("click").on("click",function() {
+            //保存供应商信息
+            $("#saveSupplier").off("click").on("click",function() {
                 if(validateForm("supplierFM")) {
                     return;
                 }
-				if(checkSupplierName()){
-					return;
-				}
-				var reg = /^([0-9])+$/;
-				var phonenum = $.trim($("#phonenum").val());
-				if(phonenum.length>0 && !reg.test(phonenum))
-				{
-					$.messager.alert('提示','电话号码只能是数字','info');
-					$("#phonenum").val("").focus();
-					return;
-				}
-				var beginNeedGet = $.trim($("#BeginNeedGet").val());
-				var beginNeedPay = $.trim($("#BeginNeedPay").val());
-				if(beginNeedGet && beginNeedPay) {
-					$.messager.alert('提示','期初应收和期初应付不能同时输入','info');
-					return;
-				}
-				var url = '/supplier/add';
+                if(checkSupplierName()){
+                    return;
+                }
+                var reg = /^([0-9])+$/;
+                var phonenum = $.trim($("#phonenum").val());
+                if(phonenum.length>0 && !reg.test(phonenum))
+                {
+                    $.messager.alert('提示','电话号码只能是数字','info');
+                    $("#phonenum").val("").focus();
+                    return;
+                }
+                var beginNeedGet = $.trim($("#BeginNeedGet").val());
+                var beginNeedPay = $.trim($("#BeginNeedPay").val());
+                if(beginNeedGet && beginNeedPay) {
+                    $.messager.alert('提示','期初应收和期初应付不能同时输入','info');
+                    return;
+                }
+                var url = '/supplier/add';
                 var supObj = $("#supplierFM").serializeObject();
                 supObj.type = supplierType;
                 supObj.enabled = 1;
-				$.ajax({
-					url: url,
-					type:"post",
-					dataType: "json",
-					data:{
+                $.ajax({
+                    url: url,
+                    type:"post",
+                    dataType: "json",
+                    data:{
                         info: JSON.stringify(supObj)
-					},
-					success: function(res) {
-						if (res) {
-							$('#supplierDlg').dialog('close');
-							initSupplier(); //刷新供应商
-						}
-					}
-				});
-			});
-		}
-	}
+                    },
+                    success: function(res) {
+                        if (res) {
+                            $('#supplierDlg').dialog('close');
+                            initSupplier(); //刷新供应商
+                        }
+                    }
+                });
+            });
+        }
+    }
 
 	function showDepotHeadDetails(pageNo,pageSize){
 		var materialParam = $.trim($("#searchMaterial").val());
@@ -2988,6 +3009,14 @@
 	function reject() {
 	    $('#materialData').datagrid('rejectChanges');
 	    editIndex = undefined;
+	}
+    //新增仓库
+    function appendDepot() {
+		alert("新增仓库");
+    }
+    //新增商品
+    function appendMaterial() {
+        alert("新增商品");
 	}
 	//判断
 	function CheckData(type) {
