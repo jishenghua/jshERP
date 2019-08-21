@@ -216,9 +216,7 @@
 	}
 	//初始化页面选项卡
 	function initSelectInfo_depot(){
-		var options = "";
 		if(depotList !=null) {
-			options = "";
 			for(var i = 0 ;i < depotList.length;i++) {
                 var depot = depotList[i];
                 var config = getSystemConfig();
@@ -228,7 +226,6 @@
                             if(depot.isDefault){
                                 defDepotId =  depot.id;
                             }
-                            options += '<option value="' + depot.id + '">' + depot.name + '</option>';
                             depotString = depotString + depot.id + ",";
                         }
                     }
@@ -243,9 +240,6 @@
                 }
 			}
 			depotString = depotString.substring(1, depotString.length-1);
-			$("#ProjectId").empty().append(options);
-			$("#AllocationProjectId").empty().append(options);
-			$("#searchProjectId").empty().append('<option value="">全部</option>').append(options);
 		}
 	}
 
@@ -3012,7 +3006,78 @@
 	}
     //新增仓库
     function appendDepot() {
-		alert("新增仓库");
+        $('#depotDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加仓库信息');
+        $(".window-mask").css({width: webW, height: webH});
+        $('#depotFM').form('clear');
+        $("#depotFM #name").focus();
+        $("#selectType").val("principal");
+        oldDepot = "";
+        depotID = 0;
+        url = '/depot/add';
+        //检查名称是否存在 ++ 重名无法提示问题需要跟进
+        function checkDepotName() {
+            var name = $.trim($("#name").val());
+            //表示是否存在 true == 存在 false = 不存在
+            var flag = false;
+            //开始ajax名称检验，不能重名
+            if (name.length > 0 && (oldDepot.length == 0 || name != oldDepot)) {
+                $.ajax({
+                    type: "get",
+                    url: "/depot/checkIsNameExist",
+                    dataType: "json",
+                    async: false,
+                    data: ({
+                        id: depotID,
+                        name: name
+                    }),
+                    success: function (res) {
+                        if(res && res.code === 200) {
+                            if(res.data && res.data.status) {
+                                flag = res.data.status;
+                                if (flag) {
+                                    $.messager.alert('提示', '仓库名称已经存在', 'info');
+                                    return;
+                                }
+                            }
+                        }
+                    },
+                    //此处添加错误处理
+                    error: function () {
+                        $.messager.alert('提示', '检查仓库名称是否存在异常，请稍后再试！', 'error');
+                        return;
+                    }
+                });
+            }
+            return flag;
+        }
+        $("#saveDepot").off("click").on("click", function () {
+            var infoObj = $("#depotFM").serializeObject();
+            infoObj.type = 0;
+            if (checkDepotName()) {
+                return;
+            }
+            $.ajax({
+                url: url,
+                type: "post",
+                dataType: "json",
+                data: ({
+                    info: JSON.stringify(infoObj)
+                }),
+                success: function(res) {
+                    if(res && res.code === 200) {
+                        $('#depotDlg').dialog('close');
+                        //加载完以后重新初始化
+                        var opts = $("#tableData").datagrid('options');
+                        showDepotDetails(opts.pageNumber, opts.pageSize);
+                    }
+                },
+                //此处添加错误处理
+                error: function () {
+                    $.messager.alert('提示', '保存仓库信息异常，请稍后再试！', 'error');
+                    return;
+                }
+            });
+        });
     }
     //新增商品
     function appendMaterial() {

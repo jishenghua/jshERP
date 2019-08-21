@@ -93,3 +93,52 @@
 	<a href="javascript:void(0)" id="cancelSupplier" onclick="javascript:$('#supplierDlg').dialog('close')">取消</a>
 </div>
 {{/if}}
+
+{{#if depotSelect}}
+<div id="depotDlg" style="width:380px;padding:10px 20px" buttons="#dlg-buttons">
+	<form id="depotFM">
+		<table>
+			<tr>
+				<td>仓库名称</td>
+				<td style="padding:5px">
+					<input name="name" id="name" style="width: 230px;height: 20px"/>
+				</td>
+			</tr>
+			<tr>
+				<td>仓库地址</td>
+				<td style="padding:5px">
+					<input name="address" id="address" style="width: 230px;height: 20px"/>
+				</td>
+			</tr>
+			<tr>
+				<td>仓储费</td>
+				<td style="padding:5px">
+					<input name="warehousing" id="warehousing" style="width: 175px;height: 20px"/>&nbsp;元/天/KG
+				</td>
+			</tr>
+			<tr>
+				<td>搬运费</td>
+				<td style="padding:5px">
+					<input name="truckage" id="truckage" placeholder="如上下搬运20元,则填写10元" style="width: 215px;height: 20px"/>&nbsp;元
+				</td>
+			</tr>
+			<tr>
+				<td>排序</td>
+				<td style="padding:5px">
+					<input name="sort" id="sort" style="width: 230px;height: 20px"/>
+				</td>
+			</tr>
+			<tr>
+				<td>描述</td>
+				<td style="padding:5px">
+					<textarea name="remark" id="remark" rows="2" cols="2" style="width: 230px;"></textarea>
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>
+<div id="dlg-buttons">
+	<a href="javascript:void(0)" id="saveDepot">保存</a>
+	<a href="javascript:void(0)" id="cancelDepot" onclick="javascript:$('#depotDlg').dialog('close')">取消</a>
+</div>
+{{/if}}
