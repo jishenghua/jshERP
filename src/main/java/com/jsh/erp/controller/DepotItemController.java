@@ -233,6 +233,9 @@ public class DepotItemController {
                     String materialOther = getOtherInfo(mpArr, diEx);
                     MaterialName = MaterialName + materialOther + ((diEx.getUName() == null || diEx.getUName().equals("")) ? "" : "(" + diEx.getUName() + ")") + ratio;
                     item.put("MaterialName", MaterialName == null ? "" : MaterialName);
+                    int inSum = depotItemService.findByTypeAndMaterialIdAndDepotId("入库", diEx.getMaterialid(), diEx.getDepotid());
+                    int outSum = depotItemService.findByTypeAndMaterialIdAndDepotId("出库", diEx.getMaterialid(), diEx.getDepotid());
+                    item.put("Stock", inSum-outSum);
                     item.put("Unit", diEx.getMunit());
                     item.put("OperNumber", diEx.getOpernumber());
                     item.put("BasicNumber", diEx.getBasicnumber());
