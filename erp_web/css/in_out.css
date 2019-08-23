@@ -100,8 +100,22 @@
 	width:135px;
 }
 
-#depotHeadDlg .add-org-btn{
+#depotHeadDlg .account-list{
 	float: left;
-	width:30px;
+	width:112px;
+}
+
+#depotHeadDlg .add-org-btn, #depotHeadDlg .add-account-btn{
+	float: left;
+	width:20px;
 	padding: 2px;
+}
+
+#depotHeadDlg .other-money-list{
+	float: left;
+	width:122px;
+}
+
+#depotHeadDlg .other-money-ico{
+	padding-left: 5px;
 }

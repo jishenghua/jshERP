@@ -1482,6 +1482,9 @@
         $("#addCustomer").off("click").on("click",function(){
             supplierDlgFun("客户");
         });
+        $("#addAccount").off("click").on("click",function(){
+            alert("增加结算账户");
+        });
 	    url = '/depotHead/addDepotHeadAndDetail';
 
 		//零售单据修改收款时，自动计算找零
