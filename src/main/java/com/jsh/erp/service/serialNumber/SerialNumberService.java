@@ -497,7 +497,7 @@ public class SerialNumberService {
     /**
      * create by: cjl
      * description:
-     *批量添加序列号
+     *批量添加序列号，最多500个
      * create time: 2019/1/29 15:11
      * @Param: materialName
      * @Param: serialNumberPrefix
@@ -526,33 +526,28 @@ public class SerialNumberService {
 
             int insertNum=0;
             StringBuffer prefixBuf=new StringBuffer(serialNumberPrefix).append(million);
-            do{
-                list=new ArrayList<SerialNumberEx>();
-                int forNum = BusinessConstants.BATCH_INSERT_MAX_NUMBER>=batAddTotal?batAddTotal:BusinessConstants.BATCH_INSERT_MAX_NUMBER;
-               for(int i=0;i<forNum;i++){
-                   insertNum++;
-                   SerialNumberEx each=new SerialNumberEx();
-                   each.setMaterialId(materialId);
-                   each.setCreator(userId);
-                   each.setCreateTime(date);
-                   each.setUpdater(userId);
-                   each.setUpdateTime(date);
-                   each.setRemark(remark);
-                   each.setSerialNumber(new StringBuffer(prefixBuf.toString()).append(insertNum).toString());
-                   list.add(each);
-               }
-                int result=0;
-                try{
-                    result = serialNumberMapperEx.batAddSerialNumber(list);
-                }catch(Exception e){
-                    logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                            ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
-                    throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
-                            ExceptionConstants.DATA_WRITE_FAIL_MSG);
-                }
+            list=new ArrayList<SerialNumberEx>();
+            int forNum = BusinessConstants.BATCH_INSERT_MAX_NUMBER>=batAddTotal?batAddTotal:BusinessConstants.BATCH_INSERT_MAX_NUMBER;
+            for(int i=0;i<forNum;i++){
+               insertNum++;
+               SerialNumberEx each=new SerialNumberEx();
+               each.setMaterialId(materialId);
+               each.setCreator(userId);
+               each.setCreateTime(date);
+               each.setUpdater(userId);
+               each.setUpdateTime(date);
+               each.setRemark(remark);
+               each.setSerialNumber(new StringBuffer(prefixBuf.toString()).append(insertNum).toString());
+               list.add(each);
+            }
+            try{
                 serialNumberMapperEx.batAddSerialNumber(list);
-                batAddTotal -= BusinessConstants.BATCH_INSERT_MAX_NUMBER;
-            }while(batAddTotal>0);
+            }catch(Exception e){
+                logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                        ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+                throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                        ExceptionConstants.DATA_WRITE_FAIL_MSG);
+            }
         }
     }
     /**

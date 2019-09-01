@@ -121,7 +121,7 @@
                         <td style="width:80px;">序列号数量</td>
                         <td style="padding:5px;width:180px;">
                             <input name="batAddTotal" id="batAddTotal" class="easyui-numberbox"
-                                   data-options="min:0,max:10000"
+                                   data-options="min:0,max:500"
                                    style="width: 180px;height: 20px"/>
                         </td>
                         <td></td>
@@ -514,9 +514,6 @@
             success: function (res) {
                 if(res && res.code === 200){
                     if(res.data && res.data.page) {
-                        if(res.data.page.total==0){
-                            $.messager.alert('查询提示', '没有对应数据！', 'warning');
-                        }
                         $("#tableData").datagrid('loadData', res.data.page);
                     }
                 }
@@ -578,7 +575,7 @@
         $(".window-mask").css({width: webW, height: webH});
         $('#batAddMaterialName').val('');
         $('#batAddSerialNumberInput').val('');
-        $('#batAddTotal').val('100');
+        $('#batAddTotal').val('10');
         $('#batAddremark').val('');
         url = '/serialNumber/batAddSerialNumber';
     }
