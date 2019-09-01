@@ -2835,9 +2835,6 @@
                 success: function(res) {
                     if(res && res.code === 200) {
                         $('#depotDlg').dialog('close');
-                        //加载完以后重新初始化
-                        var opts = $("#tableData").datagrid('options');
-                        showDepotDetails(opts.pageNumber, opts.pageSize);
                     }
                 },
                 //此处添加错误处理

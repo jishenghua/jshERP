@@ -95,7 +95,7 @@
 {{/if}}
 
 {{#if depotSelect}}
-<div id="depotDlg" style="width:380px;padding:10px 20px" buttons="#dlg-buttons">
+<div id="depotDlg" style="width:380px;padding:10px 20px" buttons="#depotDlgBtn">
 	<form id="depotFM">
 		<table>
 			<tr>
@@ -137,7 +137,7 @@
 		</table>
 	</form>
 </div>
-<div id="dlg-buttons">
+<div id="depotDlgBtn">
 	<a href="javascript:void(0)" id="saveDepot">保存</a>
 	<a href="javascript:void(0)" id="cancelDepot" onclick="javascript:$('#depotDlg').dialog('close')">取消</a>
 </div>
