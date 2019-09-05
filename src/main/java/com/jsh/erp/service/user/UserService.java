@@ -13,12 +13,12 @@ import com.jsh.erp.datasource.mappers.UserMapper;
 import com.jsh.erp.datasource.mappers.UserMapperEx;
 import com.jsh.erp.datasource.vo.TreeNodeEx;
 import com.jsh.erp.exception.BusinessRunTimeException;
+import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.orgaUserRel.OrgaUserRelService;
 import com.jsh.erp.service.tenant.TenantService;
 import com.jsh.erp.service.userBusiness.UserBusinessService;
 import com.jsh.erp.utils.ExceptionCodeConstants;
-import com.jsh.erp.utils.JshException;
 import com.jsh.erp.utils.StringUtil;
 import com.jsh.erp.utils.Tools;
 import org.slf4j.Logger;
@@ -61,10 +61,7 @@ public class UserService {
         try{
             result=userMapper.selectByPrimaryKey(id);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                    ExceptionConstants.DATA_READ_FAIL_MSG);
+            JshException.readFail(logger, e);
         }
         return result;
     }
@@ -75,10 +72,7 @@ public class UserService {
         try{
             list=userMapper.selectByExample(example);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                    ExceptionConstants.DATA_READ_FAIL_MSG);
+            JshException.readFail(logger, e);
         }
         return list;
     }
@@ -88,10 +82,7 @@ public class UserService {
         try{
             list=userMapperEx.selectByConditionUser(userName, loginName, offset, rows);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                    ExceptionConstants.DATA_READ_FAIL_MSG);
+            JshException.readFail(logger, e);
         }
         return list;
     }
@@ -101,10 +92,7 @@ public class UserService {
         try{
             result=userMapperEx.countsByUser(userName, loginName);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                    ExceptionConstants.DATA_READ_FAIL_MSG);
+            JshException.readFail(logger, e);
         }
         return result;
     }
@@ -133,10 +121,7 @@ public class UserService {
         try{
             result=userMapper.insertSelective(user);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
-                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+            JshException.writeFail(logger, e);
         }
         return result;
     }
@@ -157,10 +142,7 @@ public class UserService {
         try{
             result=userMapper.updateByPrimaryKeySelective(user);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
-                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+            JshException.writeFail(logger, e);
         }
         return result;
     }
@@ -181,10 +163,7 @@ public class UserService {
         try{
             result=userMapper.updateByPrimaryKeySelective(user);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
-                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+            JshException.writeFail(logger, e);
         }
         return result;
     }
@@ -209,10 +188,7 @@ public class UserService {
         try{
             result=userMapper.updateByPrimaryKeySelective(user);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
-                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+            JshException.writeFail(logger, e);
         }
         return result;
     }
@@ -223,10 +199,7 @@ public class UserService {
         try{
             result= userMapper.deleteByPrimaryKey(id);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
-                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+            JshException.writeFail(logger, e);
         }
         return result;
     }
@@ -240,49 +213,40 @@ public class UserService {
         try{
             result= userMapper.deleteByExample(example);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
-                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+            JshException.writeFail(logger, e);
         }
         return result;
     }
 
-    public int validateUser(String username, String password) throws JshException {
+    public int validateUser(String username, String password) throws Exception {
+        /**默认是可以登录的*/
+        List<User> list = null;
         try {
-            /**默认是可以登录的*/
-            List<User> list = null;
-            try {
-                UserExample example = new UserExample();
-                example.createCriteria().andLoginameEqualTo(username);
-                list = userMapper.selectByExample(example);
-            } catch (Exception e) {
-                logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                        ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
-                logger.error(">>>>>>>>访问验证用户姓名是否存在后台信息异常", e);
-                return ExceptionCodeConstants.UserExceptionCode.USER_ACCESS_EXCEPTION;
-            }
-
-            if (null != list && list.size() == 0) {
-                return ExceptionCodeConstants.UserExceptionCode.USER_NOT_EXIST;
-            }
-
-            try {
-                UserExample example = new UserExample();
-                example.createCriteria().andLoginameEqualTo(username).andPasswordEqualTo(password);
-                list = userMapper.selectByExample(example);
-            } catch (Exception e) {
-                logger.error(">>>>>>>>>>访问验证用户密码后台信息异常", e);
-                return ExceptionCodeConstants.UserExceptionCode.USER_ACCESS_EXCEPTION;
-            }
-
-            if (null != list && list.size() == 0) {
-                return ExceptionCodeConstants.UserExceptionCode.USER_PASSWORD_ERROR;
-            }
-            return ExceptionCodeConstants.UserExceptionCode.USER_CONDITION_FIT;
+            UserExample example = new UserExample();
+            example.createCriteria().andLoginameEqualTo(username);
+            list = userMapper.selectByExample(example);
         } catch (Exception e) {
-            throw new JshException("unknown exception", e);
+            logger.error(">>>>>>>>访问验证用户姓名是否存在后台信息异常", e);
+            return ExceptionCodeConstants.UserExceptionCode.USER_ACCESS_EXCEPTION;
         }
+
+        if (null != list && list.size() == 0) {
+            return ExceptionCodeConstants.UserExceptionCode.USER_NOT_EXIST;
+        }
+
+        try {
+            UserExample example = new UserExample();
+            example.createCriteria().andLoginameEqualTo(username).andPasswordEqualTo(password);
+            list = userMapper.selectByExample(example);
+        } catch (Exception e) {
+            logger.error(">>>>>>>>>>访问验证用户密码后台信息异常", e);
+            return ExceptionCodeConstants.UserExceptionCode.USER_ACCESS_EXCEPTION;
+        }
+
+        if (null != list && list.size() == 0) {
+            return ExceptionCodeConstants.UserExceptionCode.USER_PASSWORD_ERROR;
+        }
+        return ExceptionCodeConstants.UserExceptionCode.USER_CONDITION_FIT;
     }
 
     public User getUserByUserName(String username)throws Exception {
@@ -292,10 +256,7 @@ public class UserService {
         try{
             list= userMapper.selectByExample(example);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                    ExceptionConstants.DATA_READ_FAIL_MSG);
+            JshException.readFail(logger, e);
         }
         User user =null;
         if(list!=null&&list.size()>0){
@@ -314,10 +275,7 @@ public class UserService {
         try{
             list= userMapper.selectByExample(example);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                    ExceptionConstants.DATA_READ_FAIL_MSG);
+            JshException.readFail(logger, e);
         }
         return list==null?0:list.size();
     }
@@ -339,10 +297,7 @@ public class UserService {
         try{
             list= userMapperEx.getUserList(parameterMap);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                    ExceptionConstants.DATA_READ_FAIL_MSG);
+            JshException.readFail(logger, e);
         }
         return list;
     }
@@ -406,10 +361,7 @@ public class UserService {
         try{
             result= userMapperEx.addUser(ue);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
-                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+            JshException.writeFail(logger, e);
         }
         if(result>0){
             return ue;
@@ -440,10 +392,7 @@ public class UserService {
             try{
                 result= userMapperEx.addUser(ue);
             }catch(Exception e){
-                logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                        ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
-                throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
-                        ExceptionConstants.DATA_WRITE_FAIL_MSG);
+                JshException.writeFail(logger, e);
             }
             //更新租户id
             User user = new User();
@@ -479,10 +428,7 @@ public class UserService {
         try{
             userMapper.updateByPrimaryKeySelective(user);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
-                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+            JshException.writeFail(logger, e);
         }
     }
 
@@ -540,10 +486,7 @@ public class UserService {
         try{
             result=userMapperEx.updateUser(ue);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
-                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+            JshException.writeFail(logger, e);
         }
         if(result>0){
             return ue;
@@ -622,10 +565,7 @@ public class UserService {
         try{
             list=userMapperEx.getUserListByUserNameOrLoginName(userName,null);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                    ExceptionConstants.DATA_READ_FAIL_MSG);
+            JshException.readFail(logger, e);
         }
         return list;
     }
@@ -637,10 +577,7 @@ public class UserService {
         try{
             list=userMapperEx.getUserListByUserNameOrLoginName(null,loginName);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                    ExceptionConstants.DATA_READ_FAIL_MSG);
+            JshException.readFail(logger, e);
         }
         return list;
     }
@@ -657,10 +594,7 @@ public class UserService {
         try{
             result=userMapperEx.batDeleteOrUpdateUser(idsArray,BusinessConstants.USER_STATUS_DELETE);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
-                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+            JshException.writeFail(logger, e);
         }
         if(result<1){
             logger.error("异常码[{}],异常提示[{}],参数,ids:[{}]",
@@ -675,10 +609,7 @@ public class UserService {
         try{
             list=userMapperEx.getNodeTree();
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                    ExceptionConstants.DATA_READ_FAIL_MSG);
+            JshException.readFail(logger, e);
         }
         return list;
     }
