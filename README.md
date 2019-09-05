@@ -4,7 +4,7 @@
 * 部署如有问题请联系QQ：752718920，欢迎加入华夏ERP交流群，群号码：120725710
 * 系统的默认超管账户：admin，默认租户账号：jsh，默认密码均为：123456
 * 部署如遇到困难请参考Wiki文档  **https://gitee.com/jishenghua/JSH_ERP/wikis/pages** 
-* **本系统演示地址：[http://www.huaxiaerp.com](http://www.huaxiaerp.com)，账号：jsh，密码：123456，欢迎登录（如需试用，欢迎注册）** 
+* 本系统演示地址：[http://www.huaxiaerp.com](http://www.huaxiaerp.com)，账号：jsh，密码：123456，**欢迎登录（如需试用，欢迎注册）** 
 * 如有ERP **私人定制** 需求，请将需求整理成文档，发给邮箱： **752718920@qq.com** ，我会及时回复
 # 开发初衷
 * 华夏ERP立志为中小企业提供开源好用的ERP软件，降低企业的信息化成本
