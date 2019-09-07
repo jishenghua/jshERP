@@ -1583,7 +1583,7 @@
 			$("#payType").empty().append(option);
 		}
 
-		if(listSubType === "销售" || listSubType === "销售退货"){
+		if(listSubType === "销售" || listSubType === "销售退货" || listSubType === "销售订单"){
 			if(depotHeadInfo[18]){
 				var arr = depotHeadInfo[18].split(",");
 				var salesmanArray = [];
@@ -1724,7 +1724,7 @@
 				$("#depotHeadDlgShow .back-amount-show").text(0);
 			}
 		}
-		if(listSubType === "销售" || listSubType === "销售退货"){
+		if(listSubType === "销售" || listSubType === "销售退货" || listSubType === "销售订单"){
 			if(depotHeadInfo[18]){
 				var arr = depotHeadInfo[18].split(",");
 				var salesmanStr = "";
@@ -1972,7 +1972,7 @@
 					}
 				}
 				var SalesmanStr = "";
-				if(listSubType === "销售" || listSubType === "销售退货"){
+				if(listSubType === "销售" || listSubType === "销售退货" || listSubType === "销售订单"){
 					var Salesman = $('#Salesman').combobox('getValues').toString(); //销售人员
 					if(Salesman) {
 						var SalesmanArray = Salesman.split(",");
