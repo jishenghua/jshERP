@@ -1107,13 +1107,14 @@
                     //如果是订单跳转到采购或销售
                     if(pageType === "skip") {
                         var skipList = $("#depotHeadFM .datagrid-body tr");
+                        var input = ".datagrid-editable-input";
                         //逐条自动点击每行数据
                         skipList.each(function (i) {
                             setTimeout(function () {
-                                skipList.eq(i).find("[field='Stock']").click();
-                            },(i+1)*1000);
+                            	skipList.eq(i).find("[field='Remark']").click().find(input).val("来自订单"); //此处为确保订单转销售成功，勿删
+                            },(i+1)*200);
                         });
-					}
+                    }
 				}
 			},
 			error:function() {
