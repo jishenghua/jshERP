@@ -1141,6 +1141,10 @@
 		if(listSubType == "组装单" || listSubType == "拆卸单"){
 			isShowMaterialTypeColumn = false; //显示
 		}
+        var isShowFinishColumn = true; //是否显示分批数量的列,true为隐藏,false为显示
+        if(listSubType == "销售订单"){
+            isShowFinishColumn = false; //显示
+        }
 		$('#materialDataShow').datagrid({
 			height:245,
 			rownumbers: true,
@@ -1163,6 +1167,7 @@
 				{ title: anotherDepotHeadName,field: 'AnotherDepotName',hidden:isShowAnotherDepot,width:90},
 				{ title: '单位',field: 'Unit',editor:'validatebox',width:60},
 				{ title: '数量',field: 'OperNumber',editor:'validatebox',width:60},
+                { title: '分批数量',field: 'finishNumber',editor:'validatebox',hidden:isShowFinishColumn,width:60},
 				{ title: '单价',field: 'UnitPrice',editor:'validatebox',width:60},
 				{ title: '含税单价',field: 'TaxUnitPrice',editor:'validattebox',hidden:isShowTaxColumn,width:75},
 				{ title: '金额',field: 'AllPrice',editor:'validatebox',width:75},

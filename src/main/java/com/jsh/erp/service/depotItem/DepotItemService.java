@@ -735,4 +735,18 @@ public class DepotItemService {
         }
         return result;
     }
+
+    /**
+     * 统计该商品已分批出库的总数量-用于订单
+     * @param mid
+     * @param headerId
+     * @return
+     */
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public BigDecimal getFinishNumber(Long mid, Long headerId) {
+        DepotHead depotHead =depotHeadMapper.selectByPrimaryKey(headerId);
+        String linkNumber = depotHead.getLinknumber(); //关联单号
+        BigDecimal count = depotItemMapperEx.getFinishNumber(mid, linkNumber);
+        return count;
+    }
 }

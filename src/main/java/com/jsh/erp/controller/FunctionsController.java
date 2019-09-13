@@ -37,8 +37,8 @@ public class FunctionsController {
 
     @PostMapping(value = "/findMenu")
     public JSONArray findMenu(@RequestParam(value="pNumber") String pNumber,
-                            @RequestParam(value="hasFunctions") String hasFunctions,
-                            HttpServletRequest request)throws Exception {
+                              @RequestParam(value="hasFunctions") String hasFunctions,
+                              HttpServletRequest request)throws Exception {
         //存放数据json数组
         JSONArray dataArray = new JSONArray();
         try {
@@ -52,6 +52,7 @@ public class FunctionsController {
                     JSONArray dataArray1 = new JSONArray();
                     if (dataList1.size() != 0) {
                         item.put("text", functions.getName()); //是目录就没链接
+                        item.put("icon", functions.getIcon());
                         for (Functions functions1 : dataList1) {
                             item.put("state", "open");   //如果不为空，节点展开
                             JSONObject item1 = new JSONObject();
@@ -61,6 +62,7 @@ public class FunctionsController {
                                 JSONArray dataArray2 = new JSONArray();
                                 if (dataList2.size() != 0) {
                                     item1.put("text", functions1.getName());//是目录就没链接
+                                    item1.put("icon", functions1.getIcon());
                                     for (Functions functions2 : dataList2) {
                                         item1.put("state", "closed");   //如果不为空，节点不展开
                                         JSONObject item2 = new JSONObject();
@@ -70,40 +72,46 @@ public class FunctionsController {
                                             JSONArray dataArray3 = new JSONArray();
                                             if (dataList3.size() != 0) {
                                                 item2.put("text", functions2.getName());//是目录就没链接
+                                                item2.put("icon", functions2.getIcon());
                                                 for (Functions functions3 : dataList3) {
                                                     item2.put("state", "closed");   //如果不为空，节点不展开
                                                     JSONObject item3 = new JSONObject();
                                                     item3.put("id", functions3.getId());
                                                     item3.put("text", functions3.getName());
+                                                    item3.put("icon", functions3.getIcon());
                                                     //
                                                     dataArray3.add(item3);
                                                     item2.put("children", dataArray3);
                                                 }
                                             } else {
                                                 //不是目录，有链接
-                                                item2.put("text", "<a onclick=\"NewTab('" + functions2.getName() + "','" + functions2.getUrl() + "','" + functions2.getId() + "')\">" + functions2.getName() + "</a>");
+                                                item2.put("text", functions2.getName());
+                                                item2.put("icon", functions2.getIcon());
+                                                item2.put("url", functions2.getUrl());
                                                 dataArray2.add(item2);
                                                 item1.put("children", dataArray2);
                                             }
                                         } else {
                                             //不是目录，有链接
-                                            //item2.put("text", "<a onclick=\"NewTab('" + functions2.getName() + "','" + functions2.getUrl() + "','" + functions2.getId() + "')\">" + functions2.getName() + "</a>");
                                         }
                                     }
                                 } else {
                                     //不是目录，有链接
-                                    item1.put("text", "<a onclick=\"NewTab('" + functions1.getName() + "','" + functions1.getUrl() + "','" + functions1.getId() + "')\">" + functions1.getName() + "</a>");
+                                    item1.put("text", functions1.getName());
+                                    item1.put("icon", functions1.getIcon());
+                                    item1.put("url", functions1.getUrl());
                                     dataArray1.add(item1);
                                     item.put("children", dataArray1);
                                 }
                             } else {
                                 //不是目录，有链接
-                                //item1.put("text", "<a onclick=\"NewTab('" + functions1.getName() + "','" + functions1.getUrl() + "','" + functions1.getId() + "')\">" + functions1.getName() + "</a>");
                             }
                         }
                     } else {
                         //不是目录，有链接
-                        item.put("text", "<a onclick=\"NewTab('" + functions.getName() + "','" + functions.getUrl() + "','" + functions.getId() + "')\">" + functions.getName() + "</a>");
+                        item.put("text", functions.getName());
+                        item.put("icon", functions.getIcon());
+                        item.put("url", functions.getUrl());
                     }
                     dataArray.add(item);
                 }

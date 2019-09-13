@@ -1,20 +1,183 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
+	<meta charset="utf-8">
+	<meta content="webkit" name="renderer"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+	<meta content="no-cache" http-equiv="Pragma"/>
+	<meta http-equiv="Expires" content="0"/>
+	<meta content="width=device-width, initial-scale=1, user-scalable=1" name="viewport"/>
 	<title>华夏ERP</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-	<meta name="renderer" content="webkit">
-	<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon"/>
-	<link type="text/css" rel="stylesheet" href="/css/css.css"/>
-	<script type="text/javascript" src="/js/jquery-1.8.0.min.js"></script>
+	<link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon"/>
+	<script src="js/global.min.js?ctx=/js/a"></script>
+	<script src="js/jquery/jquery-1.12.4.min.js"></script>
+	<script src="js/handlebars.js"></script>
+	<!-- <script src="js/static/jquery/jquery-migrate-1.4.1.min.js"></script> -->
+	<!--[if lt IE 9]>
+	<script src="js/common/h5fix.min.js"></script><![endif]-->
+	<link rel="stylesheet" href="css/fonts/font-icons.min.css">
+	<link rel="stylesheet" href="js/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="js/select2/4.0/select2.css">
+	<link rel="stylesheet" href="js/icheck/1.0/minimal/grey.css">
+	<link rel="stylesheet" href="js/wdScrollTab/css/TabPanel.css">
+	<link rel="stylesheet" href="js/adminlte/css/AdminLTE.min.css">
+	<link rel="stylesheet" href="css/jsherp.css">
+	<link rel="stylesheet" href="js/adminlte/css/skins/skin-blue-light2.css">
+	<link rel="stylesheet" href="js/easyui-1.3.5/themes/default/easyui.css" type="text/css"/>
 </head>
-<body>
-	<script>
-		$(function () {
-		    var height = $(window).height();
-            $("#mainframe").height(height);
-		});
-	</script>
-	<iframe id="mainframe" src="/pages/common/main.html" frameBorder="0" width="100%" scrolling="no"></iframe>
-</body>
-</html>
+<body class="hold-transition fixed noscroll2 sidebar-mini ">
+<div class="wrapper">
+	<!--[if lte IE 9]><a style="position:absolute;top:0;left:0;z-index:100000;display:block;width:100%;font-size:14px;
+    color:#F00;text-decoration:none;background-color:#faffb3;text-align:center;" href="js/upbw/index.html" target="_blank">
+	您的浏览器版本过低或在兼容模式下，导致打开速度过慢，提升速度您可以切换到极速模式或升级为最新版，点击此处查看详情。</a>
+	<![endif]-->
+	<!--[if lte IE 8]>
+	<script>window.location.href = '/js/upbw/index.html';</script><![endif]-->
+	<link rel="stylesheet" href="js/jquery-toastr/2.0/toastr.min.css">
+	<link rel="stylesheet" href="js/modules/sys/sysIndex.css">
+	<header class="main-header">
+		<nav class="navbar navbar-static-top">
+			<div class="logo" data-toggle="push-menu">
+				<b>华夏ERP</b>
+				<small>&nbsp; &nbsp;<i class="fa fa-bars"></i></small>
+			</div>
+			<div class="navbar-custom-menu">
+				<ul class="nav navbar-nav">
+					<li class="treeview"><a href="javascript:" data-href="/pages/user/userHelp.html" class="addTabPage"><i class="fa fa-diamond"></i> 新手引导</a></li>
+					<li><a href="javascript:" id="fullScreen" title="全屏" data-placement="bottom"
+						   data-container="body"><i class="fa fa-arrows-alt"></i></a></li>
+					<li class="dropdown messages-menu">
+						<a href="javascript:" class="dropdown-toggle" data-hover="dropdown">
+							<i class="fa fa-envelope-o"></i>
+							<span class="label label-success" id="msgNum">0</span>
+						</a>
+						<ul class="dropdown-menu">
+							<li class="header">你有 <span id="msgNum2">0</span> 条消息</li>
+							<li>
+								<ul class="menu" id="msgList"
+									data-mergeMsgLimit="5"
+									data-mergeMsgTitle="系统消息"
+									data-mergeMsgContent="您有 {0} 条新消息，由于消息太多，这里为您合并，请点击查看按钮看详情。"></ul>
+							</li>
+							<li class="footer"><a href="javascript:" data-href="/pages/user/userMsg.html"
+												  data-title="查看全部消息" class="addTabPage">查看全部消息</a></li>
+						</ul>
+						<audio id="audioMessage" controls="controls" preload="auto" hidden="hidden">
+							<source src="js/modules/msg/message.mp3" type="audio/mpeg"/>
+						</audio>
+						<script src="js/jquery-timeago/jquery.timeago.js"></script>
+						<script src="js/jquery-timeago/i18n/jquery.timeago.zh_CN.js"></script>
+						<script src="js/modules/msg/topMenuMsg.js"></script>
+						<script type="text/template" id="msgListTpl">
+							<li id="msg{{d.id}}"><a href="javascript:"
+													data-href="js/a/msg/readMsg?id={{d.id}}"
+													onclick="readMsg(this, '查看消息', '{{d.id}}')">
+								<div class="pull-left"><i class="img-circle bg-aqua icon-bubble"></i></div>
+								<h4>{{d.msgContentEntity.title}}
+									<small><i class="fa fa-clock-o"></i>
+										<abbr class="timeago" title="{{d.sendDate}}">{{d.sendDate}}</abbr></small>
+								</h4>
+								<p>{{=d.msgContentEntity.content}}</p>
+							</a></li>
+						</script>
+						<script type="text/template" id="msgTipTpl">
+							<abbr class="timeago" title="{{d.sendDate}}">{{d.sendDate}}</abbr>
+							{{d.sendUserName}} <br/> {{=d.msgContentEntity.content}}
+							<div style="margin:8px 0 0;float:right;">
+								{{# $.each(d.msgContentEntity.buttons, function(idx, item){ }}
+								<button class="btn btn-default btn-sm" type="button"
+										data-href="/js{{item.href}}"
+										onclick="readMsg(this, '查看消息', '{{item.id}}');">{{item.name}}
+								</button>&nbsp;
+								{{# }); }}
+								<button type="button" class="btn btn-default btn-sm"
+										data-href="js/a/msg/readMsg?id={{d.id}}"
+										onclick="readMsg(this, '消息详情', '{{d.id}}')">查看
+								</button>&nbsp;
+							</div>
+						</script>
+					</li>
+					<li class="dropdown user-menu mr5">
+						<a href="javascript:" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
+							<img src="js/images/user1.jpg" class="user-image">
+							<span class="hidden-xs">用户名称</span>
+						</a>
+						<ul class="dropdown-menu">
+							<li class="mt5">
+								<a id="modifyPassword" href="javascript:" data-href="/pages/user/password.html"
+								   class="addTabPage">
+									<i class="fa fa-key"></i> 修改密码</a>
+							</li>
+							<li class="divider"></li>
+							<li>
+								<a href="#" id="loginOut">
+									<i class="fa fa-sign-out"></i> 退出登录</a>
+							</li>
+							<li class="divider"></li>
+							<li class="dropdown-header mb5">系统切换：</li>
+							<li>
+								<a href="index.html">
+									<i class="fa fa-check-circle-o"></i> 主导航菜单
+								</a>
+							</li>
+							<li class="mt10"></li>
+							<li class="mt10"></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</nav>
+	</header>
+	<aside class="main-sidebar">
+		<section class="sidebar">
+			<div class="user-panel">
+				<div class="pull-left image">
+					<img data-href="js/a/sys/user/info" data-title="个人中心" class="img-circle pointer"
+						 src="js/images/user1.jpg">
+					<script>
+                        $('.user-panel .img-circle').click(function () {
+                            if (!$('.main-header').is(':hidden')) {
+                                $('.main-header').slideUp(300);
+                                $('[data-toggle="push-menu"]').click();
+                            } else {
+                                $('.main-header').slideDown(300);
+                            }
+                        });
+					</script>
+				</div>
+				<div class="pull-left info">
+					<p>用户名称</p>
+					<script src="js/modules/sys/userInfo.js"></script>
+					<a href="javascript:"><i class="fa fa-circle text-success"></i> 在线</a>
+					<a href="#" id="sidebarLoginOut"><i class="fa fa-sign-out text-danger"></i> 注销</a>
+				</div>
+			</div>
+			<div id="leftMenu" data-widget="tree">
+				<ul class="sidebar-menu"></ul>
+				<script src="js/modules/sys/menu.js"></script>
+			</div>
+		</section>
+	</aside>
+	<div class="content-wrapper">
+		<div id="tabpanel"></div>
+	</div>
+</div>
+
+<a id="scroll-up" href="#" class="btn btn-sm"><i class="fa fa-angle-double-up"></i></a>
+<script src="js/bootstrap/js/bootstrap.min.js"></script>
+<script src="js/select2/4.0/select2.js"></script>
+<script src="js/select2/4.0/i18n/zh_CN.js"></script>
+<script src="js/layer/3.1/layer.js"></script>
+<script src="js/wdScrollTab/js/TabPanel.js"></script>
+<script src="js/wdScrollTab/js/TabPanel.extend.js"></script>
+<script src="js/wdScrollTab/js/TabPanel_i18n.js"></script>
+<script src="js/common/jsherp.js"></script>
+<script src="js/common/i18n/jsherp_zh_CN.js"></script>
+<script src="js/common/common.js"></script>
+<div class="hide" id="desktopTabPage" data-title="首页" data-url="/home.html"></div>
+<script src="js/jquery-toastr/2.0/toastr.min.js"></script>
+<script src="js/jquery-plugins/jquery.slimscroll.js"></script>
+<script src="js/easyui-1.3.5/jquery.easyui.min.js"></script>
+<script src="js/common/common.js"></script>
+<script src="js/modules/sys/sysIndex.js"></script>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8">
+    <meta content="webkit" name="renderer"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+    <meta content="no-cache" http-equiv="Pragma"/>
+    <meta http-equiv="Expires" content="0"/>
+    <meta content="width=device-width, initial-scale=1, user-scalable=1" name="viewport"/>
+    <title>首页-华夏ERP</title>
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon"/>
+    <script src="js/global.min.js?ctx=/js/a"></script>
+    <script src="js/jquery/jquery-1.12.4.min.js"></script>
+    <!-- <script src="/js/static/jquery/jquery-migrate-1.4.1.min.js"></script> -->
+    <!--[if lt IE 9]><script src="js/common/h5fix.min.js"></script><![endif]-->
+    <link rel="stylesheet" href="css/fonts/font-icons.min.css">
+    <link rel="stylesheet" href="js/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="js/select2/4.0/select2.css">
+    <link rel="stylesheet" href="js/icheck/1.0/minimal/grey.css">
+    <link rel="stylesheet" href="js/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="css/jsherp.css">
+    <link rel="stylesheet" href="js/adminlte/css/skins/skin-blue-light2.css">
+    <script>var _hmt = _hmt || [];(function() {var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?104e825088869ff9c5855f24ab8204c2";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);})();</script>
+</head><body class="hold-transition ">
+<div class="wrapper"><!-- <link rel="stylesheet" href="/js/static/modules/sys/sysDesktop.css"> -->
+    <div class="content pb0">
+        <div class="row">
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-aqua"><i class="fa fa-shopping-bag"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">今日累计销售</span>
+                        <span id="todaySale" class="info-box-number">90元</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-red"><i class="fa fa-shopping-cart"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">本月累计销售</span>
+                        <span id="thisMonthSale" class="info-box-number">410元</span>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix visible-sm-block"></div>
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-green"><i class="fa fa-shopping-basket"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">本月累计进货</span>
+                        <span id="thisMonthBuy" class="info-box-number">760元</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-yellow"><i class="fa fa-users"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">用户数量</span>
+                        <span class="info-box-number">28</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <section class="col-md-7 ui-sortable">
+                <!-- Chat box -->
+                <div class="nav-tabs-custom">
+                    <!-- Tabs within a box -->
+                    <ul class="nav nav-tabs pull-right ui-sortable-handle">
+                        <li class=""><a href="#revenue-chart" data-toggle="tab" aria-expanded="false">面积图</a></li>
+                        <li class="active"><a href="#sales-chart" data-toggle="tab" aria-expanded="true">饼图</a></li>
+                        <li class="pull-left header"><i class="fa fa-inbox"></i> 销售</li>
+                    </ul>
+                    <div class="tab-content no-padding">
+                        <!-- Morris chart - Sales -->
+                        <div class="chart tab-pane" id="revenue-chart" style="position: relative; height: 350px; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"><svg height="300" version="1.1" width="717.945" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="overflow: hidden; position: relative; left: -8.98655e-06px; top: -0.899049px;"><desc style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">Created with Raphaël 2.2.0</desc><defs style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></defs><text x="12.5" y="275" text-anchor="end" font-family="sans-serif" font-size="12px" stroke="none" fill="#888888" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: end; font-family: sans-serif; font-size: 12px; font-weight: normal;" font-weight="normal"><tspan dy="275" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">0</tspan></text><path fill="none" stroke="#aaaaaa" d="M25,275H692.945" stroke-width="0.5" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path><text x="12.5" y="212.5" text-anchor="end" font-family="sans-serif" font-size="12px" stroke="none" fill="#888888" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: end; font-family: sans-serif; font-size: 12px; font-weight: normal;" font-weight="normal"><tspan dy="212.5" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">7,500</tspan></text><path fill="none" stroke="#aaaaaa" d="M25,212.5H692.945" stroke-width="0.5" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path><text x="12.5" y="150" text-anchor="end" font-family="sans-serif" font-size="12px" stroke="none" fill="#888888" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: end; font-family: sans-serif; font-size: 12px; font-weight: normal;" font-weight="normal"><tspan dy="150" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">15,000</tspan></text><path fill="none" stroke="#aaaaaa" d="M25,150H692.945" stroke-width="0.5" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path><text x="12.5" y="87.5" text-anchor="end" font-family="sans-serif" font-size="12px" stroke="none" fill="#888888" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: end; font-family: sans-serif; font-size: 12px; font-weight: normal;" font-weight="normal"><tspan dy="87.5" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">22,500</tspan></text><path fill="none" stroke="#aaaaaa" d="M25,87.5H692.945" stroke-width="0.5" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path><text x="12.5" y="25" text-anchor="end" font-family="sans-serif" font-size="12px" stroke="none" fill="#888888" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: end; font-family: sans-serif; font-size: 12px; font-weight: normal;" font-weight="normal"><tspan dy="25" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">30,000</tspan></text><path fill="none" stroke="#aaaaaa" d="M25,25H692.945" stroke-width="0.5" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path><text x="570.3937302551641" y="287.5" text-anchor="middle" font-family="sans-serif" font-size="12px" stroke="none" fill="#888888" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: middle; font-family: sans-serif; font-size: 12px; font-weight: normal;" font-weight="normal" transform="matrix(1,0,0,1,0,0)"><tspan dy="287.5" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">2013</tspan></text><path fill="#74a5c2" stroke="none" d="M25,230.56666666666666C43.666749696233296,231.10833333333335,81.00024908869989,234.346875,99.66699878493318,232.73333333333335C118.33374848116648,231.11979166666669,155.66724787363307,220.05887978142076,174.33399756986637,217.65833333333333C192.79784781287975,215.28387978142075,229.72554829890646,215.553125,248.18939854191984,213.63333333333333C266.6532487849332,211.71354166666666,303.58094927095993,204.99249772313297,322.0447995139733,202.3C340.7115492102066,199.57791438979964,378.0450486026732,191.86145833333333,396.7117982989065,191.975C415.3785479951398,192.08854166666666,452.7120473876064,214.80992714025498,471.3787970838397,203.20833333333331C489.842647326853,191.73284380692166,526.7703478128798,106.50842541436462,545.2341980558931,99.66666666666666C563.4951488456866,92.9000920810313,600.0170504252734,141.67163461538462,618.2780012150669,148.775C636.9447509113002,156.03621794871796,674.2782503037668,155.0375,692.945,157.125L692.945,275L25,275Z" fill-opacity="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); fill-opacity: 1;"></path><path fill="none" stroke="#3c8dbc" d="M25,230.56666666666666C43.666749696233296,231.10833333333335,81.00024908869989,234.346875,99.66699878493318,232.73333333333335C118.33374848116648,231.11979166666669,155.66724787363307,220.05887978142076,174.33399756986637,217.65833333333333C192.79784781287975,215.28387978142075,229.72554829890646,215.553125,248.18939854191984,213.63333333333333C266.6532487849332,211.71354166666666,303.58094927095993,204.99249772313297,322.0447995139733,202.3C340.7115492102066,199.57791438979964,378.0450486026732,191.86145833333333,396.7117982989065,191.975C415.3785479951398,192.08854166666666,452.7120473876064,214.80992714025498,471.3787970838397,203.20833333333331C489.842647326853,191.73284380692166,526.7703478128798,106.50842541436462,545.2341980558931,99.66666666666666C563.4951488456866,92.9000920810313,600.0170504252734,141.67163461538462,618.2780012150669,148.775C636.9447509113002,156.03621794871796,674.2782503037668,155.0375,692.945,157.125" stroke-width="3" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path><circle cx="25" cy="230.56666666666666" r="4" fill="#3c8dbc" stroke="#ffffff" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle><circle cx="99.66699878493318" cy="232.73333333333335" r="4" fill="#3c8dbc" stroke="#ffffff" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle><circle cx="174.33399756986637" cy="217.65833333333333" r="4" fill="#3c8dbc" stroke="#ffffff" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle><circle cx="248.18939854191984" cy="213.63333333333333" r="4" fill="#3c8dbc" stroke="#ffffff" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle><circle cx="322.0447995139733" cy="202.3" r="4" fill="#3c8dbc" stroke="#ffffff" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle><circle cx="396.7117982989065" cy="191.975" r="4" fill="#3c8dbc" stroke="#ffffff" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle><circle cx="471.3787970838397" cy="203.20833333333331" r="4" fill="#3c8dbc" stroke="#ffffff" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle><circle cx="545.2341980558931" cy="99.66666666666666" r="4" fill="#3c8dbc" stroke="#ffffff" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle><circle cx="618.2780012150669" cy="148.775" r="4" fill="#3c8dbc" stroke="#ffffff" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle><circle cx="692.945" cy="157.125" r="4" fill="#3c8dbc" stroke="#ffffff" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle><path fill="#eaf3f6" stroke="none" d="M25,252.78333333333333C43.666749696233296,252.55,81.00024908869989,254.18958333333333,99.66699878493318,251.85C118.33374848116648,249.51041666666666,155.66724787363307,235.10250455373406,174.33399756986637,234.06666666666666C192.79784781287975,233.0420878870674,229.72554829890646,245.58541666666667,248.18939854191984,243.60833333333335C266.6532487849332,241.63125000000002,303.58094927095993,220.22145947176685,322.0447995139733,218.25C340.7115492102066,216.2568761384335,378.0450486026732,225.67708333333334,396.7117982989065,227.75C415.3785479951398,229.82291666666666,452.7120473876064,244.68164845173044,471.3787970838397,234.83333333333334C489.842647326853,225.0920651183971,526.7703478128798,155.53688996316757,545.2341980558931,149.39166666666665C563.4951488456866,143.3139732965009,600.0170504252734,179.0999771062271,618.2780012150669,185.94166666666666C636.9447509113002,192.93539377289378,674.2782503037668,200.03541666666666,692.945,204.73333333333335L692.945,275L25,275Z" fill-opacity="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); fill-opacity: 1;"></path><path fill="none" stroke="#a0d0e0" d="M25,252.78333333333333C43.666749696233296,252.55,81.00024908869989,254.18958333333333,99.66699878493318,251.85C118.33374848116648,249.51041666666666,155.66724787363307,235.10250455373406,174.33399756986637,234.06666666666666C192.79784781287975,233.0420878870674,229.72554829890646,245.58541666666667,248.18939854191984,243.60833333333335C266.6532487849332,241.63125000000002,303.58094927095993,220.22145947176685,322.0447995139733,218.25C340.7115492102066,216.2568761384335,378.0450486026732,225.67708333333334,396.7117982989065,227.75C415.3785479951398,229.82291666666666,452.7120473876064,244.68164845173044,471.3787970838397,234.83333333333334C489.842647326853,225.0920651183971,526.7703478128798,155.53688996316757,545.2341980558931,149.39166666666665C563.4951488456866,143.3139732965009,600.0170504252734,179.0999771062271,618.2780012150669,185.94166666666666C636.9447509113002,192.93539377289378,674.2782503037668,200.03541666666666,692.945,204.73333333333335" stroke-width="3" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path><circle cx="25" cy="252.78333333333333" r="4" fill="#a0d0e0" stroke="#ffffff" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle><circle cx="99.66699878493318" cy="251.85" r="4" fill="#a0d0e0" stroke="#ffffff" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle><circle cx="174.33399756986637" cy="234.06666666666666" r="4" fill="#a0d0e0" stroke="#ffffff" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle><circle cx="248.18939854191984" cy="243.60833333333335" r="4" fill="#a0d0e0" stroke="#ffffff" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle><circle cx="322.0447995139733" cy="218.25" r="4" fill="#a0d0e0" stroke="#ffffff" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle><circle cx="396.7117982989065" cy="227.75" r="4" fill="#a0d0e0" stroke="#ffffff" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle><circle cx="471.3787970838397" cy="234.83333333333334" r="4" fill="#a0d0e0" stroke="#ffffff" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle><circle cx="545.2341980558931" cy="149.39166666666665" r="4" fill="#a0d0e0" stroke="#ffffff" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle><circle cx="618.2780012150669" cy="185.94166666666666" r="4" fill="#a0d0e0" stroke="#ffffff" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle><circle cx="692.945" cy="204.73333333333335" r="4" fill="#a0d0e0" stroke="#ffffff" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle></svg><div class="morris-hover morris-default-style" style="left: 547.691px; top: 74px; display: none;"><div class="morris-hover-row-label">2013 Q1</div><div class="morris-hover-point" style="color: #a0d0e0">
+                            Item 1:
+                            10,687
+                        </div><div class="morris-hover-point" style="color: #3c8dbc">
+                            Item 2:
+                            4,460
+                        </div></div></div>
+                        <div class="chart tab-pane active" id="sales-chart" style="position: relative; height: 350px;"><svg height="350" version="1.1" width="687.945" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="overflow: hidden; position: relative;"><desc style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">Created with Raphaël 2.2.0</desc><defs style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></defs><path fill="none" stroke="#3c8dbc" d="M343.9725,243.33333333333331A93.33333333333333,93.33333333333333,0,0,0,432.2002551949771,180.44625304313007" stroke-width="2" opacity="0" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); opacity: 0;"></path><path fill="#3c8dbc" stroke="#ffffff" d="M343.9725,246.33333333333331A96.33333333333333,96.33333333333333,0,0,0,435.0361473262442,181.4248826052307L471.58764590702043,194.03833029452744A135,135,0,0,1,343.9725,285Z" stroke-width="3" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path><path fill="none" stroke="#f56954" d="M432.2002551949771,180.44625304313007A93.33333333333333,93.33333333333333,0,0,0,260.2573462783141,108.73398312817662" stroke-width="2" opacity="0" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); opacity: 0;"></path><path fill="#f56954" stroke="#ffffff" d="M435.0361473262442,181.4248826052307A96.33333333333333,96.33333333333333,0,0,0,257.5665020515457,107.40757544301087L222.88450979541864,90.31165416754118A135,135,0,0,1,471.58764590702043,194.03833029452744Z" stroke-width="3" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path><path fill="none" stroke="#00a65a" d="M260.2573462783141,108.73398312817662A93.33333333333333,93.33333333333333,0,0,0,343.94317846904886,243.333328727518" stroke-width="2" opacity="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); opacity: 1;"></path><path fill="#00a65a" stroke="#ffffff" d="M257.5665020515457,107.40757544301087A96.33333333333333,96.33333333333333,0,0,0,343.94223599126826,246.3333285794739L343.9285177035733,289.999993091277A140,140,0,0,1,218.3997694174712,88.10097469226493Z" stroke-width="3" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path><text x="343.9725" y="140" text-anchor="middle" font-family="&quot;Arial&quot;" font-size="15px" stroke="none" fill="#000000" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: middle; font-family: Arial; font-size: 15px; font-weight: 800;" font-weight="800" transform="matrix(1.2407,0,0,1.2407,-82.8045,-36.1969)" stroke-width="0.8059895833333334"><tspan dy="5.7734375" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">当前总量</tspan></text><text x="343.9725" y="160" text-anchor="middle" font-family="&quot;Arial&quot;" font-size="14px" stroke="none" fill="#000000" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: middle; font-family: Arial; font-size: 14px;" transform="matrix(2.0235,0,0,2.0235,-352.0475,-155.8898)" stroke-width="0.49419642857142865"><tspan dy="4.625" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">98</tspan></text></svg></div>
+                    </div>
+                </div>
+            </section>
+            <section class="col-md-5 ui-sortable ui-sortable">
+                <!-- solid sales graph -->
+                <div class="box box-solid bg-teal-gradient">
+                    <div class="box-header ui-sortable-handle">
+                        <i class="fa fa-th"></i>
+
+                        <h3 class="box-title">销售图表</h3>
+
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn bg-teal btn-sm" data-widget="collapse"><i class="fa fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn bg-teal btn-sm" data-widget="remove"><i class="fa fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="box-body border-radius-none">
+                        <div class="chart" id="line-chart" style="height: 250px; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"><svg height="250" version="1.1" width="462.813" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="overflow: hidden; position: relative; left: -0.367824px; top: -0.271661px;"><desc style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">Created with Raphaël 2.2.0</desc><defs style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></defs><text x="44.515625" y="211.9375" text-anchor="end" font-family="Open Sans" font-size="10px" stroke="none" fill="#ffffff" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: end; font-family: &quot;Open Sans&quot;; font-size: 10px; font-weight: normal;" font-weight="normal"><tspan dy="3.46875" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">0</tspan></text><path fill="none" stroke="#efefef" d="M57.015625,211.9375H437.813" stroke-width="0.4" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path><text x="44.515625" y="165.203125" text-anchor="end" font-family="Open Sans" font-size="10px" stroke="none" fill="#ffffff" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: end; font-family: &quot;Open Sans&quot;; font-size: 10px; font-weight: normal;" font-weight="normal"><tspan dy="3.46875" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">5,000</tspan></text><path fill="none" stroke="#efefef" d="M57.015625,165.203125H437.813" stroke-width="0.4" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path><text x="44.515625" y="118.46875000000001" text-anchor="end" font-family="Open Sans" font-size="10px" stroke="none" fill="#ffffff" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: end; font-family: &quot;Open Sans&quot;; font-size: 10px; font-weight: normal;" font-weight="normal"><tspan dy="3.468750000000014" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">10,000</tspan></text><path fill="none" stroke="#efefef" d="M57.015625,118.46875000000001H437.813" stroke-width="0.4" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path><text x="44.515625" y="71.734375" text-anchor="end" font-family="Open Sans" font-size="10px" stroke="none" fill="#ffffff" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: end; font-family: &quot;Open Sans&quot;; font-size: 10px; font-weight: normal;" font-weight="normal"><tspan dy="3.46875" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">15,000</tspan></text><path fill="none" stroke="#efefef" d="M57.015625,71.734375H437.813" stroke-width="0.4" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path><text x="44.515625" y="25.00000000000003" text-anchor="end" font-family="Open Sans" font-size="10px" stroke="none" fill="#ffffff" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: end; font-family: &quot;Open Sans&quot;; font-size: 10px; font-weight: normal;" font-weight="normal"><tspan dy="3.4687500000000284" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">20,000</tspan></text><path fill="none" stroke="#efefef" d="M57.015625,25.00000000000003H437.813" stroke-width="0.4" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path><text x="367.9461669198056" y="224.4375" text-anchor="middle" font-family="Open Sans" font-size="10px" stroke="none" fill="#ffffff" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: middle; font-family: &quot;Open Sans&quot;; font-size: 10px; font-weight: normal;" font-weight="normal" transform="matrix(1,0,0,1,0,6.5313)"><tspan dy="3.46875" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">2013</tspan></text><text x="198.60006819562574" y="224.4375" text-anchor="middle" font-family="Open Sans" font-size="10px" stroke="none" fill="#ffffff" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: middle; font-family: &quot;Open Sans&quot;; font-size: 10px; font-weight: normal;" font-weight="normal" transform="matrix(1,0,0,1,0,6.5313)"><tspan dy="3.46875" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">2012</tspan></text><path fill="none" stroke="#efefef" d="M57.015625,187.01873125C67.65759295261239,186.75701875,88.94152885783718,188.59601640625,99.58349681044957,185.97188125C110.22546476306196,183.34774609375,131.50940066828676,167.18747167008198,142.15136862089915,166.02565C152.67766300880925,164.87645682633197,173.7302517846294,178.94536796875002,184.2565461725395,176.72782187500002C194.78284056044959,174.51027578125002,215.83542933626973,150.49651948002048,226.36172372417983,148.28528125C237.00369167679222,146.0497436987705,258.28762758201697,156.61568359375,268.92959553462936,158.94071875C279.57156348724175,161.26575390625,300.8554993924666,177.93167894467211,311.497467345079,166.8855625C322.02376173298904,155.95951253842213,343.07635050880924,77.94468920493786,353.6026448967193,71.05205312500001C364.01326571992706,64.23516029868786,384.8345073663426,104.373636821772,395.24512818955037,112.047446875C405.88709614216276,119.89178604052199,427.1710320473876,127.85534921875,437.813,133.12465" stroke-width="2" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path><circle cx="57.015625" cy="187.01873125" r="4" fill="#efefef" stroke="#efefef" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle><circle cx="99.58349681044957" cy="185.97188125" r="4" fill="#efefef" stroke="#efefef" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle><circle cx="142.15136862089915" cy="166.02565" r="4" fill="#efefef" stroke="#efefef" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle><circle cx="184.2565461725395" cy="176.72782187500002" r="4" fill="#efefef" stroke="#efefef" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle><circle cx="226.36172372417983" cy="148.28528125" r="4" fill="#efefef" stroke="#efefef" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle><circle cx="268.92959553462936" cy="158.94071875" r="4" fill="#efefef" stroke="#efefef" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle><circle cx="311.497467345079" cy="166.8855625" r="4" fill="#efefef" stroke="#efefef" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle><circle cx="353.6026448967193" cy="71.05205312500001" r="4" fill="#efefef" stroke="#efefef" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle><circle cx="395.24512818955037" cy="112.047446875" r="4" fill="#efefef" stroke="#efefef" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle><circle cx="437.813" cy="133.12465" r="4" fill="#efefef" stroke="#efefef" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle></svg><div class="morris-hover morris-default-style" style="left: 89.1081px; top: 83px; display: none;"><div class="morris-hover-row-label">2011 Q3</div><div class="morris-hover-point" style="color: #efefef">
+                            Item 1:
+                            4,912
+                        </div></div></div>
+                    </div>
+                    <!-- /.box-body -->
+                    <div class="box-footer no-border">
+                        <div class="row">
+                            <div class="col-xs-4 text-center" style="border-right: 1px solid #f4f4f4">
+                                <div style="display:inline;width:60px;height:60px;"><canvas width="77" height="77" style="width: 60px; height: 60px;"></canvas><input type="text" class="knob" data-readonly="true" value="20" data-width="60" data-height="60" data-fgcolor="#39CCCC" readonly="readonly" style="width: 34px; height: 20px; position: absolute; vertical-align: middle; margin-top: 20px; margin-left: -47px; border: 0px; background: none; font: bold 12px Arial; text-align: center; color: rgb(57, 204, 204); padding: 0px; -webkit-appearance: none;"></div>
+                                <div class="knob-label">新订购</div>
+                            </div>
+                            <!-- ./col -->
+                            <div class="col-xs-4 text-center" style="border-right: 1px solid #f4f4f4">
+                                <div style="display:inline;width:60px;height:60px;"><canvas width="77" height="77" style="width: 60px; height: 60px;"></canvas><input type="text" class="knob" data-readonly="true" value="50" data-width="60" data-height="60" data-fgcolor="#39CCCC" readonly="readonly" style="width: 34px; height: 20px; position: absolute; vertical-align: middle; margin-top: 20px; margin-left: -47px; border: 0px; background: none; font: bold 12px Arial; text-align: center; color: rgb(57, 204, 204); padding: 0px; -webkit-appearance: none;"></div>
+                                <div class="knob-label">进行中</div>
+                            </div>
+                            <!-- ./col -->
+                            <div class="col-xs-4 text-center">
+                                <div style="display:inline;width:60px;height:60px;"><canvas width="77" height="77" style="width: 60px; height: 60px;"></canvas><input type="text" class="knob" data-readonly="true" value="30" data-width="60" data-height="60" data-fgcolor="#39CCCC" readonly="readonly" style="width: 34px; height: 20px; position: absolute; vertical-align: middle; margin-top: 20px; margin-left: -47px; border: 0px; background: none; font: bold 12px Arial; text-align: center; color: rgb(57, 204, 204); padding: 0px; -webkit-appearance: none;"></div>
+                                <div class="knob-label">已成交</div>
+                            </div>
+                            <!-- ./col -->
+                        </div>
+                        <!-- /.row -->
+                    </div>
+                    <!-- /.box-footer -->
+                </div>
+                <!-- /.box -->
+            </section>
+        </div>
+    </div>
+    <footer class="main-footer m0">
+        <div class="pull-right hidden-xs">当前版本： V1.0</div>
+        &copy; 2015-2020 华夏ERP Demo - Powered By <a href="https://www.huaxiaerp.com/" target="_blank">官方网站</a>
+    </footer>
+</div>
+
+<a id="scroll-up" href="#" class="btn btn-sm"><i class="fa fa-angle-double-up"></i></a>
+<script src="js/bootstrap/js/bootstrap.min.js"></script>
+<script src="js/select2/4.0/select2.js"></script>
+<script src="js/select2/4.0/i18n/zh_CN.js"></script>
+<script src="js/layer/3.1/layer.js"></script>
+<script src="js/my97/WdatePicker.js"></script>
+<script src="js/common/jsherp.js"></script>
+<script src="js/common/i18n/jsherp_zh_CN.js"></script>
+<script>
+    if ($('#switchSkin').length > 0){
+        $('#switchSkin i').addClass('jump5');
+        setTimeout(function(){
+            $('.main-sidebar [title="角色管理"]').append('<span class="pull-right-container">'
+                +'<small class="label pull-right bg-red jump">hot</small></span>');
+        },2000);
+    }
+</script><script src="js/jquery/jquery-ui-sortable-1.12.1.min.js"></script>
+<script>
+    $(window).resize(function(){
+        var footerHeight  = $('.main-footer').outerHeight() || 0;
+        var windowHeight  = $(window).height();
+        $('.content').css('min-height', windowHeight - footerHeight)
+    }).resize();
+    $('.ui-sortable').sortable({
+        placeholder         : 'sort-highlight',
+        connectWith         : '.ui-sortable',
+        handle              : '.box-header, .nav-tabs',
+        forcePlaceholderSize: true,  zIndex : 999999
+    }).find('.box-header, .nav-tabs').css('cursor', 'move');
+
+    $(function () {
+        $.ajax({
+            type: "get",
+            url: "/depotHead/getBuyAndSaleStatistics",
+            dataType: "json",
+            success: function (res) {
+                if(res && res.code === 200) {
+                    if(res.data) {
+                        $("#todaySale").text(res.data.todaySale);
+                        $("#thisMonthSale").text(res.data.thisMonthSale);
+                        $("#thisMonthBuy").text(res.data.thisMonthBuy);
+                    }
+                }
+            },
+            error:function(res){
+
+            }
+        });
+    });
+</script>

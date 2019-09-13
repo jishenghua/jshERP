@@ -1,208 +1,107 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="utf-8">
+    <meta content="webkit" name="renderer"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+    <meta content="no-cache" http-equiv="Pragma"/>
+    <meta http-equiv="Expires" content="0"/>
+    <meta content="width=device-width, initial-scale=1, user-scalable=1" name="viewport"/>
     <title>华夏ERP</title>
     <meta name="keywords" content="ERP,ERP系统,进销存,进销存系统" />
     <meta name="description" content="华夏ERP基于SpringBoot框架，立志为中小企业提供开源好用的ERP软件，目前专注进销存+财务功能。主要模块有零售管理、采购管理、销售管理、仓库管理、财务管理、报表查询、基础数据、系统管理等。支持预付款、收入支出、仓库调拨、组装拆卸、订单等特色功能。拥有库存状况、出入库统计等报表。同时对角色和权限进行了细致全面控制，精确到每个按钮和菜单。" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=8" >
-    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon"/>
-    <link type="text/css" rel="stylesheet" href="/css/css.css"/>
-    <script type="text/javascript" src="/js/jquery-1.8.0.min.js"></script>
-    <script type="text/javascript" src="/js/common/common.js"></script>
-    <script type="text/javascript" src="/js/md5/md5.js"></script>
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon"/>
+    <script src="js/global.min.js?ctx=/js/a"></script>
+    <script src="js/jquery/jquery-1.12.4.min.js"></script>
+    <!--[if lt IE 9]><script src="js/common/h5fix.min.js"></script><![endif]-->
+    <link rel="stylesheet" href="css/fonts/font-icons.min.css">
+    <link rel="stylesheet" href="js/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="js/select2/4.0/select2.css">
+    <link rel="stylesheet" href="js/icheck/1.0/minimal/grey.css">
+    <link rel="stylesheet" href="js/adminlte/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="css/jsherp.css">
+    <link rel="stylesheet" href="js/adminlte/css/skins/skin-blue-light2.css">
 </head>
-<body id="login_body">
-<form action="admin.html">
-    <div id="login_main">
-        <div id="login">
-            <p id="login_signal"><img src="/images/login_tip.jpg" width="108" height="29" alt="login"/></p>
-            <p id="txt_username">
-                <label for="user_name">用户名：</label>
-            </p>
-            <p id="txt_userpwd">
-                <label for="user_vcodepwd" id="user_vcodepwd">密&nbsp;&nbsp;&nbsp;&nbsp;码:</label>
-            </p>
-            <input type="text" id="user_name"/>
-            <input type="password" id="user_pwd"/>
-            <p id="tip_username" style="display: none"><span class="error_input">用户名不正确</span></p>
-            <p id="tip_userpwd" style="display: none">密码不能为空</p>
-            <div class="login_btn">
-                <input type="button" value="登录" id="btn_login"/>
-                <input type="button" value="立即注册" id="btn_register"/>
+<body class="hold-transition login-page">
+<div class="wrapper">
+    <!--[if lte IE 9]><a style="position:absolute;top:0;left:0;z-index:100000;display:block;width:100%;font-size:14px;
+    color:#F00;text-decoration:none;background-color:#faffb3;text-align:center;" href="js/upbw/index.html" target="_blank">
+    您的浏览器版本过低或在兼容模式下，导致打开速度过慢，提升速度您可以切换到极速模式或升级为最新版，点击此处查看详情。</a>
+    <![endif]-->
+    <!--[if lte IE 8]><script>window.location.href = '/js/static/upbw/index.html';</script><![endif]-->
+    <!-- <link rel="stylesheet" href="js/static/icheck/1.0/square/blue.css"> -->
+    <link rel="stylesheet" href="js/jquery-toastr/2.0/toastr.min.css">
+    <link rel="stylesheet" href="js/modules/sys/sysLogin.css">
+    <div class="login-box">
+        <div class="login-logo">
+            <a href="/">
+                <b>华夏ERP</b>
+                <small>V2.1</small>
+            </a>
+        </div>
+        <div class="login-box-body">
+            <div class="form-group has-feedback">
+                <span class="glyphicon glyphicon-user form-control-feedback" title="登录账号"></span>
+                <input type="text" id="username" name="username" class="form-control required"
+                       data-msg-required="请填写登录账号." placeholder="登录账号"/>
+            </div>
+            <div class="form-group has-feedback">
+                <span class="glyphicon glyphicon-lock form-control-feedback"
+                      title="登录密码，鼠标按下显示密码"
+                      onmousedown="$('#password').attr('type','text')"
+                      onmouseup="$('#password').attr('type','password')">
+                </span>
+                <input type="password" id="password" name="password" class="form-control required"
+                       data-msg-required="请填写登录密码." placeholder="登录密码" autocomplete="off"/>
+            </div>
+            <div class="form-group">
+                <div class="mt5 icheck">
+                    <label title="公共场所慎用,下次不需要再填写帐号"><input type="checkbox"
+                                                            id="rememberUserCode" class="form-control" data-style="minimal-grey">记住账号</label> &nbsp;
+                    <label title="公共场所慎用,下次不需要再填写帐号和密码"><input type="checkbox"
+                                                               id="rememberMe" class="form-control" data-style="minimal-grey"> 自动登录</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="hidden" name="__url" value="">
+                <button type="submit" class="btn btn-primary btn-block btn-flat"
+                        id="btnSubmit" data-loading="登录验证成功，正在进入..."
+                        data-login-valid="正在验证登录，请稍候...">立即登录
+                </button>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <a href="register.html" class="pull-left">[ 立即注册 ]</a>
+                    <div class="dropdown pull-right">
+                        <a href="https://www.huaxiaerp.com/" class="dropdown-toggle" target="_blank">
+                            <i class="fa icon-globe"></i> 官方网站
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
-        <p id="copyright">
-            Copyright © 2017-2020
+        <div class="login-copyright">
+            © 2015-2020
             <a style="color:#00458a;" href="https://www.huaxiaerp.com/" target="_blank">ERP系统</a>
             <a style="color:#00458a;" href="http://www.beian.miit.gov.cn" target="_blank">苏ICP备19040373号</a>
-            <a style="color:#00458a;" href="https://gitee.com/jishenghua/JSH_ERP" target="_blank">华夏ERP_v2.0</a>
-        </p>
+            <a style="color:#00458a;" href="https://gitee.com/jishenghua/JSH_ERP" target="_blank">华夏ERP</a>
+            <a href='https://gitee.com/jishenghua/JSH_ERP/stargazers' target="_blank">
+                <img src='https://gitee.com/jishenghua/JSH_ERP/badge/star.svg?theme=white' alt='star'></img>
+            </a>
+        </div>
     </div>
-</form>
-<script type="text/javascript">
-    //初始化界面
-    $(function () {
-        //进入页面聚焦在username输入框,方便 用户输入
-        $("#user_name").focus();
-        browserFit();
-    });
+</div>
 
-    //浏览器适配
-    function browserFit() {
-        if (getOs() == 'MSIE')
-            $("#user_vcodepwd").empty().append("密&nbsp;&nbsp;&nbsp;&nbsp;码：");
-        else
-            $("#user_vcodepwd").empty().append("密&nbsp;&nbsp;&nbsp;&nbsp;码：");
-    }
-
-    //初始化键盘enter事件
-    $(document).keydown(function (event) {
-        //兼容 IE和firefox 事件
-        var e = window.event || event;
-        var k = e.keyCode || e.which || e.charCode;
-        //兼容 IE,firefox 兼容
-        var obj = e.srcElement ? e.srcElement : e.target;
-        //绑定键盘事件为 id是usename 和password的输入框才可以触发键盘事件 13键盘事件
-        if (k == "13" && (obj.id == "user_name" || obj.id == "user_pwd"))
-            checkUserInput();
-    });
-
-    //登录按钮绑定处理事件
-    $('#btn_login').off("click").on("click", function () {
-        checkUserInput();
-    });
-    
-    $("#btn_register").off("click").on("click", function () {
-        location.href = "register.html";
-    });
-
-    //检测用户输入数据
-    function checkUserInput() {
-        var username = $.trim($('#user_name').val());
-        var password = $.trim($('#user_pwd').val());
-        if (null == username || 0 == username.length) {
-            $("#user_name").val("").focus();
-            $("#tip_userpwd").hide();
-            $("#tip_username").empty().append('<span class="error_input">用户名不能为空</span>').show();
-            return;
-        }
-        else
-            $("#tip_username").hide();
-
-        if (null == password || 0 == password.length) {
-            $("#user_pwd").val("").focus();
-            $("#tip_userpwd").empty().append('<span class="error_input">密码不能为空</span>').show();
-            return;
-        }
-        else
-            $("#tip_userpwd").hide();
-        if (username != null && username.length != 0
-            && password != null && password.length != 0) {
-            $("#user_name").focus();
-            $("#tip_username").hide();
-            $("#tip_userpwd").hide();
-            $.ajax({
-                type: "post",
-                url: "/user/login",
-                dataType: "json",
-                data: ({
-                    loginame: username,
-                    password:  hex_md5(password)
-                }),
-                success: function (res) {
-                    if(res) {
-                        var loginInfoTip = res.data.msgTip;
-                        //用户名不存在，清空输入框并定位到用户名输入框
-                        if (loginInfoTip.indexOf("user is not exist") != -1) {
-                            $("#user_pwd").val("");
-                            $("#user_name").val("").focus();
-                            $("#tip_userpwd").hide();
-                            $("#tip_username").empty().append('<span class="error_input">用户名不存在</span>').show();
-                            return;
-                        }
-                        else if (loginInfoTip.indexOf("user password error") != -1) {
-                            $("#user_pwd").val("").focus();
-                            $("#tip_userpwd").empty().append('<span class="error_input">用户密码错误</span>').show();
-                            return;
-                        }
-                        else if (loginInfoTip.indexOf("access service error") != -1) {
-                            //$("#user_name").val("").focus();
-                            $("#tip_userpwd").hide();
-                            $("#tip_username").empty().append('<span class="error_input">后台访问错误</span>').show();
-                            return;
-                        }
-                        //跳转到用户管理界面
-                        else if (loginInfoTip.indexOf("user can login") != -1 || loginInfoTip == "user already login") {
-                            console.log("user can login");
-                            $.ajax({
-                                type: "get",
-                                url: "/user/getUserSession",
-                                dataType: "json",
-                                success: function (res) {
-                                    if(res && res.code === 200) {
-                                        if(res.data.user) {
-                                            var user = res.data.user;
-                                            sessionStorage.setItem("userId", user.id);
-                                            top.location.href = "/index.html";
-                                        }
-                                    }
-                                },
-                                //此处添加错误处理
-                                error: function () {
-                                    alert("后台访问错误，请联系管理员！");
-                                }
-                            });
-                        }
-                    }
-                },
-                //此处添加错误处理
-                error: function () {
-                    alert("后台访问错误，请联系管理员！");
-                }
-            });
-        }
-    }
-
-    //处理tip提示
-    //定义变量控制密码提示显示
-    var temp_value = "";
-    $("#user_name").add("#user_pwd").unbind().bind({
-        'click keyup': function () {
-            var value = $.trim($(this).val());
-            if (value.length > 0) {
-                $("#tip_username").hide();
-                $("#tip_userpwd").hide();
-            }
-        },
-        blur: function () {
-            //兼容 IE和firefox 事件
-            var e = window.event || event;
-            //兼容 IE,firefox 兼容
-            var obj = e.srcElement ? e.srcElement : e.target;
-            var value = $.trim($(this).val());
-            if (obj.id == "user_name")
-                temp_value = value;
-            if (value.length == 0) {
-                if (obj.id == "user_name")
-                    $("#tip_username").empty().append('<span class="error_input">用户名不能为空</span>').show();
-
-                if (obj.id == "user_pwd" && temp_value.length > 0)
-                    $("#tip_userpwd").empty().append('<span class="error_input">密码不能为空</span>').show();
-                ;
-            }
-            else {
-                if (obj.id == "user_pwd" && value.length > 0 && temp_value.length == 0) {
-                    $("#tip_username").show();
-                    $("#tip_userpwd").hide();
-                }
-                else {
-                    $("#tip_username").hide();
-                    $("#tip_userpwd").hide();
-                }
-            }
-        }
-    });
-</script>
-</body>
-</html>
+<a id="scroll-up" href="#" class="btn btn-sm"><i class="fa fa-angle-double-up"></i></a>
+<script src="js/bootstrap/js/bootstrap.min.js"></script>
+<script src="js/select2/4.0/select2.js"></script>
+<script src="js/select2/4.0/i18n/zh_CN.js"></script>
+<script src="js/layer/3.1/layer.js"></script>
+<script src="js/jquery-validation/1.16/jquery.validate.js"></script>
+<script src="js/jquery-validation/1.16/localization/messages_zh_CN.js"></script>
+<script src="js/jquery-validation/1.16/jquery.validate.extend.js"></script>
+<script src="js/common/jsherp.js"></script>
+<script src="js/common/i18n/jsherp_zh_CN.js"></script>
+<script src="js/md5/md5.js"></script>
+<script src="js/modules/sys/sysLogin.js"></script>

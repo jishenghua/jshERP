@@ -28,6 +28,7 @@ import java.lang.annotation.*;
  * organization-110
  * orgaUserRel-115
  * tenant-120
+ * msg-125
  */
 @Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)

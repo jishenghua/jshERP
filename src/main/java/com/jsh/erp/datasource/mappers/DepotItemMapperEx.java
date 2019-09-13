@@ -183,4 +183,6 @@ public interface DepotItemMapperEx {
                                                            @Param("rows") Integer rows, @Param("pid") Integer pid);
 
     int findStockWarningCountTotal( @Param("pid") Integer pid);
+
+    BigDecimal getFinishNumber(@Param("mid") Long mid, @Param("linkNumber") String linkNumber);
 }

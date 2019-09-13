@@ -1691,3 +1691,31 @@ DROP FUNCTION IF EXISTS `_nextval`;
 -- ----------------------------
 alter table jsh_systemconfig add  customer_flag varchar(1) DEFAULT '0' COMMENT '客户启用标记，0未启用，1启用' after company_post_code;
 alter table jsh_systemconfig add  depot_flag varchar(1) DEFAULT '0' COMMENT '仓库启用标记，0未启用，1启用' after company_post_code;
+
+-- ----------------------------
+-- 时间：2019年9月13日
+-- 给功能表增加icon字段
+-- ----------------------------
+alter table jsh_functions add  icon varchar(50) DEFAULT NULL COMMENT '图标' after PushBtn;
+
+-- ----------------------------
+-- 时间：2019年9月13日
+-- 创建消息表
+-- ----------------------------
+CREATE TABLE `jsh_msg` (
+`id`  bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键' ,
+`msg_title`  varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '消息标题' ,
+`msg_content`  varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '消息内容' ,
+`create_time`  datetime NULL DEFAULT NULL COMMENT '创建时间' ,
+`type`  varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '消息类型' ,
+`status`  varchar(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '状态，1未读 2已读' ,
+`tenant_id`  bigint(20) NULL DEFAULT NULL COMMENT '租户id' ,
+`delete_Flag`  varchar(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '删除标记，0未删除，1删除' ,
+PRIMARY KEY (`id`)
+)
+ENGINE=InnoDB
+DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci
+COMMENT='消息表'
+AUTO_INCREMENT=2
+ROW_FORMAT=COMPACT
+;

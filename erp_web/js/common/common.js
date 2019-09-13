@@ -46,6 +46,15 @@
 			initPageNum = [10,20,30,50];
 		}
 	}
+    function dgResize() {
+        $('#tableData').datagrid('resize', {
+            width: $(window).width() - 6,
+            height: $(window).height() - 76
+        });
+    }
+    $(window).resize(function () {
+        dgResize();
+    });
 	//========================页面高度自动调节================================
 
 	//判断浏览器的类型
