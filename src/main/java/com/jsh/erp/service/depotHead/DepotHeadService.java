@@ -631,4 +631,8 @@ public class DepotHeadService {
         }
         return result;
     }
+
+    public BigDecimal getBuyAndSaleStatistics(String type, String subType, Integer hasSupplier, String beginTime, String endTime) {
+        return depotHeadMapperEx.getBuyAndSaleStatistics(type, subType, hasSupplier, beginTime, endTime);
+    }
 }

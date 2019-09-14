@@ -1,8 +1,8 @@
 /*!
- * Copyright (c) 2013-Now http://jeesite.com All rights reserved.
- * 
- * @author ThinkGem
- * @version 2019-1-6
+ * Copyright (c) 2013-Now 华夏erp All rights reserved.
+ *
+ * @author jishenghua
+ * @version 2019-09-14
  */
 $("#username, #password").on("focus blur", function () {
     var a = this;

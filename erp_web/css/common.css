@@ -23,6 +23,11 @@
 	padding-left: 20px;
 }
 
+#tablePanel #searchTable {
+	height: 40px;
+	padding: 5px;
+}
+
 .system-config {
 	padding: 5px;
 	font-size: 13px;

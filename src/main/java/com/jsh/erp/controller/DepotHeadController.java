@@ -14,6 +14,7 @@ import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.ErpInfo;
 import com.jsh.erp.utils.StringUtil;
+import com.jsh.erp.utils.Tools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
+import static com.jsh.erp.utils.Tools.getNow3;
 
 /**
  * @author ji-sheng-hua 752*718*920
@@ -456,5 +458,40 @@ public class DepotHeadController {
         JSONObject result = ExceptionConstants.standardSuccess();
         depotHeadService.batchDeleteDepotHeadAndDetail(ids);
         return result;
+    }
+
+    /**
+     * 统计今日销售额、本月销售额、本月进货额
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/getBuyAndSaleStatistics")
+    public BaseResponseInfo getBuyAndSaleStatistics(HttpServletRequest request) {
+        BaseResponseInfo res = new BaseResponseInfo();
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            String today = Tools.getNow() + " 00:00:00";
+            String firstDay = Tools.getCurrentMonth() + "-01 00:00:00";
+            BigDecimal todaySale = depotHeadService.getBuyAndSaleStatistics("出库", "销售",
+                    1, today, getNow3()); //今日销售出库
+            BigDecimal todayRetailSale = depotHeadService.getBuyAndSaleStatistics("出库", "销售",
+                    0, today, getNow3()); //今日零售出库
+            BigDecimal monthSale = depotHeadService.getBuyAndSaleStatistics("出库", "销售",
+                    1,firstDay, getNow3()); //本月销售出库
+            BigDecimal monthRetailSale = depotHeadService.getBuyAndSaleStatistics("出库", "销售",
+                    0,firstDay, getNow3()); //本月零售出库
+            BigDecimal monthBuy = depotHeadService.getBuyAndSaleStatistics("入库", "采购",
+                    1, firstDay, getNow3()); //本月采购入库
+            map.put("todaySale", todaySale.add(todayRetailSale));
+            map.put("thisMonthSale", monthSale.add(monthRetailSale));
+            map.put("thisMonthBuy", monthBuy);
+            res.code = 200;
+            res.data = map;
+        } catch(Exception e){
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
     }
 }

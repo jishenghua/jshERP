@@ -1,12 +1,12 @@
 /*!
- * Copyright (c) 2013-Now http://jeesite.com All rights reserved.
+ * Copyright (c) 2013-Now 华夏ERP All rights reserved.
  * 
  * 通用公共JavaScript，注意：项目请不要修改公共CSS样式，若需要新增或调整，请在common.js中覆盖
- * @author ThinkGem
- * @version 2019-7-10
+ * @author jishenghua
+ * @version 2019-9-14
  */
 if (typeof jQuery === "undefined") {
-    throw new Error("JeeSite's JavaScript requires jQuery")
+    throw new Error("JSHERP's JavaScript requires jQuery")
 }
 (function($, window, undefined) {
     parent.$("iframe.ui-layout-content").each(function() {

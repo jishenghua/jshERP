@@ -561,6 +561,7 @@
 				return;
 			}
 		});
+        dgResize();
 	}
 
 	//查找库存的方法
@@ -1299,9 +1300,9 @@
         } else {
             sessionStorage.setItem("rowInfo", rowInfo); //将单据信息存入缓存中
             if(listTitle == "采购订单列表") {
-                parent.addTab("订单转采购", "../materials/purchase_in_list.html?t=skip", "");
+                js.addTabPage(null, "订单转采购", "/pages/materials/purchase_in_list.html?t=skip");
             } else if(listTitle == "销售订单列表") {
-                parent.addTab("订单转销售", "../materials/sale_out_list.html?t=skip", "");
+                js.addTabPage(null, "订单转销售", "/pages/materials/sale_out_list.html?t=skip");
             }
 		}
     }

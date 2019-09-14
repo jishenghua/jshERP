@@ -15,7 +15,7 @@ var isLayui = window.layui && layui.define, $, win, ready = {
   }(),
 
   config: {}, end: {}, minIndex: 0, minLeft: [],
-  //btn: [layer.i18n.btnOk, layer.i18n.btnCancel], // ThinkGem
+  //btn: [layer.i18n.btnOk, layer.i18n.btnCancel], // jishenghua
 
   //五种原始层模式
   type: ['dialog', 'page', 'iframe', 'loading', 'tips']
@@ -24,7 +24,7 @@ var isLayui = window.layui && layui.define, $, win, ready = {
 //默认内置方法。
 var layer = {
   v: '3.0.3',
-  i18n: { // ThinkGem 国际化支持
+  i18n: { // jishenghua 国际化支持
 	btnOk: '确定',
 	btnCancel: '取消',
 	title: '信息',
@@ -231,7 +231,7 @@ Class.pt.vessel = function(conType, callback){
         + (config.type == 1 && conType ? '' : (config.content||''))
       + '</div>'
       + '<span class="layui-layer-setwin">'+ function(){
-        var closebtn = ismax && config.title ? '<a class="layui-layer-min" href="javascript:;"><cite></cite></a>' : ''; // ThinkGem 必须有标题的清空下才能最小化
+        var closebtn = ismax && config.title ? '<a class="layui-layer-min" href="javascript:;"><cite></cite></a>' : ''; // jishenghua 必须有标题的清空下才能最小化
         	closebtn += ismax ? '<a class="layui-layer-ico layui-layer-max" href="javascript:;"></a>' : '';
         config.closeBtn && (closebtn += '<a class="layui-layer-ico '+ doms[7] +' '+ doms[7] + (config.title ? config.closeBtn : (config.type == 4 ? '1' : '2')) +'" href="javascript:;"></a>');
         return closebtn;
@@ -276,8 +276,8 @@ Class.pt.creat = function(){
   
   switch(config.type){
     case 0:
-      //config.btn = ('btn' in config) ? config.btn : ready.btn[0]; ThinkGem
-      config.btn = ('btn' in config) ? config.btn : layer.i18n.btnOk;// ThinkGem
+      //config.btn = ('btn' in config) ? config.btn : ready.btn[0]; jishenghua
+      config.btn = ('btn' in config) ? config.btn : layer.i18n.btnOk;// jishenghua
       layer.closeAll('dialog');
     break;
     case 2:
@@ -286,7 +286,7 @@ Class.pt.creat = function(){
 //      	+ doms[4] +''+ times +'" name="'+ doms[4] +''+ times 
 //      	+'" onload="this.className=\'\';" class="layui-layer-load" frameborder="0" src="' 
 //      	+ config.content[0] + '"></iframe>';
-      // 2017-5-13 ThinkGem 支持post方式提交iframe
+      // 2017-5-13 jishenghua 支持post方式提交iframe
       config.content = '<iframe scrolling="'+ (config.content[1]||'auto') +'" allowtransparency="true" id="'
 			+ doms[4] +''+ times +'" name="'+ doms[4] +''+ times 
 			+ '" onload="this.className=\'\';" class="layui-layer-load" frameborder="0"></iframe><form id="'
@@ -327,9 +327,9 @@ Class.pt.creat = function(){
     config.scrollbar || doms.html.css('overflow', 'hidden').attr('layer-full', times);
   }).auto(times);
 
-  //config.type == 2 && layer.ie == 6 && that.layero.find('iframe').attr('src', content[0]); // ThinkGem 不需要ie6
+  //config.type == 2 && layer.ie == 6 && that.layero.find('iframe').attr('src', content[0]); // jishenghua 不需要ie6
   
-  // 2017-5-13 ThinkGem 支持post方式提交iframe
+  // 2017-5-13 jishenghua 支持post方式提交iframe
   if (config.type == 2){
 	var form = that.layero.find('#' + doms[4] + '-form' + times), formData = config.contentFormData;
 	for(var key in formData || {}){
@@ -454,7 +454,7 @@ Class.pt.offset = function(){
     that.offsetLeft = layero.css('left');
   }
 
-  that.offsetTop = that.offsetTop>0?that.offsetTop:0; // 2017-5-8 ThinkGem Top值不小于0
+  that.offsetTop = that.offsetTop>0?that.offsetTop:0; // 2017-5-8 jishenghua Top值不小于0
   
   layero.css({top: that.offsetTop, left: that.offsetLeft});
 };
@@ -639,10 +639,10 @@ Class.pt.callback = function(){
     if(index === 0){
       if(config.yes){
     	var close = config.yes(that.index, layero);
-        close === false || layer.close(that.index); // 2017-3-31 ThinkGem 添加返回值如果是false则关闭窗口
+        close === false || layer.close(that.index); // 2017-3-31 jishenghua 添加返回值如果是false则关闭窗口
       } else if(config['btn1']){
     	var close = config['btn1'](that.index, layero);
-        close === false || layer.close(that.index); // 2017-3-31 ThinkGem 添加返回值如果是false则关闭窗口
+        close === false || layer.close(that.index); // 2017-3-31 jishenghua 添加返回值如果是false则关闭窗口
       } else {
         layer.close(that.index);
       }
@@ -755,7 +755,7 @@ ready.rescollbar = function(index){
 
 window.layer = layer;
 
-//获取当前对话框所在窗口的jQuery对象和Window对象  ThinkGem
+//获取当前对话框所在窗口的jQuery对象和Window对象  jishenghua
 layer.$ = layer.jQuery = jQuery;
 layer.window = window;
 
@@ -786,7 +786,7 @@ layer.iframeSrc = function(index, url){
   $('#'+ doms[0] + index).find('iframe').attr('src', url);
 };
 
-//返回当前layer的iframe对象的window对象 ThinkGem
+//返回当前layer的iframe对象的window对象 jishenghua
 layer.iframeWindow = function(index){
 	var ifr = $('#'+ doms[0] + index).find('iframe');
 	if (ifr.length > 0){

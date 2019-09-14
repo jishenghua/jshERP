@@ -1,6 +1,6 @@
 /*!
  * 消息推送实现
- * @author ThinkGem
+ * @author jishenghua
  */
 $(function () {
     unreadMsg()

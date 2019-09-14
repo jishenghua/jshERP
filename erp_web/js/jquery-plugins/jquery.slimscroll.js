@@ -460,7 +460,7 @@
           }
         }
         
-        hideBar(); // ThinkGem 初始化完成滚动条自动隐藏
+        hideBar(); // jishenghua 初始化完成滚动条自动隐藏
 
       });
 

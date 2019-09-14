@@ -47,9 +47,10 @@
 		}
 	}
     function dgResize() {
+		var searchTabHeight = $('#searchTable').height();
         $('#tableData').datagrid('resize', {
             width: $(window).width() - 6,
-            height: $(window).height() - 76
+            height: $(window).height() - searchTabHeight -46
         });
     }
     $(window).resize(function () {

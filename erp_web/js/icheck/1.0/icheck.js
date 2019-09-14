@@ -80,7 +80,7 @@
           disabledClass: _disabled,
           indeterminateClass: _indeterminate,
           
-          // ThinkGem add default style.
+          // jishenghua add default style.
           checkboxClass: 'icheckbox_minimal-grey',
           radioClass: 'iradio_minimal-grey',
           

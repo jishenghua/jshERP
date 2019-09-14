@@ -1,6 +1,6 @@
 /*!
  * 首页Tab页签通用方法
- * @author ThinkGem
+ * @author jishenghua
  * @version 2017-3-26
  */
 (function (b) {

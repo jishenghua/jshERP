@@ -138,6 +138,7 @@
                 return;
             }
         });
+        dgResize();
         showSupplierDetails(1,initPageSize);
     }
 

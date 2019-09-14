@@ -4,7 +4,7 @@
 * Copyright (c) 2010 - 2015 Robin Herbots
 * Licensed under the MIT license (http://www.opensource.org/licenses/mit-license.php)
 * Version: 3.2.3-5
-* @ThinkGem 新增money千分位格式别名，举例如下：
+* @jishenghua 新增money千分位格式别名，举例如下：
 * 	$(".moneyMask").inputmask({alias:"money"}); // 金额数据格式（初始化完成表单后调用）
 * 	$('.moneyMask').inputmask('remove');		// 金额数据格式化恢复（表单提交之前调用）
 */
@@ -2426,7 +2426,7 @@
             digitsOptional: !1,
             clearMaskOnLostFocus: !1
         },
-        // ThinkGem 2015-10-14
+        // jishenghua 2015-10-14
         money: {
             prefix: "",
             groupSeparator: ",",
