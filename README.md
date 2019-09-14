@@ -38,7 +38,7 @@
 
 # 系统美图
 * 零售管理
-![零售管理](https://gitee.com/uploads/images/2018/0301/235206_aa0cf6bd_852955.jpeg "11.jpg")
+![输入图片说明](https://images.gitee.com/uploads/images/2019/0914/113648_9334e6cb_852955.png "零售管理.png")
 * 采购管理
 ![采购管理](https://gitee.com/uploads/images/2018/0301/235233_a6526c30_852955.jpeg "22.jpg")
 * 销售管理
