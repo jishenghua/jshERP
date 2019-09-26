@@ -2973,8 +2973,7 @@
 
 			},
 			//此处添加错误处理
-			error:function()
-			{
+			error:function() {
 				$.messager.alert('提示','保存信息异常，请稍后再试！','error');
 				return;
 			}
