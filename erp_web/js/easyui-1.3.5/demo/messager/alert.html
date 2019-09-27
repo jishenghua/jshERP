@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Alert Messager - jQuery EasyUI Demo</title>
+	<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../demo.css">
+	<script type="text/javascript" src="../../jquery.min.js"></script>
+	<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+</head>
+<body>
+	<h2>Alert Messager</h2>
+	<div class="demo-info">
+		<div class="demo-tip icon-tip"></div>
+		<div>Click on each button to display different alert message box.</div>
+	</div>
+	<div style="margin:10px 0;">
+		<a href="#" class="easyui-linkbutton" onclick="alert1()">Alert</a>
+		<a href="#" class="easyui-linkbutton" onclick="alert2()">Error</a>
+		<a href="#" class="easyui-linkbutton" onclick="alert3()">Info</a>
+		<a href="#" class="easyui-linkbutton" onclick="alert4()">Question</a>
+		<a href="#" class="easyui-linkbutton" onclick="alert5()">Warning</a>
+	</div>
+	<script>
+		function alert1(){
+			$.messager.alert('My Title','Here is a message!');
+		}
+		function alert2(){
+			$.messager.alert('My Title','Here is a error message!','error');
+		}
+		function alert3(){
+			$.messager.alert('My Title','Here is a info message!','info');
+		}
+		function alert4(){
+			$.messager.alert('My Title','Here is a question message!','question');
+		}
+		function alert5(){
+			$.messager.alert('My Title','Here is a warning message!','warning');
+		}
+	</script>
+</body>
+</html>

@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsh.erp.datasource.mappers.AccountMapperEx">
+    <resultMap extends="com.jsh.erp.datasource.mappers.AccountMapper.BaseResultMap" id="ResultListMap" type="com.jsh.erp.datasource.vo.AccountVo4List">
+        <result column="thismonthamount" jdbcType="VARCHAR" property="thismonthamount" />
+    </resultMap>
+
+    <resultMap id="ResultInOutList" type="com.jsh.erp.datasource.vo.AccountVo4InOutList">
+        <result column="Number" jdbcType="VARCHAR" property="number" />
+        <result column="newType" jdbcType="VARCHAR" property="type" />
+        <result column="supplier" jdbcType="VARCHAR" property="supplierName" />
+        <result column="ChangeAmount" jdbcType="DECIMAL" property="changeAmount" />
+        <result column="oTime" jdbcType="VARCHAR" property="operTime" />
+        <result column="AList" jdbcType="VARCHAR" property="aList" />
+        <result column="AMList" jdbcType="VARCHAR" property="amList" />
+    </resultMap>
+
+    <select id="selectByConditionAccount" parameterType="com.jsh.erp.datasource.entities.AccountExample" resultMap="ResultListMap">
+        select *
+        FROM jsh_account
+        where 1=1
+        <if test="name != null">
+            and name like '%${name}%'
+        </if>
+        <if test="serialNo != null">
+            and SerialNo like '%${serialNo}%'
+        </if>
+        <if test="remark != null">
+            and remark like '%${remark}%'
+        </if>
+        and ifnull(delete_Flag,'0') !='1'
+        <if test="offset != null and rows != null">
+            limit #{offset},#{rows}
+        </if>
+    </select>
+
+    <select id="countsByAccount" resultType="java.lang.Long">
+        SELECT
+        COUNT(id)
+        FROM jsh_account
+        WHERE 1=1
+        <if test="name != null">
+            and name like '%${name}%'
+        </if>
+        <if test="serialNo != null">
+            and SerialNo like '%${serialNo}%'
+        </if>
+        <if test="remark != null">
+            and remark like '%${remark}%'
+        </if>
+        and ifnull(delete_Flag,'0') !='1'
+    </select>
+
+    <select id="findAccountInOutList" parameterType="com.jsh.erp.datasource.entities.AccountExample" resultMap="ResultInOutList">
+        <!--主表出入库涉及的账户 -->
+        select dh.Number,concat(dh.SubType,dh.Type) as newType,s.supplier,dh.ChangeAmount,date_format(dh.OperTime,'%Y-%m-%d %H:%i:%S') as oTime,'' as AList,'' as AMList
+        from jsh_depothead dh inner join jsh_supplier s on dh.OrganId = s.id and ifnull(s.delete_Flag,'0') !='1'
+        where 1=1
+        <if test="accountId != null">
+            and dh.AccountId=${accountId}
+        </if>
+        and ifnull(dh.delete_Flag,'0') !='1'
+
+        <!--主表收入和支出涉及的账户 -->
+        UNION ALL
+        select ah.BillNo,ah.Type as newType,s.supplier,ah.ChangeAmount,date_format(ah.BillTime,'%Y-%m-%d %H:%i:%S') as oTime,'' as AList,'' as AMList
+        from jsh_accounthead ah inner join jsh_supplier s on ah.OrganId=s.id and ifnull(s.delete_Flag,'0') !='1'
+        where 1=1
+        <if test="accountId != null">
+            and ah.AccountId=${accountId}
+        </if>
+        and ifnull(ah.delete_Flag,'0') !='1'
+        <!--明细中涉及的账户（收款,付款,收预付款） -->
+        UNION ALL
+        select ah.BillNo,ah.Type as newType,s.supplier,ai.EachAmount,date_format(ah.BillTime,'%Y-%m-%d %H:%i:%S') as oTime,'' as AList,'' as AMList
+        from jsh_accounthead ah inner join jsh_supplier s on ah.OrganId=s.id
+        inner join jsh_accountitem ai on ai.HeaderId=ah.Id and ifnull(ai.delete_Flag,'0') !='1'
+        where ah.Type in ('收款','付款','收预付款')
+        <if test="accountId != null">
+            and ai.AccountId=${accountId}
+        </if>
+        and ifnull(ah.delete_Flag,'0') !='1'
+        <!--主表中转出的账户 -->
+        UNION ALL
+        select ah.BillNo,ah.Type as newType, '' as sName,ah.ChangeAmount,date_format(ah.BillTime,'%Y-%m-%d %H:%i:%S') as oTime,'' as AList,'' as AMList
+        from jsh_accounthead ah inner join jsh_accountitem ai on ai.HeaderId=ah.Id and ifnull(ai.delete_Flag,'0') !='1'
+        where ah.Type='转账'
+        <if test="accountId != null">
+            and ah.AccountId=${accountId}
+        </if>
+        and ifnull(ah.delete_Flag,'0') !='1'
+        <!--明细中被转入的账户 -->
+        UNION ALL
+        select ah.BillNo,ah.Type as newType, '' as sName,ai.EachAmount,date_format(ah.BillTime,'%Y-%m-%d %H:%i:%S') as oTime,'' as AList,'' as AMList
+        from jsh_accounthead ah inner join jsh_accountitem ai on ai.HeaderId=ah.Id and ifnull(ai.delete_Flag,'0') !='1'
+        where ah.Type='转账'
+        <if test="accountId != null">
+            and ai.AccountId=${accountId}
+        </if>
+        and ifnull(ah.delete_Flag,'0') !='1'
+        <!--多账户的情况 -->
+        UNION ALL
+        select dh.Number,concat(dh.SubType,dh.Type) as newType,s.supplier,dh.ChangeAmount,date_format(dh.OperTime,'%Y-%m-%d %H:%i:%S') as oTime,
+        dh.AccountIdList as AList,dh.AccountMoneyList as AMList
+        from jsh_depothead dh inner join jsh_supplier s on dh.OrganId = s.id and ifnull(s.delete_Flag,'0') !='1'
+        where 1=1
+        <if test="accountId != null">
+            and dh.AccountIdList like '%${accountId}%'
+        </if>
+        and ifnull(dh.delete_Flag,'0') !='1'
+        ORDER BY oTime desc
+        <if test="offset != null and rows != null">
+            limit #{offset},#{rows}
+        </if>
+    </select>
+
+    <select id="findAccountInOutListCount" resultType="java.lang.Integer">
+        select sum(a) from
+        (
+            <!--主表出入库涉及的账户 -->
+            select count(1) a
+            from jsh_depothead dh inner join jsh_supplier s on dh.OrganId = s.id and ifnull(s.delete_Flag,'0') !='1'
+            where 1=1
+            <if test="accountId != null">
+                and dh.AccountId=${accountId}
+            </if>
+            and ifnull(dh.delete_Flag,'0') !='1'
+            <!--主表收入和支出涉及的账户 -->
+            UNION ALL
+            select count(1) a
+            from jsh_accounthead ah inner join jsh_supplier s on ah.OrganId=s.id and ifnull(s.delete_Flag,'0') !='1'
+            where 1=1
+            <if test="accountId != null">
+                and ah.AccountId=${accountId}
+            </if>
+            and ifnull(ah.delete_Flag,'0') !='1'
+            <!--明细中涉及的账户（收款,付款,收预付款） -->
+            UNION ALL
+            select count(1) a
+            from jsh_accounthead ah inner join jsh_supplier s on ah.OrganId=s.id
+            inner join jsh_accountitem ai on ai.HeaderId=ah.Id and ifnull(ai.delete_Flag,'0') !='1'
+            where ah.Type in ('收款','付款','收预付款')
+            <if test="accountId != null">
+                and ai.AccountId=${accountId}
+            </if>
+            and ifnull(ah.delete_Flag,'0') !='1'
+            <!--主表中转出的账户 -->
+            UNION ALL
+            select count(1) a
+            from jsh_accounthead ah inner join jsh_accountitem ai on ai.HeaderId=ah.Id and ifnull(ai.delete_Flag,'0') !='1'
+            where ah.Type='转账'
+            <if test="accountId != null">
+                and ah.AccountId=${accountId}
+            </if>
+            and ifnull(ah.delete_Flag,'0') !='1'
+            <!--明细中被转入的账户 -->
+            UNION ALL
+            select count(1) a
+            from jsh_accounthead ah inner join jsh_accountitem ai on ai.HeaderId=ah.Id and ifnull(ai.delete_Flag,'0') !='1'
+            where ah.Type='转账'
+            <if test="accountId != null">
+                and ai.AccountId=${accountId}
+            </if>
+            and ifnull(ah.delete_Flag,'0') !='1'
+            <!--多账户的情况 -->
+            UNION ALL
+            select count(1) a
+            from jsh_depothead dh inner join jsh_supplier s on dh.OrganId = s.id and ifnull(s.delete_Flag,'0') !='1'
+            where 1=1
+            <if test="accountId != null">
+                and dh.AccountIdList like '%${accountId}%'
+            </if>
+            and ifnull(dh.delete_Flag,'0') !='1'
+        ) cc
+    </select>
+    <update id="batchDeleteAccountByIds">
+        update jsh_account
+        set delete_Flag='1'
+        where 1=1
+        and id in (
+        <foreach collection="ids" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
+</mapper>

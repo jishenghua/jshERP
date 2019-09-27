@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsh.erp.datasource.mappers.FunctionsMapperEx">
+    <select id="selectByConditionFunctions" parameterType="com.jsh.erp.datasource.entities.FunctionsExample" resultMap="com.jsh.erp.datasource.mappers.FunctionsMapper.BaseResultMap">
+        select *
+        FROM jsh_functions
+        where 1=1
+        <if test="name != null">
+            and name like '%${name}%'
+        </if>
+        <if test="type != null">
+            and type='${type}'
+        </if>
+        and ifnull(delete_Flag,'0') !='1'
+        order by sort asc
+        <if test="offset != null and rows != null">
+            limit #{offset},#{rows}
+        </if>
+    </select>
+    <select id="countsByFunctions" resultType="java.lang.Long">
+        SELECT
+        COUNT(id)
+        FROM jsh_functions
+        WHERE 1=1
+        <if test="name != null">
+            and name like '%${name}%'
+        </if>
+        <if test="type != null">
+            and type='${type}'
+        </if>
+        and ifnull(delete_Flag,'0') !='1'
+    </select>
+    <update id="batchDeleteFunctionsByIds">
+        update jsh_functions
+        set delete_Flag='1'
+        where 1=1
+        and id in (
+        <foreach collection="ids" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
+</mapper>

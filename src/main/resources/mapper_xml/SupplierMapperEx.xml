@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsh.erp.datasource.mappers.SupplierMapperEx">
+    <select id="selectByConditionSupplier" parameterType="com.jsh.erp.datasource.entities.SupplierExample" resultMap="com.jsh.erp.datasource.mappers.SupplierMapper.BaseResultMap">
+        select *
+        FROM jsh_supplier
+        where 1=1
+        <if test="supplier != null">
+            and supplier like '%${supplier}%'
+        </if>
+        <if test="type != null">
+            and type='${type}'
+        </if>
+        <if test="phonenum != null">
+            and phonenum like '%${phonenum}%'
+        </if>
+        <if test="telephone != null">
+            and telephone like '%${telephone}%'
+        </if>
+        <if test="description != null">
+            and description like '%${description}%'
+        </if>
+        and ifnull(delete_Flag,'0') !='1'
+        order by id desc
+        <if test="offset != null and rows != null">
+            limit #{offset},#{rows}
+        </if>
+    </select>
+    <select id="countsBySupplier" resultType="java.lang.Long">
+        SELECT
+        COUNT(id)
+        FROM jsh_supplier
+        WHERE 1=1
+        <if test="supplier != null">
+            and supplier like '%${supplier}%'
+        </if>
+        <if test="type != null">
+            and type='${type}'
+        </if>
+        <if test="phonenum != null">
+            and phonenum like '%${phonenum}%'
+        </if>
+        <if test="telephone != null">
+            and telephone like '%${telephone}%'
+        </if>
+        <if test="description != null">
+            and description like '%${description}%'
+        </if>
+        and ifnull(delete_Flag,'0') !='1'
+    </select>
+
+    <select id="findByAll" parameterType="com.jsh.erp.datasource.entities.SupplierExample" resultMap="com.jsh.erp.datasource.mappers.SupplierMapper.BaseResultMap">
+        select *
+        FROM jsh_supplier
+        where 1=1
+        <if test="supplier != null">
+            and supplier like '%${supplier}%'
+        </if>
+        <if test="type != null">
+            and type='${type}'
+        </if>
+        <if test="phonenum != null">
+            and phonenum like '%${phonenum}%'
+        </if>
+        <if test="telephone != null">
+            and telephone like '%${telephone}%'
+        </if>
+        <if test="description != null">
+            and description like '%${description}%'
+        </if>
+        and ifnull(delete_Flag,'0') !='1'
+    </select>
+    <update id="batchDeleteSupplierByIds">
+        update jsh_supplier
+        set delete_Flag='1'
+        where 1=1
+        and id in (
+        <foreach collection="ids" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
+</mapper>

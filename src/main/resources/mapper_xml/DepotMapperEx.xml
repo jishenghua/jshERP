@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsh.erp.datasource.mappers.DepotMapperEx">
+    <resultMap extends="com.jsh.erp.datasource.mappers.DepotMapper.BaseResultMap" id="ResultMapEx" type="com.jsh.erp.datasource.entities.DepotEx">
+        <result column="principalName" jdbcType="VARCHAR" property="principalName" />
+    </resultMap>
+
+    <select id="selectByConditionDepot" parameterType="com.jsh.erp.datasource.entities.DepotExample" resultMap="com.jsh.erp.datasource.mappers.DepotMapper.BaseResultMap">
+        select *
+        FROM jsh_depot
+        where 1=1
+        <if test="name != null">
+            and name like '%${name}%'
+        </if>
+        <if test="type != null">
+            and type=${type}
+        </if>
+        <if test="remark != null">
+            and remark like '%${remark}%'
+        </if>
+        and ifnull(delete_Flag,'0') !='1'
+        order by sort asc
+        <if test="offset != null and rows != null">
+            limit #{offset},#{rows}
+        </if>
+    </select>
+    <select id="countsByDepot" resultType="java.lang.Long">
+        SELECT
+        COUNT(id)
+        FROM jsh_depot
+        WHERE 1=1
+        <if test="name != null">
+            and name like '%${name}%'
+        </if>
+        <if test="type != null">
+            and type=${type}
+        </if>
+        <if test="remark != null">
+            and remark like '%${remark}%'
+        </if>
+        and ifnull(delete_Flag,'0') !='1'
+    </select>
+    <select id="getDepotList" parameterType="java.util.Map" resultMap="ResultMapEx">
+        select dep.*,usr.username as principalName
+        FROM jsh_depot dep
+        left join jsh_user usr on usr.id=dep.principal and ifnull(usr.status,'0') not in('1','2')
+        where 1=1
+        <if test="name != null and name != ''">
+            <bind name="name" value="'%' + _parameter.name + '%'" />
+            and dep.name like #{name}
+        </if>
+        <if test="type != null and type != ''">
+            and dep.type=#{type}
+        </if>
+        <if test="remark != null and remark != ''">
+            <bind name="remark" value="'%' + _parameter.remark + '%'" />
+            and dep.remark like #{remark}
+        </if>
+        and ifnull(dep.delete_Flag,'0') !='1'
+        order by dep.sort asc
+    </select>
+    <update id="batchDeleteDepotByIds">
+        update jsh_depot
+        set delete_Flag='1'
+        where 1=1
+        and id in (
+        <foreach collection="ids" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
+
+
+
+</mapper>

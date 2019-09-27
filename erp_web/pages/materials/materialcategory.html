@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>商品类别管理</title>
+    <meta charset="utf-8">
+    <!-- 指定以IE8的方式来渲染 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta http-equiv="Expires" content="-1">
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon"/>
+    <script type="text/javascript" src="/js/jquery-1.8.0.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/js/easyui-1.3.5/themes/default/easyui.css"/>
+    <link rel="stylesheet" type="text/css" href="/js/easyui-1.3.5/themes/icon.css"/>
+    <link type="text/css" rel="stylesheet" href="/css/common.css"/>
+    <script type="text/javascript" src="/js/easyui-1.3.5/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="/js/easyui-1.3.5/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="/js/common/common.js"></script>
+</head>
+<body>
+<!-- 数据显示table -->
+<div id="tablePanel" class="easyui-panel" style="padding:1px;top:300px;" title="商品类别列表" iconCls="icon-list"
+     collapsible="true" closable="false">
+    <table id="tableData" style="top:300px;border-bottom-color:#FFFFFF">
+    </table>
+</div>
+<div id="materialCategoryDlg" class="easyui-dialog" style="width:380px;padding:10px 20px"
+     closed="true" buttons="#dlg-buttons" modal="true" cache="false" collapsible="false" closable="true">
+    <form id="materialCategoryFM" method="post" novalidate>
+        <table>
+            <tr>
+                <td>上级目录</td>
+                <td style="padding:5px">
+                    <input name="parentName" id="parentName"   style="width: 200px;height: 20px" readonly="readonly"/>
+                    <a href="javascript:void(0)" class="l-btn l-btn-plain" group="" id="lookForSelectMaterialCategory">
+                        <span class="l-btn-left"><span class="l-btn-text icon-search l-btn-icon-left"></span></span></a>
+                    <input name="parentid" id="parentid" type="hidden"/>
+                </td>
+            </tr>
+            <tr>
+                <td>名称</td>
+                <td style="padding:5px">
+                    <input name="Name" id="Name" class="easyui-validatebox"
+                           data-options="required:true,validType:'length[2,30]'" style="width: 200px;height: 20px"/>
+                    <input name="id" id="id" type="hidden"/>
+                </td>
+            </tr>
+            <tr>
+                <td>编号</td>
+                <td style="padding:5px">
+                    <input name="serialNo" id="serialNo"  style="width: 200px;height: 20px"/>
+                </td>
+            </tr>
+            <tr>
+                <td>序号</td>
+                <td style="padding:5px">
+                    <input name="sort" id="sort"  style="width: 200px;height: 20px"/>
+                </td>
+            </tr>
+            <tr>
+                <td>备注</td>
+                <td style="padding:5px">
+                    <textarea name="remark" id="remark" placeholder="暂无备注信息"
+                              style="width: 200px; height:40px;"></textarea>
+                </td>
+            </tr>
+
+        </table>
+    </form>
+</div>
+<div id="dlg-buttons">
+    <a href="javascript:void(0)" id="saveMaterialCategory" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
+    <a href="javascript:void(0)" id="cancelMaterialCategory" class="easyui-linkbutton" iconCls="icon-cancel"
+       onclick="javascript:$('#materialCategoryDlg').dialog('close')">取消</a>
+</div>
+<div id="forSelectMaterialCategoryDlg" class="easyui-dialog" style="width:380px;padding:10px 20px"
+     closed="true" modal="true" cache="false" collapsible="false" closable="true">
+</div>
+
+<script type="text/javascript">
+    var url;
+    var clickType = ""; //记录从哪里点击的类别弹窗
+    //初始化界面
+    $(function () {
+        var treeHeight=webH-35;
+        var id=$("#id").val();
+        //初始化系统基础信息
+        $('#tableData').datagrid({
+            height: treeHeight,
+            toolbar: [
+                {
+                    id: 'addMaterialCategory',
+                    text: '增加',
+                    iconCls: 'icon-add',
+                    handler: function () {
+                        addMaterialCategory();
+                    }
+                },
+                '-',
+                {
+                    id: 'deleteMaterialCategory',
+                    text: '删除',
+                    iconCls: 'icon-remove',
+                    handler: function () {
+                        batDeleteMaterialCategory();
+                    }
+                }
+            ],
+        });
+        $('#tableData').prev('.datagrid-view2').find(".datagrid-body").append("<ul id='tt'><ul>");
+        $('#tt').tree({
+            url: '/materialCategory/getMaterialCategoryTree?id='+id,
+            animate: true,
+            checkbox: true,
+            onDblClick: function(node){
+                //双击修改
+                editMaterialCategory(node);
+            }
+        });
+    });
+
+    function addMaterialCategory() {
+        $('#materialCategoryFM').form('clear');
+        $('#materialCategoryDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加商品类别信息');
+        $(".window-mask").css({width: webW, height: webH});
+        $("#Name").val("").focus();
+        $("#parentName").val("");
+        $("#parentid").val("");
+        $("#serialNo").val("");
+        $("#sort").val("");
+        $("#remark").val("");
+        $("#id").val("");
+        url = '/materialCategory/addMaterialCategory';
+    }
+    function editMaterialCategory(node) {
+        var id=node.id;
+        $.ajax({
+            type: "post",
+            url: '/materialCategory/findById',
+            dataType: "json",
+            data: ({
+                id: id
+            }),
+            success: function(res) {
+                if(res) {
+                    if(res.code!=200){
+                        $.messager.alert('提示', res.msg, 'error');
+                        return;
+                    }
+                    $('#materialCategoryFM').form('clear');
+                    $('#materialCategoryDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;修改商品类别信息');
+                    $(".window-mask").css({width: webW, height: webH});
+                    $("#Name").val(res.data.name).focus();
+                    $("#parentName").val(res.data.parentName);
+                    $("#parentid").val(res.data.parentId);
+                    $("#serialNo").val(res.data.serialNo);
+                    $("#sort").val(res.data.sort);
+                    $("#remark").val(res.data.remark);
+                    $("#id").val(res.data.id);
+                    url = '/materialCategory/editMaterialCategory';
+                }
+            },
+            //此处添加错误处理
+            error: function () {
+                $.messager.alert('提示', '修改商品类别信息异常，请稍后再试！', 'error');
+                return;
+            }
+        });
+
+    }
+
+    //批量删除商品类别
+    function batDeleteMaterialCategory() {
+        var nodes = $('#tt').tree('getChecked');
+        if (nodes.length == 0) {
+            $.messager.alert('删除提示', '没有记录被选中！', 'info');
+            return;
+        }
+        if (nodes.length > 0) {
+            $.messager.confirm('删除确认', '确定要删除选中的' + nodes.length + '条商品类别信息吗？', function (r) {
+                if (r) {
+                    var ids = "";
+                    for (var i = 0; i < nodes.length; i++) {
+                        if (i == nodes.length - 1) {
+                            ids += nodes[i].id;
+                            break;
+                        }
+                        //alert(row[i].id);
+                        ids += nodes[i].id + ",";
+                    }
+                    $.ajax({
+                        type: "post",
+                        url: "/materialCategory/batchDeleteMaterialCategory",
+                        dataType: "json",
+                        async: false,
+                        data: ({
+                            ids: ids
+                        }),
+                        success: function (res) {
+                            if(res && res.code === 200) {
+                                $('#tt').tree('reload');
+                            } else {
+                                if(res && res.code == 601){
+                                    var jsondata={};
+                                    jsondata.ids=ids;
+                                    jsondata.deleteType='2';
+                                    var type='batch';
+                                    batDeleteMaterialCategoryForceConfirm(res,"/materialCategory/batchDeleteMaterialCategory",jsondata,type);
+                                }else if(res && res.code == 600){
+                                    $.messager.alert('删除提示', res.msg, 'error');
+                                }else{
+                                    $.messager.alert('删除提示', '删除商品信息异常，请稍后再试！', 'error');
+                                }
+                            }
+                        },
+                        //此处添加错误处理
+                        error: function () {
+                            $.messager.alert('删除提示', '删除商品类别信息异常，请稍后再试！', 'error');
+                            return;
+                        }
+                    });
+                }
+            });
+        }
+    }
+    /**
+     * 确认强制删除
+     * */
+    function batDeleteMaterialCategoryForceConfirm(res,url,jsondata,type) {
+        $.messager.confirm('删除确认', res.msg, function (r) {
+            if (r) {
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    dataType: "json",
+                    data: (jsondata),
+                    success: function (res) {
+                        if(res && res.code == 200) {
+                            $('#tt').tree('reload');
+                        }else if(res && res.code == 600){
+                            $.messager.alert('删除提示', res.msg, 'error');
+                        }else {
+                            $.messager.alert('删除提示', '删除商品类别信息异常，请稍后再试！', 'error');
+                        }
+                    },
+                    //此处添加错误处理
+                    error: function () {
+                        $.messager.alert('删除提示', '删除商品类别信息异常，请稍后再试！', 'error');
+                        return;
+                    }
+                });
+            }
+        });
+    }
+
+    //保存信息
+    $("#saveMaterialCategory").off("click").on("click", function () {
+        if (!$("#Name").val()) {
+            $.messager.alert('提示', '商品类别名称不能为空！', 'warning');
+            return;
+        }
+        var objInfo = $("#materialCategoryFM").serializeObject();
+        $.ajax({
+            type: "post",
+            url: url,
+            dataType: "json",
+            data: ({
+                info: JSON.stringify(objInfo)
+            }),
+            success: function(res) {
+                if(res) {
+                    if(res.code!=200){
+                        $.messager.alert('提示', res.msg, 'error');
+                        return;
+                    }
+                    $('#materialCategoryDlg').dialog('close');
+                    //加载完以后重新初始化
+                    $('#tt').tree('reload');
+                }
+            },
+            //此处添加错误处理
+            error: function () {
+                $.messager.alert('提示', '保存商品类别信息异常，请稍后再试！', 'error');
+                return;
+            }
+        });
+    });
+    //查询父级商品类别
+    $("#lookForSelectMaterialCategory").on("click", function () {
+        $('#forSelectMaterialCategoryDlg').dialog({
+            title: '商品类别选择',
+            width: webW/2,
+            height: webH/2,
+            closed: false,
+            cache: false,
+            href: '/pages/materials/materialcategory_forselect.html',
+            modal: true,
+            resizable:true
+        });
+    });
+
+</script>
+</body>
+</html>

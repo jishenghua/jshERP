@@ -1,0 +1,558 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper  namespace="com.jsh.erp.datasource.mappers.DepotItemMapperEx">
+
+    <resultMap id="DetailByTypeAndMIdResultMap" type="com.jsh.erp.datasource.entities.DepotItemVo4DetailByTypeAndMId">
+        <result column="Number" jdbcType="VARCHAR" property="number" />
+        <result column="newType" jdbcType="VARCHAR" property="newtype" />
+        <result column="b_num" jdbcType="BIGINT" property="bnum" />
+        <result column="oTime" jdbcType="TIMESTAMP" property="otime" />
+    </resultMap>
+
+    <resultMap extends="com.jsh.erp.datasource.mappers.DepotItemMapper.BaseResultMap" id="ResultAndMaterialMap" type="com.jsh.erp.datasource.entities.DepotItemVo4Material">
+        <result column="mName" jdbcType="VARCHAR" property="mname" />
+        <result column="mModel" jdbcType="VARCHAR" property="mmodel" />
+    </resultMap>
+
+    <resultMap extends="com.jsh.erp.datasource.mappers.DepotItemMapper.BaseResultMap" id="ResultWithInfoExMap" type="com.jsh.erp.datasource.entities.DepotItemVo4WithInfoEx">
+        <result column="MName" jdbcType="VARCHAR" property="MName" />
+        <result column="MModel" jdbcType="VARCHAR" property="MModel" />
+        <result column="MaterialUnit" jdbcType="VARCHAR" property="MaterialUnit" />
+        <result column="MColor" jdbcType="VARCHAR" property="MColor" />
+        <result column="MStandard" jdbcType="VARCHAR" property="MStandard" />
+        <result column="MMfrs" jdbcType="VARCHAR" property="MMfrs" />
+        <result column="MOtherField1" jdbcType="VARCHAR" property="MOtherField1" />
+        <result column="MOtherField2" jdbcType="VARCHAR" property="MOtherField2" />
+        <result column="MOtherField3" jdbcType="VARCHAR" property="MOtherField3" />
+        <result column="DepotName" jdbcType="VARCHAR" property="DepotName" />
+        <result column="AnotherDepotName" jdbcType="VARCHAR" property="AnotherDepotName" />
+        <result column="UnitId" jdbcType="BIGINT" property="UnitId" />
+        <result column="UName" jdbcType="VARCHAR" property="UName" />
+    </resultMap>
+
+    <resultMap extends="com.jsh.erp.datasource.mappers.DepotItemMapper.BaseResultMap" id="ResultByMaterial" type="com.jsh.erp.datasource.entities.DepotItemVo4WithInfoEx">
+        <result column="MId" jdbcType="VARCHAR" property="MId" />
+        <result column="MName" jdbcType="VARCHAR" property="MName" />
+        <result column="MModel" jdbcType="VARCHAR" property="MModel" />
+        <result column="MaterialUnit" jdbcType="VARCHAR" property="MaterialUnit" />
+        <result column="UName" jdbcType="VARCHAR" property="UName" />
+        <result column="MColor" jdbcType="VARCHAR" property="MColor" />
+        <result column="PresetPriceOne" jdbcType="DECIMAL" property="presetPriceOne" />
+        <result column="PriceStrategy" jdbcType="VARCHAR" property="priceStrategy" />
+    </resultMap>
+    <resultMap id="ResultStockWarningCount" type="com.jsh.erp.datasource.vo.DepotItemStockWarningCount">
+        <result column="MaterialName" jdbcType="VARCHAR" property="MaterialName" />
+        <result column="MaterialModel" jdbcType="VARCHAR" property="MaterialModel" />
+        <result column="categoryName" jdbcType="VARCHAR" property="categoryName" />
+        <result column="MaterialOther" jdbcType="VARCHAR" property="MaterialOther" />
+        <result column="MaterialUnit" jdbcType="VARCHAR" property="MaterialUnit" />
+        <result column="safetystock" jdbcType="DECIMAL" property="safetystock" />
+        <result column="BasicInNumber" jdbcType="DECIMAL" property="BasicInNumber" />
+        <result column="BasicOutNumber" jdbcType="DECIMAL" property="BasicOutNumber" />
+        <result column="BasicNumber" jdbcType="DECIMAL" property="BasicNumber" />
+        <result column="BasicLinjieNumber" jdbcType="DECIMAL" property="BasicLinjieNumber" />
+    </resultMap>
+
+    <select id="selectByConditionDepotItem" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="com.jsh.erp.datasource.mappers.DepotItemMapper.BaseResultMap">
+        select *
+        FROM jsh_depotitem
+        where 1=1
+        <if test="name != null">
+            and name like '%${name}%'
+        </if>
+        <if test="type != null">
+            and type=${type}
+        </if>
+        <if test="remark != null">
+            and remark like '%${remark}%'
+        </if>
+        and ifnull(delete_Flag,'0') !='1'
+        <if test="offset != null and rows != null">
+            limit #{offset},#{rows}
+        </if>
+    </select>
+    <select id="countsByDepotItem" resultType="java.lang.Long">
+        SELECT
+        COUNT(id)
+        FROM jsh_depotitem
+        WHERE 1=1
+        <if test="name != null">
+            and name like '%${name}%'
+        </if>
+        <if test="type != null">
+            and type=${type}
+        </if>
+        <if test="remark != null">
+            and remark like '%${remark}%'
+        </if>
+        and ifnull(delete_Flag,'0') !='1'
+    </select>
+
+    <select id="findDetailByTypeAndMaterialIdList" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="DetailByTypeAndMIdResultMap">
+        select dh.Number,concat(dh.SubType,dh.Type) as newType,
+        case when type='入库' then ifnull(di.BasicNumber,0) when type='出库' then 0-di.BasicNumber else 0 end as b_num,
+        date_format(dh.OperTime,'%Y-%m-%d %H:%i:%S') as oTime
+        from jsh_depothead dh
+        INNER JOIN jsh_depotitem di on dh.id=di.HeaderId and ifnull(di.delete_Flag,'0') !='1'
+        where dh.type!='其它'
+        and dh.SubType!='调拨'
+        and di.MaterialId =${mId}
+        and ifnull(dh.delete_Flag,'0') !='1'
+        ORDER BY oTime desc
+        <if test="offset != null and rows != null">
+            limit #{offset},#{rows}
+        </if>
+    </select>
+    <select id="findDetailByTypeAndMaterialIdCounts" resultType="java.lang.Long">
+        select count(1)
+        from jsh_depothead dh
+        INNER JOIN jsh_depotitem di on dh.id=di.HeaderId and ifnull(di.delete_Flag,'0') !='1'
+        where dh.type!='其它'
+        and dh.SubType!='调拨'
+        and di.MaterialId =${mId}
+        and ifnull(dh.delete_Flag,'0') !='1'
+    </select>
+
+
+    <select id="findStockNumByMaterialIdList" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultAndMaterialMap">
+        select di.*,m.Name mName,m.Model mModel from jsh_depotitem di
+        inner join jsh_material m on di.MaterialId=m.Id  and ifnull(m.delete_Flag,'0') !='1'
+        where 1=1
+        <if test="mId != null">
+            and di.MaterialId=${mId}
+        </if>
+        and ifnull(di.delete_Flag,'0') !='1'
+        <if test="offset != null and rows != null">
+            limit #{offset},#{rows}
+        </if>
+    </select>
+    <select id="findStockNumByMaterialIdCounts" resultType="java.lang.Long">
+        select count(*) from jsh_depotitem where 1=1
+        <if test="mId != null">
+            and MaterialId=${mId}
+        </if>
+        and ifnull(delete_Flag,'0') !='1'
+    </select>
+
+    <select id="findByTypeAndMaterialIdIn" resultType="java.lang.Long">
+        select ifnull(sum(BasicNumber),0) as BasicNumber from jsh_depothead dh
+          INNER JOIN jsh_depotitem di on dh.id=di.HeaderId  and ifnull(di.delete_Flag,'0') !='1'
+          where dh.type='入库'
+          and di.MaterialId = ${mId}
+          and ifnull(dh.delete_Flag,'0') !='1'
+    </select>
+
+    <select id="findByTypeAndMaterialIdOut" resultType="java.lang.Long">
+        select ifnull(sum(BasicNumber),0) as BasicNumber from jsh_depothead dh
+        INNER JOIN jsh_depotitem di on dh.id=di.HeaderId  and ifnull(di.delete_Flag,'0') !='1'
+        where dh.type='出库'
+        and dh.SubType!='调拨'
+        and di.MaterialId = ${mId}
+        and ifnull(dh.delete_Flag,'0') !='1'
+    </select>
+
+    <select id="findByTypeAndDepotIdAndMaterialIdIn" resultType="java.lang.Integer">
+        select ifnull(sum(BasicNumber),0) as BasicNumber from jsh_depothead dh
+        INNER JOIN jsh_depotitem di on dh.id=di.HeaderId  and ifnull(di.delete_Flag,'0') !='1'
+        where dh.type='入库'
+        and di.MaterialId = ${mId} and di.DepotId = ${depotId}
+        and ifnull(dh.delete_Flag,'0') !='1'
+    </select>
+
+    <select id="findByTypeAndDepotIdAndMaterialIdOut" resultType="java.lang.Integer">
+        select ifnull(sum(BasicNumber),0) as BasicNumber from jsh_depothead dh
+        INNER JOIN jsh_depotitem di on dh.id=di.HeaderId  and ifnull(di.delete_Flag,'0') !='1'
+        where dh.type='出库'
+        and dh.SubType!='调拨'
+        and di.MaterialId = ${mId} and di.DepotId = ${depotId}
+        and ifnull(dh.delete_Flag,'0') !='1'
+    </select>
+
+    <select id="getDetailList" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
+        select di.*,m.Name MName,m.Model MModel,m.Unit MaterialUnit,m.Color MColor,m.Standard MStandard,m.Mfrs MMfrs,
+        m.OtherField1 MOtherField1,m.OtherField2 MOtherField2,m.OtherField3 MOtherField3,
+        dp1.name DepotName,dp2.name AnotherDepotName, u.id UnitId, u.UName
+        from jsh_depotitem di
+        left join jsh_material m on di.MaterialId=m.id  and ifnull(m.delete_Flag,'0') !='1'
+        left join jsh_unit u on m.UnitId = u.id and ifnull(u.delete_Flag,'0') !='1'
+        left join jsh_depot dp1 on di.DepotId=dp1.id and ifnull(dp1.delete_Flag,'0') !='1'
+        left join jsh_depot dp2 on di.AnotherDepotId=dp2.id and ifnull(dp2.delete_Flag,'0') !='1'
+        where di.HeaderId = ${headerId}
+        and ifnull(di.delete_Flag,'0') !='1'
+        order by di.id asc
+    </select>
+
+    <select id="findByAll" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultByMaterial">
+        select m.id MId, m.Name MName, m.Model MModel, m.Unit MaterialUnit, m.Color MColor,
+        m.PresetPriceOne, m.PriceStrategy, u.UName UName
+        from jsh_depotitem di
+        inner join jsh_material m on di.MaterialId=m.id  and ifnull(m.delete_Flag,'0') !='1'
+        left join jsh_unit u on m.UnitId=u.id and ifnull(u.delete_Flag,'0') !='1'
+        where 1=1
+        <if test="headIds != null">
+            and di.HeaderId in (${headIds})
+        </if>
+        <if test="materialIds != null">
+            and di.MaterialId in (${materialIds})
+        </if>
+        and ifnull(di.delete_Flag,'0') !='1'
+        group by m.id,m.Name, m.Model, m.Unit, m.Color, m.PresetPriceOne, m.PriceStrategy, u.UName
+        <if test="offset != null and rows != null">
+            limit #{offset},#{rows}
+        </if>
+    </select>
+
+    <select id="findByAllCount" resultType="java.lang.Integer">
+        select count(1) from (select m.id
+        from jsh_depotitem di
+        inner join jsh_material m on di.MaterialId=m.id  and ifnull(m.delete_Flag,'0') !='1'
+        where 1=1
+        <if test="headIds != null">
+            and di.HeaderId in (${headIds})
+        </if>
+        <if test="materialIds != null">
+            and di.MaterialId in (${materialIds})
+        </if>
+        and ifnull(di.delete_Flag,'0') !='1'
+        group by m.id) cc
+    </select>
+
+    <select id="findByTypeInIsPrev" resultType="java.math.BigDecimal">
+        select sum(BasicNumber) as BasicNumber from jsh_depotitem di,jsh_depothead dh
+        where di.HeaderId = dh.id and
+        ((dh.type='入库' and di.DepotId=${ProjectId})
+        or
+        (dh.SubType='调拨' and di.AnotherDepotId=${ProjectId})
+        or
+        (di.AnotherDepotId=${ProjectId}))
+        and di.MaterialId = ${MId}
+        and dh.OperTime &lt; '${MonthTime}-01 00:00:00'
+        and ifnull(dh.delete_Flag,'0') !='1'
+        and ifnull(di.delete_Flag,'0') !='1'
+    </select>
+
+    <select id="findByTypeInIsNotPrev" resultType="java.math.BigDecimal">
+        select sum(BasicNumber) as BasicNumber from jsh_depotitem di,jsh_depothead dh
+        where di.HeaderId = dh.id and
+        ((dh.type='入库' and di.DepotId=${ProjectId})
+        or
+        (dh.SubType='调拨' and di.AnotherDepotId=${ProjectId})
+        or
+        (di.AnotherDepotId=${ProjectId}))
+        and di.MaterialId = ${MId}  and dh.OperTime &gt;= '${MonthTime}-01 00:00:00'
+        and dh.OperTime &lt;= '${MonthTime}-31 23:59:59'
+        and ifnull(dh.delete_Flag,'0') !='1'
+        and ifnull(di.delete_Flag,'0') !='1'
+    </select>
+
+    <select id="findByTypeOutIsPrev" resultType="java.math.BigDecimal">
+        select sum(BasicNumber) as BasicNumber from jsh_depotitem di,jsh_depothead dh
+        where di.HeaderId = dh.id
+        and dh.type='出库'
+        and di.DepotId= ${ProjectId}
+        and di.MaterialId = ${MId}
+        and dh.OperTime &lt; '${MonthTime}-01 00:00:00'
+        and ifnull(dh.delete_Flag,'0') !='1'
+        and ifnull(di.delete_Flag,'0') !='1'
+    </select>
+
+    <select id="findByTypeOutIsNotPrev" resultType="java.math.BigDecimal">
+        select sum(BasicNumber) as BasicNumber from jsh_depotitem di,jsh_depothead dh
+        where di.HeaderId = dh.id and dh.type='出库'
+        and di.DepotId= ${ProjectId}
+        and di.MaterialId = ${MId}
+        and dh.OperTime &gt;= '${MonthTime}-01 00:00:00'
+        and dh.OperTime &lt;= '${MonthTime}-31 23:59:59'
+        and ifnull(dh.delete_Flag,'0') !='1'
+        and ifnull(di.delete_Flag,'0') !='1'
+    </select>
+
+
+    <select id="findPriceByTypeInIsPrev" resultType="java.math.BigDecimal">
+        select sum(AllPrice) as AllPrice from jsh_depotitem di,jsh_depothead dh
+        where di.HeaderId = dh.id and
+        ((dh.type='入库' and di.DepotId=${ProjectId})
+        or
+        (dh.SubType='调拨' and di.AnotherDepotId=${ProjectId})
+        or
+        (di.AnotherDepotId=${ProjectId}))
+        and di.MaterialId = ${MId}
+        and dh.OperTime &lt; '${MonthTime}-01 00:00:00'
+        and ifnull(dh.delete_Flag,'0') !='1'
+        and ifnull(di.delete_Flag,'0') !='1'
+    </select>
+
+    <select id="findPriceByTypeInIsNotPrev" resultType="java.math.BigDecimal">
+        select sum(AllPrice) as AllPrice from jsh_depotitem di,jsh_depothead dh
+        where di.HeaderId = dh.id and
+        ((dh.type='入库' and di.DepotId=${ProjectId})
+        or
+        (dh.SubType='调拨' and di.AnotherDepotId=${ProjectId})
+        or
+        (di.AnotherDepotId=${ProjectId}))
+        and di.MaterialId = ${MId}  and dh.OperTime &gt;= '${MonthTime}-01 00:00:00'
+        and dh.OperTime &lt;= '${MonthTime}-31 23:59:59'
+        and ifnull(dh.delete_Flag,'0') !='1'
+        and ifnull(di.delete_Flag,'0') !='1'
+    </select>
+
+    <select id="findPriceByTypeOutIsPrev" resultType="java.math.BigDecimal">
+        select sum(AllPrice) as AllPrice from jsh_depotitem di,jsh_depothead dh
+        where di.HeaderId = dh.id and dh.type='出库'
+        and di.DepotId= ${ProjectId}
+        and di.MaterialId = ${MId}
+        and dh.OperTime &lt; '${MonthTime}-01 00:00:00'
+        and ifnull(dh.delete_Flag,'0') !='1'
+        and ifnull(di.delete_Flag,'0') !='1'
+    </select>
+
+    <select id="findPriceByTypeOutIsNotPrev" resultType="java.math.BigDecimal">
+        select sum(AllPrice) as AllPrice from jsh_depotitem di,jsh_depothead dh
+        where di.HeaderId = dh.id and dh.type='出库'
+        and di.DepotId= ${ProjectId}
+        and di.MaterialId = ${MId}
+        and dh.OperTime &gt;= '${MonthTime}-01 00:00:00'
+        and dh.OperTime &lt;= '${MonthTime}-31 23:59:59'
+        and ifnull(dh.delete_Flag,'0') !='1'
+        and ifnull(di.delete_Flag,'0') !='1'
+    </select>
+
+    <select id="findAssembleIsPrev" resultType="java.math.BigDecimal">
+        select sum(BasicNumber) as BasicNumber from jsh_depotitem di,jsh_depothead dh
+        where di.HeaderId = dh.id
+        and dh.SubType= '${subType}'
+        and di.MType= '${mType}'
+        and di.MaterialId = ${MId}
+        and dh.OperTime &lt; '${MonthTime}-01 00:00:00'
+        and ifnull(dh.delete_Flag,'0') !='1'
+        and ifnull(di.delete_Flag,'0') !='1'
+    </select>
+
+    <select id="findAssembleIsNotPrev" resultType="java.math.BigDecimal">
+        select sum(BasicNumber) as BasicNumber from jsh_depotitem di,jsh_depothead dh
+        where di.HeaderId = dh.id
+        and dh.SubType= '${subType}'
+        and di.MType= '${mType}'
+        and di.MaterialId = ${MId}
+        and dh.OperTime &gt;= '${MonthTime}-01 00:00:00'
+        and dh.OperTime &lt;= '${MonthTime}-31 23:59:59'
+        and ifnull(dh.delete_Flag,'0') !='1'
+        and ifnull(di.delete_Flag,'0') !='1'
+    </select>
+
+    <select id="buyOrSaleNumber" resultType="java.math.BigDecimal">
+        select sum(BasicNumber) as BasicNumber from jsh_depotitem di,jsh_depothead dh
+        where di.HeaderId = dh.id
+        and dh.type='${type}' and dh.subType='${subType}'
+        and di.MaterialId =${MId}
+        and dh.OperTime &gt;= '${MonthTime}-01 00:00:00'
+        and dh.OperTime &lt;= '${MonthTime}-31 23:59:59'
+        and ifnull(dh.delete_Flag,'0') !='1'
+        and ifnull(di.delete_Flag,'0') !='1'
+    </select>
+
+    <select id="buyOrSalePrice" resultType="java.math.BigDecimal">
+        select sum(AllPrice) as AllPrice from jsh_depotitem di,jsh_depothead dh
+        where di.HeaderId = dh.id
+        and dh.type='${type}' and dh.subType='${subType}'
+        and di.MaterialId =${MId}
+        and dh.OperTime &gt;= '${MonthTime}-01 00:00:00'
+        and dh.OperTime &lt;= '${MonthTime}-31 23:59:59'
+        and ifnull(dh.delete_Flag,'0') !='1'
+        and ifnull(di.delete_Flag,'0') !='1'
+    </select>
+
+    <select id="findGiftByTypeIn" resultType="java.math.BigDecimal">
+        select sum(BasicNumber) as BasicNumber from jsh_depotitem di,jsh_depothead dh
+        where di.HeaderId = dh.id
+        and dh.SubType='${subType}'
+        and di.AnotherDepotId=${ProjectId}
+        and di.MaterialId =${MId}
+        and ifnull(dh.delete_Flag,'0') !='1'
+        and ifnull(di.delete_Flag,'0') !='1'
+    </select>
+
+    <select id="findGiftByTypeOut" resultType="java.math.BigDecimal">
+        select sum(BasicNumber) as BasicNumber from jsh_depotitem di,jsh_depothead dh
+        where di.HeaderId = dh.id
+        and dh.SubType='${subType}'
+        and di.DepotId=${ProjectId}
+        and di.MaterialId =${MId}
+        and ifnull(dh.delete_Flag,'0') !='1'
+        and ifnull(di.delete_Flag,'0') !='1'
+    </select>
+
+    <select id="findDepotItemListBydepotheadId"  resultType="com.jsh.erp.datasource.entities.DepotItem">
+        select
+        dep.id,dep.headerId,dep.materialid,dep.munit,dep.opernumber,
+        dep.basicnumber,dep.unitprice,dep.taxunitprice,dep.allprice,dep.remark,
+        dep.img,dep.incidentals,dep.depotid,dep.anotherdepotid,dep.taxrate,
+        dep.taxmoney,dep.taxlastmoney,dep.otherfield1,dep.otherfield2,dep.otherfield3,
+        dep.otherfield4,dep.otherfield5,dep.mtype
+        from jsh_depotitem dep,jsh_material mat
+        where 1=1
+        <if test="depotheadId != null">
+           and dep.HeaderId = #{depotheadId}
+        </if>
+            and dep.materialid=mat.id
+        <if test="enableSerialNumber != null">
+           and mat.enableSerialNumber = #{enableSerialNumber}
+        </if>
+        and ifnull(dep.delete_Flag,'0') !='1'
+        and ifnull(mat.delete_Flag,'0') !='1'
+    </select>
+    <delete id="deleteDepotItemByDepotHeadIds">
+        delete from jsh_depotitem
+        where 1=1
+        and HeaderId in
+        (
+        <foreach collection="depotheadIds" item="depotheadId" separator=",">
+            #{depotheadId}
+        </foreach>
+        )
+    </delete>
+    <update id="batchDeleteDepotItemByDepotHeadIds">
+        update jsh_depotitem
+        set delete_Flag='1'
+        where 1=1
+        and HeaderId in
+        (
+        <foreach collection="depotheadIds" item="depotheadId" separator=",">
+            #{depotheadId}
+        </foreach>
+        )
+    </update>
+    <update id="batchDeleteDepotItemByIds">
+        update jsh_depotitem
+        set delete_Flag='1'
+        where 1=1
+        and id in (
+        <foreach collection="ids" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
+    <select id="getDepotItemListListByDepotIds" resultMap="com.jsh.erp.datasource.mappers.DepotItemMapper.BaseResultMap">
+        select
+        <include refid="com.jsh.erp.datasource.mappers.DepotItemMapper.Base_Column_List" />
+        from jsh_depotitem
+        where 1=1
+        and DepotId in (
+        <foreach collection="depotIds" item="depotId" separator=",">
+            #{depotId}
+        </foreach>
+        )
+        and ifnull(delete_Flag,'0') !='1'
+    </select>
+    <select id="getDepotItemListListByMaterialIds" resultMap="com.jsh.erp.datasource.mappers.DepotItemMapper.BaseResultMap">
+        select
+        <include refid="com.jsh.erp.datasource.mappers.DepotItemMapper.Base_Column_List" />
+        from jsh_depotitem
+        where 1=1
+        and materialId in (
+        <foreach collection="materialIds" item="materialId" separator=",">
+            #{materialId}
+        </foreach>
+        )
+        and ifnull(delete_Flag,'0') !='1'
+    </select>
+
+
+
+    <select id="findStockWarningCount" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultStockWarningCount">
+        SELECT
+        m. NAME MaterialName,
+        m.Model MaterialModel,
+        mc.`Name` categoryName,
+        CONCAT(
+        '(',
+        m.Standard,
+        ')',
+        '(',
+        m.Color,
+        ')'
+        ) AS MaterialOther,
+        m.unit MaterialUnit,
+        ifnull(m.safetystock,0) safetystock,
+        IFNULL(intype.BasicInNumber ,0) BasicInNumber,
+        IFNULL(outtype.BasicOutNumber ,0) BasicOutNumber,
+        (
+        IFNULL(intype.BasicInNumber ,0) - IFNULL(outtype.BasicOutNumber ,0)
+        ) BasicNumber,
+        (IFNULL(intype.BasicInNumber ,0) - IFNULL(outtype.BasicOutNumber ,0) - ifnull(m.safetystock,0)) BasicLinjieNumber
+        FROM
+        jsh_material m
+        LEFT JOIN jsh_materialcategory mc ON mc.Id = m.CategoryId
+        LEFT JOIN (
+        SELECT
+        di.MaterialId,
+        ifnull(sum(BasicNumber), 0) AS BasicInNumber
+        FROM
+        jsh_depothead dh
+        INNER JOIN jsh_depotitem di ON dh.id = di.HeaderId
+        AND ifnull(di.delete_Flag, '0') != '1'
+        WHERE
+        dh.type = '入库'
+        <if test="pid != null">
+            and di.DepotId= ${pid}
+        </if>
+        AND ifnull(dh.delete_Flag, '0') != '1' group by di.MaterialId
+        ) intype ON intype.MaterialId = m.id
+        LEFT JOIN (
+        SELECT
+        di.MaterialId,
+        ifnull(sum(BasicNumber), 0) AS BasicOutNumber
+        FROM
+        jsh_depothead dh
+        INNER JOIN jsh_depotitem di ON dh.id = di.HeaderId
+        AND ifnull(di.delete_Flag, '0') != '1'
+        WHERE
+        dh.type = '出库'
+        AND dh.SubType != '调拨'
+        <if test="pid != null">
+            and di.DepotId= ${pid}
+        </if>
+        AND ifnull(dh.delete_Flag, '0') != '1' group by di.MaterialId
+        ) outtype ON outtype.MaterialId = m.id
+        WHERE
+        1 = 1
+        AND ifnull(m.delete_Flag, '0') != '1'
+        AND intype.BasicInNumber > 0
+        ORDER BY
+        (IFNULL(intype.BasicInNumber ,0) - IFNULL(outtype.BasicOutNumber ,0) - ifnull(m.safetystock,0))
+        <if test="offset != null and rows != null">
+            limit #{offset},#{rows}
+        </if>
+    </select>
+
+    <select id="findStockWarningCountTotal" resultType="java.lang.Integer">
+        select count(1) from
+        jsh_material m
+        LEFT JOIN (
+        SELECT
+        di.MaterialId,
+        ifnull(sum(BasicNumber), 0) AS BasicInNumber
+        FROM
+        jsh_depothead dh
+        INNER JOIN jsh_depotitem di ON dh.id = di.HeaderId
+        AND ifnull(di.delete_Flag, '0') != '1'
+        WHERE
+        dh.type = '入库'
+        <if test="pid != null">
+            and di.DepotId= ${pid}
+        </if>
+        AND ifnull(dh.delete_Flag, '0') != '1' group by di.MaterialId
+        ) intype ON intype.MaterialId = m.id
+
+        WHERE
+        1 = 1
+        AND ifnull(m.delete_Flag, '0') != '1'
+        AND intype.BasicInNumber > 0
+    </select>
+
+    <select id="getFinishNumber" resultType="java.math.BigDecimal">
+        select sum(BasicNumber) from jsh_depotitem
+        where MaterialId=${mid} and headerId
+        in (select id from jsh_depothead where LinkNumber='${linkNumber}')
+    </select>
+</mapper>

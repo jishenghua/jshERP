@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsh.erp.datasource.mappers.LogMapperEx">
+    <resultMap extends="com.jsh.erp.datasource.mappers.LogMapper.BaseResultMap" id="ResultExMap" type="com.jsh.erp.datasource.vo.LogVo4List">
+        <result column="userName" jdbcType="VARCHAR" property="username" />
+    </resultMap>
+
+    <select id="selectByConditionLog" parameterType="com.jsh.erp.datasource.entities.LogExample" resultMap="ResultExMap">
+        select l.*,u.username userName
+        FROM jsh_log l
+        left join jsh_user u on l.userID = u.id and ifnull(u.status,'0') not in('1','2')
+        where 1=1
+        <if test="operation != null">
+            and l.operation like '%${operation}%'
+        </if>
+        <if test="usernameID != null">
+            and l.userID=${usernameID}
+        </if>
+        <if test="clientIp != null">
+            and l.clientIp like '%${clientIp}%'
+        </if>
+        <if test="status != null">
+            and l.status=${status}
+        </if>
+        <if test="beginTime != null">
+            and l.createtime &gt;= '${beginTime}'
+        </if>
+        <if test="endTime != null">
+            and l.createtime &lt;= '${endTime}'
+        </if>
+        <if test="contentdetails != null">
+            and l.contentdetails like '%${contentdetails}%'
+        </if>
+        order by l.createtime desc
+        <if test="offset != null and rows != null">
+            limit #{offset},#{rows}
+        </if>
+    </select>
+    <select id="countsByLog" resultType="java.lang.Long">
+        SELECT
+        COUNT(id)
+        FROM jsh_log
+        WHERE 1=1
+        <if test="operation != null">
+            and operation like '%${operation}%'
+        </if>
+        <if test="usernameID != null">
+            and userID=${usernameID}
+        </if>
+        <if test="clientIp != null">
+            and clientIp like '%${clientIp}%'
+        </if>
+        <if test="status != null">
+            and status = ${status}
+        </if>
+        <if test="beginTime != null"><![CDATA[
+            and createtime >= '${beginTime}'
+        ]]></if>
+        <if test="endTime != null"><![CDATA[
+            and createtime <= '${endTime}'
+        ]]></if>
+        <if test="contentdetails != null">
+            and contentdetails like '%${contentdetails}%'
+        </if>
+    </select>
+</mapper>

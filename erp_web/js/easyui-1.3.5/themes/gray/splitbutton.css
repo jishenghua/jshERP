@@ -1,0 +1,43 @@
+.s-btn-downarrow {
+  display: inline-block;
+  margin: 0 0 0 4px;
+  padding: 0 0 0 1px;
+  width: 14px;
+  height: 16px;
+  line-height: 16px;
+  border-width: 0;
+  border-style: solid;
+  font-size: 12px;
+  _vertical-align: middle;
+}
+a.s-btn-active {
+  background-position: bottom right;
+}
+a.s-btn-active span.l-btn-left {
+  background-position: bottom left;
+}
+a.s-btn-plain-active {
+  background: transparent;
+  padding: 0 5px 0 0;
+  border-width: 1px;
+  border-style: solid;
+  -moz-border-radius: 5px 5px 5px 5px;
+  -webkit-border-radius: 5px 5px 5px 5px;
+  border-radius: 5px 5px 5px 5px;
+}
+.s-btn-downarrow {
+  background: url('images/menu_arrows.png') no-repeat 2px center;
+  border-color: #bfbfbf;
+}
+a:hover.l-btn .s-btn-downarrow,
+a.s-btn-active .s-btn-downarrow,
+a.s-btn-plain-active .s-btn-downarrow {
+  background-position: 1px center;
+  padding: 0;
+  border-width: 0 0 0 1px;
+}
+a.s-btn-plain-active {
+  border-color: #ccc;
+  background-color: #e2e2e2;
+  color: #000000;
+}

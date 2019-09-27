@@ -1,0 +1,87 @@
+/*!
+ * Copyright (c) 2013-Now 华夏erp All rights reserved.
+ * @author jishenghua
+ * @version 2019-09-14
+ */
+.login-page {
+    background: #e3e7ec
+}
+
+.login-page .login-box {
+    width: auto
+}
+
+.login-page .login-logo a {
+    color: #666
+}
+
+.login-page .login-logo small {
+    font-size: 16px
+}
+
+.login-page .login-box-body {
+    width: 360px;
+    margin: auto;
+    padding: 28px;
+    background: #fff;
+    box-shadow: 0 2px 6px #999;
+    border-radius: 5px
+}
+
+.login-page .login-box-body .form-control-feedback {
+    cursor: pointer;
+    pointer-events: auto
+}
+
+.login-page .form-group {
+    margin-top: 5px;
+    margin-bottom: 23px
+}
+
+.login-page .has-feedback .form-control {
+    height: 34px;
+    padding: 4px 10px
+}
+
+.login-page .input-group-btn .btn {
+    height: 34px
+}
+
+.login-page .btn {
+    padding: 5px 10px 4px 10px;
+    font-size: 15px
+}
+
+.login-page .select2-container .select2-selection--single {
+    padding: 6px 12px;
+    height: 34px
+}
+
+.login-page .select2-container--default.select2-container--focus .select2-selection--single {
+    border-color: #3c8dbc
+}
+
+.login-page .select2-container .select2-selection--single .select2-selection__rendered {
+    margin-top: -4px
+}
+
+.login-page .select2-container .select2-selection--single .select2-selection__arrow {
+    top: 1px
+}
+
+.login-page .select2-search--dropdown .select2-search__field {
+    padding: 4px
+}
+
+.login-page .select2-results__option {
+    padding: 6px 12px
+}
+
+.login-page .login-copyright {
+    text-align: center;
+    margin-top: 20px
+}
+
+.login-page .login-copyright, .login-page .login-copyright a {
+    color: #666
+}

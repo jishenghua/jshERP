@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>图片上传前预览</title>
+<link href="imgup.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+::-moz-focus-inner{
+	padding: 0;
+	border: 0;
+}
+.ui_button,
+.ui_fileup {
+	vertical-align: middle;
+	border: 1px solid #ccc;
+	display: inline-block;
+	padding: 5px 10px;
+	background: #FFF;
+	font-size: 12px;
+	*overflow: visible;
+	*display: inline;
+	*zoom: 1;
+}
+.ui_fileup {
+	position: relative;
+	overflow: hidden;
+}
+.ui_fileup input {
+	filter: alpha(opacity=1);
+	position: absolute;
+	background: #fff;
+	font-size: 60px;
+	cursor: default;
+	width: auto;
+	opacity: 0;
+	z-index: 1;
+	left: auto;
+	right: 0;
+	top: 0;
+}
+
+.avataria .cont {
+	text-align: center;
+	min-height: 1%;
+	margin: 25px;
+	width: 302px;
+	_zoom: 1;
+}
+.avataria form {
+	text-align: left;
+	overflow: hidden;
+}
+.avataria .cont:after {
+	content: "";
+	display: block;
+	overflow: hidden;
+	height: 0;
+	clear: both;
+}
+.thumb {
+	float: right;
+	height: 120px;
+	width: 120px;
+}
+.cropaera {
+	clear: both;
+}
+.preview {
+	height: 300px;
+	width: 300px;
+}
+</style>
+</head>
+
+<body>
+<div class="avataria" title="头像上传前预览">
+	<div class="cont">
+		<div class="thumb"></div>
+		<form enctype="application/x-www-form-urlencoded">
+			<div class="ui_fileup"><input type="file" id="file" accept="image/*" onerror="alert('请选择一个图片')">浏览</div>
+			&nbsp;
+			<input type="submit" class="ui_button" value="保存">
+			<input name="crop" type="hidden">
+		</form>
+	</div>
+	<div class="cont">
+		<div id="preview" class="preview"></div>
+	</div>
+</div>
+<script src="jquery-1.8.3.min.js"></script>
+<script src="imagepreview.js"></script>
+<script src="jquery.crop.js"></script>
+<script>
+
+imagepreview(document.getElementById("file"), document.getElementById("preview"), function(info){
+	//alert("文件名:" + info.name + "\r\n图片原始高度:" + info.height + "\r\n图片原始宽度:" + info.width);
+	//这里若return false则不预览图片
+	
+	$("#preview").css({
+		background: "none"
+	});
+
+	//$("#preview").crop( function(e){
+		//$("input[type='hidden']").val([e.top, e.left, e.height, e.width].toString());
+	//}, ".thumb");
+});
+
+</script>
+</body>
+</html>

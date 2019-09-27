@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Binding to Remote Data - jQuery EasyUI Demo</title>
+	<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../demo.css">
+	<script type="text/javascript" src="../../jquery.min.js"></script>
+	<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+</head>
+<body>
+	<h2>Binding to Remote Data</h2>
+	<div class="demo-info" style="margin-bottom:10px">
+		<div class="demo-tip icon-tip"></div>
+		<div>The ComboBox is bound to a remote data.</div>
+	</div>
+	<input class="easyui-combobox" 
+			name="language"
+			data-options="
+					url:'combobox_data1.json',
+					method:'get',
+					valueField:'id',
+					textField:'text',
+					panelHeight:'auto'
+			">
+
+</body>
+</html>

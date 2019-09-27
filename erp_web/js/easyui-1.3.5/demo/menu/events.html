@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Menu Events - jQuery EasyUI Demo</title>
+	<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../demo.css">
+	<script type="text/javascript" src="../../jquery.min.js"></script>
+	<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+</head>
+<body>
+	<h2>Menu Events</h2>
+	<div class="demo-info">
+		<div class="demo-tip icon-tip"></div>
+		<div>Right click on page to display menu and click an item.</div>
+	</div>
+	<div style="margin:10px 0;"></div>
+	<div id="mm" class="easyui-menu" data-options="onClick:menuHandler" style="width:120px;">
+		<div data-options="name:'new'">New</div>
+		<div data-options="name:'save',iconCls:'icon-save'">Save</div>
+		<div data-options="name:'print',iconCls:'icon-print'">Print</div>
+		<div class="menu-sep"></div>
+		<div data-options="name:'exit'">Exit</div>
+	</div>
+	<script>
+		function menuHandler(item){
+			alert(item.name);
+		}
+		$(function(){
+			$(document).bind('contextmenu',function(e){
+				e.preventDefault();
+				$('#mm').menu('show', {
+					left: e.pageX,
+					top: e.pageY
+				});
+			});
+		});
+	</script>
+</body>
+</html>

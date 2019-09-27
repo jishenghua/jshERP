@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Accordion Actions - jQuery EasyUI Demo</title>
+	<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../demo.css">
+	<script type="text/javascript" src="../../jquery.min.js"></script>
+	<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+</head>
+<body>
+	<h2>Accordion Actions</h2>
+	<div class="demo-info">
+		<div class="demo-tip icon-tip"></div>
+		<div>Click the buttons below to add or remove accordion items.</div>
+	</div>
+	<div style="margin:10px 0;">
+		<a href="javascript:void(0)" class="easyui-linkbutton" onclick="selectPanel()">Select</a>
+		<a href="javascript:void(0)" class="easyui-linkbutton" onclick="addPanel()">Add</a>
+		<a href="javascript:void(0)" class="easyui-linkbutton" onclick="removePanel()">Remove</a>
+	</div>
+	<div id="aa" class="easyui-accordion" style="width:500px;height:300px;">
+		<div title="About" data-options="iconCls:'icon-ok'" style="overflow:auto;padding:10px;">
+			<h3 style="color:#0099FF;">Accordion for jQuery</h3>
+			<p>Accordion is a part of easyui framework for jQuery. It lets you define your accordion component on web page more easily.</p>
+		</div>
+	</div>
+	<script type="text/javascript">
+		function selectPanel(){
+			$.messager.prompt('Prompt','Please enter the panel title:',function(s){
+				if (s){
+					$('#aa').accordion('select',s);
+				}
+			});
+		}
+		var idx = 1;
+		function addPanel(){
+			$('#aa').accordion('add',{
+				title:'Title'+idx,
+				content:'<div style="padding:10px">Content'+idx+'</div>'
+			});
+			idx++;
+		}
+		function removePanel(){
+			var pp = $('#aa').accordion('getSelected');
+			if (pp){
+				var index = $('#aa').accordion('getPanelIndex',pp);
+				$('#aa').accordion('remove',index);
+			}
+		}
+	</script>
+</body>
+</html>

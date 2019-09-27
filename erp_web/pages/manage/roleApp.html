@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>角色对应应用</title>
+    <meta charset="utf-8">
+    <!-- 指定以IE8的方式来渲染 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon"/>
+    <script type="text/javascript" src="/js/jquery-1.8.0.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/js/easyui-1.3.5/themes/default/easyui.css"/>
+    <link rel="stylesheet" type="text/css" href="/js/easyui-1.3.5/themes/icon.css"/>
+    <link type="text/css" rel="stylesheet" href="/css/common.css"/>
+    <script type="text/javascript" src="/js/easyui-1.3.5/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="/js/easyui-1.3.5/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="/js/common/common.js"></script>
+</head>
+<body>
+<!-- 数据显示table -->
+<div style="padding-bottom: 10px;">
+    <a id="btnOK" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
+</div>
+<div>
+    <ul id="tt"></ul>
+</div>
+
+<script type="text/javascript">
+    var url_id = getUrlParam('id');  //获取传值id（角色id）
+    var type = "RoleAPP";
+    var url;//定义链接地址
+
+    function GetNode(ctype) {
+        var node = $('#tt').tree('getChecked');
+        var cnodes = '';
+        var pnodes = '';
+
+        var prevNode = ''; //保存上一步所选父节点
+        for (var i = 0; i < node.length; i++) {
+
+            if ($('#tt').tree('isLeaf', node[i].target)) {
+                cnodes += '[' + node[i].id + ']';
+
+                var pnode = $('#tt').tree('getParent', node[i].target); //获取当前节点的父节点
+                if (prevNode != pnode.id) //保证当前父节点与上一次父节点不同
+                {
+                    pnodes += '[' + pnode.id + ']';
+                    prevNode = pnode.id; //保存当前节点
+                }
+            }
+        }
+        //cnodes = cnodes.substring(0, cnodes.length - 1);
+        pnodes = pnodes.substring(0, pnodes.length - 1);
+
+        if (ctype == 'child') {
+            return cnodes;
+        }
+        else {
+            return pnodes
+        }
+        ;
+    };
+
+    $(function () {
+
+        $('#tt').tree({
+            url: '/app/findRoleAPP?UBType=' + type + '&UBKeyId=' + url_id,
+            animate: true,
+            checkbox: true
+        });
+
+
+        $("#btnOK").click(
+            function () {
+                var id = checkRoleAPP();
+                if (!id) {
+                    url = '/userBusiness/add';
+                }
+                else {
+                    url = '/userBusiness/update?id=' + id;
+                }
+                $.messager.confirm("提示","您确定要保存吗？",function(data){
+                    $.ajax({
+                        url: url,
+                        type: "post",
+                        data: {
+                            info: JSON.stringify({
+                                type: type,
+                                keyid: url_id,
+                                value: GetNode('child')
+                            })
+                        },
+                        dataType: "json",
+                        async: false,
+                        success: function (res) {
+                            if(res && res.code === 200) {
+                                self.parent.$.colorbox.close();
+                                $.messager.alert('提示',"操作成功！","info");
+                            }
+                            else {
+                                $.messager.alert('提示',"操作失败！","error");
+                            }
+                        }
+                    });
+                });
+            }
+        );
+
+    });
+
+    //检查记录是否存在
+    function checkRoleAPP() {
+        //表示是否存在 0 = 不存在，存在就返回id
+        var flag = 0;
+        //开始ajax名称检验，是否存在
+        $.ajax({
+            type: "get",
+            url: "/userBusiness/checkIsValueExist",
+            dataType: "json",
+            async: false,
+            data: ({
+                type: type,
+                keyId: url_id
+            }),
+            success: function (res) {
+                if(res.data && res.data.id) {
+                    flag = res.data.id;
+                }
+            },
+            //此处添加错误处理
+            error: function () {
+                $.messager.alert('提示', '检查角色对应应用是否存在异常，请稍后再试！', 'error');
+                return;
+            }
+        });
+        return flag;
+    }
+
+</script>
+</body>
+</html>

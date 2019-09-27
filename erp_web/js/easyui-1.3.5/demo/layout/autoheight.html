@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Auto Height for Layout - jQuery EasyUI Demo</title>
+	<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../demo.css">
+	<script type="text/javascript" src="../../jquery.min.js"></script>
+	<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+</head>
+<body>
+	<h2>Auto Height for Layout</h2>
+	<div class="demo-info">
+		<div class="demo-tip icon-tip"></div>
+		<div>This example shows how to auto adjust layout height after dynamically adding items.</div>
+	</div>
+	<div style="margin:10px 0;">
+		<a href="javascript:void(0)" class="easyui-linkbutton" onclick="addItem()">Add Item</a>
+		<a href="javascript:void(0)" class="easyui-linkbutton" onclick="removeItem()">Remove Item</a>
+	</div>
+	<div id="cc" style="width:700px;height:350px;">
+		<div data-options="region:'north'" style="height:50px"></div>
+		<div data-options="region:'south'" style="height:50px;"></div>
+		<div data-options="region:'west'" style="width:150px;"></div>
+		<div data-options="region:'center'" style="padding:20px">
+			<p>Panel Content.</p>
+			<p>Panel Content.</p>
+			<p>Panel Content.</p>
+			<p>Panel Content.</p>
+			<p>Panel Content.</p>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(function(){
+			$('#cc').layout();
+			setHeight();
+		});
+		
+		function addItem(){
+			$('#cc').layout('panel','center').append('<p>More Panel Content.</p>');
+			setHeight();
+		}
+		
+		function removeItem(){
+			$('#cc').layout('panel','center').find('p:last').remove();
+			setHeight();
+		}
+		
+		function setHeight(){
+			var c = $('#cc');
+			var p = c.layout('panel','center');	// get the center panel
+			var oldHeight = p.panel('panel').outerHeight();
+			p.panel('resize', {height:'auto'});
+			var newHeight = p.panel('panel').outerHeight();
+			c.height(c.height() + newHeight - oldHeight);
+			c.layout('resize');
+		}
+	</script>
+</body>
+</html>

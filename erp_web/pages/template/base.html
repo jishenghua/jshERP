@@ -1,0 +1,144 @@
+{{#if supplierSelect}}
+<div id="supplierDlg" style="width:580px;padding:10px 20px" buttons="#supplierDlgBtn">
+	<form id="supplierFM">
+		<table>
+			<tr>
+				<td style="width: 80px;height: 20px">名称</td>
+				<td style="width: 180px;padding:1px">
+					<input name="supplier" id="supplier" style="width: 160px;height: 20px"/>
+				</td>
+				<td style="width: 60px;height: 20px">联系人</td>
+				<td style="width:180px;padding:1px;">
+					<input name="contacts" id="contacts" style="width: 160px;height: 20px"/>
+				</td>
+			</tr>
+			<tr>
+				<td>手机号码</td>
+				<td style="padding:1px;">
+					<input name="telephone" id="telephone" style="width: 160px;height: 20px"/>
+				</td>
+				<td>电子邮箱</td>
+				<td style="padding:1px">
+					<input name="email" id="email" style="width: 160px;height: 20px"/>
+				</td>
+			</tr>
+			<tr>
+				<td>联系电话</td>
+				<td style="padding:1px;">
+					<input name="phonenum" id="phonenum" style="width: 160px;height: 20px"/>
+				</td>
+				<td>传真</td>
+				<td style="padding:1px">
+					<input name="fax" id="fax" style="width: 160px;height: 20px"/>
+				</td>
+			</tr>
+			<tr>
+				<td>期初应收</td>
+				<td style="padding:1px">
+					<input name="BeginNeedGet" id="BeginNeedGet" type="text" style="width: 160px;height: 20px"/>
+				</td>
+				<td>期初应付</td>
+				<td style="padding:1px">
+					<input name="BeginNeedPay" id="BeginNeedPay" type="text" style="width: 160px;height: 20px"/>
+				</td>
+			</tr>
+			<tr>
+				<td>累计应收</td>
+				<td style="padding:1px">
+					<input name="AllNeedGet" id="AllNeedGet" type="text" style="width: 160px;height: 20px" disabled="true"/>
+				</td>
+				<td>累计应付</td>
+				<td style="padding:1px">
+					<input name="AllNeedPay" id="AllNeedPay" type="text" style="width: 160px;height: 20px" disabled="true"/>
+				</td>
+			</tr>
+			<tr>
+				<td>纳税人识别号</td>
+				<td style="padding:1px">
+					<input name="taxNum" id="taxNum" class="easyui-validatebox" style="width: 160px;height: 20px"/>
+				</td>
+				<td>税率(%)</td>
+				<td style="padding:1px">
+					<input name="taxRate" id="taxRate" class="easyui-numberbox" data-options="validType:'length[1,2]'" style="width: 160px;height: 20px"/>
+				</td>
+			</tr>
+			<tr>
+				<td>开户行</td>
+				<td style="padding:1px">
+					<input name="bankName" id="bankName" class="easyui-validatebox" style="width: 160px;height: 20px"/>
+				</td>
+				<td>账号</td>
+				<td style="padding:1px">
+					<input name="accountNumber" id="accountNumber" class="easyui-validatebox"
+						   style="width: 160px;height: 20px"/>
+				</td>
+			</tr>
+			<tr>
+				<td>地址</td>
+				<td style="padding:1px" colspan="3">
+					<input name="address" id="address" class="easyui-validatebox" style="width: 408px;height: 20px"/>
+				</td>
+			</tr>
+			<tr>
+				<td>备注</td>
+				<td style="padding:1px" colspan="3">
+					<textarea name="description" id="description" rows="2" cols="2" style="width: 408px;"></textarea>
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>
+<div id="supplierDlgBtn">
+	<a href="javascript:void(0)" id="saveSupplier">保存</a>
+	<a href="javascript:void(0)" id="cancelSupplier" onclick="javascript:$('#supplierDlg').dialog('close')">取消</a>
+</div>
+{{/if}}
+
+{{#if depotSelect}}
+<div id="depotDlg" style="width:380px;padding:10px 20px" buttons="#depotDlgBtn">
+	<form id="depotFM">
+		<table>
+			<tr>
+				<td>仓库名称</td>
+				<td style="padding:5px">
+					<input name="name" id="name" style="width: 230px;height: 20px"/>
+				</td>
+			</tr>
+			<tr>
+				<td>仓库地址</td>
+				<td style="padding:5px">
+					<input name="address" id="address" style="width: 230px;height: 20px"/>
+				</td>
+			</tr>
+			<tr>
+				<td>仓储费</td>
+				<td style="padding:5px">
+					<input name="warehousing" id="warehousing" style="width: 175px;height: 20px"/>&nbsp;元/天/KG
+				</td>
+			</tr>
+			<tr>
+				<td>搬运费</td>
+				<td style="padding:5px">
+					<input name="truckage" id="truckage" placeholder="如上下搬运20元,则填写10元" style="width: 215px;height: 20px"/>&nbsp;元
+				</td>
+			</tr>
+			<tr>
+				<td>排序</td>
+				<td style="padding:5px">
+					<input name="sort" id="sort" style="width: 230px;height: 20px"/>
+				</td>
+			</tr>
+			<tr>
+				<td>描述</td>
+				<td style="padding:5px">
+					<textarea name="remark" id="remark" rows="2" cols="2" style="width: 230px;"></textarea>
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>
+<div id="depotDlgBtn">
+	<a href="javascript:void(0)" id="saveDepot">保存</a>
+	<a href="javascript:void(0)" id="cancelDepot" onclick="javascript:$('#depotDlg').dialog('close')">取消</a>
+</div>
+{{/if}}

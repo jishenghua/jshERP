@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>新手引导</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <!-- 指定以IE8的方式来渲染 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" type="text/css" href="/js/easyui-1.3.5/themes/default/easyui.css"/>
+    <link rel="stylesheet" type="text/css" href="/js/easyui-1.3.5/themes/icon.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/user_help.css" />
+    <script type="text/javascript" src="/js/jquery-1.8.0.min.js"></script>
+    <script type="text/javascript" src="/js/easyui-1.3.5/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="/js/easyui-1.3.5/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="/js/common/common.js"></script>
+    <script src="/js/common/jsherp.js"></script>
+</head>
+<body>
+<div id="tt" class="easyui-tabs" data-options="fit:true">
+    <div class="init" title="初始资料" style="padding:20px;">
+        <p class="title">初始资料录入</p>
+        <p  class="content">及时准确的录入商品、客户、供应商、仓库信息与结算账户信息，能够有效的保障经营数据的完善以及后期账务的核算。</p>
+        <hr/>
+        <div class="list">
+            <div class="row">
+                <ul>
+                    <li class="treeview">
+                        <a href="javascript:" data-href="/pages/materials/material.html"
+                           class="addTabPage" title="商品信息">商品信息</a>
+                    </li>
+                    <li class="remark">管理商品信息及商品分类。</li>
+                </ul>
+            </div>
+            <div class="row">
+                <ul>
+                    <li class="treeview">
+                        <a href="javascript:" data-href="/pages/manage/customer.html"
+                           class="addTabPage" title="客户信息">客户信息</a>
+                    </li>
+                    <li class="remark">维护您的客户信息及欠款，新增的客户需要分配给用户才能使用。</li>
+                </ul>
+            </div>
+            <div class="row">
+                <ul>
+                    <li class="treeview">
+                        <a href="javascript:" data-href="/pages/manage/vendor.html"
+                           class="addTabPage" title="供应商信息">供应商信息</a>
+                    </li>
+                    <li class="remark">维护您的供应商信息及欠款。</li>
+                </ul>
+            </div>
+            <div class="row">
+                <ul>
+                    <li class="treeview">
+                        <a href="javascript:" data-href="/pages/manage/depot.html"
+                           class="addTabPage" title="仓库信息">仓库信息</a>
+                    </li>
+                    <li class="remark">可以设置仓库负责人、设为默认仓库，新增的仓库需要分配给用户才能使用。</li>
+                </ul>
+            </div>
+            <div class="row">
+                <ul>
+                    <li class="treeview">
+                        <a href="javascript:" data-href="/pages/manage/account.html"
+                           class="addTabPage" title="结算账户">结算账户</a>
+                    </li>
+                    <li class="remark">管理账户信息及初始余额。</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="purchase" title="采购相关" style="padding:20px;">
+        <p class="title">采购相关</p>
+        <p  class="content">包含采购订单、采购入库、采购退货、进货统计与入库明细等模块</p>
+        <hr/>
+        <div class="list">
+            <div class="row">
+                <ul>
+                    <li class="treeview">
+                        <a href="javascript:" data-href="/pages/materials/purchase_orders_list.html"
+                           class="addTabPage" title="采购订单">采购订单</a>
+                    </li>
+                    <li class="remark">采购订单不涉及入库仓库和付款金额，采购订单可以转采购入库单，但需要先对采购订单进行审核。</li>
+                </ul>
+            </div>
+            <div class="row">
+                <ul>
+                    <li class="treeview">
+                        <a href="javascript:" data-href="/pages/materials/purchase_in_list.html"
+                           class="addTabPage" title="采购入库">采购入库</a>
+                    </li>
+                    <li class="remark">采购入库单可以由采购订单转过来，也可以单独创建。采购入库单据中的仓库列表只显示当前用户有权限的仓库。采购入库单可以使用多账户付款。</li>
+                </ul>
+            </div>
+            <div class="row">
+                <ul>
+                    <li class="treeview">
+                        <a href="javascript:" data-href="/pages/materials/purchase_back_list.html"
+                           class="addTabPage" title="采购退货">采购退货</a>
+                    </li>
+                    <li class="remark">用于采购入库单据的退货。</li>
+                </ul>
+            </div>
+            <div class="row">
+                <ul>
+                    <li class="treeview">
+                        <a href="javascript:" data-href="/pages/reports/buy_in_report.html"
+                           class="addTabPage" title="进货统计">进货统计</a>
+                    </li>
+                    <li class="remark">以采购入库为统计依据，让我们可以清楚地知道，我们一共进了多少货，多少钱的货。</li>
+                </ul>
+            </div>
+            <div class="row">
+                <ul>
+                    <li class="treeview">
+                        <a href="javascript:" data-href="/pages/reports/in_detail.html"
+                           class="addTabPage" title="入库明细">入库明细</a>
+                    </li>
+                    <li class="remark">入库信息列表，可以查看单条信息。</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="sale" title="销售相关" style="padding:20px;">
+        <p class="title">销售相关</p>
+        <p  class="content">包含销售订单、销售入库、销售退货、销售统计与出库明细等模块</p>
+        <hr/>
+        <div class="list">
+            <div class="row">
+                <ul>
+                    <li class="treeview">
+                        <a href="javascript:" data-href="/pages/materials/sale_orders_list.html"
+                           class="addTabPage" title="销售订单">销售订单</a>
+                    </li>
+                    <li class="remark">销售订单不涉及出库仓库和收款金额，销售订单可以转销售出库单，但需要先对销售订单进行审核。</li>
+                </ul>
+            </div>
+            <div class="row">
+                <ul>
+                    <li class="treeview">
+                        <a href="javascript:" data-href="/pages/materials/sale_out_list.html"
+                           class="addTabPage" title="销售出库">销售出库</a>
+                    </li>
+                    <li class="remark">销售出库单可以由销售订单转过来，也可以单独创建。销售出库单据中的仓库列表只显示当前用户有权限的仓库。销售出库单可以使用多账户收款。</li>
+                </ul>
+            </div>
+            <div class="row">
+                <ul>
+                    <li class="treeview">
+                        <a href="javascript:" data-href="/pages/materials/sale_back_list.html"
+                           class="addTabPage" title="销售退货">销售退货</a>
+                    </li>
+                    <li class="remark">用于销售出库单据的退货。</li>
+                </ul>
+            </div>
+            <div class="row">
+                <ul>
+                    <li class="treeview">
+                        <a href="javascript:" data-href="/pages/reports/sale_out_report.html"
+                           class="addTabPage" title="销售统计">销售统计</a>
+                    </li>
+                    <li class="remark">以销售出库为统计依据，让我们可以清楚地知道，我们一共卖了多少货，多少钱的货。</li>
+                </ul>
+            </div>
+            <div class="row">
+                <ul>
+                    <li class="treeview">
+                        <a href="javascript:" data-href="/pages/reports/out_detail.html"
+                           class="addTabPage" title="出库明细">出库明细</a>
+                    </li>
+                    <li class="remark">出库信息列表，可以查看单条信息。</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="stock" title="仓库管理" style="padding:20px;">
+        <p class="title">仓库管理</p>
+        <p  class="content">包含其它入库、其它出库、调拨出库、组装单与拆卸单等模块</p>
+        <hr/>
+        <div class="list">
+            <div class="row">
+                <ul>
+                    <li class="treeview">
+                        <a href="javascript:" data-href="/pages/materials/other_in_list.html"
+                           class="addTabPage" title="其它入库">其它入库</a>
+                    </li>
+                    <li class="remark">用于库存初始化、盘点库存等。</li>
+                </ul>
+            </div>
+            <div class="row">
+                <ul>
+                    <li class="treeview">
+                        <a href="javascript:" data-href="/pages/materials/other_out_list.html"
+                           class="addTabPage" title="其它出库">其它出库</a>
+                    </li>
+                    <li class="remark">用于盘点库存、给商品报废等。</li>
+                </ul>
+            </div>
+            <div class="row">
+                <ul>
+                    <li class="treeview">
+                        <a href="javascript:" data-href="/pages/materials/allocation_out_list.html"
+                           class="addTabPage" title="调拨出库">调拨出库</a>
+                    </li>
+                    <li class="remark">用于两个仓库之间的商品调拨，调拨单会影响库存。</li>
+                </ul>
+            </div>
+            <div class="row">
+                <ul>
+                    <li class="treeview">
+                        <a href="javascript:" data-href="/pages/materials/assemble_list.html"
+                           class="addTabPage" title="组装单">组装单</a>
+                    </li>
+                    <li class="remark">用于将多种商品合并成一个商品，被合并的商品库存减少，合并后的商品库存增加。</li>
+                </ul>
+            </div>
+            <div class="row">
+                <ul>
+                    <li class="treeview">
+                        <a href="javascript:" data-href="/pages/materials/disassemble_list.html"
+                           class="addTabPage" title="拆卸单">拆卸单</a>
+                    </li>
+                    <li class="remark">用于将一个商品拆分成多种商品，被拆分的商品库存增加，拆分后的商品库存减少。</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="financial" title="财务管理" style="padding:20px;">
+        <p class="title">财务管理</p>
+        <p  class="content">包含收入单、支出单、收款单、付款单与转账单等模块</p>
+        <hr/>
+        <div class="list">
+            <div class="row">
+                <ul>
+                    <li class="treeview">
+                        <a href="javascript:" data-href="/pages/financial/item_in.html"
+                           class="addTabPage" title="收入单">收入单</a>
+                    </li>
+                    <li class="remark">收入单主要处理一些销售收入以外的收入如维修服务收入、利息收入、调账收入等。</li>
+                </ul>
+            </div>
+            <div class="row">
+                <ul>
+                    <li class="treeview">
+                        <a href="javascript:" data-href="/pages/financial/item_out.html"
+                           class="addTabPage" title="支出单">支出单</a>
+                    </li>
+                    <li class="remark">支出单主要处理一些进货支出以外的支出如水电支出、房租支出等。</li>
+                </ul>
+            </div>
+            <div class="row">
+                <ul>
+                    <li class="treeview">
+                        <a href="javascript:" data-href="/pages/financial/money_in.html"
+                           class="addTabPage" title="收款单">收款单</a>
+                    </li>
+                    <li class="remark">收款单所收金额只对付款单位的应收应付产生影响，可以在回款统计中进行查看。收款单的优惠金额会对利润产生影响，但不影响付款单位的应收应付。优惠金额计入收入类的收款优惠中。</li>
+                </ul>
+            </div>
+            <div class="row">
+                <ul>
+                    <li class="treeview">
+                        <a href="javascript:" data-href="/pages/financial/money_out.html"
+                           class="addTabPage" title="付款单">付款单</a>
+                    </li>
+                    <li class="remark">付款单的要素和录入原则与“收款单”相同。付款单中优惠金额计入支出类中的付款优惠中，为负值 （因优惠意味着实际少付款）。</li>
+                </ul>
+            </div>
+            <div class="row">
+                <ul>
+                    <li class="treeview">
+                        <a href="javascript:" data-href="/pages/financial/giro.html"
+                           class="addTabPage" title="转账单">转账单</a>
+                    </li>
+                    <li class="remark">转账：本系统的转账是指从一个银行存款账户转入到另一个银行存款账户。</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

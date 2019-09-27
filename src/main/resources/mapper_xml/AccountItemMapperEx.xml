@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsh.erp.datasource.mappers.AccountItemMapperEx">
+
+    <resultMap extends="com.jsh.erp.datasource.mappers.AccountItemMapper.BaseResultMap" id="ResultWithInfoExMap" type="com.jsh.erp.datasource.vo.AccountItemVo4List">
+        <result column="AccountName" jdbcType="VARCHAR" property="accountName" />
+        <result column="InOutItemName" jdbcType="VARCHAR" property="inOutItemName" />
+    </resultMap>
+
+    <select id="selectByConditionAccountItem" parameterType="com.jsh.erp.datasource.entities.AccountItemExample" resultMap="com.jsh.erp.datasource.mappers.AccountItemMapper.BaseResultMap">
+        select *
+        FROM jsh_accountitem
+        where 1=1
+        <if test="name != null">
+            and name like '%${name}%'
+        </if>
+        <if test="type != null">
+            and type=${type}
+        </if>
+        <if test="remark != null">
+            and remark like '%${remark}%'
+        </if>
+        and ifnull(delete_Flag,'0') !='1'
+        <if test="offset != null and rows != null">
+            limit #{offset},#{rows}
+        </if>
+    </select>
+    <select id="countsByAccountItem" resultType="java.lang.Long">
+        SELECT
+        COUNT(id)
+        FROM jsh_accountitem
+        WHERE 1=1
+        <if test="name != null">
+            and name like '%${name}%'
+        </if>
+        <if test="type != null">
+            and type=${type}
+        </if>
+        <if test="remark != null">
+            and remark like '%${remark}%'
+        </if>
+        and ifnull(delete_Flag,'0') !='1'
+    </select>
+
+    <select id="getDetailList" parameterType="com.jsh.erp.datasource.entities.AccountItemExample" resultMap="ResultWithInfoExMap">
+        select ai.*,a.Name AccountName,ioi.Name InOutItemName
+        from jsh_accountitem ai left join jsh_account a on ai.AccountId=a.id and ifnull(a.delete_Flag,'0') !='1'
+        left join jsh_inoutitem ioi on ai.InOutItemId = ioi.id and ifnull(ioi.delete_Flag,'0') !='1'
+        where ai.HeaderId = ${headerId}
+        and ifnull(ai.delete_Flag,'0') !='1'
+        order by ai.id asc
+    </select>
+    <update id="batchDeleteAccountItemByIds">
+        update jsh_accountitem
+        set delete_Flag='1'
+        where 1=1
+        and id in (
+        <foreach collection="ids" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
+    <select id="getAccountItemListByAccountIds" resultMap="com.jsh.erp.datasource.mappers.AccountItemMapper.BaseResultMap">
+        select
+        <include refid="com.jsh.erp.datasource.mappers.AccountItemMapper.Base_Column_List" />
+        from jsh_accountitem
+        where 1=1
+        and accountId in (
+        <foreach collection="accountIds" item="accountId" separator=",">
+            #{accountId}
+        </foreach>
+        )
+        and ifnull(delete_Flag,'0') !='1'
+    </select>
+    <select id="getAccountItemListByHeaderIds" resultMap="com.jsh.erp.datasource.mappers.AccountItemMapper.BaseResultMap">
+        select
+        <include refid="com.jsh.erp.datasource.mappers.AccountItemMapper.Base_Column_List" />
+        from jsh_accountitem
+        where 1=1
+        and headerId in (
+        <foreach collection="headerIds" item="headerId" separator=",">
+            #{headerId}
+        </foreach>
+        )
+        and ifnull(delete_Flag,'0') !='1'
+    </select>
+    <select id="getAccountItemListByInOutItemIds" resultMap="com.jsh.erp.datasource.mappers.AccountItemMapper.BaseResultMap">
+        select
+        <include refid="com.jsh.erp.datasource.mappers.AccountItemMapper.Base_Column_List" />
+        from jsh_accountitem
+        where 1=1
+        and inOutItemId in (
+        <foreach collection="inOutItemIds" item="inOutItemId" separator=",">
+            #{inOutItemId}
+        </foreach>
+        )
+        and ifnull(delete_Flag,'0') !='1'
+    </select>
+</mapper>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsh.erp.datasource.mappers.OrganizationMapperEx">
+
+    <resultMap id="BaseTreeResultMap" type="com.jsh.erp.datasource.vo.TreeNode">
+        <result column="id" property="id"/>
+        <result column="org_abr" property="text"/>
+        <result column="org_no" property="attributes"/>
+        <collection column="{currentId=currentId,org_no=org_no}" property="children" javaType="java.util.ArrayList"
+                    ofType="com.jsh.erp.datasource.vo.TreeNode" select="getNextNodeTree"/>
+    </resultMap>
+
+    <resultMap id="NextTreeResultMap" type="com.jsh.erp.datasource.vo.TreeNode">
+        <result column="id" property="id"/>
+        <result column="org_abr" property="text"/>
+        <result column="org_no" property="attributes"/>
+        <collection column="{currentId=currentId,org_no=org_no}" property="children" javaType="java.util.ArrayList"
+                    ofType="com.jsh.erp.datasource.vo.TreeNode" select="getNextNodeTree"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, org_abr,org_no
+    </sql>
+
+    <select id="getNextNodeTree" resultMap="NextTreeResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>,#{currentId} as currentId
+        FROM jsh_organization
+        WHERE org_parent_no = #{org_no}
+        <if test="currentId != null">
+            and id !=#{currentId}
+        </if>
+        and ifnull(org_stcd,'0') !='5'
+        order by sort asc
+    </select>
+
+    <select id="getNodeTree" resultMap="BaseTreeResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>,#{currentId} as currentId
+        FROM jsh_organization
+        WHERE org_parent_no = -1
+        <if test="currentId != null">
+            and id !=#{currentId}
+        </if>
+        and ifnull(org_stcd,'0') !='5'
+        order by sort asc
+    </select>
+    <insert id="addOrganization" parameterType="com.jsh.erp.datasource.entities.Organization"
+            useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into jsh_organization
+        (org_no, org_full_name,
+      org_abr, org_tpcd, org_stcd,
+      org_parent_no, sort, remark,
+      create_time, creator, update_time,
+      updater, org_create_time, org_stop_time)
+        values
+        (#{orgNo,jdbcType=VARCHAR}, #{orgFullName,jdbcType=VARCHAR},
+      #{orgAbr,jdbcType=VARCHAR}, #{orgTpcd,jdbcType=VARCHAR}, #{orgStcd,jdbcType=CHAR},
+      #{orgParentNo,jdbcType=VARCHAR}, #{sort,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},
+      #{createTime,jdbcType=TIMESTAMP}, #{creator,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP},
+      #{updater,jdbcType=BIGINT}, #{orgCreateTime,jdbcType=TIMESTAMP}, #{orgStopTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+    <update id="batchDeleteOrganizationByIds">
+        update jsh_organization
+        set update_Time=#{updateTime},updater=#{updater},org_stcd='5'
+        where id in (
+        <foreach collection="ids" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
+    <update id="editOrganization">
+      update jsh_organization
+      set update_time=#{updateTime},updater=#{updater},
+      org_no = #{orgNo},org_full_name = #{orgFullName},
+      org_abr = #{orgAbr},org_tpcd = #{orgTpcd},
+      org_stcd = #{orgStcd},org_parent_no = #{orgParentNo},
+      sort = #{sort},remark = #{remark},
+      org_create_time = #{orgCreateTime},org_stop_time = #{orgStopTime}
+      where id =#{id}
+    </update>
+
+    <select id="getOrganizationRootByIds" resultMap="com.jsh.erp.datasource.mappers.OrganizationMapper.BaseResultMap">
+        select * from  jsh_organization
+        where
+        1=1
+        and ifnull(org_stcd,'0') !='5'
+        and org_parent_no='-1'
+        and org_abr='根机构'
+        and id in (
+        <foreach collection="ids" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </select>
+
+</mapper>

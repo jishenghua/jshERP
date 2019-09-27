@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>商品信息选择</title>
+    <meta charset="utf-8">
+    <!-- 指定以IE8的方式来渲染 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon"/>
+    <script type="text/javascript" src="/js/jquery-1.8.0.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/js/easyui-1.3.5/themes/default/easyui.css"/>
+    <link rel="stylesheet" type="text/css" href="/js/easyui-1.3.5/themes/icon.css"/>
+    <link type="text/css" rel="stylesheet" href="/css/common.css"/>
+    <link type="text/css" rel="stylesheet" href="/css/material.css"/>
+    <script type="text/javascript" src="/js/easyui-1.3.5/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="/js/easyui-1.3.5/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="/js/common/outlook_in.js"></script>
+    <script type="text/javascript" src="/js/common/common.js"></script>
+</head>
+<body>
+<!-- 数据显示table -->
+<div id="tableForSelectPanel" class="easyui-panel" data-options="fit:true" style="padding:1px;top:300px;" title="商品列表" iconCls="icon-list"
+     collapsible="true" closable="false">
+    <table id="searchForSelectTable">
+        <tr>
+            <td>品名：</td>
+            <td>
+                <input name="searchForSelectName" id="searchForSelectName" style="width:80px;"/>
+            </td>
+            <td>&nbsp;</td>
+            <td>型号：</td>
+            <td>
+                <input name="searchForSelectModel" id="searchForSelectModel" style="width:80px;"/>
+            </td>
+            <td>&nbsp;</td>
+            <td>
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchForSelectBtn">查询</a>&nbsp;&nbsp;
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-redo" id="searchForSelectResetBtn">重置</a>
+            </td>
+        </tr>
+    </table>
+    <table id="tableForSelectData" style="top:300px;border-bottom-color:#FFFFFF"></table>
+</div>
+
+<div id="materialDetailListDlg" class="easyui-dialog" style="width:900px;height:500px;padding:10px 20px" closed="true"
+     modal="true" collapsible="false" closable="true">
+    <table id="materialTableData" style="top:50px;border-bottom-color:#FFFFFF"></table>
+</div>
+
+    <script type="text/javascript">
+        var setCategoryId = "1";
+        var cid = 1;
+        //初始化界面
+        $(function () {
+            //初始化系统基础信息
+            initTableData();
+            ininPager();
+        });
+
+
+        //初始化表格数据
+        function initTableData() {
+            //改变宽度和高度
+            $("#searchForSelectPanel").panel({width: webW/2-70});
+            $("#tableForSelectPanel").panel({width: webW/2-70});
+            $('#tableForSelectData').datagrid({
+                //title:'商品列表',
+                //iconCls:'icon-save',
+                //width:700,
+                height: heightInfo,
+                nowrap: false,
+                rownumbers: false,
+                //动画效果
+                animate: false,
+                //选中单行
+                singleSelect: true,
+                collapsible: false,
+                selectOnCheck: false,
+                //fitColumns:true,
+                //单击行是否选中
+                //checkOnSelect : false,
+                pagination: true,
+                //交替出现背景
+                striped: true,
+                //loadFilter: pagerFilter,
+                pageSize: initPageSize,
+                pageList: initPageNum,
+                columns: [[
+                    {field: 'id', width: 35, align: "center", hidden: true},
+                    {title: '品名', field: 'name', width: 150},
+                    {title: '型号', field: 'model', width: 100},
+                    {title: '类别', field: 'categoryName', width: 130},
+                    {title: '单位', field: 'unit', width: 60}
+                ]],
+                toolbar: [
+                ],
+                onLoadError: function () {
+                    $.messager.alert('页面加载提示', '页面加载异常，请稍后再试！', 'error');
+                    return;
+                },
+                onDblClickRow : function(rowIndex, rowData){
+                    var selectType=$("#selectType").val();
+                    console.log(rowData);
+                    if(selectType=="lookForSelectMaterial"){
+                        //单个添加序列号时选择
+                        $("#materialId").val(rowData.id);
+                        $("#materialName").val(rowData.name);
+                    }else if(selectType=="batLookForSelectMaterial"){
+                        //批量添加序列号时选择
+                        $("#batAddMaterialName").val(rowData.name);
+
+                    }
+                    //关闭掉dialog
+                    $("#forSelectMaterialDlg").dialog('close');
+                }
+            });
+            dgResize();
+            showMaterialDetails(1, initPageSize);
+        }
+
+        //初始化键盘enter事件
+        $(document).keydown(function (event) {
+            //兼容 IE和firefox 事件
+            var e = window.event || event;
+            var k = e.keyCode || e.which || e.charCode;
+            //兼容 IE,firefox 兼容
+            var obj = e.srcElement ? e.srcElement : e.target;
+            //绑定键盘事件为 id是指定的输入框才可以触发键盘事件 13键盘事件 ---遗留问题 enter键效验 对话框会关闭问题
+            if (k == "13" && (obj.id == "CategoryLevel" || obj.id == "Name")) {
+                $("#saveMaterial").click();
+            }
+            //搜索按钮添加快捷键
+            if (k == "13" && (obj.id == "searchCategoryId" || (obj.id == "searchName"))) {
+                $("#searchForSelectBtn").click();
+            }
+        });
+
+        //分页信息处理
+        function ininPager() {
+            try {
+                var opts = $("#tableForSelectData").datagrid('options');
+                var pager = $("#tableForSelectData").datagrid('getPager');
+                pager.pagination({
+                    onSelectPage: function (pageNum, pageSize) {
+                        opts.pageNumber = pageNum;
+                        opts.pageSize = pageSize;
+                        pager.pagination('refresh',
+                            {
+                                pageNumber: pageNum,
+                                pageSize: pageSize
+                            });
+                        showMaterialDetails(pageNum, pageSize);
+                    }
+                });
+            }
+            catch (e) {
+                $.messager.alert('异常处理提示', "分页信息异常 :  " + e.name + ": " + e.message, 'error');
+            }
+        }
+        //搜索处理
+        $("#searchForSelectBtn").unbind().bind({
+            click: function () {
+                showMaterialDetails(1, initPageSize);
+                var opts = $("#tableForSelectData").datagrid('options');
+                var pager = $("#tableForSelectData").datagrid('getPager');
+                opts.pageNumber = 1;
+                opts.pageSize = initPageSize;
+                pager.pagination('refresh', {
+                    pageNumber: 1,
+                    pageSize: initPageSize
+                });
+            }
+        });
+
+
+        function showMaterialDetails(pageNo, pageSize) {
+            var name = $.trim($("#searchForSelectName").val());
+            var model = $.trim($("#searchForSelectModel").val());
+            if (setCategoryId != "1") {
+                cid = 2;
+            }
+            else {
+                cid = 1;
+            }
+            $.ajax({
+                type: "get",
+                url: "/material/getMaterialEnableSerialNumberList",
+                dataType: "json",
+                data: ({
+                    search: JSON.stringify({
+                        name: name,
+                        model: model
+                    }),
+                    currentPage: pageNo,
+                    pageSize: pageSize
+                }),
+                success: function (res) {
+                    if(res && res.code === 200){
+                        if(res.data && res.data.page) {
+                            $("#tableForSelectData").datagrid('loadData', res.data.page);
+                        }
+                    }
+                },
+                //此处添加错误处理
+                error: function () {
+                    $.messager.alert('查询提示', '查询数据后台异常，请稍后再试！', 'error');
+                    return;
+                }
+            });
+        }
+
+        //重置按钮
+        $("#searchForSelectResetBtn").unbind().bind({
+            click: function () {
+                $("#searchForSelectName").val("");
+                setCategoryId = "1";
+                //加载完以后重新初始化
+                $("#searchForSelectBtn").click();
+            }
+        });
+
+
+
+    </script>
+</body>
+</html>

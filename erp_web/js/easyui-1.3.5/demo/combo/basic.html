@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Basic Combo - jQuery EasyUI Demo</title>
+	<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../demo.css">
+	<script type="text/javascript" src="../../jquery.min.js"></script>
+	<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+</head>
+<body>
+	<h2>Basic Combo</h2>
+	<div class="demo-info" style="margin-bottom:10px">
+		<div class="demo-tip icon-tip"></div>
+		<div>Click the right arrow button to show drop down panel that can be filled with any content.</div>
+	</div>
+	<select id="cc" style="width:150px"></select>
+	<div id="sp">
+		<div style="color:#99BBE8;background:#fafafa;padding:5px;">Select a language</div>
+		<input type="radio" name="lang" value="01"><span>Java</span><br/>
+		<input type="radio" name="lang" value="02"><span>C#</span><br/>
+		<input type="radio" name="lang" value="03"><span>Ruby</span><br/>
+		<input type="radio" name="lang" value="04"><span>Basic</span><br/>
+		<input type="radio" name="lang" value="05"><span>Fortran</span>
+	</div>
+	<script type="text/javascript">
+		$(function(){
+			$('#cc').combo({
+				required:true,
+				editable:false
+			});
+			$('#sp').appendTo($('#cc').combo('panel'));
+			$('#sp input').click(function(){
+				var v = $(this).val();
+				var s = $(this).next('span').text();
+				$('#cc').combo('setValue', v).combo('setText', s).combo('hidePanel');
+			});
+		});
+	</script>
+</body>
+</html>

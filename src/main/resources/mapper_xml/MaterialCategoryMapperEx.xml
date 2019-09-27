@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsh.erp.datasource.mappers.MaterialCategoryMapperEx">
+    <select id="selectByConditionMaterialCategory" parameterType="com.jsh.erp.datasource.entities.MaterialCategoryExample" resultMap="com.jsh.erp.datasource.mappers.MaterialCategoryMapper.BaseResultMap">
+        select *
+        FROM jsh_materialcategory
+        where 1=1
+        and ifnull(status,'0') !='2'
+        <if test="name != null">
+            and name like '%${name}%'
+        </if>
+        <if test="parentId != null">
+            and parentId = ${parentId}
+        </if>
+        and Id !=1
+        <if test="offset != null and rows != null">
+            limit #{offset},#{rows}
+        </if>
+    </select>
+    <select id="countsByMaterialCategory" resultType="java.lang.Long">
+        SELECT
+        COUNT(id)
+        FROM jsh_materialcategory
+        WHERE 1=1
+        and ifnull(status,'0') !='2'
+        <if test="name != null">
+            and name like '%${name}%'
+        </if>
+        <if test="parentId != null">
+            and parentId = ${parentId}
+        </if>
+        and Id !=1
+    </select>
+
+    <resultMap id="BaseTreeResultMap" type="com.jsh.erp.datasource.vo.TreeNode">
+        <result column="id" property="id"/>
+        <result column="name" property="text"/>
+        <collection column="{currentId=currentId,id=id}" property="children" javaType="java.util.ArrayList"
+                    ofType="com.jsh.erp.datasource.vo.TreeNode" select="getNextNodeTree"/>
+    </resultMap>
+
+    <resultMap id="NextTreeResultMap" type="com.jsh.erp.datasource.vo.TreeNode">
+        <result column="id" property="id"/>
+        <result column="name" property="text"/>
+        <collection column="{currentId=currentId,id=id}" property="children" javaType="java.util.ArrayList"
+                    ofType="com.jsh.erp.datasource.vo.TreeNode" select="getNextNodeTree"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, name
+    </sql>
+
+    <select id="getNextNodeTree" resultMap="NextTreeResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>,#{currentId} as currentId
+        FROM jsh_materialcategory
+        WHERE ParentId = #{id}
+        <if test="currentId != null">
+            and id !=#{currentId}
+        </if>
+        and ifnull(status,'0') !='2'
+        order by sort asc
+    </select>
+
+    <select id="getNodeTree" resultMap="BaseTreeResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>,#{currentId} as currentId
+        FROM jsh_materialcategory
+        WHERE ParentId = -1
+        and ifnull(status,'0') !='2'
+        <if test="currentId != null">
+            and id !=#{currentId}
+        </if>
+        order by sort asc
+    </select>
+    <insert id="addMaterialCategory" parameterType="com.jsh.erp.datasource.entities.MaterialCategory"
+            useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+       insert into jsh_materialcategory
+        (Name, CategoryLevel, ParentId, sort,status,serial_no,remark,
+        create_Time, creator,update_Time, updater)
+        values
+        (#{name},#{categorylevel},#{parentid},#{sort},#{status},#{serialNo},#{remark},
+        #{createTime},#{creator},#{updateTime},#{updater}
+        )
+    </insert>
+    <update id="batchDeleteMaterialCategoryByIds">
+       update jsh_materialcategory
+       set update_Time=#{updateTime},updater=#{updater},status='2'
+       where id in (
+        <foreach collection="ids" item="id" separator=",">
+            #{id}
+        </foreach>
+       )
+    </update>
+    <update id="editMaterialCategory">
+       update jsh_materialcategory
+       set update_Time=#{updateTime},updater=#{updater},
+        ParentId=#{parentid},sort=#{sort},serial_no=#{serialNo},
+        name=#{name},remark=#{remark}
+       where id =#{id}
+    </update>
+    <select  id="getMaterialCategoryBySerialNo" resultMap="com.jsh.erp.datasource.mappers.MaterialCategoryMapper.BaseResultMap">
+        select
+        <include refid="com.jsh.erp.datasource.mappers.MaterialCategoryMapper.Base_Column_List"/>
+        FROM jsh_materialcategory
+        where 1=1
+        and serial_no=#{serialNo}
+        and ifnull(status,'0') !='2'
+    </select>
+    <select id="getMaterialCategoryListByCategoryIds"  resultMap="com.jsh.erp.datasource.mappers.MaterialCategoryMapper.BaseResultMap">
+        select
+        <include refid="com.jsh.erp.datasource.mappers.MaterialCategoryMapper.Base_Column_List" />
+        from jsh_materialcategory
+        where 1=1
+        and parentId in (
+        <foreach collection="parentIds" item="parentId" separator=",">
+            #{parentId}
+        </foreach>
+        )
+        and ifnull(status,'0') !='2'
+    </select>
+
+</mapper>

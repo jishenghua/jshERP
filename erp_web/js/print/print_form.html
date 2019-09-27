@@ -1,0 +1,35 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>数据打印</title>
+    <link rel="stylesheet" type="text/css" href="/js/easyui-1.3.5/themes/default/easyui.css"/>
+    <link rel="stylesheet" type="text/css" href="/js/easyui-1.3.5/themes/icon.css"/>
+    <script src="/js/jquery-1.8.0.min.js"></script>
+    <script src="/js/easyui-1.3.5/jquery.easyui.min.js"></script>
+    <script src="/js/easyui-1.3.5/locale/easyui-lang-zh_CN.js"></script>
+    <style type="text/css">
+        body{background:white;margin:0px;padding:0px;font-size:13px;text-align:left;}
+        .pb th{font-weight:bold;text-align:center;border:1px solid #333333;padding:2px;}
+        .pb td{border:1px solid #333333;padding:2px;}
+        #dlg-buttons-show {
+            visibility: hidden;
+        }
+　　</style>
+</head>
+<body>
+    <script type="text/javascript">
+        var tableString = localStorage.getItem("tableString");
+        document.write(tableString);
+        var rowLen = $(".datagrid .datagrid-view2 .datagrid-body .datagrid-row").length;
+        if(rowLen > 7) {
+            var allHeight = (rowLen+2)*25;
+            var rowHeight = rowLen*25;
+            $(".datagrid .datagrid-wrap").height(allHeight);
+            $(".datagrid .datagrid-view").height(allHeight);
+            $(".datagrid .datagrid-view1 .datagrid-body").height(rowHeight);
+            $(".datagrid .datagrid-view2 .datagrid-body").height(rowHeight);
+        }
+        window.print();
+    </script>
+</body>
+</html>

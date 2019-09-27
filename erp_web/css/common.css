@@ -1,0 +1,57 @@
+<!--页面展示特殊要求-->
+.datagrid-body,.datagrid-footer,.datagrid-pager ,.datagrid-view {
+	background-color:#EAF2FD;
+}
+
+.easyui-dialog .fitem label{
+	width:60px;
+	float:left;
+	padding:5px;
+}
+
+#tablePanel .action-show {
+	background: url('../js/easyui-1.3.5/themes/icons/list.png') no-repeat left center;
+}
+
+#tablePanel .action-edit {
+	background: url('../js/easyui-1.3.5/themes/icons/pencil.png') no-repeat left center;
+	padding: 0 8px 0 20px;
+}
+
+#tablePanel .action-delete {
+	background: url('../js/easyui-1.3.5/themes/icons/edit_remove.png') no-repeat left center;
+	padding-left: 20px;
+}
+
+#tablePanel #searchTable {
+	height: 40px;
+	padding: 5px;
+}
+
+.system-config {
+	padding: 5px;
+	font-size: 13px;
+}
+
+.system-config td{
+	padding: 10px 0px 10px 10px;
+
+}
+
+#accountDetailListDlg .n-link{
+	color:blue;
+	text-decoration:underline;
+	cursor:pointer;
+}
+
+#tablePanel .n-link{
+	color:blue;
+	text-decoration:underline;
+	cursor:pointer;
+}
+
+#materialDetailListDlg .n-link{
+	color:blue;
+	text-decoration:underline;
+	cursor:pointer;
+}

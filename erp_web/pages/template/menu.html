@@ -1,0 +1,25 @@
+{{#menu}}
+	{{#if children}}
+		<li class="treeview">
+			<a href="javascript:" data-href="blank" class="addTabPage" title="{{text}}" data-code="{{id}}">
+				<i class="fa fa-fw {{icon}}"></i>
+				<span>{{text}}</span>
+				<span class="pull-right-container">
+					<i class="fa fa-angle-left pull-right"></i>
+				</span>
+			</a>
+			<ul class="treeview-menu">
+				{{#each children}}
+				<li class="treeview">
+					<a href="javascript:" data-href="{{url}}" class="addTabPage" title="{{text}}"
+					   data-code="{{id}}">
+						<i class="fa fa-fw {{icon}}"></i>
+						<span>{{text}}</span>
+					</a>
+				</li>
+				{{/each}}
+			</ul>
+		</li>
+	{{/if}}
+{{/menu}}
+

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>DataGrid Cell Style - jQuery EasyUI Demo</title>
+	<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../demo.css">
+	<script type="text/javascript" src="../../jquery.min.js"></script>
+	<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+</head>
+<body>
+	<h2>DataGrid Cell Style</h2>
+	<div class="demo-info">
+		<div class="demo-tip icon-tip"></div>
+		<div>The cells which listprice value is less than 30 are highlighted.</div>
+	</div>
+	<div style="margin:10px 0;"></div>
+	<table class="easyui-datagrid" title="DataGrid Cell Style" style="width:700px;height:250px"
+			data-options="
+				singleSelect: true,
+				iconCls: 'icon-save',
+				url: 'datagrid_data1.json',
+				method: 'get'
+			">
+		<thead>
+			<tr>
+				<th data-options="field:'itemid',width:80">Item ID</th>
+				<th data-options="field:'productid',width:100">Product</th>
+				<th data-options="field:'listprice',width:80,align:'right',styler:cellStyler">List Price</th>
+				<th data-options="field:'unitcost',width:80,align:'right'">Unit Cost</th>
+				<th data-options="field:'attr1',width:250">Attribute</th>
+				<th data-options="field:'status',width:60,align:'center'">Status</th>
+			</tr>
+		</thead>
+	</table>
+	<script type="text/javascript">
+		function cellStyler(value,row,index){
+			if (value < 30){
+				return 'background-color:#ffee00;color:red;';
+			}
+		}
+	</script>
+</body>
+</html>

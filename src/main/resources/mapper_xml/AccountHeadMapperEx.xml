@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsh.erp.datasource.mappers.AccountHeadMapperEx">
+
+    <resultMap extends="com.jsh.erp.datasource.mappers.AccountHeadMapper.BaseResultMap" id="ResultMapEx" type="com.jsh.erp.datasource.entities.AccountHeadVo4ListEx">
+        <result column="OrganName" jdbcType="VARCHAR" property="organname" />
+        <result column="HandsPersonName" jdbcType="VARCHAR" property="handspersonname" />
+        <result column="AccountName" jdbcType="VARCHAR" property="accountname" />
+    </resultMap>
+
+    <select id="selectByConditionAccountHead" parameterType="com.jsh.erp.datasource.entities.AccountHeadExample" resultMap="ResultMapEx">
+        select ah.*, s.supplier OrganName, p.Name HandsPersonName, a.Name AccountName
+        from jsh_accounthead ah
+        left join jsh_supplier s on ah.OrganId=s.id and ifnull(s.delete_Flag,'0') !='1'
+        left join jsh_person p on ah.HandsPersonId=p.id and ifnull(p.delete_Flag,'0') !='1'
+        left join jsh_account a on ah.AccountId=a.id and ifnull(a.delete_Flag,'0') !='1'
+        where 1=1
+        <if test="billNo != null">
+            and ah.BillNo like '%${billNo}%'
+        </if>
+        <if test="type != null">
+            and ah.Type='${type}'
+        </if>
+        <if test="beginTime != null">
+            and ah.BillTime &gt;= '${beginTime}'
+        </if>
+        <if test="endTime != null">
+            and ah.BillTime &lt;= '${endTime}'
+        </if>
+        and ifnull(ah.delete_Flag,'0') !='1'
+        order by ah.Id desc
+        <if test="offset != null and rows != null">
+            limit #{offset},#{rows}
+        </if>
+    </select>
+
+
+    <select id="countsByAccountHead" resultType="java.lang.Long">
+        SELECT
+        COUNT(id)
+        FROM jsh_accounthead
+        WHERE 1=1
+        <if test="billNo != null">
+            and BillNo like '%${billNo}%'
+        </if>
+        <if test="type != null">
+            and Type='${type}'
+        </if>
+        <if test="beginTime != null">
+            and BillTime &gt;= '${beginTime}'
+        </if>
+        <if test="endTime != null">
+            and BillTime &lt;= '${endTime}'
+        </if>
+        and ifnull(delete_Flag,'0') !='1'
+    </select>
+
+    <select id="getMaxId" resultType="java.lang.Long">
+        select max(Id) as Id from jsh_accounthead
+    </select>
+
+    <select id="findAllMoney" resultType="java.math.BigDecimal">
+        select sum(${modeName}) as allMoney from jsh_accounthead
+        where Type='${type}'
+        and OrganId =${supplierId} and BillTime <![CDATA[ <='${endTime}']]>
+        and ifnull(delete_Flag,'0') !='1'
+    </select>
+
+    <select id="getDetailByNumber" parameterType="com.jsh.erp.datasource.entities.AccountHeadExample" resultMap="ResultMapEx">
+        select ah.*, s.supplier OrganName, p.Name HandsPersonName, a.Name AccountName
+        from jsh_accounthead ah
+        left join jsh_supplier s on ah.OrganId=s.id and ifnull(s.delete_Flag,'0') !='1'
+        left join jsh_person p on ah.HandsPersonId=p.id and ifnull(p.delete_Flag,'0') !='1'
+        left join jsh_account a on ah.AccountId=a.id and ifnull(a.delete_Flag,'0') !='1'
+        where 1=1
+        <if test="billNo != null">
+            and ah.BillNo = '${billNo}'
+        </if>
+        and ifnull(ah.delete_Flag,'0') !='1'
+    </select>
+    <update id="batchDeleteAccountHeadByIds">
+        update jsh_accounthead
+        set delete_Flag='1'
+        where 1=1
+        and id in (
+        <foreach collection="ids" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
+    <select id="getAccountHeadListByAccountIds"  resultMap="com.jsh.erp.datasource.mappers.AccountHeadMapper.BaseResultMap">
+        select
+        <include refid="com.jsh.erp.datasource.mappers.AccountHeadMapper.Base_Column_List" />
+        from jsh_accounthead
+        where 1=1
+        and accountId in (
+        <foreach collection="accountIds" item="accountId" separator=",">
+            #{accountId}
+        </foreach>
+        )
+        and ifnull(delete_Flag,'0') !='1'
+    </select>
+    <select id="getAccountHeadListByOrganIds"  resultMap="com.jsh.erp.datasource.mappers.AccountHeadMapper.BaseResultMap">
+        select
+        <include refid="com.jsh.erp.datasource.mappers.AccountHeadMapper.Base_Column_List" />
+        from jsh_accounthead
+        where 1=1
+        and organId in (
+        <foreach collection="organIds" item="organId" separator=",">
+            #{organId}
+        </foreach>
+        )
+        and ifnull(delete_Flag,'0') !='1'
+    </select>
+    <select id="getAccountHeadListByHandsPersonIds"  resultMap="com.jsh.erp.datasource.mappers.AccountHeadMapper.BaseResultMap">
+        select
+        <include refid="com.jsh.erp.datasource.mappers.AccountHeadMapper.Base_Column_List" />
+        from jsh_accounthead
+        where 1=1
+        and handsPersonId in (
+        <foreach collection="handsPersonIds" item="handsPersonId" separator=",">
+            #{handsPersonId}
+        </foreach>
+        )
+        and ifnull(delete_Flag,'0') !='1'
+    </select>
+</mapper>

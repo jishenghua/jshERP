@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsh.erp.datasource.mappers.MaterialMapperEx">
+    <resultMap extends="com.jsh.erp.datasource.mappers.MaterialMapper.BaseResultMap" id="ResultMapList" type="com.jsh.erp.datasource.entities.MaterialVo4Unit">
+        <result column="unitName" jdbcType="VARCHAR" property="unitName" />
+        <result column="categoryName" jdbcType="VARCHAR" property="categoryName" />
+    </resultMap>
+
+    <resultMap extends="com.jsh.erp.datasource.mappers.MaterialMapper.BaseResultMap" id="ResultAndUnitMap" type="com.jsh.erp.datasource.entities.MaterialVo4Unit">
+        <result column="UName" jdbcType="VARCHAR" property="unitName" />
+    </resultMap>
+
+    <select id="selectByConditionMaterial" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultMapList">
+        select m.*,u.uname unitName, mc.name categoryName
+        FROM jsh_material m
+        left JOIN jsh_unit u on m.UnitId = u.id and ifnull(u.delete_Flag,'0') !='1'
+        left JOIN jsh_materialcategory mc on m.CategoryId = mc.id and ifnull(mc.status,'0') !='2'
+        where 1=1
+        <if test="name != null">
+            and m.name like '%${name}%'
+        </if>
+        <if test="model != null">
+            and m.model like '%${model}%'
+        </if>
+        <if test="categoryIds != null">
+            and m.CategoryId in (${categoryIds})
+        </if>
+        and ifnull(m.delete_Flag,'0') !='1'
+        order by m.id desc
+        <if test="offset != null and rows != null">
+            limit #{offset},#{rows}
+        </if>
+    </select>
+
+    <select id="countsByMaterial" resultType="java.lang.Long">
+        SELECT
+        COUNT(m.id)
+        FROM jsh_material m
+        left JOIN jsh_unit u on m.UnitId = u.id and ifnull(u.delete_Flag,'0') !='1'
+        left JOIN jsh_materialcategory mc on m.CategoryId = mc.id and ifnull(mc.status,'0') !='2'
+        WHERE 1=1
+        <if test="name != null">
+            and m.name like '%${name}%'
+        </if>
+        <if test="model != null">
+            and m.model like '%${model}%'
+        </if>
+        <if test="categoryIds != null">
+            and m.CategoryId in (${categoryIds})
+        </if>
+        and ifnull(m.delete_Flag,'0') !='1'
+    </select>
+
+    <select id="findUnitName" resultType="java.lang.String">
+        select u.UName  from jsh_unit u
+        left join jsh_material m on m.UnitId=u.id and ifnull(m.delete_Flag,'0') !='1'
+        where m.id = ${mId}
+        and ifnull(u.delete_Flag,'0') !='1'
+    </select>
+
+    <select id="findById" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultAndUnitMap">
+        select m.*,u.UName from jsh_material m
+        left join jsh_unit u on m.UnitId=u.id and ifnull(u.delete_Flag,'0') !='1'
+        where m.id = ${id}
+        and ifnull(m.delete_Flag,'0') !='1'
+    </select>
+
+    <select id="findBySelect" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultAndUnitMap">
+        select m.*,u.UName from jsh_material m
+        left join jsh_unit u on m.UnitId=u.id and ifnull(u.delete_Flag,'0') !='1'
+        where m.enabled=1
+        and ifnull(m.delete_Flag,'0') !='1'
+        ORDER BY Id desc
+    </select>
+
+    <update id="updatePriceNullByPrimaryKey" parameterType="java.lang.Long">
+        update jsh_material
+        set
+        RetailPrice = null,
+        LowPrice = null,
+        PresetPriceOne = null,
+        PresetPriceTwo = null
+        where Id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateUnitIdNullByPrimaryKey" parameterType="java.lang.Long">
+        update jsh_material
+        set
+        UnitId = null
+        where Id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="findByAll" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultMapList">
+        select m.*,u.uname unitName, mc.name categoryName
+        FROM jsh_material m
+        left JOIN jsh_unit u on m.UnitId = u.id and ifnull(u.delete_Flag,'0') !='1'
+        left JOIN jsh_materialcategory mc on m.CategoryId = mc.id and ifnull(mc.status,'0') !='2'
+        where 1=1
+        <if test="name != null">
+            and m.name like '%${name}%'
+        </if>
+        <if test="model != null">
+            and m.model like '%${model}%'
+        </if>
+        <if test="categoryIds != null">
+            and m.CategoryId in (${categoryIds})
+        </if>
+        and ifnull(m.delete_Flag,'0') !='1'
+        order by m.id desc
+    </select>
+    <select id="findByMaterialName"  resultType="com.jsh.erp.datasource.entities.Material">
+        select m.*
+        FROM jsh_material m
+        where 1=1
+        <if test="name != null">
+            and m.name =#{name}
+        </if>
+        and ifnull(m.delete_Flag,'0') !='1'
+
+    </select>
+    <select id="getMaterialEnableSerialNumberList" parameterType="java.util.Map" resultMap="com.jsh.erp.datasource.mappers.MaterialMapper.BaseResultMap">
+        select
+        Id, CategoryId, name, Mfrs, Packing, SafetyStock, Model, Standard, Color, Unit, Remark,
+        RetailPrice, LowPrice, PresetPriceOne, PresetPriceTwo, UnitId, FirstOutUnit, FirstInUnit,
+        PriceStrategy, Enabled,enableSerialNumber
+        FROM jsh_material
+        where 1=1
+        and enabled ='1'
+        and enableSerialNumber ='1'
+        <if test="name != null and name != ''">
+            <bind name="name" value="'%' + _parameter.name + '%'" />
+            and name like #{name}
+        </if>
+        <if test="model != null and model != ''">
+            <bind name="model" value="'%' + _parameter.model + '%'" />
+            and model like #{model}
+        </if>
+        and ifnull(delete_Flag,'0') !='1'
+        order by id desc
+    </select>
+    <update id="batchDeleteMaterialByIds">
+        update jsh_material
+        set delete_Flag='1'
+        where 1=1
+        and ifnull(delete_Flag,'0') !='1'
+        and id in (
+        <foreach collection="ids" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
+    <select id="getMaterialListByCategoryIds"  resultMap="com.jsh.erp.datasource.mappers.MaterialMapper.BaseResultMap">
+        select
+        <include refid="com.jsh.erp.datasource.mappers.MaterialMapper.Base_Column_List" />
+        from jsh_material
+        where 1=1
+        and categoryId in (
+        <foreach collection="categoryIds" item="categoryId" separator=",">
+            #{categoryId}
+        </foreach>
+        )
+        and ifnull(delete_Flag,'0') !='1'
+    </select>
+    <select id="getMaterialListByUnitIds"  resultMap="com.jsh.erp.datasource.mappers.MaterialMapper.BaseResultMap">
+        select
+        <include refid="com.jsh.erp.datasource.mappers.MaterialMapper.Base_Column_List" />
+        from jsh_material
+        where 1=1
+        and unitId in (
+        <foreach collection="unitIds" item="unitId" separator=",">
+            #{unitId}
+        </foreach>
+        )
+        and ifnull(delete_Flag,'0') !='1'
+    </select>
+
+
+</mapper>

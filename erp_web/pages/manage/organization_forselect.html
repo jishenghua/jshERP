@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>机构选择</title>
+    <meta charset="utf-8">
+    <!-- 指定以IE8的方式来渲染 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon"/>
+    <script type="text/javascript" src="/js/jquery-1.8.0.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/js/easyui-1.3.5/themes/default/easyui.css"/>
+    <link rel="stylesheet" type="text/css" href="/js/easyui-1.3.5/themes/icon.css"/>
+    <link type="text/css" rel="stylesheet" href="/css/common.css"/>
+    <script type="text/javascript" src="/js/easyui-1.3.5/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="/js/easyui-1.3.5/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="/js/common/common.js"></script>
+</head>
+<body>
+<!-- 数据显示table -->
+<div>
+    <ul id="ttForSelect"></ul>
+</div>
+
+<script type="text/javascript">
+
+    $(function () {
+        var id=$("#id").val();
+        $('#ttForSelect').tree({
+            url: '/organization/getOrganizationTree?id='+id,
+            animate: true,
+            onDblClick: function (node) {
+                //双击修改
+                forSelectOrganization(node);
+            }
+        });
+
+        function forSelectOrganization(node) {
+            var selectType=$("#selectType").val();
+            if(selectType=='orgParent'){
+                $("#orgParentName").val(node.text);
+                $("#orgParentNo").val(node.attributes);
+            }else if(selectType=='org'){
+                $("#orgAbr").val(node.text);
+                $("#orgaId").val(node.id);
+            }
+            $('#forSelectOrganizationDlg').dialog('close');
+        }
+    });
+
+</script>
+</body>
+</html>
