@@ -1,1 +1,0 @@
-# 后端采用Spring+Struts+Hibernate技术，前端采用Jquery+EasyUI等技术，数据库是mysql
