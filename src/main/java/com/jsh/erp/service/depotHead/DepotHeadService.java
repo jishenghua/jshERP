@@ -481,6 +481,7 @@ public class DepotHeadService {
         DepotHead depotHead = JSONObject.parseObject(beanJson, DepotHead.class);
         //判断用户是否已经登录过，登录过不再处理
         User userInfo=userService.getCurrentUser();
+        depotHead.setHandspersonid(userInfo==null?null:userInfo.getId());
         depotHead.setOperpersonname(userInfo==null?null:userInfo.getUsername());
         depotHead.setCreatetime(new Timestamp(System.currentTimeMillis()));
         depotHead.setStatus(BusinessConstants.BILLS_STATUS_UN_AUDIT);
