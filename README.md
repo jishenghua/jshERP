@@ -17,7 +17,7 @@
 * 日志管理：Log4j 2.10.0
 * JS框架：Jquery 1.8.0
 * UI框架: EasyUI 1.3.5
-* 桌面框架: HoorayOS 2.0.0
+* 模板框架: AdminLTE 2.4.0
 * 项目管理框架: Maven 3.2.3
 
 # 开发环境
