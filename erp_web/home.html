@@ -62,7 +62,7 @@
 
                     <div class="info-box-content">
                         <span class="info-box-text">用户数量</span>
-                        <span class="info-box-number">28</span>
+                        <span id="thisUserSum" class="info-box-number">0</span>
                     </div>
                 </div>
             </div>
@@ -185,6 +185,32 @@
                         $("#todaySale").text(res.data.todaySale);
                         $("#thisMonthSale").text(res.data.thisMonthSale);
                         $("#thisMonthBuy").text(res.data.thisMonthBuy);
+                    }
+                }
+            },
+            error:function(res){
+
+            }
+        });
+    });
+
+    $(function () {
+        $.ajax({
+            type: "get",
+            url: "/user/list",
+            dataType: "json",
+            data: ({
+                search: JSON.stringify({
+                    userName: "",
+                    loginName: ""
+                }),
+                currentPage: 1,
+                pageSize: 10
+            }),
+            success: function (res) {
+                if(res && res.code === 200) {
+                    if(res.data && res.data.page) {
+                        $("#thisUserSum").text(res.data.page.total);
                     }
                 }
             },
