@@ -2754,20 +2754,10 @@
 	//删除
 	function batchDel(){
         /**
-         * 重写一下删除的逻辑
-         * 获取所有选中行,直接从列表中移除
-         * 点击保存时，将需要后台删除的数据提交到服务器
-         * **/
-        /**
-         * create by: qiankunpingtai
-         * create time: 2019/3/20 16:26
-         * description:
-         *	这个地方比较坑的，花了一个多小时才搞明白为什么
 		 *	1、删除之前必须先调用endEditing结束编辑
 		 *	2、如果只是调用endEditing结束编辑那么正在编辑行的被选中状态会被去掉
 		 *	所以要在调用endEditing先获取选中的行
          */
-            //如果编辑的行一开始是选中状态，结束编辑后仍然是选中状态
         var row = $('#materialData').datagrid('getChecked');
         if (endEditing()) {
             if (row.length == 0) {
