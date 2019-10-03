@@ -16,6 +16,7 @@
     <script type="text/javascript" src="/js/common/outlook_in.js"></script>
     <script type="text/javascript" src="/js/My97DatePicker/WdatePicker.js"></script>
     <script type="text/javascript" src="/js/common/common.js"></script>
+    <script src="/js/common/jsherp.js"></script>
 </head>
 <body>
 <!-- 数据显示table -->
@@ -101,8 +102,7 @@
                 {
                     title: '单据编号', field: 'number', width: 140,
                     formatter: function (value, row) {
-                        return "<a class='n-link' onclick=\"newTab('" + row.number + "','../materials/bill_detail.html?n=" + row.number + "&type=" + row.type + "','')\">"
-                            + row.number + "</a>";
+                        return '<a class="n-link" onclick="turnBillDetailPage(\'' + row.number + '\''+',\'' + row.type + '\');">' + row.number + '</a>';
                     }
                 },
                 {title: '类型', field: 'type', width: 100},
