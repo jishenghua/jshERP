@@ -662,3 +662,11 @@ COMMENT='消息表'
 AUTO_INCREMENT=2
 ROW_FORMAT=COMPACT
 ;
+
+-- ----------------------------
+-- 时间：2019年9月13日
+-- 删除表 jsh_app  databasechangelog databasechangeloglock
+-- ----------------------------
+drop table databasechangelog;
+drop table databasechangeloglock;
+drop table jsh_app;
