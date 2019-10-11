@@ -398,12 +398,13 @@ public class DepotHeadController {
                           @RequestParam("updated") String updated, HttpServletRequest request) throws  Exception{
         JSONObject result = ExceptionConstants.standardSuccess();
         Long billsNumLimit = Long.parseLong(request.getSession().getAttribute("billsNumLimit").toString());
+        Long tenantId = Long.parseLong(request.getSession().getAttribute("tenantId").toString());
         Long count = depotHeadService.countDepotHead(null,null,null,null,null,null,null);
         if(count>= billsNumLimit) {
             throw new BusinessParamCheckingException(ExceptionConstants.DEPOT_HEAD_OVER_LIMIT_FAILED_CODE,
                     ExceptionConstants.DEPOT_HEAD_OVER_LIMIT_FAILED_MSG);
         } else {
-            depotHeadService.addDepotHeadAndDetail(beanJson,inserted,deleted,updated);
+            depotHeadService.addDepotHeadAndDetail(beanJson,inserted,deleted,updated,tenantId);
         }
         return result;
     }
@@ -421,12 +422,16 @@ public class DepotHeadController {
      * @return java.lang.Object
      */
     @RequestMapping(value = "/updateDepotHeadAndDetail")
-    public Object updateDepotHeadAndDetail(@RequestParam("id") Long id,@RequestParam("info") String beanJson,@RequestParam("inserted") String inserted,
-                          @RequestParam("deleted") String deleted,
-                          @RequestParam("updated") String updated,@RequestParam("preTotalPrice") BigDecimal preTotalPrice) throws  Exception{
-
+    public Object updateDepotHeadAndDetail(@RequestParam("id") Long id,
+                                           @RequestParam("info") String beanJson,
+                                           @RequestParam("inserted") String inserted,
+                                           @RequestParam("deleted") String deleted,
+                                           @RequestParam("updated") String updated,
+                                           @RequestParam("preTotalPrice") BigDecimal preTotalPrice,
+                                           HttpServletRequest request) throws  Exception{
+        Long tenantId = Long.parseLong(request.getSession().getAttribute("tenantId").toString());
         JSONObject result = ExceptionConstants.standardSuccess();
-        depotHeadService.updateDepotHeadAndDetail(id,beanJson,inserted,deleted,updated,preTotalPrice);
+        depotHeadService.updateDepotHeadAndDetail(id,beanJson,inserted,deleted,updated,preTotalPrice,tenantId);
         return result;
     }
     /**

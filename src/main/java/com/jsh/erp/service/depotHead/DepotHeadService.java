@@ -469,7 +469,7 @@ public class DepotHeadService {
      * @return java.lang.String
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public void addDepotHeadAndDetail(String beanJson, String inserted, String deleted, String updated) throws Exception {
+    public void addDepotHeadAndDetail(String beanJson, String inserted, String deleted, String updated,Long tenantId) throws Exception {
         logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_DEPOT_HEAD,
                 BusinessConstants.LOG_OPERATION_TYPE_ADD,
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
@@ -494,7 +494,7 @@ public class DepotHeadService {
             }
         }
         /**入库和出库处理单据子表信息*/
-        depotItemService.saveDetials(inserted,deleted,updated,depotHead.getId());
+        depotItemService.saveDetials(inserted,deleted,updated,depotHead.getId(),tenantId);
         /**如果关联单据号非空则更新订单的状态为2 */
         if(depotHead.getLinknumber()!=null) {
             DepotHead depotHeadOrders = new DepotHead();
@@ -522,7 +522,8 @@ public class DepotHeadService {
      * @return java.lang.Object
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public void updateDepotHeadAndDetail(Long id, String beanJson, String inserted, String deleted, String updated, BigDecimal preTotalPrice)throws Exception {
+    public void updateDepotHeadAndDetail(Long id, String beanJson, String inserted, String deleted, String updated,
+                                         BigDecimal preTotalPrice, Long tenantId)throws Exception {
         logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_DEPOT_HEAD,
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
@@ -545,7 +546,7 @@ public class DepotHeadService {
             }
         }
         /**入库和出库处理单据子表信息*/
-        depotItemService.saveDetials(inserted,deleted,updated,depotHead.getId());
+        depotItemService.saveDetials(inserted,deleted,updated,depotHead.getId(),tenantId);
     }
 
     /**

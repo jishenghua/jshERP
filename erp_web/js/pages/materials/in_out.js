@@ -603,17 +603,14 @@
 						type: "get",
 						url: '/depotItem/findStockNumById',
 						data:{
-							projectId: depotId,
-                            materialId: mId,
-							monthTime: monthTime,
-                            currentPage: 1,
-                            pageSize: 10
+                            depotId: depotId,
+                            mId: mId
 						},
 						dataType: "json",
 						success: function (res) {
                             if(res && res.code === 200) {
-                                if (res.data && res.data.page && res.data.page[0]) {
-                                    var thisStock = res.data.page[0].thisSum;
+                                if (res.data) {
+                                    var thisStock = res.data.stock;
                                     if (type == "select") { //选择下拉框的时候
                                         if (ratio != undefined && ratio != 1) {
                                             loadRatio = ratio;

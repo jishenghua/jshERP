@@ -61,9 +61,8 @@ public class TenantConfig {
                         return true;
                     } else {
                         // 这里可以判断是否过滤表
-                        if ("databasechangelog".equals(tableName) || "databasechangeloglock".equals(tableName)
-                                || "jsh_materialproperty".equals(tableName) || "tbl_sequence".equals(tableName)
-                                || "jsh_userbusiness".equals(tableName) || "jsh_app".equals(tableName) || "jsh_functions".equals(tableName)
+                        if ("jsh_materialproperty".equals(tableName) || "tbl_sequence".equals(tableName)
+                                || "jsh_userbusiness".equals(tableName) || "jsh_functions".equals(tableName)
                                 || "jsh_tenant".equals(tableName)) {
                             return true;
                         } else {
@@ -83,7 +82,8 @@ public class TenantConfig {
             public boolean doFilter(MetaObject metaObject) {
                 MappedStatement ms = SqlParserHelper.getMappedStatement(metaObject);
                 // 过滤自定义查询此时无租户信息约束出现
-                if ("com.jsh.erp.datasource.mappers.UserMapperEx.getUserListByUserNameOrLoginName".equals(ms.getId())) {
+                if ("com.jsh.erp.datasource.mappers.UserMapperEx.getUserListByUserNameOrLoginName".equals(ms.getId())||
+                        "com.jsh.erp.datasource.mappers.DepotItemMapperEx.getStockByParam".equals(ms.getId())) {
                     return true;
                 }
                 return false;
@@ -108,10 +108,10 @@ public class TenantConfig {
     /**
      * 性能分析拦截器，不建议生产使用
      */
-//    @Bean
-//    public PerformanceInterceptor performanceInterceptor(){
-//        return new PerformanceInterceptor();
-//    }
+    @Bean
+    public PerformanceInterceptor performanceInterceptor(){
+        return new PerformanceInterceptor();
+    }
 
 
 }

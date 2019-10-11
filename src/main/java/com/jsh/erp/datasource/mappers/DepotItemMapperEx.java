@@ -2,6 +2,7 @@ package com.jsh.erp.datasource.mappers;
 
 import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.vo.DepotItemStockWarningCount;
+import com.jsh.erp.datasource.vo.DepotItemVo4Stock;
 import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
@@ -35,28 +36,10 @@ public interface DepotItemMapperEx {
     Long findDetailByTypeAndMaterialIdCounts(
             @Param("mId") Long mId);
 
-    List<DepotItemVo4Material> findStockNumByMaterialIdList(
-            @Param("mId") Long mId,
-            @Param("monthTime") String monthTime,
-            @Param("offset") Integer offset,
-            @Param("rows") Integer rows);
-
-    Long findStockNumByMaterialIdCounts(
-            @Param("mId") Long mId,
-            @Param("monthTime") String monthTime);
-
     Long findByTypeAndMaterialIdIn(
             @Param("mId") Long mId);
 
     Long findByTypeAndMaterialIdOut(
-            @Param("mId") Long mId);
-
-    int findByTypeAndDepotIdAndMaterialIdIn(
-            @Param("depotId") Long depotId,
-            @Param("mId") Long mId);
-
-    int findByTypeAndDepotIdAndMaterialIdOut(
-            @Param("depotId") Long depotId,
             @Param("mId") Long mId);
 
     List<DepotItemVo4WithInfoEx> getDetailList(
@@ -72,62 +55,6 @@ public interface DepotItemMapperEx {
             @Param("headIds") String headIds,
             @Param("materialIds") String materialIds);
 
-    BigDecimal findByTypeInIsPrev(
-            @Param("ProjectId") Integer ProjectId,
-            @Param("MId") Long MId,
-            @Param("MonthTime") String MonthTime);
-
-    BigDecimal findByTypeInIsNotPrev(
-            @Param("ProjectId") Integer ProjectId,
-            @Param("MId") Long MId,
-            @Param("MonthTime") String MonthTime);
-
-    BigDecimal findByTypeOutIsPrev(
-            @Param("ProjectId") Integer ProjectId,
-            @Param("MId") Long MId,
-            @Param("MonthTime") String MonthTime);
-
-    BigDecimal findByTypeOutIsNotPrev(
-            @Param("ProjectId") Integer ProjectId,
-            @Param("MId") Long MId,
-            @Param("MonthTime") String MonthTime);
-
-
-
-    BigDecimal findPriceByTypeInIsPrev(
-            @Param("ProjectId") Integer ProjectId,
-            @Param("MId") Long MId,
-            @Param("MonthTime") String MonthTime);
-
-    BigDecimal findPriceByTypeInIsNotPrev(
-            @Param("ProjectId") Integer ProjectId,
-            @Param("MId") Long MId,
-            @Param("MonthTime") String MonthTime);
-
-    BigDecimal findPriceByTypeOutIsPrev(
-            @Param("ProjectId") Integer ProjectId,
-            @Param("MId") Long MId,
-            @Param("MonthTime") String MonthTime);
-
-    BigDecimal findPriceByTypeOutIsNotPrev(
-            @Param("ProjectId") Integer ProjectId,
-            @Param("MId") Long MId,
-            @Param("MonthTime") String MonthTime);
-
-    BigDecimal findAssembleIsPrev(
-            @Param("subType") String subType,
-            @Param("mType") String mType,
-            @Param("ProjectId") Integer ProjectId,
-            @Param("MId") Long MId,
-            @Param("MonthTime") String MonthTime);
-
-    BigDecimal findAssembleIsNotPrev(
-            @Param("subType") String subType,
-            @Param("mType") String mType,
-            @Param("ProjectId") Integer ProjectId,
-            @Param("MId") Long MId,
-            @Param("MonthTime") String MonthTime);
-
     BigDecimal buyOrSaleNumber(
             @Param("type") String type,
             @Param("subType") String subType,
@@ -142,15 +69,13 @@ public interface DepotItemMapperEx {
             @Param("MonthTime") String MonthTime,
             @Param("sumType") String sumType);
 
-    BigDecimal findGiftByTypeIn(
-            @Param("subType") String subType,
-            @Param("ProjectId") Integer ProjectId,
-            @Param("MId") Long MId);
+    DepotItemVo4Stock getStockByParam(
+            @Param("depotId") Long depotId,
+            @Param("mId") Long mId,
+            @Param("beginTime") String beginTime,
+            @Param("endTime") String endTime,
+            @Param("tenantId") Long tenantId);
 
-    BigDecimal findGiftByTypeOut(
-            @Param("subType") String subType,
-            @Param("ProjectId") Integer ProjectId,
-            @Param("MId") Long MId);
     /**
      * create by: cjl
      * description:
