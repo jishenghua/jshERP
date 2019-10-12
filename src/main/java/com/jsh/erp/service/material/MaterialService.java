@@ -100,9 +100,8 @@ public class MaterialService {
                     }
                 }
                 m.setMaterialOther(materialOther);
-                Long InSum = depotItemService.findByTypeAndMaterialId("入库", m.getId());
-                Long OutSum = depotItemService.findByTypeAndMaterialId("出库", m.getId());
-                m.setStock(InSum - OutSum);
+                Long tenantId = m.getTenantId();
+                m.setStock(depotItemService.getStockByParam(null,m.getId(),null,null,tenantId));
                 resList.add(m);
             }
         }

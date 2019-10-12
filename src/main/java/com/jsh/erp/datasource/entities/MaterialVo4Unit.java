@@ -10,7 +10,7 @@ public class MaterialVo4Unit extends Material{
 
     private String materialOther;
 
-    private Long stock;
+    private BigDecimal stock;
 
     public String getUnitName() {
         return unitName;
@@ -36,11 +36,11 @@ public class MaterialVo4Unit extends Material{
         this.materialOther = materialOther;
     }
 
-    public Long getStock() {
+    public BigDecimal getStock() {
         return stock;
     }
 
-    public void setStock(Long stock) {
+    public void setStock(BigDecimal stock) {
         this.stock = stock;
     }
 }

@@ -215,20 +215,6 @@ public class DepotItemService {
         return result;
     }
 
-    public Long findByTypeAndMaterialId(String type, Long mId) throws Exception{
-        Long result = 0l;
-        try{
-            if(type.equals(TYPE)) {
-                result= depotItemMapperEx.findByTypeAndMaterialIdIn(mId);
-            } else {
-                result= depotItemMapperEx.findByTypeAndMaterialIdOut(mId);
-            }
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        return result;
-    }
-
     public List<DepotItemVo4WithInfoEx> getDetailList(Long headerId)throws Exception {
         List<DepotItemVo4WithInfoEx> list =null;
         try{

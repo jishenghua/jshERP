@@ -36,12 +36,6 @@ public interface DepotItemMapperEx {
     Long findDetailByTypeAndMaterialIdCounts(
             @Param("mId") Long mId);
 
-    Long findByTypeAndMaterialIdIn(
-            @Param("mId") Long mId);
-
-    Long findByTypeAndMaterialIdOut(
-            @Param("mId") Long mId);
-
     List<DepotItemVo4WithInfoEx> getDetailList(
             @Param("headerId") Long headerId);
 
@@ -77,12 +71,10 @@ public interface DepotItemMapperEx {
             @Param("tenantId") Long tenantId);
 
     /**
-     * create by: cjl
-     * description:
-     *  通过单据主表id查询所有单据子表数据
-     * create time: 2019/1/24 16:56
-     * @Param: depotheadId
-     * @return java.util.List<com.jsh.erp.datasource.entities.DepotItem>
+     * 通过单据主表id查询所有单据子表数据
+     * @param depotheadId
+     * @param enableSerialNumber
+     * @return
      */
      List<DepotItem> findDepotItemListBydepotheadId(@Param("depotheadId")Long depotheadId,
                                                     @Param("enableSerialNumber")String enableSerialNumber);
@@ -102,7 +94,6 @@ public interface DepotItemMapperEx {
     List<DepotItem> getDepotItemListListByDepotIds(@Param("depotIds") String[] depotIds);
 
     List<DepotItem> getDepotItemListListByMaterialIds(@Param("materialIds") String[] materialIds);
-
 
     List<DepotItemStockWarningCount> findStockWarningCount(@Param("offset") Integer offset,
                                                            @Param("rows") Integer rows, @Param("pid") Integer pid);

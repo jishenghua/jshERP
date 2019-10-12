@@ -40,6 +40,7 @@
         <result column="PresetPriceOne" jdbcType="DECIMAL" property="presetPriceOne" />
         <result column="PriceStrategy" jdbcType="VARCHAR" property="priceStrategy" />
     </resultMap>
+
     <resultMap id="ResultStockWarningCount" type="com.jsh.erp.datasource.vo.DepotItemStockWarningCount">
         <result column="MaterialName" jdbcType="VARCHAR" property="MaterialName" />
         <result column="MaterialModel" jdbcType="VARCHAR" property="MaterialModel" />
@@ -76,6 +77,7 @@
             limit #{offset},#{rows}
         </if>
     </select>
+
     <select id="countsByDepotItem" resultType="java.lang.Long">
         SELECT
         COUNT(id)
@@ -95,12 +97,22 @@
 
     <select id="findDetailByTypeAndMaterialIdList" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="DetailByTypeAndMIdResultMap">
         select dh.Number,concat(dh.SubType,dh.Type) as newType,
-        case when type='入库' then ifnull(di.BasicNumber,0) when type='出库' then 0-di.BasicNumber else 0 end as b_num,
+        case
+            when type='入库' then ifnull(di.BasicNumber,0)
+            when type='出库' then 0-di.BasicNumber
+            when dh.SubType='组装单' and di.MType='组合件' then ifnull(di.BasicNumber,0)
+            when dh.SubType='组装单' and di.MType='普通子件' then 0-di.BasicNumber
+            when dh.SubType='拆卸单' and di.MType='普通子件' then ifnull(di.BasicNumber,0)
+            when dh.SubType='拆卸单' and di.MType='组合件' then 0-di.BasicNumber
+            else 0
+        end
+        as b_num,
         date_format(dh.OperTime,'%Y-%m-%d %H:%i:%S') as oTime
         from jsh_depothead dh
         INNER JOIN jsh_depotitem di on dh.id=di.HeaderId and ifnull(di.delete_Flag,'0') !='1'
-        where dh.type!='其它'
-        and dh.SubType!='调拨'
+        where ((dh.type!='其它' and dh.SubType!='调拨')
+        or (dh.type='其它' and dh.SubType='组装单')
+        or (dh.type='其它' and dh.SubType='拆卸单'))
         and di.MaterialId =${mId}
         and ifnull(dh.delete_Flag,'0') !='1'
         ORDER BY oTime desc
@@ -108,6 +120,7 @@
             limit #{offset},#{rows}
         </if>
     </select>
+
     <select id="findDetailByTypeAndMaterialIdCounts" resultType="java.lang.Long">
         select count(1)
         from jsh_depothead dh
@@ -115,23 +128,6 @@
         where dh.type!='其它'
         and dh.SubType!='调拨'
         and di.MaterialId =${mId}
-        and ifnull(dh.delete_Flag,'0') !='1'
-    </select>
-
-    <select id="findByTypeAndMaterialIdIn" resultType="java.lang.Long">
-        select ifnull(sum(BasicNumber),0) as BasicNumber from jsh_depothead dh
-          INNER JOIN jsh_depotitem di on dh.id=di.HeaderId  and ifnull(di.delete_Flag,'0') !='1'
-          where dh.type='入库'
-          and di.MaterialId = ${mId}
-          and ifnull(dh.delete_Flag,'0') !='1'
-    </select>
-
-    <select id="findByTypeAndMaterialIdOut" resultType="java.lang.Long">
-        select ifnull(sum(BasicNumber),0) as BasicNumber from jsh_depothead dh
-        INNER JOIN jsh_depotitem di on dh.id=di.HeaderId  and ifnull(di.delete_Flag,'0') !='1'
-        where dh.type='出库'
-        and dh.SubType!='调拨'
-        and di.MaterialId = ${mId}
         and ifnull(dh.delete_Flag,'0') !='1'
     </select>
 
@@ -254,6 +250,7 @@
         and ifnull(dep.delete_Flag,'0') !='1'
         and ifnull(mat.delete_Flag,'0') !='1'
     </select>
+
     <delete id="deleteDepotItemByDepotHeadIds">
         delete from jsh_depotitem
         where 1=1
@@ -264,6 +261,7 @@
         </foreach>
         )
     </delete>
+
     <update id="batchDeleteDepotItemByDepotHeadIds">
         update jsh_depotitem
         set delete_Flag='1'
@@ -275,6 +273,7 @@
         </foreach>
         )
     </update>
+
     <update id="batchDeleteDepotItemByIds">
         update jsh_depotitem
         set delete_Flag='1'
@@ -285,6 +284,7 @@
         </foreach>
         )
     </update>
+
     <select id="getDepotItemListListByDepotIds" resultMap="com.jsh.erp.datasource.mappers.DepotItemMapper.BaseResultMap">
         select
         <include refid="com.jsh.erp.datasource.mappers.DepotItemMapper.Base_Column_List" />
@@ -297,6 +297,7 @@
         )
         and ifnull(delete_Flag,'0') !='1'
     </select>
+
     <select id="getDepotItemListListByMaterialIds" resultMap="com.jsh.erp.datasource.mappers.DepotItemMapper.BaseResultMap">
         select
         <include refid="com.jsh.erp.datasource.mappers.DepotItemMapper.Base_Column_List" />
@@ -309,8 +310,6 @@
         )
         and ifnull(delete_Flag,'0') !='1'
     </select>
-
-
 
     <select id="findStockWarningCount" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultStockWarningCount">
         SELECT
