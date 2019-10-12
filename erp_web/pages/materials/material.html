@@ -469,18 +469,20 @@
                 res = value;
             } else {
                 var ps = rec.pricestrategy;
-                var arr = JSON.parse(ps);
-                var basic = "";
-                if(type == "lowprice") {
-                    basic = arr[0].basic.LowPrice;
-                } else if(type == "presetpriceone") {
-                    basic = arr[0].basic.PresetPriceOne;
-                } else if(type == "presetpricetwo") {
-                    basic = arr[0].basic.PresetPriceTwo;
-                } else if(type == "retailprice") {
-                    basic = arr[0].basic.RetailPrice;
+                if(ps) {
+                    var arr = JSON.parse(ps);
+                    var basic = "";
+                    if(type == "lowprice") {
+                        basic = arr[0].basic.LowPrice;
+                    } else if(type == "presetpriceone") {
+                        basic = arr[0].basic.PresetPriceOne;
+                    } else if(type == "presetpricetwo") {
+                        basic = arr[0].basic.PresetPriceTwo;
+                    } else if(type == "retailprice") {
+                        basic = arr[0].basic.RetailPrice;
+                    }
+                    res = basic;
                 }
-                res = basic;
             }
             return res;
         }
