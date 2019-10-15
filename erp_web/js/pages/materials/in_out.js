@@ -24,7 +24,6 @@
 	var organUrl = ""; //组织数据接口地址
 	var amountNum = ""; //单据编号开头字符
 	var depotString = ""; //店铺id列表
-	/**默认编号有意义吗，不如空着吧*/
 	var orgDefaultId=''; //单位默认编号
 	var orgDefaultList; //存储查询出来的会员列表
 	var accountList; //账户列表
@@ -180,9 +179,7 @@
                 }
             }
 		});
-
 	}
-
 	//初始化系统基础信息
 	function initSystemData_depot(){
 		$.ajax({
@@ -226,7 +223,6 @@
             }
 		});
 	}
-
 	//初始化供应商、客户、散户信息
 	function initSupplier(){
 		$('#OrganId').combobox({
@@ -283,7 +279,6 @@
 			}
 		});
 	}
-
 	//初始化销售人员
 	function initSalesman(){
 		$('#Salesman').combobox({
@@ -293,7 +288,6 @@
 			multiple: true
 		});
 	}
-
 	//初始化收入项目列表
 	function initOutItemList(){
 		$.ajax({
@@ -312,7 +306,6 @@
 			}
 		});
 	}
-
 	//初始化商品属性
 	function initMProperty(){
 		$.ajax({
@@ -348,7 +341,6 @@
 			}
 		});
 	}
-
 	//获取账户信息
 	function initSystemData_account(){
 		$.ajax({
@@ -379,7 +371,6 @@
 			}
 		});
 	}
-
 	//防止表单提交重复
 	function initForm(){
 		$('#depotHeadFM').form({
@@ -388,7 +379,6 @@
 		    }
 		});
 	}
-
 	//初始化表格数据
 	function initTableData(){
 		if(pageType === "skip") {
@@ -406,8 +396,7 @@
 				id:'addDepotHead',
 				text:'增加',
 				iconCls:'icon-add',
-				handler:function()
-				{
+				handler:function() {
 					addDepotHead();
 				}
 			},
@@ -415,8 +404,7 @@
 				id:'deleteDepotHead',
 				text:'删除',
 				iconCls:'icon-remove',
-				handler:function()
-				{
+				handler:function() {
 					batDeleteDepotHead();
 				}
 			}
@@ -552,7 +540,6 @@
 		});
         dgResize();
 	}
-
 	//查找库存的方法
 	function findStockNumById(depotId, mId, monthTime, body, input, ratio, type){
 		var thisRatio = 1; //比例
@@ -1109,7 +1096,6 @@
 			}
 		});
 	}
-
 	//初始化表格数据-商品列表-查看状态
 	function initTableData_material_show(TotalPrice){
 		var isShowAnotherDepot = true; //显示对方仓库,true为隐藏,false为显示
@@ -1201,7 +1187,6 @@
 			}
 		});
 	}
-
 	//分页信息处理
 	function ininPager(){
 		try {
@@ -1223,7 +1208,6 @@
 			$.messager.alert('异常处理提示',"分页信息异常 :  " + e.name + ": " + e.message,'error');
 		}
 	}
-
 	//删除单据信息
 	function deleteDepotHead(depotHeadID, thisOrganId, totalPrice, status){
 		if(status == "1" || status == "2") {
@@ -1234,7 +1218,6 @@
 	        if (r) {
 				$.ajax({
 					type:"post",
-                    // url: "/depotHead/" + depotHeadID + "/delete",
                     url: "/depotHead/deleteDepotHeadAndDetail",
 					dataType: "json",
 					data:{
@@ -1278,7 +1261,6 @@
 	        }
 	    });
 	}
-
     //订单转采购或销售
     function skipDepotHead(index){
         var res = $("#tableData").datagrid("getRows")[index];
@@ -1293,7 +1275,6 @@
             }
 		}
     }
-
 	//批量删除单据信息
 	function batDeleteDepotHead(){
 		var row = $('#tableData').datagrid('getChecked');
@@ -1341,7 +1322,6 @@
                         //批量删除
                         $.ajax({
                             type: "post",
-                            // url: "/depotHead/batchDelete",
                             url: "/depotHead/batchDeleteDepotHeadAndDetail",
                             dataType: "json",
                             async: false,
@@ -1369,7 +1349,6 @@
 	        });
 		 }
 	}
-
 	//批量审核|反审核
 	function setStatusFun(status) {
 		var row = $('#tableData').datagrid('getChecked');
@@ -1421,7 +1400,6 @@
 			});
 		}
 	}
-
     //生成单据编号
 	function buildNumber() {
         $.ajax({
@@ -1440,7 +1418,6 @@
             }
         });
     }
-
 	//新增信息
 	function addDepotHead(){
 		$('#depotHeadFM').form('clear');
@@ -1524,7 +1501,6 @@
 			});
 		}
 	}
-
 	//编辑信息
 	function editDepotHead(index, res){
         if(!res) {
@@ -1641,7 +1617,6 @@
             url = '/depotHead/updateDepotHeadAndDetail?id=' + res.id; //更新接口
 		}
 	}
-
 	//查看信息
 	function showDepotHead(index){
         var res = $("#tableData").datagrid("getRows")[index];
@@ -1770,7 +1745,6 @@
 			}
 		}
 	}
-
 	//绑定操作事件
 	function bindEvent(){
 		showDepotHeadDetails(1,initPageSize); //初始化时自动查询
@@ -2398,10 +2372,7 @@
 		});
 
 	}
-
-    /**
-	 * 绑定供应商、客户事件
-     */
+    //绑定供应商、客户事件
 	function bindSupplierEvent() {
         if(listTitle === "采购入库列表" || listTitle === "其它入库列表" || listTitle === "采购订单列表"
             || listTitle === "零售出库列表"|| listTitle === "销售出库列表"|| listTitle === "销售订单列表"){
@@ -2493,7 +2464,7 @@
             });
         }
     }
-
+	//查询单据列表信息
 	function showDepotHeadDetails(pageNo,pageSize){
 		var materialParam = $.trim($("#searchMaterial").val());
         var beginTime = $.trim($("#searchBeginTime").val());
@@ -2536,7 +2507,6 @@
 			}
 		});
 	}
-
 	//自动计算事件
 	function autoReckon() {
 		//延时绑定事件
@@ -2557,7 +2527,6 @@
 				body.find("[field='TaxMoney']").find(input).val((UnitPrice*OperNumber*(taxRate/100)).toFixed(2)); //税额
 				body.find("[field='TaxLastMoney']").find(input).val((UnitPrice*OperNumber*(1+taxRate/100)).toFixed(2)); //价税合计
 				statisticsFun(body,UnitPrice,OperNumber,footer,taxRate);
-
 			});
 	    	//修改单价，自动计算金额和合计
 	    	body.find("[field='UnitPrice']").find(input).off("keyup").on("keyup",function(){
@@ -2570,64 +2539,6 @@
 				body.find("[field='TaxLastMoney']").find(input).val((UnitPrice*OperNumber*(1+taxRate/100)).toFixed(2)); //价税合计
 				statisticsFun(body,UnitPrice,OperNumber,footer,taxRate);
 	    	});
-			//点击单价，自动提示参考价格列表
-			body.find("[field='UnitPrice']").find(input).off("click").on("click",function(){
-				var self = this;
-				var mValue = body.find("[field='MaterialId'] .combo-value").attr("value"); //获取选中的商品id
-				if(!mValue) {
-					return;
-				}
-				else {
-					if(listTitle!="销售出库列表" && listTitle!="采购退货列表" && listTitle!="其它出库列表" && listTitle!="调拨出库列表") {
-						return;
-					}
-					$.ajax({
-						url: "/material/findById",
-						type: "get",
-						dataType: "json",
-						data: {
-                            id: mValue - 0
-						},
-						success: function(res){
-							if(res && res.rows && res.rows[0]) {
-								var retailPrice = res.rows[0].RetailPrice;
-								var presetPriceOne = res.rows[0].PresetPriceOne;
-								var presetPriceTwo = res.rows[0].PresetPriceTwo;
-								//定义模版
-								var temp = "<div class='price-list'>";
-								temp +="<ul>";
-								temp +="<li>批发价：" + presetPriceTwo + "</li>";
-								temp +="<li>零售价：" + retailPrice + "</li>";
-								temp +="</ul>";
-								temp +="</div>";
-								if($('.price-list').length){
-									$('.price-list').remove(); //如果存在价格列表先移除
-								}
-								else {
-									if(presetPriceTwo != undefined){ //多单位的商品
-										$(self).after(temp); //加载列表信息
-									}
-								}
-								$('.price-list ul li').off("click").on("click",function(){
-									var price = $(this).text();
-									price = price.substring(price.indexOf("：") + 1);
-									$(self).val(price);
-									$(self).keyup(); //模拟键盘操作
-									$('.price-list').remove(); //移除价格列表
-								});
-								//点击空白处移除价格列表
-								$(".datagrid-body").off("click").on("click",function(){
-									$('.price-list').remove(); //移除价格列表
-								});
-							}
-						},
-						error: function(){
-							$.messager.alert('错误提示','查询商品信息异常，请稍后再试！','error');
-							return;
-						}
-					});
-				}
-			});
 			//修改含税单价，自动计算单价、金额、税额、价税合计和合计
 			body.find("[field='TaxUnitPrice']").find(input).off("keyup").on("keyup",function(){
 				var TaxUnitPrice =$(this).val()-0; //含税单价
@@ -2707,8 +2618,7 @@
 			}
 	    },500);
 	}
-
-	//结束编辑
+	//结束编辑明细
 	function endEditing() {
 	    if (editIndex == undefined) { return true }
 	    if ($('#materialData').datagrid('validateRow', editIndex)) {
@@ -2727,7 +2637,7 @@
 	        return false;
 	    }
 	}
-	//单击
+	//单击明细
 	function onClickRow(index) {
 	    if (editIndex != index) {
 	        if (endEditing()) {
@@ -2739,7 +2649,7 @@
 	        }
 	    }
 	}
-	//新增
+	//新增明细
 	function append(){
 	    if (endEditing()) {
 	        $('#materialData').datagrid('appendRow', {DepotId:defDepotId});
@@ -2748,7 +2658,7 @@
 	        autoReckon();
 	    }
 	}
-	//删除
+	//批量删除明细
 	function batchDel(){
         /**
 		 *	1、删除之前必须先调用endEditing结束编辑
@@ -2772,13 +2682,14 @@
             }
         }
 	}
+    //单行删除明细
 	function removeit(){
 	    if (editIndex == undefined) { return }
 	    $('#materialData').datagrid('cancelEdit', editIndex)
 	            .datagrid('deleteRow', editIndex);
 	    editIndex = undefined;
 	}
-	//撤销
+	//撤销明细
 	function reject() {
 	    $('#materialData').datagrid('rejectChanges');
 	    editIndex = undefined;
@@ -2859,7 +2770,7 @@
     function appendMaterial() {
         alert("新增商品");
 	}
-	//判断
+	//判断明细
 	function CheckData(type) {
 		append();
 		removeit();
@@ -2886,10 +2797,7 @@
 	    }
 	    return true;
 	}
-
-	/**
-	 * 新增单据主表及单据子表
-	 * */
+	//新增单据主表及单据子表
 	function addDepotHeadAndDetail(url,infoStr){
 		var inserted = null;
 		if(pageType === "skip") {
@@ -2934,9 +2842,7 @@
 			}
 		});
 	}
-	/**
-	 * 修改单据主表及单据子表
-	 * */
+	//修改单据主表及单据子表
 	function updateDepotHeadAndDetail(url,infoStr,preTotalPrice){
 		var inserted = $("#materialData").datagrid('getChanges', "inserted");
 		var deleted = $("#materialData").datagrid('getChanges', "deleted");
@@ -2973,7 +2879,6 @@
 						msg: '保存信息失败，请稍后重试!'
 					});
 				}
-
 			},
 			//此处添加错误处理
 			error:function() {
@@ -2982,7 +2887,3 @@
 			}
 		});
 	}
-
-
-
-
