@@ -71,14 +71,9 @@
     //导出EXCEL
     function exportExcel() {
         $("#exprotBtn").off("click").on("click", function () {
-            if (!$("#searchPanel .total-count").text()) {
-                $.messager.alert('导出提示', '请先选择月份再进行查询！', 'error');
-            }
-            else {
-                showEachDetails(1, 3000);
-                //此处直接去做get请求，用下面的查询每月统计的方法，去获取list，参数长度虽长，但还是可以用get
-                //window.location.href = "/depotItem/exportExcel.action?browserType=" + getOs();
-            }
+            showEachDetails(1, 3000);
+            //此处直接去做get请求，用下面的查询每月统计的方法，去获取list，参数长度虽长，但还是可以用get
+            //window.location.href = "/depotItem/exportExcel.action?browserType=" + getOs();
         });
     }
 
@@ -314,7 +309,7 @@
                                     var mIds = res.data.mIds;
                                     if (mIds) {
                                         if (pageSize === 3000) {
-                                            window.location.href = "/depotItem/exportExcel?browserType=" + getOs() + "&currentPage=" + pageNo + "&pageSize=" + pageSize + "&projectId=" + $.trim($("#searchProjectId").val()) + "&monthTime=" + $("#searchMonth").val() + "&headIds=" + HeadIds + "&materialIds=" + mIds;
+                                            window.location.href = "/depotItem/exportExcel?browserType=" + getOs() + "&currentPage=" + pageNo + "&pageSize=" + pageSize + "&depotId=" + $.trim($("#searchProjectId").val()) + "&monthTime=" + $("#searchMonth").val() + "&headIds=" + HeadIds + "&materialIds=" + mIds;
                                         }
                                         else {
                                             $.ajax({
@@ -324,7 +319,7 @@
                                                 data: ({
                                                     currentPage: pageNo,
                                                     pageSize: pageSize,
-                                                    projectId: $.trim($("#searchProjectId").val()),
+                                                    depotId: $.trim($("#searchProjectId").val()),
                                                     monthTime: $("#searchMonth").val(),
                                                     headIds: HeadIds,
                                                     materialIds: mIds,
@@ -348,7 +343,7 @@
                                                 url: "/depotItem/totalCountMoney",
                                                 dataType: "json",
                                                 data: ({
-                                                    projectId: $.trim($("#searchProjectId").val()),
+                                                    depotId: $.trim($("#searchProjectId").val()),
                                                     monthTime: $("#searchMonth").val(),
                                                     headIds: HeadIds,
                                                     materialIds: mIds
@@ -360,7 +355,7 @@
                                                             if (count.lastIndexOf('.') > -1) {
                                                                 count = count.substring(0, count.lastIndexOf('.') + 3);
                                                             }
-                                                            $("#searchPanel .total-count").text("本月合计金额:" + count + "元");//本月合计金额
+                                                            $("#searchTable .total-count").text("本月合计金额:" + count + "元");//本月合计金额
                                                         }
                                                     }
                                                 },

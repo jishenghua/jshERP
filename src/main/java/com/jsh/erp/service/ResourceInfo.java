@@ -6,7 +6,6 @@ import java.lang.annotation.*;
  * @author jishenghua 2018-10-7 15:25:39
  * user-5
  * role-10
- * app-15
  * depot-20
  * log-25
  * functions-30

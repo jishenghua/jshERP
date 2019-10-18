@@ -9,7 +9,6 @@ import com.jsh.erp.datasource.mappers.UserBusinessMapperEx;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.CommonQueryManager;
-import com.jsh.erp.service.app.AppService;
 import com.jsh.erp.service.functions.FunctionsService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
@@ -41,9 +40,6 @@ public class UserBusinessService {
 
     @Resource
     private FunctionsService functionsService;
-
-    @Resource
-    private AppService appService;
 
     @Resource
     private CommonQueryManager configResourceManager;
@@ -79,10 +75,6 @@ public class UserBusinessService {
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
-        // 更新应用权限
-        if (BusinessConstants.TYPE_NAME_ROLE_FUNCTIONS.equals(userBusiness.getType()) && result > 0) {
-            result = insertOrUpdateAppValue(BusinessConstants.TYPE_NAME_ROLE_APP, userBusiness.getKeyid(), userBusiness.getValue());
-        }
         return result;
     }
 
@@ -95,10 +87,6 @@ public class UserBusinessService {
             result=userBusinessMapper.updateByPrimaryKeySelective(userBusiness);
         }catch(Exception e){
             JshException.writeFail(logger, e);
-        }
-        // 更新应用权限
-        if (BusinessConstants.TYPE_NAME_ROLE_FUNCTIONS.equals(userBusiness.getType()) && result > 0) {
-            result = insertOrUpdateAppValue(BusinessConstants.TYPE_NAME_ROLE_APP, userBusiness.getKeyid(), userBusiness.getValue());
         }
         return result;
     }
@@ -242,53 +230,6 @@ public class UserBusinessService {
             result=  userBusinessMapperEx.batchDeleteUserBusinessByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
         }catch(Exception e){
             JshException.writeFail(logger, e);
-        }
-        return result;
-    }
-
-    /**
-     * 通过功能（RoleFunctions）权限更新应用（RoleApp）权限
-     * @param type
-     * @param keyId
-     * @param functionIds
-     * @return
-     */
-    public int insertOrUpdateAppValue(String type, String keyId, String functionIds) throws Exception{
-        int result=0;
-        functionIds = functionIds.replaceAll("\\]\\[", ",").
-                replaceAll("\\[","").replaceAll("\\]","");
-        List<Functions> functionsList = functionsService.findByIds(functionIds);
-        if (!CollectionUtils.isEmpty(functionsList)) {
-            Set<String> appNumbers = new HashSet<>();
-            String appNumber;
-            for (Functions functions : functionsList) {
-                appNumber = functions.getNumber().substring(0, 2);
-                appNumbers.add(appNumber);
-            }
-            List<String> appNumberList = new ArrayList<>(appNumbers);
-            List<App> appList = appService.findAppByNumber(appNumberList);
-            StringBuilder appIdSb = new StringBuilder();
-            if (!CollectionUtils.isEmpty(appList)) {
-                for (App app : appList) {
-                    appIdSb.append("[" + app.getId() + "]");
-                }
-                List<UserBusiness> userBusinessList = getBasicData(keyId, type);
-                try{
-                    if(userBusinessList.size() > 0) {
-                        UserBusiness userBusiness = userBusinessList.get(0);
-                        userBusiness.setValue(appIdSb.toString());
-                        result = userBusinessMapper.updateByPrimaryKeySelective(userBusiness);
-                    } else {
-                        UserBusiness userBusiness = new UserBusiness();
-                        userBusiness.setType(type);
-                        userBusiness.setKeyid(keyId);
-                        userBusiness.setValue(appIdSb.toString());
-                        result = userBusinessMapper.insertSelective(userBusiness);
-                    }
-                }catch(Exception e){
-                    JshException.writeFail(logger, e);
-                }
-            }
         }
         return result;
     }

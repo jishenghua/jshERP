@@ -1,7 +1,6 @@
 package com.jsh.erp.service.functions;
 
 import com.jsh.erp.service.ICommonQuery;
-import com.jsh.erp.service.app.AppResource;
 import com.jsh.erp.service.functions.FunctionsService;
 import com.jsh.erp.utils.Constants;
 import com.jsh.erp.utils.QueryUtils;

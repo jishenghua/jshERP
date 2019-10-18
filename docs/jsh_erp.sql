@@ -16,52 +16,6 @@ Date: 2019-06-23 18:27:53
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
--- Table structure for databasechangelog
--- ----------------------------
-DROP TABLE IF EXISTS `databasechangelog`;
-CREATE TABLE `databasechangelog` (
-  `ID` varchar(255) NOT NULL,
-  `AUTHOR` varchar(255) NOT NULL,
-  `FILENAME` varchar(255) NOT NULL,
-  `DATEEXECUTED` datetime NOT NULL,
-  `ORDEREXECUTED` int(11) NOT NULL,
-  `EXECTYPE` varchar(10) NOT NULL,
-  `MD5SUM` varchar(35) DEFAULT NULL,
-  `DESCRIPTION` varchar(255) DEFAULT NULL,
-  `COMMENTS` varchar(255) DEFAULT NULL,
-  `TAG` varchar(255) DEFAULT NULL,
-  `LIQUIBASE` varchar(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of databasechangelog
--- ----------------------------
-INSERT INTO `databasechangelog` VALUES ('201709282202', 'jishenghua', 'liquibase/jsh_erp/db.changelog-jsh_erp-1.0.xml', '2017-09-28 23:34:07', '1', 'EXECUTED', '7:ca3a38c3a43ee96bf6c7bbf56123d1fc', 'sql', '增加角色bbbb-测试', null, '3.1.1');
-INSERT INTO `databasechangelog` VALUES ('201709282227', 'jishenghua', 'liquibase/jsh_erp/db.changelog-jsh_erp-1.0.xml', '2017-09-28 23:34:07', '2', 'EXECUTED', '7:fa335b3dcabb52f38c4300e35b7c0b4c', 'sql', '删除角色bbbb-测试', null, '3.1.1');
-INSERT INTO `databasechangelog` VALUES ('201709282322', 'jishenghua', 'liquibase/jsh_erp/db.changelog-jsh_erp-1.0.xml', '2017-09-29 22:39:46', '3', 'EXECUTED', '7:adeea7031bd16af361001ce7d93b1e1a', 'sql', '新增系统配置表', null, '3.1.1');
-INSERT INTO `databasechangelog` VALUES ('201709292218', 'jishenghua', 'liquibase/jsh_erp/db.changelog-jsh_erp-1.0.xml', '2017-09-29 22:39:46', '4', 'EXECUTED', '7:f7079f8d7b3fdb92fb6d319789ea9117', 'sql', '新增系统参数数据-公司相关', null, '3.1.1');
-INSERT INTO `databasechangelog` VALUES ('201710122314', 'jishenghua', 'liquibase/jsh_erp/db.changelog-jsh_erp-1.0.xml', '2017-10-18 22:39:27', '5', 'EXECUTED', '7:c0885501076d6473461f074cc68535e7', 'sql', '新增商品属性-数据', null, '3.1.1');
-INSERT INTO `databasechangelog` VALUES ('201712102245', 'jishenghua', 'liquibase/jsh_erp/db.changelog-jsh_erp-1.0.xml', '2017-12-10 22:51:30', '6', 'EXECUTED', '7:9b0df7eba9ad678b08fd435be32397b1', 'sql', '更新账户表-是否默认列', null, '3.1.1');
-INSERT INTO `databasechangelog` VALUES ('201809122201', 'jishenghua', 'liquibase/jsh_erp/db.changelog-jsh_erp-1.0.xml', '2018-10-28 19:56:28', '7', 'EXECUTED', '7:62bde21df811efc41b146eac39da7994', 'sql', '更新用户表-是否系统列', null, '3.1.1');
-
--- ----------------------------
--- Table structure for databasechangeloglock
--- ----------------------------
-DROP TABLE IF EXISTS `databasechangeloglock`;
-CREATE TABLE `databasechangeloglock` (
-  `ID` int(11) NOT NULL,
-  `LOCKED` bit(1) NOT NULL,
-  `LOCKGRANTED` datetime DEFAULT NULL,
-  `LOCKEDBY` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of databasechangeloglock
--- ----------------------------
-INSERT INTO `databasechangeloglock` VALUES ('1', '\0', null, null);
-
--- ----------------------------
 -- Table structure for jsh_account
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_account`;
@@ -188,44 +142,6 @@ INSERT INTO `jsh_accountitem` VALUES ('94', '93', '13', null, '44.000000', '', '
 INSERT INTO `jsh_accountitem` VALUES ('95', '94', '13', null, '-66.000000', '', '1', '0');
 INSERT INTO `jsh_accountitem` VALUES ('96', '95', '13', null, '6.000000', '', '1', '0');
 INSERT INTO `jsh_accountitem` VALUES ('97', '96', null, '14', '22.000000', '', null, '0');
-
--- ----------------------------
--- Table structure for jsh_app
--- ----------------------------
-DROP TABLE IF EXISTS `jsh_app`;
-CREATE TABLE `jsh_app` (
-  `Id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `Number` varchar(50) DEFAULT NULL COMMENT '编号',
-  `Name` varchar(50) DEFAULT NULL COMMENT '名称',
-  `Type` varchar(50) DEFAULT NULL COMMENT '类型',
-  `Icon` varchar(50) DEFAULT NULL COMMENT '图标',
-  `URL` varchar(50) DEFAULT NULL COMMENT '编号',
-  `Width` varchar(50) DEFAULT NULL COMMENT '宽度',
-  `Height` varchar(50) DEFAULT NULL COMMENT '高度',
-  `ReSize` bit(1) DEFAULT NULL COMMENT '是否可改变大小',
-  `OpenMax` bit(1) DEFAULT NULL COMMENT '最大化',
-  `Flash` bit(1) DEFAULT NULL COMMENT '是否切换',
-  `ZL` varchar(50) DEFAULT NULL COMMENT '类型',
-  `Sort` varchar(50) DEFAULT NULL COMMENT '排序',
-  `Remark` varchar(200) DEFAULT NULL COMMENT '备注',
-  `Enabled` bit(1) DEFAULT NULL COMMENT '是否启用',
-  `delete_Flag` varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除',
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8 COMMENT='应用表';
-
--- ----------------------------
--- Records of jsh_app
--- ----------------------------
-INSERT INTO `jsh_app` VALUES ('3', '00', '系统管理', 'app', '0000000004.png', '', '1350', '630', '', '\0', '\0', 'desk', '198', '', '', '0');
-INSERT INTO `jsh_app` VALUES ('6', '02', '个人信息', 'app', '0000000005.png', '../user/password.html', '600', '400', '\0', '\0', '\0', 'dock', '200', '', '', '0');
-INSERT INTO `jsh_app` VALUES ('7', '01', '基础数据', 'app', '0000000006.png', '', '1350', '630', '', '\0', '\0', 'desk', '120', '', '', '0');
-INSERT INTO `jsh_app` VALUES ('22', '03', '报表查询', 'app', '0000000022.png', '', '1350', '630', '', '\0', '\0', 'desk', '115', '', '', '0');
-INSERT INTO `jsh_app` VALUES ('23', '04', '零售管理', 'app', 'resizeApi.png', '', '1350', '630', '', '\0', '', 'desk', '025', '', '', '0');
-INSERT INTO `jsh_app` VALUES ('24', '05', '采购管理', 'app', 'buy.png', '', '1350', '630', '', '\0', '', 'desk', '027', '', '', '0');
-INSERT INTO `jsh_app` VALUES ('25', '06', '销售管理', 'app', 'sale.png', '', '1350', '630', '', '\0', '', 'desk', '028', '', '', '0');
-INSERT INTO `jsh_app` VALUES ('26', '07', '财务管理', 'app', 'money.png', '', '1350', '630', '', '\0', '\0', 'desk', '035', '', '', '0');
-INSERT INTO `jsh_app` VALUES ('27', '08', '仓库管理', 'app', 'depot.png', '', '1350', '630', '', '\0', '', 'desk', '029', '', '', '0');
-INSERT INTO `jsh_app` VALUES ('28', '09', '新手引导', 'app', 'userHelp.png', '../user/userHelp.html', '1000', '500', '\0', '\0', '\0', 'dock', '210', '', '', '0');
 
 -- ----------------------------
 -- Table structure for jsh_depot
@@ -677,7 +593,6 @@ CREATE TABLE `jsh_functions` (
 -- Records of jsh_functions
 -- ----------------------------
 INSERT INTO `jsh_functions` VALUES ('1', '0001', '系统管理', '0', '', '', '0910', '', '电脑版', '', 'icon-settings', '0');
-INSERT INTO `jsh_functions` VALUES ('12', '000101', '应用管理', '0001', '/pages/manage/app.html', '\0', '0132', '', '电脑版', '', 'icon-notebook', '0');
 INSERT INTO `jsh_functions` VALUES ('13', '000102', '角色管理', '0001', '/pages/manage/role.html', '\0', '0130', '', '电脑版', '', 'icon-notebook', '0');
 INSERT INTO `jsh_functions` VALUES ('14', '000103', '用户管理', '0001', '/pages/manage/user.html', '\0', '0140', '', '电脑版', null, 'icon-notebook', '0');
 INSERT INTO `jsh_functions` VALUES ('15', '000104', '日志管理', '0001', '/pages/manage/log.html', '\0', '0160', '', '电脑版', null, 'icon-notebook', '0');
@@ -1797,14 +1712,9 @@ CREATE TABLE `jsh_userbusiness` (
 -- ----------------------------
 -- Records of jsh_userbusiness
 -- ----------------------------
-INSERT INTO `jsh_userbusiness` VALUES ('1', 'RoleAPP', '4', '[3][6][7][22][23][24][25][26][27][28]', null, '0');
-INSERT INTO `jsh_userbusiness` VALUES ('2', 'RoleAPP', '5', '[8][7][6]', null, '0');
-INSERT INTO `jsh_userbusiness` VALUES ('3', 'RoleAPP', '6', '[23][24][25][27][26][22][7][3][6]', null, '0');
-INSERT INTO `jsh_userbusiness` VALUES ('4', 'RoleAPP', '7', '[21][1][8][11]', null, '0');
 INSERT INTO `jsh_userbusiness` VALUES ('5', 'RoleFunctions', '4', '[245][13][12][16][243][14][15][234][236][22][23][220][240][25][217][218][26][194][195][31][59][207][208][209][226][227][228][229][235][237][244][210][211][241][33][199][242][41][200][201][202][40][232][233][197][203][204][205][206][212][246]', '[{\"funId\":\"25\",\"btnStr\":\"1\"},{\"funId\":\"217\",\"btnStr\":\"1\"},{\"funId\":\"218\",\"btnStr\":\"1\"},{\"funId\":\"241\",\"btnStr\":\"3\"},{\"funId\":\"242\",\"btnStr\":\"3\"}]', '0');
 INSERT INTO `jsh_userbusiness` VALUES ('6', 'RoleFunctions', '5', '[22][23][25][26][194][195][31][33][200][201][41][199][202]', null, '0');
 INSERT INTO `jsh_userbusiness` VALUES ('7', 'RoleFunctions', '6', '[22][23][220][240][25][217][218][26][194][195][31][59][207][208][209][226][227][228][229][235][237][210][211][241][33][199][242][41][200][201][202][40][232][233][197][203][204][205][206][212]', '[{\"funId\":\"33\",\"btnStr\":\"4\"}]', '0');
-INSERT INTO `jsh_userbusiness` VALUES ('8', 'RoleAPP', '8', '[21][1][8][11][10]', null, '0');
 INSERT INTO `jsh_userbusiness` VALUES ('9', 'RoleFunctions', '7', '[168][13][12][16][14][15][189][18][19][132]', null, '0');
 INSERT INTO `jsh_userbusiness` VALUES ('10', 'RoleFunctions', '8', '[168][13][12][16][14][15][189][18][19][132][22][23][25][26][27][157][158][155][156][125][31][127][126][128][33][34][35][36][37][39][40][41][42][43][46][47][48][49][50][51][52][53][54][55][56][57][192][59][60][61][62][63][65][66][68][69][70][71][73][74][76][77][79][191][81][82][83][85][89][161][86][176][165][160][28][134][91][92][29][94][95][97][104][99][100][101][102][105][107][108][110][111][113][114][116][117][118][120][121][131][135][123][122][20][130][146][147][138][148][149][153][140][145][184][152][143][170][171][169][166][167][163][164][172][173][179][178][181][182][183][186][187]', null, '0');
 INSERT INTO `jsh_userbusiness` VALUES ('11', 'RoleFunctions', '9', '[168][13][12][16][14][15][189][18][19][132][22][23][25][26][27][157][158][155][156][125][31][127][126][128][33][34][35][36][37][39][40][41][42][43][46][47][48][49][50][51][52][53][54][55][56][57][192][59][60][61][62][63][65][66][68][69][70][71][73][74][76][77][79][191][81][82][83][85][89][161][86][176][165][160][28][134][91][92][29][94][95][97][104][99][100][101][102][105][107][108][110][111][113][114][116][117][118][120][121][131][135][123][122][20][130][146][147][138][148][149][153][140][145][184][152][143][170][171][169][166][167][163][164][172][173][179][178][181][182][183][186][187][188]', null, '0');
@@ -1826,7 +1736,6 @@ INSERT INTO `jsh_userbusiness` VALUES ('27', 'UserCustomer', '63', '[58]', null,
 INSERT INTO `jsh_userbusiness` VALUES ('28', 'UserDepot', '96', '[7]', null, '0');
 INSERT INTO `jsh_userbusiness` VALUES ('29', 'UserRole', '96', '[6]', null, '0');
 INSERT INTO `jsh_userbusiness` VALUES ('30', 'UserRole', '113', '[10]', null, '0');
-INSERT INTO `jsh_userbusiness` VALUES ('31', 'RoleAPP', '10', '[3][6][7][22][23][24][25][26][27][28]', null, '0');
 INSERT INTO `jsh_userbusiness` VALUES ('32', 'RoleFunctions', '10', '[245][13][243][14][15][234][22][23][220][240][25][217][218][26][194][195][31][59][207][208][209][226][227][228][229][235][237][244][210][211][241][33][199][242][41][200][201][202][40][232][233][197][203][204][205][206][212][246]', '[{\"funId\":\"25\",\"btnStr\":\"1\"},{\"funId\":\"217\",\"btnStr\":\"1\"},{\"funId\":\"218\",\"btnStr\":\"1\"},{\"funId\":\"241\",\"btnStr\":\"3\"},{\"funId\":\"242\",\"btnStr\":\"3\"}]', '0');
 INSERT INTO `jsh_userbusiness` VALUES ('34', 'UserRole', '115', '[10]', null, '0');
 INSERT INTO `jsh_userbusiness` VALUES ('35', 'UserRole', '117', '[10]', null, '0');
@@ -1837,13 +1746,9 @@ INSERT INTO `jsh_userbusiness` VALUES ('39', 'UserDepot', '120', '[7][8][9][10][
 INSERT INTO `jsh_userbusiness` VALUES ('40', 'UserCustomer', '120', '[52][48][6][5][2]', null, '0');
 INSERT INTO `jsh_userbusiness` VALUES ('41', 'RoleFunctions', '12', '', null, '0');
 INSERT INTO `jsh_userbusiness` VALUES ('48', 'RoleFunctions', '13', '[59][207][208][209][226][227][228][229][235][237][210][211][241][33][199][242][41][200]', null, '0');
-INSERT INTO `jsh_userbusiness` VALUES ('49', 'RoleAPP', '13', '[22][23][24][25]', null, '0');
-INSERT INTO `jsh_userbusiness` VALUES ('50', 'RoleAPP', '64', '[3]', null, '0');
 INSERT INTO `jsh_userbusiness` VALUES ('51', 'UserRole', '74', '[10]', null, '0');
 INSERT INTO `jsh_userbusiness` VALUES ('52', 'UserDepot', '121', '[13]', null, '0');
-INSERT INTO `jsh_userbusiness` VALUES ('53', 'RoleAPP', '121', '[3]', null, '0');
 INSERT INTO `jsh_userbusiness` VALUES ('54', 'UserDepot', '115', '[13]', null, '0');
-INSERT INTO `jsh_userbusiness` VALUES ('55', 'RoleAPP', '115', '[3]', null, '0');
 INSERT INTO `jsh_userbusiness` VALUES ('56', 'UserCustomer', '115', '[56]', null, '0');
 INSERT INTO `jsh_userbusiness` VALUES ('57', 'UserCustomer', '121', '[56]', null, '0');
 INSERT INTO `jsh_userbusiness` VALUES ('58', 'UserRole', '121', '[15]', null, '0');

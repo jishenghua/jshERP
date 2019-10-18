@@ -397,7 +397,6 @@ public class SupplierController {
                 info.code = 400;
                 info.data = data;
             }
-            //读取所有的摄像机编码
             //每行中数据顺序 "名称","类型","联系人","电话","电子邮箱","预收款","期初应收","期初应付","备注","传真","手机","地址","纳税人识别号","开户行","账号","税率","状态"
             List<Supplier> sList = new ArrayList<Supplier>();
             for (int i = 1; i < src.getRows(); i++) {

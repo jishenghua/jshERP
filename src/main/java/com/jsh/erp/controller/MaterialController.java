@@ -257,7 +257,6 @@ public class MaterialController {
                 info.code = 400;
                 info.data = data;
             }
-            //读取所有的摄像机编码
             //每行中数据顺序  "品名","类型","型号","安全存量","单位","零售价","最低售价","预计采购价","批发价","备注","状态"
             List<Material> mList = new ArrayList<Material>();
             for (int i = 1; i < src.getRows(); i++) {
