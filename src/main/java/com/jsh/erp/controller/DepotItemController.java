@@ -21,10 +21,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 
@@ -665,4 +663,46 @@ public class DepotItemController {
         }
         return res;
     }
+
+    /**
+     * 统计采购或销售的总金额
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @GetMapping(value = "/buyOrSalePrice")
+    public BaseResponseInfo buyOrSalePrice(HttpServletRequest request, HttpServletResponse response)throws Exception {
+        BaseResponseInfo res = new BaseResponseInfo();
+        Map<String, Object> map = new HashMap<String, Object>();
+        String message = "成功";
+        try {
+            Date date = new Date();
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM");
+            String dateString = formatter.format(date);
+            List<String> list = Tools.getSixMonth(dateString);
+            map.put("monthList", list);
+            List<BigDecimal> buyPriceList = new ArrayList<BigDecimal>();
+            for(String month: list) {
+                BigDecimal outPrice = depotItemService.inOrOutPrice("入库", "采购", month);
+                BigDecimal inPrice = depotItemService.inOrOutPrice("出库", "采购退货", month);
+                buyPriceList.add(outPrice.subtract(inPrice));
+            }
+            map.put("buyPriceList", buyPriceList);
+            List<BigDecimal> salePriceList = new ArrayList<BigDecimal>();
+            for(String month: list) {
+                BigDecimal outPrice = depotItemService.inOrOutPrice("出库", "销售", month);
+                BigDecimal inPrice = depotItemService.inOrOutPrice("入库", "销售退货", month);
+                salePriceList.add(outPrice.subtract(inPrice));
+            }
+            map.put("salePriceList", salePriceList);
+            res.code = 200;
+            res.data = map;
+        } catch (Exception e) {
+            e.printStackTrace();
+            message = "统计失败";
+            res.code = 500;
+        }
+        return res;
     }
+}

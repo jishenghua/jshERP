@@ -261,6 +261,24 @@ public class DepotItemService {
     }
 
     /**
+     * 统计采购或销售的总金额
+     * @param type
+     * @param subType
+     * @param MonthTime
+     * @return
+     * @throws Exception
+     */
+    public BigDecimal inOrOutPrice(String type, String subType, String MonthTime) throws Exception{
+        BigDecimal result= BigDecimal.ZERO;
+        try{
+            result = depotItemMapperEx.inOrOutPrice(type, subType, MonthTime);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return result;
+    }
+
+    /**
      * 2019-02-02修改
      * 我之前对操作数量的理解有偏差
      * 这里重点重申一下：BasicNumber=OperNumber*ratio

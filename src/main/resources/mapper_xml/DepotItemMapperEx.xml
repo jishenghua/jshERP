@@ -202,6 +202,15 @@
         and ifnull(di.delete_Flag,'0') !='1'
     </select>
 
+    <select id="inOrOutPrice" resultType="java.math.BigDecimal">
+        select ifnull(sum(DiscountLastMoney),0) as allMoney from jsh_depothead dh
+        where 1=1
+        and dh.type='${type}' and dh.subType='${subType}'
+        and dh.OperTime &gt;= '${MonthTime}-01 00:00:00'
+        and dh.OperTime &lt;= '${MonthTime}-31 23:59:59'
+        and ifnull(dh.delete_Flag,'0') !='1'
+    </select>
+
     <select id="getStockByParam"  resultMap="StockMap">
         select ifnull((curep.inTotal+curep.transfInTotal+curep.assemInTotal+curep.disAssemInTotal),0) as in_stock,
         ifnull((curep.transfOutTotal+curep.outTotal+curep.assemOutTotal+curep.disAssemOutTotal),0) out_stock
