@@ -68,7 +68,7 @@
         </div>
         <div class="row">
             <section class="col-md-6 ui-sortable">
-                <div class="box box-solid bg-teal-gradient">
+                <div class="box box-solid">
                     <div class="box-header ui-sortable-handle">
                         <i class="fa fa-th"></i>
                         <h3 class="box-title">采购统计</h3>
@@ -80,7 +80,7 @@
                 </div>
             </section>
             <section class="col-md-6 ui-sortable ui-sortable">
-                <div class="box box-solid bg-teal-gradient">
+                <div class="box box-solid">
                     <div class="box-header ui-sortable-handle">
                         <i class="fa fa-th"></i>
                         <h3 class="box-title">销售统计</h3>
@@ -210,8 +210,8 @@
             success: function (res) {
                 if(res && res.code === 200) {
                     var data = res.data;
-                    Highcharts.chart('buyIn', getChartObj("采购金额", res.data.monthList, res.data.buyPriceList));
-                    Highcharts.chart('saleOut', getChartObj("销售金额", res.data.monthList, res.data.salePriceList));
+                    Highcharts.chart('buyIn', getChartObj("最近6个月采购数据", res.data.monthList, res.data.buyPriceList));
+                    Highcharts.chart('saleOut', getChartObj("最近6个月销售数据", res.data.monthList, res.data.salePriceList));
                 }
             },
             error:function(res){
