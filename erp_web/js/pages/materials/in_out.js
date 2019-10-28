@@ -1548,7 +1548,7 @@
 
 		if(listSubType == "零售"){
 			var option = "";
-			if(depotHeadInfo[17] === "预付款"){
+            if(res.paytype === "预付款"){
 				option = '<option value="预付款">预付款</option>';
 				option += '<option value="现付">现付</option>';
 			}
