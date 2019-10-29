@@ -181,7 +181,7 @@
     </select>
 
     <select id="buyOrSaleNumber" resultType="java.math.BigDecimal">
-        select sum(BasicNumber) as BasicNumber from jsh_depotitem di,jsh_depothead dh
+        select ifnull(sum(BasicNumber),0) as BasicNumber from jsh_depotitem di,jsh_depothead dh
         where di.HeaderId = dh.id
         and dh.type='${type}' and dh.subType='${subType}'
         and di.MaterialId =${MId}
@@ -192,7 +192,7 @@
     </select>
 
     <select id="buyOrSalePrice" resultType="java.math.BigDecimal">
-        select sum(AllPrice) as AllPrice from jsh_depotitem di,jsh_depothead dh
+        select ifnull(sum(AllPrice),0) as AllPrice from jsh_depotitem di,jsh_depothead dh
         where di.HeaderId = dh.id
         and dh.type='${type}' and dh.subType='${subType}'
         and di.MaterialId =${MId}
