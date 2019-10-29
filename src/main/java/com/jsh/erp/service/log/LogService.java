@@ -206,7 +206,6 @@ public class LogService {
         Byte status = 0;
         log.setStatus(status);
         log.setContentdetails(type + getModule(apiName));
-        log.setRemark(type + getModule(apiName));
         try{
             logMapper.insertSelective(log);
         }catch(Exception e){
