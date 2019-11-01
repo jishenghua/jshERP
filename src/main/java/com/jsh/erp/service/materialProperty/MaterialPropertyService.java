@@ -9,6 +9,7 @@ import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.mappers.MaterialPropertyMapper;
 import com.jsh.erp.datasource.mappers.MaterialPropertyMapperEx;
 import com.jsh.erp.exception.BusinessRunTimeException;
+import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
@@ -43,10 +44,7 @@ public class MaterialPropertyService {
         try{
             result=materialPropertyMapper.selectByPrimaryKey(id);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                    ExceptionConstants.DATA_READ_FAIL_MSG);
+            JshException.readFail(logger, e);
         }
         return result;
     }
@@ -58,10 +56,7 @@ public class MaterialPropertyService {
         try{
             list=materialPropertyMapper.selectByExample(example);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                    ExceptionConstants.DATA_READ_FAIL_MSG);
+            JshException.readFail(logger, e);
         }
         return list;
     }
@@ -71,10 +66,7 @@ public class MaterialPropertyService {
         try{
             list=materialPropertyMapperEx.selectByConditionMaterialProperty(name, offset, rows);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                    ExceptionConstants.DATA_READ_FAIL_MSG);
+            JshException.readFail(logger, e);
         }
         return list;
     }
@@ -84,10 +76,7 @@ public class MaterialPropertyService {
         try{
             result=materialPropertyMapperEx.countsByMaterialProperty(name);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                    ExceptionConstants.DATA_READ_FAIL_MSG);
+            JshException.readFail(logger, e);
         }
         return result;
     }
@@ -99,10 +88,7 @@ public class MaterialPropertyService {
         try{
             result=materialPropertyMapper.insertSelective(materialProperty);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
-                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+            JshException.writeFail(logger, e);
         }
         return result;
     }
@@ -115,10 +101,7 @@ public class MaterialPropertyService {
         try{
             result=materialPropertyMapper.updateByPrimaryKeySelective(materialProperty);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
-                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+            JshException.writeFail(logger, e);
         }
         return result;
     }
@@ -129,10 +112,7 @@ public class MaterialPropertyService {
         try{
             result=materialPropertyMapper.deleteByPrimaryKey(id);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
-                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+            JshException.writeFail(logger, e);
         }
         return result;
     }
@@ -146,10 +126,7 @@ public class MaterialPropertyService {
         try{
             result=materialPropertyMapper.deleteByExample(example);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
-                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+            JshException.writeFail(logger, e);
         }
         return result;
     }
@@ -168,10 +145,7 @@ public class MaterialPropertyService {
         try{
             result=materialPropertyMapperEx.batchDeleteMaterialPropertyByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
-                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+            JshException.writeFail(logger, e);
         }
         return result;
 

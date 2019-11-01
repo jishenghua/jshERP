@@ -7,8 +7,8 @@ import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.mappers.UserBusinessMapper;
 import com.jsh.erp.datasource.mappers.UserBusinessMapperEx;
 import com.jsh.erp.exception.BusinessRunTimeException;
+import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.CommonQueryManager;
-import com.jsh.erp.service.app.AppService;
 import com.jsh.erp.service.functions.FunctionsService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
@@ -42,9 +42,6 @@ public class UserBusinessService {
     private FunctionsService functionsService;
 
     @Resource
-    private AppService appService;
-
-    @Resource
     private CommonQueryManager configResourceManager;
 
     public UserBusiness getUserBusiness(long id)throws Exception {
@@ -52,10 +49,7 @@ public class UserBusinessService {
         try{
             result=userBusinessMapper.selectByPrimaryKey(id);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                    ExceptionConstants.DATA_READ_FAIL_MSG);
+            JshException.readFail(logger, e);
         }
         return result;
     }
@@ -67,10 +61,7 @@ public class UserBusinessService {
         try{
             list=userBusinessMapper.selectByExample(example);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                    ExceptionConstants.DATA_READ_FAIL_MSG);
+            JshException.readFail(logger, e);
         }
         return list;
     }
@@ -82,14 +73,7 @@ public class UserBusinessService {
         try{
             result=userBusinessMapper.insertSelective(userBusiness);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
-                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
-        }
-        // 更新应用权限
-        if (BusinessConstants.TYPE_NAME_ROLE_FUNCTIONS.equals(userBusiness.getType()) && result > 0) {
-            result = insertOrUpdateAppValue(BusinessConstants.TYPE_NAME_ROLE_APP, userBusiness.getKeyid(), userBusiness.getValue());
+            JshException.writeFail(logger, e);
         }
         return result;
     }
@@ -102,14 +86,7 @@ public class UserBusinessService {
         try{
             result=userBusinessMapper.updateByPrimaryKeySelective(userBusiness);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
-                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
-        }
-        // 更新应用权限
-        if (BusinessConstants.TYPE_NAME_ROLE_FUNCTIONS.equals(userBusiness.getType()) && result > 0) {
-            result = insertOrUpdateAppValue(BusinessConstants.TYPE_NAME_ROLE_APP, userBusiness.getKeyid(), userBusiness.getValue());
+            JshException.writeFail(logger, e);
         }
         return result;
     }
@@ -120,10 +97,7 @@ public class UserBusinessService {
         try{
             result=userBusinessMapper.deleteByPrimaryKey(id);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
-                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+            JshException.writeFail(logger, e);
         }
         return result;
     }
@@ -137,10 +111,7 @@ public class UserBusinessService {
         try{
             result=userBusinessMapper.deleteByExample(example);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
-                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+            JshException.writeFail(logger, e);
         }
         return result;
     }
@@ -157,10 +128,7 @@ public class UserBusinessService {
         try{
             list= userBusinessMapper.selectByExample(example);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                    ExceptionConstants.DATA_READ_FAIL_MSG);
+            JshException.readFail(logger, e);
         }
         return list;
     }
@@ -173,10 +141,7 @@ public class UserBusinessService {
         try{
             list= userBusinessMapper.selectByExample(example);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                    ExceptionConstants.DATA_READ_FAIL_MSG);
+            JshException.readFail(logger, e);
         }
         Long id = null;
         if(list!=null&&list.size() > 0) {
@@ -199,10 +164,7 @@ public class UserBusinessService {
         try{
             list=  userBusinessMapper.selectByExample(example);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                    ExceptionConstants.DATA_READ_FAIL_MSG);
+            JshException.readFail(logger, e);
         }
         if(list!=null&&list.size() > 0) {
             return true;
@@ -224,10 +186,7 @@ public class UserBusinessService {
         try{
             result=  userBusinessMapper.updateByExampleSelective(userBusiness, example);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
-                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+            JshException.writeFail(logger, e);
         }
         return result;
     }
@@ -240,10 +199,7 @@ public class UserBusinessService {
         try{
             list=  userBusinessMapper.selectByExample(example);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                    ExceptionConstants.DATA_READ_FAIL_MSG);
+            JshException.readFail(logger, e);
         }
         return list;
     }
@@ -257,10 +213,7 @@ public class UserBusinessService {
         try{
             list=  userBusinessMapper.selectByExample(example);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                    ExceptionConstants.DATA_READ_FAIL_MSG);
+            JshException.readFail(logger, e);
         }
         return list;
     }
@@ -276,60 +229,7 @@ public class UserBusinessService {
         try{
             result=  userBusinessMapperEx.batchDeleteUserBusinessByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
-                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
-        }
-        return result;
-    }
-
-    /**
-     * 通过功能（RoleFunctions）权限更新应用（RoleApp）权限
-     * @param type
-     * @param keyId
-     * @param functionIds
-     * @return
-     */
-    public int insertOrUpdateAppValue(String type, String keyId, String functionIds) throws Exception{
-        int result=0;
-        functionIds = functionIds.replaceAll("\\]\\[", ",").
-                replaceAll("\\[","").replaceAll("\\]","");
-        List<Functions> functionsList = functionsService.findByIds(functionIds);
-        if (!CollectionUtils.isEmpty(functionsList)) {
-            Set<String> appNumbers = new HashSet<>();
-            String appNumber;
-            for (Functions functions : functionsList) {
-                appNumber = functions.getNumber().substring(0, 2);
-                appNumbers.add(appNumber);
-            }
-            List<String> appNumberList = new ArrayList<>(appNumbers);
-            List<App> appList = appService.findAppByNumber(appNumberList);
-            StringBuilder appIdSb = new StringBuilder();
-            if (!CollectionUtils.isEmpty(appList)) {
-                for (App app : appList) {
-                    appIdSb.append("[" + app.getId() + "]");
-                }
-                List<UserBusiness> userBusinessList = getBasicData(keyId, type);
-                try{
-                    if(userBusinessList.size() > 0) {
-                        UserBusiness userBusiness = userBusinessList.get(0);
-                        userBusiness.setValue(appIdSb.toString());
-                        result = userBusinessMapper.updateByPrimaryKeySelective(userBusiness);
-                    } else {
-                        UserBusiness userBusiness = new UserBusiness();
-                        userBusiness.setType(type);
-                        userBusiness.setKeyid(keyId);
-                        userBusiness.setValue(appIdSb.toString());
-                        result = userBusinessMapper.insertSelective(userBusiness);
-                    }
-                }catch(Exception e){
-                    logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                            ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
-                    throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
-                            ExceptionConstants.DATA_WRITE_FAIL_MSG);
-                }
-            }
+            JshException.writeFail(logger, e);
         }
         return result;
     }

@@ -110,7 +110,6 @@ public interface DepotHeadMapperEx {
      * */
     void updatedepotHead(DepotHead depotHead);
 
-    void updateBuildOnlyNumber();
     /**
      * 获得一个全局唯一的数作为订单号的追加
      * */
@@ -125,4 +124,11 @@ public interface DepotHeadMapperEx {
     List<DepotHead> getDepotHeadListByHandsPersonIds(@Param("handsPersonIds") String[] handsPersonIds);
 
     List<DepotHead> getDepotHeadListByDepotIds(@Param("depotIds") String[] depotIds);
+
+    BigDecimal getBuyAndSaleStatistics(
+            @Param("type") String type,
+            @Param("subType") String subType,
+            @Param("hasSupplier") Integer hasSupplier,
+            @Param("beginTime") String beginTime,
+            @Param("endTime") String endTime);
 }

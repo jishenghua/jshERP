@@ -14,6 +14,7 @@ import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.ErpInfo;
 import com.jsh.erp.utils.StringUtil;
+import com.jsh.erp.utils.Tools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
+import static com.jsh.erp.utils.Tools.getNow3;
 
 /**
  * @author ji-sheng-hua 752*718*920
@@ -38,9 +40,6 @@ import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 @RequestMapping(value = "/depotHead")
 public class DepotHeadController {
     private Logger logger = LoggerFactory.getLogger(DepotHeadController.class);
-
-    @Value("${mybatis-plus.status}")
-    private String mybatisPlusStatus;
 
     @Resource
     private DepotHeadService depotHeadService;
@@ -377,15 +376,12 @@ public class DepotHeadController {
                           @RequestParam("deleted") String deleted,
                           @RequestParam("updated") String updated, HttpServletRequest request) throws  Exception{
         JSONObject result = ExceptionConstants.standardSuccess();
-        if(("open").equals(mybatisPlusStatus)) {
-            Long billsNumLimit = Long.parseLong(request.getSession().getAttribute("billsNumLimit").toString());
-            Long count = depotHeadService.countDepotHead(null,null,null,null,null,null,null);
-            if(count>= billsNumLimit) {
-                throw new BusinessParamCheckingException(ExceptionConstants.DEPOT_HEAD_OVER_LIMIT_FAILED_CODE,
-                        ExceptionConstants.DEPOT_HEAD_OVER_LIMIT_FAILED_MSG);
-            } else {
-                depotHeadService.addDepotHeadAndDetail(beanJson,inserted,deleted,updated);
-            }
+        Long billsNumLimit = Long.parseLong(request.getSession().getAttribute("billsNumLimit").toString());
+        Long tenantId = Long.parseLong(request.getSession().getAttribute("tenantId").toString());
+        Long count = depotHeadService.countDepotHead(null,null,null,null,null,null,null);
+        if(count>= billsNumLimit) {
+            throw new BusinessParamCheckingException(ExceptionConstants.DEPOT_HEAD_OVER_LIMIT_FAILED_CODE,
+                    ExceptionConstants.DEPOT_HEAD_OVER_LIMIT_FAILED_MSG);
         } else {
             depotHeadService.addDepotHeadAndDetail(beanJson,inserted,deleted,updated);
         }
@@ -405,12 +401,16 @@ public class DepotHeadController {
      * @return java.lang.Object
      */
     @RequestMapping(value = "/updateDepotHeadAndDetail")
-    public Object updateDepotHeadAndDetail(@RequestParam("id") Long id,@RequestParam("info") String beanJson,@RequestParam("inserted") String inserted,
-                          @RequestParam("deleted") String deleted,
-                          @RequestParam("updated") String updated,@RequestParam("preTotalPrice") BigDecimal preTotalPrice) throws  Exception{
-
+    public Object updateDepotHeadAndDetail(@RequestParam("id") Long id,
+                                           @RequestParam("info") String beanJson,
+                                           @RequestParam("inserted") String inserted,
+                                           @RequestParam("deleted") String deleted,
+                                           @RequestParam("updated") String updated,
+                                           @RequestParam("preTotalPrice") BigDecimal preTotalPrice,
+                                           HttpServletRequest request) throws  Exception{
+        Long tenantId = Long.parseLong(request.getSession().getAttribute("tenantId").toString());
         JSONObject result = ExceptionConstants.standardSuccess();
-        depotHeadService.updateDepotHeadAndDetail(id,beanJson,inserted,deleted,updated,preTotalPrice);
+        depotHeadService.updateDepotHeadAndDetail(id,beanJson,inserted,deleted,updated,preTotalPrice,tenantId);
         return result;
     }
     /**
@@ -442,5 +442,40 @@ public class DepotHeadController {
         JSONObject result = ExceptionConstants.standardSuccess();
         depotHeadService.batchDeleteDepotHeadAndDetail(ids);
         return result;
+    }
+
+    /**
+     * 统计今日销售额、本月销售额、本月进货额
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/getBuyAndSaleStatistics")
+    public BaseResponseInfo getBuyAndSaleStatistics(HttpServletRequest request) {
+        BaseResponseInfo res = new BaseResponseInfo();
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            String today = Tools.getNow() + " 00:00:00";
+            String firstDay = Tools.getCurrentMonth() + "-01 00:00:00";
+            BigDecimal todaySale = depotHeadService.getBuyAndSaleStatistics("出库", "销售",
+                    1, today, getNow3()); //今日销售出库
+            BigDecimal todayRetailSale = depotHeadService.getBuyAndSaleStatistics("出库", "销售",
+                    0, today, getNow3()); //今日零售出库
+            BigDecimal monthSale = depotHeadService.getBuyAndSaleStatistics("出库", "销售",
+                    1,firstDay, getNow3()); //本月销售出库
+            BigDecimal monthRetailSale = depotHeadService.getBuyAndSaleStatistics("出库", "销售",
+                    0,firstDay, getNow3()); //本月零售出库
+            BigDecimal monthBuy = depotHeadService.getBuyAndSaleStatistics("入库", "采购",
+                    1, firstDay, getNow3()); //本月采购入库
+            map.put("todaySale", todaySale.add(todayRetailSale));
+            map.put("thisMonthSale", monthSale.add(monthRetailSale));
+            map.put("thisMonthBuy", monthBuy);
+            res.code = 200;
+            res.data = map;
+        } catch(Exception e){
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
     }
 }

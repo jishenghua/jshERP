@@ -7,6 +7,7 @@ import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.mappers.*;
 import com.jsh.erp.exception.BusinessRunTimeException;
+import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
@@ -46,10 +47,7 @@ public class DepotService {
         try{
             result=depotMapper.selectByPrimaryKey(id);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                    ExceptionConstants.DATA_READ_FAIL_MSG);
+            JshException.readFail(logger, e);
         }
         return result;
     }
@@ -61,10 +59,7 @@ public class DepotService {
         try{
             list=depotMapper.selectByExample(example);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                    ExceptionConstants.DATA_READ_FAIL_MSG);
+            JshException.readFail(logger, e);
         }
         return list;
     }
@@ -77,10 +72,7 @@ public class DepotService {
         try{
             list=depotMapper.selectByExample(example);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                    ExceptionConstants.DATA_READ_FAIL_MSG);
+            JshException.readFail(logger, e);
         }
         return list;
     }
@@ -90,10 +82,7 @@ public class DepotService {
         try{
             list=depotMapperEx.selectByConditionDepot(name, type, remark, offset, rows);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                    ExceptionConstants.DATA_READ_FAIL_MSG);
+            JshException.readFail(logger, e);
         }
         return list;
     }
@@ -103,10 +92,7 @@ public class DepotService {
         try{
             result=depotMapperEx.countsByDepot(name, type, remark);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                    ExceptionConstants.DATA_READ_FAIL_MSG);
+            JshException.readFail(logger, e);
         }
         return result;
     }
@@ -118,10 +104,7 @@ public class DepotService {
         try{
             result=depotMapper.insertSelective(depot);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
-                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+            JshException.writeFail(logger, e);
         }
         return result;
     }
@@ -134,10 +117,7 @@ public class DepotService {
         try{
             result= depotMapper.updateByPrimaryKeySelective(depot);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
-                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+            JshException.writeFail(logger, e);
         }
         return result;
     }
@@ -148,10 +128,7 @@ public class DepotService {
         try{
             result= depotMapper.deleteByPrimaryKey(id);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
-                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+            JshException.writeFail(logger, e);
         }
         return result;
     }
@@ -165,10 +142,7 @@ public class DepotService {
         try{
             result= depotMapper.deleteByExample(example);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
-                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+            JshException.writeFail(logger, e);
         }
         return result;
     }
@@ -180,10 +154,7 @@ public class DepotService {
         try{
             list= depotMapper.selectByExample(example);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                    ExceptionConstants.DATA_READ_FAIL_MSG);
+            JshException.readFail(logger, e);
         }
         return list==null?0:list.size();
     }
@@ -196,10 +167,7 @@ public class DepotService {
         try{
             list= depotMapper.selectByExample(example);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                    ExceptionConstants.DATA_READ_FAIL_MSG);
+            JshException.readFail(logger, e);
         }
         return list;
     }
@@ -212,10 +180,7 @@ public class DepotService {
         try{
             list=  depotMapper.selectByExample(example);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                    ExceptionConstants.DATA_READ_FAIL_MSG);
+            JshException.readFail(logger, e);
         }
         return list;
     }
@@ -225,10 +190,7 @@ public class DepotService {
         try{
             list=  depotMapperEx.getDepotList(parameterMap);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                    ExceptionConstants.DATA_READ_FAIL_MSG);
+            JshException.readFail(logger, e);
         }
         return list;
     }
@@ -243,10 +205,7 @@ public class DepotService {
         try{
             result=  depotMapperEx.batchDeleteDepotByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
-                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+            JshException.writeFail(logger, e);
         }
         return result;
     }
@@ -280,10 +239,7 @@ public class DepotService {
         try{
             depotHeadList=  depotHeadMapperEx.getDepotHeadListByDepotIds(idArray);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                    ExceptionConstants.DATA_READ_FAIL_MSG);
+            JshException.readFail(logger, e);
         }
         if(depotHeadList!=null&&depotHeadList.size()>0){
             logger.error("异常码[{}],异常提示[{}],参数,DepotIds[{}]",
@@ -298,10 +254,7 @@ public class DepotService {
         try{
             depotItemList=  depotItemMapperEx.getDepotItemListListByDepotIds(idArray);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                    ExceptionConstants.DATA_READ_FAIL_MSG);
+            JshException.readFail(logger, e);
         }
         if(depotItemList!=null&&depotItemList.size()>0){
             logger.error("异常码[{}],异常提示[{}],参数,DepotIds[{}]",
@@ -329,10 +282,7 @@ public class DepotService {
         try{
             result = depotMapper.updateByExampleSelective(depot, example);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
-                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+            JshException.writeFail(logger, e);
         }
         return result;
     }

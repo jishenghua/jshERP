@@ -31,7 +31,7 @@
             </foreach>
         </if>
         and ifnull(m.delete_Flag,'0') !='1'
-        order by m.id asc
+        order by m.id desc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
         </if>
@@ -80,7 +80,7 @@
         left join jsh_unit u on m.UnitId=u.id and ifnull(u.delete_Flag,'0') !='1'
         where m.enabled=1
         and ifnull(m.delete_Flag,'0') !='1'
-        ORDER BY Id asc
+        ORDER BY Id desc
     </select>
 
     <update id="updatePriceNullByPrimaryKey" parameterType="java.lang.Long">
@@ -121,7 +121,7 @@
             </foreach>
         </if>
         and ifnull(m.delete_Flag,'0') !='1'
-        order by m.id asc
+        order by m.id desc
     </select>
     <select id="findByMaterialName"  resultType="com.jsh.erp.datasource.entities.Material">
         select m.*

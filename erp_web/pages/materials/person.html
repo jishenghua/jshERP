@@ -15,9 +15,8 @@
     <script type="text/javascript" src="/js/common/common.js"></script>
 </head>
 <body>
-<!-- 查询 -->
-<div id="searchPanel" class="easyui-panel" style="padding:10px;" title="查询窗口" iconCls="icon-search" collapsible="true"
-     closable="false">
+<!-- 数据显示table -->
+<div id="tablePanel" class="easyui-panel" data-options="fit:true" style="padding:1px;top:300px;" title="经手人列表" iconCls="icon-list">
     <table id="searchTable">
         <tr>
             <td>姓名：</td>
@@ -42,11 +41,6 @@
             </td>
         </tr>
     </table>
-</div>
-
-<!-- 数据显示table -->
-<div id="tablePanel" class="easyui-panel" style="padding:1px;top:300px;" title="经手人列表" iconCls="icon-list"
-     collapsible="true" closable="false">
     <table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 </div>
 
@@ -82,54 +76,12 @@
 </div>
 
 <script type="text/javascript">
-    var depotList = null;
-    var depotID = null;
     //初始化界面
     $(function () {
-        //初始化系统基础信息
-        initSystemData();
-        initSelectInfo();
         initTableData();
         ininPager();
         initForm();
     });
-
-    //初始化系统基础信息
-    function initSystemData() {
-        $.ajax({
-            type: "get",
-            url: "/depot/getAllList",
-            //设置为同步
-            async: false,
-            dataType: "json",
-            success: function (res) {
-                if(res && res.code === 200){
-                    depotList = res.data;
-                } else {
-                    $.messager.alert('提示', '查找系统基础信息异常,请与管理员联系！', 'error');
-                    return;
-                }
-            }
-        });
-    }
-
-    //初始化页面选项卡
-    function initSelectInfo() {
-        var options = "";
-
-        if (depotList != null) {
-            options = "";
-            for (var i = 0; i < depotList.length; i++) {
-                var depot = depotList[i];
-                if (0 == i) {
-                    depotID = depot.id;
-                }
-                options += '<option value="' + depot.id + '">' + depot.name + '</option>';
-            }
-            $("#ProjectId").empty().append(options);
-            $("#searchProjectId").empty().append('<option value="">全部</option>').append(options);
-        }
-    }
 
     //防止表单提交重复
     function initForm() {
@@ -208,6 +160,7 @@
                 return;
             }
         });
+        dgResize();
         showPersonDetails(1, initPageSize);
     }
 
@@ -488,9 +441,8 @@
     //重置按钮
     $("#searchResetBtn").unbind().bind({
         click: function () {
-            $("#searchProjectId").val("");
+            $("#searchName").val("");
             $("#searchType").val("");
-
             //加载完以后重新初始化
             $("#searchBtn").click();
         }

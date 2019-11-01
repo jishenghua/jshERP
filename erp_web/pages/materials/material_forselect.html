@@ -17,9 +17,9 @@
     <script type="text/javascript" src="/js/common/common.js"></script>
 </head>
 <body>
-<!-- 查询 -->
-<div id="searchForSelectPanel" class="easyui-panel" style="padding:10px;" title="查询窗口" iconCls="icon-search" collapsible="true"
-     closable="false">
+<!-- 数据显示table -->
+<div id="tableForSelectPanel" class="easyui-panel" data-options="fit:true" style="padding:1px;top:300px;" title="商品列表" iconCls="icon-list"
+     collapsible="true" closable="false">
     <table id="searchForSelectTable">
         <tr>
             <td>品名：</td>
@@ -38,14 +38,12 @@
             </td>
         </tr>
     </table>
-</div>
-
-<!-- 数据显示table -->
-<div id="tableForSelectPanel" class="easyui-panel" style="padding:1px;top:300px;" title="商品列表" iconCls="icon-list"
-     collapsible="true" closable="false">
     <table id="tableForSelectData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 </div>
-
+<div id="materialDetailListDlg" class="easyui-dialog" style="width:900px;height:500px;padding:10px 20px" closed="true"
+     modal="true" collapsible="false" closable="true">
+    <table id="materialTableData" style="top:50px;border-bottom-color:#FFFFFF"></table>
+</div>
 <script type="text/javascript">
     var setCategoryId = "1";
     var cid = 1;
@@ -113,6 +111,7 @@
                 $("#forSelectMaterialDlg").dialog('close');
             }
         });
+        dgResize();
         showMaterialDetails(1, initPageSize);
     }
 

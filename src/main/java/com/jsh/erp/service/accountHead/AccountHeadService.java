@@ -10,6 +10,7 @@ import com.jsh.erp.datasource.mappers.AccountHeadMapperEx;
 import com.jsh.erp.datasource.mappers.AccountItemMapperEx;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.accountItem.AccountItemService;
+import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
@@ -51,10 +52,7 @@ public class AccountHeadService {
         try{
             result=accountHeadMapper.selectByPrimaryKey(id);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                    ExceptionConstants.DATA_READ_FAIL_MSG);
+            JshException.readFail(logger, e);
         }
         return result;
     }
@@ -65,10 +63,7 @@ public class AccountHeadService {
         try{
             list=accountHeadMapper.selectByExample(example);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                    ExceptionConstants.DATA_READ_FAIL_MSG);
+            JshException.readFail(logger, e);
         }
         return list;
     }
@@ -79,10 +74,7 @@ public class AccountHeadService {
         try{
             list = accountHeadMapperEx.selectByConditionAccountHead(type, billNo, beginTime, endTime, offset, rows);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                    ExceptionConstants.DATA_READ_FAIL_MSG);
+            JshException.readFail(logger, e);
         }
         if (null != list) {
             for (AccountHeadVo4ListEx ah : list) {
@@ -103,10 +95,7 @@ public class AccountHeadService {
         try{
             result = accountHeadMapperEx.countsByAccountHead(type, billNo, beginTime, endTime);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                    ExceptionConstants.DATA_READ_FAIL_MSG);
+            JshException.readFail(logger, e);
         }
         return result;
     }
@@ -118,10 +107,7 @@ public class AccountHeadService {
         try{
             result = accountHeadMapper.insertSelective(accountHead);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
-                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+            JshException.writeFail(logger, e);
         }
         return result;
     }
@@ -134,10 +120,7 @@ public class AccountHeadService {
         try{
             result = accountHeadMapper.updateByPrimaryKeySelective(accountHead);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
-                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+            JshException.writeFail(logger, e);
         }
         return result;
     }
@@ -148,10 +131,7 @@ public class AccountHeadService {
         try{
             result = accountHeadMapper.deleteByPrimaryKey(id);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
-                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+            JshException.writeFail(logger, e);
         }
         return result;
     }
@@ -165,10 +145,7 @@ public class AccountHeadService {
         try{
             result = accountHeadMapper.deleteByExample(example);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
-                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+            JshException.writeFail(logger, e);
         }
         return result;
     }
@@ -180,14 +157,10 @@ public class AccountHeadService {
         try{
             list = accountHeadMapper.selectByExample(example);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                    ExceptionConstants.DATA_READ_FAIL_MSG);
+            JshException.readFail(logger, e);
         }
         return list==null?0:list.size();
     }
-
 
     public BigDecimal findAllMoney(Integer supplierId, String type, String mode, String endTime) {
         String modeName = "";
@@ -200,10 +173,7 @@ public class AccountHeadService {
         try{
             result = accountHeadMapperEx.findAllMoney(supplierId, type, modeName, endTime);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                    ExceptionConstants.DATA_READ_FAIL_MSG);
+            JshException.readFail(logger, e);
         }
         return result;
     }
@@ -264,10 +234,7 @@ public class AccountHeadService {
         try{
             list = accountHeadMapperEx.getDetailByNumber(billNo);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                    ExceptionConstants.DATA_READ_FAIL_MSG);
+            JshException.readFail(logger, e);
         }
         if (null != list) {
             for (AccountHeadVo4ListEx ah : list) {
@@ -293,10 +260,7 @@ public class AccountHeadService {
         try{
             result = accountHeadMapperEx.batchDeleteAccountHeadByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
-                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+            JshException.writeFail(logger, e);
         }
         return result;
     }
@@ -328,10 +292,7 @@ public class AccountHeadService {
         try{
             accountItemList = accountItemMapperEx.getAccountItemListByHeaderIds(idArray);
         }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                    ExceptionConstants.DATA_READ_FAIL_MSG);
+            JshException.readFail(logger, e);
         }
         if(accountItemList!=null&&accountItemList.size()>0){
             logger.error("异常码[{}],异常提示[{}],参数,HeaderIds[{}]",

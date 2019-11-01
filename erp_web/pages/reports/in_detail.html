@@ -16,11 +16,11 @@
     <script type="text/javascript" src="/js/common/outlook_in.js"></script>
     <script type="text/javascript" src="/js/My97DatePicker/WdatePicker.js"></script>
     <script type="text/javascript" src="/js/common/common.js"></script>
+    <script src="/js/common/jsherp.js"></script>
 </head>
 <body>
-<!-- 查询 -->
-<div id="searchPanel" class="easyui-panel" style="padding:10px;" title="查询窗口" iconCls="icon-search" collapsible="true"
-     closable="false">
+<!-- 数据显示table -->
+<div id="tablePanel" class="easyui-panel" data-options="fit:true" style="padding:1px;top:300px;" title="入库明细列表" iconCls="icon-list">
     <table id="searchTable">
         <tr>
             <td>供应商：</td>
@@ -51,11 +51,6 @@
             </td>
         </tr>
     </table>
-</div>
-
-<!-- 数据显示table -->
-<div id="tablePanel" class="easyui-panel" style="padding:1px;top:300px;" title="入库明细列表" iconCls="icon-list"
-     collapsible="true" closable="false">
     <table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 </div>
 
@@ -154,17 +149,21 @@
     //初始化页面选项卡
     function initSelectInfo_depot() {
         var options = "";
-
         if (depotList != null) {
             options = "";
             for (var i = 0; i < depotList.length; i++) {
                 var depot = depotList[i];
-
-                if (userdepot != null) {
-                    if (userdepot.indexOf("[" + depot.id + "]") != -1) {
-                        options += '<option value="' + depot.id + '">' + depot.name + '</option>';
-                        depotString = depotString + depot.id + ",";
+                var config = getSystemConfig();
+                if(config && config.depotFlag == "1") {
+                    if (userdepot != null) {
+                        if (userdepot.indexOf("[" + depot.id + "]") != -1) {
+                            options += '<option value="' + depot.id + '">' + depot.name + '</option>';
+                            depotString = depotString + depot.id + ",";
+                        }
                     }
+                } else {
+                    options += '<option value="' + depot.id + '">' + depot.name + '</option>';
+                    depotString = depotString + depot.id + ",";
                 }
             }
             depotString = depotString.substring(0, depotString.length - 1);
@@ -191,8 +190,7 @@
                 {
                     title: '单据编号', field: 'number', width: 140,
                     formatter: function (value, row) {
-                        return "<a class='n-link' onclick=\"newTab('" + row.number + "','../materials/bill_detail.html?n=" + row.number + "&type=" + row.newType + "','')\">"
-                            + row.number + "</a>";
+                        return '<a class="n-link" onclick="turnBillDetailPage(\'' + row.number + '\''+',\'' + row.newType + '\');">' + row.number + '</a>';
                     }
                 },
                 {title: '商品名称', field: 'mname', width: 120},
@@ -209,6 +207,7 @@
                 return;
             }
         });
+        dgResize();
     }
 
     //初始化键盘enter事件

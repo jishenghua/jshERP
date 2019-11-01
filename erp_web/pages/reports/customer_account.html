@@ -16,11 +16,11 @@
     <script type="text/javascript" src="/js/common/outlook_in.js"></script>
     <script type="text/javascript" src="/js/My97DatePicker/WdatePicker.js"></script>
     <script type="text/javascript" src="/js/common/common.js"></script>
+    <script src="/js/common/jsherp.js"></script>
 </head>
 <body>
-<!-- 查询 -->
-<div id="searchPanel" class="easyui-panel" style="padding:10px;" title="查询窗口" iconCls="icon-search" collapsible="true"
-     closable="false">
+<!-- 数据显示table -->
+<div id="tablePanel" class="easyui-panel" data-options="fit:true" style="padding:1px;top:300px;" title="客户对账列表" iconCls="icon-list">
     <table id="searchTable">
         <tr>
             <td>客户：</td>
@@ -51,11 +51,6 @@
             </td>
         </tr>
     </table>
-</div>
-
-<!-- 数据显示table -->
-<div id="tablePanel" class="easyui-panel" style="padding:1px;top:300px;" title="客户对账列表" iconCls="icon-list"
-     collapsible="true" closable="false">
     <table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 </div>
 
@@ -108,8 +103,7 @@
                 {
                     title: '单据编号', field: 'number', width: 140,
                     formatter: function (value, row) {
-                        return "<a class='n-link' onclick=\"newTab('" + row.number + "','../materials/bill_detail.html?n=" + row.number + "&type=" + row.type + "','')\">"
-                            + row.number + "</a>";
+                        return '<a class="n-link" onclick="turnBillDetailPage(\'' + row.number + '\''+',\'' + row.type + '\');">' + row.number + '</a>';
                     }
                 },
                 {title: '类型', field: 'type', width: 100},
@@ -124,6 +118,7 @@
                 return;
             }
         });
+        dgResize();
     }
 
     //初始化键盘enter事件

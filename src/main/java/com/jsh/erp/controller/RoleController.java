@@ -50,13 +50,6 @@ public class RoleController {
         JSONArray arr = new JSONArray();
         try {
             List<Role> dataList = roleService.findUserRole();
-            //开始拼接json数据
-            JSONObject outer = new JSONObject();
-            outer.put("id", 1);
-            outer.put("text", "角色列表");
-            outer.put("state", "open");
-            //存放数据json数组
-            JSONArray dataArray = new JSONArray();
             if (null != dataList) {
                 for (Role role : dataList) {
                     JSONObject item = new JSONObject();
@@ -72,12 +65,9 @@ public class RoleController {
                     if (flag == true) {
                         item.put("checked", true);
                     }
-                    //结束
-                    dataArray.add(item);
+                    arr.add(item);
                 }
             }
-            outer.put("children", dataArray);
-            arr.add(outer);
         } catch (Exception e) {
             e.printStackTrace();
         }

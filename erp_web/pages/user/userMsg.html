@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>消息提醒</title>
+    <meta charset="utf-8">
+    <!-- 指定以IE8的方式来渲染 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon"/>
+    <script type="text/javascript" src="/js/jquery-1.8.0.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/js/easyui-1.3.5/themes/default/easyui.css"/>
+    <link rel="stylesheet" type="text/css" href="/js/easyui-1.3.5/themes/icon.css"/>
+    <link type="text/css" rel="stylesheet" href="/css/common.css"/>
+    <script type="text/javascript" src="/js/easyui-1.3.5/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="/js/easyui-1.3.5/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="/js/common/outlook_in.js"></script>
+    <script type="text/javascript" src="/js/common/common.js"></script>
+</head>
+<body>
+<!-- 数据显示table -->
+<div id="tablePanel" class="easyui-panel" data-options="fit:true" style="padding:1px;top:300px;" title="消息列表" iconCls="icon-list">
+    <table id="searchTable">
+        <tr>
+            <td>消息标题：</td>
+            <td>
+                <input name="searchMsgTitle" id="searchMsgTitle" style="width:150px;"/>
+            </td>
+            <td>&nbsp;</td>
+            <td>
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchBtn">查询</a>&nbsp;&nbsp;
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-redo" id="searchResetBtn">重置</a>
+            </td>
+        </tr>
+    </table>
+    <table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
+</div>
+
+<div id="msgDlgShow" class="easyui-dialog" style="width:600px; height:350px; padding:10px 20px;top:50px"
+     closed="true" modal="true" cache="false" collapsible="false" closable="true">
+    <table>
+        <tr>
+            <td style="width:40px;height:30px;">标题：</td>
+            <td style="padding:5px;width:500px;">
+                <span id="msgTitleShow"></span>
+            </td>
+        </tr>
+        <tr>
+            <td>内容：</td>
+            <td style="padding:5px;">
+                <span id="msgContentShow"></span>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<script type="text/javascript">
+    //初始化界面
+    $(function () {
+        //初始化系统基础信息
+        initTableData();
+        ininPager();
+    });
+
+    //初始化表格数据
+    function initTableData() {
+        //改变宽度和高度
+        $('#tableData').datagrid({
+            //title:'消息列表',
+            //iconCls:'icon-save',
+            //width:700,
+            height: heightInfo,
+            nowrap: false,
+            rownumbers: false,
+            //动画效果
+            animate: false,
+            //选中单行
+            singleSelect: true,
+            collapsible: false,
+            selectOnCheck: false,
+            //fitColumns:true,
+            //单击行是否选中
+            //checkOnSelect : false,
+            pagination: true,
+            //交替出现背景
+            striped: true,
+            //loadFilter: pagerFilter,
+            pageSize: initPageSize,
+            pageList: initPageNum,
+            columns: [[
+                {field: 'id', width: 35, align: "center", checkbox: true},
+                {title: '消息标题', field: 'msgTitle', width: 300,formatter: function (value,res) {
+                        if(res.status == 1) {
+                            return '<b onclick="showMsg(' + res.id + ');">' + value + "</b>";
+                        } else if(res.status == 2) {
+                            return '<span onclick="showMsg(' + res.id + ');">' + value + "</span>";;
+                        }
+                    }},
+                {title: '时间', field: 'createTime', width: 150},
+                {title: '状态', field: 'status', width: 100,formatter: function (value) {
+                        if(value == 1) {
+                            return "<b style='color:red'>未读</b>";
+                        } else if(value == 2) {
+                            return "<b style='color:green'>已读</b>";
+                        }
+                    }}
+            ]],
+            toolbar: [
+                {
+                    id: 'setStatus',
+                    text: '设为未读',
+                    iconCls: 'icon-undo',
+                    handler: function () {
+                        setStatus();
+                    }
+                }
+            ],
+            onLoadError: function () {
+                $.messager.alert('页面加载提示', '页面加载异常，请稍后再试！', 'error');
+                return;
+            }
+        });
+        dgResize();
+        showMsgDetails(1, initPageSize);
+    }
+
+    //初始化键盘enter事件
+    $(document).keydown(function (event) {
+        //兼容 IE和firefox 事件
+        var e = window.event || event;
+        var k = e.keyCode || e.which || e.charCode;
+        //兼容 IE,firefox 兼容
+        var obj = e.srcElement ? e.srcElement : e.target;
+        //绑定键盘事件为 id是指定的输入框才可以触发键盘事件 13键盘事件 ---遗留问题 enter键效验 对话框会关闭问题
+        //搜索按钮添加快捷键
+        if (k == "13" && (obj.id == "searchMsgTitle")) {
+            $("#searchBtn").click();
+        }
+    });
+
+    //分页信息处理
+    function ininPager() {
+        try {
+            var opts = $("#tableData").datagrid('options');
+            var pager = $("#tableData").datagrid('getPager');
+            pager.pagination({
+                onSelectPage: function (pageNum, pageSize) {
+                    opts.pageNumber = pageNum;
+                    opts.pageSize = pageSize;
+                    pager.pagination('refresh', {
+                        pageNumber: pageNum,
+                        pageSize: pageSize
+                    });
+                    showMsgDetails(pageNum, pageSize);
+                }
+            });
+        }
+        catch (e) {
+            $.messager.alert('异常处理提示', "分页信息异常 :  " + e.name + ": " + e.message, 'error');
+        }
+    }
+    //搜索处理
+    $("#searchBtn").unbind().bind({
+        click: function () {
+            showMsgDetails(1, initPageSize);
+            var opts = $("#tableData").datagrid('options');
+            var pager = $("#tableData").datagrid('getPager');
+            opts.pageNumber = 1;
+            opts.pageSize = initPageSize;
+            pager.pagination('refresh', {
+                pageNumber: 1,
+                pageSize: initPageSize
+            });
+        }
+    });
+
+    function showMsg(id) {
+        $.ajax({
+            type: "get",
+            url: "/msg/info?id=" + id,
+            dataType: "json",
+            success: function (res) {
+                if(res && res.code === 200){
+                    if(res.data && res.data.info) {
+                        $('#msgDlgShow').dialog('open').dialog('setTitle','<img src="/js/easyui-1.3.5/themes/icons/list.png"/>&nbsp;查看消息提醒');
+                        $("#msgTitleShow").text(res.data.info.msgTitle);
+                        $("#msgContentShow").text(res.data.info.msgContent);
+                        //更新消息为已读
+                        $.ajax({
+                            type: "post",
+                            url: "/msg/batchUpdateStatus",
+                            data: {
+                                ids: id,
+                                status: "2"
+                            },
+                            dataType: "json",
+                            success: function (res) {
+                                if(res && res.code ==200) {
+                                    $("#searchBtn").click();
+                                    $(":checkbox").attr("checked", false);
+                                }
+                            }
+                        });
+                    }
+                }
+            },
+            //此处添加错误处理
+            error: function () {
+                $.messager.alert('查询提示', '查询数据后台异常，请稍后再试！', 'error');
+                return;
+            }
+        });
+    }
+
+    function setStatus() {
+        var row = $('#tableData').datagrid('getChecked');
+        if (row.length == 0) {
+            $.messager.alert('提示', '没有记录被选中！', 'info');
+            return;
+        }
+        if (row.length > 0) {
+            $.messager.confirm('确认', '确定要把选中的' + row.length + '条信息设为未读吗？', function (r) {
+                if (r) {
+                    var ids = "";
+                    for (var i = 0; i < row.length; i++) {
+                        if (i == row.length - 1) {
+                            ids += row[i].id;
+                            break;
+                        }
+                        ids += row[i].id + ",";
+                    }
+                    $.ajax({
+                        type: "post",
+                        url: "/msg/batchUpdateStatus",
+                        dataType: "json",
+                        async: false,
+                        data: ({
+                            ids: ids,
+                            status: "1"
+                        }),
+                        success: function (res) {
+                            if(res && res.code == 200) {
+                                $("#searchBtn").click();
+                                $(":checkbox").attr("checked", false);
+                            }
+                        },
+                        //此处添加错误处理
+                        error: function () {
+                            $.messager.alert('提示', '设置信息异常，请稍后再试！', 'error');
+                            return;
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    function showMsgDetails(pageNo, pageSize) {
+        var name = $.trim($("#searchMsgTitle").val());
+        $.ajax({
+            type: "get",
+            url: "/msg/list",
+            dataType: "json",
+            data: ({
+                search: JSON.stringify({
+                    name: name
+                }),
+                currentPage: pageNo,
+                pageSize: pageSize
+            }),
+            success: function (res) {
+                if(res && res.code === 200){
+                    if(res.data && res.data.page) {
+                        $("#tableData").datagrid('loadData', res.data.page);
+                    }
+                }
+            },
+            //此处添加错误处理
+            error: function () {
+                $.messager.alert('查询提示', '查询数据后台异常，请稍后再试！', 'error');
+                return;
+            }
+        });
+    }
+
+    //重置按钮
+    $("#searchResetBtn").unbind().bind({
+        click: function () {
+            $("#searchMsgTitle").val("");
+            //加载完以后重新初始化
+            $("#searchBtn").click();
+        }
+    });
+</script>
+</body>
+</html>

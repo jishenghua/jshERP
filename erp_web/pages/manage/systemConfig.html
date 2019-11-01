@@ -18,9 +18,8 @@
     <script type="text/javascript" src="/js/common/common.js"></script>
 </head>
 <body>
-<!-- 查询 -->
-<div id="searchPanel" class="easyui-panel" style="padding:10px;" title="查询窗口" iconCls="icon-search" collapsible="true"
-     closable="false">
+<!-- 数据显示table -->
+<div id="tablePanel" class="easyui-panel" data-options="fit:true" style="padding:1px;top:300px;" title="系统配置" iconCls="icon-list">
     <table id="searchTable">
         <tr>
             <td>公司名称：</td>
@@ -31,14 +30,9 @@
             <td>&nbsp;</td>
             <td>
                 <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchBtn">查询</a>&nbsp;&nbsp;
-             </td>
+            </td>
         </tr>
     </table>
-</div>
-
-<!-- 数据显示table -->
-<div id="tablePanel" class="easyui-panel" style="padding:1px;top:300px;" title="系统配置" iconCls="icon-list"
-     collapsible="true" closable="false">
     <table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 </div>
 
@@ -70,6 +64,14 @@
             <label id="companyPostCodeLabel">公司邮编&nbsp;&nbsp;</label>
             <input name="companyPostCode" id="companyPostCode" style="width: 220px;height: 20px"/>
         </div>
+        <div class="fitem" style="padding:5px">
+            <label id="depotFlagLabel">仓库开关&nbsp;&nbsp;</label>
+            <input name="depotFlag" id="depotFlag" type="checkbox" style="width: 220px;height: 20px" title="勾选后需要到用户列表配置权限"/>
+        </div>
+        <div class="fitem" style="padding:5px">
+            <label id="customerFlagLabel">客户开关&nbsp;&nbsp;</label>
+            <input name="customerFlag" id="customerFlag" type="checkbox" style="width: 220px;height: 20px" title="勾选后需要到用户列表配置权限"/>
+        </div>
     </form>
 </div>
 <div id="dlg-buttons">
@@ -86,6 +88,16 @@
 
     //初始化表格数据
     function initTableData() {
+        function parseFlag(value) {
+            var flagName = "";
+            if (value =="1") {
+                flagName = "<span style='color:green'>启用</span>";
+            }
+            else {
+                flagName = "<span style='color:red'>关闭</span>";
+            }
+            return flagName;
+        }
         $('#tableData').datagrid({
             height: heightInfo,
             nowrap: false,
@@ -108,6 +120,18 @@
                 {title: '公司电话', field: 'companyTel', width: 120, align: "center"},
                 {title: '公司传真', field: 'companyFax', width: 120, align: "center"},
                 {title: '公司邮编', field: 'companyPostCode', width: 80, align: "center"},
+                {
+                    title: '仓库开关', field: 'depotFlag', width: 80, align: "center",
+                    formatter: function (value) {
+                        return parseFlag(value);
+                    }
+                },
+                {
+                    title: '客户开关', field: 'customerFlag', width: 80, align: "center",
+                    formatter: function (value) {
+                        return parseFlag(value);
+                    }
+                },
                 {
                     title: '操作', field: 'op', width: 160, formatter: function (value, rec,index) {
                         /**
@@ -149,6 +173,7 @@
                 return;
             }
         });
+        dgResize();
         showSystemConfigDetails(1, initPageSize);
     }
 
@@ -305,12 +330,15 @@
             $("#companyName").val("").focus();
             return;
         }
+        var infoObj = $("#systemConfigFM").serializeObject();
+        infoObj.depotFlag = $("#depotFlag").is(':checked')?"1":"0";
+        infoObj.customerFlag = $("#customerFlag").is(':checked')?"1":"0";
         $.ajax({
             url: url,
             type: "post",
             dataType: "json",
             data: {
-                info: JSON.stringify($("#systemConfigFM").serializeObject())
+                info: JSON.stringify(infoObj)
             },
             success: function(res) {
                 if(res && res.code === 200) {
@@ -365,7 +393,7 @@
                 async: false,
                 data: ({
                     id: systemConfigId,
-                    companyName: companyName
+                    name: companyName
                 }),
                 success: function (res) {
                     if(res && res.code === 200) {

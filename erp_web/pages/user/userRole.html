@@ -27,45 +27,43 @@
     var url_id = getUrlParam('id');  //获取传值id（用户id）
     var type = "UserRole";
     var url;//定义链接地址
-    function GetNode(ctype) {
+    function getNode() {
         var node = $('#tt').tree('getChecked');
         var cnodes = '';
-        var pnodes = '';
-
         var prevNode = ''; //保存上一步所选父节点
         for (var i = 0; i < node.length; i++) {
-
             if ($('#tt').tree('isLeaf', node[i].target)) {
                 cnodes += '[' + node[i].id + ']';
-
-                var pnode = $('#tt').tree('getParent', node[i].target); //获取当前节点的父节点
-                if (prevNode != pnode.id) //保证当前父节点与上一次父节点不同
-                {
-                    pnodes += '[' + pnode.id + ']';
-                    prevNode = pnode.id; //保存当前节点
-                }
             }
         }
-        //cnodes = cnodes.substring(0, cnodes.length - 1);
-        pnodes = pnodes.substring(0, pnodes.length - 1);
-
-        if (ctype == 'child') {
-            return cnodes;
-        }
-        else {
-            return pnodes
-        }
-        ;
-    };
+        return cnodes;
+    }
 
     $(function () {
-
         $('#tt').tree({
             url: '/role/findUserRole?UBType=' + type + '&UBKeyId=' + url_id,
             animate: true,
-            checkbox: true
+            checkbox: true,
+            onSelect: function (node) {
+                var cknodes = $('#tt').tree("getChecked");
+                for (var i = 0; i < cknodes.length; i++) {
+                    if (cknodes[i].id != node.id) {
+                        $('#tt').tree("uncheck", cknodes[i].target);
+                    }
+                }
+                if (node.checked) {
+                    $('#tt').tree('uncheck', node.target);
+                } else {
+                    $('#tt').tree('check', node.target);
+                }
+            },
+            onLoadSuccess: function (node, data) {
+                $(this).find('span.tree-checkbox').unbind().click(function () {
+                    $('#tt').tree('select', $(this).parent());
+                    return false;
+                });
+            }
         });
-
 
         $("#btnOK").click(
             function () {
@@ -84,7 +82,7 @@
                             info: JSON.stringify({
                                 type: type,
                                 keyid: url_id,
-                                value: GetNode('child')
+                                value: getNode()
                             })
                         },
                         dataType: "json",
@@ -102,7 +100,6 @@
                 });
             }
         );
-
     });
 
     //检查记录是否存在
@@ -132,6 +129,7 @@
         });
         return flag;
     }
+
 </script>
 </body>
 </html>

@@ -17,9 +17,8 @@
     <script type="text/javascript" src="/js/common/common.js"></script>
 </head>
 <body>
-<!-- 查询 -->
-<div id="searchPanel" class="easyui-panel" style="padding:10px;" title="查询窗口" iconCls="icon-search" collapsible="true"
-     closable="false">
+<!-- 数据显示table -->
+<div id="tablePanel" class="easyui-panel" data-options="fit:true" style="padding:1px;top:300px;" title="库存预警列表" iconCls="icon-list">
     <table id="searchTable">
         <tr>
             <td>仓库：</td>
@@ -38,11 +37,6 @@
             </td>
         </tr>
     </table>
-</div>
-
-<!-- 数据显示table -->
-<div id="tablePanel" class="easyui-panel" style="padding:1px;top:300px;" title="库存预警列表" iconCls="icon-list"
-     collapsible="true" closable="false">
     <table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 </div>
 
@@ -139,16 +133,19 @@
     //初始化页面选项卡
     function initSelectInfo_depot() {
         var options = "";
-
         if (depotList != null) {
             options = "";
             for (var i = 0; i < depotList.length; i++) {
                 var depot = depotList[i];
-
-                if (userdepot != null) {
-                    if (userdepot.indexOf("[" + depot.id + "]") != -1) {
-                        options += '<option value="' + depot.id + '">' + depot.name + '</option>';
+                var config = getSystemConfig();
+                if(config && config.depotFlag == "1") {
+                    if (userdepot != null) {
+                        if (userdepot.indexOf("[" + depot.id + "]") != -1) {
+                            options += '<option value="' + depot.id + '">' + depot.name + '</option>';
+                        }
                     }
+                } else {
+                    options += '<option value="' + depot.id + '">' + depot.name + '</option>';
                 }
             }
             $("#searchProjectId").empty().append(options);
@@ -221,6 +218,7 @@
                 return;
             }
         });
+        dgResize();
     }
 
     //初始化键盘enter事件

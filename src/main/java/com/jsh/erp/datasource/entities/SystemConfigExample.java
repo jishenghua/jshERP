@@ -674,6 +674,146 @@ public class SystemConfigExample {
             return (Criteria) this;
         }
 
+        public Criteria andDepotFlagIsNull() {
+            addCriterion("depot_flag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDepotFlagIsNotNull() {
+            addCriterion("depot_flag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDepotFlagEqualTo(String value) {
+            addCriterion("depot_flag =", value, "depotFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andDepotFlagNotEqualTo(String value) {
+            addCriterion("depot_flag <>", value, "depotFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andDepotFlagGreaterThan(String value) {
+            addCriterion("depot_flag >", value, "depotFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andDepotFlagGreaterThanOrEqualTo(String value) {
+            addCriterion("depot_flag >=", value, "depotFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andDepotFlagLessThan(String value) {
+            addCriterion("depot_flag <", value, "depotFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andDepotFlagLessThanOrEqualTo(String value) {
+            addCriterion("depot_flag <=", value, "depotFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andDepotFlagLike(String value) {
+            addCriterion("depot_flag like", value, "depotFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andDepotFlagNotLike(String value) {
+            addCriterion("depot_flag not like", value, "depotFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andDepotFlagIn(List<String> values) {
+            addCriterion("depot_flag in", values, "depotFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andDepotFlagNotIn(List<String> values) {
+            addCriterion("depot_flag not in", values, "depotFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andDepotFlagBetween(String value1, String value2) {
+            addCriterion("depot_flag between", value1, value2, "depotFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andDepotFlagNotBetween(String value1, String value2) {
+            addCriterion("depot_flag not between", value1, value2, "depotFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCustomerFlagIsNull() {
+            addCriterion("customer_flag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCustomerFlagIsNotNull() {
+            addCriterion("customer_flag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCustomerFlagEqualTo(String value) {
+            addCriterion("customer_flag =", value, "customerFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCustomerFlagNotEqualTo(String value) {
+            addCriterion("customer_flag <>", value, "customerFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCustomerFlagGreaterThan(String value) {
+            addCriterion("customer_flag >", value, "customerFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCustomerFlagGreaterThanOrEqualTo(String value) {
+            addCriterion("customer_flag >=", value, "customerFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCustomerFlagLessThan(String value) {
+            addCriterion("customer_flag <", value, "customerFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCustomerFlagLessThanOrEqualTo(String value) {
+            addCriterion("customer_flag <=", value, "customerFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCustomerFlagLike(String value) {
+            addCriterion("customer_flag like", value, "customerFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCustomerFlagNotLike(String value) {
+            addCriterion("customer_flag not like", value, "customerFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCustomerFlagIn(List<String> values) {
+            addCriterion("customer_flag in", values, "customerFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCustomerFlagNotIn(List<String> values) {
+            addCriterion("customer_flag not in", values, "customerFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCustomerFlagBetween(String value1, String value2) {
+            addCriterion("customer_flag between", value1, value2, "customerFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCustomerFlagNotBetween(String value1, String value2) {
+            addCriterion("customer_flag not between", value1, value2, "customerFlag");
+            return (Criteria) this;
+        }
+
         public Criteria andTenantIdIsNull() {
             addCriterion("tenant_id is null");
             return (Criteria) this;

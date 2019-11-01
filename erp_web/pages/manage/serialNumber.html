@@ -15,11 +15,11 @@
     <script type="text/javascript" src="/js/easyui-1.3.5/locale/easyui-lang-zh_CN.js"></script>
     <script type="text/javascript" src="/js/common/outlook_in.js"></script>
     <script type="text/javascript" src="/js/common/common.js"></script>
+    <script src="/js/common/jsherp.js"></script>
 </head>
 <body>
-<!-- 查询 -->
-<div id="searchPanel" class="easyui-panel" style="padding:10px;" title="查询窗口" iconCls="icon-search" collapsible="true"
-     closable="false">
+<!-- 数据显示table -->
+<div id="tablePanel" class="easyui-panel" data-options="fit:true" style="padding:1px;top:300px;" title="序列号列表" iconCls="icon-list">
     <table id="searchTable">
         <tr>
             <td>商品名称：</td>
@@ -38,11 +38,6 @@
             </td>
         </tr>
     </table>
-</div>
-
-<!-- 数据显示table -->
-<div id="tablePanel" class="easyui-panel" style="padding:1px;top:300px;" title="序列号列表" iconCls="icon-list"
-     collapsible="true" closable="false">
     <table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
     <input id="selectType" hidden="hidden" />
 </div>
@@ -121,7 +116,7 @@
                         <td style="width:80px;">序列号数量</td>
                         <td style="padding:5px;width:180px;">
                             <input name="batAddTotal" id="batAddTotal" class="easyui-numberbox"
-                                   data-options="min:0,max:10000"
+                                   data-options="min:0,max:500"
                                    style="width: 180px;height: 20px"/>
                         </td>
                         <td></td>
@@ -220,18 +215,13 @@
                 {title: '单据编号', align: "center", field: 'depotHeadNumber', width: 140,
                     formatter: function (value, row) {
                         if(row.depotHeadNumber){
-
-                            return "<a class='n-link' onclick=\"newTab('" + row.depotHeadNumber + "','../materials/bill_detail.html?n=" + row.depotHeadNumber + "&type=" + row.depotHeadType + "','')\">"
-                                + row.depotHeadNumber + "</a>";
+                            return '<a class="n-link" onclick="turnBillDetailPage(\'' + row.depotHeadNumber + '\''+',\'' + row.depotHeadType + '\');">' + row.depotHeadNumber + '</a>';
+                        } else {
+                            return '';
                         }
-                        return '';
                     }
                 },
                 {title: '已卖出', align: "center", field: 'isSell', width: 60 , formatter: function (value) {
-                        return value=='1' ? "是" : "否";
-                    }
-                },
-                {title: '已删除', align: "center", field: 'deleteFlag', width: 60, formatter: function (value) {
                         return value=='1' ? "是" : "否";
                     }
                 },
@@ -272,6 +262,7 @@
                 return;
             }
         });
+        dgResize();
         showSerialNumberDetails(1, initPageSize);
     }
     //分页信息处理
@@ -514,9 +505,6 @@
             success: function (res) {
                 if(res && res.code === 200){
                     if(res.data && res.data.page) {
-                        if(res.data.page.total==0){
-                            $.messager.alert('查询提示', '没有对应数据！', 'warning');
-                        }
                         $("#tableData").datagrid('loadData', res.data.page);
                     }
                 }
@@ -578,7 +566,7 @@
         $(".window-mask").css({width: webW, height: webH});
         $('#batAddMaterialName').val('');
         $('#batAddSerialNumberInput').val('');
-        $('#batAddTotal').val('100');
+        $('#batAddTotal').val('10');
         $('#batAddremark').val('');
         url = '/serialNumber/batAddSerialNumber';
     }

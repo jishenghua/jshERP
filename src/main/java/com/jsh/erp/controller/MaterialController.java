@@ -201,12 +201,10 @@ public class MaterialController {
     public void exportExcel(@RequestParam("name") String name,
                                         @RequestParam("model") String model,
                                         @RequestParam("categoryIds") String categoryIds,
-                                        HttpServletRequest request, HttpServletResponse response)throws Exception {
-        BaseResponseInfo res = new BaseResponseInfo();
-        Map<String, Object> map = new HashMap<String, Object>();
-        String message = "成功";
+                                        HttpServletRequest request, HttpServletResponse response) {
         try {
-            List<MaterialVo4Unit> dataList = materialService.findByAll(name, model, categoryIds);
+            List<MaterialVo4Unit> dataList = materialService.findByAll(StringUtil.toNull(name), StringUtil.toNull(model),
+                    StringUtil.toNull(categoryIds));
             String[] names = {"品名", "类型", "型号", "安全存量", "单位", "零售价", "最低售价", "预计采购价", "批发价", "备注", "状态"};
             String title = "商品信息";
             List<String[]> objects = new ArrayList<String[]>();
@@ -229,14 +227,8 @@ public class MaterialController {
             }
             File file = ExcelUtils.exportObjectsWithoutTitle(title, names, title, objects);
             ExportExecUtil.showExec(file, file.getName(), response);
-            res.code = 200;
         } catch (Exception e) {
             e.printStackTrace();
-            message = "导出失败";
-            res.code = 500;
-        } finally {
-            map.put("message", message);
-            res.data = map;
         }
     }
 
@@ -265,7 +257,6 @@ public class MaterialController {
                 info.code = 400;
                 info.data = data;
             }
-            //读取所有的摄像机编码
             //每行中数据顺序  "品名","类型","型号","安全存量","单位","零售价","最低售价","预计采购价","批发价","备注","状态"
             List<Material> mList = new ArrayList<Material>();
             for (int i = 1; i < src.getRows(); i++) {

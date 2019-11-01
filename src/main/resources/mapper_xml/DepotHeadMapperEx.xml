@@ -3,9 +3,11 @@
 <mapper namespace="com.jsh.erp.datasource.mappers.DepotHeadMapperEx">
 
     <resultMap extends="com.jsh.erp.datasource.mappers.DepotHeadMapper.BaseResultMap" id="ResultMapEx" type="com.jsh.erp.datasource.vo.DepotHeadVo4List">
+        <result column="ProjectName" jdbcType="VARCHAR" property="projectName" />
         <result column="OrganName" jdbcType="VARCHAR" property="organName" />
         <result column="HandsPersonName" jdbcType="VARCHAR" property="handsPersonName" />
         <result column="AccountName" jdbcType="VARCHAR" property="accountName" />
+        <result column="AllocationProjectName" jdbcType="VARCHAR" property="allocationProjectName" />
     </resultMap>
 
     <resultMap id="ResultWithInfoExMap" type="com.jsh.erp.datasource.vo.DepotHeadVo4InDetail">
@@ -45,6 +47,9 @@
         left join jsh_supplier s on dh.OrganId=s.id and ifnull(s.delete_Flag,'0') !='1'
         left join jsh_person p on dh.HandsPersonId=p.id and ifnull(p.delete_Flag,'0') !='1'
         left join jsh_account a on dh.AccountId=a.id and ifnull(a.delete_Flag,'0') !='1'
+        left join jsh_depot dd on dh.AllocationProjectId=dd.id and ifnull(dd.delete_Flag,'0') !='1'
+        left join jsh_depotitem di on dh.Id = di.HeaderId and ifnull(di.delete_Flag,'0') !='1'
+        left join jsh_material m on di.MaterialId = m.Id and ifnull(m.delete_Flag,'0') !='1'
         where 1=1
         <if test="type != null and type != ''">
             and dh.Type=#{type}
@@ -130,7 +135,9 @@
         </if>
         )
     </select>
-
+    <select id="getMaxId" resultType="java.lang.Long">
+        select max(Id) as Id from jsh_depothead
+    </select>
 
     <select id="findMaterialsListByHeaderId" resultType="java.lang.String">
         select group_concat(concat(jsh_material.`Name`,' ',jsh_material.Model)) as mName
@@ -242,7 +249,7 @@
         INNER JOIN jsh_depotitem di on dh.id=di.HeaderId and ifnull(di.delete_Flag,'0') !='1'
         INNER JOIN (SELECT jsh_material.id,jsh_material.name mName, Model,jsh_materialcategory.`Name` categoryName
         from jsh_material
-        INNER JOIN jsh_materialcategory on jsh_material.CategoryId=jsh_materialcategory.Id and ifnull(jsh_materialcategory.status,'0') !='2'
+        LEFT JOIN jsh_materialcategory on jsh_material.CategoryId=jsh_materialcategory.Id and ifnull(jsh_materialcategory.status,'0') !='2'
         where ifnull(jsh_material.delete_Flag,'0') !='1'
         ) m
         on m.Id=di.MaterialId where dh.type=#{type} and dh.OperTime >=#{beginTime} and dh.OperTime &lt;=#{endTime}
@@ -271,7 +278,7 @@
         INNER JOIN jsh_depotitem di on dh.id=di.HeaderId  and ifnull(di.delete_Flag,'0') !='1'
         INNER JOIN (SELECT jsh_material.id,jsh_material.name mName, Model,jsh_materialcategory.`Name` categoryName
         from jsh_material
-        INNER JOIN jsh_materialcategory on jsh_material.CategoryId=jsh_materialcategory.Id and ifnull(jsh_materialcategory.status,'0') !='2'
+        LEFT JOIN jsh_materialcategory on jsh_material.CategoryId=jsh_materialcategory.Id and ifnull(jsh_materialcategory.status,'0') !='2'
         where ifnull(jsh_material.delete_Flag,'0') !='1'
         ) m on m.Id=di.MaterialId where dh.type=#{type} and dh.OperTime >=#{beginTime} and dh.OperTime &lt;=#{endTime}
         <if test="oId != null">
@@ -541,4 +548,29 @@
         and ifnull(delete_Flag,'0') !='1'
     </select>
 
+    <select id="getBuyAndSaleStatistics" resultType="java.math.BigDecimal">
+        SELECT
+        ifnull(sum(DiscountLastMoney),0)
+        FROM jsh_depothead
+        WHERE 1=1
+        <if test="type != null">
+            and Type='${type}'
+        </if>
+        <if test="subType != null">
+            and SubType='${subType}'
+        </if>
+        <if test="hasSupplier == 1">
+            and OrganId is not null
+        </if>
+        <if test="hasSupplier == 0">
+            and OrganId is null
+        </if>
+        <if test="beginTime != null">
+            and OperTime >= '${beginTime}'
+        </if>
+        <if test="endTime != null">
+            and OperTime &lt;= '${endTime}'
+        </if>
+        and ifnull(delete_Flag,'0') !='1'
+    </select>
 </mapper>

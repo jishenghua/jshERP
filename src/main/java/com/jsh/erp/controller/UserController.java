@@ -7,16 +7,21 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
+import com.jsh.erp.datasource.entities.Tenant;
 import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.entities.UserEx;
 import com.jsh.erp.datasource.vo.TreeNodeEx;
 import com.jsh.erp.exception.BusinessParamCheckingException;
+import com.jsh.erp.service.log.LogService;
+import com.jsh.erp.service.tenant.TenantService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -37,20 +42,17 @@ import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 public class UserController {
     private Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    @Value("${mybatis-plus.status}")
-    private String mybatisPlusStatus;
-
-    @Value("${manage.ip}")
-    private String manageIp;
-
-    @Value("${manage.port}")
-    private Integer managePort;
-
     @Value("${manage.roleId}")
     private Long manageRoleId;
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private TenantService tenantService;
+
+    @Resource
+    private LogService logService;
 
     private static String message = "成功";
     private static final String HTTP = "http://";
@@ -82,6 +84,7 @@ public class UserController {
             try {
                 userStatus = userService.validateUser(username, password);
             } catch (Exception e) {
+                e.printStackTrace();
                 logger.error(">>>>>>>>>>>>>用户  " + username + " 登录 login 方法 访问服务层异常====", e);
                 msgTip = "access service exception";
             }
@@ -106,39 +109,24 @@ public class UserController {
     //                            new Timestamp(System.currentTimeMillis()), (short) 0, "管理用户：" + username + " 登录系统", username + " 登录系统"));
                         msgTip = "user can login";
                         request.getSession().setAttribute("user",user);
-                        if(("open").equals(mybatisPlusStatus)) {
-                            String tenantId = null;
-                            String userNumLimit = null;
-                            String billsNumLimit = null;
-                            if(user.getTenantId()==null){
-                                msgTip="用户数据错误，请联系管理员！";
-                                break;
-                            }
-                            JSONObject obj=null;
-                            if(user.getTenantId()!=-1){
-                                String url = HTTP + manageIp + ":" + managePort + "/tenant/getTenant?tenantId=" + user.getTenantId();
-                                obj = HttpClient.httpGet(url);
-                                if(obj!=null && obj.getString("code").equals(CODE_OK)) {
-                                    JSONObject dataObj = obj.getJSONObject("data");
-                                    if(dataObj!=null) {
-                                        tenantId = dataObj.getString("tenantId");
-                                        userNumLimit = dataObj.getString("userNumLimit");
-                                        billsNumLimit = dataObj.getString("billsNumLimit");
-                                    }
+                        if(user.getTenantId()!=null) {
+                            Tenant tenant = tenantService.getTenantByTenantId(user.getTenantId());
+                            if(tenant!=null) {
+                                Long tenantId = tenant.getTenantId();
+                                Integer userNumLimit = tenant.getUserNumLimit();
+                                Integer billsNumLimit = tenant.getBillsNumLimit();
+                                if(tenantId!=null) {
+                                    request.getSession().setAttribute("tenantId",tenantId); //租户tenantId
+                                    request.getSession().setAttribute("userNumLimit",userNumLimit); //用户限制数
+                                    request.getSession().setAttribute("billsNumLimit",billsNumLimit); //单据限制数
                                 }
-                            }else{
-                                tenantId=user.getTenantId().toString();
-                                userNumLimit=BusinessConstants.TEST_USER_NUM_LIMIT;
-                                billsNumLimit=BusinessConstants.TEST_BILLS_NUM_LIMIT;
-                            }
-                            if(tenantId!=null) {
-                                request.getSession().setAttribute("tenantId",tenantId); //租户tenantId
-                                request.getSession().setAttribute("userNumLimit",userNumLimit); //用户限制数
-                                request.getSession().setAttribute("billsNumLimit",billsNumLimit); //单据限制数
                             }
                         }
-                        request.getSession().setAttribute("mybatisPlusStatus",mybatisPlusStatus); //开启状态
+                        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_USER,
+                                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_LOGIN).append(user.getId()).toString(),
+                                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
                     } catch (Exception e) {
+                        e.printStackTrace();
                         logger.error(">>>>>>>>>>>>>>>查询用户名为:" + username + " ，用户信息异常", e);
                     }
                     break;
@@ -157,6 +145,7 @@ public class UserController {
             logger.info("===============用户登录 login 方法调用结束===============");
         } catch(Exception e){
             e.printStackTrace();
+            logger.error(e.getMessage());
             res.code = 500;
             res.data = "用户登录失败";
         }
@@ -189,12 +178,9 @@ public class UserController {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
             request.getSession().removeAttribute("user");
-            request.getSession().removeAttribute("mybatisPlusStatus");
-            if(("open").equals(mybatisPlusStatus)) {
-                request.getSession().removeAttribute("tenantId");
-                request.getSession().removeAttribute("userNumLimit");
-                request.getSession().removeAttribute("billsNumLimit");
-            }
+            request.getSession().removeAttribute("tenantId");
+            request.getSession().removeAttribute("userNumLimit");
+            request.getSession().removeAttribute("billsNumLimit");
             response.sendRedirect("/login.html");
         } catch(Exception e){
             e.printStackTrace();
@@ -330,16 +316,11 @@ public class UserController {
     @ResponseBody
     public Object addUser(@RequestParam("info") String beanJson, HttpServletRequest request)throws Exception{
         JSONObject result = ExceptionConstants.standardSuccess();
-        if(("open").equals(mybatisPlusStatus)) {
-            Long userNumLimit = Long.parseLong(request.getSession().getAttribute("userNumLimit").toString());
-            Long count = userService.countUser(null,null);
-            if(count>= userNumLimit) {
-                throw new BusinessParamCheckingException(ExceptionConstants.USER_OVER_LIMIT_FAILED_CODE,
-                        ExceptionConstants.USER_OVER_LIMIT_FAILED_MSG);
-            } else {
-                UserEx ue= JSON.parseObject(beanJson, UserEx.class);
-                userService.addUserAndOrgUserRel(ue);
-            }
+        Long userNumLimit = Long.parseLong(request.getSession().getAttribute("userNumLimit").toString());
+        Long count = userService.countUser(null,null);
+        if(count>= userNumLimit) {
+            throw new BusinessParamCheckingException(ExceptionConstants.USER_OVER_LIMIT_FAILED_CODE,
+                    ExceptionConstants.USER_OVER_LIMIT_FAILED_MSG);
         } else {
             UserEx ue= JSON.parseObject(beanJson, UserEx.class);
             userService.addUserAndOrgUserRel(ue);
@@ -365,32 +346,6 @@ public class UserController {
         ue.setLoginame(loginame);
         ue.setPassword(password);
         ue = userService.registerUser(ue,manageRoleId);
-        /**
-         * create by: qiankunpingtai
-         * create time: 2019/4/9 17:17
-         * website：https://qiankunpingtai.cn
-         * description:
-         * 这里涉及到多个项目，需要用分布式事务去处理
-         * 为了不使问题复杂化，暂时另外开启一个线程去处理其它项目的数据操作
-         */
-        final UserEx ueFinal=ue;
-        final ExecutorService executorService = Executors.newFixedThreadPool(1);
-        executorService.execute(() -> {
-                    try{
-                        //调第三方接口创建租户管理信息
-                        String url = HTTP + manageIp + ":" + managePort + "/tenant/add";
-                        JSONObject tenantObj = new JSONObject();
-                        tenantObj.put("tenantId", ueFinal.getId());
-                        tenantObj.put("loginName",ueFinal.getLoginame());
-                        String param = URLEncoder.encode(tenantObj.toString());
-                        HttpClient.httpPost(url + "?info=" + param, param);
-                        logger.info("===============创建租户信息完成===============");
-                    }catch(Exception e){
-                        //记录一下第三方接口创建租户管理信息创建失败
-                        logger.debug("调用第三方接口创建租户管理信息失败：tenantId：[{}],loginName:[{}]",ueFinal.getId(),ueFinal.getLoginame());
-                    }
-                });
-
         return result;
     }
     /**
@@ -436,21 +391,5 @@ public class UserController {
             }
         }
         return arr;
-    }
-
-    @GetMapping("/getTenantStatus")
-    public BaseResponseInfo getTenantStatus(HttpServletRequest request)throws Exception {
-        BaseResponseInfo res = new BaseResponseInfo();
-        try {
-            Map<String, Object> data = new HashMap<String, Object>();
-            data.put("status", mybatisPlusStatus);
-            res.code = 200;
-            res.data = data;
-        } catch(Exception e){
-            e.printStackTrace();
-            res.code = 500;
-            res.data = "获取失败";
-        }
-        return res;
     }
 }

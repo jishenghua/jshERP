@@ -18,9 +18,8 @@
     <script type="text/javascript" src="/js/common/common.js"></script>
 </head>
 <body>
-<!-- 查询 -->
-<div id="searchPanel" class="easyui-panel" style="padding:10px;" title="查询窗口" iconCls="icon-search" collapsible="true"
-     closable="false">
+<!-- 数据显示table -->
+<div id="tablePanel" class="easyui-panel" data-options="fit:true" style="padding:1px;top:300px;" title="用户列表" iconCls="icon-list">
     <table id="searchTable">
         <tr>
             <td>登录名称：</td>
@@ -45,11 +44,6 @@
             </td>
         </tr>
     </table>
-</div>
-
-<!-- 数据显示table -->
-<div id="tablePanel" class="easyui-panel" style="padding:1px;top:300px;" title="用户列表" iconCls="icon-list"
-     collapsible="true" closable="false">
     <table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 </div>
 
@@ -113,10 +107,26 @@
 <script type="text/javascript">
     //初始化界面
     $(function () {
+        initConfig();
         initTableData();
         ininPager();
         browserFit();
     });
+
+    //初始化配置
+    function initConfig() {
+        $("#btnSetDepart").hide();
+        $("#btnSetCustomer").hide();
+        var config = getSystemConfig();
+        if(config) {
+            if(config.depotFlag == "1") {
+                $("#btnSetDepart").show();
+            }
+            if(config.customerFlag == "1") {
+                $("#btnSetCustomer").show();
+            }
+        }
+    }
 
     //浏览器适配
     function browserFit() {
@@ -172,8 +182,8 @@
                 {title: '部门', field: 'orgAbr', width: 115, align: "center"},
                 {title: '电子邮箱', field: 'email', width: 150, align: "center"},
                 {title: '电话号码', field: 'phonenum', width: 150, align: "center"},
-                {title: '用户排序', field: 'userBlngOrgaDsplSeq', width: 50, align: "center"},
-                {title: '描述', field: 'description', width: 150},
+                {title: '用户排序', field: 'userBlngOrgaDsplSeq', width: 60, align: "center"},
+                {title: '描述', field: 'description', width: 130},
                 {field: 'orgaId',hidden:true, width: 10},
                 {
                     title: '操作', field: 'isystem', width: 150, formatter: function (value, rec,index) {
@@ -223,6 +233,7 @@
                 return;
             }
         });
+        dgResize();
         showUserDetails(1, initPageSize);
     }
 

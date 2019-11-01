@@ -1,0 +1,148 @@
+/*!
+ * Copyright (c) 2013-Now 华夏erp All rights reserved.
+ * @author jishenghua
+ * @version 2019-09-14
+ */
+.fixed .main-header {
+    position: relative;
+    max-height: none
+}
+
+.fixed .content-wrapper, .fixed .right-side {
+    padding-top: 0
+}
+
+.fixed .main-header .navbar, .fixed .right-side {
+    margin-left: 0
+}
+
+.fixed .main-sidebar {
+    top: auto;
+    padding-top: 0;
+    position: relative;
+    height: 0
+}
+
+.main-header .logo small {
+    font-size: 17px
+}
+
+.main-header .navbar .dropdow-menu {
+    border-top: 0
+}
+
+.main-header .navbar .dropdown-menu li a {
+    color: #555;
+    padding: 5px 15px 5px 25px
+}
+
+.main-header .navbar .dropdown-menu li a:hover {
+    background: #e1e3e9;
+    color: #555
+}
+
+.main-header .navbar .dropdown-menu li.divider {
+    background-color: #ddd
+}
+
+.navbar-nav > .user-menu > .dropdown-menu {
+    width: auto
+}
+
+.navbar-nav > .messages-menu i.img-circle {
+    margin: auto 10px auto auto;
+    display: block;
+    width: 33px;
+    height: 33px;
+    padding: 9px;
+    font-weight: bold
+}
+
+.navbar-nav > .messages-menu > .dropdown-menu > li.header {
+    border-radius: 0;
+    background-color: #f9f9f9
+}
+
+.user-panel > .image > img {
+    width: 45px;
+    height: 45px;
+    background: #fff
+}
+
+.sidebar-collapse .user-panel > .image > img {
+    width: 27px;
+    height: 27px
+}
+
+.user-panel > .info {
+    padding-left: 11px
+}
+
+.sidebar-menu > li a {
+    overflow: hidden;
+    text-overflow: ellipsis
+}
+
+.sidebar-menu > li > a {
+    padding: 12px 15px 12px 12px;
+    font-size: 15px
+}
+
+.sidebar-menu > li > .treeview-menu {
+    margin: 0
+}
+
+.sidebar-menu > .treeview > .treeview-menu {
+    padding-left: 0
+}
+
+.sidebar-menu .treeview-menu > li > a {
+    padding: 7px 5px 8px 20px
+}
+
+.main-sidebar, .left-side {
+    width: 170px
+}
+
+.main-header .navbar, .content-wrapper, .right-side, .main-footer {
+    margin-left: 170px
+}
+
+@media (max-width: 767px) {
+    .main-header .logo {
+        width: 100%
+    }
+
+    .main-header .navbar, .content-wrapper, .right-side, .main-footer {
+        margin-left: 0
+    }
+
+    .sidebar-open .content-wrapper, .sidebar-open .main-footer {
+        -webkit-transform: translate(200px, 0);
+        -ms-transform: translate(200px, 0);
+        -o-transform: translate(200px, 0);
+        transform: translate(200px, 0)
+    }
+
+    .main-sidebar {
+        -webkit-transform: translate(-200px, 0);
+        -ms-transform: translate(-200px, 0);
+        -o-transform: translate(-200px, 0);
+        transform: translate(-200px, 0)
+    }
+}
+
+.main-header .logo {
+    width: auto;
+    min-width: 170px
+}
+
+@media (min-width: 768px) {
+    .sidebar-mini.sidebar-collapse .main-header .logo {
+        width: auto
+    }
+
+    .sidebar-mini.sidebar-collapse .main-header .navbar {
+        margin-left: 0
+    }
+}

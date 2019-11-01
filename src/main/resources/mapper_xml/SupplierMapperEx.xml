@@ -25,6 +25,7 @@
             and description like #{description}
         </if>
         and ifnull(delete_Flag,'0') !='1'
+        order by id desc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
         </if>

@@ -1764,6 +1764,10 @@ update jsh_systemconfig set tenant_id=-1  where tenant_id is null;
 update jsh_unit set tenant_id=-1  where tenant_id is null;
 update jsh_user set tenant_id=-1  where tenant_id is null;
 update jsh_userbusiness set tenant_id=-1  where tenant_id is null;
+
+
+
+
 -- ----------------------------
 -- 时间：2019年6月12日
 -- version：1.0.16
@@ -1817,3 +1821,93 @@ select _setTenantRoleAppsAndFunctions() from dual;
 -- 删除一次性函数
 -- ----------------------------
 DROP FUNCTION _setTenantRoleAppsAndFunctions;
+
+
+-- ----------------------------
+-- 时间：2019年6月23日
+-- 增加新手引导模块
+-- ----------------------------
+INSERT INTO `jsh_app` VALUES ('28', '09', '新手引导', 'app', 'userHelp.png', '../user/userHelp.html', '1000', '500', '\0', '\0', '\0', 'dock', '210', '', '', '0',-1);
+INSERT INTO `jsh_functions` VALUES ('246', '09', '新手引导', '0', '', '', '0115', '', '电脑版', '', '0',-1);
+update jsh_userbusiness SET Value = '[3][6][7][22][23][24][25][26][27][28]'
+where Type = 'RoleAPP' and (KeyId = '4' or KeyId = '10');
+update jsh_userbusiness SET
+Value = '[245][13][12][16][243][14][15][234][236][22][23][220][240][25][217][218][26][194][195][31][59][207][208][209][226][227][228][229][235][237][244][210][211][241][33][199][242][41][200][201][202][40][232][233][197][203][204][205][206][212][246]'
+where Type = 'RoleFunctions' and KeyId = '4';
+update jsh_userbusiness SET
+Value = '[245][13][243][14][15][234][22][23][220][240][25][217][218][26][194][195][31][59][207][208][209][226][227][228][229][235][237][244][210][211][241][33][199][242][41][200][201][202][40][232][233][197][203][204][205][206][212][246]'
+where Type = 'RoleFunctions' and KeyId = '10';
+
+-- ----------------------------
+-- 时间：2019年6月26日
+-- 删除多余的资产相关表
+-- ----------------------------
+drop table jsh_asset;
+drop table jsh_assetcategory;
+drop table jsh_assetname;
+
+
+-- ----------------------------
+-- 时间：2019年6月27日
+-- 增加租户表
+-- ----------------------------
+DROP TABLE IF EXISTS `jsh_tenant`;
+CREATE TABLE `jsh_tenant` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `tenant_id` bigint(20) DEFAULT NULL COMMENT '用户id',
+  `login_name` varchar(255) DEFAULT NULL COMMENT '登录名',
+  `user_num_limit` int(11) DEFAULT NULL COMMENT '用户数量限制',
+  `bills_num_limit` int(11) DEFAULT NULL COMMENT '单据数量限制',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=81 DEFAULT CHARSET=utf8 COMMENT='租户';
+
+-- ----------------------------
+-- 时间：2019年6月27日
+-- 给租户表增加数据
+-- ----------------------------
+INSERT INTO `jsh_tenant` VALUES ('13', '63', 'jsh', '20', '2000', null);
+
+-- ----------------------------
+-- 时间：2019年8月1日
+-- 增加仓库和客户的启用标记
+-- ----------------------------
+alter table jsh_systemconfig add  customer_flag varchar(1) DEFAULT '0' COMMENT '客户启用标记，0未启用，1启用' after company_post_code;
+alter table jsh_systemconfig add  depot_flag varchar(1) DEFAULT '0' COMMENT '仓库启用标记，0未启用，1启用' after company_post_code;
+
+-- ----------------------------
+-- 时间：2019年9月13日
+-- 给功能表增加icon字段
+-- ----------------------------
+alter table jsh_functions add  icon varchar(50) DEFAULT NULL COMMENT '图标' after PushBtn;
+
+-- ----------------------------
+-- 时间：2019年9月13日
+-- 创建消息表
+-- ----------------------------
+CREATE TABLE `jsh_msg` (
+`id`  bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键' ,
+`msg_title`  varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '消息标题' ,
+`msg_content`  varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '消息内容' ,
+`create_time`  datetime NULL DEFAULT NULL COMMENT '创建时间' ,
+`type`  varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '消息类型' ,
+`status`  varchar(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '状态，1未读 2已读' ,
+`tenant_id`  bigint(20) NULL DEFAULT NULL COMMENT '租户id' ,
+`delete_Flag`  varchar(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '删除标记，0未删除，1删除' ,
+PRIMARY KEY (`id`)
+)
+ENGINE=InnoDB
+DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci
+COMMENT='消息表'
+AUTO_INCREMENT=2
+ROW_FORMAT=COMPACT
+;
+
+-- ----------------------------
+-- 时间：2019年9月13日
+-- 删除表 jsh_app  databasechangelog databasechangeloglock
+-- ----------------------------
+drop table databasechangelog;
+drop table databasechangeloglock;
+drop table jsh_app;
+

@@ -24,10 +24,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 
@@ -98,30 +96,6 @@ public class DepotItemController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/findStockNumById")
-    public String findStockNumById(
-            @RequestParam("projectId") Integer pid,
-            @RequestParam("materialId") String mId,
-            HttpServletRequest request) throws Exception{
-        Map<String, Object> objectMap = new HashMap<String, Object>();
-        //存放数据json数组
-        Long materialId = Long.valueOf(mId);
-        Long depotId = Long.valueOf(pid);
-        JSONArray dataArray = new JSONArray();
-        JSONObject item = new JSONObject();
-        /**查询指定仓库下指定材料的库存数量*/
-        item.put("thisSum", depotItemService.getCurrentRepByMaterialIdAndDepotId(materialId,depotId));
-        dataArray.add(item);
-        objectMap.put("page", dataArray);
-        return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
-    }
-
-    /**
-     * 只根据商品id查询库存数量
-     * @param mId
-     * @param request
-     * @return
-     */
     @RequestMapping(value = "/findStockNumByMaterialId")
     public String findStockNumByMaterialId(
             @RequestParam("materialId") String mId,
@@ -166,6 +140,7 @@ public class DepotItemController {
                               HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
+        Long tenantId = Long.parseLong(request.getSession().getAttribute("tenantId").toString());
         try {
             List<DepotItemVo4WithInfoEx> dataList = new ArrayList<DepotItemVo4WithInfoEx>();
             if(headerId != 0) {
@@ -260,11 +235,11 @@ public class DepotItemController {
         return materialOther;
     }
 
+
     /**
      * 查找所有的明细
      * @param currentPage
      * @param pageSize
-     * @param projectId
      * @param monthTime
      * @param headIds
      * @param materialIds
@@ -272,10 +247,10 @@ public class DepotItemController {
      * @param request
      * @return
      */
-    @GetMapping(value = "/findByAll")
+    @RequestMapping(value = "/findByAll")
     public BaseResponseInfo findByAll(@RequestParam("currentPage") Integer currentPage,
                                       @RequestParam("pageSize") Integer pageSize,
-                                      @RequestParam("projectId") Integer projectId,
+                                      @RequestParam("depotId") Long depotId,
                                       @RequestParam("monthTime") String monthTime,
                                       @RequestParam("headIds") String headIds,
                                       @RequestParam("materialIds") String materialIds,
@@ -283,45 +258,34 @@ public class DepotItemController {
                                       HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
+        Long tenantId = Long.parseLong(request.getSession().getAttribute("tenantId").toString());
         try {
             List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(headIds, materialIds, (currentPage-1)*pageSize, pageSize);
             String[] mpArr = mpList.split(",");
             int total = depotItemService.findByAllCount(headIds, materialIds);
             map.put("total", total);
             //存放数据json数组
-            Integer pid = projectId;
             JSONArray dataArray = new JSONArray();
             if (null != dataList) {
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
                     JSONObject item = new JSONObject();
-                    BigDecimal prevSum = sumNumber("入库", pid, diEx.getMId(), monthTime, true).subtract(sumNumber("出库", pid, diEx.getMId(), monthTime, true));
-                    BigDecimal InSum = sumNumber("入库", pid, diEx.getMId(), monthTime, false);
-                    BigDecimal OutSum = sumNumber("出库", pid, diEx.getMId(), monthTime, false);
-                    BigDecimal prevPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, true).subtract(sumPrice("出库", pid, diEx.getMId(), monthTime, true));
-                    BigDecimal InPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, false);
-                    BigDecimal OutPrice = sumPrice("出库", pid, diEx.getMId(), monthTime, false);
+                    Long mId = diEx.getMId();
+                    String timeA = monthTime+"-01 00:00:00";
+                    String timeB = monthTime+"-31 23:59:59";
                     item.put("MaterialName", diEx.getMName());
                     item.put("MaterialModel", diEx.getMModel());
                     //扩展信息
                     String materialOther = getOtherInfo(mpArr, diEx);
                     item.put("MaterialOther", materialOther);
                     item.put("MaterialColor", diEx.getMColor());
-                    item.put("MaterialUnit", diEx.getMaterialUnit());
-                    BigDecimal unitPrice = BigDecimal.ZERO;
-                    if ((prevSum .add(InSum).subtract(OutSum)).compareTo(BigDecimal.ZERO)!= 0) {
-                        unitPrice = (prevPrice.add(InPrice).subtract(OutPrice)).divide(prevSum.add(InSum).subtract(OutSum),2, BigDecimal.ROUND_HALF_UP);
-                        /**
-                         * 2019-01-15通过除法算出金额后，保留两位小数
-                         * */
-                        DecimalFormat    df   = new DecimalFormat("#.00");
-                        unitPrice= new BigDecimal(df.format(unitPrice));
-                    }
-                    item.put("UnitPrice", unitPrice);
-                    item.put("prevSum", prevSum);
-                    item.put("InSum", InSum);
-                    item.put("OutSum", OutSum);
-                    item.put("thisSum", prevSum.add(InSum).subtract(OutSum));
-                    item.put("thisAllPrice", prevPrice.add(InPrice).subtract(OutPrice));
+                    item.put("unitName", getUName(diEx.getMaterialUnit(), diEx.getUName()));
+                    item.put("UnitPrice", getUnitPrice(diEx.getPresetPriceOne(), diEx.getPriceStrategy()));
+                    item.put("prevSum", depotItemService.getStockByParam(depotId,mId,null,timeA,tenantId));
+                    item.put("InSum", depotItemService.getInNumByParam(depotId,mId,timeA,timeB,tenantId));
+                    item.put("OutSum", depotItemService.getOutNumByParam(depotId,mId,timeA,timeB,tenantId));
+                    BigDecimal thisSum = depotItemService.getStockByParam(depotId,mId,null,null,tenantId);
+                    item.put("thisSum", thisSum);
+                    item.put("thisAllPrice", thisSum.multiply(getUnitPrice(diEx.getPresetPriceOne(), diEx.getPriceStrategy())));
                     dataArray.add(item);
                 }
             }
@@ -336,32 +300,87 @@ public class DepotItemController {
         return res;
     }
 
+
+
+
+    /**
+     * 导出excel表格
+     * @param currentPage
+     * @param pageSize
+     * @param monthTime
+     * @param headIds
+     * @param materialIds
+     * @param request
+     * @param response
+     * @return
+     */
+    @GetMapping(value = "/exportExcel")
+    public void exportExcel(@RequestParam("currentPage") Integer currentPage,
+                            @RequestParam("pageSize") Integer pageSize,
+                            @RequestParam("depotId") Long depotId,
+                            @RequestParam("monthTime") String monthTime,
+                            @RequestParam("headIds") String headIds,
+                            @RequestParam("materialIds") String materialIds,
+                            HttpServletRequest request, HttpServletResponse response) {
+        Long tenantId = Long.parseLong(request.getSession().getAttribute("tenantId").toString());
+        try {
+            List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(headIds, materialIds, (currentPage-1)*pageSize, pageSize);
+            //存放数据json数组
+            String[] names = {"名称", "型号", "单位", "单价", "上月结存数量", "入库数量", "出库数量", "本月结存数量", "结存金额"};
+            String title = "库存报表";
+            List<String[]> objects = new ArrayList<String[]>();
+            if (null != dataList) {
+                for (DepotItemVo4WithInfoEx diEx : dataList) {
+                    Long mId = diEx.getMId();
+                    String timeA = monthTime+"-01 00:00:00";
+                    String timeB = monthTime+"-31 23:59:59";
+                    String[] objs = new String[9];
+                    objs[0] = diEx.getMName().toString();
+                    objs[1] = diEx.getMModel().toString();
+                    objs[2] = diEx.getMaterialUnit().toString();
+                    objs[3] = getUnitPrice(diEx.getPresetPriceOne(), diEx.getPriceStrategy()).toString();
+                    objs[4] = depotItemService.getStockByParam(depotId,mId,null,timeA,tenantId).toString();
+                    objs[5] = depotItemService.getInNumByParam(depotId,mId,timeA,timeB,tenantId).toString();
+                    objs[6] = depotItemService.getOutNumByParam(depotId,mId,timeA,timeB,tenantId).toString();
+                    BigDecimal thisSum = depotItemService.getStockByParam(depotId,mId,null,null,tenantId);
+                    objs[7] = thisSum.toString();
+                    objs[8] = thisSum.multiply(getUnitPrice(diEx.getPresetPriceOne(), diEx.getPriceStrategy())).toString();
+                    objects.add(objs);
+                }
+            }
+            File file = ExcelUtils.exportObjectsWithoutTitle(title, names, title, objects);
+            ExportExecUtil.showExec(file, file.getName() + "-" + monthTime, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * 统计总计金额
-     * @param pid
      * @param monthTime
      * @param headIds
      * @param materialIds
      * @param request
      * @return
      */
-    @GetMapping(value = "/totalCountMoney")
-    public BaseResponseInfo totalCountMoney(@RequestParam("projectId") Integer pid,
-                                                        @RequestParam("monthTime") String monthTime,
-                                                        @RequestParam("headIds") String headIds,
-                                                        @RequestParam("materialIds") String materialIds,
-                                                        HttpServletRequest request) throws Exception{
+    @RequestMapping(value = "/totalCountMoney")
+    public BaseResponseInfo totalCountMoney(@RequestParam("depotId") Long depotId,
+                                            @RequestParam("monthTime") String monthTime,
+                                            @RequestParam("headIds") String headIds,
+                                            @RequestParam("materialIds") String materialIds,
+                                            HttpServletRequest request) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
+        Long tenantId = Long.parseLong(request.getSession().getAttribute("tenantId").toString());
         try {
             List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(headIds, materialIds, null, null);
             BigDecimal thisAllPrice = BigDecimal.ZERO;
             if (null != dataList) {
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
-                    BigDecimal prevPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, true).subtract(sumPrice("出库", pid, diEx.getMId(), monthTime, true));
-                    BigDecimal InPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, false);
-                    BigDecimal OutPrice = sumPrice("出库", pid, diEx.getMId(), monthTime, false);
-                    thisAllPrice = thisAllPrice .add(prevPrice.add(InPrice).subtract(OutPrice));
+                    Long mId = diEx.getMId();
+                    BigDecimal thisSum = depotItemService.getStockByParam(depotId,mId,null,null,tenantId);
+                    BigDecimal unitPrice = getUnitPrice(diEx.getPresetPriceOne(), diEx.getPriceStrategy());
+                    thisAllPrice = thisAllPrice.add(thisSum.multiply(unitPrice));
                 }
             }
             map.put("totalCount", thisAllPrice);
@@ -374,6 +393,8 @@ public class DepotItemController {
         }
         return res;
     }
+
+
 
     /**
      * 进货统计
@@ -499,134 +520,6 @@ public class DepotItemController {
         return res;
     }
 
-    /**
-     * 导出excel表格
-     * @param currentPage
-     * @param pageSize
-     * @param projectId
-     * @param monthTime
-     * @param headIds
-     * @param materialIds
-     * @param request
-     * @param response
-     * @return
-     */
-    @GetMapping(value = "/exportExcel")
-    public void exportExcel(@RequestParam("currentPage") Integer currentPage,
-                                        @RequestParam("pageSize") Integer pageSize,
-                                        @RequestParam("projectId") Integer projectId,
-                                        @RequestParam("monthTime") String monthTime,
-                                        @RequestParam("headIds") String headIds,
-                                        @RequestParam("materialIds") String materialIds,
-                                        HttpServletRequest request, HttpServletResponse response)throws Exception {
-        BaseResponseInfo res = new BaseResponseInfo();
-        Map<String, Object> map = new HashMap<String, Object>();
-        String message = "成功";
-        try {
-            List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(headIds, materialIds, (currentPage-1)*pageSize, pageSize);
-            //存放数据json数组
-            Integer pid = projectId;
-            String[] names = {"名称", "型号", "单位", "单价", "上月结存数量", "入库数量", "出库数量", "本月结存数量", "结存金额"};
-            String title = "库存报表";
-            List<String[]> objects = new ArrayList<String[]>();
-            if (null != dataList) {
-                for (DepotItemVo4WithInfoEx diEx : dataList) {
-                    String[] objs = new String[9];
-                    BigDecimal prevSum = sumNumber("入库", pid, diEx.getMId(), monthTime, true).subtract(sumNumber("出库", pid, diEx.getMId(), monthTime, true));
-                    BigDecimal InSum = sumNumber("入库", pid, diEx.getMId(), monthTime, false);
-                    BigDecimal OutSum = sumNumber("出库", pid, diEx.getMId(), monthTime, false);
-                    BigDecimal prevPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, true).subtract(sumPrice("出库", pid, diEx.getMId(), monthTime, true));
-                    BigDecimal InPrice = sumPrice("入库", pid, diEx.getMId(), monthTime, false);
-                    BigDecimal OutPrice = sumPrice("出库", pid, diEx.getMId(), monthTime, false);
-                    BigDecimal unitPrice = BigDecimal.ZERO;
-                    if ((prevSum.add(InSum).subtract(OutSum)).compareTo(BigDecimal.ZERO) != 0) {
-                        unitPrice = (prevPrice.add(InPrice).subtract(OutPrice)).divide(prevSum.add(InSum).subtract(OutSum),2, BigDecimal.ROUND_HALF_UP);
-                        /**
-                         * 2019-01-15通过除法算出金额后，保留两位小数
-                         * */
-                        DecimalFormat    df   = new DecimalFormat("#.00");
-                        unitPrice= new BigDecimal(df.format(unitPrice));
-                    }
-                    BigDecimal thisSum = prevSum.add(InSum).subtract(OutSum);
-                    BigDecimal thisAllPrice = prevPrice.add(InPrice).subtract(OutPrice);
-                    objs[0] = diEx.getMName().toString();
-                    objs[1] = diEx.getMModel().toString();
-                    objs[2] = diEx.getMaterialUnit().toString();
-                    objs[3] = unitPrice.toString();
-                    objs[4] = prevSum.toString();
-                    objs[5] = InSum.toString();
-                    objs[6] = OutSum.toString();
-                    objs[7] = thisSum.toString();
-                    objs[8] = thisAllPrice.toString();
-                    objects.add(objs);
-                }
-            }
-            File file = ExcelUtils.exportObjectsWithoutTitle(title, names, title, objects);
-            ExportExecUtil.showExec(file, file.getName() + "-" + monthTime, response);
-            res.code = 200;
-        } catch (Exception e) {
-            e.printStackTrace();
-            message = "导出失败";
-            res.code = 500;
-        }
-    }
-
-    /**
-     * 数量合计
-     *
-     * @param type
-     * @param MId
-     * @param MonthTime
-     * @param isPrev
-     * @return
-     */
-    public BigDecimal sumNumber(String type, Integer ProjectId, Long MId, String MonthTime, Boolean isPrev)throws Exception {
-        BigDecimal sumNumber = BigDecimal.ZERO;
-        try {
-            BigDecimal sum = depotItemService.findByType(type, ProjectId, MId, MonthTime, isPrev);
-            if(sum != null) {
-                sumNumber = sum;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return sumNumber;
-    }
-
-    public BigDecimal assembleNumber(String subType, String mType, Integer ProjectId, Long MId, String MonthTime, Boolean isPrev) throws Exception{
-        BigDecimal assembleNumber = BigDecimal.ZERO;
-        try {
-            BigDecimal sum = depotItemService.findAssembleByType(subType, mType, ProjectId, MId, MonthTime, isPrev);
-            if(sum != null) {
-                assembleNumber = sum;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return assembleNumber;
-    }
-
-    /**
-     * 价格合计
-     *
-     * @param type
-     * @param MId
-     * @param MonthTime
-     * @param isPrev
-     * @return
-     */
-    public BigDecimal sumPrice(String type, Integer ProjectId, Long MId, String MonthTime, Boolean isPrev) throws Exception{
-        BigDecimal sumPrice = BigDecimal.ZERO;
-        try {
-            BigDecimal sum = depotItemService.findPriceByType(type, ProjectId, MId, MonthTime, isPrev);
-            if(sum != null) {
-                sumPrice = sum;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return sumPrice;
-    }
 
     public BigDecimal sumNumberBuyOrSale(String type, String subType, Long MId, String MonthTime)throws Exception {
         BigDecimal sumNumber = BigDecimal.ZERO;
@@ -655,6 +548,30 @@ public class DepotItemController {
         }
         return sumPrice;
     }
+    /**
+     * 获取单价
+     * @param presetPriceOne
+     * @param priceStrategy
+     * @return
+     */
+    public BigDecimal getUnitPrice(BigDecimal presetPriceOne, String priceStrategy) {
+        BigDecimal unitPrice = BigDecimal.ZERO;
+        if(presetPriceOne != null) {
+            DecimalFormat df = new DecimalFormat("#.00");
+            unitPrice = new BigDecimal(df.format(presetPriceOne));
+        } else {
+            JSONArray priceArr = JSONArray.parseArray(priceStrategy);
+            if(priceArr!=null && priceArr.get(0)!=null) {
+                JSONObject priceObj = JSONObject.parseObject(priceArr.get(0).toString());
+                BigDecimal basicPresetPriceOne = priceObj.getJSONObject("basic").getBigDecimal("PresetPriceOne");
+                if(basicPresetPriceOne!=null) {
+                    unitPrice = basicPresetPriceOne;
+                }
+            }
+        }
+        return unitPrice;
+    }
+
     /**
      * create by: qiankunpingtai
      * website：https://qiankunpingtai.cn
@@ -707,7 +624,6 @@ public class DepotItemController {
      * @param currentPage
      * @param pageSize
      * @param projectId
-     * @param monthTime
      * @param request
      * @param response
      * @return
@@ -753,4 +669,62 @@ public class DepotItemController {
         }
         return res;
     }
+
+    /**
+     * 统计采购或销售的总金额
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @GetMapping(value = "/buyOrSalePrice")
+    public BaseResponseInfo buyOrSalePrice(HttpServletRequest request, HttpServletResponse response)throws Exception {
+        BaseResponseInfo res = new BaseResponseInfo();
+        Map<String, Object> map = new HashMap<String, Object>();
+        String message = "成功";
+        try {
+            Date date = new Date();
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM");
+            String dateString = formatter.format(date);
+            List<String> list = Tools.getSixMonth(dateString);
+            map.put("monthList", list);
+            List<BigDecimal> buyPriceList = new ArrayList<BigDecimal>();
+            for(String month: list) {
+                BigDecimal outPrice = depotItemService.inOrOutPrice("入库", "采购", month);
+                BigDecimal inPrice = depotItemService.inOrOutPrice("出库", "采购退货", month);
+                buyPriceList.add(outPrice.subtract(inPrice));
+            }
+            map.put("buyPriceList", buyPriceList);
+            List<BigDecimal> salePriceList = new ArrayList<BigDecimal>();
+            for(String month: list) {
+                BigDecimal outPrice = depotItemService.inOrOutPrice("出库", "销售", month);
+                BigDecimal inPrice = depotItemService.inOrOutPrice("入库", "销售退货", month);
+                salePriceList.add(outPrice.subtract(inPrice));
+            }
+            map.put("salePriceList", salePriceList);
+            res.code = 200;
+            res.data = map;
+        } catch (Exception e) {
+            e.printStackTrace();
+            message = "统计失败";
+            res.code = 500;
+        }
+        return res;
     }
+    /**
+     * 获取单位
+     * @param materialUnit
+     * @param uName
+     * @return
+     */
+    public String getUName(String materialUnit, String uName) {
+        String unitName = null;
+        if(!StringUtil.isEmpty(materialUnit)) {
+            unitName = materialUnit;
+        } else if(!StringUtil.isEmpty(uName)) {
+            unitName = uName.substring(0,uName.indexOf(","));
+        }
+        return unitName;
+    }
+
+}

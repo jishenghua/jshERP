@@ -7,6 +7,7 @@ import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.Supplier;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.supplier.SupplierService;
+import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.service.userBusiness.UserBusinessService;
 import com.jsh.erp.utils.*;
@@ -44,6 +45,10 @@ public class SupplierController {
 
     @Resource
     private UserBusinessService userBusinessService;
+
+    @Resource
+    private SystemConfigService systemConfigService;
+
     @Resource
     private UserService userService;
 
@@ -81,6 +86,7 @@ public class SupplierController {
             List<Supplier> supplierList = supplierService.findBySelectCus();
             JSONArray dataArray = new JSONArray();
             if (null != supplierList) {
+                boolean customerFlag = systemConfigService.getCustomerFlag();
                 for (Supplier supplier : supplierList) {
                     JSONObject item = new JSONObject();
                     //勾选判断1
@@ -90,7 +96,7 @@ public class SupplierController {
                     } catch (DataAccessException e) {
                         logger.error(">>>>>>>>>>>>>>>>>查询用户对应的客户：存在异常！");
                     }
-                    if (flag == true) {
+                    if (!customerFlag || flag) {
                         item.put("id", supplier.getId());
                         item.put("supplier", supplier.getSupplier()); //客户名称
                         dataArray.add(item);
@@ -297,10 +303,7 @@ public class SupplierController {
                                         @RequestParam("phonenum") String phonenum,
                                         @RequestParam("telephone") String telephone,
                                         @RequestParam("description") String description,
-                                        HttpServletRequest request, HttpServletResponse response)throws Exception {
-        BaseResponseInfo res = new BaseResponseInfo();
-        Map<String, Object> map = new HashMap<String, Object>();
-        String message = "成功";
+                                        HttpServletRequest request, HttpServletResponse response) {
         try {
             List<Supplier> dataList = supplierService.findByAll(supplier, type, phonenum, telephone, description);
             String[] names = {"名称", "类型", "联系人", "电话", "电子邮箱", "预收款", "期初应收", "期初应付", "备注", "传真", "手机", "地址", "纳税人识别号", "开户行", "账号", "税率", "状态"};
@@ -331,14 +334,8 @@ public class SupplierController {
             }
             File file = ExcelUtils.exportObjectsWithoutTitle(title, names, title, objects);
             ExportExecUtil.showExec(file, file.getName(), response);
-            res.code = 200;
         } catch (Exception e) {
             e.printStackTrace();
-            message = "导出失败";
-            res.code = 500;
-        } finally {
-            map.put("message", message);
-            res.data = map;
         }
     }
 
@@ -400,7 +397,6 @@ public class SupplierController {
                 info.code = 400;
                 info.data = data;
             }
-            //读取所有的摄像机编码
             //每行中数据顺序 "名称","类型","联系人","电话","电子邮箱","预收款","期初应收","期初应付","备注","传真","手机","地址","纳税人识别号","开户行","账号","税率","状态"
             List<Supplier> sList = new ArrayList<Supplier>();
             for (int i = 1; i < src.getRows(); i++) {

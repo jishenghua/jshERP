@@ -215,4 +215,16 @@ public class StringUtil {
         }
         return value;
     }
+
+    public static String toNull(String value) {
+        if(("").equals(value)) {
+            value = null;
+        }
+        return value;
+    }
+
+    public static void main(String[] args) {
+        int i = 10/3;
+        System.out.println(i);
+    }
 }

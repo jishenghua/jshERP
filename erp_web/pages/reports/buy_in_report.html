@@ -17,9 +17,8 @@
     <script type="text/javascript" src="/js/common/common.js"></script>
 </head>
 <body>
-<!-- 查询 -->
-<div id="searchPanel" class="easyui-panel" style="padding:10px;" title="查询窗口" iconCls="icon-search" collapsible="true"
-     closable="false">
+<!-- 数据显示table -->
+<div id="tablePanel" class="easyui-panel" data-options="fit:true" style="padding:1px;top:300px;" title="进货统计列表" iconCls="icon-list">
     <table id="searchTable">
         <tr>
             <td>月份：</td>
@@ -36,11 +35,6 @@
             </td>
         </tr>
     </table>
-</div>
-
-<!-- 数据显示table -->
-<div id="tablePanel" class="easyui-panel" style="padding:1px;top:300px;" title="进货统计列表" iconCls="icon-list"
-     collapsible="true" closable="false">
     <table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 </div>
 
@@ -111,7 +105,16 @@
                 {title: '名称', field: 'MaterialName', width: 60},
                 {title: '型号', field: 'MaterialModel', width: 80},
                 {title: '扩展信息', field: 'MaterialOther', width: 150},
-                {title: '单位', field: 'MaterialUnit', width: 80},
+                {title: '单位', field: 'MaterialUnit', width: 80,
+                    formatter: function (value, row) {
+                        if(value) {
+                            return value;
+                        } else if(row.UName) {
+                            var uName = row.UName;
+                            return uName.substring(0,uName.indexOf(","));
+                        }
+                    }
+                },
                 {title: '进货数量', field: 'InSum', width: 60},
                 {title: '进货金额', field: 'InSumPrice', width: 60},
                 {title: '退货数量', field: 'OutSum', width: 60},
@@ -122,6 +125,7 @@
                 return;
             }
         });
+        dgResize();
     }
 
     //初始化键盘enter事件
@@ -201,7 +205,7 @@
                                     var mIds = res.data.mIds;
                                     if (mIds) {
                                         $.ajax({
-                                            type: "get",
+                                            type: "post",
                                             url: "/depotItem/buyIn",
                                             dataType: "json",
                                             data: ({

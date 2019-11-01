@@ -12,6 +12,7 @@ import com.jsh.erp.datasource.entities.Depot;
 import com.jsh.erp.datasource.entities.DepotEx;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.depot.DepotService;
+import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.userBusiness.UserBusinessService;
 import com.jsh.erp.utils.*;
 import org.slf4j.Logger;
@@ -39,6 +40,9 @@ public class DepotController {
 
     @Resource
     private UserBusinessService userBusinessService;
+
+    @Resource
+    private SystemConfigService systemConfigService;
 
     @GetMapping(value = "/getAllList")
     public BaseResponseInfo getAllList(HttpServletRequest request) throws Exception{
@@ -102,6 +106,14 @@ public class DepotController {
         return arr;
     }
 
+    /**
+     * 获取用户拥有权限的仓库列表
+     * @param type
+     * @param keyId
+     * @param request
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value = "/findDepotByUserId")
     public JSONArray findDepotByUserId(@RequestParam("UBType") String type, @RequestParam("UBKeyId") String keyId,
                                        HttpServletRequest request) throws Exception{
@@ -110,6 +122,7 @@ public class DepotController {
             List<Depot> dataList = depotService.findUserDepot();
             //开始拼接json数据
             if (null != dataList) {
+                boolean depotFlag = systemConfigService.getDepotFlag();
                 for (Depot depot : dataList) {
                     JSONObject item = new JSONObject();
                     //勾选判断1
@@ -119,7 +132,7 @@ public class DepotController {
                     } catch (DataAccessException e) {
                         logger.error(">>>>>>>>>>>>>>>>>查询用户对应的仓库：类型" + type + " KeyId为： " + keyId + " 存在异常！");
                     }
-                    if (flag == true) {
+                    if (!depotFlag || flag) {
                         item.put("id", depot.getId());
                         item.put("depotName", depot.getName());
                         arr.add(item);

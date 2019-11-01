@@ -60,10 +60,10 @@ public class ExceptionConstants {
     public static final String USER_EDIT_FAILED_MSG = "修改用户信息失败";
     //用户名已存在
     public static final int USER_USER_NAME_ALREADY_EXISTS_CODE = 500003;
-    public static final String USER_USER_NAME_ALREADY_EXISTS_MSG = "用户名已存在";
+    public static final String USER_USER_NAME_ALREADY_EXISTS_MSG = "用户名在本系统已存在";
     //登录名已存在
     public static final int USER_LOGIN_NAME_ALREADY_EXISTS_CODE = 500003;
-    public static final String USER_LOGIN_NAME_ALREADY_EXISTS_MSG = "登录名已存在";
+    public static final String USER_LOGIN_NAME_ALREADY_EXISTS_MSG = "登录名在本系统已存在";
     //用户录入数量超出限制
     public static final int USER_OVER_LIMIT_FAILED_CODE = 500004;
     public static final String USER_OVER_LIMIT_FAILED_MSG = "用户录入数量超出限制，请联系管理员续费";
