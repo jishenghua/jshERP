@@ -142,3 +142,35 @@
 	<a href="javascript:void(0)" id="cancelDepot" onclick="javascript:$('#depotDlg').dialog('close')">取消</a>
 </div>
 {{/if}}
+
+{{#if accountSelect}}
+<div id="accountDlg" style="width:380px;padding:10px 20px" buttons="#accountDlgBtn">
+	<form id="accountFM">
+		<table>
+			<tr>
+				<td>名称</td>
+				<td style="padding:5px">
+					<input name="name" id="name" style="width: 230px;height: 20px"/>
+				</td>
+			</tr>
+			<tr>
+				<td>编号</td>
+				<td style="padding:5px">
+					<input name="serialNo" id="serialNo" style="width: 230px;height: 20px"/>
+				</td>
+			</tr>
+			<tr>
+				<td>期初金额</td>
+				<td style="padding:5px">
+					<input name="initialAmount" id="initialAmount" style="width: 230px;height: 20px"></input>
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>
+<div id="accountDlgBtn">
+	<a href="javascript:void(0)" id="saveAccount" iconCls="icon-ok">保存</a>
+	<a href="javascript:void(0)" id="cancelAccount" iconCls="icon-cancel"
+	   onclick="javascript:$('#accountDlg').dialog('close')">取消</a>
+</div>
+{{/if}}
