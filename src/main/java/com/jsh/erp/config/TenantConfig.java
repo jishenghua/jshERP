@@ -57,7 +57,7 @@ public class TenantConfig {
             @Override
             public boolean doTableFilter(String tableName) {
                 // 这里可以判断是否过滤表
-                if ("tbl_sequence".equals(tableName) || "dual".equals(tableName)) {
+                if ("tbl_sequence".equals(tableName) || "dual".equals(tableName)|| "jsh_tenant".equals(tableName)) {
                     return true;
                 } else {
                     return false;

@@ -1926,6 +1926,7 @@ drop table jsh_app;
 -- 2、分配产品扩展字段
 -- 3、分配角色（默认添加超级管理员角色，不可修改）
 -- 4、写入用户角色模块关系
+-- 5、添加租户信息
 -- 特别提醒：之后的sql都是在之前基础上迭代，可以对已存在的系统进行数据保留更新
 -- ----------------------------
 DROP FUNCTION IF EXISTS registerUserTemplate;
@@ -1965,7 +1966,60 @@ set @functionIdList = (select left(replace(replace(value,'[',''),']',','),length
 		 INSERT INTO jsh_userbusiness ( Type, KeyId, Value, BtnStr, delete_Flag, tenant_id) VALUES ( 'RoleFunctions', @roleId, CONCAT('[',@functionStr,']') , CONCAT('[{',@functionBtnStr,'}]'), '0', tenantId);
 		 -- 设置租户的产品扩展信息
 		 INSERT INTO jsh_materialproperty( nativeName, enabled, sort, anotherName, delete_Flag, tenant_id) select nativeName, enabled, sort, anotherName, delete_Flag, tenantId from jsh_materialproperty where id in(1,2,3,4,5,6);
+	-- 添加租户信息
+	set @loginName=(select  loginame  from jsh_user where 1=1 and  id=tenantId);
+  INSERT INTO jsh_tenant( tenant_id, login_name, user_num_limit, bills_num_limit, create_time) VALUES ( tenantId, @loginName, 2, 200, (select now()));
 return _success_msg;
 end
 ;;
 DELIMITER ;
+
+-- ----------------------------
+-- 时间：2019年11月04日
+-- version：1.0.18
+-- 此次更新
+-- 修改功能表基础信息
+-- ----------------------------
+-- 删除多余的菜单
+delete from jsh_functions where PNumber in (select number from  (select Number from jsh_functions where PNumber='0') temp);
+-- 初始化菜单
+-- 系统管理
+update jsh_functions set PNumber='00' where PNumber='0001';
+-- 商品管理
+update jsh_functions set PNumber='01' where PNumber='0101';
+-- 基本资料
+update jsh_functions set PNumber='02' where PNumber='0102';
+-- 报表查询
+update jsh_functions set PNumber='03' where PNumber='0301';
+-- 零售管理
+update jsh_functions set PNumber='04' where PNumber='0401';
+-- 采购管理
+update jsh_functions set PNumber='05' where PNumber='0502';
+-- 销售管理
+update jsh_functions set PNumber='06' where PNumber='0603';
+-- 财务管理
+update jsh_functions set PNumber='07' where PNumber='0704';
+-- 仓库管理
+update jsh_functions set PNumber='08' where PNumber='0801';
+-- 调整菜单排序
+update jsh_functions set sort='0000' where number='04';
+update jsh_functions set sort='0001' where number='05';
+update jsh_functions set sort='0002' where number='06';
+update jsh_functions set sort='0003' where number='08';
+update jsh_functions set sort='0004' where number='07';
+update jsh_functions set sort='0005' where number='03';
+update jsh_functions set sort='0006',name='商品管理' where number='01';
+update jsh_functions set sort='0007',name='基本资料' where number='02';
+update jsh_functions set sort='0008' where number='00';
+-- 去掉多余的子菜单
+delete FROM jsh_functions where number='000101'
+--修改菜单路径
+update jsh_functions set url= replace(url,'..','/pages') where 1=1 and url is not null;
+-- 设置新注册的用户的功能列表
+INSERT INTO `jsh_userbusiness`( `Type`, `KeyId`, `Value`, `BtnStr`, `delete_Flag`) VALUES ( 'RoleFunctions', '10', '[1][2][11]', '[{', '0');
+update jsh_userbusiness SET
+Value = '[1][2][13][14][15][16][22][23][25][26][31][33][40][41][59][194][195][196][197][199][200][201][202][203][204][205][206][207][208][209][210][211][212][217][218][219][220][221][222][223][224][226][227][228][229][232][233][234][235][236][237][238][240][241][242][243][244][245][246]'
+where Type = 'RoleFunctions' and KeyId = '10';
+update jsh_userbusiness SET
+BtnStr = '[{funId":"25","btnStr":"1,2"},{"funId":"217","btnStr":"1,2"},{"funId":"218","btnStr":"1,2"},{"funId":"241","btnStr":"3"},{"funId":"242","btnStr":"3"}]'
+where Type = 'RoleFunctions' and KeyId = '10';

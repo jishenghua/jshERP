@@ -16,6 +16,7 @@ import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.orgaUserRel.OrgaUserRelService;
+import com.jsh.erp.service.tenant.TenantService;
 import com.jsh.erp.service.userBusiness.UserBusinessService;
 import com.jsh.erp.utils.ExceptionCodeConstants;
 import com.jsh.erp.utils.StringUtil;
@@ -50,7 +51,8 @@ public class UserService {
     private LogService logService;
     @Resource
     private UserService userService;
-
+    @Resource
+    private TenantService tenantService;
     @Resource
     private UserBusinessService userBusinessService;
 
