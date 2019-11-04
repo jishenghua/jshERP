@@ -48,9 +48,9 @@
         </div>
         <div class="register-box-body">
             <div class="form-group has-feedback">
-                <span class="glyphicon glyphicon-user form-control-feedback" title="登录账号"></span>
+                <span class="glyphicon glyphicon-user form-control-feedback" title="登录账户"></span>
                 <input type="text" id="username" name="username" class="form-control required"
-                       data-msg-required="请填写登录账号." placeholder="登录账号"/>
+                       data-msg-required="请填写登录账号." placeholder="登录账户(请输入手机号码）"/>
             </div>
             <div class="form-group has-feedback">
                 <span class="glyphicon glyphicon-lock form-control-feedback"
@@ -127,10 +127,13 @@
         if($("#validCode").val()) {
             var res = verifyCode.validate($("#validCode").val());
             if(res){
-                if(!$("#username").val()) {
-                    alert("用户名不能为空!");
+                var userName = $("#username");
+                if(!userName.val()) {
+                    alert("登录账户不能为空!");
+                } else if(!isPhoneAvailable(userName)) {
+                    alert("请输入正确的手机号码!");
                 } else if(!$("#password").val()) {
-                    alert("密码不能为空!");
+                    alert("登录密码不能为空!");
                 } else if(!$("#confirmPassword").val()) {
                     alert("确认密码不能为空!");
                 } else if($("#password").val()!=$("#confirmPassword").val()) {

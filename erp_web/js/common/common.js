@@ -335,3 +335,17 @@
     function turnBillDetailPage(number, type) {
         js.addTabPage(null, "单据明细", "/pages/materials/bill_detail.html?n="+ number + "&type=" + type);
     }
+
+    /**
+	 * 验证手机号码
+     * @param phoneInput
+     * @returns {boolean}
+     */
+    function isPhoneAvailable(phoneInput) {
+        var myreg=/^[1][3,4,5,7,8,9][0-9]{9}$/;
+        if (!myreg.test(phoneInput.val())) {
+            return false;
+        } else {
+            return true;
+        }
+    }
