@@ -2012,11 +2012,10 @@ update jsh_functions set sort='0006',name='商品管理' where number='01';
 update jsh_functions set sort='0007',name='基本资料' where number='02';
 update jsh_functions set sort='0008' where number='00';
 -- 去掉多余的子菜单
-delete FROM jsh_functions where number='000101'
---修改菜单路径
+delete FROM jsh_functions where number='000101';
+-- 修改菜单路径
 update jsh_functions set url= replace(url,'..','/pages') where 1=1 and url is not null;
--- 设置新注册的用户的功能列表
-INSERT INTO `jsh_userbusiness`( `Type`, `KeyId`, `Value`, `BtnStr`, `delete_Flag`) VALUES ( 'RoleFunctions', '10', '[1][2][11]', '[{', '0');
+
 update jsh_userbusiness SET
 Value = '[1][2][13][14][15][16][22][23][25][26][31][33][40][41][59][194][195][196][197][199][200][201][202][203][204][205][206][207][208][209][210][211][212][217][218][219][220][221][222][223][224][226][227][228][229][232][233][234][235][236][237][238][240][241][242][243][244][245][246]'
 where Type = 'RoleFunctions' and KeyId = '10';
