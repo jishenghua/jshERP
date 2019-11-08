@@ -667,7 +667,6 @@
 	//初始化表格数据-商品列表-编辑状态
 	function initTableData_material(type,TotalPrice){
 		var body,footer,input; //定义表格和文本框
-		var ratio = 1; //比例-品名专用
 		var ratioDepot = 1; //比例-仓库用
 		var monthTime = getNowFormatMonth();
 		var isShowAnotherDepot = true; //显示对方仓库,true为隐藏,false为显示
@@ -760,216 +759,7 @@
 								param.mpList = mPropertyList; //商品属性
 							},
 							onSelect:function(rec){
-								if(rec) {
-									var mId = rec.Id;
-									$.ajax({
-										url: "/material/findById",
-										type: "get",
-										dataType: "json",
-										data: {
-                                            id: mId
-										},
-										success: function (res) {
-											if(res && res.code === 200 && res.data && res.data[0]) {
-												var retailPrice = res.data[0].retailprice-0; //零售价格
-												var presetPriceOne = res.data[0].presetpriceone-0; //预计采购价
-												var presetPriceTwo = res.data[0].presetpricetwo-0; //批发价
-												var firstInUnit = res.data[0].firstinunit; //首选入库单位
-												var firstOutUnit = res.data[0].firstoutunit; //首选出库单位
-												var basicPresetPriceOne = ""; //多单位-入库-基础价格
-												var basicPresetPriceTwo = ""; //多单位-出库-基础价格
-												var retailPriceOne = ""; //多单位-入库-零售价格
-												var otherPresetPriceOne = ""; //多单位-入库-其他价格
-												var otherPresetPriceTwo = ""; //多单位-出库-其他价格
-												var retailPriceTwo = ""; //多单位-出库-零售价格
-												var basicUnit = ""; //基础单位
-												var otherUnit = ""; //其他单位
-												if(!res.data[0].unit){
-													var ps = res.data[0].pricestrategy;
-                                                    var psObj = JSON.parse(ps);
-													basicPresetPriceOne = psObj[0].basic.PresetPriceOne-0;
-													basicPresetPriceTwo = psObj[0].basic.PresetPriceTwo-0;
-													retailPriceOne = psObj[0].basic.RetailPrice-0;
-													otherPresetPriceOne = psObj[1].other.PresetPriceOne-0;
-													otherPresetPriceTwo = psObj[1].other.PresetPriceTwo-0;
-													retailPriceTwo = psObj[1].other.RetailPrice-0;
-													basicUnit = psObj[0].basic.Unit;
-													otherUnit = psObj[1].other.Unit;
-												}
-												body =$("#depotHeadFM .datagrid-body");
-												footer =$("#depotHeadFM .datagrid-footer");
-												input = ".datagrid-editable-input";
-												if(res.data[0].unit){ //如果存在计量单位信息
-													ratio = 1; //重置比例为1
-													body.find("[field='Unit']").find(input).val(res.data[0].unit); //设置-计量单位信息
-													body.find("[field='Unit']").find(input).prop("readonly","readonly"); //设置计量单位为只读
-													body.find("[field='Unit']").find(input).off("click"); //移除点击事件
-													body.find("[field='Unit']").find(input).attr("data-ratio",ratio); //修改比例缓存信息
-												}
-												else {
-													var unitName = res.data[0].unitName;
-													if(unitName) {
-														ratio = unitName.substring(unitName.indexOf(":")+1).replace(")",""); //给比例赋值
-														unitName = unitName.substring(0, unitName.indexOf("("));
-													}
-													var unitArr = unitName.split(",");
-													var basicUnit = unitArr[0]; //基础单位
-													var otherUnit = unitArr[1]; //副单位
-													var unitSetInput =""; //单位
-													body.find("[field='Unit']").find(input).prop("readonly","readonly"); //设置计量单位为只读
-													var loadRatio = 1; //在单位输入框上面加载比例字段
-													if(listSubType === "采购" || listSubType === "采购退货" || listSubType === "采购订单"){
-														unitSetInput = res.data[0].firstinunit; //给单位文本框赋值
-														if(basicUnit==unitSetInput){ //基础单位等于选择的单位
-															loadRatio = 1;
-														}
-														else if(otherUnit==unitSetInput){ //副单位等于选择的单位
-															loadRatio = ratio;
-														}
-													}
-													else if(listSubType === "销售" || listSubType === "销售退货" || listSubType === "销售订单" || listSubType === "零售" || listSubType === "零售退货"){
-														unitSetInput = res.data[0].firstoutunit; //给单位文本框赋值
-														if(basicUnit==unitSetInput){ //基础单位等于选择的单位
-															loadRatio = 1;
-														}
-														else if(otherUnit==unitSetInput){ //副单位等于选择的单位
-															loadRatio = ratio;
-														}
-													}
-													body.find("[field='Unit']").find(input).val(unitSetInput).attr("data-ratio", loadRatio); //设置-首选单位
-
-													body.find("[field='Unit']").find(input).off("click").on("click",function(){
-														if(basicUnit && otherUnit) {
-															var self = this;
-															//定义模版
-															var temp = "<div class='unit-list'>";
-															temp +="<ul>";
-															temp +="<li data-type='basic' data-ratio='1'>" + basicUnit + "</li>";
-															temp +="<li data-type='other' data-ratio='" + ratio + "'>" + otherUnit + "</li>";
-															temp +="</ul>";
-															temp +="</div>";
-															if($('.unit-list').length){
-																$('.unit-list').remove(); //如果存在计量单位列表先移除
-															}
-															else {
-																$(self).after(temp); //加载列表信息
-															}
-															//计量单位列表的单击事件
-															$('.unit-list ul li').off("click").on("click",function(){
-																var unit = $(this).text();
-																var thisRatio = $(this).attr("data-ratio"); //获取比例
-																$(self).val(unit).attr("data-ratio", thisRatio);
-																$(self).keyup(); //模拟键盘操作
-																$('.unit-list').remove(); //移除计量单位列表
-																var stock = body.find("[field='Stock']").find(input).attr("data-stock"); //从缓存中取值
-																var type = $(this).attr("data-type");
-																var UnitPrice = 0;
-																if(type === "basic"){
-																	if(listTitle == "采购订单列表" || listTitle == "采购入库列表" || listTitle == "销售退货列表" || listTitle == "其它入库列表") {
-																		UnitPrice = basicPresetPriceOne;
-																	}
-																	else if(listTitle == "销售订单列表" || listTitle == "销售出库列表" || listTitle == "采购退货列表" || listTitle == "其它出库列表" || listTitle == "调拨出库列表") {
-																		UnitPrice = basicPresetPriceTwo;
-																	}
-																	else if(listTitle == "零售出库列表" || listTitle == "零售退货列表"){
-																		UnitPrice = retailPriceOne;
-																	}
-																	body.find("[field='Stock']").find(input).val(stock); //修改库存
-																}
-																else if(type === "other"){
-																	if(listTitle == "采购订单列表" || listTitle == "采购入库列表" || listTitle == "销售退货列表" || listTitle == "其它入库列表") {
-																		UnitPrice = otherPresetPriceOne;
-																	}
-																	else if(listTitle == "销售订单列表" || listTitle == "销售出库列表" || listTitle == "采购退货列表" || listTitle == "其它出库列表" || listTitle == "调拨出库列表") {
-																		UnitPrice = otherPresetPriceTwo;
-																	}
-																	else if(listTitle == "零售出库列表" || listTitle == "零售退货列表"){
-																		UnitPrice = retailPriceTwo;
-																	}
-																	body.find("[field='Stock']").find(input).val((stock/ratio).toFixed(2)); //修改库存
-																}
-																body.find("[field='UnitPrice']").find(input).val(UnitPrice); //单价
-																var OperNumber = body.find("[field='OperNumber']").find(input).val(); //获取数量
-																var taxRate = body.find("[field='TaxRate']").find(input).val(); //获取税率
-																body.find("[field='TaxUnitPrice']").find(input).val((UnitPrice*(1+taxRate/100)).toFixed(2)); //含税单价
-																body.find("[field='AllPrice']").find(input).val((UnitPrice*OperNumber).toFixed(2)); //金额
-																body.find("[field='TaxMoney']").find(input).val((UnitPrice*OperNumber*(taxRate/100)).toFixed(2)); //税额
-																body.find("[field='TaxLastMoney']").find(input).val((UnitPrice*OperNumber*(1+taxRate/100)).toFixed(2)); //价税合计
-																statisticsFun(body,UnitPrice,OperNumber,footer,taxRate);
-															});
-															//点击空白处移除计量单位列表
-															$(".datagrid-body").off("click").on("click",function(){
-																$('.unit-list').remove(); //移除计量单位列表
-															});
-														}
-													});
-												}
-												var detailPrice = 0; //明细列表-单价
-												if(listSubType == "零售" || listSubType == "零售退货") {
-													if(res.data[0].unit) { //如果存在计量单位信息
-														detailPrice = retailPrice;
-													}
-													else {
-														if (firstOutUnit == basicUnit) {
-															detailPrice = retailPriceOne;
-														}
-														else if (firstOutUnit == otherUnit) {
-															detailPrice = retailPriceTwo;
-														}
-													}
-												}
-												else if(listTitle == "采购订单列表" || listTitle == "采购入库列表" || listTitle == "销售退货列表" || listTitle == "其它入库列表") {
-													if(res.data[0].unit) { //如果存在计量单位信息
-														detailPrice = presetPriceOne;
-													}
-													else {
-														if (firstInUnit == basicUnit) {
-															detailPrice = basicPresetPriceOne;
-														}
-														else if (firstInUnit == otherUnit) {
-															detailPrice = otherPresetPriceOne;
-														}
-													}
-												}
-												else if(listTitle == "销售订单列表" || listTitle == "销售出库列表" || listTitle == "采购退货列表" || listTitle == "其它出库列表" || listTitle == "调拨出库列表") {
-													if(res.data[0].unit) { //如果存在计量单位信息
-														detailPrice = presetPriceTwo;
-													}
-													else {
-														if(firstOutUnit==basicUnit) {
-															detailPrice = basicPresetPriceTwo;
-														}
-														else if(firstOutUnit==otherUnit){
-															detailPrice = otherPresetPriceTwo;
-														}
-													}
-												}
-												body.find("[field='OperNumber']").find(input).val(1); //数量初始化为1
-												//单价和总价赋值
-												if(!detailPrice) {
-													detailPrice = 0;
-												}
-												body.find("[field='UnitPrice']").find(input).val(detailPrice);
-												body.find("[field='AllPrice']").find(input).val(detailPrice);
-												var taxRate = body.find("[field='TaxRate']").find(input).val()-0; //获取税率
-												body.find("[field='TaxUnitPrice']").find(input).val((detailPrice*(1+taxRate/100)).toFixed(2));  //含税单价
-												body.find("[field='TaxMoney']").find(input).val((detailPrice*(taxRate/100)).toFixed(2));  //税额
-												body.find("[field='TaxLastMoney']").find(input).val((detailPrice*(1+taxRate/100)).toFixed(2));  //价税合计
-												statisticsFun(body,detailPrice,1,footer,taxRate);
-
-												//查询库存信息
-												var depotId = body.find("[field='DepotId']").find(".combo-value").val();
-												if(depotId) {
-													var type = "select"; //type 类型：点击 click，选择 select
-													findStockNumById(depotId, mId, monthTime, body, input, loadRatio, type);
-												}
-											}
-										},
-										error: function() {
-											$.messager.alert('页面加载提示','页面加载异常，请稍后再试！','error');
-										}
-									});
-								}
+                                materialSelect(rec);
 							}
 	                  	}
 		            }
@@ -1096,6 +886,220 @@
 				$.messager.alert('查询提示','查询数据后台异常，请稍后再试！','error');
 			}
 		});
+        function materialSelect(rec) {
+            var body,footer,input; //定义表格和文本框
+            var ratio = 1; //比例-品名专用
+            if(rec) {
+                var mId = rec.Id;
+                $.ajax({
+                    url: "/material/findById",
+                    type: "get",
+                    dataType: "json",
+                    data: {
+                        id: mId
+                    },
+                    success: function (res) {
+                        if(res && res.code === 200 && res.data && res.data[0]) {
+                            var retailPrice = res.data[0].retailprice-0; //零售价格
+                            var presetPriceOne = res.data[0].presetpriceone-0; //预计采购价
+                            var presetPriceTwo = res.data[0].presetpricetwo-0; //批发价
+                            var firstInUnit = res.data[0].firstinunit; //首选入库单位
+                            var firstOutUnit = res.data[0].firstoutunit; //首选出库单位
+                            var basicPresetPriceOne = ""; //多单位-入库-基础价格
+                            var basicPresetPriceTwo = ""; //多单位-出库-基础价格
+                            var retailPriceOne = ""; //多单位-入库-零售价格
+                            var otherPresetPriceOne = ""; //多单位-入库-其他价格
+                            var otherPresetPriceTwo = ""; //多单位-出库-其他价格
+                            var retailPriceTwo = ""; //多单位-出库-零售价格
+                            var basicUnit = ""; //基础单位
+                            var otherUnit = ""; //其他单位
+                            if(!res.data[0].unit){
+                                var ps = res.data[0].pricestrategy;
+                                var psObj = JSON.parse(ps);
+                                basicPresetPriceOne = psObj[0].basic.PresetPriceOne-0;
+                                basicPresetPriceTwo = psObj[0].basic.PresetPriceTwo-0;
+                                retailPriceOne = psObj[0].basic.RetailPrice-0;
+                                otherPresetPriceOne = psObj[1].other.PresetPriceOne-0;
+                                otherPresetPriceTwo = psObj[1].other.PresetPriceTwo-0;
+                                retailPriceTwo = psObj[1].other.RetailPrice-0;
+                                basicUnit = psObj[0].basic.Unit;
+                                otherUnit = psObj[1].other.Unit;
+                            }
+                            body =$("#depotHeadFM .datagrid-body");
+                            footer =$("#depotHeadFM .datagrid-footer");
+                            input = ".datagrid-editable-input";
+                            if(res.data[0].unit){ //如果存在计量单位信息
+                                ratio = 1; //重置比例为1
+                                body.find("[field='Unit']").find(input).val(res.data[0].unit); //设置-计量单位信息
+                                body.find("[field='Unit']").find(input).prop("readonly","readonly"); //设置计量单位为只读
+                                body.find("[field='Unit']").find(input).off("click"); //移除点击事件
+                                body.find("[field='Unit']").find(input).attr("data-ratio",ratio); //修改比例缓存信息
+                            }
+                            else {
+                                var unitName = res.data[0].unitName;
+                                if(unitName) {
+                                    ratio = unitName.substring(unitName.indexOf(":")+1).replace(")",""); //给比例赋值
+                                    unitName = unitName.substring(0, unitName.indexOf("("));
+                                }
+                                var unitArr = unitName.split(",");
+                                var basicUnit = unitArr[0]; //基础单位
+                                var otherUnit = unitArr[1]; //副单位
+                                var unitSetInput =""; //单位
+                                body.find("[field='Unit']").find(input).prop("readonly","readonly"); //设置计量单位为只读
+                                var loadRatio = 1; //在单位输入框上面加载比例字段
+                                if(listSubType === "采购" || listSubType === "采购退货" || listSubType === "采购订单"){
+                                    unitSetInput = res.data[0].firstinunit; //给单位文本框赋值
+                                    if(basicUnit==unitSetInput){ //基础单位等于选择的单位
+                                        loadRatio = 1;
+                                    }
+                                    else if(otherUnit==unitSetInput){ //副单位等于选择的单位
+                                        loadRatio = ratio;
+                                    }
+                                }
+                                else if(listSubType === "销售" || listSubType === "销售退货" || listSubType === "销售订单" || listSubType === "零售" || listSubType === "零售退货"){
+                                    unitSetInput = res.data[0].firstoutunit; //给单位文本框赋值
+                                    if(basicUnit==unitSetInput){ //基础单位等于选择的单位
+                                        loadRatio = 1;
+                                    }
+                                    else if(otherUnit==unitSetInput){ //副单位等于选择的单位
+                                        loadRatio = ratio;
+                                    }
+                                }
+                                body.find("[field='Unit']").find(input).val(unitSetInput).attr("data-ratio", loadRatio); //设置-首选单位
+
+                                body.find("[field='Unit']").find(input).off("click").on("click",function(){
+                                    if(basicUnit && otherUnit) {
+                                        var self = this;
+                                        //定义模版
+                                        var temp = "<div class='unit-list'>";
+                                        temp +="<ul>";
+                                        temp +="<li data-type='basic' data-ratio='1'>" + basicUnit + "</li>";
+                                        temp +="<li data-type='other' data-ratio='" + ratio + "'>" + otherUnit + "</li>";
+                                        temp +="</ul>";
+                                        temp +="</div>";
+                                        if($('.unit-list').length){
+                                            $('.unit-list').remove(); //如果存在计量单位列表先移除
+                                        }
+                                        else {
+                                            $(self).after(temp); //加载列表信息
+                                        }
+                                        //计量单位列表的单击事件
+                                        $('.unit-list ul li').off("click").on("click",function(){
+                                            var unit = $(this).text();
+                                            var thisRatio = $(this).attr("data-ratio"); //获取比例
+                                            $(self).val(unit).attr("data-ratio", thisRatio);
+                                            $(self).keyup(); //模拟键盘操作
+                                            $('.unit-list').remove(); //移除计量单位列表
+                                            var stock = body.find("[field='Stock']").find(input).attr("data-stock"); //从缓存中取值
+                                            var type = $(this).attr("data-type");
+                                            var UnitPrice = 0;
+                                            if(type === "basic"){
+                                                if(listTitle == "采购订单列表" || listTitle == "采购入库列表" || listTitle == "销售退货列表" || listTitle == "其它入库列表") {
+                                                    UnitPrice = basicPresetPriceOne;
+                                                }
+                                                else if(listTitle == "销售订单列表" || listTitle == "销售出库列表" || listTitle == "采购退货列表" || listTitle == "其它出库列表" || listTitle == "调拨出库列表") {
+                                                    UnitPrice = basicPresetPriceTwo;
+                                                }
+                                                else if(listTitle == "零售出库列表" || listTitle == "零售退货列表"){
+                                                    UnitPrice = retailPriceOne;
+                                                }
+                                                body.find("[field='Stock']").find(input).val(stock); //修改库存
+                                            }
+                                            else if(type === "other"){
+                                                if(listTitle == "采购订单列表" || listTitle == "采购入库列表" || listTitle == "销售退货列表" || listTitle == "其它入库列表") {
+                                                    UnitPrice = otherPresetPriceOne;
+                                                }
+                                                else if(listTitle == "销售订单列表" || listTitle == "销售出库列表" || listTitle == "采购退货列表" || listTitle == "其它出库列表" || listTitle == "调拨出库列表") {
+                                                    UnitPrice = otherPresetPriceTwo;
+                                                }
+                                                else if(listTitle == "零售出库列表" || listTitle == "零售退货列表"){
+                                                    UnitPrice = retailPriceTwo;
+                                                }
+                                                body.find("[field='Stock']").find(input).val((stock/ratio).toFixed(2)); //修改库存
+                                            }
+                                            body.find("[field='UnitPrice']").find(input).val(UnitPrice); //单价
+                                            var OperNumber = body.find("[field='OperNumber']").find(input).val(); //获取数量
+                                            var taxRate = body.find("[field='TaxRate']").find(input).val(); //获取税率
+                                            body.find("[field='TaxUnitPrice']").find(input).val((UnitPrice*(1+taxRate/100)).toFixed(2)); //含税单价
+                                            body.find("[field='AllPrice']").find(input).val((UnitPrice*OperNumber).toFixed(2)); //金额
+                                            body.find("[field='TaxMoney']").find(input).val((UnitPrice*OperNumber*(taxRate/100)).toFixed(2)); //税额
+                                            body.find("[field='TaxLastMoney']").find(input).val((UnitPrice*OperNumber*(1+taxRate/100)).toFixed(2)); //价税合计
+                                            statisticsFun(body,UnitPrice,OperNumber,footer,taxRate);
+                                        });
+                                        //点击空白处移除计量单位列表
+                                        $(".datagrid-body").off("click").on("click",function(){
+                                            $('.unit-list').remove(); //移除计量单位列表
+                                        });
+                                    }
+                                });
+                            }
+                            var detailPrice = 0; //明细列表-单价
+                            if(listSubType == "零售" || listSubType == "零售退货") {
+                                if(res.data[0].unit) { //如果存在计量单位信息
+                                    detailPrice = retailPrice;
+                                }
+                                else {
+                                    if (firstOutUnit == basicUnit) {
+                                        detailPrice = retailPriceOne;
+                                    }
+                                    else if (firstOutUnit == otherUnit) {
+                                        detailPrice = retailPriceTwo;
+                                    }
+                                }
+                            }
+                            else if(listTitle == "采购订单列表" || listTitle == "采购入库列表" || listTitle == "销售退货列表" || listTitle == "其它入库列表") {
+                                if(res.data[0].unit) { //如果存在计量单位信息
+                                    detailPrice = presetPriceOne;
+                                }
+                                else {
+                                    if (firstInUnit == basicUnit) {
+                                        detailPrice = basicPresetPriceOne;
+                                    }
+                                    else if (firstInUnit == otherUnit) {
+                                        detailPrice = otherPresetPriceOne;
+                                    }
+                                }
+                            }
+                            else if(listTitle == "销售订单列表" || listTitle == "销售出库列表" || listTitle == "采购退货列表" || listTitle == "其它出库列表" || listTitle == "调拨出库列表") {
+                                if(res.data[0].unit) { //如果存在计量单位信息
+                                    detailPrice = presetPriceTwo;
+                                }
+                                else {
+                                    if(firstOutUnit==basicUnit) {
+                                        detailPrice = basicPresetPriceTwo;
+                                    }
+                                    else if(firstOutUnit==otherUnit){
+                                        detailPrice = otherPresetPriceTwo;
+                                    }
+                                }
+                            }
+                            body.find("[field='OperNumber']").find(input).val(1); //数量初始化为1
+                            //单价和总价赋值
+                            if(!detailPrice) {
+                                detailPrice = 0;
+                            }
+                            body.find("[field='UnitPrice']").find(input).val(detailPrice);
+                            body.find("[field='AllPrice']").find(input).val(detailPrice);
+                            var taxRate = body.find("[field='TaxRate']").find(input).val()-0; //获取税率
+                            body.find("[field='TaxUnitPrice']").find(input).val((detailPrice*(1+taxRate/100)).toFixed(2));  //含税单价
+                            body.find("[field='TaxMoney']").find(input).val((detailPrice*(taxRate/100)).toFixed(2));  //税额
+                            body.find("[field='TaxLastMoney']").find(input).val((detailPrice*(1+taxRate/100)).toFixed(2));  //价税合计
+                            statisticsFun(body,detailPrice,1,footer,taxRate);
+
+                            //查询库存信息
+                            var depotId = body.find("[field='DepotId']").find(".combo-value").val();
+                            if(depotId) {
+                                var type = "select"; //type 类型：点击 click，选择 select
+                                findStockNumById(depotId, mId, monthTime, body, input, loadRatio, type);
+                            }
+                        }
+                    },
+                    error: function() {
+                        $.messager.alert('页面加载提示','页面加载异常，请稍后再试！','error');
+                    }
+                });
+            }
+        }
 	}
 	//初始化表格数据-商品列表-查看状态
 	function initTableData_material_show(TotalPrice){
