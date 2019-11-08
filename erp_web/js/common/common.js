@@ -1,3 +1,12 @@
+	//baidu-tongji
+	var _hmt = _hmt || [];
+	(function() {
+		var hm = document.createElement("script");
+		hm.src = "https://hm.baidu.com/hm.js?1cd9bcbaae133f03a6eb19da6579aaba";
+		var s = document.getElementsByTagName("script")[0];
+		s.parentNode.insertBefore(hm, s);
+	})();
+
 	$.fn.serializeObject = function() {
 		var o = {};
 		var a = this.serializeArray();
@@ -48,10 +57,12 @@
 	}
     function dgResize() {
 		var searchTabHeight = $('#searchTable').height();
-        $('#tableData').datagrid('resize', {
-            width: $(window).width() - 6,
-            height: $(window).height() - searchTabHeight -46
-        });
+		if($('#tableData').length) {
+            $('#tableData').datagrid('resize', {
+                width: $(window).width() - 6,
+                height: $(window).height() - searchTabHeight -46
+            });
+		}
     }
     $(window).resize(function () {
         dgResize();
