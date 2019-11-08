@@ -38,6 +38,7 @@ public interface DepotHeadMapperEx {
             @Param("materialParam") String materialParam,
             @Param("depotIds") String depotIds);
 
+    Long getMaxId();
 
     String findMaterialsListByHeaderId(
             @Param("id") Long id);
@@ -110,6 +111,7 @@ public interface DepotHeadMapperEx {
      * */
     void updatedepotHead(DepotHead depotHead);
 
+    void updateBuildOnlyNumber();
     /**
      * 获得一个全局唯一的数作为订单号的追加
      * */

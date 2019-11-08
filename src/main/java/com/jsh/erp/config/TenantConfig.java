@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.PerformanceInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.tenant.TenantHandler;
 import com.baomidou.mybatisplus.extension.plugins.tenant.TenantSqlParser;
+import com.jsh.erp.datasource.entities.User;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.LongValue;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -21,15 +22,7 @@ import java.util.List;
 
 @Configuration
 public class TenantConfig {
-    /**
-     * create by: qiankunpingtai
-     * create time: 2019/4/28 14:28
-     * website：https://qiankunpingtai.cn
-     * description:
-     * 实现多租户和无租户模式数据可以兼容在一个数据库中
-     * 多租户模式：根据tenant_id=租户id来筛选个人数据
-     * 无租户模式：根据tenant_id=-1来筛选数据
-     */
+
     @Bean
     public PaginationInterceptor paginationInterceptor(HttpServletRequest request) {
         PaginationInterceptor paginationInterceptor = new PaginationInterceptor();
@@ -41,11 +34,9 @@ public class TenantConfig {
                 //从session中获取租户id
                 Object tenantId = request.getSession().getAttribute("tenantId");
                 if(tenantId!=null){
-                    //多租户模式，租户id从当前用户获取
                     return new LongValue(Long.parseLong(tenantId.toString()));
                 } else {
-                    //无租户模式，租户id为-1
-                    return new LongValue(Long.valueOf(-1));
+                    return null;
                 }
             }
 
@@ -56,11 +47,30 @@ public class TenantConfig {
 
             @Override
             public boolean doTableFilter(String tableName) {
-                // 这里可以判断是否过滤表
-                if ("tbl_sequence".equals(tableName) || "dual".equals(tableName)|| "jsh_tenant".equals(tableName)) {
-                    return true;
+                //获取开启状态
+                Object tenantId = request.getSession().getAttribute("tenantId");
+                if(tenantId!=null) {
+                    //从session中获取租户id
+                    String loginName = null;
+                    Object userInfo = request.getSession().getAttribute("user");
+                    if(userInfo != null) {
+                        User user = (User) userInfo;
+                        loginName = user.getLoginame();
+                    }
+                    if(("admin").equals(loginName)) {
+                        return true;
+                    } else {
+                        // 这里可以判断是否过滤表
+                        if ("jsh_materialproperty".equals(tableName) || "tbl_sequence".equals(tableName)
+                                || "jsh_userbusiness".equals(tableName) || "jsh_functions".equals(tableName)
+                                || "jsh_tenant".equals(tableName)) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
                 } else {
-                    return false;
+                    return true;
                 }
             }
         });
@@ -71,14 +81,12 @@ public class TenantConfig {
             @Override
             public boolean doFilter(MetaObject metaObject) {
                 MappedStatement ms = SqlParserHelper.getMappedStatement(metaObject);
-                // 过滤自定义查询，此处跳过指定id的查询（不追加租户id过滤条件）
-                if ("com.jsh.erp.datasource.mappers.UserMapperEx.getUserListByLoginName".equals(ms.getId())||
-                        "com.jsh.erp.datasource.mappers.UserMapperEx.getUserListByloginNameAndPassword".equals(ms.getId())||
-                        "com.jsh.erp.datasource.mappers.DepotItemMapperEx.getCurrentRepByMaterialIdAndDepotId".equals(ms.getId())) {
+                // 过滤自定义查询此时无租户信息约束出现
+                if ("com.jsh.erp.datasource.mappers.UserMapperEx.getUserListByUserNameOrLoginName".equals(ms.getId())||
+                        "com.jsh.erp.datasource.mappers.DepotItemMapperEx.getStockByParam".equals(ms.getId())) {
                     return true;
                 }
                 return false;
-
             }
         });
         return paginationInterceptor;

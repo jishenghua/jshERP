@@ -16,19 +16,14 @@
         left JOIN jsh_unit u on m.UnitId = u.id and ifnull(u.delete_Flag,'0') !='1'
         left JOIN jsh_materialcategory mc on m.CategoryId = mc.id and ifnull(mc.status,'0') !='2'
         where 1=1
-        <if test="name != null and name != ''">
-            <bind name="name" value="'%' + _parameter.name + '%'"/>
-            and m.name like #{name}
+        <if test="name != null">
+            and m.name like '%${name}%'
         </if>
-        <if test="model != null and model != ''">
-            <bind name="model" value="'%' + _parameter.model + '%'"/>
-            and m.model like #{model}
+        <if test="model != null">
+            and m.model like '%${model}%'
         </if>
-        <if test="categoryIds != null and categoryIds != ''">
-            and m.CategoryId in
-            <foreach item="did" index="index" collection="categoryIds.split(',')" open="(" separator="," close=")">
-                #{did}
-            </foreach>
+        <if test="categoryIds != null">
+            and m.CategoryId in (${categoryIds})
         </if>
         and ifnull(m.delete_Flag,'0') !='1'
         order by m.id desc
@@ -44,19 +39,14 @@
         left JOIN jsh_unit u on m.UnitId = u.id and ifnull(u.delete_Flag,'0') !='1'
         left JOIN jsh_materialcategory mc on m.CategoryId = mc.id and ifnull(mc.status,'0') !='2'
         WHERE 1=1
-        <if test="name != null and name != ''">
-            <bind name="name" value="'%' + _parameter.name + '%'"/>
-            and m.name like #{name}
+        <if test="name != null">
+            and m.name like '%${name}%'
         </if>
-        <if test="model != null and model != ''">
-            <bind name="model" value="'%' + _parameter.model + '%'"/>
-            and m.model like #{model}
+        <if test="model != null">
+            and m.model like '%${model}%'
         </if>
-        <if test="categoryIds != null and categoryIds != ''">
-            and m.CategoryId in
-            <foreach item="did" index="index" collection="categoryIds.split(',')" open="(" separator="," close=")">
-                #{did}
-            </foreach>
+        <if test="categoryIds != null">
+            and m.CategoryId in (${categoryIds})
         </if>
         and ifnull(m.delete_Flag,'0') !='1'
     </select>
@@ -64,14 +54,14 @@
     <select id="findUnitName" resultType="java.lang.String">
         select u.UName  from jsh_unit u
         left join jsh_material m on m.UnitId=u.id and ifnull(m.delete_Flag,'0') !='1'
-        where m.id = #{mId}
+        where m.id = ${mId}
         and ifnull(u.delete_Flag,'0') !='1'
     </select>
 
     <select id="findById" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultAndUnitMap">
         select m.*,u.UName from jsh_material m
         left join jsh_unit u on m.UnitId=u.id and ifnull(u.delete_Flag,'0') !='1'
-        where m.id = #{id}
+        where m.id = ${id}
         and ifnull(m.delete_Flag,'0') !='1'
     </select>
 
@@ -106,19 +96,14 @@
         left JOIN jsh_unit u on m.UnitId = u.id and ifnull(u.delete_Flag,'0') !='1'
         left JOIN jsh_materialcategory mc on m.CategoryId = mc.id and ifnull(mc.status,'0') !='2'
         where 1=1
-        <if test="name != null and name != ''">
-            <bind name="name" value="'%' + _parameter.name + '%'"/>
-            and m.name like #{name}
+        <if test="name != null">
+            and m.name like '%${name}%'
         </if>
-        <if test="model != null and model != ''">
-            <bind name="model" value="'%' + _parameter.model + '%'"/>
-            and m.model like #{model}
+        <if test="model != null">
+            and m.model like '%${model}%'
         </if>
-        <if test="categoryIds != null and categoryIds != ''">
-            and m.CategoryId in
-            <foreach item="did" index="index" collection="categoryIds.split(',')" open="(" separator="," close=")">
-                #{did}
-            </foreach>
+        <if test="categoryIds != null">
+            and m.CategoryId in (${categoryIds})
         </if>
         and ifnull(m.delete_Flag,'0') !='1'
         order by m.id desc

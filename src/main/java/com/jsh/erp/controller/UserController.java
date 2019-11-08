@@ -43,7 +43,7 @@ public class UserController {
     private Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Value("${manage.roleId}")
-    private Long manageRoleId;
+    private Integer manageRoleId;
 
     @Resource
     private UserService userService;
@@ -103,11 +103,9 @@ public class UserController {
                     break;
                 default:
                     try {
-                        //验证通过 ，可以登录，放入session，记录登录日志
-                        user = userService.getUserListByloginNameAndPassword(username,password);
-    //                    logService.create(new Logdetails(user, "登录系统", model.getClientIp(),
-    //                            new Timestamp(System.currentTimeMillis()), (short) 0, "管理用户：" + username + " 登录系统", username + " 登录系统"));
                         msgTip = "user can login";
+                        //验证通过 ，可以登录，放入session，记录登录日志
+                        user = userService.getUserByUserName(username);
                         request.getSession().setAttribute("user",user);
                         if(user.getTenantId()!=null) {
                             Tenant tenant = tenantService.getTenantByTenantId(user.getTenantId());
@@ -345,7 +343,8 @@ public class UserController {
         ue.setUsername(loginame);
         ue.setLoginame(loginame);
         ue.setPassword(password);
-        ue = userService.registerUser(ue,manageRoleId);
+        userService.checkUserNameAndLoginName(ue); //检查用户名和登录名
+        ue = userService.registerUser(ue,manageRoleId,request);
         return result;
     }
     /**

@@ -43,7 +43,7 @@
         <div class="register-logo">
             <a href="/">
                 <b>华夏ERP</b>
-                <small>V2.1</small>
+                <small>V1.0</small>
             </a>
         </div>
         <div class="register-box-body">
@@ -141,20 +141,13 @@
                     alert("确认密码不一致!");
                 } else {
                     //执行注册
-                    /**
-                     * create by: qiankunpingtai
-                     * create time: 2019/4/24 15:01
-                     * website：https://qiankunpingtai.cn
-                     * description:
-                     *  密码加密后发送到后台
-                     */
                     $.ajax({
                         type: "post",
                         url: "/user/registerUser",
                         dataType: "json",
                         data: ({
                             loginame: $("#username").val(),
-                            password: hex_md5($.trim($("#password").val()))
+                            password: $("#password").val()
                         }),
                         success: function (res) {
                             if (res && res.code === 200) {

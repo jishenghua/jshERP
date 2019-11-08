@@ -93,17 +93,10 @@
                 {title: '本月发生额', field: 'thismonthamount', width: 100, align: "center"},
                 {title: '当前余额', field: 'currentamount', width: 100, align: "center"},
                 {
-                    title: '操作', field: 'op', width: 100, align: "center", formatter: function (value, rec,index) {
-                        /**
-                         * create by: qiankunpingtai
-                         * create time: 2019/5/6 9:33
-                         * website：https://qiankunpingtai.cn
-                         * description:
-                         *  修改效率低下的js实现
-                         */
+                    title: '操作', field: 'op', width: 100, align: "center", formatter: function (value, rec) {
                         var str = '';
-                        // var rowInfo = rec.id + 'AaBb' + rec.name + 'AaBb' + rec.serialno + 'AaBb' + rec.initialamount + 'AaBb' + rec.currentamount;
-                        str += '<img src="/js/easyui-1.3.5/themes/icons/list.png" style="cursor: pointer;" onclick="showAccountInOutList(\'' + index + '\');"/>&nbsp;<a onclick="showAccountInOutList(\'' + index + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">流水</a>&nbsp;&nbsp;';
+                        var rowInfo = rec.id + 'AaBb' + rec.name + 'AaBb' + rec.serialno + 'AaBb' + rec.initialamount + 'AaBb' + rec.currentamount;
+                        str += '<img src="/js/easyui-1.3.5/themes/icons/list.png" style="cursor: pointer;" onclick="showAccountInOutList(\'' + rowInfo + '\');"/>&nbsp;<a onclick="showAccountInOutList(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">流水</a>&nbsp;&nbsp;';
                         return str;
                     }
                 }
@@ -207,12 +200,10 @@
         });
     }
 
-    function showAccountInOutList(index) {
-        // var info = accountInfo.split("AaBb");
-        //获取当前行
-        var rowsdata = $("#tableData").datagrid("getRows")[index];
-        var accountId = rowsdata.id;
-        var initialAmount = rowsdata.initialamount;
+    function showAccountInOutList(accountInfo) {
+        var info = accountInfo.split("AaBb");
+        var accountId = info[0];
+        var initialAmount = info[3];
         $('#accountDetailListDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;查看账户流水');
         $(".window-mask").css({width: webW, height: webH});
         initAccountDetailData(accountId);

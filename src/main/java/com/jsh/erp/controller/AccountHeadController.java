@@ -5,7 +5,6 @@ import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.AccountHead;
 import com.jsh.erp.datasource.entities.AccountHeadVo4ListEx;
-import com.jsh.erp.exception.BusinessParamCheckingException;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.accountHead.AccountHeadService;
 import com.jsh.erp.utils.BaseResponseInfo;
@@ -35,6 +34,27 @@ public class AccountHeadController {
     @Resource
     private AccountHeadService accountHeadService;
 
+    /**
+     * 获取最大的id
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/getMaxId")
+    public BaseResponseInfo getMaxId(HttpServletRequest request)throws Exception {
+        BaseResponseInfo res = new BaseResponseInfo();
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            Long maxId = accountHeadService.getMaxId();
+            map.put("maxId", maxId);
+            res.code = 200;
+            res.data = map;
+        } catch(Exception e){
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
+    }
 
     /**
      * 查询单位的累计应收和累计应付，收预付款不计入此处
@@ -125,38 +145,5 @@ public class AccountHeadController {
         }
         return result;
     }
-    /**
-     * create by: qiankunpingtai
-     * website：https://qiankunpingtai.cn
-     * description:
-     * 新增财务信息和财务明细信息
-     * create time: 2019/5/21 15:50
-     * @Param: beanJson
-     * @Param: inserted
-     * @Param: deleted
-     * @Param: updated
-     * @Param: request
-     * @return java.lang.Object
-     */
-    @RequestMapping(value = "/addAccountHeadAndDetail")
-    public Object addAccountHeadAndDetail(@RequestParam("info") String beanJson,
-                                          @RequestParam("inserted") String inserted,
-                                        @RequestParam("deleted") String deleted,
-                                        @RequestParam("updated") String updated,
-                                        @RequestParam("listType") String listType,HttpServletRequest request) throws  Exception{
 
-        JSONObject result = ExceptionConstants.standardSuccess();
-        accountHeadService.addAccountHeadAndDetail(beanJson,inserted,deleted,updated,listType);
-        return result;
-    }
-
-    @RequestMapping(value = "/updateAccountHeadAndDetail")
-    public Object updateAccountHeadAndDetail(@RequestParam("id") Long id,@RequestParam("info") String beanJson,@RequestParam("inserted") String inserted,
-                                           @RequestParam("deleted") String deleted,
-                                           @RequestParam("updated") String updated,@RequestParam("listType") String listType) throws  Exception{
-
-        JSONObject result = ExceptionConstants.standardSuccess();
-        accountHeadService.updateAccountHeadAndDetail(id,beanJson,inserted,deleted,updated,listType);
-        return result;
-    }
 }

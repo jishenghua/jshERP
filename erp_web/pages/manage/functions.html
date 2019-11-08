@@ -167,11 +167,11 @@
                 },
                 {title: '类型', field: 'type', width: 50},
                 {
-                    title: '操作', field: 'op', align: "center", width: 130, formatter: function (value, rec,index) {
+                    title: '操作', field: 'op', align: "center", width: 130, formatter: function (value, rec) {
                         var str = '';
-                        // var rowInfo = rec.id + 'AaBb' + rec.number + 'AaBb' + rec.name + 'AaBb' + rec.pnumber + 'AaBb' + rec.url
-                        //     + 'AaBb' + rec.state + 'AaBb' + rec.sort + 'AaBb' + rec.enabled + 'AaBb' + rec.type + 'AaBb' + rec.pushbtn;
-                        str += '<img src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editFunctions(\'' + index + '\');"/>&nbsp;<a onclick="editFunctions(\'' + index + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
+                        var rowInfo = rec.id + 'AaBb' + rec.number + 'AaBb' + rec.name + 'AaBb' + rec.pnumber + 'AaBb' + rec.url
+                            + 'AaBb' + rec.state + 'AaBb' + rec.sort + 'AaBb' + rec.enabled + 'AaBb' + rec.type + 'AaBb' + rec.pushbtn;
+                        str += '<img src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editFunctions(\'' + rowInfo + '\');"/>&nbsp;<a onclick="editFunctions(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
                         str += '<img src="/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteFunctions(' + rec.id + ');"/>&nbsp;<a onclick="deleteFunctions(' + rec.id + ');" style="text-decoration:none;color:black;" href="javascript:void(0)">删除</a>&nbsp;&nbsp;';
                         return str;
                     }
@@ -381,20 +381,19 @@
     });
 
     //编辑信息
-    function editFunctions(index) {
-        // var functionsInfo = functionsTotalInfo.split("AaBb");
-        var rowsdata = $("#tableData").datagrid("getRows")[index];
-        $("#Number").focus().val(rowsdata.number);
-        $("#Name").focus().val(rowsdata.name);
-        $("#PNumber").focus().val(rowsdata.pnumber);
-        $("#URL").focus().val(rowsdata.url);
-        $("#State").attr("checked", rowsdata.state === true ? true : false);
-        $("#Sort").focus().val(rowsdata.sort);
-        $("#Enabled").attr("checked", rowsdata.enabled === true ? true : false);
-        $("#Type").focus().val(rowsdata.type);
-        var pushbtn=rowsdata.pushbtn;
-        if (pushbtn) {
-            var arr = pushbtn.split(",");
+    function editFunctions(functionsTotalInfo) {
+        var functionsInfo = functionsTotalInfo.split("AaBb");
+
+        $("#Number").focus().val(functionsInfo[1]);
+        $("#Name").focus().val(functionsInfo[2]);
+        $("#PNumber").focus().val(functionsInfo[3]);
+        $("#URL").focus().val(functionsInfo[4]);
+        $("#State").attr("checked", functionsInfo[5] == 'true' ? true : false);
+        $("#Sort").focus().val(functionsInfo[6]);
+        $("#Enabled").attr("checked", functionsInfo[7] == 'true' ? true : false);
+        $("#Type").focus().val(functionsInfo[8]);
+        if (functionsInfo[9] !== "undefined" && functionsInfo[9] !== "") {
+            var arr = functionsInfo[9].split(",");
             var pushBtnArray = [];
             for (var i = 0; i < arr.length; i++) {
                 if (arr[i]) {
@@ -409,13 +408,13 @@
             $("#PushBtn").combobox('setValues', '');
         }
 
-        oldFunctions = rowsdata.name;
+        oldFunctions = functionsInfo[2];
         $('#functionsDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑功能信息');
         $(".window-mask").css({width: webW, height: webH});
-        functionsID = rowsdata.id;
+        functionsID = functionsInfo[0];
         //焦点在名称输入框==定焦在输入文字后面
-        $("#Name").val("").focus().val(rowsdata.name);
-        url = '/functions/update?id=' + rowsdata.id;
+        $("#Name").val("").focus().val(functionsInfo[2]);
+        url = '/functions/update?id=' + functionsInfo[0];
     }
 
     //检查名称是否存在 ++ 重名无法提示问题需要跟进

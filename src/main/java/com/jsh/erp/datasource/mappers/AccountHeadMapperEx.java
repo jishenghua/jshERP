@@ -25,6 +25,7 @@ public interface AccountHeadMapperEx {
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime);
 
+    Long getMaxId();
 
     BigDecimal findAllMoney(
             @Param("supplierId") Integer supplierId,
@@ -42,7 +43,4 @@ public interface AccountHeadMapperEx {
     List<AccountHead> getAccountHeadListByOrganIds(@Param("organIds") String[] organIds);
 
     List<AccountHead> getAccountHeadListByHandsPersonIds(@Param("handsPersonIds") String[] handsPersonIds);
-
-    int addAccountHead(AccountHead accountHead);
-    int updateAccountHead(AccountHead accountHead);
 }

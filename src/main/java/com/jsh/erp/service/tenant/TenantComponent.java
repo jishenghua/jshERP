@@ -45,7 +45,7 @@ public class TenantComponent implements ICommonQuery {
 
     @Override
     public int insert(String beanJson, HttpServletRequest request)throws Exception {
-        return tenantService.insertTenant(beanJson);
+        return tenantService.insertTenant(beanJson, request);
     }
 
     @Override

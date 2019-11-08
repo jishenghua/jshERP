@@ -228,15 +228,16 @@ public class DepotHeadService {
     /**
      * 创建一个唯一的序列号
      * */
-    public  String buildOnlyNumber()throws Exception{
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public String buildOnlyNumber()throws Exception{
         Long buildOnlyNumber=null;
         synchronized (this){
             try{
+                depotHeadMapperEx.updateBuildOnlyNumber(); //编号+1
                 buildOnlyNumber= depotHeadMapperEx.getBuildOnlyNumber(BusinessConstants.DEPOT_NUMBER_SEQ);
             }catch(Exception e){
                 JshException.writeFail(logger, e);
             }
-
         }
         if(buildOnlyNumber<BusinessConstants.SEQ_TO_STRING_MIN_LENGTH){
            StringBuffer sb=new StringBuffer(buildOnlyNumber.toString());
@@ -250,7 +251,15 @@ public class DepotHeadService {
         }
     }
 
-
+    public Long getMaxId()throws Exception {
+        Long result = null;
+        try{
+            result = depotHeadMapperEx.getMaxId();
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return result;
+    }
 
     public String findMaterialsListByHeaderId(Long id)throws Exception {
         String result = null;
@@ -460,7 +469,7 @@ public class DepotHeadService {
      * @return java.lang.String
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public void addDepotHeadAndDetail(String beanJson, String inserted, String deleted, String updated) throws Exception {
+    public void addDepotHeadAndDetail(String beanJson, String inserted, String deleted, String updated,Long tenantId) throws Exception {
         logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_DEPOT_HEAD,
                 BusinessConstants.LOG_OPERATION_TYPE_ADD,
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
@@ -485,7 +494,7 @@ public class DepotHeadService {
             }
         }
         /**入库和出库处理单据子表信息*/
-        depotItemService.saveDetials(inserted,deleted,updated,depotHead.getId());
+        depotItemService.saveDetials(inserted,deleted,updated,depotHead.getId(),tenantId);
         /**如果关联单据号非空则更新订单的状态为2 */
         if(depotHead.getLinknumber()!=null) {
             DepotHead depotHeadOrders = new DepotHead();
@@ -537,7 +546,7 @@ public class DepotHeadService {
             }
         }
         /**入库和出库处理单据子表信息*/
-        depotItemService.saveDetials(inserted,deleted,updated,depotHead.getId());
+        depotItemService.saveDetials(inserted,deleted,updated,depotHead.getId(),tenantId);
     }
 
     /**

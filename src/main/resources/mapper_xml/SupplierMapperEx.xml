@@ -5,24 +5,20 @@
         select *
         FROM jsh_supplier
         where 1=1
-        <if test="supplier != null and supplier != ''">
-            <bind name="supplier" value="'%' + _parameter.supplier + '%'"/>
-            and supplier like #{supplier}
+        <if test="supplier != null">
+            and supplier like '%${supplier}%'
         </if>
         <if test="type != null">
-            and type=#{type}
+            and type='${type}'
         </if>
-        <if test="phonenum != null and phonenum != ''">
-            <bind name="phonenum" value="'%' + _parameter.phonenum + '%'"/>
-            and phonenum like #{phonenum}
+        <if test="phonenum != null">
+            and phonenum like '%${phonenum}%'
         </if>
-        <if test="telephone != null and telephone != ''">
-            <bind name="telephone" value="'%' + _parameter.telephone + '%'"/>
-            and telephone like #{telephone}
+        <if test="telephone != null">
+            and telephone like '%${telephone}%'
         </if>
-        <if test="description != null and description != ''">
-            <bind name="description" value="'%' + _parameter.description + '%'"/>
-            and description like #{description}
+        <if test="description != null">
+            and description like '%${description}%'
         </if>
         and ifnull(delete_Flag,'0') !='1'
         order by id desc
@@ -35,24 +31,20 @@
         COUNT(id)
         FROM jsh_supplier
         WHERE 1=1
-        <if test="supplier != null and supplier != ''">
-            <bind name="supplier" value="'%' + _parameter.supplier + '%'"/>
-            and supplier like #{supplier}
+        <if test="supplier != null">
+            and supplier like '%${supplier}%'
         </if>
         <if test="type != null">
-            and type=#{type}
+            and type='${type}'
         </if>
-        <if test="phonenum != null and phonenum != ''">
-            <bind name="phonenum" value="'%' + _parameter.phonenum + '%'"/>
-            and phonenum like #{phonenum}
+        <if test="phonenum != null">
+            and phonenum like '%${phonenum}%'
         </if>
-        <if test="telephone != null and telephone != ''">
-            <bind name="telephone" value="'%' + _parameter.telephone + '%'"/>
-            and telephone like #{telephone}
+        <if test="telephone != null">
+            and telephone like '%${telephone}%'
         </if>
-        <if test="description != null and description != ''">
-            <bind name="description" value="'%' + _parameter.description + '%'"/>
-            and description like #{description}
+        <if test="description != null">
+            and description like '%${description}%'
         </if>
         and ifnull(delete_Flag,'0') !='1'
     </select>
@@ -61,24 +53,20 @@
         select *
         FROM jsh_supplier
         where 1=1
-        <if test="supplier != null and supplier != ''">
-            <bind name="supplier" value="'%' + _parameter.supplier + '%'"/>
-            and supplier like #{supplier}
+        <if test="supplier != null">
+            and supplier like '%${supplier}%'
         </if>
         <if test="type != null">
-            and type=#{type}
+            and type='${type}'
         </if>
-        <if test="phonenum != null and phonenum != ''">
-            <bind name="phonenum" value="'%' + _parameter.phonenum + '%'"/>
-            and phonenum like #{phonenum}
+        <if test="phonenum != null">
+            and phonenum like '%${phonenum}%'
         </if>
-        <if test="telephone != null and telephone != ''">
-            <bind name="telephone" value="'%' + _parameter.telephone + '%'"/>
-            and telephone like #{telephone}
+        <if test="telephone != null">
+            and telephone like '%${telephone}%'
         </if>
-        <if test="description != null and description != ''">
-            <bind name="description" value="'%' + _parameter.description + '%'"/>
-            and description like #{description}
+        <if test="description != null">
+            and description like '%${description}%'
         </if>
         and ifnull(delete_Flag,'0') !='1'
     </select>

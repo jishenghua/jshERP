@@ -68,7 +68,7 @@ public class TenantService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int insertTenant(String beanJson)throws Exception {
+    public int insertTenant(String beanJson, HttpServletRequest request)throws Exception {
         Tenant tenant = JSONObject.parseObject(beanJson, Tenant.class);
         int result=0;
         try{

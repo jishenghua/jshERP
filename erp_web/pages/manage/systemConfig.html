@@ -133,18 +133,12 @@
                     }
                 },
                 {
-                    title: '操作', field: 'op', width: 160, formatter: function (value, rec,index) {
-                        /**
-                         * create by: qiankunpingtai
-                         * create time: 2019/5/6 9:33
-                         * website：https://qiankunpingtai.cn
-                         * description:
-                         *  修改效率低下的js实现
-                         */
+                    title: '操作', field: 'op', width: 160, formatter: function (value, rec) {
                         var str = '';
-                        // var rowInfo = rec.id + 'AaBb' + rec.companyName + 'AaBb' + rec.companyContacts + 'AaBb' + rec.companyAddress
-                        //     + 'AaBb' + rec.companyTel + 'AaBb' + rec.companyFax + 'AaBb' + rec.companyPostCode;
-                        str += '<img src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editSystemConfig(\'' + index + '\');"/>&nbsp;<a onclick="editSystemConfig(\'' + index + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
+                        var rowInfo = rec.id + 'AaBb' + rec.companyName + 'AaBb' + rec.companyContacts + 'AaBb' + rec.companyAddress
+                            + 'AaBb' + rec.companyTel + 'AaBb' + rec.companyFax + 'AaBb' + rec.companyPostCode
+                            + 'AaBb' + rec.depotFlag + 'AaBb' + rec.customerFlag;
+                        str += '<img src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editSystemConfig(\'' + rowInfo + '\');"/>&nbsp;<a onclick="editSystemConfig(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
                         str += '<img src="/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteSystemConfig(' + rec.id + ');"/>&nbsp;<a onclick="deleteSystemConfig(' + rec.id + ');" style="text-decoration:none;color:black;" href="javascript:void(0)">删除</a>&nbsp;&nbsp;';
                         return str;
                     }
@@ -357,26 +351,26 @@
     });
 
     //编辑系统配置信息
-    function editSystemConfig(index) {
-        // var systemConfigInfo = systemConfigTotalInfo.split("AaBb");
-        //获取当前行
-        var rowsdata = $("#tableData").datagrid("getRows")[index];
+    function editSystemConfig(systemConfigTotalInfo) {
+        var systemConfigInfo = systemConfigTotalInfo.split("AaBb");
         var row = {
-            companyName: rowsdata.companyName,
-            companyContacts: rowsdata.companyContacts,
-            companyAddress: rowsdata.companyAddress,
-            companyTel: rowsdata.companyTel,
-            companyFax: rowsdata.companyFax,
-            companyPostCode: rowsdata.companyPostCode
+            companyName: systemConfigInfo[1],
+            companyContacts: systemConfigInfo[2],
+            companyAddress: systemConfigInfo[3],
+            companyTel: systemConfigInfo[4],
+            companyFax: systemConfigInfo[5],
+            companyPostCode: systemConfigInfo[6]
         };
-        oldCompanyName = rowsdata.companyName;
+        oldCompanyName = systemConfigInfo[1];
         $('#systemConfigDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑系统配置信息');
         $(".window-mask").css({width: webW, height: webH});
         $('#systemConfigFM').form('load', row);
-        systemConfigId = rowsdata.id;
+        systemConfigId = systemConfigInfo[0];
         //焦点在名称输入框==定焦在输入文字后面
-        $("#companyName").val("").focus().val(rowsdata.companyName);
-        url = '/systemConfig/update?id=' + rowsdata.id;
+        $("#companyName").val("").focus().val(systemConfigInfo[1]);
+        $("#depotFlag").attr("checked", systemConfigInfo[7] == '1' ? true : false);
+        $("#customerFlag").attr("checked", systemConfigInfo[8] == '1' ? true : false);
+        url = '/systemConfig/update?id=' + systemConfigInfo[0];
     }
 
     //检查系统配置 名称是否存在 ++ 重名无法提示问题需要跟进

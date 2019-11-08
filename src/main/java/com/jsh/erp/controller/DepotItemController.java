@@ -4,8 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
-import com.jsh.erp.datasource.entities.DepotItemVo4DetailByTypeAndMId;
-import com.jsh.erp.datasource.entities.DepotItemVo4WithInfoEx;
+import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.vo.DepotItemStockWarningCount;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.depotItem.DepotItemService;
@@ -13,10 +12,8 @@ import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.dao.DataAccessException;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -74,8 +71,6 @@ public class DepotItemController {
                 item.put("Type", d.getNewtype()); //进出类型
                 item.put("BasicNumber", d.getBnum()); //数量
                 item.put("OperTime", d.getOtime()); //时间
-                item.put("depotName", d.getDepotName()); //仓库名称
-                item.put("depotInName", d.getDepotInName()); //调入仓库名称
                 dataArray.add(item);
             }
         }
@@ -92,26 +87,31 @@ public class DepotItemController {
 
     /**
      * 根据商品id和仓库id查询库存数量
+     * @param depotId
      * @param mId
      * @param request
      * @return
+     * @throws Exception
      */
-    @RequestMapping(value = "/findStockNumByMaterialId")
-    public String findStockNumByMaterialId(
-            @RequestParam("materialId") String mId,
-            HttpServletRequest request)  throws Exception{
-        Map<String, Object> objectMap = new HashMap<String, Object>();
-        //存放数据json数组
-        JSONArray dataArray = new JSONArray();
-        JSONObject item = new JSONObject();
-        item.put("thisSum", depotItemService.getCurrentRepByMaterialIdAndDepotId(Long.valueOf(mId),null));
-        dataArray.add(item);
-        objectMap.put("page", dataArray);
-        return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+    @GetMapping(value = "/findStockNumById")
+    public BaseResponseInfo findStockNumById(
+            @RequestParam("depotId") Long depotId,
+            @RequestParam("mId") Long mId,
+            HttpServletRequest request) throws Exception{
+        BaseResponseInfo res = new BaseResponseInfo();
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            Long tenantId = Long.parseLong(request.getSession().getAttribute("tenantId").toString());
+            map.put("stock", depotItemService.getStockByParam(depotId,mId,null,null,tenantId));
+            res.code = 200;
+            res.data = map;
+        } catch (Exception e) {
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
     }
-
-
-
 
     /**
      * 查询计量单位信息
@@ -144,7 +144,7 @@ public class DepotItemController {
         try {
             List<DepotItemVo4WithInfoEx> dataList = new ArrayList<DepotItemVo4WithInfoEx>();
             if(headerId != 0) {
-                    dataList = depotItemService.getDetailList(headerId);
+                dataList = depotItemService.getDetailList(headerId);
             }
             String[] mpArr = mpList.split(",");
             JSONObject outer = new JSONObject();
@@ -164,13 +164,17 @@ public class DepotItemController {
                         ratio = ratio.substring(ratio.indexOf("("));
                     }
                     //品名/型号/扩展信息/包装
-                    String MaterialName = diEx.getMName() + ((diEx.getMModel() == null || diEx.getMModel().equals("")) ? "" : "(" + diEx.getMModel() + ")");
+                    String MaterialName = (diEx.getMName() == null || diEx.getMName().equals("")) ? "" : diEx.getMName()
+                            + ((diEx.getMModel() == null || diEx.getMModel().equals("")) ? "" : "(" + diEx.getMModel() + ")");
                     String materialOther = getOtherInfo(mpArr, diEx);
                     MaterialName = MaterialName + materialOther + ((diEx.getUName() == null || diEx.getUName().equals("")) ? "" : "(" + diEx.getUName() + ")") + ratio;
-                    item.put("MaterialName", MaterialName);
+                    item.put("MaterialName", MaterialName == null ? "" : MaterialName);
+                    item.put("Stock", depotItemService.getStockByParam(diEx.getDepotid(),diEx.getMaterialid(),null,null,tenantId));
                     item.put("Unit", diEx.getMunit());
                     item.put("OperNumber", diEx.getOpernumber());
                     item.put("BasicNumber", diEx.getBasicnumber());
+                    //统计该商品已分批出库的总数量-用于订单
+                    item.put("finishNumber", depotItemService.getFinishNumber(diEx.getMaterialid(),diEx.getHeaderid()));
                     item.put("UnitPrice", diEx.getUnitprice());
                     item.put("TaxUnitPrice", diEx.getTaxunitprice());
                     item.put("AllPrice", diEx.getAllprice());
@@ -235,11 +239,11 @@ public class DepotItemController {
         return materialOther;
     }
 
-
     /**
      * 查找所有的明细
      * @param currentPage
      * @param pageSize
+     * @param projectId
      * @param monthTime
      * @param headIds
      * @param materialIds
@@ -247,7 +251,7 @@ public class DepotItemController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/findByAll")
+    @PostMapping(value = "/findByAll")
     public BaseResponseInfo findByAll(@RequestParam("currentPage") Integer currentPage,
                                       @RequestParam("pageSize") Integer pageSize,
                                       @RequestParam("depotId") Long depotId,
@@ -301,12 +305,11 @@ public class DepotItemController {
     }
 
 
-
-
     /**
      * 导出excel表格
      * @param currentPage
      * @param pageSize
+     * @param projectId
      * @param monthTime
      * @param headIds
      * @param materialIds
@@ -357,18 +360,19 @@ public class DepotItemController {
 
     /**
      * 统计总计金额
+     * @param pid
      * @param monthTime
      * @param headIds
      * @param materialIds
      * @param request
      * @return
      */
-    @RequestMapping(value = "/totalCountMoney")
+    @PostMapping(value = "/totalCountMoney")
     public BaseResponseInfo totalCountMoney(@RequestParam("depotId") Long depotId,
-                                            @RequestParam("monthTime") String monthTime,
-                                            @RequestParam("headIds") String headIds,
-                                            @RequestParam("materialIds") String materialIds,
-                                            HttpServletRequest request) throws Exception{
+                                                        @RequestParam("monthTime") String monthTime,
+                                                        @RequestParam("headIds") String headIds,
+                                                        @RequestParam("materialIds") String materialIds,
+                                                        HttpServletRequest request) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         Long tenantId = Long.parseLong(request.getSession().getAttribute("tenantId").toString());
@@ -394,8 +398,6 @@ public class DepotItemController {
         return res;
     }
 
-
-
     /**
      * 进货统计
      * @param currentPage
@@ -407,7 +409,7 @@ public class DepotItemController {
      * @param request
      * @return
      */
-    @GetMapping(value = "/buyIn")
+    @PostMapping(value = "/buyIn")
     public BaseResponseInfo buyIn(@RequestParam("currentPage") Integer currentPage,
                                       @RequestParam("pageSize") Integer pageSize,
                                       @RequestParam("monthTime") String monthTime,
@@ -427,10 +429,10 @@ public class DepotItemController {
             if (null != dataList) {
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
                     JSONObject item = new JSONObject();
-                    BigDecimal InSum = sumNumberBuyOrSale("入库", "采购", diEx.getMId(), monthTime);
-                    BigDecimal OutSum = sumNumberBuyOrSale("出库", "采购退货", diEx.getMId(), monthTime);
-                    BigDecimal InSumPrice = sumPriceBuyOrSale("入库", "采购", diEx.getMId(), monthTime);
-                    BigDecimal OutSumPrice = sumPriceBuyOrSale("出库", "采购退货", diEx.getMId(), monthTime);
+                    BigDecimal InSum = depotItemService.buyOrSale("入库", "采购", diEx.getMId(), monthTime, "number");
+                    BigDecimal OutSum = depotItemService.buyOrSale("出库", "采购退货", diEx.getMId(), monthTime, "number");
+                    BigDecimal InSumPrice = depotItemService.buyOrSale("入库", "采购", diEx.getMId(), monthTime, "price");
+                    BigDecimal OutSumPrice = depotItemService.buyOrSale("出库", "采购退货", diEx.getMId(), monthTime, "price");
                     item.put("MaterialName", diEx.getMName());
                     item.put("MaterialModel", diEx.getMModel());
                     //扩展信息
@@ -438,6 +440,7 @@ public class DepotItemController {
                     item.put("MaterialOther", materialOther);
                     item.put("MaterialColor", diEx.getMColor());
                     item.put("MaterialUnit", diEx.getMaterialUnit());
+                    item.put("UName", diEx.getUName());
                     item.put("InSum", InSum);
                     item.put("OutSum", OutSum);
                     item.put("InSumPrice", InSumPrice);
@@ -467,7 +470,7 @@ public class DepotItemController {
      * @param request
      * @return
      */
-    @GetMapping(value = "/saleOut")
+    @PostMapping(value = "/saleOut")
     public BaseResponseInfo saleOut(@RequestParam("currentPage") Integer currentPage,
                                   @RequestParam("pageSize") Integer pageSize,
                                   @RequestParam("monthTime") String monthTime,
@@ -487,14 +490,15 @@ public class DepotItemController {
             if (null != dataList) {
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
                     JSONObject item = new JSONObject();
-                    BigDecimal OutSumRetail = sumNumberBuyOrSale("出库", "零售", diEx.getMId(), monthTime);
-                    BigDecimal OutSum = sumNumberBuyOrSale("出库", "销售", diEx.getMId(), monthTime);
-                    BigDecimal InSumRetail = sumNumberBuyOrSale("入库", "零售退货", diEx.getMId(), monthTime);
-                    BigDecimal InSum = sumNumberBuyOrSale("入库", "销售退货", diEx.getMId(), monthTime);
-                    BigDecimal OutSumRetailPrice = sumPriceBuyOrSale("出库", "零售", diEx.getMId(), monthTime);
-                    BigDecimal OutSumPrice = sumPriceBuyOrSale("出库", "销售", diEx.getMId(), monthTime);
-                    BigDecimal InSumRetailPrice = sumPriceBuyOrSale("入库", "零售退货", diEx.getMId(), monthTime);
-                    BigDecimal InSumPrice = sumPriceBuyOrSale("入库", "销售退货", diEx.getMId(), monthTime);
+                    BigDecimal OutSumRetail = depotItemService.buyOrSale("出库", "零售", diEx.getMId(), monthTime,"number");
+                    BigDecimal OutSum = depotItemService.buyOrSale("出库", "销售", diEx.getMId(), monthTime,"number");
+                    BigDecimal InSumRetail = depotItemService.buyOrSale("入库", "零售退货", diEx.getMId(), monthTime,"number");
+                    BigDecimal InSum = depotItemService.buyOrSale("入库", "销售退货", diEx.getMId(), monthTime,"number");
+                    BigDecimal OutSumRetailPrice = depotItemService.buyOrSale("出库", "零售", diEx.getMId(), monthTime,"price");
+                    BigDecimal OutSumPrice = depotItemService.buyOrSale("出库", "销售", diEx.getMId(), monthTime,"price");
+                    BigDecimal InSumRetailPrice = depotItemService.buyOrSale("入库", "零售退货", diEx.getMId(), monthTime,"price");
+                    BigDecimal InSumPrice = depotItemService.buyOrSale("入库", "销售退货", diEx.getMId(), monthTime,"price");
+                    BigDecimal OutInSumPrice = (OutSumRetailPrice.add(OutSumPrice)).subtract(InSumRetailPrice.add(InSumPrice));
                     item.put("MaterialName", diEx.getMName());
                     item.put("MaterialModel", diEx.getMModel());
                     //扩展信息
@@ -502,10 +506,12 @@ public class DepotItemController {
                     item.put("MaterialOther", materialOther);
                     item.put("MaterialColor", diEx.getMColor());
                     item.put("MaterialUnit", diEx.getMaterialUnit());
+                    item.put("UName", diEx.getUName());
                     item.put("OutSum", OutSumRetail.add(OutSum));
                     item.put("InSum", InSumRetail.add(InSum));
                     item.put("OutSumPrice", OutSumRetailPrice.add(OutSumPrice));
                     item.put("InSumPrice", InSumRetailPrice.add(InSumPrice));
+                    item.put("OutInSumPrice",OutInSumPrice);//实际销售金额
                     dataArray.add(item);
                 }
             }
@@ -520,34 +526,22 @@ public class DepotItemController {
         return res;
     }
 
-
-    public BigDecimal sumNumberBuyOrSale(String type, String subType, Long MId, String MonthTime)throws Exception {
-        BigDecimal sumNumber = BigDecimal.ZERO;
-        String sumType = "Number";
-        try {
-            BigDecimal sum = depotItemService.buyOrSale(type, subType, MId, MonthTime, sumType);
-            if(sum != null) {
-                sumNumber = sum;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+    /**
+     * 获取单位
+     * @param materialUnit
+     * @param uName
+     * @return
+     */
+    public String getUName(String materialUnit, String uName) {
+        String unitName = null;
+        if(!StringUtil.isEmpty(materialUnit)) {
+            unitName = materialUnit;
+        } else if(!StringUtil.isEmpty(uName)) {
+            unitName = uName.substring(0,uName.indexOf(","));
         }
-        return sumNumber;
+        return unitName;
     }
 
-    public BigDecimal sumPriceBuyOrSale(String type, String subType, Long MId, String MonthTime)throws Exception {
-        BigDecimal sumPrice = BigDecimal.ZERO;
-        String sumType = "Price";
-        try {
-            BigDecimal sum = depotItemService.buyOrSale(type, subType, MId, MonthTime, sumType);
-            if(sum != null) {
-                sumPrice = sum;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return sumPrice;
-    }
     /**
      * 获取单价
      * @param presetPriceOne
@@ -624,6 +618,7 @@ public class DepotItemController {
      * @param currentPage
      * @param pageSize
      * @param projectId
+     * @param monthTime
      * @param request
      * @param response
      * @return
@@ -646,7 +641,6 @@ public class DepotItemController {
             if (null != dataList) {
                 for (DepotItemStockWarningCount diEx : dataList) {
                     String[] objs = new String[9];
-
                     objs[0] = diEx.getMaterialName().toString();
                     objs[1] = diEx.getMaterialModel().toString();
                     objs[2] = diEx.getMaterialOther().toString();
@@ -711,20 +705,4 @@ public class DepotItemController {
         }
         return res;
     }
-    /**
-     * 获取单位
-     * @param materialUnit
-     * @param uName
-     * @return
-     */
-    public String getUName(String materialUnit, String uName) {
-        String unitName = null;
-        if(!StringUtil.isEmpty(materialUnit)) {
-            unitName = materialUnit;
-        } else if(!StringUtil.isEmpty(uName)) {
-            unitName = uName.substring(0,uName.indexOf(","));
-        }
-        return unitName;
-    }
-
 }

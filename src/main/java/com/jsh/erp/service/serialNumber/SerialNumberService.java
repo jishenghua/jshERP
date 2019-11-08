@@ -379,29 +379,19 @@ public class SerialNumberService {
      * @return void
      */
     public void checkAndUpdateSerialNumber(DepotItem depotItem,User userInfo) throws Exception{
-                if(depotItem!=null){
-                    //查询商品下已分配的可用序列号数量
-                    int serialNumberSum=0;
-                    try{
-                        serialNumberSum= serialNumberMapperEx.countSerialNumberByMaterialIdAndDepotheadId(depotItem.getMaterialid(),null,BusinessConstants.IS_SELL_HOLD);
-                        //BasicNumber=OperNumber*ratio
-                    }catch(Exception e){
-                        logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                                ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
-                        throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                                ExceptionConstants.DATA_READ_FAIL_MSG);
-                    }
-                    if((depotItem.getBasicnumber()==null?0:depotItem.getBasicnumber()).intValue()>serialNumberSum){
-                        //获取商品名称
-                        Material material= materialMapper.selectByPrimaryKey(depotItem.getMaterialid());
-                        throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_SERIAL_NUMBERE_NOT_ENOUGH_CODE,
-                                String.format(ExceptionConstants.MATERIAL_SERIAL_NUMBERE_NOT_ENOUGH_MSG,material==null?"":material.getName()));
-                    }
-
-                    //商品下序列号充足，分配序列号
-                    sellSerialNumber(depotItem.getMaterialid(),depotItem.getHeaderid(),(depotItem.getBasicnumber()==null?0:depotItem.getBasicnumber()).intValue(),userInfo);
-                }
-
+        if(depotItem!=null){
+            //查询商品下已分配的可用序列号数量
+            int SerialNumberSum= serialNumberMapperEx.countSerialNumberByMaterialIdAndDepotheadId(depotItem.getMaterialid(),null,BusinessConstants.IS_SELL_HOLD);
+            //BasicNumber=OperNumber*ratio
+            if((depotItem.getBasicnumber()==null?0:depotItem.getBasicnumber()).intValue()>SerialNumberSum){
+                //获取商品名称
+                Material material= materialMapper.selectByPrimaryKey(depotItem.getMaterialid());
+                throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_SERIAL_NUMBERE_NOT_ENOUGH_CODE,
+                        String.format(ExceptionConstants.MATERIAL_SERIAL_NUMBERE_NOT_ENOUGH_MSG,material==null?"":material.getName()));
+            }
+            //商品下序列号充足，分配序列号
+            sellSerialNumber(depotItem.getMaterialid(),depotItem.getHeaderid(),(depotItem.getBasicnumber()==null?0:depotItem.getBasicnumber()).intValue(),userInfo);
+        }
     }
     /**
      *
@@ -483,30 +473,25 @@ public class SerialNumberService {
 
             int insertNum=0;
             StringBuffer prefixBuf=new StringBuffer(serialNumberPrefix).append(million);
-            do{
-                list=new ArrayList<SerialNumberEx>();
-                int forNum = BusinessConstants.BATCH_INSERT_MAX_NUMBER>=batAddTotal?batAddTotal:BusinessConstants.BATCH_INSERT_MAX_NUMBER;
-               for(int i=0;i<forNum;i++){
-                   insertNum++;
-                   SerialNumberEx each=new SerialNumberEx();
-                   each.setMaterialId(materialId);
-                   each.setCreator(userId);
-                   each.setCreateTime(date);
-                   each.setUpdater(userId);
-                   each.setUpdateTime(date);
-                   each.setRemark(remark);
-                   each.setSerialNumber(new StringBuffer(prefixBuf.toString()).append(insertNum).toString());
-                   list.add(each);
-               }
-                int result=0;
-                try{
-                    result = serialNumberMapperEx.batAddSerialNumber(list);
-                }catch(Exception e){
-                    JshException.writeFail(logger, e);
-                }
+            list=new ArrayList<SerialNumberEx>();
+            int forNum = BusinessConstants.BATCH_INSERT_MAX_NUMBER>=batAddTotal?batAddTotal:BusinessConstants.BATCH_INSERT_MAX_NUMBER;
+            for(int i=0;i<forNum;i++){
+               insertNum++;
+               SerialNumberEx each=new SerialNumberEx();
+               each.setMaterialId(materialId);
+               each.setCreator(userId);
+               each.setCreateTime(date);
+               each.setUpdater(userId);
+               each.setUpdateTime(date);
+               each.setRemark(remark);
+               each.setSerialNumber(new StringBuffer(prefixBuf.toString()).append(insertNum).toString());
+               list.add(each);
+            }
+            try{
                 serialNumberMapperEx.batAddSerialNumber(list);
-                batAddTotal -= BusinessConstants.BATCH_INSERT_MAX_NUMBER;
-            }while(batAddTotal>0);
+            }catch(Exception e){
+                JshException.writeFail(logger, e);
+            }
         }
     }
     /**

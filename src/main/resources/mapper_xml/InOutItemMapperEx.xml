@@ -5,16 +5,14 @@
         select *
         FROM jsh_inoutitem
         where 1=1
-        <if test="name != null and name != ''">
-            <bind name="name" value="'%' + _parameter.name + '%'"/>
-            and name like #{name}
+        <if test="name != null">
+            and name like '%${name}%'
         </if>
         <if test="type != null">
-            and type=#{type}
+            and type='${type}'
         </if>
-        <if test="remark != null and remark != ''">
-            <bind name="remark" value="'%' + _parameter.remark + '%'"/>
-            and remark like #{remark}
+        <if test="remark != null">
+            and remark like '%${remark}%'
         </if>
         and ifnull(delete_Flag,'0') !='1'
         <if test="offset != null and rows != null">
@@ -26,16 +24,14 @@
         COUNT(id)
         FROM jsh_inoutitem
         WHERE 1=1
-        <if test="name != null and name != ''">
-            <bind name="name" value="'%' + _parameter.name + '%'"/>
-            and name like #{name}
+        <if test="name != null">
+            and name like '%${name}%'
         </if>
         <if test="type != null">
-            and type=#{type}
+            and type='${type}'
         </if>
-        <if test="remark != null and remark != ''">
-            <bind name="remark" value="'%' + _parameter.remark + '%'"/>
-            and remark like #{remark}
+        <if test="remark != null">
+            and remark like '%${remark}%'
         </if>
         and ifnull(delete_Flag,'0') !='1'
     </select>

@@ -117,17 +117,10 @@
                 {field: 'id', width: 35, align: "center", checkbox: true},
                 {title: '角色名称', field: 'name', width: 200},
                 {
-                    title: '操作', field: 'op', align: "center", width: 130, formatter: function (value, rec,index) {
-                        /**
-                         * create by: qiankunpingtai
-                         * create time: 2019/5/5 10:30
-                         * website：https://qiankunpingtai.cn
-                         * description:
-                         *  修改效率低下的js实现
-                         */
+                    title: '操作', field: 'op', align: "center", width: 130, formatter: function (value, rec) {
                         var str = '';
-                        // var rowInfo = rec.id + 'AaBb' + rec.name;
-                            str += '<img src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editRole(\'' + index + '\');"/>&nbsp;<a onclick="editRole(\'' + index + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
+                        var rowInfo = rec.id + 'AaBb' + rec.name;
+                            str += '<img src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editRole(\'' + rowInfo + '\');"/>&nbsp;<a onclick="editRole(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
                             str += '<img src="/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteRole(' + rec.id + ');"/>&nbsp;<a onclick="deleteRole(' + rec.id + ');" style="text-decoration:none;color:black;" href="javascript:void(0)">删除</a>&nbsp;&nbsp;';
                         return str;
                     }
@@ -320,18 +313,18 @@
     });
 
     //编辑信息
-    function editRole(index) {
-        // var roleInfo = roleTotalInfo.split("AaBb");
-        var rowsdata = $("#tableData").datagrid("getRows")[index];
-        $("#name").focus().val(rowsdata.name);
+    function editRole(roleTotalInfo) {
+        var roleInfo = roleTotalInfo.split("AaBb");
 
-        oldName = rowsdata.name;
+        $("#name").focus().val(roleInfo[1]);
+
+        oldName = roleInfo[1];
         $('#roleDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑角色信息');
         $(".window-mask").css({width: webW, height: webH});
-        roleID = rowsdata.id;
+        roleID = roleInfo[0];
         //焦点在名称输入框==定焦在输入文字后面
-        $("#name").val("").focus().val(rowsdata.name);
-        url = '/role/update?id=' + rowsdata.id;
+        $("#name").val("").focus().val(roleInfo[1]);
+        url = '/role/update?id=' + roleInfo[0];
     }
 
     //检查名称是否存在 ++ 重名无法提示问题需要跟进
@@ -393,7 +386,9 @@
             url: "/role/list",
             dataType: "json",
             data: ({
-                name: searchName,
+                search: JSON.stringify({
+                    name: searchName
+                }),
                 currentPage: pageNo,
                 pageSize: pageSize
             }),

@@ -15,18 +15,17 @@
         left join jsh_person p on ah.HandsPersonId=p.id and ifnull(p.delete_Flag,'0') !='1'
         left join jsh_account a on ah.AccountId=a.id and ifnull(a.delete_Flag,'0') !='1'
         where 1=1
-        <if test="billNo != null and billNo != ''">
-            <bind name="billNo" value="'%' + _parameter.billNo + '%'"/>
-            and ah.BillNo like #{billNo}
+        <if test="billNo != null">
+            and ah.BillNo like '%${billNo}%'
         </if>
-        <if test="type != null and type != ''">
-            and ah.Type= #{type}
+        <if test="type != null">
+            and ah.Type='${type}'
         </if>
-        <if test="beginTime != null and beginTime != ''">
-            and ah.BillTime &gt;= #{beginTime}
+        <if test="beginTime != null">
+            and ah.BillTime &gt;= '${beginTime}'
         </if>
-        <if test="endTime != null and endTime != ''">
-            and ah.BillTime &lt;= #{endTime}
+        <if test="endTime != null">
+            and ah.BillTime &lt;= '${endTime}'
         </if>
         and ifnull(ah.delete_Flag,'0') !='1'
         order by ah.Id desc
@@ -41,27 +40,29 @@
         COUNT(id)
         FROM jsh_accounthead
         WHERE 1=1
-        <if test="billNo != null and billNo != ''">
-            <bind name="billNo" value="'%' + _parameter.billNo + '%'"/>
-            and BillNo like #{billNo}
+        <if test="billNo != null">
+            and BillNo like '%${billNo}%'
         </if>
-        <if test="type != null and type != ''">
-            and Type=#{type}
+        <if test="type != null">
+            and Type='${type}'
         </if>
-        <if test="beginTime != null and beginTime != ''">
-            and BillTime &gt;= #{beginTime}
+        <if test="beginTime != null">
+            and BillTime &gt;= '${beginTime}'
         </if>
-        <if test="endTime != null and endTime != ''">
-            and BillTime &lt;= #{endTime}
+        <if test="endTime != null">
+            and BillTime &lt;= '${endTime}'
         </if>
         and ifnull(delete_Flag,'0') !='1'
     </select>
 
+    <select id="getMaxId" resultType="java.lang.Long">
+        select max(Id) as Id from jsh_accounthead
+    </select>
 
     <select id="findAllMoney" resultType="java.math.BigDecimal">
-        select sum(#{modeName}) as allMoney from jsh_accounthead
-        where Type=#{type}
-        and OrganId =#{supplierId} and BillTime <![CDATA[ <=#{endTime}]]>
+        select sum(${modeName}) as allMoney from jsh_accounthead
+        where Type='${type}'
+        and OrganId =${supplierId} and BillTime <![CDATA[ <='${endTime}']]>
         and ifnull(delete_Flag,'0') !='1'
     </select>
 
@@ -73,7 +74,7 @@
         left join jsh_account a on ah.AccountId=a.id and ifnull(a.delete_Flag,'0') !='1'
         where 1=1
         <if test="billNo != null">
-            and ah.BillNo = #{billNo}
+            and ah.BillNo = '${billNo}'
         </if>
         and ifnull(ah.delete_Flag,'0') !='1'
     </select>
@@ -123,56 +124,4 @@
         )
         and ifnull(delete_Flag,'0') !='1'
     </select>
-    <insert id="addAccountHead"  parameterType="com.jsh.erp.datasource.entities.AccountHead"
-            useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-        insert into jsh_accounthead (Id, Type, OrganId,
-        HandsPersonId, ChangeAmount, TotalPrice,
-        AccountId, BillNo, BillTime,
-        Remark, tenant_id, delete_Flag
-        )
-        values (#{id,jdbcType=BIGINT}, #{type,jdbcType=VARCHAR}, #{organid,jdbcType=BIGINT},
-        #{handspersonid,jdbcType=BIGINT}, #{changeamount,jdbcType=DECIMAL}, #{totalprice,jdbcType=DECIMAL},
-        #{accountid,jdbcType=BIGINT}, #{billno,jdbcType=VARCHAR}, #{billtime,jdbcType=TIMESTAMP},
-        #{remark,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR}
-        )
-    </insert>
-    <update id="updateAccountHead" parameterType="com.jsh.erp.datasource.entities.AccountHead">
-        update jsh_accounthead
-        <set>
-            <if test="type != null">
-                Type = #{type,jdbcType=VARCHAR},
-            </if>
-            <if test="organid != null">
-                OrganId = #{organid,jdbcType=BIGINT},
-            </if>
-            <if test="handspersonid != null">
-                HandsPersonId = #{handspersonid,jdbcType=BIGINT},
-            </if>
-            <if test="changeamount != null">
-                ChangeAmount = #{changeamount,jdbcType=DECIMAL},
-            </if>
-            <if test="totalprice != null">
-                TotalPrice = #{totalprice,jdbcType=DECIMAL},
-            </if>
-            <if test="accountid != null">
-                AccountId = #{accountid,jdbcType=BIGINT},
-            </if>
-            <if test="billno != null">
-                BillNo = #{billno,jdbcType=VARCHAR},
-            </if>
-            <if test="billtime != null">
-                BillTime = #{billtime,jdbcType=TIMESTAMP},
-            </if>
-            <if test="remark != null">
-                Remark = #{remark,jdbcType=VARCHAR},
-            </if>
-            <if test="tenantId != null">
-                tenant_id = #{tenantId,jdbcType=BIGINT},
-            </if>
-            <if test="deleteFlag != null">
-                delete_Flag = #{deleteFlag,jdbcType=VARCHAR},
-            </if>
-        </set>
-        where Id = #{id,jdbcType=BIGINT}
-    </update>
 </mapper>

@@ -154,10 +154,9 @@ public class FunctionsController {
                     if(("admin").equals(loginName)) {
                         dataList.add(fun);
                     } else {
-//                        if(!("系统管理").equals(fun.getName())) {
-//                            dataList.add(fun);
-//                        }
-                        dataList.add(fun);
+                        if(!("系统管理").equals(fun.getName())) {
+                            dataList.add(fun);
+                        }
                     }
                 }
 

@@ -5,12 +5,11 @@
         select *
         FROM jsh_functions
         where 1=1
-        <if test="name != null and name != ''">
-            <bind name="name" value="'%' + _parameter.name + '%'"/>
-            and name like #{name}
+        <if test="name != null">
+            and name like '%${name}%'
         </if>
         <if test="type != null">
-            and type=#{type}
+            and type='${type}'
         </if>
         and ifnull(delete_Flag,'0') !='1'
         order by sort asc
@@ -23,12 +22,11 @@
         COUNT(id)
         FROM jsh_functions
         WHERE 1=1
-        <if test="name != null and name != ''">
-            <bind name="name" value="'%' + _parameter.name + '%'"/>
-            and name like #{name}
+        <if test="name != null">
+            and name like '%${name}%'
         </if>
         <if test="type != null">
-            and type=#{type}
+            and type='${type}'
         </if>
         and ifnull(delete_Flag,'0') !='1'
     </select>

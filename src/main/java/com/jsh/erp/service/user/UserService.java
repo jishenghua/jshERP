@@ -21,7 +21,6 @@ import com.jsh.erp.service.userBusiness.UserBusinessService;
 import com.jsh.erp.utils.ExceptionCodeConstants;
 import com.jsh.erp.utils.StringUtil;
 import com.jsh.erp.utils.Tools;
-import org.apache.ibatis.annotations.DeleteProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -219,33 +218,35 @@ public class UserService {
         return result;
     }
 
-    public int validateUser(String username, String password){
-            /**默认是可以登录的*/
-            List<User> list = null;
-            try {
-                list=this.getUserListByloginName(username);
-            } catch (Exception e) {
-                logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                        ExceptionConstants.DATA_READ_FAIL_CODE, ExceptionConstants.DATA_READ_FAIL_MSG,e);
-                logger.error(">>>>>>>>访问验证用户姓名是否存在后台信息异常", e);
-                return ExceptionCodeConstants.UserExceptionCode.USER_ACCESS_EXCEPTION;
-            }
+    public int validateUser(String username, String password) throws Exception {
+        /**默认是可以登录的*/
+        List<User> list = null;
+        try {
+            UserExample example = new UserExample();
+            example.createCriteria().andLoginameEqualTo(username);
+            list = userMapper.selectByExample(example);
+        } catch (Exception e) {
+            logger.error(">>>>>>>>访问验证用户姓名是否存在后台信息异常", e);
+            return ExceptionCodeConstants.UserExceptionCode.USER_ACCESS_EXCEPTION;
+        }
 
-            if (null != list && list.size() == 0) {
-                return ExceptionCodeConstants.UserExceptionCode.USER_NOT_EXIST;
-            }
-            User user=null;
-            try {
-                user = this.getUserListByloginNameAndPassword(username,password);
-            } catch (Exception e) {
-                logger.error(">>>>>>>>>>访问验证用户密码后台信息异常", e);
-                return ExceptionCodeConstants.UserExceptionCode.USER_ACCESS_EXCEPTION;
-            }
+        if (null != list && list.size() == 0) {
+            return ExceptionCodeConstants.UserExceptionCode.USER_NOT_EXIST;
+        }
 
-            if (null == user ) {
-                return ExceptionCodeConstants.UserExceptionCode.USER_PASSWORD_ERROR;
-            }
-            return ExceptionCodeConstants.UserExceptionCode.USER_CONDITION_FIT;
+        try {
+            UserExample example = new UserExample();
+            example.createCriteria().andLoginameEqualTo(username).andPasswordEqualTo(password);
+            list = userMapper.selectByExample(example);
+        } catch (Exception e) {
+            logger.error(">>>>>>>>>>访问验证用户密码后台信息异常", e);
+            return ExceptionCodeConstants.UserExceptionCode.USER_ACCESS_EXCEPTION;
+        }
+
+        if (null != list && list.size() == 0) {
+            return ExceptionCodeConstants.UserExceptionCode.USER_PASSWORD_ERROR;
+        }
+        return ExceptionCodeConstants.UserExceptionCode.USER_CONDITION_FIT;
     }
 
     public User getUserByUserName(String username)throws Exception {
@@ -310,8 +311,7 @@ public class UserService {
                     BusinessConstants.LOG_OPERATION_TYPE_ADD,
                     ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
             //检查用户名和登录名
-            checkLoginName(ue);
-            checkUserName(ue);
+            checkUserNameAndLoginName(ue);
             //新增用户信息
             ue= this.addUser(ue);
             if(ue==null){
@@ -351,11 +351,7 @@ public class UserService {
          * 3是否管理者默认为员工
          * 4默认用户状态为正常
          * */
-
-        //用户没有设置密码时，使用默认密码
-        if(StringUtil.isEmpty(ue.getPassword())){
-            ue.setPassword(Tools.md5Encryp(BusinessConstants.USER_DEFAULT_PASSWORD));
-        }
+        ue.setPassword(Tools.md5Encryp(BusinessConstants.USER_DEFAULT_PASSWORD));
         ue.setIsystem(BusinessConstants.USER_NOT_SYSTEM);
         if(ue.getIsmanager()==null){
             ue.setIsmanager(BusinessConstants.USER_NOT_MANAGER);
@@ -374,7 +370,7 @@ public class UserService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public UserEx registerUser(UserEx ue, Long manageRoleId) throws Exception{
+    public UserEx registerUser(UserEx ue, Integer manageRoleId, HttpServletRequest request) throws Exception{
         /**
          * create by: qiankunpingtai
          * create time: 2019/4/9 18:00
@@ -386,46 +382,42 @@ public class UserService {
             throw new BusinessRunTimeException(ExceptionConstants.USER_NAME_LIMIT_USE_CODE,
                     ExceptionConstants.USER_NAME_LIMIT_USE_MSG);
         } else {
-            /**
-             * create by: qiankunpingtai
-             * create time: 2019/4/24 10:57
-             * website：https://qiankunpingtai.cn
-             * description:
-             * 检查登录名是否已存在
-             *
-             */
-            checkLoginName(ue);
-            /**
-             * create by: qiankunpingtai
-             * create time: 2019/4/24 14:47
-             * website：https://qiankunpingtai.cn
-             * description:
-             * 注册一个新用户需要做如下操作
-             * 1、分配应用
-             * 2、分配功能模块
-             * 3、分配产品扩展字段
-             * 4、分配角色（默认添加超级管理员角色，不可修改）
-             * 5、写入用户信息
-             * 6、写入用户角色应用功能关系
-             */
-
-            ue=this.addUser(ue);
-
+            ue.setPassword(Tools.md5Encryp(ue.getPassword()));
+            ue.setIsystem(BusinessConstants.USER_NOT_SYSTEM);
+            if (ue.getIsmanager() == null) {
+                ue.setIsmanager(BusinessConstants.USER_NOT_MANAGER);
+            }
+            ue.setStatus(BusinessConstants.USER_STATUS_NORMAL);
+            int result=0;
+            try{
+                result= userMapperEx.addUser(ue);
+            }catch(Exception e){
+                JshException.writeFail(logger, e);
+            }
             //更新租户id
             User user = new User();
             user.setId(ue.getId());
             user.setTenantId(ue.getId());
             userService.updateUserTenant(user);
-            addRegisterUserNotInclueUser(user.getId(),user.getTenantId(),manageRoleId);
-//            //新增用户与角色的关系
-//            JSONObject ubObj = new JSONObject();
-//            ubObj.put("type", "UserRole");
-//            ubObj.put("keyid", ue.getId());
-//            JSONArray ubArr = new JSONArray();
-//            ubArr.add(manageRoleId);
-//            ubObj.put("value", ubArr.toString());
-//            userBusinessService.insertUserBusiness(ubObj.toString(), ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
-            return ue;
+            //新增用户与角色的关系
+            JSONObject ubObj = new JSONObject();
+            ubObj.put("type", "UserRole");
+            ubObj.put("keyid", ue.getId());
+            JSONArray ubArr = new JSONArray();
+            ubArr.add(manageRoleId);
+            ubObj.put("value", ubArr.toString());
+            userBusinessService.insertUserBusiness(ubObj.toString(), ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+            //创建租户信息
+            JSONObject tenantObj = new JSONObject();
+            tenantObj.put("tenantId", ue.getId());
+            tenantObj.put("loginName",ue.getLoginame());
+            String param = tenantObj.toJSONString();
+            tenantService.insertTenant(param, request);
+            logger.info("===============创建租户信息完成===============");
+            if (result > 0) {
+                return ue;
+            }
+            return null;
         }
     }
 
@@ -450,8 +442,7 @@ public class UserService {
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(ue.getId()).toString(),
                     ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
             //检查用户名和登录名
-            checkLoginName(ue);
-            checkUserName(ue);
+            checkUserNameAndLoginName(ue);
             //更新用户信息
             ue = this.updateUser(ue);
             if (ue == null) {
@@ -503,13 +494,14 @@ public class UserService {
         return null;
     }
     /**
-     * create by: qiankunpingtai
-     * create time: 2019/4/24 11:02
-     * website：https://qiankunpingtai.cn
+     * create by: cjl
      * description:
-     * 检查登录名全局唯一
+     *  检查用户名称和登录名不能重复
+     * create time: 2019/3/12 11:36
+     * @Param: userEx
+     * @return void
      */
-    public void checkLoginName(UserEx userEx)throws Exception{
+    public void checkUserNameAndLoginName(UserEx userEx)throws Exception{
         List<User> list=null;
         if(userEx==null){
             return;
@@ -539,25 +531,10 @@ public class UserService {
 
             }
         }
-    }
-    /**
-     * create by: qiankunpingtai
-     * create time: 2019/4/24 11:02
-     * website：https://qiankunpingtai.cn
-     * description:
-     * 检查用户名同一个租户范围内内唯一
-     *
-     */
-    public void checkUserName(UserEx userEx)throws Exception{
-        List<User> list=null;
-        if(userEx==null){
-            return;
-        }
-        Long userId=userEx.getId();
         //检查用户名
         if(!StringUtils.isEmpty(userEx.getUsername())){
             String userName=userEx.getUsername();
-            list=this.getUserListByUserNameAndTenantId(userName,userEx.getTenantId());
+            list=this.getUserListByUserName(userName);
             if(list!=null&&list.size()>0){
                 if(list.size()>1){
                     //超过一条数据存在，该用户名已存在
@@ -578,57 +555,31 @@ public class UserService {
 
             }
         }
+
     }
     /**
-     * create by: qiankunpingtai
-     * website：https://qiankunpingtai.cn
-     * description:
-     *  通过用户名和租户id获取用户信息
-     * create time: 2019/4/24 11:18
-     * @Param: userName
-     * @Param: tenantId
-     * @return java.util.List<com.jsh.erp.datasource.entities.User>
-     */
-    private List<User> getUserListByUserNameAndTenantId(String userName, Long tenantId) {
-
+     * 通过用户名获取用户列表
+     * */
+    public List<User> getUserListByUserName(String userName)throws Exception{
         List<User> list =null;
         try{
-            list=userMapperEx.getUserListByUserNameAndTenantId(userName,tenantId);
+            list=userMapperEx.getUserListByUserNameOrLoginName(userName,null);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
     }
-
     /**
      * 通过登录名获取用户列表
      * */
     public List<User> getUserListByloginName(String loginName){
         List<User> list =null;
         try{
-            list=userMapperEx.getUserListByLoginName(loginName);
+            list=userMapperEx.getUserListByUserNameOrLoginName(null,loginName);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
-    }
-    /**
-     * 通过登录名和密码获取用户列表
-     * */
-    public User getUserListByloginNameAndPassword(String loginName,String password){
-        List<User> list =null;
-        try{
-            list=userMapperEx.getUserListByloginNameAndPassword(loginName,password);
-        }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE, ExceptionConstants.DATA_READ_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                    ExceptionConstants.DATA_READ_FAIL_MSG);
-        }
-        if(list!=null&&list.size()>0){
-            return list.get(0);
-        }
-        return null;
     }
     /**
      * 批量删除用户
@@ -662,34 +613,4 @@ public class UserService {
         }
         return list;
     }
-    /**
-     * create by: qiankunpingtai
-     * website：https://qiankunpingtai.cn
-     * description:
-     * 1、分配应用
-     * 2、分配功能模块
-     * 3、分配产品扩展字段
-     * 4、分配角色（默认添加超级管理员角色，不可修改）
-     * 5、写入用户角色应用功能关系
-     * create time: 2019/4/26 9:37
-     * @Param: userId 用户id
-     * @Param: tenantId 租户id
-     * @Param: roleId 模板角色id
-     * @return java.lang.String
-     */
-    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public String addRegisterUserNotInclueUser(Long userId,Long tenantId,Long roleId)throws Exception {
-
-        String result =null;
-        try{
-            result=userMapperEx.addRegisterUserNotInclueUser(userId,tenantId,roleId);
-        }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
-                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
-        }
-        return result;
-    }
-
 }

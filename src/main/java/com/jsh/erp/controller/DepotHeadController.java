@@ -86,6 +86,27 @@ public class DepotHeadController {
         return res;
     }
 
+    /**
+     * 获取最大的id
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/getMaxId")
+    public BaseResponseInfo getMaxId(HttpServletRequest request)throws Exception {
+        BaseResponseInfo res = new BaseResponseInfo();
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            Long maxId = depotHeadService.getMaxId();
+            map.put("maxId", maxId);
+            res.code = 200;
+            res.data = map;
+        } catch(Exception e){
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
+    }
 
     /**
      * 查找单据_根据月份(报表)
@@ -383,7 +404,7 @@ public class DepotHeadController {
             throw new BusinessParamCheckingException(ExceptionConstants.DEPOT_HEAD_OVER_LIMIT_FAILED_CODE,
                     ExceptionConstants.DEPOT_HEAD_OVER_LIMIT_FAILED_MSG);
         } else {
-            depotHeadService.addDepotHeadAndDetail(beanJson,inserted,deleted,updated);
+            depotHeadService.addDepotHeadAndDetail(beanJson,inserted,deleted,updated,tenantId);
         }
         return result;
     }

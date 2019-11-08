@@ -10,29 +10,26 @@
         FROM jsh_log l
         left join jsh_user u on l.userID = u.id and ifnull(u.status,'0') not in('1','2')
         where 1=1
-        <if test="operation != null and operation != ''">
-            <bind name="operation" value="'%' + _parameter.operation + '%'"/>
-            and l.operation like #{operation}
+        <if test="operation != null">
+            and l.operation like '%${operation}%'
         </if>
         <if test="usernameID != null">
-            and l.userID=#{usernameID}
+            and l.userID=${usernameID}
         </if>
-        <if test="clientIp != null and clientIp != ''">
-            <bind name="clientIp" value="'%' + _parameter.clientIp + '%'"/>
-            and l.clientIp like #{clientIp}
+        <if test="clientIp != null">
+            and l.clientIp like '%${clientIp}%'
         </if>
         <if test="status != null">
-            and l.status=#{status}
+            and l.status=${status}
         </if>
         <if test="beginTime != null">
-            and l.createtime &gt;= #{beginTime}
+            and l.createtime &gt;= '${beginTime}'
         </if>
         <if test="endTime != null">
-            and l.createtime &lt;= #{endTime}
+            and l.createtime &lt;= '${endTime}'
         </if>
-        <if test="contentdetails != null and contentdetails != ''">
-            <bind name="contentdetails" value="'%' + _parameter.contentdetails + '%'"/>
-            and l.contentdetails like #{contentdetails}
+        <if test="contentdetails != null">
+            and l.contentdetails like '%${contentdetails}%'
         </if>
         order by l.createtime desc
         <if test="offset != null and rows != null">
@@ -44,29 +41,26 @@
         COUNT(id)
         FROM jsh_log
         WHERE 1=1
-        <if test="operation != null and operation != ''">
-            <bind name="operation" value="'%' + _parameter.operation + '%'"/>
-            and operation like #{operation}
+        <if test="operation != null">
+            and operation like '%${operation}%'
         </if>
         <if test="usernameID != null">
-            and userID=#{usernameID}
+            and userID=${usernameID}
         </if>
-        <if test="clientIp != null and clientIp != ''">
-            <bind name="clientIp" value="'%' + _parameter.clientIp + '%'"/>
-            and clientIp like #{clientIp}
+        <if test="clientIp != null">
+            and clientIp like '%${clientIp}%'
         </if>
         <if test="status != null">
-            and status = #{status}
+            and status = ${status}
         </if>
         <if test="beginTime != null"><![CDATA[
-            and createtime >= #{beginTime}
+            and createtime >= '${beginTime}'
         ]]></if>
         <if test="endTime != null"><![CDATA[
-            and createtime <= #{endTime}
+            and createtime <= '${endTime}'
         ]]></if>
-        <if test="contentdetails != null and contentdetails != ''">
-            <bind name="contentdetails" value="'%' + _parameter.contentdetails + '%'"/>
-            and contentdetails like #{contentdetails}
+        <if test="contentdetails != null">
+            and contentdetails like '%${contentdetails}%'
         </if>
     </select>
 </mapper>

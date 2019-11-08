@@ -48,17 +48,16 @@
             }
         }
         //cnodes = cnodes.substring(0, cnodes.length - 1);
-        // pnodes = pnodes.substring(0, pnodes.length - 1);
+        pnodes = pnodes.substring(0, pnodes.length - 1);
 
         if (ctype == 'child') {
             return cnodes;
         }
-        else if("all"){
-            return cnodes+pnodes;
-        }else{
-            return pnodes;
+        else {
+            return pnodes
         }
-    }
+        ;
+    };
 
     $(function () {
 
@@ -85,7 +84,7 @@
                             info: JSON.stringify({
                                 type: type,
                                 keyid: url_id,
-                                value: GetNode('all')
+                                value: GetNode('child')
                             })
                         },
                         dataType: "json",

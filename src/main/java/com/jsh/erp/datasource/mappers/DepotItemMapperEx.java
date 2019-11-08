@@ -36,15 +36,6 @@ public interface DepotItemMapperEx {
     Long findDetailByTypeAndMaterialIdCounts(
             @Param("mId") Long mId);
 
-
-    int findByTypeAndDepotIdAndMaterialIdIn(
-            @Param("depotId") Long depotId,
-            @Param("mId") Long mId);
-
-    int findByTypeAndDepotIdAndMaterialIdOut(
-            @Param("depotId") Long depotId,
-            @Param("mId") Long mId);
-
     List<DepotItemVo4WithInfoEx> getDetailList(
             @Param("headerId") Long headerId);
 
@@ -115,6 +106,4 @@ public interface DepotItemMapperEx {
     int findStockWarningCountTotal( @Param("pid") Integer pid);
 
     BigDecimal getFinishNumber(@Param("mid") Long mid, @Param("linkNumber") String linkNumber);
-
-    BigDecimal getCurrentRepByMaterialIdAndDepotId(@Param("materialId") Long materialId, @Param("depotId") Long depotId,@Param("tenantId")Long tenantId);
 }

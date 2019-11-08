@@ -24,7 +24,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class RoleService {
@@ -49,10 +48,12 @@ public class RoleService {
         return result;
     }
 
-    public List<Role> getRoleList(Map<String, String> parameterMap)throws Exception {
+    public List<Role> getRole()throws Exception {
+        RoleExample example = new RoleExample();
+        example.createCriteria().andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<Role> list=null;
         try{
-            list=roleMapperEx.getRoleList(parameterMap);
+            list=roleMapper.selectByExample(example);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }

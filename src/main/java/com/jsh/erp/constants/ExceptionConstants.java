@@ -278,9 +278,6 @@ public class ExceptionConstants {
     //商品库存不足
     public static final int MATERIAL_STOCK_NOT_ENOUGH_CODE = 8000004;
     public static final String MATERIAL_STOCK_NOT_ENOUGH_MSG = "商品:%s库存不足";
-    //商品单位不正确
-    public static final int MATERIAL_UNIT_NOT_RIGHT_CODE = 8000005;
-    public static final String MATERIAL_UNIT_NOT_RIGHT_MSG = "商品:%s单位不正确，使用单位:%s，基础单位：%s，副单位：%s";
     /**
      *  单据信息
      * type = 85
