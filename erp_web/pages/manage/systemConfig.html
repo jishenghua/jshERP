@@ -114,6 +114,17 @@
             pageList: initPageNum,
             columns: [[
                 {field: 'id', width: 35, align: "center", checkbox:true},
+                {
+                    title: '操作', field: 'op', align: "center", width: 80, formatter: function (value, rec) {
+                        var str = '';
+                        var rowInfo = rec.id + 'AaBb' + rec.companyName + 'AaBb' + rec.companyContacts + 'AaBb' + rec.companyAddress
+                            + 'AaBb' + rec.companyTel + 'AaBb' + rec.companyFax + 'AaBb' + rec.companyPostCode
+                            + 'AaBb' + rec.depotFlag + 'AaBb' + rec.customerFlag;
+                        str += '<img src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editSystemConfig(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
+                        str += '<img src="/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteSystemConfig(' + rec.id + ');"/>';
+                        return str;
+                    }
+                },
                 {title: '公司名称', field: 'companyName', width: 150},
                 {title: '联系人', field: 'companyContacts', width: 80, align: "center"},
                 {title: '公司地址', field: 'companyAddress', width: 150, align: "center"},
@@ -130,17 +141,6 @@
                     title: '客户开关', field: 'customerFlag', width: 80, align: "center",
                     formatter: function (value) {
                         return parseFlag(value);
-                    }
-                },
-                {
-                    title: '操作', field: 'op', width: 160, formatter: function (value, rec) {
-                        var str = '';
-                        var rowInfo = rec.id + 'AaBb' + rec.companyName + 'AaBb' + rec.companyContacts + 'AaBb' + rec.companyAddress
-                            + 'AaBb' + rec.companyTel + 'AaBb' + rec.companyFax + 'AaBb' + rec.companyPostCode
-                            + 'AaBb' + rec.depotFlag + 'AaBb' + rec.customerFlag;
-                        str += '<img src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editSystemConfig(\'' + rowInfo + '\');"/>&nbsp;<a onclick="editSystemConfig(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
-                        str += '<img src="/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteSystemConfig(' + rec.id + ');"/>&nbsp;<a onclick="deleteSystemConfig(' + rec.id + ');" style="text-decoration:none;color:black;" href="javascript:void(0)">删除</a>&nbsp;&nbsp;';
-                        return str;
                     }
                 }
             ]],

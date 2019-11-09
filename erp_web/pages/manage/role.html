@@ -115,16 +115,16 @@
             pageList: initPageNum,
             columns: [[
                 {field: 'id', width: 35, align: "center", checkbox: true},
-                {title: '角色名称', field: 'name', width: 200},
                 {
-                    title: '操作', field: 'op', align: "center", width: 130, formatter: function (value, rec) {
+                    title: '操作', field: 'op', align: "center", width: 80, formatter: function (value, rec) {
                         var str = '';
                         var rowInfo = rec.id + 'AaBb' + rec.name;
-                            str += '<img src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editRole(\'' + rowInfo + '\');"/>&nbsp;<a onclick="editRole(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
-                            str += '<img src="/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteRole(' + rec.id + ');"/>&nbsp;<a onclick="deleteRole(' + rec.id + ');" style="text-decoration:none;color:black;" href="javascript:void(0)">删除</a>&nbsp;&nbsp;';
+                        str += '<img src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editRole(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
+                        str += '<img src="/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteRole(' + rec.id + ');"/>';
                         return str;
                     }
-                }
+                },
+                {title: '角色名称', field: 'name', width: 200}
             ]],
             toolbar: [
                 {
