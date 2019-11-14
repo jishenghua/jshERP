@@ -609,7 +609,7 @@
                                         }
                                     }
                                     thisStock = (thisStock / loadRatio).toFixed(2);
-									body.find("[field='Stock']").find(input).val(thisStock).attr("data-stock", res.data.page[0].thisSum); //加载库存数据
+									body.find("[field='Stock']").find(input).val(thisStock).attr("data-stock", thisStock); //加载库存数据
                                 }
                                 else {
                                     body.find("[field='Stock']").find(input).val(0).attr("data-stock", 0); //加载库存数据
