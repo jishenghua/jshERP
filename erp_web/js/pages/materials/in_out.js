@@ -1437,7 +1437,7 @@
 		$("#Debt").val(0);
 		$("#AccountId").val(defaultAccountId); //初始化默认的账户Id
 		var addTitle = listTitle.replace("列表","信息");
-		$('#depotHeadDlg').dialog('open').dialog('setTitle','<img src="/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加' + addTitle);
+		$('#depotHeadDlg').show().dialog('open').dialog('setTitle','<img src="/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加' + addTitle);
 		$(".window-mask").css({ width: webW ,height: webH});
 
 	    orgDepotHead = "";
@@ -1549,7 +1549,7 @@
 	    oldNumber = res.number; //记录编辑前的单据编号
 		oldId = res.id; //记录单据Id
 	    var editTitle = listTitle.replace("列表","信息");
-	    $('#depotHeadDlg').dialog('open').dialog('setTitle','<img src="/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑' + editTitle);
+	    $('#depotHeadDlg').show().dialog('open').dialog('setTitle','<img src="/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑' + editTitle);
 	    $(".window-mask").css({ width: webW ,height: webH});
 	    depotHeadID = res.id;
 
@@ -1700,7 +1700,7 @@
         var TotalPrice = res.totalprice;
         $("#AllocationProjectIdShow").text(res.allocationProjectName);
 	    var showTitle = listTitle.replace("列表","信息");
-	    $('#depotHeadDlgShow').dialog('open').dialog('setTitle','<img src="/js/easyui-1.3.5/themes/icons/list.png"/>&nbsp;查看' + showTitle);
+	    $('#depotHeadDlgShow').show().dialog('open').dialog('setTitle','<img src="/js/easyui-1.3.5/themes/icons/list.png"/>&nbsp;查看' + showTitle);
 	    $(".window-mask").css({ width: webW ,height: webH});
 
         depotHeadID = res.id;
