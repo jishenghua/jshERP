@@ -831,7 +831,7 @@ select.form-control {
     color: #333;
     font-size: 13px;
     border: 1px solid #dedede;
-    background: #fbfbfb url("../js/static/images/loading.gif") no-repeat 5px center;
+    background: #fbfbfb url("../js/images/loading.gif") no-repeat 5px center;
     border-radius: 3px;
     -webkit-box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
     -moz-box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
