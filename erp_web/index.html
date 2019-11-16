@@ -44,7 +44,21 @@
 			</div>
 			<div class="navbar-custom-menu">
 				<ul class="nav navbar-nav">
-					<li class="treeview"><a href="javascript:" data-href="/pages/user/userHelp.html" class="addTabPage"><i class="fa fa-diamond"></i> 新手引导</a></li>
+					<li class="treeview">
+						<a href="javascript:" data-href="/pages/user/userHelp.html" class="addTabPage">
+							<i class="fa fa-diamond"></i> 新手引导
+						</a>
+					</li>
+					<li class="treeview">
+						<a target="_blank" class="aliyun" style="color:yellow;font-weight: bold;display: none;"
+						   href="https://www.aliyun.com/acts/hotsale?userCode=axva2vlr">
+							<i class="fa fa-cloud"></i> 阿里云促销中
+						</a>
+						<a target="_blank" class="tencent" style="color:yellow;font-weight: bold;display: none;"
+						   href="https://cloud.tencent.com/act/cps/redirect?fromSource=gwzcw.3018172.3018172.3018172&redirect=10140&cps_key=4fb6482d716575dcb7b8fe600d93766a&from=activity">
+							<i class="fa fa-cloud"></i> 腾讯云促销中
+						</a>
+					</li>
 					<li><a href="javascript:" id="fullScreen" title="全屏" data-placement="bottom"
 						   data-container="body"><i class="fa fa-arrows-alt"></i></a></li>
 					<li class="dropdown messages-menu">
@@ -66,8 +80,6 @@
 						<audio id="audioMessage" controls="controls" preload="auto" hidden="hidden">
 							<source src="js/modules/msg/message.mp3" type="audio/mpeg"/>
 						</audio>
-						<script src="js/jquery-timeago/jquery.timeago.js"></script>
-						<script src="js/jquery-timeago/i18n/jquery.timeago.zh_CN.js"></script>
 						<script src="js/modules/msg/topMenuMsg.js"></script>
 						<script type="text/template" id="msgListTpl">
 							<li id="msg{{d.id}}"><a href="javascript:"
@@ -177,7 +189,6 @@
 <script src="js/common/common.js"></script>
 <div class="hide" id="desktopTabPage" data-title="首页" data-url="/home.html"></div>
 <script src="js/jquery-toastr/2.0/toastr.min.js"></script>
-<script src="js/jquery-plugins/jquery.slimscroll.js"></script>
 <script src="js/easyui-1.3.5/jquery.easyui.min.js"></script>
 <script src="js/common/common.js"></script>
 <script src="js/modules/sys/sysIndex.js"></script>

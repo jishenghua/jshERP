@@ -1,3 +1,6 @@
+#depotHeadDlg,#depotHeadDlgShow{
+	display: none;
+}
 /*价格*/
 #depotHeadFM .price-list {
 	width:110px;

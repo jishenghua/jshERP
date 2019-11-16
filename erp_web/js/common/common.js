@@ -1,3 +1,12 @@
+	//baidu-tongji
+	var _hmt = _hmt || [];
+	(function() {
+		var hm = document.createElement("script");
+		hm.src = "https://hm.baidu.com/hm.js?1cd9bcbaae133f03a6eb19da6579aaba";
+		var s = document.getElementsByTagName("script")[0];
+		s.parentNode.insertBefore(hm, s);
+	})();
+
 	$.fn.serializeObject = function() {
 		var o = {};
 		var a = this.serializeArray();
@@ -48,10 +57,12 @@
 	}
     function dgResize() {
 		var searchTabHeight = $('#searchTable').height();
-        $('#tableData').datagrid('resize', {
-            width: $(window).width() - 6,
-            height: $(window).height() - searchTabHeight -46
-        });
+		if($('#tableData').length) {
+            $('#tableData').datagrid('resize', {
+                width: $(window).width() - 6,
+                height: $(window).height() - searchTabHeight -46
+            });
+		}
     }
     $(window).resize(function () {
         dgResize();
@@ -334,4 +345,18 @@
 
     function turnBillDetailPage(number, type) {
         js.addTabPage(null, "单据明细", "/pages/materials/bill_detail.html?n="+ number + "&type=" + type);
+    }
+
+    /**
+	 * 验证手机号码
+     * @param phoneInput
+     * @returns {boolean}
+     */
+    function isPhoneAvailable(phoneInput) {
+        var myreg=/^[1][3,4,5,7,8,9][0-9]{9}$/;
+        if (!myreg.test(phoneInput.val())) {
+            return false;
+        } else {
+            return true;
+        }
     }
