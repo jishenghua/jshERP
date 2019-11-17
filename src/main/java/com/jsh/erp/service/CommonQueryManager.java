@@ -140,9 +140,4 @@ public class CommonQueryManager {
         return 0;
     }
 
-
-
-
-
-
 }

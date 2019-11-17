@@ -10,7 +10,7 @@ import java.lang.annotation.*;
  * @Author: cjl
  * @Date: 2019/3/11 18:11
  */
-@ResourceInfo(value = "orgaUserRel", type = 115)
+@ResourceInfo(value = "orgaUserRel", type = 1574002394)
 @Inherited
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
