@@ -83,7 +83,7 @@ public class TenantService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateTenant(String beanJson, Long id)throws Exception {
+    public int updateTenant(String beanJson, Long id, HttpServletRequest request)throws Exception {
         Tenant tenant = JSONObject.parseObject(beanJson, Tenant.class);
         int result=0;
         try{
@@ -96,7 +96,7 @@ public class TenantService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int deleteTenant(Long id)throws Exception {
+    public int deleteTenant(Long id, HttpServletRequest request)throws Exception {
         int result=0;
         try{
             result= tenantMapper.deleteByPrimaryKey(id);
@@ -107,7 +107,7 @@ public class TenantService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteTenant(String ids)throws Exception {
+    public int batchDeleteTenant(String ids, HttpServletRequest request)throws Exception {
         List<Long> idList = StringUtil.strToLongList(ids);
         TenantExample example = new TenantExample();
         example.createCriteria().andIdIn(idList);

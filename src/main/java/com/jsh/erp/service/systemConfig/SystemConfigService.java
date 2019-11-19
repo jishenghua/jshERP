@@ -87,6 +87,7 @@ public class SystemConfigService {
         int result=0;
         try{
             result=systemConfigMapper.insertSelective(systemConfig);
+            logService.insertLog("系统配置", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -94,12 +95,14 @@ public class SystemConfigService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateSystemConfig(String beanJson, Long id) throws Exception{
+    public int updateSystemConfig(String beanJson, Long id, HttpServletRequest request) throws Exception{
         SystemConfig systemConfig = JSONObject.parseObject(beanJson, SystemConfig.class);
         systemConfig.setId(id);
         int result=0;
         try{
             result=systemConfigMapper.updateByPrimaryKeySelective(systemConfig);
+            logService.insertLog("系统配置",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -107,10 +110,12 @@ public class SystemConfigService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int deleteSystemConfig(Long id)throws Exception {
+    public int deleteSystemConfig(Long id, HttpServletRequest request)throws Exception {
         int result=0;
         try{
             result=systemConfigMapper.deleteByPrimaryKey(id);
+            logService.insertLog("系统配置",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(id).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -118,13 +123,14 @@ public class SystemConfigService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteSystemConfig(String ids)throws Exception {
+    public int batchDeleteSystemConfig(String ids, HttpServletRequest request)throws Exception {
         List<Long> idList = StringUtil.strToLongList(ids);
         SystemConfigExample example = new SystemConfigExample();
         example.createCriteria().andIdIn(idList);
         int result=0;
         try{
             result=systemConfigMapper.deleteByExample(example);
+            logService.insertLog("系统配置", "批量删除,id集:" + ids, request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -145,7 +151,7 @@ public class SystemConfigService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteSystemConfigByIds(String ids)throws Exception {
-        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_SYSTEM_CONFIG,
+        logService.insertLog("系统配置",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();

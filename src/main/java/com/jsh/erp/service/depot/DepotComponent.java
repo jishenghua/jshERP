@@ -52,18 +52,18 @@ public class DepotComponent implements ICommonQuery {
     }
 
     @Override
-    public int update(String beanJson, Long id)throws Exception {
-        return depotService.updateDepot(beanJson, id);
+    public int update(String beanJson, Long id, HttpServletRequest request)throws Exception {
+        return depotService.updateDepot(beanJson, id, request);
     }
 
     @Override
-    public int delete(Long id)throws Exception {
-        return depotService.deleteDepot(id);
+    public int delete(Long id, HttpServletRequest request)throws Exception {
+        return depotService.deleteDepot(id, request);
     }
 
     @Override
-    public int batchDelete(String ids)throws Exception {
-        return depotService.batchDeleteDepot(ids);
+    public int batchDelete(String ids, HttpServletRequest request)throws Exception {
+        return depotService.batchDeleteDepot(ids, request);
     }
 
     @Override

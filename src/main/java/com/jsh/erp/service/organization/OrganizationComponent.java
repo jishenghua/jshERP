@@ -46,18 +46,18 @@ public class OrganizationComponent implements ICommonQuery {
     }
 
     @Override
-    public int update(String beanJson, Long id)throws Exception {
-        return organizationService.updateOrganization(beanJson,id);
+    public int update(String beanJson, Long id, HttpServletRequest request)throws Exception {
+        return organizationService.updateOrganization(beanJson,id, request);
     }
 
     @Override
-    public int delete(Long id)throws Exception {
-        return organizationService.deleteOrganization(id);
+    public int delete(Long id, HttpServletRequest request)throws Exception {
+        return organizationService.deleteOrganization(id, request);
     }
 
     @Override
-    public int batchDelete(String ids)throws Exception {
-        return organizationService.batchDeleteOrganization(ids);
+    public int batchDelete(String ids, HttpServletRequest request)throws Exception {
+        return organizationService.batchDeleteOrganization(ids, request);
     }
 
     @Override

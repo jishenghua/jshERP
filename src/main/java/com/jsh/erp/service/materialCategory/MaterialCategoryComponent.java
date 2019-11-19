@@ -52,18 +52,18 @@ public class MaterialCategoryComponent implements ICommonQuery {
     }
 
     @Override
-    public int update(String beanJson, Long id)throws Exception {
-        return materialCategoryService.updateMaterialCategory(beanJson, id);
+    public int update(String beanJson, Long id, HttpServletRequest request)throws Exception {
+        return materialCategoryService.updateMaterialCategory(beanJson, id, request);
     }
 
     @Override
-    public int delete(Long id)throws Exception {
-        return materialCategoryService.deleteMaterialCategory(id);
+    public int delete(Long id, HttpServletRequest request)throws Exception {
+        return materialCategoryService.deleteMaterialCategory(id, request);
     }
 
     @Override
-    public int batchDelete(String ids)throws Exception {
-        return materialCategoryService.batchDeleteMaterialCategory(ids);
+    public int batchDelete(String ids, HttpServletRequest request)throws Exception {
+        return materialCategoryService.batchDeleteMaterialCategory(ids, request);
     }
 
     @Override

@@ -49,18 +49,18 @@ public class TenantComponent implements ICommonQuery {
     }
 
     @Override
-    public int update(String beanJson, Long id)throws Exception {
-        return tenantService.updateTenant(beanJson, id);
+    public int update(String beanJson, Long id, HttpServletRequest request)throws Exception {
+        return tenantService.updateTenant(beanJson, id, request);
     }
 
     @Override
-    public int delete(Long id)throws Exception {
-        return tenantService.deleteTenant(id);
+    public int delete(Long id, HttpServletRequest request)throws Exception {
+        return tenantService.deleteTenant(id, request);
     }
 
     @Override
-    public int batchDelete(String ids)throws Exception {
-        return tenantService.batchDeleteTenant(ids);
+    public int batchDelete(String ids, HttpServletRequest request)throws Exception {
+        return tenantService.batchDeleteTenant(ids, request);
     }
 
     @Override

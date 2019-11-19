@@ -53,41 +53,47 @@ public class OrgaUserRelService {
         int result=0;
         try{
             result=orgaUserRelMapper.insertSelective(orgaUserRel);
+            logService.insertLog("用户与机构关系", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
         return result;
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateOrgaUserRel(String beanJson, Long id) throws Exception{
+    public int updateOrgaUserRel(String beanJson, Long id, HttpServletRequest request) throws Exception{
         OrgaUserRel orgaUserRel = JSONObject.parseObject(beanJson, OrgaUserRel.class);
         orgaUserRel.setId(id);
         int result=0;
         try{
             result=orgaUserRelMapper.updateByPrimaryKeySelective(orgaUserRel);
+            logService.insertLog("用户与机构关系",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
         return result;
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int deleteOrgaUserRel(Long id)throws Exception {
+    public int deleteOrgaUserRel(Long id, HttpServletRequest request)throws Exception {
         int result=0;
         try{
             result=orgaUserRelMapper.deleteByPrimaryKey(id);
+            logService.insertLog("用户与机构关系",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(id).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
         return result;
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteOrgaUserRel(String ids)throws Exception {
+    public int batchDeleteOrgaUserRel(String ids, HttpServletRequest request)throws Exception {
         List<Long> idList = StringUtil.strToLongList(ids);
         OrgaUserRelExample example = new OrgaUserRelExample();
         example.createCriteria().andIdIn(idList);
         int result=0;
         try{
             result=orgaUserRelMapper.deleteByExample(example);
+            logService.insertLog("用户与机构关系", "批量删除,id集:" + ids, request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }

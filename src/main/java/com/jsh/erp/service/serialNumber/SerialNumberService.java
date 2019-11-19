@@ -94,10 +94,11 @@ public class SerialNumberService {
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertSerialNumber(String beanJson, HttpServletRequest request)throws Exception {
         SerialNumber serialNumber = JSONObject.parseObject(beanJson, SerialNumber.class);
-        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_SERIAL_NUMBER, BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
+        logService.insertLog("序列号", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
         int result=0;
         try{
             result=serialNumberMapper.insertSelective(serialNumber);
+            logService.insertLog("序列号", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -105,12 +106,14 @@ public class SerialNumberService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateSerialNumber(String beanJson, Long id) throws Exception{
+    public int updateSerialNumber(String beanJson, Long id, HttpServletRequest request) throws Exception{
         SerialNumber serialNumber = JSONObject.parseObject(beanJson, SerialNumber.class);
         serialNumber.setId(id);
         int result=0;
         try{
             result=serialNumberMapper.updateByPrimaryKeySelective(serialNumber);
+            logService.insertLog("序列号",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -118,10 +121,12 @@ public class SerialNumberService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int deleteSerialNumber(Long id)throws Exception {
+    public int deleteSerialNumber(Long id, HttpServletRequest request)throws Exception {
         int result=0;
         try{
             result=serialNumberMapper.deleteByPrimaryKey(id);
+            logService.insertLog("序列号",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(id).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -129,13 +134,14 @@ public class SerialNumberService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteSerialNumber(String ids)throws Exception {
+    public int batchDeleteSerialNumber(String ids, HttpServletRequest request)throws Exception {
         List<Long> idList = StringUtil.strToLongList(ids);
         SerialNumberExample example = new SerialNumberExample();
         example.createCriteria().andIdIn(idList);
         int result=0;
         try{
             result=serialNumberMapper.deleteByExample(example);
+            logService.insertLog("序列号", "批量删除,id集:" + ids, request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -246,7 +252,7 @@ public class SerialNumberService {
      * */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public SerialNumberEx addSerialNumber(SerialNumberEx serialNumberEx) throws Exception{
-        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_SERIAL_NUMBER,BusinessConstants.LOG_OPERATION_TYPE_ADD,
+        logService.insertLog("序列号",BusinessConstants.LOG_OPERATION_TYPE_ADD,
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         if(serialNumberEx==null){
             return null;
@@ -276,7 +282,7 @@ public class SerialNumberService {
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public SerialNumberEx updateSerialNumber(SerialNumberEx serialNumberEx)throws Exception {
-        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_SERIAL_NUMBER,
+        logService.insertLog("序列号",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(serialNumberEx.getId()).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         if(serialNumberEx==null){
@@ -454,7 +460,7 @@ public class SerialNumberService {
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void batAddSerialNumber(String materialName, String serialNumberPrefix, Integer batAddTotal, String remark)throws Exception {
-        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_SERIAL_NUMBER,
+        logService.insertLog("序列号",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_BATCH_ADD).append(batAddTotal).append(BusinessConstants.LOG_DATA_UNIT).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         if(StringUtil.isNotEmpty(materialName)){
@@ -505,7 +511,7 @@ public class SerialNumberService {
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteSerialNumberByIds(String ids) throws Exception{
-        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_SERIAL_NUMBER,
+        logService.insertLog("序列号",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();

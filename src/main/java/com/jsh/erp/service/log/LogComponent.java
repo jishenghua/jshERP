@@ -61,18 +61,18 @@ public class LogComponent implements ICommonQuery {
     }
 
     @Override
-    public int update(String beanJson, Long id)throws Exception {
-        return logService.updateLog(beanJson, id);
+    public int update(String beanJson, Long id, HttpServletRequest request)throws Exception {
+        return logService.updateLog(beanJson, id, request);
     }
 
     @Override
-    public int delete(Long id)throws Exception {
-        return logService.deleteLog(id);
+    public int delete(Long id, HttpServletRequest request)throws Exception {
+        return logService.deleteLog(id, request);
     }
 
     @Override
-    public int batchDelete(String ids)throws Exception {
-        return logService.batchDeleteLog(ids);
+    public int batchDelete(String ids, HttpServletRequest request)throws Exception {
+        return logService.batchDeleteLog(ids, request);
     }
 
     @Override

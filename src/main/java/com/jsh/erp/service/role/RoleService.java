@@ -86,6 +86,7 @@ public class RoleService {
         int result=0;
         try{
             result=roleMapper.insertSelective(role);
+            logService.insertLog("角色", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -93,12 +94,14 @@ public class RoleService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateRole(String beanJson, Long id) throws Exception{
+    public int updateRole(String beanJson, Long id, HttpServletRequest request) throws Exception{
         Role role = JSONObject.parseObject(beanJson, Role.class);
         role.setId(id);
         int result=0;
         try{
             result=roleMapper.updateByPrimaryKeySelective(role);
+            logService.insertLog("角色",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -106,10 +109,12 @@ public class RoleService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int deleteRole(Long id)throws Exception {
+    public int deleteRole(Long id, HttpServletRequest request)throws Exception {
         int result=0;
         try{
             result=roleMapper.deleteByPrimaryKey(id);
+            logService.insertLog("角色",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(id).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -117,13 +122,14 @@ public class RoleService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteRole(String ids) throws Exception{
+    public int batchDeleteRole(String ids, HttpServletRequest request) throws Exception{
         List<Long> idList = StringUtil.strToLongList(ids);
         RoleExample example = new RoleExample();
         example.createCriteria().andIdIn(idList);
         int result=0;
         try{
             result=roleMapper.deleteByExample(example);
+            logService.insertLog("角色", "批量删除,id集:" + ids, request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -153,7 +159,7 @@ public class RoleService {
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteRoleByIds(String ids) throws Exception{
-        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_SERIAL_NUMBER,
+        logService.insertLog("序列号",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();

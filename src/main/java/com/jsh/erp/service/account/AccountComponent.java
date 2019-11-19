@@ -52,18 +52,18 @@ public class AccountComponent implements ICommonQuery {
     }
 
     @Override
-    public int update(String beanJson, Long id)throws Exception {
-        return accountService.updateAccount(beanJson, id);
+    public int update(String beanJson, Long id, HttpServletRequest request)throws Exception {
+        return accountService.updateAccount(beanJson, id, request);
     }
 
     @Override
-    public int delete(Long id)throws Exception {
-        return accountService.deleteAccount(id);
+    public int delete(Long id, HttpServletRequest request)throws Exception {
+        return accountService.deleteAccount(id, request);
     }
 
     @Override
-    public int batchDelete(String ids)throws Exception {
-        return accountService.batchDeleteAccount(ids);
+    public int batchDelete(String ids, HttpServletRequest request)throws Exception {
+        return accountService.batchDeleteAccount(ids, request);
     }
 
     @Override

@@ -97,6 +97,7 @@ public class MsgService {
         int result=0;
         try{
             result=msgMapper.insertSelective(msg);
+            logService.insertLog("消息", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
         }catch(Exception e){
             logger.error("异常码[{}],异常提示[{}],异常[{}]",
                     ExceptionConstants.DATA_WRITE_FAIL_CODE, ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
@@ -107,12 +108,14 @@ public class MsgService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateMsg(String beanJson, Long id) throws Exception{
+    public int updateMsg(String beanJson, Long id, HttpServletRequest request) throws Exception{
         Msg msg = JSONObject.parseObject(beanJson, Msg.class);
         msg.setId(id);
         int result=0;
         try{
             result=msgMapper.updateByPrimaryKeySelective(msg);
+            logService.insertLog("消息",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
         }catch(Exception e){
             logger.error("异常码[{}],异常提示[{}],异常[{}]",
                     ExceptionConstants.DATA_WRITE_FAIL_CODE, ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
@@ -123,10 +126,12 @@ public class MsgService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int deleteMsg(Long id)throws Exception {
+    public int deleteMsg(Long id, HttpServletRequest request)throws Exception {
         int result=0;
         try{
             result=msgMapper.deleteByPrimaryKey(id);
+            logService.insertLog("消息",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(id).toString(), request);
         }catch(Exception e){
             logger.error("异常码[{}],异常提示[{}],异常[{}]",
                     ExceptionConstants.DATA_WRITE_FAIL_CODE, ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
@@ -137,13 +142,14 @@ public class MsgService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteMsg(String ids) throws Exception{
+    public int batchDeleteMsg(String ids, HttpServletRequest request) throws Exception{
         List<Long> idList = StringUtil.strToLongList(ids);
         MsgExample example = new MsgExample();
         example.createCriteria().andIdIn(idList);
         int result=0;
         try{
             result=msgMapper.deleteByExample(example);
+            logService.insertLog("消息", "批量删除,id集:" + ids, request);
         }catch(Exception e){
             logger.error("异常码[{}],异常提示[{}],异常[{}]",
                     ExceptionConstants.DATA_WRITE_FAIL_CODE, ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
@@ -179,7 +185,7 @@ public class MsgService {
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteMsgByIds(String ids) throws Exception{
-        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_SERIAL_NUMBER,
+        logService.insertLog("序列号",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         String [] idArray=ids.split(",");

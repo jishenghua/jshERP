@@ -56,18 +56,18 @@ public class SerialNumberComponent implements ICommonQuery {
     }
 
     @Override
-    public int update(String beanJson, Long id)throws Exception {
-        return serialNumberService.updateSerialNumber(beanJson, id);
+    public int update(String beanJson, Long id, HttpServletRequest request)throws Exception {
+        return serialNumberService.updateSerialNumber(beanJson, id, request);
     }
 
     @Override
-    public int delete(Long id)throws Exception {
-        return serialNumberService.deleteSerialNumber(id);
+    public int delete(Long id, HttpServletRequest request)throws Exception {
+        return serialNumberService.deleteSerialNumber(id, request);
     }
 
     @Override
-    public int batchDelete(String ids)throws Exception {
-        return serialNumberService.batchDeleteSerialNumber(ids);
+    public int batchDelete(String ids, HttpServletRequest request)throws Exception {
+        return serialNumberService.batchDeleteSerialNumber(ids, request);
     }
 
     @Override

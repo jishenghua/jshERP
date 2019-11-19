@@ -120,7 +120,7 @@ public class UserController {
                                 }
                             }
                         }
-                        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_USER,
+                        logService.insertLog("用户",
                                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_LOGIN).append(user.getId()).toString(),
                                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
                     } catch (Exception e) {

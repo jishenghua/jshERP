@@ -118,6 +118,7 @@ public class MaterialCategoryService {
         int result=0;
         try{
             result=materialCategoryMapper.insertSelective(materialCategory);
+            logService.insertLog("商品类型", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -125,12 +126,14 @@ public class MaterialCategoryService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateMaterialCategory(String beanJson, Long id) throws Exception{
+    public int updateMaterialCategory(String beanJson, Long id, HttpServletRequest request) throws Exception{
         MaterialCategory materialCategory = JSONObject.parseObject(beanJson, MaterialCategory.class);
         materialCategory.setId(id);
         int result=0;
         try{
             result=materialCategoryMapper.updateByPrimaryKeySelective(materialCategory);
+            logService.insertLog("商品类型",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -138,10 +141,12 @@ public class MaterialCategoryService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int deleteMaterialCategory(Long id)throws Exception {
+    public int deleteMaterialCategory(Long id, HttpServletRequest request)throws Exception {
         int result=0;
         try{
             result=materialCategoryMapper.deleteByPrimaryKey(id);
+            logService.insertLog("商品类型",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(id).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -149,13 +154,14 @@ public class MaterialCategoryService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteMaterialCategory(String ids)throws Exception {
+    public int batchDeleteMaterialCategory(String ids, HttpServletRequest request)throws Exception {
         List<Long> idList = StringUtil.strToLongList(ids);
         MaterialCategoryExample example = new MaterialCategoryExample();
         example.createCriteria().andIdIn(idList);
         int result=0;
         try{
             result=materialCategoryMapper.deleteByExample(example);
+            logService.insertLog("商品类型", "批量删除,id集:" + ids, request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -204,7 +210,7 @@ public class MaterialCategoryService {
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int addMaterialCategory(MaterialCategory mc) throws Exception {
-        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_MATERIAL_CATEGORY,
+        logService.insertLog("商品类型",
                 BusinessConstants.LOG_OPERATION_TYPE_ADD,
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         if(mc==null){
@@ -238,7 +244,7 @@ public class MaterialCategoryService {
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteMaterialCategoryByIds(String ids) throws Exception {
-        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_MATERIAL_CATEGORY,
+        logService.insertLog("商品类型",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         //更新时间
@@ -260,7 +266,7 @@ public class MaterialCategoryService {
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int editMaterialCategory(MaterialCategory mc) throws Exception{
-        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_MATERIAL_CATEGORY,
+        logService.insertLog("商品类型",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(mc.getId()).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         if(mc.getParentid()==null){

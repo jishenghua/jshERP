@@ -120,6 +120,7 @@ public class UserService {
         int result=0;
         try{
             result=userMapper.insertSelective(user);
+            logService.insertLog("用户", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -135,12 +136,14 @@ public class UserService {
      * @return int
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateUser(String beanJson, Long id) throws Exception{
+    public int updateUser(String beanJson, Long id, HttpServletRequest request) throws Exception{
         User user = JSONObject.parseObject(beanJson, User.class);
         user.setId(id);
         int result=0;
         try{
             result=userMapper.updateByPrimaryKeySelective(user);
+            logService.insertLog("用户",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -156,7 +159,7 @@ public class UserService {
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateUserByObj(User user) throws Exception{
-        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_USER,
+        logService.insertLog("用户",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(user.getId()).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         int result=0;
@@ -178,7 +181,7 @@ public class UserService {
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int resetPwd(String md5Pwd, Long id) throws Exception{
-        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_USER,
+        logService.insertLog("用户",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User user = new User();
@@ -194,10 +197,12 @@ public class UserService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int deleteUser(Long id)throws Exception {
+    public int deleteUser(Long id, HttpServletRequest request)throws Exception {
         int result=0;
         try{
             result= userMapper.deleteByPrimaryKey(id);
+            logService.insertLog("用户",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(id).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -205,13 +210,14 @@ public class UserService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteUser(String ids)throws Exception {
+    public int batchDeleteUser(String ids, HttpServletRequest request)throws Exception {
         List<Long> idList = StringUtil.strToLongList(ids);
         UserExample example = new UserExample();
         example.createCriteria().andIdIn(idList);
         int result=0;
         try{
             result= userMapper.deleteByExample(example);
+            logService.insertLog("用户", "批量删除,id集:" + ids, request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -307,7 +313,7 @@ public class UserService {
             throw new BusinessRunTimeException(ExceptionConstants.USER_NAME_LIMIT_USE_CODE,
                     ExceptionConstants.USER_NAME_LIMIT_USE_MSG);
         } else {
-            logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_USER,
+            logService.insertLog("用户",
                     BusinessConstants.LOG_OPERATION_TYPE_ADD,
                     ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
             //检查用户名和登录名
@@ -438,7 +444,7 @@ public class UserService {
             throw new BusinessRunTimeException(ExceptionConstants.USER_NAME_LIMIT_USE_CODE,
                     ExceptionConstants.USER_NAME_LIMIT_USE_MSG);
         } else {
-            logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_USER,
+            logService.insertLog("用户",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(ue.getId()).toString(),
                     ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
             //检查用户名和登录名
@@ -586,7 +592,7 @@ public class UserService {
      * */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void batDeleteUser(String ids) throws Exception{
-        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_USER,
+        logService.insertLog("用户",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         String idsArray[]=ids.split(",");

@@ -89,6 +89,7 @@ public class UnitService {
         int result=0;
         try{
             result=unitMapper.insertSelective(unit);
+            logService.insertLog("计量单位", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -96,12 +97,14 @@ public class UnitService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateUnit(String beanJson, Long id)throws Exception {
+    public int updateUnit(String beanJson, Long id, HttpServletRequest request)throws Exception {
         Unit unit = JSONObject.parseObject(beanJson, Unit.class);
         unit.setId(id);
         int result=0;
         try{
             result=unitMapper.updateByPrimaryKeySelective(unit);
+            logService.insertLog("计量单位",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -109,10 +112,12 @@ public class UnitService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int deleteUnit(Long id)throws Exception {
+    public int deleteUnit(Long id, HttpServletRequest request)throws Exception {
         int result=0;
         try{
             result=unitMapper.deleteByPrimaryKey(id);
+            logService.insertLog("计量单位",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(id).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -120,13 +125,14 @@ public class UnitService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteUnit(String ids) throws Exception{
+    public int batchDeleteUnit(String ids, HttpServletRequest request) throws Exception{
         List<Long> idList = StringUtil.strToLongList(ids);
         UnitExample example = new UnitExample();
         example.createCriteria().andIdIn(idList);
         int result=0;
         try{
             result=unitMapper.deleteByExample(example);
+            logService.insertLog("计量单位", "批量删除,id集:" + ids, request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -146,7 +152,7 @@ public class UnitService {
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteUnitByIds(String ids)throws Exception {
-        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_UNIT,
+        logService.insertLog("计量单位",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();

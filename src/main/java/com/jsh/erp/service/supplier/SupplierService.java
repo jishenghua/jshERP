@@ -133,6 +133,7 @@ public class SupplierService {
         int result=0;
         try{
             result=supplierMapper.insertSelective(supplier);
+            logService.insertLog("商家", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -140,7 +141,7 @@ public class SupplierService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateSupplier(String beanJson, Long id)throws Exception {
+    public int updateSupplier(String beanJson, Long id, HttpServletRequest request)throws Exception {
         Supplier supplier = JSONObject.parseObject(beanJson, Supplier.class);
         if(supplier.getBeginneedpay() == null) {
             supplier.setBeginneedpay(BigDecimal.ZERO);
@@ -152,6 +153,8 @@ public class SupplierService {
         int result=0;
         try{
             result=supplierMapper.updateByPrimaryKeySelective(supplier);
+            logService.insertLog("商家",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -159,10 +162,12 @@ public class SupplierService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int deleteSupplier(Long id)throws Exception {
+    public int deleteSupplier(Long id, HttpServletRequest request)throws Exception {
         int result=0;
         try{
             result=supplierMapper.deleteByPrimaryKey(id);
+            logService.insertLog("商家",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(id).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -170,13 +175,14 @@ public class SupplierService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteSupplier(String ids) throws Exception{
+    public int batchDeleteSupplier(String ids, HttpServletRequest request) throws Exception{
         List<Long> idList = StringUtil.strToLongList(ids);
         SupplierExample example = new SupplierExample();
         example.createCriteria().andIdIn(idList);
         int result=0;
         try{
             result=supplierMapper.deleteByExample(example);
+            logService.insertLog("商家", "批量删除,id集:" + ids, request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -197,7 +203,7 @@ public class SupplierService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateAdvanceIn(Long supplierId, BigDecimal advanceIn)throws Exception{
-        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_SUPPLIER,
+        logService.insertLog("商家",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(supplierId).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         Supplier supplier=null;
@@ -275,7 +281,7 @@ public class SupplierService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchSetEnable(Boolean enabled, String supplierIDs)throws Exception {
-        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_SUPPLIER,
+        logService.insertLog("商家",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(supplierIDs).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         List<Long> ids = StringUtil.strToLongList(supplierIDs);
@@ -318,7 +324,7 @@ public class SupplierService {
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public BaseResponseInfo importExcel(List<Supplier> mList) throws Exception {
-        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_SUPPLIER,
+        logService.insertLog("商家",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_IMPORT).append(mList.size()).append(BusinessConstants.LOG_DATA_UNIT).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         BaseResponseInfo info = new BaseResponseInfo();
@@ -339,7 +345,7 @@ public class SupplierService {
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteSupplierByIds(String ids)throws Exception {
-        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_SUPPLIER,
+        logService.insertLog("商家",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();

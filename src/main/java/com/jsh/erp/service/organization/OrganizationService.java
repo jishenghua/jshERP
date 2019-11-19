@@ -56,41 +56,47 @@ public class OrganizationService {
         int result=0;
         try{
             result=organizationMapper.insertSelective(organization);
+            logService.insertLog("机构", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
         return result;
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateOrganization(String beanJson, Long id)throws Exception {
+    public int updateOrganization(String beanJson, Long id, HttpServletRequest request)throws Exception {
         Organization organization = JSONObject.parseObject(beanJson, Organization.class);
         organization.setId(id);
         int result=0;
         try{
             result=organizationMapper.updateByPrimaryKeySelective(organization);
+            logService.insertLog("机构",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
         return result;
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int deleteOrganization(Long id)throws Exception {
+    public int deleteOrganization(Long id, HttpServletRequest request)throws Exception {
         int result=0;
         try{
             result=organizationMapper.deleteByPrimaryKey(id);
+            logService.insertLog("机构",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(id).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
         return result;
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteOrganization(String ids)throws Exception {
+    public int batchDeleteOrganization(String ids, HttpServletRequest request)throws Exception {
         List<Long> idList = StringUtil.strToLongList(ids);
         OrganizationExample example = new OrganizationExample();
         example.createCriteria().andIdIn(idList);
         int result=0;
         try{
             result=organizationMapper.deleteByExample(example);
+            logService.insertLog("机构", "批量删除,id集:" + ids, request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -98,7 +104,7 @@ public class OrganizationService {
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int addOrganization(Organization org) throws Exception{
-        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_ORGANIZATION,
+        logService.insertLog("机构",
                 BusinessConstants.LOG_OPERATION_TYPE_ADD,
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         //新增时间
@@ -133,7 +139,7 @@ public class OrganizationService {
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int editOrganization(Organization org)throws Exception {
-        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_ORGANIZATION,
+        logService.insertLog("机构",
                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(org.getId()).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         //修改时间
@@ -233,7 +239,7 @@ public class OrganizationService {
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteOrganizationByIds(String ids) throws Exception{
-        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_ORGANIZATION,
+        logService.insertLog("机构",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();
