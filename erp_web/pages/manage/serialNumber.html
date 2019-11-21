@@ -374,6 +374,9 @@
 
     //增加
     function addSerialNumber() {
+        if(checkPower()){
+            return;
+        }
         $('#serialNumberDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加序列号信息');
         $(".window-mask").css({width: webW, height: webH});
         $('#materialId').val('');

@@ -416,6 +416,9 @@
     var oldSupplier = "";
 
     function addSuppler() {
+        if(checkPower()){
+            return;
+        }
         $('#supplierDlg').dialog('open').dialog('setTitle','<img src="/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加'+listType+"信息");
         $(".window-mask").css({ width: webW ,height: webH});
         $("#supplier").focus();

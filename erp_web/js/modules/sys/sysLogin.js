@@ -109,6 +109,7 @@ function loginFun() {
                                     if(res.data.user) {
                                         var user = res.data.user;
                                         sessionStorage.setItem("userId", user.id);
+                                        sessionStorage.setItem("loginName", user.loginame);
                                         top.location.href = "/index.html";
                                     }
                                 }

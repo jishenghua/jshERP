@@ -397,7 +397,7 @@
 				text:'增加',
 				iconCls:'icon-add',
 				handler:function() {
-					addDepotHead();
+                    addDepotHead();
 				}
 			},
 			{
@@ -1425,6 +1425,9 @@
     }
 	//新增信息
 	function addDepotHead(){
+        if(checkPower()){
+        	return;
+		}
 		$('#depotHeadFM').form('clear');
 		var thisDateTime = getNowFormatDateTime(); //当前时间
 		$("#OperTime").val(thisDateTime);

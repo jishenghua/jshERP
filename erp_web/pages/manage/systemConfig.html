@@ -298,6 +298,9 @@
     var pageTotal = 0; //数据总量
 
     function addSystemConfig() {
+        if(checkPower()){
+            return;
+        }
         if(pageTotal>=1) {
             $.messager.alert('提示', '只能填写一条系统配置信息', 'warning');
         } else {

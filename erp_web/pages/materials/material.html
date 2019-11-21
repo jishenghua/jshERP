@@ -1107,6 +1107,9 @@
         }
 
         function addMaterial() {
+            if(checkPower()){
+                return;
+            }
             $('#materialFM input').val(""); //将输入框全部清空
 
             bindMProperty(); //根据商品属性绑定
