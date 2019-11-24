@@ -149,20 +149,21 @@ public class LogService {
     }
 
     public void insertLog(String moduleName, String type, HttpServletRequest request)throws Exception{
-        Log log = new Log();
-        log.setUserid(getUserId(request));
-        log.setOperation(moduleName);
-        log.setClientip(getLocalIp(request));
-        log.setCreatetime(new Date());
-        Byte status = 0;
-        log.setStatus(status);
-        log.setContentdetails(type + moduleName);
         try{
-            logMapper.insertSelective(log);
+            Long userId = getUserId(request);
+            if(userId!=null) {
+                Log log = new Log();
+                log.setUserid(userId);
+                log.setOperation(moduleName);
+                log.setClientip(getLocalIp(request));
+                log.setCreatetime(new Date());
+                Byte status = 0;
+                log.setStatus(status);
+                log.setContentdetails(type + moduleName);
+                logMapper.insertSelective(log);
+            }
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
-
     }
-
 }

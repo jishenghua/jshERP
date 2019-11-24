@@ -82,6 +82,7 @@ public class UserController {
             //获取用户状态
             int userStatus = -1;
             try {
+                request.getSession().removeAttribute("tenantId");
                 userStatus = userService.validateUser(username, password);
             } catch (Exception e) {
                 e.printStackTrace();
