@@ -1,4 +1,3 @@
-FILE_PATH=
 SERVER_NAME=jshERP
 readonly APP_HOME=${FILE_PATH:-$(dirname $(cd `dirname $0`; pwd))}
 
@@ -43,19 +42,6 @@ else
     echo "WARNING! $@"
   }
 fi
-
-function install(){
-
-  if [[ ! -n $FILE_PATH ]];then
-    sed -i "s#FILE_PATH=/home/jshERP2.0#FILE_PATH=$APP_HOME#" $APP_HOME/$0
-
-    if [[ -e /usr/sbin/$SERVER_NAME || -L /usr/sbin/$SERVER_NAME ]];then
-
-      rm -rf /usr/sbin/$SERVER_NAME && ln -s $APP_HOME/$0 /usr/sbin/$SERVER_NAME
-
-    fi
-  fi
-}
 
 function checkpid() {
    PID=$(ps -ef | grep $APP_MAIN_CLASS | grep -v 'grep' | awk '{print int($2)}')
@@ -153,11 +139,8 @@ case "$1" in
    'info')
      info
      ;;
-   'install')
-     install
-     ;;
     *)
-     echo "Usage: $0 {help|start|stop|restart|status|info|install}"
+     echo "Usage: $0 {help|start|stop|restart|status|info}"
      ;;
 esac
 exit 0
