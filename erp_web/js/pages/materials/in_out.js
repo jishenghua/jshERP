@@ -53,7 +53,6 @@
 	//根据单据名称获取类型
 	function getType(){
 		listTitle = $("#tablePanel").prev().text();
-		depotString = "|";
 		//改变宽度和高度
 		$("#searchPanel").panel({width:webW-2});
 		$("#tablePanel").panel({width:webW-2});
