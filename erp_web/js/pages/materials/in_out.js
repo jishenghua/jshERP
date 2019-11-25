@@ -213,7 +213,7 @@
                                 depotString = depotString + depot.id + ",";
                             }
                         }
-                        depotString = depotString.substring(1, depotString.length-1);
+                        depotString = depotString.substring(0, depotString.length-1);
                     }
                 } else {
                     $.messager.alert('提示', '查找系统基础信息异常,请与管理员联系！', 'error');
