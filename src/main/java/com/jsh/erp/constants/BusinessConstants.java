@@ -151,55 +151,6 @@ public class BusinessConstants {
      * 条
      * */
     public static final String LOG_DATA_UNIT = "条";
-    /**
-     * 模块中文名称
-     * 模块对应的标识
-     * */
-    public static final String LOG_MODULE_NAME_USER= "用户";
-    public static final String LOG_INTERFACE_NAME_USER= "user";
-    public static final String LOG_MODULE_NAME_ROLE= "角色";
-    public static final String LOG_INTERFACE_NAME_ROLE= "role";
-    public static final String LOG_MODULE_NAME_APP= "应用";
-    public static final String LOG_INTERFACE_NAME_APP= "app";
-    public static final String LOG_MODULE_NAME_DEPOT= "仓库";
-    public static final String LOG_INTERFACE_NAME_DEPOT= "depot";
-    public static final String LOG_MODULE_NAME_FUNCTIONS= "功能";
-    public static final String LOG_INTERFACE_NAME_FUNCTIONS= "functions";
-    public static final String LOG_MODULE_NAME_IN_OUT_ITEM= "收支项目";
-    public static final String LOG_INTERFACE_NAME_IN_OUT_ITEM= "inOutItem";
-    public static final String LOG_MODULE_NAME_UNIT= "计量单位";
-    public static final String LOG_INTERFACE_NAME_UNIT= "unit";
-    public static final String LOG_MODULE_NAME_PERSON= "经手人";
-    public static final String LOG_INTERFACE_NAME_PERSON= "person";
-    public static final String LOG_MODULE_NAME_USER_BUSINESS= "关联关系";
-    public static final String LOG_INTERFACE_NAME_USER_BUSINESS= "userBusiness";
-    public static final String LOG_MODULE_NAME_SYSTEM_CONFIG= "系统配置";
-    public static final String LOG_INTERFACE_NAME_SYSTEM_CONFIG= "systemConfig";
-    public static final String LOG_MODULE_NAME_MATERIAL_PROPERTY= "商品属性";
-    public static final String LOG_INTERFACE_NAME_MATERIAL_PROPERTY= "materialProperty";
-    public static final String LOG_MODULE_NAME_ACCOUNT= "账户";
-    public static final String LOG_INTERFACE_NAME_ACCOUNT= "account";
-    public static final String LOG_MODULE_NAME_SUPPLIER= "商家";
-    public static final String LOG_INTERFACE_NAME_SUPPLIER= "supplier";
-    public static final String LOG_MODULE_NAME_MATERIAL_CATEGORY= "商品类型";
-    public static final String LOG_INTERFACE_NAME_MATERIAL_CATEGORY= "materialCategory";
-    public static final String LOG_MODULE_NAME_MATERIAL= "商品";
-    public static final String LOG_INTERFACE_NAME_MATERIAL= "material";
-    public static final String LOG_MODULE_NAME_DEPOT_HEAD= "单据";
-    public static final String LOG_INTERFACE_NAME_DEPOT_HEAD= "depotHead";
-    public static final String LOG_MODULE_NAME_DEPOT_ITEM= "单据明细";
-    public static final String LOG_INTERFACE_NAME_DEPOT_ITEM= "depotItem";
-    public static final String LOG_MODULE_NAME_ACCOUNT_HEAD= "财务";
-    public static final String LOG_INTERFACE_NAME_ACCOUNT_HEAD= "accountHead";
-    public static final String LOG_MODULE_NAME_ACCOUNT_ITEM= "财务明细";
-    public static final String LOG_INTERFACE_NAME_ACCOUNT_ITEM= "accountItem";
-    public static final String LOG_MODULE_NAME_SERIAL_NUMBER= "序列号";
-    public static final String LOG_INTERFACE_NAME_SERIAL_NUMBER= "serialNumber";
-    public static final String LOG_MODULE_NAME_ORGANIZATION= "机构";
-    public static final String LOG_INTERFACE_NAME_ORGANIZATION= "organization";
-
-    public static final String TYPE_NAME_ROLE_APP = "RoleAPP";
-    public static final String TYPE_NAME_ROLE_FUNCTIONS = "RoleFunctions";
 
     /**
      * 删除类型

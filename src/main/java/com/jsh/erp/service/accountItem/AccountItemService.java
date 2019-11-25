@@ -95,6 +95,7 @@ public class AccountItemService {
         int result=0;
         try{
             result = accountItemMapper.insertSelective(accountItem);
+            logService.insertLog("财务明细", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -102,12 +103,14 @@ public class AccountItemService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateAccountItem(String beanJson, Long id)throws Exception {
+    public int updateAccountItem(String beanJson, Long id, HttpServletRequest request)throws Exception {
         AccountItem accountItem = JSONObject.parseObject(beanJson, AccountItem.class);
         accountItem.setId(id);
         int result=0;
         try{
             result = accountItemMapper.updateByPrimaryKeySelective(accountItem);
+            logService.insertLog("财务明细",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -115,10 +118,12 @@ public class AccountItemService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int deleteAccountItem(Long id)throws Exception {
+    public int deleteAccountItem(Long id, HttpServletRequest request)throws Exception {
         int result=0;
         try{
             result = accountItemMapper.deleteByPrimaryKey(id);
+            logService.insertLog("财务明细",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(id).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -126,13 +131,14 @@ public class AccountItemService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteAccountItem(String ids)throws Exception {
+    public int batchDeleteAccountItem(String ids, HttpServletRequest request)throws Exception {
         List<Long> idList = StringUtil.strToLongList(ids);
         AccountItemExample example = new AccountItemExample();
         example.createCriteria().andIdIn(idList);
         int result=0;
         try{
             result = accountItemMapper.deleteByExample(example);
+            logService.insertLog("财务明细", "批量删除,id集:" + ids, request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -184,7 +190,7 @@ public class AccountItemService {
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public String saveDetials(String inserted, String deleted, String updated, Long headerId, String listType) throws Exception {
-        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_ACCOUNT_ITEM,
+        logService.insertLog("财务明细",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(",headerId:").append(headerId).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         //转为json
@@ -257,7 +263,7 @@ public class AccountItemService {
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteAccountItemByIds(String ids) throws Exception{
-        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_ACCOUNT_ITEM,
+        logService.insertLog("财务明细",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();

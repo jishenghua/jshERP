@@ -72,7 +72,6 @@ public class CommonQueryManager {
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insert(String apiName, String beanJson, HttpServletRequest request) throws Exception{
         if (StringUtil.isNotEmpty(apiName)) {
-            logService.insertLog(apiName, BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
             return container.getCommonQuery(apiName).insert(beanJson, request);
         }
         return 0;
@@ -88,9 +87,7 @@ public class CommonQueryManager {
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int update(String apiName, String beanJson, Long id, HttpServletRequest request)throws Exception {
         if (StringUtil.isNotEmpty(apiName)) {
-            logService.insertLog(apiName,
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
-            return container.getCommonQuery(apiName).update(beanJson, id);
+            return container.getCommonQuery(apiName).update(beanJson, id, request);
         }
         return 0;
     }
@@ -104,9 +101,7 @@ public class CommonQueryManager {
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int delete(String apiName, Long id, HttpServletRequest request)throws Exception {
         if (StringUtil.isNotEmpty(apiName)) {
-            logService.insertLog(apiName,
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(id).toString(), request);
-            return container.getCommonQuery(apiName).delete(id);
+            return container.getCommonQuery(apiName).delete(id, request);
         }
         return 0;
     }
@@ -120,8 +115,7 @@ public class CommonQueryManager {
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDelete(String apiName, String ids, HttpServletRequest request)throws Exception {
         if (StringUtil.isNotEmpty(apiName)) {
-            logService.insertLog(apiName, "批量删除,id集:" + ids, request);
-            return container.getCommonQuery(apiName).batchDelete(ids);
+            return container.getCommonQuery(apiName).batchDelete(ids, request);
         }
         return 0;
     }
@@ -139,10 +133,5 @@ public class CommonQueryManager {
         }
         return 0;
     }
-
-
-
-
-
 
 }

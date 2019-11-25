@@ -92,6 +92,7 @@ public class PersonService {
         int result=0;
         try{
             result=personMapper.insertSelective(person);
+            logService.insertLog("经手人", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -99,12 +100,14 @@ public class PersonService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updatePerson(String beanJson, Long id)throws Exception {
+    public int updatePerson(String beanJson, Long id, HttpServletRequest request)throws Exception {
         Person person = JSONObject.parseObject(beanJson, Person.class);
         person.setId(id);
         int result=0;
         try{
             result=personMapper.updateByPrimaryKeySelective(person);
+            logService.insertLog("经手人",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -112,10 +115,12 @@ public class PersonService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int deletePerson(Long id)throws Exception {
+    public int deletePerson(Long id, HttpServletRequest request)throws Exception {
         int result=0;
         try{
             result=personMapper.deleteByPrimaryKey(id);
+            logService.insertLog("经手人",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(id).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -123,13 +128,14 @@ public class PersonService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeletePerson(String ids) throws Exception{
+    public int batchDeletePerson(String ids, HttpServletRequest request) throws Exception{
         List<Long> idList = StringUtil.strToLongList(ids);
         PersonExample example = new PersonExample();
         example.createCriteria().andIdIn(idList);
         int result=0;
         try{
             result=personMapper.deleteByExample(example);
+            logService.insertLog("经手人", "批量删除,id集:" + ids, request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -183,7 +189,7 @@ public class PersonService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeletePersonByIds(String ids)throws Exception {
-        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_PERSON,
+        logService.insertLog("经手人",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();

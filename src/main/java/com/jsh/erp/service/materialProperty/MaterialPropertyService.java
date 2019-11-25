@@ -87,6 +87,7 @@ public class MaterialPropertyService {
         int  result=0;
         try{
             result=materialPropertyMapper.insertSelective(materialProperty);
+            logService.insertLog("商品属性", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -94,12 +95,14 @@ public class MaterialPropertyService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateMaterialProperty(String beanJson, Long id)throws Exception {
+    public int updateMaterialProperty(String beanJson, Long id, HttpServletRequest request)throws Exception {
         MaterialProperty materialProperty = JSONObject.parseObject(beanJson, MaterialProperty.class);
         materialProperty.setId(id);
         int  result=0;
         try{
             result=materialPropertyMapper.updateByPrimaryKeySelective(materialProperty);
+            logService.insertLog("商品属性",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -107,10 +110,12 @@ public class MaterialPropertyService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int deleteMaterialProperty(Long id)throws Exception {
+    public int deleteMaterialProperty(Long id, HttpServletRequest request)throws Exception {
         int  result=0;
         try{
             result=materialPropertyMapper.deleteByPrimaryKey(id);
+            logService.insertLog("商品属性",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(id).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -118,13 +123,14 @@ public class MaterialPropertyService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteMaterialProperty(String ids)throws Exception {
+    public int batchDeleteMaterialProperty(String ids, HttpServletRequest request)throws Exception {
         List<Long> idList = StringUtil.strToLongList(ids);
         MaterialPropertyExample example = new MaterialPropertyExample();
         example.createCriteria().andIdIn(idList);
         int  result=0;
         try{
             result=materialPropertyMapper.deleteByExample(example);
+            logService.insertLog("商品属性", "批量删除,id集:" + ids, request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -136,7 +142,7 @@ public class MaterialPropertyService {
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteMaterialPropertyByIds(String ids) throws Exception{
-        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_MATERIAL_PROPERTY,
+        logService.insertLog("商品属性",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();

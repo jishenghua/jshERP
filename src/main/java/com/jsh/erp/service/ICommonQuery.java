@@ -50,7 +50,7 @@ public interface ICommonQuery {
      * @param beanJson
      * @return
      */
-    int update(String beanJson, Long id) throws Exception;
+    int update(String beanJson, Long id, HttpServletRequest request) throws Exception;
 
     /**
      * 删除数据
@@ -58,7 +58,7 @@ public interface ICommonQuery {
      * @param id
      * @return
      */
-    int delete(Long id) throws Exception;
+    int delete(Long id, HttpServletRequest request) throws Exception;
 
     /**
      * 批量删除数据
@@ -66,7 +66,7 @@ public interface ICommonQuery {
      * @param ids
      * @return
      */
-    int batchDelete(String ids) throws Exception;
+    int batchDelete(String ids, HttpServletRequest request) throws Exception;
 
     /**
      * 查询名称是否存在

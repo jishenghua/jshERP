@@ -88,6 +88,7 @@ public class FunctionsService {
         int result=0;
         try{
             result=functionsMapper.insertSelective(depot);
+            logService.insertLog("功能", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -95,12 +96,14 @@ public class FunctionsService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateFunctions(String beanJson, Long id) throws Exception{
+    public int updateFunctions(String beanJson, Long id, HttpServletRequest request) throws Exception{
         Functions depot = JSONObject.parseObject(beanJson, Functions.class);
         depot.setId(id);
         int result=0;
         try{
             result=functionsMapper.updateByPrimaryKeySelective(depot);
+            logService.insertLog("功能",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -108,10 +111,12 @@ public class FunctionsService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int deleteFunctions(Long id)throws Exception {
+    public int deleteFunctions(Long id, HttpServletRequest request)throws Exception {
         int result=0;
         try{
             result=functionsMapper.deleteByPrimaryKey(id);
+            logService.insertLog("功能",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(id).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -119,13 +124,14 @@ public class FunctionsService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteFunctions(String ids)throws Exception {
+    public int batchDeleteFunctions(String ids, HttpServletRequest request)throws Exception {
         List<Long> idList = StringUtil.strToLongList(ids);
         FunctionsExample example = new FunctionsExample();
         example.createCriteria().andIdIn(idList);
         int result=0;
         try{
             result=functionsMapper.deleteByExample(example);
+            logService.insertLog("功能", "批量删除,id集:" + ids, request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -189,7 +195,7 @@ public class FunctionsService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteFunctionsByIds(String ids)throws Exception {
-        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_FUNCTIONS,
+        logService.insertLog("功能",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();

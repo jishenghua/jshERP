@@ -140,7 +140,10 @@ public class DepotItemController {
                               HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
-        Long tenantId = Long.parseLong(request.getSession().getAttribute("tenantId").toString());
+        Long tenantId = null;
+        if(request.getSession().getAttribute("tenantId")!=null) {
+            tenantId = Long.parseLong(request.getSession().getAttribute("tenantId").toString());
+        }
         try {
             List<DepotItemVo4WithInfoEx> dataList = new ArrayList<DepotItemVo4WithInfoEx>();
             if(headerId != 0) {

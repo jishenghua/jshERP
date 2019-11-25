@@ -122,6 +122,7 @@ public class AccountService {
         int result=0;
         try{
             result = accountMapper.insertSelective(account);
+            logService.insertLog("账户", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -129,12 +130,14 @@ public class AccountService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateAccount(String beanJson, Long id)throws Exception {
+    public int updateAccount(String beanJson, Long id, HttpServletRequest request)throws Exception {
         Account account = JSONObject.parseObject(beanJson, Account.class);
         account.setId(id);
         int result=0;
         try{
             result = accountMapper.updateByPrimaryKeySelective(account);
+            logService.insertLog("账户",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -142,10 +145,12 @@ public class AccountService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int deleteAccount(Long id) throws Exception{
+    public int deleteAccount(Long id, HttpServletRequest request) throws Exception{
         int result=0;
         try{
             result = accountMapper.deleteByPrimaryKey(id);
+            logService.insertLog("账户",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(id).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -153,13 +158,14 @@ public class AccountService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteAccount(String ids)throws Exception {
+    public int batchDeleteAccount(String ids, HttpServletRequest request)throws Exception {
         List<Long> idList = StringUtil.strToLongList(ids);
         AccountExample example = new AccountExample();
         example.createCriteria().andIdIn(idList);
         int result=0;
         try{
             result = accountMapper.deleteByExample(example);
+            logService.insertLog("账户", "批量删除,id集:" + ids, request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -421,7 +427,7 @@ public class AccountService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateAmountIsDefault(Boolean isDefault, Long accountId) throws Exception{
-        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_ACCOUNT,BusinessConstants.LOG_OPERATION_TYPE_EDIT+accountId,
+        logService.insertLog("账户",BusinessConstants.LOG_OPERATION_TYPE_EDIT+accountId,
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         Account account = new Account();
         account.setIsdefault(isDefault);
@@ -437,7 +443,7 @@ public class AccountService {
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteAccountByIds(String ids) throws Exception{
-        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_ACCOUNT,
+        logService.insertLog("账户",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();

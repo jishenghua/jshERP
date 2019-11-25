@@ -52,18 +52,18 @@ public class PersonComponent implements ICommonQuery {
     }
 
     @Override
-    public int update(String beanJson, Long id)throws Exception {
-        return personService.updatePerson(beanJson, id);
+    public int update(String beanJson, Long id, HttpServletRequest request)throws Exception {
+        return personService.updatePerson(beanJson, id, request);
     }
 
     @Override
-    public int delete(Long id)throws Exception {
-        return personService.deletePerson(id);
+    public int delete(Long id, HttpServletRequest request)throws Exception {
+        return personService.deletePerson(id, request);
     }
 
     @Override
-    public int batchDelete(String ids)throws Exception {
-        return personService.batchDeletePerson(ids);
+    public int batchDelete(String ids, HttpServletRequest request)throws Exception {
+        return personService.batchDeletePerson(ids, request);
     }
 
     @Override

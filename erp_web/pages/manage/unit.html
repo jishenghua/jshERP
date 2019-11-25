@@ -319,6 +319,9 @@
     var oldUnit = "";
 
     function addUnit() {
+        if(checkPower()){
+            return;
+        }
         $('#unitDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加计量单位');
         $(".window-mask").css({width: webW, height: webH});
         $('#unitFM').form('clear');

@@ -103,6 +103,7 @@ public class DepotService {
         int result=0;
         try{
             result=depotMapper.insertSelective(depot);
+            logService.insertLog("仓库", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -110,12 +111,14 @@ public class DepotService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateDepot(String beanJson, Long id) throws Exception{
+    public int updateDepot(String beanJson, Long id, HttpServletRequest request) throws Exception{
         Depot depot = JSONObject.parseObject(beanJson, Depot.class);
         depot.setId(id);
         int result=0;
         try{
             result= depotMapper.updateByPrimaryKeySelective(depot);
+            logService.insertLog("仓库",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -123,10 +126,12 @@ public class DepotService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int deleteDepot(Long id)throws Exception {
+    public int deleteDepot(Long id, HttpServletRequest request)throws Exception {
         int result=0;
         try{
             result= depotMapper.deleteByPrimaryKey(id);
+            logService.insertLog("仓库",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(id).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -134,13 +139,14 @@ public class DepotService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteDepot(String ids) throws Exception{
+    public int batchDeleteDepot(String ids, HttpServletRequest request) throws Exception{
         List<Long> idList = StringUtil.strToLongList(ids);
         DepotExample example = new DepotExample();
         example.createCriteria().andIdIn(idList);
         int result=0;
         try{
             result= depotMapper.deleteByExample(example);
+            logService.insertLog("仓库", "批量删除,id集:" + ids, request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -196,7 +202,7 @@ public class DepotService {
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteDepotByIds(String ids)throws Exception {
-        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_DEPOT,
+        logService.insertLog("仓库",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();
@@ -272,7 +278,7 @@ public class DepotService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateDepotIsDefault(Boolean isDefault, Long depotID) throws Exception{
-        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_DEPOT,BusinessConstants.LOG_OPERATION_TYPE_EDIT+depotID,
+        logService.insertLog("仓库",BusinessConstants.LOG_OPERATION_TYPE_EDIT+depotID,
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         Depot depot = new Depot();
         depot.setIsDefault(isDefault);

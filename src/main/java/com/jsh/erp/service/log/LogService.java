@@ -96,7 +96,7 @@ public class LogService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateLog(String beanJson, Long id)throws Exception {
+    public int updateLog(String beanJson, Long id, HttpServletRequest request)throws Exception {
         Log log = JSONObject.parseObject(beanJson, Log.class);
         log.setId(id);
         int result=0;
@@ -109,7 +109,7 @@ public class LogService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int deleteLog(Long id)throws Exception {
+    public int deleteLog(Long id, HttpServletRequest request)throws Exception {
         int result=0;
         try{
             result=logMapper.deleteByPrimaryKey(id);
@@ -120,7 +120,7 @@ public class LogService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteLog(String ids)throws Exception {
+    public int batchDeleteLog(String ids, HttpServletRequest request)throws Exception {
         List<Long> idList = StringUtil.strToLongList(ids);
         LogExample example = new LogExample();
         example.createCriteria().andIdIn(idList);
@@ -148,70 +148,22 @@ public class LogService {
         }
     }
 
-    public String getModule(String apiName)throws Exception{
-        String moduleName = null;
-        switch (apiName) {
-            case BusinessConstants.LOG_INTERFACE_NAME_USER:
-                moduleName = BusinessConstants.LOG_MODULE_NAME_USER; break;
-            case BusinessConstants.LOG_INTERFACE_NAME_ROLE:
-                moduleName = BusinessConstants.LOG_MODULE_NAME_ROLE; break;
-            case BusinessConstants.LOG_INTERFACE_NAME_APP:
-                moduleName =BusinessConstants.LOG_MODULE_NAME_APP; break;
-            case BusinessConstants.LOG_INTERFACE_NAME_DEPOT:
-                moduleName = BusinessConstants.LOG_MODULE_NAME_DEPOT; break;
-            case BusinessConstants.LOG_INTERFACE_NAME_FUNCTIONS:
-                moduleName = BusinessConstants.LOG_MODULE_NAME_FUNCTIONS; break;
-            case BusinessConstants.LOG_INTERFACE_NAME_IN_OUT_ITEM:
-                moduleName = BusinessConstants.LOG_MODULE_NAME_IN_OUT_ITEM; break;
-            case BusinessConstants.LOG_INTERFACE_NAME_UNIT:
-                moduleName = BusinessConstants.LOG_MODULE_NAME_UNIT; break;
-            case BusinessConstants.LOG_INTERFACE_NAME_PERSON:
-                moduleName = BusinessConstants.LOG_MODULE_NAME_PERSON; break;
-            case BusinessConstants.LOG_INTERFACE_NAME_USER_BUSINESS:
-                moduleName = BusinessConstants.LOG_MODULE_NAME_USER_BUSINESS; break;
-            case BusinessConstants.LOG_INTERFACE_NAME_SYSTEM_CONFIG:
-                moduleName = BusinessConstants.LOG_MODULE_NAME_SYSTEM_CONFIG; break;
-            case BusinessConstants.LOG_INTERFACE_NAME_MATERIAL_PROPERTY:
-                moduleName = BusinessConstants.LOG_MODULE_NAME_MATERIAL_PROPERTY; break;
-            case BusinessConstants.LOG_INTERFACE_NAME_ACCOUNT:
-                moduleName = BusinessConstants.LOG_MODULE_NAME_ACCOUNT; break;
-            case BusinessConstants.LOG_INTERFACE_NAME_SUPPLIER:
-                moduleName = BusinessConstants.LOG_MODULE_NAME_SUPPLIER; break;
-            case BusinessConstants.LOG_INTERFACE_NAME_MATERIAL_CATEGORY:
-                moduleName = BusinessConstants.LOG_MODULE_NAME_MATERIAL_CATEGORY; break;
-            case BusinessConstants.LOG_INTERFACE_NAME_MATERIAL:
-                moduleName = BusinessConstants.LOG_MODULE_NAME_MATERIAL; break;
-            case BusinessConstants.LOG_INTERFACE_NAME_DEPOT_HEAD:
-                moduleName = BusinessConstants.LOG_MODULE_NAME_DEPOT_HEAD; break;
-            case BusinessConstants.LOG_INTERFACE_NAME_DEPOT_ITEM:
-                moduleName = BusinessConstants.LOG_MODULE_NAME_DEPOT_ITEM; break;
-            case BusinessConstants.LOG_INTERFACE_NAME_ACCOUNT_HEAD:
-                moduleName = BusinessConstants.LOG_MODULE_NAME_ACCOUNT_HEAD; break;
-            case BusinessConstants.LOG_INTERFACE_NAME_ACCOUNT_ITEM:
-                moduleName = BusinessConstants.LOG_MODULE_NAME_ACCOUNT_ITEM; break;
-            case BusinessConstants.LOG_INTERFACE_NAME_SERIAL_NUMBER:
-                moduleName = BusinessConstants.LOG_MODULE_NAME_SERIAL_NUMBER; break;
-            case BusinessConstants.LOG_INTERFACE_NAME_ORGANIZATION:
-                moduleName = BusinessConstants.LOG_MODULE_NAME_ORGANIZATION; break;
-        }
-        return moduleName;
-    }
-
-    public void insertLog(String apiName, String type, HttpServletRequest request)throws Exception{
-        Log log = new Log();
-        log.setUserid(getUserId(request));
-        log.setOperation(getModule(apiName));
-        log.setClientip(getLocalIp(request));
-        log.setCreatetime(new Date());
-        Byte status = 0;
-        log.setStatus(status);
-        log.setContentdetails(type + getModule(apiName));
+    public void insertLog(String moduleName, String type, HttpServletRequest request)throws Exception{
         try{
-            logMapper.insertSelective(log);
+            Long userId = getUserId(request);
+            if(userId!=null) {
+                Log log = new Log();
+                log.setUserid(userId);
+                log.setOperation(moduleName);
+                log.setClientip(getLocalIp(request));
+                log.setCreatetime(new Date());
+                Byte status = 0;
+                log.setStatus(status);
+                log.setContentdetails(type + moduleName);
+                logMapper.insertSelective(log);
+            }
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
-
     }
-
 }

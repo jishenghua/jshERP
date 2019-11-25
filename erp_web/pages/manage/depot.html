@@ -442,6 +442,9 @@
     var oldDepot = "";
 
     function addDepot() {
+        if(checkPower()){
+            return;
+        }
         $('#depotDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加仓库信息');
         $(".window-mask").css({width: webW, height: webH});
         $('#depotFM').form('clear');

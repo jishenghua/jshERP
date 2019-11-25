@@ -51,18 +51,18 @@ public class FunctionsComponent implements ICommonQuery {
     }
 
     @Override
-    public int update(String beanJson, Long id)throws Exception {
-        return functionsService.updateFunctions(beanJson, id);
+    public int update(String beanJson, Long id, HttpServletRequest request)throws Exception {
+        return functionsService.updateFunctions(beanJson, id, request);
     }
 
     @Override
-    public int delete(Long id)throws Exception {
-        return functionsService.deleteFunctions(id);
+    public int delete(Long id, HttpServletRequest request)throws Exception {
+        return functionsService.deleteFunctions(id, request);
     }
 
     @Override
-    public int batchDelete(String ids)throws Exception {
-        return functionsService.batchDeleteFunctions(ids);
+    public int batchDelete(String ids, HttpServletRequest request)throws Exception {
+        return functionsService.batchDeleteFunctions(ids, request);
     }
 
     @Override

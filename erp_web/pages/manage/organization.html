@@ -154,6 +154,9 @@
     });
 
     function addOrganization() {
+        if(checkPower()){
+            return;
+        }
         $('#OrganizationFM').form('clear');
         $('#organizationDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加机构信息');
         $(".window-mask").css({width: webW, height: webH});

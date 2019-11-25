@@ -102,6 +102,7 @@ public class AccountHeadService {
         int result=0;
         try{
             result = accountHeadMapper.insertSelective(accountHead);
+            logService.insertLog("财务", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -109,12 +110,14 @@ public class AccountHeadService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateAccountHead(String beanJson, Long id)throws Exception {
+    public int updateAccountHead(String beanJson, Long id, HttpServletRequest request)throws Exception {
         AccountHead accountHead = JSONObject.parseObject(beanJson, AccountHead.class);
         accountHead.setId(id);
         int result=0;
         try{
             result = accountHeadMapper.updateByPrimaryKeySelective(accountHead);
+            logService.insertLog("财务",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -122,10 +125,12 @@ public class AccountHeadService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int deleteAccountHead(Long id)throws Exception {
+    public int deleteAccountHead(Long id, HttpServletRequest request)throws Exception {
         int result=0;
         try{
             result = accountHeadMapper.deleteByPrimaryKey(id);
+            logService.insertLog("财务",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(id).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -133,13 +138,14 @@ public class AccountHeadService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteAccountHead(String ids)throws Exception {
+    public int batchDeleteAccountHead(String ids, HttpServletRequest request)throws Exception {
         List<Long> idList = StringUtil.strToLongList(ids);
         AccountHeadExample example = new AccountHeadExample();
         example.createCriteria().andIdIn(idList);
         int result=0;
         try{
             result = accountHeadMapper.deleteByExample(example);
+            logService.insertLog("财务", "批量删除,id集:" + ids, request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -257,7 +263,7 @@ public class AccountHeadService {
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteAccountHeadByIds(String ids)throws Exception {
-        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_ACCOUNT_HEAD,
+        logService.insertLog("财务",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();

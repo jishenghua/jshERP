@@ -49,18 +49,18 @@ public class MsgComponent implements ICommonQuery {
     }
 
     @Override
-    public int update(String beanJson, Long id)throws Exception {
-        return msgService.updateMsg(beanJson, id);
+    public int update(String beanJson, Long id, HttpServletRequest request)throws Exception {
+        return msgService.updateMsg(beanJson, id, request);
     }
 
     @Override
-    public int delete(Long id)throws Exception {
-        return msgService.deleteMsg(id);
+    public int delete(Long id, HttpServletRequest request)throws Exception {
+        return msgService.deleteMsg(id, request);
     }
 
     @Override
-    public int batchDelete(String ids)throws Exception {
-        return msgService.batchDeleteMsg(ids);
+    public int batchDelete(String ids, HttpServletRequest request)throws Exception {
+        return msgService.batchDeleteMsg(ids, request);
     }
 
     @Override

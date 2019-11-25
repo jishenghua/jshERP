@@ -50,18 +50,18 @@ public class UserComponent implements ICommonQuery {
     }
 
     @Override
-    public int update(String beanJson, Long id)throws Exception {
-        return userService.updateUser(beanJson, id);
+    public int update(String beanJson, Long id, HttpServletRequest request)throws Exception {
+        return userService.updateUser(beanJson, id, request);
     }
 
     @Override
-    public int delete(Long id)throws Exception {
-        return userService.deleteUser(id);
+    public int delete(Long id, HttpServletRequest request)throws Exception {
+        return userService.deleteUser(id, request);
     }
 
     @Override
-    public int batchDelete(String ids)throws Exception {
-        return userService.batchDeleteUser(ids);
+    public int batchDelete(String ids, HttpServletRequest request)throws Exception {
+        return userService.batchDeleteUser(ids, request);
     }
 
     @Override

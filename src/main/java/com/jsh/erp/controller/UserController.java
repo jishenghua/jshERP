@@ -82,6 +82,7 @@ public class UserController {
             //获取用户状态
             int userStatus = -1;
             try {
+                request.getSession().removeAttribute("tenantId");
                 userStatus = userService.validateUser(username, password);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -120,7 +121,7 @@ public class UserController {
                                 }
                             }
                         }
-                        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_USER,
+                        logService.insertLog("用户",
                                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_LOGIN).append(user.getId()).toString(),
                                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
                     } catch (Exception e) {

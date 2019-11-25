@@ -49,18 +49,18 @@ public class RoleComponent implements ICommonQuery {
     }
 
     @Override
-    public int update(String beanJson, Long id)throws Exception {
-        return roleService.updateRole(beanJson, id);
+    public int update(String beanJson, Long id, HttpServletRequest request)throws Exception {
+        return roleService.updateRole(beanJson, id, request);
     }
 
     @Override
-    public int delete(Long id)throws Exception {
-        return roleService.deleteRole(id);
+    public int delete(Long id, HttpServletRequest request)throws Exception {
+        return roleService.deleteRole(id, request);
     }
 
     @Override
-    public int batchDelete(String ids)throws Exception {
-        return roleService.batchDeleteRole(ids);
+    public int batchDelete(String ids, HttpServletRequest request)throws Exception {
+        return roleService.batchDeleteRole(ids, request);
     }
 
     @Override

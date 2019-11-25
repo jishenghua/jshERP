@@ -89,6 +89,7 @@ public class InOutItemService {
         int result=0;
         try{
             result=inOutItemMapper.insertSelective(depot);
+            logService.insertLog("收支项目", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -96,12 +97,14 @@ public class InOutItemService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateInOutItem(String beanJson, Long id)throws Exception {
+    public int updateInOutItem(String beanJson, Long id, HttpServletRequest request)throws Exception {
         InOutItem depot = JSONObject.parseObject(beanJson, InOutItem.class);
         depot.setId(id);
         int result=0;
         try{
             result=inOutItemMapper.updateByPrimaryKeySelective(depot);
+            logService.insertLog("收支项目",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -109,10 +112,12 @@ public class InOutItemService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int deleteInOutItem(Long id)throws Exception {
+    public int deleteInOutItem(Long id, HttpServletRequest request)throws Exception {
         int result=0;
         try{
             result=inOutItemMapper.deleteByPrimaryKey(id);
+            logService.insertLog("收支项目",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(id).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -120,13 +125,14 @@ public class InOutItemService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteInOutItem(String ids)throws Exception {
+    public int batchDeleteInOutItem(String ids, HttpServletRequest request)throws Exception {
         List<Long> idList = StringUtil.strToLongList(ids);
         InOutItemExample example = new InOutItemExample();
         example.createCriteria().andIdIn(idList);
         int result=0;
         try{
             result=inOutItemMapper.deleteByExample(example);
+            logService.insertLog("收支项目", "批量删除,id集:" + ids, request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -164,7 +170,7 @@ public class InOutItemService {
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteInOutItemByIds(String ids)throws Exception {
-        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_IN_OUT_ITEM,
+        logService.insertLog("收支项目",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();

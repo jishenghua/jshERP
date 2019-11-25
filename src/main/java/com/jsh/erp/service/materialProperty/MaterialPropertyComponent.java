@@ -48,18 +48,18 @@ public class MaterialPropertyComponent implements ICommonQuery {
     }
 
     @Override
-    public int update(String beanJson, Long id)throws Exception {
-        return materialPropertyService.updateMaterialProperty(beanJson, id);
+    public int update(String beanJson, Long id, HttpServletRequest request)throws Exception {
+        return materialPropertyService.updateMaterialProperty(beanJson, id, request);
     }
 
     @Override
-    public int delete(Long id)throws Exception {
-        return materialPropertyService.deleteMaterialProperty(id);
+    public int delete(Long id, HttpServletRequest request)throws Exception {
+        return materialPropertyService.deleteMaterialProperty(id, request);
     }
 
     @Override
-    public int batchDelete(String ids)throws Exception {
-        return materialPropertyService.batchDeleteMaterialProperty(ids);
+    public int batchDelete(String ids, HttpServletRequest request)throws Exception {
+        return materialPropertyService.batchDeleteMaterialProperty(ids, request);
     }
 
     @Override

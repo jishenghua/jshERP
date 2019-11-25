@@ -46,18 +46,18 @@ public class UserBusinessComponent implements ICommonQuery {
     }
 
     @Override
-    public int update(String beanJson, Long id)throws Exception {
-        return userBusinessService.updateUserBusiness(beanJson, id);
+    public int update(String beanJson, Long id, HttpServletRequest request)throws Exception {
+        return userBusinessService.updateUserBusiness(beanJson, id, request);
     }
 
     @Override
-    public int delete(Long id)throws Exception {
-        return userBusinessService.deleteUserBusiness(id);
+    public int delete(Long id, HttpServletRequest request)throws Exception {
+        return userBusinessService.deleteUserBusiness(id, request);
     }
 
     @Override
-    public int batchDelete(String ids)throws Exception {
-        return userBusinessService.batchDeleteUserBusiness(ids);
+    public int batchDelete(String ids, HttpServletRequest request)throws Exception {
+        return userBusinessService.batchDeleteUserBusiness(ids, request);
     }
 
     @Override

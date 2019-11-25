@@ -404,7 +404,7 @@ public class DepotHeadController {
             throw new BusinessParamCheckingException(ExceptionConstants.DEPOT_HEAD_OVER_LIMIT_FAILED_CODE,
                     ExceptionConstants.DEPOT_HEAD_OVER_LIMIT_FAILED_MSG);
         } else {
-            depotHeadService.addDepotHeadAndDetail(beanJson,inserted,deleted,updated,tenantId);
+            depotHeadService.addDepotHeadAndDetail(beanJson,inserted,deleted,updated,tenantId, request);
         }
         return result;
     }
@@ -431,7 +431,7 @@ public class DepotHeadController {
                                            HttpServletRequest request) throws  Exception{
         Long tenantId = Long.parseLong(request.getSession().getAttribute("tenantId").toString());
         JSONObject result = ExceptionConstants.standardSuccess();
-        depotHeadService.updateDepotHeadAndDetail(id,beanJson,inserted,deleted,updated,preTotalPrice,tenantId);
+        depotHeadService.updateDepotHeadAndDetail(id,beanJson,inserted,deleted,updated,preTotalPrice,tenantId,request);
         return result;
     }
     /**

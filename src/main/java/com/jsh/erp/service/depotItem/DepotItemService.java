@@ -107,6 +107,7 @@ public class DepotItemService {
         int result =0;
         try{
             result=depotItemMapper.insertSelective(depotItem);
+            logService.insertLog("单据明细", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -114,12 +115,14 @@ public class DepotItemService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateDepotItem(String beanJson, Long id)throws Exception {
+    public int updateDepotItem(String beanJson, Long id, HttpServletRequest request)throws Exception {
         DepotItem depotItem = JSONObject.parseObject(beanJson, DepotItem.class);
         depotItem.setId(id);
         int result =0;
         try{
             result=depotItemMapper.updateByPrimaryKeySelective(depotItem);
+            logService.insertLog("单据明细",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -127,10 +130,12 @@ public class DepotItemService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int deleteDepotItem(Long id)throws Exception {
+    public int deleteDepotItem(Long id, HttpServletRequest request)throws Exception {
         int result =0;
         try{
             result=depotItemMapper.deleteByPrimaryKey(id);
+            logService.insertLog("单据明细",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(id).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -138,13 +143,14 @@ public class DepotItemService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteDepotItem(String ids)throws Exception {
+    public int batchDeleteDepotItem(String ids, HttpServletRequest request)throws Exception {
         List<Long> idList = StringUtil.strToLongList(ids);
         DepotItemExample example = new DepotItemExample();
         example.createCriteria().andIdIn(idList);
         int result =0;
         try{
             result=depotItemMapper.deleteByExample(example);
+            logService.insertLog("单据明细", "批量删除,id集:" + ids, request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -284,8 +290,8 @@ public class DepotItemService {
      * 这里重点重申一下：BasicNumber=OperNumber*ratio
      * */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public String saveDetials(String inserted, String deleted, String updated, Long headerId, Long tenantId) throws Exception{
-        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_DEPOT_ITEM,
+    public String saveDetials(String inserted, String deleted, String updated, Long headerId, Long tenantId, HttpServletRequest request) throws Exception{
+        logService.insertLog("单据明细",
                 BusinessConstants.LOG_OPERATION_TYPE_ADD,
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         //查询单据主表信息
@@ -330,7 +336,7 @@ public class DepotItemService {
                                     userInfo);
                         }
                     }
-                    this.deleteDepotItem(tempDeletedJson.getLong("Id"));
+                    this.deleteDepotItem(tempDeletedJson.getLong("Id"), request);
                     bf.append(tempDeletedJson.getLong("Id"));
                     if(i<(deletedJson.size()-1)){
                         bf.append(",");
@@ -598,7 +604,7 @@ public class DepotItemService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteDepotItemByIds(String ids)throws Exception {
-        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_DEPOT_ITEM,
+        logService.insertLog("单据明细",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();

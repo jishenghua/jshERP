@@ -45,18 +45,18 @@ public class OrgaUserRelComponent implements ICommonQuery {
     }
 
     @Override
-    public int update(String beanJson, Long id)throws Exception {
-        return orgaUserRelService.updateOrgaUserRel(beanJson,id);
+    public int update(String beanJson, Long id, HttpServletRequest request)throws Exception {
+        return orgaUserRelService.updateOrgaUserRel(beanJson,id, request);
     }
 
     @Override
-    public int delete(Long id)throws Exception {
-        return orgaUserRelService.deleteOrgaUserRel(id);
+    public int delete(Long id, HttpServletRequest request)throws Exception {
+        return orgaUserRelService.deleteOrgaUserRel(id, request);
     }
 
     @Override
-    public int batchDelete(String ids)throws Exception {
-        return orgaUserRelService.batchDeleteOrgaUserRel(ids);
+    public int batchDelete(String ids, HttpServletRequest request)throws Exception {
+        return orgaUserRelService.batchDeleteOrgaUserRel(ids, request);
     }
 
     @Override

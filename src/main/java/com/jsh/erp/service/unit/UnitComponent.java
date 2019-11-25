@@ -48,18 +48,18 @@ public class UnitComponent implements ICommonQuery {
     }
 
     @Override
-    public int update(String beanJson, Long id)throws Exception {
-        return unitService.updateUnit(beanJson, id);
+    public int update(String beanJson, Long id, HttpServletRequest request)throws Exception {
+        return unitService.updateUnit(beanJson, id, request);
     }
 
     @Override
-    public int delete(Long id)throws Exception {
-        return unitService.deleteUnit(id);
+    public int delete(Long id, HttpServletRequest request)throws Exception {
+        return unitService.deleteUnit(id, request);
     }
 
     @Override
-    public int batchDelete(String ids)throws Exception {
-        return unitService.batchDeleteUnit(ids);
+    public int batchDelete(String ids, HttpServletRequest request)throws Exception {
+        return unitService.batchDeleteUnit(ids, request);
     }
 
     @Override

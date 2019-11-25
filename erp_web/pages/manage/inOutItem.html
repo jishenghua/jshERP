@@ -346,6 +346,9 @@
     var oldInOutItem = "";
 
     function addInOutItem() {
+        if(checkPower()){
+            return;
+        }
         $('#inOutItemDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加收支项目');
         $(".window-mask").css({width: webW, height: webH});
         $('#inOutItemFM').form('clear');

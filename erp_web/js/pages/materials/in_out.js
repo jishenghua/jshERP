@@ -53,7 +53,6 @@
 	//根据单据名称获取类型
 	function getType(){
 		listTitle = $("#tablePanel").prev().text();
-		depotString = "|";
 		//改变宽度和高度
 		$("#searchPanel").panel({width:webW-2});
 		$("#tablePanel").panel({width:webW-2});
@@ -397,7 +396,7 @@
 				text:'增加',
 				iconCls:'icon-add',
 				handler:function() {
-					addDepotHead();
+                    addDepotHead();
 				}
 			},
 			{
@@ -1425,6 +1424,9 @@
     }
 	//新增信息
 	function addDepotHead(){
+        if(checkPower()){
+        	return;
+		}
 		$('#depotHeadFM').form('clear');
 		var thisDateTime = getNowFormatDateTime(); //当前时间
 		$("#OperTime").val(thisDateTime);

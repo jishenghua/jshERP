@@ -72,6 +72,7 @@ public class UserBusinessService {
         int result=0;
         try{
             result=userBusinessMapper.insertSelective(userBusiness);
+            logService.insertLog("关联关系", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -79,12 +80,14 @@ public class UserBusinessService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateUserBusiness(String beanJson, Long id) throws Exception {
+    public int updateUserBusiness(String beanJson, Long id, HttpServletRequest request) throws Exception {
         UserBusiness userBusiness = JSONObject.parseObject(beanJson, UserBusiness.class);
         userBusiness.setId(id);
         int result=0;
         try{
             result=userBusinessMapper.updateByPrimaryKeySelective(userBusiness);
+            logService.insertLog("关联关系",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -92,10 +95,12 @@ public class UserBusinessService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int deleteUserBusiness(Long id)throws Exception {
+    public int deleteUserBusiness(Long id, HttpServletRequest request)throws Exception {
         int result=0;
         try{
             result=userBusinessMapper.deleteByPrimaryKey(id);
+            logService.insertLog("关联关系",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(id).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -103,13 +108,14 @@ public class UserBusinessService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteUserBusiness(String ids)throws Exception {
+    public int batchDeleteUserBusiness(String ids, HttpServletRequest request)throws Exception {
         List<Long> idList = StringUtil.strToLongList(ids);
         UserBusinessExample example = new UserBusinessExample();
         example.createCriteria().andIdIn(idList);
         int result=0;
         try{
             result=userBusinessMapper.deleteByExample(example);
+            logService.insertLog("关联关系", "批量删除,id集:" + ids, request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -175,7 +181,7 @@ public class UserBusinessService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateBtnStr(Long userBusinessId, String btnStr) throws Exception{
-        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_USER_BUSINESS,
+        logService.insertLog("关联关系",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(userBusinessId).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         UserBusiness userBusiness = new UserBusiness();
@@ -220,7 +226,7 @@ public class UserBusinessService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteUserBusinessByIds(String ids) throws Exception{
-        logService.insertLog(BusinessConstants.LOG_INTERFACE_NAME_USER_BUSINESS,
+        logService.insertLog("关联关系",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();
