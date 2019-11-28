@@ -670,3 +670,9 @@ ROW_FORMAT=COMPACT
 drop table databasechangelog;
 drop table databasechangeloglock;
 drop table jsh_app;
+
+-- ----------------------------
+-- 时间：2019年11月28日
+-- 单据编号表-改表名
+-- ----------------------------
+ALTER TABLE tbl_sequence RENAME TO jsh_sequence;

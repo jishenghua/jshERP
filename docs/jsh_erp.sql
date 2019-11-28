@@ -1762,10 +1762,10 @@ INSERT INTO `jsh_userbusiness` VALUES ('65', 'UserRole', '129', '[10]', null, '0
 INSERT INTO `jsh_userbusiness` VALUES ('66', 'UserRole', '130', '[10]', null, '0');
 
 -- ----------------------------
--- Table structure for tbl_sequence
+-- Table structure for jsh_sequence
 -- ----------------------------
-DROP TABLE IF EXISTS `tbl_sequence`;
-CREATE TABLE `tbl_sequence` (
+DROP TABLE IF EXISTS `jsh_sequence`;
+CREATE TABLE `jsh_sequence` (
   `seq_name` varchar(50) NOT NULL COMMENT '序列名称',
   `min_value` bigint(20) NOT NULL COMMENT '最小值',
   `max_value` bigint(20) NOT NULL COMMENT '最大值',
@@ -1776,9 +1776,9 @@ CREATE TABLE `tbl_sequence` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='sequence表';
 
 -- ----------------------------
--- Records of tbl_sequence
+-- Records of jsh_sequence
 -- ----------------------------
-INSERT INTO `tbl_sequence` VALUES ('depot_number_seq', '1', '999999999999999999', '304', '1', '单据编号sequence');
+INSERT INTO `jsh_sequence` VALUES ('depot_number_seq', '1', '999999999999999999', '304', '1', '单据编号sequence');
 
 -- ----------------------------
 -- Table structure for jsh_tenant

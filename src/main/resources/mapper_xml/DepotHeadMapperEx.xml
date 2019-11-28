@@ -436,11 +436,11 @@
     </update>
 
     <update id="updateBuildOnlyNumber">
-        update tbl_sequence set current_val = current_val + 1 where seq_name = 'depot_number_seq'
+        update jsh_sequence set current_val = current_val + 1 where seq_name = 'depot_number_seq'
     </update>
 
     <select id="getBuildOnlyNumber" resultType="java.lang.Long">
-      select current_val from tbl_sequence where seq_name = 'depot_number_seq'
+      select current_val from jsh_sequence where seq_name = 'depot_number_seq'
     </select>
 
     <update id="batchDeleteDepotHeadByIds">
