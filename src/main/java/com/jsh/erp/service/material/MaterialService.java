@@ -1,5 +1,7 @@
 package com.jsh.erp.service.material;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.jsh.erp.constants.BusinessConstants;
@@ -8,13 +10,19 @@ import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.mappers.DepotItemMapperEx;
 import com.jsh.erp.datasource.mappers.MaterialMapper;
 import com.jsh.erp.datasource.mappers.MaterialMapperEx;
+import com.jsh.erp.datasource.mappers.MaterialStockMapper;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
+import com.jsh.erp.service.depot.DepotService;
 import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.log.LogService;
+import com.jsh.erp.service.materialCategory.MaterialCategoryService;
+import com.jsh.erp.service.unit.UnitService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.BaseResponseInfo;
+import com.jsh.erp.utils.ExcelUtils;
 import com.jsh.erp.utils.StringUtil;
+import jxl.Sheet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -24,6 +32,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.*;
 
 @Service
@@ -42,6 +51,14 @@ public class MaterialService {
     private DepotItemMapperEx depotItemMapperEx;
     @Resource
     private DepotItemService depotItemService;
+    @Resource
+    private MaterialCategoryService materialCategoryService;
+    @Resource
+    private UnitService unitService;
+    @Resource
+    private MaterialStockMapper materialStockMapper;
+    @Resource
+    private DepotService depotService;
 
     public Material getMaterial(long id)throws Exception {
         Material result=null;
@@ -125,6 +142,22 @@ public class MaterialService {
         int result =0;
         try{
             result= materialMapper.insertSelective(material);
+            JSONObject mObj = JSON.parseObject(beanJson);
+            Long mId = material.getId();
+            if(mObj.get("stock")!=null) {
+                String stockStr = mObj.getString("stock");
+                JSONArray stockArr = JSONArray.parseArray(stockStr);
+                for(Object object: stockArr) {
+                    JSONObject jsonObj = (JSONObject)object;
+                    if(jsonObj.get("depotId")!=null && jsonObj.get("number")!=null) {
+                        String number = jsonObj.getString("number");
+                        Long depotId = jsonObj.getLong("depotId");
+                        if(number!=null && Double.valueOf(number)>0) {
+                            insertStockByMaterialAndDepot(depotId, mId, parseBigDecimalEx(number));
+                        }
+                    }
+                }
+            }
             logService.insertLog("商品", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
@@ -144,6 +177,25 @@ public class MaterialService {
                 materialMapperEx.updatePriceNullByPrimaryKey(id); //将价格置空
             } else {
                 materialMapperEx.updateUnitIdNullByPrimaryKey(id); //将多单位置空
+            }
+            JSONObject mObj = JSON.parseObject(beanJson);
+            if(mObj.get("stock")!=null) {
+                String stockStr = mObj.getString("stock");
+                JSONArray stockArr = JSONArray.parseArray(stockStr);
+                for (Object object : stockArr) {
+                    JSONObject jsonObj = (JSONObject) object;
+                    if (jsonObj.get("depotId") != null && jsonObj.get("number") != null) {
+                        String number = jsonObj.getString("number");
+                        Long depotId = jsonObj.getLong("depotId");
+                        //先清除再插入
+                        MaterialStockExample example = new MaterialStockExample();
+                        example.createCriteria().andMaterialIdEqualTo(id).andDepotIdEqualTo(depotId);
+                        materialStockMapper.deleteByExample(example);
+                        if (number != null && Double.valueOf(number) > 0) {
+                            insertStockByMaterialAndDepot(depotId, id, parseBigDecimalEx(number));
+                        }
+                    }
+                }
             }
             logService.insertLog("商品",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
@@ -296,27 +348,184 @@ public class MaterialService {
         }
         return resList;
     }
+
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public BaseResponseInfo importExcel(List<Material> mList) throws Exception {
+    public BaseResponseInfo importExcel(Sheet src) throws Exception {
+        List<Depot> depotList= depotService.getDepot();
+        int depotCount = depotList.size();
+        List<MaterialWithInitStock> mList = new ArrayList<MaterialWithInitStock>();
+        for (int i = 2; i < src.getRows(); i++) {
+            String name = ExcelUtils.getContent(src, i, 0); //名称
+            String model = ExcelUtils.getContent(src, i, 1); //型号
+            String categoryName = ExcelUtils.getContent(src, i, 2); //类型
+            String safetyStock = ExcelUtils.getContent(src, i, 3); //安全存量
+            String color = ExcelUtils.getContent(src, i, 4); //颜色
+            String unit = ExcelUtils.getContent(src, i, 5); //单位
+            //校验名称、型号、单位是否为空
+            if(StringUtil.isNotEmpty(name) && StringUtil.isNotEmpty(model) && StringUtil.isNotEmpty(unit)) {
+                MaterialWithInitStock m = new MaterialWithInitStock();
+                m.setName(name);
+                m.setModel(model);
+                Long categoryId = materialCategoryService.getCategoryIdByName(categoryName);
+                m.setCategoryid(categoryId);
+                m.setSafetystock(parseBigDecimalEx(safetyStock));
+                m.setColor(color);
+                String manyUnit = ExcelUtils.getContent(src, i, 6); //多单位
+                String ratio = ExcelUtils.getContent(src, i, 7); //比例
+                String retailPrice = ExcelUtils.getContent(src, i, 8); //零售价
+                String lowPrice = ExcelUtils.getContent(src, i, 9); //最低售价
+                String presetpriceone = ExcelUtils.getContent(src, i, 10); //预计采购价
+                String presetpricetwo = ExcelUtils.getContent(src, i, 11); //销售价
+                if(StringUtil.isNotEmpty(manyUnit.trim())){ //多单位
+                    String manyUnitAll = unit + "," + manyUnit + "(1:" + ratio + ")";
+                    Long unitId = unitService.getUnitIdByName(manyUnitAll);
+                    m.setUnitid(unitId);
+                    m.setFirstoutunit(unit); //首选出库单位
+                    m.setFirstinunit(manyUnit); //首选入库单位
+                    JSONArray arr = new JSONArray();
+                    JSONObject basicObj = new JSONObject();
+                    basicObj.put("Unit", unit);
+                    basicObj.put("RetailPrice", retailPrice);
+                    basicObj.put("LowPrice", lowPrice);
+                    basicObj.put("PresetPriceOne", presetpriceone);
+                    basicObj.put("PresetPriceTwo", presetpricetwo);
+                    JSONObject basicObjEx = new JSONObject();
+                    basicObjEx.put("basic", basicObj);
+                    JSONObject otherObj = new JSONObject();
+                    otherObj.put("Unit", manyUnit);
+                    otherObj.put("RetailPrice", parsePrice(retailPrice,ratio));
+                    otherObj.put("LowPrice", parsePrice(lowPrice,ratio));
+                    otherObj.put("PresetPriceOne", parsePrice(presetpriceone,ratio));
+                    otherObj.put("PresetPriceTwo", parsePrice(presetpricetwo,ratio));
+                    JSONObject otherObjEx = new JSONObject();
+                    otherObjEx.put("other", otherObj);
+                    arr.add(basicObjEx);
+                    arr.add(otherObjEx);
+                    m.setPricestrategy(arr.toJSONString());
+                } else {
+                    m.setUnit(unit);
+                    m.setRetailprice(parseBigDecimalEx(retailPrice));
+                    m.setLowprice(parseBigDecimalEx(lowPrice));
+                    m.setPresetpriceone(parseBigDecimalEx(presetpriceone));
+                    m.setPresetpricetwo(parseBigDecimalEx(presetpricetwo));
+                }
+                String enabled = ExcelUtils.getContent(src, i, 12); //状态
+                m.setEnabled(enabled.equals("1")? true: false);
+                //缓存各个仓库的库存信息
+                Map<Long, BigDecimal> stockMap = new HashMap<Long, BigDecimal>();
+                for(int j=1; j<=depotCount;j++) {
+                    int col = 12+j;
+                    if(col <= src.getColumns()){
+                        String depotName = ExcelUtils.getContent(src, 1, col); //获取仓库名称
+                        Long depotId = depotService.getIdByName(depotName);
+                        if(depotId!=0L){
+                            String stockStr = ExcelUtils.getContent(src, i, col);
+                            if(StringUtil.isNotEmpty(stockStr)) {
+                                stockMap.put(depotId, parseBigDecimalEx(stockStr));
+                            }
+                        }
+                    }
+                }
+                m.setStockMap(stockMap);
+                mList.add(m);
+            }
+        }
         logService.insertLog("商品",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_IMPORT).append(mList.size()).append(BusinessConstants.LOG_DATA_UNIT).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         BaseResponseInfo info = new BaseResponseInfo();
         Map<String, Object> data = new HashMap<String, Object>();
         try {
-            for(Material m: mList) {
-                materialMapper.insertSelective(m);
+            Long mId = 0L;
+            for(MaterialWithInitStock m: mList) {
+                //判断该商品是否存在，如果不存在就新增，如果存在就更新
+                List<Material> materials = getMaterialListByParam(m.getName(),m.getModel(),m.getColor(),m.getStandard(),
+                        m.getMfrs(),m.getUnit(),m.getUnitid());
+                if(materials.size()<=0) {
+                    materialMapperEx.insertSelectiveEx(m);
+                    mId = m.getId();
+                } else {
+                    mId = materials.get(0).getId();
+                    String materialJson = JSON.toJSONString(m);
+                    Material material = JSONObject.parseObject(materialJson, Material.class);
+                    material.setId(mId);
+                    materialMapper.updateByPrimaryKeySelective(material);
+                }
+                //给商品初始化库存
+                Map<Long, BigDecimal> stockMap = m.getStockMap();
+                Long depotId = null;
+                for(Depot depot: depotList){
+                    BigDecimal stock = stockMap.get(depot.getId());
+                    //先清除再插入
+                    MaterialStockExample example = new MaterialStockExample();
+                    example.createCriteria().andMaterialIdEqualTo(mId).andDepotIdEqualTo(depot.getId());
+                    materialStockMapper.deleteByExample(example);
+                    if(stock!=null && stock.compareTo(BigDecimal.ZERO)!=0) {
+                        depotId = depot.getId();
+                        insertStockByMaterialAndDepot(depotId, mId, stock);
+                    }
+                }
             }
             info.code = 200;
             data.put("message", "成功");
         } catch (Exception e) {
-            JshException.writeFail(logger, e);
             e.printStackTrace();
             info.code = 500;
             data.put("message", e.getMessage());
         }
         info.data = data;
         return info;
+    }
+
+    /**
+     * 根据条件返回产品列表
+     * @param name
+     * @param model
+     * @param color
+     * @param standard
+     * @param mfrs
+     * @param unit
+     * @param unitId
+     * @return
+     */
+    private List<Material> getMaterialListByParam(String name, String model, String color,
+                                                  String standard, String mfrs, String unit, Long unitId) {
+        MaterialExample example = new MaterialExample();
+        MaterialExample.Criteria criteria = example.createCriteria();
+        criteria.andNameEqualTo(name).andModelEqualTo(model);
+        if (StringUtil.isNotEmpty(color)) {
+            criteria.andColorEqualTo(color);
+        }
+        if (StringUtil.isNotEmpty(standard)) {
+            criteria.andStandardEqualTo(standard);
+        }
+        if (StringUtil.isNotEmpty(mfrs)) {
+            criteria.andMfrsEqualTo(mfrs);
+        }
+        if (StringUtil.isNotEmpty(unit)) {
+            criteria.andUnitEqualTo(unit);
+        }
+        if (unitId !=null) {
+            criteria.andUnitidEqualTo(unitId);
+        }
+        criteria.andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        List<Material> list = materialMapper.selectByExample(example);
+        return list;
+    }
+
+    /**
+     * 写入初始库存
+     * @param depotId
+     * @param mId
+     * @param stock
+     */
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public void insertStockByMaterialAndDepot(Long depotId, Long mId, BigDecimal stock){
+        MaterialStock materialStock = new MaterialStock();
+        materialStock.setDepotId(depotId);
+        materialStock.setMaterialId(mId);
+        materialStock.setNumber(stock);
+        materialStockMapper.insertSelective(materialStock); //存入初始库存
     }
 
     public List<Material> getMaterialEnableSerialNumberList(Map<String, Object> parameterMap)throws Exception {
@@ -386,5 +595,67 @@ public class MaterialService {
         deleteTotal= batchDeleteMaterialByIds(ids);
         return deleteTotal;
 
+    }
+
+    public BigDecimal parseBigDecimalEx(String str) throws Exception{
+        if(!StringUtil.isEmpty(str)) {
+            return  new BigDecimal(str);
+        } else {
+            return null;
+        }
+    }
+
+    public BigDecimal parsePrice(String price, String ratio) throws Exception{
+        if(StringUtil.isEmpty(price) || StringUtil.isEmpty(ratio)) {
+            return BigDecimal.ZERO;
+        } else {
+            BigDecimal pr=new BigDecimal(price);
+            BigDecimal r=new BigDecimal(ratio);
+            return pr.multiply(r);
+        }
+    }
+
+    /**
+     * 根据产品和仓库获取初始库存
+     * @param materialId
+     * @param depotId
+     * @return
+     */
+    public BigDecimal getInitStock(Long materialId, Long depotId) {
+        BigDecimal stock = BigDecimal.ZERO;
+        MaterialStockExample example = new MaterialStockExample();
+        example.createCriteria().andMaterialIdEqualTo(materialId).andDepotIdEqualTo(depotId)
+                .andDeleteFagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        List<MaterialStock> list = materialStockMapper.selectByExample(example);
+        if(list!=null && list.size()>0) {
+            stock = list.get(0).getNumber();
+        }
+        return stock;
+    }
+
+    /**
+     * 根据产品获取初始库存
+     * @param materialId
+     * @return
+     */
+    public BigDecimal getInitStockByMid(Long depotId, Long materialId) {
+        BigDecimal stock = BigDecimal.ZERO;
+        MaterialStockExample example = new MaterialStockExample();
+        if(depotId!=null) {
+            example.createCriteria().andMaterialIdEqualTo(materialId).andDepotIdEqualTo(depotId)
+                    .andDeleteFagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        } else {
+            example.createCriteria().andMaterialIdEqualTo(materialId)
+                    .andDeleteFagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        }
+        List<MaterialStock> list = materialStockMapper.selectByExample(example);
+        if(list!=null && list.size()>0) {
+            for(MaterialStock ms: list) {
+                if(ms!=null) {
+                    stock = stock.add(ms.getNumber());
+                }
+            }
+        }
+        return stock;
     }
 }

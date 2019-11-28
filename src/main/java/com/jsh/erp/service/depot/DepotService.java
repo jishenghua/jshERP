@@ -292,4 +292,19 @@ public class DepotService {
         }
         return result;
     }
+
+    /**
+     * 根据名称获取id
+     * @param name
+     */
+    public Long getIdByName(String name){
+        Long id = 0L;
+        DepotExample example = new DepotExample();
+        example.createCriteria().andNameEqualTo(name).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        List<Depot> list = depotMapper.selectByExample(example);
+        if(list!=null && list.size()>0) {
+            id = list.get(0).getId();
+        }
+        return id;
+    }
 }

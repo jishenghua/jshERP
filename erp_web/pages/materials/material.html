@@ -13,6 +13,7 @@
     <link type="text/css" rel="stylesheet" href="/css/material.css"/>
     <script type="text/javascript" src="/js/easyui-1.3.5/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="/js/easyui-1.3.5/locale/easyui-lang-zh_CN.js"></script>
+    <script src="/js/handlebars.js"></script>
     <script type="text/javascript" src="/js/common/outlook_in.js"></script>
     <script type="text/javascript" src="/js/common/common.js"></script>
     <script src="/js/common/jsherp.js"></script>
@@ -125,11 +126,11 @@
                         </td>
                     </tr>
                     <tr class="first-select-unit">
-                        <td style="height:30px;">首选出库单位</td>
+                        <td style="height:30px;">首选销售单位</td>
                         <td style="padding:5px">
                             <select name="FirstOutUnit" id="FirstOutUnit" style="width:180px;height: 20px"></select>
                         </td>
-                        <td>首选入库单位</td>
+                        <td>首选采购单位</td>
                         <td style="padding:5px">
                             <select name="FirstInUnit" id="FirstInUnit" style="width:180px;height: 20px"></select>
                         </td>
@@ -237,6 +238,9 @@
                     </tr>
                 </table>
             </div>
+            <div title="初始库存" style="padding:20px;">
+                <div id="initDepot"></div>
+            </div>
         </div>
     </form>
 </div>
@@ -251,18 +255,12 @@
      closed="true" buttons="#dlg-buttons5" modal="true" collapsible="false" closable="true">
     <form id="importExcelFM" method="post" enctype="multipart/form-data" action="/material/importExcel">
         <div class="fitem" style="padding:5px">
-            <label>文件名称&nbsp;&nbsp;</label>
-            <input name="materialFile" id="materialFile" type="file" style="width: 230px;height: 20px"/>
+            <label>表格模板&nbsp;&nbsp;</label>
+            <span><a href="/upload/excels/goods_template.xls"><b>Excel模板下载</b></a></span>
         </div>
         <div class="fitem" style="padding:5px">
-            <label><b>导入注意</b>&nbsp;&nbsp;</label><span>（多单位清空下，价格请用斜线隔开）</span>
-        </div>
-        <div class="fitem" style="padding:5px;display: none;">
-            <label>是否审查&nbsp;&nbsp;</label>
-            <select id="isCheck" name="isCheck" style="width: 230px;height: 20px">
-                <option value="0">是</option>
-                <option value="1" selected="selected">否</option>
-            </select>
+            <label>文件名称&nbsp;&nbsp;</label>
+            <input name="materialFile" id="materialFile" type="file" style="width: 230px;height: 20px"/>
         </div>
         <div id="dlg-buttons5">
             <a href="javascript:void(0)" id="saveimport" class="easyui-linkbutton" iconCls="icon-ok">导入</a>
@@ -271,6 +269,7 @@
         </div>
     </form>
 </div>
+
 <div id="forSelectMaterialCategoryDlg" class="easyui-dialog" style="width:380px;padding:10px 20px"
      closed="true" modal="true" cache="false" collapsible="false" closable="true">
 </div>
@@ -517,14 +516,9 @@
                 columns: [[
                     {field: 'id', width: 35, align: "center", checkbox: true},
                     {
-                        title: '操作', field: 'op', align: "center", width: 60, formatter: function (value, rec) {
+                        title: '操作', field: 'op', align: "center", width: 60, formatter: function (value, rec, index) {
                             var str = '';
-                            var rowInfo = rec.id + 'AaBb' + rec.name + 'AaBb' + rec.model + 'AaBb' + rec.color + 'AaBb' + rec.unit + 'AaBb' + rec.retailprice
-                                + 'AaBb' + rec.lowprice + 'AaBb' + rec.presetpriceone + 'AaBb' + rec.presetpricetwo + 'AaBb' + rec.remark + 'AaBb' + rec.standard
-                                + 'AaBb' + rec.color + 'AaBb' + rec.packing + 'AaBb' + rec.safetystock + 'AaBb' + rec.categoryid + 'AaBb' + rec.categoryName
-                                + 'AaBb' + rec.unitid + 'AaBb' + rec.unitName + 'AaBb' + rec.firstoutunit + 'AaBb' + rec.firstinunit
-                                + 'AaBb' + rec.mfrs + 'AaBb' + rec.otherfield1 + 'AaBb' + rec.otherfield2 + 'AaBb' + rec.otherfield3+ 'AaBb' + rec.enableserialnumber;
-                            str += '<img title="编辑" src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editMaterial(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
+                            str += '<img title="编辑" src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editMaterial(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
                             str += '<img title="删除" src="/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteMaterial(' + rec.id + ');"/>';
                             return str;
                         }
@@ -1141,6 +1135,7 @@
             oldManyUnit = "";
             materialID = 0;
             url = '/material/add';
+            initDepotList(materialID); //加载仓库列表页面
         }
 
         //检查商品名称是否存在 ++ 重名无法提示问题需要跟进
@@ -1245,6 +1240,17 @@
             objInfo.UnitId = $("#manyUnit").val();
             objInfo.CategoryId =$("#parentid").val();
             objInfo.PriceStrategy = JSON.stringify(priceStrategy);  //价格列表
+            //初始库存信息
+            var stockArr = [];
+            $("#initDepot input").each(function () {
+                var id = $(this).attr("data-id");
+                var val = $(this).val();
+                var stockObj = {};
+                stockObj.depotId = id;
+                stockObj.number = val;
+                stockArr.push(stockObj);
+            });
+            objInfo.stock = JSON.stringify(stockArr);
             $.ajax({
                 type: "post",
                 url: url,
@@ -1291,35 +1297,35 @@
         }
 
         //编辑信息
-        function editMaterial(materialTotalInfo) {
-            var materialInfo = materialTotalInfo.split("AaBb");
+        function editMaterial(index) {
+            var rowsdata = $("#tableData").datagrid("getRows")[index];
             bindMProperty(); //根据商品属性绑定
-            $("#Name").focus().val(materialInfo[1]);
-            $("#Color").focus().val(materialInfo[11]);
-            $("#EnableSerialNumber").val(materialInfo[24]=='1'?'1':'0');
+            $("#Name").focus().val(rowsdata.name);
+            $("#Color").focus().val(rowsdata.color);
+            $("#EnableSerialNumber").val(rowsdata.enableserialnumber=='1'?'1':'0');
             //商品类别id
-            $("#parentid").val(materialInfo[14] == "undefined" ? "" : materialInfo[14]);
+            $("#parentid").val(rowsdata.categoryid);
             //商品类别名称
-            $("#parentName").val(materialInfo[15] == "undefined" ? "" : materialInfo[15]);
-            mId = materialInfo[14];
-            mName = materialInfo[15];
-            $("#Packing").focus().val(materialInfo[12]);
-            $("#SafetyStock").focus().val(materialInfo[13]=="undefined" ? "" : materialInfo[13]);
-            $("#Model").val(materialInfo[2]);
-            $("#Standard").val(materialInfo[10] == "undefined" ? "" : materialInfo[10]);
-            $("#Color").val(materialInfo[3] == "undefined" ? "" : materialInfo[3]);
-            $("#Mfrs").val(materialInfo[20] == "undefined" ? "" : materialInfo[20]);
-            $("#OtherField1").val(materialInfo[21] == "undefined" ? "" : materialInfo[21]);
-            $("#OtherField2").val(materialInfo[22] == "undefined" ? "" : materialInfo[22]);
-            $("#OtherField3").val(materialInfo[23] == "undefined" ? "" : materialInfo[23]);
-            $("#Unit").val(materialInfo[4] == "undefined" ? "" : materialInfo[4]);
-            $("#RetailPrice").val(materialInfo[5] == "undefined" ? "" : materialInfo[5]);
-            $("#LowPrice").val(materialInfo[6] == "undefined" ? "" : materialInfo[6]);
-            $("#PresetPriceOne").val(materialInfo[7] == "undefined" ? "" : materialInfo[7]);
-            $("#PresetPriceTwo").val(materialInfo[8] == "undefined" ? "" : materialInfo[8]);
-            $("#Remark").val(materialInfo[9]);
-            $("#manyUnit").val(materialInfo[16]);
-            if (materialInfo[16] != "undefined") {
+            $("#parentName").val(rowsdata.categoryName);
+            mId = rowsdata.categoryid;
+            mName = rowsdata.categoryName;
+            $("#Packing").focus().val(rowsdata.packing);
+            $("#SafetyStock").focus().val(rowsdata.safetystock);
+            $("#Model").val(rowsdata.model);
+            $("#Standard").val(rowsdata.standard);
+            $("#Color").val(rowsdata.color);
+            $("#Mfrs").val(rowsdata.mfrs);
+            $("#OtherField1").val(rowsdata.otherfield1);
+            $("#OtherField2").val(rowsdata.otherfield2);
+            $("#OtherField3").val(rowsdata.otherfield3);
+            $("#Unit").val(rowsdata.unit);
+            $("#RetailPrice").val(rowsdata.retailprice);
+            $("#LowPrice").val(rowsdata.lowprice);
+            $("#PresetPriceOne").val(rowsdata.presetpriceone);
+            $("#PresetPriceTwo").val(rowsdata.presetpricetwo);
+            $("#Remark").val(rowsdata.remark);
+            $("#manyUnit").val(rowsdata.unitid);
+            if (rowsdata.unitid) {
                 $("#manyUnitCheck").prop("checked", true);
                 //当前为选中状态
                 $("#Unit").hide();
@@ -1336,10 +1342,10 @@
                     var basic = '<option value="' + arr[0] + '">' + arr[0] + '</option>';
                     var other = '<option value="' + arr[1] + '">' + arr[1] + '</option>';
                     firstOptions = firstOptions + basic + other;
-                    $("#FirstOutUnit").empty().append('<option value="">(空)</option>').append(firstOptions); //首选出库单位
-                    $("#FirstInUnit").empty().append('<option value="">(空)</option>').append(firstOptions); //首选入库单位
-                    $("#FirstOutUnit").val(materialInfo[18]);//首选出库单位
-                    $("#FirstInUnit").val(materialInfo[19]);//首选入库单位
+                    $("#FirstOutUnit").empty().append('<option value="">(空)</option>').append(firstOptions); //首选销售单位
+                    $("#FirstInUnit").empty().append('<option value="">(空)</option>').append(firstOptions); //首选采购单位
+                    $("#FirstOutUnit").val(rowsdata.firstoutunit);//首选销售单位
+                    $("#FirstInUnit").val(rowsdata.firstinunit);//首选采购单位
                 }
             }
             else {
@@ -1356,7 +1362,7 @@
             $.ajax({
                 url: '/material/findById',
                 data: {
-                    id: materialInfo[0]
+                    id: rowsdata.id
                 },
                 type: "get",
                 dataType: "json",
@@ -1385,26 +1391,53 @@
                 }
             });
 
-            oldName = materialInfo[1];
-            oldModel = materialInfo[2];
-            oldColor = materialInfo[11];
-            oldStandard = materialInfo[10];
-            oldMfrs = materialInfo[20];
-            oldOtherField1 = materialInfo[21];
-            oldOtherField2 = materialInfo[22];
-            oldOtherField3 = materialInfo[23];
-            oldUnit = materialInfo[4];
-            oldManyUnit = materialInfo[16];
+            oldName = rowsdata.name;
+            oldModel = rowsdata.model;
+            oldColor = rowsdata.color;
+            oldStandard = rowsdata.standard;
+            oldMfrs = rowsdata.mfrs;
+            oldOtherField1 = rowsdata.otherfield1;
+            oldOtherField2 = rowsdata.otherfield2;
+            oldOtherField3 = rowsdata.otherfield3;
+            oldUnit = rowsdata.unit;
+            oldManyUnit = rowsdata.unitid;
             $('#materialDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑商品信息');
             $(".window-mask").css({width: webW, height: webH});
-            materialID = materialInfo[0];
+            materialID = rowsdata.id;
             //焦点在名称输入框==定焦在输入文字后面
-            $("#Name").val("").focus().val(materialInfo[1]);
+            $("#Name").val("").focus().val(rowsdata.name);
             //选中基本资料tab
             $("#materialFM #tt .tabs li").first().click();
-            url = '/material/update?id=' + materialInfo[0];
+            url = '/material/update?id=' + rowsdata.id;
+            initDepotList(rowsdata.id); //加载仓库列表页面
         }
 
+        function initDepotList(mId) {
+            $.ajax({
+                type: "get",
+                url: "/depot/getAllListWithStock?mId=" + mId,
+                dataType: "json",
+                async: false,
+                success: function (res) {
+                    if (res && res.code == 200) {
+                        var json = {};
+                        json.depotList = res.data;
+                        $.ajax({
+                            type: "get",
+                            url: "../../../pages/template/init_depot_list.html?616",
+                            async: false,
+                            success: function (tem) {
+                                if (tem) {
+                                    var template = Handlebars.compile(tem);
+                                    var htmlValue = template(json);
+                                    $("#initDepot").html(htmlValue);
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        }
 
         //搜索处理
         $("#searchBtn").unbind().bind({
@@ -1501,8 +1534,8 @@
                                         var basic = '<option value="' + arr[0] + '">' + arr[0] + '</option>';
                                         var other = '<option value="' + arr[1] + '">' + arr[1] + '</option>';
                                         firstOptions = firstOptions + basic + other;
-                                        $("#FirstOutUnit").empty().append('<option value="">(空)</option>').append(firstOptions); //首选出库单位
-                                        $("#FirstInUnit").empty().append('<option value="">(空)</option>').append(firstOptions); //首选入库单位
+                                        $("#FirstOutUnit").empty().append('<option value="">(空)</option>').append(firstOptions); //首选销售单位
+                                        $("#FirstInUnit").empty().append('<option value="">(空)</option>').append(firstOptions); //首选采购单位
                                         $("#basicUnit").text(arr[0]);
                                         $("#otherUnit").text(arr[1]);
                                     }

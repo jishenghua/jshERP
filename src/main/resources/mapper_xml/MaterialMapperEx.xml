@@ -174,5 +174,168 @@
         and ifnull(delete_Flag,'0') !='1'
     </select>
 
-
+    <insert id="insertSelectiveEx" parameterType="com.jsh.erp.datasource.entities.Material"
+            useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into jsh_material
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                Id,
+            </if>
+            <if test="categoryid != null">
+                CategoryId,
+            </if>
+            <if test="name != null">
+                Name,
+            </if>
+            <if test="mfrs != null">
+                Mfrs,
+            </if>
+            <if test="packing != null">
+                Packing,
+            </if>
+            <if test="safetystock != null">
+                SafetyStock,
+            </if>
+            <if test="model != null">
+                Model,
+            </if>
+            <if test="standard != null">
+                Standard,
+            </if>
+            <if test="color != null">
+                Color,
+            </if>
+            <if test="unit != null">
+                Unit,
+            </if>
+            <if test="remark != null">
+                Remark,
+            </if>
+            <if test="retailprice != null">
+                RetailPrice,
+            </if>
+            <if test="lowprice != null">
+                LowPrice,
+            </if>
+            <if test="presetpriceone != null">
+                PresetPriceOne,
+            </if>
+            <if test="presetpricetwo != null">
+                PresetPriceTwo,
+            </if>
+            <if test="unitid != null">
+                UnitId,
+            </if>
+            <if test="firstoutunit != null">
+                FirstOutUnit,
+            </if>
+            <if test="firstinunit != null">
+                FirstInUnit,
+            </if>
+            <if test="pricestrategy != null">
+                PriceStrategy,
+            </if>
+            <if test="enabled != null">
+                Enabled,
+            </if>
+            <if test="otherfield1 != null">
+                OtherField1,
+            </if>
+            <if test="otherfield2 != null">
+                OtherField2,
+            </if>
+            <if test="otherfield3 != null">
+                OtherField3,
+            </if>
+            <if test="enableserialnumber != null">
+                enableSerialNumber,
+            </if>
+            <if test="tenantId != null">
+                tenant_id,
+            </if>
+            <if test="deleteFlag != null">
+                delete_Flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="categoryid != null">
+                #{categoryid,jdbcType=BIGINT},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="mfrs != null">
+                #{mfrs,jdbcType=VARCHAR},
+            </if>
+            <if test="packing != null">
+                #{packing,jdbcType=DECIMAL},
+            </if>
+            <if test="safetystock != null">
+                #{safetystock,jdbcType=DECIMAL},
+            </if>
+            <if test="model != null">
+                #{model,jdbcType=VARCHAR},
+            </if>
+            <if test="standard != null">
+                #{standard,jdbcType=VARCHAR},
+            </if>
+            <if test="color != null">
+                #{color,jdbcType=VARCHAR},
+            </if>
+            <if test="unit != null">
+                #{unit,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="retailprice != null">
+                #{retailprice,jdbcType=DECIMAL},
+            </if>
+            <if test="lowprice != null">
+                #{lowprice,jdbcType=DECIMAL},
+            </if>
+            <if test="presetpriceone != null">
+                #{presetpriceone,jdbcType=DECIMAL},
+            </if>
+            <if test="presetpricetwo != null">
+                #{presetpricetwo,jdbcType=DECIMAL},
+            </if>
+            <if test="unitid != null">
+                #{unitid,jdbcType=BIGINT},
+            </if>
+            <if test="firstoutunit != null">
+                #{firstoutunit,jdbcType=VARCHAR},
+            </if>
+            <if test="firstinunit != null">
+                #{firstinunit,jdbcType=VARCHAR},
+            </if>
+            <if test="pricestrategy != null">
+                #{pricestrategy,jdbcType=VARCHAR},
+            </if>
+            <if test="enabled != null">
+                #{enabled,jdbcType=BIT},
+            </if>
+            <if test="otherfield1 != null">
+                #{otherfield1,jdbcType=VARCHAR},
+            </if>
+            <if test="otherfield2 != null">
+                #{otherfield2,jdbcType=VARCHAR},
+            </if>
+            <if test="otherfield3 != null">
+                #{otherfield3,jdbcType=VARCHAR},
+            </if>
+            <if test="enableserialnumber != null">
+                #{enableserialnumber,jdbcType=VARCHAR},
+            </if>
+            <if test="tenantId != null">
+                #{tenantId,jdbcType=BIGINT},
+            </if>
+            <if test="deleteFlag != null">
+                #{deleteFlag,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
 </mapper>
