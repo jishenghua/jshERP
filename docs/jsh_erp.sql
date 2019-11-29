@@ -1270,6 +1270,20 @@ INSERT INTO `jsh_materialproperty` VALUES ('5', '自定义2', '\0', '05', '自�
 INSERT INTO `jsh_materialproperty` VALUES ('6', '自定义3', '\0', '06', '自定义3', '0');
 
 -- ----------------------------
+-- Table structure for jsh_material_stock
+-- ----------------------------
+DROP TABLE IF EXISTS `jsh_material_stock`;
+CREATE TABLE `jsh_material_stock` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `material_id` bigint(20) DEFAULT NULL COMMENT '产品id',
+  `depot_id` bigint(20) DEFAULT NULL COMMENT '仓库id',
+  `number` decimal(24,6) DEFAULT NULL COMMENT '初始库存数量',
+  `tenant_id` bigint(20) DEFAULT NULL COMMENT '租户id',
+  `delete_fag` varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=119 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='产品初始库存';
+
+-- ----------------------------
 -- Table structure for jsh_organization
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_organization`;
