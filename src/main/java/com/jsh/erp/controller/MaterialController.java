@@ -233,7 +233,7 @@ public class MaterialController {
     }
 
     /**
-     * excel表格导入
+     * excel表格导入产品（含初始库存）
      * @param materialFile
      * @param request
      * @param response
@@ -257,30 +257,7 @@ public class MaterialController {
                 info.code = 400;
                 info.data = data;
             }
-            //每行中数据顺序  "品名","类型","型号","安全存量","单位","零售价","最低售价","预计采购价","批发价","备注","状态"
-            List<Material> mList = new ArrayList<Material>();
-            for (int i = 1; i < src.getRows(); i++) {
-                Material m = new Material();
-                m.setName(ExcelUtils.getContent(src, i, 0));
-                m.setCategoryid(1L); //根目录
-                m.setModel(ExcelUtils.getContent(src, i, 2));
-                String safetyStock = ExcelUtils.getContent(src, i, 3);
-                m.setSafetystock(parseBigDecimalEx(safetyStock));
-                m.setUnit(ExcelUtils.getContent(src, i, 4));
-                String retailprice = ExcelUtils.getContent(src, i, 5);
-                m.setRetailprice(parseBigDecimalEx(retailprice));
-                String lowPrice = ExcelUtils.getContent(src, i, 6);
-                m.setLowprice(parseBigDecimalEx(lowPrice));
-                String presetpriceone = ExcelUtils.getContent(src, i, 7);
-                m.setPresetpriceone(parseBigDecimalEx(presetpriceone));
-                String presetpricetwo = ExcelUtils.getContent(src, i, 8);
-                m.setPresetpricetwo(parseBigDecimalEx(presetpricetwo));
-                m.setRemark(ExcelUtils.getContent(src, i, 9));
-                String enabled = ExcelUtils.getContent(src, i, 10);
-                m.setEnabled(enabled.equals("启用")? true: false);
-                mList.add(m);
-            }
-            info = materialService.importExcel(mList);
+            info = materialService.importExcel(src);
         } catch (Exception e) {
             e.printStackTrace();
             message = "导入失败";

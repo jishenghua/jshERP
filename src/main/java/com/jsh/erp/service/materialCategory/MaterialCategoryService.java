@@ -388,4 +388,19 @@ public class MaterialCategoryService {
         deleteTotal= batchDeleteMaterialCategoryByIds(ids);
         return deleteTotal;
     }
+
+    /**
+     * 根据名称获取类型
+     * @param name
+     */
+    public Long getCategoryIdByName(String name){
+        Long categoryId = 0l;
+        MaterialCategoryExample example = new MaterialCategoryExample();
+        example.createCriteria().andNameEqualTo(name).andStatusNotEqualTo(BusinessConstants.DELETE_TYPE_FORCE);
+        List<MaterialCategory> list = materialCategoryMapper.selectByExample(example);
+        if(list!=null && list.size()>0) {
+            categoryId = list.get(0).getId();
+        }
+        return categoryId;
+    }
 }

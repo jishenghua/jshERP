@@ -213,7 +213,7 @@
                                 depotString = depotString + depot.id + ",";
                             }
                         }
-                        depotString = depotString.substring(1, depotString.length-1);
+                        depotString = depotString.substring(0, depotString.length-1);
                     }
                 } else {
                     $.messager.alert('提示', '查找系统基础信息异常,请与管理员联系！', 'error');
@@ -995,26 +995,32 @@
                                             if(type === "basic"){
                                                 if(listTitle == "采购订单列表" || listTitle == "采购入库列表" || listTitle == "销售退货列表" || listTitle == "其它入库列表") {
                                                     UnitPrice = basicPresetPriceOne;
+                                                    loadRatio = ratio;
                                                 }
                                                 else if(listTitle == "销售订单列表" || listTitle == "销售出库列表" || listTitle == "采购退货列表" || listTitle == "其它出库列表" || listTitle == "调拨出库列表") {
                                                     UnitPrice = basicPresetPriceTwo;
+                                                    loadRatio = 1;
                                                 }
                                                 else if(listTitle == "零售出库列表" || listTitle == "零售退货列表"){
                                                     UnitPrice = retailPriceOne;
+                                                    loadRatio = 1;
                                                 }
-                                                body.find("[field='Stock']").find(input).val(stock); //修改库存
+                                                body.find("[field='Stock']").find(input).val(stock*loadRatio); //修改库存
                                             }
                                             else if(type === "other"){
                                                 if(listTitle == "采购订单列表" || listTitle == "采购入库列表" || listTitle == "销售退货列表" || listTitle == "其它入库列表") {
                                                     UnitPrice = otherPresetPriceOne;
+                                                    loadRatio = 1;
                                                 }
                                                 else if(listTitle == "销售订单列表" || listTitle == "销售出库列表" || listTitle == "采购退货列表" || listTitle == "其它出库列表" || listTitle == "调拨出库列表") {
                                                     UnitPrice = otherPresetPriceTwo;
+                                                    loadRatio = ratio;
                                                 }
                                                 else if(listTitle == "零售出库列表" || listTitle == "零售退货列表"){
                                                     UnitPrice = retailPriceTwo;
+                                                    loadRatio = ratio;
                                                 }
-                                                body.find("[field='Stock']").find(input).val((stock/ratio).toFixed(2)); //修改库存
+                                                body.find("[field='Stock']").find(input).val((stock/loadRatio).toFixed(2)); //修改库存
                                             }
                                             body.find("[field='UnitPrice']").find(input).val(UnitPrice); //单价
                                             var OperNumber = body.find("[field='OperNumber']").find(input).val(); //获取数量

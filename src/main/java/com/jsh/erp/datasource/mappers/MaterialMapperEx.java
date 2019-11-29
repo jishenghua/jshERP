@@ -59,4 +59,6 @@ public interface MaterialMapperEx {
     List<Material> getMaterialListByCategoryIds(@Param("categoryIds") String[] categoryIds);
 
     List<Material> getMaterialListByUnitIds(@Param("unitIds") String[] unitIds);
+
+    int insertSelectiveEx(Material record);
 }

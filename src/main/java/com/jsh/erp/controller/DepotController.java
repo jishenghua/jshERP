@@ -12,6 +12,7 @@ import com.jsh.erp.datasource.entities.Depot;
 import com.jsh.erp.datasource.entities.DepotEx;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.depot.DepotService;
+import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.userBusiness.UserBusinessService;
 import com.jsh.erp.utils.*;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.*;
 
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
@@ -43,6 +45,9 @@ public class DepotController {
 
     @Resource
     private SystemConfigService systemConfigService;
+
+    @Resource
+    private MaterialService materialService;
 
     @GetMapping(value = "/getAllList")
     public BaseResponseInfo getAllList(HttpServletRequest request) throws Exception{
@@ -231,5 +236,34 @@ public class DepotController {
         } else {
             return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
         }
+    }
+
+    @GetMapping(value = "/getAllListWithStock")
+    public BaseResponseInfo getAllList(@RequestParam("mId") Long mId,
+                                       HttpServletRequest request) {
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            List<Depot> list = depotService.getAllList();
+            List<DepotEx> depotList = new ArrayList<DepotEx>();
+            for(Depot depot: list) {
+                DepotEx de = new DepotEx();
+                if(mId!=0) {
+                    BigDecimal stock = materialService.getInitStock(mId, depot.getId());
+                    de.setStock(stock);
+                } else {
+                    de.setStock(BigDecimal.ZERO);
+                }
+                de.setId(depot.getId());
+                de.setName(depot.getName());
+                depotList.add(de);
+            }
+            res.code = 200;
+            res.data = depotList;
+        } catch(Exception e){
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
     }
 }

@@ -1,11 +1,14 @@
 # 项目总述
 * 很多人说华夏ERP（英文名：jshERP）是目前唯一完整开源的进销存系统
 * 虽然目前只有进销存+财务的功能，但后面将会推出ERP的全部功能，大家一起努力吧
+* 官网地址：[https://www.huaxiaerp.com](https://www.huaxiaerp.com)，演示账号：jsh，密码：123456
+* **商家入驻通道：[https://www.huaxiaerp.com/register.html](https://www.huaxiaerp.com/register.html) 欢迎注册使用** 
 * 商务合作-请联系QQ：514869858，技术交流-请联系QQ：752718920
 * 欢迎加入华夏ERP交流QQ群，群1：120725710(满)、群2：732152262
-* 系统的默认超管账户：admin，默认租户账号：jsh，默认密码均为：123456
-* 部署如遇到困难请参考Wiki文档  **https://gitee.com/jishenghua/JSH_ERP/wikis/pages** 
-* 官网地址：[http://www.huaxiaerp.com](https://www.huaxiaerp.com)，测试账号：jsh，密码：123456，**（如需长期使用，欢迎注册）** 
+* 系统默认租户账号：jsh，默认超管账户：admin，默认密码均为：123456
+* 部署如遇到困难请参考Wiki文档  https://gitee.com/jishenghua/JSH_ERP/wikis/pages
+
+* 华夏ERP参加了(2019年度最受欢迎开源中国软件评选)，欢迎小伙伴们投票 https://www.oschina.net/p/jsherp
 
 # 定制服务
 * 如有ERP **私人定制** 需求，请将需求整理成文档，发给邮箱： **514869858@qq.com** ，我会及时回复哒

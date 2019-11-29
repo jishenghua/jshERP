@@ -208,4 +208,19 @@ public class UnitService {
         deleteTotal= batchDeleteUnitByIds(ids);
         return deleteTotal;
     }
+
+    /**
+     * 根据名称获取类型
+     * @param name
+     */
+    public Long getUnitIdByName(String name){
+        Long unitId = 0l;
+        UnitExample example = new UnitExample();
+        example.createCriteria().andUnameEqualTo(name).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        List<Unit> list = unitMapper.selectByExample(example);
+        if(list!=null && list.size()>0) {
+            unitId = list.get(0).getId();
+        }
+        return unitId;
+    }
 }

@@ -436,7 +436,7 @@ $(function () {
     //消息弹窗
     var loginName = sessionStorage.getItem("loginName");
     if(loginName == "jsh") {
-        toastr.info('您当前正在使用测试账号，<br/>如需正式使用请注册 <a href="/register.html"><b>点击注册</b></a>');
+        toastr.info('您当前正在使用演示账号，<br/>如需正式使用请注册 <a href="/register.html"><b>点击注册</b></a>');
     }
 
     //广告循环
