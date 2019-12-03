@@ -2598,8 +2598,11 @@
             if (row.length > 0) {
                 $.messager.confirm('删除确认', '确定要删除选中的' + row.length + '条单据信息吗？', function (r) {
                     if (r) {
+                        var body =$("#depotHeadFM .datagrid-body");
+                        var footer =$("#depotHeadFM .datagrid-footer");
                         for (var i = 0; i < row.length; i++) {
                             $('#materialData').datagrid('deleteRow', $('#materialData').datagrid("getRowIndex", row[i]));
+                            statisticsFun(body,0,0,footer,0);
                         }
                     }
                 });
