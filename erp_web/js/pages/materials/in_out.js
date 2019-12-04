@@ -3,15 +3,8 @@
 	var kid = sessionStorage.getItem("userId");
     var pageType = getUrlParam('t');  //获取页面类型传值
 	var depotList = null;
-	var depotID = null;
-	var supplierList = null;
-	var supplierID = null;
-	var personList = null;
-	var ProjectSearch=null;
 	var userBusinessList=null;
 	var userdepot=null;
-	var depotHeadMaxId=null; //获取最大的Id
-	var accepId=null; //保存的主表id
 	var url;
 	var depotHeadID = 0;
 	var preTotalPrice = 0; //前一次加载的金额
