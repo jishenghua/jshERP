@@ -29,13 +29,13 @@
 # 开发环境
 建议开发者使用以下环境，可以避免版本带来的问题
 * IDE: IntelliJ IDEA 2017+
-* DB: Mysql5.7.4
+* DB: Mysql5.7+
 * JDK: JDK1.8
 * Maven: Maven3.2.3+
 * 为方便大家搭建开发环境，分享了下载地址  **https://pan.baidu.com/s/1iuNOSuijcU9vrVT4PCl0hQ** 提取码：bik7
 
 # 运行环境
-* 数据库服务器：Mysql5.7.4
+* 数据库服务器：Mysql5.7+
 * JAVA平台: JRE1.8
 * 操作系统：Windows、Linux等
 
