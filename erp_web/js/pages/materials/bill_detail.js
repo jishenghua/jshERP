@@ -16,8 +16,6 @@
 
     });
 
-
-
     //获取账户信息
     function initSystemData_account(){
         $.ajax({
@@ -190,9 +188,6 @@
             $("#bill .advance_in").show();
             tableString = $(".advance_in").html();
         }
-
-
-
 
         //如果是进货、销售
         if(billType == "material"){
