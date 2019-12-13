@@ -542,7 +542,7 @@ public class DepotHeadService {
         depotHead.setOperpersonname(userInfo==null?null:userInfo.getUsername());
         depotHead.setOpertime(new Timestamp(System.currentTimeMillis()));
         try{
-            depotHeadMapperEx.updatedepotHead(depotHead);
+            depotHeadMapper.updateByPrimaryKeySelective(depotHead);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
