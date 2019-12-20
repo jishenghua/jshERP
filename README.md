@@ -31,7 +31,7 @@
 * DB: Mysql5.7+
 * JDK: JDK1.8
 * Maven: Maven3.2.3+
-* 为方便大家搭建开发环境，分享了下载地址  **https://pan.baidu.com/s/1iuNOSuijcU9vrVT4PCl0hQ** 提取码：bik7
+* 为方便大家搭建开发环境，分享了下载地址  ** https://pan.baidu.com/s/1Ji7fYACw9zBMib6gHTOFqA 提取码:211s **
 
 # 运行环境
 * 数据库服务器：Mysql5.7+
