@@ -9,7 +9,7 @@
 
     <context id="DB2Tables" targetRuntime="MyBatis3" defaultModelType="flat">
         <commentGenerator>
-            <property name="suppressAllComments" value="false"/>
+            <property name="suppressAllComments" value="true"/>
             <property name="suppressDate" value="true"/>
         </commentGenerator>
 
@@ -45,7 +45,9 @@
         <table tableName="jsh_accounthead" domainObjectName="AccountHead"></table>
         <table tableName="jsh_accountitem" domainObjectName="AccountItem"></table>
         <table tableName="jsh_depot" domainObjectName="Depot"></table>
-        <table tableName="jsh_depothead" domainObjectName="DepotHead"></table>
+        <table tableName="jsh_depothead" domainObjectName="DepotHead">
+            <generatedKey column="id" sqlStatement="SELECT LAST_INSERT_ID()"/>
+        </table>
         <table tableName="jsh_depotitem" domainObjectName="DepotItem"></table>
         <table tableName="jsh_functions" domainObjectName="Functions"></table>
         <table tableName="jsh_inoutitem" domainObjectName="InOutItem"></table>
@@ -59,7 +61,9 @@
         <table tableName="jsh_supplier" domainObjectName="Supplier"></table>
         <table tableName="jsh_systemconfig" domainObjectName="SystemConfig"></table>
         <table tableName="jsh_unit" domainObjectName="Unit"></table>
-        <table tableName="jsh_user" domainObjectName="User"></table>
+        <table tableName="jsh_user" domainObjectName="User">
+            <generatedKey column="id" sqlStatement="SELECT LAST_INSERT_ID()"/>
+        </table>
         <table tableName="jsh_userbusiness" domainObjectName="UserBusiness"></table>
         <table tableName="jsh_serial_number" domainObjectName="SerialNumber"></table>
         <table tableName="jsh_organization" domainObjectName="Organization"></table>

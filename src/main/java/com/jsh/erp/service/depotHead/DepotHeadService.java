@@ -489,7 +489,7 @@ public class DepotHeadService {
         depotHead.setCreatetime(new Timestamp(System.currentTimeMillis()));
         depotHead.setStatus(BusinessConstants.BILLS_STATUS_UN_AUDIT);
         try{
-            depotHeadMapperEx.adddepotHead(depotHead);
+            depotHeadMapper.insertSelective(depotHead);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }

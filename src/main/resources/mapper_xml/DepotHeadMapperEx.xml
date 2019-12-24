@@ -324,30 +324,6 @@
         and ifnull(dh.delete_Flag,'0') !='1'
     </select>
 
-    <insert id="adddepotHead" parameterType="com.jsh.erp.datasource.entities.DepotHead"
-            useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-        insert into jsh_depothead (Type, SubType,
-        ProjectId, DefaultNumber, Number,
-        OperPersonName, CreateTime, OperTime,
-        OrganId, HandsPersonId, AccountId,
-        ChangeAmount, AllocationProjectId, TotalPrice,
-        PayType, Remark, Salesman,
-        AccountIdList, AccountMoneyList, Discount,
-        DiscountMoney, DiscountLastMoney, OtherMoney,
-        OtherMoneyList, OtherMoneyItem, AccountDay,
-        Status, LinkNumber)
-        values (#{type,jdbcType=VARCHAR}, #{subtype,jdbcType=VARCHAR},
-        #{projectid,jdbcType=BIGINT}, #{defaultnumber,jdbcType=VARCHAR}, #{number,jdbcType=VARCHAR},
-        #{operpersonname,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, #{opertime,jdbcType=TIMESTAMP},
-        #{organid,jdbcType=BIGINT}, #{handspersonid,jdbcType=BIGINT}, #{accountid,jdbcType=BIGINT},
-        #{changeamount,jdbcType=DECIMAL}, #{allocationprojectid,jdbcType=BIGINT}, #{totalprice,jdbcType=DECIMAL},
-        #{paytype,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{salesman,jdbcType=VARCHAR},
-        #{accountidlist,jdbcType=VARCHAR}, #{accountmoneylist,jdbcType=VARCHAR}, #{discount,jdbcType=DECIMAL},
-        #{discountmoney,jdbcType=DECIMAL}, #{discountlastmoney,jdbcType=DECIMAL}, #{othermoney,jdbcType=DECIMAL},
-        #{othermoneylist,jdbcType=VARCHAR}, #{othermoneyitem,jdbcType=VARCHAR}, #{accountday,jdbcType=INTEGER},
-        #{status,jdbcType=VARCHAR}, #{linknumber,jdbcType=VARCHAR})
-    </insert>
-
     <update id="updateBuildOnlyNumber">
         update jsh_sequence set current_val = current_val + 1 where seq_name = 'depot_number_seq'
     </update>

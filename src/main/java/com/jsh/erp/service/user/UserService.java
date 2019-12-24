@@ -365,7 +365,7 @@ public class UserService {
         ue.setStatus(BusinessConstants.USER_STATUS_NORMAL);
         int result=0;
         try{
-            result= userMapperEx.addUser(ue);
+            result= userMapper.insertSelective(ue);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -396,7 +396,7 @@ public class UserService {
             ue.setStatus(BusinessConstants.USER_STATUS_NORMAL);
             int result=0;
             try{
-                result= userMapperEx.addUser(ue);
+                result= userMapper.insertSelective(ue);
             }catch(Exception e){
                 JshException.writeFail(logger, e);
             }
@@ -490,7 +490,7 @@ public class UserService {
     public UserEx updateUser(UserEx ue)throws Exception{
         int result =0;
         try{
-            result=userMapperEx.updateUser(ue);
+            result=userMapper.updateByPrimaryKeySelective(ue);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
