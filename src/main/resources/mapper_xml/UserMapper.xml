@@ -110,9 +110,6 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.jsh.erp.datasource.entities.User">
-    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
     insert into jsh_user (id, username, loginame, 
       password, position, department, 
       email, phonenum, ismanager, 
@@ -125,12 +122,11 @@
       #{remark,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.User">
-    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
     insert into jsh_user
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      id,
+      <if test="id != null">
+        id,
+      </if>
       <if test="username != null">
         username,
       </if>
@@ -172,7 +168,9 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      #{id,jdbcType=BIGINT},
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
       <if test="username != null">
         #{username,jdbcType=VARCHAR},
       </if>
@@ -214,7 +212,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.jsh.erp.datasource.entities.UserExample" resultType="java.lang.Integer">
+  <select id="countByExample" parameterType="com.jsh.erp.datasource.entities.UserExample" resultType="java.lang.Long">
     select count(*) from jsh_user
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />

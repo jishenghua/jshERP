@@ -6,7 +6,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 public interface DepotHeadMapper {
-    int countByExample(DepotHeadExample example);
+    long countByExample(DepotHeadExample example);
 
     int deleteByExample(DepotHeadExample example);
 

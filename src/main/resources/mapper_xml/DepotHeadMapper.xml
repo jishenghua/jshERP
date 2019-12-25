@@ -130,9 +130,6 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.jsh.erp.datasource.entities.DepotHead">
-    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
     insert into jsh_depothead (Id, Type, SubType, 
       ProjectId, DefaultNumber, Number, 
       OperPersonName, CreateTime, OperTime, 
@@ -157,12 +154,11 @@
       #{deleteFlag,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.DepotHead">
-    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
     insert into jsh_depothead
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      Id,
+      <if test="id != null">
+        Id,
+      </if>
       <if test="type != null">
         Type,
       </if>
@@ -255,7 +251,9 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      #{id,jdbcType=BIGINT},
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
       <if test="type != null">
         #{type,jdbcType=VARCHAR},
       </if>
@@ -348,7 +346,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.jsh.erp.datasource.entities.DepotHeadExample" resultType="java.lang.Integer">
+  <select id="countByExample" parameterType="com.jsh.erp.datasource.entities.DepotHeadExample" resultType="java.lang.Long">
     select count(*) from jsh_depothead
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
