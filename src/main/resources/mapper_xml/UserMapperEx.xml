@@ -54,61 +54,6 @@
         </if>
         order by user.id desc
     </select>
-    <insert id="addUser" parameterType="com.jsh.erp.datasource.entities.UserEx"
-        useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-        insert into jsh_user (username, loginame,
-        password, position,
-        email, phonenum, ismanager,
-        isystem, status, description,
-        remark)
-        values (#{username,jdbcType=VARCHAR}, #{loginame,jdbcType=VARCHAR},
-        #{password,jdbcType=VARCHAR}, #{position,jdbcType=VARCHAR},
-        #{email,jdbcType=VARCHAR}, #{phonenum,jdbcType=VARCHAR}, #{ismanager,jdbcType=TINYINT},
-        #{isystem,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, #{description,jdbcType=VARCHAR},
-        #{remark,jdbcType=VARCHAR})
-    </insert>
-    <update id="updateUser" parameterType="com.jsh.erp.datasource.entities.UserEx">
-        update jsh_user
-        <set>
-            <if test="username != null">
-                username = #{username,jdbcType=VARCHAR},
-            </if>
-            <if test="loginame != null">
-                loginame = #{loginame,jdbcType=VARCHAR},
-            </if>
-            <if test="password != null">
-                password = #{password,jdbcType=VARCHAR},
-            </if>
-            <if test="position != null">
-                position = #{position,jdbcType=VARCHAR},
-            </if>
-            <if test="department != null">
-                department = #{department,jdbcType=VARCHAR},
-            </if>
-            <if test="email != null">
-                email = #{email,jdbcType=VARCHAR},
-            </if>
-            <if test="phonenum != null">
-                phonenum = #{phonenum,jdbcType=VARCHAR},
-            </if>
-            <if test="ismanager != null">
-                ismanager = #{ismanager,jdbcType=TINYINT},
-            </if>
-            <if test="isystem != null">
-                isystem = #{isystem,jdbcType=TINYINT},
-            </if>
-            <if test="status != null">
-                status = #{status,jdbcType=TINYINT},
-            </if>
-            <if test="description != null">
-                description = #{description,jdbcType=VARCHAR},
-            </if>
-            <if test="remark != null">
-                remark = #{remark,jdbcType=VARCHAR},
-            </if>
-        </set>
-        where id = #{id,jdbcType=BIGINT}
-    </update>
     <select id="getUserListByUserNameOrLoginName" resultMap="com.jsh.erp.datasource.mappers.UserMapper.BaseResultMap">
         select user.id, user.username, user.loginame, user.position, user.email, user.phonenum,
         user.description, user.remark,user.isystem

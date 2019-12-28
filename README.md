@@ -1,14 +1,11 @@
 # 项目总述
 * 很多人说华夏ERP（英文名：jshERP）是目前唯一完整开源的进销存系统
 * 虽然目前只有进销存+财务的功能，但后面将会推出ERP的全部功能，大家一起努力吧
-* 官网地址：[https://www.huaxiaerp.com](https://www.huaxiaerp.com)，演示账号：jsh，密码：123456
-* **商家入驻通道：[https://www.huaxiaerp.com/register.html](https://www.huaxiaerp.com/register.html) 欢迎注册使用** 
+* **官网地址：[https://www.huaxiaerp.com](https://www.huaxiaerp.com)，演示账号：jsh，密码：123456 (欢迎商家入驻)**
 * 商务合作-请联系QQ：514869858，技术交流-请联系QQ：752718920
 * 欢迎加入华夏ERP交流QQ群，群1：120725710(满)、群2：732152262
 * 系统默认租户账号：jsh，默认超管账户：admin，默认密码均为：123456
 * 部署如遇到困难请参考Wiki文档  https://gitee.com/jishenghua/JSH_ERP/wikis/pages
-
-* 华夏ERP参加了(2019年度最受欢迎开源中国软件评选)，欢迎小伙伴们投票 https://www.oschina.net/p/jsherp
 
 # 定制服务
 * 如有ERP **私人定制** 需求，请将需求整理成文档，发给邮箱： **514869858@qq.com** ，我会及时回复哒
@@ -17,6 +14,7 @@
 * 华夏ERP立志为中小企业提供开源好用的ERP软件，降低企业的信息化成本
 * 个人开发者也可以使用华夏ERP进行二次开发，加快完成开发任务
 * 初学JAVA的小伙伴可以下载源代码来进行学习交流
+* 感谢热心的小伙伴整理的用户手册 https://www.kdocs.cn/l/sfCyirZyr?f=501
 
 # 技术框架
 * 核心框架：SpringBoot 2.0.0
@@ -30,13 +28,13 @@
 # 开发环境
 建议开发者使用以下环境，可以避免版本带来的问题
 * IDE: IntelliJ IDEA 2017+
-* DB: Mysql5.7.4
+* DB: Mysql5.7+
 * JDK: JDK1.8
 * Maven: Maven3.2.3+
-* 为方便大家搭建开发环境，分享了下载地址  **https://pan.baidu.com/s/1iuNOSuijcU9vrVT4PCl0hQ** 提取码：bik7
+* 为方便大家搭建开发环境，分享了下载地址 https://pan.baidu.com/s/1jlild9uyGdQ7H2yaMx76zw 提取码:814g
 
 # 运行环境
-* 数据库服务器：Mysql5.7.4
+* 数据库服务器：Mysql5.7+
 * JAVA平台: JRE1.8
 * 操作系统：Windows、Linux等
 

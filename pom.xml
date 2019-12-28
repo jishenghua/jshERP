@@ -161,7 +161,7 @@
 			<plugin>
 				<groupId>org.mybatis.generator</groupId>
 				<artifactId>mybatis-generator-maven-plugin</artifactId>
-				<version>1.3.2</version>
+				<version>1.4.0</version>
 				<configuration>
 					<configurationFile>${basedir}/src/test/resources/generatorConfig.xml</configurationFile>
 					<verbose>true</verbose>

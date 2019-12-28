@@ -334,8 +334,14 @@ public class UserService {
             OrgaUserRel oul=new OrgaUserRel();
             //机构id
             oul.setOrgaId(ue.getOrgaId());
-            //用户id
-            oul.setUserId(ue.getId());
+            //用户id，根据用户名查询id
+            UserExample example = new UserExample();
+            example.createCriteria().andLoginameEqualTo(ue.getLoginame());
+            List<User> list = userMapper.selectByExample(example);
+            if(list!=null) {
+                Long userId = list.get(0).getId();
+                oul.setUserId(userId);
+            }
             //用户在机构中的排序
             oul.setUserBlngOrgaDsplSeq(ue.getUserBlngOrgaDsplSeq());
 
@@ -365,7 +371,7 @@ public class UserService {
         ue.setStatus(BusinessConstants.USER_STATUS_NORMAL);
         int result=0;
         try{
-            result= userMapperEx.addUser(ue);
+            result= userMapper.insertSelective(ue);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -396,7 +402,7 @@ public class UserService {
             ue.setStatus(BusinessConstants.USER_STATUS_NORMAL);
             int result=0;
             try{
-                result= userMapperEx.addUser(ue);
+                result= userMapper.insertSelective(ue);
             }catch(Exception e){
                 JshException.writeFail(logger, e);
             }
@@ -490,7 +496,7 @@ public class UserService {
     public UserEx updateUser(UserEx ue)throws Exception{
         int result =0;
         try{
-            result=userMapperEx.updateUser(ue);
+            result=userMapper.updateByPrimaryKeySelective(ue);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }

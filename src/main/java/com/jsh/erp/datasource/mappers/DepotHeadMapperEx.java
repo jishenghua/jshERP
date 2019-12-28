@@ -102,14 +102,6 @@ public interface DepotHeadMapperEx {
 
     List<DepotHeadVo4List> getDetailByNumber(
             @Param("number") String number);
-    /**
-     * 新增单据主表信息，并反显单据主表id
-     * */
-    int adddepotHead(DepotHead depotHead);
-    /**
-     * 更新单据主表信息
-     * */
-    void updatedepotHead(DepotHead depotHead);
 
     void updateBuildOnlyNumber();
     /**

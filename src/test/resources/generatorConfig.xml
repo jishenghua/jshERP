@@ -9,7 +9,7 @@
 
     <context id="DB2Tables" targetRuntime="MyBatis3" defaultModelType="flat">
         <commentGenerator>
-            <property name="suppressAllComments" value="false"/>
+            <property name="suppressAllComments" value="true"/>
             <property name="suppressDate" value="true"/>
         </commentGenerator>
 
@@ -37,7 +37,7 @@
         <!-- generate Mapper -->
         <javaClientGenerator type="XMLMAPPER"
                              targetPackage="com.jsh.erp.datasource.mappers"
-                             targetProject="src\main\java" implementationPackage="">
+                             targetProject="src\main\java">
             <property name="enableSubPackages" value="false"/>
             <property name="exampleMethodVisibility" value="public"/>
         </javaClientGenerator>

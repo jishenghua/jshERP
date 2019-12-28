@@ -25,10 +25,6 @@ public interface UserMapperEx {
 
     List<UserEx> getUserList(Map<String, Object> parameterMap);
 
-    int addUser(UserEx ue);
-
-    int updateUser(UserEx ue);
-
     List<User> getUserListByUserNameOrLoginName(@Param("userName") String userName,
                                                 @Param("loginame") String loginame);
 

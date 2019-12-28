@@ -464,8 +464,6 @@ public class DepotHeadService {
     }
 
     /**
-     * create by: cjl
-     * description:
      *  新增单据主表及单据子表信息
      * create time: 2019/1/25 14:36
      * @Param: beanJson
@@ -489,19 +487,25 @@ public class DepotHeadService {
         depotHead.setCreatetime(new Timestamp(System.currentTimeMillis()));
         depotHead.setStatus(BusinessConstants.BILLS_STATUS_UN_AUDIT);
         try{
-            depotHeadMapperEx.adddepotHead(depotHead);
+            depotHeadMapper.insertSelective(depotHead);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
-
         /**入库和出库处理预付款信息*/
         if(BusinessConstants.PAY_TYPE_PREPAID.equals(depotHead.getPaytype())){
             if(depotHead.getOrganid()!=null) {
                 supplierService.updateAdvanceIn(depotHead.getOrganid(), BigDecimal.ZERO.subtract(depotHead.getTotalprice()));
             }
         }
-        /**入库和出库处理单据子表信息*/
-        depotItemService.saveDetials(inserted,deleted,updated,depotHead.getId(),tenantId, request);
+        //根据单据编号查询单据id
+        DepotHeadExample dhExample = new DepotHeadExample();
+        dhExample.createCriteria().andDefaultnumberEqualTo(depotHead.getDefaultnumber()).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        List<DepotHead> list = depotHeadMapper.selectByExample(dhExample);
+        if(list!=null) {
+            Long headId = list.get(0).getId();
+            /**入库和出库处理单据子表信息*/
+            depotItemService.saveDetials(inserted,deleted,updated,headId,tenantId, request);
+        }
         /**如果关联单据号非空则更新订单的状态为2 */
         if(depotHead.getLinknumber()!=null) {
             DepotHead depotHeadOrders = new DepotHead();
@@ -516,8 +520,6 @@ public class DepotHeadService {
         }
     }
     /**
-     * create by: cjl
-     * description:
      * 更新单据主表及单据子表信息
      * create time: 2019/1/28 14:47
      * @Param: id
@@ -542,7 +544,7 @@ public class DepotHeadService {
         depotHead.setOperpersonname(userInfo==null?null:userInfo.getUsername());
         depotHead.setOpertime(new Timestamp(System.currentTimeMillis()));
         try{
-            depotHeadMapperEx.updatedepotHead(depotHead);
+            depotHeadMapper.updateByPrimaryKeySelective(depotHead);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
