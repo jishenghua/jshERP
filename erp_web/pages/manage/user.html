@@ -28,7 +28,7 @@
             </td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
-            <td>用户名称：</td>
+            <td>用户姓名：</td>
             <td>
                 <input type="text" name="searchUsername" id="searchUsername" style="width:100px;"/>
             </td>
@@ -72,7 +72,7 @@
             <input name="userBlngOrgaDsplSeq" id="userBlngOrgaDsplSeq"  style="width: 230px;height: 20px"/>
         </div>
         <div class="fitem" style="padding:5px">
-            <label id="usernameLabel">用户名称&nbsp;&nbsp;</label>
+            <label id="usernameLabel">用户姓名&nbsp;&nbsp;</label>
             <input name="username" id="username" class="easyui-validatebox"
                    data-options="required:true,validType:'length[2,30]'" style="width: 230px;height: 20px"/>
         </div>
@@ -131,7 +131,7 @@
     //浏览器适配
     function browserFit() {
         if (getOs() == 'MSIE') {
-            $("#usernameLabel").empty().append("用户名称&nbsp;&nbsp;");
+            $("#usernameLabel").empty().append("用户姓名&nbsp;&nbsp;");
             $("#loginameLabel").empty().append("登录名称&nbsp;&nbsp;");
             $("#orgAbrLabel").empty().append("部&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;门&nbsp;&nbsp;");
             $("#userBlngOrgaDsplSeqLabel").empty().append("用户排序&nbsp;&nbsp;");
@@ -144,7 +144,7 @@
             $("#searchDescLabel").empty().append("描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：");
         }
         else {
-            $("#usernameLabel").empty().append("用户名称&nbsp;");
+            $("#usernameLabel").empty().append("用户姓名&nbsp;");
             $("#loginameLabel").empty().append("登录名称&nbsp;");
             $("#orgAbrLabel").empty().append("部&nbsp;&nbsp;&nbsp;&nbsp;门&nbsp;");
             $("#userBlngOrgaDsplSeqLabel").empty().append("用户排序&nbsp;");
@@ -192,7 +192,7 @@
                     }
                 },
                 {title: '登录名称', field: 'loginame', width: 80},
-                {title: '用户名称', field: 'username', width: 80, align: "center"},
+                {title: '用户姓名', field: 'username', width: 80, align: "center"},
                 {title: '职位', field: 'position', width: 115, align: "center"},
                 {title: '部门', field: 'orgAbr', width: 115, align: "center"},
                 {title: '电子邮箱', field: 'email', width: 150, align: "center"},
