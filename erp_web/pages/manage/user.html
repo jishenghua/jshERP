@@ -3,8 +3,6 @@
 <head>
     <title>用户管理</title>
     <meta charset="utf-8">
-    <!-- 指定以IE8的方式来渲染 -->
-    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
     <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon"/>
     <script type="text/javascript" src="/js/jquery-1.8.0.min.js"></script>
     <script type="text/javascript" src="/js/colorbox/jquery.colorbox-min.js"></script>
@@ -110,7 +108,6 @@
         initConfig();
         initTableData();
         ininPager();
-        browserFit();
     });
 
     //初始化配置
@@ -125,36 +122,6 @@
             if(config.customerFlag == "1") {
                 $("#btnSetCustomer").show();
             }
-        }
-    }
-
-    //浏览器适配
-    function browserFit() {
-        if (getOs() == 'MSIE') {
-            $("#usernameLabel").empty().append("用户姓名&nbsp;&nbsp;");
-            $("#loginameLabel").empty().append("登录名称&nbsp;&nbsp;");
-            $("#orgAbrLabel").empty().append("部&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;门&nbsp;&nbsp;");
-            $("#userBlngOrgaDsplSeqLabel").empty().append("用户排序&nbsp;&nbsp;");
-            $("#positionLabel").empty().append("职&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;位&nbsp;&nbsp;");
-            $("#phonenumLabel").empty().append("联系电话&nbsp;&nbsp;");
-            $("#emailLabel").empty().append("电子邮箱&nbsp;&nbsp;");
-            $("#descriptionLabel").empty().append("描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述&nbsp;&nbsp;");
-            $("#searchPositionLabel").empty().append("职&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;位：");
-            $("#searchDeptLabel").empty().append("部&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;门：");
-            $("#searchDescLabel").empty().append("描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：");
-        }
-        else {
-            $("#usernameLabel").empty().append("用户姓名&nbsp;");
-            $("#loginameLabel").empty().append("登录名称&nbsp;");
-            $("#orgAbrLabel").empty().append("部&nbsp;&nbsp;&nbsp;&nbsp;门&nbsp;");
-            $("#userBlngOrgaDsplSeqLabel").empty().append("用户排序&nbsp;");
-            $("#positionLabel").empty().append("职&nbsp;&nbsp;&nbsp;&nbsp;位&nbsp;");
-            $("#phonenumLabel").empty().append("联系电话&nbsp;");
-            $("#emailLabel").empty().append("电子邮箱&nbsp;");
-            $("#descriptionLabel").empty().append("描&nbsp;&nbsp;&nbsp;&nbsp;述&nbsp;");
-            $("#searchPositionLabel").empty().append("职&nbsp;&nbsp;&nbsp;&nbsp;位：");
-            $("#searchDeptLabel").empty().append("部&nbsp;&nbsp;&nbsp;&nbsp;门：");
-            $("#searchDescLabel").empty().append("描&nbsp;&nbsp;&nbsp;&nbsp;述：");
         }
     }
 
