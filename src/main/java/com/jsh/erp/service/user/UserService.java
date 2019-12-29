@@ -307,6 +307,23 @@ public class UserService {
         }
         return list;
     }
+
+    /**
+     * 根据用户名查询id
+     * @param loginName
+     * @return
+     */
+    public Long getIdByLoginName(String loginName) {
+        Long userId = 0L;
+        UserExample example = new UserExample();
+        example.createCriteria().andLoginameEqualTo(loginName);
+        List<User> list = userMapper.selectByExample(example);
+        if(list!=null) {
+            userId = list.get(0).getId();
+        }
+        return userId;
+    }
+
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void addUserAndOrgUserRel(UserEx ue) throws Exception{
         if(BusinessConstants.DEFAULT_MANAGER.equals(ue.getLoginame())) {
@@ -335,13 +352,8 @@ public class UserService {
             //机构id
             oul.setOrgaId(ue.getOrgaId());
             //用户id，根据用户名查询id
-            UserExample example = new UserExample();
-            example.createCriteria().andLoginameEqualTo(ue.getLoginame());
-            List<User> list = userMapper.selectByExample(example);
-            if(list!=null) {
-                Long userId = list.get(0).getId();
-                oul.setUserId(userId);
-            }
+            Long userId = getIdByLoginName(ue.getLoginame());
+            oul.setUserId(userId);
             //用户在机构中的排序
             oul.setUserBlngOrgaDsplSeq(ue.getUserBlngOrgaDsplSeq());
 
@@ -403,6 +415,8 @@ public class UserService {
             int result=0;
             try{
                 result= userMapper.insertSelective(ue);
+                Long userId = getIdByLoginName(ue.getLoginame());
+                ue.setId(userId);
             }catch(Exception e){
                 JshException.writeFail(logger, e);
             }
