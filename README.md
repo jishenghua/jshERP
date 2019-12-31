@@ -31,12 +31,13 @@
 * DB: Mysql5.7+
 * JDK: JDK1.8
 * Maven: Maven3.2.3+
-* 为方便大家搭建开发环境，分享了下载地址 https://pan.baidu.com/s/1jlild9uyGdQ7H2yaMx76zw 提取码:814g
 
-# 运行环境
+# 服务器环境
 * 数据库服务器：Mysql5.7+
 * JAVA平台: JRE1.8
 * 操作系统：Windows、Linux等
+* 为方便大家搭建运行环境，分享了下载地址 https://pan.baidu.com/s/1jlild9uyGdQ7H2yaMx76zw 提取码:814g
+* 不会maven打包的小伙伴，请下载此打包后的文件：https://pan.baidu.com/s/1soId837KuvhpzTAgF62XRA 提取码：tm3k
 
 # 开源说明
 * 本系统100%开源，遵守GPL-3.0协议
