@@ -229,7 +229,7 @@ public class UserService {
         List<User> list = null;
         try {
             UserExample example = new UserExample();
-            example.createCriteria().andLoginameEqualTo(username);
+            example.createCriteria().andLoginameEqualTo(username).andStatusEqualTo(BusinessConstants.USER_STATUS_NORMAL);
             list = userMapper.selectByExample(example);
         } catch (Exception e) {
             logger.error(">>>>>>>>访问验证用户姓名是否存在后台信息异常", e);
@@ -242,7 +242,8 @@ public class UserService {
 
         try {
             UserExample example = new UserExample();
-            example.createCriteria().andLoginameEqualTo(username).andPasswordEqualTo(password);
+            example.createCriteria().andLoginameEqualTo(username).andPasswordEqualTo(password)
+                    .andStatusEqualTo(BusinessConstants.USER_STATUS_NORMAL);
             list = userMapper.selectByExample(example);
         } catch (Exception e) {
             logger.error(">>>>>>>>>>访问验证用户密码后台信息异常", e);
@@ -257,7 +258,7 @@ public class UserService {
 
     public User getUserByUserName(String username)throws Exception {
         UserExample example = new UserExample();
-        example.createCriteria().andLoginameEqualTo(username);
+        example.createCriteria().andLoginameEqualTo(username).andStatusEqualTo(BusinessConstants.USER_STATUS_NORMAL);
         List<User> list=null;
         try{
             list= userMapper.selectByExample(example);
@@ -316,7 +317,7 @@ public class UserService {
     public Long getIdByLoginName(String loginName) {
         Long userId = 0L;
         UserExample example = new UserExample();
-        example.createCriteria().andLoginameEqualTo(loginName);
+        example.createCriteria().andLoginameEqualTo(loginName).andStatusEqualTo(BusinessConstants.USER_STATUS_NORMAL);
         List<User> list = userMapper.selectByExample(example);
         if(list!=null) {
             userId = list.get(0).getId();
