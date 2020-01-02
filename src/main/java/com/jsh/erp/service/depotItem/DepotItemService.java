@@ -38,7 +38,7 @@ public class DepotItemService {
     private Logger logger = LoggerFactory.getLogger(DepotItemService.class);
 
     private final static String TYPE = "入库";
-    private final static String SUM_TYPE = "Number";
+    private final static String SUM_TYPE = "number";
     private final static String IN = "in";
     private final static String OUT = "out";
 
