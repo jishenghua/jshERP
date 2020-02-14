@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>DateBox Buttons - jQuery EasyUI Demo</title>
+	<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../demo.css">
+	<script type="text/javascript" src="../../jquery.min.js"></script>
+	<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+</head>
+<body>
+	<h2>DateBox Buttons</h2>
+	<p>This example shows how to customize the datebox buttons underneath the calendar.</p>
+	<div style="margin:20px 0;"></div>
+	<div class="easyui-panel" style="width:100%;max-width:400px;padding:30px 60px;">
+		<div style="margin-bottom:20px">
+			<input class="easyui-datebox" label="Date With 2 Buttons:" labelPosition="top" style="width:100%;">
+		</div>
+		<div style="margin-bottom:20px">
+			<input class="easyui-datebox" label="Date With 3 Buttons:" labelPosition="top" data-options="buttons:buttons" style="width:100%;">
+		</div>
+	</div>
+	<script>
+		var buttons = $.extend([], $.fn.datebox.defaults.buttons);
+		buttons.splice(1, 0, {
+			text: 'MyBtn',
+			handler: function(target){
+				alert('click MyBtn');
+			}
+		});
+	</script>
+</body>
+</html>

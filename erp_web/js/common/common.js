@@ -44,7 +44,7 @@
 		heightInfo = webH - mtopH - 86;
 
 		//分页信息修改成 15条
-		if(heightInfo > 450)
+		if(heightInfo > 550)
 		{
 			initPageSize = 15;
 			initPageNum = [15,30,50];

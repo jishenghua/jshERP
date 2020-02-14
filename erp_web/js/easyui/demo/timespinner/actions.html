@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>TimeSpinner Actions - jQuery EasyUI Demo</title>
+	<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../demo.css">
+	<script type="text/javascript" src="../../jquery.min.js"></script>
+	<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+</head>
+<body>
+	<h2>TimeSpinner Actions</h2>
+	<p>Click the buttons below to perform actions.</p>
+	<div style="margin:20px 0;">
+		<a href="#" class="easyui-linkbutton" onclick="getValue()">GetValue</a>
+		<a href="#" class="easyui-linkbutton" onclick="setValue()">SetValue</a>
+		<a href="#" class="easyui-linkbutton" onclick="disable()">Disable</a>
+		<a href="#" class="easyui-linkbutton" onclick="enable()">Enable</a>
+	</div>
+	<div class="easyui-panel" style="width:100%;max-width:400px;padding:30px 60px;">
+		<div style="margin-bottom:20px">
+			<input id="dt" class="easyui-timespinner" label="Select Time:" labelPosition="top" value="01:20" style="width:100%;">
+		</div>
+	</div>
+	<script>
+		function getValue(){
+			var val = $('#dt').timespinner('getValue');
+			alert(val);
+		}
+		function setValue(){
+			$('#dt').timespinner('setValue', '09:45');
+		}
+		function disable(){
+			$('#dt').timespinner('disable');
+		}
+		function enable(){
+			$('#dt').timespinner('enable');
+		}
+	</script>
+</body>
+</html>

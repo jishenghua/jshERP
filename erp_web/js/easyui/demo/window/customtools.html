@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Custom Window Tools - jQuery EasyUI Demo</title>
+	<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../demo.css">
+	<script type="text/javascript" src="../../jquery.min.js"></script>
+	<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+</head>
+<body>
+	<h2>Custom Window Tools</h2>
+	<p>Click the right top buttons to perform actions.</p>
+	<div style="margin:20px 0;">
+		<a href="javascript:void(0)" class="easyui-linkbutton" onclick="$('#w').window('open')">Open</a>
+		<a href="javascript:void(0)" class="easyui-linkbutton" onclick="$('#w').window('close')">Close</a>
+	</div>
+	<div id="w" class="easyui-window" title="Custom Window Tools" data-options="iconCls:'icon-save',minimizable:false,tools:'#tt'" style="width:500px;height:200px;padding:10px;">
+		The window content.
+	</div>
+	<div id="tt">
+		<a href="javascript:void(0)" class="icon-add" onclick="javascript:alert('add')"></a>
+		<a href="javascript:void(0)" class="icon-edit" onclick="javascript:alert('edit')"></a>
+		<a href="javascript:void(0)" class="icon-cut" onclick="javascript:alert('cut')"></a>
+		<a href="javascript:void(0)" class="icon-help" onclick="javascript:alert('help')"></a>
+	</div>
+
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>Basic Dialog - jQuery EasyUI Mobile Demo</title>
+	<link rel="stylesheet" type="text/css" href="../../themes/metro/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../../themes/mobile.css">
+	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+	<script type="text/javascript" src="../../jquery.min.js"></script>
+	<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="../../jquery.easyui.mobile.js"></script>
+</head>
+<body>
+	<div class="easyui-navpanel" style="position:relative">
+		<header>
+			<div class="m-toolbar">
+				<div class="m-title">Basic Dialog</div>
+			</div>
+		</header>
+        <footer>
+            <div class="m-buttongroup m-buttongroup-justified" style="width:100%">
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-large-picture',size:'large',iconAlign:'top',plain:true">Picture</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-large-clipart',size:'large',iconAlign:'top',plain:true">Clip Art</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-large-shapes',size:'large',iconAlign:'top',plain:true">Shapes</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-large-smartart',size:'large',iconAlign:'top',plain:true">SmartArt</a>
+            </div>
+        </footer>
+		<div style="text-align:center;margin:50px 30px">
+			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,outline:true" style="width:80px;height:30px" onclick="$('#dlg1').dialog('open').dialog('center')">Login</a>
+		</div>
+
+		<div id="dlg1" class="easyui-dialog" style="padding:20px 6px;width:80%;" data-options="inline:true,modal:true,closed:true,title:'Login'">
+			<div style="margin-bottom:10px">
+				<input class="easyui-textbox" prompt="Username" style="width:100%;height:30px">
+			</div>
+			<div>
+				<input class="easyui-textbox" type="password" prompt="Password" style="width:100%;height:30px">
+			</div>
+			<div class="dialog-button">
+				<a href="javascript:void(0)" class="easyui-linkbutton" style="width:100%;height:35px" onclick="$('#dlg1').dialog('close')">Sign in</a>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

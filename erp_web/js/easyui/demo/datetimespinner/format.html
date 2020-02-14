@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Format DateTimeSpinner - jQuery EasyUI Demo</title>
+	<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../demo.css">
+	<script type="text/javascript" src="../../jquery.min.js"></script>
+	<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+</head>
+<body>
+	<h2>Format DateTimeSpinner</h2>
+	<p>The DataTimeSpinner value can be formatted by specifying the 'formatter' and 'parser' functions.</p>
+	<div style="margin:20px 0;"></div>
+	<div class="easyui-panel" style="width:100%;max-width:400px;padding:30px 60px;">
+		<div style="margin-bottom:20px">
+			<input class="easyui-datetimespinner" label="mm/dd/yyyy hh:mm" labelPosition="top" value="6/24/2015 17:23" style="width:100%;">
+		</div>
+		<div style="margin-bottom:20px">
+			<input class="easyui-datetimespinner" value="6/24/2015" data-options="label:'mm/dd/yyyy',labelPosition:'top',formatter:formatter1,parser:parser1" style="width:100%;">
+		</div>
+		<div style="margin-bottom:20px">
+			<input class="easyui-datetimespinner" value="2015-6" data-options="label:'yyyy-mm',labelPosition:'top',formatter:formatter2,parser:parser2,selections:[[0,4],[5,7]]" style="width:100%;">
+		</div>
+	</div>
+	<script type="text/javascript">
+		function formatter1(date){
+			if (!date){return '';}
+			return $.fn.datebox.defaults.formatter.call(this, date);
+		}
+		function parser1(s){
+			if (!s){return null;}
+			return $.fn.datebox.defaults.parser.call(this, s);
+		}
+		function formatter2(date){
+			if (!date){return '';}
+			var y = date.getFullYear();
+			var m = date.getMonth() + 1;
+			return y + '-' + (m<10?('0'+m):m);
+		}
+		function parser2(s){
+			if (!s){return null;}
+			var ss = s.split('-');
+			var y = parseInt(ss[0],10);
+			var m = parseInt(ss[1],10);
+			if (!isNaN(y) && !isNaN(m)){
+				return new Date(y,m-1,1);
+			} else {
+				return new Date();
+			}
+		}
+	</script>
+</body>
+</html>

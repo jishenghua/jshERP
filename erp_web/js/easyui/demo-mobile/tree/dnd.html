@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>Drag Drop Tree Nodes - jQuery EasyUI Mobile Demo</title>
+	<link rel="stylesheet" type="text/css" href="../../themes/metro/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../../themes/mobile.css">
+	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+	<script type="text/javascript" src="../../jquery.min.js"></script>
+	<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="../../jquery.easyui.mobile.js"></script>
+</head>
+<body>
+	<div class="easyui-navpanel" style="padding:10px">
+		<header>
+			<div class="m-toolbar">
+				<div class="m-title">Drag Drop Tree Nodes</div>
+			</div>
+		</header>
+		<ul class="easyui-tree" data-options="animate:true,dnd:true">
+			<li>
+				<span>My Documents</span>
+				<ul>
+					<li data-options="state:'closed'">
+						<span>Photos</span>
+						<ul>
+							<li>
+								<span>Friend</span>
+							</li>
+							<li>
+								<span>Wife</span>
+							</li>
+							<li>
+								<span>Company</span>
+							</li>
+						</ul>
+					</li>
+					<li>
+						<span>Program Files</span>
+						<ul>
+							<li>Intel</li>
+							<li>Java</li>
+							<li>Microsoft Office</li>
+							<li>Games</li>
+						</ul>
+					</li>
+					<li>index.html</li>
+					<li>about.html</li>
+					<li>welcome.html</li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+</body>
+</html>

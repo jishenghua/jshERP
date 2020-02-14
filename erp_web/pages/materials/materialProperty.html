@@ -7,11 +7,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
     <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon"/>
     <script type="text/javascript" src="/js/jquery-1.8.0.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="/js/easyui-1.3.5/themes/default/easyui.css"/>
-    <link rel="stylesheet" type="text/css" href="/js/easyui-1.3.5/themes/icon.css"/>
+    <link rel="stylesheet" type="text/css" href="/js/easyui/themes/default/easyui.css"/>
+    <link rel="stylesheet" type="text/css" href="/js/easyui/themes/icon.css"/>
     <link type="text/css" rel="stylesheet" href="/css/common.css"/>
-    <script type="text/javascript" src="/js/easyui-1.3.5/jquery.easyui.min.js"></script>
-    <script type="text/javascript" src="/js/easyui-1.3.5/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="/js/easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="/js/easyui/locale/easyui-lang-zh_CN.js"></script>
     <script type="text/javascript" src="/js/common/common.js"></script>
 </head>
 <body>
@@ -21,7 +21,7 @@
         <tr>
             <td>名称：</td>
             <td>
-                <input name="searchNativeName" id="searchNativeName" style="width:120px;"/>
+                <input name="searchNativeName" id="searchNativeName" class="easyui-textbox" style="width:100px;"/>
             </td>
             <td>&nbsp;</td>
             <td>
@@ -52,15 +52,15 @@
             <tr>
                 <td>排序</td>
                 <td style="padding:5px">
-                    <input name="sort" id="sort" class="easyui-validatebox"
-                           data-options="required:true,validType:'length[2,30]'" style="width: 230px;height: 20px"/>
+                    <input name="sort" id="sort" class="easyui-textbox"
+                           data-options="required:true,validType:'length[2,30]'" style="width: 230px;"/>
                 </td>
             </tr>
             <tr>
                 <td>别名</td>
                 <td style="padding:5px">
-                    <input name="anotherName" id="anotherName" class="easyui-validatebox"
-                           data-options="validType:'length[2,30]'" style="width: 230px;height: 20px"/>
+                    <input name="anotherName" id="anotherName" class="easyui-textbox"
+                           data-options="validType:'length[2,30]'" style="width: 230px;"/>
                 </td>
             </tr>
         </table>
@@ -124,10 +124,9 @@
                 {title: '排序', field: 'sort', width: 100},
                 {title: '别名', field: 'anothername', width: 100},
                 {
-                    title: '操作', field: 'op', align: "center", width: 80, formatter: function (value, rec) {
+                    title: '操作', field: 'op', align: "center", width: 80, formatter: function (value, rec, index) {
                         var str = '';
-                        var rowInfo = rec.id + 'AaBb' + rec.nativename + 'AaBb' + rec.enabled + 'AaBb' + rec.sort + 'AaBb' + rec.anothername;
-                        str += '<img src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editMaterialProperty(\'' + rowInfo + '\');"/>&nbsp;<a onclick="editMaterialProperty(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
+                        str += '<img src="/js/easyui/themes/icons/pencil.png" style="cursor: pointer;" onclick="editMaterialProperty(\'' + index + '\');"/>&nbsp;<a onclick="editMaterialProperty(\'' + index + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
                         return str;
                     }
                 }
@@ -211,19 +210,16 @@
     });
 
     //编辑信息
-    function editMaterialProperty(totalInfo) {
-        var materialPropertyInfo = totalInfo.split("AaBb");
-
-        $("#nativeName").text(materialPropertyInfo[1]);
-        $("#enabled").attr("checked", materialPropertyInfo[2] == 'true' ? true : false);
-        $("#sort").val(materialPropertyInfo[3]);
-        $("#anotherName").val(materialPropertyInfo[4]);
-
-        $('#materialPropertyDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑商品属性');
+    function editMaterialProperty(index) {
+        var rowsdata = $("#tableData").datagrid("getRows")[index];
+        $("#nativeName").text(rowsdata.nativename);
+        $("#enabled").attr("checked", rowsdata.enabled == true ? true : false);
+        $("#sort").textbox("setValue", rowsdata.sort);
+        $("#anotherName").textbox("setValue", rowsdata.anothername);
+        $('#materialPropertyDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/pencil.png"/>&nbsp;编辑商品属性');
         $(".window-mask").css({width: webW, height: webH});
         //焦点在名称输入框==定焦在输入文字后面
-        $("#nativeName").val("").focus().val(materialPropertyInfo[1]);
-        url = '/materialProperty/update?id=' + materialPropertyInfo[0];
+        url = '/materialProperty/update?id=' + rowsdata.id;
     }
 
     //搜索处理
@@ -270,7 +266,7 @@
 
     //重置按钮
     $("#searchResetBtn").off().on("click", function () {
-        $("#searchNativeName").val("");
+        $("#searchNativeName").textbox("clear");
         //加载完以后重新初始化
         $("#searchBtn").click();
     });

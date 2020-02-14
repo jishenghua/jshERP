@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Fluid DataGrid - jQuery EasyUI Demo</title>
+	<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../demo.css">
+	<script type="text/javascript" src="../../jquery.min.js"></script>
+	<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+</head>
+<body>
+	<h2>Fluid DataGrid</h2>
+	<p>This example shows how to assign percentage width to a column in DataGrid.</p>
+	<div style="margin:20px 0;"></div>
+	
+	<table id="dg" class="easyui-datagrid" title="Fluid DataGrid" style="width:700px;height:250px"
+			data-options="singleSelect:true,collapsible:true,url:'datagrid_data1.json',method:'get'">
+		<thead>
+			<tr>
+				<th data-options="field:'itemid',resizable:false" width="15%">Item ID(15%)</th>
+				<th data-options="field:'productid',resizable:false" width="15%">Product(15%)</th>
+				<th data-options="field:'listprice',align:'right',resizable:false" width="15%">List Price(15%)</th>
+				<th data-options="field:'unitcost',align:'right',resizable:false" width="15%">Unit Cost(15%)</th>
+				<th data-options="field:'attr1',resizable:false" width="25%">Attribute(25%)</th>
+				<th data-options="field:'status',align:'center',resizable:false" width="15%">Status(15%)</th>
+			</tr>
+		</thead>
+	</table>
+
+</body>
+</html>

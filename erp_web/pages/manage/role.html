@@ -10,11 +10,11 @@
     <script type="text/javascript" src="/js/colorbox/jquery.colorbox-min.js"></script>
     <script type="text/javascript" src="/js/colorbox/colorboxSet.js"></script>
     <link href="/js/colorbox/colorbox.css" rel="stylesheet" type="text/css"/>
-    <link rel="stylesheet" type="text/css" href="/js/easyui-1.3.5/themes/default/easyui.css"/>
-    <link rel="stylesheet" type="text/css" href="/js/easyui-1.3.5/themes/icon.css"/>
+    <link rel="stylesheet" type="text/css" href="/js/easyui/themes/default/easyui.css"/>
+    <link rel="stylesheet" type="text/css" href="/js/easyui/themes/icon.css"/>
     <link type="text/css" rel="stylesheet" href="/css/common.css"/>
-    <script type="text/javascript" src="/js/easyui-1.3.5/jquery.easyui.min.js"></script>
-    <script type="text/javascript" src="/js/easyui-1.3.5/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="/js/easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="/js/easyui/locale/easyui-lang-zh_CN.js"></script>
     <script type="text/javascript" src="/js/common/common.js"></script>
 </head>
 <body>
@@ -24,7 +24,7 @@
         <tr>
             <td>角色名称：</td>
             <td>
-                <input type="text" name="searchName" id="searchName" style="width:150px;"/>
+                <input class="easyui-textbox" type="text" name="searchName" id="searchName" style="width:150px;"/>
             </td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
@@ -47,8 +47,8 @@
         <table>
             <tr>
                 <td><label id="nameLabel">角色名称&nbsp;&nbsp;</label></td>
-                <td style="padding:5px"><input name="name" id="name" class="easyui-validatebox"
-                data-options="required:true,validType:'length[2,30]'" style="width: 230px;height: 20px"/></td>
+                <td style="padding:5px"><input name="name" id="name" class="easyui-textbox"
+                data-options="required:true,validType:'length[2,30]'" style="width: 230px;"/></td>
             </tr>
         </table>
     </form>
@@ -67,18 +67,6 @@
         initForm();
         browserFit();
     });
-
-    //浏览器适配
-    function browserFit() {
-        if (getOs() == 'MSIE') {
-            $("#searchRemarkLabel").empty().append("描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：");
-            $("#nameLabel").empty().append("角色名称&nbsp;&nbsp;");
-        }
-        else {
-            $("#searchRemarkLabel").empty().append("描&nbsp;&nbsp;&nbsp;&nbsp;述：");
-            $("#nameLabel").empty().append("角色名称&nbsp;");
-        }
-    }
 
     //防止表单提交重复
     function initForm() {
@@ -116,11 +104,10 @@
             columns: [[
                 {field: 'id', width: 35, align: "center", checkbox: true},
                 {
-                    title: '操作', field: 'op', align: "center", width: 80, formatter: function (value, rec) {
+                    title: '操作', field: 'op', align: "center", width: 80, formatter: function (value, rec, index) {
                         var str = '';
-                        var rowInfo = rec.id + 'AaBb' + rec.name;
-                        str += '<img src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editRole(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
-                        str += '<img src="/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteRole(' + rec.id + ');"/>';
+                        str += '<img src="/js/easyui/themes/icons/pencil.png" style="cursor: pointer;" onclick="editRole(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
+                        str += '<img src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteRole(' + rec.id + ');"/>';
                         return str;
                     }
                 },
@@ -274,7 +261,7 @@
     function addRole() {
         $("#sort").val("");
         $("#remark").val("");
-        $('#roleDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加角色信息');
+        $('#roleDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/edit_add.png"/>&nbsp;增加角色信息');
         $(".window-mask").css({width: webW, height: webH});
         $("#name").val("").focus();
         //$('#roleFM').form('clear');
@@ -313,18 +300,14 @@
     });
 
     //编辑信息
-    function editRole(roleTotalInfo) {
-        var roleInfo = roleTotalInfo.split("AaBb");
-
-        $("#name").focus().val(roleInfo[1]);
-
-        oldName = roleInfo[1];
-        $('#roleDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑角色信息');
+    function editRole(index) {
+        var rowsdata = $("#tableData").datagrid("getRows")[index];
+        $("#name").textbox("setValue", rowsdata.name);
+        oldName = rowsdata.name;
+        $('#roleDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/pencil.png"/>&nbsp;编辑角色信息');
         $(".window-mask").css({width: webW, height: webH});
-        roleID = roleInfo[0];
-        //焦点在名称输入框==定焦在输入文字后面
-        $("#name").val("").focus().val(roleInfo[1]);
-        url = '/role/update?id=' + roleInfo[0];
+        roleID = rowsdata.id;
+        url = '/role/update?id=' + rowsdata.id;
     }
 
     //检查名称是否存在 ++ 重名无法提示问题需要跟进

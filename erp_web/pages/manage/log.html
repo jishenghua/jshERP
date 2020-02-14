@@ -6,12 +6,12 @@
     <!-- 指定以IE8的方式来渲染 -->
     <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
     <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon"/>
-    <link rel="stylesheet" type="text/css" href="/js/easyui-1.3.5/themes/default/easyui.css"/>
-    <link rel="stylesheet" type="text/css" href="/js/easyui-1.3.5/themes/icon.css"/>
+    <link rel="stylesheet" type="text/css" href="/js/easyui/themes/default/easyui.css"/>
+    <link rel="stylesheet" type="text/css" href="/js/easyui/themes/icon.css"/>
     <link type="text/css" rel="stylesheet" href="/css/common.css"/>
     <script type="text/javascript" src="/js/jquery-1.8.0.min.js"></script>
-    <script type="text/javascript" src="/js/easyui-1.3.5/jquery.easyui.min.js"></script>
-    <script type="text/javascript" src="/js/easyui-1.3.5/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="/js/easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="/js/easyui/locale/easyui-lang-zh_CN.js"></script>
     <script type="text/javascript" src="/js/common/common.js"></script>
 </head>
 <body>
@@ -21,13 +21,13 @@
         <tr>
             <td>操作模块：</td>
             <td>
-                <input type="text" name="searchOperation" id="searchOperation" style="width:90px;"/>
+                <input type="text" name="searchOperation" id="searchOperation" class="easyui-textbox" style="width:90px;"/>
             </td>
 
             <td>&nbsp;</td>
             <td>操作人员：</td>
             <td>
-                <select name="searchUsernameID" id="searchUsernameID" style="width:90px;"/>
+                <select name="searchUsernameID" id="searchUsernameID" class="easyui-textbox" style="width:90px;"/>
             </td>
             <td>&nbsp;</td>
             <td>开始时间：</td>
@@ -38,7 +38,7 @@
             <td>&nbsp;</td>
             <td>操作IP：</td>
             <td>
-                <input type="text" name="searchIP" id="searchIP" style="width:90px;"/>
+                <input type="text" name="searchIP" id="searchIP" class="easyui-textbox" style="width:90px;"/>
             </td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
@@ -47,13 +47,14 @@
         <tr>
             <td>操作详情：</td>
             <td>
-                <input type="text" name="searchDesc" id="searchDesc" style="width:90px;"/>
+                <input type="text" name="searchDesc" id="searchDesc" class="easyui-textbox" style="width:90px;"/>
             </td>
             <td>&nbsp;</td>
             <td>操作状态：</td>
             <td>
-                <select name="searchStatus" id="searchStatus" style="width:90px;">
-                    <option value="">请选择</option>
+                <select name="searchStatus" id="searchStatus" class="easyui-combobox"
+                        data-options="panelHeight:'auto'" style="width:90px;">
+                    <option value="">全部</option>
                     <option value="0">成功</option>
                     <option value="1">失败</option>
                 </select>
@@ -262,14 +263,13 @@
     //重置按钮
     $("#searchResetBtn").unbind().bind({
         click: function () {
-            $("#searchOperation").val("");
-            $("#searchUsernameID").val("");
-            $("#searchIP").val("");
-            $("#searchStatus").val("");
+            $("#searchOperation").textbox("clear");
+            $("#searchUsernameID").textbox("clear");
+            $("#searchIP").textbox("clear");
+            $("#searchStatus").textbox("setValue","");
             $("#searchBeginTime").datebox("clear");
             $("#searchEndTime").datebox("clear");
-            $("#searchDesc").val("");
-
+            $("#searchDesc").textbox("clear");
             //加载完以后重新初始化
             $("#searchBtn").click();
         }

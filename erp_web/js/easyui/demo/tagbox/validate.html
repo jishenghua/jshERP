@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Validate TagBox - jQuery EasyUI Demo</title>
+	<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../demo.css">
+	<script type="text/javascript" src="../../jquery.min.js"></script>
+	<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+</head>
+<body>
+	<h2>Validate TagBox</h2>
+	<p>This example shows how to validate the tagbox values.</p>
+	<div style="margin:20px 0;"></div>
+	<div class="easyui-panel" style="width:100%;max-width:400px;padding:30px 60px;">
+		<input class="easyui-tagbox" value="Apple,Orange" label="Add a tag" style="width:100%" data-options="
+				validType: ['length[3,10]','uniquetag']
+				">
+	</div>
+	<script type="text/javascript">
+		$.extend($.fn.validatebox.defaults.rules, {
+			uniquetag: {
+				validator: function(value, param){
+					var tb = $(this).closest('.tagbox').prev();
+					var values = tb.tagbox('getValues');
+					return $.inArray(value, values)==-1;
+				},
+				message: 'The tag value already exists.'
+			}
+		})
+	</script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Tree Actions - jQuery EasyUI Demo</title>
+	<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../demo.css">
+	<script type="text/javascript" src="../../jquery.min.js"></script>
+	<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+</head>
+<body>
+	<h2>Tree Actions</h2>
+	<p>Click the buttons below to perform actions.</p>
+	<div style="margin:20px 0;">
+		<a href="#" class="easyui-linkbutton" onclick="collapseAll()">CollapseAll</a>
+		<a href="#" class="easyui-linkbutton" onclick="expandAll()">ExpandAll</a>
+		<a href="#" class="easyui-linkbutton" onclick="expandTo()">ExpandTo</a>
+		<a href="#" class="easyui-linkbutton" onclick="getSelected()">GetSelected</a>
+	</div>
+	<div class="easyui-panel" style="padding:5px">
+		<ul id="tt" class="easyui-tree" data-options="url:'tree_data1.json',method:'get',animate:true"></ul>
+	</div>
+	<script type="text/javascript">
+		function collapseAll(){
+			$('#tt').tree('collapseAll');
+		}
+		function expandAll(){
+			$('#tt').tree('expandAll');
+		}
+		function expandTo(){
+			var node = $('#tt').tree('find',113);
+			$('#tt').tree('expandTo', node.target).tree('select', node.target);
+		}
+		function getSelected(){
+			var node = $('#tt').tree('getSelected');
+			if (node){
+				var s = node.text;
+				if (node.attributes){
+					s += ","+node.attributes.p1+","+node.attributes.p2;
+				}
+				alert(s);
+			}
+		}
+	</script>
+</body>
+</html>
