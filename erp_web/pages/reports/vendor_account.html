@@ -8,11 +8,11 @@
     <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon"/>
     <script type="text/javascript" src="/js/jquery-1.8.0.min.js"></script>
     <script type="text/javascript" src="/js/print/print.js"></script>
-    <link rel="stylesheet" type="text/css" href="/js/easyui-1.3.5/themes/default/easyui.css"/>
-    <link rel="stylesheet" type="text/css" href="/js/easyui-1.3.5/themes/icon.css"/>
+    <link rel="stylesheet" type="text/css" href="/js/easyui/themes/default/easyui.css"/>
+    <link rel="stylesheet" type="text/css" href="/js/easyui/themes/icon.css"/>
     <link type="text/css" rel="stylesheet" href="/css/common.css"/>
-    <script type="text/javascript" src="/js/easyui-1.3.5/jquery.easyui.min.js"></script>
-    <script type="text/javascript" src="/js/easyui-1.3.5/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="/js/easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="/js/easyui/locale/easyui-lang-zh_CN.js"></script>
     <script type="text/javascript" src="/js/common/outlook_in.js"></script>
     <script type="text/javascript" src="/js/My97DatePicker/WdatePicker.js"></script>
     <script type="text/javascript" src="/js/common/common.js"></script>
@@ -31,12 +31,12 @@
             <td>单据日期：</td>
             <td>
                 <input type="text" name="searchBeginTime" id="searchBeginTime"
-                       onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" class="txt Wdate" style="width:140px;"/>
+                       class="easyui-datetimebox" style="width:165px;"/>
             </td>
             <td>-</td>
             <td>
                 <input type="text" name="searchEndTime" id="searchEndTime"
-                       onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" class="txt Wdate" style="width:140px;"/>
+                       class="easyui-datetimebox" style="width:165px;"/>
             </td>
             <td>&nbsp;</td>
             <td>
@@ -60,8 +60,8 @@
     $(function () {
         var thisDate = getNowFormatMonth(); //当前月份
         var thisDateTime = getNowFormatDateTime(); //当前时间
-        $("#searchBeginTime").val(thisDate + "-01 00:00:00");
-        $("#searchEndTime").val(thisDateTime);
+        $("#searchBeginTime").textbox("setValue",thisDate + "-01 00:00:00");
+        $("#searchEndTime").textbox("setValue",thisDateTime);
         initSupplier(); //初始化供应商信息
         initTableData();
         ininPager();
@@ -110,7 +110,7 @@
                 {title: '单据金额', field: 'discountLastMoney', width: 80},
                 {title: '实际支付', field: 'changeAmount', width: 80},
                 {title: '本期变化', field: 'allPrice', width: 80},
-                {title: '单据日期', field: 'oTime', width: 140}
+                {title: '单据日期', field: 'oTime', width: 160}
             ]],
             onLoadError: function () {
                 $.messager.alert('页面加载提示', '页面加载异常，请稍后再试！', 'error');

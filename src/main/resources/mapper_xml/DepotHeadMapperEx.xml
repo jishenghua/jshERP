@@ -424,4 +424,30 @@
         </if>
         and ifnull(delete_Flag,'0') !='1'
     </select>
+
+    <select id="getBuyAndSaleRetailStatistics" resultType="java.math.BigDecimal">
+        SELECT
+        ifnull(sum(TotalPrice),0)
+        FROM jsh_depothead
+        WHERE 1=1
+        <if test="type != null">
+            and Type='${type}'
+        </if>
+        <if test="subType != null">
+            and SubType='${subType}'
+        </if>
+        <if test="hasSupplier == 1">
+            and OrganId is not null
+        </if>
+        <if test="hasSupplier == 0">
+            and OrganId is null
+        </if>
+        <if test="beginTime != null">
+            and OperTime >= '${beginTime}'
+        </if>
+        <if test="endTime != null">
+            and OperTime &lt;= '${endTime}'
+        </if>
+        and ifnull(delete_Flag,'0') !='1'
+    </select>
 </mapper>

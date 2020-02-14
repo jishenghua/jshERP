@@ -114,6 +114,10 @@
 	padding: 2px;
 }
 
+#depotHeadDlg .add-org-btn img, #depotHeadDlg .add-account-btn img{
+	padding-top: 4px;
+}
+
 #depotHeadDlg .other-money-list{
 	float: left;
 	width:122px;
@@ -121,4 +125,10 @@
 
 #depotHeadDlg .other-money-ico{
 	padding-left: 5px;
+}
+
+#depotHeadDlg .radius-ui{
+	height: 30px;
+	border: 1px solid #95B8E7;
+	border-radius:5px;
 }

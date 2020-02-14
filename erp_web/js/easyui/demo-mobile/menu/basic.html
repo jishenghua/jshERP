@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>Basic Menu - jQuery EasyUI Mobile Demo</title>
+	<link rel="stylesheet" type="text/css" href="../../themes/metro/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../../themes/mobile.css">
+	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+	<script type="text/javascript" src="../../jquery.min.js"></script>
+	<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="../../jquery.easyui.mobile.js"></script>
+</head>
+<body>
+	<div class="easyui-navpanel">
+		<header>
+			<div class="m-toolbar">
+				<div class="m-title">Menu</div>
+				<div class="m-right">
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true"></a>
+					<a href="javascript:void(0)" class="easyui-menubutton" data-options="iconCls:'icon-more',menu:'#mm',menuAlign:'right',hasDownArrow:false"></a>
+				</div>
+			</div>
+		</header>
+	</div>
+	<div id="mm" class="easyui-menu" style="width:150px;">
+		<div data-options="iconCls:'icon-undo'">Undo</div>
+		<div data-options="iconCls:'icon-redo'">Redo</div>
+		<div class="menu-sep"></div>
+		<div>Cut</div>
+		<div>Copy</div>
+		<div>Paste</div>
+		<div class="menu-sep"></div>
+		<div>Toolbar</div>
+		<div data-options="iconCls:'icon-remove'">Delete</div>
+		<div>Select All</div>
+	</div>
+</body>
+</html>

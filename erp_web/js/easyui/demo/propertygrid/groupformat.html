@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Group Format - jQuery EasyUI Demo</title>
+	<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../demo.css">
+	<script type="text/javascript" src="../../jquery.min.js"></script>
+	<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+</head>
+<body>
+	<h2>Group Format</h2>
+	<p>The user can change the group information.</p>
+	<div style="margin:20px 0;"></div>
+	<table class="easyui-propertygrid" style="width:300px" data-options="
+				url: 'propertygrid_data1.json',
+				method: 'get',
+				showGroup: true,
+				scrollbarSize: 0,
+				groupFormatter: groupFormatter
+			">
+	</table>
+	<script>
+		function groupFormatter(fvalue, rows){
+			return fvalue + ' - <span style="color:red">' + rows.length + ' rows</span>';
+		}
+	</script>
+</body>
+</html>

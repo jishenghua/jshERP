@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Custom Calendar - jQuery EasyUI Demo</title>
+	<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../demo.css">
+	<script type="text/javascript" src="../../jquery.min.js"></script>
+	<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+</head>
+<body>
+	<h2>Custom Calendar</h2>
+	<p>This example shows how to custom the calendar date by using 'formatter' function.</p>
+	<div style="margin:20px 0"></div>
+	
+	<div class="easyui-calendar" style="width:250px;height:250px;" data-options="formatter:formatDay"></div>
+			
+	<script>
+		var d1 = Math.floor((Math.random()*30)+1);
+		var d2 = Math.floor((Math.random()*30)+1);
+		function formatDay(date){
+			var m = date.getMonth()+1;
+			var d = date.getDate();
+			var opts = $(this).calendar('options');
+			if (opts.month == m && d == d1){
+				return '<div class="icon-ok md">' + d + '</div>';
+			} else if (opts.month == m && d == d2){
+				return '<div class="icon-search md">' + d + '</div>';
+			}
+			return d;
+		}
+	</script>
+	<style scoped="scoped">
+		.md{
+			height:16px;
+			line-height:16px;
+			background-position:2px center;
+			text-align:right;
+			font-weight:bold;
+			padding:0 2px;
+			color:red;
+		}
+	</style>
+</body>
+</html>

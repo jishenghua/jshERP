@@ -6,12 +6,12 @@
     <!-- 指定以IE8的方式来渲染 -->
     <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
     <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon"/>
-    <link rel="stylesheet" type="text/css" href="/js/easyui-1.3.5/themes/default/easyui.css"/>
-    <link rel="stylesheet" type="text/css" href="/js/easyui-1.3.5/themes/icon.css"/>
+    <link rel="stylesheet" type="text/css" href="/js/easyui/themes/default/easyui.css"/>
+    <link rel="stylesheet" type="text/css" href="/js/easyui/themes/icon.css"/>
     <link type="text/css" rel="stylesheet" href="/css/common.css"/>
     <script type="text/javascript" src="/js/jquery-1.8.0.min.js"></script>
-    <script type="text/javascript" src="/js/easyui-1.3.5/jquery.easyui.min.js"></script>
-    <script type="text/javascript" src="/js/easyui-1.3.5/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="/js/easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="/js/easyui/locale/easyui-lang-zh_CN.js"></script>
     <script type="text/javascript" src="/js/common/common.js"></script>
 </head>
 <body>
@@ -21,20 +21,19 @@
         <tr>
             <td>名称：</td>
             <td>
-                <input type="text" name="searchName" id="searchName" style="width:100px;"/>
+                <input type="text" name="searchName" id="searchName" class="easyui-textbox" style="width:100px;"/>
             </td>
-            <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td>类型:</td>
             <td>&nbsp;</td>
             <td>
-                <select name="searchType" id="searchType" style="width:100px; height:20px">
+                <select name="searchType" id="searchType" class="easyui-combobox"
+                        data-options="panelHeight:'auto'" style="width:100px;">
                     <option value="">全部</option>
                     <option value="电脑版">电脑版</option>
                     <option value="手机版">手机版</option>
                 </select>
             </td>
-            <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td>
                 <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchBtn">查询</a>&nbsp;&nbsp;
@@ -52,29 +51,29 @@
             <tr>
                 <td style="width:65px;">编号</td>
                 <td style="padding:5px">
-                    <input name="Number" id="Number" class="easyui-textbox" style="width: 230px;height: 20px"/>
+                    <input name="Number" id="Number" class="easyui-textbox" style="width: 230px;"/>
                 </td>
             </tr>
             <tr>
                 <td>名称</td>
                 <td style="padding:5px">
-                    <input name="Name" id="Name" class="easyui-validatebox"
-                           data-options="required:true,validType:'length[2,20]'" style="width: 230px;height: 20px"/>
+                    <input name="Name" id="Name" class="easyui-textbox"
+                           data-options="required:true,validType:'length[2,20]'" style="width: 230px;"/>
                 </td>
             </tr>
             <tr>
                 <td>上级编号</td>
                 <td style="padding:5px">
-                    <input name="PNumber" id="PNumber" class="easyui-textbox" style="width: 230px;height: 20px"/>
+                    <input name="PNumber" id="PNumber" class="easyui-textbox" style="width: 230px;"/>
                 </td>
             </tr>
             <tr>
                 <td>链接</td>
-                <td style="padding:5px"><input name="URL" id="URL" class="easyui-textbox" style="width: 230px;height: 20px"/></td>
+                <td style="padding:5px"><input name="URL" id="URL" class="easyui-textbox" style="width: 230px;"/></td>
             </tr>
             <tr>
                 <td>排序</td>
-                <td style="padding:5px"><input name="Sort" id="Sort" class="easyui-textbox" style="width: 230px;height: 20px"/></td>
+                <td style="padding:5px"><input name="Sort" id="Sort" class="easyui-textbox" style="width: 230px;"/></td>
             </tr>
             <tr>
                 <td>功能按钮</td>
@@ -92,10 +91,12 @@
             </tr>
             <tr>
                 <td>类型</td>
-                <td style="padding:5px"><select name="Type" id="Type" style="width: 230px;height: 20px">
-                    <option value="电脑版">电脑版</option>
-                    <option value="手机版">手机版</option>
-                </select>
+                <td style="padding:5px">
+                    <select name="Type" id="Type" class="easyui-combobox"
+                            data-options="panelHeight:'auto'" style="width: 230px;">
+                        <option value="电脑版">电脑版</option>
+                        <option value="手机版">手机版</option>
+                    </select>
                 </td>
             </tr>
         </table>
@@ -167,12 +168,10 @@
                 },
                 {title: '类型', field: 'type', width: 50},
                 {
-                    title: '操作', field: 'op', align: "center", width: 130, formatter: function (value, rec) {
+                    title: '操作', field: 'op', align: "center", width: 130, formatter: function (value, rec, index) {
                         var str = '';
-                        var rowInfo = rec.id + 'AaBb' + rec.number + 'AaBb' + rec.name + 'AaBb' + rec.pnumber + 'AaBb' + rec.url
-                            + 'AaBb' + rec.state + 'AaBb' + rec.sort + 'AaBb' + rec.enabled + 'AaBb' + rec.type + 'AaBb' + rec.pushbtn;
-                        str += '<img src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editFunctions(\'' + rowInfo + '\');"/>&nbsp;<a onclick="editFunctions(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
-                        str += '<img src="/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteFunctions(' + rec.id + ');"/>&nbsp;<a onclick="deleteFunctions(' + rec.id + ');" style="text-decoration:none;color:black;" href="javascript:void(0)">删除</a>&nbsp;&nbsp;';
+                        str += '<img src="/js/easyui/themes/icons/pencil.png" style="cursor: pointer;" onclick="editFunctions(\'' + index + '\');"/>&nbsp;<a onclick="editFunctions(\'' + index + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
+                        str += '<img src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteFunctions(' + rec.id + ');"/>&nbsp;<a onclick="deleteFunctions(' + rec.id + ');" style="text-decoration:none;color:black;" href="javascript:void(0)">删除</a>&nbsp;&nbsp;';
                         return str;
                     }
                 }
@@ -337,7 +336,7 @@
     var oldFunctions = "";
 
     function addFunctions() {
-        $('#functionsDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加功能信息');
+        $('#functionsDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/edit_add.png"/>&nbsp;增加功能信息');
         $(".window-mask").css({width: webW, height: webH});
         $("#Name").val("").focus();
         $('#functionsFM').form('clear');
@@ -381,19 +380,18 @@
     });
 
     //编辑信息
-    function editFunctions(functionsTotalInfo) {
-        var functionsInfo = functionsTotalInfo.split("AaBb");
-
-        $("#Number").focus().val(functionsInfo[1]);
-        $("#Name").focus().val(functionsInfo[2]);
-        $("#PNumber").focus().val(functionsInfo[3]);
-        $("#URL").focus().val(functionsInfo[4]);
-        $("#State").attr("checked", functionsInfo[5] == 'true' ? true : false);
-        $("#Sort").focus().val(functionsInfo[6]);
-        $("#Enabled").attr("checked", functionsInfo[7] == 'true' ? true : false);
-        $("#Type").focus().val(functionsInfo[8]);
-        if (functionsInfo[9] !== "undefined" && functionsInfo[9] !== "") {
-            var arr = functionsInfo[9].split(",");
+    function editFunctions(index) {
+        var rowsdata = $("#tableData").datagrid("getRows")[index];
+        $("#Number").textbox("setValue", rowsdata.number);
+        $("#Name").focus().textbox("setValue", rowsdata.name);
+        $("#PNumber").textbox("setValue", rowsdata.pnumber);
+        $("#URL").textbox("setValue", rowsdata.url);
+        $("#State").attr("checked", rowsdata.state);
+        $("#Sort").textbox("setValue", rowsdata.sort);
+        $("#Enabled").attr("checked", rowsdata.enabled);
+        $("#Type").textbox("setValue", rowsdata.type);
+        if (rowsdata.pushbtn != "undefined" && rowsdata.pushbtn != "") {
+            var arr = rowsdata.pushbtn.split(",");
             var pushBtnArray = [];
             for (var i = 0; i < arr.length; i++) {
                 if (arr[i]) {
@@ -408,13 +406,13 @@
             $("#PushBtn").combobox('setValues', '');
         }
 
-        oldFunctions = functionsInfo[2];
-        $('#functionsDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑功能信息');
+        oldFunctions = rowsdata.name;
+        $('#functionsDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/pencil.png"/>&nbsp;编辑功能信息');
         $(".window-mask").css({width: webW, height: webH});
-        functionsID = functionsInfo[0];
+        functionsID = rowsdata.id;
         //焦点在名称输入框==定焦在输入文字后面
-        $("#Name").val("").focus().val(functionsInfo[2]);
-        url = '/functions/update?id=' + functionsInfo[0];
+        $("#Name").val("").focus().val(rowsdata.name);
+        url = '/functions/update?id=' + rowsdata.id;
     }
 
     //检查名称是否存在 ++ 重名无法提示问题需要跟进
@@ -502,8 +500,8 @@
     //重置按钮
     $("#searchResetBtn").unbind().bind({
         click: function () {
-            $("#searchName").val("");
-
+            $("#searchName").textbox("clear");
+            $("#searchType").combobox("clear");
             //加载完以后重新初始化
             $("#searchBtn").click();
         }

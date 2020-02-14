@@ -476,17 +476,17 @@
 					formatter:function(value,rec,index) {
 						var str = '';
 						var orgId = rec.organid? rec.organid:0;
-						str += '<img title="查看" src="/js/easyui-1.3.5/themes/icons/list.png" style="cursor: pointer;" onclick="showDepotHead(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
-						str += '<img title="编辑" src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editDepotHead(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
-						str += '<img title="删除" src="/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteDepotHead('+ rec.id +',' + orgId +',' + rec.totalprice+',' + rec.status + ');"/>';
+						str += '<img title="查看" src="/js/easyui/themes/icons/list.png" style="cursor: pointer;" onclick="showDepotHead(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
+						str += '<img title="编辑" src="/js/easyui/themes/icons/pencil.png" style="cursor: pointer;" onclick="editDepotHead(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
+						str += '<img title="删除" src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteDepotHead('+ rec.id +',' + orgId +',' + rec.totalprice+',' + rec.status + ');"/>';
                         if(isShowSkip) {
-                            str += '&nbsp;&nbsp;&nbsp;<img title="' + opTitle + '" src="/js/easyui-1.3.5/themes/icons/redo.png" style="cursor: pointer;" onclick="skipDepotHead(\'' + index + '\');"/>';
+                            str += '&nbsp;&nbsp;&nbsp;<img title="' + opTitle + '" src="/js/easyui/themes/icons/redo.png" style="cursor: pointer;" onclick="skipDepotHead(\'' + index + '\');"/>';
 						}
 						return str;
 					}
 				},
 				{ title: organNameTitle, field: 'organName',width:120, hidden:isShowOrganNameColumn},
-				{ title: '单据编号',field: 'number',width:135, formatter:function (value,rec) {
+				{ title: '单据编号',field: 'number',width:155, formatter:function (value,rec) {
 						if(rec.linknumber) {
 							return value + "[转]";
 						} else {
@@ -494,13 +494,13 @@
 						}
 					}
 				},
-				{ title: '商品信息',field: 'materialsList',width:180,formatter:function(value){
+				{ title: '商品信息',field: 'materialsList',width:200,formatter:function(value){
 						if(value) {
                             return value.replace(",","，");
 						}
 					}
 				},
-				{ title: '单据日期',field: 'opertimeStr',width:130},
+				{ title: '单据日期',field: 'opertimeStr',width:145},
 				{ title: '操作员',field: 'operpersonname',width:60},
 				{ title: '金额合计',field: 'totalprice',width:60},
 				{ title: '含税合计',field: 'totaltaxlastmoney',hidden:isShowLastMoneyColumn,width:60,formatter:function(value,rec){
@@ -751,7 +751,11 @@
 								param.mpList = mPropertyList; //商品属性
 							},
 							onSelect:function(rec){
-                                materialSelect(rec);
+								var materialId = $("#depotHeadFM .datagrid-body")
+									.find("[field='MaterialId']").find(".datagrid-editable-input").val();
+								if(materialId !=rec.Id) {
+									materialSelect(rec);
+								}
 							}
 	                  	}
 		            }
@@ -1085,7 +1089,7 @@
                             statisticsFun(body,detailPrice,1,footer,taxRate);
 
                             //查询库存信息
-                            var depotId = body.find("[field='DepotId']").find(".combo-value").val();
+                            var depotId = body.find("[field='DepotId']").find(".textbox-value").val();
                             if(depotId) {
                                 var type = "select"; //type 类型：点击 click，选择 select
                                 findStockNumById(depotId, mId, monthTime, body, input, loadRatio, type);
@@ -1438,7 +1442,7 @@
 		$("#Debt").val(0);
 		$("#AccountId").val(defaultAccountId); //初始化默认的账户Id
 		var addTitle = listTitle.replace("列表","信息");
-		$('#depotHeadDlg').show().dialog('open').dialog('setTitle','<img src="/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加' + addTitle);
+		$('#depotHeadDlg').show().dialog('open').dialog('setTitle','<img src="/js/easyui/themes/icons/edit_add.png"/>&nbsp;增加' + addTitle);
 		$(".window-mask").css({ width: webW ,height: webH});
 
 	    orgDepotHead = "";
@@ -1446,7 +1450,7 @@
 	    initTableData_material("add"); //商品列表
 	    reject(); //撤销下、刷新商品列表
 		function supplierDlgFun(type) {
-            $('#supplierDlg').dialog('open').dialog('setTitle','<img src="/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加' + type + '信息');
+            $('#supplierDlg').dialog('open').dialog('setTitle','<img src="/js/easyui/themes/icons/edit_add.png"/>&nbsp;增加' + type + '信息');
             $('#supplierFM').form('clear');
             bindSupplierEvent();
         }
@@ -1460,7 +1464,7 @@
             supplierDlgFun("客户");
         });
         $("#addAccount").off("click").on("click",function(){
-            $('#accountDlg').dialog('open').dialog('setTitle','<img src="/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加结算账户');
+            $('#accountDlg').dialog('open').dialog('setTitle','<img src="/js/easyui/themes/icons/edit_add.png"/>&nbsp;增加结算账户');
             $('#accountFM').form('clear');
             bindAccountEvent();
         });
@@ -1550,7 +1554,7 @@
 	    oldNumber = res.number; //记录编辑前的单据编号
 		oldId = res.id; //记录单据Id
 	    var editTitle = listTitle.replace("列表","信息");
-	    $('#depotHeadDlg').show().dialog('open').dialog('setTitle','<img src="/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑' + editTitle);
+	    $('#depotHeadDlg').show().dialog('open').dialog('setTitle','<img src="/js/easyui/themes/icons/pencil.png"/>&nbsp;编辑' + editTitle);
 	    $(".window-mask").css({ width: webW ,height: webH});
 	    depotHeadID = res.id;
 
@@ -1701,7 +1705,7 @@
         var TotalPrice = res.totalprice;
         $("#AllocationProjectIdShow").text(res.allocationProjectName);
 	    var showTitle = listTitle.replace("列表","信息");
-	    $('#depotHeadDlgShow').show().dialog('open').dialog('setTitle','<img src="/js/easyui-1.3.5/themes/icons/list.png"/>&nbsp;查看' + showTitle);
+	    $('#depotHeadDlgShow').show().dialog('open').dialog('setTitle','<img src="/js/easyui/themes/icons/list.png"/>&nbsp;查看' + showTitle);
 	    $(".window-mask").css({ width: webW ,height: webH});
 
         depotHeadID = res.id;
@@ -1773,9 +1777,10 @@
 		//重置按钮
 		$("#searchResetBtn").unbind().bind({
 			click:function(){
-				$("#searchState").val("");
-				$("#searchBeginTime").val("");
-				$("#searchEndTime").val("");
+				$("#searchNumber").textbox("clear");
+				$("#searchMaterial").textbox("clear");
+				$("#searchBeginTime").datebox("clear");
+				$("#searchEndTime").datebox("clear");
 				//加载完以后重新初始化
 				$("#searchBtn").click();
 		    }
@@ -2090,7 +2095,7 @@
 
 		//多账户结算窗口弹出事件
 		function depotHeadAccountDlgFun(){
-			$('#depotHeadAccountDlg').dialog('open').dialog('setTitle','<img src="/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;多账户结算');
+			$('#depotHeadAccountDlg').dialog('open').dialog('setTitle','<img src="/js/easyui/themes/icons/pencil.png"/>&nbsp;多账户结算');
 			$("#depotHeadAccountDlg .account-dlg .account-content-tmp").remove(); //先移除输入栏目
 			$("#accountMoneyTotalDlg").text(0); //将合计初始化为0
 			for(var i=0; i<6; i++) {
@@ -2253,7 +2258,7 @@
 
 		//点击采购费用、销售费用的事件
 		$(".other-money-ico").off("click").on("click",function(){
-			$('#otherMoneyDlg').dialog('open').dialog('setTitle','<img src="/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;'+ listSubType +'费用');
+			$('#otherMoneyDlg').dialog('open').dialog('setTitle','<img src="/js/easyui/themes/icons/pencil.png"/>&nbsp;'+ listSubType +'费用');
 			$("#otherMoneyDlg .money-dlg .money-content-tmp").remove(); //先移除输入栏目
 			$("#otherMoneyTotalDlg").text(0); //将合计初始化为0
 			for(var i=0; i<6; i++) {
@@ -2616,7 +2621,7 @@
 	}
     //新增仓库
     function appendDepot() {
-        $('#depotDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加仓库信息');
+        $('#depotDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/edit_add.png"/>&nbsp;增加仓库信息');
         $(".window-mask").css({width: webW, height: webH});
         $('#depotFM').form('clear');
         bindDepotEvent();

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Fluid ComboBox - jQuery EasyUI Demo</title>
+	<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../demo.css">
+	<script type="text/javascript" src="../../jquery.min.js"></script>
+	<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+</head>
+<body>
+	<h2>Fluid ComboBox</h2>
+	<p>This example shows how to set the width of combobox to a percentage of its parent container.</p>
+	<div style="margin:20px 0"></div>
+	<div class="easyui-panel" style="width:100%;max-width:400px;padding:30px 60px;">
+		<div style="margin-bottom:20px">
+			<input class="easyui-combobox" name="language" style="width:100%;"
+					data-options="
+						url: 'combobox_data2.json',
+						method: 'get',
+						valueField:'value',
+						textField:'text',
+						groupField:'group',
+						label: 'width: 100%',
+						labelPosition: 'top'
+					">
+		</div>
+		<div style="margin-bottom:20px">
+			<input class="easyui-combobox" name="language" style="width:50%;"
+					data-options="
+						url: 'combobox_data2.json',
+						method: 'get',
+						valueField:'value',
+						textField:'text',
+						groupField:'group',
+						label: 'width: 50%',
+						labelPosition: 'top'
+					">
+		</div>
+	</div>
+</body>
+</html>

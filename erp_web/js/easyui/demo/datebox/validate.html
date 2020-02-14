@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Validate DateBox - jQuery EasyUI Demo</title>
+	<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../demo.css">
+	<script type="text/javascript" src="../../jquery.min.js"></script>
+	<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+</head>
+<body>
+	<h2>Validate DateBox</h2>
+	<p>When the selected date is greater than specified date. The field validator will raise an error.</p>
+	<div style="margin:20px 0;"></div>
+	<div class="easyui-panel" style="width:100%;max-width:400px;padding:30px 60px;">
+		<div style="margin-bottom:20px">
+			<input class="easyui-datebox" label="Required Date:" labelPosition="top" required style="width:100%;">
+		</div>
+		<div style="margin-bottom:20px">
+			<input class="easyui-datebox" label="End Date:" labelPosition="top" required data-options="validType:'md[\'10/11/2015\']'" style="width:100%;">
+		</div>
+	</div>
+	<script>
+		$.extend($.fn.validatebox.defaults.rules, {
+			md: {
+				validator: function(value, param){
+					var d1 = $.fn.datebox.defaults.parser(param[0]);
+					var d2 = $.fn.datebox.defaults.parser(value);
+					return d2<=d1;
+				},
+				message: 'The date must be less than or equals to {0}.'
+			}
+		})
+	</script>
+</body>
+</html>

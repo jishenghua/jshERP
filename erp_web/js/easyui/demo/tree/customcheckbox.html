@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Custom CheckBox Tree - jQuery EasyUI Demo</title>
+	<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../demo.css">
+	<script type="text/javascript" src="../../jquery.min.js"></script>
+	<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+</head>
+<body>
+	<h2>Custom CheckBox Tree</h2>
+	<p>Tree nodes with customized check boxes.</p>
+	<div style="margin:20px 0;"></div>
+	<div class="easyui-panel" style="padding:5px">
+		<ul class="easyui-tree" data-options="
+				url:'tree_data1.json',
+				method:'get',
+				animate:true,
+				checkbox:function(node){
+					if (node.id == 11 || node.id == 122){
+						return true;
+					}
+				}
+				"></ul>
+	</div>
+</body>
+</html>

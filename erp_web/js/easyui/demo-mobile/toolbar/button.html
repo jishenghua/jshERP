@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>Toolbar Button - jQuery EasyUI Mobile Demo</title>
+	<link rel="stylesheet" type="text/css" href="../../themes/metro/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../themes/mobile.css">
+	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+	<script type="text/javascript" src="../../jquery.min.js"></script>
+    <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="../../jquery.easyui.mobile.js"></script>
+</head>
+<body>
+	<div class="easyui-navpanel">
+        <header>
+            <div class="m-toolbar">
+                <div class="m-title">Toolbar Button</div>
+            </div>
+        </header>
+        <footer>
+            <div class="m-buttongroup m-buttongroup-justified" style="width:100%">
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-large-picture',size:'large',iconAlign:'top',plain:true">Picture</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-large-clipart',size:'large',iconAlign:'top',plain:true">Clip Art</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-large-shapes',size:'large',iconAlign:'top',plain:true">Shapes</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-large-smartart',size:'large',iconAlign:'top',plain:true">SmartArt</a>
+            </div>
+        </footer>
+        <ul class="easyui-datalist" data-options="
+                fit: true,
+                lines: true,
+                border: false
+                ">
+            <li>Large</li>
+            <li>Spotted Adult Female</li>
+            <li>Venomless</li>
+            <li>Rattleless</li>
+            <li>Green Adult</li>
+            <li>Tailless</li>
+            <li>With tail</li>
+            <li>Adult Female</li>
+        </ul>
+	</div>
+</body>
+</html>

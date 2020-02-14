@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Number Range - jQuery EasyUI Demo</title>
+	<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../demo.css">
+	<script type="text/javascript" src="../../jquery.min.js"></script>
+	<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+</head>
+<body>
+	<h2>Number Range</h2>
+	<p>The value is constrained to a range between 10 and 100.</p>
+	<div style="margin:20px 0;"></div>
+	<div class="easyui-panel" style="width:100%;max-width:400px;padding:30px 60px;">
+		<div style="margin-bottom:20px">
+			<input class="easyui-numberspinner" value="30" data-options="label:'Age:',labelPosition:'top',min:1,max:100" style="width:100%;">
+		</div>
+		<div style="margin-bottom:20px">
+			<input class="easyui-numberspinner" value="3000" data-options="label:'Salary:',labelPosition:'top',min:1000,max:6000,increment:100,prefix:'$'" style="width:100%;">
+		</div>
+	</div>
+</body>
+</html>

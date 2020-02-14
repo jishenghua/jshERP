@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>Basic Toolbar - jQuery EasyUI Mobile Demo</title>
+	<link rel="stylesheet" type="text/css" href="../../themes/metro/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../themes/mobile.css">
+	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+	<script type="text/javascript" src="../../jquery.min.js"></script>
+    <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="../../jquery.easyui.mobile.js"></script>
+</head>
+<body>
+	<div class="easyui-navpanel">
+        <header>
+            <div class="m-toolbar">
+                <div class="m-title">Basic Toolbar</div>
+                <div class="m-left">
+                    <a href="javascript:void(0)" class="easyui-linkbutton m-back" plain="true" outline="true">Back</a>
+                </div>
+                <div class="m-right">
+                    <a href="javascript:void(0)" class="easyui-linkbutton m-next" plain="true" outline="true">Next</a>
+                </div>
+            </div>
+        </header>
+        <ul class="easyui-datalist" data-options="
+                fit: true,
+                lines: true,
+                border: false,
+                textFormatter: function(value){
+                    return '<a href\'javascript:void(0)\' class=\'datalist-link\'>' + value + '</a>';
+                },
+                onClickRow: function(index,row){
+                    $('#p2-title').html(row.text);
+                    $.mobile.go('#p2');
+                }
+                ">
+            <li>Large</li>
+            <li>Spotted Adult Female</li>
+            <li>Venomless</li>
+            <li>Rattleless</li>
+            <li>Green Adult</li>
+            <li>Tailless</li>
+            <li>With tail</li>
+            <li>Adult Female</li>
+        </ul>
+	</div>
+    <div id="p2" class="easyui-navpanel">
+        <header>
+            <div class="m-toolbar">
+                <span id="p2-title" class="m-title">Detail</span>
+                <div class="m-left">
+                    <a href="javascript:void(0)" class="easyui-linkbutton m-back" plain="true" outline="true" onclick="$.mobile.back()">Back</a>
+                </div>
+            </div>
+        </header>
+        <div style="margin:50px 0 0;text-align:center">
+            <a href="javascript:void(0)" class="easyui-linkbutton" style="width:100px;height:30px" onclick="$.mobile.back()">Go Back</a>
+        </div>
+    </div>
+</body>
+</html>

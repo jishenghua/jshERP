@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>TagBox with Button - jQuery EasyUI Demo</title>
+	<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../demo.css">
+	<script type="text/javascript" src="../../jquery.min.js"></script>
+	<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+</head>
+<body>
+	<h2>TagBox with Button</h2>
+	<p>The button can be attached to a tagbox.</p>
+	<div style="margin:20px 0;"></div>
+	<div class="easyui-panel" style="width:100%;max-width:400px;padding:30px 60px;">
+		<input class="easyui-tagbox" value="Apple,Orange" label="Add a tag" style="width:100%" data-options="
+				buttonText: 'Button',
+				onClickButton: function(){
+					alert('click button');
+				}
+				">
+	</div>
+</body>
+</html>

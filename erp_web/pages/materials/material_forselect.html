@@ -7,12 +7,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
     <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon"/>
     <script type="text/javascript" src="/js/jquery-1.8.0.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="/js/easyui-1.3.5/themes/default/easyui.css"/>
-    <link rel="stylesheet" type="text/css" href="/js/easyui-1.3.5/themes/icon.css"/>
+    <link rel="stylesheet" type="text/css" href="/js/easyui/themes/default/easyui.css"/>
+    <link rel="stylesheet" type="text/css" href="/js/easyui/themes/icon.css"/>
     <link type="text/css" rel="stylesheet" href="/css/common.css"/>
     <link type="text/css" rel="stylesheet" href="/css/material.css"/>
-    <script type="text/javascript" src="/js/easyui-1.3.5/jquery.easyui.min.js"></script>
-    <script type="text/javascript" src="/js/easyui-1.3.5/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="/js/easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="/js/easyui/locale/easyui-lang-zh_CN.js"></script>
     <script type="text/javascript" src="/js/common/outlook_in.js"></script>
     <script type="text/javascript" src="/js/common/common.js"></script>
 </head>
@@ -103,10 +103,10 @@
                     if(selectType=="lookForSelectMaterial"){
                         //单个添加序列号时选择
                         $("#materialId").val(rowData.id);
-                        $("#materialName").val(rowData.name);
+                        $("#materialName").textbox("setValue",rowData.name);
                     }else if(selectType=="batLookForSelectMaterial"){
                         //批量添加序列号时选择
-                        $("#batAddMaterialName").val(rowData.name);
+                        $("#batAddMaterialName").textbox("setValue",rowData.name);
 
                     }
                     //关闭掉dialog

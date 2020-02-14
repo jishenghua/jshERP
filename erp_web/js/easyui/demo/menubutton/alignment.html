@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Menu Alignment on MenuButton - jQuery EasyUI Demo</title>
+	<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../demo.css">
+	<script type="text/javascript" src="../../jquery.min.js"></script>
+	<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+</head>
+<body>
+	<h2>Menu Alignment on MenuButton</h2>
+	<p>This example shows how to change the alignment of the top level menu.</p>
+	<div style="margin:20px 0;">
+		<span>Change Alignment: </span>
+		<select onchange="setalign(this.value)">
+			<option value="left">Left</option>
+			<option value="right">Right</option>
+		</select>
+	</div>
+	<div class="easyui-panel" style="padding:5px;">
+		<a href="#" class="easyui-linkbutton" data-options="plain:true">Home</a>
+		<a href="#" class="easyui-menubutton" data-options="menu:'#mm1',iconCls:'icon-edit'">Edit</a>
+		<a href="#" class="easyui-menubutton" data-options="menu:'#mm2',iconCls:'icon-help'">Help</a>
+		<a href="#" class="easyui-menubutton" data-options="menu:'#mm3'">About</a>
+		
+	</div>
+	<div id="mm1" style="width:150px;">
+		<div data-options="iconCls:'icon-undo'">Undo</div>
+		<div data-options="iconCls:'icon-redo'">Redo</div>
+		<div class="menu-sep"></div>
+		<div>Cut</div>
+		<div>Copy</div>
+		<div>Paste</div>
+		<div class="menu-sep"></div>
+		<div>
+			<span>Toolbar</span>
+			<div>
+				<div>Address</div>
+				<div>Link</div>
+				<div>Navigation Toolbar</div>
+				<div>Bookmark Toolbar</div>
+				<div class="menu-sep"></div>
+				<div>New Toolbar...</div>
+			</div>
+		</div>
+		<div data-options="iconCls:'icon-remove'">Delete</div>
+		<div>Select All</div>
+	</div>
+	<div id="mm2" style="width:100px;">
+		<div>Help</div>
+		<div>Update</div>
+		<div>About</div>
+	</div>
+	<div id="mm3">
+		<div>History</div>
+		<div>Faq</div>
+		<div>Our Team</div>
+	</div>
+	<script>
+		function setalign(align){
+			$('a.easyui-menubutton').menubutton({
+				menuAlign: align
+			})
+		}
+	</script>
+</body>
+</html>

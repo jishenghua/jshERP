@@ -7,12 +7,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
     <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon"/>
     <script type="text/javascript" src="/js/jquery-1.8.0.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="/js/easyui-1.3.5/themes/default/easyui.css"/>
-    <link rel="stylesheet" type="text/css" href="/js/easyui-1.3.5/themes/icon.css"/>
+    <link rel="stylesheet" type="text/css" href="/js/easyui/themes/default/easyui.css"/>
+    <link rel="stylesheet" type="text/css" href="/js/easyui/themes/icon.css"/>
     <link type="text/css" rel="stylesheet" href="/css/common.css"/>
     <link type="text/css" rel="stylesheet" href="/css/material.css"/>
-    <script type="text/javascript" src="/js/easyui-1.3.5/jquery.easyui.min.js"></script>
-    <script type="text/javascript" src="/js/easyui-1.3.5/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="/js/easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="/js/easyui/locale/easyui-lang-zh_CN.js"></script>
     <script type="text/javascript" src="/js/common/outlook_in.js"></script>
     <script type="text/javascript" src="/js/common/common.js"></script>
     <script src="/js/common/jsherp.js"></script>
@@ -24,12 +24,12 @@
         <tr>
             <td>商品名称：</td>
             <td>
-                <input name="materialName_s" id="materialName_s" style="width:80px;"/>
+                <input name="materialName_s" id="materialName_s" class="easyui-textbox" style="width:100px;"/>
             </td>
             <td>&nbsp;</td>
             <td>序列号：</td>
             <td>
-                <input name="serialNumber_s" id="serialNumber_s" style="width:80px;"/>
+                <input name="serialNumber_s" id="serialNumber_s" class="easyui-textbox" style="width:100px;"/>
             </td>
             <td>&nbsp;</td>
             <td>
@@ -47,7 +47,7 @@
     <table id="serialNumberTableData" style="top:50px;border-bottom-color:#FFFFFF"></table>
 </div>
 
-<div id="serialNumberDlg" class="easyui-dialog" style="width:860px;height:420px;padding:10px 20px"
+<div id="serialNumberDlg" class="easyui-dialog" style="width:860px;height:440px;padding:10px 20px"
      closed="true" buttons="#dlg-buttons" modal="true" collapsible="false" closable="true">
     <form id="serialNumberFM" method="post" novalidate>
         <div id="tt" class="easyui-tabs" style="width:800px;height:320px;">
@@ -56,28 +56,28 @@
                     <tr>
                         <td style="width:60px; height:30px;">商品名称</td>
                         <td style="padding:5px;width:300px;">
-                            <input name="materialId" id="materialId" type="hidden" />
-                            <input name="materialName" id="materialName" readonly="readonly"
-                                   style="width: 180px;height: 20px"/>
+                            <input name="materialName" id="materialName" class="easyui-textbox" readonly="readonly"
+                                   style="width: 180px;"/>
                             <a href="javascript:void(0)" class="l-btn l-btn-plain" group="" id="lookForSelectMaterial">
-                                <span class="l-btn-left"><span class="l-btn-text icon-search l-btn-icon-left"></span></span></a>
+                                <span class="l-btn-left"><span class="l-btn-text icon-search l-btn-icon-left" style="height: 20px;"></span></span></a>
+                            <input name="materialId" id="materialId" type="hidden" />
                         </td>
                     </tr>
                     <tr>
                         <td style="width:80px;">序列号</td>
                         <td style="padding:5px;width:180px;">
                             <input name="serialNumberId" id="serialNumberId" type="hidden" />
-                            <input name="serialNumber" id="serialNumber" class="easyui-validatebox"
+                            <input name="serialNumber" id="serialNumber" class="easyui-textbox"
                                    data-options="required:true,validType:'length[1,30]'"
-                                   style="width: 180px;height: 20px"/>
+                                   style="width: 180px;"/>
                         </td>
                         <td style="width:200px;"></td>
                     </tr>
                     <tr>
                         <td style="height:30px;">备注</td>
                         <td style="padding:5px" colspan="3">
-                            <textarea name="remark" id="remark" rows="2" cols="2" placeholder="暂无备注信息"
-                                      style="width: 468px; height:40px;"></textarea>
+                            <textarea name="remark" id="remark" class="easyui-textbox" data-options="multiline:true"
+                                      placeholder="暂无备注信息" style="width: 580px; height:40px;"></textarea>
                         </td>
                         <td></td>
                     </tr>
@@ -91,7 +91,7 @@
     <a href="javascript:void(0)" id="cancelSerialNumber" class="easyui-linkbutton" iconCls="icon-cancel"
        onclick="javascript:$('#serialNumberDlg').dialog('close')">取消</a>
 </div>
-<div id="batAddSerialNumberDlg" class="easyui-dialog" style="width:860px;height:420px;padding:10px 20px"
+<div id="batAddSerialNumberDlg" class="easyui-dialog" style="width:860px;height:440px;padding:10px 20px"
      closed="true" buttons="#bat-dlg-buttons" modal="true" collapsible="false" closable="true">
     <form id="batAddserialNumberFM" method="post" novalidate>
         <div id="batAddtt" class="easyui-tabs" style="width:800px;height:320px;">
@@ -100,32 +100,32 @@
                     <tr>
                         <td style="width:60px; height:30px;">商品名称</td>
                         <td style="padding:5px;width:300px;">
-                            <input name="materialName" id="batAddMaterialName" readonly="readonly"
-                                   style="width: 180px;height: 20px"/>
+                            <input name="materialName" id="batAddMaterialName" class="easyui-textbox" readonly="readonly"
+                                   style="width: 180px;"/>
                             <a href="javascript:void(0)" class="l-btn l-btn-plain" group="" id="batLookForSelectMaterial">
-                                <span class="l-btn-left"><span class="l-btn-text icon-search l-btn-icon-left"></span></span></a>
+                                <span class="l-btn-left"><span class="l-btn-text icon-search l-btn-icon-left" style="height: 20px"></span></span></a>
                         </td>
                     </tr>
                     <tr>
                         <td style="width:80px;">序列号前缀</td>
                         <td style="padding:5px;width:180px;">
-                            <input name="serialNumber" id="batAddSerialNumberInput" class="easyui-validatebox"
+                            <input name="serialNumber" id="batAddSerialNumberInput" class="easyui-textbox"
                                    data-options="required:true,validType:'length[1,30]'"
-                                   style="width: 180px;height: 20px"/>
+                                   style="width: 180px;"/>
                         </td>
                         <td style="width:80px;">序列号数量</td>
                         <td style="padding:5px;width:180px;">
                             <input name="batAddTotal" id="batAddTotal" class="easyui-numberbox"
                                    data-options="min:0,max:500"
-                                   style="width: 180px;height: 20px"/>
+                                   style="width: 180px;"/>
                         </td>
                         <td></td>
                     </tr>
                     <tr>
                         <td style="height:30px;">备注</td>
                         <td style="padding:5px" colspan="3">
-                            <textarea name="remark" id="batAddremark" rows="2" cols="2" placeholder="暂无备注信息"
-                                      style="width: 468px; height:40px;"></textarea>
+                            <textarea name="remark" id="batAddremark" class="easyui-textbox" data-options="multiline:true"
+                                      placeholder="暂无备注信息" style="width: 580px; height:40px;"></textarea>
                         </td>
                         <td></td>
                     </tr>
@@ -205,12 +205,12 @@
                          *  在此使用传递index，然后根据index获取数据的方式替代
                          *
                          */
-                        str += '<img title="编辑" src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editSerialNumber(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
-                        str += '<img title="删除" src="/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteSerialNumber(' + rec.id + ');"/>';
+                        str += '<img title="编辑" src="/js/easyui/themes/icons/pencil.png" style="cursor: pointer;" onclick="editSerialNumber(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
+                        str += '<img title="删除" src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteSerialNumber(' + rec.id + ');"/>';
                         return str;
                     }
                 },
-                {title: '商品名称', align: "center",field: 'materialName', width: 100},
+                {title: '商品名称', align: "center",field: 'materialName', width: 140},
                 {title: '序列号',align: "center", field: 'serialNumber', width: 200},
                 {title: '单据编号', align: "center", field: 'depotHeadNumber', width: 140,
                     formatter: function (value, row) {
@@ -225,8 +225,8 @@
                         return value=='1' ? "是" : "否";
                     }
                 },
-                {title: '创建时间',align: "center",  field: 'createTime', width: 140,formatter: formatDatebox},
-                {title: '更新时间', align: "center", field: 'updateTime', width: 140,formatter: formatDatebox},
+                {title: '创建时间',align: "center",  field: 'createTime', width: 160,formatter: formatDatebox},
+                {title: '更新时间', align: "center", field: 'updateTime', width: 160,formatter: formatDatebox},
                 {title: '备注',align: "center",  field: 'remark',width: 200}
             ]],
             toolbar: [
@@ -377,8 +377,9 @@
         if(checkPower()){
             return;
         }
-        $('#serialNumberDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加序列号信息');
+        $('#serialNumberDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/edit_add.png"/>&nbsp;增加序列号信息');
         $(".window-mask").css({width: webW, height: webH});
+        $('#serialNumberFM').form('clear');
         $('#materialId').val('');
         $('#materialName').val('');
         $('#serialNumberId').val('');
@@ -467,10 +468,10 @@
         var rowsdata = $("#tableData").datagrid("getRows")[index];
         $("#serialNumberId").val(rowsdata.serialNumberId);
         $("#materialId").val(rowsdata.materialId);
-        $("#materialName").focus().val(rowsdata.materialName);
-        $("#serialNumber").val(rowsdata.serialNumber);
-        $("#remark").val(rowsdata.remark);
-        $('#serialNumberDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑序列号信息');
+        $("#materialName").focus().textbox("setValue", rowsdata.materialName);
+        $("#serialNumber").textbox("setValue", rowsdata.serialNumber);
+        $("#remark").textbox("setValue", rowsdata.remark);
+        $('#serialNumberDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/pencil.png"/>&nbsp;编辑序列号信息');
         $(".window-mask").css({width: webW, height: webH});
         //选中基本资料tab
         $("#serialNumberFM #tt .tabs li").first().click();
@@ -522,8 +523,8 @@
     //重置按钮
     $("#searchResetBtn").unbind().bind({
         click: function () {
-            $("#materialName_s").val("");
-            $("#serialNumber_s").val("");
+            $("#materialName_s").textbox("clear");
+            $("#serialNumber_s").textbox("clear");
             //加载完以后重新初始化
             $("#searchBtn").click();
         }
@@ -565,12 +566,10 @@
      * 批量添加序列号
      * */
     function batAddSerialNumber(){
-        $('#batAddSerialNumberDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;批量添加序列号信息');
+        $('#batAddSerialNumberDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/edit_add.png"/>&nbsp;批量添加序列号信息');
         $(".window-mask").css({width: webW, height: webH});
-        $('#batAddMaterialName').val('');
-        $('#batAddSerialNumberInput').val('');
-        $('#batAddTotal').val('10');
-        $('#batAddremark').val('');
+        $('#batAddSerialNumberFM').form('clear');
+        $('#batAddTotal').textbox("setValue",'10');
         url = '/serialNumber/batAddSerialNumber';
     }
     //保存信息

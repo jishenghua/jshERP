@@ -2,13 +2,13 @@
 * 很多人说华夏ERP（英文名：jshERP）是目前唯一完整开源的进销存系统
 * 虽然目前只有进销存+财务的功能，但后面将会推出ERP的全部功能，大家一起努力吧
 * **官网地址：[https://www.huaxiaerp.com](https://www.huaxiaerp.com)，演示账号：jsh，密码：123456 (欢迎商家入驻)**
-* 商务合作-请联系QQ：514869858，技术交流-请联系QQ：752718920
 * 欢迎加入华夏ERP交流QQ群，群1：120725710(满)、群2：732152262
 * 系统默认租户账号：jsh，默认超管账户：admin，默认密码均为：123456
+* 商务合作或技术交流，请联系QQ：752718920
 * 部署如遇到困难请参考Wiki文档  https://gitee.com/jishenghua/JSH_ERP/wikis/pages
 
 # 定制服务
-* 如有ERP **私人定制** 需求，请将需求整理成文档，发给邮箱： **514869858@qq.com** ，我会及时回复哒
+* 如有ERP **私人定制** 需求，请将需求整理成文档，发给邮箱： **752718920@qq.com** ，我会及时回复哒
 
 # 开发初衷
 * 华夏ERP立志为中小企业提供开源好用的ERP软件，降低企业的信息化成本
@@ -31,12 +31,13 @@
 * DB: Mysql5.7+
 * JDK: JDK1.8
 * Maven: Maven3.2.3+
-* 为方便大家搭建开发环境，分享了下载地址 https://pan.baidu.com/s/1jlild9uyGdQ7H2yaMx76zw 提取码:814g
 
-# 运行环境
+# 服务器环境
 * 数据库服务器：Mysql5.7+
 * JAVA平台: JRE1.8
 * 操作系统：Windows、Linux等
+* 为方便大家搭建运行环境，分享了下载地址 https://pan.baidu.com/s/1jlild9uyGdQ7H2yaMx76zw 提取码:814g
+* 不会maven打包的小伙伴，请下载此打包后的文件：https://pan.baidu.com/s/1soId837KuvhpzTAgF62XRA 提取码：tm3k
 
 # 开源说明
 * 本系统100%开源，遵守GPL-3.0协议

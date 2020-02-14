@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Error Placement in ValidateBox - jQuery EasyUI Demo</title>
+	<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../demo.css">
+	<script type="text/javascript" src="../../jquery.min.js"></script>
+	<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+</head>
+<body>
+	<h2>Error Placement in ValidateBox</h2>
+	<p>This example shows how to display the error message below the field.</p>
+	<div style="margin:20px 0;"></div>
+	<div class="easyui-panel" title="Register" style="width:100%;max-width:400px;padding:30px 60px;">
+		<div style="margin-bottom:20px">
+			<label for="username" class="label-top">User Name:</label>
+			<input id="username" class="easyui-validatebox tb" data-options="required:true,validType:'length[3,10]',validateOnCreate:true,err:err">
+		</div>
+		<div style="margin-bottom:20px">
+			<label for="email" class="label-top">Email:</label>
+			<input id="email" class="easyui-validatebox tb" data-options="required:true,validType:'email',validateOnCreate:false,err:err">
+		</div>
+		<div style="margin-bottom:20px">
+			<label for="url" class="label-top">Url:</label>
+			<input id="url" class="easyui-validatebox tb" data-options="required:true,validType:'url',validateOnCreate:false,err:err">
+		</div>
+		<div style="margin-bottom:20px">
+			<label for="phone" class="label-top">Phone:</label>
+			<input id="phone" class="easyui-validatebox tb" data-options="required:true,validateOnCreate:false,err:err">
+		</div>
+	</div>
+	<style scoped="scoped">
+		.tb{
+			width:100%;
+			margin:0;
+			padding:5px 4px;
+			border:1px solid #ccc;
+			box-sizing:border-box;
+		}
+		.error-message{
+			margin: 4px 0 0 0;
+			padding: 0;
+			color: red;
+		}
+	</style>
+	<script type="text/javascript">
+		function err(target, message){
+			var t = $(target);
+			if (t.hasClass('textbox-text')){
+				t = t.parent();
+			}
+			var m = t.next('.error-message');
+			if (!m.length){
+				m = $('<div class="error-message"></div>').insertAfter(t);
+			}
+			m.html(message);
+		}
+	</script>
+</body>
+</html>

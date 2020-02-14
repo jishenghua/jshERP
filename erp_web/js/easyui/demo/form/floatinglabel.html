@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Floating Label - jQuery EasyUI Demo</title>
+	<link rel="stylesheet" type="text/css" href="../../themes/material-blue/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../demo.css">
+	<script type="text/javascript" src="../../jquery.min.js"></script>
+	<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="../../source/jquery.validatebox.js"></script>
+	<script type="text/javascript" src="../../source/jquery.textbox.js"></script>
+</head>
+<body>
+	<h2>Floating Label</h2>
+	<p>This example shows how to create inspired text fields with animated floating labels.</p>
+	<div style="margin:20px 0;"></div>
+	<div class="easyui-panel" title="New Topic" style="width:100%;max-width:400px;padding:30px 60px;">
+		<form id="ff" method="post">
+			<div class="form-floating-label form-field" style="margin-bottom:20px">
+				<input class="easyui-textbox" name="name" style="width:100%" data-options="label:'Name:',labelPosition:'top'">
+			</div>
+			<div class="form-floating-label form-field" style="margin-bottom:20px">
+				<input class="easyui-textbox" name="email" style="width:100%" data-options="label:'Email:',labelPosition:'top',validType:'email'">
+			</div>
+			<div class="form-floating-label form-field" style="margin-bottom:20px">
+				<input class="easyui-textbox" name="subject" style="width:100%" data-options="label:'Subject:',labelPosition:'top'">
+			</div>
+			<div class="form-floating-label form-field" style="margin-bottom:20px">
+				<input class="easyui-textbox" name="message" style="width:100%;min-height:100px" data-options="label:'Message:',labelPosition:'top',multiline:true">
+			</div>
+		</form>
+		<div style="text-align:center;padding:5px 0">
+			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()" style="width:80px">Submit</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()" style="width:80px">Clear</a>
+		</div>
+	</div>
+	<script>
+		function submitForm(){
+			$('#ff').form('submit');
+		}
+		function clearForm(){
+			$('#ff').form('clear');
+		}
+		function err(target, message){
+			var t = $(target);
+			if (t.hasClass('textbox-text')){
+				t = t.parent();
+			}
+			var m = t.next('.error-message');
+			if (!m.length){
+				m = $('<div class="error-message"></div>').insertAfter(t);
+			}
+			m.html(message);
+		}
+	</script>
+</body>
+</html>

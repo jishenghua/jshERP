@@ -237,9 +237,9 @@
 							+ 'AaBb' + rec.accountid+ 'AaBb' + rec.accountname + 'AaBb' + rec.organid + 'AaBb' + rec.organname
 							+ 'AaBb' + rec.handspersonid + 'AaBb' + rec.handspersonname + 'AaBb' + rec.changeamount + 'AaBb' + rec.totalprice;
 						var orgId =  rec.organid ?  rec.organid : 0;
-						str += '<img title="查看" src="/js/easyui-1.3.5/themes/icons/list.png" style="cursor: pointer;" onclick="showAccountHead(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
-						str += '<img title="编辑" src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editAccountHead(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
-						str += '<img title="删除" src="/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteAccountHead('+ rec.id +',' + orgId +',' + rec.totalprice + ');"/>';
+						str += '<img title="查看" src="/js/easyui/themes/icons/list.png" style="cursor: pointer;" onclick="showAccountHead(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
+						str += '<img title="编辑" src="/js/easyui/themes/icons/pencil.png" style="cursor: pointer;" onclick="editAccountHead(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
+						str += '<img title="删除" src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteAccountHead('+ rec.id +',' + orgId +',' + rec.totalprice + ');"/>';
 						return str;
 					}
 				},
@@ -676,7 +676,7 @@
 		var thisNumber = getNowFormatDateNum(); //根据时间生成编号
 		$("#BillNo").val(amountNum + thisNumber).focus();
 		var addTitle = listTitle.replace("列表","信息");
-		$('#accountHeadDlg').dialog('open').dialog('setTitle','<img src="/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加' + addTitle);
+		$('#accountHeadDlg').dialog('open').dialog('setTitle','<img src="/js/easyui/themes/icons/edit_add.png"/>&nbsp;增加' + addTitle);
 		$(".window-mask").css({ width: webW ,height: webH});
         
         orgAccountHead = "";
@@ -711,7 +711,7 @@
         var TotalPrice = accountHeadInfo[11];
 		preTotalPrice = accountHeadInfo[11]; //记录前一次合计金额，用于收预付款
         var editTitle = listTitle.replace("列表","信息");
-        $('#accountHeadDlg').dialog('open').dialog('setTitle','<img src="' + '/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑' + editTitle);
+        $('#accountHeadDlg').dialog('open').dialog('setTitle','<img src="' + '/js/easyui/themes/icons/pencil.png"/>&nbsp;编辑' + editTitle);
         $(".window-mask").css({ width: webW ,height: webH});
         accountHeadID = accountHeadInfo[0];
         
@@ -732,7 +732,7 @@
         $("#ChangeAmountShow").text(accountHeadInfo[10].replace("undefined","0"));
         var TotalPrice = accountHeadInfo[11];
         var showTitle = listTitle.replace("列表","信息");
-        $('#accountHeadDlgShow').dialog('open').dialog('setTitle','<img src="/js/easyui-1.3.5/themes/icons/list.png"/>&nbsp;查看' + showTitle);
+        $('#accountHeadDlgShow').dialog('open').dialog('setTitle','<img src="/js/easyui/themes/icons/list.png"/>&nbsp;查看' + showTitle);
         $(".window-mask").css({ width: webW ,height: webH});
         
         accountHeadID = accountHeadInfo[0];
@@ -760,9 +760,9 @@
 		//重置按钮
 		$("#searchResetBtn").unbind().bind({
 			click:function(){
-				$("#searchBillNo").val("");
-				$("#searchBeginTime").val("");
-				$("#searchEndTime").val("");
+				$("#searchBillNo").textbox("clear");
+				$("#searchBeginTime").datebox("clear");
+				$("#searchEndTime").datebox("clear");
 				//加载完以后重新初始化
 				$("#searchBtn").click();
 		    }	

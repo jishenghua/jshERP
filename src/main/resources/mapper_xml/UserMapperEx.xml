@@ -46,11 +46,11 @@
         and ifnull(user.status,'0') not in('1','2')
         <if test="userName != null and userName != ''">
             <bind name="userName" value="'%' + _parameter.userName + '%'" />
-            and user.userName like #{userName}
+            and user.username like #{userName}
         </if>
         <if test="loginName != null and loginName != ''">
             <bind name="loginName" value="'%' + _parameter.loginName + '%'" />
-            and user.loginName like #{loginName}
+            and user.loginame like #{loginName}
         </if>
         order by user.id desc
     </select>

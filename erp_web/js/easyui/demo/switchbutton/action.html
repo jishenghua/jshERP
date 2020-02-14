@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>SwitchButton Actions - jQuery EasyUI Demo</title>
+	<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../demo.css">
+	<script type="text/javascript" src="../../jquery.min.js"></script>
+	<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+</head>
+<body>
+	<h2>SwitchButton Actions</h2>
+	<p>Click the buttons below to perform actions.</p>
+	<div style="margin:20px 0;"></div>
+
+    <div style="margin:20px 0;">
+        <a href="#" class="easyui-linkbutton" onclick="$('#sb').switchbutton('disable')">Disable</a>
+        <a href="#" class="easyui-linkbutton" onclick="$('#sb').switchbutton('enable')">Enable</a>
+    </div>
+
+    <input id="sb" class="easyui-switchbutton" checked style="width:100px;height:30px">
+</body>
+</html>

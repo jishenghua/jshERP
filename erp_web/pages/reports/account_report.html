@@ -8,11 +8,11 @@
     <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon"/>
     <script type="text/javascript" src="/js/jquery-1.8.0.min.js"></script>
     <script type="text/javascript" src="/js/print/print.js"></script>
-    <link rel="stylesheet" type="text/css" href="/js/easyui-1.3.5/themes/default/easyui.css"/>
-    <link rel="stylesheet" type="text/css" href="/js/easyui-1.3.5/themes/icon.css"/>
+    <link rel="stylesheet" type="text/css" href="/js/easyui/themes/default/easyui.css"/>
+    <link rel="stylesheet" type="text/css" href="/js/easyui/themes/icon.css"/>
     <link type="text/css" rel="stylesheet" href="/css/common.css"/>
-    <script type="text/javascript" src="/js/easyui-1.3.5/jquery.easyui.min.js"></script>
-    <script type="text/javascript" src="/js/easyui-1.3.5/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="/js/easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="/js/easyui/locale/easyui-lang-zh_CN.js"></script>
     <script type="text/javascript" src="/js/common/outlook_in.js"></script>
     <script type="text/javascript" src="/js/My97DatePicker/WdatePicker.js"></script>
     <script type="text/javascript" src="/js/common/common.js"></script>
@@ -25,13 +25,13 @@
         <tr>
             <td>名称：</td>
             <td>
-                <input type="text" name="searchName" id="searchName" style="width:70px;"/>
+                <input type="text" name="searchName" id="searchName" class="easyui-textbox" style="width:100px;"/>
             </td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td>编号：</td>
             <td>
-                <input type="text" name="searchSerialNo" id="searchSerialNo" style="width:70px;"/>
+                <input type="text" name="searchSerialNo" id="searchSerialNo" class="easyui-textbox" style="width:100px;"/>
             </td>
             <td>&nbsp;</td>
             <td>
@@ -48,7 +48,7 @@
     <table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 </div>
 
-<div id="accountDetailListDlg" class="easyui-dialog" style="width:900px;height:500px;padding:10px 20px" closed="true"
+<div id="accountDetailListDlg" class="easyui-dialog" style="width:900px;height:580px;padding:10px 20px" closed="true"
      modal="true" collapsible="false" closable="true">
     <table id="accountTableData" style="top:50px;border-bottom-color:#FFFFFF"></table>
 </div>
@@ -96,7 +96,7 @@
                     title: '操作', field: 'op', width: 100, align: "center", formatter: function (value, rec) {
                         var str = '';
                         var rowInfo = rec.id + 'AaBb' + rec.name + 'AaBb' + rec.serialno + 'AaBb' + rec.initialamount + 'AaBb' + rec.currentamount;
-                        str += '<img src="/js/easyui-1.3.5/themes/icons/list.png" style="cursor: pointer;" onclick="showAccountInOutList(\'' + rowInfo + '\');"/>&nbsp;<a onclick="showAccountInOutList(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">流水</a>&nbsp;&nbsp;';
+                        str += '<img src="/js/easyui/themes/icons/list.png" style="cursor: pointer;" onclick="showAccountInOutList(\'' + rowInfo + '\');"/>&nbsp;<a onclick="showAccountInOutList(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">流水</a>&nbsp;&nbsp;';
                         return str;
                     }
                 }
@@ -204,7 +204,7 @@
         var info = accountInfo.split("AaBb");
         var accountId = info[0];
         var initialAmount = info[3];
-        $('#accountDetailListDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;查看账户流水');
+        $('#accountDetailListDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/pencil.png"/>&nbsp;查看账户流水');
         $(".window-mask").css({width: webW, height: webH});
         initAccountDetailData(accountId);
         getAccountInOutList(accountId, initialAmount, 1, initPageSize);

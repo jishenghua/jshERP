@@ -3,18 +3,16 @@
 <head>
     <title>用户管理</title>
     <meta charset="utf-8">
-    <!-- 指定以IE8的方式来渲染 -->
-    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
     <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon"/>
     <script type="text/javascript" src="/js/jquery-1.8.0.min.js"></script>
     <script type="text/javascript" src="/js/colorbox/jquery.colorbox-min.js"></script>
     <script type="text/javascript" src="/js/colorbox/colorboxSet.js"></script>
     <link href="/js/colorbox/colorbox.css" rel="stylesheet" type="text/css"/>
-    <link rel="stylesheet" type="text/css" href="/js/easyui-1.3.5/themes/default/easyui.css"/>
-    <link rel="stylesheet" type="text/css" href="/js/easyui-1.3.5/themes/icon.css"/>
+    <link rel="stylesheet" type="text/css" href="/js/easyui/themes/default/easyui.css"/>
+    <link rel="stylesheet" type="text/css" href="/js/easyui/themes/icon.css"/>
     <link type="text/css" rel="stylesheet" href="/css/common.css"/>
-    <script type="text/javascript" src="/js/easyui-1.3.5/jquery.easyui.min.js"></script>
-    <script type="text/javascript" src="/js/easyui-1.3.5/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="/js/easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="/js/easyui/locale/easyui-lang-zh_CN.js"></script>
     <script type="text/javascript" src="/js/common/common.js"></script>
 </head>
 <body>
@@ -24,16 +22,13 @@
         <tr>
             <td>登录名称：</td>
             <td>
-                <input type="text" name="searchLoginame" id="searchLoginame" style="width:100px;"/>
+                <input type="text" name="searchLoginame" id="searchLoginame" class="easyui-textbox" style="width:100px;"/>
             </td>
             <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td>用户名称：</td>
+            <td>用户姓名：</td>
             <td>
-                <input type="text" name="searchUsername" id="searchUsername" style="width:100px;"/>
+                <input type="text" name="searchUsername" id="searchUsername" class="easyui-textbox" style="width:100px;"/>
             </td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td>
                 <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchBtn">查询</a>&nbsp;&nbsp;
@@ -50,49 +45,78 @@
 <div id="userDlg" class="easyui-dialog" style="width:380px;padding:10px 20px"
      closed="true" buttons="#dlg-buttons" modal="true" collapsible="false" closable="true">
     <form id="usernameFM" method="post" novalidate>
-        <div class="fitem" style="padding:5px">
-            <label id="loginameLabel">登录名称 &nbsp;&nbsp;</label>
-            <input name="loginame" id="loginame" class="easyui-validatebox"
-                   data-options="required:true,validType:'length[2,15]'" style="width: 120px;height: 20px"/>
-            初始密码：123456
-        </div>
-        <div class="fitem" style="padding:5px">
-            <label id="orgAbrLabel">部&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;门&nbsp;&nbsp;</label>
-            <input name="orgAbr" id="orgAbr" style="width: 120px;height: 20px"/>
-            <a href="javascript:void(0)" class="l-btn l-btn-plain" group="" id="lookForSelectOrganization">
-                <span class="l-btn-left"><span class="l-btn-text icon-search l-btn-icon-left"></span></span></a>
-            <input name="orgaId" id="orgaId" type="hidden"/>
-            <input name="selectType" id="selectType" type="hidden"/>
-            <input name="orgaUserRelId" id="orgaUserRelId" type="hidden"/>
-            <!--一个兼容input框，没有实际用处，但是必须存在-->
-            <input name="id" id="id" type="hidden"/>
-        </div>
-        <div class="fitem" style="padding:5px">
-            <label id="userBlngOrgaDsplSeqLabel">用户排序&nbsp;&nbsp;</label>
-            <input name="userBlngOrgaDsplSeq" id="userBlngOrgaDsplSeq"  style="width: 230px;height: 20px"/>
-        </div>
-        <div class="fitem" style="padding:5px">
-            <label id="usernameLabel">用户名称&nbsp;&nbsp;</label>
-            <input name="username" id="username" class="easyui-validatebox"
-                   data-options="required:true,validType:'length[2,30]'" style="width: 230px;height: 20px"/>
-        </div>
-        <div class="fitem" style="padding:5px">
-            <label id="positionLabel">职&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;位&nbsp;&nbsp;</label>
-            <input name="position" id="position" style="width: 230px;height: 20px"/>
-        </div>
-        <div class="fitem" style="padding:5px">
-            <label id="phonenumLabel">联系电话&nbsp;&nbsp;</label>
-            <input name="phonenum" id="phonenum" class="easyui-numberbox" style="width: 230px;height: 20px"/>
-        </div>
-        <div class="fitem" style="padding:5px">
-            <label id="emailLabel">电子邮箱&nbsp;&nbsp;</label>
-            <input name="email" id="email" class="easyui-validatebox" validType="email"
-                   style="width: 230px;height: 20px"/>
-        </div>
-        <div class="fitem" style="padding:5px">
-            <label id="descriptionLabel">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述&nbsp;&nbsp;</label>
-            <textarea name="description" id="description" rows="2" cols="2" style="width: 230px;"></textarea>
-        </div>
+        <table>
+            <tr>
+                <td>登录名称</td>
+                <td style="padding:5px">
+                    <input name="loginame" id="loginame" class="easyui-textbox"
+                           data-options="required:true,validType:'length[2,15]'" style="width: 120px;"/>
+                    初始密码：123456
+                </td>
+            </tr>
+            <tr>
+                <td>部门</td>
+                <td style="padding:5px">
+                    <input name="orgAbr" id="orgAbr" class="easyui-textbox" style="width: 120px;"/>
+                    <a href="javascript:void(0)" class="l-btn l-btn-plain" group="" id="lookForSelectOrganization">
+                        <span class="l-btn-left"><span class="l-btn-text icon-search l-btn-icon-left" style="height:20px;"></span></span></a>
+                    <input name="orgaId" id="orgaId" type="hidden"/>
+                    <input name="selectType" id="selectType" type="hidden"/>
+                    <input name="orgaUserRelId" id="orgaUserRelId" type="hidden"/>
+                    <!--一个兼容input框，没有实际用处，但是必须存在-->
+                    <input name="id" id="id" type="hidden"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    用户姓名
+                </td>
+                <td style="padding:5px">
+                    <input name="username" id="username" class="easyui-textbox"
+                           data-options="required:true,validType:'length[2,30]'" style="width: 230px;"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    职位
+                </td>
+                <td style="padding:5px">
+                    <input name="position" id="position" class="easyui-textbox" style="width: 230px;"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    联系电话
+                </td>
+                <td style="padding:5px">
+                    <input name="phonenum" id="phonenum" class="easyui-numberbox" style="width: 230px;"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    电子邮箱
+                </td>
+                <td style="padding:5px">
+                    <input name="email" id="email" class="easyui-textbox" data-options="validType:'email'" style="width: 230px;"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    用户排序
+                </td>
+                <td style="padding:5px">
+                    <input name="userBlngOrgaDsplSeq" id="userBlngOrgaDsplSeq" class="easyui-textbox" style="width: 230px;"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    描述
+                </td>
+                <td style="padding:5px">
+                    <textarea name="description" id="description" class="easyui-textbox" data-options="multiline:true" style="width: 230px;height: 40px;"></textarea>
+                </td>
+            </tr>
+        </table>
     </form>
 </div>
 <div id="dlg-buttons">
@@ -110,7 +134,6 @@
         initConfig();
         initTableData();
         ininPager();
-        browserFit();
     });
 
     //初始化配置
@@ -125,36 +148,6 @@
             if(config.customerFlag == "1") {
                 $("#btnSetCustomer").show();
             }
-        }
-    }
-
-    //浏览器适配
-    function browserFit() {
-        if (getOs() == 'MSIE') {
-            $("#usernameLabel").empty().append("用户名称&nbsp;&nbsp;");
-            $("#loginameLabel").empty().append("登录名称&nbsp;&nbsp;");
-            $("#orgAbrLabel").empty().append("部&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;门&nbsp;&nbsp;");
-            $("#userBlngOrgaDsplSeqLabel").empty().append("用户排序&nbsp;&nbsp;");
-            $("#positionLabel").empty().append("职&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;位&nbsp;&nbsp;");
-            $("#phonenumLabel").empty().append("联系电话&nbsp;&nbsp;");
-            $("#emailLabel").empty().append("电子邮箱&nbsp;&nbsp;");
-            $("#descriptionLabel").empty().append("描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述&nbsp;&nbsp;");
-            $("#searchPositionLabel").empty().append("职&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;位：");
-            $("#searchDeptLabel").empty().append("部&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;门：");
-            $("#searchDescLabel").empty().append("描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：");
-        }
-        else {
-            $("#usernameLabel").empty().append("用户名称&nbsp;");
-            $("#loginameLabel").empty().append("登录名称&nbsp;");
-            $("#orgAbrLabel").empty().append("部&nbsp;&nbsp;&nbsp;&nbsp;门&nbsp;");
-            $("#userBlngOrgaDsplSeqLabel").empty().append("用户排序&nbsp;");
-            $("#positionLabel").empty().append("职&nbsp;&nbsp;&nbsp;&nbsp;位&nbsp;");
-            $("#phonenumLabel").empty().append("联系电话&nbsp;");
-            $("#emailLabel").empty().append("电子邮箱&nbsp;");
-            $("#descriptionLabel").empty().append("描&nbsp;&nbsp;&nbsp;&nbsp;述&nbsp;");
-            $("#searchPositionLabel").empty().append("职&nbsp;&nbsp;&nbsp;&nbsp;位：");
-            $("#searchDeptLabel").empty().append("部&nbsp;&nbsp;&nbsp;&nbsp;门：");
-            $("#searchDescLabel").empty().append("描&nbsp;&nbsp;&nbsp;&nbsp;述：");
         }
     }
 
@@ -180,10 +173,10 @@
                     title: '操作', field: 'isystem', align: "center", width: 80, formatter: function (value, rec, index) {
                         var str = '';
                         if(rec.loginame != "jsh") {
-                            str += '<img src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editUser(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
+                            str += '<img src="/js/easyui/themes/icons/pencil.png" style="cursor: pointer;" onclick="editUser(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
                         }
                         if (rec.id != rec.tenantId) {
-                            str += '<img src="/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteUser(' + rec.id + ');"/>';
+                            str += '<img src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteUser(' + rec.id + ');"/>';
                         }
                         else {
                             str += '';
@@ -192,12 +185,12 @@
                     }
                 },
                 {title: '登录名称', field: 'loginame', width: 80},
-                {title: '用户名称', field: 'username', width: 80, align: "center"},
+                {title: '用户姓名', field: 'username', width: 80, align: "center"},
                 {title: '职位', field: 'position', width: 115, align: "center"},
                 {title: '部门', field: 'orgAbr', width: 115, align: "center"},
                 {title: '电子邮箱', field: 'email', width: 150, align: "center"},
                 {title: '电话号码', field: 'phonenum', width: 150, align: "center"},
-                {title: '用户排序', field: 'userBlngOrgaDsplSeq', width: 60, align: "center"},
+                {title: '用户排序', field: 'userBlngOrgaDsplSeq', width: 80, align: "center"},
                 {title: '描述', field: 'description', width: 130},
                 {field: 'orgaId',hidden:true, width: 10}
             ]],
@@ -209,7 +202,7 @@
                     handler: function () {
                         addUser();
                     }
-                },
+                },'-',
                 {
                     id: 'deleteUser',
                     text: '删除',
@@ -364,7 +357,7 @@
         if(checkPower()){
             return;
         }
-        $('#userDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加用户');
+        $('#userDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/edit_add.png"/>&nbsp;增加用户');
         $(".window-mask").css({width: webW, height: webH});
         $('#usernameFM').form('clear');
         var row = {};
@@ -458,7 +451,7 @@
             userBlngOrgaDsplSeq: rowsdata.userBlngOrgaDsplSeq
         };
         oldLoginName = rowsdata.username;
-        $('#userDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑用户信息');
+        $('#userDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/pencil.png"/>&nbsp;编辑用户信息');
         $(".window-mask").css({width: webW, height: webH});
         $('#usernameFM').form('load', row);
         userID = rowsdata.id;
@@ -520,15 +513,13 @@
     //重置按钮
     $("#searchResetBtn").unbind().bind({
         click: function () {
-            $("#searchUsername").val("");
-            $("#searchLoginame").val("");
-            $("#searchPhonenum").val("");
-            $("#searchPosition").val("");
-            $("#searchDept").val("");
-            $("#searchEmail").val("");
-            $("#searchDesc").val("");
-
-
+            $("#searchUsername").textbox("setValue","");
+            $("#searchLoginame").textbox("setValue","");
+            $("#searchPhonenum").textbox("setValue","");
+            $("#searchPosition").textbox("setValue","");
+            $("#searchDept").textbox("setValue","");
+            $("#searchEmail").textbox("setValue","");
+            $("#searchDesc").textbox("setValue","");
             //加载完以后重新初始化
             $("#searchBtn").click();
         }

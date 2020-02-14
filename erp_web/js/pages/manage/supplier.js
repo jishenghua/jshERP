@@ -62,8 +62,8 @@
                         var str = '';
                         var rowInfo = rec.id + 'AaBb' + rec.supplier +'AaBb' + rec.contacts + 'AaBb'+ rec.phonenum + 'AaBb'+ rec.email + 'AaBb'+ rec.beginneedget + 'AaBb'+ rec.beginneedpay + 'AaBb' + rec.isystem + 'AaBb' + rec.description+ 'AaBb' + rec.type
                             + 'AaBb' + rec.fax + 'AaBb' + rec.telephone + 'AaBb' + rec.address + 'AaBb' + rec.taxnum + 'AaBb' + rec.bankname + 'AaBb' + rec.accountnumber + 'AaBb' + rec.taxrate;
-                        str += '<img title="编辑" src="/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editSupplier(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
-                        str += '<img title="删除" src="/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteSupplier(\'' + rowInfo + '\');"/>';
+                        str += '<img title="编辑" src="/js/easyui/themes/icons/pencil.png" style="cursor: pointer;" onclick="editSupplier(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
+                        str += '<img title="删除" src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteSupplier(\'' + rowInfo + '\');"/>';
                         return str;
                     }
                 },
@@ -78,7 +78,7 @@
                 { title: '期初应付',field: 'beginneedpay',width:70,align:"center"},
                 { title: '期末应收',field: 'allneedget',width:70,align:"center"},
                 { title: '期末应付',field: 'allneedpay',width:70,align:"center"},
-                { title: '税率(%)', field: 'taxrate',width:50,align:"center"},
+                { title: '税率(%)', field: 'taxrate',width:60,align:"center"},
                 { title: '状态',field: 'enabled',width:70,align:"center",formatter:function(value){
                     return value? "启用":"禁用";
                 }}
@@ -419,7 +419,7 @@
         if(checkPower()){
             return;
         }
-        $('#supplierDlg').dialog('open').dialog('setTitle','<img src="/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加'+listType+"信息");
+        $('#supplierDlg').dialog('open').dialog('setTitle','<img src="/js/easyui/themes/icons/edit_add.png"/>&nbsp;增加'+listType+"信息");
         $(".window-mask").css({ width: webW ,height: webH});
         $("#supplier").focus();
         $('#supplierFM').form('clear');
@@ -585,7 +585,7 @@
             taxRate : supplierInfo[16].replace("undefined","")
         };
         oldSupplier = supplierInfo[1];
-        $('#supplierDlg').dialog('open').dialog('setTitle','<img src="/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑'+listType +"信息");
+        $('#supplierDlg').dialog('open').dialog('setTitle','<img src="/js/easyui/themes/icons/pencil.png"/>&nbsp;编辑'+listType +"信息");
         $(".window-mask").css({ width: webW ,height: webH});
         $('#supplierFM').form('load',row);
         supplierID = supplierInfo[0];

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Keyboard Navigation in Menu - jQuery EasyUI Demo</title>
+	<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="../demo.css">
+	<script type="text/javascript" src="../../jquery.min.js"></script>
+	<script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+</head>
+<body>
+	<h2>Keyboard Navigation in Menu</h2>
+	<p>Press Alt+W to focus the menu. Once the menu get focus, you will be able to navigate menu using keyboard keys.</p>
+	<div style="margin:20px 0;"></div>
+	
+	<div class="easyui-panel" title="Menu" style="width:150px;">
+		<div id="mm-nav" data-options="inline:true" style="width:100%">
+			<div onclick="javascript:alert('new')">New</div>
+			<div>
+				<span>Open</span>
+				<div style="width:150px;">
+					<div><b>Word</b></div>
+					<div>Excel</div>
+					<div>PowerPoint</div>
+					<div>
+						<span>M1</span>
+						<div style="width:120px;">
+							<div>sub1</div>
+							<div>sub2</div>
+							<div>
+								<span>Sub</span>
+								<div style="width:80px;">
+									<div>sub21</div>
+									<div>sub22</div>
+									<div>sub23</div>
+								</div>
+							</div>
+							<div>sub3</div>
+						</div>
+					</div>
+					<div>
+						<span>Window Demos</span>
+						<div style="width:120px;">
+							<div>Window</div>
+							<div>Dialog</div>
+							<div>EasyUI</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div data-options="iconCls:'icon-save'">Save</div>
+			<div data-options="iconCls:'icon-print',disabled:true">Print</div>
+			<div class="menu-sep"></div>
+			<div>Exit</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		(function($){
+			function getParentMenu(rootMenu, menu){
+				return findParent(rootMenu);
+
+				function findParent(pmenu){
+					var p = undefined;
+					$(pmenu).find('.menu-item').each(function(){
+						if (!p && this.submenu){
+							if ($(this.submenu)[0] == $(menu)[0]){
+								p = pmenu;
+							} else {
+								p = findParent(this.submenu);
+							}
+						}
+					});
+					return p;
+				}
+			}
+			function getParentItem(pmenu, menu){
+				var item = undefined;
+				$(pmenu).find('.menu-item').each(function(){
+					if ($(this.submenu)[0] == $(menu)[0]){
+						item = $(this);
+						return false;
+					}
+				});
+				return item;
+			}
+
+			$.extend($.fn.menu.methods, {
+				enableNav: function(jq, rootMenu){
+					var firstItemSelector = '.menu-item:not(.menu-item-disabled):first';
+					var lastItemSelector = '.menu-item:not(.menu-item-disabled):last';
+					return jq.each(function(){
+						var menu = $(this);
+						rootMenu = $(rootMenu).length ? $(rootMenu) : menu;
+						menu.attr('tabindex','0').css('outline','none').unbind('.menunav').bind('keydown.menunav', function(e){
+							var item = $(this).find('.menu-active');
+							switch(e.keyCode){
+								case 13:  // enter
+									item.trigger('click');
+									break;
+								case 27:  // esc
+									rootMenu.find('.menu-active').trigger('mouseleave');
+									break;
+								case 38:  // up
+									var prev = item.length ? item.prevAll(firstItemSelector) : menu.find(lastItemSelector);
+									prev.trigger('mouseenter');
+									return false;
+								case 40:  // down
+									var next = item.length ? item.nextAll(firstItemSelector) : menu.find(firstItemSelector);
+									next.trigger('mouseenter');
+									return false;
+								case 37:  // left
+									var pmenu = getParentMenu(rootMenu, menu);
+									if (pmenu){
+										item.trigger('mouseleave');
+										var pitem = getParentItem(pmenu, menu);
+										if (pitem){
+											pitem.trigger('mouseenter');
+										}
+										pmenu.focus();
+									}
+									return false;
+								case 39:  // right
+									if (item.length && item[0].submenu){
+										$(item[0].submenu).menu('enableNav', rootMenu).find(firstItemSelector).trigger('mouseenter');
+										$(item[0].submenu).focus();
+									}
+									return false;
+							}
+						});
+					});
+				}
+			});
+		})(jQuery);
+
+		$(function(){
+			$('#mm-nav').menu().menu('enableNav');
+			$(document).keydown(function(e){
+				if (e.altKey && e.keyCode == 87){
+					$('#mm-nav').focus();
+				}
+			})
+		})
+	</script>
+</body>
+</html>
