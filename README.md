@@ -21,7 +21,7 @@
 * 持久层框架：Mybatis 1.3.2
 * 日志管理：Log4j 2.10.0
 * JS框架：Jquery 1.8.0
-* UI框架: EasyUI 1.3.5
+* UI框架: EasyUI 1.9.4
 * 模板框架: AdminLTE 2.4.0
 * 项目管理框架: Maven 3.2.3
 
