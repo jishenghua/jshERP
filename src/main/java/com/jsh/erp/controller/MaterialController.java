@@ -11,6 +11,7 @@ import com.jsh.erp.datasource.entities.DepotEx;
 import com.jsh.erp.datasource.entities.Material;
 import com.jsh.erp.datasource.entities.MaterialVo4Unit;
 import com.jsh.erp.exception.BusinessRunTimeException;
+import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.utils.*;
 import jxl.Sheet;
@@ -39,6 +40,9 @@ public class MaterialController {
 
     @Resource
     private MaterialService materialService;
+
+    @Resource
+    private DepotItemService depotItemService;
 
     @GetMapping(value = "/checkIsExist")
     public String checkIsExist(@RequestParam("id") Long id, @RequestParam("name") String name,
@@ -100,22 +104,56 @@ public class MaterialController {
     }
 
     /**
+     * 根据meId来查询商品名称
+     * @param meId
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/findByIdWithBarCode")
+    public BaseResponseInfo findByIdWithBarCode(@RequestParam("meId") Long meId, HttpServletRequest request) throws Exception{
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            MaterialVo4Unit mu = new MaterialVo4Unit();
+            List<MaterialVo4Unit> list = materialService.findByIdWithBarCode(meId);
+            if(list!=null && list.size()>0) {
+                mu = list.get(0);
+            }
+            res.code = 200;
+            res.data = mu;
+        } catch(Exception e){
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
+    }
+
+    /**
      * 查找商品信息-下拉框
      * @param mpList
      * @param request
      * @return
      */
     @GetMapping(value = "/findBySelect")
-    public JSONArray findBySelect(@RequestParam("mpList") String mpList, HttpServletRequest request) throws Exception{
-        JSONArray dataArray = new JSONArray();
+    public JSONObject findBySelect(@RequestParam(value = "q", required = false) String q,
+                                  @RequestParam("mpList") String mpList,
+                                  @RequestParam(value = "depotId", required = false) Long depotId,
+                                  @RequestParam("page") Integer currentPage,
+                                  @RequestParam("rows") Integer pageSize,
+                                  HttpServletRequest request) throws Exception{
+        JSONObject object = new JSONObject();
         try {
-            List<MaterialVo4Unit> dataList = materialService.findBySelect();
+            Long tenantId = Long.parseLong(request.getSession().getAttribute("tenantId").toString());
+            List<MaterialVo4Unit> dataList = materialService.findBySelectWithBarCode(q, (currentPage-1)*pageSize, pageSize);
             String[] mpArr = mpList.split(",");
+            int total = materialService.findBySelectWithBarCodeCount(q);
+            object.put("total", total);
+            JSONArray dataArray = new JSONArray();
             //存放数据json数组
             if (null != dataList) {
                 for (MaterialVo4Unit material : dataList) {
                     JSONObject item = new JSONObject();
-                    item.put("Id", material.getId());
+                    item.put("Id", material.getMeId()); //商品扩展表的id
                     String ratio; //比例
                     if (material.getUnitid() == null || material.getUnitid().equals("")) {
                         ratio = "";
@@ -124,36 +162,50 @@ public class MaterialController {
                         ratio = ratio.substring(ratio.indexOf("("));
                     }
                     //品名/型号/扩展信息/包装
-                    String MaterialName = material.getName() + ((material.getModel() == null || material.getModel().equals("")) ? "" : "(" + material.getModel() + ")");
+                    String MaterialName = "";
+                    String mBarCode = "";
+                    if(material.getmBarCode()!=null) {
+                        mBarCode = material.getmBarCode();
+                        MaterialName = MaterialName + mBarCode + "_";
+                    }
+                    item.put("mBarCode", mBarCode);
+                    MaterialName = MaterialName + " " + material.getName()
+                            + ((material.getStandard() == null || material.getStandard().equals("")) ? "" : "(" + material.getStandard() + ")")
+                            + ((material.getModel() == null || material.getModel().equals("")) ? "" : "(" + material.getModel() + ")");
+                    String expand = ""; //扩展信息
                     for (int i = 0; i < mpArr.length; i++) {
-                        if (mpArr[i].equals("颜色")) {
-                            MaterialName = MaterialName + ((material.getColor() == null || material.getColor().equals("")) ? "" : "(" + material.getColor() + ")");
-                        }
-                        if (mpArr[i].equals("规格")) {
-                            MaterialName = MaterialName + ((material.getStandard() == null || material.getStandard().equals("")) ? "" : "(" + material.getStandard() + ")");
-                        }
                         if (mpArr[i].equals("制造商")) {
-                            MaterialName = MaterialName + ((material.getMfrs() == null || material.getMfrs().equals("")) ? "" : "(" + material.getMfrs() + ")");
+                            expand = expand + ((material.getMfrs() == null || material.getMfrs().equals("")) ? "" : "(" + material.getMfrs() + ")");
                         }
                         if (mpArr[i].equals("自定义1")) {
-                            MaterialName = MaterialName + ((material.getOtherfield1() == null || material.getOtherfield1().equals("")) ? "" : "(" + material.getOtherfield1() + ")");
+                            expand = expand + ((material.getOtherfield1() == null || material.getOtherfield1().equals("")) ? "" : "(" + material.getOtherfield1() + ")");
                         }
                         if (mpArr[i].equals("自定义2")) {
-                            MaterialName = MaterialName + ((material.getOtherfield2() == null || material.getOtherfield2().equals("")) ? "" : "(" + material.getOtherfield2() + ")");
+                            expand = expand + ((material.getOtherfield2() == null || material.getOtherfield2().equals("")) ? "" : "(" + material.getOtherfield2() + ")");
                         }
                         if (mpArr[i].equals("自定义3")) {
-                            MaterialName = MaterialName + ((material.getOtherfield3() == null || material.getOtherfield3().equals("")) ? "" : "(" + material.getOtherfield3() + ")");
+                            expand = expand + ((material.getOtherfield3() == null || material.getOtherfield3().equals("")) ? "" : "(" + material.getOtherfield3() + ")");
                         }
                     }
-                    MaterialName = MaterialName + ((material.getUnit() == null || material.getUnit().equals("")) ? "" : "(" + material.getUnit() + ")") + ratio;
+                    MaterialName = MaterialName + expand + ((material.getCommodityUnit() == null || material.getCommodityUnit().equals("")) ? "" : "(" + material.getCommodityUnit() + ")") + ratio;
                     item.put("MaterialName", MaterialName);
+                    item.put("name", material.getName());
+                    item.put("expand", expand);
+                    item.put("model", material.getModel());
+                    item.put("standard", material.getStandard());
+                    item.put("unit", material.getCommodityUnit() + ratio);
+                    if(depotId!=null&& StringUtil.isNotEmpty(q)) {
+                        BigDecimal stock = depotItemService.getStockByParam(depotId,material.getId(),null,null,tenantId);
+                        item.put("stock", stock);
+                    }
                     dataArray.add(item);
                 }
             }
+            object.put("rows", dataArray);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return dataArray;
+        return object;
     }
 
 
@@ -186,6 +238,69 @@ public class MaterialController {
             res.data = "获取数据失败";
         }
         return res;
+    }
+
+    /**
+     * 根据商品id查找商品信息
+     * @param meId
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @GetMapping(value = "/getMaterialByMeId")
+    public JSONObject getMaterialByMeId(@RequestParam("meId") long meId,
+                                        @RequestParam("mpList") String mpList,
+                                        HttpServletRequest request) throws Exception{
+        JSONObject item = new JSONObject();
+        try {
+            String[] mpArr = mpList.split(",");
+            List<MaterialVo4Unit> materialList = materialService.getMaterialByMeId(meId);
+            if(materialList!=null && materialList.size()!=1) {
+                return item;
+            } else if(materialList.size() == 1) {
+                MaterialVo4Unit material = materialList.get(0);
+                item.put("Id", material.getMeId()); //商品扩展表的id
+                String ratio; //比例
+                if (material.getUnitid() == null || material.getUnitid().equals("")) {
+                    ratio = "";
+                } else {
+                    ratio = material.getUnitName();
+                    ratio = ratio.substring(ratio.indexOf("("));
+                }
+                //品名/型号/扩展信息/包装
+                String MaterialName = "";
+                MaterialName = MaterialName + material.getmBarCode() + "_" + material.getName()
+                        + ((material.getStandard() == null || material.getStandard().equals("")) ? "" : "(" + material.getStandard() + ")");
+                String expand = ""; //扩展信息
+                for (int i = 0; i < mpArr.length; i++) {
+                    if (mpArr[i].equals("颜色")) {
+                        expand = expand + ((material.getColor() == null || material.getColor().equals("")) ? "" : "(" + material.getColor() + ")");
+                    }
+                    if (mpArr[i].equals("制造商")) {
+                        expand = expand + ((material.getMfrs() == null || material.getMfrs().equals("")) ? "" : "(" + material.getMfrs() + ")");
+                    }
+                    if (mpArr[i].equals("自定义1")) {
+                        expand = expand + ((material.getOtherfield1() == null || material.getOtherfield1().equals("")) ? "" : "(" + material.getOtherfield1() + ")");
+                    }
+                    if (mpArr[i].equals("自定义2")) {
+                        expand = expand + ((material.getOtherfield2() == null || material.getOtherfield2().equals("")) ? "" : "(" + material.getOtherfield2() + ")");
+                    }
+                    if (mpArr[i].equals("自定义3")) {
+                        expand = expand + ((material.getOtherfield3() == null || material.getOtherfield3().equals("")) ? "" : "(" + material.getOtherfield3() + ")");
+                    }
+                }
+                MaterialName = MaterialName + expand + ((material.getUnit() == null || material.getUnit().equals("")) ? "" : "(" + material.getUnit() + ")") + ratio;
+                item.put("MaterialName", MaterialName);
+                item.put("name", material.getName());
+                item.put("expand", expand);
+                item.put("model", material.getModel());
+                item.put("standard", material.getStandard());
+                item.put("unit", material.getUnit() + ratio);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return item;
     }
 
     /**
@@ -339,5 +454,16 @@ public class MaterialController {
                     ExceptionConstants.MATERIAL_DELETE_FAILED_MSG);
         }
         return result;
+    }
+
+    @GetMapping(value = "/getMaxBarCode")
+    public BaseResponseInfo getMaxBarCode() throws Exception {
+        BaseResponseInfo res = new BaseResponseInfo();
+        Map<String, Object> map = new HashMap<String, Object>();
+        String barCode = materialService.getMaxBarCode();
+        map.put("barCode", barCode);
+        res.code = 200;
+        res.data = map;
+        return res;
     }
 }

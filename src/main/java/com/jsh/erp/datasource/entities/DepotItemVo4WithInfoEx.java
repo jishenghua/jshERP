@@ -36,6 +36,8 @@ public class DepotItemVo4WithInfoEx extends DepotItem{
 
     private String priceStrategy;
 
+    private String barCode;
+
     public Long getMId() {
         return MId;
     }
@@ -162,5 +164,13 @@ public class DepotItemVo4WithInfoEx extends DepotItem{
 
     public void setPriceStrategy(String priceStrategy) {
         this.priceStrategy = priceStrategy;
+    }
+
+    public String getBarCode() {
+        return barCode;
+    }
+
+    public void setBarCode(String barCode) {
+        this.barCode = barCode;
     }
 }

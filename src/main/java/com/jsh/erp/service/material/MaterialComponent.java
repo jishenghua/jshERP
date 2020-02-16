@@ -33,21 +33,22 @@ public class MaterialComponent implements ICommonQuery {
     private List<?> getMaterialList(Map<String, String> map) throws Exception{
         String search = map.get(Constants.SEARCH);
         String name = StringUtil.getInfo(search, "name");
+        String standard = StringUtil.getInfo(search, "standard");
         String model = StringUtil.getInfo(search, "model");
         String categoryIds = StringUtil.getInfo(search, "categoryIds");
         String mpList = StringUtil.getInfo(search, "mpList");
-        String order = QueryUtils.order(map);
-        return materialService.select(name, model,categoryIds,mpList, QueryUtils.offset(map), QueryUtils.rows(map));
+        return materialService.select(name, standard, model,categoryIds,mpList, QueryUtils.offset(map), QueryUtils.rows(map));
     }
 
     @Override
     public Long counts(Map<String, String> map)throws Exception {
         String search = map.get(Constants.SEARCH);
         String name = StringUtil.getInfo(search, "name");
+        String standard = StringUtil.getInfo(search, "standard");
         String model = StringUtil.getInfo(search, "model");
         String categoryIds = StringUtil.getInfo(search, "categoryIds");
         String mpList = StringUtil.getInfo(search, "mpList");
-        return materialService.countMaterial(name, model,categoryIds,mpList);
+        return materialService.countMaterial(name, standard, model,categoryIds,mpList);
     }
 
     @Override

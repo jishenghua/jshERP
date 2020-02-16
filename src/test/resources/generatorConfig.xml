@@ -51,6 +51,7 @@
         <table tableName="jsh_inoutitem" domainObjectName="InOutItem"></table>
         <table tableName="jsh_log" domainObjectName="Log"></table>
         <table tableName="jsh_material" domainObjectName="Material"></table>
+        <table tableName="jsh_material_extend" domainObjectName="MaterialExtend"></table>
         <table tableName="jsh_material_stock" domainObjectName="MaterialStock"></table>
         <table tableName="jsh_materialcategory" domainObjectName="MaterialCategory"></table>
         <table tableName="jsh_materialproperty" domainObjectName="MaterialProperty"></table>

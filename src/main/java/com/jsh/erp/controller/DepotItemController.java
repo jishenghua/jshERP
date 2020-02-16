@@ -158,7 +158,7 @@ public class DepotItemController {
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
                     JSONObject item = new JSONObject();
                     item.put("Id", diEx.getId());
-                    item.put("MaterialId", diEx.getMaterialid() == null ? "" : diEx.getMaterialid());
+                    item.put("MaterialExtendId", diEx.getMaterialExtendId() == null ? "" : diEx.getMaterialExtendId());
                     String ratio; //比例
                     if (diEx.getUnitId() == null || diEx.getUnitId().equals("")) {
                         ratio = "";
@@ -167,7 +167,8 @@ public class DepotItemController {
                         ratio = ratio.substring(ratio.indexOf("("));
                     }
                     //品名/型号/扩展信息/包装
-                    String MaterialName = (diEx.getMName() == null || diEx.getMName().equals("")) ? "" : diEx.getMName()
+                    String MaterialName = diEx.getBarCode() + "_" + ((diEx.getMName() == null || diEx.getMName().equals("")) ? "" : diEx.getMName())
+                            + ((diEx.getMStandard() == null || diEx.getMStandard().equals("")) ? "" : "(" + diEx.getMStandard() + ")")
                             + ((diEx.getMModel() == null || diEx.getMModel().equals("")) ? "" : "(" + diEx.getMModel() + ")");
                     String materialOther = getOtherInfo(mpArr, diEx);
                     MaterialName = MaterialName + materialOther + ((diEx.getUName() == null || diEx.getUName().equals("")) ? "" : "(" + diEx.getUName() + ")") + ratio;

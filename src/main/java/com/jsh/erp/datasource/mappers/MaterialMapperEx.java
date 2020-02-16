@@ -19,6 +19,7 @@ public interface MaterialMapperEx {
 
     List<MaterialVo4Unit> selectByConditionMaterial(
             @Param("name") String name,
+            @Param("standard") String standard,
             @Param("model") String model,
             @Param("categoryIds") String categoryIds,
             @Param("mpList") String mpList,
@@ -27,6 +28,7 @@ public interface MaterialMapperEx {
 
     Long countsByMaterial(
             @Param("name") String name,
+            @Param("standard") String standard,
             @Param("model") String model,
             @Param("categoryIds") String categoryIds,
             @Param("mpList") String mpList);
@@ -35,7 +37,15 @@ public interface MaterialMapperEx {
 
     List<MaterialVo4Unit> findById(@Param("id") Long id);
 
+    List<MaterialVo4Unit> findByIdWithBarCode(@Param("meId") Long meId);
+
     List<MaterialVo4Unit> findBySelect();
+
+    List<MaterialVo4Unit> findBySelectWithBarCode(@Param("q") String q,
+                                                  @Param("offset") Integer offset,
+                                                  @Param("rows") Integer rows);
+
+    int findBySelectWithBarCodeCount(@Param("q") String q);
 
     int updatePriceNullByPrimaryKey(Long id);
 
@@ -60,5 +70,8 @@ public interface MaterialMapperEx {
 
     List<Material> getMaterialListByUnitIds(@Param("unitIds") String[] unitIds);
 
-    int insertSelectiveEx(Material record);
+    String getMaxBarCode();
+
+    List<MaterialVo4Unit> getMaterialByMeId(
+            @Param("meId") Long meId);
 }

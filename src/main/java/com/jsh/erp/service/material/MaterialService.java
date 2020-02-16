@@ -13,6 +13,7 @@ import com.jsh.erp.datasource.mappers.MaterialMapperEx;
 import com.jsh.erp.datasource.mappers.MaterialStockMapper;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
+import com.jsh.erp.service.MaterialExtend.MaterialExtendService;
 import com.jsh.erp.service.depot.DepotService;
 import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.log.LogService;
@@ -59,6 +60,8 @@ public class MaterialService {
     private MaterialStockMapper materialStockMapper;
     @Resource
     private DepotService depotService;
+    @Resource
+    private MaterialExtendService materialExtendService;
 
     public Material getMaterial(long id)throws Exception {
         Material result=null;
@@ -82,27 +85,26 @@ public class MaterialService {
         return list;
     }
 
-    public List<MaterialVo4Unit> select(String name, String model, String categoryIds,String mpList, int offset, int rows)
+    public List<MaterialVo4Unit> select(String name, String standard, String model, String categoryIds,String mpList, int offset, int rows)
             throws Exception{
         String[] mpArr = mpList.split(",");
         List<MaterialVo4Unit> resList = new ArrayList<MaterialVo4Unit>();
         List<MaterialVo4Unit> list =null;
         try{
-            list= materialMapperEx.selectByConditionMaterial(name, model,categoryIds,mpList, offset, rows);
+            list= materialMapperEx.selectByConditionMaterial(name, standard, model, categoryIds, mpList, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         if (null != list) {
+            List<Long> idList = new ArrayList<Long>();
+            for (MaterialVo4Unit m : list) {
+                idList.add(m.getId());
+            }
+            List<MaterialExtend> meList = materialExtendService.getListByMIds(idList);
             for (MaterialVo4Unit m : list) {
                 //扩展信息
                 String materialOther = "";
                 for (int i = 0; i < mpArr.length; i++) {
-                    if (mpArr[i].equals("颜色")) {
-                        materialOther = materialOther + ((m.getColor() == null || m.getColor().equals("")) ? "" : "(" + m.getColor() + ")");
-                    }
-                    if (mpArr[i].equals("规格")) {
-                        materialOther = materialOther + ((m.getStandard() == null || m.getStandard().equals("")) ? "" : "(" + m.getStandard() + ")");
-                    }
                     if (mpArr[i].equals("制造商")) {
                         materialOther = materialOther + ((m.getMfrs() == null || m.getMfrs().equals("")) ? "" : "(" + m.getMfrs() + ")");
                     }
@@ -119,16 +121,24 @@ public class MaterialService {
                 m.setMaterialOther(materialOther);
                 Long tenantId = m.getTenantId();
                 m.setStock(depotItemService.getStockByParam(null,m.getId(),null,null,tenantId));
+                for(MaterialExtend me:meList) {
+                    if(me.getMaterialId().longValue() == m.getId().longValue()) {
+                        m.setPurchaseDecimal(me.getPurchaseDecimal()); //采购价
+                        m.setCommodityDecimal(me.getCommodityDecimal()); //零售价
+                        m.setWholesaleDecimal(me.getWholesaleDecimal()); //销售价
+                        m.setLowDecimal(me.getLowDecimal()); //最低售价
+                    }
+                }
                 resList.add(m);
             }
         }
         return resList;
     }
 
-    public Long countMaterial(String name, String model, String categoryIds,String mpList)throws Exception {
+    public Long countMaterial(String name, String standard, String model, String categoryIds,String mpList)throws Exception {
         Long result =null;
         try{
-            result= materialMapperEx.countsByMaterial(name, model,categoryIds,mpList);
+            result= materialMapperEx.countsByMaterial(name, standard, model, categoryIds, mpList);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -137,13 +147,18 @@ public class MaterialService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertMaterial(String beanJson, HttpServletRequest request)throws Exception {
-        Material material = JSONObject.parseObject(beanJson, Material.class);
-        material.setEnabled(true);
-        int result =0;
+        Material m = JSONObject.parseObject(beanJson, Material.class);
+        m.setEnabled(true);
         try{
-            result= materialMapper.insertSelective(material);
+            Long mId = null;
+            materialMapper.insertSelective(m);
+            List<Material> materials = getMaterialListByParam(m.getName(),m.getModel(),m.getColor(),
+                    m.getStandard(), m.getMfrs(),m.getUnit(),m.getUnitid());
+            if(materials!=null && materials.size()>0) {
+                mId = materials.get(0).getId();
+            }
             JSONObject mObj = JSON.parseObject(beanJson);
-            Long mId = material.getId();
+            materialExtendService.saveDetials(mObj.getString("inserted"), mObj.getString("deleted"), mObj.getString("updated"), mId);
             if(mObj.get("stock")!=null) {
                 String stockStr = mObj.getString("stock");
                 JSONArray stockArr = JSONArray.parseArray(stockStr);
@@ -159,19 +174,19 @@ public class MaterialService {
                 }
             }
             logService.insertLog("商品", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
+            return 1;
         }catch(Exception e){
             JshException.writeFail(logger, e);
+            return 0;
         }
-        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateMaterial(String beanJson, Long id, HttpServletRequest request) throws Exception{
         Material material = JSONObject.parseObject(beanJson, Material.class);
         material.setId(id);
-        int res =0;
         try{
-            res= materialMapper.updateByPrimaryKeySelective(material);
+            materialMapper.updateByPrimaryKeySelective(material);
             Long unitId = material.getUnitid();
             if(unitId != null) {
                 materialMapperEx.updatePriceNullByPrimaryKey(id); //将价格置空
@@ -179,6 +194,7 @@ public class MaterialService {
                 materialMapperEx.updateUnitIdNullByPrimaryKey(id); //将多单位置空
             }
             JSONObject mObj = JSON.parseObject(beanJson);
+            materialExtendService.saveDetials(mObj.getString("inserted"),mObj.getString("deleted"),mObj.getString("updated"),id);
             if(mObj.get("stock")!=null) {
                 String stockStr = mObj.getString("stock");
                 JSONArray stockArr = JSONArray.parseArray(stockStr);
@@ -199,11 +215,11 @@ public class MaterialService {
             }
             logService.insertLog("商品",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
+            return 1;
         }catch(Exception e){
             JshException.writeFail(logger, e);
+            return 0;
         }
-
-        return res;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
@@ -310,6 +326,16 @@ public class MaterialService {
         return list;
     }
 
+    public List<MaterialVo4Unit> findByIdWithBarCode(Long meId)throws Exception{
+        List<MaterialVo4Unit> list =null;
+        try{
+            list=  materialMapperEx.findByIdWithBarCode(meId);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list;
+    }
+
     public List<MaterialVo4Unit> findBySelect()throws Exception{
         List<MaterialVo4Unit> list =null;
         try{
@@ -331,6 +357,29 @@ public class MaterialService {
             JshException.readFail(logger, e);
         }
         return list;
+    }
+
+    public List<MaterialVo4Unit> findBySelectWithBarCode(String q,Integer offset, Integer rows)throws Exception{
+        List<MaterialVo4Unit> list =null;
+        try{
+            list=  materialMapperEx.findBySelectWithBarCode(q, offset, rows);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list;
+    }
+
+    public int findBySelectWithBarCodeCount(String q)throws Exception{
+        int result=0;
+        try{
+            result = materialMapperEx.findBySelectWithBarCodeCount(q);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return result;
     }
 
     public List<MaterialVo4Unit> findByAll(String name, String model, String categoryIds)throws Exception {
@@ -442,8 +491,12 @@ public class MaterialService {
                 List<Material> materials = getMaterialListByParam(m.getName(),m.getModel(),m.getColor(),m.getStandard(),
                         m.getMfrs(),m.getUnit(),m.getUnitid());
                 if(materials.size()<=0) {
-                    materialMapperEx.insertSelectiveEx(m);
-                    mId = m.getId();
+                    materialMapper.insertSelective(m);
+                    List<Material> newList = getMaterialListByParam(m.getName(),m.getModel(),m.getColor(),m.getStandard(),
+                            m.getMfrs(),m.getUnit(),m.getUnitid());
+                    if(newList!=null && newList.size()>0) {
+                        mId = newList.get(0).getId();
+                    }
                 } else {
                     mId = materials.get(0).getId();
                     String materialJson = JSON.toJSONString(m);
@@ -657,5 +710,20 @@ public class MaterialService {
             }
         }
         return stock;
+    }
+
+    public List<MaterialVo4Unit> getMaterialByMeId(long meId) {
+        List<MaterialVo4Unit> result = new ArrayList<MaterialVo4Unit>();
+        try{
+            result= materialMapperEx.getMaterialByMeId(meId);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return result;
+    }
+
+    public String getMaxBarCode() {
+        String maxBarCodeOld = materialMapperEx.getMaxBarCode();
+        return Long.parseLong(maxBarCodeOld)+"";
     }
 }
