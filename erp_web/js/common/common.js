@@ -400,3 +400,12 @@
 		}
 		return res;
 	}
+
+	/**
+	 * 判断一个值是否数字
+	 * @param value
+	 * @returns {boolean}
+	 */
+	function myIsNaN(value) {
+		return typeof value === 'number' && !isNaN(value);
+	}

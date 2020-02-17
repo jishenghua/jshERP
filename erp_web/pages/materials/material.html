@@ -217,7 +217,8 @@
         var mPropertyList = null; //商品属性列表
         var mPropertyListShort = ""; //商品属性列表-传值
         var clickType = ""; //记录从哪里点击的类别弹窗
-        // var maxBarCode = getMaxBarCode();
+        var maxBarCode = getMaxBarCode(); //获取当前最大条码
+        var thisBarCode = maxBarCode; //全局商品条码
         //初始化界面
         $(function () {
             //初始化系统基础信息
@@ -1059,7 +1060,7 @@
                         iconCls:'icon-add',
                         handler:function()
                         {
-                            append(); //新增
+                            append(1); //新增
                         }
                     },
                     {
@@ -1546,17 +1547,20 @@
         }
 
         //新增
-        function append()  {
+        function append(type)  {
             if (endEditing()) {
                 $('#materialExtendData').datagrid('appendRow', {});
                 editIndex = $('#materialExtendData').datagrid('getRows').length - 1;
                 $('#materialExtendData').datagrid('selectRow', editIndex).datagrid('beginEdit', editIndex);
                 var ed = $('#materialExtendData').datagrid('getEditor', {index:editIndex,field:'BarCode'});
-                var thisBarCode = getMaxBarCode();
-                if(!thisBarCode) {
-                    thisBarCode = "1000";
+                if(type ==1) {
+                    if(thisBarCode) {
+                        thisBarCode = Number(thisBarCode)+1;
+                    } else {
+                        thisBarCode = "1000";
+                    }
                 }
-                $(ed.target).val(Number(thisBarCode)+1);
+                $(ed.target).val(thisBarCode);
             }
         }
 
@@ -1616,7 +1620,7 @@
 
         //商品价格扩展
         function accept(objInfo) {
-            append();
+            append(0);
             removeit();
             if ($("#materialExtendData").datagrid('getChanges').length) {
                 if (!CheckData())

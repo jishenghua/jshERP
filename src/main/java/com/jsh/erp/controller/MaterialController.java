@@ -248,7 +248,7 @@ public class MaterialController {
      * @throws Exception
      */
     @GetMapping(value = "/getMaterialByMeId")
-    public JSONObject getMaterialByMeId(@RequestParam("meId") long meId,
+    public JSONObject getMaterialByMeId(@RequestParam(value = "meId", required = false) Long meId,
                                         @RequestParam("mpList") String mpList,
                                         HttpServletRequest request) throws Exception{
         JSONObject item = new JSONObject();

@@ -362,6 +362,9 @@ public class MaterialService {
     public List<MaterialVo4Unit> findBySelectWithBarCode(String q,Integer offset, Integer rows)throws Exception{
         List<MaterialVo4Unit> list =null;
         try{
+            if(StringUtil.isNotEmpty(q)) {
+                q = q.replace("'", "");
+            }
             list=  materialMapperEx.findBySelectWithBarCode(q, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
@@ -372,6 +375,9 @@ public class MaterialService {
     public int findBySelectWithBarCodeCount(String q)throws Exception{
         int result=0;
         try{
+            if(StringUtil.isNotEmpty(q)) {
+                q = q.replace("'", "");
+            }
             result = materialMapperEx.findBySelectWithBarCodeCount(q);
         }catch(Exception e){
             logger.error("异常码[{}],异常提示[{}],异常[{}]",
@@ -712,10 +718,12 @@ public class MaterialService {
         return stock;
     }
 
-    public List<MaterialVo4Unit> getMaterialByMeId(long meId) {
+    public List<MaterialVo4Unit> getMaterialByMeId(Long meId) {
         List<MaterialVo4Unit> result = new ArrayList<MaterialVo4Unit>();
         try{
-            result= materialMapperEx.getMaterialByMeId(meId);
+            if(meId!=null) {
+                result= materialMapperEx.getMaterialByMeId(meId);
+            }
         }catch(Exception e){
             JshException.readFail(logger, e);
         }

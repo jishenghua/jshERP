@@ -755,30 +755,9 @@
 								if(rec && rec.total==1) {
 									$(".datagrid-body [field='mBarCode']").click(); //在只有单个商品的时候自动选中
 								}
-								//分页后判断下是否有选中的数据行，combogrid会依据上一次选中的值进行初始化，选中datagrid数据行和设置显示值
-								var edMaterial = $('#materialData').datagrid('getEditor', {index:editIndex,field:'MaterialExtendId'});
-								var comboText = $(edMaterial.target).next().find('input.combo-text');
-								$.ajax({
-									type: "get",
-									url: '/material/getMaterialByMeId',
-									data: {
-										meId: comboText.val(),
-										mpList: mPropertyList
-									},
-									dataType: "json",
-									success: function (res) {
-										if (res && res.MaterialName) {
-											$(edMaterial.target).next().find('input.combo-text').val(res.MaterialName);
-										}
-									}
-								});
 							},
 							onSelect:function(index, rowData){
-								// var materialExtendId = $("#depotHeadFM .datagrid-body")
-								// 	.find("[field='MaterialExtendId']").find(".datagrid-editable-input").val();
-								// if(materialExtendId !=rowData.Id) {
-									materialSelect(rowData);
-								// }
+								materialSelect(rowData);
 							}
 						}
 		            }
@@ -918,6 +897,8 @@
 							var info = res.data;
 							var commodityDecimal = info.commodityDecimal-0; //零售价
 							var purchaseDecimal = info.purchaseDecimal-0; //采购价
+							var wholesaleDecimal = info.wholesaleDecimal-0; //销售价
+							var lowDecimal = info.lowDecimal-0; //最低售价
 							var commodityUnit = info.commodityUnit; //商品单位
 							body =$("#depotHeadFM .datagrid-body");
 							footer =$("#depotHeadFM .datagrid-footer");
@@ -948,11 +929,11 @@
                             if(listSubType == "零售" || listSubType == "零售退货") {
 								detailPrice = commodityDecimal;
                             }
-                            else if(listTitle == "采购订单列表" || listTitle == "采购入库列表" || listTitle == "销售退货列表" || listTitle == "其它入库列表") {
+                            else if(listTitle == "采购订单列表" || listTitle == "采购入库列表" || listTitle == "采购退货列表" || listTitle == "其它入库列表") {
 								detailPrice = purchaseDecimal;
                             }
-                            else if(listTitle == "销售订单列表" || listTitle == "销售出库列表" || listTitle == "采购退货列表" || listTitle == "其它出库列表" || listTitle == "调拨出库列表") {
-								detailPrice = commodityDecimal;
+                            else if(listTitle == "销售订单列表" || listTitle == "销售出库列表" || listTitle == "销售退货列表" || listTitle == "其它出库列表" || listTitle == "调拨出库列表") {
+								detailPrice = wholesaleDecimal;
                             }
 							//单价和总价赋值
 							if(!detailPrice) {
@@ -2314,6 +2295,28 @@
 	    	//点击商品下拉框，自动加载数量、单价、金额
 			body.find("[field='Stock']").find(input).prop("readonly","readonly");
             body.find("[field='Unit']").find(input).prop("readonly","readonly");
+			//点击商品名称
+            body.find("[field='MaterialExtendId']").find(input).next().off("mouseup").on("mouseup",function(){
+            	var that = $(this);
+				var meId = that.find('input.textbox-text').val()-0;
+				if(myIsNaN(meId)) {
+					$.ajax({
+						type: "get",
+						url: '/material/getMaterialByMeId',
+						data: {
+							meId: meId,
+							mpList: mPropertyList
+						},
+						dataType: "json",
+						success: function (res) {
+							if (res && res.MaterialName) {
+								that.find('input.textbox-value').val(meId);
+								that.find('input.textbox-text').val(res.MaterialName);
+							}
+						}
+					});
+				}
+			});
 			//修改数量，自动计算金额和合计，另外计算含税单价、税额、价税合计
 			body.find("[field='OperNumber']").find(input).off("keyup").on("keyup",function(){
 				var UnitPrice = body.find("[field='UnitPrice']").find(input).val(); //单价
@@ -2425,8 +2428,9 @@
 			$('#materialData').datagrid('getRows')[editIndex]['DepotName'] = DepotName;
 			//商品信息
 	    	var edMaterial = $('#materialData').datagrid('getEditor', {index:editIndex,field:'MaterialExtendId'});
-	        var MaterialName = $(edMaterial.target).combobox('getText');
+			var MaterialName = $(edMaterial.target).next().find('input.textbox-text').val();
 	        $('#materialData').datagrid('getRows')[editIndex]['MaterialName'] = MaterialName;
+	        //其它信息
 	        $('#materialData').datagrid('endEdit', editIndex);
 	        editIndex = undefined;
 	        return true;
@@ -2441,6 +2445,10 @@
 	            $('#materialData').datagrid('selectRow', index).datagrid('beginEdit', index);
 	            editIndex = index;
 	            autoReckon();
+				setTimeout(function() {
+					var edMaterial = $('#materialData').datagrid('getEditor', {index:editIndex,field:'MaterialExtendId'});
+					$(edMaterial.target).next().find('input.textbox-text').mouseup();
+				},550);
 	        } else {
 	            $('#materialData').datagrid('selectRow', editIndex);
 	        }

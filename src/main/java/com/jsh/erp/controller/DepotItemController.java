@@ -221,12 +221,6 @@ public class DepotItemController {
     public String getOtherInfo(String[] mpArr, DepotItemVo4WithInfoEx diEx)throws Exception {
         String materialOther = "";
         for (int i = 0; i < mpArr.length; i++) {
-            if (mpArr[i].equals("颜色")) {
-                materialOther = materialOther + ((diEx.getMColor() == null || diEx.getMColor().equals("")) ? "" : "(" + diEx.getMColor() + ")");
-            }
-            if (mpArr[i].equals("规格")) {
-                materialOther = materialOther + ((diEx.getMStandard() == null || diEx.getMStandard().equals("")) ? "" : "(" + diEx.getMStandard() + ")");
-            }
             if (mpArr[i].equals("制造商")) {
                 materialOther = materialOther + ((diEx.getMMfrs() == null || diEx.getMMfrs().equals("")) ? "" : "(" + diEx.getMMfrs() + ")");
             }
