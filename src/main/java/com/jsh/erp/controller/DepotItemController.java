@@ -7,6 +7,7 @@ import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.vo.DepotItemStockWarningCount;
 import com.jsh.erp.exception.BusinessRunTimeException;
+import com.jsh.erp.service.MaterialExtend.MaterialExtendService;
 import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.utils.*;
@@ -39,6 +40,9 @@ public class DepotItemController {
 
     @Resource
     private MaterialService materialService;
+
+    @Resource
+    private MaterialExtendService materialExtendService;
 
     /**
      * 只根据商品id查询单据列表
@@ -269,6 +273,11 @@ public class DepotItemController {
             //存放数据json数组
             JSONArray dataArray = new JSONArray();
             if (null != dataList) {
+                List<Long> idList = new ArrayList<Long>();
+                for (DepotItemVo4WithInfoEx m : dataList) {
+                    idList.add(m.getMId());
+                }
+                List<MaterialExtend> meList = materialExtendService.getListByMIds(idList);
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
                     JSONObject item = new JSONObject();
                     Long mId = diEx.getMId();
@@ -281,13 +290,18 @@ public class DepotItemController {
                     item.put("MaterialOther", materialOther);
                     item.put("MaterialColor", diEx.getMColor());
                     item.put("unitName", getUName(diEx.getMaterialUnit(), diEx.getUName()));
-                    item.put("UnitPrice", getUnitPrice(diEx.getPresetPriceOne(), diEx.getPriceStrategy()));
+
                     item.put("prevSum", depotItemService.getStockByParam(depotId,mId,null,timeA,tenantId));
                     item.put("InSum", depotItemService.getInNumByParam(depotId,mId,timeA,timeB,tenantId));
                     item.put("OutSum", depotItemService.getOutNumByParam(depotId,mId,timeA,timeB,tenantId));
                     BigDecimal thisSum = depotItemService.getStockByParam(depotId,mId,null,null,tenantId);
                     item.put("thisSum", thisSum);
-                    item.put("thisAllPrice", thisSum.multiply(getUnitPrice(diEx.getPresetPriceOne(), diEx.getPriceStrategy())));
+                    for(MaterialExtend me:meList) {
+                        if(me.getMaterialId().longValue() == diEx.getMId().longValue()) {
+                            item.put("UnitPrice", me.getPurchaseDecimal());
+                            item.put("thisAllPrice", thisSum.multiply(me.getPurchaseDecimal()));
+                        }
+                    }
                     dataArray.add(item);
                 }
             }
