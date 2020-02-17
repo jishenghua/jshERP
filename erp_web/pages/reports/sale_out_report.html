@@ -222,8 +222,8 @@
                                                 mpList: mPropertyList
                                             }),
                                             success: function (res) {
-                                                if (res && res.code === 200 && res.data) {
-                                                    $("#tableData").datagrid('loadData', res.data.rows);
+                                                if (res && res.code === 200) {
+                                                    $("#tableData").datagrid('loadData', res.data);
                                                 }
                                                 var total = 0;
                                                 res.data.rows.forEach(function(value, index, array){
