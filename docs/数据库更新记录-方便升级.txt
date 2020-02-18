@@ -739,5 +739,5 @@ alter table jsh_depotitem add material_extend_id bigint(20) DEFAULT NULL COMMENT
 -- 时间 2020-02-18
 -- by jishenghua
 -- ----------------------------
-alter table jsh_depothead drop column ProjectId
-alter table jsh_depothead drop column AllocationProjectId
+alter table jsh_depothead drop column ProjectId;
+alter table jsh_depothead drop column AllocationProjectId;
