@@ -33,6 +33,7 @@
         <include refid="com.jsh.erp.datasource.mappers.MaterialExtendMapper.Base_Column_List" />
         from jsh_material_extend
         where 1=1
+        and ifnull(delete_Flag,'0') !='1'
         and material_id in (
         <foreach collection="ids" item="id" separator=",">
             #{id}
