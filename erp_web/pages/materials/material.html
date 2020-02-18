@@ -1175,6 +1175,10 @@
                 $.messager.alert('提示', '单位为必填项！', 'warning');
                 return;
             }
+            if ($("#materialExtendData").datagrid('getRows').length==0){
+                $.messager.alert('提示', '请录入条码及相关信息！', 'warning');
+                return;
+            }
             if (checkIsExist()) {
                 return;
             }
