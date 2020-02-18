@@ -306,66 +306,6 @@ public class DepotHeadExample {
             return (Criteria) this;
         }
 
-        public Criteria andProjectidIsNull() {
-            addCriterion("ProjectId is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andProjectidIsNotNull() {
-            addCriterion("ProjectId is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andProjectidEqualTo(Long value) {
-            addCriterion("ProjectId =", value, "projectid");
-            return (Criteria) this;
-        }
-
-        public Criteria andProjectidNotEqualTo(Long value) {
-            addCriterion("ProjectId <>", value, "projectid");
-            return (Criteria) this;
-        }
-
-        public Criteria andProjectidGreaterThan(Long value) {
-            addCriterion("ProjectId >", value, "projectid");
-            return (Criteria) this;
-        }
-
-        public Criteria andProjectidGreaterThanOrEqualTo(Long value) {
-            addCriterion("ProjectId >=", value, "projectid");
-            return (Criteria) this;
-        }
-
-        public Criteria andProjectidLessThan(Long value) {
-            addCriterion("ProjectId <", value, "projectid");
-            return (Criteria) this;
-        }
-
-        public Criteria andProjectidLessThanOrEqualTo(Long value) {
-            addCriterion("ProjectId <=", value, "projectid");
-            return (Criteria) this;
-        }
-
-        public Criteria andProjectidIn(List<Long> values) {
-            addCriterion("ProjectId in", values, "projectid");
-            return (Criteria) this;
-        }
-
-        public Criteria andProjectidNotIn(List<Long> values) {
-            addCriterion("ProjectId not in", values, "projectid");
-            return (Criteria) this;
-        }
-
-        public Criteria andProjectidBetween(Long value1, Long value2) {
-            addCriterion("ProjectId between", value1, value2, "projectid");
-            return (Criteria) this;
-        }
-
-        public Criteria andProjectidNotBetween(Long value1, Long value2) {
-            addCriterion("ProjectId not between", value1, value2, "projectid");
-            return (Criteria) this;
-        }
-
         public Criteria andDefaultnumberIsNull() {
             addCriterion("DefaultNumber is null");
             return (Criteria) this;
@@ -933,66 +873,6 @@ public class DepotHeadExample {
 
         public Criteria andChangeamountNotBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("ChangeAmount not between", value1, value2, "changeamount");
-            return (Criteria) this;
-        }
-
-        public Criteria andAllocationprojectidIsNull() {
-            addCriterion("AllocationProjectId is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andAllocationprojectidIsNotNull() {
-            addCriterion("AllocationProjectId is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andAllocationprojectidEqualTo(Long value) {
-            addCriterion("AllocationProjectId =", value, "allocationprojectid");
-            return (Criteria) this;
-        }
-
-        public Criteria andAllocationprojectidNotEqualTo(Long value) {
-            addCriterion("AllocationProjectId <>", value, "allocationprojectid");
-            return (Criteria) this;
-        }
-
-        public Criteria andAllocationprojectidGreaterThan(Long value) {
-            addCriterion("AllocationProjectId >", value, "allocationprojectid");
-            return (Criteria) this;
-        }
-
-        public Criteria andAllocationprojectidGreaterThanOrEqualTo(Long value) {
-            addCriterion("AllocationProjectId >=", value, "allocationprojectid");
-            return (Criteria) this;
-        }
-
-        public Criteria andAllocationprojectidLessThan(Long value) {
-            addCriterion("AllocationProjectId <", value, "allocationprojectid");
-            return (Criteria) this;
-        }
-
-        public Criteria andAllocationprojectidLessThanOrEqualTo(Long value) {
-            addCriterion("AllocationProjectId <=", value, "allocationprojectid");
-            return (Criteria) this;
-        }
-
-        public Criteria andAllocationprojectidIn(List<Long> values) {
-            addCriterion("AllocationProjectId in", values, "allocationprojectid");
-            return (Criteria) this;
-        }
-
-        public Criteria andAllocationprojectidNotIn(List<Long> values) {
-            addCriterion("AllocationProjectId not in", values, "allocationprojectid");
-            return (Criteria) this;
-        }
-
-        public Criteria andAllocationprojectidBetween(Long value1, Long value2) {
-            addCriterion("AllocationProjectId between", value1, value2, "allocationprojectid");
-            return (Criteria) this;
-        }
-
-        public Criteria andAllocationprojectidNotBetween(Long value1, Long value2) {
-            addCriterion("AllocationProjectId not between", value1, value2, "allocationprojectid");
             return (Criteria) this;
         }
 

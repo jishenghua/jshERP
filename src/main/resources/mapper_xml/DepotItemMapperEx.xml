@@ -28,6 +28,7 @@
         <result column="AnotherDepotName" jdbcType="VARCHAR" property="AnotherDepotName" />
         <result column="UnitId" jdbcType="BIGINT" property="UnitId" />
         <result column="UName" jdbcType="VARCHAR" property="UName" />
+        <result column="barCode" jdbcType="VARCHAR" property="barCode" />
     </resultMap>
 
     <resultMap extends="com.jsh.erp.datasource.mappers.DepotItemMapper.BaseResultMap" id="ResultByMaterial" type="com.jsh.erp.datasource.entities.DepotItemVo4WithInfoEx">
@@ -134,9 +135,10 @@
     <select id="getDetailList" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
         select di.*,m.Name MName,m.Model MModel,m.Unit MaterialUnit,m.Color MColor,m.Standard MStandard,m.Mfrs MMfrs,
         m.OtherField1 MOtherField1,m.OtherField2 MOtherField2,m.OtherField3 MOtherField3,
-        dp1.name DepotName,dp2.name AnotherDepotName, u.id UnitId, u.UName
+        dp1.name DepotName,dp2.name AnotherDepotName, u.id UnitId, u.UName, me.bar_code barCode
         from jsh_depotitem di
         left join jsh_material m on di.MaterialId=m.id  and ifnull(m.delete_Flag,'0') !='1'
+        left join jsh_material_extend me on me.id=di.material_extend_id  and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_unit u on m.UnitId = u.id and ifnull(u.delete_Flag,'0') !='1'
         left join jsh_depot dp1 on di.DepotId=dp1.id and ifnull(dp1.delete_Flag,'0') !='1'
         left join jsh_depot dp2 on di.AnotherDepotId=dp2.id and ifnull(dp2.delete_Flag,'0') !='1'

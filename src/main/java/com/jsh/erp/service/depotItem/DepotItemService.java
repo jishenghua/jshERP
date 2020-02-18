@@ -13,6 +13,7 @@ import com.jsh.erp.datasource.vo.DepotItemStockWarningCount;
 import com.jsh.erp.datasource.vo.DepotItemVo4Stock;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
+import com.jsh.erp.service.MaterialExtend.MaterialExtendService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.service.serialNumber.SerialNumberService;
@@ -48,6 +49,8 @@ public class DepotItemService {
     private DepotItemMapperEx depotItemMapperEx;
     @Resource
     private MaterialService materialService;
+    @Resource
+    private MaterialExtendService materialExtendService;
     @Resource
     SerialNumberMapperEx serialNumberMapperEx;
     @Resource
@@ -349,20 +352,18 @@ public class DepotItemService {
                     DepotItem depotItem = new DepotItem();
                     JSONObject tempInsertedJson = JSONObject.parseObject(insertedJson.getString(i));
                     depotItem.setHeaderid(headerId);
-                    depotItem.setMaterialid(tempInsertedJson.getLong("MaterialId"));
+                    Long materialExtendId = tempInsertedJson.getLong("MaterialExtendId");
+                    Long materialId = materialExtendService.getMaterialExtend(materialExtendId).getMaterialId();
+                    depotItem.setMaterialid(materialId);
+                    depotItem.setMaterialExtendId(tempInsertedJson.getLong("MaterialExtendId"));
                     depotItem.setMunit(tempInsertedJson.getString("Unit"));
                     if (!StringUtil.isEmpty(tempInsertedJson.get("OperNumber").toString())) {
                         depotItem.setOpernumber(tempInsertedJson.getBigDecimal("OperNumber"));
                         try {
                             String Unit = tempInsertedJson.get("Unit").toString();
                             BigDecimal oNumber = tempInsertedJson.getBigDecimal("OperNumber");
-                            Long mId = Long.parseLong(tempInsertedJson.get("MaterialId").toString());
-                            /***
-                             * 为什么调用的方法要先把基础单位去掉，去掉之后后续还能获取到？
-                             * */
                             //以下进行单位换算
-//                            String UnitName = findUnitName(mId); //查询计量单位名称
-                            String unitName = materialService.findUnitName(mId);
+                            String unitName = materialService.findUnitName(materialId); //查询计量单位名称
                             if (!StringUtil.isEmpty(unitName)) {
                                 String unitList = unitName.substring(0, unitName.indexOf("("));
                                 String ratioList = unitName.substring(unitName.indexOf("("));
@@ -484,7 +485,13 @@ public class DepotItemService {
                         this.updateDepotItemWithObj(depotItem);
                     }
                     depotItem.setId(tempUpdatedJson.getLong("Id"));
-                    depotItem.setMaterialid(tempUpdatedJson.getLong("MaterialId"));
+                    Long materialId = null;
+                    if (StringUtil.isExist(tempUpdatedJson.get("MaterialExtendId"))) {
+                        Long materialExtendId = tempUpdatedJson.getLong("MaterialExtendId");
+                        materialId = materialExtendService.getMaterialExtend(materialExtendId).getMaterialId();
+                        depotItem.setMaterialid(materialId);
+                        depotItem.setMaterialExtendId(tempUpdatedJson.getLong("MaterialExtendId"));
+                    }
                     depotItem.setMunit(tempUpdatedJson.getString("Unit"));
                     if (!StringUtil.isEmpty(tempUpdatedJson.get("OperNumber").toString())) {
                         depotItem.setOpernumber(tempUpdatedJson.getBigDecimal("OperNumber"));
@@ -493,8 +500,7 @@ public class DepotItemService {
                             BigDecimal oNumber = tempUpdatedJson.getBigDecimal("OperNumber");
                             Long mId = Long.parseLong(tempUpdatedJson.get("MaterialId").toString());
                             //以下进行单位换算
-//                            String UnitName = findUnitName(mId); //查询计量单位名称
-                            String unitName = materialService.findUnitName(mId);
+                            String unitName = materialService.findUnitName(mId); //查询计量单位名称
                             if (!StringUtil.isEmpty(unitName)) {
                                 String unitList = unitName.substring(0, unitName.indexOf("("));
                                 String ratioList = unitName.substring(unitName.indexOf("("));

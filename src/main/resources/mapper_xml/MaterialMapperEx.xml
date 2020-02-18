@@ -4,6 +4,7 @@
     <resultMap extends="com.jsh.erp.datasource.mappers.MaterialMapper.BaseResultMap" id="ResultMapList" type="com.jsh.erp.datasource.entities.MaterialVo4Unit">
         <result column="unitName" jdbcType="VARCHAR" property="unitName" />
         <result column="categoryName" jdbcType="VARCHAR" property="categoryName" />
+        <result column="m_bar_code" jdbcType="VARCHAR" property="mBarCode" />
     </resultMap>
 
     <resultMap extends="com.jsh.erp.datasource.mappers.MaterialMapper.BaseResultMap" id="ResultAndUnitMap" type="com.jsh.erp.datasource.entities.MaterialVo4Unit">
@@ -18,6 +19,9 @@
         where 1=1
         <if test="name != null">
             and m.name like '%${name}%'
+        </if>
+        <if test="standard != null">
+            and m.Standard like '%${standard}%'
         </if>
         <if test="model != null">
             and m.model like '%${model}%'
@@ -42,6 +46,9 @@
         <if test="name != null">
             and m.name like '%${name}%'
         </if>
+        <if test="standard != null">
+            and m.Standard like '%${standard}%'
+        </if>
         <if test="model != null">
             and m.model like '%${model}%'
         </if>
@@ -65,12 +72,48 @@
         and ifnull(m.delete_Flag,'0') !='1'
     </select>
 
+    <select id="findByIdWithBarCode" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultAndUnitMap">
+        select m.*,u.UName,me.bar_code m_bar_code, me.commodity_unit, me.purchase_decimal, me.commodity_decimal,
+        me.wholesale_decimal, me.low_decimal
+        from jsh_material m
+        left join jsh_material_extend me on m.id=me.material_id and ifnull(me.delete_Flag,'0') !='1'
+        left join jsh_unit u on m.UnitId=u.id and ifnull(u.delete_Flag,'0') !='1'
+        where me.id = ${meId}
+        and ifnull(m.delete_Flag,'0') !='1'
+    </select>
+
     <select id="findBySelect" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultAndUnitMap">
         select m.*,u.UName from jsh_material m
         left join jsh_unit u on m.UnitId=u.id and ifnull(u.delete_Flag,'0') !='1'
         where m.enabled=1
         and ifnull(m.delete_Flag,'0') !='1'
         ORDER BY Id desc
+    </select>
+
+    <select id="findBySelectWithBarCode" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultAndUnitMap">
+        select m.*,u.UName,me.bar_code m_bar_code,me.id meId,me.commodity_unit from jsh_material m
+        left join jsh_material_extend me on m.id=me.material_id and ifnull(me.delete_Flag,'0') !='1'
+        left join jsh_unit u on m.UnitId=u.id and ifnull(u.delete_Flag,'0') !='1'
+        where m.enabled=1 and me.id is not null
+        <if test="q != null">
+            and (m.name like '%${q}%' or me.bar_code like '%${q}%')
+        </if>
+        and ifnull(m.delete_Flag,'0') !='1'
+        ORDER BY Id desc
+        <if test="offset != null and rows != null">
+            limit #{offset},#{rows}
+        </if>
+    </select>
+
+    <select id="findBySelectWithBarCodeCount" resultType="java.lang.Integer">
+        select count(1) from jsh_material m
+        left join jsh_material_extend me on m.id=me.material_id and ifnull(me.delete_Flag,'0') !='1'
+        left join jsh_unit u on m.UnitId=u.id and ifnull(u.delete_Flag,'0') !='1'
+        where m.enabled=1 and me.id is not null
+        <if test="q != null">
+            and (m.name like '%${q}%' or me.bar_code like '%${q}%')
+        </if>
+        and ifnull(m.delete_Flag,'0') !='1'
     </select>
 
     <update id="updatePriceNullByPrimaryKey" parameterType="java.lang.Long">
@@ -174,168 +217,20 @@
         and ifnull(delete_Flag,'0') !='1'
     </select>
 
-    <insert id="insertSelectiveEx" parameterType="com.jsh.erp.datasource.entities.Material"
-            useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-        insert into jsh_material
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">
-                Id,
-            </if>
-            <if test="categoryid != null">
-                CategoryId,
-            </if>
-            <if test="name != null">
-                Name,
-            </if>
-            <if test="mfrs != null">
-                Mfrs,
-            </if>
-            <if test="packing != null">
-                Packing,
-            </if>
-            <if test="safetystock != null">
-                SafetyStock,
-            </if>
-            <if test="model != null">
-                Model,
-            </if>
-            <if test="standard != null">
-                Standard,
-            </if>
-            <if test="color != null">
-                Color,
-            </if>
-            <if test="unit != null">
-                Unit,
-            </if>
-            <if test="remark != null">
-                Remark,
-            </if>
-            <if test="retailprice != null">
-                RetailPrice,
-            </if>
-            <if test="lowprice != null">
-                LowPrice,
-            </if>
-            <if test="presetpriceone != null">
-                PresetPriceOne,
-            </if>
-            <if test="presetpricetwo != null">
-                PresetPriceTwo,
-            </if>
-            <if test="unitid != null">
-                UnitId,
-            </if>
-            <if test="firstoutunit != null">
-                FirstOutUnit,
-            </if>
-            <if test="firstinunit != null">
-                FirstInUnit,
-            </if>
-            <if test="pricestrategy != null">
-                PriceStrategy,
-            </if>
-            <if test="enabled != null">
-                Enabled,
-            </if>
-            <if test="otherfield1 != null">
-                OtherField1,
-            </if>
-            <if test="otherfield2 != null">
-                OtherField2,
-            </if>
-            <if test="otherfield3 != null">
-                OtherField3,
-            </if>
-            <if test="enableserialnumber != null">
-                enableSerialNumber,
-            </if>
-            <if test="tenantId != null">
-                tenant_id,
-            </if>
-            <if test="deleteFlag != null">
-                delete_Flag,
-            </if>
-        </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">
-                #{id,jdbcType=BIGINT},
-            </if>
-            <if test="categoryid != null">
-                #{categoryid,jdbcType=BIGINT},
-            </if>
-            <if test="name != null">
-                #{name,jdbcType=VARCHAR},
-            </if>
-            <if test="mfrs != null">
-                #{mfrs,jdbcType=VARCHAR},
-            </if>
-            <if test="packing != null">
-                #{packing,jdbcType=DECIMAL},
-            </if>
-            <if test="safetystock != null">
-                #{safetystock,jdbcType=DECIMAL},
-            </if>
-            <if test="model != null">
-                #{model,jdbcType=VARCHAR},
-            </if>
-            <if test="standard != null">
-                #{standard,jdbcType=VARCHAR},
-            </if>
-            <if test="color != null">
-                #{color,jdbcType=VARCHAR},
-            </if>
-            <if test="unit != null">
-                #{unit,jdbcType=VARCHAR},
-            </if>
-            <if test="remark != null">
-                #{remark,jdbcType=VARCHAR},
-            </if>
-            <if test="retailprice != null">
-                #{retailprice,jdbcType=DECIMAL},
-            </if>
-            <if test="lowprice != null">
-                #{lowprice,jdbcType=DECIMAL},
-            </if>
-            <if test="presetpriceone != null">
-                #{presetpriceone,jdbcType=DECIMAL},
-            </if>
-            <if test="presetpricetwo != null">
-                #{presetpricetwo,jdbcType=DECIMAL},
-            </if>
-            <if test="unitid != null">
-                #{unitid,jdbcType=BIGINT},
-            </if>
-            <if test="firstoutunit != null">
-                #{firstoutunit,jdbcType=VARCHAR},
-            </if>
-            <if test="firstinunit != null">
-                #{firstinunit,jdbcType=VARCHAR},
-            </if>
-            <if test="pricestrategy != null">
-                #{pricestrategy,jdbcType=VARCHAR},
-            </if>
-            <if test="enabled != null">
-                #{enabled,jdbcType=BIT},
-            </if>
-            <if test="otherfield1 != null">
-                #{otherfield1,jdbcType=VARCHAR},
-            </if>
-            <if test="otherfield2 != null">
-                #{otherfield2,jdbcType=VARCHAR},
-            </if>
-            <if test="otherfield3 != null">
-                #{otherfield3,jdbcType=VARCHAR},
-            </if>
-            <if test="enableserialnumber != null">
-                #{enableserialnumber,jdbcType=VARCHAR},
-            </if>
-            <if test="tenantId != null">
-                #{tenantId,jdbcType=BIGINT},
-            </if>
-            <if test="deleteFlag != null">
-                #{deleteFlag,jdbcType=VARCHAR},
-            </if>
-        </trim>
-    </insert>
+    <select id="getMaxBarCode" resultType="java.lang.String">
+        select max(CAST(l.bar_code AS SIGNED)) bar_code from jsh_material_extend l
+    </select>
+
+    <select id="getMaterialByMeId" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultMapList">
+        select m.*,me.bar_code m_bar_code,u.uname unitName, mc.name categoryName
+        FROM jsh_material m
+        left join jsh_material_extend me on m.id=me.material_id and ifnull(me.delete_Flag,'0') !='1'
+        left JOIN jsh_unit u on m.UnitId = u.id and ifnull(u.delete_Flag,'0') !='1'
+        left JOIN jsh_materialcategory mc on m.CategoryId = mc.id and ifnull(mc.status,'0') !='2'
+        where 1=1
+        <if test="meId != null">
+            and me.id = ${meId}
+        </if>
+        and ifnull(m.delete_Flag,'0') !='1'
+    </select>
 </mapper>

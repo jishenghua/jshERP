@@ -104,7 +104,7 @@
             pageSize: 10,
             pageList: [10, 50, 100],
             columns: [[
-                {title: '名称', field: 'MaterialName', width: 60},
+                {title: '名称', field: 'MaterialName', width: 160},
                 {title: '型号', field: 'MaterialModel', width: 80},
                 {title: '扩展信息', field: 'MaterialOther', width: 150},
                 {title: '单位', field: 'MaterialUnit', width: 80,
@@ -222,8 +222,8 @@
                                                 mpList: mPropertyList
                                             }),
                                             success: function (res) {
-                                                if (res && res.code === 200 && res.data) {
-                                                    $("#tableData").datagrid('loadData', res.data.rows);
+                                                if (res && res.code === 200) {
+                                                    $("#tableData").datagrid('loadData', res.data);
                                                 }
                                                 var total = 0;
                                                 res.data.rows.forEach(function(value, index, array){

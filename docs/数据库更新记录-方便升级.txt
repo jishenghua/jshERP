@@ -697,3 +697,47 @@ COMMENT='产品初始库存'
 AUTO_INCREMENT=48
 ROW_FORMAT=COMPACT
 ;
+
+-- ----------------------------
+-- 增加商品扩展信息表
+-- 时间 2020-02-15
+-- by jishenghua
+-- ----------------------------
+CREATE TABLE `jsh_material_extend` (
+`id`  bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键' ,
+`material_id`  bigint(20) NULL DEFAULT NULL COMMENT '商品id' ,
+`bar_code`  varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '商品条码' ,
+`commodity_unit`  varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '商品单位' ,
+`purchase_decimal`  decimal(24,6) NULL DEFAULT NULL COMMENT '采购价格' ,
+`commodity_decimal`  decimal(24,6) NULL DEFAULT NULL COMMENT '零售价格' ,
+`wholesale_decimal`  decimal(24,6) NULL DEFAULT NULL COMMENT '销售价格' ,
+`low_decimal`  decimal(24,6) NULL DEFAULT NULL COMMENT '最低售价' ,
+`create_time`  datetime NULL DEFAULT NULL COMMENT '创建日期' ,
+`create_serial`  varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建人编码' ,
+`update_serial`  varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '更新人编码' ,
+`update_time`  bigint(20) NULL DEFAULT NULL COMMENT '更新时间戳' ,
+`tenant_id`  bigint(20) NULL DEFAULT NULL COMMENT '租户id' ,
+`delete_Flag`  varchar(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '删除标记，0未删除，1删除' ,
+PRIMARY KEY (`id`)
+)
+ENGINE=InnoDB
+DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci
+COMMENT='产品价格扩展'
+AUTO_INCREMENT=1
+ROW_FORMAT=COMPACT
+;
+
+-- ----------------------------
+-- 给单据明细表增加商品扩展id
+-- 时间 2020-02-16
+-- by jishenghua
+-- ----------------------------
+alter table jsh_depotitem add material_extend_id bigint(20) DEFAULT NULL COMMENT '商品扩展id' after MaterialId;
+
+-- ----------------------------
+-- 给单据主表删除字段ProjectId 和 AllocationProjectId
+-- 时间 2020-02-18
+-- by jishenghua
+-- ----------------------------
+alter table jsh_depothead drop column ProjectId;
+alter table jsh_depothead drop column AllocationProjectId;

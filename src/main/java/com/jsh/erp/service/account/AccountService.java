@@ -388,13 +388,17 @@ public class AccountService {
                 for (DepotHead depotHead : dataList) {
                     String accountIdList = depotHead.getAccountidlist();
                     String accountMoneyList = depotHead.getAccountmoneylist();
-                    accountIdList = accountIdList.replace("[", "").replace("]", "").replace("\"", "");
-                    accountMoneyList = accountMoneyList.replace("[", "").replace("]", "").replace("\"", "");
-                    String[] aList = accountIdList.split(",");
-                    String[] amList = accountMoneyList.split(",");
-                    for (int i = 0; i < aList.length; i++) {
-                        if (aList[i].toString().equals(id.toString())) {
-                            accountSum = accountSum .add(new BigDecimal(amList[i]));
+                    if(StringUtil.isNotEmpty(accountIdList) && StringUtil.isNotEmpty(accountMoneyList)) {
+                        accountIdList = accountIdList.replace("[", "").replace("]", "").replace("\"", "");
+                        accountMoneyList = accountMoneyList.replace("[", "").replace("]", "").replace("\"", "");
+                        String[] aList = accountIdList.split(",");
+                        String[] amList = accountMoneyList.split(",");
+                        for (int i = 0; i < aList.length; i++) {
+                            if (aList[i].toString().equals(id.toString())) {
+                                if(amList!=null && amList.length>0) {
+                                    accountSum = accountSum.add(new BigDecimal(amList[i]));
+                                }
+                            }
                         }
                     }
                 }

@@ -148,6 +148,13 @@ public class StringUtil {
         return new String[0];
     }
 
+    public static Long[] listToLongArray(List<Long> list) {
+        if (list != null && !list.isEmpty()) {
+            return list.toArray(new Long[list.size()]);
+        }
+        return new Long[0];
+    }
+
     public static List<String> stringToListArray(String[] strings) {
         if (strings != null && strings.length > 0) {
             return Arrays.asList(strings);
@@ -221,6 +228,19 @@ public class StringUtil {
             value = null;
         }
         return value;
+    }
+
+    public static boolean isExist(Object value) {
+        if(value!=null) {
+            String str = value.toString();
+            if("".equals(str.trim())) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return false;
+        }
     }
 
     public static void main(String[] args) {

@@ -36,6 +36,11 @@
                 <input name="searchName" id="searchName" class="easyui-textbox" style="width:100px;"/>
             </td>
             <td>&nbsp;</td>
+            <td>规格：</td>
+            <td>
+                <input name="searchStandard" id="searchStandard" class="easyui-textbox" style="width:100px;"/>
+            </td>
+            <td>&nbsp;</td>
             <td>型号：</td>
             <td>
                 <input name="searchModel" id="searchModel" class="easyui-textbox" style="width:100px;"/>
@@ -50,167 +55,96 @@
     <table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 </div>
 
-<div id="materialDetailListDlg" class="easyui-dialog" style="width:900px;height:500px;padding:10px 20px" closed="true"
+<div id="materialDetailListDlg" class="easyui-dialog" style="width:900px;height:520px;padding:10px 20px" closed="true"
      modal="true" collapsible="false" closable="true">
     <table id="materialTableData" style="top:50px;border-bottom-color:#FFFFFF"></table>
 </div>
 
-<div id="materialDlg" class="easyui-dialog" style="width:860px;height:440px;padding:10px 20px"
+<div id="materialDlg" class="easyui-dialog" style="width:1200px;height:520px;padding:10px 20px"
      closed="true" buttons="#dlg-buttons" modal="true" collapsible="false" closable="true">
     <form id="materialFM" method="post" novalidate>
-        <div id="tt" class="easyui-tabs" style="width:800px;height:320px;">
+        <div id="tt" class="easyui-tabs" style="width:1150px;height:410px;">
             <div title="基本信息" style="padding:20px;">
                 <table>
                     <tr>
-                        <td style="width:60px; height:30px;">品名</td>
-                        <td style="padding:5px;width:180px;">
+                        <td style="width:80px; height:30px;">品名</td>
+                        <td style="padding:5px;width:250px;">
                             <input name="Name" id="Name" class="easyui-textbox"
-                                   data-options="required:true,validType:'length[2,30]'"
-                                   style="width: 180px;"/>
-                        </td>
-                        <td style="width:80px;">型号</td>
-                        <td style="padding:5px;width:180px;">
-                            <input name="Model" id="Model" class="easyui-textbox"
                                    data-options="required:true,validType:'length[1,30]'"
                                    style="width: 180px;"/>
                         </td>
-                        <td style="width:200px;"></td>
+                        <td style="width:60px;">规格</td>
+                        <td style="padding:5px;width:250px;">
+                            <input name="Standard" id="Standard"
+                                   data-options="validType:'length[1,30]'" style="width: 180px;border: 1px solid #95B8E7;border-radius:5px;height: 30px"/>
+                        </td>
+                        <td style="width:60px;">单位</td>
+                        <td style="padding:5px;width:250px;">
+                            <input name="Unit" id="Unit"
+                                   data-options="validType:'length[1,30]'" style="width: 180px;height: 30px;border: 1px solid #95B8E7;border-radius:5px;"/>
+                            <select name="manyUnit" id="manyUnit"
+                                    style="width:180px;display: none;height: 30px;border: 1px solid #95B8E7;border-radius:5px;"></select>
+                            <input id="manyUnitCheck" type="checkbox"/>多单位
+                        </td>
+                        <td style="width:250px"></td>
                     </tr>
                     <tr>
+                        <td style="width:80px;">型号</td>
+                        <td style="padding:5px;">
+                            <input name="Model" id="Model" class="easyui-textbox"
+                                   data-options="validType:'length[1,30]'" style="width: 180px;"/>
+                        </td>
+                        <td style="height:30px;">颜色</td>
+                        <td style="padding:5px">
+                            <input name="Color" id="Color"
+                                   data-options="validType:'length[1,30]'" style="width: 180px;border: 1px solid #95B8E7;border-radius:5px;height: 30px"/>
+                        </td>
                         <td style="height:30px;">类别</td>
-                        <td style="padding:5px" colspan="3">
+                        <td style="padding:5px">
                             <input name="parentName" id="parentName" class="easyui-textbox" style="width: 180px;" readonly="readonly"/>
                             <a href="javascript:void(0)" class="l-btn l-btn-plain" group="" id="lookForMaterialCategory">
                                 <span class="l-btn-left"><span class="l-btn-text icon-search l-btn-icon-left" style="height: 20px;"></span></span></a>
                             <input name="parentid" id="parentid" type="hidden"/>
                         </td>
-                        <td></td>
+                        <td style="text-align: left;"></td>
                     </tr>
                     <tr>
                         <td style="width:80px;">序列号</td>
-                        <td style="padding:5px;width:180px;">
+                        <td style="padding:5px;">
                             <select name="EnableSerialNumber" id="EnableSerialNumber"
-                                style="width:180px;height: 30px;border: 1px solid #95B8E7;border-radius:5px;">
+                                    style="width:180px;height: 30px;border: 1px solid #95B8E7;border-radius:5px;">
                                 <option value="1">有</option>
                                 <option value="0">无</option>
                             </select>
                         </td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td style="height:30px;">备注</td>
-                        <td style="padding:5px" colspan="3">
-                            <textarea name="Remark" id="Remark" class="easyui-textbox" data-options="multiline:true" placeholder="暂无备注信息"
-                                      style="width: 468px; height:40px;"></textarea>
-                        </td>
-                        <td></td>
-                    </tr>
-                </table>
-            </div>
-            <div title="价格信息" style="padding:20px;">
-                <table>
-                    <tr>
                         <td style="height:30px;">安全存量</td>
                         <td style="padding:5px">
                             <input name="SafetyStock" id="SafetyStock" class="easyui-textbox"
                                    data-options="validType:'length[1,30]'" style="width: 180px;"/>
                         </td>
-                        <td>单位</td>
-                        <td style="padding:5px">
-                            <input name="Unit" id="Unit"
-                                   data-options="validType:'length[1,30]'" style="width: 180px;height: 30px;border: 1px solid #95B8E7;border-radius:5px;"/>
-                            <select name="manyUnit" id="manyUnit"
-                                    style="width:180px;display: none;height: 30px;border: 1px solid #95B8E7;border-radius:5px;"></select>
-                        </td>
-                        <td style="text-align: left;">
-                            <input id="manyUnitCheck" type="checkbox"/>多单位
-                        </td>
+                        <td style="height:30px;"></td>
+                        <td style="padding:5px"></td>
+                        <td style="text-align: left;"></td>
                     </tr>
-                    <tr class="first-select-unit">
-                        <td style="height:30px;">首选销售单位</td>
-                        <td style="padding:5px">
-                            <select name="FirstOutUnit" id="FirstOutUnit" style="width:180px; height: 30px;border: 1px solid #95B8E7;border-radius:5px;"></select>
-                        </td>
-                        <td>首选采购单位</td>
-                        <td style="padding:5px">
-                            <select name="FirstInUnit" id="FirstInUnit" style="width:180px; height: 30px;border: 1px solid #95B8E7;border-radius:5px;"></select>
+                    <tr>
+                        <td style="height:30px;">备注</td>
+                        <td style="padding:5px" colspan="5">
+                            <textarea name="Remark" id="Remark" class="easyui-textbox" data-options="multiline:true" placeholder="暂无备注信息"
+                                      style="width: 925px; height:40px;"></textarea>
                         </td>
                         <td></td>
                     </tr>
-                    <tr class="price-list">
-                        <td colspan="5" style="height:30px;">
-                            <table width="700px">
-                                <tr>
-                                    <td width="150px" height="25px"><b>价格列表</b></td>
-                                    <td width="150px">计量单位</td>
-                                    <td width="18%">零售价</td>
-                                    <td width="18%">最低售价</td>
-                                    <td width="18%">预计采购价</td>
-                                    <td width="18%">销售价</td>
-                                </tr>
-                                <tr>
-                                    <td>基本单位</td>
-                                    <td style="border: 1px solid #95B8E7;border-radius:5px;"><span id="basicUnit"></span></td>
-                                    <td><input id="basicRetailPrice" style="height:30px;border: 1px solid #95B8E7;border-radius:5px;"/></td>
-                                    <td><input id="basicLowPrice" style="height:30px;border: 1px solid #95B8E7;border-radius:5px;"/></td>
-                                    <td><input id="basicPresetPriceOne" style="height:30px;border: 1px solid #95B8E7;border-radius:5px;"/></td>
-                                    <td><input id="basicPresetPriceTwo" style="height:30px;border: 1px solid #95B8E7;border-radius:5px;"/></td>
-                                </tr>
-                                <tr>
-                                    <td>副单位</td>
-                                    <td style="border: 1px solid #95B8E7;border-radius:5px;"><span id="otherUnit"></span></td>
-                                    <td><input id="otherRetailPrice" style="height:30px;border: 1px solid #95B8E7;border-radius:5px;"/></td>
-                                    <td><input id="otherLowPrice" style="height:30px;border: 1px solid #95B8E7;border-radius:5px;"/></td>
-                                    <td><input id="otherPresetPriceOne" style="height:30px;border: 1px solid #95B8E7;border-radius:5px;"/></td>
-                                    <td><input id="otherPresetPriceTwo" style="height:30px;border: 1px solid #95B8E7;border-radius:5px;"/></td>
-                                </tr>
-                            </table>
+                    <tr>
+                        <td colspan="7">
+                            <table id="materialExtendData" style="top:100px;border-bottom-color:#FFFFFF"></table>
                         </td>
-                    </tr>
-                    <tr class="price-one">
-                        <td style="height:30px;">零售价</td>
-                        <td style="padding:5px"><input name="RetailPrice" id="RetailPrice" class="easyui-textbox"
-                                                       data-options="validType:'length[1,30]'"
-                                                       style="width: 180px;"/></td>
-                        <td>最低售价</td>
-                        <td style="padding:5px"><input name="LowPrice" id="LowPrice" class="easyui-textbox"
-                                                       data-options="validType:'length[1,30]'"
-                                                       style="width: 180px;"/></td>
-                        <td></td>
-                    </tr>
-                    <tr class="price-two">
-                        <td style="height:30px;">预计采购价</td>
-                        <td style="padding:5px"><input name="PresetPriceOne" id="PresetPriceOne"
-                                                       class="easyui-textbox"
-                                                       data-options="validType:'length[1,30]'"
-                                                       style="width: 180px;"/></td>
-                        <td>销售价</td>
-                        <td style="padding:5px"><input name="PresetPriceTwo" id="PresetPriceTwo"
-                                                       class="easyui-textbox"
-                                                       data-options="validType:'length[1,30]'"
-                                                       style="width: 180px;"/></td>
-                        <td></td>
                     </tr>
                 </table>
             </div>
             <div title="扩展信息" style="padding:20px;">
                 <table class="tb-other-info">
-                    <tr class="tr-color">
-                        <td style="width:60px; height:30px;">颜色</td>
-                        <td style="padding:5px">
-                            <input name="Color" id="Color"
-                                   data-options="validType:'length[1,30]'" style="width: 250px;border: 1px solid #95B8E7;border-radius:5px;height: 30px"/>
-                        </td>
-                    </tr>
-                    <tr class="tr-standard">
-                        <td>规格</td>
-                        <td style="padding:5px">
-                            <input name="Standard" id="Standard"
-                                   data-options="validType:'length[1,30]'" style="width: 250px;border: 1px solid #95B8E7;border-radius:5px;height: 30px"/>
-                        </td>
-                    </tr>
                     <tr class="tr-mfrs">
-                        <td>制造商</td>
+                        <td style="width:80px;">制造商</td>
                         <td style="padding:5px">
                             <input name="Mfrs" id="Mfrs"
                                    data-options="validType:'length[1,30]'" style="width: 250px;border: 1px solid #95B8E7;border-radius:5px;height: 30px"/>
@@ -253,7 +187,7 @@
 </div>
 
 <!-- 导入excel表格 -->
-<div id="importExcelDlg" class="easyui-dialog" style="width:400px; padding:10px 20px;"
+<div id="importExcelDlg" class="easyui-dialog" style="width:450px; padding:10px 20px;"
      closed="true" buttons="#dlg-buttons5" modal="true" collapsible="false" closable="true">
     <form id="importExcelFM" method="post" enctype="multipart/form-data" action="/material/importExcel">
         <div class="fitem" style="padding:5px">
@@ -276,12 +210,15 @@
      closed="true" modal="true" cache="false" collapsible="false" closable="true">
 </div>
     <script type="text/javascript">
+        var editIndex = undefined;
         var materialCategoryList = null;
         var types = "";
         var multiple = 0;  //倍数
         var mPropertyList = null; //商品属性列表
         var mPropertyListShort = ""; //商品属性列表-传值
         var clickType = ""; //记录从哪里点击的类别弹窗
+        var maxBarCode = getMaxBarCode(); //获取当前最大条码
+        var thisBarCode = maxBarCode; //全局商品条码
         //初始化界面
         $(function () {
             //初始化系统基础信息
@@ -367,10 +304,6 @@
                     //当前为选中状态
                     $("#Unit").hide();
                     $("#manyUnit").show();
-                    $(".first-select-unit").show();
-                    $(".price-list").show();
-                    $(".price-one").hide();
-                    $(".price-two").hide();
 
                     $("#Unit").val(""); //清除单位的填写内容
                     $("#RetailPrice").val("");
@@ -382,10 +315,6 @@
                     //当前为不选中状态
                     $("#Unit").show();
                     $("#manyUnit").hide();
-                    $(".first-select-unit").hide();
-                    $(".price-list").hide();
-                    $(".price-one").show();
-                    $(".price-two").show();
 
                     $("#manyUnit").val(""); //清除多单位的下拉框
                     $("#FirstOutUnit").val("");
@@ -526,6 +455,7 @@
                         }
                     },
                     {title: '品名', field: 'name', width: 120},
+                    {title: '规格', field: 'standard', width: 80},
                     {title: '型号', field: 'model', width: 80},
                     {title: '类别', field: 'categoryName', width: 80},
                     {title: '扩展信息', field: 'materialOther', width: 150},
@@ -546,26 +476,10 @@
                             return str;
                         }
                     },
-                    {title: '零售价', field: 'retailprice', width: 60,
-                        formatter: function (value, rec) {
-                            return parsePrice(value, rec, "retailprice");
-                        }
-                    },
-                    {title: '最低售价', field: 'lowprice', width: 70,
-                        formatter: function (value, rec) {
-                            return parsePrice(value, rec, "lowprice");
-                        }
-                    },
-                    {title: '预计采购价', field: 'presetpriceone', width: 70,
-                        formatter: function (value, rec) {
-                            return parsePrice(value, rec, "presetpriceone");
-                        }
-                    },
-                    {title: '销售价', field: 'presetpricetwo', width: 70,
-                        formatter: function (value, rec) {
-                            return parsePrice(value, rec, "presetpricetwo");
-                        }
-                    },
+                    {title: '采购价', field: 'purchaseDecimal', width: 70},
+                    {title: '零售价', field: 'commodityDecimal', width: 70},
+                    {title: '销售价', field: 'wholesaleDecimal', width: 70},
+                    {title: '最低售价', field: 'lowDecimal', width: 70},
                     {
                         title: '状态', field: 'enabled', width: 50, align: "center", formatter: function (value) {
                             return value ? "启用" : "禁用";
@@ -644,7 +558,7 @@
         //初始化表格数据
         function initMaterialDetailData(mId) {
             $('#materialTableData').datagrid({
-                height: heightInfo,
+                height: heightInfo-50,
                 nowrap: false,
                 rownumbers: false,
                 //动画效果
@@ -1024,10 +938,6 @@
 
         //根据商品属性架子啊
         function bindMProperty() {
-            var trColor = $(".tr-color").html();
-            trColor = '<tr class="tr-color">' + trColor + '</tr>';
-            var trStandard = $(".tr-standard").html();
-            trStandard = '<tr class="tr-standard">' + trStandard + '</tr>';
             var trMfrs = $(".tr-mfrs").html();
             trMfrs = '<tr class="tr-mfrs">' + trMfrs + '</tr>';
             var trOtherField1 = $(".tr-otherField1").html();
@@ -1039,26 +949,6 @@
             //表格模板变更
             $(".tb-other-info").html("");
             for (var i = 0; i < mPropertyList.length; i++) {
-                if (mPropertyList[i].nativename === "颜色") {
-                    $(".tb-other-info").append(trColor);
-                    $(".tr-color td").first().text(mPropertyList[i].anothername);
-                    if (mPropertyList[i].enabled) {
-                        $(".tr-color").show();
-                    }
-                    else {
-                        $(".tr-color").hide();
-                    }
-                }
-                if (mPropertyList[i].nativename === "规格") {
-                    $(".tb-other-info").append(trStandard);
-                    $(".tr-standard td").first().text(mPropertyList[i].anothername);
-                    if (mPropertyList[i].enabled) {
-                        $(".tr-standard").show();
-                    }
-                    else {
-                        $(".tr-standard").hide();
-                    }
-                }
                 if (mPropertyList[i].nativename === "制造商") {
                     $(".tb-other-info").append(trMfrs);
                     $(".tr-mfrs td").first().text(mPropertyList[i].anothername);
@@ -1106,23 +996,17 @@
             if(checkPower()){
                 return;
             }
-            $('#materialFM input').val(""); //将输入框全部清空
-
+            $('#materialFM').form('clear');
+            initTableDataExtend('add','0');
             bindMProperty(); //根据商品属性绑定
-            // $("#EnableSerialNumber").combobox('setValue','0');
             $("#EnableSerialNumber").val('0');
             $('#materialDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/edit_add.png"/>&nbsp;增加商品信息');
             $(".window-mask").css({width: webW, height: webH});
-            $("#Name").val("").focus();
             $("#manyUnitCheck").prop("checked", false);
             $("#manyUnit").val(""); //置空
             //当前为不选中状态
             $("#Unit").show();
             $("#manyUnit").hide();
-            $(".first-select-unit").hide();
-            $(".price-list").hide();
-            $(".price-one").show();
-            $(".price-two").show();
             //选中基本资料tab
             $("#materialFM #tt .tabs li").first().click();
             oldName = "";
@@ -1138,6 +1022,89 @@
             materialID = 0;
             url = '/material/add';
             initDepotList(materialID); //加载仓库列表页面
+        }
+
+        //商品价格扩展
+        function initTableDataExtend(type,materialId){
+            $('#materialExtendData').datagrid({
+                width:1000,
+                height:150,
+                rownumbers: false,
+                //动画效果
+                animate:false,
+                //选中单行
+                singleSelect : true,
+                collapsible:false,
+                selectOnCheck:false,
+                //单击行是否选中
+                checkOnSelect : false,
+                pagination: false,
+                //交替出现背景
+                striped : true,
+                showFooter: true,
+                //loadFilter: pagerFilter,
+                onClickRow: onClickRow,
+                columns:[[
+                    { field: 'Id',field: 'Id',width:35,align:"center",checkbox:true},
+                    { title: '条码',field: 'BarCode',editor:'validatebox',width:200},
+                    { title: '单位',field: 'CommodityUnit',editor:'validatebox',width:70},
+                    { title: '采购价',field: 'PurchaseDecimal',editor:'validatebox',width:70},
+                    { title: '零售价',field: 'CommodityDecimal',editor:'validatebox',width:70},
+                    { title: '销售价',field: 'WholesaleDecimal',editor:'validatebox',width:70},
+                    { title: '最低售价',field: 'LowDecimal',editor:'validatebox',width:70},
+                ]],
+                toolbar:[
+                    {
+                        id:'append',
+                        text:'新增',
+                        iconCls:'icon-add',
+                        handler:function()
+                        {
+                            append(1); //新增
+                        }
+                    },
+                    {
+                        id:'delete',
+                        text:'删除',
+                        iconCls:'icon-remove',
+                        handler:function()
+                        {
+                            removeit(); //删除
+                        }
+                    },
+                    {
+                        id:'reject',
+                        text:'撤销',
+                        iconCls:'icon-undo',
+                        handler:function()
+                        {
+                            reject(); //撤销
+                        }
+                    }
+                ],
+
+                onLoadError:function()
+                {
+                    $.messager.alert('页面加载提示','页面加载异常，请稍后再试！','error');
+                    return;
+                }
+            });
+            $.ajax({
+                type:"get",
+                url: '/materialsExtend/getDetailList',
+                data: {
+                    materialId: materialId
+                },
+                dataType: "json",
+                success: function (res) {
+                    if(res && res.code === 200) {
+                        $("#materialExtendData").datagrid('loadData',res.data);
+                    }
+                },
+                error:function() {
+                    $.messager.alert('查询提示','查询数据后台异常，请稍后再试！','error');
+                }
+            });
         }
 
         //检查商品名称是否存在 ++ 重名无法提示问题需要跟进
@@ -1204,10 +1171,6 @@
                 $.messager.alert('提示', '品名不能为空！', 'warning');
                 return;
             }
-            if (!$('#Model').val()) {
-                $.messager.alert('提示', '型号不能为空！', 'warning');
-                return;
-            }
             if(!$("#Unit").val() && !$("#manyUnit").val()) {
                 $.messager.alert('提示', '单位为必填项！', 'warning');
                 return;
@@ -1252,6 +1215,7 @@
                 stockObj.number = val;
                 stockArr.push(stockObj);
             });
+            objInfo = accept(objInfo); //商品价格扩展
             objInfo.stock = JSON.stringify(stockArr);
             $.ajax({
                 type: "post",
@@ -1310,7 +1274,6 @@
             $("#parentName").textbox("setValue", rowsdata.categoryName);
             mId = rowsdata.categoryid;
             mName = rowsdata.categoryName;
-            $("#Packing").textbox("setValue", rowsdata.packing);
             $("#SafetyStock").textbox("setValue", rowsdata.safetystock);
             $("#Model").textbox("setValue", rowsdata.model);
             $("#Standard").val(rowsdata.standard);
@@ -1320,10 +1283,10 @@
             $("#OtherField2").val(rowsdata.otherfield2);
             $("#OtherField3").val(rowsdata.otherfield3);
             $("#Unit").val(rowsdata.unit);
-            $("#RetailPrice").textbox("setValue", rowsdata.retailprice);
-            $("#LowPrice").textbox("setValue", rowsdata.lowprice);
-            $("#PresetPriceOne").textbox("setValue", rowsdata.presetpriceone);
-            $("#PresetPriceTwo").textbox("setValue", rowsdata.presetpricetwo);
+            // $("#RetailPrice").textbox("setValue", rowsdata.retailprice);
+            // $("#LowPrice").textbox("setValue", rowsdata.lowprice);
+            // $("#PresetPriceOne").textbox("setValue", rowsdata.presetpriceone);
+            // $("#PresetPriceTwo").textbox("setValue", rowsdata.presetpricetwo);
             $("#Remark").textbox("setValue", rowsdata.remark);
             $("#manyUnit").val(rowsdata.unitid);
             if (rowsdata.unitid) {
@@ -1331,10 +1294,6 @@
                 //当前为选中状态
                 $("#Unit").hide();
                 $("#manyUnit").show();
-                $(".first-select-unit").show();
-                $(".price-list").show();
-                $(".price-one").hide();
-                $(".price-two").hide();
                 var selectItem = $("#manyUnit").children('option:selected').text();
                 if (selectItem !== "(空)") {
                     var firstOutUnitOptions = selectItem.substring(0, selectItem.indexOf("("));
@@ -1354,44 +1313,8 @@
                 //当前为不选中状态
                 $("#Unit").show();
                 $("#manyUnit").hide();
-                $(".first-select-unit").hide();
-                $(".price-list").hide();
-                $(".price-one").show();
-                $(".price-two").show();
             }
-            //单独查询商品的价格列表
-            $.ajax({
-                url: '/material/findById',
-                data: {
-                    id: rowsdata.id
-                },
-                type: "get",
-                dataType: "json",
-                success: function (res) {
-                    if (res && res.code === 200 && res.data && res.data[0]) {
-                        var PriceStrategy = res.data[0].pricestrategy;
-                        PriceStrategy = JSON.parse(PriceStrategy);
-                        if (PriceStrategy && PriceStrategy[0] && PriceStrategy[1]) {
-                            //基本单位
-                            $("#basicUnit").text(PriceStrategy[0].basic.Unit);
-                            $("#basicRetailPrice").val(PriceStrategy[0].basic.RetailPrice);
-                            $("#basicLowPrice").val(PriceStrategy[0].basic.LowPrice);
-                            $("#basicPresetPriceOne").val(PriceStrategy[0].basic.PresetPriceOne);
-                            $("#basicPresetPriceTwo").val(PriceStrategy[0].basic.PresetPriceTwo);
-                            //副单位
-                            $("#otherUnit").text(PriceStrategy[1].other.Unit);
-                            $("#otherRetailPrice").val(PriceStrategy[1].other.RetailPrice);
-                            $("#otherLowPrice").val(PriceStrategy[1].other.LowPrice);
-                            $("#otherPresetPriceOne").val(PriceStrategy[1].other.PresetPriceOne);
-                            $("#otherPresetPriceTwo").val(PriceStrategy[1].other.PresetPriceTwo);
-                        }
-                    }
-                },
-                error: function () {
-
-                }
-            });
-
+            initTableDataExtend('edit',rowsdata.id);
             oldName = rowsdata.name;
             oldModel = rowsdata.model;
             oldColor = rowsdata.color;
@@ -1425,7 +1348,7 @@
                         json.depotList = res.data;
                         $.ajax({
                             type: "get",
-                            url: "../../../pages/template/init_depot_list.html?61",
+                            url: "../../../pages/template/init_depot_list.html?2121",
                             async: false,
                             success: function (tem) {
                                 if (tem) {
@@ -1455,9 +1378,9 @@
             }
         });
 
-
         function showMaterialDetails(pageNo, pageSize) {
             var name = $.trim($("#searchName").val());
+            var standard = $.trim($("#searchStandard").val());
             var model = $.trim($("#searchModel").val());
             $.ajax({
                 type: "get",
@@ -1466,6 +1389,7 @@
                 data: ({
                     search: JSON.stringify({
                         name: name,
+                        standard: standard,
                         model: model,
                         categoryIds: types,
                         mpList: mPropertyListShort
@@ -1494,6 +1418,7 @@
                 $("#searchParentName").textbox("clear");
                 $("#searchParentId").val("");
                 $("#searchName").textbox("clear");
+                $("#searchStandard").textbox("clear");
                 $("#searchModel").textbox("clear");
                 types = ""; //清空类别
                 //加载完以后重新初始化
@@ -1596,6 +1521,119 @@
             materialCategoryDlgFun();
         });
 
+        //单击
+        function onClickRow(index) {
+            if (editIndex != index) {
+                if (endEditing()) {
+                    $('#materialExtendData').datagrid('selectRow', index)
+                        .datagrid('beginEdit', index);
+                    editIndex = index;
+                } else {
+                    $('#materialExtendData').datagrid('selectRow', editIndex);
+                }
+            }
+        }
+
+        //结束编辑
+        function endEditing() {
+            if (editIndex == undefined) { return true }
+            if ($('#materialExtendData').datagrid('validateRow', editIndex)) {
+                $('#materialExtendData').datagrid('endEdit', editIndex);
+                editIndex = undefined;
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        //新增
+        function append(type)  {
+            if (endEditing()) {
+                $('#materialExtendData').datagrid('appendRow', {});
+                editIndex = $('#materialExtendData').datagrid('getRows').length - 1;
+                $('#materialExtendData').datagrid('selectRow', editIndex).datagrid('beginEdit', editIndex);
+                var ed = $('#materialExtendData').datagrid('getEditor', {index:editIndex,field:'BarCode'});
+                if(type ==1) {
+                    if(thisBarCode) {
+                        thisBarCode = Number(thisBarCode)+1;
+                    } else {
+                        thisBarCode = "1000";
+                    }
+                }
+                $(ed.target).val(thisBarCode);
+            }
+        }
+
+        //查询最新条码
+        function getMaxBarCode(){
+            var barCode = "";
+            $.ajax({
+                type:"get",
+                url: '/material/getMaxBarCode',
+                async: false,
+                dataType: "json",
+                success: function (res) {
+                    if(res && res.code === 200) {
+                        barCode = res.data.barCode;
+                    }
+                },
+                error:function() {
+                    $.messager.alert('查询提示','查询数据后台异常，请稍后再试！','error');
+                }
+            });
+            return barCode;
+        }
+
+        //删除
+        function removeit() {
+            if (editIndex == undefined) { return }
+            $('#materialExtendData').datagrid('cancelEdit', editIndex)
+                .datagrid('deleteRow', editIndex);
+            editIndex = undefined;
+        }
+
+        //撤销
+        function reject() {
+            $('#materialExtendData').datagrid('rejectChanges');
+            editIndex = undefined;
+        }
+
+        //判断
+        function CheckData() {
+            var row = $('#materialExtendData').datagrid('getRows');
+            var totalRowNum = "";
+            for (var i = 0; i < row.length; i++) {
+                if (row[i].BarCode == "") {
+                    totalRowNum += (i + 1) + "、";
+                }
+                if (row[i].CommodityUnit == "") {
+                    totalRowNum += (i + 1) + "、";
+                }
+            }
+            if (totalRowNum != "") {
+                var totalRowNum = totalRowNum.substring(0, totalRowNum.length - 1);
+                $.messager.alert('提示',"第" + totalRowNum + "行数据填写不完整！",'info');
+                return false;
+            }
+            return true;
+        }
+
+        //商品价格扩展
+        function accept(objInfo) {
+            append(0);
+            removeit();
+            if ($("#materialExtendData").datagrid('getChanges').length) {
+                if (!CheckData())
+                    return false;
+                objInfo.inserted = $("#materialExtendData").datagrid('getChanges', "inserted");
+                objInfo.deleted = $("#materialExtendData").datagrid('getChanges', "deleted");
+                objInfo.updated = $("#materialExtendData").datagrid('getChanges', "updated");
+            }
+            if (endEditing()) {
+                $('#materialExtendData').datagrid('acceptChanges');
+            }
+            return objInfo;
+        }
     </script>
 </body>
 </html>
