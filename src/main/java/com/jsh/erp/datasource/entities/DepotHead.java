@@ -10,8 +10,6 @@ public class DepotHead {
 
     private String subtype;
 
-    private Long projectid;
-
     private String defaultnumber;
 
     private String number;
@@ -29,8 +27,6 @@ public class DepotHead {
     private Long accountid;
 
     private BigDecimal changeamount;
-
-    private Long allocationprojectid;
 
     private BigDecimal totalprice;
 
@@ -88,14 +84,6 @@ public class DepotHead {
 
     public void setSubtype(String subtype) {
         this.subtype = subtype == null ? null : subtype.trim();
-    }
-
-    public Long getProjectid() {
-        return projectid;
-    }
-
-    public void setProjectid(Long projectid) {
-        this.projectid = projectid;
     }
 
     public String getDefaultnumber() {
@@ -168,14 +156,6 @@ public class DepotHead {
 
     public void setChangeamount(BigDecimal changeamount) {
         this.changeamount = changeamount;
-    }
-
-    public Long getAllocationprojectid() {
-        return allocationprojectid;
-    }
-
-    public void setAllocationprojectid(Long allocationprojectid) {
-        this.allocationprojectid = allocationprojectid;
     }
 
     public BigDecimal getTotalprice() {

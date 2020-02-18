@@ -5,7 +5,6 @@
     <id column="Id" jdbcType="BIGINT" property="id" />
     <result column="Type" jdbcType="VARCHAR" property="type" />
     <result column="SubType" jdbcType="VARCHAR" property="subtype" />
-    <result column="ProjectId" jdbcType="BIGINT" property="projectid" />
     <result column="DefaultNumber" jdbcType="VARCHAR" property="defaultnumber" />
     <result column="Number" jdbcType="VARCHAR" property="number" />
     <result column="OperPersonName" jdbcType="VARCHAR" property="operpersonname" />
@@ -15,7 +14,6 @@
     <result column="HandsPersonId" jdbcType="BIGINT" property="handspersonid" />
     <result column="AccountId" jdbcType="BIGINT" property="accountid" />
     <result column="ChangeAmount" jdbcType="DECIMAL" property="changeamount" />
-    <result column="AllocationProjectId" jdbcType="BIGINT" property="allocationprojectid" />
     <result column="TotalPrice" jdbcType="DECIMAL" property="totalprice" />
     <result column="PayType" jdbcType="VARCHAR" property="paytype" />
     <result column="Remark" jdbcType="VARCHAR" property="remark" />
@@ -93,11 +91,10 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    Id, Type, SubType, ProjectId, DefaultNumber, Number, OperPersonName, CreateTime, 
-    OperTime, OrganId, HandsPersonId, AccountId, ChangeAmount, AllocationProjectId, TotalPrice, 
-    PayType, Remark, Salesman, AccountIdList, AccountMoneyList, Discount, DiscountMoney, 
-    DiscountLastMoney, OtherMoney, OtherMoneyList, OtherMoneyItem, AccountDay, Status, 
-    LinkNumber, tenant_id, delete_Flag
+    Id, Type, SubType, DefaultNumber, Number, OperPersonName, CreateTime, OperTime, OrganId, 
+    HandsPersonId, AccountId, ChangeAmount, TotalPrice, PayType, Remark, Salesman, AccountIdList, 
+    AccountMoneyList, Discount, DiscountMoney, DiscountLastMoney, OtherMoney, OtherMoneyList, 
+    OtherMoneyItem, AccountDay, Status, LinkNumber, tenant_id, delete_Flag
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.DepotHeadExample" resultMap="BaseResultMap">
     select
@@ -131,27 +128,25 @@
   </delete>
   <insert id="insert" parameterType="com.jsh.erp.datasource.entities.DepotHead">
     insert into jsh_depothead (Id, Type, SubType, 
-      ProjectId, DefaultNumber, Number, 
-      OperPersonName, CreateTime, OperTime, 
-      OrganId, HandsPersonId, AccountId, 
-      ChangeAmount, AllocationProjectId, TotalPrice, 
-      PayType, Remark, Salesman, 
-      AccountIdList, AccountMoneyList, Discount, 
-      DiscountMoney, DiscountLastMoney, OtherMoney, 
-      OtherMoneyList, OtherMoneyItem, AccountDay, 
-      Status, LinkNumber, tenant_id, 
-      delete_Flag)
+      DefaultNumber, Number, OperPersonName, 
+      CreateTime, OperTime, OrganId, 
+      HandsPersonId, AccountId, ChangeAmount, 
+      TotalPrice, PayType, Remark, 
+      Salesman, AccountIdList, AccountMoneyList, 
+      Discount, DiscountMoney, DiscountLastMoney, 
+      OtherMoney, OtherMoneyList, OtherMoneyItem, 
+      AccountDay, Status, LinkNumber, 
+      tenant_id, delete_Flag)
     values (#{id,jdbcType=BIGINT}, #{type,jdbcType=VARCHAR}, #{subtype,jdbcType=VARCHAR}, 
-      #{projectid,jdbcType=BIGINT}, #{defaultnumber,jdbcType=VARCHAR}, #{number,jdbcType=VARCHAR}, 
-      #{operpersonname,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, #{opertime,jdbcType=TIMESTAMP}, 
-      #{organid,jdbcType=BIGINT}, #{handspersonid,jdbcType=BIGINT}, #{accountid,jdbcType=BIGINT}, 
-      #{changeamount,jdbcType=DECIMAL}, #{allocationprojectid,jdbcType=BIGINT}, #{totalprice,jdbcType=DECIMAL}, 
-      #{paytype,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{salesman,jdbcType=VARCHAR}, 
-      #{accountidlist,jdbcType=VARCHAR}, #{accountmoneylist,jdbcType=VARCHAR}, #{discount,jdbcType=DECIMAL}, 
-      #{discountmoney,jdbcType=DECIMAL}, #{discountlastmoney,jdbcType=DECIMAL}, #{othermoney,jdbcType=DECIMAL}, 
-      #{othermoneylist,jdbcType=VARCHAR}, #{othermoneyitem,jdbcType=VARCHAR}, #{accountday,jdbcType=INTEGER}, 
-      #{status,jdbcType=VARCHAR}, #{linknumber,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, 
-      #{deleteFlag,jdbcType=VARCHAR})
+      #{defaultnumber,jdbcType=VARCHAR}, #{number,jdbcType=VARCHAR}, #{operpersonname,jdbcType=VARCHAR}, 
+      #{createtime,jdbcType=TIMESTAMP}, #{opertime,jdbcType=TIMESTAMP}, #{organid,jdbcType=BIGINT}, 
+      #{handspersonid,jdbcType=BIGINT}, #{accountid,jdbcType=BIGINT}, #{changeamount,jdbcType=DECIMAL}, 
+      #{totalprice,jdbcType=DECIMAL}, #{paytype,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{salesman,jdbcType=VARCHAR}, #{accountidlist,jdbcType=VARCHAR}, #{accountmoneylist,jdbcType=VARCHAR}, 
+      #{discount,jdbcType=DECIMAL}, #{discountmoney,jdbcType=DECIMAL}, #{discountlastmoney,jdbcType=DECIMAL}, 
+      #{othermoney,jdbcType=DECIMAL}, #{othermoneylist,jdbcType=VARCHAR}, #{othermoneyitem,jdbcType=VARCHAR}, 
+      #{accountday,jdbcType=INTEGER}, #{status,jdbcType=VARCHAR}, #{linknumber,jdbcType=VARCHAR}, 
+      #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.DepotHead">
     insert into jsh_depothead
@@ -164,9 +159,6 @@
       </if>
       <if test="subtype != null">
         SubType,
-      </if>
-      <if test="projectid != null">
-        ProjectId,
       </if>
       <if test="defaultnumber != null">
         DefaultNumber,
@@ -194,9 +186,6 @@
       </if>
       <if test="changeamount != null">
         ChangeAmount,
-      </if>
-      <if test="allocationprojectid != null">
-        AllocationProjectId,
       </if>
       <if test="totalprice != null">
         TotalPrice,
@@ -260,9 +249,6 @@
       <if test="subtype != null">
         #{subtype,jdbcType=VARCHAR},
       </if>
-      <if test="projectid != null">
-        #{projectid,jdbcType=BIGINT},
-      </if>
       <if test="defaultnumber != null">
         #{defaultnumber,jdbcType=VARCHAR},
       </if>
@@ -289,9 +275,6 @@
       </if>
       <if test="changeamount != null">
         #{changeamount,jdbcType=DECIMAL},
-      </if>
-      <if test="allocationprojectid != null">
-        #{allocationprojectid,jdbcType=BIGINT},
       </if>
       <if test="totalprice != null">
         #{totalprice,jdbcType=DECIMAL},
@@ -364,9 +347,6 @@
       <if test="record.subtype != null">
         SubType = #{record.subtype,jdbcType=VARCHAR},
       </if>
-      <if test="record.projectid != null">
-        ProjectId = #{record.projectid,jdbcType=BIGINT},
-      </if>
       <if test="record.defaultnumber != null">
         DefaultNumber = #{record.defaultnumber,jdbcType=VARCHAR},
       </if>
@@ -393,9 +373,6 @@
       </if>
       <if test="record.changeamount != null">
         ChangeAmount = #{record.changeamount,jdbcType=DECIMAL},
-      </if>
-      <if test="record.allocationprojectid != null">
-        AllocationProjectId = #{record.allocationprojectid,jdbcType=BIGINT},
       </if>
       <if test="record.totalprice != null">
         TotalPrice = #{record.totalprice,jdbcType=DECIMAL},
@@ -458,7 +435,6 @@
     set Id = #{record.id,jdbcType=BIGINT},
       Type = #{record.type,jdbcType=VARCHAR},
       SubType = #{record.subtype,jdbcType=VARCHAR},
-      ProjectId = #{record.projectid,jdbcType=BIGINT},
       DefaultNumber = #{record.defaultnumber,jdbcType=VARCHAR},
       Number = #{record.number,jdbcType=VARCHAR},
       OperPersonName = #{record.operpersonname,jdbcType=VARCHAR},
@@ -468,7 +444,6 @@
       HandsPersonId = #{record.handspersonid,jdbcType=BIGINT},
       AccountId = #{record.accountid,jdbcType=BIGINT},
       ChangeAmount = #{record.changeamount,jdbcType=DECIMAL},
-      AllocationProjectId = #{record.allocationprojectid,jdbcType=BIGINT},
       TotalPrice = #{record.totalprice,jdbcType=DECIMAL},
       PayType = #{record.paytype,jdbcType=VARCHAR},
       Remark = #{record.remark,jdbcType=VARCHAR},
@@ -499,9 +474,6 @@
       <if test="subtype != null">
         SubType = #{subtype,jdbcType=VARCHAR},
       </if>
-      <if test="projectid != null">
-        ProjectId = #{projectid,jdbcType=BIGINT},
-      </if>
       <if test="defaultnumber != null">
         DefaultNumber = #{defaultnumber,jdbcType=VARCHAR},
       </if>
@@ -528,9 +500,6 @@
       </if>
       <if test="changeamount != null">
         ChangeAmount = #{changeamount,jdbcType=DECIMAL},
-      </if>
-      <if test="allocationprojectid != null">
-        AllocationProjectId = #{allocationprojectid,jdbcType=BIGINT},
       </if>
       <if test="totalprice != null">
         TotalPrice = #{totalprice,jdbcType=DECIMAL},
@@ -590,7 +559,6 @@
     update jsh_depothead
     set Type = #{type,jdbcType=VARCHAR},
       SubType = #{subtype,jdbcType=VARCHAR},
-      ProjectId = #{projectid,jdbcType=BIGINT},
       DefaultNumber = #{defaultnumber,jdbcType=VARCHAR},
       Number = #{number,jdbcType=VARCHAR},
       OperPersonName = #{operpersonname,jdbcType=VARCHAR},
@@ -600,7 +568,6 @@
       HandsPersonId = #{handspersonid,jdbcType=BIGINT},
       AccountId = #{accountid,jdbcType=BIGINT},
       ChangeAmount = #{changeamount,jdbcType=DECIMAL},
-      AllocationProjectId = #{allocationprojectid,jdbcType=BIGINT},
       TotalPrice = #{totalprice,jdbcType=DECIMAL},
       PayType = #{paytype,jdbcType=VARCHAR},
       Remark = #{remark,jdbcType=VARCHAR},

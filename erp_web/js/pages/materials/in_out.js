@@ -21,7 +21,6 @@
 	var orgDefaultList; //存储查询出来的会员列表
 	var accountList; //账户列表
 	var outItemList; //支出项目列表
-	var thisTaxRate = 0; //当前税率，选择供应商或者客户的时候设置
 	var oldNumber = ""; //编辑前的单据编号
 	var oldId = 0; //编辑前的单据Id
 	var otherColumns = true; //明细中的‘别名’列是否显示
@@ -247,26 +246,6 @@
 						option += '<option value="现付">现付</option>';
 					}
 					$("#payType").empty().append(option);
-				}
-				else{
-					$.ajax({
-						type:"get",
-						url: "/supplier/findById",
-						data: {
-                            supplierId: rec.id
-						},
-						dataType: "json",
-						success: function (res){
-							if(res && res.code === 200) {
-                                if(res.data && res.data[0]){
-                                    thisTaxRate = res.data[0].taxRate; //设置当前的税率
-                                }
-							}
-						},
-						error:function(){
-
-						}
-					});
 				}
 			}
 		});
@@ -1465,6 +1444,8 @@
 
 			$("#AccountId").attr("data-accountArr", JSON.stringify(accountArr)).attr("data-accountMoneyArr", JSON.stringify(accountMoneyArr));  //json数据存储
 			$(".many-account-ico").show(); //显示多账户的ico图标
+		} else {
+			$(".many-account-ico").hide(); //隐藏多账户的ico图标
 		}
 
 		//采购入库、销售出库的费用数据加载
@@ -2397,15 +2378,8 @@
 				body.find("[field='TaxMoney']").find(input).val((UnitPrice*OperNumber*(taxRate/100)).toFixed(2)); //税额
 				statisticsFun(body,UnitPrice,OperNumber,footer,taxRate);
 			});
-
-			//加载税率
-			if(thisTaxRate) {
-				body.find("[field='TaxRate']").find(input).val(thisTaxRate);
-			}
-			else {
-				body.find("[field='TaxRate']").find(input).val(0); //默认为0
-			}
-
+			//默认税率为0
+			body.find("[field='TaxRate']").find(input).val(0);
 			//在商品类型加载 组装件、普通子件
 			var mType = body.find("[field='MType']");
 			var rowListLength = mType.find(input).closest(".datagrid-row").attr("datagrid-row-index");

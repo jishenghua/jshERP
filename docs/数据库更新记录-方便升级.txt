@@ -733,3 +733,11 @@ ROW_FORMAT=COMPACT
 -- by jishenghua
 -- ----------------------------
 alter table jsh_depotitem add material_extend_id bigint(20) DEFAULT NULL COMMENT '商品扩展id' after MaterialId;
+
+-- ----------------------------
+-- 给单据主表删除字段ProjectId 和 AllocationProjectId
+-- 时间 2020-02-18
+-- by jishenghua
+-- ----------------------------
+alter table jsh_depothead drop column ProjectId
+alter table jsh_depothead drop column AllocationProjectId
