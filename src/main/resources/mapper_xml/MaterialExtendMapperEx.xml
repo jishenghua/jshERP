@@ -53,4 +53,16 @@
         </foreach>
         )
     </update>
+
+    <update id="batchDeleteMaterialExtendByMIds">
+        update jsh_material_extend
+        set delete_Flag='1'
+        where 1=1
+        and ifnull(delete_Flag,'0') !='1'
+        and material_id in (
+        <foreach collection="ids" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
 </mapper>

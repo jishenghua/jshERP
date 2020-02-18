@@ -7,10 +7,7 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.*;
-import com.jsh.erp.datasource.mappers.DepotItemMapperEx;
-import com.jsh.erp.datasource.mappers.MaterialMapper;
-import com.jsh.erp.datasource.mappers.MaterialMapperEx;
-import com.jsh.erp.datasource.mappers.MaterialStockMapper;
+import com.jsh.erp.datasource.mappers.*;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.MaterialExtend.MaterialExtendService;
@@ -44,6 +41,8 @@ public class MaterialService {
     private MaterialMapper materialMapper;
     @Resource
     private MaterialMapperEx materialMapperEx;
+    @Resource
+    private MaterialExtendMapperEx materialExtendMapperEx;
     @Resource
     private LogService logService;
     @Resource
@@ -603,13 +602,16 @@ public class MaterialService {
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");
-        int result =0;
         try{
-            result=  materialMapperEx.batchDeleteMaterialByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+            //逻辑删除商品
+            materialMapperEx.batchDeleteMaterialByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+            //逻辑删除商品价格扩展
+            materialExtendMapperEx.batchDeleteMaterialExtendByMIds(idArray);
+            return 1;
         }catch(Exception e){
             JshException.writeFail(logger, e);
+            return 0;
         }
-        return result;
     }
     /**
      * create by: qiankunpingtai
