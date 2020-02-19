@@ -117,8 +117,6 @@ public interface DepotHeadMapperEx {
 
     List<DepotHead> getDepotHeadListByHandsPersonIds(@Param("handsPersonIds") String[] handsPersonIds);
 
-    List<DepotHead> getDepotHeadListByDepotIds(@Param("depotIds") String[] depotIds);
-
     BigDecimal getBuyAndSaleStatistics(
             @Param("type") String type,
             @Param("subType") String subType,

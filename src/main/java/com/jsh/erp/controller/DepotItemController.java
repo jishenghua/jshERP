@@ -298,8 +298,10 @@ public class DepotItemController {
                     item.put("thisSum", thisSum);
                     for(MaterialExtend me:meList) {
                         if(me.getMaterialId().longValue() == diEx.getMId().longValue()) {
-                            item.put("UnitPrice", me.getPurchaseDecimal());
-                            item.put("thisAllPrice", thisSum.multiply(me.getPurchaseDecimal()));
+                            if(me.getPurchaseDecimal()!=null) {
+                                item.put("UnitPrice", me.getPurchaseDecimal());
+                                item.put("thisAllPrice", thisSum.multiply(me.getPurchaseDecimal()));
+                            }
                         }
                     }
                     dataArray.add(item);
