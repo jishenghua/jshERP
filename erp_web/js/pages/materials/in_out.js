@@ -192,7 +192,6 @@
 					if(depot.isDefault){
 						defDepotId =  depot.id;
 					}
-					depotString = depotString + ",";
 				}
 			}
 			depotString = depotString.substring(0, depotString.length-1);
