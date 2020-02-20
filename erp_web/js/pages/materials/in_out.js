@@ -171,48 +171,32 @@
             }
 		});
 	}
-	//初始化系统基础信息
+
+	//初始化系统仓库信息
 	function initSystemData_depot(){
-		$.ajax({
-			type:"get",
-            url: "/depot/getAllList",
-			//设置为同步
-			async:false,
-			dataType: "json",
-            success: function (res) {
-                if(res && res.code === 200){
-                    depotList = res.data;
-                    if(depotList !=null) {
-                        for(var i = 0 ;i < depotList.length;i++) {
-                            var depot = depotList[i];
-                            var config = getSystemConfig();
-                            if(config && config.depotFlag == "1") {
-                                if(userdepot!=null) {
-                                    if(userdepot.indexOf("["+depot.id+"]")!=-1) {
-                                        if(depot.isDefault){
-                                            defDepotId =  depot.id;
-                                        }
-                                        depotString = depotString + depot.id + ",";
-                                    }
-                                }
-                            } else {
-                                if(depot.isDefault){
-                                    defDepotId =  depot.id;
-                                }
-                                depotString = depotString + depot.id + ",";
-                            }
-                            if(depot.type === 1){
-                                depotString = depotString + depot.id + ",";
-                            }
-                        }
-                        depotString = depotString.substring(0, depotString.length-1);
-                    }
-                } else {
-                    $.messager.alert('提示', '查找系统基础信息异常,请与管理员联系！', 'error');
-                    return;
-                }
-            }
-		});
+		var config = getSystemConfig();
+		var depotList = getSystemDepot();
+		if(depotList !=null) {
+			for(var i = 0 ;i < depotList.length;i++) {
+				var depot = depotList[i];
+				if(config && config.depotFlag == "1") {
+					if(userdepot!=null) {
+						if(userdepot.indexOf("["+depot.id+"]")!=-1) {
+							if(depot.isDefault){
+								defDepotId =  depot.id;
+							}
+							depotString = depotString + depot.id + ",";
+						}
+					}
+				} else {
+					if(depot.isDefault){
+						defDepotId =  depot.id;
+					}
+					depotString = depotString + ",";
+				}
+			}
+			depotString = depotString.substring(0, depotString.length-1);
+		}
 	}
 	//初始化供应商、客户、散户信息
 	function initSupplier(){
