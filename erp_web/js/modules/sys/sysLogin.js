@@ -77,7 +77,7 @@ function loginFun() {
             url: "/user/login",
             dataType: "json",
             data: ({
-                loginame: username,
+                loginName: username,
                 password:  hex_md5(password)
             }),
             success: function (res) {

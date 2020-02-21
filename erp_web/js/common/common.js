@@ -26,27 +26,29 @@
 	/**
 	 * 扩展datagrid的editors方法，支持combogrid
 	 */
-	$.extend($.fn.datagrid.defaults.editors, {
-		combogrid: {
-			init: function (container, options) {
-				var input = $('<input type="text" style="height: 22px;" class="datagrid-editable-input">').appendTo(container);
-				input.combogrid(options);
-				return input;
-			},
-			destroy: function (target) {
-				$(target).combogrid('destroy');
-			},
-			getValue: function (target) {
-				return $(target).combogrid('getValue');
-			},
-			setValue: function (target, value) {
-				$(target).combogrid('setValue', value);
-			},
-			resize: function (target, width) {
-				$(target).combogrid('resize', width);
+	if($.fn.datagrid) {
+		$.extend($.fn.datagrid.defaults.editors, {
+			combogrid: {
+				init: function (container, options) {
+					var input = $('<input type="text" style="height: 22px;" class="datagrid-editable-input">').appendTo(container);
+					input.combogrid(options);
+					return input;
+				},
+				destroy: function (target) {
+					$(target).combogrid('destroy');
+				},
+				getValue: function (target) {
+					return $(target).combogrid('getValue');
+				},
+				setValue: function (target, value) {
+					$(target).combogrid('setValue', value);
+				},
+				resize: function (target, width) {
+					$(target).combogrid('resize', width);
+				}
 			}
-		}
-	});
+		});
+	}
 
 	$(function() {
 		domresize();
@@ -132,7 +134,7 @@
                 currentPage: 1,
                 pageSize: 100
             }),
-            async: false,
+            async: false, //设置为同步
             success: function (res) {
                 if (res && res.code === 200) {
                     if(res.data && res.data.page) {
@@ -151,6 +153,26 @@
         });
         return info;
     }
+
+	//初始化系统基础信息
+	function getSystemDepot(){
+		var depotList = null;
+		$.ajax({
+			type:"get",
+			url: "/depot/getAllList",
+			async:false, //设置为同步
+			dataType: "json",
+			success: function (res) {
+				if(res && res.code === 200) {
+					depotList = res.data;
+				} else {
+					$.messager.alert('提示', '查找系统基础信息异常,请与管理员联系！', 'error');
+					return;
+				}
+			}
+		});
+		return depotList;
+	}
 
 	/**
 	 * js生成唯一ID值 32位值随机值

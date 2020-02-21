@@ -171,48 +171,31 @@
             }
 		});
 	}
-	//初始化系统基础信息
+
+	//初始化系统仓库信息
 	function initSystemData_depot(){
-		$.ajax({
-			type:"get",
-            url: "/depot/getAllList",
-			//设置为同步
-			async:false,
-			dataType: "json",
-            success: function (res) {
-                if(res && res.code === 200){
-                    depotList = res.data;
-                    if(depotList !=null) {
-                        for(var i = 0 ;i < depotList.length;i++) {
-                            var depot = depotList[i];
-                            var config = getSystemConfig();
-                            if(config && config.depotFlag == "1") {
-                                if(userdepot!=null) {
-                                    if(userdepot.indexOf("["+depot.id+"]")!=-1) {
-                                        if(depot.isDefault){
-                                            defDepotId =  depot.id;
-                                        }
-                                        depotString = depotString + depot.id + ",";
-                                    }
-                                }
-                            } else {
-                                if(depot.isDefault){
-                                    defDepotId =  depot.id;
-                                }
-                                depotString = depotString + depot.id + ",";
-                            }
-                            if(depot.type === 1){
-                                depotString = depotString + depot.id + ",";
-                            }
-                        }
-                        depotString = depotString.substring(0, depotString.length-1);
-                    }
-                } else {
-                    $.messager.alert('提示', '查找系统基础信息异常,请与管理员联系！', 'error');
-                    return;
-                }
-            }
-		});
+		var config = getSystemConfig();
+		var depotList = getSystemDepot();
+		if(depotList !=null) {
+			for(var i = 0 ;i < depotList.length;i++) {
+				var depot = depotList[i];
+				if(config && config.depotFlag == "1") {
+					if(userdepot!=null) {
+						if(userdepot.indexOf("["+depot.id+"]")!=-1) {
+							if(depot.isDefault){
+								defDepotId =  depot.id;
+							}
+							depotString = depotString + depot.id + ",";
+						}
+					}
+				} else {
+					if(depot.isDefault){
+						defDepotId =  depot.id;
+					}
+				}
+			}
+			depotString = depotString.substring(0, depotString.length-1);
+		}
 	}
 	//初始化供应商、客户、散户信息
 	function initSupplier(){
@@ -1385,7 +1368,6 @@
         $("#Debt").val(discountlastmoney-res.changeamount);
 		$("#AccountDay").val(res.accountday); //结算天数
 		preTotalPrice = res.totalprice; //记录前一次合计金额，用于扣预付款
-	    $("#AllocationProjectId").val(res.allocationprojectid);
 	    oldNumber = res.number; //记录编辑前的单据编号
 		oldId = res.id; //记录单据Id
 	    var editTitle = listTitle.replace("列表","信息");
@@ -1470,7 +1452,6 @@
 	function showDepotHead(index){
         var res = $("#tableData").datagrid("getRows")[index];
 		var manyAccountMoney = 0; //多账户合计-零售
-	    $("#ProjectIdShow").text(res.projectName);
 	    $("#NumberShow").text(res.number);
 	    $("#OperTimeShow").text(res.opertimeStr);
 	    $('#OrganIdShow').text(res.organName);
@@ -1540,7 +1521,6 @@
 		}
         $("#payTypeShow").text(res.paytype);
         var TotalPrice = res.totalprice;
-        $("#AllocationProjectIdShow").text(res.allocationProjectName);
 	    var showTitle = listTitle.replace("列表","信息");
 	    $('#depotHeadDlgShow').show().dialog('open').dialog('setTitle','<img src="/js/easyui/themes/icons/list.png"/>&nbsp;查看' + showTitle);
 	    $(".window-mask").css({ width: webW ,height: webH});
@@ -1778,7 +1758,7 @@
 						return;
 					}
 				}
-				var OrganId = null, ProjectId = null,AllocationProjectId = null;
+				var OrganId = null;
 				var ChangeAmount = $.trim($("#ChangeAmount").val())-0;
 				var TotalPrice = $("#depotHeadFM .datagrid-footer [field='AllPrice'] div").text();
 				if($('#OrganId').length){
@@ -1829,8 +1809,6 @@
 				var infoStr=JSON.stringify({
 					Type: listType,
 					SubType: listSubType,
-					ProjectId: ProjectId,
-					AllocationProjectId: AllocationProjectId,
 					DefaultNumber: $.trim($("#Number").attr("data-defaultNumber")),//初始编号
 					Number: $.trim($("#Number").val()),
                     LinkNumber: $.trim($("#LinkNumber").val()),

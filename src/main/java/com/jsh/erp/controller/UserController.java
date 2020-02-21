@@ -59,7 +59,7 @@ public class UserController {
     private static final String CODE_OK = "200";
 
     @PostMapping(value = "/login")
-    public BaseResponseInfo login(@RequestParam(value = "loginame", required = false) String loginame,
+    public BaseResponseInfo login(@RequestParam(value = "loginName", required = false) String loginName,
                         @RequestParam(value = "password", required = false) String password,
                         HttpServletRequest request)throws Exception {
         logger.info("============用户登录 login 方法调用开始==============");
@@ -67,7 +67,7 @@ public class UserController {
         User user=null;
         BaseResponseInfo res = new BaseResponseInfo();
         try {
-            String username = loginame.trim();
+            String username = loginName.trim();
             password = password.trim();
             //判断用户是否已经登录过，登录过不再处理
             Object userInfo = request.getSession().getAttribute("user");

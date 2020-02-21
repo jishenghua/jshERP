@@ -1175,6 +1175,10 @@
                 $.messager.alert('提示', '单位为必填项！', 'warning');
                 return;
             }
+            if ($("#materialExtendData").datagrid('getRows').length==0){
+                $.messager.alert('提示', '请录入条码及相关信息！', 'warning');
+                return;
+            }
             if (checkIsExist()) {
                 return;
             }
@@ -1602,6 +1606,7 @@
         function CheckData() {
             var row = $('#materialExtendData').datagrid('getRows');
             var totalRowNum = "";
+            var totalBarCodeOverNum = "";
             for (var i = 0; i < row.length; i++) {
                 if (row[i].BarCode == "") {
                     totalRowNum += (i + 1) + "、";
@@ -1609,10 +1614,18 @@
                 if (row[i].CommodityUnit == "") {
                     totalRowNum += (i + 1) + "、";
                 }
+                if (row[i].BarCode.length > 15) {
+                    totalBarCodeOverNum += (i + 1) + "、";
+                }
             }
             if (totalRowNum != "") {
                 var totalRowNum = totalRowNum.substring(0, totalRowNum.length - 1);
                 $.messager.alert('提示',"第" + totalRowNum + "行数据填写不完整！",'info');
+                return false;
+            }
+            if (totalBarCodeOverNum != "") {
+                var totalBarCodeOverNum = totalBarCodeOverNum.substring(0, totalBarCodeOverNum.length - 1);
+                $.messager.alert('提示',"第" + totalBarCodeOverNum + "行条码长度超过15位！",'info');
                 return false;
             }
             return true;

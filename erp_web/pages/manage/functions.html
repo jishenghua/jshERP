@@ -390,7 +390,7 @@
         $("#Sort").textbox("setValue", rowsdata.sort);
         $("#Enabled").attr("checked", rowsdata.enabled);
         $("#Type").textbox("setValue", rowsdata.type);
-        if (rowsdata.pushbtn != "undefined" && rowsdata.pushbtn != "") {
+        if (rowsdata.pushbtn) {
             var arr = rowsdata.pushbtn.split(",");
             var pushBtnArray = [];
             for (var i = 0; i < arr.length; i++) {

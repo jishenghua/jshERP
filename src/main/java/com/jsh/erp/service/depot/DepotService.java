@@ -239,21 +239,6 @@ public class DepotService {
         String [] idArray=ids.split(",");
 
         /**
-         * 校验单据主表	jsh_depothead
-         * */
-        List<DepotHead> depotHeadList=null;
-        try{
-            depotHeadList=  depotHeadMapperEx.getDepotHeadListByDepotIds(idArray);
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        if(depotHeadList!=null&&depotHeadList.size()>0){
-            logger.error("异常码[{}],异常提示[{}],参数,DepotIds[{}]",
-                    ExceptionConstants.DELETE_FORCE_CONFIRM_CODE,ExceptionConstants.DELETE_FORCE_CONFIRM_MSG,ids);
-            throw new BusinessRunTimeException(ExceptionConstants.DELETE_FORCE_CONFIRM_CODE,
-                    ExceptionConstants.DELETE_FORCE_CONFIRM_MSG);
-        }
-        /**
          * 校验单据子表	jsh_depotitem
          * */
         List<DepotItem> depotItemList=null;
