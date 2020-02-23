@@ -430,8 +430,8 @@
     //重置按钮
     $("#searchResetBtn").unbind().bind({
         click: function () {
-            $("#searchName").val("");
-            $("#searchType").val("");
+            $("#searchName").textbox("clear");
+            $("#searchType").combobox("clear");
             //加载完以后重新初始化
             $("#searchBtn").click();
         }
