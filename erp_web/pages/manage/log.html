@@ -6,6 +6,8 @@
     <!-- 指定以IE8的方式来渲染 -->
     <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
     <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" href="/js/bootstrap/css/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="/css/jsherp.css"/>
     <link rel="stylesheet" type="text/css" href="/js/easyui/themes/default/easyui.css"/>
     <link rel="stylesheet" type="text/css" href="/js/easyui/themes/icon.css"/>
     <link type="text/css" rel="stylesheet" href="/css/common.css"/>
@@ -17,63 +19,61 @@
 <body>
 <!-- 数据显示table -->
 <div id="tablePanel" class="easyui-panel" data-options="fit:true" style="padding:1px;top:300px;" title="操作日志列表" iconCls="icon-list">
-    <table id="searchTable">
-        <tr>
-            <td>操作模块：</td>
-            <td>
-                <input type="text" name="searchOperation" id="searchOperation" class="easyui-textbox" style="width:90px;"/>
-            </td>
-
-            <td>&nbsp;</td>
-            <td>操作人员：</td>
-            <td>
-                <select name="searchUsernameID" id="searchUsernameID" class="easyui-textbox" style="width:90px;"/>
-            </td>
-            <td>&nbsp;</td>
-            <td>开始时间：</td>
-            <td>
-                <input type="text" name="searchBeginTime" id="searchBeginTime" class="easyui-datetimebox"
-                       style="width:135px;"/>
-            </td>
-            <td>&nbsp;</td>
-            <td>操作IP：</td>
-            <td>
-                <input type="text" name="searchIP" id="searchIP" class="easyui-textbox" style="width:90px;"/>
-            </td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-        </tr>
-        <tr>
-            <td>操作详情：</td>
-            <td>
-                <input type="text" name="searchDesc" id="searchDesc" class="easyui-textbox" style="width:90px;"/>
-            </td>
-            <td>&nbsp;</td>
-            <td>操作状态：</td>
-            <td>
+    <div class="box-body form-inline">
+        <div class="form-group">
+            <label class="control-label">操作模块：</label>
+            <div class="control-inline">
+                <input type="text" id="searchOperation" name="searchOperation" value="" maxlength="100" class="easyui-textbox width-90"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label">操作人员：</label>
+            <div class="control-inline">
+                <select name="searchUsernameID" id="searchUsernameID" class="width-90"
+                        style="height: 30px;border: 1px solid #95B8E7;border-radius:5px;"></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label">操作IP：</label>
+            <div class="control-inline">
+                <input type="text" id="searchIP" name="searchIP" value="" maxlength="100" class="easyui-textbox width-90"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label">操作状态：</label>
+            <div class="control-inline">
                 <select name="searchStatus" id="searchStatus" class="easyui-combobox"
                         data-options="panelHeight:'auto'" style="width:90px;">
                     <option value="">全部</option>
                     <option value="0">成功</option>
                     <option value="1">失败</option>
                 </select>
-            </td>
-            <td>&nbsp;</td>
-            <td>结束时间：</td>
-            <td>
-                <input type="text" name="searchEndTime" id="searchEndTime" class="easyui-datetimebox"
-                       style="width:135px;"/>
-            </td>
-            <td>&nbsp;</td>
-            <td colspan="3">
-                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchBtn">查询</a>
-                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-redo" id="searchResetBtn">重置</a>
-            </td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-        </tr>
-    </table>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="form-group">
+            <label class="control-label">操作详情：</label>
+            <div class="control-inline">
+                <input type="text" id="searchDesc" name="searchDesc" value="" maxlength="100" class="easyui-textbox width-90"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label">开始时间：</label>
+            <div class="control-inline">
+                <input type="text" id="searchBeginTime" name="searchBeginTime" class="easyui-datetimebox width-140"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label">结束时间：</label>
+            <div class="control-inline">
+                <input type="text" id="searchEndTime" name="searchEndTime" class="easyui-datetimebox width-140"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchBtn">查询</a>&nbsp;
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-redo" id="searchResetBtn">重置</a>
+        </div>
+    </div>
     <table id="tableData" style="height:340px;top:300px;border-bottom-color:#FFFFFF"></table>
 </div>
 <script type="text/javascript">
@@ -264,7 +264,7 @@
     $("#searchResetBtn").unbind().bind({
         click: function () {
             $("#searchOperation").textbox("clear");
-            $("#searchUsernameID").textbox("clear");
+            $("#searchUsernameID").val("");
             $("#searchIP").textbox("clear");
             $("#searchStatus").textbox("setValue","");
             $("#searchBeginTime").datebox("clear");

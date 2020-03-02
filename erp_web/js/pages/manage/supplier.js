@@ -546,12 +546,10 @@
         //重置按钮
         $("#searchResetBtn").unbind().bind({
             click:function(){
-                $("#searchSupplier").val("");
-                $("#searchType").val("");
-                $("#searchPhonenum").val("");
-                $("#searchTelephone").val("");
-                $("#searchDesc").val("");
-
+                $("#searchSupplier").textbox("clear");
+                $("#searchPhonenum").textbox("clear");
+                $("#searchTelephone").textbox("clear");
+                $("#searchDesc").textbox("clear");
                 //加载完以后重新初始化
                 $("#searchBtn").click();
             }
@@ -563,8 +561,8 @@
     //编辑信息
     function editSupplier(supplierTotalInfo) {
         var supplierInfo = supplierTotalInfo.split("AaBb");
-        var beginNeedGet = supplierInfo[5];
-        var beginNeedPay = supplierInfo[6];
+        var beginNeedGet = supplierInfo[5].replace("undefined","");
+        var beginNeedPay = supplierInfo[6].replace("undefined","");
         var row = {
             supplier : supplierInfo[1],
             contacts : supplierInfo[2].replace("undefined",""),

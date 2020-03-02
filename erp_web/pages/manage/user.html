@@ -4,6 +4,8 @@
     <title>用户管理</title>
     <meta charset="utf-8">
     <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" href="/js/bootstrap/css/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="/css/jsherp.css"/>
     <script type="text/javascript" src="/js/jquery-1.8.0.min.js"></script>
     <script type="text/javascript" src="/js/colorbox/jquery.colorbox-min.js"></script>
     <script type="text/javascript" src="/js/colorbox/colorboxSet.js"></script>
@@ -18,27 +20,24 @@
 <body>
 <!-- 数据显示table -->
 <div id="tablePanel" class="easyui-panel" data-options="fit:true" style="padding:1px;top:300px;" title="用户列表" iconCls="icon-list">
-    <table id="searchTable">
-        <tr>
-            <td>登录名称：</td>
-            <td>
-                <input type="text" name="searchLoginame" id="searchLoginame" class="easyui-textbox" style="width:100px;"/>
-            </td>
-            <td>&nbsp;</td>
-            <td>用户姓名：</td>
-            <td>
-                <input type="text" name="searchUsername" id="searchUsername" class="easyui-textbox" style="width:100px;"/>
-            </td>
-            <td>&nbsp;</td>
-            <td>
-                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchBtn">查询</a>&nbsp;&nbsp;
-                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-redo" id="searchResetBtn">重置</a>&nbsp;&nbsp;
-                <a id="btnSetRole" class='easyui-linkbutton iframe iframe_LargeForm' href='#' title='分配角色'>分配角色</a>&nbsp;&nbsp;
-                <a id="btnSetDepart" class='easyui-linkbutton iframe iframe_LargeForm' href='#' title='分配仓库'>分配仓库</a>&nbsp;&nbsp;
-                <a id="btnSetCustomer" class='easyui-linkbutton iframe iframe_LargeForm' href='#' title='分配客户'>分配客户</a>
-            </td>
-        </tr>
-    </table>
+    <div class="box-body form-inline">
+        <div class="form-group">
+            <label class="control-label">登录名称：</label>
+            <div class="control-inline">
+                <input type="text" id="searchLoginame" name="searchLoginame" value="" maxlength="100" class="easyui-textbox width-90"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label">用户姓名：</label>
+            <div class="control-inline">
+                <input type="text" id="searchUsername" name="searchUsername" value="" maxlength="100" class="easyui-textbox width-90"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchBtn">查询</a>&nbsp;
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-redo" id="searchResetBtn">重置</a>
+        </div>
+    </div>
     <table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 </div>
 

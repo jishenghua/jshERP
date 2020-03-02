@@ -6,6 +6,8 @@
     <!-- 指定以IE8的方式来渲染 -->
     <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
     <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" href="/js/bootstrap/css/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="/css/jsherp.css"/>
     <script type="text/javascript" src="/js/jquery-1.8.0.min.js"></script>
     <script type="text/javascript" src="/js/print/print.js"></script>
     <link rel="stylesheet" type="text/css" href="/js/easyui/themes/default/easyui.css"/>
@@ -19,21 +21,19 @@
 <body>
 <!-- 数据显示table -->
 <div id="tablePanel" class="easyui-panel" data-options="fit:true" style="padding:1px;top:300px;" title="进货统计列表" iconCls="icon-list">
-    <table id="searchTable">
-        <tr>
-            <td>月份：</td>
-            <td>
+    <div class="box-body form-inline">
+        <div class="form-group">
+            <label class="control-label">月份：</label>
+            <div class="control-inline">
                 <input type="text" name="searchMonth" id="searchMonth" onClick="WdatePicker({dateFmt:'yyyy-MM'})"
-                       class="txt Wdate" style="width:180px;height: 30px;border: 1px solid #95B8E7;border-radius:5px;"/>
-            </td>
-            <td>&nbsp;</td>
-            <td>
-                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchBtn">查询</a>
-                &nbsp;&nbsp;
-                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-print" id="printBtn">打印</a>
-            </td>
-        </tr>
-    </table>
+                       class="txt Wdate width-160" style="height: 30px;border: 1px solid #95B8E7;border-radius:5px;"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchBtn">查询</a>&nbsp;
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-print" id="printBtn">打印</a>
+        </div>
+    </div>
     <table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 </div>
 
@@ -114,10 +114,10 @@
                         }
                     }
                 },
-                {title: '进货数量', field: 'InSum', width: 60},
-                {title: '进货金额', field: 'InSumPrice', width: 60},
-                {title: '退货数量', field: 'OutSum', width: 60},
-                {title: '退货金额', field: 'OutSumPrice', width: 60}
+                {title: '进货数量', field: 'InSum', width: 80},
+                {title: '进货金额', field: 'InSumPrice', width: 80},
+                {title: '退货数量', field: 'OutSum', width: 80},
+                {title: '退货金额', field: 'OutSumPrice', width: 80}
             ]],
             onLoadError: function () {
                 $.messager.alert('页面加载提示', '页面加载异常，请稍后再试！', 'error');

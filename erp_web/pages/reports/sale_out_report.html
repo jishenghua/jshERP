@@ -6,6 +6,8 @@
     <!-- 指定以IE8的方式来渲染 -->
     <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
     <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" href="/js/bootstrap/css/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="/css/jsherp.css"/>
     <script type="text/javascript" src="/js/jquery-1.8.0.min.js"></script>
     <script type="text/javascript" src="/js/print/print.js"></script>
     <link rel="stylesheet" type="text/css" href="/js/easyui/themes/default/easyui.css"/>
@@ -19,23 +21,22 @@
 <body>
 <!-- 数据显示table -->
 <div id="tablePanel" class="easyui-panel" data-options="fit:true" style="padding:1px;top:300px;" title="销售统计列表" iconCls="icon-list">
-    <table id="searchTable">
-        <tr>
-            <td>月份：</td>
-            <td>
+    <div class="box-body form-inline">
+        <div class="form-group">
+            <label class="control-label">月份：</label>
+            <div class="control-inline">
                 <input type="text" name="searchMonth" id="searchMonth" onClick="WdatePicker({dateFmt:'yyyy-MM'})"
-                       class="txt Wdate" style="width:180px;height: 30px;border: 1px solid #95B8E7;border-radius:5px;"/>
-            </td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td>
-                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchBtn">查询</a>
-                &nbsp;&nbsp;
-                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-print" id="printBtn">打印</a>
-            </td>
-            <td>当前销售总额：<span class="first-total">0</span>&nbsp;&nbsp;<span class="tip">注：此处包含零售+批发销售</span></td>
-        </tr>
-    </table>
+                       class="txt Wdate width-160" style="height: 30px;border: 1px solid #95B8E7;border-radius:5px;"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchBtn">查询</a>&nbsp;
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-print" id="printBtn">打印</a>
+        </div>
+        <div class="form-group">
+            当前销售总额：<span class="first-total">0</span>&nbsp;&nbsp;<span class="tip">注：此处包含零售+批发销售</span>
+        </div>
+    </div>
     <table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 </div>
 
@@ -117,11 +118,11 @@
                         }
                     }
                 },
-                {title: '销售数量', field: 'OutSum', width: 60},
-                {title: '销售金额', field: 'OutSumPrice', width: 60},
-                {title: '退货数量', field: 'InSum', width: 60},
-                {title: '退货金额', field: 'InSumPrice', width: 60},
-                {title: '实际销售金额', field: 'OutInSumPrice', width: 80}
+                {title: '销售数量', field: 'OutSum', width: 80},
+                {title: '销售金额', field: 'OutSumPrice', width: 80},
+                {title: '退货数量', field: 'InSum', width: 80},
+                {title: '退货金额', field: 'InSumPrice', width: 80},
+                {title: '实际销售金额', field: 'OutInSumPrice', width: 100}
 
             ]],
             onLoadError: function () {

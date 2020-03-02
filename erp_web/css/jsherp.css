@@ -229,6 +229,10 @@
     width: 160px !important
 }
 
+.width-180 {
+    width: 180px !important
+}
+
 .width-460 {
     width: 460px !important
 }
@@ -659,14 +663,15 @@ select.form-control {
 
 .form-inline .form-group {
     display: inline-block;
-    margin-bottom: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
     vertical-align: middle;
     margin-right: 6px
 }
 
 .form-inline .control-label {
     text-align: right;
-    font-size: 13px;
+    font-size: 14px;
     vertical-align: baseline
 }
 
@@ -678,7 +683,8 @@ select.form-control {
 
 .form-inline .form-control {
     display: inline-block;
-    vertical-align: middle
+    vertical-align: middle;
+    border: 1px solid #95B8E7;
 }
 
 .form-inline .btn {
