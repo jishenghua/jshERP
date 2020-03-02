@@ -672,7 +672,7 @@
 								body =$("#depotHeadFM .datagrid-body");
 								footer =$("#depotHeadFM .datagrid-footer");
 								input = ".datagrid-editable-input";
-								var mId = body.find("[field='MaterialExtendId']").find(".combo-value").val();
+								var mId = body.find("[field='MaterialExtendId']").find(".textbox-value").val();
 								if(mId){
 									var type = "select"; //type 类型：点击 click，选择 select
 									findStockNumById(depotId, mId, monthTime, body, input, ratioDepot, type);

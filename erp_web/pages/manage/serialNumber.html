@@ -466,7 +466,7 @@
     function editSerialNumber(index) {
         //获取当前行
         var rowsdata = $("#tableData").datagrid("getRows")[index];
-        $("#serialNumberId").val(rowsdata.serialNumberId);
+        $("#serialNumberId").val(rowsdata.id);
         $("#materialId").val(rowsdata.materialId);
         $("#materialName").focus().textbox("setValue", rowsdata.materialName);
         $("#serialNumber").textbox("setValue", rowsdata.serialNumber);
