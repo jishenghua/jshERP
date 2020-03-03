@@ -118,17 +118,17 @@
     }
 
     .sidebar-open .content-wrapper, .sidebar-open .main-footer {
-        -webkit-transform: translate(200px, 0);
-        -ms-transform: translate(200px, 0);
-        -o-transform: translate(200px, 0);
-        transform: translate(200px, 0)
+        -webkit-transform: translate(170px, 0);
+        -ms-transform: translate(170px, 0);
+        -o-transform: translate(170px, 0);
+        transform: translate(170px, 0)
     }
 
     .main-sidebar {
-        -webkit-transform: translate(-200px, 0);
-        -ms-transform: translate(-200px, 0);
-        -o-transform: translate(-200px, 0);
-        transform: translate(-200px, 0)
+        -webkit-transform: translate(-170px, 0);
+        -ms-transform: translate(-170px, 0);
+        -o-transform: translate(-170px, 0);
+        transform: translate(-170px, 0)
     }
 }
 
