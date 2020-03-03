@@ -6,6 +6,8 @@
     <!-- 指定以IE8的方式来渲染 -->
     <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
     <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" href="/js/bootstrap/css/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="/css/jsherp.css"/>
     <link rel="stylesheet" type="text/css" href="/js/easyui/themes/default/easyui.css"/>
     <link rel="stylesheet" type="text/css" href="/js/easyui/themes/icon.css"/>
     <link type="text/css" rel="stylesheet" href="/css/common.css"/>
@@ -18,34 +20,36 @@
 <body>
 <!-- 数据显示table -->
 <div id="tablePanel" class="easyui-panel" data-options="fit:true" style="padding:1px;top:300px;" title="会员信息列表" iconCls="icon-list">
-    <table id="searchTable">
-        <tr>
-            <td>名称：</td>
-            <td>
-                <input type="text" name="searchSupplier" id="searchSupplier" class="easyui-textbox" style="width:100px;"/>
-            </td>
-            <td>&nbsp;</td>
-            <td>手机号码：</td>
-            <td>
-                <input type="text" name="searchTelephone" id="searchTelephone" class="easyui-textbox" style="width:100px;"/>
-            </td>
-            <td>&nbsp;</td>
-            <td>联系电话：</td>
-            <td>
-                <input type="text" name="searchPhonenum" id="searchPhonenum" class="easyui-textbox" style="width:100px;"/>
-            </td>
-            <td>&nbsp;</td>
-            <td id="searchDescLabel">备注：</td>
-            <td>
-                <input type="text" name="searchDesc" id="searchDesc" class="easyui-textbox" style="width:100px;"/>
-            </td>
-            <td>&nbsp;</td>
-            <td>
-                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchBtn">查询</a>&nbsp;&nbsp;
-                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-redo" id="searchResetBtn">重置</a>
-            </td>
-        </tr>
-    </table>
+    <div class="box-body form-inline">
+        <div class="form-group">
+            <label class="control-label">名称：</label>
+            <div class="control-inline">
+                <input type="text" id="searchSupplier" name="searchSupplier" value="" maxlength="100" class="easyui-textbox width-90"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label">手机号码：</label>
+            <div class="control-inline">
+                <input type="text" id="searchTelephone" name="searchTelephone" value="" maxlength="100" class="easyui-textbox width-90"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label">联系电话：</label>
+            <div class="control-inline">
+                <input type="text" id="searchPhonenum" name="searchPhonenum" value="" maxlength="100" class="easyui-textbox width-90"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label">备注：</label>
+            <div class="control-inline">
+                <input type="text" id="searchDesc" name="searchDesc" value="" maxlength="100" class="easyui-textbox width-90"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchBtn">查询</a>&nbsp;
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-redo" id="searchResetBtn">重置</a>
+        </div>
+    </div>
     <table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 </div>
 <div id="supplierDlg" class="easyui-dialog" style="width:600px;padding:10px 20px"

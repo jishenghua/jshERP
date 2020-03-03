@@ -6,6 +6,8 @@
     <!-- 指定以IE8的方式来渲染 -->
     <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
     <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" href="/js/bootstrap/css/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="/css/jsherp.css"/>
     <script type="text/javascript" src="/js/jquery-1.8.0.min.js"></script>
     <link rel="stylesheet" type="text/css" href="/js/easyui/themes/default/easyui.css"/>
     <link rel="stylesheet" type="text/css" href="/js/easyui/themes/icon.css"/>
@@ -21,37 +23,39 @@
 <body>
 <!-- 数据显示table -->
 <div id="tablePanel" class="easyui-panel" data-options="fit:true" style="padding:1px;top:300px;" title="商品列表" iconCls="icon-list">
-    <table id="searchTable">
-        <tr>
-            <td>类别：</td>
-            <td>
+    <div class="box-body form-inline">
+        <div class="form-group">
+            <label class="control-label">类别：</label>
+            <div class="control-inline">
                 <input name="searchParentName" id="searchParentName" class="easyui-textbox" style="width: 100px;" readonly="readonly"/>
                 <a href="javascript:void(0)" class="l-btn l-btn-plain" group="" style="height: 25px;" id="lookForSelectMaterialCategory">
                     <span class="l-btn-left"><span class="l-btn-text icon-search l-btn-icon-left" style="height: 20px"></span></span></a>
                 <input name="searchParentId" id="searchParentId" type="hidden"/>
-            </td>
-            <td>&nbsp;</td>
-            <td>品名：</td>
-            <td>
-                <input name="searchName" id="searchName" class="easyui-textbox" style="width:100px;"/>
-            </td>
-            <td>&nbsp;</td>
-            <td>规格：</td>
-            <td>
-                <input name="searchStandard" id="searchStandard" class="easyui-textbox" style="width:100px;"/>
-            </td>
-            <td>&nbsp;</td>
-            <td>型号：</td>
-            <td>
-                <input name="searchModel" id="searchModel" class="easyui-textbox" style="width:100px;"/>
-            </td>
-            <td>&nbsp;</td>
-            <td>
-                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchBtn">查询</a>&nbsp;&nbsp;
-                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-redo" id="searchResetBtn">重置</a>
-            </td>
-        </tr>
-    </table>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label">品名：</label>
+            <div class="control-inline">
+                <input type="text" id="searchName" name="searchName" value="" maxlength="100" class="easyui-textbox width-90"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label">规格：</label>
+            <div class="control-inline">
+                <input type="text" id="searchStandard" name="searchStandard" value="" maxlength="100" class="easyui-textbox width-90"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label">型号：</label>
+            <div class="control-inline">
+                <input type="text" id="searchModel" name="searchModel" value="" maxlength="100" class="easyui-textbox width-90"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchBtn">查询</a>&nbsp;
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-redo" id="searchResetBtn">重置</a>
+        </div>
+    </div>
     <table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 </div>
 
@@ -206,7 +210,7 @@
     </form>
 </div>
 
-<div id="forSelectMaterialCategoryDlg" class="easyui-dialog" style="width:380px;padding:10px 20px"
+<div id="forSelectMaterialCategoryDlg" class="easyui-dialog" style="width:380px;padding:10px 20px;top:50px;"
      closed="true" modal="true" cache="false" collapsible="false" closable="true">
 </div>
     <script type="text/javascript">

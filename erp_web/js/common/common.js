@@ -66,8 +66,7 @@
 		webH = document.documentElement.clientHeight;
 		webW = document.documentElement.offsetWidth;
 		widthInfo = $("body").outerWidth() -27;
-		var mtopH = $("#searchTable").outerHeight();
-		var positionH = $("#position").outerHeight();
+		var mtopH = $(".box-body").outerHeight();
 		heightInfo = webH - mtopH - 86;
 
 		//分页信息修改成 15条
@@ -83,11 +82,11 @@
 		}
 	}
     function dgResize() {
-		var searchTabHeight = $('#searchTable').height();
+		var searchTabHeight = $('.box-body').height();
 		if($('#tableData').length) {
             $('#tableData').datagrid('resize', {
                 width: $(window).width() - 6,
-                height: $(window).height() - searchTabHeight -46
+                height: $(window).height() - searchTabHeight -43
             });
 		}
     }

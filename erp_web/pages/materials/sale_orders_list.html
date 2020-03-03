@@ -6,6 +6,8 @@
     <!-- 指定以IE8的方式来渲染 -->
     <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
     <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" href="/js/bootstrap/css/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="/css/jsherp.css"/>
     <link rel="stylesheet" type="text/css" href="/js/easyui/themes/default/easyui.css"/>
     <link rel="stylesheet" type="text/css" href="/js/easyui/themes/icon.css"/>
     <link type="text/css" rel="stylesheet" href="/css/common.css"/>
@@ -23,33 +25,32 @@
 <body>
 <!-- 数据显示table -->
 <div id="tablePanel" class="easyui-panel" data-options="fit:true" style="padding:1px; top:300px;" title="销售订单列表" iconCls="icon-list">
-    <table id="searchTable">
-        <tr>
-            <td>单据编号：</td>
-            <td>
-                <input type="text" name="searchNumber" id="searchNumber" class="easyui-textbox" style="width:100px;"/>
-            </td>
-            <td>商品信息：</td>
-            <td>
-                <input type="text" name="searchMaterial" id="searchMaterial" class="easyui-textbox" placeholder="名称，型号" style="width:100px;"/>
-            </td>
-            <td>单据日期：</td>
-            <td>
-                <input type="text" name="searchBeginTime" id="searchBeginTime"
-                       class="easyui-datebox" style="width:120px;"/>
-            </td>
-            <td>-</td>
-            <td>
-                <input type="text" name="searchEndTime" id="searchEndTime"
-                       class="easyui-datebox" style="width:120px;"/>
-            </td>
-            <td>&nbsp;</td>
-            <td>
-                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchBtn">查询</a>&nbsp;
-                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-redo" id="searchResetBtn">重置</a>
-            </td>
-        </tr>
-    </table>
+    <div class="box-body form-inline">
+        <div class="form-group">
+            <label class="control-label">单据编号：</label>
+            <div class="control-inline">
+                <input type="text" id="searchNumber" name="searchNumber" value="" maxlength="100" class="easyui-textbox width-90"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label">商品信息：</label>
+            <div class="control-inline">
+                <input type="text" id="searchMaterial" name="searchMaterial" placeholder="名称，型号" maxlength="100" class="easyui-textbox width-90"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label">单据日期：</label>
+            <div class="control-inline">
+                <input type="text" id="searchBeginTime" name="searchBeginTime" value="" maxlength="100" class="easyui-datebox width-120"/>
+                -
+                <input type="text" id="searchEndTime" name="searchEndTime" value="" maxlength="100" class="easyui-datebox width-120"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchBtn">查询</a>&nbsp;
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-redo" id="searchResetBtn">重置</a>
+        </div>
+    </div>
     <table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 </div>
 
