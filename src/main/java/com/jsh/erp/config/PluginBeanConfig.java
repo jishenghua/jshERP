@@ -1,15 +1,18 @@
 package com.jsh.erp.config;
 
+import com.gitee.starblues.extension.mybatis.SpringBootMybatisExtension;
 import com.gitee.starblues.integration.application.AutoPluginApplication;
 import com.gitee.starblues.integration.application.PluginApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * 插件集成配置
- *
- * @author jishenghua
- * @version 1.0
+ * @Description: 插件集成配置
+ * @Author: jishenghua
+ * @Version: 1.0
+ * @Create Date Time: 2019-05-30 15:53
+ * @Update Date Time:
+ * @see
  */
 @Configuration
 public class PluginBeanConfig {
@@ -20,11 +23,11 @@ public class PluginBeanConfig {
      * @return PluginApplication
      */
     @Bean
-    public PluginApplication pluginApplication(PluginListener pluginListener){
-        AutoPluginApplication autoPluginApplication = new AutoPluginApplication();
-        autoPluginApplication.setPluginInitializerListener(pluginListener);
-        autoPluginApplication.addListener(ExamplePluginListener.class);
-        return autoPluginApplication;
+    public PluginApplication pluginApplication(){
+        // 实例化自动初始化插件的PluginApplication
+        PluginApplication pluginApplication = new AutoPluginApplication();
+        pluginApplication.addExtension(new SpringBootMybatisExtension());
+        return pluginApplication;
     }
 
 }

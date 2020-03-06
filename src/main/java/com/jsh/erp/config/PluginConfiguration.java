@@ -8,10 +8,12 @@ import org.springframework.stereotype.Component;
 
 
 /**
- * 插件集成配置
- *
- * @author jishenghua
- * @version 1.0
+ * @Description:
+ * @Author: jishenghua
+ * @Version: 1.0
+ * @Create Date Time: 2019-05-25 12:36
+ * @Update Date Time:
+ * @see
  */
 @Component
 @ConfigurationProperties(prefix = "plugin")
@@ -77,22 +79,18 @@ public class PluginConfiguration extends DefaultIntegrationConfiguration {
      */
     @Override
     public String pluginRestControllerPathPrefix() {
-        return "/api/plugins";
+        return "/api/plugin";
     }
 
     /**
      * 重写是否启用插件id作为RestController请求的路径前缀。
-     * 启动则插件id会作为二级路径前缀。即: /api/plugins/pluginId/**
+     * 启动则插件id会作为二级路径前缀。即: /api/plugin/pluginId/**
      * @return String
      */
     @Override
     public boolean enablePluginIdRestControllerPathPrefix() {
         return true;
     }
-
-
-
-
 
     public String getRunMode() {
         return runMode;
