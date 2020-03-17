@@ -498,9 +498,8 @@ public class DepotItemService {
                         try {
                             String Unit = tempUpdatedJson.get("Unit").toString();
                             BigDecimal oNumber = tempUpdatedJson.getBigDecimal("OperNumber");
-                            Long mId = Long.parseLong(tempUpdatedJson.get("MaterialId").toString());
                             //以下进行单位换算
-                            String unitName = materialService.findUnitName(mId); //查询计量单位名称
+                            String unitName = materialService.findUnitName(materialId); //查询计量单位名称
                             if (!StringUtil.isEmpty(unitName)) {
                                 String unitList = unitName.substring(0, unitName.indexOf("("));
                                 String ratioList = unitName.substring(unitName.indexOf("("));

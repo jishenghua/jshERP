@@ -430,3 +430,30 @@
 	function myIsNaN(value) {
 		return typeof value === 'number' && !isNaN(value);
 	}
+
+	/**
+	 * 敲回车键自动跳转到下一个文本框
+	 * @param inputDom
+	 */
+	function autoJumpNextInput(inputDom, appendDom) {
+		inputDom.on("keydown","input:text:visible",function(e){
+			//响应回车键按下的处理
+			var e = event || window.event || arguments.callee.caller.arguments[0];
+			//捕捉是否按键为回车键，可百度JS键盘事件了解更多
+			if(e && e.keyCode==13) {
+				//捕捉inputDom下的文本输入框的个数
+				var inputs = inputDom.find("input:text:visible");
+				//console.log(inputs.length);
+				var idx = inputs.index(this);                         // 获取当前焦点输入框所处的位置
+				if (idx == inputs.length - 1) {                       // 判断是否是最后一个输入框
+					var curKey = e.which;
+					if (curKey == 13) {
+						appendDom.click(); //新增行
+					}
+				} else {
+					inputs[idx + 1].focus(); // 设置焦点
+					inputs[idx + 1].select(); // 选中文字
+				}
+			}
+		});
+	}

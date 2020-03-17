@@ -716,6 +716,7 @@
 							onLoadSuccess: function (rec) {
 								if(rec && rec.total==1) {
 									$(".datagrid-body [field='mBarCode']").click(); //在只有单个商品的时候自动选中
+									$("#depotHeadFM .datagrid-body").find("[field='OperNumber']").find(".datagrid-editable-input").focus().select();
 								}
 							},
 							onSelect:function(index, rowData){
@@ -824,6 +825,9 @@
                     });
                     data.footer = array;
                     $("#materialData").datagrid('loadData',data);
+					if(type === "add") {
+						$("#depotHeadDlg #append").click(); //新增行
+					}
                     //如果是订单跳转到采购或销售
                     if(pageType === "skip") {
                         var skipList = $("#depotHeadFM .datagrid-body tr");
@@ -2248,9 +2252,13 @@
 	function autoReckon() {
 		//延时绑定事件
 	    setTimeout(function(){
+			var inputDom = $("#depotHeadFM .panel.datagrid .datagrid-view2 .datagrid-body");
+			var appendDom = $("#depotHeadDlg #append");
+			autoJumpNextInput(inputDom, appendDom); //敲回车键自动跳转到下一个文本框
 	    	var body =$("#depotHeadFM .datagrid-body");
 	    	var footer =$("#depotHeadFM .datagrid-footer");
 	    	var input = ".datagrid-editable-input";
+			body.find("[field='MaterialExtendId']").find(".textbox-text").focus().select(); //默认选择商品框
 	    	//点击商品下拉框，自动加载数量、单价、金额
 			body.find("[field='Stock']").find(input).prop("readonly","readonly");
             body.find("[field='Unit']").find(input).prop("readonly","readonly");
