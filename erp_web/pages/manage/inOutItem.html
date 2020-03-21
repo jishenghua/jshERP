@@ -54,23 +54,31 @@
 <div id="inOutItemDlg" class="easyui-dialog" style="width:380px;padding:10px 20px"
      closed="true" buttons="#dlg-buttons" modal="true" collapsible="false" closable="true">
     <form id="inOutItemFM" method="post" novalidate>
-        <div class="fitem" style="padding:5px">
-            <label id="nameLabel">名&nbsp;&nbsp;&nbsp;&nbsp;称</label>
-            <input name="name" id="name" class="easyui-textbox"
-                   data-options="required:true,validType:'length[2,30]'" style="width:230px;"/>
-        </div>
-        <div class="fitem" style="padding:5px">
-            <label id="typeLabel">类&nbsp;&nbsp;&nbsp;&nbsp;型</label>
-            <select name="type" id="type" class="easyui-combobox"
-                    data-options="panelHeight:'auto'" style="width:230px;">
-                <option value="收入">收入</option>
-                <option value="支出">支出</option>
-            </select>
-        </div>
-        <div class="fitem" style="padding:5px">
-            <label id="remarkLabel">备&nbsp;&nbsp;&nbsp;&nbsp;注</label>
-            <textarea name="remark" id="remark" class="easyui-textbox" data-options="multiline:true" style="width: 230px;height: 40px;"></textarea>
-        </div>
+        <table>
+            <tr>
+                <td>名&nbsp;&nbsp;&nbsp;&nbsp;称</td>
+                <td style="padding:5px">
+                    <input name="name" id="name" class="easyui-textbox"
+                           data-options="required:true,validType:'length[2,30]'" style="width:230px;"/>
+                </td>
+            </tr>
+            <tr>
+                <td>类&nbsp;&nbsp;&nbsp;&nbsp;型</td>
+                <td style="padding:5px">
+                    <select name="type" id="type" class="easyui-combobox"
+                            data-options="panelHeight:'auto'" style="width:230px;">
+                        <option value="收入">收入</option>
+                        <option value="支出">支出</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>备&nbsp;&nbsp;&nbsp;&nbsp;注</td>
+                <td style="padding:5px">
+                    <textarea name="remark" id="remark" class="easyui-textbox" data-options="multiline:true" style="width: 230px;height: 40px;"></textarea>
+                </td>
+            </tr>
+        </table>
     </form>
 </div>
 <div id="dlg-buttons">

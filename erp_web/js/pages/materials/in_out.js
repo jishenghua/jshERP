@@ -637,7 +637,7 @@
 			isShowMaterialTypeColumn = false; //显示
 		}
 		$('#materialData').datagrid({
-			height:245,
+			height:345,
 			rownumbers: false,
 			//动画效果
 			animate:false,
@@ -953,7 +953,7 @@
             isShowFinishColumn = false; //显示
         }
 		$('#materialDataShow').datagrid({
-			height:245,
+			height:345,
 			rownumbers: true,
 			//动画效果
 			animate:false,
