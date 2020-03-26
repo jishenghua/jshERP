@@ -1062,6 +1062,9 @@ DROP TABLE IF EXISTS `jsh_unit`;
 CREATE TABLE `jsh_unit` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `UName` varchar(50) DEFAULT NULL COMMENT '名称，支持多单位',
+  `basic_unit` varchar(50) DEFAULT NULL COMMENT '基础单位' ,
+  `other_unit` varchar(50) DEFAULT NULL COMMENT '副单位' ,
+  `ratio` int(11) NULL DEFAULT NULL COMMENT '比例' ,
   `tenant_id` bigint(20) DEFAULT NULL COMMENT '租户id',
   `delete_Flag` varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除',
   PRIMARY KEY (`id`)
@@ -1070,13 +1073,10 @@ CREATE TABLE `jsh_unit` (
 -- ----------------------------
 -- Records of jsh_unit
 -- ----------------------------
-INSERT INTO `jsh_unit` VALUES ('2', 'kg,包(1:25)', null, '0');
-INSERT INTO `jsh_unit` VALUES ('8', '瓶,箱(1:12)', null, '0');
-INSERT INTO `jsh_unit` VALUES ('11', 'qwe,sed(1:33)', null, '0');
-INSERT INTO `jsh_unit` VALUES ('12', '1,2(1:33)', null, '0');
-INSERT INTO `jsh_unit` VALUES ('13', 'aa,vv(1:22)', '1', '0');
-INSERT INTO `jsh_unit` VALUES ('14', '个,箱(1:12)', '117', '0');
-INSERT INTO `jsh_unit` VALUES ('15', '个,箱(1:12)', '63', '0');
+INSERT INTO `jsh_unit` VALUES ('2', 'kg,包(1:25)', 'kg', '包', '25', NULL, '0');
+INSERT INTO `jsh_unit` VALUES ('8', '瓶,箱(1:12)', '瓶', '箱', '12', NULL, '0');
+INSERT INTO `jsh_unit` VALUES ('14', '个,箱(1:12)', '个', '箱', '12', '117', '0');
+INSERT INTO `jsh_unit` VALUES ('15', '个,箱(1:12)', '个', '箱', '12', '63', '0');
 
 -- ----------------------------
 -- Table structure for jsh_user

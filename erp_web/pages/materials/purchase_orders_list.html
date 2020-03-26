@@ -54,10 +54,10 @@
     <table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 </div>
 
-<div id="depotHeadDlg" class="easyui-dialog" style="width:1200px;padding:10px 20px;top:60px"
+<div id="depotHeadDlg" class="easyui-dialog" style="padding:10px 20px;" fit="true"
      closed="true" buttons="#dlg-buttons" modal="true" cache="false" collapsible="false" closable="true">
     <form id="depotHeadFM" method="post" novalidate>
-        <table>
+        <table width="100%">
             <tr>
                 <td style="width:70px;">供应商</td>
                 <td style="padding:5px;width:170px;">
@@ -94,7 +94,7 @@
             <tr>
                 <td colspan="9">
                     <textarea name="Remark" id="Remark" rows="2" cols="2" class="radius-ui" placeholder="暂无备注信息"
-                              style="width: 1130px; height:35px;"></textarea>
+                              style="width:100%; height:35px;"></textarea>
                 </td>
             </tr>
         </table>
@@ -106,9 +106,9 @@
     <a href="javascript:void(0)" id="cancelDepotHead" class="easyui-linkbutton" iconCls="icon-cancel"
        onclick="javascript:$('#depotHeadDlg').dialog('close')">取消</a>
 </div>
-<div id="depotHeadDlgShow" class="easyui-dialog" style="width:1200px;padding:10px 20px;top:60px"
+<div id="depotHeadDlgShow" class="easyui-dialog" style="padding:10px 20px;" fit="true"
      closed="true" buttons="#dlg-buttons-show" modal="true" cache="false" collapsible="false" closable="true">
-    <table>
+    <table width="100%">
         <tr>
             <td style="width:60px;">供应商：</td>
             <td style="padding:5px;width:130px;">
@@ -135,7 +135,7 @@
         <tr>
             <td style="width:60px;">单据备注：</td>
             <td colspan="8" style="height:35px;">
-                <span id="RemarkShow" style="width: 1070px; height:35px;"></span>
+                <span id="RemarkShow" style="width:100%; height:35px;"></span>
             </td>
         </tr>
     </table>

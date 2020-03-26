@@ -741,3 +741,12 @@ alter table jsh_depotitem add material_extend_id bigint(20) DEFAULT NULL COMMENT
 -- ----------------------------
 alter table jsh_depothead drop column ProjectId;
 alter table jsh_depothead drop column AllocationProjectId;
+
+-- ----------------------------
+-- 给计量单位表增加基础单位、副单位、比例三个字段
+-- 时间 2020-03-24
+-- by jishenghua
+-- ----------------------------
+alter table jsh_unit add basic_unit varchar(50) DEFAULT NULL COMMENT '基础单位' after UName;
+alter table jsh_unit add other_unit varchar(50) DEFAULT NULL COMMENT '副单位' after basic_unit;
+alter table jsh_unit add ratio INT DEFAULT NULL COMMENT '比例' after other_unit;
