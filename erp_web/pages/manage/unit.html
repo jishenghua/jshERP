@@ -348,7 +348,10 @@
             dataType: "json",
             data: ({
                 info: JSON.stringify({
-                    uname: name
+                    uname: name,
+                    basicUnit: basicName,
+                    otherUnit: otherName,
+                    ratio: otherNum
                 })
             }),
             success: function(res) {
@@ -370,22 +373,14 @@
     //编辑信息
     function editUnit(index) {
         var rowsdata = $("#tableData").datagrid("getRows")[index];
-
         oldUnit = rowsdata.uname;
         $('#unitDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/pencil.png"/>&nbsp;编辑计量单位');
         $(".window-mask").css({width: webW, height: webH});
         unitID = rowsdata.id;
-        //焦点在名称输入框==定焦在输入文字后面
-        var name = rowsdata.uname;
-        var basicName = name.substring(0, name.indexOf(",")); //基础单位
-        $("#basicName").textbox("setValue", basicName);
-        var otherItem = name.substring(name.indexOf(",") + 1);
-        var otherName = otherItem.substring(0, otherItem.indexOf("("));
-        $("#otherName").textbox("setValue", otherName);
-        var lastNum = otherItem.substring(otherItem.indexOf(":") + 1);
-        lastNum = lastNum.replace(")", "");
-        $("#otherNum").textbox("setValue", lastNum);
-        $("#unitName").text(basicName);
+        $("#basicName").textbox("setValue", rowsdata.basicUnit);
+        $("#otherName").textbox("setValue", rowsdata.otherUnit);
+        $("#otherNum").textbox("setValue", rowsdata.ratio);
+        $("#unitName").text(rowsdata.basicUnit);
         url = '/unit/update?id=' + rowsdata.id;
     }
 
