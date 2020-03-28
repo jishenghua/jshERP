@@ -57,4 +57,15 @@
             and msg_title = '${msgTitle}'
         </if>
     </select>
+
+    <select id="getMsgCountByStatus" resultType="java.lang.Long">
+        SELECT
+        COUNT(id)
+        FROM jsh_msg
+        WHERE 1=1
+        and ifnull(delete_Flag,'0') !='1'
+        <if test="status != null">
+            and status = '${status}'
+        </if>
+    </select>
 </mapper>

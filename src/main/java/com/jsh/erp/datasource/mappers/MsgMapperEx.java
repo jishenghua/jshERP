@@ -20,4 +20,8 @@ public interface MsgMapperEx {
     int insertSelectiveByTask(Msg record);
 
     int checkIsNameExistByTask(@Param("msgTitle") String msgTitle);
+
+    Long getMsgCountByStatus(
+            @Param("status") String status,
+            @Param("userId") Long userId);
 }

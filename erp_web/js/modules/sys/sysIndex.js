@@ -438,4 +438,25 @@ $(function () {
         }, 10 * 1000);
     }
 
+    //更新消息条数
+    function getMsgCountByStatus() {
+        $.ajax({
+            type: "get",
+            url: "/msg/getMsgCountByStatus?status=1",
+            dataType: "json",
+            success: function (res) {
+                if (res && res.code === 200) {
+                    if(res.data) {
+                        var count = res.data.count;
+                        $("#msgNum, #msgNum2").text(count);
+                    }
+                }
+            }
+        });
+    }
+    getMsgCountByStatus();
+    setInterval(function() {
+        getMsgCountByStatus()
+    }, 1000*60);
+
 });
