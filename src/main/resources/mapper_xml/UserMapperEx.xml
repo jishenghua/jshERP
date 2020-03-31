@@ -16,7 +16,7 @@
             and username like '%${userName}%'
         </if>
         <if test="loginName != null">
-            and loginame like '%${loginName}%'
+            and login_name like '%${loginName}%'
         </if>
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
@@ -32,11 +32,11 @@
             and username like '%${userName}%'
         </if>
         <if test="loginName != null">
-            and loginame like '%${loginName}%'
+            and login_name like '%${loginName}%'
         </if>
     </select>
     <select id="getUserList" parameterType="java.util.Map" resultMap="ResultMapEx">
-        select user.id, user.username, user.loginame, user.position, user.email, user.phonenum,
+        select user.id, user.username, user.login_name, user.position, user.email, user.phonenum,
          user.description, user.remark,user.isystem,org.id as orgaId,user.tenant_id,org.org_abr,rel.user_blng_orga_dspl_seq,
         rel.id as orgaUserRelId
         FROM jsh_user user
@@ -50,12 +50,12 @@
         </if>
         <if test="loginName != null and loginName != ''">
             <bind name="loginName" value="'%' + _parameter.loginName + '%'" />
-            and user.loginame like #{loginName}
+            and user.login_name like #{loginName}
         </if>
         order by user.id desc
     </select>
     <select id="getUserListByUserNameOrLoginName" resultMap="com.jsh.erp.datasource.mappers.UserMapper.BaseResultMap">
-        select user.id, user.username, user.loginame, user.position, user.email, user.phonenum,
+        select user.id, user.username, user.login_name, user.position, user.email, user.phonenum,
         user.description, user.remark,user.isystem
         FROM jsh_user user
         where 1=1
@@ -63,8 +63,8 @@
         <if test="userName != null and userName != ''">
             and user.userName = #{userName}
         </if>
-        <if test="loginame != null and loginame != ''">
-            and user.loginame = #{loginame}
+        <if test="loginName != null and loginName != ''">
+            and user.login_name = #{loginName}
         </if>
         order by user.id desc
     </select>

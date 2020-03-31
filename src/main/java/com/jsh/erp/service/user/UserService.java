@@ -224,12 +224,12 @@ public class UserService {
         return result;
     }
 
-    public int validateUser(String username, String password) throws Exception {
+    public int validateUser(String loginName, String password) throws Exception {
         /**默认是可以登录的*/
         List<User> list = null;
         try {
             UserExample example = new UserExample();
-            example.createCriteria().andLoginameEqualTo(username).andStatusEqualTo(BusinessConstants.USER_STATUS_NORMAL);
+            example.createCriteria().andLoginNameEqualTo(loginName).andStatusEqualTo(BusinessConstants.USER_STATUS_NORMAL);
             list = userMapper.selectByExample(example);
         } catch (Exception e) {
             logger.error(">>>>>>>>访问验证用户姓名是否存在后台信息异常", e);
@@ -242,7 +242,7 @@ public class UserService {
 
         try {
             UserExample example = new UserExample();
-            example.createCriteria().andLoginameEqualTo(username).andPasswordEqualTo(password)
+            example.createCriteria().andLoginNameEqualTo(loginName).andPasswordEqualTo(password)
                     .andStatusEqualTo(BusinessConstants.USER_STATUS_NORMAL);
             list = userMapper.selectByExample(example);
         } catch (Exception e) {
@@ -256,9 +256,9 @@ public class UserService {
         return ExceptionCodeConstants.UserExceptionCode.USER_CONDITION_FIT;
     }
 
-    public User getUserByUserName(String username)throws Exception {
+    public User getUserByLoginName(String loginName)throws Exception {
         UserExample example = new UserExample();
-        example.createCriteria().andLoginameEqualTo(username).andStatusEqualTo(BusinessConstants.USER_STATUS_NORMAL);
+        example.createCriteria().andLoginNameEqualTo(loginName).andStatusEqualTo(BusinessConstants.USER_STATUS_NORMAL);
         List<User> list=null;
         try{
             list= userMapper.selectByExample(example);
@@ -277,7 +277,7 @@ public class UserService {
         List <Byte> userStatus=new ArrayList<Byte>();
         userStatus.add(BusinessConstants.USER_STATUS_DELETE);
         userStatus.add(BusinessConstants.USER_STATUS_BANNED);
-        example.createCriteria().andIdNotEqualTo(id).andLoginameEqualTo(name).andStatusNotIn(userStatus);
+        example.createCriteria().andIdNotEqualTo(id).andLoginNameEqualTo(name).andStatusNotIn(userStatus);
         List<User> list=null;
         try{
             list= userMapper.selectByExample(example);
@@ -317,7 +317,7 @@ public class UserService {
     public Long getIdByLoginName(String loginName) {
         Long userId = 0L;
         UserExample example = new UserExample();
-        example.createCriteria().andLoginameEqualTo(loginName).andStatusEqualTo(BusinessConstants.USER_STATUS_NORMAL);
+        example.createCriteria().andLoginNameEqualTo(loginName).andStatusEqualTo(BusinessConstants.USER_STATUS_NORMAL);
         List<User> list = userMapper.selectByExample(example);
         if(list!=null) {
             userId = list.get(0).getId();
@@ -327,7 +327,7 @@ public class UserService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void addUserAndOrgUserRel(UserEx ue) throws Exception{
-        if(BusinessConstants.DEFAULT_MANAGER.equals(ue.getLoginame())) {
+        if(BusinessConstants.DEFAULT_MANAGER.equals(ue.getLoginName())) {
             throw new BusinessRunTimeException(ExceptionConstants.USER_NAME_LIMIT_USE_CODE,
                     ExceptionConstants.USER_NAME_LIMIT_USE_MSG);
         } else {
@@ -353,7 +353,7 @@ public class UserService {
             //机构id
             oul.setOrgaId(ue.getOrgaId());
             //用户id，根据用户名查询id
-            Long userId = getIdByLoginName(ue.getLoginame());
+            Long userId = getIdByLoginName(ue.getLoginName());
             oul.setUserId(userId);
             //用户在机构中的排序
             oul.setUserBlngOrgaDsplSeq(ue.getUserBlngOrgaDsplSeq());
@@ -403,7 +403,7 @@ public class UserService {
          * description:
          * 多次创建事务，事物之间无法协同，应该在入口处创建一个事务以做协调
          */
-        if(BusinessConstants.DEFAULT_MANAGER.equals(ue.getLoginame())) {
+        if(BusinessConstants.DEFAULT_MANAGER.equals(ue.getLoginName())) {
             throw new BusinessRunTimeException(ExceptionConstants.USER_NAME_LIMIT_USE_CODE,
                     ExceptionConstants.USER_NAME_LIMIT_USE_MSG);
         } else {
@@ -416,7 +416,7 @@ public class UserService {
             int result=0;
             try{
                 result= userMapper.insertSelective(ue);
-                Long userId = getIdByLoginName(ue.getLoginame());
+                Long userId = getIdByLoginName(ue.getLoginName());
                 ue.setId(userId);
             }catch(Exception e){
                 JshException.writeFail(logger, e);
@@ -437,7 +437,7 @@ public class UserService {
             //创建租户信息
             JSONObject tenantObj = new JSONObject();
             tenantObj.put("tenantId", ue.getId());
-            tenantObj.put("loginName",ue.getLoginame());
+            tenantObj.put("loginName",ue.getLoginName());
             String param = tenantObj.toJSONString();
             tenantService.insertTenant(param, request);
             logger.info("===============创建租户信息完成===============");
@@ -461,7 +461,7 @@ public class UserService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void updateUserAndOrgUserRel(UserEx ue) throws Exception{
-        if(BusinessConstants.DEFAULT_MANAGER.equals(ue.getLoginame())) {
+        if(BusinessConstants.DEFAULT_MANAGER.equals(ue.getLoginName())) {
             throw new BusinessRunTimeException(ExceptionConstants.USER_NAME_LIMIT_USE_CODE,
                     ExceptionConstants.USER_NAME_LIMIT_USE_MSG);
         } else {
@@ -535,8 +535,8 @@ public class UserService {
         }
         Long userId=userEx.getId();
         //检查登录名
-        if(!StringUtils.isEmpty(userEx.getLoginame())){
-            String loginName=userEx.getLoginame();
+        if(!StringUtils.isEmpty(userEx.getLoginName())){
+            String loginName=userEx.getLoginName();
             list=this.getUserListByloginName(loginName);
             if(list!=null&&list.size()>0){
                 if(list.size()>1){

@@ -67,7 +67,7 @@ public class UserController {
         User user=null;
         BaseResponseInfo res = new BaseResponseInfo();
         try {
-            String username = loginName.trim();
+            loginName = loginName.trim();
             password = password.trim();
             //判断用户是否已经登录过，登录过不再处理
             Object userInfo = request.getSession().getAttribute("user");
@@ -75,18 +75,18 @@ public class UserController {
             if (userInfo != null) {
                 sessionUser = (User) userInfo;
             }
-            if (sessionUser != null && username.equalsIgnoreCase(sessionUser.getLoginame())) {
-                logger.info("====用户 " + username + "已经登录过, login 方法调用结束====");
+            if (sessionUser != null && loginName.equalsIgnoreCase(sessionUser.getLoginName())) {
+                logger.info("====用户 " + loginName + "已经登录过, login 方法调用结束====");
                 msgTip = "user already login";
             }
             //获取用户状态
             int userStatus = -1;
             try {
                 request.getSession().removeAttribute("tenantId");
-                userStatus = userService.validateUser(username, password);
+                userStatus = userService.validateUser(loginName, password);
             } catch (Exception e) {
                 e.printStackTrace();
-                logger.error(">>>>>>>>>>>>>用户  " + username + " 登录 login 方法 访问服务层异常====", e);
+                logger.error(">>>>>>>>>>>>>用户  " + loginName + " 登录 login 方法 访问服务层异常====", e);
                 msgTip = "access service exception";
             }
             switch (userStatus) {
@@ -106,7 +106,7 @@ public class UserController {
                     try {
                         msgTip = "user can login";
                         //验证通过 ，可以登录，放入session，记录登录日志
-                        user = userService.getUserByUserName(username);
+                        user = userService.getUserByLoginName(loginName);
                         request.getSession().setAttribute("user",user);
                         if(user.getTenantId()!=null) {
                             Tenant tenant = tenantService.getTenantByTenantId(user.getTenantId());
@@ -126,7 +126,7 @@ public class UserController {
                                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
                     } catch (Exception e) {
                         e.printStackTrace();
-                        logger.error(">>>>>>>>>>>>>>>查询用户名为:" + username + " ，用户信息异常", e);
+                        logger.error(">>>>>>>>>>>>>>>查询用户名为:" + loginName + " ，用户信息异常", e);
                     }
                     break;
             }
@@ -213,7 +213,7 @@ public class UserController {
             String oldPassword = Tools.md5Encryp(oldpwd);
             String md5Pwd = Tools.md5Encryp(password);
             //必须和原始密码一致才可以更新密码
-            if(user.getLoginame().equals("jsh")){
+            if(user.getLoginName().equals("jsh")){
                 flag = 3; //管理员jsh不能修改密码
             } else if (oldPassword.equalsIgnoreCase(user.getPassword())) {
                 user.setPassword(md5Pwd);
@@ -330,19 +330,19 @@ public class UserController {
 
     /**
      * 注册用户
-     * @param loginame
+     * @param loginName
      * @param password
      * @return
      * @throws Exception
      */
     @PostMapping(value = "/registerUser")
-    public Object registerUser(@RequestParam(value = "loginame", required = false) String loginame,
+    public Object registerUser(@RequestParam(value = "loginName", required = false) String loginName,
                                @RequestParam(value = "password", required = false) String password,
                                HttpServletRequest request)throws Exception{
         JSONObject result = ExceptionConstants.standardSuccess();
         UserEx ue= new UserEx();
-        ue.setUsername(loginame);
-        ue.setLoginame(loginame);
+        ue.setUsername(loginName);
+        ue.setLoginName(loginName);
         ue.setPassword(password);
         userService.checkUserNameAndLoginName(ue); //检查用户名和登录名
         ue = userService.registerUser(ue,manageRoleId,request);

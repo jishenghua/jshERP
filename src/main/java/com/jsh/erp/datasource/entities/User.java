@@ -5,7 +5,7 @@ public class User {
 
     private String username;
 
-    private String loginame;
+    private String loginName;
 
     private String password;
 
@@ -45,12 +45,12 @@ public class User {
         this.username = username == null ? null : username.trim();
     }
 
-    public String getLoginame() {
-        return loginame;
+    public String getLoginName() {
+        return loginName;
     }
 
-    public void setLoginame(String loginame) {
-        this.loginame = loginame == null ? null : loginame.trim();
+    public void setLoginName(String loginName) {
+        this.loginName = loginName == null ? null : loginName.trim();
     }
 
     public String getPassword() {
