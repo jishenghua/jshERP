@@ -13,48 +13,19 @@ import java.util.Map;
  */
 @Service
 public class InterfaceContainer {
-    private final Map<String, Integer> nameTypeMap;
-    private final Map<Integer, ICommonQuery> configComponentMap;
-
-    public InterfaceContainer() {
-        nameTypeMap = new HashMap<>();
-        configComponentMap = new HashMap<>();
-    }
-
+    private final Map<String, ICommonQuery> configComponentMap = new HashMap<>();
 
     @Autowired(required = false)
-    private void init(ICommonQuery[] configComponents) {
+    private synchronized void init(ICommonQuery[] configComponents) {
         for (ICommonQuery configComponent : configComponents) {
             ResourceInfo info = AnnotationUtils.getAnnotation(configComponent, ResourceInfo.class);
             if (info != null) {
-                initResourceInfo(info);
-                configComponentMap.put(info.type(), configComponent);
+                configComponentMap.put(info.value(), configComponent);
             }
         }
     }
 
-    public int getResourceType(String apiName) {
-        if (!nameTypeMap.containsKey(apiName)) {
-            throw new RuntimeException("资源:" + apiName + "的组件不存在");
-        }
-        return nameTypeMap.get(apiName);
-    }
-
     public ICommonQuery getCommonQuery(String apiName) {
-        return getCommonQuery(this.getResourceType(apiName));
+        return configComponentMap.get(apiName);
     }
-
-    private ICommonQuery getCommonQuery(int resourceType) {
-        Assert.isTrue(configComponentMap.containsKey(resourceType));
-        return configComponentMap.get(resourceType);
-    }
-
-    private synchronized void initResourceInfo(ResourceInfo info) {
-        if (nameTypeMap.containsKey(info.value())) {
-            Assert.isTrue(nameTypeMap.get(info.value()).equals(info.type()));
-        } else {
-            nameTypeMap.put(info.value(), info.type());
-        }
-    }
-
 }
