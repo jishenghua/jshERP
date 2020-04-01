@@ -463,7 +463,7 @@
 		n = n.toString();
 		return n[1] ? n : '0' + n;
 	}
-	
+
 	// 参数number为毫秒时间戳，format为需要转换成的日期格式
 	function formatTime(number, format) {
 		if(number) {
