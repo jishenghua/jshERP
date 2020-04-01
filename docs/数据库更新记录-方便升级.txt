@@ -750,3 +750,10 @@ alter table jsh_depothead drop column AllocationProjectId;
 alter table jsh_unit add basic_unit varchar(50) DEFAULT NULL COMMENT '基础单位' after UName;
 alter table jsh_unit add other_unit varchar(50) DEFAULT NULL COMMENT '副单位' after basic_unit;
 alter table jsh_unit add ratio INT DEFAULT NULL COMMENT '比例' after other_unit;
+
+-- ----------------------------
+-- 时间：2020年03月31日
+-- by jishenghua
+-- 给用户表增加 登录用户名 字段
+-- ----------------------------
+alter table jsh_user change loginame login_name varchar(255) NOT NULL COMMENT '登录用户名';

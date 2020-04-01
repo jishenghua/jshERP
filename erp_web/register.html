@@ -43,7 +43,7 @@
         <div class="register-box-body">
             <div class="form-group has-feedback">
                 <span class="glyphicon glyphicon-user form-control-feedback" title="登录账户"></span>
-                <input type="text" id="username" name="username" class="form-control required"
+                <input type="text" id="loginName" name="loginName" class="form-control required"
                        data-msg-required="请填写登录账号." placeholder="登录账户(请输入手机号码）"/>
             </div>
             <div class="form-group has-feedback">
@@ -106,7 +106,7 @@
 </body>
 
 <script>
-    $("#username, #password, #confirmPassword").on("focus blur", function () {
+    $("#loginName, #password, #confirmPassword").on("focus blur", function () {
         var a = this;
         setTimeout(function () {
             var b = $(a).css("borderColor");
@@ -121,10 +121,10 @@
         if($("#validCode").val()) {
             var res = verifyCode.validate($("#validCode").val());
             if(res){
-                var userName = $("#username");
-                if(!userName.val()) {
+                var loginName = $("#loginName");
+                if(!loginName.val()) {
                     alert("登录账户不能为空!");
-                } else if(!isPhoneAvailable(userName)) {
+                } else if(!isPhoneAvailable(loginName)) {
                     alert("请输入正确的手机号码!");
                 } else if(!$("#password").val()) {
                     alert("登录密码不能为空!");
@@ -140,7 +140,7 @@
                         url: "/user/registerUser",
                         dataType: "json",
                         data: ({
-                            loginame: $("#username").val(),
+                            loginName: $("#loginName").val(),
                             password: $("#password").val()
                         }),
                         success: function (res) {

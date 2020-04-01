@@ -5,11 +5,13 @@ import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.Msg;
 import com.jsh.erp.datasource.entities.MsgExample;
+import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.mappers.MsgMapper;
 import com.jsh.erp.datasource.mappers.MsgMapperEx;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.depotHead.DepotHeadService;
 import com.jsh.erp.service.log.LogService;
+import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +35,9 @@ public class MsgService {
 
     @Resource
     private DepotHeadService depotHeadService;
+
+    @Resource
+    private UserService userService;
 
     @Resource
     private LogService logService;
@@ -231,5 +236,19 @@ public class MsgService {
             throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
                     ExceptionConstants.DATA_WRITE_FAIL_MSG);
         }
+    }
+
+    public Long getMsgCountByStatus(String status)throws Exception {
+        Long result=null;
+        try{
+            User userInfo=userService.getCurrentUser();
+            result=msgMapperEx.getMsgCountByStatus(status, userInfo.getId());
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE, ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return result;
     }
 }

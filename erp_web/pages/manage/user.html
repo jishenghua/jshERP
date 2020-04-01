@@ -24,7 +24,7 @@
         <div class="form-group">
             <label class="control-label">登录名称：</label>
             <div class="control-inline">
-                <input type="text" id="searchLoginame" name="searchLoginame" value="" maxlength="100" class="easyui-textbox width-90"/>
+                <input type="text" id="searchLoginName" name="searchLoginName" value="" maxlength="100" class="easyui-textbox width-90"/>
             </div>
         </div>
         <div class="form-group">
@@ -51,22 +51,9 @@
             <tr>
                 <td>登录名称</td>
                 <td style="padding:5px">
-                    <input name="loginame" id="loginame" class="easyui-textbox"
+                    <input name="loginName" id="loginName" class="easyui-textbox"
                            data-options="required:true,validType:'length[2,15]'" style="width: 120px;"/>
                     初始密码：123456
-                </td>
-            </tr>
-            <tr>
-                <td>部门</td>
-                <td style="padding:5px">
-                    <input name="orgAbr" id="orgAbr" class="easyui-textbox" style="width: 120px;"/>
-                    <a href="javascript:void(0)" class="l-btn l-btn-plain" group="" id="lookForSelectOrganization">
-                        <span class="l-btn-left"><span class="l-btn-text icon-search l-btn-icon-left" style="height:20px;"></span></span></a>
-                    <input name="orgaId" id="orgaId" type="hidden"/>
-                    <input name="selectType" id="selectType" type="hidden"/>
-                    <input name="orgaUserRelId" id="orgaUserRelId" type="hidden"/>
-                    <!--一个兼容input框，没有实际用处，但是必须存在-->
-                    <input name="id" id="id" type="hidden"/>
                 </td>
             </tr>
             <tr>
@@ -76,6 +63,19 @@
                 <td style="padding:5px">
                     <input name="username" id="username" class="easyui-textbox"
                            data-options="required:true,validType:'length[2,30]'" style="width: 230px;"/>
+                </td>
+            </tr>
+            <tr>
+                <td>部门</td>
+                <td style="padding:5px">
+                    <input name="orgAbr" id="orgAbr" class="easyui-textbox" readonly style="width: 120px;"/>
+                    <a href="javascript:void(0)" class="l-btn l-btn-plain" group="" id="lookForSelectOrganization">
+                        <span class="l-btn-left"><span class="l-btn-text icon-search l-btn-icon-left" style="height:20px;"></span></span></a>
+                    <input name="orgaId" id="orgaId" type="hidden"/>
+                    <input name="selectType" id="selectType" type="hidden"/>
+                    <input name="orgaUserRelId" id="orgaUserRelId" type="hidden"/>
+                    <!--一个兼容input框，没有实际用处，但是必须存在-->
+                    <input name="id" id="id" type="hidden"/>
                 </td>
             </tr>
             <tr>
@@ -186,7 +186,7 @@
                         return str;
                     }
                 },
-                {title: '登录名称', field: 'loginame', width: 80},
+                {title: '登录名称', field: 'loginName', width: 80},
                 {title: '用户姓名', field: 'username', width: 80, align: "center"},
                 {title: '职位', field: 'position', width: 115, align: "center"},
                 {title: '部门', field: 'orgAbr', width: 115, align: "center"},
@@ -237,7 +237,7 @@
         }
 
         //搜索按钮添加快捷键
-        if (k == "13" && (obj.id == "searchUsername" || obj.id == "searchLoginame" || obj.id == "searchPhonenum"
+        if (k == "13" && (obj.id == "searchUsername" || obj.id == "searchLoginName" || obj.id == "searchPhonenum"
                 || obj.id == "searchPosition" || obj.id == "searchEmail" || obj.id == "searchDesc" || obj.id == "searchDept")) {
             $("#searchBtn").click();
         }
@@ -352,8 +352,6 @@
     //增加用户
     var url;
     var userID = 0;
-    //保存编辑前的名称
-    var oldLoginName = "";
 
     function addUser() {
         if(checkPower()){
@@ -366,7 +364,6 @@
         $('#usernameFM').form('load', row);
         $("#username").focus();
         $("#loginame").removeAttr("readonly");
-        oldLoginName = "";
         userID = 0;
         /**机构选择*/
         $("#selectType").val("org");
@@ -401,40 +398,45 @@
 
     //保存用户信息
     $("#saveusername").off("click").on("click", function () {
-        /**
-         * 2019-03-12
-         * 此处用户名和登录名是否重复的校验在保存操作时处理
-         * */
-        var reg = /^([0-9])+$/;
-        var phonenum = $.trim($("#phonenum").val());
-        if (phonenum.length > 0 && !reg.test(phonenum)) {
-            $.messager.alert('提示', '电话号码只能是数字', 'info');
-            $("#phonenum").val("").focus();
+        if(!$('#usernameFM').form('validate')){
             return;
         }
-        $.ajax({
-            url: url,
-            type: "post",
-            dataType: "json",
-            data: {
-                info: JSON.stringify($("#usernameFM").serializeObject())
-            },
-            success: function(res) {
-                if(res && res.code != 200) {
-                    $.messager.alert('提示', res.msg, 'error');
-                    return;
-                }
-                $('#userDlg').dialog('close');
-                //加载完以后重新初始化
-                var opts = $("#tableData").datagrid('options');
-                showUserDetails(opts.pageNumber, opts.pageSize);
-            },
-            //此处添加错误处理
-            error: function () {
-                $.messager.alert('提示', '网络异常，请稍后再试！', 'error');
+        else {
+            /**
+             * 2019-03-12
+             * 此处用户名和登录名是否重复的校验在保存操作时处理
+             * */
+            var reg = /^([0-9])+$/;
+            var phonenum = $.trim($("#phonenum").val());
+            if (phonenum.length > 0 && !reg.test(phonenum)) {
+                $.messager.alert('提示', '电话号码只能是数字', 'info');
+                $("#phonenum").val("").focus();
                 return;
             }
-        });
+            $.ajax({
+                url: url,
+                type: "post",
+                dataType: "json",
+                data: {
+                    info: JSON.stringify($("#usernameFM").serializeObject())
+                },
+                success: function (res) {
+                    if (res && res.code != 200) {
+                        $.messager.alert('提示', res.msg, 'error');
+                        return;
+                    }
+                    $('#userDlg').dialog('close');
+                    //加载完以后重新初始化
+                    var opts = $("#tableData").datagrid('options');
+                    showUserDetails(opts.pageNumber, opts.pageSize);
+                },
+                //此处添加错误处理
+                error: function () {
+                    $.messager.alert('提示', '网络异常，请稍后再试！', 'error');
+                    return;
+                }
+            });
+        }
     });
 
     //编辑用户信息
@@ -442,7 +444,7 @@
         var rowsdata = $("#tableData").datagrid("getRows")[index];
         var row = {
             username: rowsdata.username,
-            loginame: rowsdata.loginame,
+            loginName: rowsdata.loginName,
             position: rowsdata.position,
             email: rowsdata.email,
             phonenum: rowsdata.phonenum,
@@ -452,14 +454,13 @@
             orgaUserRelId: rowsdata.orgaUserRelId,
             userBlngOrgaDsplSeq: rowsdata.userBlngOrgaDsplSeq
         };
-        oldLoginName = rowsdata.username;
         $('#userDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/pencil.png"/>&nbsp;编辑用户信息');
         $(".window-mask").css({width: webW, height: webH});
         $('#usernameFM').form('load', row);
         userID = rowsdata.id;
         //焦点在名称输入框==定焦在输入文字后面
         $("#username").val("").focus().val(rowsdata.username);
-        $("#loginame").attr("readonly","readonly");
+        $("#loginName").attr("readonly","readonly");
         /**机构选择*/
         $("#selectType").val("org");
         url = '/user/updateUser?id=' + rowsdata.id;
@@ -484,7 +485,7 @@
 
     function showUserDetails(pageNo, pageSize) {
         var userName = $.trim($("#searchUsername").val());
-        var loginName = $.trim($("#searchLoginame").val());
+        var loginName = $.trim($("#searchLoginName").val());
         $.ajax({
             type: "get",
             url: "/user/getUserList",
@@ -516,7 +517,7 @@
     $("#searchResetBtn").unbind().bind({
         click: function () {
             $("#searchUsername").textbox("setValue","");
-            $("#searchLoginame").textbox("setValue","");
+            $("#searchLoginName").textbox("setValue","");
             $("#searchPhonenum").textbox("setValue","");
             $("#searchPosition").textbox("setValue","");
             $("#searchDept").textbox("setValue","");

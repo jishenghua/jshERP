@@ -155,8 +155,8 @@ public class MaterialExtendService {
         materialExtend.setDeleteFlag(BusinessConstants.DELETE_FLAG_EXISTS);
         materialExtend.setCreateTime(new Date());
         materialExtend.setUpdateTime(new Date().getTime());
-        materialExtend.setCreateSerial(user.getLoginame());
-        materialExtend.setUpdateSerial(user.getLoginame());
+        materialExtend.setCreateSerial(user.getLoginName());
+        materialExtend.setUpdateSerial(user.getLoginName());
         int result =0;
         try{
             result= materialExtendMapper.insertSelective(materialExtend);
@@ -170,7 +170,7 @@ public class MaterialExtendService {
     public int updateMaterialExtend(MaterialExtend MaterialExtend, HttpServletRequest request) throws Exception{
         User user = userService.getCurrentUser();
         MaterialExtend.setUpdateTime(new Date().getTime());
-        MaterialExtend.setUpdateSerial(user.getLoginame());
+        MaterialExtend.setUpdateSerial(user.getLoginName());
         int res =0;
         try{
             res= materialExtendMapper.updateByPrimaryKeySelective(MaterialExtend);
@@ -205,7 +205,7 @@ public class MaterialExtendService {
         Object userInfo = request.getSession().getAttribute("user");
         User user = (User)userInfo;
         materialExtend.setUpdateTime(new Date().getTime());
-        materialExtend.setUpdateSerial(user.getLoginame());
+        materialExtend.setUpdateSerial(user.getLoginName());
         try{
             result= materialExtendMapper.updateByPrimaryKeySelective(materialExtend);
         }catch(Exception e){

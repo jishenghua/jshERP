@@ -2513,9 +2513,10 @@
 		$.ajax({
 			type:"post",
 			url: url,
+			contentType:"application/json",
 			dataType: "json",
 			async :  false,
-			data: ({
+			data: JSON.stringify({
 				info:infoStr,
 				inserted: JSON.stringify(inserted),
 				deleted: JSON.stringify(deleted),
@@ -2553,9 +2554,10 @@
 		$.ajax({
 			type:"post",
 			url: url,
+			contentType:"application/json",
 			dataType: "json",
 			async :  false,
-			data: ({
+			data: JSON.stringify({
 				id:url.substring(url.lastIndexOf("?id=")+4,url.length),
 				info:infoStr,
 				inserted: JSON.stringify(inserted),

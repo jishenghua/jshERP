@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.DepotHead;
+import com.jsh.erp.datasource.entities.DepotHeadVo4Body;
 import com.jsh.erp.datasource.vo.DepotHeadVo4InDetail;
 import com.jsh.erp.datasource.vo.DepotHeadVo4InOutMCount;
 import com.jsh.erp.datasource.vo.DepotHeadVo4List;
@@ -382,21 +383,19 @@ public class DepotHeadController {
     }
 
     /**
-     * create by: cjl
-     * description:
-     *  新增单据主表及单据子表信息
-     * create time: 2019/1/25 14:36
-     * @Param: beanJson
-     * @Param: inserted
-     * @Param: deleted
-     * @Param: updated
-     * @return java.lang.String
+     * 新增单据主表及单据子表信息
+     * @param body
+     * @param request
+     * @return
+     * @throws Exception
      */
-    @RequestMapping(value = "/addDepotHeadAndDetail")
-    public Object addDepotHeadAndDetail(@RequestParam("info") String beanJson,@RequestParam("inserted") String inserted,
-                          @RequestParam("deleted") String deleted,
-                          @RequestParam("updated") String updated, HttpServletRequest request) throws  Exception{
+    @PostMapping(value = "/addDepotHeadAndDetail")
+    public Object addDepotHeadAndDetail(@RequestBody DepotHeadVo4Body body, HttpServletRequest request) throws  Exception{
         JSONObject result = ExceptionConstants.standardSuccess();
+        String beanJson = body.getInfo();
+        String inserted = body.getInserted();
+        String deleted = body.getDeleted();
+        String updated = body.getUpdated();
         Long billsNumLimit = Long.parseLong(request.getSession().getAttribute("billsNumLimit").toString());
         Long tenantId = Long.parseLong(request.getSession().getAttribute("tenantId").toString());
         Long count = depotHeadService.countDepotHead(null,null,null,null,null,null,null);
@@ -408,58 +407,49 @@ public class DepotHeadController {
         }
         return result;
     }
+
     /**
-     * create by: cjl
-     * description:
      * 更新单据主表及单据子表信息
-     * create time: 2019/1/28 14:47
-     * @Param: id
-     * @Param: beanJson
-     * @Param: inserted
-     * @Param: deleted
-     * @Param: updated
-     * @Param: preTotalPrice
-     * @return java.lang.Object
+     * @param body
+     * @param request
+     * @return
+     * @throws Exception
      */
-    @RequestMapping(value = "/updateDepotHeadAndDetail")
-    public Object updateDepotHeadAndDetail(@RequestParam("id") Long id,
-                                           @RequestParam("info") String beanJson,
-                                           @RequestParam("inserted") String inserted,
-                                           @RequestParam("deleted") String deleted,
-                                           @RequestParam("updated") String updated,
-                                           @RequestParam("preTotalPrice") BigDecimal preTotalPrice,
-                                           HttpServletRequest request) throws  Exception{
+    @PostMapping(value = "/updateDepotHeadAndDetail")
+    public Object updateDepotHeadAndDetail(@RequestBody DepotHeadVo4Body body, HttpServletRequest request) throws  Exception{
         Long tenantId = Long.parseLong(request.getSession().getAttribute("tenantId").toString());
         JSONObject result = ExceptionConstants.standardSuccess();
+        Long id = body.getId();
+        String beanJson = body.getInfo();
+        String inserted = body.getInserted();
+        String deleted = body.getDeleted();
+        String updated = body.getUpdated();
+        BigDecimal preTotalPrice = body.getPreTotalPrice();
         depotHeadService.updateDepotHeadAndDetail(id,beanJson,inserted,deleted,updated,preTotalPrice,tenantId,request);
         return result;
     }
-    /**
-     * create by: cjl
-     * description:
-     *  删除单据主表及子表信息
-     * create time: 2019/1/28 17:29
-     * @Param: id
-     * @return java.lang.Object
-     */
-    @RequestMapping(value = "/deleteDepotHeadAndDetail")
-    public Object deleteDepotHeadAndDetail(@RequestParam("id") Long id) throws  Exception{
 
+    /**
+     * 删除单据主表及子表信息
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    @PostMapping(value = "/deleteDepotHeadAndDetail")
+    public Object deleteDepotHeadAndDetail(@RequestParam("id") Long id) throws  Exception{
         JSONObject result = ExceptionConstants.standardSuccess();
         depotHeadService.deleteDepotHeadAndDetail(id);
         return result;
     }
-    /**
-     * create by: cjl
-     * description:
-     *  删除单据主表及子表信息
-     * create time: 2019/1/28 17:29
-     * @Param: id
-     * @return java.lang.Object
-     */
-    @RequestMapping(value = "/batchDeleteDepotHeadAndDetail")
-    public Object batchDeleteDepotHeadAndDetail(@RequestParam("ids") String ids) throws  Exception{
 
+    /**
+     * 批量删除单据主表及子表信息
+     * @param ids
+     * @return
+     * @throws Exception
+     */
+    @PostMapping(value = "/batchDeleteDepotHeadAndDetail")
+    public Object batchDeleteDepotHeadAndDetail(@RequestParam("ids") String ids) throws  Exception{
         JSONObject result = ExceptionConstants.standardSuccess();
         depotHeadService.batchDeleteDepotHeadAndDetail(ids);
         return result;

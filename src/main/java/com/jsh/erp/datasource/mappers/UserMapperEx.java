@@ -26,7 +26,7 @@ public interface UserMapperEx {
     List<UserEx> getUserList(Map<String, Object> parameterMap);
 
     List<User> getUserListByUserNameOrLoginName(@Param("userName") String userName,
-                                                @Param("loginame") String loginame);
+                                                @Param("loginName") String loginName);
 
     int batDeleteOrUpdateUser(@Param("ids") String ids[], @Param("status") byte status);
 

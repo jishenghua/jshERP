@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="com.jsh.erp.datasource.entities.User">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="username" jdbcType="VARCHAR" property="username" />
-    <result column="loginame" jdbcType="VARCHAR" property="loginame" />
+    <result column="login_name" jdbcType="VARCHAR" property="loginName" />
     <result column="password" jdbcType="VARCHAR" property="password" />
     <result column="position" jdbcType="VARCHAR" property="position" />
     <result column="department" jdbcType="VARCHAR" property="department" />
@@ -76,7 +76,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, username, loginame, password, position, department, email, phonenum, ismanager, 
+    id, username, login_name, password, position, department, email, phonenum, ismanager, 
     isystem, Status, description, remark, tenant_id
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.UserExample" resultMap="BaseResultMap">
@@ -110,12 +110,12 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.jsh.erp.datasource.entities.User">
-    insert into jsh_user (id, username, loginame, 
+    insert into jsh_user (id, username, login_name, 
       password, position, department, 
       email, phonenum, ismanager, 
       isystem, Status, description, 
       remark, tenant_id)
-    values (#{id,jdbcType=BIGINT}, #{username,jdbcType=VARCHAR}, #{loginame,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=BIGINT}, #{username,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR}, 
       #{password,jdbcType=VARCHAR}, #{position,jdbcType=VARCHAR}, #{department,jdbcType=VARCHAR}, 
       #{email,jdbcType=VARCHAR}, #{phonenum,jdbcType=VARCHAR}, #{ismanager,jdbcType=TINYINT}, 
       #{isystem,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, #{description,jdbcType=VARCHAR}, 
@@ -130,8 +130,8 @@
       <if test="username != null">
         username,
       </if>
-      <if test="loginame != null">
-        loginame,
+      <if test="loginName != null">
+        login_name,
       </if>
       <if test="password != null">
         password,
@@ -174,8 +174,8 @@
       <if test="username != null">
         #{username,jdbcType=VARCHAR},
       </if>
-      <if test="loginame != null">
-        #{loginame,jdbcType=VARCHAR},
+      <if test="loginName != null">
+        #{loginName,jdbcType=VARCHAR},
       </if>
       <if test="password != null">
         #{password,jdbcType=VARCHAR},
@@ -227,8 +227,8 @@
       <if test="record.username != null">
         username = #{record.username,jdbcType=VARCHAR},
       </if>
-      <if test="record.loginame != null">
-        loginame = #{record.loginame,jdbcType=VARCHAR},
+      <if test="record.loginName != null">
+        login_name = #{record.loginName,jdbcType=VARCHAR},
       </if>
       <if test="record.password != null">
         password = #{record.password,jdbcType=VARCHAR},
@@ -272,7 +272,7 @@
     update jsh_user
     set id = #{record.id,jdbcType=BIGINT},
       username = #{record.username,jdbcType=VARCHAR},
-      loginame = #{record.loginame,jdbcType=VARCHAR},
+      login_name = #{record.loginName,jdbcType=VARCHAR},
       password = #{record.password,jdbcType=VARCHAR},
       position = #{record.position,jdbcType=VARCHAR},
       department = #{record.department,jdbcType=VARCHAR},
@@ -294,8 +294,8 @@
       <if test="username != null">
         username = #{username,jdbcType=VARCHAR},
       </if>
-      <if test="loginame != null">
-        loginame = #{loginame,jdbcType=VARCHAR},
+      <if test="loginName != null">
+        login_name = #{loginName,jdbcType=VARCHAR},
       </if>
       <if test="password != null">
         password = #{password,jdbcType=VARCHAR},
@@ -336,7 +336,7 @@
   <update id="updateByPrimaryKey" parameterType="com.jsh.erp.datasource.entities.User">
     update jsh_user
     set username = #{username,jdbcType=VARCHAR},
-      loginame = #{loginame,jdbcType=VARCHAR},
+      login_name = #{loginName,jdbcType=VARCHAR},
       password = #{password,jdbcType=VARCHAR},
       position = #{position,jdbcType=VARCHAR},
       department = #{department,jdbcType=VARCHAR},
