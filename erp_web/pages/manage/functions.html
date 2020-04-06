@@ -89,12 +89,10 @@
                 </td>
             </tr>
             <tr>
-                <td>收缩</td>
-                <td style="padding:5px"><input name="State" id="State" type="checkbox" style="width: 230px;height: 20px"/></td>
-            </tr>
-            <tr>
-                <td>启用</td>
-                <td style="padding:5px"><input name="Enabled" id="Enabled" type="checkbox" style="width: 230px;height: 20px"/></td>
+                <td>图标</td>
+                <td style="padding:5px">
+                    <input id="icon" name="icon" class="easyui-textbox" style="width:230px;"/>
+                </td>
             </tr>
             <tr>
                 <td>类型</td>
@@ -105,6 +103,14 @@
                         <option value="手机版">手机版</option>
                     </select>
                 </td>
+            </tr>
+            <tr>
+                <td>收缩</td>
+                <td style="padding:5px"><input name="State" id="State" type="checkbox" style="width: 230px;height: 20px"/></td>
+            </tr>
+            <tr>
+                <td>启用</td>
+                <td style="padding:5px"><input name="Enabled" id="Enabled" type="checkbox" style="width: 230px;height: 20px"/></td>
             </tr>
         </table>
     </form>
@@ -174,6 +180,7 @@
                     }
                 },
                 {title: '类型', field: 'type', width: 50},
+                {title: '图标', field: 'icon', width: 110},
                 {
                     title: '操作', field: 'op', align: "center", width: 130, formatter: function (value, rec, index) {
                         var str = '';
@@ -396,6 +403,7 @@
         $("#State").attr("checked", rowsdata.state);
         $("#Sort").textbox("setValue", rowsdata.sort);
         $("#Enabled").attr("checked", rowsdata.enabled);
+        $("#icon").textbox("setValue", rowsdata.icon);
         $("#Type").textbox("setValue", rowsdata.type);
         if (rowsdata.pushbtn) {
             var arr = rowsdata.pushbtn.split(",");
