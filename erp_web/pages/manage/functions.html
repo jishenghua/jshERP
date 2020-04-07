@@ -15,6 +15,7 @@
     <script type="text/javascript" src="/js/easyui/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="/js/easyui/locale/easyui-lang-zh_CN.js"></script>
     <script type="text/javascript" src="/js/common/common.js"></script>
+    <script src="/js/common/jsherp.js"></script>
 </head>
 <body>
 <!-- 数据显示table -->
@@ -91,7 +92,7 @@
             <tr>
                 <td>图标</td>
                 <td style="padding:5px">
-                    <input id="icon" name="icon" class="easyui-textbox" style="width:230px;"/>
+                    <input id="icon" name="icon" class="easyui-textbox" data-options="buttonText:'参考'" style="width:230px;"/>
                 </td>
             </tr>
             <tr>
@@ -354,7 +355,8 @@
         $(".window-mask").css({width: webW, height: webH});
         $("#Name").val("").focus();
         $('#functionsFM').form('clear');
-
+        //点击icon图标弹出页面
+        iconBtnFun();
         oldFunctions = "";
         functionsID = 0;
         url = '/functions/add';
@@ -405,6 +407,8 @@
         $("#Enabled").attr("checked", rowsdata.enabled);
         $("#icon").textbox("setValue", rowsdata.icon);
         $("#Type").textbox("setValue", rowsdata.type);
+        //点击icon图标弹出页面
+        iconBtnFun();
         if (rowsdata.pushbtn) {
             var arr = rowsdata.pushbtn.split(",");
             var pushBtnArray = [];
@@ -428,6 +432,15 @@
         //焦点在名称输入框==定焦在输入文字后面
         $("#Name").val("").focus().val(rowsdata.name);
         url = '/functions/update?id=' + rowsdata.id;
+    }
+
+    //点击icon图标弹出页面
+    function iconBtnFun() {
+        $("#icon").textbox({
+            onClickButton:function(){
+                js.addTabPage(null, "图标选择", "/pages/manage/icon_select.html");
+            }
+        });
     }
 
     //检查名称是否存在 ++ 重名无法提示问题需要跟进
