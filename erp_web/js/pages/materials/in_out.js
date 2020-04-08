@@ -464,8 +464,8 @@
 				},
 				{ title: '单据日期',field: 'opertimeStr',width:145},
 				{ title: '操作员',field: 'operpersonname',width:60},
-				{ title: '金额合计',field: 'totalprice',width:60},
-				{ title: '含税合计',field: 'totaltaxlastmoney',hidden:isShowLastMoneyColumn,width:60,formatter:function(value,rec){
+				{ title: '金额合计',field: 'totalprice',width:70},
+				{ title: '含税合计',field: 'totaltaxlastmoney',hidden:isShowLastMoneyColumn,width:70,formatter:function(value,rec){
 						return (rec.discountmoney + rec.discountlastmoney).toFixed(2);
 					}
 				},
