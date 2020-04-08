@@ -267,7 +267,8 @@ public class MaterialService {
         MaterialExample.Criteria criteria = example.createCriteria();
         criteria.andNameEqualTo(name).andModelEqualTo(model).andColorEqualTo(color)
                 .andStandardEqualTo(standard).andMfrsEqualTo(mfrs)
-                .andOtherfield1EqualTo(otherField1).andOtherfield2EqualTo(otherField2).andOtherfield2EqualTo(otherField3);
+                .andOtherfield1EqualTo(otherField1).andOtherfield2EqualTo(otherField2).andOtherfield2EqualTo(otherField3)
+                .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         if (id > 0) {
             criteria.andIdNotEqualTo(id);
         }
