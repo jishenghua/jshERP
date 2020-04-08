@@ -1,4 +1,4 @@
-$.get("../../pages/template/base.html?7890", function(tem) {
+$.get("../../pages/template/base.html?7891", function(tem) {
     if(tem) {
         var template = Handlebars.compile(tem);
         /**
@@ -13,22 +13,29 @@ $.get("../../pages/template/base.html?7890", function(tem) {
             collapsible: false,
             closable: true
         });
-        $("#supplierDlg #supplier").validatebox({
+        $("#supplierDlg #supplier").textbox({
             required: true,
             validType: 'length[2,30]'
         });
-        $("#supplierDlg #email").validatebox({
+        $("#supplierDlg #email").textbox({
             validType: 'email'
         });
         $("#BeginNeedGet,#BeginNeedPay,#AllNeedGet,#AllNeedPay").numberbox({
             min:0,
             precision:2
         });
+        $("#taxRate").textbox({
+            validType: 'length[1,2]'
+        });
         $("#saveSupplier").linkbutton({
             iconCls: 'icon-ok'
         });
         $("#cancelSupplier").linkbutton({
             iconCls: 'icon-cancel'
+        });
+        $("#contacts,#telephone,#email,#phonenum,#fax,#taxNum,#bankName,#accountNumber,#address").textbox();
+        $("#description").textbox({
+            multiline:true
         });
 
         /**
@@ -43,7 +50,7 @@ $.get("../../pages/template/base.html?7890", function(tem) {
             collapsible: false,
             closable: true
         });
-        $("#depotDlg #name,#depotDlg #address").validatebox({
+        $("#depotDlg #name,#depotDlg #address").textbox({
             required: true,
             validType: 'length[2,30]'
         });
@@ -56,6 +63,10 @@ $.get("../../pages/template/base.html?7890", function(tem) {
         });
         $("#cancelDepot").linkbutton({
             iconCls: 'icon-cancel'
+        });
+        $("#sort").textbox();
+        $("#depotDlg #remark").textbox({
+            multiline:true
         });
 
         /**
@@ -70,7 +81,7 @@ $.get("../../pages/template/base.html?7890", function(tem) {
             collapsible: false,
             closable: true
         });
-        $("#accountDlg #name,#accountDlg #serialNo").validatebox({
+        $("#accountDlg #name,#accountDlg #serialNo").textbox({
             required: true,
             validType: 'length[2,30]'
         });
