@@ -10,7 +10,7 @@ import java.lang.annotation.*;
  * @Author: cjl
  * @Date: 2019/1/21 16:33
  */
-@ResourceInfo(value = "serialNumber", type = 1574002422)
+@ResourceInfo(value = "serialNumber")
 @Inherited
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

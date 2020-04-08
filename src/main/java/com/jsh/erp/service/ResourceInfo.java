@@ -11,5 +11,4 @@ import java.lang.annotation.*;
 @Documented
 public @interface ResourceInfo {
     String value();
-    int type();
 }

@@ -10,6 +10,7 @@ import com.jsh.erp.exception.JshException;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,10 +21,18 @@ import java.util.*;
 @Service
 public class TenantService {
     private Logger logger = LoggerFactory.getLogger(TenantService.class);
+
     @Resource
     private TenantMapper tenantMapper;
+
     @Resource
     private TenantMapperEx tenantMapperEx;
+
+    @Value("${tenant.userNumLimit}")
+    private Integer userNumLimit;
+
+    @Value("${tenant.billsNumLimit}")
+    private Integer billsNumLimit;
 
 
     public Tenant getTenant(long id)throws Exception {
@@ -72,8 +81,8 @@ public class TenantService {
         Tenant tenant = JSONObject.parseObject(beanJson, Tenant.class);
         int result=0;
         try{
-            tenant.setUserNumLimit(2); //默认用户限制数量
-            tenant.setBillsNumLimit(200); //默认单据限制数量
+            tenant.setUserNumLimit(userNumLimit); //默认用户限制数量
+            tenant.setBillsNumLimit(billsNumLimit); //默认单据限制数量
             tenant.setCreateTime(new Date());
             result=tenantMapper.insertSelective(tenant);
         }catch(Exception e){
