@@ -11,19 +11,21 @@
     <link rel="stylesheet" type="text/css" href="/js/easyui/themes/default/easyui.css"/>
     <link rel="stylesheet" type="text/css" href="/js/easyui/themes/icon.css"/>
     <link type="text/css" rel="stylesheet" href="/css/common.css"/>
+    <link rel="stylesheet" type="text/css" href="/js/Huploadify/Huploadify.css"/>
     <script type="text/javascript" src="/js/jquery-1.8.0.min.js"></script>
     <script type="text/javascript" src="/js/easyui/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="/js/easyui/locale/easyui-lang-zh_CN.js"></script>
     <script type="text/javascript" src="/js/common/common.js"></script>
+    <script src="/js/Huploadify/jquery.Huploadify.js"></script>
 </head>
 <body>
 <!-- 数据显示table -->
 <div id="tablePanel" class="easyui-panel" data-options="fit:true" style="padding:1px;top:300px;" title="插件管理" iconCls="icon-list">
     <div class="box-body form-inline">
         <div class="form-group">
-            <label class="control-label">车牌号码：</label>
+            <label class="control-label">名称：</label>
             <div class="control-inline">
-                <input type="text" id="searchPluginNumber" name="searchPluginNumber" value="" maxlength="100" class="easyui-textbox width-90"/>
+                <input type="text" id="searchPluginName" name="searchPluginName" value="" maxlength="100" class="easyui-textbox width-90"/>
             </div>
         </div>
         <div class="form-group">
@@ -33,49 +35,26 @@
     </div>
     <table id="tableData" style="height:340px;top:300px;border-bottom-color:#FFFFFF"></table>
 </div>
-<div id="pluginDlg" class="easyui-dialog" style="width:380px;padding:10px 20px"
+<div id="pluginDlg" class="easyui-dialog" style="width:650px;padding:10px 20px"
      closed="true" buttons="#dlg-buttons" modal="true" cache="false" collapsible="false" closable="true">
     <form id="pluginFM" method="post" novalidate>
         <table>
             <tr>
-                <td style="width:60px;">车牌号码</td>
+                <td style="width:60px;">插件包</td>
                 <td style="padding:5px">
-                    <input name="pluginNumber" id="pluginNumber" class="easyui-textbox" data-options="required:true,validType:'length[2,30]'" style="width: 230px;"/>
+                    <div id="pluginFile"></div>
                 </td>
             </tr>
             <tr>
-                <td>驾驶员</td>
+                <td style="width:60px;"></td>
                 <td style="padding:5px">
-                    <input name="pluginDriver" id="pluginDriver" class="easyui-textbox" data-options="validType:'length[2,30]'" style="width: 230px;"/>
-                </td>
-            </tr>
-            <tr>
-                <td>车辆状态</td>
-                <td style="padding:5px">
-                    <select name="pluginStatus" id="pluginStatus" class="easyui-combobox"
-                            data-options="panelHeight:'auto'" style="width:230px;">
-                        <option value="1">正常</option>
-                        <option value="2">在租</option>
-                        <option value="3">在售</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>车辆归属</td>
-                <td style="padding:5px">
-                    <select name="pluginBelong" id="pluginBelong" class="easyui-combobox"
-                            data-options="panelHeight:'auto'" style="width:230px;">
-                        <option value="1">公司车</option>
-                        <option value="2">外请车</option>
-                        <option value="3">租用车</option>
-                    </select>
+                    (扩展名必须为jar)
                 </td>
             </tr>
         </table>
     </form>
 </div>
 <div id="dlg-buttons">
-    <a href="javascript:void(0)" id="savePlugin" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
     <a href="javascript:void(0)" id="cancelPlugin" class="easyui-linkbutton" iconCls="icon-cancel"
        onclick="javascript:$('#pluginDlg').dialog('close')">取消</a>
 </div>
@@ -108,29 +87,35 @@
             columns: [[
                 {field: 'id', width: 35, align: "center", checkbox: true},
                 {
-                    title: '操作', field: 'op', align: "center", width: 60,
+                    title: '操作', field: 'op', align: "center", width: 120,
                     formatter: function (value, rec, index) {
                         var str = '';
+                        str += '<img title="上传模板" src="/js/easyui/themes/icons/edit_add.png" style="cursor: pointer;" onclick="uploadTemplate(\'' + rec.pluginDescriptor.pluginId + '\');"/>&nbsp;&nbsp;&nbsp;';
                         str += '<img title="开启" src="/js/easyui/themes/icons/ok.png" style="cursor: pointer;" onclick="startPlugin(\'' + rec.pluginDescriptor.pluginId + '\');"/>&nbsp;&nbsp;&nbsp;';
-                        str += '<img title="停止" src="/js/easyui/themes/icons/no.png" style="cursor: pointer;" onclick="stopPlugin(\'' + rec.pluginDescriptor.pluginId + '\');"/>';
+                        str += '<img title="停止" src="/js/easyui/themes/icons/no.png" style="cursor: pointer;" onclick="stopPlugin(\'' + rec.pluginDescriptor.pluginId + '\');"/>&nbsp;&nbsp;&nbsp;';
+                        str += '<img title="卸载" src="/js/easyui/themes/icons/undo.png" style="cursor: pointer;" onclick="uninstallPlugin(\'' + rec.pluginDescriptor.pluginId + '\');"/>';
                         return str;
                     }
                 },
-                {title: '插件Id', field: 'pluginId', width: 150,
+                {title: '标识', field: 'pluginId', width: 120,
                     formatter: function(value, rec) {
                         if (rec) {
                             return rec.pluginDescriptor.pluginId;
                         }
                     }
                 },
-                {title: '插件描述', field: 'pluginDescription', width: 150,
+                {title: '名称', field: 'pluginName', width: 120,
                     formatter: function(value, rec) {
                         if (rec) {
-                            return rec.pluginDescriptor.pluginDescription;
+                            var desc = rec.pluginDescriptor.pluginDescription;
+                            if(desc.indexOf("|")){
+                                var arr = desc.split("|");
+                                return arr[0];
+                            }
                         }
                     }
                 },
-                {title: '版本', field: 'pluginVersion', width: 150,
+                {title: '版本', field: 'pluginVersion', width: 120,
                     formatter: function(value, rec) {
                         if (rec) {
                             return rec.pluginDescriptor.version;
@@ -144,14 +129,24 @@
                         }
                     }
                 },
-                {title: '插件路径', field: 'path', width: 400},
-                {title: '插件状态', field: 'pluginState', width: 100,
+                {title: '页面链接', field: 'pluginUrl', width: 250,
+                    formatter: function(value, rec) {
+                        if (rec) {
+                            var desc = rec.pluginDescriptor.pluginDescription;
+                            if(desc.indexOf("|")){
+                                var arr = desc.split("|");
+                                return "<a href='" + arr[1] + "' target='_blank'>" + arr[1] + "</a>";
+                            }
+                        }
+                    }
+                },
+                {title: '状态', field: 'pluginState', width: 100,
                     formatter: function(value, rec) {
                         if (rec) {
                             if(rec.pluginState == "STARTED") {
                                 return "<span style='color:green'>开启</span>";
                             } else if(rec.pluginState == "STOPPED") {
-                                return "<span style='color:red'>关闭</span>";
+                                return "<span style='color:red'>停止</span>";
                             }
                         }
                     }
@@ -160,18 +155,10 @@
             toolbar: [
                 {
                     id: 'addPlugin',
-                    text: '增加',
+                    text: '上传插件包',
                     iconCls: 'icon-add',
                     handler: function () {
                         addPlugin();
-                    }
-                },'-',
-                {
-                    id: 'deletePlugin',
-                    text: '删除',
-                    iconCls: 'icon-remove',
-                    handler: function () {
-                        batDeletePlugin();
                     }
                 }
             ],
@@ -231,6 +218,31 @@
         });
     }
 
+    //卸载插件
+    function uninstallPlugin(pluginId) {
+        $.messager.confirm('卸载确认', '确定要卸载该插件吗？', function (r) {
+            if (r) {
+                $.ajax({
+                    type: "post",
+                    url: "/plugin/uninstall/" + pluginId,
+                    dataType: "json",
+                    success: function (res) {
+                        if(res && res.code == 200) {
+                            $("#searchBtn").click();
+                        } else {
+                            $.messager.alert('停止提示', '卸载插件失败，请稍后再试！', 'error');
+                        }
+                    },
+                    //此处添加错误处理
+                    error: function () {
+                        $.messager.alert('停止提示', '卸载插件异常，请稍后再试！', 'error');
+                        return;
+                    }
+                });
+            }
+        });
+    }
+
     //增加
     var url;
     var pluginId = 0;
@@ -238,31 +250,66 @@
     var oldPluginNumber = "";
 
     function addPlugin() {
-        $('#pluginDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/edit_add.png"/>&nbsp;增加车辆信息');
+        $('#pluginDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/edit_add.png"/>&nbsp;上传插件包');
         $(".window-mask").css({width: webW, height: webH});
         $('#pluginFM').form('clear');
-        oldPluginNumber = "";
-        pluginId = 0;
-        url = '/api/plugin/plugin-plugin/plugin/insert';
+        fileUpload();
+    }
+
+    //文件上传
+    function fileUpload() {
+        $('#pluginFile').empty().Huploadify({
+            auto:true,
+            fileTypeExts:'*.jar',
+            maxFileNumber:1,
+            fileSizeLimit:10240,
+            showUploadedPercent:true,//是否实时显示上传的百分比，如20%
+            showUploadedSize:true,
+            removeTimeout:9999999,
+            uploader:'/plugin/uploadInstallPluginJar',
+            onUploadStart:function(){
+                //alert('开始上传');
+            },
+            onInit:function(){
+                //alert('初始化');
+            },
+            onUploadComplete:function(){
+                $("#searchBtn").click();
+                alert('上传完成');
+            },
+            onDelete:function(file){
+                console.log('删除的文件：'+file);
+                console.log(file);
+            }
+        });
+    }
+
+    //上传模板
+    function uploadTemplate(pluginId) {
+        alert("上传模板");
     }
 
     //开启插件
     function startPlugin(pluginId) {
-        $.ajax({
-            type: "post",
-            url: "/plugin/start/" + pluginId,
-            dataType: "json",
-            success: function (res) {
-                if(res && res.code == 200) {
-                    $("#searchBtn").click();
-                } else {
-                    $.messager.alert('开启提示', '开启插件失败，请稍后再试！', 'error');
-                }
-            },
-            //此处添加错误处理
-            error: function () {
-                $.messager.alert('开启提示', '开启插件异常，请稍后再试！', 'error');
-                return;
+        $.messager.confirm('开启确认', '确定要开启该插件吗？', function (r) {
+            if (r) {
+                $.ajax({
+                    type: "post",
+                    url: "/plugin/start/" + pluginId,
+                    dataType: "json",
+                    success: function (res) {
+                        if(res && res.code == 200) {
+                            $("#searchBtn").click();
+                        } else {
+                            $.messager.alert('开启提示', '开启插件失败，请稍后再试！', 'error');
+                        }
+                    },
+                    //此处添加错误处理
+                    error: function () {
+                        $.messager.alert('开启提示', '开启插件异常，请稍后再试！', 'error');
+                        return;
+                    }
+                });
             }
         });
     }
@@ -288,6 +335,7 @@
             url: "/plugin/list",
             dataType: "json",
             data: ({
+                name: $("#searchPluginName").textbox("getValue"),
                 currentPage: pageNo,
                 pageSize: pageSize
             }),
@@ -307,7 +355,7 @@
     //重置按钮
     $("#searchResetBtn").unbind().bind({
         click: function () {
-            $("#searchPluginNumber").textbox("setValue","");
+            $("#searchPluginName").textbox("setValue","");
             //加载完以后重新初始化
             $("#searchBtn").click();
         }
