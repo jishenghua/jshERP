@@ -4,16 +4,14 @@ import com.gitee.starblues.integration.application.PluginApplication;
 import com.gitee.starblues.integration.operator.PluginOperator;
 import com.gitee.starblues.integration.operator.module.PluginInfo;
 import com.jsh.erp.utils.BaseResponseInfo;
+import com.jsh.erp.utils.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 插件jar 包测试功能
@@ -36,15 +34,27 @@ public class PluginController {
      * @return 返回插件信息
      */
     @GetMapping(value = "/list")
-    public BaseResponseInfo getPluginInfo(@RequestParam("currentPage") Integer currentPage,
+    public BaseResponseInfo getPluginInfo(@RequestParam("name") String name,
+                                          @RequestParam("currentPage") Integer currentPage,
                                           @RequestParam("pageSize") Integer pageSize,
                                           HttpServletRequest request) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         try {
+            List<PluginInfo> resList = new ArrayList<>();
             List<PluginInfo> list = pluginOperator.getPluginInfo();
-            map.put("rows", list);
-            map.put("total", list.size());
+            if(StringUtil.isEmpty(name)) {
+                resList = list;
+            } else {
+                for(PluginInfo pi : list) {
+                    String desc = pi.getPluginDescriptor().getPluginDescription();
+                    if(desc.contains(name)) {
+                        resList.add(pi);
+                    }
+                }
+            }
+            map.put("rows", resList);
+            map.put("total", resList.size());
             res.code = 200;
             res.data = map;
         } catch(Exception e){
@@ -133,17 +143,26 @@ public class PluginController {
      * @return 返回操作结果
      */
     @PostMapping("/uninstall/{id}")
-    public String uninstall(@PathVariable("id") String id){
+    public BaseResponseInfo uninstall(@PathVariable("id") String id){
+        BaseResponseInfo res = new BaseResponseInfo();
+        Map<String, Object> map = new HashMap<String, Object>();
+        String message = "";
         try {
             if(pluginOperator.uninstall(id, true)){
-                return "plugin '" + id +"' uninstall success";
+                message = "plugin '" + id +"' uninstall success";
             } else {
-                return "plugin '" + id +"' uninstall failure";
+                message = "plugin '" + id +"' uninstall failure";
             }
+            map.put("message", message);
+            res.code = 200;
+            res.data = map;
         } catch (Exception e) {
             e.printStackTrace();
-            return "plugin '" + id +"' uninstall failure. " + e.getMessage();
+            map.put("message", "plugin '" + id +"' uninstall failure. " + e.getMessage());
+            res.code = 500;
+            res.data = map;
         }
+        return res;
     }
 
 
