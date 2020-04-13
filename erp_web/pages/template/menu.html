@@ -1,25 +1,50 @@
 {{#menu}}
-	{{#if children}}
-		<li class="treeview">
-			<a href="javascript:" data-href="blank" class="addTabPage" title="{{text}}" data-code="{{id}}">
-				<i class="fa fa-fw {{icon}}"></i>
-				<span>{{text}}</span>
-				<span class="pull-right-container">
-					<i class="fa fa-angle-left pull-right"></i>
-				</span>
-			</a>
-			<ul class="treeview-menu">
-				{{#each children}}
-				<li class="treeview">
-					<a href="javascript:" data-href="{{url}}" class="addTabPage" title="{{text}}"
-					   data-code="{{id}}">
-						<i class="fa fa-fw {{icon}}"></i>
-						<span>{{text}}</span>
-					</a>
-				</li>
-				{{/each}}
-			</ul>
-		</li>
-	{{/if}}
+{{#if children}}
+<li class="treeview">
+	<a href="javascript:" data-href="blank" class="addTabPage" title="{{text}}" data-code="{{id}}">
+		<i class="fa fa-fw {{icon}}"></i>
+		<span>{{text}}</span>
+		<span class="pull-right-container">
+			<i class="fa fa-angle-left pull-right"></i>
+		</span>
+	</a>
+	<ul class="treeview-menu">
+		{{#if children}}
+			{{#each children}}
+			<li class="treeview">
+				{{#if url}}
+				<a href="javascript:" data-href="{{url}}" class="addTabPage" title="{{text}}"
+				   data-code="{{id}}">
+					<i class="fa fa-fw {{icon}}"></i>
+					<span>{{text}}</span>
+				</a>
+				{{else}}
+				<a href="javascript:" title="{{text}}" data-code="{{id}}">
+					<i class="fa fa-fw {{icon}}"></i>
+					<span>{{text}}</span>
+					<span class="pull-right-container">
+						<i class="fa fa-angle-left pull-right"></i>
+					</span>
+				</a>
+				{{/if}}
+				<ul class="treeview-menu">
+					{{#if children}}
+						{{#each children}}
+						<li class="treeview">
+							<a href="javascript:" data-href="{{url}}" class="addTabPage" title="{{text}}"
+							   data-code="{{id}}">
+								<i class="fa fa-fw {{icon}}"></i>
+								<span>{{text}}</span>
+							</a>
+						</li>
+						{{/each}}
+					{{/if}}
+				</ul>
+			</li>
+			{{/each}}
+		{{/if}}
+	</ul>
+</li>
+{{/if}}
 {{/menu}}
 

@@ -132,3 +132,15 @@
 	border: 1px solid #95B8E7;
 	border-radius:5px;
 }
+
+#depotHeadAccountDlg .radius-ui{
+	height: 30px;
+	border: 1px solid #95B8E7;
+	border-radius:5px;
+}
+
+#otherMoneyDlg .radius-ui{
+	height: 30px;
+	border: 1px solid #95B8E7;
+	border-radius:5px;
+}

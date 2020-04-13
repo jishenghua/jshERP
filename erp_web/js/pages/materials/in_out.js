@@ -464,8 +464,8 @@
 				},
 				{ title: '单据日期',field: 'opertimeStr',width:145},
 				{ title: '操作员',field: 'operpersonname',width:60},
-				{ title: '金额合计',field: 'totalprice',width:60},
-				{ title: '含税合计',field: 'totaltaxlastmoney',hidden:isShowLastMoneyColumn,width:60,formatter:function(value,rec){
+				{ title: '金额合计',field: 'totalprice',width:70},
+				{ title: '含税合计',field: 'totaltaxlastmoney',hidden:isShowLastMoneyColumn,width:70,formatter:function(value,rec){
 						return (rec.discountmoney + rec.discountlastmoney).toFixed(2);
 					}
 				},
@@ -1093,7 +1093,7 @@
     //订单转采购或销售
     function skipDepotHead(index){
         var res = $("#tableData").datagrid("getRows")[index];
-		if(status == "0" || status == "2") {
+		if(res.status == "0" || res.status == "2") {
             $.messager.alert('提示','未审核和已转的单据禁止操作！','warning');
         } else {
             sessionStorage.setItem("rowInfo", JSON.stringify(res)); //将单据信息存入缓存中

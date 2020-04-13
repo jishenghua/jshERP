@@ -245,9 +245,9 @@
 				},
 				{ field: 'organid',width:5, hidden:true},
 				{ title: organNameTitle,field: 'organname',width:140,hidden:organNameHidden},
-				{ title: '单据编号',field: 'billno',width:140},
+				{ title: '单据编号',field: 'billno',width:160},
 				{ title: '经手人',field: 'handspersonname',width:80},
-				{ title: '单据时间 ',field: 'billtime',width:140},
+				{ title: '单据时间 ',field: 'billTimeStr',width:160},
 				{ title: '合计',field: 'totalprice',width:80},
 				{ title: '备注',field: 'remark',width:100}
 			]],

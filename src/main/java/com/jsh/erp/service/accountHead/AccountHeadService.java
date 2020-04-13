@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.jsh.erp.utils.Tools.getCenternTime;
+
 @Service
 public class AccountHeadService {
     private Logger logger = LoggerFactory.getLogger(AccountHeadService.class);
@@ -80,6 +82,7 @@ public class AccountHeadService {
                 if(ah.getTotalprice() != null) {
                     ah.setTotalprice(ah.getTotalprice().abs());
                 }
+                ah.setBillTimeStr(getCenternTime(ah.getBilltime()));
                 resList.add(ah);
             }
         }

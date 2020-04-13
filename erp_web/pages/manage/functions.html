@@ -96,20 +96,6 @@
                 </td>
             </tr>
             <tr>
-                <td>类型</td>
-                <td style="padding:5px">
-                    <select name="Type" id="Type" class="easyui-combobox"
-                            data-options="panelHeight:'auto'" style="width: 230px;">
-                        <option value="电脑版">电脑版</option>
-                        <option value="手机版">手机版</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>收缩</td>
-                <td style="padding:5px"><input name="State" id="State" type="checkbox" style="width: 230px;height: 20px"/></td>
-            </tr>
-            <tr>
                 <td>启用</td>
                 <td style="padding:5px"><input name="Enabled" id="Enabled" type="checkbox" style="width: 230px;height: 20px"/></td>
             </tr>
@@ -165,22 +151,16 @@
             pageList: initPageNum,
             columns: [[
                 {field: 'id', width: 35, align: "center", checkbox: true},
-                {title: '编号 ', field: 'number', width: 60},
-                {title: '名称', field: 'name', width: 80},
-                {title: '上级编号', field: 'pnumber', width: 60},
-                {title: '链接', field: 'url', width: 200},
-                {title: '排序', field: 'sort', width: 50},
-                {
-                    title: '收缩', field: 'state', width: 50, formatter: function (value) {
-                        return value ? "开" : "关";
-                    }
-                },
+                {title: '编号 ', field: 'number', width: 80},
+                {title: '名称', field: 'name', width: 100},
+                {title: '上级编号', field: 'pnumber', width: 80},
+                {title: '链接', field: 'url', width: 250},
+                {title: '排序', field: 'sort', width: 60},
                 {
                     title: '启用', field: 'enabled', width: 50, formatter: function (value) {
                         return value ? "开" : "关";
                     }
                 },
-                {title: '类型', field: 'type', width: 50},
                 {title: '图标', field: 'icon', width: 110},
                 {
                     title: '操作', field: 'op', align: "center", width: 130, formatter: function (value, rec, index) {
@@ -199,7 +179,7 @@
                     handler: function () {
                         addFunctions();
                     }
-                },
+                },'-',
                 {
                     id: 'deleteFunctions',
                     text: '删除',

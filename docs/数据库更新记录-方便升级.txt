@@ -757,3 +757,10 @@ alter table jsh_unit add ratio INT DEFAULT NULL COMMENT '比例' after other_uni
 -- 给用户表增加 登录用户名 字段
 -- ----------------------------
 alter table jsh_user change loginame login_name varchar(255) NOT NULL COMMENT '登录用户名';
+
+-- ----------------------------
+-- 时间：2020年04月12日
+-- by jishenghua
+-- 给功能表增加插件管理
+-- ----------------------------
+INSERT INTO `jsh_functions` VALUES (245,'000107', '插件管理', '0001', '/pages/manage/plugin.html', '\0', '0170', '', '电脑版', '', 'icon-notebook', '0');
