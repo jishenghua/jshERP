@@ -153,29 +153,29 @@
 </div>
 
 <!-- 导入excel表格 -->
-<div id="importExcelDlg" style="padding:10px 20px">
+<div id="importExcelDlg" style="padding:10px 20px" buttons="#dlg-buttons5">
     <form id="importExcelFM" method="post" enctype="multipart/form-data"
           action="/supplier/importExcelVendor">
-        <div class="fitem" style="padding:5px">
-            <label>文件名称&nbsp;&nbsp;</label>
-            <input name="supplierFile" id="supplierFile" type="file" style="width: 230px;height: 20px"/>
-        </div>
-        <div class="fitem" style="padding:5px">
-            <label><b>导入注意</b>&nbsp;&nbsp;</label><span>（预收款、期初应收、期初应付、税率均为数值且要大于0；另外期初应收、期初应付不能同时输入）</span>
-        </div>
-        <div class="fitem" style="padding:5px;display: none;">
-            <label>是否审查&nbsp;&nbsp;</label>
-            <select id="isCheck" name="isCheck" style="width: 230px;height: 20px">
-                <option value="0">是</option>
-                <option value="1" selected="selected">否</option>
-            </select>
-        </div>
-        <div id="dlg-buttons5">
-            <a href="javascript:void(0)" id="saveimport" class="easyui-linkbutton" iconCls="icon-ok">导入</a>
-            <a href="javascript:void(0)" id="cancelimport" class="easyui-linkbutton" iconCls="icon-cancel"
-               onclick="javascript:$('#importExcelDlg').dialog('close')">取消</a>
-        </div>
+        <table>
+            <tr>
+                <td style="width:80px;">文件名称</td>
+                <td style="padding:5px">
+                    <input name="supplierFile" id="supplierFile" type="file" style="width: 230px;"/>
+                </td>
+            </tr>
+            <tr>
+                <td>导入注意</td>
+                <td style="padding:5px">
+                    <span>预收款、期初应收、期初应付、税率均为数值且要大于0；另外期初应收、期初应付不能同时输入</span>
+                </td>
+            </tr>
+        </table>
     </form>
+</div>
+<div id="dlg-buttons5">
+    <a href="javascript:void(0)" id="saveimport" class="easyui-linkbutton" iconCls="icon-ok">导入</a>
+    <a href="javascript:void(0)" id="cancelimport" class="easyui-linkbutton" iconCls="icon-cancel"
+       onclick="javascript:$('#importExcelDlg').dialog('close')">取消</a>
 </div>
 
 </body>
