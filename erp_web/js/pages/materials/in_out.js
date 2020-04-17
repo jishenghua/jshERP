@@ -8,7 +8,6 @@
 	var url;
 	var depotHeadID = 0;
 	var preTotalPrice = 0; //前一次加载的金额
-	var orgDepotHead = "";
 	var editIndex = undefined;
 	var listTitle = ""; //单据标题
 	var listType = ""; //入库 出库
@@ -336,9 +335,7 @@
 	//初始化表格数据
 	function initTableData(){
 		if(pageType === "skip") {
-            var res = sessionStorage.getItem("rowInfo");
-            res = JSON.parse(res);
-            editDepotHead(0, res); //自动弹出编辑框，带缓存数据
+			addDepotHead(); //自动弹出编辑框，带缓存数据
 		}
 		var hideType = undefined;
 		var isHiddenStatus = true;
@@ -828,17 +825,6 @@
 					if(type === "add") {
 						$("#depotHeadDlg #append").click(); //新增行
 					}
-                    //如果是订单跳转到采购或销售
-                    if(pageType === "skip") {
-                        var skipList = $("#depotHeadFM .datagrid-body tr");
-                        var input = ".datagrid-editable-input";
-                        //逐条自动点击每行数据
-                        skipList.each(function (i) {
-                            setTimeout(function () {
-                            	skipList.eq(i).find("[field='Remark']").click().find(input).val("来自订单"); //此处为确保订单转销售成功，勿删
-                            },(i+1)*200);
-                        });
-                    }
 				}
 			},
 			error:function() {
@@ -978,7 +964,7 @@
 				{ title: '单价',field: 'UnitPrice',editor:'validatebox',width:60},
 				{ title: '含税单价',field: 'TaxUnitPrice',editor:'validattebox',hidden:isShowTaxColumn,width:75},
 				{ title: '金额',field: 'AllPrice',editor:'validatebox',width:75},
-				{ title: '税率',field: 'TaxRate',editor:'validatebox',hidden:isShowTaxColumn,width:75},
+				{ title: '税率(%)',field: 'TaxRate',editor:'validatebox',hidden:isShowTaxColumn,width:75},
 				{ title: '税额',field: 'TaxMoney',editor:'validatebox',hidden:isShowTaxColumn,width:75},
 				{ title: '价税合计',field: 'TaxLastMoney',editor:'validatebox',hidden:isShowTaxColumn,width:75},
 				{ title: '备注',field: 'Remark',editor:'validatebox',width:100}
@@ -1266,10 +1252,19 @@
 		var addTitle = listTitle.replace("列表","信息");
 		$('#depotHeadDlg').show().dialog('open').dialog('setTitle','<img src="/js/easyui/themes/icons/edit_add.png"/>&nbsp;增加' + addTitle);
 		$(".window-mask").css({ width: webW ,height: webH});
-
-	    orgDepotHead = "";
 	    depotHeadID = 0;
-	    initTableData_material("add"); //商品列表
+		var res = sessionStorage.getItem("rowInfo");
+		if(pageType == "skip" && res) { //从订单跳转过来
+			res = JSON.parse(res);
+			$('#OrganId').combobox('setValue', res.organid);
+			$("#LinkNumber").val(res.number);  //关联订单号
+			$("#DiscountLastMoney").val(res.totalprice); //优惠后金额
+			$("#ChangeAmount").val(res.totalprice).attr("data-changeamount", res.totalprice);
+			depotHeadID = res.id;
+			initTableData_material("edit",res.totalprice); //商品列表
+		} else {
+			initTableData_material("add"); //商品列表
+		}
 	    reject(); //撤销下、刷新商品列表
 		function supplierDlgFun(type) {
             $('#supplierDlg').dialog('open').dialog('setTitle','<img src="/js/easyui/themes/icons/edit_add.png"/>&nbsp;增加' + type + '信息');
@@ -1336,16 +1331,12 @@
 		}
 	}
 	//编辑信息
-	function editDepotHead(index, res){
-        if(!res) {
-            res = $("#tableData").datagrid("getRows")[index];
-        }
-        if(pageType!="skip") {
-            if (res.status == "1" || res.status == "2") {
-                $.messager.alert('编辑提示', '已审核和已转的单据不能编辑！', 'warning');
-                return;
-            }
-        }
+	function editDepotHead(index){
+		var res = $("#tableData").datagrid("getRows")[index];
+		if (res.status == "1" || res.status == "2") {
+			$.messager.alert('编辑提示', '已审核和已转的单据不能编辑！', 'warning');
+			return;
+		}
         var TotalPrice = res.totalprice; //合计金额
         if(pageType === "skip") { //从订单跳转过来
             buildNumber(); //生成单据编号
@@ -1444,13 +1435,7 @@
 
 	    initTableData_material("edit",TotalPrice); //商品列表
 	    reject(); //撤销下、刷新商品列表
-		if(pageType === "skip") {
-            url = '/depotHead/addDepotHeadAndDetail'; //如果是从订单跳转过来，则此处为新增的接口
-			//jshjshjsh
-            $("#depotHeadFM .datagrid-body").find("[field='DepotId']").click();
-		} else {
-            url = '/depotHead/updateDepotHeadAndDetail?id=' + res.id; //更新接口
-		}
+		url = '/depotHead/updateDepotHeadAndDetail?id=' + res.id; //更新接口
 	}
 	//查看信息
 	function showDepotHead(index){
@@ -2365,7 +2350,10 @@
 				statisticsFun(body,UnitPrice,OperNumber,footer,taxRate);
 			});
 			//默认税率为0
-			body.find("[field='TaxRate']").find(input).val(0);
+			var taxRateDom = body.find("[field='TaxRate']").find(input);
+			if(taxRateDom.val() == "") {
+				taxRateDom.val(0);
+			}
 			//在商品类型加载 组装件、普通子件
 			var mType = body.find("[field='MType']");
 			var rowListLength = mType.find(input).closest(".datagrid-row").attr("datagrid-row-index");
@@ -2502,12 +2490,10 @@
 	}
 	//新增单据主表及单据子表
 	function addDepotHeadAndDetail(url,infoStr){
-		var inserted = null;
-		if(pageType === "skip") {
-            inserted = $("#materialData").datagrid('getChanges', "updated");
-		} else {
-            inserted = $("#materialData").datagrid('getChanges', "inserted");
+		if(pageType=="skip") {
+			sessionStorage.removeItem("rowInfo");
 		}
+		var inserted = $("#materialData").datagrid('getRows');
         var deleted = [];
         var updated = [];
 		$.ajax({

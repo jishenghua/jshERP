@@ -193,20 +193,26 @@
 <div id="importExcelDlg" class="easyui-dialog" style="width:450px; padding:10px 20px;"
      closed="true" buttons="#dlg-buttons5" modal="true" collapsible="false" closable="true">
     <form id="importExcelFM" method="post" enctype="multipart/form-data" action="/material/importExcel">
-        <div class="fitem" style="padding:5px">
-            <label>表格模板&nbsp;&nbsp;</label>
-            <span><a href="/upload/excels/goods_template.xls"><b>Excel模板下载</b></a></span>
-        </div>
-        <div class="fitem" style="padding:5px">
-            <label>文件名称&nbsp;&nbsp;</label>
-            <input name="materialFile" id="materialFile" type="file" style="width: 230px;height: 20px"/>
-        </div>
-        <div id="dlg-buttons5">
-            <a href="javascript:void(0)" id="saveimport" class="easyui-linkbutton" iconCls="icon-ok">导入</a>
-            <a href="javascript:void(0)" id="cancelimport" class="easyui-linkbutton" iconCls="icon-cancel"
-               onclick="javascript:$('#importExcelDlg').dialog('close')">取消</a>
-        </div>
+        <table>
+            <tr>
+                <td style="width:80px;">表格模板</td>
+                <td style="padding:5px">
+                    <span><a href="/upload/excels/goods_template.xls"><b>Excel模板下载</b></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td>文件名称</td>
+                <td style="padding:5px">
+                    <input name="materialFile" id="materialFile" type="file" style="width: 230px;"/>
+                </td>
+            </tr>
+        </table>
     </form>
+</div>
+<div id="dlg-buttons5">
+    <a href="javascript:void(0)" id="saveimport" class="easyui-linkbutton" iconCls="icon-ok">导入</a>
+    <a href="javascript:void(0)" id="cancelimport" class="easyui-linkbutton" iconCls="icon-cancel"
+       onclick="javascript:$('#importExcelDlg').dialog('close')">取消</a>
 </div>
 
 <div id="forSelectMaterialCategoryDlg" class="easyui-dialog" style="width:380px;padding:10px 20px;top:50px;"

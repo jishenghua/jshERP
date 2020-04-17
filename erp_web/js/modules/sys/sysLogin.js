@@ -90,7 +90,7 @@ function loginFun() {
                         return;
                     }
                     else if (loginInfoTip.indexOf("user password error") != -1) {
-                        alert("用户密码错误");
+                        alert("密码错误");
                         return;
                     }
                     else if (loginInfoTip.indexOf("access service error") != -1) {
