@@ -142,7 +142,6 @@
                 {
                     title: '操作', field: 'op', align: "center", width: 210, formatter: function (value, rec, index) {
                         var str = '';
-                        var rowInfo = rec.id + 'AaBb' + rec.name + 'AaBb' + rec.serialno + 'AaBb' + rec.initialamount + 'AaBb' + rec.currentamount + 'AaBb' + rec.remark;
                         str += '<img src="/js/easyui/themes/icons/list.png" style="cursor: pointer;" onclick="showAccountInOutList(\'' + index + '\');"/>&nbsp;<a onclick="showAccountInOutList(\'' + index + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">流水</a>&nbsp;&nbsp;';
                         str += '<img src="/js/easyui/themes/icons/pencil.png" style="cursor: pointer;" onclick="editAccount(\'' + index + '\');"/>&nbsp;<a onclick="editAccount(\'' + index + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
                         str += '<img src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteAccount(\'' + rec.id + '\');"/>&nbsp;<a onclick="deleteAccount(\'' + rec.id + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">删除</a>&nbsp;&nbsp;';
