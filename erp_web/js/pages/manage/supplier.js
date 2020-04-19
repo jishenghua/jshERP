@@ -57,13 +57,11 @@
             pageList: initPageNum,
             columns:[[
                 { field: 'id',width:35,align:"center",checkbox:true},
-                { title: '操作',field: 'op',align:"center",width:60,formatter:function(value,rec)
-                    {
+                { title: '操作',field: 'op',align:"center",width:60,
+                    formatter:function(value,rec,index) {
                         var str = '';
-                        var rowInfo = rec.id + 'AaBb' + rec.supplier +'AaBb' + rec.contacts + 'AaBb'+ rec.phonenum + 'AaBb'+ rec.email + 'AaBb'+ rec.beginneedget + 'AaBb'+ rec.beginneedpay + 'AaBb' + rec.isystem + 'AaBb' + rec.description+ 'AaBb' + rec.type
-                            + 'AaBb' + rec.fax + 'AaBb' + rec.telephone + 'AaBb' + rec.address + 'AaBb' + rec.taxnum + 'AaBb' + rec.bankname + 'AaBb' + rec.accountnumber + 'AaBb' + rec.taxrate;
-                        str += '<img title="编辑" src="/js/easyui/themes/icons/pencil.png" style="cursor: pointer;" onclick="editSupplier(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
-                        str += '<img title="删除" src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteSupplier(\'' + rowInfo + '\');"/>';
+                        str += '<img title="编辑" src="/js/easyui/themes/icons/pencil.png" style="cursor: pointer;" onclick="editSupplier(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
+                        str += '<img title="删除" src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteSupplier(\'' + rec.id + '\');"/>';
                         return str;
                     }
                 },
@@ -167,16 +165,15 @@
     }
 
     //删除信息
-    function deleteSupplier(supplierInfo) {
+    function deleteSupplier(id) {
         $.messager.confirm('删除确认','确定要删除此条信息吗？',function(r) {
             if (r) {
-                var supplierTotalInfo = supplierInfo.split("AaBb");
                 $.ajax({
                     type:"post",
                     url: "/supplier/batchDeleteSupplierByIds",
                     dataType: "json",
                     data: ({
-                        ids : supplierTotalInfo[0]
+                        ids : id
                     }),
                     success: function (res) {
                         if(res && res.code == 200) {
@@ -184,7 +181,7 @@
                         } else {
                             if(res && res.code == 601){
                                 var jsondata={};
-                                jsondata.ids=supplierTotalInfo[0];
+                                jsondata.ids=id;
                                 jsondata.deleteType='2';
                                 var type='single';
                                 batDeleteSupplierForceConfirm(res,"/supplier/batchDeleteSupplierByIds",jsondata,type);
@@ -557,39 +554,39 @@
 
     }
 
-
     //编辑信息
-    function editSupplier(supplierTotalInfo) {
-        var supplierInfo = supplierTotalInfo.split("AaBb");
-        var beginNeedGet = supplierInfo[5].replace("undefined","");
-        var beginNeedPay = supplierInfo[6].replace("undefined","");
+    function editSupplier(index) {
+        var res = $("#tableData").datagrid("getRows")[index];
+        var sId = res.id;
+        var beginNeedGet = res.beginneedget;
+        var beginNeedPay = res.beginneedpay;
         var row = {
-            supplier : supplierInfo[1],
-            contacts : supplierInfo[2].replace("undefined",""),
-            phonenum : supplierInfo[3].replace("undefined",""),
-            email : supplierInfo[4].replace("undefined",""),
+            supplier : res.supplier,
+            contacts : res.contacts,
+            phonenum : res.phonenum,
+            email : res.email,
             BeginNeedGet : beginNeedGet == "0"? "":beginNeedGet,
             BeginNeedPay : beginNeedPay == "0"? "":beginNeedPay,
             AllNeedGet: "",
             AllNeedPay: "",
-            description : supplierInfo[8].replace("undefined",""),
-            type : supplierInfo[9],
-            fax : supplierInfo[10].replace("undefined",""),
-            telephone : supplierInfo[11].replace("undefined",""),
-            address : supplierInfo[12].replace("undefined",""),
-            taxNum : supplierInfo[13].replace("undefined",""),
-            bankName : supplierInfo[14].replace("undefined",""),
-            accountNumber : supplierInfo[15].replace("undefined",""),
-            taxRate : supplierInfo[16].replace("undefined","")
+            description : res.description,
+            type : res.type,
+            fax : res.fax,
+            telephone : res.telephone,
+            address : res.address,
+            taxNum : res.taxnum,
+            bankName : res.bankname,
+            accountNumber : res.accountnumber,
+            taxRate : res.taxrate
         };
-        oldSupplier = supplierInfo[1];
+        oldSupplier = res.supplier;
         $('#supplierDlg').dialog('open').dialog('setTitle','<img src="/js/easyui/themes/icons/pencil.png"/>&nbsp;编辑'+listType +"信息");
         $(".window-mask").css({ width: webW ,height: webH});
         $('#supplierFM').form('load',row);
-        supplierID = supplierInfo[0];
+        supplierID = sId;
         //焦点在名称输入框==定焦在输入文字后面
-        $("#supplier").val("").focus().val(supplierInfo[1]);
-        url = '/supplier/update?id=' + supplierInfo[0];
+        $("#supplier").focus().val(res.supplier);
+        url = '/supplier/update?id=' + sId;
 
         //显示累计应收和累计应付
         var thisDateTime = getNowFormatDateTime(); //当前时间
@@ -606,7 +603,7 @@
             dataType: "json",
             async:  false,
             data: ({
-                supplierId: supplierInfo[0],
+                supplierId: sId,
                 endTime:thisDateTime,
                 supType: supType
             }),
@@ -619,7 +616,7 @@
                         dataType: "json",
                         async:  false,
                         data: ({
-                            supplierId: supplierInfo[0],
+                            supplierId: sId,
                             endTime:thisDateTime,
                             supType: supType
                         }),
