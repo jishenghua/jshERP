@@ -563,7 +563,7 @@
         var remark = $.trim($("#searchRemark").val());
         $.ajax({
             type: "get",
-            url: "/depot/getDepotList",
+            url: "/depot/list",
             dataType: "json",
             data: ({
                 search: JSON.stringify({

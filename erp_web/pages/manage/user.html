@@ -488,7 +488,7 @@
         var loginName = $.trim($("#searchLoginName").val());
         $.ajax({
             type: "get",
-            url: "/user/getUserList",
+            url: "/user/list",
             dataType: "json",
             data: ({
                 search: JSON.stringify({

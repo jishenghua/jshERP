@@ -3,8 +3,6 @@ package com.jsh.erp.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.DepotEx;
@@ -403,16 +401,8 @@ public class MaterialController {
         }
         PageQueryInfo queryInfo = new PageQueryInfo();
         Map<String, Object> objectMap = new HashMap<String, Object>();
-        if (pageSize == null || pageSize <= 0) {
-            pageSize = BusinessConstants.DEFAULT_PAGINATION_PAGE_SIZE;
-        }
-        if (currentPage == null || currentPage <= 0) {
-            currentPage = BusinessConstants.DEFAULT_PAGINATION_PAGE_NUMBER;
-        }
-        PageHelper.startPage(currentPage,pageSize,true);
         List<Material> list = materialService.getMaterialEnableSerialNumberList(parameterMap);
-        //获取分页查询后的数据
-        PageInfo<Material> pageInfo = new PageInfo<>(list);
+        Long count = materialService.getMaterialEnableSerialNumberCount(parameterMap);
         objectMap.put("page", queryInfo);
         if (list == null) {
             queryInfo.setRows(new ArrayList<Object>());
@@ -420,7 +410,7 @@ public class MaterialController {
             return returnJson(objectMap, "查找不到数据", ErpInfo.OK.code);
         }
         queryInfo.setRows(list);
-        queryInfo.setTotal(pageInfo.getTotal());
+        queryInfo.setTotal(count);
         return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
     }
     /**

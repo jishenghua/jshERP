@@ -11,7 +11,7 @@ import java.util.Map;
 
 public interface DepotMapperEx {
 
-    List<Depot> selectByConditionDepot(
+    List<DepotEx> selectByConditionDepot(
             @Param("name") String name,
             @Param("type") Integer type,
             @Param("remark") String remark,
@@ -22,8 +22,6 @@ public interface DepotMapperEx {
             @Param("name") String name,
             @Param("type") Integer type,
             @Param("remark") String remark);
-
-    List<DepotEx> getDepotList(Map<String, Object> params);
 
     int batchDeleteDepotByIds(@Param("updateTime") Date updateTime, @Param("updater") Long updater, @Param("ids") String ids[]);
 }

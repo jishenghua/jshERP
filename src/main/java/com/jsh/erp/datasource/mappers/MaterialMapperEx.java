@@ -64,6 +64,8 @@ public interface MaterialMapperEx {
      * */
     List<Material> getMaterialEnableSerialNumberList(Map<String, Object> parameterMap);
 
+    Long getMaterialEnableSerialNumberCount(Map<String, Object> parameterMap);
+
     int batchDeleteMaterialByIds(@Param("updateTime") Date updateTime, @Param("updater") Long updater, @Param("ids") String ids[]);
 
     List<Material> getMaterialListByCategoryIds(@Param("categoryIds") String[] categoryIds);
