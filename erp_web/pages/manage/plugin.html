@@ -32,6 +32,9 @@
             <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchBtn">查询</a>&nbsp;
             <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-redo" id="searchResetBtn">重置</a>
         </div>
+        <div class="form-group">
+            注：部分插件需执行初始化sql，请参考<b>官网介绍</b>进行操作
+        </div>
     </div>
     <table id="tableData" style="height:340px;top:300px;border-bottom-color:#FFFFFF"></table>
 </div>
@@ -90,7 +93,7 @@
                     title: '操作', field: 'op', align: "center", width: 120,
                     formatter: function (value, rec, index) {
                         var str = '';
-                        str += '<img title="上传模板" src="/js/easyui/themes/icons/edit_add.png" style="cursor: pointer;" onclick="uploadTemplate(\'' + rec.pluginDescriptor.pluginId + '\');"/>&nbsp;&nbsp;&nbsp;';
+                        str += '<img title="上传页面" src="/js/easyui/themes/icons/edit_add.png" style="cursor: pointer;" onclick="uploadTemplate(\'' + rec.path + '\');"/>&nbsp;&nbsp;&nbsp;';
                         str += '<img title="开启" src="/js/easyui/themes/icons/ok.png" style="cursor: pointer;" onclick="startPlugin(\'' + rec.pluginDescriptor.pluginId + '\');"/>&nbsp;&nbsp;&nbsp;';
                         str += '<img title="停止" src="/js/easyui/themes/icons/no.png" style="cursor: pointer;" onclick="stopPlugin(\'' + rec.pluginDescriptor.pluginId + '\');"/>&nbsp;&nbsp;&nbsp;';
                         str += '<img title="卸载" src="/js/easyui/themes/icons/undo.png" style="cursor: pointer;" onclick="uninstallPlugin(\'' + rec.pluginDescriptor.pluginId + '\');"/>';
@@ -284,9 +287,10 @@
         });
     }
 
-    //上传模板
-    function uploadTemplate(pluginId) {
-        alert("上传模板");
+    //上传页面
+    function uploadTemplate(path) {
+        var rootPath = path.substring(0, path.indexOf("plugins"));
+        $.messager.alert('上传页面', '请将页面上传到服务器目录：<br/>' + rootPath + "erp_web/plugins/", 'info');
     }
 
     //开启插件
