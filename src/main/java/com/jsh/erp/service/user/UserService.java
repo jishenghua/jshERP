@@ -77,8 +77,8 @@ public class UserService {
         return list;
     }
 
-    public List<User> select(String userName, String loginName, int offset, int rows)throws Exception {
-        List<User> list=null;
+    public List<UserEx> select(String userName, String loginName, int offset, int rows)throws Exception {
+        List<UserEx> list=null;
         try{
             list=userMapperEx.selectByConditionUser(userName, loginName, offset, rows);
         }catch(Exception e){
@@ -297,16 +297,6 @@ public class UserService {
     public User getCurrentUser()throws Exception{
         HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
         return (User)request.getSession().getAttribute("user");
-    }
-
-    public List<UserEx> getUserList(Map<String, Object> parameterMap) throws Exception{
-        List<UserEx> list=null;
-        try{
-            list= userMapperEx.getUserList(parameterMap);
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        return list;
     }
 
     /**

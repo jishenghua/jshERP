@@ -161,6 +161,7 @@
         and ifnull(m.delete_Flag,'0') !='1'
 
     </select>
+
     <select id="getMaterialEnableSerialNumberList" parameterType="java.util.Map" resultMap="com.jsh.erp.datasource.mappers.MaterialMapper.BaseResultMap">
         select
         Id, CategoryId, name, Mfrs, Packing, SafetyStock, Model, Standard, Color, Unit, Remark,
@@ -181,6 +182,24 @@
         and ifnull(delete_Flag,'0') !='1'
         order by id desc
     </select>
+
+    <select id="getMaterialEnableSerialNumberCount" resultType="java.lang.Long">
+        select count(1)
+        FROM jsh_material
+        where 1=1
+        and enabled ='1'
+        and enableSerialNumber ='1'
+        <if test="name != null and name != ''">
+            <bind name="name" value="'%' + _parameter.name + '%'" />
+            and name like #{name}
+        </if>
+        <if test="model != null and model != ''">
+            <bind name="model" value="'%' + _parameter.model + '%'" />
+            and model like #{model}
+        </if>
+        and ifnull(delete_Flag,'0') !='1'
+    </select>
+
     <update id="batchDeleteMaterialByIds">
         update jsh_material
         set delete_Flag='1'

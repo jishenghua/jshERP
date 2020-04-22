@@ -134,12 +134,10 @@
             columns: [[
                 {field: 'id', width: 35, align: "center", checkbox:true},
                 {
-                    title: '操作', field: 'op', align: "center", width: 80, formatter: function (value, rec) {
+                    title: '操作', field: 'op', align: "center", width: 80,
+                    formatter: function (value, rec, index) {
                         var str = '';
-                        var rowInfo = rec.id + 'AaBb' + rec.companyName + 'AaBb' + rec.companyContacts + 'AaBb' + rec.companyAddress
-                            + 'AaBb' + rec.companyTel + 'AaBb' + rec.companyFax + 'AaBb' + rec.companyPostCode
-                            + 'AaBb' + rec.depotFlag + 'AaBb' + rec.customerFlag;
-                        str += '<img src="/js/easyui/themes/icons/pencil.png" style="cursor: pointer;" onclick="editSystemConfig(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
+                        str += '<img src="/js/easyui/themes/icons/pencil.png" style="cursor: pointer;" onclick="editSystemConfig(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
                         str += '<img src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteSystemConfig(' + rec.id + ');"/>';
                         return str;
                     }
@@ -340,7 +338,7 @@
         if (checkCompanyName()) {
             return;
         }
-        var companyName = $.trim($("#companyName").val());
+        var companyName = $.trim($("#companyName").textbox("getValue"));
         if (!companyName) {
             $.messager.alert('提示', '公司名称不能为空', 'warning');
             $("#companyName").val("").focus();
@@ -373,31 +371,29 @@
     });
 
     //编辑系统配置信息
-    function editSystemConfig(systemConfigTotalInfo) {
-        var systemConfigInfo = systemConfigTotalInfo.split("AaBb");
+    function editSystemConfig(index) {
+        var res = $("#tableData").datagrid("getRows")[index];
         var row = {
-            companyName: systemConfigInfo[1],
-            companyContacts: systemConfigInfo[2],
-            companyAddress: systemConfigInfo[3],
-            companyTel: systemConfigInfo[4],
-            companyFax: systemConfigInfo[5],
-            companyPostCode: systemConfigInfo[6]
+            companyName: res.companyName,
+            companyContacts: res.companyContacts,
+            companyAddress: res.companyAddress,
+            companyTel: res.companyTel,
+            companyFax: res.companyFax,
+            companyPostCode: res.companyPostCode
         };
-        oldCompanyName = systemConfigInfo[1];
+        oldCompanyName = res.companyName;
         $('#systemConfigDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/pencil.png"/>&nbsp;编辑系统配置信息');
         $(".window-mask").css({width: webW, height: webH});
         $('#systemConfigFM').form('load', row);
-        systemConfigId = systemConfigInfo[0];
-        //焦点在名称输入框==定焦在输入文字后面
-        $("#companyName").val("").focus().val(systemConfigInfo[1]);
-        $("#depotFlag").attr("checked", systemConfigInfo[7] == '1' ? true : false);
-        $("#customerFlag").attr("checked", systemConfigInfo[8] == '1' ? true : false);
-        url = '/systemConfig/update?id=' + systemConfigInfo[0];
+        systemConfigId = res.id;
+        $("#depotFlag").attr("checked", res.depotFlag == '1' ? true : false);
+        $("#customerFlag").attr("checked", res.customerFlag == '1' ? true : false);
+        url = '/systemConfig/update?id=' + res.id;
     }
 
     //检查系统配置 名称是否存在 ++ 重名无法提示问题需要跟进
     function checkCompanyName() {
-        var companyName = $.trim($("#companyName").val());
+        var companyName = $.trim($("#companyName").textbox("getValue"));
         //表示是否存在 true == 存在 false = 不存在
         var flag = false;
         //开始ajax名称检验，不能重名
@@ -448,7 +444,7 @@
     });
 
     function showSystemConfigDetails(pageNo, pageSize) {
-        var companyName = $.trim($("#searchCompanyName").val());
+        var companyName = $.trim($("#searchCompanyName").textbox("getValue"));
         $.ajax({
             type: "get",
             url: "/systemConfig/list",

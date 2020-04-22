@@ -13,7 +13,7 @@ import java.util.Map;
 
 public interface UserMapperEx {
 
-    List<User> selectByConditionUser(
+    List<UserEx> selectByConditionUser(
             @Param("userName") String userName,
             @Param("loginName") String loginName,
             @Param("offset") Integer offset,
@@ -22,8 +22,6 @@ public interface UserMapperEx {
     Long countsByUser(
             @Param("userName") String userName,
             @Param("loginName") String loginName);
-
-    List<UserEx> getUserList(Map<String, Object> parameterMap);
 
     List<User> getUserListByUserNameOrLoginName(@Param("userName") String userName,
                                                 @Param("loginName") String loginName);

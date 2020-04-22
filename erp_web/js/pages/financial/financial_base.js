@@ -231,14 +231,12 @@
 			pageList: initPageNum,
 			columns:[[
 				{ field: 'id',width:35,align:"center",checkbox:true},
-				{ title: '操作',field: 'op',align:"center",width:90,formatter:function(value,rec) {
+				{ title: '操作',field: 'op',align:"center",width:90,
+					formatter:function(value,rec,index) {
 						var str = '';
-						var rowInfo = rec.id + 'AaBb' + rec.billno+ 'AaBb' + rec.billtime+ 'AaBb' + rec.remark
-							+ 'AaBb' + rec.accountid+ 'AaBb' + rec.accountname + 'AaBb' + rec.organid + 'AaBb' + rec.organname
-							+ 'AaBb' + rec.handspersonid + 'AaBb' + rec.handspersonname + 'AaBb' + rec.changeamount + 'AaBb' + rec.totalprice;
 						var orgId =  rec.organid ?  rec.organid : 0;
-						str += '<img title="查看" src="/js/easyui/themes/icons/list.png" style="cursor: pointer;" onclick="showAccountHead(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
-						str += '<img title="编辑" src="/js/easyui/themes/icons/pencil.png" style="cursor: pointer;" onclick="editAccountHead(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
+						str += '<img title="查看" src="/js/easyui/themes/icons/list.png" style="cursor: pointer;" onclick="showAccountHead(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
+						str += '<img title="编辑" src="/js/easyui/themes/icons/pencil.png" style="cursor: pointer;" onclick="editAccountHead(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
 						str += '<img title="删除" src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteAccountHead('+ rec.id +',' + orgId +',' + rec.totalprice + ');"/>';
 						return str;
 					}
@@ -699,43 +697,42 @@
 	}
 	
 	//编辑信息
-    function editAccountHead(accountHeadTotalInfo){
-    	var accountHeadInfo = accountHeadTotalInfo.split("AaBb");
-        $("#BillNo").val(accountHeadInfo[1]);
-        $("#BillTime").val(accountHeadInfo[2]);
-        $("#Remark").val(accountHeadInfo[3]);
-        $("#AccountId").val(accountHeadInfo[4]);
-        $('#OrganId').combobox('setValue', accountHeadInfo[6]);
-        $("#HandsPersonId").val(accountHeadInfo[8]);
-        $("#ChangeAmount").val(accountHeadInfo[10]);
-        var TotalPrice = accountHeadInfo[11];
-		preTotalPrice = accountHeadInfo[11]; //记录前一次合计金额，用于收预付款
+    function editAccountHead(index){
+		var res = $("#tableData").datagrid("getRows")[index];
+        $("#BillNo").val(res.billno);
+        $("#BillTime").val(res.billtime);
+        $("#Remark").val(res.remark);
+        $("#AccountId").val(res.accountid);
+        $('#OrganId').combobox('setValue', res.organid);
+        $("#HandsPersonId").val(res.handspersonid);
+        $("#ChangeAmount").val(res.changeamount);
+        var TotalPrice = res.totalprice;
+		preTotalPrice = res.totalprice; //记录前一次合计金额，用于收预付款
         var editTitle = listTitle.replace("列表","信息");
         $('#accountHeadDlg').dialog('open').dialog('setTitle','<img src="' + '/js/easyui/themes/icons/pencil.png"/>&nbsp;编辑' + editTitle);
         $(".window-mask").css({ width: webW ,height: webH});
-        accountHeadID = accountHeadInfo[0];
+        accountHeadID = res.id;
         
         initTableData_account("edit",TotalPrice); //明细列表
         reject(); //撤销下、刷新列表                
-        url = '/accountHead/update?id=' + accountHeadInfo[0];
+        url = '/accountHead/update?id=' + res.id;
     }
     
     //查看信息
-    function showAccountHead(accountHeadTotalInfo){
-    	var accountHeadInfo = accountHeadTotalInfo.split("AaBb");
-        $("#BillNoShow").text(accountHeadInfo[1]);
-        $("#BillTimeShow").text(accountHeadInfo[2]);	     
-        $("#RemarkShow").text(accountHeadInfo[3]);       
-        $("#AccountIdShow").text(accountHeadInfo[5]);
-        $('#OrganIdShow').text(accountHeadInfo[7]);
-        $("#HandsPersonIdShow").text(accountHeadInfo[9]);
-        $("#ChangeAmountShow").text(accountHeadInfo[10].replace("undefined","0"));
-        var TotalPrice = accountHeadInfo[11];
+    function showAccountHead(index){
+		var res = $("#tableData").datagrid("getRows")[index];
+        $("#BillNoShow").text(res.billno);
+        $("#BillTimeShow").text(res.billtime);
+        $("#RemarkShow").text(res.remark);
+        $("#AccountIdShow").text(res.accountname);
+        $('#OrganIdShow').text(res.organname);
+        $("#HandsPersonIdShow").text(res.handspersonname);
+        $("#ChangeAmountShow").text(res.changeamount);
+        var TotalPrice = res.totalprice;
         var showTitle = listTitle.replace("列表","信息");
         $('#accountHeadDlgShow').dialog('open').dialog('setTitle','<img src="/js/easyui/themes/icons/list.png"/>&nbsp;查看' + showTitle);
         $(".window-mask").css({ width: webW ,height: webH});
-        
-        accountHeadID = accountHeadInfo[0];
+        accountHeadID = res.id;
         initTableData_account_show(TotalPrice); //明细列表-查看状态
     }
 

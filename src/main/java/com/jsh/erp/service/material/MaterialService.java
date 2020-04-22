@@ -596,6 +596,17 @@ public class MaterialService {
         }
         return list;
     }
+
+    public Long getMaterialEnableSerialNumberCount(Map<String, Object> parameterMap)throws Exception {
+        Long count =null;
+        try{
+            count=  materialMapperEx.getMaterialEnableSerialNumberCount(parameterMap);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return count;
+    }
+
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteMaterialByIds(String ids) throws Exception{
         logService.insertLog("商品",

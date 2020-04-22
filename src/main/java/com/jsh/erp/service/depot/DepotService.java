@@ -77,8 +77,8 @@ public class DepotService {
         return list;
     }
 
-    public List<Depot> select(String name, Integer type, String remark, int offset, int rows)throws Exception {
-        List<Depot> list=null;
+    public List<DepotEx> select(String name, Integer type, String remark, int offset, int rows)throws Exception {
+        List<DepotEx> list=null;
         try{
             list=depotMapperEx.selectByConditionDepot(name, type, remark, offset, rows);
         }catch(Exception e){
@@ -191,15 +191,6 @@ public class DepotService {
         return list;
     }
 
-    public List<DepotEx> getDepotList(Map<String, Object> parameterMap)throws Exception {
-        List<DepotEx> list=null;
-        try{
-            list=  depotMapperEx.getDepotList(parameterMap);
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        return list;
-    }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteDepotByIds(String ids)throws Exception {
         logService.insertLog("仓库",
