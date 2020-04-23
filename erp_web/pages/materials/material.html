@@ -1646,6 +1646,26 @@
         function accept(objInfo) {
             append(0);
             removeit();
+            //判断单位是否填写正确
+            var meList = $("#materialExtendData").datagrid('getRows');
+            var unit = $("#Unit").val();
+            var manyUnitselected = $("#manyUnit").find("option:selected").text();
+            for(var i=0; i<meList.length; i++) {
+                var commodityUnit = meList[i].CommodityUnit;
+                if(unit) {
+                    if(commodityUnit != unit) {
+                        $.messager.alert('提示', '单位<b>' + commodityUnit + '</b>不包含在<b>' + unit + '</b>中！', 'warning');
+                        return;
+                    }
+                } else if(manyUnitselected) {
+                    var manyUnitInfo = manyUnitselected.substring(0, manyUnitselected.indexOf("("));
+                    var unitArr = manyUnitInfo.split(",");
+                    if(commodityUnit != unitArr[0] && commodityUnit != unitArr[1]) {
+                        $.messager.alert('提示', '单位<b>' + commodityUnit + '</b>不包含在<b>' + manyUnitInfo+ '</b>中！', 'warning');
+                        return;
+                    }
+                }
+            }
             if ($("#materialExtendData").datagrid('getChanges').length) {
                 if (!CheckData())
                     return false;
