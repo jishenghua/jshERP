@@ -131,15 +131,15 @@
                         <td style="text-align: left;"></td>
                     </tr>
                     <tr>
-                        <td colspan="7" style="padding:5px 20px 10px 0; width: 1130px">
-                            <table id="materialExtendData" style="width:100%;border-bottom-color:#FFFFFF"></table>
+                        <td colspan="7" style="padding:5px 20px 10px 0; width: 1200px">
+                            <table id="materialExtendData" style="width:1200px;border-bottom-color:#FFFFFF"></table>
                         </td>
                     </tr>
                     <tr>
                         <td style="height:30px;">备注</td>
                         <td style="padding:5px 20px 5px 5px" colspan="6">
                             <textarea name="Remark" id="Remark" class="easyui-textbox" data-options="multiline:true" placeholder="暂无备注信息"
-                                      style="width: 100%; height:40px;"></textarea>
+                                      style="width: 1130px; height:40px;"></textarea>
                         </td>
                     </tr>
                 </table>
@@ -491,12 +491,12 @@
                     {title: '最低售价', field: 'lowDecimal', width: 70},
                     {
                         title: '状态', field: 'enabled', width: 50, align: "center", formatter: function (value) {
-                            return value ? "启用" : "禁用";
+                            return value ? "<span style='color:green'>启用</span>" : "<span style='color:red'>禁用</span>";
                         }
                     },
                     {
                         title: '序列号', field: 'enableserialnumber', width: 70, align: "center", formatter: function (value) {
-                            return value=='1' ? "有" : "无";
+                            return value=='1' ? "<b>有</b>" : "无";
                         }
                     }
                 ]],
