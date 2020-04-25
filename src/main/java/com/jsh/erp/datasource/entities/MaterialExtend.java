@@ -20,6 +20,8 @@ public class MaterialExtend {
 
     private BigDecimal lowDecimal;
 
+    private String defaultFlag;
+
     private Date createTime;
 
     private String createSerial;
@@ -94,6 +96,14 @@ public class MaterialExtend {
 
     public void setLowDecimal(BigDecimal lowDecimal) {
         this.lowDecimal = lowDecimal;
+    }
+
+    public String getDefaultFlag() {
+        return defaultFlag;
+    }
+
+    public void setDefaultFlag(String defaultFlag) {
+        this.defaultFlag = defaultFlag == null ? null : defaultFlag.trim();
     }
 
     public Date getCreateTime() {

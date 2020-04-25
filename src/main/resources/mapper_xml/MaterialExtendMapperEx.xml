@@ -10,7 +10,7 @@
         from jsh_material_extend d
         where d.material_id = '${materialId}'
         and ifnull(d.delete_Flag,'0') !='1'
-        order by d.id asc
+        order by d.default_flag desc,d.id asc
     </select>
 
     <select id="getMaxTimeByTenantAndTime" resultType="java.lang.Long">

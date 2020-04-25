@@ -75,7 +75,7 @@ public class MaterialExtendService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public String saveDetials(String inserted, String deleted, String updated,Long materialId) throws Exception {
+    public String saveDetials(String inserted, String deleted, String updated, String sortList, Long materialId) throws Exception {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         logService.insertLog("商品价格扩展",
                 BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
@@ -83,6 +83,7 @@ public class MaterialExtendService {
         JSONArray insertedJson = JSONArray.parseArray(inserted);
         JSONArray deletedJson = JSONArray.parseArray(deleted);
         JSONArray updatedJson = JSONArray.parseArray(updated);
+        JSONArray sortJson = JSONArray.parseArray(sortList);
         if (null != insertedJson) {
             for (int i = 0; i < insertedJson.size(); i++) {
                 MaterialExtend materialExtend = new MaterialExtend();
@@ -143,7 +144,39 @@ public class MaterialExtendService {
                 if (StringUtils.isNotEmpty(tempUpdatedJson.getString("LowDecimal"))) {
                     materialExtend.setLowDecimal(tempUpdatedJson.getBigDecimal("LowDecimal"));
                 }
-                this.updateMaterialExtend(materialExtend, request);
+                this.updateMaterialExtend(materialExtend);
+            }
+        }
+        //处理条码的排序，基础单位排第一个
+        if (null != sortJson && sortJson.size()>0) {
+            //此处为更新的逻辑
+            for (int i = 0; i < sortJson.size(); i++) {
+                JSONObject tempSortJson = JSONObject.parseObject(sortJson.getString(i));
+                MaterialExtend materialExtend = new MaterialExtend();
+                if(StringUtil.isExist(tempSortJson.get("id"))) {
+                    materialExtend.setId(tempSortJson.getLong("id"));
+                }
+                if(StringUtil.isExist(tempSortJson.get("defaultFlag"))) {
+                    materialExtend.setDefaultFlag(tempSortJson.getString("defaultFlag"));
+                }
+                this.updateMaterialExtend(materialExtend);
+            }
+        } else {
+            //新增的时候将第一条记录设置为默认基础单位
+            MaterialExtendExample example = new MaterialExtendExample();
+            example.createCriteria().andMaterialIdEqualTo(materialId).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+            List<MaterialExtend> meList = materialExtendMapper.selectByExample(example);
+            if(meList!=null) {
+                for(int i=0; i<meList.size(); i++) {
+                    MaterialExtend materialExtend = new MaterialExtend();
+                    materialExtend.setId(meList.get(i).getId());
+                    if(i==0) {
+                        materialExtend.setDefaultFlag("1"); //默认
+                    } else {
+                        materialExtend.setDefaultFlag("0"); //非默认
+                    }
+                    this.updateMaterialExtend(materialExtend);
+                }
             }
         }
         return null;
@@ -167,9 +200,9 @@ public class MaterialExtendService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateMaterialExtend(MaterialExtend MaterialExtend, HttpServletRequest request) throws Exception{
+    public int updateMaterialExtend(MaterialExtend MaterialExtend) throws Exception{
         User user = userService.getCurrentUser();
-        MaterialExtend.setUpdateTime(new Date().getTime());
+        MaterialExtend.setUpdateTime(System.currentTimeMillis());
         MaterialExtend.setUpdateSerial(user.getLoginName());
         int res =0;
         try{

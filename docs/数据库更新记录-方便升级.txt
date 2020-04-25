@@ -764,3 +764,10 @@ alter table jsh_user change loginame login_name varchar(255) NOT NULL COMMENT '�
 -- 给功能表增加插件管理
 -- ----------------------------
 INSERT INTO `jsh_functions` VALUES (245,'000107', '插件管理', '0001', '/pages/manage/plugin.html', '\0', '0170', '', '电脑版', '', 'icon-notebook', '0');
+
+-- ----------------------------
+-- 时间：2020年04月25日
+-- by jishenghua
+-- 给商品扩展表增加 是否默认基础单位 字段
+-- ----------------------------
+alter table jsh_material_extend add default_flag VARCHAR(1) DEFAULT 1 COMMENT '是否为默认单位，1是，0否' after low_decimal;

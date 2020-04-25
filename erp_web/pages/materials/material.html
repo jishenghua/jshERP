@@ -15,6 +15,7 @@
     <link type="text/css" rel="stylesheet" href="/css/material.css"/>
     <script type="text/javascript" src="/js/easyui/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="/js/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="/js/easyui/datagrid-dnd.js"></script>
     <script src="/js/handlebars.js"></script>
     <script type="text/javascript" src="/js/common/outlook_in.js"></script>
     <script type="text/javascript" src="/js/common/common.js"></script>
@@ -1090,9 +1091,21 @@
                         {
                             reject(); //撤销
                         }
+                    },
+                    {
+                        id:'tips',
+                        text:'【注意：基础单位必须排在第一个】'
                     }
                 ],
-
+                onBeforeDrag : function(row) {
+                    //首次进来可以拖动
+                    if (editIndex !== undefined) {
+                        return false;
+                    }
+                },
+                onLoadSuccess:function(){
+                    $(this).datagrid('enableDnd');
+                },
                 onLoadError:function()
                 {
                     $.messager.alert('页面加载提示','页面加载异常，请稍后再试！','error');
@@ -1646,6 +1659,8 @@
         function accept(objInfo) {
             append(0);
             removeit();
+            //在更新商品信息的时候更新排序
+            var sortList = [];
             //判断单位是否填写正确
             var meList = $("#materialExtendData").datagrid('getRows');
             var unit = $("#Unit").val();
@@ -1666,6 +1681,19 @@
                     }
                 }
             }
+            for(var i=0; i<meList.length;i++) {
+                var sortObj = {};
+                if(meList[i].Id) {
+                    sortObj.id=meList[i].Id;
+                    if(i==0) {
+                        sortObj.defaultFlag=1;
+                    } else {
+                        sortObj.defaultFlag=0;
+                    }
+                    sortList.push(sortObj);
+                }
+            }
+            objInfo.sortList = sortList;
             if ($("#materialExtendData").datagrid('getChanges').length) {
                 if (!CheckData())
                     return false;
