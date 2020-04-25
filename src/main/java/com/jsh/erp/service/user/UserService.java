@@ -68,6 +68,7 @@ public class UserService {
 
     public List<User> getUser()throws Exception {
         UserExample example = new UserExample();
+        example.createCriteria().andStatusEqualTo(BusinessConstants.USER_STATUS_NORMAL);
         List<User> list=null;
         try{
             list=userMapper.selectByExample(example);
