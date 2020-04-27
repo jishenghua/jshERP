@@ -330,44 +330,53 @@
         oldUnit = "";
         unitID = 0;
         url = '/unit/add';
+        //单位名称事件
+        $("#basicName").textbox('textbox').bind("keyup", function () {
+            $("#unitName").text($(this).val());
+        });
     }
 
     //保存信息
     $("#saveUnit").off("click").on("click", function () {
-        if (checkUnitName()) {
+        if(!$('#unitFM').form('validate')){
             return;
         }
-        var basicName = $.trim($("#basicName").val());
-        var otherName = $.trim($("#otherName").val());
-        var otherNum = $.trim($("#otherNum").val());
-        var name = basicName + "," + otherName + "(1:" + otherNum + ")";
-
-        $.ajax({
-            url: url,
-            type: "post",
-            dataType: "json",
-            data: ({
-                info: JSON.stringify({
-                    uname: name,
-                    basicUnit: basicName,
-                    otherUnit: otherName,
-                    ratio: otherNum
-                })
-            }),
-            success: function(res) {
-                if(res && res.code === 200) {
-                    $('#unitDlg').dialog('close');
-                    //加载完以后重新初始化
-                    var opts = $("#tableData").datagrid('options');
-                    showUnitDetails(opts.pageNumber, opts.pageSize);
-                }
-            },
-            //此处添加错误处理
-            error: function () {
-                $.messager.alert('提示', '保存计量单位异常，请稍后再试！', 'error');
+        else {
+            if (checkUnitName()) {
                 return;
             }
-        });
+            var basicName = $.trim($("#basicName").val());
+            var otherName = $.trim($("#otherName").val());
+            var otherNum = $.trim($("#otherNum").val());
+            var name = basicName + "," + otherName + "(1:" + otherNum + ")";
+
+            $.ajax({
+                url: url,
+                type: "post",
+                dataType: "json",
+                data: ({
+                    info: JSON.stringify({
+                        uname: name,
+                        basicUnit: basicName,
+                        otherUnit: otherName,
+                        ratio: otherNum
+                    })
+                }),
+                success: function (res) {
+                    if (res && res.code === 200) {
+                        $('#unitDlg').dialog('close');
+                        //加载完以后重新初始化
+                        var opts = $("#tableData").datagrid('options');
+                        showUnitDetails(opts.pageNumber, opts.pageSize);
+                    }
+                },
+                //此处添加错误处理
+                error: function () {
+                    $.messager.alert('提示', '保存计量单位异常，请稍后再试！', 'error');
+                    return;
+                }
+            });
+        }
     });
 
     //编辑信息
@@ -382,6 +391,10 @@
         $("#otherNum").textbox("setValue", rowsdata.ratio);
         $("#unitName").text(rowsdata.basicUnit);
         url = '/unit/update?id=' + rowsdata.id;
+        //单位名称事件
+        $("#basicName").textbox('textbox').bind("keyup", function () {
+            $("#unitName").text($(this).val());
+        });
     }
 
     //检查名称是否存在 ++ 重名无法提示问题需要跟进
@@ -471,11 +484,6 @@
             //加载完以后重新初始化
             $("#searchBtn").click();
         }
-    });
-
-    //单位名称事件
-    $("#basicName").off("keyup").on("keyup", function () {
-        $("#unitName").text($(this).val());
     });
 </script>
 </body>

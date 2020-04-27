@@ -606,6 +606,76 @@ public class MaterialExtendExample {
             return (Criteria) this;
         }
 
+        public Criteria andDefaultFlagIsNull() {
+            addCriterion("default_flag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDefaultFlagIsNotNull() {
+            addCriterion("default_flag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDefaultFlagEqualTo(String value) {
+            addCriterion("default_flag =", value, "defaultFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andDefaultFlagNotEqualTo(String value) {
+            addCriterion("default_flag <>", value, "defaultFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andDefaultFlagGreaterThan(String value) {
+            addCriterion("default_flag >", value, "defaultFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andDefaultFlagGreaterThanOrEqualTo(String value) {
+            addCriterion("default_flag >=", value, "defaultFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andDefaultFlagLessThan(String value) {
+            addCriterion("default_flag <", value, "defaultFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andDefaultFlagLessThanOrEqualTo(String value) {
+            addCriterion("default_flag <=", value, "defaultFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andDefaultFlagLike(String value) {
+            addCriterion("default_flag like", value, "defaultFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andDefaultFlagNotLike(String value) {
+            addCriterion("default_flag not like", value, "defaultFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andDefaultFlagIn(List<String> values) {
+            addCriterion("default_flag in", values, "defaultFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andDefaultFlagNotIn(List<String> values) {
+            addCriterion("default_flag not in", values, "defaultFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andDefaultFlagBetween(String value1, String value2) {
+            addCriterion("default_flag between", value1, value2, "defaultFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andDefaultFlagNotBetween(String value1, String value2) {
+            addCriterion("default_flag not between", value1, value2, "defaultFlag");
+            return (Criteria) this;
+        }
+
         public Criteria andCreateTimeIsNull() {
             addCriterion("create_time is null");
             return (Criteria) this;

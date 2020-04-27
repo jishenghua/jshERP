@@ -157,7 +157,9 @@ public class MaterialController {
                         ratio = "";
                     } else {
                         ratio = material.getUnitName();
-                        ratio = ratio.substring(ratio.indexOf("("));
+                        if(ratio!=null) {
+                            ratio = ratio.substring(ratio.indexOf("("));
+                        }
                     }
                     //品名/型号/扩展信息/包装
                     String MaterialName = "";

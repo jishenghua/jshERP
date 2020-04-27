@@ -157,7 +157,7 @@ public class MaterialService {
                 mId = materials.get(0).getId();
             }
             JSONObject mObj = JSON.parseObject(beanJson);
-            materialExtendService.saveDetials(mObj.getString("inserted"), mObj.getString("deleted"), mObj.getString("updated"), mId);
+            materialExtendService.saveDetials(mObj.getString("inserted"), mObj.getString("deleted"), mObj.getString("updated"),mObj.getString("sortList"), mId);
             if(mObj.get("stock")!=null) {
                 String stockStr = mObj.getString("stock");
                 JSONArray stockArr = JSONArray.parseArray(stockStr);
@@ -193,7 +193,7 @@ public class MaterialService {
                 materialMapperEx.updateUnitIdNullByPrimaryKey(id); //将多单位置空
             }
             JSONObject mObj = JSON.parseObject(beanJson);
-            materialExtendService.saveDetials(mObj.getString("inserted"),mObj.getString("deleted"),mObj.getString("updated"),id);
+            materialExtendService.saveDetials(mObj.getString("inserted"),mObj.getString("deleted"),mObj.getString("updated"),mObj.getString("sortList"),id);
             if(mObj.get("stock")!=null) {
                 String stockStr = mObj.getString("stock");
                 JSONArray stockArr = JSONArray.parseArray(stockStr);

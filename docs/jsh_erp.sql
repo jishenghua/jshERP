@@ -705,6 +705,7 @@ CREATE TABLE `jsh_material_extend` (
   `commodity_decimal` decimal(24,6) DEFAULT NULL COMMENT '零售价格',
   `wholesale_decimal` decimal(24,6) DEFAULT NULL COMMENT '销售价格',
   `low_decimal` decimal(24,6) DEFAULT NULL COMMENT '最低售价',
+  `default_flag` varchar(1) DEFAULT '1' COMMENT '是否为默认单位，1是，0否',
   `create_time` datetime DEFAULT NULL COMMENT '创建日期',
   `create_serial` varchar(50) DEFAULT NULL COMMENT '创建人编码',
   `update_serial` varchar(50) DEFAULT NULL COMMENT '更新人编码',
@@ -712,20 +713,20 @@ CREATE TABLE `jsh_material_extend` (
   `tenant_id` bigint(20) DEFAULT NULL COMMENT '租户id',
   `delete_Flag` varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='产品价格扩展';
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='产品价格扩展';
 
 -- ----------------------------
 -- Records of jsh_material_extend
 -- ----------------------------
-INSERT INTO `jsh_material_extend` VALUES ('1', '587', '1000', '个', '11.000000', '22.000000', '22.000000', '22.000000', '2020-02-20 23:22:03', 'jsh', 'jsh', '1582212123066', '63', '0');
-INSERT INTO `jsh_material_extend` VALUES ('2', '568', '1001', '个', '11.000000', '15.000000', '15.000000', '15.000000', '2020-02-20 23:44:57', 'jsh', 'jsh', '1582213497098', '63', '0');
-INSERT INTO `jsh_material_extend` VALUES ('3', '569', '1002', '只', '10.000000', '15.000000', '15.000000', '13.000000', '2020-02-20 23:45:15', 'jsh', 'jsh', '1582213514731', '63', '0');
-INSERT INTO `jsh_material_extend` VALUES ('4', '570', '1003', '个', '8.000000', '15.000000', '14.000000', '13.000000', '2020-02-20 23:45:37', 'jsh', 'jsh', '1582213536875', '63', '0');
-INSERT INTO `jsh_material_extend` VALUES ('5', '577', '1004', '个', '10.000000', '20.000000', '20.000000', '20.000000', '2020-02-20 23:46:36', 'jsh', 'jsh', '1582213596494', '63', '0');
-INSERT INTO `jsh_material_extend` VALUES ('6', '577', '1005', '箱', '120.000000', '240.000000', '240.000000', '240.000000', '2020-02-20 23:46:36', 'jsh', 'jsh', '1582213596497', '63', '0');
-INSERT INTO `jsh_material_extend` VALUES ('7', '579', '1006', '个', '20.000000', '30.000000', '30.000000', '30.000000', '2020-02-20 23:47:04', 'jsh', 'jsh', '1582213624089', '63', '0');
-INSERT INTO `jsh_material_extend` VALUES ('8', '579', '1007', '箱', '240.000000', '360.000000', '360.000000', '360.000000', '2020-02-20 23:47:04', 'jsh', 'jsh', '1582213624092', '63', '0');
-INSERT INTO `jsh_material_extend` VALUES ('9', '586', '1008', '个', '12.000000', '15.000000', '15.000000', '15.000000', '2020-02-20 23:47:23', 'jsh', 'jsh', '1582213643084', '63', '0');
+INSERT INTO `jsh_material_extend` VALUES ('1', '587', '1000', '个', '11.000000', '22.000000', '22.000000', '22.000000', '1', '2020-02-20 23:22:03', 'jsh', 'jsh', '1587656613132', '63', '0');
+INSERT INTO `jsh_material_extend` VALUES ('2', '568', '1001', '个', '11.000000', '15.000000', '15.000000', '15.000000', '1', '2020-02-20 23:44:57', 'jsh', 'jsh', '1582213497098', '63', '0');
+INSERT INTO `jsh_material_extend` VALUES ('3', '569', '1002', '只', '10.000000', '15.000000', '15.000000', '13.000000', '1', '2020-02-20 23:45:15', 'jsh', 'jsh', '1582213514731', '63', '0');
+INSERT INTO `jsh_material_extend` VALUES ('4', '570', '1003', '个', '8.000000', '15.000000', '14.000000', '13.000000', '1', '2020-02-20 23:45:37', 'jsh', 'jsh', '1587657604430', '63', '0');
+INSERT INTO `jsh_material_extend` VALUES ('5', '577', '1004', '个', '10.000000', '20.000000', '20.000000', '20.000000', '1', '2020-02-20 23:46:36', 'jsh', 'jsh', '1582213596494', '63', '0');
+INSERT INTO `jsh_material_extend` VALUES ('6', '577', '1005', '箱', '120.000000', '240.000000', '240.000000', '240.000000', '1', '2020-02-20 23:46:36', 'jsh', 'jsh', '1582213596497', '63', '0');
+INSERT INTO `jsh_material_extend` VALUES ('7', '579', '1006', '个', '20.000000', '30.000000', '30.000000', '30.000000', '1', '2020-02-20 23:47:04', 'jsh', 'jsh', '1587784928581', '63', '0');
+INSERT INTO `jsh_material_extend` VALUES ('8', '579', '1007', '箱', '240.000000', '360.000000', '360.000000', '360.000000', '0', '2020-02-20 23:47:04', 'jsh', 'jsh', '1587784928585', '63', '0');
+INSERT INTO `jsh_material_extend` VALUES ('9', '586', '1008', '个', '12.000000', '15.000000', '15.000000', '15.000000', '1', '2020-02-20 23:47:23', 'jsh', 'jsh', '1582213643084', '63', '0');
 
 -- ----------------------------
 -- Table structure for jsh_material_stock

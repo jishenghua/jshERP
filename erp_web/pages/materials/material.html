@@ -15,6 +15,7 @@
     <link type="text/css" rel="stylesheet" href="/css/material.css"/>
     <script type="text/javascript" src="/js/easyui/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="/js/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="/js/easyui/datagrid-dnd.js"></script>
     <script src="/js/handlebars.js"></script>
     <script type="text/javascript" src="/js/common/outlook_in.js"></script>
     <script type="text/javascript" src="/js/common/common.js"></script>
@@ -131,15 +132,15 @@
                         <td style="text-align: left;"></td>
                     </tr>
                     <tr>
-                        <td colspan="7" style="padding:5px 20px 10px 0; width: 1130px">
-                            <table id="materialExtendData" style="width:100%;border-bottom-color:#FFFFFF"></table>
+                        <td colspan="7" style="padding:5px 20px 10px 0; width: 1200px">
+                            <table id="materialExtendData" style="width:1200px;border-bottom-color:#FFFFFF"></table>
                         </td>
                     </tr>
                     <tr>
                         <td style="height:30px;">备注</td>
                         <td style="padding:5px 20px 5px 5px" colspan="6">
                             <textarea name="Remark" id="Remark" class="easyui-textbox" data-options="multiline:true" placeholder="暂无备注信息"
-                                      style="width: 100%; height:40px;"></textarea>
+                                      style="width: 1130px; height:40px;"></textarea>
                         </td>
                     </tr>
                 </table>
@@ -491,12 +492,12 @@
                     {title: '最低售价', field: 'lowDecimal', width: 70},
                     {
                         title: '状态', field: 'enabled', width: 50, align: "center", formatter: function (value) {
-                            return value ? "启用" : "禁用";
+                            return value ? "<span style='color:green'>启用</span>" : "<span style='color:red'>禁用</span>";
                         }
                     },
                     {
                         title: '序列号', field: 'enableserialnumber', width: 70, align: "center", formatter: function (value) {
-                            return value=='1' ? "有" : "无";
+                            return value=='1' ? "<span style='color:green'>有</span>" : "无";
                         }
                     }
                 ]],
@@ -1090,9 +1091,21 @@
                         {
                             reject(); //撤销
                         }
+                    },
+                    {
+                        id:'tips',
+                        text:'【注意：基础单位必须排在第一个】'
                     }
                 ],
-
+                onBeforeDrag : function(row) {
+                    //首次进来可以拖动
+                    if (editIndex !== undefined) {
+                        return false;
+                    }
+                },
+                onLoadSuccess:function(){
+                    $(this).datagrid('enableDnd');
+                },
                 onLoadError:function()
                 {
                     $.messager.alert('页面加载提示','页面加载异常，请稍后再试！','error');
@@ -1646,6 +1659,41 @@
         function accept(objInfo) {
             append(0);
             removeit();
+            //在更新商品信息的时候更新排序
+            var sortList = [];
+            //判断单位是否填写正确
+            var meList = $("#materialExtendData").datagrid('getRows');
+            var unit = $("#Unit").val();
+            var manyUnitselected = $("#manyUnit").find("option:selected").text();
+            for(var i=0; i<meList.length; i++) {
+                var commodityUnit = meList[i].CommodityUnit;
+                if(unit) {
+                    if(commodityUnit != unit) {
+                        $.messager.alert('提示', '单位<b>' + commodityUnit + '</b>不包含在<b>' + unit + '</b>中！', 'warning');
+                        return;
+                    }
+                } else if(manyUnitselected) {
+                    var manyUnitInfo = manyUnitselected.substring(0, manyUnitselected.indexOf("("));
+                    var unitArr = manyUnitInfo.split(",");
+                    if(commodityUnit != unitArr[0] && commodityUnit != unitArr[1]) {
+                        $.messager.alert('提示', '单位<b>' + commodityUnit + '</b>不包含在<b>' + manyUnitInfo+ '</b>中！', 'warning');
+                        return;
+                    }
+                }
+            }
+            for(var i=0; i<meList.length;i++) {
+                var sortObj = {};
+                if(meList[i].Id) {
+                    sortObj.id=meList[i].Id;
+                    if(i==0) {
+                        sortObj.defaultFlag=1;
+                    } else {
+                        sortObj.defaultFlag=0;
+                    }
+                    sortList.push(sortObj);
+                }
+            }
+            objInfo.sortList = sortList;
             if ($("#materialExtendData").datagrid('getChanges').length) {
                 if (!CheckData())
                     return false;
