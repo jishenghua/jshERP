@@ -460,7 +460,7 @@
         userID = rowsdata.id;
         //焦点在名称输入框==定焦在输入文字后面
         $("#username").val("").focus().val(rowsdata.username);
-        $("#loginName").attr("readonly","readonly");
+        $("#loginName").textbox('textbox').attr('readonly',true);  //设置输入框为禁用
         /**机构选择*/
         $("#selectType").val("org");
         url = '/user/updateUser?id=' + rowsdata.id;
