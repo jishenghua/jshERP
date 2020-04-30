@@ -25,7 +25,7 @@
                     <span class="info-box-icon bg-aqua"><i class="fa fa-shopping-bag"></i></span>
                     <div class="info-box-content">
                         <span class="info-box-text">今日累计销售</span>
-                        <span id="todaySale" class="info-box-number">0元</span>
+                        <span id="todaySale" class="info-box-number"></span>
                     </div>
                 </div>
             </div>
@@ -34,7 +34,7 @@
                     <span class="info-box-icon bg-red"><i class="fa fa-shopping-cart"></i></span>
                     <div class="info-box-content">
                         <span class="info-box-text">本月累计销售</span>
-                        <span id="thisMonthSale" class="info-box-number">0元</span>
+                        <span id="thisMonthSale" class="info-box-number"></span>
                     </div>
                 </div>
             </div>
@@ -44,16 +44,16 @@
                     <span class="info-box-icon bg-green"><i class="fa fa-shopping-basket"></i></span>
                     <div class="info-box-content">
                         <span class="info-box-text">本月累计进货</span>
-                        <span id="thisMonthBuy" class="info-box-number">0元</span>
+                        <span id="thisMonthBuy" class="info-box-number"></span>
                     </div>
                 </div>
             </div>
             <div class="col-md-3 col-sm-6 col-xs-12">
                 <div class="info-box">
-                    <span class="info-box-icon bg-yellow"><i class="fa fa-users"></i></span>
+                    <span class="info-box-icon bg-yellow"><i class="fa fa-rmb"></i></span>
                     <div class="info-box-content">
-                        <span class="info-box-text">用户数量</span>
-                        <span id="thisUserSum" class="info-box-number">0</span>
+                        <span class="info-box-text">本月利润(含财务部分)</span>
+                        <span id="thisMonthAmount" class="info-box-number"></span>
                     </div>
                 </div>
             </div>
@@ -130,9 +130,9 @@
             success: function (res) {
                 if(res && res.code === 200) {
                     if(res.data) {
-                        $("#todaySale").text(res.data.todaySale);
-                        $("#thisMonthSale").text(res.data.thisMonthSale);
-                        $("#thisMonthBuy").text(res.data.thisMonthBuy);
+                        $("#todaySale").text((res.data.todaySale).toFixed(2));
+                        $("#thisMonthSale").text((res.data.thisMonthSale).toFixed(2));
+                        $("#thisMonthBuy").text((res.data.thisMonthBuy).toFixed(2));
                     }
                 }
             },
@@ -145,20 +145,12 @@
     $(function () {
         $.ajax({
             type: "get",
-            url: "/user/list",
+            url: "/account/getStatistics",
             dataType: "json",
-            data: ({
-                search: JSON.stringify({
-                    userName: "",
-                    loginName: ""
-                }),
-                currentPage: 1,
-                pageSize: 10
-            }),
             success: function (res) {
-                if(res && res.code === 200) {
-                    if(res.data && res.data.page) {
-                        $("#thisUserSum").text(res.data.page.total);
+                if (res && res.code === 200) {
+                    if(res.data) {
+                        $("#thisMonthAmount").text((res.data.allMonthAmount-0).toFixed(2));
                     }
                 }
             },
