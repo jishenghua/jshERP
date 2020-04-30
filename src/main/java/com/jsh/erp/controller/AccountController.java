@@ -6,6 +6,7 @@ import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.Account;
 import com.jsh.erp.datasource.vo.AccountVo4InOutList;
+import com.jsh.erp.datasource.vo.AccountVo4List;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.account.AccountService;
 import com.jsh.erp.utils.BaseResponseInfo;
@@ -180,6 +181,26 @@ public class AccountController {
                     ExceptionConstants.ACCOUNT_DELETE_FAILED_MSG);
         }
         return result;
+    }
+
+    /**
+     * 结算账户的统计
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/getStatistics")
+    public BaseResponseInfo getStatistics(HttpServletRequest request) throws Exception {
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            Map<String, Object> map = accountService.getStatistics();
+            res.code = 200;
+            res.data = map;
+        } catch(Exception e){
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
     }
 
 }
