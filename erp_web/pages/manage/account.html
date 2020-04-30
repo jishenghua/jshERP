@@ -425,27 +425,32 @@
         if (checkAccountName()) {
             return;
         }
-        $.ajax({
-            url: url,
-            type: "post",
-            dataType: "json",
-            data: ({
-                info: JSON.stringify($("#accountFM").serializeObject())
-            }),
-            success: function(res) {
-                if(res && res.code === 200) {
-                    $('#accountDlg').dialog('close');
-                    //加载完以后重新初始化
-                    var opts = $("#tableData").datagrid('options');
-                    showAccountDetails(opts.pageNumber, opts.pageSize);
+        if(!$('#accountFM').form('validate')){
+            return;
+        }
+        else {
+            $.ajax({
+                url: url,
+                type: "post",
+                dataType: "json",
+                data: ({
+                    info: JSON.stringify($("#accountFM").serializeObject())
+                }),
+                success: function (res) {
+                    if (res && res.code === 200) {
+                        $('#accountDlg').dialog('close');
+                        //加载完以后重新初始化
+                        var opts = $("#tableData").datagrid('options');
+                        showAccountDetails(opts.pageNumber, opts.pageSize);
+                    }
+                },
+                //此处添加错误处理
+                error: function () {
+                    $.messager.alert('提示', '保存结算账户异常，请稍后再试！', 'error');
+                    return;
                 }
-            },
-            //此处添加错误处理
-            error: function () {
-                $.messager.alert('提示', '保存结算账户异常，请稍后再试！', 'error');
-                return;
-            }
-        });
+            });
+        }
     });
 
     //编辑结算账户
