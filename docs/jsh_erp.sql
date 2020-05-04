@@ -570,21 +570,13 @@ CREATE TABLE `jsh_material` (
   `CategoryId` bigint(20) DEFAULT NULL COMMENT '产品类型',
   `Name` varchar(50) DEFAULT NULL COMMENT '名称',
   `Mfrs` varchar(50) DEFAULT NULL COMMENT '制造商',
-  `Packing` decimal(24,6) DEFAULT NULL COMMENT '包装（KG/包）',
   `SafetyStock` decimal(24,6) DEFAULT NULL COMMENT '安全存量（KG）',
   `Model` varchar(50) DEFAULT NULL COMMENT '型号',
   `Standard` varchar(50) DEFAULT NULL COMMENT '规格',
   `Color` varchar(50) DEFAULT NULL COMMENT '颜色',
   `Unit` varchar(50) DEFAULT NULL COMMENT '单位-单个',
   `Remark` varchar(100) DEFAULT NULL COMMENT '备注',
-  `RetailPrice` decimal(24,6) DEFAULT NULL COMMENT '零售价',
-  `LowPrice` decimal(24,6) DEFAULT NULL COMMENT '最低售价',
-  `PresetPriceOne` decimal(24,6) DEFAULT NULL COMMENT '预设售价一',
-  `PresetPriceTwo` decimal(24,6) DEFAULT NULL COMMENT '预设售价二',
   `UnitId` bigint(20) DEFAULT NULL COMMENT '计量单位Id',
-  `FirstOutUnit` varchar(50) DEFAULT NULL COMMENT '首选出库单位',
-  `FirstInUnit` varchar(50) DEFAULT NULL COMMENT '首选入库单位',
-  `PriceStrategy` varchar(500) DEFAULT NULL COMMENT '价格策略',
   `Enabled` bit(1) DEFAULT NULL COMMENT '启用 0-禁用  1-启用',
   `OtherField1` varchar(50) DEFAULT NULL COMMENT '自定义1',
   `OtherField2` varchar(50) DEFAULT NULL COMMENT '自定义2',
@@ -600,30 +592,30 @@ CREATE TABLE `jsh_material` (
 -- ----------------------------
 -- Records of jsh_material
 -- ----------------------------
-INSERT INTO `jsh_material` VALUES ('564', '14', '商品1', '', null, null, 'sp1', '', '', '个', '', '22.000000', '22.000000', '22.000000', '22.000000', null, null, null, '[{\"basic\":{\"Unit\":\"\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\",\"enableSerialNumber\":\"0\"}},{\"other\":{\"Unit\":\"\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\"}}]', '', '', '', '', '0', '1', '0');
-INSERT INTO `jsh_material` VALUES ('565', '14', '商品2', '', null, null, 'sp2', '', '', '个', '', '44.000000', '44.000000', '44.000000', '44.000000', null, null, null, '[{\"basic\":{\"Unit\":\"\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\",\"EnableSerialNumber\":\"1\"}},{\"other\":{\"Unit\":\"\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\"}}]', '', '', '', '', '1', '1', '0');
-INSERT INTO `jsh_material` VALUES ('566', '15', '商品666', '', null, null, 'sp666', '', '', '个', '', '5.000000', '4.000000', '3.000000', '2.000000', null, null, null, '[{\"basic\":{\"Unit\":\"\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\",\"EnableSerialNumber\":\"0\"}},{\"other\":{\"Unit\":\"\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\"}}]', '', '', '', '', '0', '117', '0');
-INSERT INTO `jsh_material` VALUES ('567', null, '商品1', '', null, null, 'dsp1', '', '', '个', '', '11.000000', '11.000000', '11.000000', '11.000000', null, null, null, '[{\"basic\":{\"Unit\":\"\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\",\"EnableSerialNumber\":\"0\"}},{\"other\":{\"Unit\":\"\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\"}}]', '', '', '', '', '0', '115', '0');
-INSERT INTO `jsh_material` VALUES ('568', '17', '商品1', '', null, '100.000000', 'sp1', '', '', '个', '', null, null, null, null, null, null, null, '[{\"basic\":{\"Unit\":\"\",\"EnableSerialNumber\":\"0\"}},{\"other\":{\"Unit\":\"\"}}]', '', '', '', '', '0', '63', '0');
-INSERT INTO `jsh_material` VALUES ('569', '17', '商品2', '', null, '200.000000', 'sp2', '', '', '只', '', '5.000000', '5.000000', '5.000000', '5.000000', null, null, null, '[{\"basic\":{\"Unit\":\"\",\"EnableSerialNumber\":\"0\"}},{\"other\":{\"Unit\":\"\"}}]', '', '', '', '', '0', '63', '0');
-INSERT INTO `jsh_material` VALUES ('570', '17', '商品3', '', null, '300.000000', 'sp3', '', '', '个', '', null, null, null, null, null, null, null, '[{\"basic\":{\"Unit\":\"\",\"EnableSerialNumber\":\"0\"}},{\"other\":{\"Unit\":\"\"}}]', '', '', '', '', '0', '63', '0');
-INSERT INTO `jsh_material` VALUES ('571', null, '商品4', '', null, null, 'sp4', '', '', '', '', null, null, null, null, '15', '个', '箱', '[{\"basic\":{\"Unit\":\"个\",\"RetailPrice\":\"3\",\"LowPrice\":\"2\",\"PresetPriceOne\":\"2\",\"PresetPriceTwo\":\"2\",\"EnableSerialNumber\":\"0\"}},{\"other\":{\"Unit\":\"箱\",\"RetailPrice\":\"36\",\"LowPrice\":\"24\",\"PresetPriceOne\":\"24\",\"PresetPriceTwo\":\"24\"}}]', '', '', '', '', '0', '63', '1');
-INSERT INTO `jsh_material` VALUES ('572', null, '234234', '', null, null, '234234', '', '', '', '', null, null, null, null, null, null, null, '[{\"basic\":{\"Unit\":\"\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\",\"EnableSerialNumber\":\"0\"}},{\"other\":{\"Unit\":\"\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\"}}]', '', '', '', '', '0', '63', '1');
-INSERT INTO `jsh_material` VALUES ('573', null, '12312', '', null, null, '12', '', '', '', '', null, null, null, null, null, null, null, '[{\"basic\":{\"Unit\":\"\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\",\"EnableSerialNumber\":\"0\"}},{\"other\":{\"Unit\":\"\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\"}}]', '', '', '', '', '0', '63', '1');
-INSERT INTO `jsh_material` VALUES ('574', null, '商品5', '', null, null, '213qw', '', '', '个', '', null, null, null, null, null, null, null, '[{\"basic\":{\"Unit\":\"\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\",\"EnableSerialNumber\":\"0\"}},{\"other\":{\"Unit\":\"\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\"}}]', '', '', '', '', '0', '63', '1');
-INSERT INTO `jsh_material` VALUES ('575', null, '商品6', '', null, null, 'sp6', '', '', '', '', null, null, null, null, '15', '', '', '[{\"basic\":{\"Unit\":\"个\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\",\"EnableSerialNumber\":\"0\"}},{\"other\":{\"Unit\":\"箱\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\"}}]', '', '', '', '', '0', '63', '1');
-INSERT INTO `jsh_material` VALUES ('576', null, '商品7', '', null, null, 'sp7', '', '', '', '', null, null, null, null, '15', '', '', '[{\"basic\":{\"Unit\":\"个\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\",\"EnableSerialNumber\":\"0\"}},{\"other\":{\"Unit\":\"箱\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\"}}]', '', '', '', '', '0', '63', '1');
-INSERT INTO `jsh_material` VALUES ('577', null, '商品8', '', null, null, 'sp8', '', '', '', '', null, null, null, null, '15', '', '', '[{\"basic\":{\"Unit\":\"\",\"EnableSerialNumber\":\"0\"}},{\"other\":{\"Unit\":\"\"}}]', '', '', '', '', '0', '63', '0');
-INSERT INTO `jsh_material` VALUES ('578', '17', '商品9', '', null, null, 'sp9', '', '', '', '', null, null, null, null, '15', '', '', '[{\"basic\":{\"Unit\":\"个\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\",\"EnableSerialNumber\":\"0\"}},{\"other\":{\"Unit\":\"箱\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\"}}]', '', '', '', '', '0', '63', '1');
-INSERT INTO `jsh_material` VALUES ('579', null, '商品17', '', null, null, 'sp17', '', '', '', '', null, null, null, null, '15', '', '', '[{\"basic\":{\"Unit\":\"\",\"EnableSerialNumber\":\"0\"}},{\"other\":{\"Unit\":\"\"}}]', '', '', '', '', '0', '63', '0');
-INSERT INTO `jsh_material` VALUES ('580', null, '15', '', null, null, '15', '', '', '', '', null, null, null, null, '15', '', '', '[{\"basic\":{\"Unit\":\"个\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\",\"EnableSerialNumber\":\"0\"}},{\"other\":{\"Unit\":\"箱\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\"}}]', '', '', '', '', '0', '63', '1');
-INSERT INTO `jsh_material` VALUES ('581', null, '16', '', null, null, '16', '', '', '', '', null, null, null, null, '15', '', '', '[{\"basic\":{\"Unit\":\"个\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\",\"EnableSerialNumber\":\"0\"}},{\"other\":{\"Unit\":\"箱\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\"}}]', '', '', '', '', '0', '63', '1');
-INSERT INTO `jsh_material` VALUES ('582', null, '商品20', '', null, null, 'sp2', '', '', '个', '', null, null, null, null, null, '', '', '[{\"basic\":{\"Unit\":\"\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\",\"EnableSerialNumber\":\"0\"}},{\"other\":{\"Unit\":\"\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\"}}]', '', '', '', '', '0', '63', '1');
-INSERT INTO `jsh_material` VALUES ('583', null, 'wer', '', null, null, 'rqwe', '', '', '', '', null, null, null, null, '15', '', '', '[{\"basic\":{\"Unit\":\"个\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\",\"EnableSerialNumber\":\"0\"}},{\"other\":{\"Unit\":\"箱\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\"}}]', '', '', '', '', '0', '63', '1');
-INSERT INTO `jsh_material` VALUES ('584', null, 'sfds', '', null, null, 'a2233', '12', '2', 'ge', '', '1.000000', '2.000000', '3.000000', '4.000000', null, '', '', '[{\"basic\":{\"Unit\":\"\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\",\"EnableSerialNumber\":\"0\"}},{\"other\":{\"Unit\":\"\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\"}}]', '', '', '', '', '0', '63', '1');
-INSERT INTO `jsh_material` VALUES ('585', null, 'asdf', '', null, null, 'adsfasdf', '', '', '', '', null, null, null, null, '15', '', '', '[{\"basic\":{\"Unit\":\"个\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\",\"EnableSerialNumber\":\"0\"}},{\"other\":{\"Unit\":\"箱\",\"RetailPrice\":\"\",\"LowPrice\":\"\",\"PresetPriceOne\":\"\",\"PresetPriceTwo\":\"\"}}]', '', '', '', '', '0', '63', '1');
-INSERT INTO `jsh_material` VALUES ('586', null, '序列号商品测试', '', null, null, 'xlh123', '', '', '个', '', null, null, null, null, null, null, null, '[{\"basic\":{\"Unit\":\"\",\"EnableSerialNumber\":\"1\"}},{\"other\":{\"Unit\":\"\"}}]', '', '', '', '', '1', '63', '0');
-INSERT INTO `jsh_material` VALUES ('587', null, '商品test1', '', null, null, '', 'test1', '', '个', '', null, null, null, null, null, null, null, '[{\"basic\":{\"Unit\":\"\",\"EnableSerialNumber\":\"0\"}},{\"other\":{\"Unit\":\"\"}}]', '', '', '', '', '0', '63', '0');
+INSERT INTO `jsh_material` VALUES ('564', '14', '商品1', '', null, 'sp1', '', '', '个', '', null, '', '', '', '', '0', '1', '0');
+INSERT INTO `jsh_material` VALUES ('565', '14', '商品2', '', null, 'sp2', '', '', '个', '', null, '', '', '', '', '1', '1', '0');
+INSERT INTO `jsh_material` VALUES ('566', '15', '商品666', '', null, 'sp666', '', '', '个', '', null, '', '', '', '', '0', '117', '0');
+INSERT INTO `jsh_material` VALUES ('567', null, '商品1', '', null, 'dsp1', '', '', '个', '', null, '', '', '', '', '0', '115', '0');
+INSERT INTO `jsh_material` VALUES ('568', '17', '商品1', '', '100.000000', 'sp1', '', '', '个', '', null, '', '', '', '', '0', '63', '0');
+INSERT INTO `jsh_material` VALUES ('569', '17', '商品2', '', '200.000000', 'sp2', '', '', '只', '', null, '', '', '', '', '0', '63', '0');
+INSERT INTO `jsh_material` VALUES ('570', '17', '商品3', '', '300.000000', 'sp3', '', '', '个', '', null, '', '', '', '', '0', '63', '0');
+INSERT INTO `jsh_material` VALUES ('571', null, '商品4', '', null, 'sp4', '', '', '', '', '15', '', '', '', '', '0', '63', '1');
+INSERT INTO `jsh_material` VALUES ('572', null, '234234', '', null, '234234', '', '', '', '', null, '', '', '', '', '0', '63', '1');
+INSERT INTO `jsh_material` VALUES ('573', null, '12312', '', null, '12', '', '', '', '', null, '', '', '', '', '0', '63', '1');
+INSERT INTO `jsh_material` VALUES ('574', null, '商品5', '', null, '213qw', '', '', '个', '', null, '', '', '', '', '0', '63', '1');
+INSERT INTO `jsh_material` VALUES ('575', null, '商品6', '', null, 'sp6', '', '', '', '', '15', '', '', '', '', '0', '63', '1');
+INSERT INTO `jsh_material` VALUES ('576', null, '商品7', '', null, 'sp7', '', '', '', '', '15', '', '', '', '', '0', '63', '1');
+INSERT INTO `jsh_material` VALUES ('577', null, '商品8', '', null, 'sp8', '', '', '', '', '15', '', '', '', '', '0', '63', '0');
+INSERT INTO `jsh_material` VALUES ('578', '17', '商品9', '', null, 'sp9', '', '', '', '', '15', '', '', '', '', '0', '63', '1');
+INSERT INTO `jsh_material` VALUES ('579', null, '商品17', '', null, 'sp17', '', '', '', '', '15', '', '', '', '', '0', '63', '0');
+INSERT INTO `jsh_material` VALUES ('580', null, '15', '', null, '15', '', '', '', '', '15', '', '', '', '', '0', '63', '1');
+INSERT INTO `jsh_material` VALUES ('581', null, '16', '', null, '16', '', '', '', '', '15', '', '', '', '', '0', '63', '1');
+INSERT INTO `jsh_material` VALUES ('582', null, '商品20', '', null, 'sp2', '', '', '个', '', null, '', '', '', '', '0', '63', '1');
+INSERT INTO `jsh_material` VALUES ('583', null, 'wer', '', null, 'rqwe', '', '', '', '', '15', '', '', '', '', '0', '63', '1');
+INSERT INTO `jsh_material` VALUES ('584', null, 'sfds', '', null, 'a2233', '12', '2', 'ge', '', null, '', '', '', '', '0', '63', '1');
+INSERT INTO `jsh_material` VALUES ('585', null, 'asdf', '', null, 'adsfasdf', '', '', '', '', '15', '', '', '', '', '0', '63', '1');
+INSERT INTO `jsh_material` VALUES ('586', null, '序列号商品测试', '', null, 'xlh123', '', '', '个', '', null, '', '', '', '', '1', '63', '0');
+INSERT INTO `jsh_material` VALUES ('587', null, '商品test1', '', null, '', 'test1', '', '个', '', null, '', '', '', '', '0', '63', '0');
 
 -- ----------------------------
 -- Table structure for jsh_materialcategory
