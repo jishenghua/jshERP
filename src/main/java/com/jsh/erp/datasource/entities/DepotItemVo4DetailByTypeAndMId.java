@@ -1,5 +1,6 @@
 package com.jsh.erp.datasource.entities;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class DepotItemVo4DetailByTypeAndMId {
@@ -8,7 +9,7 @@ public class DepotItemVo4DetailByTypeAndMId {
 
     private String newtype;
 
-    private Integer bnum;
+    private BigDecimal bnum;
 
     private Date otime;
 
@@ -28,11 +29,11 @@ public class DepotItemVo4DetailByTypeAndMId {
         this.newtype = newtype;
     }
 
-    public Integer getBnum() {
+    public BigDecimal getBnum() {
         return bnum;
     }
 
-    public void setBnum(Integer bnum) {
+    public void setBnum(BigDecimal bnum) {
         this.bnum = bnum;
     }
 

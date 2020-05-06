@@ -5,7 +5,7 @@
     <resultMap id="DetailByTypeAndMIdResultMap" type="com.jsh.erp.datasource.entities.DepotItemVo4DetailByTypeAndMId">
         <result column="Number" jdbcType="VARCHAR" property="number" />
         <result column="newType" jdbcType="VARCHAR" property="newtype" />
-        <result column="b_num" jdbcType="BIGINT" property="bnum" />
+        <result column="b_num" jdbcType="DECIMAL" property="bnum" />
         <result column="oTime" jdbcType="TIMESTAMP" property="otime" />
     </resultMap>
 
