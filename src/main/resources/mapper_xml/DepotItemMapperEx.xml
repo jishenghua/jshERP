@@ -5,7 +5,7 @@
     <resultMap id="DetailByTypeAndMIdResultMap" type="com.jsh.erp.datasource.entities.DepotItemVo4DetailByTypeAndMId">
         <result column="Number" jdbcType="VARCHAR" property="number" />
         <result column="newType" jdbcType="VARCHAR" property="newtype" />
-        <result column="b_num" jdbcType="BIGINT" property="bnum" />
+        <result column="b_num" jdbcType="DECIMAL" property="bnum" />
         <result column="oTime" jdbcType="TIMESTAMP" property="otime" />
     </resultMap>
 
@@ -38,8 +38,7 @@
         <result column="MaterialUnit" jdbcType="VARCHAR" property="MaterialUnit" />
         <result column="UName" jdbcType="VARCHAR" property="UName" />
         <result column="MColor" jdbcType="VARCHAR" property="MColor" />
-        <result column="PresetPriceOne" jdbcType="DECIMAL" property="presetPriceOne" />
-        <result column="PriceStrategy" jdbcType="VARCHAR" property="priceStrategy" />
+        <result column="purchase_decimal" jdbcType="DECIMAL" property="purchaseDecimal" />
     </resultMap>
 
     <resultMap id="ResultStockWarningCount" type="com.jsh.erp.datasource.vo.DepotItemStockWarningCount">
@@ -149,11 +148,13 @@
 
     <select id="findByAll" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultByMaterial">
         select m.id MId, m.Name MName, m.Model MModel, m.Unit MaterialUnit, m.Color MColor,
-        m.PresetPriceOne, m.PriceStrategy, u.UName UName
+        me.purchase_decimal, u.UName UName
         from jsh_depotitem di
         inner join jsh_material m on di.MaterialId=m.id  and ifnull(m.delete_Flag,'0') !='1'
+        left join jsh_material_extend me on me.id=di.material_extend_id  and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_unit u on m.UnitId=u.id and ifnull(u.delete_Flag,'0') !='1'
         where 1=1
+        and me.default_flag=1
         <if test="headIds != null">
             and di.HeaderId in (${headIds})
         </if>
@@ -161,7 +162,7 @@
             and di.MaterialId in (${materialIds})
         </if>
         and ifnull(di.delete_Flag,'0') !='1'
-        group by m.id,m.Name, m.Model, m.Unit, m.Color, m.PresetPriceOne, m.PriceStrategy, u.UName
+        group by m.id,m.Name, m.Model, m.Unit, m.Color, me.purchase_decimal, u.UName
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
         </if>

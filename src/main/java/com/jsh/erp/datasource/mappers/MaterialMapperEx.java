@@ -47,10 +47,6 @@ public interface MaterialMapperEx {
 
     int findBySelectWithBarCodeCount(@Param("q") String q);
 
-    int updatePriceNullByPrimaryKey(Long id);
-
-    int updateUnitIdNullByPrimaryKey(Long id);
-
     List<MaterialVo4Unit> findByAll(
             @Param("name") String name,
             @Param("model") String model,

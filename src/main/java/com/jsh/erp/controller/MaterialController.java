@@ -331,10 +331,10 @@ public class MaterialController {
                     objs[2] = m.getModel();
                     objs[3] = m.getSafetystock() == null? "" : m.getSafetystock().toString();
                     objs[4] = m.getUnit();
-                    objs[5] = m.getRetailprice() == null ? "" : m.getRetailprice().toString();
-                    objs[6] = m.getLowprice() == null ? "" : m.getLowprice().toString();
-                    objs[7] = m.getPresetpriceone() == null ? "" : m.getPresetpriceone().toString();
-                    objs[8] = m.getPresetpricetwo() == null ? "" : m.getPresetpricetwo().toString();
+                    objs[5] = "";
+                    objs[6] = "";
+                    objs[7] = "";
+                    objs[8] = "";
                     objs[9] = m.getRemark();
                     objs[10] = m.getEnabled() ? "启用" : "禁用";
                     objects.add(objs);

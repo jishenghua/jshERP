@@ -36,6 +36,8 @@ public class DepotItemVo4WithInfoEx extends DepotItem{
 
     private String priceStrategy;
 
+    private BigDecimal purchaseDecimal;
+
     private String barCode;
 
     public Long getMId() {
@@ -164,6 +166,14 @@ public class DepotItemVo4WithInfoEx extends DepotItem{
 
     public void setPriceStrategy(String priceStrategy) {
         this.priceStrategy = priceStrategy;
+    }
+
+    public BigDecimal getPurchaseDecimal() {
+        return purchaseDecimal;
+    }
+
+    public void setPurchaseDecimal(BigDecimal purchaseDecimal) {
+        this.purchaseDecimal = purchaseDecimal;
     }
 
     public String getBarCode() {

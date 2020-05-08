@@ -771,3 +771,17 @@ INSERT INTO `jsh_functions` VALUES (245,'000107', '插件管理', '0001', '/page
 -- 给商品扩展表增加 是否默认基础单位 字段
 -- ----------------------------
 alter table jsh_material_extend add default_flag VARCHAR(1) DEFAULT 1 COMMENT '是否为默认单位，1是，0否' after low_decimal;
+
+-- ----------------------------
+-- 时间：2020年05月04日
+-- by jishenghua
+-- 删除商品表的多价格相关的字段
+-- ----------------------------
+alter table jsh_material drop Packing;
+alter table jsh_material drop RetailPrice;
+alter table jsh_material drop LowPrice;
+alter table jsh_material drop PresetPriceOne;
+alter table jsh_material drop PresetPriceTwo;
+alter table jsh_material drop FirstOutUnit;
+alter table jsh_material drop FirstInUnit;
+alter table jsh_material drop PriceStrategy;

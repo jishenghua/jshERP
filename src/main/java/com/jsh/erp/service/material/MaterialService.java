@@ -186,12 +186,6 @@ public class MaterialService {
         material.setId(id);
         try{
             materialMapper.updateByPrimaryKeySelective(material);
-            Long unitId = material.getUnitid();
-            if(unitId != null) {
-                materialMapperEx.updatePriceNullByPrimaryKey(id); //将价格置空
-            } else {
-                materialMapperEx.updateUnitIdNullByPrimaryKey(id); //将多单位置空
-            }
             JSONObject mObj = JSON.parseObject(beanJson);
             materialExtendService.saveDetials(mObj.getString("inserted"),mObj.getString("deleted"),mObj.getString("updated"),mObj.getString("sortList"),id);
             if(mObj.get("stock")!=null) {
@@ -435,8 +429,8 @@ public class MaterialService {
                     String manyUnitAll = unit + "," + manyUnit + "(1:" + ratio + ")";
                     Long unitId = unitService.getUnitIdByName(manyUnitAll);
                     m.setUnitid(unitId);
-                    m.setFirstoutunit(unit); //首选出库单位
-                    m.setFirstinunit(manyUnit); //首选入库单位
+                    //m.setFirstoutunit(unit); //首选出库单位
+                    //m.setFirstinunit(manyUnit); //首选入库单位
                     JSONArray arr = new JSONArray();
                     JSONObject basicObj = new JSONObject();
                     basicObj.put("Unit", unit);
@@ -456,13 +450,13 @@ public class MaterialService {
                     otherObjEx.put("other", otherObj);
                     arr.add(basicObjEx);
                     arr.add(otherObjEx);
-                    m.setPricestrategy(arr.toJSONString());
+                    //m.setPricestrategy(arr.toJSONString());
                 } else {
                     m.setUnit(unit);
-                    m.setRetailprice(parseBigDecimalEx(retailPrice));
-                    m.setLowprice(parseBigDecimalEx(lowPrice));
-                    m.setPresetpriceone(parseBigDecimalEx(presetpriceone));
-                    m.setPresetpricetwo(parseBigDecimalEx(presetpricetwo));
+                    //m.setRetailprice(parseBigDecimalEx(retailPrice));
+                    //m.setLowprice(parseBigDecimalEx(lowPrice));
+                    //m.setPresetpriceone(parseBigDecimalEx(presetpriceone));
+                    //m.setPresetpricetwo(parseBigDecimalEx(presetpricetwo));
                 }
                 String enabled = ExcelUtils.getContent(src, i, 12); //状态
                 m.setEnabled(enabled.equals("1")? true: false);

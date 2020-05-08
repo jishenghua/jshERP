@@ -116,23 +116,6 @@
         and ifnull(m.delete_Flag,'0') !='1'
     </select>
 
-    <update id="updatePriceNullByPrimaryKey" parameterType="java.lang.Long">
-        update jsh_material
-        set
-        RetailPrice = null,
-        LowPrice = null,
-        PresetPriceOne = null,
-        PresetPriceTwo = null
-        where Id = #{id,jdbcType=BIGINT}
-    </update>
-
-    <update id="updateUnitIdNullByPrimaryKey" parameterType="java.lang.Long">
-        update jsh_material
-        set
-        UnitId = null
-        where Id = #{id,jdbcType=BIGINT}
-    </update>
-
     <select id="findByAll" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultMapList">
         select m.*,u.uname unitName, mc.name categoryName
         FROM jsh_material m
@@ -164,9 +147,8 @@
 
     <select id="getMaterialEnableSerialNumberList" parameterType="java.util.Map" resultMap="com.jsh.erp.datasource.mappers.MaterialMapper.BaseResultMap">
         select
-        Id, CategoryId, name, Mfrs, Packing, SafetyStock, Model, Standard, Color, Unit, Remark,
-        RetailPrice, LowPrice, PresetPriceOne, PresetPriceTwo, UnitId, FirstOutUnit, FirstInUnit,
-        PriceStrategy, Enabled,enableSerialNumber
+        Id, CategoryId, name, Mfrs, SafetyStock, Model, Standard, Color, Unit, Remark,
+        UnitId, Enabled,enableSerialNumber
         FROM jsh_material
         where 1=1
         and enabled ='1'

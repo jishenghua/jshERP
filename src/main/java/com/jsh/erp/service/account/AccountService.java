@@ -26,9 +26,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class AccountService {
@@ -324,21 +322,17 @@ public class AccountService {
                 if (!ids.equals("")) {
                     ids = ids.substring(0, ids.length() - 1);
                 }
-
                 AccountItemExample exampleAi = new AccountItemExample();
                 if (!ids.equals("")) {
                     List<Long> idList = StringUtil.strToLongList(ids);
                     exampleAi.createCriteria().andAccountidEqualTo(id).andHeaderidIn(idList)
                             .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-                } else {
-                    exampleAi.createCriteria().andAccountidEqualTo(id)
-                            .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-                }
-                List<AccountItem> dataListOne = accountItemMapper.selectByExample(exampleAi);
-                if (dataListOne != null) {
-                    for (AccountItem accountItem : dataListOne) {
-                        if(accountItem.getEachamount()!=null) {
-                            accountSum = accountSum.add(accountItem.getEachamount());
+                    List<AccountItem> dataListOne = accountItemMapper.selectByExample(exampleAi);
+                    if (dataListOne != null) {
+                        for (AccountItem accountItem : dataListOne) {
+                            if(accountItem.getEachamount()!=null) {
+                                accountSum = accountSum.add(accountItem.getEachamount());
+                            }
                         }
                     }
                 }
@@ -534,5 +528,44 @@ public class AccountService {
         deleteTotal= batchDeleteAccountByIds(ids);
         return deleteTotal;
 
+    }
+
+    public Map<String, Object> getStatistics() {
+        Map<String, Object> map = new HashMap<>();
+        try {
+            List<Account> list = getAccount();
+            String timeStr = Tools.getCurrentMonth();
+            BigDecimal allMonthAmount = BigDecimal.ZERO;
+            BigDecimal allCurrentAmount = BigDecimal.ZERO;
+            if (null != list && null !=timeStr) {
+                for (Account a : list) {
+                    BigDecimal monthAmount = getAccountSum(a.getId(), timeStr, "month").add(getAccountSumByHead(a.getId(), timeStr, "month"))
+                            .add(getAccountSumByDetail(a.getId(), timeStr, "month")).add(getManyAccountSum(a.getId(), timeStr, "month"));
+                    BigDecimal currentAmount = getAccountSum(a.getId(), "", "month").add(getAccountSumByHead(a.getId(), "", "month"))
+                            .add(getAccountSumByDetail(a.getId(), "", "month")).add(getManyAccountSum(a.getId(), "", "month")).add(a.getInitialamount());
+                    allMonthAmount = allMonthAmount.add(monthAmount);
+                    allCurrentAmount = allCurrentAmount.add(currentAmount);
+                }
+            }
+            map.put("allCurrentAmount", priceFormat(allCurrentAmount));  //当前总金额
+            map.put("allMonthAmount", priceFormat(allMonthAmount));  //本月发生额
+        } catch (Exception e) {
+            JshException.readFail(logger, e);
+        }
+        return map;
+    }
+
+    /**
+     * 价格格式化
+     * @param price
+     * @return
+     */
+    private String priceFormat(BigDecimal price) {
+        String priceFmt = "0";
+        DecimalFormat df = new DecimalFormat(".##");
+        if ((price.compareTo(BigDecimal.ZERO))!=0) {
+            priceFmt = df.format(price);
+        }
+        return priceFmt;
     }
 }
