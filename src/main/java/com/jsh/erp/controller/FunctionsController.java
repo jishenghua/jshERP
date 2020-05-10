@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author ji-sheng-hua  华夏ERP
+ * @author ji-sheng-hua  jshERP
  */
 @RestController
 @RequestMapping(value = "/functions")
