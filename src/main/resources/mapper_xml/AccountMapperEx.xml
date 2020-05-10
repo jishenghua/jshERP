@@ -54,7 +54,7 @@
     <select id="findAccountInOutList" parameterType="com.jsh.erp.datasource.entities.AccountExample" resultMap="ResultInOutList">
         <!--主表出入库涉及的账户 -->
         select dh.Number,concat(dh.SubType,dh.Type) as newType,s.supplier,dh.ChangeAmount,date_format(dh.OperTime,'%Y-%m-%d %H:%i:%S') as oTime,'' as AList,'' as AMList
-        from jsh_depothead dh inner join jsh_supplier s on dh.OrganId = s.id and ifnull(s.delete_Flag,'0') !='1'
+        from jsh_depothead dh left join jsh_supplier s on dh.OrganId = s.id and ifnull(s.delete_Flag,'0') !='1'
         where 1=1
         <if test="accountId != null">
             and dh.AccountId=${accountId}
@@ -64,7 +64,7 @@
         <!--主表收入和支出涉及的账户 -->
         UNION ALL
         select ah.BillNo,ah.Type as newType,s.supplier,ah.ChangeAmount,date_format(ah.BillTime,'%Y-%m-%d %H:%i:%S') as oTime,'' as AList,'' as AMList
-        from jsh_accounthead ah inner join jsh_supplier s on ah.OrganId=s.id and ifnull(s.delete_Flag,'0') !='1'
+        from jsh_accounthead ah left join jsh_supplier s on ah.OrganId=s.id and ifnull(s.delete_Flag,'0') !='1'
         where 1=1
         <if test="accountId != null">
             and ah.AccountId=${accountId}
@@ -73,7 +73,7 @@
         <!--明细中涉及的账户（收款,付款,收预付款） -->
         UNION ALL
         select ah.BillNo,ah.Type as newType,s.supplier,ai.EachAmount,date_format(ah.BillTime,'%Y-%m-%d %H:%i:%S') as oTime,'' as AList,'' as AMList
-        from jsh_accounthead ah inner join jsh_supplier s on ah.OrganId=s.id
+        from jsh_accounthead ah left join jsh_supplier s on ah.OrganId=s.id
         inner join jsh_accountitem ai on ai.HeaderId=ah.Id and ifnull(ai.delete_Flag,'0') !='1'
         where ah.Type in ('收款','付款','收预付款')
         <if test="accountId != null">
@@ -102,7 +102,7 @@
         UNION ALL
         select dh.Number,concat(dh.SubType,dh.Type) as newType,s.supplier,dh.ChangeAmount,date_format(dh.OperTime,'%Y-%m-%d %H:%i:%S') as oTime,
         dh.AccountIdList as AList,dh.AccountMoneyList as AMList
-        from jsh_depothead dh inner join jsh_supplier s on dh.OrganId = s.id and ifnull(s.delete_Flag,'0') !='1'
+        from jsh_depothead dh left join jsh_supplier s on dh.OrganId = s.id and ifnull(s.delete_Flag,'0') !='1'
         where 1=1
         <if test="accountId != null">
             and dh.AccountIdList like '%${accountId}%'
