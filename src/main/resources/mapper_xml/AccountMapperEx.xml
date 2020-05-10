@@ -119,7 +119,7 @@
         (
             <!--主表出入库涉及的账户 -->
             select count(1) a
-            from jsh_depothead dh inner join jsh_supplier s on dh.OrganId = s.id and ifnull(s.delete_Flag,'0') !='1'
+            from jsh_depothead dh left join jsh_supplier s on dh.OrganId = s.id and ifnull(s.delete_Flag,'0') !='1'
             where 1=1
             <if test="accountId != null">
                 and dh.AccountId=${accountId}
@@ -128,7 +128,7 @@
             <!--主表收入和支出涉及的账户 -->
             UNION ALL
             select count(1) a
-            from jsh_accounthead ah inner join jsh_supplier s on ah.OrganId=s.id and ifnull(s.delete_Flag,'0') !='1'
+            from jsh_accounthead ah left join jsh_supplier s on ah.OrganId=s.id and ifnull(s.delete_Flag,'0') !='1'
             where 1=1
             <if test="accountId != null">
                 and ah.AccountId=${accountId}
@@ -137,7 +137,7 @@
             <!--明细中涉及的账户（收款,付款,收预付款） -->
             UNION ALL
             select count(1) a
-            from jsh_accounthead ah inner join jsh_supplier s on ah.OrganId=s.id
+            from jsh_accounthead ah left join jsh_supplier s on ah.OrganId=s.id
             inner join jsh_accountitem ai on ai.HeaderId=ah.Id and ifnull(ai.delete_Flag,'0') !='1'
             where ah.Type in ('收款','付款','收预付款')
             <if test="accountId != null">
@@ -165,7 +165,7 @@
             <!--多账户的情况 -->
             UNION ALL
             select count(1) a
-            from jsh_depothead dh inner join jsh_supplier s on dh.OrganId = s.id and ifnull(s.delete_Flag,'0') !='1'
+            from jsh_depothead dh left join jsh_supplier s on dh.OrganId = s.id and ifnull(s.delete_Flag,'0') !='1'
             where 1=1
             <if test="accountId != null">
                 and dh.AccountIdList like '%${accountId}%'
