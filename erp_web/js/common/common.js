@@ -423,6 +423,21 @@
 	}
 
 	/**
+	 * 检查当前用户是否是演示用户
+	 */
+	function checkIsTestUser() {
+		var res = false;
+		var loginName = sessionStorage.getItem("loginName");
+		if (loginName == "jsh") {
+			$.messager.alert('提示', '演示用户禁止操作！', 'warning');
+			res = true;
+		} else {
+			res = false;
+		}
+		return res;
+	}
+
+	/**
 	 * 判断一个值是否数字
 	 * @param value
 	 * @returns {boolean}
