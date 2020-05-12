@@ -14,8 +14,7 @@ import javax.annotation.Resource;
 
 /**
  * Description
- *
- * @Author: qiankunpingtai
+ * @Author: jishenghua
  * @Date: 2019/4/1 15:28
  */
 @RestController
@@ -24,14 +23,9 @@ public class SystemConfigController {
     private Logger logger = LoggerFactory.getLogger(SystemConfigController.class);
     @Resource
     private SystemConfigService systemConfigService;
+
     /**
-     * create by: qiankunpingtai
-     * website：https://qiankunpingtai.cn
-     * description:
      *  批量删除系统配置信息
-     * create time: 2019/3/29 11:15
-     * @Param: ids
-     * @return java.lang.Object
      */
     @RequestMapping(value = "/batchDeleteSystemConfigByIds")
     public Object batchDeleteSystemConfigByIds(@RequestParam("ids") String ids) throws Exception {

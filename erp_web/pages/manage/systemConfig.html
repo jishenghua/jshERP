@@ -79,15 +79,17 @@
                 </td>
             </tr>
             <tr>
-                <td>仓库开关</td>
-                <td style="padding:5px">
-                    <input name="depotFlag" id="depotFlag" type="checkbox" style="width: 220px;height: 20px" title="勾选后需要到用户列表配置权限"/>
+                <td>仓库权限</td>
+                <td style="padding:5px;text-align:center;">
+                    <input name="depotFlag" id="depotFlag" type="checkbox" style="width: 20px;height: 20px" title="勾选后需要到用户列表配置"/>
+                    (勾选后需要到用户列表配置)
                 </td>
             </tr>
             <tr>
-                <td>客户开关</td>
-                <td style="padding:5px">
-                    <input name="customerFlag" id="customerFlag" type="checkbox" style="width: 220px;height: 20px" title="勾选后需要到用户列表配置权限"/>
+                <td>客户权限</td>
+                <td style="padding:5px;text-align:center;">
+                    <input name="customerFlag" id="customerFlag" type="checkbox" style="width: 20px;height: 20px" title="勾选后需要到用户列表配置"/>
+                    (勾选后需要到用户列表配置)
                 </td>
             </tr>
         </table>
@@ -231,6 +233,9 @@
 
     //删除系统配置信息
     function deleteSystemConfig(systemConfigId) {
+        if(checkIsTestUser()) {
+            return;
+        }
         $.messager.confirm('删除确认', '确定要删除此系统配置信息吗？', function (r) {
             if (r) {
                 $.ajax({
@@ -259,6 +264,9 @@
 
     //批量删除系统配置
     function batDeleteSystemConfig() {
+        if(checkIsTestUser()) {
+            return;
+        }
         var row = $('#tableData').datagrid('getChecked');
         if (row.length == 0) {
             $.messager.alert('删除提示', '没有记录被选中！', 'warning');
@@ -335,6 +343,9 @@
 
     //保存系统配置信息
     $("#saveSystemConfig").off("click").on("click", function () {
+        if(checkIsTestUser()) {
+            return;
+        }
         if (checkCompanyName()) {
             return;
         }
