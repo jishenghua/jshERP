@@ -426,15 +426,29 @@
 	 * 检查当前用户是否是演示用户
 	 */
 	function checkIsTestUser() {
-		var res = false;
-		var loginName = sessionStorage.getItem("loginName");
-		if (loginName == "jsh") {
-			$.messager.alert('提示', '演示用户禁止操作！', 'warning');
-			res = true;
-		} else {
-			res = false;
+		var result = false;
+		var demonstrateOpen = false;
+		$.ajax({
+			type: "get",
+			url: "/user/getDemonstrateOpen",
+			dataType: "json",
+			async: false, //设置为同步
+			success: function (res) {
+				if (res && res.code === 200) {
+					demonstrateOpen = res.data.demonstrateOpen;
+				}
+			}
+		});
+		if(demonstrateOpen) {
+			var loginName = sessionStorage.getItem("loginName");
+			if (loginName == "jsh") {
+				$.messager.alert('提示', '演示用户禁止操作！', 'warning');
+				result = true;
+			} else {
+				result = false;
+			}
 		}
-		return res;
+		return result;
 	}
 
 	/**
