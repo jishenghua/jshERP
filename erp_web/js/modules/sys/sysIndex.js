@@ -421,21 +421,8 @@ $(function () {
     //广告循环
     var loginName = sessionStorage.getItem("loginName");
     if(loginName == "jsh") {
-        //根据时间戳决定展示aliyun还是tencent
-        function autoChangeTip() {
-            var timestamp=new Date().getTime();
-            var checkShow = timestamp%2;
-            if(checkShow) {
-                $(".aliyun").show();
-                $(".tencent").hide();
-            } else {
-                $(".aliyun").hide();
-                $(".tencent").show();
-            }
-        }
-        setInterval(function () {
-            autoChangeTip();
-        }, 10 * 1000);
+        $(".tencent").show();
+        $(".aliyun").hide();
     }
 
     //更新消息条数
