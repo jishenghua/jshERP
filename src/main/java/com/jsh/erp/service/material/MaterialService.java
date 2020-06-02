@@ -84,22 +84,17 @@ public class MaterialService {
         return list;
     }
 
-    public List<MaterialVo4Unit> select(String name, String standard, String model, String categoryIds,String mpList, int offset, int rows)
+    public List<MaterialVo4Unit> select(String barCode, String name, String standard, String model, String categoryIds,String mpList, int offset, int rows)
             throws Exception{
         String[] mpArr = mpList.split(",");
-        List<MaterialVo4Unit> resList = new ArrayList<MaterialVo4Unit>();
+        List<MaterialVo4Unit> resList = new ArrayList<>();
         List<MaterialVo4Unit> list =null;
         try{
-            list= materialMapperEx.selectByConditionMaterial(name, standard, model, categoryIds, mpList, offset, rows);
+            list= materialMapperEx.selectByConditionMaterial(barCode, name, standard, model, categoryIds, mpList, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         if (null != list) {
-            List<Long> idList = new ArrayList<Long>();
-            for (MaterialVo4Unit m : list) {
-                idList.add(m.getId());
-            }
-            List<MaterialExtend> meList = materialExtendService.getListByMIds(idList);
             for (MaterialVo4Unit m : list) {
                 //扩展信息
                 String materialOther = "";
@@ -120,24 +115,16 @@ public class MaterialService {
                 m.setMaterialOther(materialOther);
                 Long tenantId = m.getTenantId();
                 m.setStock(depotItemService.getStockByParam(null,m.getId(),null,null,tenantId));
-                for(MaterialExtend me:meList) {
-                    if(me.getMaterialId().longValue() == m.getId().longValue()) {
-                        m.setPurchaseDecimal(me.getPurchaseDecimal()); //采购价
-                        m.setCommodityDecimal(me.getCommodityDecimal()); //零售价
-                        m.setWholesaleDecimal(me.getWholesaleDecimal()); //销售价
-                        m.setLowDecimal(me.getLowDecimal()); //最低售价
-                    }
-                }
                 resList.add(m);
             }
         }
         return resList;
     }
 
-    public Long countMaterial(String name, String standard, String model, String categoryIds,String mpList)throws Exception {
+    public Long countMaterial(String barCode, String name, String standard, String model, String categoryIds,String mpList)throws Exception {
         Long result =null;
         try{
-            result= materialMapperEx.countsByMaterial(name, standard, model, categoryIds, mpList);
+            result= materialMapperEx.countsByMaterial(barCode, name, standard, model, categoryIds, mpList);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }

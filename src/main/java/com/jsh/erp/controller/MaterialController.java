@@ -161,7 +161,7 @@ public class MaterialController {
                             ratio = ratio.substring(ratio.indexOf("("));
                         }
                     }
-                    //品名/型号/扩展信息/包装
+                    //名称/型号/扩展信息/包装
                     String MaterialName = "";
                     String mBarCode = "";
                     if(material.getmBarCode()!=null) {
@@ -267,7 +267,7 @@ public class MaterialController {
                     ratio = material.getUnitName();
                     ratio = ratio.substring(ratio.indexOf("("));
                 }
-                //品名/型号/扩展信息/包装
+                //名称/型号/扩展信息/包装
                 String MaterialName = "";
                 MaterialName = MaterialName + material.getmBarCode() + "_" + material.getName()
                         + ((material.getStandard() == null || material.getStandard().equals("")) ? "" : "(" + material.getStandard() + ")");
@@ -320,7 +320,7 @@ public class MaterialController {
         try {
             List<MaterialVo4Unit> dataList = materialService.findByAll(StringUtil.toNull(name), StringUtil.toNull(model),
                     StringUtil.toNull(categoryIds));
-            String[] names = {"品名", "类型", "型号", "安全存量", "单位", "零售价", "最低售价", "预计采购价", "批发价", "备注", "状态"};
+            String[] names = {"名称", "类型", "型号", "安全存量", "单位", "零售价", "最低售价", "预计采购价", "批发价", "备注", "状态"};
             String title = "商品信息";
             List<String[]> objects = new ArrayList<String[]>();
             if (null != dataList) {

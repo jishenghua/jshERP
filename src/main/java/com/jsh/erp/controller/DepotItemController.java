@@ -170,7 +170,7 @@ public class DepotItemController {
                         ratio = diEx.getUName();
                         ratio = ratio.substring(ratio.indexOf("("));
                     }
-                    //品名/型号/扩展信息/包装
+                    //名称/型号/扩展信息/包装
                     String MaterialName = diEx.getBarCode() + "_" + ((diEx.getMName() == null || diEx.getMName().equals("")) ? "" : diEx.getMName())
                             + ((diEx.getMStandard() == null || diEx.getMStandard().equals("")) ? "" : "(" + diEx.getMStandard() + ")")
                             + ((diEx.getMModel() == null || diEx.getMModel().equals("")) ? "" : "(" + diEx.getMModel() + ")");

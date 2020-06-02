@@ -4,7 +4,11 @@
     <resultMap extends="com.jsh.erp.datasource.mappers.MaterialMapper.BaseResultMap" id="ResultMapList" type="com.jsh.erp.datasource.entities.MaterialVo4Unit">
         <result column="unitName" jdbcType="VARCHAR" property="unitName" />
         <result column="categoryName" jdbcType="VARCHAR" property="categoryName" />
-        <result column="m_bar_code" jdbcType="VARCHAR" property="mBarCode" />
+        <result column="bar_code" jdbcType="VARCHAR" property="mBarCode" />
+        <result column="purchase_decimal" jdbcType="VARCHAR" property="purchaseDecimal" />
+        <result column="commodity_decimal" jdbcType="VARCHAR" property="commodityDecimal" />
+        <result column="wholesale_decimal" jdbcType="VARCHAR" property="wholesaleDecimal" />
+        <result column="low_decimal" jdbcType="VARCHAR" property="lowDecimal" />
     </resultMap>
 
     <resultMap extends="com.jsh.erp.datasource.mappers.MaterialMapper.BaseResultMap" id="ResultAndUnitMap" type="com.jsh.erp.datasource.entities.MaterialVo4Unit">
@@ -12,11 +16,17 @@
     </resultMap>
 
     <select id="selectByConditionMaterial" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultMapList">
-        select m.*,u.uname unitName, mc.name categoryName
+        select m.*,u.uname unitName, mc.name categoryName, me.bar_code,
+        me.purchase_decimal, me.commodity_decimal, me.wholesale_decimal,me.low_decimal
         FROM jsh_material m
+        left JOIN jsh_material_extend me on m.id = me.material_id and ifnull(me.delete_Flag,'0') !='1'
         left JOIN jsh_unit u on m.UnitId = u.id and ifnull(u.delete_Flag,'0') !='1'
         left JOIN jsh_materialcategory mc on m.CategoryId = mc.id and ifnull(mc.status,'0') !='2'
         where 1=1
+        and me.default_flag=1
+        <if test="barCode != null">
+            and me.bar_code like '%${barCode}%'
+        </if>
         <if test="name != null">
             and m.name like '%${name}%'
         </if>
@@ -40,9 +50,14 @@
         SELECT
         COUNT(m.id)
         FROM jsh_material m
+        left JOIN jsh_material_extend me on m.id = me.material_id and ifnull(me.delete_Flag,'0') !='1'
         left JOIN jsh_unit u on m.UnitId = u.id and ifnull(u.delete_Flag,'0') !='1'
         left JOIN jsh_materialcategory mc on m.CategoryId = mc.id and ifnull(mc.status,'0') !='2'
         WHERE 1=1
+        and me.default_flag=1
+        <if test="barCode != null">
+            and me.bar_code like '%${barCode}%'
+        </if>
         <if test="name != null">
             and m.name like '%${name}%'
         </if>

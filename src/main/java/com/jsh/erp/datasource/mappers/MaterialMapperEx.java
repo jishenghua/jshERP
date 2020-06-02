@@ -18,6 +18,7 @@ import java.util.Map;
 public interface MaterialMapperEx {
 
     List<MaterialVo4Unit> selectByConditionMaterial(
+            @Param("barCode") String barCode,
             @Param("name") String name,
             @Param("standard") String standard,
             @Param("model") String model,
@@ -27,6 +28,7 @@ public interface MaterialMapperEx {
             @Param("rows") Integer rows);
 
     Long countsByMaterial(
+            @Param("barCode") String barCode,
             @Param("name") String name,
             @Param("standard") String standard,
             @Param("model") String model,
