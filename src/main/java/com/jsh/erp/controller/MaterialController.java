@@ -215,11 +215,13 @@ public class MaterialController {
      * @return
      */
     @GetMapping(value = "/findByOrder")
-    public BaseResponseInfo findByOrder(HttpServletRequest request)throws Exception {
+    public BaseResponseInfo findByOrder(@RequestParam("name") String name,
+                                        @RequestParam("model") String model,
+                                        HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         try {
-            List<Material> dataList = materialService.findByOrder();
+            List<Material> dataList = materialService.findByOrder(StringUtil.toNull(name), StringUtil.toNull(model));
             String mId = "";
             if (null != dataList) {
                 for (Material material : dataList) {
@@ -457,5 +459,49 @@ public class MaterialController {
         res.code = 200;
         res.data = map;
         return res;
+    }
+
+    /**
+     * 商品名称模糊匹配
+     * @return
+     * @throws Exception
+     */
+    @GetMapping(value = "/getMaterialNameList")
+    public JSONArray getMaterialNameList() throws Exception {
+        JSONArray arr = new JSONArray();
+        try {
+            List<String> list = materialService.getMaterialNameList();
+            for (String s : list) {
+                JSONObject item = new JSONObject();
+                item.put("value", s);
+                item.put("text", s);
+                arr.add(item);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return arr;
+    }
+
+    /**
+     * 商品型号模糊匹配
+     * @return
+     * @throws Exception
+     */
+    @GetMapping(value = "/getMaterialModelList")
+    public JSONArray getMaterialModelList() throws Exception {
+        JSONArray arr = new JSONArray();
+        try {
+            List<String> list = materialService.getMaterialModelList();
+            for (String s : list) {
+                JSONObject item = new JSONObject();
+                item.put("value", s);
+                item.put("text", s);
+                arr.add(item);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return arr;
     }
 }

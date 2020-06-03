@@ -43,7 +43,7 @@
         <div class="form-group">
             <label class="control-label">名称：</label>
             <div class="control-inline">
-                <input type="text" id="searchName" name="searchName" value="" maxlength="100" class="easyui-textbox width-90"/>
+                <input type="text" id="searchName" name="searchName" value="" maxlength="100" class="width-120"/>
             </div>
         </div>
         <div class="form-group">
@@ -241,6 +241,7 @@
             initMProperty();
             manyUnitFun();
             priceKeyUp();//价格触发事件
+            initMaterialNameList();
             initMPropertyShort(); //初始化商品属性
             initTableData();
             ininPager();
@@ -370,6 +371,20 @@
             $("#basicPresetPriceTwo").off("keyup").on("keyup", function () {
                 if (multiple) {
                     $("#otherPresetPriceTwo").val($(this).val() * multiple);
+                }
+            });
+        }
+
+        //初始化商品名称模糊匹配
+        function initMaterialNameList() {
+            $('#searchName').combobox({
+                method:"get",
+                url: "/material/getMaterialNameList",
+                valueField: 'value',
+                textField: 'text',
+                filter: function(q, row){
+                    var opts = $(this).combobox('options');
+                    return row[opts.textField].indexOf(q) >-1;
                 }
             });
         }
@@ -940,7 +955,7 @@
 
         //导出数据
         function setOutputFun() {
-            var name = $.trim($("#searchName").val());
+            var name = $.trim($("#searchName").combobox("getValue"));
             var model = $.trim($("#searchModel").val());
             window.location.href = "/material/exportExcel?browserType=" + getOs()
                 + "&name=" + name + "&model=" + model + "&categoryIds=" + types;
@@ -1415,7 +1430,7 @@
 
         function showMaterialDetails(pageNo, pageSize) {
             var barCode = $.trim($("#searchBarCode").val());
-            var name = $.trim($("#searchName").val());
+            var name = $.trim($("#searchName").combobox("getValue"));
             var standard = $.trim($("#searchStandard").val());
             var model = $.trim($("#searchModel").val());
             $.ajax({
@@ -1455,7 +1470,7 @@
                 $("#searchBarCode").textbox("clear");
                 $("#searchParentName").textbox("clear");
                 $("#searchParentId").val("");
-                $("#searchName").textbox("clear");
+                $("#searchName").combobox("clear");
                 $("#searchStandard").textbox("clear");
                 $("#searchModel").textbox("clear");
                 types = ""; //清空类别

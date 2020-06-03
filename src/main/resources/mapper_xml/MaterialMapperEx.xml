@@ -251,4 +251,32 @@
         </if>
         and ifnull(m.delete_Flag,'0') !='1'
     </select>
+
+    <select id="getMaterialNameList" resultType="java.lang.String">
+        select m.name from jsh_material m
+        where m.name is not null and m.name !='' and ifnull(m.delete_Flag,'0') !='1'
+        group by m.name
+        order by m.name asc
+    </select>
+
+    <select id="getMaterialModelList" resultType="java.lang.String">
+        select m.Model from jsh_material m
+        where m.Model is not null and m.Model !='' and ifnull(m.delete_Flag,'0') !='1'
+        group by m.Model
+        order by m.Model asc
+    </select>
+
+    <select id="findByOrder" resultType="com.jsh.erp.datasource.entities.Material">
+        select m.*
+        FROM jsh_material m
+        where 1=1
+        <if test="name != null">
+            and m.name like '%${name}%'
+        </if>
+        <if test="model != null">
+            and m.model like '%${model}%'
+        </if>
+        and ifnull(m.delete_Flag,'0') !='1'
+        order by m.name,m.model asc
+    </select>
 </mapper>

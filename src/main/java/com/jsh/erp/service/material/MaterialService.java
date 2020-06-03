@@ -327,13 +327,10 @@ public class MaterialService {
         return list;
     }
 
-    public List<Material> findByOrder()throws Exception{
-        MaterialExample example = new MaterialExample();
-        example.createCriteria().andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        example.setOrderByClause("Name,Model asc");
+    public List<Material> findByOrder(String name, String model)throws Exception{
         List<Material> list =null;
         try{
-            list=  materialMapper.selectByExample(example);
+            list=  materialMapperEx.findByOrder(name, model);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -728,5 +725,13 @@ public class MaterialService {
     public String getMaxBarCode() {
         String maxBarCodeOld = materialMapperEx.getMaxBarCode();
         return Long.parseLong(maxBarCodeOld)+"";
+    }
+
+    public List<String> getMaterialNameList() {
+        return materialMapperEx.getMaterialNameList();
+    }
+
+    public List<String> getMaterialModelList() {
+        return materialMapperEx.getMaterialModelList();
     }
 }
