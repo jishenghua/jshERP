@@ -358,13 +358,13 @@ public class DepotItemController {
                     objs[0] = diEx.getMName().toString();
                     objs[1] = diEx.getMModel().toString();
                     objs[2] = diEx.getMaterialUnit().toString();
-                    objs[3] = getUnitPrice(diEx.getPresetPriceOne(), diEx.getPriceStrategy()).toString();
+                    objs[3] = diEx.getPurchaseDecimal().toString();
                     objs[4] = depotItemService.getStockByParam(depotId,mId,null,timeA,tenantId).toString();
                     objs[5] = depotItemService.getInNumByParam(depotId,mId,timeA,timeB,tenantId).toString();
                     objs[6] = depotItemService.getOutNumByParam(depotId,mId,timeA,timeB,tenantId).toString();
                     BigDecimal thisSum = depotItemService.getStockByParam(depotId,mId,null,timeB,tenantId);
                     objs[7] = thisSum.toString();
-                    objs[8] = thisSum.multiply(getUnitPrice(diEx.getPresetPriceOne(), diEx.getPriceStrategy())).toString();
+                    objs[8] = thisSum.multiply(diEx.getPurchaseDecimal()).toString();
                     objects.add(objs);
                 }
             }
