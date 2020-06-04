@@ -31,13 +31,13 @@
         <div class="form-group">
             <label class="control-label">名称：</label>
             <div class="control-inline">
-                <input name="mName" id="mName" style="width:120px;"></input>
+                <input name="mName" id="mName" style="width:100px;"></input>
             </div>
         </div>
         <div class="form-group">
             <label class="control-label">型号：</label>
             <div class="control-inline">
-                <input name="mModel" id="mModel" style="width:120px;"></input>
+                <input type="text" name="mModel" id="mModel" class="easyui-textbox" style="width:100px;"></input>
             </div>
         </div>
         <div class="form-group">
@@ -73,7 +73,6 @@
         initSystemData_depot();
         initSelectInfo_depot();
         initMaterialNameList();
-        initMaterialModelList();
         initMProperty(); //初始化商品属性
         initTableData();
         ininPager();
@@ -174,20 +173,7 @@
             url: "/material/getMaterialNameList",
             valueField: 'value',
             textField: 'text',
-            filter: function(q, row){
-                var opts = $(this).combobox('options');
-                return row[opts.textField].indexOf(q) >-1;
-            }
-        });
-    }
-
-    //初始化商品型号模糊匹配
-    function initMaterialModelList() {
-        $('#mModel').combobox({
-            method:"get",
-            url: "/material/getMaterialModelList",
-            valueField: 'value',
-            textField: 'text',
+            hasDownArrow: false,
             filter: function(q, row){
                 var opts = $(this).combobox('options');
                 return row[opts.textField].indexOf(q) >-1;
@@ -348,7 +334,7 @@
                             dataType: "json",
                             data: ({
                                 name: $("#mName").combobox("getValue"),
-                                model: $("#mModel").combobox("getValue")
+                                model: $("#mModel").textbox("getValue")
                             }),
                             success: function (res) {
                                 if(res && res.code === 200 && res.data) {

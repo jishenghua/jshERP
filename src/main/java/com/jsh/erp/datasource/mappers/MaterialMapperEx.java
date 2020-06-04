@@ -77,8 +77,6 @@ public interface MaterialMapperEx {
 
     List<String> getMaterialNameList();
 
-    List<String> getMaterialModelList();
-
     List<Material> findByOrder(@Param("name") String name,
                                @Param("model") String model);
 }

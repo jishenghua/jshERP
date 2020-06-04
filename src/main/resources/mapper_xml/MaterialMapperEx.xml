@@ -259,13 +259,6 @@
         order by m.name asc
     </select>
 
-    <select id="getMaterialModelList" resultType="java.lang.String">
-        select m.Model from jsh_material m
-        where m.Model is not null and m.Model !='' and ifnull(m.delete_Flag,'0') !='1'
-        group by m.Model
-        order by m.Model asc
-    </select>
-
     <select id="findByOrder" resultType="com.jsh.erp.datasource.entities.Material">
         select m.*
         FROM jsh_material m

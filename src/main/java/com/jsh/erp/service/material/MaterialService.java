@@ -730,8 +730,4 @@ public class MaterialService {
     public List<String> getMaterialNameList() {
         return materialMapperEx.getMaterialNameList();
     }
-
-    public List<String> getMaterialModelList() {
-        return materialMapperEx.getMaterialModelList();
-    }
 }

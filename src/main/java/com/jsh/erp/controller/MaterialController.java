@@ -482,26 +482,4 @@ public class MaterialController {
         }
         return arr;
     }
-
-    /**
-     * 商品型号模糊匹配
-     * @return
-     * @throws Exception
-     */
-    @GetMapping(value = "/getMaterialModelList")
-    public JSONArray getMaterialModelList() throws Exception {
-        JSONArray arr = new JSONArray();
-        try {
-            List<String> list = materialService.getMaterialModelList();
-            for (String s : list) {
-                JSONObject item = new JSONObject();
-                item.put("value", s);
-                item.put("text", s);
-                arr.add(item);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return arr;
-    }
 }
