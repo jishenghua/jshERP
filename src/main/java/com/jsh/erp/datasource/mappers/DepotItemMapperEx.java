@@ -40,14 +40,16 @@ public interface DepotItemMapperEx {
             @Param("headerId") Long headerId);
 
     List<DepotItemVo4WithInfoEx> findByAll(
-            @Param("headIds") String headIds,
-            @Param("materialIds") String materialIds,
+            @Param("name") String name,
+            @Param("model") String model,
+            @Param("endTime") String endTime,
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
     int findByAllCount(
-            @Param("headIds") String headIds,
-            @Param("materialIds") String materialIds);
+            @Param("name") String name,
+            @Param("model") String model,
+            @Param("endTime") String endTime);
 
     BigDecimal buyOrSaleNumber(
             @Param("type") String type,

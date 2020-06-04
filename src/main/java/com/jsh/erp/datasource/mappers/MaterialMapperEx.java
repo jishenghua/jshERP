@@ -41,8 +41,6 @@ public interface MaterialMapperEx {
 
     List<MaterialVo4Unit> findByIdWithBarCode(@Param("meId") Long meId);
 
-    List<MaterialVo4Unit> findBySelect();
-
     List<MaterialVo4Unit> findBySelectWithBarCode(@Param("q") String q,
                                                   @Param("offset") Integer offset,
                                                   @Param("rows") Integer rows);
@@ -76,7 +74,4 @@ public interface MaterialMapperEx {
             @Param("meId") Long meId);
 
     List<String> getMaterialNameList();
-
-    List<Material> findByOrder(@Param("name") String name,
-                               @Param("model") String model);
 }

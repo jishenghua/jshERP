@@ -208,40 +208,6 @@ public class MaterialController {
         return object;
     }
 
-
-    /**
-     * 查找商品信息-统计排序
-     * @param request
-     * @return
-     */
-    @GetMapping(value = "/findByOrder")
-    public BaseResponseInfo findByOrder(@RequestParam("name") String name,
-                                        @RequestParam("model") String model,
-                                        HttpServletRequest request)throws Exception {
-        BaseResponseInfo res = new BaseResponseInfo();
-        Map<String, Object> map = new HashMap<String, Object>();
-        try {
-            List<Material> dataList = materialService.findByOrder(StringUtil.toNull(name), StringUtil.toNull(model));
-            String mId = "";
-            if (null != dataList) {
-                for (Material material : dataList) {
-                    mId = mId + material.getId() + ",";
-                }
-            }
-            if (mId != "") {
-                mId = mId.substring(0, mId.lastIndexOf(","));
-            }
-            map.put("mIds", mId);
-            res.code = 200;
-            res.data = map;
-        } catch(Exception e){
-            e.printStackTrace();
-            res.code = 500;
-            res.data = "获取数据失败";
-        }
-        return res;
-    }
-
     /**
      * 根据商品id查找商品信息
      * @param meId

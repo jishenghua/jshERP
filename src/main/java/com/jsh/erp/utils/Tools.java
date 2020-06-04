@@ -459,6 +459,20 @@ public class Tools {
         return new SimpleDateFormat("yyyy-MM").format(c.getTime());
     }
 
+    /**
+     * 根据月份获取当月最后一天
+     * @param monthTime
+     * @return
+     * @throws ParseException
+     */
+    public static String lastDayOfMonth(String monthTime) throws ParseException {
+        Date date = new SimpleDateFormat("yyyy-MM").parse(monthTime);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        cal.roll(Calendar.DAY_OF_MONTH, -1);
+        return new SimpleDateFormat("yyyy-MM-dd").format(cal.getTime());
+    }
 
     /**
      * 获取email用户姓名

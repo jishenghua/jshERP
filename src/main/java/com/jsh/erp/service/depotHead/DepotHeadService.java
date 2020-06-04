@@ -285,20 +285,6 @@ public class DepotHeadService {
         return result;
     }
 
-    public List<DepotHead> findByMonth(String monthTime)throws Exception {
-        DepotHeadExample example = new DepotHeadExample();
-        monthTime = monthTime + "-31 23:59:59";
-        Date month = StringUtil.getDateByString(monthTime, null);
-        example.createCriteria().andOpertimeLessThanOrEqualTo(month).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        List<DepotHead> list = null;
-        try{
-            list = depotHeadMapper.selectByExample(example);
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        return list;
-    }
-
     public List<DepotHeadVo4InDetail> findByAll(String beginTime, String endTime, String type, Integer pid, String dids, Integer oId, Integer offset, Integer rows) throws Exception{
         List<DepotHeadVo4InDetail> list = null;
         try{

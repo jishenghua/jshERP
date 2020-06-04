@@ -149,20 +149,25 @@
     <select id="findByAll" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultByMaterial">
         select m.id MId, m.Name MName, m.Model MModel, m.Unit MaterialUnit, m.Color MColor,
         me.purchase_decimal, u.UName UName
-        from jsh_depotitem di
-        inner join jsh_material m on di.MaterialId=m.id  and ifnull(m.delete_Flag,'0') !='1'
+        from jsh_material m
+        left join jsh_depotitem di on di.MaterialId=m.id  and ifnull(m.delete_Flag,'0') !='1'
+        left join jsh_depothead dh on di.HeaderId=dh.id  and ifnull(dh.delete_Flag,'0') !='1'
         left join jsh_material_extend me on me.id=di.material_extend_id  and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_unit u on m.UnitId=u.id and ifnull(u.delete_Flag,'0') !='1'
         where 1=1
         and me.default_flag=1
-        <if test="headIds != null">
-            and di.HeaderId in (${headIds})
+        <if test="name != null">
+            and m.name like '%${name}%'
         </if>
-        <if test="materialIds != null">
-            and di.MaterialId in (${materialIds})
+        <if test="model != null">
+            and m.model like '%${model}%'
+        </if>
+        <if test="endTime != null">
+            and dh.OperTime &lt;= '${endTime}'
         </if>
         and ifnull(di.delete_Flag,'0') !='1'
         group by m.id,m.Name, m.Model, m.Unit, m.Color, me.purchase_decimal, u.UName
+        order by m.Name, m.Model asc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
         </if>
@@ -170,14 +175,18 @@
 
     <select id="findByAllCount" resultType="java.lang.Integer">
         select count(1) from (select m.id
-        from jsh_depotitem di
-        inner join jsh_material m on di.MaterialId=m.id  and ifnull(m.delete_Flag,'0') !='1'
+        from jsh_material m
+        left join jsh_depotitem di on di.MaterialId=m.id  and ifnull(m.delete_Flag,'0') !='1'
+        left join jsh_depothead dh on di.HeaderId=dh.id  and ifnull(dh.delete_Flag,'0') !='1'
         where 1=1
-        <if test="headIds != null">
-            and di.HeaderId in (${headIds})
+        <if test="name != null">
+            and m.name like '%${name}%'
         </if>
-        <if test="materialIds != null">
-            and di.MaterialId in (${materialIds})
+        <if test="model != null">
+            and m.model like '%${model}%'
+        </if>
+        <if test="endTime != null">
+            and dh.OperTime &lt;= '${endTime}'
         </if>
         and ifnull(di.delete_Flag,'0') !='1'
         group by m.id) cc

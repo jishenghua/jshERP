@@ -30,6 +30,18 @@
             </div>
         </div>
         <div class="form-group">
+            <label class="control-label">名称：</label>
+            <div class="control-inline">
+                <input name="mName" id="mName" style="width:100px;"></input>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label">型号：</label>
+            <div class="control-inline">
+                <input type="text" name="mModel" id="mModel" class="easyui-textbox" style="width:100px;"></input>
+            </div>
+        </div>
+        <div class="form-group">
             <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchBtn">查询</a>&nbsp;
             <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-print" id="printBtn">打印</a>
         </div>
@@ -43,12 +55,28 @@
     $(function () {
         var thisDate = getNowFormatMonth(); //当前月份
         $("#searchMonth").val(thisDate);
+        initMaterialNameList();
         initMProperty(); //初始化商品属性
         initTableData();
         ininPager();
         search();
         print();
     });
+
+    //初始化商品名称模糊匹配
+    function initMaterialNameList() {
+        $('#mName').combobox({
+            method:"get",
+            url: "/material/getMaterialNameList",
+            valueField: 'value',
+            textField: 'text',
+            hasDownArrow: false,
+            filter: function(q, row){
+                var opts = $(this).combobox('options');
+                return row[opts.textField].indexOf(q) >-1;
+            }
+        });
+    }
 
     //初始化商品属性
     function initMProperty() {
@@ -184,64 +212,20 @@
 
     function showDetails(pageNo, pageSize) {
         $.ajax({
-            type: "get",
-            url: "/depotHead/findByMonth",
+            type: "post",
+            url: "/depotItem/buyIn",
             dataType: "json",
             data: ({
-                monthTime: $("#searchMonth").val()
+                currentPage: pageNo,
+                pageSize: pageSize,
+                monthTime: $("#searchMonth").val(),
+                name: $("#mName").combobox("getValue"),
+                model: $("#mModel").textbox("getValue"),
+                mpList: mPropertyList
             }),
             success: function (res) {
-                if(res && res.code === 200 && res.data) {
-                    var HeadIds = res.data.HeadIds;
-                    if (HeadIds) {
-                        //获取排序后的产品ID
-                        $.ajax({
-                            type: "get",
-                            url: "/material/findByOrder",
-                            dataType: "json",
-                            success: function (res) {
-                                if(res && res.code === 200 && res.data) {
-                                    var mIds = res.data.mIds;
-                                    if (mIds) {
-                                        $.ajax({
-                                            type: "post",
-                                            url: "/depotItem/buyIn",
-                                            dataType: "json",
-                                            data: ({
-                                                currentPage: pageNo,
-                                                pageSize: pageSize,
-                                                monthTime: $("#searchMonth").val(),
-                                                headIds: HeadIds,
-                                                materialIds: mIds,
-                                                mpList: mPropertyList
-                                            }),
-                                            success: function (res) {
-                                                if (res && res.code === 200 && res.data) {
-                                                    $("#tableData").datagrid('loadData', res.data);
-                                                }
-                                            },
-                                            //此处添加错误处理
-                                            error: function () {
-                                                $.messager.alert('查询提示', '查询数据后台异常，请稍后再试！', 'error');
-                                                return;
-                                            }
-                                        });
-                                    }
-                                    else {
-                                        $.messager.alert('查询提示', '本月无数据！', 'error');
-                                    }
-                                }
-                            },
-                            //此处添加错误处理
-                            error: function () {
-                                $.messager.alert('查询提示', '查询数据后台异常，请稍后再试！', 'error');
-                                return;
-                            }
-                        });
-                    }
-                    else {
-                        $.messager.alert('查询提示', '本月无数据！', 'error');
-                    }
+                if (res && res.code === 200 && res.data) {
+                    $("#tableData").datagrid('loadData', res.data);
                 }
             },
             //此处添加错误处理

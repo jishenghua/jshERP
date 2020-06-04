@@ -317,26 +317,6 @@ public class MaterialService {
         return list;
     }
 
-    public List<MaterialVo4Unit> findBySelect()throws Exception{
-        List<MaterialVo4Unit> list =null;
-        try{
-            list=  materialMapperEx.findBySelect();
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        return list;
-    }
-
-    public List<Material> findByOrder(String name, String model)throws Exception{
-        List<Material> list =null;
-        try{
-            list=  materialMapperEx.findByOrder(name, model);
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        return list;
-    }
-
     public List<MaterialVo4Unit> findBySelectWithBarCode(String q,Integer offset, Integer rows)throws Exception{
         List<MaterialVo4Unit> list =null;
         try{

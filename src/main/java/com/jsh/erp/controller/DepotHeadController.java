@@ -110,39 +110,6 @@ public class DepotHeadController {
     }
 
     /**
-     * 查找单据_根据月份(报表)
-     * @param monthTime
-     * @param request
-     * @return
-     */
-    @GetMapping(value = "/findByMonth")
-    public BaseResponseInfo findByMonth(@RequestParam("monthTime") String monthTime,
-                                        HttpServletRequest request)throws Exception {
-        BaseResponseInfo res = new BaseResponseInfo();
-        Map<String, Object> map = new HashMap<String, Object>();
-        try {
-            List<DepotHead> dataList = depotHeadService.findByMonth(monthTime);
-            String headId = "";
-            if (null != dataList) {
-                for (DepotHead depotHead : dataList) {
-                    headId = headId + depotHead.getId() + ",";
-                }
-            }
-            if (headId != "") {
-                headId = headId.substring(0, headId.lastIndexOf(","));
-            }
-            map.put("HeadIds", headId);
-            res.code = 200;
-            res.data = map;
-        } catch(Exception e){
-            e.printStackTrace();
-            res.code = 500;
-            res.data = "获取数据失败";
-        }
-        return res;
-    }
-
-    /**
      * 入库出库明细接口
      * @param currentPage
      * @param pageSize
