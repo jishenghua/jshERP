@@ -387,7 +387,6 @@ public class MaterialService {
                 Long categoryId = materialCategoryService.getCategoryIdByName(categoryName);
                 m.setCategoryid(categoryId);
                 m.setSafetystock(parseBigDecimalEx(safetyStock));
-                m.setUnit(unit);
                 String manyUnit = ExcelUtils.getContent(src, i, 7); //副单位
                 String barCode = ExcelUtils.getContent(src, i, 8); //基础条码
                 String manyBarCode = ExcelUtils.getContent(src, i, 9); //副条码
@@ -417,6 +416,8 @@ public class MaterialService {
                     otherObj.put("wholesaleDecimal", parsePrice(wholesaleDecimal,ratio));
                     otherObj.put("lowDecimal", parsePrice(lowDecimal,ratio));
                     materialExObj.put("other", otherObj);
+                } else {
+                    m.setUnit(unit);
                 }
                 m.setMaterialExObj(materialExObj);
                 String enabled = ExcelUtils.getContent(src, i, 15); //状态
