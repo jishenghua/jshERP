@@ -288,7 +288,7 @@ public class MaterialController {
         try {
             List<MaterialVo4Unit> dataList = materialService.findByAll(StringUtil.toNull(name), StringUtil.toNull(model),
                     StringUtil.toNull(categoryIds));
-            String[] names = {"名称", "类型", "型号", "安全存量", "单位", "零售价", "最低售价", "预计采购价", "批发价", "备注", "状态"};
+            String[] names = {"名称", "类型", "型号", "安全存量", "单位", "零售价", "最低售价", "采购价", "销售价", "备注", "状态"};
             String title = "商品信息";
             List<String[]> objects = new ArrayList<String[]>();
             if (null != dataList) {
@@ -298,11 +298,11 @@ public class MaterialController {
                     objs[1] = m.getCategoryName();
                     objs[2] = m.getModel();
                     objs[3] = m.getSafetystock() == null? "" : m.getSafetystock().toString();
-                    objs[4] = m.getUnit();
-                    objs[5] = "";
-                    objs[6] = "";
-                    objs[7] = "";
-                    objs[8] = "";
+                    objs[4] = m.getCommodityUnit();
+                    objs[5] = m.getCommodityDecimal() == null? "" : m.getCommodityDecimal().toString();
+                    objs[6] = m.getLowDecimal() == null? "" : m.getLowDecimal().toString();
+                    objs[7] = m.getPurchaseDecimal() == null? "" : m.getPurchaseDecimal().toString();
+                    objs[8] = m.getWholesaleDecimal() == null? "" : m.getWholesaleDecimal().toString();
                     objs[9] = m.getRemark();
                     objs[10] = m.getEnabled() ? "启用" : "禁用";
                     objects.add(objs);
