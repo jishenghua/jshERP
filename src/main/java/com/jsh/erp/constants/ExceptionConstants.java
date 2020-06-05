@@ -66,7 +66,7 @@ public class ExceptionConstants {
     public static final String USER_LOGIN_NAME_ALREADY_EXISTS_MSG = "登录名在本系统已存在";
     //用户录入数量超出限制
     public static final int USER_OVER_LIMIT_FAILED_CODE = 500004;
-    public static final String USER_OVER_LIMIT_FAILED_MSG = "用户录入数量超出限制，请联系管理员续费";
+    public static final String USER_OVER_LIMIT_FAILED_MSG = "用户录入数量超出限制，请联系管理员";
     //此用户名限制使用
     public static final int USER_NAME_LIMIT_USE_CODE = 500004;
     public static final String USER_NAME_LIMIT_USE_MSG = "此用户名限制使用";
@@ -293,7 +293,7 @@ public class ExceptionConstants {
     public static final String DEPOT_HEAD_EDIT_FAILED_MSG = "修改单据信息失败";
     //单据录入数量超出限制
     public static final int DEPOT_HEAD_OVER_LIMIT_FAILED_CODE = 8500003;
-    public static final String DEPOT_HEAD_OVER_LIMIT_FAILED_MSG = "单据录入数量超出限制，请联系管理员续费";
+    public static final String DEPOT_HEAD_OVER_LIMIT_FAILED_MSG = "单据录入数量超出限制，请联系管理员";
     /**
      *  单据明细信息
      * type = 90
