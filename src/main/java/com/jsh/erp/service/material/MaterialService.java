@@ -425,10 +425,9 @@ public class MaterialService {
                 m.setEnabled(enabled.equals("1")? true: false);
                 //缓存各个仓库的库存信息
                 Map<Long, BigDecimal> stockMap = new HashMap<Long, BigDecimal>();
-                int depotSize = depotCount>10? 10: depotCount; //excel里面的仓库数量
-                for(int j=1; j<=depotSize;j++) {
+                for(int j=1; j<=depotCount;j++) {
                     int col = 15+j;
-                    if(col <= src.getColumns()){
+                    if(col < src.getColumns()){
                         String depotName = ExcelUtils.getContent(src, 1, col); //获取仓库名称
                         Long depotId = depotService.getIdByName(depotName);
                         if(depotId!=0L){
