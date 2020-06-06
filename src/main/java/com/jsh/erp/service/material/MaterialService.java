@@ -20,6 +20,7 @@ import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.ExcelUtils;
 import com.jsh.erp.utils.StringUtil;
+import jxl.Cell;
 import jxl.Sheet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -424,7 +425,8 @@ public class MaterialService {
                 m.setEnabled(enabled.equals("1")? true: false);
                 //缓存各个仓库的库存信息
                 Map<Long, BigDecimal> stockMap = new HashMap<Long, BigDecimal>();
-                for(int j=1; j<=depotCount;j++) {
+                int depotSize = depotCount>10? 10: depotCount; //excel里面的仓库数量
+                for(int j=1; j<=depotSize;j++) {
                     int col = 15+j;
                     if(col <= src.getColumns()){
                         String depotName = ExcelUtils.getContent(src, 1, col); //获取仓库名称
