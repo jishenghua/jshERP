@@ -678,7 +678,7 @@
 						}
 					}
 				},
-	          	{ title: '条码_品名(规格)(型号)(扩展信息)(单位)',field: 'MaterialExtendId',width:270,
+	          	{ title: '条码_名称(规格)(型号)(扩展信息)(单位)',field: 'MaterialExtendId',width:270,
 				  	formatter:function(value,row,index){
 						return row.MaterialName;
 	              	},
@@ -696,7 +696,7 @@
 							panelHeight: 380,//下拉框的高度
 							columns:[[
 								{field:'mBarCode',title:'条码',width:120},
-								{field:'name',title:'品名',width:140},
+								{field:'name',title:'名称',width:140},
 								{field:'standard',title:'规格',width:80},
 								{field:'model',title:'型号',width:80},
 								{field:'unit',title:'单位',width:60},
@@ -833,7 +833,7 @@
 		});
         function materialSelect(rec) {
             var body,footer,input; //定义表格和文本框
-            var ratio = 1; //比例-品名专用
+            var ratio = 1; //比例-名称专用
 			var loadRatio = 1; //在单位输入框上面加载比例字段
             if(rec) {
                 var meId = rec.Id;
@@ -955,7 +955,7 @@
 			columns:[[
 				{ title: '商品类型',field: 'MType',width:80, hidden:isShowMaterialTypeColumn},
 				{ title: depotHeadName,field: 'DepotName',editor:'validatebox',width:90},
-				{ title: '条码_品名(规格)(型号)(扩展信息)(单位)',field: 'MaterialName',width:270},
+				{ title: '条码_名称(规格)(型号)(扩展信息)(单位)',field: 'MaterialName',width:270},
                 { title: '库存',field: 'Stock',width:50},
 				{ title: anotherDepotHeadName,field: 'AnotherDepotName',hidden:isShowAnotherDepot,width:90},
 				{ title: '单位',field: 'Unit',editor:'validatebox',width:60},

@@ -423,7 +423,7 @@
             columns:[[
                 { title: '商品类型',field: 'MType',width:80, hidden:isShowMaterialTypeColumn},
                 { title: depotHeadName,field: 'DepotName',editor:'validatebox',width:90},
-                { title: '品名(型号)(扩展信息)(单位)',field: 'MaterialName',width:230},
+                { title: '名称(型号)(扩展信息)(单位)',field: 'MaterialName',width:230},
                 { title: anotherDepotHeadName,field: 'AnotherDepotName',hidden:isShowAnotherDepot,width:90},
                 { title: '单位',field: 'Unit',editor:'validatebox',width:60},
                 { title: '数量',field: 'OperNumber',editor:'validatebox',width:60},
@@ -434,7 +434,7 @@
                 { title: '税额',field: 'TaxMoney',editor:'validatebox',hidden:isShowTaxColumn,width:75},
                 { title: '价税合计',field: 'TaxLastMoney',editor:'validatebox',hidden:isShowTaxColumn,width:75},
                 { title: '备注',field: 'Remark',editor:'validatebox',width:120},
-                { title: '品名-别',field: 'OtherField1',editor:'validatebox',hidden:otherColumns,width:60},
+                { title: '名称-别',field: 'OtherField1',editor:'validatebox',hidden:otherColumns,width:60},
                 { title: '型号-别',field: 'OtherField2',editor:'validatebox',hidden:otherColumns,width:60},
                 { title: '颜色-别',field: 'OtherField3',editor:'validatebox',hidden:otherColumns,width:60},
                 { title: '备注1',field: 'OtherField4',editor:'validatebox',hidden:true,width:60},

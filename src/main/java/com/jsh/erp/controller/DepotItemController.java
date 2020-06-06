@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -170,7 +171,7 @@ public class DepotItemController {
                         ratio = diEx.getUName();
                         ratio = ratio.substring(ratio.indexOf("("));
                     }
-                    //品名/型号/扩展信息/包装
+                    //名称/型号/扩展信息/包装
                     String MaterialName = diEx.getBarCode() + "_" + ((diEx.getMName() == null || diEx.getMName().equals("")) ? "" : diEx.getMName())
                             + ((diEx.getMStandard() == null || diEx.getMStandard().equals("")) ? "" : "(" + diEx.getMStandard() + ")")
                             + ((diEx.getMModel() == null || diEx.getMModel().equals("")) ? "" : "(" + diEx.getMModel() + ")");
@@ -258,17 +259,20 @@ public class DepotItemController {
                                       @RequestParam("pageSize") Integer pageSize,
                                       @RequestParam("depotId") Long depotId,
                                       @RequestParam("monthTime") String monthTime,
-                                      @RequestParam("headIds") String headIds,
-                                      @RequestParam("materialIds") String materialIds,
+                                      @RequestParam("name") String name,
+                                      @RequestParam("model") String model,
                                       @RequestParam("mpList") String mpList,
                                       HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         Long tenantId = Long.parseLong(request.getSession().getAttribute("tenantId").toString());
+        String timeA = monthTime+"-01 00:00:00";
+        String timeB = Tools.lastDayOfMonth(monthTime)+" 23:59:59";
         try {
-            List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(headIds, materialIds, (currentPage-1)*pageSize, pageSize);
+            List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(StringUtil.toNull(name), StringUtil.toNull(model),
+                    timeB,(currentPage-1)*pageSize, pageSize);
             String[] mpArr = mpList.split(",");
-            int total = depotItemService.findByAllCount(headIds, materialIds);
+            int total = depotItemService.findByAllCount(StringUtil.toNull(name), timeB, StringUtil.toNull(model));
             map.put("total", total);
             //存放数据json数组
             JSONArray dataArray = new JSONArray();
@@ -281,8 +285,6 @@ public class DepotItemController {
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
                     JSONObject item = new JSONObject();
                     Long mId = diEx.getMId();
-                    String timeA = monthTime+"-01 00:00:00";
-                    String timeB = monthTime+"-31 23:59:59";
                     item.put("MaterialName", diEx.getMName());
                     item.put("MaterialModel", diEx.getMModel());
                     //扩展信息
@@ -294,7 +296,7 @@ public class DepotItemController {
                     item.put("prevSum", depotItemService.getStockByParam(depotId,mId,null,timeA,tenantId));
                     item.put("InSum", depotItemService.getInNumByParam(depotId,mId,timeA,timeB,tenantId));
                     item.put("OutSum", depotItemService.getOutNumByParam(depotId,mId,timeA,timeB,tenantId));
-                    BigDecimal thisSum = depotItemService.getStockByParam(depotId,mId,null,null,tenantId);
+                    BigDecimal thisSum = depotItemService.getStockByParam(depotId,mId,null,timeB,tenantId);
                     item.put("thisSum", thisSum);
                     for(MaterialExtend me:meList) {
                         if(me.getMaterialId().longValue() == diEx.getMId().longValue()) {
@@ -336,12 +338,15 @@ public class DepotItemController {
                             @RequestParam("pageSize") Integer pageSize,
                             @RequestParam("depotId") Long depotId,
                             @RequestParam("monthTime") String monthTime,
-                            @RequestParam("headIds") String headIds,
-                            @RequestParam("materialIds") String materialIds,
-                            HttpServletRequest request, HttpServletResponse response) {
+                            @RequestParam("name") String name,
+                            @RequestParam("model") String model,
+                            HttpServletRequest request, HttpServletResponse response) throws Exception {
         Long tenantId = Long.parseLong(request.getSession().getAttribute("tenantId").toString());
+        String timeA = monthTime+"-01 00:00:00";
+        String timeB = Tools.lastDayOfMonth(monthTime)+" 23:59:59";
         try {
-            List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(headIds, materialIds, (currentPage-1)*pageSize, pageSize);
+            List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(StringUtil.toNull(name), StringUtil.toNull(model),
+                    timeB, (currentPage-1)*pageSize, pageSize);
             //存放数据json数组
             String[] names = {"名称", "型号", "单位", "单价", "上月结存数量", "入库数量", "出库数量", "本月结存数量", "结存金额"};
             String title = "库存报表";
@@ -349,19 +354,17 @@ public class DepotItemController {
             if (null != dataList) {
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
                     Long mId = diEx.getMId();
-                    String timeA = monthTime+"-01 00:00:00";
-                    String timeB = monthTime+"-31 23:59:59";
                     String[] objs = new String[9];
                     objs[0] = diEx.getMName().toString();
                     objs[1] = diEx.getMModel().toString();
                     objs[2] = diEx.getMaterialUnit().toString();
-                    objs[3] = getUnitPrice(diEx.getPresetPriceOne(), diEx.getPriceStrategy()).toString();
+                    objs[3] = diEx.getPurchaseDecimal().toString();
                     objs[4] = depotItemService.getStockByParam(depotId,mId,null,timeA,tenantId).toString();
                     objs[5] = depotItemService.getInNumByParam(depotId,mId,timeA,timeB,tenantId).toString();
                     objs[6] = depotItemService.getOutNumByParam(depotId,mId,timeA,timeB,tenantId).toString();
-                    BigDecimal thisSum = depotItemService.getStockByParam(depotId,mId,null,null,tenantId);
+                    BigDecimal thisSum = depotItemService.getStockByParam(depotId,mId,null,timeB,tenantId);
                     objs[7] = thisSum.toString();
-                    objs[8] = thisSum.multiply(getUnitPrice(diEx.getPresetPriceOne(), diEx.getPriceStrategy())).toString();
+                    objs[8] = thisSum.multiply(diEx.getPurchaseDecimal()).toString();
                     objects.add(objs);
                 }
             }
@@ -384,20 +387,22 @@ public class DepotItemController {
     @PostMapping(value = "/totalCountMoney")
     public BaseResponseInfo totalCountMoney(@RequestParam("depotId") Long depotId,
                                                         @RequestParam("monthTime") String monthTime,
-                                                        @RequestParam("headIds") String headIds,
-                                                        @RequestParam("materialIds") String materialIds,
+                                                        @RequestParam("name") String name,
+                                                        @RequestParam("model") String model,
                                                         HttpServletRequest request) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         Long tenantId = Long.parseLong(request.getSession().getAttribute("tenantId").toString());
+        String endTime = Tools.lastDayOfMonth(monthTime)+" 23:59:59";
         try {
-            List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(headIds, materialIds, null, null);
+            List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(StringUtil.toNull(name), StringUtil.toNull(model),
+                    endTime, null, null);
             BigDecimal thisAllPrice = BigDecimal.ZERO;
             if (null != dataList) {
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
                     Long mId = diEx.getMId();
-                    BigDecimal thisSum = depotItemService.getStockByParam(depotId,mId,null,null,tenantId);
-                    BigDecimal unitPrice = getUnitPrice(diEx.getPresetPriceOne(), diEx.getPriceStrategy());
+                    BigDecimal thisSum = depotItemService.getStockByParam(depotId,mId,null,endTime,tenantId);
+                    BigDecimal unitPrice = diEx.getPurchaseDecimal();
                     thisAllPrice = thisAllPrice.add(thisSum.multiply(unitPrice));
                 }
             }
@@ -427,16 +432,18 @@ public class DepotItemController {
     public BaseResponseInfo buyIn(@RequestParam("currentPage") Integer currentPage,
                                       @RequestParam("pageSize") Integer pageSize,
                                       @RequestParam("monthTime") String monthTime,
-                                      @RequestParam("headIds") String headIds,
-                                      @RequestParam("materialIds") String materialIds,
+                                  @RequestParam("name") String name,
+                                  @RequestParam("model") String model,
                                       @RequestParam("mpList") String mpList,
                                       HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
+        String endTime = Tools.lastDayOfMonth(monthTime)+" 23:59:59";
         try {
-            List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(headIds, materialIds, (currentPage-1)*pageSize, pageSize);
+            List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(StringUtil.toNull(name), StringUtil.toNull(model),
+                    endTime, (currentPage-1)*pageSize, pageSize);
             String[] mpArr = mpList.split(",");
-            int total = depotItemService.findByAllCount(headIds, materialIds);
+            int total = depotItemService.findByAllCount(StringUtil.toNull(name), StringUtil.toNull(model), endTime);
             map.put("total", total);
             //存放数据json数组
             JSONArray dataArray = new JSONArray();
@@ -488,16 +495,18 @@ public class DepotItemController {
     public BaseResponseInfo saleOut(@RequestParam("currentPage") Integer currentPage,
                                   @RequestParam("pageSize") Integer pageSize,
                                   @RequestParam("monthTime") String monthTime,
-                                  @RequestParam("headIds") String headIds,
-                                  @RequestParam("materialIds") String materialIds,
+                                    @RequestParam("name") String name,
+                                    @RequestParam("model") String model,
                                   @RequestParam("mpList") String mpList,
                                   HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
+        String endTime = Tools.lastDayOfMonth(monthTime)+" 23:59:59";
         try {
-            List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(headIds, materialIds, (currentPage-1)*pageSize, pageSize);
+            List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(StringUtil.toNull(name), StringUtil.toNull(model),
+                    endTime,(currentPage-1)*pageSize, pageSize);
             String[] mpArr = mpList.split(",");
-            int total = depotItemService.findByAllCount(headIds, materialIds);
+            int total = depotItemService.findByAllCount(StringUtil.toNull(name), StringUtil.toNull(model), endTime);
             map.put("total", total);
             //存放数据json数组
             JSONArray dataArray = new JSONArray();

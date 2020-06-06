@@ -296,7 +296,7 @@ CREATE TABLE `jsh_depotitem` (
   `TaxRate` decimal(24,6) DEFAULT NULL COMMENT '税率',
   `TaxMoney` decimal(24,6) DEFAULT NULL COMMENT '税额',
   `TaxLastMoney` decimal(24,6) DEFAULT NULL COMMENT '价税合计',
-  `OtherField1` varchar(50) DEFAULT NULL COMMENT '自定义字段1-品名',
+  `OtherField1` varchar(50) DEFAULT NULL COMMENT '自定义字段1-名称',
   `OtherField2` varchar(50) DEFAULT NULL COMMENT '自定义字段2-型号',
   `OtherField3` varchar(50) DEFAULT NULL COMMENT '自定义字段3-制造商',
   `OtherField4` varchar(50) DEFAULT NULL COMMENT '自定义字段4',
@@ -715,7 +715,7 @@ INSERT INTO `jsh_material_extend` VALUES ('2', '568', '1001', '个', '11.000000'
 INSERT INTO `jsh_material_extend` VALUES ('3', '569', '1002', '只', '10.000000', '15.000000', '15.000000', '13.000000', '1', '2020-02-20 23:45:15', 'jsh', 'jsh', '1582213514731', '63', '0');
 INSERT INTO `jsh_material_extend` VALUES ('4', '570', '1003', '个', '8.000000', '15.000000', '14.000000', '13.000000', '1', '2020-02-20 23:45:37', 'jsh', 'jsh', '1587657604430', '63', '0');
 INSERT INTO `jsh_material_extend` VALUES ('5', '577', '1004', '个', '10.000000', '20.000000', '20.000000', '20.000000', '1', '2020-02-20 23:46:36', 'jsh', 'jsh', '1582213596494', '63', '0');
-INSERT INTO `jsh_material_extend` VALUES ('6', '577', '1005', '箱', '120.000000', '240.000000', '240.000000', '240.000000', '1', '2020-02-20 23:46:36', 'jsh', 'jsh', '1582213596497', '63', '0');
+INSERT INTO `jsh_material_extend` VALUES ('6', '577', '1005', '箱', '120.000000', '240.000000', '240.000000', '240.000000', '0', '2020-02-20 23:46:36', 'jsh', 'jsh', '1582213596497', '63', '0');
 INSERT INTO `jsh_material_extend` VALUES ('7', '579', '1006', '个', '20.000000', '30.000000', '30.000000', '30.000000', '1', '2020-02-20 23:47:04', 'jsh', 'jsh', '1587784928581', '63', '0');
 INSERT INTO `jsh_material_extend` VALUES ('8', '579', '1007', '箱', '240.000000', '360.000000', '360.000000', '360.000000', '0', '2020-02-20 23:47:04', 'jsh', 'jsh', '1587784928585', '63', '0');
 INSERT INTO `jsh_material_extend` VALUES ('9', '586', '1008', '个', '12.000000', '15.000000', '15.000000', '15.000000', '1', '2020-02-20 23:47:23', 'jsh', 'jsh', '1582213643084', '63', '0');

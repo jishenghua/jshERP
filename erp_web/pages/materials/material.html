@@ -35,9 +35,15 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label">品名：</label>
+            <label class="control-label">条码：</label>
             <div class="control-inline">
-                <input type="text" id="searchName" name="searchName" value="" maxlength="100" class="easyui-textbox width-90"/>
+                <input type="text" id="searchBarCode" name="searchBarCode" value="" maxlength="100" class="easyui-textbox width-90"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label">名称：</label>
+            <div class="control-inline">
+                <input type="text" id="searchName" name="searchName" value="" maxlength="100" class="width-90"/>
             </div>
         </div>
         <div class="form-group">
@@ -72,7 +78,7 @@
             <div title="基本信息" style="padding:20px;">
                 <table width="100%" style="min-width:1150px;">
                     <tr>
-                        <td style="width:60px; height:30px;">品名</td>
+                        <td style="width:60px; height:30px;">名称</td>
                         <td style="padding:5px;width:250px;">
                             <input name="Name" id="Name" class="easyui-textbox"
                                    data-options="required:true,validType:'length[1,30]'"
@@ -235,6 +241,7 @@
             initMProperty();
             manyUnitFun();
             priceKeyUp();//价格触发事件
+            initMaterialNameList();
             initMPropertyShort(); //初始化商品属性
             initTableData();
             ininPager();
@@ -368,6 +375,21 @@
             });
         }
 
+        //初始化商品名称模糊匹配
+        function initMaterialNameList() {
+            $('#searchName').combobox({
+                method:"get",
+                url: "/material/getMaterialNameList",
+                valueField: 'value',
+                textField: 'text',
+                hasDownArrow: false,
+                filter: function(q, row){
+                    var opts = $(this).combobox('options');
+                    return row[opts.textField].indexOf(q) >-1;
+                }
+            });
+        }
+
         //初始化商品属性
         function initMPropertyShort() {
             $.ajax({
@@ -464,12 +486,13 @@
                             return str;
                         }
                     },
-                    {title: '品名', field: 'name', width: 120},
+                    {title: '条码', field: 'mBarCode', width: 120},
+                    {title: '名称', field: 'name', width: 120},
                     {title: '规格', field: 'standard', width: 80},
                     {title: '型号', field: 'model', width: 80},
                     {title: '类别', field: 'categoryName', width: 80},
-                    {title: '扩展信息', field: 'materialOther', width: 150},
-                    {title: '单位', field: 'unit', width: 100,
+                    {title: '扩展信息', field: 'materialOther', width: 140},
+                    {title: '单位', field: 'unit', width: 80,
                         formatter: function (value, rec) {
                             if(value) {
                                 return value;
@@ -933,7 +956,7 @@
 
         //导出数据
         function setOutputFun() {
-            var name = $.trim($("#searchName").val());
+            var name = $.trim($("#searchName").combobox("getValue"));
             var model = $.trim($("#searchModel").val());
             window.location.href = "/material/exportExcel?browserType=" + getOs()
                 + "&name=" + name + "&model=" + model + "&categoryIds=" + types;
@@ -1192,7 +1215,7 @@
         //保存信息
         $("#saveMaterial").off("click").on("click", function () {
             if (!$('#Name').val()) {
-                $.messager.alert('提示', '品名不能为空！', 'warning');
+                $.messager.alert('提示', '名称不能为空！', 'warning');
                 return;
             }
             if(!$("#Unit").val() && !$("#manyUnit").val()) {
@@ -1407,7 +1430,8 @@
         });
 
         function showMaterialDetails(pageNo, pageSize) {
-            var name = $.trim($("#searchName").val());
+            var barCode = $.trim($("#searchBarCode").val());
+            var name = $.trim($("#searchName").combobox("getValue"));
             var standard = $.trim($("#searchStandard").val());
             var model = $.trim($("#searchModel").val());
             $.ajax({
@@ -1416,6 +1440,7 @@
                 dataType: "json",
                 data: ({
                     search: JSON.stringify({
+                        barCode: barCode,
                         name: name,
                         standard: standard,
                         model: model,
@@ -1443,9 +1468,10 @@
         //重置按钮
         $("#searchResetBtn").unbind().bind({
             click: function () {
+                $("#searchBarCode").textbox("clear");
                 $("#searchParentName").textbox("clear");
                 $("#searchParentId").val("");
-                $("#searchName").textbox("clear");
+                $("#searchName").combobox("clear");
                 $("#searchStandard").textbox("clear");
                 $("#searchModel").textbox("clear");
                 types = ""; //清空类别

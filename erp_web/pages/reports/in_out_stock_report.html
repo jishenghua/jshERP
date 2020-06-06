@@ -29,6 +29,18 @@
             </div>
         </div>
         <div class="form-group">
+            <label class="control-label">名称：</label>
+            <div class="control-inline">
+                <input name="mName" id="mName" style="width:100px;"></input>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label">型号：</label>
+            <div class="control-inline">
+                <input type="text" name="mModel" id="mModel" class="easyui-textbox" style="width:100px;"></input>
+            </div>
+        </div>
+        <div class="form-group">
             <label class="control-label">月份：</label>
             <div class="control-inline">
                 <input type="text" name="searchMonth" id="searchMonth" onClick="WdatePicker({dateFmt:'yyyy-MM'})"
@@ -60,6 +72,7 @@
         initSelectInfo_UB();
         initSystemData_depot();
         initSelectInfo_depot();
+        initMaterialNameList();
         initMProperty(); //初始化商品属性
         initTableData();
         ininPager();
@@ -151,6 +164,21 @@
             }
             $("#searchProjectId").empty().append(options);
         }
+    }
+
+    //初始化商品名称模糊匹配
+    function initMaterialNameList() {
+        $('#mName').combobox({
+            method:"get",
+            url: "/material/getMaterialNameList",
+            valueField: 'value',
+            textField: 'text',
+            hasDownArrow: false,
+            filter: function(q, row){
+                var opts = $(this).combobox('options');
+                return row[opts.textField].indexOf(q) >-1;
+            }
+        });
     }
 
     //初始化商品属性
@@ -288,108 +316,69 @@
     });
 
     function showEachDetails(pageNo, pageSize) {
-        $.ajax({
-            type: "get",
-            url: "/depotHead/findByMonth",
-            dataType: "json",
-            data: ({
-                monthTime: $("#searchMonth").val()
-            }),
-            success: function (res) {
-                if(res && res.code === 200 && res.data) {
-                    var HeadIds = res.data.HeadIds;
-                    if (HeadIds) {
-                        //获取排序后的产品ID
-                        $.ajax({
-                            type: "get",
-                            url: "/material/findByOrder",
-                            dataType: "json",
-                            success: function (res) {
-                                if(res && res.code === 200 && res.data) {
-                                    var mIds = res.data.mIds;
-                                    if (mIds) {
-                                        if (pageSize === 3000) {
-                                            window.location.href = "/depotItem/exportExcel?browserType=" + getOs() + "&currentPage=" + pageNo + "&pageSize=" + pageSize + "&depotId=" + $.trim($("#searchProjectId").val()) + "&monthTime=" + $("#searchMonth").val() + "&headIds=" + HeadIds + "&materialIds=" + mIds;
-                                        }
-                                        else {
-                                            $.ajax({
-                                                type: "post",
-                                                url: "/depotItem/findByAll",
-                                                dataType: "json",
-                                                data: ({
-                                                    currentPage: pageNo,
-                                                    pageSize: pageSize,
-                                                    depotId: $.trim($("#searchProjectId").val()),
-                                                    monthTime: $("#searchMonth").val(),
-                                                    headIds: HeadIds,
-                                                    materialIds: mIds,
-                                                    mpList: mPropertyList
-                                                }),
-                                                success: function (res) {
-                                                    if(res && res.code === 200) {
-                                                        $("#tableData").datagrid('loadData', res.data);
-                                                    }
-                                                },
-                                                //此处添加错误处理
-                                                error: function () {
-                                                    $.messager.alert('查询提示', '查询数据后台异常，请稍后再试！', 'error');
-                                                    return;
-                                                }
-                                            });
-
-                                            //总金额
-                                            $.ajax({
-                                                type: "post",
-                                                url: "/depotItem/totalCountMoney",
-                                                dataType: "json",
-                                                data: ({
-                                                    depotId: $.trim($("#searchProjectId").val()),
-                                                    monthTime: $("#searchMonth").val(),
-                                                    headIds: HeadIds,
-                                                    materialIds: mIds
-                                                }),
-                                                success: function (res) {
-                                                    if(res && res.code === 200) {
-                                                        if(res.data && res.data.totalCount) {
-                                                            var count = res.data.totalCount.toString();
-                                                            if (count.lastIndexOf('.') > -1) {
-                                                                count = count.substring(0, count.lastIndexOf('.') + 3);
-                                                            }
-                                                            $("#tablePanel .total-count").text("本月合计金额:" + count + "元");//本月合计金额
-                                                        }
-                                                    }
-                                                },
-                                                //此处添加错误处理
-                                                error: function () {
-                                                    $.messager.alert('查询提示', '查询数据后台异常，请稍后再试！', 'error');
-                                                    return;
-                                                }
-                                            });
-                                        }
-                                    }
-                                    else {
-                                        $.messager.alert('查询提示', '本月无数据！', 'error');
-                                    }
-                                }
-                            },
-                            //此处添加错误处理
-                            error: function () {
-                                $.messager.alert('查询提示', '查询数据后台异常，请稍后再试！', 'error');
-                                return;
-                            }
-                        });
+        if (pageSize === 3000) {
+            window.location.href = "/depotItem/exportExcel?browserType=" + getOs()
+                + "&currentPage=" + pageNo + "&pageSize=" + pageSize
+                + "&depotId=" + $.trim($("#searchProjectId").val())
+                + "&monthTime=" + $("#searchMonth").val()
+                + "&name=" + $("#mName").combobox("getValue")
+                + "&model=" + $("#mModel").textbox("getValue");
+        }
+        else {
+            $.ajax({
+                type: "post",
+                url: "/depotItem/findByAll",
+                dataType: "json",
+                data: ({
+                    currentPage: pageNo,
+                    pageSize: pageSize,
+                    depotId: $.trim($("#searchProjectId").val()),
+                    monthTime: $("#searchMonth").val(),
+                    name: $("#mName").combobox("getValue"),
+                    model: $("#mModel").textbox("getValue"),
+                    mpList: mPropertyList
+                }),
+                success: function (res) {
+                    if(res && res.code === 200) {
+                        $("#tableData").datagrid('loadData', res.data);
                     }
-                    else {
-                        $.messager.alert('查询提示', '本月无数据！', 'error');
-                    }
+                },
+                //此处添加错误处理
+                error: function () {
+                    $.messager.alert('查询提示', '查询数据后台异常，请稍后再试！', 'error');
+                    return;
                 }
-            },
-            //此处添加错误处理
-            error: function () {
-                $.messager.alert('查询提示', '查询数据后台异常，请稍后再试！', 'error');
-                return;
-            }
-        });
+            });
+
+            //总金额
+            $.ajax({
+                type: "post",
+                url: "/depotItem/totalCountMoney",
+                dataType: "json",
+                data: ({
+                    depotId: $.trim($("#searchProjectId").val()),
+                    monthTime: $("#searchMonth").val(),
+                    name: $("#mName").combobox("getValue"),
+                    model: $("#mModel").textbox("getValue")
+                }),
+                success: function (res) {
+                    if(res && res.code === 200) {
+                        if(res.data && res.data.totalCount) {
+                            var count = res.data.totalCount.toString();
+                            if (count.lastIndexOf('.') > -1) {
+                                count = count.substring(0, count.lastIndexOf('.') + 3);
+                            }
+                            $("#tablePanel .total-count").text("本月合计金额:" + count + "元");//本月合计金额
+                        }
+                    }
+                },
+                //此处添加错误处理
+                error: function () {
+                    $.messager.alert('查询提示', '查询数据后台异常，请稍后再试！', 'error');
+                    return;
+                }
+            });
+        }
     }
 
     //报表打印

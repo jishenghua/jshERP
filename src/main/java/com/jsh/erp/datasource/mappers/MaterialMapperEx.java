@@ -18,6 +18,7 @@ import java.util.Map;
 public interface MaterialMapperEx {
 
     List<MaterialVo4Unit> selectByConditionMaterial(
+            @Param("barCode") String barCode,
             @Param("name") String name,
             @Param("standard") String standard,
             @Param("model") String model,
@@ -27,6 +28,7 @@ public interface MaterialMapperEx {
             @Param("rows") Integer rows);
 
     Long countsByMaterial(
+            @Param("barCode") String barCode,
             @Param("name") String name,
             @Param("standard") String standard,
             @Param("model") String model,
@@ -38,8 +40,6 @@ public interface MaterialMapperEx {
     List<MaterialVo4Unit> findById(@Param("id") Long id);
 
     List<MaterialVo4Unit> findByIdWithBarCode(@Param("meId") Long meId);
-
-    List<MaterialVo4Unit> findBySelect();
 
     List<MaterialVo4Unit> findBySelectWithBarCode(@Param("q") String q,
                                                   @Param("offset") Integer offset,
@@ -72,4 +72,6 @@ public interface MaterialMapperEx {
 
     List<MaterialVo4Unit> getMaterialByMeId(
             @Param("meId") Long meId);
+
+    List<String> getMaterialNameList();
 }
