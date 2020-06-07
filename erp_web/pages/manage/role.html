@@ -272,6 +272,9 @@
 
     //保存信息
     $("#saveRole").off("click").on("click", function () {
+        if(!$('#roleFM').form('validate')){
+            return;
+        }
         if (checkRoleName()) {
             return;
         }

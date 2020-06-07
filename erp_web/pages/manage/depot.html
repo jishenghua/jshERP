@@ -457,11 +457,14 @@
 
     //保存信息
     $("#saveDepot").off("click").on("click", function () {
-        var infoObj = $("#depotFM").serializeObject();
-        infoObj.type = 0;
+        if(!$('#depotFM').form('validate')){
+            return;
+        }
         if (checkDepotName()) {
             return;
         }
+        var infoObj = $("#depotFM").serializeObject();
+        infoObj.type = 0;
         $.ajax({
             url: url,
             type: "post",

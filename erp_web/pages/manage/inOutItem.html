@@ -353,11 +353,14 @@
 
     //保存收支项目
     $("#saveInOutItem").off("click").on("click", function () {
-        if (checkInOutItemName()) {
+        if(!$('#inOutItemFM').form('validate')){
             return;
         }
         if (!$("#type").val()) {
             $.messager.alert('提示', '请选择类型！', 'warning');
+            return;
+        }
+        if (checkInOutItemName()) {
             return;
         }
         $.ajax({

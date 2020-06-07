@@ -136,6 +136,18 @@ public class RoleService {
         return result;
     }
 
+    public int checkIsNameExist(Long id, String name) throws Exception{
+        RoleExample example = new RoleExample();
+        example.createCriteria().andIdNotEqualTo(id).andNameEqualTo(name).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        List<Role> list =null;
+        try{
+            list=roleMapper.selectByExample(example);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list==null?0:list.size();
+    }
+
     public List<Role> findUserRole()throws Exception{
         RoleExample example = new RoleExample();
         example.setOrderByClause("Id");

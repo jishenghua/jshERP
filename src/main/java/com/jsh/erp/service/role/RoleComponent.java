@@ -65,7 +65,7 @@ public class RoleComponent implements ICommonQuery {
 
     @Override
     public int checkIsNameExist(Long id, String name)throws Exception {
-        return 0;
+        return roleService.checkIsNameExist(id, name);
     }
 
 }
