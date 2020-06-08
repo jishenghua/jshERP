@@ -85,11 +85,12 @@ public class InOutItemService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertInOutItem(String beanJson, HttpServletRequest request)throws Exception {
-        InOutItem depot = JSONObject.parseObject(beanJson, InOutItem.class);
+        InOutItem inOutItem = JSONObject.parseObject(beanJson, InOutItem.class);
         int result=0;
         try{
-            result=inOutItemMapper.insertSelective(depot);
-            logService.insertLog("收支项目", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
+            result=inOutItemMapper.insertSelective(inOutItem);
+            logService.insertLog("收支项目",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(inOutItem.getName()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -98,13 +99,13 @@ public class InOutItemService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateInOutItem(String beanJson, Long id, HttpServletRequest request)throws Exception {
-        InOutItem depot = JSONObject.parseObject(beanJson, InOutItem.class);
-        depot.setId(id);
+        InOutItem inOutItem = JSONObject.parseObject(beanJson, InOutItem.class);
+        inOutItem.setId(id);
         int result=0;
         try{
-            result=inOutItemMapper.updateByPrimaryKeySelective(depot);
+            result=inOutItemMapper.updateByPrimaryKeySelective(inOutItem);
             logService.insertLog("收支项目",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(inOutItem.getName()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }

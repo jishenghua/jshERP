@@ -105,7 +105,8 @@ public class AccountHeadService {
         int result=0;
         try{
             result = accountHeadMapper.insertSelective(accountHead);
-            logService.insertLog("财务", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
+            logService.insertLog("财务",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(accountHead.getBillno()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -120,7 +121,7 @@ public class AccountHeadService {
         try{
             result = accountHeadMapper.updateByPrimaryKeySelective(accountHead);
             logService.insertLog("财务",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(accountHead.getBillno()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -131,9 +132,10 @@ public class AccountHeadService {
     public int deleteAccountHead(Long id, HttpServletRequest request)throws Exception {
         int result=0;
         try{
+            AccountHead accountHead = accountHeadMapper.selectByPrimaryKey(id);
             result = accountHeadMapper.deleteByPrimaryKey(id);
             logService.insertLog("财务",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(id).toString(), request);
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(accountHead.getBillno()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }

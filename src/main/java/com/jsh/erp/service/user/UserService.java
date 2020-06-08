@@ -121,7 +121,8 @@ public class UserService {
         int result=0;
         try{
             result=userMapper.insertSelective(user);
-            logService.insertLog("用户", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
+            logService.insertLog("用户",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(user.getLoginName()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -144,7 +145,7 @@ public class UserService {
         try{
             result=userMapper.updateByPrimaryKeySelective(user);
             logService.insertLog("用户",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(user.getLoginName()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }

@@ -86,8 +86,7 @@ public class UserBusinessService {
         int result=0;
         try{
             result=userBusinessMapper.updateByPrimaryKeySelective(userBusiness);
-            logService.insertLog("关联关系",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
+            logService.insertLog("关联关系", BusinessConstants.LOG_OPERATION_TYPE_EDIT, request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }

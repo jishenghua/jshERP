@@ -103,7 +103,8 @@ public class DepotService {
         int result=0;
         try{
             result=depotMapper.insertSelective(depot);
-            logService.insertLog("仓库", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
+            logService.insertLog("仓库",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(depot.getName()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -118,7 +119,7 @@ public class DepotService {
         try{
             result= depotMapper.updateByPrimaryKeySelective(depot);
             logService.insertLog("仓库",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(depot.getName()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -129,9 +130,10 @@ public class DepotService {
     public int deleteDepot(Long id, HttpServletRequest request)throws Exception {
         int result=0;
         try{
+            Depot depot = depotMapper.selectByPrimaryKey(id);
             result= depotMapper.deleteByPrimaryKey(id);
             logService.insertLog("仓库",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(id).toString(), request);
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(depot.getName()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }

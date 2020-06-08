@@ -162,7 +162,8 @@ public class MaterialService {
                     }
                 }
             }
-            logService.insertLog("商品", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
+            logService.insertLog("商品",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(m.getName()).toString(), request);
             return 1;
         }catch(Exception e){
             JshException.writeFail(logger, e);
@@ -197,7 +198,7 @@ public class MaterialService {
                 }
             }
             logService.insertLog("商品",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(material.getName()).toString(), request);
             return 1;
         }catch(Exception e){
             JshException.writeFail(logger, e);

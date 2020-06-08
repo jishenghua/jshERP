@@ -148,7 +148,7 @@ public class LogService {
         }
     }
 
-    public void insertLog(String moduleName, String type, HttpServletRequest request)throws Exception{
+    public void insertLog(String moduleName, String content, HttpServletRequest request)throws Exception{
         try{
             Long userId = getUserId(request);
             if(userId!=null) {
@@ -159,7 +159,7 @@ public class LogService {
                 log.setCreatetime(new Date());
                 Byte status = 0;
                 log.setStatus(status);
-                log.setContentdetails(type + moduleName);
+                log.setContentdetails(content);
                 logMapper.insertSelective(log);
             }
         }catch(Exception e){

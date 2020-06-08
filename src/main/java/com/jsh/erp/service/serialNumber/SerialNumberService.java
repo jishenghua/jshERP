@@ -94,11 +94,11 @@ public class SerialNumberService {
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertSerialNumber(String beanJson, HttpServletRequest request)throws Exception {
         SerialNumber serialNumber = JSONObject.parseObject(beanJson, SerialNumber.class);
-        logService.insertLog("序列号", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
         int result=0;
         try{
             result=serialNumberMapper.insertSelective(serialNumber);
-            logService.insertLog("序列号", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
+            logService.insertLog("序列号",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(serialNumber.getSerialNumber()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -113,7 +113,7 @@ public class SerialNumberService {
         try{
             result=serialNumberMapper.updateByPrimaryKeySelective(serialNumber);
             logService.insertLog("序列号",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(serialNumber.getSerialNumber()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }

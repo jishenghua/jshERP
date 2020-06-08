@@ -118,7 +118,8 @@ public class MaterialCategoryService {
         int result=0;
         try{
             result=materialCategoryMapper.insertSelective(materialCategory);
-            logService.insertLog("商品类型", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
+            logService.insertLog("商品类型",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(materialCategory.getName()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -133,7 +134,7 @@ public class MaterialCategoryService {
         try{
             result=materialCategoryMapper.updateByPrimaryKeySelective(materialCategory);
             logService.insertLog("商品类型",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(materialCategory.getName()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }

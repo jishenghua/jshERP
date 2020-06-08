@@ -133,7 +133,8 @@ public class SupplierService {
         int result=0;
         try{
             result=supplierMapper.insertSelective(supplier);
-            logService.insertLog("商家", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
+            logService.insertLog("商家",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(supplier.getSupplier()).toString(),request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -154,7 +155,7 @@ public class SupplierService {
         try{
             result=supplierMapper.updateByPrimaryKeySelective(supplier);
             logService.insertLog("商家",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(supplier.getSupplier()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }

@@ -86,7 +86,8 @@ public class RoleService {
         int result=0;
         try{
             result=roleMapper.insertSelective(role);
-            logService.insertLog("角色", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
+            logService.insertLog("角色",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(role.getName()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -101,7 +102,7 @@ public class RoleService {
         try{
             result=roleMapper.updateByPrimaryKeySelective(role);
             logService.insertLog("角色",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(role.getName()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }

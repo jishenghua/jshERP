@@ -120,7 +120,8 @@ public class AccountService {
         int result=0;
         try{
             result = accountMapper.insertSelective(account);
-            logService.insertLog("账户", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
+            logService.insertLog("账户",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(account.getName()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -135,7 +136,7 @@ public class AccountService {
         try{
             result = accountMapper.updateByPrimaryKeySelective(account);
             logService.insertLog("账户",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(account.getName()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }

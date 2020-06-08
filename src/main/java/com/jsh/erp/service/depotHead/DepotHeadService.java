@@ -223,9 +223,6 @@ public class DepotHeadService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchSetStatus(String status, String depotHeadIDs)throws Exception {
-        logService.insertLog("单据",
-                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(depotHeadIDs).toString(),
-                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         List<Long> ids = StringUtil.strToLongList(depotHeadIDs);
         DepotHead depotHead = new DepotHead();
         depotHead.setStatus(status);
@@ -237,6 +234,9 @@ public class DepotHeadService {
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
+        logService.insertLog("单据",
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(depotHeadIDs).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         return result;
     }
     /**
@@ -456,9 +456,6 @@ public class DepotHeadService {
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void addDepotHeadAndDetail(String beanJson, String inserted, String deleted, String updated,Long tenantId,
                                       HttpServletRequest request) throws Exception {
-        logService.insertLog("单据",
-                BusinessConstants.LOG_OPERATION_TYPE_ADD,
-                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         /**处理单据主表数据*/
         DepotHead depotHead = JSONObject.parseObject(beanJson, DepotHead.class);
         //判断用户是否已经登录过，登录过不再处理
@@ -499,6 +496,9 @@ public class DepotHeadService {
                 JshException.writeFail(logger, e);
             }
         }
+        logService.insertLog("单据",
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(depotHead.getNumber()).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
     }
 
     /**
@@ -516,9 +516,6 @@ public class DepotHeadService {
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void updateDepotHeadAndDetail(Long id, String beanJson, String inserted, String deleted, String updated,
                                          BigDecimal preTotalPrice, Long tenantId,HttpServletRequest request)throws Exception {
-        logService.insertLog("单据",
-                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(),
-                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         /**更新单据主表信息*/
         DepotHead depotHead = JSONObject.parseObject(beanJson, DepotHead.class);
         //判断用户是否已经登录过，登录过不再处理
@@ -538,6 +535,9 @@ public class DepotHeadService {
         }
         /**入库和出库处理单据子表信息*/
         depotItemService.saveDetials(inserted,deleted,updated,depotHead.getId(),tenantId,request);
+        logService.insertLog("单据",
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(depotHead.getNumber()).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
     }
 
     /**
@@ -547,9 +547,6 @@ public class DepotHeadService {
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void deleteDepotHeadAndDetail(Long id) throws Exception {
-        logService.insertLog("单据",
-                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(id).toString(),
-                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         //查询单据主表信息
         DepotHead depotHead =getDepotHead(id);
         User userInfo=userService.getCurrentUser();
@@ -581,6 +578,9 @@ public class DepotHeadService {
 
         /**删除单据主表信息*/
         batchDeleteDepotHeadByIds(id.toString());
+        logService.insertLog("单据",
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(depotHead.getNumber()).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
     }
 
     /**

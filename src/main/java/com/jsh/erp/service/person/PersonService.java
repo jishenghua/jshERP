@@ -92,7 +92,8 @@ public class PersonService {
         int result=0;
         try{
             result=personMapper.insertSelective(person);
-            logService.insertLog("经手人", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
+            logService.insertLog("经手人",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(person.getName()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -107,7 +108,7 @@ public class PersonService {
         try{
             result=personMapper.updateByPrimaryKeySelective(person);
             logService.insertLog("经手人",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(person.getName()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }

@@ -56,7 +56,8 @@ public class OrganizationService {
         int result=0;
         try{
             result=organizationMapper.insertSelective(organization);
-            logService.insertLog("机构", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
+            logService.insertLog("机构",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(organization.getOrgFullName()).toString(),request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -70,7 +71,7 @@ public class OrganizationService {
         try{
             result=organizationMapper.updateByPrimaryKeySelective(organization);
             logService.insertLog("机构",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(organization.getOrgFullName()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }

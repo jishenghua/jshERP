@@ -97,13 +97,13 @@ public class FunctionsService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateFunctions(String beanJson, Long id, HttpServletRequest request) throws Exception{
-        Functions depot = JSONObject.parseObject(beanJson, Functions.class);
-        depot.setId(id);
+        Functions functions = JSONObject.parseObject(beanJson, Functions.class);
+        functions.setId(id);
         int result=0;
         try{
-            result=functionsMapper.updateByPrimaryKeySelective(depot);
+            result=functionsMapper.updateByPrimaryKeySelective(functions);
             logService.insertLog("功能",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(functions.getName()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }

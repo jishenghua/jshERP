@@ -89,7 +89,8 @@ public class UnitService {
         int result=0;
         try{
             result=unitMapper.insertSelective(unit);
-            logService.insertLog("计量单位", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
+            logService.insertLog("计量单位",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(unit.getUname()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -104,7 +105,7 @@ public class UnitService {
         try{
             result=unitMapper.updateByPrimaryKeySelective(unit);
             logService.insertLog("计量单位",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(unit.getUname()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
