@@ -55,6 +55,19 @@ public class AccountHeadService {
         return result;
     }
 
+    public List<AccountHead> getAccountHeadListByIds(String ids)throws Exception {
+        List<Long> idList = StringUtil.strToLongList(ids);
+        List<AccountHead> list = new ArrayList<>();
+        try{
+            AccountHeadExample example = new AccountHeadExample();
+            example.createCriteria().andIdIn(idList);
+            list = accountHeadMapper.selectByExample(example);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list;
+    }
+
     public List<AccountHead> getAccountHead() throws Exception{
         AccountHeadExample example = new AccountHeadExample();
         List<AccountHead> list=null;
@@ -268,8 +281,13 @@ public class AccountHeadService {
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteAccountHeadByIds(String ids)throws Exception {
-        logService.insertLog("财务",
-                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
+        StringBuffer sb = new StringBuffer();
+        sb.append(BusinessConstants.LOG_OPERATION_TYPE_DELETE);
+        List<AccountHead> list = getAccountHeadListByIds(ids);
+        for(AccountHead accountHead: list){
+            sb.append("[").append(accountHead.getBillno()).append("]");
+        }
+        logService.insertLog("财务", sb.toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");

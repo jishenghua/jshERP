@@ -75,6 +75,19 @@ public class MaterialService {
         return result;
     }
 
+    public List<Material> getMaterialListByIds(String ids)throws Exception {
+        List<Long> idList = StringUtil.strToLongList(ids);
+        List<Material> list = new ArrayList<>();
+        try{
+            MaterialExample example = new MaterialExample();
+            example.createCriteria().andIdIn(idList);
+            list = materialMapper.selectByExample(example);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list;
+    }
+
     public List<Material> getMaterial() throws Exception{
         MaterialExample example = new MaterialExample();
         example.createCriteria().andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
@@ -592,8 +605,13 @@ public class MaterialService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteMaterialByIds(String ids) throws Exception{
-        logService.insertLog("商品",
-                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
+        StringBuffer sb = new StringBuffer();
+        sb.append(BusinessConstants.LOG_OPERATION_TYPE_DELETE);
+        List<Material> list = getMaterialListByIds(ids);
+        for(Material material: list){
+            sb.append("[").append(material.getName()).append("]");
+        }
+        logService.insertLog("商品", sb.toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");

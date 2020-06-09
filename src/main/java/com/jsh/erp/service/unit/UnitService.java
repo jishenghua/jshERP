@@ -22,6 +22,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -49,6 +50,19 @@ public class UnitService {
             JshException.readFail(logger, e);
         }
         return result;
+    }
+
+    public List<Unit> getUnitListByIds(String ids)throws Exception {
+        List<Long> idList = StringUtil.strToLongList(ids);
+        List<Unit> list = new ArrayList<>();
+        try{
+            UnitExample example = new UnitExample();
+            example.createCriteria().andIdIn(idList);
+            list = unitMapper.selectByExample(example);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list;
     }
 
     public List<Unit> getUnit()throws Exception {
@@ -153,8 +167,13 @@ public class UnitService {
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteUnitByIds(String ids)throws Exception {
-        logService.insertLog("计量单位",
-                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
+        StringBuffer sb = new StringBuffer();
+        sb.append(BusinessConstants.LOG_OPERATION_TYPE_DELETE);
+        List<Unit> list = getUnitListByIds(ids);
+        for(Unit unit: list){
+            sb.append("[").append(unit.getUname()).append("]");
+        }
+        logService.insertLog("计量单位", sb.toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");

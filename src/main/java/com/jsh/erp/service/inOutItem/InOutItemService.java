@@ -22,6 +22,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -49,6 +50,19 @@ public class InOutItemService {
             JshException.readFail(logger, e);
         }
         return result;
+    }
+
+    public List<InOutItem> getInOutItemListByIds(String ids)throws Exception {
+        List<Long> idList = StringUtil.strToLongList(ids);
+        List<InOutItem> list = new ArrayList<>();
+        try{
+            InOutItemExample example = new InOutItemExample();
+            example.createCriteria().andIdIn(idList);
+            list = inOutItemMapper.selectByExample(example);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list;
     }
 
     public List<InOutItem> getInOutItem()throws Exception {
@@ -171,8 +185,13 @@ public class InOutItemService {
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteInOutItemByIds(String ids)throws Exception {
-        logService.insertLog("收支项目",
-                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
+        StringBuffer sb = new StringBuffer();
+        sb.append(BusinessConstants.LOG_OPERATION_TYPE_DELETE);
+        List<InOutItem> list = getInOutItemListByIds(ids);
+        for(InOutItem inOutItem: list){
+            sb.append("[").append(inOutItem.getName()).append("]");
+        }
+        logService.insertLog("收支项目", sb.toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");

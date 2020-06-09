@@ -22,6 +22,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -46,6 +47,19 @@ public class RoleService {
             JshException.readFail(logger, e);
         }
         return result;
+    }
+
+    public List<Role> getRoleListByIds(String ids)throws Exception {
+        List<Long> idList = StringUtil.strToLongList(ids);
+        List<Role> list = new ArrayList<>();
+        try{
+            RoleExample example = new RoleExample();
+            example.createCriteria().andIdIn(idList);
+            list = roleMapper.selectByExample(example);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list;
     }
 
     public List<Role> getRole()throws Exception {
@@ -172,8 +186,13 @@ public class RoleService {
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteRoleByIds(String ids) throws Exception{
-        logService.insertLog("序列号",
-                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
+        StringBuffer sb = new StringBuffer();
+        sb.append(BusinessConstants.LOG_OPERATION_TYPE_DELETE);
+        List<Role> list = getRoleListByIds(ids);
+        for(Role role: list){
+            sb.append("[").append(role.getName()).append("]");
+        }
+        logService.insertLog("角色", sb.toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");

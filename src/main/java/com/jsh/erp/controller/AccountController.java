@@ -143,9 +143,6 @@ public class AccountController {
         }
     }
     /**
-     * create by: qiankunpingtai
-     * website：https://qiankunpingtai.cn
-     * description:
      *  批量删除账户信息
      * create time: 2019/3/29 10:49
      * @Param: ids
@@ -156,13 +153,6 @@ public class AccountController {
             required =false,defaultValue=BusinessConstants.DELETE_TYPE_NORMAL)String deleteType) throws Exception {
 
         JSONObject result = ExceptionConstants.standardSuccess();
-        /**
-         * create by: qiankunpingtai
-         * create time: 2019/4/10 10:19
-         * website：https://qiankunpingtai.cn
-         * description:
-         *  出于兼容性考虑，没有传递删除类型时，默认为正常删除
-         */
         int i=0;
         if(BusinessConstants.DELETE_TYPE_NORMAL.equals(deleteType)){
              i= accountService.batchDeleteAccountByIdsNormal(ids);

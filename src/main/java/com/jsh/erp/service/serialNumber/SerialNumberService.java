@@ -59,6 +59,19 @@ public class SerialNumberService {
         return result;
     }
 
+    public List<SerialNumber> getSerialNumberListByIds(String ids)throws Exception {
+        List<Long> idList = StringUtil.strToLongList(ids);
+        List<SerialNumber> list = new ArrayList<>();
+        try{
+            SerialNumberExample example = new SerialNumberExample();
+            example.createCriteria().andIdIn(idList);
+            list = serialNumberMapper.selectByExample(example);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list;
+    }
+
     public List<SerialNumber> getSerialNumber()throws Exception {
         SerialNumberExample example = new SerialNumberExample();
         List<SerialNumber> list=null;
@@ -511,8 +524,13 @@ public class SerialNumberService {
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteSerialNumberByIds(String ids) throws Exception{
-        logService.insertLog("序列号",
-                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
+        StringBuffer sb = new StringBuffer();
+        sb.append(BusinessConstants.LOG_OPERATION_TYPE_DELETE);
+        List<SerialNumber> list = getSerialNumberListByIds(ids);
+        for(SerialNumber serialNumber: list){
+            sb.append("[").append(serialNumber.getSerialNumber()).append("]");
+        }
+        logService.insertLog("序列号", sb.toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");

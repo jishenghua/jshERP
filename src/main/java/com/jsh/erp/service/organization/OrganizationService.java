@@ -24,6 +24,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -48,6 +49,19 @@ public class OrganizationService {
 
     public Organization getOrganization(long id) throws Exception {
         return organizationMapper.selectByPrimaryKey(id);
+    }
+
+    public List<Organization> getOrganizationListByIds(String ids)throws Exception {
+        List<Long> idList = StringUtil.strToLongList(ids);
+        List<Organization> list = new ArrayList<>();
+        try{
+            OrganizationExample example = new OrganizationExample();
+            example.createCriteria().andIdIn(idList);
+            list = organizationMapper.selectByExample(example);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
@@ -106,7 +120,7 @@ public class OrganizationService {
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int addOrganization(Organization org) throws Exception{
         logService.insertLog("机构",
-                BusinessConstants.LOG_OPERATION_TYPE_ADD,
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(org.getOrgFullName()).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         //新增时间
         Date date=new Date();
@@ -141,7 +155,7 @@ public class OrganizationService {
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int editOrganization(Organization org)throws Exception {
         logService.insertLog("机构",
-               new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(org.getId()).toString(),
+               new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(org.getOrgFullName()).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         //修改时间
         org.setUpdateTime(new Date());
@@ -240,8 +254,13 @@ public class OrganizationService {
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteOrganizationByIds(String ids) throws Exception{
-        logService.insertLog("机构",
-                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
+        StringBuffer sb = new StringBuffer();
+        sb.append(BusinessConstants.LOG_OPERATION_TYPE_DELETE);
+        List<Organization> list = getOrganizationListByIds(ids);
+        for(Organization organization: list){
+            sb.append("[").append(organization.getOrgFullName()).append("]");
+        }
+        logService.insertLog("机构", sb.toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");

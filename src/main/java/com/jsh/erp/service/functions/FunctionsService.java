@@ -23,6 +23,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -48,6 +49,19 @@ public class FunctionsService {
             JshException.readFail(logger, e);
         }
         return result;
+    }
+
+    public List<Functions> getFunctionsListByIds(String ids)throws Exception {
+        List<Long> idList = StringUtil.strToLongList(ids);
+        List<Functions> list = new ArrayList<>();
+        try{
+            FunctionsExample example = new FunctionsExample();
+            example.createCriteria().andIdIn(idList);
+            list = functionsMapper.selectByExample(example);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list;
     }
 
     public List<Functions> getFunctions()throws Exception {
@@ -84,11 +98,12 @@ public class FunctionsService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertFunctions(String beanJson, HttpServletRequest request)throws Exception {
-        Functions depot = JSONObject.parseObject(beanJson, Functions.class);
+        Functions functions = JSONObject.parseObject(beanJson, Functions.class);
         int result=0;
         try{
-            result=functionsMapper.insertSelective(depot);
-            logService.insertLog("功能", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
+            result=functionsMapper.insertSelective(functions);
+            logService.insertLog("功能",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(functions.getName()).toString(),request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -195,8 +210,13 @@ public class FunctionsService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteFunctionsByIds(String ids)throws Exception {
-        logService.insertLog("功能",
-                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
+        StringBuffer sb = new StringBuffer();
+        sb.append(BusinessConstants.LOG_OPERATION_TYPE_DELETE);
+        List<Functions> list = getFunctionsListByIds(ids);
+        for(Functions functions: list){
+            sb.append("[").append(functions.getName()).append("]");
+        }
+        logService.insertLog("功能", sb.toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");

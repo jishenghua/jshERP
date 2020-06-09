@@ -60,7 +60,6 @@ public class DepotHeadService {
     @Resource
     private LogService logService;
 
-
     public DepotHead getDepotHead(long id)throws Exception {
         DepotHead result=null;
         try{
@@ -590,9 +589,6 @@ public class DepotHeadService {
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void batchDeleteDepotHeadAndDetail(String ids) throws Exception{
-        logService.insertLog("单据",
-                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
-                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         if(StringUtil.isNotEmpty(ids)){
             String [] headIds=ids.split(",");
             for(int i=0;i<headIds.length;i++){
@@ -602,9 +598,6 @@ public class DepotHeadService {
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteDepotHeadByIds(String ids)throws Exception {
-        logService.insertLog("单据",
-                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
-                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");
         int result=0;

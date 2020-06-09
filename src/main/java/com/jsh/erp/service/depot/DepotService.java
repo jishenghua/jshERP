@@ -20,6 +20,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +51,19 @@ public class DepotService {
             JshException.readFail(logger, e);
         }
         return result;
+    }
+
+    public List<Depot> getDepotListByIds(String ids)throws Exception {
+        List<Long> idList = StringUtil.strToLongList(ids);
+        List<Depot> list = new ArrayList<>();
+        try{
+            DepotExample example = new DepotExample();
+            example.createCriteria().andIdIn(idList);
+            list = depotMapper.selectByExample(example);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list;
     }
 
     public List<Depot> getDepot()throws Exception {
@@ -195,8 +209,13 @@ public class DepotService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteDepotByIds(String ids)throws Exception {
-        logService.insertLog("仓库",
-                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
+        StringBuffer sb = new StringBuffer();
+        sb.append(BusinessConstants.LOG_OPERATION_TYPE_DELETE);
+        List<Depot> list = getDepotListByIds(ids);
+        for(Depot depot: list){
+            sb.append("[").append(depot.getName()).append("]");
+        }
+        logService.insertLog("仓库", sb.toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");
