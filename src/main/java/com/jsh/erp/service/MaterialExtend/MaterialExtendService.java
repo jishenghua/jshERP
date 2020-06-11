@@ -77,8 +77,6 @@ public class MaterialExtendService {
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public String saveDetials(String inserted, String deleted, String updated, String sortList, Long materialId) throws Exception {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        logService.insertLog("商品价格扩展",
-                BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
         //转为json
         JSONArray insertedJson = JSONArray.parseArray(inserted);
         JSONArray deletedJson = JSONArray.parseArray(deleted);
@@ -249,9 +247,6 @@ public class MaterialExtendService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteMaterialExtendByIds(String ids, HttpServletRequest request) throws Exception{
-        logService.insertLog("商品价格扩展",
-                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
-                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         String [] idArray=ids.split(",");
         int result = 0;
         try{

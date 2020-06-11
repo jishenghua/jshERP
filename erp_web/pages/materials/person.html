@@ -345,6 +345,9 @@
 
     //保存信息
     $("#savePerson").off("click").on("click", function () {
+        if(!$('#personFM').form('validate')){
+            return;
+        }
         if (!$("#Type").val()) {
             $.messager.alert('提示', '请选择类型！', 'warning');
             return;

@@ -22,6 +22,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -46,6 +47,19 @@ public class RoleService {
             JshException.readFail(logger, e);
         }
         return result;
+    }
+
+    public List<Role> getRoleListByIds(String ids)throws Exception {
+        List<Long> idList = StringUtil.strToLongList(ids);
+        List<Role> list = new ArrayList<>();
+        try{
+            RoleExample example = new RoleExample();
+            example.createCriteria().andIdIn(idList);
+            list = roleMapper.selectByExample(example);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list;
     }
 
     public List<Role> getRole()throws Exception {
@@ -86,7 +100,8 @@ public class RoleService {
         int result=0;
         try{
             result=roleMapper.insertSelective(role);
-            logService.insertLog("角色", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
+            logService.insertLog("角色",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(role.getName()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -101,7 +116,7 @@ public class RoleService {
         try{
             result=roleMapper.updateByPrimaryKeySelective(role);
             logService.insertLog("角色",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(role.getName()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -136,6 +151,18 @@ public class RoleService {
         return result;
     }
 
+    public int checkIsNameExist(Long id, String name) throws Exception{
+        RoleExample example = new RoleExample();
+        example.createCriteria().andIdNotEqualTo(id).andNameEqualTo(name).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        List<Role> list =null;
+        try{
+            list=roleMapper.selectByExample(example);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list==null?0:list.size();
+    }
+
     public List<Role> findUserRole()throws Exception{
         RoleExample example = new RoleExample();
         example.setOrderByClause("Id");
@@ -159,8 +186,13 @@ public class RoleService {
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteRoleByIds(String ids) throws Exception{
-        logService.insertLog("序列号",
-                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
+        StringBuffer sb = new StringBuffer();
+        sb.append(BusinessConstants.LOG_OPERATION_TYPE_DELETE);
+        List<Role> list = getRoleListByIds(ids);
+        for(Role role: list){
+            sb.append("[").append(role.getName()).append("]");
+        }
+        logService.insertLog("角色", sb.toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");

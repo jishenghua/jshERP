@@ -52,18 +52,18 @@
     </div>
     <table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 </div>
-<div id="supplierDlg" class="easyui-dialog" style="width:580px;padding:10px 20px"
+<div id="supplierDlg" class="easyui-dialog" style="padding:10px 40px" fit="true"
      closed="true" buttons="#dlg-buttons" modal="true" collapsible="false" closable="true">
     <form id="supplierFM">
-        <table>
+        <table width="740px">
             <tr>
-                <td style="width: 80px;height: 20px">名称</td>
-                <td style="width: 180px;padding:5px">
+                <td style="width: 120px;height: 20px">名称</td>
+                <td style="width: 250px;padding:5px">
                     <input name="supplier" id="supplier" class="easyui-textbox"
                            data-options="required:true,validType:'length[2,30]'" style="width: 160px;"/>
                 </td>
-                <td style="width: 60px;height: 20px">联系人</td>
-                <td style="width:180px;padding:5px;">
+                <td style="width: 120px;height: 20px">联系人</td>
+                <td style="width:250px;padding:5px;">
                     <input name="contacts" id="contacts" class="easyui-textbox" style="width: 160px;"/>
                 </td>
             </tr>
@@ -134,13 +134,13 @@
             <tr>
                 <td>地址</td>
                 <td style="padding:5px" colspan="3">
-                    <input name="address" id="address" class="easyui-textbox" style="width: 401px;"/>
+                    <input name="address" id="address" class="easyui-textbox" style="width: 530px;"/>
                 </td>
             </tr>
             <tr>
                 <td>备注</td>
                 <td style="padding:5px" colspan="3">
-                    <input name="description" id="description" class="easyui-textbox" data-options="multiline:true" style="width: 401px;height: 40px;"/>
+                    <input name="description" id="description" class="easyui-textbox" data-options="multiline:true" style="width: 530px;height: 40px;"/>
                 </td>
             </tr>
         </table>

@@ -20,6 +20,7 @@ import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.ExcelUtils;
 import com.jsh.erp.utils.StringUtil;
+import jxl.Cell;
 import jxl.Sheet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,6 +73,19 @@ public class MaterialService {
             JshException.readFail(logger, e);
         }
         return result;
+    }
+
+    public List<Material> getMaterialListByIds(String ids)throws Exception {
+        List<Long> idList = StringUtil.strToLongList(ids);
+        List<Material> list = new ArrayList<>();
+        try{
+            MaterialExample example = new MaterialExample();
+            example.createCriteria().andIdIn(idList);
+            list = materialMapper.selectByExample(example);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list;
     }
 
     public List<Material> getMaterial() throws Exception{
@@ -161,7 +175,8 @@ public class MaterialService {
                     }
                 }
             }
-            logService.insertLog("商品", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
+            logService.insertLog("商品",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(m.getName()).toString(), request);
             return 1;
         }catch(Exception e){
             JshException.writeFail(logger, e);
@@ -196,7 +211,7 @@ public class MaterialService {
                 }
             }
             logService.insertLog("商品",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(material.getName()).toString(), request);
             return 1;
         }catch(Exception e){
             JshException.writeFail(logger, e);
@@ -426,7 +441,7 @@ public class MaterialService {
                 Map<Long, BigDecimal> stockMap = new HashMap<Long, BigDecimal>();
                 for(int j=1; j<=depotCount;j++) {
                     int col = 15+j;
-                    if(col <= src.getColumns()){
+                    if(col < src.getColumns()){
                         String depotName = ExcelUtils.getContent(src, 1, col); //获取仓库名称
                         Long depotId = depotService.getIdByName(depotName);
                         if(depotId!=0L){
@@ -590,8 +605,13 @@ public class MaterialService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteMaterialByIds(String ids) throws Exception{
-        logService.insertLog("商品",
-                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
+        StringBuffer sb = new StringBuffer();
+        sb.append(BusinessConstants.LOG_OPERATION_TYPE_DELETE);
+        List<Material> list = getMaterialListByIds(ids);
+        for(Material material: list){
+            sb.append("[").append(material.getName()).append("]");
+        }
+        logService.insertLog("商品", sb.toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");

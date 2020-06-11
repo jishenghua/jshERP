@@ -66,6 +66,19 @@ public class UserService {
         return result;
     }
 
+    public List<User> getUserListByIds(String ids)throws Exception {
+        List<Long> idList = StringUtil.strToLongList(ids);
+        List<User> list = new ArrayList<>();
+        try{
+            UserExample example = new UserExample();
+            example.createCriteria().andIdIn(idList);
+            list = userMapper.selectByExample(example);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list;
+    }
+
     public List<User> getUser()throws Exception {
         UserExample example = new UserExample();
         example.createCriteria().andStatusEqualTo(BusinessConstants.USER_STATUS_NORMAL);
@@ -121,7 +134,8 @@ public class UserService {
         int result=0;
         try{
             result=userMapper.insertSelective(user);
-            logService.insertLog("用户", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
+            logService.insertLog("用户",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(user.getLoginName()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -144,7 +158,7 @@ public class UserService {
         try{
             result=userMapper.updateByPrimaryKeySelective(user);
             logService.insertLog("用户",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(user.getLoginName()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -604,8 +618,13 @@ public class UserService {
      * */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void batDeleteUser(String ids) throws Exception{
-        logService.insertLog("用户",
-                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
+        StringBuffer sb = new StringBuffer();
+        sb.append(BusinessConstants.LOG_OPERATION_TYPE_DELETE);
+        List<User> list = getUserListByIds(ids);
+        for(User user: list){
+            sb.append("[").append(user.getLoginName()).append("]");
+        }
+        logService.insertLog("用户", sb.toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         String idsArray[]=ids.split(",");
         int result =0;

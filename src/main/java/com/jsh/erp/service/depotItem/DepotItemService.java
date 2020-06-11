@@ -110,7 +110,6 @@ public class DepotItemService {
         int result =0;
         try{
             result=depotItemMapper.insertSelective(depotItem);
-            logService.insertLog("单据明细", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -124,8 +123,6 @@ public class DepotItemService {
         int result =0;
         try{
             result=depotItemMapper.updateByPrimaryKeySelective(depotItem);
-            logService.insertLog("单据明细",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -137,8 +134,6 @@ public class DepotItemService {
         int result =0;
         try{
             result=depotItemMapper.deleteByPrimaryKey(id);
-            logService.insertLog("单据明细",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(id).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -153,7 +148,6 @@ public class DepotItemService {
         int result =0;
         try{
             result=depotItemMapper.deleteByExample(example);
-            logService.insertLog("单据明细", "批量删除,id集:" + ids, request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -294,9 +288,6 @@ public class DepotItemService {
      * */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public String saveDetials(String inserted, String deleted, String updated, Long headerId, Long tenantId, HttpServletRequest request) throws Exception{
-        logService.insertLog("单据明细",
-                BusinessConstants.LOG_OPERATION_TYPE_ADD,
-                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         //查询单据主表信息
         DepotHead depotHead=null;
         try{
@@ -609,9 +600,6 @@ public class DepotItemService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteDepotItemByIds(String ids)throws Exception {
-        logService.insertLog("单据明细",
-                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
-                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");
         int  result =0;

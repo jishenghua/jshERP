@@ -55,6 +55,19 @@ public class AccountHeadService {
         return result;
     }
 
+    public List<AccountHead> getAccountHeadListByIds(String ids)throws Exception {
+        List<Long> idList = StringUtil.strToLongList(ids);
+        List<AccountHead> list = new ArrayList<>();
+        try{
+            AccountHeadExample example = new AccountHeadExample();
+            example.createCriteria().andIdIn(idList);
+            list = accountHeadMapper.selectByExample(example);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list;
+    }
+
     public List<AccountHead> getAccountHead() throws Exception{
         AccountHeadExample example = new AccountHeadExample();
         List<AccountHead> list=null;
@@ -105,7 +118,8 @@ public class AccountHeadService {
         int result=0;
         try{
             result = accountHeadMapper.insertSelective(accountHead);
-            logService.insertLog("财务", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
+            logService.insertLog("财务",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(accountHead.getBillno()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -120,7 +134,7 @@ public class AccountHeadService {
         try{
             result = accountHeadMapper.updateByPrimaryKeySelective(accountHead);
             logService.insertLog("财务",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(accountHead.getBillno()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -131,9 +145,10 @@ public class AccountHeadService {
     public int deleteAccountHead(Long id, HttpServletRequest request)throws Exception {
         int result=0;
         try{
+            AccountHead accountHead = accountHeadMapper.selectByPrimaryKey(id);
             result = accountHeadMapper.deleteByPrimaryKey(id);
             logService.insertLog("财务",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(id).toString(), request);
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(accountHead.getBillno()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -266,8 +281,13 @@ public class AccountHeadService {
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteAccountHeadByIds(String ids)throws Exception {
-        logService.insertLog("财务",
-                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
+        StringBuffer sb = new StringBuffer();
+        sb.append(BusinessConstants.LOG_OPERATION_TYPE_DELETE);
+        List<AccountHead> list = getAccountHeadListByIds(ids);
+        for(AccountHead accountHead: list){
+            sb.append("[").append(accountHead.getBillno()).append("]");
+        }
+        logService.insertLog("财务", sb.toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");

@@ -61,6 +61,19 @@ public class AccountService {
         return accountMapper.selectByPrimaryKey(id);
     }
 
+    public List<Account> getAccountListByIds(String ids)throws Exception {
+        List<Long> idList = StringUtil.strToLongList(ids);
+        List<Account> list = new ArrayList<>();
+        try{
+            AccountExample example = new AccountExample();
+            example.createCriteria().andIdIn(idList);
+            list = accountMapper.selectByExample(example);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list;
+    }
+
     public List<Account> getAccount() throws Exception{
         AccountExample example = new AccountExample();
         example.createCriteria().andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
@@ -120,7 +133,8 @@ public class AccountService {
         int result=0;
         try{
             result = accountMapper.insertSelective(account);
-            logService.insertLog("账户", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
+            logService.insertLog("账户",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(account.getName()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -135,7 +149,7 @@ public class AccountService {
         try{
             result = accountMapper.updateByPrimaryKeySelective(account);
             logService.insertLog("账户",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(account.getName()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -441,8 +455,13 @@ public class AccountService {
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteAccountByIds(String ids) throws Exception{
-        logService.insertLog("账户",
-                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
+        StringBuffer sb = new StringBuffer();
+        sb.append(BusinessConstants.LOG_OPERATION_TYPE_DELETE);
+        List<Account> list = getAccountListByIds(ids);
+        for(Account account: list){
+            sb.append("[").append(account.getName()).append("]");
+        }
+        logService.insertLog("账户", sb.toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");

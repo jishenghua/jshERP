@@ -102,7 +102,8 @@ public class MsgService {
         int result=0;
         try{
             result=msgMapper.insertSelective(msg);
-            logService.insertLog("消息", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
+            logService.insertLog("消息",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(msg.getMsgTitle()).toString(), request);
         }catch(Exception e){
             logger.error("异常码[{}],异常提示[{}],异常[{}]",
                     ExceptionConstants.DATA_WRITE_FAIL_CODE, ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
@@ -120,7 +121,7 @@ public class MsgService {
         try{
             result=msgMapper.updateByPrimaryKeySelective(msg);
             logService.insertLog("消息",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(msg.getMsgTitle()).toString(), request);
         }catch(Exception e){
             logger.error("异常码[{}],异常提示[{}],异常[{}]",
                     ExceptionConstants.DATA_WRITE_FAIL_CODE, ExceptionConstants.DATA_WRITE_FAIL_MSG,e);

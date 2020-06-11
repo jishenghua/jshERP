@@ -144,7 +144,7 @@ public class UserController {
                             }
                         }
                         logService.insertLog("用户",
-                                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_LOGIN).append(user.getId()).toString(),
+                                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_LOGIN).append(user.getLoginName()).toString(),
                                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
                     } catch (Exception e) {
                         e.printStackTrace();

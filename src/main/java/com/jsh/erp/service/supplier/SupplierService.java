@@ -63,6 +63,19 @@ public class SupplierService {
         return result;
     }
 
+    public List<Supplier> getSupplierListByIds(String ids)throws Exception {
+        List<Long> idList = StringUtil.strToLongList(ids);
+        List<Supplier> list = new ArrayList<>();
+        try{
+            SupplierExample example = new SupplierExample();
+            example.createCriteria().andIdIn(idList);
+            list = supplierMapper.selectByExample(example);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list;
+    }
+
     public List<Supplier> getSupplier()throws Exception {
         SupplierExample example = new SupplierExample();
         example.createCriteria().andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
@@ -133,7 +146,8 @@ public class SupplierService {
         int result=0;
         try{
             result=supplierMapper.insertSelective(supplier);
-            logService.insertLog("商家", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
+            logService.insertLog("商家",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(supplier.getSupplier()).toString(),request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -154,7 +168,7 @@ public class SupplierService {
         try{
             result=supplierMapper.updateByPrimaryKeySelective(supplier);
             logService.insertLog("商家",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(supplier.getSupplier()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -345,8 +359,13 @@ public class SupplierService {
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteSupplierByIds(String ids)throws Exception {
-        logService.insertLog("商家",
-                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
+        StringBuffer sb = new StringBuffer();
+        sb.append(BusinessConstants.LOG_OPERATION_TYPE_DELETE);
+        List<Supplier> list = getSupplierListByIds(ids);
+        for(Supplier supplier: list){
+            sb.append("[").append(supplier.getSupplier()).append("]");
+        }
+        logService.insertLog("商家", sb.toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");

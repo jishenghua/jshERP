@@ -141,9 +141,9 @@ public class BusinessConstants {
      * */
     public static final String LOG_OPERATION_TYPE_ADD = "新增";
     public static final String LOG_OPERATION_TYPE_BATCH_ADD = "批量新增";
-    public static final String LOG_OPERATION_TYPE_EDIT = "修改,id:";
-    public static final String LOG_OPERATION_TYPE_DELETE = "删除,id:";
-    public static final String LOG_OPERATION_TYPE_LOGIN = "登录,id:";
+    public static final String LOG_OPERATION_TYPE_EDIT = "修改";
+    public static final String LOG_OPERATION_TYPE_DELETE = "删除";
+    public static final String LOG_OPERATION_TYPE_LOGIN = "登录";
     public static final String LOG_OPERATION_TYPE_IMPORT = "导入";
 
     /**

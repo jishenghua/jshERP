@@ -52,6 +52,19 @@ public class MaterialCategoryService {
         return result;
     }
 
+    public List<MaterialCategory> getMaterialCategoryListByIds(String ids)throws Exception {
+        List<Long> idList = StringUtil.strToLongList(ids);
+        List<MaterialCategory> list = new ArrayList<>();
+        try{
+            MaterialCategoryExample example = new MaterialCategoryExample();
+            example.createCriteria().andIdIn(idList);
+            list = materialCategoryMapper.selectByExample(example);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list;
+    }
+
     public List<MaterialCategory> getMaterialCategory()throws Exception {
         MaterialCategoryExample example = new MaterialCategoryExample();
         List<MaterialCategory> list=null;
@@ -118,7 +131,8 @@ public class MaterialCategoryService {
         int result=0;
         try{
             result=materialCategoryMapper.insertSelective(materialCategory);
-            logService.insertLog("商品类型", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
+            logService.insertLog("商品类型",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(materialCategory.getName()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -133,7 +147,7 @@ public class MaterialCategoryService {
         try{
             result=materialCategoryMapper.updateByPrimaryKeySelective(materialCategory);
             logService.insertLog("商品类型",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(), request);
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(materialCategory.getName()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -211,7 +225,7 @@ public class MaterialCategoryService {
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int addMaterialCategory(MaterialCategory mc) throws Exception {
         logService.insertLog("商品类型",
-                BusinessConstants.LOG_OPERATION_TYPE_ADD,
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(mc.getName()).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         if(mc==null){
             return 0;
@@ -244,8 +258,13 @@ public class MaterialCategoryService {
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteMaterialCategoryByIds(String ids) throws Exception {
-        logService.insertLog("商品类型",
-                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
+        StringBuffer sb = new StringBuffer();
+        sb.append(BusinessConstants.LOG_OPERATION_TYPE_DELETE);
+        List<MaterialCategory> list = getMaterialCategoryListByIds(ids);
+        for(MaterialCategory materialCategory: list){
+            sb.append("[").append(materialCategory.getName()).append("]");
+        }
+        logService.insertLog("商品类型", sb.toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         //更新时间
         Date updateDate =new Date();
@@ -267,13 +286,12 @@ public class MaterialCategoryService {
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int editMaterialCategory(MaterialCategory mc) throws Exception{
         logService.insertLog("商品类型",
-                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(mc.getId()).toString(),
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(mc.getName()).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         if(mc.getParentid()==null){
             //没有给定父级目录的id，默认设置父级目录为根目录的父目录
             mc.setParentid(BusinessConstants.MATERIAL_CATEGORY_ROOT_PARENT_ID);
         }
-
         //检查商品类型编号是否已存在
         checkMaterialCategorySerialNo(mc);
         //更新时间
