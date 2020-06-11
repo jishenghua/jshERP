@@ -11,12 +11,13 @@ $.ajax({
                 sessionStorage.setItem("userId", user.id);
                 if (user.username) {
                     $(".main-header .user-menu .hidden-xs,.main-sidebar .info p").text(user.username);
-                } else {
-                    top.location.href = '/login.html';
                 }
-            } else {
-                top.location.href = '/login.html';
             }
+        } else {
+            top.location.href = '/login.html';
         }
+    },
+    error: function () {
+        top.location.href = '/login.html';
     }
 });
