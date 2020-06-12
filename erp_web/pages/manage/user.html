@@ -313,7 +313,7 @@
                         }
                         ids += row[i].id + ",";
                     }
-                    if(row[i].loginame == "jsh"){
+                    if(row[i].loginName == "jsh"){
                         $.messager.alert('提示', '租户jsh不能删除！', 'warning');
                         return;
                     } else if(row[i].id == row[i].tenantId) {
@@ -363,7 +363,7 @@
         var row = {};
         $('#usernameFM').form('load', row);
         $("#username").focus();
-        $("#loginame").removeAttr("readonly");
+        $("#loginName").removeAttr("readonly");
         userID = 0;
         /**机构选择*/
         $("#selectType").val("org");

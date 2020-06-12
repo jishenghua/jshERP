@@ -235,83 +235,85 @@
     function deleteSystemConfig(systemConfigId) {
         if(checkIsTestUser()) {
             return;
-        }
-        $.messager.confirm('删除确认', '确定要删除此系统配置信息吗？', function (r) {
-            if (r) {
-                $.ajax({
-                    type: "post",
-                    url: "/systemConfig/batchDeleteSystemConfigByIds",
-                    dataType: "json",
-                    data: ({
-                        ids: systemConfigId
-                    }),
-                    success: function (res) {
-                        if(res && res.code == 200) {
-                            $("#searchBtn").click();
-                        } else {
-                            $.messager.alert('删除提示', '删除系统配置信息失败，请稍后再试！', 'error');
+        } else {
+            $.messager.confirm('删除确认', '确定要删除此系统配置信息吗？', function (r) {
+                if (r) {
+                    $.ajax({
+                        type: "post",
+                        url: "/systemConfig/batchDeleteSystemConfigByIds",
+                        dataType: "json",
+                        data: ({
+                            ids: systemConfigId
+                        }),
+                        success: function (res) {
+                            if(res && res.code == 200) {
+                                $("#searchBtn").click();
+                            } else {
+                                $.messager.alert('删除提示', '删除系统配置信息失败，请稍后再试！', 'error');
+                            }
+                        },
+                        //此处添加错误处理
+                        error: function () {
+                            $.messager.alert('删除提示', '删除系统配置信息异常，请稍后再试！', 'error');
+                            return;
                         }
-                    },
-                    //此处添加错误处理
-                    error: function () {
-                        $.messager.alert('删除提示', '删除系统配置信息异常，请稍后再试！', 'error');
-                        return;
-                    }
-                });
-            }
-        });
+                    });
+                }
+            });
+        }
     }
 
     //批量删除系统配置
     function batDeleteSystemConfig() {
         if(checkIsTestUser()) {
             return;
-        }
-        var row = $('#tableData').datagrid('getChecked');
-        if (row.length == 0) {
-            $.messager.alert('删除提示', '没有记录被选中！', 'warning');
-            return;
-        }
-        if (row.length > 0) {
-            $.messager.confirm('删除确认', '确定要删除选中的' + row.length + '条系统配置信息吗？', function (r) {
-                if (r) {
-                    var ids = "";
-                    for (var i = 0; i < row.length; i++) {
-                        if (i == row.length - 1) {
-                            ids += row[i].id;
-                            break;
-                        }
-                        ids += row[i].id + ",";
-                    }
-                    if(row[i].loginame == "jsh"){
-                        $.messager.alert('提示', '管理员jsh不能删除！', 'warning');
-                        return;
-                    } else {
-                        $.ajax({
-                            type: "post",
-                            url: "/systemConfig/batchDeleteSystemConfigByIds",
-                            dataType: "json",
-                            async: false,
-                            data: ({
-                                ids: ids
-                            }),
-                            success: function (res) {
-                                if(res && res.code === 200) {
-                                    $("#searchBtn").click();
-                                    $(":checkbox").attr("checked", false);
-                                } else {
-                                    $.messager.alert('删除提示', '删除系统配置信息失败，请稍后再试！', 'error');
-                                }
-                            },
-                            //此处添加错误处理
-                            error: function () {
-                                $.messager.alert('删除提示', '删除系统配置信息异常，请稍后再试！', 'error');
-                                return;
+        } else {
+            var row = $('#tableData').datagrid('getChecked');
+            if (row.length == 0) {
+                $.messager.alert('删除提示', '没有记录被选中！', 'warning');
+                return;
+            }
+            if (row.length > 0) {
+                $.messager.confirm('删除确认', '确定要删除选中的' + row.length + '条系统配置信息吗？', function (r) {
+                    if (r) {
+                        var ids = "";
+                        for (var i = 0; i < row.length; i++) {
+                            if (i == row.length - 1) {
+                                ids += row[i].id;
+                                break;
                             }
-                        });
+                            ids += row[i].id + ",";
+                        }
+                        if(row[i].loginName == "jsh"){
+                            $.messager.alert('提示', '管理员jsh不能删除！', 'warning');
+                            return;
+                        } else {
+                            $.ajax({
+                                type: "post",
+                                url: "/systemConfig/batchDeleteSystemConfigByIds",
+                                dataType: "json",
+                                async: false,
+                                data: ({
+                                    ids: ids
+                                }),
+                                success: function (res) {
+                                    if(res && res.code === 200) {
+                                        $("#searchBtn").click();
+                                        $(":checkbox").attr("checked", false);
+                                    } else {
+                                        $.messager.alert('删除提示', '删除系统配置信息失败，请稍后再试！', 'error');
+                                    }
+                                },
+                                //此处添加错误处理
+                                error: function () {
+                                    $.messager.alert('删除提示', '删除系统配置信息异常，请稍后再试！', 'error');
+                                    return;
+                                }
+                            });
+                        }
                     }
-                }
-            });
+                });
+            }
         }
     }
 
