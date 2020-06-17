@@ -182,8 +182,6 @@ public class DepotItemController {
                     item.put("Unit", diEx.getMunit());
                     item.put("OperNumber", diEx.getOpernumber());
                     item.put("BasicNumber", diEx.getBasicnumber());
-                    //统计该商品已分批出库的总数量-用于订单
-                    item.put("finishNumber", depotItemService.getFinishNumber(diEx.getMaterialid(),diEx.getHeaderid()));
                     item.put("UnitPrice", diEx.getUnitprice());
                     item.put("TaxUnitPrice", diEx.getTaxunitprice());
                     item.put("AllPrice", diEx.getAllprice());
