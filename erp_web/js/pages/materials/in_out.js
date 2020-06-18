@@ -1422,7 +1422,7 @@
 
 		//采购入库、销售出库的费用数据加载
         if(res.othermoneylist && res.othermoneyitem){
-			$("#OtherMoney").val(res.othermoney); //采购费用、销售费用
+			$("#OtherMoney").val(res.othermoney); //其它费用
             var itemArr = res.othermoneylist.split(",");
             var itemMoneyArr = res.othermoneyitem.split(",");
 			$("#OtherMoney").attr("data-itemArr",JSON.stringify(itemArr)).attr("data-itemMoneyArr",itemMoneyArr);  //json数据存储
@@ -1473,7 +1473,7 @@
 		$("#DebtShow").text((res.discountlastmoney-res.changeamount).toFixed(2));
 		$("#AccountDayShow").text(res.accountday);  //结算天数
 		$("#LinkNumberShow").text(res.linknumber); //关联订单号
-        if(res.othermoneylist && res.othermoneyitem){
+        if(res.othermoney && res.othermoneylist && res.othermoneyitem){
             var itemArr = res.othermoneylist.split(","); //支出项目id列表
             var itemMoneyArr = null;
             if(res.othermoneyitem!=null) {
@@ -1498,10 +1498,10 @@
                     }
                 }
             }
-			$("#OtherMoneyShow").text(otherMoneyShow +"总计："+ res.othermoney + "元 "); //采购费用、销售费用
+			$("#OtherMoneyShow").text(otherMoneyShow +"总计："+ res.othermoney + "元 "); //其它费用
 		}
 		else {
-			$("#OtherMoneyShow").text(res.othermoney); //采购费用、销售费用
+			$("#OtherMoneyShow").text(res.othermoney); //其它费用
 		}
         $("#payTypeShow").text(res.paytype);
         var TotalPrice = res.totalprice;
@@ -1810,7 +1810,7 @@
 					Discount: $.trim($("#Discount").val()),
 					DiscountMoney: $.trim($("#DiscountMoney").val()),
 					DiscountLastMoney: $.trim($("#DiscountLastMoney").val()),
-					OtherMoney: $.trim($("#OtherMoney").val()), //采购费用、销售费用
+					OtherMoney: $.trim($("#OtherMoney").val()), //其它费用
 					OtherMoneyList: $("#OtherMoney").attr("data-itemarr"), //支出项目列表-涉及费用
 					OtherMoneyItem: $("#OtherMoney").attr("data-itemmoneyarr"), //支出项目金额列表-涉及费用
 					AccountDay: $("#AccountDay").val() //结算天数
@@ -2055,9 +2055,9 @@
 			}
 		});
 
-		//点击采购费用、销售费用的事件
+		//点击其它费用的事件
 		$(".other-money-ico").off("click").on("click",function(){
-			$('#otherMoneyDlg').dialog('open').dialog('setTitle','<img src="/js/easyui/themes/icons/pencil.png"/>&nbsp;'+ listSubType +'费用');
+			$('#otherMoneyDlg').dialog('open').dialog('setTitle','<img src="/js/easyui/themes/icons/pencil.png"/>&nbsp;其它费用');
 			$("#otherMoneyDlg .money-dlg .money-content-tmp").remove(); //先移除输入栏目
 			$("#otherMoneyTotalDlg").text(0); //将合计初始化为0
 			for(var i=0; i<6; i++) {
@@ -2139,7 +2139,7 @@
 				if(itemArr.length && itemMoneyArr.length) {
 					$("#OtherMoney").attr("data-itemArr",JSON.stringify(itemArr)).attr("data-itemMoneyArr",JSON.stringify(itemMoneyArr));  //json数据存储
 				}
-				$("#OtherMoney").val(otherMoneyTotal); //给采购费用、销售费用赋值
+				$("#OtherMoney").val(otherMoneyTotal); //给其它费用赋值
 				$("#otherMoneyDlg").dialog('close');
 			});
 
@@ -2163,7 +2163,7 @@
 				cancelFun();
 			});
 
-			//给弹窗赋值-采购费用、销售费用数据
+			//给弹窗赋值-其它费用数据
             var itemArr = $("#OtherMoney").attr("data-itemArr");
             itemArr = JSON.parse(itemArr);
             var itemMoneyArr = $("#OtherMoney").attr("data-itemMoneyArr");
