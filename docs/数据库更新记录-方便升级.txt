@@ -785,3 +785,9 @@ alter table jsh_material drop PresetPriceTwo;
 alter table jsh_material drop FirstOutUnit;
 alter table jsh_material drop FirstInUnit;
 alter table jsh_material drop PriceStrategy;
+
+-- ----------------------------
+-- 时间：2020年6月18日
+-- 增加负库存的启用标记
+-- ----------------------------
+alter table jsh_systemconfig add minus_stock_flag varchar(1) DEFAULT '0' COMMENT '负库存启用标记，0未启用，1启用' after customer_flag;

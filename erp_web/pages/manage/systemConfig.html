@@ -43,53 +43,60 @@
         <table>
             <tr>
                 <td>公司名称</td>
-                <td style="padding:5px">
+                <td style="padding:5px 10px">
                     <input name="companyName" id="companyName" class="easyui-textbox"
                            data-options="required:true,validType:'length[2,15]'" style="width: 220px;"/>
                 </td>
             </tr>
             <tr>
                 <td>联系人</td>
-                <td style="padding:5px">
+                <td style="padding:5px 10px">
                     <input name="companyContacts" id="companyContacts" class="easyui-textbox" style="width: 220px;"/>
                 </td>
             </tr>
             <tr>
                 <td>公司地址</td>
-                <td style="padding:5px">
+                <td style="padding:5px 10px">
                     <input name="companyAddress" id="companyAddress" class="easyui-textbox" style="width: 220px;"/>
                 </td>
             </tr>
             <tr>
                 <td>公司电话</td>
-                <td style="padding:5px">
+                <td style="padding:5px 10px">
                     <input name="companyTel" id="companyTel" class="easyui-textbox" style="width: 220px;"/>
                 </td>
             </tr>
             <tr>
                 <td>公司传真</td>
-                <td style="padding:5px">
+                <td style="padding:5px 10px">
                     <input name="companyFax" id="companyFax" class="easyui-textbox" style="width: 220px;"/>
                 </td>
             </tr>
             <tr>
                 <td>公司邮编</td>
-                <td style="padding:5px">
+                <td style="padding:5px 10px">
                     <input name="companyPostCode" id="companyPostCode" class="easyui-textbox" style="width: 220px;"/>
                 </td>
             </tr>
             <tr>
                 <td>仓库权限</td>
-                <td style="padding:5px;text-align:center;">
+                <td style="padding:5px 10px;text-align:left;">
                     <input name="depotFlag" id="depotFlag" type="checkbox" style="width: 20px;height: 20px" title="勾选后需要到用户列表配置"/>
                     (勾选后需要到用户列表配置)
                 </td>
             </tr>
             <tr>
                 <td>客户权限</td>
-                <td style="padding:5px;text-align:center;">
+                <td style="padding:5px 10px;text-align:left;">
                     <input name="customerFlag" id="customerFlag" type="checkbox" style="width: 20px;height: 20px" title="勾选后需要到用户列表配置"/>
                     (勾选后需要到用户列表配置)
+                </td>
+            </tr>
+            <tr>
+                <td>负库存</td>
+                <td style="padding:5px 10px;text-align:left;">
+                    <input name="minusStockFlag" id="minusStockFlag" type="checkbox" style="width: 20px;height: 20px" title="勾选后支持负库存，批次商品除外"/>
+                    (勾选后支持负库存，批次商品除外)
                 </td>
             </tr>
         </table>
@@ -151,13 +158,19 @@
                 {title: '公司传真', field: 'companyFax', width: 120, align: "center"},
                 {title: '公司邮编', field: 'companyPostCode', width: 80, align: "center"},
                 {
-                    title: '仓库开关', field: 'depotFlag', width: 80, align: "center",
+                    title: '仓库权限', field: 'depotFlag', width: 80, align: "center",
                     formatter: function (value) {
                         return parseFlag(value);
                     }
                 },
                 {
-                    title: '客户开关', field: 'customerFlag', width: 80, align: "center",
+                    title: '客户权限', field: 'customerFlag', width: 80, align: "center",
+                    formatter: function (value) {
+                        return parseFlag(value);
+                    }
+                },
+                {
+                    title: '负库存', field: 'minusStockFlag', width: 80, align: "center",
                     formatter: function (value) {
                         return parseFlag(value);
                     }
@@ -360,6 +373,7 @@
         var infoObj = $("#systemConfigFM").serializeObject();
         infoObj.depotFlag = $("#depotFlag").is(':checked')?"1":"0";
         infoObj.customerFlag = $("#customerFlag").is(':checked')?"1":"0";
+        infoObj.minusStockFlag = $("#minusStockFlag").is(':checked')?"1":"0";
         $.ajax({
             url: url,
             type: "post",
@@ -401,6 +415,7 @@
         systemConfigId = res.id;
         $("#depotFlag").attr("checked", res.depotFlag == '1' ? true : false);
         $("#customerFlag").attr("checked", res.customerFlag == '1' ? true : false);
+        $("#minusStockFlag").attr("checked", res.minusStockFlag == '1' ? true : false);
         url = '/systemConfig/update?id=' + res.id;
     }
 
