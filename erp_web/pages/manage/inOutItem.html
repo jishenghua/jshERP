@@ -399,9 +399,7 @@
         $(".window-mask").css({width: webW, height: webH});
         $('#inOutItemFM').form('load', row);
         inOutItemID = rowsdata.id;
-        //焦点在名称输入框==定焦在输入文字后面
-        $("#inOutItem").val("").focus().val(inOutItemInfo[1]);
-        url = '/inOutItem/update?id=' + inOutItemInfo[0];
+        url = '/inOutItem/update?id=' + rowsdata.id;
     }
 
     //检查收支项目 名称是否存在 ++ 重名无法提示问题需要跟进
