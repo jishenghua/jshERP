@@ -591,13 +591,15 @@
 		var discount = $("#Discount").val(); //优惠率
 		var discountMoney = (taxLastMoneyTotal*discount/100).toFixed(2);
 		$("#DiscountMoney").val(discountMoney);//优惠金额
-		var discountLastMoney = (taxLastMoneyTotal*(1-discount/100)).toFixed(2)
+		var discountLastMoney = (taxLastMoneyTotal*(1-discount/100)).toFixed(2);
 		$("#DiscountLastMoney").val(discountLastMoney);//优惠后金额
 		if($("#AccountId").val()!=="many"){
-			$("#ChangeAmount").val(discountLastMoney); //本次付、收款
+			var otherMoney = $("#OtherMoney").val()-0;
+			var changeAmount = discountLastMoney-0+otherMoney;
+			$("#ChangeAmount").val(changeAmount.toFixed(2)); //本次付、收款
 		}
 		var changeAmountNum = $("#ChangeAmount").val()-0; //本次付款或者收款
-		$("#Debt").val((discountLastMoney-changeAmountNum).toFixed(2)); //本次欠款
+		$("#Debt").val((discountLastMoney-0+otherMoney-changeAmountNum).toFixed(2)); //本次欠款
 
 		if(listSubType == "零售" || listSubType == "零售退货") {
 			$("#ChangeAmount, #getAmount").val((TotalPrice).toFixed(2));
@@ -1470,7 +1472,7 @@
 		$("#DiscountShow").text(res.discount);
 		$("#DiscountMoneyShow").text(res.discountmoney);
 		$("#DiscountLastMoneyShow").text(res.discountlastmoney);
-		$("#DebtShow").text((res.discountlastmoney-res.changeamount).toFixed(2));
+		$("#DebtShow").text((res.discountlastmoney+res.othermoney-res.changeamount).toFixed(2));
 		$("#AccountDayShow").text(res.accountday);  //结算天数
 		$("#LinkNumberShow").text(res.linknumber); //关联订单号
         if(res.othermoney && res.othermoneylist && res.othermoneyitem){
@@ -1862,10 +1864,12 @@
 			$("#DiscountMoney").val(discountMoney); //优惠金额
 			$("#DiscountLastMoney").val(discountLastMoney); //优惠后金额
 			if($("#AccountId").val()!=="many"){
-				$("#ChangeAmount").val(discountLastMoney); //本次付、收款
+				var otherMoney = $("#OtherMoney").val()-0;
+				var changeAmount = discountLastMoney-0+otherMoney;
+				$("#ChangeAmount").val(changeAmount.toFixed(2)); //本次付、收款
 			}
 			var changeAmountNum = $("#ChangeAmount").val()-0; //本次付款或者收款
-			$("#Debt").val((discountLastMoney-changeAmountNum).toFixed(2)); //本次欠款
+			$("#Debt").val((discountLastMoney-0+otherMoney-changeAmountNum).toFixed(2)); //本次欠款
 		});
 
 		//优惠金额输入框事件
@@ -1878,17 +1882,20 @@
 			$("#Discount").val(discount); //优惠金额
 			$("#DiscountLastMoney").val(discountLastMoney); //优惠后金额
 			if($("#AccountId").val()!=="many"){
-				$("#ChangeAmount").val(discountLastMoney); //本次付、收款
+				var otherMoney = $("#OtherMoney").val()-0;
+				var changeAmount = discountLastMoney-0+otherMoney;
+				$("#ChangeAmount").val(changeAmount.toFixed(2)); //本次付、收款
 			}
 			var changeAmountNum = $("#ChangeAmount").val()-0; //本次付款或者收款
-			$("#Debt").val((discountLastMoney-changeAmountNum).toFixed(2)); //本次欠款
+			$("#Debt").val((discountLastMoney-0+otherMoney-changeAmountNum).toFixed(2)); //本次欠款
 		});
 
 		//付款、收款输入框事件
 		$("#ChangeAmount").off("keyup").on("keyup",function(){
-			var discountLastMoney = $("#DiscountLastMoney").val();
+			var discountLastMoney = $("#DiscountLastMoney").val()-0;
+			var otherMoney = $("#OtherMoney").val()-0;
 			var changeAmount = $(this).val();
-			var debtMoney  = (discountLastMoney - changeAmount).toFixed(2);
+			var debtMoney  = (discountLastMoney + otherMoney - changeAmount).toFixed(2);
 			$("#Debt").val(debtMoney); //本次欠款
 		});
 
@@ -1983,7 +1990,8 @@
 				else {
 					$("#ChangeAmount").val(accountMoneyTotal); //给付款或者收款金额赋值
 				}
-				$("#Debt").val((discountLastMoneyNum-accountMoneyTotal).toFixed(2)); //本次欠款
+				var otherMoney = $("#OtherMoney").val()-0;
+				$("#Debt").val((discountLastMoneyNum+otherMoney-accountMoneyTotal).toFixed(2)); //本次欠款
 				$("#depotHeadAccountDlg").dialog('close');
 			});
 
@@ -2140,6 +2148,9 @@
 					$("#OtherMoney").attr("data-itemArr",JSON.stringify(itemArr)).attr("data-itemMoneyArr",JSON.stringify(itemMoneyArr));  //json数据存储
 				}
 				$("#OtherMoney").val(otherMoneyTotal); //给其它费用赋值
+				var discountLastMoney = $("#DiscountLastMoney").val()-0;
+				var changeAmount = (discountLastMoney + otherMoneyTotal).toFixed(2);
+				$("#ChangeAmount").val(changeAmount); //付款或者收款
 				$("#otherMoneyDlg").dialog('close');
 			});
 
