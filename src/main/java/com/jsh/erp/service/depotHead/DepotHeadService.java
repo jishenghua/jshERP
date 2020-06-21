@@ -233,9 +233,6 @@ public class DepotHeadService {
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
-        logService.insertLog("单据",
-                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(depotHeadIDs).toString(),
-                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         return result;
     }
     /**

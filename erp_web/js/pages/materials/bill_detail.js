@@ -234,7 +234,7 @@
                         $("#bill .DiscountMoneyShow").text(data.discountmoney);
                         $("#bill .DiscountLastMoneyShow").text(data.discountlastmoney);
                         $("#bill .ChangeAmountShow").text(data.changeamount==null ? "":data.changeamount);
-                        $("#bill .DebtShow").text((data.discountlastmoney-data.changeamount).toFixed(2));
+                        $("#bill .DebtShow").text((data.discountlastmoney+data.othermoney-data.changeamount).toFixed(2));
                         $("#bill .OtherMoneyShow").text(data.othermoney==null ? "": data.othermoney);
                         $("#bill .AccountDayShow").text(data.accountday==null ? "": data.accountday); //结算天数
                         var otherMoney = data.othermoney + "";
@@ -254,7 +254,7 @@
                                     }
                                 }
                             }
-                            $("#bill .OtherMoneyShow:visible").text(otherMoneyShow +"总计："+ otherMoney.replace("undefined","0") + "元 "); //采购费用、销售费用
+                            $("#bill .OtherMoneyShow:visible").text(otherMoneyShow +"总计："+ otherMoney.replace("undefined","0") + "元 "); //其它费用
                         }
                         $("#bill .payTypeShow").text(data.payType);
                         var TotalPrice = data.totalprice;

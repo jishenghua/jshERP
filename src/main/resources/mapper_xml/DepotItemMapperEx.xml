@@ -422,10 +422,4 @@
         AND ifnull(m.delete_Flag, '0') != '1'
         AND intype.BasicInNumber > 0
     </select>
-
-    <select id="getFinishNumber" resultType="java.math.BigDecimal">
-        select sum(BasicNumber) from jsh_depotitem
-        where MaterialId=${mid} and headerId
-        in (select id from jsh_depothead where LinkNumber='${linkNumber}')
-    </select>
 </mapper>

@@ -199,4 +199,21 @@ public class SystemConfigService {
         }
         return customerFlag;
     }
+
+    /**
+     * 获取负库存开关
+     * @return
+     * @throws Exception
+     */
+    public boolean getMinusStockFlag() throws Exception {
+        boolean minusStockFlag = false;
+        List<SystemConfig> list = getSystemConfig();
+        if(list.size()>0) {
+            String flag = list.get(0).getMinusStockFlag();
+            if(("1").equals(flag)) {
+                minusStockFlag = true;
+            }
+        }
+        return minusStockFlag;
+    }
 }

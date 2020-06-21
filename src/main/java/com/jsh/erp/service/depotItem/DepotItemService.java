@@ -17,6 +17,7 @@ import com.jsh.erp.service.MaterialExtend.MaterialExtendService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.service.serialNumber.SerialNumberService;
+import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.QueryUtils;
 import com.jsh.erp.utils.StringUtil;
@@ -59,6 +60,8 @@ public class DepotItemService {
     SerialNumberService serialNumberService;
     @Resource
     private UserService userService;
+    @Resource
+    private SystemConfigService systemConfigService;
     @Resource
     private LogService logService;
 
@@ -429,7 +432,7 @@ public class DepotItemService {
                         }
                         BigDecimal stock = getStockByParam(depotItem.getDepotid(),depotItem.getMaterialid(),null,null,tenantId);
                         BigDecimal thisBasicNumber = depotItem.getBasicnumber()==null?BigDecimal.ZERO:depotItem.getBasicnumber();
-                        if(stock.compareTo(thisBasicNumber)<0){
+                        if(systemConfigService.getMinusStockFlag() == false && stock.compareTo(thisBasicNumber)<0){
                             throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_STOCK_NOT_ENOUGH_CODE,
                                     String.format(ExceptionConstants.MATERIAL_STOCK_NOT_ENOUGH_MSG,material==null?"":material.getName()));
                         }
@@ -558,7 +561,7 @@ public class DepotItemService {
                     if(BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())){
                         BigDecimal stock = getStockByParam(depotItem.getDepotid(),depotItem.getMaterialid(),null,null,tenantId);
                         BigDecimal thisBasicNumber = depotItem.getBasicnumber()==null?BigDecimal.ZERO:depotItem.getBasicnumber();
-                        if(stock.compareTo(thisBasicNumber)<0){
+                        if(systemConfigService.getMinusStockFlag() == false && stock.compareTo(thisBasicNumber)<0){
                             throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_STOCK_NOT_ENOUGH_CODE,
                                     String.format(ExceptionConstants.MATERIAL_STOCK_NOT_ENOUGH_MSG,material==null?"":material.getName()));
                         }
@@ -631,20 +634,6 @@ public class DepotItemService {
             JshException.readFail(logger, e);
         }
         return result;
-    }
-
-    /**
-     * 统计该商品已分批出库的总数量-用于订单
-     * @param mid
-     * @param headerId
-     * @return
-     */
-    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public BigDecimal getFinishNumber(Long mid, Long headerId) {
-        DepotHead depotHead =depotHeadMapper.selectByPrimaryKey(headerId);
-        String linkNumber = depotHead.getLinknumber(); //关联单号
-        BigDecimal count = depotItemMapperEx.getFinishNumber(mid, linkNumber);
-        return count;
     }
 
     /**

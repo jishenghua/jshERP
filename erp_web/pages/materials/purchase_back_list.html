@@ -105,9 +105,10 @@
                 <td style="padding:5px">
                     <input id="DiscountLastMoney" name="DiscountLastMoney" class="radius-ui" readonly="readonly" style="width:120px;"/>
                 </td>
-                <td>本次退款</td>
+                <td>其它费用</td>
                 <td style="padding:5px">
-                    <input id="ChangeAmount" name="ChangeAmount" class="radius-ui" data-changeamount="0" style="width:120px;"/>
+                    <input id="OtherMoney" name="OtherMoney" class="radius-ui" style="width:120px;" readonly="readonly"/>
+                    <img class="other-money-ico" src="/js/easyui/themes/icons/filelist.jpg"/>
                 </td>
                 <td style="width:100px;"></td>
             </tr>
@@ -118,14 +119,13 @@
                     <img class="many-account-ico" src="/js/easyui/themes/icons/filelist.jpg"
                          style="display: none;"/>
                 </td>
+                <td>本次退款</td>
+                <td style="padding:5px">
+                    <input id="ChangeAmount" name="ChangeAmount" class="radius-ui" data-changeamount="0" style="width:120px;"/>
+                </td>
                 <td>本次欠款</td>
                 <td style="padding:5px">
                     <input id="Debt" name="Debt" class="radius-ui" readonly="readonly" style="width:120px;"/>
-                </td>
-                <td>采购费用</td>
-                <td style="padding:5px">
-                    <input id="OtherMoney" name="OtherMoney" class="radius-ui" style="width:120px;" readonly="readonly"/>
-                    <img class="other-money-ico" src="/js/easyui/themes/icons/filelist.jpg"/>
                 </td>
                 <td></td>
                 <td style="padding:5px">
@@ -187,9 +187,9 @@
             <td>
                 <span id="DiscountLastMoneyShow" style="width: 120px;"></span>
             </td>
-            <td>本次付款：</td>
+            <td>其它费用：</td>
             <td style="padding:5px">
-                <span id="ChangeAmountShow"></span>
+                <span id="OtherMoneyShow"></span>
             </td>
             <td style="width:100px;"></td>
         </tr>
@@ -198,13 +198,13 @@
             <td style="padding:5px">
                 <span id="AccountIdShow"></span>
             </td>
+            <td>本次付款：</td>
+            <td style="padding:5px">
+                <span id="ChangeAmountShow"></span>
+            </td>
             <td>本次欠款：</td>
             <td style="padding:5px">
                 <span id="DebtShow"></span>
-            </td>
-            <td>采购费用：</td>
-            <td style="padding:5px">
-                <span id="OtherMoneyShow"></span>
             </td>
             <td></td>
             <td style="padding:5px">

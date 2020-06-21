@@ -50,7 +50,7 @@ $.get("../../pages/template/base.html?7891", function(tem) {
             collapsible: false,
             closable: true
         });
-        $("#depotDlg #name,#depotDlg #address").textbox({
+        $("#depotDlg #name").textbox({
             required: true,
             validType: 'length[2,30]'
         });
@@ -232,6 +232,9 @@ function bindDepotEvent() {
         return flag;
     }
     $("#saveDepot").off("click").on("click", function () {
+        if(!$('#depotFM').form('validate')){
+            return;
+        }
         var infoObj = $("#depotFM").serializeObject();
         infoObj.type = 0;
         if (checkDepotName()) {
@@ -300,24 +303,28 @@ function bindAccountEvent() {
         if (checkAccountName()) {
             return;
         }
-        $.ajax({
-            url: '/account/add',
-            type: "post",
-            dataType: "json",
-            data: ({
-                info: JSON.stringify($("#accountFM").serializeObject())
-            }),
-            success: function(res) {
-                if(res && res.code === 200) {
-                    $('#accountDlg').dialog('close');
-                    initSystemData_account(); //刷新账户
+        if(!$('#accountFM').form('validate')){
+            return;
+        } else {
+            $.ajax({
+                url: '/account/add',
+                type: "post",
+                dataType: "json",
+                data: ({
+                    info: JSON.stringify($("#accountFM").serializeObject())
+                }),
+                success: function(res) {
+                    if(res && res.code === 200) {
+                        $('#accountDlg').dialog('close');
+                        initSystemData_account(); //刷新账户
+                    }
+                },
+                //此处添加错误处理
+                error: function () {
+                    $.messager.alert('提示', '保存结算账户异常，请稍后再试！', 'error');
+                    return;
                 }
-            },
-            //此处添加错误处理
-            error: function () {
-                $.messager.alert('提示', '保存结算账户异常，请稍后再试！', 'error');
-                return;
-            }
-        });
+            });
+        }
     });
 }
