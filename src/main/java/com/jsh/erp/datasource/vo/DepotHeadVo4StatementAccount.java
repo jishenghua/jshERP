@@ -11,6 +11,10 @@ public class DepotHeadVo4StatementAccount {
 
     private BigDecimal discountLastMoney;
 
+    private BigDecimal otherMoney;
+
+    private BigDecimal billMoney;
+
     private BigDecimal changeAmount;
 
     private BigDecimal allPrice;
@@ -43,6 +47,22 @@ public class DepotHeadVo4StatementAccount {
 
     public void setDiscountLastMoney(BigDecimal discountLastMoney) {
         this.discountLastMoney = discountLastMoney;
+    }
+
+    public BigDecimal getOtherMoney() {
+        return otherMoney;
+    }
+
+    public void setOtherMoney(BigDecimal otherMoney) {
+        this.otherMoney = otherMoney;
+    }
+
+    public BigDecimal getBillMoney() {
+        return billMoney;
+    }
+
+    public void setBillMoney(BigDecimal billMoney) {
+        this.billMoney = billMoney;
     }
 
     public BigDecimal getChangeAmount() {

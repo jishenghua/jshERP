@@ -253,32 +253,35 @@ public class DepotHeadController {
                     if ((p1.compareTo(BigDecimal.ZERO))==-1) {
                         p1 = p1.abs();
                     }
+                    if(dha.getOtherMoney()!=null) {
+                        p1 = p1.add(dha.getOtherMoney()); //与其它费用相加
+                    }
                     if ((p2 .compareTo(BigDecimal.ZERO))==-1) {
                         p2 = p2.abs();
                     }
                     if (type.equals("采购入库")) {
-                        allPrice = p2 .subtract(p1);
+                        allPrice = p2.subtract(p1);
                     } else if (type.equals("销售退货入库")) {
-                        allPrice = p2 .subtract(p1);
+                        allPrice = p2.subtract(p1);
                     } else if (type.equals("销售出库")) {
-                        allPrice = p1 .subtract(p2);
+                        allPrice = p1.subtract(p2);
                     } else if (type.equals("采购退货出库")) {
-                        allPrice = p1 .subtract(p2);
+                        allPrice = p1.subtract(p2);
                     } else if (type.equals("付款")) {
                         allPrice = p1.add(p2);
                     } else if (type.equals("收款")) {
                         allPrice = BigDecimal.ZERO.subtract(p1.add(p2));
                     } else if (type.equals("收入")) {
-                        allPrice =  p1 .subtract(p2);
+                        allPrice =  p1.subtract(p2);
                     } else if (type.equals("支出")) {
-                        allPrice = p2 .subtract(p1);
+                        allPrice = p2.subtract(p1);
                     }
-                    dha.setDiscountLastMoney(p1); //金额
-                    dha.setChangeAmount(p2); //金额
+                    dha.setBillMoney(p1); //单据金额
+                    dha.setChangeAmount(p2); //实际支付
                     DecimalFormat df = new DecimalFormat(".##");
-                    dha.setAllPrice(new BigDecimal(df.format(allPrice .multiply(new BigDecimal(j))))); //计算后的金额
-                    dha.setSupplierName(dha.getSupplierName()); //供应商
-                    dha.setoTime(dha.getoTime()); //入库出库日期
+                    dha.setAllPrice(new BigDecimal(df.format(allPrice.multiply(new BigDecimal(j))))); //本期变化
+                    dha.setSupplierName(dha.getSupplierName()); //单位名称
+                    dha.setoTime(dha.getoTime()); //单据日期
                     resList.add(dha);
                 }
             }
