@@ -205,8 +205,8 @@
                             $("#bill .AccountIdShow").text(data.accountName); //结算账户
                         }
                         else if(data.accountidlist && data.accountmoneylist) {
-                            var accountArr = data.accountidlist; //账户id列表
-                            var accountMoneyArr = data.accountmoneylist; //账户金额列表
+                            var accountArr = data.accountidlist.split(","); //账户id列表
+                            var accountMoneyArr = data.accountmoneylist.split(","); //账户金额列表
                             var accountIdShow = "";
                             for (var j = 0; j < accountArr.length; j++) {
                                 if (accountList != null) {

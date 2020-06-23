@@ -422,6 +422,14 @@ public class DepotHeadService {
         }
         if (null != list) {
             for (DepotHeadVo4List dh : list) {
+                if(dh.getAccountidlist() != null) {
+                    String accountidlistStr = dh.getAccountidlist().replace("[", "").replace("]", "").replaceAll("\"", "");
+                    dh.setAccountidlist(accountidlistStr);
+                }
+                if(dh.getAccountmoneylist() != null) {
+                    String accountmoneylistStr = dh.getAccountmoneylist().replace("[", "").replace("]", "").replaceAll("\"", "");
+                    dh.setAccountmoneylist(accountmoneylistStr);
+                }
                 if(dh.getOthermoneylist() != null) {
                     String otherMoneyListStr = dh.getOthermoneylist().replace("[", "").replace("]", "").replaceAll("\"", "");
                     dh.setOthermoneylist(otherMoneyListStr);
