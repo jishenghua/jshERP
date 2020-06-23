@@ -78,7 +78,7 @@
                 { title: '期末应付',field: 'allneedpay',width:70,align:"center"},
                 { title: '税率(%)', field: 'taxrate',width:60,align:"center"},
                 { title: '状态',field: 'enabled',width:70,align:"center",formatter:function(value){
-                    return value? "启用":"禁用";
+                    return value? "<span style='color:green'>启用</span>":"<span style='color:red'>禁用</span>";
                 }}
             ]],
             toolbar:[
