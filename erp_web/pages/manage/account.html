@@ -131,7 +131,7 @@
                     title: '是否默认', field: 'isdefault', width: 100, align: "center",
                     formatter: function (value, rec) {
                         if (rec.isdefault) {
-                            return "<b style='color:green'>是</b>";
+                            return "<span style='color:green'>是</span>";
                         }
                         else {
                             return "否";
@@ -569,7 +569,7 @@
     //初始化表格数据
     function initAccountDetailData(accountId) {
         $('#accountTableData').datagrid({
-            height: heightInfo,
+            height: 435,
             nowrap: false,
             rownumbers: false,
             //动画效果

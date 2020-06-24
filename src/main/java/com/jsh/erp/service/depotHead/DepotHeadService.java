@@ -343,16 +343,21 @@ public class DepotHeadService {
 
     public BigDecimal findAllMoney(Integer supplierId, String type, String subType, String mode, String endTime)throws Exception {
         String modeName = "";
+        BigDecimal allOtherMoney = BigDecimal.ZERO;
         if (mode.equals("实际")) {
             modeName = "ChangeAmount";
         } else if (mode.equals("合计")) {
             modeName = "DiscountLastMoney";
+            allOtherMoney = depotHeadMapperEx.findAllOtherMoney(supplierId, type, subType, endTime);
         }
         BigDecimal result = null;
         try{
             result =depotHeadMapperEx.findAllMoney(supplierId, type, subType, modeName, endTime);
         }catch(Exception e){
             JshException.readFail(logger, e);
+        }
+        if(allOtherMoney!=null) {
+            result = result.add(allOtherMoney);
         }
         return result;
     }
@@ -417,6 +422,14 @@ public class DepotHeadService {
         }
         if (null != list) {
             for (DepotHeadVo4List dh : list) {
+                if(dh.getAccountidlist() != null) {
+                    String accountidlistStr = dh.getAccountidlist().replace("[", "").replace("]", "").replaceAll("\"", "");
+                    dh.setAccountidlist(accountidlistStr);
+                }
+                if(dh.getAccountmoneylist() != null) {
+                    String accountmoneylistStr = dh.getAccountmoneylist().replace("[", "").replace("]", "").replaceAll("\"", "");
+                    dh.setAccountmoneylist(accountmoneylistStr);
+                }
                 if(dh.getOthermoneylist() != null) {
                     String otherMoneyListStr = dh.getOthermoneylist().replace("[", "").replace("]", "").replaceAll("\"", "");
                     dh.setOthermoneylist(otherMoneyListStr);

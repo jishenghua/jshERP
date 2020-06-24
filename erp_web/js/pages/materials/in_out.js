@@ -1472,10 +1472,15 @@
 		$("#DiscountShow").text(res.discount);
 		$("#DiscountMoneyShow").text(res.discountmoney);
 		$("#DiscountLastMoneyShow").text(res.discountlastmoney);
-		$("#DebtShow").text((res.discountlastmoney+res.othermoney-res.changeamount).toFixed(2));
+		var debt = 0;
+		if(res.othermoney){
+			debt = (res.discountlastmoney+res.othermoney-res.changeamount).toFixed(2);
+		}
+		$("#DebtShow").text(debt);
 		$("#AccountDayShow").text(res.accountday);  //结算天数
 		$("#LinkNumberShow").text(res.linknumber); //关联订单号
-        if(res.othermoney && res.othermoneylist && res.othermoneyitem){
+        var otherMoney = res.othermoney?res.othermoney:0;
+        if(otherMoney!=0 && res.othermoneylist && res.othermoneyitem){
             var itemArr = res.othermoneylist.split(","); //支出项目id列表
             var itemMoneyArr = null;
             if(res.othermoneyitem!=null) {
@@ -1500,10 +1505,10 @@
                     }
                 }
             }
-			$("#OtherMoneyShow").text(otherMoneyShow +"总计："+ res.othermoney + "元 "); //其它费用
+			$("#OtherMoneyShow").text(otherMoneyShow +"总计："+ otherMoney + "元 "); //其它费用
 		}
 		else {
-			$("#OtherMoneyShow").text(res.othermoney); //其它费用
+            $("#OtherMoneyShow").text(otherMoney); //其它费用
 		}
         $("#payTypeShow").text(res.paytype);
         var TotalPrice = res.totalprice;
@@ -2176,21 +2181,23 @@
 
 			//给弹窗赋值-其它费用数据
             var itemArr = $("#OtherMoney").attr("data-itemArr");
-            itemArr = JSON.parse(itemArr);
-            var itemMoneyArr = $("#OtherMoney").attr("data-itemMoneyArr");
-            itemMoneyArr = JSON.parse(itemMoneyArr);
-            $("#otherMoneyDlg .money-dlg .money-content-tmp").each(function(){
-                var index = $(this).attr("data-index");
-                $(this).find(".money-id-dlg").val(itemArr[index]);
-                if(itemMoneyArr[index]!="undefined"){
-                    for(var k =0;k<itemMoneyArr.length; k++) {
-                        if (itemMoneyArr[k].otherId == itemArr[index]) {
-                            $(this).find(".other-money-dlg").val(itemMoneyArr[k].otherMoney);
-                        }
-                    }
+            if(itemArr) {
+				itemArr = JSON.parse(itemArr);
+				var itemMoneyArr = $("#OtherMoney").attr("data-itemMoneyArr");
+				itemMoneyArr = JSON.parse(itemMoneyArr);
+				$("#otherMoneyDlg .money-dlg .money-content-tmp").each(function(){
+					var index = $(this).attr("data-index");
+					$(this).find(".money-id-dlg").val(itemArr[index]);
+					if(itemMoneyArr[index]!="undefined"){
+						for(var k =0;k<itemMoneyArr.length; k++) {
+							if (itemMoneyArr[k].otherId == itemArr[index]) {
+								$(this).find(".other-money-dlg").val(itemMoneyArr[k].otherMoney);
+							}
+						}
 
-                }
-            });
+					}
+				});
+			}
 			$("#otherMoneyTotalDlg").text($("#OtherMoney").val());
 		});
 

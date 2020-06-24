@@ -34,6 +34,7 @@
         <result column="Number" jdbcType="VARCHAR" property="number" />
         <result column="type" jdbcType="VARCHAR" property="type" />
         <result column="DiscountLastMoney" jdbcType="DECIMAL" property="discountLastMoney" />
+        <result column="OtherMoney" jdbcType="DECIMAL" property="otherMoney" />
         <result column="ChangeAmount" jdbcType="DECIMAL" property="changeAmount" />
         <result column="supplierName" jdbcType="VARCHAR" property="supplierName" />
         <result column="oTime" jdbcType="VARCHAR" property="oTime" />
@@ -251,7 +252,7 @@
     </select>
 
     <select id="findStatementAccount" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultStatementAccount">
-        select dh.Number,concat(dh.SubType,dh.Type) as type,dh.DiscountLastMoney,dh.ChangeAmount,s.supplier supplierName,
+        select dh.Number,concat(dh.SubType,dh.Type) as type,dh.DiscountLastMoney,dh.OtherMoney,dh.ChangeAmount,s.supplier supplierName,
         date_format(dh.OperTime,'%Y-%m-%d %H:%i:%S') as oTime from jsh_depothead dh
         inner join jsh_supplier s on s.id=dh.OrganId and ifnull(s.delete_Flag,'0') !='1'
         where s.type='${supType}' and (dh.SubType!='其它' and dh.SubType!='采购订单' and dh.SubType!='销售订单')
@@ -261,7 +262,7 @@
         </if>
         and ifnull(dh.delete_Flag,'0') !='1'
         UNION ALL
-        select ah.BillNo Number,ah.Type as newType,ah.TotalPrice DiscountLastMoney,ah.ChangeAmount,s.supplier supplierName,
+        select ah.BillNo Number,ah.Type as newType,ah.TotalPrice DiscountLastMoney, 0 OtherMoney,ah.ChangeAmount,s.supplier supplierName,
         date_format(ah.BillTime,'%Y-%m-%d %H:%i:%S') as oTime from jsh_accounthead ah
         inner join jsh_supplier s on s.id=ah.OrganId and ifnull(s.delete_Flag,'0') !='1'
         where s.type='${supType}'
@@ -301,6 +302,12 @@
 
     <select id="findAllMoney" resultType="java.math.BigDecimal">
         select sum(${modeName}) as allMoney from jsh_depothead where Type='${type}' and SubType = '${subType}'
+        and OrganId =${supplierId} and OperTime &lt;='${endTime}'
+        and ifnull(delete_Flag,'0') !='1'
+    </select>
+
+    <select id="findAllOtherMoney" resultType="java.math.BigDecimal">
+        select sum(OtherMoney) as allOtherMoney from jsh_depothead where Type='${type}' and SubType = '${subType}'
         and OrganId =${supplierId} and OperTime &lt;='${endTime}'
         and ifnull(delete_Flag,'0') !='1'
     </select>

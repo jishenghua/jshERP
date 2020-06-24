@@ -205,8 +205,8 @@
                             $("#bill .AccountIdShow").text(data.accountName); //结算账户
                         }
                         else if(data.accountidlist && data.accountmoneylist) {
-                            var accountArr = data.accountidlist; //账户id列表
-                            var accountMoneyArr = data.accountmoneylist; //账户金额列表
+                            var accountArr = data.accountidlist.split(","); //账户id列表
+                            var accountMoneyArr = data.accountmoneylist.split(","); //账户金额列表
                             var accountIdShow = "";
                             for (var j = 0; j < accountArr.length; j++) {
                                 if (accountList != null) {
@@ -237,24 +237,32 @@
                         $("#bill .DebtShow").text((data.discountlastmoney+data.othermoney-data.changeamount).toFixed(2));
                         $("#bill .OtherMoneyShow").text(data.othermoney==null ? "": data.othermoney);
                         $("#bill .AccountDayShow").text(data.accountday==null ? "": data.accountday); //结算天数
-                        var otherMoney = data.othermoney + "";
-                        var otherMoneyList = data.othermoneylist + "";
-                        var otherMoneyItem = data.othermoneyitem + "";
-                        if(otherMoneyList && otherMoneyItem){
-                            var itemArr = otherMoneyList.split(","); //支出项目id列表
-                            var itemMoneyArr = otherMoneyItem.split(","); //支出项目金额列表
+                        if(data.othermoney && data.othermoneylist && data.othermoneyitem) {
+                            var itemArr = data.othermoneylist.split(","); //支出项目id列表
+                            var itemMoneyArr = null;
+                            if (data.othermoneyitem != null) {
+                                itemMoneyArr = eval("([" + data.othermoneyitem + "])");  //支出项目金额列表
+                            }
                             var otherMoneyShow = "";
                             for(var j =0;j<itemArr.length; j++) {
                                 if (outItemList != null) {
                                     for (var i = 0; i < outItemList.length; i++) {
                                         var money = outItemList[i];
                                         if(itemArr[j] == money.Id) {
-                                            otherMoneyShow = otherMoneyShow + money.InOutItemName + "(" + itemMoneyArr[j] +"元) ";
+                                            for(var k =0;k<itemMoneyArr.length; k++) {
+                                                if(itemMoneyArr[k].otherId == money.Id) {
+                                                    otherMoneyShow += money.InOutItemName;
+                                                    if(itemMoneyArr[k].otherMoney) {
+                                                        otherMoneyShow +="(" + itemMoneyArr[k].otherMoney +"元)";
+                                                    }
+                                                    otherMoneyShow+="，";
+                                                }
+                                            }
                                         }
                                     }
                                 }
                             }
-                            $("#bill .OtherMoneyShow:visible").text(otherMoneyShow +"总计："+ otherMoney.replace("undefined","0") + "元 "); //其它费用
+                            $("#bill .OtherMoneyShow:visible").text(otherMoneyShow +"总计："+ data.othermoney + "元 "); //其它费用
                         }
                         $("#bill .payTypeShow").text(data.payType);
                         var TotalPrice = data.totalprice;
