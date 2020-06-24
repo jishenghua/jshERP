@@ -233,14 +233,12 @@
         var mPropertyList = null; //商品属性列表
         var mPropertyListShort = ""; //商品属性列表-传值
         var clickType = ""; //记录从哪里点击的类别弹窗
-        var maxBarCode = getMaxBarCode(); //获取当前最大条码
-        var thisBarCode = maxBarCode; //全局商品条码
+        var thisBarCode = getMaxBarCode(); //获取当前最大条码
         //初始化界面
         $(function () {
             //初始化系统基础信息
             initMProperty();
             manyUnitFun();
-            priceKeyUp();//价格触发事件
             initMaterialNameList();
             initMPropertyShort(); //初始化商品属性
             initTableData();
@@ -321,56 +319,13 @@
                     //当前为选中状态
                     $("#Unit").hide();
                     $("#manyUnit").show();
-
                     $("#Unit").val(""); //清除单位的填写内容
-                    $("#RetailPrice").val("");
-                    $("#LowPrice").val("");
-                    $("#PresetPriceOne").val("");
-                    $("#PresetPriceTwo").val("");
                 }
                 else {
                     //当前为不选中状态
                     $("#Unit").show();
                     $("#manyUnit").hide();
-
                     $("#manyUnit").val(""); //清除多单位的下拉框
-                    $("#FirstOutUnit").val("");
-                    $("#FirstInUnit").val("");
-                    $("#basicUnit").text("");
-                    $("#basicRetailPrice").val("");
-                    $("#basicLowPrice").val("");
-                    $("#basicPresetPriceOne").val("");
-                    $("#basicPresetPriceTwo").val("");
-                    $("#otherUnit").text("");
-                    $("#otherRetailPrice").val("");
-                    $("#otherLowPrice").val("");
-                    $("#otherPresetPriceOne").val("");
-                    $("#otherPresetPriceTwo").val("");
-
-                }
-            });
-        }
-
-        //价格触发事件
-        function priceKeyUp() {
-            $("#basicRetailPrice").off("keyup").on("keyup", function () {
-                if (multiple) {
-                    $("#otherRetailPrice").val($(this).val() * multiple);
-                }
-            });
-            $("#basicLowPrice").off("keyup").on("keyup", function () {
-                if (multiple) {
-                    $("#otherLowPrice").val($(this).val() * multiple);
-                }
-            });
-            $("#basicPresetPriceOne").off("keyup").on("keyup", function () {
-                if (multiple) {
-                    $("#otherPresetPriceOne").val($(this).val() * multiple);
-                }
-            });
-            $("#basicPresetPriceTwo").off("keyup").on("keyup", function () {
-                if (multiple) {
-                    $("#otherPresetPriceTwo").val($(this).val() * multiple);
                 }
             });
         }
@@ -424,40 +379,12 @@
             });
         }
 
-        //价格转换
-        function parsePrice(value, rec, type) {
-            var res = "";
-            if(rec.unit) {
-                res = value;
-            } else {
-                var ps = rec.pricestrategy;
-                if(ps) {
-                    var arr = JSON.parse(ps);
-                    var basic = "";
-                    if(type == "lowprice") {
-                        basic = arr[0].basic.LowPrice;
-                    } else if(type == "presetpriceone") {
-                        basic = arr[0].basic.PresetPriceOne;
-                    } else if(type == "presetpricetwo") {
-                        basic = arr[0].basic.PresetPriceTwo;
-                    } else if(type == "retailprice") {
-                        basic = arr[0].basic.RetailPrice;
-                    }
-                    res = basic;
-                }
-            }
-            return res;
-        }
-
         //初始化表格数据
         function initTableData() {
             //改变宽度和高度
             $("#searchPanel").panel({width: webW - 2});
             $("#tablePanel").panel({width: webW - 2});
             $('#tableData').datagrid({
-                //title:'商品列表',
-                //iconCls:'icon-save',
-                //width:700,
                 height: heightInfo,
                 nowrap: false,
                 rownumbers: false,
@@ -467,13 +394,9 @@
                 singleSelect: true,
                 collapsible: false,
                 selectOnCheck: false,
-                //fitColumns:true,
-                //单击行是否选中
-                //checkOnSelect : false,
                 pagination: true,
                 //交替出现背景
                 striped: true,
-                //loadFilter: pagerFilter,
                 pageSize: initPageSize,
                 pageList: initPageNum,
                 columns: [[
@@ -700,11 +623,10 @@
                     onSelectPage: function (pageNum, pageSize) {
                         opts.pageNumber = pageNum;
                         opts.pageSize = pageSize;
-                        pager.pagination('refresh',
-                            {
-                                pageNumber: pageNum,
-                                pageSize: pageSize
-                            });
+                        pager.pagination('refresh', {
+                            pageNumber: pageNum,
+                            pageSize: pageSize
+                        });
                         showMaterialDetails(pageNum, pageSize);
                     }
                 });
@@ -1145,6 +1067,9 @@
                 success: function (res) {
                     if(res && res.code === 200) {
                         $("#materialExtendData").datagrid('loadData',res.data);
+                        if(type === "add") {
+                            $("#materialDlg #append").click(); //新增行
+                        }
                     }
                 },
                 error:function() {
@@ -1229,33 +1154,9 @@
             if (checkIsExist()) {
                 return;
             }
-            //构造价格列表json
-            var priceStrategy = [];
-            var basicList = {};
-            var otherList = {};
-            basicList.Unit = $("#basicUnit").text();
-            basicList.RetailPrice = $("#basicRetailPrice").val();
-            basicList.LowPrice = $("#basicLowPrice").val();
-            basicList.PresetPriceOne = $("#basicPresetPriceOne").val();
-            basicList.PresetPriceTwo = $("#basicPresetPriceTwo").val();
-            basicList.EnableSerialNumber=$("#EnableSerialNumber").val();
-            otherList.Unit = $("#otherUnit").text();
-            otherList.RetailPrice = $("#otherRetailPrice").val();
-            otherList.LowPrice = $("#otherLowPrice").val();
-            otherList.PresetPriceOne = $("#otherPresetPriceOne").val();
-            otherList.PresetPriceTwo = $("#otherPresetPriceTwo").val();
-
-            var basic = {};
-            var other = {};
-            basic.basic = basicList;
-            other.other = otherList;
-            priceStrategy.push(basic);
-            priceStrategy.push(other);
-
             var objInfo = $("#materialFM").serializeObject();
             objInfo.UnitId = $("#manyUnit").val();
             objInfo.CategoryId =$("#parentid").val();
-            objInfo.PriceStrategy = JSON.stringify(priceStrategy);  //价格列表
             //初始库存信息
             var stockArr = [];
             $("#initDepot input").each(function () {
@@ -1334,10 +1235,6 @@
             $("#OtherField2").val(rowsdata.otherfield2);
             $("#OtherField3").val(rowsdata.otherfield3);
             $("#Unit").val(rowsdata.unit);
-            // $("#RetailPrice").textbox("setValue", rowsdata.retailprice);
-            // $("#LowPrice").textbox("setValue", rowsdata.lowprice);
-            // $("#PresetPriceOne").textbox("setValue", rowsdata.presetpriceone);
-            // $("#PresetPriceTwo").textbox("setValue", rowsdata.presetpricetwo);
             $("#Remark").textbox("setValue", rowsdata.remark);
             $("#manyUnit").val(rowsdata.unitid);
             if (rowsdata.unitid) {
@@ -1506,19 +1403,7 @@
                                 //下拉框事件
                                 $("#manyUnit").off("change").on("change", function () {
                                     var selectItem = $(this).children('option:selected').text();
-                                    if (selectItem !== "(空)") {
-                                        var firstOutUnitOptions = selectItem.substring(0, selectItem.indexOf("("));
-                                        multiple = selectItem.substring(selectItem.indexOf(":") + 1).replace(")", "");  //倍数
-                                        var firstOptions = "";
-                                        var arr = firstOutUnitOptions.split(",");
-                                        var basic = '<option value="' + arr[0] + '">' + arr[0] + '</option>';
-                                        var other = '<option value="' + arr[1] + '">' + arr[1] + '</option>';
-                                        firstOptions = firstOptions + basic + other;
-                                        $("#FirstOutUnit").empty().append('<option value="">(空)</option>').append(firstOptions); //首选销售单位
-                                        $("#FirstInUnit").empty().append('<option value="">(空)</option>').append(firstOptions); //首选采购单位
-                                        $("#basicUnit").text(arr[0]);
-                                        $("#otherUnit").text(arr[1]);
-                                    }
+                                    if (selectItem !== "(空)") {}
                                 });
                             }
                         }
