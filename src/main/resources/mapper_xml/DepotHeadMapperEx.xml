@@ -301,13 +301,13 @@
     </select>
 
     <select id="findAllMoney" resultType="java.math.BigDecimal">
-        select sum(${modeName}) as allMoney from jsh_depothead where Type='${type}' and SubType = '${subType}'
+        select ifnull(sum(${modeName}),0) as allMoney from jsh_depothead where Type='${type}' and SubType = '${subType}'
         and OrganId =${supplierId} and OperTime &lt;='${endTime}'
         and ifnull(delete_Flag,'0') !='1'
     </select>
 
     <select id="findAllOtherMoney" resultType="java.math.BigDecimal">
-        select sum(OtherMoney) as allOtherMoney from jsh_depothead where Type='${type}' and SubType = '${subType}'
+        select ifnull(sum(OtherMoney),0) as allOtherMoney from jsh_depothead where Type='${type}' and SubType = '${subType}'
         and OrganId =${supplierId} and OperTime &lt;='${endTime}'
         and ifnull(delete_Flag,'0') !='1'
     </select>
