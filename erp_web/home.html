@@ -123,41 +123,53 @@
     }).find('.box-header, .nav-tabs').css('cursor', 'move');
 
     $(function () {
-        $.ajax({
-            type: "get",
-            url: "/depotHead/getBuyAndSaleStatistics",
-            dataType: "json",
-            success: function (res) {
-                if(res && res.code === 200) {
-                    if(res.data) {
-                        $("#todaySale").text((res.data.todaySale).toFixed(2));
-                        $("#thisMonthSale").text((res.data.thisMonthSale).toFixed(2));
-                        $("#thisMonthBuy").text((res.data.thisMonthBuy).toFixed(2));
+        var loginName = sessionStorage.getItem("loginName");
+        if(loginName!="admin") {
+            $.ajax({
+                type: "get",
+                url: "/depotHead/getBuyAndSaleStatistics",
+                dataType: "json",
+                success: function (res) {
+                    if (res && res.code === 200) {
+                        if (res.data) {
+                            $("#todaySale").text((res.data.todaySale).toFixed(2));
+                            $("#thisMonthSale").text((res.data.thisMonthSale).toFixed(2));
+                            $("#thisMonthBuy").text((res.data.thisMonthBuy).toFixed(2));
+                        }
                     }
-                }
-            },
-            error:function(res){
+                },
+                error: function (res) {
 
-            }
-        });
+                }
+            });
+        } else {
+            $("#todaySale").text("--");
+            $("#thisMonthSale").text("--");
+            $("#thisMonthBuy").text("--");
+        }
     });
 
     $(function () {
-        $.ajax({
-            type: "get",
-            url: "/account/getStatistics",
-            dataType: "json",
-            success: function (res) {
-                if (res && res.code === 200) {
-                    if(res.data) {
-                        $("#thisMonthAmount").text((res.data.allMonthAmount-0).toFixed(2));
+        var loginName = sessionStorage.getItem("loginName");
+        if(loginName!="admin") {
+            $.ajax({
+                type: "get",
+                url: "/account/getStatistics",
+                dataType: "json",
+                success: function (res) {
+                    if (res && res.code === 200) {
+                        if(res.data) {
+                            $("#thisMonthAmount").text((res.data.allMonthAmount-0).toFixed(2));
+                        }
                     }
-                }
-            },
-            error:function(res){
+                },
+                error:function(res){
 
-            }
-        });
+                }
+            });
+        } else {
+            $("#thisMonthAmount").text("--");
+        }
     });
 
     function getChartObj(titleName, categories, seriesData) {
@@ -184,21 +196,27 @@
         return chartObj;
     }
     $(function () {
-        $.ajax({
-            type: "get",
-            url: "/depotItem/buyOrSalePrice",
-            dataType: "json",
-            success: function (res) {
-                if(res && res.code === 200) {
-                    var data = res.data;
-                    Highcharts.chart('buyIn', getChartObj("最近6个月采购数据", res.data.monthList, res.data.buyPriceList));
-                    Highcharts.chart('saleOut', getChartObj("最近6个月销售数据", res.data.monthList, res.data.salePriceList));
-                }
-            },
-            error:function(res){
+        var loginName = sessionStorage.getItem("loginName");
+        if(loginName!="admin") {
+            $.ajax({
+                type: "get",
+                url: "/depotItem/buyOrSalePrice",
+                dataType: "json",
+                success: function (res) {
+                    if (res && res.code === 200) {
+                        var data = res.data;
+                        Highcharts.chart('buyIn', getChartObj("最近6个月采购数据", res.data.monthList, res.data.buyPriceList));
+                        Highcharts.chart('saleOut', getChartObj("最近6个月销售数据", res.data.monthList, res.data.salePriceList));
+                    }
+                },
+                error: function (res) {
 
-            }
-        });
+                }
+            });
+        } else {
+            Highcharts.chart('buyIn', getChartObj("最近6个月采购数据", [], []));
+            Highcharts.chart('saleOut', getChartObj("最近6个月销售数据", [], []));
+        }
     });
 
 </script>
