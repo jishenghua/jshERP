@@ -178,8 +178,10 @@ public class DepotItemController {
                     String materialOther = getOtherInfo(mpArr, diEx);
                     MaterialName = MaterialName + materialOther + ((diEx.getUName() == null || diEx.getUName().equals("")) ? "" : "(" + diEx.getUName() + ")") + ratio;
                     item.put("MaterialName", MaterialName == null ? "" : MaterialName);
-                    item.put("Stock", depotItemService.getStockByParam(diEx.getDepotid(),diEx.getMaterialid(),null,null,tenantId));
+                    BigDecimal stock = depotItemService.getStockByParam(diEx.getDepotid(),diEx.getMaterialid(),null,null,tenantId);
+                    item.put("Stock", stock);
                     item.put("Unit", diEx.getMunit());
+                    item.put("currentStock", diEx.getOpernumber().add(stock));
                     item.put("OperNumber", diEx.getOpernumber());
                     item.put("BasicNumber", diEx.getBasicnumber());
                     item.put("UnitPrice", diEx.getUnitprice());
