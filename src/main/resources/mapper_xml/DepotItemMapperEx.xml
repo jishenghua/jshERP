@@ -4,8 +4,9 @@
 
     <resultMap id="DetailByTypeAndMIdResultMap" type="com.jsh.erp.datasource.entities.DepotItemVo4DetailByTypeAndMId">
         <result column="Number" jdbcType="VARCHAR" property="number" />
-        <result column="newType" jdbcType="VARCHAR" property="newtype" />
-        <result column="b_num" jdbcType="DECIMAL" property="bnum" />
+        <result column="Type" jdbcType="VARCHAR" property="type" />
+        <result column="SubType" jdbcType="VARCHAR" property="subType" />
+        <result column="b_num" jdbcType="BIGINT" property="bnum" />
         <result column="oTime" jdbcType="TIMESTAMP" property="otime" />
     </resultMap>
 
@@ -96,7 +97,7 @@
     </select>
 
     <select id="findDetailByTypeAndMaterialIdList" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="DetailByTypeAndMIdResultMap">
-        select dh.Number,concat(dh.SubType,dh.Type) as newType,
+        select dh.Number,dh.Type,dh.SubType,
         case
             when type='入库' then ifnull(di.BasicNumber,0)
             when type='出库' then 0-di.BasicNumber
@@ -104,6 +105,7 @@
             when dh.SubType='组装单' and di.MType='普通子件' then 0-di.BasicNumber
             when dh.SubType='拆卸单' and di.MType='普通子件' then ifnull(di.BasicNumber,0)
             when dh.SubType='拆卸单' and di.MType='组合件' then 0-di.BasicNumber
+            when dh.SubType='盘点复盘' then ifnull(di.BasicNumber,0)
             else 0
         end
         as b_num,
@@ -112,7 +114,8 @@
         INNER JOIN jsh_depotitem di on dh.id=di.HeaderId and ifnull(di.delete_Flag,'0') !='1'
         where ((dh.type!='其它' and dh.SubType!='调拨')
         or (dh.type='其它' and dh.SubType='组装单')
-        or (dh.type='其它' and dh.SubType='拆卸单'))
+        or (dh.type='其它' and dh.SubType='拆卸单')
+        or (dh.type='其它' and dh.SubType='盘点复盘' and dh.Status=1))
         and di.MaterialId =${mId}
         and ifnull(dh.delete_Flag,'0') !='1'
         ORDER BY oTime desc
@@ -125,8 +128,10 @@
         select count(1)
         from jsh_depothead dh
         INNER JOIN jsh_depotitem di on dh.id=di.HeaderId and ifnull(di.delete_Flag,'0') !='1'
-        where dh.type!='其它'
-        and dh.SubType!='调拨'
+        where ((dh.type!='其它' and dh.SubType!='调拨')
+        or (dh.type='其它' and dh.SubType='组装单')
+        or (dh.type='其它' and dh.SubType='拆卸单')
+        or (dh.type='其它' and dh.SubType='盘点复盘' and dh.Status=1))
         and di.MaterialId =${mId}
         and ifnull(dh.delete_Flag,'0') !='1'
     </select>
@@ -221,6 +226,27 @@
         and dh.OperTime &gt;= '${MonthTime}-01 00:00:00'
         and dh.OperTime &lt;= '${MonthTime}-31 23:59:59'
         and ifnull(dh.delete_Flag,'0') !='1'
+    </select>
+
+    <select id="getStockCheckSum"  resultType="java.math.BigDecimal">
+        select ifnull(sum(di.BasicNumber),0) stockCheckSum from jsh_depothead dh
+        INNER JOIN jsh_depotitem di on dh.id=di.HeaderId
+        where 1=1
+        <if test="mId != null">
+            and di.MaterialId=#{mId}
+        </if>
+        and dh.SubType='盘点复盘' and dh.`Status`='1'
+        <if test="depotId != null">
+            and di.DepotId=#{depotId}
+        </if>
+        <if test="beginTime != null">
+            and dh.OperTime &gt;= '${beginTime}'
+        </if>
+        <if test="endTime != null">
+            and dh.OperTime &lt;= '${endTime}'
+        </if>
+        and ifnull(dh.delete_Flag,'0') !='1'
+        and ifnull(di.delete_Flag,'0') !='1'
     </select>
 
     <select id="getStockByParam"  resultMap="StockMap">

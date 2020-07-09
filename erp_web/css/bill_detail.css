@@ -28,6 +28,9 @@
 #bill .allocation_out{
 	display: none;
 }
+#bill .stock_check_replay{
+	display: none;
+}
 #bill .gift_recharge{
 	display: none;
 }

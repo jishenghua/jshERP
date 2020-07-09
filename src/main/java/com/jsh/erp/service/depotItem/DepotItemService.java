@@ -647,10 +647,12 @@ public class DepotItemService {
     public BigDecimal getStockByParam(Long depotId, Long mId, String beginTime, String endTime, Long tenantId){
         //初始库存
         BigDecimal initStock = materialService.getInitStockByMid(depotId, mId);
+        //盘点复盘后数量的变动
+        BigDecimal stockCheckSum = depotItemMapperEx.getStockCheckSum(depotId, mId, beginTime, endTime);
         DepotItemVo4Stock stockObj = depotItemMapperEx.getStockByParam(depotId, mId, beginTime, endTime, tenantId);
         BigDecimal intNum = stockObj.getInNum();
         BigDecimal outNum = stockObj.getOutNum();
-        return initStock.add(intNum).subtract(outNum);
+        return initStock.add(intNum).subtract(outNum).add(stockCheckSum);
     }
 
     /**

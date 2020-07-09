@@ -7,7 +7,9 @@ public class DepotItemVo4DetailByTypeAndMId {
 
     private String number;
 
-    private String newtype;
+    private String type;
+
+    private String subType;
 
     private BigDecimal bnum;
 
@@ -21,12 +23,20 @@ public class DepotItemVo4DetailByTypeAndMId {
         this.number = number;
     }
 
-    public String getNewtype() {
-        return newtype;
+    public String getType() {
+        return type;
     }
 
-    public void setNewtype(String newtype) {
-        this.newtype = newtype;
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getSubType() {
+        return subType;
+    }
+
+    public void setSubType(String subType) {
+        this.subType = subType;
     }
 
     public BigDecimal getBnum() {

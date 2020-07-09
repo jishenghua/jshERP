@@ -140,6 +140,21 @@
             $("#bill .allocation_out").show();
             tableString = $(".allocation_out").html();
         }
+        else if(listSubType == "组装单") {
+            billType = "material";
+            $("#bill .allocation_out").show();
+            tableString = $(".allocation_out").html();
+        }
+        else if(listSubType == "拆卸单") {
+            billType = "material";
+            $("#bill .allocation_out").show();
+            tableString = $(".allocation_out").html();
+        }
+        else if(listSubType == "盘点复盘") {
+            billType = "material";
+            $("#bill .stock_check_replay").show();
+            tableString = $(".stock_check_replay").html();
+        }
         else if(listSubType == "收入") {
             billType = "account";
             payTypeTitle = "收入项目";
@@ -373,6 +388,9 @@
             else if(listSubType == "调拨出库") {
                 tableString = $(".allocation_out").html();
             }
+            else if(listSubType == "盘点复盘") {
+                tableString = $(".stock_check_replay").html();
+            }
             else if(listSubType == "收入") {
                 tableString = $(".item_in").html();
             }
@@ -408,7 +426,8 @@
             depotHeadName = "仓库名称";
         }
         var isShowTaxColumn = false; //是否显示税率相关的列,true为隐藏,false为显示
-        if(listSubType == "调拨出库" || listSubType == "其它出库" || listSubType == "其它入库" || listSubType == "零售出库" || listSubType == "零售退货入库"){
+        if(listSubType == "调拨出库" || listSubType == "其它出库" || listSubType == "其它入库" ||
+            listSubType == "零售出库" || listSubType == "零售退货入库" || listSubType == "盘点复盘"){
             isShowTaxColumn = true; //隐藏
         }
         var isShowMaterialTypeColumn = true; //是否显示商品类型相关的列,true为隐藏,false为显示
