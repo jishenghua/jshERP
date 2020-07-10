@@ -54,6 +54,9 @@ $.get("../../pages/template/base.html?7891", function(tem) {
             required: true,
             validType: 'length[2,30]'
         });
+        $("#depotDlg #address").textbox({
+            validType: 'length[2,30]'
+        });
         $("#depotDlg #warehousing,#depotDlg #truckage").numberbox({
             min:0,
             precision:2

@@ -12,6 +12,11 @@ $.ajax({
                 if (user.username) {
                     $(".main-header .user-menu .hidden-xs,.main-sidebar .info p").text(user.username);
                 }
+                if(user.id==user.tenantId) {
+                    $("#newHand").show();
+                } else {
+                    $("#newHand").hide();
+                }
             }
         } else {
             top.location.href = '/login.html';

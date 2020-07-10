@@ -297,33 +297,28 @@
                             }
                             ids += row[i].id + ",";
                         }
-                        if(row[i].loginName == "jsh"){
-                            $.messager.alert('提示', '管理员jsh不能删除！', 'warning');
-                            return;
-                        } else {
-                            $.ajax({
-                                type: "post",
-                                url: "/systemConfig/batchDeleteSystemConfigByIds",
-                                dataType: "json",
-                                async: false,
-                                data: ({
-                                    ids: ids
-                                }),
-                                success: function (res) {
-                                    if(res && res.code === 200) {
-                                        $("#searchBtn").click();
-                                        $(":checkbox").attr("checked", false);
-                                    } else {
-                                        $.messager.alert('删除提示', '删除系统配置信息失败，请稍后再试！', 'error');
-                                    }
-                                },
-                                //此处添加错误处理
-                                error: function () {
-                                    $.messager.alert('删除提示', '删除系统配置信息异常，请稍后再试！', 'error');
-                                    return;
+                        $.ajax({
+                            type: "post",
+                            url: "/systemConfig/batchDeleteSystemConfigByIds",
+                            dataType: "json",
+                            async: false,
+                            data: ({
+                                ids: ids
+                            }),
+                            success: function (res) {
+                                if(res && res.code === 200) {
+                                    $("#searchBtn").click();
+                                    $(":checkbox").attr("checked", false);
+                                } else {
+                                    $.messager.alert('删除提示', '删除系统配置信息失败，请稍后再试！', 'error');
                                 }
-                            });
-                        }
+                            },
+                            //此处添加错误处理
+                            error: function () {
+                                $.messager.alert('删除提示', '删除系统配置信息异常，请稍后再试！', 'error');
+                                return;
+                            }
+                        });
                     }
                 });
             }

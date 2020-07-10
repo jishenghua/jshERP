@@ -350,7 +350,7 @@ public class DepotHeadService {
             modeName = "DiscountLastMoney";
             allOtherMoney = depotHeadMapperEx.findAllOtherMoney(supplierId, type, subType, endTime);
         }
-        BigDecimal result = null;
+        BigDecimal result = BigDecimal.ZERO;
         try{
             result =depotHeadMapperEx.findAllMoney(supplierId, type, subType, modeName, endTime);
         }catch(Exception e){

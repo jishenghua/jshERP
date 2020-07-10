@@ -73,7 +73,13 @@ public class DepotItemController {
             for (DepotItemVo4DetailByTypeAndMId d: list) {
                 JSONObject item = new JSONObject();
                 item.put("Number", d.getNumber()); //商品编号
-                item.put("Type", d.getNewtype()); //进出类型
+                String type = d.getType();
+                String subType = d.getSubType();
+                if(("其它").equals(type)) {
+                    item.put("Type", subType); //进出类型
+                } else {
+                    item.put("Type", subType + type); //进出类型
+                }
                 item.put("BasicNumber", d.getBnum()); //数量
                 item.put("OperTime", d.getOtime().getTime()); //时间
                 dataArray.add(item);
@@ -178,8 +184,10 @@ public class DepotItemController {
                     String materialOther = getOtherInfo(mpArr, diEx);
                     MaterialName = MaterialName + materialOther + ((diEx.getUName() == null || diEx.getUName().equals("")) ? "" : "(" + diEx.getUName() + ")") + ratio;
                     item.put("MaterialName", MaterialName == null ? "" : MaterialName);
-                    item.put("Stock", depotItemService.getStockByParam(diEx.getDepotid(),diEx.getMaterialid(),null,null,tenantId));
+                    BigDecimal stock = depotItemService.getStockByParam(diEx.getDepotid(),diEx.getMaterialid(),null,null,tenantId);
+                    item.put("Stock", stock);
                     item.put("Unit", diEx.getMunit());
+                    item.put("currentStock", diEx.getOpernumber().add(stock));
                     item.put("OperNumber", diEx.getOpernumber());
                     item.put("BasicNumber", diEx.getBasicnumber());
                     item.put("UnitPrice", diEx.getUnitprice());
