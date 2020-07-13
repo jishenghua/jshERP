@@ -406,9 +406,9 @@ public class DepotHeadController {
      * @throws Exception
      */
     @PostMapping(value = "/deleteDepotHeadAndDetail")
-    public Object deleteDepotHeadAndDetail(@RequestParam("id") Long id) throws  Exception{
+    public Object deleteDepotHeadAndDetail(@RequestParam("id") Long id, HttpServletRequest request) throws  Exception{
         JSONObject result = ExceptionConstants.standardSuccess();
-        depotHeadService.deleteDepotHeadAndDetail(id);
+        depotHeadService.deleteDepotHeadAndDetail(id, request);
         return result;
     }
 
@@ -419,9 +419,9 @@ public class DepotHeadController {
      * @throws Exception
      */
     @PostMapping(value = "/batchDeleteDepotHeadAndDetail")
-    public Object batchDeleteDepotHeadAndDetail(@RequestParam("ids") String ids) throws  Exception{
+    public Object batchDeleteDepotHeadAndDetail(@RequestParam("ids") String ids, HttpServletRequest request) throws  Exception{
         JSONObject result = ExceptionConstants.standardSuccess();
-        depotHeadService.batchDeleteDepotHeadAndDetail(ids);
+        depotHeadService.batchDeleteDepotHeadAndDetail(ids, request);
         return result;
     }
 

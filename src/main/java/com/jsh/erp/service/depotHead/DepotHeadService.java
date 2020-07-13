@@ -3,10 +3,7 @@ package com.jsh.erp.service.depotHead;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
-import com.jsh.erp.datasource.entities.DepotHead;
-import com.jsh.erp.datasource.entities.DepotHeadExample;
-import com.jsh.erp.datasource.entities.DepotItem;
-import com.jsh.erp.datasource.entities.User;
+import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.mappers.DepotHeadMapper;
 import com.jsh.erp.datasource.mappers.DepotHeadMapperEx;
 import com.jsh.erp.datasource.mappers.DepotItemMapperEx;
@@ -555,7 +552,7 @@ public class DepotHeadService {
      * @throws Exception
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public void deleteDepotHeadAndDetail(Long id) throws Exception {
+    public void deleteDepotHeadAndDetail(Long id, HttpServletRequest request) throws Exception {
         //查询单据主表信息
         DepotHead depotHead =getDepotHead(id);
         User userInfo=userService.getCurrentUser();
@@ -581,6 +578,12 @@ public class DepotHeadService {
         /**删除单据子表数据*/
         try{
             depotItemMapperEx.batchDeleteDepotItemByDepotHeadIds(new Long []{id});
+            //更新当前库存
+            List<DepotItem> list = depotItemService.getListByHeaderId(id);
+            for(DepotItem depotItem: list){
+                Long tenantId = Long.parseLong(request.getSession().getAttribute("tenantId").toString());
+                depotItemService.updateCurrentStock(depotItem,tenantId);
+            }
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -598,11 +601,11 @@ public class DepotHeadService {
      * @throws Exception
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public void batchDeleteDepotHeadAndDetail(String ids) throws Exception{
+    public void batchDeleteDepotHeadAndDetail(String ids, HttpServletRequest request) throws Exception{
         if(StringUtil.isNotEmpty(ids)){
             String [] headIds=ids.split(",");
             for(int i=0;i<headIds.length;i++){
-                deleteDepotHeadAndDetail(Long.valueOf(headIds[i]));
+                deleteDepotHeadAndDetail(Long.valueOf(headIds[i]), request);
             }
         }
     }

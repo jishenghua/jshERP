@@ -5,7 +5,7 @@
 
 <generatorConfiguration>
     <classPathEntry
-            location="E:\maven-repository\default\mysql\mysql-connector-java\5.1.47\mysql-connector-java-5.1.47.jar"/>
+            location="E:\maven\maven-repository\mysql\mysql-connector-java\5.1.47\mysql-connector-java-5.1.47.jar"/>
 
     <context id="DB2Tables" targetRuntime="MyBatis3" defaultModelType="flat">
         <commentGenerator>
@@ -52,7 +52,8 @@
         <table tableName="jsh_log" domainObjectName="Log"></table>
         <table tableName="jsh_material" domainObjectName="Material"></table>
         <table tableName="jsh_material_extend" domainObjectName="MaterialExtend"></table>
-        <table tableName="jsh_material_stock" domainObjectName="MaterialStock"></table>
+        <table tableName="jsh_material_current_stock" domainObjectName="MaterialCurrentStock"></table>
+        <table tableName="jsh_material_initial_stock" domainObjectName="MaterialInitialStock"></table>
         <table tableName="jsh_materialcategory" domainObjectName="MaterialCategory"></table>
         <table tableName="jsh_materialproperty" domainObjectName="MaterialProperty"></table>
         <table tableName="jsh_person" domainObjectName="Person"></table>

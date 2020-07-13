@@ -721,21 +721,39 @@ INSERT INTO `jsh_material_extend` VALUES ('8', '579', '1007', '箱', '240.000000
 INSERT INTO `jsh_material_extend` VALUES ('9', '586', '1008', '个', '12.000000', '15.000000', '15.000000', '15.000000', '1', '2020-02-20 23:47:23', 'jsh', 'jsh', '1582213643084', '63', '0');
 
 -- ----------------------------
--- Table structure for jsh_material_stock
+-- Table structure for jsh_material_initial_stock
 -- ----------------------------
-DROP TABLE IF EXISTS `jsh_material_stock`;
-CREATE TABLE `jsh_material_stock` (
+DROP TABLE IF EXISTS `jsh_material_initial_stock`;
+CREATE TABLE `jsh_material_initial_stock` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `material_id` bigint(20) DEFAULT NULL COMMENT '产品id',
   `depot_id` bigint(20) DEFAULT NULL COMMENT '仓库id',
   `number` decimal(24,6) DEFAULT NULL COMMENT '初始库存数量',
   `tenant_id` bigint(20) DEFAULT NULL COMMENT '租户id',
-  `delete_fag` varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除',
+  `delete_flag` varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=119 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='产品初始库存';
 
 -- ----------------------------
--- Records of jsh_material_stock
+-- Records of jsh_material_initial_stock
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for jsh_material_current_stock
+-- ----------------------------
+DROP TABLE IF EXISTS `jsh_material_current_stock`;
+CREATE TABLE `jsh_material_current_stock` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `material_id` bigint(20) DEFAULT NULL COMMENT '产品id',
+  `depot_id` bigint(20) DEFAULT NULL COMMENT '仓库id',
+  `current_number` decimal(24,6) DEFAULT NULL COMMENT '当前库存数量',
+  `tenant_id` bigint(20) DEFAULT NULL COMMENT '租户id',
+  `delete_flag` varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='产品当前库存';
+
+-- ----------------------------
+-- Records of jsh_material_current_stock
 -- ----------------------------
 
 -- ----------------------------

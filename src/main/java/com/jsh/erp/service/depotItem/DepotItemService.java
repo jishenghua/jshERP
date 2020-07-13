@@ -5,10 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.*;
-import com.jsh.erp.datasource.mappers.DepotHeadMapper;
-import com.jsh.erp.datasource.mappers.DepotItemMapper;
-import com.jsh.erp.datasource.mappers.DepotItemMapperEx;
-import com.jsh.erp.datasource.mappers.SerialNumberMapperEx;
+import com.jsh.erp.datasource.mappers.*;
 import com.jsh.erp.datasource.vo.DepotItemStockWarningCount;
 import com.jsh.erp.datasource.vo.DepotItemVo4Stock;
 import com.jsh.erp.exception.BusinessRunTimeException;
@@ -62,6 +59,8 @@ public class DepotItemService {
     private UserService userService;
     @Resource
     private SystemConfigService systemConfigService;
+    @Resource
+    private MaterialCurrentStockMapper materialCurrentStockMapper;
     @Resource
     private LogService logService;
 
@@ -221,6 +220,18 @@ public class DepotItemService {
         return result;
     }
 
+    public List<DepotItem> getListByHeaderId(Long headerId)throws Exception {
+        List<DepotItem> list =null;
+        try{
+            DepotItemExample example = new DepotItemExample();
+            example.createCriteria().andHeaderidEqualTo(headerId);
+            list = depotItemMapper.selectByExample(example);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list;
+    }
+
     public List<DepotItemVo4WithInfoEx> getDetailList(Long headerId)throws Exception {
         List<DepotItemVo4WithInfoEx> list =null;
         try{
@@ -333,13 +344,18 @@ public class DepotItemService {
                                     userInfo);
                         }
                     }
-                    this.deleteDepotItem(tempDeletedJson.getLong("Id"), request);
                     bf.append(tempDeletedJson.getLong("Id"));
                     if(i<(deletedJson.size()-1)){
                         bf.append(",");
                     }
                 }
                 this.batchDeleteDepotItemByIds(bf.toString());
+                //更新当前库存
+                for (int i = 0; i < deletedJson.size(); i++) {
+                    JSONObject tempDeletedJson = JSONObject.parseObject(deletedJson.getString(i));
+                    DepotItem depotItem = getDepotItem(tempDeletedJson.getLong("Id"));
+                    updateCurrentStock(depotItem,tenantId);
+                }
             }
             if (null != insertedJson) {
                 for (int i = 0; i < insertedJson.size(); i++) {
@@ -449,6 +465,8 @@ public class DepotItemService {
                         }
                     }
                     this.insertDepotItemWithObj(depotItem);
+                    //更新当前库存
+                    updateCurrentStock(depotItem,tenantId);
                 }
             }
 
@@ -576,6 +594,8 @@ public class DepotItemService {
                         }
                     }
                     this.updateDepotItemWithObj(depotItem);
+                    //更新当前库存
+                    updateCurrentStock(depotItem,tenantId);
                 }
             }
         return null;
@@ -679,5 +699,29 @@ public class DepotItemService {
     public BigDecimal getOutNumByParam(Long depotId, Long mId, String beginTime, String endTime, Long tenantId){
         DepotItemVo4Stock stockObj = depotItemMapperEx.getStockByParam(depotId, mId, beginTime, endTime, tenantId);
         return stockObj.getOutNum();
+    }
+
+    /**
+     * 根据单据明细来批量更新当前库存
+     * @param depotItem
+     * @param tenantId
+     */
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public void updateCurrentStock(DepotItem depotItem, Long tenantId){
+        MaterialCurrentStockExample example = new MaterialCurrentStockExample();
+        example.createCriteria().andMaterialIdEqualTo(depotItem.getMaterialid()).andDepotIdEqualTo(depotItem.getDepotid())
+                .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        List<MaterialCurrentStock> list = materialCurrentStockMapper.selectByExample(example);
+        MaterialCurrentStock materialCurrentStock = new MaterialCurrentStock();
+        materialCurrentStock.setMaterialId(depotItem.getMaterialid());
+        materialCurrentStock.setDepotId(depotItem.getDepotid());
+        materialCurrentStock.setCurrentNumber(getStockByParam(depotItem.getDepotid(),depotItem.getMaterialid(),null,null,tenantId));
+        if(list!=null && list.size()>0) {
+            Long mcsId = list.get(0).getId();
+            materialCurrentStock.setId(mcsId);
+            materialCurrentStockMapper.updateByPrimaryKeySelective(materialCurrentStock);
+        } else {
+            materialCurrentStockMapper.insertSelective(materialCurrentStock);
+        }
     }
 }
