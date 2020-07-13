@@ -819,5 +819,5 @@ ROW_FORMAT=COMPACT
 -- 修改jsh_material_stock的表名为jsh_material_initial_stock
 -- 修改jsh_material_initial_stock表的删除字段
 -- --------------------------------------------------------
-alter table jsh_material_stock rename to jsh_material_initial_stock
+alter table jsh_material_stock rename to jsh_material_initial_stock;
 alter table jsh_material_initial_stock change delete_fag delete_flag varchar(1) NULL DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
