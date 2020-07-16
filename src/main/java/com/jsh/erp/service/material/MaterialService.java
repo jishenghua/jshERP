@@ -59,7 +59,7 @@ public class MaterialService {
     @Resource
     private UnitService unitService;
     @Resource
-    private MaterialStockMapper materialStockMapper;
+    private MaterialInitialStockMapper materialInitialStockMapper;
     @Resource
     private DepotService depotService;
     @Resource
@@ -201,9 +201,9 @@ public class MaterialService {
                         String number = jsonObj.getString("number");
                         Long depotId = jsonObj.getLong("depotId");
                         //先清除再插入
-                        MaterialStockExample example = new MaterialStockExample();
+                        MaterialInitialStockExample example = new MaterialInitialStockExample();
                         example.createCriteria().andMaterialIdEqualTo(id).andDepotIdEqualTo(depotId);
-                        materialStockMapper.deleteByExample(example);
+                        materialInitialStockMapper.deleteByExample(example);
                         if (number != null && Double.valueOf(number) > 0) {
                             insertStockByMaterialAndDepot(depotId, id, parseBigDecimalEx(number));
                         }
@@ -490,7 +490,7 @@ public class MaterialService {
                     basicMaterialExtend.setMaterialId(mId);
                     basicMaterialExtend.setDefaultFlag("1");
                     basicMaterialExtend.setCreateTime(new Date());
-                    basicMaterialExtend.setUpdateTime(new Date().getTime());
+                    basicMaterialExtend.setUpdateTime(System.currentTimeMillis());
                     basicMaterialExtend.setCreateSerial(user.getLoginName());
                     basicMaterialExtend.setUpdateSerial(user.getLoginName());
                     materialExtendMapper.insertSelective(basicMaterialExtend);
@@ -501,7 +501,7 @@ public class MaterialService {
                     otherMaterialExtend.setMaterialId(mId);
                     otherMaterialExtend.setDefaultFlag("0");
                     otherMaterialExtend.setCreateTime(new Date());
-                    otherMaterialExtend.setUpdateTime(new Date().getTime());
+                    otherMaterialExtend.setUpdateTime(System.currentTimeMillis());
                     otherMaterialExtend.setCreateSerial(user.getLoginName());
                     otherMaterialExtend.setUpdateSerial(user.getLoginName());
                     materialExtendMapper.insertSelective(otherMaterialExtend);
@@ -512,9 +512,9 @@ public class MaterialService {
                 for(Depot depot: depotList){
                     BigDecimal stock = stockMap.get(depot.getId());
                     //先清除再插入
-                    MaterialStockExample example = new MaterialStockExample();
+                    MaterialInitialStockExample example = new MaterialInitialStockExample();
                     example.createCriteria().andMaterialIdEqualTo(mId).andDepotIdEqualTo(depot.getId());
-                    materialStockMapper.deleteByExample(example);
+                    materialInitialStockMapper.deleteByExample(example);
                     if(stock!=null && stock.compareTo(BigDecimal.ZERO)!=0) {
                         depotId = depot.getId();
                         insertStockByMaterialAndDepot(depotId, mId, stock);
@@ -576,11 +576,11 @@ public class MaterialService {
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void insertStockByMaterialAndDepot(Long depotId, Long mId, BigDecimal stock){
-        MaterialStock materialStock = new MaterialStock();
-        materialStock.setDepotId(depotId);
-        materialStock.setMaterialId(mId);
-        materialStock.setNumber(stock);
-        materialStockMapper.insertSelective(materialStock); //存入初始库存
+        MaterialInitialStock materialInitialStock = new MaterialInitialStock();
+        materialInitialStock.setDepotId(depotId);
+        materialInitialStock.setMaterialId(mId);
+        materialInitialStock.setNumber(stock);
+        materialInitialStockMapper.insertSelective(materialInitialStock); //存入初始库存
     }
 
     public List<Material> getMaterialEnableSerialNumberList(Map<String, Object> parameterMap)throws Exception {
@@ -697,10 +697,10 @@ public class MaterialService {
      */
     public BigDecimal getInitStock(Long materialId, Long depotId) {
         BigDecimal stock = BigDecimal.ZERO;
-        MaterialStockExample example = new MaterialStockExample();
+        MaterialInitialStockExample example = new MaterialInitialStockExample();
         example.createCriteria().andMaterialIdEqualTo(materialId).andDepotIdEqualTo(depotId)
-                .andDeleteFagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        List<MaterialStock> list = materialStockMapper.selectByExample(example);
+                .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        List<MaterialInitialStock> list = materialInitialStockMapper.selectByExample(example);
         if(list!=null && list.size()>0) {
             stock = list.get(0).getNumber();
         }
@@ -714,17 +714,17 @@ public class MaterialService {
      */
     public BigDecimal getInitStockByMid(Long depotId, Long materialId) {
         BigDecimal stock = BigDecimal.ZERO;
-        MaterialStockExample example = new MaterialStockExample();
+        MaterialInitialStockExample example = new MaterialInitialStockExample();
         if(depotId!=null) {
             example.createCriteria().andMaterialIdEqualTo(materialId).andDepotIdEqualTo(depotId)
-                    .andDeleteFagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+                    .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         } else {
             example.createCriteria().andMaterialIdEqualTo(materialId)
-                    .andDeleteFagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+                    .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         }
-        List<MaterialStock> list = materialStockMapper.selectByExample(example);
+        List<MaterialInitialStock> list = materialInitialStockMapper.selectByExample(example);
         if(list!=null && list.size()>0) {
-            for(MaterialStock ms: list) {
+            for(MaterialInitialStock ms: list) {
                 if(ms!=null) {
                     stock = stock.add(ms.getNumber());
                 }

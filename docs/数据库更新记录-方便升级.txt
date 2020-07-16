@@ -791,3 +791,33 @@ alter table jsh_material drop PriceStrategy;
 -- 增加负库存的启用标记
 -- ----------------------------
 alter table jsh_systemconfig add minus_stock_flag varchar(1) DEFAULT '0' COMMENT '负库存启用标记，0未启用，1启用' after customer_flag;
+
+-- ----------------------------
+-- 时间 2020年07月13日
+-- by jishenghua
+-- 增加产品当前库存表
+-- ----------------------------
+CREATE TABLE `jsh_material_current_stock` (
+`id`  bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键' ,
+`material_id`  bigint(20) NULL DEFAULT NULL COMMENT '产品id' ,
+`depot_id`  bigint(20) NULL DEFAULT NULL COMMENT '仓库id' ,
+`current_number`  decimal(24,6) NULL DEFAULT NULL COMMENT '当前库存数量' ,
+`tenant_id`  bigint(20) NULL DEFAULT NULL COMMENT '租户id' ,
+`delete_flag`  varchar(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '删除标记，0未删除，1删除' ,
+PRIMARY KEY (`id`)
+)
+ENGINE=InnoDB
+DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci
+COMMENT='产品当前库存'
+AUTO_INCREMENT=1
+ROW_FORMAT=COMPACT
+;
+
+-- --------------------------------------------------------
+-- 时间 2020年07月13日
+-- by jishenghua
+-- 修改jsh_material_stock的表名为jsh_material_initial_stock
+-- 修改jsh_material_initial_stock表的删除字段
+-- --------------------------------------------------------
+alter table jsh_material_stock rename to jsh_material_initial_stock;
+alter table jsh_material_initial_stock change delete_fag delete_flag varchar(1) NULL DEFAULT '0' COMMENT '删除标记，0未删除，1删除';

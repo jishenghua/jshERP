@@ -252,13 +252,14 @@ public class DepotItemController {
      * 查找所有的明细
      * @param currentPage
      * @param pageSize
-     * @param projectId
+     * @param depotId
      * @param monthTime
-     * @param headIds
-     * @param materialIds
+     * @param name
+     * @param model
      * @param mpList
      * @param request
      * @return
+     * @throws Exception
      */
     @PostMapping(value = "/findByAll")
     public BaseResponseInfo findByAll(@RequestParam("currentPage") Integer currentPage,
@@ -278,7 +279,7 @@ public class DepotItemController {
             List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(StringUtil.toNull(name), StringUtil.toNull(model),
                     timeB,(currentPage-1)*pageSize, pageSize);
             String[] mpArr = mpList.split(",");
-            int total = depotItemService.findByAllCount(StringUtil.toNull(name), timeB, StringUtil.toNull(model));
+            int total = depotItemService.findByAllCount(StringUtil.toNull(name), StringUtil.toNull(model), timeB);
             map.put("total", total);
             //存放数据json数组
             JSONArray dataArray = new JSONArray();
