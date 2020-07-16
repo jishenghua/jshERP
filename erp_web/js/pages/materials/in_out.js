@@ -1475,6 +1475,8 @@
 		var debt = 0;
 		if(res.othermoney){
 			debt = (res.discountlastmoney+res.othermoney-res.changeamount).toFixed(2);
+		} else {
+			debt = (res.discountlastmoney-res.changeamount).toFixed(2);
 		}
 		$("#DebtShow").text(debt);
 		$("#AccountDayShow").text(res.accountday);  //结算天数
