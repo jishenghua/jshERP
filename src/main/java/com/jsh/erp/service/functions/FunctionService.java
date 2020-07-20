@@ -2,14 +2,11 @@ package com.jsh.erp.service.functions;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
-import com.jsh.erp.constants.ExceptionConstants;
-import com.jsh.erp.datasource.entities.DepotItem;
-import com.jsh.erp.datasource.entities.Functions;
-import com.jsh.erp.datasource.entities.FunctionsExample;
+import com.jsh.erp.datasource.entities.Function;
+import com.jsh.erp.datasource.entities.FunctionExample;
 import com.jsh.erp.datasource.entities.User;
-import com.jsh.erp.datasource.mappers.FunctionsMapper;
-import com.jsh.erp.datasource.mappers.FunctionsMapperEx;
-import com.jsh.erp.exception.BusinessRunTimeException;
+import com.jsh.erp.datasource.mappers.FunctionMapper;
+import com.jsh.erp.datasource.mappers.FunctionMapperEx;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
@@ -28,21 +25,21 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class FunctionsService {
-    private Logger logger = LoggerFactory.getLogger(FunctionsService.class);
+public class FunctionService {
+    private Logger logger = LoggerFactory.getLogger(FunctionService.class);
 
     @Resource
-    private FunctionsMapper functionsMapper;
+    private FunctionMapper functionsMapper;
 
     @Resource
-    private FunctionsMapperEx functionsMapperEx;
+    private FunctionMapperEx functionMapperEx;
     @Resource
     private UserService userService;
     @Resource
     private LogService logService;
 
-    public Functions getFunctions(long id)throws Exception {
-        Functions result=null;
+    public Function getFunction(long id)throws Exception {
+        Function result=null;
         try{
             result=functionsMapper.selectByPrimaryKey(id);
         }catch(Exception e){
@@ -51,11 +48,11 @@ public class FunctionsService {
         return result;
     }
 
-    public List<Functions> getFunctionsListByIds(String ids)throws Exception {
+    public List<Function> getFunctionListByIds(String ids)throws Exception {
         List<Long> idList = StringUtil.strToLongList(ids);
-        List<Functions> list = new ArrayList<>();
+        List<Function> list = new ArrayList<>();
         try{
-            FunctionsExample example = new FunctionsExample();
+            FunctionExample example = new FunctionExample();
             example.createCriteria().andIdIn(idList);
             list = functionsMapper.selectByExample(example);
         }catch(Exception e){
@@ -64,10 +61,10 @@ public class FunctionsService {
         return list;
     }
 
-    public List<Functions> getFunctions()throws Exception {
-        FunctionsExample example = new FunctionsExample();
+    public List<Function> getFunction()throws Exception {
+        FunctionExample example = new FunctionExample();
         example.createCriteria().andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        List<Functions> list=null;
+        List<Function> list=null;
         try{
             list=functionsMapper.selectByExample(example);
         }catch(Exception e){
@@ -76,20 +73,20 @@ public class FunctionsService {
         return list;
     }
 
-    public List<Functions> select(String name, String type, int offset, int rows)throws Exception {
-        List<Functions> list=null;
+    public List<Function> select(String name, String type, int offset, int rows)throws Exception {
+        List<Function> list=null;
         try{
-            list=functionsMapperEx.selectByConditionFunctions(name, type, offset, rows);
+            list= functionMapperEx.selectByConditionFunction(name, type, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
     }
 
-    public Long countFunctions(String name, String type)throws Exception {
+    public Long countFunction(String name, String type)throws Exception {
         Long result=null;
         try{
-            result=functionsMapperEx.countsByFunctions(name, type);
+            result= functionMapperEx.countsByFunction(name, type);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -97,8 +94,8 @@ public class FunctionsService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int insertFunctions(String beanJson, HttpServletRequest request)throws Exception {
-        Functions functions = JSONObject.parseObject(beanJson, Functions.class);
+    public int insertFunction(String beanJson, HttpServletRequest request)throws Exception {
+        Function functions = JSONObject.parseObject(beanJson, Function.class);
         int result=0;
         try{
             result=functionsMapper.insertSelective(functions);
@@ -111,8 +108,8 @@ public class FunctionsService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateFunctions(String beanJson, Long id, HttpServletRequest request) throws Exception{
-        Functions functions = JSONObject.parseObject(beanJson, Functions.class);
+    public int updateFunction(String beanJson, Long id, HttpServletRequest request) throws Exception{
+        Function functions = JSONObject.parseObject(beanJson, Function.class);
         functions.setId(id);
         int result=0;
         try{
@@ -126,7 +123,7 @@ public class FunctionsService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int deleteFunctions(Long id, HttpServletRequest request)throws Exception {
+    public int deleteFunction(Long id, HttpServletRequest request)throws Exception {
         int result=0;
         try{
             result=functionsMapper.deleteByPrimaryKey(id);
@@ -139,9 +136,9 @@ public class FunctionsService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteFunctions(String ids, HttpServletRequest request)throws Exception {
+    public int batchDeleteFunction(String ids, HttpServletRequest request)throws Exception {
         List<Long> idList = StringUtil.strToLongList(ids);
-        FunctionsExample example = new FunctionsExample();
+        FunctionExample example = new FunctionExample();
         example.createCriteria().andIdIn(idList);
         int result=0;
         try{
@@ -154,9 +151,9 @@ public class FunctionsService {
     }
 
     public int checkIsNameExist(Long id, String name)throws Exception {
-        FunctionsExample example = new FunctionsExample();
+        FunctionExample example = new FunctionExample();
         example.createCriteria().andIdNotEqualTo(id).andNameEqualTo(name).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        List<Functions> list=null;
+        List<Function> list=null;
         try{
             list = functionsMapper.selectByExample(example);
         }catch(Exception e){
@@ -165,12 +162,12 @@ public class FunctionsService {
         return list==null?0:list.size();
     }
 
-    public List<Functions> getRoleFunctions(String pNumber)throws Exception {
-        FunctionsExample example = new FunctionsExample();
-        example.createCriteria().andEnabledEqualTo(true).andPnumberEqualTo(pNumber)
+    public List<Function> getRoleFunction(String pNumber)throws Exception {
+        FunctionExample example = new FunctionExample();
+        example.createCriteria().andEnabledEqualTo(true).andParentNumberEqualTo(pNumber)
                 .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         example.setOrderByClause("Sort");
-        List<Functions> list=null;
+        List<Function> list=null;
         try{
             list = functionsMapper.selectByExample(example);
         }catch(Exception e){
@@ -179,12 +176,12 @@ public class FunctionsService {
         return list;
     }
 
-    public List<Functions> findRoleFunctions(String pnumber)throws Exception{
-        FunctionsExample example = new FunctionsExample();
-        example.createCriteria().andEnabledEqualTo(true).andPnumberEqualTo(pnumber)
+    public List<Function> findRoleFunction(String pnumber)throws Exception{
+        FunctionExample example = new FunctionExample();
+        example.createCriteria().andEnabledEqualTo(true).andParentNumberEqualTo(pnumber)
                 .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         example.setOrderByClause("Sort");
-        List<Functions> list=null;
+        List<Function> list=null;
         try{
             list =functionsMapper.selectByExample(example);
         }catch(Exception e){
@@ -193,13 +190,13 @@ public class FunctionsService {
         return list;
     }
 
-    public List<Functions> findByIds(String functionsIds)throws Exception{
+    public List<Function> findByIds(String functionsIds)throws Exception{
         List<Long> idList = StringUtil.strToLongList(functionsIds);
-        FunctionsExample example = new FunctionsExample();
+        FunctionExample example = new FunctionExample();
         example.createCriteria().andEnabledEqualTo(true).andIdIn(idList)
                 .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         example.setOrderByClause("Sort asc");
-        List<Functions> list=null;
+        List<Function> list=null;
         try{
             list =functionsMapper.selectByExample(example);
         }catch(Exception e){
@@ -209,11 +206,11 @@ public class FunctionsService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteFunctionsByIds(String ids)throws Exception {
+    public int batchDeleteFunctionByIds(String ids)throws Exception {
         StringBuffer sb = new StringBuffer();
         sb.append(BusinessConstants.LOG_OPERATION_TYPE_DELETE);
-        List<Functions> list = getFunctionsListByIds(ids);
-        for(Functions functions: list){
+        List<Function> list = getFunctionListByIds(ids);
+        for(Function functions: list){
             sb.append("[").append(functions.getName()).append("]");
         }
         logService.insertLog("功能", sb.toString(),
@@ -222,7 +219,7 @@ public class FunctionsService {
         String [] idArray=ids.split(",");
         int result=0;
         try{
-            result =functionsMapperEx.batchDeleteFunctionsByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+            result = functionMapperEx.batchDeleteFunctionByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }

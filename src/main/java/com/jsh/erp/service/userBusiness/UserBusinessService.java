@@ -2,14 +2,12 @@ package com.jsh.erp.service.userBusiness;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
-import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.mappers.UserBusinessMapper;
 import com.jsh.erp.datasource.mappers.UserBusinessMapperEx;
-import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.CommonQueryManager;
-import com.jsh.erp.service.functions.FunctionsService;
+import com.jsh.erp.service.functions.FunctionService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
@@ -17,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -39,7 +36,7 @@ public class UserBusinessService {
     private UserService userService;
 
     @Resource
-    private FunctionsService functionsService;
+    private FunctionService functionService;
 
     @Resource
     private CommonQueryManager configResourceManager;
@@ -127,7 +124,7 @@ public class UserBusinessService {
 
     public List<UserBusiness> getBasicData(String keyId, String type)throws Exception{
         UserBusinessExample example = new UserBusinessExample();
-        example.createCriteria().andKeyidEqualTo(keyId).andTypeEqualTo(type)
+        example.createCriteria().andKeyIdEqualTo(keyId).andTypeEqualTo(type)
                 .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<UserBusiness> list=null;
         try{
@@ -140,7 +137,7 @@ public class UserBusinessService {
 
     public Long checkIsValueExist(String type, String keyId)throws Exception {
         UserBusinessExample example = new UserBusinessExample();
-        example.createCriteria().andTypeEqualTo(type).andKeyidEqualTo(keyId)
+        example.createCriteria().andTypeEqualTo(type).andKeyIdEqualTo(keyId)
                 .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<UserBusiness> list=null;
         try{
@@ -159,7 +156,7 @@ public class UserBusinessService {
         UserBusinessExample example = new UserBusinessExample();
         String newVaule = "%" + UBValue + "%";
         if(TypeVale !=null && KeyIdValue !=null) {
-            example.createCriteria().andTypeEqualTo(TypeVale).andKeyidEqualTo(KeyIdValue).andValueLike(newVaule)
+            example.createCriteria().andTypeEqualTo(TypeVale).andKeyIdEqualTo(KeyIdValue).andValueLike(newVaule)
                     .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         } else {
             example.createCriteria().andValueLike(newVaule)
@@ -184,7 +181,7 @@ public class UserBusinessService {
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(userBusinessId).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         UserBusiness userBusiness = new UserBusiness();
-        userBusiness.setBtnstr(btnStr);
+        userBusiness.setBtnStr(btnStr);
         UserBusinessExample example = new UserBusinessExample();
         example.createCriteria().andIdEqualTo(userBusinessId);
         int result=0;
@@ -198,7 +195,7 @@ public class UserBusinessService {
 
     public List<UserBusiness> findRoleByUserId(String userId)throws Exception{
         UserBusinessExample example = new UserBusinessExample();
-        example.createCriteria().andKeyidEqualTo(userId).andTypeEqualTo("UserRole")
+        example.createCriteria().andKeyIdEqualTo(userId).andTypeEqualTo("UserRole")
                 .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<UserBusiness> list=null;
         try{
@@ -212,7 +209,7 @@ public class UserBusinessService {
     public List<UserBusiness> findAppByRoles(String roles)throws Exception{
         List<String> rolesList = StringUtil.strToStringList(roles);
         UserBusinessExample example = new UserBusinessExample();
-        example.createCriteria().andKeyidIn(rolesList).andTypeEqualTo("RoleAPP")
+        example.createCriteria().andKeyIdIn(rolesList).andTypeEqualTo("RoleAPP")
                 .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<UserBusiness> list=null;
         try{

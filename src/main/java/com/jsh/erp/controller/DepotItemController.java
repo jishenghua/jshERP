@@ -174,7 +174,7 @@ public class DepotItemController {
                     if (diEx.getUnitId() == null || diEx.getUnitId().equals("")) {
                         ratio = "";
                     } else {
-                        ratio = diEx.getUName();
+                        ratio = diEx.getUnitName();
                         ratio = ratio.substring(ratio.indexOf("("));
                     }
                     //名称/型号/扩展信息/包装
@@ -182,7 +182,7 @@ public class DepotItemController {
                             + ((diEx.getMStandard() == null || diEx.getMStandard().equals("")) ? "" : "(" + diEx.getMStandard() + ")")
                             + ((diEx.getMModel() == null || diEx.getMModel().equals("")) ? "" : "(" + diEx.getMModel() + ")");
                     String materialOther = getOtherInfo(mpArr, diEx);
-                    MaterialName = MaterialName + materialOther + ((diEx.getUName() == null || diEx.getUName().equals("")) ? "" : "(" + diEx.getUName() + ")") + ratio;
+                    MaterialName = MaterialName + materialOther + ((diEx.getUnitName() == null || diEx.getUnitName().equals("")) ? "" : "(" + diEx.getUnitName() + ")") + ratio;
                     item.put("MaterialName", MaterialName == null ? "" : MaterialName);
                     BigDecimal stock = depotItemService.getStockByParam(diEx.getDepotid(),diEx.getMaterialid(),null,null,tenantId);
                     item.put("Stock", stock);
@@ -298,7 +298,7 @@ public class DepotItemController {
                     String materialOther = getOtherInfo(mpArr, diEx);
                     item.put("MaterialOther", materialOther);
                     item.put("MaterialColor", diEx.getMColor());
-                    item.put("unitName", getUName(diEx.getMaterialUnit(), diEx.getUName()));
+                    item.put("unitName", getUName(diEx.getMaterialUnit(), diEx.getUnitName()));
 
                     item.put("prevSum", depotItemService.getStockByParam(depotId,mId,null,timeA,tenantId));
                     item.put("InSum", depotItemService.getInNumByParam(depotId,mId,timeA,timeB,tenantId));
@@ -468,7 +468,7 @@ public class DepotItemController {
                     item.put("MaterialOther", materialOther);
                     item.put("MaterialColor", diEx.getMColor());
                     item.put("MaterialUnit", diEx.getMaterialUnit());
-                    item.put("UName", diEx.getUName());
+                    item.put("UName", diEx.getUnitName());
                     item.put("InSum", InSum);
                     item.put("OutSum", OutSum);
                     item.put("InSumPrice", InSumPrice);
@@ -536,7 +536,7 @@ public class DepotItemController {
                     item.put("MaterialOther", materialOther);
                     item.put("MaterialColor", diEx.getMColor());
                     item.put("MaterialUnit", diEx.getMaterialUnit());
-                    item.put("UName", diEx.getUName());
+                    item.put("UName", diEx.getUnitName());
                     item.put("OutSum", OutSumRetail.add(OutSum));
                     item.put("InSum", InSumRetail.add(InSum));
                     item.put("OutSumPrice", OutSumRetailPrice.add(OutSumPrice));

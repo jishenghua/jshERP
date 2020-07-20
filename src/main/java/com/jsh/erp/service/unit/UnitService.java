@@ -104,7 +104,7 @@ public class UnitService {
         try{
             result=unitMapper.insertSelective(unit);
             logService.insertLog("计量单位",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(unit.getUname()).toString(), request);
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(unit.getName()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -119,7 +119,7 @@ public class UnitService {
         try{
             result=unitMapper.updateByPrimaryKeySelective(unit);
             logService.insertLog("计量单位",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(unit.getUname()).toString(), request);
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(unit.getName()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -156,7 +156,7 @@ public class UnitService {
 
     public int checkIsNameExist(Long id, String name)throws Exception {
         UnitExample example = new UnitExample();
-        example.createCriteria().andIdNotEqualTo(id).andUnameEqualTo(name).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        example.createCriteria().andIdNotEqualTo(id).andNameEqualTo(name).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<Unit> list=null;
         try{
             list=unitMapper.selectByExample(example);
@@ -171,7 +171,7 @@ public class UnitService {
         sb.append(BusinessConstants.LOG_OPERATION_TYPE_DELETE);
         List<Unit> list = getUnitListByIds(ids);
         for(Unit unit: list){
-            sb.append("[").append(unit.getUname()).append("]");
+            sb.append("[").append(unit.getName()).append("]");
         }
         logService.insertLog("计量单位", sb.toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
@@ -234,9 +234,9 @@ public class UnitService {
      * @param name
      */
     public Long getUnitIdByName(String name){
-        Long unitId = 0l;
+        Long unitId = 0L;
         UnitExample example = new UnitExample();
-        example.createCriteria().andUnameEqualTo(name).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        example.createCriteria().andNameEqualTo(name).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<Unit> list = unitMapper.selectByExample(example);
         if(list!=null && list.size()>0) {
             unitId = list.get(0).getId();

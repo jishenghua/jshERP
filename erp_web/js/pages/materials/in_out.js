@@ -312,8 +312,8 @@
                             options += "<option value='many' class='many' data-manyAmount=''>多账户</option>";
                             for(var i = 0 ;i < accountList.length;i++) {
                                 var account = accountList[i];
-                                options += '<option value="' + account.id + '" data-currentAmount="' + account.currentamount + '">' + account.name + '</option>';
-                                if(account.isdefault) {
+                                options += '<option value="' + account.id + '" data-currentAmount="' + account.currentAmount + '">' + account.name + '</option>';
+                                if(account.isDefault) {
                                     defaultAccountId = account.id; //给账户赋值默认id
                                 }
                             }

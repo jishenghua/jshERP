@@ -30,7 +30,7 @@ public class DepotItemVo4WithInfoEx extends DepotItem{
 
     private Long UnitId;
 
-    private String UName;
+    private String unitName;
 
     private BigDecimal presetPriceOne;
 
@@ -144,12 +144,12 @@ public class DepotItemVo4WithInfoEx extends DepotItem{
         UnitId = unitId;
     }
 
-    public String getUName() {
-        return UName;
+    public String getUnitName() {
+        return unitName;
     }
 
-    public void setUName(String UName) {
-        this.UName = UName;
+    public void setUnitName(String unitName) {
+        this.unitName = unitName;
     }
 
     public BigDecimal getPresetPriceOne() {

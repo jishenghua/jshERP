@@ -88,7 +88,7 @@ public class MaterialPropertyService {
         try{
             result=materialPropertyMapper.insertSelective(materialProperty);
             logService.insertLog("商品属性",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(materialProperty.getNativename()).toString(), request);
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(materialProperty.getNativeName()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -103,7 +103,7 @@ public class MaterialPropertyService {
         try{
             result=materialPropertyMapper.updateByPrimaryKeySelective(materialProperty);
             logService.insertLog("商品属性",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(materialProperty.getNativename()).toString(), request);
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(materialProperty.getNativeName()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }

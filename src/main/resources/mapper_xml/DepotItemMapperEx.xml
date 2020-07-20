@@ -28,16 +28,17 @@
         <result column="DepotName" jdbcType="VARCHAR" property="DepotName" />
         <result column="AnotherDepotName" jdbcType="VARCHAR" property="AnotherDepotName" />
         <result column="UnitId" jdbcType="BIGINT" property="UnitId" />
-        <result column="UName" jdbcType="VARCHAR" property="UName" />
+        <result column="unit_name" jdbcType="VARCHAR" property="unitName" />
         <result column="barCode" jdbcType="VARCHAR" property="barCode" />
     </resultMap>
 
     <resultMap extends="com.jsh.erp.datasource.mappers.DepotItemMapper.BaseResultMap" id="ResultByMaterial" type="com.jsh.erp.datasource.entities.DepotItemVo4WithInfoEx">
         <result column="MId" jdbcType="VARCHAR" property="MId" />
         <result column="MName" jdbcType="VARCHAR" property="MName" />
+        <result column="MMfrs" jdbcType="VARCHAR" property="MMfrs" />
         <result column="MModel" jdbcType="VARCHAR" property="MModel" />
         <result column="MaterialUnit" jdbcType="VARCHAR" property="MaterialUnit" />
-        <result column="UName" jdbcType="VARCHAR" property="UName" />
+        <result column="unit_name" jdbcType="VARCHAR" property="unitName" />
         <result column="MColor" jdbcType="VARCHAR" property="MColor" />
         <result column="purchase_decimal" jdbcType="DECIMAL" property="purchaseDecimal" />
     </resultMap>
@@ -139,7 +140,7 @@
     <select id="getDetailList" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
         select di.*,m.Name MName,m.Model MModel,m.Unit MaterialUnit,m.Color MColor,m.Standard MStandard,m.Mfrs MMfrs,
         m.OtherField1 MOtherField1,m.OtherField2 MOtherField2,m.OtherField3 MOtherField3,
-        dp1.name DepotName,dp2.name AnotherDepotName, u.id UnitId, u.UName, me.bar_code barCode
+        dp1.name DepotName,dp2.name AnotherDepotName, u.id UnitId, u.name unit_name, me.bar_code barCode
         from jsh_depotitem di
         left join jsh_material m on di.MaterialId=m.id  and ifnull(m.delete_Flag,'0') !='1'
         left join jsh_material_extend me on me.id=di.material_extend_id  and ifnull(me.delete_Flag,'0') !='1'
@@ -152,8 +153,8 @@
     </select>
 
     <select id="findByAll" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultByMaterial">
-        select m.id MId, m.Name MName, m.Model MModel, m.Unit MaterialUnit, m.Color MColor,
-        me.purchase_decimal, u.UName UName
+        select m.id MId, m.Name MName, m.Mfrs MMfrs, m.Model MModel, m.Unit MaterialUnit, m.Color MColor,
+        me.purchase_decimal, u.name unit_name
         from jsh_material m
         left join jsh_depotitem di on di.MaterialId=m.id  and ifnull(m.delete_Flag,'0') !='1'
         left join jsh_depothead dh on di.HeaderId=dh.id  and ifnull(dh.delete_Flag,'0') !='1'
@@ -171,7 +172,7 @@
             and dh.OperTime &lt;= '${endTime}'
         </if>
         and ifnull(di.delete_Flag,'0') !='1'
-        group by m.id,m.Name, m.Model, m.Unit, m.Color, me.purchase_decimal, u.UName
+        group by m.id,m.Name, m.Model, m.Unit, m.Color, me.purchase_decimal, u.name
         order by m.Name, m.Model asc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
@@ -381,7 +382,7 @@
         (IFNULL(intype.BasicInNumber ,0) - IFNULL(outtype.BasicOutNumber ,0) - ifnull(m.safetystock,0)) BasicLinjieNumber
         FROM
         jsh_material m
-        LEFT JOIN jsh_materialcategory mc ON mc.Id = m.CategoryId
+        LEFT JOIN jsh_material_category mc ON mc.Id = m.CategoryId
         LEFT JOIN (
         SELECT
         di.MaterialId,

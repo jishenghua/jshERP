@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.jsh.erp.datasource.mappers.RoleMapper">
-  <resultMap id="BaseResultMap" type="com.jsh.erp.datasource.entities.Role">
+<mapper namespace="com.jsh.erp.datasource.mappers.FunctionMapper">
+  <resultMap id="BaseResultMap" type="com.jsh.erp.datasource.entities.Function">
     <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="number" jdbcType="VARCHAR" property="number" />
     <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="parent_number" jdbcType="VARCHAR" property="parentNumber" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="state" jdbcType="BIT" property="state" />
+    <result column="sort" jdbcType="VARCHAR" property="sort" />
+    <result column="enabled" jdbcType="BIT" property="enabled" />
     <result column="type" jdbcType="VARCHAR" property="type" />
-    <result column="value" jdbcType="VARCHAR" property="value" />
-    <result column="description" jdbcType="VARCHAR" property="description" />
-    <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
+    <result column="push_btn" jdbcType="VARCHAR" property="pushBtn" />
+    <result column="icon" jdbcType="VARCHAR" property="icon" />
     <result column="delete_flag" jdbcType="VARCHAR" property="deleteFlag" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -69,15 +74,16 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, name, type, value, description, tenant_id, delete_flag
+    id, number, name, parent_number, url, state, sort, enabled, type, push_btn, icon, 
+    delete_flag
   </sql>
-  <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.RoleExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.FunctionExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from jsh_role
+    from jsh_function
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -88,47 +94,64 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from jsh_role
+    from jsh_function
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from jsh_role
+    delete from jsh_function
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="com.jsh.erp.datasource.entities.RoleExample">
-    delete from jsh_role
+  <delete id="deleteByExample" parameterType="com.jsh.erp.datasource.entities.FunctionExample">
+    delete from jsh_function
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.jsh.erp.datasource.entities.Role">
-    insert into jsh_role (id, name, type, 
-      value, description, tenant_id, 
-      delete_flag)
-    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, 
-      #{value,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, 
-      #{deleteFlag,jdbcType=VARCHAR})
+  <insert id="insert" parameterType="com.jsh.erp.datasource.entities.Function">
+    insert into jsh_function (id, number, name, 
+      parent_number, url, state, 
+      sort, enabled, type, push_btn, 
+      icon, delete_flag)
+    values (#{id,jdbcType=BIGINT}, #{number,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{parentNumber,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, #{state,jdbcType=BIT}, 
+      #{sort,jdbcType=VARCHAR}, #{enabled,jdbcType=BIT}, #{type,jdbcType=VARCHAR}, #{pushBtn,jdbcType=VARCHAR}, 
+      #{icon,jdbcType=VARCHAR}, #{deleteFlag,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.Role">
-    insert into jsh_role
+  <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.Function">
+    insert into jsh_function
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
       </if>
+      <if test="number != null">
+        number,
+      </if>
       <if test="name != null">
         name,
+      </if>
+      <if test="parentNumber != null">
+        parent_number,
+      </if>
+      <if test="url != null">
+        url,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+      <if test="sort != null">
+        sort,
+      </if>
+      <if test="enabled != null">
+        enabled,
       </if>
       <if test="type != null">
         type,
       </if>
-      <if test="value != null">
-        value,
+      <if test="pushBtn != null">
+        push_btn,
       </if>
-      <if test="description != null">
-        description,
-      </if>
-      <if test="tenantId != null">
-        tenant_id,
+      <if test="icon != null">
+        icon,
       </if>
       <if test="deleteFlag != null">
         delete_flag,
@@ -138,52 +161,82 @@
       <if test="id != null">
         #{id,jdbcType=BIGINT},
       </if>
+      <if test="number != null">
+        #{number,jdbcType=VARCHAR},
+      </if>
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="parentNumber != null">
+        #{parentNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=BIT},
+      </if>
+      <if test="sort != null">
+        #{sort,jdbcType=VARCHAR},
+      </if>
+      <if test="enabled != null">
+        #{enabled,jdbcType=BIT},
       </if>
       <if test="type != null">
         #{type,jdbcType=VARCHAR},
       </if>
-      <if test="value != null">
-        #{value,jdbcType=VARCHAR},
+      <if test="pushBtn != null">
+        #{pushBtn,jdbcType=VARCHAR},
       </if>
-      <if test="description != null">
-        #{description,jdbcType=VARCHAR},
-      </if>
-      <if test="tenantId != null">
-        #{tenantId,jdbcType=BIGINT},
+      <if test="icon != null">
+        #{icon,jdbcType=VARCHAR},
       </if>
       <if test="deleteFlag != null">
         #{deleteFlag,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.jsh.erp.datasource.entities.RoleExample" resultType="java.lang.Long">
-    select count(*) from jsh_role
+  <select id="countByExample" parameterType="com.jsh.erp.datasource.entities.FunctionExample" resultType="java.lang.Long">
+    select count(*) from jsh_function
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update jsh_role
+    update jsh_function
     <set>
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
       </if>
+      <if test="record.number != null">
+        number = #{record.number,jdbcType=VARCHAR},
+      </if>
       <if test="record.name != null">
         name = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.parentNumber != null">
+        parent_number = #{record.parentNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="record.url != null">
+        url = #{record.url,jdbcType=VARCHAR},
+      </if>
+      <if test="record.state != null">
+        state = #{record.state,jdbcType=BIT},
+      </if>
+      <if test="record.sort != null">
+        sort = #{record.sort,jdbcType=VARCHAR},
+      </if>
+      <if test="record.enabled != null">
+        enabled = #{record.enabled,jdbcType=BIT},
       </if>
       <if test="record.type != null">
         type = #{record.type,jdbcType=VARCHAR},
       </if>
-      <if test="record.value != null">
-        value = #{record.value,jdbcType=VARCHAR},
+      <if test="record.pushBtn != null">
+        push_btn = #{record.pushBtn,jdbcType=VARCHAR},
       </if>
-      <if test="record.description != null">
-        description = #{record.description,jdbcType=VARCHAR},
-      </if>
-      <if test="record.tenantId != null">
-        tenant_id = #{record.tenantId,jdbcType=BIGINT},
+      <if test="record.icon != null">
+        icon = #{record.icon,jdbcType=VARCHAR},
       </if>
       <if test="record.deleteFlag != null">
         delete_flag = #{record.deleteFlag,jdbcType=VARCHAR},
@@ -194,35 +247,55 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update jsh_role
+    update jsh_function
     set id = #{record.id,jdbcType=BIGINT},
+      number = #{record.number,jdbcType=VARCHAR},
       name = #{record.name,jdbcType=VARCHAR},
+      parent_number = #{record.parentNumber,jdbcType=VARCHAR},
+      url = #{record.url,jdbcType=VARCHAR},
+      state = #{record.state,jdbcType=BIT},
+      sort = #{record.sort,jdbcType=VARCHAR},
+      enabled = #{record.enabled,jdbcType=BIT},
       type = #{record.type,jdbcType=VARCHAR},
-      value = #{record.value,jdbcType=VARCHAR},
-      description = #{record.description,jdbcType=VARCHAR},
-      tenant_id = #{record.tenantId,jdbcType=BIGINT},
+      push_btn = #{record.pushBtn,jdbcType=VARCHAR},
+      icon = #{record.icon,jdbcType=VARCHAR},
       delete_flag = #{record.deleteFlag,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.jsh.erp.datasource.entities.Role">
-    update jsh_role
+  <update id="updateByPrimaryKeySelective" parameterType="com.jsh.erp.datasource.entities.Function">
+    update jsh_function
     <set>
+      <if test="number != null">
+        number = #{number,jdbcType=VARCHAR},
+      </if>
       <if test="name != null">
         name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="parentNumber != null">
+        parent_number = #{parentNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=BIT},
+      </if>
+      <if test="sort != null">
+        sort = #{sort,jdbcType=VARCHAR},
+      </if>
+      <if test="enabled != null">
+        enabled = #{enabled,jdbcType=BIT},
       </if>
       <if test="type != null">
         type = #{type,jdbcType=VARCHAR},
       </if>
-      <if test="value != null">
-        value = #{value,jdbcType=VARCHAR},
+      <if test="pushBtn != null">
+        push_btn = #{pushBtn,jdbcType=VARCHAR},
       </if>
-      <if test="description != null">
-        description = #{description,jdbcType=VARCHAR},
-      </if>
-      <if test="tenantId != null">
-        tenant_id = #{tenantId,jdbcType=BIGINT},
+      <if test="icon != null">
+        icon = #{icon,jdbcType=VARCHAR},
       </if>
       <if test="deleteFlag != null">
         delete_flag = #{deleteFlag,jdbcType=VARCHAR},
@@ -230,13 +303,18 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.jsh.erp.datasource.entities.Role">
-    update jsh_role
-    set name = #{name,jdbcType=VARCHAR},
+  <update id="updateByPrimaryKey" parameterType="com.jsh.erp.datasource.entities.Function">
+    update jsh_function
+    set number = #{number,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      parent_number = #{parentNumber,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      state = #{state,jdbcType=BIT},
+      sort = #{sort,jdbcType=VARCHAR},
+      enabled = #{enabled,jdbcType=BIT},
       type = #{type,jdbcType=VARCHAR},
-      value = #{value,jdbcType=VARCHAR},
-      description = #{description,jdbcType=VARCHAR},
-      tenant_id = #{tenantId,jdbcType=BIGINT},
+      push_btn = #{pushBtn,jdbcType=VARCHAR},
+      icon = #{icon,jdbcType=VARCHAR},
       delete_flag = #{deleteFlag,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>

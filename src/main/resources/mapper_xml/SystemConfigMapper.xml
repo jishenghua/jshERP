@@ -13,7 +13,7 @@
     <result column="customer_flag" jdbcType="VARCHAR" property="customerFlag" />
     <result column="minus_stock_flag" jdbcType="VARCHAR" property="minusStockFlag" />
     <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
-    <result column="delete_Flag" jdbcType="VARCHAR" property="deleteFlag" />
+    <result column="delete_flag" jdbcType="VARCHAR" property="deleteFlag" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -75,7 +75,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, company_name, company_contacts, company_address, company_tel, company_fax, company_post_code, 
-    depot_flag, customer_flag, minus_stock_flag, tenant_id, delete_Flag
+    depot_flag, customer_flag, minus_stock_flag, tenant_id, delete_flag
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.SystemConfigExample" resultMap="BaseResultMap">
     select
@@ -83,7 +83,7 @@
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from jsh_systemconfig
+    from jsh_system_config
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -94,24 +94,24 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from jsh_systemconfig
+    from jsh_system_config
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from jsh_systemconfig
+    delete from jsh_system_config
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <delete id="deleteByExample" parameterType="com.jsh.erp.datasource.entities.SystemConfigExample">
-    delete from jsh_systemconfig
+    delete from jsh_system_config
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
   <insert id="insert" parameterType="com.jsh.erp.datasource.entities.SystemConfig">
-    insert into jsh_systemconfig (id, company_name, company_contacts, 
+    insert into jsh_system_config (id, company_name, company_contacts, 
       company_address, company_tel, company_fax, 
       company_post_code, depot_flag, customer_flag, 
-      minus_stock_flag, tenant_id, delete_Flag
+      minus_stock_flag, tenant_id, delete_flag
       )
     values (#{id,jdbcType=BIGINT}, #{companyName,jdbcType=VARCHAR}, #{companyContacts,jdbcType=VARCHAR}, 
       #{companyAddress,jdbcType=VARCHAR}, #{companyTel,jdbcType=VARCHAR}, #{companyFax,jdbcType=VARCHAR}, 
@@ -120,7 +120,7 @@
       )
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.SystemConfig">
-    insert into jsh_systemconfig
+    insert into jsh_system_config
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
@@ -156,7 +156,7 @@
         tenant_id,
       </if>
       <if test="deleteFlag != null">
-        delete_Flag,
+        delete_flag,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -199,13 +199,13 @@
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.jsh.erp.datasource.entities.SystemConfigExample" resultType="java.lang.Long">
-    select count(*) from jsh_systemconfig
+    select count(*) from jsh_system_config
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update jsh_systemconfig
+    update jsh_system_config
     <set>
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
@@ -241,7 +241,7 @@
         tenant_id = #{record.tenantId,jdbcType=BIGINT},
       </if>
       <if test="record.deleteFlag != null">
-        delete_Flag = #{record.deleteFlag,jdbcType=VARCHAR},
+        delete_flag = #{record.deleteFlag,jdbcType=VARCHAR},
       </if>
     </set>
     <if test="_parameter != null">
@@ -249,7 +249,7 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update jsh_systemconfig
+    update jsh_system_config
     set id = #{record.id,jdbcType=BIGINT},
       company_name = #{record.companyName,jdbcType=VARCHAR},
       company_contacts = #{record.companyContacts,jdbcType=VARCHAR},
@@ -261,13 +261,13 @@
       customer_flag = #{record.customerFlag,jdbcType=VARCHAR},
       minus_stock_flag = #{record.minusStockFlag,jdbcType=VARCHAR},
       tenant_id = #{record.tenantId,jdbcType=BIGINT},
-      delete_Flag = #{record.deleteFlag,jdbcType=VARCHAR}
+      delete_flag = #{record.deleteFlag,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
   <update id="updateByPrimaryKeySelective" parameterType="com.jsh.erp.datasource.entities.SystemConfig">
-    update jsh_systemconfig
+    update jsh_system_config
     <set>
       <if test="companyName != null">
         company_name = #{companyName,jdbcType=VARCHAR},
@@ -300,13 +300,13 @@
         tenant_id = #{tenantId,jdbcType=BIGINT},
       </if>
       <if test="deleteFlag != null">
-        delete_Flag = #{deleteFlag,jdbcType=VARCHAR},
+        delete_flag = #{deleteFlag,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.jsh.erp.datasource.entities.SystemConfig">
-    update jsh_systemconfig
+    update jsh_system_config
     set company_name = #{companyName,jdbcType=VARCHAR},
       company_contacts = #{companyContacts,jdbcType=VARCHAR},
       company_address = #{companyAddress,jdbcType=VARCHAR},
@@ -317,7 +317,7 @@
       customer_flag = #{customerFlag,jdbcType=VARCHAR},
       minus_stock_flag = #{minusStockFlag,jdbcType=VARCHAR},
       tenant_id = #{tenantId,jdbcType=BIGINT},
-      delete_Flag = #{deleteFlag,jdbcType=VARCHAR}
+      delete_flag = #{deleteFlag,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

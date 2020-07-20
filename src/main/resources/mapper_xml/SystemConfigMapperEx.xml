@@ -3,12 +3,12 @@
 <mapper namespace="com.jsh.erp.datasource.mappers.SystemConfigMapperEx">
     <select id="selectByConditionSystemConfig" parameterType="com.jsh.erp.datasource.entities.SystemConfigExample" resultMap="com.jsh.erp.datasource.mappers.SystemConfigMapper.BaseResultMap">
         select *
-        FROM jsh_systemconfig
+        FROM jsh_system_config
         where 1=1
         <if test="companyName != null">
             and company_name like '%${companyName}%'
         </if>
-        and ifnull(delete_Flag,'0') !='1'
+        and ifnull(delete_flag,'0') !='1'
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
         </if>
@@ -16,16 +16,16 @@
     <select id="countsBySystemConfig" resultType="java.lang.Long">
         SELECT
         COUNT(id)
-        FROM jsh_systemconfig
+        FROM jsh_system_config
         WHERE 1=1
         <if test="companyName != null">
             and company_name like '%${companyName}%'
         </if>
-        and ifnull(delete_Flag,'0') !='1'
+        and ifnull(delete_flag,'0') !='1'
     </select>
     <update id="batchDeleteSystemConfigByIds">
-        update jsh_systemconfig
-        set delete_Flag='1'
+        update jsh_system_config
+        set delete_flag='1'
         where 1=1
         and id in (
         <foreach collection="ids" item="id" separator=",">

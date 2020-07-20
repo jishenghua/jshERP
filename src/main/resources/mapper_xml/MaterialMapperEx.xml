@@ -13,16 +13,16 @@
     </resultMap>
 
     <resultMap extends="com.jsh.erp.datasource.mappers.MaterialMapper.BaseResultMap" id="ResultAndUnitMap" type="com.jsh.erp.datasource.entities.MaterialVo4Unit">
-        <result column="UName" jdbcType="VARCHAR" property="unitName" />
+        <result column="unit_name" jdbcType="VARCHAR" property="unitName" />
     </resultMap>
 
     <select id="selectByConditionMaterial" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultMapList">
-        select m.*,u.uname unitName, mc.name categoryName, me.bar_code,
+        select m.*,u.name unitName, mc.name categoryName, me.bar_code,
         me.purchase_decimal, me.commodity_decimal, me.wholesale_decimal,me.low_decimal
         FROM jsh_material m
         left JOIN jsh_material_extend me on m.id = me.material_id and ifnull(me.delete_Flag,'0') !='1'
         left JOIN jsh_unit u on m.UnitId = u.id and ifnull(u.delete_Flag,'0') !='1'
-        left JOIN jsh_materialcategory mc on m.CategoryId = mc.id and ifnull(mc.status,'0') !='2'
+        left JOIN jsh_material_category mc on m.CategoryId = mc.id and ifnull(mc.status,'0') !='2'
         where 1=1
         and me.default_flag=1
         <if test="barCode != null">
@@ -53,7 +53,7 @@
         FROM jsh_material m
         left JOIN jsh_material_extend me on m.id = me.material_id and ifnull(me.delete_Flag,'0') !='1'
         left JOIN jsh_unit u on m.UnitId = u.id and ifnull(u.delete_Flag,'0') !='1'
-        left JOIN jsh_materialcategory mc on m.CategoryId = mc.id and ifnull(mc.status,'0') !='2'
+        left JOIN jsh_material_category mc on m.CategoryId = mc.id and ifnull(mc.status,'0') !='2'
         WHERE 1=1
         and me.default_flag=1
         <if test="barCode != null">
@@ -75,21 +75,21 @@
     </select>
 
     <select id="findUnitName" resultType="java.lang.String">
-        select u.UName  from jsh_unit u
+        select u.name  from jsh_unit u
         left join jsh_material m on m.UnitId=u.id and ifnull(m.delete_Flag,'0') !='1'
         where m.id = ${mId}
         and ifnull(u.delete_Flag,'0') !='1'
     </select>
 
     <select id="findById" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultAndUnitMap">
-        select m.*,u.UName from jsh_material m
+        select m.*,u.name unit_name from jsh_material m
         left join jsh_unit u on m.UnitId=u.id and ifnull(u.delete_Flag,'0') !='1'
         where m.id = ${id}
         and ifnull(m.delete_Flag,'0') !='1'
     </select>
 
     <select id="findByIdWithBarCode" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultAndUnitMap">
-        select m.*,u.UName,me.bar_code m_bar_code, me.commodity_unit, me.purchase_decimal, me.commodity_decimal,
+        select m.*,u.name unit_name,me.bar_code m_bar_code, me.commodity_unit, me.purchase_decimal, me.commodity_decimal,
         me.wholesale_decimal, me.low_decimal
         from jsh_material m
         left join jsh_material_extend me on m.id=me.material_id and ifnull(me.delete_Flag,'0') !='1'
@@ -99,7 +99,7 @@
     </select>
 
     <select id="findBySelectWithBarCode" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultAndUnitMap">
-        select m.*,u.UName,me.bar_code m_bar_code,me.id meId,me.commodity_unit from jsh_material m
+        select m.*,u.name unit_name,me.bar_code m_bar_code,me.id meId,me.commodity_unit from jsh_material m
         left join jsh_material_extend me on m.id=me.material_id and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_unit u on m.UnitId=u.id and ifnull(u.delete_Flag,'0') !='1'
         where m.enabled=1 and me.id is not null
@@ -125,12 +125,12 @@
     </select>
 
     <select id="findByAll" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultMapList">
-        select m.*,u.uname unitName, mc.name categoryName,me.commodity_unit,me.purchase_decimal, me.commodity_decimal,
+        select m.*,u.name unitName, mc.name categoryName,me.commodity_unit,me.purchase_decimal, me.commodity_decimal,
         me.wholesale_decimal, me.low_decimal
         FROM jsh_material m
         left join jsh_material_extend me on m.id=me.material_id and ifnull(me.delete_Flag,'0') !='1'
         left JOIN jsh_unit u on m.UnitId = u.id and ifnull(u.delete_Flag,'0') !='1'
-        left JOIN jsh_materialcategory mc on m.CategoryId = mc.id and ifnull(mc.status,'0') !='2'
+        left JOIN jsh_material_category mc on m.CategoryId = mc.id and ifnull(mc.status,'0') !='2'
         where 1=1
         and me.default_flag=1
         <if test="name != null">
@@ -236,11 +236,11 @@
     </select>
 
     <select id="getMaterialByMeId" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultMapList">
-        select m.*,me.bar_code m_bar_code,u.uname unitName, mc.name categoryName
+        select m.*,me.bar_code m_bar_code,u.name unitName, mc.name categoryName
         FROM jsh_material m
         left join jsh_material_extend me on m.id=me.material_id and ifnull(me.delete_Flag,'0') !='1'
-        left JOIN jsh_unit u on m.UnitId = u.id and ifnull(u.delete_Flag,'0') !='1'
-        left JOIN jsh_materialcategory mc on m.CategoryId = mc.id and ifnull(mc.status,'0') !='2'
+        left JOIN jsh_unit u on m.UnitId = u.id and ifnull(u.delete_flag,'0') !='1'
+        left JOIN jsh_material_category mc on m.CategoryId = mc.id and ifnull(mc.status,'0') !='2'
         where 1=1
         <if test="meId != null">
             and me.id = ${meId}

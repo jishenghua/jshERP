@@ -173,7 +173,7 @@ public class PersonService {
         List<Long> ids = StringUtil.strToLongList(personIDs);
         PersonExample example = new PersonExample();
         example.createCriteria().andIdIn(ids).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        example.setOrderByClause("Id asc");
+        example.setOrderByClause("id asc");
         List<Person> list =null;
         try{
             list=personMapper.selectByExample(example);
@@ -192,7 +192,7 @@ public class PersonService {
     public List<Person> getPersonByType(String type)throws Exception {
         PersonExample example = new PersonExample();
         example.createCriteria().andTypeEqualTo(type).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        example.setOrderByClause("Id asc");
+        example.setOrderByClause("id asc");
         List<Person> list =null;
         try{
             list=personMapper.selectByExample(example);

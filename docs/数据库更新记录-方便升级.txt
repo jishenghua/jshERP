@@ -821,3 +821,85 @@ ROW_FORMAT=COMPACT
 -- --------------------------------------------------------
 alter table jsh_material_stock rename to jsh_material_initial_stock;
 alter table jsh_material_initial_stock change delete_fag delete_flag varchar(1) NULL DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
+
+-- --------------------------------------------------------
+-- 时间 2020年07月20日
+-- by jishenghua
+-- 优化表和字段的格式
+-- --------------------------------------------------------
+alter table jsh_log change userID user_id bigint(20) DEFAULT NULL COMMENT '用户id';
+alter table jsh_log change clientIP client_ip varchar(50) DEFAULT NULL COMMENT '客户端IP';
+alter table jsh_log change createtime create_time datetime DEFAULT NULL COMMENT '创建时间';
+alter table jsh_log change contentdetails content varchar(1000) DEFAULT NULL COMMENT '详情';
+alter table jsh_log drop column remark;
+
+alter table jsh_materialcategory rename to jsh_material_category;
+alter table jsh_material_category change Id id bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键';
+alter table jsh_material_category change Name name varchar(50) DEFAULT NULL COMMENT '名称';
+alter table jsh_material_category change CategoryLevel category_level smallint(6) DEFAULT NULL COMMENT '等级';
+alter table jsh_material_category change ParentId parent_id bigint(20) DEFAULT NULL COMMENT '上级id';
+
+alter table jsh_materialproperty rename to jsh_material_property;
+alter table jsh_material_property change nativeName native_name varchar(50) DEFAULT NULL COMMENT '原始名称';
+alter table jsh_material_property change anotherName another_name varchar(50) DEFAULT NULL COMMENT '别名';
+alter table jsh_material_property change delete_Flag delete_flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
+
+alter table jsh_role change Id id bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键';
+alter table jsh_role change Name name varchar(50) DEFAULT NULL COMMENT '名称';
+alter table jsh_role change delete_Flag delete_flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
+
+alter table jsh_person change Id id bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键';
+alter table jsh_person change Type type varchar(20) DEFAULT NULL COMMENT '类型';
+alter table jsh_person change Name name varchar(50) DEFAULT NULL COMMENT '姓名';
+alter table jsh_person change delete_Flag delete_flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
+
+alter table jsh_systemconfig rename to jsh_system_config;
+alter table jsh_system_config change delete_Flag delete_flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
+
+alter table jsh_account change Id id bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键';
+alter table jsh_account change Name name varchar(50) DEFAULT NULL COMMENT '名称';
+alter table jsh_account change SerialNo serial_no varchar(50) DEFAULT NULL COMMENT '编号';
+alter table jsh_account change InitialAmount initial_amount decimal(24,6) DEFAULT NULL COMMENT '期初金额';
+alter table jsh_account change CurrentAmount current_amount decimal(24,6) DEFAULT NULL COMMENT '当前余额';
+alter table jsh_account change Remark remark varchar(100) DEFAULT NULL COMMENT '备注';
+alter table jsh_account change IsDefault is_default bit(1) DEFAULT NULL COMMENT '是否默认';
+alter table jsh_account change delete_Flag delete_flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
+
+alter table jsh_functions rename to jsh_function;
+alter table jsh_function change Id id bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键';
+alter table jsh_function change Number number varchar(50) DEFAULT NULL COMMENT '编号';
+alter table jsh_function change Name name varchar(50) DEFAULT NULL COMMENT '名称';
+alter table jsh_function change PNumber parent_number varchar(50) DEFAULT NULL COMMENT '上级编号';
+alter table jsh_function change URL url varchar(100) DEFAULT NULL COMMENT '链接';
+alter table jsh_function change State state bit(1) DEFAULT NULL COMMENT '收缩';
+alter table jsh_function change Sort sort varchar(50) DEFAULT NULL COMMENT '排序';
+alter table jsh_function change Enabled enabled bit(1) DEFAULT NULL COMMENT '启用';
+alter table jsh_function change Type type varchar(50) DEFAULT NULL COMMENT '类型';
+alter table jsh_function change PushBtn push_btn varchar(50) DEFAULT NULL COMMENT '功能按钮';
+alter table jsh_function change delete_Flag delete_flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
+
+alter table jsh_userbusiness rename to jsh_user_business;
+alter table jsh_user_business change Id id bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键';
+alter table jsh_user_business change Type type varchar(50) DEFAULT NULL COMMENT '类别';
+alter table jsh_user_business change KeyId key_id varchar(50) DEFAULT NULL COMMENT '主id';
+alter table jsh_user_business change Value value varchar(10000) DEFAULT NULL COMMENT '值';
+alter table jsh_user_business change BtnStr btn_str varchar(2000) DEFAULT NULL COMMENT '按钮权限';
+alter table jsh_user_business change delete_Flag delete_flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
+
+alter table jsh_unit change UName name varchar(50) DEFAULT NULL COMMENT '名称，支持多单位';
+alter table jsh_unit change delete_Flag delete_flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
+
+alter table jsh_inoutitem rename to jsh_in_out_item;
+alter table jsh_in_out_item change Id id bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键';
+alter table jsh_in_out_item change Name name varchar(50) DEFAULT NULL COMMENT '名称';
+alter table jsh_in_out_item change Type type varchar(20) DEFAULT NULL COMMENT '类型';
+alter table jsh_in_out_item change Remark remark varchar(100) DEFAULT NULL COMMENT '备注';
+alter table jsh_in_out_item change delete_Flag delete_flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
+
+alter table jsh_serial_number change material_Id material_id bigint(20) DEFAULT NULL COMMENT '产品表id';
+alter table jsh_serial_number change serial_Number serial_number varchar(64) DEFAULT NULL COMMENT '序列号';
+alter table jsh_serial_number change is_Sell is_sell varchar(1) DEFAULT '0' COMMENT '是否卖出，0未卖出，1卖出';
+alter table jsh_serial_number change delete_Flag delete_flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
+alter table jsh_serial_number change create_Time create_time datetime DEFAULT NULL COMMENT '创建时间';
+alter table jsh_serial_number change update_Time update_time datetime DEFAULT NULL COMMENT '更新时间';
+alter table jsh_serial_number change depothead_Id depot_head_id bigint(20) DEFAULT NULL COMMENT '单据主表id，用于跟踪序列号流向';

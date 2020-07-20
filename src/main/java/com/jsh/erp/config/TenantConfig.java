@@ -61,8 +61,8 @@ public class TenantConfig {
                         return true;
                     } else {
                         // 这里可以判断是否过滤表
-                        if ("jsh_materialproperty".equals(tableName) || "jsh_sequence".equals(tableName)
-                                || "jsh_userbusiness".equals(tableName) || "jsh_functions".equals(tableName)
+                        if ("jsh_material_property".equals(tableName) || "jsh_sequence".equals(tableName)
+                                || "jsh_user_business".equals(tableName) || "jsh_function".equals(tableName)
                                 || "jsh_tenant".equals(tableName)) {
                             return true;
                         } else {

@@ -115,7 +115,7 @@
                             <input name="parentName" id="parentName" class="easyui-textbox" style="width: 180px;" readonly="readonly"/>
                             <a href="javascript:void(0)" class="l-btn l-btn-plain" group="" id="lookForMaterialCategory">
                                 <span class="l-btn-left"><span class="l-btn-text icon-search l-btn-icon-left" style="height: 20px;"></span></span></a>
-                            <input name="parentid" id="parentid" type="hidden"/>
+                            <input name="parentId" id="parentId" type="hidden"/>
                         </td>
                         <td style="text-align: left;"></td>
                     </tr>
@@ -362,7 +362,7 @@
                             var thisRows = res.data.page.rows; //属性列表
                             for (var i = 0; i < thisRows.length; i++) {
                                 if (thisRows[i].enabled) {
-                                    mPropertyListShort += thisRows[i].nativename + ",";
+                                    mPropertyListShort += thisRows[i].nativeName + ",";
                                 }
                             }
                             if (mPropertyListShort) {
@@ -906,9 +906,9 @@
             //表格模板变更
             $(".tb-other-info").html("");
             for (var i = 0; i < mPropertyList.length; i++) {
-                if (mPropertyList[i].nativename === "制造商") {
+                if (mPropertyList[i].nativeName === "制造商") {
                     $(".tb-other-info").append(trMfrs);
-                    $(".tr-mfrs td").first().text(mPropertyList[i].anothername);
+                    $(".tr-mfrs td").first().text(mPropertyList[i].anotherName);
                     if (mPropertyList[i].enabled) {
                         $(".tr-mfrs").show();
                     }
@@ -916,9 +916,9 @@
                         $(".tr-mfrs").hide();
                     }
                 }
-                if (mPropertyList[i].nativename === "自定义1") {
+                if (mPropertyList[i].nativeName === "自定义1") {
                     $(".tb-other-info").append(trOtherField1);
-                    $(".tr-otherField1 td").first().text(mPropertyList[i].anothername);
+                    $(".tr-otherField1 td").first().text(mPropertyList[i].anotherName);
                     if (mPropertyList[i].enabled) {
                         $(".tr-otherField1").show();
                     }
@@ -926,9 +926,9 @@
                         $(".tr-otherField1").hide();
                     }
                 }
-                if (mPropertyList[i].nativename === "自定义2") {
+                if (mPropertyList[i].nativeName === "自定义2") {
                     $(".tb-other-info").append(trOtherField2);
-                    $(".tr-otherField2 td").first().text(mPropertyList[i].anothername);
+                    $(".tr-otherField2 td").first().text(mPropertyList[i].anotherName);
                     if (mPropertyList[i].enabled) {
                         $(".tr-otherField2").show();
                     }
@@ -936,9 +936,9 @@
                         $(".tr-otherField2").hide();
                     }
                 }
-                if (mPropertyList[i].nativename === "自定义3") {
+                if (mPropertyList[i].nativeName === "自定义3") {
                     $(".tb-other-info").append(trOtherField3);
-                    $(".tr-otherField3 td").first().text(mPropertyList[i].anothername);
+                    $(".tr-otherField3 td").first().text(mPropertyList[i].anotherName);
                     if (mPropertyList[i].enabled) {
                         $(".tr-otherField3").show();
                     }
@@ -1156,7 +1156,7 @@
             }
             var objInfo = $("#materialFM").serializeObject();
             objInfo.UnitId = $("#manyUnit").val();
-            objInfo.CategoryId =$("#parentid").val();
+            objInfo.CategoryId =$("#parentId").val();
             //初始库存信息
             var stockArr = [];
             $("#initDepot input").each(function () {
@@ -1221,7 +1221,7 @@
             $("#Name").focus().textbox("setValue", rowsdata.name);
             $("#EnableSerialNumber").val(rowsdata.enableserialnumber=='1'?'1':'0');
             //商品类别id
-            $("#parentid").val(rowsdata.categoryid);
+            $("#parentId").val(rowsdata.categoryid);
             //商品类别名称
             $("#parentName").textbox("setValue", rowsdata.categoryName);
             mId = rowsdata.categoryid;
@@ -1397,7 +1397,7 @@
                             console.log(res.length);
                             if (res.length) {
                                 for (var i = 0; i < res.length; i++) {
-                                    options += '<option value="' + res[i].id + '">' + res[i].uname + '</option>';
+                                    options += '<option value="' + res[i].id + '">' + res[i].name + '</option>';
                                 }
                                 $("#manyUnit").empty().append('<option value="">(空)</option>').append(options);
                                 //下拉框事件

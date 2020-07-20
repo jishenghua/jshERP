@@ -104,9 +104,9 @@ public class AccountService {
                 if ((thisMonthAmount.compareTo(BigDecimal.ZERO))!=0) {
                     thisMonthAmountFmt = df.format(thisMonthAmount);
                 }
-                al.setThismonthamount(thisMonthAmountFmt);  //本月发生额
-                BigDecimal currentAmount = getAccountSum(al.getId(), "", "month").add(getAccountSumByHead(al.getId(), "", "month")).add(getAccountSumByDetail(al.getId(), "", "month")).add(getManyAccountSum(al.getId(), "", "month")) .add(al.getInitialamount()) ;
-                al.setCurrentamount(currentAmount);
+                al.setThisMonthAmount(thisMonthAmountFmt);  //本月发生额
+                BigDecimal currentAmount = getAccountSum(al.getId(), "", "month").add(getAccountSumByHead(al.getId(), "", "month")).add(getAccountSumByDetail(al.getId(), "", "month")).add(getManyAccountSum(al.getId(), "", "month")) .add(al.getInitialAmount()) ;
+                al.setCurrentAmount(currentAmount);
                 resList.add(al);
             }
         }
@@ -126,10 +126,10 @@ public class AccountService {
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertAccount(String beanJson, HttpServletRequest request)throws Exception {
         Account account = JSONObject.parseObject(beanJson, Account.class);
-        if(account.getInitialamount() == null) {
-            account.setInitialamount(BigDecimal.ZERO);
+        if(account.getInitialAmount() == null) {
+            account.setInitialAmount(BigDecimal.ZERO);
         }
-        account.setIsdefault(false);
+        account.setIsDefault(false);
         int result=0;
         try{
             result = accountMapper.insertSelective(account);
@@ -442,7 +442,7 @@ public class AccountService {
         logService.insertLog("账户",BusinessConstants.LOG_OPERATION_TYPE_EDIT+accountId,
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         Account account = new Account();
-        account.setIsdefault(isDefault);
+        account.setIsDefault(isDefault);
         AccountExample example = new AccountExample();
         example.createCriteria().andIdEqualTo(accountId);
         int result=0;
@@ -561,7 +561,7 @@ public class AccountService {
                     BigDecimal monthAmount = getAccountSum(a.getId(), timeStr, "month").add(getAccountSumByHead(a.getId(), timeStr, "month"))
                             .add(getAccountSumByDetail(a.getId(), timeStr, "month")).add(getManyAccountSum(a.getId(), timeStr, "month"));
                     BigDecimal currentAmount = getAccountSum(a.getId(), "", "month").add(getAccountSumByHead(a.getId(), "", "month"))
-                            .add(getAccountSumByDetail(a.getId(), "", "month")).add(getManyAccountSum(a.getId(), "", "month")).add(a.getInitialamount());
+                            .add(getAccountSumByDetail(a.getId(), "", "month")).add(getManyAccountSum(a.getId(), "", "month")).add(a.getInitialAmount());
                     allMonthAmount = allMonthAmount.add(monthAmount);
                     allCurrentAmount = allCurrentAmount.add(currentAmount);
                 }
