@@ -459,15 +459,15 @@
 						}
 					}
 				},
-				{ title: '单据日期',field: 'opertimeStr',width:145},
-				{ title: '操作员',field: 'operpersonname',width:60},
-				{ title: '金额合计',field: 'totalprice',width:70},
-				{ title: '含税合计',field: 'totaltaxlastmoney',hidden:isShowLastMoneyColumn,width:70,formatter:function(value,rec){
-						return (rec.discountmoney + rec.discountlastmoney).toFixed(2);
+				{ title: '单据日期',field: 'operTimeStr',width:145},
+				{ title: '操作员',field: 'operPersonName',width:60},
+				{ title: '金额合计',field: 'totalPrice',width:70},
+				{ title: '含税合计',field: 'totalTaxLastMoney',hidden:isShowLastMoneyColumn,width:70,formatter:function(value,rec){
+						return (rec.discountMoney + rec.discountLastMoney).toFixed(2);
 					}
 				},
-				{ title: '优惠后金额',field: 'discountlastmoney',hidden:isShowLastMoneyColumn,width:80},
-				{ title: payTypeTitle,field: 'changeamount',width:50,hidden:hideType},
+				{ title: '优惠后金额',field: 'discountLastMoney',hidden:isShowLastMoneyColumn,width:80},
+				{ title: payTypeTitle,field: 'changeAmount',width:50,hidden:hideType},
 				{ title: '状态',field: 'status',hidden:isHiddenStatus, width:70,align:"center",formatter:function(value){
 						if(value === "0") {
                             return "<span style='color:red;'>未审核</span>";
@@ -1334,7 +1334,7 @@
 			$.messager.alert('编辑提示', '已审核和已转的单据不能编辑！', 'warning');
 			return;
 		}
-        var TotalPrice = res.totalprice; //合计金额
+        var TotalPrice = res.totalPrice; //合计金额
         if(pageType === "skip") { //从订单跳转过来
             buildNumber(); //生成单据编号
             var thisDateTime = getNowFormatDateTime(); //当前时间
@@ -1345,21 +1345,21 @@
             $("#ChangeAmount").val(TotalPrice).attr("data-changeamount", TotalPrice);
         } else {
             $("#Number").val(res.number).attr("data-defaultNumber",res.number);
-            $("#OperTime").val(res.opertimeStr);
-            $("#LinkNumber").val(res.linknumber); //关联订单号
-            $("#AccountId").val(res.accountid); //账户Id
-            $("#DiscountLastMoney").val(res.discountlastmoney); //优惠后金额
-            $("#ChangeAmount").val(res.changeamount).attr("data-changeamount", res.changeamount);
+            $("#OperTime").val(res.operTimeStr);
+            $("#LinkNumber").val(res.linkNumber); //关联订单号
+            $("#AccountId").val(res.accountId); //账户Id
+            $("#DiscountLastMoney").val(res.discountLastMoney); //优惠后金额
+            $("#ChangeAmount").val(res.changeAmount).attr("data-changeamount", res.changeAmount);
 		}
-	    $('#OrganId').combobox('setValue', res.organid);
-	    $("#HandsPersonId").val(res.handspersonid);
+	    $('#OrganId').combobox('setValue', res.organId);
+	    $("#HandsPersonId").val(res.handsPersonId);
 	    $("#Remark").val(res.remark);
 		$("#Discount").val(res.discount?res.discount:0);
-		$("#DiscountMoney").val(res.discountmoney?res.discountmoney:0);
-        var discountlastmoney = res.discountlastmoney?res.discountlastmoney:0;
-        $("#Debt").val(discountlastmoney-res.changeamount);
-		$("#AccountDay").val(res.accountday); //结算天数
-		preTotalPrice = res.totalprice; //记录前一次合计金额，用于扣预付款
+		$("#DiscountMoney").val(res.discountMoney?res.discountMoney:0);
+        var discountlastmoney = res.discountLastMoney?res.discountLastMoney:0;
+        $("#Debt").val(discountlastmoney-res.changeAmount);
+		$("#AccountDay").val(res.accountDay); //结算天数
+		preTotalPrice = res.totalPrice; //记录前一次合计金额，用于扣预付款
 	    oldNumber = res.number; //记录编辑前的单据编号
 		oldId = res.id; //记录单据Id
 	    var editTitle = listTitle.replace("列表","信息");
@@ -1369,7 +1369,7 @@
 
 		if(listSubType == "零售"){
 			var option = "";
-            if(res.paytype === "预付款"){
+            if(res.payType === "预付款"){
 				option = '<option value="预付款">预付款</option>';
 				option += '<option value="现付">现付</option>';
 			}
@@ -1380,8 +1380,8 @@
 		}
 
 		if(listSubType === "销售" || listSubType === "销售退货" || listSubType === "销售订单"){
-            if(res.salesman){
-                var arr = res.salesman.split(",");
+            if(res.salesMan){
+                var arr = res.salesMan.split(",");
 				var salesmanArray = [];
 				for(var i=0;i<arr.length;i++){
 					if(arr[i]){
@@ -1393,10 +1393,10 @@
 		}
 
 		//采购入库、销售出库的多账户加载
-        if(res.accountidlist && res.accountmoneylist){
+        if(res.accountIdList && res.accountMoneyList){
 			$("#AccountId").val("many"); //下拉框选中多账户
-            var accountArr = res.accountidlist.split(",");
-            var accountMoneyArr = res.accountmoneylist.split(",");
+            var accountArr = res.accountIdList.split(",");
+            var accountMoneyArr = res.accountMoneyList.split(",");
 			accountMoneyArr = changeListFmtPlus(accountMoneyArr)  //将数组单个金额中的数值转为正数
 
 			if(listSubType == "零售" || listSubType == "零售退货") {
@@ -1423,10 +1423,10 @@
 		}
 
 		//采购入库、销售出库的费用数据加载
-        if(res.othermoneylist && res.othermoneyitem){
-			$("#OtherMoney").val(res.othermoney); //其它费用
-            var itemArr = res.othermoneylist.split(",");
-            var itemMoneyArr = res.othermoneyitem.split(",");
+        if(res.otherMoneyList && res.otherMoneyItem){
+			$("#OtherMoney").val(res.otherMoney); //其它费用
+            var itemArr = res.otherMoneyList.split(",");
+            var itemMoneyArr = res.otherMoneyItem.split(",");
 			$("#OtherMoney").attr("data-itemArr",JSON.stringify(itemArr)).attr("data-itemMoneyArr",itemMoneyArr);  //json数据存储
 		}
 
@@ -1439,15 +1439,15 @@
         var res = $("#tableData").datagrid("getRows")[index];
 		var manyAccountMoney = 0; //多账户合计-零售
 	    $("#NumberShow").text(res.number);
-	    $("#OperTimeShow").text(res.opertimeStr);
+	    $("#OperTimeShow").text(res.operTimeStr);
 	    $('#OrganIdShow').text(res.organName);
 	    $("#HandsPersonIdShow").text(res.handsPersonName);
         if(res.accountName){
             $("#AccountIdShow").text(res.accountName); //结算账户
         } else {
-            if (res.accountidlist) {
-                var accountArr = res.accountidlist.split(","); //账户id列表
-                var accountMoneyArr = res.accountmoneylist.split(","); //账户金额列表
+            if (res.accountIdList) {
+                var accountArr = res.accountIdList.split(","); //账户id列表
+                var accountMoneyArr = res.accountMoneyList.split(","); //账户金额列表
                 var accountIdShow = "";
                 for (var j = 0; j < accountArr.length; j++) {
                     if (accountList != null) {
@@ -1467,26 +1467,26 @@
                 $("#AccountIdShow").text(accountIdShow);
             }
         }
-	    $("#ChangeAmountShow").text(res.changeamount);
+	    $("#ChangeAmountShow").text(res.changeAmount);
 	    $("#RemarkShow").text(res.remark);
 		$("#DiscountShow").text(res.discount);
-		$("#DiscountMoneyShow").text(res.discountmoney);
-		$("#DiscountLastMoneyShow").text(res.discountlastmoney);
+		$("#DiscountMoneyShow").text(res.discountMoney);
+		$("#DiscountLastMoneyShow").text(res.discountLastMoney);
 		var debt = 0;
-		if(res.othermoney){
-			debt = (res.discountlastmoney+res.othermoney-res.changeamount).toFixed(2);
+		if(res.otherMoney){
+			debt = (res.discountLastMoney+res.otherMoney-res.changeAmount).toFixed(2);
 		} else {
-			debt = (res.discountlastmoney-res.changeamount).toFixed(2);
+			debt = (res.discountLastMoney-res.changeAmount).toFixed(2);
 		}
 		$("#DebtShow").text(debt);
-		$("#AccountDayShow").text(res.accountday);  //结算天数
-		$("#LinkNumberShow").text(res.linknumber); //关联订单号
-        var otherMoney = res.othermoney?res.othermoney:0;
-        if(otherMoney!=0 && res.othermoneylist && res.othermoneyitem){
-            var itemArr = res.othermoneylist.split(","); //支出项目id列表
+		$("#AccountDayShow").text(res.accountDay);  //结算天数
+		$("#LinkNumberShow").text(res.linkLumber); //关联订单号
+        var otherMoney = res.otherMoney?res.otherMoney:0;
+        if(otherMoney!=0 && res.otherMoneyList && res.otherMoneyItem){
+            var itemArr = res.otherMoneyList.split(","); //支出项目id列表
             var itemMoneyArr = null;
-            if(res.othermoneyitem!=null) {
-                itemMoneyArr = eval ("(" + res.othermoneyitem + ")");  //支出项目金额列表
+            if(res.otherMoneyItem!=null) {
+                itemMoneyArr = eval ("(" + res.otherMoneyItem + ")");  //支出项目金额列表
             }
 			var otherMoneyShow = "";
             for(var j =0;j<itemArr.length; j++) {
@@ -1512,8 +1512,8 @@
 		else {
             $("#OtherMoneyShow").text(otherMoney); //其它费用
 		}
-        $("#payTypeShow").text(res.paytype);
-        var TotalPrice = res.totalprice;
+        $("#payTypeShow").text(res.payType);
+        var TotalPrice = res.totalPrice;
 	    var showTitle = listTitle.replace("列表","信息");
 	    $('#depotHeadDlgShow').show().dialog('open').dialog('setTitle','<img src="/js/easyui/themes/icons/list.png"/>&nbsp;查看' + showTitle);
 	    $(".window-mask").css({ width: webW ,height: webH});
@@ -1535,7 +1535,7 @@
 		}
 		if(listSubType === "销售" || listSubType === "销售退货" || listSubType === "销售订单"){
             if(res.salesman){
-				var arr = res.salesman.split(",");
+				var arr = res.salesMan.split(",");
 				var salesmanStr = "";
 				for(var i=0;i<arr.length;i++){
 					if(arr[i]){

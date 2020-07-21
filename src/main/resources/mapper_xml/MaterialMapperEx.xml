@@ -21,8 +21,8 @@
         me.purchase_decimal, me.commodity_decimal, me.wholesale_decimal,me.low_decimal
         FROM jsh_material m
         left JOIN jsh_material_extend me on m.id = me.material_id and ifnull(me.delete_Flag,'0') !='1'
-        left JOIN jsh_unit u on m.UnitId = u.id and ifnull(u.delete_Flag,'0') !='1'
-        left JOIN jsh_material_category mc on m.CategoryId = mc.id and ifnull(mc.status,'0') !='2'
+        left JOIN jsh_unit u on m.unit_id = u.id and ifnull(u.delete_Flag,'0') !='1'
+        left JOIN jsh_material_category mc on m.category_id = mc.id and ifnull(mc.status,'0') !='2'
         where 1=1
         and me.default_flag=1
         <if test="barCode != null">
@@ -32,15 +32,15 @@
             and m.name like '%${name}%'
         </if>
         <if test="standard != null">
-            and m.Standard like '%${standard}%'
+            and m.standard like '%${standard}%'
         </if>
         <if test="model != null">
             and m.model like '%${model}%'
         </if>
         <if test="categoryIds != null">
-            and m.CategoryId in (${categoryIds})
+            and m.category_id in (${categoryIds})
         </if>
-        and ifnull(m.delete_Flag,'0') !='1'
+        and ifnull(m.delete_flag,'0') !='1'
         order by m.id desc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
@@ -52,8 +52,8 @@
         COUNT(m.id)
         FROM jsh_material m
         left JOIN jsh_material_extend me on m.id = me.material_id and ifnull(me.delete_Flag,'0') !='1'
-        left JOIN jsh_unit u on m.UnitId = u.id and ifnull(u.delete_Flag,'0') !='1'
-        left JOIN jsh_material_category mc on m.CategoryId = mc.id and ifnull(mc.status,'0') !='2'
+        left JOIN jsh_unit u on m.unit_id = u.id and ifnull(u.delete_Flag,'0') !='1'
+        left JOIN jsh_material_category mc on m.category_id = mc.id and ifnull(mc.status,'0') !='2'
         WHERE 1=1
         and me.default_flag=1
         <if test="barCode != null">
@@ -63,29 +63,29 @@
             and m.name like '%${name}%'
         </if>
         <if test="standard != null">
-            and m.Standard like '%${standard}%'
+            and m.standard like '%${standard}%'
         </if>
         <if test="model != null">
             and m.model like '%${model}%'
         </if>
         <if test="categoryIds != null">
-            and m.CategoryId in (${categoryIds})
+            and m.category_id in (${categoryIds})
         </if>
-        and ifnull(m.delete_Flag,'0') !='1'
+        and ifnull(m.delete_flag,'0') !='1'
     </select>
 
     <select id="findUnitName" resultType="java.lang.String">
         select u.name  from jsh_unit u
-        left join jsh_material m on m.UnitId=u.id and ifnull(m.delete_Flag,'0') !='1'
+        left join jsh_material m on m.unit_id=u.id and ifnull(m.delete_flag,'0') !='1'
         where m.id = ${mId}
-        and ifnull(u.delete_Flag,'0') !='1'
+        and ifnull(u.delete_flag,'0') !='1'
     </select>
 
     <select id="findById" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultAndUnitMap">
         select m.*,u.name unit_name from jsh_material m
-        left join jsh_unit u on m.UnitId=u.id and ifnull(u.delete_Flag,'0') !='1'
+        left join jsh_unit u on m.unit_id=u.id and ifnull(u.delete_flag,'0') !='1'
         where m.id = ${id}
-        and ifnull(m.delete_Flag,'0') !='1'
+        and ifnull(m.delete_flag,'0') !='1'
     </select>
 
     <select id="findByIdWithBarCode" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultAndUnitMap">
@@ -93,21 +93,21 @@
         me.wholesale_decimal, me.low_decimal
         from jsh_material m
         left join jsh_material_extend me on m.id=me.material_id and ifnull(me.delete_Flag,'0') !='1'
-        left join jsh_unit u on m.UnitId=u.id and ifnull(u.delete_Flag,'0') !='1'
+        left join jsh_unit u on m.unit_id=u.id and ifnull(u.delete_Flag,'0') !='1'
         where me.id = ${meId}
-        and ifnull(m.delete_Flag,'0') !='1'
+        and ifnull(m.delete_flag,'0') !='1'
     </select>
 
     <select id="findBySelectWithBarCode" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultAndUnitMap">
         select m.*,u.name unit_name,me.bar_code m_bar_code,me.id meId,me.commodity_unit from jsh_material m
         left join jsh_material_extend me on m.id=me.material_id and ifnull(me.delete_Flag,'0') !='1'
-        left join jsh_unit u on m.UnitId=u.id and ifnull(u.delete_Flag,'0') !='1'
+        left join jsh_unit u on m.unit_id=u.id and ifnull(u.delete_Flag,'0') !='1'
         where m.enabled=1 and me.id is not null
         <if test="q != null">
             and (m.name like '%${q}%' or me.bar_code like '%${q}%')
         </if>
-        and ifnull(m.delete_Flag,'0') !='1'
-        ORDER BY Id desc
+        and ifnull(m.delete_flag,'0') !='1'
+        ORDER BY id desc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
         </if>
@@ -116,12 +116,12 @@
     <select id="findBySelectWithBarCodeCount" resultType="java.lang.Integer">
         select count(1) from jsh_material m
         left join jsh_material_extend me on m.id=me.material_id and ifnull(me.delete_Flag,'0') !='1'
-        left join jsh_unit u on m.UnitId=u.id and ifnull(u.delete_Flag,'0') !='1'
+        left join jsh_unit u on m.unit_id=u.id and ifnull(u.delete_Flag,'0') !='1'
         where m.enabled=1 and me.id is not null
         <if test="q != null">
             and (m.name like '%${q}%' or me.bar_code like '%${q}%')
         </if>
-        and ifnull(m.delete_Flag,'0') !='1'
+        and ifnull(m.delete_flag,'0') !='1'
     </select>
 
     <select id="findByAll" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultMapList">
@@ -129,8 +129,8 @@
         me.wholesale_decimal, me.low_decimal
         FROM jsh_material m
         left join jsh_material_extend me on m.id=me.material_id and ifnull(me.delete_Flag,'0') !='1'
-        left JOIN jsh_unit u on m.UnitId = u.id and ifnull(u.delete_Flag,'0') !='1'
-        left JOIN jsh_material_category mc on m.CategoryId = mc.id and ifnull(mc.status,'0') !='2'
+        left JOIN jsh_unit u on m.unit_id = u.id and ifnull(u.delete_Flag,'0') !='1'
+        left JOIN jsh_material_category mc on m.category_id = mc.id and ifnull(mc.status,'0') !='2'
         where 1=1
         and me.default_flag=1
         <if test="name != null">
@@ -140,9 +140,9 @@
             and m.model like '%${model}%'
         </if>
         <if test="categoryIds != null">
-            and m.CategoryId in (${categoryIds})
+            and m.category_id in (${categoryIds})
         </if>
-        and ifnull(m.delete_Flag,'0') !='1'
+        and ifnull(m.delete_flag,'0') !='1'
         order by m.id desc
     </select>
     <select id="findByMaterialName"  resultType="com.jsh.erp.datasource.entities.Material">
@@ -152,18 +152,17 @@
         <if test="name != null">
             and m.name =#{name}
         </if>
-        and ifnull(m.delete_Flag,'0') !='1'
-
+        and ifnull(m.delete_flag,'0') !='1'
     </select>
 
     <select id="getMaterialEnableSerialNumberList" parameterType="java.util.Map" resultMap="com.jsh.erp.datasource.mappers.MaterialMapper.BaseResultMap">
         select
-        Id, CategoryId, name, Mfrs, SafetyStock, Model, Standard, Color, Unit, Remark,
-        UnitId, Enabled,enableSerialNumber
+        id, category_id, name, mfrs, safety_stock, model, standard, color, unit, remark,
+        unit_id, enabled,enable_serial_number
         FROM jsh_material
         where 1=1
         and enabled ='1'
-        and enableSerialNumber ='1'
+        and enable_serial_number ='1'
         <if test="name != null and name != ''">
             <bind name="name" value="'%' + _parameter.name + '%'" />
             and name like #{name}
@@ -172,7 +171,7 @@
             <bind name="model" value="'%' + _parameter.model + '%'" />
             and model like #{model}
         </if>
-        and ifnull(delete_Flag,'0') !='1'
+        and ifnull(delete_flag,'0') !='1'
         order by id desc
     </select>
 
@@ -181,7 +180,7 @@
         FROM jsh_material
         where 1=1
         and enabled ='1'
-        and enableSerialNumber ='1'
+        and enable_serial_number ='1'
         <if test="name != null and name != ''">
             <bind name="name" value="'%' + _parameter.name + '%'" />
             and name like #{name}
@@ -190,14 +189,14 @@
             <bind name="model" value="'%' + _parameter.model + '%'" />
             and model like #{model}
         </if>
-        and ifnull(delete_Flag,'0') !='1'
+        and ifnull(delete_flag,'0') !='1'
     </select>
 
     <update id="batchDeleteMaterialByIds">
         update jsh_material
-        set delete_Flag='1'
+        set delete_flag='1'
         where 1=1
-        and ifnull(delete_Flag,'0') !='1'
+        and ifnull(delete_flag,'0') !='1'
         and id in (
         <foreach collection="ids" item="id" separator=",">
             #{id}
@@ -209,24 +208,24 @@
         <include refid="com.jsh.erp.datasource.mappers.MaterialMapper.Base_Column_List" />
         from jsh_material
         where 1=1
-        and categoryId in (
+        and category_id in (
         <foreach collection="categoryIds" item="categoryId" separator=",">
             #{categoryId}
         </foreach>
         )
-        and ifnull(delete_Flag,'0') !='1'
+        and ifnull(delete_flag,'0') !='1'
     </select>
     <select id="getMaterialListByUnitIds"  resultMap="com.jsh.erp.datasource.mappers.MaterialMapper.BaseResultMap">
         select
         <include refid="com.jsh.erp.datasource.mappers.MaterialMapper.Base_Column_List" />
         from jsh_material
         where 1=1
-        and unitId in (
+        and unit_id in (
         <foreach collection="unitIds" item="unitId" separator=",">
             #{unitId}
         </foreach>
         )
-        and ifnull(delete_Flag,'0') !='1'
+        and ifnull(delete_flag,'0') !='1'
     </select>
 
     <select id="getMaxBarCode" resultType="java.lang.String">
@@ -239,18 +238,18 @@
         select m.*,me.bar_code m_bar_code,u.name unitName, mc.name categoryName
         FROM jsh_material m
         left join jsh_material_extend me on m.id=me.material_id and ifnull(me.delete_Flag,'0') !='1'
-        left JOIN jsh_unit u on m.UnitId = u.id and ifnull(u.delete_flag,'0') !='1'
-        left JOIN jsh_material_category mc on m.CategoryId = mc.id and ifnull(mc.status,'0') !='2'
+        left JOIN jsh_unit u on m.unit_id = u.id and ifnull(u.delete_flag,'0') !='1'
+        left JOIN jsh_material_category mc on m.category_id = mc.id and ifnull(mc.status,'0') !='2'
         where 1=1
         <if test="meId != null">
             and me.id = ${meId}
         </if>
-        and ifnull(m.delete_Flag,'0') !='1'
+        and ifnull(m.delete_flag,'0') !='1'
     </select>
 
     <select id="getMaterialNameList" resultType="java.lang.String">
         select m.name from jsh_material m
-        where m.name is not null and m.name !='' and ifnull(m.delete_Flag,'0') !='1'
+        where m.name is not null and m.name !='' and ifnull(m.delete_flag,'0') !='1'
         group by m.name
         order by m.name asc
     </select>

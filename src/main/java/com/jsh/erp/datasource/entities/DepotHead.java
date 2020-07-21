@@ -8,55 +8,55 @@ public class DepotHead {
 
     private String type;
 
-    private String subtype;
+    private String subType;
 
-    private String defaultnumber;
+    private String defaultNumber;
 
     private String number;
 
-    private String operpersonname;
+    private String operPersonName;
 
-    private Date createtime;
+    private Date createTime;
 
-    private Date opertime;
+    private Date operTime;
 
-    private Long organid;
+    private Long organId;
 
-    private Long handspersonid;
+    private Long handsPersonId;
 
-    private Long accountid;
+    private Long accountId;
 
-    private BigDecimal changeamount;
+    private BigDecimal changeAmount;
 
-    private BigDecimal totalprice;
+    private BigDecimal totalPrice;
 
-    private String paytype;
+    private String payType;
 
     private String remark;
 
-    private String salesman;
+    private String salesMan;
 
-    private String accountidlist;
+    private String accountIdList;
 
-    private String accountmoneylist;
+    private String accountMoneyList;
 
     private BigDecimal discount;
 
-    private BigDecimal discountmoney;
+    private BigDecimal discountMoney;
 
-    private BigDecimal discountlastmoney;
+    private BigDecimal discountLastMoney;
 
-    private BigDecimal othermoney;
+    private BigDecimal otherMoney;
 
-    private String othermoneylist;
+    private String otherMoneyList;
 
-    private String othermoneyitem;
+    private String otherMoneyItem;
 
-    private Integer accountday;
+    private Integer accountDay;
 
     private String status;
 
-    private String linknumber;
+    private String linkNumber;
 
     private Long tenantId;
 
@@ -78,20 +78,20 @@ public class DepotHead {
         this.type = type == null ? null : type.trim();
     }
 
-    public String getSubtype() {
-        return subtype;
+    public String getSubType() {
+        return subType;
     }
 
-    public void setSubtype(String subtype) {
-        this.subtype = subtype == null ? null : subtype.trim();
+    public void setSubType(String subType) {
+        this.subType = subType == null ? null : subType.trim();
     }
 
-    public String getDefaultnumber() {
-        return defaultnumber;
+    public String getDefaultNumber() {
+        return defaultNumber;
     }
 
-    public void setDefaultnumber(String defaultnumber) {
-        this.defaultnumber = defaultnumber == null ? null : defaultnumber.trim();
+    public void setDefaultNumber(String defaultNumber) {
+        this.defaultNumber = defaultNumber == null ? null : defaultNumber.trim();
     }
 
     public String getNumber() {
@@ -102,76 +102,76 @@ public class DepotHead {
         this.number = number == null ? null : number.trim();
     }
 
-    public String getOperpersonname() {
-        return operpersonname;
+    public String getOperPersonName() {
+        return operPersonName;
     }
 
-    public void setOperpersonname(String operpersonname) {
-        this.operpersonname = operpersonname == null ? null : operpersonname.trim();
+    public void setOperPersonName(String operPersonName) {
+        this.operPersonName = operPersonName == null ? null : operPersonName.trim();
     }
 
-    public Date getCreatetime() {
-        return createtime;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setCreatetime(Date createtime) {
-        this.createtime = createtime;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
-    public Date getOpertime() {
-        return opertime;
+    public Date getOperTime() {
+        return operTime;
     }
 
-    public void setOpertime(Date opertime) {
-        this.opertime = opertime;
+    public void setOperTime(Date operTime) {
+        this.operTime = operTime;
     }
 
-    public Long getOrganid() {
-        return organid;
+    public Long getOrganId() {
+        return organId;
     }
 
-    public void setOrganid(Long organid) {
-        this.organid = organid;
+    public void setOrganId(Long organId) {
+        this.organId = organId;
     }
 
-    public Long getHandspersonid() {
-        return handspersonid;
+    public Long getHandsPersonId() {
+        return handsPersonId;
     }
 
-    public void setHandspersonid(Long handspersonid) {
-        this.handspersonid = handspersonid;
+    public void setHandsPersonId(Long handsPersonId) {
+        this.handsPersonId = handsPersonId;
     }
 
-    public Long getAccountid() {
-        return accountid;
+    public Long getAccountId() {
+        return accountId;
     }
 
-    public void setAccountid(Long accountid) {
-        this.accountid = accountid;
+    public void setAccountId(Long accountId) {
+        this.accountId = accountId;
     }
 
-    public BigDecimal getChangeamount() {
-        return changeamount;
+    public BigDecimal getChangeAmount() {
+        return changeAmount;
     }
 
-    public void setChangeamount(BigDecimal changeamount) {
-        this.changeamount = changeamount;
+    public void setChangeAmount(BigDecimal changeAmount) {
+        this.changeAmount = changeAmount;
     }
 
-    public BigDecimal getTotalprice() {
-        return totalprice;
+    public BigDecimal getTotalPrice() {
+        return totalPrice;
     }
 
-    public void setTotalprice(BigDecimal totalprice) {
-        this.totalprice = totalprice;
+    public void setTotalPrice(BigDecimal totalPrice) {
+        this.totalPrice = totalPrice;
     }
 
-    public String getPaytype() {
-        return paytype;
+    public String getPayType() {
+        return payType;
     }
 
-    public void setPaytype(String paytype) {
-        this.paytype = paytype == null ? null : paytype.trim();
+    public void setPayType(String payType) {
+        this.payType = payType == null ? null : payType.trim();
     }
 
     public String getRemark() {
@@ -182,28 +182,28 @@ public class DepotHead {
         this.remark = remark == null ? null : remark.trim();
     }
 
-    public String getSalesman() {
-        return salesman;
+    public String getSalesMan() {
+        return salesMan;
     }
 
-    public void setSalesman(String salesman) {
-        this.salesman = salesman == null ? null : salesman.trim();
+    public void setSalesMan(String salesMan) {
+        this.salesMan = salesMan == null ? null : salesMan.trim();
     }
 
-    public String getAccountidlist() {
-        return accountidlist;
+    public String getAccountIdList() {
+        return accountIdList;
     }
 
-    public void setAccountidlist(String accountidlist) {
-        this.accountidlist = accountidlist == null ? null : accountidlist.trim();
+    public void setAccountIdList(String accountIdList) {
+        this.accountIdList = accountIdList == null ? null : accountIdList.trim();
     }
 
-    public String getAccountmoneylist() {
-        return accountmoneylist;
+    public String getAccountMoneyList() {
+        return accountMoneyList;
     }
 
-    public void setAccountmoneylist(String accountmoneylist) {
-        this.accountmoneylist = accountmoneylist == null ? null : accountmoneylist.trim();
+    public void setAccountMoneyList(String accountMoneyList) {
+        this.accountMoneyList = accountMoneyList == null ? null : accountMoneyList.trim();
     }
 
     public BigDecimal getDiscount() {
@@ -214,52 +214,52 @@ public class DepotHead {
         this.discount = discount;
     }
 
-    public BigDecimal getDiscountmoney() {
-        return discountmoney;
+    public BigDecimal getDiscountMoney() {
+        return discountMoney;
     }
 
-    public void setDiscountmoney(BigDecimal discountmoney) {
-        this.discountmoney = discountmoney;
+    public void setDiscountMoney(BigDecimal discountMoney) {
+        this.discountMoney = discountMoney;
     }
 
-    public BigDecimal getDiscountlastmoney() {
-        return discountlastmoney;
+    public BigDecimal getDiscountLastMoney() {
+        return discountLastMoney;
     }
 
-    public void setDiscountlastmoney(BigDecimal discountlastmoney) {
-        this.discountlastmoney = discountlastmoney;
+    public void setDiscountLastMoney(BigDecimal discountLastMoney) {
+        this.discountLastMoney = discountLastMoney;
     }
 
-    public BigDecimal getOthermoney() {
-        return othermoney;
+    public BigDecimal getOtherMoney() {
+        return otherMoney;
     }
 
-    public void setOthermoney(BigDecimal othermoney) {
-        this.othermoney = othermoney;
+    public void setOtherMoney(BigDecimal otherMoney) {
+        this.otherMoney = otherMoney;
     }
 
-    public String getOthermoneylist() {
-        return othermoneylist;
+    public String getOtherMoneyList() {
+        return otherMoneyList;
     }
 
-    public void setOthermoneylist(String othermoneylist) {
-        this.othermoneylist = othermoneylist == null ? null : othermoneylist.trim();
+    public void setOtherMoneyList(String otherMoneyList) {
+        this.otherMoneyList = otherMoneyList == null ? null : otherMoneyList.trim();
     }
 
-    public String getOthermoneyitem() {
-        return othermoneyitem;
+    public String getOtherMoneyItem() {
+        return otherMoneyItem;
     }
 
-    public void setOthermoneyitem(String othermoneyitem) {
-        this.othermoneyitem = othermoneyitem == null ? null : othermoneyitem.trim();
+    public void setOtherMoneyItem(String otherMoneyItem) {
+        this.otherMoneyItem = otherMoneyItem == null ? null : otherMoneyItem.trim();
     }
 
-    public Integer getAccountday() {
-        return accountday;
+    public Integer getAccountDay() {
+        return accountDay;
     }
 
-    public void setAccountday(Integer accountday) {
-        this.accountday = accountday;
+    public void setAccountDay(Integer accountDay) {
+        this.accountDay = accountDay;
     }
 
     public String getStatus() {
@@ -270,12 +270,12 @@ public class DepotHead {
         this.status = status == null ? null : status.trim();
     }
 
-    public String getLinknumber() {
-        return linknumber;
+    public String getLinkNumber() {
+        return linkNumber;
     }
 
-    public void setLinknumber(String linknumber) {
-        this.linknumber = linknumber == null ? null : linknumber.trim();
+    public void setLinkNumber(String linkNumber) {
+        this.linkNumber = linkNumber == null ? null : linkNumber.trim();
     }
 
     public Long getTenantId() {

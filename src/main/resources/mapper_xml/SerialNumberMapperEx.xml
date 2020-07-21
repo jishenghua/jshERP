@@ -13,10 +13,10 @@
         select
         ser.id, ser.material_id, ser.serial_number, ser.is_sell, ser.remark, ser.delete_flag, ser.create_time,
         ser.update_time,mat.name as materialName,null as creator,null as updater,null as creatorName,
-        null as updaterName,ser.depot_head_id, dh.number as depotHeadNumber,concat(dh.SubType,dh.Type) as depotHeadType
+        null as updaterName,ser.depot_head_id, dh.number as depotHeadNumber,concat(dh.sub_type,dh.type) as depotHeadType
         FROM jsh_serial_number ser
-        left join jsh_material mat on mat.id = ser.material_Id and ifnull(mat.delete_Flag,'0') !='1'
-        left join jsh_depothead dh on dh.id= ser.depot_head_id and ifnull(dh.delete_Flag,'0') !='1'
+        left join jsh_material mat on mat.id = ser.material_Id and ifnull(mat.delete_flag,'0') !='1'
+        left join jsh_depot_head dh on dh.id= ser.depot_head_id and ifnull(dh.delete_flag,'0') !='1'
         where 1=1
         <if test="serialNumber != null">
             <bind name="serialNumber" value="'%' + _parameter.serialNumber + '%'" />

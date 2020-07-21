@@ -69,14 +69,14 @@
                 { title: '联系人', field: 'contacts',width:50,align:"center"},
                 { title: '手机号码', field: 'telephone',width:100,align:"center"},
                 { title: '电子邮箱',field: 'email',width:80,align:"center"},
-                { title: '联系电话', field: 'phonenum',width:100,align:"center"},
+                { title: '联系电话', field: 'phoneNum',width:100,align:"center"},
                 { title: '传真', field: 'fax',width:100,align:"center"},
-                { title: '预付款',field: 'advancein',width:70,align:"center"},
-                { title: '期初应收',field: 'beginneedget',width:70,align:"center"},
-                { title: '期初应付',field: 'beginneedpay',width:70,align:"center"},
-                { title: '期末应收',field: 'allneedget',width:70,align:"center"},
-                { title: '期末应付',field: 'allneedpay',width:70,align:"center"},
-                { title: '税率(%)', field: 'taxrate',width:60,align:"center"},
+                { title: '预付款',field: 'advanceIn',width:70,align:"center"},
+                { title: '期初应收',field: 'beginNeedGet',width:70,align:"center"},
+                { title: '期初应付',field: 'beginNeedPay',width:70,align:"center"},
+                { title: '期末应收',field: 'allNeedGet',width:70,align:"center"},
+                { title: '期末应付',field: 'allNeedPay',width:70,align:"center"},
+                { title: '税率(%)', field: 'taxRate',width:60,align:"center"},
                 { title: '状态',field: 'enabled',width:70,align:"center",formatter:function(value){
                     return value? "<span style='color:green'>启用</span>":"<span style='color:red'>禁用</span>";
                 }}
@@ -558,12 +558,12 @@
     function editSupplier(index) {
         var res = $("#tableData").datagrid("getRows")[index];
         var sId = res.id;
-        var beginNeedGet = res.beginneedget;
-        var beginNeedPay = res.beginneedpay;
+        var beginNeedGet = res.beginNeedGet;
+        var beginNeedPay = res.beginNeedPay;
         var row = {
             supplier : res.supplier,
             contacts : res.contacts,
-            phonenum : res.phonenum,
+            phonenum : res.phoneNum,
             email : res.email,
             BeginNeedGet : beginNeedGet == "0"? "":beginNeedGet,
             BeginNeedPay : beginNeedPay == "0"? "":beginNeedPay,
@@ -574,10 +574,10 @@
             fax : res.fax,
             telephone : res.telephone,
             address : res.address,
-            taxNum : res.taxnum,
-            bankName : res.bankname,
-            accountNumber : res.accountnumber,
-            taxRate : res.taxrate
+            taxNum : res.taxNum,
+            bankName : res.bankName,
+            accountNumber : res.accountNumber,
+            taxRate : res.taxRate
         };
         oldSupplier = res.supplier;
         $('#supplierDlg').dialog('open').dialog('setTitle','<img src="/js/easyui/themes/icons/pencil.png"/>&nbsp;编辑'+listType +"信息");

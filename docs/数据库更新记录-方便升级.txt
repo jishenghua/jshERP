@@ -48,7 +48,7 @@ INSERT INTO `jsh_functions`(`Number`, `Name`, `PNumber`, `URL`, `State`, `Sort`,
 -- ----------------------------
 -- 删除单据主表供应商id字段对应外键约束
 -- ----------------------------
-ALTER TABLE jsh_depothead DROP FOREIGN KEY jsh_depothead_ibfk_3;
+ALTER TABLE jsh_depot_head DROP FOREIGN KEY jsh_depot_head_ibfk_3;
 -- ----------------------------
 -- 序列号表添加单据主表id字段，用于跟踪序列号流向
 -- ----------------------------
@@ -66,7 +66,7 @@ alter table jsh_serial_number change delete_Flag delete_Flag varchar(1) DEFAULT 
 -- ----------------------------
 -- 删除单据子表单据主表id字段对应外键约束
 -- ----------------------------
-ALTER TABLE jsh_depotitem DROP FOREIGN KEY jsh_depotitem_ibfk_1;
+ALTER TABLE jsh_depot_item DROP FOREIGN KEY jsh_depot_item_ibfk_1;
 -- ----------------------------
 -- 时间：2019年2月1日
 -- version：1.0.2
@@ -309,8 +309,8 @@ where Id = 5;
 -- version：1.0.8
 -- 改状态字段的类型，增加关联单据字段
 -- ----------------------------
-alter table jsh_depothead change Status Status varchar(1) DEFAULT '0' COMMENT '状态，0未审核、1已审核、2已转采购|销售';
-alter table jsh_depothead add `LinkNumber` varchar(50) DEFAULT null COMMENT '关联订单号';
+alter table jsh_depot_head change Status Status varchar(1) DEFAULT '0' COMMENT '状态，0未审核、1已审核、2已转采购|销售';
+alter table jsh_depot_head add `LinkNumber` varchar(50) DEFAULT null COMMENT '关联订单号';
 -- ----------------------------
 -- 时间：2019年3月12日
 -- version：1.0.9
@@ -430,8 +430,8 @@ alter table jsh_asset add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
 alter table jsh_assetcategory add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
 alter table jsh_assetname add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
 alter table jsh_depot add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
-alter table jsh_depothead add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
-alter table jsh_depotitem add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
+alter table jsh_depot_head add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
+alter table jsh_depot_item add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
 alter table jsh_inoutitem add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
 alter table jsh_log add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
 alter table jsh_material add tenant_id bigint(20) DEFAULT null COMMENT '租户id';
@@ -487,10 +487,10 @@ alter table jsh_asset add  delete_Flag varchar(1) DEFAULT '0' COMMENT '删除标
 alter table jsh_assetcategory add  delete_Flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
 -- 资产信息表	jsh_assetname
 alter table jsh_assetname add  delete_Flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
--- 单据主表	jsh_depothead
-alter table jsh_depothead add  delete_Flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
--- 单据子表	jsh_depotitem
-alter table jsh_depotitem add  delete_Flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
+-- 单据主表	jsh_depot_head
+alter table jsh_depot_head add  delete_Flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
+-- 单据子表	jsh_depot_item
+alter table jsh_depot_item add  delete_Flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
 -- 收支项目表	jsh_inoutitem
 alter table jsh_inoutitem add  delete_Flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
 
@@ -529,16 +529,16 @@ ALTER TABLE jsh_assetname DROP FOREIGN KEY FKA4ADCCF866BC8AD3;
 -- ----------------------------
 -- 删除单据主表对应外键约束
 -- ----------------------------
-ALTER TABLE jsh_depothead DROP FOREIGN KEY FK2A80F214AAE50527;
-ALTER TABLE jsh_depothead DROP FOREIGN KEY jsh_depothead_ibfk_1;
-ALTER TABLE jsh_depothead DROP FOREIGN KEY jsh_depothead_ibfk_4;
-ALTER TABLE jsh_depothead DROP FOREIGN KEY jsh_depothead_ibfk_5;
+ALTER TABLE jsh_depot_head DROP FOREIGN KEY FK2A80F214AAE50527;
+ALTER TABLE jsh_depot_head DROP FOREIGN KEY jsh_depot_head_ibfk_1;
+ALTER TABLE jsh_depot_head DROP FOREIGN KEY jsh_depot_head_ibfk_4;
+ALTER TABLE jsh_depot_head DROP FOREIGN KEY jsh_depot_head_ibfk_5;
 -- ----------------------------
 -- 删除单据子表对应外键约束
 -- ----------------------------
-ALTER TABLE jsh_depotitem DROP FOREIGN KEY FK2A819F47729F5392;
-ALTER TABLE jsh_depotitem DROP FOREIGN KEY FK2A819F479485B3F5;
-ALTER TABLE jsh_depotitem DROP FOREIGN KEY jsh_depotitem_ibfk_2;
+ALTER TABLE jsh_depot_item DROP FOREIGN KEY FK2A819F47729F5392;
+ALTER TABLE jsh_depot_item DROP FOREIGN KEY FK2A819F479485B3F5;
+ALTER TABLE jsh_depot_item DROP FOREIGN KEY jsh_depot_item_ibfk_2;
 -- ----------------------------
 -- 删除操作日志表对应外键约束
 -- ----------------------------
@@ -732,15 +732,15 @@ ROW_FORMAT=COMPACT
 -- 时间 2020-02-16
 -- by jishenghua
 -- ----------------------------
-alter table jsh_depotitem add material_extend_id bigint(20) DEFAULT NULL COMMENT '商品扩展id' after MaterialId;
+alter table jsh_depot_item add material_extend_id bigint(20) DEFAULT NULL COMMENT '商品扩展id' after MaterialId;
 
 -- ----------------------------
 -- 给单据主表删除字段ProjectId 和 AllocationProjectId
 -- 时间 2020-02-18
 -- by jishenghua
 -- ----------------------------
-alter table jsh_depothead drop column ProjectId;
-alter table jsh_depothead drop column AllocationProjectId;
+alter table jsh_depot_head drop column ProjectId;
+alter table jsh_depot_head drop column AllocationProjectId;
 
 -- ----------------------------
 -- 给计量单位表增加基础单位、副单位、比例三个字段
@@ -903,3 +903,111 @@ alter table jsh_serial_number change delete_Flag delete_flag varchar(1) DEFAULT 
 alter table jsh_serial_number change create_Time create_time datetime DEFAULT NULL COMMENT '创建时间';
 alter table jsh_serial_number change update_Time update_time datetime DEFAULT NULL COMMENT '更新时间';
 alter table jsh_serial_number change depothead_Id depot_head_id bigint(20) DEFAULT NULL COMMENT '单据主表id，用于跟踪序列号流向';
+
+alter table jsh_supplier change phonenum phone_num varchar(30) DEFAULT NULL COMMENT '联系电话';
+alter table jsh_supplier change AdvanceIn advance_in decimal(24,6) DEFAULT '0.000000' COMMENT '预收款';
+alter table jsh_supplier change BeginNeedGet begin_need_get decimal(24,6) DEFAULT NULL COMMENT '期初应收';
+alter table jsh_supplier change BeginNeedPay begin_need_pay decimal(24,6) DEFAULT NULL COMMENT '期初应付';
+alter table jsh_supplier change AllNeedGet all_need_get decimal(24,6) DEFAULT NULL COMMENT '累计应收';
+alter table jsh_supplier change AllNeedPay all_need_pay decimal(24,6) DEFAULT NULL COMMENT '累计应付';
+alter table jsh_supplier change taxNum tax_num varchar(50) DEFAULT NULL COMMENT '纳税人识别号';
+alter table jsh_supplier change bankName bank_name varchar(50) DEFAULT NULL COMMENT '开户行';
+alter table jsh_supplier change accountNumber account_number varchar(50) DEFAULT NULL COMMENT '账号';
+alter table jsh_supplier change taxRate tax_rate decimal(24,6) DEFAULT NULL COMMENT '税率';
+alter table jsh_supplier change delete_Flag delete_flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
+
+alter table jsh_accounthead rename to jsh_account_head;
+alter table jsh_account_head change Id id bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键';
+alter table jsh_account_head change Type type varchar(50) DEFAULT NULL COMMENT '类型(支出/收入/收款/付款/转账)';
+alter table jsh_account_head change OrganId organ_id bigint(20) DEFAULT NULL COMMENT '单位Id(收款/付款单位)';
+alter table jsh_account_head change HandsPersonId hands_person_id bigint(20) DEFAULT NULL COMMENT '经手人id';
+alter table jsh_account_head change ChangeAmount change_amount decimal(24,6) DEFAULT NULL COMMENT '变动金额(优惠/收款/付款/实付)';
+alter table jsh_account_head change TotalPrice total_price decimal(24,6) DEFAULT NULL COMMENT '合计金额';
+alter table jsh_account_head change AccountId account_id bigint(20) DEFAULT NULL COMMENT '账户(收款/付款)';
+alter table jsh_account_head change BillNo bill_no varchar(50) DEFAULT NULL COMMENT '单据编号';
+alter table jsh_account_head change BillTime bill_time datetime DEFAULT NULL COMMENT '单据日期';
+alter table jsh_account_head change Remark remark varchar(100) DEFAULT NULL COMMENT '备注';
+alter table jsh_account_head change delete_Flag delete_flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
+
+alter table jsh_accountitem rename to jsh_account_item;
+alter table jsh_account_item change Id id bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键';
+alter table jsh_account_item change HeaderId header_id bigint(20) NOT NULL COMMENT '表头Id';
+alter table jsh_account_item change AccountId account_id bigint(20) DEFAULT NULL COMMENT '账户Id';
+alter table jsh_account_item change InOutItemId in_out_item_id bigint(20) DEFAULT NULL COMMENT '收支项目Id';
+alter table jsh_account_item change EachAmount each_amount decimal(24,6) DEFAULT NULL COMMENT '单项金额';
+alter table jsh_account_item change Remark remark varchar(100) DEFAULT NULL COMMENT '单据备注';
+alter table jsh_account_item change delete_Flag delete_flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
+
+alter table jsh_material change Id id bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键';
+alter table jsh_material change CategoryId category_id bigint(20) DEFAULT NULL COMMENT '产品类型id';
+alter table jsh_material change Name name varchar(50) DEFAULT NULL COMMENT '名称';
+alter table jsh_material change Mfrs mfrs varchar(50) DEFAULT NULL COMMENT '制造商';
+alter table jsh_material change SafetyStock safety_stock decimal(24,6) DEFAULT NULL COMMENT '安全存量（KG）';
+alter table jsh_material change Model model varchar(50) DEFAULT NULL COMMENT '型号';
+alter table jsh_material change Standard standard varchar(50) DEFAULT NULL COMMENT '规格';
+alter table jsh_material change Color color varchar(50) DEFAULT NULL COMMENT '颜色';
+alter table jsh_material change Unit unit varchar(50) DEFAULT NULL COMMENT '单位-单个';
+alter table jsh_material change Remark remark varchar(100) DEFAULT NULL COMMENT '备注';
+alter table jsh_material change UnitId unit_id bigint(20) DEFAULT NULL COMMENT '计量单位Id';
+alter table jsh_material change Enabled enabled bit(1) DEFAULT NULL COMMENT '启用 0-禁用  1-启用';
+alter table jsh_material change OtherField1 other_field1 varchar(50) DEFAULT NULL COMMENT '自定义1';
+alter table jsh_material change OtherField2 other_field2 varchar(50) DEFAULT NULL COMMENT '自定义2';
+alter table jsh_material change OtherField3 other_field3 varchar(50) DEFAULT NULL COMMENT '自定义3';
+alter table jsh_material change enableSerialNumber enable_serial_number varchar(1) DEFAULT '0' COMMENT '是否开启序列号，0否，1是';
+alter table jsh_material change delete_Flag delete_flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
+
+alter table jsh_depot_head rename to jsh_depot_head;
+alter table jsh_depot_head change Id id bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键';
+alter table jsh_depot_head change Type type varchar(50) DEFAULT NULL COMMENT '类型(出库/入库)';
+alter table jsh_depot_head change SubType sub_type varchar(50) DEFAULT NULL COMMENT '出入库分类';
+alter table jsh_depot_head change DefaultNumber default_number varchar(50) DEFAULT NULL COMMENT '初始票据号';
+alter table jsh_depot_head change Number number varchar(50) DEFAULT NULL COMMENT '票据号';
+alter table jsh_depot_head change OperPersonName oper_person_name varchar(50) DEFAULT NULL COMMENT '操作员名字';
+alter table jsh_depot_head change CreateTime create_time datetime DEFAULT NULL COMMENT '创建时间';
+alter table jsh_depot_head change OperTime oper_time datetime DEFAULT NULL COMMENT '出入库时间';
+alter table jsh_depot_head change OrganId organ_id bigint(20) DEFAULT NULL COMMENT '供应商id';
+alter table jsh_depot_head change HandsPersonId hands_person_id bigint(20) DEFAULT NULL COMMENT '采购/领料-经手人id';
+alter table jsh_depot_head change AccountId account_id bigint(20) DEFAULT NULL COMMENT '账户id';
+alter table jsh_depot_head change ChangeAmount change_amount decimal(24,6) DEFAULT NULL COMMENT '变动金额(收款/付款)';
+alter table jsh_depot_head change TotalPrice total_price decimal(24,6) DEFAULT NULL COMMENT '合计金额';
+alter table jsh_depot_head change PayType pay_type varchar(50) DEFAULT NULL COMMENT '付款类型(现金、记账等)';
+alter table jsh_depot_head change Remark remark varchar(1000) DEFAULT NULL COMMENT '备注';
+alter table jsh_depot_head change Salesman sales_man varchar(50) DEFAULT NULL COMMENT '业务员（可以多个）';
+alter table jsh_depot_head change AccountIdList account_id_list varchar(50) DEFAULT NULL COMMENT '多账户ID列表';
+alter table jsh_depot_head change AccountMoneyList account_money_list varchar(200) DEFAULT NULL COMMENT '多账户金额列表';
+alter table jsh_depot_head change Discount discount decimal(24,6) DEFAULT NULL COMMENT '优惠率';
+alter table jsh_depot_head change DiscountMoney discount_money decimal(24,6) DEFAULT NULL COMMENT '优惠金额';
+alter table jsh_depot_head change DiscountLastMoney discount_last_money decimal(24,6) DEFAULT NULL COMMENT '优惠后金额';
+alter table jsh_depot_head change OtherMoney other_money decimal(24,6) DEFAULT NULL COMMENT '销售或采购费用合计';
+alter table jsh_depot_head change OtherMoneyList other_money_list varchar(200) DEFAULT NULL COMMENT '销售或采购费用涉及项目Id数组（包括快递、招待等）';
+alter table jsh_depot_head change OtherMoneyItem other_money_item varchar(200) DEFAULT NULL COMMENT '销售或采购费用涉及项目（包括快递、招待等）';
+alter table jsh_depot_head change AccountDay account_day int(10) DEFAULT NULL COMMENT '结算天数';
+alter table jsh_depot_head change Status status varchar(1) DEFAULT NULL COMMENT '状态，0未审核、1已审核、2已转采购|销售';
+alter table jsh_depot_head change LinkNumber link_number varchar(50) DEFAULT NULL COMMENT '关联订单号';
+alter table jsh_depot_head change delete_Flag delete_flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
+
+alter table jsh_depot_item rename to jsh_depot_item;
+alter table jsh_depot_item change Id id bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键';
+alter table jsh_depot_item change HeaderId header_id bigint(20) NOT NULL COMMENT '表头Id';
+alter table jsh_depot_item change MaterialId material_id bigint(20) NOT NULL COMMENT '商品Id';
+alter table jsh_depot_item change MUnit material_unit varchar(20) DEFAULT NULL COMMENT '商品计量单位';
+alter table jsh_depot_item change OperNumber oper_number decimal(24,6) DEFAULT NULL COMMENT '数量';
+alter table jsh_depot_item change BasicNumber basic_number decimal(24,6) DEFAULT NULL COMMENT '基础数量，如kg、瓶';
+alter table jsh_depot_item change UnitPrice unit_price decimal(24,6) DEFAULT NULL COMMENT '单价';
+alter table jsh_depot_item change TaxUnitPrice tax_unit_price decimal(24,6) DEFAULT NULL COMMENT '含税单价';
+alter table jsh_depot_item change AllPrice all_price decimal(24,6) DEFAULT NULL COMMENT '金额';
+alter table jsh_depot_item change Remark remark varchar(200) DEFAULT NULL COMMENT '备注';
+alter table jsh_depot_item change Img img varchar(50) DEFAULT NULL COMMENT '图片';
+alter table jsh_depot_item change Incidentals incidentals decimal(24,6) DEFAULT NULL COMMENT '运杂费';
+alter table jsh_depot_item change DepotId depot_id bigint(20) DEFAULT NULL COMMENT '仓库ID';
+alter table jsh_depot_item change AnotherDepotId another_depot_id bigint(20) DEFAULT NULL COMMENT '调拨时，对方仓库Id';
+alter table jsh_depot_item change TaxRate tax_rate decimal(24,6) DEFAULT NULL COMMENT '税率';
+alter table jsh_depot_item change TaxMoney tax_money decimal(24,6) DEFAULT NULL COMMENT '税额';
+alter table jsh_depot_item change TaxLastMoney tax_last_money decimal(24,6) DEFAULT NULL COMMENT '价税合计';
+alter table jsh_depot_item change OtherField1 other_field1 varchar(50) DEFAULT NULL COMMENT '自定义字段1-名称';
+alter table jsh_depot_item change OtherField2 other_field2 varchar(50) DEFAULT NULL COMMENT '自定义字段2-型号';
+alter table jsh_depot_item change OtherField3 other_field3 varchar(50) DEFAULT NULL COMMENT '自定义字段3-制造商';
+alter table jsh_depot_item change OtherField4 other_field4 varchar(50) DEFAULT NULL COMMENT '自定义字段4-名称';
+alter table jsh_depot_item change OtherField5 other_field5 varchar(50) DEFAULT NULL COMMENT '自定义字段5-名称';
+alter table jsh_depot_item change MType material_type varchar(20) DEFAULT NULL COMMENT '商品类型';
+alter table jsh_depot_item change delete_Flag delete_flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';

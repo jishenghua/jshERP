@@ -19,7 +19,7 @@ public class DepotHeadVo4List extends DepotHead{
 
     private String materialsList;
 
-    private String opertimeStr;
+    private String operTimeStr;
 
     public String getProjectName() {
         return projectName;
@@ -69,11 +69,11 @@ public class DepotHeadVo4List extends DepotHead{
         this.materialsList = materialsList;
     }
 
-    public String getOpertimeStr() {
-        return opertimeStr;
+    public String getOperTimeStr() {
+        return operTimeStr;
     }
 
-    public void setOpertimeStr(String opertimeStr) {
-        this.opertimeStr = opertimeStr;
+    public void setOperTimeStr(String operTimeStr) {
+        this.operTimeStr = operTimeStr;
     }
 }

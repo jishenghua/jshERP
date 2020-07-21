@@ -119,13 +119,13 @@ public class MaterialService {
                         materialOther = materialOther + ((m.getMfrs() == null || m.getMfrs().equals("")) ? "" : "(" + m.getMfrs() + ")");
                     }
                     if (mpArr[i].equals("自定义1")) {
-                        materialOther = materialOther + ((m.getOtherfield1() == null || m.getOtherfield1().equals("")) ? "" : "(" + m.getOtherfield1() + ")");
+                        materialOther = materialOther + ((m.getOtherField1() == null || m.getOtherField1().equals("")) ? "" : "(" + m.getOtherField1() + ")");
                     }
                     if (mpArr[i].equals("自定义2")) {
-                        materialOther = materialOther + ((m.getOtherfield2() == null || m.getOtherfield2().equals("")) ? "" : "(" + m.getOtherfield2() + ")");
+                        materialOther = materialOther + ((m.getOtherField2() == null || m.getOtherField2().equals("")) ? "" : "(" + m.getOtherField2() + ")");
                     }
                     if (mpArr[i].equals("自定义3")) {
-                        materialOther = materialOther + ((m.getOtherfield3() == null || m.getOtherfield3().equals("")) ? "" : "(" + m.getOtherfield3() + ")");
+                        materialOther = materialOther + ((m.getOtherField3() == null || m.getOtherField3().equals("")) ? "" : "(" + m.getOtherField3() + ")");
                     }
                 }
                 m.setMaterialOther(materialOther);
@@ -155,7 +155,7 @@ public class MaterialService {
             Long mId = null;
             materialMapper.insertSelective(m);
             List<Material> materials = getMaterialListByParam(m.getName(),m.getModel(),m.getColor(),
-                    m.getStandard(), m.getMfrs(),m.getUnit(),m.getUnitid());
+                    m.getStandard(), m.getMfrs(),m.getUnit(),m.getUnitId());
             if(materials!=null && materials.size()>0) {
                 mId = materials.get(0).getId();
             }
@@ -265,7 +265,7 @@ public class MaterialService {
         MaterialExample.Criteria criteria = example.createCriteria();
         criteria.andNameEqualTo(name).andModelEqualTo(model).andColorEqualTo(color)
                 .andStandardEqualTo(standard).andMfrsEqualTo(mfrs)
-                .andOtherfield1EqualTo(otherField1).andOtherfield2EqualTo(otherField2).andOtherfield2EqualTo(otherField3)
+                .andOtherField1EqualTo(otherField1).andOtherField2EqualTo(otherField2).andOtherField2EqualTo(otherField3)
                 .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         if (id > 0) {
             criteria.andIdNotEqualTo(id);
@@ -274,7 +274,7 @@ public class MaterialService {
             criteria.andUnitEqualTo(unit);
         }
         if (unitId !=null) {
-            criteria.andUnitidEqualTo(unitId);
+            criteria.andUnitIdEqualTo(unitId);
         }
         List<Material> list =null;
         try{
@@ -400,8 +400,8 @@ public class MaterialService {
                 m.setModel(model);
                 m.setColor(color);
                 Long categoryId = materialCategoryService.getCategoryIdByName(categoryName);
-                m.setCategoryid(categoryId);
-                m.setSafetystock(parseBigDecimalEx(safetyStock));
+                m.setCategoryId(categoryId);
+                m.setSafetyStock(parseBigDecimalEx(safetyStock));
                 String manyUnit = ExcelUtils.getContent(src, i, 7); //副单位
                 String barCode = ExcelUtils.getContent(src, i, 8); //基础条码
                 String manyBarCode = ExcelUtils.getContent(src, i, 9); //副条码
@@ -422,7 +422,7 @@ public class MaterialService {
                 if(StringUtil.isNotEmpty(manyUnit.trim())){ //多单位
                     String manyUnitAll = unit + "," + manyUnit + "(1:" + ratio + ")";
                     Long unitId = unitService.getUnitIdByName(manyUnitAll);
-                    m.setUnitid(unitId);
+                    m.setUnitId(unitId);
                     JSONObject otherObj = new JSONObject();
                     otherObj.put("barCode", manyBarCode);
                     otherObj.put("commodityUnit", manyUnit);
@@ -466,11 +466,11 @@ public class MaterialService {
             for(MaterialWithInitStock m: mList) {
                 //判断该商品是否存在，如果不存在就新增，如果存在就更新
                 List<Material> materials = getMaterialListByParam(m.getName(),m.getModel(),m.getColor(),m.getStandard(),
-                        m.getMfrs(),m.getUnit(),m.getUnitid());
+                        m.getMfrs(),m.getUnit(),m.getUnitId());
                 if(materials.size()<=0) {
                     materialMapper.insertSelective(m);
                     List<Material> newList = getMaterialListByParam(m.getName(),m.getModel(),m.getColor(),m.getStandard(),
-                            m.getMfrs(),m.getUnit(),m.getUnitid());
+                            m.getMfrs(),m.getUnit(),m.getUnitId());
                     if(newList!=null && newList.size()>0) {
                         mId = newList.get(0).getId();
                     }
@@ -561,7 +561,7 @@ public class MaterialService {
             criteria.andUnitEqualTo(unit);
         }
         if (unitId !=null) {
-            criteria.andUnitidEqualTo(unitId);
+            criteria.andUnitIdEqualTo(unitId);
         }
         criteria.andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<Material> list = materialMapper.selectByExample(example);
@@ -639,7 +639,7 @@ public class MaterialService {
     public int batchDeleteMaterialByIdsNormal(String ids) throws Exception{
         /**
          * 校验
-         * 1、单据子表	jsh_depotitem
+         * 1、单据子表	jsh_depot_item
          * 是否有相关数据
          * */
         int deleteTotal=0;
@@ -649,7 +649,7 @@ public class MaterialService {
         String [] idArray=ids.split(",");
 
         /**
-         * 校验单据子表	jsh_depotitem
+         * 校验单据子表	jsh_depot_item
          * */
         List<DepotItem> depotItemList =null;
         try{

@@ -346,7 +346,7 @@ public class SerialNumberService {
 
             }
             //获得唯一商品
-            if (BusinessConstants.ENABLE_SERIAL_NUMBER_NOT_ENABLED.equals(mlist.get(0).getEnableserialnumber())) {
+            if (BusinessConstants.ENABLE_SERIAL_NUMBER_NOT_ENABLED.equals(mlist.get(0).getEnableSerialNumber())) {
                 //商品未开启序列号
                 throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_NOT_ENABLE_SERIAL_NUMBER_CODE,
                         ExceptionConstants.MATERIAL_NOT_ENABLE_SERIAL_NUMBER_MSG);
@@ -400,16 +400,16 @@ public class SerialNumberService {
     public void checkAndUpdateSerialNumber(DepotItem depotItem,User userInfo) throws Exception{
         if(depotItem!=null){
             //查询商品下已分配的可用序列号数量
-            int SerialNumberSum= serialNumberMapperEx.countSerialNumberByMaterialIdAndDepotheadId(depotItem.getMaterialid(),null,BusinessConstants.IS_SELL_HOLD);
+            int SerialNumberSum= serialNumberMapperEx.countSerialNumberByMaterialIdAndDepotheadId(depotItem.getMaterialId(),null,BusinessConstants.IS_SELL_HOLD);
             //BasicNumber=OperNumber*ratio
-            if((depotItem.getBasicnumber()==null?0:depotItem.getBasicnumber()).intValue()>SerialNumberSum){
+            if((depotItem.getBasicNumber()==null?0:depotItem.getBasicNumber()).intValue()>SerialNumberSum){
                 //获取商品名称
-                Material material= materialMapper.selectByPrimaryKey(depotItem.getMaterialid());
+                Material material= materialMapper.selectByPrimaryKey(depotItem.getMaterialId());
                 throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_SERIAL_NUMBERE_NOT_ENOUGH_CODE,
                         String.format(ExceptionConstants.MATERIAL_SERIAL_NUMBERE_NOT_ENOUGH_MSG,material==null?"":material.getName()));
             }
             //商品下序列号充足，分配序列号
-            sellSerialNumber(depotItem.getMaterialid(),depotItem.getHeaderid(),(depotItem.getBasicnumber()==null?0:depotItem.getBasicnumber()).intValue(),userInfo);
+            sellSerialNumber(depotItem.getMaterialId(),depotItem.getHeaderId(),(depotItem.getBasicNumber()==null?0:depotItem.getBasicNumber()).intValue(),userInfo);
         }
     }
     /**

@@ -42,11 +42,11 @@
             <property name="exampleMethodVisibility" value="public"/>
         </javaClientGenerator>
         <!-- <table tableName="jsh_account" domainObjectName="Account"></table>
-        <table tableName="jsh_accounthead" domainObjectName="AccountHead"></table>
-        <table tableName="jsh_accountitem" domainObjectName="AccountItem"></table>
+        <table tableName="jsh_account_head" domainObjectName="AccountHead"></table>
+        <table tableName="jsh_account_item" domainObjectName="AccountItem"></table>
         <table tableName="jsh_depot" domainObjectName="Depot"></table>
-        <table tableName="jsh_depothead" domainObjectName="DepotHead"></table>
-        <table tableName="jsh_depotitem" domainObjectName="DepotItem"></table>
+        <table tableName="jsh_depot_head" domainObjectName="DepotHead"></table>
+        <table tableName="jsh_depot_item" domainObjectName="DepotItem"></table>
         <table tableName="jsh_function" domainObjectName="Functions"></table>
         <table tableName="jsh_inoutitem" domainObjectName="InOutItem"></table>
         <table tableName="jsh_log" domainObjectName="Log"></table>

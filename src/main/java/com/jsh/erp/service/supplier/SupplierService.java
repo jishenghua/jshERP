@@ -103,11 +103,11 @@ public class SupplierService {
                     supType = "vendor";
                 }
                 BigDecimal sum = BigDecimal.ZERO;
-                BigDecimal beginNeedGet = s.getBeginneedget();
+                BigDecimal beginNeedGet = s.getBeginNeedGet();
                 if(beginNeedGet==null) {
                     beginNeedGet = BigDecimal.ZERO;
                 }
-                BigDecimal beginNeedPay = s.getBeginneedpay();
+                BigDecimal beginNeedPay = s.getBeginNeedPay();
                 if(beginNeedPay==null) {
                     beginNeedPay = BigDecimal.ZERO;
                 }
@@ -115,12 +115,12 @@ public class SupplierService {
                 sum = sum.add(accountHeadService.findTotalPay(supplierId, endTime, supType));
                 if(("客户").equals(s.getType())) {
                     sum = sum.add(beginNeedGet).subtract(beginNeedPay);
-                    s.setAllneedget(sum);
-                    s.setAllneedpay(BigDecimal.ZERO);
+                    s.setAllNeedGet(sum);
+                    s.setAllNeedPay(BigDecimal.ZERO);
                 } else if(("供应商").equals(s.getType())) {
                     sum = sum.add(beginNeedPay).subtract(beginNeedGet);
-                    s.setAllneedget(BigDecimal.ZERO);
-                    s.setAllneedpay(sum);
+                    s.setAllNeedGet(BigDecimal.ZERO);
+                    s.setAllNeedPay(sum);
                 }
                 resList.add(s);
             }
@@ -157,11 +157,11 @@ public class SupplierService {
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateSupplier(String beanJson, Long id, HttpServletRequest request)throws Exception {
         Supplier supplier = JSONObject.parseObject(beanJson, Supplier.class);
-        if(supplier.getBeginneedpay() == null) {
-            supplier.setBeginneedpay(BigDecimal.ZERO);
+        if(supplier.getBeginNeedPay() == null) {
+            supplier.setBeginNeedPay(BigDecimal.ZERO);
         }
-        if(supplier.getBeginneedget() == null) {
-            supplier.setBeginneedget(BigDecimal.ZERO);
+        if(supplier.getBeginNeedGet() == null) {
+            supplier.setBeginNeedGet(BigDecimal.ZERO);
         }
         supplier.setId(id);
         int result=0;
@@ -229,7 +229,7 @@ public class SupplierService {
         int result=0;
         try{
             if(supplier!=null){
-                supplier.setAdvancein(supplier.getAdvancein().add(advanceIn));  //增加预收款的金额，可能增加的是负值
+                supplier.setAdvanceIn(supplier.getAdvanceIn().add(advanceIn));  //增加预收款的金额，可能增加的是负值
                  result=supplierMapper.updateByPrimaryKeySelective(supplier);
             }
         }catch(Exception e){
@@ -391,7 +391,7 @@ public class SupplierService {
         /**
          * 校验
          * 1、财务主表	jsh_accounthead
-         * 2、单据主表	jsh_depothead
+         * 2、单据主表	jsh_depot_head
          * 是否有相关数据
          * */
         int deleteTotal=0;
@@ -415,7 +415,7 @@ public class SupplierService {
                     ExceptionConstants.DELETE_FORCE_CONFIRM_MSG);
         }
         /**
-         * 校验单据主表	jsh_depothead
+         * 校验单据主表	jsh_depot_head
          * */
         List<DepotHead> depotHeadList=null;
         try{
