@@ -956,7 +956,7 @@ alter table jsh_material change OtherField3 other_field3 varchar(50) DEFAULT NUL
 alter table jsh_material change enableSerialNumber enable_serial_number varchar(1) DEFAULT '0' COMMENT '是否开启序列号，0否，1是';
 alter table jsh_material change delete_Flag delete_flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
 
-alter table jsh_depot_head rename to jsh_depot_head;
+alter table jsh_depothead rename to jsh_depot_head;
 alter table jsh_depot_head change Id id bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键';
 alter table jsh_depot_head change Type type varchar(50) DEFAULT NULL COMMENT '类型(出库/入库)';
 alter table jsh_depot_head change SubType sub_type varchar(50) DEFAULT NULL COMMENT '出入库分类';
@@ -986,7 +986,7 @@ alter table jsh_depot_head change Status status varchar(1) DEFAULT NULL COMMENT 
 alter table jsh_depot_head change LinkNumber link_number varchar(50) DEFAULT NULL COMMENT '关联订单号';
 alter table jsh_depot_head change delete_Flag delete_flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
 
-alter table jsh_depot_item rename to jsh_depot_item;
+alter table jsh_depotitem rename to jsh_depot_item;
 alter table jsh_depot_item change Id id bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键';
 alter table jsh_depot_item change HeaderId header_id bigint(20) NOT NULL COMMENT '表头Id';
 alter table jsh_depot_item change MaterialId material_id bigint(20) NOT NULL COMMENT '商品Id';

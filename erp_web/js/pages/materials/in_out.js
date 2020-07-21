@@ -434,10 +434,10 @@
 				{ title: '操作',field: 'op',align:"center",width:opWidth,
 					formatter:function(value,rec,index) {
 						var str = '';
-						var orgId = rec.organid? rec.organid:0;
+						var orgId = rec.organId? rec.organId:0;
 						str += '<img title="查看" src="/js/easyui/themes/icons/list.png" style="cursor: pointer;" onclick="showDepotHead(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
 						str += '<img title="编辑" src="/js/easyui/themes/icons/pencil.png" style="cursor: pointer;" onclick="editDepotHead(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
-						str += '<img title="删除" src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteDepotHead('+ rec.id +',' + orgId +',' + rec.totalprice+',' + rec.status + ');"/>';
+						str += '<img title="删除" src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteDepotHead('+ rec.id +',' + orgId +',' + rec.totalPrice+',' + rec.status + ');"/>';
                         if(isShowSkip) {
                             str += '&nbsp;&nbsp;&nbsp;<img title="' + opTitle + '" src="/js/easyui/themes/icons/redo.png" style="cursor: pointer;" onclick="skipDepotHead(\'' + index + '\');"/>';
 						}
@@ -1116,8 +1116,8 @@
                                     url: "/supplier/updateAdvanceIn",
                                     dataType: "json",
                                     data: {
-                                        supplierId: row[i].organid, //会员id
-                                        advanceIn: row[i].totalprice  //删除时同时返还用户的预付款
+                                        supplierId: row[i].organId, //会员id
+                                        advanceIn: row[i].totalPrice  //删除时同时返还用户的预付款
                                     },
                                     success: function (res) {
                                         if (res && res.code === 200) {
@@ -1253,12 +1253,12 @@
 		var res = sessionStorage.getItem("rowInfo");
 		if(pageType == "skip" && res) { //从订单跳转过来
 			res = JSON.parse(res);
-			$('#OrganId').combobox('setValue', res.organid);
+			$('#OrganId').combobox('setValue', res.organId);
 			$("#LinkNumber").val(res.number);  //关联订单号
-			$("#DiscountLastMoney").val(res.totalprice); //优惠后金额
-			$("#ChangeAmount").val(res.totalprice).attr("data-changeamount", res.totalprice);
+			$("#DiscountLastMoney").val(res.totalPrice); //优惠后金额
+			$("#ChangeAmount").val(res.totalPrice).attr("data-changeamount", res.totalPrice);
 			depotHeadID = res.id;
-			initTableData_material("edit",res.totalprice); //商品列表
+			initTableData_material("edit",res.totalPrice); //商品列表
 		} else {
 			initTableData_material("add"); //商品列表
 		}
