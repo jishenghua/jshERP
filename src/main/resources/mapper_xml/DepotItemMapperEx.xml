@@ -281,7 +281,7 @@
 
     <select id="findDepotItemListBydepotheadId"  resultType="com.jsh.erp.datasource.entities.DepotItem">
         select
-        dep.id,dep.header_id,dep.material_id,dep.materialUnit,dep.oper_number,
+        dep.id,dep.header_id,dep.material_id,dep.material_unit,dep.oper_number,
         dep.basic_number,dep.unit_price,dep.tax_unit_price,dep.all_price,dep.remark,
         dep.img,dep.incidentals,dep.depot_id,dep.another_depot_id,dep.tax_rate,
         dep.tax_money,dep.tax_last_money,dep.other_field1,dep.other_field2,dep.other_field3,
