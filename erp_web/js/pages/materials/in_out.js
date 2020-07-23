@@ -1480,7 +1480,7 @@
 		}
 		$("#DebtShow").text(debt);
 		$("#AccountDayShow").text(res.accountDay);  //结算天数
-		$("#LinkNumberShow").text(res.linkLumber); //关联订单号
+		$("#LinkNumberShow").text(res.linkNumber); //关联订单号
         var otherMoney = res.otherMoney?res.otherMoney:0;
         if(otherMoney!=0 && res.otherMoneyList && res.otherMoneyItem){
             var itemArr = res.otherMoneyList.split(","); //支出项目id列表
