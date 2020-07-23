@@ -3,7 +3,7 @@ package com.jsh.erp.datasource.entities;
 public class Unit {
     private Long id;
 
-    private String uname;
+    private String name;
 
     private String basicUnit;
 
@@ -23,12 +23,12 @@ public class Unit {
         this.id = id;
     }
 
-    public String getUname() {
-        return uname;
+    public String getName() {
+        return name;
     }
 
-    public void setUname(String uname) {
-        this.uname = uname == null ? null : uname.trim();
+    public void setName(String name) {
+        this.name = name == null ? null : name.trim();
     }
 
     public String getBasicUnit() {

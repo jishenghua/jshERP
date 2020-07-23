@@ -2,36 +2,36 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jsh.erp.datasource.mappers.LogMapperEx">
     <resultMap extends="com.jsh.erp.datasource.mappers.LogMapper.BaseResultMap" id="ResultExMap" type="com.jsh.erp.datasource.vo.LogVo4List">
-        <result column="userName" jdbcType="VARCHAR" property="username" />
+        <result column="userName" jdbcType="VARCHAR" property="userName" />
     </resultMap>
 
     <select id="selectByConditionLog" parameterType="com.jsh.erp.datasource.entities.LogExample" resultMap="ResultExMap">
         select l.*,u.username userName
         FROM jsh_log l
-        left join jsh_user u on l.userID = u.id and ifnull(u.status,'0') not in('1','2')
+        left join jsh_user u on l.user_id = u.id and ifnull(u.status,'0') not in('1','2')
         where 1=1
         <if test="operation != null">
             and l.operation like '%${operation}%'
         </if>
-        <if test="usernameID != null">
-            and l.userID=${usernameID}
+        <if test="userId != null">
+            and l.user_id=${userId}
         </if>
         <if test="clientIp != null">
-            and l.clientIp like '%${clientIp}%'
+            and l.client_ip like '%${clientIp}%'
         </if>
         <if test="status != null">
             and l.status=${status}
         </if>
         <if test="beginTime != null">
-            and l.createtime &gt;= '${beginTime}'
+            and l.create_time &gt;= '${beginTime}'
         </if>
         <if test="endTime != null">
-            and l.createtime &lt;= '${endTime}'
+            and l.create_time &lt;= '${endTime}'
         </if>
-        <if test="contentdetails != null">
-            and l.contentdetails like '%${contentdetails}%'
+        <if test="content != null">
+            and l.content like '%${content}%'
         </if>
-        order by l.createtime desc
+        order by l.create_time desc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
         </if>
@@ -44,23 +44,23 @@
         <if test="operation != null">
             and operation like '%${operation}%'
         </if>
-        <if test="usernameID != null">
-            and userID=${usernameID}
+        <if test="userId != null">
+            and user_id=${userId}
         </if>
         <if test="clientIp != null">
-            and clientIp like '%${clientIp}%'
+            and client_ip like '%${clientIp}%'
         </if>
         <if test="status != null">
             and status = ${status}
         </if>
-        <if test="beginTime != null"><![CDATA[
-            and createtime >= '${beginTime}'
-        ]]></if>
-        <if test="endTime != null"><![CDATA[
-            and createtime <= '${endTime}'
-        ]]></if>
-        <if test="contentdetails != null">
-            and contentdetails like '%${contentdetails}%'
+        <if test="beginTime != null">
+            and l.create_time &gt;= '${beginTime}'
+        </if>
+        <if test="endTime != null">
+            and l.create_time &lt;= '${endTime}'
+        </if>
+        <if test="content != null">
+            and content like '%${content}%'
         </if>
     </select>
 </mapper>

@@ -153,7 +153,7 @@ public class MaterialController {
                     JSONObject item = new JSONObject();
                     item.put("Id", material.getMeId()); //商品扩展表的id
                     String ratio; //比例
-                    if (material.getUnitid() == null || material.getUnitid().equals("")) {
+                    if (material.getUnitId() == null || material.getUnitId().equals("")) {
                         ratio = "";
                     } else {
                         ratio = material.getUnitName();
@@ -178,13 +178,13 @@ public class MaterialController {
                             expand = expand + ((material.getMfrs() == null || material.getMfrs().equals("")) ? "" : "(" + material.getMfrs() + ")");
                         }
                         if (mpArr[i].equals("自定义1")) {
-                            expand = expand + ((material.getOtherfield1() == null || material.getOtherfield1().equals("")) ? "" : "(" + material.getOtherfield1() + ")");
+                            expand = expand + ((material.getOtherField1() == null || material.getOtherField1().equals("")) ? "" : "(" + material.getOtherField1() + ")");
                         }
                         if (mpArr[i].equals("自定义2")) {
-                            expand = expand + ((material.getOtherfield2() == null || material.getOtherfield2().equals("")) ? "" : "(" + material.getOtherfield2() + ")");
+                            expand = expand + ((material.getOtherField2() == null || material.getOtherField2().equals("")) ? "" : "(" + material.getOtherField2() + ")");
                         }
                         if (mpArr[i].equals("自定义3")) {
-                            expand = expand + ((material.getOtherfield3() == null || material.getOtherfield3().equals("")) ? "" : "(" + material.getOtherfield3() + ")");
+                            expand = expand + ((material.getOtherField3() == null || material.getOtherField3().equals("")) ? "" : "(" + material.getOtherField3() + ")");
                         }
                     }
                     MaterialName = MaterialName + expand + ((material.getCommodityUnit() == null || material.getCommodityUnit().equals("")) ? "" : "(" + material.getCommodityUnit() + ")") + ratio;
@@ -229,7 +229,7 @@ public class MaterialController {
                 MaterialVo4Unit material = materialList.get(0);
                 item.put("Id", material.getMeId()); //商品扩展表的id
                 String ratio; //比例
-                if (material.getUnitid() == null || material.getUnitid().equals("")) {
+                if (material.getUnitId() == null || material.getUnitId().equals("")) {
                     ratio = "";
                 } else {
                     ratio = material.getUnitName();
@@ -248,13 +248,13 @@ public class MaterialController {
                         expand = expand + ((material.getMfrs() == null || material.getMfrs().equals("")) ? "" : "(" + material.getMfrs() + ")");
                     }
                     if (mpArr[i].equals("自定义1")) {
-                        expand = expand + ((material.getOtherfield1() == null || material.getOtherfield1().equals("")) ? "" : "(" + material.getOtherfield1() + ")");
+                        expand = expand + ((material.getOtherField1() == null || material.getOtherField1().equals("")) ? "" : "(" + material.getOtherField1() + ")");
                     }
                     if (mpArr[i].equals("自定义2")) {
-                        expand = expand + ((material.getOtherfield2() == null || material.getOtherfield2().equals("")) ? "" : "(" + material.getOtherfield2() + ")");
+                        expand = expand + ((material.getOtherField2() == null || material.getOtherField2().equals("")) ? "" : "(" + material.getOtherField2() + ")");
                     }
                     if (mpArr[i].equals("自定义3")) {
-                        expand = expand + ((material.getOtherfield3() == null || material.getOtherfield3().equals("")) ? "" : "(" + material.getOtherfield3() + ")");
+                        expand = expand + ((material.getOtherField3() == null || material.getOtherField3().equals("")) ? "" : "(" + material.getOtherField3() + ")");
                     }
                 }
                 MaterialName = MaterialName + expand + ((material.getUnit() == null || material.getUnit().equals("")) ? "" : "(" + material.getUnit() + ")") + ratio;
@@ -297,7 +297,7 @@ public class MaterialController {
                     objs[0] = m.getName();
                     objs[1] = m.getCategoryName();
                     objs[2] = m.getModel();
-                    objs[3] = m.getSafetystock() == null? "" : m.getSafetystock().toString();
+                    objs[3] = m.getSafetyStock() == null? "" : m.getSafetyStock().toString();
                     objs[4] = m.getCommodityUnit();
                     objs[5] = m.getCommodityDecimal() == null? "" : m.getCommodityDecimal().toString();
                     objs[6] = m.getLowDecimal() == null? "" : m.getLowDecimal().toString();

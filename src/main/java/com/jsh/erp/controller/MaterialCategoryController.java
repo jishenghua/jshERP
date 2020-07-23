@@ -64,8 +64,8 @@ public class MaterialCategoryController {
                 for (MaterialCategory mc : dataList) {
                     outer.put("id", mc.getId());
                     outer.put("name", mc.getName());
-                    outer.put("parentId", mc.getParentid());
-                    List<MaterialCategory> dataParentList = materialCategoryService.findById(mc.getParentid());
+                    outer.put("parentId", mc.getParentId());
+                    List<MaterialCategory> dataParentList = materialCategoryService.findById(mc.getParentId());
                     if(dataParentList!=null&&dataParentList.size()>0){
                         outer.put("parentName", dataParentList.get(0).getName());
                     }

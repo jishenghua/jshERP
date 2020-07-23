@@ -9,5 +9,7 @@ import java.util.Date; /**
  * @Date: 2019/3/29 15:09
  */
 public interface UserBusinessMapperEx {
+
     int batchDeleteUserBusinessByIds(@Param("updateTime") Date updateTime, @Param("updater") Long updater, @Param("ids") String ids[]);
+
 }

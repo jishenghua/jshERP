@@ -124,13 +124,13 @@
             columns: [[
                 {field: 'id', width: 35, align: "center", checkbox: true},
                 {title: '名称', field: 'name', width: 100},
-                {title: '编号', field: 'serialno', width: 150, align: "center"},
-                {title: '期初金额', field: 'initialamount', width: 100, align: "center"},
-                {title: '当前余额', field: 'currentamount', width: 100, align: "center"},
+                {title: '编号', field: 'serialNo', width: 150, align: "center"},
+                {title: '期初金额', field: 'initialAmount', width: 100, align: "center"},
+                {title: '当前余额', field: 'currentAmount', width: 100, align: "center"},
                 {
-                    title: '是否默认', field: 'isdefault', width: 100, align: "center",
+                    title: '是否默认', field: 'isDefault', width: 100, align: "center",
                     formatter: function (value, rec) {
-                        if (rec.isdefault) {
+                        if (rec.isDefault) {
                             return "<span style='color:green'>是</span>";
                         }
                         else {
@@ -456,17 +456,14 @@
     //编辑结算账户
     function editAccount(index) {
         var rowsdata = $("#tableData").datagrid("getRows")[index];
-        var row = {
-            name: rowsdata.name,
-            serialNo: rowsdata.serialno,
-            initialAmount: rowsdata.initialamount,
-            currentAmount: rowsdata.currentamount,
-            remark: rowsdata.remark
-        };
+        $("#name").textbox("setValue", rowsdata.name);
+        $("#serialNo").textbox("setValue", rowsdata.serialNo);
+        $("#initialAmount").textbox("setValue", rowsdata.initialAmount);
+        $("#currentAmount").textbox("setValue", rowsdata.currentAmount);
+        $("#remark").textbox("setValue", rowsdata.remark);
         oldAccount = rowsdata.name;
         $('#accountDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/pencil.png"/>&nbsp;编辑结算账户');
         $(".window-mask").css({width: webW, height: webH});
-        $('#accountFM').form('load', row);
         accountID = rowsdata.id;
         url = '/account/update?id=' + rowsdata.id;
     }
@@ -558,7 +555,7 @@
     function showAccountInOutList(index) {
         var rowsdata = $("#tableData").datagrid("getRows")[index];
         var accountId = rowsdata.id;
-        var initialAmount = rowsdata.initialamount;
+        var initialAmount = rowsdata.initialAmount;
         $('#accountDetailListDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/pencil.png"/>&nbsp;查看账户流水');
         $(".window-mask").css({width: webW, height: webH});
         initAccountDetailData(accountId);

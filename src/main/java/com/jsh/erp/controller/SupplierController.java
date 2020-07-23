@@ -154,7 +154,7 @@ public class SupplierController {
                     item.put("id", supplier.getId());
                     //客户名称
                     item.put("supplier", supplier.getSupplier());
-                    item.put("advanceIn", supplier.getAdvancein()); //预付款金额
+                    item.put("advanceIn", supplier.getAdvanceIn()); //预付款金额
                     dataArray.add(item);
                 }
             }
@@ -186,11 +186,11 @@ public class SupplierController {
                     item.put("supplier", supplier.getSupplier());
                     item.put("type", supplier.getType());
                     item.put("contacts", supplier.getContacts());
-                    item.put("phonenum", supplier.getPhonenum());
+                    item.put("phonenum", supplier.getPhoneNum());
                     item.put("email", supplier.getEmail());
-                    item.put("AdvanceIn", supplier.getAdvancein());
-                    item.put("BeginNeedGet", supplier.getBeginneedget());
-                    item.put("BeginNeedPay", supplier.getBeginneedpay());
+                    item.put("AdvanceIn", supplier.getAdvanceIn());
+                    item.put("BeginNeedGet", supplier.getBeginNeedGet());
+                    item.put("BeginNeedPay", supplier.getBeginNeedPay());
                     /**
                      * 2018-01-28这里会有空指针异常
                      * */
@@ -201,10 +201,10 @@ public class SupplierController {
                     item.put("fax", supplier.getFax());
                     item.put("telephone", supplier.getTelephone());
                     item.put("address", supplier.getAddress());
-                    item.put("taxNum", supplier.getTaxnum());
-                    item.put("bankName", supplier.getBankname());
-                    item.put("accountNumber", supplier.getAccountnumber());
-                    item.put("taxRate", supplier.getTaxrate());
+                    item.put("taxNum", supplier.getTaxNum());
+                    item.put("bankName", supplier.getBankName());
+                    item.put("accountNumber", supplier.getAccountNumber());
+                    item.put("taxRate", supplier.getTaxRate());
                     item.put("enabled", supplier.getEnabled());
                     dataArray.add(item);
                 }
@@ -315,19 +315,19 @@ public class SupplierController {
                     objs[0] = s.getSupplier();
                     objs[1] = s.getType();
                     objs[2] = s.getContacts();
-                    objs[3] = s.getPhonenum();
+                    objs[3] = s.getPhoneNum();
                     objs[4] = s.getEmail();
-                    objs[5] = s.getAdvancein() == null? "" : s.getAdvancein().toString();
-                    objs[6] = s.getBeginneedget() == null? "" : s.getBeginneedget().toString();
-                    objs[7] = s.getBeginneedpay() == null? "" : s.getBeginneedpay().toString();
+                    objs[5] = s.getAdvanceIn() == null? "" : s.getAdvanceIn().toString();
+                    objs[6] = s.getBeginNeedGet() == null? "" : s.getBeginNeedGet().toString();
+                    objs[7] = s.getBeginNeedPay() == null? "" : s.getBeginNeedPay().toString();
                     objs[8] = s.getDescription();
                     objs[9] = s.getFax();
                     objs[10] = s.getTelephone();
                     objs[11] = s.getAddress();
-                    objs[12] = s.getTaxnum();
-                    objs[13] = s.getBankname();
-                    objs[14] = s.getAccountnumber();
-                    objs[15] = s.getTaxrate() == null? "" : s.getTaxrate().toString();
+                    objs[12] = s.getTaxNum();
+                    objs[13] = s.getBankName();
+                    objs[14] = s.getAccountNumber();
+                    objs[15] = s.getTaxRate() == null? "" : s.getTaxRate().toString();
                     objs[16] = s.getEnabled() ? "启用" : "禁用";
                     objects.add(objs);
                 }
@@ -404,19 +404,19 @@ public class SupplierController {
                 s.setSupplier(ExcelUtils.getContent(src, i, 0));
                 s.setType(ExcelUtils.getContent(src, i, 1));
                 s.setContacts(ExcelUtils.getContent(src, i, 2));
-                s.setPhonenum(ExcelUtils.getContent(src, i, 3));
+                s.setPhoneNum(ExcelUtils.getContent(src, i, 3));
                 s.setEmail(ExcelUtils.getContent(src, i, 4));
-                s.setAdvancein(parseBigDecimalEx(ExcelUtils.getContent(src, i, 5)));
-                s.setBeginneedget(parseBigDecimalEx(ExcelUtils.getContent(src, i, 6)));
-                s.setBeginneedpay(parseBigDecimalEx(ExcelUtils.getContent(src, i, 7)));
+                s.setAdvanceIn(parseBigDecimalEx(ExcelUtils.getContent(src, i, 5)));
+                s.setBeginNeedGet(parseBigDecimalEx(ExcelUtils.getContent(src, i, 6)));
+                s.setBeginNeedPay(parseBigDecimalEx(ExcelUtils.getContent(src, i, 7)));
                 s.setDescription(ExcelUtils.getContent(src, i, 8));
                 s.setFax(ExcelUtils.getContent(src, i, 9));
                 s.setTelephone(ExcelUtils.getContent(src, i, 10));
                 s.setAddress(ExcelUtils.getContent(src, i, 11));
-                s.setTaxnum(ExcelUtils.getContent(src, i, 12));
-                s.setBankname(ExcelUtils.getContent(src, i, 13));
-                s.setAccountnumber(ExcelUtils.getContent(src, i, 14));
-                s.setTaxrate(parseBigDecimalEx(ExcelUtils.getContent(src, i, 15)));
+                s.setTaxNum(ExcelUtils.getContent(src, i, 12));
+                s.setBankName(ExcelUtils.getContent(src, i, 13));
+                s.setAccountNumber(ExcelUtils.getContent(src, i, 14));
+                s.setTaxRate(parseBigDecimalEx(ExcelUtils.getContent(src, i, 15)));
                 String enabled = ExcelUtils.getContent(src, i, 16);
                 s.setEnabled(enabled.equals("启用")? true: false);
                 s.setIsystem(Byte.parseByte("1"));

@@ -174,7 +174,7 @@ public class DepotItemController {
                     if (diEx.getUnitId() == null || diEx.getUnitId().equals("")) {
                         ratio = "";
                     } else {
-                        ratio = diEx.getUName();
+                        ratio = diEx.getUnitName();
                         ratio = ratio.substring(ratio.indexOf("("));
                     }
                     //名称/型号/扩展信息/包装
@@ -182,32 +182,32 @@ public class DepotItemController {
                             + ((diEx.getMStandard() == null || diEx.getMStandard().equals("")) ? "" : "(" + diEx.getMStandard() + ")")
                             + ((diEx.getMModel() == null || diEx.getMModel().equals("")) ? "" : "(" + diEx.getMModel() + ")");
                     String materialOther = getOtherInfo(mpArr, diEx);
-                    MaterialName = MaterialName + materialOther + ((diEx.getUName() == null || diEx.getUName().equals("")) ? "" : "(" + diEx.getUName() + ")") + ratio;
+                    MaterialName = MaterialName + materialOther + ((diEx.getUnitName() == null || diEx.getUnitName().equals("")) ? "" : "(" + diEx.getUnitName() + ")") + ratio;
                     item.put("MaterialName", MaterialName == null ? "" : MaterialName);
-                    BigDecimal stock = depotItemService.getStockByParam(diEx.getDepotid(),diEx.getMaterialid(),null,null,tenantId);
+                    BigDecimal stock = depotItemService.getStockByParam(diEx.getDepotId(),diEx.getMaterialId(),null,null,tenantId);
                     item.put("Stock", stock);
-                    item.put("Unit", diEx.getMunit());
-                    item.put("currentStock", diEx.getOpernumber().add(stock));
-                    item.put("OperNumber", diEx.getOpernumber());
-                    item.put("BasicNumber", diEx.getBasicnumber());
-                    item.put("UnitPrice", diEx.getUnitprice());
-                    item.put("TaxUnitPrice", diEx.getTaxunitprice());
-                    item.put("AllPrice", diEx.getAllprice());
+                    item.put("Unit", diEx.getMaterialUnit());
+                    item.put("currentStock", diEx.getOperNumber().add(stock));
+                    item.put("OperNumber", diEx.getOperNumber());
+                    item.put("BasicNumber", diEx.getBasicNumber());
+                    item.put("UnitPrice", diEx.getUnitPrice());
+                    item.put("TaxUnitPrice", diEx.getTaxUnitPrice());
+                    item.put("AllPrice", diEx.getAllPrice());
                     item.put("Remark", diEx.getRemark());
                     item.put("Img", diEx.getImg());
-                    item.put("DepotId", diEx.getDepotid() == null ? "" : diEx.getDepotid());
-                    item.put("DepotName", diEx.getDepotid() == null ? "" : diEx.getDepotName());
-                    item.put("AnotherDepotId", diEx.getAnotherdepotid() == null ? "" : diEx.getAnotherdepotid());
-                    item.put("AnotherDepotName", diEx.getAnotherdepotid() == null ? "" : diEx.getAnotherDepotName());
-                    item.put("TaxRate", diEx.getTaxrate());
-                    item.put("TaxMoney", diEx.getTaxmoney());
-                    item.put("TaxLastMoney", diEx.getTaxlastmoney());
-                    item.put("OtherField1", diEx.getOtherfield1());
-                    item.put("OtherField2", diEx.getOtherfield2());
-                    item.put("OtherField3", diEx.getOtherfield3());
-                    item.put("OtherField4", diEx.getOtherfield4());
-                    item.put("OtherField5", diEx.getOtherfield5());
-                    item.put("MType", diEx.getMtype());
+                    item.put("DepotId", diEx.getDepotId() == null ? "" : diEx.getDepotId());
+                    item.put("DepotName", diEx.getDepotId() == null ? "" : diEx.getDepotName());
+                    item.put("AnotherDepotId", diEx.getAnotherDepotId() == null ? "" : diEx.getAnotherDepotId());
+                    item.put("AnotherDepotName", diEx.getAnotherDepotId() == null ? "" : diEx.getAnotherDepotName());
+                    item.put("TaxRate", diEx.getTaxRate());
+                    item.put("TaxMoney", diEx.getTaxMoney());
+                    item.put("TaxLastMoney", diEx.getTaxLastMoney());
+                    item.put("OtherField1", diEx.getOtherField1());
+                    item.put("OtherField2", diEx.getOtherField2());
+                    item.put("OtherField3", diEx.getOtherField3());
+                    item.put("OtherField4", diEx.getOtherField4());
+                    item.put("OtherField5", diEx.getOtherField5());
+                    item.put("MType", diEx.getMaterialType());
                     item.put("op", 1);
                     dataArray.add(item);
                 }
@@ -298,7 +298,7 @@ public class DepotItemController {
                     String materialOther = getOtherInfo(mpArr, diEx);
                     item.put("MaterialOther", materialOther);
                     item.put("MaterialColor", diEx.getMColor());
-                    item.put("unitName", getUName(diEx.getMaterialUnit(), diEx.getUName()));
+                    item.put("unitName", getUName(diEx.getMaterialUnit(), diEx.getUnitName()));
 
                     item.put("prevSum", depotItemService.getStockByParam(depotId,mId,null,timeA,tenantId));
                     item.put("InSum", depotItemService.getInNumByParam(depotId,mId,timeA,timeB,tenantId));
@@ -332,10 +332,10 @@ public class DepotItemController {
      * 导出excel表格
      * @param currentPage
      * @param pageSize
-     * @param projectId
+     * @param depotId
      * @param monthTime
-     * @param headIds
-     * @param materialIds
+     * @param name
+     * @param model
      * @param request
      * @param response
      * @return
@@ -384,10 +384,10 @@ public class DepotItemController {
 
     /**
      * 统计总计金额
-     * @param pid
+     * @param depotId
      * @param monthTime
-     * @param headIds
-     * @param materialIds
+     * @param name
+     * @param model
      * @param request
      * @return
      */
@@ -429,8 +429,8 @@ public class DepotItemController {
      * @param currentPage
      * @param pageSize
      * @param monthTime
-     * @param headIds
-     * @param materialIds
+     * @param name
+     * @param model
      * @param mpList
      * @param request
      * @return
@@ -468,7 +468,7 @@ public class DepotItemController {
                     item.put("MaterialOther", materialOther);
                     item.put("MaterialColor", diEx.getMColor());
                     item.put("MaterialUnit", diEx.getMaterialUnit());
-                    item.put("UName", diEx.getUName());
+                    item.put("UName", diEx.getUnitName());
                     item.put("InSum", InSum);
                     item.put("OutSum", OutSum);
                     item.put("InSumPrice", InSumPrice);
@@ -492,8 +492,8 @@ public class DepotItemController {
      * @param currentPage
      * @param pageSize
      * @param monthTime
-     * @param headIds
-     * @param materialIds
+     * @param name
+     * @param model
      * @param mpList
      * @param request
      * @return
@@ -536,7 +536,7 @@ public class DepotItemController {
                     item.put("MaterialOther", materialOther);
                     item.put("MaterialColor", diEx.getMColor());
                     item.put("MaterialUnit", diEx.getMaterialUnit());
-                    item.put("UName", diEx.getUName());
+                    item.put("UName", diEx.getUnitName());
                     item.put("OutSum", OutSumRetail.add(OutSum));
                     item.put("InSum", InSumRetail.add(InSum));
                     item.put("OutSumPrice", OutSumRetailPrice.add(OutSumPrice));
@@ -648,7 +648,6 @@ public class DepotItemController {
      * @param currentPage
      * @param pageSize
      * @param projectId
-     * @param monthTime
      * @param request
      * @param response
      * @return

@@ -42,27 +42,27 @@
             <property name="exampleMethodVisibility" value="public"/>
         </javaClientGenerator>
         <!-- <table tableName="jsh_account" domainObjectName="Account"></table>
-        <table tableName="jsh_accounthead" domainObjectName="AccountHead"></table>
-        <table tableName="jsh_accountitem" domainObjectName="AccountItem"></table>
+        <table tableName="jsh_account_head" domainObjectName="AccountHead"></table>
+        <table tableName="jsh_account_item" domainObjectName="AccountItem"></table>
         <table tableName="jsh_depot" domainObjectName="Depot"></table>
-        <table tableName="jsh_depothead" domainObjectName="DepotHead"></table>
-        <table tableName="jsh_depotitem" domainObjectName="DepotItem"></table>
-        <table tableName="jsh_functions" domainObjectName="Functions"></table>
+        <table tableName="jsh_depot_head" domainObjectName="DepotHead"></table>
+        <table tableName="jsh_depot_item" domainObjectName="DepotItem"></table>
+        <table tableName="jsh_function" domainObjectName="Functions"></table>
         <table tableName="jsh_inoutitem" domainObjectName="InOutItem"></table>
         <table tableName="jsh_log" domainObjectName="Log"></table>
         <table tableName="jsh_material" domainObjectName="Material"></table>
         <table tableName="jsh_material_extend" domainObjectName="MaterialExtend"></table>
         <table tableName="jsh_material_current_stock" domainObjectName="MaterialCurrentStock"></table>
         <table tableName="jsh_material_initial_stock" domainObjectName="MaterialInitialStock"></table>
-        <table tableName="jsh_materialcategory" domainObjectName="MaterialCategory"></table>
-        <table tableName="jsh_materialproperty" domainObjectName="MaterialProperty"></table>
+        <table tableName="jsh_material_category" domainObjectName="MaterialCategory"></table>
+        <table tableName="jsh_material_property" domainObjectName="MaterialProperty"></table>
         <table tableName="jsh_person" domainObjectName="Person"></table>
         <table tableName="jsh_role" domainObjectName="Role"></table>
         <table tableName="jsh_supplier" domainObjectName="Supplier"></table>
-        <table tableName="jsh_systemconfig" domainObjectName="SystemConfig"></table>
+        <table tableName="jsh_system_config" domainObjectName="SystemConfig"></table>
         <table tableName="jsh_unit" domainObjectName="Unit"></table>
         <table tableName="jsh_user" domainObjectName="User"></table>
-        <table tableName="jsh_userbusiness" domainObjectName="UserBusiness"></table>
+        <table tableName="jsh_user_business" domainObjectName="UserBusiness"></table>
         <table tableName="jsh_serial_number" domainObjectName="SerialNumber"></table>
         <table tableName="jsh_organization" domainObjectName="Organization"></table>
         <table tableName="jsh_orga_user_rel" domainObjectName="OrgaUserRel"></table>

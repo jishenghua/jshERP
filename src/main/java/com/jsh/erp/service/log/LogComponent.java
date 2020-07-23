@@ -25,20 +25,19 @@ public class LogComponent implements ICommonQuery {
 
     @Override
     public List<?> select(Map<String, String> map)throws Exception {
-        return getUserList(map);
+        return getLogList(map);
     }
 
-    private List<?> getUserList(Map<String, String> map)throws Exception {
+    private List<?> getLogList(Map<String, String> map)throws Exception {
         String search = map.get(Constants.SEARCH);
         String operation = StringUtil.getInfo(search, "operation");
-        Integer usernameID = StringUtil.parseInteger(StringUtil.getInfo(search, "usernameID"));
+        Integer userId = StringUtil.parseInteger(StringUtil.getInfo(search, "userId"));
         String clientIp = StringUtil.getInfo(search, "clientIp");
         Integer status = StringUtil.parseInteger(StringUtil.getInfo(search, "status"));
         String beginTime = StringUtil.getInfo(search, "beginTime");
         String endTime = StringUtil.getInfo(search, "endTime");
-        String contentdetails = StringUtil.getInfo(search, "contentdetails");
-        String order = QueryUtils.order(map);
-        return logService.select(operation, usernameID, clientIp, status, beginTime, endTime, contentdetails,
+        String content = StringUtil.getInfo(search, "content");
+        return logService.select(operation, userId, clientIp, status, beginTime, endTime, content,
                 QueryUtils.offset(map), QueryUtils.rows(map));
     }
 
@@ -46,13 +45,13 @@ public class LogComponent implements ICommonQuery {
     public Long counts(Map<String, String> map)throws Exception {
         String search = map.get(Constants.SEARCH);
         String operation = StringUtil.getInfo(search, "operation");
-        Integer usernameID = StringUtil.parseInteger(StringUtil.getInfo(search, "usernameID"));
+        Integer userId = StringUtil.parseInteger(StringUtil.getInfo(search, "userId"));
         String clientIp = StringUtil.getInfo(search, "clientIp");
         Integer status = StringUtil.parseInteger(StringUtil.getInfo(search, "status"));
         String beginTime = StringUtil.getInfo(search, "beginTime");
         String endTime = StringUtil.getInfo(search, "endTime");
-        String contentdetails = StringUtil.getInfo(search, "contentdetails");
-        return logService.countLog(operation, usernameID, clientIp, status, beginTime, endTime, contentdetails);
+        String content = StringUtil.getInfo(search, "content");
+        return logService.countLog(operation, userId, clientIp, status, beginTime, endTime, content);
     }
 
     @Override

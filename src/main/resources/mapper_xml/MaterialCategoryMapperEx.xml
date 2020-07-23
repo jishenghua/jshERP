@@ -3,14 +3,14 @@
 <mapper namespace="com.jsh.erp.datasource.mappers.MaterialCategoryMapperEx">
     <select id="selectByConditionMaterialCategory" parameterType="com.jsh.erp.datasource.entities.MaterialCategoryExample" resultMap="com.jsh.erp.datasource.mappers.MaterialCategoryMapper.BaseResultMap">
         select *
-        FROM jsh_materialcategory
+        FROM jsh_material_category
         where 1=1
         and ifnull(status,'0') !='2'
         <if test="name != null">
             and name like '%${name}%'
         </if>
         <if test="parentId != null">
-            and parentId = ${parentId}
+            and parent_id = ${parentId}
         </if>
         and Id !=1
         <if test="offset != null and rows != null">
@@ -20,14 +20,14 @@
     <select id="countsByMaterialCategory" resultType="java.lang.Long">
         SELECT
         COUNT(id)
-        FROM jsh_materialcategory
+        FROM jsh_material_category
         WHERE 1=1
         and ifnull(status,'0') !='2'
         <if test="name != null">
             and name like '%${name}%'
         </if>
         <if test="parentId != null">
-            and parentId = ${parentId}
+            and parent_id = ${parentId}
         </if>
         and Id !=1
     </select>
@@ -53,8 +53,8 @@
     <select id="getNextNodeTree" resultMap="NextTreeResultMap">
         SELECT
         <include refid="Base_Column_List"/>,#{currentId} as currentId
-        FROM jsh_materialcategory
-        WHERE ParentId = #{id}
+        FROM jsh_material_category
+        WHERE parent_id = #{id}
         <if test="currentId != null">
             and id !=#{currentId}
         </if>
@@ -65,8 +65,8 @@
     <select id="getNodeTree" resultMap="BaseTreeResultMap">
         SELECT
         <include refid="Base_Column_List"/>,#{currentId} as currentId
-        FROM jsh_materialcategory
-        WHERE ParentId = -1
+        FROM jsh_material_category
+        WHERE parent_id = -1
         and ifnull(status,'0') !='2'
         <if test="currentId != null">
             and id !=#{currentId}
@@ -75,17 +75,17 @@
     </select>
     <insert id="addMaterialCategory" parameterType="com.jsh.erp.datasource.entities.MaterialCategory"
             useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-       insert into jsh_materialcategory
-        (Name, CategoryLevel, ParentId, sort,status,serial_no,remark,
-        create_Time, creator,update_Time, updater)
+       insert into jsh_material_category
+        (name, category_level, parent_id, sort,status,serial_no,remark,
+        create_time, creator,update_time, updater)
         values
-        (#{name},#{categorylevel},#{parentid},#{sort},#{status},#{serialNo},#{remark},
+        (#{name},#{categoryLevel},#{parentId},#{sort},#{status},#{serialNo},#{remark},
         #{createTime},#{creator},#{updateTime},#{updater}
         )
     </insert>
     <update id="batchDeleteMaterialCategoryByIds">
-       update jsh_materialcategory
-       set update_Time=#{updateTime},updater=#{updater},status='2'
+       update jsh_material_category
+       set update_time=#{updateTime},updater=#{updater},status='2'
        where id in (
         <foreach collection="ids" item="id" separator=",">
             #{id}
@@ -93,16 +93,16 @@
        )
     </update>
     <update id="editMaterialCategory">
-       update jsh_materialcategory
-       set update_Time=#{updateTime},updater=#{updater},
-        ParentId=#{parentid},sort=#{sort},serial_no=#{serialNo},
+       update jsh_material_category
+       set update_time=#{updateTime},updater=#{updater},
+        parent_id=#{parentId},sort=#{sort},serial_no=#{serialNo},
         name=#{name},remark=#{remark}
        where id =#{id}
     </update>
     <select  id="getMaterialCategoryBySerialNo" resultMap="com.jsh.erp.datasource.mappers.MaterialCategoryMapper.BaseResultMap">
         select
         <include refid="com.jsh.erp.datasource.mappers.MaterialCategoryMapper.Base_Column_List"/>
-        FROM jsh_materialcategory
+        FROM jsh_material_category
         where 1=1
         and serial_no=#{serialNo}
         and ifnull(status,'0') !='2'
@@ -110,9 +110,9 @@
     <select id="getMaterialCategoryListByCategoryIds"  resultMap="com.jsh.erp.datasource.mappers.MaterialCategoryMapper.BaseResultMap">
         select
         <include refid="com.jsh.erp.datasource.mappers.MaterialCategoryMapper.Base_Column_List" />
-        from jsh_materialcategory
+        from jsh_material_category
         where 1=1
-        and parentId in (
+        and parent_id in (
         <foreach collection="parentIds" item="parentId" separator=",">
             #{parentId}
         </foreach>

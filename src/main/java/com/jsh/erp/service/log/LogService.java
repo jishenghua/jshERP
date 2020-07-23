@@ -55,15 +55,15 @@ public class LogService {
         return list;
     }
 
-    public List<LogVo4List> select(String operation, Integer usernameID, String clientIp, Integer status, String beginTime, String endTime,
-                                   String contentdetails, int offset, int rows)throws Exception {
+    public List<LogVo4List> select(String operation, Integer userId, String clientIp, Integer status, String beginTime, String endTime,
+                                   String content, int offset, int rows)throws Exception {
         List<LogVo4List> list=null;
         try{
-            list=logMapperEx.selectByConditionLog(operation, usernameID, clientIp, status, beginTime, endTime,
-                    contentdetails, offset, rows);
+            list=logMapperEx.selectByConditionLog(operation, userId, clientIp, status, beginTime, endTime,
+                    content, offset, rows);
             if (null != list) {
                 for (LogVo4List log : list) {
-                    log.setCreateTimeStr(Tools.getCenternTime(log.getCreatetime()));
+                    log.setCreateTimeStr(Tools.getCenternTime(log.getCreateTime()));
                 }
             }
         }catch(Exception e){
@@ -72,11 +72,11 @@ public class LogService {
         return list;
     }
 
-    public Long countLog(String operation, Integer usernameID, String clientIp, Integer status, String beginTime, String endTime,
-                        String contentdetails)throws Exception {
+    public Long countLog(String operation, Integer userId, String clientIp, Integer status, String beginTime, String endTime,
+                        String content)throws Exception {
         Long result=null;
         try{
-            result=logMapperEx.countsByLog(operation, usernameID, clientIp, status, beginTime, endTime, contentdetails);
+            result=logMapperEx.countsByLog(operation, userId, clientIp, status, beginTime, endTime, content);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -153,13 +153,13 @@ public class LogService {
             Long userId = getUserId(request);
             if(userId!=null) {
                 Log log = new Log();
-                log.setUserid(userId);
+                log.setUserId(userId);
                 log.setOperation(moduleName);
-                log.setClientip(getLocalIp(request));
-                log.setCreatetime(new Date());
+                log.setClientIp(getLocalIp(request));
+                log.setCreateTime(new Date());
                 Byte status = 0;
                 log.setStatus(status);
-                log.setContentdetails(content);
+                log.setContent(content);
                 logMapper.insertSelective(log);
             }
         }catch(Exception e){

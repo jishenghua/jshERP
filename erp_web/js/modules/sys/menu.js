@@ -42,7 +42,7 @@ function initSelectInfo(lei) {
             }
             //按钮权限列表
             else if (lei == 3) {
-                var btnStr = userBusinessList[0].btnstr;
+                var btnStr = userBusinessList[0].btnStr;
                 if (btnStr != null) {
                     var btnObj = JSON.parse(btnStr);
                     for (var j = 0; j < btnObj.length; j++) {
@@ -71,10 +71,10 @@ if (btnStrList.length > 0) {
 }
 $.ajax({
     type: "post",
-    url: "/functions/findMenu",
+    url: "/function/findMenu",
     data: ({
         pNumber: 0,
-        hasFunctions: functions
+        hasFunction: functions
     }),
     dataType: "json",
     async: false,

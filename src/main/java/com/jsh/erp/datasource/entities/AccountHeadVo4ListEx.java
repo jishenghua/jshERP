@@ -9,19 +9,19 @@ public class AccountHeadVo4ListEx {
 
     private String type;
 
-    private Long organid;
+    private Long organId;
 
-    private Long handspersonid;
+    private Long handsPersonId;
 
-    private BigDecimal changeamount;
+    private BigDecimal changeAmount;
 
-    private BigDecimal totalprice;
+    private BigDecimal totalPrice;
 
-    private Long accountid;
+    private Long accountId;
 
-    private String billno;
+    private String billNo;
 
-    private Date billtime;
+    private Date billTime;
 
     private String remark;
 
@@ -29,11 +29,11 @@ public class AccountHeadVo4ListEx {
 
     private String deleteFlag;
 
-    private String organname;
+    private String organName;
 
-    private String handspersonname;
+    private String handsPersonName;
 
-    private String accountname;
+    private String accountName;
 
     private String billTimeStr;
 
@@ -53,60 +53,60 @@ public class AccountHeadVo4ListEx {
         this.type = type;
     }
 
-    public Long getOrganid() {
-        return organid;
+    public Long getOrganId() {
+        return organId;
     }
 
-    public void setOrganid(Long organid) {
-        this.organid = organid;
+    public void setOrganId(Long organId) {
+        this.organId = organId;
     }
 
-    public Long getHandspersonid() {
-        return handspersonid;
+    public Long getHandsPersonId() {
+        return handsPersonId;
     }
 
-    public void setHandspersonid(Long handspersonid) {
-        this.handspersonid = handspersonid;
+    public void setHandsPersonId(Long handsPersonId) {
+        this.handsPersonId = handsPersonId;
     }
 
-    public BigDecimal getChangeamount() {
-        return changeamount;
+    public BigDecimal getChangeAmount() {
+        return changeAmount;
     }
 
-    public void setChangeamount(BigDecimal changeamount) {
-        this.changeamount = changeamount;
+    public void setChangeAmount(BigDecimal changeAmount) {
+        this.changeAmount = changeAmount;
     }
 
-    public BigDecimal getTotalprice() {
-        return totalprice;
+    public BigDecimal getTotalPrice() {
+        return totalPrice;
     }
 
-    public void setTotalprice(BigDecimal totalprice) {
-        this.totalprice = totalprice;
+    public void setTotalPrice(BigDecimal totalPrice) {
+        this.totalPrice = totalPrice;
     }
 
-    public Long getAccountid() {
-        return accountid;
+    public Long getAccountId() {
+        return accountId;
     }
 
-    public void setAccountid(Long accountid) {
-        this.accountid = accountid;
+    public void setAccountId(Long accountId) {
+        this.accountId = accountId;
     }
 
-    public String getBillno() {
-        return billno;
+    public String getBillNo() {
+        return billNo;
     }
 
-    public void setBillno(String billno) {
-        this.billno = billno;
+    public void setBillNo(String billNo) {
+        this.billNo = billNo;
     }
 
-    public Date getBilltime() {
-        return billtime;
+    public Date getBillTime() {
+        return billTime;
     }
 
-    public void setBilltime(Date billtime) {
-        this.billtime = billtime;
+    public void setBillTime(Date billTime) {
+        this.billTime = billTime;
     }
 
     public String getRemark() {
@@ -133,28 +133,28 @@ public class AccountHeadVo4ListEx {
         this.deleteFlag = deleteFlag;
     }
 
-    public String getOrganname() {
-        return organname;
+    public String getOrganName() {
+        return organName;
     }
 
-    public void setOrganname(String organname) {
-        this.organname = organname;
+    public void setOrganName(String organName) {
+        this.organName = organName;
     }
 
-    public String getHandspersonname() {
-        return handspersonname;
+    public String getHandsPersonName() {
+        return handsPersonName;
     }
 
-    public void setHandspersonname(String handspersonname) {
-        this.handspersonname = handspersonname;
+    public void setHandsPersonName(String handsPersonName) {
+        this.handsPersonName = handsPersonName;
     }
 
-    public String getAccountname() {
-        return accountname;
+    public String getAccountName() {
+        return accountName;
     }
 
-    public void setAccountname(String accountname) {
-        this.accountname = accountname;
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
     }
 
     public String getBillTimeStr() {

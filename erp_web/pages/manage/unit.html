@@ -118,7 +118,7 @@
                         return str;
                     }
                 },
-                {title: '计量单位', field: 'uname', width: 200}
+                {title: '计量单位', field: 'name', width: 200}
             ]],
             toolbar: [
                 {
@@ -356,7 +356,7 @@
                 dataType: "json",
                 data: ({
                     info: JSON.stringify({
-                        uname: name,
+                        name: name,
                         basicUnit: basicName,
                         otherUnit: otherName,
                         ratio: otherNum

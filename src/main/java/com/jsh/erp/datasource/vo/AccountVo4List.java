@@ -4,13 +4,13 @@ import com.jsh.erp.datasource.entities.Account;
 
 public class AccountVo4List extends Account{
 
-    private String thismonthamount;
+    private String thisMonthAmount;
 
-    public String getThismonthamount() {
-        return thismonthamount;
+    public String getThisMonthAmount() {
+        return thisMonthAmount;
     }
 
-    public void setThismonthamount(String thismonthamount) {
-        this.thismonthamount = thismonthamount;
+    public void setThisMonthAmount(String thisMonthAmount) {
+        this.thisMonthAmount = thisMonthAmount;
     }
 }

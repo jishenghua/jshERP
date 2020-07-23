@@ -5,23 +5,23 @@ import java.math.BigDecimal;
 public class DepotItem {
     private Long id;
 
-    private Long headerid;
+    private Long headerId;
 
-    private Long materialid;
+    private Long materialId;
 
     private Long materialExtendId;
 
-    private String munit;
+    private String materialUnit;
 
-    private BigDecimal opernumber;
+    private BigDecimal operNumber;
 
-    private BigDecimal basicnumber;
+    private BigDecimal basicNumber;
 
-    private BigDecimal unitprice;
+    private BigDecimal unitPrice;
 
-    private BigDecimal taxunitprice;
+    private BigDecimal taxUnitPrice;
 
-    private BigDecimal allprice;
+    private BigDecimal allPrice;
 
     private String remark;
 
@@ -29,27 +29,27 @@ public class DepotItem {
 
     private BigDecimal incidentals;
 
-    private Long depotid;
+    private Long depotId;
 
-    private Long anotherdepotid;
+    private Long anotherDepotId;
 
-    private BigDecimal taxrate;
+    private BigDecimal taxRate;
 
-    private BigDecimal taxmoney;
+    private BigDecimal taxMoney;
 
-    private BigDecimal taxlastmoney;
+    private BigDecimal taxLastMoney;
 
-    private String otherfield1;
+    private String otherField1;
 
-    private String otherfield2;
+    private String otherField2;
 
-    private String otherfield3;
+    private String otherField3;
 
-    private String otherfield4;
+    private String otherField4;
 
-    private String otherfield5;
+    private String otherField5;
 
-    private String mtype;
+    private String materialType;
 
     private Long tenantId;
 
@@ -63,20 +63,20 @@ public class DepotItem {
         this.id = id;
     }
 
-    public Long getHeaderid() {
-        return headerid;
+    public Long getHeaderId() {
+        return headerId;
     }
 
-    public void setHeaderid(Long headerid) {
-        this.headerid = headerid;
+    public void setHeaderId(Long headerId) {
+        this.headerId = headerId;
     }
 
-    public Long getMaterialid() {
-        return materialid;
+    public Long getMaterialId() {
+        return materialId;
     }
 
-    public void setMaterialid(Long materialid) {
-        this.materialid = materialid;
+    public void setMaterialId(Long materialId) {
+        this.materialId = materialId;
     }
 
     public Long getMaterialExtendId() {
@@ -87,52 +87,52 @@ public class DepotItem {
         this.materialExtendId = materialExtendId;
     }
 
-    public String getMunit() {
-        return munit;
+    public String getMaterialUnit() {
+        return materialUnit;
     }
 
-    public void setMunit(String munit) {
-        this.munit = munit == null ? null : munit.trim();
+    public void setMaterialUnit(String materialUnit) {
+        this.materialUnit = materialUnit == null ? null : materialUnit.trim();
     }
 
-    public BigDecimal getOpernumber() {
-        return opernumber;
+    public BigDecimal getOperNumber() {
+        return operNumber;
     }
 
-    public void setOpernumber(BigDecimal opernumber) {
-        this.opernumber = opernumber;
+    public void setOperNumber(BigDecimal operNumber) {
+        this.operNumber = operNumber;
     }
 
-    public BigDecimal getBasicnumber() {
-        return basicnumber;
+    public BigDecimal getBasicNumber() {
+        return basicNumber;
     }
 
-    public void setBasicnumber(BigDecimal basicnumber) {
-        this.basicnumber = basicnumber;
+    public void setBasicNumber(BigDecimal basicNumber) {
+        this.basicNumber = basicNumber;
     }
 
-    public BigDecimal getUnitprice() {
-        return unitprice;
+    public BigDecimal getUnitPrice() {
+        return unitPrice;
     }
 
-    public void setUnitprice(BigDecimal unitprice) {
-        this.unitprice = unitprice;
+    public void setUnitPrice(BigDecimal unitPrice) {
+        this.unitPrice = unitPrice;
     }
 
-    public BigDecimal getTaxunitprice() {
-        return taxunitprice;
+    public BigDecimal getTaxUnitPrice() {
+        return taxUnitPrice;
     }
 
-    public void setTaxunitprice(BigDecimal taxunitprice) {
-        this.taxunitprice = taxunitprice;
+    public void setTaxUnitPrice(BigDecimal taxUnitPrice) {
+        this.taxUnitPrice = taxUnitPrice;
     }
 
-    public BigDecimal getAllprice() {
-        return allprice;
+    public BigDecimal getAllPrice() {
+        return allPrice;
     }
 
-    public void setAllprice(BigDecimal allprice) {
-        this.allprice = allprice;
+    public void setAllPrice(BigDecimal allPrice) {
+        this.allPrice = allPrice;
     }
 
     public String getRemark() {
@@ -159,92 +159,92 @@ public class DepotItem {
         this.incidentals = incidentals;
     }
 
-    public Long getDepotid() {
-        return depotid;
+    public Long getDepotId() {
+        return depotId;
     }
 
-    public void setDepotid(Long depotid) {
-        this.depotid = depotid;
+    public void setDepotId(Long depotId) {
+        this.depotId = depotId;
     }
 
-    public Long getAnotherdepotid() {
-        return anotherdepotid;
+    public Long getAnotherDepotId() {
+        return anotherDepotId;
     }
 
-    public void setAnotherdepotid(Long anotherdepotid) {
-        this.anotherdepotid = anotherdepotid;
+    public void setAnotherDepotId(Long anotherDepotId) {
+        this.anotherDepotId = anotherDepotId;
     }
 
-    public BigDecimal getTaxrate() {
-        return taxrate;
+    public BigDecimal getTaxRate() {
+        return taxRate;
     }
 
-    public void setTaxrate(BigDecimal taxrate) {
-        this.taxrate = taxrate;
+    public void setTaxRate(BigDecimal taxRate) {
+        this.taxRate = taxRate;
     }
 
-    public BigDecimal getTaxmoney() {
-        return taxmoney;
+    public BigDecimal getTaxMoney() {
+        return taxMoney;
     }
 
-    public void setTaxmoney(BigDecimal taxmoney) {
-        this.taxmoney = taxmoney;
+    public void setTaxMoney(BigDecimal taxMoney) {
+        this.taxMoney = taxMoney;
     }
 
-    public BigDecimal getTaxlastmoney() {
-        return taxlastmoney;
+    public BigDecimal getTaxLastMoney() {
+        return taxLastMoney;
     }
 
-    public void setTaxlastmoney(BigDecimal taxlastmoney) {
-        this.taxlastmoney = taxlastmoney;
+    public void setTaxLastMoney(BigDecimal taxLastMoney) {
+        this.taxLastMoney = taxLastMoney;
     }
 
-    public String getOtherfield1() {
-        return otherfield1;
+    public String getOtherField1() {
+        return otherField1;
     }
 
-    public void setOtherfield1(String otherfield1) {
-        this.otherfield1 = otherfield1 == null ? null : otherfield1.trim();
+    public void setOtherField1(String otherField1) {
+        this.otherField1 = otherField1 == null ? null : otherField1.trim();
     }
 
-    public String getOtherfield2() {
-        return otherfield2;
+    public String getOtherField2() {
+        return otherField2;
     }
 
-    public void setOtherfield2(String otherfield2) {
-        this.otherfield2 = otherfield2 == null ? null : otherfield2.trim();
+    public void setOtherField2(String otherField2) {
+        this.otherField2 = otherField2 == null ? null : otherField2.trim();
     }
 
-    public String getOtherfield3() {
-        return otherfield3;
+    public String getOtherField3() {
+        return otherField3;
     }
 
-    public void setOtherfield3(String otherfield3) {
-        this.otherfield3 = otherfield3 == null ? null : otherfield3.trim();
+    public void setOtherField3(String otherField3) {
+        this.otherField3 = otherField3 == null ? null : otherField3.trim();
     }
 
-    public String getOtherfield4() {
-        return otherfield4;
+    public String getOtherField4() {
+        return otherField4;
     }
 
-    public void setOtherfield4(String otherfield4) {
-        this.otherfield4 = otherfield4 == null ? null : otherfield4.trim();
+    public void setOtherField4(String otherField4) {
+        this.otherField4 = otherField4 == null ? null : otherField4.trim();
     }
 
-    public String getOtherfield5() {
-        return otherfield5;
+    public String getOtherField5() {
+        return otherField5;
     }
 
-    public void setOtherfield5(String otherfield5) {
-        this.otherfield5 = otherfield5 == null ? null : otherfield5.trim();
+    public void setOtherField5(String otherField5) {
+        this.otherField5 = otherField5 == null ? null : otherField5.trim();
     }
 
-    public String getMtype() {
-        return mtype;
+    public String getMaterialType() {
+        return materialType;
     }
 
-    public void setMtype(String mtype) {
-        this.mtype = mtype == null ? null : mtype.trim();
+    public void setMaterialType(String materialType) {
+        this.materialType = materialType == null ? null : materialType.trim();
     }
 
     public Long getTenantId() {

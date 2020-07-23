@@ -234,19 +234,19 @@
 				{ title: '操作',field: 'op',align:"center",width:90,
 					formatter:function(value,rec,index) {
 						var str = '';
-						var orgId =  rec.organid ?  rec.organid : 0;
+						var orgId =  rec.organId ?  rec.organId : 0;
 						str += '<img title="查看" src="/js/easyui/themes/icons/list.png" style="cursor: pointer;" onclick="showAccountHead(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
 						str += '<img title="编辑" src="/js/easyui/themes/icons/pencil.png" style="cursor: pointer;" onclick="editAccountHead(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
 						str += '<img title="删除" src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteAccountHead('+ rec.id +',' + orgId +',' + rec.totalprice + ');"/>';
 						return str;
 					}
 				},
-				{ field: 'organid',width:5, hidden:true},
-				{ title: organNameTitle,field: 'organname',width:140,hidden:organNameHidden},
-				{ title: '单据编号',field: 'billno',width:160},
-				{ title: '经手人',field: 'handspersonname',width:80},
+				{ field: 'organId',width:5, hidden:true},
+				{ title: organNameTitle,field: 'organName',width:140,hidden:organNameHidden},
+				{ title: '单据编号',field: 'billNo',width:160},
+				{ title: '经手人',field: 'handsPersonName',width:80},
 				{ title: '单据时间 ',field: 'billTimeStr',width:160},
-				{ title: '合计',field: 'totalprice',width:80},
+				{ title: '合计',field: 'totalPrice',width:80},
 				{ title: '备注',field: 'remark',width:100}
 			]],
 			toolbar:[
@@ -699,15 +699,15 @@
 	//编辑信息
     function editAccountHead(index){
 		var res = $("#tableData").datagrid("getRows")[index];
-        $("#BillNo").val(res.billno);
-        $("#BillTime").val(res.billtime);
+        $("#BillNo").val(res.billNo);
+        $("#BillTime").val(res.billTime);
         $("#Remark").val(res.remark);
-        $("#AccountId").val(res.accountid);
-        $('#OrganId').combobox('setValue', res.organid);
-        $("#HandsPersonId").val(res.handspersonid);
-        $("#ChangeAmount").val(res.changeamount);
-        var TotalPrice = res.totalprice;
-		preTotalPrice = res.totalprice; //记录前一次合计金额，用于收预付款
+        $("#AccountId").val(res.accountId);
+        $('#OrganId').combobox('setValue', res.organId);
+        $("#HandsPersonId").val(res.handsPersonId);
+        $("#ChangeAmount").val(res.changeAmount);
+        var TotalPrice = res.totalPrice;
+		preTotalPrice = res.totalPrice; //记录前一次合计金额，用于收预付款
         var editTitle = listTitle.replace("列表","信息");
         $('#accountHeadDlg').dialog('open').dialog('setTitle','<img src="' + '/js/easyui/themes/icons/pencil.png"/>&nbsp;编辑' + editTitle);
         $(".window-mask").css({ width: webW ,height: webH});
@@ -721,14 +721,14 @@
     //查看信息
     function showAccountHead(index){
 		var res = $("#tableData").datagrid("getRows")[index];
-        $("#BillNoShow").text(res.billno);
-        $("#BillTimeShow").text(res.billtime);
+        $("#BillNoShow").text(res.billNo);
+        $("#BillTimeShow").text(res.billTime);
         $("#RemarkShow").text(res.remark);
-        $("#AccountIdShow").text(res.accountname);
-        $('#OrganIdShow').text(res.organname);
-        $("#HandsPersonIdShow").text(res.handspersonname);
-        $("#ChangeAmountShow").text(res.changeamount);
-        var TotalPrice = res.totalprice;
+        $("#AccountIdShow").text(res.accountName);
+        $('#OrganIdShow').text(res.organName);
+        $("#HandsPersonIdShow").text(res.handsPersonName);
+        $("#ChangeAmountShow").text(res.changeAmount);
+        var TotalPrice = res.totalPrice;
         var showTitle = listTitle.replace("列表","信息");
         $('#accountHeadDlgShow').dialog('open').dialog('setTitle','<img src="/js/easyui/themes/icons/list.png"/>&nbsp;查看' + showTitle);
         $(".window-mask").css({ width: webW ,height: webH});
@@ -881,7 +881,7 @@
                     });
                 }
 
-                //保存单位信息
+                //保存信息
                 $.ajax({
                     type: "post",
                     url: url,

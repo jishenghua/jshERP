@@ -5,7 +5,7 @@
         SELECT *
         FROM jsh_role
         WHERE 1=1
-        and ifnull(delete_Flag,'0') !='1'
+        and ifnull(delete_flag,'0') !='1'
         <if test="name != null">
             and name like '%${name}%'
         </if>
@@ -18,14 +18,14 @@
         COUNT(id)
         FROM jsh_role
         WHERE 1=1
-        and ifnull(delete_Flag,'0') !='1'
+        and ifnull(delete_flag,'0') !='1'
         <if test="name != null">
             and name like '%${name}%'
         </if>
     </select>
     <update id="batchDeleteRoleByIds">
         update jsh_role
-        set delete_Flag='1'
+        set delete_flag='1'
         where 1=1
         and id in (
         <foreach collection="ids" item="id" separator=",">

@@ -114,12 +114,12 @@
             pageList: initPageNum,
             columns: [[
                 {title: '操作模块', field: 'operation', width: 120},
-                {title: '操作详情', field: 'contentdetails', width: 350},
-                {title: '操作人员', field: 'username', width: 100, align: "center"},
+                {title: '操作详情', field: 'content', width: 350},
+                {title: '操作人员', field: 'userName', width: 100, align: "center"},
                 {title: '操作状态',field: 'status',width:80,align:"center",formatter:function(value){
                     return value? "失败":"成功";
                 }},
-                {title: '操作IP', field: 'clientip', width: 100, align: "center"},
+                {title: '操作IP', field: 'clientIp', width: 100, align: "center"},
                 {title: '操作时间', field: 'createTimeStr', width: 150, align: "center"}
             ]],
             onLoadError: function () {
@@ -222,25 +222,25 @@
 
     function showLogDetails(pageNo, pageSize) {
         var operation = $.trim($("#searchOperation").val());
-        var usernameID = $.trim($("#searchUsernameID").val());
+        var userId = $.trim($("#searchUsernameID").val());
         var clientIp = $.trim($("#searchIP").val());
         var status = $.trim($("#searchStatus").val());
         var beginTime = $.trim($("#searchBeginTime").datebox("getValue"));
         var endTime = $.trim($("#searchEndTime").datebox("getValue"));
-        var contentdetails = $.trim($("#searchDesc").val());
+        var content = $.trim($("#searchDesc").val());
         $.ajax({
             type: "get",
             url: "/log/list",
             dataType: "json",
             data: ({
                 search: JSON.stringify({
-                operation: operation,
-                usernameID: usernameID,
-                clientIp: clientIp,
-                status: status,
-                beginTime: beginTime,
-                endTime: endTime,
-                contentdetails: contentdetails
+                    operation: operation,
+                    userId: userId,
+                    clientIp: clientIp,
+                    status: status,
+                    beginTime: beginTime,
+                    endTime: endTime,
+                    content: content
                 }),
                 currentPage: pageNo,
                 pageSize: pageSize

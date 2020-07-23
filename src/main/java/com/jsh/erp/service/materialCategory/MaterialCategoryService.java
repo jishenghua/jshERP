@@ -90,7 +90,7 @@ public class MaterialCategoryService {
         List<MaterialCategory> res= new ArrayList<MaterialCategory>();
         List<MaterialCategory> list=null;
         MaterialCategoryExample example = new MaterialCategoryExample();
-        example.createCriteria().andParentidEqualTo(parentId).andIdNotEqualTo(1l);
+        example.createCriteria().andParentIdEqualTo(parentId).andIdNotEqualTo(1L);
         example.setOrderByClause("id");
         list=materialCategoryMapper.selectByExample(example);
         if(list!=null && list.size()>0) {
@@ -230,9 +230,9 @@ public class MaterialCategoryService {
         if(mc==null){
             return 0;
         }
-        if(mc.getParentid()==null){
+        if(mc.getParentId()==null){
             //没有给定父级目录的id，默认设置父级目录为根目录的父目录
-            mc.setParentid(BusinessConstants.MATERIAL_CATEGORY_ROOT_PARENT_ID);
+            mc.setParentId(BusinessConstants.MATERIAL_CATEGORY_ROOT_PARENT_ID);
         }
         //检查商品类型编号是否已存在
         checkMaterialCategorySerialNo(mc);
@@ -288,9 +288,9 @@ public class MaterialCategoryService {
         logService.insertLog("商品类型",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(mc.getName()).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
-        if(mc.getParentid()==null){
+        if(mc.getParentId()==null){
             //没有给定父级目录的id，默认设置父级目录为根目录的父目录
-            mc.setParentid(BusinessConstants.MATERIAL_CATEGORY_ROOT_PARENT_ID);
+            mc.setParentId(BusinessConstants.MATERIAL_CATEGORY_ROOT_PARENT_ID);
         }
         //检查商品类型编号是否已存在
         checkMaterialCategorySerialNo(mc);
@@ -362,7 +362,7 @@ public class MaterialCategoryService {
         /**
          * 校验
          * 1、产品表	jsh_material
-         * 2、产品类型表	jsh_materialcategory
+         * 2、产品类型表	jsh_material_category
          * 是否有相关数据
          * */
         int deleteTotal=0;
@@ -386,7 +386,7 @@ public class MaterialCategoryService {
                     ExceptionConstants.DELETE_FORCE_CONFIRM_MSG);
         }
         /**
-         * 校验产品类型表	jsh_materialcategory
+         * 校验产品类型表	jsh_material_category
          * */
         List<MaterialCategory> materialCategoryList=null;
         try{
@@ -412,7 +412,7 @@ public class MaterialCategoryService {
      * @param name
      */
     public Long getCategoryIdByName(String name){
-        Long categoryId = 0l;
+        Long categoryId = 0L;
         MaterialCategoryExample example = new MaterialCategoryExample();
         example.createCriteria().andNameEqualTo(name).andStatusNotEqualTo(BusinessConstants.DELETE_TYPE_FORCE);
         List<MaterialCategory> list = materialCategoryMapper.selectByExample(example);

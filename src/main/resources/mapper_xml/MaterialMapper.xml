@@ -2,24 +2,24 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jsh.erp.datasource.mappers.MaterialMapper">
   <resultMap id="BaseResultMap" type="com.jsh.erp.datasource.entities.Material">
-    <id column="Id" jdbcType="BIGINT" property="id" />
-    <result column="CategoryId" jdbcType="BIGINT" property="categoryid" />
-    <result column="Name" jdbcType="VARCHAR" property="name" />
-    <result column="Mfrs" jdbcType="VARCHAR" property="mfrs" />
-    <result column="SafetyStock" jdbcType="DECIMAL" property="safetystock" />
-    <result column="Model" jdbcType="VARCHAR" property="model" />
-    <result column="Standard" jdbcType="VARCHAR" property="standard" />
-    <result column="Color" jdbcType="VARCHAR" property="color" />
-    <result column="Unit" jdbcType="VARCHAR" property="unit" />
-    <result column="Remark" jdbcType="VARCHAR" property="remark" />
-    <result column="UnitId" jdbcType="BIGINT" property="unitid" />
-    <result column="Enabled" jdbcType="BIT" property="enabled" />
-    <result column="OtherField1" jdbcType="VARCHAR" property="otherfield1" />
-    <result column="OtherField2" jdbcType="VARCHAR" property="otherfield2" />
-    <result column="OtherField3" jdbcType="VARCHAR" property="otherfield3" />
-    <result column="enableSerialNumber" jdbcType="VARCHAR" property="enableserialnumber" />
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="category_id" jdbcType="BIGINT" property="categoryId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="mfrs" jdbcType="VARCHAR" property="mfrs" />
+    <result column="safety_stock" jdbcType="DECIMAL" property="safetyStock" />
+    <result column="model" jdbcType="VARCHAR" property="model" />
+    <result column="standard" jdbcType="VARCHAR" property="standard" />
+    <result column="color" jdbcType="VARCHAR" property="color" />
+    <result column="unit" jdbcType="VARCHAR" property="unit" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="unit_id" jdbcType="BIGINT" property="unitId" />
+    <result column="enabled" jdbcType="BIT" property="enabled" />
+    <result column="other_field1" jdbcType="VARCHAR" property="otherField1" />
+    <result column="other_field2" jdbcType="VARCHAR" property="otherField2" />
+    <result column="other_field3" jdbcType="VARCHAR" property="otherField3" />
+    <result column="enable_serial_number" jdbcType="VARCHAR" property="enableSerialNumber" />
     <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
-    <result column="delete_Flag" jdbcType="VARCHAR" property="deleteFlag" />
+    <result column="delete_flag" jdbcType="VARCHAR" property="deleteFlag" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -80,8 +80,9 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    Id, CategoryId, Name, Mfrs, SafetyStock, Model, Standard, Color, Unit, Remark, UnitId, 
-    Enabled, OtherField1, OtherField2, OtherField3, enableSerialNumber, tenant_id, delete_Flag
+    id, category_id, name, mfrs, safety_stock, model, standard, color, unit, remark, 
+    unit_id, enabled, other_field1, other_field2, other_field3, enable_serial_number, 
+    tenant_id, delete_flag
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="BaseResultMap">
     select
@@ -101,11 +102,11 @@
     select 
     <include refid="Base_Column_List" />
     from jsh_material
-    where Id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from jsh_material
-    where Id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
   </delete>
   <delete id="deleteByExample" parameterType="com.jsh.erp.datasource.entities.MaterialExample">
     delete from jsh_material
@@ -114,85 +115,85 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.jsh.erp.datasource.entities.Material">
-    insert into jsh_material (Id, CategoryId, Name, 
-      Mfrs, SafetyStock, Model, 
-      Standard, Color, Unit, 
-      Remark, UnitId, Enabled, 
-      OtherField1, OtherField2, OtherField3, 
-      enableSerialNumber, tenant_id, delete_Flag
+    insert into jsh_material (id, category_id, name, 
+      mfrs, safety_stock, model, 
+      standard, color, unit, 
+      remark, unit_id, enabled, 
+      other_field1, other_field2, other_field3, 
+      enable_serial_number, tenant_id, delete_flag
       )
-    values (#{id,jdbcType=BIGINT}, #{categoryid,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, 
-      #{mfrs,jdbcType=VARCHAR}, #{safetystock,jdbcType=DECIMAL}, #{model,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=BIGINT}, #{categoryId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, 
+      #{mfrs,jdbcType=VARCHAR}, #{safetyStock,jdbcType=DECIMAL}, #{model,jdbcType=VARCHAR}, 
       #{standard,jdbcType=VARCHAR}, #{color,jdbcType=VARCHAR}, #{unit,jdbcType=VARCHAR}, 
-      #{remark,jdbcType=VARCHAR}, #{unitid,jdbcType=BIGINT}, #{enabled,jdbcType=BIT}, 
-      #{otherfield1,jdbcType=VARCHAR}, #{otherfield2,jdbcType=VARCHAR}, #{otherfield3,jdbcType=VARCHAR}, 
-      #{enableserialnumber,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR}
+      #{remark,jdbcType=VARCHAR}, #{unitId,jdbcType=BIGINT}, #{enabled,jdbcType=BIT}, 
+      #{otherField1,jdbcType=VARCHAR}, #{otherField2,jdbcType=VARCHAR}, #{otherField3,jdbcType=VARCHAR}, 
+      #{enableSerialNumber,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.Material">
     insert into jsh_material
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
-        Id,
+        id,
       </if>
-      <if test="categoryid != null">
-        CategoryId,
+      <if test="categoryId != null">
+        category_id,
       </if>
       <if test="name != null">
-        Name,
+        name,
       </if>
       <if test="mfrs != null">
-        Mfrs,
+        mfrs,
       </if>
-      <if test="safetystock != null">
-        SafetyStock,
+      <if test="safetyStock != null">
+        safety_stock,
       </if>
       <if test="model != null">
-        Model,
+        model,
       </if>
       <if test="standard != null">
-        Standard,
+        standard,
       </if>
       <if test="color != null">
-        Color,
+        color,
       </if>
       <if test="unit != null">
-        Unit,
+        unit,
       </if>
       <if test="remark != null">
-        Remark,
+        remark,
       </if>
-      <if test="unitid != null">
-        UnitId,
+      <if test="unitId != null">
+        unit_id,
       </if>
       <if test="enabled != null">
-        Enabled,
+        enabled,
       </if>
-      <if test="otherfield1 != null">
-        OtherField1,
+      <if test="otherField1 != null">
+        other_field1,
       </if>
-      <if test="otherfield2 != null">
-        OtherField2,
+      <if test="otherField2 != null">
+        other_field2,
       </if>
-      <if test="otherfield3 != null">
-        OtherField3,
+      <if test="otherField3 != null">
+        other_field3,
       </if>
-      <if test="enableserialnumber != null">
-        enableSerialNumber,
+      <if test="enableSerialNumber != null">
+        enable_serial_number,
       </if>
       <if test="tenantId != null">
         tenant_id,
       </if>
       <if test="deleteFlag != null">
-        delete_Flag,
+        delete_flag,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
         #{id,jdbcType=BIGINT},
       </if>
-      <if test="categoryid != null">
-        #{categoryid,jdbcType=BIGINT},
+      <if test="categoryId != null">
+        #{categoryId,jdbcType=BIGINT},
       </if>
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
@@ -200,8 +201,8 @@
       <if test="mfrs != null">
         #{mfrs,jdbcType=VARCHAR},
       </if>
-      <if test="safetystock != null">
-        #{safetystock,jdbcType=DECIMAL},
+      <if test="safetyStock != null">
+        #{safetyStock,jdbcType=DECIMAL},
       </if>
       <if test="model != null">
         #{model,jdbcType=VARCHAR},
@@ -218,23 +219,23 @@
       <if test="remark != null">
         #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="unitid != null">
-        #{unitid,jdbcType=BIGINT},
+      <if test="unitId != null">
+        #{unitId,jdbcType=BIGINT},
       </if>
       <if test="enabled != null">
         #{enabled,jdbcType=BIT},
       </if>
-      <if test="otherfield1 != null">
-        #{otherfield1,jdbcType=VARCHAR},
+      <if test="otherField1 != null">
+        #{otherField1,jdbcType=VARCHAR},
       </if>
-      <if test="otherfield2 != null">
-        #{otherfield2,jdbcType=VARCHAR},
+      <if test="otherField2 != null">
+        #{otherField2,jdbcType=VARCHAR},
       </if>
-      <if test="otherfield3 != null">
-        #{otherfield3,jdbcType=VARCHAR},
+      <if test="otherField3 != null">
+        #{otherField3,jdbcType=VARCHAR},
       </if>
-      <if test="enableserialnumber != null">
-        #{enableserialnumber,jdbcType=VARCHAR},
+      <if test="enableSerialNumber != null">
+        #{enableSerialNumber,jdbcType=VARCHAR},
       </if>
       <if test="tenantId != null">
         #{tenantId,jdbcType=BIGINT},
@@ -254,58 +255,58 @@
     update jsh_material
     <set>
       <if test="record.id != null">
-        Id = #{record.id,jdbcType=BIGINT},
+        id = #{record.id,jdbcType=BIGINT},
       </if>
-      <if test="record.categoryid != null">
-        CategoryId = #{record.categoryid,jdbcType=BIGINT},
+      <if test="record.categoryId != null">
+        category_id = #{record.categoryId,jdbcType=BIGINT},
       </if>
       <if test="record.name != null">
-        Name = #{record.name,jdbcType=VARCHAR},
+        name = #{record.name,jdbcType=VARCHAR},
       </if>
       <if test="record.mfrs != null">
-        Mfrs = #{record.mfrs,jdbcType=VARCHAR},
+        mfrs = #{record.mfrs,jdbcType=VARCHAR},
       </if>
-      <if test="record.safetystock != null">
-        SafetyStock = #{record.safetystock,jdbcType=DECIMAL},
+      <if test="record.safetyStock != null">
+        safety_stock = #{record.safetyStock,jdbcType=DECIMAL},
       </if>
       <if test="record.model != null">
-        Model = #{record.model,jdbcType=VARCHAR},
+        model = #{record.model,jdbcType=VARCHAR},
       </if>
       <if test="record.standard != null">
-        Standard = #{record.standard,jdbcType=VARCHAR},
+        standard = #{record.standard,jdbcType=VARCHAR},
       </if>
       <if test="record.color != null">
-        Color = #{record.color,jdbcType=VARCHAR},
+        color = #{record.color,jdbcType=VARCHAR},
       </if>
       <if test="record.unit != null">
-        Unit = #{record.unit,jdbcType=VARCHAR},
+        unit = #{record.unit,jdbcType=VARCHAR},
       </if>
       <if test="record.remark != null">
-        Remark = #{record.remark,jdbcType=VARCHAR},
+        remark = #{record.remark,jdbcType=VARCHAR},
       </if>
-      <if test="record.unitid != null">
-        UnitId = #{record.unitid,jdbcType=BIGINT},
+      <if test="record.unitId != null">
+        unit_id = #{record.unitId,jdbcType=BIGINT},
       </if>
       <if test="record.enabled != null">
-        Enabled = #{record.enabled,jdbcType=BIT},
+        enabled = #{record.enabled,jdbcType=BIT},
       </if>
-      <if test="record.otherfield1 != null">
-        OtherField1 = #{record.otherfield1,jdbcType=VARCHAR},
+      <if test="record.otherField1 != null">
+        other_field1 = #{record.otherField1,jdbcType=VARCHAR},
       </if>
-      <if test="record.otherfield2 != null">
-        OtherField2 = #{record.otherfield2,jdbcType=VARCHAR},
+      <if test="record.otherField2 != null">
+        other_field2 = #{record.otherField2,jdbcType=VARCHAR},
       </if>
-      <if test="record.otherfield3 != null">
-        OtherField3 = #{record.otherfield3,jdbcType=VARCHAR},
+      <if test="record.otherField3 != null">
+        other_field3 = #{record.otherField3,jdbcType=VARCHAR},
       </if>
-      <if test="record.enableserialnumber != null">
-        enableSerialNumber = #{record.enableserialnumber,jdbcType=VARCHAR},
+      <if test="record.enableSerialNumber != null">
+        enable_serial_number = #{record.enableSerialNumber,jdbcType=VARCHAR},
       </if>
       <if test="record.tenantId != null">
         tenant_id = #{record.tenantId,jdbcType=BIGINT},
       </if>
       <if test="record.deleteFlag != null">
-        delete_Flag = #{record.deleteFlag,jdbcType=VARCHAR},
+        delete_flag = #{record.deleteFlag,jdbcType=VARCHAR},
       </if>
     </set>
     <if test="_parameter != null">
@@ -314,24 +315,24 @@
   </update>
   <update id="updateByExample" parameterType="map">
     update jsh_material
-    set Id = #{record.id,jdbcType=BIGINT},
-      CategoryId = #{record.categoryid,jdbcType=BIGINT},
-      Name = #{record.name,jdbcType=VARCHAR},
-      Mfrs = #{record.mfrs,jdbcType=VARCHAR},
-      SafetyStock = #{record.safetystock,jdbcType=DECIMAL},
-      Model = #{record.model,jdbcType=VARCHAR},
-      Standard = #{record.standard,jdbcType=VARCHAR},
-      Color = #{record.color,jdbcType=VARCHAR},
-      Unit = #{record.unit,jdbcType=VARCHAR},
-      Remark = #{record.remark,jdbcType=VARCHAR},
-      UnitId = #{record.unitid,jdbcType=BIGINT},
-      Enabled = #{record.enabled,jdbcType=BIT},
-      OtherField1 = #{record.otherfield1,jdbcType=VARCHAR},
-      OtherField2 = #{record.otherfield2,jdbcType=VARCHAR},
-      OtherField3 = #{record.otherfield3,jdbcType=VARCHAR},
-      enableSerialNumber = #{record.enableserialnumber,jdbcType=VARCHAR},
+    set id = #{record.id,jdbcType=BIGINT},
+      category_id = #{record.categoryId,jdbcType=BIGINT},
+      name = #{record.name,jdbcType=VARCHAR},
+      mfrs = #{record.mfrs,jdbcType=VARCHAR},
+      safety_stock = #{record.safetyStock,jdbcType=DECIMAL},
+      model = #{record.model,jdbcType=VARCHAR},
+      standard = #{record.standard,jdbcType=VARCHAR},
+      color = #{record.color,jdbcType=VARCHAR},
+      unit = #{record.unit,jdbcType=VARCHAR},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      unit_id = #{record.unitId,jdbcType=BIGINT},
+      enabled = #{record.enabled,jdbcType=BIT},
+      other_field1 = #{record.otherField1,jdbcType=VARCHAR},
+      other_field2 = #{record.otherField2,jdbcType=VARCHAR},
+      other_field3 = #{record.otherField3,jdbcType=VARCHAR},
+      enable_serial_number = #{record.enableSerialNumber,jdbcType=VARCHAR},
       tenant_id = #{record.tenantId,jdbcType=BIGINT},
-      delete_Flag = #{record.deleteFlag,jdbcType=VARCHAR}
+      delete_flag = #{record.deleteFlag,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -339,79 +340,79 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.jsh.erp.datasource.entities.Material">
     update jsh_material
     <set>
-      <if test="categoryid != null">
-        CategoryId = #{categoryid,jdbcType=BIGINT},
+      <if test="categoryId != null">
+        category_id = #{categoryId,jdbcType=BIGINT},
       </if>
       <if test="name != null">
-        Name = #{name,jdbcType=VARCHAR},
+        name = #{name,jdbcType=VARCHAR},
       </if>
       <if test="mfrs != null">
-        Mfrs = #{mfrs,jdbcType=VARCHAR},
+        mfrs = #{mfrs,jdbcType=VARCHAR},
       </if>
-      <if test="safetystock != null">
-        SafetyStock = #{safetystock,jdbcType=DECIMAL},
+      <if test="safetyStock != null">
+        safety_stock = #{safetyStock,jdbcType=DECIMAL},
       </if>
       <if test="model != null">
-        Model = #{model,jdbcType=VARCHAR},
+        model = #{model,jdbcType=VARCHAR},
       </if>
       <if test="standard != null">
-        Standard = #{standard,jdbcType=VARCHAR},
+        standard = #{standard,jdbcType=VARCHAR},
       </if>
       <if test="color != null">
-        Color = #{color,jdbcType=VARCHAR},
+        color = #{color,jdbcType=VARCHAR},
       </if>
       <if test="unit != null">
-        Unit = #{unit,jdbcType=VARCHAR},
+        unit = #{unit,jdbcType=VARCHAR},
       </if>
       <if test="remark != null">
-        Remark = #{remark,jdbcType=VARCHAR},
+        remark = #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="unitid != null">
-        UnitId = #{unitid,jdbcType=BIGINT},
+      <if test="unitId != null">
+        unit_id = #{unitId,jdbcType=BIGINT},
       </if>
       <if test="enabled != null">
-        Enabled = #{enabled,jdbcType=BIT},
+        enabled = #{enabled,jdbcType=BIT},
       </if>
-      <if test="otherfield1 != null">
-        OtherField1 = #{otherfield1,jdbcType=VARCHAR},
+      <if test="otherField1 != null">
+        other_field1 = #{otherField1,jdbcType=VARCHAR},
       </if>
-      <if test="otherfield2 != null">
-        OtherField2 = #{otherfield2,jdbcType=VARCHAR},
+      <if test="otherField2 != null">
+        other_field2 = #{otherField2,jdbcType=VARCHAR},
       </if>
-      <if test="otherfield3 != null">
-        OtherField3 = #{otherfield3,jdbcType=VARCHAR},
+      <if test="otherField3 != null">
+        other_field3 = #{otherField3,jdbcType=VARCHAR},
       </if>
-      <if test="enableserialnumber != null">
-        enableSerialNumber = #{enableserialnumber,jdbcType=VARCHAR},
+      <if test="enableSerialNumber != null">
+        enable_serial_number = #{enableSerialNumber,jdbcType=VARCHAR},
       </if>
       <if test="tenantId != null">
         tenant_id = #{tenantId,jdbcType=BIGINT},
       </if>
       <if test="deleteFlag != null">
-        delete_Flag = #{deleteFlag,jdbcType=VARCHAR},
+        delete_flag = #{deleteFlag,jdbcType=VARCHAR},
       </if>
     </set>
-    where Id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.jsh.erp.datasource.entities.Material">
     update jsh_material
-    set CategoryId = #{categoryid,jdbcType=BIGINT},
-      Name = #{name,jdbcType=VARCHAR},
-      Mfrs = #{mfrs,jdbcType=VARCHAR},
-      SafetyStock = #{safetystock,jdbcType=DECIMAL},
-      Model = #{model,jdbcType=VARCHAR},
-      Standard = #{standard,jdbcType=VARCHAR},
-      Color = #{color,jdbcType=VARCHAR},
-      Unit = #{unit,jdbcType=VARCHAR},
-      Remark = #{remark,jdbcType=VARCHAR},
-      UnitId = #{unitid,jdbcType=BIGINT},
-      Enabled = #{enabled,jdbcType=BIT},
-      OtherField1 = #{otherfield1,jdbcType=VARCHAR},
-      OtherField2 = #{otherfield2,jdbcType=VARCHAR},
-      OtherField3 = #{otherfield3,jdbcType=VARCHAR},
-      enableSerialNumber = #{enableserialnumber,jdbcType=VARCHAR},
+    set category_id = #{categoryId,jdbcType=BIGINT},
+      name = #{name,jdbcType=VARCHAR},
+      mfrs = #{mfrs,jdbcType=VARCHAR},
+      safety_stock = #{safetyStock,jdbcType=DECIMAL},
+      model = #{model,jdbcType=VARCHAR},
+      standard = #{standard,jdbcType=VARCHAR},
+      color = #{color,jdbcType=VARCHAR},
+      unit = #{unit,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      unit_id = #{unitId,jdbcType=BIGINT},
+      enabled = #{enabled,jdbcType=BIT},
+      other_field1 = #{otherField1,jdbcType=VARCHAR},
+      other_field2 = #{otherField2,jdbcType=VARCHAR},
+      other_field3 = #{otherField3,jdbcType=VARCHAR},
+      enable_serial_number = #{enableSerialNumber,jdbcType=VARCHAR},
       tenant_id = #{tenantId,jdbcType=BIGINT},
-      delete_Flag = #{deleteFlag,jdbcType=VARCHAR}
-    where Id = #{id,jdbcType=BIGINT}
+      delete_flag = #{deleteFlag,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

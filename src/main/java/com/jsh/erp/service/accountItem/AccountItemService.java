@@ -201,21 +201,21 @@ public class AccountItemService {
                 for (int i = 0; i < insertedJson.size(); i++) {
                     AccountItem accountItem = new AccountItem();
                     JSONObject tempInsertedJson = JSONObject.parseObject(insertedJson.getString(i));
-                    accountItem.setHeaderid(headerId);
+                    accountItem.setHeaderId(headerId);
                     if (tempInsertedJson.get("AccountId") != null && !tempInsertedJson.get("AccountId").equals("")) {
-                        accountItem.setAccountid(tempInsertedJson.getLong("AccountId"));
+                        accountItem.setAccountId(tempInsertedJson.getLong("AccountId"));
                     }
                     if (tempInsertedJson.get("InOutItemId") != null && !tempInsertedJson.get("InOutItemId").equals("")) {
-                        accountItem.setInoutitemid(tempInsertedJson.getLong("InOutItemId"));
+                        accountItem.setInOutItemId(tempInsertedJson.getLong("InOutItemId"));
                     }
                     if (tempInsertedJson.get("EachAmount") != null && !tempInsertedJson.get("EachAmount").equals("")) {
                         BigDecimal eachAmount = tempInsertedJson.getBigDecimal("EachAmount");
                         if (listType.equals("付款")) {
                             eachAmount = BigDecimal.ZERO.subtract(eachAmount);
                         }
-                        accountItem.setEachamount(eachAmount);
+                        accountItem.setEachAmount(eachAmount);
                     } else {
-                        accountItem.setEachamount(BigDecimal.ZERO);
+                        accountItem.setEachAmount(BigDecimal.ZERO);
                     }
                     accountItem.setRemark(tempInsertedJson.getString("Remark"));
                     this.insertAccountItemWithObj(accountItem);
@@ -238,21 +238,21 @@ public class AccountItemService {
                     JSONObject tempUpdatedJson = JSONObject.parseObject(updatedJson.getString(i));
                     AccountItem accountItem = this.getAccountItem(tempUpdatedJson.getLong("Id"));
                     accountItem.setId(tempUpdatedJson.getLong("Id"));
-                    accountItem.setHeaderid(headerId);
+                    accountItem.setHeaderId(headerId);
                     if (tempUpdatedJson.get("AccountId") != null && !tempUpdatedJson.get("AccountId").equals("")) {
-                        accountItem.setAccountid(tempUpdatedJson.getLong("AccountId"));
+                        accountItem.setAccountId(tempUpdatedJson.getLong("AccountId"));
                     }
                     if (tempUpdatedJson.get("InOutItemId") != null && !tempUpdatedJson.get("InOutItemId").equals("")) {
-                        accountItem.setInoutitemid(tempUpdatedJson.getLong("InOutItemId"));
+                        accountItem.setInOutItemId(tempUpdatedJson.getLong("InOutItemId"));
                     }
                     if (tempUpdatedJson.get("EachAmount") != null && !tempUpdatedJson.get("EachAmount").equals("")) {
                         BigDecimal eachAmount = tempUpdatedJson.getBigDecimal("EachAmount");
                         if (listType.equals("付款")) {
                             eachAmount = BigDecimal.ZERO.subtract(eachAmount);
                         }
-                        accountItem.setEachamount(eachAmount);
+                        accountItem.setEachAmount(eachAmount);
                     } else {
-                        accountItem.setEachamount(BigDecimal.ZERO);
+                        accountItem.setEachAmount(BigDecimal.ZERO);
                     }
                     accountItem.setRemark(tempUpdatedJson.getString("Remark"));
                     this.updateAccountItemWithObj(accountItem);

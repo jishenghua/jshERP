@@ -164,73 +164,73 @@ public class UnitExample {
             return (Criteria) this;
         }
 
-        public Criteria andUnameIsNull() {
-            addCriterion("UName is null");
+        public Criteria andNameIsNull() {
+            addCriterion("name is null");
             return (Criteria) this;
         }
 
-        public Criteria andUnameIsNotNull() {
-            addCriterion("UName is not null");
+        public Criteria andNameIsNotNull() {
+            addCriterion("name is not null");
             return (Criteria) this;
         }
 
-        public Criteria andUnameEqualTo(String value) {
-            addCriterion("UName =", value, "uname");
+        public Criteria andNameEqualTo(String value) {
+            addCriterion("name =", value, "name");
             return (Criteria) this;
         }
 
-        public Criteria andUnameNotEqualTo(String value) {
-            addCriterion("UName <>", value, "uname");
+        public Criteria andNameNotEqualTo(String value) {
+            addCriterion("name <>", value, "name");
             return (Criteria) this;
         }
 
-        public Criteria andUnameGreaterThan(String value) {
-            addCriterion("UName >", value, "uname");
+        public Criteria andNameGreaterThan(String value) {
+            addCriterion("name >", value, "name");
             return (Criteria) this;
         }
 
-        public Criteria andUnameGreaterThanOrEqualTo(String value) {
-            addCriterion("UName >=", value, "uname");
+        public Criteria andNameGreaterThanOrEqualTo(String value) {
+            addCriterion("name >=", value, "name");
             return (Criteria) this;
         }
 
-        public Criteria andUnameLessThan(String value) {
-            addCriterion("UName <", value, "uname");
+        public Criteria andNameLessThan(String value) {
+            addCriterion("name <", value, "name");
             return (Criteria) this;
         }
 
-        public Criteria andUnameLessThanOrEqualTo(String value) {
-            addCriterion("UName <=", value, "uname");
+        public Criteria andNameLessThanOrEqualTo(String value) {
+            addCriterion("name <=", value, "name");
             return (Criteria) this;
         }
 
-        public Criteria andUnameLike(String value) {
-            addCriterion("UName like", value, "uname");
+        public Criteria andNameLike(String value) {
+            addCriterion("name like", value, "name");
             return (Criteria) this;
         }
 
-        public Criteria andUnameNotLike(String value) {
-            addCriterion("UName not like", value, "uname");
+        public Criteria andNameNotLike(String value) {
+            addCriterion("name not like", value, "name");
             return (Criteria) this;
         }
 
-        public Criteria andUnameIn(List<String> values) {
-            addCriterion("UName in", values, "uname");
+        public Criteria andNameIn(List<String> values) {
+            addCriterion("name in", values, "name");
             return (Criteria) this;
         }
 
-        public Criteria andUnameNotIn(List<String> values) {
-            addCriterion("UName not in", values, "uname");
+        public Criteria andNameNotIn(List<String> values) {
+            addCriterion("name not in", values, "name");
             return (Criteria) this;
         }
 
-        public Criteria andUnameBetween(String value1, String value2) {
-            addCriterion("UName between", value1, value2, "uname");
+        public Criteria andNameBetween(String value1, String value2) {
+            addCriterion("name between", value1, value2, "name");
             return (Criteria) this;
         }
 
-        public Criteria andUnameNotBetween(String value1, String value2) {
-            addCriterion("UName not between", value1, value2, "uname");
+        public Criteria andNameNotBetween(String value1, String value2) {
+            addCriterion("name not between", value1, value2, "name");
             return (Criteria) this;
         }
 
@@ -495,72 +495,72 @@ public class UnitExample {
         }
 
         public Criteria andDeleteFlagIsNull() {
-            addCriterion("delete_Flag is null");
+            addCriterion("delete_flag is null");
             return (Criteria) this;
         }
 
         public Criteria andDeleteFlagIsNotNull() {
-            addCriterion("delete_Flag is not null");
+            addCriterion("delete_flag is not null");
             return (Criteria) this;
         }
 
         public Criteria andDeleteFlagEqualTo(String value) {
-            addCriterion("delete_Flag =", value, "deleteFlag");
+            addCriterion("delete_flag =", value, "deleteFlag");
             return (Criteria) this;
         }
 
         public Criteria andDeleteFlagNotEqualTo(String value) {
-            addCriterion("delete_Flag <>", value, "deleteFlag");
+            addCriterion("delete_flag <>", value, "deleteFlag");
             return (Criteria) this;
         }
 
         public Criteria andDeleteFlagGreaterThan(String value) {
-            addCriterion("delete_Flag >", value, "deleteFlag");
+            addCriterion("delete_flag >", value, "deleteFlag");
             return (Criteria) this;
         }
 
         public Criteria andDeleteFlagGreaterThanOrEqualTo(String value) {
-            addCriterion("delete_Flag >=", value, "deleteFlag");
+            addCriterion("delete_flag >=", value, "deleteFlag");
             return (Criteria) this;
         }
 
         public Criteria andDeleteFlagLessThan(String value) {
-            addCriterion("delete_Flag <", value, "deleteFlag");
+            addCriterion("delete_flag <", value, "deleteFlag");
             return (Criteria) this;
         }
 
         public Criteria andDeleteFlagLessThanOrEqualTo(String value) {
-            addCriterion("delete_Flag <=", value, "deleteFlag");
+            addCriterion("delete_flag <=", value, "deleteFlag");
             return (Criteria) this;
         }
 
         public Criteria andDeleteFlagLike(String value) {
-            addCriterion("delete_Flag like", value, "deleteFlag");
+            addCriterion("delete_flag like", value, "deleteFlag");
             return (Criteria) this;
         }
 
         public Criteria andDeleteFlagNotLike(String value) {
-            addCriterion("delete_Flag not like", value, "deleteFlag");
+            addCriterion("delete_flag not like", value, "deleteFlag");
             return (Criteria) this;
         }
 
         public Criteria andDeleteFlagIn(List<String> values) {
-            addCriterion("delete_Flag in", values, "deleteFlag");
+            addCriterion("delete_flag in", values, "deleteFlag");
             return (Criteria) this;
         }
 
         public Criteria andDeleteFlagNotIn(List<String> values) {
-            addCriterion("delete_Flag not in", values, "deleteFlag");
+            addCriterion("delete_flag not in", values, "deleteFlag");
             return (Criteria) this;
         }
 
         public Criteria andDeleteFlagBetween(String value1, String value2) {
-            addCriterion("delete_Flag between", value1, value2, "deleteFlag");
+            addCriterion("delete_flag between", value1, value2, "deleteFlag");
             return (Criteria) this;
         }
 
         public Criteria andDeleteFlagNotBetween(String value1, String value2) {
-            addCriterion("delete_Flag not between", value1, value2, "deleteFlag");
+            addCriterion("delete_flag not between", value1, value2, "deleteFlag");
             return (Criteria) this;
         }
     }

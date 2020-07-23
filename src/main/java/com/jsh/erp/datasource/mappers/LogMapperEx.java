@@ -11,21 +11,21 @@ public interface LogMapperEx {
 
     List<LogVo4List> selectByConditionLog(
             @Param("operation") String operation,
-            @Param("usernameID") Integer usernameID,
+            @Param("userId") Integer userId,
             @Param("clientIp") String clientIp,
             @Param("status") Integer status,
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
-            @Param("contentdetails") String contentdetails,
+            @Param("content") String content,
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
     Long countsByLog(
             @Param("operation") String operation,
-            @Param("usernameID") Integer usernameID,
+            @Param("userId") Integer userId,
             @Param("clientIp") String clientIp,
             @Param("status") Integer status,
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
-            @Param("contentdetails") String contentdetails);
+            @Param("content") String content);
 }

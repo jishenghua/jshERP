@@ -12,7 +12,7 @@
             and type='${type}'
         </if>
         <if test="phonenum != null">
-            and phonenum like '%${phonenum}%'
+            and phone_num like '%${phonenum}%'
         </if>
         <if test="telephone != null">
             and telephone like '%${telephone}%'
@@ -20,7 +20,7 @@
         <if test="description != null">
             and description like '%${description}%'
         </if>
-        and ifnull(delete_Flag,'0') !='1'
+        and ifnull(delete_flag,'0') !='1'
         order by id desc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
@@ -38,7 +38,7 @@
             and type='${type}'
         </if>
         <if test="phonenum != null">
-            and phonenum like '%${phonenum}%'
+            and phone_num like '%${phonenum}%'
         </if>
         <if test="telephone != null">
             and telephone like '%${telephone}%'
@@ -46,7 +46,7 @@
         <if test="description != null">
             and description like '%${description}%'
         </if>
-        and ifnull(delete_Flag,'0') !='1'
+        and ifnull(delete_flag,'0') !='1'
     </select>
 
     <select id="findByAll" parameterType="com.jsh.erp.datasource.entities.SupplierExample" resultMap="com.jsh.erp.datasource.mappers.SupplierMapper.BaseResultMap">
@@ -60,7 +60,7 @@
             and type='${type}'
         </if>
         <if test="phonenum != null">
-            and phonenum like '%${phonenum}%'
+            and phone_num like '%${phonenum}%'
         </if>
         <if test="telephone != null">
             and telephone like '%${telephone}%'
@@ -68,11 +68,11 @@
         <if test="description != null">
             and description like '%${description}%'
         </if>
-        and ifnull(delete_Flag,'0') !='1'
+        and ifnull(delete_flag,'0') !='1'
     </select>
     <update id="batchDeleteSupplierByIds">
         update jsh_supplier
-        set delete_Flag='1'
+        set delete_flag='1'
         where 1=1
         and id in (
         <foreach collection="ids" item="id" separator=",">

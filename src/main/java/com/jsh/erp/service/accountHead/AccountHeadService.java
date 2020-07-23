@@ -89,13 +89,13 @@ public class AccountHeadService {
         }
         if (null != list) {
             for (AccountHeadVo4ListEx ah : list) {
-                if(ah.getChangeamount() != null) {
-                    ah.setChangeamount(ah.getChangeamount().abs());
+                if(ah.getChangeAmount() != null) {
+                    ah.setChangeAmount(ah.getChangeAmount().abs());
                 }
-                if(ah.getTotalprice() != null) {
-                    ah.setTotalprice(ah.getTotalprice().abs());
+                if(ah.getTotalPrice() != null) {
+                    ah.setTotalPrice(ah.getTotalPrice().abs());
                 }
-                ah.setBillTimeStr(getCenternTime(ah.getBilltime()));
+                ah.setBillTimeStr(getCenternTime(ah.getBillTime()));
                 resList.add(ah);
             }
         }
@@ -119,7 +119,7 @@ public class AccountHeadService {
         try{
             result = accountHeadMapper.insertSelective(accountHead);
             logService.insertLog("财务",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(accountHead.getBillno()).toString(), request);
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(accountHead.getBillNo()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -134,7 +134,7 @@ public class AccountHeadService {
         try{
             result = accountHeadMapper.updateByPrimaryKeySelective(accountHead);
             logService.insertLog("财务",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(accountHead.getBillno()).toString(), request);
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(accountHead.getBillNo()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -148,7 +148,7 @@ public class AccountHeadService {
             AccountHead accountHead = accountHeadMapper.selectByPrimaryKey(id);
             result = accountHeadMapper.deleteByPrimaryKey(id);
             logService.insertLog("财务",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(accountHead.getBillno()).toString(), request);
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(accountHead.getBillNo()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -195,9 +195,9 @@ public class AccountHeadService {
     public BigDecimal findAllMoney(Integer supplierId, String type, String mode, String endTime) {
         String modeName = "";
         if (mode.equals("实际")) {
-            modeName = "ChangeAmount";
+            modeName = "change_amount";
         } else if (mode.equals("合计")) {
-            modeName = "TotalPrice";
+            modeName = "total_price";
         }
         BigDecimal result = null;
         try{
@@ -268,11 +268,11 @@ public class AccountHeadService {
         }
         if (null != list) {
             for (AccountHeadVo4ListEx ah : list) {
-                if(ah.getChangeamount() != null) {
-                    ah.setChangeamount(ah.getChangeamount().abs());
+                if(ah.getChangeAmount() != null) {
+                    ah.setChangeAmount(ah.getChangeAmount().abs());
                 }
-                if(ah.getTotalprice() != null) {
-                    ah.setTotalprice(ah.getTotalprice().abs());
+                if(ah.getTotalPrice() != null) {
+                    ah.setTotalPrice(ah.getTotalPrice().abs());
                 }
                 resList.add(ah);
             }
@@ -285,7 +285,7 @@ public class AccountHeadService {
         sb.append(BusinessConstants.LOG_OPERATION_TYPE_DELETE);
         List<AccountHead> list = getAccountHeadListByIds(ids);
         for(AccountHead accountHead: list){
-            sb.append("[").append(accountHead.getBillno()).append("]");
+            sb.append("[").append(accountHead.getBillNo()).append("]");
         }
         logService.insertLog("财务", sb.toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());

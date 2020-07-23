@@ -219,9 +219,9 @@
                         if(data.accountName){
                             $("#bill .AccountIdShow").text(data.accountName); //结算账户
                         }
-                        else if(data.accountidlist && data.accountmoneylist) {
-                            var accountArr = data.accountidlist.split(","); //账户id列表
-                            var accountMoneyArr = data.accountmoneylist.split(","); //账户金额列表
+                        else if(data.accountIdList && data.accountMoneyList) {
+                            var accountArr = data.accountIdList.split(","); //账户id列表
+                            var accountMoneyArr = data.accountMoneyList.split(","); //账户金额列表
                             var accountIdShow = "";
                             for (var j = 0; j < accountArr.length; j++) {
                                 if (accountList != null) {
@@ -241,22 +241,22 @@
                             $("#bill .AccountIdShow").text(accountIdShow);
                         }
                         $("#bill .OrganIdShow").text(data.organName);
-                        $("#bill .OperTimeShow").text(data.opertimeStr);
+                        $("#bill .OperTimeShow").text(data.operTimeStr);
                         $("#bill .NumberShow").text(data.number);
-                        $("#bill .LinkNumberShow").text(data.linknumber? data.linknumber : "");
+                        $("#bill .LinkNumberShow").text(data.linkNumber? data.linkNumber : "");
                         $("#bill .RemarkShow").text(data.remark);
                         $("#bill .DiscountShow").text(data.discount);
-                        $("#bill .DiscountMoneyShow").text(data.discountmoney);
-                        $("#bill .DiscountLastMoneyShow").text(data.discountlastmoney);
-                        $("#bill .ChangeAmountShow").text(data.changeamount==null ? "":data.changeamount);
-                        $("#bill .DebtShow").text((data.discountlastmoney+data.othermoney-data.changeamount).toFixed(2));
-                        $("#bill .OtherMoneyShow").text(data.othermoney==null ? "": data.othermoney);
-                        $("#bill .AccountDayShow").text(data.accountday==null ? "": data.accountday); //结算天数
-                        if(data.othermoney && data.othermoneylist && data.othermoneyitem) {
-                            var itemArr = data.othermoneylist.split(","); //支出项目id列表
+                        $("#bill .DiscountMoneyShow").text(data.discountMoney);
+                        $("#bill .DiscountLastMoneyShow").text(data.discountLastMoney);
+                        $("#bill .ChangeAmountShow").text(data.changeAmount==null ? "":data.changeAmount);
+                        $("#bill .DebtShow").text((data.discountLastMoney+data.otherMoney-data.changeAmount).toFixed(2));
+                        $("#bill .OtherMoneyShow").text(data.otherMoney==null ? "": data.otherMoney);
+                        $("#bill .AccountDayShow").text(data.accountDay==null ? "": data.accountDay); //结算天数
+                        if(data.otherMoney && data.otherMoneyList && data.otherMoneyItem) {
+                            var itemArr = data.otherMoneyList.split(","); //支出项目id列表
                             var itemMoneyArr = null;
-                            if (data.othermoneyitem != null) {
-                                itemMoneyArr = eval("([" + data.othermoneyitem + "])");  //支出项目金额列表
+                            if (data.otherMoneyItem != null) {
+                                itemMoneyArr = eval("([" + data.otherMoneyItem + "])");  //支出项目金额列表
                             }
                             var otherMoneyShow = "";
                             for(var j =0;j<itemArr.length; j++) {
@@ -277,16 +277,16 @@
                                     }
                                 }
                             }
-                            $("#bill .OtherMoneyShow:visible").text(otherMoneyShow +"总计："+ data.othermoney + "元 "); //其它费用
+                            $("#bill .OtherMoneyShow:visible").text(otherMoneyShow +"总计："+ data.otherMoney + "元 "); //其它费用
                         }
                         $("#bill .payTypeShow").text(data.payType);
-                        var TotalPrice = data.totalprice;
+                        var TotalPrice = data.totalPrice;
                         depotHeadID = data.id;
                         initTableData_material_show(TotalPrice,listSubType); //商品列表-查看状态
 
                         //零售单据展示数据
                         if(listSubType == "零售出库" || listSubType == "零售退货入库"){
-                            $("#bill .change-amount-show").text(data.changeamount);
+                            $("#bill .change-amount-show").text(data.changeAmount);
                             var changeAccount = $("#bill .change-amount-show:visible").text() - 0;
                             if(manyAccountMoney!==0){
                                 $("#bill .get-amount-show").text((manyAccountMoney).toFixed(2));
@@ -298,7 +298,7 @@
                             }
                         }
                         if(listSubType === "销售出库" || listSubType === "销售退货"){
-                            var salesManInfo = data.salesman;
+                            var salesManInfo = data.salesMan;
                             if(salesManInfo){
                                 var arr = salesManInfo.split(",");
                                 var salesmanStr = "";
@@ -344,14 +344,14 @@
                 success: function (res) {
                     if(res && res.code === 200){
                         var data = res.data;
-                        $("#bill .BillNoShow").text(data.billno);
-                        $("#bill .BillTimeShow").text(data.billtime);
+                        $("#bill .BillNoShow").text(data.billNo);
+                        $("#bill .BillTimeShow").text(data.billTime);
                         $("#bill .RemarkShow").text(data.remark);
-                        $("#bill .AccountIdShow").text(data.accountname);
-                        $('#bill .OrganIdShow').text(data.organname);
-                        $("#bill .HandsPersonIdShow").text(data.handspersonname);
-                        $("#bill .ChangeAmountShow").text(data.changeamount==null ? "":data.changeamount);
-                        var totalprice = data.totalprice;
+                        $("#bill .AccountIdShow").text(data.accountName);
+                        $('#bill .OrganIdShow').text(data.organName);
+                        $("#bill .HandsPersonIdShow").text(data.handsPersonName);
+                        $("#bill .ChangeAmountShow").text(data.changeAmount==null ? "":data.changeAmount);
+                        var totalprice = data.totalPrice;
                         var accountHeadID  = data.id;
                         initTableData_account_show(totalprice, accountHeadID); //明细列表-查看状态
                     }

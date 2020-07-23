@@ -104,9 +104,9 @@ public class AccountService {
                 if ((thisMonthAmount.compareTo(BigDecimal.ZERO))!=0) {
                     thisMonthAmountFmt = df.format(thisMonthAmount);
                 }
-                al.setThismonthamount(thisMonthAmountFmt);  //本月发生额
-                BigDecimal currentAmount = getAccountSum(al.getId(), "", "month").add(getAccountSumByHead(al.getId(), "", "month")).add(getAccountSumByDetail(al.getId(), "", "month")).add(getManyAccountSum(al.getId(), "", "month")) .add(al.getInitialamount()) ;
-                al.setCurrentamount(currentAmount);
+                al.setThisMonthAmount(thisMonthAmountFmt);  //本月发生额
+                BigDecimal currentAmount = getAccountSum(al.getId(), "", "month").add(getAccountSumByHead(al.getId(), "", "month")).add(getAccountSumByDetail(al.getId(), "", "month")).add(getManyAccountSum(al.getId(), "", "month")) .add(al.getInitialAmount()) ;
+                al.setCurrentAmount(currentAmount);
                 resList.add(al);
             }
         }
@@ -126,10 +126,10 @@ public class AccountService {
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertAccount(String beanJson, HttpServletRequest request)throws Exception {
         Account account = JSONObject.parseObject(beanJson, Account.class);
-        if(account.getInitialamount() == null) {
-            account.setInitialamount(BigDecimal.ZERO);
+        if(account.getInitialAmount() == null) {
+            account.setInitialAmount(BigDecimal.ZERO);
         }
-        account.setIsdefault(false);
+        account.setIsDefault(false);
         int result=0;
         try{
             result = accountMapper.insertSelective(account);
@@ -224,15 +224,15 @@ public class AccountService {
                 Date eTime = StringUtil.getDateByString(timeStr + "-31 00:00:00", null);
                 Date mTime = StringUtil.getDateByString(timeStr + "-01 00:00:00", null);
                 if (type.equals("month")) {
-                    example.createCriteria().andAccountidEqualTo(id).andPaytypeNotEqualTo("预付款")
-                    .andOpertimeGreaterThanOrEqualTo(bTime).andOpertimeLessThanOrEqualTo(eTime)
+                    example.createCriteria().andAccountIdEqualTo(id).andPayTypeNotEqualTo("预付款")
+                    .andOperTimeGreaterThanOrEqualTo(bTime).andOperTimeLessThanOrEqualTo(eTime)
                             .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
                 } else if (type.equals("date")) {
-                    example.createCriteria().andAccountidEqualTo(id).andPaytypeNotEqualTo("预付款")
-                    .andOpertimeLessThanOrEqualTo(mTime).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+                    example.createCriteria().andAccountIdEqualTo(id).andPayTypeNotEqualTo("预付款")
+                    .andOperTimeLessThanOrEqualTo(mTime).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
                 }
             } else {
-                example.createCriteria().andAccountidEqualTo(id).andPaytypeNotEqualTo("预付款")
+                example.createCriteria().andAccountIdEqualTo(id).andPayTypeNotEqualTo("预付款")
                         .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
             }
             List<DepotHead> dataList=null;
@@ -243,8 +243,8 @@ public class AccountService {
             }
             if (dataList != null) {
                 for (DepotHead depotHead : dataList) {
-                    if(depotHead.getChangeamount()!=null) {
-                        accountSum = accountSum .add(depotHead.getChangeamount()) ;
+                    if(depotHead.getChangeAmount()!=null) {
+                        accountSum = accountSum .add(depotHead.getChangeAmount()) ;
                     }
                 }
             }
@@ -269,16 +269,16 @@ public class AccountService {
                 Date eTime = StringUtil.getDateByString(timeStr + "-31 00:00:00", null);
                 Date mTime = StringUtil.getDateByString(timeStr + "-01 00:00:00", null);
                 if (type.equals("month")) {
-                    example.createCriteria().andAccountidEqualTo(id)
-                            .andBilltimeGreaterThanOrEqualTo(bTime).andBilltimeLessThanOrEqualTo(eTime)
+                    example.createCriteria().andAccountIdEqualTo(id)
+                            .andBillTimeGreaterThanOrEqualTo(bTime).andBillTimeLessThanOrEqualTo(eTime)
                             .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
                 } else if (type.equals("date")) {
-                    example.createCriteria().andAccountidEqualTo(id)
-                            .andBilltimeLessThanOrEqualTo(mTime)
+                    example.createCriteria().andAccountIdEqualTo(id)
+                            .andBillTimeLessThanOrEqualTo(mTime)
                             .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
                 }
             } else {
-                example.createCriteria().andAccountidEqualTo(id)
+                example.createCriteria().andAccountIdEqualTo(id)
                         .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
             }
             List<AccountHead> dataList=null;
@@ -289,8 +289,8 @@ public class AccountService {
             }
             if (dataList != null) {
                 for (AccountHead accountHead : dataList) {
-                    if(accountHead.getChangeamount()!=null) {
-                        accountSum = accountSum.add(accountHead.getChangeamount());
+                    if(accountHead.getChangeAmount()!=null) {
+                        accountSum = accountSum.add(accountHead.getChangeAmount());
                     }
                 }
             }
@@ -315,10 +315,10 @@ public class AccountService {
                 Date eTime = StringUtil.getDateByString(timeStr + "-31 00:00:00", null);
                 Date mTime = StringUtil.getDateByString(timeStr + "-01 00:00:00", null);
                 if (type.equals("month")) {
-                    example.createCriteria().andBilltimeGreaterThanOrEqualTo(bTime).andBilltimeLessThanOrEqualTo(eTime)
+                    example.createCriteria().andBillTimeGreaterThanOrEqualTo(bTime).andBillTimeLessThanOrEqualTo(eTime)
                             .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
                 } else if (type.equals("date")) {
-                    example.createCriteria().andBilltimeLessThanOrEqualTo(mTime)
+                    example.createCriteria().andBillTimeLessThanOrEqualTo(mTime)
                             .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
                 }
             }
@@ -339,13 +339,13 @@ public class AccountService {
                 AccountItemExample exampleAi = new AccountItemExample();
                 if (!ids.equals("")) {
                     List<Long> idList = StringUtil.strToLongList(ids);
-                    exampleAi.createCriteria().andAccountidEqualTo(id).andHeaderidIn(idList)
+                    exampleAi.createCriteria().andAccountIdEqualTo(id).andHeaderIdIn(idList)
                             .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
                     List<AccountItem> dataListOne = accountItemMapper.selectByExample(exampleAi);
                     if (dataListOne != null) {
                         for (AccountItem accountItem : dataListOne) {
-                            if(accountItem.getEachamount()!=null) {
-                                accountSum = accountSum.add(accountItem.getEachamount());
+                            if(accountItem.getEachAmount()!=null) {
+                                accountSum = accountSum.add(accountItem.getEachAmount());
                             }
                         }
                     }
@@ -374,16 +374,16 @@ public class AccountService {
                 Date eTime = StringUtil.getDateByString(timeStr + "-31 00:00:00", null);
                 Date mTime = StringUtil.getDateByString(timeStr + "-01 00:00:00", null);
                 if (type.equals("month")) {
-                    example.createCriteria().andAccountidlistLike("%" +id.toString() + "%")
-                            .andOpertimeGreaterThanOrEqualTo(bTime).andOpertimeLessThanOrEqualTo(eTime)
+                    example.createCriteria().andAccountIdListLike("%" +id.toString() + "%")
+                            .andOperTimeGreaterThanOrEqualTo(bTime).andOperTimeLessThanOrEqualTo(eTime)
                             .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
                 } else if (type.equals("date")) {
-                    example.createCriteria().andAccountidlistLike("%" +id.toString() + "%")
-                            .andOpertimeLessThanOrEqualTo(mTime)
+                    example.createCriteria().andAccountIdListLike("%" +id.toString() + "%")
+                            .andOperTimeLessThanOrEqualTo(mTime)
                             .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
                 }
             } else {
-                example.createCriteria().andAccountidlistLike("%" +id.toString() + "%")
+                example.createCriteria().andAccountIdListLike("%" +id.toString() + "%")
                         .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
             }
             List<DepotHead> dataList=null;
@@ -394,8 +394,8 @@ public class AccountService {
             }
             if (dataList != null) {
                 for (DepotHead depotHead : dataList) {
-                    String accountIdList = depotHead.getAccountidlist();
-                    String accountMoneyList = depotHead.getAccountmoneylist();
+                    String accountIdList = depotHead.getAccountIdList();
+                    String accountMoneyList = depotHead.getAccountMoneyList();
                     if(StringUtil.isNotEmpty(accountIdList) && StringUtil.isNotEmpty(accountMoneyList)) {
                         accountIdList = accountIdList.replace("[", "").replace("]", "").replace("\"", "");
                         accountMoneyList = accountMoneyList.replace("[", "").replace("]", "").replace("\"", "");
@@ -442,7 +442,7 @@ public class AccountService {
         logService.insertLog("账户",BusinessConstants.LOG_OPERATION_TYPE_EDIT+accountId,
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         Account account = new Account();
-        account.setIsdefault(isDefault);
+        account.setIsDefault(isDefault);
         AccountExample example = new AccountExample();
         example.createCriteria().andIdEqualTo(accountId);
         int result=0;
@@ -488,7 +488,7 @@ public class AccountService {
          * 校验：
          * 1、财务主表	jsh_accounthead
          * 2、财务子表	jsh_accountitem
-         * 3、单据主表	jsh_depothead
+         * 3、单据主表	jsh_depot_head
          * 是否有相关数据
          * */
         int deleteTotal=0;
@@ -527,7 +527,7 @@ public class AccountService {
                     ExceptionConstants.DELETE_FORCE_CONFIRM_MSG);
         }
         /**
-         * 校验单据主表	jsh_depothead
+         * 校验单据主表	jsh_depot_head
          * */
         List<DepotHead> depotHeadList =null;
         try{
@@ -561,7 +561,7 @@ public class AccountService {
                     BigDecimal monthAmount = getAccountSum(a.getId(), timeStr, "month").add(getAccountSumByHead(a.getId(), timeStr, "month"))
                             .add(getAccountSumByDetail(a.getId(), timeStr, "month")).add(getManyAccountSum(a.getId(), timeStr, "month"));
                     BigDecimal currentAmount = getAccountSum(a.getId(), "", "month").add(getAccountSumByHead(a.getId(), "", "month"))
-                            .add(getAccountSumByDetail(a.getId(), "", "month")).add(getManyAccountSum(a.getId(), "", "month")).add(a.getInitialamount());
+                            .add(getAccountSumByDetail(a.getId(), "", "month")).add(getManyAccountSum(a.getId(), "", "month")).add(a.getInitialAmount());
                     allMonthAmount = allMonthAmount.add(monthAmount);
                     allCurrentAmount = allCurrentAmount.add(currentAmount);
                 }

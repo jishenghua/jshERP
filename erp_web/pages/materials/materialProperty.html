@@ -111,7 +111,7 @@
             //loadFilter: pagerFilter,
             columns: [[
                 {field: 'id', width: 10, align: "center", hidden: true},
-                {title: '名称', field: 'nativename', width: 100},
+                {title: '名称', field: 'nativeName', width: 100},
                 {
                     title: '是否启用', field: 'enabled', width: 100, formatter: function (value, rec) {
                         if (rec.enabled) {
@@ -123,7 +123,7 @@
                     }
                 },
                 {title: '排序', field: 'sort', width: 100},
-                {title: '别名', field: 'anothername', width: 100},
+                {title: '别名', field: 'anotherName', width: 100},
                 {
                     title: '操作', field: 'op', align: "center", width: 80, formatter: function (value, rec, index) {
                         var str = '';
@@ -213,10 +213,10 @@
     //编辑信息
     function editMaterialProperty(index) {
         var rowsdata = $("#tableData").datagrid("getRows")[index];
-        $("#nativeName").text(rowsdata.nativename);
+        $("#nativeName").text(rowsdata.nativeName);
         $("#enabled").attr("checked", rowsdata.enabled == true ? true : false);
         $("#sort").textbox("setValue", rowsdata.sort);
-        $("#anotherName").textbox("setValue", rowsdata.anothername);
+        $("#anotherName").textbox("setValue", rowsdata.anotherName);
         $('#materialPropertyDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/pencil.png"/>&nbsp;编辑商品属性');
         $(".window-mask").css({width: webW, height: webH});
         //焦点在名称输入框==定焦在输入文字后面

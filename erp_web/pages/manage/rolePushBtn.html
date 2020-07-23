@@ -138,14 +138,14 @@
                 if (res && res.code === 200) {
                     var ubList = res.data.userBusinessList;
                     userBusinessId = ubList[0].id;
-                    roleBtnStr = ubList[0].btnstr;
+                    roleBtnStr = ubList[0].btnStr;
                     var getValue = ubList[0].value;
                     getValue = getValue.substring(1, getValue.length - 1);
                     if (getValue.indexOf("][")) {
                         var arr = getValue.split("][");
                         arr = arr.toString();
                         $.ajax({
-                            url: "/functions/findByIds",
+                            url: "/function/findByIds",
                             type: "get",
                             data: {
                                 functionsIds: arr

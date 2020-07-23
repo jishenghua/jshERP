@@ -3,12 +3,12 @@
 <mapper namespace="com.jsh.erp.datasource.mappers.UnitMapper">
   <resultMap id="BaseResultMap" type="com.jsh.erp.datasource.entities.Unit">
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="UName" jdbcType="VARCHAR" property="uname" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="basic_unit" jdbcType="VARCHAR" property="basicUnit" />
     <result column="other_unit" jdbcType="VARCHAR" property="otherUnit" />
     <result column="ratio" jdbcType="INTEGER" property="ratio" />
     <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
-    <result column="delete_Flag" jdbcType="VARCHAR" property="deleteFlag" />
+    <result column="delete_flag" jdbcType="VARCHAR" property="deleteFlag" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -69,7 +69,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, UName, basic_unit, other_unit, ratio, tenant_id, delete_Flag
+    id, name, basic_unit, other_unit, ratio, tenant_id, delete_flag
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.UnitExample" resultMap="BaseResultMap">
     select
@@ -102,10 +102,10 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.jsh.erp.datasource.entities.Unit">
-    insert into jsh_unit (id, UName, basic_unit, 
+    insert into jsh_unit (id, name, basic_unit, 
       other_unit, ratio, tenant_id, 
-      delete_Flag)
-    values (#{id,jdbcType=BIGINT}, #{uname,jdbcType=VARCHAR}, #{basicUnit,jdbcType=VARCHAR}, 
+      delete_flag)
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{basicUnit,jdbcType=VARCHAR}, 
       #{otherUnit,jdbcType=VARCHAR}, #{ratio,jdbcType=INTEGER}, #{tenantId,jdbcType=BIGINT}, 
       #{deleteFlag,jdbcType=VARCHAR})
   </insert>
@@ -115,8 +115,8 @@
       <if test="id != null">
         id,
       </if>
-      <if test="uname != null">
-        UName,
+      <if test="name != null">
+        name,
       </if>
       <if test="basicUnit != null">
         basic_unit,
@@ -131,15 +131,15 @@
         tenant_id,
       </if>
       <if test="deleteFlag != null">
-        delete_Flag,
+        delete_flag,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
         #{id,jdbcType=BIGINT},
       </if>
-      <if test="uname != null">
-        #{uname,jdbcType=VARCHAR},
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
       </if>
       <if test="basicUnit != null">
         #{basicUnit,jdbcType=VARCHAR},
@@ -170,8 +170,8 @@
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
       </if>
-      <if test="record.uname != null">
-        UName = #{record.uname,jdbcType=VARCHAR},
+      <if test="record.name != null">
+        name = #{record.name,jdbcType=VARCHAR},
       </if>
       <if test="record.basicUnit != null">
         basic_unit = #{record.basicUnit,jdbcType=VARCHAR},
@@ -186,7 +186,7 @@
         tenant_id = #{record.tenantId,jdbcType=BIGINT},
       </if>
       <if test="record.deleteFlag != null">
-        delete_Flag = #{record.deleteFlag,jdbcType=VARCHAR},
+        delete_flag = #{record.deleteFlag,jdbcType=VARCHAR},
       </if>
     </set>
     <if test="_parameter != null">
@@ -196,12 +196,12 @@
   <update id="updateByExample" parameterType="map">
     update jsh_unit
     set id = #{record.id,jdbcType=BIGINT},
-      UName = #{record.uname,jdbcType=VARCHAR},
+      name = #{record.name,jdbcType=VARCHAR},
       basic_unit = #{record.basicUnit,jdbcType=VARCHAR},
       other_unit = #{record.otherUnit,jdbcType=VARCHAR},
       ratio = #{record.ratio,jdbcType=INTEGER},
       tenant_id = #{record.tenantId,jdbcType=BIGINT},
-      delete_Flag = #{record.deleteFlag,jdbcType=VARCHAR}
+      delete_flag = #{record.deleteFlag,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -209,8 +209,8 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.jsh.erp.datasource.entities.Unit">
     update jsh_unit
     <set>
-      <if test="uname != null">
-        UName = #{uname,jdbcType=VARCHAR},
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
       </if>
       <if test="basicUnit != null">
         basic_unit = #{basicUnit,jdbcType=VARCHAR},
@@ -225,19 +225,19 @@
         tenant_id = #{tenantId,jdbcType=BIGINT},
       </if>
       <if test="deleteFlag != null">
-        delete_Flag = #{deleteFlag,jdbcType=VARCHAR},
+        delete_flag = #{deleteFlag,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.jsh.erp.datasource.entities.Unit">
     update jsh_unit
-    set UName = #{uname,jdbcType=VARCHAR},
+    set name = #{name,jdbcType=VARCHAR},
       basic_unit = #{basicUnit,jdbcType=VARCHAR},
       other_unit = #{otherUnit,jdbcType=VARCHAR},
       ratio = #{ratio,jdbcType=INTEGER},
       tenant_id = #{tenantId,jdbcType=BIGINT},
-      delete_Flag = #{deleteFlag,jdbcType=VARCHAR}
+      delete_flag = #{deleteFlag,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

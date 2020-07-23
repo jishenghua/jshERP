@@ -90,26 +90,26 @@ public class DepotHeadService {
         }
         if (null != list) {
             for (DepotHeadVo4List dh : list) {
-                if(dh.getAccountidlist() != null) {
-                    String accountidlistStr = dh.getAccountidlist().replace("[", "").replace("]", "").replaceAll("\"", "");
-                    dh.setAccountidlist(accountidlistStr);
+                if(dh.getAccountIdList() != null) {
+                    String accountidlistStr = dh.getAccountIdList().replace("[", "").replace("]", "").replaceAll("\"", "");
+                    dh.setAccountIdList(accountidlistStr);
                 }
-                if(dh.getAccountmoneylist() != null) {
-                    String accountmoneylistStr = dh.getAccountmoneylist().replace("[", "").replace("]", "").replaceAll("\"", "");
-                    dh.setAccountmoneylist(accountmoneylistStr);
+                if(dh.getAccountMoneyList() != null) {
+                    String accountmoneylistStr = dh.getAccountMoneyList().replace("[", "").replace("]", "").replaceAll("\"", "");
+                    dh.setAccountMoneyList(accountmoneylistStr);
                 }
-                if(dh.getOthermoneylist() != null) {
-                    String otherMoneyListStr = dh.getOthermoneylist().replace("[", "").replace("]", "").replaceAll("\"", "");
-                    dh.setOthermoneylist(otherMoneyListStr);
+                if(dh.getOtherMoneyList() != null) {
+                    String otherMoneyListStr = dh.getOtherMoneyList().replace("[", "").replace("]", "").replaceAll("\"", "");
+                    dh.setOtherMoneyList(otherMoneyListStr);
                 }
-                if(dh.getChangeamount() != null) {
-                    dh.setChangeamount(dh.getChangeamount().abs());
+                if(dh.getChangeAmount() != null) {
+                    dh.setChangeAmount(dh.getChangeAmount().abs());
                 }
-                if(dh.getTotalprice() != null) {
-                    dh.setTotalprice(dh.getTotalprice().abs());
+                if(dh.getTotalPrice() != null) {
+                    dh.setTotalPrice(dh.getTotalPrice().abs());
                 }
-                if(dh.getOpertime() != null) {
-                    dh.setOpertimeStr(getCenternTime(dh.getOpertime()));
+                if(dh.getOperTime() != null) {
+                    dh.setOperTimeStr(getCenternTime(dh.getOperTime()));
                 }
                 dh.setMaterialsList(findMaterialsListByHeaderId(dh.getId()));
                 resList.add(dh);
@@ -139,9 +139,9 @@ public class DepotHeadService {
         if (userInfo != null) {
             User sessionUser = (User) userInfo;
             String uName = sessionUser.getUsername();
-            depotHead.setOperpersonname(uName);
+            depotHead.setOperPersonName(uName);
         }
-        depotHead.setCreatetime(new Timestamp(System.currentTimeMillis()));
+        depotHead.setCreateTime(new Timestamp(System.currentTimeMillis()));
         depotHead.setStatus(BusinessConstants.BILLS_STATUS_UN_AUDIT);
         int result=0;
         try{
@@ -164,8 +164,8 @@ public class DepotHeadService {
         DepotHead depotHead = JSONObject.parseObject(beanJson, DepotHead.class);
         depotHead.setId(id);
         depotHead.setStatus(dh.getStatus());
-        depotHead.setCreatetime(dh.getCreatetime());
-        depotHead.setOperpersonname(dh.getOperpersonname());
+        depotHead.setCreateTime(dh.getCreateTime());
+        depotHead.setOperPersonName(dh.getOperPersonName());
         int result=0;
         try{
             result = depotHeadMapper.updateByPrimaryKey(depotHead);
@@ -342,9 +342,9 @@ public class DepotHeadService {
         String modeName = "";
         BigDecimal allOtherMoney = BigDecimal.ZERO;
         if (mode.equals("实际")) {
-            modeName = "ChangeAmount";
+            modeName = "change_amount";
         } else if (mode.equals("合计")) {
-            modeName = "DiscountLastMoney";
+            modeName = "discount_last_money";
             allOtherMoney = depotHeadMapperEx.findAllOtherMoney(supplierId, type, subType, endTime);
         }
         BigDecimal result = BigDecimal.ZERO;
@@ -419,29 +419,29 @@ public class DepotHeadService {
         }
         if (null != list) {
             for (DepotHeadVo4List dh : list) {
-                if(dh.getAccountidlist() != null) {
-                    String accountidlistStr = dh.getAccountidlist().replace("[", "").replace("]", "").replaceAll("\"", "");
-                    dh.setAccountidlist(accountidlistStr);
+                if(dh.getAccountIdList() != null) {
+                    String accountidlistStr = dh.getAccountIdList().replace("[", "").replace("]", "").replaceAll("\"", "");
+                    dh.setAccountIdList(accountidlistStr);
                 }
-                if(dh.getAccountmoneylist() != null) {
-                    String accountmoneylistStr = dh.getAccountmoneylist().replace("[", "").replace("]", "").replaceAll("\"", "");
-                    dh.setAccountmoneylist(accountmoneylistStr);
+                if(dh.getAccountMoneyList() != null) {
+                    String accountmoneylistStr = dh.getAccountMoneyList().replace("[", "").replace("]", "").replaceAll("\"", "");
+                    dh.setAccountMoneyList(accountmoneylistStr);
                 }
-                if(dh.getOthermoneylist() != null) {
-                    String otherMoneyListStr = dh.getOthermoneylist().replace("[", "").replace("]", "").replaceAll("\"", "");
-                    dh.setOthermoneylist(otherMoneyListStr);
+                if(dh.getOtherMoneyList() != null) {
+                    String otherMoneyListStr = dh.getOtherMoneyList().replace("[", "").replace("]", "").replaceAll("\"", "");
+                    dh.setOtherMoneyList(otherMoneyListStr);
                 }
-                if(dh.getOthermoneyitem() != null) {
-                    String otherMoneyItemStr = dh.getOthermoneyitem().replace("[", "").replace("]", "").replaceAll("\"", "");
-                    dh.setOthermoneyitem(otherMoneyItemStr);
+                if(dh.getOtherMoneyItem() != null) {
+                    String otherMoneyItemStr = dh.getOtherMoneyItem().replace("[", "").replace("]", "").replaceAll("\"", "");
+                    dh.setOtherMoneyItem(otherMoneyItemStr);
                 }
-                if(dh.getChangeamount() != null) {
-                    dh.setChangeamount(dh.getChangeamount().abs());
+                if(dh.getChangeAmount() != null) {
+                    dh.setChangeAmount(dh.getChangeAmount().abs());
                 }
-                if(dh.getTotalprice() != null) {
-                    dh.setTotalprice(dh.getTotalprice().abs());
+                if(dh.getTotalPrice() != null) {
+                    dh.setTotalPrice(dh.getTotalPrice().abs());
                 }
-                dh.setOpertimeStr(getCenternTime(dh.getOpertime()));
+                dh.setOperTimeStr(getCenternTime(dh.getOperTime()));
                 dh.setMaterialsList(findMaterialsListByHeaderId(dh.getId()));
                 resList.add(dh);
             }
@@ -466,9 +466,9 @@ public class DepotHeadService {
         DepotHead depotHead = JSONObject.parseObject(beanJson, DepotHead.class);
         //判断用户是否已经登录过，登录过不再处理
         User userInfo=userService.getCurrentUser();
-        depotHead.setHandspersonid(userInfo==null?null:userInfo.getId());
-        depotHead.setOperpersonname(userInfo==null?null:userInfo.getUsername());
-        depotHead.setCreatetime(new Timestamp(System.currentTimeMillis()));
+        depotHead.setHandsPersonId(userInfo==null?null:userInfo.getId());
+        depotHead.setOperPersonName(userInfo==null?null:userInfo.getUsername());
+        depotHead.setCreateTime(new Timestamp(System.currentTimeMillis()));
         depotHead.setStatus(BusinessConstants.BILLS_STATUS_UN_AUDIT);
         try{
             depotHeadMapper.insertSelective(depotHead);
@@ -476,14 +476,14 @@ public class DepotHeadService {
             JshException.writeFail(logger, e);
         }
         /**入库和出库处理预付款信息*/
-        if(BusinessConstants.PAY_TYPE_PREPAID.equals(depotHead.getPaytype())){
-            if(depotHead.getOrganid()!=null) {
-                supplierService.updateAdvanceIn(depotHead.getOrganid(), BigDecimal.ZERO.subtract(depotHead.getTotalprice()));
+        if(BusinessConstants.PAY_TYPE_PREPAID.equals(depotHead.getPayType())){
+            if(depotHead.getOrganId()!=null) {
+                supplierService.updateAdvanceIn(depotHead.getOrganId(), BigDecimal.ZERO.subtract(depotHead.getTotalPrice()));
             }
         }
         //根据单据编号查询单据id
         DepotHeadExample dhExample = new DepotHeadExample();
-        dhExample.createCriteria().andDefaultnumberEqualTo(depotHead.getDefaultnumber()).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        dhExample.createCriteria().andDefaultNumberEqualTo(depotHead.getDefaultNumber()).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<DepotHead> list = depotHeadMapper.selectByExample(dhExample);
         if(list!=null) {
             Long headId = list.get(0).getId();
@@ -491,11 +491,11 @@ public class DepotHeadService {
             depotItemService.saveDetials(inserted,deleted,updated,headId,tenantId, request);
         }
         /**如果关联单据号非空则更新订单的状态为2 */
-        if(depotHead.getLinknumber()!=null) {
+        if(depotHead.getLinkNumber()!=null) {
             DepotHead depotHeadOrders = new DepotHead();
             depotHeadOrders.setStatus(BusinessConstants.BILLS_STATUS_SKIP);
             DepotHeadExample example = new DepotHeadExample();
-            example.createCriteria().andNumberEqualTo(depotHead.getLinknumber());
+            example.createCriteria().andNumberEqualTo(depotHead.getLinkNumber());
             try{
                 depotHeadMapper.updateByExampleSelective(depotHeadOrders, example);
             }catch(Exception e){
@@ -527,16 +527,16 @@ public class DepotHeadService {
         //判断用户是否已经登录过，登录过不再处理
         depotHead.setId(id);
         User userInfo=userService.getCurrentUser();
-        depotHead.setOperpersonname(userInfo==null?null:userInfo.getUsername());
+        depotHead.setOperPersonName(userInfo==null?null:userInfo.getUsername());
         try{
             depotHeadMapper.updateByPrimaryKeySelective(depotHead);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
         /**入库和出库处理预付款信息*/
-        if(BusinessConstants.PAY_TYPE_PREPAID.equals(depotHead.getPaytype())){
-            if(depotHead.getOrganid()!=null){
-                supplierService.updateAdvanceIn(depotHead.getOrganid(), BigDecimal.ZERO.subtract(depotHead.getTotalprice().subtract(preTotalPrice)));
+        if(BusinessConstants.PAY_TYPE_PREPAID.equals(depotHead.getPayType())){
+            if(depotHead.getOrganId()!=null){
+                supplierService.updateAdvanceIn(depotHead.getOrganId(), BigDecimal.ZERO.subtract(depotHead.getTotalPrice().subtract(preTotalPrice)));
             }
         }
         /**入库和出库处理单据子表信息*/
@@ -558,7 +558,7 @@ public class DepotHeadService {
         User userInfo=userService.getCurrentUser();
         //删除出库数据回收序列号
         if(BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())
-                &&!BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubtype())){
+                &&!BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubType())){
             //查询单据子表列表
             List<DepotItem> depotItemList=null;
             try{
@@ -571,7 +571,7 @@ public class DepotHeadService {
             if(depotItemList!=null&&depotItemList.size()>0){
                 for(DepotItem depotItem:depotItemList){
                     //BasicNumber=OperNumber*ratio
-                    serialNumberService.cancelSerialNumber(depotItem.getMaterialid(), depotItem.getHeaderid(),(depotItem.getBasicnumber()==null?0:depotItem.getBasicnumber()).intValue(),userInfo);
+                    serialNumberService.cancelSerialNumber(depotItem.getMaterialId(), depotItem.getHeaderId(),(depotItem.getBasicNumber()==null?0:depotItem.getBasicNumber()).intValue(),userInfo);
                 }
             }
         }

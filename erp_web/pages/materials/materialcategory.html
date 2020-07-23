@@ -36,13 +36,13 @@
                     <input name="parentName" id="parentName" class="easyui-textbox" style="width: 200px;" readonly="readonly"/>
                     <a href="javascript:void(0)" class="l-btn l-btn-plain" group="" id="lookForSelectMaterialCategory">
                         <span class="l-btn-left"><span class="l-btn-text icon-search l-btn-icon-left" style="height: 20px;"></span></span></a>
-                    <input name="parentid" id="parentid" type="hidden"/>
+                    <input name="parentId" id="parentId" type="hidden"/>
                 </td>
             </tr>
             <tr>
                 <td>名称</td>
                 <td style="padding:5px">
-                    <input name="Name" id="Name" class="easyui-textbox"
+                    <input name="name" id="name" class="easyui-textbox"
                            data-options="required:true,validType:'length[2,30]'" style="width: 200px;"/>
                     <input name="id" id="id" type="hidden"/>
                 </td>
@@ -145,9 +145,9 @@
                     $('#materialCategoryFM').form('clear');
                     $('#materialCategoryDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/edit_add.png"/>&nbsp;修改商品类别信息');
                     $(".window-mask").css({width: webW, height: webH});
-                    $("#Name").textbox("setValue", res.data.name).focus();
+                    $("#name").textbox("setValue", res.data.name).focus();
                     $("#parentName").textbox("setValue", res.data.parentName);
-                    $("#parentid").val(res.data.parentId);
+                    $("#parentId").val(res.data.parentId);
                     $("#serialNo").textbox("setValue", res.data.serialNo);
                     $("#sort").textbox("setValue", res.data.sort);
                     $("#remark").textbox("setValue", res.data.remark);
@@ -250,7 +250,7 @@
 
     //保存信息
     $("#saveMaterialCategory").off("click").on("click", function () {
-        if (!$("#Name").val()) {
+        if (!$("#name").val()) {
             $.messager.alert('提示', '商品类别名称不能为空！', 'warning');
             return;
         }

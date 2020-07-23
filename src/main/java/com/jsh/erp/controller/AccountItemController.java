@@ -86,11 +86,11 @@ public class AccountItemController {
                 for (AccountItemVo4List ai : dataList) {
                     JSONObject item = new JSONObject();
                     item.put("Id", ai.getId());
-                    item.put("AccountId", ai.getAccountid());
+                    item.put("AccountId", ai.getAccountId());
                     item.put("AccountName", ai.getAccountName());
-                    item.put("InOutItemId", ai.getInoutitemid());
+                    item.put("InOutItemId", ai.getInOutItemId());
                     item.put("InOutItemName", ai.getInOutItemName());
-                    BigDecimal eachAmount = ai.getEachamount();
+                    BigDecimal eachAmount = ai.getEachAmount();
                     item.put("EachAmount", (eachAmount.compareTo(BigDecimal.ZERO))==-1 ? BigDecimal.ZERO.subtract(eachAmount): eachAmount);
                     item.put("Remark", ai.getRemark());
                     dataArray.add(item);

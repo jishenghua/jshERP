@@ -240,8 +240,8 @@ public class DepotService {
     public int batchDeleteDepotByIdsNormal(String ids) throws Exception {
         /**
          * 校验
-         * 1、单据主表	jsh_depothead
-         * 2、单据子表	jsh_depotitem
+         * 1、单据主表	jsh_depot_head
+         * 2、单据子表	jsh_depot_item
          * 是否有相关数据
          * */
         int deleteTotal=0;
@@ -251,7 +251,7 @@ public class DepotService {
         String [] idArray=ids.split(",");
 
         /**
-         * 校验单据子表	jsh_depotitem
+         * 校验单据子表	jsh_depot_item
          * */
         List<DepotItem> depotItemList=null;
         try{
