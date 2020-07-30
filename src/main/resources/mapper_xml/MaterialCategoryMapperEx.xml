@@ -105,6 +105,9 @@
         FROM jsh_material_category
         where 1=1
         and serial_no=#{serialNo}
+        <if test="id != null">
+            and id!=#{id}
+        </if>
         and ifnull(status,'0') !='2'
     </select>
     <select id="getMaterialCategoryListByCategoryIds"  resultMap="com.jsh.erp.datasource.mappers.MaterialCategoryMapper.BaseResultMap">
