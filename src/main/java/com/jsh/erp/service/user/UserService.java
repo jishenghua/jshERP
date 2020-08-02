@@ -23,6 +23,7 @@ import com.jsh.erp.utils.StringUtil;
 import com.jsh.erp.utils.Tools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -39,6 +40,12 @@ import java.util.Objects;
 @Service
 public class UserService {
     private Logger logger = LoggerFactory.getLogger(UserService.class);
+
+    private static final String TEST_USER = "jsh";
+
+    @Value("${demonstrate.open}")
+    private boolean demonstrateOpen;
+
     @Resource
     private UserMapper userMapper;
 
@@ -54,7 +61,6 @@ public class UserService {
     private TenantService tenantService;
     @Resource
     private UserBusinessService userBusinessService;
-
 
     public User getUser(long id)throws Exception {
         User result=null;
@@ -312,6 +318,25 @@ public class UserService {
     public User getCurrentUser()throws Exception{
         HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
         return (User)request.getSession().getAttribute("user");
+    }
+
+    /**
+     * 检查当前用户是否是演示用户
+     * @return
+     */
+    public Boolean checkIsTestUser() throws Exception{
+        Boolean result = false;
+        try {
+            if (demonstrateOpen) {
+                User user = getCurrentUser();
+                if (TEST_USER.equals(user.getLoginName())) {
+                    result = true;
+                }
+            }
+        } catch (Exception e) {
+            JshException.readFail(logger, e);
+        }
+        return result;
     }
 
     /**

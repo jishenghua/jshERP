@@ -246,21 +246,66 @@
 
     //删除系统配置信息
     function deleteSystemConfig(systemConfigId) {
-        if(checkIsTestUser()) {
+        $.messager.confirm('删除确认', '确定要删除此系统配置信息吗？', function (r) {
+            if (r) {
+                $.ajax({
+                    type: "post",
+                    url: "/systemConfig/batchDeleteSystemConfigByIds",
+                    dataType: "json",
+                    data: ({
+                        ids: systemConfigId
+                    }),
+                    success: function (res) {
+                        if(res && res.code == 200) {
+                            $("#searchBtn").click();
+                        } else if(res.code == -1) {
+                            $.messager.alert('提示', '演示用户禁止操作！', 'warning');
+                        } else {
+                            $.messager.alert('删除提示', '删除系统配置信息失败，请稍后再试！', 'error');
+                        }
+                    },
+                    //此处添加错误处理
+                    error: function () {
+                        $.messager.alert('删除提示', '删除系统配置信息异常，请稍后再试！', 'error');
+                        return;
+                    }
+                });
+            }
+        });
+    }
+
+    //批量删除系统配置
+    function batDeleteSystemConfig() {
+        var row = $('#tableData').datagrid('getChecked');
+        if (row.length == 0) {
+            $.messager.alert('删除提示', '没有记录被选中！', 'warning');
             return;
-        } else {
-            $.messager.confirm('删除确认', '确定要删除此系统配置信息吗？', function (r) {
+        }
+        if (row.length > 0) {
+            $.messager.confirm('删除确认', '确定要删除选中的' + row.length + '条系统配置信息吗？', function (r) {
                 if (r) {
+                    var ids = "";
+                    for (var i = 0; i < row.length; i++) {
+                        if (i == row.length - 1) {
+                            ids += row[i].id;
+                            break;
+                        }
+                        ids += row[i].id + ",";
+                    }
                     $.ajax({
                         type: "post",
                         url: "/systemConfig/batchDeleteSystemConfigByIds",
                         dataType: "json",
+                        async: false,
                         data: ({
-                            ids: systemConfigId
+                            ids: ids
                         }),
                         success: function (res) {
-                            if(res && res.code == 200) {
+                            if(res && res.code === 200) {
                                 $("#searchBtn").click();
+                                $(":checkbox").attr("checked", false);
+                            } else if(res.code === -1) {
+                                $.messager.alert('提示', '演示用户禁止操作！', 'warning');
                             } else {
                                 $.messager.alert('删除提示', '删除系统配置信息失败，请稍后再试！', 'error');
                             }
@@ -273,55 +318,6 @@
                     });
                 }
             });
-        }
-    }
-
-    //批量删除系统配置
-    function batDeleteSystemConfig() {
-        if(checkIsTestUser()) {
-            return;
-        } else {
-            var row = $('#tableData').datagrid('getChecked');
-            if (row.length == 0) {
-                $.messager.alert('删除提示', '没有记录被选中！', 'warning');
-                return;
-            }
-            if (row.length > 0) {
-                $.messager.confirm('删除确认', '确定要删除选中的' + row.length + '条系统配置信息吗？', function (r) {
-                    if (r) {
-                        var ids = "";
-                        for (var i = 0; i < row.length; i++) {
-                            if (i == row.length - 1) {
-                                ids += row[i].id;
-                                break;
-                            }
-                            ids += row[i].id + ",";
-                        }
-                        $.ajax({
-                            type: "post",
-                            url: "/systemConfig/batchDeleteSystemConfigByIds",
-                            dataType: "json",
-                            async: false,
-                            data: ({
-                                ids: ids
-                            }),
-                            success: function (res) {
-                                if(res && res.code === 200) {
-                                    $("#searchBtn").click();
-                                    $(":checkbox").attr("checked", false);
-                                } else {
-                                    $.messager.alert('删除提示', '删除系统配置信息失败，请稍后再试！', 'error');
-                                }
-                            },
-                            //此处添加错误处理
-                            error: function () {
-                                $.messager.alert('删除提示', '删除系统配置信息异常，请稍后再试！', 'error');
-                                return;
-                            }
-                        });
-                    }
-                });
-            }
         }
     }
 
@@ -353,9 +349,6 @@
 
     //保存系统配置信息
     $("#saveSystemConfig").off("click").on("click", function () {
-        if(checkIsTestUser()) {
-            return;
-        }
         if (checkCompanyName()) {
             return;
         }
@@ -377,11 +370,15 @@
                 info: JSON.stringify(infoObj)
             },
             success: function(res) {
-                if(res && res.code === 200) {
-                    $('#systemConfigDlg').dialog('close');
-                    //加载完以后重新初始化
-                    var opts = $("#tableData").datagrid('options');
-                    showSystemConfigDetails(opts.pageNumber, opts.pageSize);
+                if(res) {
+                    if(res.code === 200) {
+                        $('#systemConfigDlg').dialog('close');
+                        //加载完以后重新初始化
+                        var opts = $("#tableData").datagrid('options');
+                        showSystemConfigDetails(opts.pageNumber, opts.pageSize);
+                    } else if(res.code === -1) {
+                        $.messager.alert('提示', '演示用户禁止操作！', 'warning');
+                    }
                 }
             },
             //此处添加错误处理

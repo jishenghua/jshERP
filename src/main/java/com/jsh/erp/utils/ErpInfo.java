@@ -13,7 +13,8 @@ public enum ErpInfo {
     WARING_MSG(201, "提醒信息"),
     REDIRECT(301, "session失效，重定向"),
     FORWARD_REDIRECT(302, "转发请求session失效"),
-    FORWARD_FAILED(303, "转发请求失败!");
+    FORWARD_FAILED(303, "转发请求失败!"),
+    TEST_USER(-1, "演示用户禁止操作");
 
     public final int code;
     public final String name;

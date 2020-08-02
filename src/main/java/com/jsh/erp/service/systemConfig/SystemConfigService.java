@@ -86,9 +86,13 @@ public class SystemConfigService {
         SystemConfig systemConfig = JSONObject.parseObject(beanJson, SystemConfig.class);
         int result=0;
         try{
-            result=systemConfigMapper.insertSelective(systemConfig);
-            logService.insertLog("系统配置",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(systemConfig.getCompanyName()).toString(), request);
+            if(userService.checkIsTestUser()) {
+                result=-1;
+            } else {
+                result=systemConfigMapper.insertSelective(systemConfig);
+                logService.insertLog("系统配置",
+                        new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(systemConfig.getCompanyName()).toString(), request);
+            }
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -101,9 +105,13 @@ public class SystemConfigService {
         systemConfig.setId(id);
         int result=0;
         try{
-            result=systemConfigMapper.updateByPrimaryKeySelective(systemConfig);
-            logService.insertLog("系统配置",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(systemConfig.getCompanyName()).toString(), request);
+            if(userService.checkIsTestUser()) {
+                result=-1;
+            } else {
+                result = systemConfigMapper.updateByPrimaryKeySelective(systemConfig);
+                logService.insertLog("系统配置",
+                        new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(systemConfig.getCompanyName()).toString(), request);
+            }
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }

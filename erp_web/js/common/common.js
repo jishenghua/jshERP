@@ -423,32 +423,19 @@
 	}
 
 	/**
-	 * 检查当前用户是否是演示用户
+	 * 检查当前用户是否是管理员-用户模块
 	 */
-	function checkIsTestUser() {
-		var result = false;
-		var demonstrateOpen = false;
-		$.ajax({
-			type: "get",
-			url: "/user/getDemonstrateOpen",
-			dataType: "json",
-			async: false, //设置为同步
-			success: function (res) {
-				if (res && res.code === 200) {
-					demonstrateOpen = res.data.demonstrateOpen;
-				}
-			}
-		});
-		if(demonstrateOpen) {
-			var loginName = sessionStorage.getItem("loginName");
-			if (loginName == "jsh") {
-				$.messager.alert('提示', '演示用户禁止操作！', 'warning');
-				result = true;
-			} else {
-				result = false;
-			}
+	function checkPowerForUser() {
+		var res = false;
+		var loginName = sessionStorage.getItem("loginName");
+		if(loginName == "admin") {
+			$.messager.alert('提示：本系统为多租户SAAS系统','请先到<a target="_parent" href="/register.html">注册页面</a>' +
+				'进行租户注册，<br/>然后使用租户账号登录系统，<br/>最后通过租户去创建用户！','warning');
+			res = true;
+		} else {
+			res = false;
 		}
-		return result;
+		return res;
 	}
 
 	/**

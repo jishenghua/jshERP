@@ -320,7 +320,7 @@ public class MaterialCategoryService {
         //根据商品类别编号查询商品类别
         List<MaterialCategory> mList=null;
         try{
-            mList= materialCategoryMapperEx.getMaterialCategoryBySerialNo(mc.getSerialNo());
+            mList= materialCategoryMapperEx.getMaterialCategoryBySerialNo(mc.getSerialNo(), mc.getId());
         }catch(Exception e){
             JshException.readFail(logger, e);
         }

@@ -428,10 +428,10 @@ public class SerialNumberService {
      * @return com.jsh.erp.datasource.entities.SerialNumberEx
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int sellSerialNumber(Long materialId, Long depotheadId,int count,User user) throws Exception{
+    public int sellSerialNumber(Long materialId, Long depotHeadId,int count,User user) throws Exception{
         int result=0;
         try{
-            result = serialNumberMapperEx.sellSerialNumber(materialId,depotheadId,count,new Date(),user==null?null:user.getId());
+            result = serialNumberMapperEx.sellSerialNumber(materialId,depotHeadId,count,new Date(),user==null?null:user.getId());
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -450,10 +450,10 @@ public class SerialNumberService {
      * @return com.jsh.erp.datasource.entities.SerialNumberEx
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int cancelSerialNumber(Long materialId, Long depotheadId,int count,User user) throws Exception{
+    public int cancelSerialNumber(Long materialId, Long depotHeadId,int count,User user) throws Exception{
         int result=0;
         try{
-            result = serialNumberMapperEx.cancelSerialNumber(materialId,depotheadId,count,new Date(),user==null?null:user.getId());
+            result = serialNumberMapperEx.cancelSerialNumber(materialId,depotHeadId,count,new Date(),user==null?null:user.getId());
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }

@@ -43,9 +43,6 @@ public class UserController {
     @Value("${manage.roleId}")
     private Integer manageRoleId;
 
-    @Value("${demonstrate.open}")
-    private boolean demonstrateOpen;
-
     @Resource
     private UserService userService;
 
@@ -58,27 +55,6 @@ public class UserController {
     private static String message = "成功";
     private static final String HTTP = "http://";
     private static final String CODE_OK = "200";
-
-    /**
-     * 是否开启演示状态，默认关闭
-     * @param request
-     * @return
-     */
-    @GetMapping(value = "/getDemonstrateOpen")
-    public BaseResponseInfo getDemonstrateOpen(HttpServletRequest request) {
-        BaseResponseInfo res = new BaseResponseInfo();
-        try {
-            Map<String, Object> data = new HashMap<String, Object>();
-            data.put("demonstrateOpen", demonstrateOpen);
-            res.code = 200;
-            res.data = data;
-        } catch(Exception e){
-            e.printStackTrace();
-            res.code = 500;
-            res.data = "获取失败";
-        }
-        return res;
-    }
 
     @PostMapping(value = "/login")
     public BaseResponseInfo login(@RequestParam(value = "loginName", required = false) String loginName,

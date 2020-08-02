@@ -45,17 +45,17 @@ public interface SerialNumberMapperEx {
     /**
      * 查询符合条件的序列号数量
      * */
-    int countSerialNumberByMaterialIdAndDepotheadId(@Param("materialId")Long materialId, @Param("depotheadId")Long depotheadId, @Param("isSell")String isSell);
+    int countSerialNumberByMaterialIdAndDepotheadId(@Param("materialId")Long materialId, @Param("depotHeadId")Long depotHeadId, @Param("isSell")String isSell);
     /**
      * 卖出： update jsh_serial_number set is_Sell='1' ,depothead_Id='depotheadId' where 1=1 and material_Id='materialId'
      * and is_Sell !='1' and delete_Flag !='1'  {limit 0，count}
      * */
-    int sellSerialNumber(@Param("materialId")Long materialId, @Param("depotheadId")Long depotheadId,@Param("count")Integer count, @Param("updateTime") Date updateTime,@Param("updater") Long updater);
+    int sellSerialNumber(@Param("materialId")Long materialId, @Param("depotHeadId")Long depotHeadId,@Param("count")Integer count, @Param("updateTime") Date updateTime,@Param("updater") Long updater);
     /**
      * 赎回：update jsh_serial_number set is_Sell='0'  where 1=1 and material_Id='materialId'
      *      and depothead_Id='depotheadId' and is_Sell ！='0' and delete_Flag !='1' {limit 0，count}
      * */
-    int cancelSerialNumber(@Param("materialId")Long materialId, @Param("depotheadId")Long depotheadId, @Param("count")Integer count, @Param("updateTime") Date updateTime,@Param("updater") Long updater);
+    int cancelSerialNumber(@Param("materialId")Long materialId, @Param("depotHeadId")Long depotHeadId, @Param("count")Integer count, @Param("updateTime") Date updateTime,@Param("updater") Long updater);
     /**
      * 批量添加序列号
      * */
