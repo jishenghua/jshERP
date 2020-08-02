@@ -186,7 +186,20 @@
                         return str;
                     }
                 },
-                {title: '登录名称', field: 'loginName', width: 80},
+                {title: '登录名称', field: 'loginName', width: 80, align: "center"},
+                {
+                    title: '用户类型', field: 'userType', width: 80, formatter: function (value, rec, index) {
+                        var str = '';
+                        if (rec.id == rec.tenantId) {
+                            str = "租户";
+                        } else if(rec.tenantId == null){
+                            str = "超管";
+                        } else {
+                            str = "普通";
+                        }
+                        return str;
+                    }
+                },
                 {title: '用户姓名', field: 'username', width: 80, align: "center"},
                 {title: '职位', field: 'position', width: 115, align: "center"},
                 {title: '部门', field: 'orgAbr', width: 115, align: "center"},
@@ -354,7 +367,7 @@
     var userID = 0;
 
     function addUser() {
-        if(checkPower()){
+        if(checkPowerForUser()){
             return;
         }
         $('#userDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/edit_add.png"/>&nbsp;增加用户');

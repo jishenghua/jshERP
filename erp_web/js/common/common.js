@@ -423,6 +423,22 @@
 	}
 
 	/**
+	 * 检查当前用户是否是管理员-用户模块
+	 */
+	function checkPowerForUser() {
+		var res = false;
+		var loginName = sessionStorage.getItem("loginName");
+		if(loginName == "admin") {
+			$.messager.alert('提示：本系统为多租户SAAS系统','请先到<a target="_parent" href="/register.html">注册页面</a>' +
+				'进行租户注册，<br/>然后使用租户账号登录系统，<br/>最后通过租户去创建用户！','warning');
+			res = true;
+		} else {
+			res = false;
+		}
+		return res;
+	}
+
+	/**
 	 * 判断一个值是否数字
 	 * @param value
 	 * @returns {boolean}
