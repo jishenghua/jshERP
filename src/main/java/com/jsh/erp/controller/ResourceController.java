@@ -82,6 +82,8 @@ public class ResourceController {
         int insert = configResourceManager.insert(apiName, beanJson, request);
         if(insert > 0) {
             return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+        } else if(insert == -1) {
+            return returnJson(objectMap, ErpInfo.TEST_USER.name, ErpInfo.TEST_USER.code);
         } else {
             return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
         }
@@ -95,6 +97,8 @@ public class ResourceController {
         int update = configResourceManager.update(apiName, beanJson, id, request);
         if(update > 0) {
             return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+        } else if(update == -1) {
+            return returnJson(objectMap, ErpInfo.TEST_USER.name, ErpInfo.TEST_USER.code);
         } else {
             return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
         }

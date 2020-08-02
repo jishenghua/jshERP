@@ -385,6 +385,10 @@ public class ExceptionConstants {
     public static final int ORGA_USER_REL_EDIT_FAILED_CODE = 11500002;
     public static final String ORGA_USER_REL_EDIT_FAILED_MSG = "修改机构用户关联关系失败";
 
+    //演示用户禁止操作
+    public static final int SYSTEM_CONFIG_TEST_USER_CODE = -1;
+    public static final String SYSTEM_CONFIG_TEST_USER_MSG = "演示用户禁止操作";
+
 
     /**
      * 标准正常返回/操作成功返回
