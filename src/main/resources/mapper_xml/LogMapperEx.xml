@@ -38,20 +38,21 @@
     </select>
     <select id="countsByLog" resultType="java.lang.Long">
         SELECT
-        COUNT(id)
-        FROM jsh_log
+        COUNT(1)
+        FROM jsh_log l
+        left join jsh_user u on l.user_id = u.id and ifnull(u.status,'0') not in('1','2')
         WHERE 1=1
         <if test="operation != null">
-            and operation like '%${operation}%'
+            and l.operation like '%${operation}%'
         </if>
         <if test="userId != null">
-            and user_id=${userId}
+            and l.user_id=${userId}
         </if>
         <if test="clientIp != null">
-            and client_ip like '%${clientIp}%'
+            and l.client_ip like '%${clientIp}%'
         </if>
         <if test="status != null">
-            and status = ${status}
+            and l.status = ${status}
         </if>
         <if test="beginTime != null">
             and l.create_time &gt;= '${beginTime}'
@@ -60,7 +61,7 @@
             and l.create_time &lt;= '${endTime}'
         </if>
         <if test="content != null">
-            and content like '%${content}%'
+            and l.content like '%${content}%'
         </if>
     </select>
 </mapper>

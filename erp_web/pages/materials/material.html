@@ -424,7 +424,7 @@
                             }
                         }
                     },
-                    {title: '安全存量', field: 'safetystock', width: 70},
+                    {title: '安全存量', field: 'safetyStock', width: 70},
                     {
                         title: '库存', field: 'stock', width: 70, formatter: function (value, rec) {
                             var str = '';
@@ -442,7 +442,7 @@
                         }
                     },
                     {
-                        title: '序列号', field: 'enableserialnumber', width: 70, align: "center", formatter: function (value) {
+                        title: '序列号', field: 'enableSerialNumber', width: 70, align: "center", formatter: function (value) {
                             return value=='1' ? "<span style='color:green'>有</span>" : "无";
                         }
                     }
@@ -1219,42 +1219,29 @@
             var rowsdata = $("#tableData").datagrid("getRows")[index];
             bindMProperty(); //根据商品属性绑定
             $("#Name").focus().textbox("setValue", rowsdata.name);
-            $("#EnableSerialNumber").val(rowsdata.enableserialnumber=='1'?'1':'0');
+            $("#EnableSerialNumber").val(rowsdata.enableSerialNumber=='1'?'1':'0');
             //商品类别id
-            $("#parentId").val(rowsdata.categoryid);
+            $("#parentId").val(rowsdata.categoryId);
             //商品类别名称
             $("#parentName").textbox("setValue", rowsdata.categoryName);
-            mId = rowsdata.categoryid;
+            mId = rowsdata.categoryId;
             mName = rowsdata.categoryName;
-            $("#SafetyStock").textbox("setValue", rowsdata.safetystock);
+            $("#SafetyStock").textbox("setValue", rowsdata.safetyStock);
             $("#Model").textbox("setValue", rowsdata.model);
             $("#Standard").val(rowsdata.standard);
             $("#Color").val(rowsdata.color);
             $("#Mfrs").val(rowsdata.mfrs);
-            $("#OtherField1").val(rowsdata.otherfield1);
-            $("#OtherField2").val(rowsdata.otherfield2);
-            $("#OtherField3").val(rowsdata.otherfield3);
+            $("#OtherField1").val(rowsdata.otherField1);
+            $("#OtherField2").val(rowsdata.otherField2);
+            $("#OtherField3").val(rowsdata.otherField3);
             $("#Unit").val(rowsdata.unit);
             $("#Remark").textbox("setValue", rowsdata.remark);
-            $("#manyUnit").val(rowsdata.unitid);
-            if (rowsdata.unitid) {
+            $("#manyUnit").val(rowsdata.unitId);
+            if (rowsdata.unitId) {
                 $("#manyUnitCheck").prop("checked", true);
                 //当前为选中状态
                 $("#Unit").hide();
                 $("#manyUnit").show();
-                var selectItem = $("#manyUnit").children('option:selected').text();
-                if (selectItem !== "(空)") {
-                    var firstOutUnitOptions = selectItem.substring(0, selectItem.indexOf("("));
-                    var firstOptions = "";
-                    var arr = firstOutUnitOptions.split(",");
-                    var basic = '<option value="' + arr[0] + '">' + arr[0] + '</option>';
-                    var other = '<option value="' + arr[1] + '">' + arr[1] + '</option>';
-                    firstOptions = firstOptions + basic + other;
-                    $("#FirstOutUnit").empty().append('<option value="">(空)</option>').append(firstOptions); //首选销售单位
-                    $("#FirstInUnit").empty().append('<option value="">(空)</option>').append(firstOptions); //首选采购单位
-                    $("#FirstOutUnit").val(rowsdata.firstoutunit);//首选销售单位
-                    $("#FirstInUnit").val(rowsdata.firstinunit);//首选采购单位
-                }
             }
             else {
                 $("#manyUnitCheck").prop("checked", false);
@@ -1268,11 +1255,11 @@
             oldColor = rowsdata.color;
             oldStandard = rowsdata.standard;
             oldMfrs = rowsdata.mfrs;
-            oldOtherField1 = rowsdata.otherfield1;
-            oldOtherField2 = rowsdata.otherfield2;
-            oldOtherField3 = rowsdata.otherfield3;
+            oldOtherField1 = rowsdata.otherField1;
+            oldOtherField2 = rowsdata.otherField2;
+            oldOtherField3 = rowsdata.otherField3;
             oldUnit = rowsdata.unit;
-            oldManyUnit = rowsdata.unitid;
+            oldManyUnit = rowsdata.unitId;
             $('#materialDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/pencil.png"/>&nbsp;编辑商品信息');
             $(".window-mask").css({width: webW, height: webH});
             materialID = rowsdata.id;
