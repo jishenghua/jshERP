@@ -424,6 +424,14 @@ $(function () {
         $(".tencent").show();
         $(".aliyun").hide();
     }
+    var domWidth = $(document.body).width();
+    if(domWidth<800){
+        $(".official-plugin").hide();
+        $(".feedback").hide();
+    } else {
+        $(".official-plugin").show();
+        $(".feedback").show();
+    }
 
     //更新消息条数
     function getMsgCountByStatus() {
