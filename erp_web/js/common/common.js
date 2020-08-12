@@ -414,7 +414,7 @@
     	var res = false;
         var loginName = sessionStorage.getItem("loginName");
         if(loginName == "admin") {
-            $.messager.alert('提示','管理员不能增加表单数据！','warning');
+            $.messager.alert('提示','管理员不能增加表单数据，请使用租户账号进行操作！','warning');
             res = true;
         } else {
             res = false;

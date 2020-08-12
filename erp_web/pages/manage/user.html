@@ -548,11 +548,17 @@
             $.messager.alert('提示',"请选择一条数据再操作！",'warning');
             return false;
         }
-        if (currentRow.id == currentRow.tenantId) {
-            $.messager.alert('提示',"不能给自己配置角色！",'warning');
+        var loginName = sessionStorage.getItem("loginName");
+        if(loginName == "admin") {
+            $.messager.alert('提示', '管理员不能分配角色,请使用租户账号进行操作！', 'warning');
             return false;
+        } else {
+            if (currentRow.id == currentRow.tenantId) {
+                $.messager.alert('提示',"租户不能给自己分配角色！",'warning');
+                return false;
+            }
+            this.href = "/pages/user/userRole.html?id=" + currentRow.id;
         }
-        this.href = "/pages/user/userRole.html?id=" + currentRow.id;
     });
 
     //分配部门

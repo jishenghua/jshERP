@@ -1335,22 +1335,12 @@
 			return;
 		}
         var TotalPrice = res.totalPrice; //合计金额
-        if(pageType === "skip") { //从订单跳转过来
-            buildNumber(); //生成单据编号
-            var thisDateTime = getNowFormatDateTime(); //当前时间
-            $("#OperTime").val(thisDateTime);
-            $("#LinkNumber").val(res.number);  //关联订单号
-            $("#AccountId").val(defaultAccountId); //初始化默认的账户Id
-            $("#DiscountLastMoney").val(TotalPrice); //优惠后金额
-            $("#ChangeAmount").val(TotalPrice).attr("data-changeamount", TotalPrice);
-        } else {
-            $("#Number").val(res.number).attr("data-defaultNumber",res.number);
-            $("#OperTime").val(res.operTimeStr);
-            $("#LinkNumber").val(res.linkNumber); //关联订单号
-            $("#AccountId").val(res.accountId); //账户Id
-            $("#DiscountLastMoney").val(res.discountLastMoney); //优惠后金额
-            $("#ChangeAmount").val(res.changeAmount).attr("data-changeamount", res.changeAmount);
-		}
+		$("#Number").val(res.number).attr("data-defaultNumber",res.number);
+		$("#OperTime").val(res.operTimeStr);
+		$("#LinkNumber").val(res.linkNumber); //关联订单号
+		$("#AccountId").val(res.accountId); //账户Id
+		$("#DiscountLastMoney").val(res.discountLastMoney); //优惠后金额
+		$("#ChangeAmount").val(res.changeAmount).attr("data-changeamount", res.changeAmount);
 	    $('#OrganId').combobox('setValue', res.organId);
 	    $("#HandsPersonId").val(res.handsPersonId);
 	    $("#Remark").val(res.remark);

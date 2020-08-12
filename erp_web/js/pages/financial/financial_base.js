@@ -1,4 +1,5 @@
 	//初始化界面
+	var defaultAccountId = 0; //默认账户id
 	$(function(){
 		var accountList = null;
 		var accountID = null;
@@ -25,7 +26,6 @@
 		initSystemData_person(); //经手人数据
 		initSelectInfo_person(); //经手人信息
 		initSystemData_account(); //账户数据
-		initSelectInfo_account(); //账户信息
 		initSupplier(); //供应商
 		initTableData();
 		ininPager();
@@ -106,24 +106,21 @@
 				if(res && res.code === 200) {
 					if(res.data) {
                         accountList = res.data.accountList;
+						var options = "";
+						if(accountList !=null) {
+							for(var i = 0 ;i < accountList.length; i++) {
+								var account = accountList[i];
+								options += '<option value="' + account.id + '" data-currentAmount="' + account.currentAmount + '">' + account.name + '</option>';
+								if(account.isDefault) {
+									defaultAccountId = account.id; //给账户赋值默认id
+								}
+							}
+							$("#AccountId").empty().append(options);
+						}
 					}
                 }
 			}
 		});				
-	}
-	//获取账户信息
-	function initSelectInfo_account(){
-		var options = "";				
-		if(accountList !=null)
-		{
-			options = "";
-			for(var i = 0 ;i < accountList.length; i++)
-			{
-				var account = accountList[i];
-				options += '<option value="' + account.id + '">' + account.name + '</option>';
-			}	
-			$("#AccountId").empty().append(options);
-		}
 	}
 	
 	//初始化单位信息
@@ -673,6 +670,7 @@
 		$("#BillTime").val(thisDateTime);
 		var thisNumber = getNowFormatDateNum(); //根据时间生成编号
 		$("#BillNo").val(amountNum + thisNumber).focus();
+		$("#AccountId").val(defaultAccountId); //初始化默认的账户Id
 		var addTitle = listTitle.replace("列表","信息");
 		$('#accountHeadDlg').dialog('open').dialog('setTitle','<img src="/js/easyui/themes/icons/edit_add.png"/>&nbsp;增加' + addTitle);
 		$(".window-mask").css({ width: webW ,height: webH});
@@ -706,6 +704,7 @@
         $('#OrganId').combobox('setValue', res.organId);
         $("#HandsPersonId").val(res.handsPersonId);
         $("#ChangeAmount").val(res.changeAmount);
+		$("#AccountId").val(defaultAccountId); //初始化默认的账户Id
         var TotalPrice = res.totalPrice;
 		preTotalPrice = res.totalPrice; //记录前一次合计金额，用于收预付款
         var editTitle = listTitle.replace("列表","信息");
