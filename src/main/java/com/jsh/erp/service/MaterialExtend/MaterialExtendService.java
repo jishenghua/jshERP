@@ -296,4 +296,17 @@ public class MaterialExtendService {
         }
         return list;
     }
+
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public Long selectIdByMaterialIdAndDefaultFlag(Long materialId, String defaultFlag)throws Exception {
+        Long id = 0L;
+        MaterialExtendExample example = new MaterialExtendExample();
+        example.createCriteria().andMaterialIdEqualTo(materialId).andDefaultFlagEqualTo(defaultFlag)
+                                .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        List<MaterialExtend> list = materialExtendMapper.selectByExample(example);
+        if(list!=null && list.size()>0) {
+            id = list.get(0).getId();
+        }
+        return id;
+    }
 }
