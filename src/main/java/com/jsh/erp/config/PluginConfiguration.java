@@ -27,18 +27,11 @@ public class PluginConfiguration extends DefaultIntegrationConfiguration {
     @Value("${runMode:dev}")
     private String runMode;
 
-    /**
-     * 插件的路径
-     */
     @Value("${pluginPath:plugins}")
     private String pluginPath;
 
-    /**
-     * 插件文件的路径
-     */
     @Value("${pluginConfigFilePath:pluginConfigs}")
     private String pluginConfigFilePath;
-
 
     @Override
     public RuntimeMode environment() {
@@ -55,38 +48,21 @@ public class PluginConfiguration extends DefaultIntegrationConfiguration {
         return pluginConfigFilePath;
     }
 
-    /**
-     * 重写上传插件包的临时存储路径。只适用于生产环境
-     * @return String
-     */
     @Override
     public String uploadTempPath() {
         return "temp";
     }
 
-    /**
-     * 重写插件备份路径。只适用于生产环境
-     * @return String
-     */
     @Override
     public String backupPath() {
         return "backupPlugin";
     }
 
-    /**
-     * 重写插件RestController请求的路径前缀
-     * @return String
-     */
     @Override
     public String pluginRestControllerPathPrefix() {
         return "/api/plugin";
     }
 
-    /**
-     * 重写是否启用插件id作为RestController请求的路径前缀。
-     * 启动则插件id会作为二级路径前缀。即: /api/plugin/pluginId/**
-     * @return String
-     */
     @Override
     public boolean enablePluginIdRestControllerPathPrefix() {
         return true;
