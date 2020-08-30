@@ -38,22 +38,21 @@
                     </div>
                 </div>
             </div>
-            <div class="clearfix visible-sm-block"></div>
             <div class="col-md-3 col-sm-6 col-xs-12">
                 <div class="info-box">
-                    <span class="info-box-icon bg-green"><i class="fa fa-shopping-basket"></i></span>
+                    <span class="info-box-icon bg-green"><i class="fa fa-suitcase"></i></span>
                     <div class="info-box-content">
-                        <span class="info-box-text">本月累计进货</span>
-                        <span id="thisMonthBuy" class="info-box-number"></span>
+                        <span class="info-box-text">今日累计进货</span>
+                        <span id="todayBuy" class="info-box-number"></span>
                     </div>
                 </div>
             </div>
             <div class="col-md-3 col-sm-6 col-xs-12">
                 <div class="info-box">
-                    <span class="info-box-icon bg-yellow"><i class="fa fa-rmb"></i></span>
+                    <span class="info-box-icon bg-yellow"><i class="fa fa-shopping-basket"></i></span>
                     <div class="info-box-content">
-                        <span class="info-box-text">本月利润(含财务部分)</span>
-                        <span id="thisMonthAmount" class="info-box-number"></span>
+                        <span class="info-box-text">本月累计进货</span>
+                        <span id="thisMonthBuy" class="info-box-number"></span>
                     </div>
                 </div>
             </div>
@@ -133,6 +132,7 @@
                     if (res && res.code === 200) {
                         if (res.data) {
                             $("#todaySale").text((res.data.todaySale).toFixed(2));
+                            $("#todayBuy").text((res.data.todayBuy).toFixed(2));
                             $("#thisMonthSale").text((res.data.thisMonthSale).toFixed(2));
                             $("#thisMonthBuy").text((res.data.thisMonthBuy).toFixed(2));
                         }
@@ -144,31 +144,9 @@
             });
         } else {
             $("#todaySale").text("--");
+            $("#todayBuy").text("--");
             $("#thisMonthSale").text("--");
             $("#thisMonthBuy").text("--");
-        }
-    });
-
-    $(function () {
-        var loginName = sessionStorage.getItem("loginName");
-        if(loginName!="admin") {
-            $.ajax({
-                type: "get",
-                url: "/account/getStatistics",
-                dataType: "json",
-                success: function (res) {
-                    if (res && res.code === 200) {
-                        if(res.data) {
-                            $("#thisMonthAmount").text((res.data.allMonthAmount-0).toFixed(2));
-                        }
-                    }
-                },
-                error:function(res){
-
-                }
-            });
-        } else {
-            $("#thisMonthAmount").text("--");
         }
     });
 
