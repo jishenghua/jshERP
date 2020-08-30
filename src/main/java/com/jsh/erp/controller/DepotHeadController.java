@@ -426,7 +426,7 @@ public class DepotHeadController {
     }
 
     /**
-     * 统计今日销售额、本月销售额、本月进货额
+     * 统计今日销售额、今日进货额、本月销售额、本月进货额
      * @param request
      * @return
      */
@@ -441,6 +441,8 @@ public class DepotHeadController {
                     1, today, getNow3()); //今日销售出库
             BigDecimal todayRetailSale = depotHeadService.getBuyAndSaleRetailStatistics("出库", "零售",
                     0, today, getNow3()); //今日零售出库
+            BigDecimal todayBuy = depotHeadService.getBuyAndSaleStatistics("入库", "采购",
+                    1, today, getNow3()); //今日采购入库
             BigDecimal monthSale = depotHeadService.getBuyAndSaleStatistics("出库", "销售",
                     1,firstDay, getNow3()); //本月销售出库
             BigDecimal monthRetailSale = depotHeadService.getBuyAndSaleRetailStatistics("出库", "零售",
@@ -448,6 +450,7 @@ public class DepotHeadController {
             BigDecimal monthBuy = depotHeadService.getBuyAndSaleStatistics("入库", "采购",
                     1, firstDay, getNow3()); //本月采购入库
             map.put("todaySale", todaySale.add(todayRetailSale));
+            map.put("todayBuy", todayBuy);
             map.put("thisMonthSale", monthSale.add(monthRetailSale));
             map.put("thisMonthBuy", monthBuy);
             res.code = 200;

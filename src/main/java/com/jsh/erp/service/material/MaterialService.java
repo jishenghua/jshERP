@@ -493,7 +493,13 @@ public class MaterialService {
                     basicMaterialExtend.setUpdateTime(System.currentTimeMillis());
                     basicMaterialExtend.setCreateSerial(user.getLoginName());
                     basicMaterialExtend.setUpdateSerial(user.getLoginName());
-                    materialExtendMapper.insertSelective(basicMaterialExtend);
+                    Long meId = materialExtendService.selectIdByMaterialIdAndDefaultFlag(mId, "1");
+                    if(meId==0L){
+                        materialExtendMapper.insertSelective(basicMaterialExtend);
+                    } else {
+                        basicMaterialExtend.setId(meId);
+                        materialExtendMapper.updateByPrimaryKeySelective(basicMaterialExtend);
+                    }
                 }
                 if(StringUtil.isExist(materialExObj.get("other"))) {
                     String otherStr = materialExObj.getString("other");
@@ -504,7 +510,13 @@ public class MaterialService {
                     otherMaterialExtend.setUpdateTime(System.currentTimeMillis());
                     otherMaterialExtend.setCreateSerial(user.getLoginName());
                     otherMaterialExtend.setUpdateSerial(user.getLoginName());
-                    materialExtendMapper.insertSelective(otherMaterialExtend);
+                    Long meId = materialExtendService.selectIdByMaterialIdAndDefaultFlag(mId, "0");
+                    if(meId==0L){
+                        materialExtendMapper.insertSelective(otherMaterialExtend);
+                    } else {
+                        otherMaterialExtend.setId(meId);
+                        materialExtendMapper.updateByPrimaryKeySelective(otherMaterialExtend);
+                    }
                 }
                 //给商品初始化库存
                 Map<Long, BigDecimal> stockMap = m.getStockMap();

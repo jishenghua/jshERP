@@ -379,7 +379,6 @@ INSERT INTO `jsh_function` VALUES ('242', '060301', '销售订单', '0603', '/pa
 INSERT INTO `jsh_function` VALUES ('243', '000108', '机构管理', '0001', '/pages/manage/organization.html', '', '0139', '', '电脑版', '', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('244', '030112', '库存预警', '0301', '/pages/reports/stock_warning_report.html', '\0', '0670', '', '电脑版', '', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('245', '000107', '插件管理', '0001', '/pages/manage/plugin.html', '\0', '0170', '', '电脑版', '', 'icon-notebook', '0');
-INSERT INTO `jsh_function` VALUES ('246', '030113', '负库存统计[插件]', '0301', '/plugins/minusStockStatistics/index.html', '\0', '0675', '', '电脑版', '', 'icon-notebook', '0');
 
 -- ----------------------------
 -- Table structure for jsh_in_out_item
@@ -710,7 +709,9 @@ CREATE TABLE `jsh_role` (
 -- ----------------------------
 -- Records of jsh_role
 -- ----------------------------
-INSERT INTO `jsh_role` VALUES ('16', '测试角色123', null, null, null, '63', '0');
+INSERT INTO `jsh_role` VALUES ('4', '管理员', null, null, null, null, '0');
+INSERT INTO `jsh_role` VALUES ('10', '租户', null, null, null, null, '0');
+INSERT INTO `jsh_role` VALUES ('16', '测试角色', null, null, null, '63', '0');
 INSERT INTO `jsh_role` VALUES ('17', '角色666', null, null, null, '63', '0');
 
 -- ----------------------------

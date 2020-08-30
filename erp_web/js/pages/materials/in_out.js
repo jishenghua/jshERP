@@ -2377,12 +2377,16 @@
 	    if ($('#materialData').datagrid('validateRow', editIndex)) {
 			//仓库信息
 			var edDepot = $('#materialData').datagrid('getEditor', {index:editIndex,field:'DepotId'});
-			var DepotName = $(edDepot.target).combobox('getText');
-			$('#materialData').datagrid('getRows')[editIndex]['DepotName'] = DepotName;
+			if(edDepot) {
+				var DepotName = $(edDepot.target).combobox('getText');
+				$('#materialData').datagrid('getRows')[editIndex]['DepotName'] = DepotName;
+			}
 			//商品信息
 	    	var edMaterial = $('#materialData').datagrid('getEditor', {index:editIndex,field:'MaterialExtendId'});
-			var MaterialName = $(edMaterial.target).next().find('input.textbox-text').val();
-	        $('#materialData').datagrid('getRows')[editIndex]['MaterialName'] = MaterialName;
+			if(edMaterial) {
+				var MaterialName = $(edMaterial.target).next().find('input.textbox-text').val();
+				$('#materialData').datagrid('getRows')[editIndex]['MaterialName'] = MaterialName;
+			}
 	        //其它信息
 	        $('#materialData').datagrid('endEdit', editIndex);
 	        editIndex = undefined;

@@ -367,7 +367,7 @@ public class DepotItemService {
                     depotItem.setMaterialId(materialId);
                     depotItem.setMaterialExtendId(tempInsertedJson.getLong("MaterialExtendId"));
                     depotItem.setMaterialUnit(tempInsertedJson.getString("Unit"));
-                    if (!StringUtil.isEmpty(tempInsertedJson.get("OperNumber").toString())) {
+                    if (StringUtil.isExist(tempInsertedJson.get("OperNumber"))) {
                         depotItem.setOperNumber(tempInsertedJson.getBigDecimal("OperNumber"));
                         try {
                             String Unit = tempInsertedJson.get("Unit").toString();
@@ -392,13 +392,13 @@ public class DepotItemService {
                             logger.error(">>>>>>>>>>>>>>>>>>>设置基础数量异常", e);
                         }
                     }
-                    if (!StringUtil.isEmpty(tempInsertedJson.get("UnitPrice").toString())) {
+                    if (StringUtil.isExist(tempInsertedJson.get("UnitPrice"))) {
                         depotItem.setUnitPrice(tempInsertedJson.getBigDecimal("UnitPrice"));
                     }
-                    if (!StringUtil.isEmpty(tempInsertedJson.get("TaxUnitPrice").toString())) {
+                    if (StringUtil.isExist(tempInsertedJson.get("TaxUnitPrice"))) {
                         depotItem.setTaxUnitPrice(tempInsertedJson.getBigDecimal("TaxUnitPrice"));
                     }
-                    if (!StringUtil.isEmpty(tempInsertedJson.get("AllPrice").toString())) {
+                    if (StringUtil.isExist(tempInsertedJson.get("AllPrice"))) {
                         depotItem.setAllPrice(tempInsertedJson.getBigDecimal("AllPrice"));
                     }
                     depotItem.setRemark(tempInsertedJson.getString("Remark"));
@@ -408,13 +408,13 @@ public class DepotItemService {
                     if (tempInsertedJson.get("AnotherDepotId") != null && !StringUtil.isEmpty(tempInsertedJson.get("AnotherDepotId").toString())) {
                         depotItem.setAnotherDepotId(tempInsertedJson.getLong("AnotherDepotId"));
                     }
-                    if (!StringUtil.isEmpty(tempInsertedJson.get("TaxRate").toString())) {
+                    if (StringUtil.isExist(tempInsertedJson.get("TaxRate"))) {
                         depotItem.setTaxRate(tempInsertedJson.getBigDecimal("TaxRate"));
                     }
-                    if (!StringUtil.isEmpty(tempInsertedJson.get("TaxMoney").toString())) {
+                    if (StringUtil.isExist(tempInsertedJson.get("TaxMoney"))) {
                         depotItem.setTaxMoney(tempInsertedJson.getBigDecimal("TaxMoney"));
                     }
-                    if (!StringUtil.isEmpty(tempInsertedJson.get("TaxLastMoney").toString())) {
+                    if (StringUtil.isExist(tempInsertedJson.get("TaxLastMoney"))) {
                         depotItem.setTaxLastMoney(tempInsertedJson.getBigDecimal("TaxLastMoney"));
                     }
                     if (tempInsertedJson.get("OtherField1") != null) {
