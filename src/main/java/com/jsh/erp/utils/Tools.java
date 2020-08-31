@@ -1,7 +1,6 @@
 package com.jsh.erp.utils;
 
-import com.alibaba.druid.util.StringUtils;
-
+import org.springframework.util.StringUtils;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
