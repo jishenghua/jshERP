@@ -4,8 +4,10 @@ import com.gitee.starblues.integration.application.PluginApplication;
 import com.gitee.starblues.integration.operator.PluginOperator;
 import com.gitee.starblues.integration.operator.module.PluginInfo;
 import com.jsh.erp.utils.BaseResponseInfo;
+import com.jsh.erp.utils.ComputerInfo;
 import com.jsh.erp.utils.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -245,4 +247,22 @@ public class PluginController {
         }
     }
 
+    /**
+     * 获取加密后的mac
+     * @return
+     */
+    @GetMapping("/getMacWithSecret")
+    public BaseResponseInfo getMacWithSecret(){
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            String mac = ComputerInfo.getMacAddress();
+            res.code = 200;
+            res.data = DigestUtils.md5DigestAsHex(mac.getBytes());
+        } catch (Exception e) {
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
+    }
 }
