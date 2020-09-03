@@ -31,8 +31,8 @@
         </div>
         <div class="form-group">
             <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchBtn">查询</a>&nbsp;
-            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-redo" id="searchResetBtn">重置</a>
-            <a id="btnSetFunctions" class='easyui-linkbutton iframe iframe_LargeForm' href='#' title='分配功能'>分配功能</a>&nbsp;&nbsp;
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-redo" id="searchResetBtn">重置</a>&nbsp;
+            <a id="btnSetFunctions" class='easyui-linkbutton iframe iframe_LargeForm' href='#' title='分配功能'>分配功能</a>&nbsp;
             <a id="btnSetPushBtn" class='easyui-linkbutton iframe iframe_LargeForm' href='#' title='分配按钮'>分配按钮</a>
         </div>
     </div>
@@ -48,6 +48,24 @@
                 <td style="padding:5px">
                     <input name="name" id="name" class="easyui-textbox"
                 data-options="required:true,validType:'length[2,30]'" style="width: 230px;"/>
+                </td>
+            </tr>
+            <tr>
+                <td>数据类型&nbsp;&nbsp;</td>
+                <td style="padding:5px">
+                    <select name="type" id="type" class="easyui-combobox"
+                            data-options="required:true,panelHeight:'auto'" style="width: 230px;">
+                        <option value="全部数据">全部数据</option>
+                        <option value="本部门数据">本部门数据</option>
+                        <option value="个人数据">个人数据</option>
+                        <option value="自定义数据">自定义数据</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>描述&nbsp;&nbsp;</td>
+                <td style="padding:5px">
+                    <input name="description" id="description" class="easyui-textbox" data-options="multiline:true" style="width: 230px;height: 40px;"/>
                 </td>
             </tr>
         </table>
@@ -110,7 +128,9 @@
                         return str;
                     }
                 },
-                {title: '角色名称', field: 'name', width: 200}
+                {title: '角色名称', field: 'name', width: 200},
+                {title: '数据类型', field: 'type', width: 200},
+                {title: '描述', field: 'description', width: 200}
             ]],
             toolbar: [
                 {
@@ -147,7 +167,7 @@
         //兼容 IE,firefox 兼容
         var obj = e.srcElement ? e.srcElement : e.target;
         //绑定键盘事件为 id是指定的输入框才可以触发键盘事件 13键盘事件 ---遗留问题 enter键效验 对话框会关闭问题
-        if (k == "13" && (obj.id == "name" || obj.id == "sort" || obj.id == "remark")) {
+        if (k == "13" && (obj.id == "name" || obj.id == "description")) {
             $("#saveRole").click();
         }
         //搜索按钮添加快捷键
@@ -258,13 +278,9 @@
     var oldName = "";
 
     function addRole() {
-        $("#sort").val("");
-        $("#remark").val("");
+        $('#roleFM').form('clear');
         $('#roleDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/edit_add.png"/>&nbsp;增加角色信息');
         $(".window-mask").css({width: webW, height: webH});
-        $("#name").val("").focus();
-        //$('#roleFM').form('clear');
-
         oldName = "";
         roleID = 0;
         url = '/role/add';
@@ -305,6 +321,8 @@
     function editRole(index) {
         var rowsdata = $("#tableData").datagrid("getRows")[index];
         $("#name").textbox("setValue", rowsdata.name);
+        $("#type").combobox("setValue", rowsdata.type);
+        $("#description").textbox("setValue", rowsdata.description);
         oldName = rowsdata.name;
         $('#roleDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/pencil.png"/>&nbsp;编辑角色信息');
         $(".window-mask").css({width: webW, height: webH});

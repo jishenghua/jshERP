@@ -19,6 +19,8 @@
 <body>
 <!-- 数据显示table -->
 <div style="padding-bottom: 10px;">
+    <a id="btnAllCheck" class="easyui-linkbutton">全选</a>&nbsp;
+    <a id="btnAllCancel" class="easyui-linkbutton">全取消</a>&nbsp;
     <a id="btnOK" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
 </div>
 <div id="pushList">
@@ -83,7 +85,7 @@
                                 for (var i = 0; i < arr.length; i++) {
                                     for (var j = 0; j < pushBtnJSON.length; j++) {
                                         if (pushBtnJSON[j].id === arr[i] - 0) {
-                                            str += "<input type='checkbox' value='" + pushBtnJSON[j].id + "' />" + pushBtnJSON[j].text;
+                                            str += "<input type='checkbox' value='" + pushBtnJSON[j].id + "' />" + pushBtnJSON[j].text + " ";
                                         }
                                     }
                                 }
@@ -211,6 +213,40 @@
                 }
                 $(this).closest(".datagrid-row").find("[field='Id']").attr("data-btn", checkStr);
             });
+
+            //全选
+            $("#btnAllCheck").off("click").on("click", function () {
+                bindBody.find(".datagrid-row").each(function () {
+                    $(this).find("[field='PushBtnList']").find("input").each(function () {
+                        $(this).prop("checked", "checked");
+                    });
+                    $(this).find("[field='PushBtnList']").find("input").each(function () {
+                        var checkStr = "";
+                        $(this).closest(".datagrid-cell").find("input").each(function () {
+                            var thisValue = $(this).val(); //勾选的值
+                            var isChecked = $(this).prop("checked");
+                            if (isChecked) {
+                                checkStr = checkStr + thisValue + ",";
+                            }
+                        });
+                        if (checkStr) {
+                            checkStr = checkStr.substring(0, checkStr.length - 1);
+                        }
+                        $(this).closest(".datagrid-row").find("[field='Id']").attr("data-btn", checkStr);
+                    });
+                });
+            });
+
+            //全取消
+            $("#btnAllCancel").off("click").on("click", function () {
+                bindBody.find(".datagrid-row").each(function () {
+                    $(this).find("[field='Id']").attr("data-btn", "");
+                    $(this).find("[field='PushBtnList']").find("input").each(function () {
+                        $(this).prop("checked", "");
+                    });
+                });
+            });
+
         }, 500);
 
         $("#btnOK").off("click").on("click", function () {

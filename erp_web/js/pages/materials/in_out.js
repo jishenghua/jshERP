@@ -26,9 +26,11 @@
 	var btnEnableList = getBtnStr(); //获取按钮的权限
 	var mPropertyList = ""; //商品属性列表
 	var defaultAccountId = 0; //默认账户id
+	var roleType = ""; //角色类型
 	$(function(){
 		//初始化系统基础信息
 		getType();
+		getRoleType();
 		initSystemData_UB();
 		initSystemData_depot();
 		initSystemData_account();
@@ -141,6 +143,21 @@
 			organUrl = supUrl;
 			amountNum = "CXD";
 		}
+	}
+	function getRoleType(){
+		$.ajax({
+			type:"get",
+			url: "/user/getRoleTypeByUserId",
+			async: false,
+			success: function (res) {
+				if (res && res.code === 200) {
+					roleType = res.data.roleType;
+				}
+				else {
+					roleType = null;
+				}
+			}
+		});
 	}
 	//初始化系统基础信息
 	function initSystemData_UB(){
@@ -360,8 +377,8 @@
 				}
 			}
 		];
-		//如果允许的按钮列表中存在就显示，3-代表审核|反审核的权限
-		if(btnEnableList && btnEnableList.indexOf(3)>-1 && listTitle.indexOf("订单")>-1){
+		//如果允许的按钮列表中存在就显示，2-代表审核|反审核的权限
+		if(btnEnableList && btnEnableList.indexOf(2)>-1 && listTitle.indexOf("订单")>-1){
 			isHiddenStatus = false;  //显示
 			tableToolBar.push({
 				id:'okDepotHead',
@@ -2214,6 +2231,7 @@
 				search: JSON.stringify({
 					type: listType,
 					subType: listSubType,
+					roleType: roleType,
 					state: $.trim($("#searchState").val()),
 					number: $.trim($("#searchNumber").val()),
                     beginTime: beginTime,

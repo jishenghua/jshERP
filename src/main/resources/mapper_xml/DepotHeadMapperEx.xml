@@ -55,6 +55,9 @@
         <if test="subType != null">
             and dh.sub_type='${subType}'
         </if>
+        <if test="handsPersonId != null">
+            and dh.hands_person_id='${handsPersonId}'
+        </if>
         <if test="number != null">
             and dh.number like '%${number}%'
         </if>
@@ -88,6 +91,9 @@
         </if>
         <if test="subType != null">
             and sub_type='${subType}'
+        </if>
+        <if test="handsPersonId != null">
+            and hands_person_id='${handsPersonId}'
         </if>
         <if test="number != null">
             and number like '%${number}%'

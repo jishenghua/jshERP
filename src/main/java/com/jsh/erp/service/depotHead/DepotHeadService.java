@@ -79,12 +79,17 @@ public class DepotHeadService {
         return list;
     }
 
-    public List<DepotHeadVo4List> select(String type, String subType, String number, String beginTime, String endTime,
+    public List<DepotHeadVo4List> select(String type, String subType, String roleType, String number, String beginTime, String endTime,
                                          String materialParam, String depotIds, int offset, int rows)throws Exception {
+        Long handsPersonId = null;
+        User user = userService.getCurrentUser();
+        if("个人数据".equals(roleType)) {
+            handsPersonId = user.getId();
+        }
         List<DepotHeadVo4List> resList = new ArrayList<DepotHeadVo4List>();
         List<DepotHeadVo4List> list=null;
         try{
-            list=depotHeadMapperEx.selectByConditionDepotHead(type, subType, number, beginTime, endTime, materialParam, depotIds, offset, rows);
+            list=depotHeadMapperEx.selectByConditionDepotHead(type, subType, handsPersonId, number, beginTime, endTime, materialParam, depotIds, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -118,13 +123,16 @@ public class DepotHeadService {
         return resList;
     }
 
-
-
-    public Long countDepotHead(String type, String subType, String number, String beginTime, String endTime,
+    public Long countDepotHead(String type, String subType, String roleType,String number, String beginTime, String endTime,
                                String materialParam, String depotIds) throws Exception{
+        Long handsPersonId = null;
+        User user = userService.getCurrentUser();
+        if("个人数据".equals(roleType)) {
+            handsPersonId = user.getId();
+        }
         Long result=null;
         try{
-            result=depotHeadMapperEx.countsByDepotHead(type, subType, number, beginTime, endTime, materialParam, depotIds);
+            result=depotHeadMapperEx.countsByDepotHead(type, subType, handsPersonId, number, beginTime, endTime, materialParam, depotIds);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
