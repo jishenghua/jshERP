@@ -233,8 +233,10 @@
 						var str = '';
 						var orgId =  rec.organId ?  rec.organId : 0;
 						str += '<img title="查看" src="/js/easyui/themes/icons/list.png" style="cursor: pointer;" onclick="showAccountHead(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
-						str += '<img title="编辑" src="/js/easyui/themes/icons/pencil.png" style="cursor: pointer;" onclick="editAccountHead(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
-						str += '<img title="删除" src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteAccountHead('+ rec.id +',' + orgId +',' + rec.totalprice + ');"/>';
+						if(isShowOpFun()) {
+							str += '<img title="编辑" src="/js/easyui/themes/icons/pencil.png" style="cursor: pointer;" onclick="editAccountHead(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
+							str += '<img title="删除" src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteAccountHead(' + rec.id + ',' + orgId + ',' + rec.totalprice + ');"/>';
+						}
 						return str;
 					}
 				},
@@ -273,6 +275,7 @@
 			}    
 		});
         dgResize();
+		toolbarStatus();
 	}
 	
 	//初始化表格数据-明细列表-编辑状态

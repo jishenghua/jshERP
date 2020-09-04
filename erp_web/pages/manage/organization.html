@@ -142,6 +142,7 @@
                 }
             ],
         });
+        toolbarStatus();
         $('#tableData').prev('.datagrid-view2').find(".datagrid-body").append("<ul id='tt'><ul>");
         $('#tt').tree({
             url: '/organization/getOrganizationTree?id='+id,

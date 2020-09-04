@@ -172,16 +172,18 @@
             columns: [[
                 {field: 'id', width: 35, align: "center", checkbox:true},
                 {
-                    title: '操作', field: 'isystem', align: "center", width: 80, formatter: function (value, rec, index) {
+                    title: '操作', field: 'isystem', align: "center", width: 80,
+                    formatter: function (value, rec, index) {
                         var str = '';
                         if(rec.loginName != "jsh") {
                             str += '<img src="/js/easyui/themes/icons/pencil.png" style="cursor: pointer;" onclick="editUser(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
                         }
-                        if (rec.id != rec.tenantId && rec.loginName != "admin") {
-                            str += '<img src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteUser(' + rec.id + ');"/>';
-                        }
-                        else {
-                            str += '';
+                        if(isShowOpFun()) {
+                            if (rec.id != rec.tenantId && rec.loginName != "admin") {
+                                str += '<img src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteUser(' + rec.id + ');"/>';
+                            } else {
+                                str += '';
+                            }
                         }
                         return str;
                     }
@@ -233,6 +235,7 @@
             }
         });
         dgResize();
+        toolbarStatus();
         showUserDetails(1, initPageSize);
     }
 
@@ -469,6 +472,9 @@
         };
         $('#userDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/pencil.png"/>&nbsp;编辑用户信息');
         $(".window-mask").css({width: webW, height: webH});
+        if(!isShowOpFun()){
+            $("#saveusername").hide();
+        }
         $('#usernameFM').form('load', row);
         userID = rowsdata.id;
         //焦点在名称输入框==定焦在输入文字后面

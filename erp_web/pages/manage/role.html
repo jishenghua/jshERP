@@ -121,10 +121,13 @@
             columns: [[
                 {field: 'id', width: 35, align: "center", checkbox: true},
                 {
-                    title: '操作', field: 'op', align: "center", width: 80, formatter: function (value, rec, index) {
+                    title: '操作', field: 'op', align: "center", width: 80,
+                    formatter: function (value, rec, index) {
                         var str = '';
                         str += '<img src="/js/easyui/themes/icons/pencil.png" style="cursor: pointer;" onclick="editRole(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
-                        str += '<img src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteRole(' + rec.id + ');"/>';
+                        if(isShowOpFun()) {
+                            str += '<img src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteRole(' + rec.id + ');"/>';
+                        }
                         return str;
                     }
                 },
@@ -156,6 +159,7 @@
             }
         });
         dgResize();
+        toolbarStatus();
         showRoleDetails(1, initPageSize);
     }
 
@@ -326,6 +330,9 @@
         oldName = rowsdata.name;
         $('#roleDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/pencil.png"/>&nbsp;编辑角色信息');
         $(".window-mask").css({width: webW, height: webH});
+        if(!isShowOpFun()){
+            $("#saveRole").hide();
+        }
         roleID = rowsdata.id;
         url = '/role/update?id=' + rowsdata.id;
     }

@@ -114,7 +114,9 @@
                     formatter: function (value, rec, index) {
                         var str = '';
                         str += '<img title="编辑" src="/js/easyui/themes/icons/pencil.png" style="cursor: pointer;" onclick="editUnit(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
-                        str += '<img title="删除" src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteUnit(' + rec.id + ');"/>';
+                        if(isShowOpFun()) {
+                            str += '<img title="删除" src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteUnit(' + rec.id + ');"/>';
+                        }
                         return str;
                     }
                 },
@@ -144,6 +146,7 @@
             }
         });
         dgResize();
+        toolbarStatus();
         showUnitDetails(1, initPageSize);
     }
 
@@ -385,6 +388,9 @@
         oldUnit = rowsdata.uname;
         $('#unitDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/pencil.png"/>&nbsp;编辑计量单位');
         $(".window-mask").css({width: webW, height: webH});
+        if(!isShowOpFun()){
+            $("#saveUnit").hide();
+        }
         unitID = rowsdata.id;
         $("#basicName").textbox("setValue", rowsdata.basicUnit);
         $("#otherName").textbox("setValue", rowsdata.otherUnit);

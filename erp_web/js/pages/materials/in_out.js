@@ -448,14 +448,16 @@
 			pageList: initPageNum,
 			columns:[[
 				{ field: 'id',width:35,align:"center",checkbox:true},
-				{ title: '操作',field: 'op',align:"center",width:opWidth,
+				{ title: '操作',field: 'op',align:"center", width:opWidth,
 					formatter:function(value,rec,index) {
 						var str = '';
 						var orgId = rec.organId? rec.organId:0;
 						str += '<img title="查看" src="/js/easyui/themes/icons/list.png" style="cursor: pointer;" onclick="showDepotHead(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
-						str += '<img title="编辑" src="/js/easyui/themes/icons/pencil.png" style="cursor: pointer;" onclick="editDepotHead(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
-						str += '<img title="删除" src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteDepotHead('+ rec.id +',' + orgId +',' + rec.totalPrice+',' + rec.status + ');"/>';
-                        if(isShowSkip) {
+						if(isShowOpFun()){
+							str += '<img title="编辑" src="/js/easyui/themes/icons/pencil.png" style="cursor: pointer;" onclick="editDepotHead(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
+							str += '<img title="删除" src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteDepotHead('+ rec.id +',' + orgId +',' + rec.totalPrice+',' + rec.status + ');"/>';
+						}
+						if(isShowSkip) {
                             str += '&nbsp;&nbsp;&nbsp;<img title="' + opTitle + '" src="/js/easyui/themes/icons/redo.png" style="cursor: pointer;" onclick="skipDepotHead(\'' + index + '\');"/>';
 						}
 						return str;
@@ -507,6 +509,7 @@
 			}
 		});
         dgResize();
+		toolbarStatus();
 	}
 	//查找库存的方法
 	function findStockNumById(depotId, meId, monthTime, body, input, ratio, type){

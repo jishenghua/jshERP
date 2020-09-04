@@ -147,7 +147,9 @@
                     formatter: function (value, rec, index) {
                         var str = '';
                         str += '<img src="/js/easyui/themes/icons/pencil.png" style="cursor: pointer;" onclick="editSystemConfig(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
-                        str += '<img src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteSystemConfig(' + rec.id + ');"/>';
+                        if(isShowOpFun()) {
+                            str += '<img src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteSystemConfig(' + rec.id + ');"/>';
+                        }
                         return str;
                     }
                 },
@@ -200,6 +202,7 @@
             }
         });
         dgResize();
+        toolbarStatus();
         showSystemConfigDetails(1, initPageSize);
     }
 
@@ -403,6 +406,9 @@
         oldCompanyName = res.companyName;
         $('#systemConfigDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/pencil.png"/>&nbsp;编辑系统配置信息');
         $(".window-mask").css({width: webW, height: webH});
+        if(!isShowOpFun()){
+            $("#saveSystemConfig").hide();
+        }
         $('#systemConfigFM').form('load', row);
         systemConfigId = res.id;
         $("#depotFlag").attr("checked", res.depotFlag == '1' ? true : false);

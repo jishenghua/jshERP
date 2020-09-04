@@ -126,7 +126,9 @@
                     title: '操作', field: 'op', align: "center", width: 130, formatter: function (value, rec, index) {
                         var str = '';
                         str += '<img src="/js/easyui/themes/icons/pencil.png" style="cursor: pointer;" onclick="editPerson(\'' + index + '\');"/>&nbsp;<a onclick="editPerson(\'' + index + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
-                        str += '<img src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deletePerson(' + rec.id + ');"/>&nbsp;<a onclick="deletePerson(' + rec.id + ');" style="text-decoration:none;color:black;" href="javascript:void(0)">删除</a>&nbsp;&nbsp;';
+                        if(isShowOpFun()) {
+                            str += '<img src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deletePerson(' + rec.id + ');"/>&nbsp;<a onclick="deletePerson(' + rec.id + ');" style="text-decoration:none;color:black;" href="javascript:void(0)">删除</a>&nbsp;&nbsp;';
+                        }
                         return str;
                     }
                 }
@@ -155,6 +157,7 @@
             }
         });
         dgResize();
+        toolbarStatus();
         showPersonDetails(1, initPageSize);
     }
 
@@ -383,6 +386,9 @@
         $("#Type").combobox("setValue", rowsdata.type);
         $('#personDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/pencil.png"/>&nbsp;编辑经手人信息');
         $(".window-mask").css({width: webW, height: webH});
+        if(!isShowOpFun()){
+            $("#savePerson").hide();
+        }
         personID = rowsdata.id;
         url = '/person/update?id=' + rowsdata.id;
     }

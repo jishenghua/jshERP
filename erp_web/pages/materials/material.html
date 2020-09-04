@@ -402,10 +402,13 @@
                 columns: [[
                     {field: 'id', width: 35, align: "center", checkbox: true},
                     {
-                        title: '操作', field: 'op', align: "center", width: 60, formatter: function (value, rec, index) {
+                        title: '操作', field: 'op', align: "center", width: 60,
+                        formatter: function (value, rec, index) {
                             var str = '';
                             str += '<img title="编辑" src="/js/easyui/themes/icons/pencil.png" style="cursor: pointer;" onclick="editMaterial(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
-                            str += '<img title="删除" src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteMaterial(' + rec.id + ');"/>';
+                            if(isShowOpFun()) {
+                                str += '<img title="删除" src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteMaterial(' + rec.id + ');"/>';
+                            }
                             return str;
                         }
                     },
@@ -508,6 +511,7 @@
                 }
             });
             dgResize();
+            toolbarStatus();
             showMaterialDetails(1, initPageSize);
         }
 
@@ -1262,6 +1266,9 @@
             oldManyUnit = rowsdata.unitId;
             $('#materialDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/pencil.png"/>&nbsp;编辑商品信息');
             $(".window-mask").css({width: webW, height: webH});
+            if(!isShowOpFun()){
+                $("#saveMaterial").hide();
+            }
             materialID = rowsdata.id;
             //焦点在名称输入框==定焦在输入文字后面
             $("#Name").val("").focus().val(rowsdata.name);

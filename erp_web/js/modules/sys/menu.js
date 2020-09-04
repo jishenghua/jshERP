@@ -43,7 +43,7 @@ function initSelectInfo(lei) {
             //按钮权限列表
             else if (lei == 3) {
                 var btnStr = userBusinessList[0].btnStr;
-                if (btnStr != null) {
+                if (btnStr != null && btnStr !="") {
                     var btnObj = JSON.parse(btnStr);
                     for (var j = 0; j < btnObj.length; j++) {
                         btnStrList.push(btnObj[j]);
