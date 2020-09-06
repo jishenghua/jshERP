@@ -15,6 +15,7 @@ import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.log.LogService;
+import com.jsh.erp.service.orgaUserRel.OrgaUserRelService;
 import com.jsh.erp.service.serialNumber.SerialNumberService;
 import com.jsh.erp.service.supplier.SupplierService;
 import com.jsh.erp.service.user.UserService;
@@ -53,6 +54,8 @@ public class DepotHeadService {
     @Resource
     private SerialNumberService serialNumberService;
     @Resource
+    private OrgaUserRelService orgaUserRelService;
+    @Resource
     DepotItemMapperEx depotItemMapperEx;
     @Resource
     private LogService logService;
@@ -81,15 +84,21 @@ public class DepotHeadService {
 
     public List<DepotHeadVo4List> select(String type, String subType, String roleType, String number, String beginTime, String endTime,
                                          String materialParam, String depotIds, int offset, int rows)throws Exception {
-        Long handsPersonId = null;
+        String handsPersonIds = "";
         User user = userService.getCurrentUser();
         if("个人数据".equals(roleType)) {
-            handsPersonId = user.getId();
+            handsPersonIds = user.getId().toString();
+        } else if("本机构数据".equals(roleType)) {
+            handsPersonIds = orgaUserRelService.getUserIdListByUserId(user.getId());
+        }
+        String [] handsPersonIdArray=null;
+        if(StringUtil.isNotEmpty(handsPersonIds)){
+            handsPersonIdArray = handsPersonIds.split(",");
         }
         List<DepotHeadVo4List> resList = new ArrayList<DepotHeadVo4List>();
         List<DepotHeadVo4List> list=null;
         try{
-            list=depotHeadMapperEx.selectByConditionDepotHead(type, subType, handsPersonId, number, beginTime, endTime, materialParam, depotIds, offset, rows);
+            list=depotHeadMapperEx.selectByConditionDepotHead(type, subType, handsPersonIdArray, number, beginTime, endTime, materialParam, depotIds, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -125,14 +134,20 @@ public class DepotHeadService {
 
     public Long countDepotHead(String type, String subType, String roleType,String number, String beginTime, String endTime,
                                String materialParam, String depotIds) throws Exception{
-        Long handsPersonId = null;
+        String handsPersonIds = "";
         User user = userService.getCurrentUser();
         if("个人数据".equals(roleType)) {
-            handsPersonId = user.getId();
+            handsPersonIds = user.getId().toString();
+        } else if("本机构数据".equals(roleType)) {
+            handsPersonIds = orgaUserRelService.getUserIdListByUserId(user.getId());
+        }
+        String [] handsPersonIdArray=null;
+        if(StringUtil.isNotEmpty(handsPersonIds)){
+            handsPersonIdArray = handsPersonIds.split(",");
         }
         Long result=null;
         try{
-            result=depotHeadMapperEx.countsByDepotHead(type, subType, handsPersonId, number, beginTime, endTime, materialParam, depotIds);
+            result=depotHeadMapperEx.countsByDepotHead(type, subType, handsPersonIdArray, number, beginTime, endTime, materialParam, depotIds);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }

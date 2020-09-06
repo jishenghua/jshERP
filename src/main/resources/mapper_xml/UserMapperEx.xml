@@ -29,7 +29,7 @@
         <if test="loginName != null">
             and user.login_name like '%${loginName}%'
         </if>
-        order by user.id desc
+        order by rel.user_blng_orga_dspl_seq,user.id desc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
         </if>

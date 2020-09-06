@@ -104,7 +104,7 @@
             </tr>
             <tr>
                 <td>
-                    用户排序
+                    排序
                 </td>
                 <td style="padding:5px">
                     <input name="userBlngOrgaDsplSeq" id="userBlngOrgaDsplSeq" class="easyui-textbox" style="width: 230px;"/>
@@ -175,7 +175,7 @@
                     title: '操作', field: 'isystem', align: "center", width: 80,
                     formatter: function (value, rec, index) {
                         var str = '';
-                        if(rec.loginName != "jsh") {
+                        if(rec.userType != "演示用户") {
                             str += '<img src="/js/easyui/themes/icons/pencil.png" style="cursor: pointer;" onclick="editUser(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
                         }
                         if(isShowOpFun()) {
@@ -188,19 +188,7 @@
                         return str;
                     }
                 },
-                {
-                    title: '用户类型', field: 'userType', width: 80, formatter: function (value, rec, index) {
-                        var str = '';
-                        if (rec.id == rec.tenantId) {
-                            str = "租户";
-                        } else if(rec.tenantId == null){
-                            str = "超管";
-                        } else {
-                            str = "普通";
-                        }
-                        return str;
-                    }
-                },
+                {title: '用户类型', field: 'userType', width: 80},
                 {title: '登录名称', field: 'loginName', width: 80, align: "center"},
                 {title: '用户姓名', field: 'username', width: 80, align: "center"},
                 {title: '角色', field: 'roleName', width: 80, align: "center"},
@@ -208,7 +196,7 @@
                 {title: '机构', field: 'orgAbr', width: 115, align: "center"},
                 {title: '电子邮箱', field: 'email', width: 150, align: "center"},
                 {title: '电话号码', field: 'phonenum', width: 150, align: "center"},
-                {title: '用户排序', field: 'userBlngOrgaDsplSeq', width: 80, align: "center"},
+                {title: '排序', field: 'userBlngOrgaDsplSeq', width: 80, align: "center"},
                 {title: '描述', field: 'description', width: 130},
                 {field: 'orgaId',hidden:true, width: 10}
             ]],

@@ -273,4 +273,38 @@ public class OrganizationService {
         }
         return result;
     }
+
+    /**
+     * 根据父级id递归获取子集组织id
+     * @return
+     */
+    public List<Long> getOrgIdByParentId(Long orgId) {
+        List<Long> idList = new ArrayList<Long>();
+        OrganizationExample example = new OrganizationExample();
+        example.createCriteria().andIdEqualTo(orgId).andOrgStcdNotEqualTo(BusinessConstants.ORGANIZATION_STCD_REMOVED);
+        List<Organization> orgList = organizationMapper.selectByExample(example);
+        if(orgList!=null && orgList.size()>0) {
+            idList.add(orgId);
+            getOrgIdByParentNo(idList, orgList.get(0).getOrgNo());
+        }
+        return idList;
+    }
+
+    /**
+     * 根据组织编号递归获取下级编号
+     * @param orgNo
+     * @return
+     */
+    public void getOrgIdByParentNo(List<Long> idList,String orgNo) {
+        List<Long> list = new ArrayList<Long>();
+        OrganizationExample example = new OrganizationExample();
+        example.createCriteria().andOrgParentNoEqualTo(orgNo).andOrgStcdNotEqualTo(BusinessConstants.ORGANIZATION_STCD_REMOVED);
+        List<Organization> orgList = organizationMapper.selectByExample(example);
+        if(orgList!=null && orgList.size()>0) {
+            for(Organization o: orgList) {
+                idList.add(o.getId());
+                getOrgIdByParentNo(idList, o.getOrgNo());
+            }
+        }
+    }
 }

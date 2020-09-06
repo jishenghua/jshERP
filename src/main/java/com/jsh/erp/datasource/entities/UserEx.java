@@ -18,6 +18,8 @@ public class UserEx extends User{
 
     private String roleName;
 
+    private String userType;
+
     public String getOrgAbr() {
         return orgAbr;
     }
@@ -56,5 +58,13 @@ public class UserEx extends User{
 
     public void setRoleName(String roleName) {
         this.roleName = roleName;
+    }
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
     }
 }

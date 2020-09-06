@@ -55,9 +55,6 @@
         <if test="subType != null">
             and dh.sub_type='${subType}'
         </if>
-        <if test="handsPersonId != null">
-            and dh.hands_person_id='${handsPersonId}'
-        </if>
         <if test="number != null">
             and dh.number like '%${number}%'
         </if>
@@ -72,6 +69,13 @@
         </if>
         <if test="depotIds != null">
             and di.depot_id in (${depotIds})
+        </if>
+        <if test="handsPersonIds != null">
+            and dh.hands_person_id in (
+            <foreach collection="handsPersonIds" item="handsPersonId" separator=",">
+                #{handsPersonId}
+            </foreach>
+            )
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
         order by dh.id desc
@@ -92,9 +96,6 @@
         <if test="subType != null">
             and sub_type='${subType}'
         </if>
-        <if test="handsPersonId != null">
-            and hands_person_id='${handsPersonId}'
-        </if>
         <if test="number != null">
             and number like '%${number}%'
         </if>
@@ -109,6 +110,13 @@
         </if>
         <if test="depotIds != null">
             and di.depot_id in (${depotIds})
+        </if>
+        <if test="handsPersonIds != null">
+            and hands_person_id in (
+            <foreach collection="handsPersonIds" item="handsPersonId" separator=",">
+                #{handsPersonId}
+            </foreach>
+            )
         </if>
         and ifnull(jsh_depot_head.delete_Flag,'0') !='1') tb
     </select>

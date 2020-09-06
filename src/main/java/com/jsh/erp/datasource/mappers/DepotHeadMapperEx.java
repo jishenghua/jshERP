@@ -21,7 +21,7 @@ public interface DepotHeadMapperEx {
     List<DepotHeadVo4List> selectByConditionDepotHead(
             @Param("type") String type,
             @Param("subType") String subType,
-            @Param("handsPersonId") Long handsPersonId,
+            @Param("handsPersonIds") String[] handsPersonIds,
             @Param("number") String number,
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
@@ -33,7 +33,7 @@ public interface DepotHeadMapperEx {
     Long countsByDepotHead(
             @Param("type") String type,
             @Param("subType") String subType,
-            @Param("handsPersonId") Long handsPersonId,
+            @Param("handsPersonIds") String[] handsPersonIds,
             @Param("number") String number,
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,

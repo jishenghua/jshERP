@@ -101,6 +101,21 @@ public class UserService {
         List<UserEx> list=null;
         try{
             list=userMapperEx.selectByConditionUser(userName, loginName, offset, rows);
+            for(UserEx ue: list){
+                String userType = "";
+                if(demonstrateOpen && TEST_USER.equals(ue.getLoginName())){
+                    userType = "演示用户";
+                } else {
+                    if (ue.getId().equals(ue.getTenantId())) {
+                        userType = "租户";
+                    } else if(ue.getTenantId() == null){
+                        userType = "超管";
+                    } else {
+                        userType = "普通";
+                    }
+                }
+                ue.setUserType(userType);
+            }
         }catch(Exception e){
             JshException.readFail(logger, e);
         }

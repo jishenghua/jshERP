@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -40,6 +41,8 @@ public class OrgaUserRelService {
     private OrgaUserRelMapperEx orgaUserRelMapperEx;
     @Resource
     private UserService userService;
+    @Resource
+    private OrganizationService organizationService;
     @Resource
     private LogService logService;
 
@@ -168,5 +171,49 @@ public class OrgaUserRelService {
             return orgaUserRel;
         }
         return null;
+    }
+
+    /**
+     * 根据用户id获取用户id列表
+     * @param userId
+     * @return
+     * @throws Exception
+     */
+    public String getUserIdListByUserId(Long userId) throws Exception{
+        OrgaUserRel our = new OrgaUserRel();
+        OrgaUserRelExample example = new OrgaUserRelExample();
+        example.createCriteria().andUserIdEqualTo(userId);
+        List<OrgaUserRel> list = orgaUserRelMapper.selectByExample(example);
+        if(list!=null && list.size()>0) {
+            our = list.get(0);
+        }
+        List<Long> userIdList = getUserIdListByOrgId(our.getOrgaId());
+        String users = "";
+        for(Long u: userIdList){
+            users = users + u + ",";
+        }
+        if(users.length()>0){
+            users = users.substring(0,users.length()-1);
+        }
+        return users;
+    }
+
+    /**
+     * 根据组织id获取所属的用户id列表（包含组织的递归）
+     * @param orgId
+     * @return
+     */
+    public List<Long> getUserIdListByOrgId(Long orgId) {
+        List<Long> orgIdList = organizationService.getOrgIdByParentId(orgId);
+        List<Long> userIdList = new ArrayList<Long>();
+        OrgaUserRelExample example = new OrgaUserRelExample();
+        example.createCriteria().andOrgaIdIn(orgIdList).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        List<OrgaUserRel> list = orgaUserRelMapper.selectByExample(example);
+        if(list!=null && list.size()>0) {
+            for(OrgaUserRel our: list) {
+                userIdList.add(our.getUserId());
+            }
+        }
+        return  userIdList;
     }
 }
