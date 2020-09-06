@@ -66,7 +66,7 @@
                 </td>
             </tr>
             <tr>
-                <td>部门</td>
+                <td>机构</td>
                 <td style="padding:5px">
                     <input name="orgAbr" id="orgAbr" class="easyui-textbox" readonly style="width: 120px;"/>
                     <a href="javascript:void(0)" class="l-btn l-btn-plain" group="" id="lookForSelectOrganization">
@@ -188,7 +188,6 @@
                         return str;
                     }
                 },
-                {title: '登录名称', field: 'loginName', width: 80, align: "center"},
                 {
                     title: '用户类型', field: 'userType', width: 80, formatter: function (value, rec, index) {
                         var str = '';
@@ -202,9 +201,11 @@
                         return str;
                     }
                 },
+                {title: '登录名称', field: 'loginName', width: 80, align: "center"},
                 {title: '用户姓名', field: 'username', width: 80, align: "center"},
+                {title: '角色', field: 'roleName', width: 80, align: "center"},
                 {title: '职位', field: 'position', width: 115, align: "center"},
-                {title: '部门', field: 'orgAbr', width: 115, align: "center"},
+                {title: '机构', field: 'orgAbr', width: 115, align: "center"},
                 {title: '电子邮箱', field: 'email', width: 150, align: "center"},
                 {title: '电话号码', field: 'phonenum', width: 150, align: "center"},
                 {title: '用户排序', field: 'userBlngOrgaDsplSeq', width: 80, align: "center"},
@@ -567,7 +568,7 @@
         }
     });
 
-    //分配部门
+    //分配仓库
     $('#btnSetDepart').click(function () {
         var currentRow = $("#tableData").datagrid("getSelected");
         if (currentRow == null) {
