@@ -84,17 +84,7 @@ public class DepotHeadService {
 
     public List<DepotHeadVo4List> select(String type, String subType, String roleType, String number, String beginTime, String endTime,
                                          String materialParam, String depotIds, int offset, int rows)throws Exception {
-        String handsPersonIds = "";
-        User user = userService.getCurrentUser();
-        if("个人数据".equals(roleType)) {
-            handsPersonIds = user.getId().toString();
-        } else if("本机构数据".equals(roleType)) {
-            handsPersonIds = orgaUserRelService.getUserIdListByUserId(user.getId());
-        }
-        String [] handsPersonIdArray=null;
-        if(StringUtil.isNotEmpty(handsPersonIds)){
-            handsPersonIdArray = handsPersonIds.split(",");
-        }
+        String [] handsPersonIdArray = getHandsPersonIdArray(roleType);
         List<DepotHeadVo4List> resList = new ArrayList<DepotHeadVo4List>();
         List<DepotHeadVo4List> list=null;
         try{
@@ -134,17 +124,7 @@ public class DepotHeadService {
 
     public Long countDepotHead(String type, String subType, String roleType,String number, String beginTime, String endTime,
                                String materialParam, String depotIds) throws Exception{
-        String handsPersonIds = "";
-        User user = userService.getCurrentUser();
-        if("个人数据".equals(roleType)) {
-            handsPersonIds = user.getId().toString();
-        } else if("本机构数据".equals(roleType)) {
-            handsPersonIds = orgaUserRelService.getUserIdListByUserId(user.getId());
-        }
-        String [] handsPersonIdArray=null;
-        if(StringUtil.isNotEmpty(handsPersonIds)){
-            handsPersonIdArray = handsPersonIds.split(",");
-        }
+        String [] handsPersonIdArray = getHandsPersonIdArray(roleType);
         Long result=null;
         try{
             result=depotHeadMapperEx.countsByDepotHead(type, subType, handsPersonIdArray, number, beginTime, endTime, materialParam, depotIds);
@@ -152,6 +132,27 @@ public class DepotHeadService {
             JshException.readFail(logger, e);
         }
         return result;
+    }
+
+    /**
+     * 根据角色类型获取经手人数组
+     * @param roleType
+     * @return
+     * @throws Exception
+     */
+    private String[] getHandsPersonIdArray(String roleType) throws Exception {
+        String handsPersonIds = "";
+        User user = userService.getCurrentUser();
+        if(BusinessConstants.ROLE_TYPE_PRIVATE.equals(roleType)) {
+            handsPersonIds = user.getId().toString();
+        } else if(BusinessConstants.ROLE_TYPE_THIS_ORG.equals(roleType)) {
+            handsPersonIds = orgaUserRelService.getUserIdListByUserId(user.getId());
+        }
+        String [] handsPersonIdArray=null;
+        if(StringUtil.isNotEmpty(handsPersonIds)){
+            handsPersonIdArray = handsPersonIds.split(",");
+        }
+        return handsPersonIdArray;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)

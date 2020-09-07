@@ -717,7 +717,7 @@ INSERT INTO `jsh_role` VALUES ('4', '管理员', '全部数据', null, null, nul
 INSERT INTO `jsh_role` VALUES ('10', '租户', '全部数据', null, '', null, '0');
 INSERT INTO `jsh_role` VALUES ('16', '销售经理', '全部数据', null, 'ddd', '63', '0');
 INSERT INTO `jsh_role` VALUES ('17', '销售代表', '个人数据', null, 'rrr', '63', '0');
-INSERT INTO `jsh_role` VALUES ('18', '角色abc', '自定义数据', null, '33333', '63', '0');
+INSERT INTO `jsh_role` VALUES ('18', '角色abc', '本机构数据', null, '33333', '63', '0');
 
 -- ----------------------------
 -- Table structure for jsh_sequence

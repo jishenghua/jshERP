@@ -165,6 +165,10 @@ public class BusinessConstants {
      */
     public static final String DEFAULT_MANAGER = "admin";
 
+    public static final String ROLE_TYPE_PRIVATE = "个人数据";
+
+    public static final String ROLE_TYPE_THIS_ORG = "本机构数据";
+
 
 
 
