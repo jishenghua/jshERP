@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50704
 File Encoding         : 65001
 
-Date: 2020-09-04 01:18:11
+Date: 2020-09-08 00:18:35
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -325,7 +325,7 @@ INSERT INTO `jsh_function` VALUES ('1', '0001', '系统管理', '0', '', '', '0
 INSERT INTO `jsh_function` VALUES ('13', '000102', '角色管理', '0001', '/pages/manage/role.html', '\0', '0130', '', '电脑版', '1', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('14', '000103', '用户管理', '0001', '/pages/manage/user.html', '\0', '0140', '', '电脑版', '1', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('15', '000104', '日志管理', '0001', '/pages/manage/log.html', '\0', '0160', '', '电脑版', '', 'icon-notebook', '0');
-INSERT INTO `jsh_function` VALUES ('16', '000105', '功能管理', '0001', '/pages/manage/functions.html', '\0', '0135', '', '电脑版', '1', 'icon-notebook', '0');
+INSERT INTO `jsh_function` VALUES ('16', '000105', '功能管理', '0001', '/pages/manage/functions.html', '\0', '0166', '', '电脑版', '1', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('21', '0101', '商品管理', '0', '', '\0', '0620', '', '电脑版', null, 'icon-social-dropbox', '0');
 INSERT INTO `jsh_function` VALUES ('22', '010101', '商品类别', '0101', '/pages/materials/materialcategory.html', '\0', '0230', '', '电脑版', '1', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('23', '010102', '商品信息', '0101', '/pages/materials/material.html', '\0', '0240', '', '电脑版', '1', 'icon-notebook', '0');
@@ -376,7 +376,7 @@ INSERT INTO `jsh_function` VALUES ('239', '0801', '仓库管理', '0', '', '\0',
 INSERT INTO `jsh_function` VALUES ('240', '010104', '序列号', '0101', '/pages/manage/serialNumber.html', '\0', '0246', '', '电脑版', '1', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('241', '050202', '采购订单', '0502', '/pages/materials/purchase_orders_list.html', '\0', '0335', '', '电脑版', '1,2', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('242', '060301', '销售订单', '0603', '/pages/materials/sale_orders_list.html', '\0', '0392', '', '电脑版', '1,2', 'icon-notebook', '0');
-INSERT INTO `jsh_function` VALUES ('243', '000108', '机构管理', '0001', '/pages/manage/organization.html', '', '0139', '', '电脑版', '1', 'icon-notebook', '0');
+INSERT INTO `jsh_function` VALUES ('243', '000108', '机构管理', '0001', '/pages/manage/organization.html', '', '0150', '', '电脑版', '1', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('244', '030112', '库存预警', '0301', '/pages/reports/stock_warning_report.html', '\0', '0670', '', '电脑版', '', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('245', '000107', '插件管理', '0001', '/pages/manage/plugin.html', '\0', '0170', '', '电脑版', '1', 'icon-notebook', '0');
 
@@ -416,7 +416,7 @@ CREATE TABLE `jsh_log` (
   `tenant_id` bigint(20) DEFAULT NULL COMMENT '租户id',
   PRIMARY KEY (`id`),
   KEY `FKF2696AA13E226853` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6783 DEFAULT CHARSET=utf8 COMMENT='操作日志';
+) ENGINE=InnoDB AUTO_INCREMENT=6786 DEFAULT CHARSET=utf8 COMMENT='操作日志';
 
 -- ----------------------------
 -- Records of jsh_log
@@ -427,6 +427,9 @@ INSERT INTO `jsh_log` VALUES ('6779', '120', '用户', '127.0.0.1', '2020-09-04 
 INSERT INTO `jsh_log` VALUES ('6780', '120', '关联关系', '127.0.0.1', '2020-09-04 01:16:41', '0', '修改5', null);
 INSERT INTO `jsh_log` VALUES ('6781', '120', '关联关系', '127.0.0.1', '2020-09-04 01:16:57', '0', '修改32', null);
 INSERT INTO `jsh_log` VALUES ('6782', '63', '用户', '127.0.0.1', '2020-09-04 01:17:34', '0', '登录jsh', '63');
+INSERT INTO `jsh_log` VALUES ('6783', '63', '用户', '127.0.0.1', '2020-09-08 00:13:21', '0', '登录jsh', '63');
+INSERT INTO `jsh_log` VALUES ('6784', '120', '用户', '127.0.0.1', '2020-09-08 00:13:37', '0', '登录admin', null);
+INSERT INTO `jsh_log` VALUES ('6785', '63', '用户', '127.0.0.1', '2020-09-08 00:17:35', '0', '登录jsh', '63');
 
 -- ----------------------------
 -- Table structure for jsh_material
