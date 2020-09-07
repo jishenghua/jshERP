@@ -15,6 +15,7 @@ import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.log.LogService;
+import com.jsh.erp.service.orgaUserRel.OrgaUserRelService;
 import com.jsh.erp.service.serialNumber.SerialNumberService;
 import com.jsh.erp.service.supplier.SupplierService;
 import com.jsh.erp.service.user.UserService;
@@ -53,6 +54,8 @@ public class DepotHeadService {
     @Resource
     private SerialNumberService serialNumberService;
     @Resource
+    private OrgaUserRelService orgaUserRelService;
+    @Resource
     DepotItemMapperEx depotItemMapperEx;
     @Resource
     private LogService logService;
@@ -79,12 +82,13 @@ public class DepotHeadService {
         return list;
     }
 
-    public List<DepotHeadVo4List> select(String type, String subType, String number, String beginTime, String endTime,
+    public List<DepotHeadVo4List> select(String type, String subType, String roleType, String number, String beginTime, String endTime,
                                          String materialParam, String depotIds, int offset, int rows)throws Exception {
+        String [] handsPersonIdArray = getHandsPersonIdArray(roleType);
         List<DepotHeadVo4List> resList = new ArrayList<DepotHeadVo4List>();
         List<DepotHeadVo4List> list=null;
         try{
-            list=depotHeadMapperEx.selectByConditionDepotHead(type, subType, number, beginTime, endTime, materialParam, depotIds, offset, rows);
+            list=depotHeadMapperEx.selectByConditionDepotHead(type, subType, handsPersonIdArray, number, beginTime, endTime, materialParam, depotIds, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -118,17 +122,37 @@ public class DepotHeadService {
         return resList;
     }
 
-
-
-    public Long countDepotHead(String type, String subType, String number, String beginTime, String endTime,
+    public Long countDepotHead(String type, String subType, String roleType,String number, String beginTime, String endTime,
                                String materialParam, String depotIds) throws Exception{
+        String [] handsPersonIdArray = getHandsPersonIdArray(roleType);
         Long result=null;
         try{
-            result=depotHeadMapperEx.countsByDepotHead(type, subType, number, beginTime, endTime, materialParam, depotIds);
+            result=depotHeadMapperEx.countsByDepotHead(type, subType, handsPersonIdArray, number, beginTime, endTime, materialParam, depotIds);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return result;
+    }
+
+    /**
+     * 根据角色类型获取经手人数组
+     * @param roleType
+     * @return
+     * @throws Exception
+     */
+    private String[] getHandsPersonIdArray(String roleType) throws Exception {
+        String handsPersonIds = "";
+        User user = userService.getCurrentUser();
+        if(BusinessConstants.ROLE_TYPE_PRIVATE.equals(roleType)) {
+            handsPersonIds = user.getId().toString();
+        } else if(BusinessConstants.ROLE_TYPE_THIS_ORG.equals(roleType)) {
+            handsPersonIds = orgaUserRelService.getUserIdListByUserId(user.getId());
+        }
+        String [] handsPersonIdArray=null;
+        if(StringUtil.isNotEmpty(handsPersonIds)){
+            handsPersonIdArray = handsPersonIds.split(",");
+        }
+        return handsPersonIdArray;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)

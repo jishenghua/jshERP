@@ -106,6 +106,8 @@ public class UserController {
                         //验证通过 ，可以登录，放入session，记录登录日志
                         user = userService.getUserByLoginName(loginName);
                         request.getSession().setAttribute("user",user);
+                        String roleType = userService.getRoleTypeByUserId(user.getId()); //角色类型
+                        request.getSession().setAttribute("roleType",roleType);
                         if(user.getTenantId()!=null) {
                             Tenant tenant = tenantService.getTenantByTenantId(user.getTenantId());
                             if(tenant!=null) {
@@ -345,5 +347,20 @@ public class UserController {
             }
         }
         return arr;
+    }
+    @GetMapping("/getRoleTypeByUserId")
+    public BaseResponseInfo getRoleTypeByUserId(HttpServletRequest request) {
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            Map<String, Object> data = new HashMap<String, Object>();
+            data.put("roleType", request.getSession().getAttribute("roleType"));
+            res.code = 200;
+            res.data = data;
+        } catch(Exception e){
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取失败";
+        }
+        return res;
     }
 }

@@ -35,9 +35,9 @@
         </div>
         <div class="form-group">
             <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchBtn">查询</a>&nbsp;
-            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-redo" id="searchResetBtn">重置</a>
-            <a id="btnSetRole" class='easyui-linkbutton iframe iframe_LargeForm' href='#' title='分配角色'>分配角色</a>
-            <a id="btnSetDepart" class='easyui-linkbutton iframe iframe_LargeForm' href='#' title='分配仓库'>分配仓库</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-redo" id="searchResetBtn">重置</a>&nbsp;
+            <a id="btnSetRole" class='easyui-linkbutton iframe iframe_LargeForm' href='#' title='分配角色'>分配角色</a>&nbsp;
+            <a id="btnSetDepart" class='easyui-linkbutton iframe iframe_LargeForm' href='#' title='分配仓库'>分配仓库</a>&nbsp;
             <a id="btnSetCustomer" class='easyui-linkbutton iframe iframe_LargeForm' href='#' title='分配客户'>分配客户</a>
         </div>
     </div>
@@ -66,7 +66,7 @@
                 </td>
             </tr>
             <tr>
-                <td>部门</td>
+                <td>机构</td>
                 <td style="padding:5px">
                     <input name="orgAbr" id="orgAbr" class="easyui-textbox" readonly style="width: 120px;"/>
                     <a href="javascript:void(0)" class="l-btn l-btn-plain" group="" id="lookForSelectOrganization">
@@ -104,7 +104,7 @@
             </tr>
             <tr>
                 <td>
-                    用户排序
+                    排序
                 </td>
                 <td style="padding:5px">
                     <input name="userBlngOrgaDsplSeq" id="userBlngOrgaDsplSeq" class="easyui-textbox" style="width: 230px;"/>
@@ -172,40 +172,31 @@
             columns: [[
                 {field: 'id', width: 35, align: "center", checkbox:true},
                 {
-                    title: '操作', field: 'isystem', align: "center", width: 80, formatter: function (value, rec, index) {
+                    title: '操作', field: 'isystem', align: "center", width: 80,
+                    formatter: function (value, rec, index) {
                         var str = '';
-                        if(rec.loginName != "jsh") {
+                        if(rec.userType != "演示用户") {
                             str += '<img src="/js/easyui/themes/icons/pencil.png" style="cursor: pointer;" onclick="editUser(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
                         }
-                        if (rec.id != rec.tenantId && rec.loginName != "admin") {
-                            str += '<img src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteUser(' + rec.id + ');"/>';
-                        }
-                        else {
-                            str += '';
+                        if(isShowOpFun()) {
+                            if (rec.id != rec.tenantId && rec.loginName != "admin") {
+                                str += '<img src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteUser(' + rec.id + ');"/>';
+                            } else {
+                                str += '';
+                            }
                         }
                         return str;
                     }
                 },
+                {title: '用户类型', field: 'userType', width: 80},
                 {title: '登录名称', field: 'loginName', width: 80, align: "center"},
-                {
-                    title: '用户类型', field: 'userType', width: 80, formatter: function (value, rec, index) {
-                        var str = '';
-                        if (rec.id == rec.tenantId) {
-                            str = "租户";
-                        } else if(rec.tenantId == null){
-                            str = "超管";
-                        } else {
-                            str = "普通";
-                        }
-                        return str;
-                    }
-                },
                 {title: '用户姓名', field: 'username', width: 80, align: "center"},
+                {title: '角色', field: 'roleName', width: 80, align: "center"},
                 {title: '职位', field: 'position', width: 115, align: "center"},
-                {title: '部门', field: 'orgAbr', width: 115, align: "center"},
+                {title: '机构', field: 'orgAbr', width: 115, align: "center"},
                 {title: '电子邮箱', field: 'email', width: 150, align: "center"},
                 {title: '电话号码', field: 'phonenum', width: 150, align: "center"},
-                {title: '用户排序', field: 'userBlngOrgaDsplSeq', width: 80, align: "center"},
+                {title: '排序', field: 'userBlngOrgaDsplSeq', width: 80, align: "center"},
                 {title: '描述', field: 'description', width: 130},
                 {field: 'orgaId',hidden:true, width: 10}
             ]],
@@ -233,6 +224,7 @@
             }
         });
         dgResize();
+        toolbarStatus();
         showUserDetails(1, initPageSize);
     }
 
@@ -469,6 +461,9 @@
         };
         $('#userDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/pencil.png"/>&nbsp;编辑用户信息');
         $(".window-mask").css({width: webW, height: webH});
+        if(!isShowOpFun()){
+            $("#saveusername").hide();
+        }
         $('#usernameFM').form('load', row);
         userID = rowsdata.id;
         //焦点在名称输入框==定焦在输入文字后面
@@ -561,7 +556,7 @@
         }
     });
 
-    //分配部门
+    //分配仓库
     $('#btnSetDepart').click(function () {
         var currentRow = $("#tableData").datagrid("getSelected");
         if (currentRow == null) {

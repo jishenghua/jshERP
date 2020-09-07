@@ -368,7 +368,7 @@ public class DepotHeadController {
         String updated = body.getUpdated();
         Long billsNumLimit = Long.parseLong(request.getSession().getAttribute("billsNumLimit").toString());
         Long tenantId = Long.parseLong(request.getSession().getAttribute("tenantId").toString());
-        Long count = depotHeadService.countDepotHead(null,null,null,null,null,null,null);
+        Long count = depotHeadService.countDepotHead(null,null,null,null,null,null,null,null);
         if(count>= billsNumLimit) {
             throw new BusinessParamCheckingException(ExceptionConstants.DEPOT_HEAD_OVER_LIMIT_FAILED_CODE,
                     ExceptionConstants.DEPOT_HEAD_OVER_LIMIT_FAILED_MSG);

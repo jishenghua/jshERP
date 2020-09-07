@@ -61,7 +61,9 @@
                     formatter:function(value,rec,index) {
                         var str = '';
                         str += '<img title="编辑" src="/js/easyui/themes/icons/pencil.png" style="cursor: pointer;" onclick="editSupplier(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
-                        str += '<img title="删除" src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteSupplier(\'' + rec.id + '\');"/>';
+                        if(isShowOpFun()) {
+                            str += '<img title="删除" src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteSupplier(\'' + rec.id + '\');"/>';
+                        }
                         return str;
                     }
                 },
@@ -137,6 +139,7 @@
             }
         });
         dgResize();
+        toolbarStatus();
         showSupplierDetails(1,initPageSize);
     }
 
@@ -582,6 +585,9 @@
         oldSupplier = res.supplier;
         $('#supplierDlg').dialog('open').dialog('setTitle','<img src="/js/easyui/themes/icons/pencil.png"/>&nbsp;编辑'+listType +"信息");
         $(".window-mask").css({ width: webW ,height: webH});
+        if(!isShowOpFun()){
+            $("#saveSupplier").hide();
+        }
         $('#supplierFM').form('load',row);
         supplierID = sId;
         //焦点在名称输入框==定焦在输入文字后面

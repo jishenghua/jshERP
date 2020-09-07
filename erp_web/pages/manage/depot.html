@@ -166,7 +166,9 @@
                     formatter: function (value, rec, index) {
                         var str = '';
                         str += '<img title="编辑" src="/js/easyui/themes/icons/pencil.png" style="cursor: pointer;" onclick="editDepot(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
-                        str += '<img title="删除" src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteDepot(' + rec.id + ');"/>';
+                        if(isShowOpFun()) {
+                            str += '<img title="删除" src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteDepot(' + rec.id + ');"/>';
+                        }
                         return str;
                     }
                 },
@@ -222,6 +224,7 @@
             }
         });
         dgResize();
+        toolbarStatus();
         showDepotDetails(1, initPageSize);
     }
 
@@ -503,6 +506,9 @@
         oldDepot = rowsdata.name;
         $('#depotDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/pencil.png"/>&nbsp;编辑仓库信息');
         $(".window-mask").css({width: webW, height: webH});
+        if(!isShowOpFun()){
+            $("#saveDepot").hide();
+        }
         depotID = rowsdata.id;
         url = '/depot/update?id=' + rowsdata.id;
     }

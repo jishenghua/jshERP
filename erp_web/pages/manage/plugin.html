@@ -33,7 +33,7 @@
             <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-redo" id="searchResetBtn">重置</a>
         </div>
         <div class="form-group">
-            注：部分插件需执行初始化sql，请参考<b>官网介绍</b>进行操作
+            <a href="javascript:void(0)" class="easyui-linkbutton" id="serialNumber">获取序列号</a>
         </div>
     </div>
     <table id="tableData" style="height:340px;top:300px;border-bottom-color:#FFFFFF"></table>
@@ -362,6 +362,27 @@
             $("#searchPluginName").textbox("setValue","");
             //加载完以后重新初始化
             $("#searchBtn").click();
+        }
+    });
+
+    //获取序列号
+    $("#serialNumber").unbind().bind({
+        click: function () {
+            $.ajax({
+                type: "get",
+                url: "/plugin/getMacWithSecret",
+                dataType: "json",
+                success: function (res) {
+                    if(res && res.code == 200) {
+                        $.messager.alert('序列号', res.data);
+                    }
+                },
+                //此处添加错误处理
+                error: function () {
+                    $.messager.alert('查询提示', '查询数据后台异常，请稍后再试！', 'error');
+                    return;
+                }
+            });
         }
     });
 </script>

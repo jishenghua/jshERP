@@ -223,6 +223,31 @@
 	}
 
 	/**
+	 * 判断datagrid是否显示操作列
+	 * @returns {boolean}
+	 */
+	function isShowOpFun() {
+		var btnStr = getBtnStr();
+		var isShowOp = false;
+		if(btnStr && btnStr.indexOf(1)>-1){
+			isShowOp = true; //显示
+		}
+		return isShowOp;
+	}
+
+	/**
+	 * 工具栏显示与否
+	 */
+	function toolbarStatus() {
+		var btnStr = getBtnStr();
+		if(btnStr && btnStr.indexOf(1)>-1) {
+			$(".datagrid-toolbar").show();
+		} else {
+			$(".datagrid-toolbar").remove();
+		}
+	}
+
+	/**
 	 * js获取当前时间， 格式“yyyy-MM-dd HH:MM:SS”
 	 */
 	function getNowFormatDateTime() {

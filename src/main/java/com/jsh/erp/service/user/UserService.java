@@ -1,14 +1,12 @@
 package com.jsh.erp.service.user;
 
-import com.alibaba.druid.util.StringUtils;
+import com.jsh.erp.datasource.entities.*;
+import com.jsh.erp.service.role.RoleService;
+import org.springframework.util.StringUtils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
-import com.jsh.erp.datasource.entities.OrgaUserRel;
-import com.jsh.erp.datasource.entities.User;
-import com.jsh.erp.datasource.entities.UserEx;
-import com.jsh.erp.datasource.entities.UserExample;
 import com.jsh.erp.datasource.mappers.UserMapper;
 import com.jsh.erp.datasource.mappers.UserMapperEx;
 import com.jsh.erp.datasource.vo.TreeNodeEx;
@@ -61,6 +59,8 @@ public class UserService {
     private TenantService tenantService;
     @Resource
     private UserBusinessService userBusinessService;
+    @Resource
+    private RoleService roleService;
 
     public User getUser(long id)throws Exception {
         User result=null;
@@ -101,6 +101,21 @@ public class UserService {
         List<UserEx> list=null;
         try{
             list=userMapperEx.selectByConditionUser(userName, loginName, offset, rows);
+            for(UserEx ue: list){
+                String userType = "";
+                if(demonstrateOpen && TEST_USER.equals(ue.getLoginName())){
+                    userType = "演示用户";
+                } else {
+                    if (ue.getId().equals(ue.getTenantId())) {
+                        userType = "租户";
+                    } else if(ue.getTenantId() == null){
+                        userType = "超管";
+                    } else {
+                        userType = "普通";
+                    }
+                }
+                ue.setUserType(userType);
+            }
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -674,5 +689,36 @@ public class UserService {
             JshException.readFail(logger, e);
         }
         return list;
+    }
+
+    /**
+     * 根据用户id查询角色类型
+     * @param userId
+     * @return
+     */
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public String getRoleTypeByUserId(long userId) throws Exception {
+        List<UserBusiness> list = userBusinessService.getBasicData(String.valueOf(userId), "UserRole");
+        UserBusiness ub = null;
+        if(list.size() > 0) {
+            ub = list.get(0);
+            String values = ub.getValue();
+            String roleId = null;
+            if(values!=null) {
+                values = values.replaceAll("\\[\\]",",").replace("[","").replace("]","");
+            }
+            String [] valueArray=values.split(",");
+            if(valueArray.length>0) {
+                roleId = valueArray[0];
+            }
+            Role role = roleService.getRole(Long.parseLong(roleId));
+            if(role!=null) {
+                return role.getType();
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
     }
 }

@@ -70,6 +70,13 @@
         <if test="depotIds != null">
             and di.depot_id in (${depotIds})
         </if>
+        <if test="handsPersonIds != null">
+            and dh.hands_person_id in (
+            <foreach collection="handsPersonIds" item="handsPersonId" separator=",">
+                #{handsPersonId}
+            </foreach>
+            )
+        </if>
         and ifnull(dh.delete_flag,'0') !='1'
         order by dh.id desc
         <if test="offset != null and rows != null">
@@ -103,6 +110,13 @@
         </if>
         <if test="depotIds != null">
             and di.depot_id in (${depotIds})
+        </if>
+        <if test="handsPersonIds != null">
+            and hands_person_id in (
+            <foreach collection="handsPersonIds" item="handsPersonId" separator=",">
+                #{handsPersonId}
+            </foreach>
+            )
         </if>
         and ifnull(jsh_depot_head.delete_Flag,'0') !='1') tb
     </select>

@@ -201,20 +201,13 @@
                 {field: 'depotheadId', hidden: true},
                 {field: 'depotHeadType', hidden: true},
                 {
-                    title: '操作', field: 'op', align: "center", width: 60, formatter: function (value, rec,index) {
+                    title: '操作', field: 'op', align: "center", width: 60,
+                    formatter: function (value, rec,index) {
                         var str = '';
-                        /**
-                         * create by: qiankunpingtai
-                         * create time: 2019/3/21 11:23
-                         * website：https://qiankunpingtai.cn
-                         * description:
-                         *  对于每次拼接字符串作为参数传递
-                         *  再对字符串分解获取数据的方式，个人感觉效率不是很高，实现也不优雅
-                         *  在此使用传递index，然后根据index获取数据的方式替代
-                         *
-                         */
                         str += '<img title="编辑" src="/js/easyui/themes/icons/pencil.png" style="cursor: pointer;" onclick="editSerialNumber(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
-                        str += '<img title="删除" src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteSerialNumber(' + rec.id + ');"/>';
+                        if(isShowOpFun()) {
+                            str += '<img title="删除" src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteSerialNumber(' + rec.id + ');"/>';
+                        }
                         return str;
                     }
                 },
@@ -271,6 +264,7 @@
             }
         });
         dgResize();
+        toolbarStatus();
         showSerialNumberDetails(1, initPageSize);
     }
     //分页信息处理
@@ -481,6 +475,9 @@
         $("#remark").textbox("setValue", rowsdata.remark);
         $('#serialNumberDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/pencil.png"/>&nbsp;编辑序列号信息');
         $(".window-mask").css({width: webW, height: webH});
+        if(!isShowOpFun()){
+            $("#saveSerialNumber").hide();
+        }
         //选中基本资料tab
         $("#serialNumberFM #tt .tabs li").first().click();
         url = '/serialNumber/updateSerialNumber';

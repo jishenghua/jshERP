@@ -16,6 +16,10 @@ public class UserEx extends User{
     //机构用户关联关系id
     private Long orgaUserRelId;
 
+    private String roleName;
+
+    private String userType;
+
     public String getOrgAbr() {
         return orgAbr;
     }
@@ -46,5 +50,21 @@ public class UserEx extends User{
 
     public void setOrgaUserRelId(Long orgaUserRelId) {
         this.orgaUserRelId = orgaUserRelId;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
     }
 }

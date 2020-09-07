@@ -20,6 +20,7 @@
 <!-- 数据显示table -->
 <div style="padding-bottom: 10px;">
     <a id="btnOK" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
+    <span>分配功能后请继续<b>分配按钮</b></span>
 </div>
 <div>
     <ul id="tt"></ul>
@@ -58,11 +59,9 @@
         else {
             return pnodes
         }
-        ;
-    };
+    }
 
     $(function () {
-
         $('#tt').tree({
             url: '/function/findRoleFunction?UBType=' + type + '&UBKeyId=' + url_id,
             animate: true,
@@ -93,8 +92,13 @@
                         async: false,
                         success: function (res) {
                             if(res && res.code === 200) {
-                                self.parent.$.colorbox.close();
-                                $.messager.alert('提示',"操作成功！","info");
+                                $.messager.confirm("提示","操作成功！现在继续<b>分配按钮</b>吗？",function(r){
+                                    if(r){
+                                        self.parent.window.$("#btnSetPushBtn").click();
+                                    } else {
+                                        self.parent.$.colorbox.close();
+                                    }
+                                });
                             }
                             else {
                                 $.messager.alert('提示',"操作失败！","error");

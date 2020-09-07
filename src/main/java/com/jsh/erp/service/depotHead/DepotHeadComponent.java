@@ -32,12 +32,13 @@ public class DepotHeadComponent implements ICommonQuery {
         String search = map.get(Constants.SEARCH);
         String type = StringUtil.getInfo(search, "type");
         String subType = StringUtil.getInfo(search, "subType");
+        String roleType = StringUtil.getInfo(search, "roleType");
         String number = StringUtil.getInfo(search, "number");
         String beginTime = StringUtil.getInfo(search, "beginTime");
         String endTime = StringUtil.getInfo(search, "endTime");
         String materialParam = StringUtil.getInfo(search, "materialParam");
         String depotIds = StringUtil.getInfo(search, "depotIds");
-        return depotHeadService.select(type, subType, number, beginTime, endTime, materialParam, depotIds, QueryUtils.offset(map), QueryUtils.rows(map));
+        return depotHeadService.select(type, subType, roleType, number, beginTime, endTime, materialParam, depotIds, QueryUtils.offset(map), QueryUtils.rows(map));
     }
 
     @Override
@@ -45,12 +46,13 @@ public class DepotHeadComponent implements ICommonQuery {
         String search = map.get(Constants.SEARCH);
         String type = StringUtil.getInfo(search, "type");
         String subType = StringUtil.getInfo(search, "subType");
+        String roleType = StringUtil.getInfo(search, "roleType");
         String number = StringUtil.getInfo(search, "number");
         String beginTime = StringUtil.getInfo(search, "beginTime");
         String endTime = StringUtil.getInfo(search, "endTime");
         String materialParam = StringUtil.getInfo(search, "materialParam");
         String depotIds = StringUtil.getInfo(search, "depotIds");
-        return depotHeadService.countDepotHead(type, subType, number, beginTime, endTime, materialParam, depotIds);
+        return depotHeadService.countDepotHead(type, subType, roleType, number, beginTime, endTime, materialParam, depotIds);
     }
 
     @Override

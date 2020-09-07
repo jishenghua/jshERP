@@ -126,10 +126,13 @@
                 {title: '类型', field: 'type', width: 100, align: "center"},
                 {title: '描述', field: 'remark', width: 200},
                 {
-                    title: '操作', field: 'op', align: "center", width: 130, formatter: function (value, rec, index) {
+                    title: '操作', field: 'op', align: "center", width: 130,
+                    formatter: function (value, rec, index) {
                         var str = '';
                         str += '<img src="/js/easyui/themes/icons/pencil.png" style="cursor: pointer;" onclick="editInOutItem(\'' + index + '\');"/>&nbsp;<a onclick="editInOutItem(\'' + index + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
-                        str += '<img src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteInOutItem(\'' + rec.id + '\');"/>&nbsp;<a onclick="deleteInOutItem(\'' + rec.id + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">删除</a>&nbsp;&nbsp;';
+                        if(isShowOpFun()) {
+                            str += '<img src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteInOutItem(\'' + rec.id + '\');"/>&nbsp;<a onclick="deleteInOutItem(\'' + rec.id + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">删除</a>&nbsp;&nbsp;';
+                        }
                         return str;
                     }
                 }
@@ -158,6 +161,7 @@
             }
         });
         dgResize();
+        toolbarStatus();
         showInOutItemDetails(1, initPageSize);
     }
 
@@ -397,6 +401,9 @@
         oldInOutItem = rowsdata.name;
         $('#inOutItemDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/pencil.png"/>&nbsp;编辑收支项目');
         $(".window-mask").css({width: webW, height: webH});
+        if(!isShowOpFun()){
+            $("#saveInOutItem").hide();
+        }
         $('#inOutItemFM').form('load', row);
         inOutItemID = rowsdata.id;
         url = '/inOutItem/update?id=' + rowsdata.id;

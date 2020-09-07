@@ -163,10 +163,13 @@
                 },
                 {title: '图标', field: 'icon', width: 110},
                 {
-                    title: '操作', field: 'op', align: "center", width: 130, formatter: function (value, rec, index) {
+                    title: '操作', field: 'op', align: "center", width: 130,
+                    formatter: function (value, rec, index) {
                         var str = '';
                         str += '<img src="/js/easyui/themes/icons/pencil.png" style="cursor: pointer;" onclick="editFunctions(\'' + index + '\');"/>&nbsp;<a onclick="editFunctions(\'' + index + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
-                        str += '<img src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteFunctions(' + rec.id + ');"/>&nbsp;<a onclick="deleteFunctions(' + rec.id + ');" style="text-decoration:none;color:black;" href="javascript:void(0)">删除</a>&nbsp;&nbsp;';
+                        if(isShowOpFun()) {
+                            str += '<img src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteFunctions(' + rec.id + ');"/>&nbsp;<a onclick="deleteFunctions(' + rec.id + ');" style="text-decoration:none;color:black;" href="javascript:void(0)">删除</a>&nbsp;&nbsp;';
+                        }
                         return str;
                     }
                 }
@@ -195,6 +198,7 @@
             }
         });
         dgResize();
+        toolbarStatus();
         showFunctionsDetails(1, initPageSize);
     }
 
@@ -245,7 +249,7 @@
             url: url,
             valueField: 'id',
             textField: 'text',
-            panelHeight: 120,
+            panelHeight: 160,
             multiple: true,
             method: 'get'
         });
@@ -408,6 +412,9 @@
         oldFunctions = rowsdata.name;
         $('#functionsDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/pencil.png"/>&nbsp;编辑功能信息');
         $(".window-mask").css({width: webW, height: webH});
+        if(!isShowOpFun()){
+            $("#saveFunctions").hide();
+        }
         functionsID = rowsdata.id;
         //焦点在名称输入框==定焦在输入文字后面
         $("#Name").val("").focus().val(rowsdata.name);
