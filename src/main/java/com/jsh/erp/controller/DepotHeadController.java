@@ -440,4 +440,30 @@ public class DepotHeadController {
         }
         return res;
     }
+
+    /**
+     * 根据当前用户获取操作员数组，用于控制当前用户的数据权限，限制可以看到的单据范围
+     * 注意：该接口提供给部分插件使用，勿删
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/getCreatorByCurrentUser")
+    public BaseResponseInfo getCreatorByRoleType(HttpServletRequest request) {
+        BaseResponseInfo res = new BaseResponseInfo();
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            String creator = "";
+            Object roleType = request.getSession().getAttribute("roleType");
+            if(roleType!=null) {
+                creator = depotHeadService.getCreatorByRoleType(roleType.toString());
+            }
+            res.code = 200;
+            res.data = creator;
+        } catch (Exception e) {
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
+    }
 }

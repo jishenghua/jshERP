@@ -140,7 +140,22 @@ public class DepotHeadService {
      * @return
      * @throws Exception
      */
-    private String[] getCreatorArray(String roleType) throws Exception {
+    public String[] getCreatorArray(String roleType) throws Exception {
+        String creator = getCreatorByRoleType(roleType);
+        String [] creatorArray=null;
+        if(StringUtil.isNotEmpty(creator)){
+            creatorArray = creator.split(",");
+        }
+        return creatorArray;
+    }
+
+    /**
+     * 根据角色类型获取操作员
+     * @param roleType
+     * @return
+     * @throws Exception
+     */
+    public String getCreatorByRoleType(String roleType) throws Exception {
         String creator = "";
         User user = userService.getCurrentUser();
         if(BusinessConstants.ROLE_TYPE_PRIVATE.equals(roleType)) {
@@ -148,11 +163,7 @@ public class DepotHeadService {
         } else if(BusinessConstants.ROLE_TYPE_THIS_ORG.equals(roleType)) {
             creator = orgaUserRelService.getUserIdListByUserId(user.getId());
         }
-        String [] creatorArray=null;
-        if(StringUtil.isNotEmpty(creator)){
-            creatorArray = creator.split(",");
-        }
-        return creatorArray;
+        return creator;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
