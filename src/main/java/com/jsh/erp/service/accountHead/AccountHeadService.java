@@ -11,6 +11,7 @@ import com.jsh.erp.datasource.mappers.AccountItemMapperEx;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.log.LogService;
+import com.jsh.erp.service.orgaUserRel.OrgaUserRelService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
@@ -32,12 +33,12 @@ import static com.jsh.erp.utils.Tools.getCenternTime;
 @Service
 public class AccountHeadService {
     private Logger logger = LoggerFactory.getLogger(AccountHeadService.class);
-
     @Resource
     private AccountHeadMapper accountHeadMapper;
-
     @Resource
     private AccountHeadMapperEx accountHeadMapperEx;
+    @Resource
+    private OrgaUserRelService orgaUserRelService;
     @Resource
     private UserService userService;
     @Resource
@@ -79,11 +80,12 @@ public class AccountHeadService {
         return list;
     }
 
-    public List<AccountHeadVo4ListEx> select(String type, String billNo, String beginTime, String endTime, int offset, int rows) throws Exception{
+    public List<AccountHeadVo4ListEx> select(String type, String roleType, String billNo, String beginTime, String endTime, int offset, int rows) throws Exception{
         List<AccountHeadVo4ListEx> resList = new ArrayList<AccountHeadVo4ListEx>();
         List<AccountHeadVo4ListEx> list=null;
         try{
-            list = accountHeadMapperEx.selectByConditionAccountHead(type, billNo, beginTime, endTime, offset, rows);
+            String [] creatorArray = getCreatorArray(roleType);
+            list = accountHeadMapperEx.selectByConditionAccountHead(type, creatorArray, billNo, beginTime, endTime, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -102,14 +104,36 @@ public class AccountHeadService {
         return resList;
     }
 
-    public Long countAccountHead(String type, String billNo, String beginTime, String endTime) throws Exception{
+    public Long countAccountHead(String type, String roleType, String billNo, String beginTime, String endTime) throws Exception{
         Long result=null;
         try{
-            result = accountHeadMapperEx.countsByAccountHead(type, billNo, beginTime, endTime);
+            String [] creatorArray = getCreatorArray(roleType);
+            result = accountHeadMapperEx.countsByAccountHead(type, creatorArray, billNo, beginTime, endTime);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return result;
+    }
+
+    /**
+     * 根据角色类型获取操作员数组
+     * @param roleType
+     * @return
+     * @throws Exception
+     */
+    private String[] getCreatorArray(String roleType) throws Exception {
+        String creator = "";
+        User user = userService.getCurrentUser();
+        if(BusinessConstants.ROLE_TYPE_PRIVATE.equals(roleType)) {
+            creator = user.getId().toString();
+        } else if(BusinessConstants.ROLE_TYPE_THIS_ORG.equals(roleType)) {
+            creator = orgaUserRelService.getUserIdListByUserId(user.getId());
+        }
+        String [] creatorArray=null;
+        if(StringUtil.isNotEmpty(creator)){
+            creatorArray = creator.split(",");
+        }
+        return creatorArray;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
@@ -117,6 +141,8 @@ public class AccountHeadService {
         AccountHead accountHead = JSONObject.parseObject(beanJson, AccountHead.class);
         int result=0;
         try{
+            User userInfo=userService.getCurrentUser();
+            accountHead.setCreator(userInfo==null?null:userInfo.getId());
             result = accountHeadMapper.insertSelective(accountHead);
             logService.insertLog("财务",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(accountHead.getBillNo()).toString(), request);
@@ -274,6 +300,7 @@ public class AccountHeadService {
                 if(ah.getTotalPrice() != null) {
                     ah.setTotalPrice(ah.getTotalPrice().abs());
                 }
+                ah.setBillTimeStr(getCenternTime(ah.getBillTime()));
                 resList.add(ah);
             }
         }

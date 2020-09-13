@@ -5,13 +5,15 @@
     <resultMap extends="com.jsh.erp.datasource.mappers.AccountHeadMapper.BaseResultMap" id="ResultMapEx" type="com.jsh.erp.datasource.entities.AccountHeadVo4ListEx">
         <result column="OrganName" jdbcType="VARCHAR" property="organName" />
         <result column="HandsPersonName" jdbcType="VARCHAR" property="handsPersonName" />
+        <result column="userName" jdbcType="VARCHAR" property="userName" />
         <result column="AccountName" jdbcType="VARCHAR" property="accountName" />
     </resultMap>
 
     <select id="selectByConditionAccountHead" parameterType="com.jsh.erp.datasource.entities.AccountHeadExample" resultMap="ResultMapEx">
-        select ah.*, s.supplier OrganName, p.Name HandsPersonName, a.Name AccountName
+        select ah.*, s.supplier OrganName, p.Name HandsPersonName, u.username userName, a.Name AccountName
         from jsh_account_head ah
         left join jsh_supplier s on ah.organ_id=s.id and ifnull(s.delete_Flag,'0') !='1'
+        left join jsh_user u on ah.creator=u.id and ifnull(u.Status,'0') ='0'
         left join jsh_person p on ah.hands_person_id=p.id and ifnull(p.delete_Flag,'0') !='1'
         left join jsh_account a on ah.account_id=a.id and ifnull(a.delete_Flag,'0') !='1'
         where 1=1
@@ -26,6 +28,13 @@
         </if>
         <if test="endTime != null">
             and ah.bill_time &lt;= '${endTime}'
+        </if>
+        <if test="creatorArray != null">
+            and ah.creator in (
+            <foreach collection="creatorArray" item="creator" separator=",">
+                #{creator}
+            </foreach>
+            )
         </if>
         and ifnull(ah.delete_flag,'0') !='1'
         order by ah.id desc
@@ -51,6 +60,13 @@
         </if>
         <if test="endTime != null">
             and bill_time &lt;= '${endTime}'
+        </if>
+        <if test="creatorArray != null">
+            and creator in (
+            <foreach collection="creatorArray" item="creator" separator=",">
+                #{creator}
+            </foreach>
+            )
         </if>
         and ifnull(delete_flag,'0') !='1'
     </select>

@@ -21,7 +21,7 @@ public interface DepotHeadMapperEx {
     List<DepotHeadVo4List> selectByConditionDepotHead(
             @Param("type") String type,
             @Param("subType") String subType,
-            @Param("handsPersonIds") String[] handsPersonIds,
+            @Param("creatorArray") String[] creatorArray,
             @Param("number") String number,
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
@@ -33,14 +33,12 @@ public interface DepotHeadMapperEx {
     Long countsByDepotHead(
             @Param("type") String type,
             @Param("subType") String subType,
-            @Param("handsPersonIds") String[] handsPersonIds,
+            @Param("creatorArray") String[] creatorArray,
             @Param("number") String number,
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("materialParam") String materialParam,
             @Param("depotIds") String depotIds);
-
-    Long getMaxId();
 
     String findMaterialsListByHeaderId(
             @Param("id") Long id);
@@ -123,7 +121,7 @@ public interface DepotHeadMapperEx {
 
     List<DepotHead> getDepotHeadListByOrganIds(@Param("organIds") String[] organIds);
 
-    List<DepotHead> getDepotHeadListByHandsPersonIds(@Param("handsPersonIds") String[] handsPersonIds);
+    List<DepotHead> getDepotHeadListByCreator(@Param("creatorArray") String[] creatorArray);
 
     BigDecimal getBuyAndSaleStatistics(
             @Param("type") String type,

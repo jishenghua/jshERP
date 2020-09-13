@@ -264,7 +264,7 @@ public class PersonService {
          * */
         List<DepotHead> depotHeadList =null;
         try{
-            depotHeadList=depotHeadMapperEx.getDepotHeadListByHandsPersonIds(idArray);
+            depotHeadList=depotHeadMapperEx.getDepotHeadListByCreator(idArray);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }

@@ -88,28 +88,6 @@ public class DepotHeadController {
     }
 
     /**
-     * 获取最大的id
-     * @param request
-     * @return
-     */
-    @GetMapping(value = "/getMaxId")
-    public BaseResponseInfo getMaxId(HttpServletRequest request)throws Exception {
-        BaseResponseInfo res = new BaseResponseInfo();
-        Map<String, Object> map = new HashMap<String, Object>();
-        try {
-            Long maxId = depotHeadService.getMaxId();
-            map.put("maxId", maxId);
-            res.code = 200;
-            res.data = map;
-        } catch(Exception e){
-            e.printStackTrace();
-            res.code = 500;
-            res.data = "获取数据失败";
-        }
-        return res;
-    }
-
-    /**
      * 入库出库明细接口
      * @param currentPage
      * @param pageSize

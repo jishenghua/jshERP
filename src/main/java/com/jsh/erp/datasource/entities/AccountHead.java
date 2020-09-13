@@ -12,6 +12,8 @@ public class AccountHead {
 
     private Long handsPersonId;
 
+    private Long creator;
+
     private BigDecimal changeAmount;
 
     private BigDecimal totalPrice;
@@ -58,6 +60,14 @@ public class AccountHead {
 
     public void setHandsPersonId(Long handsPersonId) {
         this.handsPersonId = handsPersonId;
+    }
+
+    public Long getCreator() {
+        return creator;
+    }
+
+    public void setCreator(Long creator) {
+        this.creator = creator;
     }
 
     public BigDecimal getChangeAmount() {

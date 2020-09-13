@@ -31,21 +31,23 @@ public class AccountHeadComponent implements ICommonQuery {
     private List<?> getAccountHeadList(Map<String, String> map)throws Exception {
         String search = map.get(Constants.SEARCH);
         String type = StringUtil.getInfo(search, "type");
+        String roleType = StringUtil.getInfo(search, "roleType");
         String billNo = StringUtil.getInfo(search, "billNo");
         String beginTime = StringUtil.getInfo(search, "beginTime");
         String endTime = StringUtil.getInfo(search, "endTime");
         String order = QueryUtils.order(map);
-        return accountHeadService.select(type, billNo, beginTime, endTime, QueryUtils.offset(map), QueryUtils.rows(map));
+        return accountHeadService.select(type, roleType, billNo, beginTime, endTime, QueryUtils.offset(map), QueryUtils.rows(map));
     }
 
     @Override
     public Long counts(Map<String, String> map)throws Exception {
         String search = map.get(Constants.SEARCH);
         String type = StringUtil.getInfo(search, "type");
+        String roleType = StringUtil.getInfo(search, "roleType");
         String billNo = StringUtil.getInfo(search, "billNo");
         String beginTime = StringUtil.getInfo(search, "beginTime");
         String endTime = StringUtil.getInfo(search, "endTime");
-        return accountHeadService.countAccountHead(type, billNo, beginTime, endTime);
+        return accountHeadService.countAccountHead(type, roleType, billNo, beginTime, endTime);
     }
 
     @Override

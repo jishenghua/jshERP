@@ -1,5 +1,6 @@
 	//初始化界面
 	var defaultAccountId = 0; //默认账户id
+	var roleType = ""; //角色类型
 	$(function(){
 		var accountList = null;
 		var accountID = null;
@@ -23,6 +24,7 @@
 		var moneyType = true; //隐藏当前列
 		var inOrOut = ""; //链接类型为收入或者支出
 		getType();
+		getRoleType();
 		initSystemData_person(); //经手人数据
 		initSelectInfo_person(); //经手人信息
 		initSystemData_account(); //账户数据
@@ -93,6 +95,21 @@
 			organUrl = retailUrl;
 			amountNum = "SYF";
 		}
+	}
+	function getRoleType(){
+		$.ajax({
+			type:"get",
+			url: "/user/getRoleTypeByUserId",
+			async: false,
+			success: function (res) {
+				if (res && res.code === 200) {
+					roleType = res.data.roleType;
+				}
+				else {
+					roleType = null;
+				}
+			}
+		});
 	}
 	//获取账户信息
 	function initSystemData_account(){
@@ -243,7 +260,7 @@
 				{ field: 'organId',width:5, hidden:true},
 				{ title: organNameTitle,field: 'organName',width:140,hidden:organNameHidden},
 				{ title: '单据编号',field: 'billNo',width:160},
-				{ title: '经手人',field: 'handsPersonName',width:80},
+				{ title: '操作员',field: 'userName',width:80},
 				{ title: '单据时间 ',field: 'billTimeStr',width:160},
 				{ title: '合计',field: 'totalPrice',width:80},
 				{ title: '备注',field: 'remark',width:100}
@@ -977,6 +994,7 @@
 			data: ({
                 search: JSON.stringify({
                     type: listType,
+					roleType: roleType,
                     billNo: $.trim($("#searchBillNo").val()),
                     beginTime: beginTime,
                     endTime: endTime

@@ -446,76 +446,6 @@ public class DepotHeadExample {
             return (Criteria) this;
         }
 
-        public Criteria andOperPersonNameIsNull() {
-            addCriterion("oper_person_name is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andOperPersonNameIsNotNull() {
-            addCriterion("oper_person_name is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andOperPersonNameEqualTo(String value) {
-            addCriterion("oper_person_name =", value, "operPersonName");
-            return (Criteria) this;
-        }
-
-        public Criteria andOperPersonNameNotEqualTo(String value) {
-            addCriterion("oper_person_name <>", value, "operPersonName");
-            return (Criteria) this;
-        }
-
-        public Criteria andOperPersonNameGreaterThan(String value) {
-            addCriterion("oper_person_name >", value, "operPersonName");
-            return (Criteria) this;
-        }
-
-        public Criteria andOperPersonNameGreaterThanOrEqualTo(String value) {
-            addCriterion("oper_person_name >=", value, "operPersonName");
-            return (Criteria) this;
-        }
-
-        public Criteria andOperPersonNameLessThan(String value) {
-            addCriterion("oper_person_name <", value, "operPersonName");
-            return (Criteria) this;
-        }
-
-        public Criteria andOperPersonNameLessThanOrEqualTo(String value) {
-            addCriterion("oper_person_name <=", value, "operPersonName");
-            return (Criteria) this;
-        }
-
-        public Criteria andOperPersonNameLike(String value) {
-            addCriterion("oper_person_name like", value, "operPersonName");
-            return (Criteria) this;
-        }
-
-        public Criteria andOperPersonNameNotLike(String value) {
-            addCriterion("oper_person_name not like", value, "operPersonName");
-            return (Criteria) this;
-        }
-
-        public Criteria andOperPersonNameIn(List<String> values) {
-            addCriterion("oper_person_name in", values, "operPersonName");
-            return (Criteria) this;
-        }
-
-        public Criteria andOperPersonNameNotIn(List<String> values) {
-            addCriterion("oper_person_name not in", values, "operPersonName");
-            return (Criteria) this;
-        }
-
-        public Criteria andOperPersonNameBetween(String value1, String value2) {
-            addCriterion("oper_person_name between", value1, value2, "operPersonName");
-            return (Criteria) this;
-        }
-
-        public Criteria andOperPersonNameNotBetween(String value1, String value2) {
-            addCriterion("oper_person_name not between", value1, value2, "operPersonName");
-            return (Criteria) this;
-        }
-
         public Criteria andCreateTimeIsNull() {
             addCriterion("create_time is null");
             return (Criteria) this;
@@ -753,6 +683,66 @@ public class DepotHeadExample {
 
         public Criteria andHandsPersonIdNotBetween(Long value1, Long value2) {
             addCriterion("hands_person_id not between", value1, value2, "handsPersonId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreatorIsNull() {
+            addCriterion("creator is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreatorIsNotNull() {
+            addCriterion("creator is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreatorEqualTo(Long value) {
+            addCriterion("creator =", value, "creator");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreatorNotEqualTo(Long value) {
+            addCriterion("creator <>", value, "creator");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreatorGreaterThan(Long value) {
+            addCriterion("creator >", value, "creator");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreatorGreaterThanOrEqualTo(Long value) {
+            addCriterion("creator >=", value, "creator");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreatorLessThan(Long value) {
+            addCriterion("creator <", value, "creator");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreatorLessThanOrEqualTo(Long value) {
+            addCriterion("creator <=", value, "creator");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreatorIn(List<Long> values) {
+            addCriterion("creator in", values, "creator");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreatorNotIn(List<Long> values) {
+            addCriterion("creator not in", values, "creator");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreatorBetween(Long value1, Long value2) {
+            addCriterion("creator between", value1, value2, "creator");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreatorNotBetween(Long value1, Long value2) {
+            addCriterion("creator not between", value1, value2, "creator");
             return (Criteria) this;
         }
 

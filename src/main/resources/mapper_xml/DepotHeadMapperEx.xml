@@ -4,7 +4,7 @@
 
     <resultMap extends="com.jsh.erp.datasource.mappers.DepotHeadMapper.BaseResultMap" id="ResultMapEx" type="com.jsh.erp.datasource.vo.DepotHeadVo4List">
         <result column="OrganName" jdbcType="VARCHAR" property="organName" />
-        <result column="HandsPersonName" jdbcType="VARCHAR" property="handsPersonName" />
+        <result column="userName" jdbcType="VARCHAR" property="userName" />
         <result column="AccountName" jdbcType="VARCHAR" property="accountName" />
     </resultMap>
 
@@ -41,10 +41,10 @@
     </resultMap>
 
     <select id="selectByConditionDepotHead" parameterType="com.jsh.erp.datasource.entities.DepotHeadExample" resultMap="ResultMapEx">
-        select distinct dh.*, s.supplier OrganName, p.name HandsPersonName, a.name AccountName
+        select distinct dh.*, s.supplier OrganName, u.username userName, a.name AccountName
         from jsh_depot_head dh
         left join jsh_supplier s on dh.organ_id=s.id and ifnull(s.delete_Flag,'0') !='1'
-        left join jsh_person p on dh.hands_person_id=p.id and ifnull(p.delete_Flag,'0') !='1'
+        left join jsh_user u on dh.creator=u.id and ifnull(u.Status,'0') ='0'
         left join jsh_account a on dh.account_id=a.id and ifnull(a.delete_Flag,'0') !='1'
         left join jsh_depot_item di on dh.id = di.header_id and ifnull(di.delete_flag,'0') !='1'
         left join jsh_material m on di.material_id = m.id and ifnull(m.delete_flag,'0') !='1'
@@ -70,10 +70,10 @@
         <if test="depotIds != null">
             and di.depot_id in (${depotIds})
         </if>
-        <if test="handsPersonIds != null">
-            and dh.hands_person_id in (
-            <foreach collection="handsPersonIds" item="handsPersonId" separator=",">
-                #{handsPersonId}
+        <if test="creatorArray != null">
+            and dh.creator in (
+            <foreach collection="creatorArray" item="creator" separator=",">
+                #{creator}
             </foreach>
             )
         </if>
@@ -111,18 +111,14 @@
         <if test="depotIds != null">
             and di.depot_id in (${depotIds})
         </if>
-        <if test="handsPersonIds != null">
-            and hands_person_id in (
-            <foreach collection="handsPersonIds" item="handsPersonId" separator=",">
-                #{handsPersonId}
+        <if test="creatorArray != null">
+            and creator in (
+            <foreach collection="creatorArray" item="creator" separator=",">
+                #{creator}
             </foreach>
             )
         </if>
         and ifnull(jsh_depot_head.delete_Flag,'0') !='1') tb
-    </select>
-
-    <select id="getMaxId" resultType="java.lang.Long">
-        select max(id) as id from jsh_depot_head
     </select>
 
     <select id="findMaterialsListByHeaderId" resultType="java.lang.String">
@@ -327,10 +323,9 @@
     </select>
 
     <select id="getDetailByNumber" parameterType="com.jsh.erp.datasource.entities.DepotHeadExample" resultMap="ResultMapEx">
-        select dh.*, s.supplier OrganName, p.name HandsPersonName, a.name AccountName
+        select dh.*, s.supplier OrganName, a.name AccountName
         from jsh_depot_head dh
         left join jsh_supplier s on dh.organ_id=s.id and ifnull(s.delete_Flag,'0') !='1'
-        left join jsh_person p on dh.hands_person_id=p.id and ifnull(p.delete_Flag,'0') !='1'
         left join jsh_account a on dh.account_id=a.id and ifnull(a.delete_Flag,'0') !='1'
         where 1=1
         <if test="number != null">
@@ -381,14 +376,14 @@
         )
         and ifnull(delete_flag,'0') !='1'
     </select>
-    <select id="getDepotHeadListByHandsPersonIds" resultMap="com.jsh.erp.datasource.mappers.DepotHeadMapper.BaseResultMap">
+    <select id="getDepotHeadListByCreator" resultMap="com.jsh.erp.datasource.mappers.DepotHeadMapper.BaseResultMap">
         select
         <include refid="com.jsh.erp.datasource.mappers.DepotHeadMapper.Base_Column_List" />
         from jsh_depot_head
         where 1=1
-        and hands_person_id in (
-        <foreach collection="handsPersonIds" item="handsPersonId" separator=",">
-            #{handsPersonId}
+        and creator in (
+        <foreach collection="creatorArray" item="creator" separator=",">
+            #{creator}
         </foreach>
         )
         and ifnull(delete_flag,'0') !='1'

@@ -91,8 +91,8 @@
                         async: false,
                         success: function (res) {
                             if(res && res.code === 200) {
+                                self.parent.window.$("#searchBtn").click();
                                 self.parent.$.colorbox.close();
-                                $.messager.alert('提示',"操作成功！","info");
                             }
                             else {
                                 $.messager.alert('提示',"操作失败！","error");

@@ -479,7 +479,7 @@
 					}
 				},
 				{ title: '单据日期',field: 'operTimeStr',width:145},
-				{ title: '操作员',field: 'operPersonName',width:60},
+				{ title: '操作员',field: 'userName',width:60},
 				{ title: '金额合计',field: 'totalPrice',width:70},
 				{ title: '含税合计',field: 'totalTaxLastMoney',hidden:isShowLastMoneyColumn,width:70,formatter:function(value,rec){
 						return (rec.discountMoney + rec.discountLastMoney).toFixed(2);
@@ -1362,7 +1362,6 @@
 		$("#DiscountLastMoney").val(res.discountLastMoney); //优惠后金额
 		$("#ChangeAmount").val(res.changeAmount).attr("data-changeamount", res.changeAmount);
 	    $('#OrganId').combobox('setValue', res.organId);
-	    $("#HandsPersonId").val(res.handsPersonId);
 	    $("#Remark").val(res.remark);
 		$("#Discount").val(res.discount?res.discount:0);
 		$("#DiscountMoney").val(res.discountMoney?res.discountMoney:0);
@@ -1451,7 +1450,6 @@
 	    $("#NumberShow").text(res.number);
 	    $("#OperTimeShow").text(res.operTimeStr);
 	    $('#OrganIdShow').text(res.organName);
-	    $("#HandsPersonIdShow").text(res.handsPersonName);
         if(res.accountName){
             $("#AccountIdShow").text(res.accountName); //结算账户
         } else {
@@ -1817,7 +1815,6 @@
                     LinkNumber: $.trim($("#LinkNumber").val()),
 					OperTime: $("#OperTime").val(),
 					OrganId: OrganId,
-					HandsPersonId: $.trim($("#HandsPersonId").val()),
 					Salesman: SalesmanStr, //销售人员
 					AccountId: getAccountID,
 					ChangeAmount: ChangeAmount, //付款/收款
