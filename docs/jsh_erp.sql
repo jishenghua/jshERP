@@ -3,14 +3,14 @@ Navicat MySQL Data Transfer
 
 Source Server         : localhost
 Source Server Version : 50704
-Source Host           : 127.0.0.1:3306
+Source Host           : localhost:3306
 Source Database       : jsh_erp
 
 Target Server Type    : MYSQL
 Target Server Version : 50704
 File Encoding         : 65001
 
-Date: 2020-09-13 18:47:08
+Date: 2020-09-26 12:06:20
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -337,22 +337,22 @@ INSERT INTO `jsh_function` VALUES ('23', '010102', '商品信息', '0101', '/pag
 INSERT INTO `jsh_function` VALUES ('24', '0102', '基本资料', '0', '', '\0', '0750', '', '电脑版', null, 'icon-grid', '0');
 INSERT INTO `jsh_function` VALUES ('25', '01020101', '供应商信息', '0102', '/pages/manage/vendor.html', '\0', '0260', '', '电脑版', '1', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('26', '010202', '仓库信息', '0102', '/pages/manage/depot.html', '\0', '0270', '', '电脑版', '1', 'icon-notebook', '0');
-INSERT INTO `jsh_function` VALUES ('31', '010206', '经手人管理', '0102', '/pages/materials/person.html', '\0', '0284', '', '电脑版', '1', 'icon-notebook', '0');
+INSERT INTO `jsh_function` VALUES ('31', '010206', '经手人管理', '0102', '/pages/manage/person.html', '\0', '0284', '', '电脑版', '1', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('32', '0502', '采购管理', '0', '', '\0', '0330', '', '电脑版', '', 'icon-loop', '0');
-INSERT INTO `jsh_function` VALUES ('33', '050201', '采购入库', '0502', '/pages/materials/purchase_in_list.html', '\0', '0340', '', '电脑版', '1,2', 'icon-notebook', '0');
+INSERT INTO `jsh_function` VALUES ('33', '050201', '采购入库', '0502', '/pages/bill/purchase_in_list.html', '\0', '0340', '', '电脑版', '1,2', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('38', '0603', '销售管理', '0', '', '\0', '0390', '', '电脑版', '', 'icon-briefcase', '0');
-INSERT INTO `jsh_function` VALUES ('40', '080107', '调拨出库', '0801', '/pages/materials/allocation_out_list.html', '\0', '0807', '', '电脑版', '1,2', 'icon-notebook', '0');
-INSERT INTO `jsh_function` VALUES ('41', '060303', '销售出库', '0603', '/pages/materials/sale_out_list.html', '\0', '0394', '', '电脑版', '1,2', 'icon-notebook', '0');
+INSERT INTO `jsh_function` VALUES ('40', '080107', '调拨出库', '0801', '/pages/bill/allocation_out_list.html', '\0', '0807', '', '电脑版', '1,2', 'icon-notebook', '0');
+INSERT INTO `jsh_function` VALUES ('41', '060303', '销售出库', '0603', '/pages/bill/sale_out_list.html', '\0', '0394', '', '电脑版', '1,2', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('44', '0704', '财务管理', '0', '', '\0', '0450', '', '电脑版', '', 'icon-map', '0');
 INSERT INTO `jsh_function` VALUES ('59', '030101', '库存状况', '0301', '/pages/reports/in_out_stock_report.html', '\0', '0600', '', '电脑版', '', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('194', '010204', '收支项目', '0102', '/pages/manage/inOutItem.html', '\0', '0282', '', '电脑版', '1', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('195', '010205', '结算账户', '0102', '/pages/manage/account.html', '\0', '0283', '', '电脑版', '1', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('197', '070402', '收入单', '0704', '/pages/financial/item_in.html', '\0', '0465', '', '电脑版', '1', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('198', '0301', '报表查询', '0', '', '\0', '0570', '', '电脑版', null, 'icon-pie-chart', '0');
-INSERT INTO `jsh_function` VALUES ('199', '050204', '采购退货', '0502', '/pages/materials/purchase_back_list.html', '\0', '0345', '', '电脑版', '1,2', 'icon-notebook', '0');
-INSERT INTO `jsh_function` VALUES ('200', '060305', '销售退货', '0603', '/pages/materials/sale_back_list.html', '\0', '0396', '', '电脑版', '1,2', 'icon-notebook', '0');
-INSERT INTO `jsh_function` VALUES ('201', '080103', '其它入库', '0801', '/pages/materials/other_in_list.html', '\0', '0803', '', '电脑版', '1,2', 'icon-notebook', '0');
-INSERT INTO `jsh_function` VALUES ('202', '080105', '其它出库', '0801', '/pages/materials/other_out_list.html', '\0', '0805', '', '电脑版', '1,2', 'icon-notebook', '0');
+INSERT INTO `jsh_function` VALUES ('199', '050204', '采购退货', '0502', '/pages/bill/purchase_back_list.html', '\0', '0345', '', '电脑版', '1,2', 'icon-notebook', '0');
+INSERT INTO `jsh_function` VALUES ('200', '060305', '销售退货', '0603', '/pages/bill/sale_back_list.html', '\0', '0396', '', '电脑版', '1,2', 'icon-notebook', '0');
+INSERT INTO `jsh_function` VALUES ('201', '080103', '其它入库', '0801', '/pages/bill/other_in_list.html', '\0', '0803', '', '电脑版', '1,2', 'icon-notebook', '0');
+INSERT INTO `jsh_function` VALUES ('202', '080105', '其它出库', '0801', '/pages/bill/other_out_list.html', '\0', '0805', '', '电脑版', '1,2', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('203', '070403', '支出单', '0704', '/pages/financial/item_out.html', '\0', '0470', '', '电脑版', '1', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('204', '070404', '收款单', '0704', '/pages/financial/money_in.html', '\0', '0475', '', '电脑版', '1', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('205', '070405', '付款单', '0704', '/pages/financial/money_out.html', '\0', '0480', '', '电脑版', '1', 'icon-notebook', '0');
@@ -360,8 +360,8 @@ INSERT INTO `jsh_function` VALUES ('206', '070406', '转账单', '0704', '/pages
 INSERT INTO `jsh_function` VALUES ('207', '030102', '账户统计', '0301', '/pages/reports/account_report.html', '\0', '0610', '', '电脑版', '', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('208', '030103', '进货统计', '0301', '/pages/reports/buy_in_report.html', '\0', '0620', '', '电脑版', '', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('209', '030104', '销售统计', '0301', '/pages/reports/sale_out_report.html', '\0', '0630', '', '电脑版', '', 'icon-notebook', '0');
-INSERT INTO `jsh_function` VALUES ('210', '040102', '零售出库', '0401', '/pages/materials/retail_out_list.html', '\0', '0405', '', '电脑版', '1,2', 'icon-notebook', '0');
-INSERT INTO `jsh_function` VALUES ('211', '040104', '零售退货', '0401', '/pages/materials/retail_back_list.html', '\0', '0407', '', '电脑版', '1,2', 'icon-notebook', '0');
+INSERT INTO `jsh_function` VALUES ('210', '040102', '零售出库', '0401', '/pages/bill/retail_out_list.html', '\0', '0405', '', '电脑版', '1,2', 'icon-notebook', '0');
+INSERT INTO `jsh_function` VALUES ('211', '040104', '零售退货', '0401', '/pages/bill/retail_back_list.html', '\0', '0407', '', '电脑版', '1,2', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('212', '070407', '收预付款', '0704', '/pages/financial/advance_in.html', '\0', '0495', '', '电脑版', '1', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('217', '01020102', '客户信息', '0102', '/pages/manage/customer.html', '\0', '0262', '', '电脑版', '1', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('218', '01020103', '会员信息', '0102', '/pages/manage/member.html', '\0', '0263', '', '电脑版', '1', 'icon-notebook', '0');
@@ -371,16 +371,16 @@ INSERT INTO `jsh_function` VALUES ('226', '030106', '入库明细', '0301', '/pa
 INSERT INTO `jsh_function` VALUES ('227', '030107', '出库明细', '0301', '/pages/reports/out_detail.html', '\0', '0645', '', '电脑版', '', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('228', '030108', '入库汇总', '0301', '/pages/reports/in_material_count.html', '\0', '0650', '', '电脑版', '', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('229', '030109', '出库汇总', '0301', '/pages/reports/out_material_count.html', '\0', '0655', '', '电脑版', '', 'icon-notebook', '0');
-INSERT INTO `jsh_function` VALUES ('232', '080109', '组装单', '0801', '/pages/materials/assemble_list.html', '\0', '0809', '', '电脑版', '1,2', 'icon-notebook', '0');
-INSERT INTO `jsh_function` VALUES ('233', '080111', '拆卸单', '0801', '/pages/materials/disassemble_list.html', '\0', '0811', '', '电脑版', '1,2', 'icon-notebook', '0');
+INSERT INTO `jsh_function` VALUES ('232', '080109', '组装单', '0801', '/pages/bill/assemble_list.html', '\0', '0809', '', '电脑版', '1,2', 'icon-notebook', '0');
+INSERT INTO `jsh_function` VALUES ('233', '080111', '拆卸单', '0801', '/pages/bill/disassemble_list.html', '\0', '0811', '', '电脑版', '1,2', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('234', '000105', '系统配置', '0001', '/pages/manage/systemConfig.html', '\0', '0165', '', '电脑版', '1', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('235', '030110', '客户对账', '0301', '/pages/reports/customer_account.html', '\0', '0660', '', '电脑版', '', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('236', '000106', '商品属性', '0001', '/pages/materials/materialProperty.html', '\0', '0168', '', '电脑版', '1', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('237', '030111', '供应商对账', '0301', '/pages/reports/vendor_account.html', '\0', '0665', '', '电脑版', '', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('239', '0801', '仓库管理', '0', '', '\0', '0420', '', '电脑版', '', 'icon-layers', '0');
 INSERT INTO `jsh_function` VALUES ('240', '010104', '序列号', '0101', '/pages/manage/serialNumber.html', '\0', '0246', '', '电脑版', '1', 'icon-notebook', '0');
-INSERT INTO `jsh_function` VALUES ('241', '050202', '采购订单', '0502', '/pages/materials/purchase_orders_list.html', '\0', '0335', '', '电脑版', '1,2', 'icon-notebook', '0');
-INSERT INTO `jsh_function` VALUES ('242', '060301', '销售订单', '0603', '/pages/materials/sale_orders_list.html', '\0', '0392', '', '电脑版', '1,2', 'icon-notebook', '0');
+INSERT INTO `jsh_function` VALUES ('241', '050202', '采购订单', '0502', '/pages/bill/purchase_orders_list.html', '\0', '0335', '', '电脑版', '1,2', 'icon-notebook', '0');
+INSERT INTO `jsh_function` VALUES ('242', '060301', '销售订单', '0603', '/pages/bill/sale_orders_list.html', '\0', '0392', '', '电脑版', '1,2', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('243', '000108', '机构管理', '0001', '/pages/manage/organization.html', '', '0150', '', '电脑版', '1', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('244', '030112', '库存预警', '0301', '/pages/reports/stock_warning_report.html', '\0', '0670', '', '电脑版', '', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('245', '000107', '插件管理', '0001', '/pages/manage/plugin.html', '\0', '0170', '', '电脑版', '1', 'icon-notebook', '0');
@@ -421,7 +421,7 @@ CREATE TABLE `jsh_log` (
   `tenant_id` bigint(20) DEFAULT NULL COMMENT '租户id',
   PRIMARY KEY (`id`),
   KEY `FKF2696AA13E226853` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6798 DEFAULT CHARSET=utf8 COMMENT='操作日志';
+) ENGINE=InnoDB AUTO_INCREMENT=6800 DEFAULT CHARSET=utf8 COMMENT='操作日志';
 
 -- ----------------------------
 -- Records of jsh_log
@@ -464,7 +464,7 @@ INSERT INTO `jsh_material` VALUES ('570', '17', '商品3', '', '300.000000', 'sp
 INSERT INTO `jsh_material` VALUES ('577', null, '商品8', '', null, 'sp8', '', '', '', '', '15', '', '', '', '', '0', '63', '0');
 INSERT INTO `jsh_material` VALUES ('579', '21', '商品17', '', null, 'sp17', '', '', '', '', '15', '', '', '', '', '0', '63', '0');
 INSERT INTO `jsh_material` VALUES ('586', '17', '序列号商品测试', '', null, 'xlh123', '', '', '个', '', null, '', '', '', '', '1', '63', '0');
-INSERT INTO `jsh_material` VALUES ('587', '17', '商品test1', '南通中远', null, '', 'test1', '', '个', '', null, '\0', '', '', '', '0', '63', '0');
+INSERT INTO `jsh_material` VALUES ('587', '17', '商品test1', '南通中远', null, '', 'test1', '', '个', '', null, '', '', '', '', '0', '63', '0');
 INSERT INTO `jsh_material` VALUES ('588', '21', '商品200', '', '112.000000', '', '300ml', '', '个', '', null, '', '', '', '', '0', '63', '0');
 
 -- ----------------------------
@@ -736,7 +736,7 @@ CREATE TABLE `jsh_sequence` (
 -- ----------------------------
 -- Records of jsh_sequence
 -- ----------------------------
-INSERT INTO `jsh_sequence` VALUES ('depot_number_seq', '1', '999999999999999999', '352', '1', '单据编号sequence');
+INSERT INTO `jsh_sequence` VALUES ('depot_number_seq', '1', '999999999999999999', '353', '1', '单据编号sequence');
 
 -- ----------------------------
 -- Table structure for jsh_serial_number

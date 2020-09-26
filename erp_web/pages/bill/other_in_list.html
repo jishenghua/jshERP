@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>其它入库</title>
+    <meta charset="utf-8">
+    <!-- 指定以IE8的方式来渲染 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" href="/js/bootstrap/css/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="/css/jsherp.css"/>
+    <link rel="stylesheet" type="text/css" href="/js/easyui/themes/default/easyui.css"/>
+    <link rel="stylesheet" type="text/css" href="/js/easyui/themes/icon.css"/>
+    <link type="text/css" rel="stylesheet" href="/css/common.css"/>
+    <link type="text/css" rel="stylesheet" href="/css/in_out.css"/>
+    <script src="/js/jquery-1.8.0.min.js"></script>
+    <script src="/js/easyui/jquery.easyui.min.js"></script>
+    <script src="/js/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="/js/handlebars.js"></script>
+    <script src="/js/My97DatePicker/WdatePicker.js"></script>
+    <script src="/js/common/common.js"></script>
+    <script src="/js/common/jsherp.js"></script>
+    <script src="/js/pages/bill/add_temp.js"></script>
+    <script src="/js/pages/bill/in_out.js"></script>
+</head>
+<body>
+<!-- 数据显示table -->
+<div id="tablePanel" class="easyui-panel" data-options="fit:true" style="padding:1px; top:300px;" title="其它入库列表" iconCls="icon-list">
+    <div class="box-body form-inline">
+        <div class="form-group">
+            <label class="control-label">单据编号：</label>
+            <div class="control-inline">
+                <input type="text" id="searchNumber" name="searchNumber" value="" maxlength="100" class="easyui-textbox width-90"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label">商品信息：</label>
+            <div class="control-inline">
+                <input type="text" id="searchMaterial" name="searchMaterial" placeholder="名称，型号" maxlength="100" class="easyui-textbox width-90"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label">单据日期：</label>
+            <div class="control-inline">
+                <input type="text" id="searchBeginTime" name="searchBeginTime" value="" maxlength="100" class="easyui-datebox width-120"/>
+                -
+                <input type="text" id="searchEndTime" name="searchEndTime" value="" maxlength="100" class="easyui-datebox width-120"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchBtn">查询</a>&nbsp;
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-redo" id="searchResetBtn">重置</a>
+        </div>
+    </div>
+    <table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
+</div>
+
+<div id="depotHeadDlg" class="easyui-dialog" style="padding:10px 20px;" fit="true"
+     closed="true" buttons="#dlg-buttons" modal="true" cache="false" collapsible="false" closable="true">
+    <form id="depotHeadFM" method="post" novalidate>
+        <table width="100%" style="min-width:1100px;">
+            <tr>
+                <td style="width:70px;">供应商</td>
+                <td style="padding:5px;width:170px;">
+                    <div class="org-list">
+                        <input id="OrganId" name="OrganId" style="width:130px;"/>
+                    </div>
+                    <div class="add-org-btn">
+                        <img id="addOrgan" src="/js/easyui/themes/icons/edit_add.png"
+                             style="cursor: pointer;" alt="增加供应商" title="增加供应商"/>
+                    </div>
+                </td>
+                <td style="width:70px;">单据日期</td>
+                <td style="padding:5px">
+                    <input type="text" name="OperTime" id="OperTime"
+                           onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" class="txt Wdate radius-ui"
+                           style="width:155px;" readonly/>
+                </td>
+                <td style="width:80px;">单据编号</td>
+                <td style="padding:5px">
+                    <input name="Number" id="Number" class="easyui-validatebox radius-ui"
+                           data-options="validType:'length[2,30]'" style="width: 150px;" readonly/>
+                </td>
+                <td style="width:70px;"></td>
+                <td style="padding:5px">
+                </td>
+                <td style="width:100px;"></td>
+            </tr>
+            <tr>
+                <td colspan="9">
+                    <!-- 商品列表table -->
+                    <table id="materialData" style="top:100px;border-bottom-color:#FFFFFF"></table>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="9">
+                    <textarea name="Remark" id="Remark" rows="2" cols="2" class="radius-ui" placeholder="暂无备注信息"
+                              style="width:100%; height:35px;"></textarea>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+<div id="dlg-buttons">
+    <a href="javascript:void(0)" id="saveDepotHead" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
+    <a href="javascript:void(0)" id="cancelDepotHead" class="easyui-linkbutton" iconCls="icon-cancel"
+       onclick="javascript:$('#depotHeadDlg').dialog('close')">取消</a>
+</div>
+<div id="depotHeadDlgShow" class="easyui-dialog" style="padding:10px 20px;" fit="true"
+     closed="true" buttons="#dlg-buttons-show" modal="true" cache="false" collapsible="false" closable="true">
+    <table width="100%" style="min-width:1100px;">
+        <tr>
+            <td style="width:60px;">供应商：</td>
+            <td style="padding:5px;width:130px;">
+                <span id="OrganIdShow"></span>
+            </td>
+            <td style="width:70px;">单据日期：</td>
+            <td style="padding:5px;width:130px;">
+                <span id="OperTimeShow"></span>
+            </td>
+            <td style="width:80px;">单据编号：</td>
+            <td style="padding:5px;width:140px;">
+                <span id="NumberShow"></span>
+            </td>
+            <td style="width:70px;"></td>
+            <td style="padding:5px;width:140px;"></td>
+            <td style="width:100px;"></td>
+        </tr>
+        <tr>
+            <td colspan="9" style="width: 1130px;">
+                <!-- 商品列表table -->
+                <table id="materialDataShow" style="top:100px;border-bottom-color:#FFFFFF"></table>
+            </td>
+        </tr>
+        <tr>
+            <td style="width:60px;">单据备注：</td>
+            <td colspan="8" style="height:35px;">
+                <span id="RemarkShow" style="width: 100%; height:35px;"></span>
+            </td>
+        </tr>
+    </table>
+</div>
+<div id="dlg-buttons-show">
+    <a href="javascript:void(0)" id="printDepotHeadShow" class="easyui-linkbutton" iconCls="icon-print">打印</a>
+    <a href="javascript:void(0)" id="cancelDepotHeadShow" class="easyui-linkbutton" iconCls="icon-cancel"
+       onclick="javascript:$('#depotHeadDlgShow').dialog('close')">取消</a>
+</div>
+<div id="supplier"></div>
+<div id="depot"></div>
+<script>
+    $(function(){
+        //初始化系统基础信息
+        getType();
+        inOutService.getRoleType();
+        inOutService.initSystemData_UB();
+        inOutService.initSystemData_depot();
+        inOutService.initSystemData_account();
+        inOutService.initSupplier(); //供应商
+        inOutService.initSalesman(); //销售人员
+        inOutService.initOutItemList(); //初始化支出项目
+        inOutService.initMProperty(); //初始化商品属性
+        initTableData();
+        inOutService.ininPager();
+        inOutService.initForm();
+        inOutService.bindEvent();//绑定操作事件
+    });
+    //根据单据名称获取类型
+    function getType() {
+        listTitle = $("#tablePanel").prev().text();
+        //改变宽度和高度
+        $("#searchPanel").panel({width:webW-2});
+        $("#tablePanel").panel({width:webW-2});
+        var supUrl = "/supplier/findBySelect_sup"; //供应商接口
+        listType = "入库";
+        listSubType = "其它";
+        organUrl = supUrl;
+        amountNum = "QTRK";
+    }
+    //初始化表格数据
+    function initTableData(){
+        if(pageType === "skip") {
+            addDepotHead(); //自动弹出编辑框，带缓存数据
+        }
+        var tableToolBar = [
+            {
+                id:'addDepotHead',
+                text:'增加',
+                iconCls:'icon-add',
+                handler:function() {
+                    addDepotHead();
+                }
+            },
+            {
+                id:'deleteDepotHead',
+                text:'删除',
+                iconCls:'icon-remove',
+                handler:function() {
+                    inOutService.batDeleteDepotHead();
+                }
+            }
+        ];
+        $('#tableData').datagrid({
+            height:heightInfo,
+            rownumbers: false,
+            //动画效果
+            animate:false,
+            //选中单行
+            singleSelect : true,
+            collapsible:false,
+            selectOnCheck:false,
+            pagination: true,
+            //交替出现背景
+            striped : true,
+            pageSize: 10,
+            pageList: initPageNum,
+            columns:[[
+                { field: 'id',width:35,align:"center",checkbox:true},
+                { title: '操作',field: 'op',align:"center", width:90,
+                    formatter:function(value,rec,index) {
+                        var str = '';
+                        var orgId = rec.organId? rec.organId:0;
+                        str += '<img title="查看" src="/js/easyui/themes/icons/list.png" style="cursor: pointer;" onclick="showDepotHead(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
+                        if(isShowOpFun()){
+                            str += '<img title="编辑" src="/js/easyui/themes/icons/pencil.png" style="cursor: pointer;" onclick="editDepotHead(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
+                            str += '<img title="删除" src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="inOutService.deleteDepotHead('+ rec.id +',' + orgId +',' + rec.totalPrice+',' + rec.status + ');"/>';
+                        }
+                        return str;
+                    }
+                },
+                { title: '供应商名称', field: 'organName',width:120},
+                { title: '单据编号',field: 'number',width:155, formatter:function (value,rec) {
+                        if(rec.linknumber) {
+                            return value + "[转]";
+                        } else {
+                            return value;
+                        }
+                    }
+                },
+                { title: '商品信息',field: 'materialsList',width:200,formatter:function(value){
+                        if(value) {
+                            return value.replace(",","，");
+                        }
+                    }
+                },
+                { title: '单据日期',field: 'operTimeStr',width:145},
+                { title: '操作员',field: 'userName',width:60},
+                { title: '金额合计',field: 'totalPrice',width:70}
+            ]],
+            toolbar:tableToolBar,
+            onLoadError:function() {
+                $.messager.alert('页面加载提示','页面加载异常，请稍后再试！','error');
+                return;
+            }
+        });
+        dgResize();
+        toolbarStatus();
+    }
+    //新增信息
+    function addDepotHead() {
+        if(checkPower()){
+            return;
+        }
+        $('#depotHeadFM').form('clear');
+        var thisDateTime = getNowFormatDateTime(); //当前时间
+        $("#OperTime").val(thisDateTime);
+        inOutService.buildNumber(); //生成单据编号
+        //初始化优惠率、优惠金额、优惠后金额、本次付|收款、本次欠款 为0
+        $("#Discount").val(0);
+        $("#DiscountMoney").val(0);
+        $("#DiscountLastMoney").val(0);
+        $("#ChangeAmount").val(0);
+        $("#Debt").val(0);
+        $("#AccountId").val(defaultAccountId); //初始化默认的账户Id
+        var addTitle = listTitle.replace("列表","信息");
+        $('#depotHeadDlg').show().dialog('open').dialog('setTitle','<img src="/js/easyui/themes/icons/edit_add.png"/>&nbsp;增加' + addTitle);
+        $(".window-mask").css({ width: webW ,height: webH});
+        depotHeadID = 0;
+        var res = sessionStorage.getItem("rowInfo");
+        if(pageType == "skip" && res) { //从订单跳转过来
+            res = JSON.parse(res);
+            $('#OrganId').combobox('setValue', res.organId);
+            $("#LinkNumber").val(res.number);  //关联订单号
+            $("#DiscountLastMoney").val(res.totalPrice); //优惠后金额
+            $("#ChangeAmount").val(res.totalPrice).attr("data-changeamount", res.totalPrice);
+            depotHeadID = res.id;
+            initTableData_material("edit",res.totalPrice); //商品列表
+        } else {
+            initTableData_material("add"); //商品列表
+        }
+        inOutService.reject(); //撤销下、刷新商品列表
+        function supplierDlgFun(type) {
+            $('#supplierDlg').dialog('open').dialog('setTitle','<img src="/js/easyui/themes/icons/edit_add.png"/>&nbsp;增加' + type + '信息');
+            $('#supplierFM').form('clear');
+            bindSupplierEvent();
+        }
+        $("#addOrgan").off("click").on("click",function(){
+            supplierDlgFun("供应商");
+        });
+        $("#addMember").off("click").on("click",function(){
+            supplierDlgFun("会员");
+        });
+        $("#addCustomer").off("click").on("click",function(){
+            supplierDlgFun("客户");
+        });
+        $("#addAccount").off("click").on("click",function(){
+            $('#accountDlg').dialog('open').dialog('setTitle','<img src="/js/easyui/themes/icons/edit_add.png"/>&nbsp;增加结算账户');
+            $('#accountFM').form('clear');
+            bindAccountEvent();
+        });
+        url = '/depotHead/addDepotHeadAndDetail';
+    }
+    //编辑信息
+    function editDepotHead(index) {
+        var res = $("#tableData").datagrid("getRows")[index];
+        if (res.status == "1" || res.status == "2") {
+            $.messager.alert('编辑提示', '已审核和已转的单据不能编辑！', 'warning');
+            return;
+        }
+        var TotalPrice = res.totalPrice; //合计金额
+        $("#Number").val(res.number).attr("data-defaultNumber",res.number);
+        $("#OperTime").val(res.operTimeStr);
+        $("#LinkNumber").val(res.linkNumber); //关联订单号
+        $("#AccountId").val(res.accountId); //账户Id
+        $("#DiscountLastMoney").val(res.discountLastMoney); //优惠后金额
+        $("#ChangeAmount").val(res.changeAmount).attr("data-changeamount", res.changeAmount);
+        $('#OrganId').combobox('setValue', res.organId);
+        $("#Remark").val(res.remark);
+        $("#Discount").val(res.discount?res.discount:0);
+        $("#DiscountMoney").val(res.discountMoney?res.discountMoney:0);
+        var discountlastmoney = res.discountLastMoney?res.discountLastMoney:0;
+        $("#Debt").val(discountlastmoney-res.changeAmount);
+        $("#AccountDay").val(res.accountDay); //结算天数
+        preTotalPrice = res.totalPrice; //记录前一次合计金额，用于扣预付款
+        oldNumber = res.number; //记录编辑前的单据编号
+        oldId = res.id; //记录单据Id
+        var editTitle = listTitle.replace("列表","信息");
+        $('#depotHeadDlg').show().dialog('open').dialog('setTitle','<img src="/js/easyui/themes/icons/pencil.png"/>&nbsp;编辑' + editTitle);
+        $(".window-mask").css({ width: webW ,height: webH});
+        depotHeadID = res.id;
+        //采购入库、销售出库的多账户加载
+        if(res.accountIdList && res.accountMoneyList){
+            $("#AccountId").val("many"); //下拉框选中多账户
+            var accountArr = res.accountIdList.split(",");
+            var accountMoneyArr = res.accountMoneyList.split(",");
+            accountMoneyArr = changeListFmtPlus(accountMoneyArr)  //将数组单个金额中的数值转为正数
+            $("#AccountId").attr("data-accountArr", JSON.stringify(accountArr)).attr("data-accountMoneyArr", JSON.stringify(accountMoneyArr));  //json数据存储
+            $(".many-account-ico").show(); //显示多账户的ico图标
+        } else {
+            $(".many-account-ico").hide(); //隐藏多账户的ico图标
+        }
+        //采购入库、销售出库的费用数据加载
+        if(res.otherMoneyList && res.otherMoneyItem){
+            $("#OtherMoney").val(res.otherMoney); //其它费用
+            var itemArr = res.otherMoneyList.split(",");
+            var itemMoneyArr = res.otherMoneyItem.split(",");
+            $("#OtherMoney").attr("data-itemArr",JSON.stringify(itemArr)).attr("data-itemMoneyArr",itemMoneyArr);  //json数据存储
+        }
+        initTableData_material("edit",TotalPrice); //商品列表
+        inOutService.reject(); //撤销下、刷新商品列表
+        url = '/depotHead/updateDepotHeadAndDetail?id=' + res.id; //更新接口
+    }
+    //查看信息
+    function showDepotHead(index) {
+        var res = $("#tableData").datagrid("getRows")[index];
+        var manyAccountMoney = 0; //多账户合计-零售
+        $("#NumberShow").text(res.number);
+        $("#OperTimeShow").text(res.operTimeStr);
+        $('#OrganIdShow').text(res.organName);
+        if(res.accountName){
+            $("#AccountIdShow").text(res.accountName); //结算账户
+        } else {
+            if (res.accountIdList) {
+                var accountArr = res.accountIdList.split(","); //账户id列表
+                var accountMoneyArr = res.accountMoneyList.split(","); //账户金额列表
+                var accountIdShow = "";
+                for (var j = 0; j < accountArr.length; j++) {
+                    if (accountList != null) {
+                        for (var i = 0; i < accountList.length; i++) {
+                            var account = accountList[i];
+                            if (accountArr[j] == account.id) {
+                                var currentAccountMoney = accountMoneyArr[j] - 0;
+                                if (currentAccountMoney < 0) {
+                                    currentAccountMoney = 0 - currentAccountMoney;
+                                }
+                                accountIdShow = accountIdShow + account.name + "(" + currentAccountMoney + "元) ";
+                                manyAccountMoney += accountMoneyArr[j] - 0; //多账户合计-零售
+                            }
+                        }
+                    }
+                }
+                $("#AccountIdShow").text(accountIdShow);
+            }
+        }
+        $("#ChangeAmountShow").text(res.changeAmount);
+        $("#RemarkShow").text(res.remark);
+        $("#DiscountShow").text(res.discount);
+        $("#DiscountMoneyShow").text(res.discountMoney);
+        $("#DiscountLastMoneyShow").text(res.discountLastMoney);
+        var debt = 0;
+        if(res.otherMoney){
+            debt = (res.discountLastMoney+res.otherMoney-res.changeAmount).toFixed(2);
+        } else {
+            debt = (res.discountLastMoney-res.changeAmount).toFixed(2);
+        }
+        $("#DebtShow").text(debt);
+        $("#AccountDayShow").text(res.accountDay);  //结算天数
+        $("#LinkNumberShow").text(res.linkNumber); //关联订单号
+        var otherMoney = res.otherMoney?res.otherMoney:0;
+        if(otherMoney!=0 && res.otherMoneyList && res.otherMoneyItem){
+            var itemArr = res.otherMoneyList.split(","); //支出项目id列表
+            var itemMoneyArr = null;
+            if(res.otherMoneyItem!=null) {
+                itemMoneyArr = eval ("(" + res.otherMoneyItem + ")");  //支出项目金额列表
+            }
+            var otherMoneyShow = "";
+            for(var j =0;j<itemArr.length; j++) {
+                if (outItemList != null) {
+                    for (var i = 0; i < outItemList.length; i++) {
+                        var money = outItemList[i];
+                        if(itemArr[j] == money.Id) {
+                            for(var k =0;k<itemMoneyArr.length; k++) {
+                                if(itemMoneyArr[k].otherId == money.Id) {
+                                    otherMoneyShow += money.InOutItemName;
+                                    if(itemMoneyArr[k].otherMoney) {
+                                        otherMoneyShow +="(" + itemMoneyArr[k].otherMoney +"元)";
+                                    }
+                                    otherMoneyShow+="，";
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            $("#OtherMoneyShow").text(otherMoneyShow +"总计："+ otherMoney + "元 "); //其它费用
+        }
+        else {
+            $("#OtherMoneyShow").text(otherMoney); //其它费用
+        }
+        $("#payTypeShow").text(res.payType);
+        var TotalPrice = res.totalPrice;
+        var showTitle = listTitle.replace("列表","信息");
+        $('#depotHeadDlgShow').show().dialog('open').dialog('setTitle','<img src="/js/easyui/themes/icons/list.png"/>&nbsp;查看' + showTitle);
+        $(".window-mask").css({ width: webW ,height: webH});
+        depotHeadID = res.id;
+        initTableData_material_show(TotalPrice); //商品列表-查看状态
+    }
+    //初始化表格数据-商品列表-编辑状态
+    function initTableData_material(type,TotalPrice) {
+        var self = this;
+        var body,footer,input; //定义表格和文本框
+        var ratioDepot = 1; //比例-仓库用
+        var monthTime = getNowFormatMonth();
+        var isShowAnotherDepot = true; //显示对方仓库,true为隐藏,false为显示
+        var depotHeadName = ""; //仓库名称
+        var depotUrl = ""; //仓库接口地址
+        var depotTextField = ""; //仓库下拉名称
+        var anotherDepotHeadName = ""; //对方仓库的列的标题
+        var anotherDepotUrl = ""; //对方仓库接口地址
+        var anotherDepotTextField = "";
+        if(listSubType == "调拨"){
+            isShowAnotherDepot = false; //调拨时候显示对方仓库
+            anotherDepotHeadName = "调入仓库";
+            anotherDepotUrl = '/depot/findDepotByUserId?UBType=UserDepot&UBKeyId='+kid;
+            anotherDepotTextField = "depotName";
+        }
+        depotHeadName = "仓库名称";
+        depotUrl = '/depot/findDepotByUserId?UBType=UserDepot&UBKeyId='+kid;
+        depotTextField = "depotName";
+        var isShowTaxColumn = false; //是否显示税率相关的列,true为隐藏,false为显示
+        if(listSubType == "调拨" || listSubType == "其它" || listSubType == "零售" || listSubType == "零售退货" || listSubType == "采购订单" || listSubType == "销售订单" || listSubType == "组装单" || listSubType == "拆卸单"){
+            isShowTaxColumn = true; //隐藏
+        }
+        var isShowMaterialTypeColumn = true; //是否显示商品类型相关的列,true为隐藏,false为显示
+        if(listSubType == "组装单" || listSubType == "拆卸单"){
+            isShowMaterialTypeColumn = false; //显示
+        }
+        $('#materialData').datagrid({
+            height:345,
+            rownumbers: false,
+            //动画效果
+            animate:false,
+            //选中单行
+            singleSelect : true,
+            collapsible:false,
+            selectOnCheck:false,
+            //单击行是否选中
+            checkOnSelect : false,
+            pagination: false,
+            //交替出现背景
+            striped : true,
+            showFooter: true,
+            //loadFilter: pagerFilter,
+            onClickRow: onClickRow,
+            columns:[[
+                { field: 'Id',width:35,align:"center",checkbox:true},
+                { title: '商品类型',field: 'MType',editor:'validatebox',hidden:isShowMaterialTypeColumn,width:80},
+                { title: depotHeadName, field: 'DepotId', editor: 'validatebox', width: 90,
+                    formatter: function (value, row, index) {
+                        return row.DepotName;
+                    },
+                    editor: {
+                        type: 'combobox',
+                        options: {
+                            valueField: 'id',
+                            textField: depotTextField,
+                            method: 'get',
+                            url: depotUrl,
+                            onSelect:function(rec){
+                                var depotId = rec.id;
+                                body =$("#depotHeadFM .datagrid-body");
+                                footer =$("#depotHeadFM .datagrid-footer");
+                                input = ".datagrid-editable-input";
+                                var mId = body.find("[field='MaterialExtendId']").find(".textbox-value").val();
+                                if(mId){
+                                    var type = "select"; //type 类型：点击 click，选择 select
+                                    inOutService.findStockNumById(depotId, mId, monthTime, body, input, ratioDepot, type);
+                                }
+                            }
+                        }
+                    }
+                },
+                { title: '条码_名称(规格)(型号)(扩展信息)(单位)',field: 'MaterialExtendId',width:270,
+                    formatter:function(value,row,index){
+                        return row.MaterialName;
+                    },
+                    editor:{
+                        type:'combogrid',
+                        options:{
+                            url: "/material/findBySelect",
+                            idField:'Id',
+                            textField:'MaterialName',
+                            method:'get',
+                            pagination: true,
+                            mode: 'remote',
+                            hasDownArrow: false,
+                            panelWidth: 630, //下拉框的宽度
+                            panelHeight: 380,//下拉框的高度
+                            columns:[[
+                                {field:'mBarCode',title:'条码',width:120},
+                                {field:'name',title:'名称',width:140},
+                                {field:'standard',title:'规格',width:80},
+                                {field:'model',title:'型号',width:80},
+                                {field:'unit',title:'单位',width:60},
+                                {field:'stock',title:'库存',width:50},
+                                {field:'expand',title:'扩展信息',width:80}
+                            ]],
+                            onBeforeLoad: function(param){
+                                var edDepot = $('#materialData').datagrid('getEditor', {index:editIndex,field:'DepotId'});
+                                if(edDepot) {
+                                    param.depotId =  $(edDepot.target).combobox('getValue');
+                                }
+                                param.mpList = mPropertyList; //商品属性
+                            },
+                            onLoadSuccess: function (rec) {
+                                if(rec && rec.total==1) {
+                                    $(".datagrid-body [field='mBarCode']").click(); //在只有单个商品的时候自动选中
+                                    $("#depotHeadFM .datagrid-body").find("[field='OperNumber']").find(".datagrid-editable-input").focus().select();
+                                }
+                            },
+                            onSelect:function(index, rowData){
+                                inOutService.materialSelect(rowData,monthTime);
+                            }
+                        }
+                    }
+                },
+                { title: '库存',field: 'Stock',editor:'validatebox',width:50},
+                { title: anotherDepotHeadName, field: 'AnotherDepotId',editor:'validatebox',hidden:isShowAnotherDepot,width:90,
+                    formatter: function (value, row, index) {
+                        return row.AnotherDepotName;
+                    },
+                    editor: {
+                        type: 'combobox',
+                        options: {
+                            valueField: 'id',
+                            textField: anotherDepotTextField,
+                            method: 'get',
+                            url: anotherDepotUrl
+                        }
+                    }
+                },
+                { title: '单位',field: 'Unit',editor:'validatebox',width:60},
+                { title: '数量',field: 'OperNumber',editor:'validatebox',width:60},
+                { title: '单价',field: 'UnitPrice',editor:'validatebox',width:60},
+                { title: '含税单价',field: 'TaxUnitPrice',editor:'validatebox',hidden:isShowTaxColumn,width:75},
+                { title: '金额',field: 'AllPrice',editor:'validatebox',width:75},
+                { title: '税率(%)',field: 'TaxRate',editor:'validatebox',hidden:isShowTaxColumn,width:75},
+                { title: '税额',field: 'TaxMoney',editor:'validatebox',hidden:isShowTaxColumn,width:75},
+                { title: '价税合计',field: 'TaxLastMoney',editor:'validatebox',hidden:isShowTaxColumn,width:75},
+                { title: '备注',field: 'Remark',editor:'validatebox',width:100}
+            ]],
+            toolbar:[
+                {
+                    id:'append',
+                    text:'新增行',
+                    iconCls:'icon-add',
+                    handler:function() {
+                        inOutService.append(); //新增行
+                    }
+                },
+                {
+                    id:'delete',
+                    text:'删除行',
+                    iconCls:'icon-remove',
+                    handler:function() {
+                        inOutService.batchDel(); //删除行
+                    }
+                },
+                {
+                    id:'reject',
+                    text:'撤销',
+                    iconCls:'icon-undo',
+                    handler:function() {
+                        inOutService.reject(); //撤销
+                    }
+                },
+                {
+                    id:'appendDepot',
+                    text:'新增仓库',
+                    iconCls:'icon-add',
+                    handler:function() {
+                        inOutService.appendDepot(); //新增仓库
+                    }
+                },
+                {
+                    id:'appendMaterial',
+                    text:'新增商品',
+                    iconCls:'icon-add',
+                    handler:function() {
+                        js.addTabPage(null, "商品信息", "/pages/materials/material.html");
+                    }
+                }
+            ],
+            onLoadError:function() {
+                $.messager.alert('页面加载提示','页面加载异常，请稍后再试！','error');
+                return;
+            }
+        });
+        $.ajax({
+            type:"get",
+            url: '/depotItem/getDetailList',
+            data: {
+                headerId: depotHeadID,
+                mpList: mPropertyList
+            },
+            dataType: "json",
+            success: function (res) {
+                if(res && res.code === 200) {
+                    var data = res.data;
+                    var AllPrice = 0;
+                    var TaxLastMoney = 0;
+                    var DiscountMoney = $("#DiscountMoney").val()-0; //优惠金额
+                    var DiscountLastMoney = $("#DiscountLastMoney").val()-0; //优惠后金额
+                    if(type === "edit") {
+                        AllPrice = TotalPrice;
+                        TaxLastMoney = DiscountMoney + DiscountLastMoney;
+                    }
+                    var array = [];
+                    array.push({
+                        "AllPrice": AllPrice,
+                        "TaxLastMoney": TaxLastMoney
+                    });
+                    data.footer = array;
+                    $("#materialData").datagrid('loadData',data);
+                    if(type === "add") {
+                        $("#depotHeadDlg #append").click(); //新增行
+                    }
+                }
+            },
+            error:function() {
+                $.messager.alert('查询提示','查询数据后台异常，请稍后再试！','error');
+            }
+        });
+    }
+    //初始化表格数据-商品列表-查看状态
+    function initTableData_material_show(TotalPrice) {
+        var self = this;
+        var isShowAnotherDepot = true; //显示对方仓库,true为隐藏,false为显示
+        var anotherDepotHeadName = ""; //对方仓库的列的标题
+        var depotHeadName = ""; //仓库的列的标题
+        if(listSubType == "调拨"){
+            isShowAnotherDepot = false; //调拨时候显示对方仓库
+            anotherDepotHeadName = "调入仓库";
+        }
+        depotHeadName = "仓库名称";
+        var isShowTaxColumn = false; //是否显示税率相关的列,true为隐藏,false为显示
+        if(listSubType == "调拨" || listSubType == "其它" || listSubType == "零售" || listSubType == "零售退货" || listSubType == "采购订单" || listSubType == "销售订单" || listSubType == "组装单" || listSubType == "拆卸单"){
+            isShowTaxColumn = true; //隐藏
+        }
+        var isShowMaterialTypeColumn = true; //是否显示商品类型相关的列,true为隐藏,false为显示
+        if(listSubType == "组装单" || listSubType == "拆卸单"){
+            isShowMaterialTypeColumn = false; //显示
+        }
+        $('#materialDataShow').datagrid({
+            height:345,
+            rownumbers: true,
+            //动画效果
+            animate:false,
+            //选中单行
+            singleSelect : true,
+            collapsible:false,
+            selectOnCheck:false,
+            pagination: false,
+            //交替出现背景
+            striped : true,
+            showFooter: true,
+            columns:[[
+                { title: '商品类型',field: 'MType',width:80, hidden:isShowMaterialTypeColumn},
+                { title: depotHeadName,field: 'DepotName',editor:'validatebox',width:90},
+                { title: '条码_名称(规格)(型号)(扩展信息)(单位)',field: 'MaterialName',width:270},
+                { title: '库存',field: 'Stock',width:50},
+                { title: anotherDepotHeadName,field: 'AnotherDepotName',hidden:isShowAnotherDepot,width:90},
+                { title: '单位',field: 'Unit',editor:'validatebox',width:60},
+                { title: '数量',field: 'OperNumber',editor:'validatebox',width:60},
+                { title: '单价',field: 'UnitPrice',editor:'validatebox',width:60},
+                { title: '含税单价',field: 'TaxUnitPrice',editor:'validattebox',hidden:isShowTaxColumn,width:75},
+                { title: '金额',field: 'AllPrice',editor:'validatebox',width:75},
+                { title: '税率(%)',field: 'TaxRate',editor:'validatebox',hidden:isShowTaxColumn,width:75},
+                { title: '税额',field: 'TaxMoney',editor:'validatebox',hidden:isShowTaxColumn,width:75},
+                { title: '价税合计',field: 'TaxLastMoney',editor:'validatebox',hidden:isShowTaxColumn,width:75},
+                { title: '备注',field: 'Remark',editor:'validatebox',width:100}
+            ]],
+            onLoadError:function() {
+                $.messager.alert('页面加载提示','页面加载异常，请稍后再试！','error');
+                return;
+            }
+        });
+        $.ajax({
+            type:"get",
+            url: '/depotItem/getDetailList',
+            data: {
+                headerId: depotHeadID,
+                mpList: mPropertyList
+            },
+            dataType: "json",
+            success: function (res) {
+                if(res && res.code === 200) {
+                    var data = res.data;
+                    var AllPrice = TotalPrice;
+                    var DiscountMoney = $("#DiscountMoneyShow").text() - 0; //优惠金额
+                    var DiscountLastMoney = $("#DiscountLastMoneyShow").text() - 0; //优惠后金额
+                    var array = [];
+                    array.push({
+                        "AllPrice": AllPrice,
+                        "TaxLastMoney": DiscountMoney + DiscountLastMoney
+                    });
+                    data.footer = array;
+                    $("#materialDataShow").datagrid('loadData', data);
+                }
+            },
+            error:function() {
+                $.messager.alert('查询提示','查询数据后台异常，请稍后再试！','error');
+            }
+        });
+    }
+    //订单转采购或销售
+    function skipDepotHead(index) {
+        var res = $("#tableData").datagrid("getRows")[index];
+        if(res.status == "0" || res.status == "2") {
+            $.messager.alert('提示','未审核和已转的单据禁止操作！','warning');
+        } else {
+            sessionStorage.setItem("rowInfo", JSON.stringify(res)); //将单据信息存入缓存中
+            if(listTitle == "采购订单列表") {
+                js.addTabPage(null, "订单转采购", "/pages/materials/purchase_in_list.html?t=skip");
+            } else if(listTitle == "销售订单列表") {
+                js.addTabPage(null, "订单转销售", "/pages/materials/sale_out_list.html?t=skip");
+            }
+        }
+    }
+    //保存信息
+    $("#saveDepotHead").off("click").on("click",function(){
+        if(!$('#depotHeadFM').form('validate')){
+            return;
+        }
+        else {
+            //如果初始编号被修改了，就要判断单据编号是否存在
+            if($.trim($("#Number").val()) != $('#Number').attr("data-defaultNumber")){
+                //调用查询单据编号是否重名的方法
+                if(inOutService.checkDepotHeadNumber()){
+                    return;
+                }
+            }
+            //输入框提示
+            if(!$('#OrganId').combobox('getValue')){
+                $.messager.alert('提示','请选择往来单位！','warning');
+                return;
+            }
+            //进行明细的校验
+            if(depotHeadID ==0) {
+                //新增模式下
+                if (!inOutService.CheckData("add")) {
+                    return;
+                }
+            }
+            else {
+                //编辑模式下
+                if (!inOutService.CheckData("edit")) {
+                    return;
+                }
+            }
+            var OrganId = null;
+            var ChangeAmount = $.trim($("#ChangeAmount").val())-0;
+            var TotalPrice = $("#depotHeadFM .datagrid-footer [field='AllPrice'] div").text();
+            if($('#OrganId').length){
+                OrganId = $('#OrganId').combobox('getValue');
+            }
+            var accountMoneyList = $("#AccountId").attr("data-accountmoneyarr"); //账户金额列表-多账户
+            var accountMoneyArr;
+            if(accountMoneyList) {
+                accountMoneyList = accountMoneyList.replace("[","").replace("]","").toString();
+                var reg=new RegExp("\"","g"); //创建正则RegExp对象
+                accountMoneyList = accountMoneyList.replace(reg,""); //替换所有的双引号
+                accountMoneyArr = accountMoneyList.split(","); //转为数组
+            }
+            if(listSubType === "采购订单"||listSubType === "采购"||listSubType === "零售退货"||listSubType === "销售退货"){
+                //付款为负数
+                ChangeAmount = 0 - ChangeAmount;
+                TotalPrice = 0 - TotalPrice;
+                if(accountMoneyArr) {
+                    accountMoneyArr = changeListFmtMinus(accountMoneyArr); //将数组单个金额中的数值转为负数
+                }
+            }
+            //零售时候，可以从会员预付款中扣款
+            var thisPayType = "现付";
+            if(listSubType === "零售") {
+                if($("#payType").val() ==="预付款") {
+                    thisPayType = "预付款";
+                }
+            }
+            var SalesmanStr = "";
+            if(listSubType === "销售" || listSubType === "销售退货" || listSubType === "销售订单"){
+                var Salesman = $('#Salesman').combobox('getValues').toString(); //销售人员
+                if(Salesman) {
+                    var SalesmanArray = Salesman.split(",");
+                    for (var i = 0; i < SalesmanArray.length; i++) {
+                        if (i === SalesmanArray.length - 1) {
+                            SalesmanStr += "<" + SalesmanArray[i] + ">";
+                        }
+                        else {
+                            SalesmanStr += "<" + SalesmanArray[i] + ">,";
+                        }
+                    }
+                }
+            }
+            var getAccountID = $.trim($("#AccountId").val());
+            if($("#AccountId").val() === "many"){ //多账户
+                getAccountID = null;
+            }
+            var infoStr=JSON.stringify({
+                Type: listType,
+                SubType: listSubType,
+                DefaultNumber: $.trim($("#Number").attr("data-defaultNumber")),//初始编号
+                Number: $.trim($("#Number").val()),
+                LinkNumber: $.trim($("#LinkNumber").val()),
+                OperTime: $("#OperTime").val(),
+                OrganId: OrganId,
+                Salesman: SalesmanStr, //销售人员
+                AccountId: getAccountID,
+                ChangeAmount: ChangeAmount, //付款/收款
+                TotalPrice: TotalPrice, //合计
+                PayType: thisPayType, //现付/预付款
+                Remark: $.trim($("#Remark").val()),
+                AccountIdList: $("#AccountId").attr("data-accountarr"), //账户列表-多账户
+                AccountMoneyList: accountMoneyArr ? JSON.stringify(accountMoneyArr) : "", //账户金额列表-多账户
+                Discount: $.trim($("#Discount").val()),
+                DiscountMoney: $.trim($("#DiscountMoney").val()),
+                DiscountLastMoney: $.trim($("#DiscountLastMoney").val()),
+                OtherMoney: $.trim($("#OtherMoney").val()), //其它费用
+                OtherMoneyList: $("#OtherMoney").attr("data-itemarr"), //支出项目列表-涉及费用
+                OtherMoneyItem: $("#OtherMoney").attr("data-itemmoneyarr"), //支出项目金额列表-涉及费用
+                AccountDay: $("#AccountDay").val() //结算天数
+            });
+            /**
+             * 零售出库，单独操作
+             * */
+            if(url.indexOf("/depotHead/addDepotHeadAndDetail")>=0){
+                inOutService.addDepotHeadAndDetail(url,infoStr);
+            } else if(url.indexOf("/depotHead/updateDepotHeadAndDetail")>=0){
+                inOutService.updateDepotHeadAndDetail(url,infoStr,preTotalPrice);
+            }
+        }
+    });
+</script>
+</body>
+</html>
