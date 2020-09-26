@@ -207,7 +207,11 @@ public class OrgaUserRelService {
         List<Long> orgIdList = organizationService.getOrgIdByParentId(orgId);
         List<Long> userIdList = new ArrayList<Long>();
         OrgaUserRelExample example = new OrgaUserRelExample();
-        example.createCriteria().andOrgaIdIn(orgIdList).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        if(orgIdList!=null && orgIdList.size()>0) {
+            example.createCriteria().andOrgaIdIn(orgIdList).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        } else {
+            example.createCriteria().andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        }
         List<OrgaUserRel> list = orgaUserRelMapper.selectByExample(example);
         if(list!=null && list.size()>0) {
             for(OrgaUserRel our: list) {

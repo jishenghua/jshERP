@@ -505,7 +505,7 @@ public class DepotItemService {
                         depotItem.setMaterialExtendId(tempUpdatedJson.getLong("MaterialExtendId"));
                     }
                     depotItem.setMaterialUnit(tempUpdatedJson.getString("Unit"));
-                    if (!StringUtil.isEmpty(tempUpdatedJson.get("OperNumber").toString())) {
+                    if (StringUtil.isExist(tempUpdatedJson.get("OperNumber"))) {
                         depotItem.setOperNumber(tempUpdatedJson.getBigDecimal("OperNumber"));
                         try {
                             String Unit = tempUpdatedJson.get("Unit").toString();
@@ -530,29 +530,29 @@ public class DepotItemService {
                             logger.error(">>>>>>>>>>>>>>>>>>>设置基础数量异常", e);
                         }
                     }
-                    if (!StringUtil.isEmpty(tempUpdatedJson.get("UnitPrice").toString())) {
+                    if (StringUtil.isExist(tempUpdatedJson.get("UnitPrice"))) {
                         depotItem.setUnitPrice(tempUpdatedJson.getBigDecimal("UnitPrice"));
                     }
-                    if (!StringUtil.isEmpty(tempUpdatedJson.get("TaxUnitPrice").toString())) {
+                    if (StringUtil.isExist(tempUpdatedJson.get("TaxUnitPrice"))) {
                         depotItem.setTaxUnitPrice(tempUpdatedJson.getBigDecimal("TaxUnitPrice"));
                     }
-                    if (!StringUtil.isEmpty(tempUpdatedJson.get("AllPrice").toString())) {
+                    if (StringUtil.isExist(tempUpdatedJson.get("AllPrice"))) {
                         depotItem.setAllPrice(tempUpdatedJson.getBigDecimal("AllPrice"));
                     }
                     depotItem.setRemark(tempUpdatedJson.getString("Remark"));
-                    if (tempUpdatedJson.get("DepotId") != null && !StringUtil.isEmpty(tempUpdatedJson.get("DepotId").toString())) {
+                    if (tempUpdatedJson.get("DepotId") != null && StringUtil.isExist(tempUpdatedJson.get("DepotId"))) {
                         depotItem.setDepotId(tempUpdatedJson.getLong("DepotId"));
                     }
-                    if (tempUpdatedJson.get("AnotherDepotId") != null && !StringUtil.isEmpty(tempUpdatedJson.get("AnotherDepotId").toString())) {
+                    if (tempUpdatedJson.get("AnotherDepotId") != null && StringUtil.isExist(tempUpdatedJson.get("AnotherDepotId"))) {
                         depotItem.setAnotherDepotId(tempUpdatedJson.getLong("AnotherDepotId"));
                     }
-                    if (!StringUtil.isEmpty(tempUpdatedJson.get("TaxRate").toString())) {
+                    if (StringUtil.isExist(tempUpdatedJson.get("TaxRate"))) {
                         depotItem.setTaxRate(tempUpdatedJson.getBigDecimal("TaxRate"));
                     }
-                    if (!StringUtil.isEmpty(tempUpdatedJson.get("TaxMoney").toString())) {
+                    if (StringUtil.isExist(tempUpdatedJson.get("TaxMoney"))) {
                         depotItem.setTaxMoney(tempUpdatedJson.getBigDecimal("TaxMoney"));
                     }
-                    if (!StringUtil.isEmpty(tempUpdatedJson.get("TaxLastMoney").toString())) {
+                    if (StringUtil.isExist(tempUpdatedJson.get("TaxLastMoney"))) {
                         depotItem.setTaxLastMoney(tempUpdatedJson.getBigDecimal("TaxLastMoney"));
                     }
                     depotItem.setOtherField1(tempUpdatedJson.getString("OtherField1"));
