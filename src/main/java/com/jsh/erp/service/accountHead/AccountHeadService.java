@@ -320,6 +320,9 @@ public class AccountHeadService {
         String [] idArray=ids.split(",");
         int result = 0;
         try{
+            //删除主表
+            result = accountItemMapperEx.batchDeleteAccountItemByHeadIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+            //删除子表
             result = accountHeadMapperEx.batchDeleteAccountHeadByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
         }catch(Exception e){
             JshException.writeFail(logger, e);

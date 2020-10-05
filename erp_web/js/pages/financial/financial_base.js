@@ -496,10 +496,8 @@
 	
 	//删除财务信息
 	function deleteAccountHead(accountHeadID, thisOrganId, totalPrice){
-		$.messager.confirm('删除确认','确定要删除此财务信息吗？',function(r)
-	 	{
-            if (r)
-            {
+		$.messager.confirm('删除确认','确定要删除此财务信息吗？',function(r) {
+            if (r) {
 				$.ajax({
 					type:"post",
                     url: "/accountHead/batchDeleteAccountHeadByIds",
@@ -511,19 +509,7 @@
                         if(res && res.code == 200) {
                             $("#searchBtn").click();
                         } else {
-                            if(res && res.code == 601){
-                                var jsondata={};
-                                jsondata.ids=accountHeadID;
-                                jsondata.deleteType='2';
-                                var type='single';
-                                batDeleteAccountHeadForceConfirm(res,"/accountHead/batchDeleteAccountHeadByIds",jsondata,type);
-                            }else if(res && res.code == 600){
-                                $.messager.alert('删除提示', res.msg, 'error');
-                                return;
-                            }else{
-                                $.messager.alert('删除提示', '删除信息失败，请稍后再试！', 'error');
-                                return;
-                            }
+							$.messager.alert('删除提示', '删除财务信息失败，请稍后再试！', 'error');
                         }
                     },
 					//此处添加错误处理
