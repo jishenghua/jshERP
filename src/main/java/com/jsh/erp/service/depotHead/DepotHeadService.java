@@ -84,11 +84,11 @@ public class DepotHeadService {
 
     public List<DepotHeadVo4List> select(String type, String subType, String roleType, String number, String beginTime, String endTime,
                                          String materialParam, String depotIds, int offset, int rows)throws Exception {
-        String [] handsPersonIdArray = getHandsPersonIdArray(roleType);
         List<DepotHeadVo4List> resList = new ArrayList<DepotHeadVo4List>();
         List<DepotHeadVo4List> list=null;
         try{
-            list=depotHeadMapperEx.selectByConditionDepotHead(type, subType, handsPersonIdArray, number, beginTime, endTime, materialParam, depotIds, offset, rows);
+            String [] creatorArray = getCreatorArray(roleType);
+            list=depotHeadMapperEx.selectByConditionDepotHead(type, subType, creatorArray, number, beginTime, endTime, materialParam, depotIds, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -124,10 +124,10 @@ public class DepotHeadService {
 
     public Long countDepotHead(String type, String subType, String roleType,String number, String beginTime, String endTime,
                                String materialParam, String depotIds) throws Exception{
-        String [] handsPersonIdArray = getHandsPersonIdArray(roleType);
         Long result=null;
         try{
-            result=depotHeadMapperEx.countsByDepotHead(type, subType, handsPersonIdArray, number, beginTime, endTime, materialParam, depotIds);
+            String [] creatorArray = getCreatorArray(roleType);
+            result=depotHeadMapperEx.countsByDepotHead(type, subType, creatorArray, number, beginTime, endTime, materialParam, depotIds);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -135,36 +135,40 @@ public class DepotHeadService {
     }
 
     /**
-     * 根据角色类型获取经手人数组
+     * 根据角色类型获取操作员数组
      * @param roleType
      * @return
      * @throws Exception
      */
-    private String[] getHandsPersonIdArray(String roleType) throws Exception {
-        String handsPersonIds = "";
+    public String[] getCreatorArray(String roleType) throws Exception {
+        String creator = getCreatorByRoleType(roleType);
+        String [] creatorArray=null;
+        if(StringUtil.isNotEmpty(creator)){
+            creatorArray = creator.split(",");
+        }
+        return creatorArray;
+    }
+
+    /**
+     * 根据角色类型获取操作员
+     * @param roleType
+     * @return
+     * @throws Exception
+     */
+    public String getCreatorByRoleType(String roleType) throws Exception {
+        String creator = "";
         User user = userService.getCurrentUser();
         if(BusinessConstants.ROLE_TYPE_PRIVATE.equals(roleType)) {
-            handsPersonIds = user.getId().toString();
+            creator = user.getId().toString();
         } else if(BusinessConstants.ROLE_TYPE_THIS_ORG.equals(roleType)) {
-            handsPersonIds = orgaUserRelService.getUserIdListByUserId(user.getId());
+            creator = orgaUserRelService.getUserIdListByUserId(user.getId());
         }
-        String [] handsPersonIdArray=null;
-        if(StringUtil.isNotEmpty(handsPersonIds)){
-            handsPersonIdArray = handsPersonIds.split(",");
-        }
-        return handsPersonIdArray;
+        return creator;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertDepotHead(String beanJson, HttpServletRequest request)throws Exception {
         DepotHead depotHead = JSONObject.parseObject(beanJson, DepotHead.class);
-        //判断用户是否已经登录过，登录过不再处理
-        Object userInfo = request.getSession().getAttribute("user");
-        if (userInfo != null) {
-            User sessionUser = (User) userInfo;
-            String uName = sessionUser.getUsername();
-            depotHead.setOperPersonName(uName);
-        }
         depotHead.setCreateTime(new Timestamp(System.currentTimeMillis()));
         depotHead.setStatus(BusinessConstants.BILLS_STATUS_UN_AUDIT);
         int result=0;
@@ -189,7 +193,6 @@ public class DepotHeadService {
         depotHead.setId(id);
         depotHead.setStatus(dh.getStatus());
         depotHead.setCreateTime(dh.getCreateTime());
-        depotHead.setOperPersonName(dh.getOperPersonName());
         int result=0;
         try{
             result = depotHeadMapper.updateByPrimaryKey(depotHead);
@@ -280,16 +283,6 @@ public class DepotHeadService {
         }else{
             return buildOnlyNumber.toString();
         }
-    }
-
-    public Long getMaxId()throws Exception {
-        Long result = null;
-        try{
-            result = depotHeadMapperEx.getMaxId();
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        return result;
     }
 
     public String findMaterialsListByHeaderId(Long id)throws Exception {
@@ -490,8 +483,7 @@ public class DepotHeadService {
         DepotHead depotHead = JSONObject.parseObject(beanJson, DepotHead.class);
         //判断用户是否已经登录过，登录过不再处理
         User userInfo=userService.getCurrentUser();
-        depotHead.setHandsPersonId(userInfo==null?null:userInfo.getId());
-        depotHead.setOperPersonName(userInfo==null?null:userInfo.getUsername());
+        depotHead.setCreator(userInfo==null?null:userInfo.getId());
         depotHead.setCreateTime(new Timestamp(System.currentTimeMillis()));
         depotHead.setStatus(BusinessConstants.BILLS_STATUS_UN_AUDIT);
         try{
@@ -550,8 +542,6 @@ public class DepotHeadService {
         DepotHead depotHead = JSONObject.parseObject(beanJson, DepotHead.class);
         //判断用户是否已经登录过，登录过不再处理
         depotHead.setId(id);
-        User userInfo=userService.getCurrentUser();
-        depotHead.setOperPersonName(userInfo==null?null:userInfo.getUsername());
         try{
             depotHeadMapper.updateByPrimaryKeySelective(depotHead);
         }catch(Exception e){

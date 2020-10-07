@@ -92,17 +92,20 @@
                         if(res.status == 1) {
                             return '<b onclick="showMsg(' + res.id + ');">' + value + "</b>";
                         } else if(res.status == 2) {
-                            return '<span onclick="showMsg(' + res.id + ');">' + value + "</span>";;
+                            return '<span onclick="showMsg(' + res.id + ');">' + value + "</span>";
                         }
                     }},
-                {title: '时间', field: 'createTime', width: 150},
+                {title: '时间', field: 'createTime', width: 150,formatter: function (value) {
+                        return formatTime(value, 'Y-M-D h:m:s');
+                    }
+                },
                 {title: '状态', field: 'status', width: 100,formatter: function (value) {
-                        if(value == 1) {
-                            return "<b style='color:red'>未读</b>";
-                        } else if(value == 2) {
-                            return "<b style='color:green'>已读</b>";
-                        }
-                    }}
+                    if(value == 1) {
+                        return "<b style='color:red'>未读</b>";
+                    } else if(value == 2) {
+                        return "<b style='color:green'>已读</b>";
+                    }
+                }}
             ]],
             toolbar: [
                 {

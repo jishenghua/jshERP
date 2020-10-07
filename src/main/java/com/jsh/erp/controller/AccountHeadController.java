@@ -111,9 +111,6 @@ public class AccountHeadController {
     }
 
     /**
-     * create by: qiankunpingtai
-     * website：https://qiankunpingtai.cn
-     * description:
      *  批量删除账户信息
      * create time: 2019/3/29 10:49
      * @Param: ids
@@ -122,25 +119,8 @@ public class AccountHeadController {
     @RequestMapping(value = "/batchDeleteAccountHeadByIds")
     public Object batchDeleteAccountHeadByIds(@RequestParam("ids") String ids,@RequestParam(value="deleteType",
             required =false,defaultValue= BusinessConstants.DELETE_TYPE_NORMAL)String deleteType) throws Exception {
-
         JSONObject result = ExceptionConstants.standardSuccess();
-        int i=0;
-        if(BusinessConstants.DELETE_TYPE_NORMAL.equals(deleteType)){
-            i= accountHeadService.batchDeleteAccountHeadByIdsNormal(ids);
-        }else if(BusinessConstants.DELETE_TYPE_FORCE.equals(deleteType)){
-            i= accountHeadService.batchDeleteAccountHeadByIds(ids);
-        }else{
-            logger.error("异常码[{}],异常提示[{}],参数,ids[{}],deleteType[{}]",
-                    ExceptionConstants.DELETE_REFUSED_CODE,ExceptionConstants.DELETE_REFUSED_MSG,ids,deleteType);
-            throw new BusinessRunTimeException(ExceptionConstants.DELETE_REFUSED_CODE,
-                    ExceptionConstants.DELETE_REFUSED_MSG);
-        }
-        if(i<1){
-            logger.error("异常码[{}],异常提示[{}],参数,ids[{}]",
-                    ExceptionConstants.ACCOUNT_HEAD_DELETE_FAILED_CODE,ExceptionConstants.ACCOUNT_HEAD_DELETE_FAILED_MSG,ids);
-            throw new BusinessRunTimeException(ExceptionConstants.ACCOUNT_HEAD_DELETE_FAILED_CODE,
-                    ExceptionConstants.ACCOUNT_HEAD_DELETE_FAILED_MSG);
-        }
+        accountHeadService.batchDeleteAccountHeadByIds(ids);
         return result;
     }
 

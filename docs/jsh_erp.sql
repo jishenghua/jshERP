@@ -3,14 +3,14 @@ Navicat MySQL Data Transfer
 
 Source Server         : localhost
 Source Server Version : 50704
-Source Host           : 127.0.0.1:3306
+Source Host           : localhost:3306
 Source Database       : jsh_erp
 
 Target Server Type    : MYSQL
 Target Server Version : 50704
 File Encoding         : 65001
 
-Date: 2020-09-08 00:18:35
+Date: 2020-09-26 12:06:20
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -47,6 +47,7 @@ CREATE TABLE `jsh_account_head` (
   `type` varchar(50) DEFAULT NULL COMMENT '类型(支出/收入/收款/付款/转账)',
   `organ_id` bigint(20) DEFAULT NULL COMMENT '单位Id(收款/付款单位)',
   `hands_person_id` bigint(20) DEFAULT NULL COMMENT '经手人id',
+  `creator` bigint(20) DEFAULT NULL COMMENT '操作员',
   `change_amount` decimal(24,6) DEFAULT NULL COMMENT '变动金额(优惠/收款/付款/实付)',
   `total_price` decimal(24,6) DEFAULT NULL COMMENT '合计金额',
   `account_id` bigint(20) DEFAULT NULL COMMENT '账户(收款/付款)',
@@ -59,20 +60,21 @@ CREATE TABLE `jsh_account_head` (
   KEY `FK9F4C0D8DB610FC06` (`organ_id`),
   KEY `FK9F4C0D8DAAE50527` (`account_id`),
   KEY `FK9F4C0D8DC4170B37` (`hands_person_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=106 DEFAULT CHARSET=utf8 COMMENT='财务主表';
+) ENGINE=InnoDB AUTO_INCREMENT=107 DEFAULT CHARSET=utf8 COMMENT='财务主表';
 
 -- ----------------------------
 -- Records of jsh_account_head
 -- ----------------------------
-INSERT INTO `jsh_account_head` VALUES ('97', '收入', '58', '16', '10.000000', '10.000000', '17', 'SR20191228121609', '2019-12-28 00:00:00', '备注1', '63', '0');
-INSERT INTO `jsh_account_head` VALUES ('98', '支出', '57', '16', '-20.000000', '-20.000000', '17', 'ZC20191228121854', '2019-12-28 12:18:54', '', '63', '0');
-INSERT INTO `jsh_account_head` VALUES ('99', '收款', '58', '16', null, '20.000000', null, 'SK20191228121908', '2019-12-28 12:19:08', '', '63', '0');
-INSERT INTO `jsh_account_head` VALUES ('100', '付款', '68', '16', null, '-20.000000', null, 'FK20191228121920', '2019-12-28 12:19:20', '', '63', '0');
-INSERT INTO `jsh_account_head` VALUES ('101', '转账', null, '16', '-20.000000', '-20.000000', '18', 'ZZ20191228121932', '2019-12-28 12:19:32', '', '63', '0');
-INSERT INTO `jsh_account_head` VALUES ('102', '收预付款', '60', '16', null, '1000.000000', null, 'SYF20191228121945', '2019-12-28 12:19:45', '', '63', '0');
-INSERT INTO `jsh_account_head` VALUES ('103', '收入', '58', '16', '20.000000', '20.000000', '18', 'SR20200721163125', '2020-07-21 16:31:25', '', '63', '0');
-INSERT INTO `jsh_account_head` VALUES ('104', '收入', '71', '16', '60.000000', '50.000000', '18', 'SR20200721225712', '2020-07-21 00:00:00', 'bb', '63', '0');
-INSERT INTO `jsh_account_head` VALUES ('105', '转账', null, '16', '-11.000000', '-11.000000', '18', 'ZZ20200722005429', '2020-07-22 00:54:29', '', '63', '0');
+INSERT INTO `jsh_account_head` VALUES ('97', '收入', '58', '16', '63', '10.000000', '10.000000', '17', 'SR20191228121609', '2019-12-28 00:00:00', '备注1', '63', '0');
+INSERT INTO `jsh_account_head` VALUES ('98', '支出', '57', '16', '63', '-20.000000', '-20.000000', '17', 'ZC20191228121854', '2019-12-28 12:18:54', '', '63', '0');
+INSERT INTO `jsh_account_head` VALUES ('99', '收款', '58', '16', '63', null, '20.000000', null, 'SK20191228121908', '2019-12-28 12:19:08', '', '63', '0');
+INSERT INTO `jsh_account_head` VALUES ('100', '付款', '68', '16', '63', null, '-20.000000', null, 'FK20191228121920', '2019-12-28 12:19:20', '', '63', '0');
+INSERT INTO `jsh_account_head` VALUES ('101', '转账', null, '16', '63', '-20.000000', '-20.000000', '18', 'ZZ20191228121932', '2019-12-28 12:19:32', '', '63', '0');
+INSERT INTO `jsh_account_head` VALUES ('102', '收预付款', '60', '16', '63', null, '1000.000000', null, 'SYF20191228121945', '2019-12-28 12:19:45', '', '63', '0');
+INSERT INTO `jsh_account_head` VALUES ('103', '收入', '58', '16', '63', '20.000000', '20.000000', '18', 'SR20200721163125', '2020-07-21 16:31:25', '', '63', '0');
+INSERT INTO `jsh_account_head` VALUES ('104', '收入', '71', '16', '63', '60.000000', '50.000000', '18', 'SR20200721225712', '2020-07-21 00:00:00', 'bb', '63', '0');
+INSERT INTO `jsh_account_head` VALUES ('105', '转账', null, '16', '63', '-11.000000', '-11.000000', '18', 'ZZ20200722005429', '2020-07-22 00:54:29', '', '63', '0');
+INSERT INTO `jsh_account_head` VALUES ('106', '收入', '58', '16', '131', '1000.000000', '1000.000000', '17', 'SR20200913184412', '2020-09-13 18:44:12', '', '63', '0');
 
 -- ----------------------------
 -- Table structure for jsh_account_item
@@ -91,7 +93,7 @@ CREATE TABLE `jsh_account_item` (
   KEY `FK9F4CBAC0AAE50527` (`account_id`),
   KEY `FK9F4CBAC0C5FE6007` (`header_id`),
   KEY `FK9F4CBAC0D203EDC5` (`in_out_item_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=107 DEFAULT CHARSET=utf8 COMMENT='财务子表';
+) ENGINE=InnoDB AUTO_INCREMENT=108 DEFAULT CHARSET=utf8 COMMENT='财务子表';
 
 -- ----------------------------
 -- Records of jsh_account_item
@@ -105,6 +107,7 @@ INSERT INTO `jsh_account_item` VALUES ('103', '102', '17', null, '1000.000000', 
 INSERT INTO `jsh_account_item` VALUES ('104', '103', null, '22', '20.000000', '', '63', '0');
 INSERT INTO `jsh_account_item` VALUES ('105', '104', null, '22', '50.000000', '', '63', '0');
 INSERT INTO `jsh_account_item` VALUES ('106', '105', '17', null, '11.000000', '', '63', '0');
+INSERT INTO `jsh_account_item` VALUES ('107', '106', null, '22', '1000.000000', '', '63', '0');
 
 -- ----------------------------
 -- Table structure for jsh_depot
@@ -143,11 +146,11 @@ CREATE TABLE `jsh_depot_head` (
   `sub_type` varchar(50) DEFAULT NULL COMMENT '出入库分类',
   `default_number` varchar(50) DEFAULT NULL COMMENT '初始票据号',
   `number` varchar(50) DEFAULT NULL COMMENT '票据号',
-  `oper_person_name` varchar(50) DEFAULT NULL COMMENT '操作员名字',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   `oper_time` datetime DEFAULT NULL COMMENT '出入库时间',
   `organ_id` bigint(20) DEFAULT NULL COMMENT '供应商id',
   `hands_person_id` bigint(20) DEFAULT NULL COMMENT '采购/领料-经手人id',
+  `creator` bigint(20) DEFAULT NULL COMMENT '操作员',
   `account_id` bigint(20) DEFAULT NULL COMMENT '账户id',
   `change_amount` decimal(24,6) DEFAULT NULL COMMENT '变动金额(收款/付款)',
   `total_price` decimal(24,6) DEFAULT NULL COMMENT '合计金额',
@@ -171,44 +174,45 @@ CREATE TABLE `jsh_depot_head` (
   KEY `FK2A80F214C4170B37` (`hands_person_id`),
   KEY `FK2A80F214B610FC06` (`organ_id`),
   KEY `FK2A80F214AAE50527` (`account_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=229 DEFAULT CHARSET=utf8 COMMENT='单据主表';
+) ENGINE=InnoDB AUTO_INCREMENT=230 DEFAULT CHARSET=utf8 COMMENT='单据主表';
 
 -- ----------------------------
 -- Records of jsh_depot_head
 -- ----------------------------
-INSERT INTO `jsh_depot_head` VALUES ('189', '入库', '采购', 'CGRK00000000261', 'CGRK00000000261', '季圣华', '2019-04-10 22:25:49', '2020-02-20 23:51:03', '57', null, '17', '-120.000000', '-120.000000', '现付', '', '', null, '', '0.000000', '0.000000', '120.000000', '0.000000', '[\"undefined\"]', '[\"undefined\"]', null, '0', '', '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('191', '入库', '采购', 'CGRK00000000264', 'CGRK00000000264', '季圣华', '2019-04-13 19:57:58', '2020-02-20 23:50:55', '57', null, '17', '-10.000000', '-10.000000', '现付', '', '', null, '', '0.000000', '0.000000', '10.000000', '0.000000', '[\"undefined\"]', '[\"undefined\"]', null, '0', '', '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('192', '入库', '采购', 'CGRK00000000265', 'CGRK00000000265', '季圣华', '2019-04-20 00:36:24', '2020-02-20 23:50:47', '57', null, '17', '-220.000000', '-220.000000', '现付', '', '', null, '', '0.000000', '0.000000', '220.000000', '0.000000', '[\"undefined\"]', '[\"undefined\"]', null, '0', '', '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('193', '出库', '销售', 'XSCK00000000268', 'XSCK00000000268', '季圣华', '2019-04-29 23:41:02', '2020-02-20 23:52:17', '58', null, '17', '300.000000', '300.000000', '现付', '', '', null, '', '0.000000', '0.000000', '300.000000', null, null, null, null, '0', '', '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('196', '入库', '采购', 'CGRK00000000274', 'CGRK00000000274', '季圣华', '2019-04-30 22:35:53', '2020-02-20 23:49:07', '57', null, '18', '-1930.000000', '-1930.000000', '现付', '', '', null, '', '0.000000', '0.000000', '1930.000000', '0.000000', '[\"undefined\"]', '[\"undefined\"]', null, '0', '', '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('197', '出库', '销售', 'XSCK00000000290', 'XSCK00000000290', '季圣华', '2019-04-30 23:15:27', '2020-02-20 23:52:01', '58', null, '17', '270.000000', '270.000000', '现付', '', '', null, '', '0.000000', '0.000000', '270.000000', null, null, null, null, '0', '', '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('199', '其它', '采购订单', 'CGDD00000000305', 'CGDD00000000305', '季圣华', '2019-12-28 12:16:36', '2020-02-20 23:47:56', '57', '63', null, '0.000000', '-22.000000', '现付', '', '', null, '', null, null, null, null, null, null, null, '0', '', '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('200', '出库', '采购退货', 'CGTH00000000306', 'CGTH00000000306', '季圣华', '2019-12-28 12:16:55', '2020-02-20 23:51:28', '57', '63', '17', '11.000000', '11.000000', '现付', '', '', null, '', '0.000000', '0.000000', '11.000000', null, null, null, null, '0', '', '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('201', '其它', '销售订单', 'XSDD00000000307', 'XSDD00000000307', '季圣华', '2019-12-28 12:17:09', '2020-02-20 23:51:37', '58', '63', null, '0.000000', '15.000000', '现付', '', '<14>', null, '', null, null, null, null, null, null, null, '0', '', '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('202', '入库', '销售退货', 'XSTH00000000308', 'XSTH00000000308', '季圣华', '2019-12-28 12:17:22', '2020-02-20 23:52:33', '58', '63', '17', '-15.000000', '-15.000000', '现付', '', '', null, '', '0.000000', '0.000000', '15.000000', null, null, null, null, '0', '', '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('203', '入库', '其它', 'QTRK00000000309', 'QTRK00000000309', '季圣华', '2019-12-28 12:17:40', '2020-02-20 23:52:51', '57', '63', null, '0.000000', '42.000000', '现付', '', '', null, '', null, null, null, null, null, null, null, '0', '', '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('204', '出库', '其它', 'QTCK00000000310', 'QTCK00000000310', '季圣华', '2019-12-28 12:17:48', '2020-02-20 23:53:04', '58', '63', null, '0.000000', '15.000000', '现付', '', '', null, '', null, null, null, null, null, null, null, '0', '', '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('205', '出库', '调拨', 'DBCK00000000311', 'DBCK00000000311', '季圣华', '2019-12-28 12:17:58', '2020-02-20 23:53:21', null, '63', null, '0.000000', '15.000000', '现付', '', '', null, '', null, null, null, null, null, null, null, '0', '', '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('206', '其它', '组装单', 'ZZD00000000312', 'ZZD00000000312', '季圣华', '2019-12-28 12:18:09', '2020-02-20 23:54:02', null, '63', null, '0.000000', '10.000000', '现付', '', '', null, '', null, null, null, null, null, null, null, '0', '', '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('207', '其它', '拆卸单', 'CXD00000000313', 'CXD00000000313', '季圣华', '2019-12-28 12:18:47', '2020-02-20 23:54:21', null, '63', null, '0.000000', '0.000000', '现付', '', '', null, '', null, null, null, null, null, null, null, '0', '', '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('208', '出库', '零售', 'LSCK00000000314', 'LSCK00000000314', '季圣华', '2019-12-28 12:20:26', '2019-12-28 12:20:14', '60', '63', '17', '30.000000', '30.000000', '预付款', '', '', null, '', null, null, null, null, null, null, null, '0', '', '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('209', '入库', '零售退货', 'LSTH00000000315', 'LSTH00000000315', '季圣华', '2019-12-28 12:20:39', '2019-12-28 12:20:29', '60', '63', '17', '-15.000000', '-15.000000', '现付', '', '', null, '', null, null, null, null, null, null, null, '0', '', '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('210', '入库', '采购', 'CGRK00000000318', 'CGRK00000000318', '季圣华', '2020-02-20 23:22:38', '2020-02-20 23:22:27', '57', '63', '17', '-110.000000', '-110.000000', '现付', '', '', null, '', '0.000000', '0.000000', '110.000000', null, null, null, null, '0', '', '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('211', '入库', '采购', 'CGRK00000000319', 'CGRK00000000319', '季圣华', '2020-02-20 23:54:48', '2020-02-20 23:54:33', '57', '63', '17', '-2400.000000', '-2400.000000', '现付', '', '', null, '', '0.000000', '0.000000', '2400.000000', null, '[\"undefined\"]', '[\"undefined\"]', null, '0', '', '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('212', '入库', '采购', 'CGRK00000000320', 'CGRK00000000320', '季圣华', '2020-07-14 00:28:15', '2020-07-14 00:27:59', '57', '63', '17', '-535.000000', '-535.000000', '现付', '', '', null, '', '0.000000', '0.000000', '535.000000', null, null, null, null, '0', '', '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('214', '出库', '销售', 'XSCK00000000321', 'XSCK00000000321', '季圣华', '2020-07-15 00:38:07', '2020-07-15 00:37:36', '58', '63', '17', '2400.000000', '2500.000000', '现付', '', '', null, '', '0.000000', '0.000000', '2500.000000', null, null, null, null, '0', '', '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('215', '入库', '采购', 'CGRK00000000329', 'CGRK00000000329', '季圣华', '2020-07-21 00:35:16', '2020-07-21 00:35:05', '57', '63', '17', '-800.000000', '-800.000000', '现付', '', '', null, '', '0.000000', '0.000000', '800.000000', null, null, null, null, '0', '', '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('216', '出库', '销售', 'XSCK00000000330', 'XSCK00000000330', '季圣华', '2020-07-21 00:35:37', '2020-07-21 00:35:26', '58', '63', '17', '308.000000', '308.000000', '现付', '', '', null, '', '0.000000', '0.000000', '308.000000', null, null, null, null, '0', '', '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('217', '其它', '采购订单', 'CGDD00000000333', 'CGDD00000000333', '季圣华', '2020-07-21 01:15:15', '2020-07-21 01:15:07', '57', '63', null, '0.000000', '-96.000000', '现付', '', '', null, '', null, null, null, null, null, null, null, '2', '', '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('218', '入库', '采购', 'CGRK00000000334', 'CGRK00000000334', '季圣华', '2020-07-21 01:15:32', '2020-07-21 01:15:28', '57', '63', '17', '-270.000000', '-270.000000', '现付', '', '', null, '', '0.000000', '0.000000', '270.000000', null, null, null, null, '0', 'CGDD00000000333', '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('219', '出库', '销售', 'XSCK00000000336', 'XSCK00000000336', '季圣华', '2020-07-21 15:06:02', '2020-07-21 15:05:49', '59', '63', '17', '70.000000', '70.000000', '现付', '', '', null, '', '0.000000', '0.000000', '70.000000', null, null, null, null, '0', '', '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('222', '出库', '销售', 'XSCK00000000338', 'XSCK00000000338', '季圣华', '2020-07-21 23:05:55', '2020-07-21 23:04:05', '58', '63', '17', '110.000000', '110.000000', '现付', '', '', null, '', '0.000000', '0.000000', '110.000000', null, null, null, null, '0', '', '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('223', '入库', '采购', 'CGRK00000000339', 'CGRK00000000339', '季圣华', '2020-07-21 23:06:55', '2020-07-21 23:06:43', '68', '63', '17', '-110.000000', '-110.000000', '现付', '', '', null, '', '0.000000', '0.000000', '110.000000', null, null, null, null, '0', '', '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('224', '出库', '销售', 'XSCK00000000340', 'XSCK00000000340', '季圣华', '2020-07-21 23:07:06', '2020-07-21 23:06:59', '71', '63', '17', '44.000000', '44.000000', '现付', '', '', null, '', '0.000000', '0.000000', '44.000000', null, null, null, null, '0', '', '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('225', '其它', '盘点录入', 'PDLR00000000342', 'PDLR00000000342', '季圣华', '2020-07-22 00:07:13', '2020-07-22 00:06:53', null, '63', null, '0.000000', '16.000000', '现付', '', '', null, '', null, null, null, null, null, null, null, '2', '', '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('226', '其它', '盘点复盘', 'PDFP00000000344', 'PDFP00000000344', '季圣华', '2020-07-22 00:07:41', '2020-07-22 00:08:06', null, '63', null, '0.000000', '16.000000', '现付', '', '', null, '', null, null, null, null, null, null, null, '1', 'PDFP00000000343', '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('227', '其它', '采购订单', 'CGDD00000000345', 'CGDD00000000345', '季圣华', '2020-07-22 00:41:37', '2020-07-22 00:41:27', '74', '63', null, '0.000000', '-110.000000', '现付', '', '', null, '', null, null, null, null, null, null, null, '2', '', '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('228', '入库', '采购', 'CGRK00000000351', 'CGRK00000000351', '季圣华', '2020-07-22 00:48:09', '2020-07-22 00:47:48', '74', '63', '17', '-110.000000', '-110.000000', '现付', '', '', null, '', '0.000000', '0.000000', '110.000000', null, null, null, null, '0', 'CGDD00000000345', '63', '0');
+INSERT INTO `jsh_depot_head` VALUES ('189', '入库', '采购', 'CGRK00000000261', 'CGRK00000000261', '2019-04-10 22:25:49', '2020-02-20 23:51:03', '57', null, null, '17', '-120.000000', '-120.000000', '现付', '', '', null, '', '0.000000', '0.000000', '120.000000', '0.000000', '[\"undefined\"]', '[\"undefined\"]', null, '0', '', '63', '0');
+INSERT INTO `jsh_depot_head` VALUES ('191', '入库', '采购', 'CGRK00000000264', 'CGRK00000000264', '2019-04-13 19:57:58', '2020-02-20 23:50:55', '57', null, null, '17', '-10.000000', '-10.000000', '现付', '', '', null, '', '0.000000', '0.000000', '10.000000', '0.000000', '[\"undefined\"]', '[\"undefined\"]', null, '0', '', '63', '0');
+INSERT INTO `jsh_depot_head` VALUES ('192', '入库', '采购', 'CGRK00000000265', 'CGRK00000000265', '2019-04-20 00:36:24', '2020-02-20 23:50:47', '57', null, null, '17', '-220.000000', '-220.000000', '现付', '', '', null, '', '0.000000', '0.000000', '220.000000', '0.000000', '[\"undefined\"]', '[\"undefined\"]', null, '0', '', '63', '0');
+INSERT INTO `jsh_depot_head` VALUES ('193', '出库', '销售', 'XSCK00000000268', 'XSCK00000000268', '2019-04-29 23:41:02', '2020-02-20 23:52:17', '58', null, null, '17', '300.000000', '300.000000', '现付', '', '', null, '', '0.000000', '0.000000', '300.000000', null, null, null, null, '0', '', '63', '0');
+INSERT INTO `jsh_depot_head` VALUES ('196', '入库', '采购', 'CGRK00000000274', 'CGRK00000000274', '2019-04-30 22:35:53', '2020-02-20 23:49:07', '57', null, null, '18', '-1930.000000', '-1930.000000', '现付', '', '', null, '', '0.000000', '0.000000', '1930.000000', '0.000000', '[\"undefined\"]', '[\"undefined\"]', null, '0', '', '63', '0');
+INSERT INTO `jsh_depot_head` VALUES ('197', '出库', '销售', 'XSCK00000000290', 'XSCK00000000290', '2019-04-30 23:15:27', '2020-02-20 23:52:01', '58', null, null, '17', '270.000000', '270.000000', '现付', '', '', null, '', '0.000000', '0.000000', '270.000000', null, null, null, null, '0', '', '63', '0');
+INSERT INTO `jsh_depot_head` VALUES ('199', '其它', '采购订单', 'CGDD00000000305', 'CGDD00000000305', '2019-12-28 12:16:36', '2020-02-20 23:47:56', '57', '63', '63', null, '0.000000', '-22.000000', '现付', '', '', null, '', null, null, null, null, null, null, null, '0', '', '63', '0');
+INSERT INTO `jsh_depot_head` VALUES ('200', '出库', '采购退货', 'CGTH00000000306', 'CGTH00000000306', '2019-12-28 12:16:55', '2020-02-20 23:51:28', '57', '63', '63', '17', '11.000000', '11.000000', '现付', '', '', null, '', '0.000000', '0.000000', '11.000000', null, null, null, null, '0', '', '63', '0');
+INSERT INTO `jsh_depot_head` VALUES ('201', '其它', '销售订单', 'XSDD00000000307', 'XSDD00000000307', '2019-12-28 12:17:09', '2020-02-20 23:51:37', '58', '63', '63', null, '0.000000', '15.000000', '现付', '', '<14>', null, '', null, null, null, null, null, null, null, '0', '', '63', '0');
+INSERT INTO `jsh_depot_head` VALUES ('202', '入库', '销售退货', 'XSTH00000000308', 'XSTH00000000308', '2019-12-28 12:17:22', '2020-02-20 23:52:33', '58', '63', '63', '17', '-15.000000', '-15.000000', '现付', '', '', null, '', '0.000000', '0.000000', '15.000000', null, null, null, null, '0', '', '63', '0');
+INSERT INTO `jsh_depot_head` VALUES ('203', '入库', '其它', 'QTRK00000000309', 'QTRK00000000309', '2019-12-28 12:17:40', '2020-02-20 23:52:51', '57', '63', '63', null, '0.000000', '42.000000', '现付', '', '', null, '', null, null, null, null, null, null, null, '0', '', '63', '0');
+INSERT INTO `jsh_depot_head` VALUES ('204', '出库', '其它', 'QTCK00000000310', 'QTCK00000000310', '2019-12-28 12:17:48', '2020-02-20 23:53:04', '58', '63', '63', null, '0.000000', '15.000000', '现付', '', '', null, '', null, null, null, null, null, null, null, '0', '', '63', '0');
+INSERT INTO `jsh_depot_head` VALUES ('205', '出库', '调拨', 'DBCK00000000311', 'DBCK00000000311', '2019-12-28 12:17:58', '2020-02-20 23:53:21', null, '63', '63', null, '0.000000', '15.000000', '现付', '', '', null, '', null, null, null, null, null, null, null, '0', '', '63', '0');
+INSERT INTO `jsh_depot_head` VALUES ('206', '其它', '组装单', 'ZZD00000000312', 'ZZD00000000312', '2019-12-28 12:18:09', '2020-02-20 23:54:02', null, '63', '63', null, '0.000000', '10.000000', '现付', '', '', null, '', null, null, null, null, null, null, null, '0', '', '63', '0');
+INSERT INTO `jsh_depot_head` VALUES ('207', '其它', '拆卸单', 'CXD00000000313', 'CXD00000000313', '2019-12-28 12:18:47', '2020-02-20 23:54:21', null, '63', '63', null, '0.000000', '0.000000', '现付', '', '', null, '', null, null, null, null, null, null, null, '0', '', '63', '0');
+INSERT INTO `jsh_depot_head` VALUES ('208', '出库', '零售', 'LSCK00000000314', 'LSCK00000000314', '2019-12-28 12:20:26', '2019-12-28 12:20:14', '60', '63', '63', '17', '30.000000', '30.000000', '预付款', '', '', null, '', null, null, null, null, null, null, null, '0', '', '63', '0');
+INSERT INTO `jsh_depot_head` VALUES ('209', '入库', '零售退货', 'LSTH00000000315', 'LSTH00000000315', '2019-12-28 12:20:39', '2019-12-28 12:20:29', '60', '63', '63', '17', '-15.000000', '-15.000000', '现付', '', '', null, '', null, null, null, null, null, null, null, '0', '', '63', '0');
+INSERT INTO `jsh_depot_head` VALUES ('210', '入库', '采购', 'CGRK00000000318', 'CGRK00000000318', '2020-02-20 23:22:38', '2020-02-20 23:22:27', '57', '63', '63', '17', '-110.000000', '-110.000000', '现付', '', '', null, '', '0.000000', '0.000000', '110.000000', null, null, null, null, '0', '', '63', '0');
+INSERT INTO `jsh_depot_head` VALUES ('211', '入库', '采购', 'CGRK00000000319', 'CGRK00000000319', '2020-02-20 23:54:48', '2020-02-20 23:54:33', '57', '63', '63', '17', '-2400.000000', '-2400.000000', '现付', '', '', null, '', '0.000000', '0.000000', '2400.000000', null, '[\"undefined\"]', '[\"undefined\"]', null, '0', '', '63', '0');
+INSERT INTO `jsh_depot_head` VALUES ('212', '入库', '采购', 'CGRK00000000320', 'CGRK00000000320', '2020-07-14 00:28:15', '2020-07-14 00:27:59', '57', '63', '63', '17', '-535.000000', '-535.000000', '现付', '', '', null, '', '0.000000', '0.000000', '535.000000', null, null, null, null, '0', '', '63', '0');
+INSERT INTO `jsh_depot_head` VALUES ('214', '出库', '销售', 'XSCK00000000321', 'XSCK00000000321', '2020-07-15 00:38:07', '2020-07-15 00:37:36', '58', '63', '63', '17', '2400.000000', '2500.000000', '现付', '', '', null, '', '0.000000', '0.000000', '2500.000000', null, null, null, null, '0', '', '63', '0');
+INSERT INTO `jsh_depot_head` VALUES ('215', '入库', '采购', 'CGRK00000000329', 'CGRK00000000329', '2020-07-21 00:35:16', '2020-07-21 00:35:05', '57', '63', '63', '17', '-800.000000', '-800.000000', '现付', '', '', null, '', '0.000000', '0.000000', '800.000000', null, null, null, null, '0', '', '63', '0');
+INSERT INTO `jsh_depot_head` VALUES ('216', '出库', '销售', 'XSCK00000000330', 'XSCK00000000330', '2020-07-21 00:35:37', '2020-07-21 00:35:26', '58', '63', '63', '17', '308.000000', '308.000000', '现付', '', '', null, '', '0.000000', '0.000000', '308.000000', null, null, null, null, '0', '', '63', '0');
+INSERT INTO `jsh_depot_head` VALUES ('217', '其它', '采购订单', 'CGDD00000000333', 'CGDD00000000333', '2020-07-21 01:15:15', '2020-07-21 01:15:07', '57', '63', '63', null, '0.000000', '-96.000000', '现付', '', '', null, '', null, null, null, null, null, null, null, '2', '', '63', '0');
+INSERT INTO `jsh_depot_head` VALUES ('218', '入库', '采购', 'CGRK00000000334', 'CGRK00000000334', '2020-07-21 01:15:32', '2020-07-21 01:15:28', '57', '63', '63', '17', '-270.000000', '-270.000000', '现付', '', '', null, '', '0.000000', '0.000000', '270.000000', null, null, null, null, '0', 'CGDD00000000333', '63', '0');
+INSERT INTO `jsh_depot_head` VALUES ('219', '出库', '销售', 'XSCK00000000336', 'XSCK00000000336', '2020-07-21 15:06:02', '2020-07-21 15:05:49', '59', '63', '63', '17', '70.000000', '70.000000', '现付', '', '', null, '', '0.000000', '0.000000', '70.000000', null, null, null, null, '0', '', '63', '0');
+INSERT INTO `jsh_depot_head` VALUES ('222', '出库', '销售', 'XSCK00000000338', 'XSCK00000000338', '2020-07-21 23:05:55', '2020-07-21 23:04:05', '58', '63', '63', '17', '110.000000', '110.000000', '现付', '', '', null, '', '0.000000', '0.000000', '110.000000', null, null, null, null, '0', '', '63', '0');
+INSERT INTO `jsh_depot_head` VALUES ('223', '入库', '采购', 'CGRK00000000339', 'CGRK00000000339', '2020-07-21 23:06:55', '2020-07-21 23:06:43', '68', '63', '63', '17', '-110.000000', '-110.000000', '现付', '', '', null, '', '0.000000', '0.000000', '110.000000', null, null, null, null, '0', '', '63', '0');
+INSERT INTO `jsh_depot_head` VALUES ('224', '出库', '销售', 'XSCK00000000340', 'XSCK00000000340', '2020-07-21 23:07:06', '2020-07-21 23:06:59', '71', '63', '63', '17', '44.000000', '44.000000', '现付', '', '', null, '', '0.000000', '0.000000', '44.000000', null, null, null, null, '0', '', '63', '0');
+INSERT INTO `jsh_depot_head` VALUES ('225', '其它', '盘点录入', 'PDLR00000000342', 'PDLR00000000342', '2020-07-22 00:07:13', '2020-07-22 00:06:53', null, '63', '63', null, '0.000000', '16.000000', '现付', '', '', null, '', null, null, null, null, null, null, null, '2', '', '63', '0');
+INSERT INTO `jsh_depot_head` VALUES ('226', '其它', '盘点复盘', 'PDFP00000000344', 'PDFP00000000344', '2020-07-22 00:07:41', '2020-07-22 00:08:06', null, '63', '63', null, '0.000000', '16.000000', '现付', '', '', null, '', null, null, null, null, null, null, null, '1', 'PDFP00000000343', '63', '0');
+INSERT INTO `jsh_depot_head` VALUES ('227', '其它', '采购订单', 'CGDD00000000345', 'CGDD00000000345', '2020-07-22 00:41:37', '2020-07-22 00:41:27', '74', '63', '63', null, '0.000000', '-110.000000', '现付', '', '', null, '', null, null, null, null, null, null, null, '2', '', '63', '0');
+INSERT INTO `jsh_depot_head` VALUES ('228', '入库', '采购', 'CGRK00000000351', 'CGRK00000000351', '2020-07-22 00:48:09', '2020-07-22 00:47:48', '74', '63', '63', '17', '-110.000000', '-110.000000', '现付', '', '', null, '', '0.000000', '0.000000', '110.000000', null, null, null, null, '0', 'CGDD00000000345', '63', '0');
+INSERT INTO `jsh_depot_head` VALUES ('229', '入库', '采购', 'CGRK00000000352', 'CGRK00000000352', '2020-09-13 18:43:56', '2020-09-13 18:43:45', '57', null, '131', '17', '-90.000000', '-90.000000', '现付', '', '', null, '', '0.000000', '0.000000', '90.000000', null, null, null, null, '0', '', '63', '0');
 
 -- ----------------------------
 -- Table structure for jsh_depot_item
@@ -246,7 +250,7 @@ CREATE TABLE `jsh_depot_item` (
   KEY `FK2A819F474BB6190E` (`header_id`),
   KEY `FK2A819F479485B3F5` (`depot_id`),
   KEY `FK2A819F47729F5392` (`another_depot_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=248 DEFAULT CHARSET=utf8 COMMENT='单据子表';
+) ENGINE=InnoDB AUTO_INCREMENT=249 DEFAULT CHARSET=utf8 COMMENT='单据子表';
 
 -- ----------------------------
 -- Records of jsh_depot_item
@@ -297,6 +301,7 @@ INSERT INTO `jsh_depot_item` VALUES ('244', '225', '570', '4', '个', '2.000000'
 INSERT INTO `jsh_depot_item` VALUES ('245', '226', '570', '4', '个', '2.000000', '2.000000', '8.000000', '8.000000', '16.000000', '', null, null, '14', null, '0.000000', '0.000000', '16.000000', null, null, null, null, null, '', '63', '0');
 INSERT INTO `jsh_depot_item` VALUES ('246', '227', '588', '10', '个', '10.000000', '10.000000', '11.000000', '11.000000', '110.000000', '', null, null, '14', null, '0.000000', '0.000000', '110.000000', null, null, null, null, null, '', '63', '0');
 INSERT INTO `jsh_depot_item` VALUES ('247', '228', '588', '10', '个', '10.000000', '10.000000', '11.000000', '11.000000', '110.000000', '', null, null, '14', null, '0.000000', '0.000000', '110.000000', null, null, null, null, null, '', '63', '0');
+INSERT INTO `jsh_depot_item` VALUES ('248', '229', '569', '3', '只', '9.000000', '9.000000', '10.000000', '10.000000', '90.000000', '', null, null, '14', null, '0.000000', '0.000000', '90.000000', null, null, null, null, null, '', '63', '0');
 
 -- ----------------------------
 -- Table structure for jsh_function
@@ -332,22 +337,22 @@ INSERT INTO `jsh_function` VALUES ('23', '010102', '商品信息', '0101', '/pag
 INSERT INTO `jsh_function` VALUES ('24', '0102', '基本资料', '0', '', '\0', '0750', '', '电脑版', null, 'icon-grid', '0');
 INSERT INTO `jsh_function` VALUES ('25', '01020101', '供应商信息', '0102', '/pages/manage/vendor.html', '\0', '0260', '', '电脑版', '1', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('26', '010202', '仓库信息', '0102', '/pages/manage/depot.html', '\0', '0270', '', '电脑版', '1', 'icon-notebook', '0');
-INSERT INTO `jsh_function` VALUES ('31', '010206', '经手人管理', '0102', '/pages/materials/person.html', '\0', '0284', '', '电脑版', '1', 'icon-notebook', '0');
+INSERT INTO `jsh_function` VALUES ('31', '010206', '经手人管理', '0102', '/pages/manage/person.html', '\0', '0284', '', '电脑版', '1', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('32', '0502', '采购管理', '0', '', '\0', '0330', '', '电脑版', '', 'icon-loop', '0');
-INSERT INTO `jsh_function` VALUES ('33', '050201', '采购入库', '0502', '/pages/materials/purchase_in_list.html', '\0', '0340', '', '电脑版', '1,2', 'icon-notebook', '0');
+INSERT INTO `jsh_function` VALUES ('33', '050201', '采购入库', '0502', '/pages/bill/purchase_in_list.html', '\0', '0340', '', '电脑版', '1,2', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('38', '0603', '销售管理', '0', '', '\0', '0390', '', '电脑版', '', 'icon-briefcase', '0');
-INSERT INTO `jsh_function` VALUES ('40', '080107', '调拨出库', '0801', '/pages/materials/allocation_out_list.html', '\0', '0807', '', '电脑版', '1,2', 'icon-notebook', '0');
-INSERT INTO `jsh_function` VALUES ('41', '060303', '销售出库', '0603', '/pages/materials/sale_out_list.html', '\0', '0394', '', '电脑版', '1,2', 'icon-notebook', '0');
+INSERT INTO `jsh_function` VALUES ('40', '080107', '调拨出库', '0801', '/pages/bill/allocation_out_list.html', '\0', '0807', '', '电脑版', '1,2', 'icon-notebook', '0');
+INSERT INTO `jsh_function` VALUES ('41', '060303', '销售出库', '0603', '/pages/bill/sale_out_list.html', '\0', '0394', '', '电脑版', '1,2', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('44', '0704', '财务管理', '0', '', '\0', '0450', '', '电脑版', '', 'icon-map', '0');
 INSERT INTO `jsh_function` VALUES ('59', '030101', '库存状况', '0301', '/pages/reports/in_out_stock_report.html', '\0', '0600', '', '电脑版', '', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('194', '010204', '收支项目', '0102', '/pages/manage/inOutItem.html', '\0', '0282', '', '电脑版', '1', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('195', '010205', '结算账户', '0102', '/pages/manage/account.html', '\0', '0283', '', '电脑版', '1', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('197', '070402', '收入单', '0704', '/pages/financial/item_in.html', '\0', '0465', '', '电脑版', '1', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('198', '0301', '报表查询', '0', '', '\0', '0570', '', '电脑版', null, 'icon-pie-chart', '0');
-INSERT INTO `jsh_function` VALUES ('199', '050204', '采购退货', '0502', '/pages/materials/purchase_back_list.html', '\0', '0345', '', '电脑版', '1,2', 'icon-notebook', '0');
-INSERT INTO `jsh_function` VALUES ('200', '060305', '销售退货', '0603', '/pages/materials/sale_back_list.html', '\0', '0396', '', '电脑版', '1,2', 'icon-notebook', '0');
-INSERT INTO `jsh_function` VALUES ('201', '080103', '其它入库', '0801', '/pages/materials/other_in_list.html', '\0', '0803', '', '电脑版', '1,2', 'icon-notebook', '0');
-INSERT INTO `jsh_function` VALUES ('202', '080105', '其它出库', '0801', '/pages/materials/other_out_list.html', '\0', '0805', '', '电脑版', '1,2', 'icon-notebook', '0');
+INSERT INTO `jsh_function` VALUES ('199', '050204', '采购退货', '0502', '/pages/bill/purchase_back_list.html', '\0', '0345', '', '电脑版', '1,2', 'icon-notebook', '0');
+INSERT INTO `jsh_function` VALUES ('200', '060305', '销售退货', '0603', '/pages/bill/sale_back_list.html', '\0', '0396', '', '电脑版', '1,2', 'icon-notebook', '0');
+INSERT INTO `jsh_function` VALUES ('201', '080103', '其它入库', '0801', '/pages/bill/other_in_list.html', '\0', '0803', '', '电脑版', '1,2', 'icon-notebook', '0');
+INSERT INTO `jsh_function` VALUES ('202', '080105', '其它出库', '0801', '/pages/bill/other_out_list.html', '\0', '0805', '', '电脑版', '1,2', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('203', '070403', '支出单', '0704', '/pages/financial/item_out.html', '\0', '0470', '', '电脑版', '1', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('204', '070404', '收款单', '0704', '/pages/financial/money_in.html', '\0', '0475', '', '电脑版', '1', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('205', '070405', '付款单', '0704', '/pages/financial/money_out.html', '\0', '0480', '', '电脑版', '1', 'icon-notebook', '0');
@@ -355,8 +360,8 @@ INSERT INTO `jsh_function` VALUES ('206', '070406', '转账单', '0704', '/pages
 INSERT INTO `jsh_function` VALUES ('207', '030102', '账户统计', '0301', '/pages/reports/account_report.html', '\0', '0610', '', '电脑版', '', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('208', '030103', '进货统计', '0301', '/pages/reports/buy_in_report.html', '\0', '0620', '', '电脑版', '', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('209', '030104', '销售统计', '0301', '/pages/reports/sale_out_report.html', '\0', '0630', '', '电脑版', '', 'icon-notebook', '0');
-INSERT INTO `jsh_function` VALUES ('210', '040102', '零售出库', '0401', '/pages/materials/retail_out_list.html', '\0', '0405', '', '电脑版', '1,2', 'icon-notebook', '0');
-INSERT INTO `jsh_function` VALUES ('211', '040104', '零售退货', '0401', '/pages/materials/retail_back_list.html', '\0', '0407', '', '电脑版', '1,2', 'icon-notebook', '0');
+INSERT INTO `jsh_function` VALUES ('210', '040102', '零售出库', '0401', '/pages/bill/retail_out_list.html', '\0', '0405', '', '电脑版', '1,2', 'icon-notebook', '0');
+INSERT INTO `jsh_function` VALUES ('211', '040104', '零售退货', '0401', '/pages/bill/retail_back_list.html', '\0', '0407', '', '电脑版', '1,2', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('212', '070407', '收预付款', '0704', '/pages/financial/advance_in.html', '\0', '0495', '', '电脑版', '1', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('217', '01020102', '客户信息', '0102', '/pages/manage/customer.html', '\0', '0262', '', '电脑版', '1', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('218', '01020103', '会员信息', '0102', '/pages/manage/member.html', '\0', '0263', '', '电脑版', '1', 'icon-notebook', '0');
@@ -366,16 +371,16 @@ INSERT INTO `jsh_function` VALUES ('226', '030106', '入库明细', '0301', '/pa
 INSERT INTO `jsh_function` VALUES ('227', '030107', '出库明细', '0301', '/pages/reports/out_detail.html', '\0', '0645', '', '电脑版', '', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('228', '030108', '入库汇总', '0301', '/pages/reports/in_material_count.html', '\0', '0650', '', '电脑版', '', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('229', '030109', '出库汇总', '0301', '/pages/reports/out_material_count.html', '\0', '0655', '', '电脑版', '', 'icon-notebook', '0');
-INSERT INTO `jsh_function` VALUES ('232', '080109', '组装单', '0801', '/pages/materials/assemble_list.html', '\0', '0809', '', '电脑版', '1,2', 'icon-notebook', '0');
-INSERT INTO `jsh_function` VALUES ('233', '080111', '拆卸单', '0801', '/pages/materials/disassemble_list.html', '\0', '0811', '', '电脑版', '1,2', 'icon-notebook', '0');
+INSERT INTO `jsh_function` VALUES ('232', '080109', '组装单', '0801', '/pages/bill/assemble_list.html', '\0', '0809', '', '电脑版', '1,2', 'icon-notebook', '0');
+INSERT INTO `jsh_function` VALUES ('233', '080111', '拆卸单', '0801', '/pages/bill/disassemble_list.html', '\0', '0811', '', '电脑版', '1,2', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('234', '000105', '系统配置', '0001', '/pages/manage/systemConfig.html', '\0', '0165', '', '电脑版', '1', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('235', '030110', '客户对账', '0301', '/pages/reports/customer_account.html', '\0', '0660', '', '电脑版', '', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('236', '000106', '商品属性', '0001', '/pages/materials/materialProperty.html', '\0', '0168', '', '电脑版', '1', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('237', '030111', '供应商对账', '0301', '/pages/reports/vendor_account.html', '\0', '0665', '', '电脑版', '', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('239', '0801', '仓库管理', '0', '', '\0', '0420', '', '电脑版', '', 'icon-layers', '0');
 INSERT INTO `jsh_function` VALUES ('240', '010104', '序列号', '0101', '/pages/manage/serialNumber.html', '\0', '0246', '', '电脑版', '1', 'icon-notebook', '0');
-INSERT INTO `jsh_function` VALUES ('241', '050202', '采购订单', '0502', '/pages/materials/purchase_orders_list.html', '\0', '0335', '', '电脑版', '1,2', 'icon-notebook', '0');
-INSERT INTO `jsh_function` VALUES ('242', '060301', '销售订单', '0603', '/pages/materials/sale_orders_list.html', '\0', '0392', '', '电脑版', '1,2', 'icon-notebook', '0');
+INSERT INTO `jsh_function` VALUES ('241', '050202', '采购订单', '0502', '/pages/bill/purchase_orders_list.html', '\0', '0335', '', '电脑版', '1,2', 'icon-notebook', '0');
+INSERT INTO `jsh_function` VALUES ('242', '060301', '销售订单', '0603', '/pages/bill/sale_orders_list.html', '\0', '0392', '', '电脑版', '1,2', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('243', '000108', '机构管理', '0001', '/pages/manage/organization.html', '', '0150', '', '电脑版', '1', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('244', '030112', '库存预警', '0301', '/pages/reports/stock_warning_report.html', '\0', '0670', '', '电脑版', '', 'icon-notebook', '0');
 INSERT INTO `jsh_function` VALUES ('245', '000107', '插件管理', '0001', '/pages/manage/plugin.html', '\0', '0170', '', '电脑版', '1', 'icon-notebook', '0');
@@ -416,20 +421,11 @@ CREATE TABLE `jsh_log` (
   `tenant_id` bigint(20) DEFAULT NULL COMMENT '租户id',
   PRIMARY KEY (`id`),
   KEY `FKF2696AA13E226853` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6786 DEFAULT CHARSET=utf8 COMMENT='操作日志';
+) ENGINE=InnoDB AUTO_INCREMENT=6800 DEFAULT CHARSET=utf8 COMMENT='操作日志';
 
 -- ----------------------------
 -- Records of jsh_log
 -- ----------------------------
-INSERT INTO `jsh_log` VALUES ('6761', '63', '用户', '127.0.0.1', '2020-07-21 23:58:39', '0', '登录jsh', '63');
-INSERT INTO `jsh_log` VALUES ('6778', '63', '用户', '127.0.0.1', '2020-07-23 22:42:48', '0', '登录jsh', '63');
-INSERT INTO `jsh_log` VALUES ('6779', '120', '用户', '127.0.0.1', '2020-09-04 01:16:20', '0', '登录admin', null);
-INSERT INTO `jsh_log` VALUES ('6780', '120', '关联关系', '127.0.0.1', '2020-09-04 01:16:41', '0', '修改5', null);
-INSERT INTO `jsh_log` VALUES ('6781', '120', '关联关系', '127.0.0.1', '2020-09-04 01:16:57', '0', '修改32', null);
-INSERT INTO `jsh_log` VALUES ('6782', '63', '用户', '127.0.0.1', '2020-09-04 01:17:34', '0', '登录jsh', '63');
-INSERT INTO `jsh_log` VALUES ('6783', '63', '用户', '127.0.0.1', '2020-09-08 00:13:21', '0', '登录jsh', '63');
-INSERT INTO `jsh_log` VALUES ('6784', '120', '用户', '127.0.0.1', '2020-09-08 00:13:37', '0', '登录admin', null);
-INSERT INTO `jsh_log` VALUES ('6785', '63', '用户', '127.0.0.1', '2020-09-08 00:17:35', '0', '登录jsh', '63');
 
 -- ----------------------------
 -- Table structure for jsh_material
@@ -468,7 +464,7 @@ INSERT INTO `jsh_material` VALUES ('570', '17', '商品3', '', '300.000000', 'sp
 INSERT INTO `jsh_material` VALUES ('577', null, '商品8', '', null, 'sp8', '', '', '', '', '15', '', '', '', '', '0', '63', '0');
 INSERT INTO `jsh_material` VALUES ('579', '21', '商品17', '', null, 'sp17', '', '', '', '', '15', '', '', '', '', '0', '63', '0');
 INSERT INTO `jsh_material` VALUES ('586', '17', '序列号商品测试', '', null, 'xlh123', '', '', '个', '', null, '', '', '', '', '1', '63', '0');
-INSERT INTO `jsh_material` VALUES ('587', '17', '商品test1', '南通中远', null, '', 'test1', '', '个', '', null, '\0', '', '', '', '0', '63', '0');
+INSERT INTO `jsh_material` VALUES ('587', '17', '商品test1', '南通中远', null, '', 'test1', '', '个', '', null, '', '', '', '', '0', '63', '0');
 INSERT INTO `jsh_material` VALUES ('588', '21', '商品200', '', '112.000000', '', '300ml', '', '个', '', null, '', '', '', '', '0', '63', '0');
 
 -- ----------------------------
@@ -519,7 +515,7 @@ CREATE TABLE `jsh_material_current_stock` (
 INSERT INTO `jsh_material_current_stock` VALUES ('1', '587', '14', '-30.000000', '63', '0');
 INSERT INTO `jsh_material_current_stock` VALUES ('2', '570', '14', '48.000000', '63', '0');
 INSERT INTO `jsh_material_current_stock` VALUES ('3', '568', '14', '19.000000', '63', '0');
-INSERT INTO `jsh_material_current_stock` VALUES ('4', '569', '14', '41.000000', '63', '0');
+INSERT INTO `jsh_material_current_stock` VALUES ('4', '569', '14', '50.000000', '63', '0');
 INSERT INTO `jsh_material_current_stock` VALUES ('5', '588', '14', '13.000000', '63', '0');
 INSERT INTO `jsh_material_current_stock` VALUES ('6', '569', '15', '122.000000', '63', '0');
 
@@ -671,12 +667,13 @@ CREATE TABLE `jsh_orga_user_rel` (
   `updater` bigint(20) DEFAULT NULL COMMENT '更新人',
   `tenant_id` bigint(20) DEFAULT NULL COMMENT '租户id',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COMMENT='机构用户关系表';
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COMMENT='机构用户关系表';
 
 -- ----------------------------
 -- Records of jsh_orga_user_rel
 -- ----------------------------
-INSERT INTO `jsh_orga_user_rel` VALUES ('10', '12', '131', '2', '0', '2019-12-28 12:13:15', '63', '2020-07-21 22:55:54', '63', '63');
+INSERT INTO `jsh_orga_user_rel` VALUES ('10', '13', '131', '2', '0', '2019-12-28 12:13:15', '63', '2020-09-13 18:42:52', '63', '63');
+INSERT INTO `jsh_orga_user_rel` VALUES ('11', '12', '63', '', '0', '2020-09-13 18:42:45', '63', '2020-09-13 18:42:45', '63', '63');
 
 -- ----------------------------
 -- Table structure for jsh_person
@@ -739,7 +736,7 @@ CREATE TABLE `jsh_sequence` (
 -- ----------------------------
 -- Records of jsh_sequence
 -- ----------------------------
-INSERT INTO `jsh_sequence` VALUES ('depot_number_seq', '1', '999999999999999999', '351', '1', '单据编号sequence');
+INSERT INTO `jsh_sequence` VALUES ('depot_number_seq', '1', '999999999999999999', '353', '1', '单据编号sequence');
 
 -- ----------------------------
 -- Table structure for jsh_serial_number
@@ -919,7 +916,7 @@ CREATE TABLE `jsh_user_business` (
   `btn_str` varchar(2000) DEFAULT NULL COMMENT '按钮权限',
   `delete_flag` varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=69 DEFAULT CHARSET=utf8 COMMENT='用户/角色/模块关系表';
+) ENGINE=InnoDB AUTO_INCREMENT=70 DEFAULT CHARSET=utf8 COMMENT='用户/角色/模块关系表';
 
 -- ----------------------------
 -- Records of jsh_user_business
@@ -972,5 +969,6 @@ INSERT INTO `jsh_user_business` VALUES ('63', 'UserRole', '127', '[10]', null, '
 INSERT INTO `jsh_user_business` VALUES ('64', 'UserRole', '128', '[10]', null, '0');
 INSERT INTO `jsh_user_business` VALUES ('65', 'UserRole', '129', '[10]', null, '0');
 INSERT INTO `jsh_user_business` VALUES ('66', 'UserRole', '130', '[10]', null, '0');
-INSERT INTO `jsh_user_business` VALUES ('67', 'UserRole', '131', '[16]', null, '0');
+INSERT INTO `jsh_user_business` VALUES ('67', 'UserRole', '131', '[17]', null, '0');
 INSERT INTO `jsh_user_business` VALUES ('68', 'RoleFunctions', '16', '[210]', null, '0');
+INSERT INTO `jsh_user_business` VALUES ('69', 'RoleFunctions', '17', '[210][211][241][33][199][242][41][200][201][202][40][232][233][197][203][204][205][206][212]', '[{\"funId\":\"241\",\"btnStr\":\"1,2\"},{\"funId\":\"33\",\"btnStr\":\"1,2\"},{\"funId\":\"199\",\"btnStr\":\"1,2\"},{\"funId\":\"242\",\"btnStr\":\"1,2\"},{\"funId\":\"41\",\"btnStr\":\"1,2\"},{\"funId\":\"200\",\"btnStr\":\"1,2\"},{\"funId\":\"210\",\"btnStr\":\"1,2\"},{\"funId\":\"211\",\"btnStr\":\"1,2\"},{\"funId\":\"197\",\"btnStr\":\"1\"},{\"funId\":\"203\",\"btnStr\":\"1\"},{\"funId\":\"204\",\"btnStr\":\"1\"},{\"funId\":\"205\",\"btnStr\":\"1\"},{\"funId\":\"206\",\"btnStr\":\"1\"},{\"funId\":\"212\",\"btnStr\":\"1\"},{\"funId\":\"201\",\"btnStr\":\"1,2\"},{\"funId\":\"202\",\"btnStr\":\"1,2\"},{\"funId\":\"40\",\"btnStr\":\"1,2\"},{\"funId\":\"232\",\"btnStr\":\"1,2\"},{\"funId\":\"233\",\"btnStr\":\"1,2\"}]', '0');

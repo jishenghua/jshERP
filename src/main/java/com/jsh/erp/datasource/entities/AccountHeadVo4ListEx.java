@@ -33,6 +33,10 @@ public class AccountHeadVo4ListEx {
 
     private String handsPersonName;
 
+    private Long creator;
+
+    private String userName;
+
     private String accountName;
 
     private String billTimeStr;
@@ -147,6 +151,22 @@ public class AccountHeadVo4ListEx {
 
     public void setHandsPersonName(String handsPersonName) {
         this.handsPersonName = handsPersonName;
+    }
+
+    public Long getCreator() {
+        return creator;
+    }
+
+    public void setCreator(Long creator) {
+        this.creator = creator;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getAccountName() {

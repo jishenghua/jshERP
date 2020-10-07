@@ -173,17 +173,23 @@
             return;
         }
         if (nodes.length > 0) {
-            $.messager.confirm('删除确认', '确定要删除选中的' + nodes.length + '条商品类别信息吗？', function (r) {
-                if (r) {
-                    var ids = "";
-                    for (var i = 0; i < nodes.length; i++) {
-                        if (i == nodes.length - 1) {
-                            ids += nodes[i].id;
-                            break;
-                        }
-                        //alert(row[i].id);
-                        ids += nodes[i].id + ",";
+            var ids = "";
+            var texts = "";
+            for (var i = 0; i < nodes.length; i++) {
+                if (i == nodes.length - 1) {
+                    if ($('#tt').tree('isLeaf', nodes[i].target)) {
+                        ids += nodes[i].id;
+                        texts += nodes[i].text;
                     }
+                    break;
+                }
+                if ($('#tt').tree('isLeaf', nodes[i].target)) {
+                    ids += nodes[i].id + ",";
+                    texts += nodes[i].text + ",";
+                }
+            }
+            $.messager.confirm('删除确认', '确定要删除选中的商品类别(' + texts + ')吗？', function (r) {
+                if (r) {
                     $.ajax({
                         type: "post",
                         url: "/materialCategory/batchDeleteMaterialCategory",

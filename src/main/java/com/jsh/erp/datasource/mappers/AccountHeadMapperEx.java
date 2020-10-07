@@ -13,6 +13,7 @@ public interface AccountHeadMapperEx {
 
     List<AccountHeadVo4ListEx> selectByConditionAccountHead(
             @Param("type") String type,
+            @Param("creatorArray") String[] creatorArray,
             @Param("billNo") String billNo,
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
@@ -21,6 +22,7 @@ public interface AccountHeadMapperEx {
 
     Long countsByAccountHead(
             @Param("type") String type,
+            @Param("creatorArray") String[] creatorArray,
             @Param("billNo") String billNo,
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime);

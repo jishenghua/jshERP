@@ -14,8 +14,6 @@ public class DepotHead {
 
     private String number;
 
-    private String operPersonName;
-
     private Date createTime;
 
     private Date operTime;
@@ -23,6 +21,8 @@ public class DepotHead {
     private Long organId;
 
     private Long handsPersonId;
+
+    private Long creator;
 
     private Long accountId;
 
@@ -102,14 +102,6 @@ public class DepotHead {
         this.number = number == null ? null : number.trim();
     }
 
-    public String getOperPersonName() {
-        return operPersonName;
-    }
-
-    public void setOperPersonName(String operPersonName) {
-        this.operPersonName = operPersonName == null ? null : operPersonName.trim();
-    }
-
     public Date getCreateTime() {
         return createTime;
     }
@@ -140,6 +132,14 @@ public class DepotHead {
 
     public void setHandsPersonId(Long handsPersonId) {
         this.handsPersonId = handsPersonId;
+    }
+
+    public Long getCreator() {
+        return creator;
+    }
+
+    public void setCreator(Long creator) {
+        this.creator = creator;
     }
 
     public Long getAccountId() {

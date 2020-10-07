@@ -415,7 +415,7 @@
 	}
 
     function turnBillDetailPage(number, type) {
-        js.addTabPage(null, "单据明细", "/pages/materials/bill_detail.html?n="+ number + "&type=" + type);
+        js.addTabPage(null, "单据明细", "/pages/bill/bill_detail.html?n="+ number + "&type=" + type);
     }
 
     /**

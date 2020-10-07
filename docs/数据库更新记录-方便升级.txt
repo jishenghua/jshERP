@@ -1011,3 +1011,13 @@ alter table jsh_depot_item change OtherField4 other_field4 varchar(50) DEFAULT N
 alter table jsh_depot_item change OtherField5 other_field5 varchar(50) DEFAULT NULL COMMENT '自定义字段5-名称';
 alter table jsh_depot_item change MType material_type varchar(20) DEFAULT NULL COMMENT '商品类型';
 alter table jsh_depot_item change delete_Flag delete_flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除';
+
+-- --------------------------------------------------------
+-- 时间 2020年09月13日
+-- by jishenghua
+-- 给单据表增加操作员字段,去掉经手头姓名字段
+-- --------------------------------------------------------
+alter table jsh_depot_head add creator bigint(20) DEFAULT NULL COMMENT '操作员' after hands_person_id;
+alter table jsh_account_head add creator bigint(20) DEFAULT NULL COMMENT '操作员' after hands_person_id;
+alter table jsh_depot_head drop column oper_person_name;
+update jsh_depot_head set creator=hands_person_id;

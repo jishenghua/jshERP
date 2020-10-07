@@ -217,17 +217,23 @@ public class UserService {
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int resetPwd(String md5Pwd, Long id) throws Exception{
+        int result=0;
         logService.insertLog("用户",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
-        User user = new User();
-        user.setId(id);
-        user.setPassword(md5Pwd);
-        int result=0;
-        try{
-            result=userMapper.updateByPrimaryKeySelective(user);
-        }catch(Exception e){
-            JshException.writeFail(logger, e);
+        User u = getUser(id);
+        String loginName = u.getLoginName();
+        if("admin".equals(loginName)){
+            logger.info("禁止重置超管密码");
+        } else {
+            User user = new User();
+            user.setId(id);
+            user.setPassword(md5Pwd);
+            try{
+                result=userMapper.updateByPrimaryKeySelective(user);
+            }catch(Exception e){
+                JshException.writeFail(logger, e);
+            }
         }
         return result;
     }

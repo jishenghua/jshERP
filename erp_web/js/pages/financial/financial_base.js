@@ -1,5 +1,6 @@
 	//初始化界面
 	var defaultAccountId = 0; //默认账户id
+	var roleType = ""; //角色类型
 	$(function(){
 		var accountList = null;
 		var accountID = null;
@@ -23,6 +24,7 @@
 		var moneyType = true; //隐藏当前列
 		var inOrOut = ""; //链接类型为收入或者支出
 		getType();
+		getRoleType();
 		initSystemData_person(); //经手人数据
 		initSelectInfo_person(); //经手人信息
 		initSystemData_account(); //账户数据
@@ -93,6 +95,21 @@
 			organUrl = retailUrl;
 			amountNum = "SYF";
 		}
+	}
+	function getRoleType(){
+		$.ajax({
+			type:"get",
+			url: "/user/getRoleTypeByUserId",
+			async: false,
+			success: function (res) {
+				if (res && res.code === 200) {
+					roleType = res.data.roleType;
+				}
+				else {
+					roleType = null;
+				}
+			}
+		});
 	}
 	//获取账户信息
 	function initSystemData_account(){
@@ -243,7 +260,7 @@
 				{ field: 'organId',width:5, hidden:true},
 				{ title: organNameTitle,field: 'organName',width:140,hidden:organNameHidden},
 				{ title: '单据编号',field: 'billNo',width:160},
-				{ title: '经手人',field: 'handsPersonName',width:80},
+				{ title: '操作员',field: 'userName',width:80},
 				{ title: '单据时间 ',field: 'billTimeStr',width:160},
 				{ title: '合计',field: 'totalPrice',width:80},
 				{ title: '备注',field: 'remark',width:100}
@@ -479,10 +496,8 @@
 	
 	//删除财务信息
 	function deleteAccountHead(accountHeadID, thisOrganId, totalPrice){
-		$.messager.confirm('删除确认','确定要删除此财务信息吗？',function(r)
-	 	{
-            if (r)
-            {
+		$.messager.confirm('删除确认','确定要删除此财务信息吗？',function(r) {
+            if (r) {
 				$.ajax({
 					type:"post",
                     url: "/accountHead/batchDeleteAccountHeadByIds",
@@ -494,19 +509,7 @@
                         if(res && res.code == 200) {
                             $("#searchBtn").click();
                         } else {
-                            if(res && res.code == 601){
-                                var jsondata={};
-                                jsondata.ids=accountHeadID;
-                                jsondata.deleteType='2';
-                                var type='single';
-                                batDeleteAccountHeadForceConfirm(res,"/accountHead/batchDeleteAccountHeadByIds",jsondata,type);
-                            }else if(res && res.code == 600){
-                                $.messager.alert('删除提示', res.msg, 'error');
-                                return;
-                            }else{
-                                $.messager.alert('删除提示', '删除信息失败，请稍后再试！', 'error');
-                                return;
-                            }
+							$.messager.alert('删除提示', '删除财务信息失败，请稍后再试！', 'error');
                         }
                     },
 					//此处添加错误处理
@@ -977,6 +980,7 @@
 			data: ({
                 search: JSON.stringify({
                     type: listType,
+					roleType: roleType,
                     billNo: $.trim($("#searchBillNo").val()),
                     beginTime: beginTime,
                     endTime: endTime

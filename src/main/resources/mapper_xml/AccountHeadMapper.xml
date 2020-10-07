@@ -6,6 +6,7 @@
     <result column="type" jdbcType="VARCHAR" property="type" />
     <result column="organ_id" jdbcType="BIGINT" property="organId" />
     <result column="hands_person_id" jdbcType="BIGINT" property="handsPersonId" />
+    <result column="creator" jdbcType="BIGINT" property="creator" />
     <result column="change_amount" jdbcType="DECIMAL" property="changeAmount" />
     <result column="total_price" jdbcType="DECIMAL" property="totalPrice" />
     <result column="account_id" jdbcType="BIGINT" property="accountId" />
@@ -74,8 +75,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, type, organ_id, hands_person_id, change_amount, total_price, account_id, bill_no, 
-    bill_time, remark, tenant_id, delete_flag
+    id, type, organ_id, hands_person_id, creator, change_amount, total_price, account_id, 
+    bill_no, bill_time, remark, tenant_id, delete_flag
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.AccountHeadExample" resultMap="BaseResultMap">
     select
@@ -109,15 +110,15 @@
   </delete>
   <insert id="insert" parameterType="com.jsh.erp.datasource.entities.AccountHead">
     insert into jsh_account_head (id, type, organ_id, 
-      hands_person_id, change_amount, total_price, 
-      account_id, bill_no, bill_time, 
-      remark, tenant_id, delete_flag
-      )
+      hands_person_id, creator, change_amount, 
+      total_price, account_id, bill_no, 
+      bill_time, remark, tenant_id, 
+      delete_flag)
     values (#{id,jdbcType=BIGINT}, #{type,jdbcType=VARCHAR}, #{organId,jdbcType=BIGINT}, 
-      #{handsPersonId,jdbcType=BIGINT}, #{changeAmount,jdbcType=DECIMAL}, #{totalPrice,jdbcType=DECIMAL}, 
-      #{accountId,jdbcType=BIGINT}, #{billNo,jdbcType=VARCHAR}, #{billTime,jdbcType=TIMESTAMP}, 
-      #{remark,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR}
-      )
+      #{handsPersonId,jdbcType=BIGINT}, #{creator,jdbcType=BIGINT}, #{changeAmount,jdbcType=DECIMAL}, 
+      #{totalPrice,jdbcType=DECIMAL}, #{accountId,jdbcType=BIGINT}, #{billNo,jdbcType=VARCHAR}, 
+      #{billTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, 
+      #{deleteFlag,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.AccountHead">
     insert into jsh_account_head
@@ -133,6 +134,9 @@
       </if>
       <if test="handsPersonId != null">
         hands_person_id,
+      </if>
+      <if test="creator != null">
+        creator,
       </if>
       <if test="changeAmount != null">
         change_amount,
@@ -171,6 +175,9 @@
       </if>
       <if test="handsPersonId != null">
         #{handsPersonId,jdbcType=BIGINT},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=BIGINT},
       </if>
       <if test="changeAmount != null">
         #{changeAmount,jdbcType=DECIMAL},
@@ -219,6 +226,9 @@
       <if test="record.handsPersonId != null">
         hands_person_id = #{record.handsPersonId,jdbcType=BIGINT},
       </if>
+      <if test="record.creator != null">
+        creator = #{record.creator,jdbcType=BIGINT},
+      </if>
       <if test="record.changeAmount != null">
         change_amount = #{record.changeAmount,jdbcType=DECIMAL},
       </if>
@@ -254,6 +264,7 @@
       type = #{record.type,jdbcType=VARCHAR},
       organ_id = #{record.organId,jdbcType=BIGINT},
       hands_person_id = #{record.handsPersonId,jdbcType=BIGINT},
+      creator = #{record.creator,jdbcType=BIGINT},
       change_amount = #{record.changeAmount,jdbcType=DECIMAL},
       total_price = #{record.totalPrice,jdbcType=DECIMAL},
       account_id = #{record.accountId,jdbcType=BIGINT},
@@ -277,6 +288,9 @@
       </if>
       <if test="handsPersonId != null">
         hands_person_id = #{handsPersonId,jdbcType=BIGINT},
+      </if>
+      <if test="creator != null">
+        creator = #{creator,jdbcType=BIGINT},
       </if>
       <if test="changeAmount != null">
         change_amount = #{changeAmount,jdbcType=DECIMAL},
@@ -310,6 +324,7 @@
     set type = #{type,jdbcType=VARCHAR},
       organ_id = #{organId,jdbcType=BIGINT},
       hands_person_id = #{handsPersonId,jdbcType=BIGINT},
+      creator = #{creator,jdbcType=BIGINT},
       change_amount = #{changeAmount,jdbcType=DECIMAL},
       total_price = #{totalPrice,jdbcType=DECIMAL},
       account_id = #{accountId,jdbcType=BIGINT},

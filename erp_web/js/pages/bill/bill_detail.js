@@ -345,7 +345,7 @@
                     if(res && res.code === 200){
                         var data = res.data;
                         $("#bill .BillNoShow").text(data.billNo);
-                        $("#bill .BillTimeShow").text(data.billTime);
+                        $("#bill .BillTimeShow").text(data.billTimeStr);
                         $("#bill .RemarkShow").text(data.remark);
                         $("#bill .AccountIdShow").text(data.accountName);
                         $('#bill .OrganIdShow').text(data.organName);

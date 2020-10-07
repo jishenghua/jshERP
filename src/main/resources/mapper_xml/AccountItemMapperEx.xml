@@ -96,4 +96,14 @@
         )
         and ifnull(delete_flag,'0') !='1'
     </select>
+    <update id="batchDeleteAccountItemByHeadIds">
+        update jsh_account_item
+        set delete_flag='1'
+        where 1=1
+        and header_id in (
+        <foreach collection="ids" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
 </mapper>

@@ -11,7 +11,7 @@ public class DepotHeadVo4List extends DepotHead{
 
     private String organName;
 
-    private String handsPersonName;
+    private String userName;
 
     private String accountName;
 
@@ -37,12 +37,12 @@ public class DepotHeadVo4List extends DepotHead{
         this.organName = organName;
     }
 
-    public String getHandsPersonName() {
-        return handsPersonName;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setHandsPersonName(String handsPersonName) {
-        this.handsPersonName = handsPersonName;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getAccountName() {
