@@ -454,8 +454,6 @@
             //交替出现背景
             striped : true,
             showFooter: true,
-            //loadFilter: pagerFilter,
-            onClickRow: onClickRow,
             columns:[[
                 { field: 'Id',width:35,align:"center",checkbox:true},
                 { title: '仓库名称', field: 'DepotId', editor: 'validatebox', width: 90,
@@ -468,16 +466,18 @@
                             valueField: 'id',
                             textField: 'depotName',
                             method: 'get',
+                            hasDownArrow: false,
                             url: '/depot/findDepotByUserId?UBType=UserDepot&UBKeyId='+kid,
                             onSelect:function(rec){
                                 var depotId = rec.id;
-                                body =$("#depotHeadFM .datagrid-body");
-                                footer =$("#depotHeadFM .datagrid-footer");
-                                input = ".datagrid-editable-input";
-                                var mId = body.find("[field='MaterialExtendId']").find(".textbox-value").val();
+                                body =$("#depotHeadFM .datagrid-view2 .datagrid-body");
+                                footer =$("#depotHeadFM .datagrid-view2 .datagrid-footer");
+                                input = "input[type=text]";
+                                var currentRowDom = body.find(".datagrid-row").eq(editIndex);
+                                var mId = currentRowDom.find("[field='MaterialExtendId']").find(".textbox-value").val();
                                 if(mId){
                                     var type = "select"; //type 类型：点击 click，选择 select
-                                    inOutService.findStockNumById(depotId, mId, monthTime, body, input, ratioDepot, type);
+                                    inOutService.findStockNumById(depotId, mId, monthTime, currentRowDom, input, ratioDepot, type);
                                 }
                             }
                         }
@@ -518,7 +518,10 @@
                             onLoadSuccess: function (rec) {
                                 if(rec && rec.total==1) {
                                     $(".datagrid-body [field='mBarCode']").click(); //在只有单个商品的时候自动选中
-                                    $("#depotHeadFM .datagrid-body").find("[field='OperNumber']").find(".datagrid-editable-input").focus().select();
+                                    var body =$("#depotHeadFM .datagrid-view2 .datagrid-body");
+                                    input = "input[type=text]";
+                                    var currentRowDom = body.find(".datagrid-row").eq(editIndex);
+                                    currentRowDom.find("[field='OperNumber']").find(input).focus().select();
                                 }
                             },
                             onSelect:function(index, rowData){
@@ -623,6 +626,11 @@
                     $("#materialData").datagrid('loadData',data);
                     if(type === "add") {
                         $("#depotHeadDlg #append").click(); //新增行
+                    } else if(type === "edit") {
+                        for(var i=0;i<data.rows.length;i++){
+                            $('#materialData').datagrid('selectRow', i).datagrid('beginEdit', i);
+                            inOutService.autoReckon();
+                        }
                     }
                 }
             },
