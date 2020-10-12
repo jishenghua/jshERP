@@ -446,17 +446,19 @@
             //动画效果
             animate:false,
             //选中单行
-            singleSelect : true,
-            collapsible:false,
-            selectOnCheck:false,
-            //单击行是否选中
-            checkOnSelect : false,
+            singleSelect: true,
+            collapsible: false,
             pagination: false,
             //交替出现背景
             striped : true,
             showFooter: true,
             columns:[[
-                { field: 'Id',width:35,align:"center",checkbox:true},
+                { field: 'Id',width:35,align:"center",hidden:true},
+                { field: 'op',align:"center", width:35,
+                    formatter:function(value,rec,index) {
+                        return '<img title="删除" src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;"/>';
+                    }
+                },
                 { title: '仓库名称', field: 'DepotId', editor: 'validatebox', width: 90,
                     formatter: function (value, row, index) {
                         return row.DepotName;
@@ -548,14 +550,6 @@
                     }
                 },
                 {
-                    id:'delete',
-                    text:'删除行',
-                    iconCls:'icon-remove',
-                    handler:function() {
-                        inOutService.batchDel(); //删除行
-                    }
-                },
-                {
                     id:'appendDepot',
                     text:'新增仓库',
                     iconCls:'icon-add',
@@ -603,6 +597,7 @@
                     });
                     data.footer = array;
                     $("#materialData").datagrid('loadData',data);
+                    $("#depotHeadFM .datagrid-view2 .datagrid-footer").find("[field='op'] img").hide();
                     if(type === "add") {
                         $("#depotHeadDlg #append").click(); //新增行
                     } else if(type === "edit") {
