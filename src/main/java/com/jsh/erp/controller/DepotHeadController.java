@@ -342,8 +342,6 @@ public class DepotHeadController {
         JSONObject result = ExceptionConstants.standardSuccess();
         String beanJson = body.getInfo();
         String inserted = body.getInserted();
-        String deleted = body.getDeleted();
-        String updated = body.getUpdated();
         Long billsNumLimit = Long.parseLong(request.getSession().getAttribute("billsNumLimit").toString());
         Long tenantId = Long.parseLong(request.getSession().getAttribute("tenantId").toString());
         Long count = depotHeadService.countDepotHead(null,null,null,null,null,null,null,null);
@@ -351,7 +349,7 @@ public class DepotHeadController {
             throw new BusinessParamCheckingException(ExceptionConstants.DEPOT_HEAD_OVER_LIMIT_FAILED_CODE,
                     ExceptionConstants.DEPOT_HEAD_OVER_LIMIT_FAILED_MSG);
         } else {
-            depotHeadService.addDepotHeadAndDetail(beanJson,inserted,deleted,updated,tenantId, request);
+            depotHeadService.addDepotHeadAndDetail(beanJson,inserted,tenantId, request);
         }
         return result;
     }
@@ -370,10 +368,8 @@ public class DepotHeadController {
         Long id = body.getId();
         String beanJson = body.getInfo();
         String inserted = body.getInserted();
-        String deleted = body.getDeleted();
-        String updated = body.getUpdated();
         BigDecimal preTotalPrice = body.getPreTotalPrice();
-        depotHeadService.updateDepotHeadAndDetail(id,beanJson,inserted,deleted,updated,preTotalPrice,tenantId,request);
+        depotHeadService.updateDepotHeadAndDetail(id,beanJson,inserted,preTotalPrice,tenantId,request);
         return result;
     }
 

@@ -296,7 +296,7 @@ public class DepotItemService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public String saveDetials(String inserted, String deleted, String updated, Long headerId, Long tenantId, HttpServletRequest request) throws Exception{
+    public String saveDetials(String inserted, Long headerId, Long tenantId, HttpServletRequest request) throws Exception{
         //查询单据主表信息
         DepotHead depotHead=null;
         try{
@@ -308,7 +308,6 @@ public class DepotItemService {
         User userInfo=userService.getCurrentUser();
         //转为json
             JSONArray insertedJson = JSONArray.parseArray(inserted);
-            JSONArray deletedJson = JSONArray.parseArray(deleted);
 
             //删除单据的明细
             deleteDepotItemHeadId(headerId);

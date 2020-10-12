@@ -1353,8 +1353,6 @@
 			}
 			this.endAllEdit();
 			var inserted = $("#materialData").datagrid('getRows');
-			var deleted = [];
-			var updated = [];
 			$.ajax({
 				type:"post",
 				url: url,
@@ -1363,9 +1361,7 @@
 				async :  false,
 				data: JSON.stringify({
 					info:infoStr,
-					inserted: JSON.stringify(inserted),
-					deleted: JSON.stringify(deleted),
-					updated: JSON.stringify(updated)
+					inserted: JSON.stringify(inserted)
 				}),
 				success: function (tipInfo){
 					if(tipInfo){
@@ -1396,8 +1392,6 @@
 			var self = this;
 			this.endAllEdit();
 			var inserted = $("#materialData").datagrid('getRows');
-			var deleted = [];
-			var updated = [];
 			$.ajax({
 				type:"post",
 				url: url,
@@ -1408,8 +1402,6 @@
 					id:url.substring(url.lastIndexOf("?id=")+4,url.length),
 					info:infoStr,
 					inserted: JSON.stringify(inserted),
-					deleted: JSON.stringify(deleted),
-					updated: JSON.stringify(updated),
 					preTotalPrice:preTotalPrice
 				}),
 				success: function (tipInfo){
