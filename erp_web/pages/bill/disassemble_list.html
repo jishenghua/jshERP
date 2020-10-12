@@ -273,7 +273,6 @@
         } else {
             initTableData_material("add"); //商品列表
         }
-        inOutService.reject(); //撤销下、刷新商品列表
         function supplierDlgFun(type) {
             $('#supplierDlg').dialog('open').dialog('setTitle','<img src="/js/easyui/themes/icons/edit_add.png"/>&nbsp;增加' + type + '信息');
             $('#supplierFM').form('clear');
@@ -343,7 +342,6 @@
             $("#OtherMoney").attr("data-itemArr",JSON.stringify(itemArr)).attr("data-itemMoneyArr",itemMoneyArr);  //json数据存储
         }
         initTableData_material("edit",TotalPrice); //商品列表
-        inOutService.reject(); //撤销下、刷新商品列表
         url = '/depotHead/updateDepotHeadAndDetail?id=' + res.id; //更新接口
     }
     //查看信息
@@ -551,14 +549,6 @@
                     iconCls:'icon-remove',
                     handler:function() {
                         inOutService.batchDel(); //删除行
-                    }
-                },
-                {
-                    id:'reject',
-                    text:'撤销',
-                    iconCls:'icon-undo',
-                    handler:function() {
-                        inOutService.reject(); //撤销
                     }
                 },
                 {

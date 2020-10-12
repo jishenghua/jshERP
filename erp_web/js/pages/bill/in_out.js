@@ -1215,18 +1215,6 @@
 				});
 			}
 		},
-		//单行删除明细
-		removeit: function () {
-			if (editIndex == undefined) { return }
-			$('#materialData').datagrid('cancelEdit', editIndex)
-				.datagrid('deleteRow', editIndex);
-			editIndex = undefined;
-		},
-		//撤销明细
-		reject: function () {
-			$('#materialData').datagrid('rejectChanges');
-			editIndex = undefined;
-		},
 		//新增仓库
 		appendDepot: function () {
 			$('#depotDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/edit_add.png"/>&nbsp;增加仓库信息');
