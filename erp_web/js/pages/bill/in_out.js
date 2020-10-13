@@ -1360,6 +1360,10 @@
 					if(tipInfo){
 						if(tipInfo.code!=200){
 							$.messager.alert('提示', tipInfo.msg, 'warning');
+							for(var i=0; i<rows.length; i++){
+								$('#materialData').datagrid('selectRow', i).datagrid('beginEdit', i);
+								self.autoReckon();
+							}
 							return;
 						}
 						$.messager.alert('提示','保存成功！','info');
@@ -1401,6 +1405,10 @@
 					if(tipInfo){
 						if(tipInfo.code!=200){
 							$.messager.alert('提示', tipInfo.msg, 'warning');
+							for(var i=0; i<rows.length; i++){
+								$('#materialData').datagrid('selectRow', i).datagrid('beginEdit', i);
+								self.autoReckon();
+							}
 							return;
 						}
 						$.messager.alert('提示','保存成功！','info');
