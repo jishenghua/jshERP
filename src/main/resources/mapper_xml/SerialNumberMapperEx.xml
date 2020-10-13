@@ -180,7 +180,7 @@
     <update id="cancelSerialNumber">
         update jsh_serial_number
         <set>
-                is_sell = '0',
+                is_sell = '0', depot_head_id=null,
             <if test="updateTime !=null ">
                 update_time = #{updateTime},
             </if>
