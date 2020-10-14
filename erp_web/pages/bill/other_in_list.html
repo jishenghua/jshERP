@@ -765,7 +765,7 @@
     });
     //搜索处理
     $("#searchBtn").off("click").on("click",function(){
-        self.showDepotHeadDetails(1,initPageSize);
+        inOutService.showDepotHeadDetails(1,initPageSize);
         var opts = $("#tableData").datagrid('options');
         var pager = $("#tableData").datagrid('getPager');
         opts.pageNumber = 1;
