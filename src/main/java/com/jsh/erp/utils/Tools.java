@@ -155,6 +155,27 @@ public class Tools {
         return new SimpleDateFormat("yyyy-MM").format(cal.getTime());
     }
 
+
+    /**
+     * 获取当前月份的前6个月(含当前月)
+     * @param size  月数
+     * @return
+     */
+    public static List<String> getLastMonths(int size) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date());
+        List<String> list = new ArrayList(size);
+        for (int i=0;i<size;i++) {
+            c.setTime(new Date());
+            c.add(Calendar.MONTH, -i);
+            Date m = c.getTime();
+            list.add(sdf.format(m));
+        }
+        Collections.reverse(list);
+        return list;
+    }
+
     /**
      * 获取当前月份的前6个月(含当前月)
      * @param date

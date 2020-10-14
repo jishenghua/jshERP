@@ -706,10 +706,7 @@ public class DepotItemController {
         Map<String, Object> map = new HashMap<String, Object>();
         String message = "成功";
         try {
-            Date date = new Date();
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM");
-            String dateString = formatter.format(date);
-            List<String> list = Tools.getSixMonth(dateString);
+            List<String> list = Tools.getLastMonths(6);
             map.put("monthList", list);
             List<BigDecimal> buyPriceList = new ArrayList<BigDecimal>();
             for(String month: list) {
