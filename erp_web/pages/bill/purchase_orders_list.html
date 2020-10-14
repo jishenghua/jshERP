@@ -214,6 +214,7 @@
         initTableData();
         inOutService.ininPager();
         inOutService.initForm();
+        inOutService.showDepotHeadDetails(1,initPageSize); //初始化时自动查询
         inOutService.bindEvent();//绑定操作事件
     });
     //根据单据名称获取类型
@@ -867,6 +868,18 @@
                 inOutService.updateDepotHeadAndDetail(url,infoStr,preTotalPrice);
             }
         }
+    });
+    //搜索处理
+    $("#searchBtn").off("click").on("click",function(){
+        self.showDepotHeadDetails(1,initPageSize);
+        var opts = $("#tableData").datagrid('options');
+        var pager = $("#tableData").datagrid('getPager');
+        opts.pageNumber = 1;
+        opts.pageSize = initPageSize;
+        pager.pagination('refresh', {
+            pageNumber:1,
+            pageSize:initPageSize
+        });
     });
 </script>
 </body>

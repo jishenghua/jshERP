@@ -566,21 +566,6 @@
 		//绑定操作事件
 		bindEvent: function () {
 			var self = this;
-			self.showDepotHeadDetails(1,initPageSize); //初始化时自动查询
-			//搜索处理
-			$("#searchBtn").off("click").on("click",function(){
-				self.showDepotHeadDetails(1,initPageSize);
-				var opts = $("#tableData").datagrid('options');
-				var pager = $("#tableData").datagrid('getPager');
-				opts.pageNumber = 1;
-				opts.pageSize = initPageSize;
-				pager.pagination('refresh',
-					{
-						pageNumber:1,
-						pageSize:initPageSize
-					});
-			});
-
 			//重置按钮
 			$("#searchResetBtn").unbind().bind({
 				click:function(){
