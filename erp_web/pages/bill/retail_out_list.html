@@ -517,6 +517,8 @@
             $("#AccountId").attr("data-accountArr", JSON.stringify(accountArr)).attr("data-accountMoneyArr", JSON.stringify(accountMoneyArr));  //json数据存储
             $(".many-account-ico").show(); //显示多账户的ico图标
         } else {
+            $("#getAmount").val(res.changeAmount); //收款金额、付款金额
+            $("#backAmount").val(0); //找零
             $(".many-account-ico").hide(); //隐藏多账户的ico图标
         }
         //采购入库、销售出库的费用数据加载
