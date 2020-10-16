@@ -67,6 +67,7 @@
         <table tableName="jsh_organization" domainObjectName="Organization"></table>
         <table tableName="jsh_orga_user_rel" domainObjectName="OrgaUserRel"></table>
         <table tableName="jsh_tenant" domainObjectName="Tenant"></table>
+        <table tableName="jsh_platform_config" domainObjectName="PlatformConfig"></table>
         <table tableName="jsh_msg" domainObjectName="Msg"></table> -->
     </context>
 </generatorConfiguration>

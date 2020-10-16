@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsh.erp.datasource.mappers.PlatformConfigMapper">
+  <resultMap id="BaseResultMap" type="com.jsh.erp.datasource.entities.PlatformConfig">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="platform_key" jdbcType="VARCHAR" property="platformKey" />
+    <result column="platform_key_info" jdbcType="VARCHAR" property="platformKeyInfo" />
+    <result column="platform_value" jdbcType="VARCHAR" property="platformValue" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, platform_key, platform_key_info, platform_value
+  </sql>
+  <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.PlatformConfigExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from jsh_platform_config
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from jsh_platform_config
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from jsh_platform_config
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.jsh.erp.datasource.entities.PlatformConfigExample">
+    delete from jsh_platform_config
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.jsh.erp.datasource.entities.PlatformConfig">
+    insert into jsh_platform_config (id, platform_key, platform_key_info, 
+      platform_value)
+    values (#{id,jdbcType=BIGINT}, #{platformKey,jdbcType=VARCHAR}, #{platformKeyInfo,jdbcType=VARCHAR}, 
+      #{platformValue,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.PlatformConfig">
+    insert into jsh_platform_config
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="platformKey != null">
+        platform_key,
+      </if>
+      <if test="platformKeyInfo != null">
+        platform_key_info,
+      </if>
+      <if test="platformValue != null">
+        platform_value,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="platformKey != null">
+        #{platformKey,jdbcType=VARCHAR},
+      </if>
+      <if test="platformKeyInfo != null">
+        #{platformKeyInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="platformValue != null">
+        #{platformValue,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.jsh.erp.datasource.entities.PlatformConfigExample" resultType="java.lang.Long">
+    select count(*) from jsh_platform_config
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update jsh_platform_config
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.platformKey != null">
+        platform_key = #{record.platformKey,jdbcType=VARCHAR},
+      </if>
+      <if test="record.platformKeyInfo != null">
+        platform_key_info = #{record.platformKeyInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.platformValue != null">
+        platform_value = #{record.platformValue,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update jsh_platform_config
+    set id = #{record.id,jdbcType=BIGINT},
+      platform_key = #{record.platformKey,jdbcType=VARCHAR},
+      platform_key_info = #{record.platformKeyInfo,jdbcType=VARCHAR},
+      platform_value = #{record.platformValue,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jsh.erp.datasource.entities.PlatformConfig">
+    update jsh_platform_config
+    <set>
+      <if test="platformKey != null">
+        platform_key = #{platformKey,jdbcType=VARCHAR},
+      </if>
+      <if test="platformKeyInfo != null">
+        platform_key_info = #{platformKeyInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="platformValue != null">
+        platform_value = #{platformValue,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jsh.erp.datasource.entities.PlatformConfig">
+    update jsh_platform_config
+    set platform_key = #{platformKey,jdbcType=VARCHAR},
+      platform_key_info = #{platformKeyInfo,jdbcType=VARCHAR},
+      platform_value = #{platformValue,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
