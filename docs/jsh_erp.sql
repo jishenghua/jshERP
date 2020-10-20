@@ -972,3 +972,21 @@ INSERT INTO `jsh_user_business` VALUES ('66', 'UserRole', '130', '[10]', null, '
 INSERT INTO `jsh_user_business` VALUES ('67', 'UserRole', '131', '[17]', null, '0');
 INSERT INTO `jsh_user_business` VALUES ('68', 'RoleFunctions', '16', '[210]', null, '0');
 INSERT INTO `jsh_user_business` VALUES ('69', 'RoleFunctions', '17', '[210][211][241][33][199][242][41][200][201][202][40][232][233][197][203][204][205][206][212]', '[{\"funId\":\"241\",\"btnStr\":\"1,2\"},{\"funId\":\"33\",\"btnStr\":\"1,2\"},{\"funId\":\"199\",\"btnStr\":\"1,2\"},{\"funId\":\"242\",\"btnStr\":\"1,2\"},{\"funId\":\"41\",\"btnStr\":\"1,2\"},{\"funId\":\"200\",\"btnStr\":\"1,2\"},{\"funId\":\"210\",\"btnStr\":\"1,2\"},{\"funId\":\"211\",\"btnStr\":\"1,2\"},{\"funId\":\"197\",\"btnStr\":\"1\"},{\"funId\":\"203\",\"btnStr\":\"1\"},{\"funId\":\"204\",\"btnStr\":\"1\"},{\"funId\":\"205\",\"btnStr\":\"1\"},{\"funId\":\"206\",\"btnStr\":\"1\"},{\"funId\":\"212\",\"btnStr\":\"1\"},{\"funId\":\"201\",\"btnStr\":\"1,2\"},{\"funId\":\"202\",\"btnStr\":\"1,2\"},{\"funId\":\"40\",\"btnStr\":\"1,2\"},{\"funId\":\"232\",\"btnStr\":\"1,2\"},{\"funId\":\"233\",\"btnStr\":\"1,2\"}]', '0');
+
+-- ----------------------------
+-- Table structure for jsh_platform_config
+-- ----------------------------
+DROP TABLE IF EXISTS `jsh_platform_config`;
+CREATE TABLE `jsh_platform_config` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `platform_key` varchar(100) DEFAULT NULL COMMENT '关键词',
+  `platform_key_info` varchar(100) DEFAULT NULL COMMENT '关键词名称',
+  `platform_value` varchar(200) DEFAULT NULL COMMENT '值',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='平台参数';
+
+-- ----------------------------
+-- Records of jsh_platform_config
+-- ----------------------------
+INSERT INTO `jsh_platform_config` VALUES ('1', 'platform_name', '平台名称', '华夏ERP');
+INSERT INTO `jsh_platform_config` VALUES ('2', 'activation_code', '激活码', null);

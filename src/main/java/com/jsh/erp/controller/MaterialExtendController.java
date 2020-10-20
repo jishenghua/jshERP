@@ -3,23 +3,18 @@ package com.jsh.erp.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.datasource.vo.MaterialExtendVo4List;
-import com.jsh.erp.service.MaterialExtend.MaterialExtendService;
+import com.jsh.erp.service.materialExtend.MaterialExtendService;
 import com.jsh.erp.utils.BaseResponseInfo;
-import com.jsh.erp.utils.ErpInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataAccessException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 
 /**
  * @author jijiaqing

@@ -154,6 +154,7 @@
         initTableData();
         inOutService.ininPager();
         inOutService.initForm();
+        inOutService.showDepotHeadDetails(1,initPageSize); //初始化时自动查询
         inOutService.bindEvent();//绑定操作事件
     });
     //根据单据名称获取类型
@@ -279,7 +280,6 @@
         } else {
             initTableData_material("add"); //商品列表
         }
-        inOutService.reject(); //撤销下、刷新商品列表
         function supplierDlgFun(type) {
             $('#supplierDlg').dialog('open').dialog('setTitle','<img src="/js/easyui/themes/icons/edit_add.png"/>&nbsp;增加' + type + '信息');
             $('#supplierFM').form('clear');
@@ -348,7 +348,6 @@
             $("#OtherMoney").attr("data-itemArr",JSON.stringify(itemArr)).attr("data-itemMoneyArr",itemMoneyArr);  //json数据存储
         }
         initTableData_material("edit",TotalPrice); //商品列表
-        inOutService.reject(); //撤销下、刷新商品列表
         url = '/depotHead/updateDepotHeadAndDetail?id=' + res.id; //更新接口
     }
     //查看信息
@@ -448,19 +447,19 @@
             //动画效果
             animate:false,
             //选中单行
-            singleSelect : true,
-            collapsible:false,
-            selectOnCheck:false,
-            //单击行是否选中
-            checkOnSelect : false,
+            singleSelect: true,
+            collapsible: false,
             pagination: false,
             //交替出现背景
             striped : true,
             showFooter: true,
-            //loadFilter: pagerFilter,
-            onClickRow: onClickRow,
             columns:[[
-                { field: 'Id',width:35,align:"center",checkbox:true},
+                { field: 'Id',width:35,align:"center",hidden:true},
+                { field: 'op',align:"center", width:35,
+                    formatter:function(value,rec,index) {
+                        return '<img title="删除" src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;"/>';
+                    }
+                },
                 { title: '仓库名称', field: 'DepotId', editor: 'validatebox', width: 90,
                     formatter: function (value, row, index) {
                         return row.DepotName;
@@ -471,16 +470,18 @@
                             valueField: 'id',
                             textField: 'depotName',
                             method: 'get',
+                            hasDownArrow: false,
                             url: '/depot/findDepotByUserId?UBType=UserDepot&UBKeyId='+kid,
                             onSelect:function(rec){
                                 var depotId = rec.id;
-                                body =$("#depotHeadFM .datagrid-body");
-                                footer =$("#depotHeadFM .datagrid-footer");
-                                input = ".datagrid-editable-input";
-                                var mId = body.find("[field='MaterialExtendId']").find(".textbox-value").val();
+                                body =$("#depotHeadFM .datagrid-view2 .datagrid-body");
+                                footer =$("#depotHeadFM .datagrid-view2 .datagrid-footer");
+                                input = "input[type=text]";
+                                var currentRowDom = body.find(".datagrid-row").eq(editIndex);
+                                var mId = currentRowDom.find("[field='MaterialExtendId']").find(".textbox-value").val();
                                 if(mId){
                                     var type = "select"; //type 类型：点击 click，选择 select
-                                    inOutService.findStockNumById(depotId, mId, monthTime, body, input, ratioDepot, type);
+                                    inOutService.findStockNumById(depotId, mId, monthTime, currentRowDom, input, ratioDepot, type);
                                 }
                             }
                         }
@@ -521,7 +522,10 @@
                             onLoadSuccess: function (rec) {
                                 if(rec && rec.total==1) {
                                     $(".datagrid-body [field='mBarCode']").click(); //在只有单个商品的时候自动选中
-                                    $("#depotHeadFM .datagrid-body").find("[field='OperNumber']").find(".datagrid-editable-input").focus().select();
+                                    var body =$("#depotHeadFM .datagrid-view2 .datagrid-body");
+                                    input = "input[type=text]";
+                                    var currentRowDom = body.find(".datagrid-row").eq(editIndex);
+                                    currentRowDom.find("[field='OperNumber']").find(input).focus().select();
                                 }
                             },
                             onSelect:function(index, rowData){
@@ -544,22 +548,6 @@
                     iconCls:'icon-add',
                     handler:function() {
                         inOutService.append(); //新增行
-                    }
-                },
-                {
-                    id:'delete',
-                    text:'删除行',
-                    iconCls:'icon-remove',
-                    handler:function() {
-                        inOutService.batchDel(); //删除行
-                    }
-                },
-                {
-                    id:'reject',
-                    text:'撤销',
-                    iconCls:'icon-undo',
-                    handler:function() {
-                        inOutService.reject(); //撤销
                     }
                 },
                 {
@@ -610,8 +598,14 @@
                     });
                     data.footer = array;
                     $("#materialData").datagrid('loadData',data);
+                    $("#depotHeadFM .datagrid-view2 .datagrid-footer").find("[field='op'] img").hide();
                     if(type === "add") {
                         $("#depotHeadDlg #append").click(); //新增行
+                    } else if(type === "edit") {
+                        for(var i=0;i<data.rows.length;i++){
+                            $('#materialData').datagrid('selectRow', i).datagrid('beginEdit', i);
+                            inOutService.autoReckon();
+                        }
                     }
                 }
             },
@@ -761,6 +755,18 @@
                 inOutService.updateDepotHeadAndDetail(url,infoStr,preTotalPrice);
             }
         }
+    });
+    //搜索处理
+    $("#searchBtn").off("click").on("click",function(){
+        inOutService.showDepotHeadDetails(1,initPageSize);
+        var opts = $("#tableData").datagrid('options');
+        var pager = $("#tableData").datagrid('getPager');
+        opts.pageNumber = 1;
+        opts.pageSize = initPageSize;
+        pager.pagination('refresh', {
+            pageNumber:1,
+            pageSize:initPageSize
+        });
     });
 </script>
 </body>

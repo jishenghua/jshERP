@@ -1,4 +1,4 @@
-package com.jsh.erp.service.MaterialExtend;
+package com.jsh.erp.service.materialExtend;
 
 import com.jsh.erp.service.ICommonQuery;
 import org.springframework.stereotype.Service;

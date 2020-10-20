@@ -469,15 +469,13 @@ public class DepotHeadService {
     /**
      * 新增单据主表及单据子表信息
      * @param beanJson
-     * @param inserted
-     * @param deleted
-     * @param updated
+     * @param rows
      * @param tenantId
      * @param request
      * @throws Exception
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public void addDepotHeadAndDetail(String beanJson, String inserted, String deleted, String updated,Long tenantId,
+    public void addDepotHeadAndDetail(String beanJson, String rows, Long tenantId,
                                       HttpServletRequest request) throws Exception {
         /**处理单据主表数据*/
         DepotHead depotHead = JSONObject.parseObject(beanJson, DepotHead.class);
@@ -504,7 +502,7 @@ public class DepotHeadService {
         if(list!=null) {
             Long headId = list.get(0).getId();
             /**入库和出库处理单据子表信息*/
-            depotItemService.saveDetials(inserted,deleted,updated,headId,tenantId, request);
+            depotItemService.saveDetials(rows,headId,tenantId, request);
         }
         /**如果关联单据号非空则更新订单的状态为2 */
         if(depotHead.getLinkNumber()!=null) {
@@ -527,16 +525,14 @@ public class DepotHeadService {
      * 更新单据主表及单据子表信息
      * @param id
      * @param beanJson
-     * @param inserted
-     * @param deleted
-     * @param updated
+     * @param rows
      * @param preTotalPrice
      * @param tenantId
      * @param request
      * @throws Exception
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public void updateDepotHeadAndDetail(Long id, String beanJson, String inserted, String deleted, String updated,
+    public void updateDepotHeadAndDetail(Long id, String beanJson, String rows,
                                          BigDecimal preTotalPrice, Long tenantId,HttpServletRequest request)throws Exception {
         /**更新单据主表信息*/
         DepotHead depotHead = JSONObject.parseObject(beanJson, DepotHead.class);
@@ -554,7 +550,7 @@ public class DepotHeadService {
             }
         }
         /**入库和出库处理单据子表信息*/
-        depotItemService.saveDetials(inserted,deleted,updated,depotHead.getId(),tenantId,request);
+        depotItemService.saveDetials(rows,depotHead.getId(),tenantId,request);
         logService.insertLog("单据",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(depotHead.getNumber()).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());

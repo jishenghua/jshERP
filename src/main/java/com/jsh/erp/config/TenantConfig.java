@@ -63,7 +63,7 @@ public class TenantConfig {
                         // 这里可以判断是否过滤表
                         if ("jsh_material_property".equals(tableName) || "jsh_sequence".equals(tableName)
                                 || "jsh_user_business".equals(tableName) || "jsh_function".equals(tableName)
-                                || "jsh_tenant".equals(tableName)) {
+                                || "jsh_platform_config".equals(tableName)|| "jsh_tenant".equals(tableName)) {
                             return true;
                         } else {
                             return false;

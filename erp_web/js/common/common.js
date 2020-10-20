@@ -83,7 +83,7 @@
 	}
     function dgResize() {
 		var searchTabHeight = $('.box-body').height();
-		if($('#tableData').length) {
+		if($('#tableData') && $('#tableData').length && $('#tableData').datagrid()) {
             $('#tableData').datagrid('resize', {
                 width: $(window).width() - 6,
                 height: $(window).height() - searchTabHeight -43

@@ -8,11 +8,7 @@ public class DepotHeadVo4Body {
 
     private String info;
 
-    private String inserted;
-
-    private String deleted;
-
-    private String updated;
+    private String rows;
 
     private BigDecimal preTotalPrice;
 
@@ -32,28 +28,12 @@ public class DepotHeadVo4Body {
         this.info = info;
     }
 
-    public String getInserted() {
-        return inserted;
+    public String getRows() {
+        return rows;
     }
 
-    public void setInserted(String inserted) {
-        this.inserted = inserted;
-    }
-
-    public String getDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(String deleted) {
-        this.deleted = deleted;
-    }
-
-    public String getUpdated() {
-        return updated;
-    }
-
-    public void setUpdated(String updated) {
-        this.updated = updated;
+    public void setRows(String rows) {
+        this.rows = rows;
     }
 
     public BigDecimal getPreTotalPrice() {
