@@ -55,6 +55,9 @@
         <if test="subType != null">
             and dh.sub_type='${subType}'
         </if>
+        <if test="status != null">
+            and dh.status ='${status}'
+        </if>
         <if test="number != null">
             and dh.number like '%${number}%'
         </if>
@@ -86,24 +89,27 @@
     <select id="countsByDepotHead" resultType="java.lang.Long">
         SELECT
         COUNT(1) from
-        (select distinct jsh_depot_head.* FROM jsh_depot_head
-        left join jsh_depot_item di on jsh_depot_head.Id = di.header_id and ifnull(di.delete_flag,'0') !='1'
+        (select distinct dh.* FROM jsh_depot_head dh
+        left join jsh_depot_item di on dh.Id = di.header_id and ifnull(di.delete_flag,'0') !='1'
         left join jsh_material m on di.material_id = m.Id and ifnull(m.delete_Flag,'0') !='1'
         WHERE 1=1
         <if test="type != null">
-            and type='${type}'
+            and dh.type='${type}'
         </if>
         <if test="subType != null">
-            and sub_type='${subType}'
+            and dh.sub_type='${subType}'
+        </if>
+        <if test="status != null">
+            and dh.status ='${status}'
         </if>
         <if test="number != null">
-            and number like '%${number}%'
+            and dh.number like '%${number}%'
         </if>
         <if test="beginTime != null">
-            and oper_time >= '${beginTime}'
+            and dh.oper_time >= '${beginTime}'
         </if>
         <if test="endTime != null">
-            and oper_time &lt;= '${endTime}'
+            and dh.oper_time &lt;= '${endTime}'
         </if>
         <if test="materialParam != null">
             and (m.`Name` like '%${materialParam}%' or m.Model like '%${materialParam}%')
@@ -112,13 +118,13 @@
             and di.depot_id in (${depotIds})
         </if>
         <if test="creatorArray != null">
-            and creator in (
+            and dh.creator in (
             <foreach collection="creatorArray" item="creator" separator=",">
                 #{creator}
             </foreach>
             )
         </if>
-        and ifnull(jsh_depot_head.delete_Flag,'0') !='1') tb
+        and ifnull(dh.delete_Flag,'0') !='1') tb
     </select>
 
     <select id="findMaterialsListByHeaderId" resultType="java.lang.String">
