@@ -381,7 +381,7 @@
                 },
                 { title: '供应商名称', field: 'organName',width:120},
                 { title: '单据编号',field: 'number',width:155, formatter:function (value,rec) {
-                        if(rec.linknumber) {
+                        if(rec.linkNumber) {
                             return value + "[转]";
                         } else {
                             return value;
@@ -459,12 +459,13 @@
             onClickButton:function(){
                 $('#linkBillDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/edit_add.png"/>&nbsp;选择关联单据');
                 $("#linkBillDlg").panel("move",{top:$(document).scrollTop() + ($(window).height()-400) * 0.5});
-                initLinkBillTableData();
+                initLinkBillTableData(1,initPageSize);
+                initLinkBillPager();
             }
         });
         url = '/depotHead/addDepotHeadAndDetail';
     }
-    function initLinkBillTableData() {
+    function initLinkBillTableData(pageNo,pageSize) {
         $('#linkBillData').datagrid({
             height:300,
             rownumbers: false,
@@ -476,7 +477,7 @@
             pagination: true,
             //交替出现背景
             striped : true,
-            pageSize: 10,
+            pageSize: 2,
             pageList: initPageNum,
             columns:[[
                 { field: 'id',width:35,align:"center",checkbox:true},
@@ -513,8 +514,8 @@
                     materialParam: "",
                     depotIds: depotString
                 }),
-                currentPage: 1,
-                pageSize: initPageSize
+                currentPage: pageNo,
+                pageSize: pageSize
             }),
             success: function (res) {
                 if(res && res.code === 200){
@@ -539,6 +540,26 @@
                 return;
             }
         });
+    }
+    function initLinkBillPager() {
+        try {
+            var opts = $("#linkBillData").datagrid('options');
+            var pager = $("#linkBillData").datagrid('getPager');
+            pager.pagination({
+                onSelectPage:function(pageNum, pageSize) {
+                    opts.pageNumber = pageNum;
+                    opts.pageSize = pageSize;
+                    pager.pagination('refresh', {
+                        pageNumber:pageNum,
+                        pageSize:pageSize
+                    });
+                    initLinkBillTableData(pageNum,pageSize);
+                }
+            });
+        }
+        catch (e) {
+            $.messager.alert('异常处理提示',"分页信息异常 :  " + e.name + ": " + e.message,'error');
+        }
     }
     //编辑信息
     function editDepotHead(index) {
@@ -634,7 +655,10 @@
         }
         $("#DebtShow").text(debt);
         $("#AccountDayShow").text(res.accountDay);  //结算天数
-        $("#LinkNumberShow").text(res.linkNumber); //关联订单号
+        //关联订单号
+        $("#LinkNumberShow").text(res.linkNumber).addClass("n-link").off("click").on("click",function () {
+            turnBillDetailPage(res.linkNumber, "采购订单");
+        });
         var otherMoney = res.otherMoney?res.otherMoney:0;
         if(otherMoney!=0 && res.otherMoneyList && res.otherMoneyItem){
             var itemArr = res.otherMoneyList.split(","); //支出项目id列表
