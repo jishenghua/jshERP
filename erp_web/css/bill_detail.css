@@ -7,10 +7,16 @@
 #bill .retail_back{
 	display: none;
 }
+#bill .purchase_orders{
+	display: none;
+}
 #bill .purchase_in{
 	display: none;
 }
 #bill .purchase_back{
+	display: none;
+}
+#bill .sale_orders{
 	display: none;
 }
 #bill .sale_out{

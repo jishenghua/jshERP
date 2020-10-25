@@ -157,36 +157,21 @@ public class Tools {
 
     /**
      * 获取当前月份的前6个月(含当前月)
-     * @param date
+     * @param size  月数
      * @return
      */
-    public static List<String> getSixMonth(String date) {
-        List<String> list = new ArrayList<String>();
-        int month = Integer.parseInt(date.substring(5, 7));
-        int year = Integer.parseInt(date.substring(0, 4));
-        for (int i = 5; i >= 0; i--) {
-            if (month > 6) {
-                if (month - i >= 10) {
-                    list.add(year + "-" + String.valueOf(month - i));
-                } else {
-                    list.add(year + "-0" + String.valueOf(month - i));
-                }
-            } else {
-                if (month - i <= 0) {
-                    if (month - i + 12 >= 10) {
-                        list.add(String.valueOf(year - 1) + "-" + String.valueOf(month - i + 12));
-                    } else {
-                        list.add(String.valueOf(year - 1) + "-0" + String.valueOf(month - i + 12));
-                    }
-                } else {
-                    if (month - i >= 10) {
-                        list.add(String.valueOf(year) + "-" + String.valueOf(month - i));
-                    } else {
-                        list.add(String.valueOf(year) + "-0" + String.valueOf(month - i));
-                    }
-                }
-            }
+    public static List<String> getLastMonths(int size) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date());
+        List<String> list = new ArrayList(size);
+        for (int i=0;i<size;i++) {
+            c.setTime(new Date());
+            c.add(Calendar.MONTH, -i);
+            Date m = c.getTime();
+            list.add(sdf.format(m));
         }
+        Collections.reverse(list);
         return list;
     }
 

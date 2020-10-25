@@ -95,7 +95,12 @@
         if(listSubType) {
             listSubType = decodeURI(listSubType);
         }
-        if(listSubType == "采购入库") {
+        if(listSubType == "采购订单") {
+            billType = "material";
+            $("#bill .purchase_orders").show();
+            tableString = $(".purchase_orders").html();
+        }
+        else if(listSubType == "采购入库") {
             billType = "material";
             $("#bill .purchase_in").show();
             tableString = $(".purchase_in").html();
@@ -104,6 +109,11 @@
             billType = "material";
             $("#bill .purchase_back").show();
             tableString = $(".purchase_back").html();
+        }
+        else if(listSubType == "销售订单") {
+            billType = "material";
+            $("#bill .sale_orders").show();
+            tableString = $(".sale_orders").html();
         }
         else if(listSubType == "销售出库") {
             billType = "material";
@@ -361,11 +371,17 @@
         //打印table
         $("#print_bill_detail").off("click").on("click",function(){
             var tableString = "";//打印table
-            if(listSubType == "采购入库") {
+            if(listSubType == "采购订单") {
+                tableString = $(".purchase_orders").html();
+            }
+            else if(listSubType == "采购入库") {
                 tableString = $(".purchase_in").html();
             }
             else if(listSubType == "采购退货出库") {
                 tableString = $(".purchase_back").html();
+            }
+            else if(listSubType == "销售订单") {
+                tableString = $(".sale_orders").html();
             }
             else if(listSubType == "销售出库") {
                 tableString = $(".sale_out").html();
@@ -426,7 +442,8 @@
             depotHeadName = "仓库名称";
         }
         var isShowTaxColumn = false; //是否显示税率相关的列,true为隐藏,false为显示
-        if(listSubType == "调拨出库" || listSubType == "其它出库" || listSubType == "其它入库" ||
+        if(listSubType == "采购订单" || listSubType == "销售订单" || listSubType == "调拨出库" ||
+            listSubType == "其它出库" || listSubType == "其它入库" ||
             listSubType == "零售出库" || listSubType == "零售退货入库" || listSubType == "盘点复盘"){
             isShowTaxColumn = true; //隐藏
         }

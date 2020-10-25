@@ -82,13 +82,13 @@ public class DepotHeadService {
         return list;
     }
 
-    public List<DepotHeadVo4List> select(String type, String subType, String roleType, String number, String beginTime, String endTime,
+    public List<DepotHeadVo4List> select(String type, String subType, String roleType, String status, String number, String beginTime, String endTime,
                                          String materialParam, String depotIds, int offset, int rows)throws Exception {
         List<DepotHeadVo4List> resList = new ArrayList<DepotHeadVo4List>();
         List<DepotHeadVo4List> list=null;
         try{
             String [] creatorArray = getCreatorArray(roleType);
-            list=depotHeadMapperEx.selectByConditionDepotHead(type, subType, creatorArray, number, beginTime, endTime, materialParam, depotIds, offset, rows);
+            list=depotHeadMapperEx.selectByConditionDepotHead(type, subType, creatorArray, status, number, beginTime, endTime, materialParam, depotIds, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -122,12 +122,12 @@ public class DepotHeadService {
         return resList;
     }
 
-    public Long countDepotHead(String type, String subType, String roleType,String number, String beginTime, String endTime,
+    public Long countDepotHead(String type, String subType, String roleType, String status, String number, String beginTime, String endTime,
                                String materialParam, String depotIds) throws Exception{
         Long result=null;
         try{
             String [] creatorArray = getCreatorArray(roleType);
-            result=depotHeadMapperEx.countsByDepotHead(type, subType, creatorArray, number, beginTime, endTime, materialParam, depotIds);
+            result=depotHeadMapperEx.countsByDepotHead(type, subType, creatorArray, status, number, beginTime, endTime, materialParam, depotIds);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }

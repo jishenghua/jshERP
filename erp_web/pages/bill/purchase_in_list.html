@@ -82,7 +82,7 @@
                 </td>
                 <td style="width:70px;">关联订单</td>
                 <td style="padding:5px">
-                    <input name="LinkNumber" id="LinkNumber" class="easyui-validatebox radius-ui" style="width: 150px;" readonly/>
+                    <input name="LinkNumber" id="LinkNumber" class="easyui-textbox" data-options="buttonText:'选择',editable:false" style="width: 185px;"/>
                 </td>
                 <td style="width:100px;"></td>
             </tr>
@@ -286,6 +286,15 @@
     <a href="javascript:void(0)" id="saveOtherMoneyDlg" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
     <a href="javascript:void(0)" id="cancelOtherMoneyDlg" class="easyui-linkbutton" iconCls="icon-cancel">取消</a>
 </div>
+<div id="linkBillDlg" class="easyui-dialog" style="width:880px;padding:10px 20px;"
+     closed="true" modal="true" buttons="#linkBillDlgBtn" cache="false" collapsible="false" closable="true">
+    <table id="linkBillData" style="top:100px;border-bottom-color:#FFFFFF"></table>
+</div>
+<div id="linkBillDlgBtn">
+    <a href="javascript:void(0)" id="saveLinkBill" class="easyui-linkbutton" iconCls="icon-ok">选择</a>
+    <a href="javascript:void(0)" id="cancelLinkBill" class="easyui-linkbutton" iconCls="icon-cancel"
+       onclick="javascript:$('#linkBillDlg').dialog('close')">取消</a>
+</div>
 <div id="supplier"></div>
 <div id="depot"></div>
 <div id="account"></div>
@@ -372,7 +381,7 @@
                 },
                 { title: '供应商名称', field: 'organName',width:120},
                 { title: '单据编号',field: 'number',width:155, formatter:function (value,rec) {
-                        if(rec.linknumber) {
+                        if(rec.linkNumber) {
                             return value + "[转]";
                         } else {
                             return value;
@@ -425,17 +434,7 @@
         $(".window-mask").css({ width: webW ,height: webH});
         depotHeadID = 0;
         var res = sessionStorage.getItem("rowInfo");
-        if(pageType == "skip" && res) { //从订单跳转过来
-            res = JSON.parse(res);
-            $('#OrganId').combobox('setValue', res.organId);
-            $("#LinkNumber").val(res.number);  //关联订单号
-            $("#DiscountLastMoney").val(res.totalPrice); //优惠后金额
-            $("#ChangeAmount").val(res.totalPrice).attr("data-changeamount", res.totalPrice);
-            depotHeadID = res.id;
-            initTableData_material("edit",res.totalPrice); //商品列表
-        } else {
-            initTableData_material("add"); //商品列表
-        }
+        initTableData_material("add"); //商品列表
         function supplierDlgFun(type) {
             $('#supplierDlg').dialog('open').dialog('setTitle','<img src="/js/easyui/themes/icons/edit_add.png"/>&nbsp;增加' + type + '信息');
             $('#supplierFM').form('clear');
@@ -455,7 +454,112 @@
             $('#accountFM').form('clear');
             bindAccountEvent();
         });
+        //关联订单的选择事件
+        $('#LinkNumber').textbox({
+            onClickButton:function(){
+                $('#linkBillDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/edit_add.png"/>&nbsp;选择关联单据');
+                $("#linkBillDlg").panel("move",{top:$(document).scrollTop() + ($(window).height()-400) * 0.5});
+                initLinkBillTableData(1,initPageSize);
+                initLinkBillPager();
+            }
+        });
         url = '/depotHead/addDepotHeadAndDetail';
+    }
+    function initLinkBillTableData(pageNo,pageSize) {
+        $('#linkBillData').datagrid({
+            height:300,
+            rownumbers: false,
+            //动画效果
+            animate:false,
+            //选中单行
+            singleSelect: true,
+            collapsible: false,
+            pagination: true,
+            //交替出现背景
+            striped : true,
+            pageSize: 2,
+            pageList: initPageNum,
+            columns:[[
+                { field: 'id',width:35,align:"center",checkbox:true},
+                { title: '供应商名称', field: 'organName',width:120},
+                { title: '单据编号',field: 'number',width:155},
+                { title: '商品信息',field: 'materialsList',width:200,formatter:function(value){
+                        if(value) {
+                            return value.replace(",","，");
+                        }
+                    }
+                },
+                { title: '单据日期',field: 'operTimeStr',width:145},
+                { title: '操作员',field: 'userName',width:60},
+                { title: '金额合计',field: 'totalPrice',width:70}
+            ]],
+            onLoadError:function() {
+                $.messager.alert('页面加载提示','页面加载异常，请稍后再试！','error');
+                return;
+            }
+        });
+        $.ajax({
+            type: "get",
+            url: "/depotHead/list",
+            dataType: "json",
+            data: ({
+                search: JSON.stringify({
+                    type: "其它",
+                    subType: "采购订单",
+                    roleType: roleType,
+                    status: "1",
+                    number: "",
+                    beginTime: "",
+                    endTime: "",
+                    materialParam: "",
+                    depotIds: depotString
+                }),
+                currentPage: pageNo,
+                pageSize: pageSize
+            }),
+            success: function (res) {
+                if(res && res.code === 200){
+                    if(res.data && res.data.page) {
+                        $("#linkBillData").datagrid('loadData', res.data.page);
+                        $("#saveLinkBill").off("click").on("click", function(){
+                            var res = $('#linkBillData').datagrid('getChecked')[0];
+                            $('#OrganId').combobox('setValue', res.organId);
+                            $("#LinkNumber").textbox("setValue",res.number);  //关联订单号
+                            $("#DiscountLastMoney").val(res.totalPrice); //优惠后金额
+                            $("#ChangeAmount").val(res.totalPrice).attr("data-changeamount", res.totalPrice);
+                            depotHeadID = res.id;
+                            initTableData_material("edit",res.totalPrice); //商品列表
+                            $('#linkBillDlg').dialog('close');
+                        });
+                    }
+                }
+            },
+            //此处添加错误处理
+            error: function () {
+                $.messager.alert('查询提示', '查询数据后台异常，请稍后再试！', 'error');
+                return;
+            }
+        });
+    }
+    function initLinkBillPager() {
+        try {
+            var opts = $("#linkBillData").datagrid('options');
+            var pager = $("#linkBillData").datagrid('getPager');
+            pager.pagination({
+                onSelectPage:function(pageNum, pageSize) {
+                    opts.pageNumber = pageNum;
+                    opts.pageSize = pageSize;
+                    pager.pagination('refresh', {
+                        pageNumber:pageNum,
+                        pageSize:pageSize
+                    });
+                    initLinkBillTableData(pageNum,pageSize);
+                }
+            });
+        }
+        catch (e) {
+            $.messager.alert('异常处理提示',"分页信息异常 :  " + e.name + ": " + e.message,'error');
+        }
     }
     //编辑信息
     function editDepotHead(index) {
@@ -551,7 +655,10 @@
         }
         $("#DebtShow").text(debt);
         $("#AccountDayShow").text(res.accountDay);  //结算天数
-        $("#LinkNumberShow").text(res.linkNumber); //关联订单号
+        //关联订单号
+        $("#LinkNumberShow").text(res.linkNumber).addClass("n-link").off("click").on("click",function () {
+            turnBillDetailPage(res.linkNumber, "采购订单");
+        });
         var otherMoney = res.otherMoney?res.otherMoney:0;
         if(otherMoney!=0 && res.otherMoneyList && res.otherMoneyItem){
             var itemArr = res.otherMoneyList.split(","); //支出项目id列表

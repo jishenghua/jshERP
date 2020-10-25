@@ -635,7 +635,7 @@
 					$("#saveDepotHead").click();
 				}
 				//搜索按钮添加快捷键
-				if(k == "13"&&(obj.id=="searchState"||obj.id=="searchNumber"||obj.id=="searchMaterial"))
+				if(k == "13"&&(obj.id=="searchNumber"||obj.id=="searchMaterial"))
 				{
 					$("#searchBtn").click();
 				}
@@ -1003,7 +1003,7 @@
 						type: listType,
 						subType: listSubType,
 						roleType: roleType,
-						state: $.trim($("#searchState").val()),
+						status: "",
 						number: $.trim($("#searchNumber").val()),
 						beginTime: beginTime,
 						endTime: endTime,

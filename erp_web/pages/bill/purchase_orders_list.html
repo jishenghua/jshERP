@@ -291,7 +291,7 @@
             pageList: initPageNum,
             columns:[[
                 { field: 'id',width:35,align:"center",checkbox:true},
-                { title: '操作',field: 'op',align:"center", width:120,
+                { title: '操作',field: 'op',align:"center", width:90,
                     formatter:function(value,rec,index) {
                         var str = '';
                         var orgId = rec.organId? rec.organId:0;
@@ -300,13 +300,12 @@
                             str += '<img title="编辑" src="/js/easyui/themes/icons/pencil.png" style="cursor: pointer;" onclick="editDepotHead(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
                             str += '<img title="删除" src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="inOutService.deleteDepotHead('+ rec.id +',' + orgId +',' + rec.totalPrice+',' + rec.status + ');"/>';
                         }
-                        str += '&nbsp;&nbsp;&nbsp;<img title="转采购入库" src="/js/easyui/themes/icons/redo.png" style="cursor: pointer;" onclick="skipDepotHead(\'' + index + '\');"/>';
                         return str;
                     }
                 },
                 { title: '供应商名称', field: 'organName',width:120},
                 { title: '单据编号',field: 'number',width:155, formatter:function (value,rec) {
-                        if(rec.linknumber) {
+                        if(rec.linkNumber) {
                             return value + "[转]";
                         } else {
                             return value;
