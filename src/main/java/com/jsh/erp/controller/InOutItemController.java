@@ -59,14 +59,13 @@ public class InOutItemController {
     }
     /**
      * create by: qiankunpingtai
-     * website：https://qiankunpingtai.cn
      * description:
      *  批量删除收支项目信息
      * create time: 2019/3/29 11:15
      * @Param: ids
      * @return java.lang.Object
      */
-    @RequestMapping(value = "/batchDeleteInOutItemByIds")
+    @PostMapping(value = "/batchDeleteInOutItemByIds")
     public Object batchDeleteInOutItemByIds(@RequestParam("ids") String ids,@RequestParam(value="deleteType",
             required =false,defaultValue= BusinessConstants.DELETE_TYPE_NORMAL)String deleteType) throws Exception {
         JSONObject result = ExceptionConstants.standardSuccess();

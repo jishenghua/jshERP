@@ -7,6 +7,7 @@ import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,7 +32,7 @@ public class SystemConfigController {
     /**
      *  批量删除系统配置信息
      */
-    @RequestMapping(value = "/batchDeleteSystemConfigByIds")
+    @PostMapping(value = "/batchDeleteSystemConfigByIds")
     public Object batchDeleteSystemConfigByIds(@RequestParam("ids") String ids) throws Exception {
         JSONObject result = ExceptionConstants.standardSuccess();
         int i= 0;

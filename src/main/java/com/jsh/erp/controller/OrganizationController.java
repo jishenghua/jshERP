@@ -13,10 +13,7 @@ import com.jsh.erp.service.organization.OrganizationService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -115,7 +112,7 @@ public class OrganizationController {
      * @Param: beanJson
      * @return java.lang.Object
      */
-    @RequestMapping(value = "/addOrganization")
+    @PostMapping(value = "/addOrganization")
     public Object addOrganization(@RequestParam("info") String beanJson) throws Exception {
         JSONObject result = ExceptionConstants.standardSuccess();
         Organization org= JSON.parseObject(beanJson, Organization.class);
@@ -134,7 +131,7 @@ public class OrganizationController {
      * @Param: beanJson
      * @return java.lang.Object
      */
-    @RequestMapping(value = "/editOrganization")
+    @PostMapping(value = "/editOrganization")
     public Object editOrganization(@RequestParam("info") String beanJson) throws Exception {
         JSONObject result = ExceptionConstants.standardSuccess();
         Organization org= JSON.parseObject(beanJson, Organization.class);
@@ -153,7 +150,7 @@ public class OrganizationController {
      * @Param: ids
      * @return java.lang.Object
      */
-    @RequestMapping(value = "/batchDeleteOrganization")
+    @PostMapping(value = "/batchDeleteOrganization")
     public Object batchDeleteOrganization(@RequestParam("ids") String ids) throws Exception {
         JSONObject result = ExceptionConstants.standardSuccess();
         int i= organizationService.batchDeleteOrganizationByIds(ids);

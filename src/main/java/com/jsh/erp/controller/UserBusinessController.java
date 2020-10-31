@@ -93,14 +93,13 @@ public class UserBusinessController {
     }
     /**
      * create by: qiankunpingtai
-     * website：https://qiankunpingtai.cn
      * description:
      *  批量删除用户角色模块关系信息
      * create time: 2019/3/28 15:47
      * @Param: ids
      * @return java.lang.Object
      */
-    @RequestMapping(value = "/batchDeleteUserBusinessByIds")
+    @PostMapping(value = "/batchDeleteUserBusinessByIds")
     public Object batchDeleteUserBusinessByIds(@RequestParam("ids") String ids) throws Exception {
 
         JSONObject result = ExceptionConstants.standardSuccess();

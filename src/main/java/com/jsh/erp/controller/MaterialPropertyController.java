@@ -7,6 +7,7 @@ import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.service.materialProperty.MaterialPropertyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,14 +28,13 @@ public class MaterialPropertyController {
     private MaterialPropertyService materialPropertyService;
     /**
      * create by: qiankunpingtai
-     * website：https://qiankunpingtai.cn
      * description:
      *  批量删除商品扩展信息
      * create time: 2019/3/29 11:15
      * @Param: ids
      * @return java.lang.Object
      */
-    @RequestMapping(value = "/batchDeleteMaterialPropertyByIds")
+    @PostMapping(value = "/batchDeleteMaterialPropertyByIds")
     public Object batchDeleteMaterialPropertyByIds(@RequestParam("ids") String ids) throws Exception {
         JSONObject result = ExceptionConstants.standardSuccess();
         int i= materialPropertyService.batchDeleteMaterialPropertyByIds(ids);

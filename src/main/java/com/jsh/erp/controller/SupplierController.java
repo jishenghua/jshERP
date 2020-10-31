@@ -442,14 +442,13 @@ public class SupplierController {
     }
     /**
      * create by: qiankunpingtai
-     * website：https://qiankunpingtai.cn
      * description:
      *  批量删除供应商信息
      * create time: 2019/3/29 11:15
      * @Param: ids
      * @return java.lang.Object
      */
-    @RequestMapping(value = "/batchDeleteSupplierByIds")
+    @PostMapping(value = "/batchDeleteSupplierByIds")
     public Object batchDeleteSupplierByIds(@RequestParam("ids") String ids,@RequestParam(value="deleteType",
             required =false,defaultValue= BusinessConstants.DELETE_TYPE_NORMAL)String deleteType) throws Exception {
         JSONObject result = ExceptionConstants.standardSuccess();

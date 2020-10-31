@@ -115,7 +115,7 @@ public class DepotController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/findDepotByUserId")
+    @GetMapping(value = "/findDepotByUserId")
     public JSONArray findDepotByUserId(@RequestParam("UBType") String type, @RequestParam("UBKeyId") String keyId,
                                        HttpServletRequest request) throws Exception{
         JSONArray arr = new JSONArray();
@@ -152,7 +152,7 @@ public class DepotController {
      * @Param: ids
      * @return java.lang.Object
      */
-    @RequestMapping(value = "/batchDeleteDepotByIds")
+    @PostMapping(value = "/batchDeleteDepotByIds")
     public Object batchDeleteDepotByIds(@RequestParam("ids") String ids,@RequestParam(value="deleteType",
             required =false,defaultValue=BusinessConstants.DELETE_TYPE_NORMAL)String deleteType) throws Exception {
         JSONObject result = ExceptionConstants.standardSuccess();

@@ -109,14 +109,13 @@ public class SerialNumberController {
     }
     /**
      * create by: qiankunpingtai
-     * website：https://qiankunpingtai.cn
      * description:
      *  逻辑删除序列号信息
      * create time: 2019/3/27 17:43
      * @Param: ids
      * @return java.lang.Object
      */
-    @RequestMapping(value = "/serialNumber/batchDeleteSerialNumberByIds")
+    @PostMapping(value = "/serialNumber/batchDeleteSerialNumberByIds")
     public Object batchDeleteSerialNumberByIds(@RequestParam("ids") String ids) throws Exception {
         JSONObject result = ExceptionConstants.standardSuccess();
         int i= serialNumberService.batchDeleteSerialNumberByIds(ids);

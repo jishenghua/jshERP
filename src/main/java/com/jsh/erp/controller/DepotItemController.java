@@ -603,7 +603,7 @@ public class DepotItemController {
      * @Param: ids
      * @return java.lang.Object
      */
-    @RequestMapping(value = "/batchDeleteDepotItemByIds")
+    @PostMapping(value = "/batchDeleteDepotItemByIds")
     public Object batchDeleteDepotItemByIds(@RequestParam("ids") String ids) throws Exception {
         JSONObject result = ExceptionConstants.standardSuccess();
         int i= depotItemService.batchDeleteDepotItemByIds(ids);
