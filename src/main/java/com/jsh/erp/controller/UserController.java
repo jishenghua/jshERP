@@ -260,6 +260,31 @@ public class UserController {
     }
 
     /**
+     * 用户列表，用于用户下拉框
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @GetMapping(value = "/getUserList")
+    public JSONArray getUserList(HttpServletRequest request)throws Exception {
+        JSONArray dataArray = new JSONArray();
+        try {
+            List<User> dataList = userService.getUser();
+            if (null != dataList) {
+                for (User user : dataList) {
+                    JSONObject item = new JSONObject();
+                    item.put("id", user.getId());
+                    item.put("userName", user.getUsername());
+                    dataArray.add(item);
+                }
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        return dataArray;
+    }
+
+    /**
      * create by: cjl
      * description:
      *  新增用户及机构和用户关系
