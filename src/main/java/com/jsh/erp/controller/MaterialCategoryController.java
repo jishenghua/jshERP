@@ -13,10 +13,7 @@ import com.jsh.erp.service.materialCategory.MaterialCategoryService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -54,7 +51,7 @@ public class MaterialCategoryController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/findById")
+    @PostMapping(value = "/findById")
     public BaseResponseInfo findById(@RequestParam("id") Long id, HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         try {

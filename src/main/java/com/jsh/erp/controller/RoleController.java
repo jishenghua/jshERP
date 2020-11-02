@@ -72,14 +72,13 @@ public class RoleController {
 
     /**
      * create by: qiankunpingtai
-     * website：https://qiankunpingtai.cn
      * description:
      *  逻辑删除角色信息
      * create time: 2019/3/28 15:39
      * @Param: ids
      * @return java.lang.Object
      */
-    @RequestMapping(value = "/batchDeleteRoleByIds")
+    @PostMapping(value = "/batchDeleteRoleByIds")
     public Object batchDeleteRoleByIds(@RequestParam("ids") String ids) throws Exception {
         JSONObject result = ExceptionConstants.standardSuccess();
         int i= roleService.batchDeleteRoleByIds(ids);

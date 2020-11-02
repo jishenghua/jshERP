@@ -9,10 +9,7 @@ import com.jsh.erp.service.accountHead.AccountHeadService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -116,7 +113,7 @@ public class AccountHeadController {
      * @Param: ids
      * @return java.lang.Object
      */
-    @RequestMapping(value = "/batchDeleteAccountHeadByIds")
+    @PostMapping(value = "/batchDeleteAccountHeadByIds")
     public Object batchDeleteAccountHeadByIds(@RequestParam("ids") String ids,@RequestParam(value="deleteType",
             required =false,defaultValue= BusinessConstants.DELETE_TYPE_NORMAL)String deleteType) throws Exception {
         JSONObject result = ExceptionConstants.standardSuccess();

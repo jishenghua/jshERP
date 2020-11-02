@@ -85,8 +85,8 @@
 		var searchTabHeight = $('.box-body').height();
 		if($('#tableData') && $('#tableData').length && $('#tableData').datagrid()) {
             $('#tableData').datagrid('resize', {
-                width: $(window).width() - 6,
-                height: $(window).height() - searchTabHeight -43
+                width: $(window).width() - 13,
+                height: $(window).height() - searchTabHeight -51
             });
 		}
     }

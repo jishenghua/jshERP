@@ -108,14 +108,13 @@ public class AccountItemController {
     }
     /**
      * create by: qiankunpingtai
-     * website：https://qiankunpingtai.cn
      * description:
      *  批量删除财务明细信息
      * create time: 2019/3/29 10:56
      * @Param: ids
      * @return java.lang.Object
      */
-    @RequestMapping(value = "/batchDeleteAccountItemByIds")
+    @PostMapping(value = "/batchDeleteAccountItemByIds")
     public Object batchDeleteAccountItemByIds(@RequestParam("ids") String ids) throws Exception {
 
         JSONObject result = ExceptionConstants.standardSuccess();

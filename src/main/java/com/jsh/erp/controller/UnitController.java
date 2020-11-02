@@ -7,6 +7,7 @@ import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.unit.UnitService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,14 +28,13 @@ public class UnitController {
     private UnitService unitService;
     /**
      * create by: qiankunpingtai
-     * website：https://qiankunpingtai.cn
      * description:
      *  批量删除系统配置信息
      * create time: 2019/3/29 11:15
      * @Param: ids
      * @return java.lang.Object
      */
-    @RequestMapping(value = "/batchDeleteUnitByIds")
+    @PostMapping(value = "/batchDeleteUnitByIds")
     public Object batchDeleteUnitByIds(@RequestParam("ids") String ids,@RequestParam(value="deleteType",
             required =false,defaultValue= BusinessConstants.DELETE_TYPE_NORMAL)String deleteType) throws Exception {
         JSONObject result = ExceptionConstants.standardSuccess();

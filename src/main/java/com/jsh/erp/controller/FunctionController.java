@@ -190,14 +190,13 @@ public class FunctionController {
     }
     /**
      * create by: qiankunpingtai
-     * website：https://qiankunpingtai.cn
      * description:
      *  批量删除功能模块信息
      * create time: 2019/3/29 11:15
      * @Param: ids
      * @return java.lang.Object
      */
-    @RequestMapping(value = "/batchDeleteFunctionByIds")
+    @PostMapping(value = "/batchDeleteFunctionByIds")
     public Object batchDeleteFunctionByIds(@RequestParam("ids") String ids) throws Exception {
         JSONObject result = ExceptionConstants.standardSuccess();
         int i= functionService.batchDeleteFunctionByIds(ids);

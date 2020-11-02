@@ -148,7 +148,7 @@ public class AccountController {
      * @Param: ids
      * @return java.lang.Object
      */
-    @RequestMapping(value = "/batchDeleteAccountByIds")
+    @PostMapping(value = "/batchDeleteAccountByIds")
     public Object batchDeleteAccountByIds(@RequestParam("ids") String ids,@RequestParam(value="deleteType",
             required =false,defaultValue=BusinessConstants.DELETE_TYPE_NORMAL)String deleteType) throws Exception {
 
