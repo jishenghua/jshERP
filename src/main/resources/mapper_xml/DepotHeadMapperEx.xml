@@ -12,9 +12,9 @@
         <result column="Number" jdbcType="VARCHAR" property="Number" />
         <result column="MName" jdbcType="VARCHAR" property="MName" />
         <result column="Model" jdbcType="VARCHAR" property="Model" />
-        <result column="UnitPrice" jdbcType="DECIMAL" property="UnitPrice" />
-        <result column="OperNumber" jdbcType="DECIMAL" property="OperNumber" />
-        <result column="AllPrice" jdbcType="DECIMAL" property="AllPrice" />
+        <result column="unit_price" jdbcType="DECIMAL" property="UnitPrice" />
+        <result column="oper_number" jdbcType="DECIMAL" property="OperNumber" />
+        <result column="all_price" jdbcType="DECIMAL" property="AllPrice" />
         <result column="SName" jdbcType="VARCHAR" property="SName" />
         <result column="DName" jdbcType="VARCHAR" property="DName" />
         <result column="OperTime" jdbcType="VARCHAR" property="OperTime" />
