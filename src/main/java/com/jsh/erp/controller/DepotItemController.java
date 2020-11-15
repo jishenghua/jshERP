@@ -176,12 +176,17 @@ public class DepotItemController {
                         ratio = ratio.substring(ratio.indexOf("("));
                     }
                     //名称/型号/扩展信息/包装
-                    String MaterialName = diEx.getBarCode() + "_" + ((diEx.getMName() == null || diEx.getMName().equals("")) ? "" : diEx.getMName())
+                    String MaterialName = ((diEx.getMName() == null || diEx.getMName().equals("")) ? "" : diEx.getMName())
                             + ((diEx.getMStandard() == null || diEx.getMStandard().equals("")) ? "" : "(" + diEx.getMStandard() + ")")
                             + ((diEx.getMModel() == null || diEx.getMModel().equals("")) ? "" : "(" + diEx.getMModel() + ")");
                     String materialOther = getOtherInfo(mpArr, diEx);
                     MaterialName = MaterialName + materialOther + ((diEx.getUnitName() == null || diEx.getUnitName().equals("")) ? "" : "(" + diEx.getUnitName() + ")") + ratio;
                     item.put("MaterialName", MaterialName == null ? "" : MaterialName);
+                    item.put("barCode", diEx.getBarCode());
+                    item.put("name", diEx.getMName());
+                    item.put("standard", diEx.getMStandard());
+                    item.put("model", diEx.getMModel());
+                    item.put("materialOther", materialOther);
                     BigDecimal stock = depotItemService.getStockByParam(diEx.getDepotId(),diEx.getMaterialId(),null,null,tenantId);
                     item.put("Stock", stock);
                     item.put("Unit", diEx.getMaterialUnit());
@@ -200,11 +205,6 @@ public class DepotItemController {
                     item.put("TaxRate", diEx.getTaxRate());
                     item.put("TaxMoney", diEx.getTaxMoney());
                     item.put("TaxLastMoney", diEx.getTaxLastMoney());
-                    item.put("OtherField1", diEx.getOtherField1());
-                    item.put("OtherField2", diEx.getOtherField2());
-                    item.put("OtherField3", diEx.getOtherField3());
-                    item.put("OtherField4", diEx.getOtherField4());
-                    item.put("OtherField5", diEx.getOtherField5());
                     item.put("MType", diEx.getMaterialType());
                     item.put("op", 1);
                     dataArray.add(item);

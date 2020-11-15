@@ -178,7 +178,7 @@
 							var thisRows = res.data.page.rows;
 							for (var i = 0; i < thisRows.length; i++) {
 								if (thisRows[i].enabled) {
-									mPropertyList += thisRows[i].nativename + ",";
+									mPropertyList += thisRows[i].nativeName + ",";
 								}
 							}
 							if (mPropertyList) {
@@ -240,7 +240,8 @@
 				type: "get",
 				dataType: "json",
 				data: {
-					meId: meId
+					meId: meId,
+					mpList: mPropertyList
 				},
 				success: function (rec) {
 					if(rec && rec.code === 200) {
@@ -308,6 +309,27 @@
 					$.messager.alert('查询提示', '查询数据后台异常，请稍后再试！', 'error');
 				}
 			});
+		},
+		getInfoByBarCode: function(barCode){
+			var materialExtendId = "";
+			$.ajax({
+				type: "get",
+				url: '/materialsExtend/getInfoByBarCode',
+				data:{
+					barCode: barCode
+				},
+				async:false,
+				dataType: "json",
+				success: function (res) {
+					if(res && res.code === 200) {
+						materialExtendId = res.data.id;
+					}
+				},
+				error: function () {
+					$.messager.alert('查询提示', '查询数据后台异常，请稍后再试！', 'error');
+				}
+			});
+			return materialExtendId;
 		},
 		//优惠率、合计的统计方法
 		statisticsFun: function (body,UnitPrice,OperNumber,footer,taxRate) {
@@ -1041,8 +1063,8 @@
 			});
 			body.find("[field='MaterialExtendId']").find(".textbox-text").focus().select(); //默认选择商品框
 			//点击商品下拉框，自动加载数量、单价、金额
-			body.find("[field='Stock']").find(input).prop("readonly","readonly");
-			body.find("[field='Unit']").find(input).prop("readonly","readonly");
+			body.find("[field='name'],[field='standard'],[field='model'],[field='materialOther'],[field='Stock'],[field='Unit']")
+				.find(input).prop("readonly","readonly");
 			//点击商品名称
 			body.find("[field='MaterialExtendId']").find(input).next().off("mouseup").on("mouseup",function(){
 				var that = $(this);
@@ -1065,7 +1087,7 @@
 					});
 				}
 			});
-			//单行删除按钮
+			//单击删除按钮
 			body.find("[field='op']").find("img").off("click").on("click",function() {
 				$(this).closest(".datagrid-cell").click(); //点击操作
 				var row = $('#materialData').datagrid('getChecked');
@@ -1218,7 +1240,7 @@
 			}
 			var totalRowNum = "";
 			for (var i = 0; i < row.length; i++) {
-				if (row[i].DepotId == "" || row[i].MaterialExtendId == "" || row[i].OperNumber == "" || row[i].UnitPrice === "" || row[i].AllPrice === "") {
+				if (row[i].DepotId == "" || row[i].barCode == "" || row[i].OperNumber == "" || row[i].UnitPrice === "" || row[i].AllPrice === "") {
 					totalRowNum += (i + 1) + "、";
 				}
 			}
@@ -1228,6 +1250,112 @@
 				return false;
 			}
 			return true;
+		},
+		//商品选择列表
+		initMaterialSelectData: function(){
+			var self = this;
+			$('#materialSelectData').datagrid({
+				height: 390,
+				rownumbers: false,
+				//动画效果
+				animate: false,
+				pagination: true,
+				//选中单行
+				singleSelect: true,
+				collapsible: false,
+				//交替出现背景
+				striped: true,
+				pageSize: 10,
+				pageList: initPageNum,
+				columns: [[
+					{field: 'id',width:35,align:"center",checkbox:true},
+					{field: 'mBarCode', title: '条码', width: 120},
+					{field: 'name', title: '名称', width: 140},
+					{field: 'standard', title: '规格', width: 80},
+					{field: 'model', title: '型号', width: 80},
+					{field: 'unit', title: '单位', width: 60},
+					{field: 'stock', title: '库存', width: 50},
+					{field: 'expand', title: '扩展信息', width: 80}
+				]],
+				onBeforeLoad: function(param){
+					param.mpList = mPropertyList; //商品属性
+				},
+				onDblClickRow: function (index, row) {
+					var monthTime = getNowFormatMonth();
+					$('#materialSelectDlg').dialog('close');
+					self.materialSelect(row,monthTime);
+				}
+			});
+		},
+		//商品选择列表-分页
+		initMaterialSelectPager: function(depotId){
+			var self = this;
+			try {
+				var opts = $("#materialSelectData").datagrid('options');
+				var pager = $("#materialSelectData").datagrid('getPager');
+				pager.pagination({
+					onSelectPage: function (pageNum, pageSize) {
+						opts.pageNumber = pageNum;
+						opts.pageSize = pageSize;
+						pager.pagination('refresh', {
+							pageNumber: pageNum,
+							pageSize: pageSize
+						});
+						self.showMaterialSelect(depotId, pageNum, pageSize);
+					}
+				});
+			}
+			catch (e) {
+				$.messager.alert('异常处理提示', "分页信息异常 :  " + e.name + ": " + e.message, 'error');
+			}
+		},
+		//商品选择列表-查询
+		showMaterialSelect: function(depotId, pageNo, pageSize){
+			$.ajax({
+				type: "get",
+				url: "/material/findBySelect",
+				dataType: "json",
+				data: ({
+					q: $("#searchBarCode").textbox("getValue"),
+					mpList: mPropertyList,
+					depotId: depotId,
+					page: pageNo,
+					rows: pageSize
+				}),
+				success: function (res) {
+					if(res) {
+						$("#materialSelectData").datagrid('loadData', res);
+					}
+				},
+				//此处添加错误处理
+				error: function () {
+					$.messager.alert('查询提示', '查询数据后台异常，请稍后再试！', 'error');
+					return;
+				}
+			});
+		},
+		//商品选择列表-事件
+		materialSelectFun: function(depotId){
+			var self = this;
+			var monthTime = getNowFormatMonth();
+			$("#searchBarCode").textbox("setValue","");
+			$("#searchMaterialBtn").off("click").on("click",function(){
+				self.showMaterialSelect(depotId,1,initPageSize);
+				var opts = $("#materialSelectData").datagrid('options');
+				var pager = $("#materialSelectData").datagrid('getPager');
+				opts.pageNumber = 1;
+				opts.pageSize = initPageSize;
+				pager.pagination('refresh', {
+					pageNumber: 1,
+					pageSize: initPageSize
+				});
+			});
+			$("#checkMaterial").off("click").on("click",function(){
+				var rowData = $("#materialSelectData").datagrid('getChecked')[0];
+				$('#materialSelectDlg').dialog('close');
+				self.materialSelect(rowData,monthTime);
+			});
+			$("#searchMaterialBtn").click();
 		},
 		//选择商品
 		materialSelect: function(rec,monthTime) {
@@ -1242,7 +1370,8 @@
 					type: "get",
 					dataType: "json",
 					data: {
-						meId: meId
+						meId: meId,
+						mpList: mPropertyList
 					},
 					success: function (res) {
 						if(res && res.code === 200) {
@@ -1256,6 +1385,11 @@
 							footer =$("#depotHeadFM .datagrid-view2 .datagrid-footer");
 							input = "input[type=text]";
 							var currentRowDom = body.find(".datagrid-row").eq(editIndex);
+							currentRowDom.find("[field='barCode']").find(".datagrid-editable-input").textbox("setValue",info.mBarCode).prop("readonly","readonly");
+							currentRowDom.find("[field='name']").find(input).val(info.name).prop("readonly","readonly");
+							currentRowDom.find("[field='standard']").find(input).val(info.standard).prop("readonly","readonly");
+							currentRowDom.find("[field='model']").find(input).val(info.model).prop("readonly","readonly");
+							currentRowDom.find("[field='materialOther']").find(input).val(info.materialOther).prop("readonly","readonly");
 							currentRowDom.find("[field='Unit']").find(input).prop("readonly","readonly"); //设置计量单位为只读
 							currentRowDom.find("[field='Unit']").find(input).val(commodityUnit); //设置单位
 							if(info.unit){ //如果存在计量单位信息

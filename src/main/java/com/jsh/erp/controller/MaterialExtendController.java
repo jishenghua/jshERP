@@ -2,6 +2,7 @@ package com.jsh.erp.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.jsh.erp.datasource.entities.MaterialExtend;
 import com.jsh.erp.datasource.vo.MaterialExtendVo4List;
 import com.jsh.erp.service.materialExtend.MaterialExtendService;
 import com.jsh.erp.utils.BaseResponseInfo;
@@ -56,6 +57,23 @@ public class MaterialExtendController {
             outer.put("rows", dataArray);
             res.code = 200;
             res.data = outer;
+        } catch (Exception e) {
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
+    }
+
+    @GetMapping(value = "/getInfoByBarCode")
+    public BaseResponseInfo getInfoByBarCode(@RequestParam("barCode") String barCode,
+                                          HttpServletRequest request)throws Exception {
+        BaseResponseInfo res = new BaseResponseInfo();
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            MaterialExtend materialExtend = materialExtendService.getInfoByBarCode(barCode);
+            res.code = 200;
+            res.data = materialExtend;
         } catch (Exception e) {
             e.printStackTrace();
             res.code = 500;

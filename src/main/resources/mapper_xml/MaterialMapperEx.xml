@@ -235,7 +235,7 @@
     </select>
 
     <select id="getMaterialByMeId" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultMapList">
-        select m.*,me.bar_code m_bar_code,u.name unitName, mc.name categoryName
+        select m.*,me.bar_code,u.name unitName, mc.name categoryName
         FROM jsh_material m
         left join jsh_material_extend me on m.id=me.material_id and ifnull(me.delete_Flag,'0') !='1'
         left JOIN jsh_unit u on m.unit_id = u.id and ifnull(u.delete_flag,'0') !='1'

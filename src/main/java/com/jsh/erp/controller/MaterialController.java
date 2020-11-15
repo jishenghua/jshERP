@@ -108,13 +108,32 @@ public class MaterialController {
      * @return
      */
     @GetMapping(value = "/findByIdWithBarCode")
-    public BaseResponseInfo findByIdWithBarCode(@RequestParam("meId") Long meId, HttpServletRequest request) throws Exception{
+    public BaseResponseInfo findByIdWithBarCode(@RequestParam("meId") Long meId,
+                                                @RequestParam("mpList") String mpList,
+                                                HttpServletRequest request) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();
         try {
+            String[] mpArr = mpList.split(",");
             MaterialVo4Unit mu = new MaterialVo4Unit();
             List<MaterialVo4Unit> list = materialService.findByIdWithBarCode(meId);
             if(list!=null && list.size()>0) {
                 mu = list.get(0);
+                String expand = ""; //扩展信息
+                for (int i = 0; i < mpArr.length; i++) {
+                    if (mpArr[i].equals("制造商")) {
+                        expand = expand + ((mu.getMfrs() == null || mu.getMfrs().equals("")) ? "" : "(" + mu.getMfrs() + ")");
+                    }
+                    if (mpArr[i].equals("自定义1")) {
+                        expand = expand + ((mu.getOtherField1() == null || mu.getOtherField1().equals("")) ? "" : "(" + mu.getOtherField1() + ")");
+                    }
+                    if (mpArr[i].equals("自定义2")) {
+                        expand = expand + ((mu.getOtherField2() == null || mu.getOtherField2().equals("")) ? "" : "(" + mu.getOtherField2() + ")");
+                    }
+                    if (mpArr[i].equals("自定义3")) {
+                        expand = expand + ((mu.getOtherField3() == null || mu.getOtherField3().equals("")) ? "" : "(" + mu.getOtherField3() + ")");
+                    }
+                }
+                mu.setMaterialOther(expand);
             }
             res.code = 200;
             res.data = mu;
@@ -194,7 +213,7 @@ public class MaterialController {
                     item.put("model", material.getModel());
                     item.put("standard", material.getStandard());
                     item.put("unit", material.getCommodityUnit() + ratio);
-                    if(depotId!=null&& StringUtil.isNotEmpty(q)) {
+                    if(depotId!=null) {
                         BigDecimal stock = depotItemService.getStockByParam(depotId,material.getId(),null,null,tenantId);
                         item.put("stock", stock);
                     }

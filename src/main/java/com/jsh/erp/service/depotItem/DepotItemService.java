@@ -322,10 +322,10 @@ public class DepotItemService {
                 DepotItem depotItem = new DepotItem();
                 JSONObject rowObj = JSONObject.parseObject(rowArr.getString(i));
                 depotItem.setHeaderId(headerId);
-                Long materialExtendId = rowObj.getLong("MaterialExtendId");
-                Long materialId = materialExtendService.getMaterialExtend(materialExtendId).getMaterialId();
-                depotItem.setMaterialId(materialId);
-                depotItem.setMaterialExtendId(rowObj.getLong("MaterialExtendId"));
+                String barCode = rowObj.getString("barCode");
+                MaterialExtend materialExtend = materialExtendService.getInfoByBarCode(barCode);
+                depotItem.setMaterialId(materialExtend.getMaterialId());
+                depotItem.setMaterialExtendId(materialExtend.getId());
                 depotItem.setMaterialUnit(rowObj.getString("Unit"));
                 if (StringUtil.isExist(rowObj.get("OperNumber"))) {
                     depotItem.setOperNumber(rowObj.getBigDecimal("OperNumber"));
@@ -333,7 +333,7 @@ public class DepotItemService {
                         String Unit = rowObj.get("Unit").toString();
                         BigDecimal oNumber = rowObj.getBigDecimal("OperNumber");
                         //以下进行单位换算
-                        String unitName = materialService.findUnitName(materialId); //查询计量单位名称
+                        String unitName = materialService.findUnitName(materialExtend.getMaterialId()); //查询计量单位名称
                         if (!StringUtil.isEmpty(unitName)) {
                             String unitList = unitName.substring(0, unitName.indexOf("("));
                             String ratioList = unitName.substring(unitName.indexOf("("));
