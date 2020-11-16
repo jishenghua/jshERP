@@ -210,6 +210,26 @@
     <a href="javascript:void(0)" id="cancelDepotHeadShow" class="easyui-linkbutton" iconCls="icon-cancel"
        onclick="javascript:$('#depotHeadDlgShow').dialog('close')">取消</a>
 </div>
+<div id="materialSelectDlg" class="easyui-dialog" style="width:880px;padding:10px 20px;"
+     closed="true" modal="true" buttons="#materialSelectDlgBtn" cache="false" collapsible="false" closable="true">
+    <div class="box-body form-inline">
+        <div class="form-group">
+            <label class="control-label">条码：</label>
+            <div class="control-inline">
+                <input type="text" id="searchBarCode" name="searchBarCode" value="" maxlength="100" class="easyui-textbox width-90"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchMaterialBtn">查询</a>
+        </div>
+    </div>
+    <table id="materialSelectData" style="top:100px;border-bottom-color:#FFFFFF"></table>
+</div>
+<div id="materialSelectDlgBtn">
+    <a href="javascript:void(0)" id="checkMaterial" class="easyui-linkbutton" iconCls="icon-ok">选择</a>
+    <a href="javascript:void(0)" id="cancelMaterial" class="easyui-linkbutton" iconCls="icon-cancel"
+       onclick="javascript:$('#materialSelectDlg').dialog('close')">取消</a>
+</div>
 <div id="depot"></div>
 <script>
     $(function(){
@@ -635,8 +655,9 @@
                                 footer =$("#depotHeadFM .datagrid-view2 .datagrid-footer");
                                 input = "input[type=text]";
                                 var currentRowDom = body.find(".datagrid-row").eq(editIndex);
-                                var mId = currentRowDom.find("[field='MaterialExtendId']").find(".textbox-value").val();
-                                if(mId){
+                                var barCode = currentRowDom.find("[field='barCode']").find(".textbox-value").val();
+                                if(barCode){
+                                    var mId = inOutService.getInfoByBarCode(barCode);
                                     var type = "select"; //type 类型：点击 click，选择 select
                                     inOutService.findStockNumById(depotId, mId, monthTime, currentRowDom, input, ratioDepot, type);
                                 }
@@ -644,53 +665,35 @@
                         }
                     }
                 },
-                { title: '条码_名称(规格)(型号)(扩展信息)(单位)',field: 'MaterialExtendId',width:270,
-                    formatter:function(value,row,index){
-                        return row.MaterialName;
-                    },
-                    editor:{
-                        type:'combogrid',
-                        options:{
-                            url: "/material/findBySelect",
-                            idField:'Id',
-                            textField:'MaterialName',
-                            method:'get',
-                            pagination: true,
-                            mode: 'remote',
-                            hasDownArrow: false,
-                            panelWidth: 630, //下拉框的宽度
-                            panelHeight: 380,//下拉框的高度
-                            columns:[[
-                                {field:'mBarCode',title:'条码',width:120},
-                                {field:'name',title:'名称',width:140},
-                                {field:'standard',title:'规格',width:80},
-                                {field:'model',title:'型号',width:80},
-                                {field:'unit',title:'单位',width:60},
-                                {field:'stock',title:'库存',width:50},
-                                {field:'expand',title:'扩展信息',width:80}
-                            ]],
-                            onBeforeLoad: function(param){
+                { title: '条码',field: 'barCode', editor:'validatebox', width:120,
+                    editor: {
+                        type: 'textbox',
+                        options: {
+                            buttonText:'...',
+                            editable:false,
+                            onClickButton: function(){
+                                var rowDom = $(this).closest(".datagrid-row").find("[field='op']").find("img");
+                                rowDom.closest(".datagrid-cell").click(); //点击操作
+                                var row = $('#materialData').datagrid('getChecked');
+                                editIndex = $('#materialData').datagrid("getRowIndex", row[0]);
+                                var depotId;
                                 var edDepot = $('#materialData').datagrid('getEditor', {index:editIndex,field:'DepotId'});
                                 if(edDepot) {
-                                    param.depotId =  $(edDepot.target).combobox('getValue');
+                                    depotId =  $(edDepot.target).combobox('getValue');
                                 }
-                                param.mpList = mPropertyList; //商品属性
-                            },
-                            onLoadSuccess: function (rec) {
-                                if(rec && rec.total==1) {
-                                    $(".datagrid-body [field='mBarCode']").click(); //在只有单个商品的时候自动选中
-                                    var body =$("#depotHeadFM .datagrid-view2 .datagrid-body");
-                                    input = "input[type=text]";
-                                    var currentRowDom = body.find(".datagrid-row").eq(editIndex);
-                                    currentRowDom.find("[field='OperNumber']").find(input).focus().select();
-                                }
-                            },
-                            onSelect:function(index, rowData){
-                                inOutService.materialSelect(rowData,monthTime);
+                                $('#materialSelectDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/edit_add.png"/>&nbsp;选择商品');
+                                $("#materialSelectDlg").panel("move",{top:$(document).scrollTop() + ($(window).height()-500) * 0.5});
+                                inOutService.initMaterialSelectData();
+                                inOutService.initMaterialSelectPager(depotId);
+                                inOutService.materialSelectFun(depotId);
                             }
                         }
                     }
                 },
+                { title: '名称', field: 'name', editor: 'validatebox', width: 100},
+                { title: '规格', field: 'standard', editor: 'validatebox', width: 60},
+                { title: '型号', field: 'model', editor: 'validatebox', width: 60},
+                { title: '扩展信息', field: 'materialOther', editor: 'validatebox', width: 70},
                 { title: '库存',field: 'Stock',editor:'validatebox',width:50},
                 { title: '单位',field: 'Unit',editor:'validatebox',width:60},
                 { title: '数量',field: 'OperNumber',editor:'validatebox',width:60},
@@ -759,6 +762,7 @@
                     if(type === "add") {
                         $("#depotHeadDlg #append").click(); //新增行
                     } else if(type === "edit") {
+                        editIndex = 0;
                         for(var i=0;i<data.rows.length;i++){
                             $('#materialData').datagrid('selectRow', i).datagrid('beginEdit', i);
                             inOutService.autoReckon();
@@ -789,7 +793,11 @@
             showFooter: true,
             columns:[[
                 { title: '仓库名称',field: 'DepotName',editor:'validatebox',width:90},
-                { title: '条码_名称(规格)(型号)(扩展信息)(单位)',field: 'MaterialName',width:270},
+                { title: '条码',field: 'barCode', editor:'validatebox', width:120},
+                { title: '名称', field: 'name', editor: 'validatebox', width: 100},
+                { title: '规格', field: 'standard', editor: 'validatebox', width: 60},
+                { title: '型号', field: 'model', editor: 'validatebox', width: 60},
+                { title: '扩展信息', field: 'materialOther', editor: 'validatebox', width: 70},
                 { title: '库存',field: 'Stock',width:50},
                 { title: '单位',field: 'Unit',editor:'validatebox',width:60},
                 { title: '数量',field: 'OperNumber',editor:'validatebox',width:60},

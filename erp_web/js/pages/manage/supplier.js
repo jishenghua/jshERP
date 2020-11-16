@@ -561,17 +561,15 @@
     function editSupplier(index) {
         var res = $("#tableData").datagrid("getRows")[index];
         var sId = res.id;
-        var beginNeedGet = res.beginNeedGet;
-        var beginNeedPay = res.beginNeedPay;
         var row = {
             supplier : res.supplier,
             contacts : res.contacts,
             phonenum : res.phoneNum,
             email : res.email,
-            BeginNeedGet : beginNeedGet == "0"? "":beginNeedGet,
-            BeginNeedPay : beginNeedPay == "0"? "":beginNeedPay,
-            AllNeedGet: "",
-            AllNeedPay: "",
+            BeginNeedGet : res.beginNeedGet == "0"? "":res.beginNeedGet,
+            BeginNeedPay : res.beginNeedPay == "0"? "":res.beginNeedPay,
+            AllNeedGet: res.allNeedGet == "0"? "":res.allNeedGet,
+            AllNeedPay: res.allNeedPay == "0"? "":res.allNeedPay,
             description : res.description,
             type : res.type,
             fax : res.fax,

@@ -12,13 +12,18 @@ function CreateFormPage(strPrintName, printDatagrid) {
         companyName = config.companyName;
     }
     var tableString = '<div class="div-title">' + companyName + "-" + listTitle + '\n</div>';
-        if(beginDate && endDate) {
-            tableString+='\n<div class="div-time">日期：' + beginDate + ' 至 ' + endDate + ' \n</div>';
-        }
-        if(getMonth) {
-            tableString += '\n<div class="div-time">月份：' + getMonth + ' \n</div>';
-        }
-        tableString+='\n<table cellspacing="0" class="pb">';
+    if(beginDate && endDate) {
+        tableString+='\n<div class="div-time">日期：' + beginDate + ' 至 ' + endDate + '</div>';
+    }
+    if(getMonth) {
+        tableString += '\n<div class="div-time">月份：' + getMonth + '</div>';
+    }
+    if(listTitle == "供应商对账"){
+        tableString += '\n<span class="div-total">期初应付：' + $(".first-total").text() + '  期末应付：' + $(".last-total").text() + '</span>';
+    } else if(listTitle == "客户对账"){
+        tableString += '\n<span class="div-total">期初应收：' + $(".first-total").text() + '  期末应收：' + $(".last-total").text() + '</span>';
+    }
+    tableString+='\n<table cellspacing="0" class="pb">';
     var frozenColumns = printDatagrid.datagrid("options").frozenColumns;  // 得到frozenColumns对象
     var columns = printDatagrid.datagrid("options").columns;    // 得到columns对象
     var nameList = '';
