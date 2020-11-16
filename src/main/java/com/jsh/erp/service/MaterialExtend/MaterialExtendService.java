@@ -308,4 +308,16 @@ public class MaterialExtendService {
         }
         return id;
     }
+
+    public MaterialExtend getInfoByBarCode(String barCode)throws Exception {
+        MaterialExtend materialExtend = new MaterialExtend();
+        MaterialExtendExample example = new MaterialExtendExample();
+        example.createCriteria().andBarCodeEqualTo(barCode)
+                .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        List<MaterialExtend> list = materialExtendMapper.selectByExample(example);
+        if(list!=null && list.size()>0) {
+            materialExtend = list.get(0);
+        }
+        return materialExtend;
+    }
 }
