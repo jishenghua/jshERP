@@ -138,7 +138,7 @@
     <a href="javascript:void(0)" id="cancelDepotHeadShow" class="easyui-linkbutton" iconCls="icon-cancel"
        onclick="javascript:$('#depotHeadDlgShow').dialog('close')">取消</a>
 </div>
-<div id="materialSelectDlg" class="easyui-dialog" style="width:880px;padding:10px 20px;"
+<div id="materialSelectDlg" class="easyui-dialog" style="padding:10px;" fit="true"
      closed="true" modal="true" buttons="#materialSelectDlgBtn" cache="false" collapsible="false" closable="true">
     <div class="box-body form-inline">
         <div class="form-group">
@@ -525,7 +525,6 @@
                                     depotId =  $(edDepot.target).combobox('getValue');
                                 }
                                 $('#materialSelectDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/edit_add.png"/>&nbsp;选择商品');
-                                $("#materialSelectDlg").panel("move",{top:$(document).scrollTop() + ($(window).height()-500) * 0.5});
                                 inOutService.initMaterialSelectData();
                                 inOutService.initMaterialSelectPager(depotId);
                                 inOutService.materialSelectFun(depotId);

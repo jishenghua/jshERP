@@ -1255,7 +1255,7 @@
 		initMaterialSelectData: function(){
 			var self = this;
 			$('#materialSelectData').datagrid({
-				height: 390,
+				height: 480,
 				rownumbers: false,
 				//动画效果
 				animate: false,
