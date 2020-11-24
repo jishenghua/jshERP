@@ -32,6 +32,8 @@ public class DepotHead {
 
     private String payType;
 
+    private String billType;
+
     private String remark;
 
     private String salesMan;
@@ -172,6 +174,14 @@ public class DepotHead {
 
     public void setPayType(String payType) {
         this.payType = payType == null ? null : payType.trim();
+    }
+
+    public String getBillType() {
+        return billType;
+    }
+
+    public void setBillType(String billType) {
+        this.billType = billType == null ? null : billType.trim();
     }
 
     public String getRemark() {
