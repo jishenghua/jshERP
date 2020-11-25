@@ -996,6 +996,76 @@ public class DepotHeadExample {
             return (Criteria) this;
         }
 
+        public Criteria andBillTypeIsNull() {
+            addCriterion("bill_type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBillTypeIsNotNull() {
+            addCriterion("bill_type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBillTypeEqualTo(String value) {
+            addCriterion("bill_type =", value, "billType");
+            return (Criteria) this;
+        }
+
+        public Criteria andBillTypeNotEqualTo(String value) {
+            addCriterion("bill_type <>", value, "billType");
+            return (Criteria) this;
+        }
+
+        public Criteria andBillTypeGreaterThan(String value) {
+            addCriterion("bill_type >", value, "billType");
+            return (Criteria) this;
+        }
+
+        public Criteria andBillTypeGreaterThanOrEqualTo(String value) {
+            addCriterion("bill_type >=", value, "billType");
+            return (Criteria) this;
+        }
+
+        public Criteria andBillTypeLessThan(String value) {
+            addCriterion("bill_type <", value, "billType");
+            return (Criteria) this;
+        }
+
+        public Criteria andBillTypeLessThanOrEqualTo(String value) {
+            addCriterion("bill_type <=", value, "billType");
+            return (Criteria) this;
+        }
+
+        public Criteria andBillTypeLike(String value) {
+            addCriterion("bill_type like", value, "billType");
+            return (Criteria) this;
+        }
+
+        public Criteria andBillTypeNotLike(String value) {
+            addCriterion("bill_type not like", value, "billType");
+            return (Criteria) this;
+        }
+
+        public Criteria andBillTypeIn(List<String> values) {
+            addCriterion("bill_type in", values, "billType");
+            return (Criteria) this;
+        }
+
+        public Criteria andBillTypeNotIn(List<String> values) {
+            addCriterion("bill_type not in", values, "billType");
+            return (Criteria) this;
+        }
+
+        public Criteria andBillTypeBetween(String value1, String value2) {
+            addCriterion("bill_type between", value1, value2, "billType");
+            return (Criteria) this;
+        }
+
+        public Criteria andBillTypeNotBetween(String value1, String value2) {
+            addCriterion("bill_type not between", value1, value2, "billType");
+            return (Criteria) this;
+        }
+
         public Criteria andRemarkIsNull() {
             addCriterion("remark is null");
             return (Criteria) this;

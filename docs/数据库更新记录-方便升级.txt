@@ -1039,3 +1039,10 @@ CREATE TABLE `jsh_platform_config` (
 
 INSERT INTO `jsh_platform_config` VALUES ('1', 'platform_name', '平台名称', '华夏ERP');
 INSERT INTO `jsh_platform_config` VALUES ('2', 'activation_code', '激活码', null);
+
+-- --------------------------------------------------------
+-- 时间 2020年11月24日
+-- by jishenghua
+-- 给单据主表增加单据类型字段bill_type
+-- --------------------------------------------------------
+alter table jsh_depot_head add bill_type varchar(50) DEFAULT NULL COMMENT '单据类型' after pay_type;

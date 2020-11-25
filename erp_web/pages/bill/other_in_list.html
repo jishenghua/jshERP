@@ -121,9 +121,13 @@
             <td style="padding:5px;width:140px;">
                 <span id="NumberShow"></span>
             </td>
-            <td style="width:70px;"></td>
-            <td style="padding:5px;width:140px;"></td>
-            <td style="width:100px;"></td>
+            <td style="width:70px;">关联单号：</td>
+            <td style="padding:5px;width:140px;">
+                <span id="LinkNumberShow"></span>
+            </td>
+            <td style="width:100px;">
+                <span id="billTypeShow"></span>
+            </td>
         </tr>
         <tr>
             <td colspan="9" style="width: 1130px;">
@@ -423,6 +427,7 @@
         $("#DebtShow").text(debt);
         $("#AccountDayShow").text(res.accountDay);  //结算天数
         $("#LinkNumberShow").text(res.linkNumber); //关联订单号
+        $("#billTypeShow").text(res.billType); //单据类型
         var otherMoney = res.otherMoney?res.otherMoney:0;
         if(otherMoney!=0 && res.otherMoneyList && res.otherMoneyItem){
             var itemArr = res.otherMoneyList.split(","); //支出项目id列表
@@ -699,11 +704,6 @@
                 if(inOutService.checkDepotHeadNumber()){
                     return;
                 }
-            }
-            //输入框提示
-            if(!$('#OrganId').combobox('getValue')){
-                $.messager.alert('提示','请选择往来单位！','warning');
-                return;
             }
             //进行明细的校验
             if(depotHeadID ==0) {
