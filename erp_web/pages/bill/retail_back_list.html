@@ -222,6 +222,9 @@
         <div class="form-group">
             <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchMaterialBtn">查询</a>
         </div>
+        <div class="form-group">
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" id="appendMaterial">新增商品</a>
+        </div>
     </div>
     <table id="materialSelectData" style="top:100px;border-bottom-color:#FFFFFF"></table>
 </div>
@@ -718,11 +721,11 @@
                     }
                 },
                 {
-                    id:'appendMaterial',
-                    text:'新增商品',
-                    iconCls:'icon-add',
+                    id:'switchToBarCode',
+                    text:'扫码',
+                    iconCls:'icon-search',
                     handler:function() {
-                        js.addTabPage(null, "商品信息", "/pages/materials/material.html");
+                        inOutService.switchToBarCode(); //扫码
                     }
                 }
             ],
@@ -731,6 +734,8 @@
                 return;
             }
         });
+        var sweepBarCodeHtml = '<td><input id="sweepBarCode" type="text" placeholder="输入条码并敲回车键" class="radius-ui" style="width:150px;display:none;"/></td>';
+        $('#depotHeadFM .datagrid-toolbar tr').append(sweepBarCodeHtml);
         $.ajax({
             type:"get",
             url: '/depotItem/getDetailList',
