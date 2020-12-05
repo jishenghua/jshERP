@@ -1222,6 +1222,28 @@
 			$('#depotFM').form('clear');
 			bindDepotEvent();
 		},
+		//扫码
+		switchToBarCode: function () {
+			if($('#sweepBarCode').css('display') == "none") {
+				$("#sweepBarCode").show().val("");
+				$("#sweepBarCode").off("keyup").on("keyup",function(e){
+					var evt = window.event || e;
+					if (evt.keyCode == 13) {
+						var meId = inOutService.getInfoByBarCode($("#sweepBarCode").val());
+						var rec = {}; rec.Id = meId;
+						var body =$("#depotHeadFM .datagrid-view2 .datagrid-body");
+						var rowDom = body.find(".datagrid-row").eq(editIndex);
+						var materialName = rowDom.find("[field='name']").find("input[type=text]").val();
+						if(materialName){
+							inOutService.append(); //新增行
+						}
+						inOutService.materialSelect(rec, getNowFormatMonth());
+					}
+				});
+			} else {
+				$("#sweepBarCode").hide();
+			}
+		},
 		//新增商品
 		appendMaterial: function () {
 			js.addTabPage(null, "商品信息", "/pages/materials/material.html");
@@ -1255,7 +1277,7 @@
 		initMaterialSelectData: function(){
 			var self = this;
 			$('#materialSelectData').datagrid({
-				height: 390,
+				height: 480,
 				rownumbers: false,
 				//动画效果
 				animate: false,
@@ -1350,6 +1372,9 @@
 					pageSize: initPageSize
 				});
 			});
+			$("#appendMaterial").off("click").on("click",function(){
+				js.addTabPage(null, "商品信息", "/pages/materials/material.html");
+			});
 			$("#checkMaterial").off("click").on("click",function(){
 				var rowData = $("#materialSelectData").datagrid('getChecked')[0];
 				$('#materialSelectDlg').dialog('close');
@@ -1427,7 +1452,12 @@
 								detailPrice = 0;
 							}
 							var operNumber = 1;
-							currentRowDom.find("[field='OperNumber']").find(input).val(operNumber).focus().select(); //数量初始化
+							currentRowDom.find("[field='OperNumber']").find(input).val(operNumber); //数量初始化
+							if($('#sweepBarCode').css('display') == "none") {
+								currentRowDom.find("[field='OperNumber']").find(input).focus().select();
+							} else {
+								$("#sweepBarCode").val("").focus().select();
+							}
 							currentRowDom.find("[field='UnitPrice']").find(input).val(detailPrice);
 							currentRowDom.find("[field='AllPrice']").find(input).val(detailPrice);
 							var taxRate = currentRowDom.find("[field='TaxRate']").find(input).val()-0; //获取税率

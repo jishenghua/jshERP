@@ -250,7 +250,7 @@
                             }
                             $("#bill .AccountIdShow").text(accountIdShow);
                         }
-                        $("#bill .OrganIdShow").text(data.organName);
+                        $("#bill .OrganIdShow").text(data.organName==null ? "":data.organName);
                         $("#bill .OperTimeShow").text(data.operTimeStr);
                         $("#bill .NumberShow").text(data.number);
                         $("#bill .LinkNumberShow").text(data.linkNumber? data.linkNumber : "");
