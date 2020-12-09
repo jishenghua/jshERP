@@ -111,15 +111,15 @@
             <td style="padding:5px;width:130px;">
                 <span id="OperTimeShow"></span>
             </td>
-            <td style="width:80px;">单据编号：</td>
-            <td style="padding:5px;width:140px;">
+            <td style="width:70px;">单据编号：</td>
+            <td style="padding:5px;width:130px;">
                 <span id="NumberShow"></span>
             </td>
             <td style="width:70px;">关联单号：</td>
-            <td style="padding:5px;width:140px;">
+            <td style="padding:5px;width:130px;">
                 <span id="LinkNumberShow"></span>
             </td>
-            <td style="width:100px;">
+            <td style="width:130px;">
                 <span id="billTypeShow"></span>
             </td>
         </tr>
@@ -423,7 +423,11 @@
         $("#DebtShow").text(debt);
         $("#AccountDayShow").text(res.accountDay);  //结算天数
         $("#LinkNumberShow").text(res.linkNumber); //关联订单号
-        $("#billTypeShow").text(res.billType); //单据类型
+        if(res.billType && res.billType!="undefined"){
+            $("#billTypeShow").text("单据类型："+res.billType); //单据类型
+        } else {
+            $("#billTypeShow").text("");
+        }
         var otherMoney = res.otherMoney?res.otherMoney:0;
         if(otherMoney!=0 && res.otherMoneyList && res.otherMoneyItem){
             var itemArr = res.otherMoneyList.split(","); //支出项目id列表
