@@ -967,6 +967,12 @@
             $("#manyUnit").val(""); //置空
             //当前为不选中状态
             $("#Unit").show();
+            $("#Unit").off("keyup").on("keyup", function () {
+                var unitInfo = $(this).val();
+                var body =$("#materialFM .datagrid-view2 .datagrid-body");
+                var input = "input[type=text]";
+                body.find("[field='CommodityUnit']").find(input).val(unitInfo);
+            });
             $("#manyUnit").hide();
             //选中基本资料tab
             $("#materialFM #tt .tabs li").first().click();
@@ -998,11 +1004,8 @@
                 selectOnCheck:false,
                 //单击行是否选中
                 checkOnSelect : false,
-                pagination: false,
                 //交替出现背景
                 striped : true,
-                showFooter: true,
-                //loadFilter: pagerFilter,
                 onClickRow: onClickRow,
                 columns:[[
                     { field: 'Id',field: 'Id',width:35,align:"center",checkbox:true},
@@ -1080,7 +1083,6 @@
                     $.messager.alert('查询提示','查询数据后台异常，请稍后再试！','error');
                 }
             });
-            dgResize();
         }
 
         //检查商品名称是否存在 ++ 重名无法提示问题需要跟进
@@ -1239,6 +1241,12 @@
             $("#OtherField2").val(rowsdata.otherField2);
             $("#OtherField3").val(rowsdata.otherField3);
             $("#Unit").val(rowsdata.unit);
+            $("#Unit").off("keyup").on("keyup", function () {
+                var unitInfo = $(this).val();
+                var body =$("#materialFM .datagrid-view2 .datagrid-body");
+                var input = "input[type=text]";
+                body.find("[field='CommodityUnit']").find(input).val(unitInfo);
+            });
             $("#Remark").textbox("setValue", rowsdata.remark);
             $("#manyUnit").val(rowsdata.unitId);
             if (rowsdata.unitId) {
@@ -1397,7 +1405,6 @@
                                 //下拉框事件
                                 $("#manyUnit").off("change").on("change", function () {
                                     var selectItem = $(this).children('option:selected').text();
-                                    if (selectItem !== "(空)") {}
                                 });
                             }
                         }
@@ -1570,18 +1577,26 @@
             var meList = $("#materialExtendData").datagrid('getRows');
             var unit = $("#Unit").val();
             var manyUnitselected = $("#manyUnit").find("option:selected").text();
+            if(!unit) {
+                //此时为多单位
+                if (meList.length<2){
+                    $.messager.alert('提示',"多单位商品的条码数量应该大于2！",'warning');
+                    return;
+                }
+            }
             for(var i=0; i<meList.length; i++) {
                 var commodityUnit = meList[i].CommodityUnit;
                 if(unit) {
                     if(commodityUnit != unit) {
-                        $.messager.alert('提示', '单位<b>' + commodityUnit + '</b>不包含在<b>' + unit + '</b>中！', 'warning');
+                        $.messager.alert('提示', '条码之后的单位填写有误，单位<b>' + commodityUnit + '</b>请修改为<b>' + unit + '</b>！', 'warning');
                         return;
                     }
                 } else if(manyUnitselected) {
                     var manyUnitInfo = manyUnitselected.substring(0, manyUnitselected.indexOf("("));
                     var unitArr = manyUnitInfo.split(",");
                     if(commodityUnit != unitArr[0] && commodityUnit != unitArr[1]) {
-                        $.messager.alert('提示', '单位<b>' + commodityUnit + '</b>不包含在<b>' + manyUnitInfo+ '</b>中！', 'warning');
+                        $.messager.alert('提示', '条码之后的单位填写有误，单位<b>' + commodityUnit + '</b>请修改为' +
+                            '<b>' + unitArr[0]+ '</b>或<b>' + unitArr[1]+ '</b>！', 'warning');
                         return;
                     }
                 }

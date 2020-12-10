@@ -189,6 +189,9 @@ public class MaterialService {
         material.setId(id);
         try{
             materialMapper.updateByPrimaryKeySelective(material);
+            if(material.getUnitId() == null) {
+                materialMapperEx.setUnitIdToNull(material.getId());
+            }
             JSONObject mObj = JSON.parseObject(beanJson);
             materialExtendService.saveDetials(mObj.getString("inserted"),mObj.getString("deleted"),mObj.getString("updated"),mObj.getString("sortList"),id);
             if(mObj.get("stock")!=null) {

@@ -253,4 +253,12 @@
         group by m.name
         order by m.name asc
     </select>
+
+    <update id="setUnitIdToNull">
+        update jsh_material
+        set unit_id = null
+        where 1=1
+        and ifnull(delete_flag,'0') !='1'
+        and id = #{id}
+    </update>
 </mapper>

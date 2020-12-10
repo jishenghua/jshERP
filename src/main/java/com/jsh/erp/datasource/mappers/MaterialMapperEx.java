@@ -74,4 +74,6 @@ public interface MaterialMapperEx {
             @Param("meId") Long meId);
 
     List<String> getMaterialNameList();
+
+    int setUnitIdToNull(@Param("id") Long id);
 }
