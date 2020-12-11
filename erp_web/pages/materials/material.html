@@ -1076,6 +1076,11 @@
                         $("#materialExtendData").datagrid('loadData',res.data);
                         if(type === "add") {
                             $("#materialDlg #append").click(); //新增行
+                        } else if(type === "edit") {
+                            if(res.data.rows.length>0){
+                                editIndex = 0;
+                                $('#materialExtendData').datagrid('selectRow', 0).datagrid('beginEdit', 0);
+                            }
                         }
                     }
                 },
