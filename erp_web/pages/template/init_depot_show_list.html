@@ -1,11 +1,16 @@
 <table>
+    <tr>
+        <td style="width:130px;height:30px;line-height:30px;padding:8px;float:left;color:#7c7c7c"><b>仓库名称</b></td>
+        <td style="width:120px;height:30px;line-height:30px;padding:8px;float:left;color:#7c7c7c"><b>初始库存</b></td>
+        <td style="width:120px;height:30px;line-height:30px;padding:8px;float:left;color:#7c7c7c"><b>总计库存</b></td>
+    </tr>
     {{#depotList}}
     <tr>
         <td style="width:130px;height:30px;line-height:30px;padding:8px;float:left;" title="{{name}}">
             <p style="width:110px;overflow: hidden;white-space:nowrap;text-overflow: ellipsis;">{{name}}</p>
         </td>
-        <td style="width:120px;height:30px;line-height:30px;padding:8px;float:left;">初始库存：{{stock}}</td>
-        <td style="width:120px;height:30px;line-height:30px;padding:8px;float:left;">总计库存：{{allStock}}</td>
+        <td style="width:120px;height:30px;line-height:30px;padding:8px;float:left;">{{stock}}</td>
+        <td style="width:120px;height:30px;line-height:30px;padding:8px;float:left;">{{allStock}}</td>
     </tr>
     {{/depotList}}
 </table>
