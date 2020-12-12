@@ -66,9 +66,16 @@
     <table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 </div>
 
-<div id="materialDetailListDlg" class="easyui-dialog" style="width:900px;height:500px;padding:10px 20px" closed="true"
+<div id="materialDetailListDlg" class="easyui-dialog" style="padding:10px 20px" fit="true" closed="true"
      modal="true" collapsible="false" closable="true">
-    <table id="materialTableData" style="top:50px;border-bottom-color:#FFFFFF"></table>
+    <div id="cc" class="easyui-layout" data-options="fit:true">
+        <div data-options="region:'west',title:'库存详情'" style="width:400px;">
+            <div id="initDepotShow"></div>
+        </div>
+        <div data-options="region:'center',title:'出入库明细'">
+            <table id="materialTableData" style="top:50px;border-bottom-color:#FFFFFF" data-options="fit:true"></table>
+        </div>
+    </div>
 </div>
 
 <div id="materialDlg" class="easyui-dialog" style="padding:10px 20px" fit="true"
@@ -431,7 +438,7 @@
                     {
                         title: '库存', field: 'stock', width: 70, formatter: function (value, rec) {
                             var str = '';
-                            str += '<span title="查看出入库明细" class="n-link" onclick="findStockList(' + rec.id + ');">' + rec.stock + '</span>';
+                            str += '<span title="查看库存及明细" class="n-link" onclick="findStockList(' + rec.id + ');">' + rec.stock + '</span>';
                             return str;
                         }
                     },
@@ -518,7 +525,7 @@
         //初始化表格数据
         function initMaterialDetailData(mId) {
             $('#materialTableData').datagrid({
-                height: 435,
+                height: heightInfo,
                 nowrap: false,
                 rownumbers: false,
                 //动画效果
@@ -641,8 +648,9 @@
         }
 
         function findStockList(mId) {
-            $('#materialDetailListDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/pencil.png"/>&nbsp;查看出入库明细');
+            $('#materialDetailListDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/pencil.png"/>&nbsp;查看库存及明细');
             $(".window-mask").css({width: webW, height: webH});
+            initDepotList(mId, "show"); //加载仓库及库存数量
             initMaterialDetailData(mId);
             getMaterialInOutList(mId, 1, initPageSize);
             ininMaterialDetailPager(mId);
@@ -988,7 +996,7 @@
             oldManyUnit = "";
             materialID = 0;
             url = '/material/add';
-            initDepotList(materialID); //加载仓库列表页面
+            initDepotList(materialID, "edit"); //加载仓库列表页面
         }
 
         //商品价格扩展
@@ -1288,10 +1296,10 @@
             //选中基本资料tab
             $("#materialFM #tt .tabs li").first().click();
             url = '/material/update?id=' + rowsdata.id;
-            initDepotList(rowsdata.id); //加载仓库列表页面
+            initDepotList(rowsdata.id, "edit"); //加载仓库列表页面
         }
 
-        function initDepotList(mId) {
+        function initDepotList(mId, type) {
             $.ajax({
                 type: "get",
                 url: "/depot/getAllListWithStock?mId=" + mId,
@@ -1301,18 +1309,33 @@
                     if (res && res.code == 200) {
                         var json = {};
                         json.depotList = res.data;
-                        $.ajax({
-                            type: "get",
-                            url: "../../../pages/template/init_depot_list.html?2121",
-                            async: false,
-                            success: function (tem) {
-                                if (tem) {
-                                    var template = Handlebars.compile(tem);
-                                    var htmlValue = template(json);
-                                    $("#initDepot").html(htmlValue);
+                        if(type == "edit"){
+                            $.ajax({
+                                type: "get",
+                                url: "../../../pages/template/init_depot_list.html?2121",
+                                async: false,
+                                success: function (tem) {
+                                    if (tem) {
+                                        var template = Handlebars.compile(tem);
+                                        var htmlValue = template(json);
+                                        $("#initDepot").html(htmlValue);
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        } else if(type == "show"){
+                            $.ajax({
+                                type: "get",
+                                url: "../../../pages/template/init_depot_show_list.html?888",
+                                async: false,
+                                success: function (tem) {
+                                    if (tem) {
+                                        var template = Handlebars.compile(tem);
+                                        var htmlValue = template(json);
+                                        $("#initDepotShow").html(htmlValue);
+                                    }
+                                }
+                            });
+                        }
                     }
                 }
             });
@@ -1585,7 +1608,7 @@
             if(!unit) {
                 //此时为多单位
                 if (meList.length<2){
-                    $.messager.alert('提示',"多单位商品的条码数量应该大于2！",'warning');
+                    $.messager.alert('提示',"多单位的商品条码行数至少要有两行，请再新增一行条码信息！",'warning');
                     return;
                 }
             }

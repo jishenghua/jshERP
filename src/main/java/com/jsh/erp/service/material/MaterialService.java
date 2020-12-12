@@ -60,6 +60,8 @@ public class MaterialService {
     @Resource
     private MaterialInitialStockMapper materialInitialStockMapper;
     @Resource
+    private MaterialCurrentStockMapper materialCurrentStockMapper;
+    @Resource
     private DepotService depotService;
     @Resource
     private MaterialExtendService materialExtendService;
@@ -704,7 +706,7 @@ public class MaterialService {
     }
 
     /**
-     * 根据产品和仓库获取初始库存
+     * 根据商品和仓库获取初始库存
      * @param materialId
      * @param depotId
      * @return
@@ -722,7 +724,7 @@ public class MaterialService {
     }
 
     /**
-     * 根据产品获取初始库存
+     * 根据商品获取初始库存
      * @param materialId
      * @return
      */
@@ -743,6 +745,24 @@ public class MaterialService {
                     stock = stock.add(ms.getNumber());
                 }
             }
+        }
+        return stock;
+    }
+
+    /**
+     * 根据商品和仓库获取当前库存
+     * @param materialId
+     * @param depotId
+     * @return
+     */
+    public BigDecimal getCurrentStock(Long materialId, Long depotId) {
+        BigDecimal stock = BigDecimal.ZERO;
+        MaterialCurrentStockExample example = new MaterialCurrentStockExample();
+        example.createCriteria().andMaterialIdEqualTo(materialId).andDepotIdEqualTo(depotId)
+                .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        List<MaterialCurrentStock> list = materialCurrentStockMapper.selectByExample(example);
+        if(list!=null && list.size()>0) {
+            stock = list.get(0).getCurrentNumber();
         }
         return stock;
     }
