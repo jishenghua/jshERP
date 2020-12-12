@@ -154,14 +154,12 @@
 
     <select id="findByAll" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultByMaterial">
         select m.id MId, m.name MName, m.mfrs MMfrs, m.model MModel, m.unit MaterialUnit, m.color MColor,
-        me.purchase_decimal, u.name unit_name
+        u.name unit_name, (select purchase_decimal from jsh_material_extend me where me.material_id=m.id and me.default_flag=1) purchase_decimal
         from jsh_material m
-        left join jsh_depot_item di on di.material_id=m.id  and ifnull(m.delete_Flag,'0') !='1'
+        left join jsh_depot_item di on di.material_id=m.id  and ifnull(di.delete_Flag,'0') !='1'
         left join jsh_depot_head dh on di.header_id=dh.id  and ifnull(dh.delete_flag,'0') !='1'
-        left join jsh_material_extend me on me.id=di.material_extend_id  and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_unit u on m.unit_id=u.id and ifnull(u.delete_Flag,'0') !='1'
         where 1=1
-        and me.default_flag=1
         <if test="name != null">
             and m.name like '%${name}%'
         </if>
@@ -171,8 +169,8 @@
         <if test="endTime != null">
             and dh.oper_time &lt;= '${endTime}'
         </if>
-        and ifnull(di.delete_flag,'0') !='1'
-        group by m.id,m.name, m.model, m.unit, m.color, me.purchase_decimal, u.name
+        and ifnull(m.delete_flag,'0') !='1'
+        group by m.id,m.name, m.model, m.unit, m.color, u.name
         order by m.name, m.model asc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
