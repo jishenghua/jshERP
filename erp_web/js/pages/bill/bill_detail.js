@@ -467,7 +467,12 @@
             columns:[[
                 { title: '商品类型',field: 'MType',width:80, hidden:isShowMaterialTypeColumn},
                 { title: depotHeadName,field: 'DepotName',editor:'validatebox',width:90},
-                { title: '名称(型号)(扩展信息)(单位)',field: 'MaterialName',width:230},
+                { title: '条码',field: 'barCode', editor:'validatebox', width:120},
+                { title: '名称', field: 'name', editor: 'validatebox', width: 100},
+                { title: '规格', field: 'standard', editor: 'validatebox', width: 60},
+                { title: '型号', field: 'model', editor: 'validatebox', width: 60},
+                { title: '扩展信息', field: 'materialOther', editor: 'validatebox', width: 70},
+                { title: '库存',field: 'Stock',width:50},
                 { title: anotherDepotHeadName,field: 'AnotherDepotName',hidden:isShowAnotherDepot,width:90},
                 { title: '单位',field: 'Unit',editor:'validatebox',width:60},
                 { title: '数量',field: 'OperNumber',editor:'validatebox',width:60},
@@ -477,12 +482,7 @@
                 { title: '税率',field: 'TaxRate',editor:'validatebox',hidden:isShowTaxColumn,width:75},
                 { title: '税额',field: 'TaxMoney',editor:'validatebox',hidden:isShowTaxColumn,width:75},
                 { title: '价税合计',field: 'TaxLastMoney',editor:'validatebox',hidden:isShowTaxColumn,width:75},
-                { title: '备注',field: 'Remark',editor:'validatebox',width:120},
-                { title: '名称-别',field: 'OtherField1',editor:'validatebox',hidden:otherColumns,width:60},
-                { title: '型号-别',field: 'OtherField2',editor:'validatebox',hidden:otherColumns,width:60},
-                { title: '颜色-别',field: 'OtherField3',editor:'validatebox',hidden:otherColumns,width:60},
-                { title: '备注1',field: 'OtherField4',editor:'validatebox',hidden:true,width:60},
-                { title: '备注2',field: 'OtherField5',editor:'validatebox',hidden:true,width:60}
+                { title: '备注',field: 'Remark',editor:'validatebox',width:100}
             ]],
             onLoadError:function() {
                 $.messager.alert('页面加载提示','页面加载异常，请稍后再试！','error');
