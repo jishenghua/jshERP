@@ -65,8 +65,7 @@
     </div>
     <table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 </div>
-
-<div id="materialDetailListDlg" class="easyui-dialog" style="padding:10px 20px" fit="true" closed="true"
+<div id="materialDetailListDlg" class="easyui-dialog" style="padding:10px 20px;display:none;" fit="true" closed="true"
      modal="true" collapsible="false" closable="true">
     <div id="cc" class="easyui-layout" data-options="fit:true">
         <div data-options="region:'west',title:'库存详情'" style="width:400px;">
@@ -77,8 +76,7 @@
         </div>
     </div>
 </div>
-
-<div id="materialDlg" class="easyui-dialog" style="padding:10px 20px" fit="true"
+<div id="materialDlg" class="easyui-dialog" style="padding:10px 20px;display:none;" fit="true"
      closed="true" buttons="#dlg-buttons" modal="true" collapsible="false" closable="true">
     <form id="materialFM" method="post" novalidate>
         <div id="tt" class="easyui-tabs" style="width:100%;height:520px;">
@@ -195,16 +193,15 @@
                 <div id="initDepot"></div>
             </div>
         </div>
+        <div id="dlg-buttons">
+            <a href="javascript:void(0)" id="saveMaterial" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
+            <a href="javascript:void(0)" id="cancelMaterial" class="easyui-linkbutton" iconCls="icon-cancel"
+               onclick="javascript:$('#materialDlg').dialog('close')">取消</a>
+        </div>
     </form>
 </div>
-<div id="dlg-buttons">
-    <a href="javascript:void(0)" id="saveMaterial" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
-    <a href="javascript:void(0)" id="cancelMaterial" class="easyui-linkbutton" iconCls="icon-cancel"
-       onclick="javascript:$('#materialDlg').dialog('close')">取消</a>
-</div>
-
 <!-- 导入excel表格 -->
-<div id="importExcelDlg" class="easyui-dialog" style="width:450px; padding:10px 20px;"
+<div id="importExcelDlg" class="easyui-dialog" style="width:450px; padding:10px 20px;display:none;"
      closed="true" buttons="#dlg-buttons5" modal="true" collapsible="false" closable="true">
     <form id="importExcelFM" method="post" enctype="multipart/form-data" action="/material/importExcel">
         <table>
@@ -221,14 +218,13 @@
                 </td>
             </tr>
         </table>
+        <div id="dlg-buttons5">
+            <a href="javascript:void(0)" id="saveimport" class="easyui-linkbutton" iconCls="icon-ok">导入</a>
+            <a href="javascript:void(0)" id="cancelimport" class="easyui-linkbutton" iconCls="icon-cancel"
+               onclick="javascript:$('#importExcelDlg').dialog('close')">取消</a>
+        </div>
     </form>
 </div>
-<div id="dlg-buttons5">
-    <a href="javascript:void(0)" id="saveimport" class="easyui-linkbutton" iconCls="icon-ok">导入</a>
-    <a href="javascript:void(0)" id="cancelimport" class="easyui-linkbutton" iconCls="icon-cancel"
-       onclick="javascript:$('#importExcelDlg').dialog('close')">取消</a>
-</div>
-
 <div id="forSelectMaterialCategoryDlg" class="easyui-dialog" style="width:380px;padding:10px 20px;top:50px;"
      closed="true" modal="true" cache="false" collapsible="false" closable="true">
 </div>

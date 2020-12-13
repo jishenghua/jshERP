@@ -53,8 +53,7 @@
     </div>
     <table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 </div>
-
-<div id="depotHeadDlg" class="easyui-dialog" style="padding:10px 20px;" fit="true"
+<div id="depotHeadDlg" class="easyui-dialog" style="padding:10px 20px;display:none;" fit="true"
      closed="true" buttons="#dlg-buttons" modal="true" cache="false" collapsible="false" closable="true">
     <form id="depotHeadFM" method="post" novalidate>
         <table width="100%" style="min-width:1100px;">
@@ -99,14 +98,14 @@
                 </td>
             </tr>
         </table>
+        <div id="dlg-buttons">
+            <a href="javascript:void(0)" id="saveDepotHead" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
+            <a href="javascript:void(0)" id="cancelDepotHead" class="easyui-linkbutton" iconCls="icon-cancel"
+               onclick="javascript:$('#depotHeadDlg').dialog('close')">取消</a>
+        </div>
     </form>
 </div>
-<div id="dlg-buttons">
-    <a href="javascript:void(0)" id="saveDepotHead" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
-    <a href="javascript:void(0)" id="cancelDepotHead" class="easyui-linkbutton" iconCls="icon-cancel"
-       onclick="javascript:$('#depotHeadDlg').dialog('close')">取消</a>
-</div>
-<div id="depotHeadDlgShow" class="easyui-dialog" style="padding:10px 20px;" fit="true"
+<div id="depotHeadDlgShow" class="easyui-dialog" style="padding:10px 20px;display:none;" fit="true"
      closed="true" buttons="#dlg-buttons-show" modal="true" cache="false" collapsible="false" closable="true">
     <table width="100%" style="min-width:1100px;">
         <tr>
@@ -141,13 +140,13 @@
             </td>
         </tr>
     </table>
+    <div id="dlg-buttons-show">
+        <a href="javascript:void(0)" id="printDepotHeadShow" class="easyui-linkbutton" iconCls="icon-print">打印</a>
+        <a href="javascript:void(0)" id="cancelDepotHeadShow" class="easyui-linkbutton" iconCls="icon-cancel"
+           onclick="javascript:$('#depotHeadDlgShow').dialog('close')">取消</a>
+    </div>
 </div>
-<div id="dlg-buttons-show">
-    <a href="javascript:void(0)" id="printDepotHeadShow" class="easyui-linkbutton" iconCls="icon-print">打印</a>
-    <a href="javascript:void(0)" id="cancelDepotHeadShow" class="easyui-linkbutton" iconCls="icon-cancel"
-       onclick="javascript:$('#depotHeadDlgShow').dialog('close')">取消</a>
-</div>
-<div id="depotHeadAccountDlg" class="easyui-dialog" style="width:380px;padding:10px 20px;top:80px"
+<div id="depotHeadAccountDlg" class="easyui-dialog" style="width:380px;padding:10px 20px;top:80px;display:none;"
      closed="true" modal="true" buttons="#accountDlgButtons" cache="false" collapsible="false" closable="true">
     <table class="account-dlg">
         <tr class="account-head-tmp">
@@ -168,12 +167,12 @@
             <td style="width:100px; padding:3px;"><input class="account-money-dlg" style="width:100px;"/></td>
         </tr>
     </table>
+    <div id="accountDlgButtons">
+        <a href="javascript:void(0)" id="saveDepotHeadAccountDlg" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
+        <a href="javascript:void(0)" id="cancelDepotHeadAccountDlg" class="easyui-linkbutton" iconCls="icon-cancel">取消</a>
+    </div>
 </div>
-<div id="accountDlgButtons">
-    <a href="javascript:void(0)" id="saveDepotHeadAccountDlg" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
-    <a href="javascript:void(0)" id="cancelDepotHeadAccountDlg" class="easyui-linkbutton" iconCls="icon-cancel">取消</a>
-</div>
-<div id="otherMoneyDlg" class="easyui-dialog" style="width:380px;padding:10px 20px;top:80px"
+<div id="otherMoneyDlg" class="easyui-dialog" style="width:380px;padding:10px 20px;top:80px;display:none;"
      closed="true" modal="true" buttons="#otherMoneyDlgBtn" cache="false" collapsible="false" closable="true">
     <table class="money-dlg">
         <tr class="money-head-tmp">
@@ -194,12 +193,12 @@
             <td style="width:100px; padding:3px;"><input class="other-money-dlg" style="width:100px;"/></td>
         </tr>
     </table>
+    <div id="otherMoneyDlgBtn">
+        <a href="javascript:void(0)" id="saveOtherMoneyDlg" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
+        <a href="javascript:void(0)" id="cancelOtherMoneyDlg" class="easyui-linkbutton" iconCls="icon-cancel">取消</a>
+    </div>
 </div>
-<div id="otherMoneyDlgBtn">
-    <a href="javascript:void(0)" id="saveOtherMoneyDlg" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
-    <a href="javascript:void(0)" id="cancelOtherMoneyDlg" class="easyui-linkbutton" iconCls="icon-cancel">取消</a>
-</div>
-<div id="materialSelectDlg" class="easyui-dialog" style="padding:10px;" fit="true"
+<div id="materialSelectDlg" class="easyui-dialog" style="padding:10px;display:none;" fit="true"
      closed="true" modal="true" buttons="#materialSelectDlgBtn" cache="false" collapsible="false" closable="true">
     <div class="box-body form-inline">
         <div class="form-group">
@@ -216,11 +215,11 @@
         </div>
     </div>
     <table id="materialSelectData" style="top:100px;border-bottom-color:#FFFFFF"></table>
-</div>
-<div id="materialSelectDlgBtn">
-    <a href="javascript:void(0)" id="checkMaterial" class="easyui-linkbutton" iconCls="icon-ok">选择</a>
-    <a href="javascript:void(0)" id="cancelMaterial" class="easyui-linkbutton" iconCls="icon-cancel"
-       onclick="javascript:$('#materialSelectDlg').dialog('close')">取消</a>
+    <div id="materialSelectDlgBtn">
+        <a href="javascript:void(0)" id="checkMaterial" class="easyui-linkbutton" iconCls="icon-ok">选择</a>
+        <a href="javascript:void(0)" id="cancelMaterial" class="easyui-linkbutton" iconCls="icon-cancel"
+           onclick="javascript:$('#materialSelectDlg').dialog('close')">取消</a>
+    </div>
 </div>
 <div id="supplier"></div>
 <div id="depot"></div>
