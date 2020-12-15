@@ -41,11 +41,13 @@ public interface MaterialMapperEx {
 
     List<MaterialVo4Unit> findByIdWithBarCode(@Param("meId") Long meId);
 
-    List<MaterialVo4Unit> findBySelectWithBarCode(@Param("q") String q,
+    List<MaterialVo4Unit> findBySelectWithBarCode(@Param("idList") List<Long> idList,
+                                                  @Param("q") String q,
                                                   @Param("offset") Integer offset,
                                                   @Param("rows") Integer rows);
 
-    int findBySelectWithBarCodeCount(@Param("q") String q);
+    int findBySelectWithBarCodeCount(@Param("idList") List<Long> idList,
+                                     @Param("q") String q);
 
     List<MaterialVo4Unit> findByAll(
             @Param("name") String name,

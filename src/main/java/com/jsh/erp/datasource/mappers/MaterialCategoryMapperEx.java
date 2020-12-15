@@ -37,4 +37,6 @@ public interface MaterialCategoryMapperEx {
     List<MaterialCategory> getMaterialCategoryBySerialNo(@Param("serialNo") String serialNo, @Param("id") Long id);
 
     List<MaterialCategory> getMaterialCategoryListByCategoryIds(@Param("parentIds") String[] categoryIds);
+
+    List<MaterialCategory> getListByParentId(Long parentId);
 }
