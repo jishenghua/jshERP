@@ -209,6 +209,7 @@ public class MaterialController {
                     }
                     MaterialName = MaterialName + expand + ((material.getCommodityUnit() == null || material.getCommodityUnit().equals("")) ? "" : "(" + material.getCommodityUnit() + ")") + ratio;
                     item.put("MaterialName", MaterialName);
+                    item.put("categoryName", material.getCategoryName());
                     item.put("name", material.getName());
                     item.put("expand", expand);
                     item.put("model", material.getModel());

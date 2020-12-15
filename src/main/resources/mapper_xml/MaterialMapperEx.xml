@@ -99,12 +99,14 @@
     </select>
 
     <select id="findBySelectWithBarCode" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultAndUnitMap">
-        select m.*,u.name unit_name,me.bar_code m_bar_code,me.id meId,me.commodity_unit from jsh_material m
+        select m.*,u.name unit_name,mc.name categoryName,me.bar_code m_bar_code,me.id meId,me.commodity_unit from jsh_material m
         left join jsh_material_extend me on m.id=me.material_id and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_unit u on m.unit_id=u.id and ifnull(u.delete_Flag,'0') !='1'
+        left JOIN jsh_material_category mc on m.category_id = mc.id and ifnull(mc.status,'0') !='2'
         where m.enabled=1 and me.id is not null
-        <if test="q != null">
-            and (m.name like '%${q}%' or me.bar_code like '%${q}%')
+        <if test="q != null and q !=''">
+            <bind name="bindKey" value="'%'+q+'%'"/>
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
         </if>
         <if test="idList.size()>0">
             and m.category_id in

@@ -38,5 +38,5 @@ public interface MaterialCategoryMapperEx {
 
     List<MaterialCategory> getMaterialCategoryListByCategoryIds(@Param("parentIds") String[] categoryIds);
 
-    List<MaterialCategory> getListByParentId(Long parentId);
+    List<MaterialCategory> getListByParentId(@Param("parentId") Long parentId);
 }

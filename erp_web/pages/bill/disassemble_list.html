@@ -136,15 +136,20 @@
      closed="true" modal="true" buttons="#materialSelectDlgBtn" cache="false" collapsible="false" closable="true">
     <div class="box-body form-inline">
         <div class="form-group">
-            <label class="control-label">条码：</label>
             <div class="control-inline">
-                <input type="text" id="searchBarCode" name="searchBarCode" value="" maxlength="100" class="easyui-textbox width-90"/>
+                <input type="text" id="searchBarCode" data-options="prompt:'条码、名称、规格、型号'" maxlength="100" class="easyui-textbox width-180"/>
             </div>
         </div>
         <div class="form-group">
-            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchMaterialBtn">查询</a>
+            <div class="control-inline">
+                <select id="searchMaterialCategory" class="easyui-combotree" style="width:180px;"
+                        data-options="url:'/materialCategory/getMaterialCategoryTree?id='">
+                </select>
+            </div>
         </div>
         <div class="form-group">
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchMaterialBtn">查询</a>&nbsp;
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-redo" id="searchMaterialResetBtn">重置</a>&nbsp;
             <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" id="appendMaterial">新增商品</a>
         </div>
     </div>

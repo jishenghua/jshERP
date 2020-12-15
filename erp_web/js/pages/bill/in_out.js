@@ -1293,6 +1293,7 @@
 					{field: 'id',width:35,align:"center",checkbox:true},
 					{field: 'mBarCode', title: '条码', width: 120},
 					{field: 'name', title: '名称', width: 140},
+					{field: 'categoryName', title: '类别', width: 80},
 					{field: 'standard', title: '规格', width: 80},
 					{field: 'model', title: '型号', width: 80},
 					{field: 'unit', title: '单位', width: 60},
@@ -1338,6 +1339,7 @@
 				url: "/material/findBySelect",
 				dataType: "json",
 				data: ({
+					categoryId: $("#searchMaterialCategory").combotree("getValue"),
 					q: $("#searchBarCode").textbox("getValue"),
 					mpList: mPropertyList,
 					depotId: depotId,
@@ -1371,6 +1373,14 @@
 					pageNumber: 1,
 					pageSize: initPageSize
 				});
+			});
+			//重置按钮
+			$("#searchMaterialResetBtn").unbind().bind({
+				click: function () {
+					$("#searchMaterialCategory").combotree("setValue","");
+					$("#searchBarCode").textbox("setValue","");
+					$("#searchMaterialBtn").click();
+				}
 			});
 			$("#appendMaterial").off("click").on("click",function(){
 				js.addTabPage(null, "商品信息", "/pages/materials/material.html");
