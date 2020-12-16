@@ -10,15 +10,12 @@
     </resultMap>
     <select id="selectByConditionUser" parameterType="com.jsh.erp.datasource.entities.UserExample" resultMap="ResultMapEx">
         select user.id, user.username, user.login_name, user.position, user.email, user.phonenum,
-        user.description, user.remark,user.isystem,org.id as orgaId,user.tenant_id,org.org_abr,rel.user_blng_orga_dspl_seq,
-        rel.id as orgaUserRelId, tb.roleName
-        FROM jsh_user user
-        left join
-        (
-        select ub.*,r.name roleName from jsh_user_business ub
+        user.description, user.remark,user.isystem,org.id as orgaId,user.tenant_id,org.org_abr,
+        rel.user_blng_orga_dspl_seq,rel.id as orgaUserRelId,
+        (select r.name from jsh_user_business ub
         inner join jsh_role r on ub.value=concat("[",r.id,"]") and ifnull(r.delete_flag,'0') !='1'
-        where ub.type='UserRole'
-        ) tb on tb.key_id=user.id
+        where ub.type='UserRole' and ub.key_id=user.id) roleName
+        FROM jsh_user user
         left join jsh_orga_user_rel rel on user.id=rel.user_id and ifnull(rel.delete_flag,'0') !='1'
         left join jsh_organization org on rel.orga_id=org.id and  ifnull(org.org_stcd,'0') !='5'
         where 1=1
@@ -38,12 +35,10 @@
         select count(user.id)
         FROM jsh_user user
         left join jsh_user_business ub on user.id=ub.key_id
-        left join jsh_role r on ub.value=concat("[",r.id,"]") and ifnull(r.delete_flag,'0') !='1'
         left join jsh_orga_user_rel rel on user.id=rel.user_id and ifnull(rel.delete_flag,'0') !='1'
         left join jsh_organization org on rel.orga_id=org.id and  ifnull(org.org_stcd,'0') !='5'
         where 1=1
         and ifnull(user.status,'0') not in('1','2')
-        and ub.type='UserRole'
         <if test="userName != null">
             and user.username like '%${userName}%'
         </if>
