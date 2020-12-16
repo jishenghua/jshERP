@@ -152,7 +152,8 @@ public class MaterialController {
      * @return
      */
     @GetMapping(value = "/findBySelect")
-    public JSONObject findBySelect(@RequestParam(value = "q", required = false) String q,
+    public JSONObject findBySelect(@RequestParam(value = "categoryId", required = false) Long categoryId,
+                                  @RequestParam(value = "q", required = false) String q,
                                   @RequestParam("mpList") String mpList,
                                   @RequestParam(value = "depotId", required = false) Long depotId,
                                   @RequestParam("page") Integer currentPage,
@@ -161,9 +162,9 @@ public class MaterialController {
         JSONObject object = new JSONObject();
         try {
             Long tenantId = Long.parseLong(request.getSession().getAttribute("tenantId").toString());
-            List<MaterialVo4Unit> dataList = materialService.findBySelectWithBarCode(q, (currentPage-1)*pageSize, pageSize);
+            List<MaterialVo4Unit> dataList = materialService.findBySelectWithBarCode(categoryId, q, (currentPage-1)*pageSize, pageSize);
             String[] mpArr = mpList.split(",");
-            int total = materialService.findBySelectWithBarCodeCount(q);
+            int total = materialService.findBySelectWithBarCodeCount(categoryId, q);
             object.put("total", total);
             JSONArray dataArray = new JSONArray();
             //存放数据json数组
@@ -208,6 +209,7 @@ public class MaterialController {
                     }
                     MaterialName = MaterialName + expand + ((material.getCommodityUnit() == null || material.getCommodityUnit().equals("")) ? "" : "(" + material.getCommodityUnit() + ")") + ratio;
                     item.put("MaterialName", MaterialName);
+                    item.put("categoryName", material.getCategoryName());
                     item.put("name", material.getName());
                     item.put("expand", expand);
                     item.put("model", material.getModel());

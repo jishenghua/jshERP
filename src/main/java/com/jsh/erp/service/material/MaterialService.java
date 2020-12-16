@@ -46,6 +46,8 @@ public class MaterialService {
     @Resource
     private MaterialExtendMapperEx materialExtendMapperEx;
     @Resource
+    private MaterialCategoryMapperEx materialCategoryMapperEx;
+    @Resource
     private LogService logService;
     @Resource
     private UserService userService;
@@ -59,6 +61,8 @@ public class MaterialService {
     private UnitService unitService;
     @Resource
     private MaterialInitialStockMapper materialInitialStockMapper;
+    @Resource
+    private MaterialCurrentStockMapper materialCurrentStockMapper;
     @Resource
     private DepotService depotService;
     @Resource
@@ -189,6 +193,9 @@ public class MaterialService {
         material.setId(id);
         try{
             materialMapper.updateByPrimaryKeySelective(material);
+            if(material.getUnitId() == null) {
+                materialMapperEx.setUnitIdToNull(material.getId());
+            }
             JSONObject mObj = JSON.parseObject(beanJson);
             materialExtendService.saveDetials(mObj.getString("inserted"),mObj.getString("deleted"),mObj.getString("updated"),mObj.getString("sortList"),id);
             if(mObj.get("stock")!=null) {
@@ -333,26 +340,57 @@ public class MaterialService {
         return list;
     }
 
-    public List<MaterialVo4Unit> findBySelectWithBarCode(String q,Integer offset, Integer rows)throws Exception{
+    public List<Long> getListByParentId(Long parentId) {
+        List<Long> idList = new ArrayList<Long>();
+        List<MaterialCategory> list = materialCategoryMapperEx.getListByParentId(parentId);
+        idList.add(parentId);
+        if(list!=null && list.size()>0) {
+            getIdListByParentId(idList, parentId);
+        }
+        return idList;
+    }
+
+    public List<Long> getIdListByParentId(List<Long> idList, Long parentId){
+        List<MaterialCategory> list = materialCategoryMapperEx.getListByParentId(parentId);
+        if(list!=null && list.size()>0) {
+            for(MaterialCategory mc : list){
+                idList.add(mc.getId());
+                getIdListByParentId(idList, mc.getId());
+            }
+        }
+        return idList;
+    }
+
+    public List<MaterialVo4Unit> findBySelectWithBarCode(Long categoryId, String q, Integer offset, Integer rows)throws Exception{
         List<MaterialVo4Unit> list =null;
         try{
+            List<Long> idList = new ArrayList<>();
+            if(categoryId!=null){
+                Long parentId = categoryId;
+                idList = getListByParentId(parentId);
+            }
             if(StringUtil.isNotEmpty(q)) {
                 q = q.replace("'", "");
             }
-            list=  materialMapperEx.findBySelectWithBarCode(q, offset, rows);
+            list=  materialMapperEx.findBySelectWithBarCode(idList, q, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
     }
 
-    public int findBySelectWithBarCodeCount(String q)throws Exception{
+    public int findBySelectWithBarCodeCount(Long categoryId, String q)throws Exception{
         int result=0;
         try{
+            List<Long> idList = new ArrayList<>();
+            if(categoryId!=null){
+                Long parentId = categoryId;
+                idList = getListByParentId(parentId);
+            }
             if(StringUtil.isNotEmpty(q)) {
                 q = q.replace("'", "");
             }
-            result = materialMapperEx.findBySelectWithBarCodeCount(q);
+            result = materialMapperEx.findBySelectWithBarCodeCount(idList, q);
         }catch(Exception e){
             logger.error("异常码[{}],异常提示[{}],异常[{}]",
                     ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);
@@ -701,7 +739,7 @@ public class MaterialService {
     }
 
     /**
-     * 根据产品和仓库获取初始库存
+     * 根据商品和仓库获取初始库存
      * @param materialId
      * @param depotId
      * @return
@@ -719,7 +757,7 @@ public class MaterialService {
     }
 
     /**
-     * 根据产品获取初始库存
+     * 根据商品获取初始库存
      * @param materialId
      * @return
      */
@@ -740,6 +778,24 @@ public class MaterialService {
                     stock = stock.add(ms.getNumber());
                 }
             }
+        }
+        return stock;
+    }
+
+    /**
+     * 根据商品和仓库获取当前库存
+     * @param materialId
+     * @param depotId
+     * @return
+     */
+    public BigDecimal getCurrentStock(Long materialId, Long depotId) {
+        BigDecimal stock = BigDecimal.ZERO;
+        MaterialCurrentStockExample example = new MaterialCurrentStockExample();
+        example.createCriteria().andMaterialIdEqualTo(materialId).andDepotIdEqualTo(depotId)
+                .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        List<MaterialCurrentStock> list = materialCurrentStockMapper.selectByExample(example);
+        if(list!=null && list.size()>0) {
+            stock = list.get(0).getCurrentNumber();
         }
         return stock;
     }

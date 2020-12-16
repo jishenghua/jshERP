@@ -17,4 +17,6 @@ public class DepotEx extends Depot{
 
     private BigDecimal stock;
 
+    private BigDecimal allStock;
+
 }

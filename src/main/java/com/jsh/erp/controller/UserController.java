@@ -106,6 +106,7 @@ public class UserController {
                         //验证通过 ，可以登录，放入session，记录登录日志
                         user = userService.getUserByLoginName(loginName);
                         request.getSession().setAttribute("user",user);
+                        request.getSession().setAttribute("userId",user.getId());
                         String roleType = userService.getRoleTypeByUserId(user.getId()); //角色类型
                         request.getSession().setAttribute("roleType",roleType);
                         if(user.getTenantId()!=null) {

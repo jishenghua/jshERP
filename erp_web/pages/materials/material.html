@@ -65,13 +65,18 @@
     </div>
     <table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 </div>
-
-<div id="materialDetailListDlg" class="easyui-dialog" style="width:900px;height:500px;padding:10px 20px" closed="true"
+<div id="materialDetailListDlg" class="easyui-dialog" style="padding:10px 20px;display:none;" fit="true" closed="true"
      modal="true" collapsible="false" closable="true">
-    <table id="materialTableData" style="top:50px;border-bottom-color:#FFFFFF"></table>
+    <div id="cc" class="easyui-layout" data-options="fit:true">
+        <div data-options="region:'west',title:'库存详情'" style="width:400px;">
+            <div id="initDepotShow"></div>
+        </div>
+        <div data-options="region:'center',title:'出入库明细'">
+            <table id="materialTableData" style="top:50px;border-bottom-color:#FFFFFF" data-options="fit:true"></table>
+        </div>
+    </div>
 </div>
-
-<div id="materialDlg" class="easyui-dialog" style="padding:10px 20px" fit="true"
+<div id="materialDlg" class="easyui-dialog" style="padding:10px 20px;display:none;" fit="true"
      closed="true" buttons="#dlg-buttons" modal="true" collapsible="false" closable="true">
     <form id="materialFM" method="post" novalidate>
         <div id="tt" class="easyui-tabs" style="width:100%;height:520px;">
@@ -188,16 +193,15 @@
                 <div id="initDepot"></div>
             </div>
         </div>
+        <div id="dlg-buttons">
+            <a href="javascript:void(0)" id="saveMaterial" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
+            <a href="javascript:void(0)" id="cancelMaterial" class="easyui-linkbutton" iconCls="icon-cancel"
+               onclick="javascript:$('#materialDlg').dialog('close')">取消</a>
+        </div>
     </form>
 </div>
-<div id="dlg-buttons">
-    <a href="javascript:void(0)" id="saveMaterial" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
-    <a href="javascript:void(0)" id="cancelMaterial" class="easyui-linkbutton" iconCls="icon-cancel"
-       onclick="javascript:$('#materialDlg').dialog('close')">取消</a>
-</div>
-
 <!-- 导入excel表格 -->
-<div id="importExcelDlg" class="easyui-dialog" style="width:450px; padding:10px 20px;"
+<div id="importExcelDlg" class="easyui-dialog" style="width:450px; padding:10px 20px;display:none;"
      closed="true" buttons="#dlg-buttons5" modal="true" collapsible="false" closable="true">
     <form id="importExcelFM" method="post" enctype="multipart/form-data" action="/material/importExcel">
         <table>
@@ -214,14 +218,13 @@
                 </td>
             </tr>
         </table>
+        <div id="dlg-buttons5">
+            <a href="javascript:void(0)" id="saveimport" class="easyui-linkbutton" iconCls="icon-ok">导入</a>
+            <a href="javascript:void(0)" id="cancelimport" class="easyui-linkbutton" iconCls="icon-cancel"
+               onclick="javascript:$('#importExcelDlg').dialog('close')">取消</a>
+        </div>
     </form>
 </div>
-<div id="dlg-buttons5">
-    <a href="javascript:void(0)" id="saveimport" class="easyui-linkbutton" iconCls="icon-ok">导入</a>
-    <a href="javascript:void(0)" id="cancelimport" class="easyui-linkbutton" iconCls="icon-cancel"
-       onclick="javascript:$('#importExcelDlg').dialog('close')">取消</a>
-</div>
-
 <div id="forSelectMaterialCategoryDlg" class="easyui-dialog" style="width:380px;padding:10px 20px;top:50px;"
      closed="true" modal="true" cache="false" collapsible="false" closable="true">
 </div>
@@ -431,7 +434,7 @@
                     {
                         title: '库存', field: 'stock', width: 70, formatter: function (value, rec) {
                             var str = '';
-                            str += '<span title="查看出入库明细" class="n-link" onclick="findStockList(' + rec.id + ');">' + rec.stock + '</span>';
+                            str += '<span title="查看库存及明细" class="n-link" onclick="findStockList(' + rec.id + ');">' + rec.stock + '</span>';
                             return str;
                         }
                     },
@@ -518,7 +521,7 @@
         //初始化表格数据
         function initMaterialDetailData(mId) {
             $('#materialTableData').datagrid({
-                height: 435,
+                height: heightInfo,
                 nowrap: false,
                 rownumbers: false,
                 //动画效果
@@ -641,8 +644,9 @@
         }
 
         function findStockList(mId) {
-            $('#materialDetailListDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/pencil.png"/>&nbsp;查看出入库明细');
+            $('#materialDetailListDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/pencil.png"/>&nbsp;查看库存及明细');
             $(".window-mask").css({width: webW, height: webH});
+            initDepotList(mId, "show"); //加载仓库及库存数量
             initMaterialDetailData(mId);
             getMaterialInOutList(mId, 1, initPageSize);
             ininMaterialDetailPager(mId);
@@ -967,6 +971,12 @@
             $("#manyUnit").val(""); //置空
             //当前为不选中状态
             $("#Unit").show();
+            $("#Unit").off("keyup").on("keyup", function () {
+                var unitInfo = $(this).val();
+                var body =$("#materialFM .datagrid-view2 .datagrid-body");
+                var input = "input[type=text]";
+                body.find("[field='CommodityUnit']").find(input).val(unitInfo);
+            });
             $("#manyUnit").hide();
             //选中基本资料tab
             $("#materialFM #tt .tabs li").first().click();
@@ -982,7 +992,7 @@
             oldManyUnit = "";
             materialID = 0;
             url = '/material/add';
-            initDepotList(materialID); //加载仓库列表页面
+            initDepotList(materialID, "edit"); //加载仓库列表页面
         }
 
         //商品价格扩展
@@ -998,11 +1008,8 @@
                 selectOnCheck:false,
                 //单击行是否选中
                 checkOnSelect : false,
-                pagination: false,
                 //交替出现背景
                 striped : true,
-                showFooter: true,
-                //loadFilter: pagerFilter,
                 onClickRow: onClickRow,
                 columns:[[
                     { field: 'Id',field: 'Id',width:35,align:"center",checkbox:true},
@@ -1073,6 +1080,11 @@
                         $("#materialExtendData").datagrid('loadData',res.data);
                         if(type === "add") {
                             $("#materialDlg #append").click(); //新增行
+                        } else if(type === "edit") {
+                            if(res.data.rows.length>0){
+                                editIndex = 0;
+                                $('#materialExtendData').datagrid('selectRow', 0).datagrid('beginEdit', 0);
+                            }
                         }
                     }
                 },
@@ -1080,7 +1092,6 @@
                     $.messager.alert('查询提示','查询数据后台异常，请稍后再试！','error');
                 }
             });
-            dgResize();
         }
 
         //检查商品名称是否存在 ++ 重名无法提示问题需要跟进
@@ -1239,6 +1250,12 @@
             $("#OtherField2").val(rowsdata.otherField2);
             $("#OtherField3").val(rowsdata.otherField3);
             $("#Unit").val(rowsdata.unit);
+            $("#Unit").off("keyup").on("keyup", function () {
+                var unitInfo = $(this).val();
+                var body =$("#materialFM .datagrid-view2 .datagrid-body");
+                var input = "input[type=text]";
+                body.find("[field='CommodityUnit']").find(input).val(unitInfo);
+            });
             $("#Remark").textbox("setValue", rowsdata.remark);
             $("#manyUnit").val(rowsdata.unitId);
             if (rowsdata.unitId) {
@@ -1275,10 +1292,10 @@
             //选中基本资料tab
             $("#materialFM #tt .tabs li").first().click();
             url = '/material/update?id=' + rowsdata.id;
-            initDepotList(rowsdata.id); //加载仓库列表页面
+            initDepotList(rowsdata.id, "edit"); //加载仓库列表页面
         }
 
-        function initDepotList(mId) {
+        function initDepotList(mId, type) {
             $.ajax({
                 type: "get",
                 url: "/depot/getAllListWithStock?mId=" + mId,
@@ -1288,18 +1305,33 @@
                     if (res && res.code == 200) {
                         var json = {};
                         json.depotList = res.data;
-                        $.ajax({
-                            type: "get",
-                            url: "../../../pages/template/init_depot_list.html?2121",
-                            async: false,
-                            success: function (tem) {
-                                if (tem) {
-                                    var template = Handlebars.compile(tem);
-                                    var htmlValue = template(json);
-                                    $("#initDepot").html(htmlValue);
+                        if(type == "edit"){
+                            $.ajax({
+                                type: "get",
+                                url: "../../../pages/template/init_depot_list.html?2121",
+                                async: false,
+                                success: function (tem) {
+                                    if (tem) {
+                                        var template = Handlebars.compile(tem);
+                                        var htmlValue = template(json);
+                                        $("#initDepot").html(htmlValue);
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        } else if(type == "show"){
+                            $.ajax({
+                                type: "get",
+                                url: "../../../pages/template/init_depot_show_list.html?888",
+                                async: false,
+                                success: function (tem) {
+                                    if (tem) {
+                                        var template = Handlebars.compile(tem);
+                                        var htmlValue = template(json);
+                                        $("#initDepotShow").html(htmlValue);
+                                    }
+                                }
+                            });
+                        }
                     }
                 }
             });
@@ -1397,7 +1429,6 @@
                                 //下拉框事件
                                 $("#manyUnit").off("change").on("change", function () {
                                     var selectItem = $(this).children('option:selected').text();
-                                    if (selectItem !== "(空)") {}
                                 });
                             }
                         }
@@ -1570,18 +1601,26 @@
             var meList = $("#materialExtendData").datagrid('getRows');
             var unit = $("#Unit").val();
             var manyUnitselected = $("#manyUnit").find("option:selected").text();
+            if(!unit) {
+                //此时为多单位
+                if (meList.length<2){
+                    $.messager.alert('提示',"多单位的商品条码行数至少要有两行，请再新增一行条码信息！",'warning');
+                    return;
+                }
+            }
             for(var i=0; i<meList.length; i++) {
                 var commodityUnit = meList[i].CommodityUnit;
                 if(unit) {
                     if(commodityUnit != unit) {
-                        $.messager.alert('提示', '单位<b>' + commodityUnit + '</b>不包含在<b>' + unit + '</b>中！', 'warning');
+                        $.messager.alert('提示', '条码之后的单位填写有误，单位<b>' + commodityUnit + '</b>请修改为<b>' + unit + '</b>！', 'warning');
                         return;
                     }
                 } else if(manyUnitselected) {
                     var manyUnitInfo = manyUnitselected.substring(0, manyUnitselected.indexOf("("));
                     var unitArr = manyUnitInfo.split(",");
                     if(commodityUnit != unitArr[0] && commodityUnit != unitArr[1]) {
-                        $.messager.alert('提示', '单位<b>' + commodityUnit + '</b>不包含在<b>' + manyUnitInfo+ '</b>中！', 'warning');
+                        $.messager.alert('提示', '条码之后的单位填写有误，单位<b>' + commodityUnit + '</b>请修改为' +
+                            '<b>' + unitArr[0]+ '</b>或<b>' + unitArr[1]+ '</b>！', 'warning');
                         return;
                     }
                 }

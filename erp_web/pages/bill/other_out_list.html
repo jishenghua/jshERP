@@ -53,8 +53,7 @@
     </div>
     <table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 </div>
-
-<div id="depotHeadDlg" class="easyui-dialog" style="padding:10px 20px;" fit="true"
+<div id="depotHeadDlg" class="easyui-dialog" style="padding:10px 20px;display:none;" fit="true"
      closed="true" buttons="#dlg-buttons" modal="true" cache="false" collapsible="false" closable="true">
     <form id="depotHeadFM" method="post" novalidate>
         <table width="100%" style="min-width:1100px;">
@@ -92,14 +91,14 @@
                 </td>
             </tr>
         </table>
+        <div id="dlg-buttons">
+            <a href="javascript:void(0)" id="saveDepotHead" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
+            <a href="javascript:void(0)" id="cancelDepotHead" class="easyui-linkbutton" iconCls="icon-cancel"
+               onclick="javascript:$('#depotHeadDlg').dialog('close')">取消</a>
+        </div>
     </form>
 </div>
-<div id="dlg-buttons">
-    <a href="javascript:void(0)" id="saveDepotHead" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
-    <a href="javascript:void(0)" id="cancelDepotHead" class="easyui-linkbutton" iconCls="icon-cancel"
-       onclick="javascript:$('#depotHeadDlg').dialog('close')">取消</a>
-</div>
-<div id="depotHeadDlgShow" class="easyui-dialog" style="padding:10px 20px;" fit="true"
+<div id="depotHeadDlgShow" class="easyui-dialog" style="padding:10px 20px;display:none;" fit="true"
      closed="true" buttons="#dlg-buttons-show" modal="true" cache="false" collapsible="false" closable="true">
     <table width="100%" style="min-width:1100px;">
         <tr>
@@ -111,15 +110,15 @@
             <td style="padding:5px;width:130px;">
                 <span id="OperTimeShow"></span>
             </td>
-            <td style="width:80px;">单据编号：</td>
-            <td style="padding:5px;width:140px;">
+            <td style="width:70px;">单据编号：</td>
+            <td style="padding:5px;width:130px;">
                 <span id="NumberShow"></span>
             </td>
             <td style="width:70px;">关联单号：</td>
-            <td style="padding:5px;width:140px;">
+            <td style="padding:5px;width:130px;">
                 <span id="LinkNumberShow"></span>
             </td>
-            <td style="width:100px;">
+            <td style="width:130px;">
                 <span id="billTypeShow"></span>
             </td>
         </tr>
@@ -136,34 +135,39 @@
             </td>
         </tr>
     </table>
+    <div id="dlg-buttons-show">
+        <a href="javascript:void(0)" id="printDepotHeadShow" class="easyui-linkbutton" iconCls="icon-print">打印</a>
+        <a href="javascript:void(0)" id="cancelDepotHeadShow" class="easyui-linkbutton" iconCls="icon-cancel"
+           onclick="javascript:$('#depotHeadDlgShow').dialog('close')">取消</a>
+    </div>
 </div>
-<div id="dlg-buttons-show">
-    <a href="javascript:void(0)" id="printDepotHeadShow" class="easyui-linkbutton" iconCls="icon-print">打印</a>
-    <a href="javascript:void(0)" id="cancelDepotHeadShow" class="easyui-linkbutton" iconCls="icon-cancel"
-       onclick="javascript:$('#depotHeadDlgShow').dialog('close')">取消</a>
-</div>
-<div id="materialSelectDlg" class="easyui-dialog" style="padding:10px;" fit="true"
+<div id="materialSelectDlg" class="easyui-dialog" style="padding:10px;display:none;" fit="true"
      closed="true" modal="true" buttons="#materialSelectDlgBtn" cache="false" collapsible="false" closable="true">
     <div class="box-body form-inline">
         <div class="form-group">
-            <label class="control-label">条码：</label>
             <div class="control-inline">
-                <input type="text" id="searchBarCode" name="searchBarCode" value="" maxlength="100" class="easyui-textbox width-90"/>
+                <input type="text" id="searchBarCode" data-options="prompt:'条码、名称、规格、型号'" maxlength="100" class="easyui-textbox width-180"/>
             </div>
         </div>
         <div class="form-group">
-            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchMaterialBtn">查询</a>
+            <div class="control-inline">
+                <select id="searchMaterialCategory" class="easyui-combotree" style="width:180px;"
+                        data-options="url:'/materialCategory/getMaterialCategoryTree?id='">
+                </select>
+            </div>
         </div>
         <div class="form-group">
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchMaterialBtn">查询</a>&nbsp;
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-redo" id="searchMaterialResetBtn">重置</a>&nbsp;
             <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" id="appendMaterial">新增商品</a>
         </div>
     </div>
     <table id="materialSelectData" style="top:100px;border-bottom-color:#FFFFFF"></table>
-</div>
-<div id="materialSelectDlgBtn">
-    <a href="javascript:void(0)" id="checkMaterial" class="easyui-linkbutton" iconCls="icon-ok">选择</a>
-    <a href="javascript:void(0)" id="cancelMaterial" class="easyui-linkbutton" iconCls="icon-cancel"
-       onclick="javascript:$('#materialSelectDlg').dialog('close')">取消</a>
+    <div id="materialSelectDlgBtn">
+        <a href="javascript:void(0)" id="checkMaterial" class="easyui-linkbutton" iconCls="icon-ok">选择</a>
+        <a href="javascript:void(0)" id="cancelMaterial" class="easyui-linkbutton" iconCls="icon-cancel"
+           onclick="javascript:$('#materialSelectDlg').dialog('close')">取消</a>
+    </div>
 </div>
 <div id="depot"></div>
 <script>
@@ -423,7 +427,11 @@
         $("#DebtShow").text(debt);
         $("#AccountDayShow").text(res.accountDay);  //结算天数
         $("#LinkNumberShow").text(res.linkNumber); //关联订单号
-        $("#billTypeShow").text(res.billType); //单据类型
+        if(res.billType && res.billType!="undefined"){
+            $("#billTypeShow").text("单据类型："+res.billType); //单据类型
+        } else {
+            $("#billTypeShow").text("");
+        }
         var otherMoney = res.otherMoney?res.otherMoney:0;
         if(otherMoney!=0 && res.otherMoneyList && res.otherMoneyItem){
             var itemArr = res.otherMoneyList.split(","); //支出项目id列表
@@ -498,7 +506,6 @@
                             valueField: 'id',
                             textField: 'depotName',
                             method: 'get',
-                            hasDownArrow: false,
                             url: '/depot/findDepotByUserId?UBType=UserDepot&UBKeyId='+kid,
                             onSelect:function(rec){
                                 var depotId = rec.id;

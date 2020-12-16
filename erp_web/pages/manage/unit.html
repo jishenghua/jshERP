@@ -43,7 +43,6 @@
                 <td style="padding:5px">
                     <input name="basicName" id="basicName" class="easyui-textbox"
                            data-options="required:true,validType:'length[1,10]'" style="width: 100px;"/>
-                    基本单位应为最小度量单位
                 </td>
             </tr>
             <tr>
@@ -52,9 +51,14 @@
                     <input name="otherName" id="otherName" class="easyui-textbox"
                            data-options="required:true,validType:'length[1,5]'" style="width: 100px;"/>
                     =
-                    <input name="otherNum" id="otherNum" class="easyui-textbox"
-                           data-options="required:true,validType:'length[1,5]'" style="width: 50px;"/>
+                    <input name="otherNum" id="otherNum" class="easyui-numberbox"
+                           data-options="required:true, min:0,precision:0" style="width: 50px;"/>
                     <span id="unitName"></span>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="height: 30px;color:#7c7c7c;">
+                    注：基本单位应为最小度量单位，副单位为大单位
                 </td>
             </tr>
         </table>
