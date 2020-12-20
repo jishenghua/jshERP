@@ -532,14 +532,27 @@ public class DepotItemService {
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void updateCurrentStock(DepotItem depotItem, Long tenantId){
+        updateCurrentStockFun(depotItem.getMaterialId(), depotItem.getDepotId(),tenantId);
+        if(depotItem.getAnotherDepotId()!=null){
+            updateCurrentStockFun(depotItem.getMaterialId(), depotItem.getAnotherDepotId(),tenantId);
+        }
+    }
+
+    /**
+     * 根据商品和仓库来更新当前库存
+     * @param mId
+     * @param dId
+     * @param tenantId
+     */
+    public void updateCurrentStockFun(Long mId, Long dId, Long tenantId) {
         MaterialCurrentStockExample example = new MaterialCurrentStockExample();
-        example.createCriteria().andMaterialIdEqualTo(depotItem.getMaterialId()).andDepotIdEqualTo(depotItem.getDepotId())
+        example.createCriteria().andMaterialIdEqualTo(mId).andDepotIdEqualTo(dId)
                 .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<MaterialCurrentStock> list = materialCurrentStockMapper.selectByExample(example);
         MaterialCurrentStock materialCurrentStock = new MaterialCurrentStock();
-        materialCurrentStock.setMaterialId(depotItem.getMaterialId());
-        materialCurrentStock.setDepotId(depotItem.getDepotId());
-        materialCurrentStock.setCurrentNumber(getStockByParam(depotItem.getDepotId(),depotItem.getMaterialId(),null,null,tenantId));
+        materialCurrentStock.setMaterialId(mId);
+        materialCurrentStock.setDepotId(dId);
+        materialCurrentStock.setCurrentNumber(getStockByParam(dId,mId,null,null,tenantId));
         if(list!=null && list.size()>0) {
             Long mcsId = list.get(0).getId();
             materialCurrentStock.setId(mcsId);
