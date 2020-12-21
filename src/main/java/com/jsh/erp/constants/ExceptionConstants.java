@@ -294,6 +294,12 @@ public class ExceptionConstants {
     //单据录入数量超出限制
     public static final int DEPOT_HEAD_OVER_LIMIT_FAILED_CODE = 8500003;
     public static final String DEPOT_HEAD_OVER_LIMIT_FAILED_MSG = "单据录入数量超出限制，请联系管理员";
+    //单据录入-仓库不能为空
+    public static final int DEPOT_HEAD_DEPOT_FAILED_CODE = 8500004;
+    public static final String DEPOT_HEAD_DEPOT_FAILED_MSG = "仓库不能为空";
+    //单据录入-调入仓库不能为空
+    public static final int DEPOT_HEAD_ANOTHER_DEPOT_FAILED_CODE = 8500005;
+    public static final String DEPOT_HEAD_ANOTHER_DEPOT_FAILED_MSG = "调入仓库不能为空";
     /**
      *  单据明细信息
      * type = 90

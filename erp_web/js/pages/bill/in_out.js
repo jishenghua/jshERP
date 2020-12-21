@@ -1262,7 +1262,7 @@
 			}
 			var totalRowNum = "";
 			for (var i = 0; i < row.length; i++) {
-				if (row[i].DepotId == "" || row[i].barCode == "" || row[i].OperNumber == "" || row[i].UnitPrice === "" || row[i].AllPrice === "") {
+				if (row[i].barCode == "" || row[i].OperNumber == "" || row[i].UnitPrice === "" || row[i].AllPrice === "") {
 					totalRowNum += (i + 1) + "、";
 				}
 			}

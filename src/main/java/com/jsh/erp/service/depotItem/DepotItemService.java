@@ -355,12 +355,19 @@ public class DepotItemService {
                 if (StringUtil.isExist(rowObj.get("AllPrice"))) {
                     depotItem.setAllPrice(rowObj.getBigDecimal("AllPrice"));
                 }
-                depotItem.setRemark(rowObj.getString("Remark"));
-                if (rowObj.get("DepotId") != null && !StringUtil.isEmpty(rowObj.get("DepotId").toString())) {
+                if (StringUtil.isExist(rowObj.get("DepotId"))) {
                     depotItem.setDepotId(rowObj.getLong("DepotId"));
+                } else {
+                    throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_DEPOT_FAILED_CODE,
+                            String.format(ExceptionConstants.DEPOT_HEAD_DEPOT_FAILED_MSG));
                 }
-                if (rowObj.get("AnotherDepotId") != null && !StringUtil.isEmpty(rowObj.get("AnotherDepotId").toString())) {
-                    depotItem.setAnotherDepotId(rowObj.getLong("AnotherDepotId"));
+                if(BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubType())) {
+                    if (StringUtil.isExist(rowObj.get("AnotherDepotId"))) {
+                        depotItem.setAnotherDepotId(rowObj.getLong("AnotherDepotId"));
+                    } else {
+                        throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_ANOTHER_DEPOT_FAILED_CODE,
+                                String.format(ExceptionConstants.DEPOT_HEAD_ANOTHER_DEPOT_FAILED_MSG));
+                    }
                 }
                 if (StringUtil.isExist(rowObj.get("TaxRate"))) {
                     depotItem.setTaxRate(rowObj.getBigDecimal("TaxRate"));
@@ -371,10 +378,10 @@ public class DepotItemService {
                 if (StringUtil.isExist(rowObj.get("TaxLastMoney"))) {
                     depotItem.setTaxLastMoney(rowObj.getBigDecimal("TaxLastMoney"));
                 }
-                if (rowObj.get("MType") != null) {
+                if (StringUtil.isExist(rowObj.get("MType"))) {
                     depotItem.setMaterialType(rowObj.getString("MType"));
                 }
-                if (rowObj.get("Remark") != null) {
+                if (StringUtil.isExist(rowObj.get("Remark"))) {
                     depotItem.setRemark(rowObj.getString("Remark"));
                 }
                 //出库时判断库存是否充足
