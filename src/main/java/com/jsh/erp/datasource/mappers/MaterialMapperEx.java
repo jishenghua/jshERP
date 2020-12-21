@@ -3,6 +3,7 @@ package com.jsh.erp.datasource.mappers;
 import com.jsh.erp.datasource.entities.AccountHead;
 import com.jsh.erp.datasource.entities.Material;
 import com.jsh.erp.datasource.entities.MaterialVo4Unit;
+import com.jsh.erp.datasource.entities.Unit;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
@@ -35,7 +36,7 @@ public interface MaterialMapperEx {
             @Param("categoryIds") String categoryIds,
             @Param("mpList") String mpList);
 
-    String findUnitName(@Param("mId") Long mId);
+    List<Unit> findUnitList(@Param("mId") Long mId);
 
     List<MaterialVo4Unit> findById(@Param("id") Long id);
 

@@ -122,27 +122,6 @@ public class DepotItemController {
         return res;
     }
 
-    /**
-     * 查询计量单位信息
-     *
-     * @return
-     */
-    public String findUnitName(Long mId)throws Exception {
-        String unitName = "";
-        try {
-            unitName = materialService.findUnitName(mId);
-            if (unitName != null) {
-                unitName = unitName.substring(1, unitName.length() - 1);
-                if (unitName.equals("null")) {
-                    unitName = "";
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return unitName;
-    }
-
     @GetMapping(value = "/getDetailList")
     public BaseResponseInfo getDetailList(@RequestParam("headerId") Long headerId,
                               @RequestParam("mpList") String mpList,

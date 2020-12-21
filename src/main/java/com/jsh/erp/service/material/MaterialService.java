@@ -310,14 +310,17 @@ public class MaterialService {
         return result;
     }
 
-    public String findUnitName(Long mId)throws Exception{
-        String result =null;
+    public Unit findUnit(Long mId)throws Exception{
+        Unit unit = new Unit();
         try{
-            result=  materialMapperEx.findUnitName(mId);
+            List<Unit> list = materialMapperEx.findUnitList(mId);
+            if(list!=null && list.size()>0) {
+                unit = list.get(0);
+            }
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
-        return result;
+        return unit;
     }
 
     public List<MaterialVo4Unit> findById(Long id)throws Exception{

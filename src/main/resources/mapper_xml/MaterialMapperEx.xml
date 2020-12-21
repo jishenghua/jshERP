@@ -74,8 +74,8 @@
         and ifnull(m.delete_flag,'0') !='1'
     </select>
 
-    <select id="findUnitName" resultType="java.lang.String">
-        select u.name  from jsh_unit u
+    <select id="findUnitList" resultType="com.jsh.erp.datasource.entities.Unit">
+        select u.* from jsh_unit u
         left join jsh_material m on m.unit_id=u.id and ifnull(m.delete_flag,'0') !='1'
         where m.id = ${mId}
         and ifnull(u.delete_flag,'0') !='1'
