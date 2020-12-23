@@ -332,22 +332,24 @@
 			return materialExtendId;
 		},
 		//优惠率、合计的统计方法
-		statisticsFun: function (body,UnitPrice,OperNumber,footer,taxRate) {
+		statisticsFun: function (body,UnitPrice,TaxUnitPrice,OperNumber,footer,taxRate) {
 			var TotalPrice = 0;
 			var taxLastMoneyTotal = 0;
 			//金额的合计
 			body.find("[field='AllPrice']").each(function(){
-				if($(this).find("input").val()!==""){
-					TotalPrice = TotalPrice + parseFloat($(this).find("input").val().toString());
+				if($(this).find("div").text()!==""){
+					TotalPrice = TotalPrice + parseFloat($(this).find("div").text().toString());
 				}
 			});
+			TotalPrice = TotalPrice + UnitPrice*OperNumber;
 			footer.find("[field='AllPrice']").find("div").text((TotalPrice).toFixed(2)); //金额的合计
 			//价税合计的总计
 			body.find("[field='TaxLastMoney']").each(function(){
-				if($(this).find("input").val()!==""){
-					taxLastMoneyTotal = taxLastMoneyTotal + (parseFloat($(this).find("input").val().toString())-0);
+				if($(this).find("div").text()!==""){
+					taxLastMoneyTotal = taxLastMoneyTotal + (parseFloat($(this).find("div").text().toString())-0);
 				}
 			});
+			taxLastMoneyTotal = taxLastMoneyTotal + (TaxUnitPrice*OperNumber);
 			footer.find("[field='TaxLastMoney']").find("div").text((taxLastMoneyTotal).toFixed(2)); //价税合计的页脚总计
 			var discount = $("#Discount").val(); //优惠率
 			var discountMoney = (taxLastMoneyTotal*discount/100).toFixed(2);
@@ -1092,7 +1094,7 @@
 				$(this).closest(".datagrid-cell").click(); //点击操作
 				var row = $('#materialData').datagrid('getChecked');
 				$('#materialData').datagrid('deleteRow', $('#materialData').datagrid("getRowIndex", row[0]));
-				self.statisticsFun(body,0,0,footer,0);
+				self.statisticsFun(body,0,0,0,footer,0);
 			});
 			//修改数量，自动计算金额和合计，另外计算含税单价、税额、价税合计
 			body.find("[field='OperNumber']").find(input).off("keyup").on("keyup",function(){
@@ -1103,9 +1105,10 @@
 				var OperNumber =$(this).val()-0; //数量
 				rowDom.find("[field='AllPrice']").find(input).val((UnitPrice*OperNumber).toFixed(2)); //金额
 				rowDom.find("[field='TaxUnitPrice']").find(input).val((UnitPrice*(1+taxRate/100)).toFixed(2)); //含税单价
+				var TaxUnitPrice = rowDom.find("[field='TaxUnitPrice']").find(input).val()-0; //含税单价
 				rowDom.find("[field='TaxMoney']").find(input).val((UnitPrice*OperNumber*(taxRate/100)).toFixed(2)); //税额
 				rowDom.find("[field='TaxLastMoney']").find(input).val((UnitPrice*OperNumber*(1+taxRate/100)).toFixed(2)); //价税合计
-				self.statisticsFun(body,UnitPrice,OperNumber,footer,taxRate);
+				self.statisticsFun(body,UnitPrice,TaxUnitPrice,OperNumber,footer,taxRate);
 			});
 			//修改单价，自动计算金额和合计
 			body.find("[field='UnitPrice']").find(input).off("keyup").on("keyup",function(){
@@ -1116,9 +1119,10 @@
 				var OperNumber = rowDom.find("[field='OperNumber']").find(input).val(); //数量
 				rowDom.find("[field='AllPrice']").find(input).val((UnitPrice*OperNumber).toFixed(2)); //金额
 				rowDom.find("[field='TaxUnitPrice']").find(input).val((UnitPrice*(1+taxRate/100)).toFixed(2)); //含税单价
+				var TaxUnitPrice = rowDom.find("[field='TaxUnitPrice']").find(input).val()-0; //含税单价
 				rowDom.find("[field='TaxMoney']").find(input).val((UnitPrice*OperNumber*(taxRate/100)).toFixed(2)); //税额
 				rowDom.find("[field='TaxLastMoney']").find(input).val((UnitPrice*OperNumber*(1+taxRate/100)).toFixed(2)); //价税合计
-				self.statisticsFun(body,UnitPrice,OperNumber,footer,taxRate);
+				self.statisticsFun(body,UnitPrice,TaxUnitPrice,OperNumber,footer,taxRate);
 			});
 			//修改含税单价，自动计算单价、金额、税额、价税合计和合计
 			body.find("[field='TaxUnitPrice']").find(input).off("keyup").on("keyup",function(){
@@ -1132,7 +1136,7 @@
 				rowDom.find("[field='AllPrice']").find(input).val((UnitPrice*OperNumber).toFixed(2)); //金额
 				rowDom.find("[field='TaxMoney']").find(input).val((UnitPrice*OperNumber*(taxRate/100)).toFixed(2)); //税额
 				rowDom.find("[field='TaxLastMoney']").find(input).val((UnitPrice*OperNumber*(1+taxRate/100)).toFixed(2)); //价税合计
-				self.statisticsFun(body,UnitPrice,OperNumber,footer,taxRate);
+				self.statisticsFun(body,UnitPrice,TaxUnitPrice,OperNumber,footer,taxRate);
 			});
 			//修改金额，自动计算单价、税额、价税合计和合计
 			body.find("[field='AllPrice']").find(input).off("keyup").on("keyup",function(){
@@ -1144,9 +1148,10 @@
 				var UnitPrice = (AllPrice/OperNumber).toFixed(2);
 				rowDom.find("[field='UnitPrice']").find(input).val(UnitPrice); //单价
 				rowDom.find("[field='TaxUnitPrice']").find(input).val((UnitPrice*(1+taxRate/100)).toFixed(2)); //含税单价
+				var TaxUnitPrice = rowDom.find("[field='TaxUnitPrice']").find(input).val()-0; //含税单价
 				rowDom.find("[field='TaxMoney']").find(input).val((UnitPrice*OperNumber*(taxRate/100)).toFixed(2)); //税额
 				rowDom.find("[field='TaxLastMoney']").find(input).val((UnitPrice*OperNumber*(1+taxRate/100)).toFixed(2)); //价税合计
-				self.statisticsFun(body,UnitPrice,OperNumber,footer,taxRate);
+				self.statisticsFun(body,UnitPrice,TaxUnitPrice,OperNumber,footer,taxRate);
 			});
 			//修改税率，自动计算含税单价、税额、价税合计和合计
 			body.find("[field='TaxRate']").find(input).off("keyup").on("keyup",function(){
@@ -1156,9 +1161,10 @@
 				var OperNumber = rowDom.find("[field='OperNumber']").find(input).val(); //数量
 				var UnitPrice = rowDom.find("[field='UnitPrice']").find(input).val(); //单价
 				rowDom.find("[field='TaxUnitPrice']").find(input).val((UnitPrice*(1+taxRate/100)).toFixed(2)); //含税单价
+				var TaxUnitPrice = rowDom.find("[field='TaxUnitPrice']").find(input).val()-0; //含税单价
 				rowDom.find("[field='TaxMoney']").find(input).val((UnitPrice*OperNumber*(taxRate/100)).toFixed(2)); //税额
 				rowDom.find("[field='TaxLastMoney']").find(input).val((UnitPrice*OperNumber*(1+taxRate/100)).toFixed(2)); //价税合计
-				self.statisticsFun(body,UnitPrice,OperNumber,footer,taxRate);
+				self.statisticsFun(body,UnitPrice,TaxUnitPrice,OperNumber,footer,taxRate);
 			});
 			//修改税额，自动计算税率、含税单价、价税合计和合计
 			body.find("[field='TaxMoney']").find(input).off("keyup").on("keyup",function(){
@@ -1170,9 +1176,10 @@
 				var OperNumber = rowDom.find("[field='OperNumber']").find(input).val(); //数量
 				var UnitPrice = rowDom.find("[field='UnitPrice']").find(input).val(); //单价
 				rowDom.find("[field='TaxUnitPrice']").find(input).val((UnitPrice*(1+taxRate/100)).toFixed(2)); //含税单价
+				var TaxUnitPrice = rowDom.find("[field='TaxUnitPrice']").find(input).val()-0; //含税单价
 				rowDom.find("[field='TaxRate']").find(input).val((taxRate).toFixed(2)); //税率
 				rowDom.find("[field='TaxLastMoney']").find(input).val((UnitPrice*OperNumber*(1+taxRate/100)).toFixed(2)); //价税合计
-				self.statisticsFun(body,UnitPrice,OperNumber,footer,taxRate);
+				self.statisticsFun(body,UnitPrice,TaxUnitPrice,OperNumber,footer,taxRate);
 			});
 			//修改价税合计，自动计算税率、含税单价、税额和合计
 			body.find("[field='TaxLastMoney']").find(input).off("keyup").on("keyup",function(){
@@ -1184,9 +1191,10 @@
 				var OperNumber = rowDom.find("[field='OperNumber']").find(input).val(); //数量
 				var UnitPrice = rowDom.find("[field='UnitPrice']").find(input).val(); //单价
 				rowDom.find("[field='TaxUnitPrice']").find(input).val((UnitPrice*(1+taxRate/100)).toFixed(2)); //含税单价
+				var TaxUnitPrice = rowDom.find("[field='TaxUnitPrice']").find(input).val()-0; //含税单价
 				rowDom.find("[field='TaxRate']").find(input).val((taxRate).toFixed(2)); //税率
 				rowDom.find("[field='TaxMoney']").find(input).val((UnitPrice*OperNumber*(taxRate/100)).toFixed(2)); //税额
-				self.statisticsFun(body,UnitPrice,OperNumber,footer,taxRate);
+				self.statisticsFun(body,UnitPrice,TaxUnitPrice,OperNumber,footer,taxRate);
 			});
 			setTimeout(function(){
 				var body =$("#depotHeadFM .datagrid-view2 .datagrid-body");
@@ -1208,12 +1216,59 @@
 				}
 			},100);
 		},
+		onClickCell: function(index, field) {
+			if (editIndex != index) {
+				if (inOutService.endEditing()) {
+					if(field == "op") {
+						$(this).datagrid('deleteRow', index);
+						var body =$("#depotHeadFM .datagrid-view2 .datagrid-body");
+						var footer =$("#depotHeadFM .datagrid-view2 .datagrid-footer");
+						inOutService.statisticsFun(body,0,0,0,footer,0);
+					} else {
+						$(this).datagrid('beginEdit', index);
+						var ed = $(this).datagrid('getEditor', {index: index, field: field});
+						if(ed){
+							$(ed.target).select();
+						}
+						editIndex = index;
+						inOutService.autoReckon();
+					}
+				} else {
+					$(this).datagrid('selectRow', editIndex);
+				}
+			}
+		},
 		//新增明细
 		append: function () {
-			$('#materialData').datagrid('appendRow', {DepotId:defDepotId});
-			editIndex = $('#materialData').datagrid('getRows').length - 1;
-			$('#materialData').datagrid('selectRow', editIndex).datagrid('beginEdit', editIndex);
-			this.autoReckon();
+			if (this.endEditing()) {
+				$('#materialData').datagrid('appendRow', {DepotId: defDepotId});
+				editIndex = $('#materialData').datagrid('getRows').length - 1;
+				$('#materialData').datagrid('selectRow', editIndex).datagrid('beginEdit', editIndex);
+				this.autoReckon();
+			}
+		},
+		//结束编辑
+		endEditing: function(){
+			if (editIndex == undefined) { return true }
+			if ($('#materialData').datagrid('validateRow', editIndex)) {
+				//仓库信息
+				var edDepot = $('#materialData').datagrid('getEditor', {index:editIndex,field:'DepotId'});
+				if(edDepot) {
+					var DepotName = $(edDepot.target).combobox('getText');
+					$('#materialData').datagrid('getRows')[editIndex]['DepotName'] = DepotName;
+				}
+				//调入仓库
+				var edAnotherDepot = $('#materialData').datagrid('getEditor', {index:editIndex,field:'AnotherDepotId'});
+				if(edAnotherDepot) {
+					var AnotherDepotName = $(edAnotherDepot.target).combobox('getText');
+					$('#materialData').datagrid('getRows')[editIndex]['AnotherDepotName'] = AnotherDepotName;
+				}
+				$('#materialData').datagrid('endEdit', editIndex);
+				editIndex = undefined;
+				return true;
+			} else {
+				return false;
+			}
 		},
 		//新增仓库
 		appendDepot: function () {
@@ -1472,9 +1527,10 @@
 							currentRowDom.find("[field='AllPrice']").find(input).val(detailPrice);
 							var taxRate = currentRowDom.find("[field='TaxRate']").find(input).val()-0; //获取税率
 							currentRowDom.find("[field='TaxUnitPrice']").find(input).val((detailPrice*(1+taxRate/100)).toFixed(2));  //含税单价
+							var TaxUnitPrice = currentRowDom.find("[field='TaxUnitPrice']").find(input).val()-0; //含税单价
 							currentRowDom.find("[field='TaxMoney']").find(input).val((detailPrice*(taxRate/100)).toFixed(2));  //税额
 							currentRowDom.find("[field='TaxLastMoney']").find(input).val((detailPrice*(1+taxRate/100)).toFixed(2));  //价税合计
-							self.statisticsFun(body,detailPrice,1,footer,taxRate);
+							self.statisticsFun(body,detailPrice,TaxUnitPrice,1,footer,taxRate);
 
 							//查询库存信息
 							var depotId = currentRowDom.find("[field='DepotId']").find(".textbox-value").val();
@@ -1490,20 +1546,13 @@
 				});
 			}
 		},
-		//结束全部的编辑
-		endAllEdit: function(){
-			var rowLen = $("#materialData").datagrid('getRows').length;
-			for(var i=0; i<rowLen; i++){
-				$('#materialData').datagrid('endEdit', i);
-			}
-		},
 		//新增单据主表及单据子表
 		addDepotHeadAndDetail: function (url,infoStr) {
 			var self = this;
 			if(pageType=="skip") {
 				sessionStorage.removeItem("rowInfo");
 			}
-			this.endAllEdit();
+			this.endEditing();
 			var rows = $("#materialData").datagrid('getRows');
 			$.ajax({
 				type:"post",
@@ -1546,7 +1595,7 @@
 		//修改单据主表及单据子表
 		updateDepotHeadAndDetail: function (url,infoStr,preTotalPrice) {
 			var self = this;
-			this.endAllEdit();
+			this.endEditing();
 			var rows = $("#materialData").datagrid('getRows');
 			$.ajax({
 				type:"post",

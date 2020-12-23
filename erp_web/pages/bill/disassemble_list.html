@@ -571,6 +571,7 @@
                     }
                 }
             ],
+            onClickCell: inOutService.onClickCell,
             onLoadError:function() {
                 $.messager.alert('页面加载提示','页面加载异常，请稍后再试！','error');
                 return;
@@ -607,12 +608,6 @@
                     $("#depotHeadFM .datagrid-view2 .datagrid-footer").find("[field='op'] img").hide();
                     if(type === "add") {
                         $("#depotHeadDlg #append").click(); //新增行
-                    } else if(type === "edit") {
-                        editIndex = 0;
-                        for(var i=0;i<data.rows.length;i++){
-                            $('#materialData').datagrid('selectRow', i).datagrid('beginEdit', i);
-                            inOutService.autoReckon();
-                        }
                     }
                 }
             },
