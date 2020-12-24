@@ -61,21 +61,3 @@
 	text-decoration:underline;
 	cursor:pointer;
 }
-.progressBar {
-	border: solid 2px #86A5AD;
-	background: white url('../images/progressBar_m.gif') no-repeat 10px 10px;
-	display: none;
-	width: 280px;
-	height: 50px;
-	position: fixed;
-	top: 50%;
-	left: 50%;
-	margin-left: -74px;
-	margin-top: -14px;
-	padding: 10px 10px 10px 50px;
-	text-align: left;
-	line-height: 27px;
-	font-weight: bold;
-	position: absolute;
-	z-index: 9999;
-}
