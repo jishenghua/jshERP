@@ -156,7 +156,10 @@ public class DepotItemController {
                     if(ratio!=null){
                         BigDecimal ratioDecimal = new BigDecimal(ratio.toString());
                         if(ratioDecimal.compareTo(BigDecimal.ZERO)!=0){
-                            stock = stock.divide(ratioDecimal,2,BigDecimal.ROUND_HALF_UP); //两位小数
+                            String otherUnit = diEx.getOtherUnit();
+                            if(otherUnit.equals(diEx.getMaterialUnit())) {
+                                stock = stock.divide(ratioDecimal,2,BigDecimal.ROUND_HALF_UP); //两位小数
+                            }
                         }
                     }
                     item.put("Stock", stock);

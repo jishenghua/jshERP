@@ -34,6 +34,8 @@ public class DepotItemVo4WithInfoEx extends DepotItem{
 
     private Integer ratio;
 
+    private String otherUnit;
+
     private BigDecimal presetPriceOne;
 
     private String priceStrategy;
@@ -160,6 +162,14 @@ public class DepotItemVo4WithInfoEx extends DepotItem{
 
     public void setRatio(Integer ratio) {
         this.ratio = ratio;
+    }
+
+    public String getOtherUnit() {
+        return otherUnit;
+    }
+
+    public void setOtherUnit(String otherUnit) {
+        this.otherUnit = otherUnit;
     }
 
     public BigDecimal getPresetPriceOne() {
