@@ -265,6 +265,7 @@ public class DepotItemController {
                     Long mId = diEx.getMId();
                     item.put("MaterialName", diEx.getMName());
                     item.put("MaterialModel", diEx.getMModel());
+                    item.put("MaterialStandard", diEx.getMStandard());
                     //扩展信息
                     String materialOther = getOtherInfo(mpArr, diEx);
                     item.put("MaterialOther", materialOther);
@@ -326,23 +327,24 @@ public class DepotItemController {
             List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(StringUtil.toNull(name), StringUtil.toNull(model),
                     timeB, (currentPage-1)*pageSize, pageSize);
             //存放数据json数组
-            String[] names = {"名称", "型号", "单位", "单价", "上月结存数量", "入库数量", "出库数量", "本月结存数量", "结存金额"};
+            String[] names = {"名称", "规格", "型号", "单位", "单价", "上月结存数量", "入库数量", "出库数量", "本月结存数量", "结存金额"};
             String title = "库存报表";
             List<String[]> objects = new ArrayList<String[]>();
             if (null != dataList) {
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
                     Long mId = diEx.getMId();
-                    String[] objs = new String[9];
-                    objs[0] = diEx.getMName().toString();
-                    objs[1] = diEx.getMModel().toString();
-                    objs[2] = diEx.getMaterialUnit().toString();
-                    objs[3] = diEx.getPurchaseDecimal().toString();
-                    objs[4] = depotItemService.getStockByParam(depotId,mId,null,timeA,tenantId).toString();
-                    objs[5] = depotItemService.getInNumByParam(depotId,mId,timeA,timeB,tenantId).toString();
-                    objs[6] = depotItemService.getOutNumByParam(depotId,mId,timeA,timeB,tenantId).toString();
+                    String[] objs = new String[10];
+                    objs[0] = diEx.getMName();
+                    objs[1] = diEx.getMStandard();
+                    objs[2] = diEx.getMModel();
+                    objs[3] = diEx.getMaterialUnit();
+                    objs[4] = diEx.getPurchaseDecimal().toString();
+                    objs[5] = depotItemService.getStockByParam(depotId,mId,null,timeA,tenantId).toString();
+                    objs[6] = depotItemService.getInNumByParam(depotId,mId,timeA,timeB,tenantId).toString();
+                    objs[7] = depotItemService.getOutNumByParam(depotId,mId,timeA,timeB,tenantId).toString();
                     BigDecimal thisSum = depotItemService.getStockByParam(depotId,mId,null,timeB,tenantId);
-                    objs[7] = thisSum.toString();
-                    objs[8] = thisSum.multiply(diEx.getPurchaseDecimal()).toString();
+                    objs[8] = thisSum.toString();
+                    objs[9] = thisSum.multiply(diEx.getPurchaseDecimal()).toString();
                     objects.add(objs);
                 }
             }
@@ -434,6 +436,7 @@ public class DepotItemController {
                     BigDecimal OutSumPrice = depotItemService.buyOrSale("出库", "采购退货", diEx.getMId(), monthTime, "price");
                     item.put("MaterialName", diEx.getMName());
                     item.put("MaterialModel", diEx.getMModel());
+                    item.put("MaterialStandard", diEx.getMStandard());
                     //扩展信息
                     String materialOther = getOtherInfo(mpArr, diEx);
                     item.put("MaterialOther", materialOther);
@@ -502,6 +505,7 @@ public class DepotItemController {
                     BigDecimal OutInSumPrice = (OutSumRetailPrice.add(OutSumPrice)).subtract(InSumRetailPrice.add(InSumPrice));
                     item.put("MaterialName", diEx.getMName());
                     item.put("MaterialModel", diEx.getMModel());
+                    item.put("MaterialStandard", diEx.getMStandard());
                     //扩展信息
                     String materialOther = getOtherInfo(mpArr, diEx);
                     item.put("MaterialOther", materialOther);
@@ -544,33 +548,7 @@ public class DepotItemController {
     }
 
     /**
-     * 获取单价
-     * @param presetPriceOne
-     * @param priceStrategy
-     * @return
-     */
-    public BigDecimal getUnitPrice(BigDecimal presetPriceOne, String priceStrategy) {
-        BigDecimal unitPrice = BigDecimal.ZERO;
-        if(presetPriceOne != null) {
-            DecimalFormat df = new DecimalFormat("#.00");
-            unitPrice = new BigDecimal(df.format(presetPriceOne));
-        } else {
-            JSONArray priceArr = JSONArray.parseArray(priceStrategy);
-            if(priceArr!=null && priceArr.get(0)!=null) {
-                JSONObject priceObj = JSONObject.parseObject(priceArr.get(0).toString());
-                BigDecimal basicPresetPriceOne = priceObj.getJSONObject("basic").getBigDecimal("PresetPriceOne");
-                if(basicPresetPriceOne!=null) {
-                    unitPrice = basicPresetPriceOne;
-                }
-            }
-        }
-        return unitPrice;
-    }
-
-    /**
      * create by: qiankunpingtai
-     * website：https://qiankunpingtai.cn
-     * description:
      *  批量删除单据明细信息
      * create time: 2019/3/29 11:15
      * @Param: ids
@@ -600,7 +578,6 @@ public class DepotItemController {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         try {
-            List<DepotItemStockWarningCount> resList = new ArrayList<DepotItemStockWarningCount>();
             List<DepotItemStockWarningCount> list = depotItemService.findStockWarningCount((currentPage-1)*pageSize, pageSize,pid);
             int total = depotItemService.findStockWarningCountTotal(pid);
             map.put("total", total);
@@ -635,21 +612,22 @@ public class DepotItemController {
             List<DepotItemStockWarningCount> dataList = depotItemService.findStockWarningCount((currentPage - 1) * pageSize, pageSize, projectId);
             //存放数据json数组
             Integer pid = projectId;
-            String[] names = {"名称", "型号", "扩展信息", "单位", "入库数量", "出库数量", "库存数量", "安全库存量", "临界库存量"};
+            String[] names = {"名称", "规格", "型号", "扩展信息", "单位", "入库数量", "出库数量", "库存数量", "安全库存量", "临界库存量"};
             String title = "库存预警报表";
             List<String[]> objects = new ArrayList<String[]>();
             if (null != dataList) {
                 for (DepotItemStockWarningCount diEx : dataList) {
-                    String[] objs = new String[9];
-                    objs[0] = diEx.getMaterialName().toString();
-                    objs[1] = diEx.getMaterialModel().toString();
-                    objs[2] = diEx.getMaterialOther().toString();
-                    objs[3] = diEx.getMaterialUnit().toString();
-                    objs[4] = diEx.getBasicInNumber().toString();
-                    objs[5] = diEx.getBasicOutNumber() == null ? "0" : diEx.getBasicOutNumber().toString();
-                    objs[6] = diEx.getBasicNumber() == null ? "0" : diEx.getBasicNumber().toString();
-                    objs[7] = diEx.getSafetystock() == null ? "0" : diEx.getSafetystock().toString();
-                    objs[8] = diEx.getBasicLinjieNumber() == null ? "0" : diEx.getBasicLinjieNumber().toString();
+                    String[] objs = new String[10];
+                    objs[0] = diEx.getMaterialName();
+                    objs[1] = diEx.getMaterialStandard();
+                    objs[2] = diEx.getMaterialModel();
+                    objs[3] = diEx.getMaterialOther();
+                    objs[4] = diEx.getMaterialUnit();
+                    objs[5] = diEx.getBasicInNumber().toString();
+                    objs[6] = diEx.getBasicOutNumber() == null ? "0" : diEx.getBasicOutNumber().toString();
+                    objs[7] = diEx.getBasicNumber() == null ? "0" : diEx.getBasicNumber().toString();
+                    objs[8] = diEx.getSafetystock() == null ? "0" : diEx.getSafetystock().toString();
+                    objs[9] = diEx.getBasicLinjieNumber() == null ? "0" : diEx.getBasicLinjieNumber().toString();
                     objects.add(objs);
                 }
             }

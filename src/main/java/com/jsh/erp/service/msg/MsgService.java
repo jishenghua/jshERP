@@ -182,8 +182,6 @@ public class MsgService {
 
     /**
      * create by: qiankunpingtai
-     * website：https://qiankunpingtai.cn
-     * description:
      *  逻辑删除角色信息
      * create time: 2019/3/28 15:44
      * @Param: ids

@@ -11,6 +11,8 @@ public class DepotHeadVo4InOutMCount {
 
     private String Model;
 
+    private String standard;
+
     private String categoryName;
 
     private BigDecimal numSum;
@@ -41,6 +43,14 @@ public class DepotHeadVo4InOutMCount {
 
     public void setModel(String model) {
         Model = model;
+    }
+
+    public String getStandard() {
+        return standard;
+    }
+
+    public void setStandard(String standard) {
+        this.standard = standard;
     }
 
     public String getCategoryName() {

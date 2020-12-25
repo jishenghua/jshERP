@@ -441,7 +441,6 @@ public class DepotItemService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public List<DepotItemStockWarningCount> findStockWarningCount(int offset, Integer rows, Integer pid) {
-
         List<DepotItemStockWarningCount> list = null;
         try{
             list =depotItemMapperEx.findStockWarningCount( offset, rows, pid);

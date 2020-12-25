@@ -235,6 +235,7 @@
             pageList: [10, 50, 100],
             columns: [[
                 {title: '名称', field: 'MaterialName', width: 160},
+                {title: '规格', field: 'MaterialStandard', width: 80},
                 {title: '型号', field: 'MaterialModel', width: 80},
                 {title: '扩展信息', field: 'MaterialOther', width: 120},
                 {title: '单位', field: 'unitName', width: 80},
@@ -370,7 +371,7 @@
                             if (count.lastIndexOf('.') > -1) {
                                 count = count.substring(0, count.lastIndexOf('.') + 3);
                             }
-                            $("#tablePanel .total-count").text("本月合计金额:" + count + "元");//本月合计金额
+                            $("#tablePanel .total-count").text("本月合计金额：" + count + "元");//本月合计金额
                         }
                     }
                 },

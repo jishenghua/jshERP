@@ -5,10 +5,11 @@ import java.math.BigDecimal;
 
 public class DepotItemStockWarningCount {
 
-
     private String MaterialName;
 
     private String MaterialModel;
+
+    private String MaterialStandard;
 
     private String categoryName;
 
@@ -41,6 +42,14 @@ public class DepotItemStockWarningCount {
 
     public void setMaterialModel(String materialModel) {
         MaterialModel = materialModel;
+    }
+
+    public String getMaterialStandard() {
+        return MaterialStandard;
+    }
+
+    public void setMaterialStandard(String materialStandard) {
+        MaterialStandard = materialStandard;
     }
 
     public String getCategoryName() {

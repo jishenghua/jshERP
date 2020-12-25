@@ -12,6 +12,7 @@
         <result column="Number" jdbcType="VARCHAR" property="Number" />
         <result column="MName" jdbcType="VARCHAR" property="MName" />
         <result column="Model" jdbcType="VARCHAR" property="Model" />
+        <result column="standard" jdbcType="VARCHAR" property="standard" />
         <result column="unit_price" jdbcType="DECIMAL" property="UnitPrice" />
         <result column="oper_number" jdbcType="DECIMAL" property="OperNumber" />
         <result column="all_price" jdbcType="DECIMAL" property="AllPrice" />
@@ -25,6 +26,7 @@
         <result column="MaterialId" jdbcType="BIGINT" property="MaterialId" />
         <result column="mName" jdbcType="VARCHAR" property="mName" />
         <result column="Model" jdbcType="VARCHAR" property="Model" />
+        <result column="standard" jdbcType="VARCHAR" property="standard" />
         <result column="categoryName" jdbcType="VARCHAR" property="categoryName" />
         <result column="numSum" jdbcType="DECIMAL" property="numSum" />
         <result column="priceSum" jdbcType="DECIMAL" property="priceSum" />
@@ -136,7 +138,7 @@
     </select>
 
     <select id="findByAll" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
-        select dh.number,m.`name` MName,m.model,di.unit_price,di.oper_number,di.all_price,s.supplier SName,d.dName DName,
+        select dh.number,m.`name` MName,m.model,m.standard,di.unit_price,di.oper_number,di.all_price,s.supplier SName,d.dName DName,
         date_format(dh.oper_time, '%Y-%m-%d') OperTime, concat(dh.sub_type,dh.type) as NewType
         from jsh_depot_head dh
         inner join jsh_depot_item di on di.header_id=dh.id and ifnull(di.delete_flag,'0') !='1'
@@ -188,8 +190,7 @@
     </select>
 
     <select id="findInOutMaterialCount" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultInOutMaterialCount">
-        select di.material_id, m.mName,m.Model,m.categoryName,
-
+        select di.material_id, m.mName,m.Model,m.standard,m.categoryName,
         (select sum(jdi.basic_number) numSum from jsh_depot_head jdh
         INNER JOIN jsh_depot_item jdi on jdh.id=jdi.header_id and ifnull(jdi.delete_flag,'0') !='1'
         where jdi.material_id=di.material_id
@@ -223,7 +224,7 @@
         ) priceSum
         from jsh_depot_head dh
         INNER JOIN jsh_depot_item di on dh.id=di.header_id and ifnull(di.delete_flag,'0') !='1'
-        INNER JOIN (SELECT jsh_material.id,jsh_material.name mName, Model,jsh_material_category.`Name` categoryName
+        INNER JOIN (SELECT jsh_material.id,jsh_material.name mName, Model, standard, jsh_material_category.`Name` categoryName
         from jsh_material
         LEFT JOIN jsh_material_category on jsh_material.category_id=jsh_material_category.Id and ifnull(jsh_material_category.status,'0') !='2'
         where ifnull(jsh_material.delete_Flag,'0') !='1'
@@ -239,7 +240,7 @@
             and di.depot_id in (${dids})
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
-        GROUP BY di.material_id,m.mName,m.Model,m.categoryName
+        GROUP BY di.material_id,m.mName,m.Model,m.standard,m.categoryName
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
         </if>
@@ -247,9 +248,9 @@
 
     <select id="findInOutMaterialCountTotal" resultType="java.lang.Integer">
         select count(1) from
-        (select di.material_id, m.mName,m.Model,m.categoryName from jsh_depot_head dh
+        (select di.material_id, m.mName,m.Model,m.standard,m.categoryName from jsh_depot_head dh
         INNER JOIN jsh_depot_item di on dh.id=di.header_id  and ifnull(di.delete_flag,'0') !='1'
-        INNER JOIN (SELECT jsh_material.id,jsh_material.name mName, Model,jsh_material_category.`Name` categoryName
+        INNER JOIN (SELECT jsh_material.id,jsh_material.name mName, Model,standard,jsh_material_category.`Name` categoryName
         from jsh_material
         LEFT JOIN jsh_material_category on jsh_material.category_id=jsh_material_category.Id and ifnull(jsh_material_category.status,'0') !='2'
         where ifnull(jsh_material.delete_Flag,'0') !='1'
@@ -264,7 +265,7 @@
             and di.depot_id in (${dids})
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
-        GROUP BY di.material_id,m.mName,m.Model,m.categoryName) a
+        GROUP BY di.material_id,m.mName,m.Model,m.standard,m.categoryName) a
     </select>
 
     <select id="findStatementAccount" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultStatementAccount">
