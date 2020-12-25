@@ -127,7 +127,6 @@ public class DepotItemController {
                               @RequestParam("mpList") String mpList,
                               HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
-        Map<String, Object> map = new HashMap<String, Object>();
         Long tenantId = null;
         if(request.getSession().getAttribute("tenantId")!=null) {
             tenantId = Long.parseLong(request.getSession().getAttribute("tenantId").toString());
@@ -147,29 +146,21 @@ public class DepotItemController {
                     JSONObject item = new JSONObject();
                     item.put("Id", diEx.getId());
                     item.put("MaterialExtendId", diEx.getMaterialExtendId() == null ? "" : diEx.getMaterialExtendId());
-                    String ratio; //比例
-                    if (diEx.getUnitId() == null || diEx.getUnitId().equals("")) {
-                        ratio = "";
-                    } else {
-                        ratio = diEx.getUnitName();
-                        ratio = ratio.substring(ratio.indexOf("("));
-                    }
-                    //名称/型号/扩展信息/包装
-                    String MaterialName = ((diEx.getMName() == null || diEx.getMName().equals("")) ? "" : diEx.getMName())
-                            + ((diEx.getMStandard() == null || diEx.getMStandard().equals("")) ? "" : "(" + diEx.getMStandard() + ")")
-                            + ((diEx.getMModel() == null || diEx.getMModel().equals("")) ? "" : "(" + diEx.getMModel() + ")");
-                    String materialOther = getOtherInfo(mpArr, diEx);
-                    MaterialName = MaterialName + materialOther + ((diEx.getUnitName() == null || diEx.getUnitName().equals("")) ? "" : "(" + diEx.getUnitName() + ")") + ratio;
-                    item.put("MaterialName", MaterialName == null ? "" : MaterialName);
                     item.put("barCode", diEx.getBarCode());
                     item.put("name", diEx.getMName());
                     item.put("standard", diEx.getMStandard());
                     item.put("model", diEx.getMModel());
-                    item.put("materialOther", materialOther);
+                    item.put("materialOther", getOtherInfo(mpArr, diEx));
+                    Integer ratio = diEx.getRatio();
                     BigDecimal stock = depotItemService.getStockByParam(diEx.getDepotId(),diEx.getMaterialId(),null,null,tenantId);
+                    if(ratio!=null){
+                        BigDecimal ratioDecimal = new BigDecimal(ratio.toString());
+                        if(ratioDecimal.compareTo(BigDecimal.ZERO)!=0){
+                            stock = stock.divide(ratioDecimal,2,BigDecimal.ROUND_HALF_UP); //两位小数
+                        }
+                    }
                     item.put("Stock", stock);
                     item.put("Unit", diEx.getMaterialUnit());
-                    item.put("currentStock", diEx.getOperNumber().add(stock));
                     item.put("OperNumber", diEx.getOperNumber());
                     item.put("BasicNumber", diEx.getBasicNumber());
                     item.put("UnitPrice", diEx.getUnitPrice());

@@ -645,7 +645,7 @@
         }
 
         function findStockList(mId, barCode, name) {
-            var titleInfo = "&nbsp;" + name + "[" + barCode + "]库存及明细";
+            var titleInfo = "&nbsp;" + name + "[" + barCode + "]的库存及明细";
             $('#materialDetailListDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/pencil.png"/>' + titleInfo);
             $(".window-mask").css({width: webW, height: webH});
             initDepotList(mId, "show"); //加载仓库及库存数量
