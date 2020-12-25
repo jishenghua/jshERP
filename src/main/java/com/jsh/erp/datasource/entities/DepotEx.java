@@ -15,8 +15,8 @@ public class DepotEx extends Depot{
     //负责人名字
     private String principalName;
 
-    private BigDecimal stock;
+    private BigDecimal initStock;
 
-    private BigDecimal allStock;
+    private BigDecimal currentStock;
 
 }

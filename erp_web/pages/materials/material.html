@@ -434,7 +434,8 @@
                     {
                         title: '库存', field: 'stock', width: 70, formatter: function (value, rec) {
                             var str = '';
-                            str += '<span title="查看库存及明细" class="n-link" onclick="findStockList(' + rec.id + ');">' + rec.stock + '</span>';
+                            str += '<span title="查看库存及明细" class="n-link" ' +
+                                'onclick="findStockList(' + rec.id + ',' + rec.mBarCode + ',\'' + rec.name + '\');">' + rec.stock + '</span>';
                             return str;
                         }
                     },
@@ -643,8 +644,9 @@
             }
         }
 
-        function findStockList(mId) {
-            $('#materialDetailListDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/pencil.png"/>&nbsp;查看库存及明细');
+        function findStockList(mId, barCode, name) {
+            var titleInfo = "&nbsp;" + name + "[" + barCode + "]库存及明细";
+            $('#materialDetailListDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/pencil.png"/>' + titleInfo);
             $(".window-mask").css({width: webW, height: webH});
             initDepotList(mId, "show"); //加载仓库及库存数量
             initMaterialDetailData(mId);
@@ -1321,7 +1323,7 @@
                         } else if(type == "show"){
                             $.ajax({
                                 type: "get",
-                                url: "../../../pages/template/init_depot_show_list.html?888",
+                                url: "../../../pages/template/init_depot_show_list.html?555",
                                 async: false,
                                 success: function (tem) {
                                     if (tem) {

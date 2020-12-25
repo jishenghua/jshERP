@@ -742,25 +742,7 @@ public class MaterialService {
     }
 
     /**
-     * 根据商品和仓库获取初始库存
-     * @param materialId
-     * @param depotId
-     * @return
-     */
-    public BigDecimal getInitStock(Long materialId, Long depotId) {
-        BigDecimal stock = BigDecimal.ZERO;
-        MaterialInitialStockExample example = new MaterialInitialStockExample();
-        example.createCriteria().andMaterialIdEqualTo(materialId).andDepotIdEqualTo(depotId)
-                .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        List<MaterialInitialStock> list = materialInitialStockMapper.selectByExample(example);
-        if(list!=null && list.size()>0) {
-            stock = list.get(0).getNumber();
-        }
-        return stock;
-    }
-
-    /**
-     * 根据商品获取初始库存
+     * 根据商品获取初始库存，仓库为空的时候查全部库存
      * @param materialId
      * @return
      */
@@ -786,6 +768,24 @@ public class MaterialService {
     }
 
     /**
+     * 根据商品和仓库获取初始库存
+     * @param materialId
+     * @param depotId
+     * @return
+     */
+    public BigDecimal getInitStock(Long materialId, Long depotId) {
+        BigDecimal stock = BigDecimal.ZERO;
+        MaterialInitialStockExample example = new MaterialInitialStockExample();
+        example.createCriteria().andMaterialIdEqualTo(materialId).andDepotIdEqualTo(depotId)
+                .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        List<MaterialInitialStock> list = materialInitialStockMapper.selectByExample(example);
+        if(list!=null && list.size()>0) {
+            stock = list.get(0).getNumber();
+        }
+        return stock;
+    }
+
+    /**
      * 根据商品和仓库获取当前库存
      * @param materialId
      * @param depotId
@@ -799,6 +799,8 @@ public class MaterialService {
         List<MaterialCurrentStock> list = materialCurrentStockMapper.selectByExample(example);
         if(list!=null && list.size()>0) {
             stock = list.get(0).getCurrentNumber();
+        } else {
+            stock = getInitStock(materialId,depotId);
         }
         return stock;
     }
