@@ -574,11 +574,25 @@ public class DepotItemController {
      */
     @GetMapping(value = "/findStockWarningCount")
     public BaseResponseInfo findStockWarningCount(@RequestParam("currentPage") Integer currentPage,
-                                                  @RequestParam("pageSize") Integer pageSize,  @RequestParam("projectId") Integer pid )throws Exception {
+                                                  @RequestParam("pageSize") Integer pageSize,
+                                                  @RequestParam("projectId") Integer pid,
+                                                  @RequestParam("mpList") String mpList)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         try {
+            String[] mpArr = mpList.split(",");
             List<DepotItemStockWarningCount> list = depotItemService.findStockWarningCount((currentPage-1)*pageSize, pageSize,pid);
+            //存放数据json数组
+            if (null != list) {
+                for (DepotItemStockWarningCount disw : list) {
+                    DepotItemVo4WithInfoEx diEx = new DepotItemVo4WithInfoEx();
+                    diEx.setMMfrs(disw.getMMfrs());
+                    diEx.setMOtherField1(disw.getMOtherField1());
+                    diEx.setMOtherField2(disw.getMOtherField2());
+                    diEx.setMOtherField3(disw.getMOtherField3());
+                    disw.setMaterialOther(getOtherInfo(mpArr, diEx));
+                }
+            }
             int total = depotItemService.findStockWarningCountTotal(pid);
             map.put("total", total);
             map.put("rows", list);
@@ -604,11 +618,13 @@ public class DepotItemController {
     public BaseResponseInfo exportWarningExcel(@RequestParam("currentPage") Integer currentPage,
                                         @RequestParam("pageSize") Integer pageSize,
                                         @RequestParam("projectId") Integer projectId,
+                                        @RequestParam("mpList") String mpList,
                                         HttpServletRequest request, HttpServletResponse response)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         String message = "成功";
         try {
+            String[] mpArr = mpList.split(",");
             List<DepotItemStockWarningCount> dataList = depotItemService.findStockWarningCount((currentPage - 1) * pageSize, pageSize, projectId);
             //存放数据json数组
             Integer pid = projectId;
@@ -617,11 +633,17 @@ public class DepotItemController {
             List<String[]> objects = new ArrayList<String[]>();
             if (null != dataList) {
                 for (DepotItemStockWarningCount diEx : dataList) {
+                    DepotItemVo4WithInfoEx diVI = new DepotItemVo4WithInfoEx();
+                    diVI.setMMfrs(diEx.getMMfrs());
+                    diVI.setMOtherField1(diEx.getMOtherField1());
+                    diVI.setMOtherField2(diEx.getMOtherField2());
+                    diVI.setMOtherField3(diEx.getMOtherField3());
+                    String materialOther = getOtherInfo(mpArr, diVI);
                     String[] objs = new String[10];
                     objs[0] = diEx.getMaterialName();
                     objs[1] = diEx.getMaterialStandard();
                     objs[2] = diEx.getMaterialModel();
-                    objs[3] = diEx.getMaterialOther();
+                    objs[3] = materialOther;
                     objs[4] = diEx.getMaterialUnit();
                     objs[5] = diEx.getBasicInNumber().toString();
                     objs[6] = diEx.getBasicOutNumber() == null ? "0" : diEx.getBasicOutNumber().toString();

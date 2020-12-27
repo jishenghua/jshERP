@@ -293,12 +293,16 @@
             data: ({
                 currentPage: pageNo,
                 pageSize: pageSize,
-                projectId : $.trim($("#searchProjectId").val())
+                projectId : $.trim($("#searchProjectId").val()),
+                mpList: mPropertyList
             }),
             success: function (res) {
                 if(res && res.code === 200 && res.data) {
                     if (pageSize === 3000) {
-                        window.location.href = "/depotItem/exportWarningExcel?browserType=" + getOs() + "&currentPage=" + pageNo + "&pageSize=" + pageSize + "&projectId=" + $.trim($("#searchProjectId").val()) ;
+                        window.location.href = "/depotItem/exportWarningExcel?browserType=" + getOs()
+                            + "&currentPage=" + pageNo + "&pageSize=" + pageSize
+                            + "&projectId=" + $.trim($("#searchProjectId").val())
+                            + "&mpList=" + mPropertyList;
                     }
                     else {
                         //获取排序后的产品ID

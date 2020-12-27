@@ -41,6 +41,9 @@
         <result column="MModel" jdbcType="VARCHAR" property="MModel" />
         <result column="MStandard" jdbcType="VARCHAR" property="MStandard" />
         <result column="MaterialUnit" jdbcType="VARCHAR" property="MaterialUnit" />
+        <result column="MOtherField1" jdbcType="VARCHAR" property="MOtherField1" />
+        <result column="MOtherField2" jdbcType="VARCHAR" property="MOtherField2" />
+        <result column="MOtherField3" jdbcType="VARCHAR" property="MOtherField3" />
         <result column="unit_name" jdbcType="VARCHAR" property="unitName" />
         <result column="MColor" jdbcType="VARCHAR" property="MColor" />
         <result column="purchase_decimal" jdbcType="DECIMAL" property="purchaseDecimal" />
@@ -50,9 +53,12 @@
         <result column="MaterialName" jdbcType="VARCHAR" property="MaterialName" />
         <result column="MaterialModel" jdbcType="VARCHAR" property="MaterialModel" />
         <result column="MaterialStandard" jdbcType="VARCHAR" property="MaterialStandard" />
+        <result column="MMfrs" jdbcType="VARCHAR" property="MMfrs" />
         <result column="categoryName" jdbcType="VARCHAR" property="categoryName" />
-        <result column="MaterialOther" jdbcType="VARCHAR" property="MaterialOther" />
         <result column="MaterialUnit" jdbcType="VARCHAR" property="MaterialUnit" />
+        <result column="MOtherField1" jdbcType="VARCHAR" property="MOtherField1" />
+        <result column="MOtherField2" jdbcType="VARCHAR" property="MOtherField2" />
+        <result column="MOtherField3" jdbcType="VARCHAR" property="MOtherField3" />
         <result column="safetystock" jdbcType="DECIMAL" property="safetystock" />
         <result column="BasicInNumber" jdbcType="DECIMAL" property="BasicInNumber" />
         <result column="BasicOutNumber" jdbcType="DECIMAL" property="BasicOutNumber" />
@@ -158,6 +164,7 @@
 
     <select id="findByAll" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultByMaterial">
         select m.id MId, m.name MName, m.mfrs MMfrs, m.model MModel, m.standard MStandard,
+        m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,
         m.unit MaterialUnit, m.color MColor, u.name unit_name,
         (select purchase_decimal from jsh_material_extend me
         where me.material_id=m.id and me.default_flag=1 and ifnull(me.delete_Flag,'0') !='1' limit 0,1)
@@ -369,15 +376,9 @@
         m.name MaterialName,
         m.model MaterialModel,
         m.standard MaterialStandard,
+        m.mfrs MMfrs,
+        m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,
         mc.`Name` categoryName,
-        CONCAT(
-        '(',
-        m.standard,
-        ')',
-        '(',
-        m.color,
-        ')'
-        ) AS MaterialOther,
         m.unit MaterialUnit,
         ifnull(m.safety_stock,0) safetystock,
         IFNULL(intype.BasicInNumber ,0) BasicInNumber,

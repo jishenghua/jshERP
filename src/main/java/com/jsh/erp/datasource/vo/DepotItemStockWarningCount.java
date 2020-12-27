@@ -11,9 +11,17 @@ public class DepotItemStockWarningCount {
 
     private String MaterialStandard;
 
+    private String MMfrs;
+
     private String categoryName;
 
     private String MaterialOther;
+
+    private String MOtherField1;
+
+    private String MOtherField2;
+
+    private String MOtherField3;
 
     private String MaterialUnit;
 
@@ -52,6 +60,14 @@ public class DepotItemStockWarningCount {
         MaterialStandard = materialStandard;
     }
 
+    public String getMMfrs() {
+        return MMfrs;
+    }
+
+    public void setMMfrs(String MMfrs) {
+        this.MMfrs = MMfrs;
+    }
+
     public String getCategoryName() {
         return categoryName;
     }
@@ -66,6 +82,30 @@ public class DepotItemStockWarningCount {
 
     public void setMaterialOther(String materialOther) {
         MaterialOther = materialOther;
+    }
+
+    public String getMOtherField1() {
+        return MOtherField1;
+    }
+
+    public void setMOtherField1(String MOtherField1) {
+        this.MOtherField1 = MOtherField1;
+    }
+
+    public String getMOtherField2() {
+        return MOtherField2;
+    }
+
+    public void setMOtherField2(String MOtherField2) {
+        this.MOtherField2 = MOtherField2;
+    }
+
+    public String getMOtherField3() {
+        return MOtherField3;
+    }
+
+    public void setMOtherField3(String MOtherField3) {
+        this.MOtherField3 = MOtherField3;
     }
 
     public String getMaterialUnit() {

@@ -111,6 +111,13 @@
             //loadFilter: pagerFilter,
             columns: [[
                 {field: 'id', width: 10, align: "center", hidden: true},
+                {
+                    title: '操作', field: 'op', align: "center", width: 80, formatter: function (value, rec, index) {
+                        var str = '';
+                        str += '<img src="/js/easyui/themes/icons/pencil.png" style="cursor: pointer;" onclick="editMaterialProperty(\'' + index + '\');"/>';
+                        return str;
+                    }
+                },
                 {title: '名称', field: 'nativeName', width: 100},
                 {
                     title: '是否启用', field: 'enabled', width: 100, formatter: function (value, rec) {
@@ -123,14 +130,7 @@
                     }
                 },
                 {title: '排序', field: 'sort', width: 100},
-                {title: '别名', field: 'anotherName', width: 100},
-                {
-                    title: '操作', field: 'op', align: "center", width: 80, formatter: function (value, rec, index) {
-                        var str = '';
-                        str += '<img src="/js/easyui/themes/icons/pencil.png" style="cursor: pointer;" onclick="editMaterialProperty(\'' + index + '\');"/>&nbsp;<a onclick="editMaterialProperty(\'' + index + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
-                        return str;
-                    }
-                }
+                {title: '别名', field: 'anotherName', width: 100}
             ]],
             onLoadError: function () {
                 $.messager.alert('页面加载提示', '页面加载异常，请稍后再试！', 'error');

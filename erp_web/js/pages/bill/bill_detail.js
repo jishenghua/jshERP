@@ -52,7 +52,7 @@
                         var thisRows = res.data.page.rows;
                         for (var i = 0; i < thisRows.length; i++) {
                             if (thisRows[i].enabled) {
-                                mPropertyList += thisRows[i].nativename + ",";
+                                mPropertyList += thisRows[i].nativeName + ",";
                             }
                         }
                         if (mPropertyList) {

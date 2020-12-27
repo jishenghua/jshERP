@@ -186,7 +186,7 @@ function bindSupplierEvent() {
                 success: function(res) {
                     if (res) {
                         $('#supplierDlg').dialog('close');
-                        initSupplier(); //刷新供应商
+                        inOutService.initSupplier(); //刷新供应商
                     }
                 }
             });
@@ -319,7 +319,7 @@ function bindAccountEvent() {
                 success: function(res) {
                     if(res && res.code === 200) {
                         $('#accountDlg').dialog('close');
-                        initSystemData_account(); //刷新账户
+                        inOutService.initSystemData_account(); //刷新账户
                     }
                 },
                 //此处添加错误处理
