@@ -1604,10 +1604,20 @@
             var meList = $("#materialExtendData").datagrid('getRows');
             var unit = $("#Unit").val();
             var manyUnitselected = $("#manyUnit").find("option:selected").text();
+            var manyUnitInfo = manyUnitselected.substring(0, manyUnitselected.indexOf("("));
+            var unitArr = manyUnitInfo.split(",");
             if(!unit) {
                 //此时为多单位
                 if (meList.length<2){
                     $.messager.alert('提示',"多单位的商品条码行数至少要有两行，请再新增一行条码信息！",'warning');
+                    return;
+                }
+                if(meList[0].CommodityUnit != unitArr[0]) {
+                    $.messager.alert('提示','条码之后的单位填写有误，单位<b>' + meList[0].CommodityUnit + '</b>请修改为<b>' + unitArr[0] + '</b>！','warning');
+                    return;
+                }
+                if(meList[1].CommodityUnit != unitArr[1]) {
+                    $.messager.alert('提示','条码之后的单位填写有误，单位<b>' + meList[1].CommodityUnit + '</b>请修改为<b>' + unitArr[1] + '</b>！','warning');
                     return;
                 }
             }
@@ -1619,8 +1629,6 @@
                         return;
                     }
                 } else if(manyUnitselected) {
-                    var manyUnitInfo = manyUnitselected.substring(0, manyUnitselected.indexOf("("));
-                    var unitArr = manyUnitInfo.split(",");
                     if(commodityUnit != unitArr[0] && commodityUnit != unitArr[1]) {
                         $.messager.alert('提示', '条码之后的单位填写有误，单位<b>' + commodityUnit + '</b>请修改为' +
                             '<b>' + unitArr[0]+ '</b>或<b>' + unitArr[1]+ '</b>！', 'warning');
