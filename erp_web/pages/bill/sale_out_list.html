@@ -564,6 +564,17 @@
                             var res = $('#linkBillData').datagrid('getChecked')[0];
                             $('#OrganId').combobox('setValue', res.organId);
                             $("#LinkNumber").textbox("setValue",res.number);  //关联订单号
+                            $("#Remark").val(res.remark);
+                            if(res.salesMan){
+                                var arr = res.salesMan.split(",");
+                                var salesmanArray = [];
+                                for(var i=0;i<arr.length;i++){
+                                    if(arr[i]){
+                                        salesmanArray.push(arr[i].replace("<","").replace(">",""));
+                                    }
+                                }
+                                $("#Salesman").combobox('setValues', salesmanArray);
+                            }
                             $("#DiscountLastMoney").val(res.totalPrice); //优惠后金额
                             $("#ChangeAmount").val(res.totalPrice).attr("data-changeamount", res.totalPrice);
                             depotHeadID = res.id;
