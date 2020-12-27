@@ -123,6 +123,17 @@
             pageList: initPageNum,
             columns: [[
                 {field: 'id', width: 35, align: "center", checkbox: true},
+                {
+                    title: '操作', field: 'op', align: "center", width: 60,
+                    formatter: function (value, rec, index) {
+                        var str = '';
+                        str += '<img title="编辑" src="/js/easyui/themes/icons/pencil.png" style="cursor: pointer;" onclick="editAccount(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
+                        if(isShowOpFun()){
+                            str += '<img title="删除" src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteAccount(\'' + rec.id + '\');"/>';
+                        }
+                        return str;
+                    }
+                },
                 {title: '名称', field: 'name', width: 100},
                 {title: '编号', field: 'serialNo', width: 150, align: "center"},
                 {title: '期初金额', field: 'initialAmount', width: 100, align: "center"},
@@ -140,14 +151,10 @@
                 },
                 {title: '备注', field: 'remark', width: 100},
                 {
-                    title: '操作', field: 'op', align: "center", width: 210,
+                    title: '账户流水', field: 'show', align: "center", width: 100,
                     formatter: function (value, rec, index) {
                         var str = '';
-                        str += '<img src="/js/easyui/themes/icons/list.png" style="cursor: pointer;" onclick="showAccountInOutList(\'' + index + '\');"/>&nbsp;<a onclick="showAccountInOutList(\'' + index + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">流水</a>&nbsp;&nbsp;';
-                        str += '<img src="/js/easyui/themes/icons/pencil.png" style="cursor: pointer;" onclick="editAccount(\'' + index + '\');"/>&nbsp;<a onclick="editAccount(\'' + index + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
-                        if(isShowOpFun()){
-                            str += '<img src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteAccount(\'' + rec.id + '\');"/>&nbsp;<a onclick="deleteAccount(\'' + rec.id + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">删除</a>&nbsp;&nbsp;';
-                        }
+                        str += '<img src="/js/easyui/themes/icons/list.png" style="cursor: pointer;" onclick="showAccountInOutList(\'' + index + '\');"/>&nbsp;<a onclick="showAccountInOutList(\'' + index + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">流水</a>';
                         return str;
                     }
                 }
