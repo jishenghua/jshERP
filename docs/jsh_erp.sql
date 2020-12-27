@@ -593,12 +593,10 @@ CREATE TABLE `jsh_material_property` (
 -- ----------------------------
 -- Records of jsh_material_property
 -- ----------------------------
-INSERT INTO `jsh_material_property` VALUES ('1', '规格', '', '02', '规格', '0');
-INSERT INTO `jsh_material_property` VALUES ('2', '颜色', '', '01', '颜色', '0');
-INSERT INTO `jsh_material_property` VALUES ('3', '制造商', '', '03', '制造商', '0');
-INSERT INTO `jsh_material_property` VALUES ('4', '自定义1', '\0', '04', '自定义1', '0');
-INSERT INTO `jsh_material_property` VALUES ('5', '自定义2', '\0', '05', '自定义2', '0');
-INSERT INTO `jsh_material_property` VALUES ('6', '自定义3', '\0', '06', '自定义3', '0');
+INSERT INTO `jsh_material_property` VALUES ('1', '制造商', '', '01', '制造商', '0');
+INSERT INTO `jsh_material_property` VALUES ('2', '自定义1', '', '02', '自定义1', '0');
+INSERT INTO `jsh_material_property` VALUES ('3', '自定义2', '', '03', '自定义2', '0');
+INSERT INTO `jsh_material_property` VALUES ('4', '自定义3', '', '04', '自定义3', '0');
 
 -- ----------------------------
 -- Table structure for jsh_msg
