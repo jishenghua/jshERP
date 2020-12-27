@@ -419,8 +419,9 @@
                     {title: '名称', field: 'name', width: 120},
                     {title: '规格', field: 'standard', width: 80},
                     {title: '型号', field: 'model', width: 80},
+                    {title: '颜色', field: 'color', width: 50},
                     {title: '类别', field: 'categoryName', width: 80},
-                    {title: '扩展信息', field: 'materialOther', width: 140},
+                    {title: '扩展信息', field: 'materialOther', width: 100},
                     {title: '单位', field: 'unit', width: 80,
                         formatter: function (value, rec) {
                             if(value) {
@@ -449,7 +450,7 @@
                         }
                     },
                     {
-                        title: '序列号', field: 'enableSerialNumber', width: 70, align: "center", formatter: function (value) {
+                        title: '序列号', field: 'enableSerialNumber', width: 60, align: "center", formatter: function (value) {
                             return value=='1' ? "<span style='color:green'>有</span>" : "无";
                         }
                     }
