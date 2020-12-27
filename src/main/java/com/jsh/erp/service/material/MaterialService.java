@@ -172,7 +172,7 @@ public class MaterialService {
                     if(jsonObj.get("depotId")!=null && jsonObj.get("number")!=null) {
                         String number = jsonObj.getString("number");
                         Long depotId = jsonObj.getLong("depotId");
-                        if(number!=null && Double.valueOf(number)>0) {
+                        if(StringUtil.isNotEmpty(number) && Double.valueOf(number)>0) {
                             insertStockByMaterialAndDepot(depotId, mId, parseBigDecimalEx(number));
                         }
                     }
@@ -210,7 +210,7 @@ public class MaterialService {
                         MaterialInitialStockExample example = new MaterialInitialStockExample();
                         example.createCriteria().andMaterialIdEqualTo(id).andDepotIdEqualTo(depotId);
                         materialInitialStockMapper.deleteByExample(example);
-                        if (number != null && Double.valueOf(number) > 0) {
+                        if (StringUtil.isNotEmpty(number) && Double.valueOf(number) > 0) {
                             insertStockByMaterialAndDepot(depotId, id, parseBigDecimalEx(number));
                         }
                     }
