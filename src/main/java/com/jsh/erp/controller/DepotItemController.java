@@ -591,6 +591,7 @@ public class DepotItemController {
                     diEx.setMOtherField2(disw.getMOtherField2());
                     diEx.setMOtherField3(disw.getMOtherField3());
                     disw.setMaterialOther(getOtherInfo(mpArr, diEx));
+                    disw.setMaterialUnit(getUName(disw.getMaterialUnit(), disw.getUnitName()));
                 }
             }
             int total = depotItemService.findStockWarningCountTotal(pid);
@@ -628,7 +629,7 @@ public class DepotItemController {
             List<DepotItemStockWarningCount> dataList = depotItemService.findStockWarningCount((currentPage - 1) * pageSize, pageSize, projectId);
             //存放数据json数组
             Integer pid = projectId;
-            String[] names = {"名称", "规格", "型号", "扩展信息", "单位", "入库数量", "出库数量", "库存数量", "安全库存量", "临界库存量"};
+            String[] names = {"名称", "规格", "型号", "扩展信息", "单位", "安全存量", "当前库存", "建议入库量"};
             String title = "库存预警报表";
             List<String[]> objects = new ArrayList<String[]>();
             if (null != dataList) {
@@ -639,17 +640,16 @@ public class DepotItemController {
                     diVI.setMOtherField2(diEx.getMOtherField2());
                     diVI.setMOtherField3(diEx.getMOtherField3());
                     String materialOther = getOtherInfo(mpArr, diVI);
-                    String[] objs = new String[10];
-                    objs[0] = diEx.getMaterialName();
-                    objs[1] = diEx.getMaterialStandard();
-                    objs[2] = diEx.getMaterialModel();
+                    String unitName = getUName(diEx.getMaterialUnit(), diEx.getUnitName());
+                    String[] objs = new String[8];
+                    objs[0] = diEx.getMName();
+                    objs[1] = diEx.getMStandard();
+                    objs[2] = diEx.getMModel();
                     objs[3] = materialOther;
-                    objs[4] = diEx.getMaterialUnit();
-                    objs[5] = diEx.getBasicInNumber().toString();
-                    objs[6] = diEx.getBasicOutNumber() == null ? "0" : diEx.getBasicOutNumber().toString();
-                    objs[7] = diEx.getBasicNumber() == null ? "0" : diEx.getBasicNumber().toString();
-                    objs[8] = diEx.getSafetystock() == null ? "0" : diEx.getSafetystock().toString();
-                    objs[9] = diEx.getBasicLinjieNumber() == null ? "0" : diEx.getBasicLinjieNumber().toString();
+                    objs[4] = unitName;
+                    objs[5] = diEx.getSafetystock() == null ? "0" : diEx.getSafetystock().toString();
+                    objs[6] = diEx.getCurrentNumber() == null ? "0" : diEx.getCurrentNumber().toString();
+                    objs[7] = diEx.getLinjieNumber() == null ? "0" : diEx.getLinjieNumber().toString();
                     objects.add(objs);
                 }
             }

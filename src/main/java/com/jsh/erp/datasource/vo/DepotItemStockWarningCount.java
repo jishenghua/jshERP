@@ -5,15 +5,21 @@ import java.math.BigDecimal;
 
 public class DepotItemStockWarningCount {
 
-    private String MaterialName;
+    private Long MId;
 
-    private String MaterialModel;
+    private String MName;
 
-    private String MaterialStandard;
+    private String MModel;
+
+    private String MaterialUnit;
+
+    private String MColor;
+
+    private String MStandard;
 
     private String MMfrs;
 
-    private String categoryName;
+    private String unitName;
 
     private String MaterialOther;
 
@@ -23,41 +29,58 @@ public class DepotItemStockWarningCount {
 
     private String MOtherField3;
 
-    private String MaterialUnit;
-
     private BigDecimal safetystock;//安全库存量
 
-    private BigDecimal BasicInNumber;//入库量
+    private BigDecimal currentNumber;//库存
 
-    private BigDecimal BasicOutNumber;//出库量
+    private BigDecimal linjieNumber;//临界库存
 
-
-    private BigDecimal BasicNumber;//库存
-
-    private BigDecimal BasicLinjieNumber;//临界库存
-
-    public String getMaterialName() {
-        return MaterialName;
+    public Long getMId() {
+        return MId;
     }
 
-    public void setMaterialName(String materialName) {
-        MaterialName = materialName;
+    public void setMId(Long MId) {
+        this.MId = MId;
     }
 
-    public String getMaterialModel() {
-        return MaterialModel;
+    public String getMName() {
+        return MName;
     }
 
-    public void setMaterialModel(String materialModel) {
-        MaterialModel = materialModel;
+    public void setMName(String MName) {
+        this.MName = MName;
     }
 
-    public String getMaterialStandard() {
-        return MaterialStandard;
+    public String getMModel() {
+        return MModel;
     }
 
-    public void setMaterialStandard(String materialStandard) {
-        MaterialStandard = materialStandard;
+    public void setMModel(String MModel) {
+        this.MModel = MModel;
+    }
+
+    public String getMaterialUnit() {
+        return MaterialUnit;
+    }
+
+    public void setMaterialUnit(String materialUnit) {
+        MaterialUnit = materialUnit;
+    }
+
+    public String getMColor() {
+        return MColor;
+    }
+
+    public void setMColor(String MColor) {
+        this.MColor = MColor;
+    }
+
+    public String getMStandard() {
+        return MStandard;
+    }
+
+    public void setMStandard(String MStandard) {
+        this.MStandard = MStandard;
     }
 
     public String getMMfrs() {
@@ -68,12 +91,12 @@ public class DepotItemStockWarningCount {
         this.MMfrs = MMfrs;
     }
 
-    public String getCategoryName() {
-        return categoryName;
+    public String getUnitName() {
+        return unitName;
     }
 
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
+    public void setUnitName(String unitName) {
+        this.unitName = unitName;
     }
 
     public String getMaterialOther() {
@@ -108,14 +131,6 @@ public class DepotItemStockWarningCount {
         this.MOtherField3 = MOtherField3;
     }
 
-    public String getMaterialUnit() {
-        return MaterialUnit;
-    }
-
-    public void setMaterialUnit(String materialUnit) {
-        MaterialUnit = materialUnit;
-    }
-
     public BigDecimal getSafetystock() {
         return safetystock;
     }
@@ -124,35 +139,19 @@ public class DepotItemStockWarningCount {
         this.safetystock = safetystock;
     }
 
-    public BigDecimal getBasicInNumber() {
-        return BasicInNumber;
+    public BigDecimal getCurrentNumber() {
+        return currentNumber;
     }
 
-    public void setBasicInNumber(BigDecimal basicInNumber) {
-        BasicInNumber = basicInNumber;
+    public void setCurrentNumber(BigDecimal currentNumber) {
+        this.currentNumber = currentNumber;
     }
 
-    public BigDecimal getBasicOutNumber() {
-        return BasicOutNumber;
+    public BigDecimal getLinjieNumber() {
+        return linjieNumber;
     }
 
-    public void setBasicOutNumber(BigDecimal basicOutNumber) {
-        BasicOutNumber = basicOutNumber;
-    }
-
-    public BigDecimal getBasicNumber() {
-        return BasicNumber;
-    }
-
-    public void setBasicNumber(BigDecimal basicNumber) {
-        BasicNumber = basicNumber;
-    }
-
-    public BigDecimal getBasicLinjieNumber() {
-        return BasicLinjieNumber;
-    }
-
-    public void setBasicLinjieNumber(BigDecimal basicLinjieNumber) {
-        BasicLinjieNumber = basicLinjieNumber;
+    public void setLinjieNumber(BigDecimal linjieNumber) {
+        this.linjieNumber = linjieNumber;
     }
 }
