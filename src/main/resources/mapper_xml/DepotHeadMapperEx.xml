@@ -69,8 +69,9 @@
         <if test="endTime != null">
             and dh.oper_time &lt;= '${endTime}'
         </if>
-        <if test="materialParam != null">
-            and (m.`Name` like '%${materialParam}%' or m.Model like '%${materialParam}%')
+        <if test="materialParam != null and materialParam !=''">
+            <bind name="bindKey" value="'%'+materialParam+'%'"/>
+            and (m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
         </if>
         <if test="depotIds != null">
             and di.depot_id in (${depotIds})
@@ -113,8 +114,9 @@
         <if test="endTime != null">
             and dh.oper_time &lt;= '${endTime}'
         </if>
-        <if test="materialParam != null">
-            and (m.`Name` like '%${materialParam}%' or m.Model like '%${materialParam}%')
+        <if test="materialParam != null and materialParam !=''">
+            <bind name="bindKey" value="'%'+materialParam+'%'"/>
+            and (m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
         </if>
         <if test="depotIds != null">
             and di.depot_id in (${depotIds})
@@ -130,7 +132,7 @@
     </select>
 
     <select id="findMaterialsListByHeaderId" resultType="java.lang.String">
-        select group_concat(concat(jsh_material.`Name`,' ',jsh_material.Model)) as mName
+        select group_concat(concat(jsh_material.name,' ',jsh_material.standard,' ',jsh_material.model)) as mName
         from jsh_depot_item
         inner join jsh_material on jsh_depot_item.material_id = jsh_material.Id and ifnull(jsh_material.delete_Flag,'0') !='1'
         where jsh_depot_item.header_id = ${id}
