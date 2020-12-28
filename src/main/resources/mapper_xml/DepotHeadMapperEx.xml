@@ -160,6 +160,10 @@
         <if test="type != null">
             and dh.type='${type}'
         </if>
+        <if test="materialParam != null and materialParam !=''">
+            <bind name="bindKey" value="'%'+materialParam+'%'"/>
+            and (m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
+        </if>
         and ifnull(dh.delete_flag,'0') !='1'
         ORDER BY oper_time DESC,number desc
         <if test="offset != null and rows != null">
@@ -187,6 +191,10 @@
         <if test="type != null">
             and dh.type='${type}'
         </if>
+        <if test="materialParam != null and materialParam !=''">
+            <bind name="bindKey" value="'%'+materialParam+'%'"/>
+            and (m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
+        </if>
         and ifnull(dh.delete_flag,'0') !='1'
         ORDER BY oper_time DESC,number desc
     </select>
@@ -208,7 +216,6 @@
         </if>
         and ifnull(jdh.delete_flag,'0') !='1'
         ) numSum,
-
         (select sum(jdi.all_price) priceSum from jsh_depot_head jdh
         INNER JOIN jsh_depot_item jdi on jdh.id=jdi.header_id  and ifnull(jdi.delete_flag,'0') !='1'
         where jdi.material_id=di.material_id
@@ -241,6 +248,10 @@
         <if test="pid == null">
             and di.depot_id in (${dids})
         </if>
+        <if test="materialParam != null and materialParam !=''">
+            <bind name="bindKey" value="'%'+materialParam+'%'"/>
+            and (m.mName like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
+        </if>
         and ifnull(dh.delete_flag,'0') !='1'
         GROUP BY di.material_id,m.mName,m.Model,m.standard,m.categoryName
         <if test="offset != null and rows != null">
@@ -265,6 +276,10 @@
         </if>
         <if test="pid == null">
             and di.depot_id in (${dids})
+        </if>
+        <if test="materialParam != null and materialParam !=''">
+            <bind name="bindKey" value="'%'+materialParam+'%'"/>
+            and (m.mName like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
         GROUP BY di.material_id,m.mName,m.Model,m.standard,m.categoryName) a

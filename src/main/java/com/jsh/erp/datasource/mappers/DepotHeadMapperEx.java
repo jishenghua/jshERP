@@ -49,6 +49,7 @@ public interface DepotHeadMapperEx {
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("type") String type,
+            @Param("materialParam") String materialParam,
             @Param("pid") Integer pid,
             @Param("dids") String dids,
             @Param("oId") Integer oId,
@@ -59,6 +60,7 @@ public interface DepotHeadMapperEx {
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("type") String type,
+            @Param("materialParam") String materialParam,
             @Param("pid") Integer pid,
             @Param("dids") String dids,
             @Param("oId") Integer oId);
@@ -67,6 +69,7 @@ public interface DepotHeadMapperEx {
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("type") String type,
+            @Param("materialParam") String materialParam,
             @Param("pid") Integer pid,
             @Param("dids") String dids,
             @Param("oId") Integer oId,
@@ -77,6 +80,7 @@ public interface DepotHeadMapperEx {
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("type") String type,
+            @Param("materialParam") String materialParam,
             @Param("pid") Integer pid,
             @Param("dids") String dids,
             @Param("oId") Integer oId);

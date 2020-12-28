@@ -37,6 +37,12 @@
             </div>
         </div>
         <div class="form-group">
+            <label class="control-label">商品信息：</label>
+            <div class="control-inline">
+                <input type="text" id="searchMaterial" name="searchMaterial" data-options="prompt:'名称、规格、型号'" class="easyui-textbox width-120"/>
+            </div>
+        </div>
+        <div class="form-group">
             <label class="control-label">单据日期：</label>
             <div class="control-inline">
                 <input type="text" id="searchBeginTime" name="searchBeginTime" value="" maxlength="100" class="easyui-datetimebox width-180"/>
@@ -282,6 +288,7 @@
                 currentPage: pageNo,
                 pageSize: pageSize,
                 organId: $('#OrganId').combobox('getValue'),
+                materialParam: $.trim($("#searchMaterial").val()),
                 projectId: $.trim($("#searchProjectId").val()),
                 depotIds: depotString,
                 beginTime: $("#searchBeginTime").val(),

@@ -30,15 +30,9 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label">名称：</label>
+            <label class="control-label">商品信息：</label>
             <div class="control-inline">
-                <input name="mName" id="mName" style="width:100px;"></input>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label">型号：</label>
-            <div class="control-inline">
-                <input type="text" name="mModel" id="mModel" class="easyui-textbox" style="width:100px;"></input>
+                <input type="text" id="searchMaterial" name="searchMaterial" data-options="prompt:'名称、规格、型号'" class="easyui-textbox width-120"/>
             </div>
         </div>
         <div class="form-group">
@@ -55,28 +49,12 @@
     $(function () {
         var thisDate = getNowFormatMonth(); //当前月份
         $("#searchMonth").val(thisDate);
-        initMaterialNameList();
         initMProperty(); //初始化商品属性
         initTableData();
         ininPager();
         search();
         print();
     });
-
-    //初始化商品名称模糊匹配
-    function initMaterialNameList() {
-        $('#mName').combobox({
-            method:"get",
-            url: "/material/getMaterialNameList",
-            valueField: 'value',
-            textField: 'text',
-            hasDownArrow: false,
-            filter: function(q, row){
-                var opts = $(this).combobox('options');
-                return row[opts.textField].indexOf(q) >-1;
-            }
-        });
-    }
 
     //初始化商品属性
     function initMProperty() {
@@ -222,8 +200,7 @@
                 currentPage: pageNo,
                 pageSize: pageSize,
                 monthTime: $("#searchMonth").val(),
-                name: $("#mName").combobox("getValue"),
-                model: $("#mModel").textbox("getValue"),
+                materialParam: $.trim($("#searchMaterial").val()),
                 mpList: mPropertyList
             }),
             success: function (res) {

@@ -29,6 +29,12 @@
             </div>
         </div>
         <div class="form-group">
+            <label class="control-label">商品信息：</label>
+            <div class="control-inline">
+                <input type="text" id="searchMaterial" name="searchMaterial" data-options="prompt:'名称、规格、型号'" class="easyui-textbox width-120"/>
+            </div>
+        </div>
+        <div class="form-group">
             <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchBtn">查询</a>
             <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-redo" id="exprotBtn">导出</a>
             <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-print" id="printBtn">打印</a>
@@ -291,6 +297,7 @@
             data: ({
                 currentPage: pageNo,
                 pageSize: pageSize,
+                materialParam: $.trim($("#searchMaterial").val()),
                 projectId : $.trim($("#searchProjectId").val()),
                 mpList: mPropertyList
             }),
@@ -299,6 +306,7 @@
                     if (pageSize === 3000) {
                         window.location.href = "/depotItem/exportWarningExcel?browserType=" + getOs()
                             + "&currentPage=" + pageNo + "&pageSize=" + pageSize
+                            + "&materialParam=" + $.trim($("#searchMaterial").val())
                             + "&projectId=" + $.trim($("#searchProjectId").val())
                             + "&mpList=" + mPropertyList;
                     }

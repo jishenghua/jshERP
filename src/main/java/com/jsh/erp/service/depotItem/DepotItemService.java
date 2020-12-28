@@ -240,20 +240,20 @@ public class DepotItemService {
         return list;
     }
 
-    public List<DepotItemVo4WithInfoEx> findByAll(String name, String model, String endTime, Integer offset, Integer rows)throws Exception {
+    public List<DepotItemVo4WithInfoEx> findByAll(String materialParam, String endTime, Integer offset, Integer rows)throws Exception {
         List<DepotItemVo4WithInfoEx> list =null;
         try{
-            list = depotItemMapperEx.findByAll(name, model, endTime, offset, rows);
+            list = depotItemMapperEx.findByAll(materialParam, endTime, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
     }
 
-    public int findByAllCount(String name, String model, String endTime)throws Exception {
+    public int findByAllCount(String materialParam, String endTime)throws Exception {
         int result=0;
         try{
-            result = depotItemMapperEx.findByAllCount(name, model, endTime);
+            result = depotItemMapperEx.findByAllCount(materialParam, endTime);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -440,20 +440,20 @@ public class DepotItemService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public List<DepotItemStockWarningCount> findStockWarningCount(int offset, Integer rows, Integer pid) {
+    public List<DepotItemStockWarningCount> findStockWarningCount(int offset, Integer rows, String materialParam, Integer pid) {
         List<DepotItemStockWarningCount> list = null;
         try{
-            list =depotItemMapperEx.findStockWarningCount( offset, rows, pid);
+            list =depotItemMapperEx.findStockWarningCount( offset, rows, materialParam, pid);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int findStockWarningCountTotal(Integer pid) {
+    public int findStockWarningCountTotal(String materialParam, Integer pid) {
         int result = 0;
         try{
-            result =depotItemMapperEx.findStockWarningCountTotal(pid);
+            result =depotItemMapperEx.findStockWarningCountTotal(materialParam, pid);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
