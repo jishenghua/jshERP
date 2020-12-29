@@ -12,6 +12,8 @@ public class DepotHeadVo4InDetail {
 
     private String Model;
 
+    private String standard;
+
     private BigDecimal UnitPrice;
 
     private BigDecimal OperNumber;
@@ -50,6 +52,14 @@ public class DepotHeadVo4InDetail {
 
     public void setModel(String model) {
         Model = model;
+    }
+
+    public String getStandard() {
+        return standard;
+    }
+
+    public void setStandard(String standard) {
+        this.standard = standard;
     }
 
     public BigDecimal getUnitPrice() {

@@ -37,6 +37,12 @@
             </div>
         </div>
         <div class="form-group">
+            <label class="control-label">商品信息：</label>
+            <div class="control-inline">
+                <input type="text" id="searchMaterial" name="searchMaterial" data-options="prompt:'名称、规格、型号'" class="easyui-textbox width-120"/>
+            </div>
+        </div>
+        <div class="form-group">
             <label class="control-label">单据日期：</label>
             <div class="control-inline">
                 <input type="text" id="searchBeginTime" name="searchBeginTime" value="" maxlength="100" class="easyui-datetimebox width-180"/>
@@ -191,8 +197,9 @@
                         return '<a class="n-link" onclick="turnBillDetailPage(\'' + row.number + '\''+',\'' + row.newType + '\');">' + row.number + '</a>';
                     }
                 },
-                {title: '商品名称', field: 'mname', width: 120},
-                {title: '商品型号', field: 'model', width: 100},
+                {title: '名称', field: 'mname', width: 120},
+                {title: '规格', field: 'standard', width: 100},
+                {title: '型号', field: 'model', width: 100},
                 {title: '单价', field: 'unitPrice', width: 60},
                 {title: '出库数量', field: 'operNumber', width: 80},
                 {title: '金额', field: 'allPrice', width: 60},
@@ -281,6 +288,7 @@
                 currentPage: pageNo,
                 pageSize: pageSize,
                 organId: $('#OrganId').combobox('getValue'),
+                materialParam: $.trim($("#searchMaterial").val()),
                 projectId: $.trim($("#searchProjectId").val()),
                 depotIds: depotString,
                 beginTime: $("#searchBeginTime").val(),

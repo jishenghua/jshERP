@@ -52,7 +52,7 @@
                         var thisRows = res.data.page.rows;
                         for (var i = 0; i < thisRows.length; i++) {
                             if (thisRows[i].enabled) {
-                                mPropertyList += thisRows[i].nativename + ",";
+                                mPropertyList += thisRows[i].nativeName + ",";
                             }
                         }
                         if (mPropertyList) {
@@ -307,7 +307,7 @@
                                 $("#bill .back-amount-show").text(0);
                             }
                         }
-                        if(listSubType === "销售出库" || listSubType === "销售退货"){
+                        if(listSubType === "销售订单" || listSubType === "销售出库" || listSubType === "销售退货"){
                             var salesManInfo = data.salesMan;
                             if(salesManInfo){
                                 var arr = salesManInfo.split(",");

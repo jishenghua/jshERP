@@ -208,14 +208,6 @@
                     handler: function () {
                         addUser();
                     }
-                },'-',
-                {
-                    id: 'deleteUser',
-                    text: '删除',
-                    iconCls: 'icon-remove',
-                    handler: function () {
-                        batDeleteUser();
-                    }
                 }
             ],
             onLoadError: function () {
@@ -298,60 +290,6 @@
                 });
             }
         });
-    }
-
-    //批量删除用户
-    function batDeleteUser() {
-        var row = $('#tableData').datagrid('getChecked');
-        if (row.length == 0) {
-            $.messager.alert('删除提示', '没有记录被选中！', 'info');
-            return;
-        }
-        if (row.length > 0) {
-            $.messager.confirm('删除确认', '确定要删除选中的' + row.length + '条用户信息吗？', function (r) {
-                if (r) {
-                    var ids = "";
-                    for (var i = 0; i < row.length; i++) {
-                        if (i == row.length - 1) {
-                            ids += row[i].id;
-                            break;
-                        }
-                        ids += row[i].id + ",";
-                    }
-                    if(row[i].loginName == "jsh"){
-                        $.messager.alert('提示', '租户jsh不能删除！', 'warning');
-                        return;
-                    } else if(row[i].id == row[i].tenantId) {
-                        $.messager.alert('提示', '不能删除自己！', 'warning');
-                        return;
-                    } else {
-                        $.ajax({
-                            type: "post",
-                            url: "/user/batchDeleteUser",
-                            dataType: "json",
-                            async: false,
-                            data: ({
-                                ids: ids,
-                            }),
-                            success: function (res) {
-                                if(res && res.code != 200) {
-                                    $.messager.alert('提示', res.msg, 'error');
-                                    return;
-                                }
-                                $.messager.alert('提示', res.msg, 'info');
-                                $("#searchBtn").click();
-                                $(":checkbox").attr("checked", false);
-                            },
-                            //此处添加错误处理
-                            error: function () {
-                                $.messager.alert('删除提示', '删除用户信息异常，请稍后再试！', 'error');
-                                return;
-                            }
-                        });
-                    }
-                }
-            });
-        }
     }
 
     //增加用户

@@ -35,7 +35,7 @@
         <div class="form-group">
             <label class="control-label">商品信息：</label>
             <div class="control-inline">
-                <input type="text" id="searchMaterial" name="searchMaterial" placeholder="名称，型号" maxlength="100" class="easyui-textbox width-90"/>
+                <input type="text" id="searchMaterial" name="searchMaterial" data-options="prompt:'名称、规格、型号'" maxlength="100" class="easyui-textbox width-120"/>
             </div>
         </div>
         <div class="form-group">
@@ -564,6 +564,17 @@
                             var res = $('#linkBillData').datagrid('getChecked')[0];
                             $('#OrganId').combobox('setValue', res.organId);
                             $("#LinkNumber").textbox("setValue",res.number);  //关联订单号
+                            $("#Remark").val(res.remark);
+                            if(res.salesMan){
+                                var arr = res.salesMan.split(",");
+                                var salesmanArray = [];
+                                for(var i=0;i<arr.length;i++){
+                                    if(arr[i]){
+                                        salesmanArray.push(arr[i].replace("<","").replace(">",""));
+                                    }
+                                }
+                                $("#Salesman").combobox('setValues', salesmanArray);
+                            }
                             $("#DiscountLastMoney").val(res.totalPrice); //优惠后金额
                             $("#ChangeAmount").val(res.totalPrice).attr("data-changeamount", res.totalPrice);
                             depotHeadID = res.id;
@@ -911,6 +922,7 @@
                     }
                 }
             ],
+            onClickCell: inOutService.onClickCell,
             onLoadError:function() {
                 $.messager.alert('页面加载提示','页面加载异常，请稍后再试！','error');
                 return;
@@ -944,15 +956,12 @@
                     });
                     data.footer = array;
                     $("#materialData").datagrid('loadData',data);
+                    for(var i=0; i<data.rows.length; i++){
+                        inOutService.autoReckon();
+                    }
                     $("#depotHeadFM .datagrid-view2 .datagrid-footer").find("[field='op'] img").hide();
                     if(type === "add") {
                         $("#depotHeadDlg #append").click(); //新增行
-                    } else if(type === "edit") {
-                        editIndex = 0;
-                        for(var i=0;i<data.rows.length;i++){
-                            $('#materialData').datagrid('selectRow', i).datagrid('beginEdit', i);
-                            inOutService.autoReckon();
-                        }
                     }
                 }
             },

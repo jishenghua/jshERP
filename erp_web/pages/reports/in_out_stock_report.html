@@ -29,15 +29,9 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label">名称：</label>
+            <label class="control-label">商品信息：</label>
             <div class="control-inline">
-                <input name="mName" id="mName" style="width:100px;"></input>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label">型号：</label>
-            <div class="control-inline">
-                <input type="text" name="mModel" id="mModel" class="easyui-textbox" style="width:100px;"></input>
+                <input type="text" id="searchMaterial" name="searchMaterial" data-options="prompt:'名称、规格、型号'" class="easyui-textbox width-120"/>
             </div>
         </div>
         <div class="form-group">
@@ -72,7 +66,6 @@
         initSelectInfo_UB();
         initSystemData_depot();
         initSelectInfo_depot();
-        initMaterialNameList();
         initMProperty(); //初始化商品属性
         initTableData();
         ininPager();
@@ -166,21 +159,6 @@
         }
     }
 
-    //初始化商品名称模糊匹配
-    function initMaterialNameList() {
-        $('#mName').combobox({
-            method:"get",
-            url: "/material/getMaterialNameList",
-            valueField: 'value',
-            textField: 'text',
-            hasDownArrow: false,
-            filter: function(q, row){
-                var opts = $(this).combobox('options');
-                return row[opts.textField].indexOf(q) >-1;
-            }
-        });
-    }
-
     //初始化商品属性
     function initMProperty() {
         $.ajax({
@@ -235,6 +213,7 @@
             pageList: [10, 50, 100],
             columns: [[
                 {title: '名称', field: 'MaterialName', width: 160},
+                {title: '规格', field: 'MaterialStandard', width: 80},
                 {title: '型号', field: 'MaterialModel', width: 80},
                 {title: '扩展信息', field: 'MaterialOther', width: 120},
                 {title: '单位', field: 'unitName', width: 80},
@@ -323,8 +302,7 @@
                 + "&currentPage=" + pageNo + "&pageSize=" + pageSize
                 + "&depotId=" + $.trim($("#searchProjectId").val())
                 + "&monthTime=" + $("#searchMonth").val()
-                + "&name=" + $("#mName").combobox("getValue")
-                + "&model=" + $("#mModel").textbox("getValue");
+                + "&materialParam=" + $.trim($("#searchMaterial").val());
         }
         else {
             $.ajax({
@@ -336,8 +314,7 @@
                     pageSize: pageSize,
                     depotId: $.trim($("#searchProjectId").val()),
                     monthTime: $("#searchMonth").val(),
-                    name: $("#mName").combobox("getValue"),
-                    model: $("#mModel").textbox("getValue"),
+                    materialParam: $.trim($("#searchMaterial").val()),
                     mpList: mPropertyList
                 }),
                 success: function (res) {
@@ -360,8 +337,7 @@
                 data: ({
                     depotId: $.trim($("#searchProjectId").val()),
                     monthTime: $("#searchMonth").val(),
-                    name: $("#mName").combobox("getValue"),
-                    model: $("#mModel").textbox("getValue")
+                    materialParam: $.trim($("#searchMaterial").val())
                 }),
                 success: function (res) {
                     if(res && res.code === 200) {
@@ -370,7 +346,7 @@
                             if (count.lastIndexOf('.') > -1) {
                                 count = count.substring(0, count.lastIndexOf('.') + 3);
                             }
-                            $("#tablePanel .total-count").text("本月合计金额:" + count + "元");//本月合计金额
+                            $("#tablePanel .total-count").text("本月合计金额：" + count + "元");//本月合计金额
                         }
                     }
                 },

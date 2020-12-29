@@ -172,7 +172,7 @@ public class MaterialService {
                     if(jsonObj.get("depotId")!=null && jsonObj.get("number")!=null) {
                         String number = jsonObj.getString("number");
                         Long depotId = jsonObj.getLong("depotId");
-                        if(number!=null && Double.valueOf(number)>0) {
+                        if(StringUtil.isNotEmpty(number) && Double.valueOf(number)>0) {
                             insertStockByMaterialAndDepot(depotId, mId, parseBigDecimalEx(number));
                         }
                     }
@@ -210,7 +210,7 @@ public class MaterialService {
                         MaterialInitialStockExample example = new MaterialInitialStockExample();
                         example.createCriteria().andMaterialIdEqualTo(id).andDepotIdEqualTo(depotId);
                         materialInitialStockMapper.deleteByExample(example);
-                        if (number != null && Double.valueOf(number) > 0) {
+                        if (StringUtil.isNotEmpty(number) && Double.valueOf(number) > 0) {
                             insertStockByMaterialAndDepot(depotId, id, parseBigDecimalEx(number));
                         }
                     }
@@ -310,14 +310,17 @@ public class MaterialService {
         return result;
     }
 
-    public String findUnitName(Long mId)throws Exception{
-        String result =null;
+    public Unit findUnit(Long mId)throws Exception{
+        Unit unit = new Unit();
         try{
-            result=  materialMapperEx.findUnitName(mId);
+            List<Unit> list = materialMapperEx.findUnitList(mId);
+            if(list!=null && list.size()>0) {
+                unit = list.get(0);
+            }
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
-        return result;
+        return unit;
     }
 
     public List<MaterialVo4Unit> findById(Long id)throws Exception{
@@ -677,8 +680,6 @@ public class MaterialService {
     }
     /**
      * create by: qiankunpingtai
-     * website：https://qiankunpingtai.cn
-     * description:
      *  正常删除，要考虑数据完整性，进行完整性校验
      * create time: 2019/4/10 18:00
      * @Param: ids
@@ -739,25 +740,7 @@ public class MaterialService {
     }
 
     /**
-     * 根据商品和仓库获取初始库存
-     * @param materialId
-     * @param depotId
-     * @return
-     */
-    public BigDecimal getInitStock(Long materialId, Long depotId) {
-        BigDecimal stock = BigDecimal.ZERO;
-        MaterialInitialStockExample example = new MaterialInitialStockExample();
-        example.createCriteria().andMaterialIdEqualTo(materialId).andDepotIdEqualTo(depotId)
-                .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        List<MaterialInitialStock> list = materialInitialStockMapper.selectByExample(example);
-        if(list!=null && list.size()>0) {
-            stock = list.get(0).getNumber();
-        }
-        return stock;
-    }
-
-    /**
-     * 根据商品获取初始库存
+     * 根据商品获取初始库存，仓库为空的时候查全部库存
      * @param materialId
      * @return
      */
@@ -783,6 +766,24 @@ public class MaterialService {
     }
 
     /**
+     * 根据商品和仓库获取初始库存
+     * @param materialId
+     * @param depotId
+     * @return
+     */
+    public BigDecimal getInitStock(Long materialId, Long depotId) {
+        BigDecimal stock = BigDecimal.ZERO;
+        MaterialInitialStockExample example = new MaterialInitialStockExample();
+        example.createCriteria().andMaterialIdEqualTo(materialId).andDepotIdEqualTo(depotId)
+                .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        List<MaterialInitialStock> list = materialInitialStockMapper.selectByExample(example);
+        if(list!=null && list.size()>0) {
+            stock = list.get(0).getNumber();
+        }
+        return stock;
+    }
+
+    /**
      * 根据商品和仓库获取当前库存
      * @param materialId
      * @param depotId
@@ -796,6 +797,8 @@ public class MaterialService {
         List<MaterialCurrentStock> list = materialCurrentStockMapper.selectByExample(example);
         if(list!=null && list.size()>0) {
             stock = list.get(0).getCurrentNumber();
+        } else {
+            stock = getInitStock(materialId,depotId);
         }
         return stock;
     }

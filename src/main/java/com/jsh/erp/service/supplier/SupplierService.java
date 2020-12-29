@@ -379,8 +379,6 @@ public class SupplierService {
     }
     /**
      * create by: qiankunpingtai
-     * website：https://qiankunpingtai.cn
-     * description:
      *正常删除，要考虑数据完整性，进行完整性校验
      * create time: 2019/4/10 14:48
      * @Param: ids

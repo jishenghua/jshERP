@@ -450,8 +450,6 @@ public class UserService {
         /**
          * create by: qiankunpingtai
          * create time: 2019/4/9 18:00
-         * website：https://qiankunpingtai.cn
-         * description:
          * 多次创建事务，事物之间无法协同，应该在入口处创建一个事务以做协调
          */
         if(BusinessConstants.DEFAULT_MANAGER.equals(ue.getLoginName())) {

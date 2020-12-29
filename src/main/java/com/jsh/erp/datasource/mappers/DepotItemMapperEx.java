@@ -40,15 +40,13 @@ public interface DepotItemMapperEx {
             @Param("headerId") Long headerId);
 
     List<DepotItemVo4WithInfoEx> findByAll(
-            @Param("name") String name,
-            @Param("model") String model,
+            @Param("materialParam") String materialParam,
             @Param("endTime") String endTime,
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
     int findByAllCount(
-            @Param("name") String name,
-            @Param("model") String model,
+            @Param("materialParam") String materialParam,
             @Param("endTime") String endTime);
 
     BigDecimal buyOrSaleNumber(
@@ -108,8 +106,13 @@ public interface DepotItemMapperEx {
 
     List<DepotItem> getDepotItemListListByMaterialIds(@Param("materialIds") String[] materialIds);
 
-    List<DepotItemStockWarningCount> findStockWarningCount(@Param("offset") Integer offset,
-                                                           @Param("rows") Integer rows, @Param("pid") Integer pid);
+    List<DepotItemStockWarningCount> findStockWarningCount(
+            @Param("offset") Integer offset,
+            @Param("rows") Integer rows,
+            @Param("materialParam") String materialParam,
+            @Param("pid") Integer pid);
 
-    int findStockWarningCountTotal( @Param("pid") Integer pid);
+    int findStockWarningCountTotal(
+            @Param("materialParam") String materialParam,
+            @Param("pid") Integer pid);
 }

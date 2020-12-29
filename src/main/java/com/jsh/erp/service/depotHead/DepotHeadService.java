@@ -295,40 +295,40 @@ public class DepotHeadService {
         return result;
     }
 
-    public List<DepotHeadVo4InDetail> findByAll(String beginTime, String endTime, String type, Integer pid, String dids, Integer oId, Integer offset, Integer rows) throws Exception{
+    public List<DepotHeadVo4InDetail> findByAll(String beginTime, String endTime, String type, String materialParam, Integer pid, String dids, Integer oId, Integer offset, Integer rows) throws Exception{
         List<DepotHeadVo4InDetail> list = null;
         try{
-            list =depotHeadMapperEx.findByAll(beginTime, endTime, type, pid, dids, oId, offset, rows);
+            list =depotHeadMapperEx.findByAll(beginTime, endTime, type, materialParam, pid, dids, oId, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
     }
 
-    public int findByAllCount(String beginTime, String endTime, String type, Integer pid, String dids, Integer oId) throws Exception{
+    public int findByAllCount(String beginTime, String endTime, String type, String materialParam, Integer pid, String dids, Integer oId) throws Exception{
         int result = 0;
         try{
-            result =depotHeadMapperEx.findByAllCount(beginTime, endTime, type, pid, dids, oId);
+            result =depotHeadMapperEx.findByAllCount(beginTime, endTime, type, materialParam, pid, dids, oId);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return result;
     }
 
-    public List<DepotHeadVo4InOutMCount> findInOutMaterialCount(String beginTime, String endTime, String type, Integer pid, String dids, Integer oId, Integer offset, Integer rows)throws Exception {
+    public List<DepotHeadVo4InOutMCount> findInOutMaterialCount(String beginTime, String endTime, String type, String materialParam, Integer pid, String dids, Integer oId, Integer offset, Integer rows)throws Exception {
         List<DepotHeadVo4InOutMCount> list = null;
         try{
-            list =depotHeadMapperEx.findInOutMaterialCount(beginTime, endTime, type, pid, dids, oId, offset, rows);
+            list =depotHeadMapperEx.findInOutMaterialCount(beginTime, endTime, type, materialParam, pid, dids, oId, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
     }
 
-    public int findInOutMaterialCountTotal(String beginTime, String endTime, String type, Integer pid, String dids, Integer oId)throws Exception {
+    public int findInOutMaterialCountTotal(String beginTime, String endTime, String type, String materialParam, Integer pid, String dids, Integer oId)throws Exception {
         int result = 0;
         try{
-            result =depotHeadMapperEx.findInOutMaterialCountTotal(beginTime, endTime, type, pid, dids, oId);
+            result =depotHeadMapperEx.findInOutMaterialCountTotal(beginTime, endTime, type, materialParam, pid, dids, oId);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }

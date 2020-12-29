@@ -419,8 +419,9 @@
                     {title: '名称', field: 'name', width: 120},
                     {title: '规格', field: 'standard', width: 80},
                     {title: '型号', field: 'model', width: 80},
+                    {title: '颜色', field: 'color', width: 50},
                     {title: '类别', field: 'categoryName', width: 80},
-                    {title: '扩展信息', field: 'materialOther', width: 140},
+                    {title: '扩展信息', field: 'materialOther', width: 100},
                     {title: '单位', field: 'unit', width: 80,
                         formatter: function (value, rec) {
                             if(value) {
@@ -434,7 +435,8 @@
                     {
                         title: '库存', field: 'stock', width: 70, formatter: function (value, rec) {
                             var str = '';
-                            str += '<span title="查看库存及明细" class="n-link" onclick="findStockList(' + rec.id + ');">' + rec.stock + '</span>';
+                            str += '<span title="查看库存及明细" class="n-link" ' +
+                                'onclick="findStockList(' + rec.id + ',' + rec.mBarCode + ',\'' + rec.name + '\');">' + rec.stock + '</span>';
                             return str;
                         }
                     },
@@ -448,7 +450,7 @@
                         }
                     },
                     {
-                        title: '序列号', field: 'enableSerialNumber', width: 70, align: "center", formatter: function (value) {
+                        title: '序列号', field: 'enableSerialNumber', width: 60, align: "center", formatter: function (value) {
                             return value=='1' ? "<span style='color:green'>有</span>" : "无";
                         }
                     }
@@ -643,8 +645,9 @@
             }
         }
 
-        function findStockList(mId) {
-            $('#materialDetailListDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/pencil.png"/>&nbsp;查看库存及明细');
+        function findStockList(mId, barCode, name) {
+            var titleInfo = "&nbsp;" + name + "[" + barCode + "]的库存及明细";
+            $('#materialDetailListDlg').dialog('open').dialog('setTitle', '<img src="/js/easyui/themes/icons/pencil.png"/>' + titleInfo);
             $(".window-mask").css({width: webW, height: webH});
             initDepotList(mId, "show"); //加载仓库及库存数量
             initMaterialDetailData(mId);
@@ -1321,7 +1324,7 @@
                         } else if(type == "show"){
                             $.ajax({
                                 type: "get",
-                                url: "../../../pages/template/init_depot_show_list.html?888",
+                                url: "../../../pages/template/init_depot_show_list.html?555",
                                 async: false,
                                 success: function (tem) {
                                     if (tem) {
@@ -1601,10 +1604,20 @@
             var meList = $("#materialExtendData").datagrid('getRows');
             var unit = $("#Unit").val();
             var manyUnitselected = $("#manyUnit").find("option:selected").text();
+            var manyUnitInfo = manyUnitselected.substring(0, manyUnitselected.indexOf("("));
+            var unitArr = manyUnitInfo.split(",");
             if(!unit) {
                 //此时为多单位
                 if (meList.length<2){
                     $.messager.alert('提示',"多单位的商品条码行数至少要有两行，请再新增一行条码信息！",'warning');
+                    return;
+                }
+                if(meList[0].CommodityUnit != unitArr[0]) {
+                    $.messager.alert('提示','条码之后的单位填写有误，单位<b>' + meList[0].CommodityUnit + '</b>请修改为<b>' + unitArr[0] + '</b>！','warning');
+                    return;
+                }
+                if(meList[1].CommodityUnit != unitArr[1]) {
+                    $.messager.alert('提示','条码之后的单位填写有误，单位<b>' + meList[1].CommodityUnit + '</b>请修改为<b>' + unitArr[1] + '</b>！','warning');
                     return;
                 }
             }
@@ -1616,8 +1629,6 @@
                         return;
                     }
                 } else if(manyUnitselected) {
-                    var manyUnitInfo = manyUnitselected.substring(0, manyUnitselected.indexOf("("));
-                    var unitArr = manyUnitInfo.split(",");
                     if(commodityUnit != unitArr[0] && commodityUnit != unitArr[1]) {
                         $.messager.alert('提示', '条码之后的单位填写有误，单位<b>' + commodityUnit + '</b>请修改为' +
                             '<b>' + unitArr[0]+ '</b>或<b>' + unitArr[1]+ '</b>！', 'warning');

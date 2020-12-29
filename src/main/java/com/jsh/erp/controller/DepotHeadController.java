@@ -104,6 +104,7 @@ public class DepotHeadController {
     public BaseResponseInfo findInDetail(@RequestParam("currentPage") Integer currentPage,
                                         @RequestParam("pageSize") Integer pageSize,
                                         @RequestParam("organId") Integer oId,
+                                        @RequestParam("materialParam") String materialParam,
                                         @RequestParam("projectId") Integer pid,
                                         @RequestParam("depotIds") String dids,
                                         @RequestParam("beginTime") String beginTime,
@@ -114,8 +115,8 @@ public class DepotHeadController {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
             List<DepotHeadVo4InDetail> resList = new ArrayList<DepotHeadVo4InDetail>();
-            List<DepotHeadVo4InDetail> list = depotHeadService.findByAll(beginTime, endTime, type, pid, dids, oId, (currentPage-1)*pageSize, pageSize);
-            int total = depotHeadService.findByAllCount(beginTime, endTime, type, pid, dids, oId);
+            List<DepotHeadVo4InDetail> list = depotHeadService.findByAll(beginTime, endTime, type, materialParam, pid, dids, oId, (currentPage-1)*pageSize, pageSize);
+            int total = depotHeadService.findByAllCount(beginTime, endTime, type, materialParam, pid, dids, oId);
             map.put("total", total);
             //存放数据json数组
             if (null != list) {
@@ -151,6 +152,7 @@ public class DepotHeadController {
     public BaseResponseInfo findInOutMaterialCount(@RequestParam("currentPage") Integer currentPage,
                                          @RequestParam("pageSize") Integer pageSize,
                                          @RequestParam("organId") Integer oId,
+                                         @RequestParam("materialParam") String materialParam,
                                          @RequestParam("projectId") Integer pid,
                                          @RequestParam("depotIds") String dids,
                                          @RequestParam("beginTime") String beginTime,
@@ -161,8 +163,8 @@ public class DepotHeadController {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
             List<DepotHeadVo4InOutMCount> resList = new ArrayList<DepotHeadVo4InOutMCount>();
-            List<DepotHeadVo4InOutMCount> list = depotHeadService.findInOutMaterialCount(beginTime, endTime, type, pid, dids, oId, (currentPage-1)*pageSize, pageSize);
-            int total = depotHeadService.findInOutMaterialCountTotal(beginTime, endTime, type, pid, dids, oId);
+            List<DepotHeadVo4InOutMCount> list = depotHeadService.findInOutMaterialCount(beginTime, endTime, type, materialParam, pid, dids, oId, (currentPage-1)*pageSize, pageSize);
+            int total = depotHeadService.findInOutMaterialCountTotal(beginTime, endTime, type, materialParam, pid, dids, oId);
             map.put("total", total);
             //存放数据json数组
             if (null != list) {

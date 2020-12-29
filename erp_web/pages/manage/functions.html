@@ -151,6 +151,17 @@
             pageList: initPageNum,
             columns: [[
                 {field: 'id', width: 35, align: "center", checkbox: true},
+                {
+                    title: '操作', field: 'op', align: "center", width: 80,
+                    formatter: function (value, rec, index) {
+                        var str = '';
+                        str += '<img title="编辑" src="/js/easyui/themes/icons/pencil.png" style="cursor: pointer;" onclick="editFunctions(\'' + index + '\');"/>&nbsp;&nbsp;&nbsp;';
+                        if(isShowOpFun()) {
+                            str += '<img title="删除" src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteFunctions(' + rec.id + ');"/>';
+                        }
+                        return str;
+                    }
+                },
                 {title: '编号 ', field: 'number', width: 80},
                 {title: '名称', field: 'name', width: 100},
                 {title: '上级编号', field: 'parentNumber', width: 80},
@@ -161,18 +172,7 @@
                         return value ? "开" : "关";
                     }
                 },
-                {title: '图标', field: 'icon', width: 110},
-                {
-                    title: '操作', field: 'op', align: "center", width: 130,
-                    formatter: function (value, rec, index) {
-                        var str = '';
-                        str += '<img src="/js/easyui/themes/icons/pencil.png" style="cursor: pointer;" onclick="editFunctions(\'' + index + '\');"/>&nbsp;<a onclick="editFunctions(\'' + index + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
-                        if(isShowOpFun()) {
-                            str += '<img src="/js/easyui/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteFunctions(' + rec.id + ');"/>&nbsp;<a onclick="deleteFunctions(' + rec.id + ');" style="text-decoration:none;color:black;" href="javascript:void(0)">删除</a>&nbsp;&nbsp;';
-                        }
-                        return str;
-                    }
-                }
+                {title: '图标', field: 'icon', width: 110}
             ]],
             toolbar: [
                 {

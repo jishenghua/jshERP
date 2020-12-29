@@ -122,33 +122,11 @@ public class DepotItemController {
         return res;
     }
 
-    /**
-     * 查询计量单位信息
-     *
-     * @return
-     */
-    public String findUnitName(Long mId)throws Exception {
-        String unitName = "";
-        try {
-            unitName = materialService.findUnitName(mId);
-            if (unitName != null) {
-                unitName = unitName.substring(1, unitName.length() - 1);
-                if (unitName.equals("null")) {
-                    unitName = "";
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return unitName;
-    }
-
     @GetMapping(value = "/getDetailList")
     public BaseResponseInfo getDetailList(@RequestParam("headerId") Long headerId,
                               @RequestParam("mpList") String mpList,
                               HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
-        Map<String, Object> map = new HashMap<String, Object>();
         Long tenantId = null;
         if(request.getSession().getAttribute("tenantId")!=null) {
             tenantId = Long.parseLong(request.getSession().getAttribute("tenantId").toString());
@@ -168,29 +146,24 @@ public class DepotItemController {
                     JSONObject item = new JSONObject();
                     item.put("Id", diEx.getId());
                     item.put("MaterialExtendId", diEx.getMaterialExtendId() == null ? "" : diEx.getMaterialExtendId());
-                    String ratio; //比例
-                    if (diEx.getUnitId() == null || diEx.getUnitId().equals("")) {
-                        ratio = "";
-                    } else {
-                        ratio = diEx.getUnitName();
-                        ratio = ratio.substring(ratio.indexOf("("));
-                    }
-                    //名称/型号/扩展信息/包装
-                    String MaterialName = ((diEx.getMName() == null || diEx.getMName().equals("")) ? "" : diEx.getMName())
-                            + ((diEx.getMStandard() == null || diEx.getMStandard().equals("")) ? "" : "(" + diEx.getMStandard() + ")")
-                            + ((diEx.getMModel() == null || diEx.getMModel().equals("")) ? "" : "(" + diEx.getMModel() + ")");
-                    String materialOther = getOtherInfo(mpArr, diEx);
-                    MaterialName = MaterialName + materialOther + ((diEx.getUnitName() == null || diEx.getUnitName().equals("")) ? "" : "(" + diEx.getUnitName() + ")") + ratio;
-                    item.put("MaterialName", MaterialName == null ? "" : MaterialName);
                     item.put("barCode", diEx.getBarCode());
                     item.put("name", diEx.getMName());
                     item.put("standard", diEx.getMStandard());
                     item.put("model", diEx.getMModel());
-                    item.put("materialOther", materialOther);
+                    item.put("materialOther", getOtherInfo(mpArr, diEx));
+                    Integer ratio = diEx.getRatio();
                     BigDecimal stock = depotItemService.getStockByParam(diEx.getDepotId(),diEx.getMaterialId(),null,null,tenantId);
+                    if(ratio!=null){
+                        BigDecimal ratioDecimal = new BigDecimal(ratio.toString());
+                        if(ratioDecimal.compareTo(BigDecimal.ZERO)!=0){
+                            String otherUnit = diEx.getOtherUnit();
+                            if(otherUnit.equals(diEx.getMaterialUnit())) {
+                                stock = stock.divide(ratioDecimal,2,BigDecimal.ROUND_HALF_UP); //两位小数
+                            }
+                        }
+                    }
                     item.put("Stock", stock);
                     item.put("Unit", diEx.getMaterialUnit());
-                    item.put("currentStock", diEx.getOperNumber().add(stock));
                     item.put("OperNumber", diEx.getOperNumber());
                     item.put("BasicNumber", diEx.getBasicNumber());
                     item.put("UnitPrice", diEx.getUnitPrice());
@@ -252,8 +225,7 @@ public class DepotItemController {
      * @param pageSize
      * @param depotId
      * @param monthTime
-     * @param name
-     * @param model
+     * @param materialParam
      * @param mpList
      * @param request
      * @return
@@ -264,8 +236,7 @@ public class DepotItemController {
                                       @RequestParam("pageSize") Integer pageSize,
                                       @RequestParam("depotId") Long depotId,
                                       @RequestParam("monthTime") String monthTime,
-                                      @RequestParam("name") String name,
-                                      @RequestParam("model") String model,
+                                      @RequestParam("materialParam") String materialParam,
                                       @RequestParam("mpList") String mpList,
                                       HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
@@ -274,10 +245,10 @@ public class DepotItemController {
         String timeA = monthTime+"-01 00:00:00";
         String timeB = Tools.lastDayOfMonth(monthTime)+" 23:59:59";
         try {
-            List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(StringUtil.toNull(name), StringUtil.toNull(model),
+            List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(StringUtil.toNull(materialParam),
                     timeB,(currentPage-1)*pageSize, pageSize);
             String[] mpArr = mpList.split(",");
-            int total = depotItemService.findByAllCount(StringUtil.toNull(name), StringUtil.toNull(model), timeB);
+            int total = depotItemService.findByAllCount(StringUtil.toNull(materialParam), timeB);
             map.put("total", total);
             //存放数据json数组
             JSONArray dataArray = new JSONArray();
@@ -292,6 +263,7 @@ public class DepotItemController {
                     Long mId = diEx.getMId();
                     item.put("MaterialName", diEx.getMName());
                     item.put("MaterialModel", diEx.getMModel());
+                    item.put("MaterialStandard", diEx.getMStandard());
                     //扩展信息
                     String materialOther = getOtherInfo(mpArr, diEx);
                     item.put("MaterialOther", materialOther);
@@ -332,8 +304,7 @@ public class DepotItemController {
      * @param pageSize
      * @param depotId
      * @param monthTime
-     * @param name
-     * @param model
+     * @param materialParam
      * @param request
      * @param response
      * @return
@@ -343,33 +314,33 @@ public class DepotItemController {
                             @RequestParam("pageSize") Integer pageSize,
                             @RequestParam("depotId") Long depotId,
                             @RequestParam("monthTime") String monthTime,
-                            @RequestParam("name") String name,
-                            @RequestParam("model") String model,
+                            @RequestParam("materialParam") String materialParam,
                             HttpServletRequest request, HttpServletResponse response) throws Exception {
         Long tenantId = Long.parseLong(request.getSession().getAttribute("tenantId").toString());
         String timeA = monthTime+"-01 00:00:00";
         String timeB = Tools.lastDayOfMonth(monthTime)+" 23:59:59";
         try {
-            List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(StringUtil.toNull(name), StringUtil.toNull(model),
+            List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(StringUtil.toNull(materialParam),
                     timeB, (currentPage-1)*pageSize, pageSize);
             //存放数据json数组
-            String[] names = {"名称", "型号", "单位", "单价", "上月结存数量", "入库数量", "出库数量", "本月结存数量", "结存金额"};
+            String[] names = {"名称", "规格", "型号", "单位", "单价", "上月结存数量", "入库数量", "出库数量", "本月结存数量", "结存金额"};
             String title = "库存报表";
             List<String[]> objects = new ArrayList<String[]>();
             if (null != dataList) {
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
                     Long mId = diEx.getMId();
-                    String[] objs = new String[9];
-                    objs[0] = diEx.getMName().toString();
-                    objs[1] = diEx.getMModel().toString();
-                    objs[2] = diEx.getMaterialUnit().toString();
-                    objs[3] = diEx.getPurchaseDecimal().toString();
-                    objs[4] = depotItemService.getStockByParam(depotId,mId,null,timeA,tenantId).toString();
-                    objs[5] = depotItemService.getInNumByParam(depotId,mId,timeA,timeB,tenantId).toString();
-                    objs[6] = depotItemService.getOutNumByParam(depotId,mId,timeA,timeB,tenantId).toString();
+                    String[] objs = new String[10];
+                    objs[0] = diEx.getMName();
+                    objs[1] = diEx.getMStandard();
+                    objs[2] = diEx.getMModel();
+                    objs[3] = diEx.getMaterialUnit();
+                    objs[4] = diEx.getPurchaseDecimal().toString();
+                    objs[5] = depotItemService.getStockByParam(depotId,mId,null,timeA,tenantId).toString();
+                    objs[6] = depotItemService.getInNumByParam(depotId,mId,timeA,timeB,tenantId).toString();
+                    objs[7] = depotItemService.getOutNumByParam(depotId,mId,timeA,timeB,tenantId).toString();
                     BigDecimal thisSum = depotItemService.getStockByParam(depotId,mId,null,timeB,tenantId);
-                    objs[7] = thisSum.toString();
-                    objs[8] = thisSum.multiply(diEx.getPurchaseDecimal()).toString();
+                    objs[8] = thisSum.toString();
+                    objs[9] = thisSum.multiply(diEx.getPurchaseDecimal()).toString();
                     objects.add(objs);
                 }
             }
@@ -384,23 +355,21 @@ public class DepotItemController {
      * 统计总计金额
      * @param depotId
      * @param monthTime
-     * @param name
-     * @param model
+     * @param materialParam
      * @param request
      * @return
      */
     @PostMapping(value = "/totalCountMoney")
     public BaseResponseInfo totalCountMoney(@RequestParam("depotId") Long depotId,
-                                                        @RequestParam("monthTime") String monthTime,
-                                                        @RequestParam("name") String name,
-                                                        @RequestParam("model") String model,
-                                                        HttpServletRequest request) throws Exception{
+                                            @RequestParam("monthTime") String monthTime,
+                                            @RequestParam("materialParam") String materialParam,
+                                            HttpServletRequest request) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         Long tenantId = Long.parseLong(request.getSession().getAttribute("tenantId").toString());
         String endTime = Tools.lastDayOfMonth(monthTime)+" 23:59:59";
         try {
-            List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(StringUtil.toNull(name), StringUtil.toNull(model),
+            List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(StringUtil.toNull(materialParam),
                     endTime, null, null);
             BigDecimal thisAllPrice = BigDecimal.ZERO;
             if (null != dataList) {
@@ -427,28 +396,26 @@ public class DepotItemController {
      * @param currentPage
      * @param pageSize
      * @param monthTime
-     * @param name
-     * @param model
+     * @param materialParam
      * @param mpList
      * @param request
      * @return
      */
     @PostMapping(value = "/buyIn")
     public BaseResponseInfo buyIn(@RequestParam("currentPage") Integer currentPage,
-                                      @RequestParam("pageSize") Integer pageSize,
-                                      @RequestParam("monthTime") String monthTime,
-                                  @RequestParam("name") String name,
-                                  @RequestParam("model") String model,
-                                      @RequestParam("mpList") String mpList,
-                                      HttpServletRequest request)throws Exception {
+                                  @RequestParam("pageSize") Integer pageSize,
+                                  @RequestParam("monthTime") String monthTime,
+                                  @RequestParam("materialParam") String materialParam,
+                                  @RequestParam("mpList") String mpList,
+                                  HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         String endTime = Tools.lastDayOfMonth(monthTime)+" 23:59:59";
         try {
-            List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(StringUtil.toNull(name), StringUtil.toNull(model),
+            List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(StringUtil.toNull(materialParam),
                     endTime, (currentPage-1)*pageSize, pageSize);
             String[] mpArr = mpList.split(",");
-            int total = depotItemService.findByAllCount(StringUtil.toNull(name), StringUtil.toNull(model), endTime);
+            int total = depotItemService.findByAllCount(StringUtil.toNull(materialParam), endTime);
             map.put("total", total);
             //存放数据json数组
             JSONArray dataArray = new JSONArray();
@@ -461,6 +428,7 @@ public class DepotItemController {
                     BigDecimal OutSumPrice = depotItemService.buyOrSale("出库", "采购退货", diEx.getMId(), monthTime, "price");
                     item.put("MaterialName", diEx.getMName());
                     item.put("MaterialModel", diEx.getMModel());
+                    item.put("MaterialStandard", diEx.getMStandard());
                     //扩展信息
                     String materialOther = getOtherInfo(mpArr, diEx);
                     item.put("MaterialOther", materialOther);
@@ -490,8 +458,7 @@ public class DepotItemController {
      * @param currentPage
      * @param pageSize
      * @param monthTime
-     * @param name
-     * @param model
+     * @param materialParam
      * @param mpList
      * @param request
      * @return
@@ -500,18 +467,17 @@ public class DepotItemController {
     public BaseResponseInfo saleOut(@RequestParam("currentPage") Integer currentPage,
                                   @RequestParam("pageSize") Integer pageSize,
                                   @RequestParam("monthTime") String monthTime,
-                                    @RequestParam("name") String name,
-                                    @RequestParam("model") String model,
+                                  @RequestParam("materialParam") String materialParam,
                                   @RequestParam("mpList") String mpList,
                                   HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         String endTime = Tools.lastDayOfMonth(monthTime)+" 23:59:59";
         try {
-            List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(StringUtil.toNull(name), StringUtil.toNull(model),
+            List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(StringUtil.toNull(materialParam),
                     endTime,(currentPage-1)*pageSize, pageSize);
             String[] mpArr = mpList.split(",");
-            int total = depotItemService.findByAllCount(StringUtil.toNull(name), StringUtil.toNull(model), endTime);
+            int total = depotItemService.findByAllCount(StringUtil.toNull(materialParam), endTime);
             map.put("total", total);
             //存放数据json数组
             JSONArray dataArray = new JSONArray();
@@ -529,6 +495,7 @@ public class DepotItemController {
                     BigDecimal OutInSumPrice = (OutSumRetailPrice.add(OutSumPrice)).subtract(InSumRetailPrice.add(InSumPrice));
                     item.put("MaterialName", diEx.getMName());
                     item.put("MaterialModel", diEx.getMModel());
+                    item.put("MaterialStandard", diEx.getMStandard());
                     //扩展信息
                     String materialOther = getOtherInfo(mpArr, diEx);
                     item.put("MaterialOther", materialOther);
@@ -571,33 +538,7 @@ public class DepotItemController {
     }
 
     /**
-     * 获取单价
-     * @param presetPriceOne
-     * @param priceStrategy
-     * @return
-     */
-    public BigDecimal getUnitPrice(BigDecimal presetPriceOne, String priceStrategy) {
-        BigDecimal unitPrice = BigDecimal.ZERO;
-        if(presetPriceOne != null) {
-            DecimalFormat df = new DecimalFormat("#.00");
-            unitPrice = new BigDecimal(df.format(presetPriceOne));
-        } else {
-            JSONArray priceArr = JSONArray.parseArray(priceStrategy);
-            if(priceArr!=null && priceArr.get(0)!=null) {
-                JSONObject priceObj = JSONObject.parseObject(priceArr.get(0).toString());
-                BigDecimal basicPresetPriceOne = priceObj.getJSONObject("basic").getBigDecimal("PresetPriceOne");
-                if(basicPresetPriceOne!=null) {
-                    unitPrice = basicPresetPriceOne;
-                }
-            }
-        }
-        return unitPrice;
-    }
-
-    /**
      * create by: qiankunpingtai
-     * website：https://qiankunpingtai.cn
-     * description:
      *  批量删除单据明细信息
      * create time: 2019/3/29 11:15
      * @Param: ids
@@ -623,13 +564,28 @@ public class DepotItemController {
      */
     @GetMapping(value = "/findStockWarningCount")
     public BaseResponseInfo findStockWarningCount(@RequestParam("currentPage") Integer currentPage,
-                                                  @RequestParam("pageSize") Integer pageSize,  @RequestParam("projectId") Integer pid )throws Exception {
+                                                  @RequestParam("pageSize") Integer pageSize,
+                                                  @RequestParam("materialParam") String materialParam,
+                                                  @RequestParam("projectId") Integer pid,
+                                                  @RequestParam("mpList") String mpList)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         try {
-            List<DepotItemStockWarningCount> resList = new ArrayList<DepotItemStockWarningCount>();
-            List<DepotItemStockWarningCount> list = depotItemService.findStockWarningCount((currentPage-1)*pageSize, pageSize,pid);
-            int total = depotItemService.findStockWarningCountTotal(pid);
+            String[] mpArr = mpList.split(",");
+            List<DepotItemStockWarningCount> list = depotItemService.findStockWarningCount((currentPage-1)*pageSize, pageSize,materialParam,pid);
+            //存放数据json数组
+            if (null != list) {
+                for (DepotItemStockWarningCount disw : list) {
+                    DepotItemVo4WithInfoEx diEx = new DepotItemVo4WithInfoEx();
+                    diEx.setMMfrs(disw.getMMfrs());
+                    diEx.setMOtherField1(disw.getMOtherField1());
+                    diEx.setMOtherField2(disw.getMOtherField2());
+                    diEx.setMOtherField3(disw.getMOtherField3());
+                    disw.setMaterialOther(getOtherInfo(mpArr, diEx));
+                    disw.setMaterialUnit(getUName(disw.getMaterialUnit(), disw.getUnitName()));
+                }
+            }
+            int total = depotItemService.findStockWarningCountTotal(materialParam,pid);
             map.put("total", total);
             map.put("rows", list);
             res.code = 200;
@@ -653,30 +609,39 @@ public class DepotItemController {
     @GetMapping(value = "/exportWarningExcel")
     public BaseResponseInfo exportWarningExcel(@RequestParam("currentPage") Integer currentPage,
                                         @RequestParam("pageSize") Integer pageSize,
+                                        @RequestParam("materialParam") String materialParam,
                                         @RequestParam("projectId") Integer projectId,
+                                        @RequestParam("mpList") String mpList,
                                         HttpServletRequest request, HttpServletResponse response)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         String message = "成功";
         try {
-            List<DepotItemStockWarningCount> dataList = depotItemService.findStockWarningCount((currentPage - 1) * pageSize, pageSize, projectId);
+            String[] mpArr = mpList.split(",");
+            List<DepotItemStockWarningCount> dataList = depotItemService.findStockWarningCount((currentPage - 1) * pageSize, pageSize, materialParam, projectId);
             //存放数据json数组
             Integer pid = projectId;
-            String[] names = {"名称", "型号", "扩展信息", "单位", "入库数量", "出库数量", "库存数量", "安全库存量", "临界库存量"};
+            String[] names = {"名称", "规格", "型号", "扩展信息", "单位", "安全存量", "当前库存", "建议入库量"};
             String title = "库存预警报表";
             List<String[]> objects = new ArrayList<String[]>();
             if (null != dataList) {
                 for (DepotItemStockWarningCount diEx : dataList) {
-                    String[] objs = new String[9];
-                    objs[0] = diEx.getMaterialName().toString();
-                    objs[1] = diEx.getMaterialModel().toString();
-                    objs[2] = diEx.getMaterialOther().toString();
-                    objs[3] = diEx.getMaterialUnit().toString();
-                    objs[4] = diEx.getBasicInNumber().toString();
-                    objs[5] = diEx.getBasicOutNumber() == null ? "0" : diEx.getBasicOutNumber().toString();
-                    objs[6] = diEx.getBasicNumber() == null ? "0" : diEx.getBasicNumber().toString();
-                    objs[7] = diEx.getSafetystock() == null ? "0" : diEx.getSafetystock().toString();
-                    objs[8] = diEx.getBasicLinjieNumber() == null ? "0" : diEx.getBasicLinjieNumber().toString();
+                    DepotItemVo4WithInfoEx diVI = new DepotItemVo4WithInfoEx();
+                    diVI.setMMfrs(diEx.getMMfrs());
+                    diVI.setMOtherField1(diEx.getMOtherField1());
+                    diVI.setMOtherField2(diEx.getMOtherField2());
+                    diVI.setMOtherField3(diEx.getMOtherField3());
+                    String materialOther = getOtherInfo(mpArr, diVI);
+                    String unitName = getUName(diEx.getMaterialUnit(), diEx.getUnitName());
+                    String[] objs = new String[8];
+                    objs[0] = diEx.getMName();
+                    objs[1] = diEx.getMStandard();
+                    objs[2] = diEx.getMModel();
+                    objs[3] = materialOther;
+                    objs[4] = unitName;
+                    objs[5] = diEx.getSafetystock() == null ? "0" : diEx.getSafetystock().toString();
+                    objs[6] = diEx.getCurrentNumber() == null ? "0" : diEx.getCurrentNumber().toString();
+                    objs[7] = diEx.getLinjieNumber() == null ? "0" : diEx.getLinjieNumber().toString();
                     objects.add(objs);
                 }
             }

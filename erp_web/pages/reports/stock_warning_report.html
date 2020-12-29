@@ -29,6 +29,12 @@
             </div>
         </div>
         <div class="form-group">
+            <label class="control-label">商品信息：</label>
+            <div class="control-inline">
+                <input type="text" id="searchMaterial" name="searchMaterial" data-options="prompt:'名称、规格、型号'" class="easyui-textbox width-120"/>
+            </div>
+        </div>
+        <div class="form-group">
             <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchBtn">查询</a>
             <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-redo" id="exprotBtn">导出</a>
             <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-print" id="printBtn">打印</a>
@@ -202,15 +208,14 @@
             pageSize: 10,
             pageList: [10, 50, 100],
             columns: [[
-                {title: '名称', field: 'materialName', width: 160},
-                {title: '型号', field: 'materialModel', width: 80},
+                {title: '名称', field: 'mname', width: 160},
+                {title: '规格', field: 'mstandard', width: 80},
+                {title: '型号', field: 'mmodel', width: 80},
                 {title: '扩展信息', field: 'materialOther', width: 150},
                 {title: '单位', field: 'materialUnit', width: 80},
-                {title: '入库数量', field: 'basicInNumber', width: 80},
-                {title: '出库数量', field: 'basicOutNumber', width: 80},
-                {title: '库存数量', field: 'basicNumber', width: 80},
-                {title: '安全库存量', field: 'safetystock', width: 80},
-                {title: '临界库存量', field: 'basicLinjieNumber', width: 80}
+                {title: '安全存量', field: 'safetystock', width: 80},
+                {title: '当前库存', field: 'currentNumber', width: 80},
+                {title: '建议入库量', field: 'linjieNumber', width: 80}
             ]],
             onLoadError: function () {
                 $.messager.alert('页面加载提示', '页面加载异常，请稍后再试！', 'error');
@@ -292,12 +297,18 @@
             data: ({
                 currentPage: pageNo,
                 pageSize: pageSize,
-                projectId : $.trim($("#searchProjectId").val())
+                materialParam: $.trim($("#searchMaterial").val()),
+                projectId : $.trim($("#searchProjectId").val()),
+                mpList: mPropertyList
             }),
             success: function (res) {
                 if(res && res.code === 200 && res.data) {
                     if (pageSize === 3000) {
-                        window.location.href = "/depotItem/exportWarningExcel?browserType=" + getOs() + "&currentPage=" + pageNo + "&pageSize=" + pageSize + "&projectId=" + $.trim($("#searchProjectId").val()) ;
+                        window.location.href = "/depotItem/exportWarningExcel?browserType=" + getOs()
+                            + "&currentPage=" + pageNo + "&pageSize=" + pageSize
+                            + "&materialParam=" + $.trim($("#searchMaterial").val())
+                            + "&projectId=" + $.trim($("#searchProjectId").val())
+                            + "&mpList=" + mPropertyList;
                     }
                     else {
                         //获取排序后的产品ID

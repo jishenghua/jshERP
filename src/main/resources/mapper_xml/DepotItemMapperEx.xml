@@ -29,6 +29,8 @@
         <result column="AnotherDepotName" jdbcType="VARCHAR" property="AnotherDepotName" />
         <result column="UnitId" jdbcType="BIGINT" property="UnitId" />
         <result column="unit_name" jdbcType="VARCHAR" property="unitName" />
+        <result column="ratio" jdbcType="INTEGER" property="ratio" />
+        <result column="other_unit" jdbcType="INTEGER" property="otherUnit" />
         <result column="barCode" jdbcType="VARCHAR" property="barCode" />
     </resultMap>
 
@@ -37,23 +39,30 @@
         <result column="MName" jdbcType="VARCHAR" property="MName" />
         <result column="MMfrs" jdbcType="VARCHAR" property="MMfrs" />
         <result column="MModel" jdbcType="VARCHAR" property="MModel" />
+        <result column="MStandard" jdbcType="VARCHAR" property="MStandard" />
         <result column="MaterialUnit" jdbcType="VARCHAR" property="MaterialUnit" />
+        <result column="MOtherField1" jdbcType="VARCHAR" property="MOtherField1" />
+        <result column="MOtherField2" jdbcType="VARCHAR" property="MOtherField2" />
+        <result column="MOtherField3" jdbcType="VARCHAR" property="MOtherField3" />
         <result column="unit_name" jdbcType="VARCHAR" property="unitName" />
         <result column="MColor" jdbcType="VARCHAR" property="MColor" />
         <result column="purchase_decimal" jdbcType="DECIMAL" property="purchaseDecimal" />
     </resultMap>
 
     <resultMap id="ResultStockWarningCount" type="com.jsh.erp.datasource.vo.DepotItemStockWarningCount">
-        <result column="MaterialName" jdbcType="VARCHAR" property="MaterialName" />
-        <result column="MaterialModel" jdbcType="VARCHAR" property="MaterialModel" />
-        <result column="categoryName" jdbcType="VARCHAR" property="categoryName" />
-        <result column="MaterialOther" jdbcType="VARCHAR" property="MaterialOther" />
+        <result column="MId" jdbcType="VARCHAR" property="MId" />
+        <result column="MName" jdbcType="VARCHAR" property="MName" />
+        <result column="MMfrs" jdbcType="VARCHAR" property="MMfrs" />
+        <result column="MModel" jdbcType="VARCHAR" property="MModel" />
+        <result column="MStandard" jdbcType="VARCHAR" property="MStandard" />
         <result column="MaterialUnit" jdbcType="VARCHAR" property="MaterialUnit" />
+        <result column="MOtherField1" jdbcType="VARCHAR" property="MOtherField1" />
+        <result column="MOtherField2" jdbcType="VARCHAR" property="MOtherField2" />
+        <result column="MOtherField3" jdbcType="VARCHAR" property="MOtherField3" />
+        <result column="unit_name" jdbcType="VARCHAR" property="unitName" />
         <result column="safetystock" jdbcType="DECIMAL" property="safetystock" />
-        <result column="BasicInNumber" jdbcType="DECIMAL" property="BasicInNumber" />
-        <result column="BasicOutNumber" jdbcType="DECIMAL" property="BasicOutNumber" />
-        <result column="BasicNumber" jdbcType="DECIMAL" property="BasicNumber" />
-        <result column="BasicLinjieNumber" jdbcType="DECIMAL" property="BasicLinjieNumber" />
+        <result column="current_number" jdbcType="DECIMAL" property="currentNumber" />
+        <result column="linjieNumber" jdbcType="DECIMAL" property="linjieNumber" />
     </resultMap>
 
     <resultMap id="StockMap" type="com.jsh.erp.datasource.vo.DepotItemVo4Stock">
@@ -140,7 +149,7 @@
     <select id="getDetailList" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
         select di.*,m.name MName,m.model MModel,m.unit MaterialUnit,m.color MColor,m.standard MStandard,m.mfrs MMfrs,
         m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,
-        dp1.name DepotName,dp2.name AnotherDepotName, u.id UnitId, u.name unit_name, me.bar_code barCode
+        dp1.name DepotName,dp2.name AnotherDepotName, u.id UnitId, u.name unit_name, u.ratio, u.other_unit, me.bar_code barCode
         from jsh_depot_item di
         left join jsh_material m on di.material_id=m.id  and ifnull(m.delete_flag,'0') !='1'
         left join jsh_material_extend me on me.id=di.material_extend_id  and ifnull(me.delete_Flag,'0') !='1'
@@ -153,7 +162,8 @@
     </select>
 
     <select id="findByAll" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultByMaterial">
-        select m.id MId, m.name MName, m.mfrs MMfrs, m.model MModel,
+        select m.id MId, m.name MName, m.mfrs MMfrs, m.model MModel, m.standard MStandard,
+        m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,
         m.unit MaterialUnit, m.color MColor, u.name unit_name,
         (select purchase_decimal from jsh_material_extend me
         where me.material_id=m.id and me.default_flag=1 and ifnull(me.delete_Flag,'0') !='1' limit 0,1)
@@ -163,11 +173,9 @@
         left join jsh_depot_head dh on di.header_id=dh.id  and ifnull(dh.delete_flag,'0') !='1'
         left join jsh_unit u on m.unit_id=u.id and ifnull(u.delete_Flag,'0') !='1'
         where 1=1
-        <if test="name != null">
-            and m.name like '%${name}%'
-        </if>
-        <if test="model != null">
-            and m.model like '%${model}%'
+        <if test="materialParam != null and materialParam !=''">
+            <bind name="bindKey" value="'%'+materialParam+'%'"/>
+            and (m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
         </if>
         <if test="endTime != null">
             and dh.oper_time &lt;= '${endTime}'
@@ -186,11 +194,9 @@
         left join jsh_depot_item di on di.material_id=m.id  and ifnull(m.delete_Flag,'0') !='1'
         left join jsh_depot_head dh on di.header_id=dh.id  and ifnull(dh.delete_flag,'0') !='1'
         where 1=1
-        <if test="name != null">
-            and m.name like '%${name}%'
-        </if>
-        <if test="model != null">
-            and m.model like '%${model}%'
+        <if test="materialParam != null and materialParam !=''">
+            <bind name="bindKey" value="'%'+materialParam+'%'"/>
+            and (m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
         </if>
         <if test="endTime != null">
             and dh.oper_time &lt;= '${endTime}'
@@ -361,66 +367,27 @@
     </select>
 
     <select id="findStockWarningCount" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultStockWarningCount">
-        SELECT
-        m.name MaterialName,
-        m.model MaterialModel,
-        mc.`Name` categoryName,
-        CONCAT(
-        '(',
-        m.standard,
-        ')',
-        '(',
-        m.color,
-        ')'
-        ) AS MaterialOther,
-        m.unit MaterialUnit,
-        ifnull(m.safety_stock,0) safetystock,
-        IFNULL(intype.BasicInNumber ,0) BasicInNumber,
-        IFNULL(outtype.BasicOutNumber ,0) BasicOutNumber,
-        (
-        IFNULL(intype.BasicInNumber ,0) - IFNULL(outtype.BasicOutNumber ,0)
-        ) BasicNumber,
-        (IFNULL(intype.BasicInNumber ,0) - IFNULL(outtype.BasicOutNumber ,0) - ifnull(m.safety_stock,0)) BasicLinjieNumber
-        FROM
-        jsh_material m
-        LEFT JOIN jsh_material_category mc ON mc.id = m.category_id
-        LEFT JOIN (
-        SELECT
-        di.material_id,
-        ifnull(sum(basic_number), 0) AS BasicInNumber
-        FROM
-        jsh_depot_head dh
-        INNER JOIN jsh_depot_item di ON dh.id = di.header_id
-        AND ifnull(di.delete_flag, '0') != '1'
-        WHERE
-        dh.type = '入库'
-        <if test="pid != null">
-            and di.depot_id= ${pid}
+        select m.id MId, m.name MName, m.mfrs MMfrs, m.model MModel, m.standard MStandard,m.color MColor,
+        m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,
+        m.unit MaterialUnit, u.name unit_name,mcs.current_number,ifnull(m.safety_stock,0) safetystock,
+        (ifnull(m.safety_stock,0)-mcs.current_number) linjieNumber
+        from jsh_material m
+        left join jsh_material_current_stock mcs on mcs.material_id=m.id and ifnull(mcs.delete_Flag,'0') !='1'
+        left join jsh_depot_item di on di.material_id=m.id  and ifnull(di.delete_Flag,'0') !='1'
+        left join jsh_depot_head dh on di.header_id=dh.id  and ifnull(dh.delete_flag,'0') !='1'
+        left join jsh_unit u on m.unit_id=u.id and ifnull(u.delete_Flag,'0') !='1'
+        where 1=1
+        and ifnull(m.delete_flag,'0') !='1'
+        and ifnull(m.safety_stock,0) > mcs.current_number
+        <if test="materialParam != null and materialParam !=''">
+            <bind name="bindKey" value="'%'+materialParam+'%'"/>
+            and (m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
         </if>
-        AND ifnull(dh.delete_flag, '0') != '1' group by di.material_id
-        ) intype ON intype.material_id = m.id
-        LEFT JOIN (
-        SELECT
-        di.material_id,
-        ifnull(sum(basic_number), 0) AS BasicOutNumber
-        FROM
-        jsh_depot_head dh
-        INNER JOIN jsh_depot_item di ON dh.id = di.header_id
-        AND ifnull(di.delete_flag, '0') != '1'
-        WHERE
-        dh.type = '出库'
-        AND dh.sub_type != '调拨'
         <if test="pid != null">
-            and di.depot_id= ${pid}
+            and mcs.depot_id= ${pid}
         </if>
-        AND ifnull(dh.delete_flag, '0') != '1' group by di.material_id
-        ) outtype ON outtype.material_id = m.id
-        WHERE
-        1 = 1
-        AND ifnull(m.delete_flag, '0') != '1'
-        AND intype.BasicInNumber > 0
-        ORDER BY
-        (IFNULL(intype.BasicInNumber ,0) - IFNULL(outtype.BasicOutNumber ,0) - ifnull(m.safety_stock,0))
+        group by m.id,m.name, m.model, m.unit, m.color, u.name
+        order by linjieNumber desc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
         </if>
@@ -428,26 +395,22 @@
 
     <select id="findStockWarningCountTotal" resultType="java.lang.Integer">
         select count(1) from
-        jsh_material m
-        LEFT JOIN (
-        SELECT
-        di.material_id,
-        ifnull(sum(basic_number), 0) AS BasicInNumber
-        FROM
-        jsh_depot_head dh
-        INNER JOIN jsh_depot_item di ON dh.id = di.header_id
-        AND ifnull(di.delete_flag, '0') != '1'
-        WHERE
-        dh.type = '入库'
-        <if test="pid != null">
-            and di.depot_id= ${pid}
+        (select m.id
+        from jsh_material m
+        left join jsh_material_current_stock mcs on mcs.material_id=m.id and ifnull(mcs.delete_Flag,'0') !='1'
+        left join jsh_depot_item di on di.material_id=m.id  and ifnull(di.delete_Flag,'0') !='1'
+        left join jsh_depot_head dh on di.header_id=dh.id  and ifnull(dh.delete_flag,'0') !='1'
+        left join jsh_unit u on m.unit_id=u.id and ifnull(u.delete_Flag,'0') !='1'
+        where 1=1
+        and ifnull(m.delete_flag,'0') !='1'
+        and ifnull(m.safety_stock,0) > mcs.current_number
+        <if test="materialParam != null and materialParam !=''">
+            <bind name="bindKey" value="'%'+materialParam+'%'"/>
+            and (m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
         </if>
-        AND ifnull(dh.delete_flag, '0') != '1' group by di.material_id
-        ) intype ON intype.material_id = m.id
-
-        WHERE
-        1 = 1
-        AND ifnull(m.delete_Flag, '0') != '1'
-        AND intype.BasicInNumber > 0
+        <if test="pid != null">
+            and mcs.depot_id= ${pid}
+        </if>
+        group by m.id,m.name, m.model, m.unit, m.color, u.name) tb
     </select>
 </mapper>
