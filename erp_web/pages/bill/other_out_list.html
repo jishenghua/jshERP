@@ -618,6 +618,9 @@
                     });
                     data.footer = array;
                     $("#materialData").datagrid('loadData',data);
+                    for(var i=0; i<data.rows.length; i++){
+                        inOutService.autoReckon();
+                    }
                     $("#depotHeadFM .datagrid-view2 .datagrid-footer").find("[field='op'] img").hide();
                     if(type === "add") {
                         $("#depotHeadDlg #append").click(); //新增行

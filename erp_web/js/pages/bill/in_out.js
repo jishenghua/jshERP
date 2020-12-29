@@ -1216,15 +1216,11 @@
 				}
 			},100);
 		},
+		//单行单列的点击事件
 		onClickCell: function(index, field) {
 			if (editIndex != index) {
 				if (inOutService.endEditing()) {
-					if(field == "op") {
-						$(this).datagrid('deleteRow', index);
-						var body =$("#depotHeadFM .datagrid-view2 .datagrid-body");
-						var footer =$("#depotHeadFM .datagrid-view2 .datagrid-footer");
-						inOutService.statisticsFun(body,0,0,0,footer,0);
-					} else {
+					if(field != "op") {
 						$(this).datagrid('beginEdit', index);
 						var ed = $(this).datagrid('getEditor', {index: index, field: field});
 						if(ed){
@@ -1264,6 +1260,7 @@
 					$('#materialData').datagrid('getRows')[editIndex]['AnotherDepotName'] = AnotherDepotName;
 				}
 				$('#materialData').datagrid('endEdit', editIndex);
+				this.autoReckon();
 				editIndex = undefined;
 				return true;
 			} else {
@@ -1568,10 +1565,6 @@
 					if(tipInfo){
 						if(tipInfo.code!=200){
 							$.messager.alert('提示', tipInfo.msg, 'warning');
-							for(var i=0; i<rows.length; i++){
-								$('#materialData').datagrid('selectRow', i).datagrid('beginEdit', i);
-								self.autoReckon();
-							}
 							return;
 						}
 						$.messager.alert('提示','保存成功！','info');
@@ -1613,10 +1606,6 @@
 					if(tipInfo){
 						if(tipInfo.code!=200){
 							$.messager.alert('提示', tipInfo.msg, 'warning');
-							for(var i=0; i<rows.length; i++){
-								$('#materialData').datagrid('selectRow', i).datagrid('beginEdit', i);
-								self.autoReckon();
-							}
 							return;
 						}
 						$.messager.alert('提示','保存成功！','info');
