@@ -436,7 +436,7 @@
                         title: '库存', field: 'stock', width: 70, formatter: function (value, rec) {
                             var str = '';
                             str += '<span title="查看库存及明细" class="n-link" ' +
-                                'onclick="findStockList(' + rec.id + ',' + rec.mBarCode + ',\'' + rec.name + '\');">' + rec.stock + '</span>';
+                                'onclick="findStockList(' + rec.id + ',\'' + rec.mBarCode + '\',\'' + rec.name + '\');">' + rec.stock + '</span>';
                             return str;
                         }
                     },
