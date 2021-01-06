@@ -436,7 +436,7 @@
                         title: '库存', field: 'stock', width: 70, formatter: function (value, rec) {
                             var str = '';
                             str += '<span title="查看库存及明细" class="n-link" ' +
-                                'onclick="findStockList(' + rec.id + ',' + rec.mBarCode + ',\'' + rec.name + '\');">' + rec.stock + '</span>';
+                                'onclick="findStockList(' + rec.id + ',\'' + rec.mBarCode + '\',\'' + rec.name + '\');">' + rec.stock + '</span>';
                             return str;
                         }
                     },
@@ -1311,7 +1311,7 @@
                         if(type == "edit"){
                             $.ajax({
                                 type: "get",
-                                url: "../../../pages/template/init_depot_list.html?2121",
+                                url: "../../../pages/template/init_depot_list.html?3232",
                                 async: false,
                                 success: function (tem) {
                                     if (tem) {
