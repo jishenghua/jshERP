@@ -78,6 +78,7 @@ public class DepotItemController {
                 } else {
                     item.put("Type", subType + type); //进出类型
                 }
+                item.put("depotName", d.getDepotName()); //仓库名称
                 item.put("BasicNumber", d.getBnum()); //数量
                 item.put("OperTime", d.getOtime().getTime()); //时间
                 dataArray.add(item);

@@ -13,6 +13,8 @@ public class DepotItemVo4DetailByTypeAndMId {
 
     private BigDecimal bnum;
 
+    private String depotName;
+
     private Date otime;
 
     public String getNumber() {
@@ -45,6 +47,14 @@ public class DepotItemVo4DetailByTypeAndMId {
 
     public void setBnum(BigDecimal bnum) {
         this.bnum = bnum;
+    }
+
+    public String getDepotName() {
+        return depotName;
+    }
+
+    public void setDepotName(String depotName) {
+        this.depotName = depotName;
     }
 
     public Date getOtime() {
