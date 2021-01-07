@@ -11,6 +11,10 @@ import java.util.List;
 
 public interface AccountMapperEx {
 
+    List<Account> getAccountByParam(
+            @Param("name") String name,
+            @Param("serialNo") String serialNo);
+
     List<AccountVo4List> selectByConditionAccount(
             @Param("name") String name,
             @Param("serialNo") String serialNo,
@@ -32,4 +36,5 @@ public interface AccountMapperEx {
             @Param("accountId") Long accountId);
 
     int batchDeleteAccountByIds(@Param("updateTime") Date updateTime, @Param("updater") Long updater, @Param("ids") String ids[]);
+
 }

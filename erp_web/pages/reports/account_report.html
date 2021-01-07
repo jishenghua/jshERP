@@ -196,6 +196,10 @@
             type: "get",
             url: "/account/getStatistics",
             dataType: "json",
+            data: ({
+                name: name,
+                serialNo: serialNo
+            }),
             success: function (res) {
                 if (res && res.code === 200) {
                     if(res.data) {
