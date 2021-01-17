@@ -7,6 +7,7 @@
         <result column="type" jdbcType="VARCHAR" property="type" />
         <result column="sub_type" jdbcType="VARCHAR" property="subType" />
         <result column="b_num" jdbcType="BIGINT" property="bnum" />
+        <result column="depotName" jdbcType="VARCHAR" property="depotName" />
         <result column="oTime" jdbcType="TIMESTAMP" property="otime" />
     </resultMap>
 
@@ -119,6 +120,7 @@
             else 0
         end
         as b_num,
+        (select name from jsh_depot d where d.id=di.depot_id and ifnull(d.delete_flag,'0') !='1') as depotName,
         date_format(dh.oper_time,'%Y-%m-%d %H:%i:%S') as oTime
         from jsh_depot_head dh
         INNER JOIN jsh_depot_item di on dh.id=di.header_id and ifnull(di.delete_flag,'0') !='1'

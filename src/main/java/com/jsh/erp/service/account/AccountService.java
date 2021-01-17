@@ -84,7 +84,16 @@ public class AccountService {
             JshException.readFail(logger, e);
         }
         return list;
+    }
 
+    public List<Account> getAccountByParam(String name, String serialNo) throws Exception{
+        List<Account> list=null;
+        try{
+            list=accountMapperEx.getAccountByParam(name, serialNo);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list;
     }
 
     public List<AccountVo4List> select(String name, String serialNo, String remark, int offset, int rows) throws Exception{
@@ -547,10 +556,10 @@ public class AccountService {
 
     }
 
-    public Map<String, Object> getStatistics() {
+    public Map<String, Object> getStatistics(String name, String serialNo) {
         Map<String, Object> map = new HashMap<>();
         try {
-            List<Account> list = getAccount();
+            List<Account> list = getAccountByParam(name, serialNo);
             String timeStr = Tools.getCurrentMonth();
             BigDecimal allMonthAmount = BigDecimal.ZERO;
             BigDecimal allCurrentAmount = BigDecimal.ZERO;

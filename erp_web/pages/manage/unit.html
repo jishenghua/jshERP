@@ -356,7 +356,10 @@
             var otherName = $.trim($("#otherName").val());
             var otherNum = $.trim($("#otherNum").val());
             var name = basicName + "," + otherName + "(1:" + otherNum + ")";
-
+            if(otherNum<=1){
+                $.messager.alert('提示', '计量单位比例必须大于1', 'warning');
+                return;
+            }
             $.ajax({
                 url: url,
                 type: "post",

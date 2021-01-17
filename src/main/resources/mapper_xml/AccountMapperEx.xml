@@ -15,6 +15,20 @@
         <result column="AMList" jdbcType="VARCHAR" property="amList" />
     </resultMap>
 
+    <select id="getAccountByParam" resultType="com.jsh.erp.datasource.entities.Account">
+        select *
+        FROM jsh_account
+        where 1=1
+        <if test="name != null and name !=''">
+            <bind name="bindName" value="'%'+name+'%'"/>
+            and name like #{bindName}
+        </if>
+        <if test="serialNo != null and serialNo !=''">
+            <bind name="bindSerialNo" value="'%'+serialNo+'%'"/>
+            and serial_no like #{bindSerialNo}
+        </if>
+    </select>
+
     <select id="selectByConditionAccount" parameterType="com.jsh.erp.datasource.entities.AccountExample" resultMap="ResultListMap">
         select *
         FROM jsh_account
@@ -173,6 +187,7 @@
             and ifnull(dh.delete_flag,'0') !='1'
         ) cc
     </select>
+
     <update id="batchDeleteAccountByIds">
         update jsh_account
         set delete_flag='1'

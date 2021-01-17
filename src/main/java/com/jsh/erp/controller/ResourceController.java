@@ -22,15 +22,8 @@ import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
  */
 @RestController
 public class ResourceController {
-    private Logger logger = LoggerFactory.getLogger(ResourceController.class);
-
     @Resource
     private CommonQueryManager configResourceManager;
-
-    @GetMapping(value = "/test/heart")
-    public JSONObject exitHeart(HttpServletRequest request)throws Exception {
-        return JsonUtils.ok();
-    }
 
     @GetMapping(value = "/{apiName}/info")
     public String getList(@PathVariable("apiName") String apiName,
