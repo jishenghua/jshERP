@@ -24,6 +24,7 @@
 * UI框架: EasyUI 1.9.4
 * 模板框架: AdminLTE 2.4.0
 * 项目管理框架: Maven 3.2.3
+* API接口框架: swagger2 2.7.0 访问路径http://ip:port/doc.html
 
 # 开发环境
 建议开发者使用以下环境，可以避免版本带来的问题
