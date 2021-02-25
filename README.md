@@ -27,7 +27,7 @@
 * API接口框架: swagger2.7.0(ip:port/doc.html)
 
 # 开发环境
-建议开发者使用以下环境，可以避免版本带来的问题
+建议开发者使用以下环境，可以避免版本不一致带来的问题
 * IDE: IntelliJ IDEA 2017+
 * DB: Mysql5.7+
 * JDK: JDK1.8
