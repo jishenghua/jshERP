@@ -38,8 +38,7 @@
 * JAVA平台: JRE1.8
 * 操作系统：Windows、Linux等
 * 为方便大家搭建运行环境，分享了下载地址 https://pan.baidu.com/s/1jlild9uyGdQ7H2yaMx76zw 提取码:814g
-* 不会maven打包的小伙伴，请下载此打包后的文件：https://pan.baidu.com/s/1dzEy1XhqCWtRV1dsorDVrA 
-提取码：cond
+* 不会maven打包的小伙伴，请下载此打包后的文件 https://pan.baidu.com/s/1Opqz-WjonJEfwWL_7iiyPw 提取码：yrq2
 
 # 开源说明
 * 本系统100%开源，遵守GPL-3.0协议
