@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsh.erp.datasource.mappers.SequenceMapperEx">
+
+    <update id="updateBuildOnlyNumber">
+        update jsh_sequence set current_val = current_val + 1 where seq_name = 'depot_number_seq'
+    </update>
+
+    <select id="getBuildOnlyNumber" resultType="java.lang.Long">
+      select current_val from jsh_sequence where seq_name = 'depot_number_seq'
+    </select>
+
+</mapper>
