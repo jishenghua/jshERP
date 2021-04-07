@@ -14,13 +14,6 @@ let objectProject = {
         title: 'Index Page',
         // 在这个页面中包含的块，默认情况下会包含,提取出来的通用 chunk 和 vendor chunk。
         chunks: ['chunk-vendors', 'chunk-common', 'index']
-    },
-    car: {
-        entry: 'src/views/plugin/car/main.js',
-        template: 'src/views/plugin/car/car.html',
-        filename: 'car.html',
-        title: 'Car Page',
-        chunks: ['chunk-vendors', 'chunk-common', 'car']
     }
 }
 let page = {}

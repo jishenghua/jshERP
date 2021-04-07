@@ -6,7 +6,6 @@
     "pre": "yarn --registry https://registry.npm.taobao.org || cnpm install || npm install --registry https://registry.npm.taobao.org ",
     "serve": "vue-cli-service serve",
     "build-index": "vue-cli-service build index",
-    "build-car": "vue-cli-service build car",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
