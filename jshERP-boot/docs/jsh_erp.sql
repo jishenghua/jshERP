@@ -386,9 +386,6 @@ INSERT INTO `jsh_function` VALUES ('242', '060301', '销售订单', '0603', '/bi
 INSERT INTO `jsh_function` VALUES ('243', '000108', '机构管理', '0001', '/system/organization', '/system/OrganizationList', '', '0150', '', '电脑版', '1', 'profile', '0');
 INSERT INTO `jsh_function` VALUES ('244', '030112', '库存预警', '0301', '/report/stock_warning_report', '/report/StockWarningReport', '\0', '0670', '', '电脑版', '', 'profile', '0');
 INSERT INTO `jsh_function` VALUES ('245', '000107', '插件管理', '0001', '/system/plugin', '/system/PluginList', '\0', '0170', '', '电脑版', '1', 'profile', '0');
-INSERT INTO `jsh_function` VALUES ('254', '1001', '生产管理', '0', '/plugin', '/layouts/TabLayout', '\0', '0550', '', '电脑版', '', 'tool', '0');
-INSERT INTO `jsh_function` VALUES ('255', '100101', '生产任务[插件]', '1001', '/plugin/produce/task', '/plugin/Produce/TaskList', '\0', '0552', '', '电脑版', '1,2', 'profile', '0');
-INSERT INTO `jsh_function` VALUES ('256', '100102', 'BOM管理[插件]', '1001', '/plugin/produce/bom', '/plugin/Produce/BomList', '\0', '0554', '', '电脑版', '1', 'profile', '0');
 
 -- ----------------------------
 -- Table structure for jsh_in_out_item
