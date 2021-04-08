@@ -14,7 +14,7 @@
         <side-menu
           mode="inline"
           :menus="menus"
-          @menuSelect="menuSelect"
+          @menuSelect="myMenuSelect"
           :theme="navTheme"
           :collapsed="false"
           :collapsible="true"></side-menu>
@@ -43,7 +43,7 @@
         <side-menu
           mode="inline"
           :menus="menus"
-          @menuSelect="menuSelect"
+          @menuSelect="myMenuSelect"
           :theme="navTheme"
           :collapsed="false"
           :collapsible="true"></side-menu>
