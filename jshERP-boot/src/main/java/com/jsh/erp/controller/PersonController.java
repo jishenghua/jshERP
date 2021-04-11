@@ -100,7 +100,7 @@ public class PersonController {
      * @param request
      * @return
      */
-    @PostMapping(value = "/getPersonByNumType")
+    @GetMapping(value = "/getPersonByNumType")
     public JSONArray getPersonByNumType(@RequestParam("type") String typeNum,
                                         HttpServletRequest request)throws Exception {
         JSONArray dataArray = new JSONArray();
@@ -117,8 +117,8 @@ public class PersonController {
             if (null != personList) {
                 for (Person person : personList) {
                     JSONObject item = new JSONObject();
-                    item.put("id", person.getId());
-                    item.put("name", person.getName());
+                    item.put("value", person.getId().toString());
+                    item.put("text", person.getName());
                     dataArray.add(item);
                 }
             }
