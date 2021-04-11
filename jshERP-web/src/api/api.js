@@ -99,6 +99,7 @@ const addPerson = (params)=>postAction("/person/add",params);
 const editPerson = (params)=>putAction("/person/update",params);
 const checkPerson = (params)=>getAction("/person/checkIsNameExist",params);
 const getPersonByType = (params)=>getAction("/person/getPersonByType",params);
+const getPersonByNumType = (params)=>getAction("/person/getPersonByNumType",params);
 //账户管理
 const addAccount = (params)=>postAction("/account/add",params);
 const editAccount = (params)=>putAction("/account/update",params);
@@ -219,6 +220,7 @@ export {
   editPerson,
   checkPerson,
   getPersonByType,
+  getPersonByNumType,
   addAccount,
   editAccount,
   checkAccount,

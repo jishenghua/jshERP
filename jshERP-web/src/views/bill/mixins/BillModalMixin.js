@@ -1,5 +1,5 @@
 import { VALIDATE_NO_PASSED, validateFormAndTables } from '@/utils/JEditableTableUtil'
-import {findBySelectSup,findBySelectCus,findBySelectRetail,getMaterialByBarCode,findStockByDepotAndBarCode,getAccount} from '@/api/api'
+import {findBySelectSup,findBySelectCus,findBySelectRetail,getMaterialByBarCode,findStockByDepotAndBarCode,getAccount,getPersonByNumType} from '@/api/api'
 import { getAction,putAction } from '@/api/manage'
 import { getMpListShort, getNowFormatDateTime } from "@/utils/util"
 import Vue from 'vue'
@@ -12,6 +12,10 @@ export const BillModalMixin = {
       supList: [],
       cusList: [],
       retailList: [],
+      personList: {
+        options: [],
+        value: ''
+      },
       depotList: [],
       accountList: [],
       accountIdList: [],
@@ -35,6 +39,7 @@ export const BillModalMixin = {
     this.initSupplier()
     this.initCustomer()
     this.initRetail()
+    this.initSalesman()
     this.initDepot()
     this.initAccount()
   },
@@ -93,6 +98,14 @@ export const BillModalMixin = {
       findBySelectRetail({}).then((res)=>{
         if(res) {
           that.retailList = res;
+        }
+      });
+    },
+    initSalesman() {
+      let that = this;
+      getPersonByNumType({type:1}).then((res)=>{
+        if(res) {
+          that.personList.options = res;
         }
       });
     },
