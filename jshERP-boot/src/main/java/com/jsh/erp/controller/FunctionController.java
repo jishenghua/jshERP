@@ -36,25 +36,6 @@ public class FunctionController {
     @Resource
     private UserBusinessService userBusinessService;
 
-    @PostMapping(value = "/findMenu")
-    public JSONArray findMenu(@RequestParam(value="pNumber") String pNumber,
-                              @RequestParam(value="hasFunction") String hasFunction,
-                              HttpServletRequest request)throws Exception {
-        //存放数据json数组
-        JSONArray dataArray = new JSONArray();
-        try {
-            //当前用户所拥有的功能列表，格式如：[1][2][5]
-            String fc = hasFunction;
-            List<Function> dataList = functionService.getRoleFunction(pNumber);
-            if (dataList.size() != 0) {
-                dataArray = getMenuByFunction(dataList, fc);
-            }
-        } catch (DataAccessException e) {
-            logger.error(">>>>>>>>>>>>>>>>>>>查找异常", e);
-        }
-        return dataArray;
-    }
-
     public JSONArray getMenuByFunction(List<Function> dataList, String fc) throws Exception {
         JSONArray dataArray = new JSONArray();
         for (Function function : dataList) {
@@ -111,6 +92,14 @@ public class FunctionController {
             List<Function> dataList = functionService.getRoleFunction(pNumber);
             if (dataList.size() != 0) {
                 dataArray = getMenuByFunction(dataList, fc);
+                //增加首页菜单项
+                JSONObject homeItem = new JSONObject();
+                homeItem.put("id", 0);
+                homeItem.put("text", "首页");
+                homeItem.put("icon", "home");
+                homeItem.put("url", "/dashboard/analysis");
+                homeItem.put("component", "/layouts/TabLayout");
+                dataArray.add(0,homeItem);
             }
         } catch (DataAccessException e) {
             logger.error(">>>>>>>>>>>>>>>>>>>查找异常", e);
