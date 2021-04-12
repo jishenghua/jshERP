@@ -115,8 +115,11 @@
             console.log("修改密码提交数据",params)
             putAction(this.url,params).then((res)=>{
               if(res.code === 200){
-                console.log(res)
-                that.$message.success(res.data.message);
+                if(res.data.status === 2 || res.data.status === 3) {
+                  that.$message.warning(res.data.message);
+                } else {
+                  that.$message.success(res.data.message);
+                }
                 that.close();
               }else{
                 that.$message.warning(res.data.message);
