@@ -82,23 +82,17 @@ export function formatDate(value, fmt) {
 // 生成首页路由
 export function generateIndexRouter(data) {
   let indexRouter = generateChildRouters(data)
-// let indexRouter = [{
-//           path: '/',
-//           name: 'dashboard',
-//           //component: () => import('@/components/layouts/BasicLayout'),
-//           component: resolve => require(['@/components/layouts/TabLayout'], resolve),
-//           meta: {
-//             title: '首页',
-//             icon: 'icon-present'
-//           },
-//           redirect: '/dashboard/analysis',
-//           children: [
-//             ...generateChildRouters(data)
-//           ]
-//         },
-//         {
-//           "path": "*", "redirect": "/404", "hidden": true
-//         }]
+  indexRouter.splice(0,0, {
+    path: '/',
+    name: '首页',
+    component: () => import('@/components/layouts/TabLayout'),
+    meta: {
+      title: '首页',
+      icon: 'icon-present',
+      url: '/dashboard/analysis'
+    },
+    redirect: '/dashboard/analysis'
+  })
   return indexRouter;
 }
 
