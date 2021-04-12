@@ -36,36 +36,6 @@ public class FunctionController {
     @Resource
     private UserBusinessService userBusinessService;
 
-    public JSONArray getMenuByFunction(List<Function> dataList, String fc) throws Exception {
-        JSONArray dataArray = new JSONArray();
-        for (Function function : dataList) {
-            JSONObject item = new JSONObject();
-            List<Function> newList = functionService.getRoleFunction(function.getNumber());
-            item.put("id", function.getId());
-            item.put("text", function.getName());
-            item.put("icon", function.getIcon());
-            item.put("url", function.getUrl());
-            //if (Tools.isPluginUrl(function.getUrl())) {
-            //    item.put("path", Tools.md5Encryp(function.getUrl()));
-            //} else {
-            //    item.put("path", function.getUrl());
-            //}
-            item.put("component", function.getComponent());
-            if (newList.size()>0) {
-                JSONArray childrenArr = getMenuByFunction(newList, fc);
-                if(childrenArr.size()>0) {
-                    item.put("children", childrenArr);
-                    dataArray.add(item);
-                }
-            } else {
-                if (fc.indexOf("[" + function.getId().toString() + "]") != -1) {
-                    dataArray.add(item);
-                }
-            }
-        }
-        return dataArray;
-    }
-
     @PostMapping(value = "/findMenuByPNumber")
     public JSONArray findMenuByPNumber(@RequestBody JSONObject jsonObject,
                               HttpServletRequest request)throws Exception {
@@ -107,6 +77,36 @@ public class FunctionController {
         return dataArray;
     }
 
+    public JSONArray getMenuByFunction(List<Function> dataList, String fc) throws Exception {
+        JSONArray dataArray = new JSONArray();
+        for (Function function : dataList) {
+            JSONObject item = new JSONObject();
+            List<Function> newList = functionService.getRoleFunction(function.getNumber());
+            item.put("id", function.getId());
+            item.put("text", function.getName());
+            item.put("icon", function.getIcon());
+            item.put("url", function.getUrl());
+            //if (Tools.isPluginUrl(function.getUrl())) {
+            //    item.put("path", Tools.md5Encryp(function.getUrl()));
+            //} else {
+            //    item.put("path", function.getUrl());
+            //}
+            item.put("component", function.getComponent());
+            if (newList.size()>0) {
+                JSONArray childrenArr = getMenuByFunction(newList, fc);
+                if(childrenArr.size()>0) {
+                    item.put("children", childrenArr);
+                    dataArray.add(item);
+                }
+            } else {
+                if (fc.indexOf("[" + function.getId().toString() + "]") != -1) {
+                    dataArray.add(item);
+                }
+            }
+        }
+        return dataArray;
+    }
+
     /**
      * 角色对应功能显示
      * @param request
@@ -120,9 +120,9 @@ public class FunctionController {
             List<Function> dataListFun = functionService.findRoleFunction("0");
             //开始拼接json数据
             JSONObject outer = new JSONObject();
-            outer.put("id", 1);
-            outer.put("key", 1);
-            outer.put("value", 1);
+            outer.put("id", 0);
+            outer.put("key", 0);
+            outer.put("value", 0);
             outer.put("title", "功能列表");
             outer.put("attributes", "功能列表");
             //存放数据json数组
