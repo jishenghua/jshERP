@@ -764,7 +764,6 @@
   import { FormTypes, VALIDATE_NO_PASSED } from '@/utils/JEditableTableUtil'
   import { cloneObject, randomString, randomNumber } from '@/utils/util'
   import JDate from '@/components/jeecg/JDate'
-  import { initDictOptions } from '@/components/dict/JDictSelectUtil'
   import { getFileAccessHttpUrl } from '@/api/manage';
   import JInputPop from '@/components/jeecg/minipop/JInputPop'
   import JFilePop from '@/components/jeecg/minipop/JFilePop'
@@ -1028,9 +1027,6 @@
                     }
                     return {}
                   })
-                }
-                if (column.dictCode) {
-                  this._loadDictConcatToOptions(column)
                 }
               }
             })
@@ -2470,24 +2466,6 @@
         if (currUploadObj && currUploadObj['message']) {
           this.$error({ title: '上传出错', content: '错误信息：' + currUploadObj['message'], maskClosable: true })
         }
-      },
-
-      /** 加载数据字典并合并到 options */
-      _loadDictConcatToOptions(column) {
-        initDictOptions(column.dictCode).then((res) => {
-          if (res && res.code == 200) {
-            let newOptions = (column.options || [])// .concat(res.result)
-            res.data.forEach(item => {
-              for (let option of newOptions) if (option.value === item.value) return
-              newOptions.push(item)
-            })
-            column.options = newOptions
-          } else {
-            console.group(`JEditableTable 查询字典(${column.dictCode})发生异常`)
-            console.log(res.data)
-            console.groupEnd()
-          }
-        })
       },
 
       /* --- common function end --- */

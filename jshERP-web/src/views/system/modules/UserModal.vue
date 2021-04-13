@@ -53,7 +53,6 @@
 <script>
   import pick from 'lodash.pick'
   import Vue from 'vue'
-  import departWindow from './DepartWindow'
   import JSelectPosition from '@/components/jeecgbiz/JSelectPosition'
   import { ACCESS_TOKEN } from "@/store/mutation-types"
   import { getAction } from '@/api/manage'
@@ -65,7 +64,6 @@
     name: "UserModal",
     components: {
       JImageUpload,
-      departWindow,
       JSelectPosition
     },
     data () {

@@ -93,18 +93,14 @@
   import {postAction,getFileAccessHttpUrl} from '@/api/manage';
   import {frozenBatch} from '@/api/api'
   import {JeecgListMixin} from '@/mixins/JeecgListMixin'
-  import SysUserAgentModal from "./modules/SysUserAgentModal";
   import JInput from '@/components/jeecg/JInput'
-  import UserRecycleBinModal from './modules/UserRecycleBinModal'
   export default {
     name: "UserList",
     mixins: [JeecgListMixin],
     components: {
-      SysUserAgentModal,
       UserModal,
       PasswordModal,
-      JInput,
-      UserRecycleBinModal
+      JInput
     },
     data() {
       return {

@@ -32,7 +32,6 @@ import {
 } from "@/store/mutation-types"
 import config from '@/defaultSettings'
 
-import JDictSelectTag from './components/dict/index.js'
 import hasPermission from '@/utils/hasPermission'
 import vueBus from '@/utils/vueBus';
 import JeecgComponents from '@/components/jeecg/index'
@@ -45,7 +44,6 @@ Vue.use(Antd)
 Vue.use(VueAxios, router)
 Vue.use(Viser)
 Vue.use(hasPermission)
-Vue.use(JDictSelectTag)
 Vue.use(Print)
 Vue.use(preview)
 Vue.use(vueBus);

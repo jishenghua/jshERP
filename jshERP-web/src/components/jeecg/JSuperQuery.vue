@@ -204,13 +204,12 @@
   import JDate from '@/components/jeecg/JDate.vue'
   import JSelectDepart from '@/components/jeecgbiz/JSelectDepart'
   import JSelectMultiUser from '@/components/jeecgbiz/JSelectMultiUser'
-  import JMultiSelectTag from '@/components/dict/JMultiSelectTag'
   import JAreaLinkage from '@comp/jeecg/JAreaLinkage'
 
   export default {
     name: 'JSuperQuery',
     mixins: [mixinDevice],
-    components: { JAreaLinkage, JMultiSelectTag, JDate, JSelectDepart, JSelectMultiUser },
+    components: { JAreaLinkage, JDate, JSelectDepart, JSelectMultiUser },
     props: {
       /*
        fieldList: [{
