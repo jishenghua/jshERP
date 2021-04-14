@@ -19,7 +19,6 @@
 <script>
   import Avatar from 'ant-design-vue/es/avatar'
   import AvatarItem from './Item'
-  import { filterEmpty } from '@/components/_util/util'
 
   export default {
     AvatarItem,
@@ -87,14 +86,6 @@
         [`${prefixCls}`]: true,
         [`${size}`]: true,
       }
-      const items = filterEmpty(this.$slots.default)
-      const itemsDom = items && items.length ? <ul class={`${prefixCls}-items`}>{ this.getItems(items) }</ul> : null
-
-      return (
-        <div class={ classString }>
-          { itemsDom }
-        </div>
-      )
     }
   }
 </script>

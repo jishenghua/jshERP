@@ -27,7 +27,6 @@
 
 <script>
   import { pcaa } from 'area-data'
-  import Area from '@/components/_util/Area'
 
   export default {
     name: 'JAreaLinkage',
