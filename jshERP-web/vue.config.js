@@ -71,12 +71,12 @@ module.exports = {
             }))
         }
         // 配置 webpack 识别 markdown 为普通的文件
-        config.module
-            .rule('markdown')
-            .test(/\.md$/)
-            .use()
-            .loader('file-loader')
-            .end()
+        // config.module
+        //     .rule('markdown')
+        //     .test(/\.md$/)
+        //     .use()
+        //     .loader('file-loader')
+        //     .end()
     },
     css: {
         loaderOptions: {
