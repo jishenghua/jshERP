@@ -76,16 +76,16 @@
     created () {
     },
     methods: {
-      edit (id) {
+      edit (record) {
         this.form.resetFields();
         this.model = Object.assign({}, {});
         this.visible = true;
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model,'name', 'type', 'description'))
         });
-        this.roleId = id
+        this.roleId = record.id
         this.checkedKeys = []
-        this.loadTree(id)
+        this.loadTree(record.id)
       },
       close () {
         this.$emit('close');
@@ -99,7 +99,7 @@
             that.confirmLoading = true;
             let formData = Object.assign(this.model, values);
             formData.type = 'RoleFunctions'
-            formData.keyId = this.model.id
+            formData.keyId = this.roleId
             formData.value = this.checkedKeys
             let obj;
             checkUserBusiness({'type': 'RoleFunctions','keyId': this.roleId}).then((res)=>{

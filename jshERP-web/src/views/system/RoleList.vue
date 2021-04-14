@@ -45,7 +45,7 @@
         :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
         @change="handleTableChange">
         <span slot="action" slot-scope="text, record">
-          <a @click="handleSetFunction(record.id)">分配功能</a>
+          <a @click="handleSetFunction(record)">分配功能</a>
           <a-divider type="vertical" />
 <!--          <a @click="handleSetPushBtn(record.id)">分配按钮</a>-->
 <!--          <a-divider type="vertical" />-->
@@ -131,8 +131,8 @@
       }
     },
     methods: {
-      handleSetFunction(id) {
-        this.$refs.roleFunctionModal.edit(id);
+      handleSetFunction(record) {
+        this.$refs.roleFunctionModal.edit(record);
         this.$refs.roleFunctionModal.title = "分配功能";
         this.$refs.roleFunctionModal.disableSubmit = false;
       },
