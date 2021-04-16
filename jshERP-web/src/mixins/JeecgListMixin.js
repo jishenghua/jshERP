@@ -254,9 +254,8 @@ export const JeecgListMixin = {
       this.loadData();
     },
     handleDetail:function(record){
-      this.$refs.modalForm.edit(record);
-      this.$refs.modalForm.title="详情";
-      this.$refs.modalForm.disableSubmit = true;
+      this.$refs.modalDetail.show(record);
+      this.$refs.modalDetail.title="详情";
     },
     /* 导出 */
     handleExportXls2(){

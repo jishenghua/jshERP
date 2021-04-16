@@ -24,7 +24,6 @@ export const BillListMixin = {
       this.handleEdit(record);
     },
     myHandleDetail(record) {
-      this.$refs.modalForm.action = "detail";
       this.handleDetail(record);
     },
     handleApprove(record) {
