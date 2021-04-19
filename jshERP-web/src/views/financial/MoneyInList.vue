@@ -57,6 +57,8 @@
         :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
         @change="handleTableChange">
         <span slot="action" slot-scope="text, record">
+          <a @click="myHandleDetail(record, 'moneyIn')">查看</a>
+          <a-divider type="vertical" />
           <a @click="myHandleEdit(record)">编辑</a>
           <a-divider type="vertical" />
           <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
@@ -68,10 +70,12 @@
     <!-- table区域-end -->
     <!-- 表单区域 -->
     <money-in-modal ref="modalForm" @ok="modalFormOk"></money-in-modal>
+    <financial-detail ref="modalDetail"></financial-detail>
   </a-card>
 </template>
 <script>
   import MoneyInModal from './modules/MoneyInModal'
+  import FinancialDetail from './dialog/FinancialDetail'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { FinancialListMixin } from './mixins/FinancialListMixin'
   import JDate from '@/components/jeecg/JDate'
@@ -80,6 +84,7 @@
     mixins:[JeecgListMixin, FinancialListMixin],
     components: {
       MoneyInModal,
+      FinancialDetail,
       JDate
     },
     data () {

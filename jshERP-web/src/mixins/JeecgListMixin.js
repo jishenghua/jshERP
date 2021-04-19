@@ -253,8 +253,8 @@ export const JeecgListMixin = {
       // 新增/修改 成功时，重载列表
       this.loadData();
     },
-    handleDetail:function(record){
-      this.$refs.modalDetail.show(record);
+    handleDetail:function(record, type){
+      this.$refs.modalDetail.show(record, type);
       this.$refs.modalDetail.title="详情";
     },
     /* 导出 */

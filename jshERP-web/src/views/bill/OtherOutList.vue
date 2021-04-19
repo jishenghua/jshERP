@@ -62,6 +62,8 @@
         :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
         @change="handleTableChange">
         <span slot="action" slot-scope="text, record">
+          <a @click="myHandleDetail(record, 'otherOut')">查看</a>
+          <a-divider type="vertical" />
           <a @click="myHandleEdit(record)">编辑</a>
           <a-divider type="vertical" />
           <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
@@ -73,10 +75,12 @@
     <!-- table区域-end -->
     <!-- 表单区域 -->
     <other-out-modal ref="modalForm" @ok="modalFormOk"></other-out-modal>
+    <bill-detail ref="modalDetail"></bill-detail>
   </a-card>
 </template>
 <script>
   import OtherOutModal from './modules/OtherOutModal'
+  import BillDetail from './dialog/BillDetail'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { BillListMixin } from './mixins/BillListMixin'
   import JDate from '@/components/jeecg/JDate'
@@ -85,6 +89,7 @@
     mixins:[JeecgListMixin,BillListMixin],
     components: {
       OtherOutModal,
+      BillDetail,
       JDate
     },
     data () {

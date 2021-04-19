@@ -85,7 +85,7 @@
   import { FinancialModalMixin } from '../mixins/FinancialModalMixin'
   import JDate from '@/components/jeecg/JDate'
   export default {
-    name: "MoneyInModal",
+    name: "AdvanceInModal",
     mixins: [JEditableTableMixin, FinancialModalMixin],
     components: {
       JDate
