@@ -8,6 +8,7 @@
     <resultMap id="ResultInOutList" type="com.jsh.erp.datasource.vo.AccountVo4InOutList">
         <result column="Number" jdbcType="VARCHAR" property="number" />
         <result column="newType" jdbcType="VARCHAR" property="type" />
+        <result column="fromType" jdbcType="VARCHAR" property="fromType" />
         <result column="supplier" jdbcType="VARCHAR" property="supplierName" />
         <result column="change_amount" jdbcType="DECIMAL" property="changeAmount" />
         <result column="oTime" jdbcType="VARCHAR" property="operTime" />
@@ -67,7 +68,7 @@
 
     <select id="findAccountInOutList" parameterType="com.jsh.erp.datasource.entities.AccountExample" resultMap="ResultInOutList">
         <!--主表出入库涉及的账户 -->
-        select dh.number,concat(dh.sub_type,dh.type) as newType,s.supplier,dh.change_amount,date_format(dh.oper_time,'%Y-%m-%d %H:%i:%S') as oTime,'' as AList,'' as AMList
+        select dh.number,concat(dh.sub_type,dh.type) as newType, 'bill' as fromType, s.supplier,dh.change_amount,date_format(dh.oper_time,'%Y-%m-%d %H:%i:%S') as oTime,'' as AList,'' as AMList
         from jsh_depot_head dh left join jsh_supplier s on dh.organ_id = s.id and ifnull(s.delete_flag,'0') !='1'
         where 1=1
         <if test="accountId != null">
@@ -77,7 +78,7 @@
 
         <!--主表收入和支出涉及的账户 -->
         UNION ALL
-        select ah.bill_no,ah.type as newType,s.supplier,ah.change_amount,date_format(ah.bill_time,'%Y-%m-%d %H:%i:%S') as oTime,'' as AList,'' as AMList
+        select ah.bill_no,ah.type as newType, 'financial' as fromType, s.supplier,ah.change_amount,date_format(ah.bill_time,'%Y-%m-%d %H:%i:%S') as oTime,'' as AList,'' as AMList
         from jsh_account_head ah left join jsh_supplier s on ah.organ_id=s.id and ifnull(s.delete_flag,'0') !='1'
         where 1=1
         <if test="accountId != null">
@@ -86,7 +87,7 @@
         and ifnull(ah.delete_flag,'0') !='1'
         <!--明细中涉及的账户（收款,付款,收预付款） -->
         UNION ALL
-        select ah.bill_no,ah.type as newType,s.supplier,ai.each_amount,date_format(ah.bill_time,'%Y-%m-%d %H:%i:%S') as oTime,'' as AList,'' as AMList
+        select ah.bill_no,ah.type as newType, 'financial' as fromType, s.supplier,ai.each_amount,date_format(ah.bill_time,'%Y-%m-%d %H:%i:%S') as oTime,'' as AList,'' as AMList
         from jsh_account_head ah left join jsh_supplier s on ah.organ_id=s.id
         inner join jsh_account_item ai on ai.header_id=ah.id and ifnull(ai.delete_flag,'0') !='1'
         where ah.type in ('收款','付款','收预付款')
@@ -96,7 +97,7 @@
         and ifnull(ah.delete_flag,'0') !='1'
         <!--主表中转出的账户 -->
         UNION ALL
-        select ah.bill_no,ah.type as newType, '' as sName,ah.change_amount,date_format(ah.bill_time,'%Y-%m-%d %H:%i:%S') as oTime,'' as AList,'' as AMList
+        select ah.bill_no,ah.type as newType, 'financial' as fromType, '' as sName,ah.change_amount,date_format(ah.bill_time,'%Y-%m-%d %H:%i:%S') as oTime,'' as AList,'' as AMList
         from jsh_account_head ah inner join jsh_account_item ai on ai.header_id=ah.id and ifnull(ai.delete_flag,'0') !='1'
         where ah.type='转账'
         <if test="accountId != null">
@@ -105,7 +106,7 @@
         and ifnull(ah.delete_flag,'0') !='1'
         <!--明细中被转入的账户 -->
         UNION ALL
-        select ah.bill_no,ah.type as newType, '' as sName,ai.each_amount,date_format(ah.bill_time,'%Y-%m-%d %H:%i:%S') as oTime,'' as AList,'' as AMList
+        select ah.bill_no,ah.type as newType, 'financial' as fromType, '' as sName,ai.each_amount,date_format(ah.bill_time,'%Y-%m-%d %H:%i:%S') as oTime,'' as AList,'' as AMList
         from jsh_account_head ah inner join jsh_account_item ai on ai.header_id=ah.id and ifnull(ai.delete_flag,'0') !='1'
         where ah.type='转账'
         <if test="accountId != null">
@@ -114,7 +115,7 @@
         and ifnull(ah.delete_flag,'0') !='1'
         <!--多账户的情况 -->
         UNION ALL
-        select dh.number,concat(dh.sub_type,dh.type) as newType,s.supplier,dh.change_amount,date_format(dh.oper_time,'%Y-%m-%d %H:%i:%S') as oTime,
+        select dh.number,concat(dh.sub_type,dh.type) as newType, 'bill' as fromType, s.supplier,dh.change_amount,date_format(dh.oper_time,'%Y-%m-%d %H:%i:%S') as oTime,
         dh.account_id_list as AList,dh.account_money_list as AMList
         from jsh_depot_head dh left join jsh_supplier s on dh.organ_id = s.id and ifnull(s.delete_flag,'0') !='1'
         where 1=1

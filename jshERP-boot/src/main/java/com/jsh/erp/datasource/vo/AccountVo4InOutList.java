@@ -8,6 +8,8 @@ public class AccountVo4InOutList {
 
     private String type;
 
+    private String fromType;
+
     private String supplierName;
 
     private BigDecimal changeAmount;
@@ -36,6 +38,14 @@ public class AccountVo4InOutList {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getFromType() {
+        return fromType;
+    }
+
+    public void setFromType(String fromType) {
+        this.fromType = fromType;
     }
 
     public String getSupplierName() {
