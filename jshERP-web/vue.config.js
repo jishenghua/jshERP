@@ -5,38 +5,8 @@ function resolve (dir) {
     return path.join(__dirname, dir)
 }
 
-let objectProject = {
-    index: {
-        entry: 'src/main.js', // page 的入口
-        template: 'public/index.html', // 模板来源
-        filename: 'index.html', // 在 dist/index.html 的输出
-        // 当使用 title 选项时，template 中的 title 标签需要是 <title><%= htmlWebpackPlugin.options.title %></title>
-        title: 'Index Page',
-        // 在这个页面中包含的块，默认情况下会包含,提取出来的通用 chunk 和 vendor chunk。
-        chunks: ['chunk-vendors', 'chunk-common', 'index']
-    }
-}
-let page = {}
-let projectname = process.argv[3] // 获取执行哪个文件
-if (process.env.NODE_ENV === 'development') {
-    page = objectProject
-} else {
-    page[projectname] = objectProject[projectname]
-}
-let publicPathStr, dirStr
-if (projectname === undefined || projectname === 'index') {
-    publicPathStr = '/'
-    dirStr = 'dist'
-} else {
-    publicPathStr = './'
-    dirStr = 'dist/plugin/' + projectname
-}
-
 // vue.config.js
 module.exports = {
-    outputDir: dirStr, // 标识是打包哪个文件
-    filenameHashing: true,
-    pages: page,
     /*
       Vue-cli3:
       Crashed when using Webpack `import()` #2463
@@ -44,8 +14,6 @@ module.exports = {
      */
     // 如果你不需要生产环境的 source map，可以将其设置为 false 以加速生产环境构建。
     productionSourceMap: false,
-    // 静态文件的路径前缀
-    publicPath: publicPathStr,
     configureWebpack: config => {
     // 生产环境取消 console.log
         if (process.env.NODE_ENV === 'production') {

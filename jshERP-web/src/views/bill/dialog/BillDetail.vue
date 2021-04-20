@@ -12,7 +12,7 @@
       style="top:5%;height: 100%;overflow-y: hidden">
       <a-form :form="form">
         <!--调拨出库-->
-        <template v-if="billType === 'allocationOut'">
+        <template v-if="billType === '调拨出库'">
           <a-row class="form-row" :gutter="24">
             <a-col :lg="6" :md="12" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
@@ -48,7 +48,7 @@
           </a-row>
         </template>
         <!--组装单-->
-        <template v-else-if="billType === 'assemble'">
+        <template v-else-if="billType === '组装单'">
           <a-row class="form-row" :gutter="24">
             <a-col :lg="6" :md="12" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
@@ -81,7 +81,7 @@
           </a-row>
         </template>
         <!--拆卸单-->
-        <template v-else-if="billType === 'disassemble'">
+        <template v-else-if="billType === '拆卸单'">
           <a-row class="form-row" :gutter="24">
             <a-col :lg="6" :md="12" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
@@ -114,7 +114,7 @@
           </a-row>
         </template>
         <!--其它入库-->
-        <template v-else-if="billType === 'otherIn'">
+        <template v-else-if="billType === '其它入库'">
           <a-row class="form-row" :gutter="24">
             <a-col :lg="6" :md="12" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="供应商">
@@ -152,7 +152,7 @@
           </a-row>
         </template>
         <!--其它出库-->
-        <template v-else-if="billType === 'otherOut'">
+        <template v-else-if="billType === '其它出库'">
           <a-row class="form-row" :gutter="24">
             <a-col :lg="6" :md="12" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户">
@@ -190,7 +190,7 @@
           </a-row>
         </template>
         <!--采购退货-->
-        <template v-else-if="billType === 'purchaseBack'">
+        <template v-else-if="billType === '采购退货出库'">
           <a-row class="form-row" :gutter="24">
             <a-col :lg="6" :md="12" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="供应商">
@@ -269,7 +269,7 @@
           </a-row>
         </template>
         <!--采购入库-->
-        <template v-else-if="billType === 'purchaseIn'">
+        <template v-else-if="billType === '采购入库'">
           <a-row class="form-row" :gutter="24">
             <a-col :lg="6" :md="12" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="供应商">
@@ -348,7 +348,7 @@
           </a-row>
         </template>
         <!--采购订单-->
-        <template v-else-if="billType === 'purchaseOrder'">
+        <template v-else-if="billType === '采购订单'">
           <a-row class="form-row" :gutter="24">
             <a-col :lg="6" :md="12" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="供应商">
@@ -386,7 +386,7 @@
           </a-row>
         </template>
         <!--零售退货-->
-        <template v-else-if="billType === 'retailBack'">
+        <template v-else-if="billType === '零售退货入库'">
           <a-row class="form-row" :gutter="24">
             <a-col :lg="6" :md="12" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="会员卡号">
@@ -453,7 +453,7 @@
           </a-row>
         </template>
         <!--零售出库-->
-        <template v-else-if="billType === 'retailOut'">
+        <template v-else-if="billType === '零售出库'">
           <a-row class="form-row" :gutter="24">
             <a-col :lg="6" :md="12" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="会员卡号">
@@ -524,7 +524,7 @@
           </a-row>
         </template>
         <!--销售退货-->
-        <template v-else-if="billType === 'saleBack'">
+        <template v-else-if="billType === '销售退货入库'">
           <a-row class="form-row" :gutter="24">
             <a-col :lg="6" :md="12" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户">
@@ -610,7 +610,7 @@
           </a-row>
         </template>
         <!--销售订单-->
-        <template v-else-if="billType === 'saleOrder'">
+        <template v-else-if="billType === '销售订单'">
           <a-row class="form-row" :gutter="24">
             <a-col :lg="6" :md="12" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户">
@@ -652,7 +652,7 @@
           </a-row>
         </template>
         <!--销售出库-->
-        <template v-else-if="billType === 'saleOut'">
+        <template v-else-if="billType === '销售出库'">
           <a-row class="form-row" :gutter="24">
             <a-col :lg="6" :md="12" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户">

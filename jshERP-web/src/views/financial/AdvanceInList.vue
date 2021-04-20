@@ -57,7 +57,7 @@
         :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
         @change="handleTableChange">
         <span slot="action" slot-scope="text, record">
-          <a @click="myHandleDetail(record, 'advanceIn')">查看</a>
+          <a @click="myHandleDetail(record, '收预付款')">查看</a>
           <a-divider type="vertical" />
           <a @click="myHandleEdit(record)">编辑</a>
           <a-divider type="vertical" />

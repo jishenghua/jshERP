@@ -18,25 +18,38 @@
       :pagination="ipagination"
       :loading="loading"
       @change="handleTableChange">
+      <span slot="numberCustomRender" slot-scope="text, record">
+        <a @click="myHandleDetail(record)">{{record.number}}</a>
+      </span>
     </a-table>
     <!-- table区域-end -->
+    <!-- 表单区域 -->
+    <bill-detail ref="billDetail"></bill-detail>
+    <financial-detail ref="financialDetail"></financial-detail>
   </a-modal>
 </template>
 <script>
+  import BillDetail from '../../bill/dialog/BillDetail'
+  import FinancialDetail from '../../financial/dialog/FinancialDetail'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import JEllipsis from '@/components/jeecg/JEllipsis'
-  import {getAction} from '@/api/manage'
+  import {findBillDetailByNumber, findFinancialDetailByNumber} from '@/api/api'
   export default {
     name: "AccountInOutList",
     mixins:[JeecgListMixin],
     components: {
-      JEllipsis
+      BillDetail,
+      FinancialDetail,
+      JEllipsis,
+      findBillDetailByNumber,
+      findFinancialDetailByNumber
     },
     data () {
       return {
         title:"操作",
         visible: false,
         disableMixinCreated: false,
+        toFromType: '',
         // 查询条件
         queryParam: {
           accountId:'',
@@ -55,7 +68,10 @@
               return parseInt(index)+1;
             }
           },
-          { title: '单据编号', dataIndex: 'number', width: 150},
+          {
+            title: '单据编号', dataIndex: 'number', width: 150,
+            scopedSlots: { customRender: 'numberCustomRender' },
+          },
           { title: '类型', dataIndex: 'type', width: 100},
           { title: '单位信息', dataIndex: 'supplierName', width: 150},
           { title: '金额', dataIndex: 'changeAmount', width: 80},
@@ -115,6 +131,25 @@
       },
       handleCancel () {
         this.close()
+      },
+      myHandleDetail(record) {
+        let that = this
+        this.toFromType = record.fromType
+        if(record.fromType === 'bill') {
+          findBillDetailByNumber({ number: record.number }).then((res) => {
+            if (res && res.code === 200) {
+              that.$refs.billDetail.show(res.data, record.type);
+              that.$refs.billDetail.title="详情";
+            }
+          })
+        } else if(record.fromType === 'financial') {
+          findFinancialDetailByNumber({ billNo: record.number }).then((res) => {
+            if (res && res.code === 200) {
+              that.$refs.financialDetail.show(res.data, record.type);
+              that.$refs.financialDetail.title="详情";
+            }
+          })
+        }
       }
     }
   }

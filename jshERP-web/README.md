@@ -6,16 +6,12 @@ jshERP-web Vue
 Overview
 ----
 
-基于 [Ant Design of Vue](https://vuecomponent.github.io/ant-design-vue/docs/vue/introduce-cn/) 实现的 Ant Design Pro  Vue 版
-Jeecg-boot 的前段UI框架，采用前后端分离方案，提供强大代码生成器的快速开发平台。
-前端页面代码和后端功能代码一键生成，不需要写任何代码，保持jeecg一贯的强大！！
-
-
 
 #### 前端技术
  
 - 基础框架：[ant-design-vue](https://github.com/vueComponent/ant-design-vue) - Ant Design Of Vue 实现
 - JavaScript框架：Vue
+- Jeecg-boot 的前段UI框架
 - Webpack
 - node
 - yarn
@@ -37,17 +33,12 @@ yarn install
 
 - 开发模式运行
 ```
-yarn run serve
+yarn serve
 ```
 
-- 编译项目
+- 编译发布项目
 ```
-yarn run build
-```
-
-- Lints and fixes files
-```
-yarn run lint
+yarn build
 ```
 
 

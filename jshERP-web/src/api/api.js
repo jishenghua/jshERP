@@ -157,8 +157,10 @@ const findBySelectRetail = (params)=>postAction("/supplier/findBySelect_retail",
 const findSupplierById = (params)=>getAction("/supplier/findById",params);
 //单据相关
 const findDepotHeadTotalPay = (params)=>getAction("/depotHead/findTotalPay",params);
+const findBillDetailByNumber = (params)=>getAction("/depotHead/getDetailByNumber",params);
 const findStockByDepotAndBarCode = (params)=>getAction("/depotItem/findStockByDepotAndBarCode",params);
 const findAccountHeadTotalPay = (params)=>getAction("/accountHead/findTotalPay",params);
+const findFinancialDetailByNumber = (params)=>getAction("/accountHead/getDetailByNumber",params);
 
 export {
   getBuyAndSaleStatistics,
@@ -265,8 +267,10 @@ export {
   findBySelectRetail,
   findSupplierById,
   findDepotHeadTotalPay,
+  findBillDetailByNumber,
   findStockByDepotAndBarCode,
-  findAccountHeadTotalPay
+  findAccountHeadTotalPay,
+  findFinancialDetailByNumber
 }
 
 

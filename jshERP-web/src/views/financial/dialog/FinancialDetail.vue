@@ -12,7 +12,7 @@
       style="top:5%;height: 100%;overflow-y: hidden">
       <a-form :form="form">
         <!--收预付款-->
-        <template v-if="financialType === 'advanceIn'">
+        <template v-if="financialType === '收预付款'">
           <a-row class="form-row" :gutter="24">
             <a-col :lg="6" :md="12" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款会员">
@@ -54,7 +54,7 @@
           </a-row>
         </template>
         <!--转账-->
-        <template v-if="financialType === 'giro'">
+        <template v-if="financialType === '转账'">
           <a-row class="form-row" :gutter="24">
             <a-col :lg="6" :md="12" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="经手人">
@@ -106,7 +106,7 @@
           </a-row>
         </template>
         <!--收入-->
-        <template v-if="financialType === 'itemIn'">
+        <template v-if="financialType === '收入'">
           <a-row class="form-row" :gutter="24">
             <a-col :lg="6" :md="12" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="往来单位">
@@ -162,7 +162,7 @@
           </a-row>
         </template>
         <!--支出-->
-        <template v-if="financialType === 'itemOut'">
+        <template v-if="financialType === '支出'">
           <a-row class="form-row" :gutter="24">
             <a-col :lg="6" :md="12" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="往来单位">
@@ -218,7 +218,7 @@
           </a-row>
         </template>
         <!--收款-->
-        <template v-if="financialType === 'moneyIn'">
+        <template v-if="financialType === '收款'">
           <a-row class="form-row" :gutter="24">
             <a-col :lg="6" :md="12" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款单位">
@@ -270,7 +270,7 @@
           </a-row>
         </template>
         <!--付款-->
-        <template v-if="financialType === 'moneyOut'">
+        <template v-if="financialType === '付款'">
           <a-row class="form-row" :gutter="24">
             <a-col :lg="6" :md="12" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款单位">
