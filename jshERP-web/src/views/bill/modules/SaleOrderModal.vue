@@ -68,13 +68,15 @@
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
   import { getMpListShort } from "@/utils/util"
+  import JSelectMultiple from '@/components/jeecg/JSelectMultiple'
   import JDate from '@/components/jeecg/JDate'
   import Vue from 'vue'
   export default {
     name: "SaleOrderModal",
     mixins: [JEditableTableMixin, BillModalMixin],
     components: {
-      JDate
+      JDate,
+      JSelectMultiple
     },
     data () {
       return {
@@ -141,11 +143,13 @@
       editAfter() {
         if (this.action === 'add') {
           this.addInit("XSDD")
+          this.personList.value = ''
         } else {
           this.model.operTime = this.model.operTimeStr
+          this.personList.value = this.model.salesMan
           this.$nextTick(() => {
             this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'number', 'remark',
-              'discount','discountMoney','discountLastMoney','otherMoney','accountId','changeAmount'))
+              'discount','discountMoney','discountLastMoney','otherMoney','accountId','changeAmount','salesMan'))
           });
           // 加载子表数据
           let params = {
@@ -171,6 +175,7 @@
         if(this.model.id){
           billMain.id = this.model.id
         }
+        billMain.salesMan = this.personList.value
         return {
           info: JSON.stringify(billMain),
           rows: JSON.stringify(detailArr),

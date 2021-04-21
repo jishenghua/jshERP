@@ -40,9 +40,7 @@
     components: {
       BillDetail,
       FinancialDetail,
-      JEllipsis,
-      findBillDetailByNumber,
-      findFinancialDetailByNumber
+      JEllipsis
     },
     data () {
       return {

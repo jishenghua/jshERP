@@ -35,7 +35,11 @@
                 <a-input placeholder="请输入单据编号" v-decorator.trim="[ 'number' ]" :readOnly="true"/>
               </a-form-item>
             </a-col>
-            <a-col :lg="6" :md="12" :sm="24"></a-col>
+            <a-col :lg="6" :md="12" :sm="24">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联订单">
+                <a-input-search placeholder="请选择关联订单" v-decorator="[ 'linkNumber' ]" @search="onSearchLinkNumber" :readOnly="true"/>
+              </a-form-item>
+            </a-col>
           </a-row>
           <j-editable-table
             :ref="refKeys[0]"
@@ -108,12 +112,14 @@
       </a-spin>
     </j-modal>
     <many-account-modal ref="manyAccountModalForm" @ok="manyAccountModalFormOk"></many-account-modal>
+    <link-bill-list ref="linkBillList" @ok="linkBillListOk"></link-bill-list>
   </a-card>
 </template>
 
 <script>
   import pick from 'lodash.pick'
   import ManyAccountModal from '../dialog/ManyAccountModal'
+  import LinkBillList from '../dialog/LinkBillList'
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
@@ -125,6 +131,7 @@
     mixins: [JEditableTableMixin, BillModalMixin],
     components: {
       ManyAccountModal,
+      LinkBillList,
       JDate
     },
     data () {
@@ -251,6 +258,30 @@
         this.$nextTick(() => {
           this.form.setFieldsValue({'changeAmount':allPrice})
         });
+      },
+      onSearchLinkNumber() {
+        this.$refs.linkBillList.show('采购订单', '供应商')
+        this.$refs.linkBillList.title = "选择采购订单"
+      },
+      linkBillListOk(selectBillRows) {
+        if(selectBillRows && selectBillRows.length>0) {
+          let record = selectBillRows[0]
+          this.$nextTick(() => {
+            this.form.setFieldsValue({
+              'organId': record.organId,
+              'linkNumber': record.number,
+              'remark': record.remark,
+              'discountLastMoney': record.totalPrice,
+              'changeAmount': record.totalPrice
+            })
+          });
+          // 加载子表数据
+          let params = {
+            headerId: record.id,
+            mpList: getMpListShort(Vue.ls.get('materialPropertyList'))  //扩展属性
+          }
+          this.requestSubTableData(this.url.detailList, params, this.materialTable);
+        }
       }
     }
   }

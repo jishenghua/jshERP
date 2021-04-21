@@ -287,7 +287,11 @@
                 {{model.number}}
               </a-form-item>
             </a-col>
-            <a-col :lg="6" :md="12" :sm="24"></a-col>
+            <a-col :lg="6" :md="12" :sm="24">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联订单">
+                {{model.linkNumber}}
+              </a-form-item>
+            </a-col>
           </a-row>
           <a-table
             ref="table"
@@ -670,7 +674,11 @@
                 {{model.number}}
               </a-form-item>
             </a-col>
-            <a-col :lg="6" :md="12" :sm="24"></a-col>
+            <a-col :lg="6" :md="12" :sm="24">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联订单">
+                {{model.linkNumber}}
+              </a-form-item>
+            </a-col>
           </a-row>
           <a-table
             ref="table"
