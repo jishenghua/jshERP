@@ -513,6 +513,7 @@ public class DepotHeadService {
         depotHead.setCreator(userInfo==null?null:userInfo.getId());
         depotHead.setCreateTime(new Timestamp(System.currentTimeMillis()));
         depotHead.setStatus(BusinessConstants.BILLS_STATUS_UN_AUDIT);
+        depotHead.setPayType(depotHead.getPayType()==null?"现付":depotHead.getPayType());
         try{
             depotHeadMapper.insertSelective(depotHead);
         }catch(Exception e){
