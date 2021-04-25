@@ -103,6 +103,8 @@ public class ResourceController {
         int delete = configResourceManager.delete(apiName, id, request);
         if(delete > 0) {
             return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+        } else if(delete == -1) {
+            return returnJson(objectMap, ErpInfo.TEST_USER.name, ErpInfo.TEST_USER.code);
         } else {
             return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
         }
@@ -115,6 +117,8 @@ public class ResourceController {
         int delete = configResourceManager.deleteBatch(apiName, ids, request);
         if(delete > 0) {
             return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+        } else if(delete == -1) {
+            return returnJson(objectMap, ErpInfo.TEST_USER.name, ErpInfo.TEST_USER.code);
         } else {
             return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
         }

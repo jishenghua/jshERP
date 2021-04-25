@@ -40,6 +40,8 @@ public class SystemConfigService {
     @Resource
     private LogService logService;
 
+    private static final String TEST_USER = "jsh";
+
     public SystemConfig getSystemConfig(long id)throws Exception {
         SystemConfig result=null;
         try{
@@ -136,7 +138,11 @@ public class SystemConfigService {
         String [] idArray=ids.split(",");
         int result=0;
         try{
-            result=systemConfigMapperEx.batchDeleteSystemConfigByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+            if(userService.checkIsTestUser()) {
+                result=-1;
+            } else {
+                result = systemConfigMapperEx.batchDeleteSystemConfigByIds(new Date(), userInfo == null ? null : userInfo.getId(), idArray);
+            }
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }

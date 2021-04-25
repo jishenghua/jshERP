@@ -68,8 +68,14 @@ public class ExceptionConstants {
     public static final int USER_OVER_LIMIT_FAILED_CODE = 500004;
     public static final String USER_OVER_LIMIT_FAILED_MSG = "用户录入数量超出限制，请联系管理员";
     //此用户名限制使用
-    public static final int USER_NAME_LIMIT_USE_CODE = 500004;
+    public static final int USER_NAME_LIMIT_USE_CODE = 500005;
     public static final String USER_NAME_LIMIT_USE_MSG = "此用户名限制使用";
+    //演示用户不允许删除
+    public static final int USER_LIMIT_DELETE_CODE = 500006;
+    public static final String USER_LIMIT_DELETE_MSG = "抱歉，演示用户不允许删除";
+    //演示用户不允许修改
+    public static final int USER_LIMIT_UPDATE_CODE = 500007;
+    public static final String USER_LIMIT_UPDATE_MSG = "抱歉，演示用户不允许修改";
 
     /**
      * 角色信息

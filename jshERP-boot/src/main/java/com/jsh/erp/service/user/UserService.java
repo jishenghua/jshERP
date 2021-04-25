@@ -257,6 +257,12 @@ public class UserService {
         sb.append(BusinessConstants.LOG_OPERATION_TYPE_DELETE);
         List<User> list = getUserListByIds(ids);
         for(User user: list){
+            if(user.getLoginName().equals(TEST_USER)){
+                logger.error("异常码[{}],异常提示[{}],参数,ids:[{}]",
+                        ExceptionConstants.USER_LIMIT_DELETE_CODE,ExceptionConstants.USER_LIMIT_DELETE_MSG,ids);
+                throw new BusinessRunTimeException(ExceptionConstants.USER_LIMIT_DELETE_CODE,
+                        ExceptionConstants.USER_LIMIT_DELETE_MSG);
+            }
             sb.append("[").append(user.getLoginName()).append("]");
         }
         logService.insertLog("用户", sb.toString(),
@@ -531,6 +537,12 @@ public class UserService {
             throw new BusinessRunTimeException(ExceptionConstants.USER_NAME_LIMIT_USE_CODE,
                     ExceptionConstants.USER_NAME_LIMIT_USE_MSG);
         } else {
+            if(ue.getLoginName().equals(TEST_USER)){
+                logger.error("异常码[{}],异常提示[{}],参数,obj:[{}]",
+                        ExceptionConstants.USER_LIMIT_UPDATE_CODE,ExceptionConstants.USER_LIMIT_UPDATE_MSG, TEST_USER);
+                throw new BusinessRunTimeException(ExceptionConstants.USER_LIMIT_UPDATE_CODE,
+                        ExceptionConstants.USER_LIMIT_UPDATE_MSG);
+            }
             logService.insertLog("用户",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(ue.getId()).toString(),
                     ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
