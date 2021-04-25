@@ -268,7 +268,7 @@
               if(res.code === 200){
                 that.$emit('ok');
               }else{
-                that.$message.warning(res.message);
+                that.$message.warning(res.data.message);
               }
             }).finally(() => {
               that.confirmLoading = false;
