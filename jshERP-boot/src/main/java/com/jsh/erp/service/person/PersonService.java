@@ -23,9 +23,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class PersonService {
@@ -198,24 +196,22 @@ public class PersonService {
         return list==null?0:list.size();
     }
 
-    public String getPersonByIds(String personIDs)throws Exception {
-        List<Long> ids = StringUtil.strToLongList(personIDs);
-        PersonExample example = new PersonExample();
-        example.createCriteria().andIdIn(ids).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        example.setOrderByClause("id asc");
-        List<Person> list =null;
-        try{
-            list=personMapper.selectByExample(example);
-        }catch(Exception e){
-            JshException.readFail(logger, e);
+    public Map<Long,String> getPersonMap() throws Exception {
+        List<Person> personList = getPerson();
+        Map<Long,String> personMap = new HashMap<>();
+        for(Person person : personList){
+            personMap.put(person.getId(), person.getName());
         }
+        return personMap;
+    }
+
+    public String getPersonByMapAndIds(Map<Long,String> personMap, String personIds)throws Exception {
+        List<Long> ids = StringUtil.strToLongList(personIds);
         StringBuffer sb = new StringBuffer();
-        if (null != list) {
-            for (Person person : list) {
-                sb.append(person.getName() + " ");
-            }
+        for(Long id: ids){
+            sb.append(personMap.get(id) + " ");
         }
-        return  sb.toString();
+        return sb.toString();
     }
 
     public List<Person> getPersonByType(String type)throws Exception {

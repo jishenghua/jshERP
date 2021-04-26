@@ -514,6 +514,28 @@ public class AccountService {
         return result;
     }
 
+    public Map<Long,String> getAccountMap() throws Exception {
+        List<Account> accountList = getAccount();
+        Map<Long,String> accountMap = new HashMap<>();
+        for(Account account : accountList){
+            accountMap.put(account.getId(), account.getName());
+        }
+        return accountMap;
+    }
+
+    public String getAccountStrByIdAndMoney(Map<Long,String> accountMap, String accountIdList, String accountMoneyList){
+        StringBuffer sb = new StringBuffer();
+        accountIdList = accountIdList.replace("[", "").replace("]", "").replace("\"", "");
+        accountMoneyList = accountMoneyList.replace("[", "").replace("]", "").replace("\"", "");
+        List<Long> idList = StringUtil.strToLongList(accountIdList);
+        List<Long> moneyList = StringUtil.strToLongList(accountMoneyList);
+        for (int i = 0; i < idList.size(); i++) {
+            Long id = idList.get(i);
+            sb.append(accountMap.get(id) + "(" + moneyList.get(i) + "元) ");
+        }
+        return sb.toString();
+    }
+
     public Map<String, Object> getStatistics(String name, String serialNo) {
         Map<String, Object> map = new HashMap<>();
         try {

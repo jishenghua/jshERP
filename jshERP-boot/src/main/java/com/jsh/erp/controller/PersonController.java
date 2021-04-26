@@ -48,17 +48,18 @@ public class PersonController {
 
     /**
      * 根据Id获取经手人信息
-     * @param personIDs
+     * @param personIds
      * @param request
      * @return
      */
     @GetMapping(value = "/getPersonByIds")
-    public BaseResponseInfo getPersonByIds(@RequestParam("personIDs") String personIDs,
+    public BaseResponseInfo getPersonByIds(@RequestParam("personIds") String personIds,
                                            HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         try {
-            String names = personService.getPersonByIds(personIDs);
+            Map<Long,String> personMap = personService.getPersonMap();
+            String names = personService.getPersonByMapAndIds(personMap, personIds);
             map.put("names", names);
             res.code = 200;
             res.data = map;

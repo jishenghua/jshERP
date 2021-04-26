@@ -13,9 +13,11 @@ import com.jsh.erp.datasource.vo.DepotHeadVo4List;
 import com.jsh.erp.datasource.vo.DepotHeadVo4StatementAccount;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
+import com.jsh.erp.service.account.AccountService;
 import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.orgaUserRel.OrgaUserRelService;
+import com.jsh.erp.service.person.PersonService;
 import com.jsh.erp.service.redis.RedisService;
 import com.jsh.erp.service.serialNumber.SerialNumberService;
 import com.jsh.erp.service.supplier.SupplierService;
@@ -32,9 +34,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static com.jsh.erp.utils.Tools.getCenternTime;
 
@@ -56,6 +56,10 @@ public class DepotHeadService {
     private SerialNumberService serialNumberService;
     @Resource
     private OrgaUserRelService orgaUserRelService;
+    @Resource
+    private PersonService personService;
+    @Resource
+    private AccountService accountService;
     @Resource
     DepotItemMapperEx depotItemMapperEx;
     @Resource
@@ -88,39 +92,44 @@ public class DepotHeadService {
     public List<DepotHeadVo4List> select(String type, String subType, String roleType, String status, String number, String beginTime, String endTime,
                                          String materialParam, String depotIds, int offset, int rows)throws Exception {
         List<DepotHeadVo4List> resList = new ArrayList<DepotHeadVo4List>();
-        List<DepotHeadVo4List> list=null;
+        List<DepotHeadVo4List> list=new ArrayList<>();
         try{
             String [] creatorArray = getCreatorArray(roleType);
+            Map<Long,String> personMap = personService.getPersonMap();
+            Map<Long,String> accountMap = accountService.getAccountMap();
             list=depotHeadMapperEx.selectByConditionDepotHead(type, subType, creatorArray, status, number, beginTime, endTime, materialParam, depotIds, offset, rows);
+            if (null != list) {
+                for (DepotHeadVo4List dh : list) {
+                    if(accountMap!=null && StringUtil.isNotEmpty(dh.getAccountIdList()) && StringUtil.isNotEmpty(dh.getAccountMoneyList())) {
+                        String accountStr = accountService.getAccountStrByIdAndMoney(accountMap, dh.getAccountIdList(), dh.getAccountMoneyList());
+                        dh.setAccountName(accountStr);
+                    }
+                    if(dh.getAccountIdList() != null) {
+                        String accountidlistStr = dh.getAccountIdList().replace("[", "").replace("]", "").replaceAll("\"", "");
+                        dh.setAccountIdList(accountidlistStr);
+                    }
+                    if(dh.getAccountMoneyList() != null) {
+                        String accountmoneylistStr = dh.getAccountMoneyList().replace("[", "").replace("]", "").replaceAll("\"", "");
+                        dh.setAccountMoneyList(accountmoneylistStr);
+                    }
+                    if(dh.getChangeAmount() != null) {
+                        dh.setChangeAmount(dh.getChangeAmount().abs());
+                    }
+                    if(dh.getTotalPrice() != null) {
+                        dh.setTotalPrice(dh.getTotalPrice().abs());
+                    }
+                    if(StringUtil.isNotEmpty(dh.getSalesMan())) {
+                        dh.setSalesManStr(personService.getPersonByMapAndIds(personMap,dh.getSalesMan()));
+                    }
+                    if(dh.getOperTime() != null) {
+                        dh.setOperTimeStr(getCenternTime(dh.getOperTime()));
+                    }
+                    dh.setMaterialsList(findMaterialsListByHeaderId(dh.getId()));
+                    resList.add(dh);
+                }
+            }
         }catch(Exception e){
             JshException.readFail(logger, e);
-        }
-        if (null != list) {
-            for (DepotHeadVo4List dh : list) {
-                if(dh.getAccountIdList() != null) {
-                    String accountidlistStr = dh.getAccountIdList().replace("[", "").replace("]", "").replaceAll("\"", "");
-                    dh.setAccountIdList(accountidlistStr);
-                }
-                if(dh.getAccountMoneyList() != null) {
-                    String accountmoneylistStr = dh.getAccountMoneyList().replace("[", "").replace("]", "").replaceAll("\"", "");
-                    dh.setAccountMoneyList(accountmoneylistStr);
-                }
-                if(dh.getOtherMoneyList() != null) {
-                    String otherMoneyListStr = dh.getOtherMoneyList().replace("[", "").replace("]", "").replaceAll("\"", "");
-                    dh.setOtherMoneyList(otherMoneyListStr);
-                }
-                if(dh.getChangeAmount() != null) {
-                    dh.setChangeAmount(dh.getChangeAmount().abs());
-                }
-                if(dh.getTotalPrice() != null) {
-                    dh.setTotalPrice(dh.getTotalPrice().abs());
-                }
-                if(dh.getOperTime() != null) {
-                    dh.setOperTimeStr(getCenternTime(dh.getOperTime()));
-                }
-                dh.setMaterialsList(findMaterialsListByHeaderId(dh.getId()));
-                resList.add(dh);
-            }
         }
         return resList;
     }
