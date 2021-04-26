@@ -84,11 +84,15 @@
           <a-row class="form-row" :gutter="24">
             <a-col :lg="6" :md="12" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="结算账户">
-                <a-select placeholder="选择结算账户" v-decorator="[ 'accountId' ]" :dropdownMatchSelectWidth="false">
+                <a-select style="width:185px;" placeholder="选择结算账户" v-decorator="[ 'accountId' ]"
+                          :dropdownMatchSelectWidth="false" allowClear @select="selectAccount">
                   <a-select-option v-for="(item,index) in accountList" :key="index" :value="item.id">
                     {{ item.name }}
                   </a-select-option>
                 </a-select>
+                <a-tooltip title="多账户明细">
+                  <a-button type="default" icon="folder" style="margin-left: 8px;" size="small" v-show="manyAccountBtnStatus" @click="handleManyAccount"/>
+                </a-tooltip>
               </a-form-item>
             </a-col>
             <a-col :lg="6" :md="12" :sm="24">
@@ -110,11 +114,13 @@
         </a-form>
       </a-spin>
     </j-modal>
+    <many-account-modal ref="manyAccountModalForm" @ok="manyAccountModalFormOk"></many-account-modal>
     <link-bill-list ref="linkBillList" @ok="linkBillListOk"></link-bill-list>
   </a-card>
 </template>
 <script>
   import pick from 'lodash.pick'
+  import ManyAccountModal from '../dialog/ManyAccountModal'
   import LinkBillList from '../dialog/LinkBillList'
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
@@ -127,6 +133,7 @@
     name: "SaleOutModal",
     mixins: [JEditableTableMixin, BillModalMixin],
     components: {
+      ManyAccountModal,
       LinkBillList,
       JDate,
       JSelectMultiple
@@ -238,6 +245,11 @@
           totalPrice += item.allPrice-0
         }
         billMain.totalPrice = totalPrice
+        if(billMain.accountId === 0) {
+          billMain.accountId = ''
+        }
+        billMain.accountIdList = this.accountIdList.length>0 ? JSON.stringify(this.accountIdList) : ""
+        billMain.accountMoneyList = this.accountMoneyList.length>0 ? JSON.stringify(this.accountMoneyList) : ""
         if(this.model.id){
           billMain.id = this.model.id
         }
@@ -246,6 +258,13 @@
           info: JSON.stringify(billMain),
           rows: JSON.stringify(detailArr),
         }
+      },
+      manyAccountModalFormOk(idList, moneyList, allPrice) {
+        this.accountIdList = idList
+        this.accountMoneyList = moneyList
+        this.$nextTick(() => {
+          this.form.setFieldsValue({'changeAmount':allPrice})
+        });
       },
       onSearchLinkNumber() {
         this.$refs.linkBillList.show("销售订单", '客户')

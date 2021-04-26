@@ -548,7 +548,7 @@
             </a-col>
             <a-col :lg="6" :md="12" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="销售人员">
-                {{model.salesMan}}
+                {{model.salesManStr}}
               </a-form-item>
             </a-col>
           </a-row>
@@ -634,7 +634,7 @@
             </a-col>
             <a-col :lg="6" :md="12" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="销售人员">
-                {{model.salesMan}}
+                {{model.salesManStr}}
               </a-form-item>
             </a-col>
           </a-row>
@@ -736,7 +736,7 @@
             </a-col>
             <a-col :lg="6" :md="12" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="销售人员">
-                {{model.salesMan}}
+                {{model.salesManStr}}
               </a-form-item>
             </a-col>
           </a-row>
