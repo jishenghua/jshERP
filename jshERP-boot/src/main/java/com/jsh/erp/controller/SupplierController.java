@@ -246,7 +246,7 @@ public class SupplierController {
      * @param request
      * @return
      */
-    @PostMapping(value = "/findUserCustomer")
+    @GetMapping(value = "/findUserCustomer")
     public JSONArray findUserCustomer(@RequestParam("UBType") String type, @RequestParam("UBKeyId") String keyId,
                                    HttpServletRequest request) throws Exception{
         JSONArray arr = new JSONArray();
@@ -254,16 +254,21 @@ public class SupplierController {
             List<Supplier> dataList = supplierService.findUserCustomer();
             //开始拼接json数据
             JSONObject outer = new JSONObject();
-            outer.put("id", 1);
-            outer.put("text", "客户列表");
-            outer.put("state", "open");
+            outer.put("id", 0);
+            outer.put("key", 0);
+            outer.put("value", 0);
+            outer.put("title", "客户列表");
+            outer.put("attributes", "客户列表");
             //存放数据json数组
             JSONArray dataArray = new JSONArray();
             if (null != dataList) {
                 for (Supplier supplier : dataList) {
                     JSONObject item = new JSONObject();
                     item.put("id", supplier.getId());
-                    item.put("text", supplier.getSupplier());
+                    item.put("key", supplier.getId());
+                    item.put("value", supplier.getId());
+                    item.put("title", supplier.getSupplier());
+                    item.put("attributes", supplier.getSupplier());
                     //勾选判断1
                     Boolean flag = false;
                     try {

@@ -195,7 +195,7 @@ public class FunctionService {
     public List<Function> findByIds(String functionsIds)throws Exception{
         List<Long> idList = StringUtil.strToLongList(functionsIds);
         FunctionExample example = new FunctionExample();
-        example.createCriteria().andEnabledEqualTo(true).andIdIn(idList)
+        example.createCriteria().andEnabledEqualTo(true).andIdIn(idList).andPushBtnIsNotNull().andPushBtnNotEqualTo("")
                 .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         example.setOrderByClause("Sort asc");
         List<Function> list=null;

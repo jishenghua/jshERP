@@ -203,10 +203,9 @@ public class FunctionController {
             if (null != dataList) {
                 for (Function function : dataList) {
                     JSONObject item = new JSONObject();
-                    item.put("Id", function.getId());
-                    item.put("Name", function.getName());
-                    item.put("PushBtn", function.getPushBtn());
-                    item.put("op", 1);
+                    item.put("id", function.getId());
+                    item.put("name", function.getName());
+                    item.put("pushBtn", function.getPushBtn());
                     dataArray.add(item);
                 }
             }

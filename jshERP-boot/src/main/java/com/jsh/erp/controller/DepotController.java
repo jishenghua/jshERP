@@ -67,7 +67,7 @@ public class DepotController {
      * @param request
      * @return
      */
-    @PostMapping(value = "/findUserDepot")
+    @GetMapping(value = "/findUserDepot")
     public JSONArray findUserDepot(@RequestParam("UBType") String type, @RequestParam("UBKeyId") String keyId,
                                  HttpServletRequest request) throws Exception{
         JSONArray arr = new JSONArray();
@@ -75,16 +75,21 @@ public class DepotController {
             List<Depot> dataList = depotService.findUserDepot();
             //开始拼接json数据
             JSONObject outer = new JSONObject();
-            outer.put("id", 1);
-            outer.put("text", "仓库列表");
-            outer.put("state", "open");
+            outer.put("id", 0);
+            outer.put("key", 0);
+            outer.put("value", 0);
+            outer.put("title", "仓库列表");
+            outer.put("attributes", "仓库列表");
             //存放数据json数组
             JSONArray dataArray = new JSONArray();
             if (null != dataList) {
                 for (Depot depot : dataList) {
                     JSONObject item = new JSONObject();
                     item.put("id", depot.getId());
-                    item.put("text", depot.getName());
+                    item.put("key", depot.getId());
+                    item.put("value", depot.getId());
+                    item.put("title", depot.getName());
+                    item.put("attributes", depot.getName());
                     //勾选判断1
                     Boolean flag = false;
                     try {
