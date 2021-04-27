@@ -27,18 +27,10 @@
     <div class="table-operator" style="border-top: 5px">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
       <a-dropdown v-if="selectedRowKeys.length > 0">
-        <a-menu slot="overlay" @click="handleMenuClick">
+        <a-menu slot="overlay">
           <a-menu-item key="1">
             <a-icon type="delete" @click="batchDel"/>
             删除
-          </a-menu-item>
-          <a-menu-item key="2">
-            <a-icon type="lock" @click="batchFrozen('2')"/>
-            冻结
-          </a-menu-item>
-          <a-menu-item key="3">
-            <a-icon type="unlock" @click="batchFrozen('1')"/>
-            解冻
           </a-menu-item>
         </a-menu>
         <a-button style="margin-left: 8px">
@@ -60,12 +52,11 @@
         :loading="loading"
         :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
         @change="handleTableChange">
-        <template slot="avatarslot" slot-scope="text, record, index">
-          <div class="anty-img-wrap">
-            <a-avatar shape="square" :src="getAvatarView(record.avatar)" icon="user"/>
-          </div>
-        </template>
         <span slot="action" slot-scope="text, record">
+          <a @click="btnSetDepot(record)">分配仓库</a>
+          <a-divider type="vertical" />
+          <a @click="btnSetCustomer(record)">分配客户</a>
+          <a-divider type="vertical" />
           <a @click="handleEdit(record)">编辑</a>
           <a-divider type="vertical"/>
           <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
@@ -80,18 +71,16 @@
     </div>
     <!-- table区域-end -->
     <user-modal ref="modalForm" @ok="modalFormOk"></user-modal>
-    <password-modal ref="passwordmodal" @ok="passwordModalOk"></password-modal>
-    <sys-user-agent-modal ref="sysUserAgentModal"></sys-user-agent-modal>
-    <!-- 用户回收站 -->
-    <user-recycle-bin-modal :visible.sync="recycleBinVisible" @ok="modalFormOk"/>
+    <user-depot-modal ref="userDepotModal" @ok="modalFormOk"></user-depot-modal>
+    <user-customer-modal ref="userCustomerModal" @ok="modalFormOk"></user-customer-modal>
   </a-card>
 </template>
 
 <script>
   import UserModal from './modules/UserModal'
-  import PasswordModal from './modules/PasswordModal'
-  import {postAction,getFileAccessHttpUrl} from '@/api/manage';
-  import {frozenBatch} from '@/api/api'
+  import UserDepotModal from './modules/UserDepotModal'
+  import UserCustomerModal from './modules/UserCustomerModal'
+  import {postAction} from '@/api/manage';
   import {JeecgListMixin} from '@/mixins/JeecgListMixin'
   import JInput from '@/components/jeecg/JInput'
   export default {
@@ -99,14 +88,13 @@
     mixins: [JeecgListMixin],
     components: {
       UserModal,
-      PasswordModal,
+      UserDepotModal,
+      UserCustomerModal,
       JInput
     },
     data() {
       return {
-        description: '这是用户管理页面',
         queryParam: {},
-        recycleBinVisible: false,
         columns: [
           {
             title: '#',
@@ -123,16 +111,14 @@
           { title: '用户类型', dataIndex: 'userType', width: 80, align: "center" },
           { title: '角色', dataIndex: 'roleName', width: 100, align: "center"},
           { title: '机构', dataIndex: 'orgAbr', width: 115, align: "center"},
-          { title: '职位', dataIndex: 'position', width: 115, align: "center"},
-          { title: '电话号码', dataIndex: 'phonenum', width: 150, align: "center"},
-          { title: '电子邮箱', dataIndex: 'email', width: 150, align: "center"},
+          { title: '电话号码', dataIndex: 'phonenum', width: 120, align: "center"},
           { title: '排序', dataIndex: 'userBlngOrgaDsplSeq', width: 60, align: "center"},
           {
             title: '操作',
             dataIndex: 'action',
             scopedSlots: {customRender: 'action'},
             align: "center",
-            width: 170
+            width: 260
           }
         ],
         url: {
@@ -143,61 +129,7 @@
         },
       }
     },
-    computed: {
-      importExcelUrl: function(){
-        return `${window._CONFIG['domianURL']}/${this.url.importExcelUrl}`;
-      }
-    },
     methods: {
-      getAvatarView: function (avatar) {
-        return getFileAccessHttpUrl(avatar)
-      },
-      batchFrozen: function (status) {
-        if (this.selectedRowKeys.length <= 0) {
-          this.$message.warning('请选择一条记录！');
-          return false;
-        } else {
-          let ids = "";
-          let that = this;
-          let isAdmin = false;
-          that.selectionRows.forEach(function (row) {
-            if (row.username == 'admin') {
-              isAdmin = true;
-            }
-          });
-          if (isAdmin) {
-            that.$message.warning('管理员账号不允许此操作,请重新选择！');
-            return;
-          }
-          that.selectedRowKeys.forEach(function (val) {
-            ids += val + ",";
-          });
-          that.$confirm({
-            title: "确认操作",
-            content: "是否" + (status == 1 ? "解冻" : "冻结") + "选中账号?",
-            onOk: function () {
-              frozenBatch({ids: ids, status: status}).then((res) => {
-                if (res.success) {
-                  that.$message.success(res.message);
-                  that.loadData();
-                  that.onClearSelected();
-                } else {
-                  that.$message.warning(res.message);
-                }
-              });
-            }
-          });
-        }
-      },
-      handleMenuClick(e) {
-        if (e.key == 1) {
-          this.batchDel();
-        } else if (e.key == 2) {
-          this.batchFrozen(2);
-        } else if (e.key == 3) {
-          this.batchFrozen(1);
-        }
-      },
       handleReset(id) {
         let that = this;
         postAction(that.url.resetPwd, {id: id}).then((res) => {
@@ -208,9 +140,18 @@
             that.$message.warning(res.data.message);
           }
         })
-      }
+      },
+      btnSetDepot(record) {
+        this.$refs.userDepotModal.edit(record);
+        this.$refs.userDepotModal.title = "分配仓库";
+        this.$refs.userDepotModal.disableSubmit = false;
+      },
+      btnSetCustomer(record) {
+        this.$refs.userCustomerModal.edit(record);
+        this.$refs.userCustomerModal.title = "分配客户";
+        this.$refs.userCustomerModal.disableSubmit = false;
+      },
     }
-
   }
 </script>
 <style scoped>

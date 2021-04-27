@@ -10,78 +10,120 @@
     wrapClassName="ant-modal-cust-warp"
     style="top:5%;height: 95%;overflow-y: hidden">
     <a-spin :spinning="confirmLoading">
-      <a-form :form="form">
-        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="按钮名称">
-          <a-input placeholder="请输入角色名称" v-decorator.trim="[ 'name', validatorRules.name]" />
-        </a-form-item>
-        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="数据类型">
-          <a-select placeholder="请选择数据类型" v-decorator="[ 'type', validatorRules.type]">
-            <a-select-option value="全部数据">全部数据</a-select-option>
-            <a-select-option value="本机构数据">本机构数据</a-select-option>
-            <a-select-option value="个人数据">个人数据</a-select-option>
-          </a-select>
-        </a-form-item>
-        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="描述">
-          <a-textarea :rows="5" placeholder="请输入描述" v-decorator="[ 'description', validatorRules.description ]" />
-        </a-form-item>
-      </a-form>
+      <div class="table-page-search-wrapper">
+        <!-- 按钮区域 -->
+        <a-form layout="inline">
+          <a-row :gutter="24">
+            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+              <a-col :md="12" :sm="24">
+                <a-button @click="toggleChecked">
+                  {{ !checked ? '全选' : '全取消' }}
+                </a-button>
+              </a-col>
+            </span>
+          </a-row>
+        </a-form>
+      </div>
+      <!-- table区域-begin -->
+      <div>
+        <a-table
+          ref="table"
+          size="middle"
+          bordered
+          rowKey="id"
+          :pagination="false"
+          :columns="columns"
+          :dataSource="dataSource"
+          :loading="loading">
+          <span slot="action" slot-scope="text, record">
+            <a-checkbox v-if="record.pushBtn.indexOf(1)>-1" value="1" :checked="checked" @change="onChange">编辑</a-checkbox>
+            <a-checkbox v-if="record.pushBtn.indexOf(2)>-1" value="2" :checked="checked" @change="onChange">审核反审核</a-checkbox>
+            <a-checkbox v-if="record.pushBtn.indexOf(3)>-1" value="3" :checked="checked" @change="onChange">导入导出</a-checkbox>
+            <a-checkbox v-if="record.pushBtn.indexOf(4)>-1" value="4" :checked="checked" @change="onChange">启用禁用</a-checkbox>
+            <a-checkbox v-if="record.pushBtn.indexOf(5)>-1" value="5" :checked="checked" @change="onChange">打印</a-checkbox>
+            <a-checkbox v-if="record.pushBtn.indexOf(6)>-1" value="6" :checked="checked" @change="onChange">作废</a-checkbox>
+          </span>
+        </a-table>
+      </div>
     </a-spin>
   </a-modal>
 </template>
 <script>
   import pick from 'lodash.pick'
+  import { JeecgListMixin } from '@/mixins/JeecgListMixin'
+  import { getAction } from '@/api/manage'
   import {addRole,editRole,checkRole } from '@/api/api'
   export default {
     name: "RolePushBtnModal",
+    mixins:[JeecgListMixin],
     data () {
       return {
         title:"操作",
         visible: false,
         model: {},
-        labelCol: {
-          xs: { span: 24 },
-          sm: { span: 5 },
-        },
-        wrapperCol: {
-          xs: { span: 24 },
-          sm: { span: 16 },
-        },
+        checked: false,
         confirmLoading: false,
         form: this.$form.createForm(this),
-        validatorRules:{
-          name:{
-            rules: [
-              { required: true, message: '请输入角色名称!' },
-              { min: 2, max: 30, message: '长度在 2 到 30 个字符', trigger: 'blur' },
-              { validator: this.validateRoleName}
-            ]
+        /* 数据源 */
+        dataSource:[],
+        // 表头
+        columns: [
+          {
+            title: '#',
+            dataIndex: '',
+            key:'rowIndex',
+            width:40,
+            align:"center",
+            customRender:function (t,r,index) {
+              return parseInt(index)+1;
+            }
           },
-          type:{
-            rules: [
-              { required: true, message: '请选择数据类型!' }
-            ]
+          {
+            title: '名称',
+            align:"center",
+            dataIndex: 'name'
           },
-          description:{
-            rules: [
-              { min: 0, max: 126, message: '长度不超过 126 个字符', trigger: 'blur' }
-            ]
+          {
+            title: '按钮列表',
+            dataIndex: 'action',
+            align:"center",
+            scopedSlots: { customRender: 'action' }
           }
-        },
+        ],
+        url: {
+          list: "/function/findByIds",
+          getBasicData: "/userBusiness/getBasicData"
+        }
       }
     },
     created () {
     },
     methods: {
-      add () {
-        this.edit({});
-      },
       edit (record) {
         this.form.resetFields();
         this.model = Object.assign({}, record);
         this.visible = true;
-        this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'name', 'type', 'description'))
-        });
+        getAction(this.url.getBasicData, {Type: 'RoleFunctions', KeyId: record.id}).then((res) => {
+          if (res && res.code === 200) {
+            let ubList = res.data.userBusinessList;
+            let getValue = ubList[0].value;
+            getValue = getValue.substring(1, getValue.length - 1);
+            if (getValue.indexOf("][")) {
+              let arr = getValue.split("][");
+              arr = arr.toString();
+              getAction(this.url.list, { functionsIds: arr }).then((res) => {
+                if (res.code === 200) {
+                  this.dataSource = res.data.rows;
+                  this.ipagination.total = res.data.total;
+                }
+                if (res.code === 510) {
+                  this.$message.warning(res.data)
+                }
+                this.loading = false;
+              })
+            }
+          }
+        })
       },
       close () {
         this.$emit('close');
@@ -116,22 +158,11 @@
       handleCancel () {
         this.close()
       },
-      validateRoleName(rule, value, callback){
-        let params = {
-          name: value,
-          id: this.model.id?this.model.id:0
-        };
-        checkRole(params).then((res)=>{
-          if(res && res.code===200) {
-            if(!res.data.status){
-              callback();
-            } else {
-              callback("名称已经存在");
-            }
-          } else {
-            callback(res.data);
-          }
-        });
+      toggleChecked() {
+        this.checked = !this.checked;
+      },
+      onChange(e) {
+        this.checked = e.target.checked;
       }
     }
   }

@@ -47,8 +47,8 @@
         <span slot="action" slot-scope="text, record">
           <a @click="handleSetFunction(record)">分配功能</a>
           <a-divider type="vertical" />
-<!--          <a @click="handleSetPushBtn(record.id)">分配按钮</a>-->
-<!--          <a-divider type="vertical" />-->
+          <a @click="handleSetPushBtn(record)">分配按钮</a>
+          <a-divider type="vertical" />
           <a @click="handleEdit(record)">编辑</a>
           <a-divider type="vertical" />
           <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
@@ -136,13 +136,10 @@
         this.$refs.roleFunctionModal.title = "分配功能";
         this.$refs.roleFunctionModal.disableSubmit = false;
       },
-      handleSetPushBtn(id) {
-        this.$refs.rolePushBtnModal.add();
+      handleSetPushBtn(record) {
+        this.$refs.rolePushBtnModal.edit(record);
         this.$refs.rolePushBtnModal.title = "分配按钮";
         this.$refs.rolePushBtnModal.disableSubmit = false;
-      },
-      onChangeDate(date, dateString) {
-        console.log(date, dateString);
       }
     }
   }
