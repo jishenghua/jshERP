@@ -1,7 +1,7 @@
 <template>
   <a-modal
     :title="title"
-    :width="800"
+    :width="width"
     :visible="visible"
     :confirmLoading="confirmLoading"
     @ok="handleOk"
@@ -36,12 +36,12 @@
           :dataSource="dataSource"
           :loading="loading">
           <span slot="action" slot-scope="text, record">
-            <a-checkbox v-if="record.pushBtn.indexOf(1)>-1" value="1" :checked="checked" @change="onChange">编辑</a-checkbox>
-            <a-checkbox v-if="record.pushBtn.indexOf(2)>-1" value="2" :checked="checked" @change="onChange">审核反审核</a-checkbox>
-            <a-checkbox v-if="record.pushBtn.indexOf(3)>-1" value="3" :checked="checked" @change="onChange">导入导出</a-checkbox>
-            <a-checkbox v-if="record.pushBtn.indexOf(4)>-1" value="4" :checked="checked" @change="onChange">启用禁用</a-checkbox>
-            <a-checkbox v-if="record.pushBtn.indexOf(5)>-1" value="5" :checked="checked" @change="onChange">打印</a-checkbox>
-            <a-checkbox v-if="record.pushBtn.indexOf(6)>-1" value="6" :checked="checked" @change="onChange">作废</a-checkbox>
+            <a-checkbox v-if="record.pushBtn.indexOf(1)>-1" value="1" :checked="record.btnStr?record.btnStr.indexOf(1)>-1:false" @change="onChange(record,'1')">编辑</a-checkbox>
+            <a-checkbox v-if="record.pushBtn.indexOf(2)>-1" value="2" :checked="record.btnStr?record.btnStr.indexOf(2)>-1:false" @change="onChange(record,'2')">审核反审核</a-checkbox>
+            <a-checkbox v-if="record.pushBtn.indexOf(3)>-1" value="3" :checked="record.btnStr?record.btnStr.indexOf(3)>-1:false" @change="onChange(record,'3')">导入导出</a-checkbox>
+            <a-checkbox v-if="record.pushBtn.indexOf(4)>-1" value="4" :checked="record.btnStr?record.btnStr.indexOf(4)>-1:false" @change="onChange(record,'4')">启用禁用</a-checkbox>
+            <a-checkbox v-if="record.pushBtn.indexOf(5)>-1" value="5" :checked="record.btnStr?record.btnStr.indexOf(5)>-1:false" @change="onChange(record,'5')">打印</a-checkbox>
+            <a-checkbox v-if="record.pushBtn.indexOf(6)>-1" value="6" :checked="record.btnStr?record.btnStr.indexOf(6)>-1:false" @change="onChange(record,'6')">作废</a-checkbox>
           </span>
         </a-table>
       </div>
@@ -52,13 +52,15 @@
   import pick from 'lodash.pick'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { getAction } from '@/api/manage'
-  import {addRole,editRole,checkRole } from '@/api/api'
+  import { updateBtnStrByRoleId } from '@/api/api'
+  import { removeByVal } from "@/utils/util"
   export default {
     name: "RolePushBtnModal",
     mixins:[JeecgListMixin],
     data () {
       return {
         title:"操作",
+        width: '800px',
         visible: false,
         model: {},
         checked: false,
@@ -91,43 +93,40 @@
           }
         ],
         url: {
-          list: "/function/findByIds",
-          getBasicData: "/userBusiness/getBasicData"
+          list: "/function/findRoleFunctionsById"
         }
       }
     },
     created () {
     },
     methods: {
-      edit (record) {
+      edit (roleId) {
         this.form.resetFields();
-        this.model = Object.assign({}, record);
+        this.model.id = roleId
         this.visible = true;
-        getAction(this.url.getBasicData, {Type: 'RoleFunctions', KeyId: record.id}).then((res) => {
-          if (res && res.code === 200) {
-            let ubList = res.data.userBusinessList;
-            let getValue = ubList[0].value;
-            getValue = getValue.substring(1, getValue.length - 1);
-            if (getValue.indexOf("][")) {
-              let arr = getValue.split("][");
-              arr = arr.toString();
-              getAction(this.url.list, { functionsIds: arr }).then((res) => {
-                if (res.code === 200) {
-                  this.dataSource = res.data.rows;
-                  this.ipagination.total = res.data.total;
-                }
-                if (res.code === 510) {
-                  this.$message.warning(res.data)
-                }
-                this.loading = false;
-              })
+        if(roleId) {
+          getAction(this.url.list, { roleId: roleId }).then((res) => {
+            if (res.code === 200) {
+              this.dataSource = res.data.rows;
+              this.ipagination.total = res.data.total;
             }
-          }
-        })
+            else if (res.code === 400) {
+              this.dataSource = []
+              this.ipagination.total = 0
+            }
+            else if (res.code === 500) {
+              this.$message.warning(res.data)
+            }
+            this.loading = false;
+          })
+        }
       },
       close () {
         this.$emit('close');
         this.visible = false;
+      },
+      handleCancel () {
+        this.close()
       },
       handleOk () {
         const that = this;
@@ -135,18 +134,26 @@
         this.form.validateFields((err, values) => {
           if (!err) {
             that.confirmLoading = true;
-            let formData = Object.assign(this.model, values);
-            let obj;
-            if(!this.model.id){
-              obj=addRole(formData);
-            }else{
-              obj=editRole(formData);
+            let funArray = this.dataSource
+            let bindArr = [];
+            let btnStr = ''
+            for(let item of funArray){
+              if (item.btnStr !== undefined && item.btnStr !== "" && item.btnStr !== "null" && item.btnStr !== null) {
+                let bindJSON = {};
+                bindJSON.funId = item.id;
+                bindJSON.btnStr = item.btnStr;
+                bindArr.push(bindJSON);
+              }
             }
+            if (bindArr.length) {
+              btnStr = JSON.stringify(bindArr);
+            }
+            let obj=updateBtnStrByRoleId({roleId: this.model.id, btnStr: btnStr});
             obj.then((res)=>{
               if(res.code === 200){
                 that.$emit('ok');
               }else{
-                that.$message.warning(res.data.message);
+                that.$message.warning(res.data);
               }
             }).finally(() => {
               that.confirmLoading = false;
@@ -155,14 +162,43 @@
           }
         })
       },
-      handleCancel () {
-        this.close()
-      },
       toggleChecked() {
         this.checked = !this.checked;
+        let funArray = this.dataSource
+        if(this.checked) {
+          for(let item of funArray){
+            item.btnStr = item.pushBtn
+          }
+        } else {
+          for(let item of funArray){
+            item.btnStr = ''
+          }
+        }
       },
-      onChange(e) {
-        this.checked = e.target.checked;
+      onChange(record,value) {
+        let funArray = this.dataSource
+        for(let item of funArray){
+          if(item.id === record.id) {
+            let btnStr = record.btnStr
+            if(btnStr) {
+              let btnArr = btnStr.split(',')
+              if(btnStr.indexOf(value)>-1) {
+                //去掉勾选
+                removeByVal(btnArr, value)
+                item.btnStr = btnArr.join()
+              } else {
+                //勾选
+                btnArr.push(value)
+                item.btnStr = btnArr.join()
+              }
+            } else {
+              let btnArr = []
+              //勾选
+              btnArr.push(value)
+              item.btnStr = btnArr.join()
+            }
+          }
+        }
       }
     }
   }

@@ -1,7 +1,7 @@
 <template>
   <a-modal
     :title="title"
-    :width="800"
+    :width="width"
     :visible="visible"
     :confirmLoading="confirmLoading"
     @ok="handleOk"
@@ -52,6 +52,7 @@
     data () {
       return {
         title:"操作",
+        width: '800px',
         visible: false,
         model: {},
         roleId: 0,
@@ -111,7 +112,7 @@
               }
               obj.then((res)=>{
                 if(res.code === 200){
-                  that.$emit('ok');
+                  that.$emit('ok', this.roleId);
                 }else{
                   that.$message.warning(res.data.message);
                 }

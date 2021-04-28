@@ -531,3 +531,17 @@ export function getNowFormatDateTime() {
     + seperator2 + strSeconds;
   return currentdate;
 }
+
+/**
+ * JS中根据指定值删除数组中的元素
+ * @param arrylist
+ * @param val
+ */
+export function removeByVal(arrylist, val) {
+  for(var i = 0; i < arrylist .length; i++) {
+    if(arrylist [i] == val) {
+      arrylist .splice(i, 1);
+      break;
+    }
+  }
+}

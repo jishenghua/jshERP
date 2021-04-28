@@ -47,7 +47,7 @@
         <span slot="action" slot-scope="text, record">
           <a @click="handleSetFunction(record)">分配功能</a>
           <a-divider type="vertical" />
-          <a @click="handleSetPushBtn(record)">分配按钮</a>
+          <a @click="handleSetPushBtn(record.id)">分配按钮</a>
           <a-divider type="vertical" />
           <a @click="handleEdit(record)">编辑</a>
           <a-divider type="vertical" />
@@ -60,8 +60,11 @@
     <!-- table区域-end -->
     <!-- 表单区域 -->
     <role-modal ref="modalForm" @ok="modalFormOk"></role-modal>
-    <role-function-modal ref="roleFunctionModal" @ok="modalFormOk"></role-function-modal>
+    <role-function-modal ref="roleFunctionModal" @ok="roleFunctionModalFormOk"></role-function-modal>
     <role-push-btn-modal ref="rolePushBtnModal" @ok="modalFormOk"></role-push-btn-modal>
+    <a-modal v-model="roleFunctionModalVisible" title="操作提示" @ok="handleTipOk">
+      <p>分配功能已经操作成功！现在继续<b>分配按钮</b>吗？</p>
+    </a-modal>
   </a-card>
 </template>
 <script>
@@ -82,6 +85,8 @@
     data () {
       return {
         description: '角色管理页面',
+        roleFunctionModalVisible: false,
+        currentRoleId: '',
         // 查询条件
         queryParam: {name:'',},
         // 表头
@@ -133,13 +138,25 @@
     methods: {
       handleSetFunction(record) {
         this.$refs.roleFunctionModal.edit(record);
-        this.$refs.roleFunctionModal.title = "分配功能";
+        this.$refs.roleFunctionModal.title = "分配功能【分配之后请继续分配按钮】";
         this.$refs.roleFunctionModal.disableSubmit = false;
       },
-      handleSetPushBtn(record) {
-        this.$refs.rolePushBtnModal.edit(record);
+      handleSetPushBtn(roleId) {
+        this.$refs.rolePushBtnModal.edit(roleId);
         this.$refs.rolePushBtnModal.title = "分配按钮";
         this.$refs.rolePushBtnModal.disableSubmit = false;
+      },
+      roleFunctionModalFormOk(id) {
+        //重载列表
+        this.loadData();
+        this.roleFunctionModalVisible = true;
+        this.currentRoleId = id
+      },
+      handleTipOk() {
+        if(this.currentRoleId) {
+          this.roleFunctionModalVisible = false;
+          this.handleSetPushBtn(this.currentRoleId)
+        }
       }
     }
   }
