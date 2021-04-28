@@ -8,6 +8,7 @@ import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.service.userBusiness.UserBusinessService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.ErpInfo;
+import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -68,18 +69,20 @@ public class UserBusinessController {
 
     /**
      * 更新角色的按钮权限
-     * @param userBusinessId
-     * @param btnStr
+     * @param jsonObject
      * @param request
      * @return
      */
     @PostMapping(value = "/updateBtnStr")
-    public BaseResponseInfo updateBtnStr(@RequestParam(value ="userBusinessId", required = false) Long userBusinessId,
-                                    @RequestParam(value ="btnStr", required = false) String btnStr,
-                                    HttpServletRequest request)throws Exception {
+    public BaseResponseInfo updateBtnStr(@RequestBody JSONObject jsonObject,
+                                         HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
-            int back = userBusinessService.updateBtnStr(userBusinessId, btnStr);
+            String roleId = jsonObject.getString("roleId");
+            String btnStr = jsonObject.getString("btnStr");
+            String keyId = roleId;
+            String type = "RoleFunctions";
+            int back = userBusinessService.updateBtnStr(keyId, type, btnStr);
             if(back > 0) {
                 res.code = 200;
                 res.data = "成功";
@@ -87,7 +90,7 @@ public class UserBusinessController {
         } catch (Exception e) {
             e.printStackTrace();
             res.code = 500;
-            res.data = "查询权限失败";
+            res.data = "更新权限失败";
         }
         return res;
     }

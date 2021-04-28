@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author ji-sheng-hua  jshERP
@@ -186,32 +188,52 @@ public class FunctionController {
 
     /**
      * 根据id列表查找功能信息
-     * @param functionsIds
+     * @param roleId
      * @param request
      * @return
      */
-    @GetMapping(value = "/findByIds")
-    public BaseResponseInfo findByIds(@RequestParam("functionsIds") String functionsIds,
+    @GetMapping(value = "/findRoleFunctionsById")
+    public BaseResponseInfo findByIds(@RequestParam("roleId") Long roleId,
                                       HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
-            List<Function> dataList = functionService.findByIds(functionsIds);
-            JSONObject outer = new JSONObject();
-            outer.put("total", dataList.size());
-            //存放数据json数组
-            JSONArray dataArray = new JSONArray();
-            if (null != dataList) {
-                for (Function function : dataList) {
-                    JSONObject item = new JSONObject();
-                    item.put("id", function.getId());
-                    item.put("name", function.getName());
-                    item.put("pushBtn", function.getPushBtn());
-                    dataArray.add(item);
+            List<UserBusiness> list = userBusinessService.getBasicData(roleId.toString(), "RoleFunctions");
+            if(null!=list && list.size()>0) {
+                //按钮
+                Map<Long,String> btnMap = new HashMap<>();
+                String btnStr = list.get(0).getBtnStr();
+                if(StringUtil.isNotEmpty(btnStr)) {
+                    JSONArray btnArr = JSONArray.parseArray(btnStr);
+                    for(Object obj: btnArr) {
+                        JSONObject btnObj = JSONObject.parseObject(obj.toString());
+                        if(btnObj.get("funId")!=null && btnObj.get("btnStr")!=null) {
+                            btnMap.put(btnObj.getLong("funId"), btnObj.getString("btnStr"));
+                        }
+                    }
                 }
+                //菜单
+                String funIds = list.get(0).getValue();
+                funIds = funIds.substring(1, funIds.length() - 1);
+                funIds = funIds.replace("][",",");
+                List<Function> dataList = functionService.findByIds(funIds);
+                JSONObject outer = new JSONObject();
+                outer.put("total", dataList.size());
+                //存放数据json数组
+                JSONArray dataArray = new JSONArray();
+                if (null != dataList) {
+                    for (Function function : dataList) {
+                        JSONObject item = new JSONObject();
+                        item.put("id", function.getId());
+                        item.put("name", function.getName());
+                        item.put("pushBtn", function.getPushBtn());
+                        item.put("btnStr", btnMap.get(function.getId()));
+                        dataArray.add(item);
+                    }
+                }
+                outer.put("rows", dataArray);
+                res.code = 200;
+                res.data = outer;
             }
-            outer.put("rows", dataArray);
-            res.code = 200;
-            res.data = outer;
         } catch (Exception e) {
             e.printStackTrace();
             res.code = 500;

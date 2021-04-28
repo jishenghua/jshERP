@@ -179,14 +179,14 @@ public class UserBusinessService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateBtnStr(Long userBusinessId, String btnStr) throws Exception{
+    public int updateBtnStr(String keyId, String type, String btnStr) throws Exception{
         logService.insertLog("关联关系",
-                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(userBusinessId).toString(),
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(type).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         UserBusiness userBusiness = new UserBusiness();
         userBusiness.setBtnStr(btnStr);
         UserBusinessExample example = new UserBusinessExample();
-        example.createCriteria().andIdEqualTo(userBusinessId);
+        example.createCriteria().andKeyIdEqualTo(keyId).andTypeEqualTo(type);
         int result=0;
         try{
             result=  userBusinessMapper.updateByExampleSelective(userBusiness, example);
