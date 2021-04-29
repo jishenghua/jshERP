@@ -72,15 +72,14 @@
           },
           { title: '类型', dataIndex: 'type', width: 100},
           { title: '单位信息', dataIndex: 'supplierName', width: 150},
-          { title: '金额', dataIndex: 'changeAmount', width: 80},
-          { title: '余额', dataIndex: 'balance', width: 80,
+          { title: '金额', dataIndex: 'changeAmount', width: 80,
             customRender:function (t,r,index) {
               if (r.aList && r.amList) {
                 let aListArr = r.aList.toString().split(",");
                 let amListArr = r.amList.toString().split(",");
                 let res = "";
                 for (let i = 0; i < aListArr.length; i++) {
-                  if (aListArr[i] == this.queryParam.accountId) {
+                  if (aListArr[i] == r.accountId) {
                     res = amListArr[i];
                   }
                 }
@@ -91,6 +90,7 @@
               }
             }
           },
+          { title: '余额', dataIndex: 'balance', width: 80},
           { title: '单据日期', dataIndex: 'operTime', width: 180}
         ],
         labelCol: {
