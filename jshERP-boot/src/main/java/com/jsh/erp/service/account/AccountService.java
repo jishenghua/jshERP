@@ -525,13 +525,12 @@ public class AccountService {
 
     public String getAccountStrByIdAndMoney(Map<Long,String> accountMap, String accountIdList, String accountMoneyList){
         StringBuffer sb = new StringBuffer();
-        accountIdList = accountIdList.replace("[", "").replace("]", "").replace("\"", "");
-        accountMoneyList = accountMoneyList.replace("[", "").replace("]", "").replace("\"", "");
         List<Long> idList = StringUtil.strToLongList(accountIdList);
         List<Long> moneyList = StringUtil.strToLongList(accountMoneyList);
         for (int i = 0; i < idList.size(); i++) {
             Long id = idList.get(i);
-            sb.append(accountMap.get(id) + "(" + moneyList.get(i) + "元) ");
+            BigDecimal money =  BigDecimal.valueOf(moneyList.get(i)).abs();
+            sb.append(accountMap.get(id) + "(" + money + "元) ");
         }
         return sb.toString();
     }
