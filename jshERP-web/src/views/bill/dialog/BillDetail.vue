@@ -424,7 +424,6 @@
             </a-col>
             <a-col :lg="6" :md="12" :sm="24">
               <a-row class="form-row" :gutter="24">
-                <a-col :lg="24" :md="6" :sm="6"><br/><br/></a-col>
                 <a-col :lg="24" :md="6" :sm="6">
                   <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="实付金额">
                     {{model.changeAmount}}
@@ -495,7 +494,6 @@
             </a-col>
             <a-col :lg="6" :md="12" :sm="24">
               <a-row class="form-row" :gutter="24">
-                <a-col :lg="24" :md="6" :sm="6"><br/><br/></a-col>
                 <a-col :lg="24" :md="6" :sm="6">
                   <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="实付金额">
                     {{model.changeAmount}}

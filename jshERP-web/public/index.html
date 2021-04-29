@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html lang="zh-cmn-Hans">
-
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title></title>
   <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-  <script src="/cdn/babel-polyfill/polyfill_7_2_5.js"></script>
   <style>
     html,
     body,
@@ -255,10 +253,6 @@
     ajax.send(null);
     window.SYS_TITLE = sysTitle;
     document.title = window.SYS_TITLE;
-    window._CONFIG['casPrefixUrl'] = 'http://cas.example.org:8443/cas';
-    window._CONFIG['onlinePreviewDomainURL'] = 'http://fileview.jeecg.com/onlinePreview'
-    window._CONFIG['staticDomainURL'] = window._CONFIG['domianURL'] + '/sys/common/static';
-    window._CONFIG['pdfDomainURL'] =  window._CONFIG['domianURL'] + '/sys/common/pdf/pdfPreviewIframe';
   </script>
 </head>
 
