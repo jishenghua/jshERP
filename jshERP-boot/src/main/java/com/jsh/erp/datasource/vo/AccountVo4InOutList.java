@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 
 public class AccountVo4InOutList {
 
+    private Long accountId;
+
     private String number;
 
     private String type;
@@ -23,6 +25,14 @@ public class AccountVo4InOutList {
     private String amList;
 
     private Long tenantId;
+
+    public Long getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(Long accountId) {
+        this.accountId = accountId;
+    }
 
     public String getNumber() {
         return number;

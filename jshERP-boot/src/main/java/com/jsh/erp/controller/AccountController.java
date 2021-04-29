@@ -115,6 +115,7 @@ public class AccountController {
                     BigDecimal balance = accountService.getAccountSum(accountId, timeStr, "date").add(accountService.getAccountSumByHead(accountId, timeStr, "date"))
                             .add(accountService.getAccountSumByDetail(accountId, timeStr, "date")).add(accountService.getManyAccountSum(accountId, timeStr, "date")).add(initialAmount);
                     aEx.setBalance(balance);
+                    aEx.setAccountId(accountId);
                     dataArray.add(aEx);
                 }
             }
