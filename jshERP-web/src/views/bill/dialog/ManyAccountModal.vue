@@ -101,9 +101,9 @@
           if(idList[1]) {this.model.twoAccountId = idList[1]-0}
           if(idList[2]) {this.model.threeAccountId = idList[2]-0}
           let moneyList = moneyStr.split(",")
-          if(moneyList[0]) {this.model.oneAccountPrice = moneyList[0]}
-          if(moneyList[1]) {this.model.twoAccountPrice = moneyList[1]}
-          if(moneyList[2]) {this.model.threeAccountPrice = moneyList[2]}
+          if(moneyList[0]) {this.model.oneAccountPrice = Math.abs(moneyList[0])}
+          if(moneyList[1]) {this.model.twoAccountPrice = Math.abs(moneyList[1])}
+          if(moneyList[2]) {this.model.threeAccountPrice = Math.abs(moneyList[2])}
         }
         this.visible = true;
         this.$nextTick(() => {

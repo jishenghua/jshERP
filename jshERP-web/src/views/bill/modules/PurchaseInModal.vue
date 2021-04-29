@@ -123,7 +123,7 @@
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
-  import { getMpListShort } from "@/utils/util"
+  import { getMpListShort, changeListFmtMinus} from "@/utils/util"
   import JDate from '@/components/jeecg/JDate'
   import Vue from 'vue'
   export default {
@@ -238,7 +238,8 @@
         for(let item of detailArr){
           totalPrice += item.allPrice-0
         }
-        billMain.totalPrice = totalPrice
+        billMain.totalPrice = 0-totalPrice
+        billMain.changeAmount = 0-billMain.changeAmount
         if(billMain.accountId === 0) {
           billMain.accountId = ''
         }
@@ -254,7 +255,7 @@
       },
       manyAccountModalFormOk(idList, moneyList, allPrice) {
         this.accountIdList = idList
-        this.accountMoneyList = moneyList
+        this.accountMoneyList = changeListFmtMinus(moneyList)
         this.$nextTick(() => {
           this.form.setFieldsValue({'changeAmount':allPrice})
         });

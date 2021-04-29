@@ -545,3 +545,21 @@ export function removeByVal(arrylist, val) {
     }
   }
 }
+
+/**
+ * 将数组单个金额中的数值转为负数
+ * @param arr
+ * @returns {Array}
+ */
+export function changeListFmtMinus(arr) {
+  var newArr = new Array();
+  for(var i=0; i<arr.length; i++) {
+    if(arr[i] < 0){
+      newArr.push((arr[i]-0).toString());
+    }
+    else {
+      newArr.push((0 - arr[i]).toString());
+    }
+  }
+  return newArr;
+}
