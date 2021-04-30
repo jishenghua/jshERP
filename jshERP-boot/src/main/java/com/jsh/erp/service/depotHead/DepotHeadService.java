@@ -523,8 +523,12 @@ public class DepotHeadService {
         depotHead.setCreateTime(new Timestamp(System.currentTimeMillis()));
         depotHead.setStatus(BusinessConstants.BILLS_STATUS_UN_AUDIT);
         depotHead.setPayType(depotHead.getPayType()==null?"现付":depotHead.getPayType());
-        depotHead.setAccountIdList(depotHead.getAccountIdList().replace("[", "").replace("]", "").replaceAll("\"", ""));
-        depotHead.setAccountMoneyList(depotHead.getAccountMoneyList().replace("[", "").replace("]", "").replaceAll("\"", ""));
+        if(StringUtil.isNotEmpty(depotHead.getAccountIdList())){
+            depotHead.setAccountIdList(depotHead.getAccountIdList().replace("[", "").replace("]", "").replaceAll("\"", ""));
+        }
+        if(StringUtil.isNotEmpty(depotHead.getAccountMoneyList())) {
+            depotHead.setAccountMoneyList(depotHead.getAccountMoneyList().replace("[", "").replace("]", "").replaceAll("\"", ""));
+        }
         try{
             depotHeadMapper.insertSelective(depotHead);
         }catch(Exception e){
@@ -576,8 +580,12 @@ public class DepotHeadService {
                                          BigDecimal preTotalPrice, Long tenantId,HttpServletRequest request)throws Exception {
         /**更新单据主表信息*/
         DepotHead depotHead = JSONObject.parseObject(beanJson, DepotHead.class);
-        depotHead.setAccountIdList(depotHead.getAccountIdList().replace("[", "").replace("]", "").replaceAll("\"", ""));
-        depotHead.setAccountMoneyList(depotHead.getAccountMoneyList().replace("[", "").replace("]", "").replaceAll("\"", ""));
+        if(StringUtil.isNotEmpty(depotHead.getAccountIdList())){
+            depotHead.setAccountIdList(depotHead.getAccountIdList().replace("[", "").replace("]", "").replaceAll("\"", ""));
+        }
+        if(StringUtil.isNotEmpty(depotHead.getAccountMoneyList())) {
+            depotHead.setAccountMoneyList(depotHead.getAccountMoneyList().replace("[", "").replace("]", "").replaceAll("\"", ""));
+        }
         try{
             depotHeadMapper.updateByPrimaryKeySelective(depotHead);
         }catch(Exception e){
