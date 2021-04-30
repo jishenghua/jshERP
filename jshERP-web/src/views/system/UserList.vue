@@ -53,10 +53,10 @@
         :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
         @change="handleTableChange">
         <span slot="action" slot-scope="text, record">
-          <a @click="btnSetDepot(record)">分配仓库</a>
-          <a-divider type="vertical" />
-          <a @click="btnSetCustomer(record)">分配客户</a>
-          <a-divider type="vertical" />
+          <a v-if="depotFlag === '1'" @click="btnSetDepot(record)">分配仓库</a>
+          <a-divider v-if="depotFlag === '1'" type="vertical" />
+          <a v-if="customerFlag === '1'" @click="btnSetCustomer(record)">分配客户</a>
+          <a-divider v-if="customerFlag === '1'" type="vertical" />
           <a @click="handleEdit(record)">编辑</a>
           <a-divider type="vertical"/>
           <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
@@ -81,6 +81,7 @@
   import UserDepotModal from './modules/UserDepotModal'
   import UserCustomerModal from './modules/UserCustomerModal'
   import {postAction} from '@/api/manage';
+  import {getCurrentSystemConfig} from '@/api/api'
   import {JeecgListMixin} from '@/mixins/JeecgListMixin'
   import JInput from '@/components/jeecg/JInput'
   export default {
@@ -95,6 +96,8 @@
     data() {
       return {
         queryParam: {},
+        depotFlag: '0',
+        customerFlag: '0',
         columns: [
           {
             title: '#',
@@ -129,7 +132,30 @@
         },
       }
     },
+    created () {
+      this.getSystemConfig()
+    },
     methods: {
+      getSystemConfig() {
+        getCurrentSystemConfig().then((res) => {
+          if(res.code === 200){
+            let systemConfig = res.data
+            this.depotFlag = systemConfig.depotFlag
+            this.customerFlag = systemConfig.customerFlag
+          } else {
+            this.$message.warning(res.data);
+          }
+        })
+      },
+      searchQuery() {
+        this.loadData(1);
+        this.getSystemConfig();
+      },
+      searchReset() {
+        this.queryParam = {}
+        this.loadData(1);
+        this.getSystemConfig();
+      },
       handleReset(id) {
         let that = this;
         postAction(that.url.resetPwd, {id: id}).then((res) => {

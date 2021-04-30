@@ -111,13 +111,14 @@ export const BillModalMixin = {
     },
     initDepot() {
       let that = this;
-      getAction('/depot/findDepotByUserId?UBType=UserDepot&UBKeyId=').then((res) => {
-        if (res) {
-          for(let i=0; i<res.length; i++) {
+      getAction('/depot/findDepotByCurrentUser').then((res) => {
+        if(res.code === 200){
+          let arr = res.data
+          for(let i=0; i<arr.length; i++) {
             let depotInfo = {};
-            depotInfo.value = res[i].id+'' //注意-此处value必须为字符串格式
-            depotInfo.text = res[i].depotName
-            depotInfo.title = res[i].depotName
+            depotInfo.value = arr[i].id+'' //注意-此处value必须为字符串格式
+            depotInfo.text = arr[i].depotName
+            depotInfo.title = arr[i].depotName
             for(let item of that.materialTable.columns){
               if(item.key == 'depotId' || item.key == 'anotherDepotId') {
                 item.options.push(depotInfo)

@@ -20,7 +20,7 @@
                 placeholder="请选择仓库"
                 v-model="queryParam.depotId">
                 <a-select-option v-for="(depot,index) in depotList" :value="depot.id">
-                  {{ depot.name }}
+                  {{ depot.depotName }}
                 </a-select-option>
               </a-select>
             </a-form-item>
@@ -155,15 +155,9 @@
         });
       },
       getDepotData() {
-        getAction('/depot/getAllList').then((res)=>{
+        getAction('/depot/findDepotByCurrentUser').then((res)=>{
           if(res.code === 200){
-            let arr=res.data;
-            for(let i=0;i<arr.length;i++){
-              let obj={};
-              obj.id=arr[i].id;
-              obj.name=arr[i].name;
-              this.depotList.push(obj);
-            }
+            this.depotList = res.data;
           }else{
             this.$message.info(res.data);
           }

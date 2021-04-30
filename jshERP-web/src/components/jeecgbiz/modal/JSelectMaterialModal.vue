@@ -260,9 +260,9 @@
       },
       getDepotList() {
         let that = this;
-        getAction('/depot/findDepotByUserId?UBType=UserDepot&UBKeyId=').then((res) => {
-          if (res) {
-            that.depotList = res
+        getAction('/depot/findDepotByCurrentUser').then((res) => {
+          if(res.code === 200){
+            that.depotList = res.data
           }
         })
       },

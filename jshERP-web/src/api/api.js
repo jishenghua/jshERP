@@ -139,6 +139,7 @@ const checkFunction = (params)=>getAction("/function/checkIsNameExist",params);
 const addSystemConfig = (params)=>postAction("/systemConfig/add",params);
 const editSystemConfig = (params)=>putAction("/systemConfig/update",params);
 const checkSystemConfig = (params)=>getAction("/systemConfig/checkIsNameExist",params);
+const getCurrentSystemConfig = (params)=>getAction("/systemConfig/getCurrentInfo",params);
 //用户|角色|模块关系
 const addUserBusiness = (params)=>postAction("/userBusiness/add",params);
 const editUserBusiness = (params)=>putAction("/userBusiness/update",params);
@@ -254,6 +255,7 @@ export {
   addSystemConfig,
   editSystemConfig,
   checkSystemConfig,
+  getCurrentSystemConfig,
   addUserBusiness,
   editUserBusiness,
   checkUserBusiness,
