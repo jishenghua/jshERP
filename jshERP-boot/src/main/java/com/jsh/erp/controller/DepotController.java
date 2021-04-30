@@ -10,6 +10,7 @@ import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.depot.DepotService;
 import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.service.systemConfig.SystemConfigService;
+import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.service.userBusiness.UserBusinessService;
 import com.jsh.erp.utils.*;
 import org.slf4j.Logger;
@@ -35,6 +36,9 @@ public class DepotController {
 
     @Resource
     private DepotService depotService;
+
+    @Resource
+    private UserService userService;
 
     @Resource
     private UserBusinessService userBusinessService;
@@ -113,18 +117,18 @@ public class DepotController {
     }
 
     /**
-     * 获取用户拥有权限的仓库列表
-     * @param type
-     * @param keyId
+     * 获取当前用户拥有权限的仓库列表
      * @param request
      * @return
      * @throws Exception
      */
-    @GetMapping(value = "/findDepotByUserId")
-    public JSONArray findDepotByUserId(@RequestParam("UBType") String type, @RequestParam("UBKeyId") String keyId,
-                                       HttpServletRequest request) throws Exception{
-        JSONArray arr = new JSONArray();
+    @GetMapping(value = "/findDepotByCurrentUser")
+    public BaseResponseInfo findDepotByCurrentUser(HttpServletRequest request) throws Exception{
+        BaseResponseInfo res = new BaseResponseInfo();
         try {
+            JSONArray arr = new JSONArray();
+            String type = "UserDepot";
+            Long userId = userService.getUserId(request);
             List<Depot> dataList = depotService.findUserDepot();
             //开始拼接json数据
             if (null != dataList) {
@@ -134,9 +138,9 @@ public class DepotController {
                     //勾选判断1
                     Boolean flag = false;
                     try {
-                        flag = userBusinessService.checkIsUserBusinessExist(type, keyId, "[" + depot.getId().toString() + "]");
+                        flag = userBusinessService.checkIsUserBusinessExist(type, userId.toString(), "[" + depot.getId().toString() + "]");
                     } catch (DataAccessException e) {
-                        logger.error(">>>>>>>>>>>>>>>>>查询用户对应的仓库：类型" + type + " KeyId为： " + keyId + " 存在异常！");
+                        logger.error(">>>>>>>>>>>>>>>>>查询用户对应的仓库：类型" + type + " KeyId为： " + userId + " 存在异常！");
                     }
                     if (!depotFlag || flag) {
                         item.put("id", depot.getId());
@@ -145,10 +149,14 @@ public class DepotController {
                     }
                 }
             }
+            res.code = 200;
+            res.data = arr;
         } catch (Exception e) {
             e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
         }
-        return arr;
+        return res;
     }
 
     @PostMapping(value = "/updateIsDefault")

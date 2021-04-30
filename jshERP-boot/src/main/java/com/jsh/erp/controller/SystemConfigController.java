@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.Depot;
+import com.jsh.erp.datasource.entities.SystemConfig;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.depot.DepotService;
 import com.jsh.erp.service.systemConfig.SystemConfigService;
@@ -77,6 +78,28 @@ public class SystemConfigController {
             }
             res.code = 200;
             res.data = arr;
+        } catch(Exception e){
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
+    }
+
+    /**
+     * 获取当前租户的配置信息
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/getCurrentInfo")
+    public BaseResponseInfo getCurrentInfo(HttpServletRequest request) throws Exception {
+        BaseResponseInfo res = new BaseResponseInfo();
+        try{
+            List<SystemConfig> list = systemConfigService.getSystemConfig();
+            if(list.size()>0) {
+                res.code = 200;
+                res.data = list.get(0);
+            }
         } catch(Exception e){
             e.printStackTrace();
             res.code = 500;
