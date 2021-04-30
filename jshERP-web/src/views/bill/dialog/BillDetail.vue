@@ -431,12 +431,12 @@
                 </a-col>
                 <a-col :lg="24" :md="6" :sm="6">
                   <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款金额">
-                    {{model.getAmount}}
+                    {{model.changeAmount}}
                   </a-form-item>
                 </a-col>
                 <a-col :lg="24" :md="6" :sm="6">
                   <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="找零">
-                    {{model.backAmount}}
+                    0
                   </a-form-item>
                 </a-col>
                 <a-col :lg="24" :md="6" :sm="6">
@@ -501,12 +501,12 @@
                 </a-col>
                 <a-col :lg="24" :md="6" :sm="6">
                   <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款金额">
-                    {{model.getAmount}}
+                    {{model.changeAmount}}
                   </a-form-item>
                 </a-col>
                 <a-col :lg="24" :md="6" :sm="6">
                   <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="找零">
-                    {{model.backAmount}}
+                    0
                   </a-form-item>
                 </a-col>
                 <a-col :lg="24" :md="6" :sm="6">

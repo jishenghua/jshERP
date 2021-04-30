@@ -71,7 +71,7 @@ export const BillModalMixin = {
         })
       })
       this.$nextTick(() => {
-        this.form.setFieldsValue({'payType': '现金'})
+        this.form.setFieldsValue({'payType': '现付'})
       })
       this.accountIdList = []
       this.accountMoneyList = []

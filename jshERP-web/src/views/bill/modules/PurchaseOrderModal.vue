@@ -165,7 +165,7 @@
         for(let item of detailArr){
           totalPrice += item.allPrice-0
         }
-        billMain.totalPrice = totalPrice
+        billMain.totalPrice = 0-totalPrice
         if(this.model.id){
           billMain.id = this.model.id
         }

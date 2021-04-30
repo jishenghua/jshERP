@@ -172,10 +172,11 @@
           this.addInit("LSTH")
         } else {
           this.model.operTime = this.model.operTimeStr
-          this.model.debt = this.model.discountLastMoney - this.model.changeAmount
+          this.model.getAmount = this.model.changeAmount
+          this.model.backAmount = 0
           this.$nextTick(() => {
             this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'number', 'remark',
-              'discount','discountMoney','discountLastMoney','otherMoney','accountId','changeAmount','debt'))
+              'discount','discountMoney','discountLastMoney','otherMoney','accountId','changeAmount','getAmount','backAmount'))
           });
           // 加载子表数据
           let params = {
@@ -197,7 +198,8 @@
         for(let item of detailArr){
           totalPrice += item.allPrice-0
         }
-        billMain.totalPrice = totalPrice
+        billMain.totalPrice = 0-totalPrice
+        billMain.changeAmount = 0-billMain.changeAmount
         if(this.model.id){
           billMain.id = this.model.id
         }
