@@ -49,20 +49,27 @@
       :pagination="ipagination"
       :loading="loading"
       @change="handleTableChange">
+      <span slot="numberCustomRender" slot-scope="text, record">
+        <a @click="myHandleDetail(record)">{{record.number}}</a>
+      </span>
     </a-table>
     <!-- table区域-end -->
+    <!-- 表单区域 -->
+    <bill-detail ref="modalDetail"></bill-detail>
   </a-card>
 </template>
 <script>
+  import BillDetail from '../bill/dialog/BillDetail'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { getNowFormatMonth } from '@/utils/util';
-  import {findBySelectCus, findSupplierById, findDepotHeadTotalPay, findAccountHeadTotalPay} from '@/api/api'
+  import {findBySelectCus, findSupplierById, findDepotHeadTotalPay, findAccountHeadTotalPay, findBillDetailByNumber} from '@/api/api'
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import moment from 'moment'
   export default {
     name: "BuyInReport",
     mixins:[JeecgListMixin],
     components: {
+      BillDetail,
       JEllipsis
     },
     data () {
@@ -94,7 +101,10 @@
               return parseInt(index)+1;
             }
           },
-          {title: '单据编号', dataIndex: 'number', width: 140},
+          {
+            title: '单据编号', dataIndex: 'number', width: 140,
+            scopedSlots: { customRender: 'numberCustomRender' },
+          },
           {title: '类型', dataIndex: 'type', width: 100},
           {title: '单位名称', dataIndex: 'supplierName', width: 200},
           {title: '单据金额', dataIndex: 'billMoney', width: 80},
@@ -177,6 +187,13 @@
       searchQuery() {
         this.loadData(1);
         this.initStatistics();
+      },
+      myHandleDetail(record) {
+        findBillDetailByNumber({ number: record.number }).then((res) => {
+          if (res && res.code === 200) {
+            this.handleDetail(res.data, record.type);
+          }
+        })
       }
     }
   }

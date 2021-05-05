@@ -73,7 +73,7 @@
             </a-col>
             <a-col :lg="6" :md="12" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="其它费用">
-                <a-input placeholder="请选择其它费用" v-decorator.trim="[ 'otherMoney' ]" @keyup="onKeyUpOtherMoney"/>
+                <a-input placeholder="请输入其它费用" v-decorator.trim="[ 'otherMoney' ]" @keyup="onKeyUpOtherMoney"/>
               </a-form-item>
             </a-col>
           </a-row>
@@ -204,7 +204,7 @@
         } else {
           this.model.operTime = this.model.operTimeStr
           this.model.debt = (this.model.discountLastMoney + this.model.otherMoney - this.model.changeAmount).toFixed(2)
-          if(this.model.accountId == null) {
+          if(this.model.accountId == null || this.model.accountId == 0) {
             this.model.accountId = 0
             this.manyAccountBtnStatus = true
             this.accountIdList = this.model.accountIdList
@@ -239,6 +239,11 @@
         }
         billMain.totalPrice = 0-totalPrice
         billMain.changeAmount = 0-billMain.changeAmount
+        if(billMain.accountId === 0) {
+          billMain.accountId = ''
+        }
+        billMain.accountIdList = this.accountIdList.length>0 ? JSON.stringify(this.accountIdList) : ""
+        billMain.accountMoneyList = this.accountMoneyList.length>0 ? JSON.stringify(this.accountMoneyList) : ""
         if(this.model.id){
           billMain.id = this.model.id
         }

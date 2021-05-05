@@ -272,7 +272,7 @@ export const BillModalMixin = {
     },
     //改变优惠、本次付款、欠款的值
     autoChangePrice(target) {
-      let allTaxLastMoney = target.statisticsColumns.taxLastMoney
+      let allTaxLastMoney = target.statisticsColumns.taxLastMoney-0
       let discount = this.form.getFieldValue('discount')-0
       let otherMoney = this.form.getFieldValue('otherMoney')-0
       let discountMoney = (discount*0.01*allTaxLastMoney).toFixed(2)-0
@@ -285,6 +285,7 @@ export const BillModalMixin = {
     },
     //改变优惠率
     onKeyUpDiscount(e) {
+      debugger
       const value = e.target.value-0
       let discountMoney = this.form.getFieldValue('discountMoney')-0
       let discountLastMoney = this.form.getFieldValue('discountLastMoney')-0

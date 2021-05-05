@@ -10,6 +10,11 @@
       @cancel="handleCancel"
       wrapClassName="ant-modal-cust-warp"
       style="top:5%;height: 100%;overflow-y: hidden">
+      <template slot="footer">
+        <a-button key="back" @click="handleCancel">
+          取消
+        </a-button>
+      </template>
       <a-form :form="form">
         <!--调拨出库-->
         <template v-if="billType === '调拨出库'">
@@ -544,11 +549,7 @@
                 {{model.number}}
               </a-form-item>
             </a-col>
-            <a-col :lg="6" :md="12" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="销售人员">
-                {{model.salesManStr}}
-              </a-form-item>
-            </a-col>
+            <a-col :lg="6" :md="12" :sm="24"></a-col>
           </a-row>
           <a-table
             ref="table"
@@ -606,7 +607,7 @@
             </a-col>
             <a-col :lg="6" :md="12" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="销售人员">
-                {{model.salesMan}}
+                {{model.salesManStr}}
               </a-form-item>
             </a-col>
           </a-row>
