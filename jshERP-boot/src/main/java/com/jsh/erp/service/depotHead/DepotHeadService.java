@@ -468,38 +468,47 @@ public class DepotHeadService {
         List<DepotHeadVo4List> resList = new ArrayList<DepotHeadVo4List>();
         List<DepotHeadVo4List> list = null;
         try{
+            Map<Long,String> personMap = personService.getPersonMap();
+            Map<Long,String> accountMap = accountService.getAccountMap();
             list = depotHeadMapperEx.getDetailByNumber(number);
+            if (null != list) {
+                for (DepotHeadVo4List dh : list) {
+                    if(accountMap!=null && StringUtil.isNotEmpty(dh.getAccountIdList()) && StringUtil.isNotEmpty(dh.getAccountMoneyList())) {
+                        String accountStr = accountService.getAccountStrByIdAndMoney(accountMap, dh.getAccountIdList(), dh.getAccountMoneyList());
+                        dh.setAccountName(accountStr);
+                    }
+                    if(dh.getAccountIdList() != null) {
+                        String accountidlistStr = dh.getAccountIdList().replace("[", "").replace("]", "").replaceAll("\"", "");
+                        dh.setAccountIdList(accountidlistStr);
+                    }
+                    if(dh.getAccountMoneyList() != null) {
+                        String accountmoneylistStr = dh.getAccountMoneyList().replace("[", "").replace("]", "").replaceAll("\"", "");
+                        dh.setAccountMoneyList(accountmoneylistStr);
+                    }
+                    if(dh.getOtherMoneyList() != null) {
+                        String otherMoneyListStr = dh.getOtherMoneyList().replace("[", "").replace("]", "").replaceAll("\"", "");
+                        dh.setOtherMoneyList(otherMoneyListStr);
+                    }
+                    if(dh.getOtherMoneyItem() != null) {
+                        String otherMoneyItemStr = dh.getOtherMoneyItem().replace("[", "").replace("]", "").replaceAll("\"", "");
+                        dh.setOtherMoneyItem(otherMoneyItemStr);
+                    }
+                    if(dh.getChangeAmount() != null) {
+                        dh.setChangeAmount(dh.getChangeAmount().abs());
+                    }
+                    if(dh.getTotalPrice() != null) {
+                        dh.setTotalPrice(dh.getTotalPrice().abs());
+                    }
+                    if(StringUtil.isNotEmpty(dh.getSalesMan())) {
+                        dh.setSalesManStr(personService.getPersonByMapAndIds(personMap,dh.getSalesMan()));
+                    }
+                    dh.setOperTimeStr(getCenternTime(dh.getOperTime()));
+                    dh.setMaterialsList(findMaterialsListByHeaderId(dh.getId()));
+                    resList.add(dh);
+                }
+            }
         }catch(Exception e){
             JshException.readFail(logger, e);
-        }
-        if (null != list) {
-            for (DepotHeadVo4List dh : list) {
-                if(dh.getAccountIdList() != null) {
-                    String accountidlistStr = dh.getAccountIdList().replace("[", "").replace("]", "").replaceAll("\"", "");
-                    dh.setAccountIdList(accountidlistStr);
-                }
-                if(dh.getAccountMoneyList() != null) {
-                    String accountmoneylistStr = dh.getAccountMoneyList().replace("[", "").replace("]", "").replaceAll("\"", "");
-                    dh.setAccountMoneyList(accountmoneylistStr);
-                }
-                if(dh.getOtherMoneyList() != null) {
-                    String otherMoneyListStr = dh.getOtherMoneyList().replace("[", "").replace("]", "").replaceAll("\"", "");
-                    dh.setOtherMoneyList(otherMoneyListStr);
-                }
-                if(dh.getOtherMoneyItem() != null) {
-                    String otherMoneyItemStr = dh.getOtherMoneyItem().replace("[", "").replace("]", "").replaceAll("\"", "");
-                    dh.setOtherMoneyItem(otherMoneyItemStr);
-                }
-                if(dh.getChangeAmount() != null) {
-                    dh.setChangeAmount(dh.getChangeAmount().abs());
-                }
-                if(dh.getTotalPrice() != null) {
-                    dh.setTotalPrice(dh.getTotalPrice().abs());
-                }
-                dh.setOperTimeStr(getCenternTime(dh.getOperTime()));
-                dh.setMaterialsList(findMaterialsListByHeaderId(dh.getId()));
-                resList.add(dh);
-            }
         }
         return resList;
     }
