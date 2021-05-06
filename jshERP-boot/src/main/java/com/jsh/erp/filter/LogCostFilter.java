@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
         initParams = {@WebInitParam(name = "ignoredUrl", value = ".ico"),
                       @WebInitParam(name = "filterPath",
                               value = "/jshERP-boot/user/login#/jshERP-boot/user/registerUser#/jshERP-boot/user/randomImage" +
-                                      "#/jshERP-boot/platformConfig/getPlatformName#/jshERP-boot/v2/api-docs")})
+                                      "#/jshERP-boot/platformConfig/getPlatformName#/jshERP-boot/v2/api-docs#/jshERP-boot/webjars")})
 public class LogCostFilter implements Filter {
 
     private static final String FILTER_PATH = "filterPath";
