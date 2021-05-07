@@ -37,8 +37,8 @@
 * 数据库服务器：Mysql5.7+
 * JAVA平台: JRE1.8
 * 操作系统：Windows、Linux等
-* 为方便大家搭建运行环境，分享了下载地址 https://pan.baidu.com/s/1jlild9uyGdQ7H2yaMx76zw 提取码:814g
-* 不会打包的小伙伴，请下载此打包后的文件 http://47.116.69.14:8899/down/J6SsL8UWr7fb 提取码:siB2FW
+* 为方便大家搭建运行环境，分享了下载地址 https://pan.baidu.com/s/1jlild9uyGdQ7H2yaMx76zw  提取码:814g
+* 不会打包的小伙伴，请下载此打包后的文件 http://47.116.69.14:8899/down/J6SsL8UWr7fb  提取码:siB2FW
 
 # 开源说明
 * 本系统100%开源，遵守GPL-3.0协议
