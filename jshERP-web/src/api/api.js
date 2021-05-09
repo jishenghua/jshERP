@@ -16,9 +16,7 @@ const queryall = (params)=>getAction("/sys/role/queryall",params);
 //用户管理
 const addUser = (params)=>postAction("/user/addUser",params);
 const editUser = (params)=>putAction("/user/updateUser",params);
-const queryUserRole = (params)=>getAction("/sys/user/queryUserRole",params);
-const getUserList = (params)=>getAction("/sys/user/list",params);
-const frozenBatch = (params)=>putAction("/sys/user/frozenBatch",params);
+const getUserList = (params)=>getAction("/user/getUserList",params);
 //验证用户是否存在
 const checkOnlyUser = (params)=>getAction("/sys/user/checkOnlyUser",params);
 //改变密码
@@ -173,10 +171,8 @@ export {
   findUserRole,
   addUser,
   editUser,
-  queryUserRole,
   getUserList,
   queryall,
-  frozenBatch,
   checkOnlyUser,
   changePassword,
   getPermissionList,

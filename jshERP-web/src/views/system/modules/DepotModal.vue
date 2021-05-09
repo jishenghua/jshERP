@@ -24,7 +24,11 @@
           <a-input placeholder="请输入搬运费" v-decorator.trim="[ 'truckage' ]" suffix="元"/>
         </a-form-item>
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="负责人">
-          <a-input placeholder="请输入负责人" v-decorator.trim="[ 'principalName' ]" />
+          <a-select placeholder="选择负责人" v-decorator="[ 'principal' ]" :dropdownMatchSelectWidth="false">
+            <a-select-option v-for="(item,index) in userList" :key="index" :value="item.id">
+              {{ item.userName }}
+            </a-select-option>
+          </a-select>
         </a-form-item>
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="排序">
           <a-input placeholder="请输入排序" v-decorator.trim="[ 'sort' ]" />
@@ -38,7 +42,7 @@
 </template>
 <script>
   import pick from 'lodash.pick'
-  import {addDepot,editDepot,checkDepot } from '@/api/api'
+  import {addDepot,editDepot,checkDepot,getUserList } from '@/api/api'
   export default {
     name: "DepotModal",
     data () {
@@ -46,6 +50,7 @@
         title:"操作",
         visible: false,
         model: {},
+        userList: [],
         labelCol: {
           xs: { span: 24 },
           sm: { span: 5 },
@@ -67,6 +72,7 @@
       }
     },
     created () {
+      this.initUser()
     },
     methods: {
       add () {
@@ -78,7 +84,7 @@
         this.visible = true;
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model,
-            'name', 'address', 'warehousing', 'truckage', 'principalName', 'sort', 'remark'))
+            'name', 'address', 'warehousing', 'truckage', 'principal', 'sort', 'remark'))
         });
       },
       close () {
@@ -128,6 +134,13 @@
             }
           } else {
             callback(res.data);
+          }
+        });
+      },
+      initUser() {
+        getUserList({}).then((res)=>{
+          if(res) {
+            this.userList = res;
           }
         });
       }
