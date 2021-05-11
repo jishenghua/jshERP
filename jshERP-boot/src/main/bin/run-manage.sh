@@ -1,30 +1,21 @@
 SERVER_NAME=jshERP
 readonly APP_HOME=${FILE_PATH:-$(dirname $(cd `dirname $0`; pwd))}
-
 #readonly JAVA_HOME=""
-
 readonly CONFIG_HOME="$APP_HOME/config/"
 readonly LIB_HOME="$APP_HOME/lib"
 readonly LOGS_HOME="$APP_HOME/logs"
-
 readonly PID_FILE="$LOGS_HOME/application.pid"
 readonly APP_MAIN_CLASS="jshERP3.0.jar"
 readonly LOG_CONFIG="$CONFIG_HOME/logback-spring.xml"
-
 readonly JAVA_RUN="-Dlogs.home=$LOGS_HOME -Dlogging.config=$LOG_CONFIG -Dspring.config.location=file:$CONFIG_HOME -Dspring.pid.file=$PID_FILE -Dspring.pid.fail-on-write-error=true"
 readonly JAVA_OPTS="-server -Xms128m -Xmx320m -XX:PermSize=128M -XX:MaxPermSize=256M $JAVA_RUN"
-
 readonly JAVA="java"
-
 PID=0
-
-
 if [ ! -x "$LOGS_HOME" ]
 then
   mkdir $LOGS_HOME
 fi
 chmod +x -R "$JAVA_HOME/bin/"
-
 functions="/etc/functions.sh"
 if test -f $functions ; then
   . $functions
@@ -42,7 +33,6 @@ else
     echo "WARNING! $@"
   }
 fi
-
 function checkpid() {
    PID=$(ps -ef | grep $APP_MAIN_CLASS | grep -v 'grep' | awk '{print int($2)}')
     if [[ -n "$PID" ]]
@@ -52,7 +42,6 @@ function checkpid() {
       return 1
     fi
 }
-
 function start() {
    checkpid
    if [[ $? -eq 0 ]]
@@ -73,7 +62,6 @@ function start() {
       fi
    fi
 }
-
 function stop() {
    checkpid
    if [[ $? -eq 0 ]];
@@ -91,7 +79,6 @@ function stop() {
       warning "[$APP_MAIN_CLASS]: is not running ..."
    fi
 }
-
 function status() {
    checkpid
    if [[ $? -eq 0 ]]
@@ -103,7 +90,6 @@ function status() {
       return 1
    fi
 }
-
 function info() {
    echo "System Information:"
    echo 
@@ -121,7 +107,6 @@ function info() {
    echo 
    echo "****************************"
 }
-
 case "$1" in
    'start')
       start
