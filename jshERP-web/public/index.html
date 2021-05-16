@@ -247,6 +247,8 @@
     ajax.onreadystatechange = function () {
       if (ajax.readyState===4 &&ajax.status===200) {
         sysTitle = ajax.responseText;
+      } else {
+        sysTitle = 'ERP系统';
       }
     }
     ajax.open('get', url, false);
