@@ -116,6 +116,8 @@ public class DepotService {
         Depot depot = JSONObject.parseObject(obj.toJSONString(), Depot.class);
         int result=0;
         try{
+            depot.setType(0);
+            depot.setIsDefault(false);
             result=depotMapper.insertSelective(depot);
             logService.insertLog("仓库",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(depot.getName()).toString(), request);

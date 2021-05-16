@@ -132,7 +132,7 @@
     </select>
 
     <select id="findMaterialsListByHeaderId" resultType="java.lang.String">
-        select group_concat(concat(jsh_material.name,' ',jsh_material.standard,' ',jsh_material.model)) as mName
+        select group_concat(concat(jsh_material.name,' ',ifnull(jsh_material.standard,''),' ',ifnull(jsh_material.model,''))) as mName
         from jsh_depot_item
         inner join jsh_material on jsh_depot_item.material_id = jsh_material.Id and ifnull(jsh_material.delete_Flag,'0') !='1'
         where jsh_depot_item.header_id = ${id}
