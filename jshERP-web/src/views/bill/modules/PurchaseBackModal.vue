@@ -80,7 +80,7 @@
           <a-row class="form-row" :gutter="24">
             <a-col :lg="6" :md="12" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="结算账户">
-                <a-select style="width:185px;" placeholder="选择结算账户" v-decorator="[ 'accountId' ]"
+                <a-select style="width:185px;" placeholder="选择结算账户" v-decorator="[ 'accountId', validatorRules.accountId ]"
                           :dropdownMatchSelectWidth="false" allowClear @select="selectAccount">
                   <a-select-option v-for="(item,index) in accountList" :key="index" :value="item.id">
                     {{ item.name }}
@@ -178,6 +178,11 @@
           organId:{
             rules: [
               { required: true, message: '请选择供应商!' }
+            ]
+          },
+          accountId:{
+            rules: [
+              { required: true, message: '请选择结算账户!' }
             ]
           }
         },

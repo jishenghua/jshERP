@@ -77,7 +77,7 @@
               </a-col>
               <a-col :lg="24" :md="6" :sm="6">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款账户">
-                  <a-select placeholder="选择收款账户" v-decorator="[ 'accountId' ]" :dropdownMatchSelectWidth="false">
+                  <a-select placeholder="选择收款账户" v-decorator="[ 'accountId', validatorRules.accountId ]" :dropdownMatchSelectWidth="false">
                     <a-select-option v-for="(item,index) in accountList" :key="index" :value="item.id">
                       {{ item.name }}
                     </a-select-option>
@@ -157,9 +157,9 @@
               { required: true, message: '请输入单据日期!' }
             ]
           },
-          type:{
+          accountId:{
             rules: [
-              { required: true, message: '请选择类型!' }
+              { required: true, message: '请选择结算账户!' }
             ]
           }
         },
