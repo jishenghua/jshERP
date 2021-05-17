@@ -26,6 +26,16 @@ Overview
 项目运行
 ----
 
+- 安装nodeJS
+```
+建议安装node-v8.17.0-x64版本 教程参考 https://blog.csdn.net/zhangkaidsy/article/details/86645070
+```
+
+- 配淘宝源（速度快）
+```
+yarn config set registry https://registry.npm.taobao.org
+```
+
 - 安装依赖
 ```
 yarn install
@@ -40,7 +50,6 @@ yarn serve
 ```
 yarn build
 ```
-
 
 
 其他说明

@@ -3,7 +3,6 @@
   "version": "2.2.0",
   "private": true,
   "scripts": {
-    "pre": "yarn --registry https://registry.npm.taobao.org || cnpm install || npm install --registry https://registry.npm.taobao.org ",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build"
   },
