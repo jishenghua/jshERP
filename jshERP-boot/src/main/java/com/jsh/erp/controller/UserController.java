@@ -140,8 +140,11 @@ public class UserController {
                 logService.insertLogWithUserId(user.getId(), user.getTenantId(), "用户",
                         new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_LOGIN).append(user.getLoginName()).toString(),
                         ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+                JSONArray btnStrArr = userService.getBtnStrArrById(user.getId());
                 data.put("token", token);
                 data.put("user", user);
+                //用户的按钮权限
+                data.put("userBtn", btnStrArr);
             }
             res.code = 200;
             res.data = data;

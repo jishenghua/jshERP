@@ -754,4 +754,29 @@ public class UserService {
         }
         return userId;
     }
+
+    /**
+     * 用户的按钮权限
+     * @param userId
+     * @return
+     * @throws Exception
+     */
+    public JSONArray getBtnStrArrById(Long userId) throws Exception {
+        JSONArray btnStrArr = new JSONArray();
+        List<UserBusiness> userRoleList = userBusinessService.getBasicData(userId.toString(), "UserRole");
+        if(userRoleList!=null && userRoleList.size()>0) {
+            String roleValue = userRoleList.get(0).getValue();
+            if(StringUtil.isNotEmpty(roleValue) && roleValue.indexOf("[")>-1 && roleValue.indexOf("]")>-1){
+                roleValue = roleValue.replace("[", "").replace("]", ""); //角色id-单个
+                List<UserBusiness> roleFunctionsList = userBusinessService.getBasicData(roleValue, "RoleFunctions");
+                if(roleFunctionsList!=null && roleFunctionsList.size()>0) {
+                    String btnStr = roleFunctionsList.get(0).getBtnStr();
+                    if(StringUtil.isNotEmpty(btnStr)){
+                        btnStrArr = JSONArray.parseArray(btnStr);
+                    }
+                }
+            }
+        }
+        return btnStrArr;
+    }
 }
