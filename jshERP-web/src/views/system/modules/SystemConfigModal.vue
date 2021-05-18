@@ -9,6 +9,11 @@
     cancelText="关闭"
     wrapClassName="ant-modal-cust-warp"
     style="top:5%;height: 100%;overflow-y: hidden">
+    <template slot="footer">
+      <a-button key="back" v-if="isReadOnly" @click="handleCancel">
+        关闭
+      </a-button>
+    </template>
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="公司名称">
@@ -58,6 +63,7 @@
         depotFlagSwitch: false, //仓库权限状态
         customerFlagSwitch: false, //客户权限状态
         minusStockFlagSwitch: false, //负库存状态
+        isReadOnly: false,
         labelCol: {
           xs: { span: 24 },
           sm: { span: 5 },

@@ -92,6 +92,7 @@
   import { triggerWindowResizeEvent } from '@/utils/util'
   import { mapState, mapActions } from 'vuex'
   import { mixin, mixinDevice } from '@/utils/mixin.js'
+  import Vue from 'vue'
 
   export default {
     name: 'GlobalLayout',
@@ -157,6 +158,7 @@
         // update-begin-author:sunjianlei date:20191223 for: 修复刷新后菜单Tab名字显示异常
         let storeKey = 'route:title:' + this.activeMenu.url
         this.$ls.set(storeKey, this.activeMenu.text)
+        Vue.ls.set('funId', this.activeMenu.id, 7 * 24 * 60 * 60 * 1000);
         // update-end-author:sunjianlei date:20191223 for: 修复刷新后菜单Tab名字显示异常
       },
       findMenuBykey(menus,key){

@@ -9,6 +9,11 @@
     cancelText="关闭"
     wrapClassName="ant-modal-cust-warp"
     style="top:10%;height: 100%;overflow-y: hidden">
+    <template slot="footer">
+      <a-button key="back" v-if="isReadOnly" @click="handleCancel">
+        关闭
+      </a-button>
+    </template>
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="编号">
@@ -54,6 +59,7 @@
         visible: false,
         model: {},
         enabledSwitch: true, //是否启用
+        isReadOnly: false,
         jselectMultiple: {
           options: [
             { text: '编辑', value: '1' },

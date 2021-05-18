@@ -11,6 +11,9 @@
       wrapClassName="ant-modal-cust-warp"
       style="top:5%;height: 100%;overflow-y: hidden">
       <template slot="footer">
+        <a-button key="print" type="primary" @click="handlePrint">
+          打印
+        </a-button>
         <a-button key="back" @click="handleCancel">
           取消
         </a-button>
@@ -1011,6 +1014,9 @@
       close() {
         this.$emit('close');
         this.visible = false;
+      },
+      handlePrint() {
+        window.print();
       }
     }
   }

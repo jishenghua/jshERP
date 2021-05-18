@@ -38,10 +38,10 @@
     </div>
     <!-- 操作按钮区域 -->
     <div class="table-operator"  style="margin-top: 5px">
-      <a-button @click="myHandleAdd" type="primary" icon="plus">新增</a-button>
+      <a-button v-if="btnEnableList.indexOf(1)>-1" @click="myHandleAdd" type="primary" icon="plus">新增</a-button>
       <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
-          <a-menu-item key="1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
+          <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
         </a-menu>
         <a-button style="margin-left: 8px">
           批量操作 <a-icon type="down" />
@@ -63,10 +63,10 @@
         @change="handleTableChange">
         <span slot="action" slot-scope="text, record">
           <a @click="myHandleDetail(record, '销售退货入库')">查看</a>
-          <a-divider type="vertical" />
-          <a @click="myHandleEdit(record)">编辑</a>
-          <a-divider type="vertical" />
-          <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
+          <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
+          <a v-if="btnEnableList.indexOf(1)>-1" @click="myHandleEdit(record)">编辑</a>
+          <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
+          <a-popconfirm v-if="btnEnableList.indexOf(1)>-1" title="确定删除吗?" @confirm="() => handleDelete(record.id)">
             <a>删除</a>
           </a-popconfirm>
         </span>

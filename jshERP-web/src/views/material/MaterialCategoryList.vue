@@ -5,8 +5,8 @@
 
         <!-- 按钮操作区域 -->
         <a-row style="margin-left: 14px">
-          <a-button @click="handleAdd()" type="primary">添加类别</a-button>
-          <a-button title="删除多条数据" @click="batchDel" type="default">批量删除</a-button>
+          <a-button v-if="btnEnableList.indexOf(1)>-1" @click="handleAdd()" type="primary">添加类别</a-button>
+          <a-button v-if="btnEnableList.indexOf(1)>-1" title="删除多条数据" @click="batchDel" type="default">批量删除</a-button>
           <a-button @click="refresh" type="default" icon="reload">刷新</a-button>
         </a-row>
         <div style="background: #fff;padding-left:16px;height: 100%; margin-top: 5px">

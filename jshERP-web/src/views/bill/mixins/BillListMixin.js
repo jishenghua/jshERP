@@ -1,3 +1,5 @@
+import Vue from 'vue'
+
 export const BillListMixin = {
   computed: {
     importExcelUrl: function(){
@@ -44,6 +46,12 @@ export const BillListMixin = {
     },
     onDateOk(value) {
       console.log(value);
+    },
+    removeStatusColumn() {
+      //没有审核反审核权限的时候直接移除状态列
+      if(this.btnEnableList.indexOf(2)===-1) {
+        this.columns.splice(7,1)
+      }
     }
   }
 }

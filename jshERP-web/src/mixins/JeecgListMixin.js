@@ -51,7 +51,9 @@ export const JeecgListMixin = {
       /** 高级查询拼接方式 */
       superQueryMatchType: 'and',
       /** 是否加载时就执行 */
-      disableMixinCreated: false
+      disableMixinCreated: false,
+      /* 按钮权限 */
+      btnEnableList: '',
     }
   },
   created() {
@@ -60,6 +62,8 @@ export const JeecgListMixin = {
         this.loadData();
         //初始化字典配置 在自己页面定义
         this.initDictConfig();
+        //初始化按钮权限
+        this.initActiveBtnStr();
       }
   },
   methods:{
@@ -342,6 +346,21 @@ export const JeecgListMixin = {
       let url = getFileAccessHttpUrl(text)
       window.open(url);
     },
+    /* 按钮权限 */
+    initActiveBtnStr() {
+      let funId = Vue.ls.get('funId'); //功能id
+      let btnStrList = Vue.ls.get('winBtnStrList'); //按钮功能列表 JSON字符串
+      this.btnEnableList = ""; //按钮列表
+      if (funId && btnStrList) {
+        for (let i = 0; i < btnStrList.length; i++) {
+          if (btnStrList[i].funId == funId) {
+            if (btnStrList[i].btnStr) {
+              this.btnEnableList = btnStrList[i].btnStr;
+            }
+          }
+        }
+      }
+    }
   }
 
 }

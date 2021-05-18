@@ -31,8 +31,8 @@
     </div>
     <!-- 操作按钮区域 -->
     <div class="table-operator"  style="margin-top: 5px">
-      <a-button type="primary" icon="plus" @click="handleAdd">新增</a-button>
-      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
+      <a-button v-if="btnEnableList.indexOf(1)>-1" type="primary" icon="plus" @click="handleAdd">新增</a-button>
+      <a-upload v-if="btnEnableList.indexOf(1)>-1" name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-popover title="导入注意点">
           <template slot="content">
             <p>预收款、期初应收、期初应付、税率均为数值且要大于0；<br/>另外期初应收、期初应付不能同时输入</p>
@@ -43,9 +43,9 @@
       <a-button type="primary" icon="download" @click="handleExportXls('供应商信息')">导出</a-button>
       <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
-          <a-menu-item key="1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
-          <a-menu-item key="2" @click="batchSetStatus(true)"><a-icon type="check-square"/>启用</a-menu-item>
-          <a-menu-item key="3" @click="batchSetStatus(false)"><a-icon type="close-square"/>禁用</a-menu-item>
+          <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
+          <a-menu-item key="2" v-if="btnEnableList.indexOf(1)>-1" @click="batchSetStatus(true)"><a-icon type="check-square"/>启用</a-menu-item>
+          <a-menu-item key="3" v-if="btnEnableList.indexOf(1)>-1" @click="batchSetStatus(false)"><a-icon type="close-square"/>禁用</a-menu-item>
         </a-menu>
         <a-button style="margin-left: 8px">
           批量操作 <a-icon type="down" />
@@ -67,8 +67,8 @@
         @change="handleTableChange">
         <span slot="action" slot-scope="text, record">
           <a @click="handleEdit(record)">编辑</a>
-          <a-divider type="vertical" />
-          <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
+          <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
+          <a-popconfirm v-if="btnEnableList.indexOf(1)>-1" title="确定删除吗?" @confirm="() => handleDelete(record.id)">
             <a>删除</a>
           </a-popconfirm>
         </span>
@@ -157,6 +157,14 @@
           type:'供应商',
         }
         this.loadData(1);
+      },
+      handleEdit: function (record) {
+        this.$refs.modalForm.edit(record);
+        this.$refs.modalForm.title = "编辑";
+        this.$refs.modalForm.disableSubmit = false;
+        if(this.btnEnableList.indexOf(1)===-1) {
+          this.$refs.modalForm.isReadOnly = true
+        }
       }
     }
   }

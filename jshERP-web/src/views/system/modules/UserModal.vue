@@ -9,6 +9,11 @@
     cancelText="关闭"
     wrapClassName="ant-modal-cust-warp"
     style="top:5%;height: 100%;overflow-y: hidden">
+    <template slot="footer">
+      <a-button key="back" v-if="isReadOnly" @click="handleCancel">
+        关闭
+      </a-button>
+    </template>
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
         <a-form-item label="登录名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
@@ -75,6 +80,7 @@
         orgaTree: [],
         roleList: [],
         userId:"", //保存用户id
+        isReadOnly: false,
         disableSubmit:false,
         dateFormat:"YYYY-MM-DD",
         validatorRules:{
