@@ -1,18 +1,24 @@
 package com.jsh.erp.service.depot;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.*;
-import com.jsh.erp.datasource.mappers.*;
+import com.jsh.erp.datasource.mappers.DepotHeadMapperEx;
+import com.jsh.erp.datasource.mappers.DepotItemMapperEx;
+import com.jsh.erp.datasource.mappers.DepotMapper;
+import com.jsh.erp.datasource.mappers.DepotMapperEx;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.log.LogService;
+import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.user.UserService;
+import com.jsh.erp.service.userBusiness.UserBusinessService;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -23,7 +29,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class DepotService {
@@ -36,6 +41,10 @@ public class DepotService {
     private DepotMapperEx depotMapperEx;
     @Resource
     private UserService userService;
+    @Resource
+    private SystemConfigService systemConfigService;
+    @Resource
+    private UserBusinessService userBusinessService;
     @Resource
     private LogService logService;
     @Resource
@@ -263,5 +272,52 @@ public class DepotService {
             id = list.get(0).getId();
         }
         return id;
+    }
+
+    public JSONArray findDepotByCurrentUser() throws Exception {
+        JSONArray arr = new JSONArray();
+        String type = "UserDepot";
+        Long userId = userService.getCurrentUser().getId();
+        List<Depot> dataList = findUserDepot();
+        //开始拼接json数据
+        if (null != dataList) {
+            boolean depotFlag = systemConfigService.getDepotFlag();
+            for (Depot depot : dataList) {
+                JSONObject item = new JSONObject();
+                //勾选判断1
+                Boolean flag = false;
+                try {
+                    flag = userBusinessService.checkIsUserBusinessExist(type, userId.toString(), "[" + depot.getId().toString() + "]");
+                } catch (DataAccessException e) {
+                    logger.error(">>>>>>>>>>>>>>>>>查询用户对应的仓库：类型" + type + " KeyId为： " + userId + " 存在异常！");
+                }
+                if (!depotFlag || flag) {
+                    item.put("id", depot.getId());
+                    item.put("depotName", depot.getName());
+                    item.put("isDefault", depot.getIsDefault());
+                    arr.add(item);
+                }
+            }
+        }
+        return arr;
+    }
+
+    /**
+     * 当前用户有权限使用的仓库列表的id，用逗号隔开
+     * @return
+     * @throws Exception
+     */
+    public String findDepotStrByCurrentUser() throws Exception {
+        JSONArray arr =  findDepotByCurrentUser();
+        StringBuffer sb = new StringBuffer();
+        for(Object object: arr) {
+            JSONObject obj = (JSONObject)object;
+            sb.append(obj.getLong("id")).append(",");
+        }
+        String depotStr = sb.toString();
+        if(StringUtil.isNotEmpty(depotStr)){
+            depotStr = depotStr.substring(0, depotStr.length()-1);
+        }
+        return depotStr;
     }
 }

@@ -112,8 +112,6 @@ public class UserController {
                             token = token + "_" + user.getTenantId();
                         }
                         redisService.storageObjectBySession(token,"userId",user.getId());
-                        String roleType = userService.getRoleTypeByUserId(user.getId()); //角色类型
-                        redisService.storageObjectBySession(token,"roleType",roleType);
                         if(user.getTenantId()!=null) {
                             Tenant tenant = tenantService.getTenantByTenantId(user.getTenantId());
                             if(tenant!=null) {
@@ -136,6 +134,8 @@ public class UserController {
             Map<String, Object> data = new HashMap<String, Object>();
             data.put("msgTip", msgTip);
             if(user!=null){
+                String roleType = userService.getRoleTypeByUserId(user.getId()); //角色类型
+                redisService.storageObjectBySession(token,"roleType",roleType);
                 redisService.storageObjectBySession(token,"token", token);
                 logService.insertLogWithUserId(user.getId(), user.getTenantId(), "用户",
                         new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_LOGIN).append(user.getLoginName()).toString(),
@@ -145,6 +145,7 @@ public class UserController {
                 data.put("user", user);
                 //用户的按钮权限
                 data.put("userBtn", btnStrArr);
+                data.put("roleType", roleType);
             }
             res.code = 200;
             res.data = data;
@@ -366,8 +367,14 @@ public class UserController {
         }
         return arr;
     }
-    @GetMapping("/getRoleTypeByUserId")
-    public BaseResponseInfo getRoleTypeByUserId(HttpServletRequest request) {
+
+    /**
+     * 获取当前用户的角色类型
+     * @param request
+     * @return
+     */
+    @GetMapping("/getRoleTypeByCurrentUser")
+    public BaseResponseInfo getRoleTypeByCurrentUser(HttpServletRequest request) {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
             Map<String, Object> data = new HashMap<String, Object>();

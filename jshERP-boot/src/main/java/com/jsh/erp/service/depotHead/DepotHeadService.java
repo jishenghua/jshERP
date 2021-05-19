@@ -14,6 +14,7 @@ import com.jsh.erp.datasource.vo.DepotHeadVo4StatementAccount;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.account.AccountService;
+import com.jsh.erp.service.depot.DepotService;
 import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.orgaUserRel.OrgaUserRelService;
@@ -48,6 +49,8 @@ public class DepotHeadService {
     private DepotHeadMapperEx depotHeadMapperEx;
     @Resource
     private UserService userService;
+    @Resource
+    private DepotService depotService;
     @Resource
     DepotItemService depotItemService;
     @Resource
@@ -90,10 +93,11 @@ public class DepotHeadService {
     }
 
     public List<DepotHeadVo4List> select(String type, String subType, String roleType, String status, String number, String beginTime, String endTime,
-                                         String materialParam, String depotIds, int offset, int rows)throws Exception {
+                                         String materialParam, int offset, int rows)throws Exception {
         List<DepotHeadVo4List> resList = new ArrayList<DepotHeadVo4List>();
         List<DepotHeadVo4List> list=new ArrayList<>();
         try{
+            String depotIds = depotService.findDepotStrByCurrentUser();
             String [] creatorArray = getCreatorArray(roleType);
             Map<Long,String> personMap = personService.getPersonMap();
             Map<Long,String> accountMap = accountService.getAccountMap();
@@ -135,9 +139,10 @@ public class DepotHeadService {
     }
 
     public Long countDepotHead(String type, String subType, String roleType, String status, String number, String beginTime, String endTime,
-                               String materialParam, String depotIds) throws Exception{
+                               String materialParam) throws Exception{
         Long result=null;
         try{
+            String depotIds = depotService.findDepotStrByCurrentUser();
             String [] creatorArray = getCreatorArray(roleType);
             result=depotHeadMapperEx.countsByDepotHead(type, subType, creatorArray, status, number, beginTime, endTime, materialParam, depotIds);
         }catch(Exception e){

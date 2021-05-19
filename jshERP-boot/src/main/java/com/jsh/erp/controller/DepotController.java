@@ -38,13 +38,7 @@ public class DepotController {
     private DepotService depotService;
 
     @Resource
-    private UserService userService;
-
-    @Resource
     private UserBusinessService userBusinessService;
-
-    @Resource
-    private SystemConfigService systemConfigService;
 
     @Resource
     private MaterialService materialService;
@@ -126,29 +120,7 @@ public class DepotController {
     public BaseResponseInfo findDepotByCurrentUser(HttpServletRequest request) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();
         try {
-            JSONArray arr = new JSONArray();
-            String type = "UserDepot";
-            Long userId = userService.getUserId(request);
-            List<Depot> dataList = depotService.findUserDepot();
-            //开始拼接json数据
-            if (null != dataList) {
-                boolean depotFlag = systemConfigService.getDepotFlag();
-                for (Depot depot : dataList) {
-                    JSONObject item = new JSONObject();
-                    //勾选判断1
-                    Boolean flag = false;
-                    try {
-                        flag = userBusinessService.checkIsUserBusinessExist(type, userId.toString(), "[" + depot.getId().toString() + "]");
-                    } catch (DataAccessException e) {
-                        logger.error(">>>>>>>>>>>>>>>>>查询用户对应的仓库：类型" + type + " KeyId为： " + userId + " 存在异常！");
-                    }
-                    if (!depotFlag || flag) {
-                        item.put("id", depot.getId());
-                        item.put("depotName", depot.getName());
-                        arr.add(item);
-                    }
-                }
-            }
+            JSONArray arr = depotService.findDepotByCurrentUser();
             res.code = 200;
             res.data = arr;
         } catch (Exception e) {

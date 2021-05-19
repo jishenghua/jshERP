@@ -96,8 +96,8 @@ public class SystemConfigController {
         BaseResponseInfo res = new BaseResponseInfo();
         try{
             List<SystemConfig> list = systemConfigService.getSystemConfig();
+            res.code = 200;
             if(list.size()>0) {
-                res.code = 200;
                 res.data = list.get(0);
             }
         } catch(Exception e){

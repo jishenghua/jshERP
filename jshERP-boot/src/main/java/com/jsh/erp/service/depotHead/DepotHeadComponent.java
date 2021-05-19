@@ -39,8 +39,7 @@ public class DepotHeadComponent implements ICommonQuery {
         String beginTime = StringUtil.getInfo(search, "beginTime");
         String endTime = StringUtil.getInfo(search, "endTime");
         String materialParam = StringUtil.getInfo(search, "materialParam");
-        String depotIds = StringUtil.getInfo(search, "depotIds");
-        return depotHeadService.select(type, subType, roleType, status, number, beginTime, endTime, materialParam, depotIds, QueryUtils.offset(map), QueryUtils.rows(map));
+        return depotHeadService.select(type, subType, roleType, status, number, beginTime, endTime, materialParam, QueryUtils.offset(map), QueryUtils.rows(map));
     }
 
     @Override
@@ -54,8 +53,7 @@ public class DepotHeadComponent implements ICommonQuery {
         String beginTime = StringUtil.getInfo(search, "beginTime");
         String endTime = StringUtil.getInfo(search, "endTime");
         String materialParam = StringUtil.getInfo(search, "materialParam");
-        String depotIds = StringUtil.getInfo(search, "depotIds");
-        return depotHeadService.countDepotHead(type, subType, roleType, status, number, beginTime, endTime, materialParam, depotIds);
+        return depotHeadService.countDepotHead(type, subType, roleType, status, number, beginTime, endTime, materialParam);
     }
 
     @Override
