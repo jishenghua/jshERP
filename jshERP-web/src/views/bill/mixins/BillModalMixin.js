@@ -70,9 +70,6 @@ export const BillModalMixin = {
           }
         })
       })
-      this.$nextTick(() => {
-        this.form.setFieldsValue({'payType': '现付'})
-      })
       this.accountIdList = []
       this.accountMoneyList = []
       this.manyAccountBtnStatus = false
@@ -151,6 +148,19 @@ export const BillModalMixin = {
         this.accountMoneyList = []
         this.manyAccountBtnStatus = false
       }
+    },
+    onAdded(event) {
+      const { row, target } = event
+      getAction('/depot/findDepotByCurrentUser').then((res) => {
+        if (res.code === 200) {
+          let arr = res.data
+          for (let i = 0; i < arr.length; i++) {
+            if(arr[i].isDefault){
+              target.setValues([{rowKey: row.id, values: {depotId: arr[i].id+''}}])
+            }
+          }
+        }
+      })
     },
     //单元值改变一个字符就触发一次
     onValueChange(event) {
@@ -285,7 +295,6 @@ export const BillModalMixin = {
     },
     //改变优惠率
     onKeyUpDiscount(e) {
-      debugger
       const value = e.target.value-0
       let discountMoney = this.form.getFieldValue('discountMoney')-0
       let discountLastMoney = this.form.getFieldValue('discountLastMoney')-0

@@ -135,12 +135,9 @@
     methods: {
       getSystemConfig() {
         getCurrentSystemConfig().then((res) => {
-          if(res.code === 200){
-            let systemConfig = res.data
-            this.depotFlag = systemConfig.depotFlag
-            this.customerFlag = systemConfig.customerFlag
-          } else {
-            this.$message.warning(res.data);
+          if(res.code === 200 && res.data){
+            this.depotFlag = res.data.depotFlag
+            this.customerFlag = res.data.customerFlag
           }
         })
       },

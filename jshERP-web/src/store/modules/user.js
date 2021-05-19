@@ -137,7 +137,6 @@ const user = {
             //     }
             //   }
             // })
-            console.log(" menu show json ", menuData)
             //update--end--autor:qinfeng-----date:20200109------for：JEECG-63 一级菜单的子菜单全部是隐藏路由，则一级菜单不显示------
             commit('SET_PERMISSIONLIST', menuData)
           } else {

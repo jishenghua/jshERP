@@ -55,6 +55,7 @@
               :rowSelection="true"
               :actionButton="true"
               @valueChange="onValueChange"
+              @added="onAdded"
               @deleted="onDeleted" />
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
@@ -177,6 +178,9 @@
       editAfter() {
         if (this.action === 'add') {
           this.addInit("LSCK")
+          this.$nextTick(() => {
+            this.form.setFieldsValue({'payType': '现付'})
+          })
         } else {
           this.model.operTime = this.model.operTimeStr
           this.model.getAmount = this.model.changeAmount

@@ -64,6 +64,7 @@
         visible: false,
         model: {},
         checked: false,
+        disableMixinCreated: true,
         confirmLoading: false,
         form: this.$form.createForm(this),
         /* 数据源 */

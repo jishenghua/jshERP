@@ -91,6 +91,7 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { BillListMixin } from './mixins/BillListMixin'
   import JDate from '@/components/jeecg/JDate'
+  import Vue from 'vue'
   export default {
     name: "SaleOrderList",
     mixins:[JeecgListMixin,BillListMixin],
@@ -106,7 +107,8 @@
           number: "",
           searchMaterial: "",
           type: "其它",
-          subType: "销售订单"
+          subType: "销售订单",
+          roleType: Vue.ls.get('roleType')
         },
         labelCol: {
           xs: { span: 24 },

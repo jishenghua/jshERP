@@ -226,6 +226,7 @@
           let err = {};
           if(res.data.msgTip == 'user can login'){
             Vue.ls.set('winBtnStrList', res.data.userBtn, 7 * 24 * 60 * 60 * 1000);
+            Vue.ls.set('roleType', res.data.roleType, 7 * 24 * 60 * 60 * 1000);
             this.loginSuccess()
           } else if(res.data.msgTip == 'user is not exist'){
             err.message = '用户不存在';

@@ -107,7 +107,8 @@
           number: "",
           materialParam: "",
           type: "其它",
-          subType: "采购订单"
+          subType: "采购订单",
+          roleType: Vue.ls.get('roleType')
         },
         labelCol: {
           xs: { span: 24 },

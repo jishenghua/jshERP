@@ -84,6 +84,7 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { BillListMixin } from './mixins/BillListMixin'
   import JDate from '@/components/jeecg/JDate'
+  import Vue from 'vue'
   export default {
     name: "SaleBackList",
     mixins:[JeecgListMixin,BillListMixin],
@@ -99,7 +100,8 @@
           number: "",
           searchMaterial: "",
           type: "入库",
-          subType: "销售退货"
+          subType: "销售退货",
+          roleType: Vue.ls.get('roleType')
         },
         // 表头
         columns: [

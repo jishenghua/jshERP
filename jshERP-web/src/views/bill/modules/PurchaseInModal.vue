@@ -51,6 +51,7 @@
             :rowSelection="true"
             :actionButton="true"
             @valueChange="onValueChange"
+            @added="onAdded"
             @deleted="onDeleted" />
           <a-row class="form-row" :gutter="24">
             <a-col :lg="24" :md="24" :sm="24">
@@ -207,6 +208,7 @@
       //调用完edit()方法之后会自动调用此方法
       editAfter() {
         if (this.action === 'add') {
+          let that = this
           this.addInit("CGRK")
         } else {
           this.model.operTime = this.model.operTimeStr

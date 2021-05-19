@@ -56,6 +56,7 @@
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
+  import { getAction } from '@/api/manage'
   import { getMpListShort } from "@/utils/util"
   import JDate from '@/components/jeecg/JDate'
   import Vue from 'vue'
@@ -168,8 +169,17 @@
         }
       },
       onAdded(event) {
-        let that = this
         const { row, target } = event
+        getAction('/depot/findDepotByCurrentUser').then((res) => {
+          if (res.code === 200) {
+            let arr = res.data
+            for (let i = 0; i < arr.length; i++) {
+              if(arr[i].isDefault){
+                target.setValues([{rowKey: row.id, values: {depotId: arr[i].id+''}}])
+              }
+            }
+          }
+        })
         if(target.rows.length>=2) {
           target.setValues([{rowKey: row.id, values: {mType: '普通子件'}}])
         } else {

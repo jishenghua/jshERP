@@ -48,6 +48,7 @@
               :rowSelection="true"
               :actionButton="true"
               @valueChange="onValueChange"
+              @added="onAdded"
               @deleted="onDeleted" />
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">

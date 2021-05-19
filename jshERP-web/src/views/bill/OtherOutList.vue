@@ -84,6 +84,7 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { BillListMixin } from './mixins/BillListMixin'
   import JDate from '@/components/jeecg/JDate'
+  import Vue from 'vue'
   export default {
     name: "OtherOutList",
     mixins:[JeecgListMixin,BillListMixin],
@@ -99,7 +100,8 @@
           number: "",
           searchMaterial: "",
           type: "出库",
-          subType: "其它"
+          subType: "其它",
+          roleType: Vue.ls.get('roleType')
         },
         labelCol: {
           xs: { span: 24 },

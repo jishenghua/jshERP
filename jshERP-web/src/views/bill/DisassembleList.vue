@@ -84,6 +84,7 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { BillListMixin } from './mixins/BillListMixin'
   import JDate from '@/components/jeecg/JDate'
+  import Vue from 'vue'
   export default {
     name: "DisassembleList",
     mixins:[JeecgListMixin,BillListMixin],
@@ -99,7 +100,8 @@
           number: "",
           searchMaterial: "",
           type: "其它",
-          subType: "拆卸单"
+          subType: "拆卸单",
+          roleType: Vue.ls.get('roleType')
         },
         labelCol: {
           xs: { span: 24 },
