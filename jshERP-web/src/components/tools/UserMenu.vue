@@ -28,7 +28,7 @@
     <!-- update_end  author:zhaoxin date:20191129 for: 做头部菜单栏导航 -->
     <span class="action">
       <a class="cloud_title" target="_blank" href="https://cloud.tencent.com/act/cps/redirect?redirect=1074&cps_key=4fb6482d716575dcb7b8fe600d93766a&from=console">
-        <a-icon type="cloud" theme="filled" style="color: yellow;font-weight: bold;font-size: 16px; line-height: 16px;" /> 腾讯云促销
+        <a-icon type="cloud" theme="filled" style="font-weight: bold;font-size: 16px; line-height: 16px;" /><span> 腾讯云促销</span>
       </a>
     </span>
     <span class="action">
@@ -241,7 +241,7 @@
 
 <style scoped>
   .cloud_title {
-    color: yellow;
+    color: inherit;
     font-weight: bold;
     text-decoration: none;
   }
