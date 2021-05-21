@@ -49,7 +49,7 @@
     <a-row :gutter="24">
       <a-col :sm="24" :md="24" :xl="24" :style="{ marginBottom: '5px' }">
         <a-card :bordered="false" :body-style="{padding: '5'}">
-          <div class="hidden-xs" style="float:right;">当前版本：V2.3</div>
+          <div class="hidden-xs" style="float:right;">当前版本：V3.0</div>
           &copy; 2015-2030 {{systemTitle}} - Powered By
           <a href="http://www.huaxiaerp.com/" target="_blank">官方网站</a>
         </a-card>
