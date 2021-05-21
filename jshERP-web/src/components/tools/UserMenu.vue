@@ -2,9 +2,9 @@
   <div class="user-wrapper" :class="theme">
     <!-- update_begin author:zhaoxin date:20191129 for: 做头部菜单栏导航 -->
     <!-- update-begin author:sunjianlei date:20191@20 for: 解决全局样式冲突的问题 -->
-    <span class="action" @click="showClick">
-      <a-icon type="search"></a-icon>
-    </span>
+<!--    <span class="action" @click="showClick">-->
+<!--      <a-icon type="search"></a-icon>-->
+<!--    </span>-->
     <!-- update-begin author:sunjianlei date:20200219 for: 菜单搜索改为动态组件，在手机端呈现出弹出框 -->
 <!--    <component :is="searchMenuComp" v-show="searchMenuVisible || isMobile()" class="borders" :visible="searchMenuVisible" title="搜索菜单" :footer="null" @cancel="searchMenuVisible=false">-->
 <!--      <a-select-->
@@ -27,8 +27,13 @@
     <!-- update-end author:sunjianlei date:20191220 for: 解决全局样式冲突的问题 -->
     <!-- update_end  author:zhaoxin date:20191129 for: 做头部菜单栏导航 -->
     <span class="action">
-      <a class="logout_title" target="_blank" href="http://www.huaxiaerp.com/">
-        <a-icon type="bank" />
+      <a class="cloud_title" target="_blank" href="https://cloud.tencent.com/act/cps/redirect?redirect=1074&cps_key=4fb6482d716575dcb7b8fe600d93766a&from=console">
+        <a-icon type="cloud" theme="filled" style="color: yellow;font-weight: bold;font-size: 16px; line-height: 16px;" /> 腾讯云促销
+      </a>
+    </span>
+    <span class="action">
+      <a target="_blank" href="http://www.huaxiaerp.com/">
+        <a-icon type="bank" style="font-size: 16px;" />
       </a>
     </span>
     <header-notice class="action"/>
@@ -235,6 +240,11 @@
 </style>
 
 <style scoped>
+  .cloud_title {
+    color: yellow;
+    font-weight: bold;
+    text-decoration: none;
+  }
   .logout_title {
     color: inherit;
     text-decoration: none;
