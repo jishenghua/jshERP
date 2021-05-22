@@ -28,7 +28,7 @@
 
 # 开发环境
 建议开发者使用以下环境，可以避免版本带来的问题
-* IDE: IntelliJ IDEA 2017+和JetBrains WebStorm 2019.3+
+* IDE: IntelliJ IDEA 2019.2+和JetBrains WebStorm 2019.3+
 * DB: Mysql 5.7.33
 * JDK: JDK 1.8
 * Node: Node 8.17.0
@@ -38,9 +38,9 @@
 
 # 服务器环境
 * 数据库：Mysql5.7.33
-* JAVA平台: JRE1.8
-* Redis: redis6.2.1
-* Nginx: nginx1.12.2
+* JAVA平台：JRE1.8
+* Redis库：redis6.2.1
+* Nginx代理：nginx1.12.2
 * 操作系统：Windows、Linux等
 * 为方便大家搭建运行环境，分享了下载地址 https://pan.baidu.com/s/1jlild9uyGdQ7H2yaMx76zw  提取码:814g
 * 不会打包的小伙伴，请下载此打包后的文件 http://47.116.69.14:8899/down/J6SsL8UWr7fb  提取码:siB2FW
