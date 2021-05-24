@@ -73,7 +73,7 @@
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
         </if>
-        <if test="depotIds != null">
+        <if test="depotIds != null and depotIds !=''">
             and di.depot_id in (${depotIds})
         </if>
         <if test="creatorArray != null">
@@ -118,7 +118,7 @@
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
         </if>
-        <if test="depotIds != null">
+        <if test="depotIds != null and depotIds !=''">
             and di.depot_id in (${depotIds})
         </if>
         <if test="creatorArray != null">
