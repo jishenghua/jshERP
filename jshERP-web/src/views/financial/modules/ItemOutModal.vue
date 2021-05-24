@@ -17,7 +17,7 @@
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="往来单位">
-              <a-select placeholder="选择往来单位" v-decorator="[ 'organId' ]" :dropdownMatchSelectWidth="false">
+              <a-select placeholder="选择往来单位" v-decorator="[ 'organId', validatorRules.organId ]" :dropdownMatchSelectWidth="false">
                 <a-select-option v-for="(item,index) in supList" :key="index" :value="item.id">
                   {{ item.supplier }}
                 </a-select-option>
@@ -26,7 +26,7 @@
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="经手人">
-              <a-select placeholder="选择经手人" v-decorator="[ 'handsPersonId' ]" :dropdownMatchSelectWidth="false">
+              <a-select placeholder="选择经手人" v-decorator="[ 'handsPersonId', validatorRules.handsPersonId ]" :dropdownMatchSelectWidth="false">
                 <a-select-option v-for="(item,index) in personList" :key="index" :value="item.id">
                   {{ item.name }}
                 </a-select-option>
@@ -108,7 +108,7 @@
         model: {},
         labelCol: {
           xs: { span: 24 },
-          sm: { span: 6 },
+          sm: { span: 8 },
         },
         wrapperCol: {
           xs: { span: 24 },
@@ -127,9 +127,14 @@
         },
         confirmLoading: false,
         validatorRules:{
-          billTime:{
+          organId:{
             rules: [
-              { required: true, message: '请输入单据日期!' }
+              { required: true, message: '请选择往来单位!' }
+            ]
+          },
+          handsPersonId:{
+            rules: [
+              { required: true, message: '请选择经手人!' }
             ]
           }
         },

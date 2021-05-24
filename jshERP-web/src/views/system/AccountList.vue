@@ -99,7 +99,7 @@
             title: '#',
             dataIndex: '',
             key:'rowIndex',
-            width:60,
+            width:40,
             align:"center",
             customRender:function (t,r,index) {
               return parseInt(index)+1;
@@ -116,6 +116,7 @@
           {
             title: '操作',
             dataIndex: 'action',
+            width: 150,
             align:"center",
             scopedSlots: { customRender: 'action' },
           }

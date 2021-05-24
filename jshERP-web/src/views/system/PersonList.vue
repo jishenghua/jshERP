@@ -89,7 +89,7 @@
             title: '#',
             dataIndex: '',
             key:'rowIndex',
-            width:60,
+            width:40,
             align:"center",
             customRender:function (t,r,index) {
               return parseInt(index)+1;
@@ -98,17 +98,20 @@
           {
             title: '姓名',
             align:"center",
-            dataIndex: 'name'
+            dataIndex: 'name',
+            width: 100,
           },
           {
             title: '类型',
             align:"center",
-            dataIndex: 'type'
+            dataIndex: 'type',
+            width: 100,
           },
           {
             title: '操作',
             dataIndex: 'action',
             align:"center",
+            width: 150,
             scopedSlots: { customRender: 'action' },
           }
         ],

@@ -85,13 +85,14 @@
               return parseInt(index)+1;
             }
           },
-          { title: '计量单位', align:"center", dataIndex: 'name' },
-          { title: '基本单位', align:"center", dataIndex: 'basicUnit' },
-          { title: '副单位', align:"center", dataIndex: 'otherUnit' },
-          { title: '比例', align:"center", dataIndex: 'ratio' },
+          { title: '计量单位', align:"center", dataIndex: 'name', width:100 },
+          { title: '基本单位', align:"center", dataIndex: 'basicUnit', width:100 },
+          { title: '副单位', align:"center", dataIndex: 'otherUnit', width:100 },
+          { title: '比例', align:"center", dataIndex: 'ratio', width:100 },
           {
             title: '操作',
             dataIndex: 'action',
+            width:150,
             align:"center",
             scopedSlots: { customRender: 'action' },
           }

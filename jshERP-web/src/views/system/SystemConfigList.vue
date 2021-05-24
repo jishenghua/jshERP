@@ -104,7 +104,7 @@
             title: '负库存', dataIndex: 'minusStockFlag', width: 80, align: "center",
             scopedSlots: { customRender: 'customRenderFlag' }
           },
-          {title: '操作', dataIndex: 'action', align:"center",
+          {title: '操作', dataIndex: 'action', width: 150, align:"center",
             scopedSlots: { customRender: 'action' },
           }
         ],

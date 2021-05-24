@@ -104,22 +104,26 @@
           {
             title: '角色名称',
             align:"center",
-            dataIndex: 'name'
+            dataIndex: 'name',
+            width: 100
           },
           {
             title: '数据类型',
             align:"center",
-            dataIndex: 'type'
+            dataIndex: 'type',
+            width: 100
           },
           {
             title: '描述',
             align:"center",
-            dataIndex: 'description'
+            dataIndex: 'description',
+            width: 100
           },
           {
             title: '操作',
             dataIndex: 'action',
             align:"center",
+            width: 150,
             scopedSlots: { customRender: 'action' },
           }
         ],
