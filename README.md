@@ -49,25 +49,25 @@
 
 # 系统美图
 * 首页
-![输入图片说明](https://images.gitee.com/uploads/images/2020/0529/231814_369bb779_852955.png "首页.png")
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0527/231344_ef2d6554_852955.png "首页.png")
 * 零售管理
-![输入图片说明](https://images.gitee.com/uploads/images/2020/0529/231841_c9ce6aef_852955.png "零售管理.png")
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0527/231359_889404f3_852955.png "零售管理.png")
 * 采购管理
-![输入图片说明](https://images.gitee.com/uploads/images/2020/0529/231855_c479fab0_852955.png "采购管理.png")
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0527/231414_85757561_852955.png "采购管理.png")
 * 销售管理
-![输入图片说明](https://images.gitee.com/uploads/images/2020/0529/231921_9c3e50ad_852955.png "销售管理.png")
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0527/231437_d2308621_852955.png "销售管理.png")
 * 仓库管理
-![输入图片说明](https://images.gitee.com/uploads/images/2020/0529/231940_7a92e2d4_852955.png "仓库管理.png")
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0527/231446_6a6455f8_852955.png "仓库管理.png")
 * 财务管理
-![输入图片说明](https://images.gitee.com/uploads/images/2020/0529/231953_fba4f4db_852955.png "财务管理.png")
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0527/231456_82f4616b_852955.png "财务管理.png")
 * 报表查询
-![输入图片说明](https://images.gitee.com/uploads/images/2020/0529/232009_804e695f_852955.png "报表查询.png")
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0527/231506_9a986d5c_852955.png "报表查询.png")
 * 商品管理
-![输入图片说明](https://images.gitee.com/uploads/images/2020/0529/232026_1cb16302_852955.png "商品管理.png")
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0527/231527_23a26826_852955.png "商品管理.png")
 * 基本资料
-![输入图片说明](https://images.gitee.com/uploads/images/2020/0529/232044_61213fdc_852955.png "基本资料.png")
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0527/231538_0be9ad14_852955.png "基本资料.png")
 * 系统管理
-![输入图片说明](https://images.gitee.com/uploads/images/2020/0529/232101_a502d325_852955.png "系统管理.png")
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0527/231547_3110acd3_852955.png "系统管理.png")
 
 # 捐赠
 开源不易，坚持更难！如果您觉得华夏ERP不错，可以捐赠请作者喝杯咖啡~，在此表示感谢^_^。
