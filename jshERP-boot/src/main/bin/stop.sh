@@ -1,0 +1,1 @@
+./bin/run-manage.sh stop

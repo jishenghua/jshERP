@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jsh.erp.datasource.mappers.MaterialExtendMapperEx" >
+    <resultMap extends="com.jsh.erp.datasource.mappers.MaterialExtendMapper.BaseResultMap" id="ResultMapList" type="com.jsh.erp.datasource.vo.MaterialExtendVo4List">
+
+    </resultMap>
+
+    <select id="getDetailList" parameterType="com.jsh.erp.datasource.entities.MaterialExtendExample" resultMap="ResultMapList">
+        select DISTINCT d.Id,d.bar_code,d.commodity_unit,d.commodity_decimal,d.purchase_decimal,d.wholesale_decimal,d.low_decimal
+        from jsh_material_extend d
+        where d.material_id = '${materialId}'
+        and ifnull(d.delete_Flag,'0') !='1'
+        order by d.default_flag desc,d.id asc
+    </select>
+
+    <select id="getMaxTimeByTenantAndTime" resultType="java.lang.Long">
+        select max(update_time) from
+        (
+        select update_time from jsh_material_extend
+        where 1=1
+        <if test="lastTime != null">
+            and update_time > ${lastTime}
+        </if>
+        order by update_time asc
+        <if test="syncNum != null">
+            limit 0,#{syncNum}
+        </if>
+        ) time_list
+    </select>
+
+    <select id="getListByMId" resultType="com.jsh.erp.datasource.entities.MaterialExtend">
+        select
+        <include refid="com.jsh.erp.datasource.mappers.MaterialExtendMapper.Base_Column_List" />
+        from jsh_material_extend
+        where 1=1
+        and ifnull(delete_Flag,'0') !='1'
+        and material_id in (
+        <foreach collection="ids" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+        group by material_id
+    </select>
+
+    <update id="batchDeleteMaterialExtendByIds">
+        update jsh_material_extend
+        set delete_Flag='1'
+        where 1=1
+        and ifnull(delete_Flag,'0') !='1'
+        and id in (
+        <foreach collection="ids" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
+
+    <update id="batchDeleteMaterialExtendByMIds">
+        update jsh_material_extend
+        set delete_Flag='1'
+        where 1=1
+        and ifnull(delete_Flag,'0') !='1'
+        and material_id in (
+        <foreach collection="ids" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
+</mapper>

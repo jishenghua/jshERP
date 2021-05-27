@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<assembly
+        xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0
+        http://maven.apache.org/xsd/assembly-1.1.0.xsd
+http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 ">
+
+    <id>bin</id>
+
+    <formats>
+        <format>zip</format>
+    </formats>
+
+    <includeBaseDirectory>true</includeBaseDirectory>
+
+    <fileSets>
+        <fileSet>
+            <directory>erp_web</directory>
+            <outputDirectory>/erp_web</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>${project.basedir}/target</directory>
+            <includes>
+                <include>*.jar</include>
+            </includes>
+            <outputDirectory>/lib</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>${project.basedir}/src/main/resources</directory>
+            <includes>
+                <include>*.properties</include>
+                <include>*.yml</include>
+                <include>*.yaml</include>
+                <include>*.xml</include>
+            </includes>
+            <outputDirectory>/config</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>${project.basedir}/src/main/bin</directory>
+            <outputDirectory>/bin</outputDirectory>
+            <includes>
+                <include>run-manage.sh</include>
+            </includes>
+            <lineEnding>unix</lineEnding>
+        </fileSet>
+        <fileSet>
+            <directory>${project.basedir}/src/main/bin/</directory>
+            <outputDirectory>/</outputDirectory>
+            <includes>
+                <include>start.bat</include>
+                <include>restart.sh</include>
+                <include>start.sh</include>
+                <include>stop.sh</include>
+                <include>status.sh</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>docs</directory>
+            <outputDirectory>/docs</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>${project.basedir}</directory>
+            <includes>
+                <include>*.md</include>
+                <include>*.txt</include>
+            </includes>
+            <outputDirectory>/</outputDirectory>
+        </fileSet>
+    </fileSets>
+</assembly>

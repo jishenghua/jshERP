@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsh.erp.datasource.mappers.OrganizationMapperEx">
+
+    <resultMap id="BaseTreeResultMap" type="com.jsh.erp.datasource.vo.TreeNode">
+        <result column="id" property="id"/>
+        <result column="id" property="key"/>
+        <result column="id" property="value"/>
+        <result column="org_abr" property="title"/>
+        <result column="org_no" property="attributes"/>
+        <collection column="{currentId=currentId,org_no=org_no,id=id}" property="children" javaType="java.util.ArrayList"
+                    ofType="com.jsh.erp.datasource.vo.TreeNode" select="getNextNodeTree"/>
+    </resultMap>
+
+    <resultMap id="NextTreeResultMap" type="com.jsh.erp.datasource.vo.TreeNode">
+        <result column="id" property="id"/>
+        <result column="id" property="key"/>
+        <result column="id" property="value"/>
+        <result column="org_abr" property="title"/>
+        <result column="org_no" property="attributes"/>
+        <collection column="{currentId=currentId,org_no=org_no,id=id}" property="children" javaType="java.util.ArrayList"
+                    ofType="com.jsh.erp.datasource.vo.TreeNode" select="getNextNodeTree"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, org_abr,org_no
+    </sql>
+
+    <select id="getNextNodeTree" resultMap="NextTreeResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>,#{currentId} as currentId
+        FROM jsh_organization
+        WHERE parent_id = #{id}
+        <if test="currentId != null">
+            and id !=#{currentId}
+        </if>
+        and ifnull(delete_flag,'0') !='1'
+        order by sort asc
+    </select>
+
+    <select id="getNodeTree" resultMap="BaseTreeResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>,#{currentId} as currentId
+        FROM jsh_organization
+        WHERE parent_id is null
+        <if test="currentId != null">
+            and id !=#{currentId}
+        </if>
+        and ifnull(delete_flag,'0') !='1'
+        order by sort asc
+    </select>
+    <insert id="addOrganization" parameterType="com.jsh.erp.datasource.entities.Organization"
+            useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into jsh_organization
+        (org_no, org_full_name,
+      org_abr, delete_flag,
+      parent_id, sort, remark,
+      create_time, update_time)
+        values
+        (#{orgNo,jdbcType=VARCHAR}, #{orgFullName,jdbcType=VARCHAR},
+      #{orgAbr,jdbcType=VARCHAR}, #{deleteFlag,jdbcType=CHAR},
+      #{parentId,jdbcType=BIGINT}, #{sort,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <update id="batchDeleteOrganizationByIds">
+        update jsh_organization
+        set update_Time=#{updateTime},delete_flag='1'
+        where id in (
+        <foreach collection="ids" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
+    <update id="editOrganization">
+      update jsh_organization
+      set update_time=#{updateTime},
+      org_no = #{orgNo},org_full_name = #{orgFullName},
+      org_abr = #{orgAbr},
+      delete_flag = #{deleteFlag},parent_id = #{parentId},
+      sort = #{sort},remark = #{remark}
+      where id =#{id}
+    </update>
+
+    <select id="getOrganizationRootByIds" resultMap="com.jsh.erp.datasource.mappers.OrganizationMapper.BaseResultMap">
+        select * from  jsh_organization
+        where
+        1=1
+        and ifnull(delete_flag,'0') !='1'
+        and parent_id is null
+        and org_abr='根机构'
+        and id in (
+        <foreach collection="ids" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </select>
+
+</mapper>
