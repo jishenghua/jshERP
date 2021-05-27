@@ -4,7 +4,6 @@
 * **官网URL：http://www.huaxiaerp.com  商务合作或技术交流，请联系QQ：752718920**
 * 欢迎加入华夏ERP交流QQ群，群1：120725710(满)、群3：805736336
 * 演示地址：http://47.116.69.14  演示账号：jsh，密码：123456
-* 演示地址(VUE内测版)：http://47.116.69.14:3000  演示账号：jsh，密码：123456
 * 系统默认租户账号：jsh，默认超管账户：admin，默认密码均为：123456
 * 部署如遇到困难请参考Wiki文档  https://gitee.com/jishenghua/JSH_ERP/wikis/pages
 
