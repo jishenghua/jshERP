@@ -42,56 +42,6 @@
           </a-form-item>
         </a-col>
         <a-col :span="24/2">
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="传真">
-            <a-input placeholder="请输入传真" v-decorator.trim="[ 'fax' ]" />
-          </a-form-item>
-        </a-col>
-        <a-col :span="24/2">
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="期初应收">
-            <a-input placeholder="请输入期初应收" v-decorator.trim="[ 'beginNeedGet' ]" />
-          </a-form-item>
-        </a-col>
-        <a-col :span="24/2">
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="期初应付">
-            <a-input placeholder="请输入期初应付" v-decorator.trim="[ 'beginNeedPay' ]" />
-          </a-form-item>
-        </a-col>
-        <a-col :span="24/2">
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="期末应收">
-            <a-input v-decorator.trim="[ 'AllNeedGet' ]" :readOnly="true" />
-          </a-form-item>
-        </a-col>
-        <a-col :span="24/2">
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="期末应付">
-            <a-input v-decorator.trim="[ 'AllNeedPay' ]" :readOnly="true" />
-          </a-form-item>
-        </a-col>
-        <a-col :span="24/2">
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="纳税人识别号">
-            <a-input placeholder="请输入纳税人识别号" v-decorator.trim="[ 'taxNum' ]" />
-          </a-form-item>
-        </a-col>
-        <a-col :span="24/2">
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="税率(%)">
-            <a-input placeholder="请输入税率(%)" v-decorator.trim="[ 'taxRate' ]" />
-          </a-form-item>
-        </a-col>
-        <a-col :span="24/2">
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="开户行">
-            <a-input placeholder="请输入开户行" v-decorator.trim="[ 'bankName' ]" />
-          </a-form-item>
-        </a-col>
-        <a-col :span="24/2">
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="账号">
-            <a-input placeholder="请输入账号" v-decorator.trim="[ 'accountNumber' ]" />
-          </a-form-item>
-        </a-col>
-        <a-col :span="24/2">
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="地址">
-            <a-input placeholder="请输入地址" v-decorator.trim="[ 'address' ]" />
-          </a-form-item>
-        </a-col>
-        <a-col :span="24/2">
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="备注">
             <a-textarea :rows="2" placeholder="请输入备注" v-decorator.trim="[ 'description' ]" />
           </a-form-item>
@@ -144,8 +94,7 @@
         this.visible = true;
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model,'supplier', 'contacts', 'telephone', 'email', 'telephone',
-            'phoneNum', 'fax', 'beginNeedGet', 'beginNeedPay', 'AllNeedGet', 'AllNeedPay', 'taxNum', 'taxRate',
-            'bankName', 'accountNumber', 'address', 'description'))
+            'phoneNum', 'description'))
         });
       },
       close () {

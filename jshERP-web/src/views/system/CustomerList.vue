@@ -35,7 +35,7 @@
       <a-upload v-if="btnEnableList.indexOf(1)>-1" name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-popover title="导入注意点">
           <template slot="content">
-            <p>预收款、期初应收、期初应付、税率均为数值且要大于0；<br/>另外期初应收、期初应付不能同时输入</p>
+            <p>期初应收、期初应付、税率均为数值且要大于0；<br/>另外期初应收、期初应付不能同时输入</p>
           </template>
           <a-button type="primary" icon="import">导入</a-button>
         </a-popover>
@@ -120,7 +120,6 @@
           { title: '联系人', dataIndex: 'contacts',width:70,align:"center"},
           { title: '手机号码', dataIndex: 'telephone',width:100,align:"center"},
           { title: '联系电话', dataIndex: 'phoneNum',width:100,align:"center"},
-          { title: '预付款',dataIndex: 'advanceIn',width:70,align:"center"},
           { title: '期初应收',dataIndex: 'beginNeedGet',width:80,align:"center"},
           { title: '期初应付',dataIndex: 'beginNeedPay',width:80,align:"center"},
           { title: '期末应收',dataIndex: 'allNeedGet',width:80,align:"center"},

@@ -57,6 +57,9 @@
             <a>删除</a>
           </a-popconfirm>
         </span>
+        <span slot="numberCustomRender" slot-scope="text, record">
+          <a @click="myHandleDetail(record)">{{record.depotHeadNumber}}</a>
+        </span>
         <!-- 状态渲染模板 -->
         <template slot="customRenderFlag" slot-scope="isSell">
           <a-tag v-if="isSell==1" color="green">是</a-tag>
@@ -71,13 +74,16 @@
     <!-- 表单区域 -->
     <serial-number-modal ref="modalForm" @ok="modalFormOk"></serial-number-modal>
     <serial-number-batch-modal ref="serialNumberBatchModel" @ok="modalFormOk"></serial-number-batch-modal>
+    <bill-detail ref="modalDetail"></bill-detail>
   </a-card>
 </template>
 <script>
   import SerialNumberModal from './modules/SerialNumberModal'
   import SerialNumberBatchModal from './modules/SerialNumberBatchModal'
+  import BillDetail from '../bill/dialog/BillDetail'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { formatDate } from "@/utils/util"
+  import {findBillDetailByNumber} from '@/api/api'
   import JDate from '@/components/jeecg/JDate'
   export default {
     name: "SerialNumberList",
@@ -85,6 +91,7 @@
     components: {
       SerialNumberModal,
       SerialNumberBatchModal,
+      BillDetail,
       JDate
     },
     data () {
@@ -106,17 +113,19 @@
           {title: '序列号',align: "left", dataIndex: 'serialNumber', width: 180},
           {title: '商品条码', align: "center",dataIndex: 'materialCode', width: 120},
           {title: '商品名称', align: "center",dataIndex: 'materialName', width: 120},
-          {title: '单据编号', align: "center", dataIndex: 'depotHeadNumber', width: 140},
+          {
+            title: '单据编号', align: "center", dataIndex: 'depotHeadNumber', width: 150,
+            scopedSlots: { customRender: 'numberCustomRender' },
+          },
           {title: '已卖出', align: "center", dataIndex: 'isSell', width: 60,
             scopedSlots: { customRender: 'customRenderFlag' }
           },
-          {title: '创建时间',align: "center",  dataIndex: 'createTime', width: 150,
+          {title: '创建时间',align: "center",  dataIndex: 'createTime', width: 180,
             scopedSlots: { customRender: 'customRenderTime' }
           },
-          {title: '更新时间', align: "center", dataIndex: 'updateTime', width: 150,
+          {title: '更新时间', align: "center", dataIndex: 'updateTime', width: 180,
             scopedSlots: { customRender: 'customRenderTime' }
           },
-          {title: '备注',align: "center",  dataIndex: 'remark',width: 140},
           {
             title: '操作',
             dataIndex: 'action',
@@ -151,6 +160,13 @@
         if(this.btnEnableList.indexOf(1)===-1) {
           this.$refs.modalForm.isReadOnly = true
         }
+      },
+      myHandleDetail(record) {
+        findBillDetailByNumber({ number: record.depotHeadNumber }).then((res) => {
+          if (res && res.code === 200) {
+            this.handleDetail(res.data, record.depotHeadType);
+          }
+        })
       }
     }
   }
