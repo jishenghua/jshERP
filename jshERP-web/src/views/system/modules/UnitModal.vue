@@ -17,12 +17,12 @@
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="基本单位">
-          <a-input placeholder="请输入基本单位" v-decorator.trim="[ 'basicUnit', validatorRules.basicUnit]" />
+          <a-input placeholder="请输入基本单位(小单位)" v-decorator.trim="[ 'basicUnit', validatorRules.basicUnit]" />
         </a-form-item>
       </a-form>
       <a-form :form="form">
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="副单位">
-          <a-input placeholder="请输入副单位" v-decorator.trim="[ 'otherUnit', validatorRules.otherUnit]" />
+          <a-input placeholder="请输入副单位(大单位)" v-decorator.trim="[ 'otherUnit', validatorRules.otherUnit]" />
         </a-form-item>
       </a-form>
       <a-form :form="form">
