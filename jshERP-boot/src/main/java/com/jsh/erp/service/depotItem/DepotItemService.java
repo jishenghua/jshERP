@@ -316,7 +316,7 @@ public class DepotItemService {
         //删除单据的明细
         deleteDepotItemHeadId(headerId);
         JSONArray rowArr = JSONArray.parseArray(rows);
-        if (null != rowArr) {
+        if (null != rowArr && rowArr.size()>0) {
             for (int i = 0; i < rowArr.size(); i++) {
                 DepotItem depotItem = new DepotItem();
                 JSONObject rowObj = JSONObject.parseObject(rowArr.getString(i));
@@ -411,6 +411,9 @@ public class DepotItemService {
                 //更新当前库存
                 updateCurrentStock(depotItem,tenantId);
             }
+        } else {
+            throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_ROW_FAILED_CODE,
+                    String.format(ExceptionConstants.DEPOT_HEAD_ROW_FAILED_MSG));
         }
     }
 
