@@ -59,8 +59,8 @@
           <a-popconfirm v-if="btnEnableList.indexOf(1)>-1" title="确定删除吗?" @confirm="() => handleDelete(record.id)">
             <a>删除</a>
           </a-popconfirm>
-          <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical"/>
-          <a-popconfirm v-if="btnEnableList.indexOf(1)>-1" title="确定重置密码为123456吗?" @confirm="() => handleReset(record.id)">
+          <a-divider type="vertical"/>
+          <a-popconfirm title="确定重置密码为123456吗?" @confirm="() => handleReset(record.id)">
             <a>重置密码</a>
           </a-popconfirm>
         </span>

@@ -225,6 +225,14 @@
             }
           }
         })
+      },
+      handleEdit: function (record) {
+        this.$refs.modalForm.edit(record);
+        this.$refs.modalForm.title = "编辑";
+        this.$refs.modalForm.disableSubmit = false;
+        if(this.btnEnableList.indexOf(1)===-1) {
+          this.$refs.modalForm.isReadOnly = true
+        }
       }
     }
   }

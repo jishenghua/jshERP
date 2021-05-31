@@ -18,7 +18,8 @@
       :dataSource="dataSource"
       :pagination="ipagination"
       :loading="loading"
-      :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange, type: getType}">
+      :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange, type: getType}"
+      :customRow="rowAction">
     </a-table>
     <!-- table区域-end -->
   </a-modal>
@@ -117,6 +118,23 @@
           }
         }
         this.selectBillIds = billIds.substring(1);
+      },
+      rowAction(record, index) {
+        return {
+          on: {
+            click: () => {
+              let arr = []
+              arr.push(record.id)
+              this.selectedRowKeys = arr
+            },
+            dblclick: () => {
+              let arr = []
+              arr.push(record.id)
+              this.selectedRowKeys = arr
+              this.handleOk()
+            }
+          }
+        }
       }
     }
   }
