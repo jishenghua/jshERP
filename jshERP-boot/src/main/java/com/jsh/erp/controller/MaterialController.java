@@ -166,7 +166,7 @@ public class MaterialController {
                                   HttpServletRequest request) throws Exception{
         JSONObject object = new JSONObject();
         try {
-            Long tenantId = Long.parseLong(redisService.getObjectFromSessionByKey(request,"tenantId").toString());
+            Long tenantId = redisService.getTenantId(request);
             List<MaterialVo4Unit> dataList = materialService.findBySelectWithBarCode(categoryId, q, (currentPage-1)*pageSize, pageSize);
             String[] mpArr = mpList.split(",");
             int total = materialService.findBySelectWithBarCodeCount(categoryId, q);

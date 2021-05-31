@@ -325,7 +325,7 @@ public class DepotHeadController {
         String beanJson = body.getInfo();
         String rows = body.getRows();
         Long billsNumLimit = Long.parseLong(redisService.getObjectFromSessionByKey(request,"billsNumLimit").toString());
-        Long tenantId = Long.parseLong(redisService.getObjectFromSessionByKey(request,"tenantId").toString());
+        Long tenantId = redisService.getTenantId(request);
         Long count = depotHeadService.countDepotHead(null,null,null,null,null,null,null,null);
         if(count>= billsNumLimit) {
             throw new BusinessParamCheckingException(ExceptionConstants.DEPOT_HEAD_OVER_LIMIT_FAILED_CODE,
@@ -345,7 +345,7 @@ public class DepotHeadController {
      */
     @PutMapping(value = "/updateDepotHeadAndDetail")
     public Object updateDepotHeadAndDetail(@RequestBody DepotHeadVo4Body body, HttpServletRequest request) throws Exception{
-        Long tenantId = Long.parseLong(redisService.getObjectFromSessionByKey(request,"tenantId").toString());
+        Long tenantId = redisService.getTenantId(request);
         JSONObject result = ExceptionConstants.standardSuccess();
         String beanJson = body.getInfo();
         String rows = body.getRows();

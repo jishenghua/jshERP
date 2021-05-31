@@ -252,7 +252,7 @@ public class DepotHeadService {
                 //更新当前库存
                 List<DepotItem> list = depotItemService.getListByHeaderId(id);
                 for(DepotItem depotItem: list){
-                    Long tenantId = Long.parseLong(redisService.getObjectFromSessionByKey(request,"tenantId").toString());
+                    Long tenantId = redisService.getTenantId(request);
                     depotItemService.updateCurrentStock(depotItem,tenantId);
                 }
             }catch(Exception e){
