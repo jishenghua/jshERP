@@ -20,6 +20,8 @@ public class MaterialVo4Unit extends Material{
 
     private BigDecimal lowDecimal;
 
+    private BigDecimal billPrice;
+
     private String mBarCode;
 
     private String commodityUnit;
@@ -88,6 +90,14 @@ public class MaterialVo4Unit extends Material{
 
     public void setLowDecimal(BigDecimal lowDecimal) {
         this.lowDecimal = lowDecimal;
+    }
+
+    public BigDecimal getBillPrice() {
+        return billPrice;
+    }
+
+    public void setBillPrice(BigDecimal billPrice) {
+        this.billPrice = billPrice;
     }
 
     public String getmBarCode() {

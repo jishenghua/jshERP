@@ -309,6 +309,9 @@ public class ExceptionConstants {
     //单据录入-明细不能为空
     public static final int DEPOT_HEAD_ROW_FAILED_CODE = 8500006;
     public static final String DEPOT_HEAD_ROW_FAILED_MSG = "单据明细不能为空";
+    //单据录入-账户不能为空
+    public static final int DEPOT_HEAD_ACCOUNT_FAILED_CODE = 8500007;
+    public static final String DEPOT_HEAD_ACCOUNT_FAILED_MSG = "结算账户不能为空";
     /**
      *  单据明细信息
      * type = 90

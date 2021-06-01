@@ -439,6 +439,7 @@ public class MaterialController {
     @GetMapping(value = "/getMaterialByBarCode")
     public BaseResponseInfo getMaterialByBarCode(@RequestParam("barCode") String barCode,
                                           @RequestParam("mpList") String mpList,
+                                          @RequestParam(required = false, value = "prefixNo") String prefixNo,
                                           HttpServletRequest request) throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
@@ -463,6 +464,16 @@ public class MaterialController {
                     }
                 }
                 mu.setMaterialOther(expand);
+                if("LSCK".equals(prefixNo) || "LSTH".equals(prefixNo)) {
+                    //零售价
+                    mu.setBillPrice(mu.getCommodityDecimal());
+                } else if("CGDD".equals(prefixNo) || "CGRK".equals(prefixNo) || "CGTH".equals(prefixNo) || "QTRK".equals(prefixNo) || "DBCK".equals(prefixNo)) {
+                    //采购价
+                    mu.setBillPrice(mu.getPurchaseDecimal());
+                } else if("XSDD".equals(prefixNo) || "XSCK".equals(prefixNo) || "XSTH".equals(prefixNo) || "QTCK".equals(prefixNo)) {
+                    //销售价
+                    mu.setBillPrice(mu.getWholesaleDecimal());
+                }
             }
             res.code = 200;
             res.data = mu;

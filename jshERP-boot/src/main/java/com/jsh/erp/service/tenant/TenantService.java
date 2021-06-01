@@ -1,6 +1,7 @@
 package com.jsh.erp.service.tenant;
 
 import com.alibaba.fastjson.JSONObject;
+import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.mappers.TenantMapper;
@@ -8,6 +9,7 @@ import com.jsh.erp.datasource.mappers.TenantMapperEx;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.utils.StringUtil;
+import com.jsh.erp.utils.Tools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -56,10 +58,15 @@ public class TenantService {
         return list;
     }
 
-    public List<Tenant> select(String loginName, int offset, int rows)throws Exception {
-        List<Tenant> list=null;
+    public List<TenantEx> select(String loginName, int offset, int rows)throws Exception {
+        List<TenantEx> list= new ArrayList<>();
         try{
-            list=tenantMapperEx.selectByConditionTenant(loginName, offset, rows);
+            list = tenantMapperEx.selectByConditionTenant(loginName, offset, rows);
+            if (null != list) {
+                for (TenantEx tenantEx : list) {
+                    tenantEx.setCreateTimeStr(Tools.getCenternTime(tenantEx.getCreateTime()));
+                }
+            }
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -81,8 +88,12 @@ public class TenantService {
         Tenant tenant = JSONObject.parseObject(obj.toJSONString(), Tenant.class);
         int result=0;
         try{
-            tenant.setUserNumLimit(userNumLimit); //默认用户限制数量
-            tenant.setBillsNumLimit(billsNumLimit); //默认单据限制数量
+            if(tenant.getUserNumLimit()==null) {
+                tenant.setUserNumLimit(userNumLimit); //默认用户限制数量
+            }
+            if(tenant.getBillsNumLimit()==null) {
+                tenant.setBillsNumLimit(billsNumLimit); //默认单据限制数量
+            }
             tenant.setCreateTime(new Date());
             result=tenantMapper.insertSelective(tenant);
         }catch(Exception e){
@@ -130,7 +141,7 @@ public class TenantService {
 
     public int checkIsNameExist(Long id, String name)throws Exception {
         TenantExample example = new TenantExample();
-        example.createCriteria().andIdEqualTo(id);
+        example.createCriteria().andIdNotEqualTo(id).andLoginNameEqualTo(name);
         List<Tenant> list=null;
         try{
             list= tenantMapper.selectByExample(example);

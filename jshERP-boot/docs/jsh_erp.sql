@@ -1759,7 +1759,7 @@ CREATE TABLE `jsh_tenant` (
 -- ----------------------------
 -- Records of jsh_tenant
 -- ----------------------------
-INSERT INTO `jsh_tenant` VALUES ('13', '63', 'jsh', '20', '2000', null);
+INSERT INTO `jsh_tenant` VALUES ('13', '63', 'jsh', '20', '2000', '2021-02-17 23:19:17');
 INSERT INTO `jsh_tenant` VALUES ('14', '137', 'alibaba', '1000000', '100000000', '2021-02-17 23:19:17');
 INSERT INTO `jsh_tenant` VALUES ('15', '138', 'xiaomi', '1000000', '100000000', '2021-02-17 23:21:25');
 INSERT INTO `jsh_tenant` VALUES ('16', '139', 'tenxun', '1000000', '100000000', '2021-02-17 23:23:09');
