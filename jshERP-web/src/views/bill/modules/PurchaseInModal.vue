@@ -145,6 +145,7 @@
         addDefaultRowNum: 1,
         visible: false,
         operTimeStr: '',
+        prefixNo: 'CGRK',
         model: {},
         labelCol: {
           xs: { span: 24 },
@@ -210,7 +211,7 @@
       editAfter() {
         if (this.action === 'add') {
           let that = this
-          this.addInit("CGRK")
+          this.addInit(this.prefixNo)
         } else {
           this.model.operTime = this.model.operTimeStr
           this.model.debt = (this.model.discountLastMoney + this.model.otherMoney - this.model.changeAmount).toFixed(2)

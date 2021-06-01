@@ -149,6 +149,7 @@
         addDefaultRowNum: 1,
         visible: false,
         operTimeStr: '',
+        prefixNo: 'XSCK',
         model: {},
         labelCol: {
           xs: { span: 24 },
@@ -213,7 +214,7 @@
       //调用完edit()方法之后会自动调用此方法
       editAfter() {
         if (this.action === 'add') {
-          this.addInit("XSCK")
+          this.addInit(this.prefixNo)
           this.personList.value = ''
         } else {
           this.model.operTime = this.model.operTimeStr

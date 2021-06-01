@@ -122,6 +122,7 @@
         addDefaultRowNum: 1,
         visible: false,
         operTimeStr: '',
+        prefixNo: 'LSCK',
         model: {},
         labelCol: {
           xs: { span: 24 },
@@ -177,7 +178,7 @@
       //调用完edit()方法之后会自动调用此方法
       editAfter() {
         if (this.action === 'add') {
-          this.addInit("LSCK")
+          this.addInit(this.prefixNo)
           this.$nextTick(() => {
             this.form.setFieldsValue({'payType': '现付'})
           })
