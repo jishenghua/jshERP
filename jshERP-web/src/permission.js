@@ -47,9 +47,7 @@ router.beforeEach((to, from, next) => {
         })
       } else {
         if (to.path) {
-          if (window._hmt) {
-            window._hmt.push(['_trackPageview', '/#' + to.fullPath])
-          }
+          _hmt.push(['_trackPageview', '/#' + to.fullPath]);
         }
         next()
       }
@@ -64,6 +62,7 @@ router.beforeEach((to, from, next) => {
     }
   }
 })
+
 router.afterEach(() => {
   NProgress.done() // finish progress bar
 })

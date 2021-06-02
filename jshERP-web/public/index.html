@@ -241,6 +241,7 @@
   <script>
     window._CONFIG = {};
     window._CONFIG['domianURL'] = '/jshERP-boot';
+    let statisticsCode = '1cd9bcbaae133f03a6eb19da6579aaba'
     let sysTitle;
     let ajax = new XMLHttpRequest();
     let url = window._CONFIG['domianURL'] + '/platformConfig/getPlatformName'
@@ -254,8 +255,16 @@
     ajax.open('get', url, false);
     ajax.send(null);
     window.SYS_TITLE = sysTitle;
+    window._statistics = 'https://hm.baidu.com/hm.js?' + statisticsCode
     document.title = window.SYS_TITLE;
+    //statistics
     var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = window._statistics;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
   </script>
 </head>
 
@@ -271,14 +280,5 @@
     </div>
   </div>
 </div>
-<script>
-  var _hmt = _hmt || [];
-  (function() {
-    var hm = document.createElement("script");
-    hm.src = "https://hm.baidu.com/hm.js?7007d53664243dc0e53bcf92791a712d";
-    var s = document.getElementsByTagName("script")[0];
-    s.parentNode.insertBefore(hm, s);
-  })();
-</script>
 </body>
 </html>
