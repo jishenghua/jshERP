@@ -166,7 +166,6 @@ export const BillModalMixin = {
     //单元值改变一个字符就触发一次
     onValueChange(event) {
       let that = this
-      debugger
       const { type, row, column, value, target } = event
       let param,operNumber,unitPrice,taxUnitPrice,allPrice,taxRate,taxMoney,taxLastMoney
       switch(column.key) {

@@ -165,6 +165,7 @@
                     let moneyBeginNeedGet = beginNeedGet - 0; //期初应收
                     let moneyBeginNeedPay = beginNeedPay - 0; //期初应付
                     money = (money + moneyBeginNeedGet - moneyBeginNeedPay).toFixed(2);
+                    money = 0-money;
                     if(type === 'first') {
                       this.firstTotal = prefix + money + "，"
                     } else if(type === 'last') {
