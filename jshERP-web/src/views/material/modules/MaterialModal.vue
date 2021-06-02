@@ -1,7 +1,7 @@
 <template>
   <a-modal
     :title="title"
-    :width="1000"
+    :width="1200"
     :visible="visible"
     :confirmLoading="confirmLoading"
     @ok="handleOk"
@@ -188,53 +188,24 @@
           dataSource: [],
           columns: [
             {
-              title: '条码',
-              key: 'barCode',
-              width: '30%',
-              type: FormTypes.input,
-              defaultValue: '',
-              placeholder: '请输入${title}',
+              title: '条码', key: 'barCode', width: '30%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}',
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             {
-              title: '单位',
-              key: 'commodityUnit',
-              width: '12%',
-              type: FormTypes.input,
-              defaultValue: '',
-              placeholder: '请输入${title}'
+              title: '单位', key: 'commodityUnit', width: '12%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}',
+              validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             {
-              title: '采购价',
-              key: 'purchaseDecimal',
-              width: '12%',
-              type: FormTypes.input,
-              defaultValue: '',
-              placeholder: '请输入${title}'
+              title: '采购价', key: 'purchaseDecimal', width: '12%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}'
             },
             {
-              title: '零售价',
-              key: 'commodityDecimal',
-              width: '12%',
-              type: FormTypes.input,
-              defaultValue: '',
-              placeholder: '请输入${title}'
+              title: '零售价', key: 'commodityDecimal', width: '12%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}'
             },
             {
-              title: '销售价',
-              key: 'wholesaleDecimal',
-              width: '12%',
-              type: FormTypes.input,
-              defaultValue: '',
-              placeholder: '请输入${title}'
+              title: '销售价', key: 'wholesaleDecimal', width: '12%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}'
             },
             {
-              title: '最低售价',
-              key: 'lowDecimal',
-              width: '12%',
-              type: FormTypes.input,
-              defaultValue: '',
-              placeholder: '请输入${title}'
+              title: '最低售价', key: 'lowDecimal', width: '12%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}'
             }
           ]
         },
@@ -243,18 +214,10 @@
           dataSource: [],
           columns: [
             {
-              title: '仓库',
-              key: 'name',
-              width: '15%',
-              type: FormTypes.normal
+              title: '仓库', key: 'name', width: '15%', type: FormTypes.normal
             },
             {
-              title: '库存数量',
-              key: 'initStock',
-              width: '15%',
-              type: FormTypes.input,
-              defaultValue: '',
-              placeholder: '请输入${title}'
+              title: '库存数量', key: 'initStock', width: '15%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}'
             }
           ]
         },
@@ -266,6 +229,11 @@
               { required: true, message: '请输入名称!' },
               { min: 2, max: 30, message: '长度在 2 到 30 个字符', trigger: 'blur' },
               { validator: this.validateMaterialName}
+            ]
+          },
+          unit:{
+            rules: [
+              { required: true, message: '请输入单位!' }
             ]
           }
         },
@@ -368,11 +336,9 @@
         }).then(allValues => {
           let formData = this.classifyIntoFormData(allValues)
           formData.sortList = [];
-          if(this.unitChecked){
-            formData.unit = ''
-          } else {
-            formData.unitId = ''
-          }
+          if(formData.unit === undefined) {formData.unit = ''}
+          if(formData.unitId === undefined) {formData.unitId = ''}
+          if(this.unitChecked) {formData.unit = ''} else {formData.unitId = ''}
           // 发起请求
           return this.requestAddOrEdit(formData)
         }).catch(e => {
@@ -395,6 +361,14 @@
       },
       /** 发起新增或修改的请求 */
       requestAddOrEdit(formData) {
+        if(formData.unit === '' && formData.unitId === '') {
+          this.$message.warning('抱歉，单位为必填项！');
+          return;
+        }
+        if(formData.meList.length === 0) {
+          this.$message.warning('抱歉，请输入条码信息！');
+          return;
+        }
         let url = this.url.add, method = 'post'
         if (this.model.id) {
           url = this.url.edit
@@ -405,12 +379,13 @@
         httpAction(url, formData, method).then((res) => {
           if(res.code === 200){
             that.$emit('ok');
+            that.confirmLoading = false
+            that.close();
           }else{
             that.$message.warning(res.data.message);
+            that.confirmLoading = false
           }
         }).finally(() => {
-          that.confirmLoading = false
-          that.close();
         })
       },
       validateMaterialName(rule, value, callback){
