@@ -369,6 +369,52 @@
           this.$message.warning('抱歉，请输入条码信息！');
           return;
         }
+        //进一步校验单位
+        debugger
+        let manyUnitselected = ''
+        if(formData.unitId) {
+          for(let i=0; i<this.unitList.length; i++) {
+            if(this.unitList[i].id == formData.unitId) {
+              manyUnitselected = this.unitList[i].name
+            }
+          }
+        }
+        let manyUnitInfo = manyUnitselected.substring(0, manyUnitselected.indexOf("("));
+        let unitArr = manyUnitInfo.split(",");
+        if(!formData.unit) {
+          //此时为多单位
+          if (formData.meList.length<2){
+            this.$message.warning('多单位的商品条码行数至少要有两行，请再新增一行条码信息！');
+            return;
+          }
+          if(formData.meList[0].commodityUnit != unitArr[0]) {
+            this.$message.warning('条码之后的单位填写有误，单位【' + formData.meList[0].commodityUnit
+              + '】请修改为【' + unitArr[0] + '】！');
+            return;
+          }
+          if(formData.meList[1].commodityUnit != unitArr[1]) {
+            this.$message.warning('条码之后的单位填写有误，单位【' + formData.meList[1].commodityUnit
+              + '】请修改为【' + unitArr[1] + '】！');
+            return;
+          }
+        }
+        for(let i=0; i<formData.meList.length; i++) {
+          let commodityUnit = formData.meList[i].commodityUnit;
+          if(formData.unit) {
+            if(commodityUnit != formData.unit) {
+              this.$message.warning('条码之后的单位填写有误，单位【' + commodityUnit + '】请修改为【'
+                + formData.unit + '】！');
+              return;
+            }
+          } else if(manyUnitselected) {
+            if(commodityUnit != unitArr[0] && commodityUnit != unitArr[1]) {
+              this.$message.warning('条码之后的单位填写有误，单位【' + commodityUnit + '】请修改为【'
+                 + unitArr[0]+ '】或【' + unitArr[1]+ '】！');
+              return;
+            }
+          }
+        }
+        //接口调用
         let url = this.url.add, method = 'post'
         if (this.model.id) {
           url = this.url.edit
