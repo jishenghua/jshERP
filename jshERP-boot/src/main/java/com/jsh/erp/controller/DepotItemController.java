@@ -395,6 +395,9 @@ public class DepotItemController {
                     Long mId = diEx.getMId();
                     BigDecimal thisSum = depotItemService.getStockByParam(depotId,mId,null,endTime,tenantId);
                     BigDecimal unitPrice = diEx.getPurchaseDecimal();
+                    if(unitPrice == null) {
+                        unitPrice = BigDecimal.ZERO;
+                    }
                     thisAllPrice = thisAllPrice.add(thisSum.multiply(unitPrice));
                 }
             }
