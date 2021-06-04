@@ -185,10 +185,6 @@
           this.pleaseSelect = ''
         }
       },
-      searchQuery() {
-        this.loadData(1);
-        this.initStatistics();
-      },
       myHandleDetail(record) {
         findBillDetailByNumber({ number: record.number }).then((res) => {
           if (res && res.code === 200) {
@@ -201,6 +197,7 @@
           this.$message.warning('请选择单据日期！')
         } else {
           this.loadData(1);
+          this.initStatistics();
         }
       }
     }
