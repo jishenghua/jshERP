@@ -108,6 +108,13 @@
       onChange: function (value, dateString) {
         console.log(dateString);
         this.queryParam.monthTime=dateString;
+      },
+      searchQuery() {
+        if(this.queryParam.monthTime == ''){
+          this.$message.warning('请选择月份！')
+        } else {
+          this.loadData(1);
+        }
       }
     }
   }
