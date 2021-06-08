@@ -213,7 +213,7 @@
         and dh.type='${type}' and dh.sub_type='${subType}'
         and di.material_id =${MId}
         and dh.oper_time &gt;= '${MonthTime}-01 00:00:00'
-        and dh.oper_time &lt;= '${MonthTime}-31 23:59:59'
+        and dh.oper_time &lt; DATE_ADD(STR_TO_DATE('${MonthTime}','%Y-%m'),INTERVAL 1 MONTH )
         and ifnull(dh.delete_flag,'0') !='1'
         and ifnull(di.delete_flag,'0') !='1'
     </select>
@@ -224,7 +224,7 @@
         and dh.type='${type}' and dh.sub_type='${subType}'
         and di.material_id =${MId}
         and dh.oper_time &gt;= '${MonthTime}-01 00:00:00'
-        and dh.oper_time &lt;= '${MonthTime}-31 23:59:59'
+        and dh.oper_time &lt; DATE_ADD(STR_TO_DATE('${MonthTime}','%Y-%m'),INTERVAL 1 MONTH )
         and ifnull(dh.delete_flag,'0') !='1'
         and ifnull(di.delete_flag,'0') !='1'
     </select>
@@ -234,7 +234,7 @@
         where 1=1
         and dh.type='${type}' and dh.sub_type='${subType}'
         and dh.oper_time &gt;= '${MonthTime}-01 00:00:00'
-        and dh.oper_time &lt;= '${MonthTime}-31 23:59:59'
+        and dh.oper_time &lt; DATE_ADD(STR_TO_DATE('${MonthTime}','%Y-%m'),INTERVAL 1 MONTH )
         and ifnull(dh.delete_flag,'0') !='1'
     </select>
 
