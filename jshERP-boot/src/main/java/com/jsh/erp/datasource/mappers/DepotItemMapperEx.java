@@ -53,20 +53,23 @@ public interface DepotItemMapperEx {
             @Param("type") String type,
             @Param("subType") String subType,
             @Param("MId") Long MId,
-            @Param("MonthTime") String MonthTime,
+            @Param("beginTime") String beginTime,
+            @Param("endTime") String endTime,
             @Param("sumType") String sumType);
 
     BigDecimal buyOrSalePrice(
             @Param("type") String type,
             @Param("subType") String subType,
             @Param("MId") Long MId,
-            @Param("MonthTime") String MonthTime,
+            @Param("beginTime") String beginTime,
+            @Param("endTime") String endTime,
             @Param("sumType") String sumType);
 
     BigDecimal inOrOutPrice(
             @Param("type") String type,
             @Param("subType") String subType,
-            @Param("MonthTime") String MonthTime);
+            @Param("beginTime") String beginTime,
+            @Param("endTime") String endTime);
 
     BigDecimal getStockCheckSum(
             @Param("depotId") Long depotId,

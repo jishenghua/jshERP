@@ -18,6 +18,7 @@ import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.QueryUtils;
 import com.jsh.erp.utils.StringUtil;
+import com.jsh.erp.utils.Tools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -259,13 +260,15 @@ public class DepotItemService {
         return result;
     }
 
-    public BigDecimal buyOrSale(String type, String subType, Long MId, String MonthTime, String sumType) throws Exception{
+    public BigDecimal buyOrSale(String type, String subType, Long MId, String monthTime, String sumType) throws Exception{
         BigDecimal result= BigDecimal.ZERO;
         try{
+            String beginTime = monthTime + "-01 00:00:00";
+            String endTime = Tools.lastDayOfMonth(monthTime) +" 23:59:59";
             if (SUM_TYPE.equals(sumType)) {
-                result= depotItemMapperEx.buyOrSaleNumber(type, subType, MId, MonthTime, sumType);
+                result= depotItemMapperEx.buyOrSaleNumber(type, subType, MId, beginTime, endTime, sumType);
             } else {
-                result= depotItemMapperEx.buyOrSalePrice(type, subType, MId, MonthTime, sumType);
+                result= depotItemMapperEx.buyOrSalePrice(type, subType, MId, beginTime, endTime, sumType);
             }
         }catch(Exception e){
             JshException.readFail(logger, e);
@@ -278,14 +281,16 @@ public class DepotItemService {
      * 统计采购或销售的总金额
      * @param type
      * @param subType
-     * @param MonthTime
+     * @param month
      * @return
      * @throws Exception
      */
-    public BigDecimal inOrOutPrice(String type, String subType, String MonthTime) throws Exception{
+    public BigDecimal inOrOutPrice(String type, String subType, String month) throws Exception{
         BigDecimal result= BigDecimal.ZERO;
         try{
-            result = depotItemMapperEx.inOrOutPrice(type, subType, MonthTime);
+            String beginTime = month + "-01 00:00:00";
+            String endTime = Tools.lastDayOfMonth(month) +" 23:59:59";
+            result = depotItemMapperEx.inOrOutPrice(type, subType, beginTime, endTime);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
