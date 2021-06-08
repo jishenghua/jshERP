@@ -18,6 +18,7 @@ import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.QueryUtils;
 import com.jsh.erp.utils.StringUtil;
+import com.jsh.erp.utils.Tools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -259,13 +260,15 @@ public class DepotItemService {
         return result;
     }
 
-    public BigDecimal buyOrSale(String type, String subType, Long MId, String MonthTime, String sumType) throws Exception{
+    public BigDecimal buyOrSale(String type, String subType, Long MId, String monthTime, String sumType) throws Exception{
         BigDecimal result= BigDecimal.ZERO;
         try{
+            String beginTime = monthTime + "-01 00:00:00";
+            String endTime = Tools.lastDayOfMonth(monthTime) +" 23:59:59";
             if (SUM_TYPE.equals(sumType)) {
-                result= depotItemMapperEx.buyOrSaleNumber(type, subType, MId, MonthTime, sumType);
+                result= depotItemMapperEx.buyOrSaleNumber(type, subType, MId, beginTime, endTime, sumType);
             } else {
-                result= depotItemMapperEx.buyOrSalePrice(type, subType, MId, MonthTime, sumType);
+                result= depotItemMapperEx.buyOrSalePrice(type, subType, MId, beginTime, endTime, sumType);
             }
         }catch(Exception e){
             JshException.readFail(logger, e);
@@ -278,14 +281,16 @@ public class DepotItemService {
      * 统计采购或销售的总金额
      * @param type
      * @param subType
-     * @param MonthTime
+     * @param month
      * @return
      * @throws Exception
      */
-    public BigDecimal inOrOutPrice(String type, String subType, String MonthTime) throws Exception{
+    public BigDecimal inOrOutPrice(String type, String subType, String month) throws Exception{
         BigDecimal result= BigDecimal.ZERO;
         try{
-            result = depotItemMapperEx.inOrOutPrice(type, subType, MonthTime);
+            String beginTime = month + "-01 00:00:00";
+            String endTime = Tools.lastDayOfMonth(month) +" 23:59:59";
+            result = depotItemMapperEx.inOrOutPrice(type, subType, beginTime, endTime);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -316,7 +321,7 @@ public class DepotItemService {
         //删除单据的明细
         deleteDepotItemHeadId(headerId);
         JSONArray rowArr = JSONArray.parseArray(rows);
-        if (null != rowArr) {
+        if (null != rowArr && rowArr.size()>0) {
             for (int i = 0; i < rowArr.size(); i++) {
                 DepotItem depotItem = new DepotItem();
                 JSONObject rowObj = JSONObject.parseObject(rowArr.getString(i));
@@ -411,6 +416,9 @@ public class DepotItemService {
                 //更新当前库存
                 updateCurrentStock(depotItem,tenantId);
             }
+        } else {
+            throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_ROW_FAILED_CODE,
+                    String.format(ExceptionConstants.DEPOT_HEAD_ROW_FAILED_MSG));
         }
     }
 

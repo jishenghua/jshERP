@@ -3,12 +3,14 @@ package com.jsh.erp.service.accountItem;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
+import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.AccountItem;
 import com.jsh.erp.datasource.entities.AccountItemExample;
 import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.mappers.AccountItemMapper;
 import com.jsh.erp.datasource.mappers.AccountItemMapperEx;
 import com.jsh.erp.datasource.vo.AccountItemVo4List;
+import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
@@ -186,7 +188,7 @@ public class AccountItemService {
         //删除单据的明细
         deleteAccountItemHeadId(headerId);
         JSONArray rowArr = JSONArray.parseArray(rows);
-        if (null != rowArr) {
+        if (null != rowArr && rowArr.size()>0) {
             for (int i = 0; i < rowArr.size(); i++) {
                 AccountItem accountItem = new AccountItem();
                 JSONObject tempInsertedJson = JSONObject.parseObject(rowArr.getString(i));
@@ -209,6 +211,9 @@ public class AccountItemService {
                 accountItem.setRemark(tempInsertedJson.getString("remark"));
                 this.insertAccountItemWithObj(accountItem);
             }
+        } else {
+            throw new BusinessRunTimeException(ExceptionConstants.ACCOUNT_HEAD_ROW_FAILED_CODE,
+                    String.format(ExceptionConstants.ACCOUNT_HEAD_ROW_FAILED_MSG));
         }
     }
 

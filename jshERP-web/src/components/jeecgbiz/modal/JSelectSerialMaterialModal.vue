@@ -39,6 +39,7 @@
             :pagination="ipagination"
             :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange,type: getType}"
             :loading="loading"
+            :customRow="rowAction"
             @change="handleTableChange">
           </a-table>
         </div>
@@ -223,6 +224,23 @@
       },
       modalFormOk() {
         this.loadData();
+      },
+      rowAction(record, index) {
+        return {
+          on: {
+            click: () => {
+              let arr = []
+              arr.push(record.id)
+              this.selectedRowKeys = arr
+            },
+            dblclick: () => {
+              let arr = []
+              arr.push(record.id)
+              this.selectedRowKeys = arr
+              this.handleSubmit()
+            }
+          }
+        }
       }
     }
   }

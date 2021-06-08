@@ -127,6 +127,7 @@
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
   import { getMpListShort } from "@/utils/util"
+  import { getAction } from '@/api/manage'
   import JSelectMultiple from '@/components/jeecg/JSelectMultiple'
   import JDate from '@/components/jeecg/JDate'
   import Vue from 'vue'
@@ -148,6 +149,7 @@
         addDefaultRowNum: 1,
         visible: false,
         operTimeStr: '',
+        prefixNo: 'XSCK',
         model: {},
         labelCol: {
           xs: { span: 24 },
@@ -212,7 +214,7 @@
       //调用完edit()方法之后会自动调用此方法
       editAfter() {
         if (this.action === 'add') {
-          this.addInit("XSCK")
+          this.addInit(this.prefixNo)
           this.personList.value = ''
         } else {
           this.model.operTime = this.model.operTimeStr
@@ -227,7 +229,7 @@
           }
           this.personList.value = this.model.salesMan
           this.$nextTick(() => {
-            this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'number', 'remark',
+            this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'number', 'linkNumber', 'remark',
               'discount','discountMoney','discountLastMoney','otherMoney','accountId','changeAmount','debt','salesMan'))
           });
           // 加载子表数据
@@ -293,8 +295,28 @@
             headerId: record.id,
             mpList: getMpListShort(Vue.ls.get('materialPropertyList'))  //扩展属性
           }
-          this.requestSubTableData(this.url.detailList, params, this.materialTable);
+          this.requestSubTableDataEx(this.url.detailList, params, this.materialTable);
         }
+      },
+      /** 查询某个tab的数据,给明细里面的价税合计赋值 */
+      requestSubTableDataEx(url, params, tab, success) {
+        tab.loading = true
+        getAction(url, params).then(res => {
+          if(res && res.code === 200){
+            let list = res.data.rows
+            let listEx = []
+            for(let j=0; j<list.length; j++){
+              let info = list[j];
+              info.taxMoney = 0
+              info.taxLastMoney = info.allPrice
+              listEx.push(info)
+            }
+            tab.dataSource = listEx
+            typeof success === 'function' ? success(res) : ''
+          }
+        }).finally(() => {
+          tab.loading = false
+        })
       }
     }
   }

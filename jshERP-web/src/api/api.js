@@ -6,6 +6,10 @@ import {UI_CACHE_DB_DICT_DATA } from "@/store/mutation-types"
 const getBuyAndSaleStatistics = (params)=>getAction("/depotHead/getBuyAndSaleStatistics",params);
 const buyOrSalePrice = (params)=>getAction("/depotItem/buyOrSalePrice",params);
 
+//租户管理
+const checkTenant = (params)=>getAction("/tenant/checkIsNameExist",params);
+const editTenant = (params)=>putAction("/tenant/update",params);
+
 //角色管理
 const addRole = (params)=>postAction("/role/add",params);
 const editRole = (params)=>putAction("/role/update",params);
@@ -14,6 +18,7 @@ const findUserRole = (params)=>getAction("/role/findUserRole",params);
 const queryall = (params)=>getAction("/sys/role/queryall",params);
 
 //用户管理
+const registerUser = (params)=>postAction("/user/registerUser",params);
 const addUser = (params)=>postAction("/user/addUser",params);
 const editUser = (params)=>putAction("/user/updateUser",params);
 const getUserList = (params)=>getAction("/user/getUserList",params);
@@ -165,10 +170,13 @@ const findFinancialDetailByNumber = (params)=>getAction("/accountHead/getDetailB
 export {
   getBuyAndSaleStatistics,
   buyOrSalePrice,
+  checkTenant,
+  editTenant,
   addRole,
   editRole,
   checkRole,
   findUserRole,
+  registerUser,
   addUser,
   editUser,
   getUserList,

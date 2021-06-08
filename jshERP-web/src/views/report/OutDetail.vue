@@ -183,6 +183,13 @@
             this.handleDetail(res.data, record.newType);
           }
         })
+      },
+      searchQuery() {
+        if(this.queryParam.beginTime == '' || this.queryParam.endTime == ''){
+          this.$message.warning('请选择单据日期！')
+        } else {
+          this.loadData(1);
+        }
       }
     }
   }

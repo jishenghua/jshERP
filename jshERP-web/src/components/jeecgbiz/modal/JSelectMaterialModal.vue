@@ -55,6 +55,7 @@
             :pagination="ipagination"
             :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange,type: getType}"
             :loading="loading"
+            :customRow="rowAction"
             @change="handleTableChange">
           </a-table>
         </div>
@@ -108,8 +109,8 @@
         title: '选择商品',
         ipagination: {
           current: 1,
-          pageSize: 5,
-          pageSizeOptions: ['5', '10', '20', '30'],
+          pageSize: 10,
+          pageSizeOptions: ['10', '20', '30'],
           showTotal: (total, range) => {
             return range[0] + '-' + range[1] + ' 共' + total + '条'
           },
@@ -275,6 +276,23 @@
       },
       modalFormOk() {
         this.loadData();
+      },
+      rowAction(record, index) {
+        return {
+          on: {
+            click: () => {
+              let arr = []
+              arr.push(record.id)
+              this.selectedRowKeys = arr
+            },
+            dblclick: () => {
+              let arr = []
+              arr.push(record.id)
+              this.selectedRowKeys = arr
+              this.handleSubmit()
+            }
+          }
+        }
       }
     }
   }

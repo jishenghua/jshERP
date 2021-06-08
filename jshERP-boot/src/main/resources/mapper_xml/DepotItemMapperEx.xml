@@ -212,8 +212,8 @@
         where di.header_id = dh.id
         and dh.type='${type}' and dh.sub_type='${subType}'
         and di.material_id =${MId}
-        and dh.oper_time &gt;= '${MonthTime}-01 00:00:00'
-        and dh.oper_time &lt;= '${MonthTime}-31 23:59:59'
+        and dh.oper_time &gt;= #{beginTime}
+        and dh.oper_time &lt;= #{endTime}
         and ifnull(dh.delete_flag,'0') !='1'
         and ifnull(di.delete_flag,'0') !='1'
     </select>
@@ -223,8 +223,8 @@
         where di.header_id = dh.id
         and dh.type='${type}' and dh.sub_type='${subType}'
         and di.material_id =${MId}
-        and dh.oper_time &gt;= '${MonthTime}-01 00:00:00'
-        and dh.oper_time &lt;= '${MonthTime}-31 23:59:59'
+        and dh.oper_time &gt;= #{beginTime}
+        and dh.oper_time &lt;= #{endTime}
         and ifnull(dh.delete_flag,'0') !='1'
         and ifnull(di.delete_flag,'0') !='1'
     </select>
@@ -233,8 +233,8 @@
         select ifnull(sum(discount_last_money),0) as allMoney from jsh_depot_head dh
         where 1=1
         and dh.type='${type}' and dh.sub_type='${subType}'
-        and dh.oper_time &gt;= '${MonthTime}-01 00:00:00'
-        and dh.oper_time &lt;= '${MonthTime}-31 23:59:59'
+        and dh.oper_time &gt;= #{beginTime}
+        and dh.oper_time &lt;= #{endTime}
         and ifnull(dh.delete_flag,'0') !='1'
     </select>
 

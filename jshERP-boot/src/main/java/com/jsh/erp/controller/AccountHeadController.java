@@ -76,6 +76,7 @@ public class AccountHeadController {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
             JSONObject outer = new JSONObject();
+            endTime = endTime + " 23:59:59";
             BigDecimal sum = accountHeadService.findTotalPay(supplierId, endTime, supType);
             outer.put("getAllMoney", sum);
             map.put("rows", outer);

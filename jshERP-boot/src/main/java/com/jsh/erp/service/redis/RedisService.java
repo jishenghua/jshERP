@@ -95,4 +95,12 @@ public class RedisService {
             }
         }
     }
+
+    public Long getTenantId(HttpServletRequest request) {
+        if(getObjectFromSessionByKey(request,"tenantId")!=null) {
+            return Long.parseLong(getObjectFromSessionByKey(request, "tenantId").toString());
+        } else {
+            return null;
+        }
+    }
 }

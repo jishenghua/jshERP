@@ -7,7 +7,6 @@
           <a-col :md="4" :sm="24">
             <a-form-item label="仓库">
               <a-select
-                :allowClear="true"
                 style="width: 100%"
                 placeholder="请选择仓库"
                 v-model="queryParam.depotId">
@@ -156,13 +155,17 @@
           }
         })
       },
-      searchQuery() {
-        this.loadData(1);
-        this.getTotalCountMoney();
-      },
       onChange: function (value, dateString) {
         console.log(dateString);
         this.queryParam.monthTime=dateString;
+      },
+      searchQuery() {
+        if(this.queryParam.monthTime == ''){
+          this.$message.warning('请选择月份！')
+        } else {
+          this.loadData(1);
+          this.getTotalCountMoney();
+        }
       }
     }
   }

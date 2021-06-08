@@ -151,12 +151,11 @@
             key:'rowIndex',
             width:40,
             align:"center",
-            fixed: 'left',
             customRender:function (t,r,index) {
               return parseInt(index)+1;
             }
           },
-          {title: '条码', dataIndex: 'mBarCode', width: 120,fixed: 'left'},
+          {title: '条码', dataIndex: 'mBarCode', width: 120},
           {title: '名称', dataIndex: 'name', width: 120},
           {title: '规格', dataIndex: 'standard', width: 80},
           {title: '型号', dataIndex: 'model', width: 80},
@@ -188,7 +187,7 @@
             title: '操作',
             dataIndex: 'action',
             align:"center",
-            width: 100,
+            width: 120,
             fixed: 'right',
             scopedSlots: { customRender: 'action' },
           }
@@ -226,6 +225,14 @@
             }
           }
         })
+      },
+      handleEdit: function (record) {
+        this.$refs.modalForm.edit(record);
+        this.$refs.modalForm.title = "编辑";
+        this.$refs.modalForm.disableSubmit = false;
+        if(this.btnEnableList.indexOf(1)===-1) {
+          this.$refs.modalForm.isReadOnly = true
+        }
       }
     }
   }

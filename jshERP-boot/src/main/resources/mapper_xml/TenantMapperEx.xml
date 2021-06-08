@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jsh.erp.datasource.mappers.TenantMapperEx">
-    <select id="selectByConditionTenant" parameterType="com.jsh.erp.datasource.entities.TenantExample" resultMap="com.jsh.erp.datasource.mappers.TenantMapper.BaseResultMap">
+
+    <resultMap extends="com.jsh.erp.datasource.mappers.LogMapper.BaseResultMap" id="ResultMapEx" type="com.jsh.erp.datasource.entities.TenantEx">
+    </resultMap>
+
+    <select id="selectByConditionTenant" parameterType="com.jsh.erp.datasource.entities.TenantExample" resultMap="ResultMapEx">
         select *
         FROM jsh_tenant
         where 1=1
         <if test="loginName != null">
             and login_name like '%${loginName}%'
         </if>
+        order by id desc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
         </if>

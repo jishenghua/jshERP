@@ -165,6 +165,7 @@
                     let moneyBeginNeedGet = beginNeedGet - 0; //期初应收
                     let moneyBeginNeedPay = beginNeedPay - 0; //期初应付
                     money = (money + moneyBeginNeedGet - moneyBeginNeedPay).toFixed(2);
+                    money = 0-money;
                     if(type === 'first') {
                       this.firstTotal = prefix + money + "，"
                     } else if(type === 'last') {
@@ -184,16 +185,20 @@
           this.pleaseSelect = ''
         }
       },
-      searchQuery() {
-        this.loadData(1);
-        this.initStatistics();
-      },
       myHandleDetail(record) {
         findBillDetailByNumber({ number: record.number }).then((res) => {
           if (res && res.code === 200) {
             this.handleDetail(res.data, record.type);
           }
         })
+      },
+      searchQuery() {
+        if(this.queryParam.beginTime == '' || this.queryParam.endTime == ''){
+          this.$message.warning('请选择单据日期！')
+        } else {
+          this.loadData(1);
+          this.initStatistics();
+        }
       }
     }
   }

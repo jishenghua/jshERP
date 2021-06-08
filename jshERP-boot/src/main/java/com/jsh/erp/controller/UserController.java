@@ -144,7 +144,9 @@ public class UserController {
                 data.put("token", token);
                 data.put("user", user);
                 //用户的按钮权限
-                data.put("userBtn", btnStrArr);
+                if(!"admin".equals(user.getLoginName())){
+                    data.put("userBtn", btnStrArr);
+                }
                 data.put("roleType", roleType);
             }
             res.code = 200;

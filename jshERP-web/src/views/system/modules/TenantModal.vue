@@ -1,33 +1,25 @@
 <template>
   <a-modal
     :title="title"
-    :width="800"
+    :width="600"
     :visible="visible"
     :confirmLoading="confirmLoading"
     @ok="handleOk"
     @cancel="handleCancel"
     cancelText="关闭"
     wrapClassName="ant-modal-cust-warp"
-    style="top:20%;height: 70%;overflow-y: hidden">
-    <template slot="footer">
-      <a-button key="back" v-if="isReadOnly" @click="handleCancel">
-        关闭
-      </a-button>
-    </template>
+    style="top:15%;height: 70%;overflow-y: hidden">
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
-        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="基本单位">
-          <a-input placeholder="请输入基本单位(小单位)" v-decorator.trim="[ 'basicUnit', validatorRules.basicUnit]" />
+        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="登录名称">
+          <a-input placeholder="请输入登录名称" v-decorator.trim="[ 'loginName', validatorRules.loginName]" :readOnly="!!model.id"
+                   suffix="初始密码：123456" />
         </a-form-item>
-      </a-form>
-      <a-form :form="form">
-        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="副单位">
-          <a-input placeholder="请输入副单位(大单位)" v-decorator.trim="[ 'otherUnit', validatorRules.otherUnit]" />
+        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="用户数量限制">
+          <a-input-number style="width:50%" placeholder="请输入用户数量限制" v-decorator.trim="[ 'userNumLimit' ]" />
         </a-form-item>
-      </a-form>
-      <a-form :form="form">
-        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="比例">
-          <a-input addon-before="基本单位 : 副单位=1 :" placeholder="请输入比例" v-decorator.trim="[ 'ratio', validatorRules.ratio]" />
+        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据数量限制">
+          <a-input-number style="width:50%" placeholder="请输入单据数量限制" v-decorator.trim="[ 'billsNumLimit' ]" />
         </a-form-item>
       </a-form>
     </a-spin>
@@ -35,15 +27,14 @@
 </template>
 <script>
   import pick from 'lodash.pick'
-  import {addUnit,editUnit,checkUnit } from '@/api/api'
+  import {registerUser,editTenant,checkTenant } from '@/api/api'
   export default {
-    name: "UnitModal",
+    name: "TenantModal",
     data () {
       return {
         title:"操作",
         visible: false,
         model: {},
-        isReadOnly: false,
         labelCol: {
           xs: { span: 24 },
           sm: { span: 5 },
@@ -55,20 +46,13 @@
         confirmLoading: false,
         form: this.$form.createForm(this),
         validatorRules:{
-          basicUnit:{
+          loginName:{
             rules: [
-              { required: true, message: '请输入基本单位!' },
-              { min: 1, max: 10, message: '长度在 1 到 10 个字符', trigger: 'blur' }
-            ]},
-          otherUnit:{
-            rules: [
-              { required: true, message: '请输入副单位!' },
-              { min: 1, max: 10, message: '长度在 1 到 10 个字符', trigger: 'blur' }
-            ]},
-          ratio:{
-            rules: [
-              { required: true, message: '请输入比例!' }
-            ]}
+              { required: true, message: '请输入登录名称!' },
+              { min: 2, max: 30, message: '长度在 2 到 30 个字符', trigger: 'blur' },
+              { validator: this.validateLoginName}
+            ]
+          }
         },
       }
     },
@@ -83,7 +67,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'basicUnit','otherUnit','ratio'))
+          this.form.setFieldsValue(pick(this.model,'loginName', 'userNumLimit', 'billsNumLimit'))
         });
       },
       close () {
@@ -99,9 +83,10 @@
             let formData = Object.assign(this.model, values);
             let obj;
             if(!this.model.id){
-              obj=addUnit(formData);
+              formData.password = '123456'
+              obj=registerUser(formData);
             }else{
-              obj=editUnit(formData);
+              obj=editTenant(formData);
             }
             obj.then((res)=>{
               if(res.code === 200){
@@ -118,6 +103,23 @@
       },
       handleCancel () {
         this.close()
+      },
+      validateLoginName(rule, value, callback){
+        let params = {
+          name: value,
+          id: this.model.id?this.model.id:0
+        };
+        checkTenant(params).then((res)=>{
+          if(res && res.code===200) {
+            if(!res.data.status){
+              callback();
+            } else {
+              callback("登录名称已经存在");
+            }
+          } else {
+            callback(res.data);
+          }
+        });
       }
     }
   }

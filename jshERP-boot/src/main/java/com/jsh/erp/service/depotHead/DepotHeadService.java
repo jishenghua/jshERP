@@ -252,7 +252,7 @@ public class DepotHeadService {
                 //更新当前库存
                 List<DepotItem> list = depotItemService.getListByHeaderId(id);
                 for(DepotItem depotItem: list){
-                    Long tenantId = Long.parseLong(redisService.getObjectFromSessionByKey(request,"tenantId").toString());
+                    Long tenantId = redisService.getTenantId(request);
                     depotItemService.updateCurrentStock(depotItem,tenantId);
                 }
             }catch(Exception e){
@@ -531,6 +531,15 @@ public class DepotHeadService {
                                       HttpServletRequest request) throws Exception {
         /**处理单据主表数据*/
         DepotHead depotHead = JSONObject.parseObject(beanJson, DepotHead.class);
+        String subType = depotHead.getSubType();
+        if("零售".equals(subType) || "零售退货".equals(subType)
+                || "采购".equals(subType) || "采购退货".equals(subType)
+                || "销售".equals(subType) || "销售退货".equals(subType)) {
+            if (StringUtil.isEmpty(depotHead.getAccountIdList()) && depotHead.getAccountId() == null) {
+                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_ACCOUNT_FAILED_CODE,
+                        String.format(ExceptionConstants.DEPOT_HEAD_ACCOUNT_FAILED_MSG));
+            }
+        }
         //判断用户是否已经登录过，登录过不再处理
         User userInfo=userService.getCurrentUser();
         depotHead.setCreator(userInfo==null?null:userInfo.getId());
@@ -594,6 +603,15 @@ public class DepotHeadService {
                                          BigDecimal preTotalPrice, Long tenantId,HttpServletRequest request)throws Exception {
         /**更新单据主表信息*/
         DepotHead depotHead = JSONObject.parseObject(beanJson, DepotHead.class);
+        String subType = depotHead.getSubType();
+        if("零售".equals(subType) || "零售退货".equals(subType)
+                || "采购".equals(subType) || "采购退货".equals(subType)
+                || "销售".equals(subType) || "销售退货".equals(subType)) {
+            if (StringUtil.isEmpty(depotHead.getAccountIdList()) && depotHead.getAccountId() == null) {
+                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_ACCOUNT_FAILED_CODE,
+                        String.format(ExceptionConstants.DEPOT_HEAD_ACCOUNT_FAILED_MSG));
+            }
+        }
         if(StringUtil.isNotEmpty(depotHead.getAccountIdList())){
             depotHead.setAccountIdList(depotHead.getAccountIdList().replace("[", "").replace("]", "").replaceAll("\"", ""));
         }

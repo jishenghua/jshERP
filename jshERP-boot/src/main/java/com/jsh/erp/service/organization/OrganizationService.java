@@ -275,7 +275,7 @@ public class OrganizationService {
      * @return
      */
     public List<Long> getOrgIdByParentId(Long orgId) {
-        List<Long> idList = new ArrayList<Long>();
+        List<Long> idList = new ArrayList<>();
         OrganizationExample example = new OrganizationExample();
         example.createCriteria().andIdEqualTo(orgId).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<Organization> orgList = organizationMapper.selectByExample(example);
@@ -292,9 +292,8 @@ public class OrganizationService {
      * @return
      */
     public void getOrgIdByParentNo(List<Long> idList,Long id) {
-        List<Long> list = new ArrayList<Long>();
         OrganizationExample example = new OrganizationExample();
-        example.createCriteria().andParentIdNotEqualTo(id).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        example.createCriteria().andParentIdEqualTo(id).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<Organization> orgList = organizationMapper.selectByExample(example);
         if(orgList!=null && orgList.size()>0) {
             for(Organization o: orgList) {

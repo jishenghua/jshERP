@@ -143,6 +143,8 @@ public class DepotHeadController {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
             List<DepotHeadVo4InOutMCount> resList = new ArrayList<>();
+            beginTime = beginTime + " 00:00:00";
+            endTime = endTime + " 23:59:59";
             List<DepotHeadVo4InOutMCount> list = depotHeadService.findInOutMaterialCount(beginTime, endTime, type, materialParam, depotId, oId, (currentPage-1)*pageSize, pageSize);
             int total = depotHeadService.findInOutMaterialCountTotal(beginTime, endTime, type, materialParam, depotId, oId);
             map.put("total", total);
@@ -191,6 +193,8 @@ public class DepotHeadController {
             } else if (supType.equals("供应商")) { //供应商
                 j = -1;
             }
+            beginTime = beginTime + " 00:00:00";
+            endTime = endTime + " 23:59:59";
             List<DepotHeadVo4StatementAccount> resList = new ArrayList<DepotHeadVo4StatementAccount>();
             List<DepotHeadVo4StatementAccount> list = depotHeadService.findStatementAccount(beginTime, endTime, organId, supType, (currentPage-1)*pageSize, pageSize);
             int total = depotHeadService.findStatementAccountCount(beginTime, endTime, organId, supType);
@@ -273,6 +277,7 @@ public class DepotHeadController {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
             JSONObject outer = new JSONObject();
+            endTime = endTime + " 23:59:59";
             BigDecimal sum = depotHeadService.findTotalPay(supplierId, endTime, supType);
             outer.put("getAllMoney", sum);
             map.put("rows", outer);
@@ -325,7 +330,7 @@ public class DepotHeadController {
         String beanJson = body.getInfo();
         String rows = body.getRows();
         Long billsNumLimit = Long.parseLong(redisService.getObjectFromSessionByKey(request,"billsNumLimit").toString());
-        Long tenantId = Long.parseLong(redisService.getObjectFromSessionByKey(request,"tenantId").toString());
+        Long tenantId = redisService.getTenantId(request);
         Long count = depotHeadService.countDepotHead(null,null,null,null,null,null,null,null);
         if(count>= billsNumLimit) {
             throw new BusinessParamCheckingException(ExceptionConstants.DEPOT_HEAD_OVER_LIMIT_FAILED_CODE,
@@ -345,7 +350,7 @@ public class DepotHeadController {
      */
     @PutMapping(value = "/updateDepotHeadAndDetail")
     public Object updateDepotHeadAndDetail(@RequestBody DepotHeadVo4Body body, HttpServletRequest request) throws Exception{
-        Long tenantId = Long.parseLong(redisService.getObjectFromSessionByKey(request,"tenantId").toString());
+        Long tenantId = redisService.getTenantId(request);
         JSONObject result = ExceptionConstants.standardSuccess();
         String beanJson = body.getInfo();
         String rows = body.getRows();

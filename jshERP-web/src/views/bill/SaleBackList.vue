@@ -103,6 +103,14 @@
           subType: "销售退货",
           roleType: Vue.ls.get('roleType')
         },
+        labelCol: {
+          xs: { span: 24 },
+          sm: { span: 8 },
+        },
+        wrapperCol: {
+          xs: { span: 24 },
+          sm: { span: 16 },
+        },
         // 表头
         columns: [
           {

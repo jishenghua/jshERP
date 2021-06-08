@@ -120,7 +120,7 @@ public class DepotItemController {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
             BigDecimal stock = BigDecimal.ZERO;
-            Long tenantId = Long.parseLong(redisService.getObjectFromSessionByKey(request,"tenantId").toString());
+            Long tenantId = redisService.getTenantId(request);
             List<MaterialVo4Unit> list = materialService.getMaterialByBarCode(barCode);
             if(list!=null && list.size()>0) {
                 MaterialVo4Unit materialVo4Unit = list.get(0);
@@ -154,7 +154,7 @@ public class DepotItemController {
                               @RequestParam("mpList") String mpList,
                               HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
-        Long tenantId = Long.parseLong(redisService.getObjectFromSessionByKey(request,"tenantId").toString());
+        Long tenantId = redisService.getTenantId(request);
         try {
             List<DepotItemVo4WithInfoEx> dataList = new ArrayList<DepotItemVo4WithInfoEx>();
             if(headerId != 0) {
@@ -264,7 +264,7 @@ public class DepotItemController {
                                       HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
-        Long tenantId = Long.parseLong(redisService.getObjectFromSessionByKey(request,"tenantId").toString());
+        Long tenantId = redisService.getTenantId(request);
         String timeA = monthTime+"-01 00:00:00";
         String timeB = Tools.lastDayOfMonth(monthTime)+" 23:59:59";
         try {
@@ -334,7 +334,7 @@ public class DepotItemController {
                             @RequestParam("monthTime") String monthTime,
                             @RequestParam("materialParam") String materialParam,
                             HttpServletRequest request, HttpServletResponse response) throws Exception {
-        Long tenantId = Long.parseLong(redisService.getObjectFromSessionByKey(request,"tenantId").toString());
+        Long tenantId = redisService.getTenantId(request);
         String timeA = monthTime+"-01 00:00:00";
         String timeB = Tools.lastDayOfMonth(monthTime)+" 23:59:59";
         try {
@@ -384,7 +384,7 @@ public class DepotItemController {
                                             HttpServletRequest request) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
-        Long tenantId = Long.parseLong(redisService.getObjectFromSessionByKey(request,"tenantId").toString());
+        Long tenantId = redisService.getTenantId(request);
         String endTime = Tools.lastDayOfMonth(monthTime)+" 23:59:59";
         try {
             List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(StringUtil.toNull(materialParam),
@@ -395,6 +395,9 @@ public class DepotItemController {
                     Long mId = diEx.getMId();
                     BigDecimal thisSum = depotItemService.getStockByParam(depotId,mId,null,endTime,tenantId);
                     BigDecimal unitPrice = diEx.getPurchaseDecimal();
+                    if(unitPrice == null) {
+                        unitPrice = BigDecimal.ZERO;
+                    }
                     thisAllPrice = thisAllPrice.add(thisSum.multiply(unitPrice));
                 }
             }

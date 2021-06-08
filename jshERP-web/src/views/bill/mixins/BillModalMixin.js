@@ -20,6 +20,7 @@ export const BillModalMixin = {
       accountList: [],
       accountIdList: [],
       accountMoneyList: [],
+      billUnitPirce: '',
       spans: {
         labelCol1: {span: 2},
         wrapperCol1: {span: 22},
@@ -176,7 +177,8 @@ export const BillModalMixin = {
         case "barCode":
           param = {
             barCode: value,
-            mpList: getMpListShort(Vue.ls.get('materialPropertyList'))  //扩展属性
+            mpList: getMpListShort(Vue.ls.get('materialPropertyList')),  //扩展属性
+            prefixNo: this.prefixNo
           }
           getMaterialByBarCode(param).then((res) => {
             if (res && res.code === 200) {
@@ -190,12 +192,12 @@ export const BillModalMixin = {
                   materialOther: res.data.materialOther,
                   unit: res.data.commodityUnit,
                   operNumber: 1,
-                  unitPrice: res.data.purchaseDecimal,
-                  taxUnitPrice: res.data.purchaseDecimal,
-                  allPrice: res.data.purchaseDecimal,
+                  unitPrice: res.data.billPrice,
+                  taxUnitPrice: res.data.billPrice,
+                  allPrice: res.data.billPrice,
                   taxRate: 0,
                   taxMoney: 0,
-                  taxLastMoney: res.data.purchaseDecimal
+                  taxLastMoney: res.data.billPrice,
                 }
               }]);
               that.getStockByDepotBarCode(row, target)

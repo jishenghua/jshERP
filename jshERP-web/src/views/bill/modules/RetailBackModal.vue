@@ -115,6 +115,7 @@
         addDefaultRowNum: 1,
         visible: false,
         operTimeStr: '',
+        prefixNo: 'LSTH',
         model: {},
         labelCol: {
           xs: { span: 24 },
@@ -170,7 +171,7 @@
       //调用完edit()方法之后会自动调用此方法
       editAfter() {
         if (this.action === 'add') {
-          this.addInit("LSTH")
+          this.addInit(this.prefixNo)
         } else {
           this.model.operTime = this.model.operTimeStr
           this.model.getAmount = this.model.changeAmount

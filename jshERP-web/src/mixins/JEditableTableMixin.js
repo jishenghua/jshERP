@@ -102,12 +102,13 @@ export const JEditableTableMixin = {
       httpAction(url, formData, method).then((res) => {
         if(res.code === 200){
           this.$emit('ok')
+          this.confirmLoading = false
+          this.close()
         } else {
           this.$message.warning(res.data.message);
+          this.confirmLoading = false
         }
       }).finally(() => {
-        this.confirmLoading = false
-        this.close()
       })
     },
 
