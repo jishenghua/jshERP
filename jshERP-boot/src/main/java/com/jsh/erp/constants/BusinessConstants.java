@@ -14,6 +14,14 @@ public class BusinessConstants {
      */
     public static final String DEFAULT_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
     /**
+     * 一天的初始时间
+     */
+    public static final String DAY_FIRST_TIME = " 00:00:00";
+    /**
+     * 一天的结束时间
+     */
+    public static final String DAY_LAST_TIME = " 23:59:59";
+    /**
      * 默认的分页起始页页码
      */
     public static final Integer DEFAULT_PAGINATION_PAGE_NUMBER = 1;

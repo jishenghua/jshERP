@@ -1,6 +1,7 @@
 package com.jsh.erp.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.AccountHeadVo4Body;
 import com.jsh.erp.datasource.entities.AccountHeadVo4ListEx;
@@ -76,7 +77,7 @@ public class AccountHeadController {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
             JSONObject outer = new JSONObject();
-            endTime = endTime + " 23:59:59";
+            endTime = endTime + BusinessConstants.DAY_LAST_TIME;
             BigDecimal sum = accountHeadService.findTotalPay(supplierId, endTime, supType);
             outer.put("getAllMoney", sum);
             map.put("rows", outer);

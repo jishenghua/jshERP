@@ -35,13 +35,16 @@
         FROM jsh_account
         where 1=1
         <if test="name != null">
-            and name like '%${name}%'
+            <bind name="bindName" value="'%'+name+'%'"/>
+            and name like #{bindName}
         </if>
-        <if test="serialNo != null">
-            and serial_no like '%${serialNo}%'
+        <if test="serialNo != null and serialNo !=''">
+            <bind name="bindSerialNo" value="'%'+serialNo+'%'"/>
+            and serial_no like #{bindSerialNo}
         </if>
         <if test="remark != null">
-            and remark like '%${remark}%'
+            <bind name="bindRemark" value="'%'+remark+'%'"/>
+            and remark like #{bindRemark}
         </if>
         and ifnull(delete_flag,'0') !='1'
         <if test="offset != null and rows != null">
@@ -55,13 +58,16 @@
         FROM jsh_account
         WHERE 1=1
         <if test="name != null">
-            and name like '%${name}%'
+            <bind name="bindName" value="'%'+name+'%'"/>
+            and name like #{bindName}
         </if>
-        <if test="serialNo != null">
-            and serial_no like '%${serialNo}%'
+        <if test="serialNo != null and serialNo !=''">
+            <bind name="bindSerialNo" value="'%'+serialNo+'%'"/>
+            and serial_no like #{bindSerialNo}
         </if>
         <if test="remark != null">
-            and remark like '%${remark}%'
+            <bind name="bindRemark" value="'%'+remark+'%'"/>
+            and remark like #{bindRemark}
         </if>
         and ifnull(delete_flag,'0') !='1'
     </select>
@@ -72,7 +78,7 @@
         from jsh_depot_head dh left join jsh_supplier s on dh.organ_id = s.id and ifnull(s.delete_flag,'0') !='1'
         where 1=1
         <if test="accountId != null">
-            and dh.account_id=${accountId}
+            and dh.account_id=#{accountId}
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
 
@@ -82,7 +88,7 @@
         from jsh_account_head ah left join jsh_supplier s on ah.organ_id=s.id and ifnull(s.delete_flag,'0') !='1'
         where 1=1
         <if test="accountId != null">
-            and ah.account_id=${accountId}
+            and ah.account_id=#{accountId}
         </if>
         and ifnull(ah.delete_flag,'0') !='1'
         <!--明细中涉及的账户（收款,付款,收预付款） -->
@@ -92,7 +98,7 @@
         inner join jsh_account_item ai on ai.header_id=ah.id and ifnull(ai.delete_flag,'0') !='1'
         where ah.type in ('收款','付款','收预付款')
         <if test="accountId != null">
-            and ai.account_id=${accountId}
+            and ai.account_id=#{accountId}
         </if>
         and ifnull(ah.delete_flag,'0') !='1'
         <!--主表中转出的账户 -->
@@ -101,7 +107,7 @@
         from jsh_account_head ah inner join jsh_account_item ai on ai.header_id=ah.id and ifnull(ai.delete_flag,'0') !='1'
         where ah.type='转账'
         <if test="accountId != null">
-            and ah.account_id=${accountId}
+            and ah.account_id=#{accountId}
         </if>
         and ifnull(ah.delete_flag,'0') !='1'
         <!--明细中被转入的账户 -->
@@ -110,7 +116,7 @@
         from jsh_account_head ah inner join jsh_account_item ai on ai.header_id=ah.id and ifnull(ai.delete_flag,'0') !='1'
         where ah.type='转账'
         <if test="accountId != null">
-            and ai.account_id=${accountId}
+            and ai.account_id=#{accountId}
         </if>
         and ifnull(ah.delete_flag,'0') !='1'
         <!--多账户的情况 -->
@@ -120,7 +126,8 @@
         from jsh_depot_head dh left join jsh_supplier s on dh.organ_id = s.id and ifnull(s.delete_flag,'0') !='1'
         where 1=1
         <if test="accountId != null">
-            and dh.account_id_list like '%${accountId}%'
+            <bind name="bindAccountId" value="'%'+accountId+'%'"/>
+            and dh.account_id_list like #{bindAccountId}
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
         ORDER BY oTime desc
@@ -137,7 +144,7 @@
             from jsh_depot_head dh left join jsh_supplier s on dh.organ_id = s.id and ifnull(s.delete_flag,'0') !='1'
             where 1=1
             <if test="accountId != null">
-                and dh.account_id=${accountId}
+                and dh.account_id=#{accountId}
             </if>
             and ifnull(dh.delete_flag,'0') !='1'
             <!--主表收入和支出涉及的账户 -->
@@ -146,7 +153,7 @@
             from jsh_account_head ah left join jsh_supplier s on ah.organ_id=s.id and ifnull(s.delete_flag,'0') !='1'
             where 1=1
             <if test="accountId != null">
-                and ah.account_id=${accountId}
+                and ah.account_id=#{accountId}
             </if>
             and ifnull(ah.delete_flag,'0') !='1'
             <!--明细中涉及的账户（收款,付款,收预付款） -->
@@ -156,7 +163,7 @@
             inner join jsh_account_item ai on ai.header_id=ah.Id and ifnull(ai.delete_flag,'0') !='1'
             where ah.Type in ('收款','付款','收预付款')
             <if test="accountId != null">
-                and ai.account_id=${accountId}
+                and ai.account_id=#{accountId}
             </if>
             and ifnull(ah.delete_flag,'0') !='1'
             <!--主表中转出的账户 -->
@@ -165,7 +172,7 @@
             from jsh_account_head ah inner join jsh_account_item ai on ai.header_id=ah.id and ifnull(ai.delete_flag,'0') !='1'
             where ah.type='转账'
             <if test="accountId != null">
-                and ah.account_id=${accountId}
+                and ah.account_id=#{accountId}
             </if>
             and ifnull(ah.delete_flag,'0') !='1'
             <!--明细中被转入的账户 -->
@@ -174,7 +181,7 @@
             from jsh_account_head ah inner join jsh_account_item ai on ai.header_id=ah.id and ifnull(ai.delete_flag,'0') !='1'
             where ah.type='转账'
             <if test="accountId != null">
-                and ai.account_id=${accountId}
+                and ai.account_id=#{accountId}
             </if>
             and ifnull(ah.delete_flag,'0') !='1'
             <!--多账户的情况 -->
@@ -183,7 +190,8 @@
             from jsh_depot_head dh left join jsh_supplier s on dh.organ_id = s.id and ifnull(s.delete_flag,'0') !='1'
             where 1=1
             <if test="accountId != null">
-                and dh.account_id_list like '%${accountId}%'
+                <bind name="bindAccountId" value="'%'+accountId+'%'"/>
+                and dh.account_id_list like #{bindAccountId}
             </if>
             and ifnull(dh.delete_flag,'0') !='1'
         ) cc

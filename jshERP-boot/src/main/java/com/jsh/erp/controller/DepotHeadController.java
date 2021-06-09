@@ -2,6 +2,7 @@ package com.jsh.erp.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.DepotHead;
 import com.jsh.erp.datasource.entities.DepotHeadVo4Body;
@@ -96,6 +97,8 @@ public class DepotHeadController {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
             List<DepotHeadVo4InDetail> resList = new ArrayList<DepotHeadVo4InDetail>();
+            beginTime = Tools.parseDayToTime(beginTime, BusinessConstants.DAY_FIRST_TIME);
+            endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
             List<DepotHeadVo4InDetail> list = depotHeadService.findByAll(beginTime, endTime, type, materialParam, depotId, oId, (currentPage-1)*pageSize, pageSize);
             int total = depotHeadService.findByAllCount(beginTime, endTime, type, materialParam, depotId, oId);
             map.put("total", total);
@@ -143,8 +146,8 @@ public class DepotHeadController {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
             List<DepotHeadVo4InOutMCount> resList = new ArrayList<>();
-            beginTime = beginTime + " 00:00:00";
-            endTime = endTime + " 23:59:59";
+            beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
+            endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
             List<DepotHeadVo4InOutMCount> list = depotHeadService.findInOutMaterialCount(beginTime, endTime, type, materialParam, depotId, oId, (currentPage-1)*pageSize, pageSize);
             int total = depotHeadService.findInOutMaterialCountTotal(beginTime, endTime, type, materialParam, depotId, oId);
             map.put("total", total);
@@ -193,8 +196,8 @@ public class DepotHeadController {
             } else if (supType.equals("供应商")) { //供应商
                 j = -1;
             }
-            beginTime = beginTime + " 00:00:00";
-            endTime = endTime + " 23:59:59";
+            beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
+            endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
             List<DepotHeadVo4StatementAccount> resList = new ArrayList<DepotHeadVo4StatementAccount>();
             List<DepotHeadVo4StatementAccount> list = depotHeadService.findStatementAccount(beginTime, endTime, organId, supType, (currentPage-1)*pageSize, pageSize);
             int total = depotHeadService.findStatementAccountCount(beginTime, endTime, organId, supType);
@@ -277,7 +280,7 @@ public class DepotHeadController {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
             JSONObject outer = new JSONObject();
-            endTime = endTime + " 23:59:59";
+            endTime = endTime + BusinessConstants.DAY_LAST_TIME;
             BigDecimal sum = depotHeadService.findTotalPay(supplierId, endTime, supType);
             outer.put("getAllMoney", sum);
             map.put("rows", outer);
@@ -369,8 +372,8 @@ public class DepotHeadController {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         try {
-            String today = Tools.getNow() + " 00:00:00";
-            String firstDay = Tools.getCurrentMonth() + "-01 00:00:00";
+            String today = Tools.getNow() + BusinessConstants.DAY_FIRST_TIME;
+            String firstDay = Tools.firstDayOfMonth(Tools.getCurrentMonth()) + BusinessConstants.DAY_FIRST_TIME;
             BigDecimal todaySale = depotHeadService.getBuyAndSaleStatistics("出库", "销售",
                     1, today, getNow3()); //今日销售出库
             BigDecimal todayRetailSale = depotHeadService.getBuyAndSaleRetailStatistics("出库", "零售",

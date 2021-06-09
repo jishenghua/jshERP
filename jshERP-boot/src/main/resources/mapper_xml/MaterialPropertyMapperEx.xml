@@ -6,7 +6,8 @@
         FROM jsh_material_property
         where 1=1
         <if test="name != null">
-            and native_name like '%${name}%'
+            <bind name="bindName" value="'%'+name+'%'"/>
+            and native_name like #{bindName}
         </if>
         and ifnull(delete_flag,'0') !='1'
         <if test="offset != null and rows != null">
@@ -19,7 +20,8 @@
         FROM jsh_material_property
         WHERE 1=1
         <if test="name != null">
-            and native_name like '%${name}%'
+            <bind name="bindName" value="'%'+name+'%'"/>
+            and native_name like #{bindName}
         </if>
         and ifnull(delete_flag,'0') !='1'
     </select>

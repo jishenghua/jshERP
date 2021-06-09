@@ -24,6 +24,7 @@ import com.jsh.erp.service.serialNumber.SerialNumberService;
 import com.jsh.erp.service.supplier.SupplierService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
+import com.jsh.erp.utils.Tools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -101,6 +102,8 @@ public class DepotHeadService {
             String [] creatorArray = getCreatorArray(roleType);
             Map<Long,String> personMap = personService.getPersonMap();
             Map<Long,String> accountMap = accountService.getAccountMap();
+            beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
+            endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
             list=depotHeadMapperEx.selectByConditionDepotHead(type, subType, creatorArray, status, number, beginTime, endTime, materialParam, depotIds, offset, rows);
             if (null != list) {
                 for (DepotHeadVo4List dh : list) {
@@ -144,6 +147,8 @@ public class DepotHeadService {
         try{
             String depotIds = depotService.findDepotStrByCurrentUser();
             String [] creatorArray = getCreatorArray(roleType);
+            beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
+            endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
             result=depotHeadMapperEx.countsByDepotHead(type, subType, creatorArray, status, number, beginTime, endTime, materialParam, depotIds);
         }catch(Exception e){
             JshException.readFail(logger, e);

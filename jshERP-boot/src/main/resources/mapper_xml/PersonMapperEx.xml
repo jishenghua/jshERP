@@ -6,10 +6,11 @@
         FROM jsh_person
         where 1=1
         <if test="name != null and name != ''">
-            and name like '%${name}%'
+            <bind name="bindName" value="'%'+name+'%'"/>
+            and name like #{bindName}
         </if>
         <if test="type != null and type != ''">
-            and type='${type}'
+            and type=#{type}
         </if>
         and ifnull(delete_flag,'0') !='1'
         <if test="offset != null and rows != null">
@@ -22,10 +23,11 @@
         FROM jsh_person
         WHERE 1=1
         <if test="name != null and name != ''">
-            and name like '%${name}%'
+            <bind name="bindName" value="'%'+name+'%'"/>
+            and name like #{bindName}
         </if>
         <if test="type != null and type != ''">
-            and type='${type}'
+            and type=#{type}
         </if>
         and ifnull(delete_flag,'0') !='1'
     </select>

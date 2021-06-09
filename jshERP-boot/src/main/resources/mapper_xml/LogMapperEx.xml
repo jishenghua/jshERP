@@ -11,25 +11,28 @@
         left join jsh_user u on l.user_id = u.id and ifnull(u.status,'0') not in('1','2')
         where 1=1
         <if test="operation != null">
-            and l.operation like '%${operation}%'
+            <bind name="bindOperation" value="'%'+operation+'%'"/>
+            and l.operation like #{bindOperation}
         </if>
         <if test="userId != null">
-            and l.user_id=${userId}
+            and l.user_id=#{userId}
         </if>
         <if test="clientIp != null">
-            and l.client_ip like '%${clientIp}%'
+            <bind name="bindClientIp" value="'%'+clientIp+'%'"/>
+            and l.client_ip like #{bindClientIp}
         </if>
         <if test="status != null">
-            and l.status=${status}
+            and l.status=#{status}
         </if>
         <if test="beginTime != null">
-            and l.create_time &gt;= '${beginTime}'
+            and l.create_time &gt;= #{beginTime}
         </if>
         <if test="endTime != null">
-            and l.create_time &lt;= '${endTime}'
+            and l.create_time &lt;= #{endTime}
         </if>
         <if test="content != null">
-            and l.content like '%${content}%'
+            <bind name="bindContent" value="'%'+content+'%'"/>
+            and l.content like #{bindContent}
         </if>
         order by l.create_time desc
         <if test="offset != null and rows != null">
@@ -43,25 +46,28 @@
         left join jsh_user u on l.user_id = u.id and ifnull(u.status,'0') not in('1','2')
         WHERE 1=1
         <if test="operation != null">
-            and l.operation like '%${operation}%'
+            <bind name="bindOperation" value="'%'+operation+'%'"/>
+            and l.operation like #{bindOperation}
         </if>
         <if test="userId != null">
-            and l.user_id=${userId}
+            and l.user_id=#{userId}
         </if>
         <if test="clientIp != null">
-            and l.client_ip like '%${clientIp}%'
+            <bind name="bindClientIp" value="'%'+clientIp+'%'"/>
+            and l.client_ip like #{bindClientIp}
         </if>
         <if test="status != null">
-            and l.status = ${status}
+            and l.status = #{status}
         </if>
         <if test="beginTime != null">
-            and l.create_time &gt;= '${beginTime}'
+            and l.create_time &gt;= #{beginTime}
         </if>
         <if test="endTime != null">
-            and l.create_time &lt;= '${endTime}'
+            and l.create_time &lt;= #{endTime}
         </if>
         <if test="content != null">
-            and l.content like '%${content}%'
+            <bind name="bindContent" value="'%'+content+'%'"/>
+            and l.content like #{bindContent}
         </if>
     </select>
 </mapper>

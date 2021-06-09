@@ -15,6 +15,7 @@ import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.orgaUserRel.OrgaUserRelService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
+import com.jsh.erp.utils.Tools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -88,6 +89,8 @@ public class AccountHeadService {
         List<AccountHeadVo4ListEx> list=null;
         try{
             String [] creatorArray = getCreatorArray(roleType);
+            beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
+            endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
             list = accountHeadMapperEx.selectByConditionAccountHead(type, creatorArray, billNo, beginTime, endTime, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
@@ -111,6 +114,8 @@ public class AccountHeadService {
         Long result=null;
         try{
             String [] creatorArray = getCreatorArray(roleType);
+            beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
+            endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
             result = accountHeadMapperEx.countsByAccountHead(type, creatorArray, billNo, beginTime, endTime);
         }catch(Exception e){
             JshException.readFail(logger, e);

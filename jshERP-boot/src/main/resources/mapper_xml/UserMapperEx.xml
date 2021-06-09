@@ -25,10 +25,12 @@
         where 1=1
         and ifnull(user.status,'0') not in('1','2')
         <if test="userName != null">
-            and user.username like '%${userName}%'
+            <bind name="bindUserName" value="'%'+userName+'%'"/>
+            and user.username like #{bindUserName}
         </if>
         <if test="loginName != null">
-            and user.login_name like '%${loginName}%'
+            <bind name="bindLoginName" value="'%'+loginName+'%'"/>
+            and user.login_name like #{bindLoginName}
         </if>
         order by rel.user_blng_orga_dspl_seq,user.id desc
         <if test="offset != null and rows != null">
@@ -41,10 +43,12 @@
         where 1=1
         and ifnull(user.status,'0') not in('1','2')
         <if test="userName != null">
-            and user.username like '%${userName}%'
+            <bind name="bindUserName" value="'%'+userName+'%'"/>
+            and user.username like #{bindUserName}
         </if>
         <if test="loginName != null">
-            and user.login_name like '%${loginName}%'
+            <bind name="bindLoginName" value="'%'+loginName+'%'"/>
+            and user.login_name like #{bindLoginName}
         </if>
     </select>
     <select id="getUserListByUserNameOrLoginName" resultMap="com.jsh.erp.datasource.mappers.UserMapper.BaseResultMap">

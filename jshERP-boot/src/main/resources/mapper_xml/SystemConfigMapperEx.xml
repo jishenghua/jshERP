@@ -6,7 +6,8 @@
         FROM jsh_system_config
         where 1=1
         <if test="companyName != null">
-            and company_name like '%${companyName}%'
+            <bind name="bindCompanyName" value="'%'+companyName+'%'"/>
+            and company_name like #{bindCompanyName}
         </if>
         and ifnull(delete_flag,'0') !='1'
         <if test="offset != null and rows != null">
@@ -19,7 +20,8 @@
         FROM jsh_system_config
         WHERE 1=1
         <if test="companyName != null">
-            and company_name like '%${companyName}%'
+            <bind name="bindCompanyName" value="'%'+companyName+'%'"/>
+            and company_name like #{bindCompanyName}
         </if>
         and ifnull(delete_flag,'0') !='1'
     </select>

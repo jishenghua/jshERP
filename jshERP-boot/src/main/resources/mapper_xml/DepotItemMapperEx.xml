@@ -76,13 +76,15 @@
         FROM jsh_depot_item
         where 1=1
         <if test="name != null">
-            and name like '%${name}%'
+            <bind name="bindName" value="'%'+name+'%'"/>
+            and name like #{bindName}
         </if>
         <if test="type != null">
-            and type=${type}
+            and type = #{type}
         </if>
         <if test="remark != null">
-            and remark like '%${remark}%'
+            <bind name="bindRemark" value="'%'+remark+'%'"/>
+            and remark like #{bindRemark}
         </if>
         and ifnull(delete_flag,'0') !='1'
         <if test="offset != null and rows != null">
@@ -96,13 +98,15 @@
         FROM jsh_depot_item
         WHERE 1=1
         <if test="name != null">
-            and name like '%${name}%'
+            <bind name="bindName" value="'%'+name+'%'"/>
+            and name like #{bindName}
         </if>
         <if test="type != null">
-            and type=${type}
+            and type = #{type}
         </if>
         <if test="remark != null">
-            and remark like '%${remark}%'
+            <bind name="bindRemark" value="'%'+remark+'%'"/>
+            and remark like #{bindRemark}
         </if>
         and ifnull(delete_flag,'0') !='1'
     </select>
@@ -128,7 +132,7 @@
         or (dh.type='其它' and dh.sub_type='组装单')
         or (dh.type='其它' and dh.sub_type='拆卸单')
         or (dh.type='其它' and dh.sub_type='盘点复盘' and dh.Status=1))
-        and di.material_id =${mId}
+        and di.material_id = #{mId}
         and ifnull(dh.delete_flag,'0') !='1'
         ORDER BY oTime desc
         <if test="offset != null and rows != null">
@@ -144,7 +148,7 @@
         or (dh.type='其它' and dh.sub_type='组装单')
         or (dh.type='其它' and dh.sub_type='拆卸单')
         or (dh.type='其它' and dh.sub_type='盘点复盘' and dh.Status=1))
-        and di.material_id =${mId}
+        and di.material_id =#{mId}
         and ifnull(dh.delete_flag,'0') !='1'
     </select>
 
@@ -158,7 +162,7 @@
         left join jsh_unit u on m.unit_id = u.id and ifnull(u.delete_Flag,'0') !='1'
         left join jsh_depot dp1 on di.depot_id=dp1.id and ifnull(dp1.delete_Flag,'0') !='1'
         left join jsh_depot dp2 on di.another_depot_id=dp2.id and ifnull(dp2.delete_Flag,'0') !='1'
-        where di.header_id = ${headerId}
+        where di.header_id = #{headerId}
         and ifnull(di.delete_flag,'0') !='1'
         order by di.id asc
     </select>
@@ -180,7 +184,7 @@
             and (m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
         </if>
         <if test="endTime != null">
-            and dh.oper_time &lt;= '${endTime}'
+            and dh.oper_time &lt;= #{endTime}
         </if>
         and ifnull(m.delete_flag,'0') !='1'
         group by m.id,m.name, m.model, m.unit, m.color, u.name
@@ -201,7 +205,7 @@
             and (m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
         </if>
         <if test="endTime != null">
-            and dh.oper_time &lt;= '${endTime}'
+            and dh.oper_time &lt;= #{endTime}
         </if>
         and ifnull(di.delete_flag,'0') !='1'
         group by m.id) cc
@@ -210,8 +214,8 @@
     <select id="buyOrSaleNumber" resultType="java.math.BigDecimal">
         select ifnull(sum(basic_number),0) as BasicNumber from jsh_depot_item di,jsh_depot_head dh
         where di.header_id = dh.id
-        and dh.type='${type}' and dh.sub_type='${subType}'
-        and di.material_id =${MId}
+        and dh.type=#{type} and dh.sub_type=#{subType}
+        and di.material_id =#{MId}
         and dh.oper_time &gt;= #{beginTime}
         and dh.oper_time &lt;= #{endTime}
         and ifnull(dh.delete_flag,'0') !='1'
@@ -221,8 +225,8 @@
     <select id="buyOrSalePrice" resultType="java.math.BigDecimal">
         select ifnull(sum(all_price),0) as AllPrice from jsh_depot_item di,jsh_depot_head dh
         where di.header_id = dh.id
-        and dh.type='${type}' and dh.sub_type='${subType}'
-        and di.material_id =${MId}
+        and dh.type=#{type} and dh.sub_type=#{subType}
+        and di.material_id =#{MId}
         and dh.oper_time &gt;= #{beginTime}
         and dh.oper_time &lt;= #{endTime}
         and ifnull(dh.delete_flag,'0') !='1'
@@ -232,7 +236,7 @@
     <select id="inOrOutPrice" resultType="java.math.BigDecimal">
         select ifnull(sum(discount_last_money),0) as allMoney from jsh_depot_head dh
         where 1=1
-        and dh.type='${type}' and dh.sub_type='${subType}'
+        and dh.type=#{type} and dh.sub_type=#{subType}
         and dh.oper_time &gt;= #{beginTime}
         and dh.oper_time &lt;= #{endTime}
         and ifnull(dh.delete_flag,'0') !='1'
@@ -250,10 +254,10 @@
             and di.depot_id=#{depotId}
         </if>
         <if test="beginTime != null">
-            and dh.oper_time &gt;= '${beginTime}'
+            and dh.oper_time &gt;= #{beginTime}
         </if>
         <if test="endTime != null">
-            and dh.oper_time &lt;= '${endTime}'
+            and dh.oper_time &lt;= #{endTime}
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
         and ifnull(di.delete_flag,'0') !='1'
@@ -277,10 +281,10 @@
         and dh.id=di.header_id
         and di.material_id=#{mId}
         <if test="beginTime != null">
-            and dh.oper_time &gt;= '${beginTime}'
+            and dh.oper_time &gt;= #{beginTime}
         </if>
         <if test="endTime != null">
-            and dh.oper_time &lt;= '${endTime}'
+            and dh.oper_time &lt;= #{endTime}
         </if>
         and dh.tenant_id=#{tenantId}
         and di.tenant_id=#{tenantId}
@@ -386,7 +390,7 @@
             and (m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
         </if>
         <if test="depotId != null">
-            and mcs.depot_id= ${depotId}
+            and mcs.depot_id= #{depotId}
         </if>
         group by m.id,m.name, m.model, m.unit, m.color, u.name
         order by linjieNumber desc
@@ -411,7 +415,7 @@
             and (m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
         </if>
         <if test="depotId != null">
-            and mcs.depot_id= ${depotId}
+            and mcs.depot_id= #{depotId}
         </if>
         group by m.id,m.name, m.model, m.unit, m.color, u.name) tb
     </select>

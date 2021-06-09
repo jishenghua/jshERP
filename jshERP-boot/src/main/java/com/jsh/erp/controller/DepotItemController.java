@@ -265,8 +265,8 @@ public class DepotItemController {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         Long tenantId = redisService.getTenantId(request);
-        String timeA = monthTime+"-01 00:00:00";
-        String timeB = Tools.lastDayOfMonth(monthTime)+" 23:59:59";
+        String timeA = Tools.firstDayOfMonth(monthTime) + BusinessConstants.DAY_FIRST_TIME;
+        String timeB = Tools.lastDayOfMonth(monthTime) + BusinessConstants.DAY_LAST_TIME;
         try {
             List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(StringUtil.toNull(materialParam),
                     timeB,(currentPage-1)*pageSize, pageSize);
@@ -335,8 +335,8 @@ public class DepotItemController {
                             @RequestParam("materialParam") String materialParam,
                             HttpServletRequest request, HttpServletResponse response) throws Exception {
         Long tenantId = redisService.getTenantId(request);
-        String timeA = monthTime+"-01 00:00:00";
-        String timeB = Tools.lastDayOfMonth(monthTime)+" 23:59:59";
+        String timeA = Tools.firstDayOfMonth(monthTime) + BusinessConstants.DAY_FIRST_TIME;
+        String timeB = Tools.lastDayOfMonth(monthTime) + BusinessConstants.DAY_LAST_TIME;
         try {
             List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(StringUtil.toNull(materialParam),
                     timeB, null, null);
@@ -385,7 +385,7 @@ public class DepotItemController {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         Long tenantId = redisService.getTenantId(request);
-        String endTime = Tools.lastDayOfMonth(monthTime)+" 23:59:59";
+        String endTime = Tools.lastDayOfMonth(monthTime) + BusinessConstants.DAY_LAST_TIME;
         try {
             List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(StringUtil.toNull(materialParam),
                     endTime, null, null);
@@ -431,7 +431,7 @@ public class DepotItemController {
                                   HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
-        String endTime = Tools.lastDayOfMonth(monthTime)+" 23:59:59";
+        String endTime = Tools.lastDayOfMonth(monthTime) + BusinessConstants.DAY_LAST_TIME;
         try {
             List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(StringUtil.toNull(materialParam),
                     endTime, (currentPage-1)*pageSize, pageSize);
@@ -493,7 +493,7 @@ public class DepotItemController {
                                   HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
-        String endTime = Tools.lastDayOfMonth(monthTime)+" 23:59:59";
+        String endTime = Tools.lastDayOfMonth(monthTime) + BusinessConstants.DAY_LAST_TIME;
         try {
             List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(StringUtil.toNull(materialParam),
                     endTime,(currentPage-1)*pageSize, pageSize);
