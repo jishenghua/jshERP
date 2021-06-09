@@ -75,7 +75,7 @@
         <template slot="customRenderStatus" slot-scope="status">
           <a-tag v-if="status == '0'" color="red">未审核</a-tag>
           <a-tag v-if="status == '1'" color="green">已审核</a-tag>
-          <a-tag v-if="status == '2'" color="blue">已转采购</a-tag>
+          <a-tag v-if="status == '2'" color="blue">已转销售</a-tag>
         </template>
       </a-table>
     </div>
