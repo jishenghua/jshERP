@@ -99,12 +99,13 @@ public class DepotHeadService {
         List<DepotHeadVo4List> list=new ArrayList<>();
         try{
             String depotIds = depotService.findDepotStrByCurrentUser();
+            String [] depotArray=depotIds.split(",");
             String [] creatorArray = getCreatorArray(roleType);
             Map<Long,String> personMap = personService.getPersonMap();
             Map<Long,String> accountMap = accountService.getAccountMap();
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            list=depotHeadMapperEx.selectByConditionDepotHead(type, subType, creatorArray, status, number, beginTime, endTime, materialParam, depotIds, offset, rows);
+            list=depotHeadMapperEx.selectByConditionDepotHead(type, subType, creatorArray, status, number, beginTime, endTime, materialParam, depotArray, offset, rows);
             if (null != list) {
                 for (DepotHeadVo4List dh : list) {
                     if(accountMap!=null && StringUtil.isNotEmpty(dh.getAccountIdList()) && StringUtil.isNotEmpty(dh.getAccountMoneyList())) {
@@ -146,10 +147,11 @@ public class DepotHeadService {
         Long result=null;
         try{
             String depotIds = depotService.findDepotStrByCurrentUser();
+            String [] depotArray=depotIds.split(",");
             String [] creatorArray = getCreatorArray(roleType);
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            result=depotHeadMapperEx.countsByDepotHead(type, subType, creatorArray, status, number, beginTime, endTime, materialParam, depotIds);
+            result=depotHeadMapperEx.countsByDepotHead(type, subType, creatorArray, status, number, beginTime, endTime, materialParam, depotArray);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
