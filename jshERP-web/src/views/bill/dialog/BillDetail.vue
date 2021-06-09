@@ -29,10 +29,7 @@
                   {{model.number}}
                 </a-form-item>
               </a-col>
-              <a-col :lg="6" :md="12" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
-                </a-form-item>
-              </a-col>
+              <a-col :lg="6" :md="12" :sm="24"></a-col>
               <a-col :lg="6" :md="12" :sm="24"></a-col>
             </a-row>
             <a-table
