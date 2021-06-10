@@ -131,15 +131,21 @@
           loading: false,
           dataSource: [],
           columns: [
-            { title: '仓库名称', key: 'depotId', width: '8%', type: FormTypes.select, placeholder: '请选择${title}', options: [] },
-            { title: '条码', key: 'barCode', width: '10%', type: FormTypes.popupJsh },
+            { title: '仓库名称', key: 'depotId', width: '8%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
+              validateRules: [{ required: true, message: '${title}不能为空' }]
+            },
+            { title: '条码', key: 'barCode', width: '10%', type: FormTypes.popupJsh,
+              validateRules: [{ required: true, message: '${title}不能为空' }]
+            },
             { title: '名称', key: 'name', width: '10%', type: FormTypes.input, readonly: true },
             { title: '规格', key: 'standard', width: '6%', type: FormTypes.input, readonly: true },
             { title: '型号', key: 'model', width: '6%', type: FormTypes.input, readonly: true },
             { title: '扩展信息', key: 'materialOther', width: '8%', type: FormTypes.input, readonly: true },
             { title: '库存', key: 'stock', width: '6%', type: FormTypes.input, readonly: true },
             { title: '单位', key: 'unit', width: '6%', type: FormTypes.input, readonly: true },
-            { title: '数量', key: 'operNumber', width: '6%', type: FormTypes.inputNumber, statistics: true },
+            { title: '数量', key: 'operNumber', width: '6%', type: FormTypes.inputNumber, statistics: true,
+              validateRules: [{ required: true, message: '${title}不能为空' }]
+            },
             { title: '单价', key: 'unitPrice', width: '8%', type: FormTypes.inputNumber},
             { title: '金额', key: 'allPrice', width: '8%', type: FormTypes.inputNumber, statistics: true },
             { title: '备注', key: 'remark', width: '9%', type: FormTypes.input }

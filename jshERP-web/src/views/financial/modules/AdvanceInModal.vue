@@ -113,8 +113,12 @@
           loading: false,
           dataSource: [],
           columns: [
-            { title: '账户名称',key: 'accountId',width: '20%', type: FormTypes.select, placeholder: '请选择${title}', options: []},
-            { title: '金额',key: 'eachAmount', width: '10%', type: FormTypes.inputNumber, statistics: true, placeholder: '请选择${title}' },
+            { title: '账户名称',key: 'accountId',width: '20%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
+              validateRules: [{ required: true, message: '${title}不能为空' }]
+            },
+            { title: '金额',key: 'eachAmount', width: '10%', type: FormTypes.inputNumber, statistics: true, placeholder: '请选择${title}',
+              validateRules: [{ required: true, message: '${title}不能为空' }]
+            },
             { title: '备注',key: 'remark', width: '30%', type: FormTypes.input, placeholder: '请选择${title}'}
           ]
         },

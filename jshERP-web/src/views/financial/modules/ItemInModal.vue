@@ -64,7 +64,7 @@
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款账户">
-              <a-select placeholder="选择收款账户" v-decorator="[ 'accountId' ]" :dropdownMatchSelectWidth="false">
+              <a-select placeholder="选择收款账户" v-decorator="[ 'accountId', validatorRules.accountId ]" :dropdownMatchSelectWidth="false">
                 <a-select-option v-for="(item,index) in accountList" :key="index" :value="item.id">
                   {{ item.name }}
                 </a-select-option>
@@ -73,7 +73,7 @@
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款金额">
-              <a-input placeholder="请输入收款金额" v-decorator.trim="[ 'changeAmount' ]" />
+              <a-input placeholder="请输入收款金额" v-decorator.trim="[ 'changeAmount', validatorRules.changeAmount ]" />
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
@@ -120,8 +120,12 @@
           loading: false,
           dataSource: [],
           columns: [
-            { title: '收入项目',key: 'inOutItemId',width: '20%', type: FormTypes.select, placeholder: '请选择${title}', options: []},
-            { title: '金额',key: 'eachAmount', width: '10%', type: FormTypes.inputNumber, statistics: true, placeholder: '请选择${title}' },
+            { title: '收入项目',key: 'inOutItemId',width: '20%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
+              validateRules: [{ required: true, message: '${title}不能为空' }]
+            },
+            { title: '金额',key: 'eachAmount', width: '10%', type: FormTypes.inputNumber, statistics: true, placeholder: '请选择${title}',
+              validateRules: [{ required: true, message: '${title}不能为空' }]
+            },
             { title: '备注',key: 'remark', width: '30%', type: FormTypes.input, placeholder: '请选择${title}'}
           ]
         },
@@ -135,6 +139,16 @@
           handsPersonId:{
             rules: [
               { required: true, message: '请选择经手人!' }
+            ]
+          },
+          accountId:{
+            rules: [
+              { required: true, message: '请选择收款账户!' }
+            ]
+          },
+          changeAmount:{
+            rules: [
+              { required: true, message: '请输入收款金额!' }
             ]
           }
         },
