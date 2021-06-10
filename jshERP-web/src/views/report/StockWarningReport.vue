@@ -1,49 +1,53 @@
 <template>
-  <a-card :bordered="false">
-    <!-- 查询区域 -->
-    <div class="table-page-search-wrapper">
-      <a-form layout="inline" @keyup.enter.native="searchQuery">
-        <a-row :gutter="24">
-          <a-col :md="4" :sm="24">
-            <a-form-item label="仓库">
-              <a-select
-                style="width: 100%"
-                placeholder="请选择仓库"
-                v-model="queryParam.depotId">
-                <a-select-option v-for="(depot,index) in depotList" :value="depot.id">
-                  {{ depot.depotName }}
-                </a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-          <a-col :md="6" :sm="8">
-            <a-form-item label="商品信息">
-              <a-input placeholder="请输入商品名称、规格、型号" v-model="queryParam.materialParam"></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :md="6" :sm="24" >
-            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-              <a-button type="primary" @click="searchQuery">查询</a-button>
-              <a-button style="margin-left: 8px" type="primary" icon="download" @click="handleExportXls('库存预警')">导出</a-button>
-            </span>
-          </a-col>
-        </a-row>
-      </a-form>
-    </div>
-    <!-- table区域-begin -->
-    <a-table
-      bordered
-      ref="table"
-      size="middle"
-      rowKey="id"
-      :columns="columns"
-      :dataSource="dataSource"
-      :pagination="ipagination"
-      :loading="loading"
-      @change="handleTableChange">
-    </a-table>
-    <!-- table区域-end -->
-  </a-card>
+  <a-row :gutter="24">
+    <a-col :md="24">
+      <a-card :bordered="false">
+        <!-- 查询区域 -->
+        <div class="table-page-search-wrapper">
+          <a-form layout="inline" @keyup.enter.native="searchQuery">
+            <a-row :gutter="24">
+              <a-col :md="4" :sm="24">
+                <a-form-item label="仓库">
+                  <a-select
+                    style="width: 100%"
+                    placeholder="请选择仓库"
+                    v-model="queryParam.depotId">
+                    <a-select-option v-for="(depot,index) in depotList" :value="depot.id">
+                      {{ depot.depotName }}
+                    </a-select-option>
+                  </a-select>
+                </a-form-item>
+              </a-col>
+              <a-col :md="6" :sm="8">
+                <a-form-item label="商品信息">
+                  <a-input placeholder="请输入商品名称、规格、型号" v-model="queryParam.materialParam"></a-input>
+                </a-form-item>
+              </a-col>
+              <a-col :md="6" :sm="24" >
+                <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+                  <a-button type="primary" @click="searchQuery">查询</a-button>
+                  <a-button style="margin-left: 8px" type="primary" icon="download" @click="handleExportXls('库存预警')">导出</a-button>
+                </span>
+              </a-col>
+            </a-row>
+          </a-form>
+        </div>
+        <!-- table区域-begin -->
+        <a-table
+          bordered
+          ref="table"
+          size="middle"
+          rowKey="id"
+          :columns="columns"
+          :dataSource="dataSource"
+          :pagination="ipagination"
+          :loading="loading"
+          @change="handleTableChange">
+        </a-table>
+        <!-- table区域-end -->
+      </a-card>
+    </a-col>
+  </a-row>
 </template>
 <script>
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'

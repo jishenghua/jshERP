@@ -1,76 +1,80 @@
 <template>
-  <a-card :bordered="false">
-    <!-- 查询区域 -->
-    <div class="table-page-search-wrapper">
-      <a-form layout="inline" @keyup.enter.native="searchQuery">
-        <a-row :gutter="24">
-          <a-col :md="6" :sm="12">
-            <a-form-item label="登录名称">
-              <a-input placeholder="输入登录名称模糊查询" v-model="queryParam.loginName"></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :md="6" :sm="12">
-            <a-form-item label="用户姓名">
-              <a-input placeholder="输入用户姓名模糊查询" v-model="queryParam.userName"></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :md="6" :sm="8">
-            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-              <a-button type="primary" @click="searchQuery">查询</a-button>
-              <a-button style="margin-left: 8px" @click="searchReset">重置</a-button>
+  <a-row :gutter="24">
+    <a-col :md="24">
+      <a-card :bordered="false">
+        <!-- 查询区域 -->
+        <div class="table-page-search-wrapper">
+          <a-form layout="inline" @keyup.enter.native="searchQuery">
+            <a-row :gutter="24">
+              <a-col :md="6" :sm="12">
+                <a-form-item label="登录名称">
+                  <a-input placeholder="输入登录名称模糊查询" v-model="queryParam.loginName"></a-input>
+                </a-form-item>
+              </a-col>
+              <a-col :md="6" :sm="12">
+                <a-form-item label="用户姓名">
+                  <a-input placeholder="输入用户姓名模糊查询" v-model="queryParam.userName"></a-input>
+                </a-form-item>
+              </a-col>
+              <a-col :md="6" :sm="8">
+                <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+                  <a-button type="primary" @click="searchQuery">查询</a-button>
+                  <a-button style="margin-left: 8px" @click="searchReset">重置</a-button>
+                </span>
+              </a-col>
+            </a-row>
+          </a-form>
+        </div>
+        <!-- 操作按钮区域 -->
+        <div class="table-operator" style="border-top: 5px">
+          <a-button v-if="btnEnableList.indexOf(1)>-1" @click="handleAdd" type="primary" icon="plus">新增</a-button>
+          <a-dropdown v-if="selectedRowKeys.length > 0">
+            <a-menu slot="overlay">
+              <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
+            </a-menu>
+            <a-button style="margin-left: 8px">
+              批量操作
+              <a-icon type="down"/>
+            </a-button>
+          </a-dropdown>
+        </div>
+        <!-- table区域-begin -->
+        <div>
+          <a-table
+            ref="table"
+            bordered
+            size="middle"
+            rowKey="id"
+            :columns="columns"
+            :dataSource="dataSource"
+            :pagination="ipagination"
+            :loading="loading"
+            :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
+            @change="handleTableChange">
+            <span slot="action" slot-scope="text, record">
+              <a v-if="btnEnableList.indexOf(1)>-1 && depotFlag === '1' " @click="btnSetDepot(record)">分配仓库</a>
+              <a-divider v-if="btnEnableList.indexOf(1)>-1 && depotFlag === '1'" type="vertical" />
+              <a v-if="btnEnableList.indexOf(1)>-1 && customerFlag === '1'" @click="btnSetCustomer(record)">分配客户</a>
+              <a-divider v-if="btnEnableList.indexOf(1)>-1 && customerFlag === '1'" type="vertical" />
+              <a @click="handleEdit(record)">编辑</a>
+              <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical"/>
+              <a-popconfirm v-if="btnEnableList.indexOf(1)>-1" title="确定删除吗?" @confirm="() => handleDelete(record.id)">
+                <a>删除</a>
+              </a-popconfirm>
+              <a-divider type="vertical"/>
+              <a-popconfirm title="确定重置密码为123456吗?" @confirm="() => handleReset(record.id)">
+                <a>重置密码</a>
+              </a-popconfirm>
             </span>
-          </a-col>
-        </a-row>
-      </a-form>
-    </div>
-    <!-- 操作按钮区域 -->
-    <div class="table-operator" style="border-top: 5px">
-      <a-button v-if="btnEnableList.indexOf(1)>-1" @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-dropdown v-if="selectedRowKeys.length > 0">
-        <a-menu slot="overlay">
-          <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
-        </a-menu>
-        <a-button style="margin-left: 8px">
-          批量操作
-          <a-icon type="down"/>
-        </a-button>
-      </a-dropdown>
-    </div>
-    <!-- table区域-begin -->
-    <div>
-      <a-table
-        ref="table"
-        bordered
-        size="middle"
-        rowKey="id"
-        :columns="columns"
-        :dataSource="dataSource"
-        :pagination="ipagination"
-        :loading="loading"
-        :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-        @change="handleTableChange">
-        <span slot="action" slot-scope="text, record">
-          <a v-if="btnEnableList.indexOf(1)>-1 && depotFlag === '1' " @click="btnSetDepot(record)">分配仓库</a>
-          <a-divider v-if="btnEnableList.indexOf(1)>-1 && depotFlag === '1'" type="vertical" />
-          <a v-if="btnEnableList.indexOf(1)>-1 && customerFlag === '1'" @click="btnSetCustomer(record)">分配客户</a>
-          <a-divider v-if="btnEnableList.indexOf(1)>-1 && customerFlag === '1'" type="vertical" />
-          <a @click="handleEdit(record)">编辑</a>
-          <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical"/>
-          <a-popconfirm v-if="btnEnableList.indexOf(1)>-1" title="确定删除吗?" @confirm="() => handleDelete(record.id)">
-            <a>删除</a>
-          </a-popconfirm>
-          <a-divider type="vertical"/>
-          <a-popconfirm title="确定重置密码为123456吗?" @confirm="() => handleReset(record.id)">
-            <a>重置密码</a>
-          </a-popconfirm>
-        </span>
-      </a-table>
-    </div>
-    <!-- table区域-end -->
-    <user-modal ref="modalForm" @ok="modalFormOk"></user-modal>
-    <user-depot-modal ref="userDepotModal" @ok="modalFormOk"></user-depot-modal>
-    <user-customer-modal ref="userCustomerModal" @ok="modalFormOk"></user-customer-modal>
-  </a-card>
+          </a-table>
+        </div>
+        <!-- table区域-end -->
+        <user-modal ref="modalForm" @ok="modalFormOk"></user-modal>
+        <user-depot-modal ref="userDepotModal" @ok="modalFormOk"></user-depot-modal>
+        <user-customer-modal ref="userCustomerModal" @ok="modalFormOk"></user-customer-modal>
+      </a-card>
+    </a-col>
+  </a-row>
 </template>
 
 <script>

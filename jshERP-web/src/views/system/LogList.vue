@@ -1,78 +1,82 @@
 <template>
-  <a-card :bordered="false">
-    <!-- 查询区域 -->
-    <div class="table-page-search-wrapper">
-      <a-form layout="inline" @keyup.enter.native="searchQuery">
-        <a-row :gutter="24">
-          <a-col :md="6" :sm="8">
-            <a-form-item label="操作模块">
-              <a-input placeholder="请输入操作模块" v-model="queryParam.operation"></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :md="6" :sm="8">
-            <a-form-item label="操作详情">
-              <a-input placeholder="请输入操作详情" v-model="queryParam.content"></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :md="6" :sm="10">
-            <a-form-item label="创建时间" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <a-range-picker
-                style="width: 210px"
-                v-model="queryParam.createTimeRange"
-                format="YYYY-MM-DD"
-                :placeholder="['开始时间', '结束时间']"
-                @change="onDateChange"
-                @ok="onDateOk"
-              />
-            </a-form-item>
-          </a-col>
-          <template v-if="toggleSearchStatus">
-            <a-col :md="6" :sm="8">
-              <a-form-item label="操作IP">
-                <a-input placeholder="请输入操作IP" v-model="queryParam.clientIp"></a-input>
-              </a-form-item>
-            </a-col>
-            <a-col :md="6" :sm="8">
-              <a-form-item label="操作状态">
-                <a-select v-model="queryParam.status" placeholder="请选择操作状态">
-                  <a-select-option value="">请选择</a-select-option>
-                  <a-select-option value="0">成功</a-select-option>
-                  <a-select-option value="1">失败</a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
-          </template>
-          <a-col :md="6" :sm="24" >
-            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-              <a-button type="primary" @click="searchQuery">查询</a-button>
-              <a-button style="margin-left: 8px" @click="searchReset">重置</a-button>
-              <a @click="handleToggleSearch" style="margin-left: 8px">
-                {{ toggleSearchStatus ? '收起' : '展开' }}
-                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
-              </a>
+  <a-row :gutter="24">
+    <a-col :md="24">
+      <a-card :bordered="false">
+        <!-- 查询区域 -->
+        <div class="table-page-search-wrapper">
+          <a-form layout="inline" @keyup.enter.native="searchQuery">
+            <a-row :gutter="24">
+              <a-col :md="6" :sm="8">
+                <a-form-item label="操作模块">
+                  <a-input placeholder="请输入操作模块" v-model="queryParam.operation"></a-input>
+                </a-form-item>
+              </a-col>
+              <a-col :md="6" :sm="8">
+                <a-form-item label="操作详情">
+                  <a-input placeholder="请输入操作详情" v-model="queryParam.content"></a-input>
+                </a-form-item>
+              </a-col>
+              <a-col :md="6" :sm="10">
+                <a-form-item label="创建时间" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-range-picker
+                    style="width: 210px"
+                    v-model="queryParam.createTimeRange"
+                    format="YYYY-MM-DD"
+                    :placeholder="['开始时间', '结束时间']"
+                    @change="onDateChange"
+                    @ok="onDateOk"
+                  />
+                </a-form-item>
+              </a-col>
+              <template v-if="toggleSearchStatus">
+                <a-col :md="6" :sm="8">
+                  <a-form-item label="操作IP">
+                    <a-input placeholder="请输入操作IP" v-model="queryParam.clientIp"></a-input>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="8">
+                  <a-form-item label="操作状态">
+                    <a-select v-model="queryParam.status" placeholder="请选择操作状态">
+                      <a-select-option value="">请选择</a-select-option>
+                      <a-select-option value="0">成功</a-select-option>
+                      <a-select-option value="1">失败</a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+              </template>
+              <a-col :md="6" :sm="24" >
+                <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+                  <a-button type="primary" @click="searchQuery">查询</a-button>
+                  <a-button style="margin-left: 8px" @click="searchReset">重置</a-button>
+                  <a @click="handleToggleSearch" style="margin-left: 8px">
+                    {{ toggleSearchStatus ? '收起' : '展开' }}
+                    <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
+                  </a>
+                </span>
+              </a-col>
+            </a-row>
+          </a-form>
+        </div>
+        <!-- table区域-begin -->
+        <a-table
+          ref="table"
+          bordered
+          size="middle"
+          rowKey="id"
+          :columns="columns"
+          :dataSource="dataSource"
+          :pagination="ipagination"
+          :loading="loading"
+          @change="handleTableChange">
+          <!-- 字符串超长截取省略号显示-->
+          <span slot="content" slot-scope="text, record">
+              <j-ellipsis :value="text" :length="40"/>
             </span>
-          </a-col>
-        </a-row>
-      </a-form>
-    </div>
-    <!-- table区域-begin -->
-    <a-table
-      ref="table"
-      bordered
-      size="middle"
-      rowKey="id"
-      :columns="columns"
-      :dataSource="dataSource"
-      :pagination="ipagination"
-      :loading="loading"
-      @change="handleTableChange">
-      <!-- 字符串超长截取省略号显示-->
-      <span slot="content" slot-scope="text, record">
-          <j-ellipsis :value="text" :length="40"/>
-        </span>
-    </a-table>
-    <!-- table区域-end -->
-  </a-card>
+        </a-table>
+        <!-- table区域-end -->
+      </a-card>
+    </a-col>
+  </a-row>
 </template>
 
 <script>

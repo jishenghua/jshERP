@@ -1,81 +1,85 @@
 <template>
-  <a-card :bordered="false" class="card-area">
-    <!-- 查询区域 -->
-    <div class="table-page-search-wrapper">
-      <!-- 搜索区域 -->
-      <a-form layout="inline" @keyup.enter.native="searchQuery">
-        <a-row :gutter="24">
-          <a-col :md="6" :sm="8">
-            <a-form-item label="序列号" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
-              <a-input placeholder="请输入序列号查询" v-model="queryParam.serialNumber"></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :md="6" :sm="8">
-            <a-form-item label="商品名称" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
-              <a-input placeholder="请输入商品名称查询" v-model="queryParam.materialName"></a-input>
-            </a-form-item>
-          </a-col>
-          <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-            <a-col :md="6" :sm="24">
-              <a-button type="primary" @click="searchQuery">查询</a-button>
-              <a-button style="margin-left: 8px" @click="searchReset">重置</a-button>
-            </a-col>
-          </span>
-        </a-row>
-      </a-form>
-    </div>
-    <!-- 操作按钮区域 -->
-    <div class="table-operator"  style="margin-top: 5px">
-      <a-button v-if="btnEnableList.indexOf(1)>-1" @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button v-if="btnEnableList.indexOf(1)>-1" @click="handleBatchAdd" type="primary" icon="plus">批量新增</a-button>
-      <a-dropdown v-if="selectedRowKeys.length > 0">
-        <a-menu slot="overlay">
-          <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
-        </a-menu>
-        <a-button style="margin-left: 8px">
-          批量操作 <a-icon type="down" />
-        </a-button>
-      </a-dropdown>
-    </div>
-    <!-- table区域-begin -->
-    <div>
-      <a-table
-        ref="table"
-        size="middle"
-        bordered
-        rowKey="id"
-        :columns="columns"
-        :dataSource="dataSource"
-        :pagination="ipagination"
-        :loading="loading"
-        :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-        @change="handleTableChange">
-        <span slot="action" slot-scope="text, record">
-          <a @click="handleEdit(record)">编辑</a>
-          <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
-          <a-popconfirm v-if="btnEnableList.indexOf(1)>-1" title="确定删除吗?" @confirm="() => handleDelete(record.id)">
-            <a>删除</a>
-          </a-popconfirm>
-        </span>
-        <span slot="numberCustomRender" slot-scope="text, record">
-          <a @click="myHandleDetail(record)">{{record.depotHeadNumber}}</a>
-        </span>
-        <!-- 状态渲染模板 -->
-        <template slot="customRenderFlag" slot-scope="isSell">
-          <a-tag v-if="isSell==1" color="green">是</a-tag>
-          <a-tag v-if="isSell==0" color="orange">否</a-tag>
-        </template>
-        <template slot="customRenderTime" slot-scope="timeStr">
-          {{simpleDateFormat(timeStr, 'yyyy-MM-dd hh:mm:ss')}}
-        </template>
-      </a-table>
-    </div>
-    <!-- table区域-end -->
-    <!-- 表单区域 -->
-    <serial-number-modal ref="modalForm" @ok="modalFormOk"></serial-number-modal>
-    <serial-number-batch-modal ref="serialNumberBatchModel" @ok="modalFormOk"></serial-number-batch-modal>
-    <bill-detail ref="modalDetail"></bill-detail>
-  </a-card>
+  <a-row :gutter="24">
+    <a-col :md="24">
+      <a-card :bordered="false">
+        <!-- 查询区域 -->
+        <div class="table-page-search-wrapper">
+          <!-- 搜索区域 -->
+          <a-form layout="inline" @keyup.enter.native="searchQuery">
+            <a-row :gutter="24">
+              <a-col :md="6" :sm="8">
+                <a-form-item label="序列号" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
+                  <a-input placeholder="请输入序列号查询" v-model="queryParam.serialNumber"></a-input>
+                </a-form-item>
+              </a-col>
+              <a-col :md="6" :sm="8">
+                <a-form-item label="商品名称" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
+                  <a-input placeholder="请输入商品名称查询" v-model="queryParam.materialName"></a-input>
+                </a-form-item>
+              </a-col>
+              <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+                <a-col :md="6" :sm="24">
+                  <a-button type="primary" @click="searchQuery">查询</a-button>
+                  <a-button style="margin-left: 8px" @click="searchReset">重置</a-button>
+                </a-col>
+              </span>
+            </a-row>
+          </a-form>
+        </div>
+        <!-- 操作按钮区域 -->
+        <div class="table-operator"  style="margin-top: 5px">
+          <a-button v-if="btnEnableList.indexOf(1)>-1" @click="handleAdd" type="primary" icon="plus">新增</a-button>
+          <a-button v-if="btnEnableList.indexOf(1)>-1" @click="handleBatchAdd" type="primary" icon="plus">批量新增</a-button>
+          <a-dropdown v-if="selectedRowKeys.length > 0">
+            <a-menu slot="overlay">
+              <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
+            </a-menu>
+            <a-button style="margin-left: 8px">
+              批量操作 <a-icon type="down" />
+            </a-button>
+          </a-dropdown>
+        </div>
+        <!-- table区域-begin -->
+        <div>
+          <a-table
+            ref="table"
+            size="middle"
+            bordered
+            rowKey="id"
+            :columns="columns"
+            :dataSource="dataSource"
+            :pagination="ipagination"
+            :loading="loading"
+            :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
+            @change="handleTableChange">
+            <span slot="action" slot-scope="text, record">
+              <a @click="handleEdit(record)">编辑</a>
+              <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
+              <a-popconfirm v-if="btnEnableList.indexOf(1)>-1" title="确定删除吗?" @confirm="() => handleDelete(record.id)">
+                <a>删除</a>
+              </a-popconfirm>
+            </span>
+            <span slot="numberCustomRender" slot-scope="text, record">
+              <a @click="myHandleDetail(record)">{{record.depotHeadNumber}}</a>
+            </span>
+            <!-- 状态渲染模板 -->
+            <template slot="customRenderFlag" slot-scope="isSell">
+              <a-tag v-if="isSell==1" color="green">是</a-tag>
+              <a-tag v-if="isSell==0" color="orange">否</a-tag>
+            </template>
+            <template slot="customRenderTime" slot-scope="timeStr">
+              {{simpleDateFormat(timeStr, 'yyyy-MM-dd hh:mm:ss')}}
+            </template>
+          </a-table>
+        </div>
+        <!-- table区域-end -->
+        <!-- 表单区域 -->
+        <serial-number-modal ref="modalForm" @ok="modalFormOk"></serial-number-modal>
+        <serial-number-batch-modal ref="serialNumberBatchModel" @ok="modalFormOk"></serial-number-batch-modal>
+        <bill-detail ref="modalDetail"></bill-detail>
+      </a-card>
+    </a-col>
+  </a-row>
 </template>
 <script>
   import SerialNumberModal from './modules/SerialNumberModal'

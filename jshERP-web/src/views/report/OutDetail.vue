@@ -1,74 +1,78 @@
 <template>
-  <a-card :bordered="false">
-    <!-- 查询区域 -->
-    <div class="table-page-search-wrapper">
-      <a-form layout="inline" @keyup.enter.native="searchQuery">
-        <a-row :gutter="24">
-          <a-col :md="4" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户">
-              <a-select placeholder="选择客户" v-model="queryParam.organId" :dropdownMatchSelectWidth="false">
-                <a-select-option v-for="(item,index) in supList" :key="index" :value="item.id">
-                  {{ item.supplier }}
-                </a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-          <a-col :md="4" :sm="24">
-            <a-form-item label="仓库">
-              <a-select
-                style="width: 100%"
-                placeholder="请选择仓库"
-                v-model="queryParam.depotId">
-                <a-select-option v-for="(depot,index) in depotList" :value="depot.id">
-                  {{ depot.depotName }}
-                </a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-          <a-col :md="5" :sm="24">
-            <a-form-item label="商品信息">
-              <a-input placeholder="名称、规格、型号" v-model="queryParam.materialParam"></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :md="6" :sm="10">
-            <a-form-item label="单据日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <a-range-picker
-                style="width: 210px"
-                v-model="queryParam.createTimeRange"
-                :default-value="defaultTimeStr"
-                format="YYYY-MM-DD"
-                :placeholder="['开始时间', '结束时间']"
-                @change="onDateChange"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col :md="4" :sm="24" >
-            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-              <a-button type="primary" @click="searchQuery">查询</a-button>
-            </span>
-          </a-col>
-        </a-row>
-      </a-form>
-    </div>
-    <!-- table区域-begin -->
-    <a-table
-      bordered
-      ref="table"
-      size="middle"
-      rowKey="id"
-      :columns="columns"
-      :dataSource="dataSource"
-      :pagination="ipagination"
-      :loading="loading"
-      @change="handleTableChange">
-      <span slot="numberCustomRender" slot-scope="text, record">
-        <a @click="myHandleDetail(record)">{{record.number}}</a>
-      </span>
-    </a-table>
-    <!-- table区域-end -->
-    <!-- 表单区域 -->
-    <bill-detail ref="modalDetail"></bill-detail>
-  </a-card>
+  <a-row :gutter="24">
+    <a-col :md="24">
+      <a-card :bordered="false">
+        <!-- 查询区域 -->
+        <div class="table-page-search-wrapper">
+          <a-form layout="inline" @keyup.enter.native="searchQuery">
+            <a-row :gutter="24">
+              <a-col :md="4" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户">
+                  <a-select placeholder="选择客户" v-model="queryParam.organId" :dropdownMatchSelectWidth="false">
+                    <a-select-option v-for="(item,index) in supList" :key="index" :value="item.id">
+                      {{ item.supplier }}
+                    </a-select-option>
+                  </a-select>
+                </a-form-item>
+              </a-col>
+              <a-col :md="4" :sm="24">
+                <a-form-item label="仓库">
+                  <a-select
+                    style="width: 100%"
+                    placeholder="请选择仓库"
+                    v-model="queryParam.depotId">
+                    <a-select-option v-for="(depot,index) in depotList" :value="depot.id">
+                      {{ depot.depotName }}
+                    </a-select-option>
+                  </a-select>
+                </a-form-item>
+              </a-col>
+              <a-col :md="5" :sm="24">
+                <a-form-item label="商品信息">
+                  <a-input placeholder="名称、规格、型号" v-model="queryParam.materialParam"></a-input>
+                </a-form-item>
+              </a-col>
+              <a-col :md="6" :sm="10">
+                <a-form-item label="单据日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-range-picker
+                    style="width: 210px"
+                    v-model="queryParam.createTimeRange"
+                    :default-value="defaultTimeStr"
+                    format="YYYY-MM-DD"
+                    :placeholder="['开始时间', '结束时间']"
+                    @change="onDateChange"
+                  />
+                </a-form-item>
+              </a-col>
+              <a-col :md="4" :sm="24" >
+                <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+                  <a-button type="primary" @click="searchQuery">查询</a-button>
+                </span>
+              </a-col>
+            </a-row>
+          </a-form>
+        </div>
+        <!-- table区域-begin -->
+        <a-table
+          bordered
+          ref="table"
+          size="middle"
+          rowKey="id"
+          :columns="columns"
+          :dataSource="dataSource"
+          :pagination="ipagination"
+          :loading="loading"
+          @change="handleTableChange">
+          <span slot="numberCustomRender" slot-scope="text, record">
+            <a @click="myHandleDetail(record)">{{record.number}}</a>
+          </span>
+        </a-table>
+        <!-- table区域-end -->
+        <!-- 表单区域 -->
+        <bill-detail ref="modalDetail"></bill-detail>
+      </a-card>
+    </a-col>
+  </a-row>
 </template>
 <script>
   import BillDetail from '../bill/dialog/BillDetail'

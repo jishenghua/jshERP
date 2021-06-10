@@ -1,41 +1,45 @@
 <template>
-  <a-card :bordered="false">
-    <!-- 查询区域 -->
-    <div class="table-page-search-wrapper">
-      <a-form layout="inline" @keyup.enter.native="searchQuery">
-        <a-row :gutter="24">
-          <a-col :md="6" :sm="8">
-            <a-form-item label="月份">
-              <a-month-picker placeholder="请选择月份" :default-value="moment(currentMonth, monthFormat)" :format="monthFormat" @change="onChange"/>
-            </a-form-item>
-          </a-col>
-          <a-col :md="6" :sm="8">
-            <a-form-item label="商品信息">
-              <a-input placeholder="请输入商品信息" v-model="queryParam.materialParam"></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :md="6" :sm="24" >
-            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-              <a-button type="primary" @click="searchQuery">查询</a-button>
-            </span>
-          </a-col>
-        </a-row>
-      </a-form>
-    </div>
-    <!-- table区域-begin -->
-    <a-table
-      bordered
-      ref="table"
-      size="middle"
-      rowKey="id"
-      :columns="columns"
-      :dataSource="dataSource"
-      :pagination="ipagination"
-      :loading="loading"
-      @change="handleTableChange">
-    </a-table>
-    <!-- table区域-end -->
-  </a-card>
+  <a-row :gutter="24">
+    <a-col :md="24">
+      <a-card :bordered="false">
+        <!-- 查询区域 -->
+        <div class="table-page-search-wrapper">
+          <a-form layout="inline" @keyup.enter.native="searchQuery">
+            <a-row :gutter="24">
+              <a-col :md="6" :sm="8">
+                <a-form-item label="月份">
+                  <a-month-picker placeholder="请选择月份" :default-value="moment(currentMonth, monthFormat)" :format="monthFormat" @change="onChange"/>
+                </a-form-item>
+              </a-col>
+              <a-col :md="6" :sm="8">
+                <a-form-item label="商品信息">
+                  <a-input placeholder="请输入商品信息" v-model="queryParam.materialParam"></a-input>
+                </a-form-item>
+              </a-col>
+              <a-col :md="6" :sm="24" >
+                <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+                  <a-button type="primary" @click="searchQuery">查询</a-button>
+                </span>
+              </a-col>
+            </a-row>
+          </a-form>
+        </div>
+        <!-- table区域-begin -->
+        <a-table
+          bordered
+          ref="table"
+          size="middle"
+          rowKey="id"
+          :columns="columns"
+          :dataSource="dataSource"
+          :pagination="ipagination"
+          :loading="loading"
+          @change="handleTableChange">
+        </a-table>
+        <!-- table区域-end -->
+      </a-card>
+    </a-col>
+  </a-row>
 </template>
 <script>
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'

@@ -1,57 +1,61 @@
 <template>
-  <a-card :bordered="false">
-    <!-- 查询区域 -->
-    <div class="table-page-search-wrapper">
-      <a-form layout="inline" @keyup.enter.native="searchQuery">
-        <a-row :gutter="24">
-          <a-col :md="4" :sm="24">
-            <a-form-item label="名称">
-              <a-input placeholder="请输入名称" v-model="queryParam.name"></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :md="4" :sm="24">
-            <a-form-item label="编号">
-              <a-input placeholder="请输入编号" v-model="queryParam.serialNo"></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :md="2" :sm="24" >
-            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-              <a-button type="primary" @click="searchQuery">查询</a-button>
-            </span>
-          </a-col>
-          <a-col :md="3" :sm="24" >
-            <a-form-item label="本月发生总额">
-              {{allMonthAmount}}
-            </a-form-item>
-          </a-col>
-          <a-col :md="3" :sm="24" >
-            <a-form-item label="当前总余额">
-              {{allCurrentAmount}}
-            </a-form-item>
-          </a-col>
-        </a-row>
-      </a-form>
-    </div>
-    <!-- table区域-begin -->
-    <div>
-      <a-table
-        bordered
-        ref="table"
-        size="middle"
-        rowKey="id"
-        :columns="columns"
-        :dataSource="dataSource"
-        :pagination="ipagination"
-        :loading="loading"
-        @change="handleTableChange">
-          <span slot="action" slot-scope="text, record">
-            <a @click="showAccountInOutList(record)">流水</a>
-          </span>
-      </a-table>
-    </div>
-    <!-- table区域-end -->
-    <account-in-out-list ref="accountInOutList" @ok="modalFormOk"></account-in-out-list>
-  </a-card>
+  <a-row :gutter="24">
+    <a-col :md="24">
+      <a-card :bordered="false">
+        <!-- 查询区域 -->
+        <div class="table-page-search-wrapper">
+          <a-form layout="inline" @keyup.enter.native="searchQuery">
+            <a-row :gutter="24">
+              <a-col :md="4" :sm="24">
+                <a-form-item label="名称">
+                  <a-input placeholder="请输入名称" v-model="queryParam.name"></a-input>
+                </a-form-item>
+              </a-col>
+              <a-col :md="4" :sm="24">
+                <a-form-item label="编号">
+                  <a-input placeholder="请输入编号" v-model="queryParam.serialNo"></a-input>
+                </a-form-item>
+              </a-col>
+              <a-col :md="2" :sm="24" >
+                <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+                  <a-button type="primary" @click="searchQuery">查询</a-button>
+                </span>
+              </a-col>
+              <a-col :md="3" :sm="24" >
+                <a-form-item label="本月发生总额">
+                  {{allMonthAmount}}
+                </a-form-item>
+              </a-col>
+              <a-col :md="3" :sm="24" >
+                <a-form-item label="当前总余额">
+                  {{allCurrentAmount}}
+                </a-form-item>
+              </a-col>
+            </a-row>
+          </a-form>
+        </div>
+        <!-- table区域-begin -->
+        <div>
+          <a-table
+            bordered
+            ref="table"
+            size="middle"
+            rowKey="id"
+            :columns="columns"
+            :dataSource="dataSource"
+            :pagination="ipagination"
+            :loading="loading"
+            @change="handleTableChange">
+              <span slot="action" slot-scope="text, record">
+                <a @click="showAccountInOutList(record)">流水</a>
+              </span>
+          </a-table>
+        </div>
+        <!-- table区域-end -->
+        <account-in-out-list ref="accountInOutList" @ok="modalFormOk"></account-in-out-list>
+      </a-card>
+    </a-col>
+  </a-row>
 </template>
 <script>
   import AccountInOutList from './modules/AccountInOutList'

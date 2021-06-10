@@ -1,110 +1,114 @@
 <template>
-  <a-card :bordered="false" class="card-area">
-    <!-- 查询区域 -->
-    <div class="table-page-search-wrapper">
-      <!-- 搜索区域 -->
-      <a-form layout="inline" @keyup.enter.native="searchQuery">
-        <a-row :gutter="24">
-          <a-col :md="6" :sm="8">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="类别">
-              <a-tree-select style="width:100%" :dropdownStyle="{maxHeight:'200px',overflow:'auto'}" allow-clear
-               :treeData="categoryTree" v-model="queryParam.categoryId" placeholder="请选择类别">
-              </a-tree-select>
-            </a-form-item>
-          </a-col>
-          <a-col :md="6" :sm="8">
-            <a-form-item label="条码" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
-              <a-input placeholder="请输入条码查询" v-model="queryParam.barCode"></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :md="6" :sm="8">
-            <a-form-item label="名称" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
-              <a-input placeholder="请输入名称查询" v-model="queryParam.name"></a-input>
-            </a-form-item>
-          </a-col>
-          <template v-if="toggleSearchStatus">
-            <a-col :md="6" :sm="8">
-              <a-form-item label="规格" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
-                <a-input placeholder="请输入规格查询" v-model="queryParam.standard"></a-input>
-              </a-form-item>
-            </a-col>
-            <a-col :md="6" :sm="8">
-              <a-form-item label="型号" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
-                <a-input placeholder="请输入型号查询" v-model="queryParam.model"></a-input>
-              </a-form-item>
-            </a-col>
-          </template>
-          <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-            <a-col :md="6" :sm="24">
-              <a-button type="primary" @click="searchQuery">查询</a-button>
-              <a-button style="margin-left: 8px" @click="searchReset">重置</a-button>
-              <a @click="handleToggleSearch" style="margin-left: 8px">
-                {{ toggleSearchStatus ? '收起' : '展开' }}
-                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
-              </a>
-            </a-col>
-          </span>
-        </a-row>
-      </a-form>
-    </div>
-    <!-- 操作按钮区域 -->
-    <div class="table-operator"  style="margin-top: 5px">
-      <a-button v-if="btnEnableList.indexOf(1)>-1" @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
-        <a-popover title="表格模板">
-          <template slot="content">
-            <p><a target="_blank" href="/doc/goods_template.xls"><b>商品Excel模板下载</b></a></p>
-          </template>
-          <a-button type="primary" icon="import">导入</a-button>
-        </a-popover>
-      </a-upload>
-      <a-button type="primary" icon="download" @click="handleExportXls('商品信息')">导出</a-button>
-      <a-dropdown v-if="selectedRowKeys.length > 0">
-        <a-menu slot="overlay">
-          <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
-          <a-menu-item key="2" v-if="btnEnableList.indexOf(1)>-1" @click="batchSetStatus(true)"><a-icon type="check-square"/>启用</a-menu-item>
-          <a-menu-item key="3" v-if="btnEnableList.indexOf(1)>-1" @click="batchSetStatus(false)"><a-icon type="close-square"/>禁用</a-menu-item>
-        </a-menu>
-        <a-button style="margin-left: 8px">
-          批量操作 <a-icon type="down" />
-        </a-button>
-      </a-dropdown>
-    </div>
-    <!-- table区域-begin -->
-    <div>
-      <a-table
-        ref="table"
-        size="middle"
-        bordered
-        rowKey="id"
-        :scroll="{ x: 1500, y: 500 }"
-        :columns="columns"
-        :dataSource="dataSource"
-        :pagination="ipagination"
-        :loading="loading"
-        :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-        @change="handleTableChange">
-        <span slot="action" slot-scope="text, record">
-          <a @click="handleEdit(record)">编辑</a>
-          <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
-          <a-popconfirm v-if="btnEnableList.indexOf(1)>-1" title="确定删除吗?" @confirm="() => handleDelete(record.id)">
-            <a>删除</a>
-          </a-popconfirm>
-        </span>
-        <template slot="customRenderEnabled" slot-scope="enabled">
-          <a-tag v-if="enabled" color="green">启用</a-tag>
-          <a-tag v-if="!enabled" color="orange">禁用</a-tag>
-        </template>
-        <template slot="customRenderEnableSerialNumber" slot-scope="enableSerialNumber">
-          <a-tag v-if="enableSerialNumber==1" color="green">有</a-tag>
-          <a-tag v-if="enableSerialNumber==0" color="orange">无</a-tag>
-        </template>
-      </a-table>
-    </div>
-    <!-- table区域-end -->
-    <!-- 表单区域 -->
-    <material-modal ref="modalForm" @ok="modalFormOk"></material-modal>
-  </a-card>
+  <a-row :gutter="24">
+    <a-col :md="24">
+      <a-card :bordered="false">
+        <!-- 查询区域 -->
+        <div class="table-page-search-wrapper">
+          <!-- 搜索区域 -->
+          <a-form layout="inline" @keyup.enter.native="searchQuery">
+            <a-row :gutter="24">
+              <a-col :md="6" :sm="8">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="类别">
+                  <a-tree-select style="width:100%" :dropdownStyle="{maxHeight:'200px',overflow:'auto'}" allow-clear
+                   :treeData="categoryTree" v-model="queryParam.categoryId" placeholder="请选择类别">
+                  </a-tree-select>
+                </a-form-item>
+              </a-col>
+              <a-col :md="6" :sm="8">
+                <a-form-item label="条码" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
+                  <a-input placeholder="请输入条码查询" v-model="queryParam.barCode"></a-input>
+                </a-form-item>
+              </a-col>
+              <a-col :md="6" :sm="8">
+                <a-form-item label="名称" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
+                  <a-input placeholder="请输入名称查询" v-model="queryParam.name"></a-input>
+                </a-form-item>
+              </a-col>
+              <template v-if="toggleSearchStatus">
+                <a-col :md="6" :sm="8">
+                  <a-form-item label="规格" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
+                    <a-input placeholder="请输入规格查询" v-model="queryParam.standard"></a-input>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="8">
+                  <a-form-item label="型号" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
+                    <a-input placeholder="请输入型号查询" v-model="queryParam.model"></a-input>
+                  </a-form-item>
+                </a-col>
+              </template>
+              <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+                <a-col :md="6" :sm="24">
+                  <a-button type="primary" @click="searchQuery">查询</a-button>
+                  <a-button style="margin-left: 8px" @click="searchReset">重置</a-button>
+                  <a @click="handleToggleSearch" style="margin-left: 8px">
+                    {{ toggleSearchStatus ? '收起' : '展开' }}
+                    <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
+                  </a>
+                </a-col>
+              </span>
+            </a-row>
+          </a-form>
+        </div>
+        <!-- 操作按钮区域 -->
+        <div class="table-operator"  style="margin-top: 5px">
+          <a-button v-if="btnEnableList.indexOf(1)>-1" @click="handleAdd" type="primary" icon="plus">新增</a-button>
+          <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
+            <a-popover title="表格模板">
+              <template slot="content">
+                <p><a target="_blank" href="/doc/goods_template.xls"><b>商品Excel模板下载</b></a></p>
+              </template>
+              <a-button type="primary" icon="import">导入</a-button>
+            </a-popover>
+          </a-upload>
+          <a-button type="primary" icon="download" @click="handleExportXls('商品信息')">导出</a-button>
+          <a-dropdown v-if="selectedRowKeys.length > 0">
+            <a-menu slot="overlay">
+              <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
+              <a-menu-item key="2" v-if="btnEnableList.indexOf(1)>-1" @click="batchSetStatus(true)"><a-icon type="check-square"/>启用</a-menu-item>
+              <a-menu-item key="3" v-if="btnEnableList.indexOf(1)>-1" @click="batchSetStatus(false)"><a-icon type="close-square"/>禁用</a-menu-item>
+            </a-menu>
+            <a-button style="margin-left: 8px">
+              批量操作 <a-icon type="down" />
+            </a-button>
+          </a-dropdown>
+        </div>
+        <!-- table区域-begin -->
+        <div>
+          <a-table
+            ref="table"
+            size="middle"
+            bordered
+            rowKey="id"
+            :scroll="{ x: 1500, y: 500 }"
+            :columns="columns"
+            :dataSource="dataSource"
+            :pagination="ipagination"
+            :loading="loading"
+            :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
+            @change="handleTableChange">
+            <span slot="action" slot-scope="text, record">
+              <a @click="handleEdit(record)">编辑</a>
+              <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
+              <a-popconfirm v-if="btnEnableList.indexOf(1)>-1" title="确定删除吗?" @confirm="() => handleDelete(record.id)">
+                <a>删除</a>
+              </a-popconfirm>
+            </span>
+            <template slot="customRenderEnabled" slot-scope="enabled">
+              <a-tag v-if="enabled" color="green">启用</a-tag>
+              <a-tag v-if="!enabled" color="orange">禁用</a-tag>
+            </template>
+            <template slot="customRenderEnableSerialNumber" slot-scope="enableSerialNumber">
+              <a-tag v-if="enableSerialNumber==1" color="green">有</a-tag>
+              <a-tag v-if="enableSerialNumber==0" color="orange">无</a-tag>
+            </template>
+          </a-table>
+        </div>
+        <!-- table区域-end -->
+        <!-- 表单区域 -->
+        <material-modal ref="modalForm" @ok="modalFormOk"></material-modal>
+      </a-card>
+    </a-col>
+  </a-row>
 </template>
 <script>
   import MaterialModal from './modules/MaterialModal'
