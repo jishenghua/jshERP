@@ -57,16 +57,18 @@
         </a-table>
         <!-- table区域-end -->
         <!-- 表单区域 -->
-        <bill-detail ref="modalDetail"></bill-detail>
+        <bill-detail ref="modalBillDetail"></bill-detail>
+        <financial-detail ref="modalFinancialDetail"></financial-detail>
       </a-card>
     </a-col>
   </a-row>
 </template>
 <script>
   import BillDetail from '../bill/dialog/BillDetail'
+  import FinancialDetail from '../financial/dialog/FinancialDetail'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { getNowFormatMonth } from '@/utils/util';
-  import {findBySelectSup, findSupplierById, findDepotHeadTotalPay, findAccountHeadTotalPay, findBillDetailByNumber} from '@/api/api'
+  import {findBySelectSup, findSupplierById, findDepotHeadTotalPay, findAccountHeadTotalPay, findBillDetailByNumber,findFinancialDetailByNumber} from '@/api/api'
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import moment from 'moment'
   export default {
@@ -74,6 +76,7 @@
     mixins:[JeecgListMixin],
     components: {
       BillDetail,
+      FinancialDetail,
       JEllipsis
     },
     data () {
@@ -190,11 +193,21 @@
         }
       },
       myHandleDetail(record) {
-        findBillDetailByNumber({ number: record.number }).then((res) => {
-          if (res && res.code === 200) {
-            this.handleDetail(res.data, record.type);
-          }
-        })
+        if(record.type === '支出' || record.type === '付款') {
+          findFinancialDetailByNumber({ billNo: record.number }).then((res) => {
+            if (res && res.code === 200) {
+              this.$refs.modalFinancialDetail.show(res.data, record.type);
+              this.$refs.modalFinancialDetail.title="详情";
+            }
+          })
+        } else {
+          findBillDetailByNumber({ number: record.number }).then((res) => {
+            if (res && res.code === 200) {
+              this.$refs.modalBillDetail.show(res.data, record.type);
+              this.$refs.modalBillDetail.title="详情";
+            }
+          })
+        }
       },
       searchQuery() {
         if(this.queryParam.beginTime == '' || this.queryParam.endTime == ''){
