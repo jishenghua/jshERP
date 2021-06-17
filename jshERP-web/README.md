@@ -31,6 +31,11 @@ Overview
 建议安装node-v8.17.0-x64版本 教程参考 https://blog.csdn.net/zhangkaidsy/article/details/86645070
 ```
 
+- 安装git
+```
+建议安装Git-2.29.2.2-64-bit版本 可通过百度搜索下载或者从本项目介绍中推荐的百度网盘下载
+```
+
 - 配淘宝源（速度快）
 ```
 yarn config set registry https://registry.npm.taobao.org
