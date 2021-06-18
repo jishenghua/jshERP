@@ -45,6 +45,9 @@ public class UserController {
     @Value("${manage.roleId}")
     private Integer manageRoleId;
 
+    @Value("${demonstrate.open}")
+    private boolean demonstrateOpen;
+
     @Resource
     private UserService userService;
 
@@ -57,6 +60,7 @@ public class UserController {
     @Resource
     private RedisService redisService;
 
+    private static final String TEST_USER = "jsh";
     private static String SUCCESS = "操作成功";
     private static String ERROR = "操作失败";
     private static final String HTTP = "http://";
@@ -225,7 +229,7 @@ public class UserController {
             String oldPassword = Tools.md5Encryp(oldpwd);
             String md5Pwd = Tools.md5Encryp(password);
             //必须和原始密码一致才可以更新密码
-            if(user.getLoginName().equals("jsh")){
+            if(demonstrateOpen && user.getLoginName().equals(TEST_USER)){
                 flag = 3; //jsh用户不能修改密码
                 info = "jsh用户不能修改密码";
             } else if (oldPassword.equalsIgnoreCase(user.getPassword())) {
