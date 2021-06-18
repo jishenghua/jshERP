@@ -70,7 +70,7 @@
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
               <a v-if="btnEnableList.indexOf(1)>-1" @click="myHandleEdit(record)">编辑</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
-              <a-popconfirm v-if="btnEnableList.indexOf(1)>-1" title="确定删除吗?" @confirm="() => handleDelete(record.id)">
+              <a-popconfirm v-if="btnEnableList.indexOf(1)>-1" title="确定删除吗?" @confirm="() => myHandleDelete(record)">
                 <a>删除</a>
               </a-popconfirm>
             </span>
@@ -179,7 +179,21 @@
 
     },
     methods: {
-
+      myHandleEdit(record) {
+        if(record.status === '0') {
+          this.$refs.modalForm.action = "edit";
+          this.handleEdit(record);
+        } else {
+          this.$message.warning("抱歉，只有未审核的单据才能编辑！")
+        }
+      },
+      myHandleDelete(record) {
+        if(record.status === '0') {
+          this.handleDelete(record.id)
+        } else {
+          this.$message.warning("抱歉，只有未审核的单据才能删除！")
+        }
+      }
     }
   }
 </script>
