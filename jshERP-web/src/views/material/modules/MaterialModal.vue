@@ -189,7 +189,9 @@
           columns: [
             {
               title: '条码', key: 'barCode', width: '30%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}',
-              validateRules: [{ required: true, message: '${title}不能为空' }]
+              validateRules: [{ required: true, message: '${title}不能为空' },
+                { pattern: /^[1-9]\d*$/, message: '请输入零以上的正整数' },
+                { pattern: /^\d{4,13}$/, message: '4到13位数字' }]
             },
             {
               title: '单位', key: 'commodityUnit', width: '12%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}',

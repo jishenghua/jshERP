@@ -36,15 +36,15 @@
         </a-form-item>
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="仓库权限">
           <a-switch checked-children="启用" un-checked-children="关闭" v-model="depotFlagSwitch" @change="onDepotChange"></a-switch>
-          （如果启用则需要到用户列表配置）
+          （如果启用则需要到<b>用户管理</b>进行<b>分配仓库</b>）
         </a-form-item>
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户权限">
           <a-switch checked-children="启用" un-checked-children="关闭" v-model="customerFlagSwitch" @change="onCustomerChange"></a-switch>
-          （如果启用则需要到用户列表配置）
+          （如果启用则需要到<b>用户管理</b>进行<b>分配客户</b>）
         </a-form-item>
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="负库存">
           <a-switch checked-children="启用" un-checked-children="关闭" v-model="minusStockFlagSwitch" @change="onMinusStockChange"></a-switch>
-          （如果启用则支持负库存，批次商品除外）
+          （如果启用则单据支持负库存，批次商品除外）
         </a-form-item>
       </a-form>
     </a-spin>
