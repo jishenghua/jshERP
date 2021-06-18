@@ -63,6 +63,16 @@
                 </a-form-item>
               </a-col>
             </a-row>
+            <a-row class="form-row" :gutter="24">
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="优惠金额">
+                  {{model.changeAmount}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6"></a-col>
+              <a-col :span="6"></a-col>
+              <a-col :span="6"></a-col>
+            </a-row>
           </section>
         </template>
         <!--转账-->

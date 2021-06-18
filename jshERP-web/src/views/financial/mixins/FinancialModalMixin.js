@@ -41,13 +41,24 @@ export const FinancialModalMixin = {
   },
   methods: {
     addInit(amountNum) {
-      this.$nextTick(() => {
-        this.form.setFieldsValue({'billTime':getNowFormatDateTime()})
-      });
       getAction('/sequence/buildNumber').then((res) => {
         if (res && res.code === 200) {
           this.form.setFieldsValue({'billNo':amountNum + res.data.defaultNumber})
         }
+      })
+      this.$nextTick(() => {
+        this.form.setFieldsValue({'billTime':getNowFormatDateTime()})
+      })
+      this.$nextTick(() => {
+        getAccount({}).then((res)=>{
+          if(res && res.code === 200) {
+            for (const item of res.data.accountList) {
+              if(item.isDefault){
+                this.form.setFieldsValue({'accountId': item.id})
+              }
+            }
+          }
+        })
       })
     },
     initSupplier() {
@@ -133,31 +144,10 @@ export const FinancialModalMixin = {
     onValueChange(event) {
       let that = this
       const { type, row, column, value, target } = event
-      let param,operNumber,unitPrice,allPrice,taxRate,taxMoney,taxLastMoney
       switch(column.key) {
-        case "operNumber":
-          unitPrice = row.unitPrice
-          taxRate = row.taxRate
-          allPrice = unitPrice*value
-          taxMoney =(taxRate/100)*allPrice
-          taxLastMoney = allPrice + taxMoney
-          target.setValues([{rowKey: row.id, values: {allPrice: allPrice, taxMoney: taxMoney, taxLastMoney: taxLastMoney}}])
+        case "eachAmount":
           target.recalcAllStatisticsColumns()
-          let allTaxLastMoney = target.statisticsColumns.taxLastMoney
-          this.$nextTick(() => {
-            this.form.setFieldsValue({'discount':0,'discountMoney':0,'discountLastMoney':allTaxLastMoney,
-              'changeAmount':allTaxLastMoney,'debt':0})
-          });
-          break;
-        case "unitPrice":
-          operNumber = row.operNumber
-          target.setValues([{rowKey: row.id, values: {allPrice: value*operNumber}}])
-          target.recalcAllStatisticsColumns()
-          break;
-        case "allPrice":
-          operNumber = row.operNumber
-          target.setValues([{rowKey: row.id, values: {unitPrice: value/operNumber}}])
-          target.recalcAllStatisticsColumns()
+          that.autoChangePrice(target)
           break;
       }
     },
@@ -169,6 +159,13 @@ export const FinancialModalMixin = {
           target.recalcAllStatisticsColumns()
         }
       })
+    },
+    //改变优惠、本次付款、欠款的值
+    autoChangePrice(target) {
+      let allEachAmount = target.statisticsColumns.eachAmount-0
+      this.$nextTick(() => {
+        this.form.setFieldsValue({'changeAmount':allEachAmount})
+      });
     }
   }
 }

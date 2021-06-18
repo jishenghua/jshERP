@@ -52,8 +52,7 @@
           :maxHeight="300"
           :rowNumber="false"
           :rowSelection="true"
-          :actionButton="true"
-          @valueChange="onValueChange" />
+          :actionButton="true" />
         <a-row class="form-row" :gutter="24">
           <a-col :lg="24" :md="24" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="">
