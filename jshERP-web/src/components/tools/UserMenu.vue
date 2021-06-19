@@ -32,7 +32,7 @@
       </a>
     </span>
     <span class="action">
-      <a target="_blank" href="http://www.huaxiaerp.com/">
+      <a target="_blank" :href="systemUrl">
         <a-icon type="bank" style="font-size: 16px;" />
       </a>
     </span>
@@ -82,6 +82,7 @@
         searchMenuOptions:[],
         searchMenuComp: 'span',
         searchMenuVisible: false,
+        systemUrl: window.SYS_URL,
         showAd: false
         // update-begin author:sunjianlei date:20200219 for: 头部菜单搜索规范命名 --------------
       }
