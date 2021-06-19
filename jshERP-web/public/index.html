@@ -239,22 +239,26 @@
   </style>
   <!-- 全局配置 -->
   <script>
+    function getPlatform(type) {
+      let res = '';
+      let ajax = new XMLHttpRequest();
+      let url = window._CONFIG['domianURL'] + '/platformConfig/getPlatform/' + type
+      ajax.onreadystatechange = function () {
+        if (ajax.readyState===4 &&ajax.status===200) {
+          res = ajax.responseText;
+        } else {
+          res = 'ERP系统';
+        }
+      }
+      ajax.open('get', url, false);
+      ajax.send(null);
+      return res;
+    }
     window._CONFIG = {};
     window._CONFIG['domianURL'] = '/jshERP-boot';
     let statisticsCode = '1cd9bcbaae133f03a6eb19da6579aaba'
-    let sysTitle;
-    let ajax = new XMLHttpRequest();
-    let url = window._CONFIG['domianURL'] + '/platformConfig/getPlatformName'
-    ajax.onreadystatechange = function () {
-      if (ajax.readyState===4 &&ajax.status===200) {
-        sysTitle = ajax.responseText;
-      } else {
-        sysTitle = 'ERP系统';
-      }
-    }
-    ajax.open('get', url, false);
-    ajax.send(null);
-    window.SYS_TITLE = sysTitle;
+    window.SYS_TITLE = getPlatform("name");
+    window.SYS_URL = getPlatform("url");
     window._statistics = 'https://hm.baidu.com/hm.js?' + statisticsCode
     document.title = window.SYS_TITLE;
     //statistics

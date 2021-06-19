@@ -51,7 +51,7 @@
         <a-card :bordered="false" :body-style="{padding: '5'}">
           <div class="hidden-xs" style="float:right;">当前版本：V3.0</div>
           &copy; 2015-2030 {{systemTitle}} - Powered By
-          <a href="http://www.huaxiaerp.com/" target="_blank">官方网站</a>
+          <a :href="systemUrl" target="_blank">官方网站</a>
         </a-card>
       </a-col>
     </a-row>
@@ -87,6 +87,7 @@
     data() {
       return {
         systemTitle: window.SYS_TITLE,
+        systemUrl: window.SYS_URL,
         loading: true,
         center: null,
         statistics: {},
