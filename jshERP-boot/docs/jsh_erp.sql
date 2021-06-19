@@ -667,6 +667,7 @@ CREATE TABLE `jsh_platform_config` (
 -- ----------------------------
 INSERT INTO `jsh_platform_config` VALUES ('1', 'platform_name', '平台名称', '华夏ERP');
 INSERT INTO `jsh_platform_config` VALUES ('2', 'activation_code', '激活码', 'b687998cc991278832e0ebcb7a6e7d0f6870c29d21679e58fa91e388985b9df5c2cd553a8d2f91de');
+INSERT INTO `jsh_platform_config` VALUES ('3', 'platform_url', '官方网站', 'http://www.huaxiaerp.com/');
 
 -- ----------------------------
 -- Table structure for jsh_role

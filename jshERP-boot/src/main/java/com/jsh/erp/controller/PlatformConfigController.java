@@ -32,7 +32,7 @@ public class PlatformConfigController {
      * @param request
      * @return
      */
-    @GetMapping(value = "/getPlatformName")
+    @GetMapping(value = "/getPlatform/name")
     public String getPlatformName(HttpServletRequest request)throws Exception {
         String res;
         try {
@@ -42,6 +42,25 @@ public class PlatformConfigController {
         } catch(Exception e){
             e.printStackTrace();
             res = "ERP系统";
+        }
+        return res;
+    }
+
+    /**
+     * 获取官方网站地址
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/getPlatform/url")
+    public String getPlatformUrl(HttpServletRequest request)throws Exception {
+        String res;
+        try {
+            String platformKey = "platform_url";
+            PlatformConfig platformConfig = platformConfigService.getPlatformConfigByKey(platformKey);
+            res = platformConfig.getPlatformValue();
+        } catch(Exception e){
+            e.printStackTrace();
+            res = "#";
         }
         return res;
     }
