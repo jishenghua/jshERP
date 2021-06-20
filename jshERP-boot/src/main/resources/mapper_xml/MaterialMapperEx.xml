@@ -406,4 +406,42 @@
         </if>
         and ifnull(m.delete_flag,'0') !='1'
     </select>
+
+    <select id="checkIsExist" resultType="java.lang.Integer">
+        select count(1) from jsh_material m
+        where ifnull(m.delete_flag,'0') !='1'
+        <if test="name != null">
+            and m.name = #{name}
+        </if>
+        <if test="model != null">
+            and m.model = #{model}
+        </if>
+        <if test="color != null">
+            and m.color = #{color}
+        </if>
+        <if test="standard != null">
+            and m.standard = #{standard}
+        </if>
+        <if test="mfrs != null">
+            and m.mfrs = #{mfrs}
+        </if>
+        <if test="otherField1 != null">
+            and m.other_field1 = #{otherField1}
+        </if>
+        <if test="otherField2 != null">
+            and m.other_field2 = #{otherField2}
+        </if>
+        <if test="otherField3 != null">
+            and m.other_field3 = #{otherField3}
+        </if>
+        <if test="unit != null">
+            and m.unit = #{unit}
+        </if>
+        <if test="unitId != null">
+            and m.unit_id = #{unitId}
+        </if>
+        <if test="id != null">
+            and m.id != #{id}
+        </if>
+    </select>
 </mapper>

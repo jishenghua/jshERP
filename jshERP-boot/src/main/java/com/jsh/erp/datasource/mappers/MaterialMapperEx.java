@@ -102,4 +102,17 @@ public interface MaterialMapperEx {
             @Param("depotId") Long depotId,
             @Param("idList") List<Long> idList,
             @Param("materialParam") String materialParam);
+
+    int checkIsExist(
+            @Param("id") Long id,
+            @Param("name") String name,
+            @Param("model") String model,
+            @Param("color") String color,
+            @Param("standard") String standard,
+            @Param("mfrs") String mfrs,
+            @Param("otherField1") String otherField1,
+            @Param("otherField2") String otherField2,
+            @Param("otherField3") String otherField3,
+            @Param("unit") String unit,
+            @Param("unitId") Long unitId);
 }

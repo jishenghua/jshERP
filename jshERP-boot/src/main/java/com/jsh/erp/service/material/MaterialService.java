@@ -298,28 +298,8 @@ public class MaterialService {
 
     public int checkIsExist(Long id, String name, String model, String color, String standard, String mfrs,
                             String otherField1, String otherField2, String otherField3, String unit, Long unitId)throws Exception {
-        MaterialExample example = new MaterialExample();
-        MaterialExample.Criteria criteria = example.createCriteria();
-        criteria.andNameEqualTo(name).andModelEqualTo(model).andColorEqualTo(color)
-                .andStandardEqualTo(standard).andMfrsEqualTo(mfrs)
-                .andOtherField1EqualTo(otherField1).andOtherField2EqualTo(otherField2).andOtherField2EqualTo(otherField3)
-                .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        if (id > 0) {
-            criteria.andIdNotEqualTo(id);
-        }
-        if (!StringUtil.isEmpty(unit)) {
-            criteria.andUnitEqualTo(unit);
-        }
-        if (unitId !=null) {
-            criteria.andUnitIdEqualTo(unitId);
-        }
-        List<Material> list =null;
-        try{
-            list=  materialMapper.selectByExample(example);
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        return list==null?0:list.size();
+        return materialMapperEx.checkIsExist(id, name, model, color, standard, mfrs, otherField1,
+                otherField2, otherField3, unit, unitId);
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
