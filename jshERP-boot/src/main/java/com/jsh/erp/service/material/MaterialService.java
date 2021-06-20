@@ -173,7 +173,7 @@ public class MaterialService {
             if(materials!=null && materials.size()>0) {
                 mId = materials.get(0).getId();
             }
-            materialExtendService.saveDetials(obj, obj.getString("sortList"), mId);
+            materialExtendService.saveDetials(obj, obj.getString("sortList"), mId, "insert");
             if(obj.get("stock")!=null) {
                 JSONArray stockArr = obj.getJSONArray("stock");
                 for (int i = 0; i < stockArr.size(); i++) {
@@ -190,7 +190,11 @@ public class MaterialService {
             logService.insertLog("商品",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(m.getName()).toString(), request);
             return 1;
-        }catch(Exception e){
+        }
+        catch (BusinessRunTimeException ex) {
+            throw new BusinessRunTimeException(ex.getCode(), ex.getMessage());
+        }
+        catch(Exception e){
             JshException.writeFail(logger, e);
             return 0;
         }
@@ -204,7 +208,7 @@ public class MaterialService {
             if(material.getUnitId() == null) {
                 materialMapperEx.setUnitIdToNull(material.getId());
             }
-            materialExtendService.saveDetials(obj, obj.getString("sortList"),material.getId());
+            materialExtendService.saveDetials(obj, obj.getString("sortList"),material.getId(), "update");
             if(obj.get("stock")!=null) {
                 JSONArray stockArr = obj.getJSONArray("stock");
                 for (int i = 0; i < stockArr.size(); i++) {

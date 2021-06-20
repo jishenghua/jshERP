@@ -4,12 +4,15 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.jsh.erp.constants.BusinessConstants;
+import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.MaterialExtend;
 import com.jsh.erp.datasource.entities.MaterialExtendExample;
 import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.mappers.MaterialExtendMapper;
 import com.jsh.erp.datasource.mappers.MaterialExtendMapperEx;
 import com.jsh.erp.datasource.vo.MaterialExtendVo4List;
+import com.jsh.erp.exception.BusinessParamCheckingException;
+import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.redis.RedisService;
@@ -77,7 +80,7 @@ public class MaterialExtendService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public String saveDetials(JSONObject obj, String sortList, Long materialId) throws Exception {
+    public String saveDetials(JSONObject obj, String sortList, Long materialId, String type) throws Exception {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         JSONArray meArr = obj.getJSONArray("meList");
         JSONArray insertedJson = new JSONArray();
@@ -85,22 +88,29 @@ public class MaterialExtendService {
         JSONArray deletedJson = new JSONArray();
         List<String> barCodeList=new ArrayList<>();
         if (null != meArr) {
-            for (int i = 0; i < meArr.size(); i++) {
-                JSONObject tempJson = meArr.getJSONObject(i);
-                String barCode = tempJson.getString("barCode");
-                barCodeList.add(barCode);
-                MaterialExtend materialExtend = getInfoByBarCode(barCode);
-                if(materialExtend.getBarCode() == null){
+            if("insert".equals(type)){
+                for (int i = 0; i < meArr.size(); i++) {
+                    JSONObject tempJson = meArr.getJSONObject(i);
                     insertedJson.add(tempJson);
-                } else {
-                    updatedJson.add(tempJson);
                 }
-            }
-            List<MaterialExtend> materialExtendList = getMeListByBarCodeAndMid(barCodeList, materialId);
-            for (MaterialExtend meObj: materialExtendList) {
-                JSONObject deleteObj = new JSONObject();
-                deleteObj.put("id", meObj.getId());
-                deletedJson.add(deleteObj);
+            } else if("update".equals(type)){
+                for (int i = 0; i < meArr.size(); i++) {
+                    JSONObject tempJson = meArr.getJSONObject(i);
+                    String barCode = tempJson.getString("barCode");
+                    barCodeList.add(barCode);
+                    MaterialExtend materialExtend = getInfoByBarCode(barCode);
+                    if (materialExtend.getBarCode() == null) {
+                        insertedJson.add(tempJson);
+                    } else {
+                        updatedJson.add(tempJson);
+                    }
+                }
+                List<MaterialExtend> materialExtendList = getMeListByBarCodeAndMid(barCodeList, materialId);
+                for (MaterialExtend meObj : materialExtendList) {
+                    JSONObject deleteObj = new JSONObject();
+                    deleteObj.put("id", meObj.getId());
+                    deletedJson.add(deleteObj);
+                }
             }
         }
         JSONArray sortJson = JSONArray.parseArray(sortList);
@@ -110,7 +120,13 @@ public class MaterialExtendService {
                 JSONObject tempInsertedJson = JSONObject.parseObject(insertedJson.getString(i));
                 materialExtend.setMaterialId(materialId);
                 if (StringUtils.isNotEmpty(tempInsertedJson.getString("barCode"))) {
-                    materialExtend.setBarCode(tempInsertedJson.getString("barCode"));
+                    int exist = checkIsBarCodeExist(0L, tempInsertedJson.getString("barCode"));
+                    if(exist>0) {
+                        throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_BARCODE_EXISTS_CODE,
+                                String.format(ExceptionConstants.MATERIAL_BARCODE_EXISTS_MSG,tempInsertedJson.getString("barCode")));
+                    } else {
+                        materialExtend.setBarCode(tempInsertedJson.getString("barCode"));
+                    }
                 }
                 if (StringUtils.isNotEmpty(tempInsertedJson.getString("commodityUnit"))) {
                     materialExtend.setCommodityUnit(tempInsertedJson.getString("commodityUnit"));
@@ -147,7 +163,13 @@ public class MaterialExtendService {
                 MaterialExtend materialExtend = new MaterialExtend();
                 materialExtend.setId(tempUpdatedJson.getLong("id"));
                 if (StringUtils.isNotEmpty(tempUpdatedJson.getString("barCode"))) {
-                    materialExtend.setBarCode(tempUpdatedJson.getString("barCode"));
+                    int exist = checkIsBarCodeExist(tempUpdatedJson.getLong("id"), tempUpdatedJson.getString("barCode"));
+                    if(exist>0) {
+                        throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_BARCODE_EXISTS_CODE,
+                                String.format(ExceptionConstants.MATERIAL_BARCODE_EXISTS_MSG,tempUpdatedJson.getString("barCode")));
+                    } else {
+                        materialExtend.setBarCode(tempUpdatedJson.getString("barCode"));
+                    }
                 }
                 if (StringUtils.isNotEmpty(tempUpdatedJson.getString("commodityUnit"))) {
                     materialExtend.setCommodityUnit(tempUpdatedJson.getString("commodityUnit"));
@@ -233,10 +255,10 @@ public class MaterialExtendService {
         return res;
     }
 
-    public int checkIsExist(Long id, String MaterialExtendName)throws Exception {
+    public int checkIsBarCodeExist(Long id, String barCode)throws Exception {
         MaterialExtendExample example = new MaterialExtendExample();
         MaterialExtendExample.Criteria criteria = example.createCriteria();
-        criteria.andBarCodeEqualTo(MaterialExtendName);
+        criteria.andBarCodeEqualTo(barCode);
         if (id > 0) {
             criteria.andIdNotEqualTo(id);
         }

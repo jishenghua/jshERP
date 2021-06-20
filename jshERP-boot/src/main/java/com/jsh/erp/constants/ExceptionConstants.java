@@ -284,6 +284,9 @@ public class ExceptionConstants {
     //商品库存不足
     public static final int MATERIAL_STOCK_NOT_ENOUGH_CODE = 8000004;
     public static final String MATERIAL_STOCK_NOT_ENOUGH_MSG = "商品:%s库存不足";
+    //商品条码重复
+    public static final int MATERIAL_BARCODE_EXISTS_CODE = 8000005;
+    public static final String MATERIAL_BARCODE_EXISTS_MSG = "商品条码:%s重复";
     /**
      *  单据信息
      * type = 85
