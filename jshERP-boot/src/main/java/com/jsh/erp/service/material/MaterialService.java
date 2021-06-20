@@ -797,4 +797,16 @@ public class MaterialService {
     public List<MaterialVo4Unit> getMaterialByBarCode(String barCode) {
         return materialMapperEx.getMaterialByBarCode(barCode);
     }
+
+    public List<MaterialVo4Unit> getListWithStock(Long depotId, List<Long> idList, String materialParam, Integer offset, Integer rows) {
+        return materialMapperEx.getListWithStock(depotId, idList, materialParam, offset, rows);
+    }
+
+    public int getListWithStockCount(Long depotId, List<Long> idList, String materialParam) {
+        return materialMapperEx.getListWithStockCount(depotId, idList, materialParam);
+    }
+
+    public MaterialVo4Unit getTotalStockAndPrice(Long depotId, List<Long> idList, String materialParam) {
+        return materialMapperEx.getTotalStockAndPrice(depotId, idList, materialParam);
+    }
 }

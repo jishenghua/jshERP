@@ -1084,3 +1084,17 @@ INSERT INTO `jsh_function` (`id`, `number`, `name`, `parent_number`, `url`, `com
 -- 更新jsh_platform_config数据
 -- --------------------------------------------------------
 INSERT INTO `jsh_platform_config` (`id`, `platform_key`, `platform_key_info`, `platform_value`) VALUES ('3', 'platform_url', '官方网站', 'http://www.huaxiaerp.com/');
+
+-- --------------------------------------------------------
+-- 时间 2021年6月20日
+-- by jishenghua
+-- 将库存状态报表改为进销存统计报表
+-- --------------------------------------------------------
+update jsh_function set name='进销存统计', sort='0658' where id=59
+
+-- --------------------------------------------------------
+-- 时间 2021年6月20日
+-- by jishenghua
+-- 增加商品库存报表
+-- --------------------------------------------------------
+INSERT INTO `jsh_function` (`id`, `number`, `name`, `parent_number`, `url`, `component`, `state`, `sort`, `enabled`, `type`, `push_btn`, `icon`, `delete_flag`) VALUES ('246', '030113', '商品库存', '0301', '/report/material_stock', '/report/MaterialStock', b'0', '0605', b'1', '电脑版', '', 'profile', '0');

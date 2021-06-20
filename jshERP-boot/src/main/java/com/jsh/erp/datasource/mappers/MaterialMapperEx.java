@@ -85,4 +85,21 @@ public interface MaterialMapperEx {
     int setUnitIdToNull(@Param("id") Long id);
 
     List<MaterialVo4Unit> getMaterialByBarCode(@Param("barCode") String barCode);
+
+    List<MaterialVo4Unit> getListWithStock(
+            @Param("depotId") Long depotId,
+            @Param("idList") List<Long> idList,
+            @Param("materialParam") String materialParam,
+            @Param("offset") Integer offset,
+            @Param("rows") Integer rows);
+
+    int getListWithStockCount(
+            @Param("depotId") Long depotId,
+            @Param("idList") List<Long> idList,
+            @Param("materialParam") String materialParam);
+
+    MaterialVo4Unit getTotalStockAndPrice(
+            @Param("depotId") Long depotId,
+            @Param("idList") List<Long> idList,
+            @Param("materialParam") String materialParam);
 }

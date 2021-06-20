@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.DepotEx;
+import com.jsh.erp.datasource.entities.DepotItemVo4WithInfoEx;
 import com.jsh.erp.datasource.entities.Material;
 import com.jsh.erp.datasource.entities.MaterialVo4Unit;
 import com.jsh.erp.exception.BusinessRunTimeException;
@@ -477,6 +478,52 @@ public class MaterialController {
             }
             res.code = 200;
             res.data = mu;
+        } catch(Exception e){
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
+    }
+
+    /**
+     * 商品库存查询
+     * @param currentPage
+     * @param pageSize
+     * @param depotId
+     * @param categoryId
+     * @param materialParam
+     * @param mpList
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @GetMapping(value = "/getListWithStock")
+    public BaseResponseInfo getListWithStock(@RequestParam("currentPage") Integer currentPage,
+                                             @RequestParam("pageSize") Integer pageSize,
+                                             @RequestParam("depotId") Long depotId,
+                                             @RequestParam("categoryId") Long categoryId,
+                                             @RequestParam("materialParam") String materialParam,
+                                             @RequestParam("mpList") String mpList,
+                                             HttpServletRequest request)throws Exception {
+        BaseResponseInfo res = new BaseResponseInfo();
+        Map<String, Object> map = new HashMap<>();
+        try {
+            List<Long> idList = new ArrayList<>();
+            if(categoryId != null){
+                idList = materialService.getListByParentId(categoryId);
+            }
+            List<MaterialVo4Unit> dataList = materialService.getListWithStock(depotId, idList, StringUtil.toNull(materialParam),
+                    (currentPage-1)*pageSize, pageSize);
+            int total = materialService.getListWithStockCount(depotId, idList, StringUtil.toNull(materialParam));
+            MaterialVo4Unit materialVo4Unit= materialService.getTotalStockAndPrice(depotId, idList, StringUtil.toNull(materialParam));
+            map.put("total", total);
+            map.put("currentStock", materialVo4Unit.getCurrentStock());
+            map.put("currentStockPrice", materialVo4Unit.getCurrentStockPrice());
+            //存放数据json数组
+            map.put("rows", dataList);
+            res.code = 200;
+            res.data = map;
         } catch(Exception e){
             e.printStackTrace();
             res.code = 500;
