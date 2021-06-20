@@ -367,7 +367,7 @@ public class MaterialController {
                 src = workbook.getSheet(0);
             } catch (Exception e) {
             }
-            res = materialService.importExcel(src);
+            res = materialService.importExcel(src, request);
         } catch (Exception e) {
             e.printStackTrace();
         }
