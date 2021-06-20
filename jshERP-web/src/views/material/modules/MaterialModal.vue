@@ -230,8 +230,7 @@
           name:{
             rules: [
               { required: true, message: '请输入名称!' },
-              { min: 2, max: 30, message: '长度在 2 到 30 个字符', trigger: 'blur' },
-              { validator: this.validateMaterialName}
+              { min: 2, max: 30, message: '长度在 2 到 30 个字符', trigger: 'blur' }
             ]
           },
           unit:{
@@ -362,6 +361,7 @@
           stock: allValues.tablesValue[1].values,
         }
       },
+
       /** 发起新增或修改的请求 */
       requestAddOrEdit(formData) {
         if(formData.unit === '' && formData.unitId === '') {
@@ -372,86 +372,95 @@
           this.$message.warning('抱歉，请输入条码信息！');
           return;
         }
-        //进一步校验单位
-        let manyUnitselected = ''
-        if(formData.unitId) {
-          for(let i=0; i<this.unitList.length; i++) {
-            if(this.unitList[i].id == formData.unitId) {
-              manyUnitselected = this.unitList[i].name
-            }
-          }
+        //校验商品是否存在，通过校验商品的名称、型号、规格、颜色、单位、制造商等
+        let param = {
+          id: this.model.id?this.model.id:0,
+          name: this.model.name,
+          model: this.parseParam(this.model.model),
+          color: this.parseParam(this.model.color),
+          standard: this.parseParam(this.model.standard),
+          mfrs: this.parseParam(this.model.mfrs),
+          otherField1: this.parseParam(this.model.otherField1),
+          otherField2: this.parseParam(this.model.otherField2),
+          otherField3: this.parseParam(this.model.otherField3),
+          unit: this.parseParam(this.model.unit),
+          unitId: this.parseParam(this.model.unitId)
         }
-        let manyUnitInfo = manyUnitselected.substring(0, manyUnitselected.indexOf("("));
-        let unitArr = manyUnitInfo.split(",");
-        if(!formData.unit) {
-          //此时为多单位
-          if (formData.meList.length<2){
-            this.$message.warning('多单位的商品条码行数至少要有两行，请再新增一行条码信息！');
-            return;
-          }
-          if(formData.meList[0].commodityUnit != unitArr[0]) {
-            this.$message.warning('条码之后的单位填写有误，单位【' + formData.meList[0].commodityUnit
-              + '】请修改为【' + unitArr[0] + '】！');
-            return;
-          }
-          if(formData.meList[1].commodityUnit != unitArr[1]) {
-            this.$message.warning('条码之后的单位填写有误，单位【' + formData.meList[1].commodityUnit
-              + '】请修改为【' + unitArr[1] + '】！');
-            return;
-          }
-        }
-        for(let i=0; i<formData.meList.length; i++) {
-          let commodityUnit = formData.meList[i].commodityUnit;
-          if(formData.unit) {
-            if(commodityUnit != formData.unit) {
-              this.$message.warning('条码之后的单位填写有误，单位【' + commodityUnit + '】请修改为【'
-                + formData.unit + '】！');
+        checkMaterial(param).then((res)=>{
+          if(res && res.code===200) {
+            if(res.data.status){
+              this.$message.warning('抱歉，该商品已存在！');
               return;
-            }
-          } else if(manyUnitselected) {
-            if(commodityUnit != unitArr[0] && commodityUnit != unitArr[1]) {
-              this.$message.warning('条码之后的单位填写有误，单位【' + commodityUnit + '】请修改为【'
-                 + unitArr[0]+ '】或【' + unitArr[1]+ '】！');
-              return;
+            } else {
+              //进一步校验单位
+              let manyUnitselected = ''
+              if(formData.unitId) {
+                for(let i=0; i<this.unitList.length; i++) {
+                  if(this.unitList[i].id == formData.unitId) {
+                    manyUnitselected = this.unitList[i].name
+                  }
+                }
+              }
+              let manyUnitInfo = manyUnitselected.substring(0, manyUnitselected.indexOf("("));
+              let unitArr = manyUnitInfo.split(",");
+              if(!formData.unit) {
+                //此时为多单位
+                if (formData.meList.length<2){
+                  this.$message.warning('多单位的商品条码行数至少要有两行，请再新增一行条码信息！');
+                  return;
+                }
+                if(formData.meList[0].commodityUnit != unitArr[0]) {
+                  this.$message.warning('条码之后的单位填写有误，单位【' + formData.meList[0].commodityUnit
+                    + '】请修改为【' + unitArr[0] + '】！');
+                  return;
+                }
+                if(formData.meList[1].commodityUnit != unitArr[1]) {
+                  this.$message.warning('条码之后的单位填写有误，单位【' + formData.meList[1].commodityUnit
+                    + '】请修改为【' + unitArr[1] + '】！');
+                  return;
+                }
+              }
+              for(let i=0; i<formData.meList.length; i++) {
+                let commodityUnit = formData.meList[i].commodityUnit;
+                if(formData.unit) {
+                  if(commodityUnit != formData.unit) {
+                    this.$message.warning('条码之后的单位填写有误，单位【' + commodityUnit + '】请修改为【'
+                      + formData.unit + '】！');
+                    return;
+                  }
+                } else if(manyUnitselected) {
+                  if(commodityUnit != unitArr[0] && commodityUnit != unitArr[1]) {
+                    this.$message.warning('条码之后的单位填写有误，单位【' + commodityUnit + '】请修改为【'
+                      + unitArr[0]+ '】或【' + unitArr[1]+ '】！');
+                    return;
+                  }
+                }
+              }
+              //接口调用
+              let url = this.url.add, method = 'post'
+              if (this.model.id) {
+                url = this.url.edit
+                method = 'put'
+              }
+              const that = this;
+              this.confirmLoading = true
+              httpAction(url, formData, method).then((res) => {
+                if(res.code === 200){
+                  that.$emit('ok');
+                  that.confirmLoading = false
+                  that.close();
+                }else{
+                  that.$message.warning(res.data.message);
+                  that.confirmLoading = false
+                }
+              }).finally(() => {
+              })
             }
           }
-        }
-        //接口调用
-        let url = this.url.add, method = 'post'
-        if (this.model.id) {
-          url = this.url.edit
-          method = 'put'
-        }
-        const that = this;
-        this.confirmLoading = true
-        httpAction(url, formData, method).then((res) => {
-          if(res.code === 200){
-            that.$emit('ok');
-            that.confirmLoading = false
-            that.close();
-          }else{
-            that.$message.warning(res.data.message);
-            that.confirmLoading = false
-          }
-        }).finally(() => {
         })
       },
-      validateMaterialName(rule, value, callback){
-        let params = {
-          name: value,
-          id: this.model.id?this.model.id:0
-        };
-        checkMaterial(params).then((res)=>{
-          if(res && res.code===200) {
-            if(!res.data.status){
-              callback();
-            } else {
-              callback("名称已经存在");
-            }
-          } else {
-            callback(res.data);
-          }
-        });
+      parseParam(param) {
+        return param ? param: ""
       },
       validateBarCode(type, value, row, column, callback, target) {
         let params = {

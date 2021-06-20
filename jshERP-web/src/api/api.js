@@ -125,7 +125,7 @@ const queryMaterialCategoryById = (params)=>getAction("/materialCategory/findByI
 //商品管理
 const addMaterial = (params)=>postAction("/material/add",params);
 const editMaterial = (params)=>putAction("/material/update",params);
-const checkMaterial = (params)=>getAction("/material/checkIsNameExist",params);
+const checkMaterial = (params)=>getAction("/material/checkIsExist",params);
 const getMaterialBySelect = (params)=>getAction("/material/findBySelect",params);
 const getSerialMaterialBySelect = (params)=>getAction("/material/getMaterialEnableSerialNumberList",params);
 const getMaterialByBarCode = (params)=>getAction("/material/getMaterialByBarCode",params);
