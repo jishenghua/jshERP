@@ -129,6 +129,7 @@ const checkMaterial = (params)=>getAction("/material/checkIsNameExist",params);
 const getMaterialBySelect = (params)=>getAction("/material/findBySelect",params);
 const getSerialMaterialBySelect = (params)=>getAction("/material/getMaterialEnableSerialNumberList",params);
 const getMaterialByBarCode = (params)=>getAction("/material/getMaterialByBarCode",params);
+const checkMaterialBarCode = (params)=>getAction("/materialsExtend/checkIsBarCodeExist",params);
 //序列号
 const addSerialNumber = (params)=>postAction("/serialNumber/add",params);
 const editSerialNumber = (params)=>putAction("/serialNumber/update",params);
@@ -249,6 +250,7 @@ export {
   getMaterialBySelect,
   getSerialMaterialBySelect,
   getMaterialByBarCode,
+  checkMaterialBarCode,
   addSerialNumber,
   editSerialNumber,
   checkSerialNumber,

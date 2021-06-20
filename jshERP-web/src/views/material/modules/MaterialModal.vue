@@ -148,7 +148,7 @@
   import pick from 'lodash.pick'
   import JEditableTable from '@/components/jeecg/JEditableTable'
   import { FormTypes, VALIDATE_NO_PASSED, getRefPromise, validateFormAndTables } from '@/utils/JEditableTableUtil'
-  import {queryMaterialCategoryTreeList,addMaterial,editMaterial,checkMaterial} from '@/api/api'
+  import {queryMaterialCategoryTreeList,checkMaterial,checkMaterialBarCode} from '@/api/api'
   import { httpAction, getAction } from '@/api/manage'
   import JDate from '@/components/jeecg/JDate'
   import Vue from 'vue'
@@ -191,7 +191,8 @@
               title: '条码', key: 'barCode', width: '30%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}',
               validateRules: [{ required: true, message: '${title}不能为空' },
                 { pattern: /^[1-9]\d*$/, message: '请输入零以上的正整数' },
-                { pattern: /^\d{4,13}$/, message: '4到13位数字' }]
+                { pattern: /^\d{4,13}$/, message: '4到13位数字' },
+                { handler: this.validateBarCode}]
             },
             {
               title: '单位', key: 'commodityUnit', width: '12%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}',
@@ -372,7 +373,6 @@
           return;
         }
         //进一步校验单位
-        debugger
         let manyUnitselected = ''
         if(formData.unitId) {
           for(let i=0; i<this.unitList.length; i++) {
@@ -450,6 +450,23 @@
             }
           } else {
             callback(res.data);
+          }
+        });
+      },
+      validateBarCode(type, value, row, column, callback, target) {
+        let params = {
+          barCode: value,
+          id: row.id.length == 20?0: row.id
+        };
+        checkMaterialBarCode(params).then((res)=>{
+          if(res && res.code===200) {
+            if(!res.data.status){
+              callback(true);
+            } else {
+              callback(false, '该条码已经存在');
+            }
+          } else {
+            callback(false, res.data);
           }
         });
       },
