@@ -5,14 +5,12 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
-import com.jsh.erp.datasource.entities.DepotEx;
-import com.jsh.erp.datasource.entities.DepotItemVo4WithInfoEx;
-import com.jsh.erp.datasource.entities.Material;
-import com.jsh.erp.datasource.entities.MaterialVo4Unit;
+import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.service.redis.RedisService;
+import com.jsh.erp.service.unit.UnitService;
 import com.jsh.erp.utils.*;
 import jxl.Sheet;
 import jxl.Workbook;
@@ -43,6 +41,9 @@ public class MaterialController {
 
     @Resource
     private DepotItemService depotItemService;
+
+    @Resource
+    private UnitService unitService;
 
     @Resource
     private RedisService redisService;
@@ -188,17 +189,24 @@ public class MaterialController {
                             ratio = ratio.substring(ratio.indexOf("("));
                         }
                     }
-                    //名称/型号/扩展信息/包装
-                    String MaterialName = "";
-                    String mBarCode = "";
-                    if(material.getmBarCode()!=null) {
-                        mBarCode = material.getmBarCode();
-                        MaterialName = MaterialName + mBarCode + "_";
+                    item.put("mBarCode", material.getmBarCode());
+                    item.put("name", material.getName());
+                    item.put("categoryName", material.getCategoryName());
+                    item.put("standard", material.getStandard());
+                    item.put("model", material.getModel());
+                    item.put("unit", material.getCommodityUnit() + ratio);
+                    if(depotId!=null) {
+                        BigDecimal stock = depotItemService.getStockByParam(depotId,material.getId(),null,null,tenantId);
+                        if (material.getUnitId()!=null){
+                            Unit unit = unitService.getUnit(material.getUnitId());
+                            if(material.getCommodityUnit().equals(unit.getOtherUnit())) {
+                                if(unit.getRatio()!=0) {
+                                    stock = stock.divide(BigDecimal.valueOf(unit.getRatio()));
+                                }
+                            }
+                        }
+                        item.put("stock", stock);
                     }
-                    item.put("mBarCode", mBarCode);
-                    MaterialName = MaterialName + " " + material.getName()
-                            + ((material.getStandard() == null || material.getStandard().equals("")) ? "" : "(" + material.getStandard() + ")")
-                            + ((material.getModel() == null || material.getModel().equals("")) ? "" : "(" + material.getModel() + ")");
                     String expand = ""; //扩展信息
                     for (int i = 0; i < mpArr.length; i++) {
                         if (mpArr[i].equals("制造商")) {
@@ -214,18 +222,7 @@ public class MaterialController {
                             expand = expand + ((material.getOtherField3() == null || material.getOtherField3().equals("")) ? "" : "(" + material.getOtherField3() + ")");
                         }
                     }
-                    MaterialName = MaterialName + expand + ((material.getCommodityUnit() == null || material.getCommodityUnit().equals("")) ? "" : "(" + material.getCommodityUnit() + ")") + ratio;
-                    item.put("materialName", MaterialName);
-                    item.put("categoryName", material.getCategoryName());
-                    item.put("name", material.getName());
                     item.put("expand", expand);
-                    item.put("model", material.getModel());
-                    item.put("standard", material.getStandard());
-                    item.put("unit", material.getCommodityUnit() + ratio);
-                    if(depotId!=null) {
-                        BigDecimal stock = depotItemService.getStockByParam(depotId,material.getId(),null,null,tenantId);
-                        item.put("stock", stock);
-                    }
                     dataArray.add(item);
                 }
             }
