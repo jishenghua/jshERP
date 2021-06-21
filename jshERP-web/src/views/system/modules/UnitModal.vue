@@ -67,7 +67,8 @@
             ]},
           ratio:{
             rules: [
-              { required: true, message: '请输入比例!' }
+              { required: true, message: '请输入比例!' },
+              { validator: this.validateRatio}
             ]}
         },
       }
@@ -118,6 +119,13 @@
       },
       handleCancel () {
         this.close()
+      },
+      validateRatio(rule, value, callback) {
+        if (value > 1) {
+          callback();
+        } else {
+          callback("比例必须大于1");
+        }
       }
     }
   }
