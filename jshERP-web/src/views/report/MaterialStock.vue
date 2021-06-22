@@ -61,14 +61,19 @@
             :pagination="ipagination"
             :loading="loading"
             @change="handleTableChange">
+              <span slot="action" slot-scope="text, record">
+                <a @click="showMaterialInOutList(record)">流水</a>
+              </span>
           </a-table>
         </section>
         <!-- table区域-end -->
+        <material-in-out-list ref="materialInOutList" @ok="modalFormOk"></material-in-out-list>
       </a-card>
     </a-col>
   </a-row>
 </template>
 <script>
+  import MaterialInOutList from './modules/MaterialInOutList'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { getAction } from '@/api/manage'
   import {queryMaterialCategoryTreeList} from '@/api/api'
@@ -80,6 +85,7 @@
     name: "MaterialStock",
     mixins:[JeecgListMixin],
     components: {
+      MaterialInOutList,
       JEllipsis
     },
     data () {
@@ -113,7 +119,10 @@
           {title: '单价', dataIndex: 'purchaseDecimal', width: 60},
           {title: '初始库存', dataIndex: 'initialStock', width: 80},
           {title: '当前库存', dataIndex: 'currentStock', width: 80},
-          {title: '当前库存金额', dataIndex: 'currentStockPrice', width: 80}
+          {title: '当前库存金额', dataIndex: 'currentStockPrice', width: 80},
+          { title: '库存流水', dataIndex: 'action', align:"center", width: 100,
+            scopedSlots: { customRender: 'action' }
+          }
         ],
         labelCol: {
           xs: { span: 1 },
@@ -191,6 +200,11 @@
           }
           this.loading = false;
         })
+      },
+      showMaterialInOutList(record) {
+        this.$refs.materialInOutList.show(record);
+        this.$refs.materialInOutList.title = "查看商品库存流水（全部仓库）";
+        this.$refs.materialInOutList.disableSubmit = false;
       }
     }
   }
