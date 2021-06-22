@@ -64,7 +64,6 @@ public class DepotItemController {
             @RequestParam("materialId") String mId, HttpServletRequest request)throws Exception {
         Map<String, String> parameterMap = ParamUtils.requestToMap(request);
         parameterMap.put("mId", mId);
-        PageQueryInfo queryInfo = new PageQueryInfo();
         Map<String, Object> objectMap = new HashMap<String, Object>();
         if (pageSize != null && pageSize <= 0) {
             pageSize = 10;
@@ -78,28 +77,27 @@ public class DepotItemController {
         if (list != null) {
             for (DepotItemVo4DetailByTypeAndMId d: list) {
                 JSONObject item = new JSONObject();
-                item.put("Number", d.getNumber()); //商品编号
+                item.put("number", d.getNumber()); //商品编号
                 String type = d.getType();
                 String subType = d.getSubType();
                 if(("其它").equals(type)) {
-                    item.put("Type", subType); //进出类型
+                    item.put("type", subType); //进出类型
                 } else {
-                    item.put("Type", subType + type); //进出类型
+                    item.put("type", subType + type); //进出类型
                 }
                 item.put("depotName", d.getDepotName()); //仓库名称
-                item.put("BasicNumber", d.getBnum()); //数量
-                item.put("OperTime", d.getOtime().getTime()); //时间
+                item.put("basicNumber", d.getBnum()); //数量
+                item.put("operTime", d.getOtime().getTime()); //时间
                 dataArray.add(item);
             }
         }
-        objectMap.put("page", queryInfo);
         if (list == null) {
-            queryInfo.setRows(new ArrayList<Object>());
-            queryInfo.setTotal(BusinessConstants.DEFAULT_LIST_NULL_NUMBER);
+            objectMap.put("rows", new ArrayList<Object>());
+            objectMap.put("total", BusinessConstants.DEFAULT_LIST_NULL_NUMBER);
             return returnJson(objectMap, "查找不到数据", ErpInfo.OK.code);
         }
-        queryInfo.setRows(dataArray);
-        queryInfo.setTotal(depotItemService.findDetailByTypeAndMaterialIdCounts(parameterMap));
+        objectMap.put("rows", dataArray);
+        objectMap.put("total", depotItemService.findDetailByTypeAndMaterialIdCounts(parameterMap));
         return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
     }
 
