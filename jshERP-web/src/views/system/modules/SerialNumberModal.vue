@@ -20,7 +20,7 @@
           <a-input placeholder="请输入序列号" v-decorator.trim="[ 'serialNumber', validatorRules.serialNumber]" />
         </a-form-item>
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="商品条码">
-          <j-select-serial-material v-decorator="[ 'materialCode' ]" :multi="false" @change="onInputChange"/>
+          <j-select-serial-material v-decorator="[ 'materialCode', validatorRules.materialCode]" :multi="false" @change="onInputChange"/>
         </a-form-item>
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="商品名称">
           <a-input v-decorator="[ 'materialName' ]" :readOnly="true"/>
@@ -66,6 +66,9 @@
               { min: 2, max: 30, message: '长度在 2 到 30 个字符', trigger: 'blur' },
               { validator: this.validateSerialNumberName}
             ]
+          },
+          materialCode:{
+            rules: [{ required: true, message: '请选择商品条码!' }]
           }
         }
       }
