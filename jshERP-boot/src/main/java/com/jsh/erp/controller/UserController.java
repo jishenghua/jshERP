@@ -107,32 +107,29 @@ public class UserController {
                 case ExceptionCodeConstants.UserExceptionCode.USER_ACCESS_EXCEPTION:
                     msgTip = "access service error";
                     break;
-                default:
-                    try {
-                        msgTip = "user can login";
-                        //验证通过 ，可以登录，放入session，记录登录日志
-                        user = userService.getUserByLoginName(loginName);
-                        if(user.getTenantId()!=null) {
-                            token = token + "_" + user.getTenantId();
-                        }
-                        redisService.storageObjectBySession(token,"userId",user.getId());
-                        if(user.getTenantId()!=null) {
-                            Tenant tenant = tenantService.getTenantByTenantId(user.getTenantId());
-                            if(tenant!=null) {
-                                Long tenantId = tenant.getTenantId();
-                                Integer userNumLimit = tenant.getUserNumLimit();
-                                Integer billsNumLimit = tenant.getBillsNumLimit();
-                                if(tenantId!=null) {
-                                    redisService.storageObjectBySession(token,"tenantId",tenantId); //租户tenantId
-                                    redisService.storageObjectBySession(token,"userNumLimit",userNumLimit); //用户限制数
-                                    redisService.storageObjectBySession(token,"billsNumLimit",billsNumLimit); //单据限制数
-                                }
+                case ExceptionCodeConstants.UserExceptionCode.USER_CONDITION_FIT:
+                    msgTip = "user can login";
+                    //验证通过 ，可以登录，放入session，记录登录日志
+                    user = userService.getUserByLoginName(loginName);
+                    if(user.getTenantId()!=null) {
+                        token = token + "_" + user.getTenantId();
+                    }
+                    redisService.storageObjectBySession(token,"userId",user.getId());
+                    if(user.getTenantId()!=null) {
+                        Tenant tenant = tenantService.getTenantByTenantId(user.getTenantId());
+                        if(tenant!=null) {
+                            Long tenantId = tenant.getTenantId();
+                            Integer userNumLimit = tenant.getUserNumLimit();
+                            Integer billsNumLimit = tenant.getBillsNumLimit();
+                            if(tenantId!=null) {
+                                redisService.storageObjectBySession(token,"tenantId",tenantId); //租户tenantId
+                                redisService.storageObjectBySession(token,"userNumLimit",userNumLimit); //用户限制数
+                                redisService.storageObjectBySession(token,"billsNumLimit",billsNumLimit); //单据限制数
                             }
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        logger.error(">>>>>>>>>>>>>>>查询用户名为:" + loginName + " ，用户信息异常", e);
                     }
+                    break;
+                default:
                     break;
             }
             Map<String, Object> data = new HashMap<String, Object>();
