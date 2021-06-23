@@ -233,44 +233,47 @@ public class DepotHeadService {
         try{
             //查询单据主表信息
             DepotHead depotHead =getDepotHead(id);
-            User userInfo=userService.getCurrentUser();
-            //删除出库数据回收序列号
-            if(BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())
-                    &&!BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubType())){
-                //查询单据子表列表
-                List<DepotItem> depotItemList=null;
-                try{
-                    depotItemList = depotItemMapperEx.findDepotItemListBydepotheadId(id,BusinessConstants.ENABLE_SERIAL_NUMBER_ENABLED);
-                }catch(Exception e){
-                    JshException.readFail(logger, e);
-                }
+            //只有未审核的单据才能被删除
+            if("0".equals(depotHead.getStatus())) {
+                User userInfo = userService.getCurrentUser();
+                //删除出库数据回收序列号
+                if (BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())
+                        && !BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubType())) {
+                    //查询单据子表列表
+                    List<DepotItem> depotItemList = null;
+                    try {
+                        depotItemList = depotItemMapperEx.findDepotItemListBydepotheadId(id, BusinessConstants.ENABLE_SERIAL_NUMBER_ENABLED);
+                    } catch (Exception e) {
+                        JshException.readFail(logger, e);
+                    }
 
-                /**回收序列号*/
-                if(depotItemList!=null&&depotItemList.size()>0){
-                    for(DepotItem depotItem:depotItemList){
-                        //BasicNumber=OperNumber*ratio
-                        serialNumberService.cancelSerialNumber(depotItem.getMaterialId(), depotItem.getHeaderId(),(depotItem.getBasicNumber()==null?0:depotItem.getBasicNumber()).intValue(),userInfo);
+                    /**回收序列号*/
+                    if (depotItemList != null && depotItemList.size() > 0) {
+                        for (DepotItem depotItem : depotItemList) {
+                            //BasicNumber=OperNumber*ratio
+                            serialNumberService.cancelSerialNumber(depotItem.getMaterialId(), depotItem.getHeaderId(), (depotItem.getBasicNumber() == null ? 0 : depotItem.getBasicNumber()).intValue(), userInfo);
+                        }
                     }
                 }
-            }
-            /**删除单据子表数据*/
-            try{
-                depotItemMapperEx.batchDeleteDepotItemByDepotHeadIds(new Long []{id});
-                //更新当前库存
-                List<DepotItem> list = depotItemService.getListByHeaderId(id);
-                for(DepotItem depotItem: list){
-                    Long tenantId = redisService.getTenantId(request);
-                    depotItemService.updateCurrentStock(depotItem,tenantId);
+                /**删除单据子表数据*/
+                try {
+                    depotItemMapperEx.batchDeleteDepotItemByDepotHeadIds(new Long[]{id});
+                    //更新当前库存
+                    List<DepotItem> list = depotItemService.getListByHeaderId(id);
+                    for (DepotItem depotItem : list) {
+                        Long tenantId = redisService.getTenantId(request);
+                        depotItemService.updateCurrentStock(depotItem, tenantId);
+                    }
+                } catch (Exception e) {
+                    JshException.writeFail(logger, e);
                 }
-            }catch(Exception e){
-                JshException.writeFail(logger, e);
+                /**删除单据主表信息*/
+                batchDeleteDepotHeadByIds(id.toString());
+                logService.insertLog("单据",
+                        new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(depotHead.getNumber()).toString(),
+                        ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+                result = 1;
             }
-            /**删除单据主表信息*/
-            batchDeleteDepotHeadByIds(id.toString());
-            logService.insertLog("单据",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(depotHead.getNumber()).toString(),
-                    ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
-            result = 1;
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -321,14 +324,31 @@ public class DepotHeadService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchSetStatus(String status, String depotHeadIDs)throws Exception {
-        List<Long> ids = StringUtil.strToLongList(depotHeadIDs);
-        DepotHead depotHead = new DepotHead();
-        depotHead.setStatus(status);
-        DepotHeadExample example = new DepotHeadExample();
-        example.createCriteria().andIdIn(ids);
         int result = 0;
         try{
-            result = depotHeadMapper.updateByExampleSelective(depotHead, example);
+            List<Long> dhIds = new ArrayList<>();
+            List<Long> ids = StringUtil.strToLongList(depotHeadIDs);
+            for(Long id: ids) {
+                DepotHead depotHead = getDepotHead(id);
+                if("0".equals(status)){
+                    if("1".equals(depotHead.getStatus())) {
+                        dhIds.add(id);
+                    }
+                } else if("1".equals(status)){
+                    if("0".equals(depotHead.getStatus())) {
+                        dhIds.add(id);
+                    }
+                }
+            }
+            if(dhIds.size()>0) {
+                DepotHead depotHead = new DepotHead();
+                depotHead.setStatus(status);
+                DepotHeadExample example = new DepotHeadExample();
+                example.createCriteria().andIdIn(dhIds);
+                result = depotHeadMapper.updateByExampleSelective(depotHead, example);
+            } else {
+                return 1;
+            }
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
