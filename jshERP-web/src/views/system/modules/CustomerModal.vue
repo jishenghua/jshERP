@@ -58,12 +58,12 @@
         </a-col>
         <a-col :span="24/2">
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="期末应收">
-            <a-input v-decorator.trim="[ 'AllNeedGet' ]" :readOnly="true" />
+            <a-input v-decorator.trim="[ 'allNeedGet' ]" :readOnly="true" />
           </a-form-item>
         </a-col>
         <a-col :span="24/2">
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="期末应付">
-            <a-input v-decorator.trim="[ 'AllNeedPay' ]" :readOnly="true" />
+            <a-input v-decorator.trim="[ 'allNeedPay' ]" :readOnly="true" />
           </a-form-item>
         </a-col>
         <a-col :span="24/2">
@@ -144,7 +144,7 @@
         this.visible = true;
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model,'supplier', 'contacts', 'telephone', 'email', 'telephone',
-            'phoneNum', 'fax', 'beginNeedGet', 'beginNeedPay', 'AllNeedGet', 'AllNeedPay', 'taxNum', 'taxRate',
+            'phoneNum', 'fax', 'beginNeedGet', 'beginNeedPay', 'allNeedGet', 'allNeedPay', 'taxNum', 'taxRate',
             'bankName', 'accountNumber', 'address', 'description'))
         });
       },
