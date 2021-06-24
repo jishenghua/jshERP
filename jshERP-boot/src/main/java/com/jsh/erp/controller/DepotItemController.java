@@ -87,7 +87,7 @@ public class DepotItemController {
                 }
                 item.put("depotName", d.getDepotName()); //仓库名称
                 item.put("basicNumber", d.getBnum()); //数量
-                item.put("operTime", d.getOtime().getTime()); //时间
+                item.put("operTime", Tools.getCenternTime(d.getOtime())); //时间
                 dataArray.add(item);
             }
         }
