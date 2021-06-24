@@ -35,7 +35,11 @@
                 <a-input placeholder="请输入单据编号" v-decorator.trim="[ 'number' ]" :readOnly="true"/>
               </a-form-item>
             </a-col>
-            <a-col :lg="6" :md="12" :sm="24"></a-col>
+            <a-col :lg="6" :md="12" :sm="24">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联单据">
+                <a-input-search placeholder="请选择关联单据" v-decorator="[ 'linkNumber' ]" @search="onSearchLinkNumber" :readOnly="true"/>
+              </a-form-item>
+            </a-col>
           </a-row>
           <j-editable-table
             :ref="refKeys[0]"
@@ -112,15 +116,18 @@
       </a-spin>
     </j-modal>
     <many-account-modal ref="manyAccountModalForm" @ok="manyAccountModalFormOk"></many-account-modal>
+    <link-bill-list ref="linkBillList" @ok="linkBillListOk"></link-bill-list>
   </a-card>
 </template>
 <script>
   import pick from 'lodash.pick'
   import ManyAccountModal from '../dialog/ManyAccountModal'
+  import LinkBillList from '../dialog/LinkBillList'
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
   import { getMpListShort, changeListFmtMinus } from "@/utils/util"
+  import { getAction } from '@/api/manage'
   import JSelectMultiple from '@/components/jeecg/JSelectMultiple'
   import JDate from '@/components/jeecg/JDate'
   import Vue from 'vue'
@@ -129,6 +136,7 @@
     mixins: [JEditableTableMixin, BillModalMixin],
     components: {
       ManyAccountModal,
+      LinkBillList,
       JDate,
       JSelectMultiple
     },
@@ -272,6 +280,50 @@
         this.$nextTick(() => {
           this.form.setFieldsValue({'changeAmount':allPrice})
         });
+      },
+      onSearchLinkNumber() {
+        this.$refs.linkBillList.show('出库', '销售', '客户', "0")
+        this.$refs.linkBillList.title = "选择销售出库"
+      },
+      linkBillListOk(selectBillRows) {
+        if(selectBillRows && selectBillRows.length>0) {
+          let record = selectBillRows[0]
+          this.$nextTick(() => {
+            this.form.setFieldsValue({
+              'organId': record.organId,
+              'linkNumber': record.number,
+              'remark': record.remark,
+              'discountLastMoney': record.totalPrice,
+              'changeAmount': record.totalPrice
+            })
+          });
+          // 加载子表数据
+          let params = {
+            headerId: record.id,
+            mpList: getMpListShort(Vue.ls.get('materialPropertyList'))  //扩展属性
+          }
+          this.requestSubTableDataEx(this.url.detailList, params, this.materialTable);
+        }
+      },
+      /** 查询某个tab的数据,给明细里面的价税合计赋值 */
+      requestSubTableDataEx(url, params, tab, success) {
+        tab.loading = true
+        getAction(url, params).then(res => {
+          if(res && res.code === 200){
+            let list = res.data.rows
+            let listEx = []
+            for(let j=0; j<list.length; j++){
+              let info = list[j];
+              info.taxMoney = 0
+              info.taxLastMoney = info.allPrice
+              listEx.push(info)
+            }
+            tab.dataSource = listEx
+            typeof success === 'function' ? success(res) : ''
+          }
+        }).finally(() => {
+          tab.loading = false
+        })
       }
     }
   }

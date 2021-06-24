@@ -276,7 +276,7 @@
         });
       },
       onSearchLinkNumber() {
-        this.$refs.linkBillList.show('采购订单', '供应商')
+        this.$refs.linkBillList.show('其它', '采购订单', '供应商', "1")
         this.$refs.linkBillList.title = "选择采购订单"
       },
       linkBillListOk(selectBillRows) {

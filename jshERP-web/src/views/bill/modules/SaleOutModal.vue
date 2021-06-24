@@ -281,7 +281,7 @@
         });
       },
       onSearchLinkNumber() {
-        this.$refs.linkBillList.show("销售订单", '客户')
+        this.$refs.linkBillList.show('其它', '销售订单', '客户', "1")
         this.$refs.linkBillList.title = "选择销售订单"
       },
       linkBillListOk(selectBillRows) {

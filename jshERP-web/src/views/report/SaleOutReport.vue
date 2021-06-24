@@ -19,23 +19,26 @@
               <a-col :md="3" :sm="24" >
                 <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                   <a-button type="primary" @click="searchQuery">查询</a-button>
+                  <a-button style="margin-left: 8px" v-print="'#reportPrint'" type="primary" icon="printer">打印</a-button>
                 </span>
               </a-col>
             </a-row>
           </a-form>
         </div>
         <!-- table区域-begin -->
-        <a-table
-          bordered
-          ref="table"
-          size="middle"
-          rowKey="id"
-          :columns="columns"
-          :dataSource="dataSource"
-          :pagination="ipagination"
-          :loading="loading"
-          @change="handleTableChange">
-        </a-table>
+        <section ref="print" id="reportPrint">
+          <a-table
+            bordered
+            ref="table"
+            size="middle"
+            rowKey="id"
+            :columns="columns"
+            :dataSource="dataSource"
+            :pagination="ipagination"
+            :loading="loading"
+            @change="handleTableChange">
+          </a-table>
+        </section>
         <!-- table区域-end -->
       </a-card>
     </a-col>

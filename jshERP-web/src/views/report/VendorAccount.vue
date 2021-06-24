@@ -18,7 +18,7 @@
               <a-col :md="6" :sm="10">
                 <a-form-item label="单据日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-range-picker
-                    style="width: 210px"
+                    style="width: 250px"
                     v-model="queryParam.createTimeRange"
                     :default-value="defaultTimeStr"
                     format="YYYY-MM-DD"
@@ -27,9 +27,10 @@
                   />
                 </a-form-item>
               </a-col>
-              <a-col :md="2" :sm="24">
+              <a-col :md="4" :sm="24">
                 <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                   <a-button type="primary" @click="searchQuery">查询</a-button>
+                  <a-button style="margin-left: 8px" v-print="'#reportPrint'" type="primary" icon="printer">打印</a-button>
                 </span>
               </a-col>
               <a-col :md="8" :sm="24">
@@ -41,20 +42,22 @@
           </a-form>
         </div>
         <!-- table区域-begin -->
-        <a-table
-          bordered
-          ref="table"
-          size="middle"
-          rowKey="id"
-          :columns="columns"
-          :dataSource="dataSource"
-          :pagination="ipagination"
-          :loading="loading"
-          @change="handleTableChange">
-          <span slot="numberCustomRender" slot-scope="text, record">
-            <a @click="myHandleDetail(record)">{{record.number}}</a>
-          </span>
-        </a-table>
+        <section ref="print" id="reportPrint">
+          <a-table
+            bordered
+            ref="table"
+            size="middle"
+            rowKey="id"
+            :columns="columns"
+            :dataSource="dataSource"
+            :pagination="ipagination"
+            :loading="loading"
+            @change="handleTableChange">
+            <span slot="numberCustomRender" slot-scope="text, record">
+              <a @click="myHandleDetail(record)">{{record.number}}</a>
+            </span>
+          </a-table>
+        </section>
         <!-- table区域-end -->
         <!-- 表单区域 -->
         <bill-detail ref="modalBillDetail"></bill-detail>

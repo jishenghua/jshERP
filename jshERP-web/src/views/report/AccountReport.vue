@@ -16,9 +16,10 @@
                   <a-input placeholder="请输入编号" v-model="queryParam.serialNo"></a-input>
                 </a-form-item>
               </a-col>
-              <a-col :md="2" :sm="24" >
+              <a-col :md="4" :sm="24" >
                 <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                   <a-button type="primary" @click="searchQuery">查询</a-button>
+                  <a-button style="margin-left: 8px" v-print="'#reportPrint'" type="primary" icon="printer">打印</a-button>
                 </span>
               </a-col>
               <a-col :md="3" :sm="24" >
@@ -35,7 +36,7 @@
           </a-form>
         </div>
         <!-- table区域-begin -->
-        <div>
+        <section ref="print" id="reportPrint">
           <a-table
             bordered
             ref="table"
@@ -50,7 +51,7 @@
                 <a @click="showAccountInOutList(record)">流水</a>
               </span>
           </a-table>
-        </div>
+        </section>
         <!-- table区域-end -->
         <account-in-out-list ref="accountInOutList" @ok="modalFormOk"></account-in-out-list>
       </a-card>

@@ -241,7 +241,11 @@
                     {{model.number}}
                   </a-form-item>
                 </a-col>
-                <a-col :span="6"></a-col>
+                <a-col :span="6">
+                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联单据">
+                    {{model.linkNumber}}
+                  </a-form-item>
+                </a-col>
               </a-row>
               <a-table
                 ref="table"
@@ -447,7 +451,11 @@
                     {{model.number}}
                   </a-form-item>
                 </a-col>
-                <a-col :span="6"></a-col>
+                <a-col :span="6">
+                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联单据">
+                    {{model.linkNumber}}
+                  </a-form-item>
+                </a-col>
               </a-row>
               <a-row class="form-row" :gutter="24">
                 <a-col :lg="18" :md="12" :sm="24">
@@ -587,7 +595,11 @@
                     {{model.number}}
                   </a-form-item>
                 </a-col>
-                <a-col :span="6"></a-col>
+                <a-col :span="6">
+                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联单据">
+                    {{model.linkNumber}}
+                  </a-form-item>
+                </a-col>
               </a-row>
               <a-table
                 ref="table"

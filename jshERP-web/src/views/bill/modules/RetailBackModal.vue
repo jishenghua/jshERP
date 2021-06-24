@@ -1,109 +1,119 @@
 <template>
-  <j-modal
-    :title="title"
-    :width="width"
-    :visible="visible"
-    :confirmLoading="confirmLoading"
-    :maskClosable="false"
-    :keyboard="false"
-    :forceRender="true"
-    switchFullscreen
-    @ok="handleOk"
-    @cancel="handleCancel"
-    wrapClassName="ant-modal-cust-warp"
-    style="top:5%;height: 100%;overflow-y: hidden">
-    <a-spin :spinning="confirmLoading">
-      <a-form :form="form">
-        <a-row class="form-row" :gutter="24">
-          <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="会员卡号">
-              <a-select placeholder="选择会员卡号" v-decorator="[ 'organId' ]" :dropdownMatchSelectWidth="false">
-                <a-select-option v-for="(item,index) in retailList" :key="index" :value="item.id">
-                  {{ item.supplier }}
-                </a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-          <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
-              <j-date v-decorator="['operTime']" :show-time="true"/>
-            </a-form-item>
-          </a-col>
-          <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号">
-              <a-input placeholder="请输入单据编号" v-decorator.trim="[ 'number' ]" :readOnly="true"/>
-            </a-form-item>
-          </a-col>
-          <a-col :lg="6" :md="12" :sm="24"></a-col>
-        </a-row>
-        <a-row class="form-row" :gutter="24">
-          <a-col :lg="18" :md="12" :sm="24">
-            <j-editable-table
-              :ref="refKeys[0]"
-              :loading="materialTable.loading"
-              :columns="materialTable.columns"
-              :dataSource="materialTable.dataSource"
-              :maxHeight="300"
-              :rowNumber="false"
-              :rowSelection="true"
-              :actionButton="true"
-              @valueChange="onValueChange"
-              @added="onAdded"
-              @deleted="onDeleted" />
-          </a-col>
-          <a-col :lg="6" :md="12" :sm="24">
-            <a-row class="form-row" :gutter="24">
-              <a-col :lg="24" :md="6" :sm="6"><br/><br/></a-col>
-              <a-col :lg="24" :md="6" :sm="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="实付金额">
-                  <a-input v-decorator.trim="[ 'changeAmount' ]" :style="{color:'purple'}" :readOnly="true"/>
-                </a-form-item>
-              </a-col>
-              <a-col :lg="24" :md="6" :sm="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款金额">
-                  <a-input v-decorator.trim="[ 'getAmount' ]" :style="{color:'red'}" defaultValue="0" @keyup="onKeyUpGetAmount"/>
-                </a-form-item>
-              </a-col>
-              <a-col :lg="24" :md="6" :sm="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="找零">
-                  <a-input v-decorator.trim="[ 'backAmount' ]" :style="{color:'green'}" :readOnly="true" defaultValue="0"/>
-                </a-form-item>
-              </a-col>
-              <a-col :lg="24" :md="6" :sm="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款账户">
-                  <a-select placeholder="选择付款账户" v-decorator="[ 'accountId', validatorRules.accountId ]" :dropdownMatchSelectWidth="false">
-                    <a-select-option v-for="(item,index) in accountList" :key="index" :value="item.id">
-                      {{ item.name }}
-                    </a-select-option>
-                  </a-select>
-                </a-form-item>
-              </a-col>
-            </a-row>
-          </a-col>
-        </a-row>
-        <a-row class="form-row" :gutter="24">
-          <a-col :lg="24" :md="24" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="">
-              <a-textarea :rows="2" placeholder="请输入备注" v-decorator="[ 'remark' ]" style="margin-top:8px;"/>
-            </a-form-item>
-          </a-col>
-        </a-row>
-      </a-form>
-    </a-spin>
-  </j-modal>
+  <a-card :bordered="false">
+    <j-modal
+      :title="title"
+      :width="width"
+      :visible="visible"
+      :confirmLoading="confirmLoading"
+      :maskClosable="false"
+      :keyboard="false"
+      :forceRender="true"
+      switchFullscreen
+      @ok="handleOk"
+      @cancel="handleCancel"
+      wrapClassName="ant-modal-cust-warp"
+      style="top:5%;height: 100%;overflow-y: hidden">
+      <a-spin :spinning="confirmLoading">
+        <a-form :form="form">
+          <a-row class="form-row" :gutter="24">
+            <a-col :lg="6" :md="12" :sm="24">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="会员卡号">
+                <a-select placeholder="选择会员卡号" v-decorator="[ 'organId' ]" :dropdownMatchSelectWidth="false">
+                  <a-select-option v-for="(item,index) in retailList" :key="index" :value="item.id">
+                    {{ item.supplier }}
+                  </a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+            <a-col :lg="6" :md="12" :sm="24">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
+                <j-date v-decorator="['operTime']" :show-time="true"/>
+              </a-form-item>
+            </a-col>
+            <a-col :lg="6" :md="12" :sm="24">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号">
+                <a-input placeholder="请输入单据编号" v-decorator.trim="[ 'number' ]" :readOnly="true"/>
+              </a-form-item>
+            </a-col>
+            <a-col :lg="6" :md="12" :sm="24">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联单据">
+                <a-input-search placeholder="请选择关联单据" v-decorator="[ 'linkNumber' ]" @search="onSearchLinkNumber" :readOnly="true"/>
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row class="form-row" :gutter="24">
+            <a-col :lg="18" :md="12" :sm="24">
+              <j-editable-table
+                :ref="refKeys[0]"
+                :loading="materialTable.loading"
+                :columns="materialTable.columns"
+                :dataSource="materialTable.dataSource"
+                :maxHeight="300"
+                :rowNumber="false"
+                :rowSelection="true"
+                :actionButton="true"
+                @valueChange="onValueChange"
+                @added="onAdded"
+                @deleted="onDeleted" />
+            </a-col>
+            <a-col :lg="6" :md="12" :sm="24">
+              <a-row class="form-row" :gutter="24">
+                <a-col :lg="24" :md="6" :sm="6"><br/><br/></a-col>
+                <a-col :lg="24" :md="6" :sm="6">
+                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="实付金额">
+                    <a-input v-decorator.trim="[ 'changeAmount' ]" :style="{color:'purple'}" :readOnly="true"/>
+                  </a-form-item>
+                </a-col>
+                <a-col :lg="24" :md="6" :sm="6">
+                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款金额">
+                    <a-input v-decorator.trim="[ 'getAmount' ]" :style="{color:'red'}" defaultValue="0" @keyup="onKeyUpGetAmount"/>
+                  </a-form-item>
+                </a-col>
+                <a-col :lg="24" :md="6" :sm="6">
+                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="找零">
+                    <a-input v-decorator.trim="[ 'backAmount' ]" :style="{color:'green'}" :readOnly="true" defaultValue="0"/>
+                  </a-form-item>
+                </a-col>
+                <a-col :lg="24" :md="6" :sm="6">
+                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款账户">
+                    <a-select placeholder="选择付款账户" v-decorator="[ 'accountId', validatorRules.accountId ]" :dropdownMatchSelectWidth="false">
+                      <a-select-option v-for="(item,index) in accountList" :key="index" :value="item.id">
+                        {{ item.name }}
+                      </a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+              </a-row>
+            </a-col>
+          </a-row>
+          <a-row class="form-row" :gutter="24">
+            <a-col :lg="24" :md="24" :sm="24">
+              <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="">
+                <a-textarea :rows="2" placeholder="请输入备注" v-decorator="[ 'remark' ]" style="margin-top:8px;"/>
+              </a-form-item>
+            </a-col>
+          </a-row>
+        </a-form>
+      </a-spin>
+    </j-modal>
+    <link-bill-list ref="linkBillList" @ok="linkBillListOk"></link-bill-list>
+  </a-card>
 </template>
 <script>
   import pick from 'lodash.pick'
+  import LinkBillList from '../dialog/LinkBillList'
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
   import { getMpListShort } from "@/utils/util"
+  import { getAction } from '@/api/manage'
   import JDate from '@/components/jeecg/JDate'
   import Vue from 'vue'
   export default {
     name: "RetailBackModal",
     mixins: [JEditableTableMixin, BillModalMixin],
     components: {
+      LinkBillList,
       JDate
     },
     data () {
@@ -231,6 +241,51 @@
         this.$nextTick(() => {
           this.form.setFieldsValue({'backAmount':backAmount})
         });
+      },
+      onSearchLinkNumber() {
+        this.$refs.linkBillList.show('出库', '零售', '会员', "0")
+        this.$refs.linkBillList.title = "选择零售出库"
+      },
+      linkBillListOk(selectBillRows) {
+        if(selectBillRows && selectBillRows.length>0) {
+          let record = selectBillRows[0]
+          this.$nextTick(() => {
+            this.form.setFieldsValue({
+              'organId': record.organId,
+              'linkNumber': record.number,
+              'remark': record.remark,
+              'getAmount': record.totalPrice,
+              'changeAmount': record.totalPrice,
+              'backAmount': 0
+            })
+          });
+          // 加载子表数据
+          let params = {
+            headerId: record.id,
+            mpList: getMpListShort(Vue.ls.get('materialPropertyList'))  //扩展属性
+          }
+          this.requestSubTableDataEx(this.url.detailList, params, this.materialTable);
+        }
+      },
+      /** 查询某个tab的数据,给明细里面的价税合计赋值 */
+      requestSubTableDataEx(url, params, tab, success) {
+        tab.loading = true
+        getAction(url, params).then(res => {
+          if(res && res.code === 200){
+            let list = res.data.rows
+            let listEx = []
+            for(let j=0; j<list.length; j++){
+              let info = list[j];
+              info.taxMoney = 0
+              info.taxLastMoney = info.allPrice
+              listEx.push(info)
+            }
+            tab.dataSource = listEx
+            typeof success === 'function' ? success(res) : ''
+          }
+        }).finally(() => {
+          tab.loading = false
+        })
       }
     }
   }
