@@ -85,6 +85,7 @@
     },
     methods: {
       show(type, subType, organType, status) {
+        this.queryParam.type = type
         this.queryParam.subType = subType
         this.queryParam.status = status
         this.columns[1].title = organType

@@ -268,8 +268,8 @@
         });
       },
       onSearchLinkNumber() {
-        this.$refs.linkBillList.show('出库', '采购', '供应商', "0")
-        this.$refs.linkBillList.title = "选择采购出库"
+        this.$refs.linkBillList.show('入库', '采购', '供应商', "0")
+        this.$refs.linkBillList.title = "选择采购入库"
       },
       linkBillListOk(selectBillRows) {
         if(selectBillRows && selectBillRows.length>0) {
