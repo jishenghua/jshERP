@@ -235,7 +235,7 @@
           }
           this.personList.value = this.model.salesMan
           this.$nextTick(() => {
-            this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'number', 'remark',
+            this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'number', 'linkNumber', 'remark',
               'discount','discountMoney','discountLastMoney','otherMoney','accountId','changeAmount','debt','salesMan'))
           });
           // 加载子表数据
