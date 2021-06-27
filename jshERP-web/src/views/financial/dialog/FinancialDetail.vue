@@ -250,7 +250,7 @@
           <section ref="print" id="moneyInPrint">
             <a-row class="form-row" :gutter="24">
               <a-col :span="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款单位">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户">
                   <a-input v-decorator="['id']" hidden/>
                   {{model.organName}}
                 </a-form-item>
@@ -304,7 +304,7 @@
           <section ref="print" id="moneyOutPrint">
             <a-row class="form-row" :gutter="24">
               <a-col :span="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款单位">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="供应商">
                   <a-input v-decorator="['id']" hidden/>
                   {{model.organName}}
                 </a-form-item>

@@ -119,7 +119,7 @@
               return parseInt(index)+1;
             }
           },
-          { title: '收款单位', dataIndex: 'organName',width:140},
+          { title: '供应商', dataIndex: 'organName',width:140},
           { title: '单据编号', dataIndex: 'billNo',width:160},
           { title: '操作员', dataIndex: 'userName',width:80},
           { title: '单据日期 ', dataIndex: 'billTimeStr',width:160},

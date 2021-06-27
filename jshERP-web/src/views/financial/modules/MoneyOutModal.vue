@@ -16,8 +16,8 @@
       <a-form :form="form">
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款单位">
-              <a-select placeholder="选择收款单位" v-decorator="[ 'organId', validatorRules.organId ]" :dropdownMatchSelectWidth="false">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="供应商">
+              <a-select placeholder="选择供应商" v-decorator="[ 'organId', validatorRules.organId ]" :dropdownMatchSelectWidth="false">
                 <a-select-option v-for="(item,index) in supList" :key="index" :value="item.id">
                   {{ item.supplier }}
                 </a-select-option>
@@ -125,7 +125,7 @@
         validatorRules:{
           organId:{
             rules: [
-              { required: true, message: '请选择收款单位!' }
+              { required: true, message: '请选择供应商!' }
             ]
           },
           handsPersonId:{
