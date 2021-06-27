@@ -599,12 +599,12 @@ public class DepotHeadService {
             /**入库和出库处理单据子表信息*/
             depotItemService.saveDetials(rows,headId,tenantId, request);
         }
-        /**如果关联单据号非空则更新订单的状态为2 */
+        /**如果关联单据号非空则更新订单的状态为2 (只操作采购订单和销售订单) */
         if(depotHead.getLinkNumber()!=null) {
             DepotHead depotHeadOrders = new DepotHead();
             depotHeadOrders.setStatus(BusinessConstants.BILLS_STATUS_SKIP);
             DepotHeadExample example = new DepotHeadExample();
-            example.createCriteria().andNumberEqualTo(depotHead.getLinkNumber());
+            example.createCriteria().andNumberEqualTo(depotHead.getLinkNumber()).andTypeEqualTo("其它");
             try{
                 depotHeadMapper.updateByExampleSelective(depotHeadOrders, example);
             }catch(Exception e){
