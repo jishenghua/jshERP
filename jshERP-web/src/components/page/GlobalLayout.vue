@@ -569,10 +569,10 @@
       height: 64px;
       position: relative;
       line-height: 64px;
-      padding-left: 24px;
+      padding-left: 10px;
       -webkit-transition: all .3s;
       transition: all .3s;
-      background: #002140;
+      background: #ffffff;
       overflow: hidden;
 
       img, h1 {
@@ -587,7 +587,7 @@
       h1 {
         color: #fff;
         font-size: 18px;
-        margin: 0 0 0 8px;
+        margin: 0 0 10px 8px;
         font-family: "Chinese Quote", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
         font-weight: 600;
       }
