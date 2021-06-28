@@ -8,6 +8,8 @@ public class AccountItemVo4List extends AccountItem {
 
     private String inOutItemName;
 
+    private String billNumber;
+
     public String getAccountName() {
         return accountName;
     }
@@ -22,5 +24,13 @@ public class AccountItemVo4List extends AccountItem {
 
     public void setInOutItemName(String inOutItemName) {
         this.inOutItemName = inOutItemName;
+    }
+
+    public String getBillNumber() {
+        return billNumber;
+    }
+
+    public void setBillNumber(String billNumber) {
+        this.billNumber = billNumber;
     }
 }

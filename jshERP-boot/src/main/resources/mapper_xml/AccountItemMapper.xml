@@ -6,6 +6,7 @@
     <result column="header_id" jdbcType="BIGINT" property="headerId" />
     <result column="account_id" jdbcType="BIGINT" property="accountId" />
     <result column="in_out_item_id" jdbcType="BIGINT" property="inOutItemId" />
+    <result column="bill_id" jdbcType="BIGINT" property="billId" />
     <result column="each_amount" jdbcType="DECIMAL" property="eachAmount" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
     <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
@@ -70,7 +71,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, header_id, account_id, in_out_item_id, each_amount, remark, tenant_id, delete_flag
+    id, header_id, account_id, in_out_item_id, bill_id, each_amount, remark, tenant_id, 
+    delete_flag
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.AccountItemExample" resultMap="BaseResultMap">
     select
@@ -104,11 +106,13 @@
   </delete>
   <insert id="insert" parameterType="com.jsh.erp.datasource.entities.AccountItem">
     insert into jsh_account_item (id, header_id, account_id, 
-      in_out_item_id, each_amount, remark, 
-      tenant_id, delete_flag)
+      in_out_item_id, bill_id, each_amount, 
+      remark, tenant_id, delete_flag
+      )
     values (#{id,jdbcType=BIGINT}, #{headerId,jdbcType=BIGINT}, #{accountId,jdbcType=BIGINT}, 
-      #{inOutItemId,jdbcType=BIGINT}, #{eachAmount,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, 
-      #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR})
+      #{inOutItemId,jdbcType=BIGINT}, #{billId,jdbcType=BIGINT}, #{eachAmount,jdbcType=DECIMAL}, 
+      #{remark,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.AccountItem">
     insert into jsh_account_item
@@ -124,6 +128,9 @@
       </if>
       <if test="inOutItemId != null">
         in_out_item_id,
+      </if>
+      <if test="billId != null">
+        bill_id,
       </if>
       <if test="eachAmount != null">
         each_amount,
@@ -150,6 +157,9 @@
       </if>
       <if test="inOutItemId != null">
         #{inOutItemId,jdbcType=BIGINT},
+      </if>
+      <if test="billId != null">
+        #{billId,jdbcType=BIGINT},
       </if>
       <if test="eachAmount != null">
         #{eachAmount,jdbcType=DECIMAL},
@@ -186,6 +196,9 @@
       <if test="record.inOutItemId != null">
         in_out_item_id = #{record.inOutItemId,jdbcType=BIGINT},
       </if>
+      <if test="record.billId != null">
+        bill_id = #{record.billId,jdbcType=BIGINT},
+      </if>
       <if test="record.eachAmount != null">
         each_amount = #{record.eachAmount,jdbcType=DECIMAL},
       </if>
@@ -209,6 +222,7 @@
       header_id = #{record.headerId,jdbcType=BIGINT},
       account_id = #{record.accountId,jdbcType=BIGINT},
       in_out_item_id = #{record.inOutItemId,jdbcType=BIGINT},
+      bill_id = #{record.billId,jdbcType=BIGINT},
       each_amount = #{record.eachAmount,jdbcType=DECIMAL},
       remark = #{record.remark,jdbcType=VARCHAR},
       tenant_id = #{record.tenantId,jdbcType=BIGINT},
@@ -228,6 +242,9 @@
       </if>
       <if test="inOutItemId != null">
         in_out_item_id = #{inOutItemId,jdbcType=BIGINT},
+      </if>
+      <if test="billId != null">
+        bill_id = #{billId,jdbcType=BIGINT},
       </if>
       <if test="eachAmount != null">
         each_amount = #{eachAmount,jdbcType=DECIMAL},
@@ -249,6 +266,7 @@
     set header_id = #{headerId,jdbcType=BIGINT},
       account_id = #{accountId,jdbcType=BIGINT},
       in_out_item_id = #{inOutItemId,jdbcType=BIGINT},
+      bill_id = #{billId,jdbcType=BIGINT},
       each_amount = #{eachAmount,jdbcType=DECIMAL},
       remark = #{remark,jdbcType=VARCHAR},
       tenant_id = #{tenantId,jdbcType=BIGINT},

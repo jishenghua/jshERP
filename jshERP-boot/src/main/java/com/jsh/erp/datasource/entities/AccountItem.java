@@ -11,6 +11,8 @@ public class AccountItem {
 
     private Long inOutItemId;
 
+    private Long billId;
+
     private BigDecimal eachAmount;
 
     private String remark;
@@ -49,6 +51,14 @@ public class AccountItem {
 
     public void setInOutItemId(Long inOutItemId) {
         this.inOutItemId = inOutItemId;
+    }
+
+    public Long getBillId() {
+        return billId;
+    }
+
+    public void setBillId(Long billId) {
+        this.billId = billId;
     }
 
     public BigDecimal getEachAmount() {

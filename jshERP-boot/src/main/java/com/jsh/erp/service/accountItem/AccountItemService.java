@@ -12,6 +12,7 @@ import com.jsh.erp.datasource.mappers.AccountItemMapperEx;
 import com.jsh.erp.datasource.vo.AccountItemVo4List;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
+import com.jsh.erp.service.depotHead.DepotHeadService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
@@ -34,13 +35,14 @@ public class AccountItemService {
 
     @Resource
     private AccountItemMapper accountItemMapper;
-
     @Resource
     private AccountItemMapperEx accountItemMapperEx;
     @Resource
     private LogService logService;
     @Resource
     private UserService userService;
+    @Resource
+    private DepotHeadService depotHeadService;
 
     public AccountItem getAccountItem(long id)throws Exception {
         AccountItem result=null;
@@ -198,6 +200,10 @@ public class AccountItemService {
                 }
                 if (tempInsertedJson.get("inOutItemId") != null && !tempInsertedJson.get("inOutItemId").equals("")) {
                     accountItem.setInOutItemId(tempInsertedJson.getLong("inOutItemId"));
+                }
+                if (tempInsertedJson.get("billNumber") != null && !tempInsertedJson.get("billNumber").equals("")) {
+                    String billNo = tempInsertedJson.getString("billNumber");
+                    accountItem.setBillId(depotHeadService.getDepotHead(billNo).getId());
                 }
                 if (tempInsertedJson.get("eachAmount") != null && !tempInsertedJson.get("eachAmount").equals("")) {
                     BigDecimal eachAmount = tempInsertedJson.getBigDecimal("eachAmount");

@@ -81,6 +81,7 @@ CREATE TABLE `jsh_account_item` (
   `header_id` bigint(20) NOT NULL COMMENT '表头Id',
   `account_id` bigint(20) DEFAULT NULL COMMENT '账户Id',
   `in_out_item_id` bigint(20) DEFAULT NULL COMMENT '收支项目Id',
+  `bill_id`  bigint(20) NULL DEFAULT NULL COMMENT '单据id' ,
   `each_amount` decimal(24,6) DEFAULT NULL COMMENT '单项金额',
   `remark` varchar(100) DEFAULT NULL COMMENT '单据备注',
   `tenant_id` bigint(20) DEFAULT NULL COMMENT '租户id',
@@ -94,12 +95,12 @@ CREATE TABLE `jsh_account_item` (
 -- ----------------------------
 -- Records of jsh_account_item
 -- ----------------------------
-INSERT INTO `jsh_account_item` VALUES ('143', '118', null, '23', '55.000000', '', '63', '0');
-INSERT INTO `jsh_account_item` VALUES ('144', '119', null, '21', '66.000000', '', '63', '0');
-INSERT INTO `jsh_account_item` VALUES ('145', '120', '17', null, '33.000000', '', '63', '0');
-INSERT INTO `jsh_account_item` VALUES ('146', '121', '18', null, '-22.000000', '', '63', '0');
-INSERT INTO `jsh_account_item` VALUES ('147', '122', '17', null, '11.000000', '', '63', '0');
-INSERT INTO `jsh_account_item` VALUES ('148', '123', '17', null, '66.000000', '', '63', '0');
+INSERT INTO `jsh_account_item` VALUES ('143', '118', null, '23', null, '55.000000', '', '63', '0');
+INSERT INTO `jsh_account_item` VALUES ('144', '119', null, '21', null, '66.000000', '', '63', '0');
+INSERT INTO `jsh_account_item` VALUES ('145', '120', '17', null, null, '33.000000', '', '63', '0');
+INSERT INTO `jsh_account_item` VALUES ('146', '121', '18', null, null, '-22.000000', '', '63', '0');
+INSERT INTO `jsh_account_item` VALUES ('147', '122', '17', null, null, '11.000000', '', '63', '0');
+INSERT INTO `jsh_account_item` VALUES ('148', '123', '17', null, null, '66.000000', '', '63', '0');
 
 -- ----------------------------
 -- Table structure for jsh_depot

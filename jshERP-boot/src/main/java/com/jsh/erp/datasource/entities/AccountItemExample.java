@@ -345,6 +345,66 @@ public class AccountItemExample {
             return (Criteria) this;
         }
 
+        public Criteria andBillIdIsNull() {
+            addCriterion("bill_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBillIdIsNotNull() {
+            addCriterion("bill_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBillIdEqualTo(Long value) {
+            addCriterion("bill_id =", value, "billId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBillIdNotEqualTo(Long value) {
+            addCriterion("bill_id <>", value, "billId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBillIdGreaterThan(Long value) {
+            addCriterion("bill_id >", value, "billId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBillIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("bill_id >=", value, "billId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBillIdLessThan(Long value) {
+            addCriterion("bill_id <", value, "billId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBillIdLessThanOrEqualTo(Long value) {
+            addCriterion("bill_id <=", value, "billId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBillIdIn(List<Long> values) {
+            addCriterion("bill_id in", values, "billId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBillIdNotIn(List<Long> values) {
+            addCriterion("bill_id not in", values, "billId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBillIdBetween(Long value1, Long value2) {
+            addCriterion("bill_id between", value1, value2, "billId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBillIdNotBetween(Long value1, Long value2) {
+            addCriterion("bill_id not between", value1, value2, "billId");
+            return (Criteria) this;
+        }
+
         public Criteria andEachAmountIsNull() {
             addCriterion("each_amount is null");
             return (Criteria) this;

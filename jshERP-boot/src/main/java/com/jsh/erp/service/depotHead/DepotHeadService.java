@@ -670,4 +670,19 @@ public class DepotHeadService {
     public BigDecimal getBuyAndSaleRetailStatistics(String type, String subType, Integer hasSupplier, String beginTime, String endTime) {
         return depotHeadMapperEx.getBuyAndSaleRetailStatistics(type, subType, hasSupplier, beginTime, endTime);
     }
+
+    public DepotHead getDepotHead(String number)throws Exception {
+        DepotHead depotHead = new DepotHead();
+        try{
+            DepotHeadExample example = new DepotHeadExample();
+            example.createCriteria().andNumberEqualTo(number).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+            List<DepotHead> list = depotHeadMapper.selectByExample(example);
+            if(null!=list && list.size()>0) {
+                depotHead = list.get(0);
+            }
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return depotHead;
+    }
 }

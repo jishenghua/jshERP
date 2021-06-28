@@ -1098,3 +1098,10 @@ update jsh_function set name='进销存统计', sort='0658' where id=59
 -- 增加商品库存报表
 -- --------------------------------------------------------
 INSERT INTO `jsh_function` (`number`, `name`, `parent_number`, `url`, `component`, `state`, `sort`, `enabled`, `type`, `push_btn`, `icon`, `delete_flag`) VALUES ('030113', '商品库存', '0301', '/report/material_stock', '/report/MaterialStock', b'0', '0605', b'1', '电脑版', '', 'profile', '0');
+
+-- --------------------------------------------------------
+-- 时间 2021年6月29日
+-- by jishenghua
+-- 给功能表增加组件字段component
+-- --------------------------------------------------------
+alter table jsh_account_item add bill_id bigint(20) DEFAULT NULL COMMENT '单据id' after in_out_item_id;
