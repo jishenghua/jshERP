@@ -781,4 +781,34 @@ public class UserService {
         }
         return btnStrArr;
     }
+
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int batchSetStatus(Byte status, String ids)throws Exception {
+        int result=0;
+        List<User> list = getUserListByIds(ids);
+        for(User user: list) {
+            if (demonstrateOpen && user.getLoginName().equals(TEST_USER)) {
+                logger.error("异常码[{}],异常提示[{}],参数,obj:[{}]",
+                        ExceptionConstants.USER_LIMIT_UPDATE_CODE, ExceptionConstants.USER_LIMIT_UPDATE_MSG, TEST_USER);
+                throw new BusinessRunTimeException(ExceptionConstants.USER_LIMIT_UPDATE_CODE,
+                        ExceptionConstants.USER_LIMIT_UPDATE_MSG);
+            }
+        }
+        String statusStr ="";
+        if(status == 0) {
+            statusStr ="批量启用";
+        } else if(status == 2) {
+            statusStr ="批量禁用";
+        }
+        logService.insertLog("用户",
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(ids).append("-").append(statusStr).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+        List<Long> idList = StringUtil.strToLongList(ids);
+        User user = new User();
+        user.setStatus(status);
+        UserExample example = new UserExample();
+        example.createCriteria().andIdIn(idList);
+        result = userMapper.updateByExampleSelective(user, example);
+        return result;
+    }
 }
