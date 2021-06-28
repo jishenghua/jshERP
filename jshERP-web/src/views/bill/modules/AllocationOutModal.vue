@@ -93,7 +93,7 @@
             { title: '仓库名称', key: 'depotId', width: '8%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
-            { title: '条码', key: 'barCode', width: '10%', type: FormTypes.popupJsh,
+            { title: '条码', key: 'barCode', width: '10%', type: FormTypes.popupJsh, multi: false,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             { title: '名称', key: 'name', width: '8%', type: FormTypes.input, readonly: true },

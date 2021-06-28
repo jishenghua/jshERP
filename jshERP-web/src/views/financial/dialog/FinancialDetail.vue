@@ -404,7 +404,7 @@
           { title: '备注',dataIndex: 'remark', width: '30%'}
         ],
         moneyInColumns: [
-          { title: '账户名称',dataIndex: 'accountName',width: '20%'},
+          { title: '销售单据编号',dataIndex: 'billNumber',width: '20%'},
           { title: '金额',dataIndex: 'eachAmount', width: '10%'},
           { title: '备注',dataIndex: 'remark', width: '30%'}
         ],
