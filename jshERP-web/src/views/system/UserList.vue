@@ -31,6 +31,8 @@
           <a-dropdown v-if="selectedRowKeys.length > 0">
             <a-menu slot="overlay">
               <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
+              <a-menu-item key="2" v-if="btnEnableList.indexOf(1)>-1" @click="batchSetStatus(0)"><a-icon type="check-square"/>启用</a-menu-item>
+              <a-menu-item key="3" v-if="btnEnableList.indexOf(1)>-1" @click="batchSetStatus(2)"><a-icon type="close-square"/>禁用</a-menu-item>
             </a-menu>
             <a-button style="margin-left: 8px">
               批量操作
@@ -66,6 +68,11 @@
                 <a>重置密码</a>
               </a-popconfirm>
             </span>
+            <!-- 状态渲染模板 -->
+            <template slot="customRenderFlag" slot-scope="status">
+              <a-tag v-if="status===0" color="green">启用</a-tag>
+              <a-tag v-if="status===2" color="orange">禁用</a-tag>
+            </template>
           </a-table>
         </div>
         <!-- table区域-end -->
@@ -117,6 +124,9 @@
           { title: '机构', dataIndex: 'orgAbr', width: 115, align: "center"},
           { title: '电话号码', dataIndex: 'phonenum', width: 120, align: "center"},
           { title: '排序', dataIndex: 'userBlngOrgaDsplSeq', width: 60, align: "center"},
+          { title: '状态',dataIndex: 'status',width:70,align:"center",
+            scopedSlots: { customRender: 'customRenderFlag' }
+          },
           {
             title: '操作',
             dataIndex: 'action',
@@ -129,7 +139,8 @@
           list: "/user/list",
           delete: "/user/delete",
           deleteBatch: "/user/deleteBatch",
-          resetPwd: "/user/resetPwd"
+          resetPwd: "/user/resetPwd",
+          batchSetStatusUrl: "/user/batchSetStatus"
         },
       }
     },
