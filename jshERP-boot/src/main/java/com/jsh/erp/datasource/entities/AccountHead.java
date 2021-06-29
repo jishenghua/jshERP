@@ -26,6 +26,8 @@ public class AccountHead {
 
     private String remark;
 
+    private String fileName;
+
     private Long tenantId;
 
     private String deleteFlag;
@@ -116,6 +118,14 @@ public class AccountHead {
 
     public void setRemark(String remark) {
         this.remark = remark == null ? null : remark.trim();
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName == null ? null : fileName.trim();
     }
 
     public Long getTenantId() {

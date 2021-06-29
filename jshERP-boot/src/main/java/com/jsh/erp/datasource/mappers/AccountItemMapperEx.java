@@ -5,6 +5,7 @@ import com.jsh.erp.datasource.entities.AccountItemExample;
 import com.jsh.erp.datasource.vo.AccountItemVo4List;
 import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -34,4 +35,6 @@ public interface AccountItemMapperEx {
     List<AccountItem> getAccountItemListByInOutItemIds(@Param("inOutItemIds") String[] inOutItemIds);
 
     int batchDeleteAccountItemByHeadIds(@Param("updateTime") Date updateTime, @Param("updater") Long updater, @Param("ids") String[] ids);
+
+    BigDecimal getEachAmountByBillId(@Param("billId") Long billId);
 }

@@ -205,6 +205,12 @@ public class AccountItemService {
                     String billNo = tempInsertedJson.getString("billNumber");
                     accountItem.setBillId(depotHeadService.getDepotHead(billNo).getId());
                 }
+                if (tempInsertedJson.get("needDebt") != null && !tempInsertedJson.get("needDebt").equals("")) {
+                    accountItem.setNeedDebt(tempInsertedJson.getBigDecimal("needDebt"));
+                }
+                if (tempInsertedJson.get("finishDebt") != null && !tempInsertedJson.get("finishDebt").equals("")) {
+                    accountItem.setFinishDebt(tempInsertedJson.getBigDecimal("finishDebt"));
+                }
                 if (tempInsertedJson.get("eachAmount") != null && !tempInsertedJson.get("eachAmount").equals("")) {
                     BigDecimal eachAmount = tempInsertedJson.getBigDecimal("eachAmount");
                     if (type.equals("付款")) {
@@ -248,5 +254,9 @@ public class AccountItemService {
             JshException.writeFail(logger, e);
         }
         return result;
+    }
+
+    public BigDecimal getEachAmountByBillId(Long billId) {
+        return accountItemMapperEx.getEachAmountByBillId(billId);
     }
 }

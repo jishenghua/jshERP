@@ -18,6 +18,7 @@
     <result column="pay_type" jdbcType="VARCHAR" property="payType" />
     <result column="bill_type" jdbcType="VARCHAR" property="billType" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="file_name" jdbcType="VARCHAR" property="fileName" />
     <result column="sales_man" jdbcType="VARCHAR" property="salesMan" />
     <result column="account_id_list" jdbcType="VARCHAR" property="accountIdList" />
     <result column="account_money_list" jdbcType="VARCHAR" property="accountMoneyList" />
@@ -93,8 +94,8 @@
   </sql>
   <sql id="Base_Column_List">
     id, type, sub_type, default_number, number, create_time, oper_time, organ_id, hands_person_id, 
-    creator, account_id, change_amount, total_price, pay_type, bill_type, remark, sales_man, 
-    account_id_list, account_money_list, discount, discount_money, discount_last_money, 
+    creator, account_id, change_amount, total_price, pay_type, bill_type, remark, file_name, 
+    sales_man, account_id_list, account_money_list, discount, discount_money, discount_last_money, 
     other_money, other_money_list, other_money_item, account_day, status, link_number, 
     tenant_id, delete_flag
   </sql>
@@ -134,23 +135,23 @@
       oper_time, organ_id, hands_person_id, 
       creator, account_id, change_amount, 
       total_price, pay_type, bill_type, 
-      remark, sales_man, account_id_list, 
-      account_money_list, discount, discount_money, 
-      discount_last_money, other_money, other_money_list, 
-      other_money_item, account_day, status, 
-      link_number, tenant_id, delete_flag
-      )
+      remark, file_name, sales_man, 
+      account_id_list, account_money_list, discount, 
+      discount_money, discount_last_money, other_money, 
+      other_money_list, other_money_item, account_day, 
+      status, link_number, tenant_id, 
+      delete_flag)
     values (#{id,jdbcType=BIGINT}, #{type,jdbcType=VARCHAR}, #{subType,jdbcType=VARCHAR}, 
       #{defaultNumber,jdbcType=VARCHAR}, #{number,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{operTime,jdbcType=TIMESTAMP}, #{organId,jdbcType=BIGINT}, #{handsPersonId,jdbcType=BIGINT}, 
       #{creator,jdbcType=BIGINT}, #{accountId,jdbcType=BIGINT}, #{changeAmount,jdbcType=DECIMAL}, 
       #{totalPrice,jdbcType=DECIMAL}, #{payType,jdbcType=VARCHAR}, #{billType,jdbcType=VARCHAR}, 
-      #{remark,jdbcType=VARCHAR}, #{salesMan,jdbcType=VARCHAR}, #{accountIdList,jdbcType=VARCHAR}, 
-      #{accountMoneyList,jdbcType=VARCHAR}, #{discount,jdbcType=DECIMAL}, #{discountMoney,jdbcType=DECIMAL}, 
-      #{discountLastMoney,jdbcType=DECIMAL}, #{otherMoney,jdbcType=DECIMAL}, #{otherMoneyList,jdbcType=VARCHAR}, 
-      #{otherMoneyItem,jdbcType=VARCHAR}, #{accountDay,jdbcType=INTEGER}, #{status,jdbcType=VARCHAR}, 
-      #{linkNumber,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR}
-      )
+      #{remark,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR}, #{salesMan,jdbcType=VARCHAR}, 
+      #{accountIdList,jdbcType=VARCHAR}, #{accountMoneyList,jdbcType=VARCHAR}, #{discount,jdbcType=DECIMAL}, 
+      #{discountMoney,jdbcType=DECIMAL}, #{discountLastMoney,jdbcType=DECIMAL}, #{otherMoney,jdbcType=DECIMAL}, 
+      #{otherMoneyList,jdbcType=VARCHAR}, #{otherMoneyItem,jdbcType=VARCHAR}, #{accountDay,jdbcType=INTEGER}, 
+      #{status,jdbcType=VARCHAR}, #{linkNumber,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, 
+      #{deleteFlag,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.DepotHead">
     insert into jsh_depot_head
@@ -202,6 +203,9 @@
       </if>
       <if test="remark != null">
         remark,
+      </if>
+      <if test="fileName != null">
+        file_name,
       </if>
       <if test="salesMan != null">
         sales_man,
@@ -294,6 +298,9 @@
       </if>
       <if test="remark != null">
         #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null">
+        #{fileName,jdbcType=VARCHAR},
       </if>
       <if test="salesMan != null">
         #{salesMan,jdbcType=VARCHAR},
@@ -396,6 +403,9 @@
       <if test="record.remark != null">
         remark = #{record.remark,jdbcType=VARCHAR},
       </if>
+      <if test="record.fileName != null">
+        file_name = #{record.fileName,jdbcType=VARCHAR},
+      </if>
       <if test="record.salesMan != null">
         sales_man = #{record.salesMan,jdbcType=VARCHAR},
       </if>
@@ -461,6 +471,7 @@
       pay_type = #{record.payType,jdbcType=VARCHAR},
       bill_type = #{record.billType,jdbcType=VARCHAR},
       remark = #{record.remark,jdbcType=VARCHAR},
+      file_name = #{record.fileName,jdbcType=VARCHAR},
       sales_man = #{record.salesMan,jdbcType=VARCHAR},
       account_id_list = #{record.accountIdList,jdbcType=VARCHAR},
       account_money_list = #{record.accountMoneyList,jdbcType=VARCHAR},
@@ -527,6 +538,9 @@
       <if test="remark != null">
         remark = #{remark,jdbcType=VARCHAR},
       </if>
+      <if test="fileName != null">
+        file_name = #{fileName,jdbcType=VARCHAR},
+      </if>
       <if test="salesMan != null">
         sales_man = #{salesMan,jdbcType=VARCHAR},
       </if>
@@ -589,6 +603,7 @@
       pay_type = #{payType,jdbcType=VARCHAR},
       bill_type = #{billType,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR},
+      file_name = #{fileName,jdbcType=VARCHAR},
       sales_man = #{salesMan,jdbcType=VARCHAR},
       account_id_list = #{accountIdList,jdbcType=VARCHAR},
       account_money_list = #{accountMoneyList,jdbcType=VARCHAR},

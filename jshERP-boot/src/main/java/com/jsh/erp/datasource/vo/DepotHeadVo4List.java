@@ -23,6 +23,8 @@ public class DepotHeadVo4List extends DepotHead{
 
     private String operTimeStr;
 
+    private BigDecimal finishDebt;
+
     public String getProjectName() {
         return projectName;
     }
@@ -85,5 +87,13 @@ public class DepotHeadVo4List extends DepotHead{
 
     public void setOperTimeStr(String operTimeStr) {
         this.operTimeStr = operTimeStr;
+    }
+
+    public BigDecimal getFinishDebt() {
+        return finishDebt;
+    }
+
+    public void setFinishDebt(BigDecimal finishDebt) {
+        this.finishDebt = finishDebt;
     }
 }

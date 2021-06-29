@@ -25,6 +25,8 @@ public class AccountHeadVo4ListEx {
 
     private String remark;
 
+    private String fileName;
+
     private Long tenantId;
 
     private String deleteFlag;
@@ -119,6 +121,14 @@ public class AccountHeadVo4ListEx {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
     public Long getTenantId() {

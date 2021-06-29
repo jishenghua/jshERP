@@ -14,10 +14,7 @@ import com.jsh.erp.exception.BusinessParamCheckingException;
 import com.jsh.erp.service.depotHead.DepotHeadService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.redis.RedisService;
-import com.jsh.erp.utils.BaseResponseInfo;
-import com.jsh.erp.utils.ErpInfo;
-import com.jsh.erp.utils.StringUtil;
-import com.jsh.erp.utils.Tools;
+import com.jsh.erp.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -424,5 +421,36 @@ public class DepotHeadController {
             res.data = "获取数据失败";
         }
         return res;
+    }
+
+    /**
+     * 查询存在欠款的单据
+     * @param search
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @GetMapping(value = "/debtList")
+    public String debtList(@RequestParam(value = Constants.SEARCH, required = false) String search,
+                           HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        String organIdStr = StringUtil.getInfo(search, "organId");
+        Long organId = Long.parseLong(organIdStr);
+        String materialParam = StringUtil.getInfo(search, "materialParam");
+        String number = StringUtil.getInfo(search, "number");
+        String beginTime = StringUtil.getInfo(search, "beginTime");
+        String endTime = StringUtil.getInfo(search, "endTime");
+        String type = StringUtil.getInfo(search, "type");
+        String subType = StringUtil.getInfo(search, "subType");
+        String roleType = StringUtil.getInfo(search, "roleType");
+        String status = StringUtil.getInfo(search, "status");
+        List<DepotHeadVo4List> list = depotHeadService.debtList(organId, materialParam, number, beginTime, endTime, type, subType, roleType, status);
+        if (list != null) {
+            objectMap.put("rows", list);
+            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+        } else {
+            objectMap.put("rows", new ArrayList<>());
+            return returnJson(objectMap, "查找不到数据", ErpInfo.OK.code);
+        }
     }
 }

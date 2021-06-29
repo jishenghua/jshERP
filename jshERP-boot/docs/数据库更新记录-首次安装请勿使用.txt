@@ -1090,7 +1090,7 @@ INSERT INTO `jsh_platform_config` (`id`, `platform_key`, `platform_key_info`, `p
 -- by jishenghua
 -- 将库存状态报表改为进销存统计报表
 -- --------------------------------------------------------
-update jsh_function set name='进销存统计', sort='0658' where id=59
+update jsh_function set name='进销存统计', sort='0658' where id=59;
 
 -- --------------------------------------------------------
 -- 时间 2021年6月20日
@@ -1102,6 +1102,12 @@ INSERT INTO `jsh_function` (`number`, `name`, `parent_number`, `url`, `component
 -- --------------------------------------------------------
 -- 时间 2021年6月29日
 -- by jishenghua
--- 给功能表增加组件字段component
+-- 给财务子表增加字段bill_id
+-- 给财务主表增加附件字段file_name
+-- 给财务主表增加附件字段file_name
 -- --------------------------------------------------------
-alter table jsh_account_item add bill_id bigint(20) DEFAULT NULL COMMENT '单据id' after in_out_item_id;
+alter table jsh_account_item add bill_id bigint(20) DEFAULT NULL COMMENT '进销存单据id' after in_out_item_id;
+alter table jsh_account_item add need_debt decimal(24,6) DEFAULT NULL COMMENT '应收欠款' after bill_id;
+alter table jsh_account_item add finish_debt decimal(24,6) DEFAULT NULL COMMENT '已收欠款' after need_debt;
+alter table jsh_depot_head add file_name varchar(500) DEFAULT NULL COMMENT '附件名称' after remark;
+alter table jsh_account_head add file_name varchar(500) DEFAULT NULL COMMENT '附件名称' after remark;

@@ -3,7 +3,10 @@ package com.jsh.erp.service.depotHead;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
-import com.jsh.erp.datasource.entities.*;
+import com.jsh.erp.datasource.entities.DepotHead;
+import com.jsh.erp.datasource.entities.DepotHeadExample;
+import com.jsh.erp.datasource.entities.DepotItem;
+import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.mappers.DepotHeadMapper;
 import com.jsh.erp.datasource.mappers.DepotHeadMapperEx;
 import com.jsh.erp.datasource.mappers.DepotItemMapperEx;
@@ -14,6 +17,7 @@ import com.jsh.erp.datasource.vo.DepotHeadVo4StatementAccount;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.account.AccountService;
+import com.jsh.erp.service.accountItem.AccountItemService;
 import com.jsh.erp.service.depot.DepotService;
 import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.log.LogService;
@@ -36,7 +40,10 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import static com.jsh.erp.utils.Tools.getCenternTime;
 
@@ -64,6 +71,8 @@ public class DepotHeadService {
     private PersonService personService;
     @Resource
     private AccountService accountService;
+    @Resource
+    private AccountItemService accountItemService;
     @Resource
     DepotItemMapperEx depotItemMapperEx;
     @Resource
@@ -684,5 +693,37 @@ public class DepotHeadService {
             JshException.readFail(logger, e);
         }
         return depotHead;
+    }
+
+    public List<DepotHeadVo4List> debtList(Long organId, String materialParam, String number, String beginTime, String endTime,
+                                              String type, String subType, String roleType, String status) {
+        List<DepotHeadVo4List> resList = new ArrayList<>();
+        try{
+            String depotIds = depotService.findDepotStrByCurrentUser();
+            String [] depotArray=depotIds.split(",");
+            String [] creatorArray = getCreatorArray(roleType);
+            beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
+            endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
+            List<DepotHeadVo4List> list=depotHeadMapperEx.debtList(organId, type, subType, creatorArray, status, number, beginTime, endTime, materialParam, depotArray);
+            if (null != list) {
+                for (DepotHeadVo4List dh : list) {
+                    if(dh.getChangeAmount() != null) {
+                        dh.setChangeAmount(dh.getChangeAmount().abs());
+                    }
+                    if(dh.getTotalPrice() != null) {
+                        dh.setTotalPrice(dh.getTotalPrice().abs());
+                    }
+                    if(dh.getOperTime() != null) {
+                        dh.setOperTimeStr(getCenternTime(dh.getOperTime()));
+                    }
+                    dh.setFinishDebt(accountItemService.getEachAmountByBillId(dh.getId()));
+                    dh.setMaterialsList(findMaterialsListByHeaderId(dh.getId()));
+                    resList.add(dh);
+                }
+            }
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return resList;
     }
 }

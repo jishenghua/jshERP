@@ -36,6 +36,8 @@ public class DepotHead {
 
     private String remark;
 
+    private String fileName;
+
     private String salesMan;
 
     private String accountIdList;
@@ -190,6 +192,14 @@ public class DepotHead {
 
     public void setRemark(String remark) {
         this.remark = remark == null ? null : remark.trim();
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName == null ? null : fileName.trim();
     }
 
     public String getSalesMan() {

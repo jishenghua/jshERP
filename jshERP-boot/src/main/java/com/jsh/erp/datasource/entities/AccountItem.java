@@ -13,6 +13,10 @@ public class AccountItem {
 
     private Long billId;
 
+    private BigDecimal needDebt;
+
+    private BigDecimal finishDebt;
+
     private BigDecimal eachAmount;
 
     private String remark;
@@ -59,6 +63,22 @@ public class AccountItem {
 
     public void setBillId(Long billId) {
         this.billId = billId;
+    }
+
+    public BigDecimal getNeedDebt() {
+        return needDebt;
+    }
+
+    public void setNeedDebt(BigDecimal needDebt) {
+        this.needDebt = needDebt;
+    }
+
+    public BigDecimal getFinishDebt() {
+        return finishDebt;
+    }
+
+    public void setFinishDebt(BigDecimal finishDebt) {
+        this.finishDebt = finishDebt;
     }
 
     public BigDecimal getEachAmount() {
