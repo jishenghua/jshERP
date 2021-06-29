@@ -193,6 +193,7 @@
       editAfter() {
         if (this.action === 'add') {
           this.addInit("SK")
+          this.fileList = []
         } else {
           this.model.billTime = this.model.billTimeStr
           this.$nextTick(() => {
