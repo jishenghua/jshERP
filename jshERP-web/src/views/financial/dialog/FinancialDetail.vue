@@ -289,11 +289,15 @@
             </a-row>
             <a-row class="form-row" :gutter="24">
               <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款账户">
+                  {{model.accountName}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="优惠金额">
                   {{model.changeAmount}}
                 </a-form-item>
               </a-col>
-              <a-col :span="6"></a-col>
               <a-col :span="6"></a-col>
               <a-col :span="6"></a-col>
             </a-row>
@@ -405,8 +409,10 @@
         ],
         moneyInColumns: [
           { title: '销售单据编号',dataIndex: 'billNumber',width: '20%'},
-          { title: '金额',dataIndex: 'eachAmount', width: '10%'},
-          { title: '备注',dataIndex: 'remark', width: '30%'}
+          { title: '应收欠款',dataIndex: 'needDebt', width: '10%'},
+          { title: '已收欠款',dataIndex: 'finishDebt', width: '10%'},
+          { title: '本次收款',dataIndex: 'eachAmount', width: '10%'},
+          { title: '备注',dataIndex: 'remark', width: '20%'}
         ],
         moneyOutColumns: [
           { title: '账户名称',dataIndex: 'accountName',width: '20%'},

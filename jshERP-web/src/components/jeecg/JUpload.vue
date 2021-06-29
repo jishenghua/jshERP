@@ -63,7 +63,7 @@
     name: 'JUpload',
     data(){
       return {
-        uploadAction:window._CONFIG['domianURL']+"/sys/common/upload",
+        uploadAction:window._CONFIG['domianURL']+"/systemConfig/upload",
         headers:{},
         fileList: [],
         newFileList: [],
@@ -184,8 +184,8 @@
             status: 'done',
             url: url,
             response:{
-              status:"history",
-              message:val[a].filePath
+              code:"history",
+              data:val[a].filePath
             }
           })
         }
@@ -209,8 +209,8 @@
             status: 'done',
             url: url,
             response:{
-              status:"history",
-              message:arr[a]
+              code:"history",
+              data:arr[a]
             }
           })
         }
@@ -225,7 +225,7 @@
         let arr = [];
 
         for(var a=0;a<uploadFiles.length;a++){
-          arr.push(uploadFiles[a].response.message)
+          arr.push(uploadFiles[a].response.data)
         }
         if(arr.length>0){
           path = arr.join(",")
@@ -247,6 +247,7 @@
       },
       handleChange(info) {
         console.log("--文件列表改变--")
+        debugger
         if(!info.file.status && this.uploadGoOn === false){
           info.fileList.pop();
         }
@@ -255,10 +256,10 @@
           if(this.number>0){
             fileList = fileList.slice(-this.number);
           }
-          if(info.file.response.success){
+          if(info.file.response.code === 200){
             fileList = fileList.map((file) => {
               if (file.response) {
-                let reUrl = file.response.message;
+                let reUrl = file.response.data;
                 file.url = getFileAccessHttpUrl(reUrl);
               }
               return file;
@@ -281,7 +282,7 @@
             for(var a=0;a<fileList.length;a++){
               var fileJson = {
                 fileName:fileList[a].name,
-                filePath:fileList[a].response.message,
+                filePath:fileList[a].response.data,
                 fileSize:fileList[a].size
               };
               this.newFileList.push(fileJson);
