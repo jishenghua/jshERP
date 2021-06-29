@@ -1111,3 +1111,4 @@ alter table jsh_account_item add need_debt decimal(24,6) DEFAULT NULL COMMENT '�
 alter table jsh_account_item add finish_debt decimal(24,6) DEFAULT NULL COMMENT '已收欠款' after need_debt;
 alter table jsh_depot_head add file_name varchar(500) DEFAULT NULL COMMENT '附件名称' after remark;
 alter table jsh_account_head add file_name varchar(500) DEFAULT NULL COMMENT '附件名称' after remark;
+alter table jsh_account_head add discount_money decimal(24,6) DEFAULT NULL COMMENT '优惠金额' after change_amount;
