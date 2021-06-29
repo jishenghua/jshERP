@@ -1102,9 +1102,9 @@ INSERT INTO `jsh_function` (`number`, `name`, `parent_number`, `url`, `component
 -- --------------------------------------------------------
 -- 时间 2021年6月29日
 -- by jishenghua
--- 给财务子表增加字段bill_id
--- 给财务主表增加附件字段file_name
--- 给财务主表增加附件字段file_name
+-- 给jsh_account_item增加字段进销存单据id 应收欠款 已收欠款
+-- 给jsh_depot_head增加附件字段附件名称
+-- 给jsh_account_head增加附件字段附件名称 优惠金额
 -- --------------------------------------------------------
 alter table jsh_account_item add bill_id bigint(20) DEFAULT NULL COMMENT '进销存单据id' after in_out_item_id;
 alter table jsh_account_item add need_debt decimal(24,6) DEFAULT NULL COMMENT '应收欠款' after bill_id;
