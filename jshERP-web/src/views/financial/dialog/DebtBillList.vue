@@ -52,7 +52,6 @@
       rowKey="id"
       :columns="columns"
       :dataSource="dataSource"
-      :pagination="ipagination"
       :loading="loading"
       :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange, type: getType}"
       :customRow="rowAction">

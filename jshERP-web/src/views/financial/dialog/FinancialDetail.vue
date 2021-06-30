@@ -65,11 +65,20 @@
             </a-row>
             <a-row class="form-row" :gutter="24">
               <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="合计金额">
+                  {{model.totalPrice}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="优惠金额">
+                  {{model.discountMoney}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款金额">
                   {{model.changeAmount}}
                 </a-form-item>
               </a-col>
-              <a-col :span="6"></a-col>
               <a-col :span="6"></a-col>
               <a-col :span="6"></a-col>
             </a-row>
@@ -294,12 +303,32 @@
                 </a-form-item>
               </a-col>
               <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="合计收款">
+                  {{model.totalPrice}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="优惠金额">
+                  {{model.discountMoney}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="实际收款">
                   {{model.changeAmount}}
                 </a-form-item>
               </a-col>
-              <a-col :span="6"></a-col>
-              <a-col :span="6"></a-col>
+            </a-row>
+            <a-row class="form-row" :gutter="24">
+              <a-col :span="8">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="附件">
+                  <ul style="list-style-type:none">
+                    <li v-for="(item,index) in fileList" :key="index">
+                      <a :href="item.url" target="_blank">{{item.name}}</a>
+                    </li>
+                  </ul>
+                </a-form-item>
+              </a-col>
+              <a-col :span="16"></a-col>
             </a-row>
           </section>
         </template>
@@ -347,13 +376,37 @@
             </a-row>
             <a-row class="form-row" :gutter="24">
               <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款账户">
+                  {{model.accountName}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="合计付款">
+                  {{model.totalPrice}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="优惠金额">
+                  {{model.discountMoney}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="实际付款">
                   {{model.changeAmount}}
                 </a-form-item>
               </a-col>
-              <a-col :span="6"></a-col>
-              <a-col :span="6"></a-col>
-              <a-col :span="6"></a-col>
+            </a-row>
+            <a-row class="form-row" :gutter="24">
+              <a-col :span="8">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="附件">
+                  <ul style="list-style-type:none">
+                    <li v-for="(item,index) in fileList" :key="index">
+                      <a :href="item.url" target="_blank">{{item.name}}</a>
+                    </li>
+                  </ul>
+                </a-form-item>
+              </a-col>
+              <a-col :span="16"></a-col>
             </a-row>
           </section>
         </template>
@@ -373,6 +426,7 @@
         visible: false,
         model: {},
         financialType: '',
+        fileList: [],
         labelCol: {
           xs: { span: 24 },
           sm: { span: 6 },
@@ -415,9 +469,11 @@
           { title: '备注',dataIndex: 'remark', width: '20%'}
         ],
         moneyOutColumns: [
-          { title: '账户名称',dataIndex: 'accountName',width: '20%'},
-          { title: '金额',dataIndex: 'eachAmount', width: '10%'},
-          { title: '备注',dataIndex: 'remark', width: '30%'}
+          { title: '采购单据编号',dataIndex: 'billNumber',width: '20%'},
+          { title: '应收欠款',dataIndex: 'needDebt', width: '10%'},
+          { title: '已收欠款',dataIndex: 'finishDebt', width: '10%'},
+          { title: '本次收款',dataIndex: 'eachAmount', width: '10%'},
+          { title: '备注',dataIndex: 'remark', width: '20%'}
         ],
       }
     },
@@ -426,6 +482,18 @@
     methods: {
       show(record, type) {
         this.financialType = type
+        //附件下载
+        let fileName = record.fileName
+        if(fileName) {
+          let fileArr = fileName.split(",")
+          this.fileList = []
+          for(let i=0; i<fileArr.length; i++) {
+            let fileInfo = {}
+            fileInfo.name= fileArr[i].replace("financial/","")
+            fileInfo.url= window._CONFIG['domianURL'] + '/systemConfig/static/' + fileArr[i]
+            this.fileList.push(fileInfo)
+          }
+        }
         this.visible = true;
         this.model = Object.assign({}, record);
         this.$nextTick(() => {

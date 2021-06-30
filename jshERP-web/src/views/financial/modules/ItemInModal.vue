@@ -199,6 +199,13 @@
           info: JSON.stringify(billMain),
           rows: JSON.stringify(detailArr),
         }
+      },
+      //改变本次欠款的值
+      autoChangeAmount(target) {
+        let allEachAmount = target.statisticsColumns.eachAmount-0
+        this.$nextTick(() => {
+          this.form.setFieldsValue({'changeAmount':allEachAmount})
+        });
       }
     }
   }

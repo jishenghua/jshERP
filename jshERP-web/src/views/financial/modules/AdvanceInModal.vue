@@ -52,7 +52,8 @@
           :maxHeight="300"
           :rowNumber="false"
           :rowSelection="true"
-          :actionButton="true" />
+          :actionButton="true"
+          @valueChange="onValueChange" />
         <a-row class="form-row" :gutter="24">
           <a-col :lg="24" :md="24" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="">
@@ -62,13 +63,19 @@
         </a-row>
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="优惠金额">
-              <a-input placeholder="请输入优惠金额" v-decorator.trim="[ 'changeAmount' ]" />
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="合计金额">
+              <a-input placeholder="请输入合计收款" v-decorator.trim="[ 'totalPrice' ]" :readOnly="true"/>
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="优惠金额">
+              <a-input placeholder="请输入优惠金额" v-decorator.trim="[ 'discountMoney' ]" @keyup="onKeyUpDiscountMoney" />
+            </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款金额">
+              <a-input placeholder="请输入收款金额" v-decorator.trim="[ 'changeAmount' ]" :readOnly="true"/>
+            </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
           </a-col>
@@ -152,7 +159,8 @@
         } else {
           this.model.billTime = this.model.billTimeStr
           this.$nextTick(() => {
-            this.form.setFieldsValue(pick(this.model,'organId', 'handsPersonId', 'billTime', 'billNo', 'remark', 'changeAmount'))
+            this.form.setFieldsValue(pick(this.model,'organId', 'handsPersonId', 'billTime', 'billNo', 'remark',
+                  'totalPrice', 'discountMoney', 'changeAmount'))
           });
           // 加载子表数据
           let params = {

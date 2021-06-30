@@ -65,7 +65,8 @@
                 :maxHeight="300"
                 :rowNumber="false"
                 :rowSelection="false"
-                :actionButton="false" />
+                :actionButton="false"
+                @valueChange="onValueChange" />
             </a-col>
           </a-row>
           <a-row class="form-row" :gutter="24">
@@ -86,18 +87,24 @@
               </a-form-item>
             </a-col>
             <a-col :lg="6" :md="12" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="优惠金额">
-                <a-input placeholder="请输入优惠金额" v-decorator.trim="[ 'changeAmount' ]" />
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="合计收款">
+                <a-input placeholder="请输入合计收款" v-decorator.trim="[ 'totalPrice' ]" :readOnly="true"/>
               </a-form-item>
             </a-col>
             <a-col :lg="6" :md="12" :sm="24">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="优惠金额">
+                <a-input placeholder="请输入优惠金额" v-decorator.trim="[ 'discountMoney', validatorRules.discountMoney ]" @keyup="onKeyUpDiscountMoney" />
+              </a-form-item>
             </a-col>
             <a-col :lg="6" :md="12" :sm="24">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="实际收款">
+                <a-input placeholder="请输入实际收款" v-decorator.trim="[ 'changeAmount' ]" :readOnly="true"/>
+              </a-form-item>
             </a-col>
           </a-row>
           <a-row class="form-row" :gutter="24">
             <a-col :lg="6" :md="12" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="文件上传">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="附件">
                 <j-upload v-model="fileList" bizPath="financial"></j-upload>
               </a-form-item>
             </a-col>
@@ -115,16 +122,13 @@
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { FinancialModalMixin } from '../mixins/FinancialModalMixin'
   import JUpload from '@/components/jeecg/JUpload'
-  import JEllipsis from '@/components/jeecg/JEllipsis'
   import JDate from '@/components/jeecg/JDate'
-  import Vue from 'vue'
   export default {
     name: "MoneyInModal",
     mixins: [JEditableTableMixin, FinancialModalMixin],
     components: {
       DebtBillList,
       JUpload,
-      JEllipsis,
       JDate
     },
     data () {
@@ -154,28 +158,25 @@
             { title: '销售单据编号',key: 'billNumber',width: '20%', type: FormTypes.input, readonly: true },
             { title: '应收欠款',key: 'needDebt', width: '10%', type: FormTypes.inputNumber, statistics: true, readonly: true },
             { title: '已收欠款', key: 'finishDebt', width: '10%', type: FormTypes.inputNumber, statistics: true, readonly: true },
-            { title: '本次收款',key: 'eachAmount', width: '10%', type: FormTypes.inputNumber, statistics: true, placeholder: '请选择${title}',
+            { title: '本次收款',key: 'eachAmount', width: '10%', type: FormTypes.inputNumber, statistics: true, placeholder: '请输入${title}',
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
-            { title: '备注',key: 'remark', width: '20%', type: FormTypes.input, placeholder: '请选择${title}'}
+            { title: '备注',key: 'remark', width: '20%', type: FormTypes.input, placeholder: '请输入${title}'}
           ]
         },
         confirmLoading: false,
         validatorRules:{
           organId:{
-            rules: [
-              { required: true, message: '请选择客户!' }
-            ]
+            rules: [{ required: true, message: '请选择客户!' }]
           },
           handsPersonId:{
-            rules: [
-              { required: true, message: '请选择经手人!' }
-            ]
+            rules: [{ required: true, message: '请选择经手人!' }]
           },
           accountId:{
-            rules: [
-              { required: true, message: '请选择收款账户!' }
-            ]
+            rules: [{ required: true, message: '请选择收款账户!' }]
+          },
+          discountMoney:{
+            rules: [{ required: true, message: '请输入优惠金额!' }]
           }
         },
         url: {
@@ -198,7 +199,7 @@
           this.model.billTime = this.model.billTimeStr
           this.$nextTick(() => {
             this.form.setFieldsValue(pick(this.model,'organId', 'handsPersonId', 'billTime', 'billNo', 'remark',
-                  'accountId','changeAmount'))
+                  'accountId', 'totalPrice', 'discountMoney', 'changeAmount'))
           });
           this.fileList = this.model.fileName
           // 加载子表数据
@@ -241,28 +242,6 @@
       },
       handleClear() {
         this.accountTable.dataSource = []
-      },
-      debtBillListOk(selectBillRows) {
-        if(selectBillRows && selectBillRows.length>0) {
-          this.requestSubTableDataEx(selectBillRows, this.accountTable);
-        }
-      },
-      /** 查询某个tab的数据,给明细里面的价税合计赋值 */
-      requestSubTableDataEx(selectBillRows, tab, success) {
-        tab.loading = true
-        let listEx = []
-        for(let i=0; i<selectBillRows.length; i++){
-          let info = selectBillRows[i]
-          info.billNumber = info.number
-          info.needDebt = (info.discountLastMoney - info.changeAmount).toFixed(2)
-          info.eachAmount =  (info.discountLastMoney - info.changeAmount - info.finishDebt).toFixed(2);
-          if(info.eachAmount != 0) {
-            listEx.push(info)
-          }
-        }
-        tab.dataSource = listEx
-        typeof success === 'function' ? success(res) : ''
-        tab.loading = false
       }
     }
   }

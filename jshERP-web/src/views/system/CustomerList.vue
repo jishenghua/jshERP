@@ -125,9 +125,7 @@
           { title: '手机号码', dataIndex: 'telephone',width:100,align:"center"},
           { title: '联系电话', dataIndex: 'phoneNum',width:100,align:"center"},
           { title: '期初应收',dataIndex: 'beginNeedGet',width:80,align:"center"},
-          { title: '期初应付',dataIndex: 'beginNeedPay',width:80,align:"center"},
           { title: '期末应收',dataIndex: 'allNeedGet',width:80,align:"center"},
-          { title: '期末应付',dataIndex: 'allNeedPay',width:80,align:"center"},
           { title: '税率(%)', dataIndex: 'taxRate',width:80,align:"center"},
           { title: '状态',dataIndex: 'enabled',width:70,align:"center",
             scopedSlots: { customRender: 'customRenderFlag' }

@@ -52,18 +52,8 @@
           </a-form-item>
         </a-col>
         <a-col :span="24/2">
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="期初应付">
-            <a-input placeholder="请输入期初应付" v-decorator.trim="[ 'beginNeedPay' ]" />
-          </a-form-item>
-        </a-col>
-        <a-col :span="24/2">
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="期末应收">
             <a-input v-decorator.trim="[ 'allNeedGet' ]" :readOnly="true" />
-          </a-form-item>
-        </a-col>
-        <a-col :span="24/2">
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="期末应付">
-            <a-input v-decorator.trim="[ 'allNeedPay' ]" :readOnly="true" />
           </a-form-item>
         </a-col>
         <a-col :span="24/2">
