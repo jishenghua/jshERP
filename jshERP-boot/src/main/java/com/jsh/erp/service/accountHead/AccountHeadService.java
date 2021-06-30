@@ -18,6 +18,7 @@ import com.jsh.erp.utils.StringUtil;
 import com.jsh.erp.utils.Tools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -49,6 +50,8 @@ public class AccountHeadService {
     private LogService logService;
     @Resource
     private AccountItemMapperEx accountItemMapperEx;
+    @Value(value="${file.path}")
+    private String filePath;
 
     public AccountHead getAccountHead(long id) throws Exception {
         AccountHead result=null;
@@ -85,27 +88,26 @@ public class AccountHeadService {
     }
 
     public List<AccountHeadVo4ListEx> select(String type, String roleType, String billNo, String beginTime, String endTime, int offset, int rows) throws Exception{
-        List<AccountHeadVo4ListEx> resList = new ArrayList<AccountHeadVo4ListEx>();
-        List<AccountHeadVo4ListEx> list=null;
+        List<AccountHeadVo4ListEx> resList = new ArrayList<>();
         try{
             String [] creatorArray = getCreatorArray(roleType);
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            list = accountHeadMapperEx.selectByConditionAccountHead(type, creatorArray, billNo, beginTime, endTime, offset, rows);
+            List<AccountHeadVo4ListEx> list = accountHeadMapperEx.selectByConditionAccountHead(type, creatorArray, billNo, beginTime, endTime, offset, rows);
+            if (null != list) {
+                for (AccountHeadVo4ListEx ah : list) {
+                    if(ah.getChangeAmount() != null) {
+                        ah.setChangeAmount(ah.getChangeAmount().abs());
+                    }
+                    if(ah.getTotalPrice() != null) {
+                        ah.setTotalPrice(ah.getTotalPrice().abs());
+                    }
+                    ah.setBillTimeStr(getCenternTime(ah.getBillTime()));
+                    resList.add(ah);
+                }
+            }
         }catch(Exception e){
             JshException.readFail(logger, e);
-        }
-        if (null != list) {
-            for (AccountHeadVo4ListEx ah : list) {
-                if(ah.getChangeAmount() != null) {
-                    ah.setChangeAmount(ah.getChangeAmount().abs());
-                }
-                if(ah.getTotalPrice() != null) {
-                    ah.setTotalPrice(ah.getTotalPrice().abs());
-                }
-                ah.setBillTimeStr(getCenternTime(ah.getBillTime()));
-                resList.add(ah);
-            }
         }
         return resList;
     }
@@ -315,8 +317,8 @@ public class AccountHeadService {
             i = -1;
         }
         //收付款部分
-        sum = sum.add((allMoney(getS, "付款", "合计",endTime).add(allMoney(getS, "付款", "实际",endTime))).multiply(new BigDecimal(i)));
-        sum = sum.subtract((allMoney(getS, "收款", "合计",endTime).add(allMoney(getS, "收款", "实际",endTime))).multiply(new BigDecimal(i)));
+        sum = sum.subtract((allMoney(getS, "收款", "合计",endTime)).multiply(new BigDecimal(i)));
+        sum = sum.add((allMoney(getS, "付款", "合计",endTime)).multiply(new BigDecimal(i)));
         sum = sum.add((allMoney(getS, "收入", "合计",endTime).subtract(allMoney(getS, "收入", "实际",endTime))).multiply(new BigDecimal(i)));
         sum = sum.subtract((allMoney(getS, "支出", "合计",endTime).subtract(allMoney(getS, "支出", "实际",endTime))).multiply(new BigDecimal(i)));
         return sum;

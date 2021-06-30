@@ -476,6 +476,66 @@ public class AccountHeadExample {
             return (Criteria) this;
         }
 
+        public Criteria andDiscountMoneyIsNull() {
+            addCriterion("discount_money is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiscountMoneyIsNotNull() {
+            addCriterion("discount_money is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiscountMoneyEqualTo(BigDecimal value) {
+            addCriterion("discount_money =", value, "discountMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiscountMoneyNotEqualTo(BigDecimal value) {
+            addCriterion("discount_money <>", value, "discountMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiscountMoneyGreaterThan(BigDecimal value) {
+            addCriterion("discount_money >", value, "discountMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiscountMoneyGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("discount_money >=", value, "discountMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiscountMoneyLessThan(BigDecimal value) {
+            addCriterion("discount_money <", value, "discountMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiscountMoneyLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("discount_money <=", value, "discountMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiscountMoneyIn(List<BigDecimal> values) {
+            addCriterion("discount_money in", values, "discountMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiscountMoneyNotIn(List<BigDecimal> values) {
+            addCriterion("discount_money not in", values, "discountMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiscountMoneyBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("discount_money between", value1, value2, "discountMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiscountMoneyNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("discount_money not between", value1, value2, "discountMoney");
+            return (Criteria) this;
+        }
+
         public Criteria andTotalPriceIsNull() {
             addCriterion("total_price is null");
             return (Criteria) this;

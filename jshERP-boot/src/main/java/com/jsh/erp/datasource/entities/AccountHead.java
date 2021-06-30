@@ -16,6 +16,8 @@ public class AccountHead {
 
     private BigDecimal changeAmount;
 
+    private BigDecimal discountMoney;
+
     private BigDecimal totalPrice;
 
     private Long accountId;
@@ -78,6 +80,14 @@ public class AccountHead {
 
     public void setChangeAmount(BigDecimal changeAmount) {
         this.changeAmount = changeAmount;
+    }
+
+    public BigDecimal getDiscountMoney() {
+        return discountMoney;
+    }
+
+    public void setDiscountMoney(BigDecimal discountMoney) {
+        this.discountMoney = discountMoney;
     }
 
     public BigDecimal getTotalPrice() {

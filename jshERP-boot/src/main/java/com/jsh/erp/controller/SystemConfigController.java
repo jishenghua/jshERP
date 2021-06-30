@@ -17,16 +17,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.HandlerMapping;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 
 /**
@@ -191,5 +192,77 @@ public class SystemConfigController {
             logger.error(e.getMessage(), e);
         }
         return "";
+    }
+
+    /**
+     * 预览图片&下载文件
+     * 请求地址：http://localhost:8080/common/static/{financial/afsdfasdfasdf_1547866868179.txt}
+     *
+     * @param request
+     * @param response
+     */
+    @GetMapping(value = "/static/**")
+    public void view(HttpServletRequest request, HttpServletResponse response) {
+        // ISO-8859-1 ==> UTF-8 进行编码转换
+        String imgPath = extractPathFromPattern(request);
+        if(StringUtil.isEmpty(imgPath) || imgPath=="null"){
+            return;
+        }
+        // 其余处理略
+        InputStream inputStream = null;
+        OutputStream outputStream = null;
+        try {
+            imgPath = imgPath.replace("..", "");
+            if (imgPath.endsWith(",")) {
+                imgPath = imgPath.substring(0, imgPath.length() - 1);
+            }
+            String fileUrl = filePath + File.separator + imgPath;
+            File file = new File(fileUrl);
+            if(!file.exists()){
+                response.setStatus(404);
+                throw new RuntimeException("文件不存在..");
+            }
+            response.setContentType("application/force-download");// 设置强制下载不打开
+            response.addHeader("Content-Disposition", "attachment;fileName=" + new String(file.getName().getBytes("UTF-8"),"iso-8859-1"));
+            inputStream = new BufferedInputStream(new FileInputStream(fileUrl));
+            outputStream = response.getOutputStream();
+            byte[] buf = new byte[1024];
+            int len;
+            while ((len = inputStream.read(buf)) > 0) {
+                outputStream.write(buf, 0, len);
+            }
+            response.flushBuffer();
+        } catch (IOException e) {
+            logger.error("预览文件失败" + e.getMessage());
+            response.setStatus(404);
+            e.printStackTrace();
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    logger.error(e.getMessage(), e);
+                }
+            }
+            if (outputStream != null) {
+                try {
+                    outputStream.close();
+                } catch (IOException e) {
+                    logger.error(e.getMessage(), e);
+                }
+            }
+        }
+    }
+
+    /**
+     *  把指定URL后的字符串全部截断当成参数
+     *  这么做是为了防止URL中包含中文或者特殊字符（/等）时，匹配不了的问题
+     * @param request
+     * @return
+     */
+    private static String extractPathFromPattern(final HttpServletRequest request) {
+        String path = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+        String bestMatchPattern = (String) request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE);
+        return new AntPathMatcher().extractPathWithinPattern(bestMatchPattern, path);
     }
 }

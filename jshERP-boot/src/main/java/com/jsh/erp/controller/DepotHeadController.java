@@ -231,10 +231,10 @@ public class DepotHeadController {
                         allPrice = p1.subtract(p2);
                     } else if (type.equals("采购退货出库")) {
                         allPrice = p1.subtract(p2);
-                    } else if (type.equals("付款")) {
-                        allPrice = p1.add(p2);
                     } else if (type.equals("收款")) {
-                        allPrice = BigDecimal.ZERO.subtract(p1.add(p2));
+                        allPrice = BigDecimal.ZERO.subtract(p1);
+                    } else if (type.equals("付款")) {
+                        allPrice = p1;
                     } else if (type.equals("收入")) {
                         allPrice =  p1.subtract(p2);
                     } else if (type.equals("支出")) {
