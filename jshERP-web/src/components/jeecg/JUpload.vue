@@ -247,7 +247,6 @@
       },
       handleChange(info) {
         console.log("--文件列表改变--")
-        debugger
         if(!info.file.status && this.uploadGoOn === false){
           info.fileList.pop();
         }

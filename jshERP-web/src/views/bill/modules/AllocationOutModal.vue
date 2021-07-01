@@ -47,6 +47,13 @@
             </a-form-item>
           </a-col>
         </a-row>
+        <a-row class="form-row" :gutter="24">
+          <a-col :lg="6" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="附件">
+              <j-upload v-model="fileList" bizPath="bill"></j-upload>
+            </a-form-item>
+          </a-col>
+        </a-row>
       </a-form>
     </a-spin>
   </j-modal>
@@ -57,12 +64,14 @@
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
   import { getMpListShort } from "@/utils/util"
+  import JUpload from '@/components/jeecg/JUpload'
   import JDate from '@/components/jeecg/JDate'
   import Vue from 'vue'
   export default {
     name: "AllocationOutModal",
     mixins: [JEditableTableMixin, BillModalMixin],
     components: {
+      JUpload,
       JDate
     },
     data () {
@@ -75,6 +84,7 @@
         visible: false,
         operTimeStr: '',
         prefixNo: 'DBCK',
+        fileList:[],
         model: {},
         labelCol: {
           xs: { span: 24 },
@@ -138,8 +148,10 @@
       editAfter() {
         if (this.action === 'add') {
           this.addInit(this.prefixNo)
+          this.fileList = []
         } else {
           this.model.operTime = this.model.operTimeStr
+          this.fileList = this.model.fileName
           this.$nextTick(() => {
             this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'number', 'remark',
               'discount','discountMoney','discountLastMoney','otherMoney','accountId','changeAmount'))
@@ -165,6 +177,9 @@
           totalPrice += item.allPrice-0
         }
         billMain.totalPrice = totalPrice
+        if(this.fileList && this.fileList.length > 0) {
+          billMain.fileName = this.fileList
+        }
         if(this.model.id){
           billMain.id = this.model.id
         }

@@ -123,7 +123,9 @@
           { title: '单据编号', dataIndex: 'billNo',width:160},
           { title: '操作员', dataIndex: 'userName',width:80},
           { title: '单据日期 ', dataIndex: 'billTimeStr',width:160},
-          { title: '合计', dataIndex: 'totalPrice',width:80},
+          { title: '合计金额', dataIndex: 'totalPrice',width:80},
+          { title: '优惠金额', dataIndex: 'discountMoney',width:80},
+          { title: '收款金额', dataIndex: 'changeAmount',width:80},
           { title: '备注', dataIndex: 'remark',width:200},
           {
             title: '操作',

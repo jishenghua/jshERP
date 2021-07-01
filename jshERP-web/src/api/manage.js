@@ -171,7 +171,7 @@ export function getFileAccessHttpUrl(avatar,subStr) {
     return avatar;
   }else{
     if(avatar &&　avatar.length>0 && avatar.indexOf('[')==-1){
-      return window._CONFIG['staticDomainURL'] + "/" + avatar;
+      return window._CONFIG['domianURL'] + "/" + avatar;
     }
   }
 }

@@ -115,7 +115,7 @@
           },
           { title: '单据日期', dataIndex: 'operTimeStr',width:130},
           { title: '操作员', dataIndex: 'userName',width:60},
-          { title: '应收欠款', dataIndex: 'needDebt',width:70,
+          { title: '欠款', dataIndex: 'needDebt',width:70,
             customRender:function (text,record,index) {
               return (record.discountLastMoney - record.changeAmount).toFixed(2);
             }
@@ -146,6 +146,13 @@
         this.queryParam.subType = subType
         this.queryParam.status = status
         this.columns[1].title = organType
+        if(type === '入库') {
+          this.columns[7].title = '已付欠款'
+          this.columns[8].title = '待付欠款'
+        } else if(type === '出库') {
+          this.columns[7].title = '已收欠款'
+          this.columns[8].title = '待收欠款'
+        }
         this.model = Object.assign({}, {});
         this.visible = true;
         this.loadData(1)

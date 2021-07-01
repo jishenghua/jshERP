@@ -74,6 +74,13 @@
           <a-col :lg="6" :md="12" :sm="24">
           </a-col>
         </a-row>
+        <a-row class="form-row" :gutter="24">
+          <a-col :lg="6" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="附件">
+              <j-upload v-model="fileList" bizPath="financial"></j-upload>
+            </a-form-item>
+          </a-col>
+        </a-row>
       </a-form>
     </a-spin>
   </j-modal>
@@ -83,11 +90,13 @@
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { FinancialModalMixin } from '../mixins/FinancialModalMixin'
+  import JUpload from '@/components/jeecg/JUpload'
   import JDate from '@/components/jeecg/JDate'
   export default {
     name: "GiroModal",
     mixins: [JEditableTableMixin, FinancialModalMixin],
     components: {
+      JUpload,
       JDate
     },
     data () {
@@ -99,6 +108,7 @@
         addDefaultRowNum: 1,
         visible: false,
         model: {},
+        fileList:[],
         labelCol: {
           xs: { span: 24 },
           sm: { span: 8 },
@@ -156,12 +166,14 @@
       editAfter() {
         if (this.action === 'add') {
           this.addInit("ZZ")
+          this.fileList = []
         } else {
           this.model.billTime = this.model.billTimeStr
           this.$nextTick(() => {
             this.form.setFieldsValue(pick(this.model,'organId', 'handsPersonId', 'billTime', 'billNo', 'remark',
               'accountId', 'changeAmount'))
           });
+          this.fileList = this.model.fileName
           // 加载子表数据
           let params = {
             headerId: this.model.id
@@ -181,6 +193,9 @@
         }
         billMain.totalPrice = 0-totalPrice
         billMain.changeAmount = 0-billMain.changeAmount
+        if(this.fileList && this.fileList.length > 0) {
+          billMain.fileName = this.fileList
+        }
         if(this.model.id){
           billMain.id = this.model.id
         }

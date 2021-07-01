@@ -43,7 +43,7 @@
     name: 'JImageUpload',
     data(){
       return {
-        uploadAction:window._CONFIG['domianURL']+"/sys/common/upload",
+        uploadAction:window._CONFIG['domianURL']+"/systemConfig/upload",
         uploadLoading:false,
         picUrl:false,
         headers:{},
@@ -96,21 +96,22 @@
       initFileList(paths){
         if(!paths || paths.length==0){
           this.fileList = [];
+          this.picUrl = false;
           return;
         }
         this.picUrl = true;
         let fileList = [];
         let arr = paths.split(",")
         for(var a=0;a<arr.length;a++){
-          let url = getFileAccessHttpUrl(arr[a]);
+          let url = getFileAccessHttpUrl('systemConfig/static/' + arr[a]);
           fileList.push({
             uid: uidGenerator(),
             name: getFileName(arr[a]),
             status: 'done',
             url: url,
             response:{
-              status:"history",
-              message:arr[a]
+              code:"history",
+              data:arr[a]
             }
           })
         }
@@ -127,11 +128,11 @@
         this.picUrl = false;
         let fileList = info.fileList
         if(info.file.status==='done'){
-          if(info.file.response.success){
+          if(info.file.response.code === 200){
             this.picUrl = true;
             fileList = fileList.map((file) => {
               if (file.response) {
-                file.url = file.response.message;
+                file.url = file.response.data;
               }
               return file;
             });
@@ -155,7 +156,7 @@
       getAvatarView(){
         if(this.fileList.length>0){
           let url = this.fileList[0].url
-          return getFileAccessHttpUrl(url)
+          return url
         }
       },
       handlePathChange(){
@@ -166,10 +167,10 @@
         }
         let arr = [];
         if(!this.isMultiple){
-          arr.push(uploadFiles[uploadFiles.length-1].response.message)
+          arr.push(uploadFiles[uploadFiles.length-1].response.data)
         }else{
           for(var a=0;a<uploadFiles.length;a++){
-            arr.push(uploadFiles[a].response.message)
+            arr.push(uploadFiles[a].response.data)
           }
         }
         if(arr.length>0){

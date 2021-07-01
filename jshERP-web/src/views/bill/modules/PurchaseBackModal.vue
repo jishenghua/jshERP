@@ -109,6 +109,13 @@
             <a-col :lg="6" :md="12" :sm="24">
             </a-col>
           </a-row>
+          <a-row class="form-row" :gutter="24">
+            <a-col :lg="6" :md="12" :sm="24">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="附件">
+                <j-upload v-model="fileList" bizPath="bill"></j-upload>
+              </a-form-item>
+            </a-col>
+          </a-row>
         </a-form>
       </a-spin>
     </j-modal>
@@ -125,6 +132,7 @@
   import { BillModalMixin } from '../mixins/BillModalMixin'
   import { getMpListShort, changeListFmtMinus} from "@/utils/util"
   import { getAction } from '@/api/manage'
+  import JUpload from '@/components/jeecg/JUpload'
   import JDate from '@/components/jeecg/JDate'
   import Vue from 'vue'
   export default {
@@ -133,6 +141,7 @@
     components: {
       ManyAccountModal,
       LinkBillList,
+      JUpload,
       JDate
     },
     data () {
@@ -145,6 +154,7 @@
         visible: false,
         operTimeStr: '',
         prefixNo: 'CGTH',
+        fileList:[],
         model: {},
         labelCol: {
           xs: { span: 24 },
@@ -216,6 +226,7 @@
       editAfter() {
         if (this.action === 'add') {
           this.addInit(this.prefixNo)
+          this.fileList = []
         } else {
           this.model.operTime = this.model.operTimeStr
           this.model.debt = (this.model.discountLastMoney + this.model.otherMoney - this.model.changeAmount).toFixed(2)
@@ -227,6 +238,7 @@
           } else {
             this.manyAccountBtnStatus = false
           }
+          this.fileList = this.model.fileName
           this.$nextTick(() => {
             this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'number', 'linkNumber', 'remark',
               'discount','discountMoney','discountLastMoney','otherMoney','accountId','changeAmount','debt'))
@@ -252,6 +264,9 @@
           totalPrice += item.allPrice-0
         }
         billMain.totalPrice = totalPrice
+        if(this.fileList && this.fileList.length > 0) {
+          billMain.fileName = this.fileList
+        }
         if(this.model.id){
           billMain.id = this.model.id
         }

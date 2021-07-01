@@ -139,6 +139,16 @@
               :rowSelection="false"
               :actionButton="false"/>
           </a-tab-pane>
+          <a-tab-pane key="4" tab="图片信息" forceRender>
+            <a-row class="form-row" :gutter="24">
+              <a-col :lg="12" :md="12" :sm="24">
+                <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 4 }}" :wrapperCol="{xs: { span: 24 },sm: { span: 20 }}" label="图片">
+                  <j-image-upload v-model="fileList" bizPath="material" isMultiple="true"></j-image-upload>
+                </a-form-item>
+              </a-col>
+              <a-col :lg="12" :md="12" :sm="24"></a-col>
+            </a-row>
+          </a-tab-pane>
         </a-tabs>
       </a-form>
     </a-spin>
@@ -150,12 +160,15 @@
   import { FormTypes, VALIDATE_NO_PASSED, getRefPromise, validateFormAndTables } from '@/utils/JEditableTableUtil'
   import {queryMaterialCategoryTreeList,checkMaterial,checkMaterialBarCode} from '@/api/api'
   import { httpAction, getAction } from '@/api/manage'
+  import JImageUpload from '@/components/jeecg/JImageUpload'
   import JDate from '@/components/jeecg/JDate'
   import Vue from 'vue'
   export default {
     name: "MaterialModal",
     components: {
-      JDate, JEditableTable
+      JImageUpload,
+      JDate,
+      JEditableTable
     },
     data () {
       return {
@@ -164,6 +177,7 @@
         categoryTree: [],
         unitList: [],
         depotList: [],
+        fileList:[],
         unitStatus: false,
         manyUnitStatus: true,
         unitChecked: false,
@@ -272,6 +286,13 @@
         this.model = Object.assign({}, record);
         this.activeKey = '1'
         this.visible = true;
+        if(JSON.stringify(record) === '{}') {
+          this.fileList = []
+        } else {
+          setTimeout(() => {
+            this.fileList = record.imgName
+          }, 5)
+        }
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model, 'name', 'standard', 'unit', 'unitId', 'model', 'color',
             'categoryId','enableSerialNumber','safetyStock','remark','mfrs','otherField1','otherField2','otherField3'))
@@ -435,6 +456,11 @@
                     return;
                   }
                 }
+              }
+              if(this.fileList && this.fileList.length > 0) {
+                formData.imgName = this.fileList
+              } else {
+                formData.imgName = ''
               }
               //接口调用
               let url = this.url.add, method = 'post'

@@ -182,12 +182,12 @@
             </a-row>
             <a-row class="form-row" :gutter="24">
               <a-col :span="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款账户">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收入账户">
                   {{model.accountName}}
                 </a-form-item>
               </a-col>
               <a-col :span="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款金额">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收入金额">
                   {{model.changeAmount}}
                 </a-form-item>
               </a-col>
@@ -240,12 +240,12 @@
             </a-row>
             <a-row class="form-row" :gutter="24">
               <a-col :span="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款账户">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="支出账户">
                   {{model.accountName}}
                 </a-form-item>
               </a-col>
               <a-col :span="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款金额">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="支出金额">
                   {{model.changeAmount}}
                 </a-form-item>
               </a-col>
@@ -318,18 +318,6 @@
                 </a-form-item>
               </a-col>
             </a-row>
-            <a-row class="form-row" :gutter="24">
-              <a-col :span="8">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="附件">
-                  <ul style="list-style-type:none">
-                    <li v-for="(item,index) in fileList" :key="index">
-                      <a :href="item.url" target="_blank">{{item.name}}</a>
-                    </li>
-                  </ul>
-                </a-form-item>
-              </a-col>
-              <a-col :span="16"></a-col>
-            </a-row>
           </section>
         </template>
         <!--付款-->
@@ -396,19 +384,21 @@
                 </a-form-item>
               </a-col>
             </a-row>
-            <a-row class="form-row" :gutter="24">
-              <a-col :span="8">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="附件">
-                  <ul style="list-style-type:none">
-                    <li v-for="(item,index) in fileList" :key="index">
-                      <a :href="item.url" target="_blank">{{item.name}}</a>
-                    </li>
-                  </ul>
-                </a-form-item>
-              </a-col>
-              <a-col :span="16"></a-col>
-            </a-row>
           </section>
+        </template>
+        <template v-if="fileList.length>0">
+          <a-row class="form-row" :gutter="24">
+            <a-col :span="8">
+              <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 4 }}" :wrapperCol="{xs: { span: 24 },sm: { span: 20 }}" label="附件">
+                <ul style="list-style-type:none">
+                  <li v-for="(item,index) in fileList" :key="index">
+                    <a :href="item.url" target="_blank">{{item.name}}</a>
+                  </li>
+                </ul>
+              </a-form-item>
+            </a-col>
+            <a-col :span="16"></a-col>
+          </a-row>
         </template>
       </a-form>
     </j-modal>
@@ -470,9 +460,9 @@
         ],
         moneyOutColumns: [
           { title: '采购单据编号',dataIndex: 'billNumber',width: '20%'},
-          { title: '应收欠款',dataIndex: 'needDebt', width: '10%'},
-          { title: '已收欠款',dataIndex: 'finishDebt', width: '10%'},
-          { title: '本次收款',dataIndex: 'eachAmount', width: '10%'},
+          { title: '应付欠款',dataIndex: 'needDebt', width: '10%'},
+          { title: '已付欠款',dataIndex: 'finishDebt', width: '10%'},
+          { title: '本次付款',dataIndex: 'eachAmount', width: '10%'},
           { title: '备注',dataIndex: 'remark', width: '20%'}
         ],
       }
@@ -493,6 +483,8 @@
             fileInfo.url= window._CONFIG['domianURL'] + '/systemConfig/static/' + fileArr[i]
             this.fileList.push(fileInfo)
           }
+        } else {
+          this.fileList = []
         }
         this.visible = true;
         this.model = Object.assign({}, record);

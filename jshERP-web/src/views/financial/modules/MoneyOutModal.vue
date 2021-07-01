@@ -155,10 +155,10 @@
           loading: false,
           dataSource: [],
           columns: [
-            { title: '销售单据编号',key: 'billNumber',width: '20%', type: FormTypes.input, readonly: true },
-            { title: '应收欠款',key: 'needDebt', width: '10%', type: FormTypes.inputNumber, statistics: true, readonly: true },
-            { title: '已收欠款', key: 'finishDebt', width: '10%', type: FormTypes.inputNumber, statistics: true, readonly: true },
-            { title: '本次收款',key: 'eachAmount', width: '10%', type: FormTypes.inputNumber, statistics: true, placeholder: '请输入${title}',
+            { title: '采购单据编号',key: 'billNumber',width: '20%', type: FormTypes.input, readonly: true },
+            { title: '应付欠款',key: 'needDebt', width: '10%', type: FormTypes.inputNumber, statistics: true, readonly: true },
+            { title: '已付欠款', key: 'finishDebt', width: '10%', type: FormTypes.inputNumber, statistics: true, readonly: true },
+            { title: '本次付款',key: 'eachAmount', width: '10%', type: FormTypes.inputNumber, statistics: true, placeholder: '请输入${title}',
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             { title: '备注',key: 'remark', width: '20%', type: FormTypes.input, placeholder: '请输入${title}'}

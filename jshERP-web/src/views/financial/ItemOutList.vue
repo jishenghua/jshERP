@@ -123,7 +123,7 @@
           { title: '单据编号', dataIndex: 'billNo',width:160},
           { title: '操作员', dataIndex: 'userName',width:80},
           { title: '单据日期 ', dataIndex: 'billTimeStr',width:160},
-          { title: '合计', dataIndex: 'totalPrice',width:80},
+          { title: '支出金额', dataIndex: 'changeAmount',width:80},
           { title: '备注', dataIndex: 'remark',width:200},
           {
             title: '操作',

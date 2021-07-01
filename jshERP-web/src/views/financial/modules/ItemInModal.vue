@@ -63,8 +63,8 @@
         </a-row>
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款账户">
-              <a-select placeholder="选择收款账户" v-decorator="[ 'accountId', validatorRules.accountId ]" :dropdownMatchSelectWidth="false">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收入账户">
+              <a-select placeholder="选择收入账户" v-decorator="[ 'accountId', validatorRules.accountId ]" :dropdownMatchSelectWidth="false">
                 <a-select-option v-for="(item,index) in accountList" :key="index" :value="item.id">
                   {{ item.name }}
                 </a-select-option>
@@ -72,13 +72,20 @@
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款金额">
-              <a-input placeholder="请输入收款金额" v-decorator.trim="[ 'changeAmount', validatorRules.changeAmount ]" />
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收入金额">
+              <a-input placeholder="请输入收入金额" v-decorator.trim="[ 'changeAmount', validatorRules.changeAmount ]" />
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
+          </a-col>
+        </a-row>
+        <a-row class="form-row" :gutter="24">
+          <a-col :lg="6" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="附件">
+              <j-upload v-model="fileList" bizPath="financial"></j-upload>
+            </a-form-item>
           </a-col>
         </a-row>
       </a-form>
@@ -90,11 +97,13 @@
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { FinancialModalMixin } from '../mixins/FinancialModalMixin'
+  import JUpload from '@/components/jeecg/JUpload'
   import JDate from '@/components/jeecg/JDate'
   export default {
     name: "ItemInModal",
     mixins: [JEditableTableMixin, FinancialModalMixin],
     components: {
+      JUpload,
       JDate
     },
     data () {
@@ -106,6 +115,7 @@
         addDefaultRowNum: 1,
         visible: false,
         model: {},
+        fileList:[],
         labelCol: {
           xs: { span: 24 },
           sm: { span: 8 },
@@ -143,12 +153,12 @@
           },
           accountId:{
             rules: [
-              { required: true, message: '请选择收款账户!' }
+              { required: true, message: '请选择收入账户!' }
             ]
           },
           changeAmount:{
             rules: [
-              { required: true, message: '请输入收款金额!' }
+              { required: true, message: '请输入收入金额!' }
             ]
           }
         },
@@ -168,12 +178,14 @@
       editAfter() {
         if (this.action === 'add') {
           this.addInit("SR")
+          this.fileList = []
         } else {
           this.model.billTime = this.model.billTimeStr
           this.$nextTick(() => {
             this.form.setFieldsValue(pick(this.model,'organId', 'handsPersonId', 'billTime', 'billNo', 'remark',
                    'accountId','changeAmount'))
           });
+          this.fileList = this.model.fileName
           // 加载子表数据
           let params = {
             headerId: this.model.id
@@ -192,6 +204,9 @@
           totalPrice += item.eachAmount-0
         }
         billMain.totalPrice = totalPrice
+        if(this.fileList && this.fileList.length > 0) {
+          billMain.fileName = this.fileList
+        }
         if(this.model.id){
           billMain.id = this.model.id
         }
