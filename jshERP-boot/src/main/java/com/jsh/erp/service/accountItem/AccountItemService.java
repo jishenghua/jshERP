@@ -257,6 +257,6 @@ public class AccountItemService {
     }
 
     public BigDecimal getEachAmountByBillId(Long billId) {
-        return accountItemMapperEx.getEachAmountByBillId(billId);
+        return accountItemMapperEx.getEachAmountByBillId(billId).abs();
     }
 }

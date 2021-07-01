@@ -775,6 +775,76 @@ public class MaterialExample {
             return (Criteria) this;
         }
 
+        public Criteria andImgNameIsNull() {
+            addCriterion("img_name is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andImgNameIsNotNull() {
+            addCriterion("img_name is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andImgNameEqualTo(String value) {
+            addCriterion("img_name =", value, "imgName");
+            return (Criteria) this;
+        }
+
+        public Criteria andImgNameNotEqualTo(String value) {
+            addCriterion("img_name <>", value, "imgName");
+            return (Criteria) this;
+        }
+
+        public Criteria andImgNameGreaterThan(String value) {
+            addCriterion("img_name >", value, "imgName");
+            return (Criteria) this;
+        }
+
+        public Criteria andImgNameGreaterThanOrEqualTo(String value) {
+            addCriterion("img_name >=", value, "imgName");
+            return (Criteria) this;
+        }
+
+        public Criteria andImgNameLessThan(String value) {
+            addCriterion("img_name <", value, "imgName");
+            return (Criteria) this;
+        }
+
+        public Criteria andImgNameLessThanOrEqualTo(String value) {
+            addCriterion("img_name <=", value, "imgName");
+            return (Criteria) this;
+        }
+
+        public Criteria andImgNameLike(String value) {
+            addCriterion("img_name like", value, "imgName");
+            return (Criteria) this;
+        }
+
+        public Criteria andImgNameNotLike(String value) {
+            addCriterion("img_name not like", value, "imgName");
+            return (Criteria) this;
+        }
+
+        public Criteria andImgNameIn(List<String> values) {
+            addCriterion("img_name in", values, "imgName");
+            return (Criteria) this;
+        }
+
+        public Criteria andImgNameNotIn(List<String> values) {
+            addCriterion("img_name not in", values, "imgName");
+            return (Criteria) this;
+        }
+
+        public Criteria andImgNameBetween(String value1, String value2) {
+            addCriterion("img_name between", value1, value2, "imgName");
+            return (Criteria) this;
+        }
+
+        public Criteria andImgNameNotBetween(String value1, String value2) {
+            addCriterion("img_name not between", value1, value2, "imgName");
+            return (Criteria) this;
+        }
+
         public Criteria andUnitIdIsNull() {
             addCriterion("unit_id is null");
             return (Criteria) this;

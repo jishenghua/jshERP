@@ -23,6 +23,8 @@ public class Material {
 
     private String remark;
 
+    private String imgName;
+
     private Long unitId;
 
     private Boolean enabled;
@@ -117,6 +119,14 @@ public class Material {
 
     public void setRemark(String remark) {
         this.remark = remark == null ? null : remark.trim();
+    }
+
+    public String getImgName() {
+        return imgName;
+    }
+
+    public void setImgName(String imgName) {
+        this.imgName = imgName == null ? null : imgName.trim();
     }
 
     public Long getUnitId() {

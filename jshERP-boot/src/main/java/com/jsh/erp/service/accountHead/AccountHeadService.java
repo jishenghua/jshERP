@@ -18,7 +18,6 @@ import com.jsh.erp.utils.StringUtil;
 import com.jsh.erp.utils.Tools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -50,8 +49,6 @@ public class AccountHeadService {
     private LogService logService;
     @Resource
     private AccountItemMapperEx accountItemMapperEx;
-    @Value(value="${file.path}")
-    private String filePath;
 
     public AccountHead getAccountHead(long id) throws Exception {
         AccountHead result=null;
