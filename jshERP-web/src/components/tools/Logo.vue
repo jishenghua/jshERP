@@ -43,6 +43,7 @@
       line-height: @height !important;
       box-shadow: none !important;
       transition: background 300ms;
+      background: #002140;
       h1 {
         font-size: 24px;
         color: #ffffff;
