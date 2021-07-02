@@ -47,23 +47,13 @@
           </a-form-item>
         </a-col>
         <a-col :span="24/2">
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="期初应收">
-            <a-input placeholder="请输入期初应收" v-decorator.trim="[ 'beginNeedGet' ]" />
-          </a-form-item>
-        </a-col>
-        <a-col :span="24/2">
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="期初应付">
             <a-input placeholder="请输入期初应付" v-decorator.trim="[ 'beginNeedPay' ]" />
           </a-form-item>
         </a-col>
         <a-col :span="24/2">
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="期末应收">
-            <a-input v-decorator.trim="[ 'AllNeedGet' ]" :readOnly="true" />
-          </a-form-item>
-        </a-col>
-        <a-col :span="24/2">
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="期末应付">
-            <a-input v-decorator.trim="[ 'AllNeedPay' ]" :readOnly="true" />
+            <a-input v-decorator.trim="[ 'allNeedPay' ]" :readOnly="true" />
           </a-form-item>
         </a-col>
         <a-col :span="24/2">
@@ -144,7 +134,7 @@
         this.visible = true;
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model,'supplier', 'contacts', 'telephone', 'email', 'telephone',
-            'phoneNum', 'fax', 'beginNeedGet', 'beginNeedPay', 'AllNeedGet', 'AllNeedPay', 'taxNum', 'taxRate',
+            'phoneNum', 'fax', 'beginNeedGet', 'beginNeedPay', 'allNeedGet', 'allNeedPay', 'taxNum', 'taxRate',
             'bankName', 'accountNumber', 'address', 'description'))
         });
       },
@@ -159,11 +149,6 @@
           if (!err) {
             that.confirmLoading = true;
             let formData = Object.assign(this.model, values);
-            if(this.model.beginNeedGet && this.model.beginNeedPay) {
-              that.$message.warn("期初应收和期初应付不能同时输入");
-              that.confirmLoading = false;
-              return;
-            }
             formData.type = "供应商";
             let obj;
             if(!this.model.id){

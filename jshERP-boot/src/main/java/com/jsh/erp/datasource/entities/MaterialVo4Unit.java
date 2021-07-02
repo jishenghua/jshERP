@@ -28,6 +28,12 @@ public class MaterialVo4Unit extends Material{
 
     private Long meId;
 
+    private BigDecimal initialStock;
+
+    private BigDecimal currentStock;
+
+    private BigDecimal currentStockPrice;
+
     public String getUnitName() {
         return unitName;
     }
@@ -122,5 +128,29 @@ public class MaterialVo4Unit extends Material{
 
     public void setMeId(Long meId) {
         this.meId = meId;
+    }
+
+    public BigDecimal getInitialStock() {
+        return initialStock;
+    }
+
+    public void setInitialStock(BigDecimal initialStock) {
+        this.initialStock = initialStock;
+    }
+
+    public BigDecimal getCurrentStock() {
+        return currentStock;
+    }
+
+    public void setCurrentStock(BigDecimal currentStock) {
+        this.currentStock = currentStock;
+    }
+
+    public BigDecimal getCurrentStockPrice() {
+        return currentStockPrice;
+    }
+
+    public void setCurrentStockPrice(BigDecimal currentStockPrice) {
+        this.currentStockPrice = currentStockPrice;
     }
 }

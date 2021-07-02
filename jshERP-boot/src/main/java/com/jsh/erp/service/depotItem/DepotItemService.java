@@ -263,8 +263,8 @@ public class DepotItemService {
     public BigDecimal buyOrSale(String type, String subType, Long MId, String monthTime, String sumType) throws Exception{
         BigDecimal result= BigDecimal.ZERO;
         try{
-            String beginTime = monthTime + "-01 00:00:00";
-            String endTime = Tools.lastDayOfMonth(monthTime) +" 23:59:59";
+            String beginTime = Tools.firstDayOfMonth(monthTime) + BusinessConstants.DAY_FIRST_TIME;
+            String endTime = Tools.lastDayOfMonth(monthTime) + BusinessConstants.DAY_LAST_TIME;
             if (SUM_TYPE.equals(sumType)) {
                 result= depotItemMapperEx.buyOrSaleNumber(type, subType, MId, beginTime, endTime, sumType);
             } else {
@@ -288,8 +288,8 @@ public class DepotItemService {
     public BigDecimal inOrOutPrice(String type, String subType, String month) throws Exception{
         BigDecimal result= BigDecimal.ZERO;
         try{
-            String beginTime = month + "-01 00:00:00";
-            String endTime = Tools.lastDayOfMonth(month) +" 23:59:59";
+            String beginTime = Tools.firstDayOfMonth(month) + BusinessConstants.DAY_FIRST_TIME;
+            String endTime = Tools.lastDayOfMonth(month) + BusinessConstants.DAY_LAST_TIME;
             result = depotItemMapperEx.inOrOutPrice(type, subType, beginTime, endTime);
         }catch(Exception e){
             JshException.readFail(logger, e);

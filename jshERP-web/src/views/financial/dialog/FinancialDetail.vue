@@ -1,5 +1,5 @@
 <template>
-  <a-card :bordered="false" class="card-area">
+  <a-card :bordered="false">
     <j-modal
       :title="title"
       :width="width"
@@ -10,315 +10,394 @@
       @cancel="handleCancel"
       wrapClassName="ant-modal-cust-warp"
       style="top:5%;height: 100%;overflow-y: hidden">
+      <template slot="footer">
+        <!--此处为解决缓存问题-->
+        <a-button v-if="financialType === '收预付款'" v-print="'#advanceInPrint'" ghost type="primary">打印</a-button>
+        <a-button v-if="financialType === '转账'" v-print="'#giroPrint'" ghost type="primary">打印</a-button>
+        <a-button v-if="financialType === '收入'" v-print="'#itemInPrint'" ghost type="primary">打印</a-button>
+        <a-button v-if="financialType === '支出'" v-print="'#itemOutPrint'" ghost type="primary">打印</a-button>
+        <a-button v-if="financialType === '收款'" v-print="'#moneyInPrint'" ghost type="primary">打印</a-button>
+        <a-button v-if="financialType === '付款'" v-print="'#moneyOutPrint'" ghost type="primary">打印</a-button>
+        <a-button key="back" @click="handleCancel">取消</a-button>
+      </template>
       <a-form :form="form">
         <!--收预付款-->
         <template v-if="financialType === '收预付款'">
-          <a-row class="form-row" :gutter="24">
-            <a-col :lg="6" :md="12" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款会员">
-                <a-input v-decorator="['id']" hidden/>
-                {{model.organName}}
-              </a-form-item>
-            </a-col>
-            <a-col :lg="6" :md="12" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="经手人">
-                {{model.handsPersonName}}
-              </a-form-item>
-            </a-col>
-            <a-col :lg="6" :md="12" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
-                {{model.billTimeStr}}
-              </a-form-item>
-            </a-col>
-            <a-col :lg="6" :md="12" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号">
-                {{model.billNo}}
-              </a-form-item>
-            </a-col>
-          </a-row>
-          <a-table
-            ref="table"
-            size="middle"
-            bordered
-            rowKey="id"
-            :pagination="false"
-            :columns="advanceInColumns"
-            :dataSource="dataSource">
-          </a-table>
-          <a-row class="form-row" :gutter="24">
-            <a-col :lg="24" :md="24" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
-                {{model.remark}}
-              </a-form-item>
-            </a-col>
-          </a-row>
+          <section ref="print" id="advanceInPrint">
+            <a-row class="form-row" :gutter="24">
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款会员">
+                  <a-input v-decorator="['id']" hidden/>
+                  {{model.organName}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="经手人">
+                  {{model.handsPersonName}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
+                  {{model.billTimeStr}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号">
+                  {{model.billNo}}
+                </a-form-item>
+              </a-col>
+            </a-row>
+            <a-table
+              ref="table"
+              size="middle"
+              bordered
+              rowKey="id"
+              :pagination="false"
+              :columns="advanceInColumns"
+              :dataSource="dataSource">
+            </a-table>
+            <a-row class="form-row" :gutter="24">
+              <a-col :lg="24" :md="24" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
+                  {{model.remark}}
+                </a-form-item>
+              </a-col>
+            </a-row>
+            <a-row class="form-row" :gutter="24">
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="合计金额">
+                  {{model.totalPrice}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="优惠金额">
+                  {{model.discountMoney}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款金额">
+                  {{model.changeAmount}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6"></a-col>
+              <a-col :span="6"></a-col>
+            </a-row>
+          </section>
         </template>
         <!--转账-->
         <template v-if="financialType === '转账'">
-          <a-row class="form-row" :gutter="24">
-            <a-col :lg="6" :md="12" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="经手人">
-                <a-input v-decorator="['id']" hidden/>
-                {{model.handsPersonName}}
-              </a-form-item>
-            </a-col>
-            <a-col :lg="6" :md="12" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
-                {{model.billTimeStr}}
-              </a-form-item>
-            </a-col>
-            <a-col :lg="6" :md="12" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号">
-                {{model.billNo}}
-              </a-form-item>
-            </a-col>
-            <a-col :lg="6" :md="12" :sm="24"></a-col>
-          </a-row>
-          <a-table
-            ref="table"
-            size="middle"
-            bordered
-            rowKey="id"
-            :pagination="false"
-            :columns="giroColumns"
-            :dataSource="dataSource">
-          </a-table>
-          <a-row class="form-row" :gutter="24">
-            <a-col :lg="24" :md="24" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
-                {{model.remark}}
-              </a-form-item>
-            </a-col>
-          </a-row>
-          <a-row class="form-row" :gutter="24">
-            <a-col :lg="6" :md="12" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款账户">
-                {{model.accountName}}
-              </a-form-item>
-            </a-col>
-            <a-col :lg="6" :md="12" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="实付金额">
-                {{model.changeAmount}}
-              </a-form-item>
-            </a-col>
-            <a-col :lg="6" :md="12" :sm="24"></a-col>
-            <a-col :lg="6" :md="12" :sm="24"></a-col>
-          </a-row>
+          <section ref="print" id="giroPrint">
+            <a-row class="form-row" :gutter="24">
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="经手人">
+                  <a-input v-decorator="['id']" hidden/>
+                  {{model.handsPersonName}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
+                  {{model.billTimeStr}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号">
+                  {{model.billNo}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6"></a-col>
+            </a-row>
+            <a-table
+              ref="table"
+              size="middle"
+              bordered
+              rowKey="id"
+              :pagination="false"
+              :columns="giroColumns"
+              :dataSource="dataSource">
+            </a-table>
+            <a-row class="form-row" :gutter="24">
+              <a-col :lg="24" :md="24" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
+                  {{model.remark}}
+                </a-form-item>
+              </a-col>
+            </a-row>
+            <a-row class="form-row" :gutter="24">
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款账户">
+                  {{model.accountName}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="实付金额">
+                  {{model.changeAmount}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6"></a-col>
+              <a-col :span="6"></a-col>
+            </a-row>
+          </section>
         </template>
         <!--收入-->
         <template v-if="financialType === '收入'">
-          <a-row class="form-row" :gutter="24">
-            <a-col :lg="6" :md="12" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="往来单位">
-                <a-input v-decorator="['id']" hidden/>
-                {{model.organName}}
-              </a-form-item>
-            </a-col>
-            <a-col :lg="6" :md="12" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="经手人">
-                {{model.handsPersonName}}
-              </a-form-item>
-            </a-col>
-            <a-col :lg="6" :md="12" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
-                {{model.billTimeStr}}
-              </a-form-item>
-            </a-col>
-            <a-col :lg="6" :md="12" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号">
-                {{model.billNo}}
-              </a-form-item>
-            </a-col>
-          </a-row>
-          <a-table
-            ref="table"
-            size="middle"
-            bordered
-            rowKey="id"
-            :pagination="false"
-            :columns="itemInColumns"
-            :dataSource="dataSource">
-          </a-table>
-          <a-row class="form-row" :gutter="24">
-            <a-col :lg="24" :md="24" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
-                {{model.remark}}
-              </a-form-item>
-            </a-col>
-          </a-row>
-          <a-row class="form-row" :gutter="24">
-            <a-col :lg="6" :md="12" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款账户">
-                {{model.accountName}}
-              </a-form-item>
-            </a-col>
-            <a-col :lg="6" :md="12" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款金额">
-                {{model.changeAmount}}
-              </a-form-item>
-            </a-col>
-            <a-col :lg="6" :md="12" :sm="24"></a-col>
-            <a-col :lg="6" :md="12" :sm="24"></a-col>
-          </a-row>
+          <section ref="print" id="itemInPrint">
+            <a-row class="form-row" :gutter="24">
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="往来单位">
+                  <a-input v-decorator="['id']" hidden/>
+                  {{model.organName}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="经手人">
+                  {{model.handsPersonName}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
+                  {{model.billTimeStr}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号">
+                  {{model.billNo}}
+                </a-form-item>
+              </a-col>
+            </a-row>
+            <a-table
+              ref="table"
+              size="middle"
+              bordered
+              rowKey="id"
+              :pagination="false"
+              :columns="itemInColumns"
+              :dataSource="dataSource">
+            </a-table>
+            <a-row class="form-row" :gutter="24">
+              <a-col :lg="24" :md="24" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
+                  {{model.remark}}
+                </a-form-item>
+              </a-col>
+            </a-row>
+            <a-row class="form-row" :gutter="24">
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收入账户">
+                  {{model.accountName}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收入金额">
+                  {{model.changeAmount}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6"></a-col>
+              <a-col :span="6"></a-col>
+            </a-row>
+          </section>
         </template>
         <!--支出-->
         <template v-if="financialType === '支出'">
-          <a-row class="form-row" :gutter="24">
-            <a-col :lg="6" :md="12" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="往来单位">
-                <a-input v-decorator="['id']" hidden/>
-                {{model.organName}}
-              </a-form-item>
-            </a-col>
-            <a-col :lg="6" :md="12" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="经手人">
-                {{model.handsPersonName}}
-              </a-form-item>
-            </a-col>
-            <a-col :lg="6" :md="12" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
-                {{model.billTimeStr}}
-              </a-form-item>
-            </a-col>
-            <a-col :lg="6" :md="12" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号">
-                {{model.billNo}}
-              </a-form-item>
-            </a-col>
-          </a-row>
-          <a-table
-            ref="table"
-            size="middle"
-            bordered
-            rowKey="id"
-            :pagination="false"
-            :columns="itemOutColumns"
-            :dataSource="dataSource">
-          </a-table>
-          <a-row class="form-row" :gutter="24">
-            <a-col :lg="24" :md="24" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
-                {{model.remark}}
-              </a-form-item>
-            </a-col>
-          </a-row>
-          <a-row class="form-row" :gutter="24">
-            <a-col :lg="6" :md="12" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款账户">
-                {{model.accountName}}
-              </a-form-item>
-            </a-col>
-            <a-col :lg="6" :md="12" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款金额">
-                {{model.changeAmount}}
-              </a-form-item>
-            </a-col>
-            <a-col :lg="6" :md="12" :sm="24"></a-col>
-            <a-col :lg="6" :md="12" :sm="24"></a-col>
-          </a-row>
+          <section ref="print" id="itemOutPrint">
+            <a-row class="form-row" :gutter="24">
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="往来单位">
+                  <a-input v-decorator="['id']" hidden/>
+                  {{model.organName}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="经手人">
+                  {{model.handsPersonName}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
+                  {{model.billTimeStr}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号">
+                  {{model.billNo}}
+                </a-form-item>
+              </a-col>
+            </a-row>
+            <a-table
+              ref="table"
+              size="middle"
+              bordered
+              rowKey="id"
+              :pagination="false"
+              :columns="itemOutColumns"
+              :dataSource="dataSource">
+            </a-table>
+            <a-row class="form-row" :gutter="24">
+              <a-col :lg="24" :md="24" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
+                  {{model.remark}}
+                </a-form-item>
+              </a-col>
+            </a-row>
+            <a-row class="form-row" :gutter="24">
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="支出账户">
+                  {{model.accountName}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="支出金额">
+                  {{model.changeAmount}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6"></a-col>
+              <a-col :span="6"></a-col>
+            </a-row>
+          </section>
         </template>
         <!--收款-->
         <template v-if="financialType === '收款'">
-          <a-row class="form-row" :gutter="24">
-            <a-col :lg="6" :md="12" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款单位">
-                <a-input v-decorator="['id']" hidden/>
-                {{model.organName}}
-              </a-form-item>
-            </a-col>
-            <a-col :lg="6" :md="12" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="经手人">
-                {{model.handsPersonName}}
-              </a-form-item>
-            </a-col>
-            <a-col :lg="6" :md="12" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
-                {{model.billTimeStr}}
-              </a-form-item>
-            </a-col>
-            <a-col :lg="6" :md="12" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号">
-                {{model.billNo}}
-              </a-form-item>
-            </a-col>
-          </a-row>
-          <a-table
-            ref="table"
-            size="middle"
-            bordered
-            rowKey="id"
-            :pagination="false"
-            :columns="moneyInColumns"
-            :dataSource="dataSource">
-          </a-table>
-          <a-row class="form-row" :gutter="24">
-            <a-col :lg="24" :md="24" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
-                {{model.remark}}
-              </a-form-item>
-            </a-col>
-          </a-row>
-          <a-row class="form-row" :gutter="24">
-            <a-col :lg="6" :md="12" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="优惠金额">
-                {{model.changeAmount}}
-              </a-form-item>
-            </a-col>
-            <a-col :lg="6" :md="12" :sm="24"></a-col>
-            <a-col :lg="6" :md="12" :sm="24"></a-col>
-            <a-col :lg="6" :md="12" :sm="24"></a-col>
-          </a-row>
+          <section ref="print" id="moneyInPrint">
+            <a-row class="form-row" :gutter="24">
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户">
+                  <a-input v-decorator="['id']" hidden/>
+                  {{model.organName}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="经手人">
+                  {{model.handsPersonName}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
+                  {{model.billTimeStr}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号">
+                  {{model.billNo}}
+                </a-form-item>
+              </a-col>
+            </a-row>
+            <a-table
+              ref="table"
+              size="middle"
+              bordered
+              rowKey="id"
+              :pagination="false"
+              :columns="moneyInColumns"
+              :dataSource="dataSource">
+            </a-table>
+            <a-row class="form-row" :gutter="24">
+              <a-col :lg="24" :md="24" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
+                  {{model.remark}}
+                </a-form-item>
+              </a-col>
+            </a-row>
+            <a-row class="form-row" :gutter="24">
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款账户">
+                  {{model.accountName}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="合计收款">
+                  {{model.totalPrice}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="优惠金额">
+                  {{model.discountMoney}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="实际收款">
+                  {{model.changeAmount}}
+                </a-form-item>
+              </a-col>
+            </a-row>
+          </section>
         </template>
         <!--付款-->
         <template v-if="financialType === '付款'">
+          <section ref="print" id="moneyOutPrint">
+            <a-row class="form-row" :gutter="24">
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="供应商">
+                  <a-input v-decorator="['id']" hidden/>
+                  {{model.organName}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="经手人">
+                  {{model.handsPersonName}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
+                  {{model.billTimeStr}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号">
+                  {{model.billNo}}
+                </a-form-item>
+              </a-col>
+            </a-row>
+            <a-table
+              ref="table"
+              size="middle"
+              bordered
+              rowKey="id"
+              :pagination="false"
+              :columns="moneyOutColumns"
+              :dataSource="dataSource">
+            </a-table>
+            <a-row class="form-row" :gutter="24">
+              <a-col :lg="24" :md="24" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
+                  {{model.remark}}
+                </a-form-item>
+              </a-col>
+            </a-row>
+            <a-row class="form-row" :gutter="24">
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款账户">
+                  {{model.accountName}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="合计付款">
+                  {{model.totalPrice}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="优惠金额">
+                  {{model.discountMoney}}
+                </a-form-item>
+              </a-col>
+              <a-col :span="6">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="实际付款">
+                  {{model.changeAmount}}
+                </a-form-item>
+              </a-col>
+            </a-row>
+          </section>
+        </template>
+        <template v-if="fileList.length>0">
           <a-row class="form-row" :gutter="24">
-            <a-col :lg="6" :md="12" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款单位">
-                <a-input v-decorator="['id']" hidden/>
-                {{model.organName}}
+            <a-col :span="12">
+              <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 3 }}" :wrapperCol="{xs: { span: 24 },sm: { span: 21 }}" label="附件">
+                <ul style="list-style-type:none">
+                  <li v-for="(item,index) in fileList" :key="index">
+                    <a :href="item.url" target="_blank">{{item.name}}</a>
+                  </li>
+                </ul>
               </a-form-item>
             </a-col>
-            <a-col :lg="6" :md="12" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="经手人">
-                {{model.handsPersonName}}
-              </a-form-item>
-            </a-col>
-            <a-col :lg="6" :md="12" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
-                {{model.billTimeStr}}
-              </a-form-item>
-            </a-col>
-            <a-col :lg="6" :md="12" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号">
-                {{model.billNo}}
-              </a-form-item>
-            </a-col>
-          </a-row>
-          <a-table
-            ref="table"
-            size="middle"
-            bordered
-            rowKey="id"
-            :pagination="false"
-            :columns="moneyOutColumns"
-            :dataSource="dataSource">
-          </a-table>
-          <a-row class="form-row" :gutter="24">
-            <a-col :lg="24" :md="24" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
-                {{model.remark}}
-              </a-form-item>
-            </a-col>
-          </a-row>
-          <a-row class="form-row" :gutter="24">
-            <a-col :lg="6" :md="12" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="优惠金额">
-                {{model.changeAmount}}
-              </a-form-item>
-            </a-col>
-            <a-col :lg="6" :md="12" :sm="24"></a-col>
-            <a-col :lg="6" :md="12" :sm="24"></a-col>
-            <a-col :lg="6" :md="12" :sm="24"></a-col>
+            <a-col :span="12"></a-col>
           </a-row>
         </template>
       </a-form>
@@ -337,6 +416,7 @@
         visible: false,
         model: {},
         financialType: '',
+        fileList: [],
         labelCol: {
           xs: { span: 24 },
           sm: { span: 6 },
@@ -372,14 +452,18 @@
           { title: '备注',dataIndex: 'remark', width: '30%'}
         ],
         moneyInColumns: [
-          { title: '账户名称',dataIndex: 'accountName',width: '20%'},
-          { title: '金额',dataIndex: 'eachAmount', width: '10%'},
-          { title: '备注',dataIndex: 'remark', width: '30%'}
+          { title: '销售单据编号',dataIndex: 'billNumber',width: '20%'},
+          { title: '应收欠款',dataIndex: 'needDebt', width: '10%'},
+          { title: '已收欠款',dataIndex: 'finishDebt', width: '10%'},
+          { title: '本次收款',dataIndex: 'eachAmount', width: '10%'},
+          { title: '备注',dataIndex: 'remark', width: '20%'}
         ],
         moneyOutColumns: [
-          { title: '账户名称',dataIndex: 'accountName',width: '20%'},
-          { title: '金额',dataIndex: 'eachAmount', width: '10%'},
-          { title: '备注',dataIndex: 'remark', width: '30%'}
+          { title: '采购单据编号',dataIndex: 'billNumber',width: '20%'},
+          { title: '应付欠款',dataIndex: 'needDebt', width: '10%'},
+          { title: '已付欠款',dataIndex: 'finishDebt', width: '10%'},
+          { title: '本次付款',dataIndex: 'eachAmount', width: '10%'},
+          { title: '备注',dataIndex: 'remark', width: '20%'}
         ],
       }
     },
@@ -388,6 +472,20 @@
     methods: {
       show(record, type) {
         this.financialType = type
+        //附件下载
+        let fileName = record.fileName
+        if(fileName) {
+          let fileArr = fileName.split(",")
+          this.fileList = []
+          for(let i=0; i<fileArr.length; i++) {
+            let fileInfo = {}
+            fileInfo.name= fileArr[i].replace("financial/","")
+            fileInfo.url= window._CONFIG['domianURL'] + '/systemConfig/static/' + fileArr[i]
+            this.fileList.push(fileInfo)
+          }
+        } else {
+          this.fileList = []
+        }
         this.visible = true;
         this.model = Object.assign({}, record);
         this.$nextTick(() => {

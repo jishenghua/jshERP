@@ -58,49 +58,49 @@
         <a-divider />
 
         <div :style="{ marginBottom: '24px' }">
-          <h3 class="setting-drawer-index-title">导航模式</h3>
+<!--          <h3 class="setting-drawer-index-title">导航模式</h3>-->
 
-          <div class="setting-drawer-index-blockChecbox">
-            <a-tooltip>
-              <template slot="title">
-                侧边栏导航
-              </template>
-              <div class="setting-drawer-index-item" @click="handleLayout('sidemenu')">
-                <img src="https://gw.alipayobjects.com/zos/rmsportal/JopDzEhOqwOjeNTXkoje.svg" alt="sidemenu">
-                <div class="setting-drawer-index-selectIcon" v-if="layoutMode === 'sidemenu'">
-                  <a-icon type="check"/>
-                </div>
-              </div>
-            </a-tooltip>
+<!--          <div class="setting-drawer-index-blockChecbox">-->
+<!--            <a-tooltip>-->
+<!--              <template slot="title">-->
+<!--                侧边栏导航-->
+<!--              </template>-->
+<!--              <div class="setting-drawer-index-item" @click="handleLayout('sidemenu')">-->
+<!--                <img src="https://gw.alipayobjects.com/zos/rmsportal/JopDzEhOqwOjeNTXkoje.svg" alt="sidemenu">-->
+<!--                <div class="setting-drawer-index-selectIcon" v-if="layoutMode === 'sidemenu'">-->
+<!--                  <a-icon type="check"/>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </a-tooltip>-->
 
-            <a-tooltip>
-              <template slot="title">
-                顶部栏导航
-              </template>
-              <div class="setting-drawer-index-item" @click="handleLayout('topmenu')">
-                <img src="https://gw.alipayobjects.com/zos/rmsportal/KDNDBbriJhLwuqMoxcAr.svg" alt="topmenu">
-                <div class="setting-drawer-index-selectIcon" v-if="layoutMode !== 'sidemenu'">
-                  <a-icon type="check"/>
-                </div>
-              </div>
-            </a-tooltip>
-          </div>
+<!--            <a-tooltip>-->
+<!--              <template slot="title">-->
+<!--                顶部栏导航-->
+<!--              </template>-->
+<!--              <div class="setting-drawer-index-item" @click="handleLayout('topmenu')">-->
+<!--                <img src="https://gw.alipayobjects.com/zos/rmsportal/KDNDBbriJhLwuqMoxcAr.svg" alt="topmenu">-->
+<!--                <div class="setting-drawer-index-selectIcon" v-if="layoutMode !== 'sidemenu'">-->
+<!--                  <a-icon type="check"/>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </a-tooltip>-->
+<!--          </div>-->
           <div :style="{ marginTop: '24px' }">
             <a-list :split="false">
-              <a-list-item>
-                <a-tooltip slot="actions">
-                  <template slot="title">
-                    该设定仅 [顶部栏导航] 时有效
-                  </template>
-                  <a-select size="small" style="width: 80px;" :defaultValue="contentWidth" @change="handleContentWidthChange">
-                    <a-select-option value="Fixed">固定</a-select-option>
-                    <a-select-option value="Fluid" v-if="layoutMode !== 'sidemenu'">流式</a-select-option>
-                  </a-select>
-                </a-tooltip>
-                <a-list-item-meta>
-                  <div slot="title">内容区域宽度</div>
-                </a-list-item-meta>
-              </a-list-item>
+<!--              <a-list-item>-->
+<!--                <a-tooltip slot="actions">-->
+<!--                  <template slot="title">-->
+<!--                    该设定仅 [顶部栏导航] 时有效-->
+<!--                  </template>-->
+<!--                  <a-select size="small" style="width: 80px;" :defaultValue="contentWidth" @change="handleContentWidthChange">-->
+<!--                    <a-select-option value="Fixed">固定</a-select-option>-->
+<!--                    <a-select-option value="Fluid" v-if="layoutMode !== 'sidemenu'">流式</a-select-option>-->
+<!--                  </a-select>-->
+<!--                </a-tooltip>-->
+<!--                <a-list-item-meta>-->
+<!--                  <div slot="title">内容区域宽度</div>-->
+<!--                </a-list-item-meta>-->
+<!--              </a-list-item>-->
               <a-list-item>
                 <a-switch slot="actions" size="small" :defaultChecked="fixedHeader" @change="handleFixedHeader" />
                 <a-list-item-meta>
@@ -143,15 +143,15 @@
             </a-list>
           </div>
         </div>
-        <a-divider />
-        <div :style="{ marginBottom: '24px' }">
-          <a-alert type="warning">
-            <span slot="message">
-              配置栏只在开发环境用于预览，生产环境不会展现，请手动修改配置文件
-              <a href="https://github.com/sendya/ant-design-pro-vue/blob/master/src/defaultSettings.js" target="_blank">src/defaultSettings.js</a>
-            </span>
-          </a-alert>
-        </div>
+<!--        <a-divider />-->
+<!--        <div :style="{ marginBottom: '24px' }">-->
+<!--          <a-alert type="warning">-->
+<!--            <span slot="message">-->
+<!--              生产环境如需修改默认配置，请手动修改配置文件-->
+<!--              src/defaultSettings.js-->
+<!--            </span>-->
+<!--          </a-alert>-->
+<!--        </div>-->
       </div>
       <div class="setting-drawer-index-handle" @click="toggle" v-if="visible">
 <!--        <a-icon type="setting" v-if="!visible"/>-->

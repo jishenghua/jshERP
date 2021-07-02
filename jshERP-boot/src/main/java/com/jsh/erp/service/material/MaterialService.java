@@ -15,6 +15,7 @@ import com.jsh.erp.service.depot.DepotService;
 import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.materialCategory.MaterialCategoryService;
+import com.jsh.erp.service.redis.RedisService;
 import com.jsh.erp.service.unit.UnitService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.BaseResponseInfo;
@@ -67,6 +68,8 @@ public class MaterialService {
     private DepotService depotService;
     @Resource
     private MaterialExtendService materialExtendService;
+    @Resource
+    private RedisService redisService;
 
     public Material getMaterial(long id)throws Exception {
         Material result=null;
@@ -173,7 +176,7 @@ public class MaterialService {
             if(materials!=null && materials.size()>0) {
                 mId = materials.get(0).getId();
             }
-            materialExtendService.saveDetials(obj, obj.getString("sortList"), mId);
+            materialExtendService.saveDetials(obj, obj.getString("sortList"), mId, "insert");
             if(obj.get("stock")!=null) {
                 JSONArray stockArr = obj.getJSONArray("stock");
                 for (int i = 0; i < stockArr.size(); i++) {
@@ -182,7 +185,8 @@ public class MaterialService {
                         String number = jsonObj.getString("initStock");
                         Long depotId = jsonObj.getLong("id");
                         if(StringUtil.isNotEmpty(number) && Double.valueOf(number)>0) {
-                            insertStockByMaterialAndDepot(depotId, mId, parseBigDecimalEx(number));
+                            insertInitialStockByMaterialAndDepot(depotId, mId, parseBigDecimalEx(number));
+                            insertCurrentStockByMaterialAndDepot(depotId, mId, parseBigDecimalEx(number));
                         }
                     }
                 }
@@ -190,7 +194,11 @@ public class MaterialService {
             logService.insertLog("商品",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(m.getName()).toString(), request);
             return 1;
-        }catch(Exception e){
+        }
+        catch (BusinessRunTimeException ex) {
+            throw new BusinessRunTimeException(ex.getCode(), ex.getMessage());
+        }
+        catch(Exception e){
             JshException.writeFail(logger, e);
             return 0;
         }
@@ -204,7 +212,7 @@ public class MaterialService {
             if(material.getUnitId() == null) {
                 materialMapperEx.setUnitIdToNull(material.getId());
             }
-            materialExtendService.saveDetials(obj, obj.getString("sortList"),material.getId());
+            materialExtendService.saveDetials(obj, obj.getString("sortList"),material.getId(), "update");
             if(obj.get("stock")!=null) {
                 JSONArray stockArr = obj.getJSONArray("stock");
                 for (int i = 0; i < stockArr.size(); i++) {
@@ -212,13 +220,16 @@ public class MaterialService {
                     if (jsonObj.get("id") != null && jsonObj.get("initStock") != null) {
                         String number = jsonObj.getString("initStock");
                         Long depotId = jsonObj.getLong("id");
-                        //先清除再插入
+                        //初始库存-先清除再插入
                         MaterialInitialStockExample example = new MaterialInitialStockExample();
                         example.createCriteria().andMaterialIdEqualTo(material.getId()).andDepotIdEqualTo(depotId);
                         materialInitialStockMapper.deleteByExample(example);
                         if (StringUtil.isNotEmpty(number) && Double.valueOf(number) > 0) {
-                            insertStockByMaterialAndDepot(depotId, material.getId(), parseBigDecimalEx(number));
+                            insertInitialStockByMaterialAndDepot(depotId, material.getId(), parseBigDecimalEx(number));
                         }
+                        //更新当前库存
+                        Long tenantId = redisService.getTenantId(request);
+                        depotItemService.updateCurrentStockFun(material.getId(), depotId, tenantId);
                     }
                 }
             }
@@ -294,28 +305,8 @@ public class MaterialService {
 
     public int checkIsExist(Long id, String name, String model, String color, String standard, String mfrs,
                             String otherField1, String otherField2, String otherField3, String unit, Long unitId)throws Exception {
-        MaterialExample example = new MaterialExample();
-        MaterialExample.Criteria criteria = example.createCriteria();
-        criteria.andNameEqualTo(name).andModelEqualTo(model).andColorEqualTo(color)
-                .andStandardEqualTo(standard).andMfrsEqualTo(mfrs)
-                .andOtherField1EqualTo(otherField1).andOtherField2EqualTo(otherField2).andOtherField2EqualTo(otherField3)
-                .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        if (id > 0) {
-            criteria.andIdNotEqualTo(id);
-        }
-        if (!StringUtil.isEmpty(unit)) {
-            criteria.andUnitEqualTo(unit);
-        }
-        if (unitId !=null) {
-            criteria.andUnitIdEqualTo(unitId);
-        }
-        List<Material> list =null;
-        try{
-            list=  materialMapper.selectByExample(example);
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        return list==null?0:list.size();
+        return materialMapperEx.checkIsExist(id, name, model, color, standard, mfrs, otherField1,
+                otherField2, otherField3, unit, unitId);
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
@@ -451,7 +442,7 @@ public class MaterialService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public BaseResponseInfo importExcel(Sheet src) throws Exception {
+    public BaseResponseInfo importExcel(Sheet src, HttpServletRequest request) throws Exception {
         List<Depot> depotList= depotService.getDepot();
         int depotCount = depotList.size();
         List<MaterialWithInitStock> mList = new ArrayList<>();
@@ -593,13 +584,16 @@ public class MaterialService {
                 Long depotId = null;
                 for(Depot depot: depotList){
                     BigDecimal stock = stockMap.get(depot.getId());
-                    //先清除再插入
+                    //初始库存-先清除再插入
                     MaterialInitialStockExample example = new MaterialInitialStockExample();
                     example.createCriteria().andMaterialIdEqualTo(mId).andDepotIdEqualTo(depot.getId());
                     materialInitialStockMapper.deleteByExample(example);
                     if(stock!=null && stock.compareTo(BigDecimal.ZERO)!=0) {
                         depotId = depot.getId();
-                        insertStockByMaterialAndDepot(depotId, mId, stock);
+                        insertInitialStockByMaterialAndDepot(depotId, mId, stock);
+                        //更新当前库存
+                        Long tenantId = redisService.getTenantId(request);
+                        depotItemService.updateCurrentStockFun(mId, depotId, tenantId);
                     }
                 }
             }
@@ -659,12 +653,27 @@ public class MaterialService {
      * @param stock
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public void insertStockByMaterialAndDepot(Long depotId, Long mId, BigDecimal stock){
+    public void insertInitialStockByMaterialAndDepot(Long depotId, Long mId, BigDecimal stock){
         MaterialInitialStock materialInitialStock = new MaterialInitialStock();
         materialInitialStock.setDepotId(depotId);
         materialInitialStock.setMaterialId(mId);
         materialInitialStock.setNumber(stock);
         materialInitialStockMapper.insertSelective(materialInitialStock); //存入初始库存
+    }
+
+    /**
+     * 写入当前库存
+     * @param depotId
+     * @param mId
+     * @param stock
+     */
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public void insertCurrentStockByMaterialAndDepot(Long depotId, Long mId, BigDecimal stock){
+        MaterialCurrentStock materialCurrentStock = new MaterialCurrentStock();
+        materialCurrentStock.setDepotId(depotId);
+        materialCurrentStock.setMaterialId(mId);
+        materialCurrentStock.setCurrentNumber(stock);
+        materialCurrentStockMapper.insertSelective(materialCurrentStock); //存入初始库存
     }
 
     public List<MaterialVo4Unit> getMaterialEnableSerialNumberList(String q, Integer offset, Integer rows)throws Exception {
@@ -792,5 +801,17 @@ public class MaterialService {
 
     public List<MaterialVo4Unit> getMaterialByBarCode(String barCode) {
         return materialMapperEx.getMaterialByBarCode(barCode);
+    }
+
+    public List<MaterialVo4Unit> getListWithStock(Long depotId, List<Long> idList, String materialParam, Integer offset, Integer rows) {
+        return materialMapperEx.getListWithStock(depotId, idList, materialParam, offset, rows);
+    }
+
+    public int getListWithStockCount(Long depotId, List<Long> idList, String materialParam) {
+        return materialMapperEx.getListWithStockCount(depotId, idList, materialParam);
+    }
+
+    public MaterialVo4Unit getTotalStockAndPrice(Long depotId, List<Long> idList, String materialParam) {
+        return materialMapperEx.getTotalStockAndPrice(depotId, idList, materialParam);
     }
 }

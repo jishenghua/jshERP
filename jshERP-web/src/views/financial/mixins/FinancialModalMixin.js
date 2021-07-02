@@ -41,13 +41,24 @@ export const FinancialModalMixin = {
   },
   methods: {
     addInit(amountNum) {
-      this.$nextTick(() => {
-        this.form.setFieldsValue({'billTime':getNowFormatDateTime()})
-      });
       getAction('/sequence/buildNumber').then((res) => {
         if (res && res.code === 200) {
           this.form.setFieldsValue({'billNo':amountNum + res.data.defaultNumber})
         }
+      })
+      this.$nextTick(() => {
+        this.form.setFieldsValue({'billTime':getNowFormatDateTime(), 'totalPrice': 0, 'discountMoney': 0, 'changeAmount': 0})
+      })
+      this.$nextTick(() => {
+        getAccount({}).then((res)=>{
+          if(res && res.code === 200) {
+            for (const item of res.data.accountList) {
+              if(item.isDefault){
+                this.form.setFieldsValue({'accountId': item.id})
+              }
+            }
+          }
+        })
       })
     },
     initSupplier() {
@@ -133,42 +144,58 @@ export const FinancialModalMixin = {
     onValueChange(event) {
       let that = this
       const { type, row, column, value, target } = event
-      let param,operNumber,unitPrice,allPrice,taxRate,taxMoney,taxLastMoney
       switch(column.key) {
-        case "operNumber":
-          unitPrice = row.unitPrice
-          taxRate = row.taxRate
-          allPrice = unitPrice*value
-          taxMoney =(taxRate/100)*allPrice
-          taxLastMoney = allPrice + taxMoney
-          target.setValues([{rowKey: row.id, values: {allPrice: allPrice, taxMoney: taxMoney, taxLastMoney: taxLastMoney}}])
+        case "eachAmount":
           target.recalcAllStatisticsColumns()
-          let allTaxLastMoney = target.statisticsColumns.taxLastMoney
-          this.$nextTick(() => {
-            this.form.setFieldsValue({'discount':0,'discountMoney':0,'discountLastMoney':allTaxLastMoney,
-              'changeAmount':allTaxLastMoney,'debt':0})
-          });
-          break;
-        case "unitPrice":
-          operNumber = row.operNumber
-          target.setValues([{rowKey: row.id, values: {allPrice: value*operNumber}}])
-          target.recalcAllStatisticsColumns()
-          break;
-        case "allPrice":
-          operNumber = row.operNumber
-          target.setValues([{rowKey: row.id, values: {unitPrice: value/operNumber}}])
-          target.recalcAllStatisticsColumns()
+          that.autoChangeAmount(target)
           break;
       }
     },
-    //根据仓库和条码查询库存
-    getStockByDepotBarCode(row, target){
-      findStockByDepotAndBarCode({ depotId: row.depotId, barCode: row.barCode }).then((res) => {
-        if (res && res.code === 200) {
-          target.setValues([{rowKey: row.id, values: {stock: res.data.stock}}])
-          target.recalcAllStatisticsColumns()
+    //改变本次欠款的值
+    autoChangeAmount(target) {
+      let allEachAmount = target.statisticsColumns.eachAmount-0
+      let discountMoney = this.form.getFieldValue('discountMoney')-0
+      let changeAmount = (allEachAmount-discountMoney).toFixed(2)
+      this.$nextTick(() => {
+        this.form.setFieldsValue({'totalPrice':allEachAmount, 'changeAmount':changeAmount})
+      });
+    },
+    //改变优惠金额
+    onKeyUpDiscountMoney(e) {
+      const value = e.target.value-0
+      let totalPrice = this.form.getFieldValue('totalPrice')-0
+      let changeAmount = (totalPrice-value).toFixed(2)
+      this.$nextTick(() => {
+        this.form.setFieldsValue({'changeAmount':changeAmount})
+      });
+    },
+    //选择欠款单据
+    debtBillListOk(selectBillRows) {
+      if(selectBillRows && selectBillRows.length>0) {
+        this.requestSubTableDataEx(selectBillRows, this.accountTable);
+      }
+    },
+    /** 查询某个tab的数据,给明细里面的金额赋值 */
+    requestSubTableDataEx(selectBillRows, tab, success) {
+      tab.loading = true
+      let listEx = []
+      let changeAmount = 0
+      for(let i=0; i<selectBillRows.length; i++){
+        let info = selectBillRows[i]
+        info.billNumber = info.number
+        info.needDebt = (info.discountLastMoney + info.otherMoney - info.changeAmount).toFixed(2)
+        info.eachAmount =  (info.discountLastMoney + info.otherMoney - info.changeAmount - info.finishDebt).toFixed(2);
+        if(info.eachAmount != 0) {
+          changeAmount += info.eachAmount-0
+          listEx.push(info)
         }
-      })
+      }
+      tab.dataSource = listEx
+      this.$nextTick(() => {
+        this.form.setFieldsValue({'totalPrice':changeAmount, 'changeAmount':changeAmount})
+      });
+      typeof success === 'function' ? success(res) : ''
+      tab.loading = false
     }
   }
 }

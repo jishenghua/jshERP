@@ -8,11 +8,13 @@
     <result column="hands_person_id" jdbcType="BIGINT" property="handsPersonId" />
     <result column="creator" jdbcType="BIGINT" property="creator" />
     <result column="change_amount" jdbcType="DECIMAL" property="changeAmount" />
+    <result column="discount_money" jdbcType="DECIMAL" property="discountMoney" />
     <result column="total_price" jdbcType="DECIMAL" property="totalPrice" />
     <result column="account_id" jdbcType="BIGINT" property="accountId" />
     <result column="bill_no" jdbcType="VARCHAR" property="billNo" />
     <result column="bill_time" jdbcType="TIMESTAMP" property="billTime" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="file_name" jdbcType="VARCHAR" property="fileName" />
     <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
     <result column="delete_flag" jdbcType="VARCHAR" property="deleteFlag" />
   </resultMap>
@@ -75,8 +77,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, type, organ_id, hands_person_id, creator, change_amount, total_price, account_id, 
-    bill_no, bill_time, remark, tenant_id, delete_flag
+    id, type, organ_id, hands_person_id, creator, change_amount, discount_money, total_price, 
+    account_id, bill_no, bill_time, remark, file_name, tenant_id, delete_flag
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.AccountHeadExample" resultMap="BaseResultMap">
     select
@@ -111,14 +113,16 @@
   <insert id="insert" parameterType="com.jsh.erp.datasource.entities.AccountHead">
     insert into jsh_account_head (id, type, organ_id, 
       hands_person_id, creator, change_amount, 
-      total_price, account_id, bill_no, 
-      bill_time, remark, tenant_id, 
-      delete_flag)
+      discount_money, total_price, account_id, 
+      bill_no, bill_time, remark, 
+      file_name, tenant_id, delete_flag
+      )
     values (#{id,jdbcType=BIGINT}, #{type,jdbcType=VARCHAR}, #{organId,jdbcType=BIGINT}, 
       #{handsPersonId,jdbcType=BIGINT}, #{creator,jdbcType=BIGINT}, #{changeAmount,jdbcType=DECIMAL}, 
-      #{totalPrice,jdbcType=DECIMAL}, #{accountId,jdbcType=BIGINT}, #{billNo,jdbcType=VARCHAR}, 
-      #{billTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, 
-      #{deleteFlag,jdbcType=VARCHAR})
+      #{discountMoney,jdbcType=DECIMAL}, #{totalPrice,jdbcType=DECIMAL}, #{accountId,jdbcType=BIGINT}, 
+      #{billNo,jdbcType=VARCHAR}, #{billTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}, 
+      #{fileName,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.AccountHead">
     insert into jsh_account_head
@@ -141,6 +145,9 @@
       <if test="changeAmount != null">
         change_amount,
       </if>
+      <if test="discountMoney != null">
+        discount_money,
+      </if>
       <if test="totalPrice != null">
         total_price,
       </if>
@@ -155,6 +162,9 @@
       </if>
       <if test="remark != null">
         remark,
+      </if>
+      <if test="fileName != null">
+        file_name,
       </if>
       <if test="tenantId != null">
         tenant_id,
@@ -182,6 +192,9 @@
       <if test="changeAmount != null">
         #{changeAmount,jdbcType=DECIMAL},
       </if>
+      <if test="discountMoney != null">
+        #{discountMoney,jdbcType=DECIMAL},
+      </if>
       <if test="totalPrice != null">
         #{totalPrice,jdbcType=DECIMAL},
       </if>
@@ -196,6 +209,9 @@
       </if>
       <if test="remark != null">
         #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null">
+        #{fileName,jdbcType=VARCHAR},
       </if>
       <if test="tenantId != null">
         #{tenantId,jdbcType=BIGINT},
@@ -232,6 +248,9 @@
       <if test="record.changeAmount != null">
         change_amount = #{record.changeAmount,jdbcType=DECIMAL},
       </if>
+      <if test="record.discountMoney != null">
+        discount_money = #{record.discountMoney,jdbcType=DECIMAL},
+      </if>
       <if test="record.totalPrice != null">
         total_price = #{record.totalPrice,jdbcType=DECIMAL},
       </if>
@@ -246,6 +265,9 @@
       </if>
       <if test="record.remark != null">
         remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fileName != null">
+        file_name = #{record.fileName,jdbcType=VARCHAR},
       </if>
       <if test="record.tenantId != null">
         tenant_id = #{record.tenantId,jdbcType=BIGINT},
@@ -266,11 +288,13 @@
       hands_person_id = #{record.handsPersonId,jdbcType=BIGINT},
       creator = #{record.creator,jdbcType=BIGINT},
       change_amount = #{record.changeAmount,jdbcType=DECIMAL},
+      discount_money = #{record.discountMoney,jdbcType=DECIMAL},
       total_price = #{record.totalPrice,jdbcType=DECIMAL},
       account_id = #{record.accountId,jdbcType=BIGINT},
       bill_no = #{record.billNo,jdbcType=VARCHAR},
       bill_time = #{record.billTime,jdbcType=TIMESTAMP},
       remark = #{record.remark,jdbcType=VARCHAR},
+      file_name = #{record.fileName,jdbcType=VARCHAR},
       tenant_id = #{record.tenantId,jdbcType=BIGINT},
       delete_flag = #{record.deleteFlag,jdbcType=VARCHAR}
     <if test="_parameter != null">
@@ -295,6 +319,9 @@
       <if test="changeAmount != null">
         change_amount = #{changeAmount,jdbcType=DECIMAL},
       </if>
+      <if test="discountMoney != null">
+        discount_money = #{discountMoney,jdbcType=DECIMAL},
+      </if>
       <if test="totalPrice != null">
         total_price = #{totalPrice,jdbcType=DECIMAL},
       </if>
@@ -309,6 +336,9 @@
       </if>
       <if test="remark != null">
         remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null">
+        file_name = #{fileName,jdbcType=VARCHAR},
       </if>
       <if test="tenantId != null">
         tenant_id = #{tenantId,jdbcType=BIGINT},
@@ -326,11 +356,13 @@
       hands_person_id = #{handsPersonId,jdbcType=BIGINT},
       creator = #{creator,jdbcType=BIGINT},
       change_amount = #{changeAmount,jdbcType=DECIMAL},
+      discount_money = #{discountMoney,jdbcType=DECIMAL},
       total_price = #{totalPrice,jdbcType=DECIMAL},
       account_id = #{accountId,jdbcType=BIGINT},
       bill_no = #{billNo,jdbcType=VARCHAR},
       bill_time = #{billTime,jdbcType=TIMESTAMP},
       remark = #{remark,jdbcType=VARCHAR},
+      file_name = #{fileName,jdbcType=VARCHAR},
       tenant_id = #{tenantId,jdbcType=BIGINT},
       delete_flag = #{deleteFlag,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}

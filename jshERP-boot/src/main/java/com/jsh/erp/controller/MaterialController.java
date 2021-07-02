@@ -5,13 +5,12 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
-import com.jsh.erp.datasource.entities.DepotEx;
-import com.jsh.erp.datasource.entities.Material;
-import com.jsh.erp.datasource.entities.MaterialVo4Unit;
+import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.service.redis.RedisService;
+import com.jsh.erp.service.unit.UnitService;
 import com.jsh.erp.utils.*;
 import jxl.Sheet;
 import jxl.Workbook;
@@ -44,6 +43,9 @@ public class MaterialController {
     private DepotItemService depotItemService;
 
     @Resource
+    private UnitService unitService;
+
+    @Resource
     private RedisService redisService;
 
     @GetMapping(value = "/checkIsExist")
@@ -54,8 +56,9 @@ public class MaterialController {
                                @RequestParam("otherField3") String otherField3, @RequestParam("unit") String unit,@RequestParam("unitId") Long unitId,
                                HttpServletRequest request)throws Exception {
         Map<String, Object> objectMap = new HashMap<String, Object>();
-        int exist = materialService.checkIsExist(id, name, model, color, standard, mfrs,
-                otherField1, otherField2, otherField3, unit, unitId);
+        int exist = materialService.checkIsExist(id, name, StringUtil.toNull(model), StringUtil.toNull(color),
+                StringUtil.toNull(standard), StringUtil.toNull(mfrs), StringUtil.toNull(otherField1),
+                StringUtil.toNull(otherField2), StringUtil.toNull(otherField3), StringUtil.toNull(unit), unitId);
         if(exist > 0) {
             objectMap.put("status", true);
         } else {
@@ -186,17 +189,24 @@ public class MaterialController {
                             ratio = ratio.substring(ratio.indexOf("("));
                         }
                     }
-                    //名称/型号/扩展信息/包装
-                    String MaterialName = "";
-                    String mBarCode = "";
-                    if(material.getmBarCode()!=null) {
-                        mBarCode = material.getmBarCode();
-                        MaterialName = MaterialName + mBarCode + "_";
+                    item.put("mBarCode", material.getmBarCode());
+                    item.put("name", material.getName());
+                    item.put("categoryName", material.getCategoryName());
+                    item.put("standard", material.getStandard());
+                    item.put("model", material.getModel());
+                    item.put("unit", material.getCommodityUnit() + ratio);
+                    if(depotId!=null) {
+                        BigDecimal stock = depotItemService.getStockByParam(depotId,material.getId(),null,null,tenantId);
+                        if (material.getUnitId()!=null){
+                            Unit unit = unitService.getUnit(material.getUnitId());
+                            if(material.getCommodityUnit().equals(unit.getOtherUnit())) {
+                                if(unit.getRatio()!=0) {
+                                    stock = stock.divide(BigDecimal.valueOf(unit.getRatio()));
+                                }
+                            }
+                        }
+                        item.put("stock", stock);
                     }
-                    item.put("mBarCode", mBarCode);
-                    MaterialName = MaterialName + " " + material.getName()
-                            + ((material.getStandard() == null || material.getStandard().equals("")) ? "" : "(" + material.getStandard() + ")")
-                            + ((material.getModel() == null || material.getModel().equals("")) ? "" : "(" + material.getModel() + ")");
                     String expand = ""; //扩展信息
                     for (int i = 0; i < mpArr.length; i++) {
                         if (mpArr[i].equals("制造商")) {
@@ -212,18 +222,7 @@ public class MaterialController {
                             expand = expand + ((material.getOtherField3() == null || material.getOtherField3().equals("")) ? "" : "(" + material.getOtherField3() + ")");
                         }
                     }
-                    MaterialName = MaterialName + expand + ((material.getCommodityUnit() == null || material.getCommodityUnit().equals("")) ? "" : "(" + material.getCommodityUnit() + ")") + ratio;
-                    item.put("materialName", MaterialName);
-                    item.put("categoryName", material.getCategoryName());
-                    item.put("name", material.getName());
                     item.put("expand", expand);
-                    item.put("model", material.getModel());
-                    item.put("standard", material.getStandard());
-                    item.put("unit", material.getCommodityUnit() + ratio);
-                    if(depotId!=null) {
-                        BigDecimal stock = depotItemService.getStockByParam(depotId,material.getId(),null,null,tenantId);
-                        item.put("stock", stock);
-                    }
                     dataArray.add(item);
                 }
             }
@@ -365,7 +364,7 @@ public class MaterialController {
                 src = workbook.getSheet(0);
             } catch (Exception e) {
             }
-            res = materialService.importExcel(src);
+            res = materialService.importExcel(src, request);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -467,7 +466,8 @@ public class MaterialController {
                 if("LSCK".equals(prefixNo) || "LSTH".equals(prefixNo)) {
                     //零售价
                     mu.setBillPrice(mu.getCommodityDecimal());
-                } else if("CGDD".equals(prefixNo) || "CGRK".equals(prefixNo) || "CGTH".equals(prefixNo) || "QTRK".equals(prefixNo) || "DBCK".equals(prefixNo)) {
+                } else if("CGDD".equals(prefixNo) || "CGRK".equals(prefixNo) || "CGTH".equals(prefixNo)
+                        || "QTRK".equals(prefixNo) || "DBCK".equals(prefixNo) || "ZZD".equals(prefixNo) || "CXD".equals(prefixNo) ) {
                     //采购价
                     mu.setBillPrice(mu.getPurchaseDecimal());
                 } else if("XSDD".equals(prefixNo) || "XSCK".equals(prefixNo) || "XSTH".equals(prefixNo) || "QTCK".equals(prefixNo)) {
@@ -477,6 +477,52 @@ public class MaterialController {
             }
             res.code = 200;
             res.data = mu;
+        } catch(Exception e){
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
+    }
+
+    /**
+     * 商品库存查询
+     * @param currentPage
+     * @param pageSize
+     * @param depotId
+     * @param categoryId
+     * @param materialParam
+     * @param mpList
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @GetMapping(value = "/getListWithStock")
+    public BaseResponseInfo getListWithStock(@RequestParam("currentPage") Integer currentPage,
+                                             @RequestParam("pageSize") Integer pageSize,
+                                             @RequestParam("depotId") Long depotId,
+                                             @RequestParam("categoryId") Long categoryId,
+                                             @RequestParam("materialParam") String materialParam,
+                                             @RequestParam("mpList") String mpList,
+                                             HttpServletRequest request)throws Exception {
+        BaseResponseInfo res = new BaseResponseInfo();
+        Map<String, Object> map = new HashMap<>();
+        try {
+            List<Long> idList = new ArrayList<>();
+            if(categoryId != null){
+                idList = materialService.getListByParentId(categoryId);
+            }
+            List<MaterialVo4Unit> dataList = materialService.getListWithStock(depotId, idList, StringUtil.toNull(materialParam),
+                    (currentPage-1)*pageSize, pageSize);
+            int total = materialService.getListWithStockCount(depotId, idList, StringUtil.toNull(materialParam));
+            MaterialVo4Unit materialVo4Unit= materialService.getTotalStockAndPrice(depotId, idList, StringUtil.toNull(materialParam));
+            map.put("total", total);
+            map.put("currentStock", materialVo4Unit.getCurrentStock());
+            map.put("currentStockPrice", materialVo4Unit.getCurrentStockPrice());
+            //存放数据json数组
+            map.put("rows", dataList);
+            res.code = 200;
+            res.data = map;
         } catch(Exception e){
             e.printStackTrace();
             res.code = 500;

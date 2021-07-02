@@ -81,4 +81,27 @@ public class MaterialExtendController {
         }
         return res;
     }
+
+    @GetMapping(value = "/checkIsBarCodeExist")
+    public BaseResponseInfo checkIsBarCodeExist(@RequestParam("id") Long id,
+                                                @RequestParam("barCode") String barCode,
+                                             HttpServletRequest request)throws Exception {
+        BaseResponseInfo res = new BaseResponseInfo();
+        Map<String, Object> map = new HashMap<>();
+        try {
+            int exist = materialExtendService.checkIsBarCodeExist(id, barCode);
+            if(exist > 0) {
+                map.put("status", true);
+            } else {
+                map.put("status", false);
+            }
+            res.code = 200;
+            res.data = map;
+        } catch (Exception e) {
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
+    }
 }

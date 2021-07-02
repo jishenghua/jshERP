@@ -1076,4 +1076,46 @@ update jsh_material_category set delete_flag='0';
 -- by jishenghua
 -- 增加租户管理菜单
 -- --------------------------------------------------------
-INSERT INTO `jsh_erp`.`jsh_function` (`id`, `number`, `name`, `parent_number`, `url`, `component`, `state`, `sort`, `enabled`, `type`, `push_btn`, `icon`, `delete_flag`) VALUES ('18', '000109', '租户管理', '0001', '/system/tenant', '/system/TenantList', b'0', '0167', b'1', '电脑版', '1', 'profile', '0');
+INSERT INTO `jsh_function` (`id`, `number`, `name`, `parent_number`, `url`, `component`, `state`, `sort`, `enabled`, `type`, `push_btn`, `icon`, `delete_flag`) VALUES ('18', '000109', '租户管理', '0001', '/system/tenant', '/system/TenantList', b'0', '0167', b'1', '电脑版', '1', 'profile', '0');
+
+-- --------------------------------------------------------
+-- 时间 2021年6月19日
+-- by jishenghua
+-- 更新jsh_platform_config数据
+-- --------------------------------------------------------
+INSERT INTO `jsh_platform_config` (`id`, `platform_key`, `platform_key_info`, `platform_value`) VALUES ('3', 'platform_url', '官方网站', 'http://www.huaxiaerp.com/');
+
+-- --------------------------------------------------------
+-- 时间 2021年6月20日
+-- by jishenghua
+-- 将库存状态报表改为进销存统计报表
+-- --------------------------------------------------------
+update jsh_function set name='进销存统计', sort='0658' where id=59;
+
+-- --------------------------------------------------------
+-- 时间 2021年6月20日
+-- by jishenghua
+-- 增加商品库存报表
+-- --------------------------------------------------------
+INSERT INTO `jsh_function` (`number`, `name`, `parent_number`, `url`, `component`, `state`, `sort`, `enabled`, `type`, `push_btn`, `icon`, `delete_flag`) VALUES ('030113', '商品库存', '0301', '/report/material_stock', '/report/MaterialStock', b'0', '0605', b'1', '电脑版', '', 'profile', '0');
+
+-- --------------------------------------------------------
+-- 时间 2021年6月29日
+-- by jishenghua
+-- 给jsh_account_item增加字段进销存单据id 应收欠款 已收欠款
+-- 给jsh_depot_head增加附件字段附件名称
+-- 给jsh_account_head增加附件字段附件名称 优惠金额
+-- --------------------------------------------------------
+alter table jsh_account_item add bill_id bigint(20) DEFAULT NULL COMMENT '进销存单据id' after in_out_item_id;
+alter table jsh_account_item add need_debt decimal(24,6) DEFAULT NULL COMMENT '应收欠款' after bill_id;
+alter table jsh_account_item add finish_debt decimal(24,6) DEFAULT NULL COMMENT '已收欠款' after need_debt;
+alter table jsh_depot_head add file_name varchar(500) DEFAULT NULL COMMENT '附件名称' after remark;
+alter table jsh_account_head add file_name varchar(500) DEFAULT NULL COMMENT '附件名称' after remark;
+alter table jsh_account_head add discount_money decimal(24,6) DEFAULT NULL COMMENT '优惠金额' after change_amount;
+
+-- --------------------------------------------------------
+-- 时间 2021年7月1日
+-- by jishenghua
+-- 给商品表增加附件名称字段
+-- --------------------------------------------------------
+alter table jsh_material add img_name varchar(500) DEFAULT NULL COMMENT '图片名称' after remark;

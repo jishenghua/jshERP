@@ -40,7 +40,7 @@
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号">
-              <a-input placeholder="请输入单据编号" v-decorator.trim="[ 'billNo' ]" />
+              <a-input placeholder="请输入单据编号" v-decorator.trim="[ 'billNo' ]" :readOnly="true"/>
             </a-form-item>
           </a-col>
         </a-row>
@@ -63,15 +63,28 @@
         </a-row>
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="合计金额">
+              <a-input placeholder="请输入合计收款" v-decorator.trim="[ 'totalPrice' ]" :readOnly="true"/>
+            </a-form-item>
+          </a-col>
+          <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="优惠金额">
-              <a-input placeholder="请输入优惠金额" v-decorator.trim="[ 'changeAmount' ]" />
+              <a-input placeholder="请输入优惠金额" v-decorator.trim="[ 'discountMoney' ]" @keyup="onKeyUpDiscountMoney" />
+            </a-form-item>
+          </a-col>
+          <a-col :lg="6" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款金额">
+              <a-input placeholder="请输入收款金额" v-decorator.trim="[ 'changeAmount' ]" :readOnly="true"/>
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
           </a-col>
+        </a-row>
+        <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
-          </a-col>
-          <a-col :lg="6" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="附件">
+              <j-upload v-model="fileList" bizPath="financial"></j-upload>
+            </a-form-item>
           </a-col>
         </a-row>
       </a-form>
@@ -83,11 +96,13 @@
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { FinancialModalMixin } from '../mixins/FinancialModalMixin'
+  import JUpload from '@/components/jeecg/JUpload'
   import JDate from '@/components/jeecg/JDate'
   export default {
     name: "AdvanceInModal",
     mixins: [JEditableTableMixin, FinancialModalMixin],
     components: {
+      JUpload,
       JDate
     },
     data () {
@@ -99,6 +114,7 @@
         addDefaultRowNum: 1,
         visible: false,
         model: {},
+        fileList:[],
         labelCol: {
           xs: { span: 24 },
           sm: { span: 8 },
@@ -113,8 +129,12 @@
           loading: false,
           dataSource: [],
           columns: [
-            { title: '账户名称',key: 'accountId',width: '20%', type: FormTypes.select, placeholder: '请选择${title}', options: []},
-            { title: '金额',key: 'eachAmount', width: '10%', type: FormTypes.inputNumber, statistics: true, placeholder: '请选择${title}' },
+            { title: '账户名称',key: 'accountId',width: '20%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
+              validateRules: [{ required: true, message: '${title}不能为空' }]
+            },
+            { title: '金额',key: 'eachAmount', width: '10%', type: FormTypes.inputNumber, statistics: true, placeholder: '请选择${title}',
+              validateRules: [{ required: true, message: '${title}不能为空' }]
+            },
             { title: '备注',key: 'remark', width: '30%', type: FormTypes.input, placeholder: '请选择${title}'}
           ]
         },
@@ -146,11 +166,14 @@
       editAfter() {
         if (this.action === 'add') {
           this.addInit("SYF")
+          this.fileList = []
         } else {
           this.model.billTime = this.model.billTimeStr
           this.$nextTick(() => {
-            this.form.setFieldsValue(pick(this.model,'organId', 'handsPersonId', 'billTime', 'billNo', 'remark', 'changeAmount'))
+            this.form.setFieldsValue(pick(this.model,'organId', 'handsPersonId', 'billTime', 'billNo', 'remark',
+                  'totalPrice', 'discountMoney', 'changeAmount'))
           });
+          this.fileList = this.model.fileName
           // 加载子表数据
           let params = {
             headerId: this.model.id
@@ -169,6 +192,9 @@
           totalPrice += item.eachAmount-0
         }
         billMain.totalPrice = totalPrice
+        if(this.fileList && this.fileList.length > 0) {
+          billMain.fileName = this.fileList
+        }
         if(this.model.id){
           billMain.id = this.model.id
         }

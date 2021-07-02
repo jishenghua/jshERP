@@ -6,16 +6,19 @@
         FROM jsh_supplier
         where 1=1
         <if test="supplier != null and supplier !=''">
-            and supplier like '%${supplier}%'
+            <bind name="bindSupplier" value="'%'+supplier+'%'"/>
+            and supplier like #{bindSupplier}
         </if>
         <if test="type != null and type !=''">
-            and type='${type}'
+            and type=#{type}
         </if>
         <if test="phonenum != null and phonenum !=''">
-            and phone_num like '%${phonenum}%'
+            <bind name="bindPhoneNum" value="'%'+phonenum+'%'"/>
+            and phone_num like #{bindPhoneNum}
         </if>
         <if test="telephone != null and telephone !=''">
-            and telephone like '%${telephone}%'
+            <bind name="bindTelephone" value="'%'+telephone+'%'"/>
+            and telephone like #{bindTelephone}
         </if>
         and ifnull(delete_flag,'0') !='1'
         order by id desc
@@ -29,16 +32,19 @@
         FROM jsh_supplier
         WHERE 1=1
         <if test="supplier != null and supplier !=''">
-            and supplier like '%${supplier}%'
+            <bind name="bindSupplier" value="'%'+supplier+'%'"/>
+            and supplier like #{bindSupplier}
         </if>
         <if test="type != null and type !=''">
-            and type='${type}'
+            and type=#{type}
         </if>
         <if test="phonenum != null and phonenum !=''">
-            and phone_num like '%${phonenum}%'
+            <bind name="bindPhoneNum" value="'%'+phonenum+'%'"/>
+            and phone_num like #{bindPhoneNum}
         </if>
         <if test="telephone != null and telephone !=''">
-            and telephone like '%${telephone}%'
+            <bind name="bindTelephone" value="'%'+telephone+'%'"/>
+            and telephone like #{bindTelephone}
         </if>
         and ifnull(delete_flag,'0') !='1'
     </select>
@@ -48,16 +54,19 @@
         FROM jsh_supplier
         where 1=1
         <if test="supplier != null and supplier !=''">
-            and supplier like '%${supplier}%'
+            <bind name="bindSupplier" value="'%'+supplier+'%'"/>
+            and supplier like #{bindSupplier}
         </if>
         <if test="type != null and type !=''">
-            and type='${type}'
+            and type=#{type}
         </if>
         <if test="phonenum != null and phonenum !=''">
-            and phone_num like '%${phonenum}%'
+            <bind name="bindPhoneNum" value="'%'+phonenum+'%'"/>
+            and phone_num like #{bindPhoneNum}
         </if>
         <if test="telephone != null and telephone !=''">
-            and telephone like '%${telephone}%'
+            <bind name="bindTelephone" value="'%'+telephone+'%'"/>
+            and telephone like #{bindTelephone}
         </if>
         and ifnull(delete_flag,'0') !='1'
         order by id desc

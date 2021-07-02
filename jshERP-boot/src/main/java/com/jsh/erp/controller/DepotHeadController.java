@@ -2,6 +2,7 @@ package com.jsh.erp.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.DepotHead;
 import com.jsh.erp.datasource.entities.DepotHeadVo4Body;
@@ -13,10 +14,7 @@ import com.jsh.erp.exception.BusinessParamCheckingException;
 import com.jsh.erp.service.depotHead.DepotHeadService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.redis.RedisService;
-import com.jsh.erp.utils.BaseResponseInfo;
-import com.jsh.erp.utils.ErpInfo;
-import com.jsh.erp.utils.StringUtil;
-import com.jsh.erp.utils.Tools;
+import com.jsh.erp.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -96,6 +94,8 @@ public class DepotHeadController {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
             List<DepotHeadVo4InDetail> resList = new ArrayList<DepotHeadVo4InDetail>();
+            beginTime = Tools.parseDayToTime(beginTime, BusinessConstants.DAY_FIRST_TIME);
+            endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
             List<DepotHeadVo4InDetail> list = depotHeadService.findByAll(beginTime, endTime, type, materialParam, depotId, oId, (currentPage-1)*pageSize, pageSize);
             int total = depotHeadService.findByAllCount(beginTime, endTime, type, materialParam, depotId, oId);
             map.put("total", total);
@@ -143,8 +143,8 @@ public class DepotHeadController {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
             List<DepotHeadVo4InOutMCount> resList = new ArrayList<>();
-            beginTime = beginTime + " 00:00:00";
-            endTime = endTime + " 23:59:59";
+            beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
+            endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
             List<DepotHeadVo4InOutMCount> list = depotHeadService.findInOutMaterialCount(beginTime, endTime, type, materialParam, depotId, oId, (currentPage-1)*pageSize, pageSize);
             int total = depotHeadService.findInOutMaterialCountTotal(beginTime, endTime, type, materialParam, depotId, oId);
             map.put("total", total);
@@ -193,8 +193,8 @@ public class DepotHeadController {
             } else if (supType.equals("供应商")) { //供应商
                 j = -1;
             }
-            beginTime = beginTime + " 00:00:00";
-            endTime = endTime + " 23:59:59";
+            beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
+            endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
             List<DepotHeadVo4StatementAccount> resList = new ArrayList<DepotHeadVo4StatementAccount>();
             List<DepotHeadVo4StatementAccount> list = depotHeadService.findStatementAccount(beginTime, endTime, organId, supType, (currentPage-1)*pageSize, pageSize);
             int total = depotHeadService.findStatementAccountCount(beginTime, endTime, organId, supType);
@@ -231,10 +231,10 @@ public class DepotHeadController {
                         allPrice = p1.subtract(p2);
                     } else if (type.equals("采购退货出库")) {
                         allPrice = p1.subtract(p2);
-                    } else if (type.equals("付款")) {
-                        allPrice = p1.add(p2);
                     } else if (type.equals("收款")) {
-                        allPrice = BigDecimal.ZERO.subtract(p1.add(p2));
+                        allPrice = BigDecimal.ZERO.subtract(p1);
+                    } else if (type.equals("付款")) {
+                        allPrice = p1;
                     } else if (type.equals("收入")) {
                         allPrice =  p1.subtract(p2);
                     } else if (type.equals("支出")) {
@@ -277,7 +277,7 @@ public class DepotHeadController {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
             JSONObject outer = new JSONObject();
-            endTime = endTime + " 23:59:59";
+            endTime = endTime + BusinessConstants.DAY_LAST_TIME;
             BigDecimal sum = depotHeadService.findTotalPay(supplierId, endTime, supType);
             outer.put("getAllMoney", sum);
             map.put("rows", outer);
@@ -369,8 +369,8 @@ public class DepotHeadController {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         try {
-            String today = Tools.getNow() + " 00:00:00";
-            String firstDay = Tools.getCurrentMonth() + "-01 00:00:00";
+            String today = Tools.getNow() + BusinessConstants.DAY_FIRST_TIME;
+            String firstDay = Tools.firstDayOfMonth(Tools.getCurrentMonth()) + BusinessConstants.DAY_FIRST_TIME;
             BigDecimal todaySale = depotHeadService.getBuyAndSaleStatistics("出库", "销售",
                     1, today, getNow3()); //今日销售出库
             BigDecimal todayRetailSale = depotHeadService.getBuyAndSaleRetailStatistics("出库", "零售",
@@ -421,5 +421,36 @@ public class DepotHeadController {
             res.data = "获取数据失败";
         }
         return res;
+    }
+
+    /**
+     * 查询存在欠款的单据
+     * @param search
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @GetMapping(value = "/debtList")
+    public String debtList(@RequestParam(value = Constants.SEARCH, required = false) String search,
+                           HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        String organIdStr = StringUtil.getInfo(search, "organId");
+        Long organId = Long.parseLong(organIdStr);
+        String materialParam = StringUtil.getInfo(search, "materialParam");
+        String number = StringUtil.getInfo(search, "number");
+        String beginTime = StringUtil.getInfo(search, "beginTime");
+        String endTime = StringUtil.getInfo(search, "endTime");
+        String type = StringUtil.getInfo(search, "type");
+        String subType = StringUtil.getInfo(search, "subType");
+        String roleType = StringUtil.getInfo(search, "roleType");
+        String status = StringUtil.getInfo(search, "status");
+        List<DepotHeadVo4List> list = depotHeadService.debtList(organId, materialParam, number, beginTime, endTime, type, subType, roleType, status);
+        if (list != null) {
+            objectMap.put("rows", list);
+            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+        } else {
+            objectMap.put("rows", new ArrayList<>());
+            return returnJson(objectMap, "查找不到数据", ErpInfo.OK.code);
+        }
     }
 }

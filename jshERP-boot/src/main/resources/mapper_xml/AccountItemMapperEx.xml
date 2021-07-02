@@ -5,6 +5,7 @@
     <resultMap extends="com.jsh.erp.datasource.mappers.AccountItemMapper.BaseResultMap" id="ResultWithInfoExMap" type="com.jsh.erp.datasource.vo.AccountItemVo4List">
         <result column="AccountName" jdbcType="VARCHAR" property="accountName" />
         <result column="InOutItemName" jdbcType="VARCHAR" property="inOutItemName" />
+        <result column="billNumber" jdbcType="VARCHAR" property="billNumber" />
     </resultMap>
 
     <select id="selectByConditionAccountItem" parameterType="com.jsh.erp.datasource.entities.AccountItemExample" resultMap="com.jsh.erp.datasource.mappers.AccountItemMapper.BaseResultMap">
@@ -12,13 +13,15 @@
         FROM jsh_account_item
         where 1=1
         <if test="name != null">
-            and name like '%${name}%'
+            <bind name="bindName" value="'%'+name+'%'"/>
+            and name like #{bindName}
         </if>
         <if test="type != null">
-            and type=${type}
+            and type=#{type}
         </if>
         <if test="remark != null">
-            and remark like '%${remark}%'
+            <bind name="bindRemark" value="'%'+remark+'%'"/>
+            and remark like #{bindRemark}
         </if>
         and ifnull(delete_flag,'0') !='1'
         <if test="offset != null and rows != null">
@@ -31,22 +34,25 @@
         FROM jsh_account_item
         WHERE 1=1
         <if test="name != null">
-            and name like '%${name}%'
+            <bind name="bindName" value="'%'+name+'%'"/>
+            and name like #{bindName}
         </if>
         <if test="type != null">
-            and type=${type}
+            and type=#{type}
         </if>
         <if test="remark != null">
-            and remark like '%${remark}%'
+            <bind name="bindRemark" value="'%'+remark+'%'"/>
+            and remark like #{bindRemark}
         </if>
         and ifnull(delete_flag,'0') !='1'
     </select>
 
     <select id="getDetailList" parameterType="com.jsh.erp.datasource.entities.AccountItemExample" resultMap="ResultWithInfoExMap">
-        select ai.*,a.Name AccountName,ioi.Name InOutItemName
+        select ai.*,a.Name AccountName,ioi.Name InOutItemName, dh.number billNumber
         from jsh_account_item ai left join jsh_account a on ai.account_id=a.id and ifnull(a.delete_Flag,'0') !='1'
         left join jsh_in_out_item ioi on ai.in_out_item_id = ioi.id and ifnull(ioi.delete_Flag,'0') !='1'
-        where ai.header_id = ${headerId}
+        left join jsh_depot_head dh on ai.bill_id = dh.id and ifnull(dh.delete_Flag,'0') !='1'
+        where ai.header_id = #{headerId}
         and ifnull(ai.delete_flag,'0') !='1'
         order by ai.id asc
     </select>
@@ -96,6 +102,7 @@
         )
         and ifnull(delete_flag,'0') !='1'
     </select>
+
     <update id="batchDeleteAccountItemByHeadIds">
         update jsh_account_item
         set delete_flag='1'
@@ -106,4 +113,15 @@
         </foreach>
         )
     </update>
+
+    <select id="getEachAmountByBillId" resultType="java.math.BigDecimal">
+        select
+        ifnull(sum(each_amount),0)
+        from jsh_account_item
+        where 1=1
+        <if test="billId != null">
+            and bill_id=#{billId}
+        </if>
+        and ifnull(delete_flag,'0') !='1'
+    </select>
 </mapper>

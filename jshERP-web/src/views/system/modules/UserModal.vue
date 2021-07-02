@@ -91,7 +91,7 @@
           },
           username:{
             rules: [{
-              required: true, message: '请输入用户账号!'
+              required: true, message: '请输入用户姓名!'
             }]
           }
         },

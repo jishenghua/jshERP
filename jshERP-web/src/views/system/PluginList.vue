@@ -1,76 +1,80 @@
 <template>
-  <a-card :bordered="false" class="card-area">
-    <!-- 查询区域 -->
-    <div class="table-page-search-wrapper">
-      <!-- 搜索区域 -->
-      <a-form layout="inline" @keyup.enter.native="searchQuery">
-        <a-row :gutter="24">
-          <a-col :md="6" :sm="8">
-            <a-form-item label="名称" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
-              <a-input placeholder="请输入名称查询" v-model="queryParam.name"></a-input>
-            </a-form-item>
-          </a-col>
-          <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-            <a-col :md="6" :sm="24">
-              <a-button type="primary" @click="searchQuery">查询</a-button>
-              <a-button style="margin-left: 8px" @click="searchReset">重置</a-button>
-              <a-button type="primary" style="margin-left: 8px" @click="writeCode">填写激活码</a-button>
-            </a-col>
-          </span>
-        </a-row>
-      </a-form>
-    </div>
-    <!-- 操作按钮区域 -->
-    <div class="table-operator"  style="margin-top: 5px">
-      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importUrl" @change="handleImportJar">
-        <a-popover title="导入注意点">
-          <template slot="content">
-            <p>请选择需要导入的插件jar包</p>
-          </template>
-          <a-button type="primary" icon="import">上传插件包</a-button>
-        </a-popover>
-      </a-upload>
-    </div>
-    <!-- table区域-begin -->
-    <div>
-      <a-table
-        ref="table"
-        size="middle"
-        bordered
-        rowKey="id"
-        :columns="columns"
-        :dataSource="dataSource"
-        :pagination="ipagination"
-        :loading="loading"
-        @change="handleTableChange">
-        <span slot="action" slot-scope="text, record">
-          <a @click="uploadTemplate(record)" >上传页面</a>
-          <a-divider type="vertical" />
-          <a-popconfirm title="确定要开启该插件吗?" @confirm="() => startPlugin(record.pluginDescriptor.pluginId)">
-            <a>开启</a>
-          </a-popconfirm>
-          <a-divider type="vertical" />
-          <a-popconfirm title="确定要停止该插件吗?" @confirm="() => stopPlugin(record.pluginDescriptor.pluginId)">
-            <a>停止</a>
-          </a-popconfirm>
-          <a-divider type="vertical" />
-          <a-popconfirm title="确定要卸载该插件吗?" @confirm="() => uninstallPlugin(record.pluginDescriptor.pluginId)">
-            <a>卸载</a>
-          </a-popconfirm>
-        </span>
-        <span slot="linkInfo" slot-scope="text, record">
-          <a @click="linkTo(record)" target='_blank'>链接跳转</a>
-        </span>
-        <template slot="customRenderFlag" slot-scope="pluginState">
-          <a-tag v-if="pluginState=='STARTED'" color="green">启用</a-tag>
-          <a-tag v-if="pluginState=='STOPPED'" color="orange">停止</a-tag>
-        </template>
-      </a-table>
-    </div>
-    <!-- table区域-end -->
-    <!-- 表单区域 -->
-    <plugin-modal ref="modalForm" @ok="modalFormOk"></plugin-modal>
-  </a-card>
+  <a-row :gutter="24">
+    <a-col :md="24">
+      <a-card :bordered="false">
+        <!-- 查询区域 -->
+        <div class="table-page-search-wrapper">
+          <!-- 搜索区域 -->
+          <a-form layout="inline" @keyup.enter.native="searchQuery">
+            <a-row :gutter="24">
+              <a-col :md="6" :sm="8">
+                <a-form-item label="名称" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
+                  <a-input placeholder="请输入名称查询" v-model="queryParam.name"></a-input>
+                </a-form-item>
+              </a-col>
+              <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+                <a-col :md="6" :sm="24">
+                  <a-button type="primary" @click="searchQuery">查询</a-button>
+                  <a-button style="margin-left: 8px" @click="searchReset">重置</a-button>
+                  <a-button type="primary" style="margin-left: 8px" @click="writeCode">填写激活码</a-button>
+                </a-col>
+              </span>
+            </a-row>
+          </a-form>
+        </div>
+        <!-- 操作按钮区域 -->
+        <div class="table-operator"  style="margin-top: 5px">
+          <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importUrl" @change="handleImportJar">
+            <a-popover title="导入注意点">
+              <template slot="content">
+                <p>请选择需要导入的插件jar包</p>
+              </template>
+              <a-button type="primary" icon="import">上传插件包</a-button>
+            </a-popover>
+          </a-upload>
+        </div>
+        <!-- table区域-begin -->
+        <div>
+          <a-table
+            ref="table"
+            size="middle"
+            bordered
+            rowKey="id"
+            :columns="columns"
+            :dataSource="dataSource"
+            :pagination="ipagination"
+            :loading="loading"
+            @change="handleTableChange">
+            <span slot="action" slot-scope="text, record">
+              <a @click="uploadTemplate(record)" >上传页面</a>
+              <a-divider type="vertical" />
+              <a-popconfirm title="确定要开启该插件吗?" @confirm="() => startPlugin(record.pluginDescriptor.pluginId)">
+                <a>开启</a>
+              </a-popconfirm>
+              <a-divider type="vertical" />
+              <a-popconfirm title="确定要停止该插件吗?" @confirm="() => stopPlugin(record.pluginDescriptor.pluginId)">
+                <a>停止</a>
+              </a-popconfirm>
+              <a-divider type="vertical" />
+              <a-popconfirm title="确定要卸载该插件吗?" @confirm="() => uninstallPlugin(record.pluginDescriptor.pluginId)">
+                <a>卸载</a>
+              </a-popconfirm>
+            </span>
+            <span slot="linkInfo" slot-scope="text, record">
+              <a @click="linkTo(record)" target='_blank'>链接跳转</a>
+            </span>
+            <template slot="customRenderFlag" slot-scope="pluginState">
+              <a-tag v-if="pluginState=='STARTED'" color="green">启用</a-tag>
+              <a-tag v-if="pluginState=='STOPPED'" color="orange">停止</a-tag>
+            </template>
+          </a-table>
+        </div>
+        <!-- table区域-end -->
+        <!-- 表单区域 -->
+        <plugin-modal ref="modalForm" @ok="modalFormOk"></plugin-modal>
+      </a-card>
+    </a-col>
+  </a-row>
 </template>
 <script>
   import PluginModal from './modules/PluginModal'

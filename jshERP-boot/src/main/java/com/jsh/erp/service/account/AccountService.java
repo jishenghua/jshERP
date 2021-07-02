@@ -272,9 +272,9 @@ public class AccountService {
         try {
             DepotHeadExample example = new DepotHeadExample();
             if (!timeStr.equals("")) {
-                Date bTime = StringUtil.getDateByString(timeStr + "-01 00:00:00", null);
-                Date eTime = StringUtil.getDateByString(timeStr + "-31 00:00:00", null);
-                Date mTime = StringUtil.getDateByString(timeStr + "-01 00:00:00", null);
+                Date bTime = StringUtil.getDateByString(Tools.firstDayOfMonth(timeStr) + BusinessConstants.DAY_FIRST_TIME, null);
+                Date eTime = StringUtil.getDateByString(Tools.lastDayOfMonth(timeStr) + BusinessConstants.DAY_LAST_TIME, null);
+                Date mTime = StringUtil.getDateByString(Tools.firstDayOfMonth(timeStr) + BusinessConstants.DAY_FIRST_TIME, null);
                 if (type.equals("month")) {
                     example.createCriteria().andAccountIdEqualTo(id).andPayTypeNotEqualTo("预付款")
                     .andOperTimeGreaterThanOrEqualTo(bTime).andOperTimeLessThanOrEqualTo(eTime)
@@ -317,9 +317,9 @@ public class AccountService {
         try {
             AccountHeadExample example = new AccountHeadExample();
             if (!timeStr.equals("")) {
-                Date bTime = StringUtil.getDateByString(timeStr + "-01 00:00:00", null);
-                Date eTime = StringUtil.getDateByString(timeStr + "-31 00:00:00", null);
-                Date mTime = StringUtil.getDateByString(timeStr + "-01 00:00:00", null);
+                Date bTime = StringUtil.getDateByString(Tools.firstDayOfMonth(timeStr) + BusinessConstants.DAY_FIRST_TIME, null);
+                Date eTime = StringUtil.getDateByString(Tools.lastDayOfMonth(timeStr) + BusinessConstants.DAY_LAST_TIME, null);
+                Date mTime = StringUtil.getDateByString(Tools.firstDayOfMonth(timeStr) + BusinessConstants.DAY_FIRST_TIME, null);
                 if (type.equals("month")) {
                     example.createCriteria().andAccountIdEqualTo(id)
                             .andBillTimeGreaterThanOrEqualTo(bTime).andBillTimeLessThanOrEqualTo(eTime)
@@ -363,9 +363,9 @@ public class AccountService {
         try {
             AccountHeadExample example = new AccountHeadExample();
             if (!timeStr.equals("")) {
-                Date bTime = StringUtil.getDateByString(timeStr + "-01 00:00:00", null);
-                Date eTime = StringUtil.getDateByString(timeStr + "-31 00:00:00", null);
-                Date mTime = StringUtil.getDateByString(timeStr + "-01 00:00:00", null);
+                Date bTime = StringUtil.getDateByString(Tools.firstDayOfMonth(timeStr) + BusinessConstants.DAY_FIRST_TIME, null);
+                Date eTime = StringUtil.getDateByString(Tools.lastDayOfMonth(timeStr) + BusinessConstants.DAY_LAST_TIME, null);
+                Date mTime = StringUtil.getDateByString(Tools.firstDayOfMonth(timeStr) + BusinessConstants.DAY_FIRST_TIME, null);
                 if (type.equals("month")) {
                     example.createCriteria().andBillTimeGreaterThanOrEqualTo(bTime).andBillTimeLessThanOrEqualTo(eTime)
                             .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
@@ -422,9 +422,9 @@ public class AccountService {
         try {
             DepotHeadExample example = new DepotHeadExample();
             if (!timeStr.equals("")) {
-                Date bTime = StringUtil.getDateByString(timeStr + "-01 00:00:00", null);
-                Date eTime = StringUtil.getDateByString(timeStr + "-31 00:00:00", null);
-                Date mTime = StringUtil.getDateByString(timeStr + "-01 00:00:00", null);
+                Date bTime = StringUtil.getDateByString(Tools.firstDayOfMonth(timeStr) + BusinessConstants.DAY_FIRST_TIME, null);
+                Date eTime = StringUtil.getDateByString(Tools.lastDayOfMonth(timeStr) + BusinessConstants.DAY_LAST_TIME, null);
+                Date mTime = StringUtil.getDateByString(Tools.firstDayOfMonth(timeStr) + BusinessConstants.DAY_FIRST_TIME, null);
                 if (type.equals("month")) {
                     example.createCriteria().andAccountIdListLike("%" +id.toString() + "%")
                             .andOperTimeGreaterThanOrEqualTo(bTime).andOperTimeLessThanOrEqualTo(eTime)

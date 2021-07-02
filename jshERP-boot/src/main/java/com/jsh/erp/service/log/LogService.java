@@ -67,6 +67,8 @@ public class LogService {
                                    String content, int offset, int rows)throws Exception {
         List<LogVo4List> list=null;
         try{
+            beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
+            endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
             list=logMapperEx.selectByConditionLog(operation, userId, clientIp, status, beginTime, endTime,
                     content, offset, rows);
             if (null != list) {
@@ -84,6 +86,8 @@ public class LogService {
                         String content)throws Exception {
         Long result=null;
         try{
+            beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
+            endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
             result=logMapperEx.countsByLog(operation, userId, clientIp, status, beginTime, endTime, content);
         }catch(Exception e){
             JshException.readFail(logger, e);

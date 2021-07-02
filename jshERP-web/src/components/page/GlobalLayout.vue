@@ -132,10 +132,10 @@
       //this.menus = this.mainRouters.find((item) => item.path === '/').children;
       this.menus = this.permissionMenuList
       // 根据后台配置菜单，重新排序加载路由信息
-      console.log('----加载菜单逻辑----')
-      console.log(this.mainRouters)
-      console.log(this.permissionMenuList)
-      console.log('----navTheme------'+this.navTheme)
+      //console.log('----加载菜单逻辑----')
+      //console.log(this.mainRouters)
+      //console.log(this.permissionMenuList)
+      //console.log('----navTheme------'+this.navTheme)
       //--update-end----author:scott---date:20190320------for:根据后台菜单配置，判断是否路由菜单字段，动态选择是否生成路由（为了支持参数URL菜单）------
     },
     methods: {
@@ -569,10 +569,10 @@
       height: 64px;
       position: relative;
       line-height: 64px;
-      padding-left: 24px;
+      padding-left: 10px;
       -webkit-transition: all .3s;
       transition: all .3s;
-      background: #002140;
+      background: #ffffff;
       overflow: hidden;
 
       img, h1 {
@@ -587,7 +587,7 @@
       h1 {
         color: #fff;
         font-size: 18px;
-        margin: 0 0 0 8px;
+        margin: 0 0 10px 8px;
         font-family: "Chinese Quote", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
         font-weight: 600;
       }

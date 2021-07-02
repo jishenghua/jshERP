@@ -476,6 +476,66 @@ public class AccountHeadExample {
             return (Criteria) this;
         }
 
+        public Criteria andDiscountMoneyIsNull() {
+            addCriterion("discount_money is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiscountMoneyIsNotNull() {
+            addCriterion("discount_money is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiscountMoneyEqualTo(BigDecimal value) {
+            addCriterion("discount_money =", value, "discountMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiscountMoneyNotEqualTo(BigDecimal value) {
+            addCriterion("discount_money <>", value, "discountMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiscountMoneyGreaterThan(BigDecimal value) {
+            addCriterion("discount_money >", value, "discountMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiscountMoneyGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("discount_money >=", value, "discountMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiscountMoneyLessThan(BigDecimal value) {
+            addCriterion("discount_money <", value, "discountMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiscountMoneyLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("discount_money <=", value, "discountMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiscountMoneyIn(List<BigDecimal> values) {
+            addCriterion("discount_money in", values, "discountMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiscountMoneyNotIn(List<BigDecimal> values) {
+            addCriterion("discount_money not in", values, "discountMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiscountMoneyBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("discount_money between", value1, value2, "discountMoney");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiscountMoneyNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("discount_money not between", value1, value2, "discountMoney");
+            return (Criteria) this;
+        }
+
         public Criteria andTotalPriceIsNull() {
             addCriterion("total_price is null");
             return (Criteria) this;
@@ -793,6 +853,76 @@ public class AccountHeadExample {
 
         public Criteria andRemarkNotBetween(String value1, String value2) {
             addCriterion("remark not between", value1, value2, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andFileNameIsNull() {
+            addCriterion("file_name is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFileNameIsNotNull() {
+            addCriterion("file_name is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFileNameEqualTo(String value) {
+            addCriterion("file_name =", value, "fileName");
+            return (Criteria) this;
+        }
+
+        public Criteria andFileNameNotEqualTo(String value) {
+            addCriterion("file_name <>", value, "fileName");
+            return (Criteria) this;
+        }
+
+        public Criteria andFileNameGreaterThan(String value) {
+            addCriterion("file_name >", value, "fileName");
+            return (Criteria) this;
+        }
+
+        public Criteria andFileNameGreaterThanOrEqualTo(String value) {
+            addCriterion("file_name >=", value, "fileName");
+            return (Criteria) this;
+        }
+
+        public Criteria andFileNameLessThan(String value) {
+            addCriterion("file_name <", value, "fileName");
+            return (Criteria) this;
+        }
+
+        public Criteria andFileNameLessThanOrEqualTo(String value) {
+            addCriterion("file_name <=", value, "fileName");
+            return (Criteria) this;
+        }
+
+        public Criteria andFileNameLike(String value) {
+            addCriterion("file_name like", value, "fileName");
+            return (Criteria) this;
+        }
+
+        public Criteria andFileNameNotLike(String value) {
+            addCriterion("file_name not like", value, "fileName");
+            return (Criteria) this;
+        }
+
+        public Criteria andFileNameIn(List<String> values) {
+            addCriterion("file_name in", values, "fileName");
+            return (Criteria) this;
+        }
+
+        public Criteria andFileNameNotIn(List<String> values) {
+            addCriterion("file_name not in", values, "fileName");
+            return (Criteria) this;
+        }
+
+        public Criteria andFileNameBetween(String value1, String value2) {
+            addCriterion("file_name between", value1, value2, "fileName");
+            return (Criteria) this;
+        }
+
+        public Criteria andFileNameNotBetween(String value1, String value2) {
+            addCriterion("file_name not between", value1, value2, "fileName");
             return (Criteria) this;
         }
 

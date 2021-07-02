@@ -103,8 +103,8 @@ export default {
       return null
     },
     renderMenuItem (menu) {
-      // const target = menu.meta.target || null
-      // const tag = target && 'a' || 'router-link'
+      const target = null
+      const tag = target && 'a' || 'router-link'
       let props = { to: { name: menu.name } }
       if(menu.route && menu.route === '0'){
         props = { to: { path: menu.path } }

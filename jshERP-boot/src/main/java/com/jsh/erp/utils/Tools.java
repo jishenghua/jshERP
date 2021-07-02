@@ -85,6 +85,14 @@ public class Tools {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
     }
 
+    public static String parseDayToTime(String day, String timeStr) {
+        if(StringUtil.isNotEmpty(day)){
+            return day + timeStr;
+        } else {
+            return null;
+        }
+    }
+
     /**
      * 获得指定时间，格式为mm:ss
      *
@@ -134,7 +142,7 @@ public class Tools {
     /**
      * 判断字符串是否全部为数字
      *
-     * @param accountWaste
+     * @param checkStr
      * @return boolean值
      */
     public static boolean checkStrIsNum(String checkStr) {
@@ -434,13 +442,23 @@ public class Tools {
     /**
      * 获取当前日期的前XX个月
      *
-     * @param 之前的第几个月
+     * @param beforeMonth
      * @return 前XX个月字符串
      */
     public static String getBeforeMonth(int beforeMonth) {
         Calendar c = Calendar.getInstance();
         c.add(Calendar.MONTH, -beforeMonth);
         return new SimpleDateFormat("yyyy-MM").format(c.getTime());
+    }
+
+    /**
+     * 根据月份获取当月第一天
+     * @param monthTime
+     * @return
+     * @throws ParseException
+     */
+    public static String firstDayOfMonth(String monthTime) throws ParseException {
+        return monthTime + "-01";
     }
 
     /**
@@ -461,7 +479,7 @@ public class Tools {
     /**
      * 获取email用户姓名
      *
-     * @param args
+     * @param emailAddress
      */
     public static String getEmailUserName(String emailAddress) {
         return emailAddress.substring(0, emailAddress.lastIndexOf("@"));
@@ -470,7 +488,7 @@ public class Tools {
     /**
      * 获取中文编码，邮件附件乱码问题解决
      *
-     * @param str
+     * @param emailAttchmentTitle
      * @return
      */
     public static String getChineseString(String emailAttchmentTitle) {
@@ -501,7 +519,7 @@ public class Tools {
     /**
      * 模糊判断电话号码是否合法，只能是数字
      *
-     * @param macAddress
+     * @param userTel
      * @return
      */
     public static boolean isTelNumberBySlur(String userTel) {

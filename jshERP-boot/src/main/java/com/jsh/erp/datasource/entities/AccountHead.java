@@ -16,6 +16,8 @@ public class AccountHead {
 
     private BigDecimal changeAmount;
 
+    private BigDecimal discountMoney;
+
     private BigDecimal totalPrice;
 
     private Long accountId;
@@ -25,6 +27,8 @@ public class AccountHead {
     private Date billTime;
 
     private String remark;
+
+    private String fileName;
 
     private Long tenantId;
 
@@ -78,6 +82,14 @@ public class AccountHead {
         this.changeAmount = changeAmount;
     }
 
+    public BigDecimal getDiscountMoney() {
+        return discountMoney;
+    }
+
+    public void setDiscountMoney(BigDecimal discountMoney) {
+        this.discountMoney = discountMoney;
+    }
+
     public BigDecimal getTotalPrice() {
         return totalPrice;
     }
@@ -116,6 +128,14 @@ public class AccountHead {
 
     public void setRemark(String remark) {
         this.remark = remark == null ? null : remark.trim();
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName == null ? null : fileName.trim();
     }
 
     public Long getTenantId() {

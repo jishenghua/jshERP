@@ -14,7 +14,7 @@
         </commentGenerator>
 
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://localhost:3306/jsh_erp_boot?generateSimpleParameterMetadata=true"
+                        connectionURL="jdbc:mysql://localhost:3306/jsh_erp?generateSimpleParameterMetadata=true"
                         userId="root" password="123456">
         </jdbcConnection>
 

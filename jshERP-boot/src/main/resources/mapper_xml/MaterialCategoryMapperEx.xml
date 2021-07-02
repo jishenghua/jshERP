@@ -7,10 +7,11 @@
         where 1=1
         and ifnull(delete_flag,'0') !='1'
         <if test="name != null">
-            and name like '%${name}%'
+            <bind name="bindName" value="'%'+name+'%'"/>
+            and name like #{bindName}
         </if>
         <if test="parentId != null">
-            and parent_id = ${parentId}
+            and parent_id = #{parentId}
         </if>
         and Id !=1
         <if test="offset != null and rows != null">
@@ -24,10 +25,11 @@
         WHERE 1=1
         and ifnull(delete_flag,'0') !='1'
         <if test="name != null">
-            and name like '%${name}%'
+            <bind name="bindName" value="'%'+name+'%'"/>
+            and name like #{bindName}
         </if>
         <if test="parentId != null">
-            and parent_id = ${parentId}
+            and parent_id = #{parentId}
         </if>
         and Id !=1
     </select>

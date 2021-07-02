@@ -67,7 +67,8 @@
             ]},
           ratio:{
             rules: [
-              { required: true, message: '请输入比例!' }
+              { required: true, message: '请输入比例!' },
+              { validator: this.validateRatio}
             ]}
         },
       }
@@ -97,27 +98,39 @@
           if (!err) {
             that.confirmLoading = true;
             let formData = Object.assign(this.model, values);
-            let obj;
-            if(!this.model.id){
-              obj=addUnit(formData);
-            }else{
-              obj=editUnit(formData);
-            }
-            obj.then((res)=>{
-              if(res.code === 200){
-                that.$emit('ok');
-              }else{
-                that.$message.warning(res.data.message);
-              }
-            }).finally(() => {
+            if(formData.basicUnit === formData.otherUnit) {
+              that.$message.warning('抱歉，基本单位与副单位不能相同！');
               that.confirmLoading = false;
-              that.close();
-            })
+            } else {
+              let obj;
+              if(!this.model.id){
+                obj=addUnit(formData);
+              }else{
+                obj=editUnit(formData);
+              }
+              obj.then((res)=>{
+                if(res.code === 200){
+                  that.$emit('ok');
+                }else{
+                  that.$message.warning(res.data.message);
+                }
+              }).finally(() => {
+                that.confirmLoading = false;
+                that.close();
+              })
+            }
           }
         })
       },
       handleCancel () {
         this.close()
+      },
+      validateRatio(rule, value, callback) {
+        if (value > 1) {
+          callback();
+        } else {
+          callback("比例必须大于1");
+        }
       }
     }
   }

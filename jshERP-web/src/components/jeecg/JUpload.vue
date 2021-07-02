@@ -45,6 +45,7 @@
   import Vue from 'vue'
   import { ACCESS_TOKEN } from "@/store/mutation-types"
   import { getFileAccessHttpUrl } from '@/api/manage';
+  import { fileSizeLimit } from '@/api/api'
 
   const FILE_TYPE_ALL = "all"
   const FILE_TYPE_IMG = "image"
@@ -63,7 +64,7 @@
     name: 'JUpload',
     data(){
       return {
-        uploadAction:window._CONFIG['domianURL']+"/sys/common/upload",
+        uploadAction:window._CONFIG['domianURL']+"/systemConfig/upload",
         headers:{},
         fileList: [],
         newFileList: [],
@@ -77,8 +78,9 @@
         moveDisplay:'none',
         showMoverTask:false,
         moverHold:false,
-        currentImg:''
+        currentImg:'',
         //---------------------------- end 图片左右换位置 -------------------------------------
+        sizeLimit: 0
       }
     },
     props:{
@@ -162,6 +164,7 @@
       }
     },
     created(){
+      this.initFileSizeLimit()
       const token = Vue.ls.get(ACCESS_TOKEN);
       //---------------------------- begin 图片左右换位置 -------------------------------------
       this.headers = {"X-Access-Token":token};
@@ -170,6 +173,13 @@
     },
 
     methods:{
+      initFileSizeLimit() {
+        fileSizeLimit().then((res)=>{
+          if(res.code === 200) {
+            this.sizeLimit = res.data
+          }
+        })
+      },
       initFileListArr(val){
         if(!val || val.length==0){
           this.fileList = [];
@@ -184,8 +194,8 @@
             status: 'done',
             url: url,
             response:{
-              status:"history",
-              message:val[a].filePath
+              code:"history",
+              data:val[a].filePath
             }
           })
         }
@@ -209,8 +219,8 @@
             status: 'done',
             url: url,
             response:{
-              status:"history",
-              message:arr[a]
+              code:"history",
+              data:arr[a]
             }
           })
         }
@@ -225,7 +235,7 @@
         let arr = [];
 
         for(var a=0;a<uploadFiles.length;a++){
-          arr.push(uploadFiles[a].response.message)
+          arr.push(uploadFiles[a].response.data)
         }
         if(arr.length>0){
           path = arr.join(",")
@@ -234,7 +244,8 @@
       },
       beforeUpload(file){
         this.uploadGoOn=true
-        var fileType = file.type;
+        let fileType = file.type;
+        let fileSize = file.size;
         if(this.fileType===FILE_TYPE_IMG){
           if(fileType.indexOf('image')<0){
             this.$message.warning('请上传图片');
@@ -242,7 +253,13 @@
             return false;
           }
         }
-        //TODO 扩展功能验证文件大小
+        //验证文件大小
+        if(fileSize>this.sizeLimit) {
+          let parseSizeLimit = (this.sizeLimit/1024/1024).toFixed(2)
+          this.$message.warning('抱歉，文件大小不能超过' + parseSizeLimit + 'M');
+          this.uploadGoOn=false
+          return false;
+        }
         return true
       },
       handleChange(info) {
@@ -255,10 +272,10 @@
           if(this.number>0){
             fileList = fileList.slice(-this.number);
           }
-          if(info.file.response.success){
+          if(info.file.response.code === 200){
             fileList = fileList.map((file) => {
               if (file.response) {
-                let reUrl = file.response.message;
+                let reUrl = file.response.data;
                 file.url = getFileAccessHttpUrl(reUrl);
               }
               return file;
@@ -281,7 +298,7 @@
             for(var a=0;a<fileList.length;a++){
               var fileJson = {
                 fileName:fileList[a].name,
-                filePath:fileList[a].response.message,
+                filePath:fileList[a].response.data,
                 fileSize:fileList[a].size
               };
               this.newFileList.push(fileJson);

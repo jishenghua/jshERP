@@ -12,6 +12,7 @@
     <result column="color" jdbcType="VARCHAR" property="color" />
     <result column="unit" jdbcType="VARCHAR" property="unit" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="img_name" jdbcType="VARCHAR" property="imgName" />
     <result column="unit_id" jdbcType="BIGINT" property="unitId" />
     <result column="enabled" jdbcType="BIT" property="enabled" />
     <result column="other_field1" jdbcType="VARCHAR" property="otherField1" />
@@ -81,7 +82,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, category_id, name, mfrs, safety_stock, model, standard, color, unit, remark, 
-    unit_id, enabled, other_field1, other_field2, other_field3, enable_serial_number, 
+    img_name, unit_id, enabled, other_field1, other_field2, other_field3, enable_serial_number, 
     tenant_id, delete_flag
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="BaseResultMap">
@@ -118,17 +119,17 @@
     insert into jsh_material (id, category_id, name, 
       mfrs, safety_stock, model, 
       standard, color, unit, 
-      remark, unit_id, enabled, 
-      other_field1, other_field2, other_field3, 
-      enable_serial_number, tenant_id, delete_flag
-      )
+      remark, img_name, unit_id, 
+      enabled, other_field1, other_field2, 
+      other_field3, enable_serial_number, tenant_id, 
+      delete_flag)
     values (#{id,jdbcType=BIGINT}, #{categoryId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, 
       #{mfrs,jdbcType=VARCHAR}, #{safetyStock,jdbcType=DECIMAL}, #{model,jdbcType=VARCHAR}, 
       #{standard,jdbcType=VARCHAR}, #{color,jdbcType=VARCHAR}, #{unit,jdbcType=VARCHAR}, 
-      #{remark,jdbcType=VARCHAR}, #{unitId,jdbcType=BIGINT}, #{enabled,jdbcType=BIT}, 
-      #{otherField1,jdbcType=VARCHAR}, #{otherField2,jdbcType=VARCHAR}, #{otherField3,jdbcType=VARCHAR}, 
-      #{enableSerialNumber,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR}
-      )
+      #{remark,jdbcType=VARCHAR}, #{imgName,jdbcType=VARCHAR}, #{unitId,jdbcType=BIGINT}, 
+      #{enabled,jdbcType=BIT}, #{otherField1,jdbcType=VARCHAR}, #{otherField2,jdbcType=VARCHAR}, 
+      #{otherField3,jdbcType=VARCHAR}, #{enableSerialNumber,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, 
+      #{deleteFlag,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.Material">
     insert into jsh_material
@@ -162,6 +163,9 @@
       </if>
       <if test="remark != null">
         remark,
+      </if>
+      <if test="imgName != null">
+        img_name,
       </if>
       <if test="unitId != null">
         unit_id,
@@ -218,6 +222,9 @@
       </if>
       <if test="remark != null">
         #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="imgName != null">
+        #{imgName,jdbcType=VARCHAR},
       </if>
       <if test="unitId != null">
         #{unitId,jdbcType=BIGINT},
@@ -284,6 +291,9 @@
       <if test="record.remark != null">
         remark = #{record.remark,jdbcType=VARCHAR},
       </if>
+      <if test="record.imgName != null">
+        img_name = #{record.imgName,jdbcType=VARCHAR},
+      </if>
       <if test="record.unitId != null">
         unit_id = #{record.unitId,jdbcType=BIGINT},
       </if>
@@ -325,6 +335,7 @@
       color = #{record.color,jdbcType=VARCHAR},
       unit = #{record.unit,jdbcType=VARCHAR},
       remark = #{record.remark,jdbcType=VARCHAR},
+      img_name = #{record.imgName,jdbcType=VARCHAR},
       unit_id = #{record.unitId,jdbcType=BIGINT},
       enabled = #{record.enabled,jdbcType=BIT},
       other_field1 = #{record.otherField1,jdbcType=VARCHAR},
@@ -367,6 +378,9 @@
       <if test="remark != null">
         remark = #{remark,jdbcType=VARCHAR},
       </if>
+      <if test="imgName != null">
+        img_name = #{imgName,jdbcType=VARCHAR},
+      </if>
       <if test="unitId != null">
         unit_id = #{unitId,jdbcType=BIGINT},
       </if>
@@ -405,6 +419,7 @@
       color = #{color,jdbcType=VARCHAR},
       unit = #{unit,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR},
+      img_name = #{imgName,jdbcType=VARCHAR},
       unit_id = #{unitId,jdbcType=BIGINT},
       enabled = #{enabled,jdbcType=BIT},
       other_field1 = #{otherField1,jdbcType=VARCHAR},

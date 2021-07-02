@@ -7,7 +7,8 @@
         WHERE 1=1
         and ifnull(delete_Flag,'0') !='1'
         <if test="name != null">
-            and msg_title like '%${name}%'
+            <bind name="bindName" value="'%'+name+'%'"/>
+            and msg_title like #{bindName}
         </if>
         order by create_time desc
         <if test="offset != null and rows != null">
@@ -21,7 +22,8 @@
         WHERE 1=1
         and ifnull(delete_Flag,'0') !='1'
         <if test="name != null">
-            and msg_title like '%${name}%'
+            <bind name="bindName" value="'%'+name+'%'"/>
+            and msg_title like #{bindName}
         </if>
     </select>
     <update id="batchDeleteMsgByIds">
@@ -54,7 +56,7 @@
         WHERE 1=1
         and ifnull(delete_Flag,'0') !='1'
         <if test="msgTitle != null">
-            and msg_title = '${msgTitle}'
+            and msg_title = #{msgTitle}
         </if>
     </select>
 
@@ -65,7 +67,7 @@
         WHERE 1=1
         and ifnull(delete_Flag,'0') !='1'
         <if test="status != null">
-            and status = '${status}'
+            and status = #{status}
         </if>
     </select>
 </mapper>

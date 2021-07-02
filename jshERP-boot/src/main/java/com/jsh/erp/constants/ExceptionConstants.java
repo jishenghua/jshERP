@@ -72,10 +72,10 @@ public class ExceptionConstants {
     public static final String USER_NAME_LIMIT_USE_MSG = "此用户名限制使用";
     //演示用户不允许删除
     public static final int USER_LIMIT_DELETE_CODE = 500006;
-    public static final String USER_LIMIT_DELETE_MSG = "抱歉，演示用户不允许删除";
+    public static final String USER_LIMIT_DELETE_MSG = "抱歉，演示模式下的演示用户不允许删除";
     //演示用户不允许修改
     public static final int USER_LIMIT_UPDATE_CODE = 500007;
-    public static final String USER_LIMIT_UPDATE_MSG = "抱歉，演示用户不允许修改";
+    public static final String USER_LIMIT_UPDATE_MSG = "抱歉，演示模式下的演示用户不允许修改";
 
     /**
      * 角色信息
@@ -284,6 +284,9 @@ public class ExceptionConstants {
     //商品库存不足
     public static final int MATERIAL_STOCK_NOT_ENOUGH_CODE = 8000004;
     public static final String MATERIAL_STOCK_NOT_ENOUGH_MSG = "商品:%s库存不足";
+    //商品条码重复
+    public static final int MATERIAL_BARCODE_EXISTS_CODE = 8000005;
+    public static final String MATERIAL_BARCODE_EXISTS_MSG = "商品条码:%s重复";
     /**
      *  单据信息
      * type = 85

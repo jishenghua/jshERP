@@ -52,29 +52,34 @@
         left join jsh_material m on di.material_id = m.id and ifnull(m.delete_flag,'0') !='1'
         where 1=1
         <if test="type != null">
-            and dh.type='${type}'
+            and dh.type=#{type}
         </if>
         <if test="subType != null">
-            and dh.sub_type='${subType}'
+            and dh.sub_type=#{subType}
         </if>
         <if test="status != null">
-            and dh.status ='${status}'
+            and dh.status =#{status}
         </if>
         <if test="number != null">
-            and dh.number like '%${number}%'
+            <bind name="bindNumber" value="'%'+number+'%'"/>
+            and dh.number like #{bindNumber}
         </if>
         <if test="beginTime != null">
-            and dh.oper_time >= '${beginTime} 00:00:00'
+            and dh.oper_time >= #{beginTime}
         </if>
         <if test="endTime != null">
-            and dh.oper_time &lt;= '${endTime} 23:59:59'
+            and dh.oper_time &lt;= #{endTime}
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
         </if>
-        <if test="depotIds != null and depotIds !=''">
-            and di.depot_id in (${depotIds})
+        <if test="depotArray != null and depotArray !=''">
+            and di.depot_id in (
+            <foreach collection="depotArray" item="depotId" separator=",">
+                #{depotId}
+            </foreach>
+            )
         </if>
         <if test="creatorArray != null">
             and dh.creator in (
@@ -97,29 +102,34 @@
         left join jsh_material m on di.material_id = m.Id and ifnull(m.delete_Flag,'0') !='1'
         WHERE 1=1
         <if test="type != null">
-            and dh.type='${type}'
+            and dh.type=#{type}
         </if>
         <if test="subType != null">
-            and dh.sub_type='${subType}'
+            and dh.sub_type=#{subType}
         </if>
         <if test="status != null">
-            and dh.status ='${status}'
+            and dh.status =#{status}
         </if>
         <if test="number != null">
-            and dh.number like '%${number}%'
+            <bind name="bindNumber" value="'%'+number+'%'"/>
+            and dh.number like #{bindNumber}
         </if>
         <if test="beginTime != null">
-            and dh.oper_time >= '${beginTime} 00:00:00'
+            and dh.oper_time >= #{beginTime}
         </if>
         <if test="endTime != null">
-            and dh.oper_time &lt;= '${endTime} 23:59:59'
+            and dh.oper_time &lt;= #{endTime}
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
         </if>
-        <if test="depotIds != null and depotIds !=''">
-            and di.depot_id in (${depotIds})
+        <if test="depotArray != null and depotArray !=''">
+            and di.depot_id in (
+            <foreach collection="depotArray" item="depotId" separator=",">
+                #{depotId}
+            </foreach>
+            )
         </if>
         <if test="creatorArray != null">
             and dh.creator in (
@@ -135,7 +145,7 @@
         select group_concat(concat(jsh_material.name,' ',ifnull(jsh_material.standard,''),' ',ifnull(jsh_material.model,''))) as mName
         from jsh_depot_item
         inner join jsh_material on jsh_depot_item.material_id = jsh_material.Id and ifnull(jsh_material.delete_Flag,'0') !='1'
-        where jsh_depot_item.header_id = ${id}
+        where jsh_depot_item.header_id = #{id}
         and ifnull(jsh_depot_item.delete_flag,'0') !='1'
     </select>
 
@@ -147,15 +157,15 @@
         inner join jsh_material m on m.id=di.material_id and ifnull(m.delete_flag,'0') !='1'
         inner join jsh_supplier s on s.id=dh.organ_id and ifnull(s.delete_Flag,'0') !='1'
         inner join (select id,name as dName,delete_Flag from jsh_depot ) d on d.id=di.depot_id and ifnull(d.delete_Flag,'0') !='1'
-        where dh.oper_time >='${beginTime} 00:00:00' and dh.oper_time &lt;='${endTime} 23:59:59'
+        where dh.oper_time >=#{beginTime} and dh.oper_time &lt;=#{endTime}
         <if test="oId != null">
-            and dh.organ_id = ${oId}
+            and dh.organ_id = #{oId}
         </if>
         <if test="depotId != null">
-            and di.depot_id = ${depotId}
+            and di.depot_id = #{depotId}
         </if>
         <if test="type != null">
-            and dh.type='${type}'
+            and dh.type=#{type}
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
@@ -175,15 +185,15 @@
         inner join jsh_material m on m.id=di.material_id and ifnull(m.delete_Flag,'0') !='1'
         inner join jsh_supplier s on s.id=dh.organ_id and ifnull(s.delete_Flag,'0') !='1'
         inner join (select id,name as dName,delete_Flag from jsh_depot) d on d.id=di.depot_id and ifnull(d.delete_Flag,'0') !='1'
-        where dh.oper_time >='${beginTime} 00:00:00' and dh.oper_time &lt;='${endTime} 23:59:59'
+        where dh.oper_time >=#{beginTime} and dh.oper_time &lt;=#{endTime}
         <if test="oId != null">
-            and dh.organ_id = ${oId}
+            and dh.organ_id = #{oId}
         </if>
         <if test="depotId != null">
-            and di.depot_id = ${depotId}
+            and di.depot_id = #{depotId}
         </if>
         <if test="type != null">
-            and dh.type='${type}'
+            and dh.type=#{type}
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
@@ -198,24 +208,24 @@
         (select sum(jdi.basic_number) numSum from jsh_depot_head jdh
         INNER JOIN jsh_depot_item jdi on jdh.id=jdi.header_id and ifnull(jdi.delete_flag,'0') !='1'
         where jdi.material_id=di.material_id
-        and jdh.type='${type}' and jdh.oper_time >='${beginTime}' and jdh.oper_time &lt;='${endTime}'
+        and jdh.type=#{type} and jdh.oper_time >=#{beginTime} and jdh.oper_time &lt;=#{endTime}
         <if test="oId != null">
-            and jdh.organ_id = ${oId}
+            and jdh.organ_id = #{oId}
         </if>
         <if test="depotId != null">
-            and jdi.depot_id = ${depotId}
+            and jdi.depot_id = #{depotId}
         </if>
         and ifnull(jdh.delete_flag,'0') !='1'
         ) numSum,
         (select sum(jdi.all_price) priceSum from jsh_depot_head jdh
         INNER JOIN jsh_depot_item jdi on jdh.id=jdi.header_id  and ifnull(jdi.delete_flag,'0') !='1'
         where jdi.material_id=di.material_id
-        and jdh.type='${type}' and jdh.oper_time >='${beginTime}' and jdh.oper_time &lt;='${endTime}'
+        and jdh.type=#{type} and jdh.oper_time >=#{beginTime} and jdh.oper_time &lt;=#{endTime}
         <if test="oId != null">
-            and jdh.organ_id = ${oId}
+            and jdh.organ_id = #{oId}
         </if>
         <if test="depotId != null">
-            and jdi.depot_id = ${depotId}
+            and jdi.depot_id = #{depotId}
         </if>
         and ifnull(jdh.delete_flag,'0') !='1'
         ) priceSum
@@ -226,12 +236,12 @@
         LEFT JOIN jsh_material_category on jsh_material.category_id=jsh_material_category.Id and ifnull(jsh_material_category.delete_flag,'0') !='1'
         where ifnull(jsh_material.delete_Flag,'0') !='1'
         ) m
-        on m.Id=di.material_id where dh.type='${type}' and dh.oper_time >='${beginTime}' and dh.oper_time &lt;='${endTime}'
+        on m.Id=di.material_id where dh.type=#{type} and dh.oper_time >=#{beginTime} and dh.oper_time &lt;=#{endTime}
         <if test="oId != null">
-            and dh.organ_id = ${oId}
+            and dh.organ_id = #{oId}
         </if>
         <if test="depotId != null">
-            and di.depot_id = ${depotId}
+            and di.depot_id = #{depotId}
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
@@ -252,12 +262,12 @@
         from jsh_material
         LEFT JOIN jsh_material_category on jsh_material.category_id=jsh_material_category.Id and ifnull(jsh_material_category.delete_flag,'0') !='1'
         where ifnull(jsh_material.delete_Flag,'0') !='1'
-        ) m on m.Id=di.material_id where dh.type='${type}' and dh.oper_time >='${beginTime}' and dh.oper_time &lt;='${endTime}'
+        ) m on m.Id=di.material_id where dh.type=#{type} and dh.oper_time >=#{beginTime} and dh.oper_time &lt;=#{endTime}
         <if test="oId != null">
-            and dh.organ_id = ${oId}
+            and dh.organ_id = #{oId}
         </if>
         <if test="depotId != null">
-            and di.depot_id = ${depotId}
+            and di.depot_id = #{depotId}
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
@@ -271,20 +281,20 @@
         select dh.number,concat(dh.sub_type,dh.type) as type,dh.discount_last_money,dh.other_money,dh.change_amount,s.supplier supplierName,
         date_format(dh.oper_time,'%Y-%m-%d %H:%i:%S') as oTime from jsh_depot_head dh
         inner join jsh_supplier s on s.id=dh.organ_id and ifnull(s.delete_Flag,'0') !='1'
-        where s.type='${supType}' and (dh.sub_type!='其它' and dh.sub_type!='采购订单' and dh.sub_type!='销售订单')
-        and dh.oper_time >='${beginTime}' and dh.oper_time &lt;='${endTime}'
+        where s.type=#{supType} and (dh.sub_type!='其它' and dh.sub_type!='采购订单' and dh.sub_type!='销售订单')
+        and dh.oper_time >=#{beginTime} and dh.oper_time &lt;=#{endTime}
         <if test="organId != null">
-            and dh.organ_id=${organId}
+            and dh.organ_id=#{organId}
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
         UNION ALL
         select ah.bill_no number,ah.type as newType,ah.total_price discount_last_money, 0 other_money,ah.change_amount,s.supplier supplierName,
         date_format(ah.bill_time,'%Y-%m-%d %H:%i:%S') as oTime from jsh_account_head ah
         inner join jsh_supplier s on s.id=ah.organ_id and ifnull(s.delete_Flag,'0') !='1'
-        where s.type='${supType}'
-        and ah.bill_time >='${beginTime}' and ah.bill_time &lt;='${endTime}'
+        where s.type=#{supType}
+        and ah.bill_time >=#{beginTime} and ah.bill_time &lt;=#{endTime}
         <if test="organId != null">
-            and ah.organ_id=${organId}
+            and ah.organ_id=#{organId}
         </if>
         and ifnull(ah.delete_flag,'0') !='1'
         ORDER BY oTime
@@ -298,33 +308,33 @@
         (
             select count(1) a from jsh_depot_head dh
             inner join jsh_supplier s on s.id=dh.organ_id and ifnull(s.delete_Flag,'0') !='1'
-            where s.type='${supType}' and (dh.sub_type!='其它' and dh.sub_type!='采购订单' and dh.sub_type!='销售订单')
-            and dh.oper_time >='${beginTime}' and dh.oper_time &lt;='${endTime}'
+            where s.type=#{supType} and (dh.sub_type!='其它' and dh.sub_type!='采购订单' and dh.sub_type!='销售订单')
+            and dh.oper_time >=#{beginTime} and dh.oper_time &lt;=#{endTime}
             <if test="organId != null">
-                and dh.organ_id=${organId}
+                and dh.organ_id=#{organId}
             </if>
             and ifnull(dh.delete_flag,'0') !='1'
             UNION ALL
             select count(1) a from jsh_account_head ah
             inner join jsh_supplier s on s.id=ah.organ_id and ifnull(s.delete_Flag,'0') !='1'
-            where s.type='${supType}'
-            and ah.bill_time >='${beginTime}' and ah.bill_time &lt;='${endTime}'
+            where s.type=#{supType}
+            and ah.bill_time >=#{beginTime} and ah.bill_time &lt;=#{endTime}
             <if test="organId != null">
-                and ah.organ_id=${organId}
+                and ah.organ_id=#{organId}
             </if>
             and ifnull(ah.delete_flag,'0') !='1'
         ) cc
     </select>
 
     <select id="findAllMoney" resultType="java.math.BigDecimal">
-        select ifnull(sum(${modeName}),0) as allMoney from jsh_depot_head where type='${type}' and sub_type = '${subType}'
-        and organ_id =${supplierId} and oper_time &lt;='${endTime}'
+        select ifnull(sum(${modeName}),0) as allMoney from jsh_depot_head where type=#{type} and sub_type = #{subType}
+        and organ_id =#{supplierId} and oper_time &lt;=#{endTime}
         and ifnull(delete_flag,'0') !='1'
     </select>
 
     <select id="findAllOtherMoney" resultType="java.math.BigDecimal">
-        select ifnull(sum(other_money),0) as allOtherMoney from jsh_depot_head where type='${type}' and sub_type = '${subType}'
-        and organ_id =${supplierId} and oper_time &lt;='${endTime}'
+        select ifnull(sum(other_money),0) as allOtherMoney from jsh_depot_head where type=#{type} and sub_type = #{subType}
+        and organ_id =#{supplierId} and oper_time &lt;=#{endTime}
         and ifnull(delete_flag,'0') !='1'
     </select>
 
@@ -335,7 +345,7 @@
         left join jsh_account a on dh.account_id=a.id and ifnull(a.delete_Flag,'0') !='1'
         where 1=1
         <if test="number != null">
-            and dh.number='${number}'
+            and dh.number=#{number}
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
     </select>
@@ -393,10 +403,10 @@
         FROM jsh_depot_head
         WHERE 1=1
         <if test="type != null">
-            and type='${type}'
+            and type=#{type}
         </if>
         <if test="subType != null">
-            and sub_type='${subType}'
+            and sub_type=#{subType}
         </if>
         <if test="hasSupplier == 1">
             and organ_id is not null
@@ -405,10 +415,10 @@
             and organ_id is null
         </if>
         <if test="beginTime != null">
-            and oper_time >= '${beginTime}'
+            and oper_time >= #{beginTime}
         </if>
         <if test="endTime != null">
-            and oper_time &lt;= '${endTime}'
+            and oper_time &lt;= #{endTime}
         </if>
         and ifnull(delete_flag,'0') !='1'
     </select>
@@ -419,10 +429,10 @@
         FROM jsh_depot_head
         WHERE 1=1
         <if test="type != null">
-            and type='${type}'
+            and type=#{type}
         </if>
         <if test="subType != null">
-            and sub_type='${subType}'
+            and sub_type=#{subType}
         </if>
         <if test="hasSupplier == 1">
             and organ_id is not null
@@ -431,11 +441,64 @@
             and organ_id is null
         </if>
         <if test="beginTime != null">
-            and oper_time >= '${beginTime}'
+            and oper_time >= #{beginTime}
         </if>
         <if test="endTime != null">
-            and oper_time &lt;= '${endTime}'
+            and oper_time &lt;= #{endTime}
         </if>
         and ifnull(delete_flag,'0') !='1'
+    </select>
+
+    <select id="debtList" parameterType="com.jsh.erp.datasource.entities.DepotHeadExample" resultMap="ResultMapEx">
+        select distinct dh.*, s.supplier OrganName, u.username userName
+        from jsh_depot_head dh
+        left join jsh_supplier s on dh.organ_id=s.id and ifnull(s.delete_Flag,'0') !='1'
+        left join jsh_user u on dh.creator=u.id and ifnull(u.Status,'0') ='0'
+        left join jsh_depot_item di on dh.id = di.header_id and ifnull(di.delete_flag,'0') !='1'
+        left join jsh_material m on di.material_id = m.id and ifnull(m.delete_flag,'0') !='1'
+        where 1=1
+        <if test="organId != null">
+            and dh.organ_id = #{organId}
+        </if>
+        <if test="type != null">
+            and dh.type=#{type}
+        </if>
+        <if test="subType != null">
+            and dh.sub_type=#{subType}
+        </if>
+        <if test="status != null">
+            and dh.status =#{status}
+        </if>
+        <if test="number != null">
+            <bind name="bindNumber" value="'%'+number+'%'"/>
+            and dh.number like #{bindNumber}
+        </if>
+        <if test="beginTime != null">
+            and dh.oper_time >= #{beginTime}
+        </if>
+        <if test="endTime != null">
+            and dh.oper_time &lt;= #{endTime}
+        </if>
+        <if test="materialParam != null and materialParam !=''">
+            <bind name="bindKey" value="'%'+materialParam+'%'"/>
+            and (m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
+        </if>
+        <if test="depotArray != null and depotArray !=''">
+            and di.depot_id in (
+            <foreach collection="depotArray" item="depotId" separator=",">
+                #{depotId}
+            </foreach>
+            )
+        </if>
+        <if test="creatorArray != null">
+            and dh.creator in (
+            <foreach collection="creatorArray" item="creator" separator=",">
+                #{creator}
+            </foreach>
+            )
+        </if>
+        and abs(dh.change_amount) &lt; dh.discount_last_money
+        and ifnull(dh.delete_flag,'0') !='1'
+        order by dh.id desc
     </select>
 </mapper>

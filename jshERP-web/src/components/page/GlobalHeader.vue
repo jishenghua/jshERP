@@ -196,7 +196,7 @@
 
       /* dark 样式 */
       &.dark {
-        color: #000000;
+        color: #000;
         box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
         background-color: white !important;
       }

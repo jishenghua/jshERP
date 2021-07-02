@@ -406,7 +406,7 @@
                           @mouseout="()=>{handleMouseoutCommono(row,col)}">
 
                           <j-select-material
-                            :multi="false"
+                            :multi="col.multi"
                             :value="getPopupJshValue(id)"
                             @change="(v)=>handleChangePopupJshCommon(v,id,row,col,rowIndex)" />
                         </span>

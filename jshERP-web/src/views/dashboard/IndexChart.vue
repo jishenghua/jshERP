@@ -18,7 +18,7 @@
         </chart-card>
       </a-col>
       <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
-        <chart-card :loading="loading" title="今日累计进货">
+        <chart-card :loading="loading" title="今日累计采购">
           <a-tooltip title="指标说明" slot="action">
             <a-icon type="info-circle-o" />
           </a-tooltip>
@@ -26,7 +26,7 @@
         </chart-card>
       </a-col>
       <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
-        <chart-card :loading="loading" title="本月累计进货">
+        <chart-card :loading="loading" title="本月累计采购">
           <a-tooltip title="指标说明" slot="action">
             <a-icon type="info-circle-o" />
           </a-tooltip>
@@ -37,12 +37,12 @@
     <a-row :gutter="24">
       <a-col :sm="24" :md="12" :xl="12" :style="{ marginBottom: '24px' }">
         <a-card :loading="loading" :bordered="false" :body-style="{paddingRight: '5'}">
-          <bar title="采购统计" :dataSource="buyPriceData"/>
+          <bar title="销售统计" :dataSource="salePriceData"/>
         </a-card>
       </a-col>
       <a-col :sm="24" :md="12" :xl="12" :style="{ marginBottom: '24px' }">
         <a-card :loading="loading" :bordered="false" :body-style="{paddingRight: '5'}">
-          <bar title="销售统计" :dataSource="salePriceData"/>
+          <bar title="采购统计" :dataSource="buyPriceData"/>
         </a-card>
       </a-col>
     </a-row>
@@ -51,7 +51,7 @@
         <a-card :bordered="false" :body-style="{padding: '5'}">
           <div class="hidden-xs" style="float:right;">当前版本：V3.0</div>
           &copy; 2015-2030 {{systemTitle}} - Powered By
-          <a href="http://www.huaxiaerp.com/" target="_blank">官方网站</a>
+          <a :href="systemUrl" target="_blank">官方网站</a>
         </a-card>
       </a-col>
     </a-row>
@@ -87,6 +87,7 @@
     data() {
       return {
         systemTitle: window.SYS_TITLE,
+        systemUrl: window.SYS_URL,
         loading: true,
         center: null,
         statistics: {},

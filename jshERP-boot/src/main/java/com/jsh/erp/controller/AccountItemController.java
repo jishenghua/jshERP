@@ -51,6 +51,9 @@ public class AccountItemController {
                     item.put("accountName", ai.getAccountName());
                     item.put("inOutItemId", ai.getInOutItemId());
                     item.put("inOutItemName", ai.getInOutItemName());
+                    item.put("billNumber", ai.getBillNumber());
+                    item.put("needDebt", ai.getNeedDebt());
+                    item.put("finishDebt", ai.getFinishDebt());
                     BigDecimal eachAmount = ai.getEachAmount();
                     item.put("eachAmount", (eachAmount.compareTo(BigDecimal.ZERO))==-1 ? BigDecimal.ZERO.subtract(eachAmount): eachAmount);
                     item.put("remark", ai.getRemark());

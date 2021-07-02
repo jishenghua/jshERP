@@ -26,54 +26,30 @@
     <!-- update-end author:sunjianlei date:20200219 for: 菜单搜索改为动态组件，在手机端呈现出弹出框 -->
     <!-- update-end author:sunjianlei date:20191220 for: 解决全局样式冲突的问题 -->
     <!-- update_end  author:zhaoxin date:20191129 for: 做头部菜单栏导航 -->
-    <span class="action">
+    <span class="action" v-if="showAd">
       <a class="cloud_title" target="_blank" href="https://cloud.tencent.com/act/cps/redirect?redirect=1074&cps_key=4fb6482d716575dcb7b8fe600d93766a&from=console">
         <a-icon type="cloud" theme="filled" style="font-weight: bold;font-size: 16px; line-height: 16px;" /><span> 腾讯云促销</span>
       </a>
     </span>
     <span class="action">
-      <a target="_blank" href="http://www.huaxiaerp.com/">
+      <a target="_blank" :href="systemUrl">
         <a-icon type="bank" style="font-size: 16px;" />
       </a>
     </span>
     <header-notice class="action"/>
     <a-dropdown>
       <span v-if="isDesktop()" class="action ant-dropdown-link user-dropdown-menu">
-<!--        <a-avatar class="avatar" size="small" :src="getAvatar()"/>-->
         <span>欢迎您，{{ nickname() }}</span>
       </span>
       <a-menu slot="overlay" class="user-dropdown-menu-wrapper">
-        <a-menu-item key="0">
-          <router-link :to="{ name: 'account-center' }">
-            <a-icon type="user"/>
-            <span>个人中心</span>
-          </router-link>
-        </a-menu-item>
-        <a-menu-item key="1">
-          <router-link :to="{ name: 'account-settings-base' }">
-            <a-icon type="setting"/>
-            <span>账户设置</span>
-          </router-link>
-        </a-menu-item>
         <a-menu-item key="3"  @click="systemSetting">
            <a-icon type="tool"/>
-           <span>系统设置</span>
+           <span>界面设置</span>
         </a-menu-item>
         <a-menu-item key="4" @click="updatePassword">
           <a-icon type="setting"/>
           <span>密码修改</span>
         </a-menu-item>
-       <!-- <a-menu-item key="2" disabled>
-          <a-icon type="setting"/>
-          <span>测试</span>
-        </a-menu-item>
-        <a-menu-divider/>
-        <a-menu-item key="3">
-          <a href="javascript:;" @click="handleLogout">
-            <a-icon type="logout"/>
-            <span>退出登录</span>
-          </a>
-        </a-menu-item>-->
       </a-menu>
     </a-dropdown>
     <span class="action">
@@ -95,7 +71,7 @@
   import DepartSelect from './DepartSelect'
   import { mapActions, mapGetters,mapState } from 'vuex'
   import { mixinDevice } from '@/utils/mixin.js'
-  import { getFileAccessHttpUrl } from "@/api/manage"
+  import { getFileAccessHttpUrl,getAction } from "@/api/manage"
 
   export default {
     name: "UserMenu",
@@ -106,6 +82,8 @@
         searchMenuOptions:[],
         searchMenuComp: 'span',
         searchMenuVisible: false,
+        systemUrl: window.SYS_URL,
+        showAd: false
         // update-begin author:sunjianlei date:20200219 for: 头部菜单搜索规范命名 --------------
       }
     },
@@ -127,6 +105,7 @@
       let lists = []
       this.searchMenus(lists,this.permissionMenuList)
       this.searchMenuOptions=[...lists]
+      this.isShowAd()
     },
     computed: {
       ...mapState({
@@ -157,7 +136,7 @@
       },
       /* update_end author:zhaoxin date:20191129 for: 做头部菜单栏导航*/
       ...mapActions(["Logout"]),
-      ...mapGetters(["nickname","userInfo"]),
+      ...mapGetters(["nickname","loginName","userInfo"]),
       // getAvatar(){
       //   return getFileAccessHttpUrl(this.avatar())
       // },
@@ -212,9 +191,16 @@
           this.$router.push({ path: route.path })
         }
         this.searchMenuVisible = false
-      }
+      },
       // update_end author:sunjianlei date:20191230 for: 解决外部链接打开失败的问题
       /*update_end author:zhaoxin date:20191129 for: 做头部菜单栏导航*/
+      isShowAd() {
+        getAction('/platformConfig/isShowAd', {}).then((res) => {
+          if (res && res.code === 200) {
+            this.showAd = res.data
+          }
+        })
+      }
     }
   }
 </script>

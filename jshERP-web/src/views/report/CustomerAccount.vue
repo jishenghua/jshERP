@@ -1,68 +1,77 @@
 <template>
-  <a-card :bordered="false">
-    <!-- 查询区域 -->
-    <div class="table-page-search-wrapper">
-      <a-form layout="inline" @keyup.enter.native="searchQuery">
-        <a-row :gutter="24">
-          <a-col :md="4" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户">
-              <a-select placeholder="选择客户" v-model="queryParam.organId" :dropdownMatchSelectWidth="false">
-                <a-select-option v-for="(item,index) in supList" :key="index" :value="item.id">
-                  {{ item.supplier }}
-                </a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-          <a-col :md="6" :sm="24">
-            <a-form-item label="单据日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <a-range-picker
-                style="width: 210px"
-                v-model="queryParam.createTimeRange"
-                :default-value="defaultTimeStr"
-                format="YYYY-MM-DD"
-                :placeholder="['开始时间', '结束时间']"
-                @change="onDateChange"
-              />
-            </a-form-item>
-          </a-col>
-          <a-col :md="2" :sm="24">
-            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-              <a-button type="primary" @click="searchQuery">查询</a-button>
+  <a-row :gutter="24">
+    <a-col :md="24">
+      <a-card :bordered="false">
+        <!-- 查询区域 -->
+        <div class="table-page-search-wrapper">
+          <a-form layout="inline" @keyup.enter.native="searchQuery">
+            <a-row :gutter="24">
+              <a-col :md="4" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户">
+                  <a-select placeholder="选择客户" v-model="queryParam.organId" :dropdownMatchSelectWidth="false">
+                    <a-select-option v-for="(item,index) in supList" :key="index" :value="item.id">
+                      {{ item.supplier }}
+                    </a-select-option>
+                  </a-select>
+                </a-form-item>
+              </a-col>
+              <a-col :md="6" :sm="24">
+                <a-form-item label="单据日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-range-picker
+                    style="width: 250px"
+                    v-model="queryParam.createTimeRange"
+                    :default-value="defaultTimeStr"
+                    format="YYYY-MM-DD"
+                    :placeholder="['开始时间', '结束时间']"
+                    @change="onDateChange"
+                  />
+                </a-form-item>
+              </a-col>
+              <a-col :md="4" :sm="24">
+                <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+                  <a-button type="primary" @click="searchQuery">查询</a-button>
+                  <a-button style="margin-left: 8px" v-print="'#reportPrint'" type="primary" icon="printer">打印</a-button>
+                </span>
+              </a-col>
+              <a-col :md="8" :sm="24">
+                <a-form-item>
+                  {{firstTotal}} {{lastTotal}} {{pleaseSelect}}
+                </a-form-item>
+              </a-col>
+            </a-row>
+          </a-form>
+        </div>
+        <!-- table区域-begin -->
+        <section ref="print" id="reportPrint">
+          <a-table
+            bordered
+            ref="table"
+            size="middle"
+            rowKey="id"
+            :columns="columns"
+            :dataSource="dataSource"
+            :pagination="ipagination"
+            :loading="loading"
+            @change="handleTableChange">
+            <span slot="numberCustomRender" slot-scope="text, record">
+              <a @click="myHandleDetail(record)">{{record.number}}</a>
             </span>
-          </a-col>
-          <a-col :md="8" :sm="24">
-            <a-form-item>
-              {{firstTotal}} {{lastTotal}} {{pleaseSelect}}
-            </a-form-item>
-          </a-col>
-        </a-row>
-      </a-form>
-    </div>
-    <!-- table区域-begin -->
-    <a-table
-      bordered
-      ref="table"
-      size="middle"
-      rowKey="id"
-      :columns="columns"
-      :dataSource="dataSource"
-      :pagination="ipagination"
-      :loading="loading"
-      @change="handleTableChange">
-      <span slot="numberCustomRender" slot-scope="text, record">
-        <a @click="myHandleDetail(record)">{{record.number}}</a>
-      </span>
-    </a-table>
-    <!-- table区域-end -->
-    <!-- 表单区域 -->
-    <bill-detail ref="modalDetail"></bill-detail>
-  </a-card>
+          </a-table>
+        </section>
+        <!-- table区域-end -->
+        <!-- 表单区域 -->
+        <bill-detail ref="modalBillDetail"></bill-detail>
+        <financial-detail ref="modalFinancialDetail"></financial-detail>
+      </a-card>
+    </a-col>
+  </a-row>
 </template>
 <script>
   import BillDetail from '../bill/dialog/BillDetail'
+  import FinancialDetail from '../financial/dialog/FinancialDetail'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { getNowFormatMonth } from '@/utils/util';
-  import {findBySelectCus, findSupplierById, findDepotHeadTotalPay, findAccountHeadTotalPay, findBillDetailByNumber} from '@/api/api'
+  import {findBySelectCus, findSupplierById, findDepotHeadTotalPay, findAccountHeadTotalPay, findBillDetailByNumber, findFinancialDetailByNumber} from '@/api/api'
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import moment from 'moment'
   export default {
@@ -70,6 +79,7 @@
     mixins:[JeecgListMixin],
     components: {
       BillDetail,
+      FinancialDetail,
       JEllipsis
     },
     data () {
@@ -185,11 +195,21 @@
         }
       },
       myHandleDetail(record) {
-        findBillDetailByNumber({ number: record.number }).then((res) => {
-          if (res && res.code === 200) {
-            this.handleDetail(res.data, record.type);
-          }
-        })
+        if(record.type === '收入' || record.type === '收款') {
+          findFinancialDetailByNumber({ billNo: record.number }).then((res) => {
+            if (res && res.code === 200) {
+              this.$refs.modalFinancialDetail.show(res.data, record.type);
+              this.$refs.modalFinancialDetail.title="详情";
+            }
+          })
+        } else {
+          findBillDetailByNumber({ number: record.number }).then((res) => {
+            if (res && res.code === 200) {
+              this.$refs.modalBillDetail.show(res.data, record.type);
+              this.$refs.modalBillDetail.title="详情";
+            }
+          })
+        }
       },
       searchQuery() {
         if(this.queryParam.beginTime == '' || this.queryParam.endTime == ''){

@@ -1,5 +1,5 @@
 <template>
-  <a-card :bordered="false" class="card-area">
+  <a-card :bordered="false">
     <j-modal
       :title="title"
       :width="width"
@@ -35,7 +35,11 @@
                 <a-input placeholder="请输入单据编号" v-decorator.trim="[ 'number' ]" :readOnly="true"/>
               </a-form-item>
             </a-col>
-            <a-col :lg="6" :md="12" :sm="24"></a-col>
+            <a-col :lg="6" :md="12" :sm="24">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联单据">
+                <a-input-search placeholder="请选择关联单据" v-decorator="[ 'linkNumber' ]" @search="onSearchLinkNumber" :readOnly="true"/>
+              </a-form-item>
+            </a-col>
           </a-row>
           <j-editable-table
             :ref="refKeys[0]"
@@ -105,19 +109,30 @@
             <a-col :lg="6" :md="12" :sm="24">
             </a-col>
           </a-row>
+          <a-row class="form-row" :gutter="24">
+            <a-col :lg="6" :md="12" :sm="24">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="附件">
+                <j-upload v-model="fileList" bizPath="bill"></j-upload>
+              </a-form-item>
+            </a-col>
+          </a-row>
         </a-form>
       </a-spin>
     </j-modal>
     <many-account-modal ref="manyAccountModalForm" @ok="manyAccountModalFormOk"></many-account-modal>
+    <link-bill-list ref="linkBillList" @ok="linkBillListOk"></link-bill-list>
   </a-card>
 </template>
 <script>
   import pick from 'lodash.pick'
   import ManyAccountModal from '../dialog/ManyAccountModal'
+  import LinkBillList from '../dialog/LinkBillList'
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
   import { getMpListShort, changeListFmtMinus} from "@/utils/util"
+  import { getAction } from '@/api/manage'
+  import JUpload from '@/components/jeecg/JUpload'
   import JDate from '@/components/jeecg/JDate'
   import Vue from 'vue'
   export default {
@@ -125,6 +140,8 @@
     mixins: [JEditableTableMixin, BillModalMixin],
     components: {
       ManyAccountModal,
+      LinkBillList,
+      JUpload,
       JDate
     },
     data () {
@@ -137,6 +154,7 @@
         visible: false,
         operTimeStr: '',
         prefixNo: 'CGTH',
+        fileList:[],
         model: {},
         labelCol: {
           xs: { span: 24 },
@@ -152,20 +170,26 @@
           loading: false,
           dataSource: [],
           columns: [
-            { title: '仓库名称', key: 'depotId', width: '8%', type: FormTypes.select, placeholder: '请选择${title}', options: [] },
-            { title: '条码', key: 'barCode', width: '10%', type: FormTypes.popupJsh },
+            { title: '仓库名称', key: 'depotId', width: '8%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
+              validateRules: [{ required: true, message: '${title}不能为空' }]
+            },
+            { title: '条码', key: 'barCode', width: '10%', type: FormTypes.popupJsh, multi: false,
+              validateRules: [{ required: true, message: '${title}不能为空' }]
+            },
             { title: '名称', key: 'name', width: '8%', type: FormTypes.input, readonly: true },
             { title: '规格', key: 'standard', width: '5%', type: FormTypes.input, readonly: true },
             { title: '型号', key: 'model', width: '5%', type: FormTypes.input, readonly: true },
             { title: '扩展信息', key: 'materialOther', width: '6%', type: FormTypes.input, readonly: true },
             { title: '库存', key: 'stock', width: '5%', type: FormTypes.input, readonly: true },
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.input, readonly: true },
-            { title: '数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true },
+            { title: '数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true,
+              validateRules: [{ required: true, message: '${title}不能为空' }]
+            },
             { title: '单价', key: 'unitPrice', width: '5%', type: FormTypes.inputNumber},
-            { title: '含税单价', key: 'taxUnitPrice', width: '6%', type: FormTypes.inputNumber},
+            { title: '含税单价', key: 'taxUnitPrice', width: '6%', type: FormTypes.inputNumber, readonly: true},
             { title: '金额', key: 'allPrice', width: '5%', type: FormTypes.inputNumber, statistics: true },
             { title: '税率(%)', key: 'taxRate', width: '6%', type: FormTypes.inputNumber},
-            { title: '税额', key: 'taxMoney', width: '5%', type: FormTypes.inputNumber, statistics: true },
+            { title: '税额', key: 'taxMoney', width: '5%', type: FormTypes.inputNumber, statistics: true, readonly: true},
             { title: '价税合计', key: 'taxLastMoney', width: '6%', type: FormTypes.inputNumber, statistics: true },
             { title: '备注', key: 'remark', width: '5%', type: FormTypes.input }
           ]
@@ -202,6 +226,7 @@
       editAfter() {
         if (this.action === 'add') {
           this.addInit(this.prefixNo)
+          this.fileList = []
         } else {
           this.model.operTime = this.model.operTimeStr
           this.model.debt = (this.model.discountLastMoney + this.model.otherMoney - this.model.changeAmount).toFixed(2)
@@ -213,8 +238,9 @@
           } else {
             this.manyAccountBtnStatus = false
           }
+          this.fileList = this.model.fileName
           this.$nextTick(() => {
-            this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'number', 'remark',
+            this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'number', 'linkNumber', 'remark',
               'discount','discountMoney','discountLastMoney','otherMoney','accountId','changeAmount','debt'))
           });
           // 加载子表数据
@@ -238,6 +264,9 @@
           totalPrice += item.allPrice-0
         }
         billMain.totalPrice = totalPrice
+        if(this.fileList && this.fileList.length > 0) {
+          billMain.fileName = this.fileList
+        }
         if(this.model.id){
           billMain.id = this.model.id
         }
@@ -252,6 +281,50 @@
         this.$nextTick(() => {
           this.form.setFieldsValue({'changeAmount':allPrice})
         });
+      },
+      onSearchLinkNumber() {
+        this.$refs.linkBillList.show('入库', '采购', '供应商', "0")
+        this.$refs.linkBillList.title = "选择采购入库"
+      },
+      linkBillListOk(selectBillRows) {
+        if(selectBillRows && selectBillRows.length>0) {
+          let record = selectBillRows[0]
+          this.$nextTick(() => {
+            this.form.setFieldsValue({
+              'organId': record.organId,
+              'linkNumber': record.number,
+              'remark': record.remark,
+              'discountLastMoney': record.totalPrice,
+              'changeAmount': record.totalPrice
+            })
+          });
+          // 加载子表数据
+          let params = {
+            headerId: record.id,
+            mpList: getMpListShort(Vue.ls.get('materialPropertyList'))  //扩展属性
+          }
+          this.requestSubTableDataEx(this.url.detailList, params, this.materialTable);
+        }
+      },
+      /** 查询某个tab的数据,给明细里面的价税合计赋值 */
+      requestSubTableDataEx(url, params, tab, success) {
+        tab.loading = true
+        getAction(url, params).then(res => {
+          if(res && res.code === 200){
+            let list = res.data.rows
+            let listEx = []
+            for(let j=0; j<list.length; j++){
+              let info = list[j];
+              info.taxMoney = 0
+              info.taxLastMoney = info.allPrice
+              listEx.push(info)
+            }
+            tab.dataSource = listEx
+            typeof success === 'function' ? success(res) : ''
+          }
+        }).finally(() => {
+          tab.loading = false
+        })
       }
     }
   }

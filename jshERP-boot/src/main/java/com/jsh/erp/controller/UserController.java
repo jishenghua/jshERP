@@ -45,6 +45,9 @@ public class UserController {
     @Value("${manage.roleId}")
     private Integer manageRoleId;
 
+    @Value("${demonstrate.open}")
+    private boolean demonstrateOpen;
+
     @Resource
     private UserService userService;
 
@@ -57,6 +60,7 @@ public class UserController {
     @Resource
     private RedisService redisService;
 
+    private static final String TEST_USER = "jsh";
     private static String SUCCESS = "操作成功";
     private static String ERROR = "操作失败";
     private static final String HTTP = "http://";
@@ -103,32 +107,29 @@ public class UserController {
                 case ExceptionCodeConstants.UserExceptionCode.USER_ACCESS_EXCEPTION:
                     msgTip = "access service error";
                     break;
-                default:
-                    try {
-                        msgTip = "user can login";
-                        //验证通过 ，可以登录，放入session，记录登录日志
-                        user = userService.getUserByLoginName(loginName);
-                        if(user.getTenantId()!=null) {
-                            token = token + "_" + user.getTenantId();
-                        }
-                        redisService.storageObjectBySession(token,"userId",user.getId());
-                        if(user.getTenantId()!=null) {
-                            Tenant tenant = tenantService.getTenantByTenantId(user.getTenantId());
-                            if(tenant!=null) {
-                                Long tenantId = tenant.getTenantId();
-                                Integer userNumLimit = tenant.getUserNumLimit();
-                                Integer billsNumLimit = tenant.getBillsNumLimit();
-                                if(tenantId!=null) {
-                                    redisService.storageObjectBySession(token,"tenantId",tenantId); //租户tenantId
-                                    redisService.storageObjectBySession(token,"userNumLimit",userNumLimit); //用户限制数
-                                    redisService.storageObjectBySession(token,"billsNumLimit",billsNumLimit); //单据限制数
-                                }
+                case ExceptionCodeConstants.UserExceptionCode.USER_CONDITION_FIT:
+                    msgTip = "user can login";
+                    //验证通过 ，可以登录，放入session，记录登录日志
+                    user = userService.getUserByLoginName(loginName);
+                    if(user.getTenantId()!=null) {
+                        token = token + "_" + user.getTenantId();
+                    }
+                    redisService.storageObjectBySession(token,"userId",user.getId());
+                    if(user.getTenantId()!=null) {
+                        Tenant tenant = tenantService.getTenantByTenantId(user.getTenantId());
+                        if(tenant!=null) {
+                            Long tenantId = tenant.getTenantId();
+                            Integer userNumLimit = tenant.getUserNumLimit();
+                            Integer billsNumLimit = tenant.getBillsNumLimit();
+                            if(tenantId!=null) {
+                                redisService.storageObjectBySession(token,"tenantId",tenantId); //租户tenantId
+                                redisService.storageObjectBySession(token,"userNumLimit",userNumLimit); //用户限制数
+                                redisService.storageObjectBySession(token,"billsNumLimit",billsNumLimit); //单据限制数
                             }
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        logger.error(">>>>>>>>>>>>>>>查询用户名为:" + loginName + " ，用户信息异常", e);
                     }
+                    break;
+                default:
                     break;
             }
             Map<String, Object> data = new HashMap<String, Object>();
@@ -225,7 +226,7 @@ public class UserController {
             String oldPassword = Tools.md5Encryp(oldpwd);
             String md5Pwd = Tools.md5Encryp(password);
             //必须和原始密码一致才可以更新密码
-            if(user.getLoginName().equals("jsh")){
+            if(demonstrateOpen && user.getLoginName().equals(TEST_USER)){
                 flag = 3; //jsh用户不能修改密码
                 info = "jsh用户不能修改密码";
             } else if (oldPassword.equalsIgnoreCase(user.getPassword())) {
@@ -409,5 +410,25 @@ public class UserController {
             res.data = "获取失败";
         }
         return res;
+    }
+
+    /**
+     * 批量设置状态-启用或者禁用
+     * @param jsonObject
+     * @param request
+     * @return
+     */
+    @PostMapping(value = "/batchSetStatus")
+    public String batchSetStatus(@RequestBody JSONObject jsonObject,
+                                 HttpServletRequest request)throws Exception {
+        Byte status = jsonObject.getByte("status");
+        String ids = jsonObject.getString("ids");
+        Map<String, Object> objectMap = new HashMap<>();
+        int res = userService.batchSetStatus(status, ids);
+        if(res > 0) {
+            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+        } else {
+            return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
+        }
     }
 }

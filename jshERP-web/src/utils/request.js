@@ -12,7 +12,7 @@ import { ACCESS_TOKEN } from "@/store/mutation-types"
  * @type {*|string}
  */
 let apiBaseUrl = window._CONFIG['domianURL'] || "/jshERP-boot";
-console.log("apiBaseUrl= ",apiBaseUrl)
+//console.log("apiBaseUrl= ",apiBaseUrl)
 // 创建 axios 实例
 const service = axios.create({
   baseURL: apiBaseUrl, // api base_url

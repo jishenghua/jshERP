@@ -125,10 +125,11 @@ const queryMaterialCategoryById = (params)=>getAction("/materialCategory/findByI
 //商品管理
 const addMaterial = (params)=>postAction("/material/add",params);
 const editMaterial = (params)=>putAction("/material/update",params);
-const checkMaterial = (params)=>getAction("/material/checkIsNameExist",params);
+const checkMaterial = (params)=>getAction("/material/checkIsExist",params);
 const getMaterialBySelect = (params)=>getAction("/material/findBySelect",params);
 const getSerialMaterialBySelect = (params)=>getAction("/material/getMaterialEnableSerialNumberList",params);
 const getMaterialByBarCode = (params)=>getAction("/material/getMaterialByBarCode",params);
+const checkMaterialBarCode = (params)=>getAction("/materialsExtend/checkIsBarCodeExist",params);
 //序列号
 const addSerialNumber = (params)=>postAction("/serialNumber/add",params);
 const editSerialNumber = (params)=>putAction("/serialNumber/update",params);
@@ -143,6 +144,7 @@ const addSystemConfig = (params)=>postAction("/systemConfig/add",params);
 const editSystemConfig = (params)=>putAction("/systemConfig/update",params);
 const checkSystemConfig = (params)=>getAction("/systemConfig/checkIsNameExist",params);
 const getCurrentSystemConfig = (params)=>getAction("/systemConfig/getCurrentInfo",params);
+const fileSizeLimit = (params)=>getAction("/systemConfig/fileSizeLimit",params);
 //用户|角色|模块关系
 const addUserBusiness = (params)=>postAction("/userBusiness/add",params);
 const editUserBusiness = (params)=>putAction("/userBusiness/update",params);
@@ -249,6 +251,7 @@ export {
   getMaterialBySelect,
   getSerialMaterialBySelect,
   getMaterialByBarCode,
+  checkMaterialBarCode,
   addSerialNumber,
   editSerialNumber,
   checkSerialNumber,
@@ -260,6 +263,7 @@ export {
   editSystemConfig,
   checkSystemConfig,
   getCurrentSystemConfig,
+  fileSizeLimit,
   addUserBusiness,
   editUserBusiness,
   checkUserBusiness,

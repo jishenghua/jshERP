@@ -59,7 +59,7 @@ public class MaterialExtendComponent implements ICommonQuery {
 
     @Override
     public int checkIsNameExist(Long id, String name)throws Exception {
-        return materialExtendService.checkIsExist(id, name);
+        return 0;
     }
 
 }

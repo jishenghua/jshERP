@@ -11,13 +11,15 @@
         left join jsh_user usr on usr.id=dep.principal and ifnull(usr.status,'0') not in('1','2')
         where 1=1
         <if test="name != null">
-            and dep.name like '%${name}%'
+            <bind name="bindName" value="'%'+name+'%'"/>
+            and dep.name like #{bindName}
         </if>
         <if test="type != null">
-            and dep.type=${type}
+            and dep.type=#{type}
         </if>
         <if test="remark != null">
-            and dep.remark like '%${remark}%'
+            <bind name="bindRemark" value="'%'+remark+'%'"/>
+            and dep.remark like #{bindRemark}
         </if>
         and ifnull(dep.delete_Flag,'0') !='1'
         order by dep.sort asc
@@ -32,13 +34,15 @@
         left join jsh_user usr on usr.id=dep.principal and ifnull(usr.status,'0') not in('1','2')
         WHERE 1=1
         <if test="name != null">
-            and dep.name like '%${name}%'
+            <bind name="bindName" value="'%'+name+'%'"/>
+            and dep.name like #{bindName}
         </if>
         <if test="type != null">
-            and dep.type=${type}
+            and dep.type=#{type}
         </if>
         <if test="remark != null">
-            and dep.remark like '%${remark}%'
+            <bind name="bindRemark" value="'%'+remark+'%'"/>
+            and dep.remark like #{bindRemark}
         </if>
         and ifnull(dep.delete_Flag,'0') !='1'
     </select>

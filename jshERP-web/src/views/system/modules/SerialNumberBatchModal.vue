@@ -15,10 +15,10 @@
           <a-input placeholder="请输入序列号前缀" v-decorator.trim="[ 'serialNumberPrefix', validatorRules.serialNumberPrefix]" />
         </a-form-item>
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="序列号数量">
-          <a-input placeholder="请输入序列号数量" v-decorator.trim="[ 'batAddTotal' ]" />
+          <a-input placeholder="请输入序列号数量" v-decorator.trim="[ 'batAddTotal', validatorRules.batAddTotal]" />
         </a-form-item>
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="商品条码">
-          <j-select-serial-material v-decorator="[ 'materialCode' ]" :multi="false" @change="onInputChange"/>
+          <j-select-serial-material v-decorator="[ 'materialCode', validatorRules.materialCode]" :multi="false" @change="onInputChange"/>
         </a-form-item>
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="商品名称">
           <a-input v-decorator="[ 'materialName' ]" :readOnly="true"/>
@@ -62,6 +62,12 @@
               { required: true, message: '请输入序列号前缀!' },
               { min: 2, max: 30, message: '长度在 2 到 30 个字符', trigger: 'blur' }
             ]
+          },
+          batAddTotal:{
+            rules: [{ required: true, message: '请输入序列号数量!' }]
+          },
+          materialCode:{
+            rules: [{ required: true, message: '请选择商品条码!' }]
           }
         }
       }

@@ -375,7 +375,16 @@ public class SupplierService {
         Map<String, Object> data = new HashMap<String, Object>();
         try {
             for(Supplier s: mList) {
-                supplierMapper.insertSelective(s);
+                SupplierExample example = new SupplierExample();
+                example.createCriteria().andSupplierEqualTo(s.getSupplier()).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+                List<Supplier> list= supplierMapper.selectByExample(example);
+                if(list.size() <= 0) {
+                    supplierMapper.insertSelective(s);
+                } else {
+                    Long id = list.get(0).getId();
+                    s.setId(id);
+                    supplierMapper.updateByPrimaryKeySelective(s);
+                }
             }
             info.code = 200;
             data.put("message", "成功");

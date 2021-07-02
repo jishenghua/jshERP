@@ -18,16 +18,17 @@
         left join jsh_account a on ah.account_id=a.id and ifnull(a.delete_Flag,'0') !='1'
         where 1=1
         <if test="billNo != null">
-            and ah.bill_no like '%${billNo}%'
+            <bind name="bindBillNo" value="'%'+billNo+'%'"/>
+            and ah.bill_no like #{bindBillNo}
         </if>
         <if test="type != null">
-            and ah.type='${type}'
+            and ah.type=#{type}
         </if>
         <if test="beginTime != null">
-            and ah.bill_time &gt;= '${beginTime} 00:00:00'
+            and ah.bill_time &gt;= #{beginTime}
         </if>
         <if test="endTime != null">
-            and ah.bill_time &lt;= '${endTime} 23:59:59'
+            and ah.bill_time &lt;= #{endTime}
         </if>
         <if test="creatorArray != null">
             and ah.creator in (
@@ -50,16 +51,17 @@
         FROM jsh_account_head
         WHERE 1=1
         <if test="billNo != null">
-            and bill_no like '%${billNo}%'
+            <bind name="bindBillNo" value="'%'+billNo+'%'"/>
+            and bill_no like #{bindBillNo}
         </if>
         <if test="type != null">
-            and type='${type}'
+            and type=#{type}
         </if>
         <if test="beginTime != null">
-            and bill_time &gt;= '${beginTime} 00:00:00'
+            and bill_time &gt;= #{beginTime}
         </if>
         <if test="endTime != null">
-            and bill_time &lt;= '${endTime} 23:59:59'
+            and bill_time &lt;= #{endTime}
         </if>
         <if test="creatorArray != null">
             and creator in (
@@ -73,8 +75,8 @@
 
     <select id="findAllMoney" resultType="java.math.BigDecimal">
         select sum(${modeName}) as allMoney from jsh_account_head
-        where type='${type}'
-        and organ_id =${supplierId} and bill_time <![CDATA[ <='${endTime}']]>
+        where type=#{type}
+        and organ_id =#{supplierId} and bill_time &lt;= #{endTime}
         and ifnull(delete_flag,'0') !='1'
     </select>
 
@@ -86,7 +88,7 @@
         left join jsh_account a on ah.account_id=a.id and ifnull(a.delete_Flag,'0') !='1'
         where 1=1
         <if test="billNo != null">
-            and ah.bill_no = '${billNo}'
+            and ah.bill_no = #{billNo}
         </if>
         and ifnull(ah.delete_flag,'0') !='1'
     </select>
