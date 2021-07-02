@@ -388,8 +388,8 @@
         </template>
         <template v-if="fileList.length>0">
           <a-row class="form-row" :gutter="24">
-            <a-col :span="8">
-              <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 4 }}" :wrapperCol="{xs: { span: 24 },sm: { span: 20 }}" label="附件">
+            <a-col :span="12">
+              <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 3 }}" :wrapperCol="{xs: { span: 24 },sm: { span: 21 }}" label="附件">
                 <ul style="list-style-type:none">
                   <li v-for="(item,index) in fileList" :key="index">
                     <a :href="item.url" target="_blank">{{item.name}}</a>
@@ -397,7 +397,7 @@
                 </ul>
               </a-form-item>
             </a-col>
-            <a-col :span="16"></a-col>
+            <a-col :span="12"></a-col>
           </a-row>
         </template>
       </a-form>

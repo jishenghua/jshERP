@@ -144,6 +144,7 @@ const addSystemConfig = (params)=>postAction("/systemConfig/add",params);
 const editSystemConfig = (params)=>putAction("/systemConfig/update",params);
 const checkSystemConfig = (params)=>getAction("/systemConfig/checkIsNameExist",params);
 const getCurrentSystemConfig = (params)=>getAction("/systemConfig/getCurrentInfo",params);
+const fileSizeLimit = (params)=>getAction("/systemConfig/fileSizeLimit",params);
 //用户|角色|模块关系
 const addUserBusiness = (params)=>postAction("/userBusiness/add",params);
 const editUserBusiness = (params)=>putAction("/userBusiness/update",params);
@@ -262,6 +263,7 @@ export {
   editSystemConfig,
   checkSystemConfig,
   getCurrentSystemConfig,
+  fileSizeLimit,
   addUserBusiness,
   editUserBusiness,
   checkUserBusiness,

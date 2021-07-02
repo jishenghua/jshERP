@@ -28,6 +28,7 @@
   import Vue from 'vue'
   import { ACCESS_TOKEN } from "@/store/mutation-types"
   import { getFileAccessHttpUrl } from '@/api/manage'
+  import { fileSizeLimit } from '@/api/api'
 
   const uidGenerator=()=>{
     return '-'+parseInt(Math.random()*10000+1,10);
@@ -50,6 +51,8 @@
         fileList: [],
         previewImage:"",
         previewVisible: false,
+        sizeLimit: 0,
+        uploadGoOn:true,
       }
     },
     props:{
@@ -89,10 +92,18 @@
       }
     },
     created(){
+      this.initFileSizeLimit()
       const token = Vue.ls.get(ACCESS_TOKEN);
       this.headers = {"X-Access-Token":token}
     },
     methods:{
+      initFileSizeLimit() {
+        fileSizeLimit().then((res)=>{
+          if(res.code === 200) {
+            this.sizeLimit = res.data
+          }
+        })
+      },
       initFileList(paths){
         if(!paths || paths.length==0){
           this.fileList = [];
@@ -118,13 +129,28 @@
         this.fileList = fileList
       },
       beforeUpload: function(file){
-        var fileType = file.type;
+        this.uploadGoOn=true
+        let fileType = file.type;
+        let fileSize = file.size;
         if(fileType.indexOf('image')<0){
           this.$message.warning('请上传图片');
+          this.uploadGoOn=false
           return false;
         }
+        //验证文件大小
+        if(fileSize>this.sizeLimit) {
+          let parseSizeLimit = (this.sizeLimit/1024/1024).toFixed(2)
+          this.$message.warning('抱歉，文件大小不能超过' + parseSizeLimit + 'M');
+          this.uploadGoOn=false
+          return false;
+        }
+        return true
       },
       handleChange(info) {
+        console.log("--文件列表改变--")
+        if(!info.file.status && this.uploadGoOn === false){
+          info.fileList.pop();
+        }
         this.picUrl = false;
         let fileList = info.fileList
         if(info.file.status==='done'){

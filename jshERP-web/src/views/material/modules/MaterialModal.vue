@@ -143,7 +143,7 @@
             <a-row class="form-row" :gutter="24">
               <a-col :lg="12" :md="12" :sm="24">
                 <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 4 }}" :wrapperCol="{xs: { span: 24 },sm: { span: 20 }}" label="图片">
-                  <j-image-upload v-model="fileList" bizPath="material" isMultiple="true"></j-image-upload>
+                  <j-image-upload v-model="fileList" bizPath="material" isMultiple></j-image-upload>
                 </a-form-item>
               </a-col>
               <a-col :lg="12" :md="12" :sm="24"></a-col>
