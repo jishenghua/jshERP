@@ -152,11 +152,16 @@
               return (record.discountMoney + record.discountLastMoney).toFixed(2);
             }
           },
-          { title: '优惠后金额', dataIndex: 'discountLastMoney',width:80},
+          { title: '待收金额', dataIndex: 'needOutMoney',width:80,
+            customRender:function (text,record,index) {
+              let needOutMoney = record.discountLastMoney + record.otherMoney
+              return needOutMoney? needOutMoney.toFixed(2):''
+            }
+          },
           { title: '收款', dataIndex: 'changeAmount',width:60},
           { title: '欠款', dataIndex: 'debt',width:60,
             customRender:function (text,record,index) {
-              let debt = record.discountLastMoney - record.changeAmount
+              let debt = record.discountLastMoney + record.otherMoney - record.changeAmount
               return debt? debt.toFixed(2):''
             }
           },

@@ -149,11 +149,6 @@
           if (!err) {
             that.confirmLoading = true;
             let formData = Object.assign(this.model, values);
-            if(this.model.beginNeedGet && this.model.beginNeedPay) {
-              that.$message.warn("期初应收和期初应付不能同时输入");
-              that.confirmLoading = false;
-              return;
-            }
             formData.type = "供应商";
             let obj;
             if(!this.model.id){

@@ -524,7 +524,7 @@
                   </a-form-item>
                 </a-col>
                 <a-col :span="6">
-                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款类型">
+                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款类型">
                     {{model.payType}}
                   </a-form-item>
                 </a-col>
@@ -544,12 +544,12 @@
                 <a-col :span="6">
                   <a-row class="form-row" :gutter="24">
                     <a-col :lg="24" :md="6" :sm="6">
-                      <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="实付金额">
+                      <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="实收金额">
                         {{model.changeAmount}}
                       </a-form-item>
                     </a-col>
                     <a-col :lg="24" :md="6" :sm="6">
-                      <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款金额">
+                      <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款金额">
                         {{model.changeAmount}}
                       </a-form-item>
                     </a-col>
@@ -559,7 +559,7 @@
                       </a-form-item>
                     </a-col>
                     <a-col :lg="24" :md="6" :sm="6">
-                      <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款账户">
+                      <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款账户">
                         {{model.accountName}}
                       </a-form-item>
                     </a-col>

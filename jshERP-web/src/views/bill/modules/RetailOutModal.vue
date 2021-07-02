@@ -35,7 +35,7 @@
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款类型">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款类型">
               <a-select placeholder="请选择付款类型" v-decorator="[ 'payType' ]">
                 <a-select-option value="现付">现付</a-select-option>
                 <a-select-option value="预付款">预付款</a-select-option>
