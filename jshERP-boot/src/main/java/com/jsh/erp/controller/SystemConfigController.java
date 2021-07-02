@@ -55,6 +55,12 @@ public class SystemConfigController {
     @Value(value="${file.path}")
     private String filePath;
 
+    @Value(value="${spring.servlet.multipart.max-file-size}")
+    private Long maxFileSize;
+
+    @Value(value="${spring.servlet.multipart.max-request-size}")
+    private Long maxRequestSize;
+
     @GetMapping(value = "/getDictItems/{dictCode}")
     public BaseResponseInfo getDictItems(@PathVariable String dictCode,
                                        HttpServletRequest request) {
@@ -120,6 +126,31 @@ public class SystemConfigController {
         return res;
     }
 
+    /**
+     * 获取文件大小限制
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @GetMapping(value = "/fileSizeLimit")
+    public BaseResponseInfo fileSizeLimit(HttpServletRequest request) throws Exception {
+        BaseResponseInfo res = new BaseResponseInfo();
+        try{
+            Long limit = 0L;
+            if(maxFileSize<maxRequestSize) {
+                limit = maxFileSize;
+            } else {
+                limit = maxRequestSize;
+            }
+            res.code = 200;
+            res.data = limit;
+        } catch(Exception e){
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
+    }
 
     /**
      * 文件上传统一方法
