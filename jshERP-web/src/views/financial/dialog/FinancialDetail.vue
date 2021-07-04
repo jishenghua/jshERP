@@ -288,6 +288,9 @@
               :pagination="false"
               :columns="moneyInColumns"
               :dataSource="dataSource">
+              <span slot="numberCustomRender" slot-scope="text, record">
+                <a @click="myHandleDetail(record)">{{record.billNumber}}</a>
+              </span>
             </a-table>
             <a-row class="form-row" :gutter="24">
               <a-col :lg="24" :md="24" :sm="24">
@@ -402,13 +405,20 @@
         </template>
       </a-form>
     </j-modal>
+    <!-- 表单区域 -->
+    <bill-detail ref="modalDetail"></bill-detail>
   </a-card>
 </template>
 <script>
   import pick from 'lodash.pick'
+  import BillDetail from '../../bill/dialog/BillDetail'
   import { getAction } from '@/api/manage'
+  import { findBillDetailByNumber} from '@/api/api'
   export default {
     name: 'FinancialDetail',
+    components: {
+      BillDetail
+    },
     data () {
       return {
         title: "详情",
@@ -452,7 +462,10 @@
           { title: '备注',dataIndex: 'remark', width: '30%'}
         ],
         moneyInColumns: [
-          { title: '销售单据编号',dataIndex: 'billNumber',width: '20%'},
+          {
+            title: '销售单据编号', dataIndex: 'billNumber', width: '20%',
+            scopedSlots: { customRender: 'numberCustomRender' },
+          },
           { title: '应收欠款',dataIndex: 'needDebt', width: '10%'},
           { title: '已收欠款',dataIndex: 'finishDebt', width: '10%'},
           { title: '本次收款',dataIndex: 'eachAmount', width: '10%'},
@@ -514,6 +527,14 @@
       close() {
         this.$emit('close');
         this.visible = false;
+      },
+      myHandleDetail(record) {
+        findBillDetailByNumber({ number: record.billNumber }).then((res) => {
+          if (res && res.code === 200) {
+            this.$refs.modalDetail.show(res.data, res.data.subType + res.data.type);
+            this.$refs.modalDetail.title= res.data.subType + res.data.type + "-详情";
+          }
+        })
       }
     }
   }

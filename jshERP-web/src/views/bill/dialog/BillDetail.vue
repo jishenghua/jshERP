@@ -243,7 +243,7 @@
                 </a-col>
                 <a-col :span="6">
                   <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联单据">
-                    {{model.linkNumber}}
+                    <a @click="myHandleDetail(model.linkNumber)">{{model.linkNumber}}</a>
                   </a-form-item>
                 </a-col>
               </a-row>
@@ -328,7 +328,7 @@
                 </a-col>
                 <a-col :span="6">
                   <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联订单">
-                    {{model.linkNumber}}
+                    <a @click="myHandleDetail(model.linkNumber)">{{model.linkNumber}}</a>
                   </a-form-item>
                 </a-col>
               </a-row>
@@ -453,7 +453,7 @@
                 </a-col>
                 <a-col :span="6">
                   <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联单据">
-                    {{model.linkNumber}}
+                    <a @click="myHandleDetail(model.linkNumber)">{{model.linkNumber}}</a>
                   </a-form-item>
                 </a-col>
               </a-row>
@@ -597,7 +597,7 @@
                 </a-col>
                 <a-col :span="6">
                   <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联单据">
-                    {{model.linkNumber}}
+                    <a @click="myHandleDetail(model.linkNumber)">{{model.linkNumber}}</a>
                   </a-form-item>
                 </a-col>
               </a-row>
@@ -729,7 +729,7 @@
                 </a-col>
                 <a-col :span="6">
                   <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联订单">
-                    {{model.linkNumber}}
+                    <a @click="myHandleDetail(model.linkNumber)">{{model.linkNumber}}</a>
                   </a-form-item>
                 </a-col>
               </a-row>
@@ -817,6 +817,7 @@
 <script>
   import pick from 'lodash.pick'
   import { getAction } from '@/api/manage'
+  import { findBillDetailByNumber} from '@/api/api'
   import { getMpListShort } from "@/utils/util"
   import Vue from 'vue'
   export default {
@@ -1095,6 +1096,15 @@
       close() {
         this.$emit('close');
         this.visible = false;
+      },
+      myHandleDetail(billNumber) {
+        findBillDetailByNumber({ number: billNumber }).then((res) => {
+          if (res && res.code === 200) {
+            let type = res.data.type === "其它"? "":res.data.type
+            this.show(res.data, res.data.subType + type);
+            this.title = res.data.subType + type + "-详情";
+          }
+        })
       }
     }
   }
