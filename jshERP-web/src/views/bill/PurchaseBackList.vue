@@ -49,6 +49,9 @@
               批量操作 <a-icon type="down" />
             </a-button>
           </a-dropdown>
+          <a-tooltip placement="left" title="用于采购入库单据的退货。采购退货单可以由采购出库单转过来，也可以单独创建。" slot="action">
+            <a-icon type="info-circle" style="font-size:20px;float:right;" />
+          </a-tooltip>
         </div>
         <!-- table区域-begin -->
         <div>

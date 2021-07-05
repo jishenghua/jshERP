@@ -49,6 +49,10 @@
               批量操作 <a-icon type="down" />
             </a-button>
           </a-dropdown>
+          <a-tooltip placement="left" title="销售出库单可以由销售订单转过来，也可以单独创建。
+          销售出库单据中的仓库列表只显示当前用户有权限的仓库。销售出库单可以使用多账户收款。" slot="action">
+            <a-icon type="info-circle" style="font-size:20px;float:right;" />
+          </a-tooltip>
         </div>
         <!-- table区域-begin -->
         <div>

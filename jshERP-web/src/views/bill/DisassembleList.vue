@@ -49,6 +49,9 @@
               批量操作 <a-icon type="down" />
             </a-button>
           </a-dropdown>
+          <a-tooltip placement="left" title="用于将一个商品拆分成多种商品，被拆分的商品库存增加，拆分后的商品库存减少。" slot="action">
+            <a-icon type="info-circle" style="font-size:20px;float:right;" />
+          </a-tooltip>
         </div>
         <!-- table区域-begin -->
         <div>

@@ -44,6 +44,9 @@
               批量操作 <a-icon type="down" />
             </a-button>
           </a-dropdown>
+          <a-tooltip placement="left" title="支出单主要处理一些进货支出以外的支出如水电支出、房租支出等。" slot="action">
+            <a-icon type="info-circle" style="font-size:20px;float:right;" />
+          </a-tooltip>
         </div>
         <!-- table区域-begin -->
         <div>

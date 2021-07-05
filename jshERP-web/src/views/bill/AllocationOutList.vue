@@ -49,6 +49,9 @@
               批量操作 <a-icon type="down" />
             </a-button>
           </a-dropdown>
+          <a-tooltip placement="left" title="用于两个仓库之间的商品调拨，调拨单会影响库存。" slot="action">
+            <a-icon type="info-circle" style="font-size:20px;float:right;" />
+          </a-tooltip>
         </div>
         <!-- table区域-begin -->
         <div>

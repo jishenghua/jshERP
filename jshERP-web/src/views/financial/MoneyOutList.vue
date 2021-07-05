@@ -44,6 +44,10 @@
               批量操作 <a-icon type="down" />
             </a-button>
           </a-dropdown>
+          <a-tooltip placement="left" title="付款单的要素和录入原则与“收款单”相同。
+          付款单中优惠金额计入支出类中的付款优惠中，为负值 （因优惠意味着实际少付款）。" slot="action">
+            <a-icon type="info-circle" style="font-size:20px;float:right;" />
+          </a-tooltip>
         </div>
         <!-- table区域-begin -->
         <div>
