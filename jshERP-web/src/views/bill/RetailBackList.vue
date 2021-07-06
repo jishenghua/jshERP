@@ -50,7 +50,7 @@
             </a-button>
           </a-dropdown>
           <a-tooltip placement="left" title="用于零售出库单据的退货。零售退货单可以由零售出库单转过来，也可以单独创建。" slot="action">
-            <a-icon type="info-circle" style="font-size:20px;float:right;" />
+            <a-icon v-if="btnEnableList.indexOf(1)>-1" type="info-circle" style="font-size:20px;float:right;" />
           </a-tooltip>
         </div>
         <!-- table区域-begin -->

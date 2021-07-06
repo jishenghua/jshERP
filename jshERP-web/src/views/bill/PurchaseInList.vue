@@ -51,7 +51,7 @@
           </a-dropdown>
           <a-tooltip placement="left" title="采购入库单可以由采购订单转过来，也可以单独创建。
           采购入库单据中的仓库列表只显示当前用户有权限的仓库。采购入库单可以使用多账户付款。" slot="action">
-            <a-icon type="info-circle" style="font-size:20px;float:right;" />
+            <a-icon v-if="btnEnableList.indexOf(1)>-1" type="info-circle" style="font-size:20px;float:right;" />
           </a-tooltip>
         </div>
         <!-- table区域-begin -->

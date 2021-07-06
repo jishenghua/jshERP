@@ -98,7 +98,7 @@
             </a-col>
             <a-col :lg="6" :md="12" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="本次退款">
-                <a-input placeholder="请输入本次付款" v-decorator.trim="[ 'changeAmount' ]" @keyup="onKeyUpChangeAmount"/>
+                <a-input placeholder="请输入本次退款" v-decorator.trim="[ 'changeAmount' ]" @keyup="onKeyUpChangeAmount" :readOnly="true"/>
               </a-form-item>
             </a-col>
             <a-col :lg="6" :md="12" :sm="24">

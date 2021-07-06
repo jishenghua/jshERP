@@ -23,6 +23,16 @@
         <!-- 操作按钮区域 -->
         <div class="table-operator" style="border-top: 5px">
           <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
+          <a-dropdown v-if="selectedRowKeys.length > 0">
+            <a-menu slot="overlay">
+              <a-menu-item key="1" @click="batchSetStatus(1)"><a-icon type="check-square"/>启用</a-menu-item>
+              <a-menu-item key="2" @click="batchSetStatus(0)"><a-icon type="close-square"/>禁用</a-menu-item>
+            </a-menu>
+            <a-button style="margin-left: 8px">
+              批量操作
+              <a-icon type="down"/>
+            </a-button>
+          </a-dropdown>
         </div>
         <!-- table区域-begin -->
         <div>
@@ -35,10 +45,16 @@
             :dataSource="dataSource"
             :pagination="ipagination"
             :loading="loading"
+            :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
             @change="handleTableChange">
             <span slot="action" slot-scope="text, record">
               <a @click="handleEdit(record)">编辑</a>
             </span>
+            <!-- 状态渲染模板 -->
+            <template slot="customRenderFlag" slot-scope="enabled">
+              <a-tag v-if="enabled" color="green">启用</a-tag>
+              <a-tag v-if="!enabled" color="orange">禁用</a-tag>
+            </template>
           </a-table>
         </div>
         <!-- table区域-end -->
@@ -78,6 +94,9 @@
           { title: '登录名称', dataIndex: 'loginName', width: 100, align: "center"},
           { title: '用户数量限制', dataIndex: 'userNumLimit', width: 100, align: "center"},
           { title: '单据数量限制', dataIndex: 'billsNumLimit', width: 100, align: "center"},
+          { title: '状态',dataIndex: 'enabled',width:70,align:"center",
+            scopedSlots: { customRender: 'customRenderFlag' }
+          },
           { title: '创建时间', dataIndex: 'createTimeStr', width: 100, align: "center"},
           {
             title: '操作',
@@ -88,7 +107,8 @@
           }
         ],
         url: {
-          list: "/tenant/list"
+          list: "/tenant/list",
+          batchSetStatusUrl: "/tenant/batchSetStatus"
         },
       }
     },

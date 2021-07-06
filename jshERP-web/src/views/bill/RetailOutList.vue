@@ -50,7 +50,7 @@
             </a-button>
           </a-dropdown>
           <a-tooltip placement="left" title="用于非会员和会员的单据录入，主要是用于散户使用，不能欠款。" slot="action">
-            <a-icon type="info-circle" style="font-size:20px;float:right;" />
+            <a-icon v-if="btnEnableList.indexOf(1)>-1" type="info-circle" style="font-size:20px;float:right;" />
           </a-tooltip>
         </div>
         <!-- table区域-begin -->

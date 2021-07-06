@@ -50,7 +50,7 @@
             </a-button>
           </a-dropdown>
           <a-tooltip placement="left" title="用于将多种商品合并成一个商品，被合并的商品库存减少，合并后的商品库存增加。" slot="action">
-            <a-icon type="info-circle" style="font-size:20px;float:right;" />
+            <a-icon v-if="btnEnableList.indexOf(1)>-1" type="info-circle" style="font-size:20px;float:right;" />
           </a-tooltip>
         </div>
         <!-- table区域-begin -->

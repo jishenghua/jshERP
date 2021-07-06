@@ -50,7 +50,7 @@
             </a-button>
           </a-dropdown>
           <a-tooltip placement="left" title="用于销售出库单据的退货。销售退货单可以由销售出库单转过来，也可以单独创建。" slot="action">
-            <a-icon type="info-circle" style="font-size:20px;float:right;" />
+            <a-icon v-if="btnEnableList.indexOf(1)>-1" type="info-circle" style="font-size:20px;float:right;" />
           </a-tooltip>
         </div>
         <!-- table区域-begin -->
@@ -155,13 +155,13 @@
               return (record.discountMoney + record.discountLastMoney).toFixed(2);
             }
           },
-          { title: '待付金额', dataIndex: 'needBackMoney',width:80,
+          { title: '待退金额', dataIndex: 'needBackMoney',width:80,
             customRender:function (text,record,index) {
               let needBackMoney = record.discountLastMoney + record.otherMoney
               return needBackMoney? needBackMoney.toFixed(2):''
             }
           },
-          { title: '付款', dataIndex: 'changeAmount',width:50},
+          { title: '退款', dataIndex: 'changeAmount',width:50},
           {
             title: '操作',
             dataIndex: 'action',

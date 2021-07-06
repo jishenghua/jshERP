@@ -45,7 +45,7 @@
             </a-button>
           </a-dropdown>
           <a-tooltip placement="left" title="收入单主要处理一些销售收入以外的收入如维修服务收入、利息收入、调账收入等。" slot="action">
-            <a-icon type="info-circle" style="font-size:20px;float:right;" />
+            <a-icon v-if="btnEnableList.indexOf(1)>-1" type="info-circle" style="font-size:20px;float:right;" />
           </a-tooltip>
         </div>
         <!-- table区域-begin -->

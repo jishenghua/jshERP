@@ -191,6 +191,10 @@
             err.message = '用户被禁用';
             this.requestFailed(err)
             this.Logout();
+          } else if(res.data.msgTip == 'tenant is black'){
+            err.message = '用户所属的租户被禁用';
+            this.requestFailed(err)
+            this.Logout();
           } else if(res.data.msgTip == 'access service error'){
             err.message = '查询服务异常';
             this.requestFailed(err)
