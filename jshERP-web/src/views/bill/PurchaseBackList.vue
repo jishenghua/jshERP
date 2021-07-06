@@ -17,7 +17,7 @@
                   <a-input placeholder="请输入名称、规格、型号" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
-              <a-col :md="6" :sm="10">
+              <a-col :md="5" :sm="10">
                 <a-form-item label="单据日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-range-picker
                     style="width: 210px"

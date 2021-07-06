@@ -6,17 +6,17 @@
         <div class="table-page-search-wrapper">
           <a-form layout="inline" @keyup.enter.native="searchQuery">
             <a-row :gutter="24">
-              <a-col :md="6" :sm="8">
+              <a-col :md="4" :sm="24">
                 <a-form-item label="月份">
                   <a-month-picker placeholder="请选择月份" :default-value="moment(currentMonth, monthFormat)" :format="monthFormat" @change="onChange"/>
                 </a-form-item>
               </a-col>
-              <a-col :md="6" :sm="8">
+              <a-col :md="5" :sm="24">
                 <a-form-item label="商品信息">
-                  <a-input placeholder="请输入商品信息" v-model="queryParam.materialParam"></a-input>
+                  <a-input placeholder="名称、规格、型号" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
-              <a-col :md="6" :sm="24" >
+              <a-col :md="4" :sm="24">
                 <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                   <a-button type="primary" @click="searchQuery">查询</a-button>
                   <a-button style="margin-left: 8px" v-print="'#reportPrint'" type="primary" icon="printer">打印</a-button>

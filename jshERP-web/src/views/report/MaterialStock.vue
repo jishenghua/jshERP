@@ -30,18 +30,18 @@
                   <a-input placeholder="条码、名称、规格、型号" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
-              <a-col :md="4" :sm="24" >
+              <a-col :md="3" :sm="24" >
                 <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                   <a-button type="primary" @click="searchQuery">查询</a-button>
                   <a-button style="margin-left: 8px" v-print="'#reportPrint'" type="primary" icon="printer">打印</a-button>
                 </span>
               </a-col>
-              <a-col :md="4" :sm="24" >
+              <a-col :md="3" :sm="24" >
                 <a-form-item label="当前总库存">
                   {{currentStock}}
                 </a-form-item>
               </a-col>
-              <a-col :md="4" :sm="24" >
+              <a-col :md="3" :sm="24" >
                 <a-form-item label="当前总库存金额">
                   {{currentStockPrice}}
                 </a-form-item>
