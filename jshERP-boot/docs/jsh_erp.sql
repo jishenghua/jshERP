@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50704
 File Encoding         : 65001
 
-Date: 2021-07-02 00:26:31
+Date: 2021-07-06 23:52:08
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -62,17 +62,17 @@ CREATE TABLE `jsh_account_head` (
   KEY `FK9F4C0D8DB610FC06` (`organ_id`),
   KEY `FK9F4C0D8DAAE50527` (`account_id`),
   KEY `FK9F4C0D8DC4170B37` (`hands_person_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=124 DEFAULT CHARSET=utf8 COMMENT='财务主表';
+) ENGINE=InnoDB AUTO_INCREMENT=127 DEFAULT CHARSET=utf8 COMMENT='财务主表';
 
 -- ----------------------------
 -- Records of jsh_account_head
 -- ----------------------------
 INSERT INTO `jsh_account_head` VALUES ('118', '收入', '58', '16', '63', '55.000000', null, '55.000000', '17', 'SR00000000643', '2021-06-02 00:24:49', null, null, '63', '0');
 INSERT INTO `jsh_account_head` VALUES ('119', '支出', '68', '16', '63', '66.000000', null, '66.000000', '17', 'ZC00000000644', '2021-06-02 00:25:01', null, null, '63', '0');
-INSERT INTO `jsh_account_head` VALUES ('120', '收款', '59', '16', '63', null, null, '33.000000', null, 'SK00000000645', '2021-06-02 00:25:13', null, null, '63', '0');
-INSERT INTO `jsh_account_head` VALUES ('121', '付款', '74', '16', '63', null, null, '22.000000', null, 'FK00000000646', '2021-06-02 00:25:23', null, null, '63', '0');
 INSERT INTO `jsh_account_head` VALUES ('122', '转账', null, '17', '63', '11.000000', null, '11.000000', '17', 'ZZ00000000647', '2021-06-02 00:25:32', null, null, '63', '0');
-INSERT INTO `jsh_account_head` VALUES ('123', '收预付款', '60', '16', '63', null, null, '66.000000', null, 'SYF00000000648', '2021-06-02 00:25:43', null, null, '63', '0');
+INSERT INTO `jsh_account_head` VALUES ('124', '收预付款', '60', '17', '63', '80.000000', '0.000000', '80.000000', null, 'SYF00000000649', '2021-07-06 23:43:48', null, null, '63', '0');
+INSERT INTO `jsh_account_head` VALUES ('125', '收款', '58', '17', '63', '10.000000', '0.000000', '10.000000', '17', 'SK00000000653', '2021-07-06 23:46:38', null, null, '63', '0');
+INSERT INTO `jsh_account_head` VALUES ('126', '付款', '57', '17', '63', '50.000000', '0.000000', '-50.000000', '17', 'FK00000000654', '2021-07-06 23:47:23', null, null, '63', '0');
 
 -- ----------------------------
 -- Table structure for jsh_account_item
@@ -94,17 +94,17 @@ CREATE TABLE `jsh_account_item` (
   KEY `FK9F4CBAC0AAE50527` (`account_id`),
   KEY `FK9F4CBAC0C5FE6007` (`header_id`),
   KEY `FK9F4CBAC0D203EDC5` (`in_out_item_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=149 DEFAULT CHARSET=utf8 COMMENT='财务子表';
+) ENGINE=InnoDB AUTO_INCREMENT=152 DEFAULT CHARSET=utf8 COMMENT='财务子表';
 
 -- ----------------------------
 -- Records of jsh_account_item
 -- ----------------------------
 INSERT INTO `jsh_account_item` VALUES ('143', '118', null, '23', null, null, null, '55.000000', '', '63', '0');
 INSERT INTO `jsh_account_item` VALUES ('144', '119', null, '21', null, null, null, '66.000000', '', '63', '0');
-INSERT INTO `jsh_account_item` VALUES ('145', '120', '17', null, null, null, null, '33.000000', '', '63', '0');
-INSERT INTO `jsh_account_item` VALUES ('146', '121', '18', null, null, null, null, '-22.000000', '', '63', '0');
 INSERT INTO `jsh_account_item` VALUES ('147', '122', '17', null, null, null, null, '11.000000', '', '63', '0');
-INSERT INTO `jsh_account_item` VALUES ('148', '123', '17', null, null, null, null, '66.000000', '', '63', '0');
+INSERT INTO `jsh_account_item` VALUES ('149', '124', '17', null, null, null, null, '80.000000', '', '63', '0');
+INSERT INTO `jsh_account_item` VALUES ('150', '125', null, null, '272', '20.000000', '0.000000', '10.000000', '', '63', '0');
+INSERT INTO `jsh_account_item` VALUES ('151', '126', null, null, '271', '60.000000', '0.000000', '-50.000000', '', '63', '0');
 
 -- ----------------------------
 -- Table structure for jsh_depot
@@ -173,7 +173,7 @@ CREATE TABLE `jsh_depot_head` (
   KEY `FK2A80F214C4170B37` (`hands_person_id`),
   KEY `FK2A80F214B610FC06` (`organ_id`),
   KEY `FK2A80F214AAE50527` (`account_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=271 DEFAULT CHARSET=utf8 COMMENT='单据主表';
+) ENGINE=InnoDB AUTO_INCREMENT=273 DEFAULT CHARSET=utf8 COMMENT='单据主表';
 
 -- ----------------------------
 -- Records of jsh_depot_head
@@ -191,6 +191,8 @@ INSERT INTO `jsh_depot_head` VALUES ('267', '出库', '其它', 'QTCK00000000639
 INSERT INTO `jsh_depot_head` VALUES ('268', '出库', '调拨', 'DBCK00000000640', 'DBCK00000000640', '2021-06-02 00:24:09', '2021-06-02 00:24:00', null, null, '63', null, null, '11.000000', '现付', null, null, null, null, null, null, null, null, null, null, null, null, null, '0', null, '63', '0');
 INSERT INTO `jsh_depot_head` VALUES ('269', '其它', '组装单', 'ZZD00000000641', 'ZZD00000000641', '2021-06-02 00:24:29', '2021-06-02 00:24:11', null, null, '63', null, null, '0.000000', '现付', null, null, null, null, null, null, null, null, null, null, null, null, null, '0', null, '63', '0');
 INSERT INTO `jsh_depot_head` VALUES ('270', '其它', '拆卸单', 'CXD00000000642', 'CXD00000000642', '2021-06-02 00:24:45', '2021-06-02 00:24:32', null, null, '63', null, null, '0.000000', '现付', null, null, null, null, null, null, null, null, null, null, null, null, null, '0', null, '63', '0');
+INSERT INTO `jsh_depot_head` VALUES ('271', '入库', '采购', 'CGRK00000000651', 'CGRK00000000651', '2021-07-06 23:45:20', '2021-07-06 23:44:45', '57', null, '63', '17', '-20.000000', '-80.000000', '现付', null, null, null, null, '', '', '0.000000', '0.000000', '80.000000', '0.000000', null, null, null, '0', null, '63', '0');
+INSERT INTO `jsh_depot_head` VALUES ('272', '出库', '销售', 'XSCK00000000652', 'XSCK00000000652', '2021-07-06 23:46:07', '2021-07-06 23:45:24', '58', null, '63', '17', '8.000000', '28.000000', '现付', null, null, null, '', '', '', '0.000000', '0.000000', '28.000000', '0.000000', null, null, null, '0', null, '63', '0');
 
 -- ----------------------------
 -- Table structure for jsh_depot_item
@@ -228,7 +230,7 @@ CREATE TABLE `jsh_depot_item` (
   KEY `FK2A819F474BB6190E` (`header_id`),
   KEY `FK2A819F479485B3F5` (`depot_id`),
   KEY `FK2A819F47729F5392` (`another_depot_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=327 DEFAULT CHARSET=utf8 COMMENT='单据子表';
+) ENGINE=InnoDB AUTO_INCREMENT=329 DEFAULT CHARSET=utf8 COMMENT='单据子表';
 
 -- ----------------------------
 -- Records of jsh_depot_item
@@ -248,6 +250,8 @@ INSERT INTO `jsh_depot_item` VALUES ('323', '269', '588', '10', '个', '1.000000
 INSERT INTO `jsh_depot_item` VALUES ('324', '269', '568', '2', '个', '1.000000', '1.000000', '0.000000', null, '0.000000', null, null, null, '14', null, null, null, null, null, null, null, null, null, '普通子件', '63', '0');
 INSERT INTO `jsh_depot_item` VALUES ('325', '270', '588', '10', '个', '1.000000', '1.000000', '0.000000', null, '0.000000', null, null, null, '14', null, null, null, null, null, null, null, null, null, '组合件', '63', '0');
 INSERT INTO `jsh_depot_item` VALUES ('326', '270', '568', '2', '个', '1.000000', '1.000000', '0.000000', null, '0.000000', null, null, null, '14', null, null, null, null, null, null, null, null, null, '普通子件', '63', '0');
+INSERT INTO `jsh_depot_item` VALUES ('327', '271', '570', '4', '个', '10.000000', '10.000000', '8.000000', '8.000000', '80.000000', null, null, null, '14', null, '0.000000', '0.000000', '80.000000', null, null, null, null, null, null, '63', '0');
+INSERT INTO `jsh_depot_item` VALUES ('328', '272', '570', '4', '个', '2.000000', '2.000000', '14.000000', '14.000000', '28.000000', null, null, null, '14', null, '0.000000', '0.000000', '28.000000', null, null, null, null, null, null, '63', '0');
 
 -- ----------------------------
 -- Table structure for jsh_function
@@ -371,30 +375,12 @@ CREATE TABLE `jsh_log` (
   `tenant_id` bigint(20) DEFAULT NULL COMMENT '租户id',
   PRIMARY KEY (`id`),
   KEY `FKF2696AA13E226853` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7511 DEFAULT CHARSET=utf8 COMMENT='操作日志';
+) ENGINE=InnoDB AUTO_INCREMENT=7520 DEFAULT CHARSET=utf8 COMMENT='操作日志';
 
 -- ----------------------------
 -- Records of jsh_log
 -- ----------------------------
-INSERT INTO `jsh_log` VALUES ('7492', '63', '单据', '127.0.0.1/127.0.0.1', '2021-06-02 00:21:54', '0', '新增CGDD00000000630', '63');
-INSERT INTO `jsh_log` VALUES ('7493', '63', '单据', '127.0.0.1/127.0.0.1', '2021-06-02 00:22:24', '0', '新增CGRK00000000631', '63');
-INSERT INTO `jsh_log` VALUES ('7494', '63', '单据', '127.0.0.1/127.0.0.1', '2021-06-02 00:22:35', '0', '新增CGTH00000000632', '63');
-INSERT INTO `jsh_log` VALUES ('7495', '63', '单据', '127.0.0.1/127.0.0.1', '2021-06-02 00:22:48', '0', '新增XSDD00000000633', '63');
-INSERT INTO `jsh_log` VALUES ('7496', '63', '单据', '127.0.0.1/127.0.0.1', '2021-06-02 00:23:03', '0', '新增XSCK00000000634', '63');
-INSERT INTO `jsh_log` VALUES ('7497', '63', '单据', '127.0.0.1/127.0.0.1', '2021-06-02 00:23:12', '0', '新增XSTH00000000635', '63');
-INSERT INTO `jsh_log` VALUES ('7498', '63', '单据', '127.0.0.1/127.0.0.1', '2021-06-02 00:23:21', '0', '新增LSCK00000000636', '63');
-INSERT INTO `jsh_log` VALUES ('7499', '63', '单据', '127.0.0.1/127.0.0.1', '2021-06-02 00:23:29', '0', '新增LSTH00000000637', '63');
-INSERT INTO `jsh_log` VALUES ('7500', '63', '单据', '127.0.0.1/127.0.0.1', '2021-06-02 00:23:48', '0', '新增QTRK00000000638', '63');
-INSERT INTO `jsh_log` VALUES ('7501', '63', '单据', '127.0.0.1/127.0.0.1', '2021-06-02 00:23:59', '0', '新增QTCK00000000639', '63');
-INSERT INTO `jsh_log` VALUES ('7502', '63', '单据', '127.0.0.1/127.0.0.1', '2021-06-02 00:24:09', '0', '新增DBCK00000000640', '63');
-INSERT INTO `jsh_log` VALUES ('7503', '63', '单据', '127.0.0.1/127.0.0.1', '2021-06-02 00:24:29', '0', '新增ZZD00000000641', '63');
-INSERT INTO `jsh_log` VALUES ('7504', '63', '单据', '127.0.0.1/127.0.0.1', '2021-06-02 00:24:45', '0', '新增CXD00000000642', '63');
-INSERT INTO `jsh_log` VALUES ('7505', '63', '财务单据', '127.0.0.1/127.0.0.1', '2021-06-02 00:25:00', '0', '新增SR00000000643', '63');
-INSERT INTO `jsh_log` VALUES ('7506', '63', '财务单据', '127.0.0.1/127.0.0.1', '2021-06-02 00:25:12', '0', '新增ZC00000000644', '63');
-INSERT INTO `jsh_log` VALUES ('7507', '63', '财务单据', '127.0.0.1/127.0.0.1', '2021-06-02 00:25:22', '0', '新增SK00000000645', '63');
-INSERT INTO `jsh_log` VALUES ('7508', '63', '财务单据', '127.0.0.1/127.0.0.1', '2021-06-02 00:25:31', '0', '新增FK00000000646', '63');
-INSERT INTO `jsh_log` VALUES ('7509', '63', '财务单据', '127.0.0.1/127.0.0.1', '2021-06-02 00:25:41', '0', '新增ZZ00000000647', '63');
-INSERT INTO `jsh_log` VALUES ('7510', '63', '财务单据', '127.0.0.1/127.0.0.1', '2021-06-02 00:25:53', '0', '新增SYF00000000648', '63');
+INSERT INTO `jsh_log` VALUES ('7519', '63', '用户', '127.0.0.1/127.0.0.1', '2021-07-06 23:50:35', '0', '登录jsh', '63');
 
 -- ----------------------------
 -- Table structure for jsh_material
@@ -475,7 +461,7 @@ CREATE TABLE `jsh_material_current_stock` (
   `tenant_id` bigint(20) DEFAULT NULL COMMENT '租户id',
   `delete_flag` varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='产品当前库存';
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='产品当前库存';
 
 -- ----------------------------
 -- Records of jsh_material_current_stock
@@ -483,6 +469,7 @@ CREATE TABLE `jsh_material_current_stock` (
 INSERT INTO `jsh_material_current_stock` VALUES ('19', '588', '14', '7.000000', '63', '0');
 INSERT INTO `jsh_material_current_stock` VALUES ('20', '568', '14', '2.000000', '63', '0');
 INSERT INTO `jsh_material_current_stock` VALUES ('21', '568', '15', '1.000000', '63', '0');
+INSERT INTO `jsh_material_current_stock` VALUES ('22', '570', '14', '8.000000', '63', '0');
 
 -- ----------------------------
 -- Table structure for jsh_material_extend
@@ -717,7 +704,7 @@ CREATE TABLE `jsh_sequence` (
 -- ----------------------------
 -- Records of jsh_sequence
 -- ----------------------------
-INSERT INTO `jsh_sequence` VALUES ('depot_number_seq', '1', '999999999999999999', '648', '1', '单据编号sequence');
+INSERT INTO `jsh_sequence` VALUES ('depot_number_seq', '1', '999999999999999999', '654', '1', '单据编号sequence');
 
 -- ----------------------------
 -- Table structure for jsh_serial_number
@@ -823,7 +810,7 @@ CREATE TABLE `jsh_tenant` (
   `login_name` varchar(255) DEFAULT NULL COMMENT '登录名',
   `user_num_limit` int(11) DEFAULT NULL COMMENT '用户数量限制',
   `bills_num_limit` int(11) DEFAULT NULL COMMENT '单据数量限制',
-  `enabled` bit(1) DEFAULT 1 COMMENT '启用 0-禁用  1-启用',
+  `enabled` bit(1) DEFAULT b'1' COMMENT '启用 0-禁用  1-启用',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 COMMENT='租户';
@@ -831,7 +818,7 @@ CREATE TABLE `jsh_tenant` (
 -- ----------------------------
 -- Records of jsh_tenant
 -- ----------------------------
-INSERT INTO `jsh_tenant` VALUES ('13', '63', 'jsh', '20', '2000', 1, '2021-02-17 23:19:17');
+INSERT INTO `jsh_tenant` VALUES ('13', '63', 'jsh', '20', '2000', '', '2021-02-17 23:19:17');
 
 -- ----------------------------
 -- Table structure for jsh_unit
