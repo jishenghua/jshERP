@@ -16,7 +16,7 @@ public interface ExceptionCodeConstants {
         public static final int USER_PASSWORD_ERROR = 2;
 
         /**
-         * 被加入黑名单
+         * 用户被加入黑名单
          */
         public static final int BLACK_USER = 3;
 
@@ -29,5 +29,10 @@ public interface ExceptionCodeConstants {
          * 访问数据库异常
          */
         public static final int USER_ACCESS_EXCEPTION = 5;
+
+        /**
+         * 租户被加入黑名单
+         */
+        public static final int BLACK_TENANT = 6;
     }
 }

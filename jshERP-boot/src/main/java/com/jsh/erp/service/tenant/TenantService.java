@@ -8,6 +8,7 @@ import com.jsh.erp.datasource.mappers.TenantMapper;
 import com.jsh.erp.datasource.mappers.TenantMapperEx;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
+import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.utils.StringUtil;
 import com.jsh.erp.utils.Tools;
 import org.slf4j.Logger;
@@ -15,6 +16,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +32,9 @@ public class TenantService {
 
     @Resource
     private TenantMapperEx tenantMapperEx;
+
+    @Resource
+    private LogService logService;
 
     @Value("${tenant.userNumLimit}")
     private Integer userNumLimit;
@@ -160,5 +166,29 @@ public class TenantService {
             tenant = list.get(0);
         }
         return tenant;
+    }
+
+    public int batchSetStatus(Boolean status, String ids)throws Exception {
+        int result=0;
+        try{
+            String statusStr ="";
+            if(status) {
+                statusStr ="批量启用";
+            } else {
+                statusStr ="批量禁用";
+            }
+            logService.insertLog("用户",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(ids).append("-").append(statusStr).toString(),
+                    ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+            List<Long> idList = StringUtil.strToLongList(ids);
+            Tenant tenant = new Tenant();
+            tenant.setEnabled(status);
+            TenantExample example = new TenantExample();
+            example.createCriteria().andIdIn(idList);
+            result = tenantMapper.updateByExampleSelective(tenant, example);
+        }catch(Exception e){
+            JshException.writeFail(logger, e);
+        }
+        return result;
     }
 }

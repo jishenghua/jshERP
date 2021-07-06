@@ -1119,3 +1119,10 @@ alter table jsh_account_head add discount_money decimal(24,6) DEFAULT NULL COMME
 -- 给商品表增加附件名称字段
 -- --------------------------------------------------------
 alter table jsh_material add img_name varchar(500) DEFAULT NULL COMMENT '图片名称' after remark;
+
+-- --------------------------------------------------------
+-- 时间 2021年7月6日
+-- by jishenghua
+-- 给租户表增加字段enabled
+-- --------------------------------------------------------
+alter table jsh_tenant add enabled bit(1) DEFAULT 1 COMMENT '启用 0-禁用  1-启用' after bills_num_limit;

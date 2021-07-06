@@ -264,17 +264,22 @@ public class DepotHeadService {
                         }
                     }
                 }
-                /**删除单据子表数据*/
-                try {
-                    depotItemMapperEx.batchDeleteDepotItemByDepotHeadIds(new Long[]{id});
-                    //更新当前库存
-                    List<DepotItem> list = depotItemService.getListByHeaderId(id);
-                    for (DepotItem depotItem : list) {
-                        Long tenantId = redisService.getTenantId(request);
-                        depotItemService.updateCurrentStock(depotItem, tenantId);
+                //对于零售出库单据，更新会员的预收款信息
+                if (BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())
+                        && BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubType())){
+                    if(BusinessConstants.PAY_TYPE_PREPAID.equals(depotHead.getPayType())) {
+                        if (depotHead.getOrganId() != null) {
+                            supplierService.updateAdvanceIn(depotHead.getOrganId(), depotHead.getTotalPrice().abs());
+                        }
                     }
-                } catch (Exception e) {
-                    JshException.writeFail(logger, e);
+                }
+                /**删除单据子表数据*/
+                depotItemMapperEx.batchDeleteDepotItemByDepotHeadIds(new Long[]{id});
+                //更新当前库存
+                List<DepotItem> list = depotItemService.getListByHeaderId(id);
+                for (DepotItem depotItem : list) {
+                    Long tenantId = redisService.getTenantId(request);
+                    depotItemService.updateCurrentStock(depotItem, tenantId);
                 }
                 /**删除单据主表信息*/
                 batchDeleteDepotHeadByIds(id.toString());
