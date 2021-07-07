@@ -99,7 +99,9 @@ public class AccountHeadService {
                     if(ah.getTotalPrice() != null) {
                         ah.setTotalPrice(ah.getTotalPrice().abs());
                     }
-                    ah.setBillTimeStr(getCenternTime(ah.getBillTime()));
+                    if(ah.getBillTime() !=null) {
+                        ah.setBillTimeStr(getCenternTime(ah.getBillTime()));
+                    }
                     resList.add(ah);
                 }
             }
@@ -308,9 +310,9 @@ public class AccountHeadService {
         BigDecimal sum = BigDecimal.ZERO;
         String getS = supplierId.toString();
         int i = 1;
-        if (("customer").equals(supType)) { //客户
+        if (("客户").equals(supType)) { //客户
             i = 1;
-        } else if (("vendor").equals(supType)) { //供应商
+        } else if (("供应商").equals(supType)) { //供应商
             i = -1;
         }
         //收付款部分

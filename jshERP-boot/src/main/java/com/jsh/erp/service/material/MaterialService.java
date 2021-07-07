@@ -462,7 +462,9 @@ public class MaterialService {
                 m.setModel(model);
                 m.setColor(color);
                 Long categoryId = materialCategoryService.getCategoryIdByName(categoryName);
-                m.setCategoryId(categoryId);
+                if(null!=categoryId){
+                    m.setCategoryId(categoryId);
+                }
                 m.setSafetyStock(parseBigDecimalEx(safetyStock));
                 String manyUnit = ExcelUtils.getContent(src, i, 7); //副单位
                 String barCode = ExcelUtils.getContent(src, i, 8); //基础条码

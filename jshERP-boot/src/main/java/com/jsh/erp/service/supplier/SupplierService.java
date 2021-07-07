@@ -95,12 +95,7 @@ public class SupplierService {
             for(Supplier s : list) {
                 Integer supplierId = s.getId().intValue();
                 String endTime = getNow3();
-                String supType = null;
-                if(("客户").equals(s.getType())) {
-                    supType = "customer";
-                } else if(("供应商").equals(s.getType())) {
-                    supType = "vendor";
-                }
+                String supType = s.getType();
                 BigDecimal sum = BigDecimal.ZERO;
                 BigDecimal beginNeedGet = s.getBeginNeedGet();
                 if(beginNeedGet==null) {

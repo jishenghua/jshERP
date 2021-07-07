@@ -61,37 +61,6 @@ public class AccountHeadController {
     }
 
     /**
-     * 查询单位的累计应收和累计应付，收预付款不计入此处
-     * @param supplierId
-     * @param endTime
-     * @param supType
-     * @param request
-     * @return
-     */
-    @GetMapping(value = "/findTotalPay")
-    public BaseResponseInfo findTotalPay(@RequestParam("supplierId") Integer supplierId,
-                                         @RequestParam("endTime") String endTime,
-                                         @RequestParam("supType") String supType,
-                                         HttpServletRequest request)throws Exception {
-        BaseResponseInfo res = new BaseResponseInfo();
-        Map<String, Object> map = new HashMap<String, Object>();
-        try {
-            JSONObject outer = new JSONObject();
-            endTime = endTime + BusinessConstants.DAY_LAST_TIME;
-            BigDecimal sum = accountHeadService.findTotalPay(supplierId, endTime, supType);
-            outer.put("getAllMoney", sum);
-            map.put("rows", outer);
-            res.code = 200;
-            res.data = map;
-        } catch (Exception e) {
-            e.printStackTrace();
-            res.code = 500;
-            res.data = "获取数据失败";
-        }
-        return res;
-    }
-
-    /**
      * 根据编号查询单据信息
      * @param billNo
      * @param request
