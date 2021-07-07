@@ -1,7 +1,6 @@
 package com.jsh.erp.service.account;
 
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.*;
@@ -105,7 +104,7 @@ public class AccountService {
             JshException.readFail(logger, e);
         }
         String timeStr = Tools.getCurrentMonth();
-        if (null != list && null !=timeStr) {
+        if (null != list) {
             for (AccountVo4List al : list) {
                 DecimalFormat df = new DecimalFormat(".##");
                 BigDecimal thisMonthAmount = getAccountSum(al.getId(), timeStr, "month").add(getAccountSumByHead(al.getId(), timeStr, "month")).add(getAccountSumByDetail(al.getId(), timeStr, "month")).add(getManyAccountSum(al.getId(), timeStr, "month"));
@@ -542,7 +541,7 @@ public class AccountService {
             String timeStr = Tools.getCurrentMonth();
             BigDecimal allMonthAmount = BigDecimal.ZERO;
             BigDecimal allCurrentAmount = BigDecimal.ZERO;
-            if (null != list && null !=timeStr) {
+            if (null != list) {
                 for (Account a : list) {
                     BigDecimal monthAmount = getAccountSum(a.getId(), timeStr, "month").add(getAccountSumByHead(a.getId(), timeStr, "month"))
                             .add(getAccountSumByDetail(a.getId(), timeStr, "month")).add(getManyAccountSum(a.getId(), timeStr, "month"));

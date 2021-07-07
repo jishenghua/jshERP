@@ -3,18 +3,17 @@ package com.jsh.erp.service.material;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.mappers.*;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
-import com.jsh.erp.service.materialExtend.MaterialExtendService;
 import com.jsh.erp.service.depot.DepotService;
 import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.materialCategory.MaterialCategoryService;
+import com.jsh.erp.service.materialExtend.MaterialExtendService;
 import com.jsh.erp.service.redis.RedisService;
 import com.jsh.erp.service.unit.UnitService;
 import com.jsh.erp.service.user.UserService;
@@ -434,9 +433,7 @@ public class MaterialService {
             JshException.readFail(logger, e);
         }
         if (null != list) {
-            for (MaterialVo4Unit m : list) {
-                resList.add(m);
-            }
+            resList.addAll(list);
         }
         return resList;
     }
