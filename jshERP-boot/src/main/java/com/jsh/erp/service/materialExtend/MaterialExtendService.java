@@ -11,7 +11,6 @@ import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.mappers.MaterialExtendMapper;
 import com.jsh.erp.datasource.mappers.MaterialExtendMapperEx;
 import com.jsh.erp.datasource.vo.MaterialExtendVo4List;
-import com.jsh.erp.exception.BusinessParamCheckingException;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.log.LogService;
@@ -114,80 +113,74 @@ public class MaterialExtendService {
             }
         }
         JSONArray sortJson = JSONArray.parseArray(sortList);
-        if (null != insertedJson) {
-            for (int i = 0; i < insertedJson.size(); i++) {
-                MaterialExtend materialExtend = new MaterialExtend();
-                JSONObject tempInsertedJson = JSONObject.parseObject(insertedJson.getString(i));
-                materialExtend.setMaterialId(materialId);
-                if (StringUtils.isNotEmpty(tempInsertedJson.getString("barCode"))) {
-                    int exist = checkIsBarCodeExist(0L, tempInsertedJson.getString("barCode"));
-                    if(exist>0) {
-                        throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_BARCODE_EXISTS_CODE,
-                                String.format(ExceptionConstants.MATERIAL_BARCODE_EXISTS_MSG,tempInsertedJson.getString("barCode")));
-                    } else {
-                        materialExtend.setBarCode(tempInsertedJson.getString("barCode"));
-                    }
+        for (int i = 0; i < insertedJson.size(); i++) {
+            MaterialExtend materialExtend = new MaterialExtend();
+            JSONObject tempInsertedJson = JSONObject.parseObject(insertedJson.getString(i));
+            materialExtend.setMaterialId(materialId);
+            if (StringUtils.isNotEmpty(tempInsertedJson.getString("barCode"))) {
+                int exist = checkIsBarCodeExist(0L, tempInsertedJson.getString("barCode"));
+                if(exist>0) {
+                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_BARCODE_EXISTS_CODE,
+                            String.format(ExceptionConstants.MATERIAL_BARCODE_EXISTS_MSG,tempInsertedJson.getString("barCode")));
+                } else {
+                    materialExtend.setBarCode(tempInsertedJson.getString("barCode"));
                 }
-                if (StringUtils.isNotEmpty(tempInsertedJson.getString("commodityUnit"))) {
-                    materialExtend.setCommodityUnit(tempInsertedJson.getString("commodityUnit"));
-                }
-                if (StringUtils.isNotEmpty(tempInsertedJson.getString("purchaseDecimal"))) {
-                    materialExtend.setPurchaseDecimal(tempInsertedJson.getBigDecimal("purchaseDecimal"));
-                }
-                if (StringUtils.isNotEmpty(tempInsertedJson.getString("commodityDecimal"))) {
-                    materialExtend.setCommodityDecimal(tempInsertedJson.getBigDecimal("commodityDecimal"));
-                }
-                if (StringUtils.isNotEmpty(tempInsertedJson.getString("wholesaleDecimal"))) {
-                    materialExtend.setWholesaleDecimal(tempInsertedJson.getBigDecimal("wholesaleDecimal"));
-                }
-                if (StringUtils.isNotEmpty(tempInsertedJson.getString("lowDecimal"))) {
-                    materialExtend.setLowDecimal(tempInsertedJson.getBigDecimal("lowDecimal"));
-                }
-                this.insertMaterialExtend(materialExtend);
+            }
+            if (StringUtils.isNotEmpty(tempInsertedJson.getString("commodityUnit"))) {
+                materialExtend.setCommodityUnit(tempInsertedJson.getString("commodityUnit"));
+            }
+            if (StringUtils.isNotEmpty(tempInsertedJson.getString("purchaseDecimal"))) {
+                materialExtend.setPurchaseDecimal(tempInsertedJson.getBigDecimal("purchaseDecimal"));
+            }
+            if (StringUtils.isNotEmpty(tempInsertedJson.getString("commodityDecimal"))) {
+                materialExtend.setCommodityDecimal(tempInsertedJson.getBigDecimal("commodityDecimal"));
+            }
+            if (StringUtils.isNotEmpty(tempInsertedJson.getString("wholesaleDecimal"))) {
+                materialExtend.setWholesaleDecimal(tempInsertedJson.getBigDecimal("wholesaleDecimal"));
+            }
+            if (StringUtils.isNotEmpty(tempInsertedJson.getString("lowDecimal"))) {
+                materialExtend.setLowDecimal(tempInsertedJson.getBigDecimal("lowDecimal"));
+            }
+            this.insertMaterialExtend(materialExtend);
+        }
+        StringBuffer bf=new StringBuffer();
+        for (int i = 0; i < deletedJson.size(); i++) {
+            JSONObject tempDeletedJson = JSONObject.parseObject(deletedJson.getString(i));
+            bf.append(tempDeletedJson.getLong("id"));
+            if(i<(deletedJson.size()-1)){
+                bf.append(",");
             }
         }
-        if (null != deletedJson) {
-            StringBuffer bf=new StringBuffer();
-            for (int i = 0; i < deletedJson.size(); i++) {
-                JSONObject tempDeletedJson = JSONObject.parseObject(deletedJson.getString(i));
-                bf.append(tempDeletedJson.getLong("id"));
-                if(i<(deletedJson.size()-1)){
-                    bf.append(",");
+        this.batchDeleteMaterialExtendByIds(bf.toString(), request);
+        for (int i = 0; i < updatedJson.size(); i++) {
+            JSONObject tempUpdatedJson = JSONObject.parseObject(updatedJson.getString(i));
+            MaterialExtend materialExtend = new MaterialExtend();
+            materialExtend.setId(tempUpdatedJson.getLong("id"));
+            if (StringUtils.isNotEmpty(tempUpdatedJson.getString("barCode"))) {
+                int exist = checkIsBarCodeExist(tempUpdatedJson.getLong("id"), tempUpdatedJson.getString("barCode"));
+                if(exist>0) {
+                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_BARCODE_EXISTS_CODE,
+                            String.format(ExceptionConstants.MATERIAL_BARCODE_EXISTS_MSG,tempUpdatedJson.getString("barCode")));
+                } else {
+                    materialExtend.setBarCode(tempUpdatedJson.getString("barCode"));
                 }
             }
-            this.batchDeleteMaterialExtendByIds(bf.toString(), request);
-        }
-        if (null != updatedJson) {
-            for (int i = 0; i < updatedJson.size(); i++) {
-                JSONObject tempUpdatedJson = JSONObject.parseObject(updatedJson.getString(i));
-                MaterialExtend materialExtend = new MaterialExtend();
-                materialExtend.setId(tempUpdatedJson.getLong("id"));
-                if (StringUtils.isNotEmpty(tempUpdatedJson.getString("barCode"))) {
-                    int exist = checkIsBarCodeExist(tempUpdatedJson.getLong("id"), tempUpdatedJson.getString("barCode"));
-                    if(exist>0) {
-                        throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_BARCODE_EXISTS_CODE,
-                                String.format(ExceptionConstants.MATERIAL_BARCODE_EXISTS_MSG,tempUpdatedJson.getString("barCode")));
-                    } else {
-                        materialExtend.setBarCode(tempUpdatedJson.getString("barCode"));
-                    }
-                }
-                if (StringUtils.isNotEmpty(tempUpdatedJson.getString("commodityUnit"))) {
-                    materialExtend.setCommodityUnit(tempUpdatedJson.getString("commodityUnit"));
-                }
-                if (StringUtils.isNotEmpty(tempUpdatedJson.getString("purchaseDecimal"))) {
-                    materialExtend.setPurchaseDecimal(tempUpdatedJson.getBigDecimal("purchaseDecimal"));
-                }
-                if (StringUtils.isNotEmpty(tempUpdatedJson.getString("commodityDecimal"))) {
-                    materialExtend.setCommodityDecimal(tempUpdatedJson.getBigDecimal("commodityDecimal"));
-                }
-                if (StringUtils.isNotEmpty(tempUpdatedJson.getString("wholesaleDecimal"))) {
-                    materialExtend.setWholesaleDecimal(tempUpdatedJson.getBigDecimal("wholesaleDecimal"));
-                }
-                if (StringUtils.isNotEmpty(tempUpdatedJson.getString("lowDecimal"))) {
-                    materialExtend.setLowDecimal(tempUpdatedJson.getBigDecimal("lowDecimal"));
-                }
-                this.updateMaterialExtend(materialExtend);
+            if (StringUtils.isNotEmpty(tempUpdatedJson.getString("commodityUnit"))) {
+                materialExtend.setCommodityUnit(tempUpdatedJson.getString("commodityUnit"));
             }
+            if (StringUtils.isNotEmpty(tempUpdatedJson.getString("purchaseDecimal"))) {
+                materialExtend.setPurchaseDecimal(tempUpdatedJson.getBigDecimal("purchaseDecimal"));
+            }
+            if (StringUtils.isNotEmpty(tempUpdatedJson.getString("commodityDecimal"))) {
+                materialExtend.setCommodityDecimal(tempUpdatedJson.getBigDecimal("commodityDecimal"));
+            }
+            if (StringUtils.isNotEmpty(tempUpdatedJson.getString("wholesaleDecimal"))) {
+                materialExtend.setWholesaleDecimal(tempUpdatedJson.getBigDecimal("wholesaleDecimal"));
+            }
+            if (StringUtils.isNotEmpty(tempUpdatedJson.getString("lowDecimal"))) {
+                materialExtend.setLowDecimal(tempUpdatedJson.getBigDecimal("lowDecimal"));
+            }
+            this.updateMaterialExtend(materialExtend);
         }
         //处理条码的排序，基础单位排第一个
         if (null != sortJson && sortJson.size()>0) {
