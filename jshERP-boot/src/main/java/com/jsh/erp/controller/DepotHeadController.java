@@ -290,8 +290,7 @@ public class DepotHeadController {
         JSONObject result = ExceptionConstants.standardSuccess();
         String beanJson = body.getInfo();
         String rows = body.getRows();
-        BigDecimal preTotalPrice = body.getPreTotalPrice();
-        depotHeadService.updateDepotHeadAndDetail(beanJson,rows,preTotalPrice,tenantId,request);
+        depotHeadService.updateDepotHeadAndDetail(beanJson,rows,tenantId,request);
         return result;
     }
 

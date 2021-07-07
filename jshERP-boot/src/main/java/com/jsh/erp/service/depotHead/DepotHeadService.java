@@ -267,7 +267,7 @@ public class DepotHeadService {
                 }
                 //对于零售出库单据，更新会员的预收款信息
                 if (BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())
-                        && BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubType())){
+                        && BusinessConstants.SUB_TYPE_RETAIL.equals(depotHead.getSubType())){
                     if(BusinessConstants.PAY_TYPE_PREPAID.equals(depotHead.getPayType())) {
                         if (depotHead.getOrganId() != null) {
                             supplierService.updateAdvanceIn(depotHead.getOrganId(), depotHead.getTotalPrice().abs());
@@ -689,16 +689,16 @@ public class DepotHeadService {
      * 更新单据主表及单据子表信息
      * @param beanJson
      * @param rows
-     * @param preTotalPrice
      * @param tenantId
      * @param request
      * @throws Exception
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public void updateDepotHeadAndDetail(String beanJson, String rows,
-                                         BigDecimal preTotalPrice, Long tenantId,HttpServletRequest request)throws Exception {
+    public void updateDepotHeadAndDetail(String beanJson, String rows, Long tenantId,HttpServletRequest request)throws Exception {
         /**更新单据主表信息*/
         DepotHead depotHead = JSONObject.parseObject(beanJson, DepotHead.class);
+        //获取之前的金额数据
+        BigDecimal preTotalPrice = getDepotHead(depotHead.getId()).getTotalPrice().abs();
         String subType = depotHead.getSubType();
         if("零售".equals(subType) || "零售退货".equals(subType)
                 || "采购".equals(subType) || "采购退货".equals(subType)

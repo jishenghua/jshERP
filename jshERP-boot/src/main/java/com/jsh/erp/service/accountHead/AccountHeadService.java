@@ -13,6 +13,7 @@ import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.accountItem.AccountItemService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.orgaUserRel.OrgaUserRelService;
+import com.jsh.erp.service.supplier.SupplierService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
 import com.jsh.erp.utils.Tools;
@@ -45,6 +46,8 @@ public class AccountHeadService {
     private AccountItemService accountItemService;
     @Resource
     private UserService userService;
+    @Resource
+    private SupplierService supplierService;
     @Resource
     private LogService logService;
     @Resource
@@ -221,6 +224,7 @@ public class AccountHeadService {
         return list==null?0:list.size();
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void addAccountHeadAndDetail(String beanJson, String rows, HttpServletRequest request) throws Exception {
         AccountHead accountHead = JSONObject.parseObject(beanJson, AccountHead.class);
         User userInfo=userService.getCurrentUser();
@@ -236,12 +240,18 @@ public class AccountHeadService {
             /**处理单据子表信息*/
             accountItemService.saveDetials(rows, headId, type, request);
         }
+        if("收预付款".equals(accountHead.getType())){
+            supplierService.updateAdvanceIn(accountHead.getOrganId(), accountHead.getTotalPrice());
+        }
         logService.insertLog("财务单据",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(accountHead.getBillNo()).toString(), request);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void updateAccountHeadAndDetail(String beanJson, String rows, HttpServletRequest request) throws Exception {
         AccountHead accountHead = JSONObject.parseObject(beanJson, AccountHead.class);
+        //获取之前的金额数据
+        BigDecimal preTotalPrice = getAccountHead(accountHead.getId()).getTotalPrice().abs();
         accountHeadMapper.updateByPrimaryKeySelective(accountHead);
         //根据单据编号查询单据id
         AccountHeadExample dhExample = new AccountHeadExample();
@@ -252,6 +262,9 @@ public class AccountHeadService {
             String type = list.get(0).getType();
             /**处理单据子表信息*/
             accountItemService.saveDetials(rows, headId, type, request);
+        }
+        if("收预付款".equals(accountHead.getType())){
+            supplierService.updateAdvanceIn(accountHead.getOrganId(), accountHead.getTotalPrice().subtract(preTotalPrice));
         }
         logService.insertLog("财务单据",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(accountHead.getBillNo()).toString(), request);
