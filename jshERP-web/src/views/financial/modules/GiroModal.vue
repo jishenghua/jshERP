@@ -26,7 +26,7 @@
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
-              <j-date v-decorator="['billTime']" :show-time="true"/>
+              <j-date v-decorator="['billTime', validatorRules.billTime]" :show-time="true"/>
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
@@ -137,6 +137,11 @@
           handsPersonId:{
             rules: [
               { required: true, message: '请选择经手人!' }
+            ]
+          },
+          billTime:{
+            rules: [
+              { required: true, message: '请选择单据日期!' }
             ]
           },
           accountId:{

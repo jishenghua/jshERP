@@ -27,7 +27,7 @@
                   />
                 </a-form-item>
               </a-col>
-              <a-col :md="4" :sm="24">
+              <a-col :md="3" :sm="24">
                 <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                   <a-button type="primary" @click="searchQuery">查询</a-button>
                   <a-button style="margin-left: 8px" v-print="'#reportPrint'" type="primary" icon="printer">打印</a-button>
@@ -35,7 +35,7 @@
               </a-col>
               <a-col :md="8" :sm="24">
                 <a-form-item>
-                  {{firstTotal}} {{lastTotal}} {{pleaseSelect}}
+                  {{firstTotal}} {{lastTotal}}
                 </a-form-item>
               </a-col>
             </a-row>
@@ -71,7 +71,8 @@
   import FinancialDetail from '../financial/dialog/FinancialDetail'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { getNowFormatMonth } from '@/utils/util';
-  import {findBySelectSup, findSupplierById, findDepotHeadTotalPay, findAccountHeadTotalPay, findBillDetailByNumber,findFinancialDetailByNumber} from '@/api/api'
+  import { getAction } from '@/api/manage'
+  import {findBySelectSup, findBillDetailByNumber,findFinancialDetailByNumber} from '@/api/api'
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import moment from 'moment'
   export default {
@@ -97,7 +98,6 @@
         supList: [],
         firstTotal: '',
         lastTotal: '',
-        pleaseSelect: '（请选择供应商）',
         tabKey: "1",
         // 表头
         columns: [
@@ -160,41 +160,6 @@
         this.queryParam.beginTime=dateString[0];
         this.queryParam.endTime=dateString[1];
       },
-      initTotal(prefix, time, type) {
-        findSupplierById({supplierId: this.queryParam.organId}).then((res)=>{
-          if (res && res.data && res.data[0]) {
-            let beginNeedGet = res.data[0].BeginNeedGet;
-            let beginNeedPay = res.data[0].BeginNeedPay;
-            findDepotHeadTotalPay({supplierId: this.queryParam.organId, endTime: time, supType: "customer" }).then((res)=>{
-              if (res && res.code === 200 && res.data && res.data.rows) {
-                let moneyA = res.data.rows.getAllMoney.toFixed(2) - 0;
-                findAccountHeadTotalPay({supplierId: this.queryParam.organId, endTime: time, supType: "customer" }).then((res)=>{
-                  if (res && res.code === 200 && res.data && res.data.rows) {
-                    let moneyB = res.data.rows.getAllMoney.toFixed(2) - 0;
-                    let money = moneyA + moneyB;
-                    let moneyBeginNeedGet = beginNeedGet - 0; //期初应收
-                    let moneyBeginNeedPay = beginNeedPay - 0; //期初应付
-                    money = (money + moneyBeginNeedGet - moneyBeginNeedPay).toFixed(2);
-                    money = 0-money;
-                    if(type === 'first') {
-                      this.firstTotal = prefix + money + "，"
-                    } else if(type === 'last') {
-                      this.lastTotal = prefix + money
-                    }
-                  }
-                })
-              }
-            })
-          }
-        })
-      },
-      initStatistics() {
-        if(this.queryParam.organId) {
-          this.initTotal('期初应付：', this.queryParam.beginTime, 'first')
-          this.initTotal('期末应付：', this.queryParam.endTime, 'last')
-          this.pleaseSelect = ''
-        }
-      },
       myHandleDetail(record) {
         if(record.type === '支出' || record.type === '付款') {
           findFinancialDetailByNumber({ billNo: record.number }).then((res) => {
@@ -212,12 +177,33 @@
           })
         }
       },
+      loadData(arg) {
+        //加载数据 若传入参数1则加载第一页的内容
+        if (arg === 1) {
+          this.ipagination.current = 1;
+        }
+        let params = this.getQueryParams();//查询条件
+        this.loading = true;
+        getAction(this.url.list, params).then((res) => {
+          if (res.code===200) {
+            this.dataSource = res.data.rows;
+            this.ipagination.total = res.data.total;
+            if(this.queryParam.organId) {
+              this.firstTotal = '期初应付：' + res.data.firstMoney + "，"
+              this.lastTotal = '期末应付：' + res.data.lastMoney
+            }
+          }
+          if(res.code===510){
+            this.$message.warning(res.data)
+          }
+          this.loading = false;
+        })
+      },
       searchQuery() {
-        if(this.queryParam.beginTime == '' || this.queryParam.endTime == ''){
+        if(this.queryParam.beginTime === '' || this.queryParam.endTime === ''){
           this.$message.warning('请选择单据日期！')
         } else {
           this.loadData(1);
-          this.initStatistics();
         }
       }
     }
