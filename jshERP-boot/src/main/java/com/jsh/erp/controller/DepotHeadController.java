@@ -211,9 +211,9 @@ public class DepotHeadController {
                     beginNeed = supplier.getBeginNeedPay();
                 }
                 BigDecimal firstMoney = depotHeadService.findTotalPay(organId, beginTime, supType)
-                        .add(accountHeadService.findTotalPay(organId, beginTime, supType)).add(beginNeed);
+                        .subtract(accountHeadService.findTotalPay(organId, beginTime, supType)).add(beginNeed);
                 BigDecimal lastMoney = depotHeadService.findTotalPay(organId, endTime, supType)
-                        .add(accountHeadService.findTotalPay(organId, endTime, supType)).add(beginNeed);
+                        .subtract(accountHeadService.findTotalPay(organId, endTime, supType)).add(beginNeed);
                 map.put("firstMoney", firstMoney); //期初
                 map.put("lastMoney", lastMoney);  //期末
             }

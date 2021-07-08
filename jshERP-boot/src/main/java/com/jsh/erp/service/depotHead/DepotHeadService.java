@@ -551,17 +551,11 @@ public class DepotHeadService {
     public BigDecimal findTotalPay(Integer supplierId, String endTime, String supType) {
         BigDecimal sum = BigDecimal.ZERO;
         String getS = supplierId.toString();
-        int i = 1;
         if (("客户").equals(supType)) { //客户
-            i = 1;
+            sum = allMoney(getS, "出库", "销售", "合计",endTime).subtract(allMoney(getS, "出库", "销售", "实际",endTime));
         } else if (("供应商").equals(supType)) { //供应商
-            i = -1;
+            sum = allMoney(getS, "入库", "采购", "合计",endTime).subtract(allMoney(getS, "入库", "采购", "实际",endTime));
         }
-        //进销部分
-        sum = sum.subtract((allMoney(getS, "入库", "采购", "合计",endTime).subtract(allMoney(getS, "入库", "采购", "实际",endTime))).multiply(new BigDecimal(i)));
-        sum = sum.subtract((allMoney(getS, "入库", "销售退货", "合计",endTime).subtract(allMoney(getS, "入库", "销售退货", "实际",endTime))).multiply(new BigDecimal(i)));
-        sum = sum.add((allMoney(getS, "出库", "销售", "合计",endTime).subtract(allMoney(getS, "出库", "销售", "实际",endTime))).multiply(new BigDecimal(i)));
-        sum = sum.add((allMoney(getS, "出库", "采购退货", "合计",endTime).subtract(allMoney(getS, "出库", "采购退货", "实际",endTime))).multiply(new BigDecimal(i)));
         return sum;
     }
 

@@ -313,7 +313,7 @@ public class AccountHeadService {
     }
 
     /**
-     * 查询单位的累计应收和累计应付，收预付款不计入此处
+     * 查询往来单位的累计应收和累计应付，只计入收款或付款
      * @param supplierId
      * @param endTime
      * @param supType
@@ -322,17 +322,11 @@ public class AccountHeadService {
     public BigDecimal findTotalPay(Integer supplierId, String endTime, String supType) {
         BigDecimal sum = BigDecimal.ZERO;
         String getS = supplierId.toString();
-        int i = 1;
         if (("客户").equals(supType)) { //客户
-            i = 1;
+            sum = allMoney(getS, "收款", "合计",endTime);
         } else if (("供应商").equals(supType)) { //供应商
-            i = -1;
+            sum = allMoney(getS, "付款", "合计",endTime);
         }
-        //收付款部分
-        sum = sum.subtract((allMoney(getS, "收款", "合计",endTime)).multiply(new BigDecimal(i)));
-        sum = sum.add((allMoney(getS, "付款", "合计",endTime)).multiply(new BigDecimal(i)));
-        sum = sum.add((allMoney(getS, "收入", "合计",endTime).subtract(allMoney(getS, "收入", "实际",endTime))).multiply(new BigDecimal(i)));
-        sum = sum.subtract((allMoney(getS, "支出", "合计",endTime).subtract(allMoney(getS, "支出", "实际",endTime))).multiply(new BigDecimal(i)));
         return sum;
     }
 
