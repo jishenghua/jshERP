@@ -63,8 +63,8 @@
         </a-row>
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款账户">
-              <a-select placeholder="选择付款账户" v-decorator="[ 'accountId', validatorRules.accountId ]" :dropdownMatchSelectWidth="false">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="支出账户">
+              <a-select placeholder="选择支出账户" v-decorator="[ 'accountId', validatorRules.accountId ]" :dropdownMatchSelectWidth="false">
                 <a-select-option v-for="(item,index) in accountList" :key="index" :value="item.id">
                   {{ item.name }}
                 </a-select-option>
@@ -72,8 +72,8 @@
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款金额">
-              <a-input placeholder="请输入付款金额" v-decorator.trim="[ 'changeAmount', validatorRules.changeAmount ]" />
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="支出金额">
+              <a-input placeholder="请输入支出金额" v-decorator.trim="[ 'changeAmount', validatorRules.changeAmount ]" :readOnly="true"/>
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
@@ -158,12 +158,12 @@
           },
           accountId:{
             rules: [
-              { required: true, message: '请选择付款账户!' }
+              { required: true, message: '请选择支出账户!' }
             ]
           },
           changeAmount:{
             rules: [
-              { required: true, message: '请输入付款金额!' }
+              { required: true, message: '请输入支出金额!' }
             ]
           }
         },

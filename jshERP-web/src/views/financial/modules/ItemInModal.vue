@@ -73,7 +73,7 @@
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收入金额">
-              <a-input placeholder="请输入收入金额" v-decorator.trim="[ 'changeAmount', validatorRules.changeAmount ]" />
+              <a-input placeholder="请输入收入金额" v-decorator.trim="[ 'changeAmount', validatorRules.changeAmount ]" :readOnly="true"/>
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">

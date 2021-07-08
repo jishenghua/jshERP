@@ -70,15 +70,11 @@
                 </a-form-item>
               </a-col>
               <a-col :span="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="优惠金额">
-                  {{model.discountMoney}}
-                </a-form-item>
-              </a-col>
-              <a-col :span="6">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款金额">
                   {{model.changeAmount}}
                 </a-form-item>
               </a-col>
+              <a-col :span="6"></a-col>
               <a-col :span="6"></a-col>
               <a-col :span="6"></a-col>
             </a-row>
