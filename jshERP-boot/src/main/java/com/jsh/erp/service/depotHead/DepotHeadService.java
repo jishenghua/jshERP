@@ -622,9 +622,8 @@ public class DepotHeadService {
         /**处理单据主表数据*/
         DepotHead depotHead = JSONObject.parseObject(beanJson, DepotHead.class);
         String subType = depotHead.getSubType();
-        if("零售".equals(subType) || "零售退货".equals(subType)
-                || "采购".equals(subType) || "采购退货".equals(subType)
-                || "销售".equals(subType) || "销售退货".equals(subType)) {
+        //结算账户校验
+        if("采购".equals(subType) || "采购退货".equals(subType) || "销售".equals(subType) || "销售退货".equals(subType)) {
             if (StringUtil.isEmpty(depotHead.getAccountIdList()) && depotHead.getAccountId() == null) {
                 throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_ACCOUNT_FAILED_CODE,
                         String.format(ExceptionConstants.DEPOT_HEAD_ACCOUNT_FAILED_MSG));
@@ -640,7 +639,15 @@ public class DepotHeadService {
             depotHead.setAccountIdList(depotHead.getAccountIdList().replace("[", "").replace("]", "").replaceAll("\"", ""));
         }
         if(StringUtil.isNotEmpty(depotHead.getAccountMoneyList())) {
-            depotHead.setAccountMoneyList(depotHead.getAccountMoneyList().replace("[", "").replace("]", "").replaceAll("\"", ""));
+            String accountMoneyList = depotHead.getAccountMoneyList().replace("[", "").replace("]", "").replaceAll("\"", "");
+            //校验多账户的金额合计是否等于本次付款或本次收款
+            int sum = StringUtil.getArrSum(accountMoneyList.split(","));
+            BigDecimal manyAccountSum = BigDecimal.valueOf(sum);
+            if(manyAccountSum.compareTo(depotHead.getChangeAmount())!=0) {
+                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_MANY_ACCOUNT_FAILED_CODE,
+                        String.format(ExceptionConstants.DEPOT_HEAD_MANY_ACCOUNT_FAILED_MSG));
+            }
+            depotHead.setAccountMoneyList(accountMoneyList);
         }
         try{
             depotHeadMapper.insertSelective(depotHead);
@@ -694,9 +701,8 @@ public class DepotHeadService {
         //获取之前的金额数据
         BigDecimal preTotalPrice = getDepotHead(depotHead.getId()).getTotalPrice().abs();
         String subType = depotHead.getSubType();
-        if("零售".equals(subType) || "零售退货".equals(subType)
-                || "采购".equals(subType) || "采购退货".equals(subType)
-                || "销售".equals(subType) || "销售退货".equals(subType)) {
+        //结算账户校验
+        if("采购".equals(subType) || "采购退货".equals(subType) || "销售".equals(subType) || "销售退货".equals(subType)) {
             if (StringUtil.isEmpty(depotHead.getAccountIdList()) && depotHead.getAccountId() == null) {
                 throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_ACCOUNT_FAILED_CODE,
                         String.format(ExceptionConstants.DEPOT_HEAD_ACCOUNT_FAILED_MSG));
