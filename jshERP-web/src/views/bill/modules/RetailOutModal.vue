@@ -113,6 +113,7 @@
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
   import { getMpListShort } from "@/utils/util"
+  import { getAccount } from '@/api/api'
   import { getAction } from '@/api/manage'
   import JUpload from '@/components/jeecg/JUpload'
   import JDate from '@/components/jeecg/JDate'
@@ -251,6 +252,13 @@
       //加载收款类型
       initPayTypeList() {
         this.payTypeList.push({"value":"现付", "text":"现付"})
+      },
+      initAccount(){
+        getAccount({}).then((res)=>{
+          if(res && res.code === 200) {
+            this.accountList = res.data.accountList
+          }
+        })
       },
       //选择会员的触发事件
       onChangeOrgan(value) {

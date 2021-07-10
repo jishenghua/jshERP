@@ -113,6 +113,7 @@
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
   import { getMpListShort } from "@/utils/util"
+  import { getAccount } from '@/api/api'
   import { getAction } from '@/api/manage'
   import JUpload from '@/components/jeecg/JUpload'
   import JDate from '@/components/jeecg/JDate'
@@ -240,6 +241,13 @@
           info: JSON.stringify(billMain),
           rows: JSON.stringify(detailArr),
         }
+      },
+      initAccount(){
+        getAccount({}).then((res)=>{
+          if(res && res.code === 200) {
+            this.accountList = res.data.accountList
+          }
+        })
       },
       //改变实收金额、收款金额的值
       autoChangePrice(target) {
