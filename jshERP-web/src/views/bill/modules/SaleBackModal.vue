@@ -133,7 +133,7 @@
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
-  import { getMpListShort, changeListFmtMinus } from "@/utils/util"
+  import { getMpListShort } from "@/utils/util"
   import { getAction } from '@/api/manage'
   import JSelectMultiple from '@/components/jeecg/JSelectMultiple'
   import JUpload from '@/components/jeecg/JUpload'
@@ -288,13 +288,6 @@
           info: JSON.stringify(billMain),
           rows: JSON.stringify(detailArr),
         }
-      },
-      manyAccountModalFormOk(idList, moneyList, allPrice) {
-        this.accountIdList = idList
-        this.accountMoneyList = changeListFmtMinus(moneyList)
-        this.$nextTick(() => {
-          this.form.setFieldsValue({'changeAmount':allPrice})
-        });
       },
       onSearchLinkNumber() {
         this.$refs.linkBillList.show('出库', '销售', '客户', "0")

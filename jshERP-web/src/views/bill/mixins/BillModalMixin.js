@@ -1,7 +1,7 @@
 import { VALIDATE_NO_PASSED, validateFormAndTables } from '@/utils/JEditableTableUtil'
 import {findBySelectSup,findBySelectCus,findBySelectRetail,getMaterialByBarCode,findStockByDepotAndBarCode,getAccount,getPersonByNumType} from '@/api/api'
 import { getAction,putAction } from '@/api/manage'
-import { getMpListShort, getNowFormatDateTime } from "@/utils/util"
+import { getMpListShort, getNowFormatDateTime, changeListFmtMinus } from "@/utils/util"
 import Vue from 'vue'
 
 export const BillModalMixin = {
@@ -149,6 +149,16 @@ export const BillModalMixin = {
         this.accountMoneyList = []
         this.manyAccountBtnStatus = false
       }
+    },
+    manyAccountModalFormOk(idList, moneyList, allPrice) {
+      this.accountIdList = idList
+      this.accountMoneyList = changeListFmtMinus(moneyList)
+      let discountLastMoney = this.form.getFieldValue('discountLastMoney')-0
+      let otherMoney = this.form.getFieldValue('otherMoney')-0
+      let debt = (discountLastMoney + otherMoney - allPrice).toFixed(2)
+      this.$nextTick(() => {
+        this.form.setFieldsValue({'changeAmount':allPrice, 'debt':debt})
+      });
     },
     onAdded(event) {
       const { row, target } = event
