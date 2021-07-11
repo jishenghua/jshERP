@@ -282,16 +282,29 @@ public class DepotService {
         //开始拼接json数据
         if (null != dataList) {
             boolean depotFlag = systemConfigService.getDepotFlag();
-            for (Depot depot : dataList) {
-                JSONObject item = new JSONObject();
-                //勾选判断1
-                Boolean flag = false;
-                try {
-                    flag = userBusinessService.checkIsUserBusinessExist(type, userId.toString(), "[" + depot.getId().toString() + "]");
-                } catch (DataAccessException e) {
-                    logger.error(">>>>>>>>>>>>>>>>>查询用户对应的仓库：类型" + type + " KeyId为： " + userId + " 存在异常！");
+            if(depotFlag) {
+                List<UserBusiness> list = userBusinessService.getBasicData(userId.toString(), type);
+                if(list!=null && list.size()>0) {
+                    String depotStr = list.get(0).getValue();
+                    if(StringUtil.isNotEmpty(depotStr)){
+                        depotStr = depotStr.replaceAll("\\[", "").replaceAll("]", ",");
+                        String[] depotArr = depotStr.split(",");
+                        for(String depotId: depotArr) {
+                            JSONObject item = new JSONObject();
+                            item.put("id", depotId);
+                            for (Depot depot : dataList) {
+                                if(depot.getId() == Integer.parseInt(depotId)){
+                                    item.put("depotName", depot.getName());
+                                    item.put("isDefault", depot.getIsDefault());
+                                }
+                            }
+                            arr.add(item);
+                        }
+                    }
                 }
-                if (!depotFlag || flag) {
+            } else {
+                for (Depot depot : dataList) {
+                    JSONObject item = new JSONObject();
                     item.put("id", depot.getId());
                     item.put("depotName", depot.getName());
                     item.put("isDefault", depot.getIsDefault());

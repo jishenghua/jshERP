@@ -206,9 +206,13 @@ public class DepotHeadController {
                 Supplier supplier = supplierService.getSupplier(organId);
                 BigDecimal beginNeed = BigDecimal.ZERO;
                 if (("客户").equals(supType)) {
-                    beginNeed = supplier.getBeginNeedGet();
+                    if(supplier.getBeginNeedGet()!=null) {
+                        beginNeed = supplier.getBeginNeedGet();
+                    }
                 } else if (("供应商").equals(supType)) {
-                    beginNeed = supplier.getBeginNeedPay();
+                    if(supplier.getBeginNeedPay()!=null) {
+                        beginNeed = supplier.getBeginNeedPay();
+                    }
                 }
                 BigDecimal firstMoney = depotHeadService.findTotalPay(organId, beginTime, supType)
                         .subtract(accountHeadService.findTotalPay(organId, beginTime, supType)).add(beginNeed);
