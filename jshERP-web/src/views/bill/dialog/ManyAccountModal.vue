@@ -150,6 +150,7 @@
               that.accountMoneyList.push(formData.threeAccountPrice)
               allPrice = allPrice + formData.threeAccountPrice
             }
+            debugger
             that.$emit('ok', that.accountIdList, that.accountMoneyList, allPrice);
             that.confirmLoading = false;
             that.close();

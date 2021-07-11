@@ -131,7 +131,7 @@
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
-  import { getMpListShort} from "@/utils/util"
+  import { getMpListShort, changeListFmtMinus } from "@/utils/util"
   import { getAction } from '@/api/manage'
   import JUpload from '@/components/jeecg/JUpload'
   import JDate from '@/components/jeecg/JDate'
@@ -269,6 +269,7 @@
         if(billMain.accountId === 0) {
           billMain.accountId = ''
         }
+        this.accountMoneyList = changeListFmtMinus(this.accountMoneyList)
         billMain.accountIdList = this.accountIdList.length>0 ? JSON.stringify(this.accountIdList) : ""
         billMain.accountMoneyList = this.accountMoneyList.length>0 ? JSON.stringify(this.accountMoneyList) : ""
         if(this.fileList && this.fileList.length > 0) {
