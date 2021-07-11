@@ -639,11 +639,11 @@ public class DepotHeadService {
             depotHead.setAccountIdList(depotHead.getAccountIdList().replace("[", "").replace("]", "").replaceAll("\"", ""));
         }
         if(StringUtil.isNotEmpty(depotHead.getAccountMoneyList())) {
+            //校验多账户的结算金额
             String accountMoneyList = depotHead.getAccountMoneyList().replace("[", "").replace("]", "").replaceAll("\"", "");
-            //校验多账户的金额合计是否等于本次付款或本次收款
             int sum = StringUtil.getArrSum(accountMoneyList.split(","));
-            BigDecimal manyAccountSum = BigDecimal.valueOf(sum);
-            if(manyAccountSum.compareTo(depotHead.getChangeAmount())!=0) {
+            BigDecimal manyAccountSum = BigDecimal.valueOf(sum).abs();
+            if(manyAccountSum.compareTo(depotHead.getChangeAmount().abs())!=0) {
                 throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_MANY_ACCOUNT_FAILED_CODE,
                         String.format(ExceptionConstants.DEPOT_HEAD_MANY_ACCOUNT_FAILED_MSG));
             }
@@ -712,7 +712,15 @@ public class DepotHeadService {
             depotHead.setAccountIdList(depotHead.getAccountIdList().replace("[", "").replace("]", "").replaceAll("\"", ""));
         }
         if(StringUtil.isNotEmpty(depotHead.getAccountMoneyList())) {
-            depotHead.setAccountMoneyList(depotHead.getAccountMoneyList().replace("[", "").replace("]", "").replaceAll("\"", ""));
+            //校验多账户的结算金额
+            String accountMoneyList = depotHead.getAccountMoneyList().replace("[", "").replace("]", "").replaceAll("\"", "");
+            int sum = StringUtil.getArrSum(accountMoneyList.split(","));
+            BigDecimal manyAccountSum = BigDecimal.valueOf(sum).abs();
+            if(manyAccountSum.compareTo(depotHead.getChangeAmount().abs())!=0) {
+                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_MANY_ACCOUNT_FAILED_CODE,
+                        String.format(ExceptionConstants.DEPOT_HEAD_MANY_ACCOUNT_FAILED_MSG));
+            }
+            depotHead.setAccountMoneyList(accountMoneyList);
         }
         try{
             depotHeadMapper.updateByPrimaryKeySelective(depotHead);
