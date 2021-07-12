@@ -295,6 +295,11 @@ public class UserService {
                 if(list.get(0).getStatus()!=0) {
                     return ExceptionCodeConstants.UserExceptionCode.BLACK_USER;
                 }
+                Long tenantId = list.get(0).getTenantId();
+                Tenant tenant = tenantService.getTenantByTenantId(tenantId);
+                if(tenant!=null && tenant.getEnabled()!=null && !tenant.getEnabled()) {
+                    return ExceptionCodeConstants.UserExceptionCode.BLACK_TENANT;
+                }
             }
         } catch (Exception e) {
             logger.error(">>>>>>>>访问验证用户姓名是否存在后台信息异常", e);

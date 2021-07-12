@@ -9,6 +9,7 @@
               <a-col :md="4" :sm="24">
                 <a-form-item label="仓库">
                   <a-select
+                    showSearch optionFilterProp="children"
                     style="width: 100%"
                     placeholder="请选择仓库"
                     v-model="queryParam.depotId">
@@ -18,9 +19,9 @@
                   </a-select>
                 </a-form-item>
               </a-col>
-              <a-col :md="6" :sm="8">
+              <a-col :md="5" :sm="24">
                 <a-form-item label="商品信息">
-                  <a-input placeholder="请输入商品名称、规格、型号" v-model="queryParam.materialParam"></a-input>
+                  <a-input placeholder="名称、规格、型号" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24" >

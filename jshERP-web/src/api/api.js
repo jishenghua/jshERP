@@ -161,12 +161,9 @@ const checkSupplier = (params)=>getAction("/supplier/checkIsNameExist",params);
 const findBySelectSup = (params)=>postAction("/supplier/findBySelect_sup",params);
 const findBySelectCus = (params)=>postAction("/supplier/findBySelect_cus",params);
 const findBySelectRetail = (params)=>postAction("/supplier/findBySelect_retail",params);
-const findSupplierById = (params)=>getAction("/supplier/findById",params);
 //单据相关
-const findDepotHeadTotalPay = (params)=>getAction("/depotHead/findTotalPay",params);
 const findBillDetailByNumber = (params)=>getAction("/depotHead/getDetailByNumber",params);
 const findStockByDepotAndBarCode = (params)=>getAction("/depotItem/findStockByDepotAndBarCode",params);
-const findAccountHeadTotalPay = (params)=>getAction("/accountHead/findTotalPay",params);
 const findFinancialDetailByNumber = (params)=>getAction("/accountHead/getDetailByNumber",params);
 
 export {
@@ -277,11 +274,8 @@ export {
   findBySelectSup,
   findBySelectCus,
   findBySelectRetail,
-  findSupplierById,
-  findDepotHeadTotalPay,
   findBillDetailByNumber,
   findStockByDepotAndBarCode,
-  findAccountHeadTotalPay,
   findFinancialDetailByNumber
 }
 

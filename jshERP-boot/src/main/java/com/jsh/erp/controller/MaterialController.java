@@ -201,7 +201,7 @@ public class MaterialController {
                             Unit unit = unitService.getUnit(material.getUnitId());
                             if(material.getCommodityUnit().equals(unit.getOtherUnit())) {
                                 if(unit.getRatio()!=0) {
-                                    stock = stock.divide(BigDecimal.valueOf(unit.getRatio()));
+                                    stock = stock.divide(BigDecimal.valueOf(unit.getRatio()),2,BigDecimal.ROUND_HALF_UP);
                                 }
                             }
                         }

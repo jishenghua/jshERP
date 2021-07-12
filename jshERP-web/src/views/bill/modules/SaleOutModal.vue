@@ -18,7 +18,8 @@
           <a-row class="form-row" :gutter="24">
             <a-col :lg="6" :md="12" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户">
-                <a-select placeholder="选择客户" v-decorator="[ 'organId', validatorRules.organId ]" :dropdownMatchSelectWidth="false">
+                <a-select placeholder="选择客户" v-decorator="[ 'organId', validatorRules.organId ]"
+                  :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
                   <a-select-option v-for="(item,index) in cusList" :key="index" :value="item.id">
                     {{ item.supplier }}
                   </a-select-option>
@@ -27,7 +28,7 @@
             </a-col>
             <a-col :lg="6" :md="12" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
-                <j-date v-decorator="['operTime']" :show-time="true"/>
+                <j-date v-decorator="['operTime', validatorRules.operTime]" :show-time="true"/>
               </a-form-item>
             </a-col>
             <a-col :lg="6" :md="12" :sm="24">
@@ -287,13 +288,6 @@
           info: JSON.stringify(billMain),
           rows: JSON.stringify(detailArr),
         }
-      },
-      manyAccountModalFormOk(idList, moneyList, allPrice) {
-        this.accountIdList = idList
-        this.accountMoneyList = moneyList
-        this.$nextTick(() => {
-          this.form.setFieldsValue({'changeAmount':allPrice})
-        });
       },
       onSearchLinkNumber() {
         this.$refs.linkBillList.show('其它', '销售订单', '客户', "1")

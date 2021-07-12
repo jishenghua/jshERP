@@ -3,7 +3,7 @@
     <a-row :gutter="24">
       <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
         <chart-card :loading="loading" title="今日累计销售">
-          <a-tooltip title="指标说明" slot="action">
+          <a-tooltip title="统计今日零售和销售单据数据" slot="action">
             <a-icon type="info-circle-o" />
           </a-tooltip>
           <head-info :content="statistics.todaySale"></head-info>
@@ -11,7 +11,7 @@
       </a-col>
       <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
         <chart-card :loading="loading" title="本月累计销售">
-          <a-tooltip title="指标说明" slot="action">
+          <a-tooltip title="统计本月零售和销售单据数据" slot="action">
             <a-icon type="info-circle-o" />
           </a-tooltip>
           <head-info :content="statistics.thisMonthSale"></head-info>
@@ -19,7 +19,7 @@
       </a-col>
       <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
         <chart-card :loading="loading" title="今日累计采购">
-          <a-tooltip title="指标说明" slot="action">
+          <a-tooltip title="统计今日采购单据数据" slot="action">
             <a-icon type="info-circle-o" />
           </a-tooltip>
           <head-info :content="statistics.todayBuy"></head-info>
@@ -27,7 +27,7 @@
       </a-col>
       <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
         <chart-card :loading="loading" title="本月累计采购">
-          <a-tooltip title="指标说明" slot="action">
+          <a-tooltip title="统计本月采购单据数据" slot="action">
             <a-icon type="info-circle-o" />
           </a-tooltip>
           <head-info :content="statistics.thisMonthBuy"></head-info>

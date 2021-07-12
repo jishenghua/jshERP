@@ -4,7 +4,7 @@
       <a-form-item>
         <a-input
           size="large"
-          v-decorator="['username',{initialValue:'', rules: validatorRules.username.rules}]"
+          v-decorator="['loginName',{initialValue:'', rules: validatorRules.loginName.rules}]"
           type="text"
           placeholder="请输入帐户名">
           <a-icon slot="prefix" type="user" :style="{ color: 'rgba(0,0,0,.25)' }"/>
@@ -90,7 +90,7 @@
           smsSendBtn: false,
         },
         validatorRules:{
-          username:{rules: [{ required: true, message: '请输入用户名!'},{validator: this.handleUsernameOrEmail}]},
+          loginName:{rules: [{ required: true, message: '请输入用户名!'},{validator: this.handleLoginName}]},
           password:{rules: [{ required: true, message: '请输入密码!',validator: 'click'}]}
         },
         verifiedCode:"",
@@ -112,30 +112,9 @@
       this.getRouterData();
     },
     methods: {
-      ...mapActions([ "Login", "Logout","PhoneLogin","ThirdLogin" ]),
-      //第三方登录
-      onThirdLogin(source){
-        let url = window._CONFIG['domianURL']+`/thirdLogin/render/${source}`
-        window.open(url, `login ${source}`, 'height=500, width=500, top=0, left=0, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=n o, status=no')
-        let that = this;
-        let receiveMessage = function(event){
-          var origin = event.origin
-          console.log("origin",origin);
-
-          let token = event.data
-          console.log("event.data",token)
-          that.ThirdLogin(token).then(res=>{
-            if(res.success){
-              that.loginSuccess()
-            }else{
-              that.requestFailed(res);
-            }
-          })
-        }
-        window.addEventListener("message", receiveMessage, false);
-      },
+      ...mapActions([ "Login", "Logout" ]),
       // handler
-      handleUsernameOrEmail (rule, value, callback) {
+      handleLoginName (rule, value, callback) {
         const regex = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/;
         if (regex.test(value)) {
           this.loginType = 0
@@ -144,27 +123,17 @@
         }
         callback()
       },
-      handleTabClick (key) {
-        this.customActiveKey = key
-        // this.form.resetFields()
-      },
       handleSubmit () {
         let that = this
         let loginParams = {};
         that.loginBtn = true;
         // 使用账户密码登陆
         if (that.customActiveKey === 'tab1') {
-          that.form.validateFields([ 'username', 'password','inputCode', 'rememberMe' ], { force: true }, (err, values) => {
+          that.form.validateFields([ 'loginName', 'password', 'rememberMe' ], { force: true }, (err, values) => {
             if (!err) {
-              loginParams.loginName = values.username
-              // update-begin- --- author:scott ------ date:20190805 ---- for:密码加密逻辑暂时注释掉，有点问题
-              //loginParams.password = md5(values.password)
-              //loginParams.password = encryption(values.password,that.encryptedString.key,that.encryptedString.iv)
+              loginParams.loginName = values.loginName
               loginParams.password = md5(values.password)
               //loginParams.remember_me = values.rememberMe
-              // update-begin- --- author:scott ------ date:20190805 ---- for:密码加密逻辑暂时注释掉，有点问题
-              //loginParams.captcha = that.inputCodeContent
-              //loginParams.checkKey = that.currdatetime
               console.log("登录参数",loginParams)
               that.Login(loginParams).then((res) => {
                 this.departConfirm(res)
@@ -175,28 +144,9 @@
               that.loginBtn = false;
             }
           })
-          // 使用手机号登陆
-        } else {
-          that.form.validateFields([ 'mobile', 'captcha', 'rememberMe' ], { force: true }, (err, values) => {
-            if (!err) {
-              loginParams.mobile = values.mobile
-              loginParams.captcha = values.captcha
-              loginParams.remember_me = values.rememberMe
-              that.PhoneLogin(loginParams).then((res) => {
-                console.log(res.result);
-                this.departConfirm(res)
-              }).catch((err) => {
-                that.requestFailed(err);
-              })
-
-            }
-          })
         }
       },
       loginSuccess () {
-        // update-begin- author:sunjianlei --- date:20190812 --- for: 登录成功后不解除禁用按钮，防止多次点击
-        // this.loginBtn = false
-        // update-end- author:sunjianlei --- date:20190812 --- for: 登录成功后不解除禁用按钮，防止多次点击
         this.$router.push({ path: "/dashboard/analysis" })
         this.$notification.success({
           message: '欢迎',
@@ -241,6 +191,10 @@
             err.message = '用户被禁用';
             this.requestFailed(err)
             this.Logout();
+          } else if(res.data.msgTip == 'tenant is black'){
+            err.message = '用户所属的租户被禁用';
+            this.requestFailed(err)
+            this.Logout();
           } else if(res.data.msgTip == 'access service error'){
             err.message = '查询服务异常';
             this.requestFailed(err)
@@ -271,6 +225,7 @@
           this.encryptedString = encryptedString;
         }
       },
+      //加载商品属性
       initMPropertyShort(){
         let mPropertyListShort = '';
         let params = {};

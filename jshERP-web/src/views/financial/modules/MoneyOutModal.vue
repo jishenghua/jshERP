@@ -18,7 +18,8 @@
           <a-row class="form-row" :gutter="24">
             <a-col :lg="6" :md="12" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="供应商">
-                <a-select placeholder="选择供应商" v-decorator="[ 'organId', validatorRules.organId ]" :dropdownMatchSelectWidth="false">
+                <a-select placeholder="选择供应商" v-decorator="[ 'organId', validatorRules.organId ]"
+                  :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
                   <a-select-option v-for="(item,index) in supList" :key="index" :value="item.id">
                     {{ item.supplier }}
                   </a-select-option>
@@ -27,7 +28,8 @@
             </a-col>
             <a-col :lg="6" :md="12" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="经手人">
-                <a-select placeholder="选择经手人" v-decorator="[ 'handsPersonId', validatorRules.handsPersonId ]" :dropdownMatchSelectWidth="false">
+                <a-select placeholder="选择经手人" v-decorator="[ 'handsPersonId', validatorRules.handsPersonId ]"
+                  :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
                   <a-select-option v-for="(item,index) in personList" :key="index" :value="item.id">
                     {{ item.name }}
                   </a-select-option>
@@ -36,7 +38,7 @@
             </a-col>
             <a-col :lg="6" :md="12" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
-                <j-date v-decorator="['billTime']" :show-time="true"/>
+                <j-date v-decorator="['billTime', validatorRules.billTime]" :show-time="true"/>
               </a-form-item>
             </a-col>
             <a-col :lg="6" :md="12" :sm="24">
@@ -171,6 +173,9 @@
           },
           handsPersonId:{
             rules: [{ required: true, message: '请选择经手人!' }]
+          },
+          billTime:{
+            rules: [{ required: true, message: '请选择单据日期!' }]
           },
           accountId:{
             rules: [{ required: true, message: '请选择付款账户!' }]

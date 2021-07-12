@@ -24,7 +24,7 @@
                 </div>
               </a-list-item>
               <div style="margin-top: 5px;text-align: center">
-                <a-button @click="toMyAnnouncement()" type="dashed" block>查看更多</a-button>
+<!--                <a-button @click="toMyAnnouncement()" type="dashed" block>查看更多</a-button>-->
               </div>
             </a-list>
           </a-tab-pane>
@@ -42,7 +42,7 @@
                 </div>
               </a-list-item>
               <div style="margin-top: 5px;text-align: center">
-                <a-button @click="toMyAnnouncement()" type="dashed" block>查看更多</a-button>
+<!--                <a-button @click="toMyAnnouncement()" type="dashed" block>查看更多</a-button>-->
               </div>
             </a-list>
           </a-tab-pane>

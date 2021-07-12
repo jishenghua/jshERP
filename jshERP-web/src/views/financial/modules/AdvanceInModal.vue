@@ -17,7 +17,8 @@
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款会员">
-              <a-select placeholder="选择付款会员" v-decorator="[ 'organId', validatorRules.organId ]" :dropdownMatchSelectWidth="false">
+              <a-select placeholder="选择付款会员" v-decorator="[ 'organId', validatorRules.organId ]"
+                :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
                 <a-select-option v-for="(item,index) in retailList" :key="index" :value="item.id">
                   {{ item.supplier }}
                 </a-select-option>
@@ -26,7 +27,8 @@
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="经手人">
-              <a-select placeholder="选择经手人" v-decorator="[ 'handsPersonId', validatorRules.handsPersonId ]" :dropdownMatchSelectWidth="false">
+              <a-select placeholder="选择经手人" v-decorator="[ 'handsPersonId', validatorRules.handsPersonId ]"
+                :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
                 <a-select-option v-for="(item,index) in personList" :key="index" :value="item.id">
                   {{ item.name }}
                 </a-select-option>
@@ -35,7 +37,7 @@
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
-              <j-date v-decorator="['billTime']" :show-time="true"/>
+              <j-date v-decorator="['billTime', validatorRules.billTime]" :show-time="true"/>
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
@@ -68,14 +70,11 @@
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="优惠金额">
-              <a-input placeholder="请输入优惠金额" v-decorator.trim="[ 'discountMoney' ]" @keyup="onKeyUpDiscountMoney" />
-            </a-form-item>
-          </a-col>
-          <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款金额">
               <a-input placeholder="请输入收款金额" v-decorator.trim="[ 'changeAmount' ]" :readOnly="true"/>
             </a-form-item>
+          </a-col>
+          <a-col :lg="6" :md="12" :sm="24">
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
           </a-col>
@@ -149,6 +148,11 @@
             rules: [
               { required: true, message: '请选择经手人!' }
             ]
+          },
+          billTime:{
+            rules: [
+              { required: true, message: '请选择单据日期!' }
+            ]
           }
         },
         url: {
@@ -171,7 +175,7 @@
           this.model.billTime = this.model.billTimeStr
           this.$nextTick(() => {
             this.form.setFieldsValue(pick(this.model,'organId', 'handsPersonId', 'billTime', 'billNo', 'remark',
-                  'totalPrice', 'discountMoney', 'changeAmount'))
+                  'totalPrice', 'changeAmount'))
           });
           this.fileList = this.model.fileName
           // 加载子表数据

@@ -78,7 +78,6 @@
 
 <script>
   import {mixinDevice} from '@/utils/mixin.js'
-  import {getSmsCaptcha} from '@/api/login'
   import {getAction, postAction} from '@/api/manage'
   import {checkOnlyUser} from '@/api/api'
 

@@ -95,16 +95,20 @@
       edit (idStr, moneyStr) {
         this.form.resetFields();
         this.model = Object.assign({}, {});
+        let idList = [], moneyList = []
         if(idStr && idStr.indexOf(',')>-1) {
-          let idList = idStr.split(",")
-          if(idList[0]) {this.model.oneAccountId = idList[0]-0}
-          if(idList[1]) {this.model.twoAccountId = idList[1]-0}
-          if(idList[2]) {this.model.threeAccountId = idList[2]-0}
-          let moneyList = moneyStr.split(",")
-          if(moneyList[0]) {this.model.oneAccountPrice = Math.abs(moneyList[0])}
-          if(moneyList[1]) {this.model.twoAccountPrice = Math.abs(moneyList[1])}
-          if(moneyList[2]) {this.model.threeAccountPrice = Math.abs(moneyList[2])}
+          idList = idStr.split(",")
+          moneyList = moneyStr.split(",")
+        } else {
+          idList = idStr
+          moneyList = moneyStr
         }
+        if(idList[0]) {this.model.oneAccountId = idList[0]-0}
+        if(idList[1]) {this.model.twoAccountId = idList[1]-0}
+        if(idList[2]) {this.model.threeAccountId = idList[2]-0}
+        if(moneyList[0]) {this.model.oneAccountPrice = Math.abs(moneyList[0])}
+        if(moneyList[1]) {this.model.twoAccountPrice = Math.abs(moneyList[1])}
+        if(moneyList[2]) {this.model.threeAccountPrice = Math.abs(moneyList[2])}
         this.visible = true;
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model,'oneAccountId','oneAccountPrice',
@@ -122,8 +126,9 @@
           if (!err) {
             let allPrice = 0
             that.confirmLoading = true;
+            that.accountIdList = []
+            that.accountMoneyList = []
             let formData = Object.assign(this.model, values);
-            console.log(formData)
             if(formData.oneAccountId!==undefined) {
               that.accountIdList.push(formData.oneAccountId)
             }
@@ -146,6 +151,7 @@
               allPrice = allPrice + formData.threeAccountPrice
             }
             that.$emit('ok', that.accountIdList, that.accountMoneyList, allPrice);
+            that.confirmLoading = false;
             that.close();
           }
         })

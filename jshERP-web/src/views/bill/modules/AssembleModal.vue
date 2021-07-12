@@ -17,7 +17,7 @@
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
-              <j-date v-decorator="['operTime']" :show-time="true"/>
+              <j-date v-decorator="['operTime', validatorRules.operTime]" :show-time="true"/>
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">

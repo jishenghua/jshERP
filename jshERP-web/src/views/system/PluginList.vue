@@ -192,7 +192,7 @@
       },
       uploadTemplate(record) {
         var rootPath = record.path.substring(0, record.path.indexOf("plugins"));
-        this.$message.info('请将页面上传到服务器目录：' + " /前端根目录/plugin/");
+        this.$message.info('请将页面上传到服务器目录：' + " /前端根目录/plugins/");
       },
       startPlugin(pluginId) {
         postAction('/plugin/start/' + pluginId).then((res)=>{

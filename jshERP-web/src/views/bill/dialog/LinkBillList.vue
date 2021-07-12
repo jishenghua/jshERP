@@ -19,7 +19,8 @@
       :pagination="ipagination"
       :loading="loading"
       :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange, type: getType}"
-      :customRow="rowAction">
+      :customRow="rowAction"
+      @change="handleTableChange">
     </a-table>
     <!-- table区域-end -->
   </a-modal>

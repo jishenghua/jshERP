@@ -362,7 +362,7 @@ public class MaterialCategoryService {
      * @param name
      */
     public Long getCategoryIdByName(String name){
-        Long categoryId = 0L;
+        Long categoryId = null;
         MaterialCategoryExample example = new MaterialCategoryExample();
         example.createCriteria().andNameEqualTo(name).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<MaterialCategory> list = materialCategoryMapper.selectByExample(example);

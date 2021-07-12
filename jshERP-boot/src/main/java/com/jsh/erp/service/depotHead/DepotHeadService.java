@@ -40,6 +40,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -264,17 +265,22 @@ public class DepotHeadService {
                         }
                     }
                 }
-                /**删除单据子表数据*/
-                try {
-                    depotItemMapperEx.batchDeleteDepotItemByDepotHeadIds(new Long[]{id});
-                    //更新当前库存
-                    List<DepotItem> list = depotItemService.getListByHeaderId(id);
-                    for (DepotItem depotItem : list) {
-                        Long tenantId = redisService.getTenantId(request);
-                        depotItemService.updateCurrentStock(depotItem, tenantId);
+                //对于零售出库单据，更新会员的预收款信息
+                if (BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())
+                        && BusinessConstants.SUB_TYPE_RETAIL.equals(depotHead.getSubType())){
+                    if(BusinessConstants.PAY_TYPE_PREPAID.equals(depotHead.getPayType())) {
+                        if (depotHead.getOrganId() != null) {
+                            supplierService.updateAdvanceIn(depotHead.getOrganId(), depotHead.getTotalPrice().abs());
+                        }
                     }
-                } catch (Exception e) {
-                    JshException.writeFail(logger, e);
+                }
+                /**删除单据子表数据*/
+                depotItemMapperEx.batchDeleteDepotItemByDepotHeadIds(new Long[]{id});
+                //更新当前库存
+                List<DepotItem> list = depotItemService.getListByHeaderId(id);
+                for (DepotItem depotItem : list) {
+                    Long tenantId = redisService.getTenantId(request);
+                    depotItemService.updateCurrentStock(depotItem, tenantId);
                 }
                 /**删除单据主表信息*/
                 batchDeleteDepotHeadByIds(id.toString());
@@ -417,8 +423,62 @@ public class DepotHeadService {
     public List<DepotHeadVo4StatementAccount> findStatementAccount(String beginTime, String endTime, Integer organId, String supType, Integer offset, Integer rows)throws Exception {
         List<DepotHeadVo4StatementAccount> list = null;
         try{
+            int j = 1;
+            if (supType.equals("客户")) { //客户
+                j = 1;
+            } else if (supType.equals("供应商")) { //供应商
+                j = -1;
+            }
             list =depotHeadMapperEx.findStatementAccount(beginTime, endTime, organId, supType, offset, rows);
-        }catch(Exception e){
+            if (null != list) {
+                for (DepotHeadVo4StatementAccount dha : list) {
+                    dha.setNumber(dha.getNumber()); //单据编号
+                    dha.setType(dha.getType()); //类型
+                    String type = dha.getType();
+                    BigDecimal p1 = BigDecimal.ZERO ;
+                    BigDecimal p2 = BigDecimal.ZERO;
+                    if (dha.getDiscountLastMoney() != null) {
+                        p1 = dha.getDiscountLastMoney();
+                    }
+                    if (dha.getChangeAmount() != null) {
+                        p2 = dha.getChangeAmount();
+                    }
+                    BigDecimal allPrice = BigDecimal.ZERO;
+                    if ((p1.compareTo(BigDecimal.ZERO))==-1) {
+                        p1 = p1.abs();
+                    }
+                    if(dha.getOtherMoney()!=null) {
+                        p1 = p1.add(dha.getOtherMoney()); //与其它费用相加
+                    }
+                    if ((p2 .compareTo(BigDecimal.ZERO))==-1) {
+                        p2 = p2.abs();
+                    }
+                    if (type.equals("采购入库")) {
+                        allPrice = p2.subtract(p1);
+                    } else if (type.equals("销售退货入库")) {
+                        allPrice = p2.subtract(p1);
+                    } else if (type.equals("销售出库")) {
+                        allPrice = p1.subtract(p2);
+                    } else if (type.equals("采购退货出库")) {
+                        allPrice = p1.subtract(p2);
+                    } else if (type.equals("收款")) {
+                        allPrice = BigDecimal.ZERO.subtract(p1);
+                    } else if (type.equals("付款")) {
+                        allPrice = p1;
+                    } else if (type.equals("收入")) {
+                        allPrice =  p1.subtract(p2);
+                    } else if (type.equals("支出")) {
+                        allPrice = p2.subtract(p1);
+                    }
+                    dha.setBillMoney(p1); //单据金额
+                    dha.setChangeAmount(p2); //实际支付
+                    DecimalFormat df = new DecimalFormat(".##");
+                    dha.setAllPrice(new BigDecimal(df.format(allPrice.multiply(new BigDecimal(j))))); //本期变化
+                    dha.setSupplierName(dha.getSupplierName()); //单位名称
+                    dha.setoTime(dha.getoTime()); //单据日期
+                }
+            }
+        } catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
@@ -491,17 +551,11 @@ public class DepotHeadService {
     public BigDecimal findTotalPay(Integer supplierId, String endTime, String supType) {
         BigDecimal sum = BigDecimal.ZERO;
         String getS = supplierId.toString();
-        int i = 1;
-        if (("customer").equals(supType)) { //客户
-            i = 1;
-        } else if (("vendor").equals(supType)) { //供应商
-            i = -1;
+        if (("客户").equals(supType)) { //客户
+            sum = allMoney(getS, "出库", "销售", "合计",endTime).subtract(allMoney(getS, "出库", "销售", "实际",endTime));
+        } else if (("供应商").equals(supType)) { //供应商
+            sum = allMoney(getS, "入库", "采购", "合计",endTime).subtract(allMoney(getS, "入库", "采购", "实际",endTime));
         }
-        //进销部分
-        sum = sum.subtract((allMoney(getS, "入库", "采购", "合计",endTime).subtract(allMoney(getS, "入库", "采购", "实际",endTime))).multiply(new BigDecimal(i)));
-        sum = sum.subtract((allMoney(getS, "入库", "销售退货", "合计",endTime).subtract(allMoney(getS, "入库", "销售退货", "实际",endTime))).multiply(new BigDecimal(i)));
-        sum = sum.add((allMoney(getS, "出库", "销售", "合计",endTime).subtract(allMoney(getS, "出库", "销售", "实际",endTime))).multiply(new BigDecimal(i)));
-        sum = sum.add((allMoney(getS, "出库", "采购退货", "合计",endTime).subtract(allMoney(getS, "出库", "采购退货", "实际",endTime))).multiply(new BigDecimal(i)));
         return sum;
     }
 
@@ -568,12 +622,18 @@ public class DepotHeadService {
         /**处理单据主表数据*/
         DepotHead depotHead = JSONObject.parseObject(beanJson, DepotHead.class);
         String subType = depotHead.getSubType();
-        if("零售".equals(subType) || "零售退货".equals(subType)
-                || "采购".equals(subType) || "采购退货".equals(subType)
-                || "销售".equals(subType) || "销售退货".equals(subType)) {
+        //结算账户校验
+        if("采购".equals(subType) || "采购退货".equals(subType) || "销售".equals(subType) || "销售退货".equals(subType)) {
             if (StringUtil.isEmpty(depotHead.getAccountIdList()) && depotHead.getAccountId() == null) {
                 throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_ACCOUNT_FAILED_CODE,
                         String.format(ExceptionConstants.DEPOT_HEAD_ACCOUNT_FAILED_MSG));
+            }
+        }
+        //欠款校验
+        if("采购退货".equals(subType) || "销售退货".equals(subType)) {
+            if(depotHead.getChangeAmount().abs().compareTo(depotHead.getDiscountLastMoney().add(depotHead.getOtherMoney()))!=0) {
+                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_BACK_BILL_DEBT_FAILED_CODE,
+                        String.format(ExceptionConstants.DEPOT_HEAD_BACK_BILL_DEBT_FAILED_MSG));
             }
         }
         //判断用户是否已经登录过，登录过不再处理
@@ -586,7 +646,15 @@ public class DepotHeadService {
             depotHead.setAccountIdList(depotHead.getAccountIdList().replace("[", "").replace("]", "").replaceAll("\"", ""));
         }
         if(StringUtil.isNotEmpty(depotHead.getAccountMoneyList())) {
-            depotHead.setAccountMoneyList(depotHead.getAccountMoneyList().replace("[", "").replace("]", "").replaceAll("\"", ""));
+            //校验多账户的结算金额
+            String accountMoneyList = depotHead.getAccountMoneyList().replace("[", "").replace("]", "").replaceAll("\"", "");
+            int sum = StringUtil.getArrSum(accountMoneyList.split(","));
+            BigDecimal manyAccountSum = BigDecimal.valueOf(sum).abs();
+            if(manyAccountSum.compareTo(depotHead.getChangeAmount().abs())!=0) {
+                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_MANY_ACCOUNT_FAILED_CODE,
+                        String.format(ExceptionConstants.DEPOT_HEAD_MANY_ACCOUNT_FAILED_MSG));
+            }
+            depotHead.setAccountMoneyList(accountMoneyList);
         }
         try{
             depotHeadMapper.insertSelective(depotHead);
@@ -629,30 +697,44 @@ public class DepotHeadService {
      * 更新单据主表及单据子表信息
      * @param beanJson
      * @param rows
-     * @param preTotalPrice
      * @param tenantId
      * @param request
      * @throws Exception
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public void updateDepotHeadAndDetail(String beanJson, String rows,
-                                         BigDecimal preTotalPrice, Long tenantId,HttpServletRequest request)throws Exception {
+    public void updateDepotHeadAndDetail(String beanJson, String rows, Long tenantId,HttpServletRequest request)throws Exception {
         /**更新单据主表信息*/
         DepotHead depotHead = JSONObject.parseObject(beanJson, DepotHead.class);
+        //获取之前的金额数据
+        BigDecimal preTotalPrice = getDepotHead(depotHead.getId()).getTotalPrice().abs();
         String subType = depotHead.getSubType();
-        if("零售".equals(subType) || "零售退货".equals(subType)
-                || "采购".equals(subType) || "采购退货".equals(subType)
-                || "销售".equals(subType) || "销售退货".equals(subType)) {
+        //结算账户校验
+        if("采购".equals(subType) || "采购退货".equals(subType) || "销售".equals(subType) || "销售退货".equals(subType)) {
             if (StringUtil.isEmpty(depotHead.getAccountIdList()) && depotHead.getAccountId() == null) {
                 throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_ACCOUNT_FAILED_CODE,
                         String.format(ExceptionConstants.DEPOT_HEAD_ACCOUNT_FAILED_MSG));
+            }
+        }
+        //欠款校验
+        if("采购退货".equals(subType) || "销售退货".equals(subType)) {
+            if(depotHead.getChangeAmount().abs().compareTo(depotHead.getDiscountLastMoney().add(depotHead.getOtherMoney()))!=0) {
+                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_BACK_BILL_DEBT_FAILED_CODE,
+                        String.format(ExceptionConstants.DEPOT_HEAD_BACK_BILL_DEBT_FAILED_MSG));
             }
         }
         if(StringUtil.isNotEmpty(depotHead.getAccountIdList())){
             depotHead.setAccountIdList(depotHead.getAccountIdList().replace("[", "").replace("]", "").replaceAll("\"", ""));
         }
         if(StringUtil.isNotEmpty(depotHead.getAccountMoneyList())) {
-            depotHead.setAccountMoneyList(depotHead.getAccountMoneyList().replace("[", "").replace("]", "").replaceAll("\"", ""));
+            //校验多账户的结算金额
+            String accountMoneyList = depotHead.getAccountMoneyList().replace("[", "").replace("]", "").replaceAll("\"", "");
+            int sum = StringUtil.getArrSum(accountMoneyList.split(","));
+            BigDecimal manyAccountSum = BigDecimal.valueOf(sum).abs();
+            if(manyAccountSum.compareTo(depotHead.getChangeAmount().abs())!=0) {
+                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_MANY_ACCOUNT_FAILED_CODE,
+                        String.format(ExceptionConstants.DEPOT_HEAD_MANY_ACCOUNT_FAILED_MSG));
+            }
+            depotHead.setAccountMoneyList(accountMoneyList);
         }
         try{
             depotHeadMapper.updateByPrimaryKeySelective(depotHead);

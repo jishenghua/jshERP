@@ -95,12 +95,7 @@ public class SupplierService {
             for(Supplier s : list) {
                 Integer supplierId = s.getId().intValue();
                 String endTime = getNow3();
-                String supType = null;
-                if(("客户").equals(s.getType())) {
-                    supType = "customer";
-                } else if(("供应商").equals(s.getType())) {
-                    supType = "vendor";
-                }
+                String supType = s.getType();
                 BigDecimal sum = BigDecimal.ZERO;
                 BigDecimal beginNeedGet = s.getBeginNeedGet();
                 if(beginNeedGet==null) {
@@ -110,15 +105,13 @@ public class SupplierService {
                 if(beginNeedPay==null) {
                     beginNeedPay = BigDecimal.ZERO;
                 }
-                sum = sum.add(depotHeadService.findTotalPay(supplierId, endTime, supType));
-                sum = sum.add(accountHeadService.findTotalPay(supplierId, endTime, supType));
+                sum = sum.add(depotHeadService.findTotalPay(supplierId, endTime, supType))
+                        .subtract(accountHeadService.findTotalPay(supplierId, endTime, supType));
                 if(("客户").equals(s.getType())) {
-                    sum = sum.add(beginNeedGet).subtract(beginNeedPay);
+                    sum = sum.add(beginNeedGet);
                     s.setAllNeedGet(sum);
-                    s.setAllNeedPay(BigDecimal.ZERO);
                 } else if(("供应商").equals(s.getType())) {
-                    sum = sum.add(beginNeedPay).subtract(beginNeedGet);
-                    s.setAllNeedGet(BigDecimal.ZERO);
+                    sum = sum.add(beginNeedPay);
                     s.setAllNeedPay(sum);
                 }
                 resList.add(s);

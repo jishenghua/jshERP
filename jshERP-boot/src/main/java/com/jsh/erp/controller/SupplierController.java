@@ -166,60 +166,6 @@ public class SupplierController {
     }
 
     /**
-     * 根据id查找信息
-     * @param supplierId
-     * @param request
-     * @return
-     */
-    @GetMapping(value = "/findById")
-    public BaseResponseInfo findById(@RequestParam("supplierId") Long supplierId,
-                              HttpServletRequest request)throws Exception {
-        BaseResponseInfo res = new BaseResponseInfo();
-        try {
-            JSONArray dataArray = new JSONArray();
-            List<Supplier> dataList = supplierService.findById(supplierId);
-            if (null != dataList) {
-                for (Supplier supplier : dataList) {
-                    JSONObject item = new JSONObject();
-                    item.put("id", supplier.getId());
-                    //名称
-                    item.put("supplier", supplier.getSupplier());
-                    item.put("type", supplier.getType());
-                    item.put("contacts", supplier.getContacts());
-                    item.put("phonenum", supplier.getPhoneNum());
-                    item.put("email", supplier.getEmail());
-                    item.put("AdvanceIn", supplier.getAdvanceIn());
-                    item.put("BeginNeedGet", supplier.getBeginNeedGet());
-                    item.put("BeginNeedPay", supplier.getBeginNeedPay());
-                    /**
-                     * 2018-01-28这里会有空指针异常
-                     * */
-                    if(supplier.getIsystem()!=null){
-                        item.put("isystem", supplier.getIsystem() == (short) 0 ? "是" : "否");
-                    }
-                    item.put("description", supplier.getDescription());
-                    item.put("fax", supplier.getFax());
-                    item.put("telephone", supplier.getTelephone());
-                    item.put("address", supplier.getAddress());
-                    item.put("taxNum", supplier.getTaxNum());
-                    item.put("bankName", supplier.getBankName());
-                    item.put("accountNumber", supplier.getAccountNumber());
-                    item.put("taxRate", supplier.getTaxRate());
-                    item.put("enabled", supplier.getEnabled());
-                    dataArray.add(item);
-                }
-                res.code = 200;
-                res.data = dataArray;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            res.code = 500;
-            res.data = "获取数据失败";
-        }
-        return res;
-    }
-
-    /**
      * 批量设置状态-启用或者禁用
      * @param jsonObject
      * @param request

@@ -259,7 +259,7 @@ export const JeecgListMixin = {
     },
     handleDetail:function(record, type){
       this.$refs.modalDetail.show(record, type);
-      this.$refs.modalDetail.title="详情";
+      this.$refs.modalDetail.title=type+"-详情";
     },
     /* 导出 */
     handleExportXls2(){

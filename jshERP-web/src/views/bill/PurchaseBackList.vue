@@ -17,7 +17,7 @@
                   <a-input placeholder="请输入名称、规格、型号" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
-              <a-col :md="6" :sm="10">
+              <a-col :md="5" :sm="10">
                 <a-form-item label="单据日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-range-picker
                     style="width: 210px"
@@ -49,6 +49,9 @@
               批量操作 <a-icon type="down" />
             </a-button>
           </a-dropdown>
+          <a-tooltip placement="left" title="用于采购入库单据的退货。采购退货单可以由采购出库单转过来，也可以单独创建。" slot="action">
+            <a-icon v-if="btnEnableList.indexOf(1)>-1" type="info-circle" style="font-size:20px;float:right;" />
+          </a-tooltip>
         </div>
         <!-- table区域-begin -->
         <div>
@@ -152,13 +155,13 @@
               return (record.discountMoney + record.discountLastMoney).toFixed(2);
             }
           },
-          { title: '待收金额', dataIndex: 'needBackMoney',width:80,
+          { title: '待退金额', dataIndex: 'needBackMoney',width:80,
             customRender:function (text,record,index) {
               let needBackMoney = record.discountLastMoney + record.otherMoney
               return needBackMoney? needBackMoney.toFixed(2):''
             }
           },
-          { title: '收款', dataIndex: 'changeAmount',width:50},
+          { title: '退款', dataIndex: 'changeAmount',width:50},
           {
             title: '操作',
             dataIndex: 'action',

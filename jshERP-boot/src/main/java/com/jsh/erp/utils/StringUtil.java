@@ -162,6 +162,14 @@ public class StringUtil {
         return new ArrayList<String>();
     }
 
+    public static int getArrSum(String[] strings) {
+        int sum = 0;
+        for(int i=0;i<strings.length;i++){
+            sum=sum+ Integer.parseInt(strings[i]);
+        }
+        return sum;
+    }
+
     /**
      * String字符串转成List<Long>数据格式
      * String str = "1,2,3,4,5,6" -> List<Long> listLong [1,2,3,4,5,6];

@@ -17,7 +17,7 @@
                   <a-input placeholder="请输入名称、规格、型号" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
-              <a-col :md="6" :sm="10">
+              <a-col :md="5" :sm="10">
                 <a-form-item label="单据日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-range-picker
                     style="width: 210px"
@@ -51,6 +51,10 @@
               批量操作 <a-icon type="down" />
             </a-button>
           </a-dropdown>
+          <a-tooltip placement="left" title="销售订单不涉及收款金额，销售订单可以转销售出库单，但需要先对销售订单进行审核。
+          勾选之后可以进行批量操作（删除、审核、反审核）" slot="action">
+            <a-icon v-if="btnEnableList.indexOf(1)>-1" type="info-circle" style="font-size:20px;float:right;" />
+          </a-tooltip>
         </div>
         <!-- table区域-begin -->
         <div>

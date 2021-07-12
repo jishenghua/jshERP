@@ -52,9 +52,11 @@
       rowKey="id"
       :columns="columns"
       :dataSource="dataSource"
+      :pagination="ipagination"
       :loading="loading"
       :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange, type: getType}"
-      :customRow="rowAction">
+      :customRow="rowAction"
+      @change="handleTableChange">
     </a-table>
     <!-- table区域-end -->
   </a-modal>
@@ -155,6 +157,8 @@
         }
         this.model = Object.assign({}, {});
         this.visible = true;
+        this.ipagination.pageSize = 100
+        this.ipagination.pageSizeOptions = ['100', '200', '300']
         this.loadData(1)
       },
       close () {

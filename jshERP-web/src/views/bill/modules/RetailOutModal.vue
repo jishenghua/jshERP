@@ -17,7 +17,8 @@
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="会员卡号">
-              <a-select placeholder="选择会员卡号" v-decorator="[ 'organId' ]" :dropdownMatchSelectWidth="false">
+              <a-select placeholder="选择会员卡号" v-decorator="[ 'organId' ]"
+                :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children" @change="onChangeOrgan">
                 <a-select-option v-for="(item,index) in retailList" :key="index" :value="item.id">
                   {{ item.supplier }}
                 </a-select-option>
@@ -26,7 +27,7 @@
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
-              <j-date v-decorator="['operTime']" :show-time="true"/>
+              <j-date v-decorator="['operTime', validatorRules.operTime]" :show-time="true"/>
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
@@ -36,9 +37,10 @@
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款类型">
-              <a-select placeholder="请选择付款类型" v-decorator="[ 'payType' ]">
-                <a-select-option value="现付">现付</a-select-option>
-                <a-select-option value="预付款">预付款</a-select-option>
+              <a-select placeholder="请选择付款类型" v-decorator="[ 'payType' ]" :dropdownMatchSelectWidth="false">
+                <a-select-option v-for="(item,index) in payTypeList" :key="index" :value="item.value">
+                  {{ item.text }}
+                </a-select-option>
               </a-select>
             </a-form-item>
           </a-col>
@@ -112,6 +114,8 @@
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
   import { getMpListShort } from "@/utils/util"
+  import { getAccount } from '@/api/api'
+  import { getAction } from '@/api/manage'
   import JUpload from '@/components/jeecg/JUpload'
   import JDate from '@/components/jeecg/JDate'
   import Vue from 'vue'
@@ -133,6 +137,7 @@
         operTimeStr: '',
         prefixNo: 'LSCK',
         fileList:[],
+        payTypeList: [],
         model: {},
         labelCol: {
           xs: { span: 24 },
@@ -189,6 +194,7 @@
       }
     },
     created () {
+      this.initPayTypeList()
     },
     methods: {
       //调用完edit()方法之后会自动调用此方法
@@ -203,6 +209,11 @@
           this.model.operTime = this.model.operTimeStr
           this.model.getAmount = this.model.changeAmount
           this.fileList = this.model.fileName
+          if(this.model.payType === '预付款'){
+            this.payTypeList = []
+            this.payTypeList.push({"value":"预付款", "text":"预付款"})
+            this.payTypeList.push({"value":"现付", "text":"现付"})
+          }
           this.$nextTick(() => {
             this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'number', 'payType', 'remark',
               'discount','discountMoney','discountLastMoney','otherMoney','accountId','changeAmount','getAmount'))
@@ -238,6 +249,35 @@
           info: JSON.stringify(billMain),
           rows: JSON.stringify(detailArr),
         }
+      },
+      //加载收款类型
+      initPayTypeList() {
+        this.payTypeList.push({"value":"现付", "text":"现付"})
+      },
+      initAccount(){
+        getAccount({}).then((res)=>{
+          if(res && res.code === 200) {
+            this.accountList = res.data.accountList
+          }
+        })
+      },
+      //选择会员的触发事件
+      onChangeOrgan(value) {
+        getAction("/supplier/info", {id: value}).then(res=>{
+          if(res && res.code === 200){
+            this.payTypeList = []
+            let info = res.data.info
+            if(info.advanceIn) {
+              this.payTypeList.push({"value":"预付款", "text":"预付款（" + info.advanceIn + "）"})
+              this.payTypeList.push({"value":"现付", "text":"现付"})
+              this.$nextTick(() => {
+                this.form.setFieldsValue({'payType': '预付款'})
+              })
+            } else {
+              this.payTypeList.push({"value":"现付", "text":"现付"})
+            }
+          }
+        })
       },
       //改变实收金额、收款金额的值
       autoChangePrice(target) {

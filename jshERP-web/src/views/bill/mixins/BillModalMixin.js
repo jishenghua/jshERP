@@ -150,6 +150,16 @@ export const BillModalMixin = {
         this.manyAccountBtnStatus = false
       }
     },
+    manyAccountModalFormOk(idList, moneyList, allPrice) {
+      this.accountIdList = idList
+      this.accountMoneyList = moneyList
+      let discountLastMoney = this.form.getFieldValue('discountLastMoney')-0
+      let otherMoney = this.form.getFieldValue('otherMoney')-0
+      let debt = (discountLastMoney + otherMoney - allPrice).toFixed(2)
+      this.$nextTick(() => {
+        this.form.setFieldsValue({'changeAmount':allPrice, 'debt':debt})
+      });
+    },
     onAdded(event) {
       const { row, target } = event
       getAction('/depot/findDepotByCurrentUser').then((res) => {

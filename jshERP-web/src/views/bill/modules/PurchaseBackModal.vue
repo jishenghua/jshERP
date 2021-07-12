@@ -18,7 +18,8 @@
           <a-row class="form-row" :gutter="24">
             <a-col :lg="6" :md="12" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="供应商">
-                <a-select placeholder="选择供应商" v-decorator="[ 'organId', validatorRules.organId ]" :dropdownMatchSelectWidth="false">
+                <a-select placeholder="选择供应商" v-decorator="[ 'organId', validatorRules.organId ]"
+                  :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
                   <a-select-option v-for="(item,index) in supList" :key="index" :value="item.id">
                     {{ item.supplier }}
                   </a-select-option>
@@ -27,7 +28,7 @@
             </a-col>
             <a-col :lg="6" :md="12" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
-                <j-date v-decorator="['operTime']" :show-time="true"/>
+                <j-date v-decorator="['operTime', validatorRules.operTime]" :show-time="true"/>
               </a-form-item>
             </a-col>
             <a-col :lg="6" :md="12" :sm="24">
@@ -98,7 +99,7 @@
             </a-col>
             <a-col :lg="6" :md="12" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="本次退款">
-                <a-input placeholder="请输入本次付款" v-decorator.trim="[ 'changeAmount' ]" @keyup="onKeyUpChangeAmount"/>
+                <a-input placeholder="请输入本次退款" v-decorator.trim="[ 'changeAmount' ]" @keyup="onKeyUpChangeAmount" :readOnly="true"/>
               </a-form-item>
             </a-col>
             <a-col :lg="6" :md="12" :sm="24">
@@ -130,7 +131,7 @@
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
-  import { getMpListShort, changeListFmtMinus} from "@/utils/util"
+  import { getMpListShort} from "@/utils/util"
   import { getAction } from '@/api/manage'
   import JUpload from '@/components/jeecg/JUpload'
   import JDate from '@/components/jeecg/JDate'
@@ -264,6 +265,11 @@
           totalPrice += item.allPrice-0
         }
         billMain.totalPrice = totalPrice
+        if(billMain.accountId === 0) {
+          billMain.accountId = ''
+        }
+        billMain.accountIdList = this.accountIdList.length>0 ? JSON.stringify(this.accountIdList) : ""
+        billMain.accountMoneyList = this.accountMoneyList.length>0 ? JSON.stringify(this.accountMoneyList) : ""
         if(this.fileList && this.fileList.length > 0) {
           billMain.fileName = this.fileList
         }
@@ -274,13 +280,6 @@
           info: JSON.stringify(billMain),
           rows: JSON.stringify(detailArr),
         }
-      },
-      manyAccountModalFormOk(idList, moneyList, allPrice) {
-        this.accountIdList = idList
-        this.accountMoneyList = changeListFmtMinus(moneyList)
-        this.$nextTick(() => {
-          this.form.setFieldsValue({'changeAmount':allPrice})
-        });
       },
       onSearchLinkNumber() {
         this.$refs.linkBillList.show('入库', '采购', '供应商', "0")

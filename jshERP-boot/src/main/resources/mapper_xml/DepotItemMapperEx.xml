@@ -187,8 +187,8 @@
             and dh.oper_time &lt;= #{endTime}
         </if>
         and ifnull(m.delete_flag,'0') !='1'
-        group by m.id,m.name, m.model, m.unit, m.color, u.name
-        order by m.name, m.model asc
+        group by m.id
+        order by m.id desc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
         </if>
@@ -265,12 +265,12 @@
 
     <select id="getStockByParam"  resultMap="StockMap">
         select ifnull((curep.inTotal+curep.transfInTotal+curep.assemInTotal+curep.disAssemInTotal),0) as in_stock,
-        ifnull((curep.transfOutTotal+curep.outTotal+curep.assemOutTotal+curep.disAssemOutTotal),0) out_stock
+        ifnull((curep.outTotal+curep.transfOutTotal+curep.assemOutTotal+curep.disAssemOutTotal),0) out_stock
         from
         (select sum(if(dh.type='入库' <if test="depotId != null">and di.depot_id=#{depotId}</if>, di.basic_number,0)) as inTotal,
+        sum(if(dh.type='出库' and dh.sub_type!='调拨' <if test="depotId != null">and di.depot_id=#{depotId}</if>,di.basic_number,0)) as outTotal,
         sum(if(dh.sub_type='调拨' <if test="depotId != null">and di.another_depot_id=#{depotId}</if>,di.basic_number,0)) as transfInTotal,
         sum(if(dh.sub_type='调拨' <if test="depotId != null">and di.depot_id=#{depotId}</if>,di.basic_number,0)) as transfOutTotal,
-        sum(if(dh.type='出库' and dh.sub_type!='调拨' <if test="depotId != null">and di.depot_id=#{depotId}</if>,di.basic_number,0)) as outTotal,
         sum(if(dh.sub_type='组装单' and di.material_type='组合件' <if test="depotId != null">and di.depot_id=#{depotId}</if>,di.basic_number,0)) as assemInTotal,
         sum(if(dh.sub_type='组装单' and di.material_type='普通子件' <if test="depotId != null">and di.depot_id=#{depotId}</if>,di.basic_number,0)) as assemOutTotal,
         sum(if(dh.sub_type='拆卸单' and di.material_type='普通子件' <if test="depotId != null">and di.depot_id=#{depotId}</if>,di.basic_number,0)) as disAssemInTotal,

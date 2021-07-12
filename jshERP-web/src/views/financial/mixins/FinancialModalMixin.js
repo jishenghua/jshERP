@@ -155,6 +155,9 @@ export const FinancialModalMixin = {
     autoChangeAmount(target) {
       let allEachAmount = target.statisticsColumns.eachAmount-0
       let discountMoney = this.form.getFieldValue('discountMoney')-0
+      if(!discountMoney) {
+        discountMoney = 0
+      }
       let changeAmount = (allEachAmount-discountMoney).toFixed(2)
       this.$nextTick(() => {
         this.form.setFieldsValue({'totalPrice':allEachAmount, 'changeAmount':changeAmount})

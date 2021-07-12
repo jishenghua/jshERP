@@ -17,7 +17,8 @@
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="供应商">
-              <a-select placeholder="选择供应商" v-decorator="[ 'organId', validatorRules.organId ]" :dropdownMatchSelectWidth="false">
+              <a-select placeholder="选择供应商" v-decorator="[ 'organId', validatorRules.organId ]"
+                :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
                 <a-select-option v-for="(item,index) in supList" :key="index" :value="item.id">
                   {{ item.supplier }}
                 </a-select-option>
@@ -26,7 +27,7 @@
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
-              <j-date v-decorator="['operTime']" :show-time="true"/>
+              <j-date v-decorator="['operTime', validatorRules.operTime]" :show-time="true"/>
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">

@@ -12,7 +12,7 @@
                   <a-input placeholder="请输入单据编号" v-model="queryParam.billNo"></a-input>
                 </a-form-item>
               </a-col>
-              <a-col :md="6" :sm="10">
+              <a-col :md="5" :sm="10">
                 <a-form-item label="单据日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-range-picker
                     style="width: 210px"
@@ -44,6 +44,9 @@
               批量操作 <a-icon type="down" />
             </a-button>
           </a-dropdown>
+          <a-tooltip placement="left" title="针对会员模块，对会员收取预付款。" slot="action">
+            <a-icon v-if="btnEnableList.indexOf(1)>-1" type="info-circle" style="font-size:20px;float:right;" />
+          </a-tooltip>
         </div>
         <!-- table区域-begin -->
         <div>
@@ -124,7 +127,6 @@
           { title: '操作员', dataIndex: 'userName',width:80},
           { title: '单据日期 ', dataIndex: 'billTimeStr',width:160},
           { title: '合计金额', dataIndex: 'totalPrice',width:80},
-          { title: '优惠金额', dataIndex: 'discountMoney',width:80},
           { title: '收款金额', dataIndex: 'changeAmount',width:80},
           { title: '备注', dataIndex: 'remark',width:200},
           {
