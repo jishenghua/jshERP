@@ -8,7 +8,8 @@
             <a-row :gutter="24">
               <a-col :md="4" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="供应商">
-                  <a-select placeholder="选择供应商" v-model="queryParam.organId" :dropdownMatchSelectWidth="false">
+                  <a-select placeholder="选择供应商" v-model="queryParam.organId"
+                    :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
                     <a-select-option v-for="(item,index) in supList" :key="index" :value="item.id">
                       {{ item.supplier }}
                     </a-select-option>

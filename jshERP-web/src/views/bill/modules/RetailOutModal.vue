@@ -17,7 +17,8 @@
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="会员卡号">
-              <a-select placeholder="选择会员卡号" v-decorator="[ 'organId' ]" :dropdownMatchSelectWidth="false" @change="onChangeOrgan">
+              <a-select placeholder="选择会员卡号" v-decorator="[ 'organId' ]"
+                :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children" @change="onChangeOrgan">
                 <a-select-option v-for="(item,index) in retailList" :key="index" :value="item.id">
                   {{ item.supplier }}
                 </a-select-option>

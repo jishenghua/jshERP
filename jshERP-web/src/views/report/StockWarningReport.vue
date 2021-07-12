@@ -9,6 +9,7 @@
               <a-col :md="4" :sm="24">
                 <a-form-item label="仓库">
                   <a-select
+                    showSearch optionFilterProp="children"
                     style="width: 100%"
                     placeholder="请选择仓库"
                     v-model="queryParam.depotId">

@@ -30,7 +30,8 @@
               </a-col>
               <a-col :md="6" :sm="8">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="仓库">
-                  <a-select placeholder="选择仓库" v-model="queryParam.depotId" :dropdownMatchSelectWidth="false" allow-clear>
+                  <a-select placeholder="选择仓库" v-model="queryParam.depotId"
+                    :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children" allow-clear>
                     <a-select-option v-for="(item,index) in depotList" :key="index" :value="item.id">
                       {{ item.depotName }}
                     </a-select-option>
