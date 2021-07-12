@@ -2,5 +2,5 @@
 
 title jshERP
 
-java -Xms1000m -Xmx2000m -jar .\lib\jshERP3.0.jar
+java -Xms1000m -Xmx2000m -jar .\lib\jshERP.jar
 pause over
