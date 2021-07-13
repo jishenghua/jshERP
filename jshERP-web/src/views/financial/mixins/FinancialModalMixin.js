@@ -29,10 +29,6 @@ export const FinancialModalMixin = {
     };
   },
   created () {
-    this.initSupplier()
-    this.initCustomer()
-    this.initRetail()
-    this.initPerson()
   },
   computed: {
     readOnly: function() {
@@ -97,13 +93,14 @@ export const FinancialModalMixin = {
       let that = this;
       findInOutItemByParam({type:type}).then((res)=>{
         if(res) {
-          for(let i=0; i<res.length; i++) {
-            let inOutItemInfo = {};
-            inOutItemInfo.value = res[i].id+'' //注意-此处value必须为字符串格式
-            inOutItemInfo.text = res[i].name
-            inOutItemInfo.title = res[i].name
-            for(let item of that.accountTable.columns){
-              if(item.key == 'inOutItemId') {
+          for(let item of that.accountTable.columns){
+            if(item.key == 'inOutItemId') {
+              item.options = []
+              for(let i=0; i<res.length; i++) {
+                let inOutItemInfo = {};
+                inOutItemInfo.value = res[i].id + '' //注意-此处value必须为字符串格式
+                inOutItemInfo.text = res[i].name
+                inOutItemInfo.title = res[i].name
                 item.options.push(inOutItemInfo)
               }
             }
@@ -126,13 +123,14 @@ export const FinancialModalMixin = {
       getAccount({}).then((res)=>{
         if(res && res.code === 200) {
           let list = res.data.accountList;
-          for(let i=0; i<list.length; i++) {
-            let accountInfo = {};
-            accountInfo.value = list[i].id+'' //注意-此处value必须为字符串格式
-            accountInfo.text = list[i].name
-            accountInfo.title = list[i].name
-            for(let item of that.accountTable.columns){
-              if(item.key == 'accountId') {
+          for(let item of that.accountTable.columns){
+            if(item.key == 'accountId') {
+              item.options = []
+              for(let i=0; i<list.length; i++) {
+                let accountInfo = {};
+                accountInfo.value = list[i].id + '' //注意-此处value必须为字符串格式
+                accountInfo.text = list[i].name
+                accountInfo.title = list[i].name
                 item.options.push(accountInfo)
               }
             }

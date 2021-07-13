@@ -113,7 +113,7 @@
           dataSource: [],
           columns: [
             { title: '仓库名称', key: 'depotId', width: '8%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
-              validateRules: [{ required: true, message: '${title}不能为空' }]
+              allowSearch:true, validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             { title: '条码', key: 'barCode', width: '12%', type: FormTypes.popupJsh, multi: false,
               validateRules: [{ required: true, message: '${title}不能为空' }]
@@ -174,6 +174,8 @@
           let url = this.readOnly ? this.url.detailList : this.url.detailList;
           this.requestSubTableData(url, params, this.materialTable);
         }
+        this.initSupplier()
+        this.initDepot()
       },
       /** 整理成formData */
       classifyIntoFormData(allValues) {

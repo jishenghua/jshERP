@@ -101,7 +101,7 @@
           dataSource: [],
           columns: [
             { title: '仓库名称', key: 'depotId', width: '8%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
-              validateRules: [{ required: true, message: '${title}不能为空' }]
+              allowSearch:true, validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             { title: '条码', key: 'barCode', width: '10%', type: FormTypes.popupJsh, multi: false,
               validateRules: [{ required: true, message: '${title}不能为空' }]
@@ -111,7 +111,7 @@
             { title: '型号', key: 'model', width: '5%', type: FormTypes.input, readonly: true },
             { title: '扩展信息', key: 'materialOther', width: '6%', type: FormTypes.input, readonly: true },
             { title: '库存', key: 'stock', width: '5%', type: FormTypes.input, readonly: true },
-            { title: '调入仓库', key: 'anotherDepotId', width: '8%', type: FormTypes.select, placeholder: '请选择${title}', options: []},
+            { title: '调入仓库', key: 'anotherDepotId', width: '8%', type: FormTypes.select, placeholder: '请选择${title}', options: [], allowSearch:true},
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.input, readonly: true },
             { title: '数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
@@ -164,6 +164,7 @@
           let url = this.readOnly ? this.url.detailList : this.url.detailList;
           this.requestSubTableData(url, params, this.materialTable);
         }
+        this.initDepot()
       },
       //提交单据时整理成formData
       classifyIntoFormData(allValues) {

@@ -58,7 +58,8 @@
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款账户">
-              <a-select placeholder="选择付款账户" v-decorator="[ 'accountId', validatorRules.accountId ]" :dropdownMatchSelectWidth="false">
+              <a-select placeholder="选择付款账户" v-decorator="[ 'accountId', validatorRules.accountId ]"
+                :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
                 <a-select-option v-for="(item,index) in accountList" :key="index" :value="item.id">
                   {{ item.name }}
                 </a-select-option>
@@ -125,7 +126,7 @@
           dataSource: [],
           columns: [
             { title: '账户名称',key: 'accountId',width: '20%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
-              validateRules: [{ required: true, message: '${title}不能为空' }]
+              allowSearch:true, validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             { title: '金额',key: 'eachAmount', width: '10%', type: FormTypes.inputNumber, statistics: true, placeholder: '请选择${title}',
               validateRules: [{ required: true, message: '${title}不能为空' }]
@@ -164,8 +165,6 @@
       }
     },
     created () {
-      this.initAccount()
-      this.initDetailAccount()
     },
     methods: {
       //调用完edit()方法之后会自动调用此方法
@@ -187,6 +186,9 @@
           let url = this.readOnly ? this.url.detailList : this.url.detailList;
           this.requestSubTableData(url, params, this.accountTable);
         }
+        this.initPerson()
+        this.initAccount()
+        this.initDetailAccount()
       },
       //提交单据时整理成formData
       classifyIntoFormData(allValues) {
