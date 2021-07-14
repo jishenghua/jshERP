@@ -7,13 +7,13 @@
           <!-- 搜索区域 -->
           <a-form layout="inline" @keyup.enter.native="searchQuery">
             <a-row :gutter="24">
-              <a-col :md="4" :sm="6">
-                <a-form-item label="名称" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
+              <a-col :md="6" :sm="24">
+                <a-form-item label="名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-input placeholder="请输入名称查询" v-model="queryParam.name"></a-input>
                 </a-form-item>
               </a-col>
-              <a-col :md="4" :sm="6">
-                <a-form-item label="类型" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
+              <a-col :md="6" :sm="24">
+                <a-form-item label="类型" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-select v-model="queryParam.type" placeholder="请选择类型">
                     <a-select-option value="">请选择</a-select-option>
                     <a-select-option value="收入">收入</a-select-option>
@@ -21,8 +21,8 @@
                   </a-select>
                 </a-form-item>
               </a-col>
-              <a-col :md="4" :sm="6">
-                <a-form-item label="备注" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
+              <a-col :md="6" :sm="24">
+                <a-form-item label="备注" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-input placeholder="请输入备注查询" v-model="queryParam.remark"></a-input>
                 </a-form-item>
               </a-col>
@@ -94,6 +94,13 @@
     },
     data () {
       return {
+        labelCol: {
+          span: 5
+        },
+        wrapperCol: {
+          span: 18,
+          offset: 1
+        },
         // 查询条件
         queryParam: {name:'',type:'',remark:''},
         // 表头

@@ -7,7 +7,7 @@
           <a-form layout="inline" @keyup.enter.native="searchQuery">
             <a-row :gutter="24">
               <a-col :md="4" :sm="24">
-                <a-form-item label="仓库">
+                <a-form-item label="仓库" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-select
                     showSearch optionFilterProp="children"
                     style="width: 100%"
@@ -20,23 +20,24 @@
                 </a-form-item>
               </a-col>
               <a-col :md="4" :sm="24">
-                <a-form-item label="月份">
-                  <a-month-picker placeholder="请选择月份" :default-value="moment(currentMonth, monthFormat)" :format="monthFormat" @change="onChange"/>
+                <a-form-item label="月份" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-month-picker placeholder="请选择月份" :default-value="moment(currentMonth, monthFormat)"
+                        style="width:100%" :format="monthFormat" @change="onChange"/>
                 </a-form-item>
               </a-col>
-              <a-col :md="5" :sm="24">
-                <a-form-item label="商品信息">
-                  <a-input placeholder="名称、规格、型号" v-model="queryParam.materialParam"></a-input>
+              <a-col :md="4" :sm="24">
+                <a-form-item label="商品信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-input placeholder="名称/规格/型号" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
-              <a-col :md="4" :sm="24" >
+              <a-col :md="4" :sm="24">
                 <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                   <a-button type="primary" @click="searchQuery">查询</a-button>
                   <a-button style="margin-left: 8px" type="primary" icon="download" @click="handleExportXls('库存状况')">导出</a-button>
                   <a-button style="margin-left: 8px" v-print="'#reportPrint'" type="primary" icon="printer">打印</a-button>
                 </span>
               </a-col>
-              <a-col :md="4" :sm="24" >
+              <a-col :md="4" :sm="24">
                 <a-form-item label="本月合计金额">
                   {{totalCountMoneyStr}}
                 </a-form-item>
@@ -81,6 +82,13 @@
         // 查询条件
         currentMonth: moment().format('YYYY-MM'),
         monthFormat: 'YYYY-MM',
+        labelCol: {
+          span: 5
+        },
+        wrapperCol: {
+          span: 18,
+          offset: 1
+        },
         queryParam: {
           depotId:'',
           monthTime: moment().format('YYYY-MM'),
@@ -114,14 +122,6 @@
           {title: '本月结存数量', dataIndex: 'thisSum', width: 120},
           {title: '结存金额', dataIndex: 'thisAllPrice', width: 80}
         ],
-        labelCol: {
-          xs: { span: 1 },
-          sm: { span: 2 },
-        },
-        wrapperCol: {
-          xs: { span: 10 },
-          sm: { span: 16 },
-        },
         url: {
           list: "/depotItem/findByAll",
           totalCountMoney: "/depotItem/totalCountMoney",

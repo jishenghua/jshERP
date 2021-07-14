@@ -7,13 +7,13 @@
           <!-- 搜索区域 -->
           <a-form layout="inline" @keyup.enter.native="searchQuery">
             <a-row :gutter="24">
-              <a-col :md="4" :sm="6">
-                <a-form-item label="仓库名称" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
+              <a-col :md="6" :sm="24">
+                <a-form-item label="仓库名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-input placeholder="请输入仓库名称查询" v-model="queryParam.name"></a-input>
                 </a-form-item>
               </a-col>
-              <a-col :md="4" :sm="6">
-                <a-form-item label="描述" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
+              <a-col :md="6" :sm="24">
+                <a-form-item label="描述" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-input placeholder="请输入描述查询" v-model="queryParam.remark"></a-input>
                 </a-form-item>
               </a-col>
@@ -90,6 +90,13 @@
     },
     data () {
       return {
+        labelCol: {
+          span: 5
+        },
+        wrapperCol: {
+          span: 18,
+          offset: 1
+        },
         // 查询条件
         queryParam: {name:'',remark:''},
         // 表头
