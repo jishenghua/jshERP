@@ -74,6 +74,15 @@
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
         </if>
+        <if test="organId != null">
+            and dh.organ_id=#{organId}
+        </if>
+        <if test="creator != null">
+            and dh.creator=#{creator}
+        </if>
+        <if test="depotId != null">
+            and di.depot_id=#{depotId}
+        </if>
         <if test="depotArray != null and depotArray !=''">
             and di.depot_id in (
             <foreach collection="depotArray" item="depotId" separator=",">
@@ -123,6 +132,15 @@
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
+        </if>
+        <if test="organId != null">
+            and dh.organ_id=#{organId}
+        </if>
+        <if test="creator != null">
+            and dh.creator=#{creator}
+        </if>
+        <if test="depotId != null">
+            and di.depot_id=#{depotId}
         </if>
         <if test="depotArray != null and depotArray !=''">
             and di.depot_id in (

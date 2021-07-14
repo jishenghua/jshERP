@@ -27,6 +27,9 @@ public interface DepotHeadMapperEx {
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("materialParam") String materialParam,
+            @Param("organId") Long organId,
+            @Param("creator") Long creator,
+            @Param("depotId") Long depotId,
             @Param("depotArray") String[] depotArray,
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
@@ -40,6 +43,9 @@ public interface DepotHeadMapperEx {
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("materialParam") String materialParam,
+            @Param("organId") Long organId,
+            @Param("creator") Long creator,
+            @Param("depotId") Long depotId,
             @Param("depotArray") String[] depotArray);
 
     String findMaterialsListByHeaderId(

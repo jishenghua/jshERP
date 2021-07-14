@@ -39,7 +39,11 @@ public class DepotHeadComponent implements ICommonQuery {
         String beginTime = StringUtil.getInfo(search, "beginTime");
         String endTime = StringUtil.getInfo(search, "endTime");
         String materialParam = StringUtil.getInfo(search, "materialParam");
-        return depotHeadService.select(type, subType, roleType, status, number, beginTime, endTime, materialParam, QueryUtils.offset(map), QueryUtils.rows(map));
+        Long organId = StringUtil.parseStrLong(StringUtil.getInfo(search, "organId"));
+        Long creator = StringUtil.parseStrLong(StringUtil.getInfo(search, "creator"));
+        Long depotId = StringUtil.parseStrLong(StringUtil.getInfo(search, "depotId"));
+        return depotHeadService.select(type, subType, roleType, status, number, beginTime, endTime, materialParam,
+                organId, creator, depotId, QueryUtils.offset(map), QueryUtils.rows(map));
     }
 
     @Override
@@ -53,7 +57,11 @@ public class DepotHeadComponent implements ICommonQuery {
         String beginTime = StringUtil.getInfo(search, "beginTime");
         String endTime = StringUtil.getInfo(search, "endTime");
         String materialParam = StringUtil.getInfo(search, "materialParam");
-        return depotHeadService.countDepotHead(type, subType, roleType, status, number, beginTime, endTime, materialParam);
+        Long organId = StringUtil.parseStrLong(StringUtil.getInfo(search, "organId"));
+        Long creator = StringUtil.parseStrLong(StringUtil.getInfo(search, "creator"));
+        Long depotId = StringUtil.parseStrLong(StringUtil.getInfo(search, "depotId"));
+        return depotHeadService.countDepotHead(type, subType, roleType, status, number, beginTime, endTime, materialParam,
+                organId, creator, depotId);
     }
 
     @Override

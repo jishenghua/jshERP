@@ -104,8 +104,8 @@ public class DepotHeadService {
     }
 
     public List<DepotHeadVo4List> select(String type, String subType, String roleType, String status, String number, String beginTime, String endTime,
-                                         String materialParam, int offset, int rows)throws Exception {
-        List<DepotHeadVo4List> resList = new ArrayList<DepotHeadVo4List>();
+               String materialParam, Long organId, Long creator, Long depotId, int offset, int rows)throws Exception {
+        List<DepotHeadVo4List> resList = new ArrayList<>();
         List<DepotHeadVo4List> list=new ArrayList<>();
         try{
             String depotIds = depotService.findDepotStrByCurrentUser();
@@ -115,7 +115,8 @@ public class DepotHeadService {
             Map<Long,String> accountMap = accountService.getAccountMap();
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            list=depotHeadMapperEx.selectByConditionDepotHead(type, subType, creatorArray, status, number, beginTime, endTime, materialParam, depotArray, offset, rows);
+            list=depotHeadMapperEx.selectByConditionDepotHead(type, subType, creatorArray, status, number, beginTime, endTime,
+                 materialParam, organId, creator, depotId, depotArray, offset, rows);
             if (null != list) {
                 for (DepotHeadVo4List dh : list) {
                     if(accountMap!=null && StringUtil.isNotEmpty(dh.getAccountIdList()) && StringUtil.isNotEmpty(dh.getAccountMoneyList())) {
@@ -153,7 +154,7 @@ public class DepotHeadService {
     }
 
     public Long countDepotHead(String type, String subType, String roleType, String status, String number, String beginTime, String endTime,
-                               String materialParam) throws Exception{
+                String materialParam, Long organId, Long creator, Long depotId) throws Exception{
         Long result=null;
         try{
             String depotIds = depotService.findDepotStrByCurrentUser();
@@ -161,7 +162,8 @@ public class DepotHeadService {
             String [] creatorArray = getCreatorArray(roleType);
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            result=depotHeadMapperEx.countsByDepotHead(type, subType, creatorArray, status, number, beginTime, endTime, materialParam, depotArray);
+            result=depotHeadMapperEx.countsByDepotHead(type, subType, creatorArray, status, number, beginTime, endTime,
+                   materialParam, organId, creator, depotId, depotArray);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }

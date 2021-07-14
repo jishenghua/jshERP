@@ -271,7 +271,7 @@ public class DepotHeadController {
         String rows = body.getRows();
         Long billsNumLimit = Long.parseLong(redisService.getObjectFromSessionByKey(request,"billsNumLimit").toString());
         Long tenantId = redisService.getTenantId(request);
-        Long count = depotHeadService.countDepotHead(null,null,null,null,null,null,null,null);
+        Long count = depotHeadService.countDepotHead(null,null,null,null,null,null,null,null,null,null,null);
         if(count>= billsNumLimit) {
             throw new BusinessParamCheckingException(ExceptionConstants.DEPOT_HEAD_OVER_LIMIT_FAILED_CODE,
                     ExceptionConstants.DEPOT_HEAD_OVER_LIMIT_FAILED_MSG);

@@ -93,6 +93,14 @@ public class StringUtil {
         }
     }
 
+    public static Long parseStrLong(String str) {
+        if (StringUtil.isNotEmpty(str)) {
+            return Long.parseLong(str);
+        } else {
+            return null;
+        }
+    }
+
     public static List<UUID> listToUUID(List<String> listStrs) {
         if (listStrs != null && listStrs.size() > 0) {
             List<UUID> uuidList = new ArrayList<UUID>();
