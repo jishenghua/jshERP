@@ -1,6 +1,16 @@
 import Vue from 'vue'
+import {getAction } from '@/api/manage'
+import {findBySelectSup, findBySelectCus, findBySelectRetail, getUserList } from '@/api/api'
 
 export const BillListMixin = {
+  data () {
+    return {
+      supList: [],
+      cusList: [],
+      retailList: [],
+      userList: []
+    }
+  },
   computed: {
     importExcelUrl: function(){
       return `${window._CONFIG['domianURL']}/${this.url.importExcelUrl}`;
@@ -52,6 +62,46 @@ export const BillListMixin = {
       if(this.btnEnableList.indexOf(2)===-1) {
         this.columns.splice(7,1)
       }
+    },
+    initSupplier() {
+      let that = this;
+      findBySelectSup({}).then((res)=>{
+        if(res) {
+          that.supList = res;
+        }
+      });
+    },
+    initCustomer() {
+      let that = this;
+      findBySelectCus({}).then((res)=>{
+        if(res) {
+          that.cusList = res;
+        }
+      });
+    },
+    initRetail() {
+      let that = this;
+      findBySelectRetail({}).then((res)=>{
+        if(res) {
+          that.retailList = res;
+        }
+      });
+    },
+    getDepotData() {
+      getAction('/depot/findDepotByCurrentUser').then((res)=>{
+        if(res.code === 200){
+          this.depotList = res.data;
+        }else{
+          this.$message.info(res.data);
+        }
+      })
+    },
+    initUser() {
+      getUserList({}).then((res)=>{
+        if(res) {
+          this.userList = res;
+        }
+      });
     }
   }
 }

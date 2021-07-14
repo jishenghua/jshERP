@@ -29,10 +29,43 @@
                   />
                 </a-form-item>
               </a-col>
+              <template v-if="toggleSearchStatus">
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="供应商" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select placeholder="选择供应商" showSearch optionFilterProp="children" v-model="queryParam.organId">
+                      <a-select-option v-for="(item,index) in supList" :key="index" :value="item.id">
+                        {{ item.supplier }}
+                      </a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="仓库名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select placeholder="请选择仓库" showSearch optionFilterProp="children" v-model="queryParam.depotId">
+                      <a-select-option v-for="(depot,index) in depotList" :value="depot.id">
+                        {{ depot.depotName }}
+                      </a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="操作员" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select placeholder="选择操作员" showSearch optionFilterProp="children" v-model="queryParam.creator">
+                      <a-select-option v-for="(item,index) in userList" :key="index" :value="item.id">
+                        {{ item.userName }}
+                      </a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+              </template>
               <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                 <a-col :md="6" :sm="24">
                   <a-button type="primary" @click="searchQuery">查询</a-button>
                   <a-button style="margin-left: 8px" @click="searchReset">重置</a-button>
+                  <a @click="handleToggleSearch" style="margin-left: 8px">
+                    {{ toggleSearchStatus ? '收起' : '展开' }}
+                    <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
+                  </a>
                 </a-col>
               </span>
             </a-row>
@@ -116,7 +149,10 @@
           materialParam: "",
           type: "其它",
           subType: "采购订单",
-          roleType: Vue.ls.get('roleType')
+          roleType: Vue.ls.get('roleType'),
+          organId: "",
+          depotId: "",
+          creator: ""
         },
         labelCol: {
           span: 5
@@ -176,10 +212,12 @@
       }
     },
     created() {
+      this.initSupplier()
+      this.getDepotData()
+      this.initUser()
       this.removeStatusColumn()
     },
     computed: {
-
     },
     methods: {
       myHandleEdit(record) {
