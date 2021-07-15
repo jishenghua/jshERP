@@ -8,6 +8,8 @@ public class DepotHeadVo4InDetail {
 
     private String Number;
 
+    private String barCode;
+
     private String MName;
 
     private String Model;
@@ -36,6 +38,14 @@ public class DepotHeadVo4InDetail {
 
     public void setNumber(String number) {
         Number = number;
+    }
+
+    public String getBarCode() {
+        return barCode;
+    }
+
+    public void setBarCode(String barCode) {
+        this.barCode = barCode;
     }
 
     public String getMName() {

@@ -7,6 +7,8 @@ public class DepotItemStockWarningCount {
 
     private Long MId;
 
+    private String barCode;
+
     private String MName;
 
     private String MModel;
@@ -41,6 +43,14 @@ public class DepotItemStockWarningCount {
 
     public void setMId(Long MId) {
         this.MId = MId;
+    }
+
+    public String getBarCode() {
+        return barCode;
+    }
+
+    public void setBarCode(String barCode) {
+        this.barCode = barCode;
     }
 
     public String getMName() {

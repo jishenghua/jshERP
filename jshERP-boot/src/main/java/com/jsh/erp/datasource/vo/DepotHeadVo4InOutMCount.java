@@ -7,6 +7,8 @@ public class DepotHeadVo4InOutMCount {
 
     private Long MaterialId;
 
+    private String barCode;
+
     private String mName;
 
     private String Model;
@@ -27,6 +29,14 @@ public class DepotHeadVo4InOutMCount {
 
     public void setMaterialId(Long materialId) {
         MaterialId = materialId;
+    }
+
+    public String getBarCode() {
+        return barCode;
+    }
+
+    public void setBarCode(String barCode) {
+        this.barCode = barCode;
     }
 
     public String getmName() {
