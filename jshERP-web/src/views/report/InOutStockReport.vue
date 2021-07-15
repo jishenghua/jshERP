@@ -27,7 +27,7 @@
               </a-col>
               <a-col :md="4" :sm="24">
                 <a-form-item label="商品信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input placeholder="名称/规格/型号" v-model="queryParam.materialParam"></a-input>
+                  <a-input placeholder="条码/名称/规格/型号" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="4" :sm="24">
@@ -110,17 +110,18 @@
               return parseInt(index)+1;
             }
           },
-          {title: '名称', dataIndex: 'materialName', width: 160},
+          {title: '条码', dataIndex: 'barCode', width: 120},
+          {title: '名称', dataIndex: 'materialName', width: 120},
           {title: '规格', dataIndex: 'materialStandard', width: 80},
           {title: '型号', dataIndex: 'materialModel', width: 80},
           {title: '扩展信息', dataIndex: 'materialOther', width: 120},
           {title: '单位', dataIndex: 'unitName', width: 80},
           {title: '单价', dataIndex: 'unitPrice', width: 60},
-          {title: '上月结存数量', dataIndex: 'prevSum', width: 120},
-          {title: '入库数量', dataIndex: 'inSum', width: 80},
-          {title: '出库数量', dataIndex: 'outSum', width: 80},
-          {title: '本月结存数量', dataIndex: 'thisSum', width: 120},
-          {title: '结存金额', dataIndex: 'thisAllPrice', width: 80}
+          {title: '上月结存数量', dataIndex: 'prevSum', width: 80},
+          {title: '入库数量', dataIndex: 'inSum', width: 60},
+          {title: '出库数量', dataIndex: 'outSum', width: 60},
+          {title: '本月结存数量', dataIndex: 'thisSum', width: 80},
+          {title: '结存金额', dataIndex: 'thisAllPrice', width: 60}
         ],
         url: {
           list: "/depotItem/findByAll",

@@ -31,7 +31,7 @@
               </a-col>
               <a-col :md="4" :sm="24">
                 <a-form-item label="商品信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input placeholder="名称/规格/型号" v-model="queryParam.materialParam"></a-input>
+                  <a-input placeholder="条码/名称/规格/型号" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="5" :sm="24">
@@ -134,15 +134,16 @@
             title: '单据编号', dataIndex: 'number', width: 140,
             scopedSlots: { customRender: 'numberCustomRender' },
           },
+          {title: '条码', dataIndex: 'barCode', width: 120},
           {title: '名称', dataIndex: 'mname', width: 120},
           {title: '规格', dataIndex: 'standard', width: 100},
           {title: '型号', dataIndex: 'model', width: 100},
           {title: '单价', dataIndex: 'unitPrice', width: 60},
           {title: '入库数量', dataIndex: 'operNumber', width: 80},
           {title: '金额', dataIndex: 'allPrice', width: 60},
-          {title: '供应商', dataIndex: 'sname', width: 200},
+          {title: '供应商', dataIndex: 'sname', width: 120},
           {title: '仓库', dataIndex: 'dname', width: 120},
-          {title: '入库日期', dataIndex: 'operTime', width: 120}
+          {title: '入库日期', dataIndex: 'operTime', width: 100}
         ],
         url: {
           list: "/depotHead/findInDetail",

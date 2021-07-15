@@ -14,7 +14,7 @@
               </a-col>
               <a-col :md="6" :sm="24">
                 <a-form-item label="商品信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input placeholder="名称、规格、型号" v-model="queryParam.materialParam"></a-input>
+                  <a-input placeholder="条码、名称、规格、型号" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
@@ -87,6 +87,7 @@
               return parseInt(index)+1;
             }
           },
+          {title: '条码', dataIndex: 'barCode', width: 160},
           {title: '名称', dataIndex: 'materialName', width: 160},
           {title: '规格', dataIndex: 'materialStandard', width: 80},
           {title: '型号', dataIndex: 'materialModel', width: 80},
