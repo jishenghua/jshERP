@@ -32,7 +32,7 @@
                 </a-form-item>
               </a-col>
               <a-col :span="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="经手人">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="财务人员">
                   {{model.handsPersonName}}
                 </a-form-item>
               </a-col>
@@ -85,7 +85,7 @@
           <section ref="print" id="giroPrint">
             <a-row class="form-row" :gutter="24">
               <a-col :span="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="经手人">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="财务人员">
                   <a-input v-decorator="['id']" hidden/>
                   {{model.handsPersonName}}
                 </a-form-item>
@@ -139,13 +139,13 @@
           <section ref="print" id="itemInPrint">
             <a-row class="form-row" :gutter="24">
               <a-col :span="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="往来单位">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户">
                   <a-input v-decorator="['id']" hidden/>
                   {{model.organName}}
                 </a-form-item>
               </a-col>
               <a-col :span="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="经手人">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="财务人员">
                   {{model.handsPersonName}}
                 </a-form-item>
               </a-col>
@@ -197,13 +197,13 @@
           <section ref="print" id="itemOutPrint">
             <a-row class="form-row" :gutter="24">
               <a-col :span="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="往来单位">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="供应商">
                   <a-input v-decorator="['id']" hidden/>
                   {{model.organName}}
                 </a-form-item>
               </a-col>
               <a-col :span="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="经手人">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="财务人员">
                   {{model.handsPersonName}}
                 </a-form-item>
               </a-col>
@@ -261,7 +261,7 @@
                 </a-form-item>
               </a-col>
               <a-col :span="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="经手人">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="财务人员">
                   {{model.handsPersonName}}
                 </a-form-item>
               </a-col>
@@ -330,7 +330,7 @@
                 </a-form-item>
               </a-col>
               <a-col :span="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="经手人">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="财务人员">
                   {{model.handsPersonName}}
                 </a-form-item>
               </a-col>

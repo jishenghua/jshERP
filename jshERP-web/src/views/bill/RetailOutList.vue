@@ -165,7 +165,7 @@
               return parseInt(index)+1;
             }
           },
-          { title: '会员卡号', dataIndex: 'organName',width:120},
+          { title: '会员', dataIndex: 'organName',width:120},
           { title: '单据编号', dataIndex: 'number',width:160,
             customRender:function (text,record,index) {
               if(record.linkNumber) {

@@ -24,10 +24,43 @@
                   />
                 </a-form-item>
               </a-col>
+              <template v-if="toggleSearchStatus">
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="付款会员" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select placeholder="选择付款会员" showSearch optionFilterProp="children" v-model="queryParam.organId">
+                      <a-select-option v-for="(item,index) in retailList" :key="index" :value="item.id">
+                        {{ item.supplier }}
+                      </a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="财务人员" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select placeholder="选择财务人员" showSearch optionFilterProp="children" v-model="queryParam.handsPersonId">
+                      <a-select-option v-for="(item,index) in personList" :key="index" :value="item.id">
+                        {{ item.name }}
+                      </a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="操作员" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select placeholder="选择操作员" showSearch optionFilterProp="children" v-model="queryParam.creator">
+                      <a-select-option v-for="(item,index) in userList" :key="index" :value="item.id">
+                        {{ item.userName }}
+                      </a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+              </template>
               <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                 <a-col :md="6" :sm="24">
                   <a-button type="primary" @click="searchQuery">查询</a-button>
                   <a-button style="margin-left: 8px" @click="searchReset">重置</a-button>
+                  <a @click="handleToggleSearch" style="margin-left: 8px">
+                    {{ toggleSearchStatus ? '收起' : '展开' }}
+                    <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
+                  </a>
                 </a-col>
               </span>
             </a-row>
@@ -107,7 +140,10 @@
         queryParam: {
           billNo: "",
           searchMaterial: "",
-          type: "收预付款"
+          type: "收预付款",
+          organId: "",
+          creator: "",
+          handsPersonId: ""
         },
         // 表头
         columns: [
@@ -122,9 +158,10 @@
             }
           },
           { title: '付款会员', dataIndex: 'organName',width:140},
+          { title: '财务人员', dataIndex: 'handsPersonName',width:140},
           { title: '单据编号', dataIndex: 'billNo',width:160},
-          { title: '操作员', dataIndex: 'userName',width:80},
           { title: '单据日期 ', dataIndex: 'billTimeStr',width:160},
+          { title: '操作员', dataIndex: 'userName',width:80},
           { title: '合计金额', dataIndex: 'totalPrice',width:80},
           { title: '收款金额', dataIndex: 'changeAmount',width:80},
           { title: '备注', dataIndex: 'remark',width:200},
@@ -144,10 +181,13 @@
       }
     },
     computed: {
-
+    },
+    created () {
+      this.initRetail()
+      this.initUser()
+      this.initPerson()
     },
     methods: {
-
     }
   }
 </script>

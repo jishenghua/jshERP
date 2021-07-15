@@ -1,4 +1,15 @@
+import {findBySelectSup, findBySelectCus, findBySelectRetail, getUserList, getPersonByType } from '@/api/api'
+
 export const FinancialListMixin = {
+  data () {
+    return {
+      supList: [],
+      cusList: [],
+      retailList: [],
+      userList: [],
+      personList: []
+    }
+  },
   computed: {
     importExcelUrl: function(){
       return `${window._CONFIG['domianURL']}/${this.url.importExcelUrl}`;
@@ -36,6 +47,45 @@ export const FinancialListMixin = {
         type: this.queryParam.type
       }
       this.loadData(1);
+    },
+    initSupplier() {
+      let that = this;
+      findBySelectSup({}).then((res)=>{
+        if(res) {
+          that.supList = res;
+        }
+      });
+    },
+    initCustomer() {
+      let that = this;
+      findBySelectCus({}).then((res)=>{
+        if(res) {
+          that.cusList = res;
+        }
+      });
+    },
+    initRetail() {
+      let that = this;
+      findBySelectRetail({}).then((res)=>{
+        if(res) {
+          that.retailList = res;
+        }
+      });
+    },
+    initUser() {
+      getUserList({}).then((res)=>{
+        if(res) {
+          this.userList = res;
+        }
+      });
+    },
+    initPerson() {
+      let that = this;
+      getPersonByType({type:'财务员'}).then((res)=>{
+        if(res && res.code === 200) {
+          that.personList = res.data.personList;
+        }
+      })
     },
     onDateChange: function (value, dateString) {
       this.queryParam.beginTime=dateString[0];

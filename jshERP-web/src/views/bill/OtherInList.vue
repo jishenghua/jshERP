@@ -165,7 +165,7 @@
               return parseInt(index)+1;
             }
           },
-          { title: '供应商名称', dataIndex: 'organName',width:120},
+          { title: '供应商', dataIndex: 'organName',width:120},
           { title: '单据编号', dataIndex: 'number',width:160,
             customRender:function (text,record,index) {
               if(record.linkNumber) {
