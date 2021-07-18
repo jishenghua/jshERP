@@ -1,13 +1,10 @@
 package com.jsh.erp.service.user;
 
-import com.jsh.erp.datasource.entities.*;
-import com.jsh.erp.service.redis.RedisService;
-import com.jsh.erp.service.role.RoleService;
-import org.springframework.util.StringUtils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
+import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.mappers.UserMapper;
 import com.jsh.erp.datasource.mappers.UserMapperEx;
 import com.jsh.erp.datasource.vo.TreeNodeEx;
@@ -15,6 +12,8 @@ import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.orgaUserRel.OrgaUserRelService;
+import com.jsh.erp.service.redis.RedisService;
+import com.jsh.erp.service.role.RoleService;
 import com.jsh.erp.service.tenant.TenantService;
 import com.jsh.erp.service.userBusiness.UserBusinessService;
 import com.jsh.erp.utils.ExceptionCodeConstants;
@@ -25,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -33,7 +33,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 @Service
@@ -291,7 +290,7 @@ public class UserService {
             list = userMapper.selectByExample(example);
             if (null != list && list.size() == 0) {
                 return ExceptionCodeConstants.UserExceptionCode.USER_NOT_EXIST;
-            } else if(list.size() ==1) {
+            } else if(null != list &&list.size() ==1) {
                 if(list.get(0).getStatus()!=0) {
                     return ExceptionCodeConstants.UserExceptionCode.BLACK_USER;
                 }
@@ -669,13 +668,11 @@ public class UserService {
                             ExceptionConstants.USER_USER_NAME_ALREADY_EXISTS_MSG);
                 }
                 //一条数据，新增时抛出异常，修改时和当前的id不同时抛出异常
-                if(list.size()==1){
-                    if(userId==null||(userId!=null&&!userId.equals(list.get(0).getId()))){
-                        logger.error("异常码[{}],异常提示[{}],参数,userName:[{}]",
-                                ExceptionConstants.USER_USER_NAME_ALREADY_EXISTS_CODE,ExceptionConstants.USER_USER_NAME_ALREADY_EXISTS_MSG,userName);
-                        throw new BusinessRunTimeException(ExceptionConstants.USER_USER_NAME_ALREADY_EXISTS_CODE,
-                                ExceptionConstants.USER_USER_NAME_ALREADY_EXISTS_MSG);
-                    }
+                if(userId == null || !userId.equals(list.get(0).getId())){
+                    logger.error("异常码[{}],异常提示[{}],参数,userName:[{}]",
+                            ExceptionConstants.USER_USER_NAME_ALREADY_EXISTS_CODE,ExceptionConstants.USER_USER_NAME_ALREADY_EXISTS_MSG,userName);
+                    throw new BusinessRunTimeException(ExceptionConstants.USER_USER_NAME_ALREADY_EXISTS_CODE,
+                            ExceptionConstants.USER_USER_NAME_ALREADY_EXISTS_MSG);
                 }
 
             }
@@ -733,10 +730,12 @@ public class UserService {
             if(values!=null) {
                 values = values.replaceAll("\\[\\]",",").replace("[","").replace("]","");
             }
+            assert values != null;
             String [] valueArray=values.split(",");
             if(valueArray.length>0) {
                 roleId = valueArray[0];
             }
+            assert roleId != null;
             Role role = roleService.getRole(Long.parseLong(roleId));
             if(role!=null) {
                 return role.getType();
