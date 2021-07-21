@@ -338,6 +338,7 @@ INSERT INTO `jsh_function` VALUES ('243', '000108', '机构管理', '0001', '/sy
 INSERT INTO `jsh_function` VALUES ('244', '030112', '库存预警', '0301', '/report/stock_warning_report', '/report/StockWarningReport', '\0', '0670', '', '电脑版', '', 'profile', '0');
 INSERT INTO `jsh_function` VALUES ('245', '000107', '插件管理', '0001', '/system/plugin', '/system/PluginList', '\0', '0170', '', '电脑版', '1', 'profile', '0');
 INSERT INTO `jsh_function` VALUES ('246', '030113', '商品库存', '0301', '/report/material_stock', '/report/MaterialStock', '\0', '0605', '', '电脑版', '', 'profile', '0');
+INSERT INTO `jsh_function` VALUES ('247', '010105', '多属性设置', '0101', '/material/material_attribute', '/material/MaterialAttributeList', '\0', '0243', '', '电脑版', '1', 'profile', '0');
 
 -- ----------------------------
 -- Table structure for jsh_in_out_item
@@ -422,6 +423,29 @@ INSERT INTO `jsh_material` VALUES ('579', '21', '商品17', '', null, 'sp17', ''
 INSERT INTO `jsh_material` VALUES ('586', '17', '序列号商品测试', '', null, 'xlh123', '', '', '个', '', null, null, '', '', '', '', '1', '63', '0');
 INSERT INTO `jsh_material` VALUES ('587', '17', '商品test1', '南通中远', null, '', 'test1', '', '个', '', null, null, '', '', '', '', '0', '63', '0');
 INSERT INTO `jsh_material` VALUES ('588', '21', '商品200', 'fafda', '112.000000', 'weqwe', '300ml', '红色', '个', 'aaaabbbbb', null, null, '', '', '', '', '0', '63', '0');
+
+-- ----------------------------
+-- Table structure for jsh_material_attribute
+-- ----------------------------
+DROP TABLE IF EXISTS `jsh_material_attribute`;
+CREATE TABLE `jsh_material_attribute` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `attribute_field` varchar(50) DEFAULT NULL COMMENT '属性字段',
+  `attribute_name` varchar(50) DEFAULT NULL COMMENT '属性名',
+  `attribute_value` varchar(500) DEFAULT NULL COMMENT '属性值',
+  `tenant_id` bigint(20) DEFAULT NULL COMMENT '租户id',
+  `delete_flag` varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='产品属性';
+
+-- ----------------------------
+-- Records of jsh_material_attribute
+-- ----------------------------
+INSERT INTO `jsh_material_attribute` VALUES ('1', 'color', '颜色', '红色|橙色|黄色|绿色|蓝色|紫色', '63', '0');
+INSERT INTO `jsh_material_attribute` VALUES ('2', 'size', '尺寸', 'S|M|L|XL|XXL|XXXL', '63', '0');
+INSERT INTO `jsh_material_attribute` VALUES ('3', 'brand', '品牌', '品牌1|品牌2', '63', '0');
+INSERT INTO `jsh_material_attribute` VALUES ('4', 'other1', '自定义1', null, '63', '0');
+INSERT INTO `jsh_material_attribute` VALUES ('5', 'other2', '自定义2', null, '63', '0');
 
 -- ----------------------------
 -- Table structure for jsh_material_category
