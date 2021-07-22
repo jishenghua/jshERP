@@ -122,6 +122,7 @@ const editMaterialProperty = (params)=>putAction("/materialProperty/update",para
 //商品类型
 const queryMaterialCategoryTreeList = (params)=>getAction("/materialCategory/getMaterialCategoryTree",params);
 const queryMaterialCategoryById = (params)=>getAction("/materialCategory/findById",params);
+const checkMaterialCategory = (params)=>getAction("/materialCategory/checkIsNameExist",params);
 //商品管理
 const addMaterial = (params)=>postAction("/material/add",params);
 const editMaterial = (params)=>putAction("/material/update",params);
@@ -135,6 +136,10 @@ const addSerialNumber = (params)=>postAction("/serialNumber/add",params);
 const editSerialNumber = (params)=>putAction("/serialNumber/update",params);
 const checkSerialNumber = (params)=>getAction("/serialNumber/checkIsNameExist",params);
 const batAddSerialNumber = (params)=>postAction("/serialNumber/batAddSerialNumber",params);
+//多属性
+const addMaterialAttribute = (params)=>postAction("/materialAttribute/add",params);
+const editMaterialAttribute = (params)=>putAction("/materialAttribute/update",params);
+const checkMaterialAttribute = (params)=>getAction("/materialAttribute/checkIsNameExist",params);
 //功能管理
 const addFunction = (params)=>postAction("/function/add",params);
 const editFunction = (params)=>putAction("/function/update",params);
@@ -243,6 +248,7 @@ export {
   editMaterialProperty,
   queryMaterialCategoryTreeList,
   queryMaterialCategoryById,
+  checkMaterialCategory,
   addMaterial,
   editMaterial,
   checkMaterial,
@@ -254,6 +260,9 @@ export {
   editSerialNumber,
   checkSerialNumber,
   batAddSerialNumber,
+  addMaterialAttribute,
+  editMaterialAttribute,
+  checkMaterialAttribute,
   addFunction,
   editFunction,
   checkFunction,

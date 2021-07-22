@@ -20,17 +20,21 @@
           </a-table>
         </div>
         <!-- table区域-end -->
+        <!-- 表单区域 -->
+        <material-attribute-modal ref="modalForm" @ok="modalFormOk"></material-attribute-modal>
       </a-card>
     </a-col>
   </a-row>
 </template>
 <script>
+  import MaterialAttributeModal from './modules/MaterialAttributeModal'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import JDate from '@/components/jeecg/JDate'
   export default {
     name: "MaterialAttributeList",
     mixins:[JeecgListMixin],
     components: {
+      MaterialAttributeModal,
       JDate
     },
     data () {
@@ -57,7 +61,7 @@
             }
           },
           {title: '属性名', dataIndex: 'attributeName', width: 100},
-          {title: '属性值', dataIndex: 'attributeValue', width: 400},
+          {title: '属性值（用竖线隔开）', dataIndex: 'attributeValue', width: 400},
           {
             title: '操作',
             dataIndex: 'action',

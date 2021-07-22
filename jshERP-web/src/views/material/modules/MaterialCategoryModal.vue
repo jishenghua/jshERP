@@ -37,7 +37,7 @@
 
 <script>
   import { httpAction } from '@/api/manage'
-  import { queryMaterialCategoryTreeList } from '@/api/api'
+  import { queryMaterialCategoryTreeList, checkMaterialCategory } from '@/api/api'
   import pick from 'lodash.pick'
   import ATextarea from 'ant-design-vue/es/input/TextArea'
   export default {
@@ -67,7 +67,12 @@
         confirmLoading: false,
         form: this.$form.createForm(this),
         validatorRules:{
-          name: {rules: [{required: true, message: '请输入名称!'}]},
+          name: {
+            rules: [
+              {required: true, message: '请输入名称!'},
+              { validator: this.validateName}
+            ]
+          },
           serialNo: {rules: [{required: true, message: '请输入编号!'}]}
         },
         url: {
@@ -135,6 +140,23 @@
       },
       handleCancel () {
         this.close()
+      },
+      validateName(rule, value, callback){
+        let params = {
+          name: value,
+          id: this.model.id?this.model.id:0
+        };
+        checkMaterialCategory(params).then((res)=>{
+          if(res && res.code===200) {
+            if(!res.data.status){
+              callback();
+            } else {
+              callback("名称已经存在");
+            }
+          } else {
+            callback(res.data);
+          }
+        });
       }
     }
   }

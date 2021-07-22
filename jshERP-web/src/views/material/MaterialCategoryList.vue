@@ -97,7 +97,7 @@
 <script>
 import MaterialCategoryModal from '../material/modules/MaterialCategoryModal'
 import pick from 'lodash.pick'
-import {queryMaterialCategoryTreeList,queryMaterialCategoryById} from '@/api/api'
+import {queryMaterialCategoryTreeList,queryMaterialCategoryById,checkMaterialCategory} from '@/api/api'
 import {httpAction, deleteAction} from '@/api/manage'
 import {JeecgListMixin} from '@/mixins/JeecgListMixin'
 export default {
@@ -143,7 +143,12 @@ export default {
         edges: []
       },
       validatorRules:{
-        name: {rules: [{required: true, message: '请输入名称!'}]},
+        name: {
+          rules: [
+            {required: true, message: '请输入名称!'},
+            { validator: this.validateName}
+          ]
+        },
         serialNo: {rules: [{required: true, message: '请输入编号!'}]}
       },
       url: {
@@ -259,7 +264,6 @@ export default {
     nodeModalClose() {
     },
     hide() {
-      console.log(111)
       this.visible = false
     },
     onCheck(checkedKeys, info) {
@@ -356,6 +360,23 @@ export default {
     },
     openSelect() {
       this.$refs.sysDirectiveModal.show()
+    },
+    validateName(rule, value, callback){
+      let params = {
+        name: value,
+        id: this.model.id?this.model.id:0
+      };
+      checkMaterialCategory(params).then((res)=>{
+        if(res && res.code===200) {
+          if(!res.data.status){
+            callback();
+          } else {
+            callback("名称已经存在");
+          }
+        } else {
+          callback(res.data);
+        }
+      });
     },
     handleAdd() {
       this.$refs.materialCategoryModal.add()
