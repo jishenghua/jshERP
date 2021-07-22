@@ -74,6 +74,7 @@ public class MaterialAttributeService {
                 materialAttribute.setAttributeName(map.get(field));
                 for(MaterialAttribute ma: maList) {
                     if(field.equals(ma.getAttributeField())){
+                        materialAttribute.setId(ma.getId());
                         materialAttribute.setAttributeName(ma.getAttributeName());
                         materialAttribute.setAttributeValue(ma.getAttributeValue());
                     }

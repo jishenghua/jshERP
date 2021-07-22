@@ -222,7 +222,15 @@ public class MaterialCategoryService {
     }
 
     public int checkIsNameExist(Long id, String name)throws Exception {
-        return 0;
+        MaterialCategoryExample example = new MaterialCategoryExample();
+        example.createCriteria().andIdNotEqualTo(id).andNameEqualTo(name).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        List<MaterialCategory> list=null;
+        try{
+            list= materialCategoryMapper.selectByExample(example);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list==null?0:list.size();
     }
 
     public List<MaterialCategory> findById(Long id)throws Exception {
