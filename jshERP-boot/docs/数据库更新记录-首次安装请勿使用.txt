@@ -1154,4 +1154,26 @@ INSERT INTO `jsh_material_attribute` VALUES ('5', 'other2', '自定义2', null, 
 -- by jishenghua
 -- 增加多属性设置菜单
 -- --------------------------------------------------------
-INSERT INTO `jsh_erp`.`jsh_function` (`id`, `number`, `name`, `parent_number`, `url`, `component`, `state`, `sort`, `enabled`, `type`, `push_btn`, `icon`, `delete_flag`) VALUES ('247', '010105', '多属性设置', '0101', '/material/material_attribute', '/material/MaterialAttributeList', '\0', '0247', '', '电脑版', '1', 'profile', '0');
+INSERT INTO `jsh_function` (`id`, `number`, `name`, `parent_number`, `url`, `component`, `state`, `sort`, `enabled`, `type`, `push_btn`, `icon`, `delete_flag`) VALUES ('247', '010105', '多属性', '0101', '/material/material_attribute', '/material/MaterialAttributeList', '\0', '0250', '', '电脑版', '1', 'profile', '0');
+
+-- --------------------------------------------------------
+-- 时间 2021年7月22日
+-- by jishenghua
+-- 移除机构表的全名字段
+-- 给商品扩展表加sku字段
+-- 给单据主表移除多余字段
+-- 给单据子表移除多余字段
+-- --------------------------------------------------------
+alter table jsh_organization drop column org_full_name;
+alter table jsh_material_extend add sku varchar(50) DEFAULT NULL COMMENT '多属性' after commodity_unit;
+alter table jsh_depot_head drop column hands_person_id;
+alter table jsh_depot_head drop column other_money_list;
+alter table jsh_depot_head drop column other_money_item;
+alter table jsh_depot_head drop column account_day;
+alter table jsh_depot_item drop column img;
+alter table jsh_depot_item drop column incidentals;
+alter table jsh_depot_item drop column other_field1;
+alter table jsh_depot_item drop column other_field2;
+alter table jsh_depot_item drop column other_field3;
+alter table jsh_depot_item drop column other_field4;
+alter table jsh_depot_item drop column other_field5;
