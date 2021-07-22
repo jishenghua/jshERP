@@ -61,11 +61,8 @@
     <a-col :md="12" :sm="24">
       <a-card :bordered="false" v-if="selectedKeys.length>0">
         <a-form :form="form">
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="全称">
-            <a-input placeholder="请输入全称" v-decorator="['orgFullName', validatorRules.orgFullName ]"/>
-          </a-form-item>
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="简称">
-            <a-input placeholder="请输入简称" v-decorator="['orgAbr', validatorRules.orgAbr ]"/>
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="名称">
+            <a-input placeholder="请输入名称" v-decorator="['orgAbr', validatorRules.orgAbr ]"/>
           </a-form-item>
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="编号">
             <a-input placeholder="请输入编号" v-decorator="['orgNo', validatorRules.orgNo ]"/>
@@ -100,7 +97,7 @@
 <script>
 import OrganizationModal from './modules/OrganizationModal'
 import pick from 'lodash.pick'
-import {queryOrganizationTreeList,queryOrganizationById, searchByKeywords, deleteByDepartId} from '@/api/api'
+import {queryOrganizationTreeList,queryOrganizationById, checkOrganization, deleteByDepartId} from '@/api/api'
 import {httpAction, deleteAction} from '@/api/manage'
 import {JeecgListMixin} from '@/mixins/JeecgListMixin'
 export default {
@@ -146,8 +143,12 @@ export default {
         edges: []
       },
       validatorRules: {
-        orgFullName: {rules: [{required: true, message: '请输入全称!'}]},
-        orgAbr: {rules: [{required: true, message: '请输入简称!'}]},
+        orgAbr: {
+          rules: [
+            { required: true, message: '请输入名称!'},
+            { validator: this.validateName}
+          ]
+        },
         orgNo: {rules: [{required: true, message: '请输入编码!'}]}
       },
       url: {
@@ -287,7 +288,6 @@ export default {
       queryOrganizationById(params).then((res) => {
         if (res && res.code == 200) {
           if(res.data){
-            record.orgFullName = res.data.orgFullName;
             record.orgAbr = res.data.orgAbr;
             record.orgNo = res.data.orgNo;
             record.parentId = res.data.parentId;
@@ -306,7 +306,7 @@ export default {
     // 触发onSelect事件时,为机构树右侧的form表单赋值
     setValuesToForm(record) {
       this.$nextTick(() => {
-        this.form.setFieldsValue(pick(record, 'orgFullName','orgAbr', 'orgNo', 'parentId', 'sort', 'remark'))
+        this.form.setFieldsValue(pick(record, 'orgAbr', 'orgNo', 'parentId', 'sort', 'remark'))
       })
     },
     getCurrSelectedTitle() {
@@ -362,6 +362,23 @@ export default {
     },
     openSelect() {
       this.$refs.sysDirectiveModal.show()
+    },
+    validateName(rule, value, callback){
+      let params = {
+        name: value,
+        id: this.model.id?this.model.id:0
+      };
+      checkOrganization(params).then((res)=>{
+        if(res && res.code===200) {
+          if(!res.data.status){
+            callback();
+          } else {
+            callback("名称已经存在");
+          }
+        } else {
+          callback(res.data);
+        }
+      });
     },
     handleAdd() {
       this.$refs.organizationModal.add()

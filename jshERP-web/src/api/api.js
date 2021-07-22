@@ -48,7 +48,7 @@ const queryPermissionRule = (params)=>getAction("/sys/permission/queryPermission
 //机构管理
 const queryOrganizationTreeList = (params)=>getAction("/organization/getOrganizationTree",params);
 const queryOrganizationById = (params)=>getAction("/organization/findById",params);
-const queryIdTree = (params)=>getAction("/sys/sysDepart/queryIdTree",params);
+const checkOrganization = (params)=>getAction("/organization/checkIsNameExist",params);
 const queryParentName   = (params)=>getAction("/sys/sysDepart/queryParentName",params);
 const searchByKeywords   = (params)=>getAction("/sys/sysDepart/searchBy",params);
 const deleteByDepartId   = (params)=>deleteAction("/sys/sysDepart/delete",params);
@@ -195,6 +195,7 @@ export {
   queryPermissionRule,
   queryOrganizationTreeList,
   queryOrganizationById,
+  checkOrganization,
   queryParentName,
   searchByKeywords,
   deleteByDepartId,
