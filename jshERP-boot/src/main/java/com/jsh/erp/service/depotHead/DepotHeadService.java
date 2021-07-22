@@ -582,14 +582,6 @@ public class DepotHeadService {
                         String accountmoneylistStr = dh.getAccountMoneyList().replace("[", "").replace("]", "").replaceAll("\"", "");
                         dh.setAccountMoneyList(accountmoneylistStr);
                     }
-                    if(dh.getOtherMoneyList() != null) {
-                        String otherMoneyListStr = dh.getOtherMoneyList().replace("[", "").replace("]", "").replaceAll("\"", "");
-                        dh.setOtherMoneyList(otherMoneyListStr);
-                    }
-                    if(dh.getOtherMoneyItem() != null) {
-                        String otherMoneyItemStr = dh.getOtherMoneyItem().replace("[", "").replace("]", "").replaceAll("\"", "");
-                        dh.setOtherMoneyItem(otherMoneyItemStr);
-                    }
                     if(dh.getChangeAmount() != null) {
                         dh.setChangeAmount(dh.getChangeAmount().abs());
                     }

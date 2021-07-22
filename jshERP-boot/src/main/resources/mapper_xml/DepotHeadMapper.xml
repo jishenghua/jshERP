@@ -10,7 +10,6 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="oper_time" jdbcType="TIMESTAMP" property="operTime" />
     <result column="organ_id" jdbcType="BIGINT" property="organId" />
-    <result column="hands_person_id" jdbcType="BIGINT" property="handsPersonId" />
     <result column="creator" jdbcType="BIGINT" property="creator" />
     <result column="account_id" jdbcType="BIGINT" property="accountId" />
     <result column="change_amount" jdbcType="DECIMAL" property="changeAmount" />
@@ -26,9 +25,6 @@
     <result column="discount_money" jdbcType="DECIMAL" property="discountMoney" />
     <result column="discount_last_money" jdbcType="DECIMAL" property="discountLastMoney" />
     <result column="other_money" jdbcType="DECIMAL" property="otherMoney" />
-    <result column="other_money_list" jdbcType="VARCHAR" property="otherMoneyList" />
-    <result column="other_money_item" jdbcType="VARCHAR" property="otherMoneyItem" />
-    <result column="account_day" jdbcType="INTEGER" property="accountDay" />
     <result column="status" jdbcType="VARCHAR" property="status" />
     <result column="link_number" jdbcType="VARCHAR" property="linkNumber" />
     <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
@@ -93,11 +89,10 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, type, sub_type, default_number, number, create_time, oper_time, organ_id, hands_person_id, 
-    creator, account_id, change_amount, total_price, pay_type, bill_type, remark, file_name, 
-    sales_man, account_id_list, account_money_list, discount, discount_money, discount_last_money, 
-    other_money, other_money_list, other_money_item, account_day, status, link_number, 
-    tenant_id, delete_flag
+    id, type, sub_type, default_number, number, create_time, oper_time, organ_id, creator, 
+    account_id, change_amount, total_price, pay_type, bill_type, remark, file_name, sales_man, 
+    account_id_list, account_money_list, discount, discount_money, discount_last_money, 
+    other_money, status, link_number, tenant_id, delete_flag
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.DepotHeadExample" resultMap="BaseResultMap">
     select
@@ -132,26 +127,24 @@
   <insert id="insert" parameterType="com.jsh.erp.datasource.entities.DepotHead">
     insert into jsh_depot_head (id, type, sub_type, 
       default_number, number, create_time, 
-      oper_time, organ_id, hands_person_id, 
-      creator, account_id, change_amount, 
-      total_price, pay_type, bill_type, 
-      remark, file_name, sales_man, 
-      account_id_list, account_money_list, discount, 
-      discount_money, discount_last_money, other_money, 
-      other_money_list, other_money_item, account_day, 
-      status, link_number, tenant_id, 
-      delete_flag)
+      oper_time, organ_id, creator, 
+      account_id, change_amount, total_price, 
+      pay_type, bill_type, remark, 
+      file_name, sales_man, account_id_list, 
+      account_money_list, discount, discount_money, 
+      discount_last_money, other_money, status, 
+      link_number, tenant_id, delete_flag
+      )
     values (#{id,jdbcType=BIGINT}, #{type,jdbcType=VARCHAR}, #{subType,jdbcType=VARCHAR}, 
       #{defaultNumber,jdbcType=VARCHAR}, #{number,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{operTime,jdbcType=TIMESTAMP}, #{organId,jdbcType=BIGINT}, #{handsPersonId,jdbcType=BIGINT}, 
-      #{creator,jdbcType=BIGINT}, #{accountId,jdbcType=BIGINT}, #{changeAmount,jdbcType=DECIMAL}, 
-      #{totalPrice,jdbcType=DECIMAL}, #{payType,jdbcType=VARCHAR}, #{billType,jdbcType=VARCHAR}, 
-      #{remark,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR}, #{salesMan,jdbcType=VARCHAR}, 
-      #{accountIdList,jdbcType=VARCHAR}, #{accountMoneyList,jdbcType=VARCHAR}, #{discount,jdbcType=DECIMAL}, 
-      #{discountMoney,jdbcType=DECIMAL}, #{discountLastMoney,jdbcType=DECIMAL}, #{otherMoney,jdbcType=DECIMAL}, 
-      #{otherMoneyList,jdbcType=VARCHAR}, #{otherMoneyItem,jdbcType=VARCHAR}, #{accountDay,jdbcType=INTEGER}, 
-      #{status,jdbcType=VARCHAR}, #{linkNumber,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, 
-      #{deleteFlag,jdbcType=VARCHAR})
+      #{operTime,jdbcType=TIMESTAMP}, #{organId,jdbcType=BIGINT}, #{creator,jdbcType=BIGINT}, 
+      #{accountId,jdbcType=BIGINT}, #{changeAmount,jdbcType=DECIMAL}, #{totalPrice,jdbcType=DECIMAL}, 
+      #{payType,jdbcType=VARCHAR}, #{billType,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{fileName,jdbcType=VARCHAR}, #{salesMan,jdbcType=VARCHAR}, #{accountIdList,jdbcType=VARCHAR}, 
+      #{accountMoneyList,jdbcType=VARCHAR}, #{discount,jdbcType=DECIMAL}, #{discountMoney,jdbcType=DECIMAL}, 
+      #{discountLastMoney,jdbcType=DECIMAL}, #{otherMoney,jdbcType=DECIMAL}, #{status,jdbcType=VARCHAR}, 
+      #{linkNumber,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.DepotHead">
     insert into jsh_depot_head
@@ -179,9 +172,6 @@
       </if>
       <if test="organId != null">
         organ_id,
-      </if>
-      <if test="handsPersonId != null">
-        hands_person_id,
       </if>
       <if test="creator != null">
         creator,
@@ -228,15 +218,6 @@
       <if test="otherMoney != null">
         other_money,
       </if>
-      <if test="otherMoneyList != null">
-        other_money_list,
-      </if>
-      <if test="otherMoneyItem != null">
-        other_money_item,
-      </if>
-      <if test="accountDay != null">
-        account_day,
-      </if>
       <if test="status != null">
         status,
       </if>
@@ -274,9 +255,6 @@
       </if>
       <if test="organId != null">
         #{organId,jdbcType=BIGINT},
-      </if>
-      <if test="handsPersonId != null">
-        #{handsPersonId,jdbcType=BIGINT},
       </if>
       <if test="creator != null">
         #{creator,jdbcType=BIGINT},
@@ -322,15 +300,6 @@
       </if>
       <if test="otherMoney != null">
         #{otherMoney,jdbcType=DECIMAL},
-      </if>
-      <if test="otherMoneyList != null">
-        #{otherMoneyList,jdbcType=VARCHAR},
-      </if>
-      <if test="otherMoneyItem != null">
-        #{otherMoneyItem,jdbcType=VARCHAR},
-      </if>
-      <if test="accountDay != null">
-        #{accountDay,jdbcType=INTEGER},
       </if>
       <if test="status != null">
         #{status,jdbcType=VARCHAR},
@@ -379,9 +348,6 @@
       <if test="record.organId != null">
         organ_id = #{record.organId,jdbcType=BIGINT},
       </if>
-      <if test="record.handsPersonId != null">
-        hands_person_id = #{record.handsPersonId,jdbcType=BIGINT},
-      </if>
       <if test="record.creator != null">
         creator = #{record.creator,jdbcType=BIGINT},
       </if>
@@ -427,15 +393,6 @@
       <if test="record.otherMoney != null">
         other_money = #{record.otherMoney,jdbcType=DECIMAL},
       </if>
-      <if test="record.otherMoneyList != null">
-        other_money_list = #{record.otherMoneyList,jdbcType=VARCHAR},
-      </if>
-      <if test="record.otherMoneyItem != null">
-        other_money_item = #{record.otherMoneyItem,jdbcType=VARCHAR},
-      </if>
-      <if test="record.accountDay != null">
-        account_day = #{record.accountDay,jdbcType=INTEGER},
-      </if>
       <if test="record.status != null">
         status = #{record.status,jdbcType=VARCHAR},
       </if>
@@ -463,7 +420,6 @@
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       oper_time = #{record.operTime,jdbcType=TIMESTAMP},
       organ_id = #{record.organId,jdbcType=BIGINT},
-      hands_person_id = #{record.handsPersonId,jdbcType=BIGINT},
       creator = #{record.creator,jdbcType=BIGINT},
       account_id = #{record.accountId,jdbcType=BIGINT},
       change_amount = #{record.changeAmount,jdbcType=DECIMAL},
@@ -479,9 +435,6 @@
       discount_money = #{record.discountMoney,jdbcType=DECIMAL},
       discount_last_money = #{record.discountLastMoney,jdbcType=DECIMAL},
       other_money = #{record.otherMoney,jdbcType=DECIMAL},
-      other_money_list = #{record.otherMoneyList,jdbcType=VARCHAR},
-      other_money_item = #{record.otherMoneyItem,jdbcType=VARCHAR},
-      account_day = #{record.accountDay,jdbcType=INTEGER},
       status = #{record.status,jdbcType=VARCHAR},
       link_number = #{record.linkNumber,jdbcType=VARCHAR},
       tenant_id = #{record.tenantId,jdbcType=BIGINT},
@@ -513,9 +466,6 @@
       </if>
       <if test="organId != null">
         organ_id = #{organId,jdbcType=BIGINT},
-      </if>
-      <if test="handsPersonId != null">
-        hands_person_id = #{handsPersonId,jdbcType=BIGINT},
       </if>
       <if test="creator != null">
         creator = #{creator,jdbcType=BIGINT},
@@ -562,15 +512,6 @@
       <if test="otherMoney != null">
         other_money = #{otherMoney,jdbcType=DECIMAL},
       </if>
-      <if test="otherMoneyList != null">
-        other_money_list = #{otherMoneyList,jdbcType=VARCHAR},
-      </if>
-      <if test="otherMoneyItem != null">
-        other_money_item = #{otherMoneyItem,jdbcType=VARCHAR},
-      </if>
-      <if test="accountDay != null">
-        account_day = #{accountDay,jdbcType=INTEGER},
-      </if>
       <if test="status != null">
         status = #{status,jdbcType=VARCHAR},
       </if>
@@ -595,7 +536,6 @@
       create_time = #{createTime,jdbcType=TIMESTAMP},
       oper_time = #{operTime,jdbcType=TIMESTAMP},
       organ_id = #{organId,jdbcType=BIGINT},
-      hands_person_id = #{handsPersonId,jdbcType=BIGINT},
       creator = #{creator,jdbcType=BIGINT},
       account_id = #{accountId,jdbcType=BIGINT},
       change_amount = #{changeAmount,jdbcType=DECIMAL},
@@ -611,9 +551,6 @@
       discount_money = #{discountMoney,jdbcType=DECIMAL},
       discount_last_money = #{discountLastMoney,jdbcType=DECIMAL},
       other_money = #{otherMoney,jdbcType=DECIMAL},
-      other_money_list = #{otherMoneyList,jdbcType=VARCHAR},
-      other_money_item = #{otherMoneyItem,jdbcType=VARCHAR},
-      account_day = #{accountDay,jdbcType=INTEGER},
       status = #{status,jdbcType=VARCHAR},
       link_number = #{linkNumber,jdbcType=VARCHAR},
       tenant_id = #{tenantId,jdbcType=BIGINT},

@@ -73,7 +73,7 @@ public class OrganizationService {
         try{
             result=organizationMapper.insertSelective(organization);
             logService.insertLog("机构",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(organization.getOrgFullName()).toString(),request);
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(organization.getOrgAbr()).toString(),request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -87,7 +87,7 @@ public class OrganizationService {
         try{
             result=organizationMapper.updateByPrimaryKeySelective(organization);
             logService.insertLog("机构",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(organization.getOrgFullName()).toString(), request);
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(organization.getOrgAbr()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -110,7 +110,7 @@ public class OrganizationService {
         sb.append(BusinessConstants.LOG_OPERATION_TYPE_DELETE);
         List<Organization> list = getOrganizationListByIds(ids);
         for(Organization organization: list){
-            sb.append("[").append(organization.getOrgFullName()).append("]");
+            sb.append("[").append(organization.getOrgAbr()).append("]");
         }
         logService.insertLog("机构", sb.toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
@@ -126,10 +126,22 @@ public class OrganizationService {
         return result;
     }
 
+    public int checkIsNameExist(Long id, String name)throws Exception {
+        OrganizationExample example = new OrganizationExample();
+        example.createCriteria().andIdNotEqualTo(id).andOrgAbrEqualTo(name).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        List<Organization> list=null;
+        try{
+            list= organizationMapper.selectByExample(example);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list==null?0:list.size();
+    }
+
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int addOrganization(Organization org) throws Exception{
         logService.insertLog("机构",
-                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(org.getOrgFullName()).toString(),
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(org.getOrgAbr()).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         //新增时间
         Date date=new Date();
@@ -160,7 +172,7 @@ public class OrganizationService {
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int editOrganization(Organization org)throws Exception {
         logService.insertLog("机构",
-               new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(org.getOrgFullName()).toString(),
+               new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(org.getOrgAbr()).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         //修改时间
         org.setUpdateTime(new Date());

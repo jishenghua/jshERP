@@ -4,7 +4,6 @@
   <resultMap id="BaseResultMap" type="com.jsh.erp.datasource.entities.Organization">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="org_no" jdbcType="VARCHAR" property="orgNo" />
-    <result column="org_full_name" jdbcType="VARCHAR" property="orgFullName" />
     <result column="org_abr" jdbcType="VARCHAR" property="orgAbr" />
     <result column="parent_id" jdbcType="BIGINT" property="parentId" />
     <result column="sort" jdbcType="VARCHAR" property="sort" />
@@ -73,8 +72,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, org_no, org_full_name, org_abr, parent_id, sort, remark, create_time, update_time, 
-    tenant_id, delete_flag
+    id, org_no, org_abr, parent_id, sort, remark, create_time, update_time, tenant_id, 
+    delete_flag
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.OrganizationExample" resultMap="BaseResultMap">
     select
@@ -107,14 +106,14 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.jsh.erp.datasource.entities.Organization">
-    insert into jsh_organization (id, org_no, org_full_name, 
-      org_abr, parent_id, sort, 
-      remark, create_time, update_time, 
-      tenant_id, delete_flag)
-    values (#{id,jdbcType=BIGINT}, #{orgNo,jdbcType=VARCHAR}, #{orgFullName,jdbcType=VARCHAR}, 
-      #{orgAbr,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, #{sort,jdbcType=VARCHAR}, 
-      #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR})
+    insert into jsh_organization (id, org_no, org_abr, 
+      parent_id, sort, remark, 
+      create_time, update_time, tenant_id, 
+      delete_flag)
+    values (#{id,jdbcType=BIGINT}, #{orgNo,jdbcType=VARCHAR}, #{orgAbr,jdbcType=VARCHAR}, 
+      #{parentId,jdbcType=BIGINT}, #{sort,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{tenantId,jdbcType=BIGINT}, 
+      #{deleteFlag,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.Organization">
     insert into jsh_organization
@@ -124,9 +123,6 @@
       </if>
       <if test="orgNo != null">
         org_no,
-      </if>
-      <if test="orgFullName != null">
-        org_full_name,
       </if>
       <if test="orgAbr != null">
         org_abr,
@@ -159,9 +155,6 @@
       </if>
       <if test="orgNo != null">
         #{orgNo,jdbcType=VARCHAR},
-      </if>
-      <if test="orgFullName != null">
-        #{orgFullName,jdbcType=VARCHAR},
       </if>
       <if test="orgAbr != null">
         #{orgAbr,jdbcType=VARCHAR},
@@ -204,9 +197,6 @@
       <if test="record.orgNo != null">
         org_no = #{record.orgNo,jdbcType=VARCHAR},
       </if>
-      <if test="record.orgFullName != null">
-        org_full_name = #{record.orgFullName,jdbcType=VARCHAR},
-      </if>
       <if test="record.orgAbr != null">
         org_abr = #{record.orgAbr,jdbcType=VARCHAR},
       </if>
@@ -240,7 +230,6 @@
     update jsh_organization
     set id = #{record.id,jdbcType=BIGINT},
       org_no = #{record.orgNo,jdbcType=VARCHAR},
-      org_full_name = #{record.orgFullName,jdbcType=VARCHAR},
       org_abr = #{record.orgAbr,jdbcType=VARCHAR},
       parent_id = #{record.parentId,jdbcType=BIGINT},
       sort = #{record.sort,jdbcType=VARCHAR},
@@ -258,9 +247,6 @@
     <set>
       <if test="orgNo != null">
         org_no = #{orgNo,jdbcType=VARCHAR},
-      </if>
-      <if test="orgFullName != null">
-        org_full_name = #{orgFullName,jdbcType=VARCHAR},
       </if>
       <if test="orgAbr != null">
         org_abr = #{orgAbr,jdbcType=VARCHAR},
@@ -292,7 +278,6 @@
   <update id="updateByPrimaryKey" parameterType="com.jsh.erp.datasource.entities.Organization">
     update jsh_organization
     set org_no = #{orgNo,jdbcType=VARCHAR},
-      org_full_name = #{orgFullName,jdbcType=VARCHAR},
       org_abr = #{orgAbr,jdbcType=VARCHAR},
       parent_id = #{parentId,jdbcType=BIGINT},
       sort = #{sort,jdbcType=VARCHAR},

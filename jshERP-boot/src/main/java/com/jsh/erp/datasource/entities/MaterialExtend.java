@@ -12,6 +12,8 @@ public class MaterialExtend {
 
     private String commodityUnit;
 
+    private String sku;
+
     private BigDecimal purchaseDecimal;
 
     private BigDecimal commodityDecimal;
@@ -64,6 +66,14 @@ public class MaterialExtend {
 
     public void setCommodityUnit(String commodityUnit) {
         this.commodityUnit = commodityUnit == null ? null : commodityUnit.trim();
+    }
+
+    public String getSku() {
+        return sku;
+    }
+
+    public void setSku(String sku) {
+        this.sku = sku == null ? null : sku.trim();
     }
 
     public BigDecimal getPurchaseDecimal() {

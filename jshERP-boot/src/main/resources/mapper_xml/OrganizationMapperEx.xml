@@ -52,13 +52,11 @@
     <insert id="addOrganization" parameterType="com.jsh.erp.datasource.entities.Organization"
             useGeneratedKeys="true" keyProperty="id" keyColumn="id">
         insert into jsh_organization
-        (org_no, org_full_name,
-      org_abr, delete_flag,
+        (org_no, org_abr, delete_flag,
       parent_id, sort, remark,
       create_time, update_time)
         values
-        (#{orgNo,jdbcType=VARCHAR}, #{orgFullName,jdbcType=VARCHAR},
-      #{orgAbr,jdbcType=VARCHAR}, #{deleteFlag,jdbcType=CHAR},
+        (#{orgNo,jdbcType=VARCHAR}, #{orgAbr,jdbcType=VARCHAR}, #{deleteFlag,jdbcType=CHAR},
       #{parentId,jdbcType=BIGINT}, #{sort,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
     </insert>
@@ -74,8 +72,7 @@
     <update id="editOrganization">
       update jsh_organization
       set update_time=#{updateTime},
-      org_no = #{orgNo},org_full_name = #{orgFullName},
-      org_abr = #{orgAbr},
+      org_no = #{orgNo},org_abr = #{orgAbr},
       delete_flag = #{deleteFlag},parent_id = #{parentId},
       sort = #{sort},remark = #{remark}
       where id =#{id}

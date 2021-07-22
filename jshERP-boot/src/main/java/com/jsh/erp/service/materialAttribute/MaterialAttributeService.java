@@ -17,7 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class MaterialAttributeService {
@@ -56,9 +58,28 @@ public class MaterialAttributeService {
 
     public List<MaterialAttribute> select(String attributeField, int offset, int rows)
             throws Exception{
+        String[] arr = {"color","size","brand","other1","other2"};
+        Map<String, String> map = new HashMap<>();
+        map.put("color", "颜色");
+        map.put("size", "尺寸");
+        map.put("brand", "品牌");
+        map.put("other1", "自定义1");
+        map.put("other2", "自定义2");
         List<MaterialAttribute> list = new ArrayList<>();
         try{
-            list= materialAttributeMapperEx.selectByConditionMaterialAttribute(attributeField, offset, rows);
+            List<MaterialAttribute> maList = materialAttributeMapperEx.selectByConditionMaterialAttribute(attributeField, offset, rows);
+            for(String field: arr) {
+                MaterialAttribute materialAttribute = new MaterialAttribute();
+                materialAttribute.setAttributeField(field);
+                materialAttribute.setAttributeName(map.get(field));
+                for(MaterialAttribute ma: maList) {
+                    if(field.equals(ma.getAttributeField())){
+                        materialAttribute.setAttributeName(ma.getAttributeName());
+                        materialAttribute.setAttributeValue(ma.getAttributeValue());
+                    }
+                }
+                list.add(materialAttribute);
+            }
         }catch(Exception e){
             JshException.readFail(logger, e);
         }

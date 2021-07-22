@@ -25,10 +25,6 @@ public class DepotItem {
 
     private String remark;
 
-    private String img;
-
-    private BigDecimal incidentals;
-
     private Long depotId;
 
     private Long anotherDepotId;
@@ -38,16 +34,6 @@ public class DepotItem {
     private BigDecimal taxMoney;
 
     private BigDecimal taxLastMoney;
-
-    private String otherField1;
-
-    private String otherField2;
-
-    private String otherField3;
-
-    private String otherField4;
-
-    private String otherField5;
 
     private String materialType;
 
@@ -143,22 +129,6 @@ public class DepotItem {
         this.remark = remark == null ? null : remark.trim();
     }
 
-    public String getImg() {
-        return img;
-    }
-
-    public void setImg(String img) {
-        this.img = img == null ? null : img.trim();
-    }
-
-    public BigDecimal getIncidentals() {
-        return incidentals;
-    }
-
-    public void setIncidentals(BigDecimal incidentals) {
-        this.incidentals = incidentals;
-    }
-
     public Long getDepotId() {
         return depotId;
     }
@@ -197,46 +167,6 @@ public class DepotItem {
 
     public void setTaxLastMoney(BigDecimal taxLastMoney) {
         this.taxLastMoney = taxLastMoney;
-    }
-
-    public String getOtherField1() {
-        return otherField1;
-    }
-
-    public void setOtherField1(String otherField1) {
-        this.otherField1 = otherField1 == null ? null : otherField1.trim();
-    }
-
-    public String getOtherField2() {
-        return otherField2;
-    }
-
-    public void setOtherField2(String otherField2) {
-        this.otherField2 = otherField2 == null ? null : otherField2.trim();
-    }
-
-    public String getOtherField3() {
-        return otherField3;
-    }
-
-    public void setOtherField3(String otherField3) {
-        this.otherField3 = otherField3 == null ? null : otherField3.trim();
-    }
-
-    public String getOtherField4() {
-        return otherField4;
-    }
-
-    public void setOtherField4(String otherField4) {
-        this.otherField4 = otherField4 == null ? null : otherField4.trim();
-    }
-
-    public String getOtherField5() {
-        return otherField5;
-    }
-
-    public void setOtherField5(String otherField5) {
-        this.otherField5 = otherField5 == null ? null : otherField5.trim();
     }
 
     public String getMaterialType() {

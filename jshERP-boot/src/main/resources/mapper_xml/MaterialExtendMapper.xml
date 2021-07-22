@@ -6,6 +6,7 @@
     <result column="material_id" jdbcType="BIGINT" property="materialId" />
     <result column="bar_code" jdbcType="VARCHAR" property="barCode" />
     <result column="commodity_unit" jdbcType="VARCHAR" property="commodityUnit" />
+    <result column="sku" jdbcType="VARCHAR" property="sku" />
     <result column="purchase_decimal" jdbcType="DECIMAL" property="purchaseDecimal" />
     <result column="commodity_decimal" jdbcType="DECIMAL" property="commodityDecimal" />
     <result column="wholesale_decimal" jdbcType="DECIMAL" property="wholesaleDecimal" />
@@ -77,9 +78,9 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, material_id, bar_code, commodity_unit, purchase_decimal, commodity_decimal, wholesale_decimal, 
-    low_decimal, default_flag, create_time, create_serial, update_serial, update_time, 
-    tenant_id, delete_Flag
+    id, material_id, bar_code, commodity_unit, sku, purchase_decimal, commodity_decimal, 
+    wholesale_decimal, low_decimal, default_flag, create_time, create_serial, update_serial, 
+    update_time, tenant_id, delete_Flag
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.MaterialExtendExample" resultMap="BaseResultMap">
     select
@@ -113,17 +114,17 @@
   </delete>
   <insert id="insert" parameterType="com.jsh.erp.datasource.entities.MaterialExtend">
     insert into jsh_material_extend (id, material_id, bar_code, 
-      commodity_unit, purchase_decimal, commodity_decimal, 
-      wholesale_decimal, low_decimal, default_flag, 
-      create_time, create_serial, update_serial, 
-      update_time, tenant_id, delete_Flag
-      )
+      commodity_unit, sku, purchase_decimal, 
+      commodity_decimal, wholesale_decimal, low_decimal, 
+      default_flag, create_time, create_serial, 
+      update_serial, update_time, tenant_id, 
+      delete_Flag)
     values (#{id,jdbcType=BIGINT}, #{materialId,jdbcType=BIGINT}, #{barCode,jdbcType=VARCHAR}, 
-      #{commodityUnit,jdbcType=VARCHAR}, #{purchaseDecimal,jdbcType=DECIMAL}, #{commodityDecimal,jdbcType=DECIMAL}, 
-      #{wholesaleDecimal,jdbcType=DECIMAL}, #{lowDecimal,jdbcType=DECIMAL}, #{defaultFlag,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{createSerial,jdbcType=VARCHAR}, #{updateSerial,jdbcType=VARCHAR}, 
-      #{updateTime,jdbcType=BIGINT}, #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR}
-      )
+      #{commodityUnit,jdbcType=VARCHAR}, #{sku,jdbcType=VARCHAR}, #{purchaseDecimal,jdbcType=DECIMAL}, 
+      #{commodityDecimal,jdbcType=DECIMAL}, #{wholesaleDecimal,jdbcType=DECIMAL}, #{lowDecimal,jdbcType=DECIMAL}, 
+      #{defaultFlag,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createSerial,jdbcType=VARCHAR}, 
+      #{updateSerial,jdbcType=VARCHAR}, #{updateTime,jdbcType=BIGINT}, #{tenantId,jdbcType=BIGINT}, 
+      #{deleteFlag,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.MaterialExtend">
     insert into jsh_material_extend
@@ -139,6 +140,9 @@
       </if>
       <if test="commodityUnit != null">
         commodity_unit,
+      </if>
+      <if test="sku != null">
+        sku,
       </if>
       <if test="purchaseDecimal != null">
         purchase_decimal,
@@ -186,6 +190,9 @@
       </if>
       <if test="commodityUnit != null">
         #{commodityUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="sku != null">
+        #{sku,jdbcType=VARCHAR},
       </if>
       <if test="purchaseDecimal != null">
         #{purchaseDecimal,jdbcType=DECIMAL},
@@ -243,6 +250,9 @@
       <if test="record.commodityUnit != null">
         commodity_unit = #{record.commodityUnit,jdbcType=VARCHAR},
       </if>
+      <if test="record.sku != null">
+        sku = #{record.sku,jdbcType=VARCHAR},
+      </if>
       <if test="record.purchaseDecimal != null">
         purchase_decimal = #{record.purchaseDecimal,jdbcType=DECIMAL},
       </if>
@@ -287,6 +297,7 @@
       material_id = #{record.materialId,jdbcType=BIGINT},
       bar_code = #{record.barCode,jdbcType=VARCHAR},
       commodity_unit = #{record.commodityUnit,jdbcType=VARCHAR},
+      sku = #{record.sku,jdbcType=VARCHAR},
       purchase_decimal = #{record.purchaseDecimal,jdbcType=DECIMAL},
       commodity_decimal = #{record.commodityDecimal,jdbcType=DECIMAL},
       wholesale_decimal = #{record.wholesaleDecimal,jdbcType=DECIMAL},
@@ -313,6 +324,9 @@
       </if>
       <if test="commodityUnit != null">
         commodity_unit = #{commodityUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="sku != null">
+        sku = #{sku,jdbcType=VARCHAR},
       </if>
       <if test="purchaseDecimal != null">
         purchase_decimal = #{purchaseDecimal,jdbcType=DECIMAL},
@@ -355,6 +369,7 @@
     set material_id = #{materialId,jdbcType=BIGINT},
       bar_code = #{barCode,jdbcType=VARCHAR},
       commodity_unit = #{commodityUnit,jdbcType=VARCHAR},
+      sku = #{sku,jdbcType=VARCHAR},
       purchase_decimal = #{purchaseDecimal,jdbcType=DECIMAL},
       commodity_decimal = #{commodityDecimal,jdbcType=DECIMAL},
       wholesale_decimal = #{wholesaleDecimal,jdbcType=DECIMAL},

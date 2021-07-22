@@ -7,8 +7,6 @@ public class Organization {
 
     private String orgNo;
 
-    private String orgFullName;
-
     private String orgAbr;
 
     private Long parentId;
@@ -39,14 +37,6 @@ public class Organization {
 
     public void setOrgNo(String orgNo) {
         this.orgNo = orgNo == null ? null : orgNo.trim();
-    }
-
-    public String getOrgFullName() {
-        return orgFullName;
-    }
-
-    public void setOrgFullName(String orgFullName) {
-        this.orgFullName = orgFullName == null ? null : orgFullName.trim();
     }
 
     public String getOrgAbr() {
