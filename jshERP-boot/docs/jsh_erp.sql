@@ -429,11 +429,11 @@ CREATE TABLE `jsh_material_attribute` (
 -- ----------------------------
 -- Records of jsh_material_attribute
 -- ----------------------------
-INSERT INTO `jsh_material_attribute` VALUES ('1', 'color', '颜色', '红色|橙色|黄色|绿色|蓝色|紫色', '63', '0');
-INSERT INTO `jsh_material_attribute` VALUES ('2', 'size', '尺寸', 'S|M|L|XL|XXL|XXXL', '63', '0');
-INSERT INTO `jsh_material_attribute` VALUES ('3', 'brand', '品牌', '品牌1|品牌2', '63', '0');
-INSERT INTO `jsh_material_attribute` VALUES ('4', 'other1', '自定义1', null, '63', '0');
-INSERT INTO `jsh_material_attribute` VALUES ('5', 'other2', '自定义2', null, '63', '0');
+INSERT INTO `jsh_material_attribute` VALUES ('1', 'manyColor', '颜色', '红色|橙色|黄色|绿色|蓝色|紫色', '63', '0');
+INSERT INTO `jsh_material_attribute` VALUES ('2', 'manySize', '尺寸', 'S|M|L|XL|XXL|XXXL', '63', '0');
+INSERT INTO `jsh_material_attribute` VALUES ('3', 'other1', '自定义1', '小米|华为', '63', '0');
+INSERT INTO `jsh_material_attribute` VALUES ('4', 'other2', '自定义2', null, '63', '0');
+INSERT INTO `jsh_material_attribute` VALUES ('5', 'other3', '自定义3', null, '63', '0');
 
 -- ----------------------------
 -- Table structure for jsh_material_category

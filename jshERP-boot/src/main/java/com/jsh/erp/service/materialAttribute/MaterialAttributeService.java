@@ -1,5 +1,6 @@
 package com.jsh.erp.service.materialAttribute;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.MaterialAttribute;
@@ -9,6 +10,7 @@ import com.jsh.erp.datasource.mappers.MaterialAttributeMapperEx;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.log.LogService;
+import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -58,13 +60,13 @@ public class MaterialAttributeService {
 
     public List<MaterialAttribute> select(String attributeField, int offset, int rows)
             throws Exception{
-        String[] arr = {"color","size","brand","other1","other2"};
+        String[] arr = {"manyColor","manySize","other1","other2","other3"};
         Map<String, String> map = new HashMap<>();
-        map.put("color", "颜色");
-        map.put("size", "尺寸");
-        map.put("brand", "品牌");
+        map.put("manyColor", "多颜色");
+        map.put("manySize", "多尺寸");
         map.put("other1", "自定义1");
         map.put("other2", "自定义2");
+        map.put("other3", "自定义3");
         List<MaterialAttribute> list = new ArrayList<>();
         try{
             List<MaterialAttribute> maList = materialAttributeMapperEx.selectByConditionMaterialAttribute(attributeField, offset, rows);
@@ -160,5 +162,60 @@ public class MaterialAttributeService {
             JshException.readFail(logger, e);
         }
         return list==null?0:list.size();
+    }
+
+    public JSONObject getAll() {
+        JSONObject obj = new JSONObject();
+        //属性名
+        obj.put("manyColorName", getNameByField("manyColor"));
+        obj.put("manySizeName", getNameByField("manySize"));
+        obj.put("other1Name", getNameByField("other1"));
+        obj.put("other2Name", getNameByField("other2"));
+        obj.put("other3Name", getNameByField("other3"));
+        //属性值
+        obj.put("manyColorValue", getValueArrByField("manyColor"));
+        obj.put("manySizeValue", getValueArrByField("manySize"));
+        obj.put("other1Value", getValueArrByField("other1"));
+        obj.put("other2Value", getValueArrByField("other2"));
+        obj.put("other3Value", getValueArrByField("other3"));
+        return obj;
+    }
+
+    public MaterialAttribute getInfoByField(String field) {
+        MaterialAttributeExample example = new MaterialAttributeExample();
+        example.createCriteria().andAttributeFieldEqualTo(field).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        List<MaterialAttribute> list = materialAttributeMapper.selectByExample(example);
+        if(list!=null && list.size()>0) {
+            return list.get(0);
+        } else {
+            return null;
+        }
+    }
+
+    public String getNameByField(String field) {
+        MaterialAttribute ma = getInfoByField(field);
+        if(ma!=null) {
+            return ma.getAttributeName();
+        } else {
+            return null;
+        }
+    }
+
+    public JSONArray getValueArrByField(String field) {
+        JSONArray valueArr = new JSONArray();
+        MaterialAttribute ma = getInfoByField(field);
+        if(ma!=null) {
+            String value = ma.getAttributeValue();
+            if(StringUtil.isNotEmpty(value)){
+                String[] arr = value.split("\\|");
+                for(String v: arr) {
+                    JSONObject item = new JSONObject();
+                    item.put("value",v);
+                    item.put("name",v);
+                    valueArr.add(item);
+                }
+            }
+        }
+        return valueArr;
     }
 }

@@ -131,6 +131,9 @@ public class MaterialExtendService {
                 if (StringUtils.isNotEmpty(tempInsertedJson.getString("commodityUnit"))) {
                     materialExtend.setCommodityUnit(tempInsertedJson.getString("commodityUnit"));
                 }
+                if (tempInsertedJson.get("sku")!=null) {
+                    materialExtend.setSku(tempInsertedJson.getString("sku"));
+                }
                 if (StringUtils.isNotEmpty(tempInsertedJson.getString("purchaseDecimal"))) {
                     materialExtend.setPurchaseDecimal(tempInsertedJson.getBigDecimal("purchaseDecimal"));
                 }
