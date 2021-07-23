@@ -80,7 +80,7 @@
               </a-col>
               <a-col :lg="8" :md="12" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="多属性">
-                  <a-switch checked-children="启用" un-checked-children="关闭" @change="onSkuChange"></a-switch>
+                  <a-switch checked-children="启用" un-checked-children="关闭" v-model="skuSwitch" @change="onSkuChange"></a-switch>
                 </a-form-item>
               </a-col>
             </a-row>
@@ -363,6 +363,8 @@
         this.form.resetFields();
         this.model = Object.assign({}, record);
         this.activeKey = '1'
+        this.skuSwitch = false
+        this.barCodeSwitch = false
         this.visible = true;
         if(JSON.stringify(record) === '{}') {
           this.fileList = []
