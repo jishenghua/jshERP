@@ -694,10 +694,7 @@
         this.$refs.modalForm.disableSubmit = false;
       },
       batchSetPricemodalFormOk(price, batchType) {
-        console.log(price)
-        console.log(batchType)
         let arr = this.meTable.dataSource
-        debugger
         if(arr.length === 0) {
           this.$message.warning('请先录入条码、单位等信息！');
         } else {
