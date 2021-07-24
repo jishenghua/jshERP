@@ -149,7 +149,16 @@
                 :maxHeight="300"
                 :rowNumber="true"
                 :rowSelection="true"
-                :actionButton="true"/>
+                :actionButton="true">
+                <template #buttonAfter>
+                  <a-button @click="batchSet('purchase')">采购价-批量</a-button>
+                  <a-button style="margin-left: 8px" @click="batchSet('commodity')">零售价-批量</a-button>
+                  <a-button style="margin-left: 8px" @click="batchSet('wholesale')">销售价-批量</a-button>
+                  <a-button style="margin-left: 8px" @click="batchSet('low')">最低售价-批量</a-button>
+                </template>
+              </j-editable-table>
+              <!-- 表单区域 -->
+              <batch-set-price-modal ref="modalForm" @ok="batchSetPricemodalFormOk"></batch-set-price-modal>
             </div>
             <a-row class="form-row" :gutter="24">
               <a-col :lg="24" :md="24" :sm="24">
@@ -217,6 +226,7 @@
 </template>
 <script>
   import pick from 'lodash.pick'
+  import BatchSetPriceModal from './BatchSetPriceModal'
   import JEditableTable from '@/components/jeecg/JEditableTable'
   import { FormTypes, VALIDATE_NO_PASSED, getRefPromise, validateFormAndTables } from '@/utils/JEditableTableUtil'
   import {queryMaterialCategoryTreeList,checkMaterial,checkMaterialBarCode,getAllMaterialAttribute,getMaxBarCode} from '@/api/api'
@@ -227,6 +237,7 @@
   export default {
     name: "MaterialModal",
     components: {
+      BatchSetPriceModal,
       JImageUpload,
       JDate,
       JEditableTable
@@ -677,6 +688,37 @@
           }
         }
         return num
+      },
+      batchSet(type) {
+        this.$refs.modalForm.add(type);
+        this.$refs.modalForm.disableSubmit = false;
+      },
+      batchSetPricemodalFormOk(price, batchType) {
+        console.log(price)
+        console.log(batchType)
+        let arr = this.meTable.dataSource
+        debugger
+        if(arr.length === 0) {
+          this.$message.warning('请先录入条码、单位等信息！');
+        } else {
+          let meTableData = []
+          for (let i = 0; i < arr.length; i++) {
+            let meInfo = {barCode: arr[i].barCode, commodityUnit: arr[i].commodityUnit, sku: arr[i].sku,
+              purchaseDecimal: arr[i].purchaseDecimal, commodityDecimal: arr[i].commodityDecimal,
+              wholesaleDecimal: arr[i].wholesaleDecimal, lowDecimal: arr[i].lowDecimal}
+            if(batchType === 'purchase') {
+              meInfo.purchaseDecimal = price-0
+            } else if(batchType === 'commodity') {
+              meInfo.commodityDecimal = price-0
+            } else if(batchType === 'wholesale') {
+              meInfo.wholesaleDecimal = price-0
+            } else if(batchType === 'low') {
+              meInfo.lowDecimal = price-0
+            }
+            meTableData.push(meInfo)
+          }
+          this.meTable.dataSource = meTableData
+        }
       },
       initMaterialAttribute() {
         getAllMaterialAttribute({}).then((res)=>{
