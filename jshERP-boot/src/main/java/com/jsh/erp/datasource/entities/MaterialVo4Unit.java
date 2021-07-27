@@ -34,6 +34,8 @@ public class MaterialVo4Unit extends Material{
 
     private BigDecimal currentStockPrice;
 
+    private String sku;
+
     public String getUnitName() {
         return unitName;
     }
@@ -152,5 +154,13 @@ public class MaterialVo4Unit extends Material{
 
     public void setCurrentStockPrice(BigDecimal currentStockPrice) {
         this.currentStockPrice = currentStockPrice;
+    }
+
+    public String getSku() {
+        return sku;
+    }
+
+    public void setSku(String sku) {
+        this.sku = sku;
     }
 }

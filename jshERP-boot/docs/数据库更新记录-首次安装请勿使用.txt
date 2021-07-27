@@ -1177,3 +1177,10 @@ alter table jsh_depot_item drop column other_field2;
 alter table jsh_depot_item drop column other_field3;
 alter table jsh_depot_item drop column other_field4;
 alter table jsh_depot_item drop column other_field5;
+
+-- --------------------------------------------------------
+-- 时间 2021年7月27日
+-- by jishenghua
+-- 移除机构表的全名字段
+-- --------------------------------------------------------
+alter table jsh_depot_item add sku varchar(50) DEFAULT NULL COMMENT '多属性' after material_unit;

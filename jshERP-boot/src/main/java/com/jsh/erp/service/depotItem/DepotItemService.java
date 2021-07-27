@@ -331,6 +331,7 @@ public class DepotItemService {
                 depotItem.setMaterialId(materialExtend.getMaterialId());
                 depotItem.setMaterialExtendId(materialExtend.getId());
                 depotItem.setMaterialUnit(rowObj.getString("unit"));
+                depotItem.setSku(rowObj.getString("sku"));
                 if (StringUtil.isExist(rowObj.get("operNumber"))) {
                     depotItem.setOperNumber(rowObj.getBigDecimal("operNumber"));
                     String unit = rowObj.get("unit").toString();

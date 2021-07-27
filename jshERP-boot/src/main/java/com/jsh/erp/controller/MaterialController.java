@@ -195,18 +195,17 @@ public class MaterialController {
                     item.put("standard", material.getStandard());
                     item.put("model", material.getModel());
                     item.put("unit", material.getCommodityUnit() + ratio);
-                    if(depotId!=null) {
-                        BigDecimal stock = depotItemService.getStockByParam(depotId,material.getId(),null,null,tenantId);
-                        if (material.getUnitId()!=null){
-                            Unit unit = unitService.getUnit(material.getUnitId());
-                            if(material.getCommodityUnit().equals(unit.getOtherUnit())) {
-                                if(unit.getRatio()!=0) {
-                                    stock = stock.divide(BigDecimal.valueOf(unit.getRatio()),2,BigDecimal.ROUND_HALF_UP);
-                                }
+                    item.put("sku", material.getSku());
+                    BigDecimal stock = depotItemService.getStockByParam(depotId,material.getId(),null,null,tenantId);
+                    if (material.getUnitId()!=null){
+                        Unit unit = unitService.getUnit(material.getUnitId());
+                        if(material.getCommodityUnit().equals(unit.getOtherUnit())) {
+                            if(unit.getRatio()!=0) {
+                                stock = stock.divide(BigDecimal.valueOf(unit.getRatio()),2,BigDecimal.ROUND_HALF_UP);
                             }
                         }
-                        item.put("stock", stock);
                     }
+                    item.put("stock", stock);
                     String expand = ""; //扩展信息
                     for (int i = 0; i < mpArr.length; i++) {
                         if (mpArr[i].equals("制造商")) {

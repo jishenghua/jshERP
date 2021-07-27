@@ -185,6 +185,7 @@ public class DepotItemController {
                     }
                     item.put("stock", stock);
                     item.put("unit", diEx.getMaterialUnit());
+                    item.put("sku", diEx.getSku());
                     item.put("operNumber", diEx.getOperNumber());
                     item.put("basicNumber", diEx.getBasicNumber());
                     item.put("unitPrice", diEx.getUnitPrice());

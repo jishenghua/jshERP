@@ -13,6 +13,8 @@ public class DepotItem {
 
     private String materialUnit;
 
+    private String sku;
+
     private BigDecimal operNumber;
 
     private BigDecimal basicNumber;
@@ -79,6 +81,14 @@ public class DepotItem {
 
     public void setMaterialUnit(String materialUnit) {
         this.materialUnit = materialUnit == null ? null : materialUnit.trim();
+    }
+
+    public String getSku() {
+        return sku;
+    }
+
+    public void setSku(String sku) {
+        this.sku = sku == null ? null : sku.trim();
     }
 
     public BigDecimal getOperNumber() {
