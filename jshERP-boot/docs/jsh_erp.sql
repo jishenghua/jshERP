@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50704
 File Encoding         : 65001
 
-Date: 2021-07-22 22:54:51
+Date: 2021-07-28 01:03:33
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -168,7 +168,7 @@ CREATE TABLE `jsh_depot_head` (
   PRIMARY KEY (`id`),
   KEY `FK2A80F214B610FC06` (`organ_id`),
   KEY `FK2A80F214AAE50527` (`account_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=273 DEFAULT CHARSET=utf8 COMMENT='单据主表';
+) ENGINE=InnoDB AUTO_INCREMENT=274 DEFAULT CHARSET=utf8 COMMENT='单据主表';
 
 -- ----------------------------
 -- Records of jsh_depot_head
@@ -188,6 +188,7 @@ INSERT INTO `jsh_depot_head` VALUES ('269', '其它', '组装单', 'ZZD000000006
 INSERT INTO `jsh_depot_head` VALUES ('270', '其它', '拆卸单', 'CXD00000000642', 'CXD00000000642', '2021-06-02 00:24:45', '2021-06-02 00:24:32', null, '63', null, null, '0.000000', '现付', null, null, null, null, null, null, null, null, null, null, '0', null, '63', '0');
 INSERT INTO `jsh_depot_head` VALUES ('271', '入库', '采购', 'CGRK00000000651', 'CGRK00000000651', '2021-07-06 23:45:20', '2021-07-06 23:44:45', '57', '63', '17', '-20.000000', '-80.000000', '现付', null, null, null, null, '', '', '0.000000', '0.000000', '80.000000', '0.000000', '0', null, '63', '0');
 INSERT INTO `jsh_depot_head` VALUES ('272', '出库', '销售', 'XSCK00000000652', 'XSCK00000000652', '2021-07-06 23:46:07', '2021-07-06 23:45:24', '58', '63', '17', '8.000000', '28.000000', '现付', null, null, null, '', '', '', '0.000000', '0.000000', '28.000000', '0.000000', '0', null, '63', '0');
+INSERT INTO `jsh_depot_head` VALUES ('273', '入库', '采购', 'CGRK00000000658', 'CGRK00000000658', '2021-07-28 00:58:12', '2021-07-28 00:58:02', '57', '63', '17', '-60.000000', '-60.000000', '现付', null, null, null, null, '', '', '0.000000', '0.000000', '60.000000', '0.000000', '0', null, '63', '0');
 
 -- ----------------------------
 -- Table structure for jsh_depot_item
@@ -199,6 +200,7 @@ CREATE TABLE `jsh_depot_item` (
   `material_id` bigint(20) NOT NULL COMMENT '商品Id',
   `material_extend_id` bigint(20) DEFAULT NULL COMMENT '商品扩展id',
   `material_unit` varchar(20) DEFAULT NULL COMMENT '商品计量单位',
+  `sku` varchar(50) DEFAULT NULL COMMENT '多属性',
   `oper_number` decimal(24,6) DEFAULT NULL COMMENT '数量',
   `basic_number` decimal(24,6) DEFAULT NULL COMMENT '基础数量，如kg、瓶',
   `unit_price` decimal(24,6) DEFAULT NULL COMMENT '单价',
@@ -218,28 +220,29 @@ CREATE TABLE `jsh_depot_item` (
   KEY `FK2A819F474BB6190E` (`header_id`),
   KEY `FK2A819F479485B3F5` (`depot_id`),
   KEY `FK2A819F47729F5392` (`another_depot_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=329 DEFAULT CHARSET=utf8 COMMENT='单据子表';
+) ENGINE=InnoDB AUTO_INCREMENT=331 DEFAULT CHARSET=utf8 COMMENT='单据子表';
 
 -- ----------------------------
 -- Records of jsh_depot_item
 -- ----------------------------
-INSERT INTO `jsh_depot_item` VALUES ('312', '258', '588', '10', '个', '10.000000', '10.000000', '11.000000', null, '110.000000', null, '14', null, null, null, null, null, '63', '0');
-INSERT INTO `jsh_depot_item` VALUES ('313', '259', '588', '10', '个', '10.000000', '10.000000', '11.000000', null, '110.000000', null, '14', null, null, '0.000000', '110.000000', null, '63', '0');
-INSERT INTO `jsh_depot_item` VALUES ('314', '260', '588', '10', '个', '2.000000', '2.000000', '11.000000', '11.000000', '22.000000', null, '14', null, '0.000000', '0.000000', '22.000000', null, '63', '0');
-INSERT INTO `jsh_depot_item` VALUES ('315', '261', '588', '10', '个', '2.000000', '2.000000', '22.000000', null, '44.000000', null, '14', null, null, null, null, null, '63', '0');
-INSERT INTO `jsh_depot_item` VALUES ('316', '262', '588', '10', '个', '2.000000', '2.000000', '22.000000', null, '44.000000', null, '14', null, null, '0.000000', '44.000000', null, '63', '0');
-INSERT INTO `jsh_depot_item` VALUES ('317', '263', '588', '10', '个', '1.000000', '1.000000', '22.000000', '22.000000', '22.000000', null, '14', null, '0.000000', '0.000000', '22.000000', null, '63', '0');
-INSERT INTO `jsh_depot_item` VALUES ('318', '264', '588', '10', '个', '1.000000', '1.000000', '22.000000', null, '22.000000', null, '14', null, null, null, null, null, '63', '0');
-INSERT INTO `jsh_depot_item` VALUES ('319', '265', '588', '10', '个', '1.000000', '1.000000', '22.000000', null, '22.000000', null, '14', null, null, null, null, null, '63', '0');
-INSERT INTO `jsh_depot_item` VALUES ('320', '266', '568', '2', '个', '5.000000', '5.000000', '11.000000', null, '55.000000', null, '14', null, null, null, null, null, '63', '0');
-INSERT INTO `jsh_depot_item` VALUES ('321', '267', '568', '2', '个', '2.000000', '2.000000', '15.000000', null, '30.000000', null, '14', null, null, null, null, null, '63', '0');
-INSERT INTO `jsh_depot_item` VALUES ('322', '268', '568', '2', '个', '1.000000', '1.000000', '11.000000', null, '11.000000', null, '14', '15', null, null, null, null, '63', '0');
-INSERT INTO `jsh_depot_item` VALUES ('323', '269', '588', '10', '个', '1.000000', '1.000000', '0.000000', null, '0.000000', null, '14', null, null, null, null, '组合件', '63', '0');
-INSERT INTO `jsh_depot_item` VALUES ('324', '269', '568', '2', '个', '1.000000', '1.000000', '0.000000', null, '0.000000', null, '14', null, null, null, null, '普通子件', '63', '0');
-INSERT INTO `jsh_depot_item` VALUES ('325', '270', '588', '10', '个', '1.000000', '1.000000', '0.000000', null, '0.000000', null, '14', null, null, null, null, '组合件', '63', '0');
-INSERT INTO `jsh_depot_item` VALUES ('326', '270', '568', '2', '个', '1.000000', '1.000000', '0.000000', null, '0.000000', null, '14', null, null, null, null, '普通子件', '63', '0');
-INSERT INTO `jsh_depot_item` VALUES ('327', '271', '570', '4', '个', '10.000000', '10.000000', '8.000000', '8.000000', '80.000000', null, '14', null, '0.000000', '0.000000', '80.000000', null, '63', '0');
-INSERT INTO `jsh_depot_item` VALUES ('328', '272', '570', '4', '个', '2.000000', '2.000000', '14.000000', '14.000000', '28.000000', null, '14', null, '0.000000', '0.000000', '28.000000', null, '63', '0');
+INSERT INTO `jsh_depot_item` VALUES ('312', '258', '588', '10', '个', null, '10.000000', '10.000000', '11.000000', null, '110.000000', null, '14', null, null, null, null, null, '63', '0');
+INSERT INTO `jsh_depot_item` VALUES ('313', '259', '588', '10', '个', null, '10.000000', '10.000000', '11.000000', null, '110.000000', null, '14', null, null, '0.000000', '110.000000', null, '63', '0');
+INSERT INTO `jsh_depot_item` VALUES ('314', '260', '588', '10', '个', null, '2.000000', '2.000000', '11.000000', '11.000000', '22.000000', null, '14', null, '0.000000', '0.000000', '22.000000', null, '63', '0');
+INSERT INTO `jsh_depot_item` VALUES ('315', '261', '588', '10', '个', null, '2.000000', '2.000000', '22.000000', null, '44.000000', null, '14', null, null, null, null, null, '63', '0');
+INSERT INTO `jsh_depot_item` VALUES ('316', '262', '588', '10', '个', null, '2.000000', '2.000000', '22.000000', null, '44.000000', null, '14', null, null, '0.000000', '44.000000', null, '63', '0');
+INSERT INTO `jsh_depot_item` VALUES ('317', '263', '588', '10', '个', null, '1.000000', '1.000000', '22.000000', '22.000000', '22.000000', null, '14', null, '0.000000', '0.000000', '22.000000', null, '63', '0');
+INSERT INTO `jsh_depot_item` VALUES ('318', '264', '588', '10', '个', null, '1.000000', '1.000000', '22.000000', null, '22.000000', null, '14', null, null, null, null, null, '63', '0');
+INSERT INTO `jsh_depot_item` VALUES ('319', '265', '588', '10', '个', null, '1.000000', '1.000000', '22.000000', null, '22.000000', null, '14', null, null, null, null, null, '63', '0');
+INSERT INTO `jsh_depot_item` VALUES ('320', '266', '568', '2', '个', null, '5.000000', '5.000000', '11.000000', null, '55.000000', null, '14', null, null, null, null, null, '63', '0');
+INSERT INTO `jsh_depot_item` VALUES ('321', '267', '568', '2', '个', null, '2.000000', '2.000000', '15.000000', null, '30.000000', null, '14', null, null, null, null, null, '63', '0');
+INSERT INTO `jsh_depot_item` VALUES ('322', '268', '568', '2', '个', null, '1.000000', '1.000000', '11.000000', null, '11.000000', null, '14', '15', null, null, null, null, '63', '0');
+INSERT INTO `jsh_depot_item` VALUES ('323', '269', '588', '10', '个', null, '1.000000', '1.000000', '0.000000', null, '0.000000', null, '14', null, null, null, null, '组合件', '63', '0');
+INSERT INTO `jsh_depot_item` VALUES ('324', '269', '568', '2', '个', null, '1.000000', '1.000000', '0.000000', null, '0.000000', null, '14', null, null, null, null, '普通子件', '63', '0');
+INSERT INTO `jsh_depot_item` VALUES ('325', '270', '588', '10', '个', null, '1.000000', '1.000000', '0.000000', null, '0.000000', null, '14', null, null, null, null, '组合件', '63', '0');
+INSERT INTO `jsh_depot_item` VALUES ('326', '270', '568', '2', '个', null, '1.000000', '1.000000', '0.000000', null, '0.000000', null, '14', null, null, null, null, '普通子件', '63', '0');
+INSERT INTO `jsh_depot_item` VALUES ('327', '271', '570', '4', '个', null, '10.000000', '10.000000', '8.000000', '8.000000', '80.000000', null, '14', null, '0.000000', '0.000000', '80.000000', null, '63', '0');
+INSERT INTO `jsh_depot_item` VALUES ('328', '272', '570', '4', '个', null, '2.000000', '2.000000', '14.000000', '14.000000', '28.000000', null, '14', null, '0.000000', '0.000000', '28.000000', null, '63', '0');
+INSERT INTO `jsh_depot_item` VALUES ('330', '273', '619', '37', '件', '橙色,L', '5.000000', '5.000000', '12.000000', '12.000000', '60.000000', null, '14', null, '0.000000', '0.000000', '60.000000', null, '63', '0');
 
 -- ----------------------------
 -- Table structure for jsh_function
@@ -364,7 +367,7 @@ CREATE TABLE `jsh_log` (
   `tenant_id` bigint(20) DEFAULT NULL COMMENT '租户id',
   PRIMARY KEY (`id`),
   KEY `FKF2696AA13E226853` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7531 DEFAULT CHARSET=utf8 COMMENT='操作日志';
+) ENGINE=InnoDB AUTO_INCREMENT=7536 DEFAULT CHARSET=utf8 COMMENT='操作日志';
 
 -- ----------------------------
 -- Records of jsh_log
@@ -398,7 +401,7 @@ CREATE TABLE `jsh_material` (
   PRIMARY KEY (`id`),
   KEY `FK675951272AB6672C` (`category_id`),
   KEY `UnitId` (`unit_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=619 DEFAULT CHARSET=utf8 COMMENT='产品表';
+) ENGINE=InnoDB AUTO_INCREMENT=620 DEFAULT CHARSET=utf8 COMMENT='产品表';
 
 -- ----------------------------
 -- Records of jsh_material
@@ -411,6 +414,7 @@ INSERT INTO `jsh_material` VALUES ('579', '21', '商品17', '', null, 'sp17', ''
 INSERT INTO `jsh_material` VALUES ('586', '17', '序列号商品测试', '', null, 'xlh123', '', '', '个', '', null, null, '', '', '', '', '1', '63', '0');
 INSERT INTO `jsh_material` VALUES ('587', '17', '商品test1', '南通中远', null, '', 'test1', '', '个', '', null, null, '', '', '', '', '0', '63', '0');
 INSERT INTO `jsh_material` VALUES ('588', '21', '商品200', 'fafda', '112.000000', 'weqwe', '300ml', '红色', '个', 'aaaabbbbb', null, null, '', '', '', '', '0', '63', '0');
+INSERT INTO `jsh_material` VALUES ('619', null, '衣服', null, null, null, null, null, '件', null, '', null, '', null, null, null, '0', '63', '0');
 
 -- ----------------------------
 -- Table structure for jsh_material_attribute
@@ -473,7 +477,7 @@ CREATE TABLE `jsh_material_current_stock` (
   `tenant_id` bigint(20) DEFAULT NULL COMMENT '租户id',
   `delete_flag` varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='产品当前库存';
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='产品当前库存';
 
 -- ----------------------------
 -- Records of jsh_material_current_stock
@@ -482,6 +486,9 @@ INSERT INTO `jsh_material_current_stock` VALUES ('19', '588', '14', '7.000000', 
 INSERT INTO `jsh_material_current_stock` VALUES ('20', '568', '14', '2.000000', '63', '0');
 INSERT INTO `jsh_material_current_stock` VALUES ('21', '568', '15', '1.000000', '63', '0');
 INSERT INTO `jsh_material_current_stock` VALUES ('22', '570', '14', '8.000000', '63', '0');
+INSERT INTO `jsh_material_current_stock` VALUES ('23', '619', '14', '5.000000', '63', '0');
+INSERT INTO `jsh_material_current_stock` VALUES ('24', '619', '15', '0.000000', '63', '0');
+INSERT INTO `jsh_material_current_stock` VALUES ('25', '619', '17', '0.000000', '63', '0');
 
 -- ----------------------------
 -- Table structure for jsh_material_extend
@@ -505,7 +512,7 @@ CREATE TABLE `jsh_material_extend` (
   `tenant_id` bigint(20) DEFAULT NULL COMMENT '租户id',
   `delete_Flag` varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='产品价格扩展';
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='产品价格扩展';
 
 -- ----------------------------
 -- Records of jsh_material_extend
@@ -520,6 +527,10 @@ INSERT INTO `jsh_material_extend` VALUES ('7', '579', '1006', '个', null, '20.0
 INSERT INTO `jsh_material_extend` VALUES ('8', '579', '1007', '箱', null, '240.000000', '360.000000', '360.000000', '360.000000', '0', '2020-02-20 23:47:04', 'jsh', 'jsh', '1595264270466', '63', '0');
 INSERT INTO `jsh_material_extend` VALUES ('9', '586', '1008', '个', null, '12.000000', '15.000000', '15.000000', '15.000000', '1', '2020-02-20 23:47:23', 'jsh', 'jsh', '1595254981896', '63', '0');
 INSERT INTO `jsh_material_extend` VALUES ('10', '588', '1009', '个', null, '11.000000', '22.000000', '22.000000', '22.000000', '1', '2020-07-21 00:58:15', 'jsh', 'jsh', '1614699799073', '63', '0');
+INSERT INTO `jsh_material_extend` VALUES ('36', '619', '1014', '件', '橙色,M', '12.000000', '15.000000', '14.000000', null, '1', '2021-07-28 01:00:20', 'jsh', 'jsh', '1627405220316', '63', '0');
+INSERT INTO `jsh_material_extend` VALUES ('37', '619', '1015', '件', '橙色,L', '12.000000', '15.000000', '14.000000', null, '0', '2021-07-28 01:00:20', 'jsh', 'jsh', '1627405220327', '63', '0');
+INSERT INTO `jsh_material_extend` VALUES ('38', '619', '1016', '件', '绿色,M', '12.000000', '15.000000', '14.000000', null, '0', '2021-07-28 01:00:20', 'jsh', 'jsh', '1627405220336', '63', '0');
+INSERT INTO `jsh_material_extend` VALUES ('39', '619', '1017', '件', '绿色,L', '12.000000', '15.000000', '14.000000', null, '0', '2021-07-28 01:00:20', 'jsh', 'jsh', '1627405220346', '63', '0');
 
 -- ----------------------------
 -- Table structure for jsh_material_initial_stock
@@ -716,7 +727,7 @@ CREATE TABLE `jsh_sequence` (
 -- ----------------------------
 -- Records of jsh_sequence
 -- ----------------------------
-INSERT INTO `jsh_sequence` VALUES ('depot_number_seq', '1', '999999999999999999', '655', '1', '单据编号sequence');
+INSERT INTO `jsh_sequence` VALUES ('depot_number_seq', '1', '999999999999999999', '658', '1', '单据编号sequence');
 
 -- ----------------------------
 -- Table structure for jsh_serial_number
