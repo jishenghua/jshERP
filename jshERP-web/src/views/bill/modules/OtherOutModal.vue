@@ -86,7 +86,7 @@
     data () {
       return {
         title:"操作",
-        width: '1450px',
+        width: '1600px',
         moreStatus: false,
         // 新增时子表默认添加几行空数据
         addDefaultRowNum: 1,
@@ -109,18 +109,19 @@
           loading: false,
           dataSource: [],
           columns: [
-            { title: '仓库名称', key: 'depotId', width: '8%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
+            { title: '仓库名称', key: 'depotId', width: '7%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
               allowSearch:true, validateRules: [{ required: true, message: '${title}不能为空' }]
             },
-            { title: '条码', key: 'barCode', width: '10%', type: FormTypes.popupJsh, multi: false,
+            { title: '条码', key: 'barCode', width: '8%', type: FormTypes.popupJsh, multi: false,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
-            { title: '名称', key: 'name', width: '8%', type: FormTypes.input, readonly: true },
+            { title: '名称', key: 'name', width: '6%', type: FormTypes.input, readonly: true },
             { title: '规格', key: 'standard', width: '5%', type: FormTypes.input, readonly: true },
             { title: '型号', key: 'model', width: '5%', type: FormTypes.input, readonly: true },
-            { title: '扩展信息', key: 'materialOther', width: '6%', type: FormTypes.input, readonly: true },
+            { title: '扩展信息', key: 'materialOther', width: '5%', type: FormTypes.input, readonly: true },
             { title: '库存', key: 'stock', width: '5%', type: FormTypes.input, readonly: true },
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.input, readonly: true },
+            { title: '多属性', key: 'sku', width: '4%', type: FormTypes.input, readonly: true },
             { title: '数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },

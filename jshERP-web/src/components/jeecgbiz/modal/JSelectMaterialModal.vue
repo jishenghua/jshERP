@@ -99,6 +99,7 @@
           {dataIndex: 'standard', title: '规格', width: 80},
           {dataIndex: 'model', title: '型号', width: 80},
           {dataIndex: 'unit', title: '单位', width: 60},
+          {dataIndex: 'sku', title: '多属性', width: 100},
           {dataIndex: 'stock', title: '库存', width: 50},
           {dataIndex: 'expand', title: '扩展信息', width: 80}
         ],

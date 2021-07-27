@@ -743,7 +743,7 @@
               >
                 <span
                   v-show="col.type === formTypes.inputNumber"
-                  style="padding: 0 10px;"
+                  style="padding: 0 2px;"
                 >{{statisticsColumns[col.key]}}</span>
               </div>
             </template>
@@ -770,7 +770,7 @@
   import JSelectMaterial from '@/components/jeecgbiz/JSelectMaterial'
 
   // 行高，需要在实例加载完成前用到
-  let rowHeight = 61
+  let rowHeight = 42
 
   export default {
     name: 'JEditableTable',
@@ -2754,7 +2754,7 @@
   @borderColor: #e8e8e8;
   @border: 1px solid @borderColor;
   /* tr & td 之间的间距 */
-  @spacing: 8px;
+  @spacing: 2px;
 
   .input-table {
     max-width: 100%;
@@ -2894,7 +2894,7 @@
 
       .td {
         /*flex: 1;*/
-        padding: 14px @spacing 14px 0;
+        padding: 6px @spacing 6px 0;
         justify-content: center;
 
         &:last-child {
@@ -2908,7 +2908,7 @@
           list-style: none;
           position: relative;
           display: inline-block;
-          padding: 4px 11px;
+          padding: 2px 2px;
           width: 100%;
           height: 32px;
           font-size: 14px;

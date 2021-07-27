@@ -137,16 +137,6 @@
         },
         // 表头
         columns: [
-          {
-            title: '#',
-            dataIndex: '',
-            key:'rowIndex',
-            width:40,
-            align:"center",
-            customRender:function (t,r,index) {
-              return parseInt(index)+1;
-            }
-          },
           { title: '财务人员', dataIndex: 'handsPersonName',width:140},
           { title: '单据编号', dataIndex: 'billNo',width:160},
           { title: '单据日期 ', dataIndex: 'billTimeStr',width:160},

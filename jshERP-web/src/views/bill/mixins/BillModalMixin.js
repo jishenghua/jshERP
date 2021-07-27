@@ -196,6 +196,7 @@ export const BillModalMixin = {
                   model: res.data.model,
                   materialOther: res.data.materialOther,
                   unit: res.data.commodityUnit,
+                  sku: res.data.sku,
                   operNumber: 1,
                   unitPrice: res.data.billPrice,
                   taxUnitPrice: res.data.billPrice,
