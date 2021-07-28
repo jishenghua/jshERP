@@ -231,6 +231,7 @@
           totalPrice += item.eachAmount-0
         }
         billMain.totalPrice = 0-totalPrice
+        billMain.changeAmount = 0-billMain.changeAmount
         if(this.fileList && this.fileList.length > 0) {
           billMain.fileName = this.fileList
         }
