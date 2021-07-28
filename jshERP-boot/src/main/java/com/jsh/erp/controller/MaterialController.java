@@ -169,7 +169,6 @@ public class MaterialController {
                                   HttpServletRequest request) throws Exception{
         JSONObject object = new JSONObject();
         try {
-            Long tenantId = redisService.getTenantId(request);
             List<MaterialVo4Unit> dataList = materialService.findBySelectWithBarCode(categoryId, q, (currentPage-1)*pageSize, pageSize);
             String[] mpArr = mpList.split(",");
             int total = materialService.findBySelectWithBarCodeCount(categoryId, q);
@@ -196,7 +195,11 @@ public class MaterialController {
                     item.put("model", material.getModel());
                     item.put("unit", material.getCommodityUnit() + ratio);
                     item.put("sku", material.getSku());
-                    BigDecimal stock = depotItemService.getStockByParam(depotId,material.getId(),null,null,tenantId);
+                    BigDecimal skuStock = depotItemService.getSkuStockByParam(depotId,material.getMeId(),null,null);
+                    if(StringUtil.isNotEmpty(material.getSku())){
+                        item.put("skuStock", skuStock);
+                    }
+                    BigDecimal stock = depotItemService.getStockByParam(depotId,material.getId(),null,null);
                     if (material.getUnitId()!=null){
                         Unit unit = unitService.getUnit(material.getUnitId());
                         if(material.getCommodityUnit().equals(unit.getOtherUnit())) {

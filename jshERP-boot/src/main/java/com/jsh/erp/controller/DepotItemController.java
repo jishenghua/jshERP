@@ -118,11 +118,10 @@ public class DepotItemController {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
             BigDecimal stock = BigDecimal.ZERO;
-            Long tenantId = redisService.getTenantId(request);
             List<MaterialVo4Unit> list = materialService.getMaterialByBarCode(barCode);
             if(list!=null && list.size()>0) {
                 MaterialVo4Unit materialVo4Unit = list.get(0);
-                stock = depotItemService.getStockByParam(depotId,materialVo4Unit.getId(),null,null,tenantId);
+                stock = depotItemService.getStockByParam(depotId,materialVo4Unit.getId(),null,null);
                 String commodityUnit = materialVo4Unit.getCommodityUnit();
                 Long unitId = materialVo4Unit.getUnitId();
                 if(unitId!=null) {
@@ -152,7 +151,6 @@ public class DepotItemController {
                               @RequestParam("mpList") String mpList,
                               HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
-        Long tenantId = redisService.getTenantId(request);
         try {
             List<DepotItemVo4WithInfoEx> dataList = new ArrayList<DepotItemVo4WithInfoEx>();
             if(headerId != 0) {
@@ -173,7 +171,7 @@ public class DepotItemController {
                     item.put("model", diEx.getMModel());
                     item.put("materialOther", getOtherInfo(mpArr, diEx));
                     Integer ratio = diEx.getRatio();
-                    BigDecimal stock = depotItemService.getStockByParam(diEx.getDepotId(),diEx.getMaterialId(),null,null,tenantId);
+                    BigDecimal stock = depotItemService.getStockByParam(diEx.getDepotId(),diEx.getMaterialId(),null,null);
                     if(ratio!=null){
                         BigDecimal ratioDecimal = new BigDecimal(ratio.toString());
                         if(ratioDecimal.compareTo(BigDecimal.ZERO)!=0){
@@ -262,7 +260,6 @@ public class DepotItemController {
                                       HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
-        Long tenantId = redisService.getTenantId(request);
         String timeA = Tools.firstDayOfMonth(monthTime) + BusinessConstants.DAY_FIRST_TIME;
         String timeB = Tools.lastDayOfMonth(monthTime) + BusinessConstants.DAY_LAST_TIME;
         try {
@@ -292,10 +289,10 @@ public class DepotItemController {
                     item.put("materialColor", diEx.getMColor());
                     item.put("unitName", getUName(diEx.getMaterialUnit(), diEx.getUnitName()));
 
-                    item.put("prevSum", depotItemService.getStockByParam(depotId,mId,null,timeA,tenantId));
-                    item.put("inSum", depotItemService.getInNumByParam(depotId,mId,timeA,timeB,tenantId));
-                    item.put("outSum", depotItemService.getOutNumByParam(depotId,mId,timeA,timeB,tenantId));
-                    BigDecimal thisSum = depotItemService.getStockByParam(depotId,mId,null,timeB,tenantId);
+                    item.put("prevSum", depotItemService.getStockByParam(depotId,mId,null,timeA));
+                    item.put("inSum", depotItemService.getInNumByParam(depotId,mId,timeA,timeB));
+                    item.put("outSum", depotItemService.getOutNumByParam(depotId,mId,timeA,timeB));
+                    BigDecimal thisSum = depotItemService.getStockByParam(depotId,mId,null,timeB);
                     item.put("thisSum", thisSum);
                     for(MaterialExtend me:meList) {
                         if(me.getMaterialId().longValue() == diEx.getMId().longValue()) {
@@ -333,7 +330,6 @@ public class DepotItemController {
                             @RequestParam("monthTime") String monthTime,
                             @RequestParam("materialParam") String materialParam,
                             HttpServletRequest request, HttpServletResponse response) throws Exception {
-        Long tenantId = redisService.getTenantId(request);
         String timeA = Tools.firstDayOfMonth(monthTime) + BusinessConstants.DAY_FIRST_TIME;
         String timeB = Tools.lastDayOfMonth(monthTime) + BusinessConstants.DAY_LAST_TIME;
         try {
@@ -353,10 +349,10 @@ public class DepotItemController {
                     objs[3] = diEx.getMModel();
                     objs[4] = diEx.getMaterialUnit();
                     objs[5] = diEx.getPurchaseDecimal().toString();
-                    objs[6] = depotItemService.getStockByParam(depotId,mId,null,timeA,tenantId).toString();
-                    objs[7] = depotItemService.getInNumByParam(depotId,mId,timeA,timeB,tenantId).toString();
-                    objs[8] = depotItemService.getOutNumByParam(depotId,mId,timeA,timeB,tenantId).toString();
-                    BigDecimal thisSum = depotItemService.getStockByParam(depotId,mId,null,timeB,tenantId);
+                    objs[6] = depotItemService.getStockByParam(depotId,mId,null,timeA).toString();
+                    objs[7] = depotItemService.getInNumByParam(depotId,mId,timeA,timeB).toString();
+                    objs[8] = depotItemService.getOutNumByParam(depotId,mId,timeA,timeB).toString();
+                    BigDecimal thisSum = depotItemService.getStockByParam(depotId,mId,null,timeB);
                     objs[9] = thisSum.toString();
                     objs[10] = thisSum.multiply(diEx.getPurchaseDecimal()).toString();
                     objects.add(objs);
@@ -384,7 +380,6 @@ public class DepotItemController {
                                             HttpServletRequest request) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
-        Long tenantId = redisService.getTenantId(request);
         String endTime = Tools.lastDayOfMonth(monthTime) + BusinessConstants.DAY_LAST_TIME;
         try {
             List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(StringUtil.toNull(materialParam),
@@ -393,7 +388,7 @@ public class DepotItemController {
             if (null != dataList) {
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
                     Long mId = diEx.getMId();
-                    BigDecimal thisSum = depotItemService.getStockByParam(depotId,mId,null,endTime,tenantId);
+                    BigDecimal thisSum = depotItemService.getStockByParam(depotId,mId,null,endTime);
                     BigDecimal unitPrice = diEx.getPurchaseDecimal();
                     if(unitPrice == null) {
                         unitPrice = BigDecimal.ZERO;

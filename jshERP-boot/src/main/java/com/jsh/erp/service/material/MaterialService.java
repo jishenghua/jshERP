@@ -142,8 +142,7 @@ public class MaterialService {
                     }
                 }
                 m.setMaterialOther(materialOther);
-                Long tenantId = m.getTenantId();
-                m.setStock(depotItemService.getStockByParam(null,m.getId(),null,null,tenantId));
+                m.setStock(depotItemService.getStockByParam(null,m.getId(),null,null));
                 resList.add(m);
             }
         }
@@ -228,8 +227,7 @@ public class MaterialService {
                             insertInitialStockByMaterialAndDepot(depotId, material.getId(), parseBigDecimalEx(number));
                         }
                         //更新当前库存
-                        Long tenantId = redisService.getTenantId(request);
-                        depotItemService.updateCurrentStockFun(material.getId(), depotId, tenantId);
+                        depotItemService.updateCurrentStockFun(material.getId(), depotId);
                     }
                 }
             }
@@ -454,8 +452,8 @@ public class MaterialService {
             String categoryName = ExcelUtils.getContent(src, i, 4); //类别
             String safetyStock = ExcelUtils.getContent(src, i, 5); //安全存量
             String unit = ExcelUtils.getContent(src, i, 6); //基础单位
-            //校验名称、型号、单位是否为空
-            if(StringUtil.isNotEmpty(name) && StringUtil.isNotEmpty(model) && StringUtil.isNotEmpty(unit)) {
+            //校验名称、单位是否为空
+            if(StringUtil.isNotEmpty(name) && StringUtil.isNotEmpty(unit)) {
                 MaterialWithInitStock m = new MaterialWithInitStock();
                 m.setName(name);
                 m.setStandard(standard);
@@ -594,8 +592,7 @@ public class MaterialService {
                         depotId = depot.getId();
                         insertInitialStockByMaterialAndDepot(depotId, mId, stock);
                         //更新当前库存
-                        Long tenantId = redisService.getTenantId(request);
-                        depotItemService.updateCurrentStockFun(mId, depotId, tenantId);
+                        depotItemService.updateCurrentStockFun(mId, depotId);
                     }
                 }
             }

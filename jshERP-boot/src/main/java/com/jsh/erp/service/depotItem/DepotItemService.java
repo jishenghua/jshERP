@@ -298,7 +298,7 @@ public class DepotItemService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public void saveDetials(String rows, Long headerId, Long tenantId, HttpServletRequest request) throws Exception{
+    public void saveDetials(String rows, Long headerId, HttpServletRequest request) throws Exception{
         //查询单据主表信息
         DepotHead depotHead =depotHeadMapper.selectByPrimaryKey(headerId);
         //获得当前操作人
@@ -398,7 +398,7 @@ public class DepotItemService {
                     if(material==null){
                         continue;
                     }
-                    BigDecimal stock = getStockByParam(depotItem.getDepotId(),depotItem.getMaterialId(),null,null,tenantId);
+                    BigDecimal stock = getStockByParam(depotItem.getDepotId(),depotItem.getMaterialId(),null,null);
                     BigDecimal thisBasicNumber = depotItem.getBasicNumber()==null?BigDecimal.ZERO:depotItem.getBasicNumber();
                     if(systemConfigService.getMinusStockFlag() == false && stock.compareTo(thisBasicNumber)<0){
                         throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_STOCK_NOT_ENOUGH_CODE,
@@ -415,7 +415,7 @@ public class DepotItemService {
                 }
                 this.insertDepotItemWithObj(depotItem);
                 //更新当前库存
-                updateCurrentStock(depotItem,tenantId);
+                updateCurrentStock(depotItem);
             }
         } else {
             throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_ROW_FAILED_CODE,
@@ -456,6 +456,32 @@ public class DepotItemService {
     }
 
     /**
+     * 库存统计-sku
+     * @param depotId
+     * @param meId
+     * @param beginTime
+     * @param endTime
+     * @return
+     */
+    public BigDecimal getSkuStockByParam(Long depotId, Long meId, String beginTime, String endTime){
+        DepotItemVo4Stock stockObj = depotItemMapperEx.getSkuStockByParam(depotId, meId, beginTime, endTime);
+        BigDecimal stockSum = BigDecimal.ZERO;
+        if(stockObj!=null) {
+            BigDecimal inTotal = stockObj.getInTotal();
+            BigDecimal transfInTotal = stockObj.getTransfInTotal();
+            BigDecimal assemInTotal = stockObj.getAssemInTotal();
+            BigDecimal disAssemInTotal = stockObj.getDisAssemInTotal();
+            BigDecimal outTotal = stockObj.getOutTotal();
+            BigDecimal transfOutTotal = stockObj.getTransfOutTotal();
+            BigDecimal assemOutTotal = stockObj.getAssemOutTotal();
+            BigDecimal disAssemOutTotal = stockObj.getDisAssemOutTotal();
+            stockSum = inTotal.add(transfInTotal).add(assemInTotal).add(disAssemInTotal)
+                    .subtract(outTotal).subtract(transfOutTotal).subtract(assemOutTotal).subtract(disAssemOutTotal);
+        }
+        return stockSum;
+    }
+
+    /**
      * 库存统计
      * @param depotId
      * @param mId
@@ -463,15 +489,26 @@ public class DepotItemService {
      * @param endTime
      * @return
      */
-    public BigDecimal getStockByParam(Long depotId, Long mId, String beginTime, String endTime, Long tenantId){
+    public BigDecimal getStockByParam(Long depotId, Long mId, String beginTime, String endTime){
         //初始库存
         BigDecimal initStock = materialService.getInitStockByMid(depotId, mId);
         //盘点复盘后数量的变动
         BigDecimal stockCheckSum = depotItemMapperEx.getStockCheckSum(depotId, mId, beginTime, endTime);
-        DepotItemVo4Stock stockObj = depotItemMapperEx.getStockByParam(depotId, mId, beginTime, endTime, tenantId);
-        BigDecimal intNum = stockObj.getInNum();
-        BigDecimal outNum = stockObj.getOutNum();
-        return initStock.add(intNum).subtract(outNum).add(stockCheckSum);
+        DepotItemVo4Stock stockObj = depotItemMapperEx.getStockByParam(depotId, mId, beginTime, endTime);
+        BigDecimal stockSum = BigDecimal.ZERO;
+        if(stockObj!=null) {
+            BigDecimal inTotal = stockObj.getInTotal();
+            BigDecimal transfInTotal = stockObj.getTransfInTotal();
+            BigDecimal assemInTotal = stockObj.getAssemInTotal();
+            BigDecimal disAssemInTotal = stockObj.getDisAssemInTotal();
+            BigDecimal outTotal = stockObj.getOutTotal();
+            BigDecimal transfOutTotal = stockObj.getTransfOutTotal();
+            BigDecimal assemOutTotal = stockObj.getAssemOutTotal();
+            BigDecimal disAssemOutTotal = stockObj.getDisAssemOutTotal();
+            stockSum = inTotal.add(transfInTotal).add(assemInTotal).add(disAssemInTotal)
+                    .subtract(outTotal).subtract(transfOutTotal).subtract(assemOutTotal).subtract(disAssemOutTotal);
+        }
+        return initStock.add(stockCheckSum).add(stockSum);
     }
 
     /**
@@ -482,9 +519,17 @@ public class DepotItemService {
      * @param endTime
      * @return
      */
-    public BigDecimal getInNumByParam(Long depotId, Long mId, String beginTime, String endTime, Long tenantId){
-        DepotItemVo4Stock stockObj = depotItemMapperEx.getStockByParam(depotId, mId, beginTime, endTime, tenantId);
-        return stockObj.getInNum();
+    public BigDecimal getInNumByParam(Long depotId, Long mId, String beginTime, String endTime){
+        DepotItemVo4Stock stockObj = depotItemMapperEx.getStockByParam(depotId, mId, beginTime, endTime);
+        BigDecimal stockSum = BigDecimal.ZERO;
+        if(stockObj!=null) {
+            BigDecimal inTotal = stockObj.getInTotal();
+            BigDecimal transfInTotal = stockObj.getTransfInTotal();
+            BigDecimal assemInTotal = stockObj.getAssemInTotal();
+            BigDecimal disAssemInTotal = stockObj.getDisAssemInTotal();
+            stockSum = inTotal.add(transfInTotal).add(assemInTotal).add(disAssemInTotal);
+        }
+        return stockSum;
     }
 
     /**
@@ -495,21 +540,28 @@ public class DepotItemService {
      * @param endTime
      * @return
      */
-    public BigDecimal getOutNumByParam(Long depotId, Long mId, String beginTime, String endTime, Long tenantId){
-        DepotItemVo4Stock stockObj = depotItemMapperEx.getStockByParam(depotId, mId, beginTime, endTime, tenantId);
-        return stockObj.getOutNum();
+    public BigDecimal getOutNumByParam(Long depotId, Long mId, String beginTime, String endTime){
+        DepotItemVo4Stock stockObj = depotItemMapperEx.getStockByParam(depotId, mId, beginTime, endTime);
+        BigDecimal stockSum = BigDecimal.ZERO;
+        if(stockObj!=null) {
+            BigDecimal outTotal = stockObj.getOutTotal();
+            BigDecimal transfOutTotal = stockObj.getTransfOutTotal();
+            BigDecimal assemOutTotal = stockObj.getAssemOutTotal();
+            BigDecimal disAssemOutTotal = stockObj.getDisAssemOutTotal();
+            stockSum = outTotal.subtract(transfOutTotal).subtract(assemOutTotal).subtract(disAssemOutTotal);
+        }
+        return stockSum;
     }
 
     /**
      * 根据单据明细来批量更新当前库存
      * @param depotItem
-     * @param tenantId
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public void updateCurrentStock(DepotItem depotItem, Long tenantId){
-        updateCurrentStockFun(depotItem.getMaterialId(), depotItem.getDepotId(),tenantId);
+    public void updateCurrentStock(DepotItem depotItem){
+        updateCurrentStockFun(depotItem.getMaterialId(), depotItem.getDepotId());
         if(depotItem.getAnotherDepotId()!=null){
-            updateCurrentStockFun(depotItem.getMaterialId(), depotItem.getAnotherDepotId(),tenantId);
+            updateCurrentStockFun(depotItem.getMaterialId(), depotItem.getAnotherDepotId());
         }
     }
 
@@ -517,9 +569,8 @@ public class DepotItemService {
      * 根据商品和仓库来更新当前库存
      * @param mId
      * @param dId
-     * @param tenantId
      */
-    public void updateCurrentStockFun(Long mId, Long dId, Long tenantId) {
+    public void updateCurrentStockFun(Long mId, Long dId) {
         MaterialCurrentStockExample example = new MaterialCurrentStockExample();
         example.createCriteria().andMaterialIdEqualTo(mId).andDepotIdEqualTo(dId)
                 .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
@@ -527,7 +578,7 @@ public class DepotItemService {
         MaterialCurrentStock materialCurrentStock = new MaterialCurrentStock();
         materialCurrentStock.setMaterialId(mId);
         materialCurrentStock.setDepotId(dId);
-        materialCurrentStock.setCurrentNumber(getStockByParam(dId,mId,null,null,tenantId));
+        materialCurrentStock.setCurrentNumber(getStockByParam(dId,mId,null,null));
         if(list!=null && list.size()>0) {
             Long mcsId = list.get(0).getId();
             materialCurrentStock.setId(mcsId);

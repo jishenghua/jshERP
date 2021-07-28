@@ -68,9 +68,15 @@
         <result column="linjieNumber" jdbcType="DECIMAL" property="linjieNumber" />
     </resultMap>
 
-    <resultMap id="StockMap" type="com.jsh.erp.datasource.vo.DepotItemVo4Stock">
-        <result column="in_stock" jdbcType="DECIMAL" property="inNum" />
-        <result column="out_stock" jdbcType="DECIMAL" property="outNum" />
+    <resultMap id="stockMap" type="com.jsh.erp.datasource.vo.DepotItemVo4Stock">
+        <result column="inTotal" jdbcType="DECIMAL" property="inTotal" />
+        <result column="outTotal" jdbcType="DECIMAL" property="outTotal" />
+        <result column="transfInTotal" jdbcType="DECIMAL" property="transfInTotal" />
+        <result column="transfOutTotal" jdbcType="DECIMAL" property="transfOutTotal" />
+        <result column="assemInTotal" jdbcType="DECIMAL" property="assemInTotal" />
+        <result column="assemOutTotal" jdbcType="DECIMAL" property="assemOutTotal" />
+        <result column="disAssemInTotal" jdbcType="DECIMAL" property="disAssemInTotal" />
+        <result column="disAssemOutTotal" jdbcType="DECIMAL" property="disAssemOutTotal" />
     </resultMap>
 
     <select id="selectByConditionDepotItem" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="com.jsh.erp.datasource.mappers.DepotItemMapper.BaseResultMap">
@@ -267,22 +273,46 @@
         and ifnull(di.delete_flag,'0') !='1'
     </select>
 
-    <select id="getStockByParam"  resultMap="StockMap">
-        select ifnull((curep.inTotal+curep.transfInTotal+curep.assemInTotal+curep.disAssemInTotal),0) as in_stock,
-        ifnull((curep.outTotal+curep.transfOutTotal+curep.assemOutTotal+curep.disAssemOutTotal),0) out_stock
+    <select id="getSkuStockByParam" resultMap="stockMap">
+        select
+        sum(case when dh.type='入库' <if test="depotId != null">and di.depot_id=#{depotId}</if> then di.basic_number else 0 end) as inTotal,
+        sum(case when dh.type='出库' and dh.sub_type!='调拨' <if test="depotId != null">and di.depot_id=#{depotId}</if> then di.basic_number else 0 end) as outTotal,
+        sum(case when dh.sub_type='调拨' <if test="depotId != null">and di.another_depot_id=#{depotId}</if> then di.basic_number else 0 end) as transfInTotal,
+        sum(case when dh.sub_type='调拨' <if test="depotId != null">and di.depot_id=#{depotId}</if> then di.basic_number else 0 end) as transfOutTotal,
+        sum(case when dh.sub_type='组装单' and di.material_type='组合件' <if test="depotId != null">and di.depot_id=#{depotId}</if> then di.basic_number else 0 end) as assemInTotal,
+        sum(case when dh.sub_type='组装单' and di.material_type='普通子件' <if test="depotId != null">and di.depot_id=#{depotId}</if> then di.basic_number else 0 end) as assemOutTotal,
+        sum(case when dh.sub_type='拆卸单' and di.material_type='普通子件' <if test="depotId != null">and di.depot_id=#{depotId}</if> then di.basic_number else 0 end) as disAssemInTotal,
+        sum(case when dh.sub_type='拆卸单' and di.material_type='组合件' <if test="depotId != null"> and di.depot_id=#{depotId}</if> then di.basic_number else 0 end) as disAssemOutTotal
         from
-        (select sum(if(dh.type='入库' <if test="depotId != null">and di.depot_id=#{depotId}</if>, di.basic_number,0)) as inTotal,
-        sum(if(dh.type='出库' and dh.sub_type!='调拨' <if test="depotId != null">and di.depot_id=#{depotId}</if>,di.basic_number,0)) as outTotal,
-        sum(if(dh.sub_type='调拨' <if test="depotId != null">and di.another_depot_id=#{depotId}</if>,di.basic_number,0)) as transfInTotal,
-        sum(if(dh.sub_type='调拨' <if test="depotId != null">and di.depot_id=#{depotId}</if>,di.basic_number,0)) as transfOutTotal,
-        sum(if(dh.sub_type='组装单' and di.material_type='组合件' <if test="depotId != null">and di.depot_id=#{depotId}</if>,di.basic_number,0)) as assemInTotal,
-        sum(if(dh.sub_type='组装单' and di.material_type='普通子件' <if test="depotId != null">and di.depot_id=#{depotId}</if>,di.basic_number,0)) as assemOutTotal,
-        sum(if(dh.sub_type='拆卸单' and di.material_type='普通子件' <if test="depotId != null">and di.depot_id=#{depotId}</if>,di.basic_number,0)) as disAssemInTotal,
-        sum(if(dh.sub_type='拆卸单' and di.material_type='组合件' <if test="depotId != null"> and di.depot_id=#{depotId}</if>,di.basic_number,0)) as disAssemOutTotal
-        from
-        jsh_depot_head dh,jsh_depot_item di
+        jsh_depot_head dh
+        left join jsh_depot_item di on dh.id=di.header_id and ifnull(di.delete_flag,'0') !='1'
         where 1=1
-        and dh.id=di.header_id
+        and ifnull(dh.delete_flag,'0') !='1'
+        and di.material_extend_id=#{meId}
+        and ifnull(di.sku,'') !=''
+        <if test="beginTime != null">
+            and dh.oper_time &gt;= #{beginTime}
+        </if>
+        <if test="endTime != null">
+            and dh.oper_time &lt;= #{endTime}
+        </if>
+    </select>
+
+    <select id="getStockByParam" resultMap="stockMap">
+        select
+        sum(case when dh.type='入库' <if test="depotId != null">and di.depot_id=#{depotId}</if> then di.basic_number else 0 end) as inTotal,
+        sum(case when dh.type='出库' and dh.sub_type!='调拨' <if test="depotId != null">and di.depot_id=#{depotId}</if> then di.basic_number else 0 end) as outTotal,
+        sum(case when dh.sub_type='调拨' <if test="depotId != null">and di.another_depot_id=#{depotId}</if> then di.basic_number else 0 end) as transfInTotal,
+        sum(case when dh.sub_type='调拨' <if test="depotId != null">and di.depot_id=#{depotId}</if> then di.basic_number else 0 end) as transfOutTotal,
+        sum(case when dh.sub_type='组装单' and di.material_type='组合件' <if test="depotId != null">and di.depot_id=#{depotId}</if> then di.basic_number else 0 end) as assemInTotal,
+        sum(case when dh.sub_type='组装单' and di.material_type='普通子件' <if test="depotId != null">and di.depot_id=#{depotId}</if> then di.basic_number else 0 end) as assemOutTotal,
+        sum(case when dh.sub_type='拆卸单' and di.material_type='普通子件' <if test="depotId != null">and di.depot_id=#{depotId}</if> then di.basic_number else 0 end) as disAssemInTotal,
+        sum(case when dh.sub_type='拆卸单' and di.material_type='组合件' <if test="depotId != null"> and di.depot_id=#{depotId}</if> then di.basic_number else 0 end) as disAssemOutTotal
+        from
+        jsh_depot_head dh
+        left join jsh_depot_item di on dh.id=di.header_id and ifnull(di.delete_flag,'0') !='1'
+        where 1=1
+        and ifnull(dh.delete_flag,'0') !='1'
         and di.material_id=#{mId}
         <if test="beginTime != null">
             and dh.oper_time &gt;= #{beginTime}
@@ -290,10 +320,6 @@
         <if test="endTime != null">
             and dh.oper_time &lt;= #{endTime}
         </if>
-        and dh.tenant_id=#{tenantId}
-        and di.tenant_id=#{tenantId}
-        and ifnull(dh.delete_flag,'0') !='1'
-        and ifnull(di.delete_flag,'0') !='1') as curep
     </select>
 
     <select id="findDepotItemListBydepotheadId"  resultType="com.jsh.erp.datasource.entities.DepotItem">
