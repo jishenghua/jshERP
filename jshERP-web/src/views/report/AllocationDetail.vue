@@ -1,23 +1,30 @@
+<!-- 用的InDetail修改 -->
 <template>
   <a-row :gutter="24">
     <a-col :md="24">
       <a-card :bordered="false">
-        <!-- 查询区域 -->
+        <!-- 查询区域
+        projectId 调出仓库
+        projectIdto 调入仓库
+        -->
         <div class="table-page-search-wrapper">
           <a-form layout="inline" @keyup.enter.native="searchQuery">
             <a-row :gutter="24">
               <a-col :md="4" :sm="24">
-                <a-form-item label="客户" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-select placeholder="选择客户" v-model="queryParam.organId"
-                    :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
-                    <a-select-option v-for="(item,index) in supList" :key="index" :value="item.id">
-                      {{ item.supplier }}
+                <a-form-item label="调出仓库" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-select
+                    showSearch optionFilterProp="children"
+                    style="width: 100%"
+                    placeholder="请选择仓库"
+                    v-model="queryParam.depotIdF">
+                    <a-select-option v-for="(depot,index) in depotList" :value="depot.id">
+                      {{ depot.depotName }}
                     </a-select-option>
                   </a-select>
                 </a-form-item>
               </a-col>
               <a-col :md="4" :sm="24">
-                <a-form-item label="仓库" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                <a-form-item label="调入仓库" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-select
                     showSearch optionFilterProp="children"
                     style="width: 100%"
@@ -84,7 +91,7 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { getNowFormatMonth } from '@/utils/util';
   import {getAction} from '@/api/manage'
-  import {findBySelectCus, findBillDetailByNumber} from '@/api/api'
+  import {findBySelectSup, findBillDetailByNumber} from '@/api/api'
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import moment from 'moment'
   export default {
@@ -108,9 +115,10 @@
           organId: '',
           materialParam:'',
           depotId: '',
+          depotIdF: '',
           beginTime: getNowFormatMonth() + '-01',
           endTime: moment().format('YYYY-MM-DD'),
-          type: "出库"
+          subType: "调拨"
         },
         dateFormat: 'YYYY-MM-DD',
         currentDay: moment().format('YYYY-MM-DD'),
@@ -142,13 +150,13 @@
           {title: '数量', dataIndex: 'operNumber', width: 60},
           {title: '单价', dataIndex: 'unitPrice', width: 60},
           {title: '金额', dataIndex: 'allPrice', width: 60},
-          {title: '客户', dataIndex: 'sname', width: 80},
-          {title: '仓库', dataIndex: 'dname', width: 80},
-          {title: '出库日期', dataIndex: 'operTime', width: 80},
+          {title: '调出仓库', dataIndex: 'dname', width: 80},
+          {title: '调入仓库', dataIndex: 'sname', width: 80},
+          {title: '调拨日期', dataIndex: 'operTime', width: 80},
           {title: '备注', dataIndex: 'newRemark', width: 100}
         ],
         url: {
-          list: "/depotHead/findInDetail",
+          list: "/depotHead/findAllocationDetail",
         }
       }
     },
@@ -173,7 +181,7 @@
       },
       initSupplier() {
         let that = this;
-        findBySelectCus({}).then((res)=>{
+        findBySelectSup({}).then((res)=>{
           if(res) {
             that.supList = res;
           }

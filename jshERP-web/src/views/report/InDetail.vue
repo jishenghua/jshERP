@@ -131,19 +131,21 @@
             }
           },
           {
-            title: '单据编号', dataIndex: 'number', width: 140,
+            title: '单据编号', dataIndex: 'number', width: 100,
             scopedSlots: { customRender: 'numberCustomRender' },
           },
-          {title: '条码', dataIndex: 'barCode', width: 120},
+          {title: '条码', dataIndex: 'barCode', width: 100},
           {title: '名称', dataIndex: 'mname', width: 120},
-          {title: '规格', dataIndex: 'standard', width: 100},
-          {title: '型号', dataIndex: 'model', width: 100},
+          {title: '规格', dataIndex: 'standard', width: 50},
+          {title: '型号', dataIndex: 'model', width: 50},
+          {title: '单位', dataIndex: 'mUnit', width: 50},
+          {title: '数量', dataIndex: 'operNumber', width: 60},
           {title: '单价', dataIndex: 'unitPrice', width: 60},
-          {title: '入库数量', dataIndex: 'operNumber', width: 80},
           {title: '金额', dataIndex: 'allPrice', width: 60},
-          {title: '供应商', dataIndex: 'sname', width: 120},
-          {title: '仓库', dataIndex: 'dname', width: 120},
-          {title: '入库日期', dataIndex: 'operTime', width: 100}
+          {title: '供应商', dataIndex: 'sname', width: 80},
+          {title: '仓库', dataIndex: 'dname', width: 80},
+          {title: '入库日期', dataIndex: 'operTime', width: 80},
+          {title: '备注', dataIndex: 'newRemark', width: 100}
         ],
         url: {
           list: "/depotHead/findInDetail",
