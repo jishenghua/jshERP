@@ -18,6 +18,10 @@ public class DepotHeadVo4InDetail {
 
     private BigDecimal UnitPrice;
 
+    private String mUnit;
+
+    private String newRemark;
+
     private BigDecimal OperNumber;
 
     private BigDecimal AllPrice;
@@ -78,6 +82,22 @@ public class DepotHeadVo4InDetail {
 
     public void setUnitPrice(BigDecimal unitPrice) {
         UnitPrice = unitPrice;
+    }
+
+    public String getmUnit() {
+        return mUnit;
+    }
+
+    public void setmUnit(String mUnit) {
+        this.mUnit = mUnit;
+    }
+
+    public String getNewRemark() {
+        return newRemark;
+    }
+
+    public void setNewRemark(String newRemark) {
+        this.newRemark = newRemark;
     }
 
     public BigDecimal getOperNumber() {

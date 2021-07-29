@@ -175,6 +175,50 @@ public class DepotHeadController {
     }
 
     /**
+     * 调拨明细接口 TODO:by sdw 20210724
+     * @param currentPage
+     * @param pageSize
+     * @param oId
+     * @param materialParam
+     * @param depotIdF  调出仓库
+     * @param depotId  调入仓库
+     * @param beginTime
+     * @param endTime
+     * @param subType
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/findAllocationDetail")
+    public BaseResponseInfo findallocationDetail(@RequestParam("currentPage") Integer currentPage,
+                                                 @RequestParam("pageSize") Integer pageSize,
+                                                 @RequestParam("organId") Integer oId,
+                                                 @RequestParam("materialParam") String materialParam,
+                                                 @RequestParam("depotId") Integer depotId,
+                                                 @RequestParam("depotIdF") Integer depotIdF,
+                                                 @RequestParam("beginTime") String beginTime,
+                                                 @RequestParam("endTime") String endTime,
+                                                 @RequestParam("subType") String subType,
+                                                 HttpServletRequest request)throws Exception {
+        BaseResponseInfo res = new BaseResponseInfo();
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            beginTime = Tools.parseDayToTime(beginTime, BusinessConstants.DAY_FIRST_TIME);
+            endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
+            List<DepotHeadVo4InDetail> list = depotHeadService.findAllocationDetail(beginTime, endTime, subType, materialParam, depotId, depotIdF, oId, (currentPage-1)*pageSize, pageSize);
+            int total = depotHeadService.findAllocationDetailCount(beginTime, endTime, subType, materialParam, depotId, depotIdF,oId);
+            map.put("rows", list);
+            map.put("total", total);
+            res.code = 200;
+            res.data = map;
+        } catch(Exception e){
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
+    }
+
+    /**
      * 对账单接口
      * @param currentPage
      * @param pageSize

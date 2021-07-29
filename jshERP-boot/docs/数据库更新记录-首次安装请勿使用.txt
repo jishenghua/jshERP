@@ -1184,3 +1184,10 @@ alter table jsh_depot_item drop column other_field5;
 -- 移除机构表的全名字段
 -- --------------------------------------------------------
 alter table jsh_depot_item add sku varchar(50) DEFAULT NULL COMMENT '多属性' after material_unit;
+
+-- --------------------------------------------------------
+-- 时间 2021年7月29日
+-- by jishenghua
+-- 增加调拨明细菜单
+-- --------------------------------------------------------
+INSERT INTO `jsh_function` VALUES ('248', '030150', '调拨明细', '0301', '/report/allocation_detail', '/report/AllocationDetail', '\0', '0646', '', '电脑版', '', 'profile', '0');

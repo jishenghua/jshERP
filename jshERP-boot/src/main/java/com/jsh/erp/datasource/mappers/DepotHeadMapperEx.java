@@ -87,6 +87,26 @@ public interface DepotHeadMapperEx {
             @Param("depotId") Integer depotId,
             @Param("oId") Integer oId);
 
+    List<DepotHeadVo4InDetail> findAllocationDetail(
+            @Param("beginTime") String beginTime,
+            @Param("endTime") String endTime,
+            @Param("subType") String subType,
+            @Param("materialParam") String materialParam,
+            @Param("depotId") Integer depotId,
+            @Param("depotIdF") Integer depotIdF,
+            @Param("oId") Integer oId,
+            @Param("offset") Integer offset,
+            @Param("rows") Integer rows);
+
+    int findAllocationDetailCount(
+            @Param("beginTime") String beginTime,
+            @Param("endTime") String endTime,
+            @Param("subType") String subType,
+            @Param("materialParam") String materialParam,
+            @Param("depotId") Integer depotId,
+            @Param("depotIdF") Integer depotIdF,
+            @Param("oId") Integer oId);
+
     List<DepotHeadVo4StatementAccount> findStatementAccount(
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,

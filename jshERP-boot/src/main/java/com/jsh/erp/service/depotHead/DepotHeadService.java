@@ -421,6 +421,26 @@ public class DepotHeadService {
         return result;
     }
 
+    public List<DepotHeadVo4InDetail> findAllocationDetail(String beginTime, String endTime, String subType, String materialParam, Integer depotId, Integer depotIdF, Integer oId, Integer offset, Integer rows) throws Exception{
+        List<DepotHeadVo4InDetail> list = null;
+        try{
+            list =depotHeadMapperEx.findAllocationDetail(beginTime, endTime, subType, materialParam, depotId, depotIdF, oId, offset, rows);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list;
+    }
+
+    public int findAllocationDetailCount(String beginTime, String endTime, String subType, String materialParam, Integer depotId,  Integer depotIdF,Integer oId) throws Exception{
+        int result = 0;
+        try{
+            result =depotHeadMapperEx.findAllocationDetailCount(beginTime, endTime, subType, materialParam, depotId,depotIdF, oId);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return result;
+    }
+
     public List<DepotHeadVo4StatementAccount> findStatementAccount(String beginTime, String endTime, Integer organId, String supType, Integer offset, Integer rows)throws Exception {
         List<DepotHeadVo4StatementAccount> list = null;
         try{

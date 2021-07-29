@@ -172,8 +172,8 @@
     </select>
 
     <select id="findByAll" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
-        select dh.number,me.bar_code, m.`name` MName,m.model,m.standard,di.unit_price,di.oper_number,di.all_price,s.supplier SName,d.dName DName,
-        date_format(dh.oper_time, '%Y-%m-%d') OperTime, concat(dh.sub_type,dh.type) as NewType
+        select dh.number,me.bar_code, m.`name` MName,m.model,m.standard,di.unit_price,di.material_unit as mUnit,di.oper_number,di.all_price,s.supplier SName,d.dName DName,
+        date_format(dh.oper_time, '%Y-%m-%d') OperTime, concat(dh.sub_type,dh.type) as NewType, concat_ws('  ',dh.remark,di.remark) as newRemark
         from jsh_depot_head dh
         inner join jsh_depot_item di on di.header_id=dh.id and ifnull(di.delete_flag,'0') !='1'
         inner join jsh_material m on m.id=di.material_id and ifnull(m.delete_flag,'0') !='1'
@@ -301,6 +301,62 @@
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
         GROUP BY di.material_id,m.mName,m.Model,m.standard,m.categoryName) a
+    </select>
+
+    <select id="findAllocationDetail" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
+        select dh.number,me.bar_code, m.`name` MName,m.model,m.standard,di.unit_price,di.material_unit as mUnit,di.oper_number,di.all_price,SName, d.dName DName,
+        date_format(dh.oper_time, '%Y-%m-%d') OperTime, concat(dh.sub_type,dh.type) as NewType, concat_ws('  ',dh.remark,di.remark) as newRemark
+        from jsh_depot_head dh
+        inner join jsh_depot_item di on di.header_id=dh.id and ifnull(di.delete_flag,'0') !='1'
+        inner join jsh_material m on m.id=di.material_id and ifnull(m.delete_flag,'0') !='1'
+        left join jsh_material_extend me on me.id=di.material_extend_id and ifnull(me.delete_Flag,'0') !='1'
+        inner join (select id,name as dName,delete_Flag from jsh_depot ) d on d.id=di.depot_id and ifnull(d.delete_Flag,'0') !='1'
+        <!-- 调出仓库名查询 -->
+        inner join (select id as aid,name as SName,delete_Flag as adelete_Flag from jsh_depot ) ddd on ddd.aid=di.another_depot_id and ifnull(ddd.adelete_Flag,'0') !='1'
+        where dh.oper_time >=#{beginTime} and dh.oper_time &lt;=#{endTime}
+        <if test="depotIdF != null">
+            and di.depot_id = #{depotIdF}
+        </if>
+        <if test="depotId != null">
+            and di.another_depot_id = #{depotId}
+        </if>
+        <if test="subType != null">
+            and dh.sub_type=#{subType}
+        </if>
+        <if test="materialParam != null and materialParam !=''">
+            <bind name="bindKey" value="'%'+materialParam+'%'"/>
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey} or dh.remark like #{bindKey})
+        </if>
+        and ifnull(dh.delete_flag,'0') !='1'
+        ORDER BY oper_time DESC,number desc
+        <if test="offset != null and rows != null">
+            limit #{offset},#{rows}
+        </if>
+    </select>
+
+    <select id="findAllocationDetailCount" resultType="java.lang.Integer">
+        select count(1)
+        from jsh_depot_head dh
+        inner join jsh_depot_item di on di.header_id=dh.id and ifnull(di.delete_flag,'0') !='1'
+        inner join jsh_material m on m.id=di.material_id and ifnull(m.delete_Flag,'0') !='1'
+        left join jsh_material_extend me on me.id=di.material_extend_id and ifnull(me.delete_Flag,'0') !='1'
+        inner join (select id,name as dName,delete_Flag from jsh_depot) d on d.id=di.depot_id and ifnull(d.delete_Flag,'0') !='1'
+        where dh.oper_time >=#{beginTime} and dh.oper_time &lt;=#{endTime}
+        <if test="depotIdF != null">
+            and di.depot_id = #{depotIdF}
+        </if>
+        <if test="depotId != null">
+            and di.another_depot_id = #{depotId}
+        </if>
+        <if test="subType != null">
+            and dh.sub_type=#{subType}
+        </if>
+        <if test="materialParam != null and materialParam !=''">
+            <bind name="bindKey" value="'%'+materialParam+'%'"/>
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey} or dh.remark like #{bindKey})
+        </if>
+        and ifnull(dh.delete_flag,'0') !='1'
+        ORDER BY oper_time DESC,number desc
     </select>
 
     <select id="findStatementAccount" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultStatementAccount">
