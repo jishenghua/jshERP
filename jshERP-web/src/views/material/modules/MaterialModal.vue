@@ -583,7 +583,7 @@
       validateBarCode(type, value, row, column, callback, target) {
         let params = {
           barCode: value,
-          id: row.id.length == 20?0: row.id
+          id: row.id.length >= 20?0: row.id
         };
         checkMaterialBarCode(params).then((res)=>{
           if(res && res.code===200) {
