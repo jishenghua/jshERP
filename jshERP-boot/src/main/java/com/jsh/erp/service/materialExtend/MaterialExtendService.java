@@ -263,11 +263,13 @@ public class MaterialExtendService {
         MaterialExtendExample.Criteria criteria = example.createCriteria();
         criteria.andBarCodeEqualTo(barCode);
         if (id > 0) {
-            criteria.andIdNotEqualTo(id);
+            criteria.andIdNotEqualTo(id).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        } else {
+            criteria.andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         }
         List<MaterialExtend> list =null;
         try{
-            list=  materialExtendMapper.selectByExample(example);
+            list = materialExtendMapper.selectByExample(example);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
