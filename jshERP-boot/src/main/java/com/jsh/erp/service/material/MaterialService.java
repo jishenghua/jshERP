@@ -791,7 +791,11 @@ public class MaterialService {
 
     public String getMaxBarCode() {
         String maxBarCodeOld = materialMapperEx.getMaxBarCode();
-        return Long.parseLong(maxBarCodeOld)+"";
+        if(StringUtil.isNotEmpty(maxBarCodeOld)) {
+            return Long.parseLong(maxBarCodeOld)+"";
+        } else {
+            return "1000";
+        }
     }
 
     public List<String> getMaterialNameList() {

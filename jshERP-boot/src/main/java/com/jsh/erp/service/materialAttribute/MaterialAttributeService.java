@@ -193,12 +193,23 @@ public class MaterialAttributeService {
     }
 
     public String getNameByField(String field) {
-        MaterialAttribute ma = getInfoByField(field);
-        if(ma!=null) {
-            return ma.getAttributeName();
-        } else {
-            return null;
+        String res = "";
+        if("manyColor".equals(field)){
+            res = "多颜色";
+        } else if("manySize".equals(field)){
+            res = "多尺寸";
+        } else if("other1".equals(field)){
+            res = "自定义1";
+        } else if("other2".equals(field)){
+            res = "自定义2";
+        } else if("other3".equals(field)){
+            res = "自定义3";
         }
+        MaterialAttribute ma = getInfoByField(field);
+        if(ma!=null && StringUtil.isNotEmpty(ma.getAttributeName())) {
+            res = ma.getAttributeName();
+        }
+        return res;
     }
 
     public JSONArray getValueArrByField(String field) {
