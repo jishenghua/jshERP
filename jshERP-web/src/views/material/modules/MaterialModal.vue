@@ -299,7 +299,7 @@
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             {
-              title: '多属性', key: 'sku', width: '12%', type: FormTypes.input, defaultValue: '', readonly:true
+              title: '多属性', key: 'sku', width: '12%', type: FormTypes.input, defaultValue: '', readonly:true, placeholder: '点击生成条码赋值'
             },
             {
               title: '采购价', key: 'purchaseDecimal', width: '12%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}'
@@ -364,6 +364,8 @@
         ])
       },
       add () {
+        //隐藏多属性
+        this.meTable.columns[2].type = FormTypes.hidden
         // 默认新增一条数据
         this.getAllTable().then(editableTables => {
           editableTables[0].add()
@@ -412,6 +414,11 @@
       requestMeTableData(url, params, tab) {
         tab.loading = true
         getAction(url, params).then(res => {
+          for (let i = 0; i < res.data.rows.length; i++) {
+            if(res.data.rows[i].sku) {
+              this.meTable.columns[2].type = FormTypes.input
+            }
+          }
           tab.dataSource = res.data.rows || []
         }).finally(() => {
           tab.loading = false
@@ -624,6 +631,11 @@
       },
       onSkuChange(checked) {
         this.skuSwitch = checked
+        if(checked) {
+          this.meTable.columns[2].type = FormTypes.input
+        } else {
+          this.meTable.columns[2].type = FormTypes.hidden
+        }
       },
       onBarCodeChange(checked) {
         let unit = this.form.getFieldValue('unit')
