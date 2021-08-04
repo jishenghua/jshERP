@@ -256,8 +256,8 @@
         skuSwitch: false, //sku开启状态
         barCodeSwitch: false, //生成条码开关
         sku: {
-          manyColor: '颜色',
-          manySize: '尺寸',
+          manyColor: '多颜色',
+          manySize: '多尺寸',
           other1: '自定义1',
           other2: '自定义2',
           other3: '自定义3',
