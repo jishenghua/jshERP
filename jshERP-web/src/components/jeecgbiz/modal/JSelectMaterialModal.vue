@@ -17,8 +17,8 @@
           <a-form layout="inline" @keyup.enter.native="onSearch">
             <a-row :gutter="24">
               <a-col :md="6" :sm="8">
-                <a-form-item label="条码" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
-                  <a-input placeholder="请输入条码查询" v-model="queryParam.q"></a-input>
+                <a-form-item label="商品" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
+                  <a-input placeholder="条码、名称、规格、型号" v-model="queryParam.q"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="8">

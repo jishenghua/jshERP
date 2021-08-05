@@ -16,13 +16,13 @@
           <!-- 搜索区域 -->
           <a-form layout="inline" @keyup.enter.native="onSearch">
             <a-row :gutter="24">
-              <a-col :md="6" :sm="8">
+              <a-col :md="12" :sm="12">
                 <a-form-item label="商品信息" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
-                  <a-input placeholder="请输入名称、规格、型号查询" v-model="queryParam.q"></a-input>
+                  <a-input placeholder="请输入条码、名称、规格、型号" v-model="queryParam.q"></a-input>
                 </a-form-item>
               </a-col>
               <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-                <a-col :md="6" :sm="24">
+                <a-col :md="12" :sm="12">
                   <a-button type="primary" @click="onSearch">查询</a-button>
                   <a-button style="margin-left: 8px" @click="searchReset(1)">重置</a-button>
                 </a-col>
