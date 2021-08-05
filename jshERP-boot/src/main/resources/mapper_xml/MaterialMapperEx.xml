@@ -217,7 +217,7 @@
         and m.enable_serial_number ='1'
         <if test="q != null and q !=''">
             <bind name="bindKey" value="'%'+q+'%'"/>
-            and (m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
         </if>
         and ifnull(m.delete_flag,'0') !='1'
         order by m.id desc
@@ -234,7 +234,7 @@
         and m.enable_serial_number ='1'
         <if test="q != null and q !=''">
             <bind name="bindKey" value="'%'+q+'%'"/>
-            and (m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
         </if>
         and ifnull(m.delete_flag,'0') !='1'
     </select>
