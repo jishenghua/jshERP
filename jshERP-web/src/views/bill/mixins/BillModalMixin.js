@@ -185,32 +185,73 @@ export const BillModalMixin = {
             mpList: getMpListShort(Vue.ls.get('materialPropertyList')),  //扩展属性
             prefixNo: this.prefixNo
           }
-          getMaterialByBarCode(param).then((res) => {
-            if (res && res.code === 200) {
-              target.setValues([{
-                rowKey: row.id,
-                values: {
-                  barCode: res.data.mBarCode,
-                  name: res.data.name,
-                  standard: res.data.standard,
-                  model: res.data.model,
-                  materialOther: res.data.materialOther,
-                  unit: res.data.commodityUnit,
-                  sku: res.data.sku,
-                  operNumber: 1,
-                  unitPrice: res.data.billPrice,
-                  taxUnitPrice: res.data.billPrice,
-                  allPrice: res.data.billPrice,
-                  taxRate: 0,
-                  taxMoney: 0,
-                  taxLastMoney: res.data.billPrice,
+          if(value.indexOf(',')>-1) {
+            //多个条码
+            getMaterialByBarCode(param).then((res) => {
+                if (res && res.code === 200) {
+                  let mList = res.data
+                  let mArr = []
+                  for (let i = 0; i < mList.length; i++) {
+                    let mInfo = mList[i]
+                    let mObj = {
+                      depotId: mInfo.depotId,
+                      barCode: mInfo.mBarCode,
+                      name: mInfo.name,
+                      standard: mInfo.standard,
+                      model: mInfo.model,
+                      materialOther: mInfo.materialOther,
+                      stock: mInfo.stock,
+                      unit: mInfo.commodityUnit,
+                      sku: mInfo.sku,
+                      operNumber: 1,
+                      unitPrice: mInfo.billPrice,
+                      taxUnitPrice: mInfo.billPrice,
+                      allPrice: mInfo.billPrice,
+                      taxRate: 0,
+                      taxMoney: 0,
+                      taxLastMoney: mInfo.billPrice
+                    }
+                    mArr.push(mObj)
+                  }
+                  this.materialTable.dataSource = mArr
                 }
-              }]);
-              that.getStockByDepotBarCode(row, target)
-              target.recalcAllStatisticsColumns()
-              that.autoChangePrice(target)
-            }
-          });
+            });
+          } else {
+            //单个条码
+            getMaterialByBarCode(param).then((res) => {
+              if (res && res.code === 200) {
+                let mList = res.data
+                let mArr = []
+                for (let i = 0; i < mList.length; i++) {
+                  let mInfo = mList[i]
+                  let mObj = {
+                    rowKey: row.id,
+                    values: {
+                      barCode: mInfo.mBarCode,
+                      name: mInfo.name,
+                      standard: mInfo.standard,
+                      model: mInfo.model,
+                      materialOther: mInfo.materialOther,
+                      unit: mInfo.commodityUnit,
+                      sku: mInfo.sku,
+                      operNumber: 1,
+                      unitPrice: mInfo.billPrice,
+                      taxUnitPrice: mInfo.billPrice,
+                      allPrice: mInfo.billPrice,
+                      taxRate: 0,
+                      taxMoney: 0,
+                      taxLastMoney: mInfo.billPrice
+                    }
+                  }
+                  mArr.push(mObj)
+                }
+                target.setValues(mArr);
+                that.getStockByDepotBarCode(row, target)
+                target.recalcAllStatisticsColumns()
+                that.autoChangePrice(target)
+              }
+            });
+          }
           break;
         case "operNumber":
           operNumber = value-0
