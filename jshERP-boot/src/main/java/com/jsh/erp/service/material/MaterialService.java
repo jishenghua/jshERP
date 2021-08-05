@@ -803,7 +803,8 @@ public class MaterialService {
     }
 
     public List<MaterialVo4Unit> getMaterialByBarCode(String barCode) {
-        return materialMapperEx.getMaterialByBarCode(barCode);
+        String [] barCodeArray=barCode.split(",");
+        return materialMapperEx.getMaterialByBarCode(barCodeArray);
     }
 
     public List<MaterialVo4Unit> getListWithStock(Long depotId, List<Long> idList, String materialParam, Integer offset, Integer rows) {

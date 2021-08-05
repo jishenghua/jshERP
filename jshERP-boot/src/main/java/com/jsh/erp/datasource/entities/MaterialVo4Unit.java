@@ -36,6 +36,8 @@ public class MaterialVo4Unit extends Material{
 
     private String sku;
 
+    private Long depotId;
+
     public String getUnitName() {
         return unitName;
     }
@@ -162,5 +164,13 @@ public class MaterialVo4Unit extends Material{
 
     public void setSku(String sku) {
         this.sku = sku;
+    }
+
+    public Long getDepotId() {
+        return depotId;
+    }
+
+    public void setDepotId(Long depotId) {
+        this.depotId = depotId;
     }
 }

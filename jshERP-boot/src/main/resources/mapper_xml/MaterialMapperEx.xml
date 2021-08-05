@@ -307,8 +307,14 @@
         from jsh_material m
         left join jsh_material_extend me on m.id=me.material_id and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_unit u on m.unit_id=u.id and ifnull(u.delete_Flag,'0') !='1'
-        where me.bar_code = #{barCode}
+        where
+        me.bar_code in (
+        <foreach collection="barCodeArray" item="barCode" separator=",">
+            #{barCode}
+        </foreach>
+        )
         and ifnull(m.delete_flag,'0') !='1'
+        order by me.id desc
     </select>
 
     <update id="setUnitIdToNull">
