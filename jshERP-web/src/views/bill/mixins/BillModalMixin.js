@@ -185,63 +185,34 @@ export const BillModalMixin = {
             mpList: getMpListShort(Vue.ls.get('materialPropertyList')),  //扩展属性
             prefixNo: this.prefixNo
           }
-          if(value.indexOf(',')>-1) {
-            //多个条码
-            getMaterialByBarCode(param).then((res) => {
-                if (res && res.code === 200) {
-                  let mList = res.data
-                  let mArr = []
-                  for (let i = 0; i < mList.length; i++) {
-                    let mInfo = mList[i]
-                    let mObj = {
-                      depotId: mInfo.depotId,
-                      barCode: mInfo.mBarCode,
-                      name: mInfo.name,
-                      standard: mInfo.standard,
-                      model: mInfo.model,
-                      materialOther: mInfo.materialOther,
-                      stock: mInfo.stock,
-                      unit: mInfo.commodityUnit,
-                      sku: mInfo.sku,
-                      operNumber: 1,
-                      unitPrice: mInfo.billPrice,
-                      taxUnitPrice: mInfo.billPrice,
-                      allPrice: mInfo.billPrice,
-                      taxRate: 0,
-                      taxMoney: 0,
-                      taxLastMoney: mInfo.billPrice
-                    }
-                    mArr.push(mObj)
-                  }
-                  this.materialTable.dataSource = mArr
+          getMaterialByBarCode(param).then((res) => {
+            if (res && res.code === 200) {
+              let mList = res.data
+              if (value.indexOf(',') > -1) {
+                //多个条码
+                let mArr = this.materialTable.dataSource
+                for (let i = 0; i < mList.length; i++) {
+                  let mInfo = mList[i]
+                  let mObj = this.parseInfoToObj(mInfo)
+                  mObj.depotId = mInfo.depotId
+                  mObj.stock = mInfo.stock
+                  mArr.push(mObj)
                 }
-            });
-          } else {
-            //单个条码
-            getMaterialByBarCode(param).then((res) => {
-              if (res && res.code === 200) {
-                let mList = res.data
+                let taxLastMoneyTotal = 0
+                for (let j = 0; j < mArr.length; j++) {
+                  taxLastMoneyTotal += mArr[j].taxLastMoney
+                }
+                this.materialTable.dataSource = mArr
+                target.statisticsColumns.taxLastMoney = taxLastMoneyTotal
+                that.autoChangePrice(target)
+              } else {
+                //单个条码
                 let mArr = []
                 for (let i = 0; i < mList.length; i++) {
                   let mInfo = mList[i]
                   let mObj = {
                     rowKey: row.id,
-                    values: {
-                      barCode: mInfo.mBarCode,
-                      name: mInfo.name,
-                      standard: mInfo.standard,
-                      model: mInfo.model,
-                      materialOther: mInfo.materialOther,
-                      unit: mInfo.commodityUnit,
-                      sku: mInfo.sku,
-                      operNumber: 1,
-                      unitPrice: mInfo.billPrice,
-                      taxUnitPrice: mInfo.billPrice,
-                      allPrice: mInfo.billPrice,
-                      taxRate: 0,
-                      taxMoney: 0,
-                      taxLastMoney: mInfo.billPrice
-                    }
+                    values: this.parseInfoToObj(mInfo)
                   }
                   mArr.push(mObj)
                 }
@@ -250,8 +221,8 @@ export const BillModalMixin = {
                 target.recalcAllStatisticsColumns()
                 that.autoChangePrice(target)
               }
-            });
-          }
+            }
+          });
           break;
         case "operNumber":
           operNumber = value-0
@@ -313,6 +284,25 @@ export const BillModalMixin = {
           target.recalcAllStatisticsColumns()
           that.autoChangePrice(target)
           break;
+      }
+    },
+    //转为商品对象
+    parseInfoToObj(mInfo) {
+      return {
+        barCode: mInfo.mBarCode,
+        name: mInfo.name,
+        standard: mInfo.standard,
+        model: mInfo.model,
+        materialOther: mInfo.materialOther,
+        unit: mInfo.commodityUnit,
+        sku: mInfo.sku,
+        operNumber: 1,
+        unitPrice: mInfo.billPrice,
+        taxUnitPrice: mInfo.billPrice,
+        allPrice: mInfo.billPrice,
+        taxRate: 0,
+        taxMoney: 0,
+        taxLastMoney: mInfo.billPrice
       }
     },
     //删除一行或多行的时候触发
