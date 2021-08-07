@@ -168,7 +168,8 @@
           {
             title: '单位', dataIndex: 'unit', width: 100, customRender: function (text, record, index) {
               if(text) {
-                return text;
+                let showSku = record.sku?'[sku]':''
+                return text + showSku;
               } else {
                 return record.unitName;
               }
