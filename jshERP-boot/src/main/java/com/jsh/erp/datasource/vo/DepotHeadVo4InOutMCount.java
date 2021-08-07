@@ -17,6 +17,8 @@ public class DepotHeadVo4InOutMCount {
 
     private String categoryName;
 
+    private String materialUnit;
+
     private BigDecimal numSum;
 
     private BigDecimal priceSum;
@@ -69,6 +71,14 @@ public class DepotHeadVo4InOutMCount {
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
+    }
+
+    public String getMaterialUnit() {
+        return materialUnit;
+    }
+
+    public void setMaterialUnit(String materialUnit) {
+        this.materialUnit = materialUnit;
     }
 
     public BigDecimal getNumSum() {

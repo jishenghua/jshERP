@@ -287,7 +287,7 @@ public class DepotItemController {
                     String materialOther = getOtherInfo(mpArr, diEx);
                     item.put("materialOther", materialOther);
                     item.put("materialColor", diEx.getMColor());
-                    item.put("unitName", getUName(diEx.getMaterialUnit(), diEx.getUnitName()));
+                    item.put("unitName", diEx.getMaterialUnit());
 
                     item.put("prevSum", depotItemService.getStockByParam(depotId,mId,null,timeA));
                     item.put("inSum", depotItemService.getInNumByParam(depotId,mId,timeA,timeB));

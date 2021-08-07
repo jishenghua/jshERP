@@ -30,6 +30,7 @@
         <result column="Model" jdbcType="VARCHAR" property="Model" />
         <result column="standard" jdbcType="VARCHAR" property="standard" />
         <result column="categoryName" jdbcType="VARCHAR" property="categoryName" />
+        <result column="materialUnit" jdbcType="VARCHAR" property="materialUnit" />
         <result column="numSum" jdbcType="DECIMAL" property="numSum" />
         <result column="priceSum" jdbcType="DECIMAL" property="priceSum" />
     </resultMap>
@@ -228,7 +229,7 @@
     </select>
 
     <select id="findInOutMaterialCount" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultInOutMaterialCount">
-        select di.material_id, m.bar_code, m.mName,m.Model,m.standard,m.categoryName,
+        select di.material_id, m.bar_code, m.mName,m.Model,m.standard,m.categoryName,m.materialUnit,
         (select sum(jdi.basic_number) numSum from jsh_depot_head jdh
         INNER JOIN jsh_depot_item jdi on jdh.id=jdi.header_id and ifnull(jdi.delete_flag,'0') !='1'
         where jdi.material_id=di.material_id
@@ -255,8 +256,10 @@
         ) priceSum
         from jsh_depot_head dh
         INNER JOIN jsh_depot_item di on dh.id=di.header_id and ifnull(di.delete_flag,'0') !='1'
-        INNER JOIN (SELECT jsh_material.id,jsh_material.name mName, me.bar_code, Model, standard, jsh_material_category.`Name` categoryName
+        INNER JOIN (SELECT jsh_material.id,jsh_material.name mName, me.bar_code, Model, standard,
+        jsh_material_category.`Name` categoryName, concat_ws('', jsh_material.unit, u.basic_unit) materialUnit
         from jsh_material
+        left join jsh_unit u on jsh_material.unit_id=u.id and ifnull(u.delete_Flag,'0') !='1'
         left join jsh_material_extend me on me.material_id=jsh_material.id and ifnull(me.delete_Flag,'0') !='1'
         LEFT JOIN jsh_material_category on jsh_material.category_id=jsh_material_category.Id and ifnull(jsh_material_category.delete_flag,'0') !='1'
         where me.default_flag=1 and ifnull(jsh_material.delete_Flag,'0') !='1'
