@@ -212,7 +212,7 @@
         let fileList = [];
         let arr = paths.split(",")
         for(var a=0;a<arr.length;a++){
-          let url = getFileAccessHttpUrl(arr[a]);
+          let url = getFileAccessHttpUrl('systemConfig/static/' + arr[a]);
           fileList.push({
             uid:uidGenerator(),
             name:getFileName(arr[a]),

@@ -128,6 +128,7 @@
           {title: '规格', dataIndex: 'standard', width: 100},
           {title: '型号', dataIndex: 'model', width: 100},
           {title: '类型', dataIndex: 'categoryName', width: 120},
+          {title: '单位', dataIndex: 'materialUnit', width: 120},
           {title: '出库数量', dataIndex: 'numSum', width: 120},
           {title: '出库金额', dataIndex: 'priceSum', width: 120}
         ],
