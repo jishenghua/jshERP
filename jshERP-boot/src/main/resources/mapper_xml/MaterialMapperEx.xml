@@ -10,6 +10,7 @@
         <result column="commodity_decimal" jdbcType="VARCHAR" property="commodityDecimal" />
         <result column="wholesale_decimal" jdbcType="VARCHAR" property="wholesaleDecimal" />
         <result column="low_decimal" jdbcType="VARCHAR" property="lowDecimal" />
+        <result column="sku" jdbcType="VARCHAR" property="sku" />
     </resultMap>
 
     <resultMap extends="com.jsh.erp.datasource.mappers.MaterialMapper.BaseResultMap" id="ResultMapListWithStock" type="com.jsh.erp.datasource.entities.MaterialVo4Unit">
@@ -30,7 +31,7 @@
 
     <select id="selectByConditionMaterial" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultMapList">
         select m.*,u.name unitName, mc.name categoryName, me.bar_code,
-        me.purchase_decimal, me.commodity_decimal, me.wholesale_decimal,me.low_decimal
+        me.purchase_decimal, me.commodity_decimal, me.wholesale_decimal,me.low_decimal,me.sku
         FROM jsh_material m
         left JOIN jsh_material_extend me on m.id = me.material_id and ifnull(me.delete_Flag,'0') !='1'
         left JOIN jsh_unit u on m.unit_id = u.id and ifnull(u.delete_Flag,'0') !='1'

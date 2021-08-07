@@ -120,31 +120,31 @@ public class MaterialService {
                 idList = getListByParentId(Long.parseLong(categoryId));
             }
             list= materialMapperEx.selectByConditionMaterial(barCode, name, standard, model, idList, mpList, offset, rows);
+            if (null != list) {
+                for (MaterialVo4Unit m : list) {
+                    //扩展信息
+                    String materialOther = "";
+                    for (int i = 0; i < mpArr.length; i++) {
+                        if (mpArr[i].equals("制造商")) {
+                            materialOther = materialOther + ((m.getMfrs() == null || m.getMfrs().equals("")) ? "" : "(" + m.getMfrs() + ")");
+                        }
+                        if (mpArr[i].equals("自定义1")) {
+                            materialOther = materialOther + ((m.getOtherField1() == null || m.getOtherField1().equals("")) ? "" : "(" + m.getOtherField1() + ")");
+                        }
+                        if (mpArr[i].equals("自定义2")) {
+                            materialOther = materialOther + ((m.getOtherField2() == null || m.getOtherField2().equals("")) ? "" : "(" + m.getOtherField2() + ")");
+                        }
+                        if (mpArr[i].equals("自定义3")) {
+                            materialOther = materialOther + ((m.getOtherField3() == null || m.getOtherField3().equals("")) ? "" : "(" + m.getOtherField3() + ")");
+                        }
+                    }
+                    m.setMaterialOther(materialOther);
+                    m.setStock(depotItemService.getStockByParam(null,m.getId(),null,null));
+                    resList.add(m);
+                }
+            }
         }catch(Exception e){
             JshException.readFail(logger, e);
-        }
-        if (null != list) {
-            for (MaterialVo4Unit m : list) {
-                //扩展信息
-                String materialOther = "";
-                for (int i = 0; i < mpArr.length; i++) {
-                    if (mpArr[i].equals("制造商")) {
-                        materialOther = materialOther + ((m.getMfrs() == null || m.getMfrs().equals("")) ? "" : "(" + m.getMfrs() + ")");
-                    }
-                    if (mpArr[i].equals("自定义1")) {
-                        materialOther = materialOther + ((m.getOtherField1() == null || m.getOtherField1().equals("")) ? "" : "(" + m.getOtherField1() + ")");
-                    }
-                    if (mpArr[i].equals("自定义2")) {
-                        materialOther = materialOther + ((m.getOtherField2() == null || m.getOtherField2().equals("")) ? "" : "(" + m.getOtherField2() + ")");
-                    }
-                    if (mpArr[i].equals("自定义3")) {
-                        materialOther = materialOther + ((m.getOtherField3() == null || m.getOtherField3().equals("")) ? "" : "(" + m.getOtherField3() + ")");
-                    }
-                }
-                m.setMaterialOther(materialOther);
-                m.setStock(depotItemService.getStockByParam(null,m.getId(),null,null));
-                resList.add(m);
-            }
         }
         return resList;
     }
