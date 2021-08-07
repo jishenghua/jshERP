@@ -190,21 +190,24 @@ export const BillModalMixin = {
               let mList = res.data
               if (value.indexOf(',') > -1) {
                 //多个条码
-                let mArr = this.materialTable.dataSource
-                for (let i = 0; i < mList.length; i++) {
-                  let mInfo = mList[i]
-                  let mObj = this.parseInfoToObj(mInfo)
-                  mObj.depotId = mInfo.depotId
-                  mObj.stock = mInfo.stock
-                  mArr.push(mObj)
-                }
-                let taxLastMoneyTotal = 0
-                for (let j = 0; j < mArr.length; j++) {
-                  taxLastMoneyTotal += mArr[j].taxLastMoney
-                }
-                this.materialTable.dataSource = mArr
-                target.statisticsColumns.taxLastMoney = taxLastMoneyTotal
-                that.autoChangePrice(target)
+                this.$refs.materialDataTable.getValues((error, values) => {
+                  values.pop()  //移除最后一行数据
+                  let mArr = values
+                  for (let i = 0; i < mList.length; i++) {
+                    let mInfo = mList[i]
+                    let mObj = this.parseInfoToObj(mInfo)
+                    mObj.depotId = mInfo.depotId
+                    mObj.stock = mInfo.stock
+                    mArr.push(mObj)
+                  }
+                  let taxLastMoneyTotal = 0
+                  for (let j = 0; j < mArr.length; j++) {
+                    taxLastMoneyTotal += mArr[j].taxLastMoney-0
+                  }
+                  this.materialTable.dataSource = mArr
+                  target.statisticsColumns.taxLastMoney = taxLastMoneyTotal
+                  that.autoChangePrice(target)
+                })
               } else {
                 //单个条码
                 let mArr = []
