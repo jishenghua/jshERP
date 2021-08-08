@@ -175,7 +175,6 @@
       },
       searchQuery() {
         this.loadData(1);
-        this.getTotalCountMoney();
       },
       loadData(arg) {
         if(!this.url.list){
