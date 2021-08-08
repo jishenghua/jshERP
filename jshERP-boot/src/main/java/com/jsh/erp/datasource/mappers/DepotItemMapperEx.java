@@ -77,12 +77,17 @@ public interface DepotItemMapperEx {
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime);
 
+    DepotItemVo4Stock getSkuStockByParam(
+            @Param("depotId") Long depotId,
+            @Param("meId") Long meId,
+            @Param("beginTime") String beginTime,
+            @Param("endTime") String endTime);
+
     DepotItemVo4Stock getStockByParam(
             @Param("depotId") Long depotId,
             @Param("mId") Long mId,
             @Param("beginTime") String beginTime,
-            @Param("endTime") String endTime,
-            @Param("tenantId") Long tenantId);
+            @Param("endTime") String endTime);
 
     /**
      * 通过单据主表id查询所有单据子表数据

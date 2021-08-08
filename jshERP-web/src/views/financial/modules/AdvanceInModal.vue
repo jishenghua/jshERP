@@ -26,8 +26,8 @@
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="经手人">
-              <a-select placeholder="选择经手人" v-decorator="[ 'handsPersonId', validatorRules.handsPersonId ]"
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="财务人员">
+              <a-select placeholder="选择财务人员" v-decorator="[ 'handsPersonId', validatorRules.handsPersonId ]"
                 :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
                 <a-select-option v-for="(item,index) in personList" :key="index" :value="item.id">
                   {{ item.name }}
@@ -129,7 +129,7 @@
           dataSource: [],
           columns: [
             { title: '账户名称',key: 'accountId',width: '20%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
-              validateRules: [{ required: true, message: '${title}不能为空' }]
+              allowSearch:true, validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             { title: '金额',key: 'eachAmount', width: '10%', type: FormTypes.inputNumber, statistics: true, placeholder: '请选择${title}',
               validateRules: [{ required: true, message: '${title}不能为空' }]
@@ -146,7 +146,7 @@
           },
           handsPersonId:{
             rules: [
-              { required: true, message: '请选择经手人!' }
+              { required: true, message: '请选择财务人员!' }
             ]
           },
           billTime:{
@@ -163,7 +163,6 @@
       }
     },
     created () {
-      this.initDetailAccount()
     },
     methods: {
       //调用完edit()方法之后会自动调用此方法
@@ -185,6 +184,9 @@
           let url = this.readOnly ? this.url.detailList : this.url.detailList;
           this.requestSubTableData(url, params, this.accountTable);
         }
+        this.initRetail()
+        this.initPerson()
+        this.initDetailAccount()
       },
       //提交单据时整理成formData
       classifyIntoFormData(allValues) {

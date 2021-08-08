@@ -16,8 +16,8 @@
       <a-form :form="form">
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="往来单位">
-              <a-select placeholder="选择往来单位" v-decorator="[ 'organId', validatorRules.organId ]"
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="供应商">
+              <a-select placeholder="选择供应商" v-decorator="[ 'organId', validatorRules.organId ]"
                 :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
                 <a-select-option v-for="(item,index) in supList" :key="index" :value="item.id">
                   {{ item.supplier }}
@@ -26,8 +26,8 @@
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="经手人">
-              <a-select placeholder="选择经手人" v-decorator="[ 'handsPersonId', validatorRules.handsPersonId ]"
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="财务人员">
+              <a-select placeholder="选择财务人员" v-decorator="[ 'handsPersonId', validatorRules.handsPersonId ]"
                 :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
                 <a-select-option v-for="(item,index) in personList" :key="index" :value="item.id">
                   {{ item.name }}
@@ -66,7 +66,8 @@
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="支出账户">
-              <a-select placeholder="选择支出账户" v-decorator="[ 'accountId', validatorRules.accountId ]" :dropdownMatchSelectWidth="false">
+              <a-select placeholder="选择支出账户" v-decorator="[ 'accountId', validatorRules.accountId ]"
+                :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
                 <a-select-option v-for="(item,index) in accountList" :key="index" :value="item.id">
                   {{ item.name }}
                 </a-select-option>
@@ -133,7 +134,7 @@
           dataSource: [],
           columns: [
             { title: '支出项目',key: 'inOutItemId',width: '20%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
-              validateRules: [{ required: true, message: '${title}不能为空' }]
+              allowSearch:true, validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             { title: '金额',key: 'eachAmount', width: '10%', type: FormTypes.inputNumber, statistics: true, placeholder: '请选择${title}',
               validateRules: [{ required: true, message: '${title}不能为空' }]
@@ -145,12 +146,12 @@
         validatorRules:{
           organId:{
             rules: [
-              { required: true, message: '请选择往来单位!' }
+              { required: true, message: '请选择供应商!' }
             ]
           },
           handsPersonId:{
             rules: [
-              { required: true, message: '请选择经手人!' }
+              { required: true, message: '请选择财务人员!' }
             ]
           },
           billTime:{
@@ -177,8 +178,6 @@
       }
     },
     created () {
-      this.initInOutItem('out')
-      this.initAccount()
     },
     methods: {
       //调用完edit()方法之后会自动调用此方法
@@ -200,6 +199,10 @@
           let url = this.readOnly ? this.url.detailList : this.url.detailList;
           this.requestSubTableData(url, params, this.accountTable);
         }
+        this.initSupplier()
+        this.initPerson()
+        this.initInOutItem('out')
+        this.initAccount()
       },
       //提交单据时整理成formData
       classifyIntoFormData(allValues) {

@@ -17,8 +17,8 @@
           <a-form layout="inline" @keyup.enter.native="onSearch">
             <a-row :gutter="24">
               <a-col :md="6" :sm="8">
-                <a-form-item label="条码" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
-                  <a-input placeholder="请输入条码查询" v-model="queryParam.q"></a-input>
+                <a-form-item label="商品" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
+                  <a-input placeholder="条码、名称、规格、型号" v-model="queryParam.q"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="8">
@@ -99,7 +99,9 @@
           {dataIndex: 'standard', title: '规格', width: 80},
           {dataIndex: 'model', title: '型号', width: 80},
           {dataIndex: 'unit', title: '单位', width: 60},
-          {dataIndex: 'stock', title: '库存', width: 50},
+          {dataIndex: 'sku', title: '多属性', width: 100},
+          {dataIndex: 'skuStock', title: '多属性库存', width: 100},
+          {dataIndex: 'stock', title: '商品库存', width: 100},
           {dataIndex: 'expand', title: '扩展信息', width: 80}
         ],
         scrollTrigger: {},

@@ -7,7 +7,7 @@
           <a-form layout="inline" @keyup.enter.native="searchQuery">
             <a-row :gutter="24">
               <a-col :md="4" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户">
+                <a-form-item label="客户" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-select placeholder="选择客户" v-model="queryParam.organId"
                     :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
                     <a-select-option v-for="(item,index) in supList" :key="index" :value="item.id">
@@ -17,7 +17,7 @@
                 </a-form-item>
               </a-col>
               <a-col :md="4" :sm="24">
-                <a-form-item label="仓库">
+                <a-form-item label="仓库" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-select
                     showSearch optionFilterProp="children"
                     style="width: 100%"
@@ -29,9 +29,9 @@
                   </a-select>
                 </a-form-item>
               </a-col>
-              <a-col :md="5" :sm="24">
-                <a-form-item label="商品信息">
-                  <a-input placeholder="名称、规格、型号" v-model="queryParam.materialParam"></a-input>
+              <a-col :md="4" :sm="24">
+                <a-form-item label="商品信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-input placeholder="条码/名称/规格/型号" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="5" :sm="24">
@@ -89,6 +89,13 @@
     },
     data () {
       return {
+        labelCol: {
+          span: 5
+        },
+        wrapperCol: {
+          span: 18,
+          offset: 1
+        },
         // 查询条件
         queryParam: {
           organId: '',
@@ -116,21 +123,15 @@
               return parseInt(index)+1;
             }
           },
-          {title: '名称', dataIndex: 'mName', width: 150},
+          {title: '条码', dataIndex: 'barCode', width: 120},
+          {title: '名称', dataIndex: 'mName', width: 120},
           {title: '规格', dataIndex: 'standard', width: 100},
           {title: '型号', dataIndex: 'model', width: 100},
           {title: '类型', dataIndex: 'categoryName', width: 120},
+          {title: '单位', dataIndex: 'materialUnit', width: 120},
           {title: '出库数量', dataIndex: 'numSum', width: 120},
           {title: '出库金额', dataIndex: 'priceSum', width: 120}
         ],
-        labelCol: {
-          xs: { span: 1 },
-          sm: { span: 2 },
-        },
-        wrapperCol: {
-          xs: { span: 10 },
-          sm: { span: 16 },
-        },
         url: {
           list: "/depotHead/findInOutMaterialCount",
         }

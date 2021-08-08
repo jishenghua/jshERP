@@ -7,24 +7,18 @@
     <result column="material_id" jdbcType="BIGINT" property="materialId" />
     <result column="material_extend_id" jdbcType="BIGINT" property="materialExtendId" />
     <result column="material_unit" jdbcType="VARCHAR" property="materialUnit" />
+    <result column="sku" jdbcType="VARCHAR" property="sku" />
     <result column="oper_number" jdbcType="DECIMAL" property="operNumber" />
     <result column="basic_number" jdbcType="DECIMAL" property="basicNumber" />
     <result column="unit_price" jdbcType="DECIMAL" property="unitPrice" />
     <result column="tax_unit_price" jdbcType="DECIMAL" property="taxUnitPrice" />
     <result column="all_price" jdbcType="DECIMAL" property="allPrice" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
-    <result column="img" jdbcType="VARCHAR" property="img" />
-    <result column="incidentals" jdbcType="DECIMAL" property="incidentals" />
     <result column="depot_id" jdbcType="BIGINT" property="depotId" />
     <result column="another_depot_id" jdbcType="BIGINT" property="anotherDepotId" />
     <result column="tax_rate" jdbcType="DECIMAL" property="taxRate" />
     <result column="tax_money" jdbcType="DECIMAL" property="taxMoney" />
     <result column="tax_last_money" jdbcType="DECIMAL" property="taxLastMoney" />
-    <result column="other_field1" jdbcType="VARCHAR" property="otherField1" />
-    <result column="other_field2" jdbcType="VARCHAR" property="otherField2" />
-    <result column="other_field3" jdbcType="VARCHAR" property="otherField3" />
-    <result column="other_field4" jdbcType="VARCHAR" property="otherField4" />
-    <result column="other_field5" jdbcType="VARCHAR" property="otherField5" />
     <result column="material_type" jdbcType="VARCHAR" property="materialType" />
     <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
     <result column="delete_flag" jdbcType="VARCHAR" property="deleteFlag" />
@@ -88,10 +82,9 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, header_id, material_id, material_extend_id, material_unit, oper_number, basic_number, 
-    unit_price, tax_unit_price, all_price, remark, img, incidentals, depot_id, another_depot_id, 
-    tax_rate, tax_money, tax_last_money, other_field1, other_field2, other_field3, other_field4, 
-    other_field5, material_type, tenant_id, delete_flag
+    id, header_id, material_id, material_extend_id, material_unit, sku, oper_number, 
+    basic_number, unit_price, tax_unit_price, all_price, remark, depot_id, another_depot_id, 
+    tax_rate, tax_money, tax_last_money, material_type, tenant_id, delete_flag
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="BaseResultMap">
     select
@@ -125,22 +118,18 @@
   </delete>
   <insert id="insert" parameterType="com.jsh.erp.datasource.entities.DepotItem">
     insert into jsh_depot_item (id, header_id, material_id, 
-      material_extend_id, material_unit, oper_number, 
-      basic_number, unit_price, tax_unit_price, 
-      all_price, remark, img, 
-      incidentals, depot_id, another_depot_id, 
-      tax_rate, tax_money, tax_last_money, 
-      other_field1, other_field2, other_field3, 
-      other_field4, other_field5, material_type, 
+      material_extend_id, material_unit, sku, 
+      oper_number, basic_number, unit_price, 
+      tax_unit_price, all_price, remark, 
+      depot_id, another_depot_id, tax_rate, 
+      tax_money, tax_last_money, material_type, 
       tenant_id, delete_flag)
     values (#{id,jdbcType=BIGINT}, #{headerId,jdbcType=BIGINT}, #{materialId,jdbcType=BIGINT}, 
-      #{materialExtendId,jdbcType=BIGINT}, #{materialUnit,jdbcType=VARCHAR}, #{operNumber,jdbcType=DECIMAL}, 
-      #{basicNumber,jdbcType=DECIMAL}, #{unitPrice,jdbcType=DECIMAL}, #{taxUnitPrice,jdbcType=DECIMAL}, 
-      #{allPrice,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, #{img,jdbcType=VARCHAR}, 
-      #{incidentals,jdbcType=DECIMAL}, #{depotId,jdbcType=BIGINT}, #{anotherDepotId,jdbcType=BIGINT}, 
-      #{taxRate,jdbcType=DECIMAL}, #{taxMoney,jdbcType=DECIMAL}, #{taxLastMoney,jdbcType=DECIMAL}, 
-      #{otherField1,jdbcType=VARCHAR}, #{otherField2,jdbcType=VARCHAR}, #{otherField3,jdbcType=VARCHAR}, 
-      #{otherField4,jdbcType=VARCHAR}, #{otherField5,jdbcType=VARCHAR}, #{materialType,jdbcType=VARCHAR}, 
+      #{materialExtendId,jdbcType=BIGINT}, #{materialUnit,jdbcType=VARCHAR}, #{sku,jdbcType=VARCHAR}, 
+      #{operNumber,jdbcType=DECIMAL}, #{basicNumber,jdbcType=DECIMAL}, #{unitPrice,jdbcType=DECIMAL}, 
+      #{taxUnitPrice,jdbcType=DECIMAL}, #{allPrice,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, 
+      #{depotId,jdbcType=BIGINT}, #{anotherDepotId,jdbcType=BIGINT}, #{taxRate,jdbcType=DECIMAL}, 
+      #{taxMoney,jdbcType=DECIMAL}, #{taxLastMoney,jdbcType=DECIMAL}, #{materialType,jdbcType=VARCHAR}, 
       #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.DepotItem">
@@ -161,6 +150,9 @@
       <if test="materialUnit != null">
         material_unit,
       </if>
+      <if test="sku != null">
+        sku,
+      </if>
       <if test="operNumber != null">
         oper_number,
       </if>
@@ -179,12 +171,6 @@
       <if test="remark != null">
         remark,
       </if>
-      <if test="img != null">
-        img,
-      </if>
-      <if test="incidentals != null">
-        incidentals,
-      </if>
       <if test="depotId != null">
         depot_id,
       </if>
@@ -199,21 +185,6 @@
       </if>
       <if test="taxLastMoney != null">
         tax_last_money,
-      </if>
-      <if test="otherField1 != null">
-        other_field1,
-      </if>
-      <if test="otherField2 != null">
-        other_field2,
-      </if>
-      <if test="otherField3 != null">
-        other_field3,
-      </if>
-      <if test="otherField4 != null">
-        other_field4,
-      </if>
-      <if test="otherField5 != null">
-        other_field5,
       </if>
       <if test="materialType != null">
         material_type,
@@ -241,6 +212,9 @@
       <if test="materialUnit != null">
         #{materialUnit,jdbcType=VARCHAR},
       </if>
+      <if test="sku != null">
+        #{sku,jdbcType=VARCHAR},
+      </if>
       <if test="operNumber != null">
         #{operNumber,jdbcType=DECIMAL},
       </if>
@@ -259,12 +233,6 @@
       <if test="remark != null">
         #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="img != null">
-        #{img,jdbcType=VARCHAR},
-      </if>
-      <if test="incidentals != null">
-        #{incidentals,jdbcType=DECIMAL},
-      </if>
       <if test="depotId != null">
         #{depotId,jdbcType=BIGINT},
       </if>
@@ -279,21 +247,6 @@
       </if>
       <if test="taxLastMoney != null">
         #{taxLastMoney,jdbcType=DECIMAL},
-      </if>
-      <if test="otherField1 != null">
-        #{otherField1,jdbcType=VARCHAR},
-      </if>
-      <if test="otherField2 != null">
-        #{otherField2,jdbcType=VARCHAR},
-      </if>
-      <if test="otherField3 != null">
-        #{otherField3,jdbcType=VARCHAR},
-      </if>
-      <if test="otherField4 != null">
-        #{otherField4,jdbcType=VARCHAR},
-      </if>
-      <if test="otherField5 != null">
-        #{otherField5,jdbcType=VARCHAR},
       </if>
       <if test="materialType != null">
         #{materialType,jdbcType=VARCHAR},
@@ -330,6 +283,9 @@
       <if test="record.materialUnit != null">
         material_unit = #{record.materialUnit,jdbcType=VARCHAR},
       </if>
+      <if test="record.sku != null">
+        sku = #{record.sku,jdbcType=VARCHAR},
+      </if>
       <if test="record.operNumber != null">
         oper_number = #{record.operNumber,jdbcType=DECIMAL},
       </if>
@@ -348,12 +304,6 @@
       <if test="record.remark != null">
         remark = #{record.remark,jdbcType=VARCHAR},
       </if>
-      <if test="record.img != null">
-        img = #{record.img,jdbcType=VARCHAR},
-      </if>
-      <if test="record.incidentals != null">
-        incidentals = #{record.incidentals,jdbcType=DECIMAL},
-      </if>
       <if test="record.depotId != null">
         depot_id = #{record.depotId,jdbcType=BIGINT},
       </if>
@@ -368,21 +318,6 @@
       </if>
       <if test="record.taxLastMoney != null">
         tax_last_money = #{record.taxLastMoney,jdbcType=DECIMAL},
-      </if>
-      <if test="record.otherField1 != null">
-        other_field1 = #{record.otherField1,jdbcType=VARCHAR},
-      </if>
-      <if test="record.otherField2 != null">
-        other_field2 = #{record.otherField2,jdbcType=VARCHAR},
-      </if>
-      <if test="record.otherField3 != null">
-        other_field3 = #{record.otherField3,jdbcType=VARCHAR},
-      </if>
-      <if test="record.otherField4 != null">
-        other_field4 = #{record.otherField4,jdbcType=VARCHAR},
-      </if>
-      <if test="record.otherField5 != null">
-        other_field5 = #{record.otherField5,jdbcType=VARCHAR},
       </if>
       <if test="record.materialType != null">
         material_type = #{record.materialType,jdbcType=VARCHAR},
@@ -405,24 +340,18 @@
       material_id = #{record.materialId,jdbcType=BIGINT},
       material_extend_id = #{record.materialExtendId,jdbcType=BIGINT},
       material_unit = #{record.materialUnit,jdbcType=VARCHAR},
+      sku = #{record.sku,jdbcType=VARCHAR},
       oper_number = #{record.operNumber,jdbcType=DECIMAL},
       basic_number = #{record.basicNumber,jdbcType=DECIMAL},
       unit_price = #{record.unitPrice,jdbcType=DECIMAL},
       tax_unit_price = #{record.taxUnitPrice,jdbcType=DECIMAL},
       all_price = #{record.allPrice,jdbcType=DECIMAL},
       remark = #{record.remark,jdbcType=VARCHAR},
-      img = #{record.img,jdbcType=VARCHAR},
-      incidentals = #{record.incidentals,jdbcType=DECIMAL},
       depot_id = #{record.depotId,jdbcType=BIGINT},
       another_depot_id = #{record.anotherDepotId,jdbcType=BIGINT},
       tax_rate = #{record.taxRate,jdbcType=DECIMAL},
       tax_money = #{record.taxMoney,jdbcType=DECIMAL},
       tax_last_money = #{record.taxLastMoney,jdbcType=DECIMAL},
-      other_field1 = #{record.otherField1,jdbcType=VARCHAR},
-      other_field2 = #{record.otherField2,jdbcType=VARCHAR},
-      other_field3 = #{record.otherField3,jdbcType=VARCHAR},
-      other_field4 = #{record.otherField4,jdbcType=VARCHAR},
-      other_field5 = #{record.otherField5,jdbcType=VARCHAR},
       material_type = #{record.materialType,jdbcType=VARCHAR},
       tenant_id = #{record.tenantId,jdbcType=BIGINT},
       delete_flag = #{record.deleteFlag,jdbcType=VARCHAR}
@@ -445,6 +374,9 @@
       <if test="materialUnit != null">
         material_unit = #{materialUnit,jdbcType=VARCHAR},
       </if>
+      <if test="sku != null">
+        sku = #{sku,jdbcType=VARCHAR},
+      </if>
       <if test="operNumber != null">
         oper_number = #{operNumber,jdbcType=DECIMAL},
       </if>
@@ -463,12 +395,6 @@
       <if test="remark != null">
         remark = #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="img != null">
-        img = #{img,jdbcType=VARCHAR},
-      </if>
-      <if test="incidentals != null">
-        incidentals = #{incidentals,jdbcType=DECIMAL},
-      </if>
       <if test="depotId != null">
         depot_id = #{depotId,jdbcType=BIGINT},
       </if>
@@ -483,21 +409,6 @@
       </if>
       <if test="taxLastMoney != null">
         tax_last_money = #{taxLastMoney,jdbcType=DECIMAL},
-      </if>
-      <if test="otherField1 != null">
-        other_field1 = #{otherField1,jdbcType=VARCHAR},
-      </if>
-      <if test="otherField2 != null">
-        other_field2 = #{otherField2,jdbcType=VARCHAR},
-      </if>
-      <if test="otherField3 != null">
-        other_field3 = #{otherField3,jdbcType=VARCHAR},
-      </if>
-      <if test="otherField4 != null">
-        other_field4 = #{otherField4,jdbcType=VARCHAR},
-      </if>
-      <if test="otherField5 != null">
-        other_field5 = #{otherField5,jdbcType=VARCHAR},
       </if>
       <if test="materialType != null">
         material_type = #{materialType,jdbcType=VARCHAR},
@@ -517,24 +428,18 @@
       material_id = #{materialId,jdbcType=BIGINT},
       material_extend_id = #{materialExtendId,jdbcType=BIGINT},
       material_unit = #{materialUnit,jdbcType=VARCHAR},
+      sku = #{sku,jdbcType=VARCHAR},
       oper_number = #{operNumber,jdbcType=DECIMAL},
       basic_number = #{basicNumber,jdbcType=DECIMAL},
       unit_price = #{unitPrice,jdbcType=DECIMAL},
       tax_unit_price = #{taxUnitPrice,jdbcType=DECIMAL},
       all_price = #{allPrice,jdbcType=DECIMAL},
       remark = #{remark,jdbcType=VARCHAR},
-      img = #{img,jdbcType=VARCHAR},
-      incidentals = #{incidentals,jdbcType=DECIMAL},
       depot_id = #{depotId,jdbcType=BIGINT},
       another_depot_id = #{anotherDepotId,jdbcType=BIGINT},
       tax_rate = #{taxRate,jdbcType=DECIMAL},
       tax_money = #{taxMoney,jdbcType=DECIMAL},
       tax_last_money = #{taxLastMoney,jdbcType=DECIMAL},
-      other_field1 = #{otherField1,jdbcType=VARCHAR},
-      other_field2 = #{otherField2,jdbcType=VARCHAR},
-      other_field3 = #{otherField3,jdbcType=VARCHAR},
-      other_field4 = #{otherField4,jdbcType=VARCHAR},
-      other_field5 = #{otherField5,jdbcType=VARCHAR},
       material_type = #{materialType,jdbcType=VARCHAR},
       tenant_id = #{tenantId,jdbcType=BIGINT},
       delete_flag = #{deleteFlag,jdbcType=VARCHAR}

@@ -36,8 +36,10 @@ public class AccountHeadComponent implements ICommonQuery {
         String billNo = StringUtil.getInfo(search, "billNo");
         String beginTime = StringUtil.getInfo(search, "beginTime");
         String endTime = StringUtil.getInfo(search, "endTime");
-        String order = QueryUtils.order(map);
-        return accountHeadService.select(type, roleType, billNo, beginTime, endTime, QueryUtils.offset(map), QueryUtils.rows(map));
+        Long organId = StringUtil.parseStrLong(StringUtil.getInfo(search, "organId"));
+        Long creator = StringUtil.parseStrLong(StringUtil.getInfo(search, "creator"));
+        Long handsPersonId = StringUtil.parseStrLong(StringUtil.getInfo(search, "handsPersonId"));
+        return accountHeadService.select(type, roleType, billNo, beginTime, endTime, organId, creator, handsPersonId, QueryUtils.offset(map), QueryUtils.rows(map));
     }
 
     @Override
@@ -48,7 +50,10 @@ public class AccountHeadComponent implements ICommonQuery {
         String billNo = StringUtil.getInfo(search, "billNo");
         String beginTime = StringUtil.getInfo(search, "beginTime");
         String endTime = StringUtil.getInfo(search, "endTime");
-        return accountHeadService.countAccountHead(type, roleType, billNo, beginTime, endTime);
+        Long organId = StringUtil.parseStrLong(StringUtil.getInfo(search, "organId"));
+        Long creator = StringUtil.parseStrLong(StringUtil.getInfo(search, "creator"));
+        Long handsPersonId = StringUtil.parseStrLong(StringUtil.getInfo(search, "handsPersonId"));
+        return accountHeadService.countAccountHead(type, roleType, billNo, beginTime, endTime, organId, creator, handsPersonId);
     }
 
     @Override

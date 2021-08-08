@@ -10,6 +10,7 @@
         <result column="commodity_decimal" jdbcType="VARCHAR" property="commodityDecimal" />
         <result column="wholesale_decimal" jdbcType="VARCHAR" property="wholesaleDecimal" />
         <result column="low_decimal" jdbcType="VARCHAR" property="lowDecimal" />
+        <result column="sku" jdbcType="VARCHAR" property="sku" />
     </resultMap>
 
     <resultMap extends="com.jsh.erp.datasource.mappers.MaterialMapper.BaseResultMap" id="ResultMapListWithStock" type="com.jsh.erp.datasource.entities.MaterialVo4Unit">
@@ -25,11 +26,12 @@
 
     <resultMap extends="com.jsh.erp.datasource.mappers.MaterialMapper.BaseResultMap" id="ResultAndUnitMap" type="com.jsh.erp.datasource.entities.MaterialVo4Unit">
         <result column="unit_name" jdbcType="VARCHAR" property="unitName" />
+        <result column="sku" jdbcType="VARCHAR" property="sku" />
     </resultMap>
 
     <select id="selectByConditionMaterial" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultMapList">
         select m.*,u.name unitName, mc.name categoryName, me.bar_code,
-        me.purchase_decimal, me.commodity_decimal, me.wholesale_decimal,me.low_decimal
+        me.purchase_decimal, me.commodity_decimal, me.wholesale_decimal,me.low_decimal,me.sku
         FROM jsh_material m
         left JOIN jsh_material_extend me on m.id = me.material_id and ifnull(me.delete_Flag,'0') !='1'
         left JOIN jsh_unit u on m.unit_id = u.id and ifnull(u.delete_Flag,'0') !='1'
@@ -124,7 +126,7 @@
     </select>
 
     <select id="findBySelectWithBarCode" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultAndUnitMap">
-        select m.*,u.name unit_name,mc.name categoryName,me.bar_code m_bar_code,me.id meId,me.commodity_unit from jsh_material m
+        select m.*,u.name unit_name,mc.name categoryName,me.bar_code m_bar_code,me.id meId,me.commodity_unit,me.sku from jsh_material m
         left join jsh_material_extend me on m.id=me.material_id and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_unit u on m.unit_id=u.id and ifnull(u.delete_Flag,'0') !='1'
         left JOIN jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
@@ -140,7 +142,7 @@
             </foreach>
         </if>
         and ifnull(m.delete_flag,'0') !='1'
-        ORDER BY id desc
+        ORDER BY me.id desc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
         </if>
@@ -216,7 +218,7 @@
         and m.enable_serial_number ='1'
         <if test="q != null and q !=''">
             <bind name="bindKey" value="'%'+q+'%'"/>
-            and (m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
         </if>
         and ifnull(m.delete_flag,'0') !='1'
         order by m.id desc
@@ -233,7 +235,7 @@
         and m.enable_serial_number ='1'
         <if test="q != null and q !=''">
             <bind name="bindKey" value="'%'+q+'%'"/>
-            and (m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
         </if>
         and ifnull(m.delete_flag,'0') !='1'
     </select>
@@ -275,9 +277,9 @@
     </select>
 
     <select id="getMaxBarCode" resultType="java.lang.String">
-        select max(CAST(l.bar_code AS SIGNED)) bar_code from jsh_material_extend l
+        select max(CAST(me.bar_code AS SIGNED)) bar_code from jsh_material_extend me
         where 1=1
-        and ifnull(l.delete_Flag,'0') !='1'
+        and ifnull(me.delete_Flag,'0') !='1'
     </select>
 
     <select id="getMaterialByMeId" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultMapList">
@@ -302,12 +304,18 @@
 
     <select id="getMaterialByBarCode" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultAndUnitMap">
         select m.*,u.name unit_name,me.bar_code m_bar_code, me.commodity_unit, me.purchase_decimal, me.commodity_decimal,
-        me.wholesale_decimal, me.low_decimal
+        me.wholesale_decimal, me.low_decimal, me.sku
         from jsh_material m
         left join jsh_material_extend me on m.id=me.material_id and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_unit u on m.unit_id=u.id and ifnull(u.delete_Flag,'0') !='1'
-        where me.bar_code = #{barCode}
+        where
+        me.bar_code in (
+        <foreach collection="barCodeArray" item="barCode" separator=",">
+            #{barCode}
+        </foreach>
+        )
         and ifnull(m.delete_flag,'0') !='1'
+        order by me.id desc
     </select>
 
     <update id="setUnitIdToNull">

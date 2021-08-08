@@ -12,11 +12,8 @@
 
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
-        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="全称">
-          <a-input placeholder="请输入全称" v-decorator="['orgFullName', validatorRules.orgFullName ]"/>
-        </a-form-item>
-        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="简称">
-          <a-input placeholder="请输入简称" v-decorator="['orgAbr', validatorRules.orgAbr ]"/>
+        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="名称">
+          <a-input placeholder="请输入名称" v-decorator="['orgAbr', validatorRules.orgAbr ]"/>
         </a-form-item>
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="编号">
           <a-input placeholder="请输入编号" v-decorator="['orgNo', validatorRules.orgNo ]"/>
@@ -40,7 +37,7 @@
 
 <script>
   import { httpAction } from '@/api/manage'
-  import { queryOrganizationTreeList } from '@/api/api'
+  import { queryOrganizationTreeList, checkOrganization } from '@/api/api'
   import pick from 'lodash.pick'
   import ATextarea from 'ant-design-vue/es/input/TextArea'
   export default {
@@ -70,8 +67,12 @@
         confirmLoading: false,
         form: this.$form.createForm(this),
         validatorRules:{
-          orgFullName: {rules: [{required: true, message: '请输入全称!'}]},
-          orgAbr: {rules: [{required: true, message: '请输入简称!'}]},
+          orgAbr: {
+            rules: [
+              { required: true, message: '请输入名称!'},
+              { validator: this.validateName}
+            ]
+          },
           orgNo: {rules: [{required: true, message: '请输入编码!'}]}
         },
         url: {
@@ -105,7 +106,7 @@
         this.visible = true;
         this.loadTreeData();
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(record, 'orgFullName','orgAbr', 'orgNo', 'parentId', 'sort', 'remark'))
+          this.form.setFieldsValue(pick(record, 'orgAbr', 'orgNo', 'parentId', 'sort', 'remark'))
         });
       },
       close () {
@@ -139,6 +140,23 @@
       },
       handleCancel () {
         this.close()
+      },
+      validateName(rule, value, callback){
+        let params = {
+          name: value,
+          id: this.model.id?this.model.id:0
+        };
+        checkOrganization(params).then((res)=>{
+          if(res && res.code===200) {
+            if(!res.data.status){
+              callback();
+            } else {
+              callback("名称已经存在");
+            }
+          } else {
+            callback(res.data);
+          }
+        });
       }
     }
   }

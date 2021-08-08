@@ -7,18 +7,18 @@
           <!-- 搜索区域 -->
           <a-form layout="inline" @keyup.enter.native="searchQuery">
             <a-row :gutter="24">
-              <a-col :md="5" :sm="10">
-                <a-form-item label="名称" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
+              <a-col :md="6" :sm="24">
+                <a-form-item label="名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-input placeholder="请输入名称查询" v-model="queryParam.supplier"></a-input>
                 </a-form-item>
               </a-col>
-              <a-col :md="5" :sm="10">
-                <a-form-item label="手机号码" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
+              <a-col :md="6" :sm="24">
+                <a-form-item label="手机号码" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-input placeholder="请输入手机号码查询" v-model="queryParam.telephone"></a-input>
                 </a-form-item>
               </a-col>
-              <a-col :md="5" :sm="10">
-                <a-form-item label="联系电话" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
+              <a-col :md="6" :sm="24">
+                <a-form-item label="联系电话" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-input placeholder="请输入联系电话查询" v-model="queryParam.phonenum"></a-input>
                 </a-form-item>
               </a-col>
@@ -101,6 +101,13 @@
     },
     data () {
       return {
+        labelCol: {
+          span: 5
+        },
+        wrapperCol: {
+          span: 18,
+          offset: 1
+        },
         // 查询条件
         queryParam: {
           supplier:'',

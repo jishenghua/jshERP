@@ -118,11 +118,10 @@ public class DepotItemController {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
             BigDecimal stock = BigDecimal.ZERO;
-            Long tenantId = redisService.getTenantId(request);
             List<MaterialVo4Unit> list = materialService.getMaterialByBarCode(barCode);
             if(list!=null && list.size()>0) {
                 MaterialVo4Unit materialVo4Unit = list.get(0);
-                stock = depotItemService.getStockByParam(depotId,materialVo4Unit.getId(),null,null,tenantId);
+                stock = depotItemService.getStockByParam(depotId,materialVo4Unit.getId(),null,null);
                 String commodityUnit = materialVo4Unit.getCommodityUnit();
                 Long unitId = materialVo4Unit.getUnitId();
                 if(unitId!=null) {
@@ -152,7 +151,6 @@ public class DepotItemController {
                               @RequestParam("mpList") String mpList,
                               HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
-        Long tenantId = redisService.getTenantId(request);
         try {
             List<DepotItemVo4WithInfoEx> dataList = new ArrayList<DepotItemVo4WithInfoEx>();
             if(headerId != 0) {
@@ -173,7 +171,7 @@ public class DepotItemController {
                     item.put("model", diEx.getMModel());
                     item.put("materialOther", getOtherInfo(mpArr, diEx));
                     Integer ratio = diEx.getRatio();
-                    BigDecimal stock = depotItemService.getStockByParam(diEx.getDepotId(),diEx.getMaterialId(),null,null,tenantId);
+                    BigDecimal stock = depotItemService.getStockByParam(diEx.getDepotId(),diEx.getMaterialId(),null,null);
                     if(ratio!=null){
                         BigDecimal ratioDecimal = new BigDecimal(ratio.toString());
                         if(ratioDecimal.compareTo(BigDecimal.ZERO)!=0){
@@ -185,13 +183,13 @@ public class DepotItemController {
                     }
                     item.put("stock", stock);
                     item.put("unit", diEx.getMaterialUnit());
+                    item.put("sku", diEx.getSku());
                     item.put("operNumber", diEx.getOperNumber());
                     item.put("basicNumber", diEx.getBasicNumber());
                     item.put("unitPrice", diEx.getUnitPrice());
                     item.put("taxUnitPrice", diEx.getTaxUnitPrice());
                     item.put("allPrice", diEx.getAllPrice());
                     item.put("remark", diEx.getRemark());
-                    item.put("img", diEx.getImg());
                     item.put("depotId", diEx.getDepotId() == null ? "" : diEx.getDepotId());
                     item.put("depotName", diEx.getDepotId() == null ? "" : diEx.getDepotName());
                     item.put("anotherDepotId", diEx.getAnotherDepotId() == null ? "" : diEx.getAnotherDepotId());
@@ -262,7 +260,6 @@ public class DepotItemController {
                                       HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
-        Long tenantId = redisService.getTenantId(request);
         String timeA = Tools.firstDayOfMonth(monthTime) + BusinessConstants.DAY_FIRST_TIME;
         String timeB = Tools.lastDayOfMonth(monthTime) + BusinessConstants.DAY_LAST_TIME;
         try {
@@ -282,6 +279,7 @@ public class DepotItemController {
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
                     JSONObject item = new JSONObject();
                     Long mId = diEx.getMId();
+                    item.put("barCode", diEx.getBarCode());
                     item.put("materialName", diEx.getMName());
                     item.put("materialModel", diEx.getMModel());
                     item.put("materialStandard", diEx.getMStandard());
@@ -289,12 +287,12 @@ public class DepotItemController {
                     String materialOther = getOtherInfo(mpArr, diEx);
                     item.put("materialOther", materialOther);
                     item.put("materialColor", diEx.getMColor());
-                    item.put("unitName", getUName(diEx.getMaterialUnit(), diEx.getUnitName()));
+                    item.put("unitName", diEx.getMaterialUnit());
 
-                    item.put("prevSum", depotItemService.getStockByParam(depotId,mId,null,timeA,tenantId));
-                    item.put("inSum", depotItemService.getInNumByParam(depotId,mId,timeA,timeB,tenantId));
-                    item.put("outSum", depotItemService.getOutNumByParam(depotId,mId,timeA,timeB,tenantId));
-                    BigDecimal thisSum = depotItemService.getStockByParam(depotId,mId,null,timeB,tenantId);
+                    item.put("prevSum", depotItemService.getStockByParam(depotId,mId,null,timeA));
+                    item.put("inSum", depotItemService.getInNumByParam(depotId,mId,timeA,timeB));
+                    item.put("outSum", depotItemService.getOutNumByParam(depotId,mId,timeA,timeB));
+                    BigDecimal thisSum = depotItemService.getStockByParam(depotId,mId,null,timeB);
                     item.put("thisSum", thisSum);
                     for(MaterialExtend me:meList) {
                         if(me.getMaterialId().longValue() == diEx.getMId().longValue()) {
@@ -332,31 +330,31 @@ public class DepotItemController {
                             @RequestParam("monthTime") String monthTime,
                             @RequestParam("materialParam") String materialParam,
                             HttpServletRequest request, HttpServletResponse response) throws Exception {
-        Long tenantId = redisService.getTenantId(request);
         String timeA = Tools.firstDayOfMonth(monthTime) + BusinessConstants.DAY_FIRST_TIME;
         String timeB = Tools.lastDayOfMonth(monthTime) + BusinessConstants.DAY_LAST_TIME;
         try {
             List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(StringUtil.toNull(materialParam),
                     timeB, null, null);
             //存放数据json数组
-            String[] names = {"名称", "规格", "型号", "单位", "单价", "上月结存数量", "入库数量", "出库数量", "本月结存数量", "结存金额"};
+            String[] names = {"条码", "名称", "规格", "型号", "单位", "单价", "上月结存数量", "入库数量", "出库数量", "本月结存数量", "结存金额"};
             String title = "库存报表";
             List<String[]> objects = new ArrayList<String[]>();
             if (null != dataList) {
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
                     Long mId = diEx.getMId();
-                    String[] objs = new String[10];
-                    objs[0] = diEx.getMName();
-                    objs[1] = diEx.getMStandard();
-                    objs[2] = diEx.getMModel();
-                    objs[3] = diEx.getMaterialUnit();
-                    objs[4] = diEx.getPurchaseDecimal().toString();
-                    objs[5] = depotItemService.getStockByParam(depotId,mId,null,timeA,tenantId).toString();
-                    objs[6] = depotItemService.getInNumByParam(depotId,mId,timeA,timeB,tenantId).toString();
-                    objs[7] = depotItemService.getOutNumByParam(depotId,mId,timeA,timeB,tenantId).toString();
-                    BigDecimal thisSum = depotItemService.getStockByParam(depotId,mId,null,timeB,tenantId);
-                    objs[8] = thisSum.toString();
-                    objs[9] = thisSum.multiply(diEx.getPurchaseDecimal()).toString();
+                    String[] objs = new String[11];
+                    objs[0] = diEx.getBarCode();
+                    objs[1] = diEx.getMName();
+                    objs[2] = diEx.getMStandard();
+                    objs[3] = diEx.getMModel();
+                    objs[4] = diEx.getMaterialUnit();
+                    objs[5] = diEx.getPurchaseDecimal().toString();
+                    objs[6] = depotItemService.getStockByParam(depotId,mId,null,timeA).toString();
+                    objs[7] = depotItemService.getInNumByParam(depotId,mId,timeA,timeB).toString();
+                    objs[8] = depotItemService.getOutNumByParam(depotId,mId,timeA,timeB).toString();
+                    BigDecimal thisSum = depotItemService.getStockByParam(depotId,mId,null,timeB);
+                    objs[9] = thisSum.toString();
+                    objs[10] = thisSum.multiply(diEx.getPurchaseDecimal()).toString();
                     objects.add(objs);
                 }
             }
@@ -382,7 +380,6 @@ public class DepotItemController {
                                             HttpServletRequest request) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
-        Long tenantId = redisService.getTenantId(request);
         String endTime = Tools.lastDayOfMonth(monthTime) + BusinessConstants.DAY_LAST_TIME;
         try {
             List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(StringUtil.toNull(materialParam),
@@ -391,7 +388,7 @@ public class DepotItemController {
             if (null != dataList) {
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
                     Long mId = diEx.getMId();
-                    BigDecimal thisSum = depotItemService.getStockByParam(depotId,mId,null,endTime,tenantId);
+                    BigDecimal thisSum = depotItemService.getStockByParam(depotId,mId,null,endTime);
                     BigDecimal unitPrice = diEx.getPurchaseDecimal();
                     if(unitPrice == null) {
                         unitPrice = BigDecimal.ZERO;
@@ -445,6 +442,7 @@ public class DepotItemController {
                     BigDecimal OutSum = depotItemService.buyOrSale("出库", "采购退货", diEx.getMId(), monthTime, "number");
                     BigDecimal InSumPrice = depotItemService.buyOrSale("入库", "采购", diEx.getMId(), monthTime, "price");
                     BigDecimal OutSumPrice = depotItemService.buyOrSale("出库", "采购退货", diEx.getMId(), monthTime, "price");
+                    item.put("barCode", diEx.getBarCode());
                     item.put("materialName", diEx.getMName());
                     item.put("materialModel", diEx.getMModel());
                     item.put("materialStandard", diEx.getMStandard());
@@ -512,6 +510,7 @@ public class DepotItemController {
                     BigDecimal InSumRetailPrice = depotItemService.buyOrSale("入库", "零售退货", diEx.getMId(), monthTime,"price");
                     BigDecimal InSumPrice = depotItemService.buyOrSale("入库", "销售退货", diEx.getMId(), monthTime,"price");
                     BigDecimal OutInSumPrice = (OutSumRetailPrice.add(OutSumPrice)).subtract(InSumRetailPrice.add(InSumPrice));
+                    item.put("barCode", diEx.getBarCode());
                     item.put("materialName", diEx.getMName());
                     item.put("materialModel", diEx.getMModel());
                     item.put("materialStandard", diEx.getMStandard());
@@ -618,7 +617,7 @@ public class DepotItemController {
             List<DepotItemStockWarningCount> dataList = depotItemService.findStockWarningCount(null, null, materialParam, depotId);
             //存放数据json数组
             Long pid = depotId;
-            String[] names = {"名称", "规格", "型号", "扩展信息", "单位", "安全存量", "当前库存", "建议入库量"};
+            String[] names = {"条码", "名称", "规格", "型号", "扩展信息", "单位", "安全存量", "当前库存", "建议入库量"};
             String title = "库存预警报表";
             List<String[]> objects = new ArrayList<String[]>();
             if (null != dataList) {
@@ -630,15 +629,16 @@ public class DepotItemController {
                     diVI.setMOtherField3(diEx.getMOtherField3());
                     String materialOther = getOtherInfo(mpArr, diVI);
                     String unitName = getUName(diEx.getMaterialUnit(), diEx.getUnitName());
-                    String[] objs = new String[8];
-                    objs[0] = diEx.getMName();
-                    objs[1] = diEx.getMStandard();
-                    objs[2] = diEx.getMModel();
-                    objs[3] = materialOther;
-                    objs[4] = unitName;
-                    objs[5] = diEx.getSafetystock() == null ? "0" : diEx.getSafetystock().toString();
-                    objs[6] = diEx.getCurrentNumber() == null ? "0" : diEx.getCurrentNumber().toString();
-                    objs[7] = diEx.getLinjieNumber() == null ? "0" : diEx.getLinjieNumber().toString();
+                    String[] objs = new String[9];
+                    objs[0] = diEx.getBarCode();
+                    objs[1] = diEx.getMName();
+                    objs[2] = diEx.getMStandard();
+                    objs[3] = diEx.getMModel();
+                    objs[4] = materialOther;
+                    objs[5] = unitName;
+                    objs[6] = diEx.getSafetystock() == null ? "0" : diEx.getSafetystock().toString();
+                    objs[7] = diEx.getCurrentNumber() == null ? "0" : diEx.getCurrentNumber().toString();
+                    objs[8] = diEx.getLinjieNumber() == null ? "0" : diEx.getLinjieNumber().toString();
                     objects.add(objs);
                 }
             }

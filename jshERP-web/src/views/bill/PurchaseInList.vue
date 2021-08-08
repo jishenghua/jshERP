@@ -7,20 +7,20 @@
           <!-- 搜索区域 -->
           <a-form layout="inline" @keyup.enter.native="searchQuery">
             <a-row :gutter="24">
-              <a-col :md="6" :sm="8">
-                <a-form-item label="单据编号" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
+              <a-col :md="6" :sm="24">
+                <a-form-item label="单据编号" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-input placeholder="请输入单据编号" v-model="queryParam.number"></a-input>
                 </a-form-item>
               </a-col>
-              <a-col :md="6" :sm="8">
-                <a-form-item label="商品信息" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
-                  <a-input placeholder="请输入名称、规格、型号" v-model="queryParam.materialParam"></a-input>
+              <a-col :md="6" :sm="24">
+                <a-form-item label="商品信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-input placeholder="请输入条码、名称、规格、型号" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
-              <a-col :md="5" :sm="10">
+              <a-col :md="6" :sm="24">
                 <a-form-item label="单据日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-range-picker
-                    style="width: 210px"
+                    style="width:100%"
                     v-model="queryParam.createTimeRange"
                     format="YYYY-MM-DD"
                     :placeholder="['开始时间', '结束时间']"
@@ -29,10 +29,43 @@
                   />
                 </a-form-item>
               </a-col>
+              <template v-if="toggleSearchStatus">
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="供应商" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select placeholder="选择供应商" showSearch optionFilterProp="children" v-model="queryParam.organId">
+                      <a-select-option v-for="(item,index) in supList" :key="index" :value="item.id">
+                        {{ item.supplier }}
+                      </a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="仓库名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select placeholder="请选择仓库" showSearch optionFilterProp="children" v-model="queryParam.depotId">
+                      <a-select-option v-for="(depot,index) in depotList" :value="depot.id">
+                        {{ depot.depotName }}
+                      </a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="操作员" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select placeholder="选择操作员" showSearch optionFilterProp="children" v-model="queryParam.creator">
+                      <a-select-option v-for="(item,index) in userList" :key="index" :value="item.id">
+                        {{ item.userName }}
+                      </a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+              </template>
               <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                 <a-col :md="6" :sm="24">
                   <a-button type="primary" @click="searchQuery">查询</a-button>
                   <a-button style="margin-left: 8px" @click="searchReset">重置</a-button>
+                  <a @click="handleToggleSearch" style="margin-left: 8px">
+                    {{ toggleSearchStatus ? '收起' : '展开' }}
+                    <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
+                  </a>
                 </a-col>
               </span>
             </a-row>
@@ -106,32 +139,24 @@
         // 查询条件
         queryParam: {
           number: "",
-          searchMaterial: "",
+          materialParam: "",
           type: "入库",
           subType: "采购",
-          roleType: Vue.ls.get('roleType')
+          roleType: Vue.ls.get('roleType'),
+          organId: "",
+          depotId: "",
+          creator: ""
         },
         labelCol: {
-          xs: { span: 24 },
-          sm: { span: 8 },
+          span: 5
         },
         wrapperCol: {
-          xs: { span: 24 },
-          sm: { span: 16 },
+          span: 18,
+          offset: 1
         },
         // 表头
         columns: [
-          {
-            title: '#',
-            dataIndex: '',
-            key:'rowIndex',
-            width:40,
-            align:"center",
-            customRender:function (t,r,index) {
-              return parseInt(index)+1;
-            }
-          },
-          { title: '供应商名称', dataIndex: 'organName',width:120},
+          { title: '供应商', dataIndex: 'organName',width:120},
           { title: '单据编号', dataIndex: 'number',width:160,
             customRender:function (text,record,index) {
               if(record.linkNumber) {
@@ -184,10 +209,13 @@
       }
     },
     computed: {
-
+    },
+    created () {
+      this.initSupplier()
+      this.getDepotData()
+      this.initUser()
     },
     methods: {
-
     }
   }
 </script>

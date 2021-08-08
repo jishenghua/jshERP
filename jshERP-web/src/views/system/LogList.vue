@@ -6,20 +6,19 @@
         <div class="table-page-search-wrapper">
           <a-form layout="inline" @keyup.enter.native="searchQuery">
             <a-row :gutter="24">
-              <a-col :md="6" :sm="8">
-                <a-form-item label="操作模块">
+              <a-col :md="6" :sm="24">
+                <a-form-item label="操作模块" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-input placeholder="请输入操作模块" v-model="queryParam.operation"></a-input>
                 </a-form-item>
               </a-col>
-              <a-col :md="6" :sm="8">
-                <a-form-item label="操作详情">
+              <a-col :md="6" :sm="24">
+                <a-form-item label="操作详情" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-input placeholder="请输入操作详情" v-model="queryParam.content"></a-input>
                 </a-form-item>
               </a-col>
-              <a-col :md="6" :sm="10">
+              <a-col :md="6" :sm="24">
                 <a-form-item label="创建时间" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-range-picker
-                    style="width: 280px"
                     v-model="queryParam.createTimeRange"
                     format="YYYY-MM-DD"
                     :placeholder="['开始时间', '结束时间']"
@@ -29,13 +28,13 @@
                 </a-form-item>
               </a-col>
               <template v-if="toggleSearchStatus">
-                <a-col :md="6" :sm="8">
-                  <a-form-item label="操作IP">
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="操作IP" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-input placeholder="请输入操作IP" v-model="queryParam.clientIp"></a-input>
                   </a-form-item>
                 </a-col>
-                <a-col :md="6" :sm="8">
-                  <a-form-item label="操作状态">
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="操作状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-select v-model="queryParam.status" placeholder="请选择操作状态">
                       <a-select-option value="">请选择</a-select-option>
                       <a-select-option value="0">成功</a-select-option>
@@ -135,12 +134,11 @@
           align:"center",
         },
         labelCol: {
-          xs: { span: 1 },
-          sm: { span: 2 },
+          span: 5
         },
         wrapperCol: {
-          xs: { span: 10 },
-          sm: { span: 16 },
+          span: 18,
+          offset: 1
         },
         url: {
           list: "/log/list",

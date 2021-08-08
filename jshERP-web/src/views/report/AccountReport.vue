@@ -6,28 +6,28 @@
         <div class="table-page-search-wrapper">
           <a-form layout="inline" @keyup.enter.native="searchQuery">
             <a-row :gutter="24">
-              <a-col :md="4" :sm="24">
-                <a-form-item label="名称">
+              <a-col :md="6" :sm="24">
+                <a-form-item label="名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-input placeholder="请输入名称" v-model="queryParam.name"></a-input>
                 </a-form-item>
               </a-col>
-              <a-col :md="4" :sm="24">
-                <a-form-item label="编号">
+              <a-col :md="6" :sm="24">
+                <a-form-item label="编号" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-input placeholder="请输入编号" v-model="queryParam.serialNo"></a-input>
                 </a-form-item>
               </a-col>
-              <a-col :md="3" :sm="24" >
+              <a-col :md="3" :sm="24">
                 <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                   <a-button type="primary" @click="searchQuery">查询</a-button>
                   <a-button style="margin-left: 8px" v-print="'#reportPrint'" type="primary" icon="printer">打印</a-button>
                 </span>
               </a-col>
-              <a-col :md="3" :sm="24" >
+              <a-col :md="3" :sm="24">
                 <a-form-item label="本月发生总额">
                   {{allMonthAmount}}
                 </a-form-item>
               </a-col>
-              <a-col :md="3" :sm="24" >
+              <a-col :md="3" :sm="24">
                 <a-form-item label="当前总余额">
                   {{allCurrentAmount}}
                 </a-form-item>
@@ -72,6 +72,13 @@
     },
     data () {
       return {
+        labelCol: {
+          span: 5
+        },
+        wrapperCol: {
+          span: 18,
+          offset: 1
+        },
         // 查询条件
         queryParam: {
           name:'',
@@ -101,14 +108,6 @@
             scopedSlots: { customRender: 'action' }
           }
         ],
-        labelCol: {
-          xs: { span: 1 },
-          sm: { span: 2 },
-        },
-        wrapperCol: {
-          xs: { span: 10 },
-          sm: { span: 16 },
-        },
         url: {
           list: "/account/list",
           getStatistics: "/account/getStatistics"

@@ -175,6 +175,50 @@ public class DepotHeadController {
     }
 
     /**
+     * 调拨明细接口 TODO:by sdw 20210724
+     * @param currentPage
+     * @param pageSize
+     * @param oId
+     * @param materialParam
+     * @param depotIdF  调出仓库
+     * @param depotId  调入仓库
+     * @param beginTime
+     * @param endTime
+     * @param subType
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/findAllocationDetail")
+    public BaseResponseInfo findallocationDetail(@RequestParam("currentPage") Integer currentPage,
+                                                 @RequestParam("pageSize") Integer pageSize,
+                                                 @RequestParam("organId") Integer oId,
+                                                 @RequestParam("materialParam") String materialParam,
+                                                 @RequestParam("depotId") Integer depotId,
+                                                 @RequestParam("depotIdF") Integer depotIdF,
+                                                 @RequestParam("beginTime") String beginTime,
+                                                 @RequestParam("endTime") String endTime,
+                                                 @RequestParam("subType") String subType,
+                                                 HttpServletRequest request)throws Exception {
+        BaseResponseInfo res = new BaseResponseInfo();
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            beginTime = Tools.parseDayToTime(beginTime, BusinessConstants.DAY_FIRST_TIME);
+            endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
+            List<DepotHeadVo4InDetail> list = depotHeadService.findAllocationDetail(beginTime, endTime, subType, materialParam, depotId, depotIdF, oId, (currentPage-1)*pageSize, pageSize);
+            int total = depotHeadService.findAllocationDetailCount(beginTime, endTime, subType, materialParam, depotId, depotIdF,oId);
+            map.put("rows", list);
+            map.put("total", total);
+            res.code = 200;
+            res.data = map;
+        } catch(Exception e){
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
+    }
+
+    /**
      * 对账单接口
      * @param currentPage
      * @param pageSize
@@ -270,13 +314,12 @@ public class DepotHeadController {
         String beanJson = body.getInfo();
         String rows = body.getRows();
         Long billsNumLimit = Long.parseLong(redisService.getObjectFromSessionByKey(request,"billsNumLimit").toString());
-        Long tenantId = redisService.getTenantId(request);
-        Long count = depotHeadService.countDepotHead(null,null,null,null,null,null,null,null);
+        Long count = depotHeadService.countDepotHead(null,null,null,null,null,null,null,null,null,null,null);
         if(count>= billsNumLimit) {
             throw new BusinessParamCheckingException(ExceptionConstants.DEPOT_HEAD_OVER_LIMIT_FAILED_CODE,
                     ExceptionConstants.DEPOT_HEAD_OVER_LIMIT_FAILED_MSG);
         } else {
-            depotHeadService.addDepotHeadAndDetail(beanJson,rows,tenantId, request);
+            depotHeadService.addDepotHeadAndDetail(beanJson,rows, request);
         }
         return result;
     }
@@ -290,11 +333,10 @@ public class DepotHeadController {
      */
     @PutMapping(value = "/updateDepotHeadAndDetail")
     public Object updateDepotHeadAndDetail(@RequestBody DepotHeadVo4Body body, HttpServletRequest request) throws Exception{
-        Long tenantId = redisService.getTenantId(request);
         JSONObject result = ExceptionConstants.standardSuccess();
         String beanJson = body.getInfo();
         String rows = body.getRows();
-        depotHeadService.updateDepotHeadAndDetail(beanJson,rows,tenantId,request);
+        depotHeadService.updateDepotHeadAndDetail(beanJson,rows,request);
         return result;
     }
 

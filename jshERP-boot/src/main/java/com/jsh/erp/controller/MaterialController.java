@@ -7,6 +7,7 @@ import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.exception.BusinessRunTimeException;
+import com.jsh.erp.service.depot.DepotService;
 import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.service.redis.RedisService;
@@ -44,6 +45,9 @@ public class MaterialController {
 
     @Resource
     private UnitService unitService;
+
+    @Resource
+    private DepotService depotService;
 
     @Resource
     private RedisService redisService;
@@ -169,7 +173,6 @@ public class MaterialController {
                                   HttpServletRequest request) throws Exception{
         JSONObject object = new JSONObject();
         try {
-            Long tenantId = redisService.getTenantId(request);
             List<MaterialVo4Unit> dataList = materialService.findBySelectWithBarCode(categoryId, q, (currentPage-1)*pageSize, pageSize);
             String[] mpArr = mpList.split(",");
             int total = materialService.findBySelectWithBarCodeCount(categoryId, q);
@@ -195,18 +198,21 @@ public class MaterialController {
                     item.put("standard", material.getStandard());
                     item.put("model", material.getModel());
                     item.put("unit", material.getCommodityUnit() + ratio);
-                    if(depotId!=null) {
-                        BigDecimal stock = depotItemService.getStockByParam(depotId,material.getId(),null,null,tenantId);
-                        if (material.getUnitId()!=null){
-                            Unit unit = unitService.getUnit(material.getUnitId());
-                            if(material.getCommodityUnit().equals(unit.getOtherUnit())) {
-                                if(unit.getRatio()!=0) {
-                                    stock = stock.divide(BigDecimal.valueOf(unit.getRatio()),2,BigDecimal.ROUND_HALF_UP);
-                                }
+                    item.put("sku", material.getSku());
+                    BigDecimal skuStock = depotItemService.getSkuStockByParam(depotId,material.getMeId(),null,null);
+                    if(StringUtil.isNotEmpty(material.getSku())){
+                        item.put("skuStock", skuStock);
+                    }
+                    BigDecimal stock = depotItemService.getStockByParam(depotId,material.getId(),null,null);
+                    if (material.getUnitId()!=null){
+                        Unit unit = unitService.getUnit(material.getUnitId());
+                        if(material.getCommodityUnit().equals(unit.getOtherUnit())) {
+                            if(unit.getRatio()!=0) {
+                                stock = stock.divide(BigDecimal.valueOf(unit.getRatio()),2,BigDecimal.ROUND_HALF_UP);
                             }
                         }
-                        item.put("stock", stock);
                     }
+                    item.put("stock", stock);
                     String expand = ""; //扩展信息
                     for (int i = 0; i < mpArr.length; i++) {
                         if (mpArr[i].equals("制造商")) {
@@ -443,40 +449,63 @@ public class MaterialController {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
             String[] mpArr = mpList.split(",");
-            MaterialVo4Unit mu = new MaterialVo4Unit();
             List<MaterialVo4Unit> list = materialService.getMaterialByBarCode(barCode);
             if(list!=null && list.size()>0) {
-                mu = list.get(0);
-                String expand = ""; //扩展信息
-                for (int i = 0; i < mpArr.length; i++) {
-                    if (mpArr[i].equals("制造商")) {
-                        expand = expand + ((mu.getMfrs() == null || mu.getMfrs().equals("")) ? "" : "(" + mu.getMfrs() + ")");
+                for(MaterialVo4Unit mvo: list) {
+                    String expand = ""; //扩展信息
+                    for (int i = 0; i < mpArr.length; i++) {
+                        if (mpArr[i].equals("制造商")) {
+                            expand = expand + ((mvo.getMfrs() == null || mvo.getMfrs().equals("")) ? "" : "(" + mvo.getMfrs() + ")");
+                        }
+                        if (mpArr[i].equals("自定义1")) {
+                            expand = expand + ((mvo.getOtherField1() == null || mvo.getOtherField1().equals("")) ? "" : "(" + mvo.getOtherField1() + ")");
+                        }
+                        if (mpArr[i].equals("自定义2")) {
+                            expand = expand + ((mvo.getOtherField2() == null || mvo.getOtherField2().equals("")) ? "" : "(" + mvo.getOtherField2() + ")");
+                        }
+                        if (mpArr[i].equals("自定义3")) {
+                            expand = expand + ((mvo.getOtherField3() == null || mvo.getOtherField3().equals("")) ? "" : "(" + mvo.getOtherField3() + ")");
+                        }
                     }
-                    if (mpArr[i].equals("自定义1")) {
-                        expand = expand + ((mu.getOtherField1() == null || mu.getOtherField1().equals("")) ? "" : "(" + mu.getOtherField1() + ")");
+                    mvo.setMaterialOther(expand);
+                    if("LSCK".equals(prefixNo) || "LSTH".equals(prefixNo)) {
+                        //零售价
+                        mvo.setBillPrice(mvo.getCommodityDecimal());
+                    } else if("CGDD".equals(prefixNo) || "CGRK".equals(prefixNo) || "CGTH".equals(prefixNo)
+                            || "QTRK".equals(prefixNo) || "DBCK".equals(prefixNo) || "ZZD".equals(prefixNo) || "CXD".equals(prefixNo) ) {
+                        //采购价
+                        mvo.setBillPrice(mvo.getPurchaseDecimal());
+                    } else if("XSDD".equals(prefixNo) || "XSCK".equals(prefixNo) || "XSTH".equals(prefixNo) || "QTCK".equals(prefixNo)) {
+                        //销售价
+                        mvo.setBillPrice(mvo.getWholesaleDecimal());
                     }
-                    if (mpArr[i].equals("自定义2")) {
-                        expand = expand + ((mu.getOtherField2() == null || mu.getOtherField2().equals("")) ? "" : "(" + mu.getOtherField2() + ")");
+                    //仓库id
+                    JSONArray depotArr = depotService.findDepotByCurrentUser();
+                    for(Object obj: depotArr){
+                        JSONObject depotObj = JSONObject.parseObject(obj.toString());
+                        if(depotObj.get("isDefault")!=null) {
+                            Boolean isDefault = depotObj.getBoolean("isDefault");
+                            if(isDefault) {
+                                Long depotId = depotObj.getLong("id");
+                                mvo.setDepotId(depotId);
+                                //库存
+                                BigDecimal stock = depotItemService.getStockByParam(depotId,mvo.getId(),null,null);
+                                if (mvo.getUnitId()!=null){
+                                    Unit unit = unitService.getUnit(mvo.getUnitId());
+                                    if(mvo.getCommodityUnit().equals(unit.getOtherUnit())) {
+                                        if(unit.getRatio()!=0) {
+                                            stock = stock.divide(BigDecimal.valueOf(unit.getRatio()),2,BigDecimal.ROUND_HALF_UP);
+                                        }
+                                    }
+                                }
+                                mvo.setStock(stock);
+                            }
+                        }
                     }
-                    if (mpArr[i].equals("自定义3")) {
-                        expand = expand + ((mu.getOtherField3() == null || mu.getOtherField3().equals("")) ? "" : "(" + mu.getOtherField3() + ")");
-                    }
-                }
-                mu.setMaterialOther(expand);
-                if("LSCK".equals(prefixNo) || "LSTH".equals(prefixNo)) {
-                    //零售价
-                    mu.setBillPrice(mu.getCommodityDecimal());
-                } else if("CGDD".equals(prefixNo) || "CGRK".equals(prefixNo) || "CGTH".equals(prefixNo)
-                        || "QTRK".equals(prefixNo) || "DBCK".equals(prefixNo) || "ZZD".equals(prefixNo) || "CXD".equals(prefixNo) ) {
-                    //采购价
-                    mu.setBillPrice(mu.getPurchaseDecimal());
-                } else if("XSDD".equals(prefixNo) || "XSCK".equals(prefixNo) || "XSTH".equals(prefixNo) || "QTCK".equals(prefixNo)) {
-                    //销售价
-                    mu.setBillPrice(mu.getWholesaleDecimal());
                 }
             }
             res.code = 200;
-            res.data = mu;
+            res.data = list;
         } catch(Exception e){
             e.printStackTrace();
             res.code = 500;

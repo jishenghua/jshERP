@@ -48,7 +48,7 @@ const queryPermissionRule = (params)=>getAction("/sys/permission/queryPermission
 //机构管理
 const queryOrganizationTreeList = (params)=>getAction("/organization/getOrganizationTree",params);
 const queryOrganizationById = (params)=>getAction("/organization/findById",params);
-const queryIdTree = (params)=>getAction("/sys/sysDepart/queryIdTree",params);
+const checkOrganization = (params)=>getAction("/organization/checkIsNameExist",params);
 const queryParentName   = (params)=>getAction("/sys/sysDepart/queryParentName",params);
 const searchByKeywords   = (params)=>getAction("/sys/sysDepart/searchBy",params);
 const deleteByDepartId   = (params)=>deleteAction("/sys/sysDepart/delete",params);
@@ -122,6 +122,7 @@ const editMaterialProperty = (params)=>putAction("/materialProperty/update",para
 //商品类型
 const queryMaterialCategoryTreeList = (params)=>getAction("/materialCategory/getMaterialCategoryTree",params);
 const queryMaterialCategoryById = (params)=>getAction("/materialCategory/findById",params);
+const checkMaterialCategory = (params)=>getAction("/materialCategory/checkIsNameExist",params);
 //商品管理
 const addMaterial = (params)=>postAction("/material/add",params);
 const editMaterial = (params)=>putAction("/material/update",params);
@@ -129,12 +130,18 @@ const checkMaterial = (params)=>getAction("/material/checkIsExist",params);
 const getMaterialBySelect = (params)=>getAction("/material/findBySelect",params);
 const getSerialMaterialBySelect = (params)=>getAction("/material/getMaterialEnableSerialNumberList",params);
 const getMaterialByBarCode = (params)=>getAction("/material/getMaterialByBarCode",params);
+const getMaxBarCode = (params)=>getAction("/material/getMaxBarCode",params);
 const checkMaterialBarCode = (params)=>getAction("/materialsExtend/checkIsBarCodeExist",params);
 //序列号
 const addSerialNumber = (params)=>postAction("/serialNumber/add",params);
 const editSerialNumber = (params)=>putAction("/serialNumber/update",params);
 const checkSerialNumber = (params)=>getAction("/serialNumber/checkIsNameExist",params);
 const batAddSerialNumber = (params)=>postAction("/serialNumber/batAddSerialNumber",params);
+//多属性
+const addMaterialAttribute = (params)=>postAction("/materialAttribute/add",params);
+const editMaterialAttribute = (params)=>putAction("/materialAttribute/update",params);
+const checkMaterialAttribute = (params)=>getAction("/materialAttribute/checkIsNameExist",params);
+const getAllMaterialAttribute = (params)=>getAction("/materialAttribute/getAll",params);
 //功能管理
 const addFunction = (params)=>postAction("/function/add",params);
 const editFunction = (params)=>putAction("/function/update",params);
@@ -195,6 +202,7 @@ export {
   queryPermissionRule,
   queryOrganizationTreeList,
   queryOrganizationById,
+  checkOrganization,
   queryParentName,
   searchByKeywords,
   deleteByDepartId,
@@ -242,17 +250,23 @@ export {
   editMaterialProperty,
   queryMaterialCategoryTreeList,
   queryMaterialCategoryById,
+  checkMaterialCategory,
   addMaterial,
   editMaterial,
   checkMaterial,
   getMaterialBySelect,
   getSerialMaterialBySelect,
   getMaterialByBarCode,
+  getMaxBarCode,
   checkMaterialBarCode,
   addSerialNumber,
   editSerialNumber,
   checkSerialNumber,
   batAddSerialNumber,
+  addMaterialAttribute,
+  editMaterialAttribute,
+  checkMaterialAttribute,
+  getAllMaterialAttribute,
   addFunction,
   editFunction,
   checkFunction,

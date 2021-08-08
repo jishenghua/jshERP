@@ -67,7 +67,7 @@
               </a-col>
               <a-col :lg="8" :md="12" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="序列号">
-                  <a-select placeholder="请选择序列号" v-decorator="[ 'enableSerialNumber' ]">
+                  <a-select placeholder="有无序列号" v-decorator="[ 'enableSerialNumber' ]">
                     <a-select-option value="1">有</a-select-option>
                     <a-select-option value="0">无</a-select-option>
                   </a-select>
@@ -79,17 +79,87 @@
                 </a-form-item>
               </a-col>
               <a-col :lg="8" :md="12" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="多属性">
+                  <a-switch checked-children="启用" un-checked-children="关闭" v-model="skuSwitch" @change="onSkuChange"></a-switch>
+                </a-form-item>
               </a-col>
             </a-row>
-            <j-editable-table
-              ref="editableMeTable"
-              :loading="meTable.loading"
-              :columns="meTable.columns"
-              :dataSource="meTable.dataSource"
-              :maxHeight="300"
-              :rowNumber="true"
-              :rowSelection="true"
-              :actionButton="true"/>
+            <a-card v-if="skuSwitch">
+              <a-row class="form-row" :gutter="24">
+                <a-col :lg="8" :md="12" :sm="24">
+                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="sku.manyColor">
+                    <a-select mode="multiple" v-decorator="[ 'manyColor' ]" showSearch optionFilterProp="children">
+                      <a-select-option v-for="(item,index) in sku.manyColorList" :key="index" :value="item.value">
+                        {{ item.name }}
+                      </a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+                <a-col :lg="8" :md="12" :sm="24">
+                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="sku.manySize">
+                    <a-select mode="multiple" v-decorator="[ 'manySize' ]" showSearch optionFilterProp="children">
+                      <a-select-option v-for="(item,index) in sku.manySizeList" :key="index" :value="item.value">
+                        {{ item.name }}
+                      </a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+                <a-col :lg="8" :md="12" :sm="24">
+                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="sku.other1">
+                    <a-select mode="multiple" v-decorator="[ 'other1' ]" showSearch optionFilterProp="children">
+                      <a-select-option v-for="(item,index) in sku.other1List" :key="index" :value="item.value">
+                        {{ item.name }}
+                      </a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+              </a-row>
+              <a-row class="form-row" :gutter="24">
+                <a-col :lg="8" :md="12" :sm="24">
+                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="sku.other2">
+                    <a-select mode="multiple" v-decorator="[ 'other2' ]" showSearch optionFilterProp="children">
+                      <a-select-option v-for="(item,index) in sku.other2List" :key="index" :value="item.value">
+                        {{ item.name }}
+                      </a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+                <a-col :lg="8" :md="12" :sm="24">
+                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="sku.other3">
+                    <a-select mode="multiple" v-decorator="[ 'other3' ]" showSearch optionFilterProp="children">
+                      <a-select-option v-for="(item,index) in sku.other3List" :key="index" :value="item.value">
+                        {{ item.name }}
+                      </a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+                <a-col :lg="8" :md="12" :sm="24">
+                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="生成条码">
+                    <a-switch v-model="barCodeSwitch" @change="onBarCodeChange"></a-switch>
+                  </a-form-item>
+                </a-col>
+              </a-row>
+            </a-card>
+            <div style="margin-top:8px;">
+              <j-editable-table
+                ref="editableMeTable"
+                :loading="meTable.loading"
+                :columns="meTable.columns"
+                :dataSource="meTable.dataSource"
+                :maxHeight="300"
+                :rowNumber="true"
+                :rowSelection="true"
+                :actionButton="true">
+                <template #buttonAfter>
+                  <a-button @click="batchSet('purchase')">采购价-批量</a-button>
+                  <a-button style="margin-left: 8px" @click="batchSet('commodity')">零售价-批量</a-button>
+                  <a-button style="margin-left: 8px" @click="batchSet('wholesale')">销售价-批量</a-button>
+                  <a-button style="margin-left: 8px" @click="batchSet('low')">最低售价-批量</a-button>
+                </template>
+              </j-editable-table>
+              <!-- 表单区域 -->
+              <batch-set-price-modal ref="modalForm" @ok="batchSetPricemodalFormOk"></batch-set-price-modal>
+            </div>
             <a-row class="form-row" :gutter="24">
               <a-col :lg="24" :md="24" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="">
@@ -156,9 +226,10 @@
 </template>
 <script>
   import pick from 'lodash.pick'
+  import BatchSetPriceModal from './BatchSetPriceModal'
   import JEditableTable from '@/components/jeecg/JEditableTable'
   import { FormTypes, VALIDATE_NO_PASSED, getRefPromise, validateFormAndTables } from '@/utils/JEditableTableUtil'
-  import {queryMaterialCategoryTreeList,checkMaterial,checkMaterialBarCode} from '@/api/api'
+  import {queryMaterialCategoryTreeList,checkMaterial,checkMaterialBarCode,getAllMaterialAttribute,getMaxBarCode} from '@/api/api'
   import { httpAction, getAction } from '@/api/manage'
   import JImageUpload from '@/components/jeecg/JImageUpload'
   import JDate from '@/components/jeecg/JDate'
@@ -166,6 +237,7 @@
   export default {
     name: "MaterialModal",
     components: {
+      BatchSetPriceModal,
       JImageUpload,
       JDate,
       JEditableTable
@@ -181,6 +253,20 @@
         unitStatus: false,
         manyUnitStatus: true,
         unitChecked: false,
+        skuSwitch: false, //sku开启状态
+        barCodeSwitch: false, //生成条码开关
+        sku: {
+          manyColor: '多颜色',
+          manySize: '多尺寸',
+          other1: '自定义1',
+          other2: '自定义2',
+          other3: '自定义3',
+          manyColorList: [],
+          manySizeList: [],
+          other1List: [],
+          other2List: [],
+          other3List: [],
+        },
         model: {},
         isReadOnly: false,
         labelCol: {
@@ -202,15 +288,18 @@
           dataSource: [],
           columns: [
             {
-              title: '条码', key: 'barCode', width: '30%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}',
+              title: '条码', key: 'barCode', width: '20%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}',
               validateRules: [{ required: true, message: '${title}不能为空' },
                 { pattern: /^[1-9]\d*$/, message: '请输入零以上的正整数' },
                 { pattern: /^\d{4,13}$/, message: '4到13位数字' },
                 { handler: this.validateBarCode}]
             },
             {
-              title: '单位', key: 'commodityUnit', width: '12%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}',
+              title: '单位', key: 'commodityUnit', width: '10%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}',
               validateRules: [{ required: true, message: '${title}不能为空' }]
+            },
+            {
+              title: '多属性', key: 'sku', width: '12%', type: FormTypes.input, defaultValue: '', readonly:true, placeholder: '点击生成条码赋值'
             },
             {
               title: '采购价', key: 'purchaseDecimal', width: '12%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}'
@@ -275,6 +364,8 @@
         ])
       },
       add () {
+        //隐藏多属性
+        this.meTable.columns[2].type = FormTypes.hidden
         // 默认新增一条数据
         this.getAllTable().then(editableTables => {
           editableTables[0].add()
@@ -285,6 +376,8 @@
         this.form.resetFields();
         this.model = Object.assign({}, record);
         this.activeKey = '1'
+        this.skuSwitch = false
+        this.barCodeSwitch = false
         this.visible = true;
         if(JSON.stringify(record) === '{}') {
           this.fileList = []
@@ -297,6 +390,7 @@
           this.form.setFieldsValue(pick(this.model, 'name', 'standard', 'unit', 'unitId', 'model', 'color',
             'categoryId','enableSerialNumber','safetyStock','remark','mfrs','otherField1','otherField2','otherField3'))
         });
+        this.initMaterialAttribute()
         // 加载子表数据
         if (this.model.id) {
           // 判断是否是多单位
@@ -320,6 +414,11 @@
       requestMeTableData(url, params, tab) {
         tab.loading = true
         getAction(url, params).then(res => {
+          for (let i = 0; i < res.data.rows.length; i++) {
+            if(res.data.rows[i].sku) {
+              this.meTable.columns[2].type = FormTypes.input
+            }
+          }
           tab.dataSource = res.data.rows || []
         }).finally(() => {
           tab.loading = false
@@ -491,7 +590,7 @@
       validateBarCode(type, value, row, column, callback, target) {
         let params = {
           barCode: value,
-          id: row.id.length == 20?0: row.id
+          id: row.id.length >= 20?0: row.id
         };
         checkMaterialBarCode(params).then((res)=>{
           if(res && res.code===200) {
@@ -529,6 +628,124 @@
             that.unitList = res.data.rows;
           }
         })
+      },
+      onSkuChange(checked) {
+        this.skuSwitch = checked
+        if(checked) {
+          this.meTable.columns[2].type = FormTypes.input
+        } else {
+          this.meTable.columns[2].type = FormTypes.hidden
+        }
+      },
+      onBarCodeChange(checked) {
+        let unit = this.form.getFieldValue('unit')
+        if(unit) {
+          if(checked){
+            //计算多属性已经选择了几个
+            let count = this.getNumByField('manyColor') + this.getNumByField('manySize')
+              + this.getNumByField('other1') + this.getNumByField('other2') + this.getNumByField('other3')
+            if(count === 2) {
+              let skuArr = []
+              if(this.getNumByField('manyColor')) {
+                skuArr.push(this.form.getFieldValue('manyColor'))
+              }
+              if(this.getNumByField('manySize')) {
+                skuArr.push(this.form.getFieldValue('manySize'))
+              }
+              if(this.getNumByField('other1')) {
+                skuArr.push(this.form.getFieldValue('other1'))
+              }
+              if(this.getNumByField('other2')) {
+                skuArr.push(this.form.getFieldValue('other2'))
+              }
+              if(this.getNumByField('other3')) {
+                skuArr.push(this.form.getFieldValue('other3'))
+              }
+              let skuArrOne = skuArr[0]
+              let skuArrTwo = skuArr[1]
+              let barCodeSku = []
+              for (let i = 0; i < skuArrOne.length; i++) {
+                for (let j = 0; j < skuArrTwo.length; j++) {
+                  barCodeSku.push(skuArrOne[i] + ',' + skuArrTwo[j])
+                }
+              }
+              let meTableData = []
+              getMaxBarCode({}).then((res)=>{
+                if(res && res.code===200) {
+                  let maxBarCode = res.data.barCode-0
+                  for (let i = 0; i < barCodeSku.length; i++) {
+                    let currentBarCode = maxBarCode + i + 1
+                    meTableData.push({barCode: currentBarCode, commodityUnit: unit, sku: barCodeSku[i]})
+                  }
+                  this.meTable.dataSource = meTableData
+                }
+              })
+            } else {
+              this.$message.warning('请选择两个属性！');
+              this.barCodeSwitch = false;
+            }
+          } else {
+            this.meTable.dataSource = []
+          }
+        } else {
+          this.$message.warning('请填写单位，注意不要勾选多单位！');
+          this.barCodeSwitch = false;
+        }
+      },
+      getNumByField(field) {
+        let num = 0
+        if(this.form.getFieldValue(field)) {
+          if(this.form.getFieldValue(field).length>0) {
+            num = 1
+          }
+        }
+        return num
+      },
+      batchSet(type) {
+        this.$refs.modalForm.add(type);
+        this.$refs.modalForm.disableSubmit = false;
+      },
+      batchSetPricemodalFormOk(price, batchType) {
+        let arr = this.meTable.dataSource
+        if(arr.length === 0) {
+          this.$message.warning('请先录入条码、单位等信息！');
+        } else {
+          let meTableData = []
+          for (let i = 0; i < arr.length; i++) {
+            let meInfo = {barCode: arr[i].barCode, commodityUnit: arr[i].commodityUnit, sku: arr[i].sku,
+              purchaseDecimal: arr[i].purchaseDecimal, commodityDecimal: arr[i].commodityDecimal,
+              wholesaleDecimal: arr[i].wholesaleDecimal, lowDecimal: arr[i].lowDecimal}
+            if(batchType === 'purchase') {
+              meInfo.purchaseDecimal = price-0
+            } else if(batchType === 'commodity') {
+              meInfo.commodityDecimal = price-0
+            } else if(batchType === 'wholesale') {
+              meInfo.wholesaleDecimal = price-0
+            } else if(batchType === 'low') {
+              meInfo.lowDecimal = price-0
+            }
+            meTableData.push(meInfo)
+          }
+          this.meTable.dataSource = meTableData
+        }
+      },
+      initMaterialAttribute() {
+        getAllMaterialAttribute({}).then((res)=>{
+          if(res && res.code===200) {
+            if(res.data) {
+              this.sku.manyColor = res.data.manyColorName;
+              this.sku.manySize = res.data.manySizeName;
+              this.sku.other1 = res.data.other1Name;
+              this.sku.other2 = res.data.other2Name;
+              this.sku.other3 = res.data.other3Name;
+              this.sku.manyColorList = res.data.manyColorValue;
+              this.sku.manySizeList = res.data.manySizeValue;
+              this.sku.other1List = res.data.other1Value;
+              this.sku.other2List = res.data.other2Value;
+              this.sku.other3List = res.data.other3Value;
+            }
+          }
+        });
       },
       loadParseMaterialProperty() {
         let mpList = Vue.ls.get('materialPropertyList')

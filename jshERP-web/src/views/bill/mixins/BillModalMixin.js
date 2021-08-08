@@ -37,12 +37,6 @@ export const BillModalMixin = {
     };
   },
   created () {
-    this.initSupplier()
-    this.initCustomer()
-    this.initRetail()
-    this.initSalesman()
-    this.initDepot()
-    this.initAccount()
   },
   computed: {
     readOnly: function() {
@@ -112,13 +106,14 @@ export const BillModalMixin = {
       getAction('/depot/findDepotByCurrentUser').then((res) => {
         if(res.code === 200){
           let arr = res.data
-          for(let i=0; i<arr.length; i++) {
-            let depotInfo = {};
-            depotInfo.value = arr[i].id+'' //注意-此处value必须为字符串格式
-            depotInfo.text = arr[i].depotName
-            depotInfo.title = arr[i].depotName
-            for(let item of that.materialTable.columns){
-              if(item.key == 'depotId' || item.key == 'anotherDepotId') {
+          for(let item of that.materialTable.columns){
+            if(item.key == 'depotId' || item.key == 'anotherDepotId') {
+              item.options = []
+              for(let i=0; i<arr.length; i++) {
+                let depotInfo = {};
+                depotInfo.value = arr[i].id + '' //注意-此处value必须为字符串格式
+                depotInfo.text = arr[i].depotName
+                depotInfo.title = arr[i].depotName
                 item.options.push(depotInfo)
               }
             }
@@ -192,27 +187,43 @@ export const BillModalMixin = {
           }
           getMaterialByBarCode(param).then((res) => {
             if (res && res.code === 200) {
-              target.setValues([{
-                rowKey: row.id,
-                values: {
-                  barCode: res.data.mBarCode,
-                  name: res.data.name,
-                  standard: res.data.standard,
-                  model: res.data.model,
-                  materialOther: res.data.materialOther,
-                  unit: res.data.commodityUnit,
-                  operNumber: 1,
-                  unitPrice: res.data.billPrice,
-                  taxUnitPrice: res.data.billPrice,
-                  allPrice: res.data.billPrice,
-                  taxRate: 0,
-                  taxMoney: 0,
-                  taxLastMoney: res.data.billPrice,
+              let mList = res.data
+              if (value.indexOf(',') > -1) {
+                //多个条码
+                this.$refs.materialDataTable.getValues((error, values) => {
+                  values.pop()  //移除最后一行数据
+                  let mArr = values
+                  for (let i = 0; i < mList.length; i++) {
+                    let mInfo = mList[i]
+                    let mObj = this.parseInfoToObj(mInfo)
+                    mObj.depotId = mInfo.depotId
+                    mObj.stock = mInfo.stock
+                    mArr.push(mObj)
+                  }
+                  let taxLastMoneyTotal = 0
+                  for (let j = 0; j < mArr.length; j++) {
+                    taxLastMoneyTotal += mArr[j].taxLastMoney-0
+                  }
+                  this.materialTable.dataSource = mArr
+                  target.statisticsColumns.taxLastMoney = taxLastMoneyTotal
+                  that.autoChangePrice(target)
+                })
+              } else {
+                //单个条码
+                let mArr = []
+                for (let i = 0; i < mList.length; i++) {
+                  let mInfo = mList[i]
+                  let mObj = {
+                    rowKey: row.id,
+                    values: this.parseInfoToObj(mInfo)
+                  }
+                  mArr.push(mObj)
                 }
-              }]);
-              that.getStockByDepotBarCode(row, target)
-              target.recalcAllStatisticsColumns()
-              that.autoChangePrice(target)
+                target.setValues(mArr);
+                that.getStockByDepotBarCode(row, target)
+                target.recalcAllStatisticsColumns()
+                that.autoChangePrice(target)
+              }
             }
           });
           break;
@@ -276,6 +287,25 @@ export const BillModalMixin = {
           target.recalcAllStatisticsColumns()
           that.autoChangePrice(target)
           break;
+      }
+    },
+    //转为商品对象
+    parseInfoToObj(mInfo) {
+      return {
+        barCode: mInfo.mBarCode,
+        name: mInfo.name,
+        standard: mInfo.standard,
+        model: mInfo.model,
+        materialOther: mInfo.materialOther,
+        unit: mInfo.commodityUnit,
+        sku: mInfo.sku,
+        operNumber: 1,
+        unitPrice: mInfo.billPrice,
+        taxUnitPrice: mInfo.billPrice,
+        allPrice: mInfo.billPrice,
+        taxRate: 0,
+        taxMoney: 0,
+        taxLastMoney: mInfo.billPrice
       }
     },
     //删除一行或多行的时候触发

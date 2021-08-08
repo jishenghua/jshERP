@@ -6,17 +6,18 @@
         <div class="table-page-search-wrapper">
           <a-form layout="inline" @keyup.enter.native="searchQuery">
             <a-row :gutter="24">
-              <a-col :md="4" :sm="24">
-                <a-form-item label="月份">
-                  <a-month-picker placeholder="请选择月份" :default-value="moment(currentMonth, monthFormat)" :format="monthFormat" @change="onChange"/>
+              <a-col :md="6" :sm="24">
+                <a-form-item label="月份" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-month-picker placeholder="请选择月份" :default-value="moment(currentMonth, monthFormat)"
+                         style="width:100%" :format="monthFormat" @change="onChange"/>
                 </a-form-item>
               </a-col>
-              <a-col :md="5" :sm="24">
-                <a-form-item label="商品信息">
-                  <a-input placeholder="名称、规格、型号" v-model="queryParam.materialParam"></a-input>
+              <a-col :md="6" :sm="24">
+                <a-form-item label="商品信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-input placeholder="条码、名称、规格、型号" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
-              <a-col :md="4" :sm="24">
+              <a-col :md="6" :sm="24">
                 <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                   <a-button type="primary" @click="searchQuery">查询</a-button>
                   <a-button style="margin-left: 8px" v-print="'#reportPrint'" type="primary" icon="printer">打印</a-button>
@@ -61,6 +62,13 @@
         // 查询条件
         currentMonth: moment().format('YYYY-MM'),
         monthFormat: 'YYYY-MM',
+        labelCol: {
+          span: 5
+        },
+        wrapperCol: {
+          span: 18,
+          offset: 1
+        },
         queryParam: {
           monthTime: moment().format('YYYY-MM'),
           materialParam:'',
@@ -79,6 +87,7 @@
               return parseInt(index)+1;
             }
           },
+          {title: '条码', dataIndex: 'barCode', width: 160},
           {title: '名称', dataIndex: 'materialName', width: 160},
           {title: '规格', dataIndex: 'materialStandard', width: 80},
           {title: '型号', dataIndex: 'materialModel', width: 80},
@@ -89,14 +98,6 @@
           {title: '退货数量', dataIndex: 'iutSum', width: 80},
           {title: '退货金额', dataIndex: 'outSumPrice', width: 80}
         ],
-        labelCol: {
-          xs: { span: 1 },
-          sm: { span: 2 },
-        },
-        wrapperCol: {
-          xs: { span: 10 },
-          sm: { span: 16 },
-        },
         url: {
           list: "/depotItem/buyIn",
         }

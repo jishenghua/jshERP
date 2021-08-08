@@ -7,7 +7,7 @@
           <a-form layout="inline" @keyup.enter.native="searchQuery">
             <a-row :gutter="24">
               <a-col :md="4" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="供应商">
+                <a-form-item label="供应商" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-select placeholder="选择供应商" v-model="queryParam.organId"
                     :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
                     <a-select-option v-for="(item,index) in supList" :key="index" :value="item.id">
@@ -17,7 +17,7 @@
                 </a-form-item>
               </a-col>
               <a-col :md="4" :sm="24">
-                <a-form-item label="仓库">
+                <a-form-item label="仓库" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-select
                     showSearch optionFilterProp="children"
                     style="width: 100%"
@@ -29,9 +29,9 @@
                   </a-select>
                 </a-form-item>
               </a-col>
-              <a-col :md="5" :sm="24">
-                <a-form-item label="商品信息">
-                  <a-input placeholder="名称、规格、型号" v-model="queryParam.materialParam"></a-input>
+              <a-col :md="4" :sm="24">
+                <a-form-item label="商品信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-input placeholder="条码/名称/规格/型号" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="5" :sm="24">
@@ -96,6 +96,13 @@
     },
     data () {
       return {
+        labelCol: {
+          span: 5
+        },
+        wrapperCol: {
+          span: 18,
+          offset: 1
+        },
         // 查询条件
         queryParam: {
           organId: '',
@@ -124,27 +131,22 @@
             }
           },
           {
-            title: '单据编号', dataIndex: 'number', width: 140,
+            title: '单据编号', dataIndex: 'number', width: 100,
             scopedSlots: { customRender: 'numberCustomRender' },
           },
+          {title: '条码', dataIndex: 'barCode', width: 100},
           {title: '名称', dataIndex: 'mname', width: 120},
-          {title: '规格', dataIndex: 'standard', width: 100},
-          {title: '型号', dataIndex: 'model', width: 100},
+          {title: '规格', dataIndex: 'standard', width: 50},
+          {title: '型号', dataIndex: 'model', width: 50},
+          {title: '单位', dataIndex: 'mUnit', width: 50},
+          {title: '数量', dataIndex: 'operNumber', width: 60},
           {title: '单价', dataIndex: 'unitPrice', width: 60},
-          {title: '入库数量', dataIndex: 'operNumber', width: 80},
           {title: '金额', dataIndex: 'allPrice', width: 60},
-          {title: '供应商', dataIndex: 'sname', width: 200},
-          {title: '仓库', dataIndex: 'dname', width: 120},
-          {title: '入库日期', dataIndex: 'operTime', width: 120}
+          {title: '供应商', dataIndex: 'sname', width: 80},
+          {title: '仓库', dataIndex: 'dname', width: 80},
+          {title: '入库日期', dataIndex: 'operTime', width: 80},
+          {title: '备注', dataIndex: 'newRemark', width: 100}
         ],
-        labelCol: {
-          xs: { span: 1 },
-          sm: { span: 2 },
-        },
-        wrapperCol: {
-          xs: { span: 10 },
-          sm: { span: 16 },
-        },
         url: {
           list: "/depotHead/findInDetail",
         }

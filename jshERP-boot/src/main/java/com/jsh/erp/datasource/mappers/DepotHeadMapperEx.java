@@ -27,6 +27,9 @@ public interface DepotHeadMapperEx {
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("materialParam") String materialParam,
+            @Param("organId") Long organId,
+            @Param("creator") Long creator,
+            @Param("depotId") Long depotId,
             @Param("depotArray") String[] depotArray,
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
@@ -40,6 +43,9 @@ public interface DepotHeadMapperEx {
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("materialParam") String materialParam,
+            @Param("organId") Long organId,
+            @Param("creator") Long creator,
+            @Param("depotId") Long depotId,
             @Param("depotArray") String[] depotArray);
 
     String findMaterialsListByHeaderId(
@@ -79,6 +85,26 @@ public interface DepotHeadMapperEx {
             @Param("type") String type,
             @Param("materialParam") String materialParam,
             @Param("depotId") Integer depotId,
+            @Param("oId") Integer oId);
+
+    List<DepotHeadVo4InDetail> findAllocationDetail(
+            @Param("beginTime") String beginTime,
+            @Param("endTime") String endTime,
+            @Param("subType") String subType,
+            @Param("materialParam") String materialParam,
+            @Param("depotId") Integer depotId,
+            @Param("depotIdF") Integer depotIdF,
+            @Param("oId") Integer oId,
+            @Param("offset") Integer offset,
+            @Param("rows") Integer rows);
+
+    int findAllocationDetailCount(
+            @Param("beginTime") String beginTime,
+            @Param("endTime") String endTime,
+            @Param("subType") String subType,
+            @Param("materialParam") String materialParam,
+            @Param("depotId") Integer depotId,
+            @Param("depotIdF") Integer depotIdF,
             @Param("oId") Integer oId);
 
     List<DepotHeadVo4StatementAccount> findStatementAccount(

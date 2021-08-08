@@ -7,6 +7,8 @@ public class DepotHeadVo4InOutMCount {
 
     private Long MaterialId;
 
+    private String barCode;
+
     private String mName;
 
     private String Model;
@@ -14,6 +16,8 @@ public class DepotHeadVo4InOutMCount {
     private String standard;
 
     private String categoryName;
+
+    private String materialUnit;
 
     private BigDecimal numSum;
 
@@ -27,6 +31,14 @@ public class DepotHeadVo4InOutMCount {
 
     public void setMaterialId(Long materialId) {
         MaterialId = materialId;
+    }
+
+    public String getBarCode() {
+        return barCode;
+    }
+
+    public void setBarCode(String barCode) {
+        this.barCode = barCode;
     }
 
     public String getmName() {
@@ -59,6 +71,14 @@ public class DepotHeadVo4InOutMCount {
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
+    }
+
+    public String getMaterialUnit() {
+        return materialUnit;
+    }
+
+    public void setMaterialUnit(String materialUnit) {
+        this.materialUnit = materialUnit;
     }
 
     public BigDecimal getNumSum() {

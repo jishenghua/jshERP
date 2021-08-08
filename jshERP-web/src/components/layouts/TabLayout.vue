@@ -121,6 +121,8 @@
           let oldIndex = this.linkList.indexOf(newRoute.fullPath)
           let oldPositionRoute = this.pageList[oldIndex]
           this.pageList.splice(oldIndex, 1, Object.assign({},newRoute,{meta:oldPositionRoute.meta}))
+          //每次切换都刷新
+          this.routeReload()
         }
       },
       'activePage': function(key) {
@@ -194,10 +196,12 @@
           this.$message.warning('这是最后一页，不能再关闭了啦')
           return
         }
-        console.log("this.pageList ",this.pageList );
+        console.log("this.pageList ",this.pageList);
         this.pageList = this.pageList.filter(item => item.fullPath !== key)
+        console.log("this.pageList ",this.pageList);
         let index = this.linkList.indexOf(key)
         this.linkList = this.linkList.filter(item => item !== key)
+        console.log("this.linkList ",this.linkList);
         index = index >= this.linkList.length ? this.linkList.length - 1 : index
         this.activePage = this.linkList[index]
       },

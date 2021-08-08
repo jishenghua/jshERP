@@ -49,7 +49,6 @@ public class OrganizationController {
             if (null != dataList) {
                 for (Organization org : dataList) {
                     outer.put("id", org.getId());
-                    outer.put("orgFullName", org.getOrgFullName());
                     outer.put("orgAbr", org.getOrgAbr());
                     outer.put("parentId", org.getParentId());
                     List<Organization> dataParentList = organizationService.findByParentId(org.getParentId());

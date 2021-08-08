@@ -27,8 +27,8 @@
               </a-form-item>
             </a-col>
             <a-col :lg="6" :md="12" :sm="24">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="经手人">
-                <a-select placeholder="选择经手人" v-decorator="[ 'handsPersonId', validatorRules.handsPersonId ]"
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="财务人员">
+                <a-select placeholder="选择财务人员" v-decorator="[ 'handsPersonId', validatorRules.handsPersonId ]"
                   :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
                   <a-select-option v-for="(item,index) in personList" :key="index" :value="item.id">
                     {{ item.name }}
@@ -81,7 +81,8 @@
           <a-row class="form-row" :gutter="24">
             <a-col :lg="6" :md="12" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款账户">
-                <a-select placeholder="选择收款账户" v-decorator="[ 'accountId', validatorRules.accountId ]" :dropdownMatchSelectWidth="false">
+                <a-select placeholder="选择收款账户" v-decorator="[ 'accountId', validatorRules.accountId ]"
+                  :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
                   <a-select-option v-for="(item,index) in accountList" :key="index" :value="item.id">
                     {{ item.name }}
                   </a-select-option>
@@ -172,7 +173,7 @@
             rules: [{ required: true, message: '请选择客户!' }]
           },
           handsPersonId:{
-            rules: [{ required: true, message: '请选择经手人!' }]
+            rules: [{ required: true, message: '请选择财务人员!' }]
           },
           billTime:{
             rules: [{ required: true, message: '请选择单据日期!' }]
@@ -192,7 +193,6 @@
       }
     },
     created () {
-      this.initAccount()
     },
     methods: {
       //调用完edit()方法之后会自动调用此方法
@@ -214,6 +214,9 @@
           let url = this.readOnly ? this.url.detailList : this.url.detailList;
           this.requestSubTableData(url, params, this.accountTable);
         }
+        this.initCustomer()
+        this.initPerson()
+        this.initAccount()
       },
       //提交单据时整理成formData
       classifyIntoFormData(allValues) {

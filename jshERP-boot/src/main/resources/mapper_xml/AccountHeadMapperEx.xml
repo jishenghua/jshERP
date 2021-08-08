@@ -30,6 +30,15 @@
         <if test="endTime != null">
             and ah.bill_time &lt;= #{endTime}
         </if>
+        <if test="organId != null">
+            and ah.organ_id=#{organId}
+        </if>
+        <if test="handsPersonId != null">
+            and ah.hands_person_id=#{handsPersonId}
+        </if>
+        <if test="creator != null">
+            and ah.creator=#{creator}
+        </if>
         <if test="creatorArray != null">
             and ah.creator in (
             <foreach collection="creatorArray" item="creator" separator=",">
@@ -62,6 +71,15 @@
         </if>
         <if test="endTime != null">
             and bill_time &lt;= #{endTime}
+        </if>
+        <if test="organId != null">
+            and organ_id=#{organId}
+        </if>
+        <if test="handsPersonId != null">
+            and hands_person_id=#{handsPersonId}
+        </if>
+        <if test="creator != null">
+            and creator=#{creator}
         </if>
         <if test="creatorArray != null">
             and creator in (

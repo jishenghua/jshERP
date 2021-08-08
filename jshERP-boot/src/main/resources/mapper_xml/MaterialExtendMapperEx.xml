@@ -6,7 +6,7 @@
     </resultMap>
 
     <select id="getDetailList" parameterType="com.jsh.erp.datasource.entities.MaterialExtendExample" resultMap="ResultMapList">
-        select DISTINCT d.Id,d.bar_code,d.commodity_unit,d.commodity_decimal,d.purchase_decimal,d.wholesale_decimal,d.low_decimal
+        select DISTINCT d.Id,d.bar_code,d.commodity_unit,d.sku,d.commodity_decimal,d.purchase_decimal,d.wholesale_decimal,d.low_decimal
         from jsh_material_extend d
         where d.material_id = #{materialId}
         and ifnull(d.delete_Flag,'0') !='1'

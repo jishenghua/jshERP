@@ -73,8 +73,7 @@ public class TenantConfig {
             public boolean doFilter(MetaObject metaObject) {
                 MappedStatement ms = SqlParserHelper.getMappedStatement(metaObject);
                 // 过滤自定义查询此时无租户信息约束出现
-                if ("com.jsh.erp.datasource.mappers.UserMapperEx.getUserListByUserNameOrLoginName".equals(ms.getId())||
-                        "com.jsh.erp.datasource.mappers.DepotItemMapperEx.getStockByParam".equals(ms.getId())) {
+                if ("com.jsh.erp.datasource.mappers.UserMapperEx.getUserListByUserNameOrLoginName".equals(ms.getId())) {
                     return true;
                 }
                 return false;

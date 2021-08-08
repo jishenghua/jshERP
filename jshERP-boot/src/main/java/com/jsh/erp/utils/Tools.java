@@ -54,8 +54,12 @@ public class Tools {
      *
      * @return
      */
-    public static String getCurrentMonth(Date date) {
-        return new SimpleDateFormat("yyyy-MM-dd").format(date);
+    public static String parseDateToStr(Date date) {
+        if(date!=null) {
+            return new SimpleDateFormat("yyyy-MM-dd").format(date);
+        } else {
+            return "";
+        }
     }
 
     /**

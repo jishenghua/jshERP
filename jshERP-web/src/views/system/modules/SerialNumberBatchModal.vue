@@ -124,7 +124,7 @@
         }
         getMaterialByBarCode(param).then((res) => {
           if (res && res.code === 200) {
-            this.form.setFieldsValue({'materialName': res.data.name})
+            this.form.setFieldsValue({'materialName': res.data[0].name})
           }
         })
       }

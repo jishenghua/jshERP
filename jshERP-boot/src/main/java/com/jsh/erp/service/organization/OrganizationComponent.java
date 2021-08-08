@@ -63,6 +63,6 @@ public class OrganizationComponent implements ICommonQuery {
 
     @Override
     public int checkIsNameExist(Long id, String name)throws Exception {
-        return 0;
+        return organizationService.checkIsNameExist(id, name);
     }
 }

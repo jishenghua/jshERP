@@ -8,6 +8,8 @@ public class DepotHeadVo4InDetail {
 
     private String Number;
 
+    private String barCode;
+
     private String MName;
 
     private String Model;
@@ -15,6 +17,10 @@ public class DepotHeadVo4InDetail {
     private String standard;
 
     private BigDecimal UnitPrice;
+
+    private String mUnit;
+
+    private String newRemark;
 
     private BigDecimal OperNumber;
 
@@ -36,6 +42,14 @@ public class DepotHeadVo4InDetail {
 
     public void setNumber(String number) {
         Number = number;
+    }
+
+    public String getBarCode() {
+        return barCode;
+    }
+
+    public void setBarCode(String barCode) {
+        this.barCode = barCode;
     }
 
     public String getMName() {
@@ -68,6 +82,22 @@ public class DepotHeadVo4InDetail {
 
     public void setUnitPrice(BigDecimal unitPrice) {
         UnitPrice = unitPrice;
+    }
+
+    public String getmUnit() {
+        return mUnit;
+    }
+
+    public void setmUnit(String mUnit) {
+        this.mUnit = mUnit;
+    }
+
+    public String getNewRemark() {
+        return newRemark;
+    }
+
+    public void setNewRemark(String newRemark) {
+        this.newRemark = newRemark;
     }
 
     public BigDecimal getOperNumber() {

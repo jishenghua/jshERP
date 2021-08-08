@@ -20,8 +20,6 @@ public class DepotHead {
 
     private Long organId;
 
-    private Long handsPersonId;
-
     private Long creator;
 
     private Long accountId;
@@ -51,12 +49,6 @@ public class DepotHead {
     private BigDecimal discountLastMoney;
 
     private BigDecimal otherMoney;
-
-    private String otherMoneyList;
-
-    private String otherMoneyItem;
-
-    private Integer accountDay;
 
     private String status;
 
@@ -128,14 +120,6 @@ public class DepotHead {
 
     public void setOrganId(Long organId) {
         this.organId = organId;
-    }
-
-    public Long getHandsPersonId() {
-        return handsPersonId;
-    }
-
-    public void setHandsPersonId(Long handsPersonId) {
-        this.handsPersonId = handsPersonId;
     }
 
     public Long getCreator() {
@@ -256,30 +240,6 @@ public class DepotHead {
 
     public void setOtherMoney(BigDecimal otherMoney) {
         this.otherMoney = otherMoney;
-    }
-
-    public String getOtherMoneyList() {
-        return otherMoneyList;
-    }
-
-    public void setOtherMoneyList(String otherMoneyList) {
-        this.otherMoneyList = otherMoneyList == null ? null : otherMoneyList.trim();
-    }
-
-    public String getOtherMoneyItem() {
-        return otherMoneyItem;
-    }
-
-    public void setOtherMoneyItem(String otherMoneyItem) {
-        this.otherMoneyItem = otherMoneyItem == null ? null : otherMoneyItem.trim();
-    }
-
-    public Integer getAccountDay() {
-        return accountDay;
-    }
-
-    public void setAccountDay(Integer accountDay) {
-        this.accountDay = accountDay;
     }
 
     public String getStatus() {

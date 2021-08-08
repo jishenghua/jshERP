@@ -47,6 +47,7 @@ public class MaterialExtendController {
                     item.put("id", md.getId());
                     item.put("barCode", md.getBarCode());
                     item.put("commodityUnit", md.getCommodityUnit());
+                    item.put("sku", md.getSku());
                     item.put("purchaseDecimal", md.getPurchaseDecimal());
                     item.put("commodityDecimal", md.getCommodityDecimal());
                     item.put("wholesaleDecimal", md.getWholesaleDecimal());

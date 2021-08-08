@@ -7,8 +7,8 @@
           <!-- 搜索区域 -->
           <a-form layout="inline" @keyup.enter.native="searchQuery">
             <a-row :gutter="24">
-              <a-col :md="6" :sm="8">
-                <a-form-item label="名称" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
+              <a-col :md="6" :sm="24">
+                <a-form-item label="名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-input placeholder="请输入名称查询" v-model="queryParam.name"></a-input>
                 </a-form-item>
               </a-col>
@@ -91,6 +91,13 @@
     },
     data () {
       return {
+        labelCol: {
+          span: 5
+        },
+        wrapperCol: {
+          span: 18,
+          offset: 1
+        },
         // 查询条件
         queryParam: {name:''},
         // 表头

@@ -120,32 +120,31 @@ public class MaterialService {
                 idList = getListByParentId(Long.parseLong(categoryId));
             }
             list= materialMapperEx.selectByConditionMaterial(barCode, name, standard, model, idList, mpList, offset, rows);
+            if (null != list) {
+                for (MaterialVo4Unit m : list) {
+                    //扩展信息
+                    String materialOther = "";
+                    for (int i = 0; i < mpArr.length; i++) {
+                        if (mpArr[i].equals("制造商")) {
+                            materialOther = materialOther + ((m.getMfrs() == null || m.getMfrs().equals("")) ? "" : "(" + m.getMfrs() + ")");
+                        }
+                        if (mpArr[i].equals("自定义1")) {
+                            materialOther = materialOther + ((m.getOtherField1() == null || m.getOtherField1().equals("")) ? "" : "(" + m.getOtherField1() + ")");
+                        }
+                        if (mpArr[i].equals("自定义2")) {
+                            materialOther = materialOther + ((m.getOtherField2() == null || m.getOtherField2().equals("")) ? "" : "(" + m.getOtherField2() + ")");
+                        }
+                        if (mpArr[i].equals("自定义3")) {
+                            materialOther = materialOther + ((m.getOtherField3() == null || m.getOtherField3().equals("")) ? "" : "(" + m.getOtherField3() + ")");
+                        }
+                    }
+                    m.setMaterialOther(materialOther);
+                    m.setStock(depotItemService.getStockByParam(null,m.getId(),null,null));
+                    resList.add(m);
+                }
+            }
         }catch(Exception e){
             JshException.readFail(logger, e);
-        }
-        if (null != list) {
-            for (MaterialVo4Unit m : list) {
-                //扩展信息
-                String materialOther = "";
-                for (int i = 0; i < mpArr.length; i++) {
-                    if (mpArr[i].equals("制造商")) {
-                        materialOther = materialOther + ((m.getMfrs() == null || m.getMfrs().equals("")) ? "" : "(" + m.getMfrs() + ")");
-                    }
-                    if (mpArr[i].equals("自定义1")) {
-                        materialOther = materialOther + ((m.getOtherField1() == null || m.getOtherField1().equals("")) ? "" : "(" + m.getOtherField1() + ")");
-                    }
-                    if (mpArr[i].equals("自定义2")) {
-                        materialOther = materialOther + ((m.getOtherField2() == null || m.getOtherField2().equals("")) ? "" : "(" + m.getOtherField2() + ")");
-                    }
-                    if (mpArr[i].equals("自定义3")) {
-                        materialOther = materialOther + ((m.getOtherField3() == null || m.getOtherField3().equals("")) ? "" : "(" + m.getOtherField3() + ")");
-                    }
-                }
-                m.setMaterialOther(materialOther);
-                Long tenantId = m.getTenantId();
-                m.setStock(depotItemService.getStockByParam(null,m.getId(),null,null,tenantId));
-                resList.add(m);
-            }
         }
         return resList;
     }
@@ -228,8 +227,7 @@ public class MaterialService {
                             insertInitialStockByMaterialAndDepot(depotId, material.getId(), parseBigDecimalEx(number));
                         }
                         //更新当前库存
-                        Long tenantId = redisService.getTenantId(request);
-                        depotItemService.updateCurrentStockFun(material.getId(), depotId, tenantId);
+                        depotItemService.updateCurrentStockFun(material.getId(), depotId);
                     }
                 }
             }
@@ -454,8 +452,8 @@ public class MaterialService {
             String categoryName = ExcelUtils.getContent(src, i, 4); //类别
             String safetyStock = ExcelUtils.getContent(src, i, 5); //安全存量
             String unit = ExcelUtils.getContent(src, i, 6); //基础单位
-            //校验名称、型号、单位是否为空
-            if(StringUtil.isNotEmpty(name) && StringUtil.isNotEmpty(model) && StringUtil.isNotEmpty(unit)) {
+            //校验名称、单位是否为空
+            if(StringUtil.isNotEmpty(name) && StringUtil.isNotEmpty(unit)) {
                 MaterialWithInitStock m = new MaterialWithInitStock();
                 m.setName(name);
                 m.setStandard(standard);
@@ -594,8 +592,7 @@ public class MaterialService {
                         depotId = depot.getId();
                         insertInitialStockByMaterialAndDepot(depotId, mId, stock);
                         //更新当前库存
-                        Long tenantId = redisService.getTenantId(request);
-                        depotItemService.updateCurrentStockFun(mId, depotId, tenantId);
+                        depotItemService.updateCurrentStockFun(mId, depotId);
                     }
                 }
             }
@@ -794,7 +791,11 @@ public class MaterialService {
 
     public String getMaxBarCode() {
         String maxBarCodeOld = materialMapperEx.getMaxBarCode();
-        return Long.parseLong(maxBarCodeOld)+"";
+        if(StringUtil.isNotEmpty(maxBarCodeOld)) {
+            return Long.parseLong(maxBarCodeOld)+"";
+        } else {
+            return "1000";
+        }
     }
 
     public List<String> getMaterialNameList() {
@@ -802,7 +803,8 @@ public class MaterialService {
     }
 
     public List<MaterialVo4Unit> getMaterialByBarCode(String barCode) {
-        return materialMapperEx.getMaterialByBarCode(barCode);
+        String [] barCodeArray=barCode.split(",");
+        return materialMapperEx.getMaterialByBarCode(barCodeArray);
     }
 
     public List<MaterialVo4Unit> getListWithStock(Long depotId, List<Long> idList, String materialParam, Integer offset, Integer rows) {

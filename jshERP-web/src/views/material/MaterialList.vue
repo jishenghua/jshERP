@@ -7,31 +7,31 @@
           <!-- 搜索区域 -->
           <a-form layout="inline" @keyup.enter.native="searchQuery">
             <a-row :gutter="24">
-              <a-col :md="6" :sm="8">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="类别">
+              <a-col :md="6" :sm="24">
+                <a-form-item label="类别" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-tree-select style="width:100%" :dropdownStyle="{maxHeight:'200px',overflow:'auto'}" allow-clear
                    :treeData="categoryTree" v-model="queryParam.categoryId" placeholder="请选择类别">
                   </a-tree-select>
                 </a-form-item>
               </a-col>
-              <a-col :md="6" :sm="8">
-                <a-form-item label="条码" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
+              <a-col :md="6" :sm="24">
+                <a-form-item label="条码" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-input placeholder="请输入条码查询" v-model="queryParam.barCode"></a-input>
                 </a-form-item>
               </a-col>
-              <a-col :md="6" :sm="8">
-                <a-form-item label="名称" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
+              <a-col :md="6" :sm="24">
+                <a-form-item label="名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-input placeholder="请输入名称查询" v-model="queryParam.name"></a-input>
                 </a-form-item>
               </a-col>
               <template v-if="toggleSearchStatus">
-                <a-col :md="6" :sm="8">
-                  <a-form-item label="规格" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="规格" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-input placeholder="请输入规格查询" v-model="queryParam.standard"></a-input>
                   </a-form-item>
                 </a-col>
-                <a-col :md="6" :sm="8">
-                  <a-form-item label="型号" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="型号" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-input placeholder="请输入型号查询" v-model="queryParam.model"></a-input>
                   </a-form-item>
                 </a-col>
@@ -131,12 +131,11 @@
         mPropertyListShort: '',
         model: {},
         labelCol: {
-          xs: { span: 24 },
-          sm: { span: 5 },
+          span: 5
         },
         wrapperCol: {
-          xs: { span: 24 },
-          sm: { span: 16 },
+          span: 18,
+          offset: 1
         },
         // 查询条件
         queryParam: {
@@ -169,7 +168,8 @@
           {
             title: '单位', dataIndex: 'unit', width: 100, customRender: function (text, record, index) {
               if(text) {
-                return text;
+                let showSku = record.sku?'[sku]':''
+                return text + showSku;
               } else {
                 return record.unitName;
               }

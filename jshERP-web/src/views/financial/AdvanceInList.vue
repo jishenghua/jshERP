@@ -7,15 +7,15 @@
           <!-- 搜索区域 -->
           <a-form layout="inline" @keyup.enter.native="searchQuery">
             <a-row :gutter="24">
-              <a-col :md="6" :sm="8">
-                <a-form-item label="单据编号" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
+              <a-col :md="6" :sm="24">
+                <a-form-item label="单据编号" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-input placeholder="请输入单据编号" v-model="queryParam.billNo"></a-input>
                 </a-form-item>
               </a-col>
-              <a-col :md="5" :sm="10">
+              <a-col :md="6" :sm="24">
                 <a-form-item label="单据日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-range-picker
-                    style="width: 210px"
+                    style="width:100%"
                     v-model="queryParam.createTimeRange"
                     format="YYYY-MM-DD"
                     :placeholder="['开始时间', '结束时间']"
@@ -24,10 +24,43 @@
                   />
                 </a-form-item>
               </a-col>
+              <template v-if="toggleSearchStatus">
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="付款会员" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select placeholder="选择付款会员" showSearch optionFilterProp="children" v-model="queryParam.organId">
+                      <a-select-option v-for="(item,index) in retailList" :key="index" :value="item.id">
+                        {{ item.supplier }}
+                      </a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="财务人员" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select placeholder="选择财务人员" showSearch optionFilterProp="children" v-model="queryParam.handsPersonId">
+                      <a-select-option v-for="(item,index) in personList" :key="index" :value="item.id">
+                        {{ item.name }}
+                      </a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="操作员" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select placeholder="选择操作员" showSearch optionFilterProp="children" v-model="queryParam.creator">
+                      <a-select-option v-for="(item,index) in userList" :key="index" :value="item.id">
+                        {{ item.userName }}
+                      </a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+              </template>
               <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                 <a-col :md="6" :sm="24">
                   <a-button type="primary" @click="searchQuery">查询</a-button>
                   <a-button style="margin-left: 8px" @click="searchReset">重置</a-button>
+                  <a @click="handleToggleSearch" style="margin-left: 8px">
+                    {{ toggleSearchStatus ? '收起' : '展开' }}
+                    <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
+                  </a>
                 </a-col>
               </span>
             </a-row>
@@ -96,36 +129,29 @@
     },
     data () {
       return {
+        labelCol: {
+          span: 5
+        },
+        wrapperCol: {
+          span: 18,
+          offset: 1
+        },
         // 查询条件
         queryParam: {
           billNo: "",
           searchMaterial: "",
-          type: "收预付款"
-        },
-        labelCol: {
-          xs: { span: 24 },
-          sm: { span: 8 },
-        },
-        wrapperCol: {
-          xs: { span: 24 },
-          sm: { span: 16 },
+          type: "收预付款",
+          organId: "",
+          creator: "",
+          handsPersonId: ""
         },
         // 表头
         columns: [
-          {
-            title: '#',
-            dataIndex: '',
-            key:'rowIndex',
-            width:40,
-            align:"center",
-            customRender:function (t,r,index) {
-              return parseInt(index)+1;
-            }
-          },
           { title: '付款会员', dataIndex: 'organName',width:140},
+          { title: '财务人员', dataIndex: 'handsPersonName',width:140},
           { title: '单据编号', dataIndex: 'billNo',width:160},
-          { title: '操作员', dataIndex: 'userName',width:80},
           { title: '单据日期 ', dataIndex: 'billTimeStr',width:160},
+          { title: '操作员', dataIndex: 'userName',width:80},
           { title: '合计金额', dataIndex: 'totalPrice',width:80},
           { title: '收款金额', dataIndex: 'changeAmount',width:80},
           { title: '备注', dataIndex: 'remark',width:200},
@@ -145,10 +171,13 @@
       }
     },
     computed: {
-
+    },
+    created () {
+      this.initRetail()
+      this.initUser()
+      this.initPerson()
     },
     methods: {
-
     }
   }
 </script>
