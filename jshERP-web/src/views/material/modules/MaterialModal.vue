@@ -724,6 +724,9 @@
             } else if(batchType === 'low') {
               meInfo.lowDecimal = price-0
             }
+            if(arr[i].id) {
+              meInfo.id = arr[i].id
+            }
             meTableData.push(meInfo)
           }
           this.meTable.dataSource = meTableData
