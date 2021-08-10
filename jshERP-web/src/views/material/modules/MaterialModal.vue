@@ -645,6 +645,7 @@
         this.skuSwitch = checked
         if(checked) {
           this.meTable.columns[2].type = FormTypes.input
+          this.form.setFieldsValue({'color':''})
         } else {
           this.meTable.columns[2].type = FormTypes.hidden
         }
