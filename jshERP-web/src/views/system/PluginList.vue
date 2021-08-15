@@ -76,6 +76,7 @@
     </a-col>
   </a-row>
 </template>
+<!-- f r o m 7 5  2 7 1  8 9 2 0 -->
 <script>
   import PluginModal from './modules/PluginModal'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'

@@ -1,3 +1,4 @@
+<!-- b y 7 5 2 7  1 8 9 2 0 -->
 <template>
   <div class="main">
     <a-form :form="form" class="user-layout-login" ref="formLogin" id="formLogin">
@@ -52,7 +53,7 @@
     </a-form>
   </div>
 </template>
-
+<!-- BY cao_yu_li -->
 <script>
   import md5 from "md5"
   import api from '@/api'

@@ -109,6 +109,7 @@
     </a-col>
   </a-row>
 </template>
+<!--power by jishenghua-->
 <script>
   import AllocationOutModal from './modules/AllocationOutModal'
   import BillDetail from './dialog/BillDetail'

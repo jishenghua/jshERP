@@ -1,3 +1,4 @@
+<!-- b y 7 5 2 7  1 8 9 2 0 -->
 <template>
   <div class="main user-layout-register">
     <a-form ref="formRegister" :autoFormCreate="(form)=>{this.form = form}" id="formRegister">
@@ -75,7 +76,7 @@
     </a-form>
   </div>
 </template>
-
+<!-- BY cao_yu_li -->
 <script>
   import {mixinDevice} from '@/utils/mixin.js'
   import {getAction, postAction} from '@/api/manage'

@@ -94,6 +94,7 @@
     <organization-modal ref="organizationModal" @ok="loadTree"></organization-modal>
   </a-row>
 </template>
+<!-- f r o m 7 5  2 7 1  8 9 2 0 -->
 <script>
 import OrganizationModal from './modules/OrganizationModal'
 import pick from 'lodash.pick'

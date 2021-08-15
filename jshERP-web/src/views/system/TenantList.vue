@@ -63,7 +63,7 @@
     </a-col>
   </a-row>
 </template>
-
+<!-- b y 7 5 2 7  1 8 9 2 0 -->
 <script>
   import TenantModal from './modules/TenantModal'
   import {JeecgListMixin} from '@/mixins/JeecgListMixin'

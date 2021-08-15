@@ -118,6 +118,7 @@
     </a-col>
   </a-row>
 </template>
+<!-- by jisheng h u a-->
 <script>
   import RetailBackModal from './modules/RetailBackModal'
   import BillDetail from './dialog/BillDetail'

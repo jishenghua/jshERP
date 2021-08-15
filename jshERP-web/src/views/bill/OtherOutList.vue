@@ -118,6 +118,7 @@
     </a-col>
   </a-row>
 </template>
+<!--power by j i s h e n g h u a-->
 <script>
   import OtherOutModal from './modules/OtherOutModal'
   import BillDetail from './dialog/BillDetail'

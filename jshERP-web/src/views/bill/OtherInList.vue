@@ -118,6 +118,7 @@
     </a-col>
   </a-row>
 </template>
+<!--power by ji shenghua-->
 <script>
   import OtherInModal from './modules/OtherInModal'
   import BillDetail from './dialog/BillDetail'
