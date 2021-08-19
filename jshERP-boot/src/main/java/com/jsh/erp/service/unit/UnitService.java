@@ -190,7 +190,7 @@ public class UnitService {
      * @param name
      */
     public Long getUnitIdByName(String name){
-        Long unitId = 0L;
+        Long unitId = null;
         UnitExample example = new UnitExample();
         example.createCriteria().andNameEqualTo(name).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<Unit> list = unitMapper.selectByExample(example);

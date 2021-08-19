@@ -287,6 +287,9 @@ public class ExceptionConstants {
     //商品条码重复
     public static final int MATERIAL_BARCODE_EXISTS_CODE = 8000005;
     public static final String MATERIAL_BARCODE_EXISTS_MSG = "商品条码:%s重复";
+    //商品-单位匹配不上
+    public static final int MATERIAL_UNIT_MATE_CODE = 8000006;
+    public static final String MATERIAL_UNIT_MATE_MSG = "抱歉，单位匹配不上，请完善计量单位信息！";
     /**
      *  单据信息
      * type = 85
