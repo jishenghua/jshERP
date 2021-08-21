@@ -86,7 +86,7 @@ public class UserController {
             //获取用户状态
             int userStatus = -1;
             try {
-                redisService.deleteObjectBySession(request,"tenantId");
+                redisService.deleteObjectBySession(request,"userId");
                 userStatus = userService.validateUser(loginName, password);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -125,7 +125,6 @@ public class UserController {
                             Integer userNumLimit = tenant.getUserNumLimit();
                             Integer billsNumLimit = tenant.getBillsNumLimit();
                             if(tenantId!=null) {
-                                redisService.storageObjectBySession(token,"tenantId",tenantId); //租户tenantId
                                 redisService.storageObjectBySession(token,"userNumLimit",userNumLimit); //用户限制数
                                 redisService.storageObjectBySession(token,"billsNumLimit",billsNumLimit); //单据限制数
                             }
@@ -140,7 +139,7 @@ public class UserController {
             if(user!=null){
                 String roleType = userService.getRoleTypeByUserId(user.getId()); //角色类型
                 redisService.storageObjectBySession(token,"roleType",roleType);
-                redisService.storageObjectBySession(token,"token", token);
+                redisService.storageObjectBySession(token,"clientIp", Tools.getLocalIp(request));
                 logService.insertLogWithUserId(user.getId(), user.getTenantId(), "用户",
                         new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_LOGIN).append(user.getLoginName()).toString(),
                         ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
@@ -188,10 +187,7 @@ public class UserController {
     public BaseResponseInfo logout(HttpServletRequest request, HttpServletResponse response)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
-            redisService.deleteObjectBySession(request,"user");
-            redisService.deleteObjectBySession(request,"tenantId");
-            redisService.deleteObjectBySession(request,"userNumLimit");
-            redisService.deleteObjectBySession(request,"billsNumLimit");
+            redisService.deleteObjectBySession(request,"userId");
             response.sendRedirect("/login.html");
         } catch(Exception e){
             e.printStackTrace();

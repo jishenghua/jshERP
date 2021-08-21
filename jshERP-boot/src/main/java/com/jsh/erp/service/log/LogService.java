@@ -148,15 +148,23 @@ public class LogService {
         try{
             Long userId = userService.getUserId(request);
             if(userId!=null) {
-                Log log = new Log();
-                log.setUserId(userId);
-                log.setOperation(moduleName);
-                log.setClientIp(getLocalIp(request));
-                log.setCreateTime(new Date());
-                Byte status = 0;
-                log.setStatus(status);
-                log.setContent(content);
-                logMapper.insertSelective(log);
+                String clientIp = getLocalIp(request);
+                String createTime = Tools.getNow3();
+                Long count = logMapperEx.getCountByIpAndDate(clientIp, createTime);
+                if(count > 0) {
+                    //如果某1个IP在同1秒内连续操作两遍，此时需要删除该redis记录，使其退出，防止恶意攻击
+                    redisService.deleteObjectByKeyAndIp("clientIp", clientIp, "userId");
+                } else {
+                    Log log = new Log();
+                    log.setUserId(userId);
+                    log.setOperation(moduleName);
+                    log.setClientIp(getLocalIp(request));
+                    log.setCreateTime(new Date());
+                    Byte status = 0;
+                    log.setStatus(status);
+                    log.setContent(content);
+                    logMapper.insertSelective(log);
+                }
             }
         }catch(Exception e){
             JshException.writeFail(logger, e);

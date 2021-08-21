@@ -28,4 +28,8 @@ public interface LogMapperEx {
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("content") String content);
+
+    Long getCountByIpAndDate(
+            @Param("clientIp") String clientIp,
+            @Param("createTime") String createTime);
 }

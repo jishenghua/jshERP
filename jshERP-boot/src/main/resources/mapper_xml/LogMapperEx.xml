@@ -70,4 +70,8 @@
             and l.content like #{bindContent}
         </if>
     </select>
+
+    <select id="getCountByIpAndDate" resultType="java.lang.Long">
+        select count(1) from jsh_log where client_ip=#{clientIp} and create_time=#{createTime}
+    </select>
 </mapper>
