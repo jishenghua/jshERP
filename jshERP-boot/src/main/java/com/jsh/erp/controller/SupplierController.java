@@ -83,19 +83,15 @@ public class SupplierController {
         try {
             String type = "UserCustomer";
             Long userId = userService.getUserId(request);
+            //获取权限信息
+            String ubValue = userBusinessService.getUBValueByTypeAndKeyId(type, userId.toString());
             List<Supplier> supplierList = supplierService.findBySelectCus();
             JSONArray dataArray = new JSONArray();
             if (null != supplierList) {
                 boolean customerFlag = systemConfigService.getCustomerFlag();
                 for (Supplier supplier : supplierList) {
                     JSONObject item = new JSONObject();
-                    //勾选判断1
-                    Boolean flag = false;
-                    try {
-                        flag = userBusinessService.checkIsUserBusinessExist(type, userId.toString(), "[" + supplier.getId().toString() + "]");
-                    } catch (DataAccessException e) {
-                        logger.error(">>>>>>>>>>>>>>>>>查询用户对应的客户：存在异常！");
-                    }
+                    Boolean flag = ubValue.contains("[" + supplier.getId().toString() + "]");
                     if (!customerFlag || flag) {
                         item.put("id", supplier.getId());
                         item.put("supplier", supplier.getSupplier()); //客户名称
@@ -197,6 +193,8 @@ public class SupplierController {
                                    HttpServletRequest request) throws Exception{
         JSONArray arr = new JSONArray();
         try {
+            //获取权限信息
+            String ubValue = userBusinessService.getUBValueByTypeAndKeyId(type, keyId);
             List<Supplier> dataList = supplierService.findUserCustomer();
             //开始拼接json数据
             JSONObject outer = new JSONObject();
@@ -215,17 +213,10 @@ public class SupplierController {
                     item.put("value", supplier.getId());
                     item.put("title", supplier.getSupplier());
                     item.put("attributes", supplier.getSupplier());
-                    //勾选判断1
-                    Boolean flag = false;
-                    try {
-                        flag = userBusinessService.checkIsUserBusinessExist(type, keyId, "[" + supplier.getId().toString() + "]");
-                    } catch (Exception e) {
-                        logger.error(">>>>>>>>>>>>>>>>>设置用户对应的客户：类型" + type + " KeyId为： " + keyId + " 存在异常！");
-                    }
-                    if (flag == true) {
+                    Boolean flag = ubValue.contains("[" + supplier.getId().toString() + "]");
+                    if (flag) {
                         item.put("checked", true);
                     }
-                    //结束
                     dataArray.add(item);
                 }
             }

@@ -62,7 +62,7 @@ public class RoleService {
         return list;
     }
 
-    public List<Role> getRole()throws Exception {
+    public List<Role> allList()throws Exception {
         RoleExample example = new RoleExample();
         example.createCriteria().andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<Role> list=null;

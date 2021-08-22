@@ -156,6 +156,8 @@ public class FunctionController {
 
     public JSONArray getFunctionList(List<Function> dataList, String type, String keyId) throws Exception {
         JSONArray dataArray = new JSONArray();
+        //获取权限信息
+        String ubValue = userBusinessService.getUBValueByTypeAndKeyId(type, keyId);
         if (null != dataList) {
             for (Function function : dataList) {
                 JSONObject item = new JSONObject();
@@ -164,13 +166,8 @@ public class FunctionController {
                 item.put("value", function.getId());
                 item.put("title", function.getName());
                 item.put("attributes", function.getName());
-                Boolean flag = false;
-                try {
-                    flag = userBusinessService.checkIsUserBusinessExist(type, keyId, "[" + function.getId().toString() + "]");
-                } catch (Exception e) {
-                    logger.error(">>>>>>>>>>>>>>>>>设置角色对应的功能：类型" + type + " KeyId为： " + keyId + " 存在异常！");
-                }
-                if (flag == true) {
+                Boolean flag = ubValue.contains("[" + function.getId().toString() + "]");
+                if (flag) {
                     item.put("checked", true);
                 }
                 List<Function> funList = functionService.findRoleFunction(function.getNumber());
