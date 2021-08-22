@@ -147,12 +147,18 @@
           })
         }
       },
-      loginSuccess () {
+      loginSuccess (res) {
         this.$router.push({ path: "/dashboard/analysis" })
         this.$notification.success({
           message: '欢迎',
           description: `${timeFix()}，欢迎回来`,
         });
+        if(res.data && res.data.user) {
+          if(res.data.user.loginName === 'admin'){
+            let desc = 'admin只是平台运维用户，真正的管理员是租户(测试账号为jsh），admin不能编辑任何业务数据，只能配置平台菜单和创建租户'
+            this.$message.info(desc,30)
+          }
+        }
         this.initMPropertyShort();
       },
       cmsFailed(err){
@@ -179,7 +185,7 @@
           if(res.data.msgTip == 'user can login'){
             Vue.ls.set('winBtnStrList', res.data.userBtn, 7 * 24 * 60 * 60 * 1000);
             Vue.ls.set('roleType', res.data.roleType, 7 * 24 * 60 * 60 * 1000);
-            this.loginSuccess()
+            this.loginSuccess(res)
           } else if(res.data.msgTip == 'user is not exist'){
             err.message = '用户不存在';
             this.requestFailed(err)
