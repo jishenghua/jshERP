@@ -53,26 +53,6 @@ public class SupplierController {
     private UserService userService;
 
     /**
-     * 更新供应商-只更新预付款，其余用原来的值
-     * @param supplierId
-     * @param advanceIn
-     * @param request
-     * @return
-     */
-    @PostMapping(value = "/updateAdvanceIn")
-    public String updateAdvanceIn(@RequestParam("supplierId") Long supplierId,
-                                            @RequestParam("advanceIn") BigDecimal advanceIn,
-                                            HttpServletRequest request)throws Exception {
-        Map<String, Object> objectMap = new HashMap<String, Object>();
-        int res = supplierService.updateAdvanceIn(supplierId, advanceIn);
-        if(res > 0) {
-            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
-        } else {
-            return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
-        }
-    }
-
-    /**
      * 查找客户信息-下拉框
      * @param request
      * @return
