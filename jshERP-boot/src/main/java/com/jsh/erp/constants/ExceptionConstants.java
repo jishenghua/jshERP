@@ -324,6 +324,9 @@ public class ExceptionConstants {
     //单据录入-退货单不能欠款
     public static final int DEPOT_HEAD_BACK_BILL_DEBT_FAILED_CODE = 8500009;
     public static final String DEPOT_HEAD_BACK_BILL_DEBT_FAILED_MSG = "退货单不能欠款";
+    //单据录入-调入仓库与原仓库不能重复
+    public static final int DEPOT_HEAD_ANOTHER_DEPOT_EQUAL_FAILED_CODE = 8500010;
+    public static final String DEPOT_HEAD_ANOTHER_DEPOT_EQUAL_FAILED_MSG = "调入仓库与原仓库不能重复";
     /**
      *  单据明细信息
      * type = 90
