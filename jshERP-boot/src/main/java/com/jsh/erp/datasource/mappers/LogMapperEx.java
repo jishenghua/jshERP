@@ -30,6 +30,7 @@ public interface LogMapperEx {
             @Param("content") String content);
 
     Long getCountByIpAndDate(
+            @Param("moduleName") String moduleName,
             @Param("clientIp") String clientIp,
             @Param("createTime") String createTime);
 }
