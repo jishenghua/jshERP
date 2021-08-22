@@ -26,7 +26,7 @@
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="角色">
           <a-select v-if="model.roleName!='租户'" placeholder="选择角色" v-decorator="[ 'roleId' ]" :dropdownMatchSelectWidth="false">
             <a-select-option v-for="(item,index) in roleList" :key="index" :value="item.id">
-              {{ item.text }}
+              {{ item.name }}
             </a-select-option>
           </a-select>
           <a-col v-if="model.roleName=='租户'"><a-row>租户</a-row></a-col>
@@ -61,7 +61,7 @@
   import JSelectPosition from '@/components/jeecgbiz/JSelectPosition'
   import { ACCESS_TOKEN } from "@/store/mutation-types"
   import { getAction } from '@/api/manage'
-  import {addUser,editUser,queryOrganizationTreeList,findUserRole} from '@/api/api'
+  import {addUser,editUser,queryOrganizationTreeList,roleAllList} from '@/api/api'
   import { disabledAuthFilter } from "@/utils/authFilter"
   import {duplicateCheck } from '@/api/api'
   import JImageUpload from '../../../components/jeecg/JImageUpload'
@@ -178,14 +178,9 @@
         })
       },
       loadRoleData(){
-        let that = this;
-        let params = {
-          'UBType': 'UserRole',
-          'UBKeyId': ''
-        };
-        findUserRole(params).then((res)=>{
+        roleAllList({}).then((res)=>{
           if(res){
-            that.roleList = res
+            this.roleList = res
           }
         })
       }
