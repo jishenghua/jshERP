@@ -154,11 +154,10 @@
       myMenuSelect(value){
         //此处触发动态路由被点击事件
         this.findMenuBykey(this.menus,value.key)
-        this.$emit("dynamicRouterShow",value.key,this.activeMenu.text)
+        this.$emit("dynamicRouterShow",value.key, this.activeMenu.id, this.activeMenu.text)
         // update-begin-author:sunjianlei date:20191223 for: 修复刷新后菜单Tab名字显示异常
         let storeKey = 'route:title:' + this.activeMenu.url
         this.$ls.set(storeKey, this.activeMenu.text)
-        Vue.ls.set('funId', this.activeMenu.id, 7 * 24 * 60 * 60 * 1000);
         // update-end-author:sunjianlei date:20191223 for: 修复刷新后菜单Tab名字显示异常
       },
       findMenuBykey(menus,key){

@@ -118,6 +118,7 @@ function generateChildRouters (data) {
       name: item.text,
       component: componentPath,
       meta: {
+        id: item.id,
         title: item.text,
         icon: item.icon,
         url: item.url,

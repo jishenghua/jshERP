@@ -36,6 +36,7 @@
   import Contextmenu from '@/components/menu/Contextmenu'
   import { mixin, mixinDevice } from '@/utils/mixin.js'
   import { triggerWindowResizeEvent } from '@/utils/util'
+  import Vue from 'vue'
 
   const indexKey = '/dashboard/analysis'
 
@@ -121,6 +122,8 @@
           let oldIndex = this.linkList.indexOf(newRoute.fullPath)
           let oldPositionRoute = this.pageList[oldIndex]
           this.pageList.splice(oldIndex, 1, Object.assign({},newRoute,{meta:oldPositionRoute.meta}))
+          //给菜单id赋值，用于调用之后控制按钮的显示
+          Vue.ls.set('funId', oldPositionRoute.meta.id, 7 * 24 * 60 * 60 * 1000)
           //每次切换都刷新
           this.routeReload()
         }
@@ -196,12 +199,9 @@
           this.$message.warning('这是最后一页，不能再关闭了啦')
           return
         }
-        console.log("this.pageList ",this.pageList);
         this.pageList = this.pageList.filter(item => item.fullPath !== key)
-        console.log("this.pageList ",this.pageList);
         let index = this.linkList.indexOf(key)
         this.linkList = this.linkList.filter(item => item !== key)
-        console.log("this.linkList ",this.linkList);
         index = index >= this.linkList.length ? this.linkList.length - 1 : index
         this.activePage = this.linkList[index]
       },
@@ -284,7 +284,7 @@
         }
       },
       //update-begin-author:taoyan date:20190430 for:动态路由title显示配置的菜单title而不是其对应路由的title
-      dynamicRouterShow(key,title){
+      dynamicRouterShow(key, id, title){
         let keyIndex = this.linkList.indexOf(key)
         if(keyIndex>=0){
           //切换历史页签
@@ -302,6 +302,7 @@
             path: key,
             fullPath: key,
             meta: {
+              id: id,
               icon: key,
               title: title
             }
