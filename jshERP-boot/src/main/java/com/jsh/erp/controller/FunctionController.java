@@ -88,11 +88,6 @@ public class FunctionController {
             item.put("text", function.getName());
             item.put("icon", function.getIcon());
             item.put("url", function.getUrl());
-            //if (Tools.isPluginUrl(function.getUrl())) {
-            //    item.put("path", Tools.md5Encryp(function.getUrl()));
-            //} else {
-            //    item.put("path", function.getUrl());
-            //}
             item.put("component", function.getComponent());
             if (newList.size()>0) {
                 JSONArray childrenArr = getMenuByFunction(newList, fc);
