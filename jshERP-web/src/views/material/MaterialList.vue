@@ -167,7 +167,7 @@
           {title: '名称', dataIndex: 'name', width: 120},
           {title: '规格', dataIndex: 'standard', width: 80},
           {title: '型号', dataIndex: 'model', width: 80},
-          {title: '颜色', dataIndex: 'color', width: 50},
+          {title: '颜色', dataIndex: 'color', width: 60},
           {title: '类别', dataIndex: 'categoryName', width: 80},
           {title: '扩展信息', dataIndex: 'materialOther', width: 100},
           {title: '单位', dataIndex: 'unit', width: 100,
@@ -179,10 +179,10 @@
           {title: '零售价', dataIndex: 'commodityDecimal', width: 70},
           {title: '销售价', dataIndex: 'wholesaleDecimal', width: 70},
           {title: '最低售价', dataIndex: 'lowDecimal', width: 80},
-          {title: '状态', dataIndex: 'enabled', width: 60, align: "center",
+          {title: '状态', dataIndex: 'enabled', width: 55, align: "center",
             scopedSlots: { customRender: 'customRenderEnabled' }
           },
-          {title: '序列号', dataIndex: 'enableSerialNumber', width: 60, align: "center",
+          {title: '序列号', dataIndex: 'enableSerialNumber', width: 55, align: "center",
             scopedSlots: { customRender: 'customRenderEnableSerialNumber' }
           },
           {
@@ -190,7 +190,6 @@
             dataIndex: 'action',
             align:"center",
             width: 120,
-            fixed: 'right',
             scopedSlots: { customRender: 'action' },
           }
         ],
