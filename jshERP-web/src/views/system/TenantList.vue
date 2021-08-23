@@ -100,11 +100,11 @@
           },
           { title: '登录名称', dataIndex: 'loginName', width: 100, align: "center"},
           { title: '用户数量限制', dataIndex: 'userNumLimit', width: 100, align: "center"},
-          { title: '单据数量限制', dataIndex: 'billsNumLimit', width: 100, align: "center"},
           { title: '状态',dataIndex: 'enabled',width:70,align:"center",
             scopedSlots: { customRender: 'customRenderFlag' }
           },
           { title: '创建时间', dataIndex: 'createTimeStr', width: 100, align: "center"},
+          { title: '到期时间', dataIndex: 'expireTimeStr', width: 100, align: "center"},
           {
             title: '操作',
             dataIndex: 'action',

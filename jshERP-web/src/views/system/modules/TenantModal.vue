@@ -18,9 +18,6 @@
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="用户数量限制">
           <a-input-number style="width:50%" placeholder="请输入用户数量限制" v-decorator.trim="[ 'userNumLimit' ]" />
         </a-form-item>
-        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据数量限制">
-          <a-input-number style="width:50%" placeholder="请输入单据数量限制" v-decorator.trim="[ 'billsNumLimit' ]" />
-        </a-form-item>
       </a-form>
     </a-spin>
   </a-modal>
