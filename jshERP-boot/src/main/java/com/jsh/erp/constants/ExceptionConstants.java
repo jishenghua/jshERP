@@ -303,9 +303,6 @@ public class ExceptionConstants {
     //修改单据信息失败
     public static final int DEPOT_HEAD_EDIT_FAILED_CODE = 8500002;
     public static final String DEPOT_HEAD_EDIT_FAILED_MSG = "修改单据信息失败";
-    //单据录入数量超出限制
-    public static final int DEPOT_HEAD_OVER_LIMIT_FAILED_CODE = 8500003;
-    public static final String DEPOT_HEAD_OVER_LIMIT_FAILED_MSG = "单据录入数量超出限制，请联系管理员";
     //单据录入-仓库不能为空
     public static final int DEPOT_HEAD_DEPOT_FAILED_CODE = 8500004;
     public static final String DEPOT_HEAD_DEPOT_FAILED_MSG = "仓库不能为空";
