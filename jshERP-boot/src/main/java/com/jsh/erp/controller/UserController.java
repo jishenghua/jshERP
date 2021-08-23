@@ -123,10 +123,8 @@ public class UserController {
                         if(tenant!=null) {
                             Long tenantId = tenant.getTenantId();
                             Integer userNumLimit = tenant.getUserNumLimit();
-                            Integer billsNumLimit = tenant.getBillsNumLimit();
                             if(tenantId!=null) {
                                 redisService.storageObjectBySession(token,"userNumLimit",userNumLimit); //用户限制数
-                                redisService.storageObjectBySession(token,"billsNumLimit",billsNumLimit); //单据限制数
                             }
                         }
                     }

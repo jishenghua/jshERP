@@ -24,8 +24,6 @@ public class UserEx extends User{
 
     private String userNumLimit;
 
-    private String billsNumLimit;
-
     public String getOrgAbr() {
         return orgAbr;
     }
@@ -88,13 +86,5 @@ public class UserEx extends User{
 
     public void setUserNumLimit(String userNumLimit) {
         this.userNumLimit = userNumLimit;
-    }
-
-    public String getBillsNumLimit() {
-        return billsNumLimit;
-    }
-
-    public void setBillsNumLimit(String billsNumLimit) {
-        this.billsNumLimit = billsNumLimit;
     }
 }

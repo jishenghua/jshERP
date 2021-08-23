@@ -39,10 +39,6 @@ public class TenantService {
     @Value("${tenant.userNumLimit}")
     private Integer userNumLimit;
 
-    @Value("${tenant.billsNumLimit}")
-    private Integer billsNumLimit;
-
-
     public Tenant getTenant(long id)throws Exception {
         Tenant result=null;
         try{
@@ -71,6 +67,7 @@ public class TenantService {
             if (null != list) {
                 for (TenantEx tenantEx : list) {
                     tenantEx.setCreateTimeStr(Tools.getCenternTime(tenantEx.getCreateTime()));
+                    tenantEx.setExpireTimeStr(Tools.getCenternTime(tenantEx.getExpireTime()));
                 }
             }
         }catch(Exception e){
@@ -96,9 +93,6 @@ public class TenantService {
         try{
             if(tenant.getUserNumLimit()==null) {
                 tenant.setUserNumLimit(userNumLimit); //默认用户限制数量
-            }
-            if(tenant.getBillsNumLimit()==null) {
-                tenant.setBillsNumLimit(billsNumLimit); //默认单据限制数量
             }
             tenant.setCreateTime(new Date());
             result=tenantMapper.insertSelective(tenant);
