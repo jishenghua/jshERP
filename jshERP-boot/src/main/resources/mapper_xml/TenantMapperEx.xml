@@ -13,6 +13,12 @@
             <bind name="bindLoginName" value="'%'+loginName+'%'"/>
             and login_name like #{bindLoginName}
         </if>
+        <if test="type != null and type != ''">
+            and type = #{type}
+        </if>
+        <if test="enabled != null and enabled != ''">
+            and enabled = #{enabled}
+        </if>
         order by id desc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
@@ -26,6 +32,12 @@
         <if test="loginName != null">
             <bind name="bindLoginName" value="'%'+loginName+'%'"/>
             and login_name like #{bindLoginName}
+        </if>
+        <if test="type != null and type != ''">
+            and type = #{type}
+        </if>
+        <if test="enabled != null and enabled != ''">
+            and enabled = #{enabled}
         </if>
     </select>
 </mapper>

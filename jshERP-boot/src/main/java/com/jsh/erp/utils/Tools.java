@@ -665,6 +665,14 @@ public class Tools {
         return new SimpleDateFormat(pattern).parse(strDate);
     }
 
+    public static Date addDays(Date date, int num) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date); //需要将date数据转移到Calender对象中操作
+        calendar.add(calendar.DATE, num);//把日期往后增加n天.正数往后推,负数往前移动
+        date=calendar.getTime();   //这个时间就是日期往后推一天的结果
+        return date;
+    }
+
     /**
      * 生成随机数字和字母组合
      * @param length

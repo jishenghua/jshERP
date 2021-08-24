@@ -110,6 +110,9 @@ public class UserController {
                 case ExceptionCodeConstants.UserExceptionCode.BLACK_TENANT:
                     msgTip = "tenant is black";
                     break;
+                case ExceptionCodeConstants.UserExceptionCode.EXPIRE_TENANT:
+                    msgTip = "tenant is expire";
+                    break;
                 case ExceptionCodeConstants.UserExceptionCode.USER_CONDITION_FIT:
                     msgTip = "user can login";
                     //验证通过 ，可以登录，放入session，记录登录日志
@@ -427,5 +430,34 @@ public class UserController {
         } else {
             return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
         }
+    }
+
+    /**
+     * 获取当前用户的用户数量和租户信息
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/infoWithTenant")
+    public BaseResponseInfo randomImage(HttpServletRequest request){
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            Map<String, Object> data = new HashMap<>();
+            Long userId = Long.parseLong(redisService.getObjectFromSessionByKey(request,"userId").toString());
+            User user = userService.getUser(userId);
+            //获取当前用户数
+            Long userCurrentNum = userService.countUser(null, null);
+            Tenant tenant = tenantService.getTenantByTenantId(user.getTenantId());
+            data.put("type", tenant.getType()); //租户类型，0免费租户，1付费租户
+            data.put("expireTime", Tools.parseDateToStr(tenant.getExpireTime()));
+            data.put("userCurrentNum", userCurrentNum);
+            data.put("userNumLimit", tenant.getUserNumLimit());
+            res.code = 200;
+            res.data = data;
+        } catch (Exception e) {
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取失败";
+        }
+        return res;
     }
 }

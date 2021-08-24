@@ -39,6 +39,9 @@ public class TenantService {
     @Value("${tenant.userNumLimit}")
     private Integer userNumLimit;
 
+    @Value("${tenant.tryDayLimit}")
+    private Integer tryDayLimit;
+
     public Tenant getTenant(long id)throws Exception {
         Tenant result=null;
         try{
@@ -60,10 +63,10 @@ public class TenantService {
         return list;
     }
 
-    public List<TenantEx> select(String loginName, int offset, int rows)throws Exception {
+    public List<TenantEx> select(String loginName, String type, String enabled, int offset, int rows)throws Exception {
         List<TenantEx> list= new ArrayList<>();
         try{
-            list = tenantMapperEx.selectByConditionTenant(loginName, offset, rows);
+            list = tenantMapperEx.selectByConditionTenant(loginName, type, enabled, offset, rows);
             if (null != list) {
                 for (TenantEx tenantEx : list) {
                     tenantEx.setCreateTimeStr(Tools.getCenternTime(tenantEx.getCreateTime()));
@@ -76,10 +79,10 @@ public class TenantService {
         return list;
     }
 
-    public Long countTenant(String loginName)throws Exception {
+    public Long countTenant(String loginName, String type, String enabled)throws Exception {
         Long result=null;
         try{
-            result=tenantMapperEx.countsByTenant(loginName);
+            result=tenantMapperEx.countsByTenant(loginName, type, enabled);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -91,10 +94,13 @@ public class TenantService {
         Tenant tenant = JSONObject.parseObject(obj.toJSONString(), Tenant.class);
         int result=0;
         try{
+            tenant.setCreateTime(new Date());
             if(tenant.getUserNumLimit()==null) {
                 tenant.setUserNumLimit(userNumLimit); //默认用户限制数量
             }
-            tenant.setCreateTime(new Date());
+            if(tenant.getExpireTime()==null) {
+                tenant.setExpireTime(Tools.addDays(new Date(), tryDayLimit)); //租户允许试用的天数
+            }
             result=tenantMapper.insertSelective(tenant);
         }catch(Exception e){
             JshException.writeFail(logger, e);

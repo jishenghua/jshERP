@@ -297,8 +297,13 @@ public class UserService {
                 }
                 Long tenantId = list.get(0).getTenantId();
                 Tenant tenant = tenantService.getTenantByTenantId(tenantId);
-                if(tenant!=null && tenant.getEnabled()!=null && !tenant.getEnabled()) {
-                    return ExceptionCodeConstants.UserExceptionCode.BLACK_TENANT;
+                if(tenant!=null) {
+                    if(tenant.getEnabled()!=null && !tenant.getEnabled()) {
+                        return ExceptionCodeConstants.UserExceptionCode.BLACK_TENANT;
+                    }
+                    if(tenant.getExpireTime()!=null && tenant.getExpireTime().getTime()<System.currentTimeMillis()){
+                        return ExceptionCodeConstants.UserExceptionCode.EXPIRE_TENANT;
+                    }
                 }
             }
         } catch (Exception e) {
@@ -516,7 +521,6 @@ public class UserService {
             JSONObject tenantObj = new JSONObject();
             tenantObj.put("tenantId", ue.getId());
             tenantObj.put("loginName",ue.getLoginName());
-            tenantObj.put("userNumLimit",ue.getUserNumLimit());
             tenantService.insertTenant(tenantObj, request);
             logger.info("===============创建租户信息完成===============");
             if (result > 0) {

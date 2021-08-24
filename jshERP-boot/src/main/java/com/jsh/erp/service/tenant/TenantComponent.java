@@ -34,14 +34,18 @@ public class TenantComponent implements ICommonQuery {
     private List<?> getTenantList(Map<String, String> map)throws Exception {
         String search = map.get(Constants.SEARCH);
         String loginName = StringUtil.getInfo(search, "loginName");
-        return tenantService.select(loginName, QueryUtils.offset(map), QueryUtils.rows(map));
+        String type = StringUtil.getInfo(search, "type");
+        String enabled = StringUtil.getInfo(search, "enabled");
+        return tenantService.select(loginName, type, enabled, QueryUtils.offset(map), QueryUtils.rows(map));
     }
 
     @Override
     public Long counts(Map<String, String> map)throws Exception {
         String search = map.get(Constants.SEARCH);
         String loginName = StringUtil.getInfo(search, "loginName");
-        return tenantService.countTenant(loginName);
+        String type = StringUtil.getInfo(search, "type");
+        String enabled = StringUtil.getInfo(search, "enabled");
+        return tenantService.countTenant(loginName, type, enabled);
     }
 
     @Override
