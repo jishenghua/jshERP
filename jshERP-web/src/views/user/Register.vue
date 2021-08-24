@@ -242,7 +242,7 @@
                 } else {
                   this.$notification['error']({
                     message: "提示",
-                    description: "注册失败",
+                    description: res.data.message || "注册失败",
                     duration: 2
                   });
                 }
