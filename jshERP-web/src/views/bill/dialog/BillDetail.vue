@@ -45,15 +45,17 @@
                 <a-col :span="6"></a-col>
                 <a-col :span="6"></a-col>
               </a-row>
-              <a-table
-                ref="table"
-                size="middle"
-                bordered
-                rowKey="id"
-                :pagination="false"
-                :columns="allocationOutColumns"
-                :dataSource="dataSource">
-              </a-table>
+              <div :style="tableWidth">
+                <a-table
+                  ref="table"
+                  size="middle"
+                  bordered
+                  rowKey="id"
+                  :pagination="false"
+                  :columns="allocationOutColumns"
+                  :dataSource="dataSource">
+                </a-table>
+              </div>
               <a-row class="form-row" :gutter="24">
                 <a-col :lg="24" :md="24" :sm="24">
                   <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
@@ -80,15 +82,17 @@
                 <a-col :span="6"></a-col>
                 <a-col :span="6"></a-col>
               </a-row>
-              <a-table
-                ref="table"
-                size="middle"
-                bordered
-                rowKey="id"
-                :pagination="false"
-                :columns="assembleColumns"
-                :dataSource="dataSource">
-              </a-table>
+              <div :style="tableWidth">
+                <a-table
+                  ref="table"
+                  size="middle"
+                  bordered
+                  rowKey="id"
+                  :pagination="false"
+                  :columns="assembleColumns"
+                  :dataSource="dataSource">
+                </a-table>
+              </div>
               <a-row class="form-row" :gutter="24">
                 <a-col :lg="24" :md="24" :sm="24">
                   <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
@@ -115,15 +119,17 @@
                 <a-col :span="6"></a-col>
                 <a-col :span="6"></a-col>
               </a-row>
-              <a-table
-                ref="table"
-                size="middle"
-                bordered
-                rowKey="id"
-                :pagination="false"
-                :columns="disassembleColumns"
-                :dataSource="dataSource">
-              </a-table>
+              <div :style="tableWidth">
+                <a-table
+                  ref="table"
+                  size="middle"
+                  bordered
+                  rowKey="id"
+                  :pagination="false"
+                  :columns="disassembleColumns"
+                  :dataSource="dataSource">
+                </a-table>
+              </div>
               <a-row class="form-row" :gutter="24">
                 <a-col :lg="24" :md="24" :sm="24">
                   <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
@@ -159,15 +165,17 @@
                   </a-form-item>
                 </a-col>
               </a-row>
-              <a-table
-                ref="table"
-                size="middle"
-                bordered
-                rowKey="id"
-                :pagination="false"
-                :columns="otherInColumns"
-                :dataSource="dataSource">
-              </a-table>
+              <div :style="tableWidth">
+                <a-table
+                  ref="table"
+                  size="middle"
+                  bordered
+                  rowKey="id"
+                  :pagination="false"
+                  :columns="otherInColumns"
+                  :dataSource="dataSource">
+                </a-table>
+              </div>
               <a-row class="form-row" :gutter="24">
                 <a-col :lg="24" :md="24" :sm="24">
                   <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
@@ -203,15 +211,17 @@
                   </a-form-item>
                 </a-col>
               </a-row>
-              <a-table
-                ref="table"
-                size="middle"
-                bordered
-                rowKey="id"
-                :pagination="false"
-                :columns="otherOutColumns"
-                :dataSource="dataSource">
-              </a-table>
+              <div :style="tableWidth">
+                <a-table
+                  ref="table"
+                  size="middle"
+                  bordered
+                  rowKey="id"
+                  :pagination="false"
+                  :columns="otherOutColumns"
+                  :dataSource="dataSource">
+                </a-table>
+              </div>
               <a-row class="form-row" :gutter="24">
                 <a-col :lg="24" :md="24" :sm="24">
                   <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
@@ -247,15 +257,17 @@
                   </a-form-item>
                 </a-col>
               </a-row>
-              <a-table
-                ref="table"
-                size="middle"
-                bordered
-                rowKey="id"
-                :pagination="false"
-                :columns="purchaseBackColumns"
-                :dataSource="dataSource">
-              </a-table>
+              <div :style="tableWidth">
+                <a-table
+                  ref="table"
+                  size="middle"
+                  bordered
+                  rowKey="id"
+                  :pagination="false"
+                  :columns="purchaseBackColumns"
+                  :dataSource="dataSource">
+                </a-table>
+              </div>
               <a-row class="form-row" :gutter="24">
                 <a-col :lg="24" :md="24" :sm="24">
                   <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
@@ -332,15 +344,17 @@
                   </a-form-item>
                 </a-col>
               </a-row>
-              <a-table
-                ref="table"
-                size="middle"
-                bordered
-                rowKey="id"
-                :pagination="false"
-                :columns="purchaseInColumns"
-                :dataSource="dataSource">
-              </a-table>
+              <div :style="tableWidth">
+                <a-table
+                  ref="table"
+                  size="middle"
+                  bordered
+                  rowKey="id"
+                  :pagination="false"
+                  :columns="purchaseInColumns"
+                  :dataSource="dataSource">
+                </a-table>
+              </div>
               <a-row class="form-row" :gutter="24">
                 <a-col :lg="24" :md="24" :sm="24">
                   <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
@@ -413,15 +427,17 @@
                 </a-col>
                 <a-col :span="6"></a-col>
               </a-row>
-              <a-table
-                ref="table"
-                size="middle"
-                bordered
-                rowKey="id"
-                :pagination="false"
-                :columns="purchaseOrderColumns"
-                :dataSource="dataSource">
-              </a-table>
+              <div :style="tableWidth">
+                <a-table
+                  ref="table"
+                  size="middle"
+                  bordered
+                  rowKey="id"
+                  :pagination="false"
+                  :columns="purchaseOrderColumns"
+                  :dataSource="dataSource">
+                </a-table>
+              </div>
               <a-row class="form-row" :gutter="24">
                 <a-col :lg="24" :md="24" :sm="24">
                   <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
@@ -459,15 +475,17 @@
               </a-row>
               <a-row class="form-row" :gutter="24">
                 <a-col :lg="18" :md="12" :sm="24">
-                  <a-table
-                    ref="table"
-                    size="middle"
-                    bordered
-                    rowKey="id"
-                    :pagination="false"
-                    :columns="retailBackColumns"
-                    :dataSource="dataSource">
-                  </a-table>
+                  <div :style="tableWidthRetail">
+                    <a-table
+                      ref="table"
+                      size="middle"
+                      bordered
+                      rowKey="id"
+                      :pagination="false"
+                      :columns="retailBackColumns"
+                      :dataSource="dataSource">
+                    </a-table>
+                  </div>
                 </a-col>
                 <a-col :span="6">
                   <a-row class="form-row" :gutter="24">
@@ -531,15 +549,17 @@
               </a-row>
               <a-row class="form-row" :gutter="24">
                 <a-col :lg="18" :md="12" :sm="24">
-                  <a-table
-                    ref="table"
-                    size="middle"
-                    bordered
-                    rowKey="id"
-                    :pagination="false"
-                    :columns="retailOutColumns"
-                    :dataSource="dataSource">
-                  </a-table>
+                  <div :style="tableWidthRetail">
+                    <a-table
+                      ref="table"
+                      size="middle"
+                      bordered
+                      rowKey="id"
+                      :pagination="false"
+                      :columns="retailOutColumns"
+                      :dataSource="dataSource">
+                    </a-table>
+                  </div>
                 </a-col>
                 <a-col :span="6">
                   <a-row class="form-row" :gutter="24">
@@ -601,15 +621,17 @@
                   </a-form-item>
                 </a-col>
               </a-row>
-              <a-table
-                ref="table"
-                size="middle"
-                bordered
-                rowKey="id"
-                :pagination="false"
-                :columns="saleBackColumns"
-                :dataSource="dataSource">
-              </a-table>
+              <div :style="tableWidth">
+                <a-table
+                  ref="table"
+                  size="middle"
+                  bordered
+                  rowKey="id"
+                  :pagination="false"
+                  :columns="saleBackColumns"
+                  :dataSource="dataSource">
+                </a-table>
+              </div>
               <a-row class="form-row" :gutter="24">
                 <a-col :lg="24" :md="24" :sm="24">
                   <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
@@ -689,15 +711,17 @@
                   </a-form-item>
                 </a-col>
               </a-row>
-              <a-table
-                ref="table"
-                size="middle"
-                bordered
-                rowKey="id"
-                :pagination="false"
-                :columns="saleOrderColumns"
-                :dataSource="dataSource">
-              </a-table>
+              <div :style="tableWidth">
+                <a-table
+                  ref="table"
+                  size="middle"
+                  bordered
+                  rowKey="id"
+                  :pagination="false"
+                  :columns="saleOrderColumns"
+                  :dataSource="dataSource">
+                </a-table>
+              </div>
               <a-row class="form-row" :gutter="24">
                 <a-col :lg="24" :md="24" :sm="24">
                   <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
@@ -733,15 +757,17 @@
                   </a-form-item>
                 </a-col>
               </a-row>
-              <a-table
-                ref="table"
-                size="middle"
-                bordered
-                rowKey="id"
-                :pagination="false"
-                :columns="saleOutColumns"
-                :dataSource="dataSource">
-              </a-table>
+              <div :style="tableWidth">
+                <a-table
+                  ref="table"
+                  size="middle"
+                  bordered
+                  rowKey="id"
+                  :pagination="false"
+                  :columns="saleOutColumns"
+                  :dataSource="dataSource">
+                </a-table>
+              </div>
               <a-row class="form-row" :gutter="24">
                 <a-col :lg="24" :md="24" :sm="24">
                   <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
@@ -830,6 +856,12 @@
         model: {},
         billType: '',
         fileList: [],
+        tableWidth: {
+          'width': '1550px'
+        },
+        tableWidthRetail: {
+          'width': '1150px'
+        },
         labelCol: {
           xs: { span: 24 },
           sm: { span: 5 },
