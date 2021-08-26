@@ -157,6 +157,9 @@
           if(res.data.user.loginName === 'admin'){
             let desc = 'admin只是平台运维用户，真正的管理员是租户(测试账号为jsh），admin不能编辑任何业务数据，只能配置平台菜单和创建租户'
             this.$message.info(desc,30)
+          } else if(res.data.user.loginName === 'jsh'){
+            let desc = '当前为测试用户，数据会被重置，正式体验请注册!'
+            this.$message.info(desc,10)
           }
         }
         this.initMPropertyShort();
