@@ -893,9 +893,9 @@ CREATE TABLE `jsh_user` (
 -- ----------------------------
 -- Records of jsh_user
 -- ----------------------------
-INSERT INTO `jsh_user` VALUES ('63', '季圣华', 'jsh', 'e10adc3949ba59abbe56e057f20f883e', '主管', null, '666666@qq.com', '1123123123132', '1', '1', '0', '', null, '63');
+INSERT INTO `jsh_user` VALUES ('63', '测试用户', 'jsh', 'e10adc3949ba59abbe56e057f20f883e', '主管', null, '666666@qq.com', '1123123123132', '1', '1', '0', '', null, '63');
 INSERT INTO `jsh_user` VALUES ('120', '管理员', 'admin', 'e10adc3949ba59abbe56e057f20f883e', null, null, null, null, '1', '0', '0', null, null, '0');
-INSERT INTO `jsh_user` VALUES ('131', '测试用户', 'test123', 'e10adc3949ba59abbe56e057f20f883e', '总监', null, '752718920@qq.com', '', '1', '0', '0', '', null, '63');
+INSERT INTO `jsh_user` VALUES ('131', 'test用户', 'test123', 'e10adc3949ba59abbe56e057f20f883e', '总监', null, '7777777@qq.com', '', '1', '0', '0', '', null, '63');
 
 -- ----------------------------
 -- Table structure for jsh_user_business
