@@ -76,6 +76,9 @@ public class ExceptionConstants {
     //演示用户不允许修改
     public static final int USER_LIMIT_UPDATE_CODE = 500007;
     public static final String USER_LIMIT_UPDATE_MSG = "抱歉，演示模式下的演示用户不允许修改";
+    //租户不能被删除
+    public static final int USER_LIMIT_TENANT_DELETE_CODE = 500008;
+    public static final String USER_LIMIT_TENANT_DELETE_MSG = "抱歉，租户不能被删除";
 
     /**
      * 角色信息

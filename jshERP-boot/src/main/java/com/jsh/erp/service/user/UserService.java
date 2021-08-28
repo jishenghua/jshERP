@@ -263,6 +263,12 @@ public class UserService {
                 throw new BusinessRunTimeException(ExceptionConstants.USER_LIMIT_DELETE_CODE,
                         ExceptionConstants.USER_LIMIT_DELETE_MSG);
             }
+            if(user.getId().equals(user.getTenantId())) {
+                logger.error("异常码[{}],异常提示[{}],参数,ids:[{}]",
+                        ExceptionConstants.USER_LIMIT_TENANT_DELETE_CODE,ExceptionConstants.USER_LIMIT_TENANT_DELETE_MSG,ids);
+                throw new BusinessRunTimeException(ExceptionConstants.USER_LIMIT_TENANT_DELETE_CODE,
+                        ExceptionConstants.USER_LIMIT_TENANT_DELETE_MSG);
+            }
             sb.append("[").append(user.getLoginName()).append("]");
         }
         logService.insertLog("用户", sb.toString(),
