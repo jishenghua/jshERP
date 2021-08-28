@@ -6,9 +6,10 @@
     <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
     <result column="login_name" jdbcType="VARCHAR" property="loginName" />
     <result column="user_num_limit" jdbcType="INTEGER" property="userNumLimit" />
-    <result column="bills_num_limit" jdbcType="INTEGER" property="billsNumLimit" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
     <result column="enabled" jdbcType="BIT" property="enabled" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="expire_time" jdbcType="TIMESTAMP" property="expireTime" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -69,7 +70,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, tenant_id, login_name, user_num_limit, bills_num_limit, enabled, create_time
+    id, tenant_id, login_name, user_num_limit, type, enabled, create_time, expire_time
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.TenantExample" resultMap="BaseResultMap">
     select
@@ -103,11 +104,11 @@
   </delete>
   <insert id="insert" parameterType="com.jsh.erp.datasource.entities.Tenant">
     insert into jsh_tenant (id, tenant_id, login_name, 
-      user_num_limit, bills_num_limit, enabled, 
-      create_time)
+      user_num_limit, type, enabled, 
+      create_time, expire_time)
     values (#{id,jdbcType=BIGINT}, #{tenantId,jdbcType=BIGINT}, #{loginName,jdbcType=VARCHAR}, 
-      #{userNumLimit,jdbcType=INTEGER}, #{billsNumLimit,jdbcType=INTEGER}, #{enabled,jdbcType=BIT}, 
-      #{createTime,jdbcType=TIMESTAMP})
+      #{userNumLimit,jdbcType=INTEGER}, #{type,jdbcType=VARCHAR}, #{enabled,jdbcType=BIT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{expireTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.Tenant">
     insert into jsh_tenant
@@ -124,14 +125,17 @@
       <if test="userNumLimit != null">
         user_num_limit,
       </if>
-      <if test="billsNumLimit != null">
-        bills_num_limit,
+      <if test="type != null">
+        type,
       </if>
       <if test="enabled != null">
         enabled,
       </if>
       <if test="createTime != null">
         create_time,
+      </if>
+      <if test="expireTime != null">
+        expire_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -147,14 +151,17 @@
       <if test="userNumLimit != null">
         #{userNumLimit,jdbcType=INTEGER},
       </if>
-      <if test="billsNumLimit != null">
-        #{billsNumLimit,jdbcType=INTEGER},
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
       </if>
       <if test="enabled != null">
         #{enabled,jdbcType=BIT},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expireTime != null">
+        #{expireTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -179,14 +186,17 @@
       <if test="record.userNumLimit != null">
         user_num_limit = #{record.userNumLimit,jdbcType=INTEGER},
       </if>
-      <if test="record.billsNumLimit != null">
-        bills_num_limit = #{record.billsNumLimit,jdbcType=INTEGER},
+      <if test="record.type != null">
+        type = #{record.type,jdbcType=VARCHAR},
       </if>
       <if test="record.enabled != null">
         enabled = #{record.enabled,jdbcType=BIT},
       </if>
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.expireTime != null">
+        expire_time = #{record.expireTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null">
@@ -199,9 +209,10 @@
       tenant_id = #{record.tenantId,jdbcType=BIGINT},
       login_name = #{record.loginName,jdbcType=VARCHAR},
       user_num_limit = #{record.userNumLimit,jdbcType=INTEGER},
-      bills_num_limit = #{record.billsNumLimit,jdbcType=INTEGER},
+      type = #{record.type,jdbcType=VARCHAR},
       enabled = #{record.enabled,jdbcType=BIT},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP}
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      expire_time = #{record.expireTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -218,14 +229,17 @@
       <if test="userNumLimit != null">
         user_num_limit = #{userNumLimit,jdbcType=INTEGER},
       </if>
-      <if test="billsNumLimit != null">
-        bills_num_limit = #{billsNumLimit,jdbcType=INTEGER},
+      <if test="type != null">
+        type = #{type,jdbcType=VARCHAR},
       </if>
       <if test="enabled != null">
         enabled = #{enabled,jdbcType=BIT},
       </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expireTime != null">
+        expire_time = #{expireTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -235,9 +249,10 @@
     set tenant_id = #{tenantId,jdbcType=BIGINT},
       login_name = #{loginName,jdbcType=VARCHAR},
       user_num_limit = #{userNumLimit,jdbcType=INTEGER},
-      bills_num_limit = #{billsNumLimit,jdbcType=INTEGER},
+      type = #{type,jdbcType=VARCHAR},
       enabled = #{enabled,jdbcType=BIT},
-      create_time = #{createTime,jdbcType=TIMESTAMP}
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      expire_time = #{expireTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

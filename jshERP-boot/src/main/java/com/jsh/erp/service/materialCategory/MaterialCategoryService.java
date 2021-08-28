@@ -183,19 +183,6 @@ public class MaterialCategoryService {
             throw new BusinessRunTimeException(ExceptionConstants.DELETE_FORCE_CONFIRM_CODE,
                     ExceptionConstants.DELETE_FORCE_CONFIRM_MSG);
         }
-        //校验产品类型表	jsh_material_category
-        List<MaterialCategory> materialCategoryList=null;
-        try{
-            materialCategoryList= materialCategoryMapperEx.getMaterialCategoryListByCategoryIds(idArray);
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        if(materialCategoryList!=null&&materialCategoryList.size()>0){
-            logger.error("异常码[{}],异常提示[{}],参数,CategoryIds[{}]",
-                    ExceptionConstants.DELETE_FORCE_CONFIRM_CODE,ExceptionConstants.DELETE_FORCE_CONFIRM_MSG,ids);
-            throw new BusinessRunTimeException(ExceptionConstants.DELETE_FORCE_CONFIRM_CODE,
-                    ExceptionConstants.DELETE_FORCE_CONFIRM_MSG);
-        }
         StringBuffer sb = new StringBuffer();
         sb.append(BusinessConstants.LOG_OPERATION_TYPE_DELETE);
         List<MaterialCategory> list = getMaterialCategoryListByIds(ids);

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -96,11 +97,24 @@ public class RedisService {
         }
     }
 
-    public Long getTenantId(HttpServletRequest request) {
-        if(getObjectFromSessionByKey(request,"tenantId")!=null) {
-            return Long.parseLong(getObjectFromSessionByKey(request, "tenantId").toString());
-        } else {
-            return null;
+    /**
+     * @author jisheng hua
+     * description:
+     *  将信息从redis中移除，比对key和ip
+     *@date: 2021/08/21 22:10
+     * @Param: request
+     * @Param: key
+     * @Param: ip
+     * @Param: deleteKey
+     * @return Object
+     */
+    public void deleteObjectByKeyAndIp(String key, String ip, String deleteKey){
+        Set<String> tokens = redisTemplate.keys("*");
+        for(String token : tokens) {
+            Object value = redisTemplate.opsForHash().get(token, key);
+            if(value!=null && value.equals(ip)) {
+                redisTemplate.opsForHash().delete(token, deleteKey);
+            }
         }
     }
 }

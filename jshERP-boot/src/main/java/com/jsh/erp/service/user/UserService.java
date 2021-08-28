@@ -263,6 +263,12 @@ public class UserService {
                 throw new BusinessRunTimeException(ExceptionConstants.USER_LIMIT_DELETE_CODE,
                         ExceptionConstants.USER_LIMIT_DELETE_MSG);
             }
+            if(user.getId().equals(user.getTenantId())) {
+                logger.error("异常码[{}],异常提示[{}],参数,ids:[{}]",
+                        ExceptionConstants.USER_LIMIT_TENANT_DELETE_CODE,ExceptionConstants.USER_LIMIT_TENANT_DELETE_MSG,ids);
+                throw new BusinessRunTimeException(ExceptionConstants.USER_LIMIT_TENANT_DELETE_CODE,
+                        ExceptionConstants.USER_LIMIT_TENANT_DELETE_MSG);
+            }
             sb.append("[").append(user.getLoginName()).append("]");
         }
         logService.insertLog("用户", sb.toString(),
@@ -297,8 +303,13 @@ public class UserService {
                 }
                 Long tenantId = list.get(0).getTenantId();
                 Tenant tenant = tenantService.getTenantByTenantId(tenantId);
-                if(tenant!=null && tenant.getEnabled()!=null && !tenant.getEnabled()) {
-                    return ExceptionCodeConstants.UserExceptionCode.BLACK_TENANT;
+                if(tenant!=null) {
+                    if(tenant.getEnabled()!=null && !tenant.getEnabled()) {
+                        return ExceptionCodeConstants.UserExceptionCode.BLACK_TENANT;
+                    }
+                    if(tenant.getExpireTime()!=null && tenant.getExpireTime().getTime()<System.currentTimeMillis()){
+                        return ExceptionCodeConstants.UserExceptionCode.EXPIRE_TENANT;
+                    }
                 }
             }
         } catch (Exception e) {
@@ -516,8 +527,6 @@ public class UserService {
             JSONObject tenantObj = new JSONObject();
             tenantObj.put("tenantId", ue.getId());
             tenantObj.put("loginName",ue.getLoginName());
-            tenantObj.put("userNumLimit",ue.getUserNumLimit());
-            tenantObj.put("billsNumLimit",ue.getBillsNumLimit());
             tenantService.insertTenant(tenantObj, request);
             logger.info("===============创建租户信息完成===============");
             if (result > 0) {

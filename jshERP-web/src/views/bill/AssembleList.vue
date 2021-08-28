@@ -109,6 +109,7 @@
     </a-col>
   </a-row>
 </template>
+<!--power by ji sheng hua-->
 <script>
   import AssembleModal from './modules/AssembleModal'
   import BillDetail from './dialog/BillDetail'

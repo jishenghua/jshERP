@@ -833,16 +833,17 @@ CREATE TABLE `jsh_tenant` (
   `tenant_id` bigint(20) DEFAULT NULL COMMENT '用户id',
   `login_name` varchar(255) DEFAULT NULL COMMENT '登录名',
   `user_num_limit` int(11) DEFAULT NULL COMMENT '用户数量限制',
-  `bills_num_limit` int(11) DEFAULT NULL COMMENT '单据数量限制',
+  `type` varchar(1) DEFAULT '0' COMMENT '租户类型，0免费租户，1付费租户',
   `enabled` bit(1) DEFAULT b'1' COMMENT '启用 0-禁用  1-启用',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `expire_time` datetime DEFAULT NULL COMMENT '到期时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 COMMENT='租户';
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 COMMENT='租户';
 
 -- ----------------------------
 -- Records of jsh_tenant
 -- ----------------------------
-INSERT INTO `jsh_tenant` VALUES ('13', '63', 'jsh', '20', '2000', '', '2021-02-17 23:19:17');
+INSERT INTO `jsh_tenant` VALUES ('13', '63', 'jsh', '2000', '1', '', '2021-02-17 23:19:17', '2099-02-17 23:19:17');
 
 -- ----------------------------
 -- Table structure for jsh_unit
@@ -892,9 +893,9 @@ CREATE TABLE `jsh_user` (
 -- ----------------------------
 -- Records of jsh_user
 -- ----------------------------
-INSERT INTO `jsh_user` VALUES ('63', '季圣华', 'jsh', 'e10adc3949ba59abbe56e057f20f883e', '主管', null, '666666@qq.com', '1123123123132', '1', '1', '0', '', null, '63');
+INSERT INTO `jsh_user` VALUES ('63', '测试用户', 'jsh', 'e10adc3949ba59abbe56e057f20f883e', '主管', null, '666666@qq.com', '1123123123132', '1', '1', '0', '', null, '63');
 INSERT INTO `jsh_user` VALUES ('120', '管理员', 'admin', 'e10adc3949ba59abbe56e057f20f883e', null, null, null, null, '1', '0', '0', null, null, '0');
-INSERT INTO `jsh_user` VALUES ('131', '测试用户', 'test123', 'e10adc3949ba59abbe56e057f20f883e', '总监', null, '752718920@qq.com', '', '1', '0', '0', '', null, '63');
+INSERT INTO `jsh_user` VALUES ('131', 'test123', 'test123', 'e10adc3949ba59abbe56e057f20f883e', '总监', null, '7777777@qq.com', '', '1', '0', '0', '', null, '63');
 
 -- ----------------------------
 -- Table structure for jsh_user_business

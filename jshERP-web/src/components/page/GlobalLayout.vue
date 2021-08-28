@@ -14,7 +14,7 @@
         <side-menu
           mode="inline"
           :menus="menus"
-          @menuSelect="myMenuSelect"
+          @menuSelect="myMenuSelectMobile"
           :theme="navTheme"
           :collapsed="false"
           :collapsible="true"></side-menu>
@@ -150,16 +150,17 @@
           this.collapsed = false
         }
       },
-      //update-begin-author:taoyan date:20190430 for:动态路由title显示配置的菜单title而不是其对应路由的title
       myMenuSelect(value){
         //此处触发动态路由被点击事件
         this.findMenuBykey(this.menus,value.key)
-        this.$emit("dynamicRouterShow",value.key,this.activeMenu.text)
-        // update-begin-author:sunjianlei date:20191223 for: 修复刷新后菜单Tab名字显示异常
+        this.$emit("dynamicRouterShow",value.key, this.activeMenu.id, this.activeMenu.text)
         let storeKey = 'route:title:' + this.activeMenu.url
         this.$ls.set(storeKey, this.activeMenu.text)
+      },
+      myMenuSelectMobile(value){
+        this.myMenuSelect(value)
+        //给菜单id赋值，用于调用之后控制按钮的显示
         Vue.ls.set('funId', this.activeMenu.id, 7 * 24 * 60 * 60 * 1000);
-        // update-end-author:sunjianlei date:20191223 for: 修复刷新后菜单Tab名字显示异常
       },
       findMenuBykey(menus,key){
         for(let i of menus){

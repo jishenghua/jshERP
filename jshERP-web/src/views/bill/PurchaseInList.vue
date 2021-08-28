@@ -119,6 +119,7 @@
     </a-col>
   </a-row>
 </template>
+<!-- by ji sheng hua-->
 <script>
   import PurchaseInModal from './modules/PurchaseInModal'
   import BillDetail from './dialog/BillDetail'

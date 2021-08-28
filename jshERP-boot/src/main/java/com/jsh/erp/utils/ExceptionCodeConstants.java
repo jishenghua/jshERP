@@ -34,5 +34,10 @@ public interface ExceptionCodeConstants {
          * 租户被加入黑名单
          */
         public static final int BLACK_TENANT = 6;
+
+        /**
+         * 租户已经过期
+         */
+        public static final int EXPIRE_TENANT = 7;
     }
 }

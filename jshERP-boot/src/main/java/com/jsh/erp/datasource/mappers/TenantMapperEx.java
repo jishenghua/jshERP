@@ -10,9 +10,13 @@ public interface TenantMapperEx {
 
     List<TenantEx> selectByConditionTenant(
             @Param("loginName") String loginName,
+            @Param("type") String type,
+            @Param("enabled") String enabled,
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
     Long countsByTenant(
-            @Param("loginName") String loginName);
+            @Param("loginName") String loginName,
+            @Param("type") String type,
+            @Param("enabled") String enabled);
 }

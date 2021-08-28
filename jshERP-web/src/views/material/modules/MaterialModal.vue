@@ -33,8 +33,8 @@
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单位">
                   <a-row class="form-row" :gutter="24">
                     <a-col :lg="13" :md="13" :sm="24">
-                      <a-input placeholder="输入单位" :hidden="unitStatus" v-decorator.trim="[ 'unit' ]" />
-                      <a-select :value="unitList" placeholder="选择单位" v-decorator="[ 'unitId' ]"
+                      <a-input placeholder="输入单位" :hidden="unitStatus" v-decorator.trim="[ 'unit' ]" @change="onlyUnitOnChange" />
+                      <a-select :value="unitList" placeholder="选择单位" v-decorator="[ 'unitId' ]" @change="manyUnitOnChange"
                                 :hidden="manyUnitStatus" :dropdownMatchSelectWidth="false">
                         <a-select-option v-for="(item,index) in unitList"
                           :key="index" :value="item.id">
@@ -149,7 +149,8 @@
                 :maxHeight="300"
                 :rowNumber="true"
                 :rowSelection="true"
-                :actionButton="true">
+                :actionButton="true"
+                @added="onAdded">
                 <template #buttonAfter>
                   <a-button @click="batchSet('purchase')">采购价-批量</a-button>
                   <a-button style="margin-left: 8px" @click="batchSet('commodity')">零售价-批量</a-button>
@@ -255,6 +256,7 @@
         unitChecked: false,
         skuSwitch: false, //sku开启状态
         barCodeSwitch: false, //生成条码开关
+        maxBarCodeInfo: '', //最大条码
         sku: {
           manyColor: '多颜色',
           manySize: '多尺寸',
@@ -351,6 +353,7 @@
       }
     },
     created () {
+      this.maxBarCodeAction();
       this.loadTreeData();
       this.loadUnitListData();
       this.loadParseMaterialProperty();
@@ -417,6 +420,8 @@
           for (let i = 0; i < res.data.rows.length; i++) {
             if(res.data.rows[i].sku) {
               this.meTable.columns[2].type = FormTypes.input
+            } else {
+              this.meTable.columns[2].type = FormTypes.hidden
             }
           }
           tab.dataSource = res.data.rows || []
@@ -604,6 +609,13 @@
           }
         });
       },
+      maxBarCodeAction(){
+        getMaxBarCode({}).then((res)=> {
+          if (res && res.code === 200) {
+            this.maxBarCodeInfo = res.data.barCode - 0
+          }
+        })
+      },
       loadTreeData(){
         let that = this;
         let params = {};
@@ -633,6 +645,7 @@
         this.skuSwitch = checked
         if(checked) {
           this.meTable.columns[2].type = FormTypes.input
+          this.form.setFieldsValue({'color':''})
         } else {
           this.meTable.columns[2].type = FormTypes.hidden
         }
@@ -701,9 +714,22 @@
         }
         return num
       },
+      onAdded(event) {
+        const { row, target } = event
+        let unit = ''
+        if(this.unitStatus == false) {
+          unit = this.form.getFieldValue('unit')
+        }
+        this.maxBarCodeInfo = this.maxBarCodeInfo + 1
+        target.setValues([{rowKey: row.id, values: {barCode: this.maxBarCodeInfo, commodityUnit: unit?unit:''}}])
+      },
       batchSet(type) {
-        this.$refs.modalForm.add(type);
-        this.$refs.modalForm.disableSubmit = false;
+        if(this.skuSwitch || this.model.id){
+          this.$refs.modalForm.add(type);
+          this.$refs.modalForm.disableSubmit = false;
+        } else {
+          this.$message.warning('抱歉，只有开启多属性才能进行批量操作！');
+        }
       },
       batchSetPricemodalFormOk(price, batchType) {
         let arr = this.meTable.dataSource
@@ -723,6 +749,9 @@
               meInfo.wholesaleDecimal = price-0
             } else if(batchType === 'low') {
               meInfo.lowDecimal = price-0
+            }
+            if(arr[i].id) {
+              meInfo.id = arr[i].id
             }
             meTableData.push(meInfo)
           }
@@ -767,6 +796,38 @@
             this.mpShort.otherField3.enabled = mpList[i].enabled
           }
         }
+      },
+      onlyUnitOnChange(e) {
+        this.$refs.editableMeTable.getValues((error, values) => {
+          let mArr = values
+          for (let i = 0; i < mArr.length; i++) {
+            let mInfo = mArr[i]
+            mInfo.commodityUnit = e.target.value
+          }
+          this.meTable.dataSource = mArr
+        })
+      },
+      manyUnitOnChange(value) {
+        let unitArr = this.unitList
+        let basicUnit = '', otherUnit = ''
+        for (let i = 0; i < unitArr.length; i++) {
+          if(unitArr[i].id === value) {
+            basicUnit = unitArr[i].basicUnit
+            otherUnit = unitArr[i].otherUnit
+          }
+        }
+        this.$refs.editableMeTable.getValues((error, values) => {
+          let mArr = values
+          for (let i = 0; i < mArr.length; i++) {
+            let mInfo = mArr[i]
+            if(i===0) {
+              mInfo.commodityUnit = basicUnit
+            } else {
+              mInfo.commodityUnit = otherUnit
+            }
+          }
+          this.meTable.dataSource = mArr
+        })
       },
       unitOnChange (e) {
         let isChecked = e.target.checked;

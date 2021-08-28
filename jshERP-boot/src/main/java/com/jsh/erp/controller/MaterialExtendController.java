@@ -6,6 +6,7 @@ import com.jsh.erp.datasource.entities.MaterialExtend;
 import com.jsh.erp.datasource.vo.MaterialExtendVo4List;
 import com.jsh.erp.service.materialExtend.MaterialExtendService;
 import com.jsh.erp.utils.BaseResponseInfo;
+import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -47,7 +48,9 @@ public class MaterialExtendController {
                     item.put("id", md.getId());
                     item.put("barCode", md.getBarCode());
                     item.put("commodityUnit", md.getCommodityUnit());
-                    item.put("sku", md.getSku());
+                    if(StringUtil.isNotEmpty(md.getSku())){
+                        item.put("sku", md.getSku());
+                    }
                     item.put("purchaseDecimal", md.getPurchaseDecimal());
                     item.put("commodityDecimal", md.getCommodityDecimal());
                     item.put("wholesaleDecimal", md.getWholesaleDecimal());

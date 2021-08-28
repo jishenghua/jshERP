@@ -1,3 +1,4 @@
+<!-- b y 7 5 2 7  1 8 9 2 0 -->
 <template>
   <div class="main">
     <a-form :form="form" class="user-layout-login" ref="formLogin" id="formLogin">
@@ -6,7 +7,7 @@
           size="large"
           v-decorator="['loginName',{initialValue:'', rules: validatorRules.loginName.rules}]"
           type="text"
-          placeholder="请输入帐户名">
+          placeholder="请输入用户名">
           <a-icon slot="prefix" type="user" :style="{ color: 'rgba(0,0,0,.25)' }"/>
         </a-input>
       </a-form-item>
@@ -24,8 +25,8 @@
 
       <a-form-item>
         <a-checkbox v-decorator="['rememberMe', {initialValue: true, valuePropName: 'checked'}]" >自动登陆</a-checkbox>
-        <router-link :to="{ name: 'register'}" class="forge-password" style="float: right;margin-right: 10px" >
-          注册账户
+        <router-link :to="{ name: 'register'}" class="forge-password" style="float: right;margin-right: 10px;" >
+          注册租户
         </router-link>
       </a-form-item>
 
@@ -52,7 +53,7 @@
     </a-form>
   </div>
 </template>
-
+<!-- BY cao_yu_li -->
 <script>
   import md5 from "md5"
   import api from '@/api'
@@ -136,7 +137,7 @@
               //loginParams.remember_me = values.rememberMe
               console.log("登录参数",loginParams)
               that.Login(loginParams).then((res) => {
-                this.departConfirm(res)
+                this.departConfirm(res, loginParams.loginName)
               }).catch((err) => {
                 that.requestFailed(err);
               });
@@ -146,12 +147,18 @@
           })
         }
       },
-      loginSuccess () {
+      loginSuccess (res) {
         this.$router.push({ path: "/dashboard/analysis" })
         this.$notification.success({
           message: '欢迎',
           description: `${timeFix()}，欢迎回来`,
         });
+        if(res.data && res.data.user) {
+          if(res.data.user.loginName === 'admin'){
+            let desc = 'admin只是平台运维用户，真正的管理员是租户(测试账号为jsh），admin不能编辑任何业务数据，只能配置平台菜单和创建租户'
+            this.$message.info(desc,30)
+          }
+        }
         this.initMPropertyShort();
       },
       cmsFailed(err){
@@ -172,13 +179,13 @@
       generateCode(value){
         this.verifiedCode = value.toLowerCase()
       },
-      departConfirm(res){
+      departConfirm(res, loginName){
         if(res.code==200){
           let err = {};
           if(res.data.msgTip == 'user can login'){
             Vue.ls.set('winBtnStrList', res.data.userBtn, 7 * 24 * 60 * 60 * 1000);
             Vue.ls.set('roleType', res.data.roleType, 7 * 24 * 60 * 60 * 1000);
-            this.loginSuccess()
+            this.loginSuccess(res)
           } else if(res.data.msgTip == 'user is not exist'){
             err.message = '用户不存在';
             this.requestFailed(err)
@@ -192,7 +199,15 @@
             this.requestFailed(err)
             this.Logout();
           } else if(res.data.msgTip == 'tenant is black'){
-            err.message = '用户所属的租户被禁用';
+            if(loginName === 'jsh') {
+              err.message = 'jsh用户已停用，请注册租户进行体验！';
+            } else {
+              err.message = '用户所属的租户被禁用';
+            }
+            this.requestFailed(err)
+            this.Logout();
+          } else if(res.data.msgTip == 'tenant is expire'){
+            err.message = '用户所属的租户已过期';
             this.requestFailed(err)
             this.Logout();
           } else if(res.data.msgTip == 'access service error'){
@@ -258,6 +273,7 @@
 
     .forge-password {
       font-size: 14px;
+      font-weight: bolder;
     }
 
     button.login-button {

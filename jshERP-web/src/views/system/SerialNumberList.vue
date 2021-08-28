@@ -81,6 +81,7 @@
     </a-col>
   </a-row>
 </template>
+<!-- f r o m 7 5  2 7 1  8 9 2 0 -->
 <script>
   import SerialNumberModal from './modules/SerialNumberModal'
   import SerialNumberBatchModal from './modules/SerialNumberBatchModal'

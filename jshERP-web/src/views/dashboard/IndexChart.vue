@@ -49,9 +49,11 @@
     <a-row :gutter="24">
       <a-col :sm="24" :md="24" :xl="24" :style="{ marginBottom: '5px' }">
         <a-card :bordered="false" :body-style="{padding: '5'}">
-          <div class="hidden-xs" style="float:right;">当前版本：V3.0</div>
-          &copy; 2015-2030 {{systemTitle}} - Powered By
-          <a :href="systemUrl" target="_blank">官方网站</a>
+          <div class="hidden-xs" style="float:right;">&copy; 2015-2030 {{systemTitle}} V3.0</div>
+          <a-tag v-if="tenant.type==0" color="blue">试用到期：{{tenant.expireTime}}</a-tag>
+          <a-tag v-if="tenant.type==0" color="blue">试用用户：{{tenant.userCurrentNum}}/{{tenant.userNumLimit}}</a-tag>
+          <a-tag v-if="tenant.type==1" color="blue">服务到期：{{tenant.expireTime}}</a-tag>
+          <a-tag v-if="tenant.type==1" color="blue">授权用户：{{tenant.userCurrentNum}}/{{tenant.userNumLimit}}</a-tag>
         </a-card>
       </a-col>
     </a-row>
@@ -69,6 +71,7 @@
   import HeadInfo from '@/components/tools/HeadInfo.vue'
   import Trend from '@/components/Trend'
   import { getBuyAndSaleStatistics, buyOrSalePrice } from '@/api/api'
+  import { getAction } from '../../api/manage'
 
   export default {
     name: "IndexChart",
@@ -94,14 +97,21 @@
         buyPriceData: [],
         salePriceData: [],
         visitFields:['ip','visit'],
-        visitInfo:[]
+        visitInfo:[],
+        tenant: {
+          type: '',
+          expireTime: '',
+          userCurrentNum: '',
+          userNumLimit: ''
+        }
       }
     },
     created() {
       setTimeout(() => {
         this.loading = !this.loading
       }, 1000)
-      this.initInfo();
+      this.initInfo()
+      this.initWithTenant()
     },
     methods: {
       initInfo () {
@@ -114,6 +124,13 @@
           if(res.code === 200){
             this.buyPriceData = res.data.buyPriceList;
             this.salePriceData = res.data.salePriceList;
+          }
+        })
+      },
+      initWithTenant() {
+        getAction("/user/infoWithTenant",{}).then(res=>{
+          if(res && res.code === 200) {
+            this.tenant = res.data
           }
         })
       }

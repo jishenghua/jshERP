@@ -313,14 +313,7 @@ public class DepotHeadController {
         JSONObject result = ExceptionConstants.standardSuccess();
         String beanJson = body.getInfo();
         String rows = body.getRows();
-        Long billsNumLimit = Long.parseLong(redisService.getObjectFromSessionByKey(request,"billsNumLimit").toString());
-        Long count = depotHeadService.countDepotHead(null,null,null,null,null,null,null,null,null,null,null);
-        if(count>= billsNumLimit) {
-            throw new BusinessParamCheckingException(ExceptionConstants.DEPOT_HEAD_OVER_LIMIT_FAILED_CODE,
-                    ExceptionConstants.DEPOT_HEAD_OVER_LIMIT_FAILED_MSG);
-        } else {
-            depotHeadService.addDepotHeadAndDetail(beanJson,rows, request);
-        }
+        depotHeadService.addDepotHeadAndDetail(beanJson, rows, request);
         return result;
     }
 

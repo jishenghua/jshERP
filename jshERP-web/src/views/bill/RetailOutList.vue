@@ -118,6 +118,7 @@
     </a-col>
   </a-row>
 </template>
+<!-- create ji sheng hua-->
 <script>
   import RetailOutModal from './modules/RetailOutModal'
   import BillDetail from './dialog/BillDetail'

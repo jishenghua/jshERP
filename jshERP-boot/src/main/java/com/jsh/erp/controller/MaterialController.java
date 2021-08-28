@@ -472,7 +472,8 @@ public class MaterialController {
                         //零售价
                         mvo.setBillPrice(mvo.getCommodityDecimal());
                     } else if("CGDD".equals(prefixNo) || "CGRK".equals(prefixNo) || "CGTH".equals(prefixNo)
-                            || "QTRK".equals(prefixNo) || "DBCK".equals(prefixNo) || "ZZD".equals(prefixNo) || "CXD".equals(prefixNo) ) {
+                            || "QTRK".equals(prefixNo) || "DBCK".equals(prefixNo) || "ZZD".equals(prefixNo) || "CXD".equals(prefixNo)
+                            || "PDLR".equals(prefixNo) || "PDFP".equals(prefixNo) ) {
                         //采购价
                         mvo.setBillPrice(mvo.getPurchaseDecimal());
                     } else if("XSDD".equals(prefixNo) || "XSCK".equals(prefixNo) || "XSTH".equals(prefixNo) || "QTCK".equals(prefixNo)) {

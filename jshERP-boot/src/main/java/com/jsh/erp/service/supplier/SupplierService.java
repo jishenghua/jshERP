@@ -240,9 +240,6 @@ public class SupplierService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateAdvanceIn(Long supplierId, BigDecimal advanceIn)throws Exception{
-        logService.insertLog("商家",
-                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(supplierId).toString(),
-                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         Supplier supplier=null;
         try{
             supplier = supplierMapper.selectByPrimaryKey(supplierId);

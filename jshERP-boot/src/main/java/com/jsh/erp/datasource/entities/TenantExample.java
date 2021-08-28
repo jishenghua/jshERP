@@ -355,63 +355,73 @@ public class TenantExample {
             return (Criteria) this;
         }
 
-        public Criteria andBillsNumLimitIsNull() {
-            addCriterion("bills_num_limit is null");
+        public Criteria andTypeIsNull() {
+            addCriterion("type is null");
             return (Criteria) this;
         }
 
-        public Criteria andBillsNumLimitIsNotNull() {
-            addCriterion("bills_num_limit is not null");
+        public Criteria andTypeIsNotNull() {
+            addCriterion("type is not null");
             return (Criteria) this;
         }
 
-        public Criteria andBillsNumLimitEqualTo(Integer value) {
-            addCriterion("bills_num_limit =", value, "billsNumLimit");
+        public Criteria andTypeEqualTo(String value) {
+            addCriterion("type =", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andBillsNumLimitNotEqualTo(Integer value) {
-            addCriterion("bills_num_limit <>", value, "billsNumLimit");
+        public Criteria andTypeNotEqualTo(String value) {
+            addCriterion("type <>", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andBillsNumLimitGreaterThan(Integer value) {
-            addCriterion("bills_num_limit >", value, "billsNumLimit");
+        public Criteria andTypeGreaterThan(String value) {
+            addCriterion("type >", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andBillsNumLimitGreaterThanOrEqualTo(Integer value) {
-            addCriterion("bills_num_limit >=", value, "billsNumLimit");
+        public Criteria andTypeGreaterThanOrEqualTo(String value) {
+            addCriterion("type >=", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andBillsNumLimitLessThan(Integer value) {
-            addCriterion("bills_num_limit <", value, "billsNumLimit");
+        public Criteria andTypeLessThan(String value) {
+            addCriterion("type <", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andBillsNumLimitLessThanOrEqualTo(Integer value) {
-            addCriterion("bills_num_limit <=", value, "billsNumLimit");
+        public Criteria andTypeLessThanOrEqualTo(String value) {
+            addCriterion("type <=", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andBillsNumLimitIn(List<Integer> values) {
-            addCriterion("bills_num_limit in", values, "billsNumLimit");
+        public Criteria andTypeLike(String value) {
+            addCriterion("type like", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andBillsNumLimitNotIn(List<Integer> values) {
-            addCriterion("bills_num_limit not in", values, "billsNumLimit");
+        public Criteria andTypeNotLike(String value) {
+            addCriterion("type not like", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andBillsNumLimitBetween(Integer value1, Integer value2) {
-            addCriterion("bills_num_limit between", value1, value2, "billsNumLimit");
+        public Criteria andTypeIn(List<String> values) {
+            addCriterion("type in", values, "type");
             return (Criteria) this;
         }
 
-        public Criteria andBillsNumLimitNotBetween(Integer value1, Integer value2) {
-            addCriterion("bills_num_limit not between", value1, value2, "billsNumLimit");
+        public Criteria andTypeNotIn(List<String> values) {
+            addCriterion("type not in", values, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeBetween(String value1, String value2) {
+            addCriterion("type between", value1, value2, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeNotBetween(String value1, String value2) {
+            addCriterion("type not between", value1, value2, "type");
             return (Criteria) this;
         }
 
@@ -532,6 +542,66 @@ public class TenantExample {
 
         public Criteria andCreateTimeNotBetween(Date value1, Date value2) {
             addCriterion("create_time not between", value1, value2, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpireTimeIsNull() {
+            addCriterion("expire_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpireTimeIsNotNull() {
+            addCriterion("expire_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpireTimeEqualTo(Date value) {
+            addCriterion("expire_time =", value, "expireTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpireTimeNotEqualTo(Date value) {
+            addCriterion("expire_time <>", value, "expireTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpireTimeGreaterThan(Date value) {
+            addCriterion("expire_time >", value, "expireTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpireTimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("expire_time >=", value, "expireTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpireTimeLessThan(Date value) {
+            addCriterion("expire_time <", value, "expireTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpireTimeLessThanOrEqualTo(Date value) {
+            addCriterion("expire_time <=", value, "expireTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpireTimeIn(List<Date> values) {
+            addCriterion("expire_time in", values, "expireTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpireTimeNotIn(List<Date> values) {
+            addCriterion("expire_time not in", values, "expireTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpireTimeBetween(Date value1, Date value2) {
+            addCriterion("expire_time between", value1, value2, "expireTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpireTimeNotBetween(Date value1, Date value2) {
+            addCriterion("expire_time not between", value1, value2, "expireTime");
             return (Criteria) this;
         }
     }

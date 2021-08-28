@@ -76,6 +76,9 @@ public class ExceptionConstants {
     //演示用户不允许修改
     public static final int USER_LIMIT_UPDATE_CODE = 500007;
     public static final String USER_LIMIT_UPDATE_MSG = "抱歉，演示模式下的演示用户不允许修改";
+    //租户不能被删除
+    public static final int USER_LIMIT_TENANT_DELETE_CODE = 500008;
+    public static final String USER_LIMIT_TENANT_DELETE_MSG = "抱歉，租户不能被删除";
 
     /**
      * 角色信息
@@ -287,6 +290,9 @@ public class ExceptionConstants {
     //商品条码重复
     public static final int MATERIAL_BARCODE_EXISTS_CODE = 8000005;
     public static final String MATERIAL_BARCODE_EXISTS_MSG = "商品条码:%s重复";
+    //商品-单位匹配不上
+    public static final int MATERIAL_UNIT_MATE_CODE = 8000006;
+    public static final String MATERIAL_UNIT_MATE_MSG = "抱歉，单位匹配不上，请完善计量单位信息！";
     /**
      *  单据信息
      * type = 85
@@ -300,9 +306,6 @@ public class ExceptionConstants {
     //修改单据信息失败
     public static final int DEPOT_HEAD_EDIT_FAILED_CODE = 8500002;
     public static final String DEPOT_HEAD_EDIT_FAILED_MSG = "修改单据信息失败";
-    //单据录入数量超出限制
-    public static final int DEPOT_HEAD_OVER_LIMIT_FAILED_CODE = 8500003;
-    public static final String DEPOT_HEAD_OVER_LIMIT_FAILED_MSG = "单据录入数量超出限制，请联系管理员";
     //单据录入-仓库不能为空
     public static final int DEPOT_HEAD_DEPOT_FAILED_CODE = 8500004;
     public static final String DEPOT_HEAD_DEPOT_FAILED_MSG = "仓库不能为空";
@@ -321,6 +324,9 @@ public class ExceptionConstants {
     //单据录入-退货单不能欠款
     public static final int DEPOT_HEAD_BACK_BILL_DEBT_FAILED_CODE = 8500009;
     public static final String DEPOT_HEAD_BACK_BILL_DEBT_FAILED_MSG = "退货单不能欠款";
+    //单据录入-调入仓库与原仓库不能重复
+    public static final int DEPOT_HEAD_ANOTHER_DEPOT_EQUAL_FAILED_CODE = 8500010;
+    public static final String DEPOT_HEAD_ANOTHER_DEPOT_EQUAL_FAILED_MSG = "调入仓库与原仓库不能重复";
     /**
      *  单据明细信息
      * type = 90

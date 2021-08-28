@@ -53,26 +53,6 @@ public class SupplierController {
     private UserService userService;
 
     /**
-     * 更新供应商-只更新预付款，其余用原来的值
-     * @param supplierId
-     * @param advanceIn
-     * @param request
-     * @return
-     */
-    @PostMapping(value = "/updateAdvanceIn")
-    public String updateAdvanceIn(@RequestParam("supplierId") Long supplierId,
-                                            @RequestParam("advanceIn") BigDecimal advanceIn,
-                                            HttpServletRequest request)throws Exception {
-        Map<String, Object> objectMap = new HashMap<String, Object>();
-        int res = supplierService.updateAdvanceIn(supplierId, advanceIn);
-        if(res > 0) {
-            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
-        } else {
-            return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
-        }
-    }
-
-    /**
      * 查找客户信息-下拉框
      * @param request
      * @return
@@ -83,19 +63,15 @@ public class SupplierController {
         try {
             String type = "UserCustomer";
             Long userId = userService.getUserId(request);
+            //获取权限信息
+            String ubValue = userBusinessService.getUBValueByTypeAndKeyId(type, userId.toString());
             List<Supplier> supplierList = supplierService.findBySelectCus();
             JSONArray dataArray = new JSONArray();
             if (null != supplierList) {
                 boolean customerFlag = systemConfigService.getCustomerFlag();
                 for (Supplier supplier : supplierList) {
                     JSONObject item = new JSONObject();
-                    //勾选判断1
-                    Boolean flag = false;
-                    try {
-                        flag = userBusinessService.checkIsUserBusinessExist(type, userId.toString(), "[" + supplier.getId().toString() + "]");
-                    } catch (DataAccessException e) {
-                        logger.error(">>>>>>>>>>>>>>>>>查询用户对应的客户：存在异常！");
-                    }
+                    Boolean flag = ubValue.contains("[" + supplier.getId().toString() + "]");
                     if (!customerFlag || flag) {
                         item.put("id", supplier.getId());
                         item.put("supplier", supplier.getSupplier()); //客户名称
@@ -197,6 +173,8 @@ public class SupplierController {
                                    HttpServletRequest request) throws Exception{
         JSONArray arr = new JSONArray();
         try {
+            //获取权限信息
+            String ubValue = userBusinessService.getUBValueByTypeAndKeyId(type, keyId);
             List<Supplier> dataList = supplierService.findUserCustomer();
             //开始拼接json数据
             JSONObject outer = new JSONObject();
@@ -215,17 +193,10 @@ public class SupplierController {
                     item.put("value", supplier.getId());
                     item.put("title", supplier.getSupplier());
                     item.put("attributes", supplier.getSupplier());
-                    //勾选判断1
-                    Boolean flag = false;
-                    try {
-                        flag = userBusinessService.checkIsUserBusinessExist(type, keyId, "[" + supplier.getId().toString() + "]");
-                    } catch (Exception e) {
-                        logger.error(">>>>>>>>>>>>>>>>>设置用户对应的客户：类型" + type + " KeyId为： " + keyId + " 存在异常！");
-                    }
-                    if (flag == true) {
+                    Boolean flag = ubValue.contains("[" + supplier.getId().toString() + "]");
+                    if (flag) {
                         item.put("checked", true);
                     }
-                    //结束
                     dataArray.add(item);
                 }
             }

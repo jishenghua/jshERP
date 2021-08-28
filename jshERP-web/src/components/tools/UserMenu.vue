@@ -32,9 +32,12 @@
       </a>
     </span>
     <span class="action">
-      <a target="_blank" :href="systemUrl">
-        <a-icon type="bank" style="font-size: 16px;" />
-      </a>
+      <a-tooltip>
+        <template slot="title">官方网站</template>
+        <a target="_blank" :href="systemUrl">
+          <a-icon type="bank" style="font-size: 16px;" />
+        </a>
+      </a-tooltip>
     </span>
     <header-notice class="action"/>
     <a-dropdown>

@@ -85,14 +85,6 @@ service.interceptors.request.use(config => {
   if (token) {
     config.headers[ 'X-Access-Token' ] = token // 让每个请求携带自定义 token 请根据实际情况自行修改
   }
-  if(config.method=='get'){
-    if(config.url.indexOf("systemConfig/getDictItems")<0){
-      config.params = {
-        _t: Date.parse(new Date())/1000,
-        ...config.params
-      }
-    }
-  }
   return config
 },(error) => {
   return Promise.reject(error)

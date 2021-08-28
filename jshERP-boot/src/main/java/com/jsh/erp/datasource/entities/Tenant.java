@@ -11,11 +11,13 @@ public class Tenant {
 
     private Integer userNumLimit;
 
-    private Integer billsNumLimit;
+    private String type;
 
     private Boolean enabled;
 
     private Date createTime;
+
+    private Date expireTime;
 
     public Long getId() {
         return id;
@@ -49,12 +51,12 @@ public class Tenant {
         this.userNumLimit = userNumLimit;
     }
 
-    public Integer getBillsNumLimit() {
-        return billsNumLimit;
+    public String getType() {
+        return type;
     }
 
-    public void setBillsNumLimit(Integer billsNumLimit) {
-        this.billsNumLimit = billsNumLimit;
+    public void setType(String type) {
+        this.type = type == null ? null : type.trim();
     }
 
     public Boolean getEnabled() {
@@ -71,5 +73,13 @@ public class Tenant {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public Date getExpireTime() {
+        return expireTime;
+    }
+
+    public void setExpireTime(Date expireTime) {
+        this.expireTime = expireTime;
     }
 }

@@ -307,17 +307,7 @@ export const JeecgListMixin = {
           if (info.file.response.code === 200) {
             this.$message.success(info.file.response.data || `${info.file.name} 文件上传成功`)
           } else {
-            let { message, result: { msg, fileUrl, fileName } } = info.file.response
-            let href = window._CONFIG['domianURL'] + fileUrl
-            this.$warning({
-              title: message,
-              content: (
-                <div>
-                  <span>{msg}</span><br/>
-                  <span>具体详情请 <a href={href} target="_blank" download={fileName}>点击下载</a> </span>
-                </div>
-              )
-            })
+            this.$message.warning(info.file.response.data)
           }
           this.loadData()
         } else {

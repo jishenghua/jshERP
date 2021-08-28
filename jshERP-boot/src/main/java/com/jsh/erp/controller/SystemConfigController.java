@@ -61,49 +61,6 @@ public class SystemConfigController {
     @Value(value="${spring.servlet.multipart.max-request-size}")
     private Long maxRequestSize;
 
-    @GetMapping(value = "/getDictItems/{dictCode}")
-    public BaseResponseInfo getDictItems(@PathVariable String dictCode,
-                                       HttpServletRequest request) {
-        BaseResponseInfo res = new BaseResponseInfo();
-        try {
-            Long userId = userService.getUserId(request);
-            JSONArray arr = new JSONArray();
-            if(StringUtil.isNotEmpty(dictCode)) {
-                if (dictCode.equals("depotDict")) {
-                    List<Depot> dataList = depotService.findUserDepot();
-                    //开始拼接json数据
-                    if (null != dataList) {
-                        boolean depotFlag = systemConfigService.getDepotFlag();
-                        for (Depot depot : dataList) {
-                            JSONObject item = new JSONObject();
-                            //勾选判断1
-                            Boolean flag = false;
-                            String type = "UserDepot";
-                            try {
-                                flag = userBusinessService.checkIsUserBusinessExist(type, userId.toString(), "[" + depot.getId().toString() + "]");
-                            } catch (DataAccessException e) {
-                                logger.error(">>>>>>>>>>>>>>>>>查询用户对应的仓库：类型" + type + " KeyId为： " + userId + " 存在异常！");
-                            }
-                            if (!depotFlag || flag) {
-                                item.put("value", depot.getId().toString());
-                                item.put("text", depot.getName());
-                                item.put("title", depot.getName());
-                                arr.add(item);
-                            }
-                        }
-                    }
-                }
-            }
-            res.code = 200;
-            res.data = arr;
-        } catch(Exception e){
-            e.printStackTrace();
-            res.code = 500;
-            res.data = "获取数据失败";
-        }
-        return res;
-    }
-
     /**
      * 获取当前租户的配置信息
      * @param request

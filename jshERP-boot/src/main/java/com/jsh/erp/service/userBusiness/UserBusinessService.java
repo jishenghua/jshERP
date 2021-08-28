@@ -126,16 +126,25 @@ public class UserBusinessService {
     }
 
     public List<UserBusiness> getBasicData(String keyId, String type)throws Exception{
-        UserBusinessExample example = new UserBusinessExample();
-        example.createCriteria().andKeyIdEqualTo(keyId).andTypeEqualTo(type)
-                .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<UserBusiness> list=null;
         try{
+            UserBusinessExample example = new UserBusinessExample();
+            example.createCriteria().andKeyIdEqualTo(keyId).andTypeEqualTo(type)
+                    .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
             list= userBusinessMapper.selectByExample(example);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
+    }
+
+    public String getUBValueByTypeAndKeyId(String type, String keyId) throws Exception {
+        String ubValue = "";
+        List<UserBusiness> ubList = getBasicData(keyId, type);
+        if(ubList!=null && ubList.size()>0) {
+            ubValue = ubList.get(0).getValue();
+        }
+        return ubValue;
     }
 
     public Long checkIsValueExist(String type, String keyId)throws Exception {
@@ -153,29 +162,6 @@ public class UserBusinessService {
             id = list.get(0).getId();
         }
         return id;
-    }
-
-    public Boolean checkIsUserBusinessExist(String TypeVale, String KeyIdValue, String UBValue)throws Exception {
-        UserBusinessExample example = new UserBusinessExample();
-        String newVaule = "%" + UBValue + "%";
-        if(TypeVale !=null && KeyIdValue !=null) {
-            example.createCriteria().andTypeEqualTo(TypeVale).andKeyIdEqualTo(KeyIdValue).andValueLike(newVaule)
-                    .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        } else {
-            example.createCriteria().andValueLike(newVaule)
-                    .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        }
-        List<UserBusiness> list=null;
-        try{
-            list=  userBusinessMapper.selectByExample(example);
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        if(list!=null&&list.size() > 0) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)

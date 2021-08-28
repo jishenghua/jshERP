@@ -1181,7 +1181,7 @@ alter table jsh_depot_item drop column other_field5;
 -- --------------------------------------------------------
 -- 时间 2021年7月27日
 -- by jishenghua
--- 移除机构表的全名字段
+-- 给单据子表加sku字段
 -- --------------------------------------------------------
 alter table jsh_depot_item add sku varchar(50) DEFAULT NULL COMMENT '多属性' after material_unit;
 
@@ -1191,3 +1191,13 @@ alter table jsh_depot_item add sku varchar(50) DEFAULT NULL COMMENT '多属性' 
 -- 增加调拨明细菜单
 -- --------------------------------------------------------
 INSERT INTO `jsh_function` VALUES ('248', '030150', '调拨明细', '0301', '/report/allocation_detail', '/report/AllocationDetail', '\0', '0646', '', '电脑版', '', 'profile', '0');
+
+-- --------------------------------------------------------
+-- 时间 2021年8月24日
+-- by jishenghua
+-- 给租户表加sku字段
+-- 给租户表移除单据数量限制字段
+-- --------------------------------------------------------
+alter table jsh_tenant add type varchar(1) DEFAULT '0' COMMENT '租户类型，0免费租户，1付费租户' after bills_num_limit;
+alter table jsh_tenant drop column bills_num_limit;
+alter table jsh_tenant add expire_time datetime DEFAULT NULL COMMENT '到期时间' after create_time;

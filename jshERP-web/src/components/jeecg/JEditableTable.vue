@@ -2758,6 +2758,7 @@
 
   .input-table {
     max-width: 100%;
+    min-width: 1550px;
     overflow-x: hidden;
     overflow-y: hidden;
     position: relative;

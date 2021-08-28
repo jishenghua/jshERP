@@ -259,7 +259,7 @@
         <if test="mId != null">
             and di.material_id=#{mId}
         </if>
-        and dh.sub_type='盘点复盘' and dh.`Status`='1'
+        and dh.sub_type='盘点复盘'
         <if test="depotId != null">
             and di.depot_id=#{depotId}
         </if>

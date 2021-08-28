@@ -70,6 +70,8 @@ public class DepotController {
                                  HttpServletRequest request) throws Exception{
         JSONArray arr = new JSONArray();
         try {
+            //获取权限信息
+            String ubValue = userBusinessService.getUBValueByTypeAndKeyId(type, keyId);
             List<Depot> dataList = depotService.findUserDepot();
             //开始拼接json数据
             JSONObject outer = new JSONObject();
@@ -88,17 +90,10 @@ public class DepotController {
                     item.put("value", depot.getId());
                     item.put("title", depot.getName());
                     item.put("attributes", depot.getName());
-                    //勾选判断1
-                    Boolean flag = false;
-                    try {
-                        flag = userBusinessService.checkIsUserBusinessExist(type, keyId, "[" + depot.getId().toString() + "]");
-                    } catch (Exception e) {
-                        logger.error(">>>>>>>>>>>>>>>>>设置用户对应的仓库：类型" + type + " KeyId为： " + keyId + " 存在异常！");
-                    }
-                    if (flag == true) {
+                    Boolean flag = ubValue.contains("[" + depot.getId().toString() + "]");
+                    if (flag) {
                         item.put("checked", true);
                     }
-                    //结束
                     dataArray.add(item);
                 }
             }
