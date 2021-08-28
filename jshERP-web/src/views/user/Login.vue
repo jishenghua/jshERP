@@ -7,7 +7,7 @@
           size="large"
           v-decorator="['loginName',{initialValue:'', rules: validatorRules.loginName.rules}]"
           type="text"
-          placeholder="请输入帐户名">
+          placeholder="请输入用户名">
           <a-icon slot="prefix" type="user" :style="{ color: 'rgba(0,0,0,.25)' }"/>
         </a-input>
       </a-form-item>
@@ -25,8 +25,8 @@
 
       <a-form-item>
         <a-checkbox v-decorator="['rememberMe', {initialValue: true, valuePropName: 'checked'}]" >自动登陆</a-checkbox>
-        <router-link :to="{ name: 'register'}" class="forge-password" style="float: right;margin-right: 10px" >
-          注册账户
+        <router-link :to="{ name: 'register'}" class="forge-password" style="float: right;margin-right: 10px;" >
+          注册租户
         </router-link>
       </a-form-item>
 
@@ -137,7 +137,7 @@
               //loginParams.remember_me = values.rememberMe
               console.log("登录参数",loginParams)
               that.Login(loginParams).then((res) => {
-                this.departConfirm(res)
+                this.departConfirm(res, loginParams.loginName)
               }).catch((err) => {
                 that.requestFailed(err);
               });
@@ -157,9 +157,6 @@
           if(res.data.user.loginName === 'admin'){
             let desc = 'admin只是平台运维用户，真正的管理员是租户(测试账号为jsh），admin不能编辑任何业务数据，只能配置平台菜单和创建租户'
             this.$message.info(desc,30)
-          } else if(res.data.user.loginName === 'jsh'){
-            let desc = '当前为测试用户，数据会被重置，正式体验请注册!'
-            this.$message.info(desc,10)
           }
         }
         this.initMPropertyShort();
@@ -182,7 +179,7 @@
       generateCode(value){
         this.verifiedCode = value.toLowerCase()
       },
-      departConfirm(res){
+      departConfirm(res, loginName){
         if(res.code==200){
           let err = {};
           if(res.data.msgTip == 'user can login'){
@@ -202,7 +199,11 @@
             this.requestFailed(err)
             this.Logout();
           } else if(res.data.msgTip == 'tenant is black'){
-            err.message = '用户所属的租户被禁用';
+            if(loginName === 'jsh') {
+              err.message = 'jsh用户已停用，请注册租户进行体验！';
+            } else {
+              err.message = '用户所属的租户被禁用';
+            }
             this.requestFailed(err)
             this.Logout();
           } else if(res.data.msgTip == 'tenant is expire'){
@@ -272,6 +273,7 @@
 
     .forge-password {
       font-size: 14px;
+      font-weight: bolder;
     }
 
     button.login-button {

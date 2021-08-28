@@ -4,7 +4,7 @@
     <a-form ref="formRegister" :autoFormCreate="(form)=>{this.form = form}" id="formRegister">
       <a-form-item
         fieldDecoratorId="username"
-        :fieldDecoratorOptions="{rules: [{ required: true, message: '用户名不能为空'}], validateTrigger: ['change', 'blur'], validateFirst: true}">
+        :fieldDecoratorOptions="{rules: [{ required: true, message: '用户名不能为空'}, { validator: this.handleUserName}], validateTrigger: ['change', 'blur'], validateFirst: true}">
         <a-input size="large" type="text" autocomplete="false" placeholder="请输入用户名"></a-input>
       </a-form-item>
 
@@ -40,7 +40,6 @@
               size="large"
               type="text"
               default-value=""
-              @change="inputCodeChange"
               placeholder="请输入验证码">
               <a-icon slot="prefix" type="smile" :style="{ color: 'rgba(0,0,0,.25)' }"/>
             </a-input>
@@ -60,9 +59,9 @@
           class="register-button"
           :loading="registerBtn"
           @click.stop.prevent="handleSubmit"
-          :disabled="registerBtn">注册
+          :disabled="registerBtn">注册租户
         </a-button>
-        <router-link class="login" :to="{ name: 'login' }">使用已有账户登录</router-link>
+        <router-link class="login" :to="{ name: 'login' }">使用已有租户登录</router-link>
       </a-form-item>
 
       <div class="login-copyright">
@@ -153,6 +152,13 @@
           this.requestCodeSuccess=false
         })
       },
+      handleUserName(rule, value, callback) {
+        let reg = /^(?=.*[a-z]).{4,}$/;
+        if (!reg.test(value)) {
+          callback(new Error('用户名需要由4位小写字母组成!'))
+        }
+        callback()
+      },
       handlePasswordLevel(rule, value, callback) {
 
         let level = 0
@@ -232,8 +238,8 @@
                 if(res.code === 200){
                   this.$notification.success({
                     message: '提示',
-                    description: "注册成功，请进行登录！",
-                    duration: 2
+                    description: "注册成功，请使用该租户登录！",
+                    duration: 5
                   });
                   let that = this;
                   setTimeout(function () {
@@ -326,6 +332,7 @@
     .login {
       float: right;
       line-height: 40px;
+      font-weight: bolder;
     }
   }
   .login-copyright {
