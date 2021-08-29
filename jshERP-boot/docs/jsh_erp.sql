@@ -361,7 +361,7 @@ CREATE TABLE `jsh_log` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `user_id` bigint(20) DEFAULT NULL COMMENT '用户id',
   `operation` varchar(500) DEFAULT NULL COMMENT '操作模块名称',
-  `client_ip` varchar(50) DEFAULT NULL COMMENT '客户端IP',
+  `client_ip` varchar(200) DEFAULT NULL COMMENT '客户端IP',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   `status` tinyint(4) DEFAULT NULL COMMENT '操作状态 0==成功，1==失败',
   `content` varchar(1000) DEFAULT NULL COMMENT '详情',
