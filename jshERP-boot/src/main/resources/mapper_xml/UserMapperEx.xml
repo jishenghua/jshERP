@@ -10,15 +10,17 @@
         <result column="roleName" jdbcType="VARCHAR" property="roleName" />
     </resultMap>
     <select id="selectByConditionUser" parameterType="com.jsh.erp.datasource.entities.UserExample" resultMap="ResultMapEx">
+        select tb.*,
+        (select r.id from jsh_user_business ub
+        left join jsh_role r on ub.value=concat("[",r.id,"]") and ifnull(r.delete_flag,'0') !='1'
+        where ub.type='UserRole' and ub.key_id=tb.id limit 0,1) roleId,
+        (select r.name from jsh_user_business ub
+        left join jsh_role r on ub.value=concat("[",r.id,"]") and ifnull(r.delete_flag,'0') !='1'
+        where ub.type='UserRole' and ub.key_id=tb.id limit 0,1) roleName
+        from (
         select user.id, user.username, user.login_name, user.position, user.email, user.phonenum,
         user.description, user.remark,user.isystem,org.id as orgaId,user.tenant_id,user.status,org.org_abr,
-        rel.user_blng_orga_dspl_seq,rel.id as orgaUserRelId,
-        (select r.id from jsh_user_business ub
-        inner join jsh_role r on ub.value=concat("[",r.id,"]") and ifnull(r.delete_flag,'0') !='1'
-        where ub.type='UserRole' and ub.key_id=user.id limit 0,1) roleId,
-        (select r.name from jsh_user_business ub
-        inner join jsh_role r on ub.value=concat("[",r.id,"]") and ifnull(r.delete_flag,'0') !='1'
-        where ub.type='UserRole' and ub.key_id=user.id limit 0,1) roleName
+        rel.user_blng_orga_dspl_seq,rel.id as orgaUserRelId
         FROM jsh_user user
         left join jsh_orga_user_rel rel on user.id=rel.user_id and ifnull(rel.delete_flag,'0') !='1'
         left join jsh_organization org on rel.orga_id=org.id and ifnull(org.delete_flag,'0') !='1'
@@ -36,6 +38,7 @@
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
         </if>
+        ) tb
     </select>
     <select id="countsByUser" resultType="java.lang.Long">
         select count(user.id)
