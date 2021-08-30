@@ -43,7 +43,7 @@
 * Nginx代理：nginx1.12.2
 * 操作系统：Windows、Linux等
 * 为方便大家搭建运行环境，分享了下载地址 https://pan.baidu.com/s/1jlild9uyGdQ7H2yaMx76zw  提取码:814g
-* 不会打包的小伙伴，请下载此打包后的文件 http://47.116.69.14:8899/down/J6SsL8UWr7fb  提取码:siB2FW
+* 不会打包的小伙伴，请下载此打包后的文件 https://share.weiyun.com/Y6BXPOxn 密码：ae8jcy
 * 不会部署的小伙伴，请参考部署教程 http://www.huaxiaerp.com/thread-177-1-1.html
 
 # 开源说明
