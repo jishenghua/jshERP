@@ -133,7 +133,7 @@
           that.form.validateFields([ 'loginName', 'password', 'rememberMe' ], { force: true }, (err, values) => {
             if (!err) {
               loginParams.loginName = values.loginName
-              loginParams.password = md5(values.password)
+              loginParams.password = values.password
               //loginParams.remember_me = values.rememberMe
               console.log("登录参数",loginParams)
               that.Login(loginParams).then((res) => {
