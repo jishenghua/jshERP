@@ -87,7 +87,7 @@ public class UserController {
             int userStatus = -1;
             try {
                 redisService.deleteObjectBySession(request,"userId");
-                userStatus = userService.validateUser(loginName, Tools.md5Encryp(password));
+                userStatus = userService.validateUser(loginName, password);
             } catch (Exception e) {
                 e.printStackTrace();
                 logger.error(">>>>>>>>>>>>>用户  " + loginName + " 登录 login 方法 访问服务层异常====", e);
@@ -223,14 +223,12 @@ public class UserController {
             String oldpwd = jsonObject.getString("oldpassword");
             String password = jsonObject.getString("password");
             User user = userService.getUser(userId);
-            String oldPassword = Tools.md5Encryp(oldpwd);
-            String md5Pwd = Tools.md5Encryp(password);
             //必须和原始密码一致才可以更新密码
             if(demonstrateOpen && user.getLoginName().equals(TEST_USER)){
                 flag = 3; //jsh用户不能修改密码
                 info = "jsh用户不能修改密码";
-            } else if (oldPassword.equalsIgnoreCase(user.getPassword())) {
-                user.setPassword(md5Pwd);
+            } else if (oldpwd.equalsIgnoreCase(user.getPassword())) {
+                user.setPassword(password);
                 flag = userService.updateUserByObj(user); //1-成功
                 info = "修改成功";
             } else {
