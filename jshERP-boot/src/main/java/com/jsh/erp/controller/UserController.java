@@ -87,7 +87,7 @@ public class UserController {
             int userStatus = -1;
             try {
                 redisService.deleteObjectBySession(request,"userId");
-                userStatus = userService.validateUser(loginName, password);
+                userStatus = userService.validateUser(loginName, Tools.md5Encryp(password));
             } catch (Exception e) {
                 e.printStackTrace();
                 logger.error(">>>>>>>>>>>>>用户  " + loginName + " 登录 login 方法 访问服务层异常====", e);
