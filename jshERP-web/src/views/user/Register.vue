@@ -80,6 +80,7 @@
   import {mixinDevice} from '@/utils/mixin.js'
   import {getAction, postAction} from '@/api/manage'
   import {checkOnlyUser} from '@/api/api'
+  import md5 from 'md5'
 
   const levelNames = {
     0: '低',
@@ -232,7 +233,7 @@
             if(values.inputCode == this.randCode) {
               let register = {
                 loginName: values.username,
-                password: values.password
+                password: md5(values.password)
               };
               postAction("/user/registerUser", register).then((res) => {
                 if(res.code === 200){

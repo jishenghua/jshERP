@@ -55,6 +55,7 @@
 </template>
 <!-- BY cao_yu_li -->
 <script>
+  import md5 from "md5"
   import api from '@/api'
   import TwoStepCaptcha from '@/components/tools/TwoStepCaptcha'
   import { mapActions } from "vuex"
@@ -132,7 +133,7 @@
           that.form.validateFields([ 'loginName', 'password', 'rememberMe' ], { force: true }, (err, values) => {
             if (!err) {
               loginParams.loginName = values.loginName
-              loginParams.password = values.password
+              loginParams.password = md5(values.password)
               //loginParams.remember_me = values.rememberMe
               console.log("登录参数",loginParams)
               that.Login(loginParams).then((res) => {
