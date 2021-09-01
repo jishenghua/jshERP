@@ -53,6 +53,7 @@
         linkList: [],
         activePage: '',
         menuVisible: false,
+        changeType: 0, //0-不刷新 1-刷新
         menuItemList: [
           { key: '4', icon: 'reload', text: '刷 新' },
           { key: '1', icon: 'arrow-left', text: '关闭左侧' },
@@ -98,25 +99,21 @@
     },
     watch: {
       '$route': function(newRoute) {
-        //console.log("新的路由",newRoute)
+        // console.log("新的路由",newRoute)
         this.activePage = newRoute.fullPath
         if (!this.multipage) {
           this.linkList = [newRoute.fullPath]
           this.pageList = [Object.assign({},newRoute)]
         // update-begin-author:taoyan date:20200211 for: TASK #3368 【路由缓存】首页的缓存设置有问题，需要根据后台的路由配置来实现是否缓存
         } else if(indexKey==newRoute.fullPath) {
-          //首页时 判断是否缓存 没有缓存 刷新之
-          if (newRoute.meta.keepAlive === false) {
-            this.routeReload()
-          }
+          //首页时 直接刷新
+          this.routeReload()
         // update-end-author:taoyan date:20200211 for: TASK #3368 【路由缓存】首页的缓存设置有问题，需要根据后台的路由配置来实现是否缓存
         }else if (this.linkList.indexOf(newRoute.fullPath) < 0) {
           this.linkList.push(newRoute.fullPath)
           this.pageList.push(Object.assign({},newRoute))
           // update-begin-author:sunjianlei date:20200103 for: 如果新增的页面配置了缓存路由，那么就强制刷新一遍
-          if (newRoute.meta.keepAlive) {
-            this.routeReload()
-          }
+          this.routeReload()
           // update-end-author:sunjianlei date:20200103 for: 如果新增的页面配置了缓存路由，那么就强制刷新一遍
         } else if (this.linkList.indexOf(newRoute.fullPath) >= 0) {
           let oldIndex = this.linkList.indexOf(newRoute.fullPath)
@@ -124,8 +121,9 @@
           this.pageList.splice(oldIndex, 1, Object.assign({},newRoute,{meta:oldPositionRoute.meta}))
           //给菜单id赋值，用于调用之后控制按钮的显示
           Vue.ls.set('funId', oldPositionRoute.meta.id, 7 * 24 * 60 * 60 * 1000)
-          //每次切换都刷新
-          this.routeReload()
+          if(this.changeType) {
+            this.routeReload()
+          }
         }
       },
       'activePage': function(key) {
@@ -180,9 +178,13 @@
       // update-end-author:sunjianlei date:20200120 for: 动态更改页面标题
 
       changePage(key) {
+        //切换页签
+        this.changeType = 0
         this.activePage = key
       },
       tabCallBack() {
+        //切换页签
+        this.changeType = 0
         this.$nextTick(() => {
           triggerWindowResizeEvent()
         })
@@ -288,6 +290,7 @@
         let keyIndex = this.linkList.indexOf(key)
         if(keyIndex>=0){
           //切换历史页签
+          this.changeType = 0
           let currRouter = this.pageList[keyIndex]
           let meta = Object.assign({},currRouter.meta,{title:title})
           this.pageList.splice(keyIndex, 1, Object.assign({},currRouter,{meta:meta}))
@@ -297,6 +300,7 @@
           }
         } else {
           //打开新的页签
+          this.changeType = 1
           this.pageList.push({
             name: title,
             path: key,
