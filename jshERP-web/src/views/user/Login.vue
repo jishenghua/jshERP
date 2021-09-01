@@ -55,7 +55,6 @@
 </template>
 <!-- BY cao_yu_li -->
 <script>
-  import md5 from "md5"
   import api from '@/api'
   import TwoStepCaptcha from '@/components/tools/TwoStepCaptcha'
   import { mapActions } from "vuex"
