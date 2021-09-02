@@ -73,7 +73,7 @@
   import moment from 'moment'
   import Vue from 'vue'
   export default {
-    name: "BuyInReport",
+    name: "InOutStockReport",
     mixins:[JeecgListMixin],
     components: {
       JEllipsis

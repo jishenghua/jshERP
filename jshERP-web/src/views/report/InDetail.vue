@@ -89,7 +89,7 @@
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import moment from 'moment'
   export default {
-    name: "BuyInReport",
+    name: "InDetail",
     mixins:[JeecgListMixin],
     components: {
       BillDetail,

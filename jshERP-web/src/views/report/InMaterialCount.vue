@@ -83,7 +83,7 @@
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import moment from 'moment'
   export default {
-    name: "BuyInReport",
+    name: "InMaterialCount",
     mixins:[JeecgListMixin],
     components: {
       JEllipsis

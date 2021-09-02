@@ -78,7 +78,7 @@
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import moment from 'moment'
   export default {
-    name: "BuyInReport",
+    name: "VendorAccount",
     mixins:[JeecgListMixin],
     components: {
       BillDetail,

@@ -61,7 +61,7 @@
   import { getMpListShort } from "@/utils/util"
   import Vue from 'vue'
   export default {
-    name: "BuyInReport",
+    name: "StockWarningReport",
     mixins:[JeecgListMixin],
     components: {
       JEllipsis
