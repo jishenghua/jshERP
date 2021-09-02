@@ -19,7 +19,8 @@ export const ENCRYPTED_STRING = 'ENCRYPTED_STRING'
 export const ENHANCE_PRE = 'enhance_'
 export const UI_CACHE_DB_DICT_DATA = 'UI_CACHE_DB_DICT_DATA'
 export const INDEX_MAIN_PAGE_PATH =  "/dashboard/analysis"
-
+//路由缓存问题，关闭了tab页时再打开就不刷新 #842
+export const CACHE_INCLUDED_ROUTES = 'CACHE_INCLUDED_ROUTES'
 export const CONTENT_WIDTH_TYPE = {
   Fluid: 'Fluid',
   Fixed: 'Fixed'

@@ -113,6 +113,11 @@ function generateChildRouters (data) {
     if (isURL(URL)) {
       item.url = URL;
     }
+    let componentName =''
+    if(item.component) {
+      let index = item.component.lastIndexOf("\/");
+      componentName = item.component.substring(index + 1, item.component.length);
+    }
     let menu = {
       path: item.url,
       name: item.text,
@@ -122,8 +127,9 @@ function generateChildRouters (data) {
         title: item.text,
         icon: item.icon,
         url: item.url,
-        // permissionList:"",
-        // keepAlive:"",
+        componentName:componentName,
+        keepAlive: true
+        // permissionList:""
       }
     }
     if (item.children && item.children.length > 0) {

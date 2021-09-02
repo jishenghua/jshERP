@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import { login, logout } from "@/api/login"
-import { ACCESS_TOKEN, USER_NAME,USER_INFO,UI_CACHE_DB_DICT_DATA,USER_ID,USER_LOGIN_NAME } from "@/store/mutation-types"
+import { ACCESS_TOKEN, USER_NAME,USER_INFO,UI_CACHE_DB_DICT_DATA,USER_ID,USER_LOGIN_NAME,CACHE_INCLUDED_ROUTES } from "@/store/mutation-types"
 import { welcome } from "@/utils/util"
 import { queryPermissionsByUser } from '@/api/api'
 import { getAction } from '@/api/manage'
@@ -113,6 +113,7 @@ const user = {
         Vue.ls.remove(USER_LOGIN_NAME)
         Vue.ls.remove(USER_INFO)
         Vue.ls.remove(UI_CACHE_DB_DICT_DATA)
+        Vue.ls.remove(CACHE_INCLUDED_ROUTES)
         logout().then(() => {
           resolve()
         }).catch(() => {
