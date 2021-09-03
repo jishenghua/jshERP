@@ -188,11 +188,7 @@
       // update_begin author:sunjianlei date:20191230 for: 解决外部链接打开失败的问题
       searchMethods(value) {
         let route = this.searchMenuOptions.filter(item => item.id === value)[0]
-        if (route.component.includes('layouts/IframePageView')) {
-          window.open(route.url, '_blank')
-        } else {
-          this.$router.push({ path: route.url })
-        }
+        this.$router.push({ path: route.url })
         this.searchMenuVisible = false
       },
       // update_end author:sunjianlei date:20191230 for: 解决外部链接打开失败的问题
