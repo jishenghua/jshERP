@@ -66,6 +66,7 @@
             :columns="columns"
             :dataSource="dataSource"
             :pagination="ipagination"
+            :scroll="scroll"
             :loading="loading"
             @change="handleTableChange">
           </a-table>

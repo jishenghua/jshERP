@@ -46,6 +46,7 @@
             :columns="columns"
             :dataSource="dataSource"
             :pagination="ipagination"
+            :scroll="scroll"
             :loading="loading"
             @change="handleTableChange">
               <span slot="action" slot-scope="text, record">

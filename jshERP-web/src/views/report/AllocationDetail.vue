@@ -73,6 +73,7 @@
             :columns="columns"
             :dataSource="dataSource"
             :pagination="ipagination"
+            :scroll="scroll"
             :loading="loading"
             @change="handleTableChange">
             <span slot="numberCustomRender" slot-scope="text, record">
