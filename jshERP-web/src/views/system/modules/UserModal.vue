@@ -24,7 +24,7 @@
           <a-input placeholder="请输入用户姓名" v-decorator.trim="[ 'username', validatorRules.username]" />
         </a-form-item>
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="角色">
-          <a-select v-if="model.roleName!='租户'" placeholder="选择角色" v-decorator="[ 'roleId' ]" :dropdownMatchSelectWidth="false">
+          <a-select v-if="model.roleName!='租户'" placeholder="选择角色" v-decorator="[ 'roleId', validatorRules.roleId]" :dropdownMatchSelectWidth="false">
             <a-select-option v-for="(item,index) in roleList" :key="index" :value="item.id">
               {{ item.name }}
             </a-select-option>
@@ -92,6 +92,11 @@
           username:{
             rules: [{
               required: true, message: '请输入用户姓名!'
+            }]
+          },
+          roleId:{
+            rules: [{
+              required: true, message: '请选择角色!'
             }]
           }
         },
