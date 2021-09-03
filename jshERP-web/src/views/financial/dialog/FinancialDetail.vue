@@ -418,7 +418,7 @@
     data () {
       return {
         title: "详情",
-        width: '1200px',
+        width: '1600px',
         visible: false,
         model: {},
         financialType: '',

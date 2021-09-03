@@ -107,7 +107,7 @@
     data () {
       return {
         title:"操作",
-        width: '1200px',
+        width: '1600px',
         moreStatus: false,
         // 新增时子表默认添加几行空数据
         addDefaultRowNum: 1,

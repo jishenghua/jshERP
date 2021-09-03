@@ -290,30 +290,30 @@
           dataSource: [],
           columns: [
             {
-              title: '条码', key: 'barCode', width: '20%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}',
+              title: '条码', key: 'barCode', width: '15%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}',
               validateRules: [{ required: true, message: '${title}不能为空' },
                 { pattern: /^[1-9]\d*$/, message: '请输入零以上的正整数' },
                 { pattern: /^\d{4,13}$/, message: '4到13位数字' },
                 { handler: this.validateBarCode}]
             },
             {
-              title: '单位', key: 'commodityUnit', width: '10%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}',
+              title: '单位', key: 'commodityUnit', width: '8%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}',
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             {
-              title: '多属性', key: 'sku', width: '12%', type: FormTypes.input, defaultValue: '', readonly:true, placeholder: '点击生成条码赋值'
+              title: '多属性', key: 'sku', width: '10%', type: FormTypes.input, defaultValue: '', readonly:true, placeholder: '点击生成条码赋值'
             },
             {
-              title: '采购价', key: 'purchaseDecimal', width: '12%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}'
+              title: '采购价', key: 'purchaseDecimal', width: '8%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}'
             },
             {
-              title: '零售价', key: 'commodityDecimal', width: '12%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}'
+              title: '零售价', key: 'commodityDecimal', width: '8%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}'
             },
             {
-              title: '销售价', key: 'wholesaleDecimal', width: '12%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}'
+              title: '销售价', key: 'wholesaleDecimal', width: '8%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}'
             },
             {
-              title: '最低售价', key: 'lowDecimal', width: '12%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}'
+              title: '最低售价', key: 'lowDecimal', width: '8%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}'
             }
           ]
         },
@@ -845,5 +845,8 @@
   }
 </script>
 <style scoped>
-
+  .input-table {
+    max-width: 100%;
+    min-width: 1550px;
+  }
 </style>
