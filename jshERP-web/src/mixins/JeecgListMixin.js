@@ -29,6 +29,10 @@ export const JeecgListMixin = {
         showSizeChanger: true,
         total: 0
       },
+      /* 控制table高度 */
+      scroll: {
+        y: document.documentElement.clientHeight-330
+      },
       /* 排序参数 */
       isorter:{
         column: 'createTime',

@@ -69,9 +69,9 @@
       </a-layout-content>
 
       <!-- layout footer -->
-      <a-layout-footer style="padding: 0px">
-        <global-footer/>
-      </a-layout-footer>
+<!--      <a-layout-footer style="padding: 0px">-->
+<!--        <global-footer/>-->
+<!--      </a-layout-footer>-->
     </a-layout>
 
     <!-- update-start---- author:os_chengtgen -- date:20190830 --  for:issues/463 -编译主题颜色已生效，但还一直转圈，显示主题 正在编译 ---- -->

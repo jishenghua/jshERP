@@ -106,6 +106,7 @@
           {title: '名称', dataIndex: 'name', width: 100},
           {title: '上级编号', dataIndex: 'parentNumber', width: 80},
           {title: '链接', dataIndex: 'url', width: 250},
+          {title: '组件', dataIndex: 'component', width: 250},
           {title: '排序', dataIndex: 'sort', width: 80},
           {
             title: '是否启用', dataIndex: 'enabled', width: 80, align: "center",

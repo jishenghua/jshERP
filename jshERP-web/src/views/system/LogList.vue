@@ -65,6 +65,7 @@
           :columns="columns"
           :dataSource="dataSource"
           :pagination="ipagination"
+          :scroll="scroll"
           :loading="loading"
           @change="handleTableChange">
           <!-- 字符串超长截取省略号显示-->

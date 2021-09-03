@@ -28,6 +28,9 @@
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="链接">
           <a-input placeholder="请输入链接" v-decorator.trim="[ 'url' ]" />
         </a-form-item>
+        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="组件">
+          <a-input placeholder="请输入组件" v-decorator.trim="[ 'component' ]" />
+        </a-form-item>
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="排序">
           <a-input placeholder="请输入排序" v-decorator.trim="[ 'sort' ]" />
         </a-form-item>
@@ -118,7 +121,7 @@
           this.jselectMultiple.value = ''
         }
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'number', 'name', 'parentNumber', 'url','sort','pushBtn','icon','enabled'))
+          this.form.setFieldsValue(pick(this.model,'number', 'name', 'parentNumber', 'url', 'component', 'sort', 'pushBtn', 'icon', 'enabled'))
         });
       },
       close () {

@@ -128,6 +128,7 @@ function generateChildRouters (data) {
         icon: item.icon,
         url: item.url,
         componentName:componentName,
+        internalOrExternal:true,
         keepAlive: true
         // permissionList:""
       }
