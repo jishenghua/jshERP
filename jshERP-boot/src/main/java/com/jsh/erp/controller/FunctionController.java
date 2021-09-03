@@ -161,16 +161,14 @@ public class FunctionController {
                 item.put("value", function.getId());
                 item.put("title", function.getName());
                 item.put("attributes", function.getName());
-                Boolean flag = ubValue.contains("[" + function.getId().toString() + "]");
-                if (flag) {
-                    item.put("checked", true);
-                }
                 List<Function> funList = functionService.findRoleFunction(function.getNumber());
                 if(funList.size()>0) {
                     JSONArray funArr = getFunctionList(funList, type, keyId);
                     item.put("children", funArr);
                     dataArray.add(item);
                 } else {
+                    Boolean flag = ubValue.contains("[" + function.getId().toString() + "]");
+                    item.put("checked", flag);
                     dataArray.add(item);
                 }
             }
