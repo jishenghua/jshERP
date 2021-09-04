@@ -61,7 +61,6 @@ export const JeecgListMixin = {
     }
   },
   created() {
-    this.initScroll()
     if(!this.disableMixinCreated){
       //console.log(' -- mixin created -- ')
       this.loadData();
@@ -69,16 +68,11 @@ export const JeecgListMixin = {
       this.initDictConfig();
       //初始化按钮权限
       this.initActiveBtnStr();
+      //初始化列表横向或纵向滚动
+      this.initScroll()
     }
   },
   methods:{
-    initScroll() {
-      if (this.isMobile()) {
-        this.scroll.y = ''
-      } else {
-        this.scroll.y = document.documentElement.clientHeight-330
-      }
-    },
     loadData(arg) {
       if(!this.url.list){
         this.$message.error("请设置url.list属性!")
@@ -361,6 +355,13 @@ export const JeecgListMixin = {
             }
           }
         }
+      }
+    },
+    initScroll() {
+      if (this.isMobile()) {
+        this.scroll.y = ''
+      } else {
+        this.scroll.y = document.documentElement.clientHeight-330
       }
     }
   }

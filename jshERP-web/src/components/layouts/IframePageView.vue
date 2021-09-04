@@ -5,12 +5,12 @@
 <script>
   import Vue from 'vue'
   import { ACCESS_TOKEN } from "@/store/mutation-types"
-  import PageLayout from '../page/PageLayout'
-  import RouteView from './RouteView'
+  import {mixinDevice} from '@/utils/mixin.js'
 
   export default {
     name: "IframePageContent",
     inject:['closeCurrent'],
+    mixins: [mixinDevice],
     data () {
       return {
         url: "",
@@ -33,7 +33,11 @@
       goUrl () {
         let url = this.$route.meta.url
         this.id = this.$route.path
-        this.height = document.documentElement.clientHeight-130
+        if (this.isMobile()) {
+          this.height = 800
+        } else {
+          this.height = document.documentElement.clientHeight-130
+        }
         console.log("------url------"+url)
         console.log("------token------"+Vue.ls.get(ACCESS_TOKEN))
         if (url !== null && url !== undefined) {
