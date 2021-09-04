@@ -7,8 +7,10 @@ import { filterObj } from '@/utils/util';
 import { deleteAction, getAction, postAction, downFile, getFileAccessHttpUrl } from '@/api/manage'
 import Vue from 'vue'
 import { ACCESS_TOKEN } from "@/store/mutation-types"
+import {mixinDevice} from '@/utils/mixin.js'
 
 export const JeecgListMixin = {
+  mixins: [mixinDevice],
   data(){
     return {
       //token header
@@ -30,9 +32,7 @@ export const JeecgListMixin = {
         total: 0
       },
       /* 控制table高度 */
-      scroll: {
-        y: document.documentElement.clientHeight-330
-      },
+      scroll: {},
       /* 排序参数 */
       isorter:{
         column: 'createTime',
@@ -61,16 +61,24 @@ export const JeecgListMixin = {
     }
   },
   created() {
-      if(!this.disableMixinCreated){
-        //console.log(' -- mixin created -- ')
-        this.loadData();
-        //初始化字典配置 在自己页面定义
-        this.initDictConfig();
-        //初始化按钮权限
-        this.initActiveBtnStr();
-      }
+    this.initScroll()
+    if(!this.disableMixinCreated){
+      //console.log(' -- mixin created -- ')
+      this.loadData();
+      //初始化字典配置 在自己页面定义
+      this.initDictConfig();
+      //初始化按钮权限
+      this.initActiveBtnStr();
+    }
   },
   methods:{
+    initScroll() {
+      if (this.isMobile()) {
+        this.scroll.y = ''
+      } else {
+        this.scroll.y = document.documentElement.clientHeight-330
+      }
+    },
     loadData(arg) {
       if(!this.url.list){
         this.$message.error("请设置url.list属性!")
