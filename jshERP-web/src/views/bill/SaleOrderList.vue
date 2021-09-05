@@ -206,7 +206,6 @@
       this.initCustomer()
       this.getDepotData()
       this.initUser()
-      this.removeStatusColumn()
     },
     computed: {
     },

@@ -24,7 +24,9 @@ export const FinancialListMixin = {
       return true;
     }
   },
-
+  created() {
+    this.removeStatusColumn()
+  },
   methods: {
     myHandleAdd() {
       this.$refs.modalForm.action = "add";
@@ -104,6 +106,19 @@ export const FinancialListMixin = {
     },
     onDateOk(value) {
       console.log(value);
+    },
+    removeStatusColumn() {
+      //没有审核反审核权限的时候直接移除状态列
+      if(this.btnEnableList.indexOf(2)===-1 && this.btnEnableList.indexOf(7)===-1) {
+        let statusIndex = 0
+        for(let i=0; i<this.columns.length; i++){
+          if(this.columns[i].dataIndex === 'status') {
+            statusIndex = i
+          }
+        }
+        //移除状态列
+        this.columns.splice(statusIndex,1)
+      }
     }
   }
 }
