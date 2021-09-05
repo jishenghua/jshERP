@@ -160,7 +160,7 @@
           {title: '颜色', dataIndex: 'color', width: '4%'},
           {title: '类别', dataIndex: 'categoryName', width: '6%'},
           {title: '扩展信息', dataIndex: 'materialOther', width: '6%'},
-          {title: '单位', dataIndex: 'unit', width: '5%',
+          {title: '单位', dataIndex: 'unit', width: '6%',
             scopedSlots: { customRender: 'customRenderUnit' }
           },
           {title: '安全存量', dataIndex: 'safetyStock', width: '5%'},
