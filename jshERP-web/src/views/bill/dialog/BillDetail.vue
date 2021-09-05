@@ -821,15 +821,11 @@
               </a-row>
             </section>
           </template>
-          <template v-if="fileList.length>0">
+          <template v-if="fileList && fileList.length>0">
             <a-row class="form-row" :gutter="24">
               <a-col :span="10">
                 <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 3 }}" :wrapperCol="{xs: { span: 24 },sm: { span: 21 }}" label="附件">
-                  <ul style="list-style-type:none">
-                    <li v-for="(item,index) in fileList" :key="index">
-                      <a :href="item.url" target="_blank">{{item.name}}</a>
-                    </li>
-                  </ul>
+                  <j-upload v-model="fileList" bizPath="bill" :disabled="true" :buttonVisible="false"></j-upload>
                 </a-form-item>
               </a-col>
               <a-col :span="14"></a-col>
@@ -845,9 +841,13 @@
   import { getAction } from '@/api/manage'
   import { findBillDetailByNumber} from '@/api/api'
   import { getMpListShort } from "@/utils/util"
+  import JUpload from '@/components/jeecg/JUpload'
   import Vue from 'vue'
   export default {
     name: 'BillDetail',
+    components: {
+      JUpload
+    },
     data () {
       return {
         title: "详情",
@@ -1098,20 +1098,7 @@
       show(record, type) {
         this.billType = type
         //附件下载
-        let fileName = record.fileName
-        if(fileName) {
-          let fileArr = fileName.split(",")
-          this.fileList = []
-          for(let i=0; i<fileArr.length; i++) {
-            let fileInfo = {}
-            let shortName = fileArr[i].replace("bill/","")
-            fileInfo.name= shortName.substring(shortName.indexOf('/')+1)
-            fileInfo.url= window._CONFIG['domianURL'] + '/systemConfig/static/' + fileArr[i]
-            this.fileList.push(fileInfo)
-          }
-        } else {
-          this.fileList = []
-        }
+        this.fileList = record.fileName
         this.visible = true;
         this.model = Object.assign({}, record);
         this.model.debt = (this.model.discountLastMoney + this.model.otherMoney - this.model.changeAmount).toFixed(2)
