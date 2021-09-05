@@ -35,6 +35,7 @@
   import pick from 'lodash.pick'
   import {registerUser,editTenant,checkTenant } from '@/api/api'
   import JDate from '@/components/jeecg/JDate'
+  import md5 from 'md5'
   export default {
     name: "TenantModal",
     components: {
@@ -94,7 +95,7 @@
             let formData = Object.assign(this.model, values);
             let obj;
             if(!this.model.id){
-              formData.password = '123456'
+              formData.password = md5('123456')
               obj=registerUser(formData);
             }else{
               obj=editTenant(formData);
