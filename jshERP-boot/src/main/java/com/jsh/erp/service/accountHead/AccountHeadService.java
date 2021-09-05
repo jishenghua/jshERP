@@ -2,13 +2,12 @@ package com.jsh.erp.service.accountHead;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
-import com.jsh.erp.datasource.entities.AccountHead;
-import com.jsh.erp.datasource.entities.AccountHeadExample;
-import com.jsh.erp.datasource.entities.AccountHeadVo4ListEx;
-import com.jsh.erp.datasource.entities.User;
+import com.jsh.erp.constants.ExceptionConstants;
+import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.mappers.AccountHeadMapper;
 import com.jsh.erp.datasource.mappers.AccountHeadMapperEx;
 import com.jsh.erp.datasource.mappers.AccountItemMapperEx;
+import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.accountItem.AccountItemService;
 import com.jsh.erp.service.log.LogService;
@@ -197,21 +196,20 @@ public class AccountHeadService {
         List<AccountHead> list = getAccountHeadListByIds(ids);
         for(AccountHead accountHead: list){
             sb.append("[").append(accountHead.getBillNo()).append("]");
+            if("1".equals(accountHead.getStatus())) {
+                throw new BusinessRunTimeException(ExceptionConstants.ACCOUNT_HEAD_UN_AUDIT_DELETE_FAILED_CODE,
+                        String.format(ExceptionConstants.ACCOUNT_HEAD_UN_AUDIT_DELETE_FAILED_MSG));
+            }
         }
-        logService.insertLog("财务", sb.toString(),
-                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");
-        int result = 0;
-        try{
-            //删除主表
-            result = accountItemMapperEx.batchDeleteAccountItemByHeadIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
-            //删除子表
-            result = accountHeadMapperEx.batchDeleteAccountHeadByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
-        }catch(Exception e){
-            JshException.writeFail(logger, e);
-        }
-        return result;
+        //删除主表
+        accountItemMapperEx.batchDeleteAccountItemByHeadIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+        //删除子表
+        accountHeadMapperEx.batchDeleteAccountHeadByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+        logService.insertLog("财务", sb.toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+        return 1;
     }
 
     public int checkIsNameExist(Long id, String name)throws Exception {
@@ -227,10 +225,44 @@ public class AccountHeadService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int batchSetStatus(String status, String accountHeadIds)throws Exception {
+        int result = 0;
+        try{
+            List<Long> ahIds = new ArrayList<>();
+            List<Long> ids = StringUtil.strToLongList(accountHeadIds);
+            for(Long id: ids) {
+                AccountHead accountHead = getAccountHead(id);
+                if("0".equals(status)){
+                    if("1".equals(accountHead.getStatus())) {
+                        ahIds.add(id);
+                    }
+                } else if("1".equals(status)){
+                    if("0".equals(accountHead.getStatus())) {
+                        ahIds.add(id);
+                    }
+                }
+            }
+            if(ahIds.size()>0) {
+                AccountHead accountHead = new AccountHead();
+                accountHead.setStatus(status);
+                AccountHeadExample example = new AccountHeadExample();
+                example.createCriteria().andIdIn(ahIds);
+                result = accountHeadMapper.updateByExampleSelective(accountHead, example);
+            } else {
+                return 1;
+            }
+        }catch(Exception e){
+            JshException.writeFail(logger, e);
+        }
+        return result;
+    }
+
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void addAccountHeadAndDetail(String beanJson, String rows, HttpServletRequest request) throws Exception {
         AccountHead accountHead = JSONObject.parseObject(beanJson, AccountHead.class);
         User userInfo=userService.getCurrentUser();
         accountHead.setCreator(userInfo==null?null:userInfo.getId());
+        accountHead.setStatus(BusinessConstants.BILLS_STATUS_UN_AUDIT);
         accountHeadMapper.insertSelective(accountHead);
         //根据单据编号查询单据id
         AccountHeadExample dhExample = new AccountHeadExample();

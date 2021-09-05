@@ -1208,3 +1208,11 @@ alter table jsh_tenant add expire_time datetime DEFAULT NULL COMMENT '到期时�
 -- 给日志表的ip字段改长度
 -- --------------------------------------------------------
 alter table jsh_log change client_ip client_ip varchar(200) DEFAULT NULL COMMENT '客户端IP';
+
+-- --------------------------------------------------------
+-- 时间 2021年9月5日
+-- by jishenghua
+-- 给财务表增加状态字段，给历史数据赋值为0
+-- --------------------------------------------------------
+alter table jsh_account_head add status varchar(1) DEFAULT NULL COMMENT '状态，0未审核、1已审核' after file_name;
+update jsh_account_head set status=0;

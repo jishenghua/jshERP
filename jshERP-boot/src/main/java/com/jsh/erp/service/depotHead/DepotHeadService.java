@@ -106,7 +106,7 @@ public class DepotHeadService {
         List<DepotHeadVo4List> list=new ArrayList<>();
         try{
             String depotIds = depotService.findDepotStrByCurrentUser();
-            String [] depotArray=depotIds.split(",");
+            String [] depotArray=StringUtil.isNotEmpty(depotIds)?depotIds.split(","):null;
             String [] creatorArray = getCreatorArray(roleType);
             Map<Long,String> personMap = personService.getPersonMap();
             Map<Long,String> accountMap = accountService.getAccountMap();
@@ -155,7 +155,7 @@ public class DepotHeadService {
         Long result=null;
         try{
             String depotIds = depotService.findDepotStrByCurrentUser();
-            String [] depotArray=depotIds.split(",");
+            String [] depotArray=StringUtil.isNotEmpty(depotIds)?depotIds.split(","):null;
             String [] creatorArray = getCreatorArray(roleType);
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
@@ -248,70 +248,59 @@ public class DepotHeadService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteBillByIds(String ids)throws Exception {
-        int result=0;
-        try{
-            StringBuffer sb = new StringBuffer();
-            sb.append(BusinessConstants.LOG_OPERATION_TYPE_DELETE);
-            List<DepotHead> dhList = getDepotHeadListByIds(ids);
-            for(DepotHead depotHead: dhList){
-                sb.append("[").append(depotHead.getNumber()).append("]");
-            }
-            logService.insertLog("单据", sb.toString(),
-                    ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
-            if(StringUtil.isNotEmpty(ids)){
-                String [] headIds=ids.split(",");
-                for(int i=0;i<headIds.length;i++){
-                    Long id = Long.parseLong(headIds[i]);
-                    //查询单据主表信息
-                    DepotHead depotHead =getDepotHead(id);
-                    //只有未审核的单据才能被删除
-                    if("0".equals(depotHead.getStatus())) {
-                        User userInfo = userService.getCurrentUser();
-                        //删除出库数据回收序列号
-                        if (BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())
-                                && !BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubType())) {
-                            //查询单据子表列表
-                            List<DepotItem> depotItemList = null;
-                            try {
-                                depotItemList = depotItemMapperEx.findDepotItemListBydepotheadId(id, BusinessConstants.ENABLE_SERIAL_NUMBER_ENABLED);
-                            } catch (Exception e) {
-                                JshException.readFail(logger, e);
-                            }
+        StringBuffer sb = new StringBuffer();
+        sb.append(BusinessConstants.LOG_OPERATION_TYPE_DELETE);
+        List<DepotHead> dhList = getDepotHeadListByIds(ids);
+        for(DepotHead depotHead: dhList){
+            sb.append("[").append(depotHead.getNumber()).append("]");
+            //只有未审核的单据才能被删除
+            if("0".equals(depotHead.getStatus())) {
+                User userInfo = userService.getCurrentUser();
+                //删除出库数据回收序列号
+                if (BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())
+                        && !BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubType())) {
+                    //查询单据子表列表
+                    List<DepotItem> depotItemList = null;
+                    try {
+                        depotItemList = depotItemMapperEx.findDepotItemListBydepotheadId(depotHead.getId(), BusinessConstants.ENABLE_SERIAL_NUMBER_ENABLED);
+                    } catch (Exception e) {
+                        JshException.readFail(logger, e);
+                    }
 
-                            /**回收序列号*/
-                            if (depotItemList != null && depotItemList.size() > 0) {
-                                for (DepotItem depotItem : depotItemList) {
-                                    //BasicNumber=OperNumber*ratio
-                                    serialNumberService.cancelSerialNumber(depotItem.getMaterialId(), depotItem.getHeaderId(), (depotItem.getBasicNumber() == null ? 0 : depotItem.getBasicNumber()).intValue(), userInfo);
-                                }
-                            }
+                    /**回收序列号*/
+                    if (depotItemList != null && depotItemList.size() > 0) {
+                        for (DepotItem depotItem : depotItemList) {
+                            //BasicNumber=OperNumber*ratio
+                            serialNumberService.cancelSerialNumber(depotItem.getMaterialId(), depotItem.getHeaderId(), (depotItem.getBasicNumber() == null ? 0 : depotItem.getBasicNumber()).intValue(), userInfo);
                         }
-                        //对于零售出库单据，更新会员的预收款信息
-                        if (BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())
-                                && BusinessConstants.SUB_TYPE_RETAIL.equals(depotHead.getSubType())){
-                            if(BusinessConstants.PAY_TYPE_PREPAID.equals(depotHead.getPayType())) {
-                                if (depotHead.getOrganId() != null) {
-                                    supplierService.updateAdvanceIn(depotHead.getOrganId(), depotHead.getTotalPrice().abs());
-                                }
-                            }
-                        }
-                        /**删除单据子表数据*/
-                        depotItemMapperEx.batchDeleteDepotItemByDepotHeadIds(new Long[]{id});
-                        //更新当前库存
-                        List<DepotItem> list = depotItemService.getListByHeaderId(id);
-                        for (DepotItem depotItem : list) {
-                            depotItemService.updateCurrentStock(depotItem);
-                        }
-                        /**删除单据主表信息*/
-                        batchDeleteDepotHeadByIds(id.toString());
                     }
                 }
+                //对于零售出库单据，更新会员的预收款信息
+                if (BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())
+                        && BusinessConstants.SUB_TYPE_RETAIL.equals(depotHead.getSubType())){
+                    if(BusinessConstants.PAY_TYPE_PREPAID.equals(depotHead.getPayType())) {
+                        if (depotHead.getOrganId() != null) {
+                            supplierService.updateAdvanceIn(depotHead.getOrganId(), depotHead.getTotalPrice().abs());
+                        }
+                    }
+                }
+                /**删除单据子表数据*/
+                depotItemMapperEx.batchDeleteDepotItemByDepotHeadIds(new Long[]{depotHead.getId()});
+                //更新当前库存
+                List<DepotItem> list = depotItemService.getListByHeaderId(depotHead.getId());
+                for (DepotItem depotItem : list) {
+                    depotItemService.updateCurrentStock(depotItem);
+                }
+                /**删除单据主表信息*/
+                batchDeleteDepotHeadByIds(depotHead.getId().toString());
+            } else {
+                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_UN_AUDIT_DELETE_FAILED_CODE,
+                        String.format(ExceptionConstants.DEPOT_HEAD_UN_AUDIT_DELETE_FAILED_MSG));
             }
-            result = 1;
-        }catch(Exception e){
-            JshException.writeFail(logger, e);
         }
-        return result;
+        logService.insertLog("单据", sb.toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+        return 1;
     }
 
     /**

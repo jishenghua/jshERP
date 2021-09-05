@@ -30,6 +30,8 @@ public class AccountHead {
 
     private String fileName;
 
+    private String status;
+
     private Long tenantId;
 
     private String deleteFlag;
@@ -136,6 +138,14 @@ public class AccountHead {
 
     public void setFileName(String fileName) {
         this.fileName = fileName == null ? null : fileName.trim();
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status == null ? null : status.trim();
     }
 
     public Long getTenantId() {

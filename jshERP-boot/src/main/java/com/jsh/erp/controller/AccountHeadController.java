@@ -7,6 +7,7 @@ import com.jsh.erp.datasource.entities.AccountHeadVo4Body;
 import com.jsh.erp.datasource.entities.AccountHeadVo4ListEx;
 import com.jsh.erp.service.accountHead.AccountHeadService;
 import com.jsh.erp.utils.BaseResponseInfo;
+import com.jsh.erp.utils.ErpInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,8 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 
 /**
  * @author jishenghua 752*718*920
@@ -27,6 +30,26 @@ public class AccountHeadController {
 
     @Resource
     private AccountHeadService accountHeadService;
+
+    /**
+     * 批量设置状态-审核或者反审核
+     * @param jsonObject
+     * @param request
+     * @return
+     */
+    @PostMapping(value = "/batchSetStatus")
+    public String batchSetStatus(@RequestBody JSONObject jsonObject,
+                                 HttpServletRequest request) throws Exception{
+        Map<String, Object> objectMap = new HashMap<>();
+        String status = jsonObject.getString("status");
+        String ids = jsonObject.getString("ids");
+        int res = accountHeadService.batchSetStatus(status, ids);
+        if(res > 0) {
+            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+        } else {
+            return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
+        }
+    }
 
     /**
      * 新增财务主表及财务子表信息
