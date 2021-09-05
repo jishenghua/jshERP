@@ -78,7 +78,7 @@
             <a-menu slot="overlay">
               <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
               <a-menu-item key="2" v-if="btnEnableList.indexOf(2)>-1" @click="batchSetStatus(1)"><a-icon type="check"/>审核</a-menu-item>
-              <a-menu-item key="3" v-if="btnEnableList.indexOf(2)>-1" @click="batchSetStatus(0)"><a-icon type="stop"/>反审核</a-menu-item>
+              <a-menu-item key="3" v-if="btnEnableList.indexOf(7)>-1" @click="batchSetStatus(0)"><a-icon type="stop"/>反审核</a-menu-item>
             </a-menu>
             <a-button style="margin-left: 8px">
               批量操作 <a-icon type="down" />
@@ -184,7 +184,7 @@
           { title: '单据日期', dataIndex: 'operTimeStr',width:145},
           { title: '操作员', dataIndex: 'userName',width:80},
           { title: '金额合计', dataIndex: 'totalPrice',width:80},
-          {title: '状态', dataIndex: 'status', width: 80, align: "center",
+          { title: '状态', dataIndex: 'status', width: 80, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }
           },
           {
@@ -211,21 +211,6 @@
     computed: {
     },
     methods: {
-      myHandleEdit(record) {
-        if(record.status === '0') {
-          this.$refs.modalForm.action = "edit";
-          this.handleEdit(record);
-        } else {
-          this.$message.warning("抱歉，只有未审核的单据才能编辑！")
-        }
-      },
-      myHandleDelete(record) {
-        if(record.status === '0') {
-          this.handleDelete(record.id)
-        } else {
-          this.$message.warning("抱歉，只有未审核的单据才能删除！")
-        }
-      }
     }
   }
 </script>

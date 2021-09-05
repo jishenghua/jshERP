@@ -32,8 +32,19 @@ export const BillListMixin = {
       this.handleAdd();
     },
     myHandleEdit(record) {
-      this.$refs.modalForm.action = "edit";
-      this.handleEdit(record);
+      if(record.status === '0') {
+        this.$refs.modalForm.action = "edit";
+        this.handleEdit(record);
+      } else {
+        this.$message.warning("抱歉，只有未审核的单据才能编辑！")
+      }
+    },
+    myHandleDelete(record) {
+      if(record.status === '0') {
+        this.handleDelete(record.id)
+      } else {
+        this.$message.warning("抱歉，只有未审核的单据才能删除！")
+      }
     },
     myHandleDetail(record, type) {
       this.handleDetail(record, type);
@@ -59,7 +70,7 @@ export const BillListMixin = {
     },
     removeStatusColumn() {
       //没有审核反审核权限的时候直接移除状态列
-      if(this.btnEnableList.indexOf(2)===-1) {
+      if(this.btnEnableList.indexOf(2)===-1 && this.btnEnableList.indexOf(7)===-1) {
         this.columns.splice(7,1)
       }
     },
