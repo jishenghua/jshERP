@@ -1104,7 +1104,8 @@
           this.fileList = []
           for(let i=0; i<fileArr.length; i++) {
             let fileInfo = {}
-            fileInfo.name= fileArr[i].replace("bill/","")
+            let shortName = fileArr[i].replace("bill/","")
+            fileInfo.name= shortName.substring(shortName.indexOf('/')+1)
             fileInfo.url= window._CONFIG['domianURL'] + '/systemConfig/static/' + fileArr[i]
             this.fileList.push(fileInfo)
           }
