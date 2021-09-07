@@ -17,10 +17,11 @@
                   <a-input placeholder="请输入编号" v-model="queryParam.serialNo"></a-input>
                 </a-form-item>
               </a-col>
-              <a-col :md="3" :sm="24">
+              <a-col :md="4" :sm="24">
                 <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                   <a-button type="primary" @click="searchQuery">查询</a-button>
-                  <a-button style="margin-left: 8px" v-print="'#reportPrint'" type="primary" icon="printer">打印</a-button>
+                  <a-button style="margin-left: 8px" v-print="'#reportPrint'" icon="printer">打印</a-button>
+                  <a-button style="margin-left: 8px" @click="exportExcel" icon="download">导出</a-button>
                 </span>
               </a-col>
               <a-col :md="3" :sm="24">
@@ -63,6 +64,7 @@
 <script>
   import AccountInOutList from './modules/AccountInOutList'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
+  import { openDownloadDialog, sheet2blob} from "@/utils/util"
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import {getAction} from '@/api/manage'
   export default {
@@ -138,6 +140,15 @@
         this.$refs.accountInOutList.show(record);
         this.$refs.accountInOutList.title = "查看账户流水";
         this.$refs.accountInOutList.disableSubmit = false;
+      },
+      exportExcel() {
+        let aoa = [['名称', '编号', '期初金额', '本月发生额', '账户流水']]
+        for (let i = 0; i < this.dataSource.length; i++) {
+          let ds = this.dataSource[i]
+          let itemDevice = [ds.name, ds.serialNo, ds.initialAmount, ds.thisMonthAmount, ds.currentAmount]
+          aoa.push(itemDevice)
+        }
+        openDownloadDialog(sheet2blob(aoa), '账户统计')
       }
     }
   }

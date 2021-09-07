@@ -21,6 +21,7 @@
     "lodash.pick": "^4.4.0",
     "md5": "^2.2.1",
     "nprogress": "^0.2.0",
+    "xlsx": "^0.14.3",
     "viser-vue": "^2.4.4",
     "vue": "^2.6.10",
     "vue-area-linkage": "^5.1.0",

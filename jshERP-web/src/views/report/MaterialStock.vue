@@ -35,7 +35,8 @@
               <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                 <a-col :md="4" :sm="24">
                   <a-button type="primary" @click="searchQuery">查询</a-button>
-                  <a-button style="margin-left: 8px" v-print="'#reportPrint'" type="primary" icon="printer">打印</a-button>
+                  <a-button style="margin-left: 8px" v-print="'#reportPrint'" icon="printer">打印</a-button>
+                  <a-button style="margin-left: 8px" @click="exportExcel" icon="download">导出</a-button>
                 </a-col>
               </span>
               <a-col :md="3" :sm="24">
@@ -80,7 +81,7 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { getAction } from '@/api/manage'
   import {queryMaterialCategoryTreeList} from '@/api/api'
-  import { getMpListShort } from "@/utils/util"
+  import { getMpListShort, openDownloadDialog, sheet2blob} from "@/utils/util"
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import moment from 'moment'
   import Vue from 'vue'
@@ -206,6 +207,16 @@
         this.$refs.materialInOutList.show(record);
         this.$refs.materialInOutList.title = "查看商品库存流水（全部仓库）";
         this.$refs.materialInOutList.disableSubmit = false;
+      },
+      exportExcel() {
+        let aoa = [['条码', '名称', '规格', '型号', '颜色', '类别', '单位', '单价', '初始库存', '当前库存', '当前库存金额']]
+        for (let i = 0; i < this.dataSource.length; i++) {
+          let ds = this.dataSource[i]
+          let itemDevice = [ds.mBarCode, ds.name, ds.standard, ds.model, ds.color, ds.categoryName, ds.unitName,
+            ds.purchaseDecimal, ds.initialStock, ds.currentStock, ds.currentStockPrice]
+          aoa.push(itemDevice)
+        }
+        openDownloadDialog(sheet2blob(aoa), '商品库存')
       }
     }
   }
