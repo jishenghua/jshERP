@@ -582,7 +582,8 @@
             </foreach>
             )
         </if>
-        and abs(dh.change_amount) &lt; dh.discount_last_money
+        and (abs(dh.change_amount)+(select ifnull(sum(ai.each_amount),0) from jsh_account_item ai where ai.bill_id=dh.id and ifnull(ai.delete_flag,'0') !='1'))
+        &lt; (dh.discount_last_money + dh.other_money)
         and ifnull(dh.delete_flag,'0') !='1'
         order by dh.id desc
     </select>
