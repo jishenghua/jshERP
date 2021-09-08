@@ -57,7 +57,8 @@
               <a-col :md="4" :sm="24" >
                 <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                   <a-button type="primary" @click="searchQuery">查询</a-button>
-                  <a-button style="margin-left: 8px" v-print="'#reportPrint'" type="primary" icon="printer">打印</a-button>
+                  <a-button style="margin-left: 8px" v-print="'#reportPrint'" icon="printer">打印</a-button>
+                  <a-button style="margin-left: 8px" @click="exportExcel" icon="download">导出</a-button>
                 </span>
               </a-col>
             </a-row>
@@ -91,7 +92,7 @@
 <script>
   import BillDetail from '../bill/dialog/BillDetail'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import { getNowFormatMonth } from '@/utils/util';
+  import { getNowFormatMonth, openDownloadDialog, sheet2blob} from "@/utils/util"
   import {getAction} from '@/api/manage'
   import {findBySelectSup, findBillDetailByNumber} from '@/api/api'
   import JEllipsis from '@/components/jeecg/JEllipsis'
@@ -121,6 +122,9 @@
           beginTime: getNowFormatMonth() + '-01',
           endTime: moment().format('YYYY-MM-DD'),
           subType: "调拨"
+        },
+        ipagination:{
+          pageSizeOptions: ['10', '100', '200']
         },
         dateFormat: 'YYYY-MM-DD',
         currentDay: moment().format('YYYY-MM-DD'),
@@ -211,6 +215,16 @@
         } else {
           this.loadData(1);
         }
+      },
+      exportExcel() {
+        let aoa = [['单据编号', '条码', '名称', '规格', '型号', '单位', '数量', '单价', '金额', '调出仓库', '调入仓库', '调拨日期', '备注']]
+        for (let i = 0; i < this.dataSource.length; i++) {
+          let ds = this.dataSource[i]
+          let item = [ds.number, ds.barCode, ds.mname, ds.standard, ds.model, ds.mUnit, ds.operNumber,
+            ds.unitPrice, ds.allPrice, ds.dname, ds.sname, ds.operTime, ds.newRemark]
+          aoa.push(item)
+        }
+        openDownloadDialog(sheet2blob(aoa), '调拨明细')
       }
     }
   }

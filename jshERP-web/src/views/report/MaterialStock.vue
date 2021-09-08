@@ -108,6 +108,9 @@
           materialParam:'',
           mpList: getMpListShort(Vue.ls.get('materialPropertyList'))  //扩展属性
         },
+        ipagination:{
+          pageSizeOptions: ['10', '100', '200']
+        },
         depotList: [],
         categoryTree:[],
         currentStock: '',
@@ -212,9 +215,9 @@
         let aoa = [['条码', '名称', '规格', '型号', '颜色', '类别', '单位', '单价', '初始库存', '当前库存', '当前库存金额']]
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let itemDevice = [ds.mBarCode, ds.name, ds.standard, ds.model, ds.color, ds.categoryName, ds.unitName,
+          let item = [ds.mBarCode, ds.name, ds.standard, ds.model, ds.color, ds.categoryName, ds.unitName,
             ds.purchaseDecimal, ds.initialStock, ds.currentStock, ds.currentStockPrice]
-          aoa.push(itemDevice)
+          aoa.push(item)
         }
         openDownloadDialog(sheet2blob(aoa), '商品库存')
       }

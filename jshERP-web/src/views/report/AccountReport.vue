@@ -88,6 +88,9 @@
           name:'',
           serialNo:''
         },
+        ipagination:{
+          pageSizeOptions: ['10', '100', '200']
+        },
         allMonthAmount: '',
         allCurrentAmount: '',
         tabKey: "1",
@@ -145,8 +148,8 @@
         let aoa = [['名称', '编号', '期初金额', '本月发生额', '账户流水']]
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let itemDevice = [ds.name, ds.serialNo, ds.initialAmount, ds.thisMonthAmount, ds.currentAmount]
-          aoa.push(itemDevice)
+          let item = [ds.name, ds.serialNo, ds.initialAmount, ds.thisMonthAmount, ds.currentAmount]
+          aoa.push(item)
         }
         openDownloadDialog(sheet2blob(aoa), '账户统计')
       }

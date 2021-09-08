@@ -29,10 +29,11 @@
                   />
                 </a-form-item>
               </a-col>
-              <a-col :md="3" :sm="24">
+              <a-col :md="4" :sm="24">
                 <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                   <a-button type="primary" @click="searchQuery">查询</a-button>
-                  <a-button style="margin-left: 8px" v-print="'#reportPrint'" type="primary" icon="printer">打印</a-button>
+                  <a-button style="margin-left: 8px" v-print="'#reportPrint'" icon="printer">打印</a-button>
+                  <a-button style="margin-left: 8px" @click="exportExcel" icon="download">导出</a-button>
                 </span>
               </a-col>
               <a-col :md="8" :sm="24">
@@ -73,7 +74,7 @@
   import BillDetail from '../bill/dialog/BillDetail'
   import FinancialDetail from '../financial/dialog/FinancialDetail'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import { getNowFormatMonth } from '@/utils/util';
+  import { getNowFormatMonth, openDownloadDialog, sheet2blob} from "@/utils/util"
   import { getAction } from '@/api/manage'
   import {findBySelectCus, findBillDetailByNumber, findFinancialDetailByNumber} from '@/api/api'
   import JEllipsis from '@/components/jeecg/JEllipsis'
@@ -101,6 +102,9 @@
           organId: '',
           beginTime: getNowFormatMonth() + '-01',
           endTime: moment().format('YYYY-MM-DD'),
+        },
+        ipagination:{
+          pageSizeOptions: ['10', '100', '200']
         },
         dateFormat: 'YYYY-MM-DD',
         currentDay: moment().format('YYYY-MM-DD'),
@@ -207,6 +211,15 @@
         } else {
           this.loadData(1);
         }
+      },
+      exportExcel() {
+        let aoa = [['单据编号', '类型', '单位名称', '单据金额', '实际支付', '本期变化', '单据日期']]
+        for (let i = 0; i < this.dataSource.length; i++) {
+          let ds = this.dataSource[i]
+          let item = [ds.number, ds.type, ds.supplierName, ds.billMoney, ds.changeAmount, ds.allPrice, ds.oTime]
+          aoa.push(item)
+        }
+        openDownloadDialog(sheet2blob(aoa), '客户对账')
       }
     }
   }

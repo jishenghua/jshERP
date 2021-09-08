@@ -21,7 +21,8 @@
               <a-col :md="6" :sm="24">
                 <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                   <a-button type="primary" @click="searchQuery">查询</a-button>
-                  <a-button style="margin-left: 8px" v-print="'#reportPrint'" type="primary" icon="printer">打印</a-button>
+                  <a-button style="margin-left: 8px" v-print="'#reportPrint'" icon="printer">打印</a-button>
+                  <a-button style="margin-left: 8px" @click="exportExcel" icon="download">导出</a-button>
                 </span>
               </a-col>
             </a-row>
@@ -49,7 +50,7 @@
 </template>
 <script>
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import { getMpListShort } from "@/utils/util"
+  import { getMpListShort, openDownloadDialog, sheet2blob} from "@/utils/util"
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import moment from 'moment'
   import Vue from 'vue'
@@ -75,6 +76,9 @@
           monthTime: moment().format('YYYY-MM'),
           materialParam:'',
           mpList: getMpListShort(Vue.ls.get('materialPropertyList'))
+        },
+        ipagination:{
+          pageSizeOptions: ['10', '100', '200']
         },
         tabKey: "1",
         // 表头
@@ -128,6 +132,16 @@
         } else {
           this.loadData(1);
         }
+      },
+      exportExcel() {
+        let aoa = [['条码', '名称', '规格', '型号', '扩展信息', '单位', '销售数量', '销售金额', '退货数量', '退货金额', '实际销售金额']]
+        for (let i = 0; i < this.dataSource.length; i++) {
+          let ds = this.dataSource[i]
+          let item = [ds.barCode, ds.materialName, ds.materialStandard, ds.materialModel, ds.materialOther, ds.materialUnit, ds.outSum,
+            ds.outSumPrice, ds.inSum, ds.inSumPrice, ds.outInSumPrice]
+          aoa.push(item)
+        }
+        openDownloadDialog(sheet2blob(aoa), '销售统计')
       }
     }
   }
