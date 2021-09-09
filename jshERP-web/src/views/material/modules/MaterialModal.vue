@@ -80,7 +80,7 @@
               </a-col>
               <a-col :lg="8" :md="12" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="多属性">
-                  <a-switch checked-children="启用" un-checked-children="关闭" v-model="skuSwitch" @change="onSkuChange"></a-switch>
+                  <a-switch checked-children="启用" un-checked-children="关闭" v-model="skuSwitch" :disabled="switchDisabled" @change="onSkuChange"></a-switch>
                 </a-form-item>
               </a-col>
             </a-row>
@@ -146,6 +146,7 @@
                 :loading="meTable.loading"
                 :columns="meTable.columns"
                 :dataSource="meTable.dataSource"
+                :minWidth="1000"
                 :maxHeight="300"
                 :rowNumber="true"
                 :rowSelection="true"
@@ -205,6 +206,7 @@
               :loading="depotTable.loading"
               :columns="depotTable.columns"
               :dataSource="depotTable.dataSource"
+              :minWidth="1000"
               :maxHeight="300"
               :rowNumber="true"
               :rowSelection="false"
@@ -255,6 +257,7 @@
         manyUnitStatus: true,
         unitChecked: false,
         skuSwitch: false, //sku开启状态
+        switchDisabled: false, //开关的启用状态
         barCodeSwitch: false, //生成条码开关
         maxBarCodeInfo: '', //最大条码
         sku: {
@@ -304,16 +307,16 @@
               title: '多属性', key: 'sku', width: '10%', type: FormTypes.input, defaultValue: '', readonly:true, placeholder: '点击生成条码赋值'
             },
             {
-              title: '采购价', key: 'purchaseDecimal', width: '8%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}'
+              title: '采购价', key: 'purchaseDecimal', width: '9%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}'
             },
             {
-              title: '零售价', key: 'commodityDecimal', width: '8%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}'
+              title: '零售价', key: 'commodityDecimal', width: '9%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}'
             },
             {
-              title: '销售价', key: 'wholesaleDecimal', width: '8%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}'
+              title: '销售价', key: 'wholesaleDecimal', width: '9%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}'
             },
             {
-              title: '最低售价', key: 'lowDecimal', width: '8%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}'
+              title: '最低售价', key: 'lowDecimal', width: '9%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}'
             }
           ]
         },
@@ -396,6 +399,8 @@
         this.initMaterialAttribute()
         // 加载子表数据
         if (this.model.id) {
+          //禁用多属性开关
+          this.switchDisabled = true
           // 判断是否是多单位
           if(this.model.unit){
             this.unitChecked = false
@@ -407,9 +412,13 @@
             this.manyUnitStatus = false
           }
           let params = { materialId: this.model.id }
+          //编辑商品的时候多属性字段可以修改
+          this.meTable.columns[2].readonly = false
           this.requestMeTableData(this.url.materialsExtendList, params, this.meTable)
           this.requestDepotTableData(this.url.depotWithStock, { mId: this.model.id }, this.depotTable)
         } else {
+          this.switchDisabled = false
+          this.meTable.columns[2].readonly = true
           this.requestDepotTableData(this.url.depotWithStock, { mId: 0 }, this.depotTable)
         }
       },
@@ -643,9 +652,9 @@
       },
       onSkuChange(checked) {
         this.skuSwitch = checked
-        if(checked) {
+        if (checked) {
           this.meTable.columns[2].type = FormTypes.input
-          this.form.setFieldsValue({'color':''})
+          this.form.setFieldsValue({ 'color': '' })
         } else {
           this.meTable.columns[2].type = FormTypes.hidden
         }
