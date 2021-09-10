@@ -109,7 +109,7 @@
           mpList: getMpListShort(Vue.ls.get('materialPropertyList'))  //扩展属性
         },
         ipagination:{
-          pageSizeOptions: ['10', '100', '200']
+          pageSizeOptions: ['10', '20', '30', '100', '200']
         },
         depotList: [],
         categoryTree:[],

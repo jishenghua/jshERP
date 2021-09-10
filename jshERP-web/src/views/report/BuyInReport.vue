@@ -78,7 +78,7 @@
           mpList: getMpListShort(Vue.ls.get('materialPropertyList'))
         },
         ipagination:{
-          pageSizeOptions: ['10', '100', '200']
+          pageSizeOptions: ['10', '20', '30', '100', '200']
         },
         tabKey: "1",
         // 表头

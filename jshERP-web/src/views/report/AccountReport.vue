@@ -89,7 +89,7 @@
           serialNo:''
         },
         ipagination:{
-          pageSizeOptions: ['10', '100', '200']
+          pageSizeOptions: ['10', '20', '30', '100', '200']
         },
         allMonthAmount: '',
         allCurrentAmount: '',

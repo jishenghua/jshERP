@@ -104,7 +104,7 @@
           endTime: moment().format('YYYY-MM-DD'),
         },
         ipagination:{
-          pageSizeOptions: ['10', '100', '200']
+          pageSizeOptions: ['10', '20', '30', '100', '200']
         },
         dateFormat: 'YYYY-MM-DD',
         currentDay: moment().format('YYYY-MM-DD'),
