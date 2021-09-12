@@ -77,7 +77,9 @@ public class DepotItemController {
         if (list != null) {
             for (DepotItemVo4DetailByTypeAndMId d: list) {
                 JSONObject item = new JSONObject();
-                item.put("number", d.getNumber()); //商品编号
+                item.put("number", d.getNumber()); //编号
+                item.put("barCode", d.getBarCode()); //条码
+                item.put("materialName", d.getMaterialName()); //名称
                 String type = d.getType();
                 String subType = d.getSubType();
                 if(("其它").equals(type)) {
