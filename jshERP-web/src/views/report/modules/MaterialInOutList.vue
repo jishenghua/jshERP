@@ -70,9 +70,11 @@
             scopedSlots: { customRender: 'numberCustomRender' },
           },
           { title: '类型', dataIndex: 'type', width: 100},
-          {title: '仓库名称', dataIndex: 'depotName', width: 80},
-          {title: '数量', dataIndex: 'basicNumber', width: 80},
-          {title: '日期', dataIndex: 'operTime', width: 180}
+          { title: '条码', dataIndex: 'barCode', width: 100},
+          { title: '名称', dataIndex: 'materialName', width: 100},
+          { title: '仓库名称', dataIndex: 'depotName', width: 80},
+          { title: '数量', dataIndex: 'basicNumber', width: 80},
+          { title: '日期', dataIndex: 'operTime', width: 180}
         ],
         labelCol: {
           xs: { span: 1 },
