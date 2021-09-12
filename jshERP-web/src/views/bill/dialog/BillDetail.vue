@@ -11,20 +11,21 @@
       wrapClassName="ant-modal-cust-warp"
       style="top:5%;height: 100%;overflow-y: hidden">
       <template slot="footer">
+        <a-button v-if="billPrintFlag" @click="handlePrint">三联打印预览</a-button>
         <!--此处为解决缓存问题-->
-        <a-button v-if="billType === '调拨出库'" v-print="'#allocationOutPrint'" ghost type="primary">打印</a-button>
-        <a-button v-if="billType === '组装单'" v-print="'#assemblePrint'" ghost type="primary">打印</a-button>
-        <a-button v-if="billType === '拆卸单'" v-print="'#disassemblePrint'" ghost type="primary">打印</a-button>
-        <a-button v-if="billType === '其它入库'" v-print="'#otherInPrint'" ghost type="primary">打印</a-button>
-        <a-button v-if="billType === '其它出库'" v-print="'#otherOutPrint'" ghost type="primary">打印</a-button>
-        <a-button v-if="billType === '采购退货出库'" v-print="'#purchaseBackPrint'" ghost type="primary">打印</a-button>
-        <a-button v-if="billType === '采购入库'" v-print="'#purchaseInPrint'" ghost type="primary">打印</a-button>
-        <a-button v-if="billType === '采购订单'" v-print="'#purchaseOrderPrint'" ghost type="primary">打印</a-button>
-        <a-button v-if="billType === '零售退货入库'" v-print="'#retailBackPrint'" ghost type="primary">打印</a-button>
-        <a-button v-if="billType === '零售出库'" v-print="'#retailOutPrint'" ghost type="primary">打印</a-button>
-        <a-button v-if="billType === '销售退货入库'" v-print="'#saleBackPrint'" ghost type="primary">打印</a-button>
-        <a-button v-if="billType === '销售订单'" v-print="'#saleOrderPrint'" ghost type="primary">打印</a-button>
-        <a-button v-if="billType === '销售出库'" v-print="'#saleOutPrint'" ghost type="primary">打印</a-button>
+        <a-button v-if="billType === '调拨出库'" v-print="'#allocationOutPrint'">普通打印</a-button>
+        <a-button v-if="billType === '组装单'" v-print="'#assemblePrint'">普通打印</a-button>
+        <a-button v-if="billType === '拆卸单'" v-print="'#disassemblePrint'">普通打印</a-button>
+        <a-button v-if="billType === '其它入库'" v-print="'#otherInPrint'">普通打印</a-button>
+        <a-button v-if="billType === '其它出库'" v-print="'#otherOutPrint'">普通打印</a-button>
+        <a-button v-if="billType === '采购退货出库'" v-print="'#purchaseBackPrint'">普通打印</a-button>
+        <a-button v-if="billType === '采购入库'" v-print="'#purchaseInPrint'">普通打印</a-button>
+        <a-button v-if="billType === '采购订单'" v-print="'#purchaseOrderPrint'">普通打印</a-button>
+        <a-button v-if="billType === '零售退货入库'" v-print="'#retailBackPrint'">普通打印</a-button>
+        <a-button v-if="billType === '零售出库'" v-print="'#retailOutPrint'">普通打印</a-button>
+        <a-button v-if="billType === '销售退货入库'" v-print="'#saleBackPrint'">普通打印</a-button>
+        <a-button v-if="billType === '销售订单'" v-print="'#saleOrderPrint'">普通打印</a-button>
+        <a-button v-if="billType === '销售出库'" v-print="'#saleOutPrint'">普通打印</a-button>
         <a-button key="back" @click="handleCancel">取消</a-button>
       </template>
       <a-form :form="form">
@@ -833,19 +834,22 @@
           </template>
       </a-form>
     </j-modal>
+    <bill-print-iframe ref="modalDetail"></bill-print-iframe>
   </a-card>
 </template>
 
 <script>
   import pick from 'lodash.pick'
   import { getAction } from '@/api/manage'
-  import { findBillDetailByNumber} from '@/api/api'
+  import { findBillDetailByNumber, getPlatformConfigByKey} from '@/api/api'
   import { getMpListShort } from "@/utils/util"
+  import BillPrintIframe from './BillPrintIframe'
   import JUpload from '@/components/jeecg/JUpload'
   import Vue from 'vue'
   export default {
     name: 'BillDetail',
     components: {
+      BillPrintIframe,
       JUpload
     },
     data () {
@@ -855,6 +859,7 @@
         visible: false,
         model: {},
         billType: '',
+        billPrintFlag: false,
         fileList: [],
         tableWidth: {
           'width': '1550px'
@@ -1095,6 +1100,13 @@
     created () {
     },
     methods: {
+      initPlatform() {
+        getPlatformConfigByKey( {"platformKey": "bill_print_flag"}).then((res)=> {
+          if (res && res.code == 200) {
+            this.billPrintFlag = res.data.platformValue==='1'?true:false
+          }
+        })
+      },
       show(record, type) {
         this.billType = type
         //附件下载
@@ -1111,6 +1123,7 @@
         }
         let url = this.readOnly ? this.url.detailList : this.url.detailList;
         this.requestSubTableData(url, params);
+        this.initPlatform()
       },
       requestSubTableData(url, params, success) {
         this.loading = true
@@ -1138,6 +1151,11 @@
             this.title = res.data.subType + type + "-详情";
           }
         })
+      },
+      //三联打印预览
+      handlePrint() {
+        this.$refs.modalDetail.show(this.model, this.billType);
+        this.$refs.modalDetail.title=this.billType + "-三联打印预览";
       }
     }
   }
