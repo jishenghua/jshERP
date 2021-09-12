@@ -1216,3 +1216,11 @@ alter table jsh_log change client_ip client_ip varchar(200) DEFAULT NULL COMMENT
 -- --------------------------------------------------------
 alter table jsh_account_head add status varchar(1) DEFAULT NULL COMMENT '状态，0未审核、1已审核' after file_name;
 update jsh_account_head set status=0;
+
+-- --------------------------------------------------------
+-- 时间 2021年9月12日
+-- by jishenghua
+-- 插入jsh_platform_config数据，控制是否显示三联打印
+-- --------------------------------------------------------
+INSERT INTO `jsh_platform_config` (`id`, `platform_key`, `platform_key_info`, `platform_value`) VALUES ('4', 'bill_print_flag', '三联打印启用标记', '0');
+INSERT INTO `jsh_platform_config` (`id`, `platform_key`, `platform_key_info`, `platform_value`) VALUES ('5', 'bill_print_url', '三联打印地址', '');
