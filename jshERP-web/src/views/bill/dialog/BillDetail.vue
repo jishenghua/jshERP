@@ -1101,9 +1101,12 @@
     },
     methods: {
       initPlatform() {
-        getPlatformConfigByKey( {"platformKey": "bill_print_flag"}).then((res)=> {
-          if (res && res.code == 200) {
-            this.billPrintFlag = res.data.platformValue==='1'?true:false
+        getPlatformConfigByKey({"platformKey": "bill_print_flag"}).then((res)=> {
+          if (res && res.code === 200) {
+            if(this.billType === '采购订单'||this.billType === '采购入库'||this.billType === '采购退货出库'||
+              this.billType === '销售订单'||this.billType === '销售出库'||this.billType === '销售退货入库') {
+              this.billPrintFlag = res.data.platformValue==='1'?true:false
+            }
           }
         })
       },
@@ -1154,8 +1157,14 @@
       },
       //三联打印预览
       handlePrint() {
-        this.$refs.modalDetail.show(this.model, this.billType);
-        this.$refs.modalDetail.title=this.billType + "-三联打印预览";
+        getPlatformConfigByKey({"platformKey": "bill_print_url"}).then((res)=> {
+          if (res && res.code === 200) {
+            let billPrintUrl = res.data.platformValue + '?no=' + this.model.number
+            let billPrintHeight = this.dataSource.length*46 + 300
+            this.$refs.modalDetail.show(this.model, billPrintUrl, billPrintHeight);
+            this.$refs.modalDetail.title = this.billType + "-三联打印预览";
+          }
+        })
       }
     }
   }

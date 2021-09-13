@@ -1,57 +1,71 @@
 <template>
-  <div></div>
+  <a-modal
+    :title="title"
+    :width="width"
+    :visible="visible"
+    @cancel="handleCancel"
+    cancelText="关闭"
+    wrapClassName="ant-modal-cust-warp"
+    style="top:5%;height: 100%;overflow-y: hidden">
+    <template slot="footer">
+      <a-button key="back" @click="handleCancel">取消</a-button>
+    </template>
+    <a-form :form="form">
+      <template>
+        <iframe :src="billPrintUrl" width="100%" :height="height" frameborder="0" scrolling="no"></iframe>
+      </template>
+      <template>
+        <a-row>
+          <a-col>
+            <a-form-item>
+              <a-input v-decorator="['id']" hidden/>
+            </a-form-item>
+          </a-col>
+        </a-row>
+      </template>
+    </a-form>
+  </a-modal>
 </template>
 
 <script>
-  import Vue from 'vue'
-  import { ACCESS_TOKEN } from "@/store/mutation-types"
-  import {mixinDevice} from '@/utils/mixin.js'
-
+  import pick from 'lodash.pick'
   export default {
-    name: "BillPrintIframe",
-    inject:['closeCurrent'],
-    mixins: [mixinDevice],
+    name: 'BillPrintIframe',
     data () {
       return {
-        url: "",
-        id:"",
-        height: ""
+        title: "三联打印预览",
+        width: '1550px',
+        visible: false,
+        billPrintUrl: '',
+        height: "",
+        model: {},
+        form: this.$form.createForm(this),
+        loading: false
       }
     },
     created () {
-      this.goUrl()
-    },
-    updated () {
-      this.goUrl()
-    },
-    watch: {
-      $route(to, from) {
-        this.goUrl();
-      }
     },
     methods: {
-      show(record, type) {
-
+      show(record, billPrintUrl, billPrintHeight) {
+        this.height = billPrintHeight
+        this.billPrintUrl = billPrintUrl
+        this.visible = true;
+        this.model = Object.assign({}, record);
+        this.$nextTick(() => {
+          this.form.setFieldsValue(pick(this.model,'id'))
+        });
       },
-      goUrl () {
-        let url = this.$route.meta.url
-        this.id = this.$route.path
-        if (this.isMobile()) {
-          this.height = 800
-        } else {
-          this.height = document.documentElement.clientHeight-130
-        }
-        console.log("------url------"+url)
-        console.log("------token------"+Vue.ls.get(ACCESS_TOKEN))
-        if (url !== null && url !== undefined) {
-          //外部url加入token
-          let token = Vue.ls.get(ACCESS_TOKEN);
-          this.url = url + '?token=' + token;
-        }
+      handleCancel() {
+        this.close()
+      },
+      close() {
+        this.$emit('close');
+        this.visible = false;
       }
     }
   }
 </script>
 
-<style>
+<style scoped>
+
 </style>
