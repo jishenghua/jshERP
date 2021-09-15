@@ -1160,7 +1160,7 @@
         getPlatformConfigByKey({"platformKey": "bill_print_url"}).then((res)=> {
           if (res && res.code === 200) {
             let billPrintUrl = res.data.platformValue + '?no=' + this.model.number
-            let billPrintHeight = this.dataSource.length*50 + 400
+            let billPrintHeight = this.dataSource.length*50 + 600
             this.$refs.modalDetail.show(this.model, billPrintUrl, billPrintHeight);
             this.$refs.modalDetail.title = this.billType + "-三联打印预览";
           }
