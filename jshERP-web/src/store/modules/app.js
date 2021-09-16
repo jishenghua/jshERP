@@ -23,7 +23,7 @@ const app = {
     layout: '',
     contentWidth: '',
     fixedHeader: false,
-    fixSiderbar: false,
+    fixSiderbar: true,
     autoHideHeader: false,
     color: null,
     weak: false,
