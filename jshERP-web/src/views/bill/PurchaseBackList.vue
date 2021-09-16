@@ -162,7 +162,7 @@
         },
         // 表头
         columns: [
-          { title: '供应商', dataIndex: 'organName',width:120},
+          { title: '供应商', dataIndex: 'organName',width:120, ellipsis:true},
           { title: '单据编号', dataIndex: 'number',width:160,
             customRender:function (text,record,index) {
               if(record.linkNumber) {
