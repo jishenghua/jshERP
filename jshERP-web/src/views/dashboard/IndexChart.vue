@@ -37,12 +37,12 @@
     <a-row :gutter="24">
       <a-col :sm="24" :md="12" :xl="12" :style="{ marginBottom: '24px' }">
         <a-card :loading="loading" :bordered="false" :body-style="{paddingRight: '5'}">
-          <bar title="销售统计" :dataSource="salePriceData"/>
+          <bar title="销售统计" :yaxisText="yaxisText" :dataSource="salePriceData"/>
         </a-card>
       </a-col>
       <a-col :sm="24" :md="12" :xl="12" :style="{ marginBottom: '24px' }">
         <a-card :loading="loading" :bordered="false" :body-style="{paddingRight: '5'}">
-          <bar title="采购统计" :dataSource="buyPriceData"/>
+          <bar title="采购统计" :yaxisText="yaxisText" :dataSource="buyPriceData"/>
         </a-card>
       </a-col>
     </a-row>
@@ -94,6 +94,7 @@
         loading: true,
         center: null,
         statistics: {},
+        yaxisText: '金额',
         buyPriceData: [],
         salePriceData: [],
         visitFields:['ip','visit'],
