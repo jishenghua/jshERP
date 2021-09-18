@@ -330,6 +330,12 @@ public class ExceptionConstants {
     //单据删除-只有未审核的单据才能删除
     public static final int DEPOT_HEAD_UN_AUDIT_DELETE_FAILED_CODE = 8500011;
     public static final String DEPOT_HEAD_UN_AUDIT_DELETE_FAILED_MSG = "抱歉，只有未审核的单据才能删除";
+    //单据审核-只有未审核的单据才能审核
+    public static final int DEPOT_HEAD_UN_AUDIT_TO_AUDIT_FAILED_CODE = 8500012;
+    public static final String DEPOT_HEAD_UN_AUDIT_TO_AUDIT_FAILED_MSG = "抱歉，只有未审核的单据才能审核";
+    //单据反审核-只有已审核的单据才能反审核
+    public static final int DEPOT_HEAD_AUDIT_TO_UN_AUDIT_FAILED_CODE = 8500013;
+    public static final String DEPOT_HEAD_AUDIT_TO_UN_AUDIT_FAILED_MSG = "抱歉，只有已审核的单据才能反审核";
     /**
      *  单据明细信息
      * type = 90
