@@ -82,7 +82,7 @@
           </a-dropdown>
           <a-tooltip placement="left" title="付款单的要素和录入原则与“收款单”相同。
           付款单中优惠金额计入支出类中的付款优惠中，为负值 （因优惠意味着实际少付款）。" slot="action">
-            <a-icon v-if="btnEnableList.indexOf(1)>-1" type="info-circle" style="font-size:20px;float:right;" />
+            <a-icon v-if="btnEnableList.indexOf(1)>-1" type="question-circle" style="font-size:20px;float:right;" />
           </a-tooltip>
         </div>
         <!-- table区域-begin -->

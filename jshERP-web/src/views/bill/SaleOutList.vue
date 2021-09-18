@@ -86,8 +86,9 @@
             </a-button>
           </a-dropdown>
           <a-tooltip placement="left" title="销售出库单可以由销售订单转过来，也可以单独创建。
-          销售出库单据中的仓库列表只显示当前用户有权限的仓库。销售出库单可以使用多账户收款。" slot="action">
-            <a-icon v-if="btnEnableList.indexOf(1)>-1" type="info-circle" style="font-size:20px;float:right;" />
+          销售出库单据中的仓库列表只显示当前用户有权限的仓库。销售出库单可以使用多账户收款。
+          勾选单据之后可以进行批量操作（删除、审核、反审核）" slot="action">
+            <a-icon v-if="btnEnableList.indexOf(1)>-1" type="question-circle" style="font-size:20px;float:right;" />
           </a-tooltip>
         </div>
         <!-- table区域-begin -->

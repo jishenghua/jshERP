@@ -81,7 +81,7 @@
             </a-button>
           </a-dropdown>
           <a-tooltip placement="left" title="针对会员模块，对会员收取预付款。" slot="action">
-            <a-icon v-if="btnEnableList.indexOf(1)>-1" type="info-circle" style="font-size:20px;float:right;" />
+            <a-icon v-if="btnEnableList.indexOf(1)>-1" type="question-circle" style="font-size:20px;float:right;" />
           </a-tooltip>
         </div>
         <!-- table区域-begin -->

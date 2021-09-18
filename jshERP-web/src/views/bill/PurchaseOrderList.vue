@@ -85,8 +85,8 @@
             </a-button>
           </a-dropdown>
           <a-tooltip placement="left" title="采购订单不涉及付款金额，采购订单可以转采购入库单，但需要先对采购订单进行审核。
-          勾选之后可以进行批量操作（删除、审核、反审核）" slot="action">
-            <a-icon v-if="btnEnableList.indexOf(1)>-1" type="info-circle" style="font-size:20px;float:right;" />
+          勾选单据之后可以进行批量操作（删除、审核、反审核）" slot="action">
+            <a-icon v-if="btnEnableList.indexOf(1)>-1" type="question-circle" style="font-size:20px;float:right;" />
           </a-tooltip>
         </div>
         <!-- table区域-begin -->

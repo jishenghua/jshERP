@@ -82,7 +82,7 @@
           </a-dropdown>
           <a-tooltip placement="left" title="收款单所收金额只对付款单位的应收应付产生影响，可以在回款统计中进行查看。
           收款单的优惠金额会对利润产生影响，但不影响付款单位的应收应付。优惠金额计入收入类的收款优惠中。" slot="action">
-            <a-icon v-if="btnEnableList.indexOf(1)>-1" type="info-circle" style="font-size:20px;float:right;" />
+            <a-icon v-if="btnEnableList.indexOf(1)>-1" type="question-circle" style="font-size:20px;float:right;" />
           </a-tooltip>
         </div>
         <!-- table区域-begin -->

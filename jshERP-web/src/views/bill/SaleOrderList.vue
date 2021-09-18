@@ -86,8 +86,8 @@
             </a-button>
           </a-dropdown>
           <a-tooltip placement="left" title="销售订单不涉及收款金额，销售订单可以转销售出库单，但需要先对销售订单进行审核。
-          勾选之后可以进行批量操作（删除、审核、反审核）" slot="action">
-            <a-icon v-if="btnEnableList.indexOf(1)>-1" type="info-circle" style="font-size:20px;float:right;" />
+          勾选单据之后可以进行批量操作（删除、审核、反审核）" slot="action">
+            <a-icon v-if="btnEnableList.indexOf(1)>-1" type="question-circle" style="font-size:20px;float:right;" />
           </a-tooltip>
         </div>
         <!-- table区域-begin -->

@@ -72,7 +72,7 @@
             </a-button>
           </a-dropdown>
           <a-tooltip placement="left" title="转账：本系统的转账是指从一个银行存款账户转入到另一个银行存款账户。" slot="action">
-            <a-icon v-if="btnEnableList.indexOf(1)>-1" type="info-circle" style="font-size:20px;float:right;" />
+            <a-icon v-if="btnEnableList.indexOf(1)>-1" type="question-circle" style="font-size:20px;float:right;" />
           </a-tooltip>
         </div>
         <!-- table区域-begin -->
