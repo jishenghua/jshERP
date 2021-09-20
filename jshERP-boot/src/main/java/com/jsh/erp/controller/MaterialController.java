@@ -199,16 +199,18 @@ public class MaterialController {
                     item.put("model", material.getModel());
                     item.put("unit", material.getCommodityUnit() + ratio);
                     item.put("sku", material.getSku());
+                    BigDecimal stock;
                     BigDecimal skuStock = depotItemService.getSkuStockByParam(depotId,material.getMeId(),null,null);
-                    if(StringUtil.isNotEmpty(material.getSku())){
-                        item.put("skuStock", skuStock);
-                    }
-                    BigDecimal stock = depotItemService.getStockByParam(depotId,material.getId(),null,null);
-                    if (material.getUnitId()!=null){
-                        Unit unit = unitService.getUnit(material.getUnitId());
-                        if(material.getCommodityUnit().equals(unit.getOtherUnit())) {
-                            if(unit.getRatio()!=0) {
-                                stock = stock.divide(BigDecimal.valueOf(unit.getRatio()),2,BigDecimal.ROUND_HALF_UP);
+                    if(skuStock.compareTo(BigDecimal.ZERO)!=0){
+                        stock = skuStock;
+                    } else {
+                        stock = depotItemService.getStockByParam(depotId,material.getId(),null,null);
+                        if (material.getUnitId()!=null){
+                            Unit unit = unitService.getUnit(material.getUnitId());
+                            if(material.getCommodityUnit().equals(unit.getOtherUnit())) {
+                                if(unit.getRatio()!=0) {
+                                    stock = stock.divide(BigDecimal.valueOf(unit.getRatio()),2,BigDecimal.ROUND_HALF_UP);
+                                }
                             }
                         }
                     }
