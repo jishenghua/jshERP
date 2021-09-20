@@ -18,7 +18,7 @@
       <a-icon :type="uploadLoading ? 'loading' : 'plus'" />
       <div class="ant-upload-text">{{ text }}</div>
     </div>
-    <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel()">
+    <a-modal :visible="previewVisible" :width="1000" :footer="null" @cancel="handleCancel()">
       <img alt="example" style="width: 100%" :src="previewImage"/>
     </a-modal>
   </a-upload>
