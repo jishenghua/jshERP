@@ -123,16 +123,21 @@ public class DepotItemController {
             List<MaterialVo4Unit> list = materialService.getMaterialByBarCode(barCode);
             if(list!=null && list.size()>0) {
                 MaterialVo4Unit materialVo4Unit = list.get(0);
-                stock = depotItemService.getStockByParam(depotId,materialVo4Unit.getId(),null,null);
-                String commodityUnit = materialVo4Unit.getCommodityUnit();
-                Long unitId = materialVo4Unit.getUnitId();
-                if(unitId!=null) {
-                    Integer ratio = 1;
-                    Unit unit = unitService.getUnit(unitId);
-                    if(commodityUnit.equals(unit.getOtherUnit())){
-                        ratio = unit.getRatio();
-                        if(ratio!=0) {
-                            stock = stock.divide(BigDecimal.valueOf(ratio),2,BigDecimal.ROUND_HALF_UP); //两位小数
+                BigDecimal skuStock = depotItemService.getSkuStockByParam(depotId,materialVo4Unit.getMeId(),null,null);
+                if(skuStock.compareTo(BigDecimal.ZERO)!=0){
+                    stock = skuStock;
+                } else {
+                    stock = depotItemService.getStockByParam(depotId,materialVo4Unit.getId(),null,null);
+                    String commodityUnit = materialVo4Unit.getCommodityUnit();
+                    Long unitId = materialVo4Unit.getUnitId();
+                    if(unitId!=null) {
+                        Integer ratio = 1;
+                        Unit unit = unitService.getUnit(unitId);
+                        if(commodityUnit.equals(unit.getOtherUnit())){
+                            ratio = unit.getRatio();
+                            if(ratio!=0) {
+                                stock = stock.divide(BigDecimal.valueOf(ratio),2,BigDecimal.ROUND_HALF_UP); //两位小数
+                            }
                         }
                     }
                 }
@@ -173,13 +178,19 @@ public class DepotItemController {
                     item.put("model", diEx.getMModel());
                     item.put("materialOther", getOtherInfo(mpArr, diEx));
                     Integer ratio = diEx.getRatio();
-                    BigDecimal stock = depotItemService.getStockByParam(diEx.getDepotId(),diEx.getMaterialId(),null,null);
-                    if(ratio!=null){
-                        BigDecimal ratioDecimal = new BigDecimal(ratio.toString());
-                        if(ratioDecimal.compareTo(BigDecimal.ZERO)!=0){
-                            String otherUnit = diEx.getOtherUnit();
-                            if(otherUnit.equals(diEx.getMaterialUnit())) {
-                                stock = stock.divide(ratioDecimal,2,BigDecimal.ROUND_HALF_UP); //两位小数
+                    BigDecimal stock;
+                    BigDecimal skuStock = depotItemService.getSkuStockByParam(diEx.getDepotId(),diEx.getMaterialExtendId(),null,null);
+                    if(skuStock.compareTo(BigDecimal.ZERO)!=0){
+                        stock = skuStock;
+                    } else {
+                        stock = depotItemService.getStockByParam(diEx.getDepotId(),diEx.getMaterialId(),null,null);
+                        if(ratio!=null){
+                            BigDecimal ratioDecimal = new BigDecimal(ratio.toString());
+                            if(ratioDecimal.compareTo(BigDecimal.ZERO)!=0){
+                                String otherUnit = diEx.getOtherUnit();
+                                if(otherUnit.equals(diEx.getMaterialUnit())) {
+                                    stock = stock.divide(ratioDecimal,2,BigDecimal.ROUND_HALF_UP); //两位小数
+                                }
                             }
                         }
                     }

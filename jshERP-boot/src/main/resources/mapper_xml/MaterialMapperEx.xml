@@ -25,6 +25,7 @@
     </resultMap>
 
     <resultMap extends="com.jsh.erp.datasource.mappers.MaterialMapper.BaseResultMap" id="ResultAndUnitMap" type="com.jsh.erp.datasource.entities.MaterialVo4Unit">
+        <result column="meId" jdbcType="BIGINT" property="meId" />
         <result column="unit_name" jdbcType="VARCHAR" property="unitName" />
         <result column="sku" jdbcType="VARCHAR" property="sku" />
     </resultMap>
@@ -303,7 +304,7 @@
     </select>
 
     <select id="getMaterialByBarCode" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultAndUnitMap">
-        select m.*,u.name unit_name,me.bar_code m_bar_code, me.commodity_unit, me.purchase_decimal, me.commodity_decimal,
+        select m.*,u.name unit_name, me.id meId,me.bar_code m_bar_code, me.commodity_unit, me.purchase_decimal, me.commodity_decimal,
         me.wholesale_decimal, me.low_decimal, me.sku
         from jsh_material m
         left join jsh_material_extend me on m.id=me.material_id and ifnull(me.delete_Flag,'0') !='1'
