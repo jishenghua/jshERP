@@ -492,12 +492,18 @@ public class MaterialController {
                                 Long depotId = depotObj.getLong("id");
                                 mvo.setDepotId(depotId);
                                 //库存
-                                BigDecimal stock = depotItemService.getStockByParam(depotId,mvo.getId(),null,null);
-                                if (mvo.getUnitId()!=null){
-                                    Unit unit = unitService.getUnit(mvo.getUnitId());
-                                    if(mvo.getCommodityUnit().equals(unit.getOtherUnit())) {
-                                        if(unit.getRatio()!=0) {
-                                            stock = stock.divide(BigDecimal.valueOf(unit.getRatio()),2,BigDecimal.ROUND_HALF_UP);
+                                BigDecimal stock;
+                                BigDecimal skuStock = depotItemService.getSkuStockByParam(depotId,mvo.getMeId(),null,null);
+                                if(skuStock.compareTo(BigDecimal.ZERO)!=0){
+                                    stock = skuStock;
+                                } else {
+                                    stock = depotItemService.getStockByParam(depotId,mvo.getId(),null,null);
+                                    if (mvo.getUnitId()!=null){
+                                        Unit unit = unitService.getUnit(mvo.getUnitId());
+                                        if(mvo.getCommodityUnit().equals(unit.getOtherUnit())) {
+                                            if(unit.getRatio()!=0) {
+                                                stock = stock.divide(BigDecimal.valueOf(unit.getRatio()),2,BigDecimal.ROUND_HALF_UP);
+                                            }
                                         }
                                     }
                                 }
