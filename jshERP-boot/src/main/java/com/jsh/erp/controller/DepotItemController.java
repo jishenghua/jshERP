@@ -123,9 +123,8 @@ public class DepotItemController {
             List<MaterialVo4Unit> list = materialService.getMaterialByBarCode(barCode);
             if(list!=null && list.size()>0) {
                 MaterialVo4Unit materialVo4Unit = list.get(0);
-                BigDecimal skuStock = depotItemService.getSkuStockByParam(depotId,materialVo4Unit.getMeId(),null,null);
-                if(skuStock.compareTo(BigDecimal.ZERO)!=0){
-                    stock = skuStock;
+                if(StringUtil.isNotEmpty(materialVo4Unit.getSku())){
+                    stock = depotItemService.getSkuStockByParam(depotId,materialVo4Unit.getMeId(),null,null);
                 } else {
                     stock = depotItemService.getStockByParam(depotId,materialVo4Unit.getId(),null,null);
                     String commodityUnit = materialVo4Unit.getCommodityUnit();
@@ -179,9 +178,8 @@ public class DepotItemController {
                     item.put("materialOther", getOtherInfo(mpArr, diEx));
                     Integer ratio = diEx.getRatio();
                     BigDecimal stock;
-                    BigDecimal skuStock = depotItemService.getSkuStockByParam(diEx.getDepotId(),diEx.getMaterialExtendId(),null,null);
-                    if(skuStock.compareTo(BigDecimal.ZERO)!=0){
-                        stock = skuStock;
+                    if(StringUtil.isNotEmpty(diEx.getSku())){
+                        stock = depotItemService.getSkuStockByParam(diEx.getDepotId(),diEx.getMaterialExtendId(),null,null);
                     } else {
                         stock = depotItemService.getStockByParam(diEx.getDepotId(),diEx.getMaterialId(),null,null);
                         if(ratio!=null){

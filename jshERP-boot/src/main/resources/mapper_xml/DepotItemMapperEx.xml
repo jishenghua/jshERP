@@ -155,7 +155,7 @@
     <select id="findDetailByTypeAndMaterialIdCounts" resultType="java.lang.Long">
         select count(1)
         from jsh_depot_head dh
-        INNER JOIN jsh_depot_item di on dh.id=di.header_id and ifnull(di.delete_flag,'0') !='1'
+        left JOIN jsh_depot_item di on dh.id=di.header_id and ifnull(di.delete_flag,'0') !='1'
         where ((dh.type!='其它' and dh.sub_type!='调拨')
         or (dh.type='其它' and dh.sub_type='组装单')
         or (dh.type='其它' and dh.sub_type='拆卸单')
@@ -258,7 +258,7 @@
 
     <select id="getStockCheckSum"  resultType="java.math.BigDecimal">
         select ifnull(sum(di.basic_number),0) stockCheckSum from jsh_depot_head dh
-        INNER JOIN jsh_depot_item di on dh.id=di.header_id
+        left JOIN jsh_depot_item di on dh.id=di.header_id
         where 1=1
         <if test="mId != null">
             and di.material_id=#{mId}
