@@ -33,6 +33,12 @@ export const BillListMixin = {
       this.$refs.modalForm.action = "add";
       this.handleAdd();
     },
+    myHandleCopyAdd(record) {
+      this.$refs.modalForm.action = "copyAdd";
+      this.$refs.modalForm.edit(record);
+      this.$refs.modalForm.title = "复制新增";
+      this.$refs.modalForm.disableSubmit = false;
+    },
     myHandleEdit(record) {
       if(record.status === '0') {
         this.$refs.modalForm.action = "edit";
