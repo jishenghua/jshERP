@@ -998,7 +998,6 @@
           { title: '备注', dataIndex: 'remark', width: '5%'}
         ],
         purchaseOrderColumns: [
-          { title: '仓库名称', dataIndex: 'depotName', width: '8%'},
           { title: '条码', dataIndex: 'barCode', width: '10%'},
           { title: '名称', dataIndex: 'name', width: '8%'},
           { title: '规格', dataIndex: 'standard', width: '5%'},
@@ -1062,7 +1061,6 @@
           { title: '备注', dataIndex: 'remark', width: '5%'}
         ],
         saleOrderColumns: [
-          { title: '仓库名称', dataIndex: 'depotName', width: '8%'},
           { title: '条码', dataIndex: 'barCode', width: '10%'},
           { title: '名称', dataIndex: 'name', width: '8%'},
           { title: '规格', dataIndex: 'standard', width: '5%'},

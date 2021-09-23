@@ -112,9 +112,6 @@
           loading: false,
           dataSource: [],
           columns: [
-            { title: '仓库名称', key: 'depotId', width: '7%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
-              allowSearch:true, validateRules: [{ required: true, message: '${title}不能为空' }]
-            },
             { title: '条码', key: 'barCode', width: '8%', type: FormTypes.popupJsh, multi: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
