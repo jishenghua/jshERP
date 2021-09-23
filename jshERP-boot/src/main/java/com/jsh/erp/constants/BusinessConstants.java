@@ -67,12 +67,14 @@ public class BusinessConstants {
     public static final String BILLS_STATUS_SKIP = "2";
     /**
      * 出入库分类
-     *采购、采购退货、其它、零售、销售、调拨
+     *采购、采购退货、其它、零售、销售、调拨等
      * */
+    public static final String SUB_TYPE_PURCHASE_ORDER = "采购订单";
     public static final String SUB_TYPE_PURCHASE = "采购";
     public static final String SUB_TYPE_PURCHASE_TETURNS = "采购退货";
     public static final String SUB_TYPE_OTHER = "其它";
     public static final String SUB_TYPE_RETAIL = "零售";
+    public static final String SUB_TYPE_SALES_ORDER = "销售订单";
     public static final String SUB_TYPE_SALES = "销售";
     public static final String SUB_TYPE_TRANSFER = "调拨";
     /**

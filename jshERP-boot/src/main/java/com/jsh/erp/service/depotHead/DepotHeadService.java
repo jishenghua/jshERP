@@ -105,8 +105,7 @@ public class DepotHeadService {
         List<DepotHeadVo4List> resList = new ArrayList<>();
         List<DepotHeadVo4List> list=new ArrayList<>();
         try{
-            String depotIds = depotService.findDepotStrByCurrentUser();
-            String [] depotArray=StringUtil.isNotEmpty(depotIds)?depotIds.split(","):null;
+            String [] depotArray = getDepotArray(subType);
             String [] creatorArray = getCreatorArray(roleType);
             Map<Long,String> personMap = personService.getPersonMap();
             Map<Long,String> accountMap = accountService.getAccountMap();
@@ -154,8 +153,7 @@ public class DepotHeadService {
                 String materialParam, Long organId, Long creator, Long depotId) throws Exception{
         Long result=null;
         try{
-            String depotIds = depotService.findDepotStrByCurrentUser();
-            String [] depotArray=StringUtil.isNotEmpty(depotIds)?depotIds.split(","):null;
+            String [] depotArray = getDepotArray(subType);
             String [] creatorArray = getCreatorArray(roleType);
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
@@ -165,6 +163,21 @@ public class DepotHeadService {
             JshException.readFail(logger, e);
         }
         return result;
+    }
+
+    /**
+     * 根据单据类型获取仓库数组
+     * @param subType
+     * @return
+     * @throws Exception
+     */
+    public String[] getDepotArray(String subType) throws Exception {
+        String [] depotArray = null;
+        if(!BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(subType) && !BusinessConstants.SUB_TYPE_SALES_ORDER.equals(subType)) {
+            String depotIds = depotService.findDepotStrByCurrentUser();
+            depotArray = StringUtil.isNotEmpty(depotIds) ? depotIds.split(",") : null;
+        }
+        return depotArray;
     }
 
     /**

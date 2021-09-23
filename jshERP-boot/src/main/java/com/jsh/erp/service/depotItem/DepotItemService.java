@@ -363,8 +363,11 @@ public class DepotItemService {
                 if (StringUtil.isExist(rowObj.get("depotId"))) {
                     depotItem.setDepotId(rowObj.getLong("depotId"));
                 } else {
-                    throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_DEPOT_FAILED_CODE,
-                            String.format(ExceptionConstants.DEPOT_HEAD_DEPOT_FAILED_MSG));
+                    if(!BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(depotHead.getSubType())
+                            && !BusinessConstants.SUB_TYPE_SALES_ORDER.equals(depotHead.getSubType())) {
+                        throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_DEPOT_FAILED_CODE,
+                                String.format(ExceptionConstants.DEPOT_HEAD_DEPOT_FAILED_MSG));
+                    }
                 }
                 if(BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubType())) {
                     if (StringUtil.isExist(rowObj.get("anotherDepotId"))) {
@@ -576,20 +579,22 @@ public class DepotItemService {
      * @param dId
      */
     public void updateCurrentStockFun(Long mId, Long dId) {
-        MaterialCurrentStockExample example = new MaterialCurrentStockExample();
-        example.createCriteria().andMaterialIdEqualTo(mId).andDepotIdEqualTo(dId)
-                .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        List<MaterialCurrentStock> list = materialCurrentStockMapper.selectByExample(example);
-        MaterialCurrentStock materialCurrentStock = new MaterialCurrentStock();
-        materialCurrentStock.setMaterialId(mId);
-        materialCurrentStock.setDepotId(dId);
-        materialCurrentStock.setCurrentNumber(getStockByParam(dId,mId,null,null));
-        if(list!=null && list.size()>0) {
-            Long mcsId = list.get(0).getId();
-            materialCurrentStock.setId(mcsId);
-            materialCurrentStockMapper.updateByPrimaryKeySelective(materialCurrentStock);
-        } else {
-            materialCurrentStockMapper.insertSelective(materialCurrentStock);
+        if(mId!=null && dId!=null) {
+            MaterialCurrentStockExample example = new MaterialCurrentStockExample();
+            example.createCriteria().andMaterialIdEqualTo(mId).andDepotIdEqualTo(dId)
+                    .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+            List<MaterialCurrentStock> list = materialCurrentStockMapper.selectByExample(example);
+            MaterialCurrentStock materialCurrentStock = new MaterialCurrentStock();
+            materialCurrentStock.setMaterialId(mId);
+            materialCurrentStock.setDepotId(dId);
+            materialCurrentStock.setCurrentNumber(getStockByParam(dId,mId,null,null));
+            if(list!=null && list.size()>0) {
+                Long mcsId = list.get(0).getId();
+                materialCurrentStock.setId(mcsId);
+                materialCurrentStockMapper.updateByPrimaryKeySelective(materialCurrentStock);
+            } else {
+                materialCurrentStockMapper.insertSelective(materialCurrentStock);
+            }
         }
     }
 }
