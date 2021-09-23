@@ -162,7 +162,7 @@ CREATE TABLE `jsh_depot_head` (
   `discount_money` decimal(24,6) DEFAULT NULL COMMENT '优惠金额',
   `discount_last_money` decimal(24,6) DEFAULT NULL COMMENT '优惠后金额',
   `other_money` decimal(24,6) DEFAULT NULL COMMENT '销售或采购费用合计',
-  `status` varchar(1) DEFAULT NULL COMMENT '状态，0未审核、1已审核、2已转采购|销售',
+  `status` varchar(1) DEFAULT NULL COMMENT '状态，0未审核、1已审核、2完成采购|销售、3部分采购|销售',
   `link_number` varchar(50) DEFAULT NULL COMMENT '关联订单号',
   `tenant_id` bigint(20) DEFAULT NULL COMMENT '租户id',
   `delete_flag` varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除',
