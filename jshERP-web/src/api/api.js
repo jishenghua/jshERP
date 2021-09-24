@@ -76,6 +76,8 @@ const editSystemConfig = (params)=>putAction("/systemConfig/update",params);
 const checkSystemConfig = (params)=>getAction("/systemConfig/checkIsNameExist",params);
 const getCurrentSystemConfig = (params)=>getAction("/systemConfig/getCurrentInfo",params);
 const fileSizeLimit = (params)=>getAction("/systemConfig/fileSizeLimit",params);
+//平台参数
+const getPlatformConfigByKey = (params)=>getAction("/platformConfig/getPlatformConfigByKey",params);
 //用户|角色|模块关系
 const addUserBusiness = (params)=>postAction("/userBusiness/add",params);
 const editUserBusiness = (params)=>putAction("/userBusiness/update",params);
@@ -158,6 +160,7 @@ export {
   checkSystemConfig,
   getCurrentSystemConfig,
   fileSizeLimit,
+  getPlatformConfigByKey,
   addUserBusiness,
   editUserBusiness,
   checkUserBusiness,

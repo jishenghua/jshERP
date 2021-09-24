@@ -52,6 +52,7 @@
               :loading="materialTable.loading"
               :columns="materialTable.columns"
               :dataSource="materialTable.dataSource"
+              :minWidth="1100"
               :maxHeight="300"
               :rowNumber="false"
               :rowSelection="true"
@@ -159,8 +160,8 @@
             { title: '条码', key: 'barCode', width: '12%', type: FormTypes.popupJsh, multi: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
-            { title: '名称', key: 'name', width: '8%', type: FormTypes.input, readonly: true },
-            { title: '规格', key: 'standard', width: '5%', type: FormTypes.input, readonly: true },
+            { title: '名称', key: 'name', width: '9%', type: FormTypes.input, readonly: true },
+            { title: '规格', key: 'standard', width: '6%', type: FormTypes.input, readonly: true },
             { title: '型号', key: 'model', width: '5%', type: FormTypes.input, readonly: true },
             { title: '扩展信息', key: 'materialOther', width: '7%', type: FormTypes.input, readonly: true },
             { title: '库存', key: 'stock', width: '5%', type: FormTypes.input, readonly: true },
@@ -171,7 +172,7 @@
             },
             { title: '单价', key: 'unitPrice', width: '5%', type: FormTypes.inputNumber},
             { title: '金额', key: 'allPrice', width: '5%', type: FormTypes.inputNumber, statistics: true },
-            { title: '备注', key: 'remark', width: '5%', type: FormTypes.input }
+            { title: '备注', key: 'remark', width: '7%', type: FormTypes.input }
           ]
         },
         confirmLoading: false,
@@ -226,6 +227,12 @@
           }
           let url = this.readOnly ? this.url.detailList : this.url.detailList;
           this.requestSubTableData(url, params, this.materialTable);
+        }
+        //复制新增单据-初始化单号和日期
+        if(this.action === 'copyAdd') {
+          this.model.id = ''
+          this.model.tenantId = ''
+          this.copyAddInit(this.prefixNo)
         }
         this.initRetail()
         this.initDepot()

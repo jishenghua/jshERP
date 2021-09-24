@@ -34,7 +34,7 @@
         </a-button>
       </template>
     </a-upload>
-    <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+    <a-modal :visible="previewVisible" :width="1000" :footer="null" @cancel="handleCancel">
       <img alt="example" style="width: 100%" :src="previewImage" />
     </a-modal>
   </div>
@@ -312,7 +312,9 @@
         console.log(file)
       },
       handlePreview(file){
-        if(this.fileType === FILE_TYPE_IMG){
+        let postfix = file.name.substring(file.name.indexOf('.'))
+        if(postfix === '.gif' || postfix === '.jpg' || postfix === '.jpeg' || postfix === '.png' ||
+          postfix === '.GIF' || postfix === '.JPG' || postfix === '.JPEG' || postfix === '.PNG') {
           this.previewImage = file.url || file.thumbUrl;
           this.previewVisible = true;
         }else{

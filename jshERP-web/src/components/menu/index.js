@@ -120,15 +120,25 @@ export default {
           item.meta = Object.assign(item.meta, { hidden: true })
         })
       }
-
-      return (
-        <Item {...{ key: menu.url }}>
-          <tag {...{ props, attrs }}>
-            {this.renderIcon(menu.icon)}
-            <span>{menu.text}</span>
-          </tag>
-        </Item>
-      )
+      if(menu.component==='/layouts/IframePageView') {
+        return (
+          <Item {...{ key: menu.url }}>
+            <tag {...{ props, attrs }}>
+              {this.renderIcon(menu.icon)}
+              <span><b>{menu.text}</b></span>
+            </tag>
+          </Item>
+        )
+      } else {
+        return (
+          <Item {...{ key: menu.url }}>
+            <tag {...{ props, attrs }}>
+              {this.renderIcon(menu.icon)}
+              <span>{menu.text}</span>
+            </tag>
+          </Item>
+        )
+      }
     },
     renderSubMenu (menu) {
       const itemArr = []

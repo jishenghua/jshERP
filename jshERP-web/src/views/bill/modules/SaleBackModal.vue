@@ -260,6 +260,12 @@
           let url = this.readOnly ? this.url.detailList : this.url.detailList;
           this.requestSubTableData(url, params, this.materialTable);
         }
+        //复制新增单据-初始化单号和日期
+        if(this.action === 'copyAdd') {
+          this.model.id = ''
+          this.model.tenantId = ''
+          this.copyAddInit(this.prefixNo)
+        }
         this.initCustomer()
         this.initSalesman()
         this.initDepot()
@@ -297,7 +303,7 @@
         }
       },
       onSearchLinkNumber() {
-        this.$refs.linkBillList.show('出库', '销售', '客户', "0")
+        this.$refs.linkBillList.show('出库', '销售', '客户', "1")
         this.$refs.linkBillList.title = "选择销售出库"
       },
       linkBillListOk(selectBillRows) {

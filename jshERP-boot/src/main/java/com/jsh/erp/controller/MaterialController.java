@@ -199,16 +199,17 @@ public class MaterialController {
                     item.put("model", material.getModel());
                     item.put("unit", material.getCommodityUnit() + ratio);
                     item.put("sku", material.getSku());
-                    BigDecimal skuStock = depotItemService.getSkuStockByParam(depotId,material.getMeId(),null,null);
+                    BigDecimal stock;
                     if(StringUtil.isNotEmpty(material.getSku())){
-                        item.put("skuStock", skuStock);
-                    }
-                    BigDecimal stock = depotItemService.getStockByParam(depotId,material.getId(),null,null);
-                    if (material.getUnitId()!=null){
-                        Unit unit = unitService.getUnit(material.getUnitId());
-                        if(material.getCommodityUnit().equals(unit.getOtherUnit())) {
-                            if(unit.getRatio()!=0) {
-                                stock = stock.divide(BigDecimal.valueOf(unit.getRatio()),2,BigDecimal.ROUND_HALF_UP);
+                        stock = depotItemService.getSkuStockByParam(depotId,material.getMeId(),null,null);
+                    } else {
+                        stock = depotItemService.getStockByParam(depotId,material.getId(),null,null);
+                        if (material.getUnitId()!=null){
+                            Unit unit = unitService.getUnit(material.getUnitId());
+                            if(material.getCommodityUnit().equals(unit.getOtherUnit())) {
+                                if(unit.getRatio()!=0) {
+                                    stock = stock.divide(BigDecimal.valueOf(unit.getRatio()),2,BigDecimal.ROUND_HALF_UP);
+                                }
                             }
                         }
                     }
@@ -490,12 +491,17 @@ public class MaterialController {
                                 Long depotId = depotObj.getLong("id");
                                 mvo.setDepotId(depotId);
                                 //库存
-                                BigDecimal stock = depotItemService.getStockByParam(depotId,mvo.getId(),null,null);
-                                if (mvo.getUnitId()!=null){
-                                    Unit unit = unitService.getUnit(mvo.getUnitId());
-                                    if(mvo.getCommodityUnit().equals(unit.getOtherUnit())) {
-                                        if(unit.getRatio()!=0) {
-                                            stock = stock.divide(BigDecimal.valueOf(unit.getRatio()),2,BigDecimal.ROUND_HALF_UP);
+                                BigDecimal stock;
+                                if(StringUtil.isNotEmpty(mvo.getSku())){
+                                    stock = depotItemService.getSkuStockByParam(depotId,mvo.getMeId(),null,null);
+                                } else {
+                                    stock = depotItemService.getStockByParam(depotId,mvo.getId(),null,null);
+                                    if (mvo.getUnitId()!=null){
+                                        Unit unit = unitService.getUnit(mvo.getUnitId());
+                                        if(mvo.getCommodityUnit().equals(unit.getOtherUnit())) {
+                                            if(unit.getRatio()!=0) {
+                                                stock = stock.divide(BigDecimal.valueOf(unit.getRatio()),2,BigDecimal.ROUND_HALF_UP);
+                                            }
                                         }
                                     }
                                 }

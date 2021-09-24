@@ -64,13 +64,15 @@
           <a-dropdown v-if="selectedRowKeys.length > 0">
             <a-menu slot="overlay">
               <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
+              <a-menu-item key="2" v-if="btnEnableList.indexOf(2)>-1" @click="batchSetStatus(1)"><a-icon type="check"/>审核</a-menu-item>
+              <a-menu-item key="3" v-if="btnEnableList.indexOf(7)>-1" @click="batchSetStatus(0)"><a-icon type="stop"/>反审核</a-menu-item>
             </a-menu>
             <a-button style="margin-left: 8px">
               批量操作 <a-icon type="down" />
             </a-button>
           </a-dropdown>
           <a-tooltip placement="left" title="转账：本系统的转账是指从一个银行存款账户转入到另一个银行存款账户。" slot="action">
-            <a-icon v-if="btnEnableList.indexOf(1)>-1" type="info-circle" style="font-size:20px;float:right;" />
+            <a-icon v-if="btnEnableList.indexOf(1)>-1" type="question-circle" style="font-size:20px;float:right;" />
           </a-tooltip>
         </div>
         <!-- table区域-begin -->
@@ -91,10 +93,14 @@
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
               <a v-if="btnEnableList.indexOf(1)>-1" @click="myHandleEdit(record)">编辑</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
-              <a-popconfirm v-if="btnEnableList.indexOf(1)>-1" title="确定删除吗?" @confirm="() => handleDelete(record.id)">
+              <a-popconfirm v-if="btnEnableList.indexOf(1)>-1" title="确定删除吗?" @confirm="() => myHandleDelete(record)">
                 <a>删除</a>
               </a-popconfirm>
             </span>
+            <template slot="customRenderStatus" slot-scope="status">
+              <a-tag v-if="status == '0'" color="red">未审核</a-tag>
+              <a-tag v-if="status == '1'" color="green">已审核</a-tag>
+            </template>
           </a-table>
         </div>
         <!-- table区域-end -->
@@ -144,6 +150,9 @@
           { title: '操作员', dataIndex: 'userName',width:80},
           { title: '实付金额', dataIndex: 'changeAmount',width:80},
           { title: '备注', dataIndex: 'remark',width:200},
+          { title: '状态', dataIndex: 'status', width: 80, align: "center",
+            scopedSlots: { customRender: 'customRenderStatus' }
+          },
           {
             title: '操作',
             dataIndex: 'action',
@@ -155,7 +164,8 @@
         url: {
           list: "/accountHead/list",
           delete: "/accountHead/delete",
-          deleteBatch: "/accountHead/deleteBatch"
+          deleteBatch: "/accountHead/deleteBatch",
+          batchSetStatusUrl: "/accountHead/batchSetStatus"
         }
       }
     },

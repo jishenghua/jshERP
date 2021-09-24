@@ -7,6 +7,10 @@ public class DepotItemVo4DetailByTypeAndMId {
 
     private String number;
 
+    private String barCode;
+
+    private String materialName;
+
     private String type;
 
     private String subType;
@@ -23,6 +27,22 @@ public class DepotItemVo4DetailByTypeAndMId {
 
     public void setNumber(String number) {
         this.number = number;
+    }
+
+    public String getBarCode() {
+        return barCode;
+    }
+
+    public void setBarCode(String barCode) {
+        this.barCode = barCode;
+    }
+
+    public String getMaterialName() {
+        return materialName;
+    }
+
+    public void setMaterialName(String materialName) {
+        this.materialName = materialName;
     }
 
     public String getType() {

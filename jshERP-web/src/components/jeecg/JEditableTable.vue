@@ -34,7 +34,7 @@
 
     <slot name="actionButtonAfter" :target="getVM()"/>
 
-    <div :id="`${caseId}inputTable`" class="input-table">
+    <div :id="`${caseId}inputTable`" class="input-table" :style="{'min-width':minWidth+'px'}">
       <!-- 渲染表头 -->
       <div class="thead" ref="thead">
         <div class="tr" :style="{width: this.realTrWidth}">
@@ -814,6 +814,10 @@
         default: false
       },
       // 页面是否在加载中
+      minWidth: {
+        type: Number,
+        default: 1550
+      },
       maxHeight: {
         type: Number,
         default: 400
@@ -2758,7 +2762,6 @@
 
   .input-table {
     max-width: 100%;
-    min-width: 1550px;
     overflow-x: hidden;
     overflow-y: hidden;
     position: relative;

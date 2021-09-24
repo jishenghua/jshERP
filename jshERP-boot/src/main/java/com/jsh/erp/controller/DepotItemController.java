@@ -77,7 +77,9 @@ public class DepotItemController {
         if (list != null) {
             for (DepotItemVo4DetailByTypeAndMId d: list) {
                 JSONObject item = new JSONObject();
-                item.put("number", d.getNumber()); //商品编号
+                item.put("number", d.getNumber()); //编号
+                item.put("barCode", d.getBarCode()); //条码
+                item.put("materialName", d.getMaterialName()); //名称
                 String type = d.getType();
                 String subType = d.getSubType();
                 if(("其它").equals(type)) {
@@ -121,16 +123,20 @@ public class DepotItemController {
             List<MaterialVo4Unit> list = materialService.getMaterialByBarCode(barCode);
             if(list!=null && list.size()>0) {
                 MaterialVo4Unit materialVo4Unit = list.get(0);
-                stock = depotItemService.getStockByParam(depotId,materialVo4Unit.getId(),null,null);
-                String commodityUnit = materialVo4Unit.getCommodityUnit();
-                Long unitId = materialVo4Unit.getUnitId();
-                if(unitId!=null) {
-                    Integer ratio = 1;
-                    Unit unit = unitService.getUnit(unitId);
-                    if(commodityUnit.equals(unit.getOtherUnit())){
-                        ratio = unit.getRatio();
-                        if(ratio!=0) {
-                            stock = stock.divide(BigDecimal.valueOf(ratio),2,BigDecimal.ROUND_HALF_UP); //两位小数
+                if(StringUtil.isNotEmpty(materialVo4Unit.getSku())){
+                    stock = depotItemService.getSkuStockByParam(depotId,materialVo4Unit.getMeId(),null,null);
+                } else {
+                    stock = depotItemService.getStockByParam(depotId,materialVo4Unit.getId(),null,null);
+                    String commodityUnit = materialVo4Unit.getCommodityUnit();
+                    Long unitId = materialVo4Unit.getUnitId();
+                    if(unitId!=null) {
+                        Integer ratio = 1;
+                        Unit unit = unitService.getUnit(unitId);
+                        if(commodityUnit.equals(unit.getOtherUnit())){
+                            ratio = unit.getRatio();
+                            if(ratio!=0) {
+                                stock = stock.divide(BigDecimal.valueOf(ratio),2,BigDecimal.ROUND_HALF_UP); //两位小数
+                            }
                         }
                     }
                 }
@@ -171,13 +177,18 @@ public class DepotItemController {
                     item.put("model", diEx.getMModel());
                     item.put("materialOther", getOtherInfo(mpArr, diEx));
                     Integer ratio = diEx.getRatio();
-                    BigDecimal stock = depotItemService.getStockByParam(diEx.getDepotId(),diEx.getMaterialId(),null,null);
-                    if(ratio!=null){
-                        BigDecimal ratioDecimal = new BigDecimal(ratio.toString());
-                        if(ratioDecimal.compareTo(BigDecimal.ZERO)!=0){
-                            String otherUnit = diEx.getOtherUnit();
-                            if(otherUnit.equals(diEx.getMaterialUnit())) {
-                                stock = stock.divide(ratioDecimal,2,BigDecimal.ROUND_HALF_UP); //两位小数
+                    BigDecimal stock;
+                    if(StringUtil.isNotEmpty(diEx.getSku())){
+                        stock = depotItemService.getSkuStockByParam(diEx.getDepotId(),diEx.getMaterialExtendId(),null,null);
+                    } else {
+                        stock = depotItemService.getStockByParam(diEx.getDepotId(),diEx.getMaterialId(),null,null);
+                        if(ratio!=null){
+                            BigDecimal ratioDecimal = new BigDecimal(ratio.toString());
+                            if(ratioDecimal.compareTo(BigDecimal.ZERO)!=0){
+                                String otherUnit = diEx.getOtherUnit();
+                                if(otherUnit.equals(diEx.getMaterialUnit())) {
+                                    stock = stock.divide(ratioDecimal,2,BigDecimal.ROUND_HALF_UP); //两位小数
+                                }
                             }
                         }
                     }
@@ -314,55 +325,6 @@ public class DepotItemController {
             res.data = "获取数据失败";
         }
         return res;
-    }
-
-    /**
-     * 导出excel表格
-     * @param depotId
-     * @param monthTime
-     * @param materialParam
-     * @param request
-     * @param response
-     * @return
-     */
-    @GetMapping(value = "/exportExcel")
-    public void exportExcel(@RequestParam("depotId") Long depotId,
-                            @RequestParam("monthTime") String monthTime,
-                            @RequestParam("materialParam") String materialParam,
-                            HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String timeA = Tools.firstDayOfMonth(monthTime) + BusinessConstants.DAY_FIRST_TIME;
-        String timeB = Tools.lastDayOfMonth(monthTime) + BusinessConstants.DAY_LAST_TIME;
-        try {
-            List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(StringUtil.toNull(materialParam),
-                    timeB, null, null);
-            //存放数据json数组
-            String[] names = {"条码", "名称", "规格", "型号", "单位", "单价", "上月结存数量", "入库数量", "出库数量", "本月结存数量", "结存金额"};
-            String title = "库存报表";
-            List<String[]> objects = new ArrayList<String[]>();
-            if (null != dataList) {
-                for (DepotItemVo4WithInfoEx diEx : dataList) {
-                    Long mId = diEx.getMId();
-                    String[] objs = new String[11];
-                    objs[0] = diEx.getBarCode();
-                    objs[1] = diEx.getMName();
-                    objs[2] = diEx.getMStandard();
-                    objs[3] = diEx.getMModel();
-                    objs[4] = diEx.getMaterialUnit();
-                    objs[5] = diEx.getPurchaseDecimal().toString();
-                    objs[6] = depotItemService.getStockByParam(depotId,mId,null,timeA).toString();
-                    objs[7] = depotItemService.getInNumByParam(depotId,mId,timeA,timeB).toString();
-                    objs[8] = depotItemService.getOutNumByParam(depotId,mId,timeA,timeB).toString();
-                    BigDecimal thisSum = depotItemService.getStockByParam(depotId,mId,null,timeB);
-                    objs[9] = thisSum.toString();
-                    objs[10] = thisSum.multiply(diEx.getPurchaseDecimal()).toString();
-                    objects.add(objs);
-                }
-            }
-            File file = ExcelUtils.exportObjectsWithoutTitle(title, names, title, objects);
-            ExportExecUtil.showExec(file, file.getName() + "-" + monthTime, response);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -593,62 +555,6 @@ public class DepotItemController {
             e.printStackTrace();
             res.code = 500;
             res.data = "获取数据失败";
-        }
-        return res;
-    }
-    /**
-     * 导出库存预警excel表格
-     * @param depotId
-     * @param request
-     * @param response
-     * @return
-     */
-    @GetMapping(value = "/exportWarningExcel")
-    public BaseResponseInfo exportWarningExcel(
-                                        @RequestParam("depotId") Long depotId,
-                                        @RequestParam("materialParam") String materialParam,
-                                        @RequestParam("mpList") String mpList,
-                                        HttpServletRequest request, HttpServletResponse response)throws Exception {
-        BaseResponseInfo res = new BaseResponseInfo();
-        Map<String, Object> map = new HashMap<String, Object>();
-        String message = "成功";
-        try {
-            String[] mpArr = mpList.split(",");
-            List<DepotItemStockWarningCount> dataList = depotItemService.findStockWarningCount(null, null, materialParam, depotId);
-            //存放数据json数组
-            Long pid = depotId;
-            String[] names = {"条码", "名称", "规格", "型号", "扩展信息", "单位", "安全存量", "当前库存", "建议入库量"};
-            String title = "库存预警报表";
-            List<String[]> objects = new ArrayList<String[]>();
-            if (null != dataList) {
-                for (DepotItemStockWarningCount diEx : dataList) {
-                    DepotItemVo4WithInfoEx diVI = new DepotItemVo4WithInfoEx();
-                    diVI.setMMfrs(diEx.getMMfrs());
-                    diVI.setMOtherField1(diEx.getMOtherField1());
-                    diVI.setMOtherField2(diEx.getMOtherField2());
-                    diVI.setMOtherField3(diEx.getMOtherField3());
-                    String materialOther = getOtherInfo(mpArr, diVI);
-                    String unitName = getUName(diEx.getMaterialUnit(), diEx.getUnitName());
-                    String[] objs = new String[9];
-                    objs[0] = diEx.getBarCode();
-                    objs[1] = diEx.getMName();
-                    objs[2] = diEx.getMStandard();
-                    objs[3] = diEx.getMModel();
-                    objs[4] = materialOther;
-                    objs[5] = unitName;
-                    objs[6] = diEx.getSafetystock() == null ? "0" : diEx.getSafetystock().toString();
-                    objs[7] = diEx.getCurrentNumber() == null ? "0" : diEx.getCurrentNumber().toString();
-                    objs[8] = diEx.getLinjieNumber() == null ? "0" : diEx.getLinjieNumber().toString();
-                    objects.add(objs);
-                }
-            }
-            File file = ExcelUtils.exportObjectsWithoutTitle(title+pid, names, title, objects);
-            ExportExecUtil.showExec(file, file.getName(), response);
-            res.code = 200;
-        } catch (Exception e) {
-            e.printStackTrace();
-            message = "导出失败";
-            res.code = 500;
         }
         return res;
     }

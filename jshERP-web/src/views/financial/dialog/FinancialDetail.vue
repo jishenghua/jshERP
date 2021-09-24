@@ -385,15 +385,11 @@
             </a-row>
           </section>
         </template>
-        <template v-if="fileList.length>0">
+        <template v-if="fileList && fileList.length>0">
           <a-row class="form-row" :gutter="24">
             <a-col :span="12">
               <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 3 }}" :wrapperCol="{xs: { span: 24 },sm: { span: 21 }}" label="附件">
-                <ul style="list-style-type:none">
-                  <li v-for="(item,index) in fileList" :key="index">
-                    <a :href="item.url" target="_blank">{{item.name}}</a>
-                  </li>
-                </ul>
+                <j-upload v-model="fileList" bizPath="bill" :disabled="true" :buttonVisible="false"></j-upload>
               </a-form-item>
             </a-col>
             <a-col :span="12"></a-col>
@@ -410,15 +406,17 @@
   import BillDetail from '../../bill/dialog/BillDetail'
   import { getAction } from '@/api/manage'
   import { findBillDetailByNumber} from '@/api/api'
+  import JUpload from '@/components/jeecg/JUpload'
   export default {
     name: 'FinancialDetail',
     components: {
-      BillDetail
+      BillDetail,
+      JUpload
     },
     data () {
       return {
         title: "详情",
-        width: '1200px',
+        width: '1600px',
         visible: false,
         model: {},
         financialType: '',
@@ -482,19 +480,7 @@
       show(record, type) {
         this.financialType = type
         //附件下载
-        let fileName = record.fileName
-        if(fileName) {
-          let fileArr = fileName.split(",")
-          this.fileList = []
-          for(let i=0; i<fileArr.length; i++) {
-            let fileInfo = {}
-            fileInfo.name= fileArr[i].replace("financial/","")
-            fileInfo.url= window._CONFIG['domianURL'] + '/systemConfig/static/' + fileArr[i]
-            this.fileList.push(fileInfo)
-          }
-        } else {
-          this.fileList = []
-        }
+        this.fileList = record.fileName
         this.visible = true;
         this.model = Object.assign({}, record);
         this.$nextTick(() => {

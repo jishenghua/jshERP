@@ -3,7 +3,7 @@
 * 虽然目前只有进销存+财务+生产的功能，但后面将会推出ERP的全部功能，有兴趣请帮点一下 **Star** 哦
 * **官网URL：http://www.huaxiaerp.com  商务合作或技术交流，请联系QQ：752718920**
 * 欢迎加入华夏ERP交流QQ群，群1：120725710(满)、群3：805736336
-* 平台地址：http://47.116.69.14 欢迎大家注册租户进行体验
+* 平台地址：http://cloud.huaxiaerp.vip 欢迎大家注册租户进行体验
 * 系统默认租户账号：jsh，默认超管账户：admin，默认密码均为：123456
 * 部署如遇到困难请参考Wiki文档  https://gitee.com/jishenghua/JSH_ERP/wikis/pages
 
@@ -43,7 +43,7 @@
 * Nginx代理：nginx1.12.2
 * 操作系统：Windows、Linux等
 * 为方便大家搭建运行环境，分享了下载地址 https://pan.baidu.com/s/1jlild9uyGdQ7H2yaMx76zw  提取码:814g
-* 不会打包的小伙伴，请下载此打包后的文件 http://47.116.69.14:8899/down/J6SsL8UWr7fb  提取码:siB2FW
+* 不会打包的小伙伴，请下载此打包后的文件 https://share.weiyun.com/Y6BXPOxn 密码：ae8jcy
 * 不会部署的小伙伴，请参考部署教程 http://www.huaxiaerp.com/thread-177-1-1.html
 
 # 开源说明

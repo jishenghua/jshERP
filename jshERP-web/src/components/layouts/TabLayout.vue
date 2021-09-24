@@ -1,8 +1,6 @@
 <template>
   <global-layout @dynamicRouterShow="dynamicRouterShow">
-    <!-- update-begin- author:sunjianlei --- date:20191009 --- for: 提升右键菜单的层级 -->
     <contextmenu :itemList="menuItemList" :visible.sync="menuVisible" style="z-index: 9999;" @select="onMenuSelect"/>
-    <!-- update-end- author:sunjianlei --- date:20191009 --- for: 提升右键菜单的层级 -->
     <a-tabs
       @contextmenu.native="e => onContextmenu(e)"
       v-if="multipage"
@@ -20,7 +18,7 @@
     </a-tabs>
     <div style="margin: 4px 4px 0;">
       <transition name="page-toggle">
-        <keep-alive v-if="multipage">
+        <keep-alive v-if="multipage" :include="includedComponents">
           <router-view v-if="reloadFlag"/>
         </keep-alive>
         <template v-else>
@@ -36,9 +34,9 @@
   import Contextmenu from '@/components/menu/Contextmenu'
   import { mixin, mixinDevice } from '@/utils/mixin.js'
   import { triggerWindowResizeEvent } from '@/utils/util'
-  import Vue from 'vue'
-
   const indexKey = '/dashboard/analysis'
+  import Vue from 'vue'
+  import { CACHE_INCLUDED_ROUTES } from "@/store/mutation-types"
 
   export default {
     name: 'TabLayout',
@@ -62,13 +60,11 @@
         reloadFlag:true
       }
     },
-    /* update_begin author:wuxianquan date:20190828 for: 关闭当前tab页，供子页面调用 ->望菜单能配置外链，直接弹出新页面而不是嵌入iframe #428 */
     provide(){
       return{
         closeCurrent:this.closeCurrent
       }
     },
-    /* update_end author:wuxianquan date:20190828 for: 关闭当前tab页，供子页面调用->望菜单能配置外链，直接弹出新页面而不是嵌入iframe #428 */
     computed: {
       multipage() {
         //判断如果是手机模式，自动切换为单页面模式
@@ -77,19 +73,33 @@
         } else {
           return this.$store.state.app.multipage
         }
+      },
+      includedComponents() {
+        const includedRouters = Vue.ls.get(CACHE_INCLUDED_ROUTES)
+        //console.log("includedRouters：" + includedRouters)
+        //加入到 cache_included_routes
+        if (this.$route.meta.componentName) {
+          let cacheRouterArray = Vue.ls.get(CACHE_INCLUDED_ROUTES) || []
+          if(!cacheRouterArray.includes(this.$route.meta.componentName)){
+            cacheRouterArray.push(this.$route.meta.componentName)
+            //console.log("Vue ls set componentName ：" + this.$route.meta.componentName)
+            Vue.ls.set(CACHE_INCLUDED_ROUTES, cacheRouterArray)
+            //console.log("Vue ls includedRouterArrays ：" + Vue.ls.get(CACHE_INCLUDED_ROUTES))
+            return cacheRouterArray;
+          }
+        }
+        return includedRouters;
       }
     },
     created() {
       if (this.$route.path != indexKey) {
         this.addIndexToFirst()
       }
-      // update-begin-author:sunjianlei date:20191223 for: 修复刷新后菜单Tab名字显示异常
       let storeKey = 'route:title:' + this.$route.fullPath
       let routeTitle = this.$ls.get(storeKey)
       if (routeTitle) {
         this.$route.meta.title = routeTitle
       }
-      // update-end-author:sunjianlei date:20191223 for: 修复刷新后菜单Tab名字显示异常
       this.pageList.push(this.$route)
       this.linkList.push(this.$route.fullPath)
       this.activePage = this.$route.fullPath
@@ -98,34 +108,22 @@
     },
     watch: {
       '$route': function(newRoute) {
-        //console.log("新的路由",newRoute)
+        // console.log("新的路由",newRoute)
         this.activePage = newRoute.fullPath
         if (!this.multipage) {
           this.linkList = [newRoute.fullPath]
           this.pageList = [Object.assign({},newRoute)]
-        // update-begin-author:taoyan date:20200211 for: TASK #3368 【路由缓存】首页的缓存设置有问题，需要根据后台的路由配置来实现是否缓存
         } else if(indexKey==newRoute.fullPath) {
-          //首页时 判断是否缓存 没有缓存 刷新之
-          if (newRoute.meta.keepAlive === false) {
-            this.routeReload()
-          }
-        // update-end-author:taoyan date:20200211 for: TASK #3368 【路由缓存】首页的缓存设置有问题，需要根据后台的路由配置来实现是否缓存
+          //首页时 直接刷新
         }else if (this.linkList.indexOf(newRoute.fullPath) < 0) {
           this.linkList.push(newRoute.fullPath)
           this.pageList.push(Object.assign({},newRoute))
-          // update-begin-author:sunjianlei date:20200103 for: 如果新增的页面配置了缓存路由，那么就强制刷新一遍
-          if (newRoute.meta.keepAlive) {
-            this.routeReload()
-          }
-          // update-end-author:sunjianlei date:20200103 for: 如果新增的页面配置了缓存路由，那么就强制刷新一遍
         } else if (this.linkList.indexOf(newRoute.fullPath) >= 0) {
           let oldIndex = this.linkList.indexOf(newRoute.fullPath)
           let oldPositionRoute = this.pageList[oldIndex]
           this.pageList.splice(oldIndex, 1, Object.assign({},newRoute,{meta:oldPositionRoute.meta}))
           //给菜单id赋值，用于调用之后控制按钮的显示
           Vue.ls.set('funId', oldPositionRoute.meta.id, 7 * 24 * 60 * 60 * 1000)
-          //每次切换都刷新
-          this.routeReload()
         }
       },
       'activePage': function(key) {
@@ -142,16 +140,14 @@
           }
         }
       },
-      // update-begin-author:sunjianlei date:20191223 for: 修复从单页模式切换回多页模式后首页不居第一位的 BUG
+      //从单页模式切换回多页模式后首页要居第一位
       device() {
         if (this.multipage && this.linkList.indexOf(indexKey) === -1) {
           this.addIndexToFirst()
         }
       },
-      // update-end-author:sunjianlei date:20191223 for: 修复从单页模式切换回多页模式后首页不居第一位的 BUG
     },
     methods: {
-      // update-begin-author:sunjianlei date:20191223 for: 修复从单页模式切换回多页模式后首页不居第一位的 BUG
       // 将首页添加到第一位
       addIndexToFirst() {
         this.pageList.splice(0, 0, {
@@ -165,9 +161,7 @@
         })
         this.linkList.splice(0, 0, indexKey)
       },
-      // update-end-author:sunjianlei date:20191223 for: 修复从单页模式切换回多页模式后首页不居第一位的 BUG
-
-      // update-begin-author:sunjianlei date:20200120 for: 动态更改页面标题
+      //动态更改页面标题
       changeTitle(title) {
         let projectTitle = window.SYS_TITLE
         // 首页特殊处理
@@ -177,8 +171,6 @@
           document.title = title + ' · ' + projectTitle
         }
       },
-      // update-end-author:sunjianlei date:20200120 for: 动态更改页面标题
-
       changePage(key) {
         this.activePage = key
       },
@@ -199,11 +191,26 @@
           this.$message.warning('这是最后一页，不能再关闭了啦')
           return
         }
+        //console.log("this.pageList ",this.pageList );
+        let removeRoute = this.pageList.filter(item => item.fullPath == key)
         this.pageList = this.pageList.filter(item => item.fullPath !== key)
         let index = this.linkList.indexOf(key)
         this.linkList = this.linkList.filter(item => item !== key)
         index = index >= this.linkList.length ? this.linkList.length - 1 : index
         this.activePage = this.linkList[index]
+        //update-begin--Author:scott  Date:20201015 for：路由缓存问题，关闭了tab页时再打开就不刷新 #842
+        //关闭页面则从缓存cache_included_routes中删除路由，下次点击菜单会重新加载页面
+        let cacheRouterArray = Vue.ls.get(CACHE_INCLUDED_ROUTES) || []
+        if (removeRoute && removeRoute[0]) {
+          let componentName = removeRoute[0].meta.componentName
+          //console.log("key: ", key);
+          //console.log("componentName: ", componentName);
+          if(cacheRouterArray.includes(componentName)){
+            cacheRouterArray.splice(cacheRouterArray.findIndex(item => item === componentName), 1)
+            Vue.ls.set(CACHE_INCLUDED_ROUTES, cacheRouterArray)
+          }
+        }
+        //update-end--Author:scott  Date:20201015 for：路由缓存问题，关闭了tab页时再打开就不刷新 #842
       },
       onContextmenu(e) {
         const pagekey = this.getPageKey(e.target)
@@ -240,11 +247,10 @@
             break
         }
       },
-      /* update_begin author:wuxianquan date:20190828 for: 关闭当前tab页，供子页面调用->望菜单能配置外链，直接弹出新页面而不是嵌入iframe #428 */
+      //关闭当前tab页，供子页面调用->望菜单能配置外链，直接弹出新页面而不是嵌入iframe
       closeCurrent(){
         this.remove(this.activePage);
       },
-      /* update_end author:wuxianquan date:20190828 for: 关闭当前tab页，供子页面调用->望菜单能配置外链，直接弹出新页面而不是嵌入iframe #428 */
       closeOthers(pageKey) {
         let index = this.linkList.indexOf(pageKey)
         if (pageKey == indexKey || pageKey.indexOf('?ticke=')>=0) {
@@ -283,8 +289,8 @@
           this.activePage = this.linkList[this.linkList.length - 1]
         }
       },
-      //update-begin-author:taoyan date:20190430 for:动态路由title显示配置的菜单title而不是其对应路由的title
-      dynamicRouterShow(key, id, title){
+      //动态路由title显示配置的菜单title而不是其对应路由的title
+      dynamicRouterShow(key, id, title, component){
         let keyIndex = this.linkList.indexOf(key)
         if(keyIndex>=0){
           //切换历史页签
@@ -297,6 +303,10 @@
           }
         } else {
           //打开新的页签
+          if(component) {
+            let index = component.lastIndexOf("\/");
+            component = component.substring(index + 1, component.length);
+          }
           this.pageList.push({
             name: title,
             path: key,
@@ -304,16 +314,16 @@
             meta: {
               id: id,
               icon: key,
-              title: title
+              title: title,
+              componentName: component,
+              keepAlive: true
             }
           })
           this.linkList.push(key)
           this.activePage = key
         }
       },
-      //update-end-author:taoyan date:20190430 for:动态路由title显示配置的菜单title而不是其对应路由的title
-
-      //update-begin-author:taoyan date:20191008 for:路由刷新
+      //路由刷新
       routeReload(){
         this.reloadFlag = false
         let ToggleMultipage = "ToggleMultipage"
@@ -323,7 +333,6 @@
           this.reloadFlag = true
         })
       }
-      //update-end-author:taoyan date:20191008 for:路由刷新
     }
   }
 </script>
@@ -331,12 +340,7 @@
 <style lang="less">
 
   /*
- * The following styles are auto-applied to elements with
- * transition="page-transition" when their visibility is toggled
- * by Vue.js.
- *
- * You can easily play with the page transition by editing
- * these styles.
+ * by ji-shenghua qq 75-27-18-920
  */
 
   .page-transition-enter {

@@ -28,6 +28,9 @@
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="链接">
           <a-input placeholder="请输入链接" v-decorator.trim="[ 'url' ]" />
         </a-form-item>
+        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="组件">
+          <a-input placeholder="请输入组件" v-decorator.trim="[ 'component' ]" />
+        </a-form-item>
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="排序">
           <a-input placeholder="请输入排序" v-decorator.trim="[ 'sort' ]" />
         </a-form-item>
@@ -63,7 +66,8 @@
         jselectMultiple: {
           options: [
             { text: '编辑', value: '1' },
-            { text: '审核反审核', value: '2' },
+            { text: '审核', value: '2' },
+            { text: '反审核', value: '7' },
             { text: '导入导出', value: '3' },
             { text: '启用禁用', value: '4' },
             { text: '打印', value: '5' },
@@ -118,7 +122,7 @@
           this.jselectMultiple.value = ''
         }
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'number', 'name', 'parentNumber', 'url','sort','pushBtn','icon','enabled'))
+          this.form.setFieldsValue(pick(this.model,'number', 'name', 'parentNumber', 'url', 'component', 'sort', 'pushBtn', 'icon', 'enabled'))
         });
       },
       close () {

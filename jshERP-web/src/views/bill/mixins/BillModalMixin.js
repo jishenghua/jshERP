@@ -69,6 +69,16 @@ export const BillModalMixin = {
       this.accountMoneyList = []
       this.manyAccountBtnStatus = false
     },
+    copyAddInit(amountNum) {
+      getAction('/sequence/buildNumber').then((res) => {
+        if (res && res.code === 200) {
+          this.form.setFieldsValue({'number':amountNum + res.data.defaultNumber})
+        }
+      })
+      this.$nextTick(() => {
+        this.form.setFieldsValue({'operTime':getNowFormatDateTime()})
+      })
+    },
     initSupplier() {
       let that = this;
       findBySelectSup({}).then((res)=>{

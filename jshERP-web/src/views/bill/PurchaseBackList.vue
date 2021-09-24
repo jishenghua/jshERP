@@ -77,13 +77,15 @@
           <a-dropdown v-if="selectedRowKeys.length > 0">
             <a-menu slot="overlay">
               <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
+              <a-menu-item key="2" v-if="btnEnableList.indexOf(2)>-1" @click="batchSetStatus(1)"><a-icon type="check"/>审核</a-menu-item>
+              <a-menu-item key="3" v-if="btnEnableList.indexOf(7)>-1" @click="batchSetStatus(0)"><a-icon type="stop"/>反审核</a-menu-item>
             </a-menu>
             <a-button style="margin-left: 8px">
               批量操作 <a-icon type="down" />
             </a-button>
           </a-dropdown>
           <a-tooltip placement="left" title="用于采购入库单据的退货。采购退货单可以由采购出库单转过来，也可以单独创建。" slot="action">
-            <a-icon v-if="btnEnableList.indexOf(1)>-1" type="info-circle" style="font-size:20px;float:right;" />
+            <a-icon v-if="btnEnableList.indexOf(1)>-1" type="question-circle" style="font-size:20px;float:right;" />
           </a-tooltip>
         </div>
         <!-- table区域-begin -->
@@ -104,10 +106,16 @@
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
               <a v-if="btnEnableList.indexOf(1)>-1" @click="myHandleEdit(record)">编辑</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
-              <a-popconfirm v-if="btnEnableList.indexOf(1)>-1" title="确定删除吗?" @confirm="() => handleDelete(record.id)">
+              <a v-if="btnEnableList.indexOf(1)>-1" @click="myHandleCopyAdd(record)">复制</a>
+              <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
+              <a-popconfirm v-if="btnEnableList.indexOf(1)>-1" title="确定删除吗?" @confirm="() => myHandleDelete(record)">
                 <a>删除</a>
               </a-popconfirm>
             </span>
+            <template slot="customRenderStatus" slot-scope="status">
+              <a-tag v-if="status == '0'" color="red">未审核</a-tag>
+              <a-tag v-if="status == '1'" color="green">已审核</a-tag>
+            </template>
           </a-table>
         </div>
         <!-- table区域-end -->
@@ -156,7 +164,7 @@
         },
         // 表头
         columns: [
-          { title: '供应商', dataIndex: 'organName',width:120},
+          { title: '供应商', dataIndex: 'organName',width:120, ellipsis:true},
           { title: '单据编号', dataIndex: 'number',width:160,
             customRender:function (text,record,index) {
               if(record.linkNumber) {
@@ -188,6 +196,9 @@
             }
           },
           { title: '退款', dataIndex: 'changeAmount',width:50},
+          { title: '状态', dataIndex: 'status', width: 80, align: "center",
+            scopedSlots: { customRender: 'customRenderStatus' }
+          },
           {
             title: '操作',
             dataIndex: 'action',
@@ -198,7 +209,8 @@
         url: {
           list: "/depotHead/list",
           delete: "/depotHead/delete",
-          deleteBatch: "/depotHead/deleteBatch"
+          deleteBatch: "/depotHead/deleteBatch",
+          batchSetStatusUrl: "/depotHead/batchSetStatus"
         }
       }
     },

@@ -50,7 +50,8 @@
               <a-col :md="4" :sm="24" >
                 <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                   <a-button type="primary" @click="searchQuery">查询</a-button>
-                  <a-button style="margin-left: 8px" v-print="'#reportPrint'" type="primary" icon="printer">打印</a-button>
+                  <a-button style="margin-left: 8px" v-print="'#reportPrint'" icon="printer">打印</a-button>
+                  <a-button style="margin-left: 8px" @click="exportExcel" icon="download">导出</a-button>
                 </span>
               </a-col>
             </a-row>
@@ -66,6 +67,7 @@
             :columns="columns"
             :dataSource="dataSource"
             :pagination="ipagination"
+            :scroll="scroll"
             :loading="loading"
             @change="handleTableChange">
           </a-table>
@@ -77,13 +79,13 @@
 </template>
 <script>
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import { getNowFormatMonth } from '@/utils/util';
+  import { getNowFormatMonth, openDownloadDialog, sheet2blob} from "@/utils/util"
   import {getAction} from '@/api/manage'
   import {findBySelectSup} from '@/api/api'
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import moment from 'moment'
   export default {
-    name: "BuyInReport",
+    name: "InMaterialCount",
     mixins:[JeecgListMixin],
     components: {
       JEllipsis
@@ -105,6 +107,9 @@
           beginTime: getNowFormatMonth() + '-01',
           endTime: moment().format('YYYY-MM-DD'),
           type: "入库"
+        },
+        ipagination:{
+          pageSizeOptions: ['10', '20', '30', '100', '200']
         },
         dateFormat: 'YYYY-MM-DD',
         currentDay: moment().format('YYYY-MM-DD'),
@@ -180,6 +185,15 @@
         } else {
           this.loadData(1);
         }
+      },
+      exportExcel() {
+        let aoa = [['条码', '名称', '规格', '型号', '类型', '单位', '入库数量', '入库金额']]
+        for (let i = 0; i < this.dataSource.length; i++) {
+          let ds = this.dataSource[i]
+          let item = [ds.barCode, ds.mName, ds.standard, ds.model, ds.categoryName, ds.materialUnit, ds.numSum, ds.priceSum]
+          aoa.push(item)
+        }
+        openDownloadDialog(sheet2blob(aoa), '入库汇总')
       }
     }
   }

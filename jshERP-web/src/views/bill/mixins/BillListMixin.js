@@ -25,15 +25,34 @@ export const BillListMixin = {
       return true;
     }
   },
-
+  created() {
+    this.removeStatusColumn()
+  },
   methods: {
     myHandleAdd() {
       this.$refs.modalForm.action = "add";
       this.handleAdd();
     },
+    myHandleCopyAdd(record) {
+      this.$refs.modalForm.action = "copyAdd";
+      this.$refs.modalForm.edit(record);
+      this.$refs.modalForm.title = "复制新增";
+      this.$refs.modalForm.disableSubmit = false;
+    },
     myHandleEdit(record) {
-      this.$refs.modalForm.action = "edit";
-      this.handleEdit(record);
+      if(record.status === '0') {
+        this.$refs.modalForm.action = "edit";
+        this.handleEdit(record);
+      } else {
+        this.$message.warning("抱歉，只有未审核的单据才能编辑！")
+      }
+    },
+    myHandleDelete(record) {
+      if(record.status === '0') {
+        this.handleDelete(record.id)
+      } else {
+        this.$message.warning("抱歉，只有未审核的单据才能删除！")
+      }
     },
     myHandleDetail(record, type) {
       this.handleDetail(record, type);
@@ -59,8 +78,15 @@ export const BillListMixin = {
     },
     removeStatusColumn() {
       //没有审核反审核权限的时候直接移除状态列
-      if(this.btnEnableList.indexOf(2)===-1) {
-        this.columns.splice(7,1)
+      if(this.btnEnableList.indexOf(2)===-1 && this.btnEnableList.indexOf(7)===-1) {
+        let statusIndex = 0
+        for(let i=0; i<this.columns.length; i++){
+          if(this.columns[i].dataIndex === 'status') {
+            statusIndex = i
+          }
+        }
+        //移除状态列
+        this.columns.splice(statusIndex,1)
       }
     },
     initSupplier() {

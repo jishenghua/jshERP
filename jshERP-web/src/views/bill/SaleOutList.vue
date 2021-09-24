@@ -78,14 +78,17 @@
           <a-dropdown v-if="selectedRowKeys.length > 0">
             <a-menu slot="overlay">
               <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
+              <a-menu-item key="2" v-if="btnEnableList.indexOf(2)>-1" @click="batchSetStatus(1)"><a-icon type="check"/>审核</a-menu-item>
+              <a-menu-item key="3" v-if="btnEnableList.indexOf(7)>-1" @click="batchSetStatus(0)"><a-icon type="stop"/>反审核</a-menu-item>
             </a-menu>
             <a-button style="margin-left: 8px">
               批量操作 <a-icon type="down" />
             </a-button>
           </a-dropdown>
           <a-tooltip placement="left" title="销售出库单可以由销售订单转过来，也可以单独创建。
-          销售出库单据中的仓库列表只显示当前用户有权限的仓库。销售出库单可以使用多账户收款。" slot="action">
-            <a-icon v-if="btnEnableList.indexOf(1)>-1" type="info-circle" style="font-size:20px;float:right;" />
+          销售出库单据中的仓库列表只显示当前用户有权限的仓库。销售出库单可以使用多账户收款。
+          勾选单据之后可以进行批量操作（删除、审核、反审核）" slot="action">
+            <a-icon v-if="btnEnableList.indexOf(1)>-1" type="question-circle" style="font-size:20px;float:right;" />
           </a-tooltip>
         </div>
         <!-- table区域-begin -->
@@ -106,10 +109,16 @@
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
               <a v-if="btnEnableList.indexOf(1)>-1" @click="myHandleEdit(record)">编辑</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
-              <a-popconfirm v-if="btnEnableList.indexOf(1)>-1" title="确定删除吗?" @confirm="() => handleDelete(record.id)">
+              <a v-if="btnEnableList.indexOf(1)>-1" @click="myHandleCopyAdd(record)">复制</a>
+              <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
+              <a-popconfirm v-if="btnEnableList.indexOf(1)>-1" title="确定删除吗?" @confirm="() => myHandleDelete(record)">
                 <a>删除</a>
               </a-popconfirm>
             </span>
+            <template slot="customRenderStatus" slot-scope="status">
+              <a-tag v-if="status == '0'" color="red">未审核</a-tag>
+              <a-tag v-if="status == '1'" color="green">已审核</a-tag>
+            </template>
           </a-table>
         </div>
         <!-- table区域-end -->
@@ -157,7 +166,7 @@
         },
         // 表头
         columns: [
-          { title: '客户', dataIndex: 'organName',width:120},
+          { title: '客户', dataIndex: 'organName',width:120, ellipsis:true},
           { title: '单据编号', dataIndex: 'number',width:160,
             customRender:function (text,record,index) {
               if(record.linkNumber) {
@@ -195,6 +204,9 @@
               return debt? debt.toFixed(2):''
             }
           },
+          { title: '状态', dataIndex: 'status', width: 80, align: "center",
+            scopedSlots: { customRender: 'customRenderStatus' }
+          },
           {
             title: '操作',
             dataIndex: 'action',
@@ -205,7 +217,8 @@
         url: {
           list: "/depotHead/list",
           delete: "/depotHead/delete",
-          deleteBatch: "/depotHead/deleteBatch"
+          deleteBatch: "/depotHead/deleteBatch",
+          batchSetStatusUrl: "/depotHead/batchSetStatus"
         }
       }
     },

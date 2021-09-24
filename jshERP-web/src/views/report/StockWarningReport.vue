@@ -28,8 +28,8 @@
               <a-col :md="6" :sm="24">
                 <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                   <a-button type="primary" @click="searchQuery">查询</a-button>
-                  <a-button style="margin-left: 8px" type="primary" icon="download" @click="handleExportXls('库存预警')">导出</a-button>
-                  <a-button style="margin-left: 8px" v-print="'#reportPrint'" type="primary" icon="printer">打印</a-button>
+                  <a-button style="margin-left: 8px" v-print="'#reportPrint'" icon="printer">打印</a-button>
+                  <a-button style="margin-left: 8px" @click="exportExcel" icon="download">导出</a-button>
                 </span>
               </a-col>
             </a-row>
@@ -45,6 +45,7 @@
             :columns="columns"
             :dataSource="dataSource"
             :pagination="ipagination"
+            :scroll="scroll"
             :loading="loading"
             @change="handleTableChange">
           </a-table>
@@ -58,10 +59,10 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import {getAction} from '@/api/manage'
-  import { getMpListShort } from "@/utils/util"
+  import { getMpListShort, openDownloadDialog, sheet2blob} from "@/utils/util"
   import Vue from 'vue'
   export default {
-    name: "BuyInReport",
+    name: "StockWarningReport",
     mixins:[JeecgListMixin],
     components: {
       JEllipsis
@@ -80,6 +81,9 @@
           materialParam:'',
           depotId: '',
           mpList: getMpListShort(Vue.ls.get('materialPropertyList'))  //扩展属性
+        },
+        ipagination:{
+          pageSizeOptions: ['10', '20', '30', '100', '200']
         },
         depotList: [],
         tabKey: "1",
@@ -106,8 +110,7 @@
           {title: '建议入库量', dataIndex: 'linjieNumber', width: 80}
         ],
         url: {
-          list: "/depotItem/findStockWarningCount",
-          exportXlsUrl: "/depotItem/exportWarningExcel",
+          list: "/depotItem/findStockWarningCount"
         }
       }
     },
@@ -130,6 +133,15 @@
             this.$message.info(res.data);
           }
         })
+      },
+      exportExcel() {
+        let aoa = [['条码', '名称', '规格', '型号', '扩展信息', '单位', '安全存量', '当前库存', '建议入库量']]
+        for (let i = 0; i < this.dataSource.length; i++) {
+          let ds = this.dataSource[i]
+          let item = [ds.barCode, ds.mname, ds.mstandard, ds.mmodel, ds.materialOther, ds.materialUnit, ds.safetystock, ds.currentNumber, ds.linjieNumber]
+          aoa.push(item)
+        }
+        openDownloadDialog(sheet2blob(aoa), '库存预警')
       }
     }
   }

@@ -40,6 +40,7 @@
 <script>
 
   import { putAction } from '@/api/manage'
+  import md5 from 'md5'
 
   export default {
     name: "UserPassword",
@@ -111,6 +112,8 @@
         this.form.validateFields((err, values) => {
           if (!err) {
             that.confirmLoading = true;
+            values.oldpassword = md5(values.oldpassword)
+            values.password = md5(values.password)
             let params = Object.assign({userId:this.userId},values)
             console.log("修改密码提交数据",params)
             putAction(this.url,params).then((res)=>{

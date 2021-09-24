@@ -40,15 +40,6 @@
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="24">
-                  <a-form-item label="仓库名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-select placeholder="请选择仓库" showSearch optionFilterProp="children" v-model="queryParam.depotId">
-                      <a-select-option v-for="(depot,index) in depotList" :value="depot.id">
-                        {{ depot.depotName }}
-                      </a-select-option>
-                    </a-select>
-                  </a-form-item>
-                </a-col>
-                <a-col :md="6" :sm="24">
                   <a-form-item label="操作员" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-select placeholder="选择操作员" showSearch optionFilterProp="children" v-model="queryParam.creator">
                       <a-select-option v-for="(item,index) in userList" :key="index" :value="item.id">
@@ -78,15 +69,15 @@
             <a-menu slot="overlay">
               <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
               <a-menu-item key="2" v-if="btnEnableList.indexOf(2)>-1" @click="batchSetStatus(1)"><a-icon type="check"/>审核</a-menu-item>
-              <a-menu-item key="3" v-if="btnEnableList.indexOf(2)>-1" @click="batchSetStatus(0)"><a-icon type="stop"/>反审核</a-menu-item>
+              <a-menu-item key="3" v-if="btnEnableList.indexOf(7)>-1" @click="batchSetStatus(0)"><a-icon type="stop"/>反审核</a-menu-item>
             </a-menu>
             <a-button style="margin-left: 8px">
               批量操作 <a-icon type="down" />
             </a-button>
           </a-dropdown>
           <a-tooltip placement="left" title="采购订单不涉及付款金额，采购订单可以转采购入库单，但需要先对采购订单进行审核。
-          勾选之后可以进行批量操作（删除、审核、反审核）" slot="action">
-            <a-icon v-if="btnEnableList.indexOf(1)>-1" type="info-circle" style="font-size:20px;float:right;" />
+          勾选单据之后可以进行批量操作（删除、审核、反审核）" slot="action">
+            <a-icon v-if="btnEnableList.indexOf(1)>-1" type="question-circle" style="font-size:20px;float:right;" />
           </a-tooltip>
         </div>
         <!-- table区域-begin -->
@@ -106,6 +97,8 @@
               <a @click="myHandleDetail(record, '采购订单')">查看</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
               <a v-if="btnEnableList.indexOf(1)>-1" @click="myHandleEdit(record)">编辑</a>
+              <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
+              <a v-if="btnEnableList.indexOf(1)>-1" @click="myHandleCopyAdd(record)">复制</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
               <a-popconfirm v-if="btnEnableList.indexOf(1)>-1" title="确定删除吗?" @confirm="() => myHandleDelete(record)">
                 <a>删除</a>
@@ -164,7 +157,7 @@
         },
         // 表头
         columns: [
-          { title: '供应商', dataIndex: 'organName',width:120},
+          { title: '供应商', dataIndex: 'organName',width:120, ellipsis:true},
           { title: '单据编号', dataIndex: 'number',width:160,
             customRender:function (text,record,index) {
               if(record.linkNumber) {
@@ -184,7 +177,7 @@
           { title: '单据日期', dataIndex: 'operTimeStr',width:145},
           { title: '操作员', dataIndex: 'userName',width:80},
           { title: '金额合计', dataIndex: 'totalPrice',width:80},
-          {title: '状态', dataIndex: 'status', width: 80, align: "center",
+          { title: '状态', dataIndex: 'status', width: 80, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }
           },
           {
@@ -204,28 +197,11 @@
     },
     created() {
       this.initSupplier()
-      this.getDepotData()
       this.initUser()
-      this.removeStatusColumn()
     },
     computed: {
     },
     methods: {
-      myHandleEdit(record) {
-        if(record.status === '0') {
-          this.$refs.modalForm.action = "edit";
-          this.handleEdit(record);
-        } else {
-          this.$message.warning("抱歉，只有未审核的单据才能编辑！")
-        }
-      },
-      myHandleDelete(record) {
-        if(record.status === '0') {
-          this.handleDelete(record.id)
-        } else {
-          this.$message.warning("抱歉，只有未审核的单据才能删除！")
-        }
-      }
     }
   }
 </script>

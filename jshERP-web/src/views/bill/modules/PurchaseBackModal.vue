@@ -253,6 +253,12 @@
           let url = this.readOnly ? this.url.detailList : this.url.detailList;
           this.requestSubTableData(url, params, this.materialTable);
         }
+        //复制新增单据-初始化单号和日期
+        if(this.action === 'copyAdd') {
+          this.model.id = ''
+          this.model.tenantId = ''
+          this.copyAddInit(this.prefixNo)
+        }
         this.initSupplier()
         this.initDepot()
         this.initAccount()
@@ -286,7 +292,7 @@
         }
       },
       onSearchLinkNumber() {
-        this.$refs.linkBillList.show('入库', '采购', '供应商', "0")
+        this.$refs.linkBillList.show('入库', '采购', '供应商', "1")
         this.$refs.linkBillList.title = "选择采购入库"
       },
       linkBillListOk(selectBillRows) {

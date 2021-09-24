@@ -496,7 +496,7 @@ public class UserService {
             throw new BusinessRunTimeException(ExceptionConstants.USER_NAME_LIMIT_USE_CODE,
                     ExceptionConstants.USER_NAME_LIMIT_USE_MSG);
         } else {
-            ue.setPassword(Tools.md5Encryp(ue.getPassword()));
+            ue.setPassword(ue.getPassword());
             ue.setIsystem(BusinessConstants.USER_NOT_SYSTEM);
             if (ue.getIsmanager() == null) {
                 ue.setIsmanager(BusinessConstants.USER_NOT_MANAGER);

@@ -80,10 +80,10 @@
             size="middle"
             bordered
             rowKey="id"
-            :scroll="{ x: 1500, y: 500 }"
             :columns="columns"
             :dataSource="dataSource"
             :pagination="ipagination"
+            :scroll="scroll"
             :loading="loading"
             :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
             @change="handleTableChange">
@@ -153,43 +153,33 @@
         },
         // 表头
         columns: [
-          {
-            title: '#',
-            dataIndex: '',
-            key:'rowIndex',
-            width:40,
-            align:"center",
-            customRender:function (t,r,index) {
-              return parseInt(index)+1;
-            }
-          },
-          {title: '条码', dataIndex: 'mBarCode', width: 120},
-          {title: '名称', dataIndex: 'name', width: 120},
-          {title: '规格', dataIndex: 'standard', width: 80},
-          {title: '型号', dataIndex: 'model', width: 80},
-          {title: '颜色', dataIndex: 'color', width: 60},
-          {title: '类别', dataIndex: 'categoryName', width: 80},
-          {title: '扩展信息', dataIndex: 'materialOther', width: 100},
-          {title: '单位', dataIndex: 'unit', width: 100,
+          {title: '条码', dataIndex: 'mBarCode', width: '8%'},
+          {title: '名称', dataIndex: 'name', width: '10%'},
+          {title: '规格', dataIndex: 'standard', width: '6%'},
+          {title: '型号', dataIndex: 'model', width: '6%'},
+          {title: '颜色', dataIndex: 'color', width: '4%'},
+          {title: '类别', dataIndex: 'categoryName', width: '6%'},
+          {title: '扩展信息', dataIndex: 'materialOther', width: '6%'},
+          {title: '单位', dataIndex: 'unit', width: '6%',
             scopedSlots: { customRender: 'customRenderUnit' }
           },
-          {title: '安全存量', dataIndex: 'safetyStock', width: 80},
-          {title: '库存', dataIndex: 'stock', width: 70},
-          {title: '采购价', dataIndex: 'purchaseDecimal', width: 70},
-          {title: '零售价', dataIndex: 'commodityDecimal', width: 70},
-          {title: '销售价', dataIndex: 'wholesaleDecimal', width: 70},
-          {title: '最低售价', dataIndex: 'lowDecimal', width: 80},
-          {title: '状态', dataIndex: 'enabled', width: 55, align: "center",
+          {title: '安全存量', dataIndex: 'safetyStock', width: '5%'},
+          {title: '库存', dataIndex: 'stock', width: '5%'},
+          {title: '采购价', dataIndex: 'purchaseDecimal', width: '5%'},
+          {title: '零售价', dataIndex: 'commodityDecimal', width: '5%'},
+          {title: '销售价', dataIndex: 'wholesaleDecimal', width: '5%'},
+          {title: '最低售价', dataIndex: 'lowDecimal', width: '5%'},
+          {title: '状态', dataIndex: 'enabled', width: '4%', align: "center",
             scopedSlots: { customRender: 'customRenderEnabled' }
           },
-          {title: '序列号', dataIndex: 'enableSerialNumber', width: 55, align: "center",
+          {title: '序列号', dataIndex: 'enableSerialNumber', width: '4%', align: "center",
             scopedSlots: { customRender: 'customRenderEnableSerialNumber' }
           },
           {
             title: '操作',
             dataIndex: 'action',
             align:"center",
-            width: 120,
+            width: '8%',
             scopedSlots: { customRender: 'action' },
           }
         ],
@@ -213,6 +203,13 @@
       }
     },
     methods: {
+      initScroll() {
+        if (this.isMobile()) {
+          this.scroll.y = ''
+        } else {
+          this.scroll.y = document.documentElement.clientHeight-370
+        }
+      },
       loadTreeData(){
         let that = this;
         let params = {};

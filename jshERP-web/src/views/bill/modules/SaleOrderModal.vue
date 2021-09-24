@@ -115,9 +115,6 @@
           loading: false,
           dataSource: [],
           columns: [
-            { title: '仓库名称', key: 'depotId', width: '7%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
-              allowSearch:true, validateRules: [{ required: true, message: '${title}不能为空' }]
-            },
             { title: '条码', key: 'barCode', width: '8%', type: FormTypes.popupJsh, multi: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
@@ -180,6 +177,12 @@
           }
           let url = this.readOnly ? this.url.detailList : this.url.detailList;
           this.requestSubTableData(url, params, this.materialTable);
+        }
+        //复制新增单据-初始化单号和日期
+        if(this.action === 'copyAdd') {
+          this.model.id = ''
+          this.model.tenantId = ''
+          this.copyAddInit(this.prefixNo)
         }
         this.initCustomer()
         this.initSalesman()

@@ -73,6 +73,8 @@
           <a-dropdown v-if="selectedRowKeys.length > 0">
             <a-menu slot="overlay">
               <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
+              <a-menu-item key="2" v-if="btnEnableList.indexOf(2)>-1" @click="batchSetStatus(1)"><a-icon type="check"/>审核</a-menu-item>
+              <a-menu-item key="3" v-if="btnEnableList.indexOf(7)>-1" @click="batchSetStatus(0)"><a-icon type="stop"/>反审核</a-menu-item>
             </a-menu>
             <a-button style="margin-left: 8px">
               批量操作 <a-icon type="down" />
@@ -80,7 +82,7 @@
           </a-dropdown>
           <a-tooltip placement="left" title="付款单的要素和录入原则与“收款单”相同。
           付款单中优惠金额计入支出类中的付款优惠中，为负值 （因优惠意味着实际少付款）。" slot="action">
-            <a-icon v-if="btnEnableList.indexOf(1)>-1" type="info-circle" style="font-size:20px;float:right;" />
+            <a-icon v-if="btnEnableList.indexOf(1)>-1" type="question-circle" style="font-size:20px;float:right;" />
           </a-tooltip>
         </div>
         <!-- table区域-begin -->
@@ -101,10 +103,14 @@
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
               <a v-if="btnEnableList.indexOf(1)>-1" @click="myHandleEdit(record)">编辑</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
-              <a-popconfirm v-if="btnEnableList.indexOf(1)>-1" title="确定删除吗?" @confirm="() => handleDelete(record.id)">
+              <a-popconfirm v-if="btnEnableList.indexOf(1)>-1" title="确定删除吗?" @confirm="() => myHandleDelete(record)">
                 <a>删除</a>
               </a-popconfirm>
             </span>
+            <template slot="customRenderStatus" slot-scope="status">
+              <a-tag v-if="status == '0'" color="red">未审核</a-tag>
+              <a-tag v-if="status == '1'" color="green">已审核</a-tag>
+            </template>
           </a-table>
         </div>
         <!-- table区域-end -->
@@ -149,7 +155,7 @@
         },
         // 表头
         columns: [
-          { title: '供应商', dataIndex: 'organName',width:140},
+          { title: '供应商', dataIndex: 'organName',width:140, ellipsis:true},
           { title: '财务人员', dataIndex: 'handsPersonName',width:140},
           { title: '单据编号', dataIndex: 'billNo',width:160},
           { title: '单据日期 ', dataIndex: 'billTimeStr',width:160},
@@ -158,6 +164,9 @@
           { title: '优惠金额', dataIndex: 'discountMoney',width:80},
           { title: '实际付款', dataIndex: 'changeAmount',width:80},
           { title: '备注', dataIndex: 'remark',width:200},
+          { title: '状态', dataIndex: 'status', width: 80, align: "center",
+            scopedSlots: { customRender: 'customRenderStatus' }
+          },
           {
             title: '操作',
             dataIndex: 'action',
@@ -169,7 +178,8 @@
         url: {
           list: "/accountHead/list",
           delete: "/accountHead/delete",
-          deleteBatch: "/accountHead/deleteBatch"
+          deleteBatch: "/accountHead/deleteBatch",
+          batchSetStatusUrl: "/accountHead/batchSetStatus"
         }
       }
     },

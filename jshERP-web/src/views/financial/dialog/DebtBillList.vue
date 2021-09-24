@@ -1,7 +1,7 @@
 <template>
   <a-modal
     :title="title"
-    :width="1150"
+    :width="1250"
     :visible="visible"
     @ok="handleOk"
     @cancel="handleCancel"

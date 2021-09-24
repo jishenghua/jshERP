@@ -7,8 +7,10 @@ import { filterObj } from '@/utils/util';
 import { deleteAction, getAction, postAction, downFile, getFileAccessHttpUrl } from '@/api/manage'
 import Vue from 'vue'
 import { ACCESS_TOKEN } from "@/store/mutation-types"
+import {mixinDevice} from '@/utils/mixin.js'
 
 export const JeecgListMixin = {
+  mixins: [mixinDevice],
   data(){
     return {
       //token header
@@ -29,6 +31,8 @@ export const JeecgListMixin = {
         showSizeChanger: true,
         total: 0
       },
+      /* 控制table高度 */
+      scroll: {},
       /* 排序参数 */
       isorter:{
         column: 'createTime',
@@ -57,14 +61,16 @@ export const JeecgListMixin = {
     }
   },
   created() {
-      if(!this.disableMixinCreated){
-        //console.log(' -- mixin created -- ')
-        this.loadData();
-        //初始化字典配置 在自己页面定义
-        this.initDictConfig();
-        //初始化按钮权限
-        this.initActiveBtnStr();
-      }
+    if(!this.disableMixinCreated){
+      //console.log(' -- mixin created -- ')
+      this.loadData();
+      //初始化字典配置 在自己页面定义
+      this.initDictConfig();
+      //初始化按钮权限
+      this.initActiveBtnStr();
+      //初始化列表横向或纵向滚动
+      this.initScroll()
+    }
   },
   methods:{
     loadData(arg) {
@@ -349,6 +355,13 @@ export const JeecgListMixin = {
             }
           }
         }
+      }
+    },
+    initScroll() {
+      if (this.isMobile()) {
+        this.scroll.y = ''
+      } else {
+        this.scroll.y = document.documentElement.clientHeight-330
       }
     }
   }

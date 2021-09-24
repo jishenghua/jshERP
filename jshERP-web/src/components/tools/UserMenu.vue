@@ -2,27 +2,27 @@
   <div class="user-wrapper" :class="theme">
     <!-- update_begin author:zhaoxin date:20191129 for: 做头部菜单栏导航 -->
     <!-- update-begin author:sunjianlei date:20191@20 for: 解决全局样式冲突的问题 -->
-<!--    <span class="action" @click="showClick">-->
-<!--      <a-icon type="search"></a-icon>-->
-<!--    </span>-->
+    <span class="action" @click="showClick">
+      <a-icon type="search"></a-icon>
+    </span>
     <!-- update-begin author:sunjianlei date:20200219 for: 菜单搜索改为动态组件，在手机端呈现出弹出框 -->
-<!--    <component :is="searchMenuComp" v-show="searchMenuVisible || isMobile()" class="borders" :visible="searchMenuVisible" title="搜索菜单" :footer="null" @cancel="searchMenuVisible=false">-->
-<!--      <a-select-->
-<!--        class="search-input"-->
-<!--        showSearch-->
-<!--        :showArrow="false"-->
-<!--        placeholder="搜索菜单"-->
-<!--        optionFilterProp="children"-->
-<!--        :filterOption="filterOption"-->
-<!--        :open="isMobile()?true:null"-->
-<!--        :getPopupContainer="(node) => node.parentNode"-->
-<!--        :style="isMobile()?{width: '100%',marginBottom:'50px'}:{}"-->
-<!--        @change="searchMethods"-->
-<!--        @blur="hiddenClick"-->
-<!--      >-->
-<!--        <a-select-option v-for="(site,index) in searchMenuOptions" :key="index" :value="site.id">{{site.meta.title}}</a-select-option>-->
-<!--      </a-select>-->
-<!--    </component>-->
+    <component :is="searchMenuComp" v-show="searchMenuVisible || isMobile()" class="borders" :visible="searchMenuVisible" title="搜索菜单" :footer="null" @cancel="searchMenuVisible=false">
+      <a-select
+        class="search-input"
+        showSearch
+        :showArrow="false"
+        placeholder="搜索菜单"
+        optionFilterProp="children"
+        :filterOption="filterOption"
+        :open="isMobile()?true:null"
+        :getPopupContainer="(node) => node.parentNode"
+        :style="isMobile()?{width: '100%',marginBottom:'50px'}:{}"
+        @change="searchMethods"
+        @blur="hiddenClick"
+      >
+        <a-select-option v-for="(site,index) in searchMenuOptions" :key="index" :value="site.id">{{site.text}}</a-select-option>
+      </a-select>
+    </component>
     <!-- update-end author:sunjianlei date:20200219 for: 菜单搜索改为动态组件，在手机端呈现出弹出框 -->
     <!-- update-end author:sunjianlei date:20191220 for: 解决全局样式冲突的问题 -->
     <!-- update_end  author:zhaoxin date:20191129 for: 做头部菜单栏导航 -->
@@ -174,8 +174,8 @@
       /* update_begin author:zhaoxin date:20191129 for: 做头部菜单栏导航*/
       searchMenus(arr,menus){
         for(let i of menus){
-          if(!i.hidden && "layouts/RouteView"!==i.component){
-           arr.push(i)
+          if("/layouts/RouteView"!==i.component && "/layouts/TabLayout"!==i.component){
+            arr.push(i)
           }
           if(i.children&& i.children.length>0){
             this.searchMenus(arr,i.children)
@@ -188,11 +188,7 @@
       // update_begin author:sunjianlei date:20191230 for: 解决外部链接打开失败的问题
       searchMethods(value) {
         let route = this.searchMenuOptions.filter(item => item.id === value)[0]
-        if (route.meta.internalOrExternal === true || route.component.includes('layouts/IframePageView')) {
-          window.open(route.meta.url, '_blank')
-        } else {
-          this.$router.push({ path: route.path })
-        }
+        this.$router.push({ path: route.url })
         this.searchMenuVisible = false
       },
       // update_end author:sunjianlei date:20191230 for: 解决外部链接打开失败的问题

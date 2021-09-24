@@ -13,6 +13,7 @@ import com.jsh.erp.service.userBusiness.UserBusinessService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.FileUtils;
 import com.jsh.erp.utils.StringUtil;
+import com.jsh.erp.utils.Tools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -126,6 +127,9 @@ public class SystemConfigController {
             if(StringUtil.isEmpty(bizPath)){
                 bizPath = "";
             }
+            String token = request.getHeader("X-Access-Token");
+            Long tenantId = Tools.getTenantIdByToken(token);
+            bizPath = bizPath + File.separator + tenantId;
             savePath = this.uploadLocal(file,bizPath);
             if(StringUtil.isNotEmpty(savePath)){
                 res.code = 200;

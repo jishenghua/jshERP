@@ -69,9 +69,9 @@
       </a-layout-content>
 
       <!-- layout footer -->
-      <a-layout-footer style="padding: 0px">
-        <global-footer/>
-      </a-layout-footer>
+<!--      <a-layout-footer style="padding: 0px">-->
+<!--        <global-footer/>-->
+<!--      </a-layout-footer>-->
     </a-layout>
 
     <!-- update-start---- author:os_chengtgen -- date:20190830 --  for:issues/463 -编译主题颜色已生效，但还一直转圈，显示主题 正在编译 ---- -->
@@ -153,7 +153,7 @@
       myMenuSelect(value){
         //此处触发动态路由被点击事件
         this.findMenuBykey(this.menus,value.key)
-        this.$emit("dynamicRouterShow",value.key, this.activeMenu.id, this.activeMenu.text)
+        this.$emit("dynamicRouterShow",value.key, this.activeMenu.id, this.activeMenu.text, this.activeMenu.component)
         let storeKey = 'route:title:' + this.activeMenu.url
         this.$ls.set(storeKey, this.activeMenu.text)
       },

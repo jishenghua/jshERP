@@ -34,8 +34,8 @@
               <a-col :md="4" :sm="24">
                 <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                   <a-button type="primary" @click="searchQuery">查询</a-button>
-                  <a-button style="margin-left: 8px" type="primary" icon="download" @click="handleExportXls('库存状况')">导出</a-button>
-                  <a-button style="margin-left: 8px" v-print="'#reportPrint'" type="primary" icon="printer">打印</a-button>
+                  <a-button style="margin-left: 8px" v-print="'#reportPrint'" icon="printer">打印</a-button>
+                  <a-button style="margin-left: 8px" @click="exportExcel" icon="download">导出</a-button>
                 </span>
               </a-col>
               <a-col :md="4" :sm="24">
@@ -56,6 +56,7 @@
             :columns="columns"
             :dataSource="dataSource"
             :pagination="ipagination"
+            :scroll="scroll"
             :loading="loading"
             @change="handleTableChange">
           </a-table>
@@ -68,12 +69,12 @@
 <script>
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { getAction } from '@/api/manage'
-  import { getMpListShort } from "@/utils/util"
+  import { getMpListShort, openDownloadDialog, sheet2blob} from "@/utils/util"
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import moment from 'moment'
   import Vue from 'vue'
   export default {
-    name: "BuyInReport",
+    name: "InOutStockReport",
     mixins:[JeecgListMixin],
     components: {
       JEllipsis
@@ -95,6 +96,9 @@
           monthTime: moment().format('YYYY-MM'),
           materialParam:'',
           mpList: getMpListShort(Vue.ls.get('materialPropertyList'))  //扩展属性
+        },
+        ipagination:{
+          pageSizeOptions: ['10', '20', '30', '100', '200']
         },
         tabKey: "1",
         depotList: [],
@@ -127,7 +131,7 @@
         url: {
           list: "/depotItem/findByAll",
           totalCountMoney: "/depotItem/totalCountMoney",
-          exportXlsUrl: "/depotItem/exportExcel",
+          exportXlsUrl: "/depotItem/exportExcel"
         }
       }
     },
@@ -176,6 +180,16 @@
           this.loadData(1);
           this.getTotalCountMoney();
         }
+      },
+      exportExcel() {
+        let aoa = [['条码', '名称', '规格', '型号', '扩展信息', '单位', '单价', '上月结存数量', '入库数量', '出库数量', '本月结存数量', '结存金额']]
+        for (let i = 0; i < this.dataSource.length; i++) {
+          let ds = this.dataSource[i]
+          let item = [ds.barCode, ds.materialName, ds.materialStandard, ds.materialModel, ds.materialOther, ds.unitName, ds.unitPrice,
+            ds.prevSum, ds.inSum, ds.outSum, ds.thisSum, ds.thisAllPrice]
+          aoa.push(item)
+        }
+        openDownloadDialog(sheet2blob(aoa), '进销存统计')
       }
     }
   }

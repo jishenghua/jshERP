@@ -173,6 +173,12 @@
           let url = this.readOnly ? this.url.detailList : this.url.detailList;
           this.requestSubTableData(url, params, this.materialTable);
         }
+        //复制新增单据-初始化单号和日期
+        if(this.action === 'copyAdd') {
+          this.model.id = ''
+          this.model.tenantId = ''
+          this.copyAddInit(this.prefixNo)
+        }
         this.initCustomer()
         this.initDepot()
       },

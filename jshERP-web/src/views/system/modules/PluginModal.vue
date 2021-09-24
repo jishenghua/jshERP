@@ -23,7 +23,7 @@
 </template>
 <script>
   import pick from 'lodash.pick'
-  import {addPerson,editPerson,checkPerson } from '@/api/api'
+  import {getPlatformConfigByKey } from '@/api/api'
   import { getAction, postAction } from '../../../api/manage'
   export default {
     name: "PluginModal",
@@ -66,7 +66,7 @@
         getAction("/plugin/getMacWithSecret").then((res)=>{
           if(res && res.code == 200) {
             this.model.platformKey = res.data
-            getAction("/platformConfig/getPlatformConfigByKey", {"platformKey": "activation_code"}).then((res)=>{
+            getPlatformConfigByKey( {"platformKey": "activation_code"}).then((res)=>{
               if(res && res.code == 200) {
                 this.model.platformValue = res.data.platformValue
                 this.visible = true;

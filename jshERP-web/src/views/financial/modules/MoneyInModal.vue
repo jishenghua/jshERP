@@ -137,7 +137,7 @@
     data () {
       return {
         title:"操作",
-        width: '1200px',
+        width: '1600px',
         moreStatus: false,
         // 新增时子表默认添加几行空数据
         addDefaultRowNum: 0,
@@ -242,7 +242,7 @@
       handleClickAdd() {
         let organId = this.form.getFieldValue('organId')
         if(organId){
-          this.$refs.debtBillList.show(organId, '出库', '销售', '客户', "0")
+          this.$refs.debtBillList.show(organId, '出库', '销售', '客户', "")
           this.$refs.debtBillList.title = "选择销售出库欠款单据"
         } else {
           this.$message.warning('请选择客户！');
