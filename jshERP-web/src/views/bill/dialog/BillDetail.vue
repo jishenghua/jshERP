@@ -12,19 +12,19 @@
     <template slot="footer">
       <a-button v-if="billPrintFlag" @click="handlePrint">三联打印预览</a-button>
       <!--此处为解决缓存问题-->
+      <a-button v-if="billType === '零售出库'" v-print="'#retailOutPrint'">普通打印</a-button>
+      <a-button v-if="billType === '零售退货入库'" v-print="'#retailBackPrint'">普通打印</a-button>
+      <a-button v-if="billType === '采购订单'" v-print="'#purchaseOrderPrint'">普通打印</a-button>
+      <a-button v-if="billType === '采购入库'" v-print="'#purchaseInPrint'">普通打印</a-button>
+      <a-button v-if="billType === '采购退货出库'" v-print="'#purchaseBackPrint'">普通打印</a-button>
+      <a-button v-if="billType === '销售订单'" v-print="'#saleOrderPrint'">普通打印</a-button>
+      <a-button v-if="billType === '销售出库'" v-print="'#saleOutPrint'">普通打印</a-button>
+      <a-button v-if="billType === '销售退货入库'" v-print="'#saleBackPrint'">普通打印</a-button>
+      <a-button v-if="billType === '其它入库'" v-print="'#otherInPrint'">普通打印</a-button>
+      <a-button v-if="billType === '其它出库'" v-print="'#otherOutPrint'">普通打印</a-button>
       <a-button v-if="billType === '调拨出库'" v-print="'#allocationOutPrint'">普通打印</a-button>
       <a-button v-if="billType === '组装单'" v-print="'#assemblePrint'">普通打印</a-button>
       <a-button v-if="billType === '拆卸单'" v-print="'#disassemblePrint'">普通打印</a-button>
-      <a-button v-if="billType === '其它入库'" v-print="'#otherInPrint'">普通打印</a-button>
-      <a-button v-if="billType === '其它出库'" v-print="'#otherOutPrint'">普通打印</a-button>
-      <a-button v-if="billType === '采购退货出库'" v-print="'#purchaseBackPrint'">普通打印</a-button>
-      <a-button v-if="billType === '采购入库'" v-print="'#purchaseInPrint'">普通打印</a-button>
-      <a-button v-if="billType === '采购订单'" v-print="'#purchaseOrderPrint'">普通打印</a-button>
-      <a-button v-if="billType === '零售退货入库'" v-print="'#retailBackPrint'">普通打印</a-button>
-      <a-button v-if="billType === '零售出库'" v-print="'#retailOutPrint'">普通打印</a-button>
-      <a-button v-if="billType === '销售退货入库'" v-print="'#saleBackPrint'">普通打印</a-button>
-      <a-button v-if="billType === '销售订单'" v-print="'#saleOrderPrint'">普通打印</a-button>
-      <a-button v-if="billType === '销售出库'" v-print="'#saleOutPrint'">普通打印</a-button>
       <a-button key="back" @click="handleCancel">取消</a-button>
     </template>
     <a-form :form="form">
@@ -52,7 +52,7 @@
                 bordered
                 rowKey="id"
                 :pagination="false"
-                :columns="allocationOutColumns"
+                :columns="columns"
                 :dataSource="dataSource">
               </a-table>
             </div>
@@ -89,7 +89,7 @@
                 bordered
                 rowKey="id"
                 :pagination="false"
-                :columns="assembleColumns"
+                :columns="columns"
                 :dataSource="dataSource">
               </a-table>
             </div>
@@ -126,7 +126,7 @@
                 bordered
                 rowKey="id"
                 :pagination="false"
-                :columns="disassembleColumns"
+                :columns="columns"
                 :dataSource="dataSource">
               </a-table>
             </div>
@@ -172,7 +172,7 @@
                 bordered
                 rowKey="id"
                 :pagination="false"
-                :columns="otherInColumns"
+                :columns="columns"
                 :dataSource="dataSource">
               </a-table>
             </div>
@@ -218,7 +218,7 @@
                 bordered
                 rowKey="id"
                 :pagination="false"
-                :columns="otherOutColumns"
+                :columns="columns"
                 :dataSource="dataSource">
               </a-table>
             </div>
@@ -264,7 +264,7 @@
                 bordered
                 rowKey="id"
                 :pagination="false"
-                :columns="purchaseBackColumns"
+                :columns="columns"
                 :dataSource="dataSource">
               </a-table>
             </div>
@@ -351,7 +351,7 @@
                 bordered
                 rowKey="id"
                 :pagination="false"
-                :columns="purchaseInColumns"
+                :columns="columns"
                 :dataSource="dataSource">
               </a-table>
             </div>
@@ -434,7 +434,7 @@
                 bordered
                 rowKey="id"
                 :pagination="false"
-                :columns="purchaseOrderColumns"
+                :columns="columns"
                 :dataSource="dataSource">
               </a-table>
             </div>
@@ -482,7 +482,7 @@
                     bordered
                     rowKey="id"
                     :pagination="false"
-                    :columns="retailBackColumns"
+                    :columns="columns"
                     :dataSource="dataSource">
                   </a-table>
                 </div>
@@ -556,7 +556,7 @@
                     bordered
                     rowKey="id"
                     :pagination="false"
-                    :columns="retailOutColumns"
+                    :columns="columns"
                     :dataSource="dataSource">
                   </a-table>
                 </div>
@@ -628,7 +628,7 @@
                 bordered
                 rowKey="id"
                 :pagination="false"
-                :columns="saleBackColumns"
+                :columns="columns"
                 :dataSource="dataSource">
               </a-table>
             </div>
@@ -718,7 +718,7 @@
                 bordered
                 rowKey="id"
                 :pagination="false"
-                :columns="saleOrderColumns"
+                :columns="columns"
                 :dataSource="dataSource">
               </a-table>
             </div>
@@ -764,7 +764,7 @@
                 bordered
                 rowKey="id"
                 :pagination="false"
-                :columns="saleOutColumns"
+                :columns="columns"
                 :dataSource="dataSource">
               </a-table>
             </div>
@@ -879,6 +879,10 @@
         url: {
           detailList: '/depotItem/getDetailList'
         },
+        //表头
+        columns:[],
+        //列定义
+        defColumns: [],
         allocationOutColumns: [
           { title: '仓库名称', dataIndex: 'depotName', width: '8%'},
           { title: '条码', dataIndex: 'barCode', width: '10%'},
@@ -1098,6 +1102,51 @@
     created () {
     },
     methods: {
+      initSetting(record, type) {
+        if (type === '零售出库') {
+          this.defColumns = this.retailOutColumns
+        } else if (type === '零售退货入库') {
+          this.defColumns = this.retailBackColumns
+        } else if (type === '采购订单') {
+          this.defColumns = this.purchaseOrderColumns
+        } else if (type === '采购入库') {
+          this.defColumns = this.purchaseInColumns
+        } else if (type === '采购退货出库') {
+          this.defColumns = this.purchaseBackColumns
+        } else if (type === '销售订单') {
+          this.defColumns = this.saleOrderColumns
+        } else if (type === '销售出库') {
+          this.defColumns = this.saleOutColumns
+        } else if (type === '销售退货入库') {
+          this.defColumns = this.saleBackColumns
+        } else if (type === '其它入库') {
+          this.defColumns = this.otherInColumns
+        } else if (type === '其它出库') {
+          this.defColumns = this.otherOutColumns
+        } else if (type === '调拨出库') {
+          this.defColumns = this.allocationOutColumns
+        } else if (type === '组装单') {
+          this.defColumns = this.assembleColumns
+        } else if (type === '拆卸单') {
+          this.defColumns = this.disassembleColumns
+        }
+        //不是部分采购|部分销售的时候移除列
+        if(record.status === '3') {
+          this.columns = this.defColumns
+        } else {
+          let currentCol = []
+          for(let i=0; i<this.defColumns.length; i++){
+            if(this.defColumns[i].dataIndex !== 'finishNumber') {
+              let info = {}
+              info.title = this.defColumns[i].title
+              info.dataIndex = this.defColumns[i].dataIndex
+              info.width = this.defColumns[i].width
+              currentCol.push(info)
+            }
+          }
+          this.columns = currentCol
+        }
+      },
       initPlatform() {
         getPlatformConfigByKey({"platformKey": "bill_print_flag"}).then((res)=> {
           if (res && res.code === 200) {
@@ -1109,6 +1158,7 @@
         })
       },
       show(record, type) {
+        this.initSetting(record, type)
         this.billType = type
         //附件下载
         this.fileList = record.fileName
