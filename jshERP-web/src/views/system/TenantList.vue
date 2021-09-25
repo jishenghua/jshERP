@@ -39,7 +39,7 @@
         <!-- 操作按钮区域 -->
         <div class="table-operator" style="border-top: 5px">
           <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-          <a-dropdown v-if="selectedRowKeys.length > 0">
+          <a-dropdown>
             <a-menu slot="overlay">
               <a-menu-item key="1" @click="batchSetStatus(1)"><a-icon type="check-square"/>启用</a-menu-item>
               <a-menu-item key="2" @click="batchSetStatus(0)"><a-icon type="close-square"/>禁用</a-menu-item>

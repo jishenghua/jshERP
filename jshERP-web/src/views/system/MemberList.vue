@@ -43,7 +43,7 @@
             </a-popover>
           </a-upload>
           <a-button type="primary" icon="download" @click="handleExportXls('会员信息')">导出</a-button>
-          <a-dropdown v-if="selectedRowKeys.length > 0">
+          <a-dropdown>
             <a-menu slot="overlay">
               <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
               <a-menu-item key="2" v-if="btnEnableList.indexOf(1)>-1" @click="batchSetStatus(true)"><a-icon type="check-square"/>启用</a-menu-item>

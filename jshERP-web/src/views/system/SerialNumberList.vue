@@ -30,7 +30,7 @@
         <div class="table-operator"  style="margin-top: 5px">
           <a-button v-if="btnEnableList.indexOf(1)>-1" @click="handleAdd" type="primary" icon="plus">新增</a-button>
           <a-button v-if="btnEnableList.indexOf(1)>-1" @click="handleBatchAdd" type="primary" icon="plus">批量新增</a-button>
-          <a-dropdown v-if="selectedRowKeys.length > 0">
+          <a-dropdown>
             <a-menu slot="overlay">
               <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
             </a-menu>
