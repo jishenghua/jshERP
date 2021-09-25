@@ -170,7 +170,7 @@
           { title: '单据编号', dataIndex: 'number',width:160,
             customRender:function (text,record,index) {
               if(record.linkNumber) {
-                return text + "[转]";
+                return text + "[订]";
               } else {
                 return text;
               }

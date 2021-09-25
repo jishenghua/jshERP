@@ -187,14 +187,16 @@
             { title: '库存', key: 'stock', width: '5%', type: FormTypes.input, readonly: true },
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.input, readonly: true },
             { title: '多属性', key: 'sku', width: '4%', type: FormTypes.input, readonly: true },
-            { title: '数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true,
+            { title: '原数量', key: 'preNumber', width: '4%', type: FormTypes.input, readonly: true },
+            { title: '已入库', key: 'finishNumber', width: '4%', type: FormTypes.input, readonly: true },
+            { title: '数量', key: 'operNumber', width: '4%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
-            { title: '单价', key: 'unitPrice', width: '5%', type: FormTypes.inputNumber},
+            { title: '单价', key: 'unitPrice', width: '4%', type: FormTypes.inputNumber},
             { title: '含税单价', key: 'taxUnitPrice', width: '5%', type: FormTypes.inputNumber, readonly: true},
             { title: '金额', key: 'allPrice', width: '5%', type: FormTypes.inputNumber, statistics: true },
-            { title: '税率', key: 'taxRate', width: '4%', type: FormTypes.inputNumber,placeholder: '%'},
-            { title: '税额', key: 'taxMoney', width: '4%', type: FormTypes.inputNumber, statistics: true, readonly: true},
+            { title: '税率', key: 'taxRate', width: '3%', type: FormTypes.inputNumber,placeholder: '%'},
+            { title: '税额', key: 'taxMoney', width: '3%', type: FormTypes.inputNumber, statistics: true, readonly: true},
             { title: '价税合计', key: 'taxLastMoney', width: '5%', type: FormTypes.inputNumber, statistics: true },
             { title: '备注', key: 'remark', width: '5%', type: FormTypes.input }
           ]
@@ -299,7 +301,7 @@
         }
       },
       onSearchLinkNumber() {
-        this.$refs.linkBillList.show('其它', '销售订单', '客户', "1")
+        this.$refs.linkBillList.show('其它', '销售订单', '客户', "1,3")
         this.$refs.linkBillList.title = "选择销售订单"
       },
       linkBillListOk(selectBillRows) {
@@ -329,13 +331,28 @@
           if(res && res.code === 200){
             let list = res.data.rows
             let listEx = []
+            let discountLastMoney = 0
             for(let j=0; j<list.length; j++){
               let info = list[j];
+              if(info.preNumber) {
+                info.operNumber = info.preNumber - info.finishNumber
+                info.allPrice = info.operNumber * info.unitPrice-0;
+                discountLastMoney += info.allPrice
+              }
               info.taxMoney = 0
               info.taxLastMoney = info.allPrice
               listEx.push(info)
             }
             tab.dataSource = listEx
+            //给优惠后金额重新赋值
+            if(discountLastMoney) {
+              this.$nextTick(() => {
+                this.form.setFieldsValue({
+                  'discountLastMoney': discountLastMoney,
+                  'changeAmount': discountLastMoney
+                })
+              });
+            }
             typeof success === 'function' ? success(res) : ''
           }
         }).finally(() => {

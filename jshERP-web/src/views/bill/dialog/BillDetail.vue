@@ -1005,6 +1005,7 @@
           { title: '单位', dataIndex: 'unit', width: '4%'},
           { title: '多属性', dataIndex: 'sku', width: '4%'},
           { title: '数量', dataIndex: 'operNumber', width: '5%'},
+          { title: '已入库', dataIndex: 'finishNumber', width: '5%'},
           { title: '单价', dataIndex: 'unitPrice', width: '5%'},
           { title: '金额', dataIndex: 'allPrice', width: '5%'},
           { title: '备注', dataIndex: 'remark', width: '5%'}
@@ -1068,6 +1069,7 @@
           { title: '单位', dataIndex: 'unit', width: '4%'},
           { title: '多属性', dataIndex: 'sku', width: '4%'},
           { title: '数量', dataIndex: 'operNumber', width: '5%'},
+          { title: '已入库', dataIndex: 'finishNumber', width: '5%'},
           { title: '单价', dataIndex: 'unitPrice', width: '5%'},
           { title: '金额', dataIndex: 'allPrice', width: '5%'},
           { title: '备注', dataIndex: 'remark', width: '5%'}
