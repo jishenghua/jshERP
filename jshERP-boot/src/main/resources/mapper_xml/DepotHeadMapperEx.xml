@@ -61,8 +61,12 @@
         <if test="subType != null">
             and dh.sub_type=#{subType}
         </if>
-        <if test="status != null">
-            and dh.status =#{status}
+        <if test="statusArray != null and statusArray !=''">
+            and dh.status in (
+            <foreach collection="statusArray" item="status" separator=",">
+                #{status}
+            </foreach>
+            )
         </if>
         <if test="number != null">
             <bind name="bindNumber" value="'%'+number+'%'"/>
@@ -121,8 +125,12 @@
         <if test="subType != null">
             and dh.sub_type=#{subType}
         </if>
-        <if test="status != null">
-            and dh.status =#{status}
+        <if test="statusArray != null and statusArray !=''">
+            and dh.status in (
+            <foreach collection="statusArray" item="status" separator=",">
+                #{status}
+            </foreach>
+            )
         </if>
         <if test="number != null">
             <bind name="bindNumber" value="'%'+number+'%'"/>

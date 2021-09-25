@@ -456,4 +456,21 @@
         </if>
         group by m.id,m.name, m.model, m.unit, m.color, u.name) tb
     </select>
+
+    <select id="getFinishNumber" resultType="java.math.BigDecimal">
+        select ifnull(sum(di.basic_number),0) from jsh_depot_item di
+        where di.material_id=#{mId}
+        and ifnull(di.delete_flag,'0') !='1'
+        and di.header_id
+        in
+        (
+        select dh.id from jsh_depot_head dh
+        where
+        dh.link_number=#{linkNumber}
+        and ifnull(dh.delete_flag,'0') !='1'
+        <if test="goToType != null">
+            and dh.sub_type=#{goToType}
+        </if>
+        )
+    </select>
 </mapper>

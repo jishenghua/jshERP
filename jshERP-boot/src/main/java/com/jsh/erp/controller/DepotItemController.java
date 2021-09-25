@@ -197,6 +197,8 @@ public class DepotItemController {
                     item.put("sku", diEx.getSku());
                     item.put("operNumber", diEx.getOperNumber());
                     item.put("basicNumber", diEx.getBasicNumber());
+                    item.put("preNumber", diEx.getOperNumber()); //原数量
+                    item.put("finishNumber", depotItemService.getFinishNumber(diEx.getMaterialId(), diEx.getHeaderId())); //已入库|已出库
                     item.put("unitPrice", diEx.getUnitPrice());
                     item.put("taxUnitPrice", diEx.getTaxUnitPrice());
                     item.put("allPrice", diEx.getAllPrice());

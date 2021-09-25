@@ -336,6 +336,9 @@ public class ExceptionConstants {
     //单据反审核-只有已审核的单据才能反审核
     public static final int DEPOT_HEAD_AUDIT_TO_UN_AUDIT_FAILED_CODE = 8500013;
     public static final String DEPOT_HEAD_AUDIT_TO_UN_AUDIT_FAILED_MSG = "抱歉，只有已审核的单据才能反审核";
+    //单据录入-商品条码XXX的数量需要修改下
+    public static final int DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_CODE = 85000014;
+    public static final String DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_MSG = "商品条码%s的数量需要修改下";
     /**
      *  单据明细信息
      * type = 90

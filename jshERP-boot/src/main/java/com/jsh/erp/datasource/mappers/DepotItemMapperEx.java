@@ -123,4 +123,9 @@ public interface DepotItemMapperEx {
     int findStockWarningCountTotal(
             @Param("materialParam") String materialParam,
             @Param("depotId") Long depotId);
+
+    BigDecimal getFinishNumber(
+            @Param("mId") Long mId,
+            @Param("linkNumber") String linkNumber,
+            @Param("goToType") String goToType);
 }
