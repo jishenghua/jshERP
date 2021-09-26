@@ -47,7 +47,6 @@
           :rowSelection="true"
           :actionButton="true"
           @valueChange="onValueChange"
-          @added="onAdded"
           @deleted="onDeleted" />
         <a-row class="form-row" :gutter="24">
           <a-col :lg="24" :md="24" :sm="24">
