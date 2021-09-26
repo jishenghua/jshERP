@@ -1,4 +1,4 @@
-import { VALIDATE_NO_PASSED, validateFormAndTables } from '@/utils/JEditableTableUtil'
+import { FormTypes } from '@/utils/JEditableTableUtil'
 import {findBySelectSup,findBySelectCus,findBySelectRetail,getMaterialByBarCode,findStockByDepotAndBarCode,getAccount,getPersonByNumType} from '@/api/api'
 import { getAction,putAction } from '@/api/manage'
 import { getMpListShort, getNowFormatDateTime } from "@/utils/util"
@@ -68,6 +68,7 @@ export const BillModalMixin = {
       this.accountIdList = []
       this.accountMoneyList = []
       this.manyAccountBtnStatus = false
+      this.changeFormTypes(this.materialTable.columns, 'sku', 0)
     },
     copyAddInit(amountNum) {
       getAction('/sequence/buildNumber').then((res) => {
@@ -78,6 +79,36 @@ export const BillModalMixin = {
       this.$nextTick(() => {
         this.form.setFieldsValue({'operTime':getNowFormatDateTime()})
       })
+    },
+    /** 查询某个tab的数据 */
+    requestSubTableData(url, params, tab, success) {
+      tab.loading = true
+      getAction(url, params).then(res => {
+        if(res && res.code === 200){
+          tab.dataSource = res.data.rows
+          this.changeFormTypes(this.materialTable.columns, 'sku', 0)
+          for(let i=0; i<tab.dataSource.length; i++){
+            if(tab.dataSource[i].sku) {
+              this.changeFormTypes(this.materialTable.columns, 'sku', 1)
+            }
+          }
+          typeof success === 'function' ? success(res) : ''
+        }
+      }).finally(() => {
+        tab.loading = false
+      })
+    },
+    //改变字段的状态，1-显示 0-隐藏
+    changeFormTypes(columns, key, type) {
+      for(let i=0; i<columns.length; i++){
+        if(columns[i].key === key) {
+          if(type){
+            columns[i].type = FormTypes.input //显示
+          } else {
+            columns[i].type = FormTypes.hidden //隐藏
+          }
+        }
+      }
     },
     initSupplier() {
       let that = this;
@@ -205,6 +236,9 @@ export const BillModalMixin = {
                   let mArr = values
                   for (let i = 0; i < mList.length; i++) {
                     let mInfo = mList[i]
+                    if(mInfo.sku) {
+                      this.changeFormTypes(this.materialTable.columns, 'sku', 1)
+                    }
                     let mObj = this.parseInfoToObj(mInfo)
                     mObj.depotId = mInfo.depotId
                     mObj.stock = mInfo.stock
@@ -223,6 +257,9 @@ export const BillModalMixin = {
                 let mArr = []
                 for (let i = 0; i < mList.length; i++) {
                   let mInfo = mList[i]
+                  if(mInfo.sku) {
+                    this.changeFormTypes(this.materialTable.columns, 'sku', 1)
+                  }
                   let mObj = {
                     rowKey: row.id,
                     values: this.parseInfoToObj(mInfo)

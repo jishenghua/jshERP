@@ -115,6 +115,7 @@
           loading: false,
           dataSource: [],
           columns: [
+            { title: '仓库名称', key: 'depotId', width: '7%', type: FormTypes.hidden },
             { title: '条码', key: 'barCode', width: '8%', type: FormTypes.popupJsh, multi: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
@@ -186,7 +187,6 @@
         }
         this.initCustomer()
         this.initSalesman()
-        this.initDepot()
       },
       //提交单据时整理成formData
       classifyIntoFormData(allValues) {
@@ -197,6 +197,7 @@
         billMain.subType = '销售订单'
         billMain.defaultNumber = billMain.number
         for(let item of detailArr){
+          item.depotId = '' //订单不需要仓库
           totalPrice += item.allPrice-0
         }
         billMain.totalPrice = totalPrice

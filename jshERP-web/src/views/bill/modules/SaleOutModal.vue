@@ -231,6 +231,8 @@
     methods: {
       //调用完edit()方法之后会自动调用此方法
       editAfter() {
+        this.changeFormTypes(this.materialTable.columns, 'preNumber', 0)
+        this.changeFormTypes(this.materialTable.columns, 'finishNumber', 0)
         if (this.action === 'add') {
           this.addInit(this.prefixNo)
           this.personList.value = ''
@@ -305,6 +307,8 @@
         this.$refs.linkBillList.title = "选择销售订单"
       },
       linkBillListOk(selectBillRows) {
+        this.changeFormTypes(this.materialTable.columns, 'preNumber', 1)
+        this.changeFormTypes(this.materialTable.columns, 'finishNumber', 1)
         if(selectBillRows && selectBillRows.length>0) {
           let record = selectBillRows[0]
           this.$nextTick(() => {
