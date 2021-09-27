@@ -106,6 +106,10 @@
               <a-tag v-if="enableSerialNumber==1" color="green">有</a-tag>
               <a-tag v-if="enableSerialNumber==0" color="orange">无</a-tag>
             </template>
+            <template slot="customRenderEnableBatchNumber" slot-scope="enableBatchNumber">
+              <a-tag v-if="enableBatchNumber==1" color="green">有</a-tag>
+              <a-tag v-if="enableBatchNumber==0" color="orange">无</a-tag>
+            </template>
           </a-table>
         </div>
         <!-- table区域-end -->
@@ -175,11 +179,14 @@
           {title: '序列号', dataIndex: 'enableSerialNumber', width: '4%', align: "center",
             scopedSlots: { customRender: 'customRenderEnableSerialNumber' }
           },
+          {title: '批号', dataIndex: 'enableBatchNumber', width: '3%', align: "center",
+            scopedSlots: { customRender: 'customRenderEnableBatchNumber' }
+          },
           {
             title: '操作',
             dataIndex: 'action',
             align:"center",
-            width: '8%',
+            width: '6%',
             scopedSlots: { customRender: 'action' },
           }
         ],
