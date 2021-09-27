@@ -1,6 +1,7 @@
 package com.jsh.erp.datasource.entities;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class DepotItem {
     private Long id;
@@ -38,6 +39,12 @@ public class DepotItem {
     private BigDecimal taxLastMoney;
 
     private String materialType;
+
+    private String snList;
+
+    private String batchNumber;
+
+    private Date expirationDate;
 
     private Long tenantId;
 
@@ -185,6 +192,30 @@ public class DepotItem {
 
     public void setMaterialType(String materialType) {
         this.materialType = materialType == null ? null : materialType.trim();
+    }
+
+    public String getSnList() {
+        return snList;
+    }
+
+    public void setSnList(String snList) {
+        this.snList = snList == null ? null : snList.trim();
+    }
+
+    public String getBatchNumber() {
+        return batchNumber;
+    }
+
+    public void setBatchNumber(String batchNumber) {
+        this.batchNumber = batchNumber == null ? null : batchNumber.trim();
+    }
+
+    public Date getExpirationDate() {
+        return expirationDate;
+    }
+
+    public void setExpirationDate(Date expirationDate) {
+        this.expirationDate = expirationDate;
     }
 
     public Long getTenantId() {

@@ -27,6 +27,8 @@ public class Material {
 
     private Long unitId;
 
+    private Integer expiryNum;
+
     private Boolean enabled;
 
     private String otherField1;
@@ -36,6 +38,8 @@ public class Material {
     private String otherField3;
 
     private String enableSerialNumber;
+
+    private String enableBatchNumber;
 
     private Long tenantId;
 
@@ -137,6 +141,14 @@ public class Material {
         this.unitId = unitId;
     }
 
+    public Integer getExpiryNum() {
+        return expiryNum;
+    }
+
+    public void setExpiryNum(Integer expiryNum) {
+        this.expiryNum = expiryNum;
+    }
+
     public Boolean getEnabled() {
         return enabled;
     }
@@ -175,6 +187,14 @@ public class Material {
 
     public void setEnableSerialNumber(String enableSerialNumber) {
         this.enableSerialNumber = enableSerialNumber == null ? null : enableSerialNumber.trim();
+    }
+
+    public String getEnableBatchNumber() {
+        return enableBatchNumber;
+    }
+
+    public void setEnableBatchNumber(String enableBatchNumber) {
+        this.enableBatchNumber = enableBatchNumber == null ? null : enableBatchNumber.trim();
     }
 
     public Long getTenantId() {

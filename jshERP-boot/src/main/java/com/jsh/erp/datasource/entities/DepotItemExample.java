@@ -2,6 +2,7 @@ package com.jsh.erp.datasource.entities;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class DepotItemExample {
@@ -1222,6 +1223,206 @@ public class DepotItemExample {
 
         public Criteria andMaterialTypeNotBetween(String value1, String value2) {
             addCriterion("material_type not between", value1, value2, "materialType");
+            return (Criteria) this;
+        }
+
+        public Criteria andSnListIsNull() {
+            addCriterion("sn_list is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSnListIsNotNull() {
+            addCriterion("sn_list is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSnListEqualTo(String value) {
+            addCriterion("sn_list =", value, "snList");
+            return (Criteria) this;
+        }
+
+        public Criteria andSnListNotEqualTo(String value) {
+            addCriterion("sn_list <>", value, "snList");
+            return (Criteria) this;
+        }
+
+        public Criteria andSnListGreaterThan(String value) {
+            addCriterion("sn_list >", value, "snList");
+            return (Criteria) this;
+        }
+
+        public Criteria andSnListGreaterThanOrEqualTo(String value) {
+            addCriterion("sn_list >=", value, "snList");
+            return (Criteria) this;
+        }
+
+        public Criteria andSnListLessThan(String value) {
+            addCriterion("sn_list <", value, "snList");
+            return (Criteria) this;
+        }
+
+        public Criteria andSnListLessThanOrEqualTo(String value) {
+            addCriterion("sn_list <=", value, "snList");
+            return (Criteria) this;
+        }
+
+        public Criteria andSnListLike(String value) {
+            addCriterion("sn_list like", value, "snList");
+            return (Criteria) this;
+        }
+
+        public Criteria andSnListNotLike(String value) {
+            addCriterion("sn_list not like", value, "snList");
+            return (Criteria) this;
+        }
+
+        public Criteria andSnListIn(List<String> values) {
+            addCriterion("sn_list in", values, "snList");
+            return (Criteria) this;
+        }
+
+        public Criteria andSnListNotIn(List<String> values) {
+            addCriterion("sn_list not in", values, "snList");
+            return (Criteria) this;
+        }
+
+        public Criteria andSnListBetween(String value1, String value2) {
+            addCriterion("sn_list between", value1, value2, "snList");
+            return (Criteria) this;
+        }
+
+        public Criteria andSnListNotBetween(String value1, String value2) {
+            addCriterion("sn_list not between", value1, value2, "snList");
+            return (Criteria) this;
+        }
+
+        public Criteria andBatchNumberIsNull() {
+            addCriterion("batch_number is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBatchNumberIsNotNull() {
+            addCriterion("batch_number is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBatchNumberEqualTo(String value) {
+            addCriterion("batch_number =", value, "batchNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andBatchNumberNotEqualTo(String value) {
+            addCriterion("batch_number <>", value, "batchNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andBatchNumberGreaterThan(String value) {
+            addCriterion("batch_number >", value, "batchNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andBatchNumberGreaterThanOrEqualTo(String value) {
+            addCriterion("batch_number >=", value, "batchNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andBatchNumberLessThan(String value) {
+            addCriterion("batch_number <", value, "batchNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andBatchNumberLessThanOrEqualTo(String value) {
+            addCriterion("batch_number <=", value, "batchNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andBatchNumberLike(String value) {
+            addCriterion("batch_number like", value, "batchNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andBatchNumberNotLike(String value) {
+            addCriterion("batch_number not like", value, "batchNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andBatchNumberIn(List<String> values) {
+            addCriterion("batch_number in", values, "batchNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andBatchNumberNotIn(List<String> values) {
+            addCriterion("batch_number not in", values, "batchNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andBatchNumberBetween(String value1, String value2) {
+            addCriterion("batch_number between", value1, value2, "batchNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andBatchNumberNotBetween(String value1, String value2) {
+            addCriterion("batch_number not between", value1, value2, "batchNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpirationDateIsNull() {
+            addCriterion("expiration_date is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpirationDateIsNotNull() {
+            addCriterion("expiration_date is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpirationDateEqualTo(Date value) {
+            addCriterion("expiration_date =", value, "expirationDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpirationDateNotEqualTo(Date value) {
+            addCriterion("expiration_date <>", value, "expirationDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpirationDateGreaterThan(Date value) {
+            addCriterion("expiration_date >", value, "expirationDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpirationDateGreaterThanOrEqualTo(Date value) {
+            addCriterion("expiration_date >=", value, "expirationDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpirationDateLessThan(Date value) {
+            addCriterion("expiration_date <", value, "expirationDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpirationDateLessThanOrEqualTo(Date value) {
+            addCriterion("expiration_date <=", value, "expirationDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpirationDateIn(List<Date> values) {
+            addCriterion("expiration_date in", values, "expirationDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpirationDateNotIn(List<Date> values) {
+            addCriterion("expiration_date not in", values, "expirationDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpirationDateBetween(Date value1, Date value2) {
+            addCriterion("expiration_date between", value1, value2, "expirationDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpirationDateNotBetween(Date value1, Date value2) {
+            addCriterion("expiration_date not between", value1, value2, "expirationDate");
             return (Criteria) this;
         }
 

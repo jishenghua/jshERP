@@ -20,6 +20,9 @@
     <result column="tax_money" jdbcType="DECIMAL" property="taxMoney" />
     <result column="tax_last_money" jdbcType="DECIMAL" property="taxLastMoney" />
     <result column="material_type" jdbcType="VARCHAR" property="materialType" />
+    <result column="sn_list" jdbcType="VARCHAR" property="snList" />
+    <result column="batch_number" jdbcType="VARCHAR" property="batchNumber" />
+    <result column="expiration_date" jdbcType="TIMESTAMP" property="expirationDate" />
     <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
     <result column="delete_flag" jdbcType="VARCHAR" property="deleteFlag" />
   </resultMap>
@@ -84,7 +87,8 @@
   <sql id="Base_Column_List">
     id, header_id, material_id, material_extend_id, material_unit, sku, oper_number, 
     basic_number, unit_price, tax_unit_price, all_price, remark, depot_id, another_depot_id, 
-    tax_rate, tax_money, tax_last_money, material_type, tenant_id, delete_flag
+    tax_rate, tax_money, tax_last_money, material_type, sn_list, batch_number, expiration_date, 
+    tenant_id, delete_flag
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="BaseResultMap">
     select
@@ -123,6 +127,7 @@
       tax_unit_price, all_price, remark, 
       depot_id, another_depot_id, tax_rate, 
       tax_money, tax_last_money, material_type, 
+      sn_list, batch_number, expiration_date, 
       tenant_id, delete_flag)
     values (#{id,jdbcType=BIGINT}, #{headerId,jdbcType=BIGINT}, #{materialId,jdbcType=BIGINT}, 
       #{materialExtendId,jdbcType=BIGINT}, #{materialUnit,jdbcType=VARCHAR}, #{sku,jdbcType=VARCHAR}, 
@@ -130,6 +135,7 @@
       #{taxUnitPrice,jdbcType=DECIMAL}, #{allPrice,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, 
       #{depotId,jdbcType=BIGINT}, #{anotherDepotId,jdbcType=BIGINT}, #{taxRate,jdbcType=DECIMAL}, 
       #{taxMoney,jdbcType=DECIMAL}, #{taxLastMoney,jdbcType=DECIMAL}, #{materialType,jdbcType=VARCHAR}, 
+      #{snList,jdbcType=VARCHAR}, #{batchNumber,jdbcType=VARCHAR}, #{expirationDate,jdbcType=TIMESTAMP}, 
       #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.DepotItem">
@@ -188,6 +194,15 @@
       </if>
       <if test="materialType != null">
         material_type,
+      </if>
+      <if test="snList != null">
+        sn_list,
+      </if>
+      <if test="batchNumber != null">
+        batch_number,
+      </if>
+      <if test="expirationDate != null">
+        expiration_date,
       </if>
       <if test="tenantId != null">
         tenant_id,
@@ -250,6 +265,15 @@
       </if>
       <if test="materialType != null">
         #{materialType,jdbcType=VARCHAR},
+      </if>
+      <if test="snList != null">
+        #{snList,jdbcType=VARCHAR},
+      </if>
+      <if test="batchNumber != null">
+        #{batchNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="expirationDate != null">
+        #{expirationDate,jdbcType=TIMESTAMP},
       </if>
       <if test="tenantId != null">
         #{tenantId,jdbcType=BIGINT},
@@ -322,6 +346,15 @@
       <if test="record.materialType != null">
         material_type = #{record.materialType,jdbcType=VARCHAR},
       </if>
+      <if test="record.snList != null">
+        sn_list = #{record.snList,jdbcType=VARCHAR},
+      </if>
+      <if test="record.batchNumber != null">
+        batch_number = #{record.batchNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="record.expirationDate != null">
+        expiration_date = #{record.expirationDate,jdbcType=TIMESTAMP},
+      </if>
       <if test="record.tenantId != null">
         tenant_id = #{record.tenantId,jdbcType=BIGINT},
       </if>
@@ -353,6 +386,9 @@
       tax_money = #{record.taxMoney,jdbcType=DECIMAL},
       tax_last_money = #{record.taxLastMoney,jdbcType=DECIMAL},
       material_type = #{record.materialType,jdbcType=VARCHAR},
+      sn_list = #{record.snList,jdbcType=VARCHAR},
+      batch_number = #{record.batchNumber,jdbcType=VARCHAR},
+      expiration_date = #{record.expirationDate,jdbcType=TIMESTAMP},
       tenant_id = #{record.tenantId,jdbcType=BIGINT},
       delete_flag = #{record.deleteFlag,jdbcType=VARCHAR}
     <if test="_parameter != null">
@@ -413,6 +449,15 @@
       <if test="materialType != null">
         material_type = #{materialType,jdbcType=VARCHAR},
       </if>
+      <if test="snList != null">
+        sn_list = #{snList,jdbcType=VARCHAR},
+      </if>
+      <if test="batchNumber != null">
+        batch_number = #{batchNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="expirationDate != null">
+        expiration_date = #{expirationDate,jdbcType=TIMESTAMP},
+      </if>
       <if test="tenantId != null">
         tenant_id = #{tenantId,jdbcType=BIGINT},
       </if>
@@ -441,6 +486,9 @@
       tax_money = #{taxMoney,jdbcType=DECIMAL},
       tax_last_money = #{taxLastMoney,jdbcType=DECIMAL},
       material_type = #{materialType,jdbcType=VARCHAR},
+      sn_list = #{snList,jdbcType=VARCHAR},
+      batch_number = #{batchNumber,jdbcType=VARCHAR},
+      expiration_date = #{expirationDate,jdbcType=TIMESTAMP},
       tenant_id = #{tenantId,jdbcType=BIGINT},
       delete_flag = #{deleteFlag,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}

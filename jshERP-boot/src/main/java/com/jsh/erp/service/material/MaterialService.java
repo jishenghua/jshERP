@@ -211,6 +211,9 @@ public class MaterialService {
             if(material.getUnitId() == null) {
                 materialMapperEx.setUnitIdToNull(material.getId());
             }
+            if(material.getExpiryNum() == null) {
+                materialMapperEx.setExpiryNumToNull(material.getId());
+            }
             materialExtendService.saveDetials(obj, obj.getString("sortList"),material.getId(), "update");
             if(obj.get("stock")!=null) {
                 JSONArray stockArr = obj.getJSONArray("stock");

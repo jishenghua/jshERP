@@ -27,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
+import static com.jsh.erp.utils.Tools.getCenternTime;
 
 /**
  * @author ji-sheng-hua 华夏erp
@@ -194,6 +195,9 @@ public class DepotItemController {
                     }
                     item.put("stock", stock);
                     item.put("unit", diEx.getMaterialUnit());
+                    item.put("snList", diEx.getSnList());
+                    item.put("batchNumber", diEx.getBatchNumber());
+                    item.put("expirationDate", Tools.parseDateToStr(diEx.getExpirationDate()));
                     item.put("sku", diEx.getSku());
                     item.put("operNumber", diEx.getOperNumber());
                     item.put("basicNumber", diEx.getBasicNumber());

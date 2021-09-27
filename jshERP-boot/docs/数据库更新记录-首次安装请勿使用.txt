@@ -1231,3 +1231,21 @@ INSERT INTO `jsh_platform_config` (`id`, `platform_key`, `platform_key_info`, `p
 -- 修改单据主表的状态字段描述
 -- --------------------------------------------------------
 alter table jsh_depot_head change status status varchar(1) DEFAULT NULL COMMENT '状态，0未审核、1已审核、2完成采购|销售、3部分采购|销售';
+
+-- --------------------------------------------------------
+-- 时间 2021年9月27日
+-- by jishenghua
+-- 给商品表和单据字表增加字段
+-- --------------------------------------------------------
+alter table jsh_material add enable_batch_number varchar(1) DEFAULT 0 COMMENT '是否开启批号，0否，1是' after enable_serial_number;
+alter table jsh_material add expiry_num int(10) DEFAULT NULL COMMENT '保质期天数' after unit_id;
+alter table jsh_depot_item add sn_list varchar(2000) DEFAULT NULL COMMENT '序列号列表' after material_type;
+alter table jsh_depot_item add batch_number varchar(100) DEFAULT NULL COMMENT '批号' after sn_list;
+alter table jsh_depot_item add expiration_date datetime DEFAULT NULL COMMENT '有效日期' after batch_number;
+
+-- --------------------------------------------------------
+-- 时间 2021年9月27日
+-- by jishenghua
+-- 插入jsh_platform_config数据，配置租户续费地址
+-- --------------------------------------------------------
+INSERT INTO `jsh_platform_config` (`platform_key`, `platform_key_info`, `platform_value`) VALUES ('pay_fee_url', '租户续费地址', '');

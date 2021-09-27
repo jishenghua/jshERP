@@ -333,7 +333,18 @@ public class DepotItemService {
                 depotItem.setMaterialId(materialExtend.getMaterialId());
                 depotItem.setMaterialExtendId(materialExtend.getId());
                 depotItem.setMaterialUnit(rowObj.getString("unit"));
-                depotItem.setSku(rowObj.getString("sku"));
+                if (StringUtil.isExist(rowObj.get("snList"))) {
+                    depotItem.setSnList(rowObj.getString("snList"));
+                }
+                if (StringUtil.isExist(rowObj.get("batchNumber"))) {
+                    depotItem.setBatchNumber(rowObj.getString("batchNumber"));
+                }
+                if (StringUtil.isExist(rowObj.get("expirationDate"))) {
+                    depotItem.setExpirationDate(rowObj.getDate("expirationDate"));
+                }
+                if (StringUtil.isExist(rowObj.get("sku"))) {
+                    depotItem.setSku(rowObj.getString("sku"));
+                }
                 if (StringUtil.isExist(rowObj.get("operNumber"))) {
                     depotItem.setOperNumber(rowObj.getBigDecimal("operNumber"));
                     String unit = rowObj.get("unit").toString();
