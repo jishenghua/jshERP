@@ -54,6 +54,7 @@
           <a-tag v-if="tenant.type==0" color="blue">试用用户：{{tenant.userCurrentNum}}/{{tenant.userNumLimit}}</a-tag>
           <a-tag v-if="tenant.type==1" color="blue">服务到期：{{tenant.expireTime}}</a-tag>
           <a-tag v-if="tenant.type==1" color="blue">授权用户：{{tenant.userCurrentNum}}/{{tenant.userNumLimit}}</a-tag>
+          <a v-if="hasExpire" style="color: red;" :href="payFeeUrl" target="_blank">立即续费</a>
         </a-card>
       </a-col>
     </a-row>
@@ -70,7 +71,7 @@
   import LineChartMultid from '@/components/chart/LineChartMultid'
   import HeadInfo from '@/components/tools/HeadInfo.vue'
   import Trend from '@/components/Trend'
-  import { getBuyAndSaleStatistics, buyOrSalePrice } from '@/api/api'
+  import { getBuyAndSaleStatistics, buyOrSalePrice, getPlatformConfigByKey } from '@/api/api'
   import { getAction } from '../../api/manage'
 
   export default {
@@ -99,6 +100,8 @@
         salePriceData: [],
         visitFields:['ip','visit'],
         visitInfo:[],
+        hasExpire: false,
+        payFeeUrl: '',
         tenant: {
           type: '',
           expireTime: '',
@@ -127,11 +130,24 @@
             this.salePriceData = res.data.salePriceList;
           }
         })
+        getPlatformConfigByKey({"platformKey": "pay_fee_url"}).then((res)=> {
+          if (res && res.code === 200) {
+            this.payFeeUrl = res.data.platformValue
+          }
+        })
       },
       initWithTenant() {
         getAction("/user/infoWithTenant",{}).then(res=>{
           if(res && res.code === 200) {
             this.tenant = res.data
+            let currentTime = new Date(); //新建一个日期对象，默认现在的时间
+            let expireTime = new Date(res.data.expireTime); //设置过去的一个时间点，"yyyy-MM-dd HH:mm:ss"格式化日期
+            let difftime = expireTime - currentTime; //计算时间差
+            //如果距离到期还剩5天就进行提示续费
+            if(difftime<86400000*5) {
+              this.hasExpire = true
+              this.$message.warning('您好，服务即将到期，请及时续费！',5)
+            }
           }
         })
       }
