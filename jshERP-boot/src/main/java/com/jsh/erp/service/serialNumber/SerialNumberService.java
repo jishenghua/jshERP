@@ -458,4 +458,24 @@ public class SerialNumberService {
         }
         return result;
     }
+
+    public List<SerialNumber> getEnableSerialNumberList(String name, Long depotId, Long materialId, Integer offset, Integer rows)throws Exception {
+        List<SerialNumber> list =null;
+        try{
+            list = serialNumberMapperEx.getEnableSerialNumberList(StringUtil.toNull(name), depotId, materialId, offset, rows);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list;
+    }
+
+    public Long getEnableSerialNumberCount(String name, Long depotId, Long materialId)throws Exception {
+        Long count = 0L;
+        try{
+            count = serialNumberMapperEx.getEnableSerialNumberCount(StringUtil.toNull(name), depotId, materialId);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return count;
+    }
 }

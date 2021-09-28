@@ -1249,3 +1249,10 @@ alter table jsh_depot_item add expiration_date datetime DEFAULT NULL COMMENT '�
 -- 插入jsh_platform_config数据，配置租户续费地址
 -- --------------------------------------------------------
 INSERT INTO `jsh_platform_config` (`platform_key`, `platform_key_info`, `platform_value`) VALUES ('pay_fee_url', '租户续费地址', '');
+
+-- --------------------------------------------------------
+-- 时间 2021年9月28日
+-- by jishenghua
+-- 给序列号表增加仓库id
+-- --------------------------------------------------------
+alter table jsh_serial_number add depot_id bigint(20) DEFAULT NULL COMMENT '仓库id' after material_Id;

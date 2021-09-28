@@ -3,10 +3,13 @@ package com.jsh.erp.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.ExceptionConstants;
+import com.jsh.erp.datasource.entities.SerialNumber;
 import com.jsh.erp.datasource.entities.SerialNumberEx;
 import com.jsh.erp.exception.BusinessParamCheckingException;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.serialNumber.SerialNumberService;
+import com.jsh.erp.utils.BaseResponseInfo;
+import com.jsh.erp.utils.Constants;
 import com.jsh.erp.utils.ErpInfo;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
@@ -83,5 +87,40 @@ public class SerialNumberController {
         } else {
             return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
         }
+    }
+
+    /**
+     * 获取序列号商品
+     * @param name
+     * @param depotId
+     * @param materialId
+     * @param currentPage
+     * @param pageSize
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @GetMapping(value = "/getEnableSerialNumberList")
+    public BaseResponseInfo getEnableSerialNumberList(@RequestParam("name") String name,
+                                                      @RequestParam("depotId") Long depotId,
+                                                      @RequestParam("materialId") Long materialId,
+                                                      @RequestParam(value = Constants.CURRENT_PAGE, required = false) Integer currentPage,
+                                                      @RequestParam(value = Constants.PAGE_SIZE, required = false) Integer pageSize,
+                                                      HttpServletRequest request)throws Exception {
+        BaseResponseInfo res = new BaseResponseInfo();
+        Map<String, Object> map = new HashMap<>();
+        try {
+            List<SerialNumber> list = serialNumberService.getEnableSerialNumberList(name, depotId, materialId, (currentPage-1)*pageSize, pageSize);
+            Long total = serialNumberService.getEnableSerialNumberCount(name, depotId, materialId);
+            map.put("rows", list);
+            map.put("total", total);
+            res.code = 200;
+            res.data = map;
+        } catch(Exception e){
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
     }
 }

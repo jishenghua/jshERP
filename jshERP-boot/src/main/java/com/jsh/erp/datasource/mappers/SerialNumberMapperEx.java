@@ -1,5 +1,6 @@
 package com.jsh.erp.datasource.mappers;
 
+import com.jsh.erp.datasource.entities.SerialNumber;
 import com.jsh.erp.datasource.entities.SerialNumberEx;
 import org.apache.ibatis.annotations.Param;
 
@@ -62,4 +63,13 @@ public interface SerialNumberMapperEx {
     int batAddSerialNumber(@Param("list") List<SerialNumberEx> list);
 
     int batchDeleteSerialNumberByIds(@Param("updateTime") Date updateTime, @Param("updater") Long updater, @Param("ids") String ids[]);
+
+    List<SerialNumber> getEnableSerialNumberList(@Param("name") String name,
+                                                 @Param("depotId") Long depotId,
+                                                 @Param("materialId") Long materialId,
+                                                 @Param("offset") Integer offset, @Param("rows") Integer rows);
+
+    Long getEnableSerialNumberCount(@Param("name") String name,
+                                    @Param("depotId") Long depotId,
+                                    @Param("materialId") Long materialId);
 }

@@ -81,6 +81,17 @@
         <result column="disAssemOutTotal" jdbcType="DECIMAL" property="disAssemOutTotal" />
     </resultMap>
 
+    <resultMap id="batchNumberListMap" type="com.jsh.erp.datasource.vo.DepotItemVoBatchNumberList">
+        <result column="id" jdbcType="VARCHAR" property="id" />
+        <result column="bar_code" jdbcType="VARCHAR" property="barCode" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="standard" jdbcType="VARCHAR" property="standard" />
+        <result column="model" jdbcType="VARCHAR" property="model" />
+        <result column="batch_number" jdbcType="VARCHAR" property="batchNumber" />
+        <result column="expiration_date" jdbcType="TIMESTAMP" property="expirationDate" />
+        <result column="total_num" jdbcType="VARCHAR" property="totalNum" />
+    </resultMap>
+
     <select id="selectByConditionDepotItem" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="com.jsh.erp.datasource.mappers.DepotItemMapper.BaseResultMap">
         select *
         FROM jsh_depot_item
@@ -472,5 +483,31 @@
             and dh.sub_type=#{goToType}
         </if>
         )
+    </select>
+
+    <select id="getBatchNumberList" resultMap="batchNumberListMap">
+        select id, bar_code, name, standard, model, batch_number, expiration_date, sum(oper_number) total_num  from
+        (select di.batch_number id, me.bar_code, m.name, m.standard, m.model,di.batch_number,di.expiration_date,
+        di.oper_number*(case dh.type when '入库' then 1 when '出库' then -1 end) as oper_number
+        from
+        jsh_depot_head dh
+        left join jsh_depot_item di on dh.id=di.header_id
+        left join jsh_material m on m.id=di.material_id and ifnull(m.delete_flag, '0') != '1'
+        left join jsh_material_extend me on me.material_id=m.id and ifnull(me.delete_flag,'0') !='1'
+        where me.bar_code= #{barCode} and me.default_flag=1
+        <if test="name != null">
+            <bind name="bindName" value="'%'+name+'%'"/>
+            and di.batch_number like #{bindName}
+        </if>
+        <if test="depotId != null">
+            and di.depot_id= #{depotId}
+        </if>
+        <if test="batchNumber != null">
+            and di.batch_number= #{batchNumber}
+        </if>
+        and m.enable_batch_number =1
+        and di.delete_flag!=1) tb
+        group by batch_number
+        order by expiration_date asc
     </select>
 </mapper>

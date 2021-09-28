@@ -7,6 +7,8 @@ public class SerialNumber {
 
     private Long materialId;
 
+    private Long depotId;
+
     private String serialNumber;
 
     private String isSell;
@@ -41,6 +43,14 @@ public class SerialNumber {
 
     public void setMaterialId(Long materialId) {
         this.materialId = materialId;
+    }
+
+    public Long getDepotId() {
+        return depotId;
+    }
+
+    public void setDepotId(Long depotId) {
+        this.depotId = depotId;
     }
 
     public String getSerialNumber() {

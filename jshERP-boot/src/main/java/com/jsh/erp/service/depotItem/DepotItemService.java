@@ -8,6 +8,7 @@ import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.mappers.*;
 import com.jsh.erp.datasource.vo.DepotItemStockWarningCount;
 import com.jsh.erp.datasource.vo.DepotItemVo4Stock;
+import com.jsh.erp.datasource.vo.DepotItemVoBatchNumberList;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.materialExtend.MaterialExtendService;
@@ -660,5 +661,9 @@ public class DepotItemService {
         }
         BigDecimal count = depotItemMapperEx.getFinishNumber(mId, linkNumber, goToType);
         return count;
+    }
+
+    public List<DepotItemVoBatchNumberList> getBatchNumberList(String name, Long depotId, String barCode, String batchNumber){
+        return depotItemMapperEx.getBatchNumberList(name, depotId, barCode, batchNumber);
     }
 }

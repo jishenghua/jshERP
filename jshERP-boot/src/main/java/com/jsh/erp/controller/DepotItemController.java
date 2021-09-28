@@ -6,6 +6,7 @@ import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.vo.DepotItemStockWarningCount;
+import com.jsh.erp.datasource.vo.DepotItemVoBatchNumberList;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.materialExtend.MaterialExtendService;
 import com.jsh.erp.service.depotItem.DepotItemService;
@@ -605,6 +606,40 @@ public class DepotItemController {
             e.printStackTrace();
             message = "统计失败";
             res.code = 500;
+        }
+        return res;
+    }
+
+    /**
+     * 获取批次商品列表信息
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/getBatchNumberList")
+    public BaseResponseInfo getBatchNumberList(@RequestParam("name") String name,
+                                               @RequestParam("depotId") Long depotId,
+                                               @RequestParam("barCode") String barCode,
+                                               @RequestParam(value = "batchNumber", required = false) String batchNumber,
+                                               HttpServletRequest request) throws Exception{
+        BaseResponseInfo res = new BaseResponseInfo();
+        Map<String, Object> map = new HashMap<>();
+        try {
+            List<DepotItemVoBatchNumberList> reslist = new ArrayList<>();
+            List<DepotItemVoBatchNumberList> list = depotItemService.getBatchNumberList(name, depotId, barCode, batchNumber);
+            for(DepotItemVoBatchNumberList bn: list) {
+                if(bn.getTotalNum()!=null && bn.getTotalNum().compareTo(BigDecimal.ZERO)>0) {
+                    reslist.add(bn);
+                }
+                bn.setExpirationDateStr(Tools.parseDateToStr(bn.getExpirationDate()));
+            }
+            map.put("rows", reslist);
+            map.put("total", reslist.size());
+            res.code = 200;
+            res.data = map;
+        } catch (Exception e) {
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
         }
         return res;
     }

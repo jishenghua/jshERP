@@ -743,27 +743,28 @@ INSERT INTO `jsh_sequence` VALUES ('depot_number_seq', '1', '999999999999999999'
 -- ----------------------------
 DROP TABLE IF EXISTS `jsh_serial_number`;
 CREATE TABLE `jsh_serial_number` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `material_id` bigint(20) DEFAULT NULL COMMENT '产品表id',
-  `serial_number` varchar(64) DEFAULT NULL COMMENT '序列号',
-  `is_sell` varchar(1) DEFAULT '0' COMMENT '是否卖出，0未卖出，1卖出',
-  `remark` varchar(1024) DEFAULT NULL COMMENT '备注',
-  `delete_flag` varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除',
-  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
-  `creator` bigint(20) DEFAULT NULL COMMENT '创建人',
-  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
-  `updater` bigint(20) DEFAULT NULL COMMENT '更新人',
-  `depot_head_id` bigint(20) DEFAULT NULL COMMENT '单据主表id，用于跟踪序列号流向',
-  `tenant_id` bigint(20) DEFAULT NULL COMMENT '租户id',
-  PRIMARY KEY (`id`)
+ `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+ `material_id` bigint(20) DEFAULT NULL COMMENT '产品表id',
+ `depot_id` bigint(20) DEFAULT NULL COMMENT '仓库id',
+ `serial_number` varchar(64) DEFAULT NULL COMMENT '序列号',
+ `is_sell` varchar(1) DEFAULT '0' COMMENT '是否卖出，0未卖出，1卖出',
+ `remark` varchar(1024) DEFAULT NULL COMMENT '备注',
+ `delete_flag` varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除',
+ `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+ `creator` bigint(20) DEFAULT NULL COMMENT '创建人',
+ `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+ `updater` bigint(20) DEFAULT NULL COMMENT '更新人',
+ `depot_head_id` bigint(20) DEFAULT NULL COMMENT '单据主表id，用于跟踪序列号流向',
+ `tenant_id` bigint(20) DEFAULT NULL COMMENT '租户id',
+ PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=110 DEFAULT CHARSET=utf8 COMMENT='序列号表';
 
 -- ----------------------------
 -- Records of jsh_serial_number
 -- ----------------------------
-INSERT INTO `jsh_serial_number` VALUES ('105', '586', '12312323423223', '0', 'abab', '0', '2019-12-28 12:14:39', '63', '2020-07-21 00:30:32', '63', null, '63');
-INSERT INTO `jsh_serial_number` VALUES ('108', '586', '3215952626621201', '0', '', '0', '2020-07-21 00:31:02', '63', '2020-07-21 00:31:02', '63', null, '63');
-INSERT INTO `jsh_serial_number` VALUES ('109', '586', '3215952626621202', '0', '', '0', '2020-07-21 00:31:02', '63', '2020-07-21 00:31:02', '63', null, '63');
+INSERT INTO `jsh_serial_number` VALUES ('105', '586', '14', '12312323423223', '0', 'abab', '0', '2019-12-28 12:14:39', '63', '2020-07-21 00:30:32', '63', null, '63');
+INSERT INTO `jsh_serial_number` VALUES ('108', '586', '14', '3215952626621201', '0', '', '0', '2020-07-21 00:31:02', '63', '2020-07-21 00:31:02', '63', null, '63');
+INSERT INTO `jsh_serial_number` VALUES ('109', '586', '14', '3215952626621202', '0', '', '0', '2020-07-21 00:31:02', '63', '2020-07-21 00:31:02', '63', null, '63');
 
 -- ----------------------------
 -- Table structure for jsh_supplier
