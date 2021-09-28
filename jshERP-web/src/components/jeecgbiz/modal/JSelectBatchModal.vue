@@ -17,25 +17,8 @@
           <a-form layout="inline" @keyup.enter.native="onSearch">
             <a-row :gutter="24">
               <a-col :md="6" :sm="8">
-                <a-form-item label="商品" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
-                  <a-input placeholder="条码、名称、规格、型号" v-model="queryParam.q"></a-input>
-                </a-form-item>
-              </a-col>
-              <a-col :md="6" :sm="8">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="类别">
-                  <a-tree-select style="width:100%" :dropdownStyle="{maxHeight:'200px',overflow:'auto'}" allow-clear
-                                 :treeData="categoryTree" v-model="queryParam.categoryId" placeholder="请选择类别">
-                  </a-tree-select>
-                </a-form-item>
-              </a-col>
-              <a-col :md="6" :sm="8">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="仓库">
-                  <a-select placeholder="选择仓库" v-model="queryParam.depotId"
-                    :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children" allow-clear>
-                    <a-select-option v-for="(item,index) in depotList" :key="index" :value="item.id">
-                      {{ item.depotName }}
-                    </a-select-option>
-                  </a-select>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="批号">
+                  <a-input placeholder="请输入批号" v-model="queryParam.name"></a-input>
                 </a-form-item>
               </a-col>
               <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
@@ -53,11 +36,9 @@
             rowKey="id"
             :columns="columns"
             :dataSource="dataSource"
-            :pagination="ipagination"
             :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange,type: getType}"
             :loading="loading"
-            :customRow="rowAction"
-            @change="handleTableChange">
+            :customRow="rowAction">
           </a-table>
         </div>
       </a-col>
@@ -66,22 +47,21 @@
 </template>
 
 <script>
-  import { httpAction, getAction } from '@/api/manage'
-  import {filterObj, getMpListShort} from '@/utils/util'
-  import {getMaterialBySelect, queryMaterialCategoryTreeList} from '@/api/api'
+  import { getAction } from '@/api/manage'
+  import {getBatchNumberList} from '@/api/api'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import Vue from 'vue'
 
   export default {
-    name: 'JSelectMaterialModal',
+    name: 'JSelectBatchModal',
     mixins:[JeecgListMixin],
     components: {},
     props: ['modalWidth', 'rows', 'multi', 'barCode'],
     data() {
       return {
         queryParam: {
-          q: '',
-          depotId: ''
+          name: "",
+          depotId: '',
+          barCode: ''
         },
         labelCol: {
           xs: { span: 24 },
@@ -93,33 +73,20 @@
         },
         categoryTree:[],
         columns: [
-          {dataIndex: 'mBarCode', title: '条码', width: 100, align: 'left'},
+          {dataIndex: 'batchNumber', title: '批号', width: 100, align: 'left'},
+          {dataIndex: 'barCode', title: '条码', width: 100},
           {dataIndex: 'name', title: '名称', width: 100},
-          {dataIndex: 'categoryName', title: '类别', width: 80},
           {dataIndex: 'standard', title: '规格', width: 80},
           {dataIndex: 'model', title: '型号', width: 80},
-          {dataIndex: 'unit', title: '单位', width: 60},
-          {dataIndex: 'sku', title: '多属性', width: 100},
-          {dataIndex: 'stock', title: '库存', width: 100},
-          {dataIndex: 'expand', title: '扩展信息', width: 80}
+          {dataIndex: 'expirationDateStr', title: '有效期至', width: 80},
+          {dataIndex: 'totalNum', title: '库存', width: 80}
         ],
         scrollTrigger: {},
         dataSource: [],
         selectedRowKeys: [],
-        selectMaterialRows: [],
-        selectMaterialIds: [],
-        title: '选择商品',
-        ipagination: {
-          current: 1,
-          pageSize: 10,
-          pageSizeOptions: ['10', '20', '30'],
-          showTotal: (total, range) => {
-            return range[0] + '-' + range[1] + ' 共' + total + '条'
-          },
-          showQuickJumper: true,
-          showSizeChanger: true,
-          total: 0
-        },
+        selectRows: [],
+        selectIds: [],
+        title: '选择批号',
         isorter: {
           column: 'createTime',
           order: 'desc'
@@ -147,10 +114,6 @@
       },
     },
     created() {
-      // 该方法触发屏幕自适应
-      this.resetScreenSize()
-      this.loadTreeData()
-      this.getDepotList()
       this.loadData()
     },
     methods: {
@@ -164,8 +127,9 @@
       },
       async loadData(arg) {
         if(this.rows) {
-          if(JSON.parse(this.rows).depotId){
+          if(JSON.parse(this.rows).depotId && JSON.parse(this.rows).barCode ){
             this.queryParam.depotId = JSON.parse(this.rows).depotId-0
+            this.queryParam.barCode = JSON.parse(this.rows).barCode
           }
         }
         if (arg === 1) {
@@ -173,37 +137,14 @@
         }
         this.loading = true
         let params = this.getQueryParams()//查询条件
-        await getMaterialBySelect(params).then((res) => {
-          if (res) {
-            this.dataSource = res.rows
-            this.ipagination.total = res.total
+        await getBatchNumberList(params).then((res) => {
+          if (res && res.code === 200) {
+            this.dataSource = res.data.rows
+            this.ipagination.total = res.data.total
           }
         }).finally(() => {
           this.loading = false
         })
-      },
-      loadTreeData(){
-        let that = this;
-        let params = {};
-        params.id='';
-        queryMaterialCategoryTreeList(params).then((res)=>{
-          if(res){
-            that.categoryTree = [];
-            for (let i = 0; i < res.length; i++) {
-              let temp = res[i];
-              that.categoryTree.push(temp);
-            }
-          }
-        })
-      },
-      // 触发屏幕自适应
-      resetScreenSize() {
-        let screenWidth = document.body.clientWidth;
-        if (screenWidth < 500) {
-          this.scrollTrigger = {x: 800};
-        } else {
-          this.scrollTrigger = {};
-        }
       },
       showModal() {
         this.visible = true;
@@ -212,10 +153,7 @@
       },
       getQueryParams() {
         let param = Object.assign({}, this.queryParam, this.isorter);
-        param.mpList = getMpListShort(Vue.ls.get('materialPropertyList'))  //扩展属性
-        param.page = this.ipagination.current;
-        param.rows = this.ipagination.pageSize;
-        return filterObj(param);
+        return param;
       },
       getQueryField() {
         let str = 'id,';
@@ -227,51 +165,41 @@
       searchReset(num) {
         let that = this;
         if (num !== 0) {
-          that.queryParam = {};
+          if(this.rows) {
+            this.queryParam.name=''
+            if(JSON.parse(this.rows).depotId && JSON.parse(this.rows).barCode ){
+              this.queryParam.depotId = JSON.parse(this.rows).depotId-0
+              this.queryParam.barCode = JSON.parse(this.rows).barCode
+            }
+          }
           that.loadData(1);
         }
         that.selectedRowKeys = [];
-        that.selectMaterialIds = [];
+        that.selectIds = [];
       },
       close() {
         this.searchReset(0);
         this.visible = false;
       },
-      handleTableChange(pagination, filters, sorter) {
-        if (Object.keys(sorter).length > 0) {
-          this.isorter.column = sorter.field;
-          this.isorter.order = 'ascend' === sorter.order ? 'asc' : 'desc';
-        }
-        this.ipagination = pagination;
-        this.loadData();
-      },
       handleSubmit() {
         let that = this;
-        this.getSelectMaterialRows();
-        that.$emit('ok', that.selectMaterialRows, that.selectMaterialIds);
+        this.getSelectRows();
+        that.$emit('ok', that.selectRows, that.selectIds);
         that.searchReset(0)
         that.close();
       },
       //获取选择信息
-      getSelectMaterialRows(rowId) {
+      getSelectRows(rowId) {
         let dataSource = this.dataSource;
-        let materialIds = "";
-        this.selectMaterialRows = [];
+        let ids = "";
+        this.selectRows = [];
         for (let i = 0, len = dataSource.length; i < len; i++) {
           if (this.selectedRowKeys.includes(dataSource[i].id)) {
-            this.selectMaterialRows.push(dataSource[i]);
-            materialIds = materialIds + "," + dataSource[i].mBarCode
+            this.selectRows.push(dataSource[i]);
+            ids = ids + "," + dataSource[i].batchNumber
           }
         }
-        this.selectMaterialIds = materialIds.substring(1);
-      },
-      getDepotList() {
-        let that = this;
-        getAction('/depot/findDepotByCurrentUser').then((res) => {
-          if(res.code === 200){
-            that.depotList = res.data
-          }
-        })
+        this.selectIds = ids.substring(1);
       },
       onSelectChange(selectedRowKeys, selectionRows) {
         this.selectedRowKeys = selectedRowKeys;

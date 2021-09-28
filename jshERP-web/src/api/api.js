@@ -97,6 +97,7 @@ const findBySelectRetail = (params)=>postAction("/supplier/findBySelect_retail",
 //单据相关
 const findBillDetailByNumber = (params)=>getAction("/depotHead/getDetailByNumber",params);
 const findStockByDepotAndBarCode = (params)=>getAction("/depotItem/findStockByDepotAndBarCode",params);
+const getBatchNumberList = (params)=>getAction("/depotItem/getBatchNumberList",params);
 const findFinancialDetailByNumber = (params)=>getAction("/accountHead/getDetailByNumber",params);
 
 export {
@@ -176,6 +177,7 @@ export {
   findBySelectRetail,
   findBillDetailByNumber,
   findStockByDepotAndBarCode,
+  getBatchNumberList,
   findFinancialDetailByNumber
 }
 

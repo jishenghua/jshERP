@@ -125,6 +125,7 @@
           {title: '序列号',align: "left", dataIndex: 'serialNumber', width: 180},
           {title: '商品条码', align: "center",dataIndex: 'materialCode', width: 120},
           {title: '商品名称', align: "center",dataIndex: 'materialName', width: 120},
+          {title: '仓库', align: "center", dataIndex: 'depotName', width: 150},
           {
             title: '单据编号', align: "center", dataIndex: 'depotHeadNumber', width: 150,
             scopedSlots: { customRender: 'numberCustomRender' },

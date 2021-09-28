@@ -1,5 +1,6 @@
 import { FormTypes } from '@/utils/JEditableTableUtil'
-import {findBySelectSup,findBySelectCus,findBySelectRetail,getMaterialByBarCode,findStockByDepotAndBarCode,getAccount,getPersonByNumType} from '@/api/api'
+import {findBySelectSup,findBySelectCus,findBySelectRetail,getMaterialByBarCode,findStockByDepotAndBarCode,getAccount,
+  getPersonByNumType, getBatchNumberList} from '@/api/api'
 import { getAction,putAction } from '@/api/manage'
 import { getMpListShort, getNowFormatDateTime } from "@/utils/util"
 import Vue from 'vue'
@@ -213,7 +214,7 @@ export const BillModalMixin = {
     onValueChange(event) {
       let that = this
       const { type, row, column, value, target } = event
-      let param,operNumber,unitPrice,taxUnitPrice,allPrice,taxRate,taxMoney,taxLastMoney
+      let param,batchNumber,operNumber,unitPrice,taxUnitPrice,allPrice,taxRate,taxMoney,taxLastMoney
       switch(column.key) {
         case "depotId":
           if(row.barCode){
@@ -273,6 +274,27 @@ export const BillModalMixin = {
               }
             }
           });
+          break;
+        case "batchNumber":
+          batchNumber = value-0
+          getBatchNumberList({name:'', depotId: row.depotId, barCode: row.barCode, batchNumber: batchNumber}).then((res) => {
+            if (res && res.code === 200) {
+              if(res.data && res.data.rows) {
+                let info = res.data.rows[0]
+                operNumber = info.totalNum
+                taxRate = row.taxRate-0 //税率
+                unitPrice = row.unitPrice-0 //单价
+                taxUnitPrice = row.taxUnitPrice-0
+                allPrice = (unitPrice*operNumber).toFixed(2)-0
+                taxMoney =((taxRate*0.01)*allPrice).toFixed(2)-0
+                taxLastMoney = (allPrice + taxMoney).toFixed(2)-0
+                target.setValues([{rowKey: row.id, values: {expirationDate: info.expirationDateStr, operNumber: operNumber,
+                    allPrice: allPrice, taxMoney: taxMoney, taxLastMoney: taxLastMoney}}])
+                target.recalcAllStatisticsColumns()
+                that.autoChangePrice(target)
+              }
+            }
+          })
           break;
         case "operNumber":
           operNumber = value-0
