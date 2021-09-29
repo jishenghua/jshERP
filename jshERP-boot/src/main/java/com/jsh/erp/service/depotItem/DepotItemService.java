@@ -336,6 +336,13 @@ public class DepotItemService {
                 depotItem.setMaterialUnit(rowObj.getString("unit"));
                 if (StringUtil.isExist(rowObj.get("snList"))) {
                     depotItem.setSnList(rowObj.getString("snList"));
+                    if(StringUtil.isExist(rowObj.get("depotId"))) {
+                        Long depotId = rowObj.getLong("depotId");
+                        if(BusinessConstants.SUB_TYPE_PURCHASE.equals(depotHead.getSubType())||
+                                BusinessConstants.SUB_TYPE_SALES_RETURN.equals(depotHead.getSubType())) {
+                            serialNumberService.addSerialNumberByBill(materialExtend.getMaterialId(), depotId, depotItem.getSnList());
+                        }
+                    }
                 }
                 if (StringUtil.isExist(rowObj.get("batchNumber"))) {
                     depotItem.setBatchNumber(rowObj.getString("batchNumber"));
@@ -442,7 +449,7 @@ public class DepotItemService {
                         //判断商品是否开启序列号，开启的收回序列号，未开启的跳过
                         if(BusinessConstants.ENABLE_SERIAL_NUMBER_ENABLED.equals(material.getEnableSerialNumber())) {
                             //查询单据子表中开启序列号的数据列表
-                            serialNumberService.checkAndUpdateSerialNumber(depotItem, userInfo);
+                            serialNumberService.checkAndUpdateSerialNumber(depotItem, userInfo, StringUtil.toNull(depotItem.getSnList()));
                         }
                     }
                 }

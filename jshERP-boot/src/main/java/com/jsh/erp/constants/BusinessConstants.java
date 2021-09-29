@@ -72,11 +72,12 @@ public class BusinessConstants {
      * */
     public static final String SUB_TYPE_PURCHASE_ORDER = "采购订单";
     public static final String SUB_TYPE_PURCHASE = "采购";
-    public static final String SUB_TYPE_PURCHASE_TETURNS = "采购退货";
+    public static final String SUB_TYPE_PURCHASE_RETURN = "采购退货";
     public static final String SUB_TYPE_OTHER = "其它";
     public static final String SUB_TYPE_RETAIL = "零售";
     public static final String SUB_TYPE_SALES_ORDER = "销售订单";
     public static final String SUB_TYPE_SALES = "销售";
+    public static final String SUB_TYPE_SALES_RETURN = "销售退货";
     public static final String SUB_TYPE_TRANSFER = "调拨";
     /**
      * 批量插入sql时最大的数据条数

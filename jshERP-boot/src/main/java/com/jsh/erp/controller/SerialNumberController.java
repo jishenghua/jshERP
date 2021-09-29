@@ -93,25 +93,25 @@ public class SerialNumberController {
      * 获取序列号商品
      * @param name
      * @param depotId
-     * @param materialId
+     * @param barCode
      * @param currentPage
      * @param pageSize
      * @param request
      * @return
      * @throws Exception
      */
-    @GetMapping(value = "/getEnableSerialNumberList")
+    @GetMapping(value = "/serialNumber/getEnableSerialNumberList")
     public BaseResponseInfo getEnableSerialNumberList(@RequestParam("name") String name,
                                                       @RequestParam("depotId") Long depotId,
-                                                      @RequestParam("materialId") Long materialId,
-                                                      @RequestParam(value = Constants.CURRENT_PAGE, required = false) Integer currentPage,
-                                                      @RequestParam(value = Constants.PAGE_SIZE, required = false) Integer pageSize,
+                                                      @RequestParam("barCode") String barCode,
+                                                      @RequestParam("page") Integer currentPage,
+                                                      @RequestParam("rows") Integer pageSize,
                                                       HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<>();
         try {
-            List<SerialNumber> list = serialNumberService.getEnableSerialNumberList(name, depotId, materialId, (currentPage-1)*pageSize, pageSize);
-            Long total = serialNumberService.getEnableSerialNumberCount(name, depotId, materialId);
+            List<SerialNumber> list = serialNumberService.getEnableSerialNumberList(name, depotId, barCode, (currentPage-1)*pageSize, pageSize);
+            Long total = serialNumberService.getEnableSerialNumberCount(name, depotId, barCode);
             map.put("rows", list);
             map.put("total", total);
             res.code = 200;

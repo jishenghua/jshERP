@@ -165,20 +165,15 @@
         </if>
             and is_sell != '1'
             and ifnull(delete_flag,'0') !='1'
-        <if test="count != null">
-        and id in
-            ( select batchSN.id from
-                ( select selFrom.id from jsh_serial_number selFrom
-                    where 1=1
-                    <if test="materialId != null">
-                        and selFrom.material_Id = #{materialId}
-                    </if>
-                        and selFrom.is_sell != '1'
-                        and ifnull(selFrom.delete_flag,'0') !='1'
-                    limit 0,#{count}
-                ) batchSN
+        <if test="snArray != null">
+            and serial_number
+            in (
+            <foreach collection="snArray" item="sn" separator=",">
+                #{sn}
+            </foreach>
             )
         </if>
+
     </update>
 
     <update id="cancelSerialNumber">
@@ -246,16 +241,18 @@
         select
         ser.id, ser.serial_number
         FROM jsh_serial_number ser
-        where 1=1
+        left join jsh_material m on m.id=ser.material_id and ifnull(m.delete_flag, '0') != '1'
+        left join jsh_material_extend me on me.material_id=m.id and ifnull(me.delete_flag,'0') !='1'
+        where 1=1 and me.default_flag=1
         <if test="name != null">
             <bind name="bindName" value="'%'+name+'%'"/>
             and ser.serial_number like #{bindName}
         </if>
         <if test="depotId != null">
-            and ser.depot_id =#{depotId}
+            and ser.depot_id = #{depotId}
         </if>
-        <if test="materialId != null">
-            and ser.material_id =#{materialId}
+        <if test="barCode != null">
+            and me.bar_code= #{barCode}
         </if>
         and ser.is_sell = '0'
         and ifnull(ser.delete_flag,'0') !='1'
@@ -268,16 +265,18 @@
         select
         count(1)
         FROM jsh_serial_number ser
-        where 1=1
+        left join jsh_material m on m.id=ser.material_id and ifnull(m.delete_flag, '0') != '1'
+        left join jsh_material_extend me on me.material_id=m.id and ifnull(me.delete_flag,'0') !='1'
+        where 1=1 and me.default_flag=1
         <if test="name != null">
             <bind name="bindName" value="'%'+name+'%'"/>
             and ser.serial_number like #{bindName}
         </if>
         <if test="depotId != null">
-            and ser.depot_id =#{depotId}
+            and ser.depot_id = #{depotId}
         </if>
-        <if test="materialId != null">
-            and ser.material_id =#{materialId}
+        <if test="barCode != null">
+            and me.bar_code= #{barCode}
         </if>
         and ser.is_sell = '0'
         and ifnull(ser.delete_flag,'0') !='1'

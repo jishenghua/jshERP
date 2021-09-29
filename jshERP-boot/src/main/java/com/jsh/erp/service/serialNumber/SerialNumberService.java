@@ -341,19 +341,9 @@ public class SerialNumberService {
      * @Param: List<DepotItem>
      * @return void
      */
-    public void checkAndUpdateSerialNumber(DepotItem depotItem,User userInfo) throws Exception{
+    public void checkAndUpdateSerialNumber(DepotItem depotItem,User userInfo, String snList) throws Exception{
         if(depotItem!=null){
-            //查询商品下已分配的可用序列号数量
-            int SerialNumberSum= serialNumberMapperEx.countSerialNumberByMaterialIdAndDepotheadId(depotItem.getMaterialId(),null,BusinessConstants.IS_SELL_HOLD);
-            //BasicNumber=OperNumber*ratio
-            if((depotItem.getBasicNumber()==null?0:depotItem.getBasicNumber()).intValue()>SerialNumberSum){
-                //获取商品名称
-                Material material= materialMapper.selectByPrimaryKey(depotItem.getMaterialId());
-                throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_SERIAL_NUMBERE_NOT_ENOUGH_CODE,
-                        String.format(ExceptionConstants.MATERIAL_SERIAL_NUMBERE_NOT_ENOUGH_MSG,material==null?"":material.getName()));
-            }
-            //商品下序列号充足，分配序列号
-            sellSerialNumber(depotItem.getMaterialId(),depotItem.getHeaderId(),(depotItem.getBasicNumber()==null?0:depotItem.getBasicNumber()).intValue(),userInfo);
+            sellSerialNumber(depotItem.getMaterialId(),depotItem.getHeaderId(), snList,userInfo);
         }
     }
     /**
@@ -372,10 +362,11 @@ public class SerialNumberService {
      * @return com.jsh.erp.datasource.entities.SerialNumberEx
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int sellSerialNumber(Long materialId, Long depotHeadId,int count,User user) throws Exception{
+    public int sellSerialNumber(Long materialId, Long depotHeadId, String snList, User user) throws Exception{
         int result=0;
         try{
-            result = serialNumberMapperEx.sellSerialNumber(materialId,depotHeadId,count,new Date(),user==null?null:user.getId());
+            String [] snArray=snList.split(",");
+            result = serialNumberMapperEx.sellSerialNumber(materialId, depotHeadId, snArray, new Date(),user==null?null:user.getId());
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -459,23 +450,40 @@ public class SerialNumberService {
         return result;
     }
 
-    public List<SerialNumber> getEnableSerialNumberList(String name, Long depotId, Long materialId, Integer offset, Integer rows)throws Exception {
+    public List<SerialNumber> getEnableSerialNumberList(String name, Long depotId, String barCode, Integer offset, Integer rows)throws Exception {
         List<SerialNumber> list =null;
         try{
-            list = serialNumberMapperEx.getEnableSerialNumberList(StringUtil.toNull(name), depotId, materialId, offset, rows);
+            list = serialNumberMapperEx.getEnableSerialNumberList(StringUtil.toNull(name), depotId, barCode, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
     }
 
-    public Long getEnableSerialNumberCount(String name, Long depotId, Long materialId)throws Exception {
+    public Long getEnableSerialNumberCount(String name, Long depotId, String barCode)throws Exception {
         Long count = 0L;
         try{
-            count = serialNumberMapperEx.getEnableSerialNumberCount(StringUtil.toNull(name), depotId, materialId);
+            count = serialNumberMapperEx.getEnableSerialNumberCount(StringUtil.toNull(name), depotId, barCode);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return count;
+    }
+
+    public void addSerialNumberByBill(Long materialId, Long depotId, String snList) throws Exception {
+        List<String> snArr = StringUtil.strToStringList(snList);
+        for(String sn: snArr) {
+            SerialNumber serialNumber = new SerialNumber();
+            serialNumber.setMaterialId(materialId);
+            serialNumber.setDepotId(depotId);
+            serialNumber.setSerialNumber(sn);
+            Date date=new Date();
+            serialNumber.setCreateTime(date);
+            serialNumber.setUpdateTime(date);
+            User userInfo=userService.getCurrentUser();
+            serialNumber.setCreator(userInfo==null?null:userInfo.getId());
+            serialNumber.setUpdater(userInfo==null?null:userInfo.getId());
+            serialNumberMapper.insertSelective(serialNumber);
+        }
     }
 }

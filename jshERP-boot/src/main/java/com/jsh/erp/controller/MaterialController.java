@@ -199,6 +199,8 @@ public class MaterialController {
                     item.put("model", material.getModel());
                     item.put("unit", material.getCommodityUnit() + ratio);
                     item.put("sku", material.getSku());
+                    item.put("enableSerialNumber", material.getEnableSerialNumber());
+                    item.put("enableBatchNumber", material.getEnableBatchNumber());
                     BigDecimal stock;
                     if(StringUtil.isNotEmpty(material.getSku())){
                         stock = depotItemService.getSkuStockByParam(depotId,material.getMeId(),null,null);
