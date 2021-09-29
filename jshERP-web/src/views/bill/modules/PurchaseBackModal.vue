@@ -172,7 +172,7 @@
             { title: '仓库名称', key: 'depotId', width: '7%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
               allowSearch:true, validateRules: [{ required: true, message: '${title}不能为空' }]
             },
-            { title: '条码', key: 'barCode', width: '8%', type: FormTypes.popupJsh, multi: true,
+            { title: '条码', key: 'barCode', width: '8%', type: FormTypes.popupJsh, kind: 'material', multi: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             { title: '名称', key: 'name', width: '6%', type: FormTypes.input, readonly: true },
@@ -181,9 +181,9 @@
             { title: '扩展信息', key: 'materialOther', width: '5%', type: FormTypes.input, readonly: true },
             { title: '库存', key: 'stock', width: '5%', type: FormTypes.input, readonly: true },
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.input, readonly: true },
-            { title: '序列号', key: 'snList', width: '5%', type: FormTypes.input },
-            { title: '批号', key: 'batchNumber', width: '5%', type: FormTypes.input },
-            { title: '有效期', key: 'expirationDate',width: '7%', type: FormTypes.input },
+            { title: '序列号', key: 'snList', width: '7%', type: FormTypes.popupJsh, kind: 'sn', multi: true },
+            { title: '批号', key: 'batchNumber', width: '7%', type: FormTypes.popupJsh, kind: 'batch', multi: false },
+            { title: '有效期', key: 'expirationDate',width: '5%', type: FormTypes.input, readonly: true },
             { title: '多属性', key: 'sku', width: '4%', type: FormTypes.input, readonly: true },
             { title: '数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
@@ -227,6 +227,9 @@
     methods: {
       //调用完edit()方法之后会自动调用此方法
       editAfter() {
+        this.changeFormTypes(this.materialTable.columns, 'snList', 0)
+        this.changeFormTypes(this.materialTable.columns, 'batchNumber', 0)
+        this.changeFormTypes(this.materialTable.columns, 'expirationDate', 0)
         if (this.action === 'add') {
           this.addInit(this.prefixNo)
           this.fileList = []

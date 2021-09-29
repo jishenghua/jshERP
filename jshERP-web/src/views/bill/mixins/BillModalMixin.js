@@ -104,7 +104,21 @@ export const BillModalMixin = {
       for(let i=0; i<columns.length; i++){
         if(columns[i].key === key) {
           if(type){
-            columns[i].type = FormTypes.input //显示
+            if(key === 'snList' || key === 'batchNumber') {
+              if(this.prefixNo === 'XSCK' || this.prefixNo === 'CGTH') {
+                columns[i].type = FormTypes.popupJsh //显示
+              } else {
+                columns[i].type = FormTypes.input //显示
+              }
+            } else if(key === 'expirationDate') {
+              if(this.prefixNo === 'CGRK' || this.prefixNo === 'XSTH') {
+                columns[i].type = FormTypes.date //显示
+              } else {
+                columns[i].type = FormTypes.input //显示
+              }
+            } else {
+              columns[i].type = FormTypes.input //显示
+            }
           } else {
             columns[i].type = FormTypes.hidden //隐藏
           }
@@ -240,6 +254,13 @@ export const BillModalMixin = {
                     if(mInfo.sku) {
                       this.changeFormTypes(this.materialTable.columns, 'sku', 1)
                     }
+                    if(mInfo.enableSerialNumber === "1") {
+                      this.changeFormTypes(this.materialTable.columns, 'snList', 1)
+                    }
+                    if(mInfo.enableBatchNumber === "1") {
+                      this.changeFormTypes(this.materialTable.columns, 'batchNumber', 1)
+                      this.changeFormTypes(this.materialTable.columns, 'expirationDate', 1)
+                    }
                     let mObj = this.parseInfoToObj(mInfo)
                     mObj.depotId = mInfo.depotId
                     mObj.stock = mInfo.stock
@@ -260,6 +281,13 @@ export const BillModalMixin = {
                   let mInfo = mList[i]
                   if(mInfo.sku) {
                     this.changeFormTypes(this.materialTable.columns, 'sku', 1)
+                  }
+                  if(mInfo.enableSerialNumber === "1") {
+                    this.changeFormTypes(this.materialTable.columns, 'snList', 1)
+                  }
+                  if(mInfo.enableBatchNumber === "1") {
+                    this.changeFormTypes(this.materialTable.columns, 'batchNumber', 1)
+                    this.changeFormTypes(this.materialTable.columns, 'expirationDate', 1)
                   }
                   let mObj = {
                     rowKey: row.id,

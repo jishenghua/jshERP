@@ -8,16 +8,18 @@
     </a-input-search>
     <j-select-material-modal v-if="kind === 'material'" ref="selectModal" :modal-width="modalWidth" :rows="rows" :multi="multi" :bar-code="value" @ok="selectOK" @initComp="initComp"/>
     <j-select-batch-modal v-if="kind === 'batch'" ref="selectModal" :modal-width="modalWidth" :rows="rows" :multi="multi" :bar-code="value" @ok="selectOK" @initComp="initComp"/>
+    <j-select-sn-modal v-if="kind === 'sn'" ref="selectModal" :modal-width="modalWidth" :rows="rows" :multi="multi" :bar-code="value" @ok="selectOK" @initComp="initComp"/>
   </div>
 </template>
 
 <script>
   import JSelectMaterialModal from './modal/JSelectMaterialModal'
   import JSelectBatchModal from './modal/JSelectBatchModal'
+  import JSelectSnModal from './modal/JSelectSnModal'
 
   export default {
     name: 'JSelectList',
-    components: {JSelectMaterialModal, JSelectBatchModal},
+    components: {JSelectMaterialModal, JSelectBatchModal, JSelectSnModal},
     props: {
       modalWidth: {
         type: Number,
