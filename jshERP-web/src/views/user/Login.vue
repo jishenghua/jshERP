@@ -157,6 +157,18 @@
           if(res.data.user.loginName === 'admin'){
             let desc = 'admin只是平台运维用户，真正的管理员是租户(测试账号为jsh），admin不能编辑任何业务数据，只能配置平台菜单和创建租户'
             this.$message.info(desc,30)
+          } else {
+            getAction("/user/infoWithTenant",{}).then(res=>{
+              if(res && res.code === 200) {
+                let currentTime = new Date(); //新建一个日期对象，默认现在的时间
+                let expireTime = new Date(res.data.expireTime); //设置过去的一个时间点，"yyyy-MM-dd HH:mm:ss"格式化日期
+                let difftime = expireTime - currentTime; //计算时间差
+                //如果距离到期还剩5天就进行提示续费
+                if(difftime<86400000*5) {
+                  this.$message.warning('您好，服务即将到期，请及时续费！',5)
+                }
+              }
+            })
           }
         }
         this.initMPropertyShort();

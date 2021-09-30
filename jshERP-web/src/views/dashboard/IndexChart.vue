@@ -146,7 +146,6 @@
             //如果距离到期还剩5天就进行提示续费
             if(difftime<86400000*5) {
               this.hasExpire = true
-              this.$message.warning('您好，服务即将到期，请及时续费！',5)
             }
           }
         })
