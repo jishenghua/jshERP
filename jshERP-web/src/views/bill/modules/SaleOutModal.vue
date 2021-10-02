@@ -186,7 +186,7 @@
             { title: '扩展信息', key: 'materialOther', width: '5%', type: FormTypes.input, readonly: true },
             { title: '库存', key: 'stock', width: '5%', type: FormTypes.input, readonly: true },
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.input, readonly: true },
-            { title: '序列号', key: 'snList', width: '7%', type: FormTypes.popupJsh, kind: 'sn', multi: true },
+            { title: '序列号', key: 'snList', width: '12%', type: FormTypes.popupJsh, kind: 'sn', multi: true },
             { title: '批号', key: 'batchNumber', width: '7%', type: FormTypes.popupJsh, kind: 'batch', multi: false },
             { title: '有效期', key: 'expirationDate',width: '5%', type: FormTypes.input, readonly: true },
             { title: '多属性', key: 'sku', width: '4%', type: FormTypes.input, readonly: true },

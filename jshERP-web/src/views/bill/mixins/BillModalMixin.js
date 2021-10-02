@@ -112,13 +112,13 @@ export const BillModalMixin = {
         if(columns[i].key === key) {
           if(type){
             if(key === 'snList' || key === 'batchNumber') {
-              if(this.prefixNo === 'XSCK' || this.prefixNo === 'CGTH') {
+              if(this.prefixNo === 'XSCK') {
                 columns[i].type = FormTypes.popupJsh //显示
               } else {
                 columns[i].type = FormTypes.input //显示
               }
             } else if(key === 'expirationDate') {
-              if(this.prefixNo === 'CGRK' || this.prefixNo === 'XSTH') {
+              if(this.prefixNo === 'CGRK' || this.prefixNo === 'XSTH' || this.prefixNo === 'CGTH') {
                 columns[i].type = FormTypes.date //显示
               } else {
                 columns[i].type = FormTypes.input //显示
@@ -235,7 +235,7 @@ export const BillModalMixin = {
     onValueChange(event) {
       let that = this
       const { type, row, column, value, target } = event
-      let param,batchNumber,operNumber,unitPrice,taxUnitPrice,allPrice,taxRate,taxMoney,taxLastMoney
+      let param,snList,batchNumber,operNumber,unitPrice,taxUnitPrice,allPrice,taxRate,taxMoney,taxLastMoney
       switch(column.key) {
         case "depotId":
           if(row.barCode){
@@ -309,6 +309,22 @@ export const BillModalMixin = {
               }
             }
           });
+          break;
+        case "snList":
+          snList = value
+          if(snList) {
+            let snArr = snList.split(',')
+            operNumber = snArr.length
+            taxRate = row.taxRate-0 //税率
+            unitPrice = row.unitPrice-0 //单价
+            taxUnitPrice = row.taxUnitPrice-0
+            allPrice = (unitPrice*operNumber).toFixed(2)-0
+            taxMoney =((taxRate*0.01)*allPrice).toFixed(2)-0
+            taxLastMoney = (allPrice + taxMoney).toFixed(2)-0
+            target.setValues([{rowKey: row.id, values: {operNumber: operNumber, allPrice: allPrice, taxMoney: taxMoney, taxLastMoney: taxLastMoney}}])
+            target.recalcAllStatisticsColumns()
+            that.autoChangePrice(target)
+          }
           break;
         case "batchNumber":
           batchNumber = value-0

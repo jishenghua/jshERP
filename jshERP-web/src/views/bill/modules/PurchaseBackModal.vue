@@ -181,9 +181,11 @@
             { title: '扩展信息', key: 'materialOther', width: '5%', type: FormTypes.input, readonly: true },
             { title: '库存', key: 'stock', width: '5%', type: FormTypes.input, readonly: true },
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.input, readonly: true },
-            { title: '序列号', key: 'snList', width: '7%', type: FormTypes.popupJsh, kind: 'sn', multi: true },
-            { title: '批号', key: 'batchNumber', width: '7%', type: FormTypes.popupJsh, kind: 'batch', multi: false },
-            { title: '有效期', key: 'expirationDate',width: '5%', type: FormTypes.input, readonly: true },
+            { title: '序列号', key: 'snList', width: '12%', type: FormTypes.input, placeholder: '多个序列号请用逗号隔开',
+              validateRules: [{ pattern: /^\S{1,100}$/, message: '请小于100位字符' }]
+            },
+            { title: '批号', key: 'batchNumber', width: '5%', type: FormTypes.input },
+            { title: '有效期', key: 'expirationDate',width: '7%', type: FormTypes.date },
             { title: '多属性', key: 'sku', width: '4%', type: FormTypes.input, readonly: true },
             { title: '数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
