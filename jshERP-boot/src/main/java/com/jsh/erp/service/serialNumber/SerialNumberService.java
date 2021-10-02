@@ -473,17 +473,25 @@ public class SerialNumberService {
     public void addSerialNumberByBill(Long materialId, Long depotId, String snList) throws Exception {
         List<String> snArr = StringUtil.strToStringList(snList);
         for(String sn: snArr) {
-            SerialNumber serialNumber = new SerialNumber();
-            serialNumber.setMaterialId(materialId);
-            serialNumber.setDepotId(depotId);
-            serialNumber.setSerialNumber(sn);
-            Date date=new Date();
-            serialNumber.setCreateTime(date);
-            serialNumber.setUpdateTime(date);
-            User userInfo=userService.getCurrentUser();
-            serialNumber.setCreator(userInfo==null?null:userInfo.getId());
-            serialNumber.setUpdater(userInfo==null?null:userInfo.getId());
-            serialNumberMapper.insertSelective(serialNumber);
+            List<SerialNumber> list = new ArrayList<>();
+            SerialNumberExample example = new SerialNumberExample();
+            example.createCriteria().andMaterialIdEqualTo(materialId).andSerialNumberEqualTo(sn)
+                    .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+            list = serialNumberMapper.selectByExample(example);
+            //判断如果不存在重复序列号就新增
+            if(list == null || list.size() == 0) {
+                SerialNumber serialNumber = new SerialNumber();
+                serialNumber.setMaterialId(materialId);
+                serialNumber.setDepotId(depotId);
+                serialNumber.setSerialNumber(sn);
+                Date date = new Date();
+                serialNumber.setCreateTime(date);
+                serialNumber.setUpdateTime(date);
+                User userInfo = userService.getCurrentUser();
+                serialNumber.setCreator(userInfo == null ? null : userInfo.getId());
+                serialNumber.setUpdater(userInfo == null ? null : userInfo.getId());
+                serialNumberMapper.insertSelective(serialNumber);
+            }
         }
     }
 }
