@@ -471,6 +471,8 @@ public class SerialNumberService {
     }
 
     public void addSerialNumberByBill(Long materialId, Long depotId, String snList) throws Exception {
+        //将中文的逗号批量替换为英文逗号
+        snList = snList.replaceAll("，",",");
         List<String> snArr = StringUtil.strToStringList(snList);
         for(String sn: snArr) {
             List<SerialNumber> list = new ArrayList<>();

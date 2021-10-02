@@ -372,8 +372,9 @@ public class DepotItemService {
                         depotItem.setBasicNumber(oNumber); //其他情况
                     }
                 }
-                //如果数量+已完成数量<原订单数量，代表该单据状态为未全部完成出入库
-                if (StringUtil.isExist(rowObj.get("preNumber")) && StringUtil.isExist(rowObj.get("finishNumber"))) {
+                //如果数量+已完成数量<原订单数量，代表该单据状态为未全部完成出入库(判断前提是存在关联订单)
+                if (StringUtil.isNotEmpty(depotHead.getLinkNumber())
+                        && StringUtil.isExist(rowObj.get("preNumber")) && StringUtil.isExist(rowObj.get("finishNumber"))) {
                     BigDecimal preNumber = rowObj.getBigDecimal("preNumber");
                     BigDecimal finishNumber = rowObj.getBigDecimal("finishNumber");
                     if(depotItem.getOperNumber().add(finishNumber).compareTo(preNumber)<0) {
