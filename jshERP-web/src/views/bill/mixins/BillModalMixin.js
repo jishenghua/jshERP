@@ -69,7 +69,6 @@ export const BillModalMixin = {
       this.accountIdList = []
       this.accountMoneyList = []
       this.manyAccountBtnStatus = false
-      this.changeFormTypes(this.materialTable.columns, 'sku', 0)
     },
     copyAddInit(amountNum) {
       getAction('/sequence/buildNumber').then((res) => {
@@ -87,8 +86,16 @@ export const BillModalMixin = {
       getAction(url, params).then(res => {
         if(res && res.code === 200){
           tab.dataSource = res.data.rows
-          this.changeFormTypes(this.materialTable.columns, 'sku', 0)
           for(let i=0; i<tab.dataSource.length; i++){
+            if(tab.dataSource[i].snList) {
+              this.changeFormTypes(this.materialTable.columns, 'snList', 1)
+            }
+            if(tab.dataSource[i].batchNumber) {
+              this.changeFormTypes(this.materialTable.columns, 'batchNumber', 1)
+            }
+            if(tab.dataSource[i].expirationDate) {
+              this.changeFormTypes(this.materialTable.columns, 'expirationDate', 1)
+            }
             if(tab.dataSource[i].sku) {
               this.changeFormTypes(this.materialTable.columns, 'sku', 1)
             }

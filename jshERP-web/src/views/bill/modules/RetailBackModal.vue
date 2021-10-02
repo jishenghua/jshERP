@@ -198,6 +198,7 @@
     methods: {
       //调用完edit()方法之后会自动调用此方法
       editAfter() {
+        this.changeFormTypes(this.materialTable.columns, 'sku', 0)
         if (this.action === 'add') {
           this.addInit(this.prefixNo)
           this.fileList = []

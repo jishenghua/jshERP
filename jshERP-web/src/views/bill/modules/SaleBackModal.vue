@@ -235,6 +235,7 @@
         this.changeFormTypes(this.materialTable.columns, 'snList', 0)
         this.changeFormTypes(this.materialTable.columns, 'batchNumber', 0)
         this.changeFormTypes(this.materialTable.columns, 'expirationDate', 0)
+        this.changeFormTypes(this.materialTable.columns, 'sku', 0)
         if (this.action === 'add') {
           this.addInit(this.prefixNo)
           this.personList.value = ''
