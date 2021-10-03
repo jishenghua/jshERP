@@ -327,7 +327,7 @@ export const BillModalMixin = {
           }
           break;
         case "batchNumber":
-          batchNumber = value-0
+          batchNumber = value
           getBatchNumberList({name:'', depotId: row.depotId, barCode: row.barCode, batchNumber: batchNumber}).then((res) => {
             if (res && res.code === 200) {
               if(res.data && res.data.rows) {
