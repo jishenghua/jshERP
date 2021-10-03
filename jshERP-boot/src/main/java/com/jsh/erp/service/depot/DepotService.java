@@ -291,9 +291,9 @@ public class DepotService {
                         String[] depotArr = depotStr.split(",");
                         for(String depotId: depotArr) {
                             JSONObject item = new JSONObject();
-                            item.put("id", depotId);
+                            item.put("id", Long.parseLong(depotId));
                             for (Depot depot : dataList) {
-                                if(depot.getId() == Integer.parseInt(depotId)){
+                                if(depot.getId() == Long.parseLong(depotId)){
                                     item.put("depotName", depot.getName());
                                     item.put("isDefault", depot.getIsDefault());
                                 }
