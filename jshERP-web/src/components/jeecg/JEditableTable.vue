@@ -2045,15 +2045,13 @@
               let value = item[key]
               if (value && count !== '-') {
                 try {
-                  // 20200528 cfm modi
-                  // count += Number.parseInt(value)
                   count += Number.parseFloat(value)
                 } catch (e) {
                   count = '-'
                 }
               }
             })
-            this.statisticsColumns[key] = count
+            this.statisticsColumns[key] = count.toFixed(2)
           }
         }
       },
