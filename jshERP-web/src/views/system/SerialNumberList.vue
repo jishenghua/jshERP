@@ -59,8 +59,11 @@
                 <a>删除</a>
               </a-popconfirm>
             </span>
-            <span slot="numberCustomRender" slot-scope="text, record">
-              <a @click="myHandleDetail(record)">{{record.depotHeadNumber}}</a>
+            <span slot="inBillNoCustomRender" slot-scope="text, record">
+              <a @click="myHandleDetail(record.inBillNo)">{{record.inBillNo}}</a>
+            </span>
+            <span slot="outBillNoCustomRender" slot-scope="text, record">
+              <a @click="myHandleDetail(record.outBillNo)">{{record.outBillNo}}</a>
             </span>
             <!-- 状态渲染模板 -->
             <template slot="customRenderFlag" slot-scope="isSell">
@@ -127,16 +130,20 @@
           {title: '商品名称', align: "center",dataIndex: 'materialName', width: 120},
           {title: '仓库', align: "center", dataIndex: 'depotName', width: 150},
           {
-            title: '单据编号', align: "center", dataIndex: 'depotHeadNumber', width: 150,
-            scopedSlots: { customRender: 'numberCustomRender' },
+            title: '入库单号', align: "center", dataIndex: 'inBillNo', width: 150,
+            scopedSlots: { customRender: 'inBillNoCustomRender' },
+          },
+          {
+            title: '出库单号', align: "center", dataIndex: 'outBillNo', width: 150,
+            scopedSlots: { customRender: 'outBillNoCustomRender' },
           },
           {title: '已卖出', align: "center", dataIndex: 'isSell', width: 60,
             scopedSlots: { customRender: 'customRenderFlag' }
           },
-          {title: '创建时间',align: "center",  dataIndex: 'createTime', width: 180,
+          {title: '创建时间',align: "center",  dataIndex: 'createTime', width: 160,
             scopedSlots: { customRender: 'customRenderTime' }
           },
-          {title: '更新时间', align: "center", dataIndex: 'updateTime', width: 180,
+          {title: '更新时间', align: "center", dataIndex: 'updateTime', width: 160,
             scopedSlots: { customRender: 'customRenderTime' }
           },
           {
@@ -174,10 +181,10 @@
           this.$refs.modalForm.isReadOnly = true
         }
       },
-      myHandleDetail(record) {
-        findBillDetailByNumber({ number: record.depotHeadNumber }).then((res) => {
+      myHandleDetail(billNo) {
+        findBillDetailByNumber({ number: billNo }).then((res) => {
           if (res && res.code === 200) {
-            this.handleDetail(res.data, record.depotHeadType);
+            this.handleDetail(res.data, res.data.depotHeadType);
           }
         })
       }
