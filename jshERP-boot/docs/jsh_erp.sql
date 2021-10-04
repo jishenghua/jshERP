@@ -754,7 +754,8 @@ CREATE TABLE `jsh_serial_number` (
  `creator` bigint(20) DEFAULT NULL COMMENT '创建人',
  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
  `updater` bigint(20) DEFAULT NULL COMMENT '更新人',
- `depot_head_id` bigint(20) DEFAULT NULL COMMENT '单据主表id，用于跟踪序列号流向',
+ `in_bill_no` varchar(50) DEFAULT NULL COMMENT '入库单号',
+ `out_bill_no` varchar(50) DEFAULT NULL COMMENT '出库单号',
  `tenant_id` bigint(20) DEFAULT NULL COMMENT '租户id',
  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=110 DEFAULT CHARSET=utf8 COMMENT='序列号表';
@@ -762,9 +763,9 @@ CREATE TABLE `jsh_serial_number` (
 -- ----------------------------
 -- Records of jsh_serial_number
 -- ----------------------------
-INSERT INTO `jsh_serial_number` VALUES ('105', '586', '14', '12312323423223', '0', 'abab', '0', '2019-12-28 12:14:39', '63', '2020-07-21 00:30:32', '63', null, '63');
-INSERT INTO `jsh_serial_number` VALUES ('108', '586', '14', '3215952626621201', '0', '', '0', '2020-07-21 00:31:02', '63', '2020-07-21 00:31:02', '63', null, '63');
-INSERT INTO `jsh_serial_number` VALUES ('109', '586', '14', '3215952626621202', '0', '', '0', '2020-07-21 00:31:02', '63', '2020-07-21 00:31:02', '63', null, '63');
+INSERT INTO `jsh_serial_number` VALUES ('105', '586', '14', '12312323423223', '0', 'abab', '0', '2019-12-28 12:14:39', '63', '2020-07-21 00:30:32', '63', null, null, '63');
+INSERT INTO `jsh_serial_number` VALUES ('108', '586', '14', '3215952626621201', '0', '', '0', '2020-07-21 00:31:02', '63', '2020-07-21 00:31:02', '63', null, null, '63');
+INSERT INTO `jsh_serial_number` VALUES ('109', '586', '14', '3215952626621202', '0', '', '0', '2020-07-21 00:31:02', '63', '2020-07-21 00:31:02', '63', null, null, '63');
 
 -- ----------------------------
 -- Table structure for jsh_supplier
