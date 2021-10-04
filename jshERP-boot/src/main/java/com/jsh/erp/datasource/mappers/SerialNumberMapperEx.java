@@ -14,22 +14,6 @@ import java.util.List;
  * @Date: 2019/1/21 17:09
  */
 public interface SerialNumberMapperEx {
-    /**
-     * 根据条件查询序列号列表
-     * */
-     List<SerialNumberEx> selectByConditionSerialNumber(@Param("serialNumber") String serialNumber, @Param("materialName") String materialName,@Param("offset") Integer offset,@Param("rows") Integer rows);
-    /**
-     * 根据条件查询序列号数量
-     * */
-    Long countSerialNumber(@Param("serialNumber")String serialNumber,@Param("materialName")String materialName);
-     /**
-      * 通过id查询序列号复合信息
-      * */
-     List<SerialNumberEx> findById(Long id);
-     /**
-      * 通过序列号查询序列号实体信息
-      * */
-     List<SerialNumberEx> findBySerialNumber(@Param("serialNumber") String serialNumber);
      /**
       * 新增序列号信息
       * */
@@ -44,19 +28,15 @@ public interface SerialNumberMapperEx {
      * */
     int findSerialNumberByMaterialId(@Param("materialId") Long materialId);
     /**
-     * 查询符合条件的序列号数量
-     * */
-    int countSerialNumberByMaterialIdAndDepotheadId(@Param("materialId")Long materialId, @Param("depotHeadId")Long depotHeadId, @Param("isSell")String isSell);
-    /**
      * 卖出： update jsh_serial_number set is_Sell='1' ,depothead_Id='depotheadId' where 1=1 and material_Id='materialId'
      * and is_Sell !='1' and delete_Flag !='1'  {limit 0，count}
      * */
-    int sellSerialNumber(@Param("materialId")Long materialId, @Param("depotHeadId")Long depotHeadId, @Param("snArray") String snArray[], @Param("updateTime") Date updateTime,@Param("updater") Long updater);
+    int sellSerialNumber(@Param("materialId")Long materialId, @Param("outBillNo")String outBillNo, @Param("snArray") String snArray[], @Param("updateTime") Date updateTime,@Param("updater") Long updater);
     /**
      * 赎回：update jsh_serial_number set is_Sell='0',depothead_Id=null  where 1=1 and material_Id='materialId'
      *      and depothead_Id='depotheadId' and is_Sell ！='0' and delete_Flag !='1' {limit 0，count}
      * */
-    int cancelSerialNumber(@Param("materialId")Long materialId, @Param("depotHeadId")Long depotHeadId, @Param("count")Integer count, @Param("updateTime") Date updateTime,@Param("updater") Long updater);
+    int cancelSerialNumber(@Param("materialId")Long materialId, @Param("outBillNo")String outBillNo, @Param("count")Integer count, @Param("updateTime") Date updateTime,@Param("updater") Long updater);
     /**
      * 批量添加序列号
      * */

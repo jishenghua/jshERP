@@ -86,24 +86,12 @@ public class SerialNumberService {
     }
 
     public List<SerialNumberEx> select(String serialNumber, String materialName, Integer offset, Integer rows)throws Exception {
-        List<SerialNumberEx> list=null;
-        try{
-            list=serialNumberMapperEx.selectByConditionSerialNumber(serialNumber, materialName,offset, rows);
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        return list;
+        return null;
 
     }
 
     public Long countSerialNumber(String serialNumber,String materialName)throws Exception {
-        Long result=null;
-        try{
-            result=serialNumberMapperEx.countSerialNumber(serialNumber, materialName);
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        return result;
+        return null;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
@@ -201,72 +189,6 @@ public class SerialNumberService {
         }
         return list==null?0:list.size();
     }
-
-    public List<SerialNumberEx> findById(Long id)throws Exception{
-        List<SerialNumberEx> list=null;
-        try{
-            list=serialNumberMapperEx.findById(id);
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        return list;
-    }
-
-    public void checkIsExist(Long id, String materialName, String serialNumber) throws Exception{
-        /**
-         * 商品名称不为空时，检查商品名称是否存在
-         * */
-            if(StringUtil.isNotEmpty(materialName)){
-                List<Material> mlist=null;
-                try{
-                     mlist = materialMapperEx.findByMaterialName(materialName);
-                }catch(Exception e){
-                    JshException.readFail(logger, e);
-                }
-
-               if(mlist==null||mlist.size()<1){
-                   //商品名称不存在
-                   throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_NOT_EXISTS_CODE,
-                           ExceptionConstants.MATERIAL_NOT_EXISTS_MSG);
-               }else if(mlist.size()>1){
-                   //商品信息不唯一
-                   throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_NOT_ONLY_CODE,
-                           ExceptionConstants.MATERIAL_NOT_ONLY_MSG);
-
-               }
-            }
-            /***
-             * 判断序列号是否已存在
-             * */
-            List <SerialNumberEx> list=null;
-            try{
-                 list = serialNumberMapperEx.findBySerialNumber(serialNumber);
-            }catch(Exception e){
-                JshException.readFail(logger, e);
-            }
-            if(list!=null&&list.size()>0){
-                if(list.size()>1){
-                    //存在多个同名序列号
-                    throw new BusinessRunTimeException(ExceptionConstants.SERIAL_NUMBERE_ALREADY_EXISTS_CODE,
-                            ExceptionConstants.SERIAL_NUMBERE_ALREADY_EXISTS_MSG);
-                }else{
-                    //存在一个序列号
-                    if(id==null){
-                        //新增，存在要添加的序列号
-                        throw new BusinessRunTimeException(ExceptionConstants.SERIAL_NUMBERE_ALREADY_EXISTS_CODE,
-                                ExceptionConstants.SERIAL_NUMBERE_ALREADY_EXISTS_MSG);
-                    }
-                        if(id.equals(list.get(0).getId())){
-                            //修改的是同一条数据
-                        }else{
-                            //存在一条不同的序列号信息
-                            throw new BusinessRunTimeException(ExceptionConstants.SERIAL_NUMBERE_ALREADY_EXISTS_CODE,
-                                    ExceptionConstants.SERIAL_NUMBERE_ALREADY_EXISTS_MSG);
-                        }
-                }
-
-            }
-    }
     /**
      * create by: cjl
      * description:
@@ -341,9 +263,9 @@ public class SerialNumberService {
      * @Param: List<DepotItem>
      * @return void
      */
-    public void checkAndUpdateSerialNumber(DepotItem depotItem,User userInfo, String snList) throws Exception{
+    public void checkAndUpdateSerialNumber(DepotItem depotItem, String outBillNo,User userInfo, String snList) throws Exception{
         if(depotItem!=null){
-            sellSerialNumber(depotItem.getMaterialId(),depotItem.getHeaderId(), snList,userInfo);
+            sellSerialNumber(depotItem.getMaterialId(), outBillNo, snList,userInfo);
         }
     }
     /**
@@ -362,11 +284,11 @@ public class SerialNumberService {
      * @return com.jsh.erp.datasource.entities.SerialNumberEx
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int sellSerialNumber(Long materialId, Long depotHeadId, String snList, User user) throws Exception{
+    public int sellSerialNumber(Long materialId, String outBillNo, String snList, User user) throws Exception{
         int result=0;
         try{
             String [] snArray=snList.split(",");
-            result = serialNumberMapperEx.sellSerialNumber(materialId, depotHeadId, snArray, new Date(),user==null?null:user.getId());
+            result = serialNumberMapperEx.sellSerialNumber(materialId, outBillNo, snArray, new Date(),user==null?null:user.getId());
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -385,10 +307,10 @@ public class SerialNumberService {
      * @return com.jsh.erp.datasource.entities.SerialNumberEx
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int cancelSerialNumber(Long materialId, Long depotHeadId,int count,User user) throws Exception{
+    public int cancelSerialNumber(Long materialId, String outBillNo,int count,User user) throws Exception{
         int result=0;
         try{
-            result = serialNumberMapperEx.cancelSerialNumber(materialId,depotHeadId,count,new Date(),user==null?null:user.getId());
+            result = serialNumberMapperEx.cancelSerialNumber(materialId,outBillNo,count,new Date(),user==null?null:user.getId());
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -470,7 +392,7 @@ public class SerialNumberService {
         return count;
     }
 
-    public void addSerialNumberByBill(Long materialId, Long depotId, String snList) throws Exception {
+    public void addSerialNumberByBill(String inBillNo, Long materialId, Long depotId, String snList) throws Exception {
         //将中文的逗号批量替换为英文逗号
         snList = snList.replaceAll("，",",");
         List<String> snArr = StringUtil.strToStringList(snList);
@@ -492,6 +414,7 @@ public class SerialNumberService {
                 User userInfo = userService.getCurrentUser();
                 serialNumber.setCreator(userInfo == null ? null : userInfo.getId());
                 serialNumber.setUpdater(userInfo == null ? null : userInfo.getId());
+                serialNumber.setInBillNo(inBillNo);
                 serialNumberMapper.insertSelective(serialNumber);
             }
         }

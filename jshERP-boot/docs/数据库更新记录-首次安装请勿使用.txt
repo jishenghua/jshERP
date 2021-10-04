@@ -1256,3 +1256,12 @@ INSERT INTO `jsh_platform_config` (`platform_key`, `platform_key_info`, `platfor
 -- 给序列号表增加仓库id
 -- --------------------------------------------------------
 alter table jsh_serial_number add depot_id bigint(20) DEFAULT NULL COMMENT '仓库id' after material_Id;
+
+-- --------------------------------------------------------
+-- 时间 2021年10月4日
+-- by jishenghua
+-- 给序列号表增加入库单号和出库单号字段，另外去掉单据id字段
+-- --------------------------------------------------------
+alter table jsh_serial_number add in_bill_no varchar(50) DEFAULT NULL COMMENT '入库单号' after updater;
+alter table jsh_serial_number add out_bill_no varchar(50) DEFAULT NULL COMMENT '出库单号' after in_bill_no;
+alter table jsh_serial_number drop column depot_head_id;

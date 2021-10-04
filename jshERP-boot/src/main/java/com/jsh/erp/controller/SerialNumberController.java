@@ -36,29 +36,6 @@ public class SerialNumberController {
 
     @Resource
     private SerialNumberService serialNumberService;
-    /**
-     * create by: cjl
-     * description:
-     *  检查序列号是否存在
-     * create time: 2019/1/22 11:02
-     * @Param: id
-     * @Param: materialName
-     * @Param: serialNumber
-     * @Param: request
-     * @return java.lang.Object
-     */
-    @PostMapping("/serialNumber/checkIsExist")
-    @ResponseBody
-    public Object checkIsExist(@RequestParam("id") Long id, @RequestParam("materialName") String materialName,
-                               @RequestParam("serialNumber") String serialNumber, HttpServletRequest request) throws Exception{
-        JSONObject result = ExceptionConstants.standardSuccess();
-        if(StringUtil.isEmpty(serialNumber)){
-            throw new BusinessParamCheckingException(ExceptionConstants.SERIAL_NUMBERE_NOT_BE_EMPTY_CODE,
-                    ExceptionConstants.SERIAL_NUMBERE_NOT_BE_EMPTY_MSG);
-        }
-        serialNumberService.checkIsExist(id, materialName, serialNumber);
-        return result;
-    }
 
     /**
      * create by: cjl

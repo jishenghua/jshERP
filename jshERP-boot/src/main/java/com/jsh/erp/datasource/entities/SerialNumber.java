@@ -25,7 +25,9 @@ public class SerialNumber {
 
     private Long updater;
 
-    private Long depotHeadId;
+    private String inBillNo;
+
+    private String outBillNo;
 
     private Long tenantId;
 
@@ -117,12 +119,20 @@ public class SerialNumber {
         this.updater = updater;
     }
 
-    public Long getDepotHeadId() {
-        return depotHeadId;
+    public String getInBillNo() {
+        return inBillNo;
     }
 
-    public void setDepotHeadId(Long depotHeadId) {
-        this.depotHeadId = depotHeadId;
+    public void setInBillNo(String inBillNo) {
+        this.inBillNo = inBillNo == null ? null : inBillNo.trim();
+    }
+
+    public String getOutBillNo() {
+        return outBillNo;
+    }
+
+    public void setOutBillNo(String outBillNo) {
+        this.outBillNo = outBillNo == null ? null : outBillNo.trim();
     }
 
     public Long getTenantId() {

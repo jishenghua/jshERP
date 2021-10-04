@@ -286,7 +286,7 @@ public class DepotHeadService {
                     if (depotItemList != null && depotItemList.size() > 0) {
                         for (DepotItem depotItem : depotItemList) {
                             //BasicNumber=OperNumber*ratio
-                            serialNumberService.cancelSerialNumber(depotItem.getMaterialId(), depotItem.getHeaderId(), (depotItem.getBasicNumber() == null ? 0 : depotItem.getBasicNumber()).intValue(), userInfo);
+                            serialNumberService.cancelSerialNumber(depotItem.getMaterialId(), depotHead.getNumber(), (depotItem.getBasicNumber() == null ? 0 : depotItem.getBasicNumber()).intValue(), userInfo);
                         }
                     }
                 }
