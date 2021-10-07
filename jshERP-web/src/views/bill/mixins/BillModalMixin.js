@@ -22,6 +22,8 @@ export const BillModalMixin = {
       accountIdList: [],
       accountMoneyList: [],
       billUnitPirce: '',
+      scanBarCode: '',
+      scanStatus: true,
       spans: {
         labelCol1: {span: 2},
         wrapperCol1: {span: 22},
@@ -505,6 +507,16 @@ export const BillModalMixin = {
       this.$nextTick(() => {
         this.form.setFieldsValue({'debt':debtNew})
       });
+    },
+    scanEnter() {
+      this.scanStatus = false
+    },
+    scanPressEnter() {
+      console.log(this.scanBarCode)
+    },
+    stopScan() {
+      this.scanStatus = true
+      this.scanBarCode = ''
     }
   }
 }
