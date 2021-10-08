@@ -491,13 +491,16 @@ public class MaterialController {
                             Boolean isDefault = depotObj.getBoolean("isDefault");
                             if(isDefault) {
                                 Long depotId = depotObj.getLong("id");
-                                mvo.setDepotId(depotId);
+                                if(!"CGDD".equals(prefixNo) && !"XSDD".equals(prefixNo) ) {
+                                    //除订单之外的单据才有仓库
+                                    mvo.setDepotId(depotId);
+                                }
                                 //库存
                                 BigDecimal stock;
                                 if(StringUtil.isNotEmpty(mvo.getSku())){
-                                    stock = depotItemService.getSkuStockByParam(depotId,mvo.getMeId(),null,null);
+                                    stock = depotItemService.getSkuStockByParam(mvo.getDepotId(),mvo.getMeId(),null,null);
                                 } else {
-                                    stock = depotItemService.getStockByParam(depotId,mvo.getId(),null,null);
+                                    stock = depotItemService.getStockByParam(mvo.getDepotId(),mvo.getId(),null,null);
                                     if (mvo.getUnitId()!=null){
                                         Unit unit = unitService.getUnit(mvo.getUnitId());
                                         if(mvo.getCommodityUnit().equals(unit.getOtherUnit())) {
