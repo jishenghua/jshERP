@@ -51,7 +51,21 @@
           :rowSelection="true"
           :actionButton="true"
           @valueChange="onValueChange"
-          @deleted="onDeleted" />
+          @deleted="onDeleted">
+          <template #buttonAfter>
+            <a-row :gutter="24">
+              <a-col v-if="scanStatus" :md="6" :sm="24">
+                <a-button @click="scanEnter">扫码录入</a-button>
+              </a-col>
+              <a-col v-if="!scanStatus" :md="16" :sm="24" style="padding: 0 6px 0 12px">
+                <a-input placeholder="请扫码商品条码并回车" v-model="scanBarCode" @pressEnter="scanPressEnter" />
+              </a-col>
+              <a-col v-if="!scanStatus" :md="6" :sm="24" style="padding: 0px">
+                <a-button @click="stopScan">收起扫码</a-button>
+              </a-col>
+            </a-row>
+          </template>
+        </j-editable-table>
         <a-row class="form-row" :gutter="24">
           <a-col :lg="24" :md="24" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="">

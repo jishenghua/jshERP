@@ -1,4 +1,4 @@
-import { FormTypes } from '@/utils/JEditableTableUtil'
+import { FormTypes, getListData } from '@/utils/JEditableTableUtil'
 import {findBySelectSup,findBySelectCus,findBySelectRetail,getMaterialByBarCode,findStockByDepotAndBarCode,getAccount,
   getPersonByNumType, getBatchNumberList} from '@/api/api'
 import { getAction,putAction } from '@/api/manage'
@@ -511,8 +511,106 @@ export const BillModalMixin = {
     scanEnter() {
       this.scanStatus = false
     },
+    //扫码之后回车
     scanPressEnter() {
-      console.log(this.scanBarCode)
+      if(this.scanBarCode) {
+        this.getAllTable().then(tables => {
+          return getListData(this.form, tables)
+        }).then(allValues => {
+          let param = {
+            barCode: this.scanBarCode,
+            mpList: getMpListShort(Vue.ls.get('materialPropertyList')),  //扩展属性
+            prefixNo: this.prefixNo
+          }
+          getMaterialByBarCode(param).then((res) => {
+            if (res && res.code === 200) {
+              let hasFinished = false
+              let allTaxLastMoney = 0
+              //获取单据明细列表信息
+              let detailArr = allValues.tablesValue[0].values
+              //构造新的列表数组，用于存放单据明细信息
+              let newDetailArr = []
+              for(let detail of detailArr){
+                if(detail.barCode) {
+                  //如果条码重复，就在给原来的数量加1
+                  if(detail.barCode === this.scanBarCode) {
+                    detail.operNumber = (detail.operNumber-0)+1
+                    //由于改变了商品数量，需要同时更新相关金额和价税合计
+                    let taxRate = detail.taxRate-0 //税率
+                    let unitPrice = detail.unitPrice-0 //单价
+                    detail.allPrice = (unitPrice*detail.operNumber).toFixed(2)-0
+                    detail.taxMoney = ((taxRate*0.01)*detail.allPrice).toFixed(2)-0
+                    detail.taxLastMoney = (detail.allPrice + detail.taxMoney).toFixed(2)-0
+                    hasFinished = true
+                  }
+                  newDetailArr.push(detail)
+                }
+              }
+              if(!hasFinished) {
+                //将扫码的条码对应的商品加入列表
+                let item = {}
+                item.barCode = this.scanBarCode
+                let mList = res.data
+                if(mList && mList.length>0) {
+                  let mInfo = mList[0]
+                  if(mInfo.sku) {
+                    this.changeFormTypes(this.materialTable.columns, 'sku', 1)
+                  }
+                  if(mInfo.enableSerialNumber === "1") {
+                    this.changeFormTypes(this.materialTable.columns, 'snList', 1)
+                  }
+                  if(mInfo.enableBatchNumber === "1") {
+                    this.changeFormTypes(this.materialTable.columns, 'batchNumber', 1)
+                    this.changeFormTypes(this.materialTable.columns, 'expirationDate', 1)
+                  }
+                  item.depotId = mInfo.depotId
+                  item.name = mInfo.name
+                  item.standard = mInfo.standard
+                  item.model = mInfo.model
+                  item.materialOther = mInfo.materialOther
+                  item.stock = mInfo.stock
+                  item.unit = mInfo.commodityUnit
+                  item.sku = mInfo.sku
+                  item.operNumber = 1
+                  item.unitPrice = mInfo.billPrice
+                  item.taxUnitPrice = mInfo.billPrice
+                  item.allPrice = mInfo.billPrice
+                  item.taxRate = 0
+                  item.taxMoney = 0
+                  item.taxLastMoney = mInfo.billPrice
+                  newDetailArr.push(item)
+                } else {
+                  this.$message.warning('抱歉，此条码不存在商品信息！');
+                }
+              }
+              //组合和拆分单据给商品类型进行重新赋值
+              for(let i=0; i< newDetailArr.length; i++) {
+                if(i===0) {
+                  newDetailArr[0].mType = '组合件'
+                } else {
+                  newDetailArr[i].mType = '普通子件'
+                }
+              }
+              this.materialTable.dataSource = newDetailArr
+              //更新优惠后金额、本次付款等信息
+              for(let newDetail of newDetailArr){
+                allTaxLastMoney = allTaxLastMoney + (newDetail.taxLastMoney-0)
+              }
+              let discount = this.form.getFieldValue('discount')-0
+              let otherMoney = this.form.getFieldValue('otherMoney')-0
+              let discountMoney = (discount*0.01*allTaxLastMoney).toFixed(2)-0
+              let discountLastMoney = (allTaxLastMoney-discountMoney).toFixed(2)-0
+              let changeAmountNew = (discountLastMoney + otherMoney).toFixed(2)-0
+              this.$nextTick(() => {
+                this.form.setFieldsValue({'discount':discount,'discountMoney':discountMoney,'discountLastMoney':discountLastMoney,
+                  'changeAmount':changeAmountNew,'debt':0})
+              });
+              //置空扫码的内容
+              this.scanBarCode = ''
+            }
+          })
+        })
+      }
     },
     stopScan() {
       this.scanStatus = true
