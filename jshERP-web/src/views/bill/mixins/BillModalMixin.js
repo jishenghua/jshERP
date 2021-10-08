@@ -525,6 +525,7 @@ export const BillModalMixin = {
           getMaterialByBarCode(param).then((res) => {
             if (res && res.code === 200) {
               let hasFinished = false
+              let allLastMoney = 0
               let allTaxLastMoney = 0
               //获取单据明细列表信息
               let detailArr = allValues.tablesValue[0].values
@@ -594,6 +595,7 @@ export const BillModalMixin = {
               this.materialTable.dataSource = newDetailArr
               //更新优惠后金额、本次付款等信息
               for(let newDetail of newDetailArr){
+                allLastMoney = allLastMoney + (newDetail.allPrice-0)
                 allTaxLastMoney = allTaxLastMoney + (newDetail.taxLastMoney-0)
               }
               let discount = this.form.getFieldValue('discount')-0
@@ -601,10 +603,16 @@ export const BillModalMixin = {
               let discountMoney = (discount*0.01*allTaxLastMoney).toFixed(2)-0
               let discountLastMoney = (allTaxLastMoney-discountMoney).toFixed(2)-0
               let changeAmountNew = (discountLastMoney + otherMoney).toFixed(2)-0
-              this.$nextTick(() => {
-                this.form.setFieldsValue({'discount':discount,'discountMoney':discountMoney,'discountLastMoney':discountLastMoney,
-                  'changeAmount':changeAmountNew,'debt':0})
-              });
+              if(this.prefixNo === 'LSCK' || this.prefixNo === 'LSTH') {
+                this.$nextTick(() => {
+                  this.form.setFieldsValue({'changeAmount':allLastMoney,'getAmount':allLastMoney,'backAmount':0})
+                });
+              } else {
+                this.$nextTick(() => {
+                  this.form.setFieldsValue({'discount':discount,'discountMoney':discountMoney,'discountLastMoney':discountLastMoney,
+                    'changeAmount':changeAmountNew,'debt':0})
+                });
+              }
               //置空扫码的内容
               this.scanBarCode = ''
             }
