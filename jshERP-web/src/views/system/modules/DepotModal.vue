@@ -39,7 +39,7 @@
           <a-input placeholder="请输入排序" v-decorator.trim="[ 'sort' ]" />
         </a-form-item>
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="备注">
-          <a-input placeholder="请输入备注" v-decorator.trim="[ 'remark' ]" />
+          <a-textarea :rows="2" placeholder="请输入备注" v-decorator.trim="[ 'remark' ]" />
         </a-form-item>
       </a-form>
     </a-spin>

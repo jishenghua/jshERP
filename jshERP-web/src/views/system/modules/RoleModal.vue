@@ -27,7 +27,7 @@
           </a-select>
         </a-form-item>
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="描述">
-          <a-textarea :rows="5" placeholder="请输入描述" v-decorator="[ 'description', validatorRules.description ]" />
+          <a-textarea :rows="2" placeholder="请输入描述" v-decorator="[ 'description', validatorRules.description ]" />
         </a-form-item>
       </a-form>
     </a-spin>
