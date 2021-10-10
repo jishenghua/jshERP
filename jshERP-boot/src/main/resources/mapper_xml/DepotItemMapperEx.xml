@@ -28,6 +28,8 @@
         <result column="MOtherField1" jdbcType="VARCHAR" property="MOtherField1" />
         <result column="MOtherField2" jdbcType="VARCHAR" property="MOtherField2" />
         <result column="MOtherField3" jdbcType="VARCHAR" property="MOtherField3" />
+        <result column="enable_serial_number" jdbcType="VARCHAR" property="enableSerialNumber" />
+        <result column="enable_batch_number" jdbcType="VARCHAR" property="enableBatchNumber" />
         <result column="DepotName" jdbcType="VARCHAR" property="DepotName" />
         <result column="AnotherDepotName" jdbcType="VARCHAR" property="AnotherDepotName" />
         <result column="UnitId" jdbcType="BIGINT" property="UnitId" />
@@ -177,7 +179,7 @@
 
     <select id="getDetailList" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
         select di.*,m.name MName,m.model MModel,m.unit MaterialUnit,m.color MColor,m.standard MStandard,m.mfrs MMfrs,
-        m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,
+        m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,m.enable_serial_number, m.enable_batch_number,
         dp1.name DepotName,dp2.name AnotherDepotName, u.id UnitId, u.name unit_name, u.ratio, u.other_unit, me.bar_code barCode
         from jsh_depot_item di
         left join jsh_material m on di.material_id=m.id  and ifnull(m.delete_flag,'0') !='1'

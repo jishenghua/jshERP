@@ -200,6 +200,8 @@ public class DepotItemController {
                     item.put("batchNumber", diEx.getBatchNumber());
                     item.put("expirationDate", Tools.parseDateToStr(diEx.getExpirationDate()));
                     item.put("sku", diEx.getSku());
+                    item.put("enableSerialNumber", diEx.getEnableSerialNumber());
+                    item.put("enableBatchNumber", diEx.getEnableBatchNumber());
                     item.put("operNumber", diEx.getOperNumber());
                     item.put("basicNumber", diEx.getBasicNumber());
                     item.put("preNumber", diEx.getOperNumber()); //原数量
