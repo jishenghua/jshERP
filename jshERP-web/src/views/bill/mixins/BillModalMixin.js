@@ -278,6 +278,12 @@ export const BillModalMixin = {
                   let taxLastMoneyTotal = 0
                   for (let j = 0; j < mArr.length; j++) {
                     taxLastMoneyTotal += mArr[j].taxLastMoney-0
+                    //组合和拆分单据给商品类型进行重新赋值
+                    if(j===0) {
+                      mArr[0].mType = '组合件'
+                    } else {
+                      mArr[j].mType = '普通子件'
+                    }
                   }
                   this.materialTable.dataSource = mArr
                   target.statisticsColumns.taxLastMoney = taxLastMoneyTotal
