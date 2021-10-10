@@ -363,6 +363,7 @@
               info.taxMoney = 0
               info.taxLastMoney = info.allPrice
               listEx.push(info)
+              this.changeColumnShowOrHide(info)
             }
             tab.dataSource = listEx
             //给优惠后金额重新赋值

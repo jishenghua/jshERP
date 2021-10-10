@@ -348,6 +348,7 @@
               info.taxMoney = 0
               info.taxLastMoney = info.allPrice
               listEx.push(info)
+              this.changeColumnShowOrHide(info)
             }
             tab.dataSource = listEx
             typeof success === 'function' ? success(res) : ''

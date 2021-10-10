@@ -436,6 +436,19 @@ export const BillModalMixin = {
         taxLastMoney: mInfo.billPrice
       }
     },
+    //控制sku、序列号、批号输入框的显示和隐藏状态
+    changeColumnShowOrHide(info) {
+      if(info.sku) {
+        this.changeFormTypes(this.materialTable.columns, 'sku', 1)
+      }
+      if(info.enableSerialNumber === "1") {
+        this.changeFormTypes(this.materialTable.columns, 'snList', 1)
+      }
+      if(info.enableBatchNumber === "1") {
+        this.changeFormTypes(this.materialTable.columns, 'batchNumber', 1)
+        this.changeFormTypes(this.materialTable.columns, 'expirationDate', 1)
+      }
+    },
     //删除一行或多行的时候触发
     onDeleted(ids, target) {
       target.recalcAllStatisticsColumns()
