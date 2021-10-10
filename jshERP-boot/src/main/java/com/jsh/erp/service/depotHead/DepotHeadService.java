@@ -303,12 +303,14 @@ public class DepotHeadService {
                 depotItemMapperEx.batchDeleteDepotItemByDepotHeadIds(new Long[]{depotHead.getId()});
                 //删除单据主表信息
                 batchDeleteDepotHeadByIds(depotHead.getId().toString());
-                //将关联的订单置为审核状态-针对采购入库和销售出库
+                //将关联的单据置为审核状态-针对采购入库、销售出库和盘点复盘
                 if(StringUtil.isNotEmpty(depotHead.getLinkNumber())){
                     if((BusinessConstants.DEPOTHEAD_TYPE_IN.equals(depotHead.getType()) &&
                         BusinessConstants.SUB_TYPE_PURCHASE.equals(depotHead.getSubType()))
                     || (BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType()) &&
-                        BusinessConstants.SUB_TYPE_SALES.equals(depotHead.getSubType()))) {
+                        BusinessConstants.SUB_TYPE_SALES.equals(depotHead.getSubType()))
+                    || (BusinessConstants.DEPOTHEAD_TYPE_OTHER.equals(depotHead.getType()) &&
+                        BusinessConstants.SUB_TYPE_REPLAY.equals(depotHead.getSubType()))) {
                         DepotHead dh = new DepotHead();
                         dh.setStatus(BusinessConstants.BILLS_STATUS_AUDIT);
                         DepotHeadExample example = new DepotHeadExample();
