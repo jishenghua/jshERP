@@ -204,6 +204,7 @@
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
         </if>
+        and dh.sub_type!='调拨'
         and ifnull(dh.delete_flag,'0') !='1'
         ORDER BY oper_time DESC,number desc
         <if test="offset != null and rows != null">
@@ -233,59 +234,43 @@
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
         </if>
+        and dh.sub_type!='调拨'
         and ifnull(dh.delete_flag,'0') !='1'
         ORDER BY oper_time DESC,number desc
     </select>
 
     <select id="findInOutMaterialCount" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultInOutMaterialCount">
         select di.material_id, m.bar_code, m.mName,m.Model,m.standard,m.categoryName,m.materialUnit,
-        (select sum(jdi.basic_number) numSum from jsh_depot_head jdh
-        left JOIN jsh_depot_item jdi on jdh.id=jdi.header_id and ifnull(jdi.delete_flag,'0') !='1'
-        where jdi.material_id=di.material_id
-        and jdh.type=#{type} and jdh.oper_time >=#{beginTime} and jdh.oper_time &lt;=#{endTime}
-        <if test="oId != null">
-            and jdh.organ_id = #{oId}
-        </if>
-        <if test="depotId != null">
-            and jdi.depot_id = #{depotId}
-        </if>
-        and ifnull(jdh.delete_flag,'0') !='1'
-        ) numSum,
-        (select sum(jdi.all_price) priceSum from jsh_depot_head jdh
-        left JOIN jsh_depot_item jdi on jdh.id=jdi.header_id  and ifnull(jdi.delete_flag,'0') !='1'
-        where jdi.material_id=di.material_id
-        and jdh.type=#{type} and jdh.oper_time >=#{beginTime} and jdh.oper_time &lt;=#{endTime}
-        <if test="oId != null">
-            and jdh.organ_id = #{oId}
-        </if>
-        <if test="depotId != null">
-            and jdi.depot_id = #{depotId}
-        </if>
-        and ifnull(jdh.delete_flag,'0') !='1'
-        ) priceSum
+        sum(di.basic_number) numSum,
+        sum(di.all_price) priceSum
         from jsh_depot_head dh
-        left JOIN jsh_depot_item di on dh.id=di.header_id and ifnull(di.delete_flag,'0') !='1'
-        left JOIN (SELECT jsh_material.id,jsh_material.name mName, me.bar_code, Model, standard,
+        left join jsh_depot_item di on dh.id=di.header_id and ifnull(di.delete_flag,'0') !='1'
+        left join (select jsh_material.id,jsh_material.name mName, me.bar_code, Model, standard,
         jsh_material_category.`Name` categoryName, concat_ws('', jsh_material.unit, u.basic_unit) materialUnit
         from jsh_material
         left join jsh_unit u on jsh_material.unit_id=u.id and ifnull(u.delete_Flag,'0') !='1'
         left join jsh_material_extend me on me.material_id=jsh_material.id and ifnull(me.delete_Flag,'0') !='1'
-        left JOIN jsh_material_category on jsh_material.category_id=jsh_material_category.Id and ifnull(jsh_material_category.delete_flag,'0') !='1'
+        left join jsh_material_category on jsh_material.category_id=jsh_material_category.Id and ifnull(jsh_material_category.delete_flag,'0') !='1'
         where me.default_flag=1 and ifnull(jsh_material.delete_Flag,'0') !='1'
         ) m
-        on m.Id=di.material_id where dh.type=#{type} and dh.oper_time >=#{beginTime} and dh.oper_time &lt;=#{endTime}
+        on m.Id=di.material_id where (dh.type=#{type} or dh.sub_type='调拨') and dh.oper_time >=#{beginTime} and dh.oper_time &lt;=#{endTime}
         <if test="oId != null">
             and dh.organ_id = #{oId}
         </if>
         <if test="depotId != null">
-            and di.depot_id = #{depotId}
+            <if test="type == '入库'">
+                and ((di.depot_id = #{depotId} and dh.sub_type!='调拨') or (di.another_depot_id = #{depotId} and dh.sub_type='调拨'))
+            </if>
+            <if test="type == '出库'">
+                and di.depot_id = #{depotId}
+            </if>
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (m.bar_code like #{bindKey} or m.mName like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
-        GROUP BY di.material_id,m.mName,m.Model,m.standard,m.categoryName
+        group by di.material_id
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
         </if>
@@ -294,25 +279,30 @@
     <select id="findInOutMaterialCountTotal" resultType="java.lang.Integer">
         select count(1) from
         (select di.material_id, m.mName,m.bar_code,m.Model,m.standard,m.categoryName from jsh_depot_head dh
-        left JOIN jsh_depot_item di on dh.id=di.header_id  and ifnull(di.delete_flag,'0') !='1'
-        left JOIN (SELECT jsh_material.id,jsh_material.name mName, me.bar_code, Model,standard,jsh_material_category.`Name` categoryName
+        left join jsh_depot_item di on dh.id=di.header_id  and ifnull(di.delete_flag,'0') !='1'
+        left join (select jsh_material.id,jsh_material.name mName, me.bar_code, Model,standard,jsh_material_category.`Name` categoryName
         from jsh_material
         left join jsh_material_extend me on me.material_id=jsh_material.id and ifnull(me.delete_Flag,'0') !='1'
-        left JOIN jsh_material_category on jsh_material.category_id=jsh_material_category.Id and ifnull(jsh_material_category.delete_flag,'0') !='1'
+        left join jsh_material_category on jsh_material.category_id=jsh_material_category.Id and ifnull(jsh_material_category.delete_flag,'0') !='1'
         where me.default_flag=1 and ifnull(jsh_material.delete_Flag,'0') !='1'
-        ) m on m.Id=di.material_id where dh.type=#{type} and dh.oper_time >=#{beginTime} and dh.oper_time &lt;=#{endTime}
+        ) m on m.Id=di.material_id where (dh.type=#{type} or dh.sub_type='调拨') and dh.oper_time >=#{beginTime} and dh.oper_time &lt;=#{endTime}
         <if test="oId != null">
             and dh.organ_id = #{oId}
         </if>
         <if test="depotId != null">
-            and di.depot_id = #{depotId}
+            <if test="type == '入库'">
+                 and ((di.depot_id = #{depotId} and dh.sub_type!='调拨') or (di.another_depot_id = #{depotId} and dh.sub_type='调拨'))
+            </if>
+            <if test="type == '出库'">
+                and di.depot_id = #{depotId}
+            </if>
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (m.bar_code like #{bindKey} or m.mName like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
-        GROUP BY di.material_id,m.mName,m.Model,m.standard,m.categoryName) a
+        group by di.material_id) a
     </select>
 
     <select id="findAllocationDetail" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
