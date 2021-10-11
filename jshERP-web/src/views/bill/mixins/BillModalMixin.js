@@ -567,6 +567,7 @@ export const BillModalMixin = {
                   item.name = mInfo.name
                   item.standard = mInfo.standard
                   item.model = mInfo.model
+                  item.color = mInfo.color
                   item.materialOther = mInfo.materialOther
                   item.stock = mInfo.stock
                   item.unit = mInfo.commodityUnit
