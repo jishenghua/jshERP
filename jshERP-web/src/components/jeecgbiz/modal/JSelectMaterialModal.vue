@@ -106,6 +106,7 @@
           {dataIndex: 'categoryName', title: '类别', width: 80},
           {dataIndex: 'standard', title: '规格', width: 80},
           {dataIndex: 'model', title: '型号', width: 80},
+          {dataIndex: 'color', title: '颜色', width: 80},
           {dataIndex: 'unit', title: '单位', width: 60},
           {dataIndex: 'sku', title: '多属性', width: 80},
           {dataIndex: 'stock', title: '库存', width: 60},

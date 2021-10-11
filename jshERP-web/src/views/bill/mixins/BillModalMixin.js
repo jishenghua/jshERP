@@ -89,18 +89,8 @@ export const BillModalMixin = {
         if(res && res.code === 200){
           tab.dataSource = res.data.rows
           for(let i=0; i<tab.dataSource.length; i++){
-            if(tab.dataSource[i].snList) {
-              this.changeFormTypes(this.materialTable.columns, 'snList', 1)
-            }
-            if(tab.dataSource[i].batchNumber) {
-              this.changeFormTypes(this.materialTable.columns, 'batchNumber', 1)
-            }
-            if(tab.dataSource[i].expirationDate) {
-              this.changeFormTypes(this.materialTable.columns, 'expirationDate', 1)
-            }
-            if(tab.dataSource[i].sku) {
-              this.changeFormTypes(this.materialTable.columns, 'sku', 1)
-            }
+            let info = tab.dataSource[i]
+            this.changeColumnShow(info)
           }
           typeof success === 'function' ? success(res) : ''
         }
@@ -260,16 +250,7 @@ export const BillModalMixin = {
                   let mArr = values
                   for (let i = 0; i < mList.length; i++) {
                     let mInfo = mList[i]
-                    if(mInfo.sku) {
-                      this.changeFormTypes(this.materialTable.columns, 'sku', 1)
-                    }
-                    if(mInfo.enableSerialNumber === "1") {
-                      this.changeFormTypes(this.materialTable.columns, 'snList', 1)
-                    }
-                    if(mInfo.enableBatchNumber === "1") {
-                      this.changeFormTypes(this.materialTable.columns, 'batchNumber', 1)
-                      this.changeFormTypes(this.materialTable.columns, 'expirationDate', 1)
-                    }
+                    this.changeColumnShow(mInfo)
                     let mObj = this.parseInfoToObj(mInfo)
                     mObj.depotId = mInfo.depotId
                     mObj.stock = mInfo.stock
@@ -294,16 +275,7 @@ export const BillModalMixin = {
                 let mArr = []
                 for (let i = 0; i < mList.length; i++) {
                   let mInfo = mList[i]
-                  if(mInfo.sku) {
-                    this.changeFormTypes(this.materialTable.columns, 'sku', 1)
-                  }
-                  if(mInfo.enableSerialNumber === "1") {
-                    this.changeFormTypes(this.materialTable.columns, 'snList', 1)
-                  }
-                  if(mInfo.enableBatchNumber === "1") {
-                    this.changeFormTypes(this.materialTable.columns, 'batchNumber', 1)
-                    this.changeFormTypes(this.materialTable.columns, 'expirationDate', 1)
-                  }
+                  this.changeColumnShow(mInfo)
                   let mObj = {
                     rowKey: row.id,
                     values: this.parseInfoToObj(mInfo)
@@ -424,6 +396,7 @@ export const BillModalMixin = {
         name: mInfo.name,
         standard: mInfo.standard,
         model: mInfo.model,
+        color: mInfo.color,
         materialOther: mInfo.materialOther,
         unit: mInfo.commodityUnit,
         sku: mInfo.sku,
@@ -436,8 +409,24 @@ export const BillModalMixin = {
         taxLastMoney: mInfo.billPrice
       }
     },
-    //控制sku、序列号、批号输入框的显示和隐藏状态
-    changeColumnShowOrHide(info) {
+    //使得型号、颜色、扩展信息、sku等为隐藏
+    changeColumnHide() {
+      this.changeFormTypes(this.materialTable.columns, 'model', 0)
+      this.changeFormTypes(this.materialTable.columns, 'color', 0)
+      this.changeFormTypes(this.materialTable.columns, 'materialOther', 0)
+      this.changeFormTypes(this.materialTable.columns, 'sku', 0)
+    },
+    //使得sku、序列号、批号、到期日等为显示
+    changeColumnShow(info) {
+      if(info.model) {
+        this.changeFormTypes(this.materialTable.columns, 'model', 1)
+      }
+      if(info.color) {
+        this.changeFormTypes(this.materialTable.columns, 'color', 1)
+      }
+      if(info.materialOther) {
+        this.changeFormTypes(this.materialTable.columns, 'materialOther', 1)
+      }
       if(info.sku) {
         this.changeFormTypes(this.materialTable.columns, 'sku', 1)
       }
@@ -573,16 +562,7 @@ export const BillModalMixin = {
                 let mList = res.data
                 if(mList && mList.length>0) {
                   let mInfo = mList[0]
-                  if(mInfo.sku) {
-                    this.changeFormTypes(this.materialTable.columns, 'sku', 1)
-                  }
-                  if(mInfo.enableSerialNumber === "1") {
-                    this.changeFormTypes(this.materialTable.columns, 'snList', 1)
-                  }
-                  if(mInfo.enableBatchNumber === "1") {
-                    this.changeFormTypes(this.materialTable.columns, 'batchNumber', 1)
-                    this.changeFormTypes(this.materialTable.columns, 'expirationDate', 1)
-                  }
+                  this.changeColumnShow(mInfo)
                   item.depotId = mInfo.depotId
                   item.name = mInfo.name
                   item.standard = mInfo.standard

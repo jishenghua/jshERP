@@ -197,6 +197,7 @@
             { title: '名称', key: 'name', width: '6%', type: FormTypes.input, readonly: true },
             { title: '规格', key: 'standard', width: '5%', type: FormTypes.input, readonly: true },
             { title: '型号', key: 'model', width: '5%', type: FormTypes.input, readonly: true },
+            { title: '颜色', key: 'color', width: '5%', type: FormTypes.input, readonly: true },
             { title: '扩展信息', key: 'materialOther', width: '5%', type: FormTypes.input, readonly: true },
             { title: '库存', key: 'stock', width: '5%', type: FormTypes.input, readonly: true },
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.input, readonly: true },
@@ -248,10 +249,10 @@
     methods: {
       //调用完edit()方法之后会自动调用此方法
       editAfter() {
+        this.changeColumnHide()
         this.changeFormTypes(this.materialTable.columns, 'snList', 0)
         this.changeFormTypes(this.materialTable.columns, 'batchNumber', 0)
         this.changeFormTypes(this.materialTable.columns, 'expirationDate', 0)
-        this.changeFormTypes(this.materialTable.columns, 'sku', 0)
         if (this.action === 'add') {
           this.addInit(this.prefixNo)
           this.personList.value = ''
@@ -359,7 +360,7 @@
               info.taxMoney = 0
               info.taxLastMoney = info.allPrice
               listEx.push(info)
-              this.changeColumnShowOrHide(info)
+              this.changeColumnShow(info)
             }
             tab.dataSource = listEx
             typeof success === 'function' ? success(res) : ''

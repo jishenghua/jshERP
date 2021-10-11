@@ -177,6 +177,7 @@
             { title: '名称', key: 'name', width: '9%', type: FormTypes.input, readonly: true },
             { title: '规格', key: 'standard', width: '6%', type: FormTypes.input, readonly: true },
             { title: '型号', key: 'model', width: '5%', type: FormTypes.input, readonly: true },
+            { title: '颜色', key: 'color', width: '5%', type: FormTypes.input, readonly: true },
             { title: '扩展信息', key: 'materialOther', width: '7%', type: FormTypes.input, readonly: true },
             { title: '库存', key: 'stock', width: '5%', type: FormTypes.input, readonly: true },
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.input, readonly: true },
@@ -215,7 +216,7 @@
     methods: {
       //调用完edit()方法之后会自动调用此方法
       editAfter() {
-        this.changeFormTypes(this.materialTable.columns, 'sku', 0)
+        this.changeColumnHide()
         if (this.action === 'add') {
           this.addInit(this.prefixNo)
           this.fileList = []
