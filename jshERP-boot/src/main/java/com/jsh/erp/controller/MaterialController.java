@@ -197,6 +197,7 @@ public class MaterialController {
                     item.put("categoryName", material.getCategoryName());
                     item.put("standard", material.getStandard());
                     item.put("model", material.getModel());
+                    item.put("color", material.getColor());
                     item.put("unit", material.getCommodityUnit() + ratio);
                     item.put("sku", material.getSku());
                     item.put("enableSerialNumber", material.getEnableSerialNumber());

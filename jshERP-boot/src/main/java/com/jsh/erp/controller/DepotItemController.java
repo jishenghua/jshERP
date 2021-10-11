@@ -177,6 +177,7 @@ public class DepotItemController {
                     item.put("name", diEx.getMName());
                     item.put("standard", diEx.getMStandard());
                     item.put("model", diEx.getMModel());
+                    item.put("color", diEx.getMColor());
                     item.put("materialOther", getOtherInfo(mpArr, diEx));
                     Integer ratio = diEx.getRatio();
                     BigDecimal stock;
