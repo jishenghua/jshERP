@@ -527,6 +527,9 @@ public class UserService {
             JSONObject tenantObj = new JSONObject();
             tenantObj.put("tenantId", ue.getId());
             tenantObj.put("loginName",ue.getLoginName());
+            tenantObj.put("userNumLimit", ue.getUserNumLimit());
+            tenantObj.put("expireTime", ue.getExpireTime());
+            tenantObj.put("remark", ue.getRemark());
             tenantService.insertTenant(tenantObj, request);
             logger.info("===============创建租户信息完成===============");
             if (result > 0) {

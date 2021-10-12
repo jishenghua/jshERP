@@ -10,6 +10,7 @@
     <result column="enabled" jdbcType="BIT" property="enabled" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="expire_time" jdbcType="TIMESTAMP" property="expireTime" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -70,7 +71,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, tenant_id, login_name, user_num_limit, type, enabled, create_time, expire_time
+    id, tenant_id, login_name, user_num_limit, type, enabled, create_time, expire_time, 
+    remark
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.TenantExample" resultMap="BaseResultMap">
     select
@@ -105,10 +107,12 @@
   <insert id="insert" parameterType="com.jsh.erp.datasource.entities.Tenant">
     insert into jsh_tenant (id, tenant_id, login_name, 
       user_num_limit, type, enabled, 
-      create_time, expire_time)
+      create_time, expire_time, remark
+      )
     values (#{id,jdbcType=BIGINT}, #{tenantId,jdbcType=BIGINT}, #{loginName,jdbcType=VARCHAR}, 
       #{userNumLimit,jdbcType=INTEGER}, #{type,jdbcType=VARCHAR}, #{enabled,jdbcType=BIT}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{expireTime,jdbcType=TIMESTAMP})
+      #{createTime,jdbcType=TIMESTAMP}, #{expireTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.Tenant">
     insert into jsh_tenant
@@ -137,6 +141,9 @@
       <if test="expireTime != null">
         expire_time,
       </if>
+      <if test="remark != null">
+        remark,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -162,6 +169,9 @@
       </if>
       <if test="expireTime != null">
         #{expireTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -198,6 +208,9 @@
       <if test="record.expireTime != null">
         expire_time = #{record.expireTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="record.remark != null">
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -212,7 +225,8 @@
       type = #{record.type,jdbcType=VARCHAR},
       enabled = #{record.enabled,jdbcType=BIT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      expire_time = #{record.expireTime,jdbcType=TIMESTAMP}
+      expire_time = #{record.expireTime,jdbcType=TIMESTAMP},
+      remark = #{record.remark,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -241,6 +255,9 @@
       <if test="expireTime != null">
         expire_time = #{expireTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -252,7 +269,8 @@
       type = #{type,jdbcType=VARCHAR},
       enabled = #{enabled,jdbcType=BIT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      expire_time = #{expireTime,jdbcType=TIMESTAMP}
+      expire_time = #{expireTime,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

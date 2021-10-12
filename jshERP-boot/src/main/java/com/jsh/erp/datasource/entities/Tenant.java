@@ -19,6 +19,8 @@ public class Tenant {
 
     private Date expireTime;
 
+    private String remark;
+
     public Long getId() {
         return id;
     }
@@ -81,5 +83,13 @@ public class Tenant {
 
     public void setExpireTime(Date expireTime) {
         this.expireTime = expireTime;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark == null ? null : remark.trim();
     }
 }
