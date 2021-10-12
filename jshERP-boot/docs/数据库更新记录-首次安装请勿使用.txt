@@ -1267,3 +1267,10 @@ alter table jsh_serial_number add in_bill_no varchar(50) DEFAULT NULL COMMENT '�
 alter table jsh_serial_number add out_bill_no varchar(50) DEFAULT NULL COMMENT '出库单号' after in_bill_no;
 alter table jsh_serial_number drop column depot_head_id;
 delete from jsh_function where number='010104';
+
+-- --------------------------------------------------------
+-- 时间 2021年10月12日
+-- by jishenghua
+-- 给租户表增加备注字段
+-- --------------------------------------------------------
+alter table jsh_tenant add remark varchar(500) DEFAULT NULL COMMENT '备注' after expire_time;

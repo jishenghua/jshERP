@@ -846,13 +846,14 @@ CREATE TABLE `jsh_tenant` (
   `enabled` bit(1) DEFAULT b'1' COMMENT '启用 0-禁用  1-启用',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   `expire_time` datetime DEFAULT NULL COMMENT '到期时间',
+  `remark` varchar(500) DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 COMMENT='租户';
 
 -- ----------------------------
 -- Records of jsh_tenant
 -- ----------------------------
-INSERT INTO `jsh_tenant` VALUES ('13', '63', 'jsh', '2000', '1', '', '2021-02-17 23:19:17', '2099-02-17 23:19:17');
+INSERT INTO `jsh_tenant` VALUES ('13', '63', 'jsh', '2000', '1', '', '2021-02-17 23:19:17', '2099-02-17 23:19:17', null);
 
 -- ----------------------------
 -- Table structure for jsh_unit
