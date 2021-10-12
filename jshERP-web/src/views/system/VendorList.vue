@@ -181,10 +181,13 @@
         }
       },
       exportExcel() {
-        let aoa = [['名称', '联系人', '手机号码', '联系电话', '电子邮箱', '期初应付', '期末应付', '税率(%)']]
+        let aoa = [['名称', '联系人', '手机号码', '联系电话', '电子邮箱', '传真', '期初应付',
+          '期末应付', '纳税人识别号', '税率(%)', '开户行', '账号', '地址', '备注', '状态']]
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.supplier, ds.contacts, ds.telephone, ds.phoneNum, ds.email, ds.beginNeedPay, ds.allNeedPay, ds.taxRate]
+          let enabledStr = ds.enabled?'启用':'禁用'
+          let item = [ds.supplier, ds.contacts, ds.telephone, ds.phoneNum, ds.email, ds.fax, ds.beginNeedPay,
+            ds.allNeedPay, ds.taxNum, ds.taxRate, ds.bankName, ds.accountNumber, ds.address, ds.description, enabledStr]
           aoa.push(item)
         }
         openDownloadDialog(sheet2blob(aoa), '供应商信息')

@@ -179,10 +179,11 @@
         }
       },
       exportExcel() {
-        let aoa = [['名称', '联系人', '手机号码', '联系电话', '电子邮箱', '预付款']]
+        let aoa = [['名称', '联系人', '手机号码', '联系电话', '电子邮箱', '预付款', '备注', '状态']]
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.supplier, ds.contacts, ds.telephone, ds.phoneNum, ds.email, ds.advanceIn]
+          let enabledStr = ds.enabled?'启用':'禁用'
+          let item = [ds.supplier, ds.contacts, ds.telephone, ds.phoneNum, ds.email, ds.advanceIn, ds.description, enabledStr]
           aoa.push(item)
         }
         openDownloadDialog(sheet2blob(aoa), '会员信息')
