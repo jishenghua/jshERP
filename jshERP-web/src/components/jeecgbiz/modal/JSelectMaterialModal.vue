@@ -178,11 +178,6 @@
         }
       },
       async loadData(arg) {
-        if(this.rows) {
-          if(JSON.parse(this.rows).depotId){
-            this.queryParam.depotId = JSON.parse(this.rows).depotId-0
-          }
-        }
         if (arg === 1) {
           this.ipagination.current = 1;
         }
@@ -285,8 +280,16 @@
         getAction('/depot/findDepotByCurrentUser').then((res) => {
           if(res.code === 200){
             that.depotList = res.data
+            this.initDepotSelect()
           }
         })
+      },
+      initDepotSelect() {
+        if(this.rows) {
+          if(JSON.parse(this.rows).depotId){
+            this.queryParam.depotId = JSON.parse(this.rows).depotId-0
+          }
+        }
       },
       onSelectChange(selectedRowKeys, selectionRows) {
         this.selectedRowKeys = selectedRowKeys;
