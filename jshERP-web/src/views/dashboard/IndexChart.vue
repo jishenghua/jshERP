@@ -27,7 +27,7 @@
       </a-col>
       <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
         <chart-card :loading="loading" title="本月累计采购">
-          <a-tooltip title="统计本月采购单据数据" slot="action">
+          <a-tooltip placement="left" title="统计本月采购单据数据" slot="action">
             <a-icon type="info-circle-o" />
           </a-tooltip>
           <head-info :content="statistics.thisMonthBuy"></head-info>
