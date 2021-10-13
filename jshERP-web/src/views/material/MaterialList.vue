@@ -210,13 +210,6 @@
       }
     },
     methods: {
-      initScroll() {
-        if (this.isMobile()) {
-          this.scroll.y = ''
-        } else {
-          this.scroll.y = document.documentElement.clientHeight-370
-        }
-      },
       loadTreeData(){
         let that = this;
         let params = {};

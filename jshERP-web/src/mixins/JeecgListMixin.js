@@ -68,9 +68,10 @@ export const JeecgListMixin = {
       this.initDictConfig();
       //初始化按钮权限
       this.initActiveBtnStr();
-      //初始化列表横向或纵向滚动
-      this.initScroll()
     }
+  },
+  mounted () {
+    this.initScroll()
   },
   methods:{
     loadData(arg) {
@@ -357,11 +358,24 @@ export const JeecgListMixin = {
         }
       }
     },
+    /* 初始化表格横向或纵向滚动 */
     initScroll() {
       if (this.isMobile()) {
         this.scroll.y = ''
       } else {
-        this.scroll.y = document.documentElement.clientHeight-330
+        let basicLength = 274
+        let searchWrapperDomLen=0, operatorDomLen=0
+        //搜索区域
+        let searchWrapperDom = document.getElementsByClassName('table-page-search-wrapper')
+        //操作按钮区域
+        let operatorDom = document.getElementsByClassName('table-operator')
+        if(searchWrapperDom && searchWrapperDom[0]) {
+          searchWrapperDomLen = searchWrapperDom[0].offsetHeight
+        }
+        if(operatorDom && operatorDom[0]) {
+          operatorDomLen = operatorDom[0].offsetHeight+10
+        }
+        this.scroll.y = document.documentElement.clientHeight-searchWrapperDomLen-operatorDomLen-basicLength
       }
     }
   }
