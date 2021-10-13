@@ -105,9 +105,9 @@
           {title: '型号', dataIndex: 'mmodel', width: 80},
           {title: '扩展信息', dataIndex: 'materialOther', width: 150},
           {title: '单位', dataIndex: 'materialUnit', width: 80},
-          {title: '安全存量', dataIndex: 'safetystock', width: 80},
-          {title: '当前库存', dataIndex: 'currentNumber', width: 80},
-          {title: '建议入库量', dataIndex: 'linjieNumber', width: 80}
+          {title: '安全存量', dataIndex: 'safetystock', sorter: (a, b) => a.safetystock - b.safetystock, width: 80},
+          {title: '当前库存', dataIndex: 'currentNumber', sorter: (a, b) => a.currentNumber - b.currentNumber, width: 80},
+          {title: '建议入库量', dataIndex: 'linjieNumber', sorter: (a, b) => a.linjieNumber - b.linjieNumber, width: 80}
         ],
         url: {
           list: "/depotItem/findStockWarningCount"

@@ -130,10 +130,10 @@
           {title: '颜色', dataIndex: 'color', width: 80},
           {title: '类别', dataIndex: 'categoryName', width: 80},
           {title: '单位', dataIndex: 'unitName', width: 60},
-          {title: '单价', dataIndex: 'purchaseDecimal', width: 60},
-          {title: '初始库存', dataIndex: 'initialStock', width: 60},
-          {title: '当前库存', dataIndex: 'currentStock', width: 60},
-          {title: '当前库存金额', dataIndex: 'currentStockPrice', width: 80},
+          {title: '单价', dataIndex: 'purchaseDecimal', sorter: (a, b) => a.purchaseDecimal - b.purchaseDecimal, width: 60},
+          {title: '初始库存', dataIndex: 'initialStock', sorter: (a, b) => a.initialStock - b.initialStock, width: 60},
+          {title: '当前库存', dataIndex: 'currentStock', sorter: (a, b) => a.currentStock - b.currentStock, width: 60},
+          {title: '当前库存金额', dataIndex: 'currentStockPrice', sorter: (a, b) => a.currentStockPrice - b.currentStockPrice, width: 80},
           { title: '库存流水', dataIndex: 'action', align:"center", width: 100,
             scopedSlots: { customRender: 'action' }
           }

@@ -127,7 +127,6 @@ export const JeecgListMixin = {
       return filterObj(param);
     },
     getQueryField() {
-      //TODO 字段权限控制
       var str = "id,";
       this.columns.forEach(function (value) {
         str += "," + value.dataIndex;

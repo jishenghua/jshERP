@@ -121,12 +121,12 @@
           {title: '型号', dataIndex: 'materialModel', width: 80},
           {title: '扩展信息', dataIndex: 'materialOther', width: 120},
           {title: '单位', dataIndex: 'unitName', width: 80},
-          {title: '单价', dataIndex: 'unitPrice', width: 60},
-          {title: '上月结存数量', dataIndex: 'prevSum', width: 80},
-          {title: '入库数量', dataIndex: 'inSum', width: 60},
-          {title: '出库数量', dataIndex: 'outSum', width: 60},
-          {title: '本月结存数量', dataIndex: 'thisSum', width: 80},
-          {title: '结存金额', dataIndex: 'thisAllPrice', width: 60}
+          {title: '单价', dataIndex: 'unitPrice', sorter: (a, b) => a.unitPrice - b.unitPrice, width: 60},
+          {title: '上月结存数量', dataIndex: 'prevSum', sorter: (a, b) => a.prevSum - b.prevSum, width: 80},
+          {title: '入库数量', dataIndex: 'inSum', sorter: (a, b) => a.inSum - b.inSum, width: 60},
+          {title: '出库数量', dataIndex: 'outSum', sorter: (a, b) => a.outSum - b.outSum, width: 60},
+          {title: '本月结存数量', dataIndex: 'thisSum', sorter: (a, b) => a.thisSum - b.thisSum, width: 80},
+          {title: '结存金额', dataIndex: 'thisAllPrice', sorter: (a, b) => a.thisAllPrice - b.thisAllPrice, width: 60}
         ],
         url: {
           list: "/depotItem/findByAll",

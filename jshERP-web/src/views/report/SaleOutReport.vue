@@ -99,11 +99,11 @@
           {title: '型号', dataIndex: 'materialModel', width: 80},
           {title: '扩展信息', dataIndex: 'materialOther', width: 150},
           {title: '单位', dataIndex: 'materialUnit', width: 80},
-          {title: '销售数量', dataIndex: 'outSum', width: 80},
-          {title: '销售金额', dataIndex: 'outSumPrice', width: 80},
-          {title: '退货数量', dataIndex: 'inSum', width: 80},
-          {title: '退货金额', dataIndex: 'inSumPrice', width: 80},
-          {title: '实际销售金额', dataIndex: 'outInSumPrice', width: 80}
+          {title: '销售数量', dataIndex: 'outSum', sorter: (a, b) => a.outSum - b.outSum, width: 80},
+          {title: '销售金额', dataIndex: 'outSumPrice', sorter: (a, b) => a.outSumPrice - b.outSumPrice, width: 80},
+          {title: '退货数量', dataIndex: 'inSum', sorter: (a, b) => a.inSum - b.inSum, width: 80},
+          {title: '退货金额', dataIndex: 'inSumPrice', sorter: (a, b) => a.inSumPrice - b.inSumPrice, width: 80},
+          {title: '实际销售金额', dataIndex: 'outInSumPrice', sorter: (a, b) => a.outInSumPrice - b.outInSumPrice, width: 100}
         ],
         url: {
           list: "/depotItem/saleOut"

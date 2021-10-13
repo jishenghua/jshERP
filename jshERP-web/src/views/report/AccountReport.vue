@@ -107,10 +107,10 @@
             }
           },
           { title: '名称', dataIndex: 'name', width: 100},
-          { title: '编号', dataIndex: 'serialNo', width: 150, align: "center"},
-          { title: '期初金额', dataIndex: 'initialAmount', width: 100, align: "center"},
-          { title: '本月发生额', dataIndex: 'thisMonthAmount', width: 100, align: "center"},
-          { title: '当前余额', dataIndex: 'currentAmount', width: 100, align: "center"},
+          { title: '编号', dataIndex: 'serialNo', width: 150},
+          { title: '期初金额', dataIndex: 'initialAmount', sorter: (a, b) => a.initialAmount - b.initialAmount, width: 100},
+          { title: '本月发生额', dataIndex: 'thisMonthAmount', sorter: (a, b) => a.thisMonthAmount - b.thisMonthAmount, width: 100},
+          { title: '当前余额', dataIndex: 'currentAmount', sorter: (a, b) => a.currentAmount - b.currentAmount, width: 100},
           { title: '账户流水', dataIndex: 'action', align:"center", width: 200,
             scopedSlots: { customRender: 'action' }
           }
