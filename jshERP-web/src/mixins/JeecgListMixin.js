@@ -376,6 +376,34 @@ export const JeecgListMixin = {
         }
         this.scroll.y = document.documentElement.clientHeight-searchWrapperDomLen-operatorDomLen-basicLength
       }
+    },
+    /** 表格增加合计行 */
+    tableAddTotalRow(columns, dataSource) {
+      if(this.ipagination.pageSize!==10) {
+        let numKey = 'rowIndex'
+        let totalRow = { [numKey]: '合计' }
+        //移除不需要合计的列
+        let removeCols = 'action,mBarCode,purchaseDecimal'
+        columns.forEach(column => {
+          let { key, dataIndex } = column
+          if (![key, dataIndex].includes(numKey)) {
+            let total = 0
+            dataSource.forEach(data => {
+              total += Number.parseFloat(data[dataIndex])
+            })
+            if (Number.isNaN(total)) {
+              total = '-'
+            } else {
+              total = total.toFixed(2)
+            }
+            if(removeCols.indexOf(dataIndex)>-1) {
+              total = '-'
+            }
+            totalRow[dataIndex] = total
+          }
+        })
+        dataSource.push(totalRow)
+      }
     }
   }
 
