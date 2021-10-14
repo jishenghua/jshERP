@@ -203,7 +203,7 @@
           {
             title: '操作',
             dataIndex: 'action',
-            align:"center", width: 150,
+            align:"center", width: 160,
             scopedSlots: { customRender: 'action' },
           }
         ],
