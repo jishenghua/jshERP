@@ -89,6 +89,7 @@ export const JeecgListMixin = {
         if (res.code===200) {
           this.dataSource = res.data.rows;
           this.ipagination.total = res.data.total;
+          this.tableAddTotalRow(this.columns, this.dataSource)
         }
         if(res.code===510){
           this.$message.warning(res.data)
@@ -244,12 +245,13 @@ export const JeecgListMixin = {
     },
     handleTableChange(pagination, filters, sorter) {
       //分页、排序、筛选变化时触发
-      //TODO 筛选
       if (Object.keys(sorter).length > 0) {
         this.isorter.column = sorter.field;
         this.isorter.order = "ascend" == sorter.order ? "asc" : "desc"
       }
-      this.ipagination = pagination;
+      if(pagination && pagination.current) {
+        this.ipagination = pagination;
+      }
       this.loadData();
     },
     handleToggleSearch(){
@@ -383,7 +385,7 @@ export const JeecgListMixin = {
         let numKey = 'rowIndex'
         let totalRow = { [numKey]: '合计' }
         //移除不需要合计的列
-        let removeCols = 'action,mBarCode,purchaseDecimal'
+        let removeCols = 'action,mBarCode,barCode,unitPrice,purchaseDecimal,operTime,oTime'
         columns.forEach(column => {
           let { key, dataIndex } = column
           if (![key, dataIndex].includes(numKey)) {
@@ -404,6 +406,16 @@ export const JeecgListMixin = {
         })
         dataSource.push(totalRow)
       }
+    },
+    paginationChange(page, pageSize) {
+      this.ipagination.current = page
+      this.ipagination.pageSize = pageSize
+      this.loadData(this.ipagination.current);
+    },
+    paginationShowSizeChange(current, size) {
+      this.ipagination.current = current
+      this.ipagination.pageSize = size
+      this.loadData(this.ipagination.current);
     }
   }
 

@@ -70,9 +70,8 @@
               </span>
           </a-table>
           <a-row :gutter="24" style="margin-top: 8px;text-align:right;">
-            <a-col :md="12" :sm="24"></a-col>
-            <a-col :md="12" :sm="24">
-              <a-pagination @change="onChange" @showSizeChange="onShowSizeChange"
+            <a-col :md="24" :sm="24">
+              <a-pagination @change="paginationChange" @showSizeChange="paginationShowSizeChange"
                 size="small"
                 show-size-changer
                 :showQuickJumper="true"
@@ -215,9 +214,9 @@
           if (res.code===200) {
             this.dataSource = res.data.rows;
             this.ipagination.total = res.data.total;
+            this.tableAddTotalRow(this.columns, this.dataSource)
             this.currentStock = res.data.currentStock;
             this.currentStockPrice = res.data.currentStockPrice;
-            this.tableAddTotalRow(this.columns, this.dataSource)
           }
           if(res.code===510){
             this.$message.warning(res.data)
@@ -239,16 +238,6 @@
           aoa.push(item)
         }
         openDownloadDialog(sheet2blob(aoa), '商品库存')
-      },
-      onChange(page, pageSize) {
-        this.ipagination.current = page
-        this.ipagination.pageSize = pageSize
-        this.loadData(this.ipagination.current);
-      },
-      onShowSizeChange(current, size) {
-        this.ipagination.current = current
-        this.ipagination.pageSize = size
-        this.loadData(this.ipagination.current);
       }
     }
   }

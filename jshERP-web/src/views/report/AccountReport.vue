@@ -46,7 +46,7 @@
             rowKey="id"
             :columns="columns"
             :dataSource="dataSource"
-            :pagination="ipagination"
+            :pagination="false"
             :scroll="scroll"
             :loading="loading"
             @change="handleTableChange">
@@ -54,6 +54,22 @@
                 <a @click="showAccountInOutList(record)">流水</a>
               </span>
           </a-table>
+          <a-row :gutter="24" style="margin-top: 8px;text-align:right;">
+            <a-col :md="24" :sm="24">
+              <a-pagination @change="paginationChange" @showSizeChange="paginationShowSizeChange"
+                size="small"
+                show-size-changer
+                :showQuickJumper="true"
+                :page-size="ipagination.pageSize"
+                :page-size-options="ipagination.pageSizeOptions"
+                :total="ipagination.total"
+                :show-total="(total, range) => `共 ${total} 条`">
+                <template slot="buildOptionText" slot-scope="props">
+                  <span>{{ props.value-1 }}条/页</span>
+                </template>
+              </a-pagination>
+            </a-col>
+          </a-row>
         </section>
         <!-- table区域-end -->
         <account-in-out-list ref="accountInOutList" @ok="modalFormOk"></account-in-out-list>
@@ -89,7 +105,8 @@
           serialNo:''
         },
         ipagination:{
-          pageSizeOptions: ['10', '20', '30', '100', '200']
+          pageSize: 11,
+          pageSizeOptions: ['11', '21', '31', '101', '201']
         },
         allMonthAmount: '',
         allCurrentAmount: '',
@@ -97,13 +114,9 @@
         // 表头
         columns: [
           {
-            title: '#',
-            dataIndex: '',
-            key:'rowIndex',
-            width:60,
-            align:"center",
+            title: '#', dataIndex: 'rowIndex', width:60, align:"center",
             customRender:function (t,r,index) {
-              return parseInt(index)+1;
+              return (t !== '合计') ? (parseInt(index) + 1) : t
             }
           },
           { title: '名称', dataIndex: 'name', width: 100},
@@ -125,6 +138,13 @@
       this.getAccountStatistics()
     },
     methods: {
+      getQueryParams() {
+        let param = Object.assign({}, this.queryParam, this.isorter);
+        param.field = this.getQueryField();
+        param.currentPage = this.ipagination.current;
+        param.pageSize = this.ipagination.pageSize-1;
+        return param;
+      },
       getAccountStatistics() {
         getAction(this.url.getStatistics, this.queryParam).then((res)=>{
           if(res && res.code === 200) {
