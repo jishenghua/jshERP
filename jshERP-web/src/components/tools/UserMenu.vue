@@ -1,5 +1,10 @@
 <template>
   <div class="user-wrapper" :class="theme">
+    <span class="action" v-if="showAd">
+      <a class="ad_title" target="_blank" :href="payFeeUrl">
+        <a-icon type="cloud" theme="filled" style="color: yellow; font-size: 16px; line-height: 16px;" /><span> 华夏ERP网络版99元起</span>
+      </a>
+    </span>
     <!-- update_begin author:zhaoxin date:20191129 for: 做头部菜单栏导航 -->
     <!-- update-begin author:sunjianlei date:20191@20 for: 解决全局样式冲突的问题 -->
     <span class="action" @click="showClick">
@@ -26,11 +31,6 @@
     <!-- update-end author:sunjianlei date:20200219 for: 菜单搜索改为动态组件，在手机端呈现出弹出框 -->
     <!-- update-end author:sunjianlei date:20191220 for: 解决全局样式冲突的问题 -->
     <!-- update_end  author:zhaoxin date:20191129 for: 做头部菜单栏导航 -->
-    <span class="action" v-if="showAd">
-      <a class="cloud_title" target="_blank" href="https://cloud.tencent.com/act/cps/redirect?redirect=1074&cps_key=4fb6482d716575dcb7b8fe600d93766a&from=console">
-        <a-icon type="cloud" theme="filled" style="font-weight: bold;font-size: 16px; line-height: 16px;" /><span> 腾讯云促销</span>
-      </a>
-    </span>
     <span class="action">
       <a-tooltip>
         <template slot="title">官方网站</template>
@@ -75,6 +75,7 @@
   import { mapActions, mapGetters,mapState } from 'vuex'
   import { mixinDevice } from '@/utils/mixin.js'
   import { getFileAccessHttpUrl,getAction } from "@/api/manage"
+  import { getPlatformConfigByKey } from '@/api/api'
 
   export default {
     name: "UserMenu",
@@ -86,7 +87,8 @@
         searchMenuComp: 'span',
         searchMenuVisible: false,
         systemUrl: window.SYS_URL,
-        showAd: false
+        showAd: false,
+        payFeeUrl: ''
         // update-begin author:sunjianlei date:20200219 for: 头部菜单搜索规范命名 --------------
       }
     },
@@ -194,9 +196,13 @@
       // update_end author:sunjianlei date:20191230 for: 解决外部链接打开失败的问题
       /*update_end author:zhaoxin date:20191129 for: 做头部菜单栏导航*/
       isShowAd() {
-        getAction('/platformConfig/isShowAd', {}).then((res) => {
+        getPlatformConfigByKey({"platformKey": "pay_fee_url"}).then((res)=> {
           if (res && res.code === 200) {
-            this.showAd = res.data
+            let payFeeUrl = res.data.platformValue
+            if(payFeeUrl) {
+              this.showAd = true
+              this.payFeeUrl = payFeeUrl
+            }
           }
         })
       }
@@ -225,9 +231,8 @@
 </style>
 
 <style scoped>
-  .cloud_title {
-    color: inherit;
-    font-weight: bold;
+  .ad_title {
+    color: yellow;
     text-decoration: none;
   }
   .logout_title {
