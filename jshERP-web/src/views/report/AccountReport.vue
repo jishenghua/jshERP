@@ -51,7 +51,7 @@
             :loading="loading"
             @change="handleTableChange">
               <span slot="action" slot-scope="text, record">
-                <a @click="showAccountInOutList(record)">流水</a>
+                <a @click="showAccountInOutList(record)">{{record.id?'流水':''}}</a>
               </span>
           </a-table>
           <a-row :gutter="24" style="margin-top: 8px;text-align:right;">

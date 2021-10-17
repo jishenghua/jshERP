@@ -381,7 +381,8 @@ export const JeecgListMixin = {
     },
     /** 表格增加合计行 */
     tableAddTotalRow(columns, dataSource) {
-      if(dataSource.length>0 && this.ipagination.pageSize!==10) {
+      if(dataSource.length>0 && this.ipagination.pageSize%10===1) {
+        //分页条数为11、21、31等的时候增加合计行
         let numKey = 'rowIndex'
         let totalRow = { [numKey]: '合计' }
         //移除不需要合计的列
