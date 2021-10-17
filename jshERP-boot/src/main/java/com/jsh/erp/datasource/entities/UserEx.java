@@ -1,5 +1,7 @@
 package com.jsh.erp.datasource.entities;
 
+import java.util.Date;
+
 /**
  * Description
  *
@@ -21,6 +23,10 @@ public class UserEx extends User{
     private String roleName;
 
     private String userType;
+
+    private Integer userNumLimit;
+
+    private String expireTime;
 
     public String getOrgAbr() {
         return orgAbr;
@@ -76,5 +82,21 @@ public class UserEx extends User{
 
     public void setUserType(String userType) {
         this.userType = userType;
+    }
+
+    public Integer getUserNumLimit() {
+        return userNumLimit;
+    }
+
+    public void setUserNumLimit(Integer userNumLimit) {
+        this.userNumLimit = userNumLimit;
+    }
+
+    public String getExpireTime() {
+        return expireTime;
+    }
+
+    public void setExpireTime(String expireTime) {
+        this.expireTime = expireTime;
     }
 }

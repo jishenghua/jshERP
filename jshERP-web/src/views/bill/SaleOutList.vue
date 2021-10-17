@@ -75,7 +75,7 @@
         <!-- 操作按钮区域 -->
         <div class="table-operator"  style="margin-top: 5px">
           <a-button v-if="btnEnableList.indexOf(1)>-1" @click="myHandleAdd" type="primary" icon="plus">新增</a-button>
-          <a-dropdown v-if="selectedRowKeys.length > 0">
+          <a-dropdown>
             <a-menu slot="overlay">
               <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
               <a-menu-item key="2" v-if="btnEnableList.indexOf(2)>-1" @click="batchSetStatus(1)"><a-icon type="check"/>审核</a-menu-item>
@@ -101,6 +101,7 @@
             :columns="columns"
             :dataSource="dataSource"
             :pagination="ipagination"
+            :scroll="scroll"
             :loading="loading"
             :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
             @change="handleTableChange">
@@ -170,7 +171,7 @@
           { title: '单据编号', dataIndex: 'number',width:160,
             customRender:function (text,record,index) {
               if(record.linkNumber) {
-                return text + "[转]";
+                return text + "[订]";
               } else {
                 return text;
               }
@@ -210,7 +211,7 @@
           {
             title: '操作',
             dataIndex: 'action',
-            align:"center", width: 150,
+            align:"center", width: 180,
             scopedSlots: { customRender: 'action' },
           }
         ],

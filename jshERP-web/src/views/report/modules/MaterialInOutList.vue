@@ -1,7 +1,7 @@
 <template>
   <a-modal
     :title="title"
-    :width="1000"
+    :width="1250"
     :visible="visible"
     @cancel="handleCancel"
     cancelText="关闭"
@@ -66,15 +66,15 @@
             }
           },
           {
-            title: '单据编号', dataIndex: 'number', width: 150,
+            title: '单据编号', dataIndex: 'number', width: 100,
             scopedSlots: { customRender: 'numberCustomRender' },
           },
           { title: '类型', dataIndex: 'type', width: 100},
           { title: '条码', dataIndex: 'barCode', width: 100},
-          { title: '名称', dataIndex: 'materialName', width: 100},
+          { title: '名称', dataIndex: 'materialName', width: 200},
           { title: '仓库名称', dataIndex: 'depotName', width: 80},
           { title: '数量', dataIndex: 'basicNumber', width: 80},
-          { title: '日期', dataIndex: 'operTime', width: 180}
+          { title: '日期', dataIndex: 'operTime', width: 100}
         ],
         labelCol: {
           xs: { span: 1 },

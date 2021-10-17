@@ -1231,3 +1231,46 @@ INSERT INTO `jsh_platform_config` (`id`, `platform_key`, `platform_key_info`, `p
 -- 修改单据主表的状态字段描述
 -- --------------------------------------------------------
 alter table jsh_depot_head change status status varchar(1) DEFAULT NULL COMMENT '状态，0未审核、1已审核、2完成采购|销售、3部分采购|销售';
+
+-- --------------------------------------------------------
+-- 时间 2021年9月27日
+-- by jishenghua
+-- 给商品表和单据字表增加字段
+-- --------------------------------------------------------
+alter table jsh_material add enable_batch_number varchar(1) DEFAULT 0 COMMENT '是否开启批号，0否，1是' after enable_serial_number;
+alter table jsh_material add expiry_num int(10) DEFAULT NULL COMMENT '保质期天数' after unit_id;
+alter table jsh_depot_item add sn_list varchar(2000) DEFAULT NULL COMMENT '序列号列表' after material_type;
+alter table jsh_depot_item add batch_number varchar(100) DEFAULT NULL COMMENT '批号' after sn_list;
+alter table jsh_depot_item add expiration_date datetime DEFAULT NULL COMMENT '有效日期' after batch_number;
+
+-- --------------------------------------------------------
+-- 时间 2021年9月27日
+-- by jishenghua
+-- 插入jsh_platform_config数据，配置租户续费地址
+-- --------------------------------------------------------
+INSERT INTO `jsh_platform_config` (`platform_key`, `platform_key_info`, `platform_value`) VALUES ('pay_fee_url', '租户续费地址', '');
+
+-- --------------------------------------------------------
+-- 时间 2021年9月28日
+-- by jishenghua
+-- 给序列号表增加仓库id
+-- --------------------------------------------------------
+alter table jsh_serial_number add depot_id bigint(20) DEFAULT NULL COMMENT '仓库id' after material_Id;
+
+-- --------------------------------------------------------
+-- 时间 2021年10月4日
+-- by jishenghua
+-- 给序列号表增加入库单号和出库单号字段，另外去掉单据id字段
+-- 移除序列号菜单
+-- --------------------------------------------------------
+alter table jsh_serial_number add in_bill_no varchar(50) DEFAULT NULL COMMENT '入库单号' after updater;
+alter table jsh_serial_number add out_bill_no varchar(50) DEFAULT NULL COMMENT '出库单号' after in_bill_no;
+alter table jsh_serial_number drop column depot_head_id;
+delete from jsh_function where number='010104';
+
+-- --------------------------------------------------------
+-- 时间 2021年10月12日
+-- by jishenghua
+-- 给租户表增加备注字段
+-- --------------------------------------------------------
+alter table jsh_tenant add remark varchar(500) DEFAULT NULL COMMENT '备注' after expire_time;

@@ -1,7 +1,7 @@
 <template>
   <a-modal
     :title="title"
-    :width="1200"
+    :width="1300"
     :visible="visible"
     :confirmLoading="confirmLoading"
     @ok="handleOk"
@@ -19,17 +19,22 @@
         <a-tabs default-active-key="1">
           <a-tab-pane key="1" tab="基本信息" forceRender>
             <a-row class="form-row" :gutter="24">
-              <a-col :lg="8" :md="12" :sm="24">
+              <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="名称">
                   <a-input placeholder="请输入名称" v-decorator.trim="[ 'name', validatorRules.name]" />
                 </a-form-item>
               </a-col>
-              <a-col :lg="8" :md="12" :sm="24">
+              <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="规格">
                   <a-input placeholder="请输入规格" v-decorator.trim="[ 'standard' ]" />
                 </a-form-item>
               </a-col>
-              <a-col :lg="8" :md="12" :sm="24">
+              <a-col :md="6" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="型号">
+                  <a-input placeholder="请输入型号" v-decorator.trim="[ 'model' ]" />
+                </a-form-item>
+              </a-col>
+              <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单位">
                   <a-row class="form-row" :gutter="24">
                     <a-col :lg="13" :md="13" :sm="24">
@@ -48,24 +53,19 @@
                   </a-row>
                 </a-form-item>
               </a-col>
-              <a-col :lg="8" :md="12" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="型号">
-                  <a-input placeholder="请输入型号" v-decorator.trim="[ 'model' ]" />
-                </a-form-item>
-              </a-col>
-              <a-col :lg="8" :md="12" :sm="24">
+              <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="颜色">
                   <a-input placeholder="请输入颜色" v-decorator.trim="[ 'color' ]" />
                 </a-form-item>
               </a-col>
-              <a-col :lg="8" :md="12" :sm="24">
+              <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="类别">
                   <a-tree-select style="width:100%" :dropdownStyle="{maxHeight:'200px',overflow:'auto'}" allow-clear
                    :treeData="categoryTree" v-decorator="[ 'categoryId' ]" placeholder="请选择类别">
                   </a-tree-select>
                 </a-form-item>
               </a-col>
-              <a-col :lg="8" :md="12" :sm="24">
+              <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="序列号">
                   <a-select placeholder="有无序列号" v-decorator="[ 'enableSerialNumber' ]">
                     <a-select-option value="1">有</a-select-option>
@@ -73,12 +73,25 @@
                   </a-select>
                 </a-form-item>
               </a-col>
-              <a-col :lg="8" :md="12" :sm="24">
+              <a-col :md="6" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="批号">
+                  <a-select placeholder="有无批号" v-decorator="[ 'enableBatchNumber' ]">
+                    <a-select-option value="1">有</a-select-option>
+                    <a-select-option value="0">无</a-select-option>
+                  </a-select>
+                </a-form-item>
+              </a-col>
+              <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="安全存量">
                   <a-input placeholder="请输入安全存量" v-decorator.trim="[ 'safetyStock' ]" />
                 </a-form-item>
               </a-col>
-              <a-col :lg="8" :md="12" :sm="24">
+              <a-col :md="6" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="保质期天数">
+                  <a-input-number style="width: 100%" placeholder="请输入保质期天数" v-decorator.trim="[ 'expiryNum' ]" />
+                </a-form-item>
+              </a-col>
+              <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="多属性">
                   <a-switch checked-children="启用" un-checked-children="关闭" v-model="skuSwitch" :disabled="switchDisabled" @change="onSkuChange"></a-switch>
                 </a-form-item>
@@ -86,7 +99,7 @@
             </a-row>
             <a-card v-if="skuSwitch">
               <a-row class="form-row" :gutter="24">
-                <a-col :lg="8" :md="12" :sm="24">
+                <a-col :md="6" :sm="24">
                   <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="sku.manyColor">
                     <a-select mode="multiple" v-decorator="[ 'manyColor' ]" showSearch optionFilterProp="children">
                       <a-select-option v-for="(item,index) in sku.manyColorList" :key="index" :value="item.value">
@@ -95,7 +108,7 @@
                     </a-select>
                   </a-form-item>
                 </a-col>
-                <a-col :lg="8" :md="12" :sm="24">
+                <a-col :md="6" :sm="24">
                   <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="sku.manySize">
                     <a-select mode="multiple" v-decorator="[ 'manySize' ]" showSearch optionFilterProp="children">
                       <a-select-option v-for="(item,index) in sku.manySizeList" :key="index" :value="item.value">
@@ -104,7 +117,7 @@
                     </a-select>
                   </a-form-item>
                 </a-col>
-                <a-col :lg="8" :md="12" :sm="24">
+                <a-col :md="6" :sm="24">
                   <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="sku.other1">
                     <a-select mode="multiple" v-decorator="[ 'other1' ]" showSearch optionFilterProp="children">
                       <a-select-option v-for="(item,index) in sku.other1List" :key="index" :value="item.value">
@@ -115,7 +128,7 @@
                 </a-col>
               </a-row>
               <a-row class="form-row" :gutter="24">
-                <a-col :lg="8" :md="12" :sm="24">
+                <a-col :md="6" :sm="24">
                   <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="sku.other2">
                     <a-select mode="multiple" v-decorator="[ 'other2' ]" showSearch optionFilterProp="children">
                       <a-select-option v-for="(item,index) in sku.other2List" :key="index" :value="item.value">
@@ -124,7 +137,7 @@
                     </a-select>
                   </a-form-item>
                 </a-col>
-                <a-col :lg="8" :md="12" :sm="24">
+                <a-col :md="6" :sm="24">
                   <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="sku.other3">
                     <a-select mode="multiple" v-decorator="[ 'other3' ]" showSearch optionFilterProp="children">
                       <a-select-option v-for="(item,index) in sku.other3List" :key="index" :value="item.value">
@@ -133,7 +146,7 @@
                     </a-select>
                   </a-form-item>
                 </a-col>
-                <a-col :lg="8" :md="12" :sm="24">
+                <a-col :md="6" :sm="24">
                   <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="生成条码">
                     <a-switch v-model="barCodeSwitch" @change="onBarCodeChange"></a-switch>
                   </a-form-item>
@@ -394,7 +407,7 @@
         }
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model, 'name', 'standard', 'unit', 'unitId', 'model', 'color',
-            'categoryId','enableSerialNumber','safetyStock','remark','mfrs','otherField1','otherField2','otherField3'))
+            'categoryId','enableSerialNumber','enableBatchNumber','expiryNum','safetyStock','remark','mfrs','otherField1','otherField2','otherField3'))
         });
         this.initMaterialAttribute()
         // 加载子表数据

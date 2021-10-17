@@ -24,7 +24,7 @@
         <!-- 操作按钮区域 -->
         <div class="table-operator"  style="margin-top: 5px">
           <a-button v-if="btnEnableList.indexOf(1)>-1" @click="myHandleAdd" type="primary" icon="plus">新增</a-button>
-          <a-dropdown v-if="selectedRowKeys.length > 0">
+          <a-dropdown>
             <a-menu slot="overlay">
               <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
             </a-menu>
@@ -43,6 +43,7 @@
             :columns="columns"
             :dataSource="dataSource"
             :pagination="ipagination"
+            :scroll="scroll"
             :loading="loading"
             :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
             @change="handleTableChange">

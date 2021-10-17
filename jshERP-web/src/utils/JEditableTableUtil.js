@@ -111,3 +111,66 @@ export function validateTables(cases, deleteTempId) {
     })()
   })
 }
+
+/**
+ * 一次性验证主表单和所有的次表单-只校验单号
+ * @param form 主表单 form 对象
+ * @param cases 接收一个数组，每项都是一个JEditableTable实例
+ * @returns {Promise<any>}
+ * @author sunjianlei
+ */
+export function getListData(form, cases) {
+  let options = {}
+  return new Promise((resolve, reject) => {
+    // 验证主表表单
+    form.validateFields(['number'],(err, values) => {
+      err ? reject({ error: VALIDATE_NO_PASSED }) : resolve(values)
+    })
+  }).then(values => {
+    Object.assign(options, { formValue: values })
+    // 验证所有子表的表单
+    return getListTables(cases)
+  }).then(all => {
+    Object.assign(options, { tablesValue: all })
+    return Promise.resolve(options)
+  }).catch(error => {
+    return Promise.reject(error)
+  })
+}
+
+/**
+ * 不验证直接获取一个或多个表格的所有值
+ * @param cases 接收一个数组，每项都是一个JEditableTable实例
+ * @param deleteTempId 是否删除临时ID，如果设为true，行编辑就不返回新增行的ID，ID需要后台生成
+ * @author sunjianlei
+ */
+export function getListTables(cases, deleteTempId) {
+  if (!(cases instanceof Array)) {
+    throw `'validateTables'函数的'cases'参数需要的是一个数组，而传入的却是${typeof cases}`
+  }
+  return new Promise((resolve, reject) => {
+    let tables = []
+    let index = 0;
+    if(!cases || cases.length==0){
+      resolve()
+    }
+    (function next() {
+      let vm = cases[index]
+      vm.getAll(false, deleteTempId).then(all => {
+        tables[index] = all
+        // 判断校验是否全部完成，完成返回成功，否则继续进行下一步校验
+        if (++index === cases.length) {
+          resolve(tables)
+        } else (
+          next()
+        )
+      }, error => {
+        // 出现未验证通过的表单，不再进行下一步校验，直接返回失败并跳转到该表格
+        if (error === VALIDATE_NO_PASSED) {
+          reject({ error: VALIDATE_NO_PASSED, index })
+        }
+        reject(error)
+      })
+    })()
+  })
+}

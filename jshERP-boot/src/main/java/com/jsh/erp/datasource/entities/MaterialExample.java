@@ -905,6 +905,66 @@ public class MaterialExample {
             return (Criteria) this;
         }
 
+        public Criteria andExpiryNumIsNull() {
+            addCriterion("expiry_num is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpiryNumIsNotNull() {
+            addCriterion("expiry_num is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpiryNumEqualTo(Integer value) {
+            addCriterion("expiry_num =", value, "expiryNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpiryNumNotEqualTo(Integer value) {
+            addCriterion("expiry_num <>", value, "expiryNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpiryNumGreaterThan(Integer value) {
+            addCriterion("expiry_num >", value, "expiryNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpiryNumGreaterThanOrEqualTo(Integer value) {
+            addCriterion("expiry_num >=", value, "expiryNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpiryNumLessThan(Integer value) {
+            addCriterion("expiry_num <", value, "expiryNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpiryNumLessThanOrEqualTo(Integer value) {
+            addCriterion("expiry_num <=", value, "expiryNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpiryNumIn(List<Integer> values) {
+            addCriterion("expiry_num in", values, "expiryNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpiryNumNotIn(List<Integer> values) {
+            addCriterion("expiry_num not in", values, "expiryNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpiryNumBetween(Integer value1, Integer value2) {
+            addCriterion("expiry_num between", value1, value2, "expiryNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andExpiryNumNotBetween(Integer value1, Integer value2) {
+            addCriterion("expiry_num not between", value1, value2, "expiryNum");
+            return (Criteria) this;
+        }
+
         public Criteria andEnabledIsNull() {
             addCriterion("enabled is null");
             return (Criteria) this;
@@ -1242,6 +1302,76 @@ public class MaterialExample {
 
         public Criteria andEnableSerialNumberNotBetween(String value1, String value2) {
             addCriterion("enable_serial_number not between", value1, value2, "enableSerialNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnableBatchNumberIsNull() {
+            addCriterion("enable_batch_number is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnableBatchNumberIsNotNull() {
+            addCriterion("enable_batch_number is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnableBatchNumberEqualTo(String value) {
+            addCriterion("enable_batch_number =", value, "enableBatchNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnableBatchNumberNotEqualTo(String value) {
+            addCriterion("enable_batch_number <>", value, "enableBatchNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnableBatchNumberGreaterThan(String value) {
+            addCriterion("enable_batch_number >", value, "enableBatchNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnableBatchNumberGreaterThanOrEqualTo(String value) {
+            addCriterion("enable_batch_number >=", value, "enableBatchNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnableBatchNumberLessThan(String value) {
+            addCriterion("enable_batch_number <", value, "enableBatchNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnableBatchNumberLessThanOrEqualTo(String value) {
+            addCriterion("enable_batch_number <=", value, "enableBatchNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnableBatchNumberLike(String value) {
+            addCriterion("enable_batch_number like", value, "enableBatchNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnableBatchNumberNotLike(String value) {
+            addCriterion("enable_batch_number not like", value, "enableBatchNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnableBatchNumberIn(List<String> values) {
+            addCriterion("enable_batch_number in", values, "enableBatchNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnableBatchNumberNotIn(List<String> values) {
+            addCriterion("enable_batch_number not in", values, "enableBatchNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnableBatchNumberBetween(String value1, String value2) {
+            addCriterion("enable_batch_number between", value1, value2, "enableBatchNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnableBatchNumberNotBetween(String value1, String value2) {
+            addCriterion("enable_batch_number not between", value1, value2, "enableBatchNumber");
             return (Criteria) this;
         }
 

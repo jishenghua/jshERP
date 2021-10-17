@@ -65,7 +65,7 @@
         <!-- 操作按钮区域 -->
         <div class="table-operator"  style="margin-top: 5px">
           <a-button v-if="btnEnableList.indexOf(1)>-1" @click="myHandleAdd" type="primary" icon="plus">新增</a-button>
-          <a-dropdown v-if="selectedRowKeys.length > 0">
+          <a-dropdown>
             <a-menu slot="overlay">
               <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
               <a-menu-item key="2" v-if="btnEnableList.indexOf(2)>-1" @click="batchSetStatus(1)"><a-icon type="check"/>审核</a-menu-item>
@@ -90,6 +90,7 @@
             :columns="columns"
             :dataSource="dataSource"
             :pagination="ipagination"
+            :scroll="scroll"
             :loading="loading"
             :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
             @change="handleTableChange">
@@ -107,7 +108,8 @@
             <template slot="customRenderStatus" slot-scope="status">
               <a-tag v-if="status == '0'" color="red">未审核</a-tag>
               <a-tag v-if="status == '1'" color="green">已审核</a-tag>
-              <a-tag v-if="status == '2'" color="blue">已转采购</a-tag>
+              <a-tag v-if="status == '2'" color="cyan">完成采购</a-tag>
+              <a-tag v-if="status == '3'" color="blue">部分采购</a-tag>
             </template>
           </a-table>
         </div>

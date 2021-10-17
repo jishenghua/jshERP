@@ -21,6 +21,14 @@
       :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange, type: getType}"
       :customRow="rowAction"
       @change="handleTableChange">
+      <template slot="customRenderStatus" slot-scope="status">
+        <a-tag v-if="status === '0'" color="red">未审核</a-tag>
+        <a-tag v-if="status === '1'" color="green">已审核</a-tag>
+        <a-tag v-if="status === '2' && queryParam.subType === '采购订单'" color="cyan">完成采购</a-tag>
+        <a-tag v-if="status === '2' && queryParam.subType === '销售订单'" color="cyan">完成销售</a-tag>
+        <a-tag v-if="status === '3' && queryParam.subType === '采购订单'" color="blue">部分采购</a-tag>
+        <a-tag v-if="status === '3' && queryParam.subType === '销售订单'" color="blue">部分销售</a-tag>
+      </template>
     </a-table>
     <!-- table区域-end -->
   </a-modal>
@@ -61,7 +69,7 @@
           },
           { title: '', dataIndex: 'organName',width:120},
           { title: '单据编号', dataIndex: 'number',width:150},
-          { title: '商品信息', dataIndex: 'materialsList',width:220, ellipsis:true,
+          { title: '商品信息', dataIndex: 'materialsList',width:280, ellipsis:true,
             customRender:function (text,record,index) {
               if(text) {
                 return text.replace(",","，");
@@ -69,8 +77,11 @@
             }
           },
           { title: '单据日期', dataIndex: 'operTimeStr',width:145},
-          { title: '操作员', dataIndex: 'userName',width:60},
-          { title: '金额合计', dataIndex: 'totalPrice',width:70}
+          { title: '操作员', dataIndex: 'userName',width:70},
+          { title: '金额合计', dataIndex: 'totalPrice',width:70},
+          { title: '状态', dataIndex: 'status', width: 70, align: "center",
+            scopedSlots: { customRender: 'customRenderStatus' }
+          }
         ],
         url: {
           list: "/depotHead/list"

@@ -1,5 +1,6 @@
-import { VALIDATE_NO_PASSED, validateFormAndTables } from '@/utils/JEditableTableUtil'
-import {findBySelectSup,findBySelectCus,findBySelectRetail,getMaterialByBarCode,findStockByDepotAndBarCode,getAccount,getPersonByNumType} from '@/api/api'
+import { FormTypes, getListData } from '@/utils/JEditableTableUtil'
+import {findBySelectSup,findBySelectCus,findBySelectRetail,getMaterialByBarCode,findStockByDepotAndBarCode,getAccount,
+  getPersonByNumType, getBatchNumberList} from '@/api/api'
 import { getAction,putAction } from '@/api/manage'
 import { getMpListShort, getNowFormatDateTime } from "@/utils/util"
 import Vue from 'vue'
@@ -21,6 +22,8 @@ export const BillModalMixin = {
       accountIdList: [],
       accountMoneyList: [],
       billUnitPirce: '',
+      scanBarCode: '',
+      scanStatus: true,
       spans: {
         labelCol1: {span: 2},
         wrapperCol1: {span: 22},
@@ -78,6 +81,48 @@ export const BillModalMixin = {
       this.$nextTick(() => {
         this.form.setFieldsValue({'operTime':getNowFormatDateTime()})
       })
+    },
+    /** 查询某个tab的数据 */
+    requestSubTableData(url, params, tab, success) {
+      tab.loading = true
+      getAction(url, params).then(res => {
+        if(res && res.code === 200){
+          tab.dataSource = res.data.rows
+          for(let i=0; i<tab.dataSource.length; i++){
+            let info = tab.dataSource[i]
+            this.changeColumnShow(info)
+          }
+          typeof success === 'function' ? success(res) : ''
+        }
+      }).finally(() => {
+        tab.loading = false
+      })
+    },
+    //改变字段的状态，1-显示 0-隐藏
+    changeFormTypes(columns, key, type) {
+      for(let i=0; i<columns.length; i++){
+        if(columns[i].key === key) {
+          if(type){
+            if(key === 'snList' || key === 'batchNumber') {
+              if(this.prefixNo === 'XSCK') {
+                columns[i].type = FormTypes.popupJsh //显示
+              } else {
+                columns[i].type = FormTypes.input //显示
+              }
+            } else if(key === 'expirationDate') {
+              if(this.prefixNo === 'CGRK' || this.prefixNo === 'XSTH' || this.prefixNo === 'CGTH') {
+                columns[i].type = FormTypes.date //显示
+              } else {
+                columns[i].type = FormTypes.input //显示
+              }
+            } else {
+              columns[i].type = FormTypes.input //显示
+            }
+          } else {
+            columns[i].type = FormTypes.hidden //隐藏
+          }
+        }
+      }
     },
     initSupplier() {
       let that = this;
@@ -182,7 +227,7 @@ export const BillModalMixin = {
     onValueChange(event) {
       let that = this
       const { type, row, column, value, target } = event
-      let param,operNumber,unitPrice,taxUnitPrice,allPrice,taxRate,taxMoney,taxLastMoney
+      let param,snList,batchNumber,operNumber,unitPrice,taxUnitPrice,allPrice,taxRate,taxMoney,taxLastMoney
       switch(column.key) {
         case "depotId":
           if(row.barCode){
@@ -205,6 +250,7 @@ export const BillModalMixin = {
                   let mArr = values
                   for (let i = 0; i < mList.length; i++) {
                     let mInfo = mList[i]
+                    this.changeColumnShow(mInfo)
                     let mObj = this.parseInfoToObj(mInfo)
                     mObj.depotId = mInfo.depotId
                     mObj.stock = mInfo.stock
@@ -213,6 +259,12 @@ export const BillModalMixin = {
                   let taxLastMoneyTotal = 0
                   for (let j = 0; j < mArr.length; j++) {
                     taxLastMoneyTotal += mArr[j].taxLastMoney-0
+                    //组合和拆分单据给商品类型进行重新赋值
+                    if(j===0) {
+                      mArr[0].mType = '组合件'
+                    } else {
+                      mArr[j].mType = '普通子件'
+                    }
                   }
                   this.materialTable.dataSource = mArr
                   target.statisticsColumns.taxLastMoney = taxLastMoneyTotal
@@ -223,6 +275,7 @@ export const BillModalMixin = {
                 let mArr = []
                 for (let i = 0; i < mList.length; i++) {
                   let mInfo = mList[i]
+                  this.changeColumnShow(mInfo)
                   let mObj = {
                     rowKey: row.id,
                     values: this.parseInfoToObj(mInfo)
@@ -236,6 +289,43 @@ export const BillModalMixin = {
               }
             }
           });
+          break;
+        case "snList":
+          snList = value
+          if(snList) {
+            let snArr = snList.split(',')
+            operNumber = snArr.length
+            taxRate = row.taxRate-0 //税率
+            unitPrice = row.unitPrice-0 //单价
+            taxUnitPrice = row.taxUnitPrice-0
+            allPrice = (unitPrice*operNumber).toFixed(2)-0
+            taxMoney =((taxRate*0.01)*allPrice).toFixed(2)-0
+            taxLastMoney = (allPrice + taxMoney).toFixed(2)-0
+            target.setValues([{rowKey: row.id, values: {operNumber: operNumber, allPrice: allPrice, taxMoney: taxMoney, taxLastMoney: taxLastMoney}}])
+            target.recalcAllStatisticsColumns()
+            that.autoChangePrice(target)
+          }
+          break;
+        case "batchNumber":
+          batchNumber = value
+          getBatchNumberList({name:'', depotId: row.depotId, barCode: row.barCode, batchNumber: batchNumber}).then((res) => {
+            if (res && res.code === 200) {
+              if(res.data && res.data.rows) {
+                let info = res.data.rows[0]
+                operNumber = info.totalNum
+                taxRate = row.taxRate-0 //税率
+                unitPrice = row.unitPrice-0 //单价
+                taxUnitPrice = row.taxUnitPrice-0
+                allPrice = (unitPrice*operNumber).toFixed(2)-0
+                taxMoney =((taxRate*0.01)*allPrice).toFixed(2)-0
+                taxLastMoney = (allPrice + taxMoney).toFixed(2)-0
+                target.setValues([{rowKey: row.id, values: {expirationDate: info.expirationDateStr, operNumber: operNumber,
+                    allPrice: allPrice, taxMoney: taxMoney, taxLastMoney: taxLastMoney}}])
+                target.recalcAllStatisticsColumns()
+                that.autoChangePrice(target)
+              }
+            }
+          })
           break;
         case "operNumber":
           operNumber = value-0
@@ -306,6 +396,7 @@ export const BillModalMixin = {
         name: mInfo.name,
         standard: mInfo.standard,
         model: mInfo.model,
+        color: mInfo.color,
         materialOther: mInfo.materialOther,
         unit: mInfo.commodityUnit,
         sku: mInfo.sku,
@@ -316,6 +407,35 @@ export const BillModalMixin = {
         taxRate: 0,
         taxMoney: 0,
         taxLastMoney: mInfo.billPrice
+      }
+    },
+    //使得型号、颜色、扩展信息、sku等为隐藏
+    changeColumnHide() {
+      this.changeFormTypes(this.materialTable.columns, 'model', 0)
+      this.changeFormTypes(this.materialTable.columns, 'color', 0)
+      this.changeFormTypes(this.materialTable.columns, 'materialOther', 0)
+      this.changeFormTypes(this.materialTable.columns, 'sku', 0)
+    },
+    //使得sku、序列号、批号、到期日等为显示
+    changeColumnShow(info) {
+      if(info.model) {
+        this.changeFormTypes(this.materialTable.columns, 'model', 1)
+      }
+      if(info.color) {
+        this.changeFormTypes(this.materialTable.columns, 'color', 1)
+      }
+      if(info.materialOther) {
+        this.changeFormTypes(this.materialTable.columns, 'materialOther', 1)
+      }
+      if(info.sku) {
+        this.changeFormTypes(this.materialTable.columns, 'sku', 1)
+      }
+      if(info.enableSerialNumber === "1") {
+        this.changeFormTypes(this.materialTable.columns, 'snList', 1)
+      }
+      if(info.enableBatchNumber === "1") {
+        this.changeFormTypes(this.materialTable.columns, 'batchNumber', 1)
+        this.changeFormTypes(this.materialTable.columns, 'expirationDate', 1)
       }
     },
     //删除一行或多行的时候触发
@@ -395,6 +515,114 @@ export const BillModalMixin = {
       this.$nextTick(() => {
         this.form.setFieldsValue({'debt':debtNew})
       });
+    },
+    scanEnter() {
+      this.scanStatus = false
+    },
+    //扫码之后回车
+    scanPressEnter() {
+      if(this.scanBarCode) {
+        this.getAllTable().then(tables => {
+          return getListData(this.form, tables)
+        }).then(allValues => {
+          let param = {
+            barCode: this.scanBarCode,
+            mpList: getMpListShort(Vue.ls.get('materialPropertyList')),  //扩展属性
+            prefixNo: this.prefixNo
+          }
+          getMaterialByBarCode(param).then((res) => {
+            if (res && res.code === 200) {
+              let hasFinished = false
+              let allLastMoney = 0
+              let allTaxLastMoney = 0
+              //获取单据明细列表信息
+              let detailArr = allValues.tablesValue[0].values
+              //构造新的列表数组，用于存放单据明细信息
+              let newDetailArr = []
+              for(let detail of detailArr){
+                if(detail.barCode) {
+                  //如果条码重复，就在给原来的数量加1
+                  if(detail.barCode === this.scanBarCode) {
+                    detail.operNumber = (detail.operNumber-0)+1
+                    //由于改变了商品数量，需要同时更新相关金额和价税合计
+                    let taxRate = detail.taxRate-0 //税率
+                    let unitPrice = detail.unitPrice-0 //单价
+                    detail.allPrice = (unitPrice*detail.operNumber).toFixed(2)-0
+                    detail.taxMoney = ((taxRate*0.01)*detail.allPrice).toFixed(2)-0
+                    detail.taxLastMoney = (detail.allPrice + detail.taxMoney).toFixed(2)-0
+                    hasFinished = true
+                  }
+                  newDetailArr.push(detail)
+                }
+              }
+              if(!hasFinished) {
+                //将扫码的条码对应的商品加入列表
+                let item = {}
+                item.barCode = this.scanBarCode
+                let mList = res.data
+                if(mList && mList.length>0) {
+                  let mInfo = mList[0]
+                  this.changeColumnShow(mInfo)
+                  item.depotId = mInfo.depotId
+                  item.name = mInfo.name
+                  item.standard = mInfo.standard
+                  item.model = mInfo.model
+                  item.color = mInfo.color
+                  item.materialOther = mInfo.materialOther
+                  item.stock = mInfo.stock
+                  item.unit = mInfo.commodityUnit
+                  item.sku = mInfo.sku
+                  item.operNumber = 1
+                  item.unitPrice = mInfo.billPrice
+                  item.taxUnitPrice = mInfo.billPrice
+                  item.allPrice = mInfo.billPrice
+                  item.taxRate = 0
+                  item.taxMoney = 0
+                  item.taxLastMoney = mInfo.billPrice
+                  newDetailArr.push(item)
+                } else {
+                  this.$message.warning('抱歉，此条码不存在商品信息！');
+                }
+              }
+              //组合和拆分单据给商品类型进行重新赋值
+              for(let i=0; i< newDetailArr.length; i++) {
+                if(i===0) {
+                  newDetailArr[0].mType = '组合件'
+                } else {
+                  newDetailArr[i].mType = '普通子件'
+                }
+              }
+              this.materialTable.dataSource = newDetailArr
+              //更新优惠后金额、本次付款等信息
+              for(let newDetail of newDetailArr){
+                allLastMoney = allLastMoney + (newDetail.allPrice-0)
+                allTaxLastMoney = allTaxLastMoney + (newDetail.taxLastMoney-0)
+              }
+              let discount = this.form.getFieldValue('discount')-0
+              let otherMoney = this.form.getFieldValue('otherMoney')-0
+              let discountMoney = (discount*0.01*allTaxLastMoney).toFixed(2)-0
+              let discountLastMoney = (allTaxLastMoney-discountMoney).toFixed(2)-0
+              let changeAmountNew = (discountLastMoney + otherMoney).toFixed(2)-0
+              if(this.prefixNo === 'LSCK' || this.prefixNo === 'LSTH') {
+                this.$nextTick(() => {
+                  this.form.setFieldsValue({'changeAmount':allLastMoney,'getAmount':allLastMoney,'backAmount':0})
+                });
+              } else {
+                this.$nextTick(() => {
+                  this.form.setFieldsValue({'discount':discount,'discountMoney':discountMoney,'discountLastMoney':discountLastMoney,
+                    'changeAmount':changeAmountNew,'debt':0})
+                });
+              }
+              //置空扫码的内容
+              this.scanBarCode = ''
+            }
+          })
+        })
+      }
+    },
+    stopScan() {
+      this.scanStatus = true
+      this.scanBarCode = ''
     }
   }
 }

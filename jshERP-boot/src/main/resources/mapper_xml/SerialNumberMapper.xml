@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="com.jsh.erp.datasource.entities.SerialNumber">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="material_id" jdbcType="BIGINT" property="materialId" />
+    <result column="depot_id" jdbcType="BIGINT" property="depotId" />
     <result column="serial_number" jdbcType="VARCHAR" property="serialNumber" />
     <result column="is_sell" jdbcType="VARCHAR" property="isSell" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
@@ -12,7 +13,8 @@
     <result column="creator" jdbcType="BIGINT" property="creator" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="updater" jdbcType="BIGINT" property="updater" />
-    <result column="depot_head_id" jdbcType="BIGINT" property="depotHeadId" />
+    <result column="in_bill_no" jdbcType="VARCHAR" property="inBillNo" />
+    <result column="out_bill_no" jdbcType="VARCHAR" property="outBillNo" />
     <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -74,8 +76,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, material_id, serial_number, is_sell, remark, delete_flag, create_time, creator, 
-    update_time, updater, depot_head_id, tenant_id
+    id, material_id, depot_id, serial_number, is_sell, remark, delete_flag, create_time, 
+    creator, update_time, updater, in_bill_no, out_bill_no, tenant_id
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.SerialNumberExample" resultMap="BaseResultMap">
     select
@@ -108,16 +110,16 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.jsh.erp.datasource.entities.SerialNumber">
-    insert into jsh_serial_number (id, material_id, serial_number, 
-      is_sell, remark, delete_flag, 
-      create_time, creator, update_time, 
-      updater, depot_head_id, tenant_id
-      )
-    values (#{id,jdbcType=BIGINT}, #{materialId,jdbcType=BIGINT}, #{serialNumber,jdbcType=VARCHAR}, 
-      #{isSell,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{deleteFlag,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{creator,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{updater,jdbcType=BIGINT}, #{depotHeadId,jdbcType=BIGINT}, #{tenantId,jdbcType=BIGINT}
-      )
+    insert into jsh_serial_number (id, material_id, depot_id, 
+      serial_number, is_sell, remark, 
+      delete_flag, create_time, creator, 
+      update_time, updater, in_bill_no, 
+      out_bill_no, tenant_id)
+    values (#{id,jdbcType=BIGINT}, #{materialId,jdbcType=BIGINT}, #{depotId,jdbcType=BIGINT}, 
+      #{serialNumber,jdbcType=VARCHAR}, #{isSell,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{deleteFlag,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{creator,jdbcType=BIGINT}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{updater,jdbcType=BIGINT}, #{inBillNo,jdbcType=VARCHAR}, 
+      #{outBillNo,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.SerialNumber">
     insert into jsh_serial_number
@@ -127,6 +129,9 @@
       </if>
       <if test="materialId != null">
         material_id,
+      </if>
+      <if test="depotId != null">
+        depot_id,
       </if>
       <if test="serialNumber != null">
         serial_number,
@@ -152,8 +157,11 @@
       <if test="updater != null">
         updater,
       </if>
-      <if test="depotHeadId != null">
-        depot_head_id,
+      <if test="inBillNo != null">
+        in_bill_no,
+      </if>
+      <if test="outBillNo != null">
+        out_bill_no,
       </if>
       <if test="tenantId != null">
         tenant_id,
@@ -165,6 +173,9 @@
       </if>
       <if test="materialId != null">
         #{materialId,jdbcType=BIGINT},
+      </if>
+      <if test="depotId != null">
+        #{depotId,jdbcType=BIGINT},
       </if>
       <if test="serialNumber != null">
         #{serialNumber,jdbcType=VARCHAR},
@@ -190,8 +201,11 @@
       <if test="updater != null">
         #{updater,jdbcType=BIGINT},
       </if>
-      <if test="depotHeadId != null">
-        #{depotHeadId,jdbcType=BIGINT},
+      <if test="inBillNo != null">
+        #{inBillNo,jdbcType=VARCHAR},
+      </if>
+      <if test="outBillNo != null">
+        #{outBillNo,jdbcType=VARCHAR},
       </if>
       <if test="tenantId != null">
         #{tenantId,jdbcType=BIGINT},
@@ -212,6 +226,9 @@
       </if>
       <if test="record.materialId != null">
         material_id = #{record.materialId,jdbcType=BIGINT},
+      </if>
+      <if test="record.depotId != null">
+        depot_id = #{record.depotId,jdbcType=BIGINT},
       </if>
       <if test="record.serialNumber != null">
         serial_number = #{record.serialNumber,jdbcType=VARCHAR},
@@ -237,8 +254,11 @@
       <if test="record.updater != null">
         updater = #{record.updater,jdbcType=BIGINT},
       </if>
-      <if test="record.depotHeadId != null">
-        depot_head_id = #{record.depotHeadId,jdbcType=BIGINT},
+      <if test="record.inBillNo != null">
+        in_bill_no = #{record.inBillNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.outBillNo != null">
+        out_bill_no = #{record.outBillNo,jdbcType=VARCHAR},
       </if>
       <if test="record.tenantId != null">
         tenant_id = #{record.tenantId,jdbcType=BIGINT},
@@ -252,6 +272,7 @@
     update jsh_serial_number
     set id = #{record.id,jdbcType=BIGINT},
       material_id = #{record.materialId,jdbcType=BIGINT},
+      depot_id = #{record.depotId,jdbcType=BIGINT},
       serial_number = #{record.serialNumber,jdbcType=VARCHAR},
       is_sell = #{record.isSell,jdbcType=VARCHAR},
       remark = #{record.remark,jdbcType=VARCHAR},
@@ -260,7 +281,8 @@
       creator = #{record.creator,jdbcType=BIGINT},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       updater = #{record.updater,jdbcType=BIGINT},
-      depot_head_id = #{record.depotHeadId,jdbcType=BIGINT},
+      in_bill_no = #{record.inBillNo,jdbcType=VARCHAR},
+      out_bill_no = #{record.outBillNo,jdbcType=VARCHAR},
       tenant_id = #{record.tenantId,jdbcType=BIGINT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -271,6 +293,9 @@
     <set>
       <if test="materialId != null">
         material_id = #{materialId,jdbcType=BIGINT},
+      </if>
+      <if test="depotId != null">
+        depot_id = #{depotId,jdbcType=BIGINT},
       </if>
       <if test="serialNumber != null">
         serial_number = #{serialNumber,jdbcType=VARCHAR},
@@ -296,8 +321,11 @@
       <if test="updater != null">
         updater = #{updater,jdbcType=BIGINT},
       </if>
-      <if test="depotHeadId != null">
-        depot_head_id = #{depotHeadId,jdbcType=BIGINT},
+      <if test="inBillNo != null">
+        in_bill_no = #{inBillNo,jdbcType=VARCHAR},
+      </if>
+      <if test="outBillNo != null">
+        out_bill_no = #{outBillNo,jdbcType=VARCHAR},
       </if>
       <if test="tenantId != null">
         tenant_id = #{tenantId,jdbcType=BIGINT},
@@ -308,6 +336,7 @@
   <update id="updateByPrimaryKey" parameterType="com.jsh.erp.datasource.entities.SerialNumber">
     update jsh_serial_number
     set material_id = #{materialId,jdbcType=BIGINT},
+      depot_id = #{depotId,jdbcType=BIGINT},
       serial_number = #{serialNumber,jdbcType=VARCHAR},
       is_sell = #{isSell,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR},
@@ -316,7 +345,8 @@
       creator = #{creator,jdbcType=BIGINT},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       updater = #{updater,jdbcType=BIGINT},
-      depot_head_id = #{depotHeadId,jdbcType=BIGINT},
+      in_bill_no = #{inBillNo,jdbcType=VARCHAR},
+      out_bill_no = #{outBillNo,jdbcType=VARCHAR},
       tenant_id = #{tenantId,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>

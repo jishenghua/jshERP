@@ -73,7 +73,7 @@
             rowKey="id"
             :columns="columns"
             :dataSource="dataSource"
-            :pagination="ipagination"
+            :pagination="false"
             :scroll="scroll"
             :loading="loading"
             @change="handleTableChange">
@@ -81,6 +81,22 @@
               <a @click="myHandleDetail(record)">{{record.number}}</a>
             </span>
           </a-table>
+          <a-row :gutter="24" style="margin-top: 8px;text-align:right;">
+            <a-col :md="24" :sm="24">
+              <a-pagination @change="paginationChange" @showSizeChange="paginationShowSizeChange"
+                size="small"
+                show-size-changer
+                :showQuickJumper="true"
+                :page-size="ipagination.pageSize"
+                :page-size-options="ipagination.pageSizeOptions"
+                :total="ipagination.total"
+                :show-total="(total, range) => `共 ${total} 条`">
+                <template slot="buildOptionText" slot-scope="props">
+                  <span>{{ props.value-1 }}条/页</span>
+                </template>
+              </a-pagination>
+            </a-col>
+          </a-row>
         </section>
         <!-- table区域-end -->
         <!-- 表单区域 -->
@@ -124,7 +140,8 @@
           subType: "调拨"
         },
         ipagination:{
-          pageSizeOptions: ['10', '20', '30', '100', '200']
+          pageSize: 11,
+          pageSizeOptions: ['11', '21', '31', '101', '201']
         },
         dateFormat: 'YYYY-MM-DD',
         currentDay: moment().format('YYYY-MM-DD'),
@@ -135,13 +152,9 @@
         // 表头
         columns: [
           {
-            title: '#',
-            dataIndex: '',
-            key:'rowIndex',
-            width:40,
-            align:"center",
+            title: '#', dataIndex: 'rowIndex', width:40, align:"center",
             customRender:function (t,r,index) {
-              return parseInt(index)+1;
+              return (t !== '合计') ? (parseInt(index) + 1) : t
             }
           },
           {
@@ -153,9 +166,9 @@
           {title: '规格', dataIndex: 'standard', width: 50},
           {title: '型号', dataIndex: 'model', width: 50},
           {title: '单位', dataIndex: 'mUnit', width: 50},
-          {title: '数量', dataIndex: 'operNumber', width: 60},
-          {title: '单价', dataIndex: 'unitPrice', width: 60},
-          {title: '金额', dataIndex: 'allPrice', width: 60},
+          {title: '数量', dataIndex: 'operNumber', sorter: (a, b) => a.operNumber - b.operNumber, width: 60},
+          {title: '单价', dataIndex: 'unitPrice', sorter: (a, b) => a.unitPrice - b.unitPrice, width: 60},
+          {title: '金额', dataIndex: 'allPrice', sorter: (a, b) => a.allPrice - b.allPrice, width: 60},
           {title: '调出仓库', dataIndex: 'dname', width: 80},
           {title: '调入仓库', dataIndex: 'sname', width: 80},
           {title: '调拨日期', dataIndex: 'operTime', width: 80},
@@ -177,7 +190,7 @@
         let param = Object.assign({}, this.queryParam, this.isorter);
         param.field = this.getQueryField();
         param.currentPage = this.ipagination.current;
-        param.pageSize = this.ipagination.pageSize;
+        param.pageSize = this.ipagination.pageSize-1;
         return param;
       },
       onDateChange: function (value, dateString) {

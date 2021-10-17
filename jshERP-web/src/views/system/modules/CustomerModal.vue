@@ -32,13 +32,13 @@
           </a-form-item>
         </a-col>
         <a-col :span="24/2">
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="电子邮箱">
-            <a-input placeholder="请输入电子邮箱" v-decorator.trim="[ 'email' ]" />
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="联系电话">
+            <a-input placeholder="请输入联系电话" v-decorator.trim="[ 'phoneNum' ]" />
           </a-form-item>
         </a-col>
         <a-col :span="24/2">
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="联系电话">
-            <a-input placeholder="请输入联系电话" v-decorator.trim="[ 'phoneNum' ]" />
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="电子邮箱">
+            <a-input placeholder="请输入电子邮箱" v-decorator.trim="[ 'email' ]" />
           </a-form-item>
         </a-col>
         <a-col :span="24/2">

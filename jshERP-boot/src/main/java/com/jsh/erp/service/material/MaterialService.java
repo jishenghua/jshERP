@@ -211,6 +211,9 @@ public class MaterialService {
             if(material.getUnitId() == null) {
                 materialMapperEx.setUnitIdToNull(material.getId());
             }
+            if(material.getExpiryNum() == null) {
+                materialMapperEx.setExpiryNumToNull(material.getId());
+            }
             materialExtendService.saveDetials(obj, obj.getString("sortList"),material.getId(), "update");
             if(obj.get("stock")!=null) {
                 JSONArray stockArr = obj.getJSONArray("stock");
@@ -815,8 +818,9 @@ public class MaterialService {
         return materialMapperEx.getMaterialByBarCode(barCodeArray);
     }
 
-    public List<MaterialVo4Unit> getListWithStock(Long depotId, List<Long> idList, String materialParam, Integer offset, Integer rows) {
-        return materialMapperEx.getListWithStock(depotId, idList, materialParam, offset, rows);
+    public List<MaterialVo4Unit> getListWithStock(Long depotId, List<Long> idList, String materialParam,
+                                                  String column, String order, Integer offset, Integer rows) {
+        return materialMapperEx.getListWithStock(depotId, idList, materialParam, column, order, offset, rows);
     }
 
     public int getListWithStockCount(Long depotId, List<Long> idList, String materialParam) {

@@ -49,7 +49,7 @@
           <a-input placeholder="请输入排序" v-decorator.trim="[ 'userBlngOrgaDsplSeq' ]" />
         </a-form-item>
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="描述">
-          <a-textarea :rows="1" placeholder="请输入描述" v-decorator="[ 'description' ]" />
+          <a-textarea :rows="2" placeholder="请输入描述" v-decorator="[ 'description' ]" />
         </a-form-item>
       </a-form>
     </a-spin>
@@ -116,8 +116,6 @@
       }
     },
     created () {
-      this.loadOrgaData()
-      this.loadRoleData()
       const token = Vue.ls.get(ACCESS_TOKEN);
       this.headers = {"X-Access-Token":token}
     },
@@ -126,13 +124,14 @@
         this.edit({});
       },
       edit (record) {
-        let that = this;
-        that.form.resetFields();
-        that.userId = record.id;
-        that.visible = true;
-        that.model = Object.assign({}, record);
-        that.$nextTick(() => {
-          that.form.setFieldsValue(pick(this.model,'loginName','username','roleId','orgaId','position',
+        this.loadOrgaData()
+        this.loadRoleData()
+        this.form.resetFields();
+        this.userId = record.id;
+        this.visible = true;
+        this.model = Object.assign({}, record);
+        this.$nextTick(() => {
+          this.form.setFieldsValue(pick(this.model,'loginName','username','roleId','orgaId','position',
             'phonenum','email','userBlngOrgaDsplSeq','description'))
         });
       },

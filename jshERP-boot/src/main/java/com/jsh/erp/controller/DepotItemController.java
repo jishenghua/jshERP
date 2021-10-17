@@ -6,6 +6,7 @@ import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.vo.DepotItemStockWarningCount;
+import com.jsh.erp.datasource.vo.DepotItemVoBatchNumberList;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.materialExtend.MaterialExtendService;
 import com.jsh.erp.service.depotItem.DepotItemService;
@@ -27,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
+import static com.jsh.erp.utils.Tools.getCenternTime;
 
 /**
  * @author ji-sheng-hua 华夏erp
@@ -175,6 +177,7 @@ public class DepotItemController {
                     item.put("name", diEx.getMName());
                     item.put("standard", diEx.getMStandard());
                     item.put("model", diEx.getMModel());
+                    item.put("color", diEx.getMColor());
                     item.put("materialOther", getOtherInfo(mpArr, diEx));
                     Integer ratio = diEx.getRatio();
                     BigDecimal stock;
@@ -194,9 +197,16 @@ public class DepotItemController {
                     }
                     item.put("stock", stock);
                     item.put("unit", diEx.getMaterialUnit());
+                    item.put("snList", diEx.getSnList());
+                    item.put("batchNumber", diEx.getBatchNumber());
+                    item.put("expirationDate", Tools.parseDateToStr(diEx.getExpirationDate()));
                     item.put("sku", diEx.getSku());
+                    item.put("enableSerialNumber", diEx.getEnableSerialNumber());
+                    item.put("enableBatchNumber", diEx.getEnableBatchNumber());
                     item.put("operNumber", diEx.getOperNumber());
                     item.put("basicNumber", diEx.getBasicNumber());
+                    item.put("preNumber", diEx.getOperNumber()); //原数量
+                    item.put("finishNumber", depotItemService.getFinishNumber(diEx.getMaterialId(), diEx.getHeaderId())); //已入库|已出库
                     item.put("unitPrice", diEx.getUnitPrice());
                     item.put("taxUnitPrice", diEx.getTaxUnitPrice());
                     item.put("allPrice", diEx.getAllPrice());
@@ -599,6 +609,40 @@ public class DepotItemController {
             e.printStackTrace();
             message = "统计失败";
             res.code = 500;
+        }
+        return res;
+    }
+
+    /**
+     * 获取批次商品列表信息
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/getBatchNumberList")
+    public BaseResponseInfo getBatchNumberList(@RequestParam("name") String name,
+                                               @RequestParam("depotId") Long depotId,
+                                               @RequestParam("barCode") String barCode,
+                                               @RequestParam(value = "batchNumber", required = false) String batchNumber,
+                                               HttpServletRequest request) throws Exception{
+        BaseResponseInfo res = new BaseResponseInfo();
+        Map<String, Object> map = new HashMap<>();
+        try {
+            List<DepotItemVoBatchNumberList> reslist = new ArrayList<>();
+            List<DepotItemVoBatchNumberList> list = depotItemService.getBatchNumberList(name, depotId, barCode, batchNumber);
+            for(DepotItemVoBatchNumberList bn: list) {
+                if(bn.getTotalNum()!=null && bn.getTotalNum().compareTo(BigDecimal.ZERO)>0) {
+                    reslist.add(bn);
+                }
+                bn.setExpirationDateStr(Tools.parseDateToStr(bn.getExpirationDate()));
+            }
+            map.put("rows", reslist);
+            map.put("total", reslist.size());
+            res.code = 200;
+            res.data = map;
+        } catch (Exception e) {
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
         }
         return res;
     }

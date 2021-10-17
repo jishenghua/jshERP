@@ -197,8 +197,11 @@ public class MaterialController {
                     item.put("categoryName", material.getCategoryName());
                     item.put("standard", material.getStandard());
                     item.put("model", material.getModel());
+                    item.put("color", material.getColor());
                     item.put("unit", material.getCommodityUnit() + ratio);
                     item.put("sku", material.getSku());
+                    item.put("enableSerialNumber", material.getEnableSerialNumber());
+                    item.put("enableBatchNumber", material.getEnableBatchNumber());
                     BigDecimal stock;
                     if(StringUtil.isNotEmpty(material.getSku())){
                         stock = depotItemService.getSkuStockByParam(depotId,material.getMeId(),null,null);
@@ -489,13 +492,16 @@ public class MaterialController {
                             Boolean isDefault = depotObj.getBoolean("isDefault");
                             if(isDefault) {
                                 Long depotId = depotObj.getLong("id");
-                                mvo.setDepotId(depotId);
+                                if(!"CGDD".equals(prefixNo) && !"XSDD".equals(prefixNo) ) {
+                                    //除订单之外的单据才有仓库
+                                    mvo.setDepotId(depotId);
+                                }
                                 //库存
                                 BigDecimal stock;
                                 if(StringUtil.isNotEmpty(mvo.getSku())){
-                                    stock = depotItemService.getSkuStockByParam(depotId,mvo.getMeId(),null,null);
+                                    stock = depotItemService.getSkuStockByParam(mvo.getDepotId(),mvo.getMeId(),null,null);
                                 } else {
-                                    stock = depotItemService.getStockByParam(depotId,mvo.getId(),null,null);
+                                    stock = depotItemService.getStockByParam(mvo.getDepotId(),mvo.getId(),null,null);
                                     if (mvo.getUnitId()!=null){
                                         Unit unit = unitService.getUnit(mvo.getUnitId());
                                         if(mvo.getCommodityUnit().equals(unit.getOtherUnit())) {
@@ -529,6 +535,8 @@ public class MaterialController {
      * @param categoryId
      * @param materialParam
      * @param mpList
+     * @param column
+     * @param order
      * @param request
      * @return
      * @throws Exception
@@ -540,6 +548,8 @@ public class MaterialController {
                                              @RequestParam("categoryId") Long categoryId,
                                              @RequestParam("materialParam") String materialParam,
                                              @RequestParam("mpList") String mpList,
+                                             @RequestParam("column") String column,
+                                             @RequestParam("order") String order,
                                              HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<>();
@@ -549,7 +559,7 @@ public class MaterialController {
                 idList = materialService.getListByParentId(categoryId);
             }
             List<MaterialVo4Unit> dataList = materialService.getListWithStock(depotId, idList, StringUtil.toNull(materialParam),
-                    (currentPage-1)*pageSize, pageSize);
+                    column, order, (currentPage-1)*pageSize, pageSize);
             int total = materialService.getListWithStockCount(depotId, idList, StringUtil.toNull(materialParam));
             MaterialVo4Unit materialVo4Unit= materialService.getTotalStockAndPrice(depotId, idList, StringUtil.toNull(materialParam));
             map.put("total", total);

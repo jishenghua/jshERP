@@ -61,6 +61,7 @@ const addSerialNumber = (params)=>postAction("/serialNumber/add",params);
 const editSerialNumber = (params)=>putAction("/serialNumber/update",params);
 const checkSerialNumber = (params)=>getAction("/serialNumber/checkIsNameExist",params);
 const batAddSerialNumber = (params)=>postAction("/serialNumber/batAddSerialNumber",params);
+const getEnableSerialNumberList = (params)=>getAction("/serialNumber/getEnableSerialNumberList",params);
 //多属性
 const addMaterialAttribute = (params)=>postAction("/materialAttribute/add",params);
 const editMaterialAttribute = (params)=>putAction("/materialAttribute/update",params);
@@ -97,6 +98,7 @@ const findBySelectRetail = (params)=>postAction("/supplier/findBySelect_retail",
 //单据相关
 const findBillDetailByNumber = (params)=>getAction("/depotHead/getDetailByNumber",params);
 const findStockByDepotAndBarCode = (params)=>getAction("/depotItem/findStockByDepotAndBarCode",params);
+const getBatchNumberList = (params)=>getAction("/depotItem/getBatchNumberList",params);
 const findFinancialDetailByNumber = (params)=>getAction("/accountHead/getDetailByNumber",params);
 
 export {
@@ -148,6 +150,7 @@ export {
   editSerialNumber,
   checkSerialNumber,
   batAddSerialNumber,
+  getEnableSerialNumberList,
   addMaterialAttribute,
   editMaterialAttribute,
   checkMaterialAttribute,
@@ -176,6 +179,7 @@ export {
   findBySelectRetail,
   findBillDetailByNumber,
   findStockByDepotAndBarCode,
+  getBatchNumberList,
   findFinancialDetailByNumber
 }
 

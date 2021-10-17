@@ -405,7 +405,9 @@
                           @mouseover="()=>{handleMouseoverCommono(row,col)}"
                           @mouseout="()=>{handleMouseoutCommono(row,col)}">
 
-                          <j-select-material
+                          <j-select-list
+                            :rows="getPopupJshRows(row)"
+                            :kind="col.kind"
                             :multi="col.multi"
                             :value="getPopupJshValue(id)"
                             @change="(v)=>handleChangePopupJshCommon(v,id,row,col,rowIndex)" />
@@ -767,14 +769,14 @@
   import { getFileAccessHttpUrl } from '@/api/manage';
   import JInputPop from '@/components/jeecg/minipop/JInputPop'
   import JFilePop from '@/components/jeecg/minipop/JFilePop'
-  import JSelectMaterial from '@/components/jeecgbiz/JSelectMaterial'
+  import JSelectList from '@/components/jeecgbiz/JSelectList'
 
   // 行高，需要在实例加载完成前用到
   let rowHeight = 42
 
   export default {
     name: 'JEditableTable',
-    components: { JDate, Draggable, JInputPop, JFilePop, JSelectMaterial },
+    components: { JDate, Draggable, JInputPop, JFilePop, JSelectList },
     provide() {
       return {
         parentIsJEditableTable: true,
@@ -2043,15 +2045,13 @@
               let value = item[key]
               if (value && count !== '-') {
                 try {
-                  // 20200528 cfm modi
-                  // count += Number.parseInt(value)
                   count += Number.parseFloat(value)
                 } catch (e) {
                   count = '-'
                 }
               }
             })
-            this.statisticsColumns[key] = count
+            this.statisticsColumns[key] = count.toFixed(2)
           }
         }
       },
@@ -2703,6 +2703,11 @@
       /** popupJsh输入框回显 */
       getPopupJshValue(id) {
         return this.popupJshValues[id]
+      },
+      /** popupJsh构造传值 */
+      getPopupJshRows(row) {
+        let { values } = this.getValuesSync({ validate: false, rowIds: [row.id] })
+        return JSON.stringify(values[0])
       },
       handleRadioChange(value, id, row, column) {
         this.radioValues = this.bindValuesChange(value, id, 'radioValues')

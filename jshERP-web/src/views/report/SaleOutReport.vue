@@ -37,11 +37,27 @@
             rowKey="id"
             :columns="columns"
             :dataSource="dataSource"
-            :pagination="ipagination"
+            :pagination="false"
             :scroll="scroll"
             :loading="loading"
             @change="handleTableChange">
           </a-table>
+          <a-row :gutter="24" style="margin-top: 8px;text-align:right;">
+            <a-col :md="24" :sm="24">
+              <a-pagination @change="paginationChange" @showSizeChange="paginationShowSizeChange"
+                size="small"
+                show-size-changer
+                :showQuickJumper="true"
+                :page-size="ipagination.pageSize"
+                :page-size-options="ipagination.pageSizeOptions"
+                :total="ipagination.total"
+                :show-total="(total, range) => `共 ${total} 条`">
+                <template slot="buildOptionText" slot-scope="props">
+                  <span>{{ props.value-1 }}条/页</span>
+                </template>
+              </a-pagination>
+            </a-col>
+          </a-row>
         </section>
         <!-- table区域-end -->
       </a-card>
@@ -78,19 +94,16 @@
           mpList: getMpListShort(Vue.ls.get('materialPropertyList'))
         },
         ipagination:{
-          pageSizeOptions: ['10', '20', '30', '100', '200']
+          pageSize: 11,
+          pageSizeOptions: ['11', '21', '31', '101', '201']
         },
         tabKey: "1",
         // 表头
         columns: [
           {
-            title: '#',
-            dataIndex: '',
-            key:'rowIndex',
-            width:60,
-            align:"center",
+            title: '#', dataIndex: 'rowIndex', width:60, align:"center",
             customRender:function (t,r,index) {
-              return parseInt(index)+1;
+              return (t !== '合计') ? (parseInt(index) + 1) : t
             }
           },
           {title: '条码', dataIndex: 'barCode', width: 160},
@@ -99,11 +112,11 @@
           {title: '型号', dataIndex: 'materialModel', width: 80},
           {title: '扩展信息', dataIndex: 'materialOther', width: 150},
           {title: '单位', dataIndex: 'materialUnit', width: 80},
-          {title: '销售数量', dataIndex: 'outSum', width: 80},
-          {title: '销售金额', dataIndex: 'outSumPrice', width: 80},
-          {title: '退货数量', dataIndex: 'inSum', width: 80},
-          {title: '退货金额', dataIndex: 'inSumPrice', width: 80},
-          {title: '实际销售金额', dataIndex: 'outInSumPrice', width: 80}
+          {title: '销售数量', dataIndex: 'outSum', sorter: (a, b) => a.outSum - b.outSum, width: 80},
+          {title: '销售金额', dataIndex: 'outSumPrice', sorter: (a, b) => a.outSumPrice - b.outSumPrice, width: 80},
+          {title: '退货数量', dataIndex: 'inSum', sorter: (a, b) => a.inSum - b.inSum, width: 80},
+          {title: '退货金额', dataIndex: 'inSumPrice', sorter: (a, b) => a.inSumPrice - b.inSumPrice, width: 80},
+          {title: '实际销售金额', dataIndex: 'outInSumPrice', sorter: (a, b) => a.outInSumPrice - b.outInSumPrice, width: 100}
         ],
         url: {
           list: "/depotItem/saleOut"
@@ -119,7 +132,7 @@
         param.monthTime = this.queryParam.monthTime;
         param.field = this.getQueryField();
         param.currentPage = this.ipagination.current;
-        param.pageSize = this.ipagination.pageSize;
+        param.pageSize = this.ipagination.pageSize-1;
         return param;
       },
       onChange: function (value, dateString) {

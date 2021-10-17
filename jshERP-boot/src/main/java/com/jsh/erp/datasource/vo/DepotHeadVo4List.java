@@ -25,6 +25,8 @@ public class DepotHeadVo4List extends DepotHead{
 
     private BigDecimal finishDebt;
 
+    private String depotHeadType;
+
     public String getProjectName() {
         return projectName;
     }
@@ -95,5 +97,13 @@ public class DepotHeadVo4List extends DepotHead{
 
     public void setFinishDebt(BigDecimal finishDebt) {
         this.finishDebt = finishDebt;
+    }
+
+    public String getDepotHeadType() {
+        return depotHeadType;
+    }
+
+    public void setDepotHeadType(String depotHeadType) {
+        this.depotHeadType = depotHeadType;
     }
 }

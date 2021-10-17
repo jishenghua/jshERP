@@ -9,82 +9,16 @@
         <result column="updaterName" jdbcType="VARCHAR" property="updaterName" />
         <result column="depotHeadNumber" jdbcType="VARCHAR" property="depotHeadNumber" />
         <result column="depotHeadType" jdbcType="VARCHAR" property="depotHeadType" />
+        <result column="depotName" jdbcType="VARCHAR" property="depotName" />
     </resultMap>
-    <select id="selectByConditionSerialNumber" resultMap="SerialNumberExBaseResultMap">
-        select
-        ser.id, ser.material_id, ser.serial_number, ser.is_sell, ser.remark, ser.delete_flag, ser.create_time,
-        ser.update_time,me.bar_code as materialCode,mat.name as materialName,null as creator,null as updater,null as creatorName,
-        null as updaterName,ser.depot_head_id, dh.number as depotHeadNumber,concat(dh.sub_type,dh.type) as depotHeadType
-        FROM jsh_serial_number ser
-        left join jsh_material mat on mat.id = ser.material_Id and ifnull(mat.delete_flag,'0') !='1'
-        left join jsh_material_extend me on mat.id=me.material_id and ifnull(me.delete_Flag,'0') !='1'
-        left join jsh_depot_head dh on dh.id= ser.depot_head_id and ifnull(dh.delete_flag,'0') !='1'
-        where 1=1
-        <if test="serialNumber != null">
-            <bind name="serialNumber" value="'%' + _parameter.serialNumber + '%'" />
-            and ser.serial_number like  #{serialNumber}
-        </if>
-        <if test="materialName != null">
-            <bind name="materialName" value="'%' + _parameter.materialName + '%'" />
-            and mat.name like  #{materialName}
-        </if>
-        and ifnull(ser.delete_flag,'0') !='1'
-        order by ser.id desc
-        <if test="offset != null and rows != null">
-            limit #{offset},#{rows}
-        </if>
-    </select>
-    <select id="countSerialNumber"  resultType="java.lang.Long">
-        SELECT
-        COUNT(ser.id)
-        FROM jsh_serial_number ser
-        left JOIN jsh_material mat on mat.id = ser.material_Id and ifnull(mat.delete_flag,'0') !='1'
-        where 1=1
-        <if test="serialNumber != null">
-            <bind name="serialNumber" value="'%' + _parameter.serialNumber + '%'" />
-            and ser.serial_Number like #{serialNumber}
-        </if>
-        <if test="materialName != null">
-            <bind name="materialName" value="'%' + _parameter.materialName + '%'" />
-            and mat.name like  #{materialName}
-        </if>
-        and ifnull(ser.delete_flag,'0') !='1'
-        order by ser.id desc
-    </select>
-    <select id="findById" resultMap="SerialNumberExBaseResultMap">
-        SELECT
-        ser.id, ser.material_id, ser.serial_number, ser.is_sell, ser.remark, ser.delete_flag, ser.create_time,
-        ser.update_time,ser.creator,ser.updater,mat.name as materialName,cr.username as creatorName,
-        ur.username as updaterName,ser.depot_head_id
-        FROM jsh_serial_number ser
-        left JOIN jsh_material mat on mat.id = ser.material_Id and ifnull(mat.delete_Flag,'0') !='1'
-        left join jsh_user cr on ser.creator=cr.id and ifnull(cr.status,'0') not in('1','2')
-        left join jsh_user ur on ser.updater=ur.id and ifnull(ur.status,'0') not in('1','2')
-        where 1=1
-        and ser.id=#{id}
-        and ifnull(ser.delete_flag,'0') !='1'
-        order by ser.id desc
-    </select>
-    <select id="findBySerialNumber" resultMap="SerialNumberExBaseResultMap">
-        SELECT
-        ser.id, ser.material_id, ser.serial_number, ser.is_sell, ser.remark, ser.delete_flag, ser.create_time,
-        ser.update_time,ser.creator,ser.updater,ser.depot_head_id
-        FROM jsh_serial_number ser
-        where 1=1
-        <if test="serialNumber != null">
-            and ser.serial_number=#{serialNumber}
-        </if>
-        and ifnull(ser.delete_flag,'0') !='1'
-        order by ser.id desc
-    </select>
     <insert id="addSerialNumber" parameterType="com.jsh.erp.datasource.entities.SerialNumberEx"
             useGeneratedKeys="true" keyProperty="id" keyColumn="id">
        insert into jsh_serial_number
         (material_id, serial_number, is_sell, remark,delete_flag,
-        create_time, creator,update_time, updater,depot_head_id)
+        create_time, creator,update_time, updater,in_bill_no, out_bill_no)
         values
         (#{materialId},#{serialNumber},#{isSell},#{remark},#{deleteFlag},
-        #{createTime},#{creator},#{updateTime},#{updater},#{depotHeadId}
+        #{createTime},#{creator},#{updateTime},#{updater},#{inBillNo},#{outBillNo}
         )
     </insert>
     <update id="updateSerialNumber" parameterType="com.jsh.erp.datasource.entities.SerialNumberEx">
@@ -111,8 +45,11 @@
             <if test="updater != null">
                 updater = #{updater,jdbcType=BIGINT},
             </if>
-            <if test="depotHeadId != null">
-                depot_head_id = #{depotHeadId,jdbcType=BIGINT},
+            <if test="inBillNo != null">
+                in_bill_no = #{inBillNo,jdbcType=VARCHAR},
+            </if>
+            <if test="outBillNo != null">
+                out_bill_no = #{outBillNo,jdbcType=VARCHAR}
             </if>
         </set>
         where id = #{id,jdbcType=BIGINT}
@@ -129,26 +66,12 @@
         and ifnull(ser.delete_flag,'0') !='1'
         and ser.is_sell !='1'
     </select>
-    <select id="countSerialNumberByMaterialIdAndDepotheadId" resultType="java.lang.Integer">
-        SELECT
-        count(ser.id)
-        FROM jsh_serial_number ser
-        where 1=1
-        <if test="materialId != null">
-            and ser.material_id=#{materialId}
-        </if>
-        <if test="depotHeadId != null">
-            and ser.depot_head_id=#{depotHeadId}
-        </if>
-        and ser.is_sell =#{isSell,jdbcType=VARCHAR}
-        and ifnull(ser.delete_flag,'0') !='1'
-    </select>
     <update id="sellSerialNumber">
         update jsh_serial_number
         <set>
             is_sell = '1',
-            <if test="depotHeadId !=null ">
-                depot_head_id = #{depotHeadId},
+            <if test="outBillNo !=null ">
+                out_bill_no = #{outBillNo},
             </if>
             <if test="updateTime !=null ">
                 update_time = #{updateTime},
@@ -163,26 +86,21 @@
         </if>
             and is_sell != '1'
             and ifnull(delete_flag,'0') !='1'
-        <if test="count != null">
-        and id in
-            ( select batchSN.id from
-                ( select selFrom.id from jsh_serial_number selFrom
-                    where 1=1
-                    <if test="materialId != null">
-                        and selFrom.material_Id = #{materialId}
-                    </if>
-                        and selFrom.is_sell != '1'
-                        and ifnull(selFrom.delete_flag,'0') !='1'
-                    limit 0,#{count}
-                ) batchSN
+        <if test="snArray != null">
+            and serial_number
+            in (
+            <foreach collection="snArray" item="sn" separator=",">
+                #{sn}
+            </foreach>
             )
         </if>
+
     </update>
 
     <update id="cancelSerialNumber">
         update jsh_serial_number
         <set>
-                is_sell = '0', depot_head_id=null,
+                is_sell = '0', out_bill_no=null,
             <if test="updateTime !=null ">
                 update_time = #{updateTime},
             </if>
@@ -194,8 +112,8 @@
         <if test="materialId != null">
             and material_id = #{materialId}
         </if>
-        <if test="depotHeadId !=null ">
-            and depot_head_id = #{depotHeadId,jdbcType=BIGINT}
+        <if test="outBillNo !=null ">
+            and out_bill_no = #{outBillNo,jdbcType=VARCHAR}
         </if>
             and is_sell != '0'
             and ifnull(delete_flag,'0') !='1'
@@ -207,8 +125,8 @@
             <if test="materialId != null">
                 and selFrom.material_id = #{materialId}
             </if>
-            <if test="depotHeadId !=null ">
-                and selFrom.depot_head_id = #{depotHeadId,jdbcType=BIGINT}
+            <if test="outBillNo !=null ">
+                and selFrom.out_bill_no = #{outBillNo,jdbcType=VARCHAR}
             </if>
                 and selFrom.is_sell !='0'
                 and ifnull(selFrom.delete_flag,'0') !='1'
@@ -240,8 +158,48 @@
         )
     </update>
 
-
-
-
-
+    <select id="getEnableSerialNumberList" resultMap="com.jsh.erp.datasource.mappers.SerialNumberMapper.BaseResultMap">
+        select
+        ser.id, ser.serial_number
+        FROM jsh_serial_number ser
+        left join jsh_material m on m.id=ser.material_id and ifnull(m.delete_flag, '0') != '1'
+        left join jsh_material_extend me on me.material_id=m.id and ifnull(me.delete_flag,'0') !='1'
+        where 1=1 and me.default_flag=1
+        <if test="name != null">
+            <bind name="bindName" value="'%'+name+'%'"/>
+            and ser.serial_number like #{bindName}
+        </if>
+        <if test="depotId != null">
+            and ser.depot_id = #{depotId}
+        </if>
+        <if test="barCode != null">
+            and me.bar_code= #{barCode}
+        </if>
+        and ser.is_sell = '0'
+        and ifnull(ser.delete_flag,'0') !='1'
+        order by ser.id desc
+        <if test="offset != null and rows != null">
+            limit #{offset},#{rows}
+        </if>
+    </select>
+    <select id="getEnableSerialNumberCount" resultType="java.lang.Long">
+        select
+        count(1)
+        FROM jsh_serial_number ser
+        left join jsh_material m on m.id=ser.material_id and ifnull(m.delete_flag, '0') != '1'
+        left join jsh_material_extend me on me.material_id=m.id and ifnull(me.delete_flag,'0') !='1'
+        where 1=1 and me.default_flag=1
+        <if test="name != null">
+            <bind name="bindName" value="'%'+name+'%'"/>
+            and ser.serial_number like #{bindName}
+        </if>
+        <if test="depotId != null">
+            and ser.depot_id = #{depotId}
+        </if>
+        <if test="barCode != null">
+            and me.bar_code= #{barCode}
+        </if>
+        and ser.is_sell = '0'
+        and ifnull(ser.delete_flag,'0') !='1'
+    </select>
 </mapper>

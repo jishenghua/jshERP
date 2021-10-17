@@ -327,6 +327,14 @@
         and id = #{id}
     </update>
 
+    <update id="setExpiryNumToNull">
+        update jsh_material
+        set expiry_num = null
+        where 1=1
+        and ifnull(delete_flag,'0') !='1'
+        and id = #{id}
+    </update>
+
     <select id="getListWithStock" resultMap="ResultMapListWithStock">
         select m.*, me.commodity_unit unitName, mc.name categoryName, me.bar_code,
         ifnull(me.purchase_decimal,0) purchase_decimal,
@@ -359,7 +367,12 @@
         </if>
         and ifnull(m.delete_flag,'0') !='1'
         group by m.id
-        order by m.id desc
+        <if test="column == 'createTime'">
+            order by m.id desc
+        </if>
+        <if test="column != 'createTime'">
+            order by ${column} ${order}
+        </if>
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
         </if>

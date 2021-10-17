@@ -68,9 +68,10 @@ export const JeecgListMixin = {
       this.initDictConfig();
       //初始化按钮权限
       this.initActiveBtnStr();
-      //初始化列表横向或纵向滚动
-      this.initScroll()
     }
+  },
+  mounted () {
+    this.initScroll()
   },
   methods:{
     loadData(arg) {
@@ -88,6 +89,7 @@ export const JeecgListMixin = {
         if (res.code===200) {
           this.dataSource = res.data.rows;
           this.ipagination.total = res.data.total;
+          this.tableAddTotalRow(this.columns, this.dataSource)
         }
         if(res.code===510){
           this.$message.warning(res.data)
@@ -126,7 +128,6 @@ export const JeecgListMixin = {
       return filterObj(param);
     },
     getQueryField() {
-      //TODO 字段权限控制
       var str = "id,";
       this.columns.forEach(function (value) {
         str += "," + value.dataIndex;
@@ -244,12 +245,13 @@ export const JeecgListMixin = {
     },
     handleTableChange(pagination, filters, sorter) {
       //分页、排序、筛选变化时触发
-      //TODO 筛选
       if (Object.keys(sorter).length > 0) {
         this.isorter.column = sorter.field;
         this.isorter.order = "ascend" == sorter.order ? "asc" : "desc"
       }
-      this.ipagination = pagination;
+      if(pagination && pagination.current) {
+        this.ipagination = pagination;
+      }
       this.loadData();
     },
     handleToggleSearch(){
@@ -357,12 +359,64 @@ export const JeecgListMixin = {
         }
       }
     },
+    /* 初始化表格横向或纵向滚动 */
     initScroll() {
       if (this.isMobile()) {
         this.scroll.y = ''
       } else {
-        this.scroll.y = document.documentElement.clientHeight-330
+        let basicLength = 274
+        let searchWrapperDomLen=0, operatorDomLen=0
+        //搜索区域
+        let searchWrapperDom = document.getElementsByClassName('table-page-search-wrapper')
+        //操作按钮区域
+        let operatorDom = document.getElementsByClassName('table-operator')
+        if(searchWrapperDom && searchWrapperDom[0]) {
+          searchWrapperDomLen = searchWrapperDom[0].offsetHeight
+        }
+        if(operatorDom && operatorDom[0]) {
+          operatorDomLen = operatorDom[0].offsetHeight+10
+        }
+        this.scroll.y = document.documentElement.clientHeight-searchWrapperDomLen-operatorDomLen-basicLength
       }
+    },
+    /** 表格增加合计行 */
+    tableAddTotalRow(columns, dataSource) {
+      if(dataSource.length>0 && this.ipagination.pageSize%10===1) {
+        //分页条数为11、21、31等的时候增加合计行
+        let numKey = 'rowIndex'
+        let totalRow = { [numKey]: '合计' }
+        //移除不需要合计的列
+        let removeCols = 'action,mBarCode,barCode,serialNo,unitPrice,purchaseDecimal,operTime,oTime'
+        columns.forEach(column => {
+          let { key, dataIndex } = column
+          if (![key, dataIndex].includes(numKey)) {
+            let total = 0
+            dataSource.forEach(data => {
+              total += Number.parseFloat(data[dataIndex])
+            })
+            if (Number.isNaN(total)) {
+              total = '-'
+            } else {
+              total = total.toFixed(2)
+            }
+            if(removeCols.indexOf(dataIndex)>-1) {
+              total = '-'
+            }
+            totalRow[dataIndex] = total
+          }
+        })
+        dataSource.push(totalRow)
+      }
+    },
+    paginationChange(page, pageSize) {
+      this.ipagination.current = page
+      this.ipagination.pageSize = pageSize
+      this.loadData(this.ipagination.current);
+    },
+    paginationShowSizeChange(current, size) {
+      this.ipagination.current = current
+      this.ipagination.pageSize = size
+      this.loadData(this.ipagination.current);
     }
   }
 

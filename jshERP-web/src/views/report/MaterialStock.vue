@@ -61,14 +61,30 @@
             rowKey="id"
             :columns="columns"
             :dataSource="dataSource"
-            :pagination="ipagination"
+            :pagination="false"
             :scroll="scroll"
             :loading="loading"
             @change="handleTableChange">
               <span slot="action" slot-scope="text, record">
-                <a @click="showMaterialInOutList(record)">流水</a>
+                <a @click="showMaterialInOutList(record)">{{record.id?'流水':''}}</a>
               </span>
           </a-table>
+          <a-row :gutter="24" style="margin-top: 8px;text-align:right;">
+            <a-col :md="24" :sm="24">
+              <a-pagination @change="paginationChange" @showSizeChange="paginationShowSizeChange"
+                size="small"
+                show-size-changer
+                :showQuickJumper="true"
+                :page-size="ipagination.pageSize"
+                :page-size-options="ipagination.pageSizeOptions"
+                :total="ipagination.total"
+                :show-total="(total, range) => `共 ${total} 条`">
+                <template slot="buildOptionText" slot-scope="props">
+                  <span>{{ props.value-1 }}条/页</span>
+                </template>
+              </a-pagination>
+            </a-col>
+          </a-row>
         </section>
         <!-- table区域-end -->
         <material-in-out-list ref="materialInOutList" @ok="modalFormOk"></material-in-out-list>
@@ -109,7 +125,8 @@
           mpList: getMpListShort(Vue.ls.get('materialPropertyList'))  //扩展属性
         },
         ipagination:{
-          pageSizeOptions: ['10', '20', '30', '100', '200']
+          pageSize: 11,
+          pageSizeOptions: ['11', '21', '31', '101', '201']
         },
         depotList: [],
         categoryTree:[],
@@ -118,22 +135,22 @@
         // 表头
         columns: [
           {
-            title: '#', dataIndex: '', key:'rowIndex', width:40, align:"center",
+            title: '#', dataIndex: 'rowIndex', width:40, align:"center",
             customRender:function (t,r,index) {
-              return parseInt(index)+1;
+              return (t !== '合计') ? (parseInt(index) + 1) : t
             }
           },
           {title: '条码', dataIndex: 'mBarCode', width: 80},
-          {title: '名称', dataIndex: 'name', width: 80},
+          {title: '名称', dataIndex: 'name', width: 140},
           {title: '规格', dataIndex: 'standard', width: 80},
           {title: '型号', dataIndex: 'model', width: 80},
           {title: '颜色', dataIndex: 'color', width: 80},
           {title: '类别', dataIndex: 'categoryName', width: 80},
-          {title: '单位', dataIndex: 'unitName', width: 80},
-          {title: '单价', dataIndex: 'purchaseDecimal', width: 60},
-          {title: '初始库存', dataIndex: 'initialStock', width: 80},
-          {title: '当前库存', dataIndex: 'currentStock', width: 80},
-          {title: '当前库存金额', dataIndex: 'currentStockPrice', width: 80},
+          {title: '单位', dataIndex: 'unitName', width: 60},
+          {title: '单价', dataIndex: 'purchaseDecimal', sorter: (a, b) => a.purchaseDecimal - b.purchaseDecimal, width: 60},
+          {title: '初始库存', dataIndex: 'initialStock', sorter: (a, b) => a.initialStock - b.initialStock, width: 60},
+          {title: '当前库存', dataIndex: 'currentStock', sorter: (a, b) => a.currentStock - b.currentStock, width: 60},
+          {title: '当前库存金额', dataIndex: 'currentStockPrice', sorter: (a, b) => a.currentStockPrice - b.currentStockPrice, width: 80},
           { title: '库存流水', dataIndex: 'action', align:"center", width: 100,
             scopedSlots: { customRender: 'action' }
           }
@@ -153,7 +170,7 @@
         let param = Object.assign({}, this.queryParam, this.isorter);
         param.field = this.getQueryField();
         param.currentPage = this.ipagination.current;
-        param.pageSize = this.ipagination.pageSize;
+        param.pageSize = this.ipagination.pageSize-1;
         return param;
       },
       getDepotData() {
@@ -197,6 +214,7 @@
           if (res.code===200) {
             this.dataSource = res.data.rows;
             this.ipagination.total = res.data.total;
+            this.tableAddTotalRow(this.columns, this.dataSource)
             this.currentStock = res.data.currentStock;
             this.currentStockPrice = res.data.currentStockPrice;
           }

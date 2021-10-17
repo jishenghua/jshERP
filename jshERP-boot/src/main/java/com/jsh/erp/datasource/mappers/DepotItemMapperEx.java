@@ -3,6 +3,7 @@ package com.jsh.erp.datasource.mappers;
 import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.vo.DepotItemStockWarningCount;
 import com.jsh.erp.datasource.vo.DepotItemVo4Stock;
+import com.jsh.erp.datasource.vo.DepotItemVoBatchNumberList;
 import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
@@ -123,4 +124,16 @@ public interface DepotItemMapperEx {
     int findStockWarningCountTotal(
             @Param("materialParam") String materialParam,
             @Param("depotId") Long depotId);
+
+    BigDecimal getFinishNumber(
+            @Param("mId") Long mId,
+            @Param("linkNumber") String linkNumber,
+            @Param("goToType") String goToType);
+
+    List<DepotItemVoBatchNumberList> getBatchNumberList(
+            @Param("name") String name,
+            @Param("depotId") Long depotId,
+            @Param("barCode") String barCode,
+            @Param("batchNumber") String batchNumber
+            );
 }

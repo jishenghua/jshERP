@@ -62,7 +62,7 @@
             </a-popover>
           </a-upload>
           <a-button type="primary" icon="download" @click="handleExportXls('商品信息')">导出</a-button>
-          <a-dropdown v-if="selectedRowKeys.length > 0">
+          <a-dropdown>
             <a-menu slot="overlay">
               <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
               <a-menu-item key="2" v-if="btnEnableList.indexOf(1)>-1" @click="batchSetStatus(true)"><a-icon type="check-square"/>启用</a-menu-item>
@@ -105,6 +105,10 @@
             <template slot="customRenderEnableSerialNumber" slot-scope="enableSerialNumber">
               <a-tag v-if="enableSerialNumber==1" color="green">有</a-tag>
               <a-tag v-if="enableSerialNumber==0" color="orange">无</a-tag>
+            </template>
+            <template slot="customRenderEnableBatchNumber" slot-scope="enableBatchNumber">
+              <a-tag v-if="enableBatchNumber==1" color="green">有</a-tag>
+              <a-tag v-if="enableBatchNumber==0" color="orange">无</a-tag>
             </template>
           </a-table>
         </div>
@@ -175,11 +179,14 @@
           {title: '序列号', dataIndex: 'enableSerialNumber', width: '4%', align: "center",
             scopedSlots: { customRender: 'customRenderEnableSerialNumber' }
           },
+          {title: '批号', dataIndex: 'enableBatchNumber', width: '3%', align: "center",
+            scopedSlots: { customRender: 'customRenderEnableBatchNumber' }
+          },
           {
             title: '操作',
             dataIndex: 'action',
             align:"center",
-            width: '8%',
+            width: '6%',
             scopedSlots: { customRender: 'action' },
           }
         ],
@@ -203,13 +210,6 @@
       }
     },
     methods: {
-      initScroll() {
-        if (this.isMobile()) {
-          this.scroll.y = ''
-        } else {
-          this.scroll.y = document.documentElement.clientHeight-370
-        }
-      },
       loadTreeData(){
         let that = this;
         let params = {};

@@ -209,57 +209,6 @@ public class SupplierController {
     }
 
     /**
-     * 生成excel表格
-     * @param supplier
-     * @param type
-     * @param phonenum
-     * @param telephone
-     * @param request
-     * @param response
-     * @return
-     */
-    @GetMapping(value = "/exportExcel")
-    public void exportExcel(@RequestParam("supplier") String supplier,
-                                        @RequestParam("type") String type,
-                                        @RequestParam("phonenum") String phonenum,
-                                        @RequestParam("telephone") String telephone,
-                                        HttpServletRequest request, HttpServletResponse response) {
-        try {
-            List<Supplier> dataList = supplierService.findByAll(supplier, type, phonenum, telephone);
-            String[] names = {"名称", "类型", "联系人", "电话", "电子邮箱", "预收款", "期初应收", "期初应付", "备注", "传真", "手机", "地址", "纳税人识别号", "开户行", "账号", "税率", "状态"};
-            String title = "信息报表";
-            List<String[]> objects = new ArrayList<String[]>();
-            if (null != dataList) {
-                for (Supplier s : dataList) {
-                    String[] objs = new String[17];
-                    objs[0] = s.getSupplier();
-                    objs[1] = s.getType();
-                    objs[2] = s.getContacts();
-                    objs[3] = s.getPhoneNum();
-                    objs[4] = s.getEmail();
-                    objs[5] = s.getAdvanceIn() == null? "" : s.getAdvanceIn().toString();
-                    objs[6] = s.getBeginNeedGet() == null? "" : s.getBeginNeedGet().toString();
-                    objs[7] = s.getBeginNeedPay() == null? "" : s.getBeginNeedPay().toString();
-                    objs[8] = s.getDescription();
-                    objs[9] = s.getFax();
-                    objs[10] = s.getTelephone();
-                    objs[11] = s.getAddress();
-                    objs[12] = s.getTaxNum();
-                    objs[13] = s.getBankName();
-                    objs[14] = s.getAccountNumber();
-                    objs[15] = s.getTaxRate() == null? "" : s.getTaxRate().toString();
-                    objs[16] = s.getEnabled() ? "启用" : "禁用";
-                    objects.add(objs);
-                }
-            }
-            File file = ExcelUtils.exportObjectsWithoutTitle(title, names, title, objects);
-            ExportExecUtil.showExec(file, file.getName(), response);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
      * 导入excel表格
      * @param file
      * @param request

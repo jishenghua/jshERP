@@ -225,6 +225,66 @@ public class SerialNumberExample {
             return (Criteria) this;
         }
 
+        public Criteria andDepotIdIsNull() {
+            addCriterion("depot_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDepotIdIsNotNull() {
+            addCriterion("depot_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDepotIdEqualTo(Long value) {
+            addCriterion("depot_id =", value, "depotId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDepotIdNotEqualTo(Long value) {
+            addCriterion("depot_id <>", value, "depotId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDepotIdGreaterThan(Long value) {
+            addCriterion("depot_id >", value, "depotId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDepotIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("depot_id >=", value, "depotId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDepotIdLessThan(Long value) {
+            addCriterion("depot_id <", value, "depotId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDepotIdLessThanOrEqualTo(Long value) {
+            addCriterion("depot_id <=", value, "depotId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDepotIdIn(List<Long> values) {
+            addCriterion("depot_id in", values, "depotId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDepotIdNotIn(List<Long> values) {
+            addCriterion("depot_id not in", values, "depotId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDepotIdBetween(Long value1, Long value2) {
+            addCriterion("depot_id between", value1, value2, "depotId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDepotIdNotBetween(Long value1, Long value2) {
+            addCriterion("depot_id not between", value1, value2, "depotId");
+            return (Criteria) this;
+        }
+
         public Criteria andSerialNumberIsNull() {
             addCriterion("serial_number is null");
             return (Criteria) this;
@@ -745,63 +805,143 @@ public class SerialNumberExample {
             return (Criteria) this;
         }
 
-        public Criteria andDepotHeadIdIsNull() {
-            addCriterion("depot_head_id is null");
+        public Criteria andInBillNoIsNull() {
+            addCriterion("in_bill_no is null");
             return (Criteria) this;
         }
 
-        public Criteria andDepotHeadIdIsNotNull() {
-            addCriterion("depot_head_id is not null");
+        public Criteria andInBillNoIsNotNull() {
+            addCriterion("in_bill_no is not null");
             return (Criteria) this;
         }
 
-        public Criteria andDepotHeadIdEqualTo(Long value) {
-            addCriterion("depot_head_id =", value, "depotHeadId");
+        public Criteria andInBillNoEqualTo(String value) {
+            addCriterion("in_bill_no =", value, "inBillNo");
             return (Criteria) this;
         }
 
-        public Criteria andDepotHeadIdNotEqualTo(Long value) {
-            addCriterion("depot_head_id <>", value, "depotHeadId");
+        public Criteria andInBillNoNotEqualTo(String value) {
+            addCriterion("in_bill_no <>", value, "inBillNo");
             return (Criteria) this;
         }
 
-        public Criteria andDepotHeadIdGreaterThan(Long value) {
-            addCriterion("depot_head_id >", value, "depotHeadId");
+        public Criteria andInBillNoGreaterThan(String value) {
+            addCriterion("in_bill_no >", value, "inBillNo");
             return (Criteria) this;
         }
 
-        public Criteria andDepotHeadIdGreaterThanOrEqualTo(Long value) {
-            addCriterion("depot_head_id >=", value, "depotHeadId");
+        public Criteria andInBillNoGreaterThanOrEqualTo(String value) {
+            addCriterion("in_bill_no >=", value, "inBillNo");
             return (Criteria) this;
         }
 
-        public Criteria andDepotHeadIdLessThan(Long value) {
-            addCriterion("depot_head_id <", value, "depotHeadId");
+        public Criteria andInBillNoLessThan(String value) {
+            addCriterion("in_bill_no <", value, "inBillNo");
             return (Criteria) this;
         }
 
-        public Criteria andDepotHeadIdLessThanOrEqualTo(Long value) {
-            addCriterion("depot_head_id <=", value, "depotHeadId");
+        public Criteria andInBillNoLessThanOrEqualTo(String value) {
+            addCriterion("in_bill_no <=", value, "inBillNo");
             return (Criteria) this;
         }
 
-        public Criteria andDepotHeadIdIn(List<Long> values) {
-            addCriterion("depot_head_id in", values, "depotHeadId");
+        public Criteria andInBillNoLike(String value) {
+            addCriterion("in_bill_no like", value, "inBillNo");
             return (Criteria) this;
         }
 
-        public Criteria andDepotHeadIdNotIn(List<Long> values) {
-            addCriterion("depot_head_id not in", values, "depotHeadId");
+        public Criteria andInBillNoNotLike(String value) {
+            addCriterion("in_bill_no not like", value, "inBillNo");
             return (Criteria) this;
         }
 
-        public Criteria andDepotHeadIdBetween(Long value1, Long value2) {
-            addCriterion("depot_head_id between", value1, value2, "depotHeadId");
+        public Criteria andInBillNoIn(List<String> values) {
+            addCriterion("in_bill_no in", values, "inBillNo");
             return (Criteria) this;
         }
 
-        public Criteria andDepotHeadIdNotBetween(Long value1, Long value2) {
-            addCriterion("depot_head_id not between", value1, value2, "depotHeadId");
+        public Criteria andInBillNoNotIn(List<String> values) {
+            addCriterion("in_bill_no not in", values, "inBillNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andInBillNoBetween(String value1, String value2) {
+            addCriterion("in_bill_no between", value1, value2, "inBillNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andInBillNoNotBetween(String value1, String value2) {
+            addCriterion("in_bill_no not between", value1, value2, "inBillNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andOutBillNoIsNull() {
+            addCriterion("out_bill_no is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOutBillNoIsNotNull() {
+            addCriterion("out_bill_no is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOutBillNoEqualTo(String value) {
+            addCriterion("out_bill_no =", value, "outBillNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andOutBillNoNotEqualTo(String value) {
+            addCriterion("out_bill_no <>", value, "outBillNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andOutBillNoGreaterThan(String value) {
+            addCriterion("out_bill_no >", value, "outBillNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andOutBillNoGreaterThanOrEqualTo(String value) {
+            addCriterion("out_bill_no >=", value, "outBillNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andOutBillNoLessThan(String value) {
+            addCriterion("out_bill_no <", value, "outBillNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andOutBillNoLessThanOrEqualTo(String value) {
+            addCriterion("out_bill_no <=", value, "outBillNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andOutBillNoLike(String value) {
+            addCriterion("out_bill_no like", value, "outBillNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andOutBillNoNotLike(String value) {
+            addCriterion("out_bill_no not like", value, "outBillNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andOutBillNoIn(List<String> values) {
+            addCriterion("out_bill_no in", values, "outBillNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andOutBillNoNotIn(List<String> values) {
+            addCriterion("out_bill_no not in", values, "outBillNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andOutBillNoBetween(String value1, String value2) {
+            addCriterion("out_bill_no between", value1, value2, "outBillNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andOutBillNoNotBetween(String value1, String value2) {
+            addCriterion("out_bill_no not between", value1, value2, "outBillNo");
             return (Criteria) this;
         }
 

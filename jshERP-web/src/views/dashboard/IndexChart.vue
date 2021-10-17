@@ -27,7 +27,7 @@
       </a-col>
       <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
         <chart-card :loading="loading" title="本月累计采购">
-          <a-tooltip title="统计本月采购单据数据" slot="action">
+          <a-tooltip placement="left" title="统计本月采购单据数据" slot="action">
             <a-icon type="info-circle-o" />
           </a-tooltip>
           <head-info :content="statistics.thisMonthBuy"></head-info>
@@ -37,12 +37,12 @@
     <a-row :gutter="24">
       <a-col :sm="24" :md="12" :xl="12" :style="{ marginBottom: '24px' }">
         <a-card :loading="loading" :bordered="false" :body-style="{paddingRight: '5'}">
-          <bar title="销售统计" :yaxisText="yaxisText" :dataSource="salePriceData"/>
+          <bar title="销售统计" :height="410" :yaxisText="yaxisText" :dataSource="salePriceData"/>
         </a-card>
       </a-col>
       <a-col :sm="24" :md="12" :xl="12" :style="{ marginBottom: '24px' }">
         <a-card :loading="loading" :bordered="false" :body-style="{paddingRight: '5'}">
-          <bar title="采购统计" :yaxisText="yaxisText" :dataSource="buyPriceData"/>
+          <bar title="采购统计" :height="410" :yaxisText="yaxisText" :dataSource="buyPriceData"/>
         </a-card>
       </a-col>
     </a-row>
@@ -54,6 +54,7 @@
           <a-tag v-if="tenant.type==0" color="blue">试用用户：{{tenant.userCurrentNum}}/{{tenant.userNumLimit}}</a-tag>
           <a-tag v-if="tenant.type==1" color="blue">服务到期：{{tenant.expireTime}}</a-tag>
           <a-tag v-if="tenant.type==1" color="blue">授权用户：{{tenant.userCurrentNum}}/{{tenant.userNumLimit}}</a-tag>
+          <a v-if="hasExpire" style="color: red;" :href="payFeeUrl" target="_blank">立即续费</a>
         </a-card>
       </a-col>
     </a-row>
@@ -70,7 +71,7 @@
   import LineChartMultid from '@/components/chart/LineChartMultid'
   import HeadInfo from '@/components/tools/HeadInfo.vue'
   import Trend from '@/components/Trend'
-  import { getBuyAndSaleStatistics, buyOrSalePrice } from '@/api/api'
+  import { getBuyAndSaleStatistics, buyOrSalePrice, getPlatformConfigByKey } from '@/api/api'
   import { getAction } from '../../api/manage'
 
   export default {
@@ -99,6 +100,8 @@
         salePriceData: [],
         visitFields:['ip','visit'],
         visitInfo:[],
+        hasExpire: false,
+        payFeeUrl: '',
         tenant: {
           type: '',
           expireTime: '',
@@ -127,11 +130,23 @@
             this.salePriceData = res.data.salePriceList;
           }
         })
+        getPlatformConfigByKey({"platformKey": "pay_fee_url"}).then((res)=> {
+          if (res && res.code === 200) {
+            this.payFeeUrl = res.data.platformValue
+          }
+        })
       },
       initWithTenant() {
         getAction("/user/infoWithTenant",{}).then(res=>{
           if(res && res.code === 200) {
             this.tenant = res.data
+            let currentTime = new Date(); //新建一个日期对象，默认现在的时间
+            let expireTime = new Date(res.data.expireTime); //设置过去的一个时间点，"yyyy-MM-dd HH:mm:ss"格式化日期
+            let difftime = expireTime - currentTime; //计算时间差
+            //如果距离到期还剩5天就进行提示续费
+            if(difftime<86400000*5) {
+              this.hasExpire = true
+            }
           }
         })
       }

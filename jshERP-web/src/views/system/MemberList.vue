@@ -42,8 +42,8 @@
               <a-button type="primary" icon="import">导入</a-button>
             </a-popover>
           </a-upload>
-          <a-button type="primary" icon="download" @click="handleExportXls('会员信息')">导出</a-button>
-          <a-dropdown v-if="selectedRowKeys.length > 0">
+          <a-button type="primary" @click="exportExcel" icon="download">导出</a-button>
+          <a-dropdown>
             <a-menu slot="overlay">
               <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
               <a-menu-item key="2" v-if="btnEnableList.indexOf(1)>-1" @click="batchSetStatus(true)"><a-icon type="check-square"/>启用</a-menu-item>
@@ -64,6 +64,7 @@
             :columns="columns"
             :dataSource="dataSource"
             :pagination="ipagination"
+            :scroll="scroll"
             :loading="loading"
             :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
             @change="handleTableChange">
@@ -92,6 +93,7 @@
 <script>
   import MemberModal from './modules/MemberModal'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
+  import { openDownloadDialog, sheet2blob} from "@/utils/util"
   import JDate from '@/components/jeecg/JDate'
   export default {
     name: "MemberList",
@@ -116,6 +118,9 @@
           telephone:'',
           phonenum:''
         },
+        ipagination:{
+          pageSizeOptions: ['10', '20', '30', '100', '200']
+        },
         // 表头
         columns: [
           {
@@ -130,8 +135,9 @@
           },
           { title: '名称',dataIndex: 'supplier',width:150},
           { title: '联系人', dataIndex: 'contacts',width:70,align:"center"},
-          { title: '手机号码', dataIndex: 'telephone',width:110,align:"center"},
+          { title: '手机号码', dataIndex: 'telephone',width:100,align:"center"},
           { title: '联系电话', dataIndex: 'phoneNum',width:100,align:"center"},
+          { title: '电子邮箱', dataIndex: 'email',width:150,align:"center"},
           { title: '预付款',dataIndex: 'advanceIn',width:70,align:"center"},
           { title: '状态',dataIndex: 'enabled',width:70,align:"center",
             scopedSlots: { customRender: 'customRenderFlag' }
@@ -149,7 +155,6 @@
           delete: "/supplier/delete",
           deleteBatch: "/supplier/deleteBatch",
           importExcelUrl: "/supplier/importExcel",
-          exportXlsUrl: "/supplier/exportExcel",
           batchSetStatusUrl: "/supplier/batchSetStatus"
         }
       }
@@ -173,6 +178,16 @@
         if(this.btnEnableList.indexOf(1)===-1) {
           this.$refs.modalForm.isReadOnly = true
         }
+      },
+      exportExcel() {
+        let aoa = [['名称', '联系人', '手机号码', '联系电话', '电子邮箱', '预付款', '备注', '状态']]
+        for (let i = 0; i < this.dataSource.length; i++) {
+          let ds = this.dataSource[i]
+          let enabledStr = ds.enabled?'启用':'禁用'
+          let item = [ds.supplier, ds.contacts, ds.telephone, ds.phoneNum, ds.email, ds.advanceIn, ds.description, enabledStr]
+          aoa.push(item)
+        }
+        openDownloadDialog(sheet2blob(aoa), '会员信息')
       }
     }
   }

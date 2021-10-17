@@ -59,7 +59,21 @@
               :actionButton="true"
               @valueChange="onValueChange"
               @added="onAdded"
-              @deleted="onDeleted" />
+              @deleted="onDeleted">
+              <template #buttonAfter>
+                <a-row :gutter="24">
+                  <a-col v-if="scanStatus" :md="6" :sm="24">
+                    <a-button @click="scanEnter">扫码录入</a-button>
+                  </a-col>
+                  <a-col v-if="!scanStatus" :md="16" :sm="24" style="padding: 0 6px 0 12px">
+                    <a-input placeholder="请扫码商品条码并回车" v-model="scanBarCode" @pressEnter="scanPressEnter" />
+                  </a-col>
+                  <a-col v-if="!scanStatus" :md="6" :sm="24" style="padding: 0px">
+                    <a-button @click="stopScan">收起扫码</a-button>
+                  </a-col>
+                </a-row>
+              </template>
+            </j-editable-table>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
             <a-row class="form-row" :gutter="24">
@@ -157,12 +171,13 @@
             { title: '仓库名称', key: 'depotId', width: '7%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
               allowSearch:true, validateRules: [{ required: true, message: '${title}不能为空' }]
             },
-            { title: '条码', key: 'barCode', width: '12%', type: FormTypes.popupJsh, multi: true,
+            { title: '条码', key: 'barCode', width: '12%', type: FormTypes.popupJsh, kind: 'material', multi: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             { title: '名称', key: 'name', width: '9%', type: FormTypes.input, readonly: true },
             { title: '规格', key: 'standard', width: '6%', type: FormTypes.input, readonly: true },
             { title: '型号', key: 'model', width: '5%', type: FormTypes.input, readonly: true },
+            { title: '颜色', key: 'color', width: '5%', type: FormTypes.input, readonly: true },
             { title: '扩展信息', key: 'materialOther', width: '7%', type: FormTypes.input, readonly: true },
             { title: '库存', key: 'stock', width: '5%', type: FormTypes.input, readonly: true },
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.input, readonly: true },
@@ -201,6 +216,7 @@
     methods: {
       //调用完edit()方法之后会自动调用此方法
       editAfter() {
+        this.changeColumnHide()
         if (this.action === 'add') {
           this.addInit(this.prefixNo)
           this.fileList = []

@@ -34,11 +34,12 @@ public class BusinessConstants {
      */
     public static final Integer DEFAULT_PAGINATION_PAGE_SIZE = 10;
     /**
-     * 单据主表出入库类型 type 入库 出库
+     * 单据主表出入库类型 type 入库 出库 其它
      * depothead
      * */
     public static final String DEPOTHEAD_TYPE_IN = "入库";
     public static final String DEPOTHEAD_TYPE_OUT = "出库";
+    public static final String DEPOTHEAD_TYPE_OTHER = "其它";
     /**
      * 付款类型 payType //现付/预付款
      * */
@@ -60,23 +61,26 @@ public class BusinessConstants {
     public static final String ENABLE_SERIAL_NUMBER_ENABLED = "1";
     public static final String ENABLE_SERIAL_NUMBER_NOT_ENABLED = "0";
     /**
-     * 单据状态 billsStatus '0'未审核 '1'审核 '2'已转采购|销售
+     * 单据状态 billsStatus '0'未审核 '1'审核 '2'完成采购|销售 '3'部分采购|销售
      * */
     public static final String BILLS_STATUS_UN_AUDIT = "0";
     public static final String BILLS_STATUS_AUDIT = "1";
-    public static final String BILLS_STATUS_SKIP = "2";
+    public static final String BILLS_STATUS_SKIPED = "2";
+    public static final String BILLS_STATUS_SKIPING = "3";
     /**
      * 出入库分类
-     *采购、采购退货、其它、零售、销售、调拨等
+     *采购、采购退货、其它、零售、销售、调拨、盘点复盘等
      * */
     public static final String SUB_TYPE_PURCHASE_ORDER = "采购订单";
     public static final String SUB_TYPE_PURCHASE = "采购";
-    public static final String SUB_TYPE_PURCHASE_TETURNS = "采购退货";
+    public static final String SUB_TYPE_PURCHASE_RETURN = "采购退货";
     public static final String SUB_TYPE_OTHER = "其它";
     public static final String SUB_TYPE_RETAIL = "零售";
     public static final String SUB_TYPE_SALES_ORDER = "销售订单";
     public static final String SUB_TYPE_SALES = "销售";
+    public static final String SUB_TYPE_SALES_RETURN = "销售退货";
     public static final String SUB_TYPE_TRANSFER = "调拨";
+    public static final String SUB_TYPE_REPLAY = "盘点复盘";
     /**
      * 批量插入sql时最大的数据条数
      * */

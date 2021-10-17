@@ -53,7 +53,7 @@
             rowKey="id"
             :columns="columns"
             :dataSource="dataSource"
-            :pagination="ipagination"
+            :pagination="false"
             :scroll="scroll"
             :loading="loading"
             @change="handleTableChange">
@@ -61,6 +61,22 @@
               <a @click="myHandleDetail(record)">{{record.number}}</a>
             </span>
           </a-table>
+          <a-row :gutter="24" style="margin-top: 8px;text-align:right;">
+            <a-col :md="24" :sm="24">
+              <a-pagination @change="paginationChange" @showSizeChange="paginationShowSizeChange"
+                size="small"
+                show-size-changer
+                :showQuickJumper="true"
+                :page-size="ipagination.pageSize"
+                :page-size-options="ipagination.pageSizeOptions"
+                :total="ipagination.total"
+                :show-total="(total, range) => `共 ${total} 条`">
+                <template slot="buildOptionText" slot-scope="props">
+                  <span>{{ props.value-1 }}条/页</span>
+                </template>
+              </a-pagination>
+            </a-col>
+          </a-row>
         </section>
         <!-- table区域-end -->
         <!-- 表单区域 -->
@@ -104,7 +120,8 @@
           endTime: moment().format('YYYY-MM-DD'),
         },
         ipagination:{
-          pageSizeOptions: ['10', '20', '30', '100', '200']
+          pageSize: 11,
+          pageSizeOptions: ['11', '21', '31', '101', '201']
         },
         dateFormat: 'YYYY-MM-DD',
         currentDay: moment().format('YYYY-MM-DD'),
@@ -116,13 +133,9 @@
         // 表头
         columns: [
           {
-            title: '#',
-            dataIndex: '',
-            key:'rowIndex',
-            width:40,
-            align:"center",
+            title: '#', dataIndex: 'rowIndex', width:40, align:"center",
             customRender:function (t,r,index) {
-              return parseInt(index)+1;
+              return (t !== '合计') ? (parseInt(index) + 1) : t
             }
           },
           {
@@ -150,7 +163,7 @@
         let param = Object.assign({}, this.queryParam, this.isorter);
         param.field = this.getQueryField();
         param.currentPage = this.ipagination.current;
-        param.pageSize = this.ipagination.pageSize;
+        param.pageSize = this.ipagination.pageSize-1;
         return param;
       },
       initSupplier() {
@@ -194,6 +207,7 @@
           if (res.code===200) {
             this.dataSource = res.data.rows;
             this.ipagination.total = res.data.total;
+            this.tableAddTotalRow(this.columns, this.dataSource)
             if(this.queryParam.organId) {
               this.firstTotal = '期初应付：' + res.data.firstMoney + "，"
               this.lastTotal = '期末应付：' + res.data.lastMoney

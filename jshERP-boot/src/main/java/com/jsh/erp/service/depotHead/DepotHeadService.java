@@ -107,11 +107,12 @@ public class DepotHeadService {
         try{
             String [] depotArray = getDepotArray(subType);
             String [] creatorArray = getCreatorArray(roleType);
+            String [] statusArray = StringUtil.isNotEmpty(status) ? status.split(",") : null;
             Map<Long,String> personMap = personService.getPersonMap();
             Map<Long,String> accountMap = accountService.getAccountMap();
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            list=depotHeadMapperEx.selectByConditionDepotHead(type, subType, creatorArray, status, number, beginTime, endTime,
+            list=depotHeadMapperEx.selectByConditionDepotHead(type, subType, creatorArray, statusArray, number, beginTime, endTime,
                  materialParam, organId, creator, depotId, depotArray, offset, rows);
             if (null != list) {
                 for (DepotHeadVo4List dh : list) {
@@ -155,9 +156,10 @@ public class DepotHeadService {
         try{
             String [] depotArray = getDepotArray(subType);
             String [] creatorArray = getCreatorArray(roleType);
+            String [] statusArray = StringUtil.isNotEmpty(status) ? status.split(",") : null;
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            result=depotHeadMapperEx.countsByDepotHead(type, subType, creatorArray, status, number, beginTime, endTime,
+            result=depotHeadMapperEx.countsByDepotHead(type, subType, creatorArray, statusArray, number, beginTime, endTime,
                    materialParam, organId, creator, depotId, depotArray);
         }catch(Exception e){
             JshException.readFail(logger, e);
@@ -284,7 +286,7 @@ public class DepotHeadService {
                     if (depotItemList != null && depotItemList.size() > 0) {
                         for (DepotItem depotItem : depotItemList) {
                             //BasicNumber=OperNumber*ratio
-                            serialNumberService.cancelSerialNumber(depotItem.getMaterialId(), depotItem.getHeaderId(), (depotItem.getBasicNumber() == null ? 0 : depotItem.getBasicNumber()).intValue(), userInfo);
+                            serialNumberService.cancelSerialNumber(depotItem.getMaterialId(), depotHead.getNumber(), (depotItem.getBasicNumber() == null ? 0 : depotItem.getBasicNumber()).intValue(), userInfo);
                         }
                     }
                 }
@@ -301,12 +303,14 @@ public class DepotHeadService {
                 depotItemMapperEx.batchDeleteDepotItemByDepotHeadIds(new Long[]{depotHead.getId()});
                 //删除单据主表信息
                 batchDeleteDepotHeadByIds(depotHead.getId().toString());
-                //将关联的订单置为审核状态-针对采购入库和销售出库
+                //将关联的单据置为审核状态-针对采购入库、销售出库和盘点复盘
                 if(StringUtil.isNotEmpty(depotHead.getLinkNumber())){
                     if((BusinessConstants.DEPOTHEAD_TYPE_IN.equals(depotHead.getType()) &&
                         BusinessConstants.SUB_TYPE_PURCHASE.equals(depotHead.getSubType()))
                     || (BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType()) &&
-                        BusinessConstants.SUB_TYPE_SALES.equals(depotHead.getSubType()))) {
+                        BusinessConstants.SUB_TYPE_SALES.equals(depotHead.getSubType()))
+                    || (BusinessConstants.DEPOTHEAD_TYPE_OTHER.equals(depotHead.getType()) &&
+                        BusinessConstants.SUB_TYPE_REPLAY.equals(depotHead.getSubType()))) {
                         DepotHead dh = new DepotHead();
                         dh.setStatus(BusinessConstants.BILLS_STATUS_AUDIT);
                         DepotHeadExample example = new DepotHeadExample();
@@ -722,18 +726,6 @@ public class DepotHeadService {
             Long headId = list.get(0).getId();
             /**入库和出库处理单据子表信息*/
             depotItemService.saveDetials(rows,headId, request);
-        }
-        /**如果关联单据号非空则更新订单的状态为2 (只操作采购订单和销售订单) */
-        if(depotHead.getLinkNumber()!=null) {
-            DepotHead depotHeadOrders = new DepotHead();
-            depotHeadOrders.setStatus(BusinessConstants.BILLS_STATUS_SKIP);
-            DepotHeadExample example = new DepotHeadExample();
-            example.createCriteria().andNumberEqualTo(depotHead.getLinkNumber()).andTypeEqualTo("其它");
-            try{
-                depotHeadMapper.updateByExampleSelective(depotHeadOrders, example);
-            }catch(Exception e){
-                JshException.writeFail(logger, e);
-            }
         }
         logService.insertLog("单据",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(depotHead.getNumber()).toString(),

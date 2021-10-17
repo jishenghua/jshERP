@@ -16,16 +16,19 @@
                    suffix="初始密码：123456" />
         </a-form-item>
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="用户数量限制">
-          <a-input-number style="width:60%" placeholder="请输入用户数量限制" v-decorator.trim="[ 'userNumLimit' ]" />
+          <a-input-number style="width:100%" placeholder="请输入用户数量限制" v-decorator.trim="[ 'userNumLimit' ]" />
         </a-form-item>
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="租户类型">
-          <a-select style="width:60%" placeholder="请选择租户类型" v-decorator.trim="[ 'type' ]">
+          <a-select style="width:100%" placeholder="请选择租户类型" v-decorator.trim="[ 'type' ]">
             <a-select-option value="0">免费租户</a-select-option>
             <a-select-option value="1">付费租户</a-select-option>
           </a-select>
         </a-form-item>
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="到期时间">
-          <j-date style="width:60%" placeholder="请选择到期时间" v-decorator.trim="[ 'expireTime' ]" :show-time="true"/>
+          <j-date style="width:100%" placeholder="请选择到期时间" v-decorator.trim="[ 'expireTime' ]" :show-time="true"/>
+        </a-form-item>
+        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="描述">
+          <a-textarea :rows="2" placeholder="请输入描述" v-decorator.trim="[ 'remark' ]" />
         </a-form-item>
       </a-form>
     </a-spin>
@@ -79,7 +82,7 @@
         this.model.expireTime = this.model.expireTimeStr
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'loginName', 'userNumLimit', 'billsNumLimit', 'type', 'expireTime'))
+          this.form.setFieldsValue(pick(this.model,'loginName', 'userNumLimit', 'type', 'expireTime', 'remark'))
         });
       },
       close () {
