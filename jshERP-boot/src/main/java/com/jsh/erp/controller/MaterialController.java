@@ -535,6 +535,8 @@ public class MaterialController {
      * @param categoryId
      * @param materialParam
      * @param mpList
+     * @param column
+     * @param order
      * @param request
      * @return
      * @throws Exception
@@ -546,6 +548,8 @@ public class MaterialController {
                                              @RequestParam("categoryId") Long categoryId,
                                              @RequestParam("materialParam") String materialParam,
                                              @RequestParam("mpList") String mpList,
+                                             @RequestParam("column") String column,
+                                             @RequestParam("order") String order,
                                              HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<>();
@@ -555,7 +559,7 @@ public class MaterialController {
                 idList = materialService.getListByParentId(categoryId);
             }
             List<MaterialVo4Unit> dataList = materialService.getListWithStock(depotId, idList, StringUtil.toNull(materialParam),
-                    (currentPage-1)*pageSize, pageSize);
+                    column, order, (currentPage-1)*pageSize, pageSize);
             int total = materialService.getListWithStockCount(depotId, idList, StringUtil.toNull(materialParam));
             MaterialVo4Unit materialVo4Unit= materialService.getTotalStockAndPrice(depotId, idList, StringUtil.toNull(materialParam));
             map.put("total", total);
