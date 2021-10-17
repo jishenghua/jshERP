@@ -2,7 +2,7 @@
 * 很多人说华夏ERP（英文名：jshERP）是目前人气领先的国产ERP系统
 * 虽然目前只有进销存+财务+生产的功能，但后面将会推出ERP的全部功能，有兴趣请帮点一下 **Star** 哦
 * **官网URL：http://www.huaxiaerp.com  商务合作或技术交流，请联系QQ：752718920**
-* 欢迎加入华夏ERP交流QQ群，群1：120725710(满)、群3：805736336
+* 欢迎加入华夏ERP交流QQ群，群3：805736336(满)、群4：146571538
 * 平台地址：http://cloud.huaxiaerp.vip 欢迎大家注册租户进行使用
 * 系统默认租户账号：jsh，默认超管账户：admin，默认密码均为：123456
 * 部署如遇到困难请参考Wiki文档  https://gitee.com/jishenghua/JSH_ERP/wikis/pages
