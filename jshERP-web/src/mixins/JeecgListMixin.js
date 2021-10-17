@@ -386,7 +386,7 @@ export const JeecgListMixin = {
         let numKey = 'rowIndex'
         let totalRow = { [numKey]: '合计' }
         //移除不需要合计的列
-        let removeCols = 'action,mBarCode,barCode,unitPrice,purchaseDecimal,operTime,oTime'
+        let removeCols = 'action,mBarCode,barCode,serialNo,unitPrice,purchaseDecimal,operTime,oTime'
         columns.forEach(column => {
           let { key, dataIndex } = column
           if (![key, dataIndex].includes(numKey)) {
