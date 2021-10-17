@@ -77,31 +77,6 @@ public class PlatformConfigController {
     }
 
     /**
-     * 是否显示广告
-     * @param request
-     * @return
-     */
-    @GetMapping(value = "/isShowAd")
-    public BaseResponseInfo isShowAd(HttpServletRequest request)throws Exception {
-        BaseResponseInfo res = new BaseResponseInfo();
-        try {
-            User user = userService.getCurrentUser();
-            if (demonstrateOpen && TEST_USER.equals(user.getLoginName())) {
-                res.code = 200;
-                res.data = true;
-            } else {
-                res.code = 200;
-                res.data = false;
-            }
-        } catch(Exception e){
-            e.printStackTrace();
-            res.code = 500;
-            res.data = "获取数据失败";
-        }
-        return res;
-    }
-
-    /**
      * 根据platformKey更新platformValue
      * @param object
      * @param request
