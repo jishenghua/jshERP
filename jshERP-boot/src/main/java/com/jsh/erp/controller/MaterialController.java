@@ -559,7 +559,7 @@ public class MaterialController {
                 idList = materialService.getListByParentId(categoryId);
             }
             List<MaterialVo4Unit> dataList = materialService.getListWithStock(depotId, idList, StringUtil.toNull(materialParam),
-                    column, order, (currentPage-1)*pageSize, pageSize);
+                    StringUtil.safeSqlParse(column), StringUtil.safeSqlParse(order), (currentPage-1)*pageSize, pageSize);
             int total = materialService.getListWithStockCount(depotId, idList, StringUtil.toNull(materialParam));
             MaterialVo4Unit materialVo4Unit= materialService.getTotalStockAndPrice(depotId, idList, StringUtil.toNull(materialParam));
             map.put("total", total);
