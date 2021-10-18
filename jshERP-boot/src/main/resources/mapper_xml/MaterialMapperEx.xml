@@ -143,7 +143,7 @@
             </foreach>
         </if>
         and ifnull(m.delete_flag,'0') !='1'
-        ORDER BY me.id desc
+        ORDER BY m.id desc,me.default_flag desc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
         </if>
