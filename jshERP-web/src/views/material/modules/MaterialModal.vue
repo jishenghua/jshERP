@@ -35,19 +35,25 @@
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单位">
+                <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 4 }}" :wrapperCol="{xs: { span: 24 },sm: { span: 20 }}" label="单位">
                   <a-row class="form-row" :gutter="24">
-                    <a-col :lg="13" :md="13" :sm="24">
+                    <a-col :lg="15" :md="15" :sm="24">
                       <a-input placeholder="输入单位" :hidden="unitStatus" v-decorator.trim="[ 'unit' ]" @change="onlyUnitOnChange" />
                       <a-select :value="unitList" placeholder="选择单位" v-decorator="[ 'unitId' ]" @change="manyUnitOnChange"
                                 :hidden="manyUnitStatus" :dropdownMatchSelectWidth="false">
+                        <div slot="dropdownRender" slot-scope="menu">
+                          <v-nodes :vnodes="menu" />
+                          <a-divider style="margin: 4px 0;" />
+                          <div style="padding: 4px 8px; cursor: pointer;"
+                               @mousedown="e => e.preventDefault()" @click="addUnit"><a-icon type="plus" /> 新增计量单位</div>
+                        </div>
                         <a-select-option v-for="(item,index) in unitList"
                           :key="index" :value="item.id">
                           {{ item.name }}
                         </a-select-option>
                       </a-select>
                     </a-col>
-                    <a-col :lg="11" :md="11" :sm="24">
+                    <a-col :lg="9" :md="9" :sm="24">
                       <a-checkbox :checked="unitChecked" @change="unitOnChange">多单位</a-checkbox>
                     </a-col>
                   </a-row>
@@ -59,9 +65,19 @@
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="类别">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="安全存量">
+                  <a-input placeholder="请输入安全存量" v-decorator.trim="[ 'safetyStock' ]" />
+                </a-form-item>
+              </a-col>
+              <a-col :md="6" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="保质期天数">
+                  <a-input-number style="width: 100%" placeholder="请输入保质期天数" v-decorator.trim="[ 'expiryNum' ]" />
+                </a-form-item>
+              </a-col>
+              <a-col :md="6" :sm="24">
+                <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 4 }}" :wrapperCol="{xs: { span: 24 },sm: { span: 20 }}" label="类别">
                   <a-tree-select style="width:100%" :dropdownStyle="{maxHeight:'200px',overflow:'auto'}" allow-clear
-                   :treeData="categoryTree" v-decorator="[ 'categoryId' ]" placeholder="请选择类别">
+                                 :treeData="categoryTree" v-decorator="[ 'categoryId' ]" placeholder="请选择类别">
                   </a-tree-select>
                 </a-form-item>
               </a-col>
@@ -79,16 +95,6 @@
                     <a-select-option value="1">有</a-select-option>
                     <a-select-option value="0">无</a-select-option>
                   </a-select>
-                </a-form-item>
-              </a-col>
-              <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="安全存量">
-                  <a-input placeholder="请输入安全存量" v-decorator.trim="[ 'safetyStock' ]" />
-                </a-form-item>
-              </a-col>
-              <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="保质期天数">
-                  <a-input-number style="width: 100%" placeholder="请输入保质期天数" v-decorator.trim="[ 'expiryNum' ]" />
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
@@ -238,11 +244,13 @@
         </a-tabs>
       </a-form>
     </a-spin>
+    <unit-modal ref="unitModalForm" @ok="unitModalFormOk"></unit-modal>
   </a-modal>
 </template>
 <script>
   import pick from 'lodash.pick'
   import BatchSetPriceModal from './BatchSetPriceModal'
+  import UnitModal from '../../system/modules/UnitModal'
   import JEditableTable from '@/components/jeecg/JEditableTable'
   import { FormTypes, VALIDATE_NO_PASSED, getRefPromise, validateFormAndTables } from '@/utils/JEditableTableUtil'
   import {queryMaterialCategoryTreeList,checkMaterial,checkMaterialBarCode,getAllMaterialAttribute,getMaxBarCode} from '@/api/api'
@@ -254,9 +262,14 @@
     name: "MaterialModal",
     components: {
       BatchSetPriceModal,
+      UnitModal,
       JImageUpload,
       JDate,
-      JEditableTable
+      JEditableTable,
+      VNodes: {
+        functional: true,
+        render: (h, ctx) => ctx.props.vnodes,
+      }
     },
     data () {
       return {
@@ -862,6 +875,14 @@
           this.manyUnitStatus = true;
           this.unitChecked = false;
         }
+      },
+      addUnit() {
+        this.$refs.unitModalForm.add();
+        this.$refs.unitModalForm.title = "新增计量单位";
+        this.$refs.unitModalForm.disableSubmit = false;
+      },
+      unitModalFormOk() {
+        this.loadUnitListData()
       }
     }
   }
