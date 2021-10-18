@@ -138,6 +138,22 @@ export const FinancialModalMixin = {
         }
       })
     },
+    addSupplier() {
+      this.$refs.vendorModalForm.add();
+      this.$refs.vendorModalForm.title = "新增";
+      this.$refs.vendorModalForm.disableSubmit = false;
+    },
+    addCustomer() {
+      this.$refs.customerModalForm.add();
+      this.$refs.customerModalForm.title = "新增客户（提醒：如果找不到新添加的客户，请到用户管理检查是否分配了该客户权限）";
+      this.$refs.customerModalForm.disableSubmit = false;
+    },
+    vendorModalFormOk() {
+      this.initSupplier()
+    },
+    customerModalFormOk() {
+      this.initCustomer()
+    },
     //单元值改变一个字符就触发一次
     onValueChange(event) {
       let that = this

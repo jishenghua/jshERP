@@ -210,6 +210,22 @@ export const BillModalMixin = {
         this.form.setFieldsValue({'changeAmount':allPrice, 'debt':debt})
       });
     },
+    addSupplier() {
+      this.$refs.vendorModalForm.add();
+      this.$refs.vendorModalForm.title = "新增供应商";
+      this.$refs.vendorModalForm.disableSubmit = false;
+    },
+    addCustomer() {
+      this.$refs.customerModalForm.add();
+      this.$refs.customerModalForm.title = "新增客户（提醒：如果找不到新添加的客户，请到用户管理检查是否分配了该客户权限）";
+      this.$refs.customerModalForm.disableSubmit = false;
+    },
+    vendorModalFormOk() {
+      this.initSupplier()
+    },
+    customerModalFormOk() {
+      this.initCustomer()
+    },
     onAdded(event) {
       const { row, target } = event
       getAction('/depot/findDepotByCurrentUser').then((res) => {

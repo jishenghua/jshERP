@@ -19,6 +19,12 @@
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户">
               <a-select placeholder="选择客户" v-decorator="[ 'organId', validatorRules.organId ]"
                 :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
+                <div slot="dropdownRender" slot-scope="menu">
+                  <v-nodes :vnodes="menu" />
+                  <a-divider style="margin: 4px 0;" />
+                  <div style="padding: 4px 8px; cursor: pointer;"
+                       @mousedown="e => e.preventDefault()" @click="addCustomer"><a-icon type="plus" /> 新增客户</div>
+                </div>
                 <a-select-option v-for="(item,index) in cusList" :key="index" :value="item.id">
                   {{ item.supplier }}
                 </a-select-option>
@@ -114,11 +120,13 @@
       </a-form>
     </a-spin>
     <debt-bill-list ref="debtBillList" @ok="debtBillListOk"></debt-bill-list>
+    <customer-modal ref="customerModalForm" @ok="customerModalFormOk"></customer-modal>
   </j-modal>
 </template>
 <script>
   import pick from 'lodash.pick'
   import DebtBillList from '../dialog/DebtBillList'
+  import CustomerModal from '../../system/modules/CustomerModal'
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { FinancialModalMixin } from '../mixins/FinancialModalMixin'
@@ -129,8 +137,13 @@
     mixins: [JEditableTableMixin, FinancialModalMixin],
     components: {
       DebtBillList,
+      CustomerModal,
       JUpload,
-      JDate
+      JDate,
+      VNodes: {
+        functional: true,
+        render: (h, ctx) => ctx.props.vnodes,
+      }
     },
     data () {
       return {
