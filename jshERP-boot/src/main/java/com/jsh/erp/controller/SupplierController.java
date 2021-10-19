@@ -114,6 +114,50 @@ public class SupplierController {
     }
 
     /**
+     * 查找往来单位，含供应商和客户信息-下拉框
+     * @param request
+     * @return
+     */
+    @PostMapping(value = "/findBySelect_organ")
+    public JSONArray findBySelectOrgan(HttpServletRequest request) throws Exception{
+        JSONArray arr = new JSONArray();
+        try {
+            JSONArray dataArray = new JSONArray();
+            //1、获取供应商信息
+            List<Supplier> supplierList = supplierService.findBySelectSup();
+            if (null != supplierList) {
+                for (Supplier supplier : supplierList) {
+                    JSONObject item = new JSONObject();
+                    item.put("id", supplier.getId());
+                    item.put("supplier", supplier.getSupplier()); //供应商名称
+                    dataArray.add(item);
+                }
+            }
+            //2、获取客户信息
+            String type = "UserCustomer";
+            Long userId = userService.getUserId(request);
+            String ubValue = userBusinessService.getUBValueByTypeAndKeyId(type, userId.toString());
+            List<Supplier> customerList = supplierService.findBySelectCus();
+            if (null != customerList) {
+                boolean customerFlag = systemConfigService.getCustomerFlag();
+                for (Supplier supplier : customerList) {
+                    JSONObject item = new JSONObject();
+                    Boolean flag = ubValue.contains("[" + supplier.getId().toString() + "]");
+                    if (!customerFlag || flag) {
+                        item.put("id", supplier.getId());
+                        item.put("supplier", supplier.getSupplier()); //客户名称
+                        dataArray.add(item);
+                    }
+                }
+            }
+            arr = dataArray;
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        return arr;
+    }
+
+    /**
      * 查找会员信息-下拉框
      * @param request
      * @return
