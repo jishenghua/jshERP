@@ -1,6 +1,8 @@
 import * as api from '@/api/api'
 import { isURL } from '@/utils/validate'
 import XLSX from 'xlsx'
+import Vue from 'vue'
+import introJs from 'intro.js'
 
 export function timeFix() {
   const time = new Date()
@@ -653,4 +655,30 @@ export function sheet2blob (aoa, sheetName) {
     return buf
   }
   return blob
+}
+
+/**
+ * 新手引导步骤
+ * @param module 这个变量可以用来存取版本号， 系统更新时候改变相应值
+ * @param cur_version 这个变量可以用来存取版本号， 系统更新时候改变相应值
+ */
+export function handleIntroJs(module, cur_version) {
+  //每个页面设置不同的缓存变量名称，不可以重复，有新版本时，更新cur_version
+  //有新版本更新时才出现一次引导页， 第二次进入进不再出现， 这里有缓存来判断
+  if (Vue.ls.get('intro_cache_' + module) === cur_version) {
+    return;
+  }
+  introJs().setOptions({
+    prevLabel: '&larr; 上一步',
+    nextLabel: '下一步 &rarr;',
+    skipLabel: '跳过',
+    doneLabel: '知道了',
+    exitOnOverlayClick: false //点击空白区域是否关闭提示组件
+  }).oncomplete(function(){
+    //点击跳过按钮后执行的事件(这里保存对应的版本号到缓存,并且设置有效期为100天）
+    Vue.ls.set('intro_cache_' + module, cur_version, 100 * 24 * 60 * 60 * 1000);
+  }).onexit(function(){
+    //点击结束按钮后， 执行的事件
+    Vue.ls.set('intro_cache_' + module, cur_version, 100 * 24 * 60 * 60 * 1000);
+  }).start()
 }

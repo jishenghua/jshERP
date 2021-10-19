@@ -2,32 +2,32 @@
   <div class="page-header-index-wide">
     <a-row :gutter="24">
       <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
-        <chart-card :loading="loading" title="今日累计销售">
-          <a-tooltip title="统计今日零售和销售单据数据" slot="action">
+        <chart-card :loading="loading" title="今日累计销售" data-step="1" data-intro="统计今日零售和销售单据的总金额">
+          <a-tooltip title="统计今日零售和销售单据的总金额" slot="action">
             <a-icon type="info-circle-o" />
           </a-tooltip>
           <head-info :content="statistics.todaySale"></head-info>
         </chart-card>
       </a-col>
       <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
-        <chart-card :loading="loading" title="本月累计销售">
-          <a-tooltip title="统计本月零售和销售单据数据" slot="action">
+        <chart-card :loading="loading" title="本月累计销售" data-step="2" data-intro="统计本月零售和销售单据的总金额">
+          <a-tooltip title="统计本月零售和销售单据的总金额" slot="action">
             <a-icon type="info-circle-o" />
           </a-tooltip>
           <head-info :content="statistics.thisMonthSale"></head-info>
         </chart-card>
       </a-col>
       <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
-        <chart-card :loading="loading" title="今日累计采购">
-          <a-tooltip title="统计今日采购单据数据" slot="action">
+        <chart-card :loading="loading" title="今日累计采购" data-step="3" data-intro="统计今日采购单据的总金额">
+          <a-tooltip title="统计今日采购单据的总金额" slot="action">
             <a-icon type="info-circle-o" />
           </a-tooltip>
           <head-info :content="statistics.todayBuy"></head-info>
         </chart-card>
       </a-col>
       <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
-        <chart-card :loading="loading" title="本月累计采购">
-          <a-tooltip placement="left" title="统计本月采购单据数据" slot="action">
+        <chart-card :loading="loading" title="本月累计采购" data-step="4" data-intro="统计本月采购单据的总金额">
+          <a-tooltip placement="left" title="统计本月采购单据的总金额" slot="action">
             <a-icon type="info-circle-o" />
           </a-tooltip>
           <head-info :content="statistics.thisMonthBuy"></head-info>
@@ -36,19 +36,20 @@
     </a-row>
     <a-row :gutter="24">
       <a-col :sm="24" :md="12" :xl="12" :style="{ marginBottom: '24px' }">
-        <a-card :loading="loading" :bordered="false" :body-style="{paddingRight: '5'}">
+        <a-card :loading="loading" :bordered="false" :body-style="{paddingRight: '5'}" data-step="5" data-intro="统计往前6个月每月销售的总金额">
           <bar title="销售统计" :height="410" :yaxisText="yaxisText" :dataSource="salePriceData"/>
         </a-card>
       </a-col>
       <a-col :sm="24" :md="12" :xl="12" :style="{ marginBottom: '24px' }">
-        <a-card :loading="loading" :bordered="false" :body-style="{paddingRight: '5'}">
+        <a-card :loading="loading" :bordered="false" :body-style="{paddingRight: '5'}" data-step="6" data-intro="统计往前6个月每月采购的总金额">
           <bar title="采购统计" :height="410" :yaxisText="yaxisText" :dataSource="buyPriceData"/>
         </a-card>
       </a-col>
     </a-row>
     <a-row :gutter="24">
       <a-col :sm="24" :md="24" :xl="24" :style="{ marginBottom: '5px' }">
-        <a-card :bordered="false" :body-style="{padding: '5'}">
+        <a-card :bordered="false" :body-style="{padding: '5'}" data-step="7" data-intro="展示服务到期时间（快到期时会出现续费链接，请注意及时续费）、
+          用户数量（是指最多可以录入的用户数量）、版权信息">
           <div class="hidden-xs" style="float:right;">&copy; 2015-2030 {{systemTitle}} V3.0</div>
           <a-tag v-if="tenant.type==0" color="blue">试用到期：{{tenant.expireTime}}</a-tag>
           <a-tag v-if="tenant.type==0" color="blue">试用用户：{{tenant.userCurrentNum}}/{{tenant.userNumLimit}}</a-tag>
@@ -72,6 +73,7 @@
   import HeadInfo from '@/components/tools/HeadInfo.vue'
   import Trend from '@/components/Trend'
   import { getBuyAndSaleStatistics, buyOrSalePrice, getPlatformConfigByKey } from '@/api/api'
+  import { handleIntroJs } from "@/utils/util"
   import { getAction } from '../../api/manage'
 
   export default {
@@ -116,6 +118,9 @@
       }, 1000)
       this.initInfo()
       this.initWithTenant()
+    },
+    mounted() {
+      handleIntroJs('indexChart', 1)
     },
     methods: {
       initInfo () {
