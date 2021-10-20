@@ -16,7 +16,9 @@
       <a-form :form="form">
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户" data-step="1" data-title="客户"
+              data-intro="客户必须选择，如果发现需要选择的客户尚未录入，可以在下拉框中点击新增客户进行录入。
+                          特别注意，客户如果录入之后在下拉框中不显示，请检查是否给当前用户分配对应的客户权限">
               <a-select placeholder="选择客户" v-decorator="[ 'organId', validatorRules.organId ]"
                 :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
                 <div slot="dropdownRender" slot-scope="menu">
@@ -37,12 +39,14 @@
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号" data-step="2" data-title="单据编号"
+              data-intro="单据编号自动生成、自动累加、开头是单据类型的首字母缩写，累加的规则是每次打开页面会自动占用一个新的编号">
               <a-input placeholder="请输入单据编号" v-decorator.trim="[ 'number' ]" :readOnly="true"/>
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="销售人员">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="销售人员" data-step="3" data-title="销售人员"
+              data-intro="销售人员的数据来自【经手人管理】菜单中的业务员">
               <j-select-multiple placeholder="请选择销售人员" v-model="personList.value" :options="personList.options"/>
             </a-form-item>
           </a-col>
@@ -59,7 +63,7 @@
           @valueChange="onValueChange"
           @deleted="onDeleted">
           <template #buttonAfter>
-            <a-row :gutter="24">
+            <a-row :gutter="24" data-step="4" data-title="扫码录入" data-intro="此功能支持扫码枪扫描商品条码进行录入">
               <a-col v-if="scanStatus" :md="6" :sm="24">
                 <a-button @click="scanEnter">扫码录入</a-button>
               </a-col>
@@ -81,7 +85,7 @@
         </a-row>
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="附件">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="附件" data-step="5" data-title="附件" data-intro="可以上传与单据相关的图片、文档，支持多个文件">
               <j-upload v-model="fileList" bizPath="bill"></j-upload>
             </a-form-item>
           </a-col>
@@ -97,7 +101,7 @@
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
-  import { getMpListShort } from "@/utils/util"
+  import { getMpListShort,handleIntroJs } from "@/utils/util"
   import JSelectMultiple from '@/components/jeecg/JSelectMultiple'
   import JUpload from '@/components/jeecg/JUpload'
   import JDate from '@/components/jeecg/JDate'
@@ -191,6 +195,9 @@
           this.addInit(this.prefixNo)
           this.personList.value = ''
           this.fileList = []
+          this.$nextTick(() => {
+            handleIntroJs('saleOrder', 2)
+          })
         } else {
           this.model.operTime = this.model.operTimeStr
           this.personList.value = this.model.salesMan

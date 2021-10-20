@@ -16,7 +16,9 @@
       <a-form :form="form">
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户" data-step="1" data-title="客户"
+                         data-intro="客户必须选择，如果发现需要选择的客户尚未录入，可以在下拉框中点击新增客户进行录入。
+                          特别注意，客户如果录入之后在下拉框中不显示，请检查是否给当前用户分配对应的客户权限">
               <a-select placeholder="选择客户" v-decorator="[ 'organId', validatorRules.organId ]"
                 :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
                 <div slot="dropdownRender" slot-scope="menu">
@@ -37,12 +39,15 @@
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号" data-step="2" data-title="单据编号"
+                         data-intro="单据编号自动生成、自动累加、开头是单据类型的首字母缩写，累加的规则是每次打开页面会自动占用一个新的编号">
               <a-input placeholder="请输入单据编号" v-decorator.trim="[ 'number' ]" :readOnly="true"/>
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联订单">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联订单" data-step="3" data-title="关联订单"
+              data-intro="销售出库单据可以通过关联订单来选择已录入的订单，选择之后会自动加载订单的内容，然后继续录入仓库等信息完成单据的提交，
+              提交之后原来的销售订单会对应的改变单据状态。另外本系统支持订单多次出库，只需选择订单之后修改对应的商品数量即可">
               <a-input-search placeholder="请选择关联订单" v-decorator="[ 'linkNumber' ]" @search="onSearchLinkNumber" :readOnly="true"/>
             </a-form-item>
           </a-col>
@@ -60,7 +65,7 @@
           @added="onAdded"
           @deleted="onDeleted">
           <template #buttonAfter>
-            <a-row :gutter="24">
+            <a-row :gutter="24" data-step="4" data-title="扫码录入" data-intro="此功能支持扫码枪扫描商品条码进行录入">
               <a-col v-if="scanStatus" :md="6" :sm="24">
                 <a-button @click="scanEnter">扫码录入</a-button>
               </a-col>
@@ -82,29 +87,34 @@
         </a-row>
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="优惠率">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="优惠率" data-step="5" data-title="优惠率"
+                         data-intro="针对单据明细中商品总金额进行优惠的比例">
               <a-input style="width:185px;" placeholder="请输入优惠率" v-decorator.trim="[ 'discount' ]" suffix="%" @keyup="onKeyUpDiscount"/>
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款优惠">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款优惠" data-step="6" data-title="收款优惠"
+                         data-intro="针对单据明细中商品总金额进行优惠的金额">
               <a-input placeholder="请输入付款优惠" v-decorator.trim="[ 'discountMoney' ]" @keyup="onKeyUpDiscountMoney"/>
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="优惠后金额">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="优惠后金额" data-step="7" data-title="优惠后金额"
+                         data-intro="针对单据明细中商品总金额进行优惠后的金额">
               <a-input placeholder="请输入优惠后金额" v-decorator.trim="[ 'discountLastMoney' ]" :readOnly="true"/>
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="其它费用">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="其它费用" data-step="8" data-title="其它费用"
+                         data-intro="比如快递费、油费、过路费">
               <a-input placeholder="请输入其它费用" v-decorator.trim="[ 'otherMoney' ]" @keyup="onKeyUpOtherMoney"/>
             </a-form-item>
           </a-col>
         </a-row>
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="结算账户">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="结算账户" data-step="9" data-title="结算账户"
+                         data-intro="如果在下拉框中选择多账户，则可以通过多个结算账户进行结算">
               <a-select style="width:185px;" placeholder="选择结算账户" v-decorator="[ 'accountId', validatorRules.accountId ]"
                         :dropdownMatchSelectWidth="false" allowClear @select="selectAccount">
                 <a-select-option v-for="(item,index) in accountList" :key="index" :value="item.id">
@@ -122,19 +132,22 @@
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="本次欠款">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="本次欠款" data-step="10" data-title="本次欠款"
+                         data-intro="欠款产生的费用，后续可以在收款单进行收取">
               <a-input placeholder="请输入本次欠款" v-decorator.trim="[ 'debt' ]" :readOnly="true"/>
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="销售人员">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="销售人员" data-step="11" data-title="销售人员"
+                         data-intro="销售人员的数据来自【经手人管理】菜单中的业务员">
               <j-select-multiple placeholder="请选择销售人员" v-model="personList.value" :options="personList.options"/>
             </a-form-item>
           </a-col>
         </a-row>
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="附件">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="附件" data-step="12" data-title="附件"
+                         data-intro="可以上传与单据相关的图片、文档，支持多个文件">
               <j-upload v-model="fileList" bizPath="bill"></j-upload>
             </a-form-item>
           </a-col>
@@ -154,7 +167,7 @@
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
-  import { getMpListShort } from "@/utils/util"
+  import { getMpListShort,handleIntroJs } from "@/utils/util"
   import { getAction } from '@/api/manage'
   import JSelectMultiple from '@/components/jeecg/JSelectMultiple'
   import JUpload from '@/components/jeecg/JUpload'
@@ -272,6 +285,9 @@
           this.addInit(this.prefixNo)
           this.personList.value = ''
           this.fileList = []
+          this.$nextTick(() => {
+            handleIntroJs('saleOut', 2)
+          })
         } else {
           this.model.operTime = this.model.operTimeStr
           this.model.debt = (this.model.discountLastMoney + this.model.otherMoney - this.model.changeAmount).toFixed(2)
