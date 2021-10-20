@@ -20,6 +20,12 @@
                          data-intro="如果发现需要选择的会员卡号尚未录入，可以在下拉框中点击新增会员信息进行录入">
               <a-select placeholder="选择会员卡号" v-decorator="[ 'organId' ]"
                 :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children" @change="onChangeOrgan">
+                <div slot="dropdownRender" slot-scope="menu">
+                  <v-nodes :vnodes="menu" />
+                  <a-divider style="margin: 4px 0;" />
+                  <div style="padding: 4px 8px; cursor: pointer;"
+                       @mousedown="e => e.preventDefault()" @click="addMember"><a-icon type="plus" /> 新增会员</div>
+                </div>
                 <a-select-option v-for="(item,index) in retailList" :key="index" :value="item.id">
                   {{ item.supplier }}
                 </a-select-option>
@@ -129,10 +135,12 @@
         </a-row>
       </a-form>
     </a-spin>
+    <member-modal ref="memberModalForm" @ok="memberModalFormOk"></member-modal>
   </j-modal>
 </template>
 <script>
   import pick from 'lodash.pick'
+  import MemberModal from '../../system/modules/MemberModal'
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
@@ -146,8 +154,13 @@
     name: "RetailOutModal",
     mixins: [JEditableTableMixin, BillModalMixin],
     components: {
+      MemberModal,
       JUpload,
-      JDate
+      JDate,
+      VNodes: {
+        functional: true,
+        render: (h, ctx) => ctx.props.vnodes,
+      }
     },
     data () {
       return {

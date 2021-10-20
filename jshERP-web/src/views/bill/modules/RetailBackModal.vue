@@ -19,6 +19,12 @@
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="会员卡号">
               <a-select placeholder="选择会员卡号" v-decorator="[ 'organId' ]"
                 :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
+                <div slot="dropdownRender" slot-scope="menu">
+                  <v-nodes :vnodes="menu" />
+                  <a-divider style="margin: 4px 0;" />
+                  <div style="padding: 4px 8px; cursor: pointer;"
+                       @mousedown="e => e.preventDefault()" @click="addMember"><a-icon type="plus" /> 新增会员</div>
+                </div>
                 <a-select-option v-for="(item,index) in retailList" :key="index" :value="item.id">
                   {{ item.supplier }}
                 </a-select-option>
@@ -118,11 +124,13 @@
       </a-form>
     </a-spin>
     <link-bill-list ref="linkBillList" @ok="linkBillListOk"></link-bill-list>
+    <member-modal ref="memberModalForm" @ok="memberModalFormOk"></member-modal>
   </j-modal>
 </template>
 <script>
   import pick from 'lodash.pick'
   import LinkBillList from '../dialog/LinkBillList'
+  import MemberModal from '../../system/modules/MemberModal'
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
@@ -137,8 +145,13 @@
     mixins: [JEditableTableMixin, BillModalMixin],
     components: {
       LinkBillList,
+      MemberModal,
       JUpload,
-      JDate
+      JDate,
+      VNodes: {
+        functional: true,
+        render: (h, ctx) => ctx.props.vnodes,
+      }
     },
     data () {
       return {

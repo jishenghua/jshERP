@@ -220,11 +220,19 @@ export const BillModalMixin = {
       this.$refs.customerModalForm.title = "新增客户（提醒：如果找不到新添加的客户，请到用户管理检查是否分配了该客户权限）";
       this.$refs.customerModalForm.disableSubmit = false;
     },
+    addMember() {
+      this.$refs.memberModalForm.add();
+      this.$refs.memberModalForm.title = "新增会员";
+      this.$refs.memberModalForm.disableSubmit = false;
+    },
     vendorModalFormOk() {
       this.initSupplier()
     },
     customerModalFormOk() {
       this.initCustomer()
+    },
+    memberModalFormOk() {
+      this.initRetail()
     },
     onAdded(event) {
       const { row, target } = event
