@@ -20,23 +20,23 @@
           <a-tab-pane key="1" tab="基本信息" forceRender>
             <a-row class="form-row" :gutter="24">
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="名称" data-step="1" data-intro="名称必填，可以重复">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="名称" data-step="1" data-title="名称" data-intro="名称必填，可以重复">
                   <a-input placeholder="请输入名称" v-decorator.trim="[ 'name', validatorRules.name]"/>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="规格" data-step="2" data-intro="规格不必填，比如：10克">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="规格" data-step="2" data-title="规格" data-intro="规格不必填，比如：10克">
                   <a-input placeholder="请输入规格" v-decorator.trim="[ 'standard' ]"/>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="型号" data-step="3" data-intro="型号是比规格更小的属性，比如：RX-01">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="型号" data-step="3" data-title="型号" data-intro="型号是比规格更小的属性，比如：RX-01">
                   <a-input placeholder="请输入型号" v-decorator.trim="[ 'model' ]" />
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 4 }}" :wrapperCol="{xs: { span: 24 },sm: { span: 20 }}" label="单位"
-                  data-step="4" data-intro="此处支持单个单位和多单位，勾选多单位就可以切换到多单位的下拉框，多单位需要先在【计量单位】页面进行录入。
+                  data-step="4" data-title="单位" data-intro="此处支持单个单位和多单位，勾选多单位就可以切换到多单位的下拉框，多单位需要先在【计量单位】页面进行录入。
                   比如牛奶有瓶和箱两种单位，12瓶=1箱，这就构成了多单位，多单位中有个换算比例">
                   <a-row class="form-row" :gutter="24">
                     <a-col :lg="15" :md="15" :sm="24">
@@ -67,27 +67,27 @@
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="安全存量" data-step="5"
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="安全存量" data-step="5" data-title="安全存量"
                   data-intro="安全存量是指商品的最小库存临界量，当仓库中的库存小于这个值，在库存预警报表中可以查询出来，用于提醒补货">
                   <a-input placeholder="请输入安全存量" v-decorator.trim="[ 'safetyStock' ]" />
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="保质期天数" data-step="6"
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="保质期天数" data-step="6" data-title="保质期天数"
                   data-intro="保质期天数指的是商品的保质期，主要针对带生产日期的，此类商品一般有批号">
                   <a-input-number style="width: 100%" placeholder="请输入保质期天数" v-decorator.trim="[ 'expiryNum' ]" />
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 4 }}" :wrapperCol="{xs: { span: 24 },sm: { span: 20 }}" label="类别"
-                  data-step="7" data-intro="类别需要在【商品类别】页面进行录入，录入之后在此处进行调用">
+                  data-step="7" data-title="类别" data-intro="类别需要在【商品类别】页面进行录入，录入之后在此处进行调用">
                   <a-tree-select style="width:100%" :dropdownStyle="{maxHeight:'200px',overflow:'auto'}" allow-clear
                                  :treeData="categoryTree" v-decorator="[ 'categoryId' ]" placeholder="请选择类别">
                   </a-tree-select>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="序列号" data-step="8"
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="序列号" data-step="8" data-title="序列号"
                   data-intro="此处是商品的序列号开关，如果选择了有，则在采购入库单据需要录入该商品的序列号，在销售出库单据需要选择该商品的序列号进行出库">
                   <a-select placeholder="有无序列号" v-decorator="[ 'enableSerialNumber' ]">
                     <a-select-option value="1">有</a-select-option>
@@ -96,7 +96,7 @@
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="批号" data-step="9"
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="批号" data-step="9" data-title="批号"
                   data-intro="此处是商品的批号开关，如果选择了有，则在采购入库单据需要录入该商品的批号和生产日期，在销售出库单据需要选择该商品的批号进行出库">
                   <a-select placeholder="有无批号" v-decorator="[ 'enableBatchNumber' ]">
                     <a-select-option value="1">有</a-select-option>
@@ -105,7 +105,7 @@
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="多属性" data-step="10"
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="多属性" data-step="10" data-title="多属性"
                   data-intro="多属性是针对的sku商品（比如服装、鞋帽行业），此处开关如果启用就可以在下方进行多sku的配置，配置具体的颜色、尺码之类的组合">
                   <a-switch checked-children="启用" un-checked-children="关闭" v-model="skuSwitch" :disabled="switchDisabled" @change="onSkuChange"></a-switch>
                 </a-form-item>
@@ -413,7 +413,7 @@
         })
         this.edit({});
         this.$nextTick(() => {
-          handleIntroJs('material', 12)
+          handleIntroJs('material', 11)
         });
       },
       edit (record) {

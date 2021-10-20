@@ -668,10 +668,9 @@ export function handleIntroJs(module, cur_version) {
   if (Vue.ls.get('intro_cache_' + module) === cur_version) {
     return;
   }
-  introJs().setOptions({
+  introJs(".ant-modal-cust-warp").setOptions({
     prevLabel: '&larr; 上一步',
     nextLabel: '下一步 &rarr;',
-    skipLabel: '跳过',
     doneLabel: '知道了',
     exitOnOverlayClick: false //点击空白区域是否关闭提示组件
   }).oncomplete(function(){
