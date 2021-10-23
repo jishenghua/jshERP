@@ -491,10 +491,17 @@ public class DepotItemService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void deleteDepotItemHeadId(Long headerId)throws Exception {
-        DepotItemExample example = new DepotItemExample();
-        example.createCriteria().andHeaderIdEqualTo(headerId);
         try{
+            //1、查询删除前的单据明细
+            List<DepotItem> depotItemList = getListByHeaderId(headerId);
+            //2、删除单据明细
+            DepotItemExample example = new DepotItemExample();
+            example.createCriteria().andHeaderIdEqualTo(headerId);
             depotItemMapper.deleteByExample(example);
+            //3、计算删除之后单据明细中商品的库存
+            for(DepotItem depotItem : depotItemList){
+                updateCurrentStock(depotItem);
+            }
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
