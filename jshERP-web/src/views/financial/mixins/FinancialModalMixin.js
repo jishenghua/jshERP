@@ -157,11 +157,19 @@ export const FinancialModalMixin = {
       this.$refs.customerModalForm.title = "新增客户（提醒：如果找不到新添加的客户，请到用户管理检查是否分配了该客户权限）";
       this.$refs.customerModalForm.disableSubmit = false;
     },
+    addAccount() {
+      this.$refs.accountModalForm.add();
+      this.$refs.accountModalForm.title = "新增结算账户";
+      this.$refs.accountModalForm.disableSubmit = false;
+    },
     vendorModalFormOk() {
       this.initSupplier()
     },
     customerModalFormOk() {
       this.initCustomer()
+    },
+    accountModalFormOk() {
+      this.initAccount()
     },
     //单元值改变一个字符就触发一次
     onValueChange(event) {

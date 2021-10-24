@@ -68,6 +68,12 @@
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收入账户">
               <a-select placeholder="选择收入账户" v-decorator="[ 'accountId', validatorRules.accountId ]"
                 :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
+                <div slot="dropdownRender" slot-scope="menu">
+                  <v-nodes :vnodes="menu" />
+                  <a-divider style="margin: 4px 0;" />
+                  <div style="padding: 4px 8px; cursor: pointer;"
+                       @mousedown="e => e.preventDefault()" @click="addAccount"><a-icon type="plus" /> 新增结算账户</div>
+                </div>
                 <a-select-option v-for="(item,index) in accountList" :key="index" :value="item.id">
                   {{ item.name }}
                 </a-select-option>
@@ -93,10 +99,12 @@
         </a-row>
       </a-form>
     </a-spin>
+    <account-modal ref="accountModalForm" @ok="accountModalFormOk"></account-modal>
   </j-modal>
 </template>
 <script>
   import pick from 'lodash.pick'
+  import AccountModal from '../../system/modules/AccountModal'
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { FinancialModalMixin } from '../mixins/FinancialModalMixin'
@@ -106,8 +114,13 @@
     name: "ItemInModal",
     mixins: [JEditableTableMixin, FinancialModalMixin],
     components: {
+      AccountModal,
       JUpload,
-      JDate
+      JDate,
+      VNodes: {
+        functional: true,
+        render: (h, ctx) => ctx.props.vnodes,
+      }
     },
     data () {
       return {
