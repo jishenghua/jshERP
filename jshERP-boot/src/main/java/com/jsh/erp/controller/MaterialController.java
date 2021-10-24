@@ -547,6 +547,7 @@ public class MaterialController {
                                              @RequestParam("depotId") Long depotId,
                                              @RequestParam("categoryId") Long categoryId,
                                              @RequestParam("materialParam") String materialParam,
+                                             @RequestParam("zeroStock") Integer zeroStock,
                                              @RequestParam("mpList") String mpList,
                                              @RequestParam("column") String column,
                                              @RequestParam("order") String order,
@@ -558,9 +559,9 @@ public class MaterialController {
             if(categoryId != null){
                 idList = materialService.getListByParentId(categoryId);
             }
-            List<MaterialVo4Unit> dataList = materialService.getListWithStock(depotId, idList, StringUtil.toNull(materialParam),
+            List<MaterialVo4Unit> dataList = materialService.getListWithStock(depotId, idList, StringUtil.toNull(materialParam), zeroStock,
                     StringUtil.safeSqlParse(column), StringUtil.safeSqlParse(order), (currentPage-1)*pageSize, pageSize);
-            int total = materialService.getListWithStockCount(depotId, idList, StringUtil.toNull(materialParam));
+            int total = materialService.getListWithStockCount(depotId, idList, StringUtil.toNull(materialParam), zeroStock);
             MaterialVo4Unit materialVo4Unit= materialService.getTotalStockAndPrice(depotId, idList, StringUtil.toNull(materialParam));
             map.put("total", total);
             map.put("currentStock", materialVo4Unit.getCurrentStock());
@@ -575,5 +576,25 @@ public class MaterialController {
             res.data = "获取数据失败";
         }
         return res;
+    }
+
+    /**
+     * 批量设置商品当前的实时库存（按每个仓库）
+     * @param jsonObject
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @PostMapping(value = "/batchSetMaterialCurrentStock")
+    public String batchSetMaterialCurrentStock(@RequestBody JSONObject jsonObject,
+                                 HttpServletRequest request)throws Exception {
+        String ids = jsonObject.getString("ids");
+        Map<String, Object> objectMap = new HashMap<>();
+        int res = materialService.batchSetMaterialCurrentStock(ids);
+        if(res > 0) {
+            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+        } else {
+            return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
+        }
     }
 }

@@ -818,16 +818,30 @@ public class MaterialService {
         return materialMapperEx.getMaterialByBarCode(barCodeArray);
     }
 
-    public List<MaterialVo4Unit> getListWithStock(Long depotId, List<Long> idList, String materialParam,
+    public List<MaterialVo4Unit> getListWithStock(Long depotId, List<Long> idList, String materialParam, Integer zeroStock,
                                                   String column, String order, Integer offset, Integer rows) {
-        return materialMapperEx.getListWithStock(depotId, idList, materialParam, column, order, offset, rows);
+        return materialMapperEx.getListWithStock(depotId, idList, materialParam, zeroStock, column, order, offset, rows);
     }
 
-    public int getListWithStockCount(Long depotId, List<Long> idList, String materialParam) {
-        return materialMapperEx.getListWithStockCount(depotId, idList, materialParam);
+    public int getListWithStockCount(Long depotId, List<Long> idList, String materialParam, Integer zeroStock) {
+        return materialMapperEx.getListWithStockCount(depotId, idList, materialParam, zeroStock);
     }
 
     public MaterialVo4Unit getTotalStockAndPrice(Long depotId, List<Long> idList, String materialParam) {
         return materialMapperEx.getTotalStockAndPrice(depotId, idList, materialParam);
+    }
+
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int batchSetMaterialCurrentStock(String ids) throws Exception {
+        int res = 0;
+        List<Long> idList = StringUtil.strToLongList(ids);
+        List<Depot> depotList = depotService.getAllList();
+        for(Long mId: idList) {
+            for(Depot depot: depotList) {
+                depotItemService.updateCurrentStockFun(mId, depot.getId());
+                res = 1;
+            }
+        }
+        return res;
     }
 }
