@@ -665,10 +665,14 @@ export function sheet2blob (aoa, sheetName) {
 export function handleIntroJs(module, cur_version) {
   //每个页面设置不同的缓存变量名称，不可以重复，有新版本时，更新cur_version
   //有新版本更新时才出现一次引导页， 第二次进入进不再出现， 这里有缓存来判断
+  let introJsObj = introJs()
+  if(module !== 'indexChart') {
+    introJsObj = introJs('.ant-modal-cust-warp')
+  }
   if (Vue.ls.get('intro_cache_' + module) === cur_version) {
     return;
   }
-  introJs(".ant-modal-cust-warp").setOptions({
+  introJsObj.setOptions({
     prevLabel: '&larr; 上一步',
     nextLabel: '下一步 &rarr;',
     doneLabel: '知道了',
