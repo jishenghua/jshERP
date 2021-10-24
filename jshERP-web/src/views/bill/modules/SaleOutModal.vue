@@ -122,6 +122,12 @@
                          data-intro="如果在下拉框中选择多账户，则可以通过多个结算账户进行结算">
               <a-select style="width:185px;" placeholder="选择结算账户" v-decorator="[ 'accountId', validatorRules.accountId ]"
                         :dropdownMatchSelectWidth="false" allowClear @select="selectAccount">
+                <div slot="dropdownRender" slot-scope="menu">
+                  <v-nodes :vnodes="menu" />
+                  <a-divider style="margin: 4px 0;" />
+                  <div style="padding: 4px 8px; cursor: pointer;"
+                       @mousedown="e => e.preventDefault()" @click="addAccount"><a-icon type="plus" /> 新增结算账户</div>
+                </div>
                 <a-select-option v-for="(item,index) in accountList" :key="index" :value="item.id">
                   {{ item.name }}
                 </a-select-option>
@@ -163,6 +169,7 @@
     <link-bill-list ref="linkBillList" @ok="linkBillListOk"></link-bill-list>
     <customer-modal ref="customerModalForm" @ok="customerModalFormOk"></customer-modal>
     <depot-modal ref="depotModalForm" @ok="depotModalFormOk"></depot-modal>
+    <account-modal ref="accountModalForm" @ok="accountModalFormOk"></account-modal>
   </j-modal>
 </template>
 <script>
@@ -171,6 +178,7 @@
   import LinkBillList from '../dialog/LinkBillList'
   import CustomerModal from '../../system/modules/CustomerModal'
   import DepotModal from '../../system/modules/DepotModal'
+  import AccountModal from '../../system/modules/AccountModal'
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
@@ -188,6 +196,7 @@
       LinkBillList,
       CustomerModal,
       DepotModal,
+      AccountModal,
       JUpload,
       JDate,
       JSelectMultiple,
