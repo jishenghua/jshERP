@@ -63,7 +63,12 @@
           @valueChange="onValueChange"
           @deleted="onDeleted">
           <template #buttonAfter>
-            <a-row :gutter="24" data-step="4" data-title="扫码录入" data-intro="此功能支持扫码枪扫描商品条码进行录入">
+            <a-row :gutter="24" style="float:left;width:140px;">
+              <a-col :md="24" :sm="24">
+                <a-button icon="plus" @click="addDepot">新增仓库</a-button>
+              </a-col>
+            </a-row>
+            <a-row :gutter="24" style="float:left;" data-step="4" data-title="扫码录入" data-intro="此功能支持扫码枪扫描商品条码进行录入">
               <a-col v-if="scanStatus" :md="6" :sm="24">
                 <a-button @click="scanEnter">扫码录入</a-button>
               </a-col>
@@ -93,11 +98,13 @@
       </a-form>
     </a-spin>
     <customer-modal ref="customerModalForm" @ok="customerModalFormOk"></customer-modal>
+    <depot-modal ref="depotModalForm" @ok="depotModalFormOk"></depot-modal>
   </j-modal>
 </template>
 <script>
   import pick from 'lodash.pick'
   import CustomerModal from '../../system/modules/CustomerModal'
+  import DepotModal from '../../system/modules/DepotModal'
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
@@ -111,6 +118,7 @@
     mixins: [JEditableTableMixin, BillModalMixin],
     components: {
       CustomerModal,
+      DepotModal,
       JUpload,
       JDate,
       JSelectMultiple,

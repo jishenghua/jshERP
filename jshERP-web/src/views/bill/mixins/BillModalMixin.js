@@ -225,6 +225,11 @@ export const BillModalMixin = {
       this.$refs.memberModalForm.title = "新增会员";
       this.$refs.memberModalForm.disableSubmit = false;
     },
+    addDepot() {
+      this.$refs.depotModalForm.add();
+      this.$refs.depotModalForm.title = "新增仓库";
+      this.$refs.depotModalForm.disableSubmit = false;
+    },
     vendorModalFormOk() {
       this.initSupplier()
     },
@@ -233,6 +238,9 @@ export const BillModalMixin = {
     },
     memberModalFormOk() {
       this.initRetail()
+    },
+    depotModalFormOk() {
+      this.initDepot()
     },
     onAdded(event) {
       const { row, target } = event
