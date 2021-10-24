@@ -7,7 +7,7 @@
         <div class="table-page-search-wrapper">
           <a-form layout="inline" @keyup.enter.native="searchQuery">
             <a-row :gutter="24">
-              <a-col :md="4" :sm="24">
+              <a-col :md="3" :sm="24">
                 <a-form-item label="仓库" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-select
                     showSearch optionFilterProp="children"
@@ -20,7 +20,7 @@
                   </a-select>
                 </a-form-item>
               </a-col>
-              <a-col :md="4" :sm="24">
+              <a-col :md="3" :sm="24">
                 <a-form-item label="类别" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-tree-select style="width:100%" :dropdownStyle="{maxHeight:'200px',overflow:'auto'}" allow-clear
                        :treeData="categoryTree" v-model="queryParam.categoryId" placeholder="请选择类别">
@@ -30,6 +30,14 @@
               <a-col :md="4" :sm="24">
                 <a-form-item label="商品信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-input placeholder="条码/名称/规格/型号" v-model="queryParam.materialParam"></a-input>
+                </a-form-item>
+              </a-col>
+              <a-col :md="3" :sm="24">
+                <a-form-item label="零库存" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-select v-model="queryParam.zeroStock">
+                    <a-select-option value="0">隐藏</a-select-option>
+                    <a-select-option value="1">显示</a-select-option>
+                  </a-select>
                 </a-form-item>
               </a-col>
               <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
@@ -122,6 +130,7 @@
           depotId:'',
           categoryId:'',
           materialParam:'',
+          zeroStock: '0',
           mpList: getMpListShort(Vue.ls.get('materialPropertyList'))  //扩展属性
         },
         ipagination:{
