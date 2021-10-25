@@ -162,6 +162,11 @@ export const FinancialModalMixin = {
       this.$refs.accountModalForm.title = "新增结算账户";
       this.$refs.accountModalForm.disableSubmit = false;
     },
+    addPerson() {
+      this.$refs.personModalForm.add();
+      this.$refs.personModalForm.title = "新增经手人";
+      this.$refs.personModalForm.disableSubmit = false;
+    },
     vendorModalFormOk() {
       this.initSupplier()
     },
@@ -170,6 +175,9 @@ export const FinancialModalMixin = {
     },
     accountModalFormOk() {
       this.initAccount()
+    },
+    personModalFormOk() {
+      this.initPerson()
     },
     //单元值改变一个字符就触发一次
     onValueChange(event) {
