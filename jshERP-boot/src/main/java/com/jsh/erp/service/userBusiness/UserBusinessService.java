@@ -167,7 +167,7 @@ public class UserBusinessService {
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateBtnStr(String keyId, String type, String btnStr) throws Exception{
         logService.insertLog("关联关系",
-                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(type).toString(),
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append("角色的按钮权限").toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         UserBusiness userBusiness = new UserBusiness();
         userBusiness.setBtnStr(btnStr);
