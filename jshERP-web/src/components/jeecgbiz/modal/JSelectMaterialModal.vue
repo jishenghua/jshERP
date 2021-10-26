@@ -215,8 +215,9 @@
           this.scrollTrigger = {};
         }
       },
-      showModal() {
+      showModal(barCode) {
         this.visible = true;
+        this.queryParam.q = barCode
         this.loadData();
         this.form.resetFields();
       },
