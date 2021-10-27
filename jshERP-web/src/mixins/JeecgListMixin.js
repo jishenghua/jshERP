@@ -407,6 +407,9 @@ export const JeecgListMixin = {
           }
         })
         dataSource.push(totalRow)
+        //总数要增加合计的行数，每页都有一行合计，所以总数要加上
+        let size = parseInt(this.ipagination.total/this.ipagination.pageSize) +1
+        this.ipagination.total = this.ipagination.total + size
       }
     },
     paginationChange(page, pageSize) {
