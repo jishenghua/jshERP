@@ -10,7 +10,7 @@
     style="top:20px;"
   >
     <a-spin :spinning="confirmLoading">
-      <a-form :form="form">
+      <a-form :form="form" id="passwordModal">
 
         <a-form-item label="用户账号" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input placeholder="请输入用户账号" v-decorator="[ 'username', {}]" :readOnly="true"/>
@@ -31,7 +31,7 @@
 
 <script>
   import {changePassword} from '@/api/api'
-
+  import {autoJumpNextInput} from "@/utils/util"
   export default {
     name: "PasswordModal",
     data () {
@@ -82,6 +82,7 @@
         this.model.username = username;
         this.$nextTick(() => {
           this.form.setFieldsValue({username:username});
+          autoJumpNextInput('passwordModal')
         });
       },
       close () {

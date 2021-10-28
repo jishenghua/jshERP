@@ -18,7 +18,7 @@
       <a-form :form="form">
         <a-tabs default-active-key="1">
           <a-tab-pane key="1" tab="基本信息" forceRender>
-            <a-row class="form-row" :gutter="24">
+            <a-row class="form-row" :gutter="24" id="materialHeadModal">
               <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="名称" data-step="1" data-title="名称" data-intro="名称必填，可以重复">
                   <a-input placeholder="请输入名称" v-decorator.trim="[ 'name', validatorRules.name]"/>
@@ -167,7 +167,7 @@
                 </a-col>
               </a-row>
             </a-card>
-            <div style="margin-top:8px;">
+            <div style="margin-top:8px;" id="materialDetailModal">
               <j-editable-table
                 ref="editableMeTable"
                 :loading="meTable.loading"
@@ -262,7 +262,7 @@
   import JEditableTable from '@/components/jeecg/JEditableTable'
   import { FormTypes, VALIDATE_NO_PASSED, getRefPromise, validateFormAndTables } from '@/utils/JEditableTableUtil'
   import {queryMaterialCategoryTreeList,checkMaterial,checkMaterialBarCode,getAllMaterialAttribute,getMaxBarCode} from '@/api/api'
-  import { handleIntroJs } from "@/utils/util"
+  import { handleIntroJs,autoJumpNextInput } from "@/utils/util"
   import { httpAction, getAction } from '@/api/manage'
   import JImageUpload from '@/components/jeecg/JImageUpload'
   import JDate from '@/components/jeecg/JDate'
@@ -433,6 +433,8 @@
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model, 'name', 'standard', 'unit', 'unitId', 'model', 'color',
             'categoryId','enableSerialNumber','enableBatchNumber','expiryNum','safetyStock','remark','mfrs','otherField1','otherField2','otherField3'))
+          autoJumpNextInput('materialHeadModal')
+          autoJumpNextInput('materialDetailModal')
         });
         this.initMaterialAttribute()
         // 加载子表数据

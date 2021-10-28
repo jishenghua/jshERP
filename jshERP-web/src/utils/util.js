@@ -685,3 +685,28 @@ export function handleIntroJs(module, cur_version) {
     Vue.ls.set('intro_cache_' + module, cur_version, 100 * 24 * 60 * 60 * 1000);
   }).start()
 }
+
+/**
+ * 回车后自动跳到下一个input
+ */
+export function autoJumpNextInput(domInfo) {
+  let domIndex = 0
+  let inputs = document.getElementById(domInfo).getElementsByTagName('input')
+  inputs[domIndex].focus()
+  document.getElementById(domInfo).addEventListener('keydown',function(e){
+    if(e.keyCode === 13){
+      domIndex++
+      if(domIndex === inputs.length) {
+        domIndex = 0
+      }
+      inputs[domIndex].focus()
+    }
+  })
+  for(let i=0; i<inputs.length; i++){
+    //这个index就是做个介质，来获取当前的i是第几个
+    inputs[i].index = i;
+    inputs[i].onclick = function () {
+      domIndex = this.index
+    }
+  }
+}

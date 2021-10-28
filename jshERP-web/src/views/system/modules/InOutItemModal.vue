@@ -15,7 +15,7 @@
       </a-button>
     </template>
     <a-spin :spinning="confirmLoading">
-      <a-form :form="form">
+      <a-form :form="form" id="inOutItemModal">
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="名称">
           <a-input placeholder="请输入名称" v-decorator.trim="[ 'name', validatorRules.name]" />
         </a-form-item>
@@ -35,6 +35,7 @@
 <script>
   import pick from 'lodash.pick'
   import {addInOutItem,editInOutItem,checkInOutItem } from '@/api/api'
+  import {autoJumpNextInput} from "@/utils/util"
   export default {
     name: "InOutItemModal",
     data () {
@@ -80,6 +81,7 @@
         this.visible = true;
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model,'name', 'type', 'remark'))
+          autoJumpNextInput('inOutItemModal')
         });
       },
       close () {

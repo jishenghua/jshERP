@@ -15,7 +15,7 @@
       </a-button>
     </template>
     <a-spin :spinning="confirmLoading">
-      <a-form :form="form">
+      <a-form :form="form" id="memberModal">
         <a-col :span="24/2">
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="名称">
             <a-input placeholder="请输入名称" v-decorator.trim="[ 'supplier', validatorRules.supplier]" />
@@ -53,6 +53,7 @@
 <script>
   import pick from 'lodash.pick'
   import {addSupplier,editSupplier,checkSupplier } from '@/api/api'
+  import {autoJumpNextInput} from "@/utils/util"
   export default {
     name: "MemberModal",
     data () {
@@ -95,6 +96,7 @@
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model,'supplier', 'contacts', 'telephone', 'email', 'telephone',
             'phoneNum', 'description'))
+          autoJumpNextInput('memberModal')
         });
       },
       close () {

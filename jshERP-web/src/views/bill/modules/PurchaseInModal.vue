@@ -51,7 +51,7 @@
             </a-form-item>
           </a-col>
         </a-row>
-        <j-editable-table
+        <j-editable-table  id="purchaseInModal"
           :ref="refKeys[0]"
           :loading="materialTable.loading"
           :columns="materialTable.columns"
@@ -178,7 +178,7 @@
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
-  import { getMpListShort, changeListFmtMinus,handleIntroJs } from "@/utils/util"
+  import { getMpListShort, changeListFmtMinus,handleIntroJs,autoJumpNextInput } from "@/utils/util"
   import { getAction } from '@/api/manage'
   import JUpload from '@/components/jeecg/JUpload'
   import JDate from '@/components/jeecg/JDate'
@@ -324,6 +324,9 @@
           let url = this.readOnly ? this.url.detailList : this.url.detailList;
           this.requestSubTableData(url, params, this.materialTable);
         }
+        this.$nextTick(() => {
+          autoJumpNextInput('purchaseInModal')
+        })
         //复制新增单据-初始化单号和日期
         if(this.action === 'copyAdd') {
           this.model.id = ''

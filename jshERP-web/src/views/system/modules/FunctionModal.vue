@@ -15,7 +15,7 @@
       </a-button>
     </template>
     <a-spin :spinning="confirmLoading">
-      <a-form :form="form">
+      <a-form :form="form" id="functionModal">
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="编号">
           <a-input placeholder="请输入编号" v-decorator.trim="[ 'number', validatorRules.number]" />
         </a-form-item>
@@ -50,6 +50,7 @@
 <script>
   import pick from 'lodash.pick'
   import {addFunction,editFunction,checkFunction } from '@/api/api'
+  import {autoJumpNextInput} from "@/utils/util"
   import JSelectMultiple from '@/components/jeecg/JSelectMultiple'
   export default {
     name: "FunctionModal",
@@ -123,6 +124,7 @@
         }
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model,'number', 'name', 'parentNumber', 'url', 'component', 'sort', 'pushBtn', 'icon', 'enabled'))
+          autoJumpNextInput('functionModal')
         });
       },
       close () {
