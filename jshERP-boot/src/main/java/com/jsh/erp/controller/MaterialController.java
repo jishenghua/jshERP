@@ -327,23 +327,22 @@ public class MaterialController {
         try {
             List<MaterialVo4Unit> dataList = materialService.findByAll(StringUtil.toNull(barCode), StringUtil.toNull(name),
                     StringUtil.toNull(standard), StringUtil.toNull(model), StringUtil.toNull(categoryId));
-            String[] names = {"名称", "类型", "型号", "安全存量", "单位", "零售价", "最低售价", "采购价", "销售价", "备注", "状态"};
+            String[] names = {"名称", "类型", "型号", "单位", "零售价", "最低售价", "采购价", "销售价", "备注", "状态"};
             String title = "商品信息";
             List<String[]> objects = new ArrayList<String[]>();
             if (null != dataList) {
                 for (MaterialVo4Unit m : dataList) {
-                    String[] objs = new String[11];
+                    String[] objs = new String[10];
                     objs[0] = m.getName();
                     objs[1] = m.getCategoryName();
                     objs[2] = m.getModel();
-                    objs[3] = m.getSafetyStock() == null? "" : m.getSafetyStock().toString();
-                    objs[4] = m.getCommodityUnit();
-                    objs[5] = m.getCommodityDecimal() == null? "" : m.getCommodityDecimal().toString();
-                    objs[6] = m.getLowDecimal() == null? "" : m.getLowDecimal().toString();
-                    objs[7] = m.getPurchaseDecimal() == null? "" : m.getPurchaseDecimal().toString();
-                    objs[8] = m.getWholesaleDecimal() == null? "" : m.getWholesaleDecimal().toString();
-                    objs[9] = m.getRemark();
-                    objs[10] = m.getEnabled() ? "启用" : "禁用";
+                    objs[3] = m.getCommodityUnit();
+                    objs[4] = m.getCommodityDecimal() == null? "" : m.getCommodityDecimal().toString();
+                    objs[5] = m.getLowDecimal() == null? "" : m.getLowDecimal().toString();
+                    objs[6] = m.getPurchaseDecimal() == null? "" : m.getPurchaseDecimal().toString();
+                    objs[7] = m.getWholesaleDecimal() == null? "" : m.getWholesaleDecimal().toString();
+                    objs[8] = m.getRemark();
+                    objs[9] = m.getEnabled() ? "启用" : "禁用";
                     objects.add(objs);
                 }
             }

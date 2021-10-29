@@ -11,6 +11,10 @@ public class MaterialInitialStock {
 
     private BigDecimal number;
 
+    private BigDecimal lowSafeStock;
+
+    private BigDecimal highSafeStock;
+
     private Long tenantId;
 
     private String deleteFlag;
@@ -45,6 +49,22 @@ public class MaterialInitialStock {
 
     public void setNumber(BigDecimal number) {
         this.number = number;
+    }
+
+    public BigDecimal getLowSafeStock() {
+        return lowSafeStock;
+    }
+
+    public void setLowSafeStock(BigDecimal lowSafeStock) {
+        this.lowSafeStock = lowSafeStock;
+    }
+
+    public BigDecimal getHighSafeStock() {
+        return highSafeStock;
+    }
+
+    public void setHighSafeStock(BigDecimal highSafeStock) {
+        this.highSafeStock = highSafeStock;
     }
 
     public Long getTenantId() {

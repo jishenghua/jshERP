@@ -345,6 +345,126 @@ public class MaterialInitialStockExample {
             return (Criteria) this;
         }
 
+        public Criteria andLowSafeStockIsNull() {
+            addCriterion("low_safe_stock is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLowSafeStockIsNotNull() {
+            addCriterion("low_safe_stock is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLowSafeStockEqualTo(BigDecimal value) {
+            addCriterion("low_safe_stock =", value, "lowSafeStock");
+            return (Criteria) this;
+        }
+
+        public Criteria andLowSafeStockNotEqualTo(BigDecimal value) {
+            addCriterion("low_safe_stock <>", value, "lowSafeStock");
+            return (Criteria) this;
+        }
+
+        public Criteria andLowSafeStockGreaterThan(BigDecimal value) {
+            addCriterion("low_safe_stock >", value, "lowSafeStock");
+            return (Criteria) this;
+        }
+
+        public Criteria andLowSafeStockGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("low_safe_stock >=", value, "lowSafeStock");
+            return (Criteria) this;
+        }
+
+        public Criteria andLowSafeStockLessThan(BigDecimal value) {
+            addCriterion("low_safe_stock <", value, "lowSafeStock");
+            return (Criteria) this;
+        }
+
+        public Criteria andLowSafeStockLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("low_safe_stock <=", value, "lowSafeStock");
+            return (Criteria) this;
+        }
+
+        public Criteria andLowSafeStockIn(List<BigDecimal> values) {
+            addCriterion("low_safe_stock in", values, "lowSafeStock");
+            return (Criteria) this;
+        }
+
+        public Criteria andLowSafeStockNotIn(List<BigDecimal> values) {
+            addCriterion("low_safe_stock not in", values, "lowSafeStock");
+            return (Criteria) this;
+        }
+
+        public Criteria andLowSafeStockBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("low_safe_stock between", value1, value2, "lowSafeStock");
+            return (Criteria) this;
+        }
+
+        public Criteria andLowSafeStockNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("low_safe_stock not between", value1, value2, "lowSafeStock");
+            return (Criteria) this;
+        }
+
+        public Criteria andHighSafeStockIsNull() {
+            addCriterion("high_safe_stock is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andHighSafeStockIsNotNull() {
+            addCriterion("high_safe_stock is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andHighSafeStockEqualTo(BigDecimal value) {
+            addCriterion("high_safe_stock =", value, "highSafeStock");
+            return (Criteria) this;
+        }
+
+        public Criteria andHighSafeStockNotEqualTo(BigDecimal value) {
+            addCriterion("high_safe_stock <>", value, "highSafeStock");
+            return (Criteria) this;
+        }
+
+        public Criteria andHighSafeStockGreaterThan(BigDecimal value) {
+            addCriterion("high_safe_stock >", value, "highSafeStock");
+            return (Criteria) this;
+        }
+
+        public Criteria andHighSafeStockGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("high_safe_stock >=", value, "highSafeStock");
+            return (Criteria) this;
+        }
+
+        public Criteria andHighSafeStockLessThan(BigDecimal value) {
+            addCriterion("high_safe_stock <", value, "highSafeStock");
+            return (Criteria) this;
+        }
+
+        public Criteria andHighSafeStockLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("high_safe_stock <=", value, "highSafeStock");
+            return (Criteria) this;
+        }
+
+        public Criteria andHighSafeStockIn(List<BigDecimal> values) {
+            addCriterion("high_safe_stock in", values, "highSafeStock");
+            return (Criteria) this;
+        }
+
+        public Criteria andHighSafeStockNotIn(List<BigDecimal> values) {
+            addCriterion("high_safe_stock not in", values, "highSafeStock");
+            return (Criteria) this;
+        }
+
+        public Criteria andHighSafeStockBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("high_safe_stock between", value1, value2, "highSafeStock");
+            return (Criteria) this;
+        }
+
+        public Criteria andHighSafeStockNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("high_safe_stock not between", value1, value2, "highSafeStock");
+            return (Criteria) this;
+        }
+
         public Criteria andTenantIdIsNull() {
             addCriterion("tenant_id is null");
             return (Criteria) this;

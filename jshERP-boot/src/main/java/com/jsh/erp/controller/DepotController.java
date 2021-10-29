@@ -6,6 +6,8 @@ import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.Depot;
 import com.jsh.erp.datasource.entities.DepotEx;
+import com.jsh.erp.datasource.entities.MaterialCurrentStock;
+import com.jsh.erp.datasource.entities.MaterialInitialStock;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.depot.DepotService;
 import com.jsh.erp.service.material.MaterialService;
@@ -153,6 +155,9 @@ public class DepotController {
                     BigDecimal currentStock = materialService.getCurrentStock(mId, depot.getId());
                     de.setInitStock(initStock);
                     de.setCurrentStock(currentStock);
+                    MaterialInitialStock materialInitialStock = materialService.getSafeStock(mId, depot.getId());
+                    de.setLowSafeStock(materialInitialStock.getLowSafeStock());
+                    de.setHighSafeStock(materialInitialStock.getHighSafeStock());
                 } else {
                     de.setInitStock(BigDecimal.ZERO);
                     de.setCurrentStock(BigDecimal.ZERO);

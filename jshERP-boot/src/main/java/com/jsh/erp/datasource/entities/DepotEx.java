@@ -19,4 +19,8 @@ public class DepotEx extends Depot{
 
     private BigDecimal currentStock;
 
+    private BigDecimal lowSafeStock;
+
+    private BigDecimal highSafeStock;
+
 }
