@@ -67,15 +67,15 @@
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="安全存量" data-step="5" data-title="安全存量"
-                  data-intro="安全存量是指商品的最小库存临界量，当仓库中的库存小于这个值，在库存预警报表中可以查询出来，用于提醒补货">
-                  <a-input placeholder="请输入安全存量" v-decorator.trim="[ 'safetyStock' ]" />
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="基础重量" data-step="5" data-title="基础重量"
+                  data-intro="请填写基本单位对应的重量，用于计算按重量分摊费用时单据中各行商品分摊的费用成本">
+                  <a-input placeholder="请输入基础重量(kg)" v-decorator.trim="[ 'weight' ]" />
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="保质期天数" data-step="6" data-title="保质期天数"
-                  data-intro="保质期天数指的是商品的保质期，主要针对带生产日期的，此类商品一般有批号">
-                  <a-input-number style="width: 100%" placeholder="请输入保质期天数" v-decorator.trim="[ 'expiryNum' ]" />
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="保质期" data-step="6" data-title="保质期"
+                  data-intro="保质期指的是商品的保质期(天)，主要针对带生产日期的，此类商品一般有批号">
+                  <a-input-number style="width: 100%" placeholder="请输入保质期(天)" v-decorator.trim="[ 'expiryNum' ]" />
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
@@ -227,7 +227,7 @@
               </a-col>
             </a-row>
           </a-tab-pane>
-          <a-tab-pane key="3" tab="初始库存" forceRender>
+          <a-tab-pane key="3" tab="库存数量" forceRender>
             <j-editable-table
               ref="editableDepotTable"
               :loading="depotTable.loading"
@@ -363,7 +363,13 @@
               title: '仓库', key: 'name', width: '15%', type: FormTypes.normal
             },
             {
-              title: '库存数量', key: 'initStock', width: '15%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}'
+              title: '期初库存数量', key: 'initStock', width: '15%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}'
+            },
+            {
+              title: '最低库存数量', key: 'lowSafeStock', width: '15%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}'
+            },
+            {
+              title: '最高库存数量', key: 'highSafeStock', width: '15%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}'
             }
           ]
         },
@@ -432,7 +438,7 @@
         }
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model, 'name', 'standard', 'unit', 'unitId', 'model', 'color',
-            'categoryId','enableSerialNumber','enableBatchNumber','expiryNum','safetyStock','remark','mfrs','otherField1','otherField2','otherField3'))
+            'categoryId','enableSerialNumber','enableBatchNumber','expiryNum','weight','remark','mfrs','otherField1','otherField2','otherField3'))
           autoJumpNextInput('materialHeadModal')
           autoJumpNextInput('materialDetailModal')
         });

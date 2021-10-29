@@ -168,7 +168,7 @@
           {title: '单位', dataIndex: 'unit', width: '6%',
             scopedSlots: { customRender: 'customRenderUnit' }
           },
-          {title: '安全存量', dataIndex: 'safetyStock', width: '5%'},
+          {title: '保质期', dataIndex: 'expiryNum', width: '4%'},
           {title: '库存', dataIndex: 'stock', width: '5%'},
           {title: '采购价', dataIndex: 'purchaseDecimal', width: '5%'},
           {title: '零售价', dataIndex: 'commodityDecimal', width: '5%'},
