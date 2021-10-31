@@ -324,9 +324,9 @@
           let url = this.readOnly ? this.url.detailList : this.url.detailList;
           this.requestSubTableData(url, params, this.materialTable);
         }
-        this.$nextTick(() => {
+        setTimeout(function() {
           autoJumpNextInput('purchaseInModal')
-        })
+        },100)
         //复制新增单据-初始化单号和日期
         if(this.action === 'copyAdd') {
           this.model.id = ''
