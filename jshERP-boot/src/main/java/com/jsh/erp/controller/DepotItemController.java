@@ -554,6 +554,14 @@ public class DepotItemController {
                     diEx.setMOtherField3(disw.getMOtherField3());
                     disw.setMaterialOther(getOtherInfo(mpArr, diEx));
                     disw.setMaterialUnit(getUName(disw.getMaterialUnit(), disw.getUnitName()));
+                    if(disw.getCurrentNumber().compareTo(disw.getLowSafeStock())<0) {
+                        disw.setLowCritical(disw.getLowSafeStock().subtract(disw.getCurrentNumber()));
+                        disw.setHighCritical(BigDecimal.ZERO);
+                    }
+                    if(disw.getCurrentNumber().compareTo(disw.getHighSafeStock())>0) {
+                        disw.setLowCritical(BigDecimal.ZERO);
+                        disw.setHighCritical(disw.getCurrentNumber().subtract(disw.getHighSafeStock()));
+                    }
                 }
             }
             int total = depotItemService.findStockWarningCountTotal(materialParam,depotId);
