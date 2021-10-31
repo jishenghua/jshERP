@@ -242,6 +242,7 @@
               that.loading = true;
               postAction(that.url.batchSetMaterialCurrentStockUrl, {ids: ids}).then((res) => {
                 if(res.code === 200){
+                  that.$message.info('修正库存成功！');
                   that.loadData();
                   that.onClearSelected();
                 } else {
