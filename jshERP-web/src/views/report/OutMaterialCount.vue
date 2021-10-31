@@ -81,7 +81,7 @@
                 :page-size="ipagination.pageSize"
                 :page-size-options="ipagination.pageSizeOptions"
                 :total="ipagination.total"
-                :show-total="(total, range) => `共 ${total-parseInt(total/ipagination.pageSize)-1} 条`">
+                :show-total="(total, range) => `共 ${total-Math.ceil(total/ipagination.pageSize)} 条`">
                 <template slot="buildOptionText" slot-scope="props">
                   <span>{{ props.value-1 }}条/页</span>
                 </template>

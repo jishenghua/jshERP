@@ -388,7 +388,7 @@ export const JeecgListMixin = {
         //需要合计的列
         let parseCols = 'initialStock,currentStock,currentStockPrice,initialAmount,thisMonthAmount,currentAmount,inSum,inSumPrice,' +
           'outSum,outSumPrice,outInSumPrice,operNumber,allPrice,numSum,priceSum,prevSum,thisSum,thisAllPrice,billMoney,changeAmount,' +
-          'allPrice,safetystock,currentNumber,linjieNumber'
+          'allPrice,currentNumber,lowSafeStock,highSafeStock,lowCritical,highCritical'
         columns.forEach(column => {
           let { key, dataIndex } = column
           if (![key, dataIndex].includes(numKey)) {
@@ -408,7 +408,7 @@ export const JeecgListMixin = {
         })
         dataSource.push(totalRow)
         //总数要增加合计的行数，每页都有一行合计，所以总数要加上
-        let size = parseInt(this.ipagination.total/this.ipagination.pageSize) +1
+        let size = Math.ceil(this.ipagination.total/this.ipagination.pageSize)
         this.ipagination.total = this.ipagination.total + size
       }
     },

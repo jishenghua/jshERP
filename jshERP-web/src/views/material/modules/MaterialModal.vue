@@ -366,10 +366,10 @@
               title: '期初库存数量', key: 'initStock', width: '15%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}'
             },
             {
-              title: '最低库存数量', key: 'lowSafeStock', width: '15%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}'
+              title: '最低安全库存数量', key: 'lowSafeStock', width: '15%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}'
             },
             {
-              title: '最高库存数量', key: 'highSafeStock', width: '15%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}'
+              title: '最高安全库存数量', key: 'highSafeStock', width: '15%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}'
             }
           ]
         },
