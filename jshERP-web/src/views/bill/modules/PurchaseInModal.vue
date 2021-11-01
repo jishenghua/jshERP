@@ -51,7 +51,7 @@
             </a-form-item>
           </a-col>
         </a-row>
-        <j-editable-table  id="purchaseInModal"
+        <j-editable-table id="billModal"
           :ref="refKeys[0]"
           :loading="materialTable.loading"
           :columns="materialTable.columns"
@@ -74,7 +74,7 @@
                 <a-button @click="scanEnter">扫码录入</a-button>
               </a-col>
               <a-col v-if="!scanStatus" :md="16" :sm="24" style="padding: 0 6px 0 12px">
-                <a-input placeholder="请扫码商品条码并回车" v-model="scanBarCode" @pressEnter="scanPressEnter" />
+                <a-input placeholder="请扫码商品条码并回车" v-model="scanBarCode" @pressEnter="scanPressEnter" ref="scanBarCode"/>
               </a-col>
               <a-col v-if="!scanStatus" :md="6" :sm="24" style="padding: 0px">
                 <a-button @click="stopScan">收起扫码</a-button>
@@ -178,7 +178,7 @@
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
-  import { getMpListShort, changeListFmtMinus,handleIntroJs,autoJumpNextInput } from "@/utils/util"
+  import { getMpListShort, changeListFmtMinus,handleIntroJs } from "@/utils/util"
   import { getAction } from '@/api/manage'
   import JUpload from '@/components/jeecg/JUpload'
   import JDate from '@/components/jeecg/JDate'
@@ -324,9 +324,6 @@
           let url = this.readOnly ? this.url.detailList : this.url.detailList;
           this.requestSubTableData(url, params, this.materialTable);
         }
-        setTimeout(function() {
-          autoJumpNextInput('purchaseInModal')
-        },100)
         //复制新增单据-初始化单号和日期
         if(this.action === 'copyAdd') {
           this.model.id = ''

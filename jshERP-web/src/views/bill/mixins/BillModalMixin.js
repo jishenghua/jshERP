@@ -326,6 +326,7 @@ export const BillModalMixin = {
                 that.getStockByDepotBarCode(row, target)
                 target.recalcAllStatisticsColumns()
                 that.autoChangePrice(target)
+                target.autoSelectBySpecialKey('operNumber')
               }
             }
           });
@@ -655,6 +656,7 @@ export const BillModalMixin = {
               }
               //置空扫码的内容
               this.scanBarCode = ''
+              this.$refs.scanBarCode.focus()
             }
           })
         })

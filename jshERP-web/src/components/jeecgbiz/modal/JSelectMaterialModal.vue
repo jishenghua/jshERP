@@ -306,7 +306,10 @@
       },
       onSearch() {
         if(this.dataSource && this.dataSource.length===1) {
-          if(this.queryParam.q === this.dataSource[0].mBarCode) {
+          if(this.queryParam.q === this.dataSource[0].mBarCode||
+            this.queryParam.q === this.dataSource[0].name||
+            this.queryParam.q === this.dataSource[0].standard||
+            this.queryParam.q === this.dataSource[0].model) {
             let arr = []
             arr.push(this.dataSource[0].id)
             this.selectedRowKeys = arr

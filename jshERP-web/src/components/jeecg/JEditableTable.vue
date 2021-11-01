@@ -1429,6 +1429,9 @@
         this.$nextTick(() => {
           tbody.scrollTop = tbody.scrollHeight
         })
+        this.$nextTick(() => {
+          this.autoJumpNextInputBill('billModal')
+        })
       },
       /**
        * 在指定位置添加一行
@@ -2739,8 +2742,55 @@
           return content.substr(0,len)
         }
         return content;
+      },
+      /** 回车后自动跳到下一个input **/
+      autoJumpNextInputBill(domInfo) {
+        let that = this
+        let domIndex = 0
+        let inputs = document.getElementById(domInfo).getElementsByTagName('input')
+        inputs[domIndex].focus()
+        document.getElementById(domInfo).addEventListener('keydown',function(e){
+          if(e.keyCode === 13){
+            domIndex++
+            if(domIndex === inputs.length) {
+              domIndex = 0
+              that.handleClickAdd()
+            }
+            inputs[domIndex].focus()
+          }
+        })
+        for(let i=0; i<inputs.length; i++){
+          //这个index就是做个介质，来获取当前的i是第几个
+          inputs[i].index = i;
+          inputs[i].onclick = function () {
+            domIndex = this.index
+          }
+          inputs[i].onselect = function () {
+            domIndex = this.index
+          }
+        }
+      },
+      /** 自动选中特殊的key **/
+      autoSelectBySpecialKey(specialKey) {
+        let trs = this.getElement('tbody').getElementsByClassName('tr')
+        let trEls = []
+        for (let tr of trs) {
+          trEls.push(tr)
+        }
+        trEls.forEach(tr => {
+          let { idx } = tr.dataset
+          let value = this.inputValues[idx]
+          for (let key in value) {
+            if (value.hasOwnProperty(key)) {
+              let elid = `${key}${value.id}`
+              let el = document.getElementById(elid)
+              if (el && key === specialKey) {
+                el.select()
+              }
+            }
+          }
+        })
       }
-
     },
     beforeDestroy() {
       this.destroyCleanGroupRequest = true
