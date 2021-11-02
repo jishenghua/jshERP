@@ -180,14 +180,14 @@
                 :actionButton="true"
                 @added="onAdded">
                 <template #buttonAfter>
-                  <a-button @click="batchSet('purchase')">采购价-批量</a-button>
-                  <a-button style="margin-left: 8px" @click="batchSet('commodity')">零售价-批量</a-button>
-                  <a-button style="margin-left: 8px" @click="batchSet('wholesale')">销售价-批量</a-button>
-                  <a-button style="margin-left: 8px" @click="batchSet('low')">最低售价-批量</a-button>
+                  <a-button @click="batchSetPrice('purchase')">采购价-批量</a-button>
+                  <a-button style="margin-left: 8px" @click="batchSetPrice('commodity')">零售价-批量</a-button>
+                  <a-button style="margin-left: 8px" @click="batchSetPrice('wholesale')">销售价-批量</a-button>
+                  <a-button style="margin-left: 8px" @click="batchSetPrice('low')">最低售价-批量</a-button>
                 </template>
               </j-editable-table>
               <!-- 表单区域 -->
-              <batch-set-price-modal ref="modalForm" @ok="batchSetPricemodalFormOk"></batch-set-price-modal>
+              <batch-set-price-modal ref="priceModalForm" @ok="batchSetPriceModalFormOk"></batch-set-price-modal>
             </div>
             <a-row class="form-row" :gutter="24">
               <a-col :lg="24" :md="24" :sm="24">
@@ -237,7 +237,15 @@
               :maxHeight="300"
               :rowNumber="true"
               :rowSelection="false"
-              :actionButton="false"/>
+              :actionButton="false">
+              <template #buttonAfter>
+                <a-button style="margin: 0px 0px 8px 0px" @click="batchSetStock('initStock')">期初库存-批量</a-button>
+                <a-button style="margin-left: 8px" @click="batchSetStock('lowSafeStock')">最低安全库存-批量</a-button>
+                <a-button style="margin-left: 8px" @click="batchSetStock('highSafeStock')">最高安全库存-批量</a-button>
+              </template>
+            </j-editable-table>
+            <!-- 表单区域 -->
+            <batch-set-stock-modal ref="stockModalForm" @ok="batchSetStockModalFormOk"></batch-set-stock-modal>
           </a-tab-pane>
           <a-tab-pane key="4" tab="图片信息" forceRender>
             <a-row class="form-row" :gutter="24">
@@ -258,6 +266,7 @@
 <script>
   import pick from 'lodash.pick'
   import BatchSetPriceModal from './BatchSetPriceModal'
+  import BatchSetStockModal from './BatchSetStockModal'
   import UnitModal from '../../system/modules/UnitModal'
   import JEditableTable from '@/components/jeecg/JEditableTable'
   import { FormTypes, VALIDATE_NO_PASSED, getRefPromise, validateFormAndTables } from '@/utils/JEditableTableUtil'
@@ -271,6 +280,7 @@
     name: "MaterialModal",
     components: {
       BatchSetPriceModal,
+      BatchSetStockModal,
       UnitModal,
       JImageUpload,
       JDate,
@@ -778,15 +788,19 @@
         this.maxBarCodeInfo = this.maxBarCodeInfo + 1
         target.setValues([{rowKey: row.id, values: {barCode: this.maxBarCodeInfo, commodityUnit: unit?unit:''}}])
       },
-      batchSet(type) {
+      batchSetPrice(type) {
         if(this.skuSwitch || this.model.id){
-          this.$refs.modalForm.add(type);
-          this.$refs.modalForm.disableSubmit = false;
+          this.$refs.priceModalForm.add(type);
+          this.$refs.priceModalForm.disableSubmit = false;
         } else {
           this.$message.warning('抱歉，只有开启多属性才能进行批量操作！');
         }
       },
-      batchSetPricemodalFormOk(price, batchType) {
+      batchSetStock(type) {
+        this.$refs.stockModalForm.add(type);
+        this.$refs.stockModalForm.disableSubmit = false;
+      },
+      batchSetPriceModalFormOk(price, batchType) {
         let arr = this.meTable.dataSource
         if(arr.length === 0) {
           this.$message.warning('请先录入条码、单位等信息！');
@@ -812,6 +826,26 @@
           }
           this.meTable.dataSource = meTableData
         }
+      },
+      batchSetStockModalFormOk(stock, batchType) {
+        let arr = this.depotTable.dataSource
+        let depotTableData = []
+        for (let i = 0; i < arr.length; i++) {
+          let depotInfo = {name: arr[i].name, initStock: arr[i].initStock,
+            lowSafeStock: arr[i].lowSafeStock, highSafeStock: arr[i].highSafeStock}
+          if (batchType === 'initStock') {
+            depotInfo.initStock = stock - 0
+          } else if (batchType === 'lowSafeStock') {
+            depotInfo.lowSafeStock = stock - 0
+          } else if (batchType === 'highSafeStock') {
+            depotInfo.highSafeStock = stock - 0
+          }
+          if (arr[i].id) {
+            depotInfo.id = arr[i].id
+          }
+          depotTableData.push(depotInfo)
+        }
+        this.depotTable.dataSource = depotTableData
       },
       initMaterialAttribute() {
         getAllMaterialAttribute({}).then((res)=>{
