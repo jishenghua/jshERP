@@ -559,6 +559,9 @@ export const BillModalMixin = {
     },
     scanEnter() {
       this.scanStatus = false
+      this.$nextTick(() => {
+        this.$refs.scanBarCode.focus()
+      })
     },
     //扫码之后回车
     scanPressEnter() {
