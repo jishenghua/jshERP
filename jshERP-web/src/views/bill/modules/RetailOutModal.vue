@@ -7,10 +7,13 @@
     :maskClosable="false"
     :keyboard="false"
     :forceRender="true"
+    v-bind:prefixNo="prefixNo"
+    switchHelp
     switchFullscreen
     @ok="handleOk"
     @cancel="handleCancel"
     wrapClassName="ant-modal-cust-warp"
+    :id="prefixNo"
     style="top:5%;height: 100%;overflow-y: hidden">
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">

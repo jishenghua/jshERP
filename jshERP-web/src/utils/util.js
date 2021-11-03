@@ -667,7 +667,8 @@ export function handleIntroJs(module, cur_version) {
   //有新版本更新时才出现一次引导页， 第二次进入进不再出现， 这里有缓存来判断
   let introJsObj = introJs()
   if(module !== 'indexChart') {
-    introJsObj = introJs('.ant-modal-cust-warp')
+    let idElement = '#' + module
+    introJsObj = introJs(idElement)
   }
   if (Vue.ls.get('intro_cache_' + module) === cur_version) {
     return;

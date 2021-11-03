@@ -1,13 +1,17 @@
 <template>
-  <a-modal
+  <j-modal
     :title="title"
     :width="1300"
     :visible="visible"
     :confirmLoading="confirmLoading"
+    v-bind:prefixNo="prefixNo"
+    switchHelp
+    switchFullscreen
     @ok="handleOk"
     @cancel="handleCancel"
     cancelText="关闭"
     wrapClassName="ant-modal-cust-warp"
+    :id="prefixNo"
     style="top:5%;height: 100%;overflow-y: hidden">
     <template slot="footer">
       <a-button key="back" v-if="isReadOnly" @click="handleCancel">
@@ -261,7 +265,7 @@
       </a-form>
     </a-spin>
     <unit-modal ref="unitModalForm" @ok="unitModalFormOk"></unit-modal>
-  </a-modal>
+  </j-modal>
 </template>
 <script>
   import pick from 'lodash.pick'
@@ -305,6 +309,7 @@
         switchDisabled: false, //开关的启用状态
         barCodeSwitch: false, //生成条码开关
         maxBarCodeInfo: '', //最大条码
+        prefixNo: 'material',
         sku: {
           manyColor: '多颜色',
           manySize: '多尺寸',
