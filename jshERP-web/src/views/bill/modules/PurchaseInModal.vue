@@ -7,6 +7,8 @@
     :maskClosable="false"
     :keyboard="false"
     :forceRender="true"
+    v-bind:prefixNo="prefixNo"
+    switchHelp
     switchFullscreen
     @ok="handleOk"
     @cancel="handleCancel"
@@ -60,6 +62,7 @@
           :rowNumber="false"
           :rowSelection="true"
           :actionButton="true"
+          :dragSort="true"
           @valueChange="onValueChange"
           @added="onAdded"
           @deleted="onDeleted">
@@ -298,7 +301,7 @@
           this.addInit(this.prefixNo)
           this.fileList = []
           this.$nextTick(() => {
-            handleIntroJs('purchaseIn', 11)
+            handleIntroJs(this.prefixNo, 1)
           })
         } else {
           this.model.operTime = this.model.operTimeStr

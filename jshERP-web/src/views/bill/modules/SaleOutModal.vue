@@ -7,6 +7,8 @@
     :maskClosable="false"
     :keyboard="false"
     :forceRender="true"
+    v-bind:prefixNo="prefixNo"
+    switchHelp
     switchFullscreen
     @ok="handleOk"
     @cancel="handleCancel"
@@ -303,7 +305,7 @@
           this.personList.value = ''
           this.fileList = []
           this.$nextTick(() => {
-            handleIntroJs('saleOut', 2)
+            handleIntroJs(this.prefixNo, 1)
           })
         } else {
           this.model.operTime = this.model.operTimeStr
