@@ -62,6 +62,7 @@
           :rowNumber="false"
           :rowSelection="true"
           :actionButton="true"
+          :dragSort="true"
           @valueChange="onValueChange"
           @deleted="onDeleted">
           <template #buttonAfter>

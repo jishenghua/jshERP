@@ -52,6 +52,7 @@
           :rowNumber="false"
           :rowSelection="true"
           :actionButton="true"
+          :dragSort="true"
           @valueChange="onValueChange"
           @added="onAdded"
           @deleted="onDeleted">
