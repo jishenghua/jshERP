@@ -44,7 +44,7 @@
 <script>
 
   import { getClass, getStyle } from '@/utils/props-util'
-  import { handleIntroJs } from "@/utils/util"
+  import { triggerWindowResizeEvent, handleIntroJs } from "@/utils/util"
   import Vue from 'vue'
 
   export default {
@@ -172,6 +172,7 @@
       /** 切换全屏 */
       toggleFullscreen() {
         this.innerFullscreen = !this.innerFullscreen
+        triggerWindowResizeEvent()
       },
 
     }
