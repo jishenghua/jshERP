@@ -31,16 +31,16 @@
                   <a-input placeholder="条码/名称/规格/型号" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
-              <a-col :md="4" :sm="24">
-                <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+              <a-col :md="5" :sm="24">
+                <span class="table-page-search-submitButtons">
                   <a-button type="primary" @click="searchQuery">查询</a-button>
                   <a-button style="margin-left: 8px" v-print="'#reportPrint'" icon="printer">打印</a-button>
                   <a-button style="margin-left: 8px" @click="exportExcel" icon="download">导出</a-button>
                 </span>
               </a-col>
-              <a-col :md="4" :sm="24">
-                <a-form-item label="本月合计金额">
-                  {{totalCountMoneyStr}}
+              <a-col :md="6" :sm="24">
+                <a-form-item>
+                  <span>本月合计金额：{{totalCountMoneyStr}}</span>
                 </a-form-item>
               </a-col>
             </a-row>

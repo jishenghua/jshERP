@@ -40,21 +40,16 @@
                   </a-select>
                 </a-form-item>
               </a-col>
-              <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-                <a-col :md="4" :sm="24">
+              <a-col :md="5" :sm="24">
+                <span class="table-page-search-submitButtons">
                   <a-button type="primary" @click="searchQuery">查询</a-button>
                   <a-button style="margin-left: 8px" v-print="'#reportPrint'" icon="printer">打印</a-button>
                   <a-button style="margin-left: 8px" @click="exportExcel" icon="download">导出</a-button>
-                </a-col>
-              </span>
-              <a-col :md="3" :sm="24">
-                <a-form-item label="当前总库存" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  {{currentStock}}
-                </a-form-item>
+                </span>
               </a-col>
-              <a-col :md="3" :sm="24">
-                <a-form-item label="当前总库存金额" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  {{currentStockPrice}}
+              <a-col :md="6" :sm="24">
+                <a-form-item>
+                  <span>当前总库存：{{currentStock}}，当前总库存金额：{{currentStockPrice}}</span>
                 </a-form-item>
               </a-col>
             </a-row>
