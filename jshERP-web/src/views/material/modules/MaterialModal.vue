@@ -179,7 +179,7 @@
                 :dataSource="meTable.dataSource"
                 :minWidth="1000"
                 :maxHeight="300"
-                :rowNumber="true"
+                :rowNumber="false"
                 :rowSelection="true"
                 :actionButton="true"
                 @added="onAdded">
