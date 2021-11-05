@@ -1286,3 +1286,15 @@ alter table jsh_material_initial_stock add low_safe_stock decimal(24,6) DEFAULT 
 alter table jsh_material_initial_stock add high_safe_stock decimal(24,6) DEFAULT NULL COMMENT '最高库存数量' after low_safe_stock;
 alter table jsh_material add weight decimal(24,6) DEFAULT NULL COMMENT '基础重量(kg)' after expiry_num;
 alter table jsh_material drop column safety_stock;
+
+-- --------------------------------------------------------
+-- 时间 2021年11月5日
+-- by jishenghua
+-- 给用户/角色/模块关系表增加租户字段
+-- 给用户/角色/模块关系表的租户字段赋值
+-- --------------------------------------------------------
+alter table jsh_user_business add tenant_id bigint(20) DEFAULT null COMMENT '租户id' after btn_str;
+update jsh_user_business ub left join jsh_user u on ub.key_id=u.id set ub.tenant_id=u.tenant_id
+where (ub.type='UserRole' or ub.type='UserDepot' or ub.type='UserCustomer') and u.tenant_id!=0;
+update jsh_user_business ub left join jsh_role r on ub.key_id=r.id set ub.tenant_id=r.tenant_id
+where (ub.type='RoleFunctions') and r.tenant_id is not null;

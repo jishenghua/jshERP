@@ -7,6 +7,7 @@
     <result column="key_id" jdbcType="VARCHAR" property="keyId" />
     <result column="value" jdbcType="VARCHAR" property="value" />
     <result column="btn_str" jdbcType="VARCHAR" property="btnStr" />
+    <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
     <result column="delete_flag" jdbcType="VARCHAR" property="deleteFlag" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -68,7 +69,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, type, key_id, value, btn_str, delete_flag
+    id, type, key_id, value, btn_str, tenant_id, delete_flag
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.UserBusinessExample" resultMap="BaseResultMap">
     select
@@ -102,11 +103,11 @@
   </delete>
   <insert id="insert" parameterType="com.jsh.erp.datasource.entities.UserBusiness">
     insert into jsh_user_business (id, type, key_id, 
-      value, btn_str, delete_flag
-      )
+      value, btn_str, tenant_id, 
+      delete_flag)
     values (#{id,jdbcType=BIGINT}, #{type,jdbcType=VARCHAR}, #{keyId,jdbcType=VARCHAR}, 
-      #{value,jdbcType=VARCHAR}, #{btnStr,jdbcType=VARCHAR}, #{deleteFlag,jdbcType=VARCHAR}
-      )
+      #{value,jdbcType=VARCHAR}, #{btnStr,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, 
+      #{deleteFlag,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.UserBusiness">
     insert into jsh_user_business
@@ -125,6 +126,9 @@
       </if>
       <if test="btnStr != null">
         btn_str,
+      </if>
+      <if test="tenantId != null">
+        tenant_id,
       </if>
       <if test="deleteFlag != null">
         delete_flag,
@@ -145,6 +149,9 @@
       </if>
       <if test="btnStr != null">
         #{btnStr,jdbcType=VARCHAR},
+      </if>
+      <if test="tenantId != null">
+        #{tenantId,jdbcType=BIGINT},
       </if>
       <if test="deleteFlag != null">
         #{deleteFlag,jdbcType=VARCHAR},
@@ -175,6 +182,9 @@
       <if test="record.btnStr != null">
         btn_str = #{record.btnStr,jdbcType=VARCHAR},
       </if>
+      <if test="record.tenantId != null">
+        tenant_id = #{record.tenantId,jdbcType=BIGINT},
+      </if>
       <if test="record.deleteFlag != null">
         delete_flag = #{record.deleteFlag,jdbcType=VARCHAR},
       </if>
@@ -190,6 +200,7 @@
       key_id = #{record.keyId,jdbcType=VARCHAR},
       value = #{record.value,jdbcType=VARCHAR},
       btn_str = #{record.btnStr,jdbcType=VARCHAR},
+      tenant_id = #{record.tenantId,jdbcType=BIGINT},
       delete_flag = #{record.deleteFlag,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -210,6 +221,9 @@
       <if test="btnStr != null">
         btn_str = #{btnStr,jdbcType=VARCHAR},
       </if>
+      <if test="tenantId != null">
+        tenant_id = #{tenantId,jdbcType=BIGINT},
+      </if>
       <if test="deleteFlag != null">
         delete_flag = #{deleteFlag,jdbcType=VARCHAR},
       </if>
@@ -222,6 +236,7 @@
       key_id = #{keyId,jdbcType=VARCHAR},
       value = #{value,jdbcType=VARCHAR},
       btn_str = #{btnStr,jdbcType=VARCHAR},
+      tenant_id = #{tenantId,jdbcType=BIGINT},
       delete_flag = #{deleteFlag,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>

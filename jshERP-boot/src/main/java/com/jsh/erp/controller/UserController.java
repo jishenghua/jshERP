@@ -317,7 +317,7 @@ public class UserController {
                     ExceptionConstants.USER_OVER_LIMIT_FAILED_MSG);
         } else {
             UserEx ue= JSONObject.parseObject(obj.toJSONString(), UserEx.class);
-            userService.addUserAndOrgUserRel(ue);
+            userService.addUserAndOrgUserRel(ue, request);
         }
         return result;
     }
@@ -332,10 +332,10 @@ public class UserController {
      */
     @PutMapping("/updateUser")
     @ResponseBody
-    public Object updateUser(@RequestBody JSONObject obj)throws Exception{
+    public Object updateUser(@RequestBody JSONObject obj, HttpServletRequest request)throws Exception{
         JSONObject result = ExceptionConstants.standardSuccess();
         UserEx ue= JSONObject.parseObject(obj.toJSONString(), UserEx.class);
-        userService.updateUserAndOrgUserRel(ue);
+        userService.updateUserAndOrgUserRel(ue, request);
         return result;
     }
 
