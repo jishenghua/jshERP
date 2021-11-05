@@ -458,9 +458,12 @@ public class DepotItemService {
                 //更新当前库存
                 updateCurrentStock(depotItem);
             }
-            //如果关联单据号非空则更新订单的状态
-            if(StringUtil.isNotEmpty(depotHead.getLinkNumber())) {
-                changeBillStatus(depotHead, billStatus);
+            //如果关联单据号非空则更新订单的状态,单据类型：采购入库单或销售出库单
+            if(BusinessConstants.SUB_TYPE_PURCHASE.equals(depotHead.getSubType())
+                    || BusinessConstants.SUB_TYPE_SALES.equals(depotHead.getSubType())) {
+                if(StringUtil.isNotEmpty(depotHead.getLinkNumber())) {
+                    changeBillStatus(depotHead, billStatus);
+                }
             }
         } else {
             throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_ROW_FAILED_CODE,
