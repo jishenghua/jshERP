@@ -1,0 +1,28 @@
+version: "3.3"
+
+services:
+  web:
+    image: jsherp/web
+    build:
+      context: jshERP-web/
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+  boot:
+    image: jsherp/boot
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - ./data/upload:/opt/jshERP/upload
+  db:
+    image: mariadb
+    volumes:
+      - ./data/db:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: jsh_erp
+  redis:
+    image: redis
+    volumes:
+      - ./data/redis:/data
