@@ -3,6 +3,8 @@ version: "3.3"
 services:
   web:
     image: jsherp/web
+    depends_on:
+      - boot
     build:
       context: jshERP-web/
       dockerfile: Dockerfile
@@ -11,18 +13,36 @@ services:
   boot:
     image: jsherp/boot
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     volumes:
       - ./data/upload:/opt/jshERP/upload
+      - /etc/localtime:/etc/localtime:ro
   db:
-    image: mariadb
+    image: jsherp/db
+    build:
+      context: jshERP-db/
+      dockerfile: Dockerfile
     volumes:
       - ./data/db:/var/lib/mysql
+      - /etc/localtime:/etc/localtime:ro
     environment:
       MYSQL_ROOT_PASSWORD: 123456
       MYSQL_DATABASE: jsh_erp
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "--protocol=tcp", "-p123456"]
+      timeout: 20s
+      interval: 10s
+      retries: 20
   redis:
     image: redis
     volumes:
       - ./data/redis:/data
+      - /etc/localtime:/etc/localtime:ro
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      timeout: 20s
+      interval: 10s
+      retries: 20

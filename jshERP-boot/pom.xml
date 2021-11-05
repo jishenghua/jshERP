@@ -45,18 +45,18 @@
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
-			<version>1.2.55</version>
+			<version>1.2.78</version>
 		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.30</version>
+			<version>5.1.49</version>
 		</dependency>
 		<!--http-->
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
-			<version>4.5.2</version>
+			<version>4.5.13</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sourceforge.jexcelapi</groupId>
@@ -179,7 +179,7 @@
 				<version>3.1.4</version>
 				<configuration>
 					<from>
-						<image>openjdk:8</image>
+						<image>adoptopenjdk:8</image>
 					</from>
 					<to>
 						<image>jsherp/boot</image>
@@ -195,6 +195,14 @@
 						</volumes>
 						<mainClass>com.jsh.erp.ErpApplication</mainClass>
 						<creationTime>USE_CURRENT_TIMESTAMP</creationTime>
+						<jvmFlags>
+							<jvmFlag>-Xms128m</jvmFlag>
+							<jvmFlag>-Xmx320m</jvmFlag>
+							<jvmFlag>-XX:PermSize=128M</jvmFlag>
+							<jvmFlag>-XX:MaxPermSize=256M</jvmFlag>
+							<jvmFlag>-server</jvmFlag>
+							<jvmFlag>-Dfile.encoding=UTF-8</jvmFlag>
+						</jvmFlags>
 					</container>
 				</configuration>
 				<executions>
