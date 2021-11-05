@@ -61,11 +61,6 @@
           @valueChange="onValueChange"
           @deleted="onDeleted">
           <template #buttonAfter>
-            <a-row :gutter="24" style="float:left;width:140px;">
-              <a-col :md="24" :sm="24">
-                <a-button icon="plus" @click="addDepot">新增仓库</a-button>
-              </a-col>
-            </a-row>
             <a-row :gutter="24" style="float:left;" data-step="3" data-title="扫码录入" data-intro="此功能支持扫码枪扫描商品条码进行录入">
               <a-col v-if="scanStatus" :md="6" :sm="24">
                 <a-button @click="scanEnter">扫码录入</a-button>
@@ -96,13 +91,11 @@
       </a-form>
     </a-spin>
     <vendor-modal ref="vendorModalForm" @ok="vendorModalFormOk"></vendor-modal>
-    <depot-modal ref="depotModalForm" @ok="depotModalFormOk"></depot-modal>
   </j-modal>
 </template>
 <script>
   import pick from 'lodash.pick'
   import VendorModal from '../../system/modules/VendorModal'
-  import DepotModal from '../../system/modules/DepotModal'
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
@@ -115,7 +108,6 @@
     mixins: [JEditableTableMixin,BillModalMixin],
     components: {
       VendorModal,
-      DepotModal,
       JUpload,
       JDate,
       VNodes: {
