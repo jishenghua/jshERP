@@ -79,6 +79,7 @@ public class UserBusinessService {
             }
             String value = userBusiness.getValue();
             String newValue = value.replaceAll(",","\\]\\[");
+            newValue = newValue.replaceAll("[0]","").replaceAll("\\[\\]","");
             userBusiness.setValue(newValue);
             result=userBusinessMapper.insertSelective(userBusiness);
             logService.insertLog("关联关系", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
@@ -95,6 +96,7 @@ public class UserBusinessService {
         try{
             String value = userBusiness.getValue();
             String newValue = value.replaceAll(",","\\]\\[");
+            newValue = newValue.replaceAll("[0]","").replaceAll("\\[\\]","");
             userBusiness.setValue(newValue);
             result=userBusinessMapper.updateByPrimaryKeySelective(userBusiness);
             logService.insertLog("关联关系", BusinessConstants.LOG_OPERATION_TYPE_EDIT, request);
