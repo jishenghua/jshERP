@@ -44,8 +44,8 @@
           //外部url加入token
           let token = Vue.ls.get(ACCESS_TOKEN);
           if(url) {
-            url = url.replace('/report','')
-            url = 'http://' + window.location.host + url
+            url = url.replace('/system','')
+            url = document.location.protocol + '//' + window.location.host + url
           }
           this.url = url + '?token=' + token;
         }
