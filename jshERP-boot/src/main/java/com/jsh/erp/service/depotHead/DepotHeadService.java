@@ -796,8 +796,8 @@ public class DepotHeadService {
         return depotHeadMapperEx.getBuyAndSaleStatistics(type, subType, hasSupplier, beginTime, endTime);
     }
 
-    public BigDecimal getBuyAndSaleRetailStatistics(String type, String subType, Integer hasSupplier, String beginTime, String endTime) {
-        return depotHeadMapperEx.getBuyAndSaleRetailStatistics(type, subType, hasSupplier, beginTime, endTime);
+    public BigDecimal getBuyAndSaleRetailStatistics(String type, String subType, String beginTime, String endTime) {
+        return depotHeadMapperEx.getBuyAndSaleRetailStatistics(type, subType, beginTime, endTime).abs();
     }
 
     public DepotHead getDepotHead(String number)throws Exception {

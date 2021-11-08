@@ -518,12 +518,6 @@
         <if test="subType != null">
             and sub_type=#{subType}
         </if>
-        <if test="hasSupplier == 1">
-            and organ_id is not null
-        </if>
-        <if test="hasSupplier == 0">
-            and organ_id is null
-        </if>
         <if test="beginTime != null">
             and oper_time >= #{beginTime}
         </if>

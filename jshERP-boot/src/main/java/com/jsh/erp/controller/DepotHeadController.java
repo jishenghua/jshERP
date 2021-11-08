@@ -345,34 +345,48 @@ public class DepotHeadController {
     }
 
     /**
-     * 统计今日销售额、今日进货额、本月销售额、本月进货额
+     * 统计今日采购额、本月采购额、今日销售额、本月销售额、今日零售额、本月零售额
      * @param request
      * @return
      */
     @GetMapping(value = "/getBuyAndSaleStatistics")
-    @ApiOperation(value = "统计今日销售额、今日进货额、本月销售额、本月进货额")
+    @ApiOperation(value = "统计今日采购额、本月采购额、今日销售额、本月销售额、今日零售额、本月零售额")
     public BaseResponseInfo getBuyAndSaleStatistics(HttpServletRequest request) {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         try {
             String today = Tools.getNow() + BusinessConstants.DAY_FIRST_TIME;
             String firstDay = Tools.firstDayOfMonth(Tools.getCurrentMonth()) + BusinessConstants.DAY_FIRST_TIME;
-            BigDecimal todaySale = depotHeadService.getBuyAndSaleStatistics("出库", "销售",
-                    1, today, getNow3()); //今日销售出库
-            BigDecimal todayRetailSale = depotHeadService.getBuyAndSaleRetailStatistics("出库", "零售",
-                    0, today, getNow3()); //今日零售出库
             BigDecimal todayBuy = depotHeadService.getBuyAndSaleStatistics("入库", "采购",
                     1, today, getNow3()); //今日采购入库
-            BigDecimal monthSale = depotHeadService.getBuyAndSaleStatistics("出库", "销售",
-                    1,firstDay, getNow3()); //本月销售出库
-            BigDecimal monthRetailSale = depotHeadService.getBuyAndSaleRetailStatistics("出库", "零售",
-                    0,firstDay, getNow3()); //本月零售出库
+            BigDecimal todayBuyBack = depotHeadService.getBuyAndSaleStatistics("出库", "采购退货",
+                    1, today, getNow3()); //今日采购退货
+            BigDecimal todaySale = depotHeadService.getBuyAndSaleStatistics("出库", "销售",
+                    1, today, getNow3()); //今日销售出库
+            BigDecimal todaySaleBack = depotHeadService.getBuyAndSaleStatistics("入库", "销售退货",
+                    1, today, getNow3()); //今日销售退货
+            BigDecimal todayRetailSale = depotHeadService.getBuyAndSaleRetailStatistics("出库", "零售",
+                    today, getNow3()); //今日零售出库
+            BigDecimal todayRetailSaleBack = depotHeadService.getBuyAndSaleRetailStatistics("入库", "零售退货",
+                    today, getNow3()); //今日零售退货
             BigDecimal monthBuy = depotHeadService.getBuyAndSaleStatistics("入库", "采购",
                     1, firstDay, getNow3()); //本月采购入库
-            map.put("todaySale", todaySale.add(todayRetailSale));
-            map.put("todayBuy", todayBuy);
-            map.put("thisMonthSale", monthSale.add(monthRetailSale));
-            map.put("thisMonthBuy", monthBuy);
+            BigDecimal monthBuyBack = depotHeadService.getBuyAndSaleStatistics("出库", "采购退货",
+                    1, firstDay, getNow3()); //本月采购退货
+            BigDecimal monthSale = depotHeadService.getBuyAndSaleStatistics("出库", "销售",
+                    1,firstDay, getNow3()); //本月销售出库
+            BigDecimal monthSaleBack = depotHeadService.getBuyAndSaleStatistics("入库", "销售退货",
+                    1,firstDay, getNow3()); //本月销售退货
+            BigDecimal monthRetailSale = depotHeadService.getBuyAndSaleRetailStatistics("出库", "零售",
+                    firstDay, getNow3()); //本月零售出库
+            BigDecimal monthRetailSaleBack = depotHeadService.getBuyAndSaleRetailStatistics("入库", "零售退货",
+                    firstDay, getNow3()); //本月零售退货
+            map.put("todayBuy", todayBuy.subtract(todayBuyBack));
+            map.put("todaySale", todaySale.subtract(todaySaleBack));
+            map.put("todayRetailSale", todayRetailSale.subtract(todayRetailSaleBack));
+            map.put("monthBuy", monthBuy.subtract(monthBuyBack));
+            map.put("monthSale", monthSale.subtract(monthSaleBack));
+            map.put("monthRetailSale", monthRetailSale.subtract(monthRetailSaleBack));
             res.code = 200;
             res.data = map;
         } catch(Exception e){

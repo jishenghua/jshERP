@@ -269,6 +269,15 @@
         and ifnull(dh.delete_flag,'0') !='1'
     </select>
 
+    <select id="inOrOutRetailPrice" resultType="java.math.BigDecimal">
+        select ifnull(sum(total_price),0) as allMoney from jsh_depot_head dh
+        where 1=1
+          and dh.type=#{type} and dh.sub_type=#{subType}
+          and dh.oper_time &gt;= #{beginTime}
+          and dh.oper_time &lt;= #{endTime}
+          and ifnull(dh.delete_flag,'0') !='1'
+    </select>
+
     <select id="getStockCheckSum"  resultType="java.math.BigDecimal">
         select ifnull(sum(di.basic_number),0) stockCheckSum from jsh_depot_head dh
         left JOIN jsh_depot_item di on dh.id=di.header_id

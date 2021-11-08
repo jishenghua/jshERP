@@ -597,14 +597,14 @@ public class DepotItemController {
     }
 
     /**
-     * 统计采购或销售的总金额
+     * 统计采购、销售、零售的总金额
      * @param request
      * @param response
      * @return
      * @throws Exception
      */
     @GetMapping(value = "/buyOrSalePrice")
-    @ApiOperation(value = "统计采购或销售的总金额")
+    @ApiOperation(value = "统计采购、销售、零售的总金额")
     public BaseResponseInfo buyOrSalePrice(HttpServletRequest request, HttpServletResponse response)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
@@ -631,6 +631,16 @@ public class DepotItemController {
                 salePriceList.add(obj);
             }
             map.put("salePriceList", salePriceList);
+            JSONArray retailPriceList = new JSONArray();
+            for(String month: list) {
+                JSONObject obj = new JSONObject();
+                BigDecimal outPrice = depotItemService.inOrOutRetailPrice("出库", "零售", month);
+                BigDecimal inPrice = depotItemService.inOrOutRetailPrice("入库", "零售退货", month);
+                obj.put("x", month);
+                obj.put("y", outPrice.subtract(inPrice));
+                retailPriceList.add(obj);
+            }
+            map.put("retailPriceList", retailPriceList);
             res.code = 200;
             res.data = map;
         } catch (Exception e) {

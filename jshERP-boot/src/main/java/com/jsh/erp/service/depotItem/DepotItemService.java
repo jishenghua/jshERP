@@ -298,6 +298,27 @@ public class DepotItemService {
         return result;
     }
 
+    /**
+     * 统计零售的总金额
+     * @param type
+     * @param subType
+     * @param month
+     * @return
+     * @throws Exception
+     */
+    public BigDecimal inOrOutRetailPrice(String type, String subType, String month) throws Exception{
+        BigDecimal result= BigDecimal.ZERO;
+        try{
+            String beginTime = Tools.firstDayOfMonth(month) + BusinessConstants.DAY_FIRST_TIME;
+            String endTime = Tools.lastDayOfMonth(month) + BusinessConstants.DAY_LAST_TIME;
+            result = depotItemMapperEx.inOrOutRetailPrice(type, subType, beginTime, endTime);
+            result = result.abs();
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return result;
+    }
+
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void saveDetials(String rows, Long headerId, HttpServletRequest request) throws Exception{
         //查询单据主表信息

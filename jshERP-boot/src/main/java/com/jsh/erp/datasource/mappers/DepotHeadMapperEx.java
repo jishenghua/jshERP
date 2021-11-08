@@ -155,7 +155,6 @@ public interface DepotHeadMapperEx {
     BigDecimal getBuyAndSaleRetailStatistics(
             @Param("type") String type,
             @Param("subType") String subType,
-            @Param("hasSupplier") Integer hasSupplier,
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime);
 
