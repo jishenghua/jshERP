@@ -7,6 +7,8 @@ import com.jsh.erp.service.platformConfig.PlatformConfigService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.ErpInfo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +26,7 @@ import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
  */
 @RestController
 @RequestMapping(value = "/platformConfig")
+@Api(tags = {"平台参数"})
 public class PlatformConfigController {
     private Logger logger = LoggerFactory.getLogger(PlatformConfigController.class);
 
@@ -44,6 +47,7 @@ public class PlatformConfigController {
      * @return
      */
     @GetMapping(value = "/getPlatform/name")
+    @ApiOperation(value = "获取平台名称")
     public String getPlatformName(HttpServletRequest request)throws Exception {
         String res;
         try {
@@ -63,6 +67,7 @@ public class PlatformConfigController {
      * @return
      */
     @GetMapping(value = "/getPlatform/url")
+    @ApiOperation(value = "获取官方网站地址")
     public String getPlatformUrl(HttpServletRequest request)throws Exception {
         String res;
         try {
@@ -83,6 +88,7 @@ public class PlatformConfigController {
      * @return
      */
     @PostMapping(value = "/updatePlatformConfigByKey")
+    @ApiOperation(value = "根据platformKey更新platformValue")
     public String updatePlatformConfigByKey(@RequestBody JSONObject object,
                                             HttpServletRequest request)throws Exception {
         Map<String, Object> objectMap = new HashMap<>();
@@ -103,6 +109,7 @@ public class PlatformConfigController {
      * @return
      */
     @GetMapping(value = "/getPlatformConfigByKey")
+    @ApiOperation(value = "根据platformKey查询信息")
     public BaseResponseInfo getPlatformConfigByKey(@RequestParam("platformKey") String platformKey,
                                             HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();

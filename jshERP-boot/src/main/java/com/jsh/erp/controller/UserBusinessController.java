@@ -9,6 +9,8 @@ import com.jsh.erp.service.userBusiness.UserBusinessService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.ErpInfo;
 import com.jsh.erp.utils.StringUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +28,7 @@ import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
  */
 @RestController
 @RequestMapping(value = "/userBusiness")
+@Api(tags = {"用户角色模块的关系"})
 public class UserBusinessController {
     private Logger logger = LoggerFactory.getLogger(UserBusinessController.class);
 
@@ -34,7 +37,16 @@ public class UserBusinessController {
     @Resource
     private UserService userService;
 
+    /**
+     * 获取信息
+     * @param keyId
+     * @param type
+     * @param request
+     * @return
+     * @throws Exception
+     */
     @GetMapping(value = "/getBasicData")
+    @ApiOperation(value = "获取信息")
     public BaseResponseInfo getBasicData(@RequestParam(value = "KeyId") String keyId,
                                          @RequestParam(value = "Type") String type,
                                          HttpServletRequest request)throws Exception {
@@ -53,7 +65,16 @@ public class UserBusinessController {
         return res;
     }
 
+    /**
+     * 校验存在
+     * @param type
+     * @param keyId
+     * @param request
+     * @return
+     * @throws Exception
+     */
     @GetMapping(value = "/checkIsValueExist")
+    @ApiOperation(value = "校验存在")
     public String checkIsValueExist(@RequestParam(value ="type", required = false) String type,
                                    @RequestParam(value ="keyId", required = false) String keyId,
                                    HttpServletRequest request)throws Exception {
@@ -74,6 +95,7 @@ public class UserBusinessController {
      * @return
      */
     @PostMapping(value = "/updateBtnStr")
+    @ApiOperation(value = "更新角色的按钮权限")
     public BaseResponseInfo updateBtnStr(@RequestBody JSONObject jsonObject,
                                          HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();

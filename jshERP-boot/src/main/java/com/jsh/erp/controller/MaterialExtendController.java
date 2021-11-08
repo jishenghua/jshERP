@@ -7,6 +7,8 @@ import com.jsh.erp.datasource.vo.MaterialExtendVo4List;
 import com.jsh.erp.service.materialExtend.MaterialExtendService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.StringUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -23,12 +25,14 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping(value = "/materialsExtend")
+@Api(tags = {"商品价格扩展"})
 public class MaterialExtendController {
     private Logger logger = LoggerFactory.getLogger(MaterialExtendController.class);
     @Resource
     private MaterialExtendService materialExtendService;
 
     @GetMapping(value = "/getDetailList")
+    @ApiOperation(value = "价格信息列表")
     public BaseResponseInfo getDetailList(@RequestParam("materialId") Long materialId,
                                           HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
@@ -69,7 +73,15 @@ public class MaterialExtendController {
         return res;
     }
 
+    /**
+     * 根据条码查询商品信息
+     * @param barCode
+     * @param request
+     * @return
+     * @throws Exception
+     */
     @GetMapping(value = "/getInfoByBarCode")
+    @ApiOperation(value = "根据条码查询商品信息")
     public BaseResponseInfo getInfoByBarCode(@RequestParam("barCode") String barCode,
                                           HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
@@ -86,7 +98,16 @@ public class MaterialExtendController {
         return res;
     }
 
+    /**
+     * 校验条码是否存在
+     * @param id
+     * @param barCode
+     * @param request
+     * @return
+     * @throws Exception
+     */
     @GetMapping(value = "/checkIsBarCodeExist")
+    @ApiOperation(value = "校验条码是否存在")
     public BaseResponseInfo checkIsBarCodeExist(@RequestParam("id") Long id,
                                                 @RequestParam("barCode") String barCode,
                                              HttpServletRequest request)throws Exception {

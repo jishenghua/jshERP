@@ -8,6 +8,8 @@ import com.jsh.erp.datasource.entities.InOutItem;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.inOutItem.InOutItemService;
 import com.jsh.erp.utils.BaseResponseInfo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +25,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping(value = "/inOutItem")
+@Api(tags = {"收支项目"})
 public class InOutItemController {
     private Logger logger = LoggerFactory.getLogger(InOutItemController.class);
 
@@ -35,6 +38,7 @@ public class InOutItemController {
      * @return
      */
     @GetMapping(value = "/findBySelect")
+    @ApiOperation(value = "查找收支项目信息")
     public String findBySelect(@RequestParam("type") String type, HttpServletRequest request) throws Exception{
         String res = null;
         try {

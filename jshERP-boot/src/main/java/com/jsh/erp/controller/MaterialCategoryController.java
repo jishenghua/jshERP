@@ -11,6 +11,8 @@ import com.jsh.erp.datasource.vo.TreeNode;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.materialCategory.MaterialCategoryService;
 import com.jsh.erp.utils.BaseResponseInfo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -24,13 +26,22 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/materialCategory")
+@Api(tags = {"商品类别"})
 public class MaterialCategoryController {
     private Logger logger = LoggerFactory.getLogger(MaterialCategoryController.class);
 
     @Resource
     private MaterialCategoryService materialCategoryService;
 
+    /**
+     * 获取全部商品类别
+     * @param parentId
+     * @param request
+     * @return
+     * @throws Exception
+     */
     @GetMapping(value = "/getAllList")
+    @ApiOperation(value = "获取全部商品类别")
     public BaseResponseInfo getAllList(@RequestParam("parentId") Long parentId, HttpServletRequest request) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();
         try {
@@ -52,6 +63,7 @@ public class MaterialCategoryController {
      * @return
      */
     @GetMapping(value = "/findById")
+    @ApiOperation(value = "根据id来查询商品名称")
     public BaseResponseInfo findById(@RequestParam("id") Long id, HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
@@ -89,6 +101,7 @@ public class MaterialCategoryController {
      * @return com.alibaba.fastjson.JSONArray
      */
     @RequestMapping(value = "/getMaterialCategoryTree")
+    @ApiOperation(value = "获取商品类别树数据")
     public JSONArray getMaterialCategoryTree(@RequestParam("id") Long id) throws Exception{
        JSONArray arr=new JSONArray();
        List<TreeNode> materialCategoryTree = materialCategoryService.getMaterialCategoryTree(id);
@@ -110,6 +123,7 @@ public class MaterialCategoryController {
      * @return java.lang.Object
      */
     @RequestMapping(value = "/addMaterialCategory")
+    @ApiOperation(value = "新增商品类别数据")
     public Object addMaterialCategory(@RequestParam("info") String beanJson) throws Exception {
         JSONObject result = ExceptionConstants.standardSuccess();
         MaterialCategory mc= JSON.parseObject(beanJson, MaterialCategory.class);
@@ -129,6 +143,7 @@ public class MaterialCategoryController {
      * @return java.lang.Object
      */
     @RequestMapping(value = "/editMaterialCategory")
+    @ApiOperation(value = "修改商品类别数据")
     public Object editMaterialCategory(@RequestParam("info") String beanJson) throws Exception {
         JSONObject result = ExceptionConstants.standardSuccess();
         MaterialCategory mc= JSON.parseObject(beanJson, MaterialCategory.class);

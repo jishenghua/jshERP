@@ -14,6 +14,8 @@ import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.FileUtils;
 import com.jsh.erp.utils.StringUtil;
 import com.jsh.erp.utils.Tools;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,6 +40,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/systemConfig")
+@Api(tags = {"系统参数"})
 public class SystemConfigController {
     private Logger logger = LoggerFactory.getLogger(SystemConfigController.class);
 
@@ -68,6 +71,7 @@ public class SystemConfigController {
      * @return
      */
     @GetMapping(value = "/getCurrentInfo")
+    @ApiOperation(value = "获取当前租户的配置信息")
     public BaseResponseInfo getCurrentInfo(HttpServletRequest request) throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         try{
@@ -91,6 +95,7 @@ public class SystemConfigController {
      * @throws Exception
      */
     @GetMapping(value = "/fileSizeLimit")
+    @ApiOperation(value = "获取文件大小限制")
     public BaseResponseInfo fileSizeLimit(HttpServletRequest request) throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         try{
@@ -117,6 +122,7 @@ public class SystemConfigController {
      * @return
      */
     @PostMapping(value = "/upload")
+    @ApiOperation(value = "文件上传统一方法")
     public BaseResponseInfo upload(HttpServletRequest request, HttpServletResponse response) {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
@@ -194,6 +200,7 @@ public class SystemConfigController {
      * @param response
      */
     @GetMapping(value = "/static/**")
+    @ApiOperation(value = "预览图片&下载文件")
     public void view(HttpServletRequest request, HttpServletResponse response) {
         // ISO-8859-1 ==> UTF-8 进行编码转换
         String imgPath = extractPathFromPattern(request);

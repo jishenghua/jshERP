@@ -8,6 +8,8 @@ import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.role.RoleService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.service.userBusiness.UserBusinessService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +23,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/role")
+@Api(tags = {"角色管理"})
 public class RoleController {
     private Logger logger = LoggerFactory.getLogger(RoleController.class);
 
@@ -36,6 +39,7 @@ public class RoleController {
      * @return
      */
     @GetMapping(value = "/findUserRole")
+    @ApiOperation(value = "查询用户的角色")
     public JSONArray findUserRole(@RequestParam("UBType") String type, @RequestParam("UBKeyId") String keyId,
                                   HttpServletRequest request)throws Exception {
         JSONArray arr = new JSONArray();
@@ -62,6 +66,7 @@ public class RoleController {
     }
 
     @GetMapping(value = "/allList")
+    @ApiOperation(value = "查询全部角色列表")
     public List<Role> allList(HttpServletRequest request)throws Exception {
         return roleService.allList();
     }
