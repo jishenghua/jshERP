@@ -42,7 +42,7 @@
           @added="onAdded"
           @deleted="onDeleted">
           <template #buttonAfter>
-            <a-row :gutter="24" style="float:left;width:140px;">
+            <a-row v-if="isTenant" :gutter="24" style="float:left;width:140px;">
               <a-col :md="24" :sm="24">
                 <a-button icon="plus" @click="addDepot">新增仓库</a-button>
               </a-col>

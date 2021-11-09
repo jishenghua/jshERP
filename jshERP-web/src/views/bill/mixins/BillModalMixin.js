@@ -3,6 +3,7 @@ import {findBySelectSup,findBySelectCus,findBySelectRetail,getMaterialByBarCode,
   getPersonByNumType, getBatchNumberList} from '@/api/api'
 import { getAction,putAction } from '@/api/manage'
 import { getMpListShort, getNowFormatDateTime } from "@/utils/util"
+import { USER_INFO } from "@/store/mutation-types"
 import Vue from 'vue'
 
 export const BillModalMixin = {
@@ -24,6 +25,7 @@ export const BillModalMixin = {
       billUnitPirce: '',
       scanBarCode: '',
       scanStatus: true,
+      isTenant: false,
       spans: {
         labelCol1: {span: 2},
         wrapperCol1: {span: 22},
@@ -40,6 +42,8 @@ export const BillModalMixin = {
     };
   },
   created () {
+    let userInfo = Vue.ls.get(USER_INFO)
+    this.isTenant = userInfo.id === userInfo.tenantId? true:false
   },
   computed: {
     readOnly: function() {

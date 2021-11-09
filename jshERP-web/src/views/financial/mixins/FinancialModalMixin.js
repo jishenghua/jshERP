@@ -2,6 +2,7 @@ import { VALIDATE_NO_PASSED, validateFormAndTables } from '@/utils/JEditableTabl
 import {findBySelectSup,findBySelectCus,findBySelectRetail,findBySelectOrgan,findStockByDepotAndBarCode,getAccount,getPersonByType,findInOutItemByParam} from '@/api/api'
 import { getAction,putAction } from '@/api/manage'
 import { getMpListShort, getNowFormatDateTime } from "@/utils/util"
+import { USER_INFO } from "@/store/mutation-types"
 import Vue from 'vue'
 
 export const FinancialModalMixin = {
@@ -14,6 +15,7 @@ export const FinancialModalMixin = {
       organList: [],
       personList: [],
       accountList: [],
+      isTenant: false,
       spans: {
         labelCol1: {span: 2},
         wrapperCol1: {span: 22},
@@ -30,6 +32,8 @@ export const FinancialModalMixin = {
     };
   },
   created () {
+    let userInfo = Vue.ls.get(USER_INFO)
+    this.isTenant = userInfo.id === userInfo.tenantId? true:false
   },
   computed: {
     readOnly: function() {

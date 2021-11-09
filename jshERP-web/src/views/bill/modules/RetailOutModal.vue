@@ -26,7 +26,7 @@
                 <div slot="dropdownRender" slot-scope="menu">
                   <v-nodes :vnodes="menu" />
                   <a-divider style="margin: 4px 0;" />
-                  <div style="padding: 4px 8px; cursor: pointer;"
+                  <div v-if="isTenant" style="padding: 4px 8px; cursor: pointer;"
                        @mousedown="e => e.preventDefault()" @click="addMember"><a-icon type="plus" /> 新增会员</div>
                 </div>
                 <a-select-option v-for="(item,index) in retailList" :key="index" :value="item.id">
@@ -74,7 +74,7 @@
               @added="onAdded"
               @deleted="onDeleted">
               <template #buttonAfter>
-                <a-row :gutter="24" style="float:left;width:140px;">
+                <a-row v-if="isTenant" :gutter="24" style="float:left;width:140px;">
                   <a-col :md="24" :sm="24">
                     <a-button icon="plus" @click="addDepot">新增仓库</a-button>
                   </a-col>
@@ -121,7 +121,7 @@
                     <div slot="dropdownRender" slot-scope="menu">
                       <v-nodes :vnodes="menu" />
                       <a-divider style="margin: 4px 0;" />
-                      <div style="padding: 4px 8px; cursor: pointer;"
+                      <div v-if="isTenant" style="padding: 4px 8px; cursor: pointer;"
                            @mousedown="e => e.preventDefault()" @click="addAccount"><a-icon type="plus" /> 新增结算账户</div>
                     </div>
                     <a-select-option v-for="(item,index) in accountList" :key="index" :value="item.id">
