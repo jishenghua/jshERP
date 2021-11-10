@@ -117,10 +117,10 @@ export const BillModalMixin = {
               if(this.prefixNo === 'CGRK' || this.prefixNo === 'XSTH' || this.prefixNo === 'CGTH') {
                 columns[i].type = FormTypes.date //显示
               } else {
-                columns[i].type = FormTypes.input //显示
+                columns[i].type = FormTypes.normal //显示
               }
             } else {
-              columns[i].type = FormTypes.input //显示
+              columns[i].type = FormTypes.normal //显示
             }
           } else {
             columns[i].type = FormTypes.hidden //隐藏

@@ -707,7 +707,9 @@
                     </div>
 
                     <!-- else (normal) -->
-                    <span v-else :key="i" v-bind="buildProps(row,col)">{{ inputValues[rowIndex][col.key] }}</span>
+                    <span v-else :key="i" v-bind="buildProps(row,col)" class="td-span" :title="inputValues[rowIndex][col.key]">
+                      {{ inputValues[rowIndex][col.key] }}
+                    </span>
                   </template>
                 </div>
               </div>
@@ -761,6 +763,7 @@
 
 <script>
   import Vue from 'vue'
+  import $ from 'jquery'
   import Draggable from 'vuedraggable'
   import { ACCESS_TOKEN } from '@/store/mutation-types'
   import { FormTypes, VALIDATE_NO_PASSED } from '@/utils/JEditableTableUtil'
@@ -1430,7 +1433,7 @@
           tbody.scrollTop = tbody.scrollHeight
         })
         this.$nextTick(() => {
-          this.autoJumpNextInputBill('billModal')
+          this.autoJumpNextInputBill()
         })
       },
       /**
@@ -1462,6 +1465,9 @@
           }),
           num, insertIndex,
           target: this
+        })
+        this.$nextTick(() => {
+          this.autoJumpNextInputBill()
         })
       },
       /** 删除被选中的行 */
@@ -2744,31 +2750,35 @@
         return content;
       },
       /** 回车后自动跳到下一个input **/
-      autoJumpNextInputBill(domInfo) {
+      autoJumpNextInputBill() {
         let that = this
-        let domIndex = 0
-        let inputs = document.getElementById(domInfo).getElementsByTagName('input')
-        inputs[domIndex].focus()
-        document.getElementById(domInfo).addEventListener('keydown',function(e){
-          if(e.keyCode === 13){
-            domIndex++
-            if(domIndex === inputs.length) {
-              domIndex = 0
-              that.handleClickAdd()
+        let inputDom = $(".ant-modal-cust-warp:visible").find("#billModal");
+        inputDom.find("input:visible:not(:checkbox)").off("keydown").on("keydown", function(e){
+          //响应回车键按下的处理
+          e = event || window.event || arguments.callee.caller.arguments[0];
+          //捕捉是否按键为回车键，可百度JS键盘事件了解更多
+          if(e && e.keyCode==13) {
+            //捕捉inputDom下的文本输入框的个数
+            let inputs = inputDom.find("input:visible:not(:checkbox)");
+            let idx = inputs.index(this); // 获取当前焦点输入框所处的位置
+            if (idx == inputs.length - 1) { // 判断是否是最后一个输入框
+              let curKey = e.which;
+              if (curKey == 13) {
+                //新增行
+                that.handleClickAdd();
+                //进行下一行的自动聚焦
+                setTimeout(function() {
+                  inputs = inputDom.find("input:visible:not(:checkbox)");
+                  inputs[idx + 1].focus(); // 设置焦点
+                  inputs[idx + 1].select(); // 选中文字
+                },100)
+              }
+            } else {
+              inputs[idx + 1].focus(); // 设置焦点
+              inputs[idx + 1].select(); // 选中文字
             }
-            inputs[domIndex].focus()
           }
         })
-        for(let i=0; i<inputs.length; i++){
-          //这个index就是做个介质，来获取当前的i是第几个
-          inputs[i].index = i;
-          inputs[i].onclick = function () {
-            domIndex = this.index
-          }
-          inputs[i].onselect = function () {
-            domIndex = this.index
-          }
-        }
       },
       /** 自动选中特殊的key **/
       autoSelectBySpecialKey(specialKey) {
@@ -3028,6 +3038,29 @@
             opacity: 0.6;
           }
 
+        }
+
+        .td-span {
+          font-variant: tabular-nums;
+          box-sizing: border-box;
+          margin: 0;
+          list-style: none;
+          position: relative;
+          display: inline-block;
+          padding: 2px 2px;
+          width: 100%;
+          height: 32px;
+          font-size: 14px;
+          line-height: 1.9;
+          color: rgba(0, 0, 0, 0.65);
+          background-color: #fff;
+          border: 1px dashed #d9d9d9;
+          border-radius: 4px;
+          transition: all 0.3s;
+          outline: none;
+          overflow:hidden;
+          white-space:nowrap;
+          text-overflow:ellipsis;
         }
 
       }

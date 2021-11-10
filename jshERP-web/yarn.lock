@@ -6657,6 +6657,11 @@ javascript-stringify@^1.6.0:
   resolved "https://registry.npmjs.org/javascript-stringify/-/javascript-stringify-1.6.0.tgz#142d111f3a6e3dae8f4a9afd77d45855b5a9cce3"
   integrity sha1-FC0RHzpuPa6PSpr9d9RYVbWpzOM=
 
+jquery@^1.12.4:
+  version "1.12.4"
+  resolved "https://registry.yarnpkg.com/jquery/-/jquery-1.12.4.tgz#01e1dfba290fe73deba77ceeacb0f9ba2fec9e0c"
+  integrity sha1-AeHfuikP5z3rp3zurLD5ui/sngw=
+
 js-base64@^2.1.9:
   version "2.5.2"
   resolved "https://registry.npmjs.org/js-base64/-/js-base64-2.5.2.tgz#313b6274dda718f714d00b3330bbae6e38e90209"
