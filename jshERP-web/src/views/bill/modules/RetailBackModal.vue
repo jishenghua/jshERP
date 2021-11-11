@@ -323,7 +323,7 @@
         });
       },
       onSearchLinkNumber() {
-        this.$refs.linkBillList.show('出库', '零售', '会员', "0")
+        this.$refs.linkBillList.show('出库', '零售', '会员', "1")
         this.$refs.linkBillList.title = "选择零售出库"
       },
       linkBillListOk(selectBillRows) {

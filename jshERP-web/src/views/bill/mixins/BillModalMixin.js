@@ -316,21 +316,24 @@ export const BillModalMixin = {
                 })
               } else {
                 //单个条码
-                let mArr = []
-                for (let i = 0; i < mList.length; i++) {
-                  let mInfo = mList[i]
-                  this.changeColumnShow(mInfo)
-                  let mObj = {
-                    rowKey: row.id,
-                    values: this.parseInfoToObj(mInfo)
+                findStockByDepotAndBarCode({ depotId: row.depotId, barCode: row.barCode }).then((res) => {
+                  if (res && res.code === 200) {
+                    let mArr = []
+                    let mInfo = mList[0]
+                    this.changeColumnShow(mInfo)
+                    let mInfoEx = this.parseInfoToObj(mInfo)
+                    mInfoEx.stock = res.data.stock
+                    let mObj = {
+                      rowKey: row.id,
+                      values: mInfoEx
+                    }
+                    mArr.push(mObj)
+                    target.setValues(mArr);
+                    target.recalcAllStatisticsColumns()
+                    that.autoChangePrice(target)
+                    target.autoSelectBySpecialKey('operNumber')
                   }
-                  mArr.push(mObj)
-                }
-                target.setValues(mArr);
-                that.getStockByDepotBarCode(row, target)
-                target.recalcAllStatisticsColumns()
-                that.autoChangePrice(target)
-                target.autoSelectBySpecialKey('operNumber')
+                })
               }
             }
           });
