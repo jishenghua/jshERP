@@ -73,6 +73,10 @@
             <bind name="bindNumber" value="'%'+number+'%'"/>
             and dh.number like #{bindNumber}
         </if>
+        <if test="linkNumber != null">
+            <bind name="bindLinkNumber" value="'%'+linkNumber+'%'"/>
+            and dh.link_number like #{bindLinkNumber}
+        </if>
         <if test="beginTime != null">
             and dh.oper_time >= #{beginTime}
         </if>
@@ -136,6 +140,10 @@
         <if test="number != null">
             <bind name="bindNumber" value="'%'+number+'%'"/>
             and dh.number like #{bindNumber}
+        </if>
+        <if test="linkNumber != null">
+            <bind name="bindLinkNumber" value="'%'+linkNumber+'%'"/>
+            and dh.link_number like #{bindLinkNumber}
         </if>
         <if test="beginTime != null">
             and dh.oper_time >= #{beginTime}

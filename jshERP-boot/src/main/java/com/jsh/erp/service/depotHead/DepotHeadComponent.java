@@ -36,13 +36,14 @@ public class DepotHeadComponent implements ICommonQuery {
         String roleType = StringUtil.getInfo(search, "roleType");
         String status = StringUtil.getInfo(search, "status");
         String number = StringUtil.getInfo(search, "number");
+        String linkNumber = StringUtil.getInfo(search, "linkNumber");
         String beginTime = StringUtil.getInfo(search, "beginTime");
         String endTime = StringUtil.getInfo(search, "endTime");
         String materialParam = StringUtil.getInfo(search, "materialParam");
         Long organId = StringUtil.parseStrLong(StringUtil.getInfo(search, "organId"));
         Long creator = StringUtil.parseStrLong(StringUtil.getInfo(search, "creator"));
         Long depotId = StringUtil.parseStrLong(StringUtil.getInfo(search, "depotId"));
-        return depotHeadService.select(type, subType, roleType, status, number, beginTime, endTime, materialParam,
+        return depotHeadService.select(type, subType, roleType, status, number, linkNumber, beginTime, endTime, materialParam,
                 organId, creator, depotId, QueryUtils.offset(map), QueryUtils.rows(map));
     }
 
@@ -54,13 +55,14 @@ public class DepotHeadComponent implements ICommonQuery {
         String roleType = StringUtil.getInfo(search, "roleType");
         String status = StringUtil.getInfo(search, "status");
         String number = StringUtil.getInfo(search, "number");
+        String linkNumber = StringUtil.getInfo(search, "linkNumber");
         String beginTime = StringUtil.getInfo(search, "beginTime");
         String endTime = StringUtil.getInfo(search, "endTime");
         String materialParam = StringUtil.getInfo(search, "materialParam");
         Long organId = StringUtil.parseStrLong(StringUtil.getInfo(search, "organId"));
         Long creator = StringUtil.parseStrLong(StringUtil.getInfo(search, "creator"));
         Long depotId = StringUtil.parseStrLong(StringUtil.getInfo(search, "depotId"));
-        return depotHeadService.countDepotHead(type, subType, roleType, status, number, beginTime, endTime, materialParam,
+        return depotHeadService.countDepotHead(type, subType, roleType, status, number, linkNumber, beginTime, endTime, materialParam,
                 organId, creator, depotId);
     }
 
