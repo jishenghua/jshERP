@@ -28,6 +28,7 @@
             <bind name="bindSerialNo" value="'%'+serialNo+'%'"/>
             and serial_no like #{bindSerialNo}
         </if>
+        and ifnull(delete_flag,'0') !='1'
     </select>
 
     <select id="selectByConditionAccount" parameterType="com.jsh.erp.datasource.entities.AccountExample" resultMap="ResultListMap">
