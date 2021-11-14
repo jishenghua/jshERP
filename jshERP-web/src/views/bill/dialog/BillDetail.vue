@@ -639,7 +639,7 @@
               </a-form-item>
             </a-col>
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联单号">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联单据">
                 {{model.linkNumber}} {{model.billType}}
               </a-form-item>
             </a-col>
@@ -685,7 +685,7 @@
               </a-form-item>
             </a-col>
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联单号">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联单据">
                 {{model.linkNumber}} {{model.billType}}
               </a-form-item>
             </a-col>

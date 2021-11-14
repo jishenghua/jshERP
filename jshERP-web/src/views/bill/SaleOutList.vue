@@ -58,6 +58,11 @@
                     </a-select>
                   </a-form-item>
                 </a-col>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="关联订单" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-input placeholder="请输入关联订单" v-model="queryParam.linkNumber"></a-input>
+                  </a-form-item>
+                </a-col>
               </template>
               <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                 <a-col :md="6" :sm="24">
@@ -156,7 +161,8 @@
           roleType: Vue.ls.get('roleType'),
           organId: "",
           depotId: "",
-          creator: ""
+          creator: "",
+          linkNumber: ""
         },
         labelCol: {
           span: 5
