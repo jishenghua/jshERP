@@ -592,8 +592,8 @@ public class MaterialController {
     @ApiOperation(value = "商品库存查询")
     public BaseResponseInfo getListWithStock(@RequestParam("currentPage") Integer currentPage,
                                              @RequestParam("pageSize") Integer pageSize,
-                                             @RequestParam("depotId") Long depotId,
-                                             @RequestParam("categoryId") Long categoryId,
+                                             @RequestParam(value = "depotId", required = false) Long depotId,
+                                             @RequestParam(value = "categoryId", required = false) Long categoryId,
                                              @RequestParam("materialParam") String materialParam,
                                              @RequestParam("zeroStock") Integer zeroStock,
                                              @RequestParam("mpList") String mpList,

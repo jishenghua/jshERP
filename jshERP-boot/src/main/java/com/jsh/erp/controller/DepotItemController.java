@@ -289,7 +289,7 @@ public class DepotItemController {
     @ApiOperation(value = "查找所有的明细")
     public BaseResponseInfo findByAll(@RequestParam("currentPage") Integer currentPage,
                                       @RequestParam("pageSize") Integer pageSize,
-                                      @RequestParam("depotId") Long depotId,
+                                      @RequestParam(value = "depotId", required = false) Long depotId,
                                       @RequestParam("monthTime") String monthTime,
                                       @RequestParam("materialParam") String materialParam,
                                       @RequestParam("mpList") String mpList,
@@ -362,7 +362,7 @@ public class DepotItemController {
      */
     @GetMapping(value = "/totalCountMoney")
     @ApiOperation(value = "统计总计金额")
-    public BaseResponseInfo totalCountMoney(@RequestParam("depotId") Long depotId,
+    public BaseResponseInfo totalCountMoney(@RequestParam(value = "depotId", required = false) Long depotId,
                                             @RequestParam("monthTime") String monthTime,
                                             @RequestParam("materialParam") String materialParam,
                                             HttpServletRequest request) throws Exception{
@@ -556,7 +556,7 @@ public class DepotItemController {
     public BaseResponseInfo findStockWarningCount(@RequestParam("currentPage") Integer currentPage,
                                                   @RequestParam("pageSize") Integer pageSize,
                                                   @RequestParam("materialParam") String materialParam,
-                                                  @RequestParam("depotId") Long depotId,
+                                                  @RequestParam(value = "depotId", required = false) Long depotId,
                                                   @RequestParam("mpList") String mpList)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();

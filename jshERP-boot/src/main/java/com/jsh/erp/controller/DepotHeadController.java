@@ -97,9 +97,9 @@ public class DepotHeadController {
     @ApiOperation(value = "入库出库明细接口")
     public BaseResponseInfo findInDetail(@RequestParam("currentPage") Integer currentPage,
                                         @RequestParam("pageSize") Integer pageSize,
-                                        @RequestParam("organId") Integer oId,
+                                        @RequestParam(value = "organId", required = false) Integer oId,
                                         @RequestParam("materialParam") String materialParam,
-                                        @RequestParam("depotId") Integer depotId,
+                                        @RequestParam(value = "depotId", required = false) Integer depotId,
                                         @RequestParam("beginTime") String beginTime,
                                         @RequestParam("endTime") String endTime,
                                         @RequestParam("type") String type,
@@ -147,9 +147,9 @@ public class DepotHeadController {
     @ApiOperation(value = "入库出库统计接口")
     public BaseResponseInfo findInOutMaterialCount(@RequestParam("currentPage") Integer currentPage,
                                          @RequestParam("pageSize") Integer pageSize,
-                                         @RequestParam("organId") Integer oId,
+                                         @RequestParam(value = "organId", required = false) Integer oId,
                                          @RequestParam("materialParam") String materialParam,
-                                         @RequestParam("depotId") Integer depotId,
+                                         @RequestParam(value = "depotId", required = false) Integer depotId,
                                          @RequestParam("beginTime") String beginTime,
                                          @RequestParam("endTime") String endTime,
                                          @RequestParam("type") String type,
@@ -198,10 +198,10 @@ public class DepotHeadController {
     @ApiOperation(value = "调拨明细统计")
     public BaseResponseInfo findallocationDetail(@RequestParam("currentPage") Integer currentPage,
                                                  @RequestParam("pageSize") Integer pageSize,
-                                                 @RequestParam("organId") Integer oId,
+                                                 @RequestParam(value = "organId", required = false) Integer oId,
                                                  @RequestParam("materialParam") String materialParam,
-                                                 @RequestParam("depotId") Integer depotId,
-                                                 @RequestParam("depotIdF") Integer depotIdF,
+                                                 @RequestParam(value = "depotId", required = false) Integer depotId,
+                                                 @RequestParam(value = "depotIdF", required = false) Integer depotIdF,
                                                  @RequestParam("beginTime") String beginTime,
                                                  @RequestParam("endTime") String endTime,
                                                  @RequestParam("subType") String subType,
@@ -242,7 +242,7 @@ public class DepotHeadController {
                                                    @RequestParam("pageSize") Integer pageSize,
                                                    @RequestParam("beginTime") String beginTime,
                                                    @RequestParam("endTime") String endTime,
-                                                   @RequestParam("organId") Integer organId,
+                                                   @RequestParam(value = "organId", required = false) Integer organId,
                                                    @RequestParam("supType") String supType,
                                                    HttpServletRequest request) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();
