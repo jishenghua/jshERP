@@ -298,6 +298,27 @@ public class DepotItemService {
         return result;
     }
 
+    /**
+     * 统计零售的总金额
+     * @param type
+     * @param subType
+     * @param month
+     * @return
+     * @throws Exception
+     */
+    public BigDecimal inOrOutRetailPrice(String type, String subType, String month) throws Exception{
+        BigDecimal result= BigDecimal.ZERO;
+        try{
+            String beginTime = Tools.firstDayOfMonth(month) + BusinessConstants.DAY_FIRST_TIME;
+            String endTime = Tools.lastDayOfMonth(month) + BusinessConstants.DAY_LAST_TIME;
+            result = depotItemMapperEx.inOrOutRetailPrice(type, subType, beginTime, endTime);
+            result = result.abs();
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return result;
+    }
+
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void saveDetials(String rows, Long headerId, HttpServletRequest request) throws Exception{
         //查询单据主表信息
@@ -458,9 +479,12 @@ public class DepotItemService {
                 //更新当前库存
                 updateCurrentStock(depotItem);
             }
-            //如果关联单据号非空则更新订单的状态
-            if(StringUtil.isNotEmpty(depotHead.getLinkNumber())) {
-                changeBillStatus(depotHead, billStatus);
+            //如果关联单据号非空则更新订单的状态,单据类型：采购入库单或销售出库单
+            if(BusinessConstants.SUB_TYPE_PURCHASE.equals(depotHead.getSubType())
+                    || BusinessConstants.SUB_TYPE_SALES.equals(depotHead.getSubType())) {
+                if(StringUtil.isNotEmpty(depotHead.getLinkNumber())) {
+                    changeBillStatus(depotHead, billStatus);
+                }
             }
         } else {
             throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_ROW_FAILED_CODE,
@@ -491,10 +515,17 @@ public class DepotItemService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void deleteDepotItemHeadId(Long headerId)throws Exception {
-        DepotItemExample example = new DepotItemExample();
-        example.createCriteria().andHeaderIdEqualTo(headerId);
         try{
+            //1、查询删除前的单据明细
+            List<DepotItem> depotItemList = getListByHeaderId(headerId);
+            //2、删除单据明细
+            DepotItemExample example = new DepotItemExample();
+            example.createCriteria().andHeaderIdEqualTo(headerId);
             depotItemMapper.deleteByExample(example);
+            //3、计算删除之后单据明细中商品的库存
+            for(DepotItem depotItem : depotItemList){
+                updateCurrentStock(depotItem);
+            }
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }

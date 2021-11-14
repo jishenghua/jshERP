@@ -50,7 +50,7 @@
         select distinct dh.*, s.supplier OrganName, u.username userName, a.name AccountName
         from jsh_depot_head dh
         left join jsh_supplier s on dh.organ_id=s.id and ifnull(s.delete_Flag,'0') !='1'
-        left join jsh_user u on dh.creator=u.id and ifnull(u.Status,'0') ='0'
+        left join jsh_user u on dh.creator=u.id and ifnull(u.Status,'0') !='1'
         left join jsh_account a on dh.account_id=a.id and ifnull(a.delete_Flag,'0') !='1'
         left join jsh_depot_item di on dh.id = di.header_id and ifnull(di.delete_flag,'0') !='1'
         left join jsh_material m on di.material_id = m.id and ifnull(m.delete_flag,'0') !='1'
@@ -518,12 +518,6 @@
         <if test="subType != null">
             and sub_type=#{subType}
         </if>
-        <if test="hasSupplier == 1">
-            and organ_id is not null
-        </if>
-        <if test="hasSupplier == 0">
-            and organ_id is null
-        </if>
         <if test="beginTime != null">
             and oper_time >= #{beginTime}
         </if>
@@ -537,7 +531,7 @@
         select distinct dh.*, s.supplier OrganName, u.username userName
         from jsh_depot_head dh
         left join jsh_supplier s on dh.organ_id=s.id and ifnull(s.delete_Flag,'0') !='1'
-        left join jsh_user u on dh.creator=u.id and ifnull(u.Status,'0') ='0'
+        left join jsh_user u on dh.creator=u.id and ifnull(u.Status,'0') !='1'
         left join jsh_depot_item di on dh.id = di.header_id and ifnull(di.delete_flag,'0') !='1'
         left join jsh_material m on di.material_id = m.id and ifnull(m.delete_flag,'0') !='1'
         where 1=1
@@ -581,7 +575,7 @@
             </foreach>
             )
         </if>
-        and (abs(dh.change_amount)+(select ifnull(sum(ai.each_amount),0) from jsh_account_item ai where ai.bill_id=dh.id and ifnull(ai.delete_flag,'0') !='1'))
+        and (abs(dh.change_amount)+(select ifnull(sum(abs(ai.each_amount)),0) from jsh_account_item ai where ai.bill_id=dh.id and ifnull(ai.delete_flag,'0') !='1'))
         &lt; (dh.discount_last_money + dh.other_money)
         and ifnull(dh.delete_flag,'0') !='1'
         order by dh.id desc

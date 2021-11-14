@@ -67,9 +67,9 @@
         <result column="MOtherField2" jdbcType="VARCHAR" property="MOtherField2" />
         <result column="MOtherField3" jdbcType="VARCHAR" property="MOtherField3" />
         <result column="unit_name" jdbcType="VARCHAR" property="unitName" />
-        <result column="safetystock" jdbcType="DECIMAL" property="safetystock" />
         <result column="current_number" jdbcType="DECIMAL" property="currentNumber" />
-        <result column="linjieNumber" jdbcType="DECIMAL" property="linjieNumber" />
+        <result column="low_safe_stock" jdbcType="DECIMAL" property="lowSafeStock" />
+        <result column="high_safe_stock" jdbcType="DECIMAL" property="highSafeStock" />
     </resultMap>
 
     <resultMap id="stockMap" type="com.jsh.erp.datasource.vo.DepotItemVo4Stock">
@@ -269,6 +269,15 @@
         and ifnull(dh.delete_flag,'0') !='1'
     </select>
 
+    <select id="inOrOutRetailPrice" resultType="java.math.BigDecimal">
+        select ifnull(sum(total_price),0) as allMoney from jsh_depot_head dh
+        where 1=1
+          and dh.type=#{type} and dh.sub_type=#{subType}
+          and dh.oper_time &gt;= #{beginTime}
+          and dh.oper_time &lt;= #{endTime}
+          and ifnull(dh.delete_flag,'0') !='1'
+    </select>
+
     <select id="getStockCheckSum"  resultType="java.math.BigDecimal">
         select ifnull(sum(di.basic_number),0) stockCheckSum from jsh_depot_head dh
         left JOIN jsh_depot_item di on dh.id=di.header_id
@@ -420,28 +429,28 @@
 
     <select id="findStockWarningCount" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultStockWarningCount">
         select m.id MId, m.name MName, me.bar_code, m.mfrs MMfrs, m.model MModel, m.standard MStandard,m.color MColor,
-        m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,
-        m.unit MaterialUnit, u.name unit_name,mcs.current_number,ifnull(m.safety_stock,0) safetystock,
-        (ifnull(m.safety_stock,0)-mcs.current_number) linjieNumber
+        m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,d.name depotName,
+        m.unit MaterialUnit, u.name unit_name,mcs.current_number,
+        ifnull(mis.low_safe_stock,0) low_safe_stock, ifnull(mis.high_safe_stock,0) high_safe_stock
         from jsh_material m
         left join jsh_material_extend me on me.material_id=m.id and ifnull(me.delete_Flag,'0') !='1'
+        left join jsh_material_initial_stock mis on mis.material_id=m.id and ifnull(mis.delete_Flag,'0') !='1'
         left join jsh_material_current_stock mcs on mcs.material_id=m.id and ifnull(mcs.delete_Flag,'0') !='1'
-        left join jsh_depot_item di on di.material_id=m.id  and ifnull(di.delete_Flag,'0') !='1'
-        left join jsh_depot_head dh on di.header_id=dh.id  and ifnull(dh.delete_flag,'0') !='1'
         left join jsh_unit u on m.unit_id=u.id and ifnull(u.delete_Flag,'0') !='1'
+        left join jsh_depot d on d.id=mis.depot_id and ifnull(u.delete_flag,'0') !='1'
         where 1=1
         and me.default_flag=1
         and ifnull(m.delete_flag,'0') !='1'
-        and ifnull(m.safety_stock,0) > mcs.current_number
+        and mis.depot_id=mcs.depot_id
+        and (mcs.current_number &lt; ifnull(mis.low_safe_stock,0) or mcs.current_number > ifnull(mis.high_safe_stock,0))
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
         </if>
         <if test="depotId != null">
-            and mcs.depot_id= #{depotId}
+            and mis.depot_id= #{depotId}
         </if>
-        group by m.id,m.name, m.model, m.unit, m.color, u.name
-        order by linjieNumber desc
+        order by depotName asc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
         </if>
@@ -452,22 +461,23 @@
         (select m.id
         from jsh_material m
         left join jsh_material_extend me on me.material_id=m.id and ifnull(me.delete_Flag,'0') !='1'
+        left join jsh_material_initial_stock mis on mis.material_id=m.id and ifnull(mis.delete_Flag,'0') !='1'
         left join jsh_material_current_stock mcs on mcs.material_id=m.id and ifnull(mcs.delete_Flag,'0') !='1'
-        left join jsh_depot_item di on di.material_id=m.id  and ifnull(di.delete_Flag,'0') !='1'
-        left join jsh_depot_head dh on di.header_id=dh.id  and ifnull(dh.delete_flag,'0') !='1'
         left join jsh_unit u on m.unit_id=u.id and ifnull(u.delete_Flag,'0') !='1'
+        left join jsh_depot d on d.id=mis.depot_id and ifnull(u.delete_flag,'0') !='1'
         where 1=1
         and me.default_flag=1
         and ifnull(m.delete_flag,'0') !='1'
-        and ifnull(m.safety_stock,0) > mcs.current_number
+        and mis.depot_id=mcs.depot_id
+        and (mcs.current_number &lt; ifnull(mis.low_safe_stock,0) or mcs.current_number > ifnull(mis.high_safe_stock,0))
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
         </if>
         <if test="depotId != null">
-            and mcs.depot_id= #{depotId}
+            and mis.depot_id= #{depotId}
         </if>
-        group by m.id,m.name, m.model, m.unit, m.color, u.name) tb
+        ) tb
     </select>
 
     <select id="getFinishNumber" resultType="java.math.BigDecimal">

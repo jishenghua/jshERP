@@ -11,6 +11,7 @@ import com.jsh.erp.service.functions.FunctionService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
+import com.jsh.erp.utils.Tools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -68,8 +69,17 @@ public class UserBusinessService {
         UserBusiness userBusiness = JSONObject.parseObject(obj.toJSONString(), UserBusiness.class);
         int result=0;
         try{
+            String token = "";
+            if(request!=null) {
+                token = request.getHeader("X-Access-Token");
+                Long tenantId = Tools.getTenantIdByToken(token);
+                if(tenantId!=0L) {
+                    userBusiness.setTenantId(tenantId);
+                }
+            }
             String value = userBusiness.getValue();
             String newValue = value.replaceAll(",","\\]\\[");
+            newValue = newValue.replaceAll("\\[0\\]","").replaceAll("\\[\\]","");
             userBusiness.setValue(newValue);
             result=userBusinessMapper.insertSelective(userBusiness);
             logService.insertLog("关联关系", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
@@ -86,6 +96,7 @@ public class UserBusinessService {
         try{
             String value = userBusiness.getValue();
             String newValue = value.replaceAll(",","\\]\\[");
+            newValue = newValue.replaceAll("\\[0\\]","").replaceAll("\\[\\]","");
             userBusiness.setValue(newValue);
             result=userBusinessMapper.updateByPrimaryKeySelective(userBusiness);
             logService.insertLog("关联关系", BusinessConstants.LOG_OPERATION_TYPE_EDIT, request);
@@ -138,6 +149,19 @@ public class UserBusinessService {
         return list;
     }
 
+    public List<UserBusiness> getListBy(String keyId, String type)throws Exception{
+        List<UserBusiness> list=null;
+        try{
+            UserBusinessExample example = new UserBusinessExample();
+            example.createCriteria().andKeyIdEqualTo(keyId).andTypeEqualTo(type)
+                    .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+            list= userBusinessMapper.selectByExample(example);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list;
+    }
+
     public String getUBValueByTypeAndKeyId(String type, String keyId) throws Exception {
         String ubValue = "";
         List<UserBusiness> ubList = getBasicData(keyId, type);
@@ -167,7 +191,7 @@ public class UserBusinessService {
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateBtnStr(String keyId, String type, String btnStr) throws Exception{
         logService.insertLog("关联关系",
-                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(type).toString(),
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append("角色的按钮权限").toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         UserBusiness userBusiness = new UserBusiness();
         userBusiness.setBtnStr(btnStr);

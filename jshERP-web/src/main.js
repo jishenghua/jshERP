@@ -16,6 +16,7 @@ import Print from 'vue-print-nb-jeecg'
 /*import '@babel/polyfill'*/
 import preview from 'vue-photo-preview'
 import 'vue-photo-preview/dist/skin.css'
+import 'intro.js/introjs.css'
 
 import {
   ACCESS_TOKEN,
@@ -47,8 +48,8 @@ Vue.use(hasPermission)
 Vue.use(Print)
 Vue.use(preview)
 Vue.use(vueBus);
-Vue.use(JeecgComponents);
-Vue.use(VueAreaLinkage);
+Vue.use(JeecgComponents)
+Vue.use(VueAreaLinkage)
 
 new Vue({
   router,

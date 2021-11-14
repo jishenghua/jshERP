@@ -3,6 +3,7 @@ import {findBySelectSup,findBySelectCus,findBySelectRetail,getMaterialByBarCode,
   getPersonByNumType, getBatchNumberList} from '@/api/api'
 import { getAction,putAction } from '@/api/manage'
 import { getMpListShort, getNowFormatDateTime } from "@/utils/util"
+import { USER_INFO } from "@/store/mutation-types"
 import Vue from 'vue'
 
 export const BillModalMixin = {
@@ -24,6 +25,7 @@ export const BillModalMixin = {
       billUnitPirce: '',
       scanBarCode: '',
       scanStatus: true,
+      isTenant: false,
       spans: {
         labelCol1: {span: 2},
         wrapperCol1: {span: 22},
@@ -40,6 +42,8 @@ export const BillModalMixin = {
     };
   },
   created () {
+    let userInfo = Vue.ls.get(USER_INFO)
+    this.isTenant = userInfo.id === userInfo.tenantId? true:false
   },
   computed: {
     readOnly: function() {
@@ -113,10 +117,10 @@ export const BillModalMixin = {
               if(this.prefixNo === 'CGRK' || this.prefixNo === 'XSTH' || this.prefixNo === 'CGTH') {
                 columns[i].type = FormTypes.date //显示
               } else {
-                columns[i].type = FormTypes.input //显示
+                columns[i].type = FormTypes.normal //显示
               }
             } else {
-              columns[i].type = FormTypes.input //显示
+              columns[i].type = FormTypes.normal //显示
             }
           } else {
             columns[i].type = FormTypes.hidden //隐藏
@@ -210,6 +214,46 @@ export const BillModalMixin = {
         this.form.setFieldsValue({'changeAmount':allPrice, 'debt':debt})
       });
     },
+    addSupplier() {
+      this.$refs.vendorModalForm.add();
+      this.$refs.vendorModalForm.title = "新增供应商";
+      this.$refs.vendorModalForm.disableSubmit = false;
+    },
+    addCustomer() {
+      this.$refs.customerModalForm.add();
+      this.$refs.customerModalForm.title = "新增客户（提醒：如果找不到新添加的客户，请到用户管理检查是否分配了该客户权限）";
+      this.$refs.customerModalForm.disableSubmit = false;
+    },
+    addMember() {
+      this.$refs.memberModalForm.add();
+      this.$refs.memberModalForm.title = "新增会员";
+      this.$refs.memberModalForm.disableSubmit = false;
+    },
+    addDepot() {
+      this.$refs.depotModalForm.add();
+      this.$refs.depotModalForm.title = "新增仓库";
+      this.$refs.depotModalForm.disableSubmit = false;
+    },
+    addAccount() {
+      this.$refs.accountModalForm.add();
+      this.$refs.accountModalForm.title = "新增结算账户";
+      this.$refs.accountModalForm.disableSubmit = false;
+    },
+    vendorModalFormOk() {
+      this.initSupplier()
+    },
+    customerModalFormOk() {
+      this.initCustomer()
+    },
+    memberModalFormOk() {
+      this.initRetail()
+    },
+    depotModalFormOk() {
+      this.initDepot()
+    },
+    accountModalFormOk() {
+      this.initAccount()
+    },
     onAdded(event) {
       const { row, target } = event
       getAction('/depot/findDepotByCurrentUser').then((res) => {
@@ -272,20 +316,24 @@ export const BillModalMixin = {
                 })
               } else {
                 //单个条码
-                let mArr = []
-                for (let i = 0; i < mList.length; i++) {
-                  let mInfo = mList[i]
-                  this.changeColumnShow(mInfo)
-                  let mObj = {
-                    rowKey: row.id,
-                    values: this.parseInfoToObj(mInfo)
+                findStockByDepotAndBarCode({ depotId: row.depotId, barCode: row.barCode }).then((res) => {
+                  if (res && res.code === 200) {
+                    let mArr = []
+                    let mInfo = mList[0]
+                    this.changeColumnShow(mInfo)
+                    let mInfoEx = this.parseInfoToObj(mInfo)
+                    mInfoEx.stock = res.data.stock
+                    let mObj = {
+                      rowKey: row.id,
+                      values: mInfoEx
+                    }
+                    mArr.push(mObj)
+                    target.setValues(mArr);
+                    target.recalcAllStatisticsColumns()
+                    that.autoChangePrice(target)
+                    target.autoSelectBySpecialKey('operNumber')
                   }
-                  mArr.push(mObj)
-                }
-                target.setValues(mArr);
-                that.getStockByDepotBarCode(row, target)
-                target.recalcAllStatisticsColumns()
-                that.autoChangePrice(target)
+                })
               }
             }
           });
@@ -518,6 +566,9 @@ export const BillModalMixin = {
     },
     scanEnter() {
       this.scanStatus = false
+      this.$nextTick(() => {
+        this.$refs.scanBarCode.focus()
+      })
     },
     //扫码之后回车
     scanPressEnter() {
@@ -615,6 +666,7 @@ export const BillModalMixin = {
               }
               //置空扫码的内容
               this.scanBarCode = ''
+              this.$refs.scanBarCode.focus()
             }
           })
         })

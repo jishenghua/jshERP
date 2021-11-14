@@ -15,7 +15,7 @@
       </a-button>
     </template>
     <a-spin :spinning="confirmLoading">
-      <a-form :form="form">
+      <a-form :form="form" id="systemConfigModal">
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="公司名称">
           <a-input placeholder="请输入公司名称" v-decorator.trim="[ 'companyName', validatorRules.companyName]" />
         </a-form-item>
@@ -53,6 +53,7 @@
 <script>
   import pick from 'lodash.pick'
   import {addSystemConfig,editSystemConfig,checkSystemConfig } from '@/api/api'
+  import {autoJumpNextInput} from "@/utils/util"
   export default {
     name: "SystemConfigModal",
     data () {
@@ -110,6 +111,7 @@
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model,'companyName', 'companyContacts', 'companyAddress',
             'companyTel', 'companyFax', 'companyPostCode', 'depotFlag', 'customerFlag', 'minusStockFlag'))
+          autoJumpNextInput('systemConfigModal')
         });
         if(record.id) {
           if (record.depotFlag != null) {

@@ -117,11 +117,16 @@ public class OrganizationService {
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");
         int result=0;
-        try{
+        List <Organization> organList = organizationMapperEx.getOrganizationByParentIds(idArray);
+        if(organList!=null && organList.size()>0) {
+            //如果存在子机构则不能删除
+            logger.error("异常码[{}],异常提示[{}]",
+                    ExceptionConstants.ORGANIZATION_CHILD_NOT_ALLOWED_DELETE_CODE,ExceptionConstants.ORGANIZATION_CHILD_NOT_ALLOWED_DELETE_MSG);
+            throw new BusinessRunTimeException(ExceptionConstants.ORGANIZATION_CHILD_NOT_ALLOWED_DELETE_CODE,
+                    ExceptionConstants.ORGANIZATION_CHILD_NOT_ALLOWED_DELETE_MSG);
+        } else {
             result=organizationMapperEx.batchDeleteOrganizationByIds(
                     new Date(),userInfo==null?null:userInfo.getId(),idArray);
-        }catch(Exception e){
-            JshException.writeFail(logger, e);
         }
         return result;
     }

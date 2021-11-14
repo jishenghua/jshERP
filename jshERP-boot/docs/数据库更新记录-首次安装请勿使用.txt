@@ -1274,3 +1274,27 @@ delete from jsh_function where number='010104';
 -- 给租户表增加备注字段
 -- --------------------------------------------------------
 alter table jsh_tenant add remark varchar(500) DEFAULT NULL COMMENT '备注' after expire_time;
+
+-- --------------------------------------------------------
+-- 时间 2021年10月29日
+-- by jishenghua
+-- 给商品初始库存表增加最低库存数量、最高库存数量字段
+-- 给商品表增加基础重量字段
+-- 给商品表移除安全库存字段
+-- --------------------------------------------------------
+alter table jsh_material_initial_stock add low_safe_stock decimal(24,6) DEFAULT NULL COMMENT '最低库存数量' after number;
+alter table jsh_material_initial_stock add high_safe_stock decimal(24,6) DEFAULT NULL COMMENT '最高库存数量' after low_safe_stock;
+alter table jsh_material add weight decimal(24,6) DEFAULT NULL COMMENT '基础重量(kg)' after expiry_num;
+alter table jsh_material drop column safety_stock;
+
+-- --------------------------------------------------------
+-- 时间 2021年11月5日
+-- by jishenghua
+-- 给用户/角色/模块关系表增加租户字段
+-- 给用户/角色/模块关系表的租户字段赋值
+-- --------------------------------------------------------
+alter table jsh_user_business add tenant_id bigint(20) DEFAULT null COMMENT '租户id' after btn_str;
+update jsh_user_business ub left join jsh_user u on ub.key_id=u.id set ub.tenant_id=u.tenant_id
+where (ub.type='UserRole' or ub.type='UserDepot' or ub.type='UserCustomer') and u.tenant_id!=0;
+update jsh_user_business ub left join jsh_role r on ub.key_id=r.id set ub.tenant_id=r.tenant_id
+where (ub.type='RoleFunctions') and r.tenant_id is not null;

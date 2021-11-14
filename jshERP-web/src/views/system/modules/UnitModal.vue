@@ -15,7 +15,7 @@
       </a-button>
     </template>
     <a-spin :spinning="confirmLoading">
-      <a-form :form="form">
+      <a-form :form="form" id="unitModal">
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="基本单位">
           <a-input placeholder="请输入基本单位(小单位)" v-decorator.trim="[ 'basicUnit', validatorRules.basicUnit]" />
         </a-form-item>
@@ -36,6 +36,7 @@
 <script>
   import pick from 'lodash.pick'
   import {addUnit,editUnit,checkUnit } from '@/api/api'
+  import {autoJumpNextInput} from "@/utils/util"
   export default {
     name: "UnitModal",
     data () {
@@ -85,6 +86,7 @@
         this.visible = true;
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model,'basicUnit','otherUnit','ratio'))
+          autoJumpNextInput('unitModal')
         });
       },
       close () {

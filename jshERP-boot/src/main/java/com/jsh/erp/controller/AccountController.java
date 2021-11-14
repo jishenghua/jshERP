@@ -11,8 +11,11 @@ import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.account.AccountService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.ErpInfo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Description;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -29,6 +32,7 @@ import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
  */
 @RestController
 @RequestMapping(value = "/account")
+@Api(tags = {"账户管理"})
 public class AccountController {
     private Logger logger = LoggerFactory.getLogger(AccountController.class);
 
@@ -41,6 +45,7 @@ public class AccountController {
      * @return
      */
     @GetMapping(value = "/findBySelect")
+    @ApiOperation(value = "查找结算账户信息-下拉框")
     public String findBySelect(HttpServletRequest request) throws Exception {
         String res = null;
         try {
@@ -70,6 +75,7 @@ public class AccountController {
      * @return
      */
     @GetMapping(value = "/getAccount")
+    @ApiOperation(value = "获取所有结算账户")
     public BaseResponseInfo getAccount(HttpServletRequest request) throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
@@ -96,6 +102,7 @@ public class AccountController {
      * @return
      */
     @GetMapping(value = "/findAccountInOutList")
+    @ApiOperation(value = "账户流水信息")
     public BaseResponseInfo findAccountInOutList(@RequestParam("currentPage") Integer currentPage,
                                                  @RequestParam("pageSize") Integer pageSize,
                                                  @RequestParam("accountId") Long accountId,
@@ -130,7 +137,15 @@ public class AccountController {
         return res;
     }
 
+    /**
+     * 更新默认账户
+     * @param object
+     * @param request
+     * @return
+     * @throws Exception
+     */
     @PostMapping(value = "/updateIsDefault")
+    @ApiOperation(value = "更新默认账户")
     public String updateIsDefault(@RequestBody JSONObject object,
                                        HttpServletRequest request) throws Exception{
         Long accountId = object.getLong("id");
@@ -149,6 +164,7 @@ public class AccountController {
      * @return
      */
     @GetMapping(value = "/getStatistics")
+    @ApiOperation(value = "结算账户的统计")
     public BaseResponseInfo getStatistics(@RequestParam("name") String name,
                                           @RequestParam("serialNo") String serialNo,
                                           HttpServletRequest request) throws Exception {

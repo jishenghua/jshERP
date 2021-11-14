@@ -11,6 +11,8 @@ import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.service.userBusiness.UserBusinessService;
 import com.jsh.erp.utils.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import jxl.Sheet;
 import jxl.Workbook;
 import org.slf4j.Logger;
@@ -37,6 +39,7 @@ import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
  */
 @RestController
 @RequestMapping(value = "/supplier")
+@Api(tags = {"商家管理"})
 public class SupplierController {
     private Logger logger = LoggerFactory.getLogger(SupplierController.class);
 
@@ -58,6 +61,7 @@ public class SupplierController {
      * @return
      */
     @PostMapping(value = "/findBySelect_cus")
+    @ApiOperation(value = "查找客户信息")
     public JSONArray findBySelectCus(HttpServletRequest request) {
         JSONArray arr = new JSONArray();
         try {
@@ -92,6 +96,7 @@ public class SupplierController {
      * @return
      */
     @PostMapping(value = "/findBySelect_sup")
+    @ApiOperation(value = "查找供应商信息")
     public JSONArray findBySelectSup(HttpServletRequest request) throws Exception{
         JSONArray arr = new JSONArray();
         try {
@@ -114,11 +119,57 @@ public class SupplierController {
     }
 
     /**
+     * 查找往来单位，含供应商和客户信息-下拉框
+     * @param request
+     * @return
+     */
+    @PostMapping(value = "/findBySelect_organ")
+    @ApiOperation(value = "查找往来单位，含供应商和客户信息")
+    public JSONArray findBySelectOrgan(HttpServletRequest request) throws Exception{
+        JSONArray arr = new JSONArray();
+        try {
+            JSONArray dataArray = new JSONArray();
+            //1、获取供应商信息
+            List<Supplier> supplierList = supplierService.findBySelectSup();
+            if (null != supplierList) {
+                for (Supplier supplier : supplierList) {
+                    JSONObject item = new JSONObject();
+                    item.put("id", supplier.getId());
+                    item.put("supplier", supplier.getSupplier()); //供应商名称
+                    dataArray.add(item);
+                }
+            }
+            //2、获取客户信息
+            String type = "UserCustomer";
+            Long userId = userService.getUserId(request);
+            String ubValue = userBusinessService.getUBValueByTypeAndKeyId(type, userId.toString());
+            List<Supplier> customerList = supplierService.findBySelectCus();
+            if (null != customerList) {
+                boolean customerFlag = systemConfigService.getCustomerFlag();
+                for (Supplier supplier : customerList) {
+                    JSONObject item = new JSONObject();
+                    Boolean flag = ubValue.contains("[" + supplier.getId().toString() + "]");
+                    if (!customerFlag || flag) {
+                        item.put("id", supplier.getId());
+                        item.put("supplier", supplier.getSupplier()); //客户名称
+                        dataArray.add(item);
+                    }
+                }
+            }
+            arr = dataArray;
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        return arr;
+    }
+
+    /**
      * 查找会员信息-下拉框
      * @param request
      * @return
      */
     @PostMapping(value = "/findBySelect_retail")
+    @ApiOperation(value = "查找会员信息")
     public JSONArray findBySelectRetail(HttpServletRequest request)throws Exception {
         JSONArray arr = new JSONArray();
         try {
@@ -148,6 +199,7 @@ public class SupplierController {
      * @return
      */
     @PostMapping(value = "/batchSetStatus")
+    @ApiOperation(value = "批量设置状态")
     public String batchSetStatus(@RequestBody JSONObject jsonObject,
                                  HttpServletRequest request)throws Exception {
         Boolean status = jsonObject.getBoolean("status");
@@ -169,6 +221,7 @@ public class SupplierController {
      * @return
      */
     @GetMapping(value = "/findUserCustomer")
+    @ApiOperation(value = "用户对应客户显示")
     public JSONArray findUserCustomer(@RequestParam("UBType") String type, @RequestParam("UBKeyId") String keyId,
                                    HttpServletRequest request) throws Exception{
         JSONArray arr = new JSONArray();
@@ -216,6 +269,7 @@ public class SupplierController {
      * @return
      */
     @PostMapping(value = "/importExcel")
+    @ApiOperation(value = "导入excel表格")
     public BaseResponseInfo importExcel(MultipartFile file,
                             HttpServletRequest request, HttpServletResponse response) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();

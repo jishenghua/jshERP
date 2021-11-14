@@ -155,7 +155,7 @@
         },
         // 表头
         columns: [
-          { title: '供应商', dataIndex: 'organName',width:140, ellipsis:true},
+          { title: '往来单位', dataIndex: 'organName',width:140, ellipsis:true},
           { title: '财务人员', dataIndex: 'handsPersonName',width:140},
           { title: '单据编号', dataIndex: 'billNo',width:160},
           { title: '单据日期 ', dataIndex: 'billTimeStr',width:160},

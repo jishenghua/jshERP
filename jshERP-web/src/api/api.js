@@ -95,6 +95,7 @@ const checkSupplier = (params)=>getAction("/supplier/checkIsNameExist",params);
 const findBySelectSup = (params)=>postAction("/supplier/findBySelect_sup",params);
 const findBySelectCus = (params)=>postAction("/supplier/findBySelect_cus",params);
 const findBySelectRetail = (params)=>postAction("/supplier/findBySelect_retail",params);
+const findBySelectOrgan = (params)=>postAction("/supplier/findBySelect_organ",params);
 //单据相关
 const findBillDetailByNumber = (params)=>getAction("/depotHead/getDetailByNumber",params);
 const findStockByDepotAndBarCode = (params)=>getAction("/depotItem/findStockByDepotAndBarCode",params);
@@ -177,6 +178,7 @@ export {
   findBySelectSup,
   findBySelectCus,
   findBySelectRetail,
+  findBySelectOrgan,
   findBillDetailByNumber,
   findStockByDepotAndBarCode,
   getBatchNumberList,

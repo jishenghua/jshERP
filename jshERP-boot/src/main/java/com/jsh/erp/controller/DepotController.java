@@ -6,6 +6,8 @@ import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.Depot;
 import com.jsh.erp.datasource.entities.DepotEx;
+import com.jsh.erp.datasource.entities.MaterialCurrentStock;
+import com.jsh.erp.datasource.entities.MaterialInitialStock;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.depot.DepotService;
 import com.jsh.erp.service.material.MaterialService;
@@ -13,6 +15,8 @@ import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.service.userBusiness.UserBusinessService;
 import com.jsh.erp.utils.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -31,6 +35,7 @@ import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
  */
 @RestController
 @RequestMapping(value = "/depot")
+@Api(tags = {"仓库管理"})
 public class DepotController {
     private Logger logger = LoggerFactory.getLogger(DepotController.class);
 
@@ -43,7 +48,14 @@ public class DepotController {
     @Resource
     private MaterialService materialService;
 
+    /**
+     * 仓库列表
+     * @param request
+     * @return
+     * @throws Exception
+     */
     @GetMapping(value = "/getAllList")
+    @ApiOperation(value = "仓库列表")
     public BaseResponseInfo getAllList(HttpServletRequest request) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();
         try {
@@ -66,6 +78,7 @@ public class DepotController {
      * @return
      */
     @GetMapping(value = "/findUserDepot")
+    @ApiOperation(value = "用户对应仓库显示")
     public JSONArray findUserDepot(@RequestParam("UBType") String type, @RequestParam("UBKeyId") String keyId,
                                  HttpServletRequest request) throws Exception{
         JSONArray arr = new JSONArray();
@@ -112,6 +125,7 @@ public class DepotController {
      * @throws Exception
      */
     @GetMapping(value = "/findDepotByCurrentUser")
+    @ApiOperation(value = "获取当前用户拥有权限的仓库列表")
     public BaseResponseInfo findDepotByCurrentUser(HttpServletRequest request) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();
         try {
@@ -126,7 +140,15 @@ public class DepotController {
         return res;
     }
 
+    /**
+     * 更新默认仓库
+     * @param object
+     * @param request
+     * @return
+     * @throws Exception
+     */
     @PostMapping(value = "/updateIsDefault")
+    @ApiOperation(value = "更新默认仓库")
     public String updateIsDefault(@RequestBody JSONObject object,
                                        HttpServletRequest request) throws Exception{
         Long depotId = object.getLong("id");
@@ -139,7 +161,14 @@ public class DepotController {
         }
     }
 
+    /**
+     * 仓库列表-带库存
+     * @param mId
+     * @param request
+     * @return
+     */
     @GetMapping(value = "/getAllListWithStock")
+    @ApiOperation(value = "仓库列表-带库存")
     public BaseResponseInfo getAllList(@RequestParam("mId") Long mId,
                                        HttpServletRequest request) {
         BaseResponseInfo res = new BaseResponseInfo();
@@ -153,6 +182,9 @@ public class DepotController {
                     BigDecimal currentStock = materialService.getCurrentStock(mId, depot.getId());
                     de.setInitStock(initStock);
                     de.setCurrentStock(currentStock);
+                    MaterialInitialStock materialInitialStock = materialService.getSafeStock(mId, depot.getId());
+                    de.setLowSafeStock(materialInitialStock.getLowSafeStock());
+                    de.setHighSafeStock(materialInitialStock.getHighSafeStock());
                 } else {
                     de.setInitStock(BigDecimal.ZERO);
                     de.setCurrentStock(BigDecimal.ZERO);

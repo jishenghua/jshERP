@@ -385,27 +385,31 @@ export const JeecgListMixin = {
         //分页条数为11、21、31等的时候增加合计行
         let numKey = 'rowIndex'
         let totalRow = { [numKey]: '合计' }
-        //移除不需要合计的列
-        let removeCols = 'action,mBarCode,barCode,serialNo,unitPrice,purchaseDecimal,operTime,oTime'
+        //需要合计的列
+        let parseCols = 'initialStock,currentStock,currentStockPrice,initialAmount,thisMonthAmount,currentAmount,inSum,inSumPrice,' +
+          'outSum,outSumPrice,outInSumPrice,operNumber,allPrice,numSum,priceSum,prevSum,thisSum,thisAllPrice,billMoney,changeAmount,' +
+          'allPrice,currentNumber,lowSafeStock,highSafeStock,lowCritical,highCritical'
         columns.forEach(column => {
           let { key, dataIndex } = column
           if (![key, dataIndex].includes(numKey)) {
             let total = 0
             dataSource.forEach(data => {
-              total += Number.parseFloat(data[dataIndex])
+              if(parseCols.indexOf(dataIndex)>-1) {
+                total += Number.parseFloat(data[dataIndex])
+              } else {
+                total = '-'
+              }
             })
-            if (Number.isNaN(total)) {
-              total = '-'
-            } else {
+            if (total !== '-') {
               total = total.toFixed(2)
-            }
-            if(removeCols.indexOf(dataIndex)>-1) {
-              total = '-'
             }
             totalRow[dataIndex] = total
           }
         })
         dataSource.push(totalRow)
+        //总数要增加合计的行数，每页都有一行合计，所以总数要加上
+        let size = Math.ceil(this.ipagination.total/this.ipagination.pageSize)
+        this.ipagination.total = this.ipagination.total + size
       }
     },
     paginationChange(page, pageSize) {

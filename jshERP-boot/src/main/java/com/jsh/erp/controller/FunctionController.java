@@ -12,6 +12,8 @@ import com.jsh.erp.service.userBusiness.UserBusinessService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.StringUtil;
 import com.jsh.erp.utils.Tools;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -29,6 +31,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping(value = "/function")
+@Api(tags = {"功能管理"})
 public class FunctionController {
     private Logger logger = LoggerFactory.getLogger(FunctionController.class);
 
@@ -38,7 +41,15 @@ public class FunctionController {
     @Resource
     private UserBusinessService userBusinessService;
 
+    /**
+     * 根据父编号查询菜单
+     * @param jsonObject
+     * @param request
+     * @return
+     * @throws Exception
+     */
     @PostMapping(value = "/findMenuByPNumber")
+    @ApiOperation(value = "根据父编号查询菜单")
     public JSONArray findMenuByPNumber(@RequestBody JSONObject jsonObject,
                               HttpServletRequest request)throws Exception {
         String pNumber = jsonObject.getString("pNumber");
@@ -110,6 +121,7 @@ public class FunctionController {
      * @return
      */
     @GetMapping(value = "/findRoleFunction")
+    @ApiOperation(value = "角色对应功能显示")
     public JSONArray findRoleFunction(@RequestParam("UBType") String type, @RequestParam("UBKeyId") String keyId,
                                  HttpServletRequest request)throws Exception {
         JSONArray arr = new JSONArray();
@@ -183,6 +195,7 @@ public class FunctionController {
      * @return
      */
     @GetMapping(value = "/findRoleFunctionsById")
+    @ApiOperation(value = "根据id列表查找功能信息")
     public BaseResponseInfo findByIds(@RequestParam("roleId") Long roleId,
                                       HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();

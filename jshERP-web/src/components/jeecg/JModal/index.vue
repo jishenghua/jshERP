@@ -17,8 +17,13 @@
         <a-col class="left">
           <slot name="title">{{ title }}</slot>
         </a-col>
-        <a-col v-if="switchFullscreen" class="right" @click="toggleFullscreen">
-          <a-button class="ant-modal-close ant-modal-close-x" ghost type="link" :icon="fullscreenButtonIcon"/>
+        <a-col class="right">
+          <a-tooltip title="新手引导">
+            <a-button v-if="switchHelp" @click="handleHelp" style="right:112px;" class="ant-modal-close ant-modal-close-x"
+                      ghost type="link" icon="question-circle"/>
+          </a-tooltip>
+          <a-button v-if="switchFullscreen" @click="toggleFullscreen" class="ant-modal-close ant-modal-close-x"
+                    ghost type="link" :icon="fullscreenButtonIcon"/>
         </a-col>
       </a-row>
     </template>
@@ -39,6 +44,8 @@
 <script>
 
   import { getClass, getStyle } from '@/utils/props-util'
+  import { triggerWindowResizeEvent, handleIntroJs } from "@/utils/util"
+  import Vue from 'vue'
 
   export default {
     name: 'JModal',
@@ -46,8 +53,15 @@
       title: String,
       // 可使用 .sync 修饰符
       visible: Boolean,
+      // 前缀代号
+      prefixNo: String,
       // 是否全屏弹窗，当全屏时无论如何都会禁止 body 滚动。可使用 .sync 修饰符
       fullscreen: {
+        type: Boolean,
+        default: false
+      },
+      // 是否允许展示新手引导（允许后右上角会出现一个按钮）
+      switchHelp: {
         type: Boolean,
         default: false
       },
@@ -148,9 +162,17 @@
         this.close()
       },
 
+      /** 新手引导 */
+      handleHelp() {
+        let element = 'intro_cache_' + this.prefixNo
+        Vue.ls.remove(element)
+        handleIntroJs(this.prefixNo, 1)
+      },
+
       /** 切换全屏 */
       toggleFullscreen() {
         this.innerFullscreen = !this.innerFullscreen
+        triggerWindowResizeEvent()
       },
 
     }

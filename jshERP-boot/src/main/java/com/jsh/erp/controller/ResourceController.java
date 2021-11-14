@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.service.CommonQueryManager;
 import com.jsh.erp.utils.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -21,12 +23,14 @@ import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
  * by jishenghua 2018-9-12 23:58:10 华夏erp
  */
 @RestController
+@Api(tags = {"资源接口"})
 public class ResourceController {
 
     @Resource
     private CommonQueryManager configResourceManager;
 
     @GetMapping(value = "/{apiName}/info")
+    @ApiOperation(value = "根据id获取信息")
     public String getList(@PathVariable("apiName") String apiName,
                           @RequestParam("id") Long id,
                           HttpServletRequest request) throws Exception {
@@ -41,6 +45,7 @@ public class ResourceController {
     }
 
     @GetMapping(value = "/{apiName}/list")
+    @ApiOperation(value = "获取信息列表")
     public String getList(@PathVariable("apiName") String apiName,
                         @RequestParam(value = Constants.PAGE_SIZE, required = false) Integer pageSize,
                         @RequestParam(value = Constants.CURRENT_PAGE, required = false) Integer currentPage,
@@ -69,6 +74,7 @@ public class ResourceController {
     }
 
     @PostMapping(value = "/{apiName}/add", produces = {"application/javascript", "application/json"})
+    @ApiOperation(value = "新增")
     public String addResource(@PathVariable("apiName") String apiName,
                               @RequestBody JSONObject obj, HttpServletRequest request)throws Exception {
         Map<String, Object> objectMap = new HashMap<String, Object>();
@@ -83,6 +89,7 @@ public class ResourceController {
     }
 
     @PutMapping(value = "/{apiName}/update", produces = {"application/javascript", "application/json"})
+    @ApiOperation(value = "修改")
     public String updateResource(@PathVariable("apiName") String apiName,
                                  @RequestBody JSONObject obj, HttpServletRequest request)throws Exception {
         Map<String, Object> objectMap = new HashMap<String, Object>();
@@ -97,6 +104,7 @@ public class ResourceController {
     }
 
     @DeleteMapping(value = "/{apiName}/delete", produces = {"application/javascript", "application/json"})
+    @ApiOperation(value = "删除")
     public String deleteResource(@PathVariable("apiName") String apiName,
                                  @RequestParam("id") Long id, HttpServletRequest request)throws Exception {
         Map<String, Object> objectMap = new HashMap<String, Object>();
@@ -111,6 +119,7 @@ public class ResourceController {
     }
 
     @DeleteMapping(value = "/{apiName}/deleteBatch", produces = {"application/javascript", "application/json"})
+    @ApiOperation(value = "批量删除")
     public String batchDeleteResource(@PathVariable("apiName") String apiName,
                                       @RequestParam("ids") String ids, HttpServletRequest request)throws Exception {
         Map<String, Object> objectMap = new HashMap<String, Object>();
@@ -125,6 +134,7 @@ public class ResourceController {
     }
 
     @GetMapping(value = "/{apiName}/checkIsNameExist")
+    @ApiOperation(value = "检查名称是否存在")
     public String checkIsNameExist(@PathVariable("apiName") String apiName,
                                    @RequestParam Long id, @RequestParam(value ="name", required = false) String name,
                                    HttpServletRequest request)throws Exception {

@@ -11,7 +11,7 @@
     cancelText="关闭">
 
     <a-spin :spinning="confirmLoading">
-      <a-form :form="form">
+      <a-form :form="form" id="organizationModal">
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="名称">
           <a-input placeholder="请输入名称" v-decorator="['orgAbr', validatorRules.orgAbr ]"/>
         </a-form-item>
@@ -38,6 +38,7 @@
 <script>
   import { httpAction } from '@/api/manage'
   import { queryOrganizationTreeList, checkOrganization } from '@/api/api'
+  import {autoJumpNextInput} from "@/utils/util"
   import pick from 'lodash.pick'
   import ATextarea from 'ant-design-vue/es/input/TextArea'
   export default {
@@ -107,6 +108,7 @@
         this.loadTreeData();
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(record, 'orgAbr', 'orgNo', 'parentId', 'sort', 'remark'))
+          autoJumpNextInput('organizationModal')
         });
       },
       close () {

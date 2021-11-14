@@ -16,10 +16,10 @@
       <a-form :form="form">
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="供应商">
-              <a-select placeholder="选择供应商" v-decorator="[ 'organId', validatorRules.organId ]"
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="往来单位">
+              <a-select placeholder="选择往来单位" v-decorator="[ 'organId', validatorRules.organId ]"
                 :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
-                <a-select-option v-for="(item,index) in supList" :key="index" :value="item.id">
+                <a-select-option v-for="(item,index) in organList" :key="index" :value="item.id">
                   {{ item.supplier }}
                 </a-select-option>
               </a-select>
@@ -29,6 +29,12 @@
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="财务人员">
               <a-select placeholder="选择财务人员" v-decorator="[ 'handsPersonId', validatorRules.handsPersonId ]"
                 :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
+                <div slot="dropdownRender" slot-scope="menu">
+                  <v-nodes :vnodes="menu" />
+                  <a-divider style="margin: 4px 0;" />
+                  <div v-if="isTenant" style="padding: 4px 8px; cursor: pointer;"
+                       @mousedown="e => e.preventDefault()" @click="addPerson"><a-icon type="plus" /> 新增经手人</div>
+                </div>
                 <a-select-option v-for="(item,index) in personList" :key="index" :value="item.id">
                   {{ item.name }}
                 </a-select-option>
@@ -68,6 +74,12 @@
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="支出账户">
               <a-select placeholder="选择支出账户" v-decorator="[ 'accountId', validatorRules.accountId ]"
                 :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
+                <div slot="dropdownRender" slot-scope="menu">
+                  <v-nodes :vnodes="menu" />
+                  <a-divider style="margin: 4px 0;" />
+                  <div v-if="isTenant" style="padding: 4px 8px; cursor: pointer;"
+                       @mousedown="e => e.preventDefault()" @click="addAccount"><a-icon type="plus" /> 新增结算账户</div>
+                </div>
                 <a-select-option v-for="(item,index) in accountList" :key="index" :value="item.id">
                   {{ item.name }}
                 </a-select-option>
@@ -93,10 +105,14 @@
         </a-row>
       </a-form>
     </a-spin>
+    <account-modal ref="accountModalForm" @ok="accountModalFormOk"></account-modal>
+    <person-modal ref="personModalForm" @ok="personModalFormOk"></person-modal>
   </j-modal>
 </template>
 <script>
   import pick from 'lodash.pick'
+  import AccountModal from '../../system/modules/AccountModal'
+  import PersonModal from '../../system/modules/PersonModal'
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { FinancialModalMixin } from '../mixins/FinancialModalMixin'
@@ -106,8 +122,14 @@
     name: "ItemOutModal",
     mixins: [JEditableTableMixin, FinancialModalMixin],
     components: {
+      AccountModal,
+      PersonModal,
       JUpload,
-      JDate
+      JDate,
+      VNodes: {
+        functional: true,
+        render: (h, ctx) => ctx.props.vnodes,
+      }
     },
     data () {
       return {
@@ -199,7 +221,7 @@
           let url = this.readOnly ? this.url.detailList : this.url.detailList;
           this.requestSubTableData(url, params, this.accountTable);
         }
-        this.initSupplier()
+        this.initOrgan()
         this.initPerson()
         this.initInOutItem('out')
         this.initAccount()

@@ -411,7 +411,7 @@ public class UserService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public void addUserAndOrgUserRel(UserEx ue) throws Exception{
+    public void addUserAndOrgUserRel(UserEx ue, HttpServletRequest request) throws Exception{
         if(BusinessConstants.DEFAULT_MANAGER.equals(ue.getLoginName())) {
             throw new BusinessRunTimeException(ExceptionConstants.USER_NAME_LIMIT_USE_CODE,
                     ExceptionConstants.USER_NAME_LIMIT_USE_MSG);
@@ -436,7 +436,7 @@ public class UserService {
                 ubObj.put("type", "UserRole");
                 ubObj.put("keyid", userId);
                 ubObj.put("value", "[" + ue.getRoleId() + "]");
-                userBusinessService.insertUserBusiness(ubObj, null);
+                userBusinessService.insertUserBusiness(ubObj, request);
             }
             if(ue.getOrgaId()==null){
                 //如果没有选择机构，就不建机构和用户的关联关系
@@ -522,7 +522,8 @@ public class UserService {
             JSONArray ubArr = new JSONArray();
             ubArr.add(manageRoleId);
             ubObj.put("value", ubArr.toString());
-            userBusinessService.insertUserBusiness(ubObj, ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+            ubObj.put("tenantId", ue.getId());
+            userBusinessService.insertUserBusiness(ubObj, null);
             //创建租户信息
             JSONObject tenantObj = new JSONObject();
             tenantObj.put("tenantId", ue.getId());
@@ -551,7 +552,7 @@ public class UserService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public void updateUserAndOrgUserRel(UserEx ue) throws Exception{
+    public void updateUserAndOrgUserRel(UserEx ue, HttpServletRequest request) throws Exception{
         if(BusinessConstants.DEFAULT_MANAGER.equals(ue.getLoginName())) {
             throw new BusinessRunTimeException(ExceptionConstants.USER_NAME_LIMIT_USE_CODE,
                     ExceptionConstants.USER_NAME_LIMIT_USE_MSG);
@@ -583,9 +584,9 @@ public class UserService {
                 Long ubId = userBusinessService.checkIsValueExist("UserRole", ue.getId().toString());
                 if(ubId!=null) {
                     ubObj.put("id", ubId);
-                    userBusinessService.updateUserBusiness(ubObj, null);
+                    userBusinessService.updateUserBusiness(ubObj, request);
                 } else {
-                    userBusinessService.insertUserBusiness(ubObj, null);
+                    userBusinessService.insertUserBusiness(ubObj, request);
                 }
             }
             if (ue.getOrgaId() == null) {

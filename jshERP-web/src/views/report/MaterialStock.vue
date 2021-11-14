@@ -7,7 +7,7 @@
         <div class="table-page-search-wrapper">
           <a-form layout="inline" @keyup.enter.native="searchQuery">
             <a-row :gutter="24">
-              <a-col :md="4" :sm="24">
+              <a-col :md="3" :sm="24">
                 <a-form-item label="仓库" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-select
                     showSearch optionFilterProp="children"
@@ -20,7 +20,7 @@
                   </a-select>
                 </a-form-item>
               </a-col>
-              <a-col :md="4" :sm="24">
+              <a-col :md="3" :sm="24">
                 <a-form-item label="类别" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-tree-select style="width:100%" :dropdownStyle="{maxHeight:'200px',overflow:'auto'}" allow-clear
                        :treeData="categoryTree" v-model="queryParam.categoryId" placeholder="请选择类别">
@@ -32,21 +32,24 @@
                   <a-input placeholder="条码/名称/规格/型号" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
-              <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-                <a-col :md="4" :sm="24">
+              <a-col :md="3" :sm="24">
+                <a-form-item label="零库存" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-select v-model="queryParam.zeroStock">
+                    <a-select-option value="0">隐藏</a-select-option>
+                    <a-select-option value="1">显示</a-select-option>
+                  </a-select>
+                </a-form-item>
+              </a-col>
+              <a-col :md="5" :sm="24">
+                <span class="table-page-search-submitButtons">
                   <a-button type="primary" @click="searchQuery">查询</a-button>
                   <a-button style="margin-left: 8px" v-print="'#reportPrint'" icon="printer">打印</a-button>
                   <a-button style="margin-left: 8px" @click="exportExcel" icon="download">导出</a-button>
-                </a-col>
-              </span>
-              <a-col :md="3" :sm="24">
-                <a-form-item label="当前总库存" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  {{currentStock}}
-                </a-form-item>
+                </span>
               </a-col>
-              <a-col :md="3" :sm="24">
-                <a-form-item label="当前总库存金额" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  {{currentStockPrice}}
+              <a-col :md="6" :sm="24">
+                <a-form-item>
+                  <span>当前总库存：{{currentStock}}，当前总库存金额：{{currentStockPrice}}</span>
                 </a-form-item>
               </a-col>
             </a-row>
@@ -75,10 +78,11 @@
                 size="small"
                 show-size-changer
                 :showQuickJumper="true"
+                :current="ipagination.current"
                 :page-size="ipagination.pageSize"
                 :page-size-options="ipagination.pageSizeOptions"
                 :total="ipagination.total"
-                :show-total="(total, range) => `共 ${total} 条`">
+                :show-total="(total, range) => `共 ${total-Math.ceil(total/ipagination.pageSize)} 条`">
                 <template slot="buildOptionText" slot-scope="props">
                   <span>{{ props.value-1 }}条/页</span>
                 </template>
@@ -122,6 +126,7 @@
           depotId:'',
           categoryId:'',
           materialParam:'',
+          zeroStock: '0',
           mpList: getMpListShort(Vue.ls.get('materialPropertyList'))  //扩展属性
         },
         ipagination:{

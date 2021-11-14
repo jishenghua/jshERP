@@ -14,6 +14,8 @@ import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.service.redis.RedisService;
 import com.jsh.erp.service.unit.UnitService;
 import com.jsh.erp.utils.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +37,7 @@ import static com.jsh.erp.utils.Tools.getCenternTime;
  */
 @RestController
 @RequestMapping(value = "/depotItem")
+@Api(tags = {"单据明细"})
 public class DepotItemController {
     private Logger logger = LoggerFactory.getLogger(DepotItemController.class);
 
@@ -60,6 +63,7 @@ public class DepotItemController {
      * @return
      */
     @GetMapping(value = "/findDetailByTypeAndMaterialId")
+    @ApiOperation(value = "只根据商品id查询单据列表")
     public String findDetailByTypeAndMaterialId(
             @RequestParam(value = Constants.PAGE_SIZE, required = false) Integer pageSize,
             @RequestParam(value = Constants.CURRENT_PAGE, required = false) Integer currentPage,
@@ -114,6 +118,7 @@ public class DepotItemController {
      * @throws Exception
      */
     @GetMapping(value = "/findStockByDepotAndBarCode")
+    @ApiOperation(value = "根据商品条码和仓库id查询库存数量")
     public BaseResponseInfo findStockByDepotAndBarCode(
             @RequestParam("depotId") Long depotId,
             @RequestParam("barCode") String barCode,
@@ -154,7 +159,16 @@ public class DepotItemController {
         return res;
     }
 
+    /**
+     * 单据明细列表
+     * @param headerId
+     * @param mpList
+     * @param request
+     * @return
+     * @throws Exception
+     */
     @GetMapping(value = "/getDetailList")
+    @ApiOperation(value = "单据明细列表")
     public BaseResponseInfo getDetailList(@RequestParam("headerId") Long headerId,
                               @RequestParam("mpList") String mpList,
                               HttpServletRequest request)throws Exception {
@@ -272,6 +286,7 @@ public class DepotItemController {
      * @throws Exception
      */
     @GetMapping(value = "/findByAll")
+    @ApiOperation(value = "查找所有的明细")
     public BaseResponseInfo findByAll(@RequestParam("currentPage") Integer currentPage,
                                       @RequestParam("pageSize") Integer pageSize,
                                       @RequestParam("depotId") Long depotId,
@@ -346,6 +361,7 @@ public class DepotItemController {
      * @return
      */
     @GetMapping(value = "/totalCountMoney")
+    @ApiOperation(value = "统计总计金额")
     public BaseResponseInfo totalCountMoney(@RequestParam("depotId") Long depotId,
                                             @RequestParam("monthTime") String monthTime,
                                             @RequestParam("materialParam") String materialParam,
@@ -390,6 +406,7 @@ public class DepotItemController {
      * @return
      */
     @GetMapping(value = "/buyIn")
+    @ApiOperation(value = "进货统计")
     public BaseResponseInfo buyIn(@RequestParam("currentPage") Integer currentPage,
                                   @RequestParam("pageSize") Integer pageSize,
                                   @RequestParam("monthTime") String monthTime,
@@ -453,6 +470,7 @@ public class DepotItemController {
      * @return
      */
     @GetMapping(value = "/saleOut")
+    @ApiOperation(value = "销售统计")
     public BaseResponseInfo saleOut(@RequestParam("currentPage") Integer currentPage,
                                   @RequestParam("pageSize") Integer pageSize,
                                   @RequestParam("monthTime") String monthTime,
@@ -534,6 +552,7 @@ public class DepotItemController {
      * @return
      */
     @GetMapping(value = "/findStockWarningCount")
+    @ApiOperation(value = "库存预警报表")
     public BaseResponseInfo findStockWarningCount(@RequestParam("currentPage") Integer currentPage,
                                                   @RequestParam("pageSize") Integer pageSize,
                                                   @RequestParam("materialParam") String materialParam,
@@ -554,6 +573,14 @@ public class DepotItemController {
                     diEx.setMOtherField3(disw.getMOtherField3());
                     disw.setMaterialOther(getOtherInfo(mpArr, diEx));
                     disw.setMaterialUnit(getUName(disw.getMaterialUnit(), disw.getUnitName()));
+                    if(disw.getCurrentNumber().compareTo(disw.getLowSafeStock())<0) {
+                        disw.setLowCritical(disw.getLowSafeStock().subtract(disw.getCurrentNumber()));
+                        disw.setHighCritical(BigDecimal.ZERO);
+                    }
+                    if(disw.getCurrentNumber().compareTo(disw.getHighSafeStock())>0) {
+                        disw.setLowCritical(BigDecimal.ZERO);
+                        disw.setHighCritical(disw.getCurrentNumber().subtract(disw.getHighSafeStock()));
+                    }
                 }
             }
             int total = depotItemService.findStockWarningCountTotal(materialParam,depotId);
@@ -570,13 +597,14 @@ public class DepotItemController {
     }
 
     /**
-     * 统计采购或销售的总金额
+     * 统计采购、销售、零售的总金额
      * @param request
      * @param response
      * @return
      * @throws Exception
      */
     @GetMapping(value = "/buyOrSalePrice")
+    @ApiOperation(value = "统计采购、销售、零售的总金额")
     public BaseResponseInfo buyOrSalePrice(HttpServletRequest request, HttpServletResponse response)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
@@ -603,6 +631,16 @@ public class DepotItemController {
                 salePriceList.add(obj);
             }
             map.put("salePriceList", salePriceList);
+            JSONArray retailPriceList = new JSONArray();
+            for(String month: list) {
+                JSONObject obj = new JSONObject();
+                BigDecimal outPrice = depotItemService.inOrOutRetailPrice("出库", "零售", month);
+                BigDecimal inPrice = depotItemService.inOrOutRetailPrice("入库", "零售退货", month);
+                obj.put("x", month);
+                obj.put("y", outPrice.subtract(inPrice));
+                retailPriceList.add(obj);
+            }
+            map.put("retailPriceList", retailPriceList);
             res.code = 200;
             res.data = map;
         } catch (Exception e) {
@@ -619,6 +657,7 @@ public class DepotItemController {
      * @return
      */
     @GetMapping(value = "/getBatchNumberList")
+    @ApiOperation(value = "获取批次商品列表信息")
     public BaseResponseInfo getBatchNumberList(@RequestParam("name") String name,
                                                @RequestParam("depotId") Long depotId,
                                                @RequestParam("barCode") String barCode,

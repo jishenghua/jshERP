@@ -60,6 +60,17 @@
       #{parentId,jdbcType=BIGINT}, #{sort,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
     </insert>
+    <select id="getOrganizationByParentIds" resultMap="com.jsh.erp.datasource.mappers.OrganizationMapper.BaseResultMap">
+        select * from  jsh_organization
+        where
+        1=1
+        and ifnull(delete_flag,'0') !='1'
+        and parent_id in (
+        <foreach collection="ids" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </select>
     <update id="batchDeleteOrganizationByIds">
         update jsh_organization
         set update_Time=#{updateTime},delete_flag='1'

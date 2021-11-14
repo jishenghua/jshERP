@@ -89,10 +89,10 @@
       }
     },
     created () {
-      this.initAccount()
     },
     methods: {
       edit (idStr, moneyStr) {
+        this.initAccount()
         this.form.resetFields();
         this.model = Object.assign({}, {});
         let idList = [], moneyList = []

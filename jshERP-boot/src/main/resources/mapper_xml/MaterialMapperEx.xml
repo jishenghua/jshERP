@@ -143,7 +143,7 @@
             </foreach>
         </if>
         and ifnull(m.delete_flag,'0') !='1'
-        ORDER BY me.id desc
+        ORDER BY m.id desc,me.default_flag desc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
         </if>
@@ -367,6 +367,9 @@
         </if>
         and ifnull(m.delete_flag,'0') !='1'
         group by m.id
+        <if test="zeroStock == 0">
+            having currentStock!=0
+        </if>
         <if test="column == 'createTime'">
             order by m.id desc
         </if>
@@ -380,7 +383,7 @@
 
     <select id="getListWithStockCount" resultType="java.lang.Integer">
         select count(tb.id) from
-        (select m.id from jsh_material m
+        (select m.id, ifnull(sum(mcs.current_number),0) currentStock from jsh_material m
         left JOIN jsh_material_extend me on m.id = me.material_id and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_material_current_stock mcs on m.id = mcs.material_id and ifnull(mcs.delete_flag,'0') !='1'
         left JOIN jsh_unit u on m.unit_id = u.id and ifnull(u.delete_Flag,'0') !='1'
@@ -401,7 +404,11 @@
             and (me.bar_code like #{bindParam} or m.name like #{bindParam} or m.standard like #{bindParam} or m.model like #{bindParam})
         </if>
         and ifnull(m.delete_flag,'0') !='1'
-        group by m.id) tb
+        group by m.id
+        <if test="zeroStock == 0">
+            having currentStock!=0
+        </if>
+        ) tb
     </select>
 
     <select id="getTotalStockAndPrice" resultType="com.jsh.erp.datasource.entities.MaterialVo4Unit">

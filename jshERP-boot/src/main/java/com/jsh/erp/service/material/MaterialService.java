@@ -182,9 +182,17 @@ public class MaterialService {
                     JSONObject jsonObj = stockArr.getJSONObject(i);
                     if(jsonObj.get("id")!=null && jsonObj.get("initStock")!=null) {
                         String number = jsonObj.getString("initStock");
+                        BigDecimal lowSafeStock = null;
+                        BigDecimal highSafeStock = null;
+                        if(jsonObj.get("lowSafeStock")!=null) {
+                            lowSafeStock = jsonObj.getBigDecimal("lowSafeStock");
+                        }
+                        if(jsonObj.get("highSafeStock")!=null) {
+                            highSafeStock = jsonObj.getBigDecimal("highSafeStock");
+                        }
                         Long depotId = jsonObj.getLong("id");
-                        if(StringUtil.isNotEmpty(number) && Double.valueOf(number)>0) {
-                            insertInitialStockByMaterialAndDepot(depotId, mId, parseBigDecimalEx(number));
+                        if(StringUtil.isNotEmpty(number) && Double.valueOf(number)>0 || lowSafeStock!=null || highSafeStock!=null) {
+                            insertInitialStockByMaterialAndDepot(depotId, mId, parseBigDecimalEx(number), lowSafeStock, highSafeStock);
                             insertCurrentStockByMaterialAndDepot(depotId, mId, parseBigDecimalEx(number));
                         }
                     }
@@ -221,13 +229,21 @@ public class MaterialService {
                     JSONObject jsonObj = stockArr.getJSONObject(i);
                     if (jsonObj.get("id") != null && jsonObj.get("initStock") != null) {
                         String number = jsonObj.getString("initStock");
+                        BigDecimal lowSafeStock = null;
+                        BigDecimal highSafeStock = null;
+                        if(jsonObj.get("lowSafeStock")!=null) {
+                            lowSafeStock = jsonObj.getBigDecimal("lowSafeStock");
+                        }
+                        if(jsonObj.get("highSafeStock")!=null) {
+                            highSafeStock = jsonObj.getBigDecimal("highSafeStock");
+                        }
                         Long depotId = jsonObj.getLong("id");
                         //初始库存-先清除再插入
                         MaterialInitialStockExample example = new MaterialInitialStockExample();
                         example.createCriteria().andMaterialIdEqualTo(material.getId()).andDepotIdEqualTo(depotId);
                         materialInitialStockMapper.deleteByExample(example);
-                        if (StringUtil.isNotEmpty(number) && Double.valueOf(number) > 0) {
-                            insertInitialStockByMaterialAndDepot(depotId, material.getId(), parseBigDecimalEx(number));
+                        if (StringUtil.isNotEmpty(number) && Double.valueOf(number) > 0 || lowSafeStock!=null || highSafeStock!=null) {
+                            insertInitialStockByMaterialAndDepot(depotId, material.getId(), parseBigDecimalEx(number), lowSafeStock, highSafeStock);
                         }
                         //更新当前库存
                         depotItemService.updateCurrentStockFun(material.getId(), depotId);
@@ -468,7 +484,6 @@ public class MaterialService {
                     if(null!=categoryId){
                         m.setCategoryId(categoryId);
                     }
-                    m.setSafetyStock(parseBigDecimalEx(safetyStock));
                     String manyUnit = ExcelUtils.getContent(src, i, 7); //副单位
                     String barCode = ExcelUtils.getContent(src, i, 8); //基础条码
                     String manyBarCode = ExcelUtils.getContent(src, i, 9); //副条码
@@ -598,7 +613,7 @@ public class MaterialService {
                     materialInitialStockMapper.deleteByExample(example);
                     if(stock!=null && stock.compareTo(BigDecimal.ZERO)!=0) {
                         depotId = depot.getId();
-                        insertInitialStockByMaterialAndDepot(depotId, mId, stock);
+                        insertInitialStockByMaterialAndDepot(depotId, mId, stock, null, null);
                         //更新当前库存
                         depotItemService.updateCurrentStockFun(mId, depotId);
                     }
@@ -663,11 +678,18 @@ public class MaterialService {
      * @param stock
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public void insertInitialStockByMaterialAndDepot(Long depotId, Long mId, BigDecimal stock){
+    public void insertInitialStockByMaterialAndDepot(Long depotId, Long mId, BigDecimal stock, BigDecimal lowSafeStock, BigDecimal highSafeStock){
         MaterialInitialStock materialInitialStock = new MaterialInitialStock();
         materialInitialStock.setDepotId(depotId);
         materialInitialStock.setMaterialId(mId);
+        stock = stock == null? BigDecimal.ZERO: stock;
         materialInitialStock.setNumber(stock);
+        if(lowSafeStock!=null) {
+            materialInitialStock.setLowSafeStock(lowSafeStock);
+        }
+        if(highSafeStock!=null) {
+            materialInitialStock.setHighSafeStock(highSafeStock);
+        }
         materialInitialStockMapper.insertSelective(materialInitialStock); //存入初始库存
     }
 
@@ -788,6 +810,24 @@ public class MaterialService {
         return stock;
     }
 
+    /**
+     * 根据商品和仓库获取安全库存信息
+     * @param materialId
+     * @param depotId
+     * @return
+     */
+    public MaterialInitialStock getSafeStock(Long materialId, Long depotId) {
+        MaterialInitialStock materialInitialStock = new MaterialInitialStock();
+        MaterialInitialStockExample example = new MaterialInitialStockExample();
+        example.createCriteria().andMaterialIdEqualTo(materialId).andDepotIdEqualTo(depotId)
+                .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        List<MaterialInitialStock> list = materialInitialStockMapper.selectByExample(example);
+        if(list!=null && list.size()>0) {
+            materialInitialStock = list.get(0);
+        }
+        return materialInitialStock;
+    }
+
     public List<MaterialVo4Unit> getMaterialByMeId(Long meId) {
         List<MaterialVo4Unit> result = new ArrayList<MaterialVo4Unit>();
         try{
@@ -818,16 +858,30 @@ public class MaterialService {
         return materialMapperEx.getMaterialByBarCode(barCodeArray);
     }
 
-    public List<MaterialVo4Unit> getListWithStock(Long depotId, List<Long> idList, String materialParam,
+    public List<MaterialVo4Unit> getListWithStock(Long depotId, List<Long> idList, String materialParam, Integer zeroStock,
                                                   String column, String order, Integer offset, Integer rows) {
-        return materialMapperEx.getListWithStock(depotId, idList, materialParam, column, order, offset, rows);
+        return materialMapperEx.getListWithStock(depotId, idList, materialParam, zeroStock, column, order, offset, rows);
     }
 
-    public int getListWithStockCount(Long depotId, List<Long> idList, String materialParam) {
-        return materialMapperEx.getListWithStockCount(depotId, idList, materialParam);
+    public int getListWithStockCount(Long depotId, List<Long> idList, String materialParam, Integer zeroStock) {
+        return materialMapperEx.getListWithStockCount(depotId, idList, materialParam, zeroStock);
     }
 
     public MaterialVo4Unit getTotalStockAndPrice(Long depotId, List<Long> idList, String materialParam) {
         return materialMapperEx.getTotalStockAndPrice(depotId, idList, materialParam);
+    }
+
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int batchSetMaterialCurrentStock(String ids) throws Exception {
+        int res = 0;
+        List<Long> idList = StringUtil.strToLongList(ids);
+        List<Depot> depotList = depotService.getAllList();
+        for(Long mId: idList) {
+            for(Depot depot: depotList) {
+                depotItemService.updateCurrentStockFun(mId, depot.getId());
+                res = 1;
+            }
+        }
+        return res;
     }
 }

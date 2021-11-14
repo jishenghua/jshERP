@@ -92,6 +92,7 @@ public interface MaterialMapperEx {
             @Param("depotId") Long depotId,
             @Param("idList") List<Long> idList,
             @Param("materialParam") String materialParam,
+            @Param("zeroStock") Integer zeroStock,
             @Param("column") String column,
             @Param("order") String order,
             @Param("offset") Integer offset,
@@ -100,7 +101,8 @@ public interface MaterialMapperEx {
     int getListWithStockCount(
             @Param("depotId") Long depotId,
             @Param("idList") List<Long> idList,
-            @Param("materialParam") String materialParam);
+            @Param("materialParam") String materialParam,
+            @Param("zeroStock") Integer zeroStock);
 
     MaterialVo4Unit getTotalStockAndPrice(
             @Param("depotId") Long depotId,

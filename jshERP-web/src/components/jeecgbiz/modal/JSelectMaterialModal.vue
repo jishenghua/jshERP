@@ -18,7 +18,7 @@
             <a-row :gutter="24">
               <a-col :md="6" :sm="8">
                 <a-form-item label="商品" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
-                  <a-input placeholder="条码、名称、规格、型号" v-model="queryParam.q"></a-input>
+                  <a-input ref="material" placeholder="条码、名称、规格、型号" v-model="queryParam.q"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="8">
@@ -187,6 +187,12 @@
           if (res) {
             this.dataSource = res.rows
             this.ipagination.total = res.total
+            if(res.total ===1) {
+              this.title = '选择商品【再次回车可以直接选中】'
+              this.$nextTick(() => this.$refs.material.focus());
+            } else {
+              this.title = '选择商品'
+            }
           }
         }).finally(() => {
           this.loading = false
@@ -215,8 +221,11 @@
           this.scrollTrigger = {};
         }
       },
-      showModal() {
+      showModal(barCode) {
         this.visible = true;
+        this.title = '选择商品'
+        this.queryParam.q = barCode
+        this.$nextTick(() => this.$refs.material.focus());
         this.loadData();
         this.form.resetFields();
       },
@@ -296,10 +305,24 @@
         this.selectionRows = selectionRows;
       },
       onSearch() {
-        this.loadData(1);
+        if(this.dataSource && this.dataSource.length===1) {
+          if(this.queryParam.q === this.dataSource[0].mBarCode||
+            this.queryParam.q === this.dataSource[0].name||
+            this.queryParam.q === this.dataSource[0].standard||
+            this.queryParam.q === this.dataSource[0].model) {
+            let arr = []
+            arr.push(this.dataSource[0].id)
+            this.selectedRowKeys = arr
+            this.handleSubmit()
+          } else {
+            this.loadData(1)
+          }
+        } else {
+          this.loadData(1)
+        }
       },
       modalFormOk() {
-        this.loadData();
+        this.loadData()
       },
       rowAction(record, index) {
         return {

@@ -70,7 +70,8 @@ const user = {
               const result = response.data
               Vue.ls.set(USER_ID, result.user.id, 7 * 24 * 60 * 60 * 1000);
               Vue.ls.set(USER_LOGIN_NAME, result.user.loginName, 7 * 24 * 60 * 60 * 1000);
-              Vue.ls.set(ACCESS_TOKEN, result.token, 1 * 24 * 60 * 60 * 1000)
+              //前端7天有效期，后端默认1天，只要用户在1天内有访问页面就可以一直续期直到7天结束
+              Vue.ls.set(ACCESS_TOKEN, result.token, 7 * 24 * 60 * 60 * 1000)
               Vue.ls.set(USER_INFO, result.user, 7 * 24 * 60 * 60 * 1000)
               commit('SET_TOKEN', result.token)
             }

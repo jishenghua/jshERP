@@ -33,11 +33,11 @@ public class Swagger2Config {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("Mybatis-Plus Plugin Example RESTful APIs")
-                .description("集成Mybatis-Plus模块接口描述")
+                .title("华夏ERP Restful Api")
+                .description("华夏ERP接口描述")
                 .termsOfServiceUrl("http://127.0.0.1")
                 .contact(new Contact("jishenghua", "", ""))
-                .version("2.1.1")
+                .version("3.0")
                 .build();
     }
 

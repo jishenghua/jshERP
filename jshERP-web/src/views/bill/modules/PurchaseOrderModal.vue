@@ -7,18 +7,28 @@
     :maskClosable="false"
     :keyboard="false"
     :forceRender="true"
+    v-bind:prefixNo="prefixNo"
+    switchHelp
     switchFullscreen
     @ok="handleOk"
     @cancel="handleCancel"
     wrapClassName="ant-modal-cust-warp"
+    :id="prefixNo"
     style="top:5%;height: 100%;overflow-y: hidden">
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="供应商">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="供应商" data-step="1" data-title="供应商"
+              data-intro="供应商必须选择，如果发现需要选择的供应商尚未录入，可以在下拉框中点击新增供应商进行录入">
               <a-select placeholder="选择供应商" v-decorator="[ 'organId', validatorRules.organId ]"
                 :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
+                <div slot="dropdownRender" slot-scope="menu">
+                  <v-nodes :vnodes="menu" />
+                  <a-divider style="margin: 4px 0;" />
+                  <div v-if="isTenant" style="padding: 4px 8px; cursor: pointer;"
+                       @mousedown="e => e.preventDefault()" @click="addSupplier"><a-icon type="plus" /> 新增供应商</div>
+                </div>
                 <a-select-option v-for="(item,index) in supList" :key="index" :value="item.id">
                   {{ item.supplier }}
                 </a-select-option>
@@ -31,13 +41,14 @@
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号" data-step="2" data-title="单据编号"
+              data-intro="单据编号自动生成、自动累加、开头是单据类型的首字母缩写，累加的规则是每次打开页面会自动占用一个新的编号">
               <a-input placeholder="请输入单据编号" v-decorator.trim="[ 'number' ]" :readOnly="true"/>
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24"></a-col>
         </a-row>
-        <j-editable-table
+        <j-editable-table id="billModal"
           :ref="refKeys[0]"
           :loading="materialTable.loading"
           :columns="materialTable.columns"
@@ -46,15 +57,16 @@
           :rowNumber="false"
           :rowSelection="true"
           :actionButton="true"
+          :dragSort="true"
           @valueChange="onValueChange"
           @deleted="onDeleted">
           <template #buttonAfter>
-            <a-row :gutter="24">
+            <a-row :gutter="24" style="float:left;" data-step="3" data-title="扫码录入" data-intro="此功能支持扫码枪扫描商品条码进行录入">
               <a-col v-if="scanStatus" :md="6" :sm="24">
                 <a-button @click="scanEnter">扫码录入</a-button>
               </a-col>
               <a-col v-if="!scanStatus" :md="16" :sm="24" style="padding: 0 6px 0 12px">
-                <a-input placeholder="请扫码商品条码并回车" v-model="scanBarCode" @pressEnter="scanPressEnter" />
+                <a-input placeholder="请扫码商品条码并回车" v-model="scanBarCode" @pressEnter="scanPressEnter" ref="scanBarCode"/>
               </a-col>
               <a-col v-if="!scanStatus" :md="6" :sm="24" style="padding: 0px">
                 <a-button @click="stopScan">收起扫码</a-button>
@@ -71,21 +83,23 @@
         </a-row>
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="附件">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="附件" data-step="4" data-title="附件" data-intro="可以上传与单据相关的图片、文档，支持多个文件">
               <j-upload v-model="fileList" bizPath="bill"></j-upload>
             </a-form-item>
           </a-col>
         </a-row>
       </a-form>
     </a-spin>
+    <vendor-modal ref="vendorModalForm" @ok="vendorModalFormOk"></vendor-modal>
   </j-modal>
 </template>
 <script>
   import pick from 'lodash.pick'
+  import VendorModal from '../../system/modules/VendorModal'
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
-  import { getMpListShort } from "@/utils/util"
+  import { getMpListShort,handleIntroJs } from "@/utils/util"
   import JUpload from '@/components/jeecg/JUpload'
   import JDate from '@/components/jeecg/JDate'
   import Vue from 'vue'
@@ -93,8 +107,13 @@
     name: "PurchaseOrderModal",
     mixins: [JEditableTableMixin,BillModalMixin],
     components: {
+      VendorModal,
       JUpload,
-      JDate
+      JDate,
+      VNodes: {
+        functional: true,
+        render: (h, ctx) => ctx.props.vnodes,
+      }
     },
     data () {
       return {
@@ -129,14 +148,14 @@
             { title: '条码', key: 'barCode', width: '8%', type: FormTypes.popupJsh, kind: 'material', multi: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
-            { title: '名称', key: 'name', width: '6%', type: FormTypes.input, readonly: true },
-            { title: '规格', key: 'standard', width: '5%', type: FormTypes.input, readonly: true },
-            { title: '型号', key: 'model', width: '5%', type: FormTypes.input, readonly: true },
-            { title: '颜色', key: 'color', width: '5%', type: FormTypes.input, readonly: true },
-            { title: '扩展信息', key: 'materialOther', width: '5%', type: FormTypes.input, readonly: true },
-            { title: '库存', key: 'stock', width: '5%', type: FormTypes.input, readonly: true },
-            { title: '单位', key: 'unit', width: '4%', type: FormTypes.input, readonly: true },
-            { title: '多属性', key: 'sku', width: '4%', type: FormTypes.input, readonly: true },
+            { title: '名称', key: 'name', width: '6%', type: FormTypes.normal },
+            { title: '规格', key: 'standard', width: '5%', type: FormTypes.normal },
+            { title: '型号', key: 'model', width: '5%', type: FormTypes.normal },
+            { title: '颜色', key: 'color', width: '5%', type: FormTypes.normal },
+            { title: '扩展信息', key: 'materialOther', width: '5%', type: FormTypes.normal },
+            { title: '库存', key: 'stock', width: '5%', type: FormTypes.normal },
+            { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
+            { title: '多属性', key: 'sku', width: '4%', type: FormTypes.normal },
             { title: '数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
@@ -174,6 +193,9 @@
         if (this.action === 'add') {
           this.addInit(this.prefixNo)
           this.fileList = []
+          this.$nextTick(() => {
+            handleIntroJs(this.prefixNo, 1)
+          })
         } else {
           this.model.operTime = this.model.operTimeStr
           this.fileList = this.model.fileName

@@ -55,10 +55,11 @@
                 size="small"
                 show-size-changer
                 :showQuickJumper="true"
+                :current="ipagination.current"
                 :page-size="ipagination.pageSize"
                 :page-size-options="ipagination.pageSizeOptions"
                 :total="ipagination.total"
-                :show-total="(total, range) => `共 ${total} 条`">
+                :show-total="(total, range) => `共 ${total-Math.ceil(total/ipagination.pageSize)} 条`">
                 <template slot="buildOptionText" slot-scope="props">
                   <span>{{ props.value-1 }}条/页</span>
                 </template>
@@ -112,15 +113,18 @@
               return (t !== '合计') ? (parseInt(index) + 1) : t
             }
           },
-          {title: '条码', dataIndex: 'barCode', width: 120},
-          {title: '名称', dataIndex: 'mname', width: 120},
+          {title: '仓库', dataIndex: 'depotName', width: 100},
+          {title: '条码', dataIndex: 'barCode', width: 100},
+          {title: '名称', dataIndex: 'mname', width: 100},
           {title: '规格', dataIndex: 'mstandard', width: 80},
           {title: '型号', dataIndex: 'mmodel', width: 80},
-          {title: '扩展信息', dataIndex: 'materialOther', width: 150},
-          {title: '单位', dataIndex: 'materialUnit', width: 80},
-          {title: '安全存量', dataIndex: 'safetystock', sorter: (a, b) => a.safetystock - b.safetystock, width: 80},
-          {title: '当前库存', dataIndex: 'currentNumber', sorter: (a, b) => a.currentNumber - b.currentNumber, width: 80},
-          {title: '建议入库量', dataIndex: 'linjieNumber', sorter: (a, b) => a.linjieNumber - b.linjieNumber, width: 80}
+          {title: '扩展信息', dataIndex: 'materialOther', width: 100},
+          {title: '单位', dataIndex: 'materialUnit', width: 60},
+          {title: '库存', dataIndex: 'currentNumber', sorter: (a, b) => a.currentNumber - b.currentNumber, width: 80},
+          {title: '最低安全库存', dataIndex: 'lowSafeStock', sorter: (a, b) => a.lowSafeStock - b.lowSafeStock, width: 100},
+          {title: '最高安全库存', dataIndex: 'highSafeStock', sorter: (a, b) => a.highSafeStock - b.highSafeStock, width: 100},
+          {title: '建议入库量', dataIndex: 'lowCritical', sorter: (a, b) => a.lowCritical - b.lowCritical, width: 80},
+          {title: '建议出库量', dataIndex: 'highCritical', sorter: (a, b) => a.highCritical - b.highCritical, width: 80}
         ],
         url: {
           list: "/depotItem/findStockWarningCount"
@@ -148,10 +152,11 @@
         })
       },
       exportExcel() {
-        let aoa = [['条码', '名称', '规格', '型号', '扩展信息', '单位', '安全存量', '当前库存', '建议入库量']]
+        let aoa = [['仓库', '条码', '名称', '规格', '型号', '扩展信息', '单位', '库存', '最低安全库存', '最高安全库存', '建议入库量', '建议出库量']]
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.barCode, ds.mname, ds.mstandard, ds.mmodel, ds.materialOther, ds.materialUnit, ds.safetystock, ds.currentNumber, ds.linjieNumber]
+          let item = [ds.depotName, ds.barCode, ds.mname, ds.mstandard, ds.mmodel, ds.materialOther, ds.materialUnit,
+            ds.currentNumber, ds.lowSafeStock, ds.highSafeStock, ds.lowCritical, ds.highCritical]
           aoa.push(item)
         }
         openDownloadDialog(sheet2blob(aoa), '库存预警')
