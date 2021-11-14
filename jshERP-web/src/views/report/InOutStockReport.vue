@@ -10,8 +10,8 @@
               <a-col :md="4" :sm="24">
                 <a-form-item label="仓库" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-select
-                    showSearch optionFilterProp="children"
-                    style="width: 100%"
+                    optionFilterProp="children"
+                    showSearch allow-clear style="width: 100%"
                     placeholder="请选择仓库"
                     v-model="queryParam.depotId">
                     <a-select-option v-for="(depot,index) in depotList" :value="depot.id">
