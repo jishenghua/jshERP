@@ -229,6 +229,11 @@ export const BillModalMixin = {
       this.$refs.memberModalForm.title = "新增会员";
       this.$refs.memberModalForm.disableSubmit = false;
     },
+    handleBatchSetDepot() {
+      this.$refs.batchSetDepotModalForm.add();
+      this.$refs.batchSetDepotModalForm.title = "批量设置仓库";
+      this.$refs.batchSetDepotModalForm.disableSubmit = false;
+    },
     addDepot() {
       this.$refs.depotModalForm.add();
       this.$refs.depotModalForm.title = "新增仓库";
@@ -247,6 +252,21 @@ export const BillModalMixin = {
     },
     memberModalFormOk() {
       this.initRetail()
+    },
+    batchSetDepotModalFormOk(depotId) {
+      this.getAllTable().then(tables => {
+        return getListData(this.form, tables)
+      }).then(allValues => {
+        //获取单据明细列表信息
+        let detailArr = allValues.tablesValue[0].values
+        //构造新的列表数组，用于存放单据明细信息
+        let newDetailArr = []
+        for(let detail of detailArr){
+          detail.depotId = depotId
+          newDetailArr.push(detail)
+        }
+        this.materialTable.dataSource = newDetailArr
+      })
     },
     depotModalFormOk() {
       this.initDepot()

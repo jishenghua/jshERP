@@ -69,11 +69,6 @@
           @added="onAdded"
           @deleted="onDeleted">
           <template #buttonAfter>
-            <a-row v-if="isTenant" :gutter="24" style="float:left;width:140px;">
-              <a-col :md="24" :sm="24">
-                <a-button icon="plus" @click="addDepot">新增仓库</a-button>
-              </a-col>
-            </a-row>
             <a-row :gutter="24" style="float:left;" data-step="4" data-title="扫码录入" data-intro="此功能支持扫码枪扫描商品条码进行录入">
               <a-col v-if="scanStatus" :md="6" :sm="24">
                 <a-button @click="scanEnter">扫码录入</a-button>
@@ -83,6 +78,17 @@
               </a-col>
               <a-col v-if="!scanStatus" :md="6" :sm="24" style="padding: 0px">
                 <a-button @click="stopScan">收起扫码</a-button>
+              </a-col>
+            </a-row>
+            <a-row :gutter="24" style="float:left;">
+              <a-col :md="24" :sm="24">
+                <a-dropdown>
+                  <a-menu slot="overlay">
+                    <a-menu-item key="1" @click="handleBatchSetDepot"><a-icon type="setting"/>批量设置</a-menu-item>
+                    <a-menu-item v-if="isTenant" key="2" @click="addDepot"><a-icon type="plus"/>新增仓库</a-menu-item>
+                  </a-menu>
+                  <a-button style="margin-left: 8px">仓库操作 <a-icon type="down" /></a-button>
+                </a-dropdown>
               </a-col>
             </a-row>
           </template>
@@ -174,6 +180,7 @@
     <customer-modal ref="customerModalForm" @ok="customerModalFormOk"></customer-modal>
     <depot-modal ref="depotModalForm" @ok="depotModalFormOk"></depot-modal>
     <account-modal ref="accountModalForm" @ok="accountModalFormOk"></account-modal>
+    <batch-set-depot ref="batchSetDepotModalForm" @ok="batchSetDepotModalFormOk"></batch-set-depot>
   </j-modal>
 </template>
 <script>
@@ -183,6 +190,7 @@
   import CustomerModal from '../../system/modules/CustomerModal'
   import DepotModal from '../../system/modules/DepotModal'
   import AccountModal from '../../system/modules/AccountModal'
+  import BatchSetDepot from '../dialog/BatchSetDepot'
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
@@ -201,6 +209,7 @@
       CustomerModal,
       DepotModal,
       AccountModal,
+      BatchSetDepot,
       JUpload,
       JDate,
       JSelectMultiple,
