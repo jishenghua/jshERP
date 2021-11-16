@@ -11,7 +11,7 @@ public interface LogMapperEx {
 
     List<LogVo4List> selectByConditionLog(
             @Param("operation") String operation,
-            @Param("userId") Integer userId,
+            @Param("userInfo") String userInfo,
             @Param("clientIp") String clientIp,
             @Param("status") Integer status,
             @Param("beginTime") String beginTime,
@@ -22,7 +22,7 @@ public interface LogMapperEx {
 
     Long countsByLog(
             @Param("operation") String operation,
-            @Param("userId") Integer userId,
+            @Param("userInfo") String userInfo,
             @Param("clientIp") String clientIp,
             @Param("status") Integer status,
             @Param("beginTime") String beginTime,

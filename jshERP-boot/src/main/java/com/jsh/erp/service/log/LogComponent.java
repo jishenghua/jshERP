@@ -32,13 +32,13 @@ public class LogComponent implements ICommonQuery {
     private List<?> getLogList(Map<String, String> map)throws Exception {
         String search = map.get(Constants.SEARCH);
         String operation = StringUtil.getInfo(search, "operation");
-        Integer userId = StringUtil.parseInteger(StringUtil.getInfo(search, "userId"));
+        String userInfo = StringUtil.getInfo(search, "userInfo");
         String clientIp = StringUtil.getInfo(search, "clientIp");
         Integer status = StringUtil.parseInteger(StringUtil.getInfo(search, "status"));
         String beginTime = StringUtil.getInfo(search, "beginTime");
         String endTime = StringUtil.getInfo(search, "endTime");
         String content = StringUtil.getInfo(search, "content");
-        return logService.select(operation, userId, clientIp, status, beginTime, endTime, content,
+        return logService.select(operation, userInfo, clientIp, status, beginTime, endTime, content,
                 QueryUtils.offset(map), QueryUtils.rows(map));
     }
 
@@ -46,13 +46,13 @@ public class LogComponent implements ICommonQuery {
     public Long counts(Map<String, String> map)throws Exception {
         String search = map.get(Constants.SEARCH);
         String operation = StringUtil.getInfo(search, "operation");
-        Integer userId = StringUtil.parseInteger(StringUtil.getInfo(search, "userId"));
+        String userInfo = StringUtil.getInfo(search, "userInfo");
         String clientIp = StringUtil.getInfo(search, "clientIp");
         Integer status = StringUtil.parseInteger(StringUtil.getInfo(search, "status"));
         String beginTime = StringUtil.getInfo(search, "beginTime");
         String endTime = StringUtil.getInfo(search, "endTime");
         String content = StringUtil.getInfo(search, "content");
-        return logService.countLog(operation, userId, clientIp, status, beginTime, endTime, content);
+        return logService.countLog(operation, userInfo, clientIp, status, beginTime, endTime, content);
     }
 
     @Override
