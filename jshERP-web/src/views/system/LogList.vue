@@ -29,6 +29,11 @@
               </a-col>
               <template v-if="toggleSearchStatus">
                 <a-col :md="6" :sm="24">
+                  <a-form-item label="操作员" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-input placeholder="请输入操作员账号或姓名" v-model="queryParam.userInfo"></a-input>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
                   <a-form-item label="操作IP" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-input placeholder="请输入操作IP" v-model="queryParam.clientIp"></a-input>
                   </a-form-item>
@@ -96,6 +101,7 @@
           operation:'',
           content:'',
           createTimeRange:[],
+          userInfo: '',
           clientIp:'',
           status:''
         },
@@ -114,7 +120,8 @@
           },
           {title: '操作模块', dataIndex: 'operation', width: 120},
           {title: '操作详情', align:"left", dataIndex: 'content', scopedSlots: { customRender: 'content' }, width: 350 },
-          {title: '操作人员', dataIndex: 'userName', width: 100, align: "center"},
+          {title: '操作员账号', dataIndex: 'loginName', width: 80, align: "center"},
+          {title: '操作员姓名', dataIndex: 'userName', width: 80, align: "center"},
           {
             title: '操作状态', dataIndex: 'status',width:80, align:"center",
             customRender:function (text) {
@@ -126,7 +133,7 @@
             }
           },
           {title: '操作IP', dataIndex: 'clientIp', width: 110, align: "center"},
-          {title: '操作时间', dataIndex: 'createTimeStr', width: 150, align: "center"}
+          {title: '操作时间', dataIndex: 'createTimeStr', width: 120, align: "center"}
         ],
         operateColumn:
         {
