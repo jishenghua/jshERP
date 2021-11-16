@@ -14,7 +14,9 @@ import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.accountHead.AccountHeadService;
 import com.jsh.erp.service.depotHead.DepotHeadService;
 import com.jsh.erp.service.log.LogService;
+import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.user.UserService;
+import com.jsh.erp.service.userBusiness.UserBusinessService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
@@ -52,6 +54,10 @@ public class SupplierService {
     private DepotHeadService depotHeadService;
     @Resource
     private AccountHeadService accountHeadService;
+    @Resource
+    private SystemConfigService systemConfigService;
+    @Resource
+    private UserBusinessService userBusinessService;
 
     public Supplier getSupplier(long id)throws Exception {
         Supplier result=null;
@@ -139,6 +145,28 @@ public class SupplierService {
         try{
             supplier.setEnabled(true);
             result=supplierMapper.insertSelective(supplier);
+            //新增客户时给当前用户自动授权
+            if("客户".equals(supplier.getType())) {
+                Long userId = userService.getUserId(request);
+                Supplier sInfo = supplierMapperEx.getSupplierByName(supplier.getSupplier());
+                String ubKey = "[" + sInfo.getId() + "]";
+                List<UserBusiness> ubList = userBusinessService.getBasicData(userId.toString(), "UserCustomer");
+                if(ubList ==null || ubList.size() == 0) {
+                    JSONObject ubObj = new JSONObject();
+                    ubObj.put("type", "UserCustomer");
+                    ubObj.put("keyId", userId);
+                    ubObj.put("value", ubKey);
+                    userBusinessService.insertUserBusiness(ubObj, request);
+                } else {
+                    UserBusiness ubInfo = ubList.get(0);
+                    JSONObject ubObj = new JSONObject();
+                    ubObj.put("id", ubInfo.getId());
+                    ubObj.put("type", ubInfo.getType());
+                    ubObj.put("keyId", ubInfo.getKeyId());
+                    ubObj.put("value", ubInfo.getValue() + ubKey);
+                    userBusinessService.updateUserBusiness(ubObj, request);
+                }
+            }
             logService.insertLog("商家",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(supplier.getSupplier()).toString(),request);
         }catch(Exception e){

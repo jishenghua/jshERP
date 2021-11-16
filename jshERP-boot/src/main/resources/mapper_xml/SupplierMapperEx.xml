@@ -71,6 +71,7 @@
         and ifnull(delete_flag,'0') !='1'
         order by id desc
     </select>
+
     <update id="batchDeleteSupplierByIds">
         update jsh_supplier
         set delete_flag='1'
@@ -81,4 +82,10 @@
         </foreach>
         )
     </update>
+
+    <select id="getSupplierByName" resultType="com.jsh.erp.datasource.entities.Supplier">
+        select *
+        from jsh_supplier
+        where supplier = #{supplier}
+    </select>
 </mapper>
