@@ -195,7 +195,6 @@ public class UserController {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
             redisService.deleteObjectBySession(request,"userId");
-            response.sendRedirect("/login.html");
         } catch(Exception e){
             e.printStackTrace();
             res.code = 500;
