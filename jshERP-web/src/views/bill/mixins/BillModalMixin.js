@@ -108,13 +108,13 @@ export const BillModalMixin = {
         if(columns[i].key === key) {
           if(type){
             if(key === 'snList' || key === 'batchNumber') {
-              if(this.prefixNo === 'XSCK') {
+              if(this.prefixNo === 'LSCK' || this.prefixNo === 'CGTH'  || this.prefixNo === 'XSCK' || this.prefixNo === 'QTCK') {
                 columns[i].type = FormTypes.popupJsh //显示
               } else {
                 columns[i].type = FormTypes.input //显示
               }
             } else if(key === 'expirationDate') {
-              if(this.prefixNo === 'CGRK' || this.prefixNo === 'XSTH' || this.prefixNo === 'CGTH') {
+              if(this.prefixNo === 'LSTH' || this.prefixNo === 'CGRK' || this.prefixNo === 'XSTH' || this.prefixNo === 'QTRK') {
                 columns[i].type = FormTypes.date //显示
               } else {
                 columns[i].type = FormTypes.normal //显示
