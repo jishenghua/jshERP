@@ -19,6 +19,15 @@
                 <a-button @click="toggleChecked">
                   {{ !checked ? '全选' : '全取消' }}
                 </a-button>
+                <a-button @click="editToggleChecked" style="margin-left: 8px">
+                  {{ !editChecked ? '全选-编辑' : '全取消-编辑' }}
+                </a-button>
+                <a-button @click="auditToggleChecked" style="margin-left: 8px">
+                  {{ !auditChecked ? '全选-审核' : '全取消-审核' }}
+                </a-button>
+                <a-button @click="unAuditToggleChecked" style="margin-left: 8px">
+                  {{ !unAuditChecked ? '全选-反审核' : '全取消-反审核' }}
+                </a-button>
               </a-col>
             </span>
           </a-row>
@@ -65,6 +74,9 @@
         visible: false,
         model: {},
         checked: false,
+        editChecked: false,
+        auditChecked: false,
+        unAuditChecked: false,
         disableMixinCreated: true,
         confirmLoading: false,
         form: this.$form.createForm(this),
@@ -176,6 +188,73 @@
             item.btnStr = ''
           }
         }
+      },
+      editToggleChecked() {
+        this.editChecked = !this.editChecked;
+        let funArray = this.dataSource
+        if(this.editChecked) {
+          for(let item of funArray){
+            item.btnStr = this.parseArrByParam(1, item.btnStr, 1)
+          }
+        } else {
+          for(let item of funArray){
+            item.btnStr = this.parseArrByParam(1, item.btnStr, 0)
+          }
+        }
+      },
+      auditToggleChecked() {
+        this.auditChecked = !this.auditChecked;
+        let funArray = this.dataSource
+        if(this.auditChecked) {
+          for(let item of funArray){
+            item.btnStr = this.parseArrByParam(2, item.btnStr, 1)
+          }
+        } else {
+          for(let item of funArray){
+            item.btnStr = this.parseArrByParam(2, item.btnStr, 0)
+          }
+        }
+      },
+      unAuditToggleChecked() {
+        this.unAuditChecked = !this.unAuditChecked;
+        let funArray = this.dataSource
+        if(this.unAuditChecked) {
+          for(let item of funArray){
+            item.btnStr = this.parseArrByParam(7, item.btnStr, 1)
+          }
+        } else {
+          for(let item of funArray){
+            item.btnStr = this.parseArrByParam(7, item.btnStr, 0)
+          }
+        }
+      },
+      /**
+       * 格式转换，控制按钮的显示或隐藏
+       * @param param
+       * @param btnStr
+       * @param type
+       * @returns {string}
+       */
+      parseArrByParam(param, btnStr, type) {
+        if(type) {
+          btnStr = btnStr + ','
+          if(btnStr.indexOf(param + ',') === -1) {
+            btnStr = btnStr + param + ','
+          }
+        } else {
+          btnStr = btnStr + ','
+          if(btnStr.indexOf(param + ',') > -1) {
+            btnStr = btnStr.replace(param + ',', '')
+          }
+        }
+        if(btnStr) {
+          btnStr = btnStr.replace('null', '')
+          btnStr = btnStr.substring(0, btnStr.length-1)
+          if(btnStr.substring(0,1) === ',') {
+            btnStr = btnStr.substring(1)
+          }
+        }
+        return btnStr
       },
       onChange(record,value) {
         let funArray = this.dataSource
