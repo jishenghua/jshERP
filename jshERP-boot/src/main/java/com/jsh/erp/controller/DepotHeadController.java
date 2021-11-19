@@ -85,6 +85,7 @@ public class DepotHeadController {
      * @param currentPage
      * @param pageSize
      * @param oId
+     * @param number
      * @param materialParam
      * @param depotId
      * @param beginTime
@@ -98,6 +99,7 @@ public class DepotHeadController {
     public BaseResponseInfo findInDetail(@RequestParam("currentPage") Integer currentPage,
                                         @RequestParam("pageSize") Integer pageSize,
                                         @RequestParam(value = "organId", required = false) Integer oId,
+                                         @RequestParam("number") String number,
                                         @RequestParam("materialParam") String materialParam,
                                         @RequestParam(value = "depotId", required = false) Integer depotId,
                                         @RequestParam("beginTime") String beginTime,
@@ -110,8 +112,8 @@ public class DepotHeadController {
             List<DepotHeadVo4InDetail> resList = new ArrayList<DepotHeadVo4InDetail>();
             beginTime = Tools.parseDayToTime(beginTime, BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            List<DepotHeadVo4InDetail> list = depotHeadService.findByAll(beginTime, endTime, type, materialParam, depotId, oId, (currentPage-1)*pageSize, pageSize);
-            int total = depotHeadService.findByAllCount(beginTime, endTime, type, materialParam, depotId, oId);
+            List<DepotHeadVo4InDetail> list = depotHeadService.findByAll(beginTime, endTime, type, materialParam, depotId, oId, number, (currentPage-1)*pageSize, pageSize);
+            int total = depotHeadService.findByAllCount(beginTime, endTime, type, materialParam, depotId, oId, number);
             map.put("total", total);
             //存放数据json数组
             if (null != list) {
@@ -184,7 +186,7 @@ public class DepotHeadController {
      * 调拨明细统计
      * @param currentPage
      * @param pageSize
-     * @param oId
+     * @param number
      * @param materialParam
      * @param depotIdF  调出仓库
      * @param depotId  调入仓库
@@ -198,7 +200,7 @@ public class DepotHeadController {
     @ApiOperation(value = "调拨明细统计")
     public BaseResponseInfo findallocationDetail(@RequestParam("currentPage") Integer currentPage,
                                                  @RequestParam("pageSize") Integer pageSize,
-                                                 @RequestParam(value = "organId", required = false) Integer oId,
+                                                 @RequestParam("number") String number,
                                                  @RequestParam("materialParam") String materialParam,
                                                  @RequestParam(value = "depotId", required = false) Integer depotId,
                                                  @RequestParam(value = "depotIdF", required = false) Integer depotIdF,
@@ -211,8 +213,8 @@ public class DepotHeadController {
         try {
             beginTime = Tools.parseDayToTime(beginTime, BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            List<DepotHeadVo4InDetail> list = depotHeadService.findAllocationDetail(beginTime, endTime, subType, materialParam, depotId, depotIdF, oId, (currentPage-1)*pageSize, pageSize);
-            int total = depotHeadService.findAllocationDetailCount(beginTime, endTime, subType, materialParam, depotId, depotIdF,oId);
+            List<DepotHeadVo4InDetail> list = depotHeadService.findAllocationDetail(beginTime, endTime, subType, number, materialParam, depotId, depotIdF, (currentPage-1)*pageSize, pageSize);
+            int total = depotHeadService.findAllocationDetailCount(beginTime, endTime, subType, number, materialParam, depotId, depotIdF);
             map.put("rows", list);
             map.put("total", total);
             res.code = 200;

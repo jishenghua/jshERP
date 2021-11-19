@@ -420,20 +420,21 @@ public class DepotHeadService {
         return result;
     }
 
-    public List<DepotHeadVo4InDetail> findByAll(String beginTime, String endTime, String type, String materialParam, Integer depotId, Integer oId, Integer offset, Integer rows) throws Exception{
+    public List<DepotHeadVo4InDetail> findByAll(String beginTime, String endTime, String type, String materialParam,
+                                                Integer depotId, Integer oId, String number,Integer offset, Integer rows) throws Exception{
         List<DepotHeadVo4InDetail> list = null;
         try{
-            list =depotHeadMapperEx.findByAll(beginTime, endTime, type, materialParam, depotId, oId, offset, rows);
+            list =depotHeadMapperEx.findByAll(beginTime, endTime, type, materialParam, depotId, oId, number, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
     }
 
-    public int findByAllCount(String beginTime, String endTime, String type, String materialParam, Integer depotId, Integer oId) throws Exception{
+    public int findByAllCount(String beginTime, String endTime, String type, String materialParam, Integer depotId, Integer oId, String number) throws Exception{
         int result = 0;
         try{
-            result =depotHeadMapperEx.findByAllCount(beginTime, endTime, type, materialParam, depotId, oId);
+            result =depotHeadMapperEx.findByAllCount(beginTime, endTime, type, materialParam, depotId, oId, number);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -460,20 +461,20 @@ public class DepotHeadService {
         return result;
     }
 
-    public List<DepotHeadVo4InDetail> findAllocationDetail(String beginTime, String endTime, String subType, String materialParam, Integer depotId, Integer depotIdF, Integer oId, Integer offset, Integer rows) throws Exception{
+    public List<DepotHeadVo4InDetail> findAllocationDetail(String beginTime, String endTime, String subType, String number, String materialParam, Integer depotId, Integer depotIdF, Integer offset, Integer rows) throws Exception{
         List<DepotHeadVo4InDetail> list = null;
         try{
-            list =depotHeadMapperEx.findAllocationDetail(beginTime, endTime, subType, materialParam, depotId, depotIdF, oId, offset, rows);
+            list =depotHeadMapperEx.findAllocationDetail(beginTime, endTime, subType, number, materialParam, depotId, depotIdF, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
     }
 
-    public int findAllocationDetailCount(String beginTime, String endTime, String subType, String materialParam, Integer depotId,  Integer depotIdF,Integer oId) throws Exception{
+    public int findAllocationDetailCount(String beginTime, String endTime, String subType, String number, String materialParam, Integer depotId,  Integer depotIdF) throws Exception{
         int result = 0;
         try{
-            result =depotHeadMapperEx.findAllocationDetailCount(beginTime, endTime, subType, materialParam, depotId,depotIdF, oId);
+            result =depotHeadMapperEx.findAllocationDetailCount(beginTime, endTime, subType, number, materialParam, depotId,depotIdF);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
