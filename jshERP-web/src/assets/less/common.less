@@ -1,4 +1,3 @@
-
 /*列表上方操作按钮区域*/
 .ant-card-body .table-operator {
   margin-bottom: 0px;
@@ -10,7 +9,6 @@
 .table-operator .ant-btn-group .ant-btn {
   margin: 0;
 }
-
 .table-operator .ant-btn-group .ant-btn:last-child {
   margin: 0 8px 8px 0;
 }
@@ -19,22 +17,43 @@
   padding-top: 15px;
   padding-bottom: 15px;
 }
-
 /*列表页面弹出modal*/
 .ant-modal-cust-warp {
   height: 100%
 }
-
 /*弹出modal Y轴滚动条*/
 .ant-modal-cust-warp .ant-modal-body {
+  padding: 24px 24px 12px 24px;
   height: calc(100% - 110px) !important;
   overflow-y: auto
 }
-
 /*弹出modal 先有content后有body 故滚动条控制在body上*/
 .ant-modal-cust-warp .ant-modal-content {
   height: 90%;
   overflow-y: hidden
+}
+/*文本框样式*/
+.ant-modal-cust-warp .ant-form-item {
+  margin-bottom: 12px;
+}
+/*商品-列表页面弹出modal*/
+.ant-modal-material-warp {
+  height: 100%
+}
+/*商品-弹出modal Y轴滚动条*/
+.ant-modal-material-warp .ant-modal-body {
+  padding: 12px 24px 12px 24px;
+  height: calc(100% - 110px) !important;
+  overflow-y: auto
+}
+/*商品-弹出modal 先有content后有body 故滚动条控制在body上*/
+.ant-modal-material-warp .ant-modal-content {
+  height: 90%;
+  overflow-y: hidden
+}
+/*商品-文本框样式*/
+.ant-modal-material-warp .ant-form-item {
+  margin-bottom: 12px;
 }
 /*列表中有图片的加这个样式 参考用户管理*/
 .anty-img-wrap {
@@ -47,11 +66,8 @@
 /*列表中范围查询样式*/
 .query-group-cust{width: calc(50% - 10px)}
 .query-group-split-cust:before{content:"~";width: 20px;display: inline-block;text-align: center}
-
-
 /*erp风格子表外框padding设置*/
 .ant-card-wider-padding.cust-erp-sub-tab>.ant-card-body{padding:5px 12px}
-
 /* 内嵌子表背景颜色 */
 .j-inner-table-wrapper /deep/ .ant-table-expanded-row .ant-table-wrapper .ant-table-tbody .ant-table-row {
   background-color: #FFFFFF;

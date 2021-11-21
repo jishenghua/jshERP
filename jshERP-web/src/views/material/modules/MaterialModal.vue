@@ -10,7 +10,7 @@
     @ok="handleOk"
     @cancel="handleCancel"
     cancelText="关闭"
-    wrapClassName="ant-modal-cust-warp"
+    wrapClassName="ant-modal-material-warp"
     :id="prefixNo"
     style="top:5%;height: 100%;overflow-y: hidden">
     <template slot="footer">
@@ -177,6 +177,7 @@
                 :loading="meTable.loading"
                 :columns="meTable.columns"
                 :dataSource="meTable.dataSource"
+                :height="300"
                 :minWidth="1000"
                 :maxHeight="300"
                 :rowNumber="false"
@@ -196,7 +197,7 @@
             <a-row class="form-row" :gutter="24">
               <a-col :lg="24" :md="24" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="">
-                  <a-textarea :rows="2" placeholder="请输入备注" v-decorator="[ 'remark' ]" style="margin-top:8px;"/>
+                  <a-textarea :rows="1" placeholder="请输入备注" v-decorator="[ 'remark' ]" style="margin-top:8px;"/>
                 </a-form-item>
               </a-col>
             </a-row>

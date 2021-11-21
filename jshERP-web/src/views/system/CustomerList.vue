@@ -50,7 +50,7 @@
               <a-menu-item key="2" v-if="btnEnableList.indexOf(1)>-1" @click="batchSetStatus(true)"><a-icon type="check-square"/>启用</a-menu-item>
               <a-menu-item key="3" v-if="btnEnableList.indexOf(1)>-1" @click="batchSetStatus(false)"><a-icon type="close-square"/>禁用</a-menu-item>
             </a-menu>
-            <a-button style="margin-left: 8px">
+            <a-button>
               批量操作 <a-icon type="down" />
             </a-button>
           </a-dropdown>
