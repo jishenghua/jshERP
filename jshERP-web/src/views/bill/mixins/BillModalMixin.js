@@ -259,13 +259,35 @@ export const BillModalMixin = {
       }).then(allValues => {
         //获取单据明细列表信息
         let detailArr = allValues.tablesValue[0].values
-        //构造新的列表数组，用于存放单据明细信息
-        let newDetailArr = []
+        let barCodes = ''
         for(let detail of detailArr){
-          detail.depotId = depotId
-          newDetailArr.push(detail)
+          barCodes += detail.barCode + ','
         }
-        this.materialTable.dataSource = newDetailArr
+        if(barCodes) {
+          barCodes = barCodes.substring(0, barCodes.length-1)
+        }
+        let param = {
+          barCode: barCodes,
+          depotId: depotId,
+          mpList: getMpListShort(Vue.ls.get('materialPropertyList')),  //扩展属性
+          prefixNo: this.prefixNo
+        }
+        getMaterialByBarCode(param).then((res) => {
+          if (res && res.code === 200) {
+            let mList = res.data
+            if(mList && mList.length) {
+              //构造新的列表数组，用于存放单据明细信息
+              let newDetailArr = []
+              for (let i = 0; i < detailArr.length; i++) {
+                let item = detailArr[i]
+                item.depotId = depotId
+                item.stock = mList[i].stock
+                newDetailArr.push(item)
+              }
+              this.materialTable.dataSource = newDetailArr
+            }
+          }
+        })
       })
     },
     depotModalFormOk() {
