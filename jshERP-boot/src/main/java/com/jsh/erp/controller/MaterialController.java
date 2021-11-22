@@ -494,6 +494,7 @@ public class MaterialController {
     @GetMapping(value = "/getMaterialByBarCode")
     @ApiOperation(value = "根据条码查询商品信息")
     public BaseResponseInfo getMaterialByBarCode(@RequestParam("barCode") String barCode,
+                                          @RequestParam(value = "depotId", required = false) Long depotId,
                                           @RequestParam("mpList") String mpList,
                                           @RequestParam(required = false, value = "prefixNo") String prefixNo,
                                           HttpServletRequest request) throws Exception {
@@ -519,48 +520,38 @@ public class MaterialController {
                         }
                     }
                     mvo.setMaterialOther(expand);
-                    if("LSCK".equals(prefixNo) || "LSTH".equals(prefixNo)) {
+                    if ("LSCK".equals(prefixNo) || "LSTH".equals(prefixNo)) {
                         //零售价
                         mvo.setBillPrice(mvo.getCommodityDecimal());
-                    } else if("CGDD".equals(prefixNo) || "CGRK".equals(prefixNo) || "CGTH".equals(prefixNo)
+                    } else if ("CGDD".equals(prefixNo) || "CGRK".equals(prefixNo) || "CGTH".equals(prefixNo)
                             || "QTRK".equals(prefixNo) || "DBCK".equals(prefixNo) || "ZZD".equals(prefixNo) || "CXD".equals(prefixNo)
-                            || "PDLR".equals(prefixNo) || "PDFP".equals(prefixNo) ) {
+                            || "PDLR".equals(prefixNo) || "PDFP".equals(prefixNo)) {
                         //采购价
                         mvo.setBillPrice(mvo.getPurchaseDecimal());
-                    } else if("XSDD".equals(prefixNo) || "XSCK".equals(prefixNo) || "XSTH".equals(prefixNo) || "QTCK".equals(prefixNo)) {
+                    } else if ("XSDD".equals(prefixNo) || "XSCK".equals(prefixNo) || "XSTH".equals(prefixNo) || "QTCK".equals(prefixNo)) {
                         //销售价
                         mvo.setBillPrice(mvo.getWholesaleDecimal());
                     }
                     //仓库id
-                    JSONArray depotArr = depotService.findDepotByCurrentUser();
-                    for(Object obj: depotArr){
-                        JSONObject depotObj = JSONObject.parseObject(obj.toString());
-                        if(depotObj.get("isDefault")!=null) {
-                            Boolean isDefault = depotObj.getBoolean("isDefault");
-                            if(isDefault) {
-                                Long depotId = depotObj.getLong("id");
-                                if(!"CGDD".equals(prefixNo) && !"XSDD".equals(prefixNo) ) {
-                                    //除订单之外的单据才有仓库
-                                    mvo.setDepotId(depotId);
-                                }
-                                //库存
-                                BigDecimal stock;
-                                if(StringUtil.isNotEmpty(mvo.getSku())){
-                                    stock = depotItemService.getSkuStockByParam(mvo.getDepotId(),mvo.getMeId(),null,null);
-                                } else {
-                                    stock = depotItemService.getStockByParam(mvo.getDepotId(),mvo.getId(),null,null);
-                                    if (mvo.getUnitId()!=null){
-                                        Unit unit = unitService.getUnit(mvo.getUnitId());
-                                        if(mvo.getCommodityUnit().equals(unit.getOtherUnit())) {
-                                            if(unit.getRatio()!=0) {
-                                                stock = stock.divide(BigDecimal.valueOf(unit.getRatio()),2,BigDecimal.ROUND_HALF_UP);
-                                            }
-                                        }
+                    if (depotId == null) {
+                        JSONArray depotArr = depotService.findDepotByCurrentUser();
+                        for (Object obj : depotArr) {
+                            JSONObject depotObj = JSONObject.parseObject(obj.toString());
+                            if (depotObj.get("isDefault") != null) {
+                                Boolean isDefault = depotObj.getBoolean("isDefault");
+                                if (isDefault) {
+                                    Long id = depotObj.getLong("id");
+                                    if (!"CGDD".equals(prefixNo) && !"XSDD".equals(prefixNo)) {
+                                        //除订单之外的单据才有仓库
+                                        mvo.setDepotId(id);
                                     }
+                                    getStockByMaterialInfo(mvo);
                                 }
-                                mvo.setStock(stock);
                             }
                         }
+                    } else {
+                        mvo.setDepotId(depotId);
+                        getStockByMaterialInfo(mvo);
                     }
                 }
             }
@@ -572,6 +563,29 @@ public class MaterialController {
             res.data = "获取数据失败";
         }
         return res;
+    }
+
+    /**
+     * 根据商品信息获取库存，进行赋值
+     * @param mvo
+     * @throws Exception
+     */
+    private void getStockByMaterialInfo(MaterialVo4Unit mvo) throws Exception {
+        BigDecimal stock;
+        if (StringUtil.isNotEmpty(mvo.getSku())) {
+            stock = depotItemService.getSkuStockByParam(mvo.getDepotId(), mvo.getMeId(), null, null);
+        } else {
+            stock = depotItemService.getStockByParam(mvo.getDepotId(), mvo.getId(), null, null);
+            if (mvo.getUnitId() != null) {
+                Unit unit = unitService.getUnit(mvo.getUnitId());
+                if (mvo.getCommodityUnit().equals(unit.getOtherUnit())) {
+                    if (unit.getRatio() != 0) {
+                        stock = stock.divide(BigDecimal.valueOf(unit.getRatio()), 2, BigDecimal.ROUND_HALF_UP);
+                    }
+                }
+            }
+        }
+        mvo.setStock(stock);
     }
 
     /**
