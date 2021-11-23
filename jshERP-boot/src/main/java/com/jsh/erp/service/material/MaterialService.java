@@ -471,7 +471,7 @@ public class MaterialService {
                 String model = ExcelUtils.getContent(src, i, 2); //型号
                 String color = ExcelUtils.getContent(src, i, 3); //颜色
                 String categoryName = ExcelUtils.getContent(src, i, 4); //类别
-                String safetyStock = ExcelUtils.getContent(src, i, 5); //安全存量
+                String expiryNum = ExcelUtils.getContent(src, i, 5); //保质期
                 String unit = ExcelUtils.getContent(src, i, 6); //基础单位
                 //校验名称、单位是否为空
                 if(StringUtil.isNotEmpty(name) && StringUtil.isNotEmpty(unit)) {
@@ -484,6 +484,9 @@ public class MaterialService {
                     if(null!=categoryId){
                         m.setCategoryId(categoryId);
                     }
+                    if(StringUtil.isNotEmpty(expiryNum)) {
+                        m.setExpiryNum(Integer.parseInt(expiryNum));
+                    }
                     String manyUnit = ExcelUtils.getContent(src, i, 7); //副单位
                     String barCode = ExcelUtils.getContent(src, i, 8); //基础条码
                     String manyBarCode = ExcelUtils.getContent(src, i, 9); //副条码
@@ -492,6 +495,18 @@ public class MaterialService {
                     String commodityDecimal = ExcelUtils.getContent(src, i, 12); //零售价
                     String wholesaleDecimal = ExcelUtils.getContent(src, i, 13); //销售价
                     String lowDecimal = ExcelUtils.getContent(src, i, 14); //最低售价
+                    String enabled = ExcelUtils.getContent(src, i, 15); //状态
+                    //校验条码是否存在
+                    List<MaterialVo4Unit> basicMaterialList = getMaterialByBarCode(barCode);
+                    if(basicMaterialList!=null && basicMaterialList.size()>0) {
+                        throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_BARCODE_EXISTS_CODE,
+                                String.format(ExceptionConstants.MATERIAL_BARCODE_EXISTS_MSG, barCode));
+                    }
+                    List<MaterialVo4Unit> otherMaterialList = getMaterialByBarCode(manyBarCode);
+                    if(otherMaterialList!=null && otherMaterialList.size()>0) {
+                        throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_BARCODE_EXISTS_CODE,
+                                String.format(ExceptionConstants.MATERIAL_BARCODE_EXISTS_MSG, manyBarCode));
+                    }
                     JSONObject materialExObj = new JSONObject();
                     JSONObject basicObj = new JSONObject();
                     basicObj.put("barCode", barCode);
@@ -522,7 +537,6 @@ public class MaterialService {
                         m.setUnit(unit);
                     }
                     m.setMaterialExObj(materialExObj);
-                    String enabled = ExcelUtils.getContent(src, i, 15); //状态
                     m.setEnabled(enabled.equals("1")? true: false);
                     //缓存各个仓库的库存信息
                     Map<Long, BigDecimal> stockMap = new HashMap<Long, BigDecimal>();
