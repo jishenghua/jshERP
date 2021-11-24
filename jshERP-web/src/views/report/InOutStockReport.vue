@@ -40,7 +40,7 @@
               </a-col>
               <a-col :md="6" :sm="24">
                 <a-form-item>
-                  <span>本月合计金额：{{totalCountMoneyStr}}</span>
+                  <span>总结存金额：{{totalCountMoneyStr}}</span>
                 </a-form-item>
               </a-col>
             </a-row>
