@@ -592,7 +592,7 @@ public class MaterialController {
      * 商品库存查询
      * @param currentPage
      * @param pageSize
-     * @param depotId
+     * @param depotIds
      * @param categoryId
      * @param materialParam
      * @param mpList
@@ -606,7 +606,7 @@ public class MaterialController {
     @ApiOperation(value = "商品库存查询")
     public BaseResponseInfo getListWithStock(@RequestParam("currentPage") Integer currentPage,
                                              @RequestParam("pageSize") Integer pageSize,
-                                             @RequestParam(value = "depotId", required = false) Long depotId,
+                                             @RequestParam(value = "depotIds", required = false) String depotIds,
                                              @RequestParam(value = "categoryId", required = false) Long categoryId,
                                              @RequestParam("materialParam") String materialParam,
                                              @RequestParam("zeroStock") Integer zeroStock,
@@ -618,13 +618,24 @@ public class MaterialController {
         Map<String, Object> map = new HashMap<>();
         try {
             List<Long> idList = new ArrayList<>();
+            List<Long> depotList = new ArrayList<>();
             if(categoryId != null){
                 idList = materialService.getListByParentId(categoryId);
             }
-            List<MaterialVo4Unit> dataList = materialService.getListWithStock(depotId, idList, StringUtil.toNull(materialParam), zeroStock,
+            if(StringUtil.isNotEmpty(depotIds)) {
+                depotList = StringUtil.strToLongList(depotIds);
+            } else {
+                //未选择仓库时默认为当前用户有权限的仓库
+                JSONArray depotArr = depotService.findDepotByCurrentUser();
+                for(Object obj: depotArr) {
+                    JSONObject object = JSONObject.parseObject(obj.toString());
+                    depotList.add(object.getLong("id"));
+                }
+            }
+            List<MaterialVo4Unit> dataList = materialService.getListWithStock(depotList, idList, StringUtil.toNull(materialParam), zeroStock,
                     StringUtil.safeSqlParse(column), StringUtil.safeSqlParse(order), (currentPage-1)*pageSize, pageSize);
-            int total = materialService.getListWithStockCount(depotId, idList, StringUtil.toNull(materialParam), zeroStock);
-            MaterialVo4Unit materialVo4Unit= materialService.getTotalStockAndPrice(depotId, idList, StringUtil.toNull(materialParam));
+            int total = materialService.getListWithStockCount(depotList, idList, StringUtil.toNull(materialParam), zeroStock);
+            MaterialVo4Unit materialVo4Unit= materialService.getTotalStockAndPrice(depotList, idList, StringUtil.toNull(materialParam));
             map.put("total", total);
             map.put("currentStock", materialVo4Unit.getCurrentStock());
             map.put("currentStockPrice", materialVo4Unit.getCurrentStockPrice());

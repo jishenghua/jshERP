@@ -89,7 +89,7 @@ public interface MaterialMapperEx {
     List<MaterialVo4Unit> getMaterialByBarCode(@Param("barCodeArray") String [] barCodeArray);
 
     List<MaterialVo4Unit> getListWithStock(
-            @Param("depotId") Long depotId,
+            @Param("depotList") List<Long> depotList,
             @Param("idList") List<Long> idList,
             @Param("materialParam") String materialParam,
             @Param("zeroStock") Integer zeroStock,
@@ -99,13 +99,13 @@ public interface MaterialMapperEx {
             @Param("rows") Integer rows);
 
     int getListWithStockCount(
-            @Param("depotId") Long depotId,
+            @Param("depotList") List<Long> depotList,
             @Param("idList") List<Long> idList,
             @Param("materialParam") String materialParam,
             @Param("zeroStock") Integer zeroStock);
 
     MaterialVo4Unit getTotalStockAndPrice(
-            @Param("depotId") Long depotId,
+            @Param("depotList") List<Long> depotList,
             @Param("idList") List<Long> idList,
             @Param("materialParam") String materialParam);
 

@@ -872,17 +872,17 @@ public class MaterialService {
         return materialMapperEx.getMaterialByBarCode(barCodeArray);
     }
 
-    public List<MaterialVo4Unit> getListWithStock(Long depotId, List<Long> idList, String materialParam, Integer zeroStock,
+    public List<MaterialVo4Unit> getListWithStock(List<Long> depotList, List<Long> idList, String materialParam, Integer zeroStock,
                                                   String column, String order, Integer offset, Integer rows) {
-        return materialMapperEx.getListWithStock(depotId, idList, materialParam, zeroStock, column, order, offset, rows);
+        return materialMapperEx.getListWithStock(depotList, idList, materialParam, zeroStock, column, order, offset, rows);
     }
 
-    public int getListWithStockCount(Long depotId, List<Long> idList, String materialParam, Integer zeroStock) {
-        return materialMapperEx.getListWithStockCount(depotId, idList, materialParam, zeroStock);
+    public int getListWithStockCount(List<Long> depotList, List<Long> idList, String materialParam, Integer zeroStock) {
+        return materialMapperEx.getListWithStockCount(depotList, idList, materialParam, zeroStock);
     }
 
-    public MaterialVo4Unit getTotalStockAndPrice(Long depotId, List<Long> idList, String materialParam) {
-        return materialMapperEx.getTotalStockAndPrice(depotId, idList, materialParam);
+    public MaterialVo4Unit getTotalStockAndPrice(List<Long> depotList, List<Long> idList, String materialParam) {
+        return materialMapperEx.getTotalStockAndPrice(depotList, idList, materialParam);
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
