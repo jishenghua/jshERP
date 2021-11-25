@@ -275,17 +275,23 @@ export const BillModalMixin = {
         getMaterialByBarCode(param).then((res) => {
           if (res && res.code === 200) {
             let mList = res.data
+            //构造新的列表数组，用于存放单据明细信息
+            let newDetailArr = []
             if(mList && mList.length) {
-              //构造新的列表数组，用于存放单据明细信息
-              let newDetailArr = []
               for (let i = 0; i < detailArr.length; i++) {
                 let item = detailArr[i]
                 item.depotId = depotId
                 item.stock = mList[i].stock
                 newDetailArr.push(item)
               }
-              this.materialTable.dataSource = newDetailArr
+            } else {
+              for (let i = 0; i < detailArr.length; i++) {
+                let item = detailArr[i]
+                item.depotId = depotId
+                newDetailArr.push(item)
+              }
             }
+            this.materialTable.dataSource = newDetailArr
           }
         })
       })
