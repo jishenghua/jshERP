@@ -18,16 +18,21 @@ import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.service.userBusiness.UserBusinessService;
 import com.jsh.erp.utils.BaseResponseInfo;
+import com.jsh.erp.utils.ExcelUtils;
 import com.jsh.erp.utils.StringUtil;
+import jxl.Sheet;
+import jxl.Workbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -384,13 +389,93 @@ public class SupplierService {
         return list;
     }
 
+    public void importVendor(MultipartFile file, HttpServletRequest request) throws Exception{
+        String type = "供应商";
+        Workbook workbook = Workbook.getWorkbook(file.getInputStream());
+        Sheet src = workbook.getSheet(0);
+        //'名称', '联系人', '手机号码', '联系电话', '电子邮箱', '传真', '期初应付', '纳税人识别号', '税率(%)', '开户行', '账号', '地址', '备注', '状态'
+        List<Supplier> sList = new ArrayList<>();
+        for (int i = 2; i < src.getRows(); i++) {
+            Supplier s = new Supplier();
+            s.setType(type);
+            s.setSupplier(ExcelUtils.getContent(src, i, 0));
+            s.setContacts(ExcelUtils.getContent(src, i, 1));
+            s.setTelephone(ExcelUtils.getContent(src, i, 2));
+            s.setPhoneNum(ExcelUtils.getContent(src, i, 3));
+            s.setEmail(ExcelUtils.getContent(src, i, 4));
+            s.setFax(ExcelUtils.getContent(src, i, 5));
+            s.setBeginNeedGet(parseBigDecimalEx(ExcelUtils.getContent(src, i, 6)));
+            s.setTaxNum(ExcelUtils.getContent(src, i, 7));
+            s.setTaxRate(parseBigDecimalEx(ExcelUtils.getContent(src, i, 8)));
+            s.setBankName(ExcelUtils.getContent(src, i, 9));
+            s.setAccountNumber(ExcelUtils.getContent(src, i, 10));
+            s.setAddress(ExcelUtils.getContent(src, i, 11));
+            s.setDescription(ExcelUtils.getContent(src, i, 12));
+            String enabled = ExcelUtils.getContent(src, i, 13);
+            s.setEnabled(enabled.equals("1"));
+            sList.add(s);
+        }
+        importExcel(sList, type);
+    }
+
+    public void importCustomer(MultipartFile file, HttpServletRequest request) throws Exception{
+        String type = "客户";
+        Workbook workbook = Workbook.getWorkbook(file.getInputStream());
+        Sheet src = workbook.getSheet(0);
+        //'名称', '联系人', '手机号码', '联系电话', '电子邮箱', '传真', '期初应收', '纳税人识别号', '税率(%)', '开户行', '账号', '地址', '备注', '状态'
+        List<Supplier> sList = new ArrayList<>();
+        for (int i = 2; i < src.getRows(); i++) {
+            Supplier s = new Supplier();
+            s.setType(type);
+            s.setSupplier(ExcelUtils.getContent(src, i, 0));
+            s.setContacts(ExcelUtils.getContent(src, i, 1));
+            s.setTelephone(ExcelUtils.getContent(src, i, 2));
+            s.setPhoneNum(ExcelUtils.getContent(src, i, 3));
+            s.setEmail(ExcelUtils.getContent(src, i, 4));
+            s.setFax(ExcelUtils.getContent(src, i, 5));
+            s.setBeginNeedGet(parseBigDecimalEx(ExcelUtils.getContent(src, i, 6)));
+            s.setTaxNum(ExcelUtils.getContent(src, i, 7));
+            s.setTaxRate(parseBigDecimalEx(ExcelUtils.getContent(src, i, 8)));
+            s.setBankName(ExcelUtils.getContent(src, i, 9));
+            s.setAccountNumber(ExcelUtils.getContent(src, i, 10));
+            s.setAddress(ExcelUtils.getContent(src, i, 11));
+            s.setDescription(ExcelUtils.getContent(src, i, 12));
+            String enabled = ExcelUtils.getContent(src, i, 13);
+            s.setEnabled(enabled.equals("1"));
+            sList.add(s);
+        }
+        importExcel(sList, type);
+    }
+
+    public void importMember(MultipartFile file, HttpServletRequest request) throws Exception{
+        String type = "会员";
+        Workbook workbook = Workbook.getWorkbook(file.getInputStream());
+        Sheet src = workbook.getSheet(0);
+        //'名称', '联系人', '手机号码', '联系电话', '电子邮箱', '备注', '状态'
+        List<Supplier> sList = new ArrayList<>();
+        for (int i = 2; i < src.getRows(); i++) {
+            Supplier s = new Supplier();
+            s.setType(type);
+            s.setSupplier(ExcelUtils.getContent(src, i, 0));
+            s.setContacts(ExcelUtils.getContent(src, i, 1));
+            s.setTelephone(ExcelUtils.getContent(src, i, 2));
+            s.setPhoneNum(ExcelUtils.getContent(src, i, 3));
+            s.setEmail(ExcelUtils.getContent(src, i, 4));
+            s.setDescription(ExcelUtils.getContent(src, i, 5));
+            String enabled = ExcelUtils.getContent(src, i, 6);
+            s.setEnabled(enabled.equals("1"));
+            sList.add(s);
+        }
+        importExcel(sList, type);
+    }
+
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public BaseResponseInfo importExcel(List<Supplier> mList) throws Exception {
-        logService.insertLog("商家",
+    public BaseResponseInfo importExcel(List<Supplier> mList, String type) throws Exception {
+        logService.insertLog(type,
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_IMPORT).append(mList.size()).append(BusinessConstants.LOG_DATA_UNIT).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         BaseResponseInfo info = new BaseResponseInfo();
-        Map<String, Object> data = new HashMap<String, Object>();
+        Map<String, Object> data = new HashMap<>();
         try {
             for(Supplier s: mList) {
                 SupplierExample example = new SupplierExample();
@@ -413,5 +498,79 @@ public class SupplierService {
         }
         info.data = data;
         return info;
+    }
+
+    public BigDecimal parseBigDecimalEx(String str)throws Exception{
+        if(!StringUtil.isEmpty(str)) {
+            return new BigDecimal(str);
+        } else {
+            return null;
+        }
+    }
+
+    public File exportExcel(List<Supplier> dataList, String type) throws Exception {
+        if("供应商".equals(type)) {
+            return exportExcelVendorOrCustomer(dataList, type);
+        } else if("客户".equals(type)) {
+            return exportExcelVendorOrCustomer(dataList, type);
+        } else {
+            //会员
+            String[] names = {"名称", "联系人", "手机号码", "联系电话", "电子邮箱", "预付款", "备注", "状态"};
+            String title = "信息报表";
+            List<String[]> objects = new ArrayList<String[]>();
+            if (null != dataList) {
+                for (Supplier s : dataList) {
+                    String[] objs = new String[15];
+                    objs[0] = s.getSupplier();
+                    objs[1] = s.getContacts();
+                    objs[2] = s.getTelephone();
+                    objs[3] = s.getPhoneNum();
+                    objs[4] = s.getEmail();
+                    objs[5] = s.getAdvanceIn() == null? "" : s.getAdvanceIn().toString();
+                    objs[6] = s.getDescription();
+                    objs[7] = s.getEnabled() ? "启用" : "禁用";
+                    objects.add(objs);
+                }
+            }
+            return ExcelUtils.exportObjectsWithoutTitle(title, names, title, objects);
+        }
+    }
+
+    private File exportExcelVendorOrCustomer(List<Supplier> dataList, String type) throws Exception {
+        String beginNeedStr = "";
+        String allNeedStr = "";
+        if("供应商".equals(type)) {
+            beginNeedStr = "期初应付";
+            allNeedStr = "期末应付";
+        } else if("客户".equals(type)) {
+            beginNeedStr = "期初应收";
+            allNeedStr = "期末应收";
+        }
+        String[] names = {"名称", "联系人", "手机号码", "联系电话", "电子邮箱", "传真", beginNeedStr,
+                allNeedStr, "纳税人识别号", "税率(%)", "开户行", "账号", "地址", "备注", "状态"};
+        String title = "信息报表";
+        List<String[]> objects = new ArrayList<String[]>();
+        if (null != dataList) {
+            for (Supplier s : dataList) {
+                String[] objs = new String[15];
+                objs[0] = s.getSupplier();
+                objs[1] = s.getContacts();
+                objs[2] = s.getTelephone();
+                objs[3] = s.getPhoneNum();
+                objs[4] = s.getEmail();
+                objs[5] = s.getFax();
+                objs[6] = s.getBeginNeedPay() == null? "" : s.getBeginNeedPay().toString();
+                objs[7] = s.getAllNeedPay() == null? "" : s.getAllNeedPay().toString();
+                objs[8] = s.getTaxNum();
+                objs[9] = s.getTaxRate() == null? "" : s.getTaxRate().toString();
+                objs[10] = s.getBankName();
+                objs[11] = s.getAccountNumber();
+                objs[12] = s.getAddress();
+                objs[13] = s.getDescription();
+                objs[14] = s.getEnabled() ? "启用" : "禁用";
+                objects.add(objs);
+            }
+        }
+        return ExcelUtils.exportObjectsWithoutTitle(title, names, title, objects);
     }
 }
