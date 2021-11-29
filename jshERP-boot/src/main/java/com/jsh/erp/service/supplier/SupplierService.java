@@ -552,6 +552,27 @@ public class SupplierService {
         List<String[]> objects = new ArrayList<String[]>();
         if (null != dataList) {
             for (Supplier s : dataList) {
+                Integer supplierId = s.getId().intValue();
+                String endTime = getNow3();
+                String supType = s.getType();
+                BigDecimal sum = BigDecimal.ZERO;
+                BigDecimal beginNeedGet = s.getBeginNeedGet();
+                if(beginNeedGet==null) {
+                    beginNeedGet = BigDecimal.ZERO;
+                }
+                BigDecimal beginNeedPay = s.getBeginNeedPay();
+                if(beginNeedPay==null) {
+                    beginNeedPay = BigDecimal.ZERO;
+                }
+                sum = sum.add(depotHeadService.findTotalPay(supplierId, endTime, supType))
+                        .subtract(accountHeadService.findTotalPay(supplierId, endTime, supType));
+                if(("客户").equals(s.getType())) {
+                    sum = sum.add(beginNeedGet);
+                    s.setAllNeedGet(sum);
+                } else if(("供应商").equals(s.getType())) {
+                    sum = sum.add(beginNeedPay);
+                    s.setAllNeedPay(sum);
+                }
                 String[] objs = new String[15];
                 objs[0] = s.getSupplier();
                 objs[1] = s.getContacts();
@@ -559,8 +580,13 @@ public class SupplierService {
                 objs[3] = s.getPhoneNum();
                 objs[4] = s.getEmail();
                 objs[5] = s.getFax();
-                objs[6] = s.getBeginNeedPay() == null? "" : s.getBeginNeedPay().toString();
-                objs[7] = s.getAllNeedPay() == null? "" : s.getAllNeedPay().toString();
+                if(("客户").equals(s.getType())) {
+                    objs[6] = s.getBeginNeedGet() == null? "" : s.getBeginNeedGet().toString();
+                    objs[7] = s.getAllNeedGet() == null? "" : s.getAllNeedGet().toString();
+                } else if(("供应商").equals(s.getType())) {
+                    objs[6] = s.getBeginNeedPay() == null? "" : s.getBeginNeedPay().toString();
+                    objs[7] = s.getAllNeedPay() == null? "" : s.getAllNeedPay().toString();
+                }
                 objs[8] = s.getTaxNum();
                 objs[9] = s.getTaxRate() == null? "" : s.getTaxRate().toString();
                 objs[10] = s.getBankName();
