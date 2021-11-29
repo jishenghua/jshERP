@@ -183,6 +183,7 @@
                 :rowNumber="false"
                 :rowSelection="true"
                 :actionButton="true"
+                @valueChange="onValueChange"
                 @added="onAdded">
                 <template #buttonAfter>
                   <a-button @click="batchSetPrice('purchase')">采购价-批量</a-button>
@@ -794,6 +795,50 @@
         this.maxBarCodeInfo = this.maxBarCodeInfo + 1
         target.setValues([{rowKey: row.id, values: {barCode: this.maxBarCodeInfo, commodityUnit: unit?unit:''}}])
       },
+      //单元值改变一个字符就触发一次
+      onValueChange(event) {
+        const { type, row, column, value, target } = event
+        switch(column.key) {
+          case "purchaseDecimal":
+          case "commodityDecimal":
+          case "wholesaleDecimal":
+          case "lowDecimal":
+            this.changeDecimalByValue(row)
+            break;
+        }
+      },
+      //修改商品明细中的价格触发计算
+      changeDecimalByValue(row) {
+        let unitArr = this.unitList
+        let basicUnit = '', otherUnit = '', ratio = 1
+        for (let i = 0; i < unitArr.length; i++) {
+          if(unitArr[i].id === this.form.getFieldValue('unitId')) {
+            basicUnit = unitArr[i].basicUnit
+            otherUnit = unitArr[i].otherUnit
+            ratio = unitArr[i].ratio
+          }
+        }
+        if(row.commodityUnit === basicUnit) {
+          this.$refs.editableMeTable.getValues((error, values) => {
+            let mArr = values, basicPurchaseDecimal='', basicCommodityDecimal='', basicWholesaleDecimal='', basicLowDecimal=''
+            for (let i = 0; i < mArr.length; i++) {
+              let mInfo = mArr[i]
+              if(i===0) {
+                basicPurchaseDecimal = mInfo.purchaseDecimal
+                basicCommodityDecimal = mInfo.commodityDecimal
+                basicWholesaleDecimal = mInfo.wholesaleDecimal
+                basicLowDecimal = mInfo.lowDecimal
+              } else {
+                if(basicPurchaseDecimal) { mInfo.purchaseDecimal = basicPurchaseDecimal*ratio}
+                if(basicCommodityDecimal) { mInfo.commodityDecimal = basicCommodityDecimal*ratio}
+                if(basicWholesaleDecimal) { mInfo.wholesaleDecimal = basicWholesaleDecimal*ratio}
+                if(basicLowDecimal) { mInfo.lowDecimal = basicLowDecimal*ratio}
+              }
+            }
+            this.meTable.dataSource = mArr
+          })
+        }
+      },
       batchSetPrice(type) {
         if(this.skuSwitch || this.model.id){
           this.$refs.priceModalForm.add(type);
@@ -904,21 +949,30 @@
       },
       manyUnitOnChange(value) {
         let unitArr = this.unitList
-        let basicUnit = '', otherUnit = ''
+        let basicUnit = '', otherUnit = '', ratio = 1
         for (let i = 0; i < unitArr.length; i++) {
           if(unitArr[i].id === value) {
             basicUnit = unitArr[i].basicUnit
             otherUnit = unitArr[i].otherUnit
+            ratio = unitArr[i].ratio
           }
         }
         this.$refs.editableMeTable.getValues((error, values) => {
-          let mArr = values
+          let mArr = values, basicPurchaseDecimal='', basicCommodityDecimal='', basicWholesaleDecimal='', basicLowDecimal=''
           for (let i = 0; i < mArr.length; i++) {
             let mInfo = mArr[i]
             if(i===0) {
               mInfo.commodityUnit = basicUnit
+              basicPurchaseDecimal = mInfo.purchaseDecimal
+              basicCommodityDecimal = mInfo.commodityDecimal
+              basicWholesaleDecimal = mInfo.wholesaleDecimal
+              basicLowDecimal = mInfo.lowDecimal
             } else {
               mInfo.commodityUnit = otherUnit
+              if(basicPurchaseDecimal) { mInfo.purchaseDecimal = basicPurchaseDecimal*ratio}
+              if(basicCommodityDecimal) { mInfo.commodityDecimal = basicCommodityDecimal*ratio}
+              if(basicWholesaleDecimal) { mInfo.wholesaleDecimal = basicWholesaleDecimal*ratio}
+              if(basicLowDecimal) { mInfo.lowDecimal = basicLowDecimal*ratio}
             }
           }
           this.meTable.dataSource = mArr
