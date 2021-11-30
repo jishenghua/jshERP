@@ -22,6 +22,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -102,7 +103,7 @@ public class UnitService {
         Unit unit = JSONObject.parseObject(obj.toJSONString(), Unit.class);
         int result=0;
         try{
-            unit.setName(unit.getBasicUnit() + "," + unit.getOtherUnit() + "(1:" + unit.getRatio() + ")");
+            parseNameByUnit(unit);
             result=unitMapper.insertSelective(unit);
             logService.insertLog("计量单位",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(unit.getName()).toString(), request);
@@ -117,7 +118,7 @@ public class UnitService {
         Unit unit = JSONObject.parseObject(obj.toJSONString(), Unit.class);
         int result=0;
         try{
-            unit.setName(unit.getBasicUnit() + "," + unit.getOtherUnit() + "(1:" + unit.getRatio() + ")");
+            parseNameByUnit(unit);
             result=unitMapper.updateByPrimaryKeySelective(unit);
             logService.insertLog("计量单位",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(unit.getName()).toString(), request);
@@ -125,6 +126,21 @@ public class UnitService {
             JshException.writeFail(logger, e);
         }
         return result;
+    }
+
+    /**
+     * 根据单位信息生成名称的格式
+     * @param unit
+     */
+    private void parseNameByUnit(Unit unit) {
+        String unitName = unit.getBasicUnit() + "/" + "(" +  unit.getOtherUnit() + "=" + unit.getRatio().toString() + unit.getBasicUnit() + ")";
+        if(StringUtil.isNotEmpty(unit.getOtherUnitTwo()) && unit.getRatioTwo()!=null) {
+            unitName += "/" + "(" + unit.getOtherUnitTwo() + "=" + unit.getRatioTwo().toString() + unit.getBasicUnit() + ")";
+            if(StringUtil.isNotEmpty(unit.getOtherUnitThree()) && unit.getRatioThree()!=null) {
+                unitName += "/" + "(" + unit.getOtherUnitThree() + "=" + unit.getRatioThree().toString() + unit.getBasicUnit() + ")";
+            }
+        }
+        unit.setName(unitName);
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
@@ -198,5 +214,25 @@ public class UnitService {
             unitId = list.get(0).getId();
         }
         return unitId;
+    }
+
+    /**
+     * 根据多单位的比例进行库存换算（保留两位小数）
+     * @param stock
+     * @param unitInfo
+     * @param materialUnit
+     * @return
+     */
+    public BigDecimal parseStockByUnit(BigDecimal stock, Unit unitInfo, String materialUnit) {
+        if(materialUnit.equals(unitInfo.getOtherUnit()) && unitInfo.getRatio() != 0) {
+            stock = stock.divide(BigDecimal.valueOf(unitInfo.getRatio()),2,BigDecimal.ROUND_HALF_UP);
+        }
+        if(materialUnit.equals(unitInfo.getOtherUnitTwo()) && unitInfo.getRatioTwo() != 0) {
+            stock = stock.divide(BigDecimal.valueOf(unitInfo.getRatioTwo()),2,BigDecimal.ROUND_HALF_UP);
+        }
+        if(materialUnit.equals(unitInfo.getOtherUnitThree()) && unitInfo.getRatioThree() != 0) {
+            stock = stock.divide(BigDecimal.valueOf(unitInfo.getRatioThree()),2,BigDecimal.ROUND_HALF_UP);
+        }
+        return stock;
     }
 }

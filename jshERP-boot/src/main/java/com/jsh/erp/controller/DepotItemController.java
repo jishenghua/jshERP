@@ -138,17 +138,10 @@ public class DepotItemController {
                     stock = depotItemService.getSkuStockByParam(depotId,materialVo4Unit.getMeId(),null,null);
                 } else {
                     stock = depotItemService.getStockByParam(depotId,materialVo4Unit.getId(),null,null);
-                    String commodityUnit = materialVo4Unit.getCommodityUnit();
-                    Long unitId = materialVo4Unit.getUnitId();
-                    if(unitId!=null) {
-                        Integer ratio = 1;
-                        Unit unit = unitService.getUnit(unitId);
-                        if(commodityUnit.equals(unit.getOtherUnit())){
-                            ratio = unit.getRatio();
-                            if(ratio!=0) {
-                                stock = stock.divide(BigDecimal.valueOf(ratio),2,BigDecimal.ROUND_HALF_UP); //两位小数
-                            }
-                        }
+                    if(materialVo4Unit.getUnitId()!=null) {
+                        Unit unit = unitService.getUnit(materialVo4Unit.getUnitId());
+                        String commodityUnit = materialVo4Unit.getCommodityUnit();
+                        stock = unitService.parseStockByUnit(stock, unit, commodityUnit);
                     }
                 }
             }
@@ -197,20 +190,15 @@ public class DepotItemController {
                     item.put("model", diEx.getMModel());
                     item.put("color", diEx.getMColor());
                     item.put("materialOther", getOtherInfo(mpArr, diEx));
-                    Integer ratio = diEx.getRatio();
                     BigDecimal stock;
                     if(StringUtil.isNotEmpty(diEx.getSku())){
                         stock = depotItemService.getSkuStockByParam(diEx.getDepotId(),diEx.getMaterialExtendId(),null,null);
                     } else {
                         stock = depotItemService.getStockByParam(diEx.getDepotId(),diEx.getMaterialId(),null,null);
-                        if(ratio!=null){
-                            BigDecimal ratioDecimal = new BigDecimal(ratio.toString());
-                            if(ratioDecimal.compareTo(BigDecimal.ZERO)!=0){
-                                String otherUnit = diEx.getOtherUnit();
-                                if(otherUnit.equals(diEx.getMaterialUnit())) {
-                                    stock = stock.divide(ratioDecimal,2,BigDecimal.ROUND_HALF_UP); //两位小数
-                                }
-                            }
+                        Unit unitInfo = materialService.findUnit(diEx.getMaterialId()); //查询计量单位信息
+                        if (StringUtil.isNotEmpty(unitInfo.getName())) {
+                            String materialUnit = diEx.getMaterialUnit();
+                            stock = unitService.parseStockByUnit(stock, unitInfo, materialUnit);
                         }
                     }
                     item.put("stock", stock);
@@ -251,7 +239,6 @@ public class DepotItemController {
         }
         return res;
     }
-
 
     /**
      * 获取扩展信息

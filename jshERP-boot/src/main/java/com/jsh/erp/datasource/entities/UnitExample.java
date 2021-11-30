@@ -374,6 +374,146 @@ public class UnitExample {
             return (Criteria) this;
         }
 
+        public Criteria andOtherUnitTwoIsNull() {
+            addCriterion("other_unit_two is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOtherUnitTwoIsNotNull() {
+            addCriterion("other_unit_two is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOtherUnitTwoEqualTo(String value) {
+            addCriterion("other_unit_two =", value, "otherUnitTwo");
+            return (Criteria) this;
+        }
+
+        public Criteria andOtherUnitTwoNotEqualTo(String value) {
+            addCriterion("other_unit_two <>", value, "otherUnitTwo");
+            return (Criteria) this;
+        }
+
+        public Criteria andOtherUnitTwoGreaterThan(String value) {
+            addCriterion("other_unit_two >", value, "otherUnitTwo");
+            return (Criteria) this;
+        }
+
+        public Criteria andOtherUnitTwoGreaterThanOrEqualTo(String value) {
+            addCriterion("other_unit_two >=", value, "otherUnitTwo");
+            return (Criteria) this;
+        }
+
+        public Criteria andOtherUnitTwoLessThan(String value) {
+            addCriterion("other_unit_two <", value, "otherUnitTwo");
+            return (Criteria) this;
+        }
+
+        public Criteria andOtherUnitTwoLessThanOrEqualTo(String value) {
+            addCriterion("other_unit_two <=", value, "otherUnitTwo");
+            return (Criteria) this;
+        }
+
+        public Criteria andOtherUnitTwoLike(String value) {
+            addCriterion("other_unit_two like", value, "otherUnitTwo");
+            return (Criteria) this;
+        }
+
+        public Criteria andOtherUnitTwoNotLike(String value) {
+            addCriterion("other_unit_two not like", value, "otherUnitTwo");
+            return (Criteria) this;
+        }
+
+        public Criteria andOtherUnitTwoIn(List<String> values) {
+            addCriterion("other_unit_two in", values, "otherUnitTwo");
+            return (Criteria) this;
+        }
+
+        public Criteria andOtherUnitTwoNotIn(List<String> values) {
+            addCriterion("other_unit_two not in", values, "otherUnitTwo");
+            return (Criteria) this;
+        }
+
+        public Criteria andOtherUnitTwoBetween(String value1, String value2) {
+            addCriterion("other_unit_two between", value1, value2, "otherUnitTwo");
+            return (Criteria) this;
+        }
+
+        public Criteria andOtherUnitTwoNotBetween(String value1, String value2) {
+            addCriterion("other_unit_two not between", value1, value2, "otherUnitTwo");
+            return (Criteria) this;
+        }
+
+        public Criteria andOtherUnitThreeIsNull() {
+            addCriterion("other_unit_three is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOtherUnitThreeIsNotNull() {
+            addCriterion("other_unit_three is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOtherUnitThreeEqualTo(String value) {
+            addCriterion("other_unit_three =", value, "otherUnitThree");
+            return (Criteria) this;
+        }
+
+        public Criteria andOtherUnitThreeNotEqualTo(String value) {
+            addCriterion("other_unit_three <>", value, "otherUnitThree");
+            return (Criteria) this;
+        }
+
+        public Criteria andOtherUnitThreeGreaterThan(String value) {
+            addCriterion("other_unit_three >", value, "otherUnitThree");
+            return (Criteria) this;
+        }
+
+        public Criteria andOtherUnitThreeGreaterThanOrEqualTo(String value) {
+            addCriterion("other_unit_three >=", value, "otherUnitThree");
+            return (Criteria) this;
+        }
+
+        public Criteria andOtherUnitThreeLessThan(String value) {
+            addCriterion("other_unit_three <", value, "otherUnitThree");
+            return (Criteria) this;
+        }
+
+        public Criteria andOtherUnitThreeLessThanOrEqualTo(String value) {
+            addCriterion("other_unit_three <=", value, "otherUnitThree");
+            return (Criteria) this;
+        }
+
+        public Criteria andOtherUnitThreeLike(String value) {
+            addCriterion("other_unit_three like", value, "otherUnitThree");
+            return (Criteria) this;
+        }
+
+        public Criteria andOtherUnitThreeNotLike(String value) {
+            addCriterion("other_unit_three not like", value, "otherUnitThree");
+            return (Criteria) this;
+        }
+
+        public Criteria andOtherUnitThreeIn(List<String> values) {
+            addCriterion("other_unit_three in", values, "otherUnitThree");
+            return (Criteria) this;
+        }
+
+        public Criteria andOtherUnitThreeNotIn(List<String> values) {
+            addCriterion("other_unit_three not in", values, "otherUnitThree");
+            return (Criteria) this;
+        }
+
+        public Criteria andOtherUnitThreeBetween(String value1, String value2) {
+            addCriterion("other_unit_three between", value1, value2, "otherUnitThree");
+            return (Criteria) this;
+        }
+
+        public Criteria andOtherUnitThreeNotBetween(String value1, String value2) {
+            addCriterion("other_unit_three not between", value1, value2, "otherUnitThree");
+            return (Criteria) this;
+        }
+
         public Criteria andRatioIsNull() {
             addCriterion("ratio is null");
             return (Criteria) this;
@@ -431,6 +571,126 @@ public class UnitExample {
 
         public Criteria andRatioNotBetween(Integer value1, Integer value2) {
             addCriterion("ratio not between", value1, value2, "ratio");
+            return (Criteria) this;
+        }
+
+        public Criteria andRatioTwoIsNull() {
+            addCriterion("ratio_two is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRatioTwoIsNotNull() {
+            addCriterion("ratio_two is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRatioTwoEqualTo(Integer value) {
+            addCriterion("ratio_two =", value, "ratioTwo");
+            return (Criteria) this;
+        }
+
+        public Criteria andRatioTwoNotEqualTo(Integer value) {
+            addCriterion("ratio_two <>", value, "ratioTwo");
+            return (Criteria) this;
+        }
+
+        public Criteria andRatioTwoGreaterThan(Integer value) {
+            addCriterion("ratio_two >", value, "ratioTwo");
+            return (Criteria) this;
+        }
+
+        public Criteria andRatioTwoGreaterThanOrEqualTo(Integer value) {
+            addCriterion("ratio_two >=", value, "ratioTwo");
+            return (Criteria) this;
+        }
+
+        public Criteria andRatioTwoLessThan(Integer value) {
+            addCriterion("ratio_two <", value, "ratioTwo");
+            return (Criteria) this;
+        }
+
+        public Criteria andRatioTwoLessThanOrEqualTo(Integer value) {
+            addCriterion("ratio_two <=", value, "ratioTwo");
+            return (Criteria) this;
+        }
+
+        public Criteria andRatioTwoIn(List<Integer> values) {
+            addCriterion("ratio_two in", values, "ratioTwo");
+            return (Criteria) this;
+        }
+
+        public Criteria andRatioTwoNotIn(List<Integer> values) {
+            addCriterion("ratio_two not in", values, "ratioTwo");
+            return (Criteria) this;
+        }
+
+        public Criteria andRatioTwoBetween(Integer value1, Integer value2) {
+            addCriterion("ratio_two between", value1, value2, "ratioTwo");
+            return (Criteria) this;
+        }
+
+        public Criteria andRatioTwoNotBetween(Integer value1, Integer value2) {
+            addCriterion("ratio_two not between", value1, value2, "ratioTwo");
+            return (Criteria) this;
+        }
+
+        public Criteria andRatioThreeIsNull() {
+            addCriterion("ratio_three is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRatioThreeIsNotNull() {
+            addCriterion("ratio_three is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRatioThreeEqualTo(Integer value) {
+            addCriterion("ratio_three =", value, "ratioThree");
+            return (Criteria) this;
+        }
+
+        public Criteria andRatioThreeNotEqualTo(Integer value) {
+            addCriterion("ratio_three <>", value, "ratioThree");
+            return (Criteria) this;
+        }
+
+        public Criteria andRatioThreeGreaterThan(Integer value) {
+            addCriterion("ratio_three >", value, "ratioThree");
+            return (Criteria) this;
+        }
+
+        public Criteria andRatioThreeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("ratio_three >=", value, "ratioThree");
+            return (Criteria) this;
+        }
+
+        public Criteria andRatioThreeLessThan(Integer value) {
+            addCriterion("ratio_three <", value, "ratioThree");
+            return (Criteria) this;
+        }
+
+        public Criteria andRatioThreeLessThanOrEqualTo(Integer value) {
+            addCriterion("ratio_three <=", value, "ratioThree");
+            return (Criteria) this;
+        }
+
+        public Criteria andRatioThreeIn(List<Integer> values) {
+            addCriterion("ratio_three in", values, "ratioThree");
+            return (Criteria) this;
+        }
+
+        public Criteria andRatioThreeNotIn(List<Integer> values) {
+            addCriterion("ratio_three not in", values, "ratioThree");
+            return (Criteria) this;
+        }
+
+        public Criteria andRatioThreeBetween(Integer value1, Integer value2) {
+            addCriterion("ratio_three between", value1, value2, "ratioThree");
+            return (Criteria) this;
+        }
+
+        public Criteria andRatioThreeNotBetween(Integer value1, Integer value2) {
+            addCriterion("ratio_three not between", value1, value2, "ratioThree");
             return (Criteria) this;
         }
 

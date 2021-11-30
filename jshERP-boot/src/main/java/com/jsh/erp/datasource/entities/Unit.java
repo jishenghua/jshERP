@@ -9,7 +9,15 @@ public class Unit {
 
     private String otherUnit;
 
+    private String otherUnitTwo;
+
+    private String otherUnitThree;
+
     private Integer ratio;
+
+    private Integer ratioTwo;
+
+    private Integer ratioThree;
 
     private Long tenantId;
 
@@ -47,12 +55,44 @@ public class Unit {
         this.otherUnit = otherUnit == null ? null : otherUnit.trim();
     }
 
+    public String getOtherUnitTwo() {
+        return otherUnitTwo;
+    }
+
+    public void setOtherUnitTwo(String otherUnitTwo) {
+        this.otherUnitTwo = otherUnitTwo == null ? null : otherUnitTwo.trim();
+    }
+
+    public String getOtherUnitThree() {
+        return otherUnitThree;
+    }
+
+    public void setOtherUnitThree(String otherUnitThree) {
+        this.otherUnitThree = otherUnitThree == null ? null : otherUnitThree.trim();
+    }
+
     public Integer getRatio() {
         return ratio;
     }
 
     public void setRatio(Integer ratio) {
         this.ratio = ratio;
+    }
+
+    public Integer getRatioTwo() {
+        return ratioTwo;
+    }
+
+    public void setRatioTwo(Integer ratioTwo) {
+        this.ratioTwo = ratioTwo;
+    }
+
+    public Integer getRatioThree() {
+        return ratioThree;
+    }
+
+    public void setRatioThree(Integer ratioThree) {
+        this.ratioThree = ratioThree;
     }
 
     public Long getTenantId() {

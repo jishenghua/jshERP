@@ -208,14 +208,11 @@ public class MaterialController {
                 for (MaterialVo4Unit material : dataList) {
                     JSONObject item = new JSONObject();
                     item.put("id", material.getMeId()); //商品扩展表的id
-                    String ratio; //比例
+                    String ratioStr; //比例
                     if (material.getUnitId() == null || material.getUnitId().equals("")) {
-                        ratio = "";
+                        ratioStr = "";
                     } else {
-                        ratio = material.getUnitName();
-                        if(ratio!=null) {
-                            ratio = ratio.substring(ratio.indexOf("("));
-                        }
+                        ratioStr = "[多单位]";
                     }
                     item.put("mBarCode", material.getmBarCode());
                     item.put("name", material.getName());
@@ -223,7 +220,7 @@ public class MaterialController {
                     item.put("standard", material.getStandard());
                     item.put("model", material.getModel());
                     item.put("color", material.getColor());
-                    item.put("unit", material.getCommodityUnit() + ratio);
+                    item.put("unit", material.getCommodityUnit() + ratioStr);
                     item.put("sku", material.getSku());
                     item.put("enableSerialNumber", material.getEnableSerialNumber());
                     item.put("enableBatchNumber", material.getEnableBatchNumber());
@@ -234,11 +231,8 @@ public class MaterialController {
                         stock = depotItemService.getStockByParam(depotId,material.getId(),null,null);
                         if (material.getUnitId()!=null){
                             Unit unit = unitService.getUnit(material.getUnitId());
-                            if(material.getCommodityUnit().equals(unit.getOtherUnit())) {
-                                if(unit.getRatio()!=0) {
-                                    stock = stock.divide(BigDecimal.valueOf(unit.getRatio()),2,BigDecimal.ROUND_HALF_UP);
-                                }
-                            }
+                            String commodityUnit = material.getCommodityUnit();
+                            stock = unitService.parseStockByUnit(stock, unit, commodityUnit);
                         }
                     }
                     item.put("stock", stock);
@@ -578,11 +572,8 @@ public class MaterialController {
             stock = depotItemService.getStockByParam(mvo.getDepotId(), mvo.getId(), null, null);
             if (mvo.getUnitId() != null) {
                 Unit unit = unitService.getUnit(mvo.getUnitId());
-                if (mvo.getCommodityUnit().equals(unit.getOtherUnit())) {
-                    if (unit.getRatio() != 0) {
-                        stock = stock.divide(BigDecimal.valueOf(unit.getRatio()), 2, BigDecimal.ROUND_HALF_UP);
-                    }
-                }
+                String commodityUnit = mvo.getCommodityUnit();
+                stock = unitService.parseStockByUnit(stock, unit, commodityUnit);
             }
         }
         mvo.setStock(stock);
