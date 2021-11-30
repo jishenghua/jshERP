@@ -107,14 +107,14 @@
           {dataIndex: 'standard', title: '规格', width: 80},
           {dataIndex: 'model', title: '型号', width: 80},
           {dataIndex: 'color', title: '颜色', width: 80},
-          {dataIndex: 'unit', title: '单位', width: 60},
+          {dataIndex: 'unit', title: '单位', width: 70, ellipsis:true},
           {dataIndex: 'sku', title: '多属性', width: 80},
           {dataIndex: 'stock', title: '库存', width: 60},
           {dataIndex: 'expand', title: '扩展信息', width: 80},
           {dataIndex: 'enableSerialNumber', title: '序列号', width: 60, align: "center",
             scopedSlots: { customRender: 'customRenderEnableSerialNumber' }
           },
-          {dataIndex: 'enableBatchNumber', title: '批号', width: 60, align: "center",
+          {dataIndex: 'enableBatchNumber', title: '批号', width: 50, align: "center",
             scopedSlots: { customRender: 'customRenderEnableBatchNumber' }
           }
         ],

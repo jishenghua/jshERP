@@ -95,10 +95,6 @@
                 <a>删除</a>
               </a-popconfirm>
             </span>
-            <span slot="customRenderUnit" slot-scope="text, record">
-              {{text?text:record.unitName}}
-              <a-tag v-if="record.sku">SKU</a-tag>
-            </span>
             <template slot="customRenderEnabled" slot-scope="enabled">
               <a-tag v-if="enabled" color="green">启用</a-tag>
               <a-tag v-if="!enabled" color="orange">禁用</a-tag>
@@ -165,8 +161,17 @@
           {title: '颜色', dataIndex: 'color', width: '4%'},
           {title: '类别', dataIndex: 'categoryName', width: '6%'},
           {title: '扩展信息', dataIndex: 'materialOther', width: '6%'},
-          {title: '单位', dataIndex: 'unit', width: '6%',
-            scopedSlots: { customRender: 'customRenderUnit' }
+          {title: '单位', dataIndex: 'unit', width: '6%', ellipsis:true,
+            customRender:function (t,r,index) {
+              if (r) {
+                let name = t?t:r.unitName
+                if(r.sku) {
+                  return name + '[SKU]';
+                } else {
+                  return name;
+                }
+              }
+            }
           },
           {title: '保质期', dataIndex: 'expiryNum', width: '4%'},
           {title: '库存', dataIndex: 'stock', width: '5%'},
