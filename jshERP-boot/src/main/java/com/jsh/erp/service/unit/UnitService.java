@@ -120,6 +120,12 @@ public class UnitService {
         try{
             parseNameByUnit(unit);
             result=unitMapper.updateByPrimaryKeySelective(unit);
+            if(unit.getRatioTwo()==null) {
+                unitMapperEx.updateRatioTwoById(unit.getId());
+            }
+            if(unit.getRatioThree()==null) {
+                unitMapperEx.updateRatioThreeById(unit.getId());
+            }
             logService.insertLog("计量单位",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(unit.getName()).toString(), request);
         }catch(Exception e){
