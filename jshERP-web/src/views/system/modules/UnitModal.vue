@@ -116,18 +116,23 @@
               that.confirmLoading = false;
               return;
             }
-            if(!formData.ratio) {
-              that.$message.warning('抱歉，此时比例不能为空！');
+            if(formData.otherUnit && !formData.ratio) {
+              that.$message.warning('抱歉，比例不能为空！');
               that.confirmLoading = false;
               return;
             }
             if(formData.otherUnitTwo && !formData.ratioTwo) {
-              that.$message.warning('抱歉，此时比例2不能为空！');
+              that.$message.warning('抱歉，比例2不能为空！');
               that.confirmLoading = false;
               return;
             }
             if(formData.otherUnitThree && !formData.ratioThree) {
-              that.$message.warning('抱歉，此时比例3不能为空！');
+              that.$message.warning('抱歉，比例3不能为空！');
+              that.confirmLoading = false;
+              return;
+            }
+            if(!formData.otherUnitTwo && formData.otherUnitThree) {
+              that.$message.warning('抱歉，需要先输入副单位2再输入副单位3！');
               that.confirmLoading = false;
               return;
             }
