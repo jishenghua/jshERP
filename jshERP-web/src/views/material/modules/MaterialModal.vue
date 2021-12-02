@@ -46,7 +46,7 @@
                     <a-col :lg="15" :md="15" :sm="24">
                       <a-input placeholder="输入单位" :hidden="unitStatus" v-decorator.trim="[ 'unit' ]" @change="onlyUnitOnChange" />
                       <a-select :value="unitList" placeholder="选择单位" v-decorator="[ 'unitId' ]" @change="manyUnitOnChange"
-                                :hidden="manyUnitStatus" :dropdownMatchSelectWidth="false">
+                        showSearch optionFilterProp="children" :hidden="manyUnitStatus" :dropdownMatchSelectWidth="false">
                         <div slot="dropdownRender" slot-scope="menu">
                           <v-nodes :vnodes="menu" />
                           <a-divider style="margin: 4px 0;" />
