@@ -153,7 +153,7 @@ public class SupplierService {
             //新增客户时给当前用户自动授权
             if("客户".equals(supplier.getType())) {
                 Long userId = userService.getUserId(request);
-                Supplier sInfo = supplierMapperEx.getSupplierByName(supplier.getSupplier());
+                Supplier sInfo = supplierMapperEx.getSupplierByNameAndType(supplier.getSupplier(), supplier.getType());
                 String ubKey = "[" + sInfo.getId() + "]";
                 List<UserBusiness> ubList = userBusinessService.getBasicData(userId.toString(), "UserCustomer");
                 if(ubList ==null || ubList.size() == 0) {
@@ -262,6 +262,19 @@ public class SupplierService {
     public int checkIsNameExist(Long id, String name)throws Exception {
         SupplierExample example = new SupplierExample();
         example.createCriteria().andIdNotEqualTo(id).andSupplierEqualTo(name).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        List<Supplier> list=null;
+        try{
+            list= supplierMapper.selectByExample(example);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list==null?0:list.size();
+    }
+
+    public int checkIsNameAndTypeExist(Long id, String name, String type)throws Exception {
+        SupplierExample example = new SupplierExample();
+        example.createCriteria().andIdNotEqualTo(id).andSupplierEqualTo(name).andTypeEqualTo(type)
+                .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<Supplier> list=null;
         try{
             list= supplierMapper.selectByExample(example);

@@ -83,9 +83,9 @@
         )
     </update>
 
-    <select id="getSupplierByName" resultType="com.jsh.erp.datasource.entities.Supplier">
+    <select id="getSupplierByNameAndType" resultType="com.jsh.erp.datasource.entities.Supplier">
         select *
         from jsh_supplier
-        where supplier = #{supplier}
+        where supplier = #{supplier} and type = #{type}
     </select>
 </mapper>

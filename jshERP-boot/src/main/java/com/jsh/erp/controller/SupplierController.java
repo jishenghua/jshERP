@@ -55,6 +55,22 @@ public class SupplierController {
     @Resource
     private UserService userService;
 
+    @GetMapping(value = "/checkIsNameAndTypeExist")
+    @ApiOperation(value = "检查名称和类型是否存在")
+    public String checkIsNameAndTypeExist(@RequestParam Long id,
+                                          @RequestParam(value ="name") String name,
+                                          @RequestParam(value ="type") String type,
+                                          HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        int exist = supplierService.checkIsNameAndTypeExist(id, name, type);
+        if(exist > 0) {
+            objectMap.put("status", true);
+        } else {
+            objectMap.put("status", false);
+        }
+        return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+    }
+
     /**
      * 查找客户信息-下拉框
      * @param request
@@ -135,7 +151,7 @@ public class SupplierController {
                 for (Supplier supplier : supplierList) {
                     JSONObject item = new JSONObject();
                     item.put("id", supplier.getId());
-                    item.put("supplier", supplier.getSupplier()); //供应商名称
+                    item.put("supplier", supplier.getSupplier() + "[供应商]"); //供应商名称
                     dataArray.add(item);
                 }
             }
@@ -151,7 +167,7 @@ public class SupplierController {
                     Boolean flag = ubValue.contains("[" + supplier.getId().toString() + "]");
                     if (!customerFlag || flag) {
                         item.put("id", supplier.getId());
-                        item.put("supplier", supplier.getSupplier()); //客户名称
+                        item.put("supplier", supplier.getSupplier() + "[客户]"); //客户名称
                         dataArray.add(item);
                     }
                 }

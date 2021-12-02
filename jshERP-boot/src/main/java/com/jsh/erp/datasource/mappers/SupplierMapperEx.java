@@ -31,6 +31,7 @@ public interface SupplierMapperEx {
 
     int batchDeleteSupplierByIds(@Param("updateTime") Date updateTime, @Param("updater") Long updater, @Param("ids") String ids[]);
 
-    Supplier getSupplierByName(
-            @Param("supplier") String supplier);
+    Supplier getSupplierByNameAndType(
+            @Param("supplier") String supplier,
+            @Param("type") String type);
 }
