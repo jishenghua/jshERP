@@ -141,6 +141,7 @@
       validateSupplierName(rule, value, callback){
         let params = {
           name: value,
+          type: '会员',
           id: this.model.id?this.model.id:0
         };
         checkSupplier(params).then((res)=>{
