@@ -280,7 +280,7 @@ public class DepotItemController {
     @ApiOperation(value = "查找所有的明细")
     public BaseResponseInfo findByAll(@RequestParam("currentPage") Integer currentPage,
                                       @RequestParam("pageSize") Integer pageSize,
-                                      @RequestParam(value = "depotIds", required = false) String depotIds,
+                                      @RequestParam("depotIds") String depotIds,
                                       @RequestParam("monthTime") String monthTime,
                                       @RequestParam("materialParam") String materialParam,
                                       @RequestParam("mpList") String mpList,
@@ -290,17 +290,7 @@ public class DepotItemController {
         try {
             String timeA = Tools.firstDayOfMonth(monthTime) + BusinessConstants.DAY_FIRST_TIME;
             String timeB = Tools.lastDayOfMonth(monthTime) + BusinessConstants.DAY_LAST_TIME;
-            List<Long> depotList = new ArrayList<>();
-            if(StringUtil.isNotEmpty(depotIds)) {
-                depotList = StringUtil.strToLongList(depotIds);
-            } else {
-                //未选择仓库时默认为当前用户有权限的仓库
-                JSONArray depotArr = depotService.findDepotByCurrentUser();
-                for(Object obj: depotArr) {
-                    JSONObject object = JSONObject.parseObject(obj.toString());
-                    depotList.add(object.getLong("id"));
-                }
-            }
+            List<Long> depotList = StringUtil.strToLongList(depotIds);
             List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(StringUtil.toNull(materialParam),
                     timeB,(currentPage-1)*pageSize, pageSize);
             String[] mpArr = mpList.split(",");
@@ -376,7 +366,7 @@ public class DepotItemController {
      */
     @GetMapping(value = "/totalCountMoney")
     @ApiOperation(value = "统计总计金额")
-    public BaseResponseInfo totalCountMoney(@RequestParam(value = "depotIds", required = false) String depotIds,
+    public BaseResponseInfo totalCountMoney(@RequestParam("depotIds") String depotIds,
                                             @RequestParam("monthTime") String monthTime,
                                             @RequestParam("materialParam") String materialParam,
                                             HttpServletRequest request) throws Exception{
@@ -384,17 +374,7 @@ public class DepotItemController {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
             String endTime = Tools.lastDayOfMonth(monthTime) + BusinessConstants.DAY_LAST_TIME;
-            List<Long> depotList = new ArrayList<>();
-            if(StringUtil.isNotEmpty(depotIds)) {
-                depotList = StringUtil.strToLongList(depotIds);
-            } else {
-                //未选择仓库时默认为当前用户有权限的仓库
-                JSONArray depotArr = depotService.findDepotByCurrentUser();
-                for(Object obj: depotArr) {
-                    JSONObject object = JSONObject.parseObject(obj.toString());
-                    depotList.add(object.getLong("id"));
-                }
-            }
+            List<Long> depotList = StringUtil.strToLongList(depotIds);
             List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(StringUtil.toNull(materialParam),
                     endTime, null, null);
             BigDecimal thisAllPrice = BigDecimal.ZERO;
