@@ -1298,3 +1298,13 @@ update jsh_user_business ub left join jsh_user u on ub.key_id=u.id set ub.tenant
 where (ub.type='UserRole' or ub.type='UserDepot' or ub.type='UserCustomer') and u.tenant_id!=0;
 update jsh_user_business ub left join jsh_role r on ub.key_id=r.id set ub.tenant_id=r.tenant_id
 where (ub.type='RoleFunctions') and r.tenant_id is not null;
+
+-- --------------------------------------------------------
+-- 时间 2021年11月30日
+-- by jishenghua
+-- 给计量单位表增加副单位2、副单位3、比例2、比例3 四个字段
+-- --------------------------------------------------------
+alter table jsh_unit add other_unit_two varchar(50) DEFAULT NULL COMMENT '副单位2' after other_unit;
+alter table jsh_unit add other_unit_three varchar(50) DEFAULT NULL COMMENT '副单位3' after other_unit_two;
+alter table jsh_unit add ratio_two int(11) DEFAULT NULL COMMENT '比例2' after ratio;
+alter table jsh_unit add ratio_three int(11) DEFAULT NULL COMMENT '比例3' after ratio_two;

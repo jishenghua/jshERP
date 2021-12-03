@@ -37,19 +37,19 @@
           <a-upload v-if="btnEnableList.indexOf(1)>-1" name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
             <a-popover title="导入注意点">
               <template slot="content">
-                <p>预收款为数值且要大于0</p>
+                <p><a target="_blank" href="/doc/member_template.xls"><b>会员Excel模板下载</b></a></p>
               </template>
               <a-button type="primary" icon="import">导入</a-button>
             </a-popover>
           </a-upload>
-          <a-button type="primary" @click="exportExcel" icon="download">导出</a-button>
+          <a-button type="primary" icon="download" @click="handleExportXls('会员信息')">导出</a-button>
           <a-dropdown>
             <a-menu slot="overlay">
               <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
               <a-menu-item key="2" v-if="btnEnableList.indexOf(1)>-1" @click="batchSetStatus(true)"><a-icon type="check-square"/>启用</a-menu-item>
               <a-menu-item key="3" v-if="btnEnableList.indexOf(1)>-1" @click="batchSetStatus(false)"><a-icon type="close-square"/>禁用</a-menu-item>
             </a-menu>
-            <a-button style="margin-left: 8px">
+            <a-button>
               批量操作 <a-icon type="down" />
             </a-button>
           </a-dropdown>
@@ -154,7 +154,8 @@
           list: "/supplier/list",
           delete: "/supplier/delete",
           deleteBatch: "/supplier/deleteBatch",
-          importExcelUrl: "/supplier/importExcel",
+          importExcelUrl: "/supplier/importMember",
+          exportXlsUrl: "/supplier/exportExcel",
           batchSetStatusUrl: "/supplier/batchSetStatus"
         }
       }
@@ -178,16 +179,6 @@
         if(this.btnEnableList.indexOf(1)===-1) {
           this.$refs.modalForm.isReadOnly = true
         }
-      },
-      exportExcel() {
-        let aoa = [['名称', '联系人', '手机号码', '联系电话', '电子邮箱', '预付款', '备注', '状态']]
-        for (let i = 0; i < this.dataSource.length; i++) {
-          let ds = this.dataSource[i]
-          let enabledStr = ds.enabled?'启用':'禁用'
-          let item = [ds.supplier, ds.contacts, ds.telephone, ds.phoneNum, ds.email, ds.advanceIn, ds.description, enabledStr]
-          aoa.push(item)
-        }
-        openDownloadDialog(sheet2blob(aoa), '会员信息')
       }
     }
   }

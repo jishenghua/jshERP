@@ -8,7 +8,7 @@
     @cancel="handleCancel"
     cancelText="关闭"
     wrapClassName="ant-modal-cust-warp"
-    style="top:25%;height: 50%;overflow-y: hidden">
+    style="top:30%;height: 40%;overflow-y: hidden">
     <template slot="footer">
       <a-button key="back" v-if="isReadOnly" @click="handleCancel">
         关闭

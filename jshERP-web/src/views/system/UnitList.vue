@@ -28,7 +28,7 @@
             <a-menu slot="overlay">
               <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
             </a-menu>
-            <a-button style="margin-left: 8px">
+            <a-button>
               批量操作 <a-icon type="down" />
             </a-button>
           </a-dropdown>
@@ -98,10 +98,33 @@
               return parseInt(index)+1;
             }
           },
-          { title: '计量单位', align:"center", dataIndex: 'name', width:100 },
+          { title: '计量单位', align:"center", dataIndex: 'name', width:150 },
           { title: '基本单位', align:"center", dataIndex: 'basicUnit', width:100 },
-          { title: '副单位', align:"center", dataIndex: 'otherUnit', width:100 },
-          { title: '比例', align:"center", dataIndex: 'ratio', width:100 },
+          { title: '副单位', align:"center", dataIndex: 'otherUnit', width:100,
+            customRender:function (t,r,index) {
+              if (r) {
+                return r.otherUnit + '=' + r.ratio + r.basicUnit;
+              }
+            }
+          },
+          { title: '副单位2', align:"center", dataIndex: 'otherUnitTwo', width:100,
+            customRender:function (t,r,index) {
+              if (r) {
+                if(r.otherUnitTwo) {
+                  return r.otherUnitTwo + '=' + r.ratioTwo + r.basicUnit;
+                }
+              }
+            }
+          },
+          { title: '副单位3', align:"center", dataIndex: 'otherUnitThree', width:100,
+            customRender:function (t,r,index) {
+              if (r) {
+                if(r.otherUnitThree) {
+                  return r.otherUnitThree + '=' + r.ratioThree + r.basicUnit;
+                }
+              }
+            }
+          },
           {
             title: '操作',
             dataIndex: 'action',

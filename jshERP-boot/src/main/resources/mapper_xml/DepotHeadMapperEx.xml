@@ -73,6 +73,10 @@
             <bind name="bindNumber" value="'%'+number+'%'"/>
             and dh.number like #{bindNumber}
         </if>
+        <if test="linkNumber != null">
+            <bind name="bindLinkNumber" value="'%'+linkNumber+'%'"/>
+            and dh.link_number like #{bindLinkNumber}
+        </if>
         <if test="beginTime != null">
             and dh.oper_time >= #{beginTime}
         </if>
@@ -137,6 +141,10 @@
             <bind name="bindNumber" value="'%'+number+'%'"/>
             and dh.number like #{bindNumber}
         </if>
+        <if test="linkNumber != null">
+            <bind name="bindLinkNumber" value="'%'+linkNumber+'%'"/>
+            and dh.link_number like #{bindLinkNumber}
+        </if>
         <if test="beginTime != null">
             and dh.oper_time >= #{beginTime}
         </if>
@@ -200,6 +208,10 @@
         <if test="type != null">
             and dh.type=#{type}
         </if>
+        <if test="number != null and number !=''">
+            <bind name="bindNumber" value="'%'+number+'%'"/>
+            and dh.number like #{bindNumber}
+        </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
@@ -229,6 +241,10 @@
         </if>
         <if test="type != null">
             and dh.type=#{type}
+        </if>
+        <if test="number != null and number !=''">
+            <bind name="bindNumber" value="'%'+number+'%'"/>
+            and dh.number like #{bindNumber}
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
@@ -325,6 +341,10 @@
         <if test="subType != null">
             and dh.sub_type=#{subType}
         </if>
+        <if test="number != null and number !=''">
+            <bind name="bindNumber" value="'%'+number+'%'"/>
+            and dh.number like #{bindNumber}
+        </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey} or dh.remark like #{bindKey})
@@ -352,6 +372,10 @@
         </if>
         <if test="subType != null">
             and dh.sub_type=#{subType}
+        </if>
+        <if test="number != null and number !=''">
+            <bind name="bindNumber" value="'%'+number+'%'"/>
+            and dh.number like #{bindNumber}
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>

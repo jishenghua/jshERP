@@ -8,7 +8,7 @@
     @cancel="handleCancel"
     cancelText="关闭"
     wrapClassName="ant-modal-cust-warp"
-    style="top:5%;height: 100%;overflow-y: hidden">
+    style="top:25%;height: 50%;overflow-y: hidden">
     <template slot="footer">
       <a-button key="back" v-if="isReadOnly" @click="handleCancel">
         关闭
@@ -141,6 +141,7 @@
       validateSupplierName(rule, value, callback){
         let params = {
           name: value,
+          type: '会员',
           id: this.model.id?this.model.id:0
         };
         checkSupplier(params).then((res)=>{

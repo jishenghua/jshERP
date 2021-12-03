@@ -85,6 +85,7 @@ public class DepotHeadController {
      * @param currentPage
      * @param pageSize
      * @param oId
+     * @param number
      * @param materialParam
      * @param depotId
      * @param beginTime
@@ -97,9 +98,10 @@ public class DepotHeadController {
     @ApiOperation(value = "入库出库明细接口")
     public BaseResponseInfo findInDetail(@RequestParam("currentPage") Integer currentPage,
                                         @RequestParam("pageSize") Integer pageSize,
-                                        @RequestParam("organId") Integer oId,
+                                        @RequestParam(value = "organId", required = false) Integer oId,
+                                         @RequestParam("number") String number,
                                         @RequestParam("materialParam") String materialParam,
-                                        @RequestParam("depotId") Integer depotId,
+                                        @RequestParam(value = "depotId", required = false) Integer depotId,
                                         @RequestParam("beginTime") String beginTime,
                                         @RequestParam("endTime") String endTime,
                                         @RequestParam("type") String type,
@@ -110,8 +112,8 @@ public class DepotHeadController {
             List<DepotHeadVo4InDetail> resList = new ArrayList<DepotHeadVo4InDetail>();
             beginTime = Tools.parseDayToTime(beginTime, BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            List<DepotHeadVo4InDetail> list = depotHeadService.findByAll(beginTime, endTime, type, materialParam, depotId, oId, (currentPage-1)*pageSize, pageSize);
-            int total = depotHeadService.findByAllCount(beginTime, endTime, type, materialParam, depotId, oId);
+            List<DepotHeadVo4InDetail> list = depotHeadService.findByAll(beginTime, endTime, type, materialParam, depotId, oId, number, (currentPage-1)*pageSize, pageSize);
+            int total = depotHeadService.findByAllCount(beginTime, endTime, type, materialParam, depotId, oId, number);
             map.put("total", total);
             //存放数据json数组
             if (null != list) {
@@ -147,9 +149,9 @@ public class DepotHeadController {
     @ApiOperation(value = "入库出库统计接口")
     public BaseResponseInfo findInOutMaterialCount(@RequestParam("currentPage") Integer currentPage,
                                          @RequestParam("pageSize") Integer pageSize,
-                                         @RequestParam("organId") Integer oId,
+                                         @RequestParam(value = "organId", required = false) Integer oId,
                                          @RequestParam("materialParam") String materialParam,
-                                         @RequestParam("depotId") Integer depotId,
+                                         @RequestParam(value = "depotId", required = false) Integer depotId,
                                          @RequestParam("beginTime") String beginTime,
                                          @RequestParam("endTime") String endTime,
                                          @RequestParam("type") String type,
@@ -184,7 +186,7 @@ public class DepotHeadController {
      * 调拨明细统计
      * @param currentPage
      * @param pageSize
-     * @param oId
+     * @param number
      * @param materialParam
      * @param depotIdF  调出仓库
      * @param depotId  调入仓库
@@ -198,10 +200,10 @@ public class DepotHeadController {
     @ApiOperation(value = "调拨明细统计")
     public BaseResponseInfo findallocationDetail(@RequestParam("currentPage") Integer currentPage,
                                                  @RequestParam("pageSize") Integer pageSize,
-                                                 @RequestParam("organId") Integer oId,
+                                                 @RequestParam("number") String number,
                                                  @RequestParam("materialParam") String materialParam,
-                                                 @RequestParam("depotId") Integer depotId,
-                                                 @RequestParam("depotIdF") Integer depotIdF,
+                                                 @RequestParam(value = "depotId", required = false) Integer depotId,
+                                                 @RequestParam(value = "depotIdF", required = false) Integer depotIdF,
                                                  @RequestParam("beginTime") String beginTime,
                                                  @RequestParam("endTime") String endTime,
                                                  @RequestParam("subType") String subType,
@@ -211,8 +213,8 @@ public class DepotHeadController {
         try {
             beginTime = Tools.parseDayToTime(beginTime, BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            List<DepotHeadVo4InDetail> list = depotHeadService.findAllocationDetail(beginTime, endTime, subType, materialParam, depotId, depotIdF, oId, (currentPage-1)*pageSize, pageSize);
-            int total = depotHeadService.findAllocationDetailCount(beginTime, endTime, subType, materialParam, depotId, depotIdF,oId);
+            List<DepotHeadVo4InDetail> list = depotHeadService.findAllocationDetail(beginTime, endTime, subType, number, materialParam, depotId, depotIdF, (currentPage-1)*pageSize, pageSize);
+            int total = depotHeadService.findAllocationDetailCount(beginTime, endTime, subType, number, materialParam, depotId, depotIdF);
             map.put("rows", list);
             map.put("total", total);
             res.code = 200;
@@ -242,7 +244,7 @@ public class DepotHeadController {
                                                    @RequestParam("pageSize") Integer pageSize,
                                                    @RequestParam("beginTime") String beginTime,
                                                    @RequestParam("endTime") String endTime,
-                                                   @RequestParam("organId") Integer organId,
+                                                   @RequestParam(value = "organId", required = false) Integer organId,
                                                    @RequestParam("supType") String supType,
                                                    HttpServletRequest request) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();

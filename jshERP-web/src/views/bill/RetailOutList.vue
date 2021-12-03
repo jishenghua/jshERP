@@ -80,7 +80,7 @@
               <a-menu-item key="2" v-if="btnEnableList.indexOf(2)>-1" @click="batchSetStatus(1)"><a-icon type="check"/>审核</a-menu-item>
               <a-menu-item key="3" v-if="btnEnableList.indexOf(7)>-1" @click="batchSetStatus(0)"><a-icon type="stop"/>反审核</a-menu-item>
             </a-menu>
-            <a-button style="margin-left: 8px">
+            <a-button>
               批量操作 <a-icon type="down" />
             </a-button>
           </a-dropdown>

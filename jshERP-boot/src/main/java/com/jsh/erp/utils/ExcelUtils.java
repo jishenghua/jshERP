@@ -204,7 +204,11 @@ public class ExcelUtils {
 
 
 	public static String getContent(Sheet src, int rowNum, int colNum) {
-		return src.getRow(rowNum)[colNum].getContents().trim();
+		if(colNum < src.getRow(rowNum).length) {
+			return src.getRow(rowNum)[colNum].getContents().trim();
+		} else {
+			return null;
+		}
 	}
 
 	/**

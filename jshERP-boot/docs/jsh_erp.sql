@@ -866,7 +866,11 @@ CREATE TABLE `jsh_unit` (
   `name` varchar(50) DEFAULT NULL COMMENT '名称，支持多单位',
   `basic_unit` varchar(50) DEFAULT NULL COMMENT '基础单位',
   `other_unit` varchar(50) DEFAULT NULL COMMENT '副单位',
+  `other_unit_two` varchar(50) DEFAULT NULL COMMENT '副单位2',
+  `other_unit_three` varchar(50) DEFAULT NULL COMMENT '副单位3',
   `ratio` int(11) DEFAULT NULL COMMENT '比例',
+  `ratio_two` int(11) DEFAULT NULL COMMENT '比例2',
+  `ratio_three` int(11) DEFAULT NULL COMMENT '比例3',
   `tenant_id` bigint(20) DEFAULT NULL COMMENT '租户id',
   `delete_flag` varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除',
   PRIMARY KEY (`id`)
@@ -875,10 +879,10 @@ CREATE TABLE `jsh_unit` (
 -- ----------------------------
 -- Records of jsh_unit
 -- ----------------------------
-INSERT INTO `jsh_unit` VALUES ('15', '个,箱(1:12)', '个', '箱', '12', '63', '0');
-INSERT INTO `jsh_unit` VALUES ('19', '个,盒(1:15)', '个', '盒', '15', '63', '0');
-INSERT INTO `jsh_unit` VALUES ('20', '盒,箱(1:8)', '盒', '箱', '8', '63', '0');
-INSERT INTO `jsh_unit` VALUES ('21', '瓶,箱(1:12)', '瓶', '箱', '12', '63', '0');
+INSERT INTO `jsh_unit` VALUES ('15', '个/(箱=12个)', '个', '箱', null, null, '12', null, null, '63', '0');
+INSERT INTO `jsh_unit` VALUES ('19', '个/(盒=15个)', '个', '盒', null, null, '15', null, null, '63', '0');
+INSERT INTO `jsh_unit` VALUES ('20', '盒/(箱=8盒)', '盒', '箱', null, null, '8', null, null, '63', '0');
+INSERT INTO `jsh_unit` VALUES ('21', '瓶/(箱=12瓶)', '瓶', '箱', null, null, '12', null, null, '63', '0');
 
 -- ----------------------------
 -- Table structure for jsh_user

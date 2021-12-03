@@ -10,7 +10,7 @@
     @ok="handleOk"
     @cancel="handleCancel"
     cancelText="关闭"
-    wrapClassName="ant-modal-cust-warp"
+    wrapClassName="ant-modal-material-warp"
     :id="prefixNo"
     style="top:5%;height: 100%;overflow-y: hidden">
     <template slot="footer">
@@ -46,7 +46,7 @@
                     <a-col :lg="15" :md="15" :sm="24">
                       <a-input placeholder="输入单位" :hidden="unitStatus" v-decorator.trim="[ 'unit' ]" @change="onlyUnitOnChange" />
                       <a-select :value="unitList" placeholder="选择单位" v-decorator="[ 'unitId' ]" @change="manyUnitOnChange"
-                                :hidden="manyUnitStatus" :dropdownMatchSelectWidth="false">
+                        showSearch optionFilterProp="children" :hidden="manyUnitStatus" :dropdownMatchSelectWidth="false">
                         <div slot="dropdownRender" slot-scope="menu">
                           <v-nodes :vnodes="menu" />
                           <a-divider style="margin: 4px 0;" />
@@ -177,11 +177,13 @@
                 :loading="meTable.loading"
                 :columns="meTable.columns"
                 :dataSource="meTable.dataSource"
+                :height="300"
                 :minWidth="1000"
                 :maxHeight="300"
                 :rowNumber="false"
                 :rowSelection="true"
                 :actionButton="true"
+                @valueChange="onValueChange"
                 @added="onAdded">
                 <template #buttonAfter>
                   <a-button @click="batchSetPrice('purchase')">采购价-批量</a-button>
@@ -196,7 +198,7 @@
             <a-row class="form-row" :gutter="24">
               <a-col :lg="24" :md="24" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="">
-                  <a-textarea :rows="2" placeholder="请输入备注" v-decorator="[ 'remark' ]" style="margin-top:8px;"/>
+                  <a-textarea :rows="1" placeholder="请输入备注" v-decorator="[ 'remark' ]" style="margin-top:8px;"/>
                 </a-form-item>
               </a-col>
             </a-row>
@@ -588,30 +590,36 @@
               return;
             } else {
               //进一步校验单位
-              let manyUnitselected = ''
+              let basicUnit = '', otherUnit = '', otherUnitTwo = '', otherUnitThree = ''
               if(formData.unitId) {
-                for(let i=0; i<this.unitList.length; i++) {
-                  if(this.unitList[i].id == formData.unitId) {
-                    manyUnitselected = this.unitList[i].name
+                let unitArr = this.unitList
+                for(let i=0; i < unitArr.length; i++) {
+                  if(unitArr[i].id == formData.unitId) {
+                    basicUnit = unitArr[i].basicUnit
+                    otherUnit = unitArr[i].otherUnit
+                    if(unitArr[i].otherUnitTwo) {
+                      otherUnitTwo = unitArr[i].otherUnitTwo
+                    }
+                    if(unitArr[i].otherUnitThree) {
+                      otherUnitThree = unitArr[i].otherUnitThree
+                    }
                   }
                 }
               }
-              let manyUnitInfo = manyUnitselected.substring(0, manyUnitselected.indexOf("("));
-              let unitArr = manyUnitInfo.split(",");
               if(!formData.unit) {
                 //此时为多单位
                 if (formData.meList.length<2){
                   this.$message.warning('多单位的商品条码行数至少要有两行，请再新增一行条码信息！');
                   return;
                 }
-                if(formData.meList[0].commodityUnit != unitArr[0]) {
+                if(formData.meList[0].commodityUnit != basicUnit) {
                   this.$message.warning('条码之后的单位填写有误，单位【' + formData.meList[0].commodityUnit
-                    + '】请修改为【' + unitArr[0] + '】！');
+                    + '】请修改为【' + basicUnit + '】！');
                   return;
                 }
-                if(formData.meList[1].commodityUnit != unitArr[1]) {
+                if(formData.meList[1].commodityUnit != otherUnit) {
                   this.$message.warning('条码之后的单位填写有误，单位【' + formData.meList[1].commodityUnit
-                    + '】请修改为【' + unitArr[1] + '】！');
+                    + '】请修改为【' + otherUnit + '】！');
                   return;
                 }
               }
@@ -623,10 +631,10 @@
                       + formData.unit + '】！');
                     return;
                   }
-                } else if(manyUnitselected) {
-                  if(commodityUnit != unitArr[0] && commodityUnit != unitArr[1]) {
+                } else if(formData.unitId) {
+                  if(commodityUnit != basicUnit && commodityUnit != otherUnit && commodityUnit != otherUnitTwo && commodityUnit != otherUnitThree) {
                     this.$message.warning('条码之后的单位填写有误，单位【' + commodityUnit + '】请修改为【'
-                      + unitArr[0]+ '】或【' + unitArr[1]+ '】！');
+                      + basicUnit+ '】或【' + otherUnit+ '】或【' + otherUnitTwo+ '】或【' + otherUnitThree+ '】！');
                     return;
                   }
                 }
@@ -793,6 +801,71 @@
         this.maxBarCodeInfo = this.maxBarCodeInfo + 1
         target.setValues([{rowKey: row.id, values: {barCode: this.maxBarCodeInfo, commodityUnit: unit?unit:''}}])
       },
+      //单元值改变一个字符就触发一次
+      onValueChange(event) {
+        const { type, row, column, value, target } = event
+        switch(column.key) {
+          case "purchaseDecimal":
+          case "commodityDecimal":
+          case "wholesaleDecimal":
+          case "lowDecimal":
+            this.changeDecimalByValue(row)
+            break;
+        }
+      },
+      //修改商品明细中的价格触发计算
+      changeDecimalByValue(row) {
+        let unitArr = this.unitList
+        let basicUnit = '', otherUnit = '', ratio = 1, otherUnitTwo = '', ratioTwo = 1, otherUnitThree = '', ratioThree = 1
+        for (let i = 0; i < unitArr.length; i++) {
+          if(unitArr[i].id === this.form.getFieldValue('unitId')) {
+            basicUnit = unitArr[i].basicUnit
+            otherUnit = unitArr[i].otherUnit
+            ratio = unitArr[i].ratio
+            if(unitArr[i].otherUnitTwo) {
+              otherUnitTwo = unitArr[i].otherUnitTwo
+              ratioTwo = unitArr[i].ratioTwo
+            }
+            if(unitArr[i].otherUnitThree) {
+              otherUnitThree = unitArr[i].otherUnitThree
+              ratioThree = unitArr[i].ratioThree
+            }
+          }
+        }
+        if(row.commodityUnit === basicUnit) {
+          this.$refs.editableMeTable.getValues((error, values) => {
+            let mArr = values, basicPurchaseDecimal='', basicCommodityDecimal='', basicWholesaleDecimal='', basicLowDecimal=''
+            for (let i = 0; i < mArr.length; i++) {
+              let mInfo = mArr[i]
+              if(i===0) {
+                basicPurchaseDecimal = mInfo.purchaseDecimal
+                basicCommodityDecimal = mInfo.commodityDecimal
+                basicWholesaleDecimal = mInfo.wholesaleDecimal
+                basicLowDecimal = mInfo.lowDecimal
+              } else {
+                //副单位进行换算
+                if(basicPurchaseDecimal) { mInfo.purchaseDecimal = basicPurchaseDecimal*ratio}
+                if(basicCommodityDecimal) { mInfo.commodityDecimal = basicCommodityDecimal*ratio}
+                if(basicWholesaleDecimal) { mInfo.wholesaleDecimal = basicWholesaleDecimal*ratio}
+                if(basicLowDecimal) { mInfo.lowDecimal = basicLowDecimal*ratio}
+                if(otherUnitTwo && i===2) {
+                  if(basicPurchaseDecimal) { mInfo.purchaseDecimal = basicPurchaseDecimal*ratioTwo}
+                  if(basicCommodityDecimal) { mInfo.commodityDecimal = basicCommodityDecimal*ratioTwo}
+                  if(basicWholesaleDecimal) { mInfo.wholesaleDecimal = basicWholesaleDecimal*ratioTwo}
+                  if(basicLowDecimal) { mInfo.lowDecimal = basicLowDecimal*ratioTwo}
+                }
+                if(otherUnitThree && i===3) {
+                  if(basicPurchaseDecimal) { mInfo.purchaseDecimal = basicPurchaseDecimal*ratioThree}
+                  if(basicCommodityDecimal) { mInfo.commodityDecimal = basicCommodityDecimal*ratioThree}
+                  if(basicWholesaleDecimal) { mInfo.wholesaleDecimal = basicWholesaleDecimal*ratioThree}
+                  if(basicLowDecimal) { mInfo.lowDecimal = basicLowDecimal*ratioThree}
+                }
+              }
+            }
+            this.meTable.dataSource = mArr
+          })
+        }
+      },
       batchSetPrice(type) {
         if(this.skuSwitch || this.model.id){
           this.$refs.priceModalForm.add(type);
@@ -903,21 +976,53 @@
       },
       manyUnitOnChange(value) {
         let unitArr = this.unitList
-        let basicUnit = '', otherUnit = ''
+        let basicUnit = '', otherUnit = '', ratio = 1, otherUnitTwo = '', ratioTwo = 1, otherUnitThree = '', ratioThree = 1
         for (let i = 0; i < unitArr.length; i++) {
           if(unitArr[i].id === value) {
             basicUnit = unitArr[i].basicUnit
             otherUnit = unitArr[i].otherUnit
+            ratio = unitArr[i].ratio
+            if(unitArr[i].otherUnitTwo) {
+              otherUnitTwo = unitArr[i].otherUnitTwo
+              ratioTwo = unitArr[i].ratioTwo
+            }
+            if(unitArr[i].otherUnitThree) {
+              otherUnitThree = unitArr[i].otherUnitThree
+              ratioThree = unitArr[i].ratioThree
+            }
           }
         }
         this.$refs.editableMeTable.getValues((error, values) => {
-          let mArr = values
+          let mArr = values, basicPurchaseDecimal='', basicCommodityDecimal='', basicWholesaleDecimal='', basicLowDecimal=''
           for (let i = 0; i < mArr.length; i++) {
             let mInfo = mArr[i]
             if(i===0) {
               mInfo.commodityUnit = basicUnit
+              basicPurchaseDecimal = mInfo.purchaseDecimal
+              basicCommodityDecimal = mInfo.commodityDecimal
+              basicWholesaleDecimal = mInfo.wholesaleDecimal
+              basicLowDecimal = mInfo.lowDecimal
             } else {
+              //副单位进行换算
               mInfo.commodityUnit = otherUnit
+              if(basicPurchaseDecimal) { mInfo.purchaseDecimal = basicPurchaseDecimal*ratio}
+              if(basicCommodityDecimal) { mInfo.commodityDecimal = basicCommodityDecimal*ratio}
+              if(basicWholesaleDecimal) { mInfo.wholesaleDecimal = basicWholesaleDecimal*ratio}
+              if(basicLowDecimal) { mInfo.lowDecimal = basicLowDecimal*ratio}
+              if(otherUnitTwo && i===2) {
+                mInfo.commodityUnit = otherUnitTwo
+                if(basicPurchaseDecimal) { mInfo.purchaseDecimal = basicPurchaseDecimal*ratioTwo}
+                if(basicCommodityDecimal) { mInfo.commodityDecimal = basicCommodityDecimal*ratioTwo}
+                if(basicWholesaleDecimal) { mInfo.wholesaleDecimal = basicWholesaleDecimal*ratioTwo}
+                if(basicLowDecimal) { mInfo.lowDecimal = basicLowDecimal*ratioTwo}
+              }
+              if(otherUnitThree && i===3) {
+                mInfo.commodityUnit = otherUnitThree
+                if(basicPurchaseDecimal) { mInfo.purchaseDecimal = basicPurchaseDecimal*ratioThree}
+                if(basicCommodityDecimal) { mInfo.commodityDecimal = basicCommodityDecimal*ratioThree}
+                if(basicWholesaleDecimal) { mInfo.wholesaleDecimal = basicWholesaleDecimal*ratioThree}
+                if(basicLowDecimal) { mInfo.lowDecimal = basicLowDecimal*ratioThree}
+              }
             }
           }
           this.meTable.dataSource = mArr

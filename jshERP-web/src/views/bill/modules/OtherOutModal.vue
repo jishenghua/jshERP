@@ -57,12 +57,7 @@
           @added="onAdded"
           @deleted="onDeleted">
           <template #buttonAfter>
-            <a-row v-if="isTenant" :gutter="24" style="float:left;width:140px;">
-              <a-col :md="24" :sm="24">
-                <a-button icon="plus" @click="addDepot">新增仓库</a-button>
-              </a-col>
-            </a-row>
-            <a-row :gutter="24" style="float:left;">
+            <a-row :gutter="24" style="float:left;" data-step="4" data-title="扫码录入" data-intro="此功能支持扫码枪扫描商品条码进行录入">
               <a-col v-if="scanStatus" :md="6" :sm="24">
                 <a-button @click="scanEnter">扫码录入</a-button>
               </a-col>
@@ -73,12 +68,23 @@
                 <a-button @click="stopScan">收起扫码</a-button>
               </a-col>
             </a-row>
+            <a-row :gutter="24" style="float:left;">
+              <a-col :md="24" :sm="24">
+                <a-dropdown>
+                  <a-menu slot="overlay">
+                    <a-menu-item key="1" @click="handleBatchSetDepot"><a-icon type="setting"/>批量设置</a-menu-item>
+                    <a-menu-item v-if="isTenant" key="2" @click="addDepot"><a-icon type="plus"/>新增仓库</a-menu-item>
+                  </a-menu>
+                  <a-button style="margin-left: 8px">仓库操作 <a-icon type="down" /></a-button>
+                </a-dropdown>
+              </a-col>
+            </a-row>
           </template>
         </j-editable-table>
         <a-row class="form-row" :gutter="24">
           <a-col :lg="24" :md="24" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="">
-              <a-textarea :rows="2" placeholder="请输入备注" v-decorator="[ 'remark' ]" style="margin-top:8px;"/>
+              <a-textarea :rows="1" placeholder="请输入备注" v-decorator="[ 'remark' ]" style="margin-top:8px;"/>
             </a-form-item>
           </a-col>
         </a-row>
@@ -93,12 +99,14 @@
     </a-spin>
     <customer-modal ref="customerModalForm" @ok="customerModalFormOk"></customer-modal>
     <depot-modal ref="depotModalForm" @ok="depotModalFormOk"></depot-modal>
+    <batch-set-depot ref="batchSetDepotModalForm" @ok="batchSetDepotModalFormOk"></batch-set-depot>
   </j-modal>
 </template>
 <script>
   import pick from 'lodash.pick'
   import CustomerModal from '../../system/modules/CustomerModal'
   import DepotModal from '../../system/modules/DepotModal'
+  import BatchSetDepot from '../dialog/BatchSetDepot'
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
@@ -112,6 +120,7 @@
     components: {
       CustomerModal,
       DepotModal,
+      BatchSetDepot,
       JUpload,
       JDate,
       VNodes: {
@@ -158,6 +167,9 @@
             { title: '扩展信息', key: 'materialOther', width: '5%', type: FormTypes.normal },
             { title: '库存', key: 'stock', width: '5%', type: FormTypes.normal },
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
+            { title: '序列号', key: 'snList', width: '12%', type: FormTypes.popupJsh, kind: 'sn', multi: true },
+            { title: '批号', key: 'batchNumber', width: '7%', type: FormTypes.popupJsh, kind: 'batch', multi: false },
+            { title: '有效期', key: 'expirationDate',width: '6%', type: FormTypes.normal },
             { title: '多属性', key: 'sku', width: '4%', type: FormTypes.normal },
             { title: '数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
@@ -193,6 +205,9 @@
       //调用完edit()方法之后会自动调用此方法
       editAfter() {
         this.changeColumnHide()
+        this.changeFormTypes(this.materialTable.columns, 'snList', 0)
+        this.changeFormTypes(this.materialTable.columns, 'batchNumber', 0)
+        this.changeFormTypes(this.materialTable.columns, 'expirationDate', 0)
         if (this.action === 'add') {
           this.addInit(this.prefixNo)
           this.fileList = []

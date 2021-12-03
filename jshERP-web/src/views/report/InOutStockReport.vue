@@ -10,10 +10,11 @@
               <a-col :md="4" :sm="24">
                 <a-form-item label="仓库" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-select
-                    showSearch optionFilterProp="children"
-                    style="width: 100%"
+                    mode="multiple" :maxTagCount="1"
+                    optionFilterProp="children"
+                    showSearch style="width: 100%"
                     placeholder="请选择仓库"
-                    v-model="queryParam.depotId">
+                    v-model="depotSelected">
                     <a-select-option v-for="(depot,index) in depotList" :value="depot.id">
                       {{ depot.depotName }}
                     </a-select-option>
@@ -40,7 +41,7 @@
               </a-col>
               <a-col :md="6" :sm="24">
                 <a-form-item>
-                  <span>本月合计金额：{{totalCountMoneyStr}}</span>
+                  <span>总结存金额：{{totalCountMoneyStr}}</span>
                 </a-form-item>
               </a-col>
             </a-row>
@@ -118,7 +119,7 @@
           pageSize: 11,
           pageSizeOptions: ['11', '21', '31', '101', '201']
         },
-        tabKey: "1",
+        depotSelected:[],
         depotList: [],
         totalCountMoneyStr: '',
         // 表头
@@ -157,6 +158,9 @@
       moment,
       getQueryParams() {
         let param = Object.assign({}, this.queryParam, this.isorter);
+        if(this.depotSelected && this.depotSelected.length>0) {
+          param.depotIds = this.depotSelected.join()
+        }
         param.monthTime = this.queryParam.monthTime;
         param.field = this.getQueryField();
         param.currentPage = this.ipagination.current;
@@ -173,7 +177,12 @@
         })
       },
       getTotalCountMoney(){
-        getAction(this.url.totalCountMoney, this.queryParam).then((res)=>{
+        let param = Object.assign({}, this.queryParam, this.isorter);
+        if(this.depotSelected && this.depotSelected.length>0) {
+          param.depotIds = this.depotSelected.join()
+        }
+        param.monthTime = this.queryParam.monthTime;
+        getAction(this.url.totalCountMoney, param).then((res)=>{
           if(res && res.code === 200) {
             let count = res.data.totalCount.toString();
             if (count.lastIndexOf('.') > -1) {

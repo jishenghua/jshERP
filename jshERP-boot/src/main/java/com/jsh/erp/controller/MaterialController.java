@@ -208,14 +208,11 @@ public class MaterialController {
                 for (MaterialVo4Unit material : dataList) {
                     JSONObject item = new JSONObject();
                     item.put("id", material.getMeId()); //商品扩展表的id
-                    String ratio; //比例
+                    String ratioStr; //比例
                     if (material.getUnitId() == null || material.getUnitId().equals("")) {
-                        ratio = "";
+                        ratioStr = "";
                     } else {
-                        ratio = material.getUnitName();
-                        if(ratio!=null) {
-                            ratio = ratio.substring(ratio.indexOf("("));
-                        }
+                        ratioStr = "[多单位]";
                     }
                     item.put("mBarCode", material.getmBarCode());
                     item.put("name", material.getName());
@@ -223,7 +220,7 @@ public class MaterialController {
                     item.put("standard", material.getStandard());
                     item.put("model", material.getModel());
                     item.put("color", material.getColor());
-                    item.put("unit", material.getCommodityUnit() + ratio);
+                    item.put("unit", material.getCommodityUnit() + ratioStr);
                     item.put("sku", material.getSku());
                     item.put("enableSerialNumber", material.getEnableSerialNumber());
                     item.put("enableBatchNumber", material.getEnableBatchNumber());
@@ -234,11 +231,8 @@ public class MaterialController {
                         stock = depotItemService.getStockByParam(depotId,material.getId(),null,null);
                         if (material.getUnitId()!=null){
                             Unit unit = unitService.getUnit(material.getUnitId());
-                            if(material.getCommodityUnit().equals(unit.getOtherUnit())) {
-                                if(unit.getRatio()!=0) {
-                                    stock = stock.divide(BigDecimal.valueOf(unit.getRatio()),2,BigDecimal.ROUND_HALF_UP);
-                                }
-                            }
+                            String commodityUnit = material.getCommodityUnit();
+                            stock = unitService.parseStockByUnit(stock, unit, commodityUnit);
                         }
                     }
                     item.put("stock", stock);
@@ -494,6 +488,7 @@ public class MaterialController {
     @GetMapping(value = "/getMaterialByBarCode")
     @ApiOperation(value = "根据条码查询商品信息")
     public BaseResponseInfo getMaterialByBarCode(@RequestParam("barCode") String barCode,
+                                          @RequestParam(value = "depotId", required = false) Long depotId,
                                           @RequestParam("mpList") String mpList,
                                           @RequestParam(required = false, value = "prefixNo") String prefixNo,
                                           HttpServletRequest request) throws Exception {
@@ -519,48 +514,38 @@ public class MaterialController {
                         }
                     }
                     mvo.setMaterialOther(expand);
-                    if("LSCK".equals(prefixNo) || "LSTH".equals(prefixNo)) {
+                    if ("LSCK".equals(prefixNo) || "LSTH".equals(prefixNo)) {
                         //零售价
                         mvo.setBillPrice(mvo.getCommodityDecimal());
-                    } else if("CGDD".equals(prefixNo) || "CGRK".equals(prefixNo) || "CGTH".equals(prefixNo)
+                    } else if ("CGDD".equals(prefixNo) || "CGRK".equals(prefixNo) || "CGTH".equals(prefixNo)
                             || "QTRK".equals(prefixNo) || "DBCK".equals(prefixNo) || "ZZD".equals(prefixNo) || "CXD".equals(prefixNo)
-                            || "PDLR".equals(prefixNo) || "PDFP".equals(prefixNo) ) {
+                            || "PDLR".equals(prefixNo) || "PDFP".equals(prefixNo)) {
                         //采购价
                         mvo.setBillPrice(mvo.getPurchaseDecimal());
-                    } else if("XSDD".equals(prefixNo) || "XSCK".equals(prefixNo) || "XSTH".equals(prefixNo) || "QTCK".equals(prefixNo)) {
+                    } else if ("XSDD".equals(prefixNo) || "XSCK".equals(prefixNo) || "XSTH".equals(prefixNo) || "QTCK".equals(prefixNo)) {
                         //销售价
                         mvo.setBillPrice(mvo.getWholesaleDecimal());
                     }
                     //仓库id
-                    JSONArray depotArr = depotService.findDepotByCurrentUser();
-                    for(Object obj: depotArr){
-                        JSONObject depotObj = JSONObject.parseObject(obj.toString());
-                        if(depotObj.get("isDefault")!=null) {
-                            Boolean isDefault = depotObj.getBoolean("isDefault");
-                            if(isDefault) {
-                                Long depotId = depotObj.getLong("id");
-                                if(!"CGDD".equals(prefixNo) && !"XSDD".equals(prefixNo) ) {
-                                    //除订单之外的单据才有仓库
-                                    mvo.setDepotId(depotId);
-                                }
-                                //库存
-                                BigDecimal stock;
-                                if(StringUtil.isNotEmpty(mvo.getSku())){
-                                    stock = depotItemService.getSkuStockByParam(mvo.getDepotId(),mvo.getMeId(),null,null);
-                                } else {
-                                    stock = depotItemService.getStockByParam(mvo.getDepotId(),mvo.getId(),null,null);
-                                    if (mvo.getUnitId()!=null){
-                                        Unit unit = unitService.getUnit(mvo.getUnitId());
-                                        if(mvo.getCommodityUnit().equals(unit.getOtherUnit())) {
-                                            if(unit.getRatio()!=0) {
-                                                stock = stock.divide(BigDecimal.valueOf(unit.getRatio()),2,BigDecimal.ROUND_HALF_UP);
-                                            }
-                                        }
+                    if (depotId == null) {
+                        JSONArray depotArr = depotService.findDepotByCurrentUser();
+                        for (Object obj : depotArr) {
+                            JSONObject depotObj = JSONObject.parseObject(obj.toString());
+                            if (depotObj.get("isDefault") != null) {
+                                Boolean isDefault = depotObj.getBoolean("isDefault");
+                                if (isDefault) {
+                                    Long id = depotObj.getLong("id");
+                                    if (!"CGDD".equals(prefixNo) && !"XSDD".equals(prefixNo)) {
+                                        //除订单之外的单据才有仓库
+                                        mvo.setDepotId(id);
                                     }
+                                    getStockByMaterialInfo(mvo);
                                 }
-                                mvo.setStock(stock);
                             }
                         }
+                    } else {
+                        mvo.setDepotId(depotId);
+                        getStockByMaterialInfo(mvo);
                     }
                 }
             }
@@ -575,10 +560,30 @@ public class MaterialController {
     }
 
     /**
+     * 根据商品信息获取库存，进行赋值
+     * @param mvo
+     * @throws Exception
+     */
+    private void getStockByMaterialInfo(MaterialVo4Unit mvo) throws Exception {
+        BigDecimal stock;
+        if (StringUtil.isNotEmpty(mvo.getSku())) {
+            stock = depotItemService.getSkuStockByParam(mvo.getDepotId(), mvo.getMeId(), null, null);
+        } else {
+            stock = depotItemService.getStockByParam(mvo.getDepotId(), mvo.getId(), null, null);
+            if (mvo.getUnitId() != null) {
+                Unit unit = unitService.getUnit(mvo.getUnitId());
+                String commodityUnit = mvo.getCommodityUnit();
+                stock = unitService.parseStockByUnit(stock, unit, commodityUnit);
+            }
+        }
+        mvo.setStock(stock);
+    }
+
+    /**
      * 商品库存查询
      * @param currentPage
      * @param pageSize
-     * @param depotId
+     * @param depotIds
      * @param categoryId
      * @param materialParam
      * @param mpList
@@ -592,8 +597,8 @@ public class MaterialController {
     @ApiOperation(value = "商品库存查询")
     public BaseResponseInfo getListWithStock(@RequestParam("currentPage") Integer currentPage,
                                              @RequestParam("pageSize") Integer pageSize,
-                                             @RequestParam("depotId") Long depotId,
-                                             @RequestParam("categoryId") Long categoryId,
+                                             @RequestParam(value = "depotIds", required = false) String depotIds,
+                                             @RequestParam(value = "categoryId", required = false) Long categoryId,
                                              @RequestParam("materialParam") String materialParam,
                                              @RequestParam("zeroStock") Integer zeroStock,
                                              @RequestParam("mpList") String mpList,
@@ -604,13 +609,24 @@ public class MaterialController {
         Map<String, Object> map = new HashMap<>();
         try {
             List<Long> idList = new ArrayList<>();
+            List<Long> depotList = new ArrayList<>();
             if(categoryId != null){
                 idList = materialService.getListByParentId(categoryId);
             }
-            List<MaterialVo4Unit> dataList = materialService.getListWithStock(depotId, idList, StringUtil.toNull(materialParam), zeroStock,
+            if(StringUtil.isNotEmpty(depotIds)) {
+                depotList = StringUtil.strToLongList(depotIds);
+            } else {
+                //未选择仓库时默认为当前用户有权限的仓库
+                JSONArray depotArr = depotService.findDepotByCurrentUser();
+                for(Object obj: depotArr) {
+                    JSONObject object = JSONObject.parseObject(obj.toString());
+                    depotList.add(object.getLong("id"));
+                }
+            }
+            List<MaterialVo4Unit> dataList = materialService.getListWithStock(depotList, idList, StringUtil.toNull(materialParam), zeroStock,
                     StringUtil.safeSqlParse(column), StringUtil.safeSqlParse(order), (currentPage-1)*pageSize, pageSize);
-            int total = materialService.getListWithStockCount(depotId, idList, StringUtil.toNull(materialParam), zeroStock);
-            MaterialVo4Unit materialVo4Unit= materialService.getTotalStockAndPrice(depotId, idList, StringUtil.toNull(materialParam));
+            int total = materialService.getListWithStockCount(depotList, idList, StringUtil.toNull(materialParam), zeroStock);
+            MaterialVo4Unit materialVo4Unit= materialService.getTotalStockAndPrice(depotList, idList, StringUtil.toNull(materialParam));
             map.put("total", total);
             map.put("currentStock", materialVo4Unit.getCurrentStock());
             map.put("currentStockPrice", materialVo4Unit.getCurrentStockPrice());

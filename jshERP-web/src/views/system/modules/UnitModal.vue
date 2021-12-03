@@ -1,14 +1,14 @@
 <template>
   <a-modal
     :title="title"
-    :width="800"
+    :width="700"
     :visible="visible"
     :confirmLoading="confirmLoading"
     @ok="handleOk"
     @cancel="handleCancel"
     cancelText="关闭"
     wrapClassName="ant-modal-cust-warp"
-    style="top:20%;height: 70%;overflow-y: hidden">
+    style="top:25%; height:50%; overflow-y:hidden">
     <template slot="footer">
       <a-button key="back" v-if="isReadOnly" @click="handleCancel">
         关闭
@@ -22,12 +22,23 @@
       </a-form>
       <a-form :form="form">
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="副单位">
-          <a-input placeholder="请输入副单位(大单位)" v-decorator.trim="[ 'otherUnit', validatorRules.otherUnit]" />
+          <a-input placeholder="请输入副单位(大单位)" style="width:48%" v-decorator.trim="[ 'otherUnit' ]" />
+          =
+          <a-input suffix="基本单位" placeholder="请输入比例" style="width:48%" v-decorator.trim="[ 'ratio' ]" />
         </a-form-item>
       </a-form>
       <a-form :form="form">
-        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="比例">
-          <a-input addon-before="基本单位 : 副单位=1 :" placeholder="请输入比例" v-decorator.trim="[ 'ratio', validatorRules.ratio]" />
+        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="副单位2">
+          <a-input placeholder="请输入副单位2(大单位)" style="width:48%" v-decorator.trim="[ 'otherUnitTwo' ]" />
+          =
+          <a-input suffix="基本单位" placeholder="请输入比例2" style="width:48%" v-decorator.trim="[ 'ratioTwo' ]" />
+        </a-form-item>
+      </a-form>
+      <a-form :form="form">
+        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="副单位3">
+          <a-input placeholder="请输入副单位3(大单位)" style="width:48%" v-decorator.trim="[ 'otherUnitThree' ]" />
+          =
+          <a-input suffix="基本单位" placeholder="请输入比例3" style="width:48%" v-decorator.trim="[ 'ratioThree' ]" />
         </a-form-item>
       </a-form>
     </a-spin>
@@ -85,7 +96,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'basicUnit','otherUnit','ratio'))
+          this.form.setFieldsValue(pick(this.model,'basicUnit','otherUnit','ratio','otherUnitTwo','ratioTwo','otherUnitThree','ratioThree'))
           autoJumpNextInput('unitModal')
         });
       },
@@ -100,27 +111,62 @@
           if (!err) {
             that.confirmLoading = true;
             let formData = Object.assign(this.model, values);
+            if(!formData.otherUnit) {
+              that.$message.warning('抱歉，副单位不能为空！');
+              that.confirmLoading = false;
+              return;
+            }
+            if(formData.otherUnit && !formData.ratio) {
+              that.$message.warning('抱歉，比例不能为空！');
+              that.confirmLoading = false;
+              return;
+            }
+            if(formData.otherUnitTwo && !formData.ratioTwo) {
+              that.$message.warning('抱歉，比例2不能为空！');
+              that.confirmLoading = false;
+              return;
+            }
+            if(formData.otherUnitThree && !formData.ratioThree) {
+              that.$message.warning('抱歉，比例3不能为空！');
+              that.confirmLoading = false;
+              return;
+            }
+            if(!formData.otherUnitTwo && formData.otherUnitThree) {
+              that.$message.warning('抱歉，需要先输入副单位2再输入副单位3！');
+              that.confirmLoading = false;
+              return;
+            }
             if(formData.basicUnit === formData.otherUnit) {
               that.$message.warning('抱歉，基本单位与副单位不能相同！');
               that.confirmLoading = false;
-            } else {
-              let obj;
-              if(!this.model.id){
-                obj=addUnit(formData);
-              }else{
-                obj=editUnit(formData);
-              }
-              obj.then((res)=>{
-                if(res.code === 200){
-                  that.$emit('ok');
-                }else{
-                  that.$message.warning(res.data.message);
-                }
-              }).finally(() => {
-                that.confirmLoading = false;
-                that.close();
-              })
+              return;
             }
+            if(formData.basicUnit === formData.otherUnitTwo) {
+              that.$message.warning('抱歉，基本单位与副单位2不能相同！');
+              that.confirmLoading = false;
+              return;
+            }
+            if(formData.basicUnit === formData.otherUnitThree) {
+              that.$message.warning('抱歉，基本单位与副单位3不能相同！');
+              that.confirmLoading = false;
+              return;
+            }
+            let obj;
+            if(!this.model.id){
+              obj=addUnit(formData);
+            }else{
+              obj=editUnit(formData);
+            }
+            obj.then((res)=>{
+              if(res.code === 200){
+                that.$emit('ok');
+              }else{
+                that.$message.warning(res.data.message);
+              }
+            }).finally(() => {
+              that.confirmLoading = false;
+              that.close();
+            })
           }
         })
       },

@@ -108,13 +108,13 @@ export const BillModalMixin = {
         if(columns[i].key === key) {
           if(type){
             if(key === 'snList' || key === 'batchNumber') {
-              if(this.prefixNo === 'XSCK') {
+              if(this.prefixNo === 'LSCK' || this.prefixNo === 'CGTH'  || this.prefixNo === 'XSCK' || this.prefixNo === 'QTCK') {
                 columns[i].type = FormTypes.popupJsh //显示
               } else {
                 columns[i].type = FormTypes.input //显示
               }
             } else if(key === 'expirationDate') {
-              if(this.prefixNo === 'CGRK' || this.prefixNo === 'XSTH' || this.prefixNo === 'CGTH') {
+              if(this.prefixNo === 'LSTH' || this.prefixNo === 'CGRK' || this.prefixNo === 'XSTH' || this.prefixNo === 'QTRK') {
                 columns[i].type = FormTypes.date //显示
               } else {
                 columns[i].type = FormTypes.normal //显示
@@ -229,6 +229,11 @@ export const BillModalMixin = {
       this.$refs.memberModalForm.title = "新增会员";
       this.$refs.memberModalForm.disableSubmit = false;
     },
+    handleBatchSetDepot() {
+      this.$refs.batchSetDepotModalForm.add();
+      this.$refs.batchSetDepotModalForm.title = "批量设置仓库";
+      this.$refs.batchSetDepotModalForm.disableSubmit = false;
+    },
     addDepot() {
       this.$refs.depotModalForm.add();
       this.$refs.depotModalForm.title = "新增仓库";
@@ -247,6 +252,49 @@ export const BillModalMixin = {
     },
     memberModalFormOk() {
       this.initRetail()
+    },
+    batchSetDepotModalFormOk(depotId) {
+      this.getAllTable().then(tables => {
+        return getListData(this.form, tables)
+      }).then(allValues => {
+        //获取单据明细列表信息
+        let detailArr = allValues.tablesValue[0].values
+        let barCodes = ''
+        for(let detail of detailArr){
+          barCodes += detail.barCode + ','
+        }
+        if(barCodes) {
+          barCodes = barCodes.substring(0, barCodes.length-1)
+        }
+        let param = {
+          barCode: barCodes,
+          depotId: depotId,
+          mpList: getMpListShort(Vue.ls.get('materialPropertyList')),  //扩展属性
+          prefixNo: this.prefixNo
+        }
+        getMaterialByBarCode(param).then((res) => {
+          if (res && res.code === 200) {
+            let mList = res.data
+            //构造新的列表数组，用于存放单据明细信息
+            let newDetailArr = []
+            if(mList && mList.length) {
+              for (let i = 0; i < detailArr.length; i++) {
+                let item = detailArr[i]
+                item.depotId = depotId
+                item.stock = mList[i].stock
+                newDetailArr.push(item)
+              }
+            } else {
+              for (let i = 0; i < detailArr.length; i++) {
+                let item = detailArr[i]
+                item.depotId = depotId
+                newDetailArr.push(item)
+              }
+            }
+            this.materialTable.dataSource = newDetailArr
+          }
+        })
+      })
     },
     depotModalFormOk() {
       this.initDepot()

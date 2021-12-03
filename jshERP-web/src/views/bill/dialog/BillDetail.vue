@@ -25,6 +25,7 @@
       <a-button v-if="billType === '调拨出库'" v-print="'#allocationOutPrint'">普通打印</a-button>
       <a-button v-if="billType === '组装单'" v-print="'#assemblePrint'">普通打印</a-button>
       <a-button v-if="billType === '拆卸单'" v-print="'#disassemblePrint'">普通打印</a-button>
+      <a-button v-if="billType === '盘点复盘'" v-print="'#stockCheckReplayPrint'">普通打印</a-button>
       <a-button key="back" @click="handleCancel">取消</a-button>
     </template>
     <a-form :form="form">
@@ -639,7 +640,7 @@
               </a-form-item>
             </a-col>
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联单号">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联单据">
                 {{model.linkNumber}} {{model.billType}}
               </a-form-item>
             </a-col>
@@ -685,7 +686,7 @@
               </a-form-item>
             </a-col>
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联单号">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联单据">
                 {{model.linkNumber}} {{model.billType}}
               </a-form-item>
             </a-col>
@@ -821,6 +822,47 @@
           </a-row>
         </section>
       </template>
+      <!--盘点复盘-->
+      <template v-else-if="billType === '盘点复盘'">
+        <section ref="print" id="stockCheckReplayPrint">
+          <a-row class="form-row" :gutter="24">
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
+                {{model.operTimeStr}}
+              </a-form-item>
+            </a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号">
+                {{model.number}}
+              </a-form-item>
+            </a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联单据">
+                {{model.linkNumber}}
+              </a-form-item>
+            </a-col>
+            <a-col :span="6"></a-col>
+          </a-row>
+          <div :style="tableWidth">
+            <a-table
+              ref="table"
+              size="middle"
+              bordered
+              rowKey="id"
+              :pagination="false"
+              :columns="columns"
+              :dataSource="dataSource">
+            </a-table>
+          </div>
+          <a-row class="form-row" :gutter="24">
+            <a-col :lg="24" :md="24" :sm="24">
+              <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
+                {{model.remark}}
+              </a-form-item>
+            </a-col>
+          </a-row>
+        </section>
+      </template>
       <template v-if="fileList && fileList.length>0">
         <a-row class="form-row" :gutter="24">
           <a-col :span="10">
@@ -893,6 +935,9 @@
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
+          { title: '序列号', dataIndex: 'snList'},
+          { title: '批号', dataIndex: 'batchNumber'},
+          { title: '有效期', dataIndex: 'expirationDate'},
           { title: '多属性', dataIndex: 'sku'},
           { title: '数量', dataIndex: 'operNumber'},
           { title: '单价', dataIndex: 'unitPrice'},
@@ -909,6 +954,9 @@
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
+          { title: '序列号', dataIndex: 'snList'},
+          { title: '批号', dataIndex: 'batchNumber'},
+          { title: '有效期', dataIndex: 'expirationDate'},
           { title: '多属性', dataIndex: 'sku'},
           { title: '数量', dataIndex: 'operNumber'},
           { title: '单价', dataIndex: 'unitPrice'},
@@ -1049,6 +1097,9 @@
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
+          { title: '序列号', dataIndex: 'snList'},
+          { title: '批号', dataIndex: 'batchNumber'},
+          { title: '有效期', dataIndex: 'expirationDate'},
           { title: '多属性', dataIndex: 'sku'},
           { title: '数量', dataIndex: 'operNumber'},
           { title: '单价', dataIndex: 'unitPrice'},
@@ -1065,6 +1116,9 @@
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
+          { title: '序列号', dataIndex: 'snList'},
+          { title: '批号', dataIndex: 'batchNumber'},
+          { title: '有效期', dataIndex: 'expirationDate'},
           { title: '多属性', dataIndex: 'sku'},
           { title: '数量', dataIndex: 'operNumber'},
           { title: '单价', dataIndex: 'unitPrice'},
@@ -1121,6 +1175,21 @@
           { title: '单价', dataIndex: 'unitPrice'},
           { title: '金额', dataIndex: 'allPrice'},
           { title: '备注', dataIndex: 'remark'}
+        ],
+        stockCheckReplayColumns: [
+          { title: '仓库名称', dataIndex: 'depotName'},
+          { title: '条码', dataIndex: 'barCode'},
+          { title: '名称', dataIndex: 'name'},
+          { title: '规格', dataIndex: 'standard'},
+          { title: '型号', dataIndex: 'model'},
+          { title: '扩展信息', dataIndex: 'materialOther'},
+          { title: '库存', dataIndex: 'stock'},
+          { title: '单位', dataIndex: 'unit'},
+          { title: '多属性', dataIndex: 'sku'},
+          { title: '数量', dataIndex: 'operNumber'},
+          { title: '单价', dataIndex: 'unitPrice'},
+          { title: '金额', dataIndex: 'allPrice'},
+          { title: '备注', dataIndex: 'remark'}
         ]
       }
     },
@@ -1154,6 +1223,8 @@
           this.defColumns = this.assembleColumns
         } else if (type === '拆卸单') {
           this.defColumns = this.disassembleColumns
+        } else if (type === '盘点复盘') {
+          this.defColumns = this.stockCheckReplayColumns
         }
         //不是部分采购|部分销售的时候移除列
         if(record.status === '3') {

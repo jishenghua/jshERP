@@ -11,11 +11,12 @@
         <div class="table-page-search-wrapper">
           <a-form layout="inline" @keyup.enter.native="searchQuery">
             <a-row :gutter="24">
-              <a-col :md="4" :sm="24">
+              <a-col :md="3" :sm="24">
                 <a-form-item label="调出仓库" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-select
-                    showSearch optionFilterProp="children"
-                    style="width: 100%"
+                    optionFilterProp="children"
+                    :dropdownMatchSelectWidth="false"
+                    showSearch allow-clear style="width: 100%"
                     placeholder="请选择仓库"
                     v-model="queryParam.depotIdF">
                     <a-select-option v-for="(depot,index) in depotList" :value="depot.id">
@@ -24,17 +25,23 @@
                   </a-select>
                 </a-form-item>
               </a-col>
-              <a-col :md="4" :sm="24">
+              <a-col :md="3" :sm="24">
                 <a-form-item label="调入仓库" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-select
-                    showSearch optionFilterProp="children"
-                    style="width: 100%"
+                    optionFilterProp="children"
+                    :dropdownMatchSelectWidth="false"
+                    showSearch allow-clear style="width: 100%"
                     placeholder="请选择仓库"
                     v-model="queryParam.depotId">
                     <a-select-option v-for="(depot,index) in depotList" :value="depot.id">
                       {{ depot.depotName }}
                     </a-select-option>
                   </a-select>
+                </a-form-item>
+              </a-col>
+              <a-col :md="4" :sm="24">
+                <a-form-item label="单据编号" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-input placeholder="请输入单据编号" v-model="queryParam.number"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="4" :sm="24">
@@ -133,6 +140,7 @@
         // 查询条件
         queryParam: {
           organId: '',
+          number: '',
           materialParam:'',
           depotId: '',
           depotIdF: '',
@@ -162,11 +170,11 @@
             title: '单据编号', dataIndex: 'number', width: 100,
             scopedSlots: { customRender: 'numberCustomRender' },
           },
-          {title: '条码', dataIndex: 'barCode', width: 100},
+          {title: '条码', dataIndex: 'barCode', width: 80},
           {title: '名称', dataIndex: 'mname', width: 120},
-          {title: '规格', dataIndex: 'standard', width: 50},
-          {title: '型号', dataIndex: 'model', width: 50},
-          {title: '单位', dataIndex: 'mUnit', width: 50},
+          {title: '规格', dataIndex: 'standard', width: 60},
+          {title: '型号', dataIndex: 'model', width: 60},
+          {title: '单位', dataIndex: 'mUnit', width: 60},
           {title: '数量', dataIndex: 'operNumber', sorter: (a, b) => a.operNumber - b.operNumber, width: 60},
           {title: '单价', dataIndex: 'unitPrice', sorter: (a, b) => a.unitPrice - b.unitPrice, width: 60},
           {title: '金额', dataIndex: 'allPrice', sorter: (a, b) => a.allPrice - b.allPrice, width: 60},

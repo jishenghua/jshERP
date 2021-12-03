@@ -91,7 +91,7 @@ const checkUnit = (params)=>getAction("/unit/checkIsNameExist",params);
 //供应商|客户|会员
 const addSupplier = (params)=>postAction("/supplier/add",params);
 const editSupplier = (params)=>putAction("/supplier/update",params);
-const checkSupplier = (params)=>getAction("/supplier/checkIsNameExist",params);
+const checkSupplier = (params)=>getAction("/supplier/checkIsNameAndTypeExist",params);
 const findBySelectSup = (params)=>postAction("/supplier/findBySelect_sup",params);
 const findBySelectCus = (params)=>postAction("/supplier/findBySelect_cus",params);
 const findBySelectRetail = (params)=>postAction("/supplier/findBySelect_retail",params);
