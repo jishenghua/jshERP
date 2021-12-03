@@ -425,7 +425,7 @@
     <select id="findStockWarningCount" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultStockWarningCount">
         select m.id MId, m.name MName, me.bar_code, m.mfrs MMfrs, m.model MModel, m.standard MStandard,m.color MColor,
         m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,d.name depotName,
-        m.unit MaterialUnit, u.name unit_name,mcs.current_number,
+        m.unit MaterialUnit, u.basic_unit unit_name,mcs.current_number,
         ifnull(mis.low_safe_stock,0) low_safe_stock, ifnull(mis.high_safe_stock,0) high_safe_stock
         from jsh_material m
         left join jsh_material_extend me on me.material_id=m.id and ifnull(me.delete_Flag,'0') !='1'

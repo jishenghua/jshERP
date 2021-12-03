@@ -546,10 +546,10 @@ public class DepotItemController {
      */
     public String getUName(String materialUnit, String uName) {
         String unitName = null;
-        if(!StringUtil.isEmpty(materialUnit)) {
+        if(StringUtil.isNotEmpty(materialUnit)) {
             unitName = materialUnit;
-        } else if(!StringUtil.isEmpty(uName)) {
-            unitName = uName.substring(0,uName.indexOf(","));
+        } else if(StringUtil.isNotEmpty(uName)) {
+            unitName = uName;
         }
         return unitName;
     }
