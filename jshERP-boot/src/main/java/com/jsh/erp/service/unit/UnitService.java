@@ -208,13 +208,17 @@ public class UnitService {
     }
 
     /**
-     * 根据名称获取类型
-     * @param name
+     * 根据条件查询单位id
+     * @param basicUnit
+     * @param otherUnit
+     * @param ratio
+     * @return
      */
-    public Long getUnitIdByName(String name){
+    public Long getUnitIdByParam(String basicUnit, String otherUnit, Integer ratio){
         Long unitId = null;
         UnitExample example = new UnitExample();
-        example.createCriteria().andNameEqualTo(name).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        example.createCriteria().andBasicUnitEqualTo(basicUnit).andOtherUnitEqualTo(otherUnit).andRatioEqualTo(ratio)
+                .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<Unit> list = unitMapper.selectByExample(example);
         if(list!=null && list.size()>0) {
             unitId = list.get(0).getId();

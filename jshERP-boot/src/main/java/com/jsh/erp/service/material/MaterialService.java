@@ -472,7 +472,7 @@ public class MaterialService {
                 String color = ExcelUtils.getContent(src, i, 3); //颜色
                 String categoryName = ExcelUtils.getContent(src, i, 4); //类别
                 String expiryNum = ExcelUtils.getContent(src, i, 5); //保质期
-                String unit = ExcelUtils.getContent(src, i, 6); //基础单位
+                String unit = ExcelUtils.getContent(src, i, 6); //基本单位
                 //校验名称、单位是否为空
                 if(StringUtil.isNotEmpty(name) && StringUtil.isNotEmpty(unit)) {
                     MaterialWithInitStock m = new MaterialWithInitStock();
@@ -516,14 +516,13 @@ public class MaterialService {
                     basicObj.put("wholesaleDecimal", wholesaleDecimal);
                     basicObj.put("lowDecimal", lowDecimal);
                     materialExObj.put("basic", basicObj);
-                    if(StringUtil.isNotEmpty(manyUnit.trim())){ //多单位
-                        String manyUnitAll = unit + "," + manyUnit + "(1:" + ratio + ")";
-                        Long unitId = unitService.getUnitIdByName(manyUnitAll);
+                    if(StringUtil.isNotEmpty(manyUnit) && StringUtil.isNotEmpty(ratio)){ //多单位
+                        Long unitId = unitService.getUnitIdByParam(unit, manyUnit, Integer.parseInt(ratio.trim()));
                         if(unitId != null) {
                             m.setUnitId(unitId);
                         } else {
                             throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_UNIT_MATE_CODE,
-                                    String.format(ExceptionConstants.MATERIAL_UNIT_MATE_MSG));
+                                    String.format(ExceptionConstants.MATERIAL_UNIT_MATE_MSG, manyBarCode));
                         }
                         JSONObject otherObj = new JSONObject();
                         otherObj.put("barCode", manyBarCode);
@@ -544,11 +543,13 @@ public class MaterialService {
                         int col = 15+j;
                         if(col < src.getColumns()){
                             String depotName = ExcelUtils.getContent(src, 1, col); //获取仓库名称
-                            Long depotId = depotService.getIdByName(depotName);
-                            if(depotId!=0L){
-                                String stockStr = ExcelUtils.getContent(src, i, col);
-                                if(StringUtil.isNotEmpty(stockStr)) {
-                                    stockMap.put(depotId, parseBigDecimalEx(stockStr));
+                            if(StringUtil.isNotEmpty(depotName)) {
+                                Long depotId = depotService.getIdByName(depotName);
+                                if(depotId!=0L){
+                                    String stockStr = ExcelUtils.getContent(src, i, col);
+                                    if(StringUtil.isNotEmpty(stockStr)) {
+                                        stockMap.put(depotId, parseBigDecimalEx(stockStr));
+                                    }
                                 }
                             }
                         }

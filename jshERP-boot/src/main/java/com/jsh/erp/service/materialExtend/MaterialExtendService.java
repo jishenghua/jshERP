@@ -192,7 +192,7 @@ public class MaterialExtendService {
                 this.updateMaterialExtend(materialExtend);
             }
         }
-        //处理条码的排序，基础单位排第一个
+        //处理条码的排序，基本单位排第一个
         if (null != sortJson && sortJson.size()>0) {
             //此处为更新的逻辑
             for (int i = 0; i < sortJson.size(); i++) {
@@ -207,7 +207,7 @@ public class MaterialExtendService {
                 this.updateMaterialExtend(materialExtend);
             }
         } else {
-            //新增的时候将第一条记录设置为默认基础单位
+            //新增的时候将第一条记录设置为默认基本单位
             MaterialExtendExample example = new MaterialExtendExample();
             example.createCriteria().andMaterialIdEqualTo(materialId).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
             List<MaterialExtend> meList = materialExtendMapper.selectByExample(example);

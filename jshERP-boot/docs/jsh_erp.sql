@@ -879,10 +879,10 @@ CREATE TABLE `jsh_unit` (
 -- ----------------------------
 -- Records of jsh_unit
 -- ----------------------------
-INSERT INTO `jsh_unit` VALUES ('15', '个,箱(1:12)', '个', '箱', null, null, '12', null, null, '63', '0');
-INSERT INTO `jsh_unit` VALUES ('19', '个,盒(1:15)', '个', '盒', null, null, '15', null, null, '63', '0');
-INSERT INTO `jsh_unit` VALUES ('20', '盒,箱(1:8)', '盒', '箱', null, null, '8', null, null, '63', '0');
-INSERT INTO `jsh_unit` VALUES ('21', '瓶,箱(1:12)', '瓶', '箱', null, null, '12', null, null, '63', '0');
+INSERT INTO `jsh_unit` VALUES ('15', '个/(箱=12个)', '个', '箱', null, null, '12', null, null, '63', '0');
+INSERT INTO `jsh_unit` VALUES ('19', '个/(盒=15个)', '个', '盒', null, null, '15', null, null, '63', '0');
+INSERT INTO `jsh_unit` VALUES ('20', '盒/(箱=8盒)', '盒', '箱', null, null, '8', null, null, '63', '0');
+INSERT INTO `jsh_unit` VALUES ('21', '瓶/(箱=12瓶)', '瓶', '箱', null, null, '12', null, null, '63', '0');
 
 -- ----------------------------
 -- Table structure for jsh_user

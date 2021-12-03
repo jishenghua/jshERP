@@ -382,7 +382,7 @@ public class DepotItemService {
                     Unit unitInfo = materialService.findUnit(materialExtend.getMaterialId()); //查询计量单位信息
                     if (StringUtil.isNotEmpty(unitInfo.getName())) {
                         String basicUnit = unitInfo.getBasicUnit(); //基本单位
-                        if (unit.equals(basicUnit)) { //如果等于基础单位
+                        if (unit.equals(basicUnit)) { //如果等于基本单位
                             depotItem.setBasicNumber(oNumber); //数量一致
                         } else if (unit.equals(unitInfo.getOtherUnit())) { //如果等于副单位
                             depotItem.setBasicNumber(oNumber.multiply(new BigDecimal(unitInfo.getRatio())) ); //数量乘以比例
