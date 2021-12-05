@@ -652,6 +652,7 @@ public class DepotHeadService {
                     }
                     dh.setOperTimeStr(getCenternTime(dh.getOperTime()));
                     dh.setMaterialsList(findMaterialsListByHeaderId(dh.getId()));
+                    dh.setCreatorName(userService.getUser(dh.getCreator()).getUsername());
                     resList.add(dh);
                 }
             }
