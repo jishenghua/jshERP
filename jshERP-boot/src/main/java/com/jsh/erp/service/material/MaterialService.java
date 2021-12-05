@@ -242,7 +242,7 @@ public class MaterialService {
                         MaterialInitialStockExample example = new MaterialInitialStockExample();
                         example.createCriteria().andMaterialIdEqualTo(material.getId()).andDepotIdEqualTo(depotId);
                         materialInitialStockMapper.deleteByExample(example);
-                        if (StringUtil.isNotEmpty(number) && Double.valueOf(number) > 0 || lowSafeStock!=null || highSafeStock!=null) {
+                        if (StringUtil.isNotEmpty(number) && Double.parseDouble(number) != 0 || lowSafeStock!=null || highSafeStock!=null) {
                             insertInitialStockByMaterialAndDepot(depotId, material.getId(), parseBigDecimalEx(number), lowSafeStock, highSafeStock);
                         }
                         //更新当前库存
