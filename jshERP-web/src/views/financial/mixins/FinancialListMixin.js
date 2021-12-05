@@ -1,10 +1,11 @@
-import {findBySelectSup, findBySelectCus, findBySelectRetail, getUserList, getPersonByType } from '@/api/api'
+import {findBySelectSup, findBySelectCus, findBySelectOrgan, findBySelectRetail, getUserList, getPersonByType } from '@/api/api'
 
 export const FinancialListMixin = {
   data () {
     return {
       supList: [],
       cusList: [],
+      organList: [],
       retailList: [],
       userList: [],
       personList: []
@@ -74,6 +75,14 @@ export const FinancialListMixin = {
       findBySelectCus({}).then((res)=>{
         if(res) {
           that.cusList = res;
+        }
+      });
+    },
+    initOrgan() {
+      let that = this;
+      findBySelectOrgan({}).then((res)=>{
+        if(res) {
+          that.organList = res;
         }
       });
     },

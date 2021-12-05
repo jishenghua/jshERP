@@ -27,9 +27,9 @@
               </a-col>
               <template v-if="toggleSearchStatus">
                 <a-col :md="6" :sm="24">
-                  <a-form-item label="供应商" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-select placeholder="选择供应商" showSearch optionFilterProp="children" v-model="queryParam.organId">
-                      <a-select-option v-for="(item,index) in supList" :key="index" :value="item.id">
+                  <a-form-item label="往来单位" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select placeholder="选择往来单位" showSearch optionFilterProp="children" v-model="queryParam.organId">
+                      <a-select-option v-for="(item,index) in organList" :key="index" :value="item.id">
                         {{ item.supplier }}
                       </a-select-option>
                     </a-select>
@@ -184,7 +184,7 @@
     computed: {
     },
     created () {
-      this.initSupplier()
+      this.initOrgan()
       this.initUser()
       this.initPerson()
     },
