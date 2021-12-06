@@ -395,7 +395,11 @@ export const JeecgListMixin = {
             let total = 0
             dataSource.forEach(data => {
               if(parseCols.indexOf(dataIndex)>-1) {
-                total += Number.parseFloat(data[dataIndex])
+                if(data[dataIndex]) {
+                  total += Number.parseFloat(data[dataIndex])
+                } else {
+                  total += 0
+                }
               } else {
                 total = '-'
               }
