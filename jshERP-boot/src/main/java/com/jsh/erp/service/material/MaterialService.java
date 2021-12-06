@@ -762,15 +762,16 @@ public class MaterialService {
     }
 
     /**
-     * 根据商品获取初始库存，仓库为空的时候查全部库存
+     * 根据商品获取初始库存-多仓库
+     * @param depotList
      * @param materialId
      * @return
      */
-    public BigDecimal getInitStockByMid(Long depotId, Long materialId) {
+    public BigDecimal getInitStockByMidAndDepotList(List<Long> depotList, Long materialId) {
         BigDecimal stock = BigDecimal.ZERO;
         MaterialInitialStockExample example = new MaterialInitialStockExample();
-        if(depotId!=null) {
-            example.createCriteria().andMaterialIdEqualTo(materialId).andDepotIdEqualTo(depotId)
+        if(depotList!=null && depotList.size()>0) {
+            example.createCriteria().andMaterialIdEqualTo(materialId).andDepotIdIn(depotList)
                     .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         } else {
             example.createCriteria().andMaterialIdEqualTo(materialId)

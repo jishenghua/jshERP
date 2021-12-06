@@ -78,8 +78,8 @@ public interface DepotItemMapperEx {
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime);
 
-    BigDecimal getStockCheckSum(
-            @Param("depotId") Long depotId,
+    BigDecimal getStockCheckSumByDepotList(
+            @Param("depotList") List<Long> depotList,
             @Param("mId") Long mId,
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime);
@@ -90,8 +90,8 @@ public interface DepotItemMapperEx {
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime);
 
-    DepotItemVo4Stock getStockByParam(
-            @Param("depotId") Long depotId,
+    DepotItemVo4Stock getStockByParamWithDepotList(
+            @Param("depotList") List<Long> depotList,
             @Param("mId") Long mId,
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime);
@@ -104,12 +104,6 @@ public interface DepotItemMapperEx {
      */
      List<DepotItem> findDepotItemListBydepotheadId(@Param("depotheadId")Long depotheadId,
                                                     @Param("enableSerialNumber")String enableSerialNumber);
-     /**
-      * 根据单据主表id删除单据子表数据
-      * 物理删除，已弃用
-      * */
-     @Deprecated
-     int deleteDepotItemByDepotHeadIds(@Param("depotheadIds")Long []depotHeadIds);
      /**
       * 根据单据主表id删除单据子表数据
       * */

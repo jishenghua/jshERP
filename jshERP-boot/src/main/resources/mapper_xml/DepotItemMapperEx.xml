@@ -273,7 +273,7 @@
           and ifnull(dh.delete_flag,'0') !='1'
     </select>
 
-    <select id="getStockCheckSum"  resultType="java.math.BigDecimal">
+    <select id="getStockCheckSumByDepotList"  resultType="java.math.BigDecimal">
         select ifnull(sum(di.basic_number),0) stockCheckSum from jsh_depot_head dh
         left JOIN jsh_depot_item di on dh.id=di.header_id
         where 1=1
@@ -281,8 +281,11 @@
             and di.material_id=#{mId}
         </if>
         and dh.sub_type='盘点复盘'
-        <if test="depotId != null">
-            and di.depot_id=#{depotId}
+        <if test="depotList.size()>0">
+            and di.depot_id in
+            <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
         </if>
         <if test="beginTime != null">
             and dh.oper_time &gt;= #{beginTime}
@@ -319,16 +322,22 @@
         </if>
     </select>
 
-    <select id="getStockByParam" resultMap="stockMap">
+    <sql id="depotParam">
+        <if test="depotList.size()>0">
+            and di.depot_id in <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach>
+        </if>
+    </sql>
+
+    <select id="getStockByParamWithDepotList" resultMap="stockMap">
         select
-        sum(case when dh.type='入库' <if test="depotId != null">and di.depot_id=#{depotId}</if> then di.basic_number else 0 end) as inTotal,
-        sum(case when dh.type='出库' and dh.sub_type!='调拨' <if test="depotId != null">and di.depot_id=#{depotId}</if> then di.basic_number else 0 end) as outTotal,
-        sum(case when dh.sub_type='调拨' <if test="depotId != null">and di.another_depot_id=#{depotId}</if> then di.basic_number else 0 end) as transfInTotal,
-        sum(case when dh.sub_type='调拨' <if test="depotId != null">and di.depot_id=#{depotId}</if> then di.basic_number else 0 end) as transfOutTotal,
-        sum(case when dh.sub_type='组装单' and di.material_type='组合件' <if test="depotId != null">and di.depot_id=#{depotId}</if> then di.basic_number else 0 end) as assemInTotal,
-        sum(case when dh.sub_type='组装单' and di.material_type='普通子件' <if test="depotId != null">and di.depot_id=#{depotId}</if> then di.basic_number else 0 end) as assemOutTotal,
-        sum(case when dh.sub_type='拆卸单' and di.material_type='普通子件' <if test="depotId != null">and di.depot_id=#{depotId}</if> then di.basic_number else 0 end) as disAssemInTotal,
-        sum(case when dh.sub_type='拆卸单' and di.material_type='组合件' <if test="depotId != null"> and di.depot_id=#{depotId}</if> then di.basic_number else 0 end) as disAssemOutTotal
+        sum(case when dh.type='入库' <include refid="depotParam" /> then di.basic_number else 0 end) as inTotal,
+        sum(case when dh.type='出库' and dh.sub_type!='调拨' <include refid="depotParam" /> then di.basic_number else 0 end) as outTotal,
+        sum(case when dh.sub_type='调拨' <include refid="depotParam" /> then di.basic_number else 0 end) as transfInTotal,
+        sum(case when dh.sub_type='调拨' <include refid="depotParam" /> then di.basic_number else 0 end) as transfOutTotal,
+        sum(case when dh.sub_type='组装单' and di.material_type='组合件' <include refid="depotParam" /> then di.basic_number else 0 end) as assemInTotal,
+        sum(case when dh.sub_type='组装单' and di.material_type='普通子件' <include refid="depotParam" /> then di.basic_number else 0 end) as assemOutTotal,
+        sum(case when dh.sub_type='拆卸单' and di.material_type='普通子件' <include refid="depotParam" /> then di.basic_number else 0 end) as disAssemInTotal,
+        sum(case when dh.sub_type='拆卸单' and di.material_type='组合件' <include refid="depotParam" /> then di.basic_number else 0 end) as disAssemOutTotal
         from
         jsh_depot_head dh
         left join jsh_depot_item di on dh.id=di.header_id and ifnull(di.delete_flag,'0') !='1'
@@ -361,17 +370,6 @@
         and ifnull(dep.delete_flag,'0') !='1'
         and ifnull(mat.delete_flag,'0') !='1'
     </select>
-
-    <delete id="deleteDepotItemByDepotHeadIds">
-        delete from jsh_depot_item
-        where 1=1
-        and header_id in
-        (
-        <foreach collection="depotheadIds" item="depotheadId" separator=",">
-            #{depotheadId}
-        </foreach>
-        )
-    </delete>
 
     <update id="batchDeleteDepotItemByDepotHeadIds">
         update jsh_depot_item
