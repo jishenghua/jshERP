@@ -650,6 +650,8 @@ public class DepotItemService {
             BigDecimal assemOutTotal = stockObj.getAssemOutTotal();
             BigDecimal disAssemOutTotal = stockObj.getDisAssemOutTotal();
             outSum = outTotal.subtract(transfOutTotal).subtract(assemOutTotal).subtract(disAssemOutTotal);
+            //取绝对值
+            outSum = outSum.abs();
         }
         if(stockCheckSum.compareTo(BigDecimal.ZERO)>0) {
             inSum = inSum.add(stockCheckSum);
