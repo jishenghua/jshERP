@@ -317,9 +317,10 @@ public class DepotItemController {
                     item.put("materialColor", diEx.getMColor());
                     item.put("unitName", diEx.getMaterialUnit());
                     BigDecimal prevSum = depotItemService.getStockByParamWithDepotList(depotList,mId,null,timeA);
-                    BigDecimal inSum = depotItemService.getInNumByParamWithDepotList(depotList,mId,timeA,timeB);
-                    BigDecimal outSum = depotItemService.getOutNumByParamWithDepotList(depotList,mId,timeA,timeB);
-                    BigDecimal thisSum = depotItemService.getStockByParamWithDepotList(depotList,mId,null,timeB);
+                    Map<String,BigDecimal> intervalMap = depotItemService.getIntervalMapByParamWithDepotList(depotList,mId,timeA,timeB);
+                    BigDecimal inSum = intervalMap.get("inSum");
+                    BigDecimal outSum = intervalMap.get("outSum");
+                    BigDecimal thisSum = prevSum.add(inSum).subtract(outSum);
                     item.put("prevSum", prevSum);
                     item.put("inSum", inSum);
                     item.put("outSum", outSum);
@@ -426,6 +427,7 @@ public class DepotItemController {
                     BigDecimal OutSum = depotItemService.buyOrSale("出库", "采购退货", diEx.getMId(), monthTime, "number");
                     BigDecimal InSumPrice = depotItemService.buyOrSale("入库", "采购", diEx.getMId(), monthTime, "price");
                     BigDecimal OutSumPrice = depotItemService.buyOrSale("出库", "采购退货", diEx.getMId(), monthTime, "price");
+                    BigDecimal InOutSumPrice = InSumPrice.subtract(OutSumPrice);
                     item.put("barCode", diEx.getBarCode());
                     item.put("materialName", diEx.getMName());
                     item.put("materialModel", diEx.getMModel());
@@ -440,6 +442,7 @@ public class DepotItemController {
                     item.put("outSum", OutSum);
                     item.put("inSumPrice", InSumPrice);
                     item.put("outSumPrice", OutSumPrice);
+                    item.put("inOutSumPrice",InOutSumPrice);//实际采购金额
                     dataArray.add(item);
                 }
             }

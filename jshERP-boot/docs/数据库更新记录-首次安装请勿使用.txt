@@ -1308,3 +1308,10 @@ alter table jsh_unit add other_unit_two varchar(50) DEFAULT NULL COMMENT '副单
 alter table jsh_unit add other_unit_three varchar(50) DEFAULT NULL COMMENT '副单位3' after other_unit_two;
 alter table jsh_unit add ratio_two int(11) DEFAULT NULL COMMENT '比例2' after ratio;
 alter table jsh_unit add ratio_three int(11) DEFAULT NULL COMMENT '比例3' after ratio_two;
+
+-- --------------------------------------------------------
+-- 时间 2021年12月07日
+-- by jishenghua
+-- 更新菜单名称-进货统计改为采购统计
+-- --------------------------------------------------------
+update jsh_function set name='采购统计' where name='进货统计';
