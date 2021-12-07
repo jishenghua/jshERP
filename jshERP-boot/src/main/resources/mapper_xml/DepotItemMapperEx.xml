@@ -441,8 +441,11 @@
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
         </if>
-        <if test="depotId != null">
-            and mis.depot_id= #{depotId}
+        <if test="depotList.size()>0">
+            and mis.depot_id in
+            <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
         </if>
         order by depotName asc
         <if test="offset != null and rows != null">
@@ -469,8 +472,11 @@
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
         </if>
-        <if test="depotId != null">
-            and mis.depot_id= #{depotId}
+        <if test="depotList.size()>0">
+            and mis.depot_id in
+            <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
         </if>
         ) tb
     </select>

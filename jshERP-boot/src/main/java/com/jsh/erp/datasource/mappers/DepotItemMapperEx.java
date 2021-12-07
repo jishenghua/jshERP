@@ -119,11 +119,11 @@ public interface DepotItemMapperEx {
             @Param("offset") Integer offset,
             @Param("rows") Integer rows,
             @Param("materialParam") String materialParam,
-            @Param("depotId") Long depotId);
+            @Param("depotList") List<Long> depotList);
 
     int findStockWarningCountTotal(
             @Param("materialParam") String materialParam,
-            @Param("depotId") Long depotId);
+            @Param("depotList") List<Long> depotList);
 
     BigDecimal getFinishNumber(
             @Param("mId") Long mId,

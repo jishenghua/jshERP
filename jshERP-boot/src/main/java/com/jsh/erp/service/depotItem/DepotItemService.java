@@ -532,20 +532,20 @@ public class DepotItemService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public List<DepotItemStockWarningCount> findStockWarningCount(Integer offset, Integer rows, String materialParam, Long depotId) {
+    public List<DepotItemStockWarningCount> findStockWarningCount(Integer offset, Integer rows, String materialParam, List<Long> depotList) {
         List<DepotItemStockWarningCount> list = null;
         try{
-            list =depotItemMapperEx.findStockWarningCount(offset, rows, materialParam, depotId);
+            list =depotItemMapperEx.findStockWarningCount(offset, rows, materialParam, depotList);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int findStockWarningCountTotal(String materialParam, Long depotId) {
+    public int findStockWarningCountTotal(String materialParam, List<Long> depotList) {
         int result = 0;
         try{
-            result =depotItemMapperEx.findStockWarningCountTotal(materialParam, depotId);
+            result =depotItemMapperEx.findStockWarningCountTotal(materialParam, depotList);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }

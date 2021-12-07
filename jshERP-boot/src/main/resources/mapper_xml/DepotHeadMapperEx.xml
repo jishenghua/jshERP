@@ -205,8 +205,11 @@
         <if test="oId != null">
             and dh.organ_id = #{oId}
         </if>
-        <if test="depotId != null">
-            and di.depot_id = #{depotId}
+        <if test="depotList.size()>0">
+            and di.depot_id in
+            <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
         </if>
         <if test="type != null">
             and dh.type=#{type}
@@ -239,8 +242,11 @@
         <if test="oId != null">
             and dh.organ_id = #{oId}
         </if>
-        <if test="depotId != null">
-            and di.depot_id = #{depotId}
+        <if test="depotList.size()>0">
+            and di.depot_id in
+            <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
         </if>
         <if test="type != null">
             and dh.type=#{type}
@@ -276,12 +282,25 @@
         <if test="oId != null">
             and dh.organ_id = #{oId}
         </if>
-        <if test="depotId != null">
+        <if test="depotList.size()>0">
             <if test="type == '入库'">
-                and ((di.depot_id = #{depotId} and dh.sub_type!='调拨') or (di.another_depot_id = #{depotId} and dh.sub_type='调拨'))
+                and ((
+                dh.sub_type!='调拨' and di.depot_id in
+                <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+                ) or (
+                dh.sub_type='调拨' and di.another_depot_id in
+                <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+                ))
             </if>
             <if test="type == '出库'">
-                and di.depot_id = #{depotId}
+                and di.depot_id in
+                <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
             </if>
         </if>
         <if test="materialParam != null and materialParam !=''">
@@ -308,12 +327,25 @@
         <if test="oId != null">
             and dh.organ_id = #{oId}
         </if>
-        <if test="depotId != null">
+        <if test="depotList.size()>0">
             <if test="type == '入库'">
-                 and ((di.depot_id = #{depotId} and dh.sub_type!='调拨') or (di.another_depot_id = #{depotId} and dh.sub_type='调拨'))
+                 and ((
+                 dh.sub_type!='调拨' and di.depot_id in
+                <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+                 ) or (
+                 dh.sub_type='调拨' and di.another_depot_id in
+                <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+                 ))
             </if>
             <if test="type == '出库'">
-                and di.depot_id = #{depotId}
+                and di.depot_id in
+                <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
             </if>
         </if>
         <if test="materialParam != null and materialParam !=''">
@@ -335,11 +367,17 @@
         <!-- 调出仓库名查询 -->
         left join (select id as aid,name as SName,delete_Flag as adelete_Flag from jsh_depot ) ddd on ddd.aid=di.another_depot_id and ifnull(ddd.adelete_Flag,'0') !='1'
         where dh.oper_time >=#{beginTime} and dh.oper_time &lt;=#{endTime}
-        <if test="depotIdF != null">
-            and di.depot_id = #{depotIdF}
+        <if test="depotFList.size()>0">
+            and di.depot_id in
+            <foreach collection="depotFList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
         </if>
-        <if test="depotId != null">
-            and di.another_depot_id = #{depotId}
+        <if test="depotList.size()>0">
+            and di.another_depot_id in
+            <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
         </if>
         <if test="subType != null">
             and dh.sub_type=#{subType}
@@ -367,11 +405,17 @@
         left join jsh_material_extend me on me.id=di.material_extend_id and ifnull(me.delete_Flag,'0') !='1'
         left join (select id,name as dName,delete_Flag from jsh_depot) d on d.id=di.depot_id and ifnull(d.delete_Flag,'0') !='1'
         where dh.oper_time >=#{beginTime} and dh.oper_time &lt;=#{endTime}
-        <if test="depotIdF != null">
-            and di.depot_id = #{depotIdF}
+        <if test="depotFList.size()>0">
+            and di.depot_id in
+            <foreach collection="depotFList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
         </if>
-        <if test="depotId != null">
-            and di.another_depot_id = #{depotId}
+        <if test="depotList.size()>0">
+            and di.another_depot_id in
+            <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
         </if>
         <if test="subType != null">
             and dh.sub_type=#{subType}

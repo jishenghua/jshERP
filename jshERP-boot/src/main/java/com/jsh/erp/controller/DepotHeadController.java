@@ -13,6 +13,7 @@ import com.jsh.erp.datasource.vo.DepotHeadVo4List;
 import com.jsh.erp.datasource.vo.DepotHeadVo4StatementAccount;
 import com.jsh.erp.exception.BusinessParamCheckingException;
 import com.jsh.erp.service.accountHead.AccountHeadService;
+import com.jsh.erp.service.depot.DepotService;
 import com.jsh.erp.service.depotHead.DepotHeadService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.redis.RedisService;
@@ -55,6 +56,9 @@ public class DepotHeadController {
 
     @Resource
     private SupplierService supplierService;
+
+    @Resource
+    private DepotService depotService;
 
     @Resource
     private RedisService redisService;
@@ -101,7 +105,7 @@ public class DepotHeadController {
                                         @RequestParam(value = "organId", required = false) Integer oId,
                                          @RequestParam("number") String number,
                                         @RequestParam("materialParam") String materialParam,
-                                        @RequestParam(value = "depotId", required = false) Integer depotId,
+                                        @RequestParam(value = "depotId", required = false) Long depotId,
                                         @RequestParam("beginTime") String beginTime,
                                         @RequestParam("endTime") String endTime,
                                         @RequestParam("type") String type,
@@ -109,11 +113,22 @@ public class DepotHeadController {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         try {
+            List<Long> depotList = new ArrayList<>();
+            if(depotId != null) {
+                depotList.add(depotId);
+            } else {
+                //未选择仓库时默认为当前用户有权限的仓库
+                JSONArray depotArr = depotService.findDepotByCurrentUser();
+                for(Object obj: depotArr) {
+                    JSONObject object = JSONObject.parseObject(obj.toString());
+                    depotList.add(object.getLong("id"));
+                }
+            }
             List<DepotHeadVo4InDetail> resList = new ArrayList<DepotHeadVo4InDetail>();
             beginTime = Tools.parseDayToTime(beginTime, BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            List<DepotHeadVo4InDetail> list = depotHeadService.findByAll(beginTime, endTime, type, materialParam, depotId, oId, number, (currentPage-1)*pageSize, pageSize);
-            int total = depotHeadService.findByAllCount(beginTime, endTime, type, materialParam, depotId, oId, number);
+            List<DepotHeadVo4InDetail> list = depotHeadService.findByAll(beginTime, endTime, type, materialParam, depotList, oId, number, (currentPage-1)*pageSize, pageSize);
+            int total = depotHeadService.findByAllCount(beginTime, endTime, type, materialParam, depotList, oId, number);
             map.put("total", total);
             //存放数据json数组
             if (null != list) {
@@ -151,7 +166,7 @@ public class DepotHeadController {
                                          @RequestParam("pageSize") Integer pageSize,
                                          @RequestParam(value = "organId", required = false) Integer oId,
                                          @RequestParam("materialParam") String materialParam,
-                                         @RequestParam(value = "depotId", required = false) Integer depotId,
+                                         @RequestParam(value = "depotId", required = false) Long depotId,
                                          @RequestParam("beginTime") String beginTime,
                                          @RequestParam("endTime") String endTime,
                                          @RequestParam("type") String type,
@@ -159,11 +174,22 @@ public class DepotHeadController {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         try {
+            List<Long> depotList = new ArrayList<>();
+            if(depotId != null) {
+                depotList.add(depotId);
+            } else {
+                //未选择仓库时默认为当前用户有权限的仓库
+                JSONArray depotArr = depotService.findDepotByCurrentUser();
+                for(Object obj: depotArr) {
+                    JSONObject object = JSONObject.parseObject(obj.toString());
+                    depotList.add(object.getLong("id"));
+                }
+            }
             List<DepotHeadVo4InOutMCount> resList = new ArrayList<>();
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            List<DepotHeadVo4InOutMCount> list = depotHeadService.findInOutMaterialCount(beginTime, endTime, type, materialParam, depotId, oId, (currentPage-1)*pageSize, pageSize);
-            int total = depotHeadService.findInOutMaterialCountTotal(beginTime, endTime, type, materialParam, depotId, oId);
+            List<DepotHeadVo4InOutMCount> list = depotHeadService.findInOutMaterialCount(beginTime, endTime, type, materialParam, depotList, oId, (currentPage-1)*pageSize, pageSize);
+            int total = depotHeadService.findInOutMaterialCountTotal(beginTime, endTime, type, materialParam, depotList, oId);
             map.put("total", total);
             //存放数据json数组
             if (null != list) {
@@ -202,8 +228,8 @@ public class DepotHeadController {
                                                  @RequestParam("pageSize") Integer pageSize,
                                                  @RequestParam("number") String number,
                                                  @RequestParam("materialParam") String materialParam,
-                                                 @RequestParam(value = "depotId", required = false) Integer depotId,
-                                                 @RequestParam(value = "depotIdF", required = false) Integer depotIdF,
+                                                 @RequestParam(value = "depotId", required = false) Long depotId,
+                                                 @RequestParam(value = "depotIdF", required = false) Long depotIdF,
                                                  @RequestParam("beginTime") String beginTime,
                                                  @RequestParam("endTime") String endTime,
                                                  @RequestParam("subType") String subType,
@@ -211,10 +237,32 @@ public class DepotHeadController {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         try {
+            List<Long> depotList = new ArrayList<>();
+            List<Long> depotFList = new ArrayList<>();
+            if(depotId != null) {
+                depotList.add(depotId);
+            } else {
+                //未选择仓库时默认为当前用户有权限的仓库
+                JSONArray depotArr = depotService.findDepotByCurrentUser();
+                for(Object obj: depotArr) {
+                    JSONObject object = JSONObject.parseObject(obj.toString());
+                    depotList.add(object.getLong("id"));
+                }
+            }
+            if(depotIdF != null) {
+                depotFList.add(depotIdF);
+            } else {
+                //未选择仓库时默认为当前用户有权限的仓库
+                JSONArray depotArr = depotService.findDepotByCurrentUser();
+                for(Object obj: depotArr) {
+                    JSONObject object = JSONObject.parseObject(obj.toString());
+                    depotFList.add(object.getLong("id"));
+                }
+            }
             beginTime = Tools.parseDayToTime(beginTime, BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            List<DepotHeadVo4InDetail> list = depotHeadService.findAllocationDetail(beginTime, endTime, subType, number, materialParam, depotId, depotIdF, (currentPage-1)*pageSize, pageSize);
-            int total = depotHeadService.findAllocationDetailCount(beginTime, endTime, subType, number, materialParam, depotId, depotIdF);
+            List<DepotHeadVo4InDetail> list = depotHeadService.findAllocationDetail(beginTime, endTime, subType, number, materialParam, depotList, depotFList, (currentPage-1)*pageSize, pageSize);
+            int total = depotHeadService.findAllocationDetailCount(beginTime, endTime, subType, number, materialParam, depotList, depotFList);
             map.put("rows", list);
             map.put("total", total);
             res.code = 200;
