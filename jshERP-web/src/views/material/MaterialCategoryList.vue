@@ -3,7 +3,6 @@
   <a-row :gutter="10">
     <a-col :md="12" :sm="24">
       <a-card :bordered="false">
-
         <!-- 按钮操作区域 -->
         <a-row style="margin-left: 14px">
           <a-button v-if="btnEnableList.indexOf(1)>-1" @click="handleAdd()" type="primary">添加类别</a-button>

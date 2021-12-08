@@ -54,19 +54,19 @@
       <a-col :sm="24" :md="12" :xl="8" :style="{ paddingRight: '0px',marginBottom: '12px' }">
         <a-card :loading="loading" :bordered="false" :body-style="{paddingRight: '5'}" data-step="7" data-title="采购统计"
                 data-intro="统计往前6个月每月采购的总金额">
-          <bar title="采购统计" :height="410" :yaxisText="yaxisText" :dataSource="buyPriceData"/>
+          <bar title="采购统计" :height="barHeight" :yaxisText="yaxisText" :dataSource="buyPriceData"/>
         </a-card>
       </a-col>
       <a-col :sm="24" :md="12" :xl="8" :style="{ paddingRight: '0px',marginBottom: '12px' }">
         <a-card :loading="loading" :bordered="false" :body-style="{paddingRight: '5'}" data-step="8" data-title="销售统计"
                 data-intro="统计往前6个月每月销售的总金额">
-          <bar title="销售统计" :height="410" :yaxisText="yaxisText" :dataSource="salePriceData"/>
+          <bar title="销售统计" :height="barHeight" :yaxisText="yaxisText" :dataSource="salePriceData"/>
         </a-card>
       </a-col>
       <a-col :sm="24" :md="12" :xl="8" :style="{ paddingRight: '0px',marginBottom: '12px' }">
         <a-card :loading="loading" :bordered="false" :body-style="{paddingRight: '5'}" data-step="9" data-title="零售统计"
                 data-intro="统计往前6个月每月零售的总金额">
-          <bar title="零售统计" :height="410" :yaxisText="yaxisText" :dataSource="retailPriceData"/>
+          <bar title="零售统计" :height="barHeight" :yaxisText="yaxisText" :dataSource="retailPriceData"/>
         </a-card>
       </a-col>
     </a-row>
@@ -122,6 +122,7 @@
         loading: true,
         center: null,
         statistics: {},
+        barHeight: document.documentElement.clientHeight-465,
         yaxisText: '金额',
         buyPriceData: [],
         salePriceData: [],
