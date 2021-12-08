@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsh.erp.datasource.mappers.PlatformConfigMapperEx">
+  <select id="selectByConditionPlatformConfig" parameterType="com.jsh.erp.datasource.entities.PlatformConfigExample" resultMap="com.jsh.erp.datasource.mappers.PlatformConfigMapper.BaseResultMap">
+    select *
+    FROM jsh_platform_config
+    where 1=1
+    and platform_key!='activation_code'
+    <if test="platformKey != null and platformKey != ''">
+      <bind name="bindKey" value="'%'+platformKey+'%'"/>
+      and platform_key like #{bindKey}
+    </if>
+    <if test="offset != null and rows != null">
+      limit #{offset},#{rows}
+    </if>
+  </select>
+  <select id="countsByPlatformConfig" resultType="java.lang.Long">
+    SELECT
+    COUNT(id)
+    FROM jsh_platform_config
+    WHERE 1=1
+    and platform_key!='activation_code'
+    <if test="platformKey != null and platformKey != ''">
+      <bind name="bindKey" value="'%'+platformKey+'%'"/>
+      and platform_key like #{bindKey}
+    </if>
+  </select>
+</mapper>

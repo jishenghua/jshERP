@@ -9,11 +9,11 @@ import java.util.List;
 public interface PlatformConfigMapperEx {
 
     List<PlatformConfig> selectByConditionPlatformConfig(
-            @Param("key") String key,
+            @Param("platformKey") String platformKey,
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
     Long countsByPlatformConfig(
-            @Param("key") String key);
+            @Param("platformKey") String platformKey);
 
 }

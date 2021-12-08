@@ -1313,5 +1313,11 @@ alter table jsh_unit add ratio_three int(11) DEFAULT NULL COMMENT '比例3' afte
 -- 时间 2021年12月07日
 -- by jishenghua
 -- 更新菜单名称-进货统计改为采购统计
+-- 增加平台配置菜单
+-- 给平台配置增加注册启用标记
 -- --------------------------------------------------------
 update jsh_function set name='采购统计' where name='进货统计';
+insert into `jsh_function`(`number`, `name`, `parent_number`, `url`, `component`, `state`, `sort`, `enabled`, `type`, `push_btn`, `icon`, `delete_flag`)
+ values ('000112', '平台配置', '0001', '/system/platform_config', '/system/PlatformConfigList', '\0', '0175', '', '电脑版', '', 'profile', '0');
+insert into `jsh_platform_config`(`platform_key`, `platform_key_info`, `platform_value`)
+ values ('register_flag', '注册启用标记', '1');
