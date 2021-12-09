@@ -4,15 +4,18 @@ import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.Msg;
+import com.jsh.erp.datasource.entities.MsgEx;
 import com.jsh.erp.datasource.entities.MsgExample;
 import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.mappers.MsgMapper;
 import com.jsh.erp.datasource.mappers.MsgMapperEx;
+import com.jsh.erp.datasource.vo.DepotHeadVo4List;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.depotHead.DepotHeadService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
+import com.jsh.erp.utils.Tools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -22,7 +25,11 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import static com.jsh.erp.utils.Tools.getCenternTime;
 
 @Service
 public class MsgService {
@@ -70,10 +77,17 @@ public class MsgService {
         return list;
     }
 
-    public List<Msg> select(String name, int offset, int rows)throws Exception {
-        List<Msg> list=null;
+    public List<MsgEx> select(String name, int offset, int rows)throws Exception {
+        List<MsgEx> list=null;
         try{
-            list=msgMapperEx.selectByConditionMsg(name, offset, rows);
+            list = msgMapperEx.selectByConditionMsg(name, offset, rows);
+            if (null != list) {
+                for (MsgEx msgEx : list) {
+                    if(msgEx.getCreateTime() != null) {
+                        msgEx.setCreateTimeStr(getCenternTime(msgEx.getCreateTime()));
+                    }
+                }
+            }
         }catch(Exception e){
             logger.error("异常码[{}],异常提示[{}],异常[{}]",
                     ExceptionConstants.DATA_READ_FAIL_CODE, ExceptionConstants.DATA_READ_FAIL_MSG,e);
@@ -101,6 +115,8 @@ public class MsgService {
         Msg msg = JSONObject.parseObject(obj.toJSONString(), Msg.class);
         int result=0;
         try{
+            msg.setCreateTime(new Date());
+            msg.setStatus("1");
             result=msgMapper.insertSelective(msg);
             logService.insertLog("消息",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(msg.getMsgTitle()).toString(), request);
@@ -204,19 +220,33 @@ public class MsgService {
         return result;
     }
 
-    public List<Msg> getMsgByStatus(String status)throws Exception {
-        MsgExample example = new MsgExample();
-        example.createCriteria().andStatusEqualTo(status).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        List<Msg> list=null;
+    public List<MsgEx> getMsgByStatus(String status)throws Exception {
+        List<MsgEx> resList=new ArrayList<>();
         try{
-            list=msgMapper.selectByExample(example);
+            MsgExample example = new MsgExample();
+            example.createCriteria().andStatusEqualTo(status).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+            List<Msg> list = msgMapper.selectByExample(example);
+            if (null != list) {
+                for (Msg msg : list) {
+                    if(msg.getCreateTime() != null) {
+                        MsgEx msgEx = new MsgEx();
+                        msgEx.setId(msg.getId());
+                        msgEx.setMsgTitle(msg.getMsgTitle());
+                        msgEx.setMsgContent(msg.getMsgContent());
+                        msgEx.setStatus(msg.getStatus());
+                        msgEx.setType(msg.getType());
+                        msgEx.setCreateTimeStr(Tools.parseDateToStr(msg.getCreateTime()));
+                        resList.add(msgEx);
+                    }
+                }
+            }
         }catch(Exception e){
             logger.error("异常码[{}],异常提示[{}],异常[{}]",
                     ExceptionConstants.DATA_READ_FAIL_CODE, ExceptionConstants.DATA_READ_FAIL_MSG,e);
             throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
                     ExceptionConstants.DATA_READ_FAIL_MSG);
         }
-        return list;
+        return resList;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
@@ -248,5 +278,21 @@ public class MsgService {
                     ExceptionConstants.DATA_READ_FAIL_MSG);
         }
         return result;
+    }
+
+    public Integer getMsgCountByType(String type)throws Exception {
+        int msgCount = 0;
+        try{
+            MsgExample example = new MsgExample();
+            example.createCriteria().andTypeEqualTo(type).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+            List<Msg> list = msgMapper.selectByExample(example);
+            msgCount = list.size();
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_READ_FAIL_CODE, ExceptionConstants.DATA_READ_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
+                    ExceptionConstants.DATA_READ_FAIL_MSG);
+        }
+        return msgCount;
     }
 }
