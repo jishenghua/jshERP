@@ -99,7 +99,7 @@
   import Trend from '@/components/Trend'
   import { getBuyAndSaleStatistics, buyOrSalePrice, getPlatformConfigByKey } from '@/api/api'
   import { handleIntroJs } from "@/utils/util"
-  import { getAction } from '../../api/manage'
+  import { getAction,postAction } from '../../api/manage'
 
   export default {
     name: "IndexChart",
@@ -179,6 +179,27 @@
             //如果距离到期还剩5天就进行提示续费
             if(difftime<86400000*5) {
               this.hasExpire = true
+              //针对免费租户发送试用到期的消息提醒
+              if(res.data.type === '0') {
+                //先检查有无发送过，只发送一次
+                getAction("/msg/getMsgCountByType",{'type': '试用到期'}).then(res=>{
+                  if(res && res.code === 200) {
+                    if(res.data.count === 0) {
+                      //发送消息
+                      let msgParam = {
+                        'msgTitle': '试用到期提醒',
+                        'msgContent': '试用期即将结束，请您及时续费，过期将会影响正常使用！',
+                        'type': '试用到期'
+                      }
+                      postAction("/msg/add",msgParam).then(res=>{
+                        if(res && res.code === 200) {
+
+                        }
+                      })
+                    }
+                  }
+                })
+              }
             }
           }
         })
