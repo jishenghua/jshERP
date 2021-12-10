@@ -599,7 +599,7 @@ CREATE TABLE `jsh_msg` (
 -- ----------------------------
 -- Records of jsh_msg
 -- ----------------------------
-INSERT INTO `jsh_msg` VALUES ('2', '标题1', '内容1', '2019-09-10 00:11:39', '类型1', '1', '63', '0');
+INSERT INTO `jsh_msg` VALUES ('2', '标题1', '内容1', '2019-09-10 00:11:39', '类型1', '2', '63', '0');
 
 -- ----------------------------
 -- Table structure for jsh_organization
