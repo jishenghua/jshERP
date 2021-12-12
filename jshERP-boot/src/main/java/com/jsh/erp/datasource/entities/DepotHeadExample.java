@@ -806,6 +806,66 @@ public class DepotHeadExample {
             return (Criteria) this;
         }
 
+        public Criteria andBackAmountIsNull() {
+            addCriterion("back_amount is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackAmountIsNotNull() {
+            addCriterion("back_amount is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackAmountEqualTo(BigDecimal value) {
+            addCriterion("back_amount =", value, "backAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackAmountNotEqualTo(BigDecimal value) {
+            addCriterion("back_amount <>", value, "backAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackAmountGreaterThan(BigDecimal value) {
+            addCriterion("back_amount >", value, "backAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackAmountGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("back_amount >=", value, "backAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackAmountLessThan(BigDecimal value) {
+            addCriterion("back_amount <", value, "backAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackAmountLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("back_amount <=", value, "backAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackAmountIn(List<BigDecimal> values) {
+            addCriterion("back_amount in", values, "backAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackAmountNotIn(List<BigDecimal> values) {
+            addCriterion("back_amount not in", values, "backAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackAmountBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("back_amount between", value1, value2, "backAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackAmountNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("back_amount not between", value1, value2, "backAmount");
+            return (Criteria) this;
+        }
+
         public Criteria andTotalPriceIsNull() {
             addCriterion("total_price is null");
             return (Criteria) this;

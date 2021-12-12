@@ -1323,3 +1323,10 @@ insert into `jsh_function`(`number`, `name`, `parent_number`, `url`, `component`
 insert into `jsh_platform_config`(`platform_key`, `platform_key_info`, `platform_value`)
  values ('register_flag', '注册启用标记', '1');
 update jsh_msg set status='2' where id=2;
+
+-- --------------------------------------------------------
+-- 时间 2021年12月12日
+-- by jishenghua
+-- 给单据表增加找零字段backAmount
+-- --------------------------------------------------------
+alter table jsh_depot_head add back_amount decimal(24,6) DEFAULT NULL COMMENT '找零金额' after change_amount;

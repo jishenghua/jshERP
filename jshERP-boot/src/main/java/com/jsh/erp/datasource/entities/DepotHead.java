@@ -26,6 +26,8 @@ public class DepotHead {
 
     private BigDecimal changeAmount;
 
+    private BigDecimal backAmount;
+
     private BigDecimal totalPrice;
 
     private String payType;
@@ -144,6 +146,14 @@ public class DepotHead {
 
     public void setChangeAmount(BigDecimal changeAmount) {
         this.changeAmount = changeAmount;
+    }
+
+    public BigDecimal getBackAmount() {
+        return backAmount;
+    }
+
+    public void setBackAmount(BigDecimal backAmount) {
+        this.backAmount = backAmount;
     }
 
     public BigDecimal getTotalPrice() {
