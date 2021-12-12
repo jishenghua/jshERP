@@ -93,7 +93,7 @@
             <a-row class="form-row" :gutter="24">
               <a-col :lg="24" :md="6" :sm="6"><br/><br/></a-col>
               <a-col :lg="24" :md="6" :sm="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="实付金额">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据金额">
                   <a-input v-decorator.trim="[ 'changeAmount' ]" :style="{color:'purple'}" :readOnly="true"/>
                 </a-form-item>
               </a-col>
@@ -267,8 +267,11 @@
           this.fileList = []
         } else {
           this.model.operTime = this.model.operTimeStr
-          this.model.getAmount = this.model.changeAmount
-          this.model.backAmount = 0
+          if(this.model.backAmount) {
+            this.model.getAmount = (this.model.changeAmount + this.model.backAmount).toFixed(2)
+          } else {
+            this.model.getAmount = this.model.changeAmount
+          }
           this.fileList = this.model.fileName
           this.$nextTick(() => {
             this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'number', 'linkNumber', 'remark',

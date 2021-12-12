@@ -103,8 +103,8 @@
             <a-row class="form-row" :gutter="24">
               <a-col :lg="24" :md="6" :sm="6"><br/><br/></a-col>
               <a-col :lg="24" :md="6" :sm="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="实收金额" data-step="5" data-title="实收金额"
-                             data-intro="实收金额等于左侧商品的总金额">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据金额" data-step="5" data-title="单据金额"
+                             data-intro="单据金额等于左侧商品的总金额">
                   <a-input v-decorator.trim="[ 'changeAmount' ]" :style="{color:'purple'}" :readOnly="true"/>
                 </a-form-item>
               </a-col>
@@ -285,7 +285,11 @@
           })
         } else {
           this.model.operTime = this.model.operTimeStr
-          this.model.getAmount = this.model.changeAmount
+          if(this.model.backAmount) {
+            this.model.getAmount = (this.model.changeAmount + this.model.backAmount).toFixed(2)
+          } else {
+            this.model.getAmount = this.model.changeAmount
+          }
           this.fileList = this.model.fileName
           if(this.model.payType === '预付款'){
             this.payTypeList = []
@@ -294,7 +298,7 @@
           }
           this.$nextTick(() => {
             this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'number', 'payType', 'remark',
-              'discount','discountMoney','discountLastMoney','otherMoney','accountId','changeAmount','getAmount'))
+              'discount','discountMoney','discountLastMoney','otherMoney','accountId','changeAmount','getAmount','backAmount'))
           });
           // 加载子表数据
           let params = {

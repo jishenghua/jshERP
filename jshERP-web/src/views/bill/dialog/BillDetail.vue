@@ -72,18 +72,18 @@
             <a-col :span="6">
               <a-row class="form-row" :gutter="24">
                 <a-col :lg="24" :md="6" :sm="6">
-                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="实收金额">
+                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据金额">
                     {{model.changeAmount}}
                   </a-form-item>
                 </a-col>
                 <a-col :lg="24" :md="6" :sm="6">
                   <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款金额">
-                    {{model.changeAmount}}
+                    {{model.getAmount}}
                   </a-form-item>
                 </a-col>
                 <a-col :lg="24" :md="6" :sm="6">
                   <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="找零">
-                    0
+                    {{model.backAmount}}
                   </a-form-item>
                 </a-col>
                 <a-col :lg="24" :md="6" :sm="6">
@@ -146,18 +146,18 @@
             <a-col :span="6">
               <a-row class="form-row" :gutter="24">
                 <a-col :lg="24" :md="6" :sm="6">
-                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="实付金额">
+                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据金额">
                     {{model.changeAmount}}
                   </a-form-item>
                 </a-col>
                 <a-col :lg="24" :md="6" :sm="6">
                   <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款金额">
-                    {{model.changeAmount}}
+                    {{model.getAmount}}
                   </a-form-item>
                 </a-col>
                 <a-col :lg="24" :md="6" :sm="6">
                   <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="找零">
-                    0
+                    {{model.backAmount}}
                   </a-form-item>
                 </a-col>
                 <a-col :lg="24" :md="6" :sm="6">
@@ -1260,6 +1260,11 @@
         this.fileList = record.fileName
         this.visible = true;
         this.model = Object.assign({}, record);
+        if(this.model.backAmount) {
+          this.model.getAmount = (this.model.changeAmount + this.model.backAmount).toFixed(2)
+        } else {
+          this.model.getAmount = this.model.changeAmount
+        }
         this.model.debt = (this.model.discountLastMoney + this.model.otherMoney - this.model.changeAmount).toFixed(2)
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model,'id'))

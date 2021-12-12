@@ -185,7 +185,16 @@
           { title: '单据日期', dataIndex: 'operTimeStr',width:145},
           { title: '操作员', dataIndex: 'userName',width:80},
           { title: '金额合计', dataIndex: 'totalPrice',width:80},
-          { title: '收款', dataIndex: 'changeAmount',width:50},
+          { title: '收款金额', dataIndex: 'getAmount',width:80,
+            customRender:function (text,record,index) {
+              if(record.backAmount) {
+                return record.changeAmount + record.backAmount
+              } else {
+                return record.changeAmount
+              }
+            }
+          },
+          { title: '找零', dataIndex: 'backAmount',width:50},
           { title: '状态', dataIndex: 'status', width: 80, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }
           },
