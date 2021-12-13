@@ -4,7 +4,6 @@
     :width="modalWidth"
     :visible="visible"
     :confirmLoading="confirmLoading"
-    @ok="handleOk"
     @cancel="handleCancel"
     cancelText="关闭"
     style="top:20%;height: 60%;overflow-y: hidden">
