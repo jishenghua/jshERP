@@ -159,7 +159,7 @@
           { title: '财务人员', dataIndex: 'handsPersonName',width:140},
           { title: '单据编号', dataIndex: 'billNo',width:160},
           { title: '单据日期 ', dataIndex: 'billTimeStr',width:160},
-          { title: '操作员', dataIndex: 'userName',width:80},
+          { title: '操作员', dataIndex: 'userName',width:80, ellipsis:true},
           { title: '支出金额', dataIndex: 'changeAmount',width:80},
           { title: '备注', dataIndex: 'remark',width:200},
           { title: '状态', dataIndex: 'status', width: 80, align: "center",

@@ -160,7 +160,7 @@
           { title: '财务人员', dataIndex: 'handsPersonName',width:140},
           { title: '单据编号', dataIndex: 'billNo',width:160},
           { title: '单据日期 ', dataIndex: 'billTimeStr',width:160},
-          { title: '操作员', dataIndex: 'userName',width:80},
+          { title: '操作员', dataIndex: 'userName',width:80, ellipsis:true},
           { title: '合计收款', dataIndex: 'totalPrice',width:80},
           { title: '优惠金额', dataIndex: 'discountMoney',width:80},
           { title: '实际收款', dataIndex: 'changeAmount',width:80},
