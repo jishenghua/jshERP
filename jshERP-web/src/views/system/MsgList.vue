@@ -6,7 +6,7 @@
     :confirmLoading="confirmLoading"
     @cancel="handleCancel"
     cancelText="关闭"
-    style="top:20%;height: 60%;overflow-y: hidden">
+    style="top:15%;height: 70%;overflow-y: hidden">
     <template slot="footer">
       <a-button key="back" @click="handleCancel">
         关闭
@@ -80,6 +80,10 @@
         confirmLoading: false,
         queryParam: {
           name: ''
+        },
+        ipagination:{
+          pageSize: 5,
+          pageSizeOptions: ['5','10', '20', '30']
         },
         columns: [{
           title: '标题',
