@@ -115,11 +115,14 @@ public class MsgService {
         Msg msg = JSONObject.parseObject(obj.toJSONString(), Msg.class);
         int result=0;
         try{
-            msg.setCreateTime(new Date());
-            msg.setStatus("1");
-            result=msgMapper.insertSelective(msg);
-            logService.insertLog("消息",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(msg.getMsgTitle()).toString(), request);
+            User userInfo = userService.getCurrentUser();
+            if(!BusinessConstants.DEFAULT_MANAGER.equals(userInfo.getLoginName())) {
+                msg.setCreateTime(new Date());
+                msg.setStatus("1");
+                result=msgMapper.insertSelective(msg);
+                logService.insertLog("消息",
+                        new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(msg.getMsgTitle()).toString(), request);
+            }
         }catch(Exception e){
             logger.error("异常码[{}],异常提示[{}],异常[{}]",
                     ExceptionConstants.DATA_WRITE_FAIL_CODE, ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
