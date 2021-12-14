@@ -16,7 +16,7 @@ export const JeecgListMixin = {
       //token header
       tokenHeader: {'X-Access-Token': Vue.ls.get(ACCESS_TOKEN)},
       /*卡片样式 */
-      cardStyle: 'height:' + (document.documentElement.clientHeight-125) + 'px',
+      cardStyle: '',
       /* 查询条件-请不要在queryParam中声明非字符串值的属性 */
       queryParam: {},
       /* 数据源 */
@@ -63,6 +63,9 @@ export const JeecgListMixin = {
     }
   },
   created() {
+    if(this.isDesktop()) {
+      this.cardStyle = 'height:' + (document.documentElement.clientHeight-125) + 'px'
+    }
     if(!this.disableMixinCreated){
       //console.log(' -- mixin created -- ')
       this.loadData();
