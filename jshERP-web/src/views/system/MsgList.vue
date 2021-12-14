@@ -30,9 +30,9 @@
         </a-row>
       </a-form>
     </div>
-<!--    <div class="table-operator">-->
-<!--      <a-button type="primary" @click="readAll" icon="book">全部标注已读</a-button>-->
-<!--    </div>-->
+    <div class="table-operator">
+      <a-button type="primary" @click="readAll" icon="book">全部标注已读</a-button>
+    </div>
     <div style="margin-top: 5px">
       <a-table
         ref="table"
@@ -59,8 +59,7 @@
 </template>
 
 <script>
-  import { filterObj } from '@/utils/util'
-  import { getAction,putAction,postAction } from '@/api/manage'
+  import { postAction } from '@/api/manage'
   import ShowAnnouncement from '@/components/tools/ShowAnnouncement'
   import {JeecgListMixin} from '@/mixins/JeecgListMixin'
   import DynamicNotice from '../../components/tools/DynamicNotice'
@@ -111,8 +110,7 @@
 		    url: {
           list: "/msg/list",
           batchUpdateStatus:"/msg/batchUpdateStatus",
-          editCementSend:"sys/sysAnnouncementSend/editByAnntIdAndUserId",
-          readAllMsg:"sys/sysAnnouncementSend/readAll",
+          readAllMsg:"/msg/readAllMsg",
         },
         loading:false,
         openPath:'',
@@ -127,7 +125,6 @@
         postAction(this.url.batchUpdateStatus,{ids:record.id, status: '2'}).then((res)=>{
           if(res && res.code === 200){
             this.loadData();
-            //this.syncHeadNotic(record.anntId)
           }
         });
         if(record.openType==='component'){
@@ -138,20 +135,16 @@
           this.$refs.ShowAnnouncement.detail(record);
         }
       },
-      syncHeadNotic(anntId){
-        getAction("sys/annountCement/syncNotic",{anntId:anntId})
-      },
       readAll(){
-        var that = this;
+        let that = this;
         that.$confirm({
           title:"确认操作",
           content:"是否全部标注已读?",
           onOk: function(){
-            putAction(that.url.readAllMsg).then((res)=>{
-              if(res.success){
-                that.$message.success(res.message);
+            postAction(that.url.readAllMsg).then((res)=>{
+              if(res && res.code === 200){
+                that.$message.success(res.data);
                 that.loadData();
-                that.syncHeadNotic();
               }
             });
           }
