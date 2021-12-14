@@ -52,12 +52,14 @@
   import {addSystemConfig,editSystemConfig,checkSystemConfig } from '@/api/api'
   import {autoJumpNextInput} from "@/utils/util"
   import {getAction } from '@/api/manage'
+  import {mixinDevice} from '@/utils/mixin.js'
   export default {
     name: "SystemConfigList",
+    mixins: [mixinDevice],
     data () {
       return {
         title:"操作",
-        cardStyle: 'height:' + (document.documentElement.clientHeight-125) + 'px',
+        cardStyle: '',
         visible: true,
         model: {},
         depotFlagSwitch: false, //仓库权限状态
@@ -86,6 +88,9 @@
     },
     created () {
       this.init()
+      if(this.isDesktop()) {
+        this.cardStyle = 'height:' + (document.documentElement.clientHeight-125) + 'px'
+      }
     },
     methods: {
       onDepotChange(checked) {
