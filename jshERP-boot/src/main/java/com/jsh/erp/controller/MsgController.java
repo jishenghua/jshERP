@@ -130,4 +130,26 @@ public class MsgController {
         }
         return res;
     }
+
+    /**
+     * 全部设置未已读
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/readAllMsg")
+    @ApiOperation(value = "全部设置未已读")
+    public BaseResponseInfo readAllMsg(HttpServletRequest request)throws Exception {
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            msgService.readAllMsg();
+            res.code = 200;
+            res.data = "操作成功!";
+        } catch(Exception e){
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
+    }
 }

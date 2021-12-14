@@ -298,4 +298,23 @@ public class MsgService {
         }
         return msgCount;
     }
+
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public void readAllMsg() throws Exception{
+        try{
+            User userInfo = userService.getCurrentUser();
+            if(!BusinessConstants.DEFAULT_MANAGER.equals(userInfo.getLoginName())) {
+                Msg msg = new Msg();
+                msg.setStatus("2");
+                MsgExample example = new MsgExample();
+                example.createCriteria();
+                msgMapper.updateByExampleSelective(msg, example);
+            }
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE, ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+    }
 }
