@@ -284,7 +284,7 @@
           this.addInit(this.prefixNo)
           this.fileList = []
           this.$nextTick(() => {
-            handleIntroJs('retailOut', 1)
+            handleIntroJs(this.prefixNo, 1)
           })
           this.$nextTick(() => {
             this.form.setFieldsValue({'payType': '现付', 'getAmount':0, 'backAmount':0})
