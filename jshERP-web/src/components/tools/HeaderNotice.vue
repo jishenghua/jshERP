@@ -103,6 +103,10 @@
           getAction(this.url.getMsgByStatus, { status: '1'}).then((res) => {
             if (res && res.code === 200) {
               this.announcement1 = res.data;
+              if(this.announcement1.length>5) {
+                this.announcement1 = this.announcement1.reverse()
+                this.announcement1 = this.announcement1.slice(0,5)
+              }
               this.msg1Count = res.data.length;
               this.msg1Title = "通知(" + res.data.length + ")";
             }
