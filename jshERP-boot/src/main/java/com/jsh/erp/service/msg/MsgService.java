@@ -80,11 +80,14 @@ public class MsgService {
     public List<MsgEx> select(String name, int offset, int rows)throws Exception {
         List<MsgEx> list=null;
         try{
-            list = msgMapperEx.selectByConditionMsg(name, offset, rows);
-            if (null != list) {
-                for (MsgEx msgEx : list) {
-                    if(msgEx.getCreateTime() != null) {
-                        msgEx.setCreateTimeStr(getCenternTime(msgEx.getCreateTime()));
+            User userInfo = userService.getCurrentUser();
+            if(!BusinessConstants.DEFAULT_MANAGER.equals(userInfo.getLoginName())) {
+                list = msgMapperEx.selectByConditionMsg(name, offset, rows);
+                if (null != list) {
+                    for (MsgEx msgEx : list) {
+                        if (msgEx.getCreateTime() != null) {
+                            msgEx.setCreateTimeStr(getCenternTime(msgEx.getCreateTime()));
+                        }
                     }
                 }
             }
@@ -100,7 +103,10 @@ public class MsgService {
     public Long countMsg(String name)throws Exception {
         Long result=null;
         try{
-            result=msgMapperEx.countsByMsg(name);
+            User userInfo = userService.getCurrentUser();
+            if(!BusinessConstants.DEFAULT_MANAGER.equals(userInfo.getLoginName())) {
+                result = msgMapperEx.countsByMsg(name);
+            }
         }catch(Exception e){
             logger.error("异常码[{}],异常提示[{}],异常[{}]",
                     ExceptionConstants.DATA_READ_FAIL_CODE, ExceptionConstants.DATA_READ_FAIL_MSG,e);
@@ -226,20 +232,23 @@ public class MsgService {
     public List<MsgEx> getMsgByStatus(String status)throws Exception {
         List<MsgEx> resList=new ArrayList<>();
         try{
-            MsgExample example = new MsgExample();
-            example.createCriteria().andStatusEqualTo(status).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-            List<Msg> list = msgMapper.selectByExample(example);
-            if (null != list) {
-                for (Msg msg : list) {
-                    if(msg.getCreateTime() != null) {
-                        MsgEx msgEx = new MsgEx();
-                        msgEx.setId(msg.getId());
-                        msgEx.setMsgTitle(msg.getMsgTitle());
-                        msgEx.setMsgContent(msg.getMsgContent());
-                        msgEx.setStatus(msg.getStatus());
-                        msgEx.setType(msg.getType());
-                        msgEx.setCreateTimeStr(Tools.parseDateToStr(msg.getCreateTime()));
-                        resList.add(msgEx);
+            User userInfo = userService.getCurrentUser();
+            if(!BusinessConstants.DEFAULT_MANAGER.equals(userInfo.getLoginName())) {
+                MsgExample example = new MsgExample();
+                example.createCriteria().andStatusEqualTo(status).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+                List<Msg> list = msgMapper.selectByExample(example);
+                if (null != list) {
+                    for (Msg msg : list) {
+                        if (msg.getCreateTime() != null) {
+                            MsgEx msgEx = new MsgEx();
+                            msgEx.setId(msg.getId());
+                            msgEx.setMsgTitle(msg.getMsgTitle());
+                            msgEx.setMsgContent(msg.getMsgContent());
+                            msgEx.setStatus(msg.getStatus());
+                            msgEx.setType(msg.getType());
+                            msgEx.setCreateTimeStr(Tools.parseDateToStr(msg.getCreateTime()));
+                            resList.add(msgEx);
+                        }
                     }
                 }
             }
@@ -273,7 +282,9 @@ public class MsgService {
         Long result=null;
         try{
             User userInfo=userService.getCurrentUser();
-            result=msgMapperEx.getMsgCountByStatus(status, userInfo.getId());
+            if(!BusinessConstants.DEFAULT_MANAGER.equals(userInfo.getLoginName())) {
+                result = msgMapperEx.getMsgCountByStatus(status, userInfo.getId());
+            }
         }catch(Exception e){
             logger.error("异常码[{}],异常提示[{}],异常[{}]",
                     ExceptionConstants.DATA_READ_FAIL_CODE, ExceptionConstants.DATA_READ_FAIL_MSG,e);
@@ -286,10 +297,13 @@ public class MsgService {
     public Integer getMsgCountByType(String type)throws Exception {
         int msgCount = 0;
         try{
-            MsgExample example = new MsgExample();
-            example.createCriteria().andTypeEqualTo(type).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-            List<Msg> list = msgMapper.selectByExample(example);
-            msgCount = list.size();
+            User userInfo = userService.getCurrentUser();
+            if(!BusinessConstants.DEFAULT_MANAGER.equals(userInfo.getLoginName())) {
+                MsgExample example = new MsgExample();
+                example.createCriteria().andTypeEqualTo(type).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+                List<Msg> list = msgMapper.selectByExample(example);
+                msgCount = list.size();
+            }
         }catch(Exception e){
             logger.error("异常码[{}],异常提示[{}],异常[{}]",
                     ExceptionConstants.DATA_READ_FAIL_CODE, ExceptionConstants.DATA_READ_FAIL_MSG,e);
