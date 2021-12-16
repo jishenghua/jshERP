@@ -48,20 +48,20 @@ public class PlatformConfigService {
         return list;
     }
 
-    public List<PlatformConfig> select(String key, int offset, int rows)throws Exception {
+    public List<PlatformConfig> select(String platformKey, int offset, int rows)throws Exception {
         List<PlatformConfig> list=null;
         try{
-            list=platformConfigMapperEx.selectByConditionPlatformConfig(key, offset, rows);
+            list=platformConfigMapperEx.selectByConditionPlatformConfig(platformKey, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
     }
 
-    public Long countPlatformConfig(String key)throws Exception {
+    public Long countPlatformConfig(String platformKey)throws Exception {
         Long result=null;
         try{
-            result=platformConfigMapperEx.countsByPlatformConfig(key);
+            result=platformConfigMapperEx.countsByPlatformConfig(platformKey);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -69,7 +69,7 @@ public class PlatformConfigService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int insertSystemConfig(JSONObject obj, HttpServletRequest request) throws Exception{
+    public int insertPlatformConfig(JSONObject obj, HttpServletRequest request) throws Exception{
         PlatformConfig platformConfig = JSONObject.parseObject(obj.toJSONString(), PlatformConfig.class);
         int result=0;
         try{
@@ -81,7 +81,7 @@ public class PlatformConfigService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateSystemConfig(JSONObject obj, HttpServletRequest request) throws Exception{
+    public int updatePlatformConfig(JSONObject obj, HttpServletRequest request) throws Exception{
         PlatformConfig platformConfig = JSONObject.parseObject(obj.toJSONString(), PlatformConfig.class);
         int result=0;
         try{
@@ -93,7 +93,7 @@ public class PlatformConfigService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int deleteSystemConfig(Long id, HttpServletRequest request)throws Exception {
+    public int deletePlatformConfig(Long id, HttpServletRequest request)throws Exception {
         int result=0;
         try{
             result=platformConfigMapper.deleteByPrimaryKey(id);
@@ -104,7 +104,7 @@ public class PlatformConfigService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteSystemConfig(String ids, HttpServletRequest request)throws Exception {
+    public int batchDeletePlatformConfig(String ids, HttpServletRequest request)throws Exception {
         List<Long> idList = StringUtil.strToLongList(ids);
         PlatformConfigExample example = new PlatformConfigExample();
         example.createCriteria().andIdIn(idList);

@@ -88,56 +88,62 @@
                 </a-row>
               </template>
             </j-editable-table>
-          </a-col>
-          <a-col :lg="6" :md="12" :sm="24">
             <a-row class="form-row" :gutter="24">
-              <a-col :lg="24" :md="6" :sm="6"><br/><br/></a-col>
-              <a-col :lg="24" :md="6" :sm="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="实付金额">
-                  <a-input v-decorator.trim="[ 'changeAmount' ]" :style="{color:'purple'}" :readOnly="true"/>
+              <a-col :lg="24" :md="24" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="">
+                  <a-textarea :rows="1" placeholder="请输入备注" v-decorator="[ 'remark' ]" style="margin-top:8px;"/>
                 </a-form-item>
               </a-col>
-              <a-col :lg="24" :md="6" :sm="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款金额">
-                  <a-input v-decorator.trim="[ 'getAmount' ]" :style="{color:'red'}" defaultValue="0" @keyup="onKeyUpGetAmount"/>
-                </a-form-item>
-              </a-col>
-              <a-col :lg="24" :md="6" :sm="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="找零">
-                  <a-input v-decorator.trim="[ 'backAmount' ]" :style="{color:'green'}" :readOnly="true" defaultValue="0"/>
-                </a-form-item>
-              </a-col>
-              <a-col :lg="24" :md="6" :sm="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款账户">
-                  <a-select placeholder="选择付款账户" v-decorator="[ 'accountId', validatorRules.accountId ]" :dropdownMatchSelectWidth="false">
-                    <div slot="dropdownRender" slot-scope="menu">
-                      <v-nodes :vnodes="menu" />
-                      <a-divider style="margin: 4px 0;" />
-                      <div v-if="isTenant" style="padding: 4px 8px; cursor: pointer;"
-                           @mousedown="e => e.preventDefault()" @click="addAccount"><a-icon type="plus" /> 新增结算账户</div>
-                    </div>
-                    <a-select-option v-for="(item,index) in accountList" :key="index" :value="item.id">
-                      {{ item.name }}
-                    </a-select-option>
-                  </a-select>
+            </a-row>
+            <a-row class="form-row" :gutter="24">
+              <a-col :lg="6" :md="12" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="附件">
+                  <j-upload v-model="fileList" bizPath="bill"></j-upload>
                 </a-form-item>
               </a-col>
             </a-row>
           </a-col>
-        </a-row>
-        <a-row class="form-row" :gutter="24">
-          <a-col :lg="24" :md="24" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="">
-              <a-textarea :rows="1" placeholder="请输入备注" v-decorator="[ 'remark' ]" style="margin-top:8px;"/>
-            </a-form-item>
-          </a-col>
-        </a-row>
-        <a-row class="form-row" :gutter="24">
-          <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="附件">
-              <j-upload v-model="fileList" bizPath="bill"></j-upload>
-            </a-form-item>
-          </a-col>
+          <div class="sign">
+            <a-col :lg="6" :md="12" :sm="24">
+              <a-row class="form-row" :gutter="24">
+                <a-col :lg="24" :md="6" :sm="6"><br/><br/></a-col>
+                <a-col :lg="24" :md="6" :sm="6">
+                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <span slot="label" style="font-size: 24px;line-height:24px">单据金额</span>
+                    <a-input v-decorator.trim="[ 'changeAmount' ]" :style="{color:'purple'}" :readOnly="true"/>
+                  </a-form-item>
+                </a-col>
+                <a-col :lg="24" :md="6" :sm="6">
+                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <span slot="label" style="font-size: 24px;line-height:24px">付款金额</span>
+                    <a-input v-decorator.trim="[ 'getAmount' ]" :style="{color:'red'}" defaultValue="0" @keyup="onKeyUpGetAmount"/>
+                  </a-form-item>
+                </a-col>
+                <a-col :lg="24" :md="6" :sm="6">
+                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <span slot="label" style="font-size: 24px;line-height:24px">找零</span>
+                    <a-input v-decorator.trim="[ 'backAmount' ]" :style="{color:'green'}" :readOnly="true" defaultValue="0"/>
+                  </a-form-item>
+                </a-col>
+                <a-col :lg="24" :md="6" :sm="6">
+                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <span slot="label" style="font-size: 24px;line-height:24px">付款账户</span>
+                    <a-select placeholder="选择付款账户" style="font-size:20px;" v-decorator="[ 'accountId', validatorRules.accountId ]" :dropdownMatchSelectWidth="false">
+                      <div slot="dropdownRender" slot-scope="menu">
+                        <v-nodes :vnodes="menu" />
+                        <a-divider style="margin: 4px 0;" />
+                        <div v-if="isTenant" style="padding: 4px 8px; cursor: pointer;"
+                             @mousedown="e => e.preventDefault()" @click="addAccount"><a-icon type="plus" /> 新增结算账户</div>
+                      </div>
+                      <a-select-option v-for="(item,index) in accountList" :key="index" :value="item.id">
+                        {{ item.name }}
+                      </a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+              </a-row>
+            </a-col>
+          </div>
         </a-row>
       </a-form>
     </a-spin>
@@ -265,10 +271,16 @@
         if (this.action === 'add') {
           this.addInit(this.prefixNo)
           this.fileList = []
+          this.$nextTick(() => {
+            this.form.setFieldsValue({'getAmount':0, 'backAmount':0})
+          })
         } else {
           this.model.operTime = this.model.operTimeStr
-          this.model.getAmount = this.model.changeAmount
-          this.model.backAmount = 0
+          if(this.model.backAmount) {
+            this.model.getAmount = (this.model.changeAmount + this.model.backAmount).toFixed(2)
+          } else {
+            this.model.getAmount = this.model.changeAmount
+          }
           this.fileList = this.model.fileName
           this.$nextTick(() => {
             this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'number', 'linkNumber', 'remark',
@@ -388,5 +400,12 @@
   }
 </script>
 <style scoped>
-
+  .sign .ant-input{
+    font-size: 30px;
+    font-weight:bolder;
+    text-align:center;
+    border-left-width:0px!important;
+    border-top-width:0px!important;
+    border-right-width:0px!important;
+  }
 </style>

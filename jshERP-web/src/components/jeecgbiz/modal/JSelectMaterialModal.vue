@@ -40,7 +40,7 @@
               </a-col>
               <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                 <a-col :md="6" :sm="24">
-                  <a-button type="primary" @click="onSearch">查询</a-button>
+                  <a-button type="primary" @click="loadData(1)">查询</a-button>
                   <a-button style="margin-left: 8px" @click="searchReset(1)">重置</a-button>
                 </a-col>
               </span>
@@ -102,7 +102,7 @@
         categoryTree:[],
         columns: [
           {dataIndex: 'mBarCode', title: '条码', width: 100, align: 'left'},
-          {dataIndex: 'name', title: '名称', width: 120},
+          {dataIndex: 'name', title: '名称', width: 120, ellipsis:true},
           {dataIndex: 'categoryName', title: '类别', width: 80},
           {dataIndex: 'standard', title: '规格', width: 80},
           {dataIndex: 'model', title: '型号', width: 80},
@@ -110,7 +110,7 @@
           {dataIndex: 'unit', title: '单位', width: 70, ellipsis:true},
           {dataIndex: 'sku', title: '多属性', width: 80},
           {dataIndex: 'stock', title: '库存', width: 60},
-          {dataIndex: 'expand', title: '扩展信息', width: 80},
+          {dataIndex: 'expand', title: '扩展信息', width: 80, ellipsis:true},
           {dataIndex: 'enableSerialNumber', title: '序列号', width: 60, align: "center",
             scopedSlots: { customRender: 'customRenderEnableSerialNumber' }
           },

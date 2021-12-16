@@ -31,35 +31,35 @@ public class PlatformConfigComponent implements ICommonQuery {
 
     private List<?> getPlatformConfigList(Map<String, String> map)throws Exception {
         String search = map.get(Constants.SEARCH);
-        String key = StringUtil.getInfo(search, "key");
-        return platformConfigService.select(key, QueryUtils.offset(map), QueryUtils.rows(map));
+        String platformKey = StringUtil.getInfo(search, "platformKey");
+        return platformConfigService.select(platformKey, QueryUtils.offset(map), QueryUtils.rows(map));
     }
 
     @Override
     public Long counts(Map<String, String> map)throws Exception {
         String search = map.get(Constants.SEARCH);
-        String key = StringUtil.getInfo(search, "key");
-        return platformConfigService.countPlatformConfig(key);
+        String platformKey = StringUtil.getInfo(search, "platformKey");
+        return platformConfigService.countPlatformConfig(platformKey);
     }
 
     @Override
     public int insert(JSONObject obj, HttpServletRequest request)throws Exception {
-        return platformConfigService.insertSystemConfig(obj, request);
+        return platformConfigService.insertPlatformConfig(obj, request);
     }
 
     @Override
     public int update(JSONObject obj, HttpServletRequest request)throws Exception {
-        return platformConfigService.updateSystemConfig(obj, request);
+        return platformConfigService.updatePlatformConfig(obj, request);
     }
 
     @Override
     public int delete(Long id, HttpServletRequest request)throws Exception {
-        return platformConfigService.deleteSystemConfig(id, request);
+        return platformConfigService.deletePlatformConfig(id, request);
     }
 
     @Override
     public int deleteBatch(String ids, HttpServletRequest request)throws Exception {
-        return platformConfigService.batchDeleteSystemConfig(ids, request);
+        return platformConfigService.batchDeletePlatformConfig(ids, request);
     }
 
     @Override

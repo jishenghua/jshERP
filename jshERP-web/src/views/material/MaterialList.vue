@@ -2,7 +2,7 @@
 <template>
   <a-row :gutter="24">
     <a-col :md="24">
-      <a-card :bordered="false">
+      <a-card :style="cardStyle" :bordered="false">
         <!-- 查询区域 -->
         <div class="table-page-search-wrapper">
           <!-- 搜索区域 -->
@@ -155,12 +155,12 @@
         // 表头
         columns: [
           {title: '条码', dataIndex: 'mBarCode', width: '8%'},
-          {title: '名称', dataIndex: 'name', width: '10%'},
-          {title: '规格', dataIndex: 'standard', width: '6%'},
-          {title: '型号', dataIndex: 'model', width: '6%'},
-          {title: '颜色', dataIndex: 'color', width: '4%'},
-          {title: '类别', dataIndex: 'categoryName', width: '6%'},
-          {title: '扩展信息', dataIndex: 'materialOther', width: '6%'},
+          {title: '名称', dataIndex: 'name', width: '10%', ellipsis:true},
+          {title: '规格', dataIndex: 'standard', width: '6%', ellipsis:true},
+          {title: '型号', dataIndex: 'model', width: '6%', ellipsis:true},
+          {title: '颜色', dataIndex: 'color', width: '4%', ellipsis:true},
+          {title: '类别', dataIndex: 'categoryName', width: '6%', ellipsis:true},
+          {title: '扩展信息', dataIndex: 'materialOther', width: '6%', ellipsis:true},
           {title: '单位', dataIndex: 'unit', width: '6%', ellipsis:true,
             customRender:function (t,r,index) {
               if (r) {

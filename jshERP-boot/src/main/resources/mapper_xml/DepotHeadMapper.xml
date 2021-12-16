@@ -13,6 +13,7 @@
     <result column="creator" jdbcType="BIGINT" property="creator" />
     <result column="account_id" jdbcType="BIGINT" property="accountId" />
     <result column="change_amount" jdbcType="DECIMAL" property="changeAmount" />
+    <result column="back_amount" jdbcType="DECIMAL" property="backAmount" />
     <result column="total_price" jdbcType="DECIMAL" property="totalPrice" />
     <result column="pay_type" jdbcType="VARCHAR" property="payType" />
     <result column="bill_type" jdbcType="VARCHAR" property="billType" />
@@ -90,9 +91,9 @@
   </sql>
   <sql id="Base_Column_List">
     id, type, sub_type, default_number, number, create_time, oper_time, organ_id, creator, 
-    account_id, change_amount, total_price, pay_type, bill_type, remark, file_name, sales_man, 
-    account_id_list, account_money_list, discount, discount_money, discount_last_money, 
-    other_money, status, link_number, tenant_id, delete_flag
+    account_id, change_amount, back_amount, total_price, pay_type, bill_type, remark, 
+    file_name, sales_man, account_id_list, account_money_list, discount, discount_money, 
+    discount_last_money, other_money, status, link_number, tenant_id, delete_flag
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.DepotHeadExample" resultMap="BaseResultMap">
     select
@@ -128,23 +129,23 @@
     insert into jsh_depot_head (id, type, sub_type, 
       default_number, number, create_time, 
       oper_time, organ_id, creator, 
-      account_id, change_amount, total_price, 
-      pay_type, bill_type, remark, 
-      file_name, sales_man, account_id_list, 
-      account_money_list, discount, discount_money, 
-      discount_last_money, other_money, status, 
-      link_number, tenant_id, delete_flag
-      )
+      account_id, change_amount, back_amount, 
+      total_price, pay_type, bill_type, 
+      remark, file_name, sales_man, 
+      account_id_list, account_money_list, discount, 
+      discount_money, discount_last_money, other_money, 
+      status, link_number, tenant_id, 
+      delete_flag)
     values (#{id,jdbcType=BIGINT}, #{type,jdbcType=VARCHAR}, #{subType,jdbcType=VARCHAR}, 
       #{defaultNumber,jdbcType=VARCHAR}, #{number,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{operTime,jdbcType=TIMESTAMP}, #{organId,jdbcType=BIGINT}, #{creator,jdbcType=BIGINT}, 
-      #{accountId,jdbcType=BIGINT}, #{changeAmount,jdbcType=DECIMAL}, #{totalPrice,jdbcType=DECIMAL}, 
-      #{payType,jdbcType=VARCHAR}, #{billType,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
-      #{fileName,jdbcType=VARCHAR}, #{salesMan,jdbcType=VARCHAR}, #{accountIdList,jdbcType=VARCHAR}, 
-      #{accountMoneyList,jdbcType=VARCHAR}, #{discount,jdbcType=DECIMAL}, #{discountMoney,jdbcType=DECIMAL}, 
-      #{discountLastMoney,jdbcType=DECIMAL}, #{otherMoney,jdbcType=DECIMAL}, #{status,jdbcType=VARCHAR}, 
-      #{linkNumber,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR}
-      )
+      #{accountId,jdbcType=BIGINT}, #{changeAmount,jdbcType=DECIMAL}, #{backAmount,jdbcType=DECIMAL}, 
+      #{totalPrice,jdbcType=DECIMAL}, #{payType,jdbcType=VARCHAR}, #{billType,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR}, #{salesMan,jdbcType=VARCHAR}, 
+      #{accountIdList,jdbcType=VARCHAR}, #{accountMoneyList,jdbcType=VARCHAR}, #{discount,jdbcType=DECIMAL}, 
+      #{discountMoney,jdbcType=DECIMAL}, #{discountLastMoney,jdbcType=DECIMAL}, #{otherMoney,jdbcType=DECIMAL}, 
+      #{status,jdbcType=VARCHAR}, #{linkNumber,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, 
+      #{deleteFlag,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.DepotHead">
     insert into jsh_depot_head
@@ -181,6 +182,9 @@
       </if>
       <if test="changeAmount != null">
         change_amount,
+      </if>
+      <if test="backAmount != null">
+        back_amount,
       </if>
       <if test="totalPrice != null">
         total_price,
@@ -264,6 +268,9 @@
       </if>
       <if test="changeAmount != null">
         #{changeAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="backAmount != null">
+        #{backAmount,jdbcType=DECIMAL},
       </if>
       <if test="totalPrice != null">
         #{totalPrice,jdbcType=DECIMAL},
@@ -357,6 +364,9 @@
       <if test="record.changeAmount != null">
         change_amount = #{record.changeAmount,jdbcType=DECIMAL},
       </if>
+      <if test="record.backAmount != null">
+        back_amount = #{record.backAmount,jdbcType=DECIMAL},
+      </if>
       <if test="record.totalPrice != null">
         total_price = #{record.totalPrice,jdbcType=DECIMAL},
       </if>
@@ -423,6 +433,7 @@
       creator = #{record.creator,jdbcType=BIGINT},
       account_id = #{record.accountId,jdbcType=BIGINT},
       change_amount = #{record.changeAmount,jdbcType=DECIMAL},
+      back_amount = #{record.backAmount,jdbcType=DECIMAL},
       total_price = #{record.totalPrice,jdbcType=DECIMAL},
       pay_type = #{record.payType,jdbcType=VARCHAR},
       bill_type = #{record.billType,jdbcType=VARCHAR},
@@ -475,6 +486,9 @@
       </if>
       <if test="changeAmount != null">
         change_amount = #{changeAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="backAmount != null">
+        back_amount = #{backAmount,jdbcType=DECIMAL},
       </if>
       <if test="totalPrice != null">
         total_price = #{totalPrice,jdbcType=DECIMAL},
@@ -539,6 +553,7 @@
       creator = #{creator,jdbcType=BIGINT},
       account_id = #{accountId,jdbcType=BIGINT},
       change_amount = #{changeAmount,jdbcType=DECIMAL},
+      back_amount = #{backAmount,jdbcType=DECIMAL},
       total_price = #{totalPrice,jdbcType=DECIMAL},
       pay_type = #{payType,jdbcType=VARCHAR},
       bill_type = #{billType,jdbcType=VARCHAR},

@@ -15,6 +15,8 @@ export const JeecgListMixin = {
     return {
       //token header
       tokenHeader: {'X-Access-Token': Vue.ls.get(ACCESS_TOKEN)},
+      /*卡片样式 */
+      cardStyle: '',
       /* 查询条件-请不要在queryParam中声明非字符串值的属性 */
       queryParam: {},
       /* 数据源 */
@@ -57,10 +59,13 @@ export const JeecgListMixin = {
       /** 是否加载时就执行 */
       disableMixinCreated: false,
       /* 按钮权限 */
-      btnEnableList: '',
+      btnEnableList: ''
     }
   },
   created() {
+    if(this.isDesktop()) {
+      this.cardStyle = 'height:' + (document.documentElement.clientHeight-125) + 'px'
+    }
     if(!this.disableMixinCreated){
       //console.log(' -- mixin created -- ')
       this.loadData();
@@ -395,7 +400,11 @@ export const JeecgListMixin = {
             let total = 0
             dataSource.forEach(data => {
               if(parseCols.indexOf(dataIndex)>-1) {
-                total += Number.parseFloat(data[dataIndex])
+                if(data[dataIndex]) {
+                  total += Number.parseFloat(data[dataIndex])
+                } else {
+                  total += 0
+                }
               } else {
                 total = '-'
               }
@@ -408,7 +417,7 @@ export const JeecgListMixin = {
         })
         dataSource.push(totalRow)
         //总数要增加合计的行数，每页都有一行合计，所以总数要加上
-        let size = Math.ceil(this.ipagination.total/this.ipagination.pageSize)
+        let size = Math.ceil(this.ipagination.total/(this.ipagination.pageSize-1))
         this.ipagination.total = this.ipagination.total + size
       }
     },

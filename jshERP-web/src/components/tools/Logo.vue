@@ -1,13 +1,6 @@
 <template>
   <div class="logo">
     <h1 v-if="showTitle">{{ title }}</h1>
-<!--    <router-link :to="{name:'dashboard'}">-->
-      <!-- update-begin- author:sunjianlei --- date:20190814 --- for: logo颜色根据主题颜色变化 -->
-<!--      <img v-if="layoutMode === 'sidemenu'" src="~@/assets/logo.png" alt="logo">-->
-<!--      <img v-else src="~@/assets/logo_top.png" alt="logo">-->
-      <!-- update-begin- author:sunjianlei --- date:20190814 --- for: logo颜色根据主题颜色变化 -->
-
-<!--    </router-link>-->
   </div>
 </template>
 

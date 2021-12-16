@@ -124,7 +124,7 @@ public class DepotItemController {
     @GetMapping(value = "/findStockByDepotAndBarCode")
     @ApiOperation(value = "根据商品条码和仓库id查询库存数量")
     public BaseResponseInfo findStockByDepotAndBarCode(
-            @RequestParam("depotId") Long depotId,
+            @RequestParam(value = "depotId",required = false) Long depotId,
             @RequestParam("barCode") String barCode,
             HttpServletRequest request) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();
@@ -280,27 +280,17 @@ public class DepotItemController {
     @ApiOperation(value = "查找所有的明细")
     public BaseResponseInfo findByAll(@RequestParam("currentPage") Integer currentPage,
                                       @RequestParam("pageSize") Integer pageSize,
-                                      @RequestParam(value = "depotIds", required = false) String depotIds,
+                                      @RequestParam("depotIds") String depotIds,
                                       @RequestParam("monthTime") String monthTime,
                                       @RequestParam("materialParam") String materialParam,
                                       @RequestParam("mpList") String mpList,
                                       HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         try {
             String timeA = Tools.firstDayOfMonth(monthTime) + BusinessConstants.DAY_FIRST_TIME;
             String timeB = Tools.lastDayOfMonth(monthTime) + BusinessConstants.DAY_LAST_TIME;
-            List<Long> depotList = new ArrayList<>();
-            if(StringUtil.isNotEmpty(depotIds)) {
-                depotList = StringUtil.strToLongList(depotIds);
-            } else {
-                //未选择仓库时默认为当前用户有权限的仓库
-                JSONArray depotArr = depotService.findDepotByCurrentUser();
-                for(Object obj: depotArr) {
-                    JSONObject object = JSONObject.parseObject(obj.toString());
-                    depotList.add(object.getLong("id"));
-                }
-            }
+            List<Long> depotList = StringUtil.strToLongList(depotIds);
             List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(StringUtil.toNull(materialParam),
                     timeB,(currentPage-1)*pageSize, pageSize);
             String[] mpArr = mpList.split(",");
@@ -309,7 +299,7 @@ public class DepotItemController {
             //存放数据json数组
             JSONArray dataArray = new JSONArray();
             if (null != dataList) {
-                List<Long> idList = new ArrayList<Long>();
+                List<Long> idList = new ArrayList<>();
                 for (DepotItemVo4WithInfoEx m : dataList) {
                     idList.add(m.getMId());
                 }
@@ -326,20 +316,11 @@ public class DepotItemController {
                     item.put("materialOther", materialOther);
                     item.put("materialColor", diEx.getMColor());
                     item.put("unitName", diEx.getMaterialUnit());
-                    BigDecimal prevSum = BigDecimal.ZERO;
-                    BigDecimal inSum = BigDecimal.ZERO;
-                    BigDecimal outSum = BigDecimal.ZERO;
-                    BigDecimal thisSum = BigDecimal.ZERO;
-                    for(Long depotId: depotList) {
-                        BigDecimal prevSumStock = depotItemService.getStockByParam(depotId,mId,null,timeA);
-                        BigDecimal inSumStock = depotItemService.getInNumByParam(depotId,mId,timeA,timeB);
-                        BigDecimal outSumStock = depotItemService.getOutNumByParam(depotId,mId,timeA,timeB);
-                        BigDecimal thisSumStock = depotItemService.getStockByParam(depotId,mId,null,timeB);
-                        prevSum = prevSum.add(prevSumStock);
-                        inSum = inSum.add(inSumStock);
-                        outSum = outSum.add(outSumStock);
-                        thisSum = thisSum.add(thisSumStock);
-                    }
+                    BigDecimal prevSum = depotItemService.getStockByParamWithDepotList(depotList,mId,null,timeA);
+                    Map<String,BigDecimal> intervalMap = depotItemService.getIntervalMapByParamWithDepotList(depotList,mId,timeA,timeB);
+                    BigDecimal inSum = intervalMap.get("inSum");
+                    BigDecimal outSum = intervalMap.get("outSum");
+                    BigDecimal thisSum = prevSum.add(inSum).subtract(outSum);
                     item.put("prevSum", prevSum);
                     item.put("inSum", inSum);
                     item.put("outSum", outSum);
@@ -376,36 +357,22 @@ public class DepotItemController {
      */
     @GetMapping(value = "/totalCountMoney")
     @ApiOperation(value = "统计总计金额")
-    public BaseResponseInfo totalCountMoney(@RequestParam(value = "depotIds", required = false) String depotIds,
+    public BaseResponseInfo totalCountMoney(@RequestParam("depotIds") String depotIds,
                                             @RequestParam("monthTime") String monthTime,
                                             @RequestParam("materialParam") String materialParam,
                                             HttpServletRequest request) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         try {
             String endTime = Tools.lastDayOfMonth(monthTime) + BusinessConstants.DAY_LAST_TIME;
-            List<Long> depotList = new ArrayList<>();
-            if(StringUtil.isNotEmpty(depotIds)) {
-                depotList = StringUtil.strToLongList(depotIds);
-            } else {
-                //未选择仓库时默认为当前用户有权限的仓库
-                JSONArray depotArr = depotService.findDepotByCurrentUser();
-                for(Object obj: depotArr) {
-                    JSONObject object = JSONObject.parseObject(obj.toString());
-                    depotList.add(object.getLong("id"));
-                }
-            }
+            List<Long> depotList = StringUtil.strToLongList(depotIds);
             List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(StringUtil.toNull(materialParam),
                     endTime, null, null);
             BigDecimal thisAllPrice = BigDecimal.ZERO;
             if (null != dataList) {
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
                     Long mId = diEx.getMId();
-                    BigDecimal thisSum = BigDecimal.ZERO;
-                    for(Long depotId: depotList) {
-                        BigDecimal thisSumStock = depotItemService.getStockByParam(depotId,mId,null,endTime);
-                        thisSum = thisSum.add(thisSumStock);
-                    }
+                    BigDecimal thisSum = depotItemService.getStockByParamWithDepotList(depotList,mId,null,endTime);
                     BigDecimal unitPrice = diEx.getPurchaseDecimal();
                     if(unitPrice == null) {
                         unitPrice = BigDecimal.ZERO;
@@ -460,6 +427,7 @@ public class DepotItemController {
                     BigDecimal OutSum = depotItemService.buyOrSale("出库", "采购退货", diEx.getMId(), monthTime, "number");
                     BigDecimal InSumPrice = depotItemService.buyOrSale("入库", "采购", diEx.getMId(), monthTime, "price");
                     BigDecimal OutSumPrice = depotItemService.buyOrSale("出库", "采购退货", diEx.getMId(), monthTime, "price");
+                    BigDecimal InOutSumPrice = InSumPrice.subtract(OutSumPrice);
                     item.put("barCode", diEx.getBarCode());
                     item.put("materialName", diEx.getMName());
                     item.put("materialModel", diEx.getMModel());
@@ -474,6 +442,7 @@ public class DepotItemController {
                     item.put("outSum", OutSum);
                     item.put("inSumPrice", InSumPrice);
                     item.put("outSumPrice", OutSumPrice);
+                    item.put("inOutSumPrice",InOutSumPrice);//实际采购金额
                     dataArray.add(item);
                 }
             }
@@ -566,10 +535,10 @@ public class DepotItemController {
      */
     public String getUName(String materialUnit, String uName) {
         String unitName = null;
-        if(!StringUtil.isEmpty(materialUnit)) {
+        if(StringUtil.isNotEmpty(materialUnit)) {
             unitName = materialUnit;
-        } else if(!StringUtil.isEmpty(uName)) {
-            unitName = uName.substring(0,uName.indexOf(","));
+        } else if(StringUtil.isNotEmpty(uName)) {
+            unitName = uName;
         }
         return unitName;
     }
@@ -590,8 +559,19 @@ public class DepotItemController {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         try {
+            List<Long> depotList = new ArrayList<>();
+            if(depotId != null) {
+                depotList.add(depotId);
+            } else {
+                //未选择仓库时默认为当前用户有权限的仓库
+                JSONArray depotArr = depotService.findDepotByCurrentUser();
+                for(Object obj: depotArr) {
+                    JSONObject object = JSONObject.parseObject(obj.toString());
+                    depotList.add(object.getLong("id"));
+                }
+            }
             String[] mpArr = mpList.split(",");
-            List<DepotItemStockWarningCount> list = depotItemService.findStockWarningCount((currentPage-1)*pageSize, pageSize,materialParam,depotId);
+            List<DepotItemStockWarningCount> list = depotItemService.findStockWarningCount((currentPage-1)*pageSize, pageSize, materialParam, depotList);
             //存放数据json数组
             if (null != list) {
                 for (DepotItemStockWarningCount disw : list) {
@@ -612,7 +592,7 @@ public class DepotItemController {
                     }
                 }
             }
-            int total = depotItemService.findStockWarningCountTotal(materialParam,depotId);
+            int total = depotItemService.findStockWarningCountTotal(materialParam, depotList);
             map.put("total", total);
             map.put("rows", list);
             res.code = 200;

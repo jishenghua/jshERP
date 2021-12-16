@@ -16,7 +16,7 @@ let apiBaseUrl = window._CONFIG['domianURL'] || "/jshERP-boot";
 // 创建 axios 实例
 const service = axios.create({
   baseURL: apiBaseUrl, // api base_url
-  timeout: 9000 // 请求超时时间
+  timeout: 90000 // 请求超时时间
 })
 
 const err = (error) => {

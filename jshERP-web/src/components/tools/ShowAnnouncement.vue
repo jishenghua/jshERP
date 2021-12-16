@@ -14,7 +14,7 @@
     <a-card class="daily-article" :loading="loading">
       <a-card-meta
         :title="record.titile"
-        :description="'发布人：'+record.sender + ' 发布时间： ' + record.sendTime">
+        :description="'标题：'+record.msgTitle">
       </a-card-meta>
       <a-divider />
       <span v-html="record.msgContent" class="article-content"></span>
@@ -44,7 +44,7 @@
         loading: false,
         bodyStyle:{
           padding: "0",
-          height:(window.innerHeight*0.8)+"px",
+          height:(window.innerHeight*0.6)+"px",
           "overflow-y":"auto",
 
         },

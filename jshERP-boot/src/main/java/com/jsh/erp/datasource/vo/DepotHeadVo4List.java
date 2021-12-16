@@ -27,6 +27,14 @@ public class DepotHeadVo4List extends DepotHead{
 
     private String depotHeadType;
 
+    private String creatorName;
+
+    private String contacts;
+
+    private String telephone;
+
+    private String address;
+
     public String getProjectName() {
         return projectName;
     }
@@ -105,5 +113,37 @@ public class DepotHeadVo4List extends DepotHead{
 
     public void setDepotHeadType(String depotHeadType) {
         this.depotHeadType = depotHeadType;
+    }
+
+    public String getCreatorName() {
+        return creatorName;
+    }
+
+    public void setCreatorName(String creatorName) {
+        this.creatorName = creatorName;
+    }
+
+    public String getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(String contacts) {
+        this.contacts = contacts;
+    }
+
+    public String getTelephone() {
+        return telephone;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

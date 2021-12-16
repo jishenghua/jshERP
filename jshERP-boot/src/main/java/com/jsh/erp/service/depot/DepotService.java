@@ -231,23 +231,10 @@ public class DepotService {
     public List<Depot> findUserDepot()throws Exception{
         DepotExample example = new DepotExample();
         example.createCriteria().andTypeEqualTo(0).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        example.setOrderByClause("Sort");
+        example.setOrderByClause("sort");
         List<Depot> list=null;
         try{
             list= depotMapper.selectByExample(example);
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        return list;
-    }
-
-    public List<Depot> findGiftByType(Integer type)throws Exception{
-        DepotExample example = new DepotExample();
-        example.createCriteria().andTypeEqualTo(type);
-        example.setOrderByClause("Sort");
-        List<Depot> list=null;
-        try{
-            list=  depotMapper.selectByExample(example);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -309,16 +296,16 @@ public class DepotService {
                     if(StringUtil.isNotEmpty(depotStr)){
                         depotStr = depotStr.replaceAll("\\[", "").replaceAll("]", ",");
                         String[] depotArr = depotStr.split(",");
-                        for(String depotId: depotArr) {
-                            JSONObject item = new JSONObject();
-                            item.put("id", Long.parseLong(depotId));
-                            for (Depot depot : dataList) {
+                        for (Depot depot : dataList) {
+                            for(String depotId: depotArr) {
                                 if(depot.getId() == Long.parseLong(depotId)){
+                                    JSONObject item = new JSONObject();
+                                    item.put("id", depot.getId());
                                     item.put("depotName", depot.getName());
                                     item.put("isDefault", depot.getIsDefault());
+                                    arr.add(item);
                                 }
                             }
-                            arr.add(item);
                         }
                     }
                 }

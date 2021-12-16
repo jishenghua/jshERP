@@ -58,7 +58,7 @@ public interface DepotHeadMapperEx {
             @Param("endTime") String endTime,
             @Param("type") String type,
             @Param("materialParam") String materialParam,
-            @Param("depotId") Integer depotId,
+            @Param("depotList") List<Long> depotList,
             @Param("oId") Integer oId,
             @Param("number") String number,
             @Param("offset") Integer offset,
@@ -69,7 +69,7 @@ public interface DepotHeadMapperEx {
             @Param("endTime") String endTime,
             @Param("type") String type,
             @Param("materialParam") String materialParam,
-            @Param("depotId") Integer depotId,
+            @Param("depotList") List<Long> depotList,
             @Param("oId") Integer oId,
             @Param("number") String number);
 
@@ -78,7 +78,7 @@ public interface DepotHeadMapperEx {
             @Param("endTime") String endTime,
             @Param("type") String type,
             @Param("materialParam") String materialParam,
-            @Param("depotId") Integer depotId,
+            @Param("depotList") List<Long> depotList,
             @Param("oId") Integer oId,
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
@@ -88,7 +88,7 @@ public interface DepotHeadMapperEx {
             @Param("endTime") String endTime,
             @Param("type") String type,
             @Param("materialParam") String materialParam,
-            @Param("depotId") Integer depotId,
+            @Param("depotList") List<Long> depotList,
             @Param("oId") Integer oId);
 
     List<DepotHeadVo4InDetail> findAllocationDetail(
@@ -97,8 +97,8 @@ public interface DepotHeadMapperEx {
             @Param("subType") String subType,
             @Param("number") String number,
             @Param("materialParam") String materialParam,
-            @Param("depotId") Integer depotId,
-            @Param("depotIdF") Integer depotIdF,
+            @Param("depotList") List<Long> depotList,
+            @Param("depotFList") List<Long> depotFList,
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
@@ -108,8 +108,8 @@ public interface DepotHeadMapperEx {
             @Param("subType") String subType,
             @Param("number") String number,
             @Param("materialParam") String materialParam,
-            @Param("depotId") Integer depotId,
-            @Param("depotIdF") Integer depotIdF);
+            @Param("depotList") List<Long> depotList,
+            @Param("depotFList") List<Long> depotFList);
 
     List<DepotHeadVo4StatementAccount> findStatementAccount(
             @Param("beginTime") String beginTime,

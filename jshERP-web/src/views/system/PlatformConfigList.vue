@@ -1,4 +1,3 @@
-<!-- by 7527_18920 -->
 <template>
   <a-row :gutter="24">
     <a-col :md="24">
@@ -13,6 +12,7 @@
             :columns="columns"
             :dataSource="dataSource"
             :pagination="ipagination"
+            :scroll="scroll"
             :loading="loading"
             @change="handleTableChange">
             <span slot="action" slot-scope="text, record">
@@ -22,24 +22,24 @@
         </div>
         <!-- table区域-end -->
         <!-- 表单区域 -->
-        <material-attribute-modal ref="modalForm" @ok="modalFormOk"></material-attribute-modal>
+        <platform-config-modal ref="modalForm" @ok="modalFormOk"></platform-config-modal>
       </a-card>
     </a-col>
   </a-row>
 </template>
+<!-- f r o m 7 5  2 7 1  8 9 2 0 -->
 <script>
-  import MaterialAttributeModal from './modules/MaterialAttributeModal'
+  import PlatformConfigModal from './modules/PlatformConfigModal'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import JDate from '@/components/jeecg/JDate'
   export default {
-    name: "MaterialAttributeList",
+    name: "PlatformConfigList",
     mixins:[JeecgListMixin],
     components: {
-      MaterialAttributeModal,
-      JDate
+      PlatformConfigModal
     },
     data () {
       return {
+        currentRoleId: '',
         labelCol: {
           span: 5
         },
@@ -48,7 +48,7 @@
           offset: 1
         },
         // 查询条件
-        queryParam: {attributeField:''},
+        queryParam: {platformKey:'',},
         // 表头
         columns: [
           {
@@ -61,28 +61,40 @@
               return parseInt(index)+1;
             }
           },
-          {title: '属性名', dataIndex: 'attributeName', width: 100},
-          {title: '属性值（用竖线隔开）', dataIndex: 'attributeValue', width: 400},
+          {
+            title: '配置名称',
+            dataIndex: 'platformKeyInfo',
+            width: 100
+          },
+          {
+            title: '配置值',
+            dataIndex: 'platformValue',
+            width: 500
+          },
           {
             title: '操作',
             dataIndex: 'action',
-            width: 100,
             align:"center",
+            width: 100,
             scopedSlots: { customRender: 'action' },
           }
         ],
         url: {
-          list: "/materialAttribute/list",
-          delete: "/materialAttribute/delete",
-          deleteBatch: "/materialAttribute/deleteBatch"
-        }
+          list: "/platformConfig/list",
+          delete: "/platformConfig/delete",
+          deleteBatch: "/platformConfig/deleteBatch"
+        },
       }
     },
-    computed: {
-
-    },
     methods: {
-
+      handleEdit: function (record) {
+        this.$refs.modalForm.edit(record);
+        this.$refs.modalForm.title = "编辑";
+        this.$refs.modalForm.disableSubmit = false;
+        if(this.btnEnableList.indexOf(1)===-1) {
+          this.$refs.modalForm.isReadOnly = true
+        }
+      }
     }
   }
 </script>

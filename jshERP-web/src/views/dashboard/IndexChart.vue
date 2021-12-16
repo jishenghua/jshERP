@@ -54,19 +54,19 @@
       <a-col :sm="24" :md="12" :xl="8" :style="{ paddingRight: '0px',marginBottom: '12px' }">
         <a-card :loading="loading" :bordered="false" :body-style="{paddingRight: '5'}" data-step="7" data-title="采购统计"
                 data-intro="统计往前6个月每月采购的总金额">
-          <bar title="采购统计" :height="410" :yaxisText="yaxisText" :dataSource="buyPriceData"/>
+          <bar title="采购统计" :height="barHeight" :yaxisText="yaxisText" :dataSource="buyPriceData"/>
         </a-card>
       </a-col>
       <a-col :sm="24" :md="12" :xl="8" :style="{ paddingRight: '0px',marginBottom: '12px' }">
         <a-card :loading="loading" :bordered="false" :body-style="{paddingRight: '5'}" data-step="8" data-title="销售统计"
                 data-intro="统计往前6个月每月销售的总金额">
-          <bar title="销售统计" :height="410" :yaxisText="yaxisText" :dataSource="salePriceData"/>
+          <bar title="销售统计" :height="barHeight" :yaxisText="yaxisText" :dataSource="salePriceData"/>
         </a-card>
       </a-col>
       <a-col :sm="24" :md="12" :xl="8" :style="{ paddingRight: '0px',marginBottom: '12px' }">
         <a-card :loading="loading" :bordered="false" :body-style="{paddingRight: '5'}" data-step="9" data-title="零售统计"
                 data-intro="统计往前6个月每月零售的总金额">
-          <bar title="零售统计" :height="410" :yaxisText="yaxisText" :dataSource="retailPriceData"/>
+          <bar title="零售统计" :height="barHeight" :yaxisText="yaxisText" :dataSource="retailPriceData"/>
         </a-card>
       </a-col>
     </a-row>
@@ -99,7 +99,7 @@
   import Trend from '@/components/Trend'
   import { getBuyAndSaleStatistics, buyOrSalePrice, getPlatformConfigByKey } from '@/api/api'
   import { handleIntroJs } from "@/utils/util"
-  import { getAction } from '../../api/manage'
+  import { getAction,postAction } from '../../api/manage'
 
   export default {
     name: "IndexChart",
@@ -122,6 +122,7 @@
         loading: true,
         center: null,
         statistics: {},
+        barHeight: document.documentElement.clientHeight-465,
         yaxisText: '金额',
         buyPriceData: [],
         salePriceData: [],
@@ -178,6 +179,27 @@
             //如果距离到期还剩5天就进行提示续费
             if(difftime<86400000*5) {
               this.hasExpire = true
+              //针对免费租户发送试用到期的消息提醒
+              if(res.data.type === '0') {
+                //先检查有无发送过，只发送一次
+                getAction("/msg/getMsgCountByType",{'type': '试用到期'}).then(res=>{
+                  if(res && res.code === 200) {
+                    if(res.data.count === 0) {
+                      //发送消息
+                      let msgParam = {
+                        'msgTitle': '试用到期提醒',
+                        'msgContent': '试用期即将结束，请您及时续费，过期将会影响正常使用！',
+                        'type': '试用到期'
+                      }
+                      postAction("/msg/add",msgParam).then(res=>{
+                        if(res && res.code === 200) {
+
+                        }
+                      })
+                    }
+                  }
+                })
+              }
             }
           }
         })

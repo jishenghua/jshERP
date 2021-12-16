@@ -98,61 +98,67 @@
                 </a-row>
               </template>
             </j-editable-table>
-          </a-col>
-          <a-col :lg="6" :md="12" :sm="24">
             <a-row class="form-row" :gutter="24">
-              <a-col :lg="24" :md="6" :sm="6"><br/><br/></a-col>
-              <a-col :lg="24" :md="6" :sm="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="实收金额" data-step="5" data-title="实收金额"
-                             data-intro="实收金额等于左侧商品的总金额">
-                  <a-input v-decorator.trim="[ 'changeAmount' ]" :style="{color:'purple'}" :readOnly="true"/>
+              <a-col :lg="24" :md="24" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="">
+                  <a-textarea :rows="1" placeholder="请输入备注" v-decorator="[ 'remark' ]" style="margin-top:8px;"/>
                 </a-form-item>
               </a-col>
-              <a-col :lg="24" :md="6" :sm="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款金额" data-step="6" data-title="收款金额"
-                             data-intro="收款金额为收银员收取用户的实际金额">
-                  <a-input v-decorator.trim="[ 'getAmount' ]" :style="{color:'red'}" defaultValue="0" @keyup="onKeyUpGetAmount"/>
-                </a-form-item>
-              </a-col>
-              <a-col :lg="24" :md="6" :sm="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="找零" data-step="7" data-title="找零"
-                             data-intro="找零等于收款金额减去实收金额">
-                  <a-input v-decorator.trim="[ 'backAmount' ]" :style="{color:'green'}" :readOnly="true" defaultValue="0"/>
-                </a-form-item>
-              </a-col>
-              <a-col :lg="24" :md="6" :sm="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款账户" data-step="8" data-title="收款账户"
-                             data-intro="收款账户的信息来自基本资料菜单下的【结算账户】">
-                  <a-select placeholder="选择收款账户" v-decorator="[ 'accountId', validatorRules.accountId ]" :dropdownMatchSelectWidth="false">
-                    <div slot="dropdownRender" slot-scope="menu">
-                      <v-nodes :vnodes="menu" />
-                      <a-divider style="margin: 4px 0;" />
-                      <div v-if="isTenant" style="padding: 4px 8px; cursor: pointer;"
-                           @mousedown="e => e.preventDefault()" @click="addAccount"><a-icon type="plus" /> 新增结算账户</div>
-                    </div>
-                    <a-select-option v-for="(item,index) in accountList" :key="index" :value="item.id">
-                      {{ item.name }}
-                    </a-select-option>
-                  </a-select>
+            </a-row>
+            <a-row class="form-row" :gutter="24">
+              <a-col :lg="6" :md="12" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="附件" data-step="9" data-title="附件"
+                             data-intro="可以上传与单据相关的图片、文档，支持多个文件">
+                  <j-upload v-model="fileList" bizPath="bill"></j-upload>
                 </a-form-item>
               </a-col>
             </a-row>
           </a-col>
-        </a-row>
-        <a-row class="form-row" :gutter="24">
-          <a-col :lg="24" :md="24" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="">
-              <a-textarea :rows="1" placeholder="请输入备注" v-decorator="[ 'remark' ]" style="margin-top:8px;"/>
-            </a-form-item>
-          </a-col>
-        </a-row>
-        <a-row class="form-row" :gutter="24">
-          <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="附件" data-step="9" data-title="附件"
-                         data-intro="可以上传与单据相关的图片、文档，支持多个文件">
-              <j-upload v-model="fileList" bizPath="bill"></j-upload>
-            </a-form-item>
-          </a-col>
+          <div class="sign">
+            <a-col :lg="6" :md="12" :sm="24">
+              <a-row class="form-row" :gutter="24">
+                <a-col :lg="24" :md="6" :sm="6"><br/><br/></a-col>
+                <a-col :lg="24" :md="6" :sm="6">
+                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" data-step="5" data-title="单据金额"
+                               data-intro="单据金额等于左侧商品的总金额">
+                    <span slot="label" style="font-size: 24px;line-height:24px">单据金额</span>
+                    <a-input v-decorator.trim="[ 'changeAmount' ]" :style="{color:'purple'}" :readOnly="true"/>
+                  </a-form-item>
+                </a-col>
+                <a-col :lg="24" :md="6" :sm="6">
+                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" data-step="6" data-title="收款金额"
+                               data-intro="收款金额为收银员收取用户的实际金额">
+                    <span slot="label" style="font-size: 24px;line-height:24px">收款金额</span>
+                    <a-input v-decorator.trim="[ 'getAmount' ]" :style="{color:'red'}" defaultValue="0" @keyup="onKeyUpGetAmount"/>
+                  </a-form-item>
+                </a-col>
+                <a-col :lg="24" :md="6" :sm="6">
+                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" data-step="7" data-title="找零"
+                               data-intro="找零等于收款金额减去实收金额">
+                    <span slot="label" style="font-size: 24px;line-height:24px">找零</span>
+                    <a-input v-decorator.trim="[ 'backAmount' ]" :style="{color:'green'}" :readOnly="true" defaultValue="0"/>
+                  </a-form-item>
+                </a-col>
+                <a-col :lg="24" :md="6" :sm="6">
+                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" data-step="8" data-title="收款账户"
+                               data-intro="收款账户的信息来自基本资料菜单下的【结算账户】">
+                    <span slot="label" style="font-size: 24px;line-height:24px">收款账户</span>
+                    <a-select placeholder="选择收款账户" style="font-size:20px;" v-decorator="[ 'accountId', validatorRules.accountId ]" :dropdownMatchSelectWidth="false">
+                      <div slot="dropdownRender" slot-scope="menu">
+                        <v-nodes :vnodes="menu" />
+                        <a-divider style="margin: 4px 0;" />
+                        <div v-if="isTenant" style="padding: 4px 8px; cursor: pointer;"
+                             @mousedown="e => e.preventDefault()" @click="addAccount"><a-icon type="plus" /> 新增结算账户</div>
+                      </div>
+                      <a-select-option v-for="(item,index) in accountList" :key="index" :value="item.id">
+                        {{ item.name }}
+                      </a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+              </a-row>
+            </a-col>
+          </div>
         </a-row>
       </a-form>
     </a-spin>
@@ -278,14 +284,18 @@
           this.addInit(this.prefixNo)
           this.fileList = []
           this.$nextTick(() => {
-            handleIntroJs('retailOut', 1)
+            handleIntroJs(this.prefixNo, 1)
           })
           this.$nextTick(() => {
-            this.form.setFieldsValue({'payType': '现付'})
+            this.form.setFieldsValue({'payType': '现付', 'getAmount':0, 'backAmount':0})
           })
         } else {
           this.model.operTime = this.model.operTimeStr
-          this.model.getAmount = this.model.changeAmount
+          if(this.model.backAmount) {
+            this.model.getAmount = (this.model.changeAmount + this.model.backAmount).toFixed(2)
+          } else {
+            this.model.getAmount = this.model.changeAmount
+          }
           this.fileList = this.model.fileName
           if(this.model.payType === '预付款'){
             this.payTypeList = []
@@ -294,7 +304,7 @@
           }
           this.$nextTick(() => {
             this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'number', 'payType', 'remark',
-              'discount','discountMoney','discountLastMoney','otherMoney','accountId','changeAmount','getAmount'))
+              'discount','discountMoney','discountLastMoney','otherMoney','accountId','changeAmount','getAmount','backAmount'))
           });
           // 加载子表数据
           let params = {
@@ -386,5 +396,12 @@
   }
 </script>
 <style scoped>
-
+  .sign .ant-input{
+    font-size: 30px;
+    font-weight:bolder;
+    text-align:center;
+    border-left-width:0px!important;
+    border-top-width:0px!important;
+    border-right-width:0px!important;
+  }
 </style>

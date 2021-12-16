@@ -569,6 +569,10 @@
           this.$message.warning('抱歉，请输入条码信息！');
           return;
         }
+        if(formData.enableSerialNumber === '1' && formData.enableBatchNumber === '1') {
+          this.$message.warning('抱歉，序列号和批号只能选择一项！');
+          return;
+        }
         //校验商品是否存在，通过校验商品的名称、型号、规格、颜色、单位、制造商等
         let param = {
           id: this.model.id?this.model.id:0,
