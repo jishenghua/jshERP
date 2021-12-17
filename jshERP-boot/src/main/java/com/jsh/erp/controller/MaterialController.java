@@ -208,11 +208,26 @@ public class MaterialController {
                 for (MaterialVo4Unit material : dataList) {
                     JSONObject item = new JSONObject();
                     item.put("id", material.getMeId()); //商品扩展表的id
-                    String ratioStr; //比例
-                    if (material.getUnitId() == null || material.getUnitId().equals("")) {
+                    String ratioStr = ""; //比例
+                    Unit unit = new Unit();
+                    if (material.getUnitId() == null) {
                         ratioStr = "";
                     } else {
-                        ratioStr = "[多单位]";
+                        unit = unitService.getUnit(material.getUnitId());
+                        //拼接副单位的比例
+                        String commodityUnit = material.getCommodityUnit();
+                        if(commodityUnit.equals(unit.getBasicUnit())) {
+                            ratioStr = "[基本]";
+                        }
+                        if(commodityUnit.equals(unit.getOtherUnit())) {
+                            ratioStr = "[" + unit.getRatio() + unit.getBasicUnit() + "]";
+                        }
+                        if(commodityUnit.equals(unit.getOtherUnitTwo())) {
+                            ratioStr = "[" + unit.getRatioTwo() + unit.getBasicUnit() + "]";
+                        }
+                        if(commodityUnit.equals(unit.getOtherUnitThree())) {
+                            ratioStr = "[" + unit.getRatioThree() + unit.getBasicUnit() + "]";
+                        }
                     }
                     item.put("mBarCode", material.getmBarCode());
                     item.put("name", material.getName());
@@ -230,7 +245,6 @@ public class MaterialController {
                     } else {
                         stock = depotItemService.getStockByParam(depotId,material.getId(),null,null);
                         if (material.getUnitId()!=null){
-                            Unit unit = unitService.getUnit(material.getUnitId());
                             String commodityUnit = material.getCommodityUnit();
                             stock = unitService.parseStockByUnit(stock, unit, commodityUnit);
                         }
