@@ -179,6 +179,15 @@
           { title: '单据日期', dataIndex: 'operTimeStr',width:145},
           { title: '操作员', dataIndex: 'userName',width:80, ellipsis:true},
           { title: '金额合计', dataIndex: 'totalPrice',width:80},
+          { title: '含税合计', dataIndex: 'totalTaxLastMoney',width:80,
+            customRender:function (text,record,index) {
+              if(record.discountLastMoney) {
+                return (record.discountMoney + record.discountLastMoney).toFixed(2);
+              } else {
+                return record.totalPrice;
+              }
+            }
+          },
           { title: '状态', dataIndex: 'status', width: 80, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }
           },

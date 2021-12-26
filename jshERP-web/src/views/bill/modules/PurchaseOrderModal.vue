@@ -83,6 +83,28 @@
         </a-row>
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="优惠率" data-step="5" data-title="优惠率"
+                         data-intro="针对单据明细中商品总金额进行优惠的比例">
+              <a-input style="width:185px;" placeholder="请输入优惠率" v-decorator.trim="[ 'discount' ]" suffix="%" @keyup="onKeyUpDiscount"/>
+            </a-form-item>
+          </a-col>
+          <a-col :lg="6" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款优惠" data-step="6" data-title="付款优惠"
+                         data-intro="针对单据明细中商品总金额进行优惠的金额">
+              <a-input placeholder="请输入付款优惠" v-decorator.trim="[ 'discountMoney' ]" @keyup="onKeyUpDiscountMoney"/>
+            </a-form-item>
+          </a-col>
+          <a-col :lg="6" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="优惠后金额" data-step="7" data-title="优惠后金额"
+                         data-intro="针对单据明细中商品总金额进行优惠后的金额">
+              <a-input placeholder="请输入优惠后金额" v-decorator.trim="[ 'discountLastMoney' ]" :readOnly="true"/>
+            </a-form-item>
+          </a-col>
+          <a-col :lg="6" :md="12" :sm="24">
+          </a-col>
+        </a-row>
+        <a-row class="form-row" :gutter="24">
+          <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="附件" data-step="4" data-title="附件" data-intro="可以上传与单据相关的图片、文档，支持多个文件">
               <j-upload v-model="fileList" bizPath="bill"></j-upload>
             </a-form-item>
@@ -161,6 +183,9 @@
             },
             { title: '单价', key: 'unitPrice', width: '5%', type: FormTypes.inputNumber },
             { title: '金额', key: 'allPrice', width: '5%', type: FormTypes.inputNumber, statistics: true },
+            { title: '税率', key: 'taxRate', width: '3%', type: FormTypes.inputNumber,placeholder: '%'},
+            { title: '税额', key: 'taxMoney', width: '5%', type: FormTypes.inputNumber, readonly: true, statistics: true },
+            { title: '价税合计', key: 'taxLastMoney', width: '5%', type: FormTypes.inputNumber, statistics: true },
             { title: '备注', key: 'remark', width: '5%', type: FormTypes.input}
           ]
         },
@@ -200,7 +225,8 @@
           this.model.operTime = this.model.operTimeStr
           this.fileList = this.model.fileName
           this.$nextTick(() => {
-            this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'number', 'remark'))
+            this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'number', 'remark',
+            'discount','discountMoney','discountLastMoney'))
           });
           // 加载子表数据
           let params = {
