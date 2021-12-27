@@ -145,11 +145,11 @@
         }
       },
       exportExcel() {
-        let aoa = [['条码', '名称', '规格', '型号', '扩展信息', '单位', '进货数量', '进货金额', '退货数量', '退货金额']]
+        let aoa = [['条码', '名称', '规格', '型号', '扩展信息', '单位', '进货数量', '进货金额', '退货数量', '退货金额', '实际采购金额']]
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
           let item = [ds.barCode, ds.materialName, ds.materialStandard, ds.materialModel, ds.materialOther, ds.materialUnit,
-            ds.inSum, ds.inSumPrice, ds.outSum, ds.outSumPrice]
+            ds.inSum, ds.inSumPrice, ds.outSum, ds.outSumPrice, ds.inOutSumPrice]
           aoa.push(item)
         }
         openDownloadDialog(sheet2blob(aoa), '进货统计')

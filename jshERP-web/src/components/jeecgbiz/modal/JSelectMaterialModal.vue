@@ -30,7 +30,7 @@
               </a-col>
               <a-col :md="6" :sm="8">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="仓库">
-                  <a-select placeholder="选择仓库" v-model="queryParam.depotId"
+                  <a-select placeholder="选择仓库" v-model="queryParam.depotId" @change="onDepotChange"
                     :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children" allow-clear>
                     <a-select-option v-for="(item,index) in depotList" :key="index" :value="item.id">
                       {{ item.depotName }}
@@ -166,7 +166,6 @@
       this.resetScreenSize()
       this.loadTreeData()
       this.getDepotList()
-      this.loadData()
     },
     methods: {
       initBarCode() {
@@ -226,6 +225,7 @@
         this.title = '选择商品'
         this.queryParam.q = barCode
         this.$nextTick(() => this.$refs.material.focus());
+        this.initDepotSelect()
         this.loadData();
         this.form.resetFields();
       },
@@ -289,7 +289,6 @@
         getAction('/depot/findDepotByCurrentUser').then((res) => {
           if(res.code === 200){
             that.depotList = res.data
-            this.initDepotSelect()
           }
         })
       },
@@ -299,6 +298,9 @@
             this.queryParam.depotId = JSON.parse(this.rows).depotId-0
           }
         }
+      },
+      onDepotChange(value) {
+        this.queryParam.depotId = value
       },
       onSelectChange(selectedRowKeys, selectionRows) {
         this.selectedRowKeys = selectedRowKeys;

@@ -217,6 +217,25 @@
               </a-form-item>
             </a-col>
           </a-row>
+          <a-row class="form-row" :gutter="24">
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="优惠率">
+                {{model.discount}}%
+              </a-form-item>
+            </a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款优惠">
+                {{model.discountMoney}}
+              </a-form-item>
+            </a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 6 }}" :wrapperCol="wrapperCol" label="优惠后金额">
+                {{model.discountLastMoney}}
+              </a-form-item>
+            </a-col>
+            <a-col :span="6">
+            </a-col>
+          </a-row>
         </section>
       </template>
       <!--采购入库-->
@@ -435,6 +454,25 @@
               <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
                 {{model.remark}}
               </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row class="form-row" :gutter="24">
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="优惠率">
+                {{model.discount}}%
+              </a-form-item>
+            </a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款优惠">
+                {{model.discountMoney}}
+              </a-form-item>
+            </a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 6 }}" :wrapperCol="wrapperCol" label="优惠后金额">
+                {{model.discountLastMoney}}
+              </a-form-item>
+            </a-col>
+            <a-col :span="6">
             </a-col>
           </a-row>
         </section>
@@ -977,6 +1015,9 @@
           { title: '已入库', dataIndex: 'finishNumber'},
           { title: '单价', dataIndex: 'unitPrice'},
           { title: '金额', dataIndex: 'allPrice'},
+          { title: '税率(%)', dataIndex: 'taxRate'},
+          { title: '税额', dataIndex: 'taxMoney'},
+          { title: '价税合计', dataIndex: 'taxLastMoney'},
           { title: '备注', dataIndex: 'remark'}
         ],
         purchaseInColumns: [
@@ -995,7 +1036,6 @@
           { title: '多属性', dataIndex: 'sku'},
           { title: '数量', dataIndex: 'operNumber'},
           { title: '单价', dataIndex: 'unitPrice'},
-          { title: '含税单价', dataIndex: 'taxUnitPrice'},
           { title: '金额', dataIndex: 'allPrice'},
           { title: '税率(%)', dataIndex: 'taxRate'},
           { title: '税额', dataIndex: 'taxMoney'},
@@ -1018,7 +1058,6 @@
           { title: '多属性', dataIndex: 'sku'},
           { title: '数量', dataIndex: 'operNumber'},
           { title: '单价', dataIndex: 'unitPrice'},
-          { title: '含税单价', dataIndex: 'taxUnitPrice'},
           { title: '金额', dataIndex: 'allPrice'},
           { title: '税率(%)', dataIndex: 'taxRate'},
           { title: '税额', dataIndex: 'taxMoney'},
@@ -1039,6 +1078,9 @@
           { title: '已入库', dataIndex: 'finishNumber'},
           { title: '单价', dataIndex: 'unitPrice'},
           { title: '金额', dataIndex: 'allPrice'},
+          { title: '税率(%)', dataIndex: 'taxRate'},
+          { title: '税额', dataIndex: 'taxMoney'},
+          { title: '价税合计', dataIndex: 'taxLastMoney'},
           { title: '备注', dataIndex: 'remark'}
         ],
         saleOutColumns: [
@@ -1057,7 +1099,6 @@
           { title: '多属性', dataIndex: 'sku'},
           { title: '数量', dataIndex: 'operNumber'},
           { title: '单价', dataIndex: 'unitPrice'},
-          { title: '含税单价', dataIndex: 'taxUnitPrice'},
           { title: '金额', dataIndex: 'allPrice'},
           { title: '税率(%)', dataIndex: 'taxRate'},
           { title: '税额', dataIndex: 'taxMoney'},
@@ -1080,7 +1121,6 @@
           { title: '多属性', dataIndex: 'sku'},
           { title: '数量', dataIndex: 'operNumber'},
           { title: '单价', dataIndex: 'unitPrice'},
-          { title: '含税单价', dataIndex: 'taxUnitPrice'},
           { title: '金额', dataIndex: 'allPrice'},
           { title: '税率(%)', dataIndex: 'taxRate'},
           { title: '税额', dataIndex: 'taxMoney'},

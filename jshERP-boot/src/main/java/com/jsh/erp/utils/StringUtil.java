@@ -241,7 +241,7 @@ public class StringUtil {
             if(StringUtil.isNotEmpty(search)) {
                 JSONObject obj = JSONObject.parseObject(search);
                 if (obj.get(key) != null) {
-                    value = obj.getString(key);
+                    value = obj.getString(key).trim();
                     if (value.equals("")) {
                         value = null;
                     }
@@ -256,6 +256,8 @@ public class StringUtil {
     public static String toNull(String value) {
         if(("").equals(value)) {
             value = null;
+        } else {
+            value = value.trim();
         }
         return value;
     }
