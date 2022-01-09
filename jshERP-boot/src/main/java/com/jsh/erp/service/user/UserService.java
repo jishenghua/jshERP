@@ -1,6 +1,7 @@
 package com.jsh.erp.service.user;
 
 import com.jsh.erp.datasource.entities.*;
+import com.jsh.erp.service.functions.FunctionService;
 import com.jsh.erp.service.redis.RedisService;
 import com.jsh.erp.service.role.RoleService;
 import org.springframework.util.StringUtils;
@@ -31,10 +32,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -62,6 +60,8 @@ public class UserService {
     private UserBusinessService userBusinessService;
     @Resource
     private RoleService roleService;
+    @Resource
+    private FunctionService functionService;
     @Resource
     private RedisService redisService;
 
@@ -797,7 +797,24 @@ public class UserService {
                 }
             }
         }
-        return btnStrArr;
+        //将数组中的funId转为url
+        JSONArray btnStrWithUrlArr = new JSONArray();
+        if(btnStrArr.size()>0) {
+            List<Function> functionList = functionService.getFunction();
+            Map<Long, String> functionMap = new HashMap<>();
+            for (Function function: functionList) {
+                functionMap.put(function.getId(), function.getUrl());
+            }
+            for (Object obj : btnStrArr) {
+                JSONObject btnStrObj = JSONObject.parseObject(obj.toString());
+                Long funId = btnStrObj.getLong("funId");
+                JSONObject btnStrWithUrlObj = new JSONObject();
+                btnStrWithUrlObj.put("url", functionMap.get(funId));
+                btnStrWithUrlObj.put("btnStr", btnStrObj.getString("btnStr"));
+                btnStrWithUrlArr.add(btnStrWithUrlObj);
+            }
+        }
+        return btnStrWithUrlArr;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
