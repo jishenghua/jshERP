@@ -351,12 +351,11 @@ export const JeecgListMixin = {
     },
     /* 按钮权限 */
     initActiveBtnStr() {
-      let funId = Vue.ls.get('funId'); //功能id
       let btnStrList = Vue.ls.get('winBtnStrList'); //按钮功能列表 JSON字符串
       this.btnEnableList = ""; //按钮列表
-      if (funId && btnStrList) {
+      if (location.pathname && btnStrList) {
         for (let i = 0; i < btnStrList.length; i++) {
-          if (btnStrList[i].funId == funId) {
+          if (btnStrList[i].url === location.pathname) {
             if (btnStrList[i].btnStr) {
               this.btnEnableList = btnStrList[i].btnStr;
             }

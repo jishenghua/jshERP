@@ -122,8 +122,6 @@
           let oldIndex = this.linkList.indexOf(newRoute.fullPath)
           let oldPositionRoute = this.pageList[oldIndex]
           this.pageList.splice(oldIndex, 1, Object.assign({},newRoute,{meta:oldPositionRoute.meta}))
-          //给菜单id赋值，用于调用之后控制按钮的显示
-          Vue.ls.set('funId', oldPositionRoute.meta.id, 7 * 24 * 60 * 60 * 1000)
         }
       },
       'activePage': function(key) {
