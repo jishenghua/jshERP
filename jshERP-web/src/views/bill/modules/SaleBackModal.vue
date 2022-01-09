@@ -351,7 +351,11 @@
         this.accountMoneyList = changeListFmtMinus(this.accountMoneyList)
         billMain.accountIdList = this.accountIdList.length>0 ? JSON.stringify(this.accountIdList) : ""
         billMain.accountMoneyList = this.accountMoneyList.length>0 ? JSON.stringify(this.accountMoneyList) : ""
-        billMain.fileName = this.fileList
+        if(this.fileList && this.fileList.length > 0) {
+          billMain.fileName = this.fileList
+        } else {
+          billMain.fileName = ''
+        }
         if(this.model.id){
           billMain.id = this.model.id
         }
