@@ -139,7 +139,7 @@
               loginParams.loginName = values.loginName
               loginParams.password = md5(values.password)
               //loginParams.remember_me = values.rememberMe
-              console.log("登录参数",loginParams)
+              //console.log("登录参数",loginParams)
               that.Login(loginParams).then((res) => {
                 this.departConfirm(res, loginParams.loginName)
               }).catch((err) => {
