@@ -37,10 +37,6 @@ router.beforeEach((to, from, next) => {
           })
         })
         .catch(() => {
-          /* notification.error({
-             message: '系统提示',
-             description: '请求用户信息失败，请重试！'
-           })*/
           store.dispatch('Logout').then(() => {
             next({ path: '/user/login' })
           })
