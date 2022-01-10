@@ -77,7 +77,9 @@ public class LogCostFilter implements Filter {
             }
         }
         servletResponse.setStatus(500);
-        servletResponse.getWriter().write("loginOut");
+        if(requestUrl != null && !requestUrl.contains("/user/logout") && !requestUrl.contains("/function/findMenuByPNumber")) {
+            servletResponse.getWriter().write("loginOut");
+        }
     }
 
     private static String regexPrefix = "^.*";
