@@ -40,7 +40,7 @@
               </a-col>
               <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                 <a-col :md="6" :sm="24">
-                  <a-button type="primary" @click="loadData(1)">查询</a-button>
+                  <a-button type="primary" @click="loadMaterialData(1)">查询</a-button>
                   <a-button style="margin-left: 8px" @click="searchReset(1)">重置</a-button>
                 </a-col>
               </span>
@@ -164,8 +164,6 @@
     created() {
       // 该方法触发屏幕自适应
       this.resetScreenSize()
-      this.loadTreeData()
-      this.getDepotList()
     },
     methods: {
       initBarCode() {
@@ -176,13 +174,13 @@
           this.$emit('initComp', '')
         }
       },
-      async loadData(arg) {
+      loadMaterialData(arg) {
         if (arg === 1) {
           this.ipagination.current = 1;
         }
         this.loading = true
         let params = this.getQueryParams()//查询条件
-        await getMaterialBySelect(params).then((res) => {
+        getMaterialBySelect(params).then((res) => {
           if (res) {
             this.dataSource = res.rows
             this.ipagination.total = res.total
@@ -225,8 +223,10 @@
         this.title = '选择商品'
         this.queryParam.q = barCode
         this.$nextTick(() => this.$refs.material.focus());
+        this.loadTreeData()
+        this.getDepotList()
         this.initDepotSelect()
-        this.loadData();
+        this.loadMaterialData();
         this.form.resetFields();
       },
       getQueryParams() {
@@ -247,7 +247,7 @@
         let that = this;
         if (num !== 0) {
           that.queryParam = {};
-          that.loadData(1);
+          that.loadMaterialData(1);
         }
         that.selectedRowKeys = [];
         that.selectMaterialIds = [];
@@ -262,7 +262,7 @@
           this.isorter.order = 'ascend' === sorter.order ? 'asc' : 'desc';
         }
         this.ipagination = pagination;
-        this.loadData();
+        this.loadMaterialData();
       },
       handleSubmit() {
         let that = this;
@@ -317,14 +317,14 @@
             this.selectedRowKeys = arr
             this.handleSubmit()
           } else {
-            this.loadData(1)
+            this.loadMaterialData(1)
           }
         } else {
-          this.loadData(1)
+          this.loadMaterialData(1)
         }
       },
       modalFormOk() {
-        this.loadData()
+        this.loadMaterialData()
       },
       rowAction(record, index) {
         return {
