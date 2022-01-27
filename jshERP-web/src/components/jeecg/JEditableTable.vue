@@ -11,13 +11,13 @@
       <a-col>
         <!-- 操作按钮 -->
         <div v-if="actionButton" class="action-button">
-          <a-button type="primary" icon="plus" @click="handleClickAdd" :disabled="disabled">新增</a-button>
+          <a-button type="primary" icon="plus" @click="handleClickAdd" :disabled="disabled">新增行</a-button>
           <span class="gap"></span>
           <template v-if="selectedRowIds.length>0">
             <a-popconfirm
               :title="`确定要删除这 ${selectedRowIds.length} 项吗?`"
               @confirm="handleConfirmDelete">
-              <a-button type="primary" icon="minus" :disabled="disabled">删除</a-button>
+              <a-button type="primary" icon="minus" :disabled="disabled">删除行</a-button>
               <span class="gap"></span>
             </a-popconfirm>
             <template v-if="showClearSelectButton">
@@ -707,7 +707,9 @@
                     </div>
 
                     <!-- else (normal) -->
-                    <span v-else :key="i" v-bind="buildProps(row,col)">{{ inputValues[rowIndex][col.key] }}</span>
+                    <span v-else :key="i" v-bind="buildProps(row,col)" class="td-span" :title="inputValues[rowIndex][col.key]">
+                      {{ inputValues[rowIndex][col.key] }}
+                    </span>
                   </template>
                 </div>
               </div>
@@ -761,6 +763,7 @@
 
 <script>
   import Vue from 'vue'
+  import $ from 'jquery'
   import Draggable from 'vuedraggable'
   import { ACCESS_TOKEN } from '@/store/mutation-types'
   import { FormTypes, VALIDATE_NO_PASSED } from '@/utils/JEditableTableUtil'
@@ -1429,6 +1432,9 @@
         this.$nextTick(() => {
           tbody.scrollTop = tbody.scrollHeight
         })
+        this.$nextTick(() => {
+          this.autoJumpNextInputBill()
+        })
       },
       /**
        * 在指定位置添加一行
@@ -1459,6 +1465,9 @@
           }),
           num, insertIndex,
           target: this
+        })
+        this.$nextTick(() => {
+          this.autoJumpNextInputBill()
         })
       },
       /** 删除被选中的行 */
@@ -2739,8 +2748,59 @@
           return content.substr(0,len)
         }
         return content;
+      },
+      /** 回车后自动跳到下一个input **/
+      autoJumpNextInputBill() {
+        let that = this
+        let inputDom = $(".ant-modal-cust-warp:visible").find("#billModal");
+        inputDom.find("input:visible:not(:checkbox)").off("keydown").on("keydown", function(e){
+          //响应回车键按下的处理
+          e = event || window.event || arguments.callee.caller.arguments[0];
+          //捕捉是否按键为回车键，可百度JS键盘事件了解更多
+          if(e && e.keyCode==13) {
+            //捕捉inputDom下的文本输入框的个数
+            let inputs = inputDom.find("input:visible:not(:checkbox)");
+            let idx = inputs.index(this); // 获取当前焦点输入框所处的位置
+            if (idx == inputs.length - 1) { // 判断是否是最后一个输入框
+              let curKey = e.which;
+              if (curKey == 13) {
+                //新增行
+                that.handleClickAdd();
+                //进行下一行的自动聚焦
+                setTimeout(function() {
+                  inputs = inputDom.find("input:visible:not(:checkbox)");
+                  inputs[idx + 1].focus(); // 设置焦点
+                  inputs[idx + 1].select(); // 选中文字
+                },100)
+              }
+            } else {
+              inputs[idx + 1].focus(); // 设置焦点
+              inputs[idx + 1].select(); // 选中文字
+            }
+          }
+        })
+      },
+      /** 自动选中特殊的key **/
+      autoSelectBySpecialKey(specialKey) {
+        let trs = this.getElement('tbody').getElementsByClassName('tr')
+        let trEls = []
+        for (let tr of trs) {
+          trEls.push(tr)
+        }
+        trEls.forEach(tr => {
+          let { idx } = tr.dataset
+          let value = this.inputValues[idx]
+          for (let key in value) {
+            if (value.hasOwnProperty(key)) {
+              let elid = `${key}${value.id}`
+              let el = document.getElementById(elid)
+              if (el && key === specialKey) {
+                el.select()
+              }
+            }
+          }
+        })
       }
-
     },
     beforeDestroy() {
       this.destroyCleanGroupRequest = true
@@ -2978,6 +3038,29 @@
             opacity: 0.6;
           }
 
+        }
+
+        .td-span {
+          font-variant: tabular-nums;
+          box-sizing: border-box;
+          margin: 0;
+          list-style: none;
+          position: relative;
+          display: inline-block;
+          padding: 2px 2px;
+          width: 100%;
+          height: 32px;
+          font-size: 14px;
+          line-height: 1.9;
+          color: rgba(0, 0, 0, 0.65);
+          background-color: #fff;
+          border: 1px dashed #d9d9d9;
+          border-radius: 4px;
+          transition: all 0.3s;
+          outline: none;
+          overflow:hidden;
+          white-space:nowrap;
+          text-overflow:ellipsis;
         }
 
       }

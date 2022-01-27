@@ -1,7 +1,8 @@
 import { VALIDATE_NO_PASSED, validateFormAndTables } from '@/utils/JEditableTableUtil'
-import {findBySelectSup,findBySelectCus,findBySelectRetail,findStockByDepotAndBarCode,getAccount,getPersonByType,findInOutItemByParam} from '@/api/api'
+import {findBySelectSup,findBySelectCus,findBySelectRetail,findBySelectOrgan,findStockByDepotAndBarCode,getAccount,getPersonByType,findInOutItemByParam} from '@/api/api'
 import { getAction,putAction } from '@/api/manage'
 import { getMpListShort, getNowFormatDateTime } from "@/utils/util"
+import { USER_INFO } from "@/store/mutation-types"
 import Vue from 'vue'
 
 export const FinancialModalMixin = {
@@ -11,8 +12,10 @@ export const FinancialModalMixin = {
       supList: [],
       cusList: [],
       retailList: [],
+      organList: [],
       personList: [],
       accountList: [],
+      isTenant: false,
       spans: {
         labelCol1: {span: 2},
         wrapperCol1: {span: 22},
@@ -29,6 +32,8 @@ export const FinancialModalMixin = {
     };
   },
   created () {
+    let userInfo = Vue.ls.get(USER_INFO)
+    this.isTenant = userInfo.id === userInfo.tenantId? true:false
   },
   computed: {
     readOnly: function() {
@@ -70,6 +75,14 @@ export const FinancialModalMixin = {
       findBySelectCus({}).then((res)=>{
         if(res) {
           that.cusList = res;
+        }
+      });
+    },
+    initOrgan() {
+      let that = this;
+      findBySelectOrgan({}).then((res)=>{
+        if(res) {
+          that.organList = res;
         }
       });
     },
@@ -137,6 +150,38 @@ export const FinancialModalMixin = {
           }
         }
       })
+    },
+    addSupplier() {
+      this.$refs.vendorModalForm.add();
+      this.$refs.vendorModalForm.title = "新增";
+      this.$refs.vendorModalForm.disableSubmit = false;
+    },
+    addCustomer() {
+      this.$refs.customerModalForm.add();
+      this.$refs.customerModalForm.title = "新增客户（提醒：如果找不到新添加的客户，请到用户管理检查是否分配了该客户权限）";
+      this.$refs.customerModalForm.disableSubmit = false;
+    },
+    addAccount() {
+      this.$refs.accountModalForm.add();
+      this.$refs.accountModalForm.title = "新增结算账户";
+      this.$refs.accountModalForm.disableSubmit = false;
+    },
+    addPerson() {
+      this.$refs.personModalForm.add();
+      this.$refs.personModalForm.title = "新增经手人";
+      this.$refs.personModalForm.disableSubmit = false;
+    },
+    vendorModalFormOk() {
+      this.initSupplier()
+    },
+    customerModalFormOk() {
+      this.initCustomer()
+    },
+    accountModalFormOk() {
+      this.initAccount()
+    },
+    personModalFormOk() {
+      this.initPerson()
     },
     //单元值改变一个字符就触发一次
     onValueChange(event) {

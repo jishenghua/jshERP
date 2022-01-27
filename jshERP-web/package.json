@@ -22,6 +22,8 @@
     "md5": "^2.2.1",
     "nprogress": "^0.2.0",
     "xlsx": "^0.14.3",
+    "intro.js": "^4.2.2",
+    "jquery": "^1.12.4",
     "viser-vue": "^2.4.4",
     "vue": "^2.6.10",
     "vue-area-linkage": "^5.1.0",

@@ -6,6 +6,8 @@
     <result column="material_id" jdbcType="BIGINT" property="materialId" />
     <result column="depot_id" jdbcType="BIGINT" property="depotId" />
     <result column="number" jdbcType="DECIMAL" property="number" />
+    <result column="low_safe_stock" jdbcType="DECIMAL" property="lowSafeStock" />
+    <result column="high_safe_stock" jdbcType="DECIMAL" property="highSafeStock" />
     <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
     <result column="delete_flag" jdbcType="VARCHAR" property="deleteFlag" />
   </resultMap>
@@ -68,7 +70,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, material_id, depot_id, number, tenant_id, delete_flag
+    id, material_id, depot_id, number, low_safe_stock, high_safe_stock, tenant_id, delete_flag
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.MaterialInitialStockExample" resultMap="BaseResultMap">
     select
@@ -102,11 +104,11 @@
   </delete>
   <insert id="insert" parameterType="com.jsh.erp.datasource.entities.MaterialInitialStock">
     insert into jsh_material_initial_stock (id, material_id, depot_id, 
-      number, tenant_id, delete_flag
-      )
+      number, low_safe_stock, high_safe_stock, 
+      tenant_id, delete_flag)
     values (#{id,jdbcType=BIGINT}, #{materialId,jdbcType=BIGINT}, #{depotId,jdbcType=BIGINT}, 
-      #{number,jdbcType=DECIMAL}, #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR}
-      )
+      #{number,jdbcType=DECIMAL}, #{lowSafeStock,jdbcType=DECIMAL}, #{highSafeStock,jdbcType=DECIMAL}, 
+      #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.MaterialInitialStock">
     insert into jsh_material_initial_stock
@@ -122,6 +124,12 @@
       </if>
       <if test="number != null">
         number,
+      </if>
+      <if test="lowSafeStock != null">
+        low_safe_stock,
+      </if>
+      <if test="highSafeStock != null">
+        high_safe_stock,
       </if>
       <if test="tenantId != null">
         tenant_id,
@@ -142,6 +150,12 @@
       </if>
       <if test="number != null">
         #{number,jdbcType=DECIMAL},
+      </if>
+      <if test="lowSafeStock != null">
+        #{lowSafeStock,jdbcType=DECIMAL},
+      </if>
+      <if test="highSafeStock != null">
+        #{highSafeStock,jdbcType=DECIMAL},
       </if>
       <if test="tenantId != null">
         #{tenantId,jdbcType=BIGINT},
@@ -172,6 +186,12 @@
       <if test="record.number != null">
         number = #{record.number,jdbcType=DECIMAL},
       </if>
+      <if test="record.lowSafeStock != null">
+        low_safe_stock = #{record.lowSafeStock,jdbcType=DECIMAL},
+      </if>
+      <if test="record.highSafeStock != null">
+        high_safe_stock = #{record.highSafeStock,jdbcType=DECIMAL},
+      </if>
       <if test="record.tenantId != null">
         tenant_id = #{record.tenantId,jdbcType=BIGINT},
       </if>
@@ -189,6 +209,8 @@
       material_id = #{record.materialId,jdbcType=BIGINT},
       depot_id = #{record.depotId,jdbcType=BIGINT},
       number = #{record.number,jdbcType=DECIMAL},
+      low_safe_stock = #{record.lowSafeStock,jdbcType=DECIMAL},
+      high_safe_stock = #{record.highSafeStock,jdbcType=DECIMAL},
       tenant_id = #{record.tenantId,jdbcType=BIGINT},
       delete_flag = #{record.deleteFlag,jdbcType=VARCHAR}
     <if test="_parameter != null">
@@ -207,6 +229,12 @@
       <if test="number != null">
         number = #{number,jdbcType=DECIMAL},
       </if>
+      <if test="lowSafeStock != null">
+        low_safe_stock = #{lowSafeStock,jdbcType=DECIMAL},
+      </if>
+      <if test="highSafeStock != null">
+        high_safe_stock = #{highSafeStock,jdbcType=DECIMAL},
+      </if>
       <if test="tenantId != null">
         tenant_id = #{tenantId,jdbcType=BIGINT},
       </if>
@@ -221,6 +249,8 @@
     set material_id = #{materialId,jdbcType=BIGINT},
       depot_id = #{depotId,jdbcType=BIGINT},
       number = #{number,jdbcType=DECIMAL},
+      low_safe_stock = #{lowSafeStock,jdbcType=DECIMAL},
+      high_safe_stock = #{highSafeStock,jdbcType=DECIMAL},
       tenant_id = #{tenantId,jdbcType=BIGINT},
       delete_flag = #{deleteFlag,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}

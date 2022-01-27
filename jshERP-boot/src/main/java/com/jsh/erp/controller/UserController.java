@@ -16,6 +16,8 @@ import com.jsh.erp.service.redis.RedisService;
 import com.jsh.erp.service.tenant.TenantService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,6 +41,7 @@ import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
  */
 @RestController
 @RequestMapping(value = "/user")
+@Api(tags = {"用户管理"})
 public class UserController {
     private Logger logger = LoggerFactory.getLogger(UserController.class);
 
@@ -68,6 +71,7 @@ public class UserController {
     private static final String BASE_CHECK_CODES = "qwertyuiplkjhgfdsazxcvbnmQWERTYUPLKJHGFDSAZXCVBNM1234567890";
 
     @PostMapping(value = "/login")
+    @ApiOperation(value = "登录")
     public BaseResponseInfo login(@RequestBody User userParam,
                         HttpServletRequest request)throws Exception {
         logger.info("============用户登录 login 方法调用开始==============");
@@ -166,6 +170,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/getUserSession")
+    @ApiOperation(value = "获取用户信息")
     public BaseResponseInfo getSessionUser(HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
@@ -185,11 +190,11 @@ public class UserController {
     }
 
     @GetMapping(value = "/logout")
+    @ApiOperation(value = "退出")
     public BaseResponseInfo logout(HttpServletRequest request, HttpServletResponse response)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
             redisService.deleteObjectBySession(request,"userId");
-            response.sendRedirect("/login.html");
         } catch(Exception e){
             e.printStackTrace();
             res.code = 500;
@@ -199,6 +204,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/resetPwd")
+    @ApiOperation(value = "重置密码")
     public String resetPwd(@RequestBody JSONObject jsonObject,
                                      HttpServletRequest request) throws Exception {
         Map<String, Object> objectMap = new HashMap<>();
@@ -214,6 +220,7 @@ public class UserController {
     }
 
     @PutMapping(value = "/updatePwd")
+    @ApiOperation(value = "更新密码")
     public String updatePwd(@RequestBody JSONObject jsonObject, HttpServletRequest request)throws Exception {
         Integer flag = 0;
         Map<String, Object> objectMap = new HashMap<String, Object>();
@@ -255,6 +262,7 @@ public class UserController {
      * @return
      */
     @GetMapping(value = "/getAllList")
+    @ApiOperation(value = "获取全部用户数据列表")
     public BaseResponseInfo getAllList(HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
@@ -280,6 +288,7 @@ public class UserController {
      * @throws Exception
      */
     @GetMapping(value = "/getUserList")
+    @ApiOperation(value = "用户列表")
     public JSONArray getUserList(HttpServletRequest request)throws Exception {
         JSONArray dataArray = new JSONArray();
         try {
@@ -307,6 +316,7 @@ public class UserController {
      * @return java.lang.Object
      */
     @PostMapping("/addUser")
+    @ApiOperation(value = "新增用户")
     @ResponseBody
     public Object addUser(@RequestBody JSONObject obj, HttpServletRequest request)throws Exception{
         JSONObject result = ExceptionConstants.standardSuccess();
@@ -317,7 +327,7 @@ public class UserController {
                     ExceptionConstants.USER_OVER_LIMIT_FAILED_MSG);
         } else {
             UserEx ue= JSONObject.parseObject(obj.toJSONString(), UserEx.class);
-            userService.addUserAndOrgUserRel(ue);
+            userService.addUserAndOrgUserRel(ue, request);
         }
         return result;
     }
@@ -331,11 +341,12 @@ public class UserController {
      * @return java.lang.Object
      */
     @PutMapping("/updateUser")
+    @ApiOperation(value = "修改用户")
     @ResponseBody
-    public Object updateUser(@RequestBody JSONObject obj)throws Exception{
+    public Object updateUser(@RequestBody JSONObject obj, HttpServletRequest request)throws Exception{
         JSONObject result = ExceptionConstants.standardSuccess();
         UserEx ue= JSONObject.parseObject(obj.toJSONString(), UserEx.class);
-        userService.updateUserAndOrgUserRel(ue);
+        userService.updateUserAndOrgUserRel(ue, request);
         return result;
     }
 
@@ -346,6 +357,7 @@ public class UserController {
      * @throws Exception
      */
     @PostMapping(value = "/registerUser")
+    @ApiOperation(value = "注册用户")
     public Object registerUser(@RequestBody UserEx ue,
                                HttpServletRequest request)throws Exception{
         JSONObject result = ExceptionConstants.standardSuccess();
@@ -355,7 +367,13 @@ public class UserController {
         return result;
     }
 
+    /**
+     * 获取机构用户树
+     * @return
+     * @throws Exception
+     */
     @RequestMapping("/getOrganizationUserTree")
+    @ApiOperation(value = "获取机构用户树")
     public JSONArray getOrganizationUserTree()throws Exception{
         JSONArray arr=new JSONArray();
         List<TreeNodeEx> organizationUserTree= userService.getOrganizationUserTree();
@@ -375,6 +393,7 @@ public class UserController {
      * @return
      */
     @GetMapping("/getRoleTypeByCurrentUser")
+    @ApiOperation(value = "获取当前用户的角色类型")
     public BaseResponseInfo getRoleTypeByCurrentUser(HttpServletRequest request) {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
@@ -391,7 +410,14 @@ public class UserController {
         return res;
     }
 
+    /**
+     * 获取随机校验码
+     * @param response
+     * @param key
+     * @return
+     */
     @GetMapping(value = "/randomImage/{key}")
+    @ApiOperation(value = "获取随机校验码")
     public BaseResponseInfo randomImage(HttpServletResponse response,@PathVariable String key){
         BaseResponseInfo res = new BaseResponseInfo();
         try {
@@ -417,6 +443,7 @@ public class UserController {
      * @return
      */
     @PostMapping(value = "/batchSetStatus")
+    @ApiOperation(value = "批量设置状态")
     public String batchSetStatus(@RequestBody JSONObject jsonObject,
                                  HttpServletRequest request)throws Exception {
         Byte status = jsonObject.getByte("status");
@@ -436,6 +463,7 @@ public class UserController {
      * @return
      */
     @GetMapping(value = "/infoWithTenant")
+    @ApiOperation(value = "获取当前用户的用户数量和租户信息")
     public BaseResponseInfo randomImage(HttpServletRequest request){
         BaseResponseInfo res = new BaseResponseInfo();
         try {

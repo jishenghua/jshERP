@@ -11,6 +11,8 @@ import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.service.userBusiness.UserBusinessService;
 import com.jsh.erp.utils.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import jxl.Sheet;
 import jxl.Workbook;
 import org.slf4j.Logger;
@@ -37,6 +39,7 @@ import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
  */
 @RestController
 @RequestMapping(value = "/supplier")
+@Api(tags = {"商家管理"})
 public class SupplierController {
     private Logger logger = LoggerFactory.getLogger(SupplierController.class);
 
@@ -52,12 +55,29 @@ public class SupplierController {
     @Resource
     private UserService userService;
 
+    @GetMapping(value = "/checkIsNameAndTypeExist")
+    @ApiOperation(value = "检查名称和类型是否存在")
+    public String checkIsNameAndTypeExist(@RequestParam Long id,
+                                          @RequestParam(value ="name") String name,
+                                          @RequestParam(value ="type") String type,
+                                          HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        int exist = supplierService.checkIsNameAndTypeExist(id, name, type);
+        if(exist > 0) {
+            objectMap.put("status", true);
+        } else {
+            objectMap.put("status", false);
+        }
+        return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+    }
+
     /**
      * 查找客户信息-下拉框
      * @param request
      * @return
      */
     @PostMapping(value = "/findBySelect_cus")
+    @ApiOperation(value = "查找客户信息")
     public JSONArray findBySelectCus(HttpServletRequest request) {
         JSONArray arr = new JSONArray();
         try {
@@ -92,6 +112,7 @@ public class SupplierController {
      * @return
      */
     @PostMapping(value = "/findBySelect_sup")
+    @ApiOperation(value = "查找供应商信息")
     public JSONArray findBySelectSup(HttpServletRequest request) throws Exception{
         JSONArray arr = new JSONArray();
         try {
@@ -114,11 +135,57 @@ public class SupplierController {
     }
 
     /**
+     * 查找往来单位，含供应商和客户信息-下拉框
+     * @param request
+     * @return
+     */
+    @PostMapping(value = "/findBySelect_organ")
+    @ApiOperation(value = "查找往来单位，含供应商和客户信息")
+    public JSONArray findBySelectOrgan(HttpServletRequest request) throws Exception{
+        JSONArray arr = new JSONArray();
+        try {
+            JSONArray dataArray = new JSONArray();
+            //1、获取供应商信息
+            List<Supplier> supplierList = supplierService.findBySelectSup();
+            if (null != supplierList) {
+                for (Supplier supplier : supplierList) {
+                    JSONObject item = new JSONObject();
+                    item.put("id", supplier.getId());
+                    item.put("supplier", supplier.getSupplier() + "[供应商]"); //供应商名称
+                    dataArray.add(item);
+                }
+            }
+            //2、获取客户信息
+            String type = "UserCustomer";
+            Long userId = userService.getUserId(request);
+            String ubValue = userBusinessService.getUBValueByTypeAndKeyId(type, userId.toString());
+            List<Supplier> customerList = supplierService.findBySelectCus();
+            if (null != customerList) {
+                boolean customerFlag = systemConfigService.getCustomerFlag();
+                for (Supplier supplier : customerList) {
+                    JSONObject item = new JSONObject();
+                    Boolean flag = ubValue.contains("[" + supplier.getId().toString() + "]");
+                    if (!customerFlag || flag) {
+                        item.put("id", supplier.getId());
+                        item.put("supplier", supplier.getSupplier() + "[客户]"); //客户名称
+                        dataArray.add(item);
+                    }
+                }
+            }
+            arr = dataArray;
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        return arr;
+    }
+
+    /**
      * 查找会员信息-下拉框
      * @param request
      * @return
      */
     @PostMapping(value = "/findBySelect_retail")
+    @ApiOperation(value = "查找会员信息")
     public JSONArray findBySelectRetail(HttpServletRequest request)throws Exception {
         JSONArray arr = new JSONArray();
         try {
@@ -148,6 +215,7 @@ public class SupplierController {
      * @return
      */
     @PostMapping(value = "/batchSetStatus")
+    @ApiOperation(value = "批量设置状态")
     public String batchSetStatus(@RequestBody JSONObject jsonObject,
                                  HttpServletRequest request)throws Exception {
         Boolean status = jsonObject.getBoolean("status");
@@ -169,6 +237,7 @@ public class SupplierController {
      * @return
      */
     @GetMapping(value = "/findUserCustomer")
+    @ApiOperation(value = "用户对应客户显示")
     public JSONArray findUserCustomer(@RequestParam("UBType") String type, @RequestParam("UBKeyId") String keyId,
                                    HttpServletRequest request) throws Exception{
         JSONArray arr = new JSONArray();
@@ -209,18 +278,19 @@ public class SupplierController {
     }
 
     /**
-     * 导入excel表格
+     * 导入供应商
      * @param file
      * @param request
      * @param response
      * @return
      */
-    @PostMapping(value = "/importExcel")
-    public BaseResponseInfo importExcel(MultipartFile file,
+    @PostMapping(value = "/importVendor")
+    @ApiOperation(value = "导入供应商")
+    public BaseResponseInfo importVendor(MultipartFile file,
                             HttpServletRequest request, HttpServletResponse response) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();
         try {
-            importFun(file);
+            supplierService.importVendor(file, request);
             res.code = 200;
             res.data = "导入成功";
         } catch(Exception e){
@@ -231,63 +301,77 @@ public class SupplierController {
         return res;
     }
 
-    public String importFun(MultipartFile file)throws Exception{
-        BaseResponseInfo info = new BaseResponseInfo();
-        Map<String, Object> data = new HashMap<String, Object>();
-        String message = "成功";
+    /**
+     * 导入客户
+     * @param file
+     * @param request
+     * @param response
+     * @return
+     */
+    @PostMapping(value = "/importCustomer")
+    @ApiOperation(value = "导入客户")
+    public BaseResponseInfo importCustomer(MultipartFile file,
+                                        HttpServletRequest request, HttpServletResponse response) throws Exception{
+        BaseResponseInfo res = new BaseResponseInfo();
         try {
-            Sheet src = null;
-            //文件合法性校验
-            try {
-                Workbook workbook = Workbook.getWorkbook(file.getInputStream());
-                src = workbook.getSheet(0);
-            } catch (Exception e) {
-                message = "导入文件不合法，请检查";
-                data.put("message", message);
-                info.code = 400;
-                info.data = data;
-            }
-            //每行中数据顺序 "名称","类型","联系人","电话","电子邮箱","预收款","期初应收","期初应付","备注","传真","手机","地址","纳税人识别号","开户行","账号","税率","状态"
-            List<Supplier> sList = new ArrayList<Supplier>();
-            for (int i = 1; i < src.getRows(); i++) {
-                Supplier s = new Supplier();
-                s.setSupplier(ExcelUtils.getContent(src, i, 0));
-                s.setType(ExcelUtils.getContent(src, i, 1));
-                s.setContacts(ExcelUtils.getContent(src, i, 2));
-                s.setPhoneNum(ExcelUtils.getContent(src, i, 3));
-                s.setEmail(ExcelUtils.getContent(src, i, 4));
-                s.setAdvanceIn(parseBigDecimalEx(ExcelUtils.getContent(src, i, 5)));
-                s.setBeginNeedGet(parseBigDecimalEx(ExcelUtils.getContent(src, i, 6)));
-                s.setBeginNeedPay(parseBigDecimalEx(ExcelUtils.getContent(src, i, 7)));
-                s.setDescription(ExcelUtils.getContent(src, i, 8));
-                s.setFax(ExcelUtils.getContent(src, i, 9));
-                s.setTelephone(ExcelUtils.getContent(src, i, 10));
-                s.setAddress(ExcelUtils.getContent(src, i, 11));
-                s.setTaxNum(ExcelUtils.getContent(src, i, 12));
-                s.setBankName(ExcelUtils.getContent(src, i, 13));
-                s.setAccountNumber(ExcelUtils.getContent(src, i, 14));
-                s.setTaxRate(parseBigDecimalEx(ExcelUtils.getContent(src, i, 15)));
-                String enabled = ExcelUtils.getContent(src, i, 16);
-                s.setEnabled(enabled.equals("启用")? true: false);
-                s.setIsystem(Byte.parseByte("1"));
-                sList.add(s);
-            }
-            info = supplierService.importExcel(sList);
-        } catch (Exception e) {
+            supplierService.importCustomer(file, request);
+            res.code = 200;
+            res.data = "导入成功";
+        } catch(Exception e){
             e.printStackTrace();
-            message = "导入失败";
-            info.code = 500;
-            data.put("message", message);
-            info.data = data;
+            res.code = 500;
+            res.data = "导入失败";
         }
-        return null;
+        return res;
     }
 
-    public BigDecimal parseBigDecimalEx(String str)throws Exception{
-        if(!StringUtil.isEmpty(str)) {
-            return new BigDecimal(str);
-        } else {
-            return null;
+    /**
+     * 导入会员
+     * @param file
+     * @param request
+     * @param response
+     * @return
+     */
+    @PostMapping(value = "/importMember")
+    @ApiOperation(value = "导入会员")
+    public BaseResponseInfo importMember(MultipartFile file,
+                                           HttpServletRequest request, HttpServletResponse response) throws Exception{
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            supplierService.importMember(file, request);
+            res.code = 200;
+            res.data = "导入成功";
+        } catch(Exception e){
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "导入失败";
+        }
+        return res;
+    }
+
+    /**
+     * 生成excel表格
+     * @param supplier
+     * @param type
+     * @param phonenum
+     * @param telephone
+     * @param request
+     * @param response
+     * @return
+     */
+    @GetMapping(value = "/exportExcel")
+    public void exportExcel(@RequestParam(value = "supplier", required = false) String supplier,
+                            @RequestParam("type") String type,
+                            @RequestParam(value = "phonenum", required = false) String phonenum,
+                            @RequestParam(value = "telephone", required = false) String telephone,
+                            HttpServletRequest request, HttpServletResponse response) {
+        try {
+            List<Supplier> dataList = supplierService.findByAll(supplier, type, phonenum, telephone);
+            File file = supplierService.exportExcel(dataList, type);
+            ExportExecUtil.showExec(file, file.getName(), response);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
+
 }

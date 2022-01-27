@@ -18,7 +18,7 @@
             <a-row :gutter="24">
               <a-col :md="6" :sm="8">
                 <a-form-item label="商品" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
-                  <a-input placeholder="条码、名称、规格、型号" v-model="queryParam.q"></a-input>
+                  <a-input ref="material" placeholder="条码、名称、规格、型号" v-model="queryParam.q"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="8">
@@ -30,7 +30,7 @@
               </a-col>
               <a-col :md="6" :sm="8">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="仓库">
-                  <a-select placeholder="选择仓库" v-model="queryParam.depotId"
+                  <a-select placeholder="选择仓库" v-model="queryParam.depotId" @change="onDepotChange"
                     :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children" allow-clear>
                     <a-select-option v-for="(item,index) in depotList" :key="index" :value="item.id">
                       {{ item.depotName }}
@@ -40,7 +40,7 @@
               </a-col>
               <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                 <a-col :md="6" :sm="24">
-                  <a-button type="primary" @click="onSearch">查询</a-button>
+                  <a-button type="primary" @click="loadData(1)">查询</a-button>
                   <a-button style="margin-left: 8px" @click="searchReset(1)">重置</a-button>
                 </a-col>
               </span>
@@ -102,19 +102,19 @@
         categoryTree:[],
         columns: [
           {dataIndex: 'mBarCode', title: '条码', width: 100, align: 'left'},
-          {dataIndex: 'name', title: '名称', width: 120},
+          {dataIndex: 'name', title: '名称', width: 120, ellipsis:true},
           {dataIndex: 'categoryName', title: '类别', width: 80},
           {dataIndex: 'standard', title: '规格', width: 80},
           {dataIndex: 'model', title: '型号', width: 80},
           {dataIndex: 'color', title: '颜色', width: 80},
-          {dataIndex: 'unit', title: '单位', width: 60},
+          {dataIndex: 'unit', title: '单位', width: 70, ellipsis:true},
           {dataIndex: 'sku', title: '多属性', width: 80},
           {dataIndex: 'stock', title: '库存', width: 60},
-          {dataIndex: 'expand', title: '扩展信息', width: 80},
+          {dataIndex: 'expand', title: '扩展信息', width: 80, ellipsis:true},
           {dataIndex: 'enableSerialNumber', title: '序列号', width: 60, align: "center",
             scopedSlots: { customRender: 'customRenderEnableSerialNumber' }
           },
-          {dataIndex: 'enableBatchNumber', title: '批号', width: 60, align: "center",
+          {dataIndex: 'enableBatchNumber', title: '批号', width: 50, align: "center",
             scopedSlots: { customRender: 'customRenderEnableBatchNumber' }
           }
         ],
@@ -166,7 +166,6 @@
       this.resetScreenSize()
       this.loadTreeData()
       this.getDepotList()
-      this.loadData()
     },
     methods: {
       initBarCode() {
@@ -187,6 +186,12 @@
           if (res) {
             this.dataSource = res.rows
             this.ipagination.total = res.total
+            if(res.total ===1) {
+              this.title = '选择商品【再次回车可以直接选中】'
+              this.$nextTick(() => this.$refs.material.focus());
+            } else {
+              this.title = '选择商品'
+            }
           }
         }).finally(() => {
           this.loading = false
@@ -215,8 +220,12 @@
           this.scrollTrigger = {};
         }
       },
-      showModal() {
+      showModal(barCode) {
         this.visible = true;
+        this.title = '选择商品'
+        this.queryParam.q = barCode
+        this.$nextTick(() => this.$refs.material.focus());
+        this.initDepotSelect()
         this.loadData();
         this.form.resetFields();
       },
@@ -280,7 +289,6 @@
         getAction('/depot/findDepotByCurrentUser').then((res) => {
           if(res.code === 200){
             that.depotList = res.data
-            this.initDepotSelect()
           }
         })
       },
@@ -291,15 +299,32 @@
           }
         }
       },
+      onDepotChange(value) {
+        this.queryParam.depotId = value
+      },
       onSelectChange(selectedRowKeys, selectionRows) {
         this.selectedRowKeys = selectedRowKeys;
         this.selectionRows = selectionRows;
       },
       onSearch() {
-        this.loadData(1);
+        if(this.dataSource && this.dataSource.length===1) {
+          if(this.queryParam.q === this.dataSource[0].mBarCode||
+            this.queryParam.q === this.dataSource[0].name||
+            this.queryParam.q === this.dataSource[0].standard||
+            this.queryParam.q === this.dataSource[0].model) {
+            let arr = []
+            arr.push(this.dataSource[0].id)
+            this.selectedRowKeys = arr
+            this.handleSubmit()
+          } else {
+            this.loadData(1)
+          }
+        } else {
+          this.loadData(1)
+        }
       },
       modalFormOk() {
-        this.loadData();
+        this.loadData()
       },
       rowAction(record, index) {
         return {

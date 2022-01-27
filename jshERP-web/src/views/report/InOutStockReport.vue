@@ -2,7 +2,7 @@
 <template>
   <a-row :gutter="24">
     <a-col :md="24">
-      <a-card :bordered="false">
+      <a-card :style="cardStyle" :bordered="false">
         <!-- 查询区域 -->
         <div class="table-page-search-wrapper">
           <a-form layout="inline" @keyup.enter.native="searchQuery">
@@ -10,10 +10,11 @@
               <a-col :md="4" :sm="24">
                 <a-form-item label="仓库" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-select
-                    showSearch optionFilterProp="children"
-                    style="width: 100%"
+                    mode="multiple" :maxTagCount="1"
+                    optionFilterProp="children"
+                    showSearch style="width: 100%"
                     placeholder="请选择仓库"
-                    v-model="queryParam.depotId">
+                    v-model="depotSelected">
                     <a-select-option v-for="(depot,index) in depotList" :value="depot.id">
                       {{ depot.depotName }}
                     </a-select-option>
@@ -31,16 +32,16 @@
                   <a-input placeholder="条码/名称/规格/型号" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
-              <a-col :md="4" :sm="24">
-                <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+              <a-col :md="5" :sm="24">
+                <span class="table-page-search-submitButtons">
                   <a-button type="primary" @click="searchQuery">查询</a-button>
                   <a-button style="margin-left: 8px" v-print="'#reportPrint'" icon="printer">打印</a-button>
                   <a-button style="margin-left: 8px" @click="exportExcel" icon="download">导出</a-button>
                 </span>
               </a-col>
-              <a-col :md="4" :sm="24">
-                <a-form-item label="本月合计金额">
-                  {{totalCountMoneyStr}}
+              <a-col :md="6" :sm="24">
+                <a-form-item>
+                  <span>总结存金额：{{totalCountMoneyStr}}</span>
                 </a-form-item>
               </a-col>
             </a-row>
@@ -66,10 +67,11 @@
                 size="small"
                 show-size-changer
                 :showQuickJumper="true"
+                :current="ipagination.current"
                 :page-size="ipagination.pageSize"
                 :page-size-options="ipagination.pageSizeOptions"
                 :total="ipagination.total"
-                :show-total="(total, range) => `共 ${total} 条`">
+                :show-total="(total, range) => `共 ${total-Math.ceil(total/ipagination.pageSize)} 条`">
                 <template slot="buildOptionText" slot-scope="props">
                   <span>{{ props.value-1 }}条/页</span>
                 </template>
@@ -117,9 +119,10 @@
           pageSize: 11,
           pageSizeOptions: ['11', '21', '31', '101', '201']
         },
-        tabKey: "1",
+        depotSelected:[],
         depotList: [],
-        totalCountMoneyStr: '',
+        totalCountMoneyStr: '0元',
+        disableMixinCreated: true,
         // 表头
         columns: [
           {
@@ -150,12 +153,14 @@
     },
     created() {
       this.getDepotData()
-      this.getTotalCountMoney()
     },
     methods: {
       moment,
       getQueryParams() {
         let param = Object.assign({}, this.queryParam, this.isorter);
+        if(this.depotSelected && this.depotSelected.length>0) {
+          param.depotIds = this.depotSelected.join()
+        }
         param.monthTime = this.queryParam.monthTime;
         param.field = this.getQueryField();
         param.currentPage = this.ipagination.current;
@@ -172,7 +177,12 @@
         })
       },
       getTotalCountMoney(){
-        getAction(this.url.totalCountMoney, this.queryParam).then((res)=>{
+        let param = Object.assign({}, this.queryParam, this.isorter);
+        if(this.depotSelected && this.depotSelected.length>0) {
+          param.depotIds = this.depotSelected.join()
+        }
+        param.monthTime = this.queryParam.monthTime;
+        getAction(this.url.totalCountMoney, param).then((res)=>{
           if(res && res.code === 200) {
             let count = res.data.totalCount.toString();
             if (count.lastIndexOf('.') > -1) {
@@ -187,7 +197,9 @@
         this.queryParam.monthTime=dateString;
       },
       searchQuery() {
-        if(this.queryParam.monthTime == ''){
+        if(this.depotSelected.length===0){
+          this.$message.warning('请选择仓库！')
+        } else if(this.queryParam.monthTime == ''){
           this.$message.warning('请选择月份！')
         } else {
           this.loadData(1);

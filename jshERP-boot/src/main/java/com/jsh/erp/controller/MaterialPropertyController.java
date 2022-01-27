@@ -5,6 +5,7 @@ import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.service.materialProperty.MaterialPropertyService;
+import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +23,7 @@ import javax.annotation.Resource;
  */
 @RestController
 @RequestMapping(value = "/materialProperty")
+@Api(tags = {"商品扩展字段"})
 public class MaterialPropertyController {
 
 

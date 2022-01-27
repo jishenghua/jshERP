@@ -8,6 +8,8 @@ import com.jsh.erp.datasource.entities.AccountHeadVo4ListEx;
 import com.jsh.erp.service.accountHead.AccountHeadService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.ErpInfo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +27,7 @@ import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
  */
 @RestController
 @RequestMapping(value = "/accountHead")
+@Api(tags = {"财务管理"})
 public class AccountHeadController {
     private Logger logger = LoggerFactory.getLogger(AccountHeadController.class);
 
@@ -38,6 +41,7 @@ public class AccountHeadController {
      * @return
      */
     @PostMapping(value = "/batchSetStatus")
+    @ApiOperation(value = "批量设置状态-审核或者反审核")
     public String batchSetStatus(@RequestBody JSONObject jsonObject,
                                  HttpServletRequest request) throws Exception{
         Map<String, Object> objectMap = new HashMap<>();
@@ -59,6 +63,7 @@ public class AccountHeadController {
      * @throws Exception
      */
     @PostMapping(value = "/addAccountHeadAndDetail")
+    @ApiOperation(value = "新增财务主表及财务子表信息")
     public Object addAccountHeadAndDetail(@RequestBody AccountHeadVo4Body body, HttpServletRequest request) throws  Exception{
         JSONObject result = ExceptionConstants.standardSuccess();
         String beanJson = body.getInfo();
@@ -75,6 +80,7 @@ public class AccountHeadController {
      * @throws Exception
      */
     @PutMapping(value = "/updateAccountHeadAndDetail")
+    @ApiOperation(value = "更新财务主表及财务子表信息")
     public Object updateAccountHeadAndDetail(@RequestBody AccountHeadVo4Body body, HttpServletRequest request) throws Exception{
         JSONObject result = ExceptionConstants.standardSuccess();
         String beanJson = body.getInfo();
@@ -90,6 +96,7 @@ public class AccountHeadController {
      * @return
      */
     @GetMapping(value = "/getDetailByNumber")
+    @ApiOperation(value = "根据编号查询单据信息")
     public BaseResponseInfo getDetailByNumber(@RequestParam("billNo") String billNo,
                                               HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();

@@ -2,36 +2,31 @@
 <template>
   <a-row :gutter="24">
     <a-col :md="24">
-      <a-card :bordered="false">
+      <a-card :style="cardStyle" :bordered="false">
         <!-- 查询区域 -->
         <div class="table-page-search-wrapper">
           <a-form layout="inline" @keyup.enter.native="searchQuery">
             <a-row :gutter="24">
               <a-col :md="6" :sm="24">
                 <a-form-item label="名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input placeholder="请输入名称" v-model="queryParam.name"></a-input>
+                  <a-input placeholder="请输入名称" v-model="queryParam.search.name"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
                 <a-form-item label="编号" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input placeholder="请输入编号" v-model="queryParam.serialNo"></a-input>
+                  <a-input placeholder="请输入编号" v-model="queryParam.search.serialNo"></a-input>
                 </a-form-item>
               </a-col>
-              <a-col :md="4" :sm="24">
-                <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+              <a-col :md="5" :sm="24">
+                <span class="table-page-search-submitButtons">
                   <a-button type="primary" @click="searchQuery">查询</a-button>
                   <a-button style="margin-left: 8px" v-print="'#reportPrint'" icon="printer">打印</a-button>
                   <a-button style="margin-left: 8px" @click="exportExcel" icon="download">导出</a-button>
                 </span>
               </a-col>
-              <a-col :md="3" :sm="24">
-                <a-form-item label="本月发生总额">
-                  {{allMonthAmount}}
-                </a-form-item>
-              </a-col>
-              <a-col :md="3" :sm="24">
-                <a-form-item label="当前总余额">
-                  {{allCurrentAmount}}
+              <a-col :md="6" :sm="24">
+                <a-form-item>
+                  <span>本月发生总额：{{allMonthAmount}}，当前总余额：{{allCurrentAmount}}</span>
                 </a-form-item>
               </a-col>
             </a-row>
@@ -60,10 +55,11 @@
                 size="small"
                 show-size-changer
                 :showQuickJumper="true"
+                :current="ipagination.current"
                 :page-size="ipagination.pageSize"
                 :page-size-options="ipagination.pageSizeOptions"
                 :total="ipagination.total"
-                :show-total="(total, range) => `共 ${total} 条`">
+                :show-total="(total, range) => `共 ${total-Math.ceil(total/ipagination.pageSize)} 条`">
                 <template slot="buildOptionText" slot-scope="props">
                   <span>{{ props.value-1 }}条/页</span>
                 </template>
@@ -101,8 +97,10 @@
         },
         // 查询条件
         queryParam: {
-          name:'',
-          serialNo:''
+          search: {
+            name:'',
+            serialNo:''
+          }
         },
         ipagination:{
           pageSize: 11,
@@ -146,7 +144,7 @@
         return param;
       },
       getAccountStatistics() {
-        getAction(this.url.getStatistics, this.queryParam).then((res)=>{
+        getAction(this.url.getStatistics, this.queryParam.search).then((res)=>{
           if(res && res.code === 200) {
             if(res.data){
               this.allMonthAmount = res.data.allMonthAmount

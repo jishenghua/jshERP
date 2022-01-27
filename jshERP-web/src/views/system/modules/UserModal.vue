@@ -8,14 +8,14 @@
     @cancel="handleCancel"
     cancelText="关闭"
     wrapClassName="ant-modal-cust-warp"
-    style="top:5%;height: 100%;overflow-y: hidden">
+    style="top:10%;height: 85%;overflow-y: hidden">
     <template slot="footer">
       <a-button key="back" v-if="isReadOnly" @click="handleCancel">
         关闭
       </a-button>
     </template>
     <a-spin :spinning="confirmLoading">
-      <a-form :form="form">
+      <a-form :form="form" id="userModal">
         <a-form-item label="登录名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input placeholder="请输入登录名称" v-decorator.trim="[ 'loginName', validatorRules.loginName]" :readOnly="!!model.id"
            suffix="初始密码：123456" />
@@ -64,6 +64,7 @@
   import {addUser,editUser,queryOrganizationTreeList,roleAllList} from '@/api/api'
   import { disabledAuthFilter } from "@/utils/authFilter"
   import {duplicateCheck } from '@/api/api'
+  import {autoJumpNextInput} from "@/utils/util"
   import JImageUpload from '../../../components/jeecg/JImageUpload'
   export default {
     name: "UserModal",
@@ -133,6 +134,7 @@
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model,'loginName','username','roleId','orgaId','position',
             'phonenum','email','userBlngOrgaDsplSeq','description'))
+          autoJumpNextInput('userModal')
         });
       },
       close() {

@@ -6,7 +6,6 @@
     <result column="category_id" jdbcType="BIGINT" property="categoryId" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="mfrs" jdbcType="VARCHAR" property="mfrs" />
-    <result column="safety_stock" jdbcType="DECIMAL" property="safetyStock" />
     <result column="model" jdbcType="VARCHAR" property="model" />
     <result column="standard" jdbcType="VARCHAR" property="standard" />
     <result column="color" jdbcType="VARCHAR" property="color" />
@@ -15,6 +14,7 @@
     <result column="img_name" jdbcType="VARCHAR" property="imgName" />
     <result column="unit_id" jdbcType="BIGINT" property="unitId" />
     <result column="expiry_num" jdbcType="INTEGER" property="expiryNum" />
+    <result column="weight" jdbcType="DECIMAL" property="weight" />
     <result column="enabled" jdbcType="BIT" property="enabled" />
     <result column="other_field1" jdbcType="VARCHAR" property="otherField1" />
     <result column="other_field2" jdbcType="VARCHAR" property="otherField2" />
@@ -83,9 +83,9 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, category_id, name, mfrs, safety_stock, model, standard, color, unit, remark, 
-    img_name, unit_id, expiry_num, enabled, other_field1, other_field2, other_field3, 
-    enable_serial_number, enable_batch_number, tenant_id, delete_flag
+    id, category_id, name, mfrs, model, standard, color, unit, remark, img_name, unit_id, 
+    expiry_num, weight, enabled, other_field1, other_field2, other_field3, enable_serial_number, 
+    enable_batch_number, tenant_id, delete_flag
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="BaseResultMap">
     select
@@ -119,18 +119,18 @@
   </delete>
   <insert id="insert" parameterType="com.jsh.erp.datasource.entities.Material">
     insert into jsh_material (id, category_id, name, 
-      mfrs, safety_stock, model, 
-      standard, color, unit, 
-      remark, img_name, unit_id, 
-      expiry_num, enabled, other_field1, 
+      mfrs, model, standard, 
+      color, unit, remark, 
+      img_name, unit_id, expiry_num, 
+      weight, enabled, other_field1, 
       other_field2, other_field3, enable_serial_number, 
       enable_batch_number, tenant_id, delete_flag
       )
     values (#{id,jdbcType=BIGINT}, #{categoryId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, 
-      #{mfrs,jdbcType=VARCHAR}, #{safetyStock,jdbcType=DECIMAL}, #{model,jdbcType=VARCHAR}, 
-      #{standard,jdbcType=VARCHAR}, #{color,jdbcType=VARCHAR}, #{unit,jdbcType=VARCHAR}, 
-      #{remark,jdbcType=VARCHAR}, #{imgName,jdbcType=VARCHAR}, #{unitId,jdbcType=BIGINT}, 
-      #{expiryNum,jdbcType=INTEGER}, #{enabled,jdbcType=BIT}, #{otherField1,jdbcType=VARCHAR}, 
+      #{mfrs,jdbcType=VARCHAR}, #{model,jdbcType=VARCHAR}, #{standard,jdbcType=VARCHAR}, 
+      #{color,jdbcType=VARCHAR}, #{unit,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{imgName,jdbcType=VARCHAR}, #{unitId,jdbcType=BIGINT}, #{expiryNum,jdbcType=INTEGER}, 
+      #{weight,jdbcType=DECIMAL}, #{enabled,jdbcType=BIT}, #{otherField1,jdbcType=VARCHAR}, 
       #{otherField2,jdbcType=VARCHAR}, #{otherField3,jdbcType=VARCHAR}, #{enableSerialNumber,jdbcType=VARCHAR}, 
       #{enableBatchNumber,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR}
       )
@@ -149,9 +149,6 @@
       </if>
       <if test="mfrs != null">
         mfrs,
-      </if>
-      <if test="safetyStock != null">
-        safety_stock,
       </if>
       <if test="model != null">
         model,
@@ -176,6 +173,9 @@
       </if>
       <if test="expiryNum != null">
         expiry_num,
+      </if>
+      <if test="weight != null">
+        weight,
       </if>
       <if test="enabled != null">
         enabled,
@@ -215,9 +215,6 @@
       <if test="mfrs != null">
         #{mfrs,jdbcType=VARCHAR},
       </if>
-      <if test="safetyStock != null">
-        #{safetyStock,jdbcType=DECIMAL},
-      </if>
       <if test="model != null">
         #{model,jdbcType=VARCHAR},
       </if>
@@ -241,6 +238,9 @@
       </if>
       <if test="expiryNum != null">
         #{expiryNum,jdbcType=INTEGER},
+      </if>
+      <if test="weight != null">
+        #{weight,jdbcType=DECIMAL},
       </if>
       <if test="enabled != null">
         #{enabled,jdbcType=BIT},
@@ -289,9 +289,6 @@
       <if test="record.mfrs != null">
         mfrs = #{record.mfrs,jdbcType=VARCHAR},
       </if>
-      <if test="record.safetyStock != null">
-        safety_stock = #{record.safetyStock,jdbcType=DECIMAL},
-      </if>
       <if test="record.model != null">
         model = #{record.model,jdbcType=VARCHAR},
       </if>
@@ -315,6 +312,9 @@
       </if>
       <if test="record.expiryNum != null">
         expiry_num = #{record.expiryNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.weight != null">
+        weight = #{record.weight,jdbcType=DECIMAL},
       </if>
       <if test="record.enabled != null">
         enabled = #{record.enabled,jdbcType=BIT},
@@ -351,7 +351,6 @@
       category_id = #{record.categoryId,jdbcType=BIGINT},
       name = #{record.name,jdbcType=VARCHAR},
       mfrs = #{record.mfrs,jdbcType=VARCHAR},
-      safety_stock = #{record.safetyStock,jdbcType=DECIMAL},
       model = #{record.model,jdbcType=VARCHAR},
       standard = #{record.standard,jdbcType=VARCHAR},
       color = #{record.color,jdbcType=VARCHAR},
@@ -360,6 +359,7 @@
       img_name = #{record.imgName,jdbcType=VARCHAR},
       unit_id = #{record.unitId,jdbcType=BIGINT},
       expiry_num = #{record.expiryNum,jdbcType=INTEGER},
+      weight = #{record.weight,jdbcType=DECIMAL},
       enabled = #{record.enabled,jdbcType=BIT},
       other_field1 = #{record.otherField1,jdbcType=VARCHAR},
       other_field2 = #{record.otherField2,jdbcType=VARCHAR},
@@ -384,9 +384,6 @@
       <if test="mfrs != null">
         mfrs = #{mfrs,jdbcType=VARCHAR},
       </if>
-      <if test="safetyStock != null">
-        safety_stock = #{safetyStock,jdbcType=DECIMAL},
-      </if>
       <if test="model != null">
         model = #{model,jdbcType=VARCHAR},
       </if>
@@ -410,6 +407,9 @@
       </if>
       <if test="expiryNum != null">
         expiry_num = #{expiryNum,jdbcType=INTEGER},
+      </if>
+      <if test="weight != null">
+        weight = #{weight,jdbcType=DECIMAL},
       </if>
       <if test="enabled != null">
         enabled = #{enabled,jdbcType=BIT},
@@ -443,7 +443,6 @@
     set category_id = #{categoryId,jdbcType=BIGINT},
       name = #{name,jdbcType=VARCHAR},
       mfrs = #{mfrs,jdbcType=VARCHAR},
-      safety_stock = #{safetyStock,jdbcType=DECIMAL},
       model = #{model,jdbcType=VARCHAR},
       standard = #{standard,jdbcType=VARCHAR},
       color = #{color,jdbcType=VARCHAR},
@@ -452,6 +451,7 @@
       img_name = #{imgName,jdbcType=VARCHAR},
       unit_id = #{unitId,jdbcType=BIGINT},
       expiry_num = #{expiryNum,jdbcType=INTEGER},
+      weight = #{weight,jdbcType=DECIMAL},
       enabled = #{enabled,jdbcType=BIT},
       other_field1 = #{otherField1,jdbcType=VARCHAR},
       other_field2 = #{otherField2,jdbcType=VARCHAR},

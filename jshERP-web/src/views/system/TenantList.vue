@@ -1,7 +1,7 @@
 <template>
   <a-row :gutter="24">
     <a-col :md="24">
-      <a-card :bordered="false">
+      <a-card :style="cardStyle" :bordered="false">
         <!-- 查询区域 -->
         <div class="table-page-search-wrapper">
           <a-form layout="inline" @keyup.enter.native="searchQuery">
@@ -44,7 +44,7 @@
               <a-menu-item key="1" @click="batchSetStatus(1)"><a-icon type="check-square"/>启用</a-menu-item>
               <a-menu-item key="2" @click="batchSetStatus(0)"><a-icon type="close-square"/>禁用</a-menu-item>
             </a-menu>
-            <a-button style="margin-left: 8px">
+            <a-button>
               批量操作
               <a-icon type="down"/>
             </a-button>

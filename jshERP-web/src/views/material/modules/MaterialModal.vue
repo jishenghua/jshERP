@@ -1,13 +1,17 @@
 <template>
-  <a-modal
+  <j-modal
     :title="title"
     :width="1300"
     :visible="visible"
     :confirmLoading="confirmLoading"
+    v-bind:prefixNo="prefixNo"
+    switchHelp
+    switchFullscreen
     @ok="handleOk"
     @cancel="handleCancel"
     cancelText="关闭"
-    wrapClassName="ant-modal-cust-warp"
+    wrapClassName="ant-modal-material-warp"
+    :id="prefixNo"
     style="top:5%;height: 100%;overflow-y: hidden">
     <template slot="footer">
       <a-button key="back" v-if="isReadOnly" @click="handleCancel">
@@ -18,36 +22,44 @@
       <a-form :form="form">
         <a-tabs default-active-key="1">
           <a-tab-pane key="1" tab="基本信息" forceRender>
-            <a-row class="form-row" :gutter="24">
+            <a-row class="form-row" :gutter="24" id="materialHeadModal">
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="名称">
-                  <a-input placeholder="请输入名称" v-decorator.trim="[ 'name', validatorRules.name]" />
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="名称" data-step="1" data-title="名称" data-intro="名称必填，可以重复">
+                  <a-input placeholder="请输入名称" v-decorator.trim="[ 'name', validatorRules.name]"/>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="规格">
-                  <a-input placeholder="请输入规格" v-decorator.trim="[ 'standard' ]" />
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="规格" data-step="2" data-title="规格" data-intro="规格不必填，比如：10克">
+                  <a-input placeholder="请输入规格" v-decorator.trim="[ 'standard' ]"/>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="型号">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="型号" data-step="3" data-title="型号" data-intro="型号是比规格更小的属性，比如：RX-01">
                   <a-input placeholder="请输入型号" v-decorator.trim="[ 'model' ]" />
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单位">
+                <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 4 }}" :wrapperCol="{xs: { span: 24 },sm: { span: 20 }}" label="单位"
+                  data-step="4" data-title="单位" data-intro="此处支持单个单位和多单位，勾选多单位就可以切换到多单位的下拉框，多单位需要先在【计量单位】页面进行录入。
+                  比如牛奶有瓶和箱两种单位，12瓶=1箱，这就构成了多单位，多单位中有个换算比例">
                   <a-row class="form-row" :gutter="24">
-                    <a-col :lg="13" :md="13" :sm="24">
+                    <a-col :lg="15" :md="15" :sm="24">
                       <a-input placeholder="输入单位" :hidden="unitStatus" v-decorator.trim="[ 'unit' ]" @change="onlyUnitOnChange" />
                       <a-select :value="unitList" placeholder="选择单位" v-decorator="[ 'unitId' ]" @change="manyUnitOnChange"
-                                :hidden="manyUnitStatus" :dropdownMatchSelectWidth="false">
+                        showSearch optionFilterProp="children" :hidden="manyUnitStatus" :dropdownMatchSelectWidth="false">
+                        <div slot="dropdownRender" slot-scope="menu">
+                          <v-nodes :vnodes="menu" />
+                          <a-divider style="margin: 4px 0;" />
+                          <div style="padding: 4px 8px; cursor: pointer;"
+                               @mousedown="e => e.preventDefault()" @click="addUnit"><a-icon type="plus" /> 新增计量单位</div>
+                        </div>
                         <a-select-option v-for="(item,index) in unitList"
                           :key="index" :value="item.id">
                           {{ item.name }}
                         </a-select-option>
                       </a-select>
                     </a-col>
-                    <a-col :lg="11" :md="11" :sm="24">
+                    <a-col :lg="9" :md="9" :sm="24">
                       <a-checkbox :checked="unitChecked" @change="unitOnChange">多单位</a-checkbox>
                     </a-col>
                   </a-row>
@@ -59,14 +71,28 @@
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="类别">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="基础重量" data-step="5" data-title="基础重量"
+                  data-intro="请填写基本单位对应的重量，用于计算按重量分摊费用时单据中各行商品分摊的费用成本">
+                  <a-input placeholder="请输入基础重量(kg)" v-decorator.trim="[ 'weight' ]" />
+                </a-form-item>
+              </a-col>
+              <a-col :md="6" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="保质期" data-step="6" data-title="保质期"
+                  data-intro="保质期指的是商品的保质期(天)，主要针对带生产日期的，此类商品一般有批号">
+                  <a-input-number style="width: 100%" placeholder="请输入保质期(天)" v-decorator.trim="[ 'expiryNum' ]" />
+                </a-form-item>
+              </a-col>
+              <a-col :md="6" :sm="24">
+                <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 4 }}" :wrapperCol="{xs: { span: 24 },sm: { span: 20 }}" label="类别"
+                  data-step="7" data-title="类别" data-intro="类别需要在【商品类别】页面进行录入，录入之后在此处进行调用">
                   <a-tree-select style="width:100%" :dropdownStyle="{maxHeight:'200px',overflow:'auto'}" allow-clear
-                   :treeData="categoryTree" v-decorator="[ 'categoryId' ]" placeholder="请选择类别">
+                                 :treeData="categoryTree" v-decorator="[ 'categoryId' ]" placeholder="请选择类别">
                   </a-tree-select>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="序列号">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="序列号" data-step="8" data-title="序列号"
+                  data-intro="此处是商品的序列号开关，如果选择了有，则在采购入库单据需要录入该商品的序列号，在销售出库单据需要选择该商品的序列号进行出库">
                   <a-select placeholder="有无序列号" v-decorator="[ 'enableSerialNumber' ]">
                     <a-select-option value="1">有</a-select-option>
                     <a-select-option value="0">无</a-select-option>
@@ -74,7 +100,8 @@
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="批号">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="批号" data-step="9" data-title="批号"
+                  data-intro="此处是商品的批号开关，如果选择了有，则在采购入库单据需要录入该商品的批号和生产日期，在销售出库单据需要选择该商品的批号进行出库">
                   <a-select placeholder="有无批号" v-decorator="[ 'enableBatchNumber' ]">
                     <a-select-option value="1">有</a-select-option>
                     <a-select-option value="0">无</a-select-option>
@@ -82,17 +109,8 @@
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="安全存量">
-                  <a-input placeholder="请输入安全存量" v-decorator.trim="[ 'safetyStock' ]" />
-                </a-form-item>
-              </a-col>
-              <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="保质期天数">
-                  <a-input-number style="width: 100%" placeholder="请输入保质期天数" v-decorator.trim="[ 'expiryNum' ]" />
-                </a-form-item>
-              </a-col>
-              <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="多属性">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="多属性" data-step="10" data-title="多属性"
+                  data-intro="多属性是针对的sku商品（比如服装、鞋帽行业），此处开关如果启用就可以在下方进行多sku的配置，配置具体的颜色、尺码之类的组合">
                   <a-switch checked-children="启用" un-checked-children="关闭" v-model="skuSwitch" :disabled="switchDisabled" @change="onSkuChange"></a-switch>
                 </a-form-item>
               </a-col>
@@ -153,32 +171,34 @@
                 </a-col>
               </a-row>
             </a-card>
-            <div style="margin-top:8px;">
+            <div style="margin-top:8px;" id="materialDetailModal">
               <j-editable-table
                 ref="editableMeTable"
                 :loading="meTable.loading"
                 :columns="meTable.columns"
                 :dataSource="meTable.dataSource"
+                :height="300"
                 :minWidth="1000"
                 :maxHeight="300"
-                :rowNumber="true"
+                :rowNumber="false"
                 :rowSelection="true"
                 :actionButton="true"
+                @valueChange="onValueChange"
                 @added="onAdded">
                 <template #buttonAfter>
-                  <a-button @click="batchSet('purchase')">采购价-批量</a-button>
-                  <a-button style="margin-left: 8px" @click="batchSet('commodity')">零售价-批量</a-button>
-                  <a-button style="margin-left: 8px" @click="batchSet('wholesale')">销售价-批量</a-button>
-                  <a-button style="margin-left: 8px" @click="batchSet('low')">最低售价-批量</a-button>
+                  <a-button @click="batchSetPrice('purchase')">采购价-批量</a-button>
+                  <a-button style="margin-left: 8px" @click="batchSetPrice('commodity')">零售价-批量</a-button>
+                  <a-button style="margin-left: 8px" @click="batchSetPrice('wholesale')">销售价-批量</a-button>
+                  <a-button style="margin-left: 8px" @click="batchSetPrice('low')">最低售价-批量</a-button>
                 </template>
               </j-editable-table>
               <!-- 表单区域 -->
-              <batch-set-price-modal ref="modalForm" @ok="batchSetPricemodalFormOk"></batch-set-price-modal>
+              <batch-set-price-modal ref="priceModalForm" @ok="batchSetPriceModalFormOk"></batch-set-price-modal>
             </div>
             <a-row class="form-row" :gutter="24">
               <a-col :lg="24" :md="24" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="">
-                  <a-textarea :rows="2" placeholder="请输入备注" v-decorator="[ 'remark' ]" style="margin-top:8px;"/>
+                  <a-textarea :rows="1" placeholder="请输入备注" v-decorator="[ 'remark' ]" style="margin-top:8px;"/>
                 </a-form-item>
               </a-col>
             </a-row>
@@ -213,7 +233,7 @@
               </a-col>
             </a-row>
           </a-tab-pane>
-          <a-tab-pane key="3" tab="初始库存" forceRender>
+          <a-tab-pane key="3" tab="库存数量" forceRender>
             <j-editable-table
               ref="editableDepotTable"
               :loading="depotTable.loading"
@@ -223,7 +243,15 @@
               :maxHeight="300"
               :rowNumber="true"
               :rowSelection="false"
-              :actionButton="false"/>
+              :actionButton="false">
+              <template #buttonAfter>
+                <a-button style="margin: 0px 0px 8px 0px" @click="batchSetStock('initStock')">期初库存-批量</a-button>
+                <a-button style="margin-left: 8px" @click="batchSetStock('lowSafeStock')">最低安全库存-批量</a-button>
+                <a-button style="margin-left: 8px" @click="batchSetStock('highSafeStock')">最高安全库存-批量</a-button>
+              </template>
+            </j-editable-table>
+            <!-- 表单区域 -->
+            <batch-set-stock-modal ref="stockModalForm" @ok="batchSetStockModalFormOk"></batch-set-stock-modal>
           </a-tab-pane>
           <a-tab-pane key="4" tab="图片信息" forceRender>
             <a-row class="form-row" :gutter="24">
@@ -238,14 +266,18 @@
         </a-tabs>
       </a-form>
     </a-spin>
-  </a-modal>
+    <unit-modal ref="unitModalForm" @ok="unitModalFormOk"></unit-modal>
+  </j-modal>
 </template>
 <script>
   import pick from 'lodash.pick'
   import BatchSetPriceModal from './BatchSetPriceModal'
+  import BatchSetStockModal from './BatchSetStockModal'
+  import UnitModal from '../../system/modules/UnitModal'
   import JEditableTable from '@/components/jeecg/JEditableTable'
   import { FormTypes, VALIDATE_NO_PASSED, getRefPromise, validateFormAndTables } from '@/utils/JEditableTableUtil'
   import {queryMaterialCategoryTreeList,checkMaterial,checkMaterialBarCode,getAllMaterialAttribute,getMaxBarCode} from '@/api/api'
+  import { handleIntroJs,autoJumpNextInput } from "@/utils/util"
   import { httpAction, getAction } from '@/api/manage'
   import JImageUpload from '@/components/jeecg/JImageUpload'
   import JDate from '@/components/jeecg/JDate'
@@ -254,9 +286,15 @@
     name: "MaterialModal",
     components: {
       BatchSetPriceModal,
+      BatchSetStockModal,
+      UnitModal,
       JImageUpload,
       JDate,
-      JEditableTable
+      JEditableTable,
+      VNodes: {
+        functional: true,
+        render: (h, ctx) => ctx.props.vnodes,
+      }
     },
     data () {
       return {
@@ -273,6 +311,7 @@
         switchDisabled: false, //开关的启用状态
         barCodeSwitch: false, //生成条码开关
         maxBarCodeInfo: '', //最大条码
+        prefixNo: 'material',
         sku: {
           manyColor: '多颜色',
           manySize: '多尺寸',
@@ -341,7 +380,13 @@
               title: '仓库', key: 'name', width: '15%', type: FormTypes.normal
             },
             {
-              title: '库存数量', key: 'initStock', width: '15%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}'
+              title: '期初库存数量', key: 'initStock', width: '15%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}'
+            },
+            {
+              title: '最低安全库存数量', key: 'lowSafeStock', width: '15%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}'
+            },
+            {
+              title: '最高安全库存数量', key: 'highSafeStock', width: '15%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}'
             }
           ]
         },
@@ -390,6 +435,9 @@
           editableTables[0].add()
         })
         this.edit({});
+        this.$nextTick(() => {
+          handleIntroJs('material', 11)
+        });
       },
       edit (record) {
         this.form.resetFields();
@@ -407,7 +455,9 @@
         }
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model, 'name', 'standard', 'unit', 'unitId', 'model', 'color',
-            'categoryId','enableSerialNumber','enableBatchNumber','expiryNum','safetyStock','remark','mfrs','otherField1','otherField2','otherField3'))
+            'categoryId','enableSerialNumber','enableBatchNumber','expiryNum','weight','remark','mfrs','otherField1','otherField2','otherField3'))
+          autoJumpNextInput('materialHeadModal')
+          autoJumpNextInput('materialDetailModal')
         });
         this.initMaterialAttribute()
         // 加载子表数据
@@ -519,6 +569,10 @@
           this.$message.warning('抱歉，请输入条码信息！');
           return;
         }
+        if(formData.enableSerialNumber === '1' && formData.enableBatchNumber === '1') {
+          this.$message.warning('抱歉，序列号和批号只能选择一项！');
+          return;
+        }
         //校验商品是否存在，通过校验商品的名称、型号、规格、颜色、单位、制造商等
         let param = {
           id: this.model.id?this.model.id:0,
@@ -540,30 +594,36 @@
               return;
             } else {
               //进一步校验单位
-              let manyUnitselected = ''
+              let basicUnit = '', otherUnit = '', otherUnitTwo = '', otherUnitThree = ''
               if(formData.unitId) {
-                for(let i=0; i<this.unitList.length; i++) {
-                  if(this.unitList[i].id == formData.unitId) {
-                    manyUnitselected = this.unitList[i].name
+                let unitArr = this.unitList
+                for(let i=0; i < unitArr.length; i++) {
+                  if(unitArr[i].id == formData.unitId) {
+                    basicUnit = unitArr[i].basicUnit
+                    otherUnit = unitArr[i].otherUnit
+                    if(unitArr[i].otherUnitTwo) {
+                      otherUnitTwo = unitArr[i].otherUnitTwo
+                    }
+                    if(unitArr[i].otherUnitThree) {
+                      otherUnitThree = unitArr[i].otherUnitThree
+                    }
                   }
                 }
               }
-              let manyUnitInfo = manyUnitselected.substring(0, manyUnitselected.indexOf("("));
-              let unitArr = manyUnitInfo.split(",");
               if(!formData.unit) {
                 //此时为多单位
                 if (formData.meList.length<2){
                   this.$message.warning('多单位的商品条码行数至少要有两行，请再新增一行条码信息！');
                   return;
                 }
-                if(formData.meList[0].commodityUnit != unitArr[0]) {
+                if(formData.meList[0].commodityUnit != basicUnit) {
                   this.$message.warning('条码之后的单位填写有误，单位【' + formData.meList[0].commodityUnit
-                    + '】请修改为【' + unitArr[0] + '】！');
+                    + '】请修改为【' + basicUnit + '】！');
                   return;
                 }
-                if(formData.meList[1].commodityUnit != unitArr[1]) {
+                if(formData.meList[1].commodityUnit != otherUnit) {
                   this.$message.warning('条码之后的单位填写有误，单位【' + formData.meList[1].commodityUnit
-                    + '】请修改为【' + unitArr[1] + '】！');
+                    + '】请修改为【' + otherUnit + '】！');
                   return;
                 }
               }
@@ -575,10 +635,10 @@
                       + formData.unit + '】！');
                     return;
                   }
-                } else if(manyUnitselected) {
-                  if(commodityUnit != unitArr[0] && commodityUnit != unitArr[1]) {
+                } else if(formData.unitId) {
+                  if(commodityUnit != basicUnit && commodityUnit != otherUnit && commodityUnit != otherUnitTwo && commodityUnit != otherUnitThree) {
                     this.$message.warning('条码之后的单位填写有误，单位【' + commodityUnit + '】请修改为【'
-                      + unitArr[0]+ '】或【' + unitArr[1]+ '】！');
+                      + basicUnit+ '】或【' + otherUnit+ '】或【' + otherUnitTwo+ '】或【' + otherUnitThree+ '】！');
                     return;
                   }
                 }
@@ -745,15 +805,84 @@
         this.maxBarCodeInfo = this.maxBarCodeInfo + 1
         target.setValues([{rowKey: row.id, values: {barCode: this.maxBarCodeInfo, commodityUnit: unit?unit:''}}])
       },
-      batchSet(type) {
+      //单元值改变一个字符就触发一次
+      onValueChange(event) {
+        const { type, row, column, value, target } = event
+        switch(column.key) {
+          case "purchaseDecimal":
+          case "commodityDecimal":
+          case "wholesaleDecimal":
+          case "lowDecimal":
+            this.changeDecimalByValue(row)
+            break;
+        }
+      },
+      //修改商品明细中的价格触发计算
+      changeDecimalByValue(row) {
+        let unitArr = this.unitList
+        let basicUnit = '', otherUnit = '', ratio = 1, otherUnitTwo = '', ratioTwo = 1, otherUnitThree = '', ratioThree = 1
+        for (let i = 0; i < unitArr.length; i++) {
+          if(unitArr[i].id === this.form.getFieldValue('unitId')) {
+            basicUnit = unitArr[i].basicUnit
+            otherUnit = unitArr[i].otherUnit
+            ratio = unitArr[i].ratio
+            if(unitArr[i].otherUnitTwo) {
+              otherUnitTwo = unitArr[i].otherUnitTwo
+              ratioTwo = unitArr[i].ratioTwo
+            }
+            if(unitArr[i].otherUnitThree) {
+              otherUnitThree = unitArr[i].otherUnitThree
+              ratioThree = unitArr[i].ratioThree
+            }
+          }
+        }
+        if(row.commodityUnit === basicUnit) {
+          this.$refs.editableMeTable.getValues((error, values) => {
+            let mArr = values, basicPurchaseDecimal='', basicCommodityDecimal='', basicWholesaleDecimal='', basicLowDecimal=''
+            for (let i = 0; i < mArr.length; i++) {
+              let mInfo = mArr[i]
+              if(i===0) {
+                basicPurchaseDecimal = mInfo.purchaseDecimal
+                basicCommodityDecimal = mInfo.commodityDecimal
+                basicWholesaleDecimal = mInfo.wholesaleDecimal
+                basicLowDecimal = mInfo.lowDecimal
+              } else {
+                //副单位进行换算
+                if(basicPurchaseDecimal) { mInfo.purchaseDecimal = basicPurchaseDecimal*ratio}
+                if(basicCommodityDecimal) { mInfo.commodityDecimal = basicCommodityDecimal*ratio}
+                if(basicWholesaleDecimal) { mInfo.wholesaleDecimal = basicWholesaleDecimal*ratio}
+                if(basicLowDecimal) { mInfo.lowDecimal = basicLowDecimal*ratio}
+                if(otherUnitTwo && i===2) {
+                  if(basicPurchaseDecimal) { mInfo.purchaseDecimal = basicPurchaseDecimal*ratioTwo}
+                  if(basicCommodityDecimal) { mInfo.commodityDecimal = basicCommodityDecimal*ratioTwo}
+                  if(basicWholesaleDecimal) { mInfo.wholesaleDecimal = basicWholesaleDecimal*ratioTwo}
+                  if(basicLowDecimal) { mInfo.lowDecimal = basicLowDecimal*ratioTwo}
+                }
+                if(otherUnitThree && i===3) {
+                  if(basicPurchaseDecimal) { mInfo.purchaseDecimal = basicPurchaseDecimal*ratioThree}
+                  if(basicCommodityDecimal) { mInfo.commodityDecimal = basicCommodityDecimal*ratioThree}
+                  if(basicWholesaleDecimal) { mInfo.wholesaleDecimal = basicWholesaleDecimal*ratioThree}
+                  if(basicLowDecimal) { mInfo.lowDecimal = basicLowDecimal*ratioThree}
+                }
+              }
+            }
+            this.meTable.dataSource = mArr
+          })
+        }
+      },
+      batchSetPrice(type) {
         if(this.skuSwitch || this.model.id){
-          this.$refs.modalForm.add(type);
-          this.$refs.modalForm.disableSubmit = false;
+          this.$refs.priceModalForm.add(type);
+          this.$refs.priceModalForm.disableSubmit = false;
         } else {
           this.$message.warning('抱歉，只有开启多属性才能进行批量操作！');
         }
       },
-      batchSetPricemodalFormOk(price, batchType) {
+      batchSetStock(type) {
+        this.$refs.stockModalForm.add(type);
+        this.$refs.stockModalForm.disableSubmit = false;
+      },
+      batchSetPriceModalFormOk(price, batchType) {
         let arr = this.meTable.dataSource
         if(arr.length === 0) {
           this.$message.warning('请先录入条码、单位等信息！');
@@ -779,6 +908,26 @@
           }
           this.meTable.dataSource = meTableData
         }
+      },
+      batchSetStockModalFormOk(stock, batchType) {
+        let arr = this.depotTable.dataSource
+        let depotTableData = []
+        for (let i = 0; i < arr.length; i++) {
+          let depotInfo = {name: arr[i].name, initStock: arr[i].initStock,
+            lowSafeStock: arr[i].lowSafeStock, highSafeStock: arr[i].highSafeStock}
+          if (batchType === 'initStock') {
+            depotInfo.initStock = stock - 0
+          } else if (batchType === 'lowSafeStock') {
+            depotInfo.lowSafeStock = stock - 0
+          } else if (batchType === 'highSafeStock') {
+            depotInfo.highSafeStock = stock - 0
+          }
+          if (arr[i].id) {
+            depotInfo.id = arr[i].id
+          }
+          depotTableData.push(depotInfo)
+        }
+        this.depotTable.dataSource = depotTableData
       },
       initMaterialAttribute() {
         getAllMaterialAttribute({}).then((res)=>{
@@ -831,21 +980,53 @@
       },
       manyUnitOnChange(value) {
         let unitArr = this.unitList
-        let basicUnit = '', otherUnit = ''
+        let basicUnit = '', otherUnit = '', ratio = 1, otherUnitTwo = '', ratioTwo = 1, otherUnitThree = '', ratioThree = 1
         for (let i = 0; i < unitArr.length; i++) {
           if(unitArr[i].id === value) {
             basicUnit = unitArr[i].basicUnit
             otherUnit = unitArr[i].otherUnit
+            ratio = unitArr[i].ratio
+            if(unitArr[i].otherUnitTwo) {
+              otherUnitTwo = unitArr[i].otherUnitTwo
+              ratioTwo = unitArr[i].ratioTwo
+            }
+            if(unitArr[i].otherUnitThree) {
+              otherUnitThree = unitArr[i].otherUnitThree
+              ratioThree = unitArr[i].ratioThree
+            }
           }
         }
         this.$refs.editableMeTable.getValues((error, values) => {
-          let mArr = values
+          let mArr = values, basicPurchaseDecimal='', basicCommodityDecimal='', basicWholesaleDecimal='', basicLowDecimal=''
           for (let i = 0; i < mArr.length; i++) {
             let mInfo = mArr[i]
             if(i===0) {
               mInfo.commodityUnit = basicUnit
+              basicPurchaseDecimal = mInfo.purchaseDecimal
+              basicCommodityDecimal = mInfo.commodityDecimal
+              basicWholesaleDecimal = mInfo.wholesaleDecimal
+              basicLowDecimal = mInfo.lowDecimal
             } else {
+              //副单位进行换算
               mInfo.commodityUnit = otherUnit
+              if(basicPurchaseDecimal) { mInfo.purchaseDecimal = basicPurchaseDecimal*ratio}
+              if(basicCommodityDecimal) { mInfo.commodityDecimal = basicCommodityDecimal*ratio}
+              if(basicWholesaleDecimal) { mInfo.wholesaleDecimal = basicWholesaleDecimal*ratio}
+              if(basicLowDecimal) { mInfo.lowDecimal = basicLowDecimal*ratio}
+              if(otherUnitTwo && i===2) {
+                mInfo.commodityUnit = otherUnitTwo
+                if(basicPurchaseDecimal) { mInfo.purchaseDecimal = basicPurchaseDecimal*ratioTwo}
+                if(basicCommodityDecimal) { mInfo.commodityDecimal = basicCommodityDecimal*ratioTwo}
+                if(basicWholesaleDecimal) { mInfo.wholesaleDecimal = basicWholesaleDecimal*ratioTwo}
+                if(basicLowDecimal) { mInfo.lowDecimal = basicLowDecimal*ratioTwo}
+              }
+              if(otherUnitThree && i===3) {
+                mInfo.commodityUnit = otherUnitThree
+                if(basicPurchaseDecimal) { mInfo.purchaseDecimal = basicPurchaseDecimal*ratioThree}
+                if(basicCommodityDecimal) { mInfo.commodityDecimal = basicCommodityDecimal*ratioThree}
+                if(basicWholesaleDecimal) { mInfo.wholesaleDecimal = basicWholesaleDecimal*ratioThree}
+                if(basicLowDecimal) { mInfo.lowDecimal = basicLowDecimal*ratioThree}
+              }
             }
           }
           this.meTable.dataSource = mArr
@@ -862,6 +1043,14 @@
           this.manyUnitStatus = true;
           this.unitChecked = false;
         }
+      },
+      addUnit() {
+        this.$refs.unitModalForm.add();
+        this.$refs.unitModalForm.title = "新增计量单位";
+        this.$refs.unitModalForm.disableSubmit = false;
+      },
+      unitModalFormOk() {
+        this.loadUnitListData()
       }
     }
   }

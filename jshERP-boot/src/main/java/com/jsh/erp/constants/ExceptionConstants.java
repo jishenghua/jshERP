@@ -253,12 +253,15 @@ public class ExceptionConstants {
     //商品类别编号已存在
     public static final int MATERIAL_CATEGORY_SERIAL_ALREADY_EXISTS_CODE = 7500003;
     public static final String MATERIAL_CATEGORY_SERIAL_ALREADY_EXISTS_MSG = "商品类别编号已存在";
-    //根目录不支持修改
+    //根类别不支持修改
     public static final int MATERIAL_CATEGORY_ROOT_NOT_SUPPORT_EDIT_CODE = 7500004;
-    public static final String MATERIAL_CATEGORY_ROOT_NOT_SUPPORT_EDIT_MSG = "根目录不支持修改";
-    //根目录不支持删除
+    public static final String MATERIAL_CATEGORY_ROOT_NOT_SUPPORT_EDIT_MSG = "根类别不支持修改";
+    //根类别不支持删除
     public static final int MATERIAL_CATEGORY_ROOT_NOT_SUPPORT_DELETE_CODE = 7500005;
-    public static final String MATERIAL_CATEGORY_ROOT_NOT_SUPPORT_DELETE_MSG = "根目录不支持删除";
+    public static final String MATERIAL_CATEGORY_ROOT_NOT_SUPPORT_DELETE_MSG = "根类别不支持删除";
+    //该类别存在下级不允许删除
+    public static final int MATERIAL_CATEGORY_CHILD_NOT_SUPPORT_DELETE_CODE = 7500006;
+    public static final String MATERIAL_CATEGORY_CHILD_NOT_SUPPORT_DELETE_MSG = "该类别存在下级不允许删除";
     /**
      * 商品信息
      * type = 80
@@ -292,7 +295,7 @@ public class ExceptionConstants {
     public static final String MATERIAL_BARCODE_EXISTS_MSG = "商品条码:%s重复";
     //商品-单位匹配不上
     public static final int MATERIAL_UNIT_MATE_CODE = 8000006;
-    public static final String MATERIAL_UNIT_MATE_MSG = "抱歉，单位匹配不上，请完善计量单位信息！";
+    public static final String MATERIAL_UNIT_MATE_MSG = "抱歉，商品条码:%s的单位匹配不上，请完善计量单位信息！";
     /**
      *  单据信息
      * type = 85
@@ -422,6 +425,9 @@ public class ExceptionConstants {
     //根机构不允许修改
     public static final int ORGANIZATION_ROOT_NOT_ALLOWED_EDIT_CODE = 11000005;
     public static final String ORGANIZATION_ROOT_NOT_ALLOWED_EDIT_MSG = "根机构不允许修改";
+    //该机构存在下级不允许删除
+    public static final int ORGANIZATION_CHILD_NOT_ALLOWED_DELETE_CODE = 11000006;
+    public static final String ORGANIZATION_CHILD_NOT_ALLOWED_DELETE_MSG = "该机构存在下级不允许删除";
     /**
      * 机构用户关联关系
      * type = 115

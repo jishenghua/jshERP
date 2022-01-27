@@ -8,14 +8,14 @@
     @cancel="handleCancel"
     cancelText="关闭"
     wrapClassName="ant-modal-cust-warp"
-    style="top:15%;height: 80%;overflow-y: hidden">
+    style="top:20%;height: 60%;overflow-y: hidden">
     <template slot="footer">
       <a-button key="back" v-if="isReadOnly" @click="handleCancel">
         关闭
       </a-button>
     </template>
     <a-spin :spinning="confirmLoading">
-      <a-form :form="form">
+      <a-form :form="form" id="accountModal">
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="名称">
           <a-input placeholder="请输入名称" v-decorator.trim="[ 'name', validatorRules.name]" />
         </a-form-item>
@@ -38,6 +38,7 @@
 <script>
   import pick from 'lodash.pick'
   import {addAccount,editAccount,checkAccount } from '@/api/api'
+  import {autoJumpNextInput} from "@/utils/util"
   export default {
     name: "AccountModal",
     data () {
@@ -84,6 +85,7 @@
         this.visible = true;
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model,'name', 'serialNo', 'initialAmount', 'currentAmount', 'remark'))
+          autoJumpNextInput('accountModal')
         });
       },
       close () {

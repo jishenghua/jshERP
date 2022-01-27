@@ -89,10 +89,10 @@
       }
     },
     created () {
-      this.initAccount()
     },
     methods: {
       edit (idStr, moneyStr) {
+        this.initAccount()
         this.form.resetFields();
         this.model = Object.assign({}, {});
         let idList = [], moneyList = []
@@ -149,6 +149,18 @@
             if(formData.threeAccountPrice!==undefined) {
               that.accountMoneyList.push(formData.threeAccountPrice)
               allPrice = allPrice + formData.threeAccountPrice
+            }
+            if(that.accountIdList.length<2 || that.accountMoneyList.length<2) {
+              this.$message.warning('抱歉，多账户结算必须选择两个以上账户和金额！');
+              that.confirmLoading = false;
+              return;
+            }
+            if((formData.oneAccountId && !formData.oneAccountPrice)||
+              (formData.twoAccountId && !formData.twoAccountPrice)||
+              (formData.threeAccountId && !formData.threeAccountPrice)) {
+              this.$message.warning('抱歉，请填写结算金额！');
+              that.confirmLoading = false;
+              return;
             }
             that.$emit('ok', that.accountIdList, that.accountMoneyList, allPrice);
             that.confirmLoading = false;

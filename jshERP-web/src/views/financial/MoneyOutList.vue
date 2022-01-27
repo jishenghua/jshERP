@@ -2,7 +2,7 @@
 <template>
   <a-row :gutter="24">
     <a-col :md="24">
-      <a-card :bordered="false">
+      <a-card :style="cardStyle" :bordered="false">
         <!-- 查询区域 -->
         <div class="table-page-search-wrapper">
           <!-- 搜索区域 -->
@@ -76,7 +76,7 @@
               <a-menu-item key="2" v-if="btnEnableList.indexOf(2)>-1" @click="batchSetStatus(1)"><a-icon type="check"/>审核</a-menu-item>
               <a-menu-item key="3" v-if="btnEnableList.indexOf(7)>-1" @click="batchSetStatus(0)"><a-icon type="stop"/>反审核</a-menu-item>
             </a-menu>
-            <a-button style="margin-left: 8px">
+            <a-button>
               批量操作 <a-icon type="down" />
             </a-button>
           </a-dropdown>
@@ -160,7 +160,7 @@
           { title: '财务人员', dataIndex: 'handsPersonName',width:140},
           { title: '单据编号', dataIndex: 'billNo',width:160},
           { title: '单据日期 ', dataIndex: 'billTimeStr',width:160},
-          { title: '操作员', dataIndex: 'userName',width:80},
+          { title: '操作员', dataIndex: 'userName',width:80, ellipsis:true},
           { title: '合计付款', dataIndex: 'totalPrice',width:80},
           { title: '优惠金额', dataIndex: 'discountMoney',width:80},
           { title: '实际付款', dataIndex: 'changeAmount',width:80},

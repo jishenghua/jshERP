@@ -28,7 +28,7 @@
           <a-col :lg="6" :md="12" :sm="24"></a-col>
           <a-col :lg="6" :md="12" :sm="24"></a-col>
         </a-row>
-        <j-editable-table
+        <j-editable-table id="billModal"
           :ref="refKeys[0]"
           :loading="materialTable.loading"
           :columns="materialTable.columns"
@@ -41,15 +41,26 @@
           @added="onAdded"
           @deleted="onDeleted">
           <template #buttonAfter>
-            <a-row :gutter="24">
+            <a-row :gutter="24" style="float:left;" data-step="4" data-title="扫码录入" data-intro="此功能支持扫码枪扫描商品条码进行录入">
               <a-col v-if="scanStatus" :md="6" :sm="24">
                 <a-button @click="scanEnter">扫码录入</a-button>
               </a-col>
               <a-col v-if="!scanStatus" :md="16" :sm="24" style="padding: 0 6px 0 12px">
-                <a-input placeholder="请扫码商品条码并回车" v-model="scanBarCode" @pressEnter="scanPressEnter" />
+                <a-input placeholder="请扫码商品条码并回车" v-model="scanBarCode" @pressEnter="scanPressEnter" ref="scanBarCode"/>
               </a-col>
               <a-col v-if="!scanStatus" :md="6" :sm="24" style="padding: 0px">
                 <a-button @click="stopScan">收起扫码</a-button>
+              </a-col>
+            </a-row>
+            <a-row :gutter="24" style="float:left;">
+              <a-col :md="24" :sm="24">
+                <a-dropdown>
+                  <a-menu slot="overlay">
+                    <a-menu-item key="1" @click="handleBatchSetDepot"><a-icon type="setting"/>批量设置</a-menu-item>
+                    <a-menu-item v-if="isTenant" key="2" @click="addDepot"><a-icon type="plus"/>新增仓库</a-menu-item>
+                  </a-menu>
+                  <a-button style="margin-left: 8px">仓库操作 <a-icon type="down" /></a-button>
+                </a-dropdown>
               </a-col>
             </a-row>
           </template>
@@ -57,7 +68,7 @@
         <a-row class="form-row" :gutter="24">
           <a-col :lg="24" :md="24" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="">
-              <a-textarea :rows="2" placeholder="请输入备注" v-decorator="[ 'remark' ]" style="margin-top:8px;"/>
+              <a-textarea :rows="1" placeholder="请输入备注" v-decorator="[ 'remark' ]" style="margin-top:8px;"/>
             </a-form-item>
           </a-col>
         </a-row>
@@ -70,10 +81,14 @@
         </a-row>
       </a-form>
     </a-spin>
+    <depot-modal ref="depotModalForm" @ok="depotModalFormOk"></depot-modal>
+    <batch-set-depot ref="batchSetDepotModalForm" @ok="batchSetDepotModalFormOk"></batch-set-depot>
   </j-modal>
 </template>
 <script>
   import pick from 'lodash.pick'
+  import DepotModal from '../../system/modules/DepotModal'
+  import BatchSetDepot from '../dialog/BatchSetDepot'
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
@@ -86,6 +101,8 @@
     name: "DisassembleModal",
     mixins: [JEditableTableMixin, BillModalMixin],
     components: {
+      DepotModal,
+      BatchSetDepot,
       JUpload,
       JDate
     },
@@ -115,21 +132,21 @@
           loading: false,
           dataSource: [],
           columns: [
-            { title: '商品类型',key: 'mType',width:'7%', type: FormTypes.input, readonly: true },
+            { title: '商品类型',key: 'mType',width:'7%', type: FormTypes.normal },
             { title: '仓库名称', key: 'depotId', width: '7%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
               allowSearch:true, validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             { title: '条码', key: 'barCode', width: '8%', type: FormTypes.popupJsh, kind: 'material', multi: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
-            { title: '名称', key: 'name', width: '6%', type: FormTypes.input, readonly: true },
-            { title: '规格', key: 'standard', width: '5%', type: FormTypes.input, readonly: true },
-            { title: '型号', key: 'model', width: '5%', type: FormTypes.input, readonly: true },
-            { title: '颜色', key: 'color', width: '5%', type: FormTypes.input, readonly: true },
-            { title: '扩展信息', key: 'materialOther', width: '5%', type: FormTypes.input, readonly: true },
-            { title: '库存', key: 'stock', width: '5%', type: FormTypes.input, readonly: true },
-            { title: '单位', key: 'unit', width: '4%', type: FormTypes.input, readonly: true },
-            { title: '多属性', key: 'sku', width: '4%', type: FormTypes.input, readonly: true },
+            { title: '名称', key: 'name', width: '6%', type: FormTypes.normal },
+            { title: '规格', key: 'standard', width: '5%', type: FormTypes.normal },
+            { title: '型号', key: 'model', width: '5%', type: FormTypes.normal },
+            { title: '颜色', key: 'color', width: '5%', type: FormTypes.normal },
+            { title: '扩展信息', key: 'materialOther', width: '5%', type: FormTypes.normal },
+            { title: '库存', key: 'stock', width: '5%', type: FormTypes.normal },
+            { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
+            { title: '多属性', key: 'sku', width: '4%', type: FormTypes.normal },
             { title: '数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },

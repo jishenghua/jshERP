@@ -35,4 +35,14 @@
         </foreach>
         )
     </update>
+    <update id="updateRatioTwoById">
+        update jsh_unit
+        set ratio_two=null
+        where id=#{id}
+    </update>
+    <update id="updateRatioThreeById">
+        update jsh_unit
+        set ratio_three=null
+        where id=#{id}
+    </update>
 </mapper>

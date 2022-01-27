@@ -2,7 +2,7 @@
 <template>
   <a-row :gutter="24">
     <a-col :md="24">
-      <a-card :bordered="false">
+      <a-card :style="cardStyle" :bordered="false">
         <!-- 查询区域 -->
         <div class="table-page-search-wrapper">
           <a-form layout="inline" @keyup.enter.native="searchQuery">
@@ -10,17 +10,18 @@
               <a-col :md="4" :sm="24">
                 <a-form-item label="仓库" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-select
-                    showSearch optionFilterProp="children"
-                    style="width: 100%"
+                    mode="multiple" :maxTagCount="1"
+                    optionFilterProp="children"
+                    showSearch style="width: 100%"
                     placeholder="请选择仓库"
-                    v-model="queryParam.depotId">
+                    v-model="depotSelected">
                     <a-select-option v-for="(depot,index) in depotList" :value="depot.id">
                       {{ depot.depotName }}
                     </a-select-option>
                   </a-select>
                 </a-form-item>
               </a-col>
-              <a-col :md="4" :sm="24">
+              <a-col :md="3" :sm="24">
                 <a-form-item label="类别" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-tree-select style="width:100%" :dropdownStyle="{maxHeight:'200px',overflow:'auto'}" allow-clear
                        :treeData="categoryTree" v-model="queryParam.categoryId" placeholder="请选择类别">
@@ -32,21 +33,24 @@
                   <a-input placeholder="条码/名称/规格/型号" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
-              <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-                <a-col :md="4" :sm="24">
+              <a-col :md="3" :sm="24">
+                <a-form-item label="零库存" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-select v-model="queryParam.zeroStock">
+                    <a-select-option value="0">隐藏</a-select-option>
+                    <a-select-option value="1">显示</a-select-option>
+                  </a-select>
+                </a-form-item>
+              </a-col>
+              <a-col :md="4" :sm="24">
+                <span class="table-page-search-submitButtons">
                   <a-button type="primary" @click="searchQuery">查询</a-button>
                   <a-button style="margin-left: 8px" v-print="'#reportPrint'" icon="printer">打印</a-button>
                   <a-button style="margin-left: 8px" @click="exportExcel" icon="download">导出</a-button>
-                </a-col>
-              </span>
-              <a-col :md="3" :sm="24">
-                <a-form-item label="当前总库存" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  {{currentStock}}
-                </a-form-item>
+                </span>
               </a-col>
-              <a-col :md="3" :sm="24">
-                <a-form-item label="当前总库存金额" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  {{currentStockPrice}}
+              <a-col :md="6" :sm="24">
+                <a-form-item>
+                  <span>总库存：{{currentStock}}，总库存金额：{{currentStockPrice}}</span>
                 </a-form-item>
               </a-col>
             </a-row>
@@ -75,10 +79,11 @@
                 size="small"
                 show-size-changer
                 :showQuickJumper="true"
+                :current="ipagination.current"
                 :page-size="ipagination.pageSize"
                 :page-size-options="ipagination.pageSizeOptions"
                 :total="ipagination.total"
-                :show-total="(total, range) => `共 ${total} 条`">
+                :show-total="(total, range) => `共 ${total-Math.ceil(total/ipagination.pageSize)} 条`">
                 <template slot="buildOptionText" slot-scope="props">
                   <span>{{ props.value-1 }}条/页</span>
                 </template>
@@ -119,15 +124,16 @@
         },
         // 查询条件
         queryParam: {
-          depotId:'',
           categoryId:'',
           materialParam:'',
+          zeroStock: '0',
           mpList: getMpListShort(Vue.ls.get('materialPropertyList'))  //扩展属性
         },
         ipagination:{
           pageSize: 11,
           pageSizeOptions: ['11', '21', '31', '101', '201']
         },
+        depotSelected:[],
         depotList: [],
         categoryTree:[],
         currentStock: '',
@@ -149,8 +155,8 @@
           {title: '单位', dataIndex: 'unitName', width: 60},
           {title: '单价', dataIndex: 'purchaseDecimal', sorter: (a, b) => a.purchaseDecimal - b.purchaseDecimal, width: 60},
           {title: '初始库存', dataIndex: 'initialStock', sorter: (a, b) => a.initialStock - b.initialStock, width: 60},
-          {title: '当前库存', dataIndex: 'currentStock', sorter: (a, b) => a.currentStock - b.currentStock, width: 60},
-          {title: '当前库存金额', dataIndex: 'currentStockPrice', sorter: (a, b) => a.currentStockPrice - b.currentStockPrice, width: 80},
+          {title: '库存', dataIndex: 'currentStock', sorter: (a, b) => a.currentStock - b.currentStock, width: 60},
+          {title: '库存金额', dataIndex: 'currentStockPrice', sorter: (a, b) => a.currentStockPrice - b.currentStockPrice, width: 80},
           { title: '库存流水', dataIndex: 'action', align:"center", width: 100,
             scopedSlots: { customRender: 'action' }
           }
@@ -168,6 +174,9 @@
       moment,
       getQueryParams() {
         let param = Object.assign({}, this.queryParam, this.isorter);
+        if(this.depotSelected && this.depotSelected.length>0) {
+          param.depotIds = this.depotSelected.join()
+        }
         param.field = this.getQueryField();
         param.currentPage = this.ipagination.current;
         param.pageSize = this.ipagination.pageSize-1;
@@ -200,15 +209,11 @@
         this.loadData(1);
       },
       loadData(arg) {
-        if(!this.url.list){
-          this.$message.error("请设置url.list属性!")
-          return
-        }
         //加载数据 若传入参数1则加载第一页的内容
         if (arg === 1) {
           this.ipagination.current = 1;
         }
-        var params = this.getQueryParams();//查询条件
+        let params = this.getQueryParams();//查询条件
         this.loading = true;
         getAction(this.url.list, params).then((res) => {
           if (res.code===200) {
@@ -230,7 +235,7 @@
         this.$refs.materialInOutList.disableSubmit = false;
       },
       exportExcel() {
-        let aoa = [['条码', '名称', '规格', '型号', '颜色', '类别', '单位', '单价', '初始库存', '当前库存', '当前库存金额']]
+        let aoa = [['条码', '名称', '规格', '型号', '颜色', '类别', '单位', '单价', '初始库存', '库存', '库存金额']]
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
           let item = [ds.mBarCode, ds.name, ds.standard, ds.model, ds.color, ds.categoryName, ds.unitName,

@@ -2,7 +2,7 @@
 <template>
   <a-row :gutter="24">
     <a-col :md="24">
-      <a-card :bordered="false">
+      <a-card :style="cardStyle" :bordered="false">
         <!-- 查询区域 -->
         <div class="table-page-search-wrapper">
           <a-form layout="inline" @keyup.enter.native="searchQuery">
@@ -15,7 +15,7 @@
               </a-col>
               <a-col :md="6" :sm="24">
                 <a-form-item label="商品信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input placeholder="条码、名称、规格、型号" v-model="queryParam.materialParam"></a-input>
+                  <a-input placeholder="条码/名称/规格/型号" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
@@ -48,10 +48,11 @@
                 size="small"
                 show-size-changer
                 :showQuickJumper="true"
+                :current="ipagination.current"
                 :page-size="ipagination.pageSize"
                 :page-size-options="ipagination.pageSizeOptions"
                 :total="ipagination.total"
-                :show-total="(total, range) => `共 ${total} 条`">
+                :show-total="(total, range) => `共 ${total-Math.ceil(total/ipagination.pageSize)} 条`">
                 <template slot="buildOptionText" slot-scope="props">
                   <span>{{ props.value-1 }}条/页</span>
                 </template>
@@ -112,13 +113,14 @@
           {title: '型号', dataIndex: 'materialModel', width: 80},
           {title: '扩展信息', dataIndex: 'materialOther', width: 150},
           {title: '单位', dataIndex: 'materialUnit', width: 80},
-          {title: '进货数量', dataIndex: 'inSum', sorter: (a, b) => a.inSum - b.inSum, width: 80},
-          {title: '进货金额', dataIndex: 'inSumPrice', sorter: (a, b) => a.inSumPrice - b.inSumPrice, width: 80},
+          {title: '采购数量', dataIndex: 'inSum', sorter: (a, b) => a.inSum - b.inSum, width: 80},
+          {title: '采购金额', dataIndex: 'inSumPrice', sorter: (a, b) => a.inSumPrice - b.inSumPrice, width: 80},
           {title: '退货数量', dataIndex: 'outSum', sorter: (a, b) => a.outSum - b.outSum, width: 80},
-          {title: '退货金额', dataIndex: 'outSumPrice', sorter: (a, b) => a.outSumPrice - b.outSumPrice, width: 80}
+          {title: '退货金额', dataIndex: 'outSumPrice', sorter: (a, b) => a.outSumPrice - b.outSumPrice, width: 80},
+          {title: '实际采购金额', dataIndex: 'inOutSumPrice', sorter: (a, b) => a.inOutSumPrice - b.inOutSumPrice, width: 100}
         ],
         url: {
-          list: "/depotItem/buyIn",
+          list: "/depotItem/buyIn"
         }
       }
     },
@@ -143,11 +145,11 @@
         }
       },
       exportExcel() {
-        let aoa = [['条码', '名称', '规格', '型号', '扩展信息', '单位', '进货数量', '进货金额', '退货数量', '退货金额']]
+        let aoa = [['条码', '名称', '规格', '型号', '扩展信息', '单位', '进货数量', '进货金额', '退货数量', '退货金额', '实际采购金额']]
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
           let item = [ds.barCode, ds.materialName, ds.materialStandard, ds.materialModel, ds.materialOther, ds.materialUnit,
-            ds.inSum, ds.inSumPrice, ds.outSum, ds.outSumPrice]
+            ds.inSum, ds.inSumPrice, ds.outSum, ds.outSumPrice, ds.inOutSumPrice]
           aoa.push(item)
         }
         openDownloadDialog(sheet2blob(aoa), '进货统计')

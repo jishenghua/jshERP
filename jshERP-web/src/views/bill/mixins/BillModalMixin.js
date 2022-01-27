@@ -3,6 +3,7 @@ import {findBySelectSup,findBySelectCus,findBySelectRetail,getMaterialByBarCode,
   getPersonByNumType, getBatchNumberList} from '@/api/api'
 import { getAction,putAction } from '@/api/manage'
 import { getMpListShort, getNowFormatDateTime } from "@/utils/util"
+import { USER_INFO } from "@/store/mutation-types"
 import Vue from 'vue'
 
 export const BillModalMixin = {
@@ -24,6 +25,7 @@ export const BillModalMixin = {
       billUnitPirce: '',
       scanBarCode: '',
       scanStatus: true,
+      isTenant: false,
       spans: {
         labelCol1: {span: 2},
         wrapperCol1: {span: 22},
@@ -40,6 +42,8 @@ export const BillModalMixin = {
     };
   },
   created () {
+    let userInfo = Vue.ls.get(USER_INFO)
+    this.isTenant = userInfo.id === userInfo.tenantId? true:false
   },
   computed: {
     readOnly: function() {
@@ -104,19 +108,19 @@ export const BillModalMixin = {
         if(columns[i].key === key) {
           if(type){
             if(key === 'snList' || key === 'batchNumber') {
-              if(this.prefixNo === 'XSCK') {
+              if(this.prefixNo === 'LSCK' || this.prefixNo === 'CGTH'  || this.prefixNo === 'XSCK' || this.prefixNo === 'QTCK') {
                 columns[i].type = FormTypes.popupJsh //显示
               } else {
                 columns[i].type = FormTypes.input //显示
               }
             } else if(key === 'expirationDate') {
-              if(this.prefixNo === 'CGRK' || this.prefixNo === 'XSTH' || this.prefixNo === 'CGTH') {
+              if(this.prefixNo === 'LSTH' || this.prefixNo === 'CGRK' || this.prefixNo === 'XSTH' || this.prefixNo === 'QTRK') {
                 columns[i].type = FormTypes.date //显示
               } else {
-                columns[i].type = FormTypes.input //显示
+                columns[i].type = FormTypes.normal //显示
               }
             } else {
-              columns[i].type = FormTypes.input //显示
+              columns[i].type = FormTypes.normal //显示
             }
           } else {
             columns[i].type = FormTypes.hidden //隐藏
@@ -210,6 +214,94 @@ export const BillModalMixin = {
         this.form.setFieldsValue({'changeAmount':allPrice, 'debt':debt})
       });
     },
+    addSupplier() {
+      this.$refs.vendorModalForm.add();
+      this.$refs.vendorModalForm.title = "新增供应商";
+      this.$refs.vendorModalForm.disableSubmit = false;
+    },
+    addCustomer() {
+      this.$refs.customerModalForm.add();
+      this.$refs.customerModalForm.title = "新增客户（提醒：如果找不到新添加的客户，请到用户管理检查是否分配了该客户权限）";
+      this.$refs.customerModalForm.disableSubmit = false;
+    },
+    addMember() {
+      this.$refs.memberModalForm.add();
+      this.$refs.memberModalForm.title = "新增会员";
+      this.$refs.memberModalForm.disableSubmit = false;
+    },
+    handleBatchSetDepot() {
+      this.$refs.batchSetDepotModalForm.add();
+      this.$refs.batchSetDepotModalForm.title = "批量设置仓库";
+      this.$refs.batchSetDepotModalForm.disableSubmit = false;
+    },
+    addDepot() {
+      this.$refs.depotModalForm.add();
+      this.$refs.depotModalForm.title = "新增仓库";
+      this.$refs.depotModalForm.disableSubmit = false;
+    },
+    addAccount() {
+      this.$refs.accountModalForm.add();
+      this.$refs.accountModalForm.title = "新增结算账户";
+      this.$refs.accountModalForm.disableSubmit = false;
+    },
+    vendorModalFormOk() {
+      this.initSupplier()
+    },
+    customerModalFormOk() {
+      this.initCustomer()
+    },
+    memberModalFormOk() {
+      this.initRetail()
+    },
+    batchSetDepotModalFormOk(depotId) {
+      this.getAllTable().then(tables => {
+        return getListData(this.form, tables)
+      }).then(allValues => {
+        //获取单据明细列表信息
+        let detailArr = allValues.tablesValue[0].values
+        let barCodes = ''
+        for(let detail of detailArr){
+          barCodes += detail.barCode + ','
+        }
+        if(barCodes) {
+          barCodes = barCodes.substring(0, barCodes.length-1)
+        }
+        let param = {
+          barCode: barCodes,
+          depotId: depotId,
+          mpList: getMpListShort(Vue.ls.get('materialPropertyList')),  //扩展属性
+          prefixNo: this.prefixNo
+        }
+        getMaterialByBarCode(param).then((res) => {
+          if (res && res.code === 200) {
+            let mList = res.data
+            //构造新的列表数组，用于存放单据明细信息
+            let newDetailArr = []
+            if(mList && mList.length) {
+              for (let i = 0; i < detailArr.length; i++) {
+                let item = detailArr[i]
+                item.depotId = depotId
+                item.stock = mList[i].stock
+                newDetailArr.push(item)
+              }
+            } else {
+              for (let i = 0; i < detailArr.length; i++) {
+                let item = detailArr[i]
+                item.depotId = depotId
+                newDetailArr.push(item)
+              }
+            }
+            this.materialTable.dataSource = newDetailArr
+          }
+        })
+      })
+    },
+    depotModalFormOk() {
+      this.initDepot()
+    },
+    accountModalFormOk() {
+      this.initAccount()
+    },
     onAdded(event) {
       const { row, target } = event
       getAction('/depot/findDepotByCurrentUser').then((res) => {
@@ -227,7 +319,7 @@ export const BillModalMixin = {
     onValueChange(event) {
       let that = this
       const { type, row, column, value, target } = event
-      let param,snList,batchNumber,operNumber,unitPrice,taxUnitPrice,allPrice,taxRate,taxMoney,taxLastMoney
+      let param,snList,batchNumber,operNumber,unitPrice,allPrice,taxRate,taxMoney,taxLastMoney
       switch(column.key) {
         case "depotId":
           if(row.barCode){
@@ -272,20 +364,24 @@ export const BillModalMixin = {
                 })
               } else {
                 //单个条码
-                let mArr = []
-                for (let i = 0; i < mList.length; i++) {
-                  let mInfo = mList[i]
-                  this.changeColumnShow(mInfo)
-                  let mObj = {
-                    rowKey: row.id,
-                    values: this.parseInfoToObj(mInfo)
+                findStockByDepotAndBarCode({ depotId: row.depotId, barCode: row.barCode }).then((res) => {
+                  if (res && res.code === 200) {
+                    let mArr = []
+                    let mInfo = mList[0]
+                    this.changeColumnShow(mInfo)
+                    let mInfoEx = this.parseInfoToObj(mInfo)
+                    mInfoEx.stock = res.data.stock
+                    let mObj = {
+                      rowKey: row.id,
+                      values: mInfoEx
+                    }
+                    mArr.push(mObj)
+                    target.setValues(mArr);
+                    target.recalcAllStatisticsColumns()
+                    that.autoChangePrice(target)
+                    target.autoSelectBySpecialKey('operNumber')
                   }
-                  mArr.push(mObj)
-                }
-                target.setValues(mArr);
-                that.getStockByDepotBarCode(row, target)
-                target.recalcAllStatisticsColumns()
-                that.autoChangePrice(target)
+                })
               }
             }
           });
@@ -297,7 +393,6 @@ export const BillModalMixin = {
             operNumber = snArr.length
             taxRate = row.taxRate-0 //税率
             unitPrice = row.unitPrice-0 //单价
-            taxUnitPrice = row.taxUnitPrice-0
             allPrice = (unitPrice*operNumber).toFixed(2)-0
             taxMoney =((taxRate*0.01)*allPrice).toFixed(2)-0
             taxLastMoney = (allPrice + taxMoney).toFixed(2)-0
@@ -315,7 +410,6 @@ export const BillModalMixin = {
                 operNumber = info.totalNum
                 taxRate = row.taxRate-0 //税率
                 unitPrice = row.unitPrice-0 //单价
-                taxUnitPrice = row.taxUnitPrice-0
                 allPrice = (unitPrice*operNumber).toFixed(2)-0
                 taxMoney =((taxRate*0.01)*allPrice).toFixed(2)-0
                 taxLastMoney = (allPrice + taxMoney).toFixed(2)-0
@@ -331,7 +425,6 @@ export const BillModalMixin = {
           operNumber = value-0
           taxRate = row.taxRate-0 //税率
           unitPrice = row.unitPrice-0 //单价
-          taxUnitPrice = row.taxUnitPrice-0
           allPrice = (unitPrice*operNumber).toFixed(2)-0
           taxMoney =((taxRate*0.01)*allPrice).toFixed(2)-0
           taxLastMoney = (allPrice + taxMoney).toFixed(2)-0
@@ -343,11 +436,10 @@ export const BillModalMixin = {
           operNumber = row.operNumber-0 //数量
           unitPrice = value-0 //单价
           taxRate = row.taxRate-0 //税率
-          taxUnitPrice = (unitPrice*(1+taxRate*0.01)).toFixed(2)-0
           allPrice = (unitPrice*operNumber).toFixed(2)-0
           taxMoney =((taxRate*0.01)*allPrice).toFixed(2)-0
           taxLastMoney = (allPrice + taxMoney).toFixed(2)-0
-          target.setValues([{rowKey: row.id, values: {taxUnitPrice: taxUnitPrice, allPrice: allPrice, taxMoney: taxMoney, taxLastMoney: taxLastMoney}}])
+          target.setValues([{rowKey: row.id, values: {allPrice: allPrice, taxMoney: taxMoney, taxLastMoney: taxLastMoney}}])
           target.recalcAllStatisticsColumns()
           that.autoChangePrice(target)
           break;
@@ -356,10 +448,9 @@ export const BillModalMixin = {
           taxRate = row.taxRate-0 //税率
           allPrice = value-0
           unitPrice = (allPrice/operNumber).toFixed(2)-0 //单价
-          taxUnitPrice =(unitPrice*(1+taxRate*0.01)).toFixed(2)-0
           taxMoney =((taxRate*0.01)*allPrice).toFixed(2)-0
           taxLastMoney = (allPrice + taxMoney).toFixed(2)-0
-          target.setValues([{rowKey: row.id, values: {unitPrice: unitPrice, taxUnitPrice: taxUnitPrice, taxMoney: taxMoney, taxLastMoney: taxLastMoney}}])
+          target.setValues([{rowKey: row.id, values: {unitPrice: unitPrice, taxMoney: taxMoney, taxLastMoney: taxLastMoney}}])
           target.recalcAllStatisticsColumns()
           that.autoChangePrice(target)
           break;
@@ -368,10 +459,9 @@ export const BillModalMixin = {
           allPrice = row.allPrice-0
           unitPrice = row.unitPrice-0
           taxRate = value-0 //税率
-          taxUnitPrice =(unitPrice*(1+taxRate*0.01)).toFixed(2)-0
           taxMoney =((taxRate*0.01)*allPrice).toFixed(2)-0
           taxLastMoney = (allPrice + taxMoney).toFixed(2)-0
-          target.setValues([{rowKey: row.id, values: {taxUnitPrice: taxUnitPrice, taxMoney: taxMoney, taxLastMoney: taxLastMoney}}])
+          target.setValues([{rowKey: row.id, values: {taxMoney: taxMoney, taxLastMoney: taxLastMoney}}])
           target.recalcAllStatisticsColumns()
           that.autoChangePrice(target)
           break;
@@ -379,11 +469,10 @@ export const BillModalMixin = {
           operNumber = row.operNumber-0 //数量
           taxLastMoney = value-0
           taxRate = row.taxRate-0 //税率
-          taxUnitPrice = (taxLastMoney/operNumber).toFixed(2)-0
-          unitPrice = (taxUnitPrice/(1+taxRate*0.01)).toFixed(2)-0
+          unitPrice = (taxLastMoney/operNumber/(1+taxRate*0.01)).toFixed(2)-0
           allPrice = (unitPrice*operNumber).toFixed(2)-0
           taxMoney =(taxLastMoney-allPrice).toFixed(2)-0
-          target.setValues([{rowKey: row.id, values: {unitPrice: unitPrice, taxUnitPrice: taxUnitPrice, allPrice: allPrice, taxMoney: taxMoney}}])
+          target.setValues([{rowKey: row.id, values: {unitPrice: unitPrice, allPrice: allPrice, taxMoney: taxMoney}}])
           target.recalcAllStatisticsColumns()
           that.autoChangePrice(target)
           break;
@@ -402,7 +491,6 @@ export const BillModalMixin = {
         sku: mInfo.sku,
         operNumber: 1,
         unitPrice: mInfo.billPrice,
-        taxUnitPrice: mInfo.billPrice,
         allPrice: mInfo.billPrice,
         taxRate: 0,
         taxMoney: 0,
@@ -518,6 +606,9 @@ export const BillModalMixin = {
     },
     scanEnter() {
       this.scanStatus = false
+      this.$nextTick(() => {
+        this.$refs.scanBarCode.focus()
+      })
     },
     //扫码之后回车
     scanPressEnter() {
@@ -574,7 +665,6 @@ export const BillModalMixin = {
                   item.sku = mInfo.sku
                   item.operNumber = 1
                   item.unitPrice = mInfo.billPrice
-                  item.taxUnitPrice = mInfo.billPrice
                   item.allPrice = mInfo.billPrice
                   item.taxRate = 0
                   item.taxMoney = 0
@@ -615,6 +705,7 @@ export const BillModalMixin = {
               }
               //置空扫码的内容
               this.scanBarCode = ''
+              this.$refs.scanBarCode.focus()
             }
           })
         })

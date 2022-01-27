@@ -2,7 +2,7 @@
 <template>
   <a-row :gutter="24">
     <a-col :md="24">
-      <a-card :bordered="false">
+      <a-card :style="cardStyle" :bordered="false">
         <!-- 查询区域 -->
         <div class="table-page-search-wrapper">
           <a-form layout="inline" @keyup.enter.native="searchQuery">
@@ -10,7 +10,7 @@
               <a-col :md="4" :sm="24">
                 <a-form-item label="客户" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-select placeholder="选择客户" v-model="queryParam.organId"
-                    :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
+                    :dropdownMatchSelectWidth="false" showSearch allow-clear optionFilterProp="children">
                     <a-select-option v-for="(item,index) in supList" :key="index" :value="item.id">
                       {{ item.supplier }}
                     </a-select-option>
@@ -20,8 +20,8 @@
               <a-col :md="4" :sm="24">
                 <a-form-item label="仓库" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-select
-                    showSearch optionFilterProp="children"
-                    style="width: 100%"
+                    optionFilterProp="children"
+                    showSearch allow-clear style="width: 100%"
                     placeholder="请选择仓库"
                     v-model="queryParam.depotId">
                     <a-select-option v-for="(depot,index) in depotList" :value="depot.id">
@@ -77,10 +77,11 @@
                 size="small"
                 show-size-changer
                 :showQuickJumper="true"
+                :current="ipagination.current"
                 :page-size="ipagination.pageSize"
                 :page-size-options="ipagination.pageSizeOptions"
                 :total="ipagination.total"
-                :show-total="(total, range) => `共 ${total} 条`">
+                :show-total="(total, range) => `共 ${total-Math.ceil(total/ipagination.pageSize)} 条`">
                 <template slot="buildOptionText" slot-scope="props">
                   <span>{{ props.value-1 }}条/页</span>
                 </template>

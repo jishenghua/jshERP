@@ -8,14 +8,14 @@
     @cancel="handleCancel"
     cancelText="关闭"
     wrapClassName="ant-modal-cust-warp"
-    style="top:25%;height: 50%;overflow-y: hidden">
+    style="top:30%;height: 40%;overflow-y: hidden">
     <template slot="footer">
       <a-button key="back" v-if="isReadOnly" @click="handleCancel">
         关闭
       </a-button>
     </template>
     <a-spin :spinning="confirmLoading">
-      <a-form :form="form">
+      <a-form :form="form" id="personModal">
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="姓名">
           <a-input placeholder="请输入姓名" v-decorator.trim="[ 'name', validatorRules.name]" />
         </a-form-item>
@@ -33,6 +33,7 @@
 <script>
   import pick from 'lodash.pick'
   import {addPerson,editPerson,checkPerson } from '@/api/api'
+  import {autoJumpNextInput} from "@/utils/util"
   export default {
     name: "PersonModal",
     data () {
@@ -78,6 +79,7 @@
         this.visible = true;
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model,'name', 'type', 'description'))
+          autoJumpNextInput('personModal')
         });
       },
       close () {

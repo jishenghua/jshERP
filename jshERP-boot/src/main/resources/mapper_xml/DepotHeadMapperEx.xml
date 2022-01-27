@@ -7,6 +7,9 @@
         <result column="OrganName" jdbcType="VARCHAR" property="organName" />
         <result column="userName" jdbcType="VARCHAR" property="userName" />
         <result column="AccountName" jdbcType="VARCHAR" property="accountName" />
+        <result column="contacts" jdbcType="VARCHAR" property="contacts" />
+        <result column="telephone" jdbcType="VARCHAR" property="telephone" />
+        <result column="address" jdbcType="VARCHAR" property="address" />
     </resultMap>
 
     <resultMap id="ResultWithInfoExMap" type="com.jsh.erp.datasource.vo.DepotHeadVo4InDetail">
@@ -50,7 +53,7 @@
         select distinct dh.*, s.supplier OrganName, u.username userName, a.name AccountName
         from jsh_depot_head dh
         left join jsh_supplier s on dh.organ_id=s.id and ifnull(s.delete_Flag,'0') !='1'
-        left join jsh_user u on dh.creator=u.id and ifnull(u.Status,'0') ='0'
+        left join jsh_user u on dh.creator=u.id and ifnull(u.Status,'0') !='1'
         left join jsh_account a on dh.account_id=a.id and ifnull(a.delete_Flag,'0') !='1'
         left join jsh_depot_item di on dh.id = di.header_id and ifnull(di.delete_flag,'0') !='1'
         left join jsh_material m on di.material_id = m.id and ifnull(m.delete_flag,'0') !='1'
@@ -72,6 +75,10 @@
         <if test="number != null">
             <bind name="bindNumber" value="'%'+number+'%'"/>
             and dh.number like #{bindNumber}
+        </if>
+        <if test="linkNumber != null">
+            <bind name="bindLinkNumber" value="'%'+linkNumber+'%'"/>
+            and dh.link_number like #{bindLinkNumber}
         </if>
         <if test="beginTime != null">
             and dh.oper_time >= #{beginTime}
@@ -137,6 +144,10 @@
             <bind name="bindNumber" value="'%'+number+'%'"/>
             and dh.number like #{bindNumber}
         </if>
+        <if test="linkNumber != null">
+            <bind name="bindLinkNumber" value="'%'+linkNumber+'%'"/>
+            and dh.link_number like #{bindLinkNumber}
+        </if>
         <if test="beginTime != null">
             and dh.oper_time >= #{beginTime}
         </if>
@@ -194,11 +205,18 @@
         <if test="oId != null">
             and dh.organ_id = #{oId}
         </if>
-        <if test="depotId != null">
-            and di.depot_id = #{depotId}
+        <if test="depotList.size()>0">
+            and di.depot_id in
+            <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
         </if>
         <if test="type != null">
             and dh.type=#{type}
+        </if>
+        <if test="number != null and number !=''">
+            <bind name="bindNumber" value="'%'+number+'%'"/>
+            and dh.number like #{bindNumber}
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
@@ -224,11 +242,18 @@
         <if test="oId != null">
             and dh.organ_id = #{oId}
         </if>
-        <if test="depotId != null">
-            and di.depot_id = #{depotId}
+        <if test="depotList.size()>0">
+            and di.depot_id in
+            <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
         </if>
         <if test="type != null">
             and dh.type=#{type}
+        </if>
+        <if test="number != null and number !=''">
+            <bind name="bindNumber" value="'%'+number+'%'"/>
+            and dh.number like #{bindNumber}
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
@@ -257,12 +282,25 @@
         <if test="oId != null">
             and dh.organ_id = #{oId}
         </if>
-        <if test="depotId != null">
+        <if test="depotList.size()>0">
             <if test="type == '入库'">
-                and ((di.depot_id = #{depotId} and dh.sub_type!='调拨') or (di.another_depot_id = #{depotId} and dh.sub_type='调拨'))
+                and ((
+                dh.sub_type!='调拨' and di.depot_id in
+                <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+                ) or (
+                dh.sub_type='调拨' and di.another_depot_id in
+                <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+                ))
             </if>
             <if test="type == '出库'">
-                and di.depot_id = #{depotId}
+                and di.depot_id in
+                <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
             </if>
         </if>
         <if test="materialParam != null and materialParam !=''">
@@ -289,12 +327,25 @@
         <if test="oId != null">
             and dh.organ_id = #{oId}
         </if>
-        <if test="depotId != null">
+        <if test="depotList.size()>0">
             <if test="type == '入库'">
-                 and ((di.depot_id = #{depotId} and dh.sub_type!='调拨') or (di.another_depot_id = #{depotId} and dh.sub_type='调拨'))
+                 and ((
+                 dh.sub_type!='调拨' and di.depot_id in
+                <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+                 ) or (
+                 dh.sub_type='调拨' and di.another_depot_id in
+                <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+                 ))
             </if>
             <if test="type == '出库'">
-                and di.depot_id = #{depotId}
+                and di.depot_id in
+                <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
             </if>
         </if>
         <if test="materialParam != null and materialParam !=''">
@@ -316,14 +367,24 @@
         <!-- 调出仓库名查询 -->
         left join (select id as aid,name as SName,delete_Flag as adelete_Flag from jsh_depot ) ddd on ddd.aid=di.another_depot_id and ifnull(ddd.adelete_Flag,'0') !='1'
         where dh.oper_time >=#{beginTime} and dh.oper_time &lt;=#{endTime}
-        <if test="depotIdF != null">
-            and di.depot_id = #{depotIdF}
+        <if test="depotFList.size()>0">
+            and di.depot_id in
+            <foreach collection="depotFList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
         </if>
-        <if test="depotId != null">
-            and di.another_depot_id = #{depotId}
+        <if test="depotList.size()>0">
+            and di.another_depot_id in
+            <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
         </if>
         <if test="subType != null">
             and dh.sub_type=#{subType}
+        </if>
+        <if test="number != null and number !=''">
+            <bind name="bindNumber" value="'%'+number+'%'"/>
+            and dh.number like #{bindNumber}
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
@@ -344,14 +405,24 @@
         left join jsh_material_extend me on me.id=di.material_extend_id and ifnull(me.delete_Flag,'0') !='1'
         left join (select id,name as dName,delete_Flag from jsh_depot) d on d.id=di.depot_id and ifnull(d.delete_Flag,'0') !='1'
         where dh.oper_time >=#{beginTime} and dh.oper_time &lt;=#{endTime}
-        <if test="depotIdF != null">
-            and di.depot_id = #{depotIdF}
+        <if test="depotFList.size()>0">
+            and di.depot_id in
+            <foreach collection="depotFList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
         </if>
-        <if test="depotId != null">
-            and di.another_depot_id = #{depotId}
+        <if test="depotList.size()>0">
+            and di.another_depot_id in
+            <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
         </if>
         <if test="subType != null">
             and dh.sub_type=#{subType}
+        </if>
+        <if test="number != null and number !=''">
+            <bind name="bindNumber" value="'%'+number+'%'"/>
+            and dh.number like #{bindNumber}
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
@@ -423,7 +494,8 @@
     </select>
 
     <select id="getDetailByNumber" parameterType="com.jsh.erp.datasource.entities.DepotHeadExample" resultMap="ResultMapEx">
-        select dh.*, concat(dh.sub_type,dh.type) as depotHeadType, s.supplier OrganName, a.name AccountName
+        select dh.*, concat(dh.sub_type,dh.type) as depotHeadType, a.name AccountName,
+               s.supplier OrganName, s.contacts, s.telephone, s.address
         from jsh_depot_head dh
         left join jsh_supplier s on dh.organ_id=s.id and ifnull(s.delete_Flag,'0') !='1'
         left join jsh_account a on dh.account_id=a.id and ifnull(a.delete_Flag,'0') !='1'
@@ -518,12 +590,6 @@
         <if test="subType != null">
             and sub_type=#{subType}
         </if>
-        <if test="hasSupplier == 1">
-            and organ_id is not null
-        </if>
-        <if test="hasSupplier == 0">
-            and organ_id is null
-        </if>
         <if test="beginTime != null">
             and oper_time >= #{beginTime}
         </if>
@@ -537,7 +603,7 @@
         select distinct dh.*, s.supplier OrganName, u.username userName
         from jsh_depot_head dh
         left join jsh_supplier s on dh.organ_id=s.id and ifnull(s.delete_Flag,'0') !='1'
-        left join jsh_user u on dh.creator=u.id and ifnull(u.Status,'0') ='0'
+        left join jsh_user u on dh.creator=u.id and ifnull(u.Status,'0') !='1'
         left join jsh_depot_item di on dh.id = di.header_id and ifnull(di.delete_flag,'0') !='1'
         left join jsh_material m on di.material_id = m.id and ifnull(m.delete_flag,'0') !='1'
         where 1=1
@@ -581,7 +647,7 @@
             </foreach>
             )
         </if>
-        and (abs(dh.change_amount)+(select ifnull(sum(ai.each_amount),0) from jsh_account_item ai where ai.bill_id=dh.id and ifnull(ai.delete_flag,'0') !='1'))
+        and (abs(dh.change_amount)+(select ifnull(sum(abs(ai.each_amount)),0) from jsh_account_item ai where ai.bill_id=dh.id and ifnull(ai.delete_flag,'0') !='1'))
         &lt; (dh.discount_last_money + dh.other_money)
         and ifnull(dh.delete_flag,'0') !='1'
         order by dh.id desc

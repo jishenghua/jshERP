@@ -1,7 +1,7 @@
 <template>
   <a-row :gutter="24">
     <a-col :md="24">
-      <a-card :bordered="false">
+      <a-card :style="cardStyle" :bordered="false">
         <!-- 查询区域 -->
         <div class="table-page-search-wrapper">
           <!-- 搜索区域 -->
@@ -57,6 +57,11 @@
                     </a-select>
                   </a-form-item>
                 </a-col>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="关联单据" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-input placeholder="请输入关联单据" v-model="queryParam.linkNumber"></a-input>
+                  </a-form-item>
+                </a-col>
               </template>
               <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                 <a-col :md="6" :sm="24">
@@ -80,7 +85,7 @@
               <a-menu-item key="2" v-if="btnEnableList.indexOf(2)>-1" @click="batchSetStatus(1)"><a-icon type="check"/>审核</a-menu-item>
               <a-menu-item key="3" v-if="btnEnableList.indexOf(7)>-1" @click="batchSetStatus(0)"><a-icon type="stop"/>反审核</a-menu-item>
             </a-menu>
-            <a-button style="margin-left: 8px">
+            <a-button>
               批量操作 <a-icon type="down" />
             </a-button>
           </a-dropdown>
@@ -154,7 +159,8 @@
           roleType: Vue.ls.get('roleType'),
           organId: "",
           depotId: "",
-          creator: ""
+          creator: "",
+          linkNumber: ""
         },
         labelCol: {
           span: 5
@@ -183,7 +189,7 @@
             }
           },
           { title: '单据日期', dataIndex: 'operTimeStr',width:145},
-          { title: '操作员', dataIndex: 'userName',width:80},
+          { title: '操作员', dataIndex: 'userName',width:80, ellipsis:true},
           { title: '金额合计', dataIndex: 'totalPrice',width:80},
           { title: '状态', dataIndex: 'status', width: 80, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }

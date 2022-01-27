@@ -278,9 +278,9 @@ public class SerialNumberService {
      * 卖出序列号
      * create time: 2019/1/25 9:17
      * @Param: materialId
-     * @Param: depotheadId
-     * @Param: isSell 卖出'1'
-     * @Param: Count 卖出或者赎回的数量
+     * @Param: depotheadId
+     * @Param: isSell 卖出'1'
+     * @Param: Count 卖出或者赎回的数量
      * @return com.jsh.erp.datasource.entities.SerialNumberEx
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)

@@ -28,9 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class DepotItemService {
@@ -298,6 +296,27 @@ public class DepotItemService {
         return result;
     }
 
+    /**
+     * 统计零售的总金额
+     * @param type
+     * @param subType
+     * @param month
+     * @return
+     * @throws Exception
+     */
+    public BigDecimal inOrOutRetailPrice(String type, String subType, String month) throws Exception{
+        BigDecimal result= BigDecimal.ZERO;
+        try{
+            String beginTime = Tools.firstDayOfMonth(month) + BusinessConstants.DAY_FIRST_TIME;
+            String endTime = Tools.lastDayOfMonth(month) + BusinessConstants.DAY_LAST_TIME;
+            result = depotItemMapperEx.inOrOutRetailPrice(type, subType, beginTime, endTime);
+            result = result.abs();
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return result;
+    }
+
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void saveDetials(String rows, Long headerId, HttpServletRequest request) throws Exception{
         //查询单据主表信息
@@ -361,12 +380,14 @@ public class DepotItemService {
                     Unit unitInfo = materialService.findUnit(materialExtend.getMaterialId()); //查询计量单位信息
                     if (StringUtil.isNotEmpty(unitInfo.getName())) {
                         String basicUnit = unitInfo.getBasicUnit(); //基本单位
-                        String otherUnit = unitInfo.getOtherUnit(); //副单位
-                        Integer ratio = unitInfo.getRatio(); //比例
-                        if (unit.equals(basicUnit)) { //如果等于基础单位
+                        if (unit.equals(basicUnit)) { //如果等于基本单位
                             depotItem.setBasicNumber(oNumber); //数量一致
-                        } else if (unit.equals(otherUnit)) { //如果等于副单位
-                            depotItem.setBasicNumber(oNumber.multiply(new BigDecimal(ratio)) ); //数量乘以比例
+                        } else if (unit.equals(unitInfo.getOtherUnit())) { //如果等于副单位
+                            depotItem.setBasicNumber(oNumber.multiply(new BigDecimal(unitInfo.getRatio())) ); //数量乘以比例
+                        } else if (unit.equals(unitInfo.getOtherUnitTwo())) { //如果等于副单位2
+                            depotItem.setBasicNumber(oNumber.multiply(new BigDecimal(unitInfo.getRatioTwo())) ); //数量乘以比例
+                        } else if (unit.equals(unitInfo.getOtherUnitThree())) { //如果等于副单位3
+                            depotItem.setBasicNumber(oNumber.multiply(new BigDecimal(unitInfo.getRatioThree())) ); //数量乘以比例
                         }
                     } else {
                         depotItem.setBasicNumber(oNumber); //其他情况
@@ -458,9 +479,12 @@ public class DepotItemService {
                 //更新当前库存
                 updateCurrentStock(depotItem);
             }
-            //如果关联单据号非空则更新订单的状态
-            if(StringUtil.isNotEmpty(depotHead.getLinkNumber())) {
-                changeBillStatus(depotHead, billStatus);
+            //如果关联单据号非空则更新订单的状态,单据类型：采购入库单或销售出库单
+            if(BusinessConstants.SUB_TYPE_PURCHASE.equals(depotHead.getSubType())
+                    || BusinessConstants.SUB_TYPE_SALES.equals(depotHead.getSubType())) {
+                if(StringUtil.isNotEmpty(depotHead.getLinkNumber())) {
+                    changeBillStatus(depotHead, billStatus);
+                }
             }
         } else {
             throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_ROW_FAILED_CODE,
@@ -491,30 +515,37 @@ public class DepotItemService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void deleteDepotItemHeadId(Long headerId)throws Exception {
-        DepotItemExample example = new DepotItemExample();
-        example.createCriteria().andHeaderIdEqualTo(headerId);
         try{
+            //1、查询删除前的单据明细
+            List<DepotItem> depotItemList = getListByHeaderId(headerId);
+            //2、删除单据明细
+            DepotItemExample example = new DepotItemExample();
+            example.createCriteria().andHeaderIdEqualTo(headerId);
             depotItemMapper.deleteByExample(example);
+            //3、计算删除之后单据明细中商品的库存
+            for(DepotItem depotItem : depotItemList){
+                updateCurrentStock(depotItem);
+            }
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public List<DepotItemStockWarningCount> findStockWarningCount(Integer offset, Integer rows, String materialParam, Long depotId) {
+    public List<DepotItemStockWarningCount> findStockWarningCount(Integer offset, Integer rows, String materialParam, List<Long> depotList) {
         List<DepotItemStockWarningCount> list = null;
         try{
-            list =depotItemMapperEx.findStockWarningCount(offset, rows, materialParam, depotId);
+            list =depotItemMapperEx.findStockWarningCount(offset, rows, materialParam, depotList);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
     }
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int findStockWarningCountTotal(String materialParam, Long depotId) {
+    public int findStockWarningCountTotal(String materialParam, List<Long> depotList) {
         int result = 0;
         try{
-            result =depotItemMapperEx.findStockWarningCountTotal(materialParam, depotId);
+            result =depotItemMapperEx.findStockWarningCountTotal(materialParam, depotList);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -548,7 +579,7 @@ public class DepotItemService {
     }
 
     /**
-     * 库存统计
+     * 库存统计-单仓库
      * @param depotId
      * @param mId
      * @param beginTime
@@ -556,11 +587,27 @@ public class DepotItemService {
      * @return
      */
     public BigDecimal getStockByParam(Long depotId, Long mId, String beginTime, String endTime){
+        List<Long> depotList = new ArrayList<>();
+        if(depotId != null) {
+            depotList.add(depotId);
+        }
+        return getStockByParamWithDepotList(depotList, mId, beginTime, endTime);
+    }
+
+    /**
+     * 库存统计-多仓库
+     * @param depotList
+     * @param mId
+     * @param beginTime
+     * @param endTime
+     * @return
+     */
+    public BigDecimal getStockByParamWithDepotList(List<Long> depotList, Long mId, String beginTime, String endTime){
         //初始库存
-        BigDecimal initStock = materialService.getInitStockByMid(depotId, mId);
+        BigDecimal initStock = materialService.getInitStockByMidAndDepotList(depotList, mId);
         //盘点复盘后数量的变动
-        BigDecimal stockCheckSum = depotItemMapperEx.getStockCheckSum(depotId, mId, beginTime, endTime);
-        DepotItemVo4Stock stockObj = depotItemMapperEx.getStockByParam(depotId, mId, beginTime, endTime);
+        BigDecimal stockCheckSum = depotItemMapperEx.getStockCheckSumByDepotList(depotList, mId, beginTime, endTime);
+        DepotItemVo4Stock stockObj = depotItemMapperEx.getStockByParamWithDepotList(depotList, mId, beginTime, endTime);
         BigDecimal stockSum = BigDecimal.ZERO;
         if(stockObj!=null) {
             BigDecimal inTotal = stockObj.getInTotal();
@@ -578,45 +625,41 @@ public class DepotItemService {
     }
 
     /**
-     * 入库统计
-     * @param depotId
+     * 统计时间段内的入库和出库数量-多仓库
+     * @param depotList
      * @param mId
      * @param beginTime
      * @param endTime
      * @return
      */
-    public BigDecimal getInNumByParam(Long depotId, Long mId, String beginTime, String endTime){
-        DepotItemVo4Stock stockObj = depotItemMapperEx.getStockByParam(depotId, mId, beginTime, endTime);
-        BigDecimal stockSum = BigDecimal.ZERO;
+    public Map<String, BigDecimal> getIntervalMapByParamWithDepotList(List<Long> depotList, Long mId, String beginTime, String endTime){
+        Map<String,BigDecimal> intervalMap = new HashMap<>();
+        BigDecimal inSum = BigDecimal.ZERO;
+        BigDecimal outSum = BigDecimal.ZERO;
+        //盘点复盘后数量的变动
+        BigDecimal stockCheckSum = depotItemMapperEx.getStockCheckSumByDepotList(depotList, mId, beginTime, endTime);
+        DepotItemVo4Stock stockObj = depotItemMapperEx.getStockByParamWithDepotList(depotList, mId, beginTime, endTime);
         if(stockObj!=null) {
             BigDecimal inTotal = stockObj.getInTotal();
             BigDecimal transfInTotal = stockObj.getTransfInTotal();
             BigDecimal assemInTotal = stockObj.getAssemInTotal();
             BigDecimal disAssemInTotal = stockObj.getDisAssemInTotal();
-            stockSum = inTotal.add(transfInTotal).add(assemInTotal).add(disAssemInTotal);
-        }
-        return stockSum;
-    }
-
-    /**
-     * 出库统计
-     * @param depotId
-     * @param mId
-     * @param beginTime
-     * @param endTime
-     * @return
-     */
-    public BigDecimal getOutNumByParam(Long depotId, Long mId, String beginTime, String endTime){
-        DepotItemVo4Stock stockObj = depotItemMapperEx.getStockByParam(depotId, mId, beginTime, endTime);
-        BigDecimal stockSum = BigDecimal.ZERO;
-        if(stockObj!=null) {
+            inSum = inTotal.add(transfInTotal).add(assemInTotal).add(disAssemInTotal);
             BigDecimal outTotal = stockObj.getOutTotal();
             BigDecimal transfOutTotal = stockObj.getTransfOutTotal();
             BigDecimal assemOutTotal = stockObj.getAssemOutTotal();
             BigDecimal disAssemOutTotal = stockObj.getDisAssemOutTotal();
-            stockSum = outTotal.subtract(transfOutTotal).subtract(assemOutTotal).subtract(disAssemOutTotal);
+            outSum = outTotal.add(transfOutTotal).add(assemOutTotal).add(disAssemOutTotal);
         }
-        return stockSum;
+        if(stockCheckSum.compareTo(BigDecimal.ZERO)>0) {
+            inSum = inSum.add(stockCheckSum);
+        } else {
+            //盘点复盘数量为负数代表出库
+            outSum = outSum.subtract(stockCheckSum);
+        }
+        intervalMap.put("inSum", inSum);
+        intervalMap.put("outSum", outSum);
+        return intervalMap;
     }
 
     /**

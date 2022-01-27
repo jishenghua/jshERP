@@ -3,7 +3,6 @@
   <a-row :gutter="10">
     <a-col :md="12" :sm="24">
       <a-card :bordered="false">
-
         <!-- 按钮操作区域 -->
         <a-row style="margin-left: 14px">
           <a-button v-if="btnEnableList.indexOf(1)>-1" @click="handleAdd()" type="primary">添加类别</a-button>
@@ -244,7 +243,7 @@ export default {
         var that = this
         this.$confirm({
           title: '确认删除',
-          content: '确定要删除所选中的 ' + this.checkedKeys.length + ' 条数据，以及子节点数据吗?',
+          content: '确定要删除所选中的 ' + this.checkedKeys.length + ' 条数据吗?',
           onOk: function () {
             deleteAction(that.url.deleteBatch, {ids: ids}).then((res) => {
               if (res.code == 200) {

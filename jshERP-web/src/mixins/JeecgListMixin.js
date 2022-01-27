@@ -15,6 +15,8 @@ export const JeecgListMixin = {
     return {
       //token header
       tokenHeader: {'X-Access-Token': Vue.ls.get(ACCESS_TOKEN)},
+      /*卡片样式 */
+      cardStyle: '',
       /* 查询条件-请不要在queryParam中声明非字符串值的属性 */
       queryParam: {},
       /* 数据源 */
@@ -57,10 +59,13 @@ export const JeecgListMixin = {
       /** 是否加载时就执行 */
       disableMixinCreated: false,
       /* 按钮权限 */
-      btnEnableList: '',
+      btnEnableList: ''
     }
   },
   created() {
+    if(this.isDesktop()) {
+      this.cardStyle = 'height:' + (document.documentElement.clientHeight-125) + 'px'
+    }
     if(!this.disableMixinCreated){
       //console.log(' -- mixin created -- ')
       this.loadData();
@@ -385,27 +390,35 @@ export const JeecgListMixin = {
         //分页条数为11、21、31等的时候增加合计行
         let numKey = 'rowIndex'
         let totalRow = { [numKey]: '合计' }
-        //移除不需要合计的列
-        let removeCols = 'action,mBarCode,barCode,serialNo,unitPrice,purchaseDecimal,operTime,oTime'
+        //需要合计的列
+        let parseCols = 'initialStock,currentStock,currentStockPrice,initialAmount,thisMonthAmount,currentAmount,inSum,inSumPrice,' +
+          'outSum,outSumPrice,outInSumPrice,operNumber,allPrice,numSum,priceSum,prevSum,thisSum,thisAllPrice,billMoney,changeAmount,' +
+          'allPrice,currentNumber,lowSafeStock,highSafeStock,lowCritical,highCritical'
         columns.forEach(column => {
           let { key, dataIndex } = column
           if (![key, dataIndex].includes(numKey)) {
             let total = 0
             dataSource.forEach(data => {
-              total += Number.parseFloat(data[dataIndex])
+              if(parseCols.indexOf(dataIndex)>-1) {
+                if(data[dataIndex]) {
+                  total += Number.parseFloat(data[dataIndex])
+                } else {
+                  total += 0
+                }
+              } else {
+                total = '-'
+              }
             })
-            if (Number.isNaN(total)) {
-              total = '-'
-            } else {
+            if (total !== '-') {
               total = total.toFixed(2)
-            }
-            if(removeCols.indexOf(dataIndex)>-1) {
-              total = '-'
             }
             totalRow[dataIndex] = total
           }
         })
         dataSource.push(totalRow)
+        //总数要增加合计的行数，每页都有一行合计，所以总数要加上
+        let size = Math.ceil(this.ipagination.total/(this.ipagination.pageSize-1))
+        this.ipagination.total = this.ipagination.total + size
       }
     },
     paginationChange(page, pageSize) {

@@ -1,150 +1,171 @@
 <template>
-  <a-row :gutter="24">
-    <a-col :md="24">
-      <a-card :bordered="false">
-        <!-- 查询区域 -->
-        <div class="table-page-search-wrapper">
-          <!-- 搜索区域 -->
-          <a-form layout="inline" @keyup.enter.native="searchQuery">
-            <a-row :gutter="24">
-              <a-col :md="6" :sm="24">
-                <a-form-item label="公司名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input placeholder="请输入公司名称查询" v-model="queryParam.companyName"></a-input>
-                </a-form-item>
-              </a-col>
-              <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-                <a-col :md="6" :sm="24">
-                  <a-button type="primary" @click="searchQuery">查询</a-button>
-                  <a-button style="margin-left: 8px" @click="searchReset">重置</a-button>
-                </a-col>
-              </span>
-            </a-row>
+  <a-card :style="cardStyle" :bordered="false">
+    <a-row :gutter="24">
+      <a-col :md="12">
+        <a-spin :spinning="confirmLoading">
+          <a-form :form="form" id="systemConfigModal">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="公司名称">
+              <a-input placeholder="请输入公司名称" v-decorator.trim="[ 'companyName', validatorRules.companyName]" />
+            </a-form-item>
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="联系人">
+              <a-input placeholder="请输入联系人" v-decorator.trim="[ 'companyContacts' ]" />
+            </a-form-item>
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="公司地址">
+              <a-input placeholder="请输入公司地址" v-decorator.trim="[ 'companyAddress' ]" />
+            </a-form-item>
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="公司电话">
+              <a-input placeholder="请输入公司电话" v-decorator.trim="[ 'companyTel' ]" />
+            </a-form-item>
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="公司传真">
+              <a-input placeholder="请输入公司传真" v-decorator.trim="[ 'companyFax' ]" />
+            </a-form-item>
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="公司邮编">
+              <a-input placeholder="请输入公司邮编" v-decorator.trim="[ 'companyPostCode' ]" />
+            </a-form-item>
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="仓库权限">
+              <a-switch checked-children="启用" un-checked-children="关闭" v-model="depotFlagSwitch" @change="onDepotChange"></a-switch>
+              （如果启用则需要到<b>用户管理</b>进行<b>分配仓库</b>）
+            </a-form-item>
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户权限">
+              <a-switch checked-children="启用" un-checked-children="关闭" v-model="customerFlagSwitch" @change="onCustomerChange"></a-switch>
+              （如果启用则需要到<b>用户管理</b>进行<b>分配客户</b>）
+            </a-form-item>
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="负库存">
+              <a-switch checked-children="启用" un-checked-children="关闭" v-model="minusStockFlagSwitch" @change="onMinusStockChange"></a-switch>
+              （如果启用则单据支持负库存，批次商品除外）
+            </a-form-item>
           </a-form>
-        </div>
-        <!-- 操作按钮区域 -->
-        <div class="table-operator"  style="margin-top: 5px">
-          <a-button v-if="btnEnableList.indexOf(1)>-1" @click="myHandleAdd" type="primary" icon="plus">新增</a-button>
-          <a-dropdown>
-            <a-menu slot="overlay">
-              <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
-            </a-menu>
-            <a-button style="margin-left: 8px">
-              批量操作 <a-icon type="down" />
-            </a-button>
-          </a-dropdown>
-        </div>
-        <!-- table区域-begin -->
-        <div>
-          <a-table
-            ref="table"
-            size="middle"
-            bordered
-            rowKey="id"
-            :columns="columns"
-            :dataSource="dataSource"
-            :pagination="ipagination"
-            :scroll="scroll"
-            :loading="loading"
-            :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-            @change="handleTableChange">
-            <span slot="action" slot-scope="text, record">
-              <a @click="handleEdit(record)">编辑</a>
-              <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
-              <a-popconfirm v-if="btnEnableList.indexOf(1)>-1" title="确定删除吗?" @confirm="() => handleDelete(record.id)">
-                <a>删除</a>
-              </a-popconfirm>
-            </span>
-            <!-- 状态渲染模板 -->
-            <template slot="customRenderFlag" slot-scope="flag">
-              <a-tag v-if="flag==1" color="green">启用</a-tag>
-              <a-tag v-if="flag==0" color="orange">关闭</a-tag>
-            </template>
-          </a-table>
-        </div>
-        <!-- table区域-end -->
-        <!-- 表单区域 -->
-        <systemConfig-modal ref="modalForm" @ok="modalFormOk"></systemConfig-modal>
-      </a-card>
-    </a-col>
-  </a-row>
+        </a-spin>
+      </a-col>
+    </a-row>
+    <a-row :gutter="24">
+      <a-col :md="12" align="middle">
+        <a-button type="primary" @click="handleOk">保存</a-button>
+        <a-button style="margin-left:20px" @click="handleReset">重置</a-button>
+      </a-col>
+    </a-row>
+  </a-card>
 </template>
 <!-- b y 7 5 2 7  1 8 9 2 0 -->
 <script>
-  import SystemConfigModal from './modules/SystemConfigModal'
-  import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import JDate from '@/components/jeecg/JDate'
+  import pick from 'lodash.pick'
+  import {addSystemConfig,editSystemConfig,checkSystemConfig } from '@/api/api'
+  import {autoJumpNextInput} from "@/utils/util"
+  import {getAction } from '@/api/manage'
+  import {mixinDevice} from '@/utils/mixin.js'
   export default {
     name: "SystemConfigList",
-    mixins:[JeecgListMixin],
-    components: {
-      SystemConfigModal,
-      JDate
-    },
+    mixins: [mixinDevice],
     data () {
       return {
+        title:"操作",
+        cardStyle: '',
+        visible: true,
+        model: {},
+        depotFlagSwitch: false, //仓库权限状态
+        customerFlagSwitch: false, //客户权限状态
+        minusStockFlagSwitch: false, //负库存状态
+        isReadOnly: false,
         labelCol: {
-          span: 5
+          xs: { span: 24 },
+          sm: { span: 5 },
         },
         wrapperCol: {
-          span: 18,
-          offset: 1
+          xs: { span: 24 },
+          sm: { span: 16 },
         },
-        // 查询条件
-        queryParam: {companyName:'',},
-        // 表头
-        columns: [
-          {
-            title: '#', dataIndex: '', key:'rowIndex', width:40, align:"center",
-            customRender:function (text,record,index) {
-              return parseInt(index)+1;
-            }
-          },
-          {title: '公司名称', dataIndex: 'companyName', width: 150},
-          {title: '联系人', dataIndex: 'companyContacts', width: 80, align: "center"},
-          {title: '公司地址', dataIndex: 'companyAddress', width: 150, align: "center"},
-          {title: '公司电话', dataIndex: 'companyTel', width: 120, align: "center"},
-          {title: '公司传真', dataIndex: 'companyFax', width: 120, align: "center"},
-          {title: '公司邮编', dataIndex: 'companyPostCode', width: 80, align: "center"},
-          {
-            title: '仓库权限', dataIndex: 'depotFlag', width: 80, align: "center",
-            scopedSlots: { customRender: 'customRenderFlag' }
-          },
-          {
-            title: '客户权限', dataIndex: 'customerFlag', width: 80, align: "center",
-            scopedSlots: { customRender: 'customRenderFlag' }
-          },
-          {
-            title: '负库存', dataIndex: 'minusStockFlag', width: 80, align: "center",
-            scopedSlots: { customRender: 'customRenderFlag' }
-          },
-          {title: '操作', dataIndex: 'action', width: 150, align:"center",
-            scopedSlots: { customRender: 'action' },
+        confirmLoading: false,
+        form: this.$form.createForm(this),
+        validatorRules:{
+          companyName:{
+            rules: [
+              { required: true, message: '请输入公司名称!' },
+              { min: 2, max: 30, message: '长度在 2 到 30 个字符', trigger: 'blur' }
+            ]
           }
-        ],
-        url: {
-          list: "/systemConfig/list",
-          delete: "/systemConfig/delete",
-          deleteBatch: "/systemConfig/deleteBatch"
-        },
+        }
       }
     },
-    computed: {
+    created () {
+      this.init()
+      if(this.isDesktop()) {
+        this.cardStyle = 'height:' + (document.documentElement.clientHeight-125) + 'px'
+      }
     },
     methods: {
-      myHandleAdd() {
-        if(this.ipagination.total>=1) {
-          this.$message.warning('抱歉，只能填写一条系统配置信息！');
-        } else {
-          this.handleAdd()
-        }
+      onDepotChange(checked) {
+        this.model.depotFlag = checked?'1':'0'
       },
-      handleEdit: function (record) {
-        this.$refs.modalForm.edit(record);
-        this.$refs.modalForm.title = "编辑";
-        this.$refs.modalForm.disableSubmit = false;
-        if(this.btnEnableList.indexOf(1)===-1) {
-          this.$refs.modalForm.isReadOnly = true
+      onCustomerChange(checked) {
+        this.model.customerFlag = checked?'1':'0'
+      },
+      onMinusStockChange(checked) {
+        this.model.minusStockFlag = checked?'1':'0'
+      },
+      init () {
+        let param = {
+          search: {"companyName":""},
+          currentPage: 1,
+          pageSize: 10
         }
+        getAction('/systemConfig/list', param).then((res)=>{
+          if(res.code === 200){
+            let record = res.data.rows[0]
+            this.form.resetFields();
+            this.model = Object.assign({}, record);
+            this.visible = true;
+            this.$nextTick(() => {
+              this.form.setFieldsValue(pick(this.model,'companyName', 'companyContacts', 'companyAddress',
+                'companyTel', 'companyFax', 'companyPostCode', 'depotFlag', 'customerFlag', 'minusStockFlag'))
+              autoJumpNextInput('systemConfigModal')
+            });
+            if(record.id) {
+              if (record.depotFlag != null) {
+                this.depotFlagSwitch = record.depotFlag == '1' ? true : false;
+              }
+              if (record.customerFlag != null) {
+                this.customerFlagSwitch = record.customerFlag == '1' ? true : false;
+              }
+              if (record.minusStockFlag != null) {
+                this.minusStockFlagSwitch = record.minusStockFlag == '1' ? true : false;
+              }
+            }
+          } else {
+            this.$message.info(res.data);
+          }
+        })
+      },
+      handleOk () {
+        const that = this;
+        // 触发表单验证
+        this.form.validateFields((err, values) => {
+          if (!err) {
+            that.confirmLoading = true;
+            let formData = Object.assign(this.model, values);
+            let obj;
+            if(!this.model.id){
+              obj=addSystemConfig(formData);
+            }else{
+              obj=editSystemConfig(formData);
+            }
+            obj.then((res)=>{
+              if(res.code === 200){
+                this.init()
+                that.$message.info('保存成功！');
+              }else{
+                that.$message.warning(res.data.message);
+              }
+            }).finally(() => {
+              that.confirmLoading = false;
+            })
+          }
+        })
+      },
+      handleReset () {
+        this.form.resetFields();
+        this.depotFlagSwitch = false
+        this.customerFlagSwitch = false
+        this.minusStockFlagSwitch = false
       }
     }
   }

@@ -19,6 +19,12 @@
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="会员卡号">
               <a-select placeholder="选择会员卡号" v-decorator="[ 'organId' ]"
                 :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
+                <div slot="dropdownRender" slot-scope="menu">
+                  <v-nodes :vnodes="menu" />
+                  <a-divider style="margin: 4px 0;" />
+                  <div v-if="isTenant" style="padding: 4px 8px; cursor: pointer;"
+                       @mousedown="e => e.preventDefault()" @click="addMember"><a-icon type="plus" /> 新增会员</div>
+                </div>
                 <a-select-option v-for="(item,index) in retailList" :key="index" :value="item.id">
                   {{ item.supplier }}
                 </a-select-option>
@@ -43,7 +49,7 @@
         </a-row>
         <a-row class="form-row" :gutter="24">
           <a-col :lg="18" :md="12" :sm="24">
-            <j-editable-table
+            <j-editable-table id="billModal"
               :ref="refKeys[0]"
               :loading="materialTable.loading"
               :columns="materialTable.columns"
@@ -53,76 +59,108 @@
               :rowNumber="false"
               :rowSelection="true"
               :actionButton="true"
+              :dragSort="true"
               @valueChange="onValueChange"
               @added="onAdded"
               @deleted="onDeleted">
               <template #buttonAfter>
-                <a-row :gutter="24">
+                <a-row :gutter="24" style="float:left;" data-step="4" data-title="扫码录入" data-intro="此功能支持扫码枪扫描商品条码进行录入">
                   <a-col v-if="scanStatus" :md="6" :sm="24">
                     <a-button @click="scanEnter">扫码录入</a-button>
                   </a-col>
                   <a-col v-if="!scanStatus" :md="16" :sm="24" style="padding: 0 6px 0 12px">
-                    <a-input placeholder="请扫码商品条码并回车" v-model="scanBarCode" @pressEnter="scanPressEnter" />
+                    <a-input placeholder="请扫码商品条码并回车" v-model="scanBarCode" @pressEnter="scanPressEnter" ref="scanBarCode"/>
                   </a-col>
                   <a-col v-if="!scanStatus" :md="6" :sm="24" style="padding: 0px">
                     <a-button @click="stopScan">收起扫码</a-button>
                   </a-col>
                 </a-row>
+                <a-row :gutter="24" style="float:left;">
+                  <a-col :md="24" :sm="24">
+                    <a-dropdown>
+                      <a-menu slot="overlay">
+                        <a-menu-item key="1" @click="handleBatchSetDepot"><a-icon type="setting"/>批量设置</a-menu-item>
+                        <a-menu-item v-if="isTenant" key="2" @click="addDepot"><a-icon type="plus"/>新增仓库</a-menu-item>
+                      </a-menu>
+                      <a-button style="margin-left: 8px">仓库操作 <a-icon type="down" /></a-button>
+                    </a-dropdown>
+                  </a-col>
+                </a-row>
               </template>
             </j-editable-table>
-          </a-col>
-          <a-col :lg="6" :md="12" :sm="24">
             <a-row class="form-row" :gutter="24">
-              <a-col :lg="24" :md="6" :sm="6"><br/><br/></a-col>
-              <a-col :lg="24" :md="6" :sm="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="实付金额">
-                  <a-input v-decorator.trim="[ 'changeAmount' ]" :style="{color:'purple'}" :readOnly="true"/>
+              <a-col :lg="24" :md="24" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="">
+                  <a-textarea :rows="1" placeholder="请输入备注" v-decorator="[ 'remark' ]" style="margin-top:8px;"/>
                 </a-form-item>
               </a-col>
-              <a-col :lg="24" :md="6" :sm="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款金额">
-                  <a-input v-decorator.trim="[ 'getAmount' ]" :style="{color:'red'}" defaultValue="0" @keyup="onKeyUpGetAmount"/>
-                </a-form-item>
-              </a-col>
-              <a-col :lg="24" :md="6" :sm="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="找零">
-                  <a-input v-decorator.trim="[ 'backAmount' ]" :style="{color:'green'}" :readOnly="true" defaultValue="0"/>
-                </a-form-item>
-              </a-col>
-              <a-col :lg="24" :md="6" :sm="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款账户">
-                  <a-select placeholder="选择付款账户" v-decorator="[ 'accountId', validatorRules.accountId ]" :dropdownMatchSelectWidth="false">
-                    <a-select-option v-for="(item,index) in accountList" :key="index" :value="item.id">
-                      {{ item.name }}
-                    </a-select-option>
-                  </a-select>
+            </a-row>
+            <a-row class="form-row" :gutter="24">
+              <a-col :lg="6" :md="12" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="附件">
+                  <j-upload v-model="fileList" bizPath="bill"></j-upload>
                 </a-form-item>
               </a-col>
             </a-row>
           </a-col>
-        </a-row>
-        <a-row class="form-row" :gutter="24">
-          <a-col :lg="24" :md="24" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="">
-              <a-textarea :rows="2" placeholder="请输入备注" v-decorator="[ 'remark' ]" style="margin-top:8px;"/>
-            </a-form-item>
-          </a-col>
-        </a-row>
-        <a-row class="form-row" :gutter="24">
-          <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="附件">
-              <j-upload v-model="fileList" bizPath="bill"></j-upload>
-            </a-form-item>
-          </a-col>
+          <div class="sign">
+            <a-col :lg="6" :md="12" :sm="24">
+              <a-row class="form-row" :gutter="24">
+                <a-col :lg="24" :md="6" :sm="6"><br/><br/></a-col>
+                <a-col :lg="24" :md="6" :sm="6">
+                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <span slot="label" style="font-size: 24px;line-height:24px">单据金额</span>
+                    <a-input v-decorator.trim="[ 'changeAmount' ]" :style="{color:'purple'}" :readOnly="true"/>
+                  </a-form-item>
+                </a-col>
+                <a-col :lg="24" :md="6" :sm="6">
+                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <span slot="label" style="font-size: 24px;line-height:24px">付款金额</span>
+                    <a-input v-decorator.trim="[ 'getAmount' ]" :style="{color:'red'}" defaultValue="0" @keyup="onKeyUpGetAmount"/>
+                  </a-form-item>
+                </a-col>
+                <a-col :lg="24" :md="6" :sm="6">
+                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <span slot="label" style="font-size: 24px;line-height:24px">找零</span>
+                    <a-input v-decorator.trim="[ 'backAmount' ]" :style="{color:'green'}" :readOnly="true" defaultValue="0"/>
+                  </a-form-item>
+                </a-col>
+                <a-col :lg="24" :md="6" :sm="6">
+                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <span slot="label" style="font-size: 24px;line-height:24px">付款账户</span>
+                    <a-select placeholder="选择付款账户" style="font-size:20px;" v-decorator="[ 'accountId', validatorRules.accountId ]" :dropdownMatchSelectWidth="false">
+                      <div slot="dropdownRender" slot-scope="menu">
+                        <v-nodes :vnodes="menu" />
+                        <a-divider style="margin: 4px 0;" />
+                        <div v-if="isTenant" style="padding: 4px 8px; cursor: pointer;"
+                             @mousedown="e => e.preventDefault()" @click="addAccount"><a-icon type="plus" /> 新增结算账户</div>
+                      </div>
+                      <a-select-option v-for="(item,index) in accountList" :key="index" :value="item.id">
+                        {{ item.name }}
+                      </a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+              </a-row>
+            </a-col>
+          </div>
         </a-row>
       </a-form>
     </a-spin>
     <link-bill-list ref="linkBillList" @ok="linkBillListOk"></link-bill-list>
+    <member-modal ref="memberModalForm" @ok="memberModalFormOk"></member-modal>
+    <depot-modal ref="depotModalForm" @ok="depotModalFormOk"></depot-modal>
+    <account-modal ref="accountModalForm" @ok="accountModalFormOk"></account-modal>
+    <batch-set-depot ref="batchSetDepotModalForm" @ok="batchSetDepotModalFormOk"></batch-set-depot>
   </j-modal>
 </template>
 <script>
   import pick from 'lodash.pick'
   import LinkBillList from '../dialog/LinkBillList'
+  import MemberModal from '../../system/modules/MemberModal'
+  import DepotModal from '../../system/modules/DepotModal'
+  import AccountModal from '../../system/modules/AccountModal'
+  import BatchSetDepot from '../dialog/BatchSetDepot'
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
@@ -137,8 +175,16 @@
     mixins: [JEditableTableMixin, BillModalMixin],
     components: {
       LinkBillList,
+      MemberModal,
+      DepotModal,
+      AccountModal,
+      BatchSetDepot,
       JUpload,
-      JDate
+      JDate,
+      VNodes: {
+        functional: true,
+        render: (h, ctx) => ctx.props.vnodes,
+      }
     },
     data () {
       return {
@@ -172,14 +218,19 @@
             { title: '条码', key: 'barCode', width: '12%', type: FormTypes.popupJsh, kind: 'material', multi: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
-            { title: '名称', key: 'name', width: '9%', type: FormTypes.input, readonly: true },
-            { title: '规格', key: 'standard', width: '6%', type: FormTypes.input, readonly: true },
-            { title: '型号', key: 'model', width: '6%', type: FormTypes.input, readonly: true },
-            { title: '颜色', key: 'color', width: '5%', type: FormTypes.input, readonly: true },
-            { title: '扩展信息', key: 'materialOther', width: '7%', type: FormTypes.input, readonly: true },
-            { title: '库存', key: 'stock', width: '5%', type: FormTypes.input, readonly: true },
-            { title: '单位', key: 'unit', width: '4%', type: FormTypes.input, readonly: true },
-            { title: '多属性', key: 'sku', width: '5%', type: FormTypes.input, readonly: true },
+            { title: '名称', key: 'name', width: '9%', type: FormTypes.normal },
+            { title: '规格', key: 'standard', width: '6%', type: FormTypes.normal },
+            { title: '型号', key: 'model', width: '6%', type: FormTypes.normal },
+            { title: '颜色', key: 'color', width: '5%', type: FormTypes.normal },
+            { title: '扩展信息', key: 'materialOther', width: '7%', type: FormTypes.normal },
+            { title: '库存', key: 'stock', width: '5%', type: FormTypes.normal },
+            { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
+            { title: '序列号', key: 'snList', width: '12%', type: FormTypes.input, placeholder: '多个序列号请用逗号隔开',
+              validateRules: [{ pattern: /^\S{1,100}$/, message: '请小于100位字符' }]
+            },
+            { title: '批号', key: 'batchNumber', width: '7%', type: FormTypes.input },
+            { title: '有效期', key: 'expirationDate',width: '9%', type: FormTypes.date },
+            { title: '多属性', key: 'sku', width: '5%', type: FormTypes.normal },
             { title: '数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
@@ -214,13 +265,22 @@
       //调用完edit()方法之后会自动调用此方法
       editAfter() {
         this.changeColumnHide()
+        this.changeFormTypes(this.materialTable.columns, 'snList', 0)
+        this.changeFormTypes(this.materialTable.columns, 'batchNumber', 0)
+        this.changeFormTypes(this.materialTable.columns, 'expirationDate', 0)
         if (this.action === 'add') {
           this.addInit(this.prefixNo)
           this.fileList = []
+          this.$nextTick(() => {
+            this.form.setFieldsValue({'getAmount':0, 'backAmount':0})
+          })
         } else {
           this.model.operTime = this.model.operTimeStr
-          this.model.getAmount = this.model.changeAmount
-          this.model.backAmount = 0
+          if(this.model.backAmount) {
+            this.model.getAmount = (this.model.changeAmount + this.model.backAmount).toFixed(2)
+          } else {
+            this.model.getAmount = this.model.changeAmount
+          }
           this.fileList = this.model.fileName
           this.$nextTick(() => {
             this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'number', 'linkNumber', 'remark',
@@ -292,7 +352,7 @@
         });
       },
       onSearchLinkNumber() {
-        this.$refs.linkBillList.show('出库', '零售', '会员', "0")
+        this.$refs.linkBillList.show('出库', '零售', '会员', "1")
         this.$refs.linkBillList.title = "选择零售出库"
       },
       linkBillListOk(selectBillRows) {
@@ -340,5 +400,12 @@
   }
 </script>
 <style scoped>
-
+  .sign .ant-input{
+    font-size: 30px;
+    font-weight:bolder;
+    text-align:center;
+    border-left-width:0px!important;
+    border-top-width:0px!important;
+    border-right-width:0px!important;
+  }
 </style>

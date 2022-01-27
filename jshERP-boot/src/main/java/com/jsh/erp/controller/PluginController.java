@@ -6,6 +6,8 @@ import com.gitee.starblues.integration.operator.module.PluginInfo;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.ComputerInfo;
 import com.jsh.erp.utils.StringUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +25,7 @@ import java.util.*;
  */
 @RestController
 @RequestMapping("/plugin")
+@Api(tags = {"插件管理"})
 public class PluginController {
 
 
@@ -37,6 +40,7 @@ public class PluginController {
      * @return 返回插件信息
      */
     @GetMapping(value = "/list")
+    @ApiOperation(value = "获取插件信息")
     public BaseResponseInfo getPluginInfo(@RequestParam(value = "name",required = false) String name,
                                           @RequestParam("currentPage") Integer currentPage,
                                           @RequestParam("pageSize") Integer pageSize,
@@ -73,6 +77,7 @@ public class PluginController {
      * @return 获取插件文件名。只在生产环境显示
      */
     @GetMapping("/files")
+    @ApiOperation(value = "获取插件jar文件名")
     public Set<String> getPluginFilePaths(){
         try {
             return pluginOperator.getPluginFilePaths();
@@ -89,6 +94,7 @@ public class PluginController {
      * @return 返回操作结果
      */
     @PostMapping("/stop/{id}")
+    @ApiOperation(value = "根据插件id停止插件")
     public BaseResponseInfo stop(@PathVariable("id") String id){
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
@@ -117,6 +123,7 @@ public class PluginController {
      * @return 返回操作结果
      */
     @PostMapping("/start/{id}")
+    @ApiOperation(value = "根据插件id启动插件")
     public BaseResponseInfo start(@PathVariable("id") String id){
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
@@ -146,6 +153,7 @@ public class PluginController {
      * @return 返回操作结果
      */
     @PostMapping("/uninstall/{id}")
+    @ApiOperation(value = "根据插件id卸载插件")
     public BaseResponseInfo uninstall(@PathVariable("id") String id){
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
@@ -175,6 +183,7 @@ public class PluginController {
      * @return 操作结果
      */
     @PostMapping("/installByPath")
+    @ApiOperation(value = "根据插件路径安装插件")
     public String install(@RequestParam("path") String path){
         try {
             if(pluginOperator.install(Paths.get(path))){
@@ -195,6 +204,7 @@ public class PluginController {
      * @return 操作结果
      */
     @PostMapping("/uploadInstallPluginJar")
+    @ApiOperation(value = "上传并安装插件")
     public BaseResponseInfo install(MultipartFile file, HttpServletRequest request, HttpServletResponse response){
         BaseResponseInfo res = new BaseResponseInfo();
         try {
@@ -215,6 +225,7 @@ public class PluginController {
      * @return 操作结果
      */
     @PostMapping("/uploadPluginConfigFile")
+    @ApiOperation(value = "上传插件的配置文件")
     public String uploadConfig(@RequestParam("configFile") MultipartFile multipartFile){
         try {
             if(pluginOperator.uploadConfigFile(multipartFile)){
@@ -235,6 +246,7 @@ public class PluginController {
      * @return 操作结果
      */
     @PostMapping("/back/{pluginId}")
+    @ApiOperation(value = "备份插件")
     public String backupPlugin(@PathVariable("pluginId") String pluginId){
         try {
             if(pluginOperator.backupPlugin(pluginId, "testBack")){
@@ -253,6 +265,7 @@ public class PluginController {
      * @return
      */
     @GetMapping("/getMacWithSecret")
+    @ApiOperation(value = "获取加密后的mac")
     public BaseResponseInfo getMacWithSecret(){
         BaseResponseInfo res = new BaseResponseInfo();
         try {

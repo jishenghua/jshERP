@@ -64,7 +64,7 @@ const updateTheme = primaryColor => {
     const lessConfigNode = document.createElement('script');
     const lessScriptNode = document.createElement('script');
     lessStyleNode.setAttribute('rel', 'stylesheet/less');
-    lessStyleNode.setAttribute('href', '/color.less');
+    lessStyleNode.setAttribute('href', '/static/color.less');
     lessConfigNode.innerHTML = `
       window.less = {
         async: true,
@@ -72,7 +72,7 @@ const updateTheme = primaryColor => {
         javascriptEnabled: true
       };
     `;
-    lessScriptNode.src = 'https://gw.alipayobjects.com/os/lib/less.js/3.8.1/less.min.js';
+    lessScriptNode.src = '/static/less.min.js';
     lessScriptNode.async = true;
     lessScriptNode.onload = () => {
       buildIt();

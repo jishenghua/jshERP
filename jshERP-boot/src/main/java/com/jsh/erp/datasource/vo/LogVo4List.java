@@ -4,9 +4,19 @@ import com.jsh.erp.datasource.entities.Log;
 
 public class LogVo4List extends Log {
 
+    private String loginName;
+
     private String userName;
 
     private String createTimeStr;
+
+    public String getLoginName() {
+        return loginName;
+    }
+
+    public void setLoginName(String loginName) {
+        this.loginName = loginName;
+    }
 
     public String getUserName() {
         return userName;

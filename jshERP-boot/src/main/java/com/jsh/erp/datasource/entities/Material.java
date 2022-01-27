@@ -11,8 +11,6 @@ public class Material {
 
     private String mfrs;
 
-    private BigDecimal safetyStock;
-
     private String model;
 
     private String standard;
@@ -28,6 +26,8 @@ public class Material {
     private Long unitId;
 
     private Integer expiryNum;
+
+    private BigDecimal weight;
 
     private Boolean enabled;
 
@@ -75,14 +75,6 @@ public class Material {
 
     public void setMfrs(String mfrs) {
         this.mfrs = mfrs == null ? null : mfrs.trim();
-    }
-
-    public BigDecimal getSafetyStock() {
-        return safetyStock;
-    }
-
-    public void setSafetyStock(BigDecimal safetyStock) {
-        this.safetyStock = safetyStock;
     }
 
     public String getModel() {
@@ -147,6 +139,14 @@ public class Material {
 
     public void setExpiryNum(Integer expiryNum) {
         this.expiryNum = expiryNum;
+    }
+
+    public BigDecimal getWeight() {
+        return weight;
+    }
+
+    public void setWeight(BigDecimal weight) {
+        this.weight = weight;
     }
 
     public Boolean getEnabled() {

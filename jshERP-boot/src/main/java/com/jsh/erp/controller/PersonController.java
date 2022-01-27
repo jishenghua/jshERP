@@ -8,6 +8,8 @@ import com.jsh.erp.datasource.entities.Person;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.person.PersonService;
 import com.jsh.erp.utils.BaseResponseInfo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -23,13 +25,21 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping(value = "/person")
+@Api(tags = {"经手人管理"})
 public class PersonController {
     private Logger logger = LoggerFactory.getLogger(PersonController.class);
 
     @Resource
     private PersonService personService;
 
+    /**
+     * 全部数据列表
+     * @param request
+     * @return
+     * @throws Exception
+     */
     @GetMapping(value = "/getAllList")
+    @ApiOperation(value = "全部数据列表")
     public BaseResponseInfo getAllList(HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
@@ -53,6 +63,7 @@ public class PersonController {
      * @return
      */
     @GetMapping(value = "/getPersonByIds")
+    @ApiOperation(value = "根据Id获取经手人信息")
     public BaseResponseInfo getPersonByIds(@RequestParam("personIds") String personIds,
                                            HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
@@ -78,6 +89,7 @@ public class PersonController {
      * @return
      */
     @GetMapping(value = "/getPersonByType")
+    @ApiOperation(value = "根据类型获取经手人信息")
     public BaseResponseInfo getPersonByType(@RequestParam("type") String type,
                                             HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
@@ -102,6 +114,7 @@ public class PersonController {
      * @return
      */
     @GetMapping(value = "/getPersonByNumType")
+    @ApiOperation(value = "根据类型获取经手人信息1-业务员，2-仓管员，3-财务员")
     public JSONArray getPersonByNumType(@RequestParam("type") String typeNum,
                                         HttpServletRequest request)throws Exception {
         JSONArray dataArray = new JSONArray();

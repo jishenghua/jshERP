@@ -31,11 +31,17 @@ public class DepotItemStockWarningCount {
 
     private String MOtherField3;
 
-    private BigDecimal safetystock;//安全库存量
+    private String depotName;
 
-    private BigDecimal currentNumber;//库存
+    private BigDecimal currentNumber;
 
-    private BigDecimal linjieNumber;//临界库存
+    private BigDecimal lowSafeStock;
+
+    private BigDecimal highSafeStock;
+
+    private BigDecimal lowCritical;
+
+    private BigDecimal highCritical;
 
     public Long getMId() {
         return MId;
@@ -141,12 +147,12 @@ public class DepotItemStockWarningCount {
         this.MOtherField3 = MOtherField3;
     }
 
-    public BigDecimal getSafetystock() {
-        return safetystock;
+    public String getDepotName() {
+        return depotName;
     }
 
-    public void setSafetystock(BigDecimal safetystock) {
-        this.safetystock = safetystock;
+    public void setDepotName(String depotName) {
+        this.depotName = depotName;
     }
 
     public BigDecimal getCurrentNumber() {
@@ -157,11 +163,35 @@ public class DepotItemStockWarningCount {
         this.currentNumber = currentNumber;
     }
 
-    public BigDecimal getLinjieNumber() {
-        return linjieNumber;
+    public BigDecimal getLowSafeStock() {
+        return lowSafeStock;
     }
 
-    public void setLinjieNumber(BigDecimal linjieNumber) {
-        this.linjieNumber = linjieNumber;
+    public void setLowSafeStock(BigDecimal lowSafeStock) {
+        this.lowSafeStock = lowSafeStock;
+    }
+
+    public BigDecimal getHighSafeStock() {
+        return highSafeStock;
+    }
+
+    public void setHighSafeStock(BigDecimal highSafeStock) {
+        this.highSafeStock = highSafeStock;
+    }
+
+    public BigDecimal getLowCritical() {
+        return lowCritical;
+    }
+
+    public void setLowCritical(BigDecimal lowCritical) {
+        this.lowCritical = lowCritical;
+    }
+
+    public BigDecimal getHighCritical() {
+        return highCritical;
+    }
+
+    public void setHighCritical(BigDecimal highCritical) {
+        this.highCritical = highCritical;
     }
 }

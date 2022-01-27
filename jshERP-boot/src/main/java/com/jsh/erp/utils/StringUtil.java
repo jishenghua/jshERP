@@ -19,6 +19,13 @@ public class StringUtil {
 
     private static String DEFAULT_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
+    public final static String regex = "'|#|%|;|--| and | and|and | or | or|or | not | not|not " +
+            "| use | use|use | insert | insert|insert | delete | delete|delete | update | update|update " +
+            "| select | select|select | count | count|count | group | group|group | union | union|union " +
+            "| create | create|create | drop | drop|drop | truncate | truncate|truncate | alter | alter|alter " +
+            "| grant | grant|grant | execute | execute|execute | exec | exec|exec | xp_cmdshell | xp_cmdshell|xp_cmdshell " +
+            "| call | call|call | declare | declare|declare | source | source|source | sql | sql|sql ";
+
     public static String filterNull(String str) {
         if (str == null) {
             return "";
@@ -234,7 +241,7 @@ public class StringUtil {
             if(StringUtil.isNotEmpty(search)) {
                 JSONObject obj = JSONObject.parseObject(search);
                 if (obj.get(key) != null) {
-                    value = obj.getString(key);
+                    value = obj.getString(key).trim();
                     if (value.equals("")) {
                         value = null;
                     }
@@ -249,6 +256,8 @@ public class StringUtil {
     public static String toNull(String value) {
         if(("").equals(value)) {
             value = null;
+        } else {
+            value = value.trim();
         }
         return value;
     }
@@ -264,6 +273,15 @@ public class StringUtil {
         } else {
             return false;
         }
+    }
+
+    /**
+     * sql注入过滤，保障sql的安全执行
+     * @param originStr
+     * @return
+     */
+    public static String safeSqlParse(String originStr){
+        return originStr.replaceAll("(?i)" + regex, "");
     }
 
     public static void main(String[] args) {

@@ -63,13 +63,13 @@ public class LogService {
         return list;
     }
 
-    public List<LogVo4List> select(String operation, Integer userId, String clientIp, Integer status, String beginTime, String endTime,
+    public List<LogVo4List> select(String operation, String userInfo, String clientIp, Integer status, String beginTime, String endTime,
                                    String content, int offset, int rows)throws Exception {
         List<LogVo4List> list=null;
         try{
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            list=logMapperEx.selectByConditionLog(operation, userId, clientIp, status, beginTime, endTime,
+            list=logMapperEx.selectByConditionLog(operation, userInfo, clientIp, status, beginTime, endTime,
                     content, offset, rows);
             if (null != list) {
                 for (LogVo4List log : list) {
@@ -82,13 +82,13 @@ public class LogService {
         return list;
     }
 
-    public Long countLog(String operation, Integer userId, String clientIp, Integer status, String beginTime, String endTime,
+    public Long countLog(String operation, String userInfo, String clientIp, Integer status, String beginTime, String endTime,
                         String content)throws Exception {
         Long result=null;
         try{
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            result=logMapperEx.countsByLog(operation, userId, clientIp, status, beginTime, endTime, content);
+            result=logMapperEx.countsByLog(operation, userInfo, clientIp, status, beginTime, endTime, content);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }

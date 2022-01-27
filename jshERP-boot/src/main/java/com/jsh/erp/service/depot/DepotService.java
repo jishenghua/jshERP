@@ -128,6 +128,26 @@ public class DepotService {
             depot.setType(0);
             depot.setIsDefault(false);
             result=depotMapper.insertSelective(depot);
+            //新增仓库时给当前用户自动授权
+            Long userId = userService.getUserId(request);
+            Long depotId = getIdByName(depot.getName());
+            String ubKey = "[" + depotId + "]";
+            List<UserBusiness> ubList = userBusinessService.getBasicData(userId.toString(), "UserDepot");
+            if(ubList ==null || ubList.size() == 0) {
+                JSONObject ubObj = new JSONObject();
+                ubObj.put("type", "UserDepot");
+                ubObj.put("keyId", userId);
+                ubObj.put("value", ubKey);
+                userBusinessService.insertUserBusiness(ubObj, request);
+            } else {
+                UserBusiness ubInfo = ubList.get(0);
+                JSONObject ubObj = new JSONObject();
+                ubObj.put("id", ubInfo.getId());
+                ubObj.put("type", ubInfo.getType());
+                ubObj.put("keyId", ubInfo.getKeyId());
+                ubObj.put("value", ubInfo.getValue() + ubKey);
+                userBusinessService.updateUserBusiness(ubObj, request);
+            }
             logService.insertLog("仓库",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(depot.getName()).toString(), request);
         }catch(Exception e){
@@ -211,23 +231,10 @@ public class DepotService {
     public List<Depot> findUserDepot()throws Exception{
         DepotExample example = new DepotExample();
         example.createCriteria().andTypeEqualTo(0).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        example.setOrderByClause("Sort");
+        example.setOrderByClause("sort");
         List<Depot> list=null;
         try{
             list= depotMapper.selectByExample(example);
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        return list;
-    }
-
-    public List<Depot> findGiftByType(Integer type)throws Exception{
-        DepotExample example = new DepotExample();
-        example.createCriteria().andTypeEqualTo(type);
-        example.setOrderByClause("Sort");
-        List<Depot> list=null;
-        try{
-            list=  depotMapper.selectByExample(example);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -289,16 +296,16 @@ public class DepotService {
                     if(StringUtil.isNotEmpty(depotStr)){
                         depotStr = depotStr.replaceAll("\\[", "").replaceAll("]", ",");
                         String[] depotArr = depotStr.split(",");
-                        for(String depotId: depotArr) {
-                            JSONObject item = new JSONObject();
-                            item.put("id", Long.parseLong(depotId));
-                            for (Depot depot : dataList) {
+                        for (Depot depot : dataList) {
+                            for(String depotId: depotArr) {
                                 if(depot.getId() == Long.parseLong(depotId)){
+                                    JSONObject item = new JSONObject();
+                                    item.put("id", depot.getId());
                                     item.put("depotName", depot.getName());
                                     item.put("isDefault", depot.getIsDefault());
+                                    arr.add(item);
                                 }
                             }
-                            arr.add(item);
                         }
                     }
                 }

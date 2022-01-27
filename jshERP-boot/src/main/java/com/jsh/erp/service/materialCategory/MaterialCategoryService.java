@@ -200,10 +200,14 @@ public class MaterialCategoryService {
         if(strArray.length<1){
             return 0;
         }
-        try{
+        List<MaterialCategory> mcList = materialCategoryMapperEx.getMaterialCategoryListByCategoryIds(idArray);
+        if(mcList!=null && mcList.size()>0) {
+            logger.error("异常码[{}],异常提示[{}]",
+                    ExceptionConstants.MATERIAL_CATEGORY_CHILD_NOT_SUPPORT_DELETE_CODE,ExceptionConstants.MATERIAL_CATEGORY_CHILD_NOT_SUPPORT_DELETE_MSG);
+            throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_CATEGORY_CHILD_NOT_SUPPORT_DELETE_CODE,
+                    ExceptionConstants.MATERIAL_CATEGORY_CHILD_NOT_SUPPORT_DELETE_MSG);
+        } else {
             result=materialCategoryMapperEx.batchDeleteMaterialCategoryByIds(updateDate,updater,strArray);
-        }catch(Exception e){
-            JshException.writeFail(logger, e);
         }
         return result;
     }

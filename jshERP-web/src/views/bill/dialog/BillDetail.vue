@@ -25,6 +25,7 @@
       <a-button v-if="billType === '调拨出库'" v-print="'#allocationOutPrint'">普通打印</a-button>
       <a-button v-if="billType === '组装单'" v-print="'#assemblePrint'">普通打印</a-button>
       <a-button v-if="billType === '拆卸单'" v-print="'#disassemblePrint'">普通打印</a-button>
+      <a-button v-if="billType === '盘点复盘'" v-print="'#stockCheckReplayPrint'">普通打印</a-button>
       <a-button key="back" @click="handleCancel">取消</a-button>
     </template>
     <a-form :form="form">
@@ -71,18 +72,18 @@
             <a-col :span="6">
               <a-row class="form-row" :gutter="24">
                 <a-col :lg="24" :md="6" :sm="6">
-                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="实收金额">
+                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据金额">
                     {{model.changeAmount}}
                   </a-form-item>
                 </a-col>
                 <a-col :lg="24" :md="6" :sm="6">
                   <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款金额">
-                    {{model.changeAmount}}
+                    {{model.getAmount}}
                   </a-form-item>
                 </a-col>
                 <a-col :lg="24" :md="6" :sm="6">
                   <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="找零">
-                    0
+                    {{model.backAmount}}
                   </a-form-item>
                 </a-col>
                 <a-col :lg="24" :md="6" :sm="6">
@@ -145,18 +146,18 @@
             <a-col :span="6">
               <a-row class="form-row" :gutter="24">
                 <a-col :lg="24" :md="6" :sm="6">
-                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="实付金额">
+                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据金额">
                     {{model.changeAmount}}
                   </a-form-item>
                 </a-col>
                 <a-col :lg="24" :md="6" :sm="6">
                   <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款金额">
-                    {{model.changeAmount}}
+                    {{model.getAmount}}
                   </a-form-item>
                 </a-col>
                 <a-col :lg="24" :md="6" :sm="6">
                   <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="找零">
-                    0
+                    {{model.backAmount}}
                   </a-form-item>
                 </a-col>
                 <a-col :lg="24" :md="6" :sm="6">
@@ -214,6 +215,25 @@
               <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
                 {{model.remark}}
               </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row class="form-row" :gutter="24">
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="优惠率">
+                {{model.discount}}%
+              </a-form-item>
+            </a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款优惠">
+                {{model.discountMoney}}
+              </a-form-item>
+            </a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 6 }}" :wrapperCol="wrapperCol" label="优惠后金额">
+                {{model.discountLastMoney}}
+              </a-form-item>
+            </a-col>
+            <a-col :span="6">
             </a-col>
           </a-row>
         </section>
@@ -436,6 +456,25 @@
               </a-form-item>
             </a-col>
           </a-row>
+          <a-row class="form-row" :gutter="24">
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="优惠率">
+                {{model.discount}}%
+              </a-form-item>
+            </a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款优惠">
+                {{model.discountMoney}}
+              </a-form-item>
+            </a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 6 }}" :wrapperCol="wrapperCol" label="优惠后金额">
+                {{model.discountLastMoney}}
+              </a-form-item>
+            </a-col>
+            <a-col :span="6">
+            </a-col>
+          </a-row>
         </section>
       </template>
       <!--销售出库-->
@@ -639,7 +678,7 @@
               </a-form-item>
             </a-col>
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联单号">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联单据">
                 {{model.linkNumber}} {{model.billType}}
               </a-form-item>
             </a-col>
@@ -685,7 +724,7 @@
               </a-form-item>
             </a-col>
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联单号">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联单据">
                 {{model.linkNumber}} {{model.billType}}
               </a-form-item>
             </a-col>
@@ -821,6 +860,47 @@
           </a-row>
         </section>
       </template>
+      <!--盘点复盘-->
+      <template v-else-if="billType === '盘点复盘'">
+        <section ref="print" id="stockCheckReplayPrint">
+          <a-row class="form-row" :gutter="24">
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
+                {{model.operTimeStr}}
+              </a-form-item>
+            </a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号">
+                {{model.number}}
+              </a-form-item>
+            </a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联单据">
+                {{model.linkNumber}}
+              </a-form-item>
+            </a-col>
+            <a-col :span="6"></a-col>
+          </a-row>
+          <div :style="tableWidth">
+            <a-table
+              ref="table"
+              size="middle"
+              bordered
+              rowKey="id"
+              :pagination="false"
+              :columns="columns"
+              :dataSource="dataSource">
+            </a-table>
+          </div>
+          <a-row class="form-row" :gutter="24">
+            <a-col :lg="24" :md="24" :sm="24">
+              <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
+                {{model.remark}}
+              </a-form-item>
+            </a-col>
+          </a-row>
+        </section>
+      </template>
       <template v-if="fileList && fileList.length>0">
         <a-row class="form-row" :gutter="24">
           <a-col :span="10">
@@ -893,6 +973,9 @@
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
+          { title: '序列号', dataIndex: 'snList'},
+          { title: '批号', dataIndex: 'batchNumber'},
+          { title: '有效期', dataIndex: 'expirationDate'},
           { title: '多属性', dataIndex: 'sku'},
           { title: '数量', dataIndex: 'operNumber'},
           { title: '单价', dataIndex: 'unitPrice'},
@@ -909,6 +992,9 @@
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
+          { title: '序列号', dataIndex: 'snList'},
+          { title: '批号', dataIndex: 'batchNumber'},
+          { title: '有效期', dataIndex: 'expirationDate'},
           { title: '多属性', dataIndex: 'sku'},
           { title: '数量', dataIndex: 'operNumber'},
           { title: '单价', dataIndex: 'unitPrice'},
@@ -929,6 +1015,9 @@
           { title: '已入库', dataIndex: 'finishNumber'},
           { title: '单价', dataIndex: 'unitPrice'},
           { title: '金额', dataIndex: 'allPrice'},
+          { title: '税率(%)', dataIndex: 'taxRate'},
+          { title: '税额', dataIndex: 'taxMoney'},
+          { title: '价税合计', dataIndex: 'taxLastMoney'},
           { title: '备注', dataIndex: 'remark'}
         ],
         purchaseInColumns: [
@@ -947,7 +1036,6 @@
           { title: '多属性', dataIndex: 'sku'},
           { title: '数量', dataIndex: 'operNumber'},
           { title: '单价', dataIndex: 'unitPrice'},
-          { title: '含税单价', dataIndex: 'taxUnitPrice'},
           { title: '金额', dataIndex: 'allPrice'},
           { title: '税率(%)', dataIndex: 'taxRate'},
           { title: '税额', dataIndex: 'taxMoney'},
@@ -970,7 +1058,6 @@
           { title: '多属性', dataIndex: 'sku'},
           { title: '数量', dataIndex: 'operNumber'},
           { title: '单价', dataIndex: 'unitPrice'},
-          { title: '含税单价', dataIndex: 'taxUnitPrice'},
           { title: '金额', dataIndex: 'allPrice'},
           { title: '税率(%)', dataIndex: 'taxRate'},
           { title: '税额', dataIndex: 'taxMoney'},
@@ -991,6 +1078,9 @@
           { title: '已入库', dataIndex: 'finishNumber'},
           { title: '单价', dataIndex: 'unitPrice'},
           { title: '金额', dataIndex: 'allPrice'},
+          { title: '税率(%)', dataIndex: 'taxRate'},
+          { title: '税额', dataIndex: 'taxMoney'},
+          { title: '价税合计', dataIndex: 'taxLastMoney'},
           { title: '备注', dataIndex: 'remark'}
         ],
         saleOutColumns: [
@@ -1009,7 +1099,6 @@
           { title: '多属性', dataIndex: 'sku'},
           { title: '数量', dataIndex: 'operNumber'},
           { title: '单价', dataIndex: 'unitPrice'},
-          { title: '含税单价', dataIndex: 'taxUnitPrice'},
           { title: '金额', dataIndex: 'allPrice'},
           { title: '税率(%)', dataIndex: 'taxRate'},
           { title: '税额', dataIndex: 'taxMoney'},
@@ -1032,7 +1121,6 @@
           { title: '多属性', dataIndex: 'sku'},
           { title: '数量', dataIndex: 'operNumber'},
           { title: '单价', dataIndex: 'unitPrice'},
-          { title: '含税单价', dataIndex: 'taxUnitPrice'},
           { title: '金额', dataIndex: 'allPrice'},
           { title: '税率(%)', dataIndex: 'taxRate'},
           { title: '税额', dataIndex: 'taxMoney'},
@@ -1049,6 +1137,9 @@
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
+          { title: '序列号', dataIndex: 'snList'},
+          { title: '批号', dataIndex: 'batchNumber'},
+          { title: '有效期', dataIndex: 'expirationDate'},
           { title: '多属性', dataIndex: 'sku'},
           { title: '数量', dataIndex: 'operNumber'},
           { title: '单价', dataIndex: 'unitPrice'},
@@ -1065,6 +1156,9 @@
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
+          { title: '序列号', dataIndex: 'snList'},
+          { title: '批号', dataIndex: 'batchNumber'},
+          { title: '有效期', dataIndex: 'expirationDate'},
           { title: '多属性', dataIndex: 'sku'},
           { title: '数量', dataIndex: 'operNumber'},
           { title: '单价', dataIndex: 'unitPrice'},
@@ -1121,6 +1215,21 @@
           { title: '单价', dataIndex: 'unitPrice'},
           { title: '金额', dataIndex: 'allPrice'},
           { title: '备注', dataIndex: 'remark'}
+        ],
+        stockCheckReplayColumns: [
+          { title: '仓库名称', dataIndex: 'depotName'},
+          { title: '条码', dataIndex: 'barCode'},
+          { title: '名称', dataIndex: 'name'},
+          { title: '规格', dataIndex: 'standard'},
+          { title: '型号', dataIndex: 'model'},
+          { title: '扩展信息', dataIndex: 'materialOther'},
+          { title: '库存', dataIndex: 'stock'},
+          { title: '单位', dataIndex: 'unit'},
+          { title: '多属性', dataIndex: 'sku'},
+          { title: '数量', dataIndex: 'operNumber'},
+          { title: '单价', dataIndex: 'unitPrice'},
+          { title: '金额', dataIndex: 'allPrice'},
+          { title: '备注', dataIndex: 'remark'}
         ]
       }
     },
@@ -1154,6 +1263,8 @@
           this.defColumns = this.assembleColumns
         } else if (type === '拆卸单') {
           this.defColumns = this.disassembleColumns
+        } else if (type === '盘点复盘') {
+          this.defColumns = this.stockCheckReplayColumns
         }
         //不是部分采购|部分销售的时候移除列
         if(record.status === '3') {
@@ -1189,6 +1300,11 @@
         this.fileList = record.fileName
         this.visible = true;
         this.model = Object.assign({}, record);
+        if(this.model.backAmount) {
+          this.model.getAmount = (this.model.changeAmount + this.model.backAmount).toFixed(2)
+        } else {
+          this.model.getAmount = this.model.changeAmount
+        }
         this.model.debt = (this.model.discountLastMoney + this.model.otherMoney - this.model.changeAmount).toFixed(2)
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model,'id'))

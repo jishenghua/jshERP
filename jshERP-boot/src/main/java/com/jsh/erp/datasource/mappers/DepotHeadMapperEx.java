@@ -24,6 +24,7 @@ public interface DepotHeadMapperEx {
             @Param("creatorArray") String[] creatorArray,
             @Param("statusArray") String[] statusArray,
             @Param("number") String number,
+            @Param("linkNumber") String linkNumber,
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("materialParam") String materialParam,
@@ -40,6 +41,7 @@ public interface DepotHeadMapperEx {
             @Param("creatorArray") String[] creatorArray,
             @Param("statusArray") String[] statusArray,
             @Param("number") String number,
+            @Param("linkNumber") String linkNumber,
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("materialParam") String materialParam,
@@ -56,8 +58,9 @@ public interface DepotHeadMapperEx {
             @Param("endTime") String endTime,
             @Param("type") String type,
             @Param("materialParam") String materialParam,
-            @Param("depotId") Integer depotId,
+            @Param("depotList") List<Long> depotList,
             @Param("oId") Integer oId,
+            @Param("number") String number,
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
@@ -66,15 +69,16 @@ public interface DepotHeadMapperEx {
             @Param("endTime") String endTime,
             @Param("type") String type,
             @Param("materialParam") String materialParam,
-            @Param("depotId") Integer depotId,
-            @Param("oId") Integer oId);
+            @Param("depotList") List<Long> depotList,
+            @Param("oId") Integer oId,
+            @Param("number") String number);
 
     List<DepotHeadVo4InOutMCount> findInOutMaterialCount(
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("type") String type,
             @Param("materialParam") String materialParam,
-            @Param("depotId") Integer depotId,
+            @Param("depotList") List<Long> depotList,
             @Param("oId") Integer oId,
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
@@ -84,17 +88,17 @@ public interface DepotHeadMapperEx {
             @Param("endTime") String endTime,
             @Param("type") String type,
             @Param("materialParam") String materialParam,
-            @Param("depotId") Integer depotId,
+            @Param("depotList") List<Long> depotList,
             @Param("oId") Integer oId);
 
     List<DepotHeadVo4InDetail> findAllocationDetail(
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("subType") String subType,
+            @Param("number") String number,
             @Param("materialParam") String materialParam,
-            @Param("depotId") Integer depotId,
-            @Param("depotIdF") Integer depotIdF,
-            @Param("oId") Integer oId,
+            @Param("depotList") List<Long> depotList,
+            @Param("depotFList") List<Long> depotFList,
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
@@ -102,10 +106,10 @@ public interface DepotHeadMapperEx {
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("subType") String subType,
+            @Param("number") String number,
             @Param("materialParam") String materialParam,
-            @Param("depotId") Integer depotId,
-            @Param("depotIdF") Integer depotIdF,
-            @Param("oId") Integer oId);
+            @Param("depotList") List<Long> depotList,
+            @Param("depotFList") List<Long> depotFList);
 
     List<DepotHeadVo4StatementAccount> findStatementAccount(
             @Param("beginTime") String beginTime,
@@ -155,7 +159,6 @@ public interface DepotHeadMapperEx {
     BigDecimal getBuyAndSaleRetailStatistics(
             @Param("type") String type,
             @Param("subType") String subType,
-            @Param("hasSupplier") Integer hasSupplier,
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime);
 

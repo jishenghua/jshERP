@@ -25,7 +25,7 @@
 
       <a-form-item>
         <a-checkbox v-decorator="['rememberMe', {initialValue: true, valuePropName: 'checked'}]" >自动登陆</a-checkbox>
-        <router-link :to="{ name: 'register'}" class="forge-password" style="float: right;margin-right: 10px;" >
+        <router-link v-if="registerFlag==='1'" :to="{ name: 'register'}" class="forge-password" style="float: right;margin-right: 10px;" >
           注册租户
         </router-link>
       </a-form-item>
@@ -61,11 +61,13 @@
   import { mapActions } from "vuex"
   import { timeFix } from "@/utils/util"
   import Vue from 'vue'
+  import {getPlatformConfigByKey } from '@/api/api'
   import { ACCESS_TOKEN ,ENCRYPTED_STRING} from "@/store/mutation-types"
   import { putAction,postAction,getAction } from '@/api/manage'
   import { encryption , getEncryptedString } from '@/utils/encryption/aesEncrypt'
   import store from '@/store/'
   import { USER_INFO } from "@/store/mutation-types"
+  import pick from 'lodash.pick'
 
   export default {
     components: {
@@ -104,6 +106,7 @@
         validate_status:"",
         currdatetime:'',
         randCodeImage:'',
+        registerFlag:'',
         requestCodeSuccess:false
       }
     },
@@ -111,6 +114,7 @@
       this.currdatetime = new Date().getTime();
       Vue.ls.remove(ACCESS_TOKEN)
       this.getRouterData();
+      this.getRegisterFlag();
     },
     methods: {
       ...mapActions([ "Login", "Logout" ]),
@@ -238,6 +242,13 @@
             this.form.setFieldsValue({
               'username': this.$route.params.username
             });
+          }
+        })
+      },
+      getRegisterFlag(){
+        getPlatformConfigByKey( {"platformKey": "register_flag"}).then((res)=>{
+          if(res && res.code == 200) {
+            this.registerFlag = res.data.platformValue
           }
         })
       },

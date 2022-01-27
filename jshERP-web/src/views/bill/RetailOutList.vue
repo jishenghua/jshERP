@@ -1,7 +1,7 @@
 <template>
   <a-row :gutter="24">
     <a-col :md="24">
-      <a-card :bordered="false">
+      <a-card :style="cardStyle" :bordered="false">
         <!-- 查询区域 -->
         <div class="table-page-search-wrapper">
           <!-- 搜索区域 -->
@@ -80,7 +80,7 @@
               <a-menu-item key="2" v-if="btnEnableList.indexOf(2)>-1" @click="batchSetStatus(1)"><a-icon type="check"/>审核</a-menu-item>
               <a-menu-item key="3" v-if="btnEnableList.indexOf(7)>-1" @click="batchSetStatus(0)"><a-icon type="stop"/>反审核</a-menu-item>
             </a-menu>
-            <a-button style="margin-left: 8px">
+            <a-button>
               批量操作 <a-icon type="down" />
             </a-button>
           </a-dropdown>
@@ -183,9 +183,18 @@
             }
           },
           { title: '单据日期', dataIndex: 'operTimeStr',width:145},
-          { title: '操作员', dataIndex: 'userName',width:80},
+          { title: '操作员', dataIndex: 'userName',width:80, ellipsis:true},
           { title: '金额合计', dataIndex: 'totalPrice',width:80},
-          { title: '收款', dataIndex: 'changeAmount',width:50},
+          { title: '收款金额', dataIndex: 'getAmount',width:80,
+            customRender:function (text,record,index) {
+              if(record.backAmount) {
+                return record.changeAmount + record.backAmount
+              } else {
+                return record.changeAmount
+              }
+            }
+          },
+          { title: '找零', dataIndex: 'backAmount',width:50},
           { title: '状态', dataIndex: 'status', width: 80, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }
           },

@@ -12,6 +12,8 @@ import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.Constants;
 import com.jsh.erp.utils.ErpInfo;
 import com.jsh.erp.utils.StringUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +33,8 @@ import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
  * @Date: 2019/1/22 10:29
  */
 @RestController
+@RequestMapping(value = "/serialNumber")
+@Api(tags = {"序列号管理"})
 public class SerialNumberController {
     private Logger logger = LoggerFactory.getLogger(SerialNumberController.class);
 
@@ -43,13 +47,13 @@ public class SerialNumberController {
      *批量添加序列号
      * create time: 2019/1/29 15:11
      * @Param: materialName
-     * @Param: serialNumberPrefix
-     * @Param: batAddTotal
-     * @Param: remark
+     * @Param: serialNumberPrefix
+     * @Param: batAddTotal
+     * @Param: remark
      * @return java.lang.Object
      */
-    @PostMapping("/serialNumber/batAddSerialNumber")
-    @ResponseBody
+    @PostMapping("/batAddSerialNumber")
+    @ApiOperation(value = "批量添加序列号")
     public String batAddSerialNumber(@RequestBody JSONObject jsonObject, HttpServletRequest request)throws Exception{
         Map<String, Object> objectMap = new HashMap<>();
         String materialCode = jsonObject.getString("materialCode");
@@ -77,7 +81,8 @@ public class SerialNumberController {
      * @return
      * @throws Exception
      */
-    @GetMapping(value = "/serialNumber/getEnableSerialNumberList")
+    @GetMapping(value = "/getEnableSerialNumberList")
+    @ApiOperation(value = "获取序列号商品")
     public BaseResponseInfo getEnableSerialNumberList(@RequestParam("name") String name,
                                                       @RequestParam("depotId") Long depotId,
                                                       @RequestParam("barCode") String barCode,

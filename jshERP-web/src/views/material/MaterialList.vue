@@ -2,7 +2,7 @@
 <template>
   <a-row :gutter="24">
     <a-col :md="24">
-      <a-card :bordered="false">
+      <a-card :style="cardStyle" :bordered="false">
         <!-- 查询区域 -->
         <div class="table-page-search-wrapper">
           <!-- 搜索区域 -->
@@ -67,8 +67,9 @@
               <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
               <a-menu-item key="2" v-if="btnEnableList.indexOf(1)>-1" @click="batchSetStatus(true)"><a-icon type="check-square"/>启用</a-menu-item>
               <a-menu-item key="3" v-if="btnEnableList.indexOf(1)>-1" @click="batchSetStatus(false)"><a-icon type="close-square"/>禁用</a-menu-item>
+              <a-menu-item key="4" v-if="btnEnableList.indexOf(1)>-1" @click="batchSetMaterialCurrentStock()"><a-icon type="stock"/>修正库存</a-menu-item>
             </a-menu>
-            <a-button style="margin-left: 8px">
+            <a-button>
               批量操作 <a-icon type="down" />
             </a-button>
           </a-dropdown>
@@ -94,10 +95,6 @@
                 <a>删除</a>
               </a-popconfirm>
             </span>
-            <span slot="customRenderUnit" slot-scope="text, record">
-              {{text?text:record.unitName}}
-              <a-tag v-if="record.sku">SKU</a-tag>
-            </span>
             <template slot="customRenderEnabled" slot-scope="enabled">
               <a-tag v-if="enabled" color="green">启用</a-tag>
               <a-tag v-if="!enabled" color="orange">禁用</a-tag>
@@ -121,8 +118,8 @@
 </template>
 <script>
   import MaterialModal from './modules/MaterialModal'
-  import {queryMaterialCategoryTreeList,queryMaterialCategoryById} from '@/api/api'
-  import { getAction } from '@/api/manage'
+  import {queryMaterialCategoryTreeList} from '@/api/api'
+  import { postAction } from '@/api/manage'
   import { getMpListShort } from "@/utils/util"
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import JDate from '@/components/jeecg/JDate'
@@ -158,16 +155,25 @@
         // 表头
         columns: [
           {title: '条码', dataIndex: 'mBarCode', width: '8%'},
-          {title: '名称', dataIndex: 'name', width: '10%'},
-          {title: '规格', dataIndex: 'standard', width: '6%'},
-          {title: '型号', dataIndex: 'model', width: '6%'},
-          {title: '颜色', dataIndex: 'color', width: '4%'},
-          {title: '类别', dataIndex: 'categoryName', width: '6%'},
-          {title: '扩展信息', dataIndex: 'materialOther', width: '6%'},
-          {title: '单位', dataIndex: 'unit', width: '6%',
-            scopedSlots: { customRender: 'customRenderUnit' }
+          {title: '名称', dataIndex: 'name', width: '10%', ellipsis:true},
+          {title: '规格', dataIndex: 'standard', width: '6%', ellipsis:true},
+          {title: '型号', dataIndex: 'model', width: '6%', ellipsis:true},
+          {title: '颜色', dataIndex: 'color', width: '4%', ellipsis:true},
+          {title: '类别', dataIndex: 'categoryName', width: '6%', ellipsis:true},
+          {title: '扩展信息', dataIndex: 'materialOther', width: '6%', ellipsis:true},
+          {title: '单位', dataIndex: 'unit', width: '6%', ellipsis:true,
+            customRender:function (t,r,index) {
+              if (r) {
+                let name = t?t:r.unitName
+                if(r.sku) {
+                  return name + '[SKU]';
+                } else {
+                  return name;
+                }
+              }
+            }
           },
-          {title: '安全存量', dataIndex: 'safetyStock', width: '5%'},
+          {title: '保质期', dataIndex: 'expiryNum', width: '4%'},
           {title: '库存', dataIndex: 'stock', width: '5%'},
           {title: '采购价', dataIndex: 'purchaseDecimal', width: '5%'},
           {title: '零售价', dataIndex: 'commodityDecimal', width: '5%'},
@@ -196,7 +202,8 @@
           deleteBatch: "/material/deleteBatch",
           importExcelUrl: "/material/importExcel",
           exportXlsUrl: "/material/exportExcel",
-          batchSetStatusUrl: "/material/batchSetStatus"
+          batchSetStatusUrl: "/material/batchSetStatus",
+          batchSetMaterialCurrentStockUrl: "/material/batchSetMaterialCurrentStock"
         }
       }
     },
@@ -223,6 +230,35 @@
             }
           }
         })
+      },
+      batchSetMaterialCurrentStock: function () {
+        if (this.selectedRowKeys.length <= 0) {
+          this.$message.warning('请选择一条记录！');
+        } else {
+          let ids = "";
+          for (let a = 0; a < this.selectedRowKeys.length; a++) {
+            ids += this.selectedRowKeys[a] + ",";
+          }
+          let that = this;
+          this.$confirm({
+            title: "确认操作",
+            content: "是否操作选中数据?",
+            onOk: function () {
+              that.loading = true;
+              postAction(that.url.batchSetMaterialCurrentStockUrl, {ids: ids}).then((res) => {
+                if(res.code === 200){
+                  that.$message.info('修正库存成功！');
+                  that.loadData();
+                  that.onClearSelected();
+                } else {
+                  that.$message.warning(res.data.message);
+                }
+              }).finally(() => {
+                that.loading = false;
+              });
+            }
+          });
+        }
       },
       handleEdit: function (record) {
         this.$refs.modalForm.edit(record);

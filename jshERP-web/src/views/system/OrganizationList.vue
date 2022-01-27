@@ -244,7 +244,7 @@ export default {
         var that = this
         this.$confirm({
           title: '确认删除',
-          content: '确定要删除所选中的 ' + this.checkedKeys.length + ' 条数据，以及子节点数据吗?',
+          content: '确定要删除所选中的 ' + this.checkedKeys.length + ' 条数据?',
           onOk: function () {
             deleteAction(that.url.deleteBatch, {ids: ids}).then((res) => {
               if (res.code == 200) {
@@ -389,7 +389,7 @@ export default {
       var that = this
       this.$confirm({
         title: '确认删除',
-        content: '确定要删除此机构以及子节点数据吗?',
+        content: '确定要删除此机构吗?',
         onOk: function () {
           deleteByDepartId({id: that.rightClickSelectedKey}).then((resp) => {
             if (resp.success) {

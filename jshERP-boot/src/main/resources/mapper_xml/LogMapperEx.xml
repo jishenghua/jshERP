@@ -3,19 +3,21 @@
 <mapper namespace="com.jsh.erp.datasource.mappers.LogMapperEx">
     <resultMap extends="com.jsh.erp.datasource.mappers.LogMapper.BaseResultMap" id="ResultExMap" type="com.jsh.erp.datasource.vo.LogVo4List">
         <result column="userName" jdbcType="VARCHAR" property="userName" />
+        <result column="login_name" jdbcType="VARCHAR" property="loginName" />
     </resultMap>
 
     <select id="selectByConditionLog" parameterType="com.jsh.erp.datasource.entities.LogExample" resultMap="ResultExMap">
-        select l.*,u.username userName
+        select l.*,u.login_name,u.username userName
         FROM jsh_log l
-        left join jsh_user u on l.user_id = u.id and ifnull(u.status,'0') not in('1','2')
+        left join jsh_user u on l.user_id = u.id and ifnull(u.Status,'0') !='1'
         where 1=1
         <if test="operation != null">
             <bind name="bindOperation" value="'%'+operation+'%'"/>
             and l.operation like #{bindOperation}
         </if>
-        <if test="userId != null">
-            and l.user_id=#{userId}
+        <if test="userInfo != null">
+            <bind name="bindUserInfo" value="'%'+userInfo+'%'"/>
+            and (u.username like #{bindUserInfo} or u.login_name like #{bindUserInfo})
         </if>
         <if test="clientIp != null">
             <bind name="bindClientIp" value="'%'+clientIp+'%'"/>
@@ -43,14 +45,15 @@
         SELECT
         COUNT(1)
         FROM jsh_log l
-        left join jsh_user u on l.user_id = u.id and ifnull(u.status,'0') not in('1','2')
+        left join jsh_user u on l.user_id = u.id and ifnull(u.Status,'0') !='1'
         WHERE 1=1
         <if test="operation != null">
             <bind name="bindOperation" value="'%'+operation+'%'"/>
             and l.operation like #{bindOperation}
         </if>
-        <if test="userId != null">
-            and l.user_id=#{userId}
+        <if test="userInfo != null">
+            <bind name="bindUserInfo" value="'%'+userInfo+'%'"/>
+            and (u.username like #{bindUserInfo} or u.login_name like #{bindUserInfo})
         </if>
         <if test="clientIp != null">
             <bind name="bindClientIp" value="'%'+clientIp+'%'"/>

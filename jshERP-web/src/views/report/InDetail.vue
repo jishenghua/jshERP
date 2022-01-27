@@ -2,32 +2,38 @@
 <template>
   <a-row :gutter="24">
     <a-col :md="24">
-      <a-card :bordered="false">
+      <a-card :style="cardStyle" :bordered="false">
         <!-- 查询区域 -->
         <div class="table-page-search-wrapper">
           <a-form layout="inline" @keyup.enter.native="searchQuery">
             <a-row :gutter="24">
-              <a-col :md="4" :sm="24">
+              <a-col :md="3" :sm="24">
                 <a-form-item label="供应商" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-select placeholder="选择供应商" v-model="queryParam.organId"
-                    :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
+                    :dropdownMatchSelectWidth="false" showSearch allow-clear optionFilterProp="children">
                     <a-select-option v-for="(item,index) in supList" :key="index" :value="item.id">
                       {{ item.supplier }}
                     </a-select-option>
                   </a-select>
                 </a-form-item>
               </a-col>
-              <a-col :md="4" :sm="24">
+              <a-col :md="3" :sm="24">
                 <a-form-item label="仓库" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-select
-                    showSearch optionFilterProp="children"
-                    style="width: 100%"
+                    optionFilterProp="children"
+                    :dropdownMatchSelectWidth="false"
+                    showSearch allow-clear style="width: 100%"
                     placeholder="请选择仓库"
                     v-model="queryParam.depotId">
                     <a-select-option v-for="(depot,index) in depotList" :value="depot.id">
                       {{ depot.depotName }}
                     </a-select-option>
                   </a-select>
+                </a-form-item>
+              </a-col>
+              <a-col :md="4" :sm="24">
+                <a-form-item label="单据编号" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-input placeholder="请输入单据编号" v-model="queryParam.number"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="4" :sm="24">
@@ -80,10 +86,11 @@
                 size="small"
                 show-size-changer
                 :showQuickJumper="true"
+                :current="ipagination.current"
                 :page-size="ipagination.pageSize"
                 :page-size-options="ipagination.pageSizeOptions"
                 :total="ipagination.total"
-                :show-total="(total, range) => `共 ${total} 条`">
+                :show-total="(total, range) => `共 ${total-Math.ceil(total/ipagination.pageSize)} 条`">
                 <template slot="buildOptionText" slot-scope="props">
                   <span>{{ props.value-1 }}条/页</span>
                 </template>
@@ -125,6 +132,7 @@
         // 查询条件
         queryParam: {
           organId: '',
+          number: '',
           materialParam:'',
           depotId: '',
           beginTime: getNowFormatMonth() + '-01',
@@ -153,11 +161,11 @@
             title: '单据编号', dataIndex: 'number', width: 100,
             scopedSlots: { customRender: 'numberCustomRender' },
           },
-          {title: '条码', dataIndex: 'barCode', width: 100},
+          {title: '条码', dataIndex: 'barCode', width: 80},
           {title: '名称', dataIndex: 'mname', width: 120},
-          {title: '规格', dataIndex: 'standard', width: 50},
-          {title: '型号', dataIndex: 'model', width: 50},
-          {title: '单位', dataIndex: 'mUnit', width: 50},
+          {title: '规格', dataIndex: 'standard', width: 60},
+          {title: '型号', dataIndex: 'model', width: 60},
+          {title: '单位', dataIndex: 'mUnit', width: 60},
           {title: '数量', dataIndex: 'operNumber', sorter: (a, b) => a.operNumber - b.operNumber, width: 60},
           {title: '单价', dataIndex: 'unitPrice', sorter: (a, b) => a.unitPrice - b.unitPrice, width: 60},
           {title: '金额', dataIndex: 'allPrice', sorter: (a, b) => a.allPrice - b.allPrice, width: 60},

@@ -8,14 +8,14 @@
     @cancel="handleCancel"
     cancelText="关闭"
     wrapClassName="ant-modal-cust-warp"
-    style="top:5%;height: 98%;overflow-y: hidden">
+    style="top:15%;height: 70%;overflow-y: hidden">
     <template slot="footer">
       <a-button key="back" v-if="isReadOnly" @click="handleCancel">
         关闭
       </a-button>
     </template>
     <a-spin :spinning="confirmLoading">
-      <a-form :form="form">
+      <a-form :form="form" id="depotModal">
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="仓库名称">
           <a-input placeholder="请输入仓库名称" v-decorator.trim="[ 'name', validatorRules.name]" />
         </a-form-item>
@@ -48,6 +48,7 @@
 <script>
   import pick from 'lodash.pick'
   import {addDepot,editDepot,checkDepot,getUserList } from '@/api/api'
+  import {autoJumpNextInput} from "@/utils/util"
   export default {
     name: "DepotModal",
     data () {
@@ -91,6 +92,7 @@
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model,
             'name', 'address', 'warehousing', 'truckage', 'principal', 'sort', 'remark'))
+          autoJumpNextInput('depotModal')
         });
       },
       close () {

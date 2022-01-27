@@ -2,7 +2,7 @@
 <template>
   <a-row :gutter="24">
     <a-col :md="24">
-      <a-card :bordered="false">
+      <a-card :style="cardStyle" :bordered="false">
         <!-- 查询区域 -->
         <div class="table-page-search-wrapper">
           <!-- 搜索区域 -->
@@ -27,9 +27,9 @@
               </a-col>
               <template v-if="toggleSearchStatus">
                 <a-col :md="6" :sm="24">
-                  <a-form-item label="客户" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-select placeholder="选择客户" showSearch optionFilterProp="children" v-model="queryParam.organId">
-                      <a-select-option v-for="(item,index) in cusList" :key="index" :value="item.id">
+                  <a-form-item label="往来单位" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select placeholder="选择往来单位" showSearch optionFilterProp="children" v-model="queryParam.organId">
+                      <a-select-option v-for="(item,index) in organList" :key="index" :value="item.id">
                         {{ item.supplier }}
                       </a-select-option>
                     </a-select>
@@ -76,7 +76,7 @@
               <a-menu-item key="2" v-if="btnEnableList.indexOf(2)>-1" @click="batchSetStatus(1)"><a-icon type="check"/>审核</a-menu-item>
               <a-menu-item key="3" v-if="btnEnableList.indexOf(7)>-1" @click="batchSetStatus(0)"><a-icon type="stop"/>反审核</a-menu-item>
             </a-menu>
-            <a-button style="margin-left: 8px">
+            <a-button>
               批量操作 <a-icon type="down" />
             </a-button>
           </a-dropdown>
@@ -155,11 +155,11 @@
         },
         // 表头
         columns: [
-          { title: '客户', dataIndex: 'organName',width:140, ellipsis:true},
+          { title: '往来单位', dataIndex: 'organName',width:140, ellipsis:true},
           { title: '财务人员', dataIndex: 'handsPersonName',width:140},
           { title: '单据编号', dataIndex: 'billNo',width:160},
           { title: '单据日期 ', dataIndex: 'billTimeStr',width:160},
-          { title: '操作员', dataIndex: 'userName',width:80},
+          { title: '操作员', dataIndex: 'userName',width:80, ellipsis:true},
           { title: '收入金额', dataIndex: 'changeAmount',width:80},
           { title: '备注', dataIndex: 'remark',width:200},
           { title: '状态', dataIndex: 'status', width: 80, align: "center",
@@ -184,7 +184,7 @@
     computed: {
     },
     created () {
-      this.initCustomer()
+      this.initOrgan()
       this.initUser()
       this.initPerson()
     },

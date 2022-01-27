@@ -19,6 +19,12 @@
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="供应商">
               <a-select placeholder="选择供应商" v-decorator="[ 'organId', validatorRules.organId ]"
                 :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
+                <div slot="dropdownRender" slot-scope="menu">
+                  <v-nodes :vnodes="menu" />
+                  <a-divider style="margin: 4px 0;" />
+                  <div v-if="isTenant" style="padding: 4px 8px; cursor: pointer;"
+                       @mousedown="e => e.preventDefault()" @click="addSupplier"><a-icon type="plus" /> 新增供应商</div>
+                </div>
                 <a-select-option v-for="(item,index) in supList" :key="index" :value="item.id">
                   {{ item.supplier }}
                 </a-select-option>
@@ -41,7 +47,7 @@
             </a-form-item>
           </a-col>
         </a-row>
-        <j-editable-table
+        <j-editable-table id="billModal"
           :ref="refKeys[0]"
           :loading="materialTable.loading"
           :columns="materialTable.columns"
@@ -50,19 +56,31 @@
           :rowNumber="false"
           :rowSelection="true"
           :actionButton="true"
+          :dragSort="true"
           @valueChange="onValueChange"
           @added="onAdded"
           @deleted="onDeleted">
           <template #buttonAfter>
-            <a-row :gutter="24">
+            <a-row :gutter="24" style="float:left;" data-step="4" data-title="扫码录入" data-intro="此功能支持扫码枪扫描商品条码进行录入">
               <a-col v-if="scanStatus" :md="6" :sm="24">
                 <a-button @click="scanEnter">扫码录入</a-button>
               </a-col>
               <a-col v-if="!scanStatus" :md="16" :sm="24" style="padding: 0 6px 0 12px">
-                <a-input placeholder="请扫码商品条码并回车" v-model="scanBarCode" @pressEnter="scanPressEnter" />
+                <a-input placeholder="请扫码商品条码并回车" v-model="scanBarCode" @pressEnter="scanPressEnter" ref="scanBarCode"/>
               </a-col>
               <a-col v-if="!scanStatus" :md="6" :sm="24" style="padding: 0px">
                 <a-button @click="stopScan">收起扫码</a-button>
+              </a-col>
+            </a-row>
+            <a-row :gutter="24" style="float:left;">
+              <a-col :md="24" :sm="24">
+                <a-dropdown>
+                  <a-menu slot="overlay">
+                    <a-menu-item key="1" @click="handleBatchSetDepot"><a-icon type="setting"/>批量设置</a-menu-item>
+                    <a-menu-item v-if="isTenant" key="2" @click="addDepot"><a-icon type="plus"/>新增仓库</a-menu-item>
+                  </a-menu>
+                  <a-button style="margin-left: 8px">仓库操作 <a-icon type="down" /></a-button>
+                </a-dropdown>
               </a-col>
             </a-row>
           </template>
@@ -70,7 +88,7 @@
         <a-row class="form-row" :gutter="24">
           <a-col :lg="24" :md="24" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="">
-              <a-textarea :rows="2" placeholder="请输入备注" v-decorator="[ 'remark' ]" style="margin-top:8px;"/>
+              <a-textarea :rows="1" placeholder="请输入备注" v-decorator="[ 'remark' ]" style="margin-top:8px;"/>
             </a-form-item>
           </a-col>
         </a-row>
@@ -101,6 +119,12 @@
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="结算账户">
               <a-select style="width:185px;" placeholder="选择结算账户" v-decorator="[ 'accountId', validatorRules.accountId ]"
                         :dropdownMatchSelectWidth="false" allowClear @select="selectAccount">
+                <div slot="dropdownRender" slot-scope="menu">
+                  <v-nodes :vnodes="menu" />
+                  <a-divider style="margin: 4px 0;" />
+                  <div v-if="isTenant" style="padding: 4px 8px; cursor: pointer;"
+                       @mousedown="e => e.preventDefault()" @click="addAccount"><a-icon type="plus" /> 新增结算账户</div>
+                </div>
                 <a-select-option v-for="(item,index) in accountList" :key="index" :value="item.id">
                   {{ item.name }}
                 </a-select-option>
@@ -134,12 +158,20 @@
     </a-spin>
     <many-account-modal ref="manyAccountModalForm" @ok="manyAccountModalFormOk"></many-account-modal>
     <link-bill-list ref="linkBillList" @ok="linkBillListOk"></link-bill-list>
+    <vendor-modal ref="vendorModalForm" @ok="vendorModalFormOk"></vendor-modal>
+    <depot-modal ref="depotModalForm" @ok="depotModalFormOk"></depot-modal>
+    <account-modal ref="accountModalForm" @ok="accountModalFormOk"></account-modal>
+    <batch-set-depot ref="batchSetDepotModalForm" @ok="batchSetDepotModalFormOk"></batch-set-depot>
   </j-modal>
 </template>
 <script>
   import pick from 'lodash.pick'
   import ManyAccountModal from '../dialog/ManyAccountModal'
   import LinkBillList from '../dialog/LinkBillList'
+  import VendorModal from '../../system/modules/VendorModal'
+  import DepotModal from '../../system/modules/DepotModal'
+  import AccountModal from '../../system/modules/AccountModal'
+  import BatchSetDepot from '../dialog/BatchSetDepot'
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
@@ -154,8 +186,16 @@
     components: {
       ManyAccountModal,
       LinkBillList,
+      VendorModal,
+      DepotModal,
+      AccountModal,
+      BatchSetDepot,
       JUpload,
-      JDate
+      JDate,
+      VNodes: {
+        functional: true,
+        render: (h, ctx) => ctx.props.vnodes,
+      }
     },
     data () {
       return {
@@ -189,27 +229,24 @@
             { title: '条码', key: 'barCode', width: '8%', type: FormTypes.popupJsh, kind: 'material', multi: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
-            { title: '名称', key: 'name', width: '6%', type: FormTypes.input, readonly: true },
-            { title: '规格', key: 'standard', width: '5%', type: FormTypes.input, readonly: true },
-            { title: '型号', key: 'model', width: '5%', type: FormTypes.input, readonly: true },
-            { title: '颜色', key: 'color', width: '5%', type: FormTypes.input, readonly: true },
-            { title: '扩展信息', key: 'materialOther', width: '5%', type: FormTypes.input, readonly: true },
-            { title: '库存', key: 'stock', width: '5%', type: FormTypes.input, readonly: true },
-            { title: '单位', key: 'unit', width: '4%', type: FormTypes.input, readonly: true },
-            { title: '序列号', key: 'snList', width: '12%', type: FormTypes.input, placeholder: '多个序列号请用逗号隔开',
-              validateRules: [{ pattern: /^\S{1,100}$/, message: '请小于100位字符' }]
-            },
-            { title: '批号', key: 'batchNumber', width: '5%', type: FormTypes.input },
-            { title: '有效期', key: 'expirationDate',width: '7%', type: FormTypes.date },
-            { title: '多属性', key: 'sku', width: '4%', type: FormTypes.input, readonly: true },
+            { title: '名称', key: 'name', width: '6%', type: FormTypes.normal },
+            { title: '规格', key: 'standard', width: '5%', type: FormTypes.normal },
+            { title: '型号', key: 'model', width: '5%', type: FormTypes.normal },
+            { title: '颜色', key: 'color', width: '5%', type: FormTypes.normal },
+            { title: '扩展信息', key: 'materialOther', width: '5%', type: FormTypes.normal },
+            { title: '库存', key: 'stock', width: '5%', type: FormTypes.normal },
+            { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
+            { title: '序列号', key: 'snList', width: '12%', type: FormTypes.popupJsh, kind: 'sn', multi: true },
+            { title: '批号', key: 'batchNumber', width: '7%', type: FormTypes.popupJsh, kind: 'batch', multi: false },
+            { title: '有效期', key: 'expirationDate',width: '6%', type: FormTypes.normal },
+            { title: '多属性', key: 'sku', width: '4%', type: FormTypes.normal },
             { title: '数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             { title: '单价', key: 'unitPrice', width: '5%', type: FormTypes.inputNumber},
-            { title: '含税单价', key: 'taxUnitPrice', width: '5%', type: FormTypes.inputNumber, readonly: true},
             { title: '金额', key: 'allPrice', width: '5%', type: FormTypes.inputNumber, statistics: true },
             { title: '税率', key: 'taxRate', width: '4%', type: FormTypes.inputNumber,placeholder: '%'},
-            { title: '税额', key: 'taxMoney', width: '4%', type: FormTypes.inputNumber, statistics: true, readonly: true},
+            { title: '税额', key: 'taxMoney', width: '5%', type: FormTypes.inputNumber, readonly: true, statistics: true },
             { title: '价税合计', key: 'taxLastMoney', width: '5%', type: FormTypes.inputNumber, statistics: true },
             { title: '备注', key: 'remark', width: '5%', type: FormTypes.input }
           ]

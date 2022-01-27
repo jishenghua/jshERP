@@ -1,7 +1,7 @@
 <template>
   <a-popover
     trigger="click"
-    placement="bottomRight"
+    placement="bottom"
     :autoAdjustOverflow="true"
     :arrowPointAtCenter="true"
     overlayClassName="header-notice-wrapper"
@@ -14,35 +14,12 @@
             <a-list>
               <a-list-item :key="index" v-for="(record, index) in announcement1">
                 <div style="margin-left: 5%;width: 80%">
-                  <p><a @click="showAnnouncement(record)">{{ record.titile }}</a></p>
-                  <p style="color: rgba(0,0,0,.45);margin-bottom: 0px">{{ record.createTime }} 发布</p>
-                </div>
-                <div style="text-align: right">
-                  <a-tag @click="showAnnouncement(record)" v-if="record.priority === 'L'" color="blue">一般消息</a-tag>
-                  <a-tag @click="showAnnouncement(record)" v-if="record.priority === 'M'" color="orange">重要消息</a-tag>
-                  <a-tag @click="showAnnouncement(record)" v-if="record.priority === 'H'" color="red">紧急消息</a-tag>
+                  <p><a @click="showAnnouncement(record)">{{ record.msgTitle }}</a></p>
+                  <p style="color: rgba(0,0,0,.45);margin-bottom: 0px">{{ record.createTimeStr }} 发布</p>
                 </div>
               </a-list-item>
               <div style="margin-top: 5px;text-align: center">
-<!--                <a-button @click="toMyAnnouncement()" type="dashed" block>查看更多</a-button>-->
-              </div>
-            </a-list>
-          </a-tab-pane>
-          <a-tab-pane :tab="msg2Title" key="2">
-            <a-list>
-              <a-list-item :key="index" v-for="(record, index) in announcement2">
-                <div style="margin-left: 5%;width: 80%">
-                  <p><a @click="showAnnouncement(record)">{{ record.titile }}</a></p>
-                  <p style="color: rgba(0,0,0,.45);margin-bottom: 0px">{{ record.createTime }} 发布</p>
-                </div>
-                <div style="text-align: right">
-                  <a-tag @click="showAnnouncement(record)" v-if="record.priority === 'L'" color="blue">一般消息</a-tag>
-                  <a-tag @click="showAnnouncement(record)" v-if="record.priority === 'M'" color="orange">重要消息</a-tag>
-                  <a-tag @click="showAnnouncement(record)" v-if="record.priority === 'H'" color="red">紧急消息</a-tag>
-                </div>
-              </a-list-item>
-              <div style="margin-top: 5px;text-align: center">
-<!--                <a-button @click="toMyAnnouncement()" type="dashed" block>查看更多</a-button>-->
+                <a-button @click="toMyAnnouncement()" type="dashed" block>查看更多</a-button>
               </div>
             </a-list>
           </a-tab-pane>
@@ -56,37 +33,36 @@
     </span>
     <show-announcement ref="ShowAnnouncement" @ok="modalFormOk"></show-announcement>
     <dynamic-notice ref="showDynamNotice" :path="openPath" :formData="formData"/>
+    <msg-list ref="modalList" @close="modalListCancel()"></msg-list>
   </a-popover>
 </template>
 
 <script>
-  import { getAction,putAction } from '@/api/manage'
+  import { getAction,postAction } from '@/api/manage'
   import ShowAnnouncement from './ShowAnnouncement'
   import store from '@/store/'
   import DynamicNotice from './DynamicNotice'
-
+  import MsgList from '@/views/system/MsgList'
 
   export default {
     name: "HeaderNotice",
     components: {
       DynamicNotice,
       ShowAnnouncement,
+      MsgList
     },
     data () {
       return {
         loadding: false,
         url:{
-          listCementByUser:"/sys/annountCement/listByUser",
-          editCementSend:"/sys/sysAnnouncementSend/editByAnntIdAndUserId",
+          getMsgByStatus:"/msg/getMsgByStatus",
+          batchUpdateStatus:"/msg/batchUpdateStatus",
           queryById:"/sys/annountCement/queryById",
         },
         hovered: false,
         announcement1:[],
-        announcement2:[],
         msg1Count:"0",
-        msg2Count:"0",
         msg1Title:"通知(0)",
-        msg2Title:"",
         stopTimer:false,
         websock: null,
         lockReconnect:false,
@@ -97,11 +73,11 @@
     },
     computed:{
       msgTotal () {
-        return parseInt(this.msg1Count)+parseInt(this.msg2Count);
+        return parseInt(this.msg1Count);
       }
     },
     mounted() {
-      //this.loadData();
+      this.loadData();
       //this.timerFun();
       //this.initWebSocket(); //注释by jishenghua  2021年1月13日
      // this.heartCheckFun();
@@ -124,14 +100,15 @@
       loadData (){
         try {
           // 获取系统消息
-          getAction(this.url.listCementByUser).then((res) => {
-            if (res.success) {
-              this.announcement1 = res.result.anntMsgList;
-              this.msg1Count = res.result.anntMsgTotal;
-              this.msg1Title = "通知(" + res.result.anntMsgTotal + ")";
-              this.announcement2 = res.result.sysMsgList;
-              this.msg2Count = res.result.sysMsgTotal;
-              this.msg2Title = "系统消息(" + res.result.sysMsgTotal + ")";
+          getAction(this.url.getMsgByStatus, { status: '1'}).then((res) => {
+            if (res && res.code === 200) {
+              this.announcement1 = res.data;
+              if(this.announcement1.length>5) {
+                this.announcement1 = this.announcement1.reverse()
+                this.announcement1 = this.announcement1.slice(0,5)
+              }
+              this.msg1Count = res.data.length;
+              this.msg1Title = "通知(" + res.data.length + ")";
             }
           }).catch(error => {
             console.log("系统消息通知异常",error);//这行打印permissionName is undefined
@@ -154,28 +131,21 @@
         }, 200)
       },
       showAnnouncement(record){
-        putAction(this.url.editCementSend,{anntId:record.id}).then((res)=>{
-          if(res.success){
+        postAction(this.url.batchUpdateStatus,{ids:record.id, status: '2'}).then((res)=>{
+          if(res && res.code === 200){
             this.loadData();
           }
         });
         this.hovered = false;
-        if(record.openType==='component'){
-          this.openPath = record.openPage;
-          this.formData = {id:record.busId};
-          this.$refs.showDynamNotice.detail(record.openPage);
-        }else{
-          this.$refs.ShowAnnouncement.detail(record);
-        }
+        this.$refs.ShowAnnouncement.detail(record);
       },
       toMyAnnouncement(){
-
-        this.$router.push({
-          path: '/isps/userAnnouncement',
-          name: 'isps-userAnnouncement'
-        });
+        this.$refs.modalList.handleDetail();
       },
       modalFormOk(){
+      },
+      modalListCancel(){
+        this.loadData()
       },
       handleHoverChange (visible) {
         this.hovered = visible;

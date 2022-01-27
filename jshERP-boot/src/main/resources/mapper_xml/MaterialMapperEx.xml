@@ -143,7 +143,7 @@
             </foreach>
         </if>
         and ifnull(m.delete_flag,'0') !='1'
-        ORDER BY me.id desc
+        ORDER BY m.id desc, me.default_flag desc, me.id asc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
         </if>
@@ -339,8 +339,11 @@
         select m.*, me.commodity_unit unitName, mc.name categoryName, me.bar_code,
         ifnull(me.purchase_decimal,0) purchase_decimal,
         (select ifnull(sum(mis.number),0) from jsh_material_initial_stock mis where mis.material_id = m.id
-        <if test="depotId != null">
-            and mis.depot_id = #{depotId}
+        <if test="depotList.size()>0">
+            and mis.depot_id in
+            <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
         </if>
         ) initialStock,
         ifnull(sum(mcs.current_number),0) currentStock,
@@ -352,8 +355,11 @@
         left JOIN jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
         where 1=1
         and me.default_flag=1
-        <if test="depotId != null">
-            and mcs.depot_id = #{depotId}
+        <if test="depotList.size()>0">
+            and mcs.depot_id in
+            <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
         </if>
         <if test="idList.size()>0">
             and m.category_id in
@@ -367,6 +373,9 @@
         </if>
         and ifnull(m.delete_flag,'0') !='1'
         group by m.id
+        <if test="zeroStock == 0">
+            having currentStock!=0
+        </if>
         <if test="column == 'createTime'">
             order by m.id desc
         </if>
@@ -380,15 +389,18 @@
 
     <select id="getListWithStockCount" resultType="java.lang.Integer">
         select count(tb.id) from
-        (select m.id from jsh_material m
+        (select m.id, ifnull(sum(mcs.current_number),0) currentStock from jsh_material m
         left JOIN jsh_material_extend me on m.id = me.material_id and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_material_current_stock mcs on m.id = mcs.material_id and ifnull(mcs.delete_flag,'0') !='1'
         left JOIN jsh_unit u on m.unit_id = u.id and ifnull(u.delete_Flag,'0') !='1'
         left JOIN jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
         where 1=1
         and me.default_flag=1
-        <if test="depotId != null">
-            and mcs.depot_id = #{depotId}
+        <if test="depotList.size()>0">
+            and mcs.depot_id in
+            <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
         </if>
         <if test="idList.size()>0">
             and m.category_id in
@@ -401,7 +413,11 @@
             and (me.bar_code like #{bindParam} or m.name like #{bindParam} or m.standard like #{bindParam} or m.model like #{bindParam})
         </if>
         and ifnull(m.delete_flag,'0') !='1'
-        group by m.id) tb
+        group by m.id
+        <if test="zeroStock == 0">
+            having currentStock!=0
+        </if>
+        ) tb
     </select>
 
     <select id="getTotalStockAndPrice" resultType="com.jsh.erp.datasource.entities.MaterialVo4Unit">
@@ -415,8 +431,11 @@
         left JOIN jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
         where 1=1
         and me.default_flag=1
-        <if test="depotId != null">
-            and mcs.depot_id = #{depotId}
+        <if test="depotList.size()>0">
+            and mcs.depot_id in
+            <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
         </if>
         <if test="idList.size()>0">
             and m.category_id in

@@ -28,6 +28,7 @@
             <bind name="bindSerialNo" value="'%'+serialNo+'%'"/>
             and serial_no like #{bindSerialNo}
         </if>
+        and ifnull(delete_flag,'0') !='1'
     </select>
 
     <select id="selectByConditionAccount" parameterType="com.jsh.erp.datasource.entities.AccountExample" resultMap="ResultListMap">
@@ -81,12 +82,11 @@
             and dh.account_id=#{accountId}
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
-
         <!--主表收入和支出涉及的账户 -->
         UNION ALL
         select ah.bill_no,ah.type as newType, 'financial' as fromType, s.supplier,ah.change_amount,date_format(ah.bill_time,'%Y-%m-%d %H:%i:%S') as oTime,'' as AList,'' as AMList
         from jsh_account_head ah left join jsh_supplier s on ah.organ_id=s.id and ifnull(s.delete_flag,'0') !='1'
-        where 1=1
+        where ah.type!='转账'
         <if test="accountId != null">
             and ah.account_id=#{accountId}
         </if>
@@ -151,7 +151,7 @@
             UNION ALL
             select count(1) a
             from jsh_account_head ah left join jsh_supplier s on ah.organ_id=s.id and ifnull(s.delete_flag,'0') !='1'
-            where 1=1
+            where ah.type!='转账'
             <if test="accountId != null">
                 and ah.account_id=#{accountId}
             </if>

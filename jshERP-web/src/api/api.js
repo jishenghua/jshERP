@@ -78,6 +78,8 @@ const checkSystemConfig = (params)=>getAction("/systemConfig/checkIsNameExist",p
 const getCurrentSystemConfig = (params)=>getAction("/systemConfig/getCurrentInfo",params);
 const fileSizeLimit = (params)=>getAction("/systemConfig/fileSizeLimit",params);
 //平台参数
+const addPlatformConfig = (params)=>postAction("/platformConfig/add",params);
+const editPlatformConfig = (params)=>putAction("/platformConfig/update",params);
 const getPlatformConfigByKey = (params)=>getAction("/platformConfig/getPlatformConfigByKey",params);
 //用户|角色|模块关系
 const addUserBusiness = (params)=>postAction("/userBusiness/add",params);
@@ -91,10 +93,11 @@ const checkUnit = (params)=>getAction("/unit/checkIsNameExist",params);
 //供应商|客户|会员
 const addSupplier = (params)=>postAction("/supplier/add",params);
 const editSupplier = (params)=>putAction("/supplier/update",params);
-const checkSupplier = (params)=>getAction("/supplier/checkIsNameExist",params);
+const checkSupplier = (params)=>getAction("/supplier/checkIsNameAndTypeExist",params);
 const findBySelectSup = (params)=>postAction("/supplier/findBySelect_sup",params);
 const findBySelectCus = (params)=>postAction("/supplier/findBySelect_cus",params);
 const findBySelectRetail = (params)=>postAction("/supplier/findBySelect_retail",params);
+const findBySelectOrgan = (params)=>postAction("/supplier/findBySelect_organ",params);
 //单据相关
 const findBillDetailByNumber = (params)=>getAction("/depotHead/getDetailByNumber",params);
 const findStockByDepotAndBarCode = (params)=>getAction("/depotItem/findStockByDepotAndBarCode",params);
@@ -163,6 +166,8 @@ export {
   checkSystemConfig,
   getCurrentSystemConfig,
   fileSizeLimit,
+  addPlatformConfig,
+  editPlatformConfig,
   getPlatformConfigByKey,
   addUserBusiness,
   editUserBusiness,
@@ -177,6 +182,7 @@ export {
   findBySelectSup,
   findBySelectCus,
   findBySelectRetail,
+  findBySelectOrgan,
   findBillDetailByNumber,
   findStockByDepotAndBarCode,
   getBatchNumberList,

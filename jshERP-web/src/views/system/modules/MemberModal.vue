@@ -8,14 +8,14 @@
     @cancel="handleCancel"
     cancelText="关闭"
     wrapClassName="ant-modal-cust-warp"
-    style="top:5%;height: 100%;overflow-y: hidden">
+    style="top:25%;height: 50%;overflow-y: hidden">
     <template slot="footer">
       <a-button key="back" v-if="isReadOnly" @click="handleCancel">
         关闭
       </a-button>
     </template>
     <a-spin :spinning="confirmLoading">
-      <a-form :form="form">
+      <a-form :form="form" id="memberModal">
         <a-col :span="24/2">
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="名称">
             <a-input placeholder="请输入名称" v-decorator.trim="[ 'supplier', validatorRules.supplier]" />
@@ -53,6 +53,7 @@
 <script>
   import pick from 'lodash.pick'
   import {addSupplier,editSupplier,checkSupplier } from '@/api/api'
+  import {autoJumpNextInput} from "@/utils/util"
   export default {
     name: "MemberModal",
     data () {
@@ -95,6 +96,7 @@
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model,'supplier', 'contacts', 'telephone', 'email', 'telephone',
             'phoneNum', 'description'))
+          autoJumpNextInput('memberModal')
         });
       },
       close () {
@@ -139,6 +141,7 @@
       validateSupplierName(rule, value, callback){
         let params = {
           name: value,
+          type: '会员',
           id: this.model.id?this.model.id:0
         };
         checkSupplier(params).then((res)=>{

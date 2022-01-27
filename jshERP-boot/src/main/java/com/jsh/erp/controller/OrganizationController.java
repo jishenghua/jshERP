@@ -11,6 +11,8 @@ import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.materialCategory.MaterialCategoryService;
 import com.jsh.erp.service.organization.OrganizationService;
 import com.jsh.erp.utils.BaseResponseInfo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +30,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/organization")
+@Api(tags = {"机构管理"})
 public class OrganizationController {
     private Logger logger = LoggerFactory.getLogger(OrganizationController.class);
 
@@ -40,6 +43,7 @@ public class OrganizationController {
      * @return
      */
     @GetMapping(value = "/findById")
+    @ApiOperation(value = "根据id来查询机构信息")
     public BaseResponseInfo findById(@RequestParam("id") Long id, HttpServletRequest request) throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -80,6 +84,7 @@ public class OrganizationController {
      * @return com.alibaba.fastjson.JSONArray
      */
     @RequestMapping(value = "/getOrganizationTree")
+    @ApiOperation(value = "获取机构树数据")
     public JSONArray getOrganizationTree(@RequestParam("id") Long id) throws Exception{
        JSONArray arr=new JSONArray();
        List<TreeNode> organizationTree= organizationService.getOrganizationTree(id);
@@ -101,6 +106,7 @@ public class OrganizationController {
      * @return java.lang.Object
      */
     @PostMapping(value = "/addOrganization")
+    @ApiOperation(value = "新增机构信息")
     public Object addOrganization(@RequestParam("info") String beanJson) throws Exception {
         JSONObject result = ExceptionConstants.standardSuccess();
         Organization org= JSON.parseObject(beanJson, Organization.class);
@@ -120,6 +126,7 @@ public class OrganizationController {
      * @return java.lang.Object
      */
     @PostMapping(value = "/editOrganization")
+    @ApiOperation(value = "修改机构信息")
     public Object editOrganization(@RequestParam("info") String beanJson) throws Exception {
         JSONObject result = ExceptionConstants.standardSuccess();
         Organization org= JSON.parseObject(beanJson, Organization.class);
