@@ -127,6 +127,7 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { FinancialListMixin } from './mixins/FinancialListMixin'
   import JDate from '@/components/jeecg/JDate'
+  import Vue from 'vue'
   export default {
     name: "ItemOutList",
     mixins:[JeecgListMixin, FinancialListMixin],
@@ -151,7 +152,8 @@
           type: "支出",
           organId: "",
           creator: "",
-          handsPersonId: ""
+          handsPersonId: "",
+          roleType: Vue.ls.get('roleType')
         },
         // 表头
         columns: [
