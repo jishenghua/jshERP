@@ -750,7 +750,7 @@ public class UserService {
             if(valueArray.length>0) {
                 roleId = valueArray[0];
             }
-            Role role = roleService.getRole(Long.parseLong(roleId));
+            Role role = roleService.getRoleWithoutTenant(Long.parseLong(roleId));
             if(role!=null) {
                 return role.getType();
             } else {

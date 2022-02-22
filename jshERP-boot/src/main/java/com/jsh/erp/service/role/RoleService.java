@@ -183,4 +183,8 @@ public class RoleService {
         }
         return result;
     }
+
+    public Role getRoleWithoutTenant(Long roleId) {
+        return roleMapperEx.getRoleWithoutTenant(roleId);
+    }
 }
