@@ -77,6 +77,8 @@ public class TenantConfig {
                     return true;
                 } else if ("com.jsh.erp.datasource.mappers.RoleMapperEx.getRoleWithoutTenant".equals(ms.getId())) {
                     return true;
+                } else if ("com.jsh.erp.datasource.mappers.logMapperEx.insertLogWithUserId".equals(ms.getId())) {
+                    return true;
                 }
                 return false;
             }

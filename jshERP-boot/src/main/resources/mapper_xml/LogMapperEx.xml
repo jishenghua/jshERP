@@ -77,4 +77,13 @@
     <select id="getCountByIpAndDate" resultType="java.lang.Long">
         select count(1) from jsh_log where operation=#{moduleName} and client_ip=#{clientIp} and create_time=#{createTime}
     </select>
+
+    <insert id="insertLogWithUserId" parameterType="com.jsh.erp.datasource.entities.Log">
+        insert into jsh_log (user_id, operation,
+                             client_ip, create_time, status,
+                             content, tenant_id)
+        values (#{userId,jdbcType=BIGINT}, #{operation,jdbcType=VARCHAR},
+                #{clientIp,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{status,jdbcType=TINYINT},
+                #{content,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT})
+    </insert>
 </mapper>

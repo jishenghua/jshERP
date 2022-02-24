@@ -33,4 +33,6 @@ public interface LogMapperEx {
             @Param("moduleName") String moduleName,
             @Param("clientIp") String clientIp,
             @Param("createTime") String createTime);
+
+    int insertLogWithUserId(Log log);
 }

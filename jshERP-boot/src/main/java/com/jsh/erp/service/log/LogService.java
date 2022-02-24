@@ -183,7 +183,7 @@ public class LogService {
                 log.setStatus(status);
                 log.setContent(content);
                 log.setTenantId(tenantId);
-                logMapper.insertSelective(log);
+                logMapperEx.insertLogWithUserId(log);
             }
         }catch(Exception e){
             JshException.writeFail(logger, e);
