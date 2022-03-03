@@ -61,6 +61,7 @@ public interface DepotHeadMapperEx {
             @Param("depotList") List<Long> depotList,
             @Param("oId") Integer oId,
             @Param("number") String number,
+            @Param("remark") String remark,
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
@@ -71,7 +72,8 @@ public interface DepotHeadMapperEx {
             @Param("materialParam") String materialParam,
             @Param("depotList") List<Long> depotList,
             @Param("oId") Integer oId,
-            @Param("number") String number);
+            @Param("number") String number,
+            @Param("remark") String remark);
 
     List<DepotHeadVo4InOutMCount> findInOutMaterialCount(
             @Param("beginTime") String beginTime,
@@ -99,6 +101,7 @@ public interface DepotHeadMapperEx {
             @Param("materialParam") String materialParam,
             @Param("depotList") List<Long> depotList,
             @Param("depotFList") List<Long> depotFList,
+            @Param("remark") String remark,
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
@@ -109,7 +112,8 @@ public interface DepotHeadMapperEx {
             @Param("number") String number,
             @Param("materialParam") String materialParam,
             @Param("depotList") List<Long> depotList,
-            @Param("depotFList") List<Long> depotFList);
+            @Param("depotFList") List<Long> depotFList,
+            @Param("remark") String remark);
 
     List<DepotHeadVo4StatementAccount> findStatementAccount(
             @Param("beginTime") String beginTime,
