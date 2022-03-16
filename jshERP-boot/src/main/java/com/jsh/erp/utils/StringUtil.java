@@ -276,6 +276,28 @@ public class StringUtil {
     }
 
     /**
+     * 判断对象是否为正整数
+     * @param value
+     * @return
+     */
+    public static boolean isPositiveInteger(Object value) {
+        if(value!=null) {
+            String str = value.toString();
+            if(isNotEmpty(str)) {
+                if((str.matches("[0-9]+"))&&(Integer.parseInt(str)>0)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * sql注入过滤，保障sql的安全执行
      * @param originStr
      * @return
