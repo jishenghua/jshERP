@@ -506,17 +506,6 @@ public class MaterialService {
                         throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_BARCODE_NOT_INTEGER_CODE,
                                 String.format(ExceptionConstants.MATERIAL_BARCODE_NOT_INTEGER_MSG, manyBarCode));
                     }
-                    //校验条码是否存在
-                    List<MaterialVo4Unit> basicMaterialList = getMaterialByBarCode(barCode);
-                    if(basicMaterialList!=null && basicMaterialList.size()>0) {
-                        throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_BARCODE_EXISTS_CODE,
-                                String.format(ExceptionConstants.MATERIAL_BARCODE_EXISTS_MSG, barCode));
-                    }
-                    List<MaterialVo4Unit> otherMaterialList = getMaterialByBarCode(manyBarCode);
-                    if(otherMaterialList!=null && otherMaterialList.size()>0) {
-                        throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_BARCODE_EXISTS_CODE,
-                                String.format(ExceptionConstants.MATERIAL_BARCODE_EXISTS_MSG, manyBarCode));
-                    }
                     JSONObject materialExObj = new JSONObject();
                     JSONObject basicObj = new JSONObject();
                     basicObj.put("barCode", barCode);
@@ -603,12 +592,7 @@ public class MaterialService {
                     basicMaterialExtend.setCreateSerial(user.getLoginName());
                     basicMaterialExtend.setUpdateSerial(user.getLoginName());
                     Long meId = materialExtendService.selectIdByMaterialIdAndDefaultFlag(mId, "1");
-                    if(meId==0L){
-                        materialExtendMapper.insertSelective(basicMaterialExtend);
-                    } else {
-                        basicMaterialExtend.setId(meId);
-                        materialExtendMapper.updateByPrimaryKeySelective(basicMaterialExtend);
-                    }
+                    changeMaterialExtend(mId, basicMaterialExtend, meId);
                 }
                 if(StringUtil.isExist(materialExObj.get("other"))) {
                     String otherStr = materialExObj.getString("other");
@@ -620,12 +604,7 @@ public class MaterialService {
                     otherMaterialExtend.setCreateSerial(user.getLoginName());
                     otherMaterialExtend.setUpdateSerial(user.getLoginName());
                     Long meId = materialExtendService.selectIdByMaterialIdAndDefaultFlag(mId, "0");
-                    if(meId==0L){
-                        materialExtendMapper.insertSelective(otherMaterialExtend);
-                    } else {
-                        otherMaterialExtend.setId(meId);
-                        materialExtendMapper.updateByPrimaryKeySelective(otherMaterialExtend);
-                    }
+                    changeMaterialExtend(mId, otherMaterialExtend, meId);
                 }
                 //给商品初始化库存getAllListWithStock
                 Map<Long, BigDecimal> stockMap = m.getStockMap();
@@ -655,6 +634,28 @@ public class MaterialService {
             info.data = "导入失败";
         }
         return info;
+    }
+
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public void changeMaterialExtend(Long mId, MaterialExtend materialExtend, Long meId) {
+        if(meId==0L){
+            //校验条码是否存在
+            List<MaterialVo4Unit> basicMaterialList = getMaterialByBarCode(materialExtend.getBarCode());
+            if(basicMaterialList!=null && basicMaterialList.size()>0) {
+                throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_BARCODE_EXISTS_CODE,
+                        String.format(ExceptionConstants.MATERIAL_BARCODE_EXISTS_MSG, materialExtend.getBarCode()));
+            }
+            materialExtendMapper.insertSelective(materialExtend);
+        } else {
+            //校验条码是否存在
+            List<MaterialVo4Unit> basicMaterialList = getMaterialByBarCodeAndWithOutMId(materialExtend.getBarCode(), mId);
+            if(basicMaterialList!=null && basicMaterialList.size()>0) {
+                throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_BARCODE_EXISTS_CODE,
+                        String.format(ExceptionConstants.MATERIAL_BARCODE_EXISTS_MSG, materialExtend.getBarCode()));
+            }
+            materialExtend.setId(meId);
+            materialExtendMapper.updateByPrimaryKeySelective(materialExtend);
+        }
     }
 
     /**
@@ -882,6 +883,11 @@ public class MaterialService {
     public List<MaterialVo4Unit> getMaterialByBarCode(String barCode) {
         String [] barCodeArray=barCode.split(",");
         return materialMapperEx.getMaterialByBarCode(barCodeArray);
+    }
+
+    public List<MaterialVo4Unit> getMaterialByBarCodeAndWithOutMId(String barCode, Long mId) {
+        String [] barCodeArray=barCode.split(",");
+        return materialMapperEx.getMaterialByBarCodeAndWithOutMId(barCodeArray, mId);
     }
 
     public List<MaterialVo4Unit> getListWithStock(List<Long> depotList, List<Long> idList, String materialParam, Integer zeroStock,
