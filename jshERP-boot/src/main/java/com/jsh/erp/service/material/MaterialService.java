@@ -170,8 +170,10 @@ public class MaterialService {
         try{
             Long mId = null;
             materialMapper.insertSelective(m);
-            List<Material> materials = getMaterialListByParam(m.getName(),m.getModel(),m.getColor(),
-                    m.getStandard(), m.getMfrs(),m.getUnit(),m.getUnitId());
+            JSONArray meArr = obj.getJSONArray("meList");
+            JSONObject tempJson = meArr.getJSONObject(0);
+            String basicBarCode = tempJson.getString("barCode");
+            List<Material> materials = getMaterialListByParam(m.getName(),m.getModel(),m.getColor(),m.getStandard(), m.getUnit(),m.getUnitId(), basicBarCode);
             if(materials!=null && materials.size()>0) {
                 mId = materials.get(0).getId();
             }
@@ -563,12 +565,11 @@ public class MaterialService {
             Long mId = 0L;
             for(MaterialWithInitStock m: mList) {
                 //判断该商品是否存在，如果不存在就新增，如果存在就更新
-                List<Material> materials = getMaterialListByParam(m.getName(),m.getModel(),m.getColor(),m.getStandard(),
-                        m.getMfrs(),m.getUnit(),m.getUnitId());
+                String basicBarCode = getBasicBarCode(m);
+                List<Material> materials = getMaterialListByParam(m.getName(),m.getModel(),m.getColor(),m.getStandard(),m.getUnit(),m.getUnitId(), basicBarCode);
                 if(materials.size()<=0) {
                     materialMapper.insertSelective(m);
-                    List<Material> newList = getMaterialListByParam(m.getName(),m.getModel(),m.getColor(),m.getStandard(),
-                            m.getMfrs(),m.getUnit(),m.getUnitId());
+                    List<Material> newList = getMaterialListByParam(m.getName(),m.getModel(),m.getColor(),m.getStandard(),m.getUnit(),m.getUnitId(), basicBarCode);
                     if(newList!=null && newList.size()>0) {
                         mId = newList.get(0).getId();
                     }
@@ -640,16 +641,16 @@ public class MaterialService {
     public void changeMaterialExtend(Long mId, MaterialExtend materialExtend, Long meId) {
         if(meId==0L){
             //校验条码是否存在
-            List<MaterialVo4Unit> basicMaterialList = getMaterialByBarCode(materialExtend.getBarCode());
-            if(basicMaterialList!=null && basicMaterialList.size()>0) {
+            List<MaterialVo4Unit> materialList = getMaterialByBarCode(materialExtend.getBarCode());
+            if(materialList!=null && materialList.size()>0) {
                 throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_BARCODE_EXISTS_CODE,
                         String.format(ExceptionConstants.MATERIAL_BARCODE_EXISTS_MSG, materialExtend.getBarCode()));
             }
             materialExtendMapper.insertSelective(materialExtend);
         } else {
-            //校验条码是否存在
-            List<MaterialVo4Unit> basicMaterialList = getMaterialByBarCodeAndWithOutMId(materialExtend.getBarCode(), mId);
-            if(basicMaterialList!=null && basicMaterialList.size()>0) {
+            //校验条码是否存在：检查除此商品之外是否还有这个条码，有则返回列表
+            List<MaterialVo4Unit> materialList = getMaterialByBarCodeAndWithOutMId(materialExtend.getBarCode(), mId);
+            if(materialList!=null && materialList.size()>0) {
                 throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_BARCODE_EXISTS_CODE,
                         String.format(ExceptionConstants.MATERIAL_BARCODE_EXISTS_MSG, materialExtend.getBarCode()));
             }
@@ -658,19 +659,29 @@ public class MaterialService {
         }
     }
 
+    public String getBasicBarCode(MaterialWithInitStock m) {
+        String barCode = "";
+        JSONObject materialExObj = m.getMaterialExObj();
+        if(StringUtil.isExist(materialExObj.get("basic"))) {
+            String basicStr = materialExObj.getString("basic");
+            MaterialExtend basicMaterialExtend = JSONObject.parseObject(basicStr, MaterialExtend.class);
+            barCode = basicMaterialExtend.getBarCode();
+        }
+        return barCode;
+    }
+
     /**
      * 根据条件返回产品列表
      * @param name
      * @param model
      * @param color
      * @param standard
-     * @param mfrs
      * @param unit
      * @param unitId
      * @return
      */
-    private List<Material> getMaterialListByParam(String name, String model, String color,
-                                                  String standard, String mfrs, String unit, Long unitId) {
+    private List<Material> getMaterialListByParam(String name, String model, String color, String standard, String unit, Long unitId, String basicBarCode) throws Exception {
+        List<Material> list = new ArrayList<>();
         MaterialExample example = new MaterialExample();
         MaterialExample.Criteria criteria = example.createCriteria();
         criteria.andNameEqualTo(name);
@@ -683,9 +694,6 @@ public class MaterialService {
         if (StringUtil.isNotEmpty(standard)) {
             criteria.andStandardEqualTo(standard);
         }
-        if (StringUtil.isNotEmpty(mfrs)) {
-            criteria.andMfrsEqualTo(mfrs);
-        }
         if (StringUtil.isNotEmpty(unit)) {
             criteria.andUnitEqualTo(unit);
         }
@@ -693,7 +701,15 @@ public class MaterialService {
             criteria.andUnitIdEqualTo(unitId);
         }
         criteria.andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        List<Material> list = materialMapper.selectByExample(example);
+        list = materialMapper.selectByExample(example);
+        if(list.size()==0) {
+            //如果通过组合条件没有查到改商品，则通过条码再查一次
+            MaterialExtend materialExtend = materialExtendService.getInfoByBarCode(basicBarCode);
+            if(materialExtend != null && materialExtend.getMaterialId()!=null) {
+                Material material = getMaterial(materialExtend.getMaterialId());
+                list.add(material);
+            }
+        }
         return list;
     }
 
