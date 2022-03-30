@@ -411,6 +411,7 @@ public class MaterialService {
             }
             if(StringUtil.isNotEmpty(q)) {
                 q = q.replace("'", "");
+                q = q.trim();
             }
             list=  materialMapperEx.findBySelectWithBarCode(idList, q, offset, rows);
         }catch(Exception e){
