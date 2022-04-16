@@ -79,6 +79,7 @@ public class UserController {
         User user=null;
         BaseResponseInfo res = new BaseResponseInfo();
         try {
+
             String loginName = userParam.getLoginName().trim();
             String password = userParam.getPassword().trim();
             //判断用户是否已经登录过，登录过不再处理

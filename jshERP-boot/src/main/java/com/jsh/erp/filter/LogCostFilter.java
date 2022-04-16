@@ -60,7 +60,7 @@ public class LogCostFilter implements Filter {
             return;
         }
         if (requestUrl != null && (requestUrl.contains("/doc.html") ||
-            requestUrl.contains("/register.html") || requestUrl.contains("/login.html"))) {
+            requestUrl.contains("/user/login") || requestUrl.contains("/user/register"))) {
             chain.doFilter(request, response);
             return;
         }
@@ -76,7 +76,10 @@ public class LogCostFilter implements Filter {
                 }
             }
         }
-        servletResponse.sendRedirect("/login.html");
+        servletResponse.setStatus(500);
+        if(requestUrl != null && !requestUrl.contains("/user/logout") && !requestUrl.contains("/function/findMenuByPNumber")) {
+            servletResponse.getWriter().write("loginOut");
+        }
     }
 
     private static String regexPrefix = "^.*";

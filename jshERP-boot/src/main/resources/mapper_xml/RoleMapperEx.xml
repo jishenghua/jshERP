@@ -35,4 +35,10 @@
         </foreach>
         )
     </update>
+    <select id="getRoleWithoutTenant" resultType="com.jsh.erp.datasource.entities.Role">
+        select * from jsh_role
+        where 1=1
+        and ifnull(delete_flag,'0') !='1'
+        and id=#{roleId}
+    </select>
 </mapper>

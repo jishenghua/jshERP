@@ -47,8 +47,13 @@
           <a-col>
             © 2015-2030 {{systemTitle}} - Powered By
             <a style="color:#00458a;" :href="systemUrl" target="_blank">官方网站</a>
+            <span v-if="showWeixinSpan()" class="weixin" @mouseover="showWeixin" @click="hideWeixin">微信小程序</span>
           </a-col>
         </a-row>
+      </div>
+
+      <div v-if="showWeixinFlag" style="text-align: center; padding-top: 10px;">
+        <img src="/static/weixin.jpg" style="width:200px" />
       </div>
     </a-form>
   </div>
@@ -107,7 +112,8 @@
         currdatetime:'',
         randCodeImage:'',
         registerFlag:'',
-        requestCodeSuccess:false
+        requestCodeSuccess:false,
+        showWeixinFlag:false,
       }
     },
     created () {
@@ -139,7 +145,7 @@
               loginParams.loginName = values.loginName
               loginParams.password = md5(values.password)
               //loginParams.remember_me = values.rememberMe
-              console.log("登录参数",loginParams)
+              //console.log("登录参数",loginParams)
               that.Login(loginParams).then((res) => {
                 this.departConfirm(res, loginParams.loginName)
               }).catch((err) => {
@@ -277,6 +283,20 @@
             }
           }
         })
+      },
+      showWeixinSpan() {
+        let host = window.location.host
+        if(host === 'cloud.huaxiaerp.vip') {
+          return true
+        } else {
+          return false
+        }
+      },
+      showWeixin() {
+        this.showWeixinFlag = true
+      },
+      hideWeixin() {
+        this.showWeixinFlag = false
       }
     }
   }
@@ -327,6 +347,12 @@
       .register {
         float: right;
       }
+    }
+
+    .weixin {
+      padding-left:10px;
+      color: red;
+      cursor:pointer
     }
   }
 

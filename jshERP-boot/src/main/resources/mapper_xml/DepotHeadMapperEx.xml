@@ -222,6 +222,10 @@
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
         </if>
+        <if test="remark != null and remark !=''">
+            <bind name="bindRemark" value="'%'+remark+'%'"/>
+            and (dh.remark like #{bindRemark} or di.remark like #{bindRemark})
+        </if>
         and dh.sub_type!='调拨'
         and ifnull(dh.delete_flag,'0') !='1'
         ORDER BY oper_time DESC,number desc
@@ -258,6 +262,10 @@
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
+        </if>
+        <if test="remark != null and remark !=''">
+            <bind name="bindRemark" value="'%'+remark+'%'"/>
+            and (dh.remark like #{bindRemark} or di.remark like #{bindRemark})
         </if>
         and dh.sub_type!='调拨'
         and ifnull(dh.delete_flag,'0') !='1'
@@ -390,6 +398,10 @@
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey} or dh.remark like #{bindKey})
         </if>
+        <if test="remark != null and remark !=''">
+            <bind name="bindRemark" value="'%'+remark+'%'"/>
+            and (dh.remark like #{bindRemark} or di.remark like #{bindRemark})
+        </if>
         and ifnull(dh.delete_flag,'0') !='1'
         ORDER BY oper_time DESC,number desc
         <if test="offset != null and rows != null">
@@ -427,6 +439,10 @@
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey} or dh.remark like #{bindKey})
+        </if>
+        <if test="remark != null and remark !=''">
+            <bind name="bindRemark" value="'%'+remark+'%'"/>
+            and (dh.remark like #{bindRemark} or di.remark like #{bindRemark})
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
         ORDER BY oper_time DESC,number desc

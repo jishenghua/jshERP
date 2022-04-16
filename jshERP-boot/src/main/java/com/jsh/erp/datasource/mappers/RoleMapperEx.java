@@ -18,4 +18,7 @@ public interface RoleMapperEx {
             @Param("name") String name);
 
     int batchDeleteRoleByIds(@Param("updateTime") Date updateTime, @Param("updater") Long updater, @Param("ids") String ids[]);
+
+    Role getRoleWithoutTenant(
+            @Param("roleId") Long roleId);
 }

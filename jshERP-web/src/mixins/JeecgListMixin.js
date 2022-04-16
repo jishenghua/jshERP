@@ -351,12 +351,15 @@ export const JeecgListMixin = {
     },
     /* 按钮权限 */
     initActiveBtnStr() {
-      let funId = Vue.ls.get('funId'); //功能id
       let btnStrList = Vue.ls.get('winBtnStrList'); //按钮功能列表 JSON字符串
       this.btnEnableList = ""; //按钮列表
-      if (funId && btnStrList) {
+      let pathName = location.pathname
+      if(pathName.indexOf('/plugins')>-1) {
+        pathName = '/system' + pathName
+      }
+      if (pathName && btnStrList) {
         for (let i = 0; i < btnStrList.length; i++) {
-          if (btnStrList[i].funId == funId) {
+          if (btnStrList[i].url === pathName) {
             if (btnStrList[i].btnStr) {
               this.btnEnableList = btnStrList[i].btnStr;
             }
@@ -391,7 +394,7 @@ export const JeecgListMixin = {
         let numKey = 'rowIndex'
         let totalRow = { [numKey]: '合计' }
         //需要合计的列
-        let parseCols = 'initialStock,currentStock,currentStockPrice,initialAmount,thisMonthAmount,currentAmount,inSum,inSumPrice,' +
+        let parseCols = 'initialStock,currentStock,currentStockPrice,initialAmount,thisMonthAmount,currentAmount,inSum,inSumPrice,inOutSumPrice,' +
           'outSum,outSumPrice,outInSumPrice,operNumber,allPrice,numSum,priceSum,prevSum,thisSum,thisAllPrice,billMoney,changeAmount,' +
           'allPrice,currentNumber,lowSafeStock,highSafeStock,lowCritical,highCritical'
         columns.forEach(column => {

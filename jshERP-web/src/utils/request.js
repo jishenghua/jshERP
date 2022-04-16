@@ -23,32 +23,22 @@ const err = (error) => {
   if (error.response) {
     let data = error.response.data
     const token = Vue.ls.get(ACCESS_TOKEN)
-    console.log("------异常响应------",token)
-    console.log("------异常响应------",error.response.status)
     switch (error.response.status) {
       case 403:
         notification.error({ message: '系统提示', description: '拒绝访问',duration: 4})
         break
       case 500:
-        //notification.error({ message: '系统提示', description:'Token失效，请重新登录!',duration: 4})
-        if(token && data.message=="Token失效，请重新登录"){
-          // update-begin- --- author:scott ------ date:20190225 ---- for:Token失效采用弹框模式，不直接跳转----
-          // store.dispatch('Logout').then(() => {
-          //     window.location.reload()
-          // })
+        if(token && data==="loginOut"){
           Modal.error({
             title: '登录已过期',
             content: '很抱歉，登录已过期，请重新登录',
             okText: '重新登录',
             mask: false,
             onOk: () => {
-              store.dispatch('Logout').then(() => {
-                Vue.ls.remove(ACCESS_TOKEN)
-                window.location.reload()
-              })
+              Vue.ls.remove(ACCESS_TOKEN)
+              window.location.reload()
             }
           })
-          // update-end- --- author:scott ------ date:20190225 ---- for:Token失效采用弹框模式，不直接跳转----
         }
         break
       case 404:

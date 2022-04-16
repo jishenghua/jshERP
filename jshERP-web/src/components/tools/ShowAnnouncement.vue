@@ -12,10 +12,7 @@
       <a-button v-if="record.openType==='url'" type="primary" @click="toHandle">去处理</a-button>
     </template>
     <a-card class="daily-article" :loading="loading">
-      <a-card-meta
-        :title="record.titile"
-        :description="'标题：'+record.msgTitle">
-      </a-card-meta>
+      <span style="font-size:18px;">{{record.msgTitle}}</span>
       <a-divider />
       <span v-html="record.msgContent" class="article-content"></span>
     </a-card>

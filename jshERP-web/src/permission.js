@@ -37,12 +37,8 @@ router.beforeEach((to, from, next) => {
           })
         })
         .catch(() => {
-          /* notification.error({
-             message: '系统提示',
-             description: '请求用户信息失败，请重试！'
-           })*/
           store.dispatch('Logout').then(() => {
-            next({ path: '/user/login', query: { redirect: to.fullPath } })
+            next({ path: '/user/login' })
           })
         })
       } else {
@@ -57,7 +53,7 @@ router.beforeEach((to, from, next) => {
       // 在免登录白名单，直接进入
       next()
     } else {
-      next({ path: '/user/login', query: { redirect: to.fullPath } })
+      next({ path: '/user/login' })
       NProgress.done() // if current page is login will not trigger afterEach hook, so manually handle it
     }
   }

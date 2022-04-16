@@ -1075,7 +1075,7 @@
           { title: '单位', dataIndex: 'unit'},
           { title: '多属性', dataIndex: 'sku'},
           { title: '数量', dataIndex: 'operNumber'},
-          { title: '已入库', dataIndex: 'finishNumber'},
+          { title: '已出库', dataIndex: 'finishNumber'},
           { title: '单价', dataIndex: 'unitPrice'},
           { title: '金额', dataIndex: 'allPrice'},
           { title: '税率(%)', dataIndex: 'taxRate'},

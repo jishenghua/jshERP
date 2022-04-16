@@ -259,6 +259,8 @@
         billMain.totalPrice = 0-totalPrice
         if(this.fileList && this.fileList.length > 0) {
           billMain.fileName = this.fileList
+        } else {
+          billMain.fileName = ''
         }
         if(this.model.id){
           billMain.id = this.model.id

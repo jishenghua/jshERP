@@ -358,6 +358,7 @@ public class DepotItemService {
                     if(StringUtil.isExist(rowObj.get("depotId"))) {
                         Long depotId = rowObj.getLong("depotId");
                         if(BusinessConstants.SUB_TYPE_PURCHASE.equals(depotHead.getSubType())||
+                                BusinessConstants.SUB_TYPE_OTHER.equals(depotHead.getSubType())||
                                 BusinessConstants.SUB_TYPE_SALES_RETURN.equals(depotHead.getSubType())) {
                             serialNumberService.addSerialNumberByBill(depotHead.getNumber(), materialExtend.getMaterialId(), depotId, depotItem.getSnList());
                         }

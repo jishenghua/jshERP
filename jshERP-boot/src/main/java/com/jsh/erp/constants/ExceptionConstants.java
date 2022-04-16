@@ -296,6 +296,9 @@ public class ExceptionConstants {
     //商品-单位匹配不上
     public static final int MATERIAL_UNIT_MATE_CODE = 8000006;
     public static final String MATERIAL_UNIT_MATE_MSG = "抱歉，商品条码:%s的单位匹配不上，请完善计量单位信息！";
+    //商品条码不是正整数
+    public static final int MATERIAL_BARCODE_NOT_INTEGER_CODE = 8000007;
+    public static final String MATERIAL_BARCODE_NOT_INTEGER_MSG = "商品条码:%s不是正整数";
     /**
      *  单据信息
      * type = 85

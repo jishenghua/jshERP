@@ -118,6 +118,7 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { FinancialListMixin } from './mixins/FinancialListMixin'
   import JDate from '@/components/jeecg/JDate'
+  import Vue from 'vue'
   export default {
     name: "GiroList",
     mixins:[JeecgListMixin, FinancialListMixin],
@@ -141,7 +142,8 @@
           searchMaterial: "",
           type: "转账",
           creator: "",
-          handsPersonId: ""
+          handsPersonId: "",
+          roleType: Vue.ls.get('roleType')
         },
         // 表头
         columns: [

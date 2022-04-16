@@ -181,7 +181,7 @@
         this.queryParam.endTime=dateString[1];
       },
       myHandleDetail(record) {
-        if(record.type === '收入' || record.type === '收款') {
+        if(record.type === '收入' || record.type === '支出' || record.type === '收款') {
           findFinancialDetailByNumber({ billNo: record.number }).then((res) => {
             if (res && res.code === 200) {
               this.$refs.modalFinancialDetail.show(res.data, record.type);

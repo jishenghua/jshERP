@@ -109,6 +109,8 @@
       },
       add () {
         this.edit({});
+        this.model.enabled = true
+        this.enabledSwitch = true
       },
       edit (record) {
         this.form.resetFields();

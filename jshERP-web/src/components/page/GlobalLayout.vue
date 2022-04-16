@@ -14,7 +14,7 @@
         <side-menu
           mode="inline"
           :menus="menus"
-          @menuSelect="myMenuSelectMobile"
+          @menuSelect="myMenuSelect"
           :theme="navTheme"
           :collapsed="false"
           :collapsible="true"></side-menu>
@@ -156,11 +156,6 @@
         this.$emit("dynamicRouterShow",value.key, this.activeMenu.id, this.activeMenu.text, this.activeMenu.component)
         let storeKey = 'route:title:' + this.activeMenu.url
         this.$ls.set(storeKey, this.activeMenu.text)
-      },
-      myMenuSelectMobile(value){
-        this.myMenuSelect(value)
-        //给菜单id赋值，用于调用之后控制按钮的显示
-        Vue.ls.set('funId', this.activeMenu.id, 7 * 24 * 60 * 60 * 1000);
       },
       findMenuBykey(menus,key){
         for(let i of menus){

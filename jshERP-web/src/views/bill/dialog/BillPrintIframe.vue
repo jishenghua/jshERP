@@ -34,7 +34,7 @@
     data () {
       return {
         title: "三联打印预览",
-        width: '1550px',
+        width: '1000px',
         visible: false,
         billPrintUrl: '',
         height: "",
