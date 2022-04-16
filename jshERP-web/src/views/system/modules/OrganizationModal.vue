@@ -20,8 +20,8 @@
         </a-form-item>
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="上级机构">
           <a-tree-select style="width:100%" :dropdownStyle="{maxHeight:'200px',overflow:'auto'}"
-                         allow-clear treeDefaultExpandAll="true"
-               :treeData="departTree" v-model="model.parentId" placeholder="请选择上级机构">
+                         allow-clear :treeDefaultExpandAll="true"
+               :treeData="departTree" v-decorator="[ 'parentId' ]" placeholder="请选择上级机构">
           </a-tree-select>
         </a-form-item>
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="排序">

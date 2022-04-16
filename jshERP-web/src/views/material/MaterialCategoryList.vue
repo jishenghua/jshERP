@@ -69,8 +69,8 @@
           </a-form-item>
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="上级目录">
             <a-tree-select style="width:100%" :dropdownStyle="{maxHeight:'200px',overflow:'auto'}"
-                           allow-clear treeDefaultExpandAll="true"
-                           :treeData="treeData" v-model="model.parentId" placeholder="请选择上级目录">
+                           allow-clear :treeDefaultExpandAll="true"
+                           :treeData="treeData" v-decorator="[ 'parentId' ]" placeholder="请选择上级目录">
             </a-tree-select>
           </a-form-item>
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="排序">
@@ -169,7 +169,7 @@ export default {
       this.refresh();
     },
     loadTree() {
-      var that = this
+      let that = this
       that.treeData = []
       that.categoryTree = []
       let params = {};
@@ -180,11 +180,9 @@ export default {
           this.allTreeKeys = [];
           for (let i = 0; i < res.length; i++) {
             let temp = res[i]
-            that.treeData.push(temp)
             that.categoryTree.push(temp)
             that.setThisExpandedKeys(temp)
             that.getAllKeys(temp);
-            // console.log(temp.id)
           }
           this.loading = false
         }
@@ -211,8 +209,6 @@ export default {
     },
     onExpand(expandedKeys) {
       console.log('onExpand', expandedKeys)
-      // if not set autoExpandParent to false, if children expanded, parent can not collapse.
-      // or, you can remove all expanded children keys.
       this.iExpandedKeys = expandedKeys
     },
     backFlowList() {
@@ -236,11 +232,11 @@ export default {
       if (this.checkedKeys.length <= 0) {
         this.$message.warning('请选择一条记录！')
       } else {
-        var ids = ''
-        for (var a = 0; a < this.checkedKeys.length; a++) {
+        let ids = ''
+        for (let a = 0; a < this.checkedKeys.length; a++) {
           ids += this.checkedKeys[a] + ','
         }
-        var that = this
+        let that = this
         this.$confirm({
           title: '确认删除',
           content: '确定要删除所选中的 ' + this.checkedKeys.length + ' 条数据吗?',
@@ -284,6 +280,7 @@ export default {
       let record = e.node.dataRef
       let params = {};
       params.id=record.id;
+      this.getTreeByParams(params)
       queryMaterialCategoryById(params).then((res) => {
         if (res && res.code == 200) {
           if(res.data){
@@ -300,7 +297,18 @@ export default {
             this.setValuesToForm(record)
           }
         }
-      });
+      })
+    },
+    //根据类别id加载类别树
+    getTreeByParams(params) {
+      queryMaterialCategoryTreeList(params).then((res) => {
+        if (res) {
+          this.treeData = []
+          for (let i = 0; i < res.length; i++) {
+            this.treeData.push(res[i])
+          }
+        }
+      })
     },
     // 触发onSelect事件时,为类别树右侧的form表单赋值
     setValuesToForm(record) {
@@ -334,15 +342,17 @@ export default {
             this.$message.warning('请点击选择要修改类别!')
             return
           }
-
           let formData = Object.assign(this.currSelected, values)
           console.log('Received values of form: ', formData)
           httpAction(this.url.edit, formData, 'put').then((res) => {
             if (res.code == 200) {
               this.$message.success('保存成功!')
               this.loadTree()
+              let params = {}
+              params.id = formData.id
+              this.getTreeByParams(params)
             } else {
-              this.$message.error(res.message)
+              this.$message.warning(res.data.message)
             }
           })
         }
