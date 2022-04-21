@@ -1330,3 +1330,10 @@ update jsh_msg set status='2' where id=2;
 -- 给单据表增加找零字段backAmount
 -- --------------------------------------------------------
 alter table jsh_depot_head add back_amount decimal(24,6) DEFAULT NULL COMMENT '找零金额' after change_amount;
+
+-- --------------------------------------------------------
+-- 时间 2022年04月21日
+-- by jishenghua
+-- 修改商品表的名称字段的长度
+-- --------------------------------------------------------
+alter table jsh_material change name name varchar(100) DEFAULT NULL COMMENT '名称';

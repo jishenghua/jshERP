@@ -386,7 +386,7 @@ DROP TABLE IF EXISTS `jsh_material`;
 CREATE TABLE `jsh_material` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `category_id` bigint(20) DEFAULT NULL COMMENT '产品类型id',
-  `name` varchar(50) DEFAULT NULL COMMENT '名称',
+  `name` varchar(100) DEFAULT NULL COMMENT '名称',
   `mfrs` varchar(50) DEFAULT NULL COMMENT '制造商',
   `model` varchar(50) DEFAULT NULL COMMENT '型号',
   `standard` varchar(50) DEFAULT NULL COMMENT '规格',
