@@ -445,6 +445,10 @@ public class ExceptionConstants {
     public static final int ORGA_USER_REL_EDIT_FAILED_CODE = 11500002;
     public static final String ORGA_USER_REL_EDIT_FAILED_MSG = "修改机构用户关联关系失败";
 
+    //进销存统计，如果有权限的仓库数量太多则提示要选择仓库
+    public static final int REPORT_TWO_MANY_DEPOT_FAILED_CODE = 510;
+    public static final String REPORT_TWO_MANY_DEPOT_FAILED_MSG = "请选择仓库，再进行查询";
+
     //演示用户禁止操作
     public static final int SYSTEM_CONFIG_TEST_USER_CODE = -1;
     public static final String SYSTEM_CONFIG_TEST_USER_MSG = "演示用户禁止操作";

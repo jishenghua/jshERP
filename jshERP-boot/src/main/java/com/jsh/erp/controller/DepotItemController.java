@@ -280,7 +280,7 @@ public class DepotItemController {
     @ApiOperation(value = "查找所有的明细")
     public BaseResponseInfo findByAll(@RequestParam("currentPage") Integer currentPage,
                                       @RequestParam("pageSize") Integer pageSize,
-                                      @RequestParam("depotIds") String depotIds,
+                                      @RequestParam(value = "depotIds",required = false) String depotIds,
                                       @RequestParam("monthTime") String monthTime,
                                       @RequestParam("materialParam") String materialParam,
                                       @RequestParam("mpList") String mpList,
@@ -290,7 +290,7 @@ public class DepotItemController {
         try {
             String timeA = Tools.firstDayOfMonth(monthTime) + BusinessConstants.DAY_FIRST_TIME;
             String timeB = Tools.lastDayOfMonth(monthTime) + BusinessConstants.DAY_LAST_TIME;
-            List<Long> depotList = StringUtil.strToLongList(depotIds);
+            List<Long> depotList = parseListByDepotIds(depotIds);
             List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(StringUtil.toNull(materialParam),
                     timeB,(currentPage-1)*pageSize, pageSize);
             String[] mpArr = mpList.split(",");
@@ -339,6 +339,9 @@ public class DepotItemController {
             map.put("rows", dataArray);
             res.code = 200;
             res.data = map;
+        } catch (BusinessRunTimeException e) {
+            res.code = e.getCode();
+            res.data = e.getData().get("message");
         } catch(Exception e){
             e.printStackTrace();
             res.code = 500;
@@ -357,7 +360,7 @@ public class DepotItemController {
      */
     @GetMapping(value = "/totalCountMoney")
     @ApiOperation(value = "统计总计金额")
-    public BaseResponseInfo totalCountMoney(@RequestParam("depotIds") String depotIds,
+    public BaseResponseInfo totalCountMoney(@RequestParam(value = "depotIds",required = false) String depotIds,
                                             @RequestParam("monthTime") String monthTime,
                                             @RequestParam("materialParam") String materialParam,
                                             HttpServletRequest request) throws Exception{
@@ -365,7 +368,7 @@ public class DepotItemController {
         Map<String, Object> map = new HashMap<>();
         try {
             String endTime = Tools.lastDayOfMonth(monthTime) + BusinessConstants.DAY_LAST_TIME;
-            List<Long> depotList = StringUtil.strToLongList(depotIds);
+            List<Long> depotList = parseListByDepotIds(depotIds);
             List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(StringUtil.toNull(materialParam),
                     endTime, null, null);
             BigDecimal thisAllPrice = BigDecimal.ZERO;
@@ -383,12 +386,35 @@ public class DepotItemController {
             map.put("totalCount", thisAllPrice);
             res.code = 200;
             res.data = map;
+        } catch (BusinessRunTimeException e) {
+            res.code = e.getCode();
+            res.data = e.getData().get("message");
         } catch(Exception e){
             e.printStackTrace();
             res.code = 500;
             res.data = "获取数据失败";
         }
         return res;
+    }
+
+    private List<Long> parseListByDepotIds(@RequestParam("depotIds") String depotIds) throws Exception {
+        List<Long> depotList = new ArrayList<>();
+        if(StringUtil.isNotEmpty(depotIds)) {
+            depotList = StringUtil.strToLongList(depotIds);
+        } else {
+            //未选择仓库时默认为当前用户有权限的仓库
+            JSONArray depotArr = depotService.findDepotByCurrentUser();
+            for(Object obj: depotArr) {
+                JSONObject object = JSONObject.parseObject(obj.toString());
+                depotList.add(object.getLong("id"));
+            }
+            //如果有权限的仓库数量太多则提示要选择仓库
+            if(depotList.size()>10) {
+                throw new BusinessRunTimeException(ExceptionConstants.REPORT_TWO_MANY_DEPOT_FAILED_CODE,
+                        ExceptionConstants.REPORT_TWO_MANY_DEPOT_FAILED_MSG);
+            }
+        }
+        return depotList;
     }
 
     /**
