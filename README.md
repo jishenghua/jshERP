@@ -5,7 +5,8 @@
 * 欢迎加入华夏ERP交流QQ群(入群领文档)，群3：805736336(满)、群4：146571538
 * 平台地址：http://cloud.huaxiaerp.vip 欢迎大家注册租户进行使用
 * 系统默认租户账号：jsh，默认超管账户：admin，默认密码均为：123456
-* 部署如遇到困难请参考Wiki文档  https://gitee.com/jishenghua/JSH_ERP/wikis/pages
+* 感谢热心的小伙伴整理的用户手册 http://www.huaxiaerp.com/thread-9-1-1.html
+* 喜欢视频教程可以看这里 https://space.bilibili.com/540003552/channel/series 
 
 # 定制和插件
 * 如有ERP **私人定制** 需求，请将需求整理成文档，发给邮箱： **752718920@qq.com** ，我会及时回复哒
@@ -15,8 +16,6 @@
 * 华夏ERP立志为中小企业提供开源好用的ERP软件，降低企业的信息化成本
 * 个人开发者也可以使用华夏ERP进行二次开发，加快完成开发任务
 * 初学JAVA的小伙伴可以下载源代码来进行学习交流
-* 感谢热心的小伙伴整理的用户手册 http://www.huaxiaerp.com/thread-9-1-1.html
-* 喜欢视频教程可以看这里 https://space.bilibili.com/540003552/channel/series 
 
 # 技术框架
 * 核心框架：SpringBoot 2.0.0
