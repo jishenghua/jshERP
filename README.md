@@ -16,6 +16,7 @@
 * 个人开发者也可以使用华夏ERP进行二次开发，加快完成开发任务
 * 初学JAVA的小伙伴可以下载源代码来进行学习交流
 * 感谢热心的小伙伴整理的用户手册 http://www.huaxiaerp.com/thread-9-1-1.html
+* 喜欢视频教程可以看这里 https://space.bilibili.com/540003552/channel/series 
 
 # 技术框架
 * 核心框架：SpringBoot 2.0.0
