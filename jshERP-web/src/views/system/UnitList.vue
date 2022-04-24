@@ -98,8 +98,8 @@
               return parseInt(index)+1;
             }
           },
-          { title: '计量单位', align:"center", dataIndex: 'name', width:150 },
-          { title: '基本单位', align:"center", dataIndex: 'basicUnit', width:100 },
+          { title: '计量单位', align:"center", dataIndex: 'name', width:200 },
+          { title: '基本单位', align:"center", dataIndex: 'basicUnit', width:80 },
           { title: '副单位', align:"center", dataIndex: 'otherUnit', width:100,
             customRender:function (t,r,index) {
               if (r) {
@@ -128,7 +128,7 @@
           {
             title: '操作',
             dataIndex: 'action',
-            width:150,
+            width:120,
             align:"center",
             scopedSlots: { customRender: 'action' },
           }

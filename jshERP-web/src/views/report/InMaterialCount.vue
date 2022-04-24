@@ -7,7 +7,7 @@
         <div class="table-page-search-wrapper">
           <a-form layout="inline" @keyup.enter.native="searchQuery">
             <a-row :gutter="24">
-              <a-col :md="4" :sm="24">
+              <a-col :md="6" :sm="24">
                 <a-form-item label="供应商" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-select placeholder="选择供应商" v-model="queryParam.organId"
                     :dropdownMatchSelectWidth="false" showSearch allow-clear optionFilterProp="children">
@@ -17,28 +17,15 @@
                   </a-select>
                 </a-form-item>
               </a-col>
-              <a-col :md="4" :sm="24">
-                <a-form-item label="仓库" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-select
-                    optionFilterProp="children"
-                    showSearch allow-clear style="width: 100%"
-                    placeholder="请选择仓库"
-                    v-model="queryParam.depotId">
-                    <a-select-option v-for="(depot,index) in depotList" :value="depot.id">
-                      {{ depot.depotName }}
-                    </a-select-option>
-                  </a-select>
-                </a-form-item>
-              </a-col>
-              <a-col :md="4" :sm="24">
+              <a-col :md="6" :sm="24">
                 <a-form-item label="商品信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-input placeholder="条码/名称/规格/型号" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
-              <a-col :md="5" :sm="24">
+              <a-col :md="6" :sm="24">
                 <a-form-item label="单据日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-range-picker
-                    style="width: 210px"
+                    style="width: 100%"
                     v-model="queryParam.createTimeRange"
                     :default-value="defaultTimeStr"
                     format="YYYY-MM-DD"
@@ -47,13 +34,32 @@
                   />
                 </a-form-item>
               </a-col>
-              <a-col :md="4" :sm="24" >
+              <a-col :md="6" :sm="24" >
                 <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                   <a-button type="primary" @click="searchQuery">查询</a-button>
                   <a-button style="margin-left: 8px" v-print="'#reportPrint'" icon="printer">打印</a-button>
                   <a-button style="margin-left: 8px" @click="exportExcel" icon="download">导出</a-button>
+                  <a @click="handleToggleSearch" style="margin-left: 8px">
+                    {{ toggleSearchStatus ? '收起' : '展开' }}
+                    <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
+                  </a>
                 </span>
               </a-col>
+              <template v-if="toggleSearchStatus">
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="仓库" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select
+                      optionFilterProp="children"
+                      showSearch allow-clear style="width: 100%"
+                      placeholder="请选择仓库"
+                      v-model="queryParam.depotId">
+                      <a-select-option v-for="(depot,index) in depotList" :value="depot.id">
+                        {{ depot.depotName }}
+                      </a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+              </template>
             </a-row>
           </a-form>
         </div>

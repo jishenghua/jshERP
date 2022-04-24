@@ -25,6 +25,16 @@
                   <a-input placeholder="请输入名称查询" v-model="queryParam.name"></a-input>
                 </a-form-item>
               </a-col>
+              <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+                <a-col :md="6" :sm="24">
+                  <a-button type="primary" @click="searchQuery">查询</a-button>
+                  <a-button style="margin-left: 8px" @click="searchReset">重置</a-button>
+                  <a @click="handleToggleSearch" style="margin-left: 8px">
+                    {{ toggleSearchStatus ? '收起' : '展开' }}
+                    <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
+                  </a>
+                </a-col>
+              </span>
               <template v-if="toggleSearchStatus">
                 <a-col :md="6" :sm="24">
                   <a-form-item label="规格" :labelCol="labelCol" :wrapperCol="wrapperCol">
@@ -37,16 +47,6 @@
                   </a-form-item>
                 </a-col>
               </template>
-              <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-                <a-col :md="6" :sm="24">
-                  <a-button type="primary" @click="searchQuery">查询</a-button>
-                  <a-button style="margin-left: 8px" @click="searchReset">重置</a-button>
-                  <a @click="handleToggleSearch" style="margin-left: 8px">
-                    {{ toggleSearchStatus ? '收起' : '展开' }}
-                    <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
-                  </a>
-                </a-col>
-              </span>
             </a-row>
           </a-form>
         </div>
