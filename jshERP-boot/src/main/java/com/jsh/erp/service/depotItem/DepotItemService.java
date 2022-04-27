@@ -701,7 +701,7 @@ public class DepotItemService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public BigDecimal getFinishNumber(Long mId, Long headerId) {
+    public BigDecimal getFinishNumber(Long mId, Long headerId, Unit unitInfo, String materialUnit) {
         String goToType = "";
         DepotHead depotHead =depotHeadMapper.selectByPrimaryKey(headerId);
         String linkNumber = depotHead.getNumber(); //订单号
@@ -712,6 +712,16 @@ public class DepotItemService {
             goToType = BusinessConstants.SUB_TYPE_SALES;
         }
         BigDecimal count = depotItemMapperEx.getFinishNumber(mId, linkNumber, goToType);
+        //根据多单位情况进行数量的转换
+        if(materialUnit.equals(unitInfo.getOtherUnit()) && unitInfo.getRatio() != 0) {
+            count = count.divide(BigDecimal.valueOf(unitInfo.getRatio()),2,BigDecimal.ROUND_HALF_UP);
+        }
+        if(materialUnit.equals(unitInfo.getOtherUnitTwo()) && unitInfo.getRatioTwo() != 0) {
+            count = count.divide(BigDecimal.valueOf(unitInfo.getRatioTwo()),2,BigDecimal.ROUND_HALF_UP);
+        }
+        if(materialUnit.equals(unitInfo.getOtherUnitThree()) && unitInfo.getRatioThree() != 0) {
+            count = count.divide(BigDecimal.valueOf(unitInfo.getRatioThree()),2,BigDecimal.ROUND_HALF_UP);
+        }
         return count;
     }
 

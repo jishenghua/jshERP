@@ -191,13 +191,13 @@ public class DepotItemController {
                     item.put("color", diEx.getMColor());
                     item.put("materialOther", getOtherInfo(mpArr, diEx));
                     BigDecimal stock;
+                    Unit unitInfo = materialService.findUnit(diEx.getMaterialId()); //查询计量单位信息
+                    String materialUnit = diEx.getMaterialUnit();
                     if(StringUtil.isNotEmpty(diEx.getSku())){
                         stock = depotItemService.getSkuStockByParam(diEx.getDepotId(),diEx.getMaterialExtendId(),null,null);
                     } else {
                         stock = depotItemService.getStockByParam(diEx.getDepotId(),diEx.getMaterialId(),null,null);
-                        Unit unitInfo = materialService.findUnit(diEx.getMaterialId()); //查询计量单位信息
                         if (StringUtil.isNotEmpty(unitInfo.getName())) {
-                            String materialUnit = diEx.getMaterialUnit();
                             stock = unitService.parseStockByUnit(stock, unitInfo, materialUnit);
                         }
                     }
@@ -212,7 +212,7 @@ public class DepotItemController {
                     item.put("operNumber", diEx.getOperNumber());
                     item.put("basicNumber", diEx.getBasicNumber());
                     item.put("preNumber", diEx.getOperNumber()); //原数量
-                    item.put("finishNumber", depotItemService.getFinishNumber(diEx.getMaterialId(), diEx.getHeaderId())); //已入库|已出库
+                    item.put("finishNumber", depotItemService.getFinishNumber(diEx.getMaterialId(), diEx.getHeaderId(), unitInfo, materialUnit)); //已入库|已出库
                     item.put("unitPrice", diEx.getUnitPrice());
                     item.put("taxUnitPrice", diEx.getTaxUnitPrice());
                     item.put("allPrice", diEx.getAllPrice());
