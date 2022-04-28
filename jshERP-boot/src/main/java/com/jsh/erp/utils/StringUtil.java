@@ -280,11 +280,11 @@ public class StringUtil {
      * @param value
      * @return
      */
-    public static boolean isPositiveInteger(Object value) {
+    public static boolean isPositiveLong(Object value) {
         if(value!=null) {
             String str = value.toString();
             if(isNotEmpty(str)) {
-                if((str.matches("[0-9]+"))&&(Integer.parseInt(str)>0)) {
+                if((str.matches("[0-9]+"))&&(Long.parseLong(str)>0)) {
                     return true;
                 } else {
                     return false;

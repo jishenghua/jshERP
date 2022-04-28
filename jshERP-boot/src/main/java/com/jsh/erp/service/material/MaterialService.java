@@ -500,12 +500,12 @@ public class MaterialService {
                     String lowDecimal = ExcelUtils.getContent(src, i, 14); //最低售价
                     String enabled = ExcelUtils.getContent(src, i, 15); //状态
                     //校验基础条码是否是正整数
-                    if(!StringUtil.isPositiveInteger(barCode)) {
+                    if(!StringUtil.isPositiveLong(barCode)) {
                         throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_BARCODE_NOT_INTEGER_CODE,
                                 String.format(ExceptionConstants.MATERIAL_BARCODE_NOT_INTEGER_MSG, barCode));
                     }
                     //校验副条码是否是正整数
-                    if(StringUtil.isNotEmpty(manyBarCode) && !StringUtil.isPositiveInteger(manyBarCode)) {
+                    if(StringUtil.isNotEmpty(manyBarCode) && !StringUtil.isPositiveLong(manyBarCode)) {
                         throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_BARCODE_NOT_INTEGER_CODE,
                                 String.format(ExceptionConstants.MATERIAL_BARCODE_NOT_INTEGER_MSG, manyBarCode));
                     }
