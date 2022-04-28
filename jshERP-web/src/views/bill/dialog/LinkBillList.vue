@@ -67,7 +67,7 @@
               return parseInt(index)+1;
             }
           },
-          { title: '', dataIndex: 'organName',width:120},
+          { title: '', dataIndex: 'organName',width:120, ellipsis:true},
           { title: '单据编号', dataIndex: 'number',width:150},
           { title: '商品信息', dataIndex: 'materialsList',width:280, ellipsis:true,
             customRender:function (text,record,index) {
