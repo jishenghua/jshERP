@@ -384,6 +384,7 @@ export const JeecgListMixin = {
         if(operatorDom && operatorDom[0]) {
           operatorDomLen = operatorDom[0].offsetHeight+10
         }
+        this.scroll.x = 1640
         this.scroll.y = document.documentElement.clientHeight-searchWrapperDomLen-operatorDomLen-basicLength
       }
     },
