@@ -145,6 +145,7 @@
         form: this.$form.createForm(this),
         loading: false,
         expandedKeys: [],
+        disableMixinCreated: true,
       }
     },
     computed: {
