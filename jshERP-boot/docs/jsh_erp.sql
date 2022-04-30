@@ -69,11 +69,11 @@ CREATE TABLE `jsh_account_head` (
 -- Records of jsh_account_head
 -- ----------------------------
 INSERT INTO `jsh_account_head` VALUES ('118', '收入', '58', '16', '63', '55.000000', null, '55.000000', '17', 'SR00000000643', '2021-06-02 00:24:49', null, null, '1', '63', '0');
-INSERT INTO `jsh_account_head` VALUES ('119', '支出', '68', '16', '63', '66.000000', null, '66.000000', '17', 'ZC00000000644', '2021-06-02 00:25:01', null, null, '0', '63', '0');
-INSERT INTO `jsh_account_head` VALUES ('122', '转账', null, '17', '63', '11.000000', null, '11.000000', '17', 'ZZ00000000647', '2021-06-02 00:25:32', null, null, '0', '63', '0');
+INSERT INTO `jsh_account_head` VALUES ('119', '支出', '68', '16', '63', '-66.000000', null, '-66.000000', '17', 'ZC00000000644', '2021-06-02 00:25:01', null, null, '0', '63', '0');
+INSERT INTO `jsh_account_head` VALUES ('122', '转账', null, '17', '63', '-11.000000', null, '-11.000000', '17', 'ZZ00000000647', '2021-06-02 00:25:32', null, null, '0', '63', '0');
 INSERT INTO `jsh_account_head` VALUES ('124', '收预付款', '60', '17', '63', '80.000000', '0.000000', '80.000000', null, 'SYF00000000649', '2021-07-06 23:43:48', null, null, '0', '63', '0');
 INSERT INTO `jsh_account_head` VALUES ('125', '收款', '58', '17', '63', '10.000000', '0.000000', '10.000000', '17', 'SK00000000653', '2021-07-06 23:46:38', null, null, '0', '63', '0');
-INSERT INTO `jsh_account_head` VALUES ('126', '付款', '57', '17', '63', '50.000000', '0.000000', '-50.000000', '17', 'FK00000000654', '2021-07-06 23:47:23', null, null, '0', '63', '0');
+INSERT INTO `jsh_account_head` VALUES ('126', '付款', '57', '17', '63', '-50.000000', '0.000000', '-50.000000', '17', 'FK00000000654', '2021-07-06 23:47:23', null, null, '0', '63', '0');
 
 -- ----------------------------
 -- Table structure for jsh_account_item
@@ -183,7 +183,7 @@ INSERT INTO `jsh_depot_head` VALUES ('262', '出库', '销售', 'XSCK00000000634
 INSERT INTO `jsh_depot_head` VALUES ('263', '入库', '销售退货', 'XSTH00000000635', 'XSTH00000000635', '2021-06-02 00:23:12', '2021-06-02 00:23:05', '71', '63', '17', '-22.000000', null, '-22.000000', '现付', null, null, null, '', '', '', '0.000000', '0.000000', '22.000000', '0.000000', '0', null, '63', '0');
 INSERT INTO `jsh_depot_head` VALUES ('264', '出库', '零售', 'LSCK00000000636', 'LSCK00000000636', '2021-06-02 00:23:21', '2021-06-02 00:23:14', '60', '63', '17', '22.000000', null, '22.000000', '现付', null, null, null, null, null, null, null, null, null, null, '0', null, '63', '0');
 INSERT INTO `jsh_depot_head` VALUES ('265', '入库', '零售退货', 'LSTH00000000637', 'LSTH00000000637', '2021-06-02 00:23:29', '2021-06-02 00:23:23', '60', '63', '17', '-22.000000', null, '-22.000000', '现付', null, null, null, null, null, null, null, null, null, null, '0', null, '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('266', '入库', '其它', 'QTRK00000000638', 'QTRK00000000638', '2021-06-02 00:23:48', '2021-06-02 00:23:36', '57', '63', null, null, null, '55.000000', '现付', null, null, null, null, null, null, null, null, null, null, '1', null, '63', '0');
+INSERT INTO `jsh_depot_head` VALUES ('266', '入库', '其它', 'QTRK00000000638', 'QTRK00000000638', '2021-06-02 00:23:48', '2021-06-02 00:23:36', '57', '63', null, null, null, '-55.000000', '现付', null, null, null, null, null, null, null, null, null, null, '1', null, '63', '0');
 INSERT INTO `jsh_depot_head` VALUES ('267', '出库', '其它', 'QTCK00000000639', 'QTCK00000000639', '2021-06-02 00:23:59', '2021-06-02 00:23:50', '58', '63', null, null, null, '30.000000', '现付', null, null, null, null, null, null, null, null, null, null, '0', null, '63', '0');
 INSERT INTO `jsh_depot_head` VALUES ('268', '出库', '调拨', 'DBCK00000000640', 'DBCK00000000640', '2021-06-02 00:24:09', '2021-06-02 00:24:00', null, '63', null, null, null, '11.000000', '现付', null, null, null, null, null, null, null, null, null, null, '0', null, '63', '0');
 INSERT INTO `jsh_depot_head` VALUES ('269', '其它', '组装单', 'ZZD00000000641', 'ZZD00000000641', '2021-06-02 00:24:29', '2021-06-02 00:24:11', null, '63', null, null, null, '0.000000', '现付', null, null, null, null, null, null, null, null, null, null, '0', null, '63', '0');

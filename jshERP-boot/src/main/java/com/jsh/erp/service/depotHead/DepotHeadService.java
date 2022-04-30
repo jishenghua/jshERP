@@ -529,10 +529,6 @@ public class DepotHeadService {
                         allPrice = BigDecimal.ZERO.subtract(p1);
                     } else if (type.equals("付款")) {
                         allPrice = p1;
-                    } else if (type.equals("收入")) {
-                        allPrice =  p1.subtract(p2);
-                    } else if (type.equals("支出")) {
-                        allPrice = p2.subtract(p1);
                     }
                     dha.setBillMoney(p1); //单据金额
                     dha.setChangeAmount(p2); //实际支付
