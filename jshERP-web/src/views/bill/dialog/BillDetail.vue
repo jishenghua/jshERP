@@ -1236,7 +1236,7 @@
     created () {
     },
     methods: {
-      initSetting(record, type) {
+      initSetting(record, type, ds) {
         if (type === '零售出库') {
           this.defColumns = this.retailOutColumns
         } else if (type === '零售退货入库') {
@@ -1266,13 +1266,39 @@
         } else if (type === '盘点复盘') {
           this.defColumns = this.stockCheckReplayColumns
         }
-        //不是部分采购|部分销售的时候移除列
+        //判断序列号、批号、有效期、多属性是否有值
+        let needAddkeywords = []
+        for (let i = 0; i < ds.length; i++) {
+          if(ds[i].snList) {
+            needAddkeywords.push('snList')
+          }
+          if(ds[i].batchNumber) {
+            needAddkeywords.push('batchNumber')
+          }
+          if(ds[i].expirationDate) {
+            needAddkeywords.push('expirationDate')
+          }
+          if(ds[i].sku) {
+            needAddkeywords.push('sku')
+          }
+        }
         if(record.status === '3') {
+          //部分采购|部分销售的时候显示全部列
           this.columns = this.defColumns
         } else {
           let currentCol = []
           for(let i=0; i<this.defColumns.length; i++){
-            if(this.defColumns[i].dataIndex !== 'finishNumber') {
+            //移除列
+            let needRemoveKeywords = ['finishNumber','snList','batchNumber','expirationDate','sku']
+            if(needRemoveKeywords.indexOf(this.defColumns[i].dataIndex)===-1) {
+              let info = {}
+              info.title = this.defColumns[i].title
+              info.dataIndex = this.defColumns[i].dataIndex
+              info.width = this.defColumns[i].width
+              currentCol.push(info)
+            }
+            //添加有数据的列
+            if(needAddkeywords.indexOf(this.defColumns[i].dataIndex)>-1) {
               let info = {}
               info.title = this.defColumns[i].title
               info.dataIndex = this.defColumns[i].dataIndex
@@ -1294,7 +1320,6 @@
         })
       },
       show(record, type) {
-        this.initSetting(record, type)
         this.billType = type
         //附件下载
         this.fileList = record.fileName
@@ -1314,14 +1339,15 @@
           mpList: getMpListShort(Vue.ls.get('materialPropertyList'))  //扩展属性
         }
         let url = this.readOnly ? this.url.detailList : this.url.detailList;
-        this.requestSubTableData(url, params);
+        this.requestSubTableData(record, type, url, params);
         this.initPlatform()
       },
-      requestSubTableData(url, params, success) {
+      requestSubTableData(record, type, url, params, success) {
         this.loading = true
         getAction(url, params).then(res => {
           if(res && res.code === 200){
             this.dataSource = res.data.rows
+            this.initSetting(record, type, this.dataSource)
             typeof success === 'function' ? success(res) : ''
           }
         }).finally(() => {
