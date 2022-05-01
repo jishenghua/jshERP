@@ -106,7 +106,9 @@ public class MaterialService {
         return list;
     }
 
-    public List<MaterialVo4Unit> select(String barCode, String name, String standard, String model, String categoryId,String mpList, int offset, int rows)
+    public List<MaterialVo4Unit> select(String barCode, String name, String standard, String model, String color,
+                                        String weight, String expiryNum, String enableSerialNumber, String enableBatchNumber,
+                                        String remark, String categoryId, String mpList, int offset, int rows)
             throws Exception{
         String[] mpArr = new String[]{};
         if(StringUtil.isNotEmpty(mpList)){
@@ -119,7 +121,8 @@ public class MaterialService {
             if(StringUtil.isNotEmpty(categoryId)){
                 idList = getListByParentId(Long.parseLong(categoryId));
             }
-            list= materialMapperEx.selectByConditionMaterial(barCode, name, standard, model, idList, mpList, offset, rows);
+            list= materialMapperEx.selectByConditionMaterial(barCode, name, standard, model, color, weight, expiryNum,
+                    enableSerialNumber, enableBatchNumber, remark, idList, mpList, offset, rows);
             if (null != list) {
                 for (MaterialVo4Unit m : list) {
                     //扩展信息
@@ -149,14 +152,17 @@ public class MaterialService {
         return resList;
     }
 
-    public Long countMaterial(String barCode, String name, String standard, String model, String categoryId,String mpList)throws Exception {
+    public Long countMaterial(String barCode, String name, String standard, String model, String color,
+                              String weight, String expiryNum, String enableSerialNumber, String enableBatchNumber,
+                              String remark, String categoryId,String mpList)throws Exception {
         Long result =null;
         try{
             List<Long> idList = new ArrayList<>();
             if(StringUtil.isNotEmpty(categoryId)){
                 idList = getListByParentId(Long.parseLong(categoryId));
             }
-            result= materialMapperEx.countsByMaterial(barCode, name, standard, model, idList, mpList);
+            result= materialMapperEx.countsByMaterial(barCode, name, standard, model, color, weight, expiryNum,
+                    enableSerialNumber, enableBatchNumber, remark, idList, mpList);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
