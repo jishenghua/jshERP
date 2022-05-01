@@ -46,6 +46,42 @@
                     <a-input placeholder="请输入型号查询" v-model="queryParam.model"></a-input>
                   </a-form-item>
                 </a-col>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="颜色" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-input placeholder="请输入颜色查询" v-model="queryParam.color"></a-input>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="基础重量" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-input-number style="width: 100%" placeholder="请输入基础重量查询" v-model="queryParam.weight"></a-input-number>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="保质期" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-input-number style="width: 100%" placeholder="请输入保质期查询" v-model="queryParam.expiryNum"></a-input-number>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="序列号" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select placeholder="有无序列号" v-model="queryParam.enableSerialNumber">
+                      <a-select-option value="1">有</a-select-option>
+                      <a-select-option value="0">无</a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="批号" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select placeholder="有无批号" v-model="queryParam.enableBatchNumber">
+                      <a-select-option value="1">有</a-select-option>
+                      <a-select-option value="0">无</a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="备注" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-input placeholder="请输入备注查询" v-model="queryParam.remark"></a-input>
+                  </a-form-item>
+                </a-col>
               </template>
             </a-row>
           </a-form>
@@ -150,6 +186,12 @@
           name:'',
           standard:'',
           model:'',
+          color:'',
+          weight:'',
+          expiryNum:'',
+          enableSerialNumber:'',
+          enableBatchNumber:'',
+          remark:'',
           mpList: getMpListShort(Vue.ls.get('materialPropertyList'))  //扩展属性
         },
         // 表头
