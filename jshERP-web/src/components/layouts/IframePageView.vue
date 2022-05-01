@@ -21,14 +21,6 @@
     created () {
       this.goUrl()
     },
-    updated () {
-      this.goUrl()
-    },
-    watch: {
-      $route(to, from) {
-        this.goUrl();
-      }
-    },
     methods: {
       goUrl () {
         let url = this.$route.meta.url

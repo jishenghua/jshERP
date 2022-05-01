@@ -123,7 +123,6 @@ function generateChildRouters (data) {
     let menu = {
       path: item.url,
       name: item.text,
-      component: componentPath,
       meta: {
         id: item.id,
         title: item.text,
@@ -132,8 +131,13 @@ function generateChildRouters (data) {
         componentName:componentName,
         internalOrExternal:true,
         keepAlive: true
-        // permissionList:""
       }
+    }
+    if(item.component.indexOf("IframePageView")>-1){
+      //给带iframe的页面进行改造
+      menu.iframeComponent = componentPath
+    } else {
+      menu.component = componentPath
     }
     if (item.children && item.children.length > 0) {
       menu.children = [...generateChildRouters( item.children)];

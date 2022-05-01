@@ -25,6 +25,13 @@
           <router-view v-if="reloadFlag"/>
         </template>
       </transition>
+      <!-- iframe页 -->
+      <component
+        v-for="item in hasOpenComponentsArr"
+        :key="item.name"
+        :is="item.name"
+        v-show="$route.path === item.path">
+      </component>
     </div>
   </global-layout>
 </template>
@@ -37,6 +44,7 @@
   const indexKey = '/dashboard/analysis'
   import Vue from 'vue'
   import { CACHE_INCLUDED_ROUTES } from "@/store/mutation-types"
+  import store from '../../store'
 
   export default {
     name: 'TabLayout',
@@ -57,7 +65,8 @@
           { key: '2', icon: 'arrow-right', text: '关闭右侧' },
           { key: '3', icon: 'close', text: '关闭其它' }
         ],
-        reloadFlag:true
+        reloadFlag:true,
+        componentsArr: []
       }
     },
     provide(){
@@ -66,6 +75,10 @@
       }
     },
     computed: {
+      // 实现懒加载，只渲染已经打开过（hasOpen:true）的iframe页
+      hasOpenComponentsArr() {
+        return this.componentsArr.filter(item => item.hasOpen)
+      },
       multipage() {
         //判断如果是手机模式，自动切换为单页面模式
         if (this.isMobile()) {
@@ -76,15 +89,12 @@
       },
       includedComponents() {
         const includedRouters = Vue.ls.get(CACHE_INCLUDED_ROUTES)
-        //console.log("includedRouters：" + includedRouters)
         //加入到 cache_included_routes
         if (this.$route.meta.componentName) {
           let cacheRouterArray = Vue.ls.get(CACHE_INCLUDED_ROUTES) || []
           if(!cacheRouterArray.includes(this.$route.meta.componentName)){
             cacheRouterArray.push(this.$route.meta.componentName)
-            //console.log("Vue ls set componentName ：" + this.$route.meta.componentName)
             Vue.ls.set(CACHE_INCLUDED_ROUTES, cacheRouterArray)
-            //console.log("Vue ls includedRouterArrays ：" + Vue.ls.get(CACHE_INCLUDED_ROUTES))
             return cacheRouterArray;
           }
         }
@@ -92,6 +102,15 @@
       }
     },
     created() {
+      // 设置iframe页的数组对象
+      const componentsArr = this.getComponentsArr()
+      componentsArr.forEach((item) => {
+        Vue.component(item.name, item.component)
+      })
+      this.componentsArr = componentsArr
+      // 判断当前路由是否iframe页
+      this.isOpenIframePage()
+
       if (this.$route.path != indexKey) {
         this.addIndexToFirst()
       }
@@ -144,8 +163,44 @@
           this.addIndexToFirst()
         }
       },
+      $route() {
+        // 判断当前路由是否iframe页
+        this.isOpenIframePage()
+      }
     },
     methods: {
+      // 根据当前路由设置hasOpen
+      isOpenIframePage() {
+        const target = this.componentsArr.find(item => {
+          return item.path === this.$route.path
+        })
+        if (target && !target.hasOpen) {
+          target.hasOpen = true;
+        }
+      },
+      // 遍历路由的所有页面，把含有iframeComponent标识的收集起来
+      getComponentsArr() {
+        let iframeArr = []
+        const routers = this.$store.state.permission.routers;
+        for (let i = 0; i < routers.length; i++) {
+          if(routers[i].children) {
+            for (let j = 0; j < routers[i].children.length; j++) {
+              if(routers[i].children[j].iframeComponent) {
+                iframeArr.push(routers[i].children[j])
+              }
+            }
+          }
+        }
+        return iframeArr.map((item) => {
+          const name = item.name || item.path.replace('/', '')
+          return {
+            name: name,
+            path: item.path,
+            hasOpen: false, // 是否打开过，默认false
+            component: item.iframeComponent // 组件文件的引用
+          }
+        })
+      },
       // 将首页添加到第一位
       addIndexToFirst() {
         this.pageList.splice(0, 0, {
@@ -208,6 +263,12 @@
             Vue.ls.set(CACHE_INCLUDED_ROUTES, cacheRouterArray)
           }
         }
+        //从iframe缓存中关闭对应的页面
+        this.componentsArr.find(item => {
+          if(item.path === key) {
+            item.hasOpen = false
+          }
+        })
         //update-end--Author:scott  Date:20201015 for：路由缓存问题，关闭了tab页时再打开就不刷新 #842
       },
       onContextmenu(e) {
