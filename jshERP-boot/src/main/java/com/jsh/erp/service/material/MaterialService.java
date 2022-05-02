@@ -480,8 +480,9 @@ public class MaterialService {
                 String model = ExcelUtils.getContent(src, i, 2); //型号
                 String color = ExcelUtils.getContent(src, i, 3); //颜色
                 String categoryName = ExcelUtils.getContent(src, i, 4); //类别
-                String expiryNum = ExcelUtils.getContent(src, i, 5); //保质期
-                String unit = ExcelUtils.getContent(src, i, 6); //基本单位
+                String weight = ExcelUtils.getContent(src, i, 5); //基础重量(kg)
+                String expiryNum = ExcelUtils.getContent(src, i, 6); //保质期
+                String unit = ExcelUtils.getContent(src, i, 7); //基本单位
                 //校验名称、单位是否为空
                 if(StringUtil.isNotEmpty(name) && StringUtil.isNotEmpty(unit)) {
                     MaterialWithInitStock m = new MaterialWithInitStock();
@@ -493,18 +494,23 @@ public class MaterialService {
                     if(null!=categoryId){
                         m.setCategoryId(categoryId);
                     }
+                    if(StringUtil.isNotEmpty(weight)) {
+                        m.setWeight(BigDecimal.valueOf(Long.parseLong(weight)));
+                    }
                     if(StringUtil.isNotEmpty(expiryNum)) {
                         m.setExpiryNum(Integer.parseInt(expiryNum));
                     }
-                    String manyUnit = ExcelUtils.getContent(src, i, 7); //副单位
-                    String barCode = ExcelUtils.getContent(src, i, 8); //基础条码
-                    String manyBarCode = ExcelUtils.getContent(src, i, 9); //副条码
-                    String ratio = ExcelUtils.getContent(src, i, 10); //比例
-                    String purchaseDecimal = ExcelUtils.getContent(src, i, 11); //采购价
-                    String commodityDecimal = ExcelUtils.getContent(src, i, 12); //零售价
-                    String wholesaleDecimal = ExcelUtils.getContent(src, i, 13); //销售价
-                    String lowDecimal = ExcelUtils.getContent(src, i, 14); //最低售价
-                    String enabled = ExcelUtils.getContent(src, i, 15); //状态
+                    String manyUnit = ExcelUtils.getContent(src, i, 8); //副单位
+                    String barCode = ExcelUtils.getContent(src, i, 9); //基础条码
+                    String manyBarCode = ExcelUtils.getContent(src, i, 10); //副条码
+                    String ratio = ExcelUtils.getContent(src, i, 11); //比例
+                    String purchaseDecimal = ExcelUtils.getContent(src, i, 12); //采购价
+                    String commodityDecimal = ExcelUtils.getContent(src, i, 13); //零售价
+                    String wholesaleDecimal = ExcelUtils.getContent(src, i, 14); //销售价
+                    String lowDecimal = ExcelUtils.getContent(src, i, 15); //最低售价
+                    String enabled = ExcelUtils.getContent(src, i, 16); //状态
+                    String enableSerialNumber = ExcelUtils.getContent(src, i, 17); //序列号
+                    String enableBatchNumber = ExcelUtils.getContent(src, i, 18); //批号
                     //校验基础条码是否是正整数
                     if(!StringUtil.isPositiveLong(barCode)) {
                         throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_BARCODE_NOT_INTEGER_CODE,
@@ -544,11 +550,25 @@ public class MaterialService {
                         m.setUnit(unit);
                     }
                     m.setMaterialExObj(materialExObj);
-                    m.setEnabled(enabled.equals("1")? true: false);
+                    m.setEnabled("1".equals(enabled));
+                    if(StringUtil.isNotEmpty(enableSerialNumber) && "1".equals(enableSerialNumber)) {
+                        m.setEnableSerialNumber("1");
+                    } else {
+                        m.setEnableSerialNumber("0");
+                    }
+                    if(StringUtil.isNotEmpty(enableBatchNumber) && "1".equals(enableBatchNumber)) {
+                        m.setEnableBatchNumber("1");
+                    } else {
+                        m.setEnableBatchNumber("0");
+                    }
+                    if("1".equals(enableSerialNumber) && "1".equals(enableBatchNumber)) {
+                        throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_ENABLE_MUST_ONE_CODE,
+                                String.format(ExceptionConstants.MATERIAL_ENABLE_MUST_ONE_MSG, barCode));
+                    }
                     //缓存各个仓库的库存信息
-                    Map<Long, BigDecimal> stockMap = new HashMap<Long, BigDecimal>();
+                    Map<Long, BigDecimal> stockMap = new HashMap<>();
                     for(int j=1; j<=depotCount;j++) {
-                        int col = 15+j;
+                        int col = 18+j;
                         if(col < src.getColumns()){
                             String depotName = ExcelUtils.getContent(src, 1, col); //获取仓库名称
                             if(StringUtil.isNotEmpty(depotName)) {

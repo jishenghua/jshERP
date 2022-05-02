@@ -299,6 +299,9 @@ public class ExceptionConstants {
     //商品条码不是正整数
     public static final int MATERIAL_BARCODE_NOT_INTEGER_CODE = 8000007;
     public static final String MATERIAL_BARCODE_NOT_INTEGER_MSG = "商品条码:%s不是正整数";
+    //序列号和批号只能有一项
+    public static final int MATERIAL_ENABLE_MUST_ONE_CODE = 8000008;
+    public static final String MATERIAL_ENABLE_MUST_ONE_MSG = "抱歉，商品条码:%s的序列号和批号不能同时填1";
     /**
      *  单据信息
      * type = 85
