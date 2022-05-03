@@ -302,6 +302,9 @@ public class ExceptionConstants {
     //序列号和批号只能有一项
     public static final int MATERIAL_ENABLE_MUST_ONE_CODE = 8000008;
     public static final String MATERIAL_ENABLE_MUST_ONE_MSG = "抱歉，商品条码:%s的序列号和批号不能同时填1";
+    //抱歉，文件扩展名必须为xls
+    public static final int MATERIAL_EXTENSION_ERROR_CODE = 8000009;
+    public static final String MATERIAL_EXTENSION_ERROR_MSG = "抱歉，文件扩展名必须为xls";
     /**
      *  单据信息
      * type = 85
