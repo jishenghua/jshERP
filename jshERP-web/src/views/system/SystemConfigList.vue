@@ -22,6 +22,9 @@
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="公司邮编">
               <a-input placeholder="请输入公司邮编" v-decorator.trim="[ 'companyPostCode' ]" />
             </a-form-item>
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="销售协议">
+              <a-input placeholder="请输入销售协议" v-decorator.trim="[ 'saleAgreement', validatorRules.saleAgreement ]" />
+            </a-form-item>
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="仓库权限">
               <a-switch checked-children="启用" un-checked-children="关闭" v-model="depotFlagSwitch" @change="onDepotChange"></a-switch>
               （如果启用则需要到<b>用户管理</b>进行<b>分配仓库</b>）
@@ -82,6 +85,11 @@
               { required: true, message: '请输入公司名称!' },
               { min: 2, max: 30, message: '长度在 2 到 30 个字符', trigger: 'blur' }
             ]
+          },
+          saleAgreement:{
+            rules: [
+              { min: 2, max: 200, message: '长度在 2 到 200 个字符', trigger: 'blur' }
+            ]
           }
         }
       }
@@ -116,7 +124,7 @@
             this.visible = true;
             this.$nextTick(() => {
               this.form.setFieldsValue(pick(this.model,'companyName', 'companyContacts', 'companyAddress',
-                'companyTel', 'companyFax', 'companyPostCode', 'depotFlag', 'customerFlag', 'minusStockFlag'))
+                'companyTel', 'companyFax', 'companyPostCode', 'saleAgreement', 'depotFlag', 'customerFlag', 'minusStockFlag'))
               autoJumpNextInput('systemConfigModal')
             });
             if(record.id) {
