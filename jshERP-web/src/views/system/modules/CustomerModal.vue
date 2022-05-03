@@ -63,7 +63,7 @@
         </a-col>
         <a-col :span="24/2">
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="税率(%)">
-            <a-input placeholder="请输入税率(%)" v-decorator.trim="[ 'taxRate' ]" />
+            <a-input-number style="width:100%" placeholder="请输入税率" v-decorator.trim="[ 'taxRate' ]" />
           </a-form-item>
         </a-col>
         <a-col :span="24/2">

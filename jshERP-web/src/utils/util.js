@@ -618,7 +618,7 @@ export function openDownloadDialog (url, saveName) {
   }
   let aLink = document.createElement('a')
   aLink.href = url
-  saveName = saveName + '_' + getNowFormatStr() + '.xlsx'
+  saveName = saveName + '_' + getNowFormatStr() + '.xls'
   aLink.download = saveName || '' // HTML5新增的属性，指定保存文件名，可以不要后缀，注意，file:///模式下不会生效
   let event
   if (window.MouseEvent) event = new MouseEvent('click')
