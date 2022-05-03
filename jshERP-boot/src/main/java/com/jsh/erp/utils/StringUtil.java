@@ -254,7 +254,7 @@ public class StringUtil {
     }
 
     public static String toNull(String value) {
-        if(("").equals(value)) {
+        if(isEmpty(value)) {
             value = null;
         } else {
             value = value.trim();

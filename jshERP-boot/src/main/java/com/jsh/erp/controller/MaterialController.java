@@ -303,18 +303,18 @@ public class MaterialController {
      */
     @GetMapping(value = "/exportExcel")
     @ApiOperation(value = "生成excel表格")
-    public void exportExcel(@RequestParam("categoryId") String categoryId,
-                            @RequestParam("barCode") String barCode,
-                            @RequestParam("name") String name,
-                            @RequestParam("standard") String standard,
-                            @RequestParam("model") String model,
-                            @RequestParam("color") String color,
-                            @RequestParam("weight") String weight,
-                            @RequestParam("expiryNum") String expiryNum,
-                            @RequestParam("enableSerialNumber") String enableSerialNumber,
-                            @RequestParam("enableBatchNumber") String enableBatchNumber,
-                            @RequestParam("remark") String remark,
-                            @RequestParam("mpList") String mpList,
+    public void exportExcel(@RequestParam(value = "categoryId", required = false) String categoryId,
+                            @RequestParam(value = "barCode", required = false) String barCode,
+                            @RequestParam(value = "name", required = false) String name,
+                            @RequestParam(value = "standard", required = false) String standard,
+                            @RequestParam(value = "model", required = false) String model,
+                            @RequestParam(value = "color", required = false) String color,
+                            @RequestParam(value = "weight", required = false) String weight,
+                            @RequestParam(value = "expiryNum", required = false) String expiryNum,
+                            @RequestParam(value = "enableSerialNumber", required = false) String enableSerialNumber,
+                            @RequestParam(value = "enableBatchNumber", required = false) String enableBatchNumber,
+                            @RequestParam(value = "remark", required = false) String remark,
+                            @RequestParam(value = "mpList", required = false) String mpList,
                             HttpServletRequest request, HttpServletResponse response) {
         try {
             String[] mpArr = new String[]{};
