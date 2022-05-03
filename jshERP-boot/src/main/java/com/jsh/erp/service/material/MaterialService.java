@@ -432,7 +432,9 @@ public class MaterialService {
         return result;
     }
 
-    public List<MaterialVo4Unit> findByAll(String barCode, String name, String standard, String model, String categoryId)throws Exception {
+    public List<MaterialVo4Unit> findByAll(String barCode, String name, String standard, String model, String color,
+                                           String weight, String expiryNum, String enableSerialNumber, String enableBatchNumber,
+                                           String remark, String categoryId)throws Exception {
         List<MaterialVo4Unit> resList = new ArrayList<>();
         List<MaterialVo4Unit> list =null;
         try{
@@ -440,7 +442,8 @@ public class MaterialService {
             if(StringUtil.isNotEmpty(categoryId)){
                 idList = getListByParentId(Long.parseLong(categoryId));
             }
-            list=  materialMapperEx.findByAll(barCode, name, standard, model, idList);
+            list=  materialMapperEx.findByAll(barCode, name, standard, model, color, weight, expiryNum,
+                    enableSerialNumber, enableBatchNumber, remark, idList);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }

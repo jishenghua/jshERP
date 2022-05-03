@@ -308,6 +308,12 @@ public class MaterialController {
                             @RequestParam("name") String name,
                             @RequestParam("standard") String standard,
                             @RequestParam("model") String model,
+                            @RequestParam("color") String color,
+                            @RequestParam("weight") String weight,
+                            @RequestParam("expiryNum") String expiryNum,
+                            @RequestParam("enableSerialNumber") String enableSerialNumber,
+                            @RequestParam("enableBatchNumber") String enableBatchNumber,
+                            @RequestParam("remark") String remark,
                             @RequestParam("mpList") String mpList,
                             HttpServletRequest request, HttpServletResponse response) {
         try {
@@ -316,7 +322,9 @@ public class MaterialController {
                 mpArr= mpList.split(",");
             }
             List<MaterialVo4Unit> dataList = materialService.findByAll(StringUtil.toNull(barCode), StringUtil.toNull(name),
-                    StringUtil.toNull(standard), StringUtil.toNull(model), StringUtil.toNull(categoryId));
+                    StringUtil.toNull(standard), StringUtil.toNull(model), StringUtil.toNull(color), StringUtil.toNull(weight),
+                    StringUtil.toNull(expiryNum), StringUtil.toNull(enableSerialNumber), StringUtil.toNull(enableBatchNumber),
+                    StringUtil.toNull(remark), StringUtil.toNull(categoryId));
             String[] names = {"条码", "名称", "规格", "型号", "颜色", "类别", "扩展信息", "单位", "基础重量", "保质期", "采购价", "销售价", "零售价", "最低售价", "备注", "状态", "序列号", "批号"};
             String title = "商品信息";
             List<String[]> objects = new ArrayList<>();
