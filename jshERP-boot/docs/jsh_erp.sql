@@ -825,6 +825,7 @@ CREATE TABLE `jsh_system_config` (
   `company_tel` varchar(20) DEFAULT NULL COMMENT '公司电话',
   `company_fax` varchar(20) DEFAULT NULL COMMENT '公司传真',
   `company_post_code` varchar(20) DEFAULT NULL COMMENT '公司邮编',
+  `sale_agreement` varchar(500) DEFAULT NULL COMMENT '销售协议',
   `depot_flag` varchar(1) DEFAULT '0' COMMENT '仓库启用标记，0未启用，1启用',
   `customer_flag` varchar(1) DEFAULT '0' COMMENT '客户启用标记，0未启用，1启用',
   `minus_stock_flag` varchar(1) DEFAULT '0' COMMENT '负库存启用标记，0未启用，1启用',
@@ -836,7 +837,7 @@ CREATE TABLE `jsh_system_config` (
 -- ----------------------------
 -- Records of jsh_system_config
 -- ----------------------------
-INSERT INTO `jsh_system_config` VALUES ('11', '公司test', '小李', '地址1', '12345678', null, null, '0', '0', '1', '63', '0');
+INSERT INTO `jsh_system_config` VALUES ('11', '公司test', '小李', '地址1', '12345678', null, null, '注：本单为我公司与客户约定账期内结款的依据，由客户或其单位员工签字生效，并承担法律责任。', '0', '0', '1', '63', '0');
 
 -- ----------------------------
 -- Table structure for jsh_tenant

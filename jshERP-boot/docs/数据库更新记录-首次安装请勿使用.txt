@@ -1337,3 +1337,10 @@ alter table jsh_depot_head add back_amount decimal(24,6) DEFAULT NULL COMMENT '�
 -- 修改商品表的名称字段的长度
 -- --------------------------------------------------------
 alter table jsh_material change name name varchar(100) DEFAULT NULL COMMENT '名称';
+
+-- --------------------------------------------------------
+-- 时间 2022年05月03日
+-- by jishenghua
+-- 给系统参数表增加销售协议字段
+-- --------------------------------------------------------
+alter table jsh_system_config add sale_agreement varchar(500) DEFAULT NULL COMMENT '销售协议' after company_post_code;

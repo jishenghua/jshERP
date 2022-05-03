@@ -584,6 +584,76 @@ public class SystemConfigExample {
             return (Criteria) this;
         }
 
+        public Criteria andSaleAgreementIsNull() {
+            addCriterion("sale_agreement is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSaleAgreementIsNotNull() {
+            addCriterion("sale_agreement is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSaleAgreementEqualTo(String value) {
+            addCriterion("sale_agreement =", value, "saleAgreement");
+            return (Criteria) this;
+        }
+
+        public Criteria andSaleAgreementNotEqualTo(String value) {
+            addCriterion("sale_agreement <>", value, "saleAgreement");
+            return (Criteria) this;
+        }
+
+        public Criteria andSaleAgreementGreaterThan(String value) {
+            addCriterion("sale_agreement >", value, "saleAgreement");
+            return (Criteria) this;
+        }
+
+        public Criteria andSaleAgreementGreaterThanOrEqualTo(String value) {
+            addCriterion("sale_agreement >=", value, "saleAgreement");
+            return (Criteria) this;
+        }
+
+        public Criteria andSaleAgreementLessThan(String value) {
+            addCriterion("sale_agreement <", value, "saleAgreement");
+            return (Criteria) this;
+        }
+
+        public Criteria andSaleAgreementLessThanOrEqualTo(String value) {
+            addCriterion("sale_agreement <=", value, "saleAgreement");
+            return (Criteria) this;
+        }
+
+        public Criteria andSaleAgreementLike(String value) {
+            addCriterion("sale_agreement like", value, "saleAgreement");
+            return (Criteria) this;
+        }
+
+        public Criteria andSaleAgreementNotLike(String value) {
+            addCriterion("sale_agreement not like", value, "saleAgreement");
+            return (Criteria) this;
+        }
+
+        public Criteria andSaleAgreementIn(List<String> values) {
+            addCriterion("sale_agreement in", values, "saleAgreement");
+            return (Criteria) this;
+        }
+
+        public Criteria andSaleAgreementNotIn(List<String> values) {
+            addCriterion("sale_agreement not in", values, "saleAgreement");
+            return (Criteria) this;
+        }
+
+        public Criteria andSaleAgreementBetween(String value1, String value2) {
+            addCriterion("sale_agreement between", value1, value2, "saleAgreement");
+            return (Criteria) this;
+        }
+
+        public Criteria andSaleAgreementNotBetween(String value1, String value2) {
+            addCriterion("sale_agreement not between", value1, value2, "saleAgreement");
+            return (Criteria) this;
+        }
+
         public Criteria andDepotFlagIsNull() {
             addCriterion("depot_flag is null");
             return (Criteria) this;

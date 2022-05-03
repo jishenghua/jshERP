@@ -15,6 +15,8 @@ public class SystemConfig {
 
     private String companyPostCode;
 
+    private String saleAgreement;
+
     private String depotFlag;
 
     private String customerFlag;
@@ -79,6 +81,14 @@ public class SystemConfig {
 
     public void setCompanyPostCode(String companyPostCode) {
         this.companyPostCode = companyPostCode == null ? null : companyPostCode.trim();
+    }
+
+    public String getSaleAgreement() {
+        return saleAgreement;
+    }
+
+    public void setSaleAgreement(String saleAgreement) {
+        this.saleAgreement = saleAgreement == null ? null : saleAgreement.trim();
     }
 
     public String getDepotFlag() {
