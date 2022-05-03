@@ -7,6 +7,7 @@
           size="large"
           v-decorator="['loginName',{initialValue:'', rules: validatorRules.loginName.rules}]"
           type="text"
+          @focus="initWeixin"
           placeholder="请输入用户名">
           <a-icon slot="prefix" type="user" :style="{ color: 'rgba(0,0,0,.25)' }"/>
         </a-input>
@@ -53,7 +54,7 @@
       </div>
 
       <div v-if="showWeixinFlag" style="text-align: center; padding-top: 10px;">
-        <img src="/static/weixin.jpg" style="width:200px" />
+        <img src="/static/weixin.jpg" style="width:258px" />
       </div>
     </a-form>
   </div>
@@ -119,8 +120,8 @@
     created () {
       this.currdatetime = new Date().getTime();
       Vue.ls.remove(ACCESS_TOKEN)
-      this.getRouterData();
-      this.getRegisterFlag();
+      this.getRouterData()
+      this.getRegisterFlag()
     },
     methods: {
       ...mapActions([ "Login", "Logout" ]),
@@ -283,6 +284,14 @@
             }
           }
         })
+      },
+      initWeixin() {
+        if(this.showWeixinSpan()) {
+          let that = this
+          setTimeout(function() {
+            that.showWeixin()
+          },3000)
+        }
       },
       showWeixinSpan() {
         let host = window.location.host
