@@ -8,14 +8,20 @@
           <a-form layout="inline" @keyup.enter.native="searchQuery">
             <a-row :gutter="24">
               <a-col :md="6" :sm="24">
-                <a-form-item label="月份" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-month-picker placeholder="请选择月份" :default-value="moment(currentMonth, monthFormat)"
-                         style="width:100%" :format="monthFormat" @change="onChange"/>
+                <a-form-item label="商品信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-input placeholder="条码/名称/规格/型号" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item label="商品信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input placeholder="条码/名称/规格/型号" v-model="queryParam.materialParam"></a-input>
+                <a-form-item label="单据日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-range-picker
+                    style="width: 100%"
+                    v-model="queryParam.createTimeRange"
+                    :default-value="defaultTimeStr"
+                    format="YYYY-MM-DD"
+                    :placeholder="['开始时间', '结束时间']"
+                    @change="onDateChange"
+                  />
                 </a-form-item>
               </a-col>
               <a-col :md="4" :sm="24">
@@ -72,7 +78,7 @@
 </template>
 <script>
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import { getMpListShort, openDownloadDialog, sheet2blob} from "@/utils/util"
+  import { getNowFormatYear, getMpListShort, openDownloadDialog, sheet2blob} from "@/utils/util"
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import moment from 'moment'
   import Vue from 'vue'
@@ -84,9 +90,6 @@
     },
     data () {
       return {
-        // 查询条件
-        currentMonth: moment().format('YYYY-MM'),
-        monthFormat: 'YYYY-MM',
         labelCol: {
           span: 5
         },
@@ -95,14 +98,18 @@
           offset: 1
         },
         queryParam: {
-          monthTime: moment().format('YYYY-MM'),
           materialParam:'',
+          beginTime: getNowFormatYear() + '-01-01',
+          endTime: moment().format('YYYY-MM-DD'),
           mpList: getMpListShort(Vue.ls.get('materialPropertyList'))
         },
         ipagination:{
           pageSize: 11,
           pageSizeOptions: ['11', '21', '31', '101', '201']
         },
+        dateFormat: 'YYYY-MM-DD',
+        currentDay: moment().format('YYYY-MM-DD'),
+        defaultTimeStr: '',
         tabKey: "1",
         // 表头
         columns: [
@@ -129,6 +136,9 @@
         }
       }
     },
+    created () {
+      this.defaultTimeStr = [moment(getNowFormatYear() + '-01-01', this.dateFormat), moment(this.currentDay, this.dateFormat)]
+    },
     methods: {
       moment,
       create(){
@@ -141,13 +151,14 @@
         param.pageSize = this.ipagination.pageSize-1;
         return param;
       },
-      onChange: function (value, dateString) {
-        console.log(dateString);
-        this.queryParam.monthTime=dateString;
+      onDateChange: function (value, dateString) {
+        console.log(dateString[0],dateString[1]);
+        this.queryParam.beginTime=dateString[0];
+        this.queryParam.endTime=dateString[1];
       },
       searchQuery() {
-        if(this.queryParam.monthTime == ''){
-          this.$message.warning('请选择月份！')
+        if(this.queryParam.beginTime == '' || this.queryParam.endTime == ''){
+          this.$message.warning('请选择单据日期！')
         } else {
           this.loadData(1);
         }
