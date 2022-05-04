@@ -481,50 +481,56 @@ export function getMpListShort(thisRows, checker, replacer) {
 }
 
 /**
+ * js获取当前年份， 格式“yyyy”
+ */
+export function getNowFormatYear() {
+  let date = new Date();
+  return date.getFullYear();
+}
+
+/**
  * js获取当前月份， 格式“yyyy-MM”
  */
 export function getNowFormatMonth() {
-  var date = new Date();
-  var seperator1 = "-";
-  var month = date.getMonth() + 1;
+  let date = new Date();
+  let seperator1 = "-";
+  let month = date.getMonth() + 1;
   if (month >= 1 && month <= 9) {
     month = "0" + month;
   }
-  var currentdate = date.getFullYear() + seperator1 + month;
-  return currentdate;
+  return date.getFullYear() + seperator1 + month;
 }
 
 /**
  * js获取当前日期， 格式“yyyy-MM-dd”
  */
 export function getFormatDate() {
-  var date = new Date();
-  var seperator1 = "-";
-  var year = date.getFullYear();
-  var month = date.getMonth() + 1;
-  var strDate = date.getDate();
+  let date = new Date();
+  let seperator1 = "-";
+  let year = date.getFullYear();
+  let month = date.getMonth() + 1;
+  let strDate = date.getDate();
   if (month >= 1 && month <= 9) {
     month = "0" + month;
   }
   if (strDate >= 0 && strDate <= 9) {
     strDate = "0" + strDate;
   }
-  var currentdate = year + seperator1 + month + seperator1 + strDate;
-  return currentdate;
+  return year + seperator1 + month + seperator1 + strDate;
 }
 
 /**
  * js获取当前时间， 格式“yyyy-MM-dd HH:MM:SS”
  */
 export function getNowFormatDateTime() {
-  var date = new Date();
-  var seperator1 = "-";
-  var seperator2 = ":";
-  var month = date.getMonth() + 1;
-  var strDate = date.getDate();
-  var strHours = date.getHours();
-  var strMinutes = date.getMinutes();
-  var strSeconds = date.getSeconds();
+  let date = new Date();
+  let seperator1 = "-";
+  let seperator2 = ":";
+  let month = date.getMonth() + 1;
+  let strDate = date.getDate();
+  let strHours = date.getHours();
+  let strMinutes = date.getMinutes();
+  let strSeconds = date.getSeconds();
   if (month >= 1 && month <= 9) {
     month = "0" + month;
   }
@@ -540,22 +546,21 @@ export function getNowFormatDateTime() {
   if (strSeconds >= 0 && strSeconds <= 9) {
     strSeconds = "0" + strSeconds;
   }
-  var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+  return date.getFullYear() + seperator1 + month + seperator1 + strDate
     + " " + strHours + seperator2 + strMinutes
     + seperator2 + strSeconds;
-  return currentdate;
 }
 
 /**
  * js获取当前时间， 格式“MMddHHMMSS”
  */
 export function getNowFormatStr() {
-  var date = new Date();
-  var month = date.getMonth() + 1;
-  var strDate = date.getDate();
-  var strHours = date.getHours();
-  var strMinutes = date.getMinutes();
-  var strSeconds = date.getSeconds();
+  let date = new Date();
+  let month = date.getMonth() + 1;
+  let strDate = date.getDate();
+  let strHours = date.getHours();
+  let strMinutes = date.getMinutes();
+  let strSeconds = date.getSeconds();
   if (month >= 1 && month <= 9) {
     month = "0" + month;
   }
@@ -571,7 +576,7 @@ export function getNowFormatStr() {
   if (strSeconds >= 0 && strSeconds <= 9) {
     strSeconds = "0" + strSeconds;
   }
-  var currentdate = month + strDate + strHours + strMinutes + strSeconds;
+  let currentdate = month + strDate + strHours + strMinutes + strSeconds;
   return currentdate;
 }
 
@@ -595,7 +600,7 @@ export function removeByVal(arrylist, val) {
  * @returns {Array}
  */
 export function changeListFmtMinus(arr) {
-  var newArr = new Array();
+  let newArr = new Array();
   for(var i=0; i<arr.length; i++) {
     if(arr[i] < 0){
       newArr.push((arr[i]-0).toString());
