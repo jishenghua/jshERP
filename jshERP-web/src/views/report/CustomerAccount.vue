@@ -91,7 +91,7 @@
   import BillDetail from '../bill/dialog/BillDetail'
   import FinancialDetail from '../financial/dialog/FinancialDetail'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import { getNowFormatMonth, openDownloadDialog, sheet2blob} from "@/utils/util"
+  import { getNowFormatYear, openDownloadDialog, sheet2blob} from "@/utils/util"
   import { getAction } from '@/api/manage'
   import {findBySelectCus, findBillDetailByNumber, findFinancialDetailByNumber} from '@/api/api'
   import JEllipsis from '@/components/jeecg/JEllipsis'
@@ -117,7 +117,7 @@
         queryParam: {
           supType: "客户",
           organId: '',
-          beginTime: getNowFormatMonth() + '-01',
+          beginTime: getNowFormatYear() + '-01-01',
           endTime: moment().format('YYYY-MM-DD'),
         },
         ipagination:{
@@ -157,7 +157,7 @@
     },
     created () {
       this.initSupplier()
-      this.defaultTimeStr = [moment(getNowFormatMonth() + '-01', this.dateFormat), moment(this.currentDay, this.dateFormat)]
+      this.defaultTimeStr = [moment(getNowFormatYear() + '-01-01', this.dateFormat), moment(this.currentDay, this.dateFormat)]
     },
     methods: {
       getQueryParams() {

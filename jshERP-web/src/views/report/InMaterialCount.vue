@@ -102,7 +102,7 @@
 </template>
 <script>
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import { getNowFormatMonth, openDownloadDialog, sheet2blob} from "@/utils/util"
+  import { getNowFormatYear, openDownloadDialog, sheet2blob} from "@/utils/util"
   import {getAction} from '@/api/manage'
   import {findBySelectSup} from '@/api/api'
   import JEllipsis from '@/components/jeecg/JEllipsis'
@@ -127,7 +127,7 @@
           organId: '',
           materialParam:'',
           depotId: '',
-          beginTime: getNowFormatMonth() + '-01',
+          beginTime: getNowFormatYear() + '-01-01',
           endTime: moment().format('YYYY-MM-DD'),
           type: "入库"
         },
@@ -166,7 +166,7 @@
     created () {
       this.getDepotData()
       this.initSupplier()
-      this.defaultTimeStr = [moment(getNowFormatMonth() + '-01', this.dateFormat), moment(this.currentDay, this.dateFormat)]
+      this.defaultTimeStr = [moment(getNowFormatYear() + '-01-01', this.dateFormat), moment(this.currentDay, this.dateFormat)]
     },
     methods: {
       moment,
