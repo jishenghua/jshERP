@@ -50,6 +50,20 @@ public interface DepotItemMapperEx {
             @Param("materialParam") String materialParam,
             @Param("endTime") String endTime);
 
+    List<DepotItemVo4WithInfoEx> getListWithBugOrSale(
+            @Param("materialParam") String materialParam,
+            @Param("billType") String billType,
+            @Param("beginTime") String beginTime,
+            @Param("endTime") String endTime,
+            @Param("offset") Integer offset,
+            @Param("rows") Integer rows);
+
+    int getListWithBugOrSaleCount(
+            @Param("materialParam") String materialParam,
+            @Param("billType") String billType,
+            @Param("beginTime") String beginTime,
+            @Param("endTime") String endTime);
+
     BigDecimal buyOrSaleNumber(
             @Param("type") String type,
             @Param("subType") String subType,

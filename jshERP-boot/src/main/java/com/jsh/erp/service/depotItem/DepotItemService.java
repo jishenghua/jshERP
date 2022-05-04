@@ -259,11 +259,29 @@ public class DepotItemService {
         return result;
     }
 
-    public BigDecimal buyOrSale(String type, String subType, Long MId, String monthTime, String sumType) throws Exception{
+    public List<DepotItemVo4WithInfoEx> getListWithBugOrSale(String materialParam, String billType, String beginTime, String endTime, Integer offset, Integer rows)throws Exception {
+        List<DepotItemVo4WithInfoEx> list =null;
+        try{
+            list = depotItemMapperEx.getListWithBugOrSale(materialParam, billType, beginTime, endTime, offset, rows);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list;
+    }
+
+    public int getListWithBugOrSaleCount(String materialParam, String billType, String beginTime, String endTime)throws Exception {
+        int result=0;
+        try{
+            result = depotItemMapperEx.getListWithBugOrSaleCount(materialParam, billType, beginTime, endTime);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return result;
+    }
+
+    public BigDecimal buyOrSale(String type, String subType, Long MId, String beginTime, String endTime, String sumType) throws Exception{
         BigDecimal result= BigDecimal.ZERO;
         try{
-            String beginTime = Tools.firstDayOfMonth(monthTime) + BusinessConstants.DAY_FIRST_TIME;
-            String endTime = Tools.lastDayOfMonth(monthTime) + BusinessConstants.DAY_LAST_TIME;
             if (SUM_TYPE.equals(sumType)) {
                 result= depotItemMapperEx.buyOrSaleNumber(type, subType, MId, beginTime, endTime, sumType);
             } else {
