@@ -25,6 +25,16 @@
                   <a-input placeholder="请输入名称查询" v-model="queryParam.name"></a-input>
                 </a-form-item>
               </a-col>
+              <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+                <a-col :md="6" :sm="24">
+                  <a-button type="primary" @click="searchQuery">查询</a-button>
+                  <a-button style="margin-left: 8px" @click="searchReset">重置</a-button>
+                  <a @click="handleToggleSearch" style="margin-left: 8px">
+                    {{ toggleSearchStatus ? '收起' : '展开' }}
+                    <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
+                  </a>
+                </a-col>
+              </span>
               <template v-if="toggleSearchStatus">
                 <a-col :md="6" :sm="24">
                   <a-form-item label="规格" :labelCol="labelCol" :wrapperCol="wrapperCol">
@@ -36,17 +46,43 @@
                     <a-input placeholder="请输入型号查询" v-model="queryParam.model"></a-input>
                   </a-form-item>
                 </a-col>
-              </template>
-              <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                 <a-col :md="6" :sm="24">
-                  <a-button type="primary" @click="searchQuery">查询</a-button>
-                  <a-button style="margin-left: 8px" @click="searchReset">重置</a-button>
-                  <a @click="handleToggleSearch" style="margin-left: 8px">
-                    {{ toggleSearchStatus ? '收起' : '展开' }}
-                    <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
-                  </a>
+                  <a-form-item label="颜色" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-input placeholder="请输入颜色查询" v-model="queryParam.color"></a-input>
+                  </a-form-item>
                 </a-col>
-              </span>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="基础重量" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-input-number style="width: 100%" placeholder="请输入基础重量查询" v-model="queryParam.weight"></a-input-number>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="保质期" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-input-number style="width: 100%" placeholder="请输入保质期查询" v-model="queryParam.expiryNum"></a-input-number>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="序列号" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select placeholder="有无序列号" v-model="queryParam.enableSerialNumber">
+                      <a-select-option value="1">有</a-select-option>
+                      <a-select-option value="0">无</a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="批号" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select placeholder="有无批号" v-model="queryParam.enableBatchNumber">
+                      <a-select-option value="1">有</a-select-option>
+                      <a-select-option value="0">无</a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="备注" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-input placeholder="请输入备注查询" v-model="queryParam.remark"></a-input>
+                  </a-form-item>
+                </a-col>
+              </template>
             </a-row>
           </a-form>
         </div>
@@ -73,6 +109,24 @@
               批量操作 <a-icon type="down" />
             </a-button>
           </a-dropdown>
+          <a-popover trigger="click" placement="right">
+            <template slot="content">
+              <a-checkbox-group @change="onColChange" v-model="settingColumns" :defaultValue="settingColumns">
+                <a-row style="width: 500px">
+                  <template v-for="(item,index) in defColumns">
+                    <template>
+                      <a-col :span="8">
+                        <a-checkbox :value="item.dataIndex">
+                          <j-ellipsis :value="item.title" :length="10"></j-ellipsis>
+                        </a-checkbox>
+                      </a-col>
+                    </template>
+                  </template>
+                </a-row>
+              </a-checkbox-group>
+            </template>
+            <a-button icon="setting">列设置</a-button>
+          </a-popover>
         </div>
         <!-- table区域-begin -->
         <div>
@@ -86,7 +140,7 @@
             :pagination="ipagination"
             :scroll="scroll"
             :loading="loading"
-            :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
+            :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange, columnWidth:'2%'}"
             @change="handleTableChange">
             <span slot="action" slot-scope="text, record">
               <a @click="handleEdit(record)">编辑</a>
@@ -118,17 +172,20 @@
 </template>
 <script>
   import MaterialModal from './modules/MaterialModal'
-  import {queryMaterialCategoryTreeList} from '@/api/api'
+  import { queryMaterialCategoryTreeList } from '@/api/api'
   import { postAction } from '@/api/manage'
-  import { getMpListShort } from "@/utils/util"
+  import { getMpListShort } from '@/utils/util'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
+  import JEllipsis from '@/components/jeecg/JEllipsis'
   import JDate from '@/components/jeecg/JDate'
   import Vue from 'vue'
+
   export default {
     name: "MaterialList",
     mixins:[JeecgListMixin],
     components: {
       MaterialModal,
+      JEllipsis,
       JDate
     },
     data () {
@@ -150,10 +207,21 @@
           name:'',
           standard:'',
           model:'',
+          color:'',
+          weight:'',
+          expiryNum:'',
+          enableSerialNumber:'',
+          enableBatchNumber:'',
+          remark:'',
           mpList: getMpListShort(Vue.ls.get('materialPropertyList'))  //扩展属性
         },
-        // 表头
-        columns: [
+        // 实际表头
+        columns:[],
+        // 初始化设置的表头
+        settingColumns:['mBarCode','name','standard','model','color','categoryName','materialOther','unit', 'stock',
+          'purchaseDecimal','commodityDecimal','wholesaleDecimal','lowDecimal','enabled','enableSerialNumber','enableBatchNumber','action'],
+        // 默认的列
+        defColumns: [
           {title: '条码', dataIndex: 'mBarCode', width: '8%'},
           {title: '名称', dataIndex: 'name', width: '10%', ellipsis:true},
           {title: '规格', dataIndex: 'standard', width: '6%', ellipsis:true},
@@ -173,12 +241,14 @@
               }
             }
           },
+          {title: '基础重量', dataIndex: 'weight', width: '5%'},
           {title: '保质期', dataIndex: 'expiryNum', width: '4%'},
           {title: '库存', dataIndex: 'stock', width: '5%'},
           {title: '采购价', dataIndex: 'purchaseDecimal', width: '5%'},
           {title: '零售价', dataIndex: 'commodityDecimal', width: '5%'},
           {title: '销售价', dataIndex: 'wholesaleDecimal', width: '5%'},
           {title: '最低售价', dataIndex: 'lowDecimal', width: '5%'},
+          {title: '备注', dataIndex: 'remark', width: '5%', ellipsis:true},
           {title: '状态', dataIndex: 'enabled', width: '4%', align: "center",
             scopedSlots: { customRender: 'customRenderEnabled' }
           },
@@ -209,6 +279,7 @@
     },
     created() {
       this.model = Object.assign({}, {});
+      this.initColumnsSetting()
       this.loadTreeData();
     },
     computed: {
@@ -217,6 +288,30 @@
       }
     },
     methods: {
+      //加载初始化列
+      initColumnsSetting(){
+        let columnsStr = Vue.ls.get('materialColumns')
+        if(columnsStr && columnsStr.indexOf(',')>-1) {
+          this.settingColumns = columnsStr.split(',')
+        }
+        this.columns = this.defColumns.filter(item => {
+          if (this.settingColumns.includes(item.dataIndex)) {
+            return true
+          }
+          return false
+        })
+      },
+      //列设置更改事件
+      onColChange (checkedValues) {
+        this.columns = this.defColumns.filter(item => {
+          if (checkedValues.includes(item.dataIndex)) {
+            return true
+          }
+          return false
+        })
+        let columnsStr = checkedValues.join()
+        Vue.ls.set('materialColumns', columnsStr)
+      },
       loadTreeData(){
         let that = this;
         let params = {};

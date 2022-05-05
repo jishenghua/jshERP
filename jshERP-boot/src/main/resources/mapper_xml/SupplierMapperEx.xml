@@ -87,5 +87,6 @@
         select *
         from jsh_supplier
         where supplier = #{supplier} and type = #{type}
+        and ifnull(delete_flag,'0') !='1'
     </select>
 </mapper>

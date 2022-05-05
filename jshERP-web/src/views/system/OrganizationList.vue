@@ -69,8 +69,8 @@
           </a-form-item>
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="上级机构">
             <a-tree-select style="width:100%" :dropdownStyle="{maxHeight:'200px',overflow:'auto'}"
-                           allow-clear treeDefaultExpandAll="true"
-                           :treeData="treeData" v-model="model.parentId" placeholder="请选择上级机构">
+                           allow-clear :treeDefaultExpandAll="true"
+                           :treeData="treeData" v-decorator="[ 'parentId' ]" placeholder="请选择上级机构">
             </a-tree-select>
           </a-form-item>
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="排序">
@@ -170,7 +170,7 @@ export default {
       this.refresh();
     },
     loadTree() {
-      var that = this
+      let that = this
       that.treeData = []
       that.departTree = []
       let params = {};
@@ -181,11 +181,9 @@ export default {
           this.allTreeKeys = [];
           for (let i = 0; i < res.length; i++) {
             let temp = res[i]
-            that.treeData.push(temp)
             that.departTree.push(temp)
             that.setThisExpandedKeys(temp)
             that.getAllKeys(temp);
-            // console.log(temp.id)
           }
           this.loading = false
         }
@@ -286,6 +284,7 @@ export default {
       let record = e.node.dataRef
       let params = {};
       params.id=record.id;
+      this.getTreeByParams(params)
       queryOrganizationById(params).then((res) => {
         if (res && res.code == 200) {
           if(res.data){
@@ -303,6 +302,17 @@ export default {
           }
         }
       });
+    },
+    //根据机构id加载机构树
+    getTreeByParams(params) {
+      queryOrganizationTreeList(params).then((res) => {
+        if (res) {
+          this.treeData = []
+          for (let i = 0; i < res.length; i++) {
+            this.treeData.push(res[i])
+          }
+        }
+      })
     },
     // 触发onSelect事件时,为机构树右侧的form表单赋值
     setValuesToForm(record) {
@@ -337,13 +347,15 @@ export default {
             this.$message.warning('请点击选择要修改机构!')
             return
           }
-
           let formData = Object.assign(this.currSelected, values)
           console.log('Received values of form: ', formData)
           httpAction(this.url.edit, formData, 'put').then((res) => {
             if (res.code == 200) {
               this.$message.success('保存成功!')
               this.loadTree()
+              let params = {}
+              params.id = formData.id
+              this.getTreeByParams(params)
             } else {
               this.$message.error(res.message)
             }

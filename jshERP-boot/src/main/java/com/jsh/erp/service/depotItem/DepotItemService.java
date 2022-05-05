@@ -259,11 +259,29 @@ public class DepotItemService {
         return result;
     }
 
-    public BigDecimal buyOrSale(String type, String subType, Long MId, String monthTime, String sumType) throws Exception{
+    public List<DepotItemVo4WithInfoEx> getListWithBugOrSale(String materialParam, String billType, String beginTime, String endTime, Integer offset, Integer rows)throws Exception {
+        List<DepotItemVo4WithInfoEx> list =null;
+        try{
+            list = depotItemMapperEx.getListWithBugOrSale(materialParam, billType, beginTime, endTime, offset, rows);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list;
+    }
+
+    public int getListWithBugOrSaleCount(String materialParam, String billType, String beginTime, String endTime)throws Exception {
+        int result=0;
+        try{
+            result = depotItemMapperEx.getListWithBugOrSaleCount(materialParam, billType, beginTime, endTime);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return result;
+    }
+
+    public BigDecimal buyOrSale(String type, String subType, Long MId, String beginTime, String endTime, String sumType) throws Exception{
         BigDecimal result= BigDecimal.ZERO;
         try{
-            String beginTime = Tools.firstDayOfMonth(monthTime) + BusinessConstants.DAY_FIRST_TIME;
-            String endTime = Tools.lastDayOfMonth(monthTime) + BusinessConstants.DAY_LAST_TIME;
             if (SUM_TYPE.equals(sumType)) {
                 result= depotItemMapperEx.buyOrSaleNumber(type, subType, MId, beginTime, endTime, sumType);
             } else {
@@ -701,7 +719,7 @@ public class DepotItemService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public BigDecimal getFinishNumber(Long mId, Long headerId) {
+    public BigDecimal getFinishNumber(Long mId, Long headerId, Unit unitInfo, String materialUnit) {
         String goToType = "";
         DepotHead depotHead =depotHeadMapper.selectByPrimaryKey(headerId);
         String linkNumber = depotHead.getNumber(); //订单号
@@ -712,6 +730,16 @@ public class DepotItemService {
             goToType = BusinessConstants.SUB_TYPE_SALES;
         }
         BigDecimal count = depotItemMapperEx.getFinishNumber(mId, linkNumber, goToType);
+        //根据多单位情况进行数量的转换
+        if(materialUnit.equals(unitInfo.getOtherUnit()) && unitInfo.getRatio() != 0) {
+            count = count.divide(BigDecimal.valueOf(unitInfo.getRatio()),2,BigDecimal.ROUND_HALF_UP);
+        }
+        if(materialUnit.equals(unitInfo.getOtherUnitTwo()) && unitInfo.getRatioTwo() != 0) {
+            count = count.divide(BigDecimal.valueOf(unitInfo.getRatioTwo()),2,BigDecimal.ROUND_HALF_UP);
+        }
+        if(materialUnit.equals(unitInfo.getOtherUnitThree()) && unitInfo.getRatioThree() != 0) {
+            count = count.divide(BigDecimal.valueOf(unitInfo.getRatioThree()),2,BigDecimal.ROUND_HALF_UP);
+        }
         return count;
     }
 

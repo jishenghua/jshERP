@@ -248,7 +248,7 @@
         for(let item of detailArr){
           totalPrice += item.allPrice-0
         }
-        billMain.totalPrice = totalPrice
+        billMain.totalPrice = 0-totalPrice
         if(this.fileList && this.fileList.length > 0) {
           billMain.fileName = this.fileList
         } else {

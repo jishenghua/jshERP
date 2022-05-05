@@ -101,14 +101,14 @@
         },
         categoryTree:[],
         columns: [
-          {dataIndex: 'mBarCode', title: '条码', width: 100, align: 'left'},
+          {dataIndex: 'mBarCode', title: '条码', width: 100, align: 'left', ellipsis:true},
           {dataIndex: 'name', title: '名称', width: 120, ellipsis:true},
-          {dataIndex: 'categoryName', title: '类别', width: 80},
-          {dataIndex: 'standard', title: '规格', width: 80},
-          {dataIndex: 'model', title: '型号', width: 80},
-          {dataIndex: 'color', title: '颜色', width: 80},
+          {dataIndex: 'categoryName', title: '类别', width: 80, ellipsis:true},
+          {dataIndex: 'standard', title: '规格', width: 80, ellipsis:true},
+          {dataIndex: 'model', title: '型号', width: 80, ellipsis:true},
+          {dataIndex: 'color', title: '颜色', width: 80, ellipsis:true},
           {dataIndex: 'unit', title: '单位', width: 70, ellipsis:true},
-          {dataIndex: 'sku', title: '多属性', width: 80},
+          {dataIndex: 'sku', title: '多属性', width: 80, ellipsis:true},
           {dataIndex: 'stock', title: '库存', width: 60},
           {dataIndex: 'expand', title: '扩展信息', width: 80, ellipsis:true},
           {dataIndex: 'enableSerialNumber', title: '序列号', width: 60, align: "center",
@@ -145,6 +145,7 @@
         form: this.$form.createForm(this),
         loading: false,
         expandedKeys: [],
+        disableMixinCreated: true,
       }
     },
     computed: {

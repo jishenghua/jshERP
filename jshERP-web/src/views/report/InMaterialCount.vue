@@ -7,7 +7,7 @@
         <div class="table-page-search-wrapper">
           <a-form layout="inline" @keyup.enter.native="searchQuery">
             <a-row :gutter="24">
-              <a-col :md="4" :sm="24">
+              <a-col :md="6" :sm="24">
                 <a-form-item label="供应商" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-select placeholder="选择供应商" v-model="queryParam.organId"
                     :dropdownMatchSelectWidth="false" showSearch allow-clear optionFilterProp="children">
@@ -17,28 +17,15 @@
                   </a-select>
                 </a-form-item>
               </a-col>
-              <a-col :md="4" :sm="24">
-                <a-form-item label="仓库" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-select
-                    optionFilterProp="children"
-                    showSearch allow-clear style="width: 100%"
-                    placeholder="请选择仓库"
-                    v-model="queryParam.depotId">
-                    <a-select-option v-for="(depot,index) in depotList" :value="depot.id">
-                      {{ depot.depotName }}
-                    </a-select-option>
-                  </a-select>
-                </a-form-item>
-              </a-col>
-              <a-col :md="4" :sm="24">
+              <a-col :md="6" :sm="24">
                 <a-form-item label="商品信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-input placeholder="条码/名称/规格/型号" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
-              <a-col :md="5" :sm="24">
+              <a-col :md="6" :sm="24">
                 <a-form-item label="单据日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-range-picker
-                    style="width: 210px"
+                    style="width: 100%"
                     v-model="queryParam.createTimeRange"
                     :default-value="defaultTimeStr"
                     format="YYYY-MM-DD"
@@ -47,13 +34,32 @@
                   />
                 </a-form-item>
               </a-col>
-              <a-col :md="4" :sm="24" >
+              <a-col :md="6" :sm="24" >
                 <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                   <a-button type="primary" @click="searchQuery">查询</a-button>
                   <a-button style="margin-left: 8px" v-print="'#reportPrint'" icon="printer">打印</a-button>
                   <a-button style="margin-left: 8px" @click="exportExcel" icon="download">导出</a-button>
+                  <a @click="handleToggleSearch" style="margin-left: 8px">
+                    {{ toggleSearchStatus ? '收起' : '展开' }}
+                    <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
+                  </a>
                 </span>
               </a-col>
+              <template v-if="toggleSearchStatus">
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="仓库" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select
+                      optionFilterProp="children"
+                      showSearch allow-clear style="width: 100%"
+                      placeholder="请选择仓库"
+                      v-model="queryParam.depotId">
+                      <a-select-option v-for="(depot,index) in depotList" :value="depot.id">
+                        {{ depot.depotName }}
+                      </a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+              </template>
             </a-row>
           </a-form>
         </div>
@@ -96,7 +102,7 @@
 </template>
 <script>
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import { getNowFormatMonth, openDownloadDialog, sheet2blob} from "@/utils/util"
+  import { getNowFormatYear, openDownloadDialog, sheet2blob} from "@/utils/util"
   import {getAction} from '@/api/manage'
   import {findBySelectSup} from '@/api/api'
   import JEllipsis from '@/components/jeecg/JEllipsis'
@@ -121,7 +127,7 @@
           organId: '',
           materialParam:'',
           depotId: '',
-          beginTime: getNowFormatMonth() + '-01',
+          beginTime: getNowFormatYear() + '-01-01',
           endTime: moment().format('YYYY-MM-DD'),
           type: "入库"
         },
@@ -144,11 +150,11 @@
             }
           },
           {title: '条码', dataIndex: 'barCode', width: 120},
-          {title: '名称', dataIndex: 'mName', width: 120},
-          {title: '规格', dataIndex: 'standard', width: 100},
-          {title: '型号', dataIndex: 'model', width: 100},
-          {title: '类型', dataIndex: 'categoryName', width: 120},
-          {title: '单位', dataIndex: 'materialUnit', width: 120},
+          {title: '名称', dataIndex: 'mName', width: 120, ellipsis:true},
+          {title: '规格', dataIndex: 'standard', width: 100, ellipsis:true},
+          {title: '型号', dataIndex: 'model', width: 100, ellipsis:true},
+          {title: '类型', dataIndex: 'categoryName', width: 120, ellipsis:true},
+          {title: '单位', dataIndex: 'materialUnit', width: 120, ellipsis:true},
           {title: '入库数量', dataIndex: 'numSum', sorter: (a, b) => a.numSum - b.numSum, width: 120},
           {title: '入库金额', dataIndex: 'priceSum', sorter: (a, b) => a.priceSum - b.priceSum, width: 120}
         ],
@@ -160,7 +166,7 @@
     created () {
       this.getDepotData()
       this.initSupplier()
-      this.defaultTimeStr = [moment(getNowFormatMonth() + '-01', this.dateFormat), moment(this.currentDay, this.dateFormat)]
+      this.defaultTimeStr = [moment(getNowFormatYear() + '-01-01', this.dateFormat), moment(this.currentDay, this.dateFormat)]
     },
     methods: {
       moment,

@@ -529,7 +529,7 @@ public class SupplierService {
         } else {
             //会员
             String[] names = {"名称", "联系人", "手机号码", "联系电话", "电子邮箱", "预付款", "备注", "状态"};
-            String title = "信息报表";
+            String title = "信息内容";
             List<String[]> objects = new ArrayList<String[]>();
             if (null != dataList) {
                 for (Supplier s : dataList) {
@@ -561,7 +561,7 @@ public class SupplierService {
         }
         String[] names = {"名称", "联系人", "手机号码", "联系电话", "电子邮箱", "传真", beginNeedStr,
                 allNeedStr, "纳税人识别号", "税率(%)", "开户行", "账号", "地址", "备注", "状态"};
-        String title = "信息报表";
+        String title = "信息内容";
         List<String[]> objects = new ArrayList<String[]>();
         if (null != dataList) {
             for (Supplier s : dataList) {

@@ -462,13 +462,13 @@
         select ah.bill_no number,ah.type as newType,ah.total_price discount_last_money, 0 other_money,ah.change_amount,s.supplier supplierName,
         date_format(ah.bill_time,'%Y-%m-%d %H:%i:%S') as oTime from jsh_account_head ah
         left join jsh_supplier s on s.id=ah.organ_id and ifnull(s.delete_Flag,'0') !='1'
-        where s.type=#{supType}
+        where s.type=#{supType} and (ah.type='收款' or ah.type='付款')
         and ah.bill_time >=#{beginTime} and ah.bill_time &lt;=#{endTime}
         <if test="organId != null">
             and ah.organ_id=#{organId}
         </if>
         and ifnull(ah.delete_flag,'0') !='1'
-        ORDER BY oTime
+        ORDER BY oTime desc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
         </if>
@@ -488,7 +488,7 @@
             UNION ALL
             select count(1) a from jsh_account_head ah
             left join jsh_supplier s on s.id=ah.organ_id and ifnull(s.delete_Flag,'0') !='1'
-            where s.type=#{supType}
+            where s.type=#{supType} and (ah.type='收款' or ah.type='付款')
             and ah.bill_time >=#{beginTime} and ah.bill_time &lt;=#{endTime}
             <if test="organId != null">
                 and ah.organ_id=#{organId}

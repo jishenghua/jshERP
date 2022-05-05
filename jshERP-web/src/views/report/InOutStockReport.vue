@@ -122,7 +122,6 @@
         depotSelected:[],
         depotList: [],
         totalCountMoneyStr: '0元',
-        disableMixinCreated: true,
         // 表头
         columns: [
           {
@@ -132,11 +131,11 @@
             }
           },
           {title: '条码', dataIndex: 'barCode', width: 100},
-          {title: '名称', dataIndex: 'materialName', width: 120},
-          {title: '规格', dataIndex: 'materialStandard', width: 80},
-          {title: '型号', dataIndex: 'materialModel', width: 80},
-          {title: '扩展信息', dataIndex: 'materialOther', width: 80},
-          {title: '单位', dataIndex: 'unitName', width: 60},
+          {title: '名称', dataIndex: 'materialName', width: 120, ellipsis:true},
+          {title: '规格', dataIndex: 'materialStandard', width: 80, ellipsis:true},
+          {title: '型号', dataIndex: 'materialModel', width: 80, ellipsis:true},
+          {title: '扩展信息', dataIndex: 'materialOther', width: 80, ellipsis:true},
+          {title: '单位', dataIndex: 'unitName', width: 60, ellipsis:true},
           {title: '单价', dataIndex: 'unitPrice', sorter: (a, b) => a.unitPrice - b.unitPrice, width: 60},
           {title: '上月结存数量', dataIndex: 'prevSum', sorter: (a, b) => a.prevSum - b.prevSum, width: 80},
           {title: '入库数量', dataIndex: 'inSum', sorter: (a, b) => a.inSum - b.inSum, width: 60},
@@ -153,6 +152,7 @@
     },
     created() {
       this.getDepotData()
+      this.getTotalCountMoney()
     },
     methods: {
       moment,
@@ -197,9 +197,7 @@
         this.queryParam.monthTime=dateString;
       },
       searchQuery() {
-        if(this.depotSelected.length===0){
-          this.$message.warning('请选择仓库！')
-        } else if(this.queryParam.monthTime == ''){
+        if(this.queryParam.monthTime == ''){
           this.$message.warning('请选择月份！')
         } else {
           this.loadData(1);

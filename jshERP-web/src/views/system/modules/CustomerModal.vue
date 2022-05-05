@@ -63,7 +63,7 @@
         </a-col>
         <a-col :span="24/2">
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="税率(%)">
-            <a-input placeholder="请输入税率(%)" v-decorator.trim="[ 'taxRate' ]" />
+            <a-input-number style="width:100%" placeholder="请输入税率" v-decorator.trim="[ 'taxRate' ]" />
           </a-form-item>
         </a-col>
         <a-col :span="24/2">
@@ -116,7 +116,7 @@
           supplier:{
             rules: [
               { required: true, message: '请输入名称!' },
-              { min: 2, max: 30, message: '长度在 2 到 30 个字符', trigger: 'blur' },
+              { min: 2, max: 60, message: '长度在 2 到 60 个字符', trigger: 'blur' },
               { validator: this.validateSupplierName}
             ]
           }

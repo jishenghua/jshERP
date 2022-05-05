@@ -23,6 +23,12 @@ public interface MaterialMapperEx {
             @Param("name") String name,
             @Param("standard") String standard,
             @Param("model") String model,
+            @Param("color") String color,
+            @Param("weight") String weight,
+            @Param("expiryNum") String expiryNum,
+            @Param("enableSerialNumber") String enableSerialNumber,
+            @Param("enableBatchNumber") String enableBatchNumber,
+            @Param("remark") String remark,
             @Param("idList") List<Long> idList,
             @Param("mpList") String mpList,
             @Param("offset") Integer offset,
@@ -33,6 +39,12 @@ public interface MaterialMapperEx {
             @Param("name") String name,
             @Param("standard") String standard,
             @Param("model") String model,
+            @Param("color") String color,
+            @Param("weight") String weight,
+            @Param("expiryNum") String expiryNum,
+            @Param("enableSerialNumber") String enableSerialNumber,
+            @Param("enableBatchNumber") String enableBatchNumber,
+            @Param("remark") String remark,
             @Param("idList") List<Long> idList,
             @Param("mpList") String mpList);
 
@@ -55,6 +67,12 @@ public interface MaterialMapperEx {
             @Param("name") String name,
             @Param("standard") String standard,
             @Param("model") String model,
+            @Param("color") String color,
+            @Param("weight") String weight,
+            @Param("expiryNum") String expiryNum,
+            @Param("enableSerialNumber") String enableSerialNumber,
+            @Param("enableBatchNumber") String enableBatchNumber,
+            @Param("remark") String remark,
             @Param("idList") List<Long> idList);
     /**
      * 通过商品名称查询商品信息

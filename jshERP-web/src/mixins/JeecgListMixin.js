@@ -3,7 +3,7 @@
  * 高级查询按钮调用 superQuery方法  高级查询组件ref定义为superQueryModal
  * data中url定义 list为查询列表  delete为删除单条记录  deleteBatch为批量删除
  */
-import { filterObj } from '@/utils/util';
+import { filterObj,getNowFormatStr } from '@/utils/util';
 import { deleteAction, getAction, postAction, downFile, getFileAccessHttpUrl } from '@/api/manage'
 import Vue from 'vue'
 import { ACCESS_TOKEN } from "@/store/mutation-types"
@@ -301,7 +301,7 @@ export const JeecgListMixin = {
           let link = document.createElement('a')
           link.style.display = 'none'
           link.href = url
-          link.setAttribute('download', fileName+'.xls')
+          link.setAttribute('download', fileName + '_' + getNowFormatStr()+'.xls')
           document.body.appendChild(link)
           link.click()
           document.body.removeChild(link); //下载完成移除元素
@@ -384,6 +384,7 @@ export const JeecgListMixin = {
         if(operatorDom && operatorDom[0]) {
           operatorDomLen = operatorDom[0].offsetHeight+10
         }
+        this.scroll.x = 1640
         this.scroll.y = document.documentElement.clientHeight-searchWrapperDomLen-operatorDomLen-basicLength
       }
     },

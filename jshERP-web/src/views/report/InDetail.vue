@@ -7,22 +7,12 @@
         <div class="table-page-search-wrapper">
           <a-form layout="inline" @keyup.enter.native="searchQuery">
             <a-row :gutter="24">
-              <a-col :md="4" :sm="24">
-                <a-form-item label="供应商" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-select placeholder="选择供应商" v-model="queryParam.organId"
-                    :dropdownMatchSelectWidth="false" showSearch allow-clear optionFilterProp="children">
-                    <a-select-option v-for="(item,index) in supList" :key="index" :value="item.id">
-                      {{ item.supplier }}
-                    </a-select-option>
-                  </a-select>
-                </a-form-item>
-              </a-col>
-              <a-col :md="4" :sm="24">
+              <a-col :md="6" :sm="24">
                 <a-form-item label="单据编号" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-input placeholder="请输入单据编号" v-model="queryParam.number"></a-input>
                 </a-form-item>
               </a-col>
-              <a-col :md="4" :sm="24">
+              <a-col :md="6" :sm="24">
                 <a-form-item label="商品信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-input placeholder="条码/名称/规格/型号" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
@@ -39,8 +29,29 @@
                   />
                 </a-form-item>
               </a-col>
+              <a-col :md="6" :sm="24" >
+                <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+                  <a-button type="primary" @click="searchQuery">查询</a-button>
+                  <a-button style="margin-left: 8px" v-print="'#reportPrint'" icon="printer">打印</a-button>
+                  <a-button style="margin-left: 8px" @click="exportExcel" icon="download">导出</a-button>
+                  <a @click="handleToggleSearch" style="margin-left: 8px">
+                    {{ toggleSearchStatus ? '收起' : '展开' }}
+                    <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
+                  </a>
+                </span>
+              </a-col>
               <template v-if="toggleSearchStatus">
-                <a-col :md="4" :sm="24">
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="供应商" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select placeholder="选择供应商" v-model="queryParam.organId"
+                              :dropdownMatchSelectWidth="false" showSearch allow-clear optionFilterProp="children">
+                      <a-select-option v-for="(item,index) in supList" :key="index" :value="item.id">
+                        {{ item.supplier }}
+                      </a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
                   <a-form-item label="仓库" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-select
                       optionFilterProp="children"
@@ -54,23 +65,12 @@
                     </a-select>
                   </a-form-item>
                 </a-col>
-                <a-col :md="4" :sm="24">
+                <a-col :md="6" :sm="24">
                   <a-form-item label="备注" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-input placeholder="请输入备注" v-model="queryParam.remark"></a-input>
                   </a-form-item>
                 </a-col>
               </template>
-              <a-col :md="4" :sm="24" >
-                <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-                  <a-button type="primary" @click="searchQuery">查询</a-button>
-                  <a-button style="margin-left: 8px" v-print="'#reportPrint'" icon="printer">打印</a-button>
-                  <a-button style="margin-left: 8px" @click="exportExcel" icon="download">导出</a-button>
-                  <a @click="handleToggleSearch" style="margin-left: 8px">
-                    {{ toggleSearchStatus ? '收起' : '展开' }}
-                    <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
-                  </a>
-                </span>
-              </a-col>
             </a-row>
           </a-form>
         </div>
@@ -119,7 +119,7 @@
 <script>
   import BillDetail from '../bill/dialog/BillDetail'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import { getNowFormatMonth, openDownloadDialog, sheet2blob} from "@/utils/util"
+  import { getNowFormatYear, openDownloadDialog, sheet2blob} from "@/utils/util"
   import {getAction} from '@/api/manage'
   import {findBySelectSup, findBillDetailByNumber} from '@/api/api'
   import JEllipsis from '@/components/jeecg/JEllipsis'
@@ -146,7 +146,7 @@
           number: '',
           materialParam:'',
           depotId: '',
-          beginTime: getNowFormatMonth() + '-01',
+          beginTime: getNowFormatYear() + '-01-01',
           endTime: moment().format('YYYY-MM-DD'),
           type: "入库",
           remark: ''
@@ -174,17 +174,17 @@
             scopedSlots: { customRender: 'numberCustomRender' },
           },
           {title: '条码', dataIndex: 'barCode', width: 80},
-          {title: '名称', dataIndex: 'mname', width: 120},
-          {title: '规格', dataIndex: 'standard', width: 60},
-          {title: '型号', dataIndex: 'model', width: 60},
-          {title: '单位', dataIndex: 'mUnit', width: 60},
+          {title: '名称', dataIndex: 'mname', width: 120, ellipsis:true},
+          {title: '规格', dataIndex: 'standard', width: 60, ellipsis:true},
+          {title: '型号', dataIndex: 'model', width: 60, ellipsis:true},
+          {title: '单位', dataIndex: 'mUnit', width: 60, ellipsis:true},
           {title: '数量', dataIndex: 'operNumber', sorter: (a, b) => a.operNumber - b.operNumber, width: 60},
           {title: '单价', dataIndex: 'unitPrice', sorter: (a, b) => a.unitPrice - b.unitPrice, width: 60},
           {title: '金额', dataIndex: 'allPrice', sorter: (a, b) => a.allPrice - b.allPrice, width: 60},
-          {title: '供应商', dataIndex: 'sname', width: 80},
-          {title: '仓库', dataIndex: 'dname', width: 80},
+          {title: '供应商', dataIndex: 'sname', width: 80, ellipsis:true},
+          {title: '仓库', dataIndex: 'dname', width: 80, ellipsis:true},
           {title: '入库日期', dataIndex: 'operTime', width: 80},
-          {title: '备注', dataIndex: 'newRemark', width: 100}
+          {title: '备注', dataIndex: 'newRemark', width: 100, ellipsis:true}
         ],
         url: {
           list: "/depotHead/findInDetail",
@@ -194,7 +194,7 @@
     created () {
       this.getDepotData()
       this.initSupplier()
-      this.defaultTimeStr = [moment(getNowFormatMonth() + '-01', this.dateFormat), moment(this.currentDay, this.dateFormat)]
+      this.defaultTimeStr = [moment(getNowFormatYear() + '-01-01', this.dateFormat), moment(this.currentDay, this.dateFormat)]
     },
     methods: {
       moment,

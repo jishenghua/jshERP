@@ -9,6 +9,7 @@
     <result column="company_tel" jdbcType="VARCHAR" property="companyTel" />
     <result column="company_fax" jdbcType="VARCHAR" property="companyFax" />
     <result column="company_post_code" jdbcType="VARCHAR" property="companyPostCode" />
+    <result column="sale_agreement" jdbcType="VARCHAR" property="saleAgreement" />
     <result column="depot_flag" jdbcType="VARCHAR" property="depotFlag" />
     <result column="customer_flag" jdbcType="VARCHAR" property="customerFlag" />
     <result column="minus_stock_flag" jdbcType="VARCHAR" property="minusStockFlag" />
@@ -75,7 +76,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, company_name, company_contacts, company_address, company_tel, company_fax, company_post_code, 
-    depot_flag, customer_flag, minus_stock_flag, tenant_id, delete_flag
+    sale_agreement, depot_flag, customer_flag, minus_stock_flag, tenant_id, delete_flag
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.SystemConfigExample" resultMap="BaseResultMap">
     select
@@ -110,14 +111,14 @@
   <insert id="insert" parameterType="com.jsh.erp.datasource.entities.SystemConfig">
     insert into jsh_system_config (id, company_name, company_contacts, 
       company_address, company_tel, company_fax, 
-      company_post_code, depot_flag, customer_flag, 
-      minus_stock_flag, tenant_id, delete_flag
-      )
+      company_post_code, sale_agreement, depot_flag, 
+      customer_flag, minus_stock_flag, tenant_id, 
+      delete_flag)
     values (#{id,jdbcType=BIGINT}, #{companyName,jdbcType=VARCHAR}, #{companyContacts,jdbcType=VARCHAR}, 
       #{companyAddress,jdbcType=VARCHAR}, #{companyTel,jdbcType=VARCHAR}, #{companyFax,jdbcType=VARCHAR}, 
-      #{companyPostCode,jdbcType=VARCHAR}, #{depotFlag,jdbcType=VARCHAR}, #{customerFlag,jdbcType=VARCHAR}, 
-      #{minusStockFlag,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR}
-      )
+      #{companyPostCode,jdbcType=VARCHAR}, #{saleAgreement,jdbcType=VARCHAR}, #{depotFlag,jdbcType=VARCHAR}, 
+      #{customerFlag,jdbcType=VARCHAR}, #{minusStockFlag,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, 
+      #{deleteFlag,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.SystemConfig">
     insert into jsh_system_config
@@ -142,6 +143,9 @@
       </if>
       <if test="companyPostCode != null">
         company_post_code,
+      </if>
+      <if test="saleAgreement != null">
+        sale_agreement,
       </if>
       <if test="depotFlag != null">
         depot_flag,
@@ -180,6 +184,9 @@
       </if>
       <if test="companyPostCode != null">
         #{companyPostCode,jdbcType=VARCHAR},
+      </if>
+      <if test="saleAgreement != null">
+        #{saleAgreement,jdbcType=VARCHAR},
       </if>
       <if test="depotFlag != null">
         #{depotFlag,jdbcType=VARCHAR},
@@ -228,6 +235,9 @@
       <if test="record.companyPostCode != null">
         company_post_code = #{record.companyPostCode,jdbcType=VARCHAR},
       </if>
+      <if test="record.saleAgreement != null">
+        sale_agreement = #{record.saleAgreement,jdbcType=VARCHAR},
+      </if>
       <if test="record.depotFlag != null">
         depot_flag = #{record.depotFlag,jdbcType=VARCHAR},
       </if>
@@ -257,6 +267,7 @@
       company_tel = #{record.companyTel,jdbcType=VARCHAR},
       company_fax = #{record.companyFax,jdbcType=VARCHAR},
       company_post_code = #{record.companyPostCode,jdbcType=VARCHAR},
+      sale_agreement = #{record.saleAgreement,jdbcType=VARCHAR},
       depot_flag = #{record.depotFlag,jdbcType=VARCHAR},
       customer_flag = #{record.customerFlag,jdbcType=VARCHAR},
       minus_stock_flag = #{record.minusStockFlag,jdbcType=VARCHAR},
@@ -287,6 +298,9 @@
       <if test="companyPostCode != null">
         company_post_code = #{companyPostCode,jdbcType=VARCHAR},
       </if>
+      <if test="saleAgreement != null">
+        sale_agreement = #{saleAgreement,jdbcType=VARCHAR},
+      </if>
       <if test="depotFlag != null">
         depot_flag = #{depotFlag,jdbcType=VARCHAR},
       </if>
@@ -313,6 +327,7 @@
       company_tel = #{companyTel,jdbcType=VARCHAR},
       company_fax = #{companyFax,jdbcType=VARCHAR},
       company_post_code = #{companyPostCode,jdbcType=VARCHAR},
+      sale_agreement = #{saleAgreement,jdbcType=VARCHAR},
       depot_flag = #{depotFlag,jdbcType=VARCHAR},
       customer_flag = #{customerFlag,jdbcType=VARCHAR},
       minus_stock_flag = #{minusStockFlag,jdbcType=VARCHAR},

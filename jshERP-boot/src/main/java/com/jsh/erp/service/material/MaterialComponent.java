@@ -38,8 +38,15 @@ public class MaterialComponent implements ICommonQuery {
         String name = StringUtil.getInfo(search, "name");
         String standard = StringUtil.getInfo(search, "standard");
         String model = StringUtil.getInfo(search, "model");
+        String color = StringUtil.getInfo(search, "color");
+        String weight = StringUtil.getInfo(search, "weight");
+        String expiryNum = StringUtil.getInfo(search, "expiryNum");
+        String enableSerialNumber = StringUtil.getInfo(search, "enableSerialNumber");
+        String enableBatchNumber = StringUtil.getInfo(search, "enableBatchNumber");
+        String remark = StringUtil.getInfo(search, "remark");
         String mpList = StringUtil.getInfo(search, "mpList");
-        return materialService.select(barCode, name, standard, model,categoryId,mpList, QueryUtils.offset(map), QueryUtils.rows(map));
+        return materialService.select(barCode, name, standard, model, color, weight, expiryNum,
+                enableSerialNumber, enableBatchNumber, remark, categoryId, mpList, QueryUtils.offset(map), QueryUtils.rows(map));
     }
 
     @Override
@@ -50,8 +57,15 @@ public class MaterialComponent implements ICommonQuery {
         String name = StringUtil.getInfo(search, "name");
         String standard = StringUtil.getInfo(search, "standard");
         String model = StringUtil.getInfo(search, "model");
+        String color = StringUtil.getInfo(search, "color");
+        String weight = StringUtil.getInfo(search, "weight");
+        String expiryNum = StringUtil.getInfo(search, "expiryNum");
+        String enableSerialNumber = StringUtil.getInfo(search, "enableSerialNumber");
+        String enableBatchNumber = StringUtil.getInfo(search, "enableBatchNumber");
+        String remark = StringUtil.getInfo(search, "remark");
         String mpList = StringUtil.getInfo(search, "mpList");
-        return materialService.countMaterial(barCode, name, standard, model,categoryId,mpList);
+        return materialService.countMaterial(barCode, name, standard, model, color, weight, expiryNum,
+                enableSerialNumber, enableBatchNumber, remark, categoryId, mpList);
     }
 
     @Override

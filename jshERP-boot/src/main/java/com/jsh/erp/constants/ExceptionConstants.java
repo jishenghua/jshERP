@@ -299,6 +299,12 @@ public class ExceptionConstants {
     //商品条码不是正整数
     public static final int MATERIAL_BARCODE_NOT_INTEGER_CODE = 8000007;
     public static final String MATERIAL_BARCODE_NOT_INTEGER_MSG = "商品条码:%s不是正整数";
+    //序列号和批号只能有一项
+    public static final int MATERIAL_ENABLE_MUST_ONE_CODE = 8000008;
+    public static final String MATERIAL_ENABLE_MUST_ONE_MSG = "抱歉，商品条码:%s的序列号和批号不能同时填1";
+    //抱歉，文件扩展名必须为xls
+    public static final int MATERIAL_EXTENSION_ERROR_CODE = 8000009;
+    public static final String MATERIAL_EXTENSION_ERROR_MSG = "抱歉，文件扩展名必须为xls";
     /**
      *  单据信息
      * type = 85
@@ -444,6 +450,10 @@ public class ExceptionConstants {
     //修改机构用户关联关系失败
     public static final int ORGA_USER_REL_EDIT_FAILED_CODE = 11500002;
     public static final String ORGA_USER_REL_EDIT_FAILED_MSG = "修改机构用户关联关系失败";
+
+    //进销存统计，如果有权限的仓库数量太多则提示要选择仓库
+    public static final int REPORT_TWO_MANY_DEPOT_FAILED_CODE = 510;
+    public static final String REPORT_TWO_MANY_DEPOT_FAILED_MSG = "请选择仓库，再进行查询";
 
     //演示用户禁止操作
     public static final int SYSTEM_CONFIG_TEST_USER_CODE = -1;

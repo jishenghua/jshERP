@@ -392,8 +392,7 @@
               'organId': record.organId,
               'linkNumber': record.number,
               'remark': record.remark,
-              'discountLastMoney': record.totalPrice,
-              'changeAmount': record.totalPrice
+              'discount': record.discount
             })
           });
           // 加载子表数据
@@ -411,24 +410,29 @@
           if(res && res.code === 200){
             let list = res.data.rows
             let listEx = []
-            let discountLastMoney = 0
+            let allTaxLastMoney = 0
             for(let j=0; j<list.length; j++){
               let info = list[j];
               if(info.preNumber) {
                 info.operNumber = info.preNumber - info.finishNumber
-                info.allPrice = info.operNumber * info.unitPrice-0;
-                discountLastMoney += info.allPrice
+                info.allPrice = info.operNumber * info.unitPrice-0
               }
-              info.taxMoney = 0
-              info.taxLastMoney = info.allPrice
+              let taxRate = info.taxRate-0
+              info.taxMoney = (info.allPrice*taxRate/100).toFixed(2)-0
+              info.taxLastMoney = info.allPrice + info.taxMoney
+              allTaxLastMoney += info.taxLastMoney
               listEx.push(info)
               this.changeColumnShow(info)
             }
             tab.dataSource = listEx
             //给优惠后金额重新赋值
-            if(discountLastMoney) {
+            if(allTaxLastMoney) {
+              let discount = this.form.getFieldValue('discount')-0
+              let discountMoney = (discount*allTaxLastMoney/100).toFixed(2)-0
+              let discountLastMoney = allTaxLastMoney - discountMoney
               this.$nextTick(() => {
                 this.form.setFieldsValue({
+                  'discountMoney': discountMoney,
                   'discountLastMoney': discountLastMoney,
                   'changeAmount': discountLastMoney
                 })

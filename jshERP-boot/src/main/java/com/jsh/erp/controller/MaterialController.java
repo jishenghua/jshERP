@@ -1,12 +1,9 @@
 package com.jsh.erp.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.jsh.erp.constants.BusinessConstants;
-import com.jsh.erp.constants.ExceptionConstants;
-import com.jsh.erp.datasource.entities.*;
-import com.jsh.erp.exception.BusinessRunTimeException;
+import com.jsh.erp.datasource.entities.MaterialVo4Unit;
+import com.jsh.erp.datasource.entities.Unit;
 import com.jsh.erp.service.depot.DepotService;
 import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.material.MaterialService;
@@ -15,8 +12,6 @@ import com.jsh.erp.service.unit.UnitService;
 import com.jsh.erp.utils.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import jxl.Sheet;
-import jxl.Workbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +22,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 
@@ -154,22 +152,7 @@ public class MaterialController {
             List<MaterialVo4Unit> list = materialService.findByIdWithBarCode(meId);
             if(list!=null && list.size()>0) {
                 mu = list.get(0);
-                String expand = ""; //扩展信息
-                for (int i = 0; i < mpArr.length; i++) {
-                    if (mpArr[i].equals("制造商")) {
-                        expand = expand + ((mu.getMfrs() == null || mu.getMfrs().equals("")) ? "" : "(" + mu.getMfrs() + ")");
-                    }
-                    if (mpArr[i].equals("自定义1")) {
-                        expand = expand + ((mu.getOtherField1() == null || mu.getOtherField1().equals("")) ? "" : "(" + mu.getOtherField1() + ")");
-                    }
-                    if (mpArr[i].equals("自定义2")) {
-                        expand = expand + ((mu.getOtherField2() == null || mu.getOtherField2().equals("")) ? "" : "(" + mu.getOtherField2() + ")");
-                    }
-                    if (mpArr[i].equals("自定义3")) {
-                        expand = expand + ((mu.getOtherField3() == null || mu.getOtherField3().equals("")) ? "" : "(" + mu.getOtherField3() + ")");
-                    }
-                }
-                mu.setMaterialOther(expand);
+                mu.setMaterialOther(materialService.getMaterialOtherByParam(mpArr, mu));
             }
             res.code = 200;
             res.data = mu;
@@ -250,22 +233,7 @@ public class MaterialController {
                         }
                     }
                     item.put("stock", stock);
-                    String expand = ""; //扩展信息
-                    for (int i = 0; i < mpArr.length; i++) {
-                        if (mpArr[i].equals("制造商")) {
-                            expand = expand + ((material.getMfrs() == null || material.getMfrs().equals("")) ? "" : "(" + material.getMfrs() + ")");
-                        }
-                        if (mpArr[i].equals("自定义1")) {
-                            expand = expand + ((material.getOtherField1() == null || material.getOtherField1().equals("")) ? "" : "(" + material.getOtherField1() + ")");
-                        }
-                        if (mpArr[i].equals("自定义2")) {
-                            expand = expand + ((material.getOtherField2() == null || material.getOtherField2().equals("")) ? "" : "(" + material.getOtherField2() + ")");
-                        }
-                        if (mpArr[i].equals("自定义3")) {
-                            expand = expand + ((material.getOtherField3() == null || material.getOtherField3().equals("")) ? "" : "(" + material.getOtherField3() + ")");
-                        }
-                    }
-                    item.put("expand", expand);
+                    item.put("expand", materialService.getMaterialOtherByParam(mpArr, material));
                     dataArray.add(item);
                 }
             }
@@ -308,24 +276,7 @@ public class MaterialController {
                 String MaterialName = "";
                 MaterialName = MaterialName + material.getmBarCode() + "_" + material.getName()
                         + ((material.getStandard() == null || material.getStandard().equals("")) ? "" : "(" + material.getStandard() + ")");
-                String expand = ""; //扩展信息
-                for (int i = 0; i < mpArr.length; i++) {
-                    if (mpArr[i].equals("颜色")) {
-                        expand = expand + ((material.getColor() == null || material.getColor().equals("")) ? "" : "(" + material.getColor() + ")");
-                    }
-                    if (mpArr[i].equals("制造商")) {
-                        expand = expand + ((material.getMfrs() == null || material.getMfrs().equals("")) ? "" : "(" + material.getMfrs() + ")");
-                    }
-                    if (mpArr[i].equals("自定义1")) {
-                        expand = expand + ((material.getOtherField1() == null || material.getOtherField1().equals("")) ? "" : "(" + material.getOtherField1() + ")");
-                    }
-                    if (mpArr[i].equals("自定义2")) {
-                        expand = expand + ((material.getOtherField2() == null || material.getOtherField2().equals("")) ? "" : "(" + material.getOtherField2() + ")");
-                    }
-                    if (mpArr[i].equals("自定义3")) {
-                        expand = expand + ((material.getOtherField3() == null || material.getOtherField3().equals("")) ? "" : "(" + material.getOtherField3() + ")");
-                    }
-                }
+                String expand = materialService.getMaterialOtherByParam(mpArr, material); //扩展信息
                 MaterialName = MaterialName + expand + ((material.getUnit() == null || material.getUnit().equals("")) ? "" : "(" + material.getUnit() + ")") + ratio;
                 item.put("MaterialName", MaterialName);
                 item.put("name", material.getName());
@@ -352,32 +303,52 @@ public class MaterialController {
      */
     @GetMapping(value = "/exportExcel")
     @ApiOperation(value = "生成excel表格")
-    public void exportExcel(@RequestParam("categoryId") String categoryId,
-                            @RequestParam("barCode") String barCode,
-                            @RequestParam("name") String name,
-                            @RequestParam("standard") String standard,
-                            @RequestParam("model") String model,
-                            @RequestParam("mpList") String mpList,
+    public void exportExcel(@RequestParam(value = "categoryId", required = false) String categoryId,
+                            @RequestParam(value = "barCode", required = false) String barCode,
+                            @RequestParam(value = "name", required = false) String name,
+                            @RequestParam(value = "standard", required = false) String standard,
+                            @RequestParam(value = "model", required = false) String model,
+                            @RequestParam(value = "color", required = false) String color,
+                            @RequestParam(value = "weight", required = false) String weight,
+                            @RequestParam(value = "expiryNum", required = false) String expiryNum,
+                            @RequestParam(value = "enableSerialNumber", required = false) String enableSerialNumber,
+                            @RequestParam(value = "enableBatchNumber", required = false) String enableBatchNumber,
+                            @RequestParam(value = "remark", required = false) String remark,
+                            @RequestParam(value = "mpList", required = false) String mpList,
                             HttpServletRequest request, HttpServletResponse response) {
         try {
+            String[] mpArr = new String[]{};
+            if(StringUtil.isNotEmpty(mpList)){
+                mpArr= mpList.split(",");
+            }
             List<MaterialVo4Unit> dataList = materialService.findByAll(StringUtil.toNull(barCode), StringUtil.toNull(name),
-                    StringUtil.toNull(standard), StringUtil.toNull(model), StringUtil.toNull(categoryId));
-            String[] names = {"名称", "类型", "型号", "单位", "零售价", "最低售价", "采购价", "销售价", "备注", "状态"};
+                    StringUtil.toNull(standard), StringUtil.toNull(model), StringUtil.toNull(color), StringUtil.toNull(weight),
+                    StringUtil.toNull(expiryNum), StringUtil.toNull(enableSerialNumber), StringUtil.toNull(enableBatchNumber),
+                    StringUtil.toNull(remark), StringUtil.toNull(categoryId));
+            String[] names = {"条码", "名称", "规格", "型号", "颜色", "类别", "扩展信息", "单位", "基础重量", "保质期", "采购价", "销售价", "零售价", "最低售价", "备注", "状态", "序列号", "批号"};
             String title = "商品信息";
-            List<String[]> objects = new ArrayList<String[]>();
+            List<String[]> objects = new ArrayList<>();
             if (null != dataList) {
                 for (MaterialVo4Unit m : dataList) {
-                    String[] objs = new String[10];
-                    objs[0] = m.getName();
-                    objs[1] = m.getCategoryName();
-                    objs[2] = m.getModel();
-                    objs[3] = m.getCommodityUnit();
-                    objs[4] = m.getCommodityDecimal() == null? "" : m.getCommodityDecimal().toString();
-                    objs[5] = m.getLowDecimal() == null? "" : m.getLowDecimal().toString();
-                    objs[6] = m.getPurchaseDecimal() == null? "" : m.getPurchaseDecimal().toString();
-                    objs[7] = m.getWholesaleDecimal() == null? "" : m.getWholesaleDecimal().toString();
-                    objs[8] = m.getRemark();
-                    objs[9] = m.getEnabled() ? "启用" : "禁用";
+                    String[] objs = new String[100];
+                    objs[0] = m.getmBarCode();
+                    objs[1] = m.getName();
+                    objs[2] = m.getStandard();
+                    objs[3] = m.getModel();
+                    objs[4] = m.getColor();
+                    objs[5] = m.getCategoryName();
+                    objs[6] = materialService.getMaterialOtherByParam(mpArr, m);
+                    objs[7] = m.getCommodityUnit();
+                    objs[8] = m.getWeight() == null? "" : m.getWeight().toString();
+                    objs[9] = m.getExpiryNum() == null? "" : m.getExpiryNum().toString();
+                    objs[10] = m.getPurchaseDecimal() == null? "" : m.getPurchaseDecimal().toString();
+                    objs[11] = m.getWholesaleDecimal() == null? "" : m.getWholesaleDecimal().toString();
+                    objs[12] = m.getCommodityDecimal() == null? "" : m.getCommodityDecimal().toString();
+                    objs[13] = m.getLowDecimal() == null? "" : m.getLowDecimal().toString();
+                    objs[14] = m.getRemark();
+                    objs[15] = m.getEnabled() ? "启用" : "禁用";
+                    objs[16] = "1".equals(m.getEnableSerialNumber()) ? "有" : "无";
+                    objs[17] = "1".equals(m.getEnableBatchNumber()) ? "有" : "无";
                     objects.add(objs);
                 }
             }
@@ -400,16 +371,8 @@ public class MaterialController {
     public BaseResponseInfo importExcel(MultipartFile file,
                             HttpServletRequest request, HttpServletResponse response) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();
-        String message = "成功";
         try {
-            Sheet src = null;
-            //文件合法性校验
-            try {
-                Workbook workbook = Workbook.getWorkbook(file.getInputStream());
-                src = workbook.getSheet(0);
-            } catch (Exception e) {
-            }
-            res = materialService.importExcel(src, request);
+            res = materialService.importExcel(file, request);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -512,22 +475,7 @@ public class MaterialController {
             List<MaterialVo4Unit> list = materialService.getMaterialByBarCode(barCode);
             if(list!=null && list.size()>0) {
                 for(MaterialVo4Unit mvo: list) {
-                    String expand = ""; //扩展信息
-                    for (int i = 0; i < mpArr.length; i++) {
-                        if (mpArr[i].equals("制造商")) {
-                            expand = expand + ((mvo.getMfrs() == null || mvo.getMfrs().equals("")) ? "" : "(" + mvo.getMfrs() + ")");
-                        }
-                        if (mpArr[i].equals("自定义1")) {
-                            expand = expand + ((mvo.getOtherField1() == null || mvo.getOtherField1().equals("")) ? "" : "(" + mvo.getOtherField1() + ")");
-                        }
-                        if (mpArr[i].equals("自定义2")) {
-                            expand = expand + ((mvo.getOtherField2() == null || mvo.getOtherField2().equals("")) ? "" : "(" + mvo.getOtherField2() + ")");
-                        }
-                        if (mpArr[i].equals("自定义3")) {
-                            expand = expand + ((mvo.getOtherField3() == null || mvo.getOtherField3().equals("")) ? "" : "(" + mvo.getOtherField3() + ")");
-                        }
-                    }
-                    mvo.setMaterialOther(expand);
+                    mvo.setMaterialOther(materialService.getMaterialOtherByParam(mpArr, mvo));
                     if ("LSCK".equals(prefixNo) || "LSTH".equals(prefixNo)) {
                         //零售价
                         mvo.setBillPrice(mvo.getCommodityDecimal());

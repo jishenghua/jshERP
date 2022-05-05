@@ -19,6 +19,7 @@
               <a-col :md="6" :sm="24">
                 <a-form-item label="创建时间" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-range-picker
+                    style="width: 100%"
                     v-model="queryParam.createTimeRange"
                     format="YYYY-MM-DD"
                     :placeholder="['开始时间', '结束时间']"
@@ -26,6 +27,16 @@
                     @ok="onDateOk"
                   />
                 </a-form-item>
+              </a-col>
+              <a-col :md="6" :sm="24" >
+                <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+                  <a-button type="primary" @click="searchQuery">查询</a-button>
+                  <a-button style="margin-left: 8px" @click="searchReset">重置</a-button>
+                  <a @click="handleToggleSearch" style="margin-left: 8px">
+                    {{ toggleSearchStatus ? '收起' : '展开' }}
+                    <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
+                  </a>
+                </span>
               </a-col>
               <template v-if="toggleSearchStatus">
                 <a-col :md="6" :sm="24">
@@ -48,16 +59,6 @@
                   </a-form-item>
                 </a-col>
               </template>
-              <a-col :md="6" :sm="24" >
-                <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-                  <a-button type="primary" @click="searchQuery">查询</a-button>
-                  <a-button style="margin-left: 8px" @click="searchReset">重置</a-button>
-                  <a @click="handleToggleSearch" style="margin-left: 8px">
-                    {{ toggleSearchStatus ? '收起' : '展开' }}
-                    <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
-                  </a>
-                </span>
-              </a-col>
             </a-row>
           </a-form>
         </div>

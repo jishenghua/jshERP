@@ -21,8 +21,8 @@
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
         <a-tabs default-active-key="1">
-          <a-tab-pane key="1" tab="基本信息" forceRender>
-            <a-row class="form-row" :gutter="24" id="materialHeadModal">
+          <a-tab-pane key="1" tab="基本信息" id="materialHeadModal" forceRender>
+            <a-row class="form-row" :gutter="24">
               <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="名称" data-step="1" data-title="名称" data-intro="名称必填，可以重复">
                   <a-input placeholder="请输入名称" v-decorator.trim="[ 'name', validatorRules.name]"/>
@@ -65,6 +65,8 @@
                   </a-row>
                 </a-form-item>
               </a-col>
+            </a-row>
+            <a-row class="form-row" :gutter="24">
               <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="颜色">
                   <a-input placeholder="请输入颜色" v-decorator.trim="[ 'color' ]" />
@@ -73,7 +75,7 @@
               <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="基础重量" data-step="5" data-title="基础重量"
                   data-intro="请填写基本单位对应的重量，用于计算按重量分摊费用时单据中各行商品分摊的费用成本">
-                  <a-input placeholder="请输入基础重量(kg)" v-decorator.trim="[ 'weight' ]" />
+                  <a-input-number style="width: 100%" placeholder="请输入基础重量(kg)" v-decorator.trim="[ 'weight' ]" />
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
@@ -90,6 +92,8 @@
                   </a-tree-select>
                 </a-form-item>
               </a-col>
+            </a-row>
+            <a-row class="form-row" :gutter="24">
               <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="序列号" data-step="8" data-title="序列号"
                   data-intro="此处是商品的序列号开关，如果选择了有，则在采购入库单据需要录入该商品的序列号，在销售出库单据需要选择该商品的序列号进行出库">
@@ -396,7 +400,7 @@
           name:{
             rules: [
               { required: true, message: '请输入名称!' },
-              { min: 2, max: 30, message: '长度在 2 到 30 个字符', trigger: 'blur' }
+              { min: 2, max: 60, message: '长度在 2 到 60 个字符', trigger: 'blur' }
             ]
           },
           unit:{

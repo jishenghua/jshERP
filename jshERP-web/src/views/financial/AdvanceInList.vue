@@ -25,16 +25,26 @@
                   />
                 </a-form-item>
               </a-col>
-              <template v-if="toggleSearchStatus">
+              <a-col :md="6" :sm="24">
+                <a-form-item label="付款会员" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-select placeholder="选择付款会员" showSearch optionFilterProp="children" v-model="queryParam.organId">
+                    <a-select-option v-for="(item,index) in retailList" :key="index" :value="item.id">
+                      {{ item.supplier }}
+                    </a-select-option>
+                  </a-select>
+                </a-form-item>
+              </a-col>
+              <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                 <a-col :md="6" :sm="24">
-                  <a-form-item label="付款会员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-select placeholder="选择付款会员" showSearch optionFilterProp="children" v-model="queryParam.organId">
-                      <a-select-option v-for="(item,index) in retailList" :key="index" :value="item.id">
-                        {{ item.supplier }}
-                      </a-select-option>
-                    </a-select>
-                  </a-form-item>
+                  <a-button type="primary" @click="searchQuery">查询</a-button>
+                  <a-button style="margin-left: 8px" @click="searchReset">重置</a-button>
+                  <a @click="handleToggleSearch" style="margin-left: 8px">
+                    {{ toggleSearchStatus ? '收起' : '展开' }}
+                    <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
+                  </a>
                 </a-col>
+              </span>
+              <template v-if="toggleSearchStatus">
                 <a-col :md="6" :sm="24">
                   <a-form-item label="财务人员" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-select placeholder="选择财务人员" showSearch optionFilterProp="children" v-model="queryParam.handsPersonId">
@@ -54,16 +64,6 @@
                   </a-form-item>
                 </a-col>
               </template>
-              <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-                <a-col :md="6" :sm="24">
-                  <a-button type="primary" @click="searchQuery">查询</a-button>
-                  <a-button style="margin-left: 8px" @click="searchReset">重置</a-button>
-                  <a @click="handleToggleSearch" style="margin-left: 8px">
-                    {{ toggleSearchStatus ? '收起' : '展开' }}
-                    <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
-                  </a>
-                </a-col>
-              </span>
             </a-row>
           </a-form>
         </div>

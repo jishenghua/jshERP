@@ -638,7 +638,7 @@
 
       .ant-form-item {
         display: flex;
-        margin-bottom: 24px;
+        margin-bottom: 12px;
         margin-right: 0;
 
         .ant-form-item-control-wrapper {
@@ -661,7 +661,7 @@
 
     .table-page-search-submitButtons {
       display: block;
-      margin-bottom: 24px;
+      margin-bottom: 12px;
       white-space: nowrap;
     }
 

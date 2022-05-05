@@ -7,7 +7,7 @@
         <div class="table-page-search-wrapper">
           <a-form layout="inline" @keyup.enter.native="searchQuery">
             <a-row :gutter="24">
-              <a-col :md="4" :sm="24">
+              <a-col :md="6" :sm="24">
                 <a-form-item label="客户" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-select placeholder="选择客户" v-model="queryParam.organId"
                     :dropdownMatchSelectWidth="false" showSearch allow-clear optionFilterProp="children">
@@ -17,10 +17,10 @@
                   </a-select>
                 </a-form-item>
               </a-col>
-              <a-col :md="5" :sm="24">
+              <a-col :md="6" :sm="24">
                 <a-form-item label="单据日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-range-picker
-                    style="width: 210px"
+                    style="width: 100%"
                     v-model="queryParam.createTimeRange"
                     :default-value="defaultTimeStr"
                     format="YYYY-MM-DD"
@@ -36,7 +36,7 @@
                   <a-button style="margin-left: 8px" @click="exportExcel" icon="download">导出</a-button>
                 </span>
               </a-col>
-              <a-col :md="8" :sm="24">
+              <a-col :md="6" :sm="24">
                 <a-form-item>
                   {{firstTotal}} {{lastTotal}}
                 </a-form-item>
@@ -91,7 +91,7 @@
   import BillDetail from '../bill/dialog/BillDetail'
   import FinancialDetail from '../financial/dialog/FinancialDetail'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import { getNowFormatMonth, openDownloadDialog, sheet2blob} from "@/utils/util"
+  import { getNowFormatYear, openDownloadDialog, sheet2blob} from "@/utils/util"
   import { getAction } from '@/api/manage'
   import {findBySelectCus, findBillDetailByNumber, findFinancialDetailByNumber} from '@/api/api'
   import JEllipsis from '@/components/jeecg/JEllipsis'
@@ -117,7 +117,7 @@
         queryParam: {
           supType: "客户",
           organId: '',
-          beginTime: getNowFormatMonth() + '-01',
+          beginTime: getNowFormatYear() + '-01-01',
           endTime: moment().format('YYYY-MM-DD'),
         },
         ipagination:{
@@ -157,7 +157,7 @@
     },
     created () {
       this.initSupplier()
-      this.defaultTimeStr = [moment(getNowFormatMonth() + '-01', this.dateFormat), moment(this.currentDay, this.dateFormat)]
+      this.defaultTimeStr = [moment(getNowFormatYear() + '-01-01', this.dateFormat), moment(this.currentDay, this.dateFormat)]
     },
     methods: {
       getQueryParams() {

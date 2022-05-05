@@ -67,7 +67,7 @@
               return parseInt(index)+1;
             }
           },
-          { title: '', dataIndex: 'organName',width:120},
+          { title: '', dataIndex: 'organName',width:120, ellipsis:true},
           { title: '单据编号', dataIndex: 'number',width:150},
           { title: '商品信息', dataIndex: 'materialsList',width:280, ellipsis:true,
             customRender:function (text,record,index) {
@@ -76,9 +76,14 @@
               }
             }
           },
-          { title: '单据日期', dataIndex: 'operTimeStr',width:145},
+          { title: '单据日期', dataIndex: 'operTimeStr',width:135},
           { title: '操作员', dataIndex: 'userName',width:70},
           { title: '金额合计', dataIndex: 'totalPrice',width:70},
+          { title: '含税合计', dataIndex: 'totalTaxLastMoney',width:80,
+            customRender:function (text,record,index) {
+              return (record.discountMoney + record.discountLastMoney).toFixed(2);
+            }
+          },
           { title: '状态', dataIndex: 'status', width: 70, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }
           }
