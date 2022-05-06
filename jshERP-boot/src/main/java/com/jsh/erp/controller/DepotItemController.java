@@ -299,11 +299,6 @@ public class DepotItemController {
             //存放数据json数组
             JSONArray dataArray = new JSONArray();
             if (null != dataList) {
-                List<Long> idList = new ArrayList<>();
-                for (DepotItemVo4WithInfoEx m : dataList) {
-                    idList.add(m.getMId());
-                }
-                List<MaterialExtend> meList = materialExtendService.getListByMIds(idList);
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
                     JSONObject item = new JSONObject();
                     Long mId = diEx.getMId();
@@ -325,14 +320,8 @@ public class DepotItemController {
                     item.put("inSum", inSum);
                     item.put("outSum", outSum);
                     item.put("thisSum", thisSum);
-                    for(MaterialExtend me:meList) {
-                        if(me.getMaterialId().longValue() == diEx.getMId().longValue()) {
-                            if(me.getPurchaseDecimal()!=null) {
-                                item.put("unitPrice", me.getPurchaseDecimal());
-                                item.put("thisAllPrice", thisSum.multiply(me.getPurchaseDecimal()));
-                            }
-                        }
-                    }
+                    item.put("unitPrice", diEx.getPurchaseDecimal());
+                    item.put("thisAllPrice", thisSum.multiply(diEx.getPurchaseDecimal()));
                     dataArray.add(item);
                 }
             }

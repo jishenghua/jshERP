@@ -19,10 +19,10 @@
     <div style="margin: 4px 4px 0;">
       <transition name="page-toggle">
         <keep-alive v-if="multipage" :include="includedComponents">
-          <router-view v-if="reloadFlag"/>
+          <router-view />
         </keep-alive>
         <template v-else>
-          <router-view v-if="reloadFlag"/>
+          <router-view />
         </template>
       </transition>
       <!-- iframe页 -->
@@ -60,12 +60,10 @@
         activePage: '',
         menuVisible: false,
         menuItemList: [
-          { key: '4', icon: 'reload', text: '刷 新' },
           { key: '1', icon: 'arrow-left', text: '关闭左侧' },
           { key: '2', icon: 'arrow-right', text: '关闭右侧' },
           { key: '3', icon: 'close', text: '关闭其它' }
         ],
-        reloadFlag:true,
         componentsArr: []
       }
     },
@@ -150,11 +148,9 @@
         this.changeTitle(waitRouter.meta.title)
       },
       'multipage': function(newVal) {
-        if(this.reloadFlag){
-          if (!newVal) {
-            this.linkList = [this.$route.fullPath]
-            this.pageList = [this.$route]
-          }
+        if (!newVal) {
+          this.linkList = [this.$route.fullPath]
+          this.pageList = [this.$route]
         }
       },
       //从单页模式切换回多页模式后首页要居第一位
@@ -299,9 +295,6 @@
           case '3':
             this.closeOthers(pageKey)
             break
-          case '4':
-            this.routeReload()
-            break
           default:
             break
         }
@@ -382,16 +375,6 @@
           this.activePage = key
         }
       },
-      //路由刷新
-      routeReload(){
-        this.reloadFlag = false
-        let ToggleMultipage = "ToggleMultipage"
-        this.$store.dispatch(ToggleMultipage,false)
-        this.$nextTick(()=>{
-          this.$store.dispatch(ToggleMultipage,true)
-          this.reloadFlag = true
-        })
-      }
     }
   }
 </script>

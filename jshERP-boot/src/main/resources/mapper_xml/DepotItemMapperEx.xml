@@ -191,7 +191,7 @@
         select m.id MId, me.bar_code, m.name MName, m.mfrs MMfrs, m.model MModel, m.standard MStandard,
         m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,
         concat_ws('', m.unit, u.basic_unit) MaterialUnit, m.color MColor, u.name unit_name,
-        (select purchase_decimal from jsh_material_extend me
+        (select ifnull(purchase_decimal,0) from jsh_material_extend me
         where me.material_id=m.id and me.default_flag=1 and ifnull(me.delete_Flag,'0') !='1' limit 0,1)
         purchase_decimal
         from jsh_material m
