@@ -222,14 +222,14 @@
           'purchaseDecimal','commodityDecimal','wholesaleDecimal','lowDecimal','enabled','enableSerialNumber','enableBatchNumber','action'],
         // 默认的列
         defColumns: [
-          {title: '条码', dataIndex: 'mBarCode', width: '8%'},
-          {title: '名称', dataIndex: 'name', width: '10%', ellipsis:true},
-          {title: '规格', dataIndex: 'standard', width: '6%', ellipsis:true},
-          {title: '型号', dataIndex: 'model', width: '6%', ellipsis:true},
-          {title: '颜色', dataIndex: 'color', width: '4%', ellipsis:true},
-          {title: '类别', dataIndex: 'categoryName', width: '6%', ellipsis:true},
-          {title: '扩展信息', dataIndex: 'materialOther', width: '6%', ellipsis:true},
-          {title: '单位', dataIndex: 'unit', width: '6%', ellipsis:true,
+          {title: '条码', dataIndex: 'mBarCode'},
+          {title: '名称', dataIndex: 'name'},
+          {title: '规格', dataIndex: 'standard'},
+          {title: '型号', dataIndex: 'model'},
+          {title: '颜色', dataIndex: 'color'},
+          {title: '类别', dataIndex: 'categoryName'},
+          {title: '扩展信息', dataIndex: 'materialOther'},
+          {title: '单位', dataIndex: 'unit',
             customRender:function (t,r,index) {
               if (r) {
                 let name = t?t:r.unitName
@@ -241,28 +241,28 @@
               }
             }
           },
-          {title: '基础重量', dataIndex: 'weight', width: '5%'},
-          {title: '保质期', dataIndex: 'expiryNum', width: '4%'},
-          {title: '库存', dataIndex: 'stock', width: '5%'},
-          {title: '采购价', dataIndex: 'purchaseDecimal', width: '5%'},
-          {title: '零售价', dataIndex: 'commodityDecimal', width: '5%'},
-          {title: '销售价', dataIndex: 'wholesaleDecimal', width: '5%'},
-          {title: '最低售价', dataIndex: 'lowDecimal', width: '5%'},
-          {title: '备注', dataIndex: 'remark', width: '5%', ellipsis:true},
-          {title: '状态', dataIndex: 'enabled', width: '4%', align: "center",
+          {title: '基础重量', dataIndex: 'weight'},
+          {title: '保质期', dataIndex: 'expiryNum'},
+          {title: '库存', dataIndex: 'stock'},
+          {title: '采购价', dataIndex: 'purchaseDecimal'},
+          {title: '零售价', dataIndex: 'commodityDecimal'},
+          {title: '销售价', dataIndex: 'wholesaleDecimal'},
+          {title: '最低售价', dataIndex: 'lowDecimal'},
+          {title: '备注', dataIndex: 'remark'},
+          {title: '状态', dataIndex: 'enabled', align: "center", width: 100,
             scopedSlots: { customRender: 'customRenderEnabled' }
           },
-          {title: '序列号', dataIndex: 'enableSerialNumber', width: '4%', align: "center",
+          {title: '序列号', dataIndex: 'enableSerialNumber', align: "center", width: 100,
             scopedSlots: { customRender: 'customRenderEnableSerialNumber' }
           },
-          {title: '批号', dataIndex: 'enableBatchNumber', width: '3%', align: "center",
+          {title: '批号', dataIndex: 'enableBatchNumber', align: "center", width: 100,
             scopedSlots: { customRender: 'customRenderEnableBatchNumber' }
           },
           {
             title: '操作',
             dataIndex: 'action',
             align:"center",
-            width: '6%',
+            width: 150,
             scopedSlots: { customRender: 'action' },
           }
         ],
