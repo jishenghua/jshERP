@@ -30,7 +30,8 @@
         v-for="item in hasOpenComponentsArr"
         :key="item.name"
         :is="item.name"
-        v-show="$route.path === item.path">
+        v-show="$route.path === item.path"
+        v-if="reloadIframeFlag">
       </component>
     </div>
   </global-layout>
@@ -66,6 +67,7 @@
           { key: '3', icon: 'close', text: '关闭其它' }
         ],
         reloadFlag:true,
+        reloadIframeFlag:true,
         componentsArr: []
       }
     },
@@ -300,7 +302,7 @@
             this.closeOthers(pageKey)
             break
           case '4':
-            this.routeReload()
+            this.routeReload(pageKey)
             break
           default:
             break
@@ -383,14 +385,22 @@
         }
       },
       //路由刷新
-      routeReload(){
-        this.reloadFlag = false
-        let ToggleMultipage = "ToggleMultipage"
-        this.$store.dispatch(ToggleMultipage,false)
-        this.$nextTick(()=>{
-          this.$store.dispatch(ToggleMultipage,true)
-          this.reloadFlag = true
-        })
+      routeReload(pageKey){
+        if(pageKey.indexOf('/system/plugins')>-1) {
+          //从iframe缓存中关闭对应的页面
+          this.reloadIframeFlag = false
+          this.$nextTick(()=>{
+            this.reloadIframeFlag = true
+          })
+        } else {
+          this.reloadFlag = false
+          let ToggleMultipage = "ToggleMultipage"
+          this.$store.dispatch(ToggleMultipage,false)
+          this.$nextTick(()=>{
+            this.$store.dispatch(ToggleMultipage,true)
+            this.reloadFlag = true
+          })
+        }
       }
     }
   }
