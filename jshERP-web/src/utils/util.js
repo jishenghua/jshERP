@@ -595,18 +595,26 @@ export function removeByVal(arrylist, val) {
 }
 
 /**
- * 将数组单个金额中的数值转为负数
- * @param arr
+ * 将字符串中单个金额中的数值转为负数
+ * @param str
  * @returns {Array}
  */
-export function changeListFmtMinus(arr) {
-  let newArr = new Array();
-  for(var i=0; i<arr.length; i++) {
-    if(arr[i] < 0){
-      newArr.push((arr[i]-0).toString());
+export function changeListFmtMinus(str) {
+  let newArr = new Array()
+  if(str) {
+    let arr = []
+    if(str.indexOf(',')>-1) {
+      arr = str.split(',')
+    } else {
+      arr = str
     }
-    else {
-      newArr.push((0 - arr[i]).toString());
+    for(let i=0; i<arr.length; i++) {
+      if(arr[i] < 0){
+        newArr.push((arr[i]-0).toString());
+      }
+      else {
+        newArr.push((0 - arr[i]).toString());
+      }
     }
   }
   return newArr;
