@@ -87,13 +87,15 @@ public class AccountHeadService {
     }
 
     public List<AccountHeadVo4ListEx> select(String type, String roleType, String billNo, String beginTime, String endTime,
-                                             Long organId, Long creator, Long handsPersonId, int offset, int rows) throws Exception{
+                                             Long organId, Long creator, Long handsPersonId, Long accountId, String status,
+                                             String remark, int offset, int rows) throws Exception{
         List<AccountHeadVo4ListEx> resList = new ArrayList<>();
         try{
             String [] creatorArray = getCreatorArray(roleType);
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            List<AccountHeadVo4ListEx> list = accountHeadMapperEx.selectByConditionAccountHead(type, creatorArray, billNo, beginTime, endTime, organId, creator, handsPersonId, offset, rows);
+            List<AccountHeadVo4ListEx> list = accountHeadMapperEx.selectByConditionAccountHead(type, creatorArray, billNo,
+                    beginTime, endTime, organId, creator, handsPersonId, accountId, status, remark, offset, rows);
             if (null != list) {
                 for (AccountHeadVo4ListEx ah : list) {
                     if(ah.getChangeAmount() != null) {
@@ -115,13 +117,15 @@ public class AccountHeadService {
     }
 
     public Long countAccountHead(String type, String roleType, String billNo, String beginTime, String endTime,
-                                 Long organId, Long creator, Long handsPersonId) throws Exception{
+                                 Long organId, Long creator, Long handsPersonId, Long accountId, String status,
+                                 String remark) throws Exception{
         Long result=null;
         try{
             String [] creatorArray = getCreatorArray(roleType);
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            result = accountHeadMapperEx.countsByAccountHead(type, creatorArray, billNo, beginTime, endTime, organId, creator, handsPersonId);
+            result = accountHeadMapperEx.countsByAccountHead(type, creatorArray, billNo,
+                    beginTime, endTime, organId, creator, handsPersonId, accountId, status, remark);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }

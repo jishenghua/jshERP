@@ -101,7 +101,7 @@ public class DepotHeadService {
     }
 
     public List<DepotHeadVo4List> select(String type, String subType, String roleType, String status, String number, String linkNumber,
-           String beginTime, String endTime, String materialParam, Long organId, Long creator, Long depotId, int offset, int rows) throws Exception {
+           String beginTime, String endTime, String materialParam, Long organId, Long creator, Long depotId, Long accountId, String remark, int offset, int rows) throws Exception {
         List<DepotHeadVo4List> resList = new ArrayList<>();
         List<DepotHeadVo4List> list=new ArrayList<>();
         try{
@@ -113,7 +113,7 @@ public class DepotHeadService {
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
             list=depotHeadMapperEx.selectByConditionDepotHead(type, subType, creatorArray, statusArray, number, linkNumber, beginTime, endTime,
-                 materialParam, organId, creator, depotId, depotArray, offset, rows);
+                 materialParam, organId, creator, depotId, depotArray, accountId, remark, offset, rows);
             if (null != list) {
                 for (DepotHeadVo4List dh : list) {
                     if(accountMap!=null && StringUtil.isNotEmpty(dh.getAccountIdList()) && StringUtil.isNotEmpty(dh.getAccountMoneyList())) {
@@ -151,7 +151,7 @@ public class DepotHeadService {
     }
 
     public Long countDepotHead(String type, String subType, String roleType, String status, String number, String linkNumber,
-           String beginTime, String endTime, String materialParam, Long organId, Long creator, Long depotId) throws Exception{
+           String beginTime, String endTime, String materialParam, Long organId, Long creator, Long depotId, Long accountId, String remark) throws Exception{
         Long result=null;
         try{
             String [] depotArray = getDepotArray(subType);
@@ -160,7 +160,7 @@ public class DepotHeadService {
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
             result=depotHeadMapperEx.countsByDepotHead(type, subType, creatorArray, statusArray, number, linkNumber, beginTime, endTime,
-                   materialParam, organId, creator, depotId, depotArray);
+                   materialParam, organId, creator, depotId, depotArray, accountId, remark);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -720,8 +720,8 @@ public class DepotHeadService {
         if(StringUtil.isNotEmpty(depotHead.getAccountMoneyList())) {
             //校验多账户的结算金额
             String accountMoneyList = depotHead.getAccountMoneyList().replace("[", "").replace("]", "").replaceAll("\"", "");
-            int sum = StringUtil.getArrSum(accountMoneyList.split(","));
-            BigDecimal manyAccountSum = BigDecimal.valueOf(sum).abs();
+            BigDecimal sum = StringUtil.getArrSum(accountMoneyList.split(","));
+            BigDecimal manyAccountSum = sum.abs();
             if(manyAccountSum.compareTo(depotHead.getChangeAmount().abs())!=0) {
                 throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_MANY_ACCOUNT_FAILED_CODE,
                         String.format(ExceptionConstants.DEPOT_HEAD_MANY_ACCOUNT_FAILED_MSG));
@@ -787,8 +787,8 @@ public class DepotHeadService {
         if(StringUtil.isNotEmpty(depotHead.getAccountMoneyList())) {
             //校验多账户的结算金额
             String accountMoneyList = depotHead.getAccountMoneyList().replace("[", "").replace("]", "").replaceAll("\"", "");
-            int sum = StringUtil.getArrSum(accountMoneyList.split(","));
-            BigDecimal manyAccountSum = BigDecimal.valueOf(sum).abs();
+            BigDecimal sum = StringUtil.getArrSum(accountMoneyList.split(","));
+            BigDecimal manyAccountSum = sum.abs();
             if(manyAccountSum.compareTo(depotHead.getChangeAmount().abs())!=0) {
                 throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_MANY_ACCOUNT_FAILED_CODE,
                         String.format(ExceptionConstants.DEPOT_HEAD_MANY_ACCOUNT_FAILED_MSG));

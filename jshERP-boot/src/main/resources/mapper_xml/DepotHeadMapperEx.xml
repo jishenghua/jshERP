@@ -113,6 +113,14 @@
             </foreach>
             )
         </if>
+        <if test="accountId != null">
+            <bind name="bindAccountId" value="'%'+accountId+'%'"/>
+            and (dh.account_id=#{accountId} or dh.account_id_list like #{bindAccountId})
+        </if>
+        <if test="remark != null and remark !=''">
+            <bind name="bindRemark" value="'%'+remark+'%'"/>
+            and dh.remark like #{bindRemark}
+        </if>
         and ifnull(dh.delete_flag,'0') !='1'
         order by dh.id desc
         <if test="offset != null and rows != null">
@@ -180,6 +188,14 @@
                 #{creator}
             </foreach>
             )
+        </if>
+        <if test="accountId != null">
+            <bind name="bindAccountId" value="'%'+accountId+'%'"/>
+            and (dh.account_id=#{accountId} or dh.account_id_list like #{bindAccountId})
+        </if>
+        <if test="remark != null and remark !=''">
+            <bind name="bindRemark" value="'%'+remark+'%'"/>
+            and dh.remark like #{bindRemark}
         </if>
         and ifnull(dh.delete_Flag,'0') !='1') tb
     </select>
