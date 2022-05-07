@@ -72,6 +72,19 @@
                     <a-input placeholder="请输入关联单据" v-model="queryParam.linkNumber"></a-input>
                   </a-form-item>
                 </a-col>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="单据状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select placeholder="选择单据状态" v-model="queryParam.status">
+                      <a-select-option value="0">未审核</a-select-option>
+                      <a-select-option value="1">已审核</a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="单据备注" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-input placeholder="请输入单据备注" v-model="queryParam.remark"></a-input>
+                  </a-form-item>
+                </a-col>
               </template>
             </a-row>
           </a-form>
@@ -160,7 +173,9 @@
           organId: "",
           depotId: "",
           creator: "",
-          linkNumber: ""
+          linkNumber: "",
+          status: "",
+          remark: ""
         },
         labelCol: {
           span: 5
