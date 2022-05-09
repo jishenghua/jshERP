@@ -92,7 +92,7 @@ public class MaterialAttributeService {
     public Long countMaterialAttribute(String attributeField)throws Exception {
         Long result =null;
         try{
-            result= materialAttributeMapperEx.countsByMaterialAttribute(attributeField);
+            result= 5L;
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
