@@ -1,4 +1,5 @@
 import {findBySelectSup, findBySelectCus, findBySelectOrgan, findBySelectRetail, getUserList, getPersonByType, getAccount} from '@/api/api'
+import Vue from 'vue'
 
 export const FinancialListMixin = {
   data () {
@@ -59,7 +60,8 @@ export const FinancialListMixin = {
     },
     searchReset() {
       this.queryParam = {
-        type: this.queryParam.type
+        type: this.queryParam.type,
+        roleType: Vue.ls.get('roleType')
       }
       this.loadData(1);
     },
