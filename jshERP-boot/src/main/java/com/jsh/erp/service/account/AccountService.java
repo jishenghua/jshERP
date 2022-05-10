@@ -526,10 +526,10 @@ public class AccountService {
     public String getAccountStrByIdAndMoney(Map<Long,String> accountMap, String accountIdList, String accountMoneyList){
         StringBuffer sb = new StringBuffer();
         List<Long> idList = StringUtil.strToLongList(accountIdList);
-        List<Long> moneyList = StringUtil.strToLongList(accountMoneyList);
+        List<BigDecimal> moneyList = StringUtil.strToBigDecimalList(accountMoneyList);
         for (int i = 0; i < idList.size(); i++) {
             Long id = idList.get(i);
-            BigDecimal money =  BigDecimal.valueOf(moneyList.get(i)).abs();
+            BigDecimal money =  moneyList.get(i).abs();
             sb.append(accountMap.get(id) + "(" + money + "元) ");
         }
         return sb.toString();

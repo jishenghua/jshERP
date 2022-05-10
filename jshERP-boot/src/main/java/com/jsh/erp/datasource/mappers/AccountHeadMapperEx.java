@@ -20,6 +20,9 @@ public interface AccountHeadMapperEx {
             @Param("organId") Long organId,
             @Param("creator") Long creator,
             @Param("handsPersonId") Long handsPersonId,
+            @Param("accountId") Long accountId,
+            @Param("status") String status,
+            @Param("remark") String remark,
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
@@ -31,7 +34,10 @@ public interface AccountHeadMapperEx {
             @Param("endTime") String endTime,
             @Param("organId") Long organId,
             @Param("creator") Long creator,
-            @Param("handsPersonId") Long handsPersonId);
+            @Param("handsPersonId") Long handsPersonId,
+            @Param("accountId") Long accountId,
+            @Param("status") String status,
+            @Param("remark") String remark);
 
     BigDecimal findAllMoney(
             @Param("supplierId") Integer supplierId,

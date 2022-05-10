@@ -46,6 +46,16 @@
             </foreach>
             )
         </if>
+        <if test="accountId != null">
+            and ah.account_id=#{accountId}
+        </if>
+        <if test="status != null and status != ''">
+            and ah.status=#{status}
+        </if>
+        <if test="remark != null and remark !=''">
+            <bind name="bindRemark" value="'%'+remark+'%'"/>
+            and ah.remark like #{bindRemark}
+        </if>
         and ifnull(ah.delete_flag,'0') !='1'
         order by ah.id desc
         <if test="offset != null and rows != null">
@@ -87,6 +97,16 @@
                 #{creator}
             </foreach>
             )
+        </if>
+        <if test="accountId != null">
+            and account_id=#{accountId}
+        </if>
+        <if test="status != null and status != ''">
+            and status=#{status}
+        </if>
+        <if test="remark != null and remark !=''">
+            <bind name="bindRemark" value="'%'+remark+'%'"/>
+            and remark like #{bindRemark}
         </if>
         and ifnull(delete_flag,'0') !='1'
     </select>

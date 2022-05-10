@@ -362,6 +362,12 @@
         if(this.btnEnableList.indexOf(1)===-1) {
           this.$refs.modalForm.isReadOnly = true
         }
+      },
+      searchReset() {
+        this.queryParam = {
+          mpList: getMpListShort(Vue.ls.get('materialPropertyList'))  //扩展属性
+        }
+        this.loadData(1);
       }
     }
   }

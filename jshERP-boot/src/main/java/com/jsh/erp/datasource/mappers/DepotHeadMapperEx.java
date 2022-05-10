@@ -32,6 +32,8 @@ public interface DepotHeadMapperEx {
             @Param("creator") Long creator,
             @Param("depotId") Long depotId,
             @Param("depotArray") String[] depotArray,
+            @Param("accountId") Long accountId,
+            @Param("remark") String remark,
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
@@ -48,7 +50,9 @@ public interface DepotHeadMapperEx {
             @Param("organId") Long organId,
             @Param("creator") Long creator,
             @Param("depotId") Long depotId,
-            @Param("depotArray") String[] depotArray);
+            @Param("depotArray") String[] depotArray,
+            @Param("accountId") Long accountId,
+            @Param("remark") String remark);
 
     String findMaterialsListByHeaderId(
             @Param("id") Long id);

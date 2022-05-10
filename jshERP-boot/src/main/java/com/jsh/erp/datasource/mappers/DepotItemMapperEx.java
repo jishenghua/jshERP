@@ -140,8 +140,14 @@ public interface DepotItemMapperEx {
             @Param("depotList") List<Long> depotList);
 
     BigDecimal getFinishNumber(
-            @Param("mId") Long mId,
+            @Param("meId") Long meId,
             @Param("linkNumber") String linkNumber,
+            @Param("goToType") String goToType);
+
+    BigDecimal getRealFinishNumber(
+            @Param("meId") Long meId,
+            @Param("linkNumber") String linkNumber,
+            @Param("currentHeaderId") Long currentHeaderId,
             @Param("goToType") String goToType);
 
     List<DepotItemVoBatchNumberList> getBatchNumberList(

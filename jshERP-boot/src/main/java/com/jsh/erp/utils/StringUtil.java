@@ -4,6 +4,7 @@ import org.springframework.util.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -177,10 +178,10 @@ public class StringUtil {
         return new ArrayList<String>();
     }
 
-    public static int getArrSum(String[] strings) {
-        int sum = 0;
+    public static BigDecimal getArrSum(String[] strings) {
+        BigDecimal sum = BigDecimal.ZERO;
         for(int i=0;i<strings.length;i++){
-            sum=sum+ Integer.parseInt(strings[i]);
+            sum = sum.add(new BigDecimal(strings[i]));
         }
         return sum;
     }
@@ -198,6 +199,24 @@ public class StringUtil {
         for (int i = 0, size = d.length; i < size; i++) {
             if(d[i]!=null) {
                 idList.add(Long.parseLong(d[i]));
+            }
+        }
+        return idList;
+    }
+
+    /**
+     * String字符串转成List<BigDecimal>数据格式
+     * String str = "1,2,3,4,5,6" -> List<BigDecimal> listBigDecimal [1,2,3,4,5,6];
+     *
+     * @param strArr
+     * @return
+     */
+    public static List<BigDecimal> strToBigDecimalList(String strArr) {
+        List<BigDecimal> idList=new ArrayList<>();
+        String[] d=strArr.split(",");
+        for (int i = 0, size = d.length; i < size; i++) {
+            if(d[i]!=null) {
+                idList.add(new BigDecimal(d[i]));
             }
         }
         return idList;

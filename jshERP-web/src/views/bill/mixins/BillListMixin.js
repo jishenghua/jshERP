@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import {getAction } from '@/api/manage'
-import {findBySelectSup, findBySelectCus, findBySelectRetail, getUserList } from '@/api/api'
+import {findBySelectSup, findBySelectCus, findBySelectRetail, getUserList, getAccount} from '@/api/api'
 
 export const BillListMixin = {
   data () {
@@ -8,7 +8,8 @@ export const BillListMixin = {
       supList: [],
       cusList: [],
       retailList: [],
-      userList: []
+      userList: [],
+      accountList: []
     }
   },
   computed: {
@@ -65,7 +66,8 @@ export const BillListMixin = {
     searchReset() {
       this.queryParam = {
         type: this.queryParam.type,
-        subType: this.queryParam.subType
+        subType: this.queryParam.subType,
+        roleType: Vue.ls.get('roleType')
       }
       this.loadData(1);
     },
@@ -128,6 +130,14 @@ export const BillListMixin = {
           this.userList = res;
         }
       });
+    },
+    initAccount() {
+      getAccount({}).then((res)=>{
+        if(res && res.code === 200) {
+          let list = res.data.accountList
+          this.accountList = list
+        }
+      })
     }
   }
 }
