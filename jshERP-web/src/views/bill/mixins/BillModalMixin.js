@@ -44,6 +44,8 @@ export const BillModalMixin = {
   created () {
     let userInfo = Vue.ls.get(USER_INFO)
     this.isTenant = userInfo.id === userInfo.tenantId? true:false
+    let realScreenWidth = window.screen.width * window.devicePixelRatio
+    this.width = realScreenWidth<1600?'1300px':'1600px'
   },
   computed: {
     readOnly: function() {
