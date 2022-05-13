@@ -299,6 +299,7 @@ public class DepotHeadService {
                         }
                     }
                 }
+                List<DepotItem> list = depotItemService.getListByHeaderId(depotHead.getId());
                 //删除单据子表数据
                 depotItemMapperEx.batchDeleteDepotItemByDepotHeadIds(new Long[]{depotHead.getId()});
                 //删除单据主表信息
@@ -325,7 +326,6 @@ public class DepotHeadService {
                     }
                 }
                 //更新当前库存
-                List<DepotItem> list = depotItemService.getListByHeaderId(depotHead.getId());
                 for (DepotItem depotItem : list) {
                     depotItemService.updateCurrentStock(depotItem);
                 }
