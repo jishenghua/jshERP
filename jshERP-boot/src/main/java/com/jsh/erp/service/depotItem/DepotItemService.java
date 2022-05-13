@@ -845,4 +845,8 @@ public class DepotItemService {
     public List<DepotItemVoBatchNumberList> getBatchNumberList(String name, Long depotId, String barCode, String batchNumber){
         return depotItemMapperEx.getBatchNumberList(name, depotId, barCode, batchNumber);
     }
+
+    public Long getCountByMaterialAndDepot(Long mId, Long depotId) {
+        return depotItemMapperEx.getCountByMaterialAndDepot(mId, depotId);
+    }
 }

@@ -585,9 +585,6 @@ public class MaterialService {
                     mList.add(m);
                 }
             }
-            logService.insertLog("商品",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_IMPORT).append(mList.size()).append(BusinessConstants.LOG_DATA_UNIT).toString(),
-                    ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
             Long mId = 0L;
             for(MaterialWithInitStock m: mList) {
                 //判断该商品是否存在，如果不存在就新增，如果存在就更新
@@ -596,7 +593,7 @@ public class MaterialService {
                 if(materials.size()<=0) {
                     materialMapper.insertSelective(m);
                     List<Material> newList = getMaterialListByParam(m.getName(),m.getModel(),m.getColor(),m.getStandard(),m.getUnit(),m.getUnitId(), basicBarCode);
-                    if(newList!=null && newList.size()>0) {
+                    if(newList.size()>0) {
                         mId = newList.get(0).getId();
                     }
                 } else {
@@ -637,19 +634,23 @@ public class MaterialService {
                 Map<Long, BigDecimal> stockMap = m.getStockMap();
                 Long depotId = null;
                 for(Depot depot: depotList){
+                    depotId = depot.getId();
                     BigDecimal stock = stockMap.get(depot.getId());
                     //初始库存-先清除再插入
                     MaterialInitialStockExample example = new MaterialInitialStockExample();
                     example.createCriteria().andMaterialIdEqualTo(mId).andDepotIdEqualTo(depot.getId());
                     materialInitialStockMapper.deleteByExample(example);
                     if(stock!=null && stock.compareTo(BigDecimal.ZERO)!=0) {
-                        depotId = depot.getId();
+                        //新增初始库存
                         insertInitialStockByMaterialAndDepot(depotId, mId, stock, null, null);
-                        //更新当前库存
-                        depotItemService.updateCurrentStockFun(mId, depotId);
                     }
+                    //新增或更新当前库存
+                    insertOrUpdateCurrentStockByMaterialAndDepot(depotId, mId, stock);
                 }
             }
+            logService.insertLog("商品",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_IMPORT).append(mList.size()).append(BusinessConstants.LOG_DATA_UNIT).toString(),
+                    ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
             info.code = 200;
             info.data = "导入成功";
         } catch (BusinessRunTimeException e) {
@@ -762,6 +763,19 @@ public class MaterialService {
     }
 
     /**
+     * 删除当前库存
+     * @param depotId
+     * @param mId
+     */
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public void deleteCurrentStockByMaterialAndDepot(Long depotId, Long mId){
+        MaterialCurrentStockExample example = new MaterialCurrentStockExample();
+        example.createCriteria().andDepotIdEqualTo(depotId).andMaterialIdEqualTo(mId)
+                .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        materialCurrentStockMapper.deleteByExample(example);
+    }
+
+    /**
      * 写入当前库存
      * @param depotId
      * @param mId
@@ -774,6 +788,25 @@ public class MaterialService {
         materialCurrentStock.setMaterialId(mId);
         materialCurrentStock.setCurrentNumber(stock);
         materialCurrentStockMapper.insertSelective(materialCurrentStock); //存入初始库存
+    }
+
+    /**
+     * 新增或更新当前库存
+     * @param depotId
+     * @param mId
+     * @param stock
+     */
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public void insertOrUpdateCurrentStockByMaterialAndDepot(Long depotId, Long mId, BigDecimal stock){
+        Long billCount = depotItemService.getCountByMaterialAndDepot(mId, depotId);
+        if(billCount == 0) {
+            deleteCurrentStockByMaterialAndDepot(depotId, mId);
+            if(stock!=null && stock.compareTo(BigDecimal.ZERO)!=0) {
+                insertCurrentStockByMaterialAndDepot(depotId, mId, stock);
+            }
+        } else {
+            depotItemService.updateCurrentStockFun(mId, depotId);
+        }
     }
 
     public List<MaterialVo4Unit> getMaterialEnableSerialNumberList(String q, Integer offset, Integer rows)throws Exception {

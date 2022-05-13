@@ -154,6 +154,9 @@ public interface DepotItemMapperEx {
             @Param("name") String name,
             @Param("depotId") Long depotId,
             @Param("barCode") String barCode,
-            @Param("batchNumber") String batchNumber
-            );
+            @Param("batchNumber") String batchNumber);
+
+    Long getCountByMaterialAndDepot(
+            @Param("mId") Long mId,
+            @Param("depotId") Long depotId);
 }

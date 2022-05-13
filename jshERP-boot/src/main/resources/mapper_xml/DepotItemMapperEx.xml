@@ -608,4 +608,10 @@
         group by batch_number
         order by expiration_date asc
     </select>
+
+    <select id="getCountByMaterialAndDepot" resultType="java.lang.Long">
+        select count(1) from jsh_depot_item di
+        where di.material_id=#{mId} and di.depot_id=#{depotId}
+        and ifnull(di.delete_flag,'0') !='1'
+    </select>
 </mapper>
