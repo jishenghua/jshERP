@@ -215,6 +215,9 @@
           remark:'',
           mpList: getMpListShort(Vue.ls.get('materialPropertyList'))  //扩展属性
         },
+        ipagination:{
+          pageSizeOptions: ['10', '20', '30', '100', '200']
+        },
         // 实际表头
         columns:[],
         // 初始化设置的表头
@@ -227,9 +230,9 @@
           {title: '规格', dataIndex: 'standard'},
           {title: '型号', dataIndex: 'model'},
           {title: '颜色', dataIndex: 'color'},
-          {title: '类别', dataIndex: 'categoryName'},
-          {title: '扩展信息', dataIndex: 'materialOther'},
-          {title: '单位', dataIndex: 'unit',
+          {title: '类别', dataIndex: 'categoryName', width: 100, ellipsis:true},
+          {title: '扩展信息', dataIndex: 'materialOther', width: 100, ellipsis:true},
+          {title: '单位', dataIndex: 'unit', width: 80, ellipsis:true,
             customRender:function (t,r,index) {
               if (r) {
                 let name = t?t:r.unitName
@@ -241,28 +244,28 @@
               }
             }
           },
-          {title: '基础重量', dataIndex: 'weight'},
-          {title: '保质期', dataIndex: 'expiryNum'},
-          {title: '库存', dataIndex: 'stock'},
-          {title: '采购价', dataIndex: 'purchaseDecimal'},
-          {title: '零售价', dataIndex: 'commodityDecimal'},
-          {title: '销售价', dataIndex: 'wholesaleDecimal'},
-          {title: '最低售价', dataIndex: 'lowDecimal'},
+          {title: '基础重量', dataIndex: 'weight', width: 80},
+          {title: '保质期', dataIndex: 'expiryNum', width: 60},
+          {title: '库存', dataIndex: 'stock', width: 80},
+          {title: '采购价', dataIndex: 'purchaseDecimal', width: 80},
+          {title: '零售价', dataIndex: 'commodityDecimal', width: 80},
+          {title: '销售价', dataIndex: 'wholesaleDecimal', width: 80},
+          {title: '最低售价', dataIndex: 'lowDecimal', width: 80},
           {title: '备注', dataIndex: 'remark'},
-          {title: '状态', dataIndex: 'enabled', align: "center", width: 100,
+          {title: '状态', dataIndex: 'enabled', align: "center", width: 60,
             scopedSlots: { customRender: 'customRenderEnabled' }
           },
-          {title: '序列号', dataIndex: 'enableSerialNumber', align: "center", width: 100,
+          {title: '序列号', dataIndex: 'enableSerialNumber', align: "center", width: 60,
             scopedSlots: { customRender: 'customRenderEnableSerialNumber' }
           },
-          {title: '批号', dataIndex: 'enableBatchNumber', align: "center", width: 100,
+          {title: '批号', dataIndex: 'enableBatchNumber', align: "center", width: 60,
             scopedSlots: { customRender: 'customRenderEnableBatchNumber' }
           },
           {
             title: '操作',
             dataIndex: 'action',
             align:"center",
-            width: 150,
+            width: 100,
             scopedSlots: { customRender: 'action' },
           }
         ],
