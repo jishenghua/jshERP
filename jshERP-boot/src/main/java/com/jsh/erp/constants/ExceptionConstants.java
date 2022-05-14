@@ -305,6 +305,27 @@ public class ExceptionConstants {
     //抱歉，文件扩展名必须为xls
     public static final int MATERIAL_EXTENSION_ERROR_CODE = 8000009;
     public static final String MATERIAL_EXTENSION_ERROR_MSG = "抱歉，文件扩展名必须为xls";
+    //名称为空
+    public static final int MATERIAL_NAME_EMPTY_CODE = 8000010;
+    public static final String MATERIAL_NAME_EMPTY_MSG = "第%s行名称为空";
+    //基本单位为空
+    public static final int MATERIAL_UNIT_EMPTY_CODE = 8000011;
+    public static final String MATERIAL_UNIT_EMPTY_MSG = "第%s行基本单位为空";
+    //状态格式错误
+    public static final int MATERIAL_ENABLED_ERROR_CODE = 8000012;
+    public static final String MATERIAL_ENABLED_ERROR_MSG = "第%s行状态格式错误";
+    //单次导入超出1000条
+    public static final int MATERIAL_IMPORT_OVER_LIMIT_CODE = 8000013;
+    public static final String MATERIAL_IMPORT_OVER_LIMIT_MSG = "抱歉，单次导入不能超出1000条";
+    //基础重量格式错误
+    public static final int MATERIAL_WEIGHT_NOT_DECIMAL_CODE = 8000014;
+    public static final String MATERIAL_WEIGHT_NOT_DECIMAL_MSG = "第%s行基础重量格式错误";
+    //保质期格式错误
+    public static final int MATERIAL_EXPIRY_NUM_NOT_INTEGER_CODE = 8000015;
+    public static final String MATERIAL_EXPIRY_NUM_NOT_INTEGER_MSG = "第%s行保质期格式错误";
+    //比例格式错误
+    public static final int MATERIAL_RATIO_NOT_INTEGER_CODE = 8000016;
+    public static final String MATERIAL_RATIO_NOT_INTEGER_MSG = "第%s行比例格式错误";
     /**
      *  单据信息
      * type = 85

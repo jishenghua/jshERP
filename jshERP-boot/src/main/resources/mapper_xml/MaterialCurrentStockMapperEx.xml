@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsh.erp.datasource.mappers.MaterialCurrentStockMapperEx">
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into jsh_material_current_stock (material_id, depot_id, current_number)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.materialId,jdbcType=BIGINT}, #{item.depotId,jdbcType=BIGINT},#{item.currentNumber,jdbcType=DECIMAL})
+        </foreach >
+    </insert>
+
+    <select id="getCurrentStockMapByIdList" resultType="com.jsh.erp.datasource.entities.MaterialCurrentStock">
+        select material_id, sum(current_number) current_number from jsh_material_current_stock
+        where 1=1
+        and ifnull(delete_flag,'0') !='1'
+        and material_id in
+        <foreach collection="materialIdList" item="materialId" index="index" separator="," open="(" close=")">
+            #{materialId}
+        </foreach>
+        group by material_id
+    </select>
+
+</mapper>

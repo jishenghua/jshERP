@@ -39,21 +39,9 @@
         left JOIN jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
         where 1=1
         and me.default_flag=1
-        <if test="barCode != null and barCode !=''">
-            <bind name="bindBarCode" value="'%'+barCode+'%'"/>
-            and me.bar_code like #{bindBarCode}
-        </if>
-        <if test="name != null and name !=''">
-            <bind name="bindName" value="'%'+name+'%'"/>
-            and m.name like #{bindName}
-        </if>
-        <if test="standard != null and standard !=''">
-            <bind name="bindStandard" value="'%'+standard+'%'"/>
-            and m.standard like #{bindStandard}
-        </if>
-        <if test="model != null and model !=''">
-            <bind name="bindModel" value="'%'+model+'%'"/>
-            and m.model like #{bindModel}
+        <if test="materialParam != null and materialParam !=''">
+            <bind name="bindKey" value="'%'+materialParam+'%'"/>
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
         </if>
         <if test="color != null and color !=''">
             <bind name="bindColor" value="'%'+color+'%'"/>
@@ -70,6 +58,9 @@
         </if>
         <if test="enableBatchNumber != null and enableBatchNumber !=''">
             and m.enable_batch_number = #{enableBatchNumber}
+        </if>
+        <if test="enabled != null">
+            and m.enabled = #{enabled}
         </if>
         <if test="remark != null and remark !=''">
             <bind name="bindRemark" value="'%'+remark+'%'"/>
@@ -97,21 +88,9 @@
         left JOIN jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
         WHERE 1=1
         and me.default_flag=1
-        <if test="barCode != null and barCode !=''">
-            <bind name="bindBarCode" value="'%'+barCode+'%'"/>
-            and me.bar_code like #{bindBarCode}
-        </if>
-        <if test="name != null and name !=''">
-            <bind name="bindName" value="'%'+name+'%'"/>
-            and m.name like #{bindName}
-        </if>
-        <if test="standard != null and standard !=''">
-            <bind name="bindStandard" value="'%'+standard+'%'"/>
-            and m.standard like #{bindStandard}
-        </if>
-        <if test="model != null and model !=''">
-            <bind name="bindModel" value="'%'+model+'%'"/>
-            and m.model like #{bindModel}
+        <if test="materialParam != null and materialParam !=''">
+            <bind name="bindKey" value="'%'+materialParam+'%'"/>
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
         </if>
         <if test="color != null and color !=''">
             <bind name="bindColor" value="'%'+color+'%'"/>
@@ -129,6 +108,9 @@
         <if test="enableBatchNumber != null and enableBatchNumber !=''">
             and m.enable_batch_number = #{enableBatchNumber}
         </if>
+        <if test="enabled != null and enabled !=''">
+            and m.enabled = #{enabled}
+        </if>
         <if test="remark != null and remark !=''">
             <bind name="bindRemark" value="'%'+remark+'%'"/>
             and m.remark like #{bindRemark}
@@ -141,6 +123,140 @@
         </if>
         and ifnull(m.delete_flag,'0') !='1'
     </select>
+
+    <insert id="insertSelectiveEx" parameterType="com.jsh.erp.datasource.entities.Material" useGeneratedKeys="true" keyProperty="id">
+        insert into jsh_material
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="categoryId != null">
+                category_id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="mfrs != null">
+                mfrs,
+            </if>
+            <if test="model != null">
+                model,
+            </if>
+            <if test="standard != null">
+                standard,
+            </if>
+            <if test="color != null">
+                color,
+            </if>
+            <if test="unit != null">
+                unit,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="imgName != null">
+                img_name,
+            </if>
+            <if test="unitId != null">
+                unit_id,
+            </if>
+            <if test="expiryNum != null">
+                expiry_num,
+            </if>
+            <if test="weight != null">
+                weight,
+            </if>
+            <if test="enabled != null">
+                enabled,
+            </if>
+            <if test="otherField1 != null">
+                other_field1,
+            </if>
+            <if test="otherField2 != null">
+                other_field2,
+            </if>
+            <if test="otherField3 != null">
+                other_field3,
+            </if>
+            <if test="enableSerialNumber != null">
+                enable_serial_number,
+            </if>
+            <if test="enableBatchNumber != null">
+                enable_batch_number,
+            </if>
+            <if test="tenantId != null">
+                tenant_id,
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="categoryId != null">
+                #{categoryId,jdbcType=BIGINT},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="mfrs != null">
+                #{mfrs,jdbcType=VARCHAR},
+            </if>
+            <if test="model != null">
+                #{model,jdbcType=VARCHAR},
+            </if>
+            <if test="standard != null">
+                #{standard,jdbcType=VARCHAR},
+            </if>
+            <if test="color != null">
+                #{color,jdbcType=VARCHAR},
+            </if>
+            <if test="unit != null">
+                #{unit,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="imgName != null">
+                #{imgName,jdbcType=VARCHAR},
+            </if>
+            <if test="unitId != null">
+                #{unitId,jdbcType=BIGINT},
+            </if>
+            <if test="expiryNum != null">
+                #{expiryNum,jdbcType=INTEGER},
+            </if>
+            <if test="weight != null">
+                #{weight,jdbcType=DECIMAL},
+            </if>
+            <if test="enabled != null">
+                #{enabled,jdbcType=BIT},
+            </if>
+            <if test="otherField1 != null">
+                #{otherField1,jdbcType=VARCHAR},
+            </if>
+            <if test="otherField2 != null">
+                #{otherField2,jdbcType=VARCHAR},
+            </if>
+            <if test="otherField3 != null">
+                #{otherField3,jdbcType=VARCHAR},
+            </if>
+            <if test="enableSerialNumber != null">
+                #{enableSerialNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="enableBatchNumber != null">
+                #{enableBatchNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="tenantId != null">
+                #{tenantId,jdbcType=BIGINT},
+            </if>
+            <if test="deleteFlag != null">
+                #{deleteFlag,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
 
     <select id="findUnitList" resultType="com.jsh.erp.datasource.entities.Unit">
         select u.* from jsh_unit u

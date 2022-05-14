@@ -19,15 +19,13 @@ import java.util.Map;
 public interface MaterialMapperEx {
 
     List<MaterialVo4Unit> selectByConditionMaterial(
-            @Param("barCode") String barCode,
-            @Param("name") String name,
-            @Param("standard") String standard,
-            @Param("model") String model,
+            @Param("materialParam") String materialParam,
             @Param("color") String color,
             @Param("weight") String weight,
             @Param("expiryNum") String expiryNum,
             @Param("enableSerialNumber") String enableSerialNumber,
             @Param("enableBatchNumber") String enableBatchNumber,
+            @Param("enabled") String enabled,
             @Param("remark") String remark,
             @Param("idList") List<Long> idList,
             @Param("mpList") String mpList,
@@ -35,18 +33,18 @@ public interface MaterialMapperEx {
             @Param("rows") Integer rows);
 
     Long countsByMaterial(
-            @Param("barCode") String barCode,
-            @Param("name") String name,
-            @Param("standard") String standard,
-            @Param("model") String model,
+            @Param("materialParam") String materialParam,
             @Param("color") String color,
             @Param("weight") String weight,
             @Param("expiryNum") String expiryNum,
             @Param("enableSerialNumber") String enableSerialNumber,
             @Param("enableBatchNumber") String enableBatchNumber,
+            @Param("enabled") String enabled,
             @Param("remark") String remark,
             @Param("idList") List<Long> idList,
             @Param("mpList") String mpList);
+
+    Long insertSelectiveEx(Material record);
 
     List<Unit> findUnitList(@Param("mId") Long mId);
 
