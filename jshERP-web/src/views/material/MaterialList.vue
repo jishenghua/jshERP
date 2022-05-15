@@ -97,7 +97,8 @@
               <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
               <a-menu-item key="2" v-if="btnEnableList.indexOf(1)>-1" @click="batchSetStatus(true)"><a-icon type="check-square"/>启用</a-menu-item>
               <a-menu-item key="3" v-if="btnEnableList.indexOf(1)>-1" @click="batchSetStatus(false)"><a-icon type="close-square"/>禁用</a-menu-item>
-              <a-menu-item key="4" v-if="btnEnableList.indexOf(1)>-1" @click="batchSetMaterialCurrentStock()"><a-icon type="stock"/>修正库存</a-menu-item>
+              <a-menu-item key="4" v-if="btnEnableList.indexOf(1)>-1" @click="batchEdit()"><a-icon type="edit"/>批量编辑</a-menu-item>
+              <a-menu-item key="5" v-if="btnEnableList.indexOf(1)>-1" @click="batchSetMaterialCurrentStock()"><a-icon type="stock"/>修正库存</a-menu-item>
             </a-menu>
             <a-button>
               批量操作 <a-icon type="down" />
@@ -160,12 +161,14 @@
         <!-- table区域-end -->
         <!-- 表单区域 -->
         <material-modal ref="modalForm" @ok="modalFormOk"></material-modal>
+        <batch-set-info-modal ref="batchSetInfoModalForm" @ok="modalFormOk"></batch-set-info-modal>
       </a-card>
     </a-col>
   </a-row>
 </template>
 <script>
   import MaterialModal from './modules/MaterialModal'
+  import BatchSetInfoModal from './modules/BatchSetInfoModal'
   import { queryMaterialCategoryTreeList } from '@/api/api'
   import { postAction } from '@/api/manage'
   import { getMpListShort } from '@/utils/util'
@@ -179,6 +182,7 @@
     mixins:[JeecgListMixin],
     components: {
       MaterialModal,
+      BatchSetInfoModal,
       JEllipsis,
       JDate
     },
@@ -321,7 +325,7 @@
           }
         })
       },
-      batchSetMaterialCurrentStock: function () {
+      batchSetMaterialCurrentStock () {
         if (this.selectedRowKeys.length <= 0) {
           this.$message.warning('请选择一条记录！');
         } else {
@@ -348,6 +352,18 @@
               });
             }
           });
+        }
+      },
+      batchEdit() {
+        if (this.selectedRowKeys.length <= 0) {
+          this.$message.warning('请选择一条记录！');
+        } else {
+          let ids = "";
+          for (let a = 0; a < this.selectedRowKeys.length; a++) {
+            ids += this.selectedRowKeys[a] + ",";
+          }
+          this.$refs.batchSetInfoModalForm.edit(ids);
+          this.$refs.batchSetInfoModalForm.title = "批量编辑";
         }
       },
       handleEdit: function (record) {
