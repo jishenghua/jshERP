@@ -624,4 +624,24 @@ public class MaterialController {
             return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
         }
     }
+
+    /**
+     * 批量更新商品信息
+     * @param jsonObject
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @PostMapping(value = "/batchUpdate")
+    @ApiOperation(value = "批量更新商品信息")
+    public String batchUpdate(@RequestBody JSONObject jsonObject,
+                              HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        int res = materialService.batchUpdate(jsonObject);
+        if(res > 0) {
+            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+        } else {
+            return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
+        }
+    }
 }

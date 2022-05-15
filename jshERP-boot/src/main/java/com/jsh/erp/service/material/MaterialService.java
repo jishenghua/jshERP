@@ -1080,4 +1080,14 @@ public class MaterialService {
         }
         return res;
     }
+
+    public int batchUpdate(JSONObject jsonObject) {
+        String ids = jsonObject.getString("ids");
+        String materialStr = jsonObject.getString("material");
+        List<Long> idList = StringUtil.strToLongList(ids);
+        Material material = JSONObject.parseObject(materialStr, Material.class);
+        MaterialExample example = new MaterialExample();
+        example.createCriteria().andIdIn(idList).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        return materialMapper.updateByExampleSelective(material, example);
+    }
 }
