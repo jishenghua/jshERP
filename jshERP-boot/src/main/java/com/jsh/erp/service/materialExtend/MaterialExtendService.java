@@ -347,7 +347,7 @@ public class MaterialExtendService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public Long selectIdByMaterialIdAndDefaultFlag(Long materialId, String defaultFlag)throws Exception {
+    public Long selectIdByMaterialIdAndDefaultFlag(Long materialId, String defaultFlag) {
         Long id = 0L;
         MaterialExtendExample example = new MaterialExtendExample();
         example.createCriteria().andMaterialIdEqualTo(materialId).andDefaultFlagEqualTo(defaultFlag)

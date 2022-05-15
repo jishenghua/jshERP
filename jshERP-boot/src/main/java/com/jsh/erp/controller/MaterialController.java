@@ -325,7 +325,7 @@ public class MaterialController {
                     StringUtil.toNull(standard), StringUtil.toNull(model), StringUtil.toNull(color), StringUtil.toNull(weight),
                     StringUtil.toNull(expiryNum), StringUtil.toNull(enableSerialNumber), StringUtil.toNull(enableBatchNumber),
                     StringUtil.toNull(remark), StringUtil.toNull(categoryId));
-            String[] names = {"条码", "名称", "规格", "型号", "颜色", "类别", "扩展信息", "单位", "基础重量", "保质期", "采购价", "销售价", "零售价", "最低售价", "备注", "状态", "序列号", "批号"};
+            String[] names = {"条码", "名称", "规格", "型号", "颜色", "类别", "扩展信息", "单位", "基础重量", "保质期", "采购价", "零售价", "销售价", "最低售价", "备注", "状态", "序列号", "批号"};
             String title = "商品信息";
             List<String[]> objects = new ArrayList<>();
             if (null != dataList) {
@@ -342,8 +342,8 @@ public class MaterialController {
                     objs[8] = m.getWeight() == null? "" : m.getWeight().toString();
                     objs[9] = m.getExpiryNum() == null? "" : m.getExpiryNum().toString();
                     objs[10] = m.getPurchaseDecimal() == null? "" : m.getPurchaseDecimal().toString();
-                    objs[11] = m.getWholesaleDecimal() == null? "" : m.getWholesaleDecimal().toString();
-                    objs[12] = m.getCommodityDecimal() == null? "" : m.getCommodityDecimal().toString();
+                    objs[11] = m.getCommodityDecimal() == null? "" : m.getCommodityDecimal().toString();
+                    objs[12] = m.getWholesaleDecimal() == null? "" : m.getWholesaleDecimal().toString();
                     objs[13] = m.getLowDecimal() == null? "" : m.getLowDecimal().toString();
                     objs[14] = m.getRemark();
                     objs[15] = m.getEnabled() ? "启用" : "禁用";

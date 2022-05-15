@@ -34,38 +34,34 @@ public class MaterialComponent implements ICommonQuery {
     private List<?> getMaterialList(Map<String, String> map) throws Exception{
         String search = map.get(Constants.SEARCH);
         String categoryId = StringUtil.getInfo(search, "categoryId");
-        String barCode = StringUtil.getInfo(search, "barCode");
-        String name = StringUtil.getInfo(search, "name");
-        String standard = StringUtil.getInfo(search, "standard");
-        String model = StringUtil.getInfo(search, "model");
+        String materialParam = StringUtil.getInfo(search, "materialParam");
         String color = StringUtil.getInfo(search, "color");
         String weight = StringUtil.getInfo(search, "weight");
         String expiryNum = StringUtil.getInfo(search, "expiryNum");
         String enableSerialNumber = StringUtil.getInfo(search, "enableSerialNumber");
         String enableBatchNumber = StringUtil.getInfo(search, "enableBatchNumber");
+        String enabled = StringUtil.getInfo(search, "enabled");
         String remark = StringUtil.getInfo(search, "remark");
         String mpList = StringUtil.getInfo(search, "mpList");
-        return materialService.select(barCode, name, standard, model, color, weight, expiryNum,
-                enableSerialNumber, enableBatchNumber, remark, categoryId, mpList, QueryUtils.offset(map), QueryUtils.rows(map));
+        return materialService.select(materialParam, color, weight, expiryNum,
+                enableSerialNumber, enableBatchNumber, enabled, remark, categoryId, mpList, QueryUtils.offset(map), QueryUtils.rows(map));
     }
 
     @Override
     public Long counts(Map<String, String> map)throws Exception {
         String search = map.get(Constants.SEARCH);
         String categoryId = StringUtil.getInfo(search, "categoryId");
-        String barCode = StringUtil.getInfo(search, "barCode");
-        String name = StringUtil.getInfo(search, "name");
-        String standard = StringUtil.getInfo(search, "standard");
-        String model = StringUtil.getInfo(search, "model");
+        String materialParam = StringUtil.getInfo(search, "materialParam");
         String color = StringUtil.getInfo(search, "color");
         String weight = StringUtil.getInfo(search, "weight");
         String expiryNum = StringUtil.getInfo(search, "expiryNum");
         String enableSerialNumber = StringUtil.getInfo(search, "enableSerialNumber");
         String enableBatchNumber = StringUtil.getInfo(search, "enableBatchNumber");
+        String enabled = StringUtil.getInfo(search, "enabled");
         String remark = StringUtil.getInfo(search, "remark");
         String mpList = StringUtil.getInfo(search, "mpList");
-        return materialService.countMaterial(barCode, name, standard, model, color, weight, expiryNum,
-                enableSerialNumber, enableBatchNumber, remark, categoryId, mpList);
+        return materialService.countMaterial(materialParam, color, weight, expiryNum,
+                enableSerialNumber, enableBatchNumber, enabled, remark, categoryId, mpList);
     }
 
     @Override

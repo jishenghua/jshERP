@@ -179,7 +179,7 @@ public class DepotController {
                 DepotEx de = new DepotEx();
                 if(mId!=0) {
                     BigDecimal initStock = materialService.getInitStock(mId, depot.getId());
-                    BigDecimal currentStock = materialService.getCurrentStock(mId, depot.getId());
+                    BigDecimal currentStock = materialService.getCurrentStockByMaterialIdAndDepotId(mId, depot.getId());
                     de.setInitStock(initStock);
                     de.setCurrentStock(currentStock);
                     MaterialInitialStock materialInitialStock = materialService.getSafeStock(mId, depot.getId());

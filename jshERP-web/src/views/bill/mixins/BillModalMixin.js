@@ -44,6 +44,8 @@ export const BillModalMixin = {
   created () {
     let userInfo = Vue.ls.get(USER_INFO)
     this.isTenant = userInfo.id === userInfo.tenantId? true:false
+    let realScreenWidth = window.screen.width * window.devicePixelRatio
+    this.width = realScreenWidth<1600?'1300px':'1600px'
   },
   computed: {
     readOnly: function() {
@@ -556,10 +558,8 @@ export const BillModalMixin = {
     //改变优惠率
     onKeyUpDiscount(e) {
       const value = e.target.value-0
-      let discountMoney = this.form.getFieldValue('discountMoney')-0
-      let discountLastMoney = this.form.getFieldValue('discountLastMoney')-0
       let otherMoney = this.form.getFieldValue('otherMoney')-0
-      let allTaxLastMoney = (discountMoney + discountLastMoney).toFixed(2)-0
+      let allTaxLastMoney = this.$refs.materialDataTable.statisticsColumns.taxLastMoney-0
       let discountMoneyNew = (allTaxLastMoney*value*0.01).toFixed(2)-0
       let discountLastMoneyNew = (allTaxLastMoney - discountMoneyNew).toFixed(2)-0
       let changeAmountNew = (discountLastMoneyNew + otherMoney).toFixed(2)-0
@@ -571,19 +571,15 @@ export const BillModalMixin = {
     //改变付款优惠
     onKeyUpDiscountMoney(e) {
       const value = e.target.value-0
-      let discount = this.form.getFieldValue('discount')-0
-      let discountLastMoney = this.form.getFieldValue('discountLastMoney')-0
       let otherMoney = this.form.getFieldValue('otherMoney')-0
-      if(discount !== 100) {
-        let allTaxLastMoney = (discountLastMoney/(1-discount/100)).toFixed(2)-0
-        let discountNew = (value/allTaxLastMoney*100).toFixed(2)-0
-        let discountLastMoneyNew = (allTaxLastMoney - value).toFixed(2)-0
-        let changeAmountNew = (discountLastMoneyNew + otherMoney).toFixed(2)-0
-        this.$nextTick(() => {
-          this.form.setFieldsValue({'discount':discountNew,'discountLastMoney':discountLastMoneyNew,
-            'changeAmount':changeAmountNew,'debt':0})
-        });
-      }
+      let allTaxLastMoney = this.$refs.materialDataTable.statisticsColumns.taxLastMoney-0
+      let discountNew = (value/allTaxLastMoney*100).toFixed(2)-0
+      let discountLastMoneyNew = (allTaxLastMoney - value).toFixed(2)-0
+      let changeAmountNew = (discountLastMoneyNew + otherMoney).toFixed(2)-0
+      this.$nextTick(() => {
+        this.form.setFieldsValue({'discount':discountNew,'discountLastMoney':discountLastMoneyNew,
+          'changeAmount':changeAmountNew,'debt':0})
+      });
     },
     //其它费用
     onKeyUpOtherMoney(e) {
