@@ -55,9 +55,10 @@
     name: 'JSelectBatchModal',
     mixins:[JeecgListMixin],
     components: {},
-    props: ['modalWidth', 'rows', 'multi', 'barCode'],
+    props: ['rows', 'multi', 'barCode'],
     data() {
       return {
+        modalWidth: 1000,
         queryParam: {
           name: "",
           depotId: '',

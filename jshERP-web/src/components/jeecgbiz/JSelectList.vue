@@ -2,9 +2,9 @@
   <div>
     <a-input-search v-if="kind === 'material'" v-model="names" placeholder="请选择" @pressEnter="onPressEnter" @search="onSearch"></a-input-search>
     <a-input-search v-if="kind === 'batch'||kind === 'sn'" v-model="names" placeholder="请选择" readOnly @search="onSearch"></a-input-search>
-    <j-select-material-modal v-if="kind === 'material'" ref="selectModal" :modal-width="modalWidth" :rows="rows" :multi="multi" :bar-code="value" @ok="selectOK" @initComp="initComp"/>
-    <j-select-batch-modal v-if="kind === 'batch'" ref="selectModal" :modal-width="modalWidth" :rows="rows" :multi="multi" :bar-code="value" @ok="selectOK" @initComp="initComp"/>
-    <j-select-sn-modal v-if="kind === 'sn'" ref="selectModal" :modal-width="modalWidth" :rows="rows" :multi="multi" :bar-code="value" @ok="selectOK" @initComp="initComp"/>
+    <j-select-material-modal v-if="kind === 'material'" ref="selectModal" :rows="rows" :multi="multi" :bar-code="value" @ok="selectOK" @initComp="initComp"/>
+    <j-select-batch-modal v-if="kind === 'batch'" ref="selectModal" :rows="rows" :multi="multi" :bar-code="value" @ok="selectOK" @initComp="initComp"/>
+    <j-select-sn-modal v-if="kind === 'sn'" ref="selectModal" :rows="rows" :multi="multi" :bar-code="value" @ok="selectOK" @initComp="initComp"/>
   </div>
 </template>
 
@@ -20,11 +20,6 @@
     name: 'JSelectList',
     components: {JSelectMaterialModal, JSelectBatchModal, JSelectSnModal},
     props: {
-      modalWidth: {
-        type: Number,
-        default: 1450,
-        required: false
-      },
       value: {
         type: String,
         required: false
