@@ -159,4 +159,11 @@ public interface DepotItemMapperEx {
     Long getCountByMaterialAndDepot(
             @Param("mId") Long mId,
             @Param("depotId") Long depotId);
+
+    List<DepotItemVo4MaterialAndSum> getLinkBillDetailMaterialSum(
+            @Param("linkNumber") String linkNumber);
+
+    List<DepotItemVo4MaterialAndSum> getBatchBillDetailMaterialSum(
+            @Param("linkNumber") String linkNumber,
+            @Param("type") String type);
 }
