@@ -189,7 +189,8 @@
                 :rowSelection="true"
                 :actionButton="true"
                 @valueChange="onValueChange"
-                @added="onAdded">
+                @added="onAdded"
+                @deleted="onDeleted">
                 <template #buttonAfter>
                   <a-button @click="batchSetPrice('purchase')">采购价-批量</a-button>
                   <a-button style="margin-left: 8px" @click="batchSetPrice('commodity')">零售价-批量</a-button>
@@ -316,6 +317,7 @@
         switchDisabled: false, //开关的启用状态
         barCodeSwitch: false, //生成条码开关
         maxBarCodeInfo: '', //最大条码
+        meDeleteIdList: [], //删除条码信息的id数组
         prefixNo: 'material',
         sku: {
           manyColor: '多颜色',
@@ -653,6 +655,7 @@
               } else {
                 formData.imgName = ''
               }
+              formData.meDeleteIdList = this.meDeleteIdList
               //接口调用
               let url = this.url.add, method = 'post'
               if (this.model.id) {
@@ -809,6 +812,9 @@
         }
         this.maxBarCodeInfo = this.maxBarCodeInfo + 1
         target.setValues([{rowKey: row.id, values: {barCode: this.maxBarCodeInfo, commodityUnit: unit?unit:''}}])
+      },
+      onDeleted(value) {
+        this.meDeleteIdList = (value)
       },
       //单元值改变一个字符就触发一次
       onValueChange(event) {
