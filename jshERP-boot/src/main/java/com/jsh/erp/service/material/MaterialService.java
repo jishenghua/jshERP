@@ -430,9 +430,8 @@ public class MaterialService {
         return result;
     }
 
-    public List<MaterialVo4Unit> findByAll(String barCode, String name, String standard, String model, String color,
-                                           String weight, String expiryNum, String enableSerialNumber, String enableBatchNumber,
-                                           String remark, String categoryId)throws Exception {
+    public List<MaterialVo4Unit> exportExcel(String materialParam, String color, String weight, String expiryNum, String enabled,
+                                             String enableSerialNumber, String enableBatchNumber, String remark, String categoryId)throws Exception {
         List<MaterialVo4Unit> resList = new ArrayList<>();
         List<MaterialVo4Unit> list =null;
         try{
@@ -440,8 +439,8 @@ public class MaterialService {
             if(StringUtil.isNotEmpty(categoryId)){
                 idList = getListByParentId(Long.parseLong(categoryId));
             }
-            list=  materialMapperEx.findByAll(barCode, name, standard, model, color, weight, expiryNum,
-                    enableSerialNumber, enableBatchNumber, remark, idList);
+            list=  materialMapperEx.exportExcel(materialParam, color, weight, expiryNum, enabled, enableSerialNumber,
+                    enableBatchNumber, remark, idList);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -654,9 +653,13 @@ public class MaterialService {
             }
             //批量更新库存
             batchDeleteInitialStockByMaterialList(deleteStockMaterialIdList);
-            materialInitialStockMapperEx.batchInsert(insertInitialStockMaterialList);
+            if(insertInitialStockMaterialList.size()>0) {
+                materialInitialStockMapperEx.batchInsert(insertInitialStockMaterialList);
+            }
             batchDeleteCurrentStockByMaterialList(deleteStockMaterialIdList);
-            materialCurrentStockMapperEx.batchInsert(insertCurrentStockMaterialList);
+            if(insertCurrentStockMaterialList.size()>0) {
+                materialCurrentStockMapperEx.batchInsert(insertCurrentStockMaterialList);
+            }
             logService.insertLog("商品",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_IMPORT).append(mList.size()).append(BusinessConstants.LOG_DATA_UNIT).toString(),
                     ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());

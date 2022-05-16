@@ -304,13 +304,11 @@ public class MaterialController {
     @GetMapping(value = "/exportExcel")
     @ApiOperation(value = "生成excel表格")
     public void exportExcel(@RequestParam(value = "categoryId", required = false) String categoryId,
-                            @RequestParam(value = "barCode", required = false) String barCode,
-                            @RequestParam(value = "name", required = false) String name,
-                            @RequestParam(value = "standard", required = false) String standard,
-                            @RequestParam(value = "model", required = false) String model,
+                            @RequestParam(value = "materialParam", required = false) String materialParam,
                             @RequestParam(value = "color", required = false) String color,
                             @RequestParam(value = "weight", required = false) String weight,
                             @RequestParam(value = "expiryNum", required = false) String expiryNum,
+                            @RequestParam(value = "enabled", required = false) String enabled,
                             @RequestParam(value = "enableSerialNumber", required = false) String enableSerialNumber,
                             @RequestParam(value = "enableBatchNumber", required = false) String enableBatchNumber,
                             @RequestParam(value = "remark", required = false) String remark,
@@ -321,10 +319,9 @@ public class MaterialController {
             if(StringUtil.isNotEmpty(mpList)){
                 mpArr= mpList.split(",");
             }
-            List<MaterialVo4Unit> dataList = materialService.findByAll(StringUtil.toNull(barCode), StringUtil.toNull(name),
-                    StringUtil.toNull(standard), StringUtil.toNull(model), StringUtil.toNull(color), StringUtil.toNull(weight),
-                    StringUtil.toNull(expiryNum), StringUtil.toNull(enableSerialNumber), StringUtil.toNull(enableBatchNumber),
-                    StringUtil.toNull(remark), StringUtil.toNull(categoryId));
+            List<MaterialVo4Unit> dataList = materialService.exportExcel(StringUtil.toNull(materialParam), StringUtil.toNull(color),
+                    StringUtil.toNull(weight), StringUtil.toNull(expiryNum), StringUtil.toNull(enabled), StringUtil.toNull(enableSerialNumber),
+                    StringUtil.toNull(enableBatchNumber), StringUtil.toNull(remark), StringUtil.toNull(categoryId));
             String[] names = {"条码", "名称", "规格", "型号", "颜色", "类别", "扩展信息", "单位", "基础重量", "保质期", "采购价", "零售价", "销售价", "最低售价", "备注", "状态", "序列号", "批号"};
             String title = "商品信息";
             List<String[]> objects = new ArrayList<>();
