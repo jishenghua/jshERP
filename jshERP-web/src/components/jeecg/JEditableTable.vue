@@ -111,8 +111,8 @@
                     <a-menu slot="overlay">
                       <a-menu-item key="0" :disabled="rowIndex===0" @click="_handleRowMoveUp(rowIndex)">向上移</a-menu-item>
                       <a-menu-item key="1" :disabled="rowIndex===(rows.length-1)" @click="_handleRowMoveDown(rowIndex)">向下移</a-menu-item>
-                      <a-menu-divider/>
-                      <a-menu-item key="3" @click="_handleRowInsertDown(rowIndex)">插入一行</a-menu-item>
+                      <!-- <a-menu-divider/>
+                      <a-menu-item key="3" @click="_handleRowInsertDown(rowIndex)">插入一行</a-menu-item> -->
                     </a-menu>
                   </a-dropdown>
                 </div>
