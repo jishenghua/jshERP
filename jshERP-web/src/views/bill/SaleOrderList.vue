@@ -127,6 +127,11 @@
               <a-tag v-if="status == '2'" color="cyan">完成销售</a-tag>
               <a-tag v-if="status == '3'" color="blue">部分销售</a-tag>
             </template>
+            <template slot="customRenderPurchaseStatus" slot-scope="purchaseStatus">
+              <a-tag v-if="purchaseStatus == '0'" color="red">未采购</a-tag>
+              <a-tag v-if="purchaseStatus == '2'" color="cyan">完成采购</a-tag>
+              <a-tag v-if="purchaseStatus == '3'" color="blue">部分采购</a-tag>
+            </template>
           </a-table>
         </div>
         <!-- table区域-end -->
@@ -207,6 +212,9 @@
           },
           { title: '状态', dataIndex: 'status', width: 70, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }
+          },
+          { title: '采购状态', dataIndex: 'purchaseStatus', width: 70, align: "center",
+            scopedSlots: { customRender: 'customRenderPurchaseStatus' }
           },
           {
             title: '操作',

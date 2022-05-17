@@ -197,7 +197,11 @@
                 {{model.number}}
               </a-form-item>
             </a-col>
-            <a-col :span="6"></a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联订单">
+                <a @click="myHandleDetail(model.linkNumber)">{{model.linkNumber}}</a>
+              </a-form-item>
+            </a-col>
           </a-row>
           <div :style="tableWidth">
             <a-table

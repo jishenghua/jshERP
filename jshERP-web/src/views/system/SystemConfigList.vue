@@ -37,6 +37,10 @@
               <a-switch checked-children="启用" un-checked-children="关闭" v-model="minusStockFlagSwitch" @change="onMinusStockChange"></a-switch>
               （如果启用则单据支持负库存，批次商品除外）
             </a-form-item>
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="以销定购">
+              <a-switch checked-children="启用" un-checked-children="关闭" v-model="purchaseBySaleFlagSwitch" @change="onPurchaseBySaleChange"></a-switch>
+              （如果启用则根据销售订单来定制采购订单，进货后再发给客户）
+            </a-form-item>
           </a-form>
         </a-spin>
       </a-col>
@@ -68,6 +72,7 @@
         depotFlagSwitch: false, //仓库权限状态
         customerFlagSwitch: false, //客户权限状态
         minusStockFlagSwitch: false, //负库存状态
+        purchaseBySaleFlagSwitch: false, //以销定购状态
         isReadOnly: false,
         labelCol: {
           xs: { span: 24 },
@@ -110,6 +115,9 @@
       onMinusStockChange(checked) {
         this.model.minusStockFlag = checked?'1':'0'
       },
+      onPurchaseBySaleChange(checked) {
+        this.model.purchaseBySaleFlag = checked?'1':'0'
+      },
       init () {
         let param = {
           search: {"companyName":""},
@@ -124,7 +132,8 @@
             this.visible = true;
             this.$nextTick(() => {
               this.form.setFieldsValue(pick(this.model,'companyName', 'companyContacts', 'companyAddress',
-                'companyTel', 'companyFax', 'companyPostCode', 'saleAgreement', 'depotFlag', 'customerFlag', 'minusStockFlag'))
+                'companyTel', 'companyFax', 'companyPostCode', 'saleAgreement', 'depotFlag', 'customerFlag',
+                'minusStockFlag', 'purchaseBySaleFlag'))
               autoJumpNextInput('systemConfigModal')
             });
             if(record.id) {
@@ -136,6 +145,9 @@
               }
               if (record.minusStockFlag != null) {
                 this.minusStockFlagSwitch = record.minusStockFlag == '1' ? true : false;
+              }
+              if (record.purchaseBySaleFlag != null) {
+                this.purchaseBySaleFlagSwitch = record.purchaseBySaleFlag == '1' ? true : false;
               }
             }
           } else {
@@ -174,6 +186,7 @@
         this.depotFlagSwitch = false
         this.customerFlagSwitch = false
         this.minusStockFlagSwitch = false
+        this.purchaseBySaleFlagSwitch = false
       }
     }
   }
