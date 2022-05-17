@@ -1344,3 +1344,13 @@ alter table jsh_material change name name varchar(100) DEFAULT NULL COMMENT '名
 -- 给系统参数表增加销售协议字段
 -- --------------------------------------------------------
 alter table jsh_system_config add sale_agreement varchar(500) DEFAULT NULL COMMENT '销售协议' after company_post_code;
+
+-- --------------------------------------------------------
+-- 时间 2022年05月17日
+-- by jishenghua
+-- 给单据主表增加采购状态字段
+-- 给系统参数表增加以销定购开关字段
+-- --------------------------------------------------------
+alter table jsh_depot_head add purchase_status varchar(1) DEFAULT NULL COMMENT '采购状态，0未采购、2完成采购、3部分采购' after status;
+alter table jsh_system_config add purchase_by_sale_flag varchar(1) DEFAULT '0' COMMENT '以销定购启用标记，0未启用，1启用' after minus_stock_flag;
+update jsh_depot_head set purchase_status='0';

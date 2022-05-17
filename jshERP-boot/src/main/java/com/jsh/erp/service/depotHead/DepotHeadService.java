@@ -325,6 +325,23 @@ public class DepotHeadService {
                         depotHeadMapper.updateByExampleSelective(dh, example);
                     }
                 }
+                //将关联的销售订单单据置为未采购状态-针对销售订单转采购订单的情况
+                if(StringUtil.isNotEmpty(depotHead.getLinkNumber())){
+                    if(BusinessConstants.DEPOTHEAD_TYPE_OTHER.equals(depotHead.getType()) &&
+                            BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(depotHead.getSubType())) {
+                        DepotHead dh = new DepotHead();
+                        //获取分批操作后单据的商品和商品数量（汇总）
+                        List<DepotItemVo4MaterialAndSum> batchList = depotItemMapperEx.getBatchBillDetailMaterialSum(depotHead.getLinkNumber(), depotHead.getType());
+                        if(batchList.size()>0) {
+                            dh.setPurchaseStatus(BusinessConstants.PURCHASE_STATUS_SKIPING);
+                        } else {
+                            dh.setPurchaseStatus(BusinessConstants.PURCHASE_STATUS_UN_AUDIT);
+                        }
+                        DepotHeadExample example = new DepotHeadExample();
+                        example.createCriteria().andNumberEqualTo(depotHead.getLinkNumber());
+                        depotHeadMapper.updateByExampleSelective(dh, example);
+                    }
+                }
                 //更新当前库存
                 for (DepotItem depotItem : list) {
                     depotItemService.updateCurrentStock(depotItem);
@@ -713,6 +730,7 @@ public class DepotHeadService {
         depotHead.setCreator(userInfo==null?null:userInfo.getId());
         depotHead.setCreateTime(new Timestamp(System.currentTimeMillis()));
         depotHead.setStatus(BusinessConstants.BILLS_STATUS_UN_AUDIT);
+        depotHead.setPurchaseStatus(BusinessConstants.BILLS_STATUS_UN_AUDIT);
         depotHead.setPayType(depotHead.getPayType()==null?"现付":depotHead.getPayType());
         if(StringUtil.isNotEmpty(depotHead.getAccountIdList())){
             depotHead.setAccountIdList(depotHead.getAccountIdList().replace("[", "").replace("]", "").replaceAll("\"", ""));

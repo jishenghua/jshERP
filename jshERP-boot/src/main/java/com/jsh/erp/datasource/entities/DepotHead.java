@@ -54,6 +54,8 @@ public class DepotHead {
 
     private String status;
 
+    private String purchaseStatus;
+
     private String linkNumber;
 
     private Long tenantId;
@@ -258,6 +260,14 @@ public class DepotHead {
 
     public void setStatus(String status) {
         this.status = status == null ? null : status.trim();
+    }
+
+    public String getPurchaseStatus() {
+        return purchaseStatus;
+    }
+
+    public void setPurchaseStatus(String purchaseStatus) {
+        this.purchaseStatus = purchaseStatus == null ? null : purchaseStatus.trim();
     }
 
     public String getLinkNumber() {

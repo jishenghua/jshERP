@@ -864,6 +864,76 @@ public class SystemConfigExample {
             return (Criteria) this;
         }
 
+        public Criteria andPurchaseBySaleFlagIsNull() {
+            addCriterion("purchase_by_sale_flag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseBySaleFlagIsNotNull() {
+            addCriterion("purchase_by_sale_flag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseBySaleFlagEqualTo(String value) {
+            addCriterion("purchase_by_sale_flag =", value, "purchaseBySaleFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseBySaleFlagNotEqualTo(String value) {
+            addCriterion("purchase_by_sale_flag <>", value, "purchaseBySaleFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseBySaleFlagGreaterThan(String value) {
+            addCriterion("purchase_by_sale_flag >", value, "purchaseBySaleFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseBySaleFlagGreaterThanOrEqualTo(String value) {
+            addCriterion("purchase_by_sale_flag >=", value, "purchaseBySaleFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseBySaleFlagLessThan(String value) {
+            addCriterion("purchase_by_sale_flag <", value, "purchaseBySaleFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseBySaleFlagLessThanOrEqualTo(String value) {
+            addCriterion("purchase_by_sale_flag <=", value, "purchaseBySaleFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseBySaleFlagLike(String value) {
+            addCriterion("purchase_by_sale_flag like", value, "purchaseBySaleFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseBySaleFlagNotLike(String value) {
+            addCriterion("purchase_by_sale_flag not like", value, "purchaseBySaleFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseBySaleFlagIn(List<String> values) {
+            addCriterion("purchase_by_sale_flag in", values, "purchaseBySaleFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseBySaleFlagNotIn(List<String> values) {
+            addCriterion("purchase_by_sale_flag not in", values, "purchaseBySaleFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseBySaleFlagBetween(String value1, String value2) {
+            addCriterion("purchase_by_sale_flag between", value1, value2, "purchaseBySaleFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseBySaleFlagNotBetween(String value1, String value2) {
+            addCriterion("purchase_by_sale_flag not between", value1, value2, "purchaseBySaleFlag");
+            return (Criteria) this;
+        }
+
         public Criteria andTenantIdIsNull() {
             addCriterion("tenant_id is null");
             return (Criteria) this;

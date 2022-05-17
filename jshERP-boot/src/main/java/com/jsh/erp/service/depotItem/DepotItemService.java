@@ -566,6 +566,13 @@ public class DepotItemService {
                     changeBillStatus(depotHead, billStatus);
                 }
             }
+            //如果关联单据号非空则更新订单的状态,此处针对销售订单转采购订单的场景
+            if(BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(depotHead.getSubType())) {
+                if(StringUtil.isNotEmpty(depotHead.getLinkNumber())) {
+                    String billStatus = getBillStatusByParam(depotHead);
+                    changeBillPurchaseStatus(depotHead, billStatus);
+                }
+            }
         } else {
             throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_ROW_FAILED_CODE,
                     String.format(ExceptionConstants.DEPOT_HEAD_ROW_FAILED_MSG));
@@ -610,6 +617,27 @@ public class DepotItemService {
     public void changeBillStatus(DepotHead depotHead, String billStatus) {
         DepotHead depotHeadOrders = new DepotHead();
         depotHeadOrders.setStatus(billStatus);
+        DepotHeadExample example = new DepotHeadExample();
+        List<String> linkNumberList = StringUtil.strToStringList(depotHead.getLinkNumber());
+        example.createCriteria().andNumberIn(linkNumberList);
+        try{
+            depotHeadMapper.updateByExampleSelective(depotHeadOrders, example);
+        }catch(Exception e){
+            logger.error("异常码[{}],异常提示[{}],异常[{}]",
+                    ExceptionConstants.DATA_WRITE_FAIL_CODE,ExceptionConstants.DATA_WRITE_FAIL_MSG,e);
+            throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
+                    ExceptionConstants.DATA_WRITE_FAIL_MSG);
+        }
+    }
+
+    /**
+     * 更新单据状态,此处针对销售订单转采购订单的场景
+     * @param depotHead
+     * @param billStatus
+     */
+    public void changeBillPurchaseStatus(DepotHead depotHead, String billStatus) {
+        DepotHead depotHeadOrders = new DepotHead();
+        depotHeadOrders.setPurchaseStatus(billStatus);
         DepotHeadExample example = new DepotHeadExample();
         List<String> linkNumberList = StringUtil.strToStringList(depotHead.getLinkNumber());
         example.createCriteria().andNumberIn(linkNumberList);
@@ -810,15 +838,27 @@ public class DepotItemService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public BigDecimal getFinishNumber(Long meId, Long headerId, Unit unitInfo, String materialUnit) {
+    public BigDecimal getFinishNumber(Long meId, Long headerId, Unit unitInfo, String materialUnit, String linkType) {
         String goToType = "";
         DepotHead depotHead =depotHeadMapper.selectByPrimaryKey(headerId);
         String linkNumber = depotHead.getNumber(); //订单号
-        if(BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(depotHead.getSubType())) {
-            goToType = BusinessConstants.SUB_TYPE_PURCHASE;
-        }
-        if(BusinessConstants.SUB_TYPE_SALES_ORDER.equals(depotHead.getSubType())) {
-            goToType = BusinessConstants.SUB_TYPE_SALES;
+        if("purchase".equals(linkType)) {
+            if(BusinessConstants.SUB_TYPE_SALES_ORDER.equals(depotHead.getSubType())) {
+                goToType = BusinessConstants.SUB_TYPE_PURCHASE_ORDER;
+            }
+        } else {
+            if(BusinessConstants.PURCHASE_STATUS_SKIPING.equals(depotHead.getPurchaseStatus())) {
+                if(BusinessConstants.SUB_TYPE_SALES_ORDER.equals(depotHead.getSubType())) {
+                    goToType = BusinessConstants.SUB_TYPE_PURCHASE_ORDER;
+                }
+            } else {
+                if(BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(depotHead.getSubType())) {
+                    goToType = BusinessConstants.SUB_TYPE_PURCHASE;
+                }
+                if(BusinessConstants.SUB_TYPE_SALES_ORDER.equals(depotHead.getSubType())) {
+                    goToType = BusinessConstants.SUB_TYPE_SALES;
+                }
+            }
         }
         BigDecimal count = depotItemMapperEx.getFinishNumber(meId, linkNumber, goToType);
         //根据多单位情况进行数量的转换

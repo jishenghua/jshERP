@@ -1726,6 +1726,76 @@ public class DepotHeadExample {
             return (Criteria) this;
         }
 
+        public Criteria andPurchaseStatusIsNull() {
+            addCriterion("purchase_status is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseStatusIsNotNull() {
+            addCriterion("purchase_status is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseStatusEqualTo(String value) {
+            addCriterion("purchase_status =", value, "purchaseStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseStatusNotEqualTo(String value) {
+            addCriterion("purchase_status <>", value, "purchaseStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseStatusGreaterThan(String value) {
+            addCriterion("purchase_status >", value, "purchaseStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseStatusGreaterThanOrEqualTo(String value) {
+            addCriterion("purchase_status >=", value, "purchaseStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseStatusLessThan(String value) {
+            addCriterion("purchase_status <", value, "purchaseStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseStatusLessThanOrEqualTo(String value) {
+            addCriterion("purchase_status <=", value, "purchaseStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseStatusLike(String value) {
+            addCriterion("purchase_status like", value, "purchaseStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseStatusNotLike(String value) {
+            addCriterion("purchase_status not like", value, "purchaseStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseStatusIn(List<String> values) {
+            addCriterion("purchase_status in", values, "purchaseStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseStatusNotIn(List<String> values) {
+            addCriterion("purchase_status not in", values, "purchaseStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseStatusBetween(String value1, String value2) {
+            addCriterion("purchase_status between", value1, value2, "purchaseStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseStatusNotBetween(String value1, String value2) {
+            addCriterion("purchase_status not between", value1, value2, "purchaseStatus");
+            return (Criteria) this;
+        }
+
         public Criteria andLinkNumberIsNull() {
             addCriterion("link_number is null");
             return (Criteria) this;

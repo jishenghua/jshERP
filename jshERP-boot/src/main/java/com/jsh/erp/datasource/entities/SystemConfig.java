@@ -23,6 +23,8 @@ public class SystemConfig {
 
     private String minusStockFlag;
 
+    private String purchaseBySaleFlag;
+
     private Long tenantId;
 
     private String deleteFlag;
@@ -113,6 +115,14 @@ public class SystemConfig {
 
     public void setMinusStockFlag(String minusStockFlag) {
         this.minusStockFlag = minusStockFlag == null ? null : minusStockFlag.trim();
+    }
+
+    public String getPurchaseBySaleFlag() {
+        return purchaseBySaleFlag;
+    }
+
+    public void setPurchaseBySaleFlag(String purchaseBySaleFlag) {
+        this.purchaseBySaleFlag = purchaseBySaleFlag == null ? null : purchaseBySaleFlag.trim();
     }
 
     public Long getTenantId() {

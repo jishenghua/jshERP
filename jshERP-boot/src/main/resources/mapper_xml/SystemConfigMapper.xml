@@ -13,6 +13,7 @@
     <result column="depot_flag" jdbcType="VARCHAR" property="depotFlag" />
     <result column="customer_flag" jdbcType="VARCHAR" property="customerFlag" />
     <result column="minus_stock_flag" jdbcType="VARCHAR" property="minusStockFlag" />
+    <result column="purchase_by_sale_flag" jdbcType="VARCHAR" property="purchaseBySaleFlag" />
     <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
     <result column="delete_flag" jdbcType="VARCHAR" property="deleteFlag" />
   </resultMap>
@@ -76,7 +77,8 @@
   </sql>
   <sql id="Base_Column_List">
     id, company_name, company_contacts, company_address, company_tel, company_fax, company_post_code, 
-    sale_agreement, depot_flag, customer_flag, minus_stock_flag, tenant_id, delete_flag
+    sale_agreement, depot_flag, customer_flag, minus_stock_flag, purchase_by_sale_flag, 
+    tenant_id, delete_flag
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.SystemConfigExample" resultMap="BaseResultMap">
     select
@@ -112,13 +114,13 @@
     insert into jsh_system_config (id, company_name, company_contacts, 
       company_address, company_tel, company_fax, 
       company_post_code, sale_agreement, depot_flag, 
-      customer_flag, minus_stock_flag, tenant_id, 
-      delete_flag)
+      customer_flag, minus_stock_flag, purchase_by_sale_flag, 
+      tenant_id, delete_flag)
     values (#{id,jdbcType=BIGINT}, #{companyName,jdbcType=VARCHAR}, #{companyContacts,jdbcType=VARCHAR}, 
       #{companyAddress,jdbcType=VARCHAR}, #{companyTel,jdbcType=VARCHAR}, #{companyFax,jdbcType=VARCHAR}, 
       #{companyPostCode,jdbcType=VARCHAR}, #{saleAgreement,jdbcType=VARCHAR}, #{depotFlag,jdbcType=VARCHAR}, 
-      #{customerFlag,jdbcType=VARCHAR}, #{minusStockFlag,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, 
-      #{deleteFlag,jdbcType=VARCHAR})
+      #{customerFlag,jdbcType=VARCHAR}, #{minusStockFlag,jdbcType=VARCHAR}, #{purchaseBySaleFlag,jdbcType=VARCHAR}, 
+      #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.SystemConfig">
     insert into jsh_system_config
@@ -155,6 +157,9 @@
       </if>
       <if test="minusStockFlag != null">
         minus_stock_flag,
+      </if>
+      <if test="purchaseBySaleFlag != null">
+        purchase_by_sale_flag,
       </if>
       <if test="tenantId != null">
         tenant_id,
@@ -196,6 +201,9 @@
       </if>
       <if test="minusStockFlag != null">
         #{minusStockFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseBySaleFlag != null">
+        #{purchaseBySaleFlag,jdbcType=VARCHAR},
       </if>
       <if test="tenantId != null">
         #{tenantId,jdbcType=BIGINT},
@@ -247,6 +255,9 @@
       <if test="record.minusStockFlag != null">
         minus_stock_flag = #{record.minusStockFlag,jdbcType=VARCHAR},
       </if>
+      <if test="record.purchaseBySaleFlag != null">
+        purchase_by_sale_flag = #{record.purchaseBySaleFlag,jdbcType=VARCHAR},
+      </if>
       <if test="record.tenantId != null">
         tenant_id = #{record.tenantId,jdbcType=BIGINT},
       </if>
@@ -271,6 +282,7 @@
       depot_flag = #{record.depotFlag,jdbcType=VARCHAR},
       customer_flag = #{record.customerFlag,jdbcType=VARCHAR},
       minus_stock_flag = #{record.minusStockFlag,jdbcType=VARCHAR},
+      purchase_by_sale_flag = #{record.purchaseBySaleFlag,jdbcType=VARCHAR},
       tenant_id = #{record.tenantId,jdbcType=BIGINT},
       delete_flag = #{record.deleteFlag,jdbcType=VARCHAR}
     <if test="_parameter != null">
@@ -310,6 +322,9 @@
       <if test="minusStockFlag != null">
         minus_stock_flag = #{minusStockFlag,jdbcType=VARCHAR},
       </if>
+      <if test="purchaseBySaleFlag != null">
+        purchase_by_sale_flag = #{purchaseBySaleFlag,jdbcType=VARCHAR},
+      </if>
       <if test="tenantId != null">
         tenant_id = #{tenantId,jdbcType=BIGINT},
       </if>
@@ -331,6 +346,7 @@
       depot_flag = #{depotFlag,jdbcType=VARCHAR},
       customer_flag = #{customerFlag,jdbcType=VARCHAR},
       minus_stock_flag = #{minusStockFlag,jdbcType=VARCHAR},
+      purchase_by_sale_flag = #{purchaseBySaleFlag,jdbcType=VARCHAR},
       tenant_id = #{tenantId,jdbcType=BIGINT},
       delete_flag = #{deleteFlag,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}

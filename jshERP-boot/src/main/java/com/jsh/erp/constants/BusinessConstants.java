@@ -68,6 +68,12 @@ public class BusinessConstants {
     public static final String BILLS_STATUS_SKIPED = "2";
     public static final String BILLS_STATUS_SKIPING = "3";
     /**
+     * 单据-采购状态 purchaseStatus '0'未采购、'2'完成采购、'3'部分采购
+     * */
+    public static final String PURCHASE_STATUS_UN_AUDIT = "0";
+    public static final String PURCHASE_STATUS_SKIPED = "2";
+    public static final String PURCHASE_STATUS_SKIPING = "3";
+    /**
      * 出入库分类
      *采购、采购退货、其它、零售、销售、调拨、盘点复盘等
      * */
