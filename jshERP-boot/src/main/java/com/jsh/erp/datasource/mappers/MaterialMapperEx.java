@@ -60,14 +60,12 @@ public interface MaterialMapperEx {
     int findBySelectWithBarCodeCount(@Param("idList") List<Long> idList,
                                      @Param("q") String q);
 
-    List<MaterialVo4Unit> findByAll(
-            @Param("barCode") String barCode,
-            @Param("name") String name,
-            @Param("standard") String standard,
-            @Param("model") String model,
+    List<MaterialVo4Unit> exportExcel(
+            @Param("materialParam") String materialParam,
             @Param("color") String color,
             @Param("weight") String weight,
             @Param("expiryNum") String expiryNum,
+            @Param("enabled") String enabled,
             @Param("enableSerialNumber") String enableSerialNumber,
             @Param("enableBatchNumber") String enableBatchNumber,
             @Param("remark") String remark,

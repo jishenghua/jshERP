@@ -90,6 +90,11 @@
         <result column="total_num" jdbcType="VARCHAR" property="totalNum" />
     </resultMap>
 
+    <resultMap id="materialSumMap" type="com.jsh.erp.datasource.entities.DepotItemVo4MaterialAndSum">
+        <result column="material_extend_id" jdbcType="VARCHAR" property="materialExtendId" />
+        <result column="oper_number" jdbcType="VARCHAR" property="operNumber" />
+    </resultMap>
+
     <select id="selectByConditionDepotItem" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="com.jsh.erp.datasource.mappers.DepotItemMapper.BaseResultMap">
         select *
         FROM jsh_depot_item
@@ -613,5 +618,21 @@
         select count(1) from jsh_depot_item di
         where di.material_id=#{mId} and di.depot_id=#{depotId}
         and ifnull(di.delete_flag,'0') !='1'
+    </select>
+
+    <select id="getLinkBillDetailMaterialSum" resultMap="materialSumMap">
+        select di.material_extend_id, sum(di.oper_number) oper_number from jsh_depot_head dh
+        left join jsh_depot_item di on dh.id=di.header_id and ifnull(di.delete_flag,'0') !='1'
+        where dh.number=#{linkNumber}
+          and ifnull(dh.delete_flag,'0') !='1'
+        group by di.material_extend_id
+    </select>
+
+    <select id="getBatchBillDetailMaterialSum" resultMap="materialSumMap">
+        select di.material_extend_id, sum(di.oper_number) oper_number from jsh_depot_head dh
+        left join jsh_depot_item di on dh.id=di.header_id and ifnull(di.delete_flag,'0') !='1'
+        where dh.link_number=#{linkNumber} and dh.type=#{type}
+          and ifnull(dh.delete_flag,'0') !='1'
+        group by di.material_extend_id
     </select>
 </mapper>

@@ -85,8 +85,8 @@ public class MaterialExtendService {
         JSONArray meArr = obj.getJSONArray("meList");
         JSONArray insertedJson = new JSONArray();
         JSONArray updatedJson = new JSONArray();
-        JSONArray deletedJson = new JSONArray();
-        List<String> barCodeList=new ArrayList<>();
+        JSONArray deletedJson = obj.getJSONArray("meDeleteIdList");
+        JSONArray sortJson = JSONArray.parseArray(sortList);
         if (null != meArr) {
             if("insert".equals(type)){
                 for (int i = 0; i < meArr.size(); i++) {
@@ -97,23 +97,25 @@ public class MaterialExtendService {
                 for (int i = 0; i < meArr.size(); i++) {
                     JSONObject tempJson = meArr.getJSONObject(i);
                     String barCode = tempJson.getString("barCode");
-                    barCodeList.add(barCode);
-                    MaterialExtend materialExtend = getInfoByBarCode(barCode);
-                    if (materialExtend.getBarCode() == null) {
+                    String tempId = tempJson.getString("id");
+                    if(tempId.length()>19){
                         insertedJson.add(tempJson);
                     } else {
                         updatedJson.add(tempJson);
                     }
                 }
-                List<MaterialExtend> materialExtendList = getMeListByBarCodeAndMid(barCodeList, materialId);
-                for (MaterialExtend meObj : materialExtendList) {
-                    JSONObject deleteObj = new JSONObject();
-                    deleteObj.put("id", meObj.getId());
-                    deletedJson.add(deleteObj);
-                }
             }
         }
-        JSONArray sortJson = JSONArray.parseArray(sortList);
+        if (null != deletedJson) {
+            StringBuffer bf=new StringBuffer();
+            for (int i = 0; i < deletedJson.size(); i++) {
+                bf.append(deletedJson.getString(i));
+                if(i<(deletedJson.size()-1)){
+                    bf.append(",");
+                }
+            }
+            this.batchDeleteMaterialExtendByIds(bf.toString(), request);
+        }
         if (null != insertedJson) {
             for (int i = 0; i < insertedJson.size(); i++) {
                 MaterialExtend materialExtend = new MaterialExtend();
@@ -148,17 +150,6 @@ public class MaterialExtendService {
                 }
                 this.insertMaterialExtend(materialExtend);
             }
-        }
-        if (null != deletedJson) {
-            StringBuffer bf=new StringBuffer();
-            for (int i = 0; i < deletedJson.size(); i++) {
-                JSONObject tempDeletedJson = JSONObject.parseObject(deletedJson.getString(i));
-                bf.append(tempDeletedJson.getLong("id"));
-                if(i<(deletedJson.size()-1)){
-                    bf.append(",");
-                }
-            }
-            this.batchDeleteMaterialExtendByIds(bf.toString(), request);
         }
         if (null != updatedJson) {
             for (int i = 0; i < updatedJson.size(); i++) {
@@ -379,11 +370,13 @@ public class MaterialExtendService {
      * @throws Exception
      */
     public List<MaterialExtend> getMeListByBarCodeAndMid(List<String> barCodeList, Long mId)throws Exception {
-        MaterialExtend materialExtend = new MaterialExtend();
-        MaterialExtendExample example = new MaterialExtendExample();
-        example.createCriteria().andBarCodeNotIn(barCodeList).andMaterialIdEqualTo(mId)
-                .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        List<MaterialExtend> list = materialExtendMapper.selectByExample(example);
+        List<MaterialExtend> list = new ArrayList<>();
+        if(barCodeList.size()>0) {
+            MaterialExtendExample example = new MaterialExtendExample();
+            example.createCriteria().andBarCodeNotIn(barCodeList).andMaterialIdEqualTo(mId)
+                    .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+            list = materialExtendMapper.selectByExample(example);
+        }
         return list;
     }
 }

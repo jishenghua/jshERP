@@ -57,9 +57,10 @@
     name: 'JSelectSnModal',
     mixins:[JeecgListMixin],
     components: {},
-    props: ['modalWidth', 'rows', 'multi', 'barCode'],
+    props: ['rows', 'multi', 'barCode'],
     data() {
       return {
+        modalWidth: 800,
         queryParam: {
           name: "",
           depotId: '',

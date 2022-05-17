@@ -68,25 +68,26 @@
             </a-row>
             <a-row class="form-row" :gutter="24">
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="颜色">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="颜色" data-step="5" data-title="颜色"
+                             data-intro="请填写商品的颜色，如果是多属性商品可以不填（下面有多属性开关）">
                   <a-input placeholder="请输入颜色" v-decorator.trim="[ 'color' ]" />
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="基础重量" data-step="5" data-title="基础重量"
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="基础重量" data-step="6" data-title="基础重量"
                   data-intro="请填写基本单位对应的重量，用于计算按重量分摊费用时单据中各行商品分摊的费用成本">
                   <a-input-number style="width: 100%" placeholder="请输入基础重量(kg)" v-decorator.trim="[ 'weight' ]" />
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="保质期" data-step="6" data-title="保质期"
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="保质期" data-step="7" data-title="保质期"
                   data-intro="保质期指的是商品的保质期(天)，主要针对带生产日期的，此类商品一般有批号">
                   <a-input-number style="width: 100%" placeholder="请输入保质期(天)" v-decorator.trim="[ 'expiryNum' ]" />
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 4 }}" :wrapperCol="{xs: { span: 24 },sm: { span: 20 }}" label="类别"
-                  data-step="7" data-title="类别" data-intro="类别需要在【商品类别】页面进行录入，录入之后在此处进行调用">
+                  data-step="8" data-title="类别" data-intro="类别需要在【商品类别】页面进行录入，录入之后在此处进行调用">
                   <a-tree-select style="width:100%" :dropdownStyle="{maxHeight:'200px',overflow:'auto'}" allow-clear
                                  :treeData="categoryTree" v-decorator="[ 'categoryId' ]" placeholder="请选择类别">
                   </a-tree-select>
@@ -95,7 +96,7 @@
             </a-row>
             <a-row class="form-row" :gutter="24">
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="序列号" data-step="8" data-title="序列号"
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="序列号" data-step="9" data-title="序列号"
                   data-intro="此处是商品的序列号开关，如果选择了有，则在采购入库单据需要录入该商品的序列号，在销售出库单据需要选择该商品的序列号进行出库">
                   <a-select placeholder="有无序列号" v-decorator="[ 'enableSerialNumber' ]">
                     <a-select-option value="1">有</a-select-option>
@@ -104,7 +105,7 @@
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="批号" data-step="9" data-title="批号"
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="批号" data-step="10" data-title="批号"
                   data-intro="此处是商品的批号开关，如果选择了有，则在采购入库单据需要录入该商品的批号和生产日期，在销售出库单据需要选择该商品的批号进行出库">
                   <a-select placeholder="有无批号" v-decorator="[ 'enableBatchNumber' ]">
                     <a-select-option value="1">有</a-select-option>
@@ -113,7 +114,7 @@
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="多属性" data-step="10" data-title="多属性"
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="多属性" data-step="11" data-title="多属性"
                   data-intro="多属性是针对的sku商品（比如服装、鞋帽行业），此处开关如果启用就可以在下方进行多sku的配置，配置具体的颜色、尺码之类的组合">
                   <a-switch checked-children="启用" un-checked-children="关闭" v-model="skuSwitch" :disabled="switchDisabled" @change="onSkuChange"></a-switch>
                 </a-form-item>
@@ -188,7 +189,8 @@
                 :rowSelection="true"
                 :actionButton="true"
                 @valueChange="onValueChange"
-                @added="onAdded">
+                @added="onAdded"
+                @deleted="onDeleted">
                 <template #buttonAfter>
                   <a-button @click="batchSetPrice('purchase')">采购价-批量</a-button>
                   <a-button style="margin-left: 8px" @click="batchSetPrice('commodity')">零售价-批量</a-button>
@@ -315,6 +317,7 @@
         switchDisabled: false, //开关的启用状态
         barCodeSwitch: false, //生成条码开关
         maxBarCodeInfo: '', //最大条码
+        meDeleteIdList: [], //删除条码信息的id数组
         prefixNo: 'material',
         sku: {
           manyColor: '多颜色',
@@ -652,6 +655,7 @@
               } else {
                 formData.imgName = ''
               }
+              formData.meDeleteIdList = this.meDeleteIdList
               //接口调用
               let url = this.url.add, method = 'post'
               if (this.model.id) {
@@ -808,6 +812,9 @@
         }
         this.maxBarCodeInfo = this.maxBarCodeInfo + 1
         target.setValues([{rowKey: row.id, values: {barCode: this.maxBarCodeInfo, commodityUnit: unit?unit:''}}])
+      },
+      onDeleted(value) {
+        this.meDeleteIdList = (value)
       },
       //单元值改变一个字符就触发一次
       onValueChange(event) {

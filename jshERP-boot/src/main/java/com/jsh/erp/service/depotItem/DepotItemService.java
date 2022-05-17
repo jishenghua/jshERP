@@ -406,8 +406,6 @@ public class DepotItemService {
         }
         //删除单据的明细
         deleteDepotItemHeadId(headerId);
-        //单据状态:是否全部完成 2-全部完成 3-部分完成（针对订单的分批出入库）
-        String billStatus = BusinessConstants.BILLS_STATUS_SKIPED;
         JSONArray rowArr = JSONArray.parseArray(rows);
         if (null != rowArr && rowArr.size()>0) {
             for (int i = 0; i < rowArr.size(); i++) {
@@ -460,16 +458,14 @@ public class DepotItemService {
                         depotItem.setBasicNumber(oNumber); //其他情况
                     }
                 }
-                //如果数量+已完成数量<原订单数量，代表该单据状态为未全部完成出入库(判断前提是存在关联订单)
+                //如果数量+已完成数量>原订单数量，给出预警(判断前提是存在关联订单)
                 if (StringUtil.isNotEmpty(depotHead.getLinkNumber())
                         && StringUtil.isExist(rowObj.get("preNumber")) && StringUtil.isExist(rowObj.get("finishNumber"))) {
                     if("add".equals(actionType)) {
                         //在新增模式进行状态赋值
                         BigDecimal preNumber = rowObj.getBigDecimal("preNumber");
                         BigDecimal finishNumber = rowObj.getBigDecimal("finishNumber");
-                        if(depotItem.getOperNumber().add(finishNumber).compareTo(preNumber)<0) {
-                            billStatus = BusinessConstants.BILLS_STATUS_SKIPING;
-                        } else if(depotItem.getOperNumber().add(finishNumber).compareTo(preNumber)>0) {
+                        if(depotItem.getOperNumber().add(finishNumber).compareTo(preNumber)>0) {
                             throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_CODE,
                                     String.format(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_MSG, barCode));
                         }
@@ -481,9 +477,7 @@ public class DepotItemService {
                         BigDecimal preNumber = getPreItemByHeaderIdAndMaterial(depotHead.getLinkNumber(), depotItem.getMaterialExtendId()).getOperNumber();
                         //除去此单据之外的已入库|已出库
                         BigDecimal realFinishNumber = getRealFinishNumber(depotItem.getMaterialExtendId(), preHeaderId, headerId, unitInfo, unit);
-                        if(depotItem.getOperNumber().add(realFinishNumber).compareTo(preNumber)<0) {
-                            billStatus = BusinessConstants.BILLS_STATUS_SKIPING;
-                        } else if(depotItem.getOperNumber().add(realFinishNumber).compareTo(preNumber)>0) {
+                        if(depotItem.getOperNumber().add(realFinishNumber).compareTo(preNumber)>0) {
                             throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_CODE,
                                     String.format(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_MSG, barCode));
                         }
@@ -567,6 +561,8 @@ public class DepotItemService {
             if(BusinessConstants.SUB_TYPE_PURCHASE.equals(depotHead.getSubType())
                     || BusinessConstants.SUB_TYPE_SALES.equals(depotHead.getSubType())) {
                 if(StringUtil.isNotEmpty(depotHead.getLinkNumber())) {
+                    //单据状态:是否全部完成 2-全部完成 3-部分完成（针对订单的分批出入库）
+                    String billStatus = getBillStatusByParam(depotHead);
                     changeBillStatus(depotHead, billStatus);
                 }
             }
@@ -574,6 +570,36 @@ public class DepotItemService {
             throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_ROW_FAILED_CODE,
                     String.format(ExceptionConstants.DEPOT_HEAD_ROW_FAILED_MSG));
         }
+    }
+
+    /**
+     * 判断单据的状态
+     * 通过数组对比：原单据的商品和商品数量（汇总） 与 分批操作后单据的商品和商品数量（汇总）
+     * @param depotHead
+     * @return
+     */
+    public String getBillStatusByParam(DepotHead depotHead) {
+        String res = BusinessConstants.BILLS_STATUS_SKIPED;
+        //获取原单据的商品和商品数量（汇总）
+        List<DepotItemVo4MaterialAndSum> linkList = depotItemMapperEx.getLinkBillDetailMaterialSum(depotHead.getLinkNumber());
+        //获取分批操作后单据的商品和商品数量（汇总）
+        List<DepotItemVo4MaterialAndSum> batchList = depotItemMapperEx.getBatchBillDetailMaterialSum(depotHead.getLinkNumber(), depotHead.getType());
+        //将分批操作后的单据的商品和商品数据构造成Map
+        Map<Long, BigDecimal> materialSumMap = new HashMap<>();
+        for(DepotItemVo4MaterialAndSum materialAndSum : batchList) {
+            materialSumMap.put(materialAndSum.getMaterialExtendId(), materialAndSum.getOperNumber());
+        }
+        for(DepotItemVo4MaterialAndSum materialAndSum : linkList) {
+            BigDecimal materialSum = materialSumMap.get(materialAndSum.getMaterialExtendId());
+            if(materialSum!=null) {
+                if(materialSum.compareTo(materialAndSum.getOperNumber()) != 0) {
+                    res = BusinessConstants.BILLS_STATUS_SKIPING;
+                }
+            } else {
+                res = BusinessConstants.BILLS_STATUS_SKIPING;
+            }
+        }
+        return res;
     }
 
     /**

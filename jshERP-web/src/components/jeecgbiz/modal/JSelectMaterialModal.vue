@@ -84,9 +84,10 @@
     name: 'JSelectMaterialModal',
     mixins:[JeecgListMixin],
     components: {},
-    props: ['modalWidth', 'rows', 'multi', 'barCode'],
+    props: ['rows', 'multi', 'barCode'],
     data() {
       return {
+        modalWidth: 1450,
         queryParam: {
           q: '',
           depotId: ''
@@ -212,6 +213,8 @@
       },
       // 触发屏幕自适应
       resetScreenSize() {
+        let realScreenWidth = window.screen.width * window.devicePixelRatio
+        this.modalWidth = realScreenWidth<1600?'1200px':'1450px'
         let screenWidth = document.body.clientWidth;
         if (screenWidth < 500) {
           this.scrollTrigger = {x: 800};

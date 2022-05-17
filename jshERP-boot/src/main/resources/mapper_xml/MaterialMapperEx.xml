@@ -38,7 +38,6 @@
         left JOIN jsh_unit u on m.unit_id = u.id and ifnull(u.delete_Flag,'0') !='1'
         left JOIN jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
         where 1=1
-        and me.default_flag=1
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
@@ -59,7 +58,7 @@
         <if test="enableBatchNumber != null and enableBatchNumber !=''">
             and m.enable_batch_number = #{enableBatchNumber}
         </if>
-        <if test="enabled != null">
+        <if test="enabled != null and enabled !=''">
             and m.enabled = #{enabled}
         </if>
         <if test="remark != null and remark !=''">
@@ -73,6 +72,7 @@
             </foreach>
         </if>
         and ifnull(m.delete_flag,'0') !='1'
+        group by m.id
         order by m.id desc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
@@ -323,7 +323,7 @@
         and ifnull(m.delete_flag,'0') !='1'
     </select>
 
-    <select id="findByAll" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultMapList">
+    <select id="exportExcel" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultMapList">
         select m.*,u.name unitName, mc.name categoryName,me.bar_code,me.commodity_unit,me.purchase_decimal, me.commodity_decimal,
         me.wholesale_decimal, me.low_decimal
         FROM jsh_material m
@@ -332,21 +332,9 @@
         left JOIN jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
         where 1=1
         and me.default_flag=1
-        <if test="barCode != null and barCode !=''">
-            <bind name="bindBarCode" value="'%'+barCode+'%'"/>
-            and me.bar_code like #{bindBarCode}
-        </if>
-        <if test="name != null and name !=''">
-            <bind name="bindName" value="'%'+name+'%'"/>
-            and m.name like #{bindName}
-        </if>
-        <if test="standard != null and standard !=''">
-            <bind name="bindStandard" value="'%'+standard+'%'"/>
-            and m.standard like #{bindStandard}
-        </if>
-        <if test="model != null and model !=''">
-            <bind name="bindModel" value="'%'+standard+'%'"/>
-            and m.model like #{bindModel}
+        <if test="materialParam != null and materialParam !=''">
+            <bind name="bindKey" value="'%'+materialParam+'%'"/>
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
         </if>
         <if test="color != null and color !=''">
             <bind name="bindColor" value="'%'+color+'%'"/>
@@ -357,6 +345,9 @@
         </if>
         <if test="expiryNum != null and expiryNum !=''">
             and m.expiry_num = #{expiryNum}
+        </if>
+        <if test="enabled != null and enabled !=''">
+            and m.enabled = #{enabled}
         </if>
         <if test="enableSerialNumber != null and enableSerialNumber !=''">
             and m.enable_serial_number = #{enableSerialNumber}
