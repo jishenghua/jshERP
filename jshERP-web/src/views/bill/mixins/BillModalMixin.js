@@ -25,6 +25,8 @@ export const BillModalMixin = {
       billUnitPirce: '',
       scanBarCode: '',
       scanStatus: true,
+      billStatus: '0',
+      isCanCheck: true,
       isTenant: false,
       spans: {
         labelCol1: {span: 2},
@@ -710,6 +712,11 @@ export const BillModalMixin = {
     stopScan() {
       this.scanStatus = true
       this.scanBarCode = ''
-    }
+    },
+    //保存并审核
+    handleOkAndCheck() {
+      this.billStatus = '1'
+      this.handleOk()
+    },
   }
 }

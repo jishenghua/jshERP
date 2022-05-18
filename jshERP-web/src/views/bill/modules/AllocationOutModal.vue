@@ -8,10 +8,14 @@
     :keyboard="false"
     :forceRender="true"
     switchFullscreen
-    @ok="handleOk"
     @cancel="handleCancel"
     wrapClassName="ant-modal-cust-warp"
     style="top:5%;height: 100%;overflow-y: hidden">
+    <template slot="footer">
+      <a-button @click="handleCancel">取消</a-button>
+      <a-button v-if="isCanCheck" @click="handleOkAndCheck">保存并审核</a-button>
+      <a-button type="primary" @click="handleOk">保存</a-button>
+    </template>
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
         <a-row class="form-row" :gutter="24">
@@ -180,6 +184,7 @@
     methods: {
       //调用完edit()方法之后会自动调用此方法
       editAfter() {
+        this.billStatus = '0'
         this.changeColumnHide()
         if (this.action === 'add') {
           this.addInit(this.prefixNo)
@@ -227,6 +232,7 @@
         if(this.model.id){
           billMain.id = this.model.id
         }
+        billMain.status = this.billStatus
         return {
           info: JSON.stringify(billMain),
           rows: JSON.stringify(detailArr),

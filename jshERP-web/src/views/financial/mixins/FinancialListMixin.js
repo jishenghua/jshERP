@@ -33,11 +33,17 @@ export const FinancialListMixin = {
   methods: {
     myHandleAdd() {
       this.$refs.modalForm.action = "add";
+      if(this.btnEnableList.indexOf(2)===-1) {
+        this.$refs.modalForm.isCanCheck = false
+      }
       this.handleAdd();
     },
     myHandleEdit(record) {
       if(record.status === '0') {
         this.$refs.modalForm.action = "edit";
+        if(this.btnEnableList.indexOf(2)===-1) {
+          this.$refs.modalForm.isCanCheck = false
+        }
         this.handleEdit(record);
       } else {
         this.$message.warning("抱歉，只有未审核的单据才能编辑！")

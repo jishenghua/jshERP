@@ -32,10 +32,16 @@ export const BillListMixin = {
   methods: {
     myHandleAdd() {
       this.$refs.modalForm.action = "add";
+      if(this.btnEnableList.indexOf(2)===-1) {
+        this.$refs.modalForm.isCanCheck = false
+      }
       this.handleAdd();
     },
     myHandleCopyAdd(record) {
       this.$refs.modalForm.action = "copyAdd";
+      if(this.btnEnableList.indexOf(2)===-1) {
+        this.$refs.modalForm.isCanCheck = false
+      }
       this.$refs.modalForm.edit(record);
       this.$refs.modalForm.title = "复制新增";
       this.$refs.modalForm.disableSubmit = false;
@@ -43,6 +49,9 @@ export const BillListMixin = {
     myHandleEdit(record) {
       if(record.status === '0') {
         this.$refs.modalForm.action = "edit";
+        if(this.btnEnableList.indexOf(2)===-1) {
+          this.$refs.modalForm.isCanCheck = false
+        }
         this.handleEdit(record);
       } else {
         this.$message.warning("抱歉，只有未审核的单据才能编辑！")
