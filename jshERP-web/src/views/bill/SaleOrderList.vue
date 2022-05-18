@@ -259,12 +259,18 @@
         getCurrentSystemConfig().then((res) => {
           if(res.code === 200 && res.data){
             let purchaseBySaleFlag = res.data.purchaseBySaleFlag
+            let statusIndex = 0
+            for(let i=0; i<this.columns.length; i++){
+              if(this.columns[i].dataIndex === 'purchaseStatus') {
+                statusIndex = i
+              }
+            }
             if(purchaseBySaleFlag === "0") {
-              if(this.columns.length === 10) {
-                this.columns.splice(8, 1)
+              if(statusIndex>0) {
+                this.columns.splice(statusIndex, 1)
               }
             } else {
-              if(this.columns.length<10) {
+              if(statusIndex===0) {
                 let purchaseStatusObj = { title: '采购进度', dataIndex: 'purchaseStatus', width: 70, align: "center",
                   scopedSlots: { customRender: 'customRenderPurchaseStatus' }
                 }
