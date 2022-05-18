@@ -242,6 +242,10 @@
             handleIntroJs(this.prefixNo, 1)
           })
         } else {
+          if(this.model.linkNumber) {
+            this.rowCanEdit = false
+            this.materialTable.columns[1].type = FormTypes.normal
+          }
           this.model.operTime = this.model.operTimeStr
           this.fileList = this.model.fileName
           this.$nextTick(() => {

@@ -195,14 +195,13 @@
         this.visible = true;
         this.loadData(1)
       },
-      purchaseShow(type, subType, organType, status, purchaseStatus) {
+      purchaseShow(type, subType, organType, status) {
         this.selectType = 'list'
         this.showType = 'purchase'
         this.queryParam.type = type
         this.queryParam.subType = subType
         this.queryParam.roleType = '全部数据'
         this.queryParam.status = status
-        this.queryParam.purchaseStatus = purchaseStatus
         this.columns[0].title = organType
         this.model = Object.assign({}, {});
         this.visible = true;
@@ -250,7 +249,8 @@
           let record = this.selectBillRows[0]
           let param = {
             headerId: record.id,
-            mpList : ''
+            mpList : '',
+            linkType: this.showType
           }
           this.loading = true;
           getAction('/depotItem/getDetailList', param).then((res) => {

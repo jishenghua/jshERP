@@ -326,6 +326,10 @@
             handleIntroJs(this.prefixNo, 1)
           })
         } else {
+          if(this.model.linkNumber) {
+            this.rowCanEdit = false
+            this.materialTable.columns[1].type = FormTypes.normal
+          }
           this.model.operTime = this.model.operTimeStr
           this.model.debt = (this.model.discountLastMoney + this.model.otherMoney - this.model.changeAmount).toFixed(2)
           if(this.model.accountId == null) {
