@@ -729,7 +729,9 @@ public class DepotHeadService {
         User userInfo=userService.getCurrentUser();
         depotHead.setCreator(userInfo==null?null:userInfo.getId());
         depotHead.setCreateTime(new Timestamp(System.currentTimeMillis()));
-        depotHead.setStatus(BusinessConstants.BILLS_STATUS_UN_AUDIT);
+        if(StringUtil.isEmpty(depotHead.getStatus())) {
+            depotHead.setStatus(BusinessConstants.BILLS_STATUS_UN_AUDIT);
+        }
         depotHead.setPurchaseStatus(BusinessConstants.BILLS_STATUS_UN_AUDIT);
         depotHead.setPayType(depotHead.getPayType()==null?"现付":depotHead.getPayType());
         if(StringUtil.isNotEmpty(depotHead.getAccountIdList())){

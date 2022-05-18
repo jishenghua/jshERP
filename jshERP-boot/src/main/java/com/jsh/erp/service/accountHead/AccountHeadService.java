@@ -266,7 +266,9 @@ public class AccountHeadService {
         AccountHead accountHead = JSONObject.parseObject(beanJson, AccountHead.class);
         User userInfo=userService.getCurrentUser();
         accountHead.setCreator(userInfo==null?null:userInfo.getId());
-        accountHead.setStatus(BusinessConstants.BILLS_STATUS_UN_AUDIT);
+        if(StringUtil.isEmpty(accountHead.getStatus())) {
+            accountHead.setStatus(BusinessConstants.BILLS_STATUS_UN_AUDIT);
+        }
         accountHeadMapper.insertSelective(accountHead);
         //根据单据编号查询单据id
         AccountHeadExample dhExample = new AccountHeadExample();
