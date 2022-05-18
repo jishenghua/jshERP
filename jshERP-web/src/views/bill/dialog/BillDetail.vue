@@ -198,7 +198,7 @@
               </a-form-item>
             </a-col>
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联订单">
+              <a-form-item v-if="purchaseBySaleFlag" :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联订单">
                 <a @click="myHandleDetail(model.linkNumber)">{{model.linkNumber}}</a>
               </a-form-item>
             </a-col>
@@ -923,7 +923,7 @@
 <script>
   import pick from 'lodash.pick'
   import { getAction } from '@/api/manage'
-  import { findBillDetailByNumber, getPlatformConfigByKey} from '@/api/api'
+  import { findBillDetailByNumber, getPlatformConfigByKey, getCurrentSystemConfig} from '@/api/api'
   import { getMpListShort } from "@/utils/util"
   import BillPrintIframe from './BillPrintIframe'
   import JUpload from '@/components/jeecg/JUpload'
@@ -943,6 +943,7 @@
         billType: '',
         billPrintFlag: false,
         fileList: [],
+        purchaseBySaleFlag: false,
         tableWidth: {
           'width': '1550px'
         },
@@ -1325,6 +1326,13 @@
           }
         })
       },
+      getSystemConfig() {
+        getCurrentSystemConfig().then((res) => {
+          if(res.code === 200 && res.data){
+            this.purchaseBySaleFlag = res.data.purchaseBySaleFlag==='1'?true:false
+          }
+        })
+      },
       show(record, type) {
         this.billType = type
         //附件下载
@@ -1347,6 +1355,7 @@
         let url = this.readOnly ? this.url.detailList : this.url.detailList;
         this.requestSubTableData(record, type, url, params);
         this.initPlatform()
+        this.getSystemConfig()
       },
       requestSubTableData(record, type, url, params, success) {
         this.loading = true

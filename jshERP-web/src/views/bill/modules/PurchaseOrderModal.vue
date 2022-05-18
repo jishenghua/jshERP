@@ -47,7 +47,7 @@
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联订单" data-step="3" data-title="关联订单"
+            <a-form-item v-if="purchaseBySaleFlag" :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联订单" data-step="3" data-title="关联订单"
                          data-intro="采购订单单据可以通过关联订单来选择已录入的销售订单，选择之后会自动加载订单的内容，
               提交之后原来的销售订单会对应的改变单据状态。另外本系统支持分批多次关联">
               <a-input-search placeholder="请选择关联订单" v-decorator="[ 'linkNumber' ]" @search="onSearchLinkNumber" :readOnly="true"/>
@@ -129,6 +129,7 @@
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
+  import { getCurrentSystemConfig } from '@/api/api'
   import { getMpListShort,handleIntroJs } from "@/utils/util"
   import JUpload from '@/components/jeecg/JUpload'
   import JDate from '@/components/jeecg/JDate'
@@ -160,6 +161,7 @@
         prefixNo: 'CGDD',
         fileList:[],
         rowCanEdit: true,
+        purchaseBySaleFlag: true,
         model: {},
         labelCol: {
           xs: { span: 24 },
@@ -226,6 +228,7 @@
       editAfter() {
         this.rowCanEdit = true
         this.materialTable.columns[1].type = FormTypes.popupJsh
+        this.getSystemConfig()
         this.changeColumnHide()
         if (this.action === 'add') {
           this.addInit(this.prefixNo)
@@ -237,7 +240,7 @@
           this.model.operTime = this.model.operTimeStr
           this.fileList = this.model.fileName
           this.$nextTick(() => {
-            this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'number', 'remark',
+            this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'number', 'linkNumber', 'remark',
             'discount','discountMoney','discountLastMoney'))
           });
           // 加载子表数据
@@ -320,6 +323,13 @@
           }
           this.materialTable.dataSource = selectBillDetailRows
         }
+      },
+      getSystemConfig() {
+        getCurrentSystemConfig().then((res) => {
+          if(res.code === 200 && res.data){
+            this.purchaseBySaleFlag = res.data.purchaseBySaleFlag==='1'?true:false
+          }
+        })
       },
     }
   }

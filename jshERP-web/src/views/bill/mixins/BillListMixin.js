@@ -9,7 +9,7 @@ export const BillListMixin = {
       cusList: [],
       retailList: [],
       userList: [],
-      accountList: []
+      accountList: [],
     }
   },
   computed: {
@@ -138,6 +138,6 @@ export const BillListMixin = {
           this.accountList = list
         }
       })
-    }
+    },
   }
 }

@@ -147,6 +147,7 @@
   import BillDetail from './dialog/BillDetail'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { BillListMixin } from './mixins/BillListMixin'
+  import { getCurrentSystemConfig } from '@/api/api'
   import JDate from '@/components/jeecg/JDate'
   import Vue from 'vue'
   export default {
@@ -213,7 +214,7 @@
           { title: '状态', dataIndex: 'status', width: 70, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }
           },
-          { title: '采购状态', dataIndex: 'purchaseStatus', width: 70, align: "center",
+          { title: '采购进度', dataIndex: 'purchaseStatus', width: 70, align: "center",
             scopedSlots: { customRender: 'customRenderPurchaseStatus' }
           },
           {
@@ -234,6 +235,7 @@
     created() {
       this.initCustomer()
       this.initUser()
+      this.getSystemConfig()
     },
     computed: {
     },
@@ -252,7 +254,30 @@
         } else {
           this.$message.warning("抱歉，只有未审核的单据才能删除！")
         }
-      }
+      },
+      getSystemConfig() {
+        getCurrentSystemConfig().then((res) => {
+          if(res.code === 200 && res.data){
+            let purchaseBySaleFlag = res.data.purchaseBySaleFlag
+            if(purchaseBySaleFlag === "0") {
+              if(this.columns.length === 10) {
+                this.columns.splice(8, 1)
+              }
+            } else {
+              if(this.columns.length<10) {
+                let purchaseStatusObj = { title: '采购进度', dataIndex: 'purchaseStatus', width: 70, align: "center",
+                  scopedSlots: { customRender: 'customRenderPurchaseStatus' }
+                }
+                this.columns.splice(8, 0, purchaseStatusObj)
+              }
+            }
+          }
+        })
+      },
+      searchQuery() {
+        this.loadData(1)
+        this.getSystemConfig()
+      },
     }
   }
 </script>
