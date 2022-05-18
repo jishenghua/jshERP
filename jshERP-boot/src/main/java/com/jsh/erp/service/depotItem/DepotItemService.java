@@ -847,17 +847,11 @@ public class DepotItemService {
                 goToType = BusinessConstants.SUB_TYPE_PURCHASE_ORDER;
             }
         } else {
-            if(BusinessConstants.PURCHASE_STATUS_SKIPING.equals(depotHead.getPurchaseStatus())) {
-                if(BusinessConstants.SUB_TYPE_SALES_ORDER.equals(depotHead.getSubType())) {
-                    goToType = BusinessConstants.SUB_TYPE_PURCHASE_ORDER;
-                }
-            } else {
-                if(BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(depotHead.getSubType())) {
-                    goToType = BusinessConstants.SUB_TYPE_PURCHASE;
-                }
-                if(BusinessConstants.SUB_TYPE_SALES_ORDER.equals(depotHead.getSubType())) {
-                    goToType = BusinessConstants.SUB_TYPE_SALES;
-                }
+            if(BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(depotHead.getSubType())) {
+                goToType = BusinessConstants.SUB_TYPE_PURCHASE;
+            }
+            if(BusinessConstants.SUB_TYPE_SALES_ORDER.equals(depotHead.getSubType())) {
+                goToType = BusinessConstants.SUB_TYPE_SALES;
             }
         }
         BigDecimal count = depotItemMapperEx.getFinishNumber(meId, linkNumber, goToType);
