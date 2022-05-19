@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import {getAction } from '@/api/manage'
+import { FormTypes } from '@/utils/JEditableTableUtil'
 import {findBySelectSup, findBySelectCus, findBySelectRetail, getUserList, getAccount} from '@/api/api'
 
 export const BillListMixin = {
@@ -45,6 +46,9 @@ export const BillListMixin = {
       this.$refs.modalForm.edit(record);
       this.$refs.modalForm.title = "复制新增";
       this.$refs.modalForm.disableSubmit = false;
+      //开启明细的编辑模式
+      this.$refs.modalForm.rowCanEdit = true
+      this.$refs.modalForm.materialTable.columns[1].type = FormTypes.popupJsh
     },
     myHandleEdit(record) {
       if(record.status === '0') {
