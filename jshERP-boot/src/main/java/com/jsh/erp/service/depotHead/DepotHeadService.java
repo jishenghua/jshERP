@@ -542,11 +542,7 @@ public class DepotHeadService {
                     }
                     if (type.equals("采购入库")) {
                         allPrice = p2.subtract(p1);
-                    } else if (type.equals("销售退货入库")) {
-                        allPrice = p2.subtract(p1);
                     } else if (type.equals("销售出库")) {
-                        allPrice = p1.subtract(p2);
-                    } else if (type.equals("采购退货出库")) {
                         allPrice = p1.subtract(p2);
                     } else if (type.equals("收款")) {
                         allPrice = BigDecimal.ZERO.subtract(p1);

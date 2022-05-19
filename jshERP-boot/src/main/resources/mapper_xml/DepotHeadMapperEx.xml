@@ -468,7 +468,7 @@
         select dh.number,concat(dh.sub_type,dh.type) as type,dh.discount_last_money,dh.other_money,dh.change_amount,s.supplier supplierName,
         date_format(dh.oper_time,'%Y-%m-%d %H:%i:%S') as oTime from jsh_depot_head dh
         left join jsh_supplier s on s.id=dh.organ_id and ifnull(s.delete_Flag,'0') !='1'
-        where s.type=#{supType} and (dh.sub_type!='其它' and dh.sub_type!='采购订单' and dh.sub_type!='销售订单')
+        where s.type=#{supType} and (dh.sub_type='采购' or dh.sub_type='销售')
         and dh.oper_time >=#{beginTime} and dh.oper_time &lt;=#{endTime}
         <if test="organId != null">
             and dh.organ_id=#{organId}
@@ -495,7 +495,7 @@
         (
             select count(1) a from jsh_depot_head dh
             left join jsh_supplier s on s.id=dh.organ_id and ifnull(s.delete_Flag,'0') !='1'
-            where s.type=#{supType} and (dh.sub_type!='其它' and dh.sub_type!='采购订单' and dh.sub_type!='销售订单')
+            where s.type=#{supType} and (dh.sub_type='采购' or dh.sub_type='销售')
             and dh.oper_time >=#{beginTime} and dh.oper_time &lt;=#{endTime}
             <if test="organId != null">
                 and dh.organ_id=#{organId}
