@@ -21,7 +21,7 @@
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="供应商">
-              <a-select placeholder="选择供应商" v-decorator="[ 'organId', validatorRules.organId ]"
+              <a-select placeholder="选择供应商" v-decorator="[ 'organId', validatorRules.organId ]" :disabled="!rowCanEdit"
                 :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
                 <div slot="dropdownRender" slot-scope="menu">
                   <v-nodes :vnodes="menu" />
@@ -58,14 +58,14 @@
           :dataSource="materialTable.dataSource"
           :maxHeight="300"
           :rowNumber="false"
-          :rowSelection="true"
-          :actionButton="true"
-          :dragSort="true"
+          :rowSelection="rowCanEdit"
+          :actionButton="rowCanEdit"
+          :dragSort="rowCanEdit"
           @valueChange="onValueChange"
           @added="onAdded"
           @deleted="onDeleted">
           <template #buttonAfter>
-            <a-row :gutter="24" style="float:left;" data-step="4" data-title="扫码录入" data-intro="此功能支持扫码枪扫描商品条码进行录入">
+            <a-row v-if="rowCanEdit" :gutter="24" style="float:left;padding-bottom: 5px;" data-step="4" data-title="扫码录入" data-intro="此功能支持扫码枪扫描商品条码进行录入">
               <a-col v-if="scanStatus" :md="6" :sm="24">
                 <a-button @click="scanEnter">扫码录入</a-button>
               </a-col>
@@ -76,7 +76,7 @@
                 <a-button @click="stopScan">收起扫码</a-button>
               </a-col>
             </a-row>
-            <a-row :gutter="24" style="float:left;">
+            <a-row :gutter="24" style="float:left;padding-bottom: 5px;">
               <a-col :md="24" :sm="24">
                 <a-dropdown>
                   <a-menu slot="overlay">
@@ -212,6 +212,7 @@
         operTimeStr: '',
         prefixNo: 'CGTH',
         fileList:[],
+        rowCanEdit: true,
         model: {},
         labelCol: {
           xs: { span: 24 },
@@ -286,6 +287,8 @@
       //调用完edit()方法之后会自动调用此方法
       editAfter() {
         this.billStatus = '0'
+        this.rowCanEdit = true
+        this.materialTable.columns[1].type = FormTypes.popupJsh
         this.changeColumnHide()
         this.changeFormTypes(this.materialTable.columns, 'snList', 0)
         this.changeFormTypes(this.materialTable.columns, 'batchNumber', 0)
@@ -294,6 +297,10 @@
           this.addInit(this.prefixNo)
           this.fileList = []
         } else {
+          if(this.model.linkNumber) {
+            this.rowCanEdit = false
+            this.materialTable.columns[1].type = FormTypes.normal
+          }
           this.model.operTime = this.model.operTimeStr
           this.model.debt = (this.model.discountLastMoney + this.model.otherMoney - this.model.changeAmount).toFixed(2)
           if(this.model.accountId == null) {
@@ -362,47 +369,37 @@
         this.$refs.linkBillList.show('入库', '采购', '供应商', "1")
         this.$refs.linkBillList.title = "选择采购入库"
       },
-      linkBillListOk(selectBillRows) {
-        if(selectBillRows && selectBillRows.length>0) {
-          let record = selectBillRows[0]
-          this.$nextTick(() => {
-            this.form.setFieldsValue({
-              'organId': record.organId,
-              'linkNumber': record.number,
-              'remark': record.remark,
-              'discountLastMoney': record.totalPrice,
-              'changeAmount': record.totalPrice
-            })
-          });
-          // 加载子表数据
-          let params = {
-            headerId: record.id,
-            mpList: getMpListShort(Vue.ls.get('materialPropertyList'))  //扩展属性
+      linkBillListOk(selectBillDetailRows, linkNumber, organId, discount, remark) {
+        this.rowCanEdit = false
+        this.materialTable.columns[1].type = FormTypes.normal
+        if(selectBillDetailRows && selectBillDetailRows.length>0) {
+          let listEx = []
+          let allTaxLastMoney = 0
+          for(let j=0; j<selectBillDetailRows.length; j++) {
+            let info = selectBillDetailRows[j];
+            allTaxLastMoney += info.taxLastMoney
+            listEx.push(info)
+            this.changeColumnShow(info)
           }
-          this.requestSubTableDataEx(this.url.detailList, params, this.materialTable);
+          this.materialTable.dataSource = listEx
+          ///给优惠后金额重新赋值
+          if(allTaxLastMoney) {
+            let discountMoney = (discount*allTaxLastMoney/100).toFixed(2)-0
+            let discountLastMoney = (allTaxLastMoney - discountMoney).toFixed(2)-0
+            this.$nextTick(() => {
+              this.form.setFieldsValue({
+                'organId': organId,
+                'linkNumber': linkNumber,
+                'discount': discount,
+                'discountMoney': discountMoney,
+                'discountLastMoney': discountLastMoney,
+                'changeAmount': discountLastMoney,
+                'remark': remark
+              })
+            })
+          }
         }
       },
-      /** 查询某个tab的数据,给明细里面的价税合计赋值 */
-      requestSubTableDataEx(url, params, tab, success) {
-        tab.loading = true
-        getAction(url, params).then(res => {
-          if(res && res.code === 200){
-            let list = res.data.rows
-            let listEx = []
-            for(let j=0; j<list.length; j++){
-              let info = list[j];
-              info.taxMoney = 0
-              info.taxLastMoney = info.allPrice
-              listEx.push(info)
-              this.changeColumnShow(info)
-            }
-            tab.dataSource = listEx
-            typeof success === 'function' ? success(res) : ''
-          }
-        }).finally(() => {
-          tab.loading = false
-        })
-      }
     }
   }
 </script>
