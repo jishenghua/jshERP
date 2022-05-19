@@ -106,7 +106,7 @@
         selectedDetailRowKeys: [],
         selectBillRows: [],
         selectBillDetailRows: [],
-        showType: 'list',
+        showType: 'basic',
         selectType: 'list',
         linkNumber: '',
         organId: '',
@@ -195,13 +195,14 @@
         this.visible = true;
         this.loadData(1)
       },
-      purchaseShow(type, subType, organType, status) {
+      purchaseShow(type, subType, organType, status, purchaseStatus) {
         this.selectType = 'list'
         this.showType = 'purchase'
         this.queryParam.type = type
         this.queryParam.subType = subType
         this.queryParam.roleType = '全部数据'
         this.queryParam.status = status
+        this.queryParam.purchaseStatus = purchaseStatus
         this.columns[0].title = organType
         this.model = Object.assign({}, {});
         this.visible = true;

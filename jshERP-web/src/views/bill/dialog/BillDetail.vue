@@ -1292,6 +1292,20 @@
         if(record.status === '3') {
           //部分采购|部分销售的时候显示全部列
           this.columns = this.defColumns
+        } else if(record.purchaseStatus === '3') {
+          //将已出库的标题转为已采购，针对销售订单转采购订单的场景
+          let currentCol = []
+          for(let i=0; i<this.defColumns.length; i++){
+            let info = {}
+            info.title = this.defColumns[i].title
+            info.dataIndex = this.defColumns[i].dataIndex
+            info.width = this.defColumns[i].width
+            if(this.defColumns[i].dataIndex === 'finishNumber') {
+              info.title = '已采购'
+            }
+            currentCol.push(info)
+          }
+          this.columns = currentCol
         } else {
           let currentCol = []
           for(let i=0; i<this.defColumns.length; i++){
@@ -1348,9 +1362,16 @@
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model,'id'))
         });
+        let showType = 'basic'
+        if(record.status === '3') {
+          showType = 'basic'
+        } else if(record.purchaseStatus === '3') {
+          showType = 'purchase'
+        }
         let params = {
           headerId: this.model.id,
-          mpList: getMpListShort(Vue.ls.get('materialPropertyList'))  //扩展属性
+          mpList: getMpListShort(Vue.ls.get('materialPropertyList')),  //扩展属性
+          linkType: showType
         }
         let url = this.readOnly ? this.url.detailList : this.url.detailList;
         this.requestSubTableData(record, type, url, params);
