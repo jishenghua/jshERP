@@ -314,7 +314,7 @@ public class DepotHeadService {
                         BusinessConstants.SUB_TYPE_REPLAY.equals(depotHead.getSubType()))) {
                         String status = BusinessConstants.BILLS_STATUS_AUDIT;
                         //查询除当前单据之外的关联单据列表
-                        List<DepotHead> exceptCurrentList = getListByLinkNumberExceptCurrent(depotHead.getLinkNumber(), depotHead.getNumber());
+                        List<DepotHead> exceptCurrentList = getListByLinkNumberExceptCurrent(depotHead.getLinkNumber(), depotHead.getNumber(), depotHead.getType());
                         if(exceptCurrentList!=null && exceptCurrentList.size()>0) {
                             status = BusinessConstants.BILLS_STATUS_SKIPING;
                         }
@@ -691,9 +691,9 @@ public class DepotHeadService {
      * @return
      * @throws Exception
      */
-    public List<DepotHead> getListByLinkNumberExceptCurrent(String linkNumber, String number)throws Exception {
+    public List<DepotHead> getListByLinkNumberExceptCurrent(String linkNumber, String number, String type)throws Exception {
         DepotHeadExample example = new DepotHeadExample();
-        example.createCriteria().andLinkNumberEqualTo(linkNumber).andNumberNotEqualTo(number)
+        example.createCriteria().andLinkNumberEqualTo(linkNumber).andNumberNotEqualTo(number).andTypeEqualTo(type)
                 .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         return depotHeadMapper.selectByExample(example);
     }
