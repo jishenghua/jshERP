@@ -8,3 +8,6 @@
 
 ## front
 **/*.lock
+
+/data
+.m2
