@@ -51,7 +51,6 @@
 
 # 系统美图
 * 首页
-![输入图片说明](%E9%A6%96%E9%A1%B5.png)
 ![输入图片说明](https://images.gitee.com/uploads/images/2021/0527/231344_ef2d6554_852955.png "首页.png")
 * 零售管理
 ![输入图片说明](https://images.gitee.com/uploads/images/2021/0527/231359_889404f3_852955.png "零售管理.png")
