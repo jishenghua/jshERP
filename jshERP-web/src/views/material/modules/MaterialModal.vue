@@ -644,8 +644,15 @@
                   }
                 } else if(formData.unitId) {
                   if(commodityUnit != basicUnit && commodityUnit != otherUnit && commodityUnit != otherUnitTwo && commodityUnit != otherUnitThree) {
-                    this.$message.warning('条码之后的单位填写有误，单位【' + commodityUnit + '】请修改为【'
-                      + basicUnit+ '】或【' + otherUnit+ '】或【' + otherUnitTwo+ '】或【' + otherUnitThree+ '】！');
+                    let warnInfo = '条码之后的单位填写有误，单位【' + commodityUnit + '】请修改为【' + basicUnit+ '】或【' + otherUnit+ '】'
+                    if(otherUnitTwo) {
+                      warnInfo += '或【' + otherUnitTwo+ '】'
+                    }
+                    if(otherUnitThree) {
+                      warnInfo += '或【' + otherUnitThree+ '】'
+                    }
+                    warnInfo += '！'
+                    this.$message.warning(warnInfo);
                     return;
                   }
                 }
