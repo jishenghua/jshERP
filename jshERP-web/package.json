@@ -66,6 +66,7 @@
       "parser": "babel-eslint"
     },
     "rules": {
+      "template-curly-spacing" : "off",
       "generator-star-spacing": "off",
       "no-mixed-operators": 0,
       "vue/max-attributes-per-line": [
@@ -88,9 +89,11 @@
       "vue/no-use-v-if-with-v-for": 0,
       "vue/html-closing-bracket-newline": 0,
       "vue/no-parsing-error": 0,
-	  "no-console": 0,
+      "no-console": 0,
       "no-tabs": 0,
-      "indent": [1, 4]
+      "indent": ["error", 2, {
+        "ignoredNodes": ["TemplateLiteral"]
+      }]
     }
   },
   "postcss": {
