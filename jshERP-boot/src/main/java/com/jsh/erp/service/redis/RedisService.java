@@ -99,21 +99,17 @@ public class RedisService {
 
     /**
      * @author jisheng hua
-     * description:
-     *  将信息从redis中移除，比对key和ip
-     *@date: 2021/08/21 22:10
-     * @Param: request
-     * @Param: key
-     * @Param: ip
-     * @Param: deleteKey
-     * @return Object
+     * 将信息从redis中移除，比对user和ip
+     * @param userId
+     * @param clientIp
      */
-    public void deleteObjectByKeyAndIp(String key, String ip, String deleteKey){
+    public void deleteObjectByUserAndIp(Long userId, String clientIp){
         Set<String> tokens = redisTemplate.keys("*");
         for(String token : tokens) {
-            Object value = redisTemplate.opsForHash().get(token, key);
-            if(value!=null && value.equals(ip)) {
-                redisTemplate.opsForHash().delete(token, deleteKey);
+            Object userIdValue = redisTemplate.opsForHash().get(token, "userId");
+            Object clientIpValue = redisTemplate.opsForHash().get(token, "clientIp");
+            if(userIdValue!=null && clientIpValue!=null && userIdValue.equals(userId.toString()) && clientIpValue.equals(clientIp)) {
+                redisTemplate.opsForHash().delete(token, "userId");
             }
         }
     }

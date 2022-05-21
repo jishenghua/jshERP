@@ -75,7 +75,8 @@
     </select>
 
     <select id="getCountByIpAndDate" resultType="java.lang.Long">
-        select count(1) from jsh_log where operation=#{moduleName} and client_ip=#{clientIp} and create_time=#{createTime}
+        select count(1) from jsh_log
+        where user_id=#{userId} and operation=#{moduleName} and client_ip=#{clientIp} and create_time=#{createTime}
     </select>
 
     <insert id="insertLogWithUserId" parameterType="com.jsh.erp.datasource.entities.Log">

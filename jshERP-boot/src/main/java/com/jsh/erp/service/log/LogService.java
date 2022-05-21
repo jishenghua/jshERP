@@ -150,10 +150,10 @@ public class LogService {
             if(userId!=null) {
                 String clientIp = getLocalIp(request);
                 String createTime = Tools.getNow3();
-                Long count = logMapperEx.getCountByIpAndDate(moduleName, clientIp, createTime);
+                Long count = logMapperEx.getCountByIpAndDate(userId, moduleName, clientIp, createTime);
                 if(count > 0) {
-                    //如果某1个IP在同1秒内连续操作两遍，此时需要删除该redis记录，使其退出，防止恶意攻击
-                    redisService.deleteObjectByKeyAndIp("clientIp", clientIp, "userId");
+                    //如果某个用户某个IP在同1秒内连续操作两遍，此时需要删除该redis记录，使其退出，防止恶意攻击
+                    redisService.deleteObjectByUserAndIp(userId, clientIp);
                 } else {
                     Log log = new Log();
                     log.setUserId(userId);
