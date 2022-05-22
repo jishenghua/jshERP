@@ -387,23 +387,6 @@ public class DepotItemService {
     public void saveDetials(String rows, Long headerId, String actionType, HttpServletRequest request) throws Exception{
         //查询单据主表信息
         DepotHead depotHead =depotHeadMapper.selectByPrimaryKey(headerId);
-        //获得当前操作人
-        User userInfo=userService.getCurrentUser();
-        //首先回收序列号，如果是调拨，不用处理序列号
-        if(BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())
-            &&!BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubType())){
-            List<DepotItem> depotItemList = getListByHeaderId(headerId);
-            for(DepotItem depotItem : depotItemList){
-                Material material= materialService.getMaterial(depotItem.getMaterialId());
-                if(material==null){
-                    continue;
-                }
-                if(BusinessConstants.ENABLE_SERIAL_NUMBER_ENABLED.equals(material.getEnableSerialNumber())){
-                    serialNumberService.cancelSerialNumber(depotItem.getMaterialId(),depotHead.getNumber(),
-                            (depotItem.getBasicNumber()==null?0:depotItem.getBasicNumber()).intValue(), userInfo);
-                }
-            }
-        }
         //删除单据的明细
         deleteDepotItemHeadId(headerId);
         JSONArray rowArr = JSONArray.parseArray(rows);
@@ -417,6 +400,7 @@ public class DepotItemService {
                 depotItem.setMaterialId(materialExtend.getMaterialId());
                 depotItem.setMaterialExtendId(materialExtend.getId());
                 depotItem.setMaterialUnit(rowObj.getString("unit"));
+                Material material= materialService.getMaterial(depotItem.getMaterialId());
                 if (StringUtil.isExist(rowObj.get("snList"))) {
                     depotItem.setSnList(rowObj.getString("snList"));
                     if(StringUtil.isExist(rowObj.get("depotId"))) {
@@ -427,9 +411,21 @@ public class DepotItemService {
                             serialNumberService.addSerialNumberByBill(depotHead.getNumber(), materialExtend.getMaterialId(), depotId, depotItem.getSnList());
                         }
                     }
+                } else {
+                    //序列号不能为空
+                    if(BusinessConstants.ENABLE_SERIAL_NUMBER_ENABLED.equals(material.getEnableSerialNumber())) {
+                        throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_SERIAL_NUMBERE_EMPTY_CODE,
+                                String.format(ExceptionConstants.MATERIAL_SERIAL_NUMBERE_EMPTY_MSG, barCode));
+                    }
                 }
                 if (StringUtil.isExist(rowObj.get("batchNumber"))) {
                     depotItem.setBatchNumber(rowObj.getString("batchNumber"));
+                } else {
+                    //批号不能为空
+                    if(BusinessConstants.ENABLE_BATCH_NUMBER_ENABLED.equals(material.getEnableBatchNumber())) {
+                        throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_BATCH_NUMBERE_EMPTY_CODE,
+                                String.format(ExceptionConstants.MATERIAL_BATCH_NUMBERE_EMPTY_MSG, barCode));
+                    }
                 }
                 if (StringUtil.isExist(rowObj.get("expirationDate"))) {
                     depotItem.setExpirationDate(rowObj.getDate("expirationDate"));
@@ -531,28 +527,22 @@ public class DepotItemService {
                 }
                 //出库时判断库存是否充足
                 if(BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())){
-                    if(depotItem==null){
-                        continue;
-                    }
-                    Material material= materialService.getMaterial(depotItem.getMaterialId());
-                    if(material==null){
-                        continue;
-                    }
                     BigDecimal stock = getStockByParam(depotItem.getDepotId(),depotItem.getMaterialId(),null,null);
                     if(StringUtil.isNotEmpty(depotItem.getSku())) {
                         //对于sku商品要换个方式计算库存
                         stock = getSkuStockByParam(depotItem.getDepotId(),depotItem.getMaterialExtendId(),null,null);
                     }
                     BigDecimal thisBasicNumber = depotItem.getBasicNumber()==null?BigDecimal.ZERO:depotItem.getBasicNumber();
-                    if(systemConfigService.getMinusStockFlag() == false && stock.compareTo(thisBasicNumber)<0){
+                    if(!systemConfigService.getMinusStockFlag() && stock.compareTo(thisBasicNumber)<0){
                         throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_STOCK_NOT_ENOUGH_CODE,
-                                String.format(ExceptionConstants.MATERIAL_STOCK_NOT_ENOUGH_MSG,material==null?"":material.getName()));
+                                String.format(ExceptionConstants.MATERIAL_STOCK_NOT_ENOUGH_MSG, material.getName()));
                     }
                     //出库时处理序列号
                     if(!BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubType())) {
-                        //判断商品是否开启序列号，开启的收回序列号，未开启的跳过
+                        //判断商品是否开启序列号，开启的售出序列号，未开启的跳过
                         if(BusinessConstants.ENABLE_SERIAL_NUMBER_ENABLED.equals(material.getEnableSerialNumber())) {
-                            //查询单据子表中开启序列号的数据列表
+                            //售出序列号，获得当前操作人
+                            User userInfo=userService.getCurrentUser();
                             serialNumberService.checkAndUpdateSerialNumber(depotItem, depotHead.getNumber(), userInfo, StringUtil.toNull(depotItem.getSnList()));
                         }
                     }

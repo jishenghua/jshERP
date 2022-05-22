@@ -284,9 +284,9 @@ public class ExceptionConstants {
     //该商品未开启序列号
     public static final int MATERIAL_NOT_ENABLE_SERIAL_NUMBER_CODE = 8000002;
     public static final String MATERIAL_NOT_ENABLE_SERIAL_NUMBER_MSG = "该商品未开启序列号功能";
-    //该商品已绑定序列号数量小于等于商品现有库存
-    public static final int MATERIAL_SERIAL_NUMBERE_NOT_MORE_THAN_STORAGE_CODE = 8000003;
-    public static final String MATERIAL_SERIAL_NUMBERE_NOT_MORE_THAN_STORAGE_MSG = "该商品已绑定序列号数量大于等于商品现有库存";
+    //商品的序列号不能为空
+    public static final int MATERIAL_SERIAL_NUMBERE_EMPTY_CODE = 8000003;
+    public static final String MATERIAL_SERIAL_NUMBERE_EMPTY_MSG = "抱歉，商品条码:%s的序列号不能为空";
     //商品库存不足
     public static final int MATERIAL_STOCK_NOT_ENOUGH_CODE = 8000004;
     public static final String MATERIAL_STOCK_NOT_ENOUGH_MSG = "商品:%s库存不足";
@@ -326,6 +326,9 @@ public class ExceptionConstants {
     //比例格式错误
     public static final int MATERIAL_RATIO_NOT_INTEGER_CODE = 8000016;
     public static final String MATERIAL_RATIO_NOT_INTEGER_MSG = "第%s行比例格式错误";
+    //商品的批号不能为空
+    public static final int MATERIAL_BATCH_NUMBERE_EMPTY_CODE = 8000017;
+    public static final String MATERIAL_BATCH_NUMBERE_EMPTY_MSG = "抱歉，商品条码:%s的批号不能为空";
     /**
      *  单据信息
      * type = 85

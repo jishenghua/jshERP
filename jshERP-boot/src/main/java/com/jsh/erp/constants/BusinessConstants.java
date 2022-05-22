@@ -61,6 +61,11 @@ public class BusinessConstants {
     public static final String ENABLE_SERIAL_NUMBER_ENABLED = "1";
     public static final String ENABLE_SERIAL_NUMBER_NOT_ENABLED = "0";
     /**
+     * 商品是否开启批号标识enableBatchNumber  '0'未启用 '1'启用
+     * */
+    public static final String ENABLE_BATCH_NUMBER_ENABLED = "1";
+    public static final String ENABLE_BATCH_NUMBER_NOT_ENABLED = "0";
+    /**
      * 单据状态 billsStatus '0'未审核 '1'审核 '2'完成采购|销售 '3'部分采购|销售
      * */
     public static final String BILLS_STATUS_UN_AUDIT = "0";

@@ -287,6 +287,8 @@ public class SerialNumberService {
     public int sellSerialNumber(Long materialId, String outBillNo, String snList, User user) throws Exception{
         int result=0;
         try{
+            //将中文的逗号批量替换为英文逗号
+            snList = snList.replaceAll("，",",");
             String [] snArray=snList.split(",");
             result = serialNumberMapperEx.sellSerialNumber(materialId, outBillNo, snArray, new Date(),user==null?null:user.getId());
         }catch(Exception e){
