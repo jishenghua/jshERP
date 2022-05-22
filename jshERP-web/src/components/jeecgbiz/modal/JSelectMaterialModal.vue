@@ -18,7 +18,7 @@
             <a-row :gutter="24">
               <a-col :md="6" :sm="8">
                 <a-form-item label="商品" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
-                  <a-input ref="material" placeholder="条码、名称、规格、型号" v-model="queryParam.q"></a-input>
+                  <a-input ref="material" placeholder="条码、名称、规格、型号、颜色" v-model="queryParam.q"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="8">
@@ -42,8 +42,30 @@
                 <a-col :md="6" :sm="24">
                   <a-button type="primary" @click="loadMaterialData(1)">查询</a-button>
                   <a-button style="margin-left: 8px" @click="searchReset(1)">重置</a-button>
+                  <a @click="handleToggleSearch" style="margin-left: 8px">
+                    {{ toggleSearchStatus ? '收起' : '展开' }}
+                    <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
+                  </a>
                 </a-col>
               </span>
+              <template v-if="toggleSearchStatus">
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="序列号" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select placeholder="有无序列号" v-model="queryParam.enableSerialNumber">
+                      <a-select-option value="1">有</a-select-option>
+                      <a-select-option value="0">无</a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="批号" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select placeholder="有无批号" v-model="queryParam.enableBatchNumber">
+                      <a-select-option value="1">有</a-select-option>
+                      <a-select-option value="0">无</a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+              </template>
             </a-row>
           </a-form>
           <a-table
@@ -90,7 +112,10 @@
         modalWidth: 1450,
         queryParam: {
           q: '',
-          depotId: ''
+          categoryId: '',
+          depotId: '',
+          enableSerialNumber: '',
+          enableBatchNumber: ''
         },
         labelCol: {
           xs: { span: 24 },
@@ -315,7 +340,8 @@
           if(this.queryParam.q === this.dataSource[0].mBarCode||
             this.queryParam.q === this.dataSource[0].name||
             this.queryParam.q === this.dataSource[0].standard||
-            this.queryParam.q === this.dataSource[0].model) {
+            this.queryParam.q === this.dataSource[0].model||
+            this.queryParam.q === this.dataSource[0].color) {
             let arr = []
             arr.push(this.dataSource[0].id)
             this.selectedRowKeys = arr
