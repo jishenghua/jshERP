@@ -393,6 +393,7 @@ export const BillModalMixin = {
         case "snList":
           snList = value
           if(snList) {
+            snList = snList.replaceAll('，',',')
             let snArr = snList.split(',')
             operNumber = snArr.length
             taxRate = row.taxRate-0 //税率
