@@ -176,14 +176,18 @@ public class MaterialController {
                                   @RequestParam(value = "q", required = false) String q,
                                   @RequestParam("mpList") String mpList,
                                   @RequestParam(value = "depotId", required = false) Long depotId,
+                                  @RequestParam(value = "enableSerialNumber", required = false) String enableSerialNumber,
+                                  @RequestParam(value = "enableBatchNumber", required = false) String enableBatchNumber,
                                   @RequestParam("page") Integer currentPage,
                                   @RequestParam("rows") Integer pageSize,
                                   HttpServletRequest request) throws Exception{
         JSONObject object = new JSONObject();
         try {
-            List<MaterialVo4Unit> dataList = materialService.findBySelectWithBarCode(categoryId, q, (currentPage-1)*pageSize, pageSize);
+            List<MaterialVo4Unit> dataList = materialService.findBySelectWithBarCode(categoryId, q, enableSerialNumber,
+                    enableBatchNumber, (currentPage-1)*pageSize, pageSize);
             String[] mpArr = mpList.split(",");
-            int total = materialService.findBySelectWithBarCodeCount(categoryId, q);
+            int total = materialService.findBySelectWithBarCodeCount(categoryId, q, enableSerialNumber,
+                    enableBatchNumber);
             object.put("total", total);
             JSONArray dataArray = new JSONArray();
             //存放数据json数组
@@ -293,11 +297,16 @@ public class MaterialController {
 
     /**
      * 生成excel表格
-     * @param barCode
-     * @param name
-     * @param standard
-     * @param model
      * @param categoryId
+     * @param materialParam
+     * @param color
+     * @param weight
+     * @param expiryNum
+     * @param enabled
+     * @param enableSerialNumber
+     * @param enableBatchNumber
+     * @param remark
+     * @param mpList
      * @param request
      * @param response
      */

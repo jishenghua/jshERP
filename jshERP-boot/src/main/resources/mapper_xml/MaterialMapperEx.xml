@@ -290,13 +290,19 @@
         where m.enabled=1 and me.id is not null
         <if test="q != null and q !=''">
             <bind name="bindKey" value="'%'+q+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey} or m.color like #{bindKey})
         </if>
         <if test="idList.size()>0">
             and m.category_id in
             <foreach collection="idList" item="item" index="index" separator="," open="(" close=")">
                 #{item}
             </foreach>
+        </if>
+        <if test="enableSerialNumber != null and enableSerialNumber !=''">
+            and m.enable_serial_number = #{enableSerialNumber}
+        </if>
+        <if test="enableBatchNumber != null and enableBatchNumber !=''">
+            and m.enable_batch_number = #{enableBatchNumber}
         </if>
         and ifnull(m.delete_flag,'0') !='1'
         ORDER BY m.id desc, me.default_flag desc, me.id asc
@@ -319,6 +325,12 @@
             <foreach collection="idList" item="item" index="index" separator="," open="(" close=")">
                 #{item}
             </foreach>
+        </if>
+        <if test="enableSerialNumber != null and enableSerialNumber !=''">
+            and m.enable_serial_number = #{enableSerialNumber}
+        </if>
+        <if test="enableBatchNumber != null and enableBatchNumber !=''">
+            and m.enable_batch_number = #{enableBatchNumber}
         </if>
         and ifnull(m.delete_flag,'0') !='1'
     </select>
