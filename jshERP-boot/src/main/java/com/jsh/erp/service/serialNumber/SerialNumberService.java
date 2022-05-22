@@ -418,6 +418,9 @@ public class SerialNumberService {
                 serialNumber.setUpdater(userInfo == null ? null : userInfo.getId());
                 serialNumber.setInBillNo(inBillNo);
                 serialNumberMapper.insertSelective(serialNumber);
+            } else {
+                throw new BusinessRunTimeException(ExceptionConstants.SERIAL_NUMBERE_ALREADY_EXISTS_CODE,
+                        String.format(ExceptionConstants.SERIAL_NUMBERE_ALREADY_EXISTS_MSG, sn));
             }
         }
     }

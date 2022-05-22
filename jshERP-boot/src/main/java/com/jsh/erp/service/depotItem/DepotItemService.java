@@ -419,12 +419,20 @@ public class DepotItemService {
                     }
                 }
                 if (StringUtil.isExist(rowObj.get("batchNumber"))) {
-                    depotItem.setBatchNumber(rowObj.getString("batchNumber"));
+                    //入库的时候批号不能重复
+                    Long bnCount = depotItemMapperEx.getCountByMaterialAndBatchNumber(materialExtend.getId(), rowObj.getString("batchNumber"), "入库");
+                    if(bnCount == 0) {
+                        depotItem.setBatchNumber(rowObj.getString("batchNumber"));
+                    } else {
+                        throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_BATCH_NUMBERE_EXISTS_CODE,
+                                String.format(ExceptionConstants.DEPOT_HEAD_BATCH_NUMBERE_EXISTS_MSG, barCode));
+                    }
+
                 } else {
                     //批号不能为空
                     if(BusinessConstants.ENABLE_BATCH_NUMBER_ENABLED.equals(material.getEnableBatchNumber())) {
-                        throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_BATCH_NUMBERE_EMPTY_CODE,
-                                String.format(ExceptionConstants.MATERIAL_BATCH_NUMBERE_EMPTY_MSG, barCode));
+                        throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_BATCH_NUMBERE_EMPTY_CODE,
+                                String.format(ExceptionConstants.DEPOT_HEAD_BATCH_NUMBERE_EMPTY_MSG, barCode));
                     }
                 }
                 if (StringUtil.isExist(rowObj.get("expirationDate"))) {

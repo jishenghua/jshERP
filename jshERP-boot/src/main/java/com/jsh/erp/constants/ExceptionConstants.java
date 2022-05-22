@@ -326,9 +326,7 @@ public class ExceptionConstants {
     //比例格式错误
     public static final int MATERIAL_RATIO_NOT_INTEGER_CODE = 8000016;
     public static final String MATERIAL_RATIO_NOT_INTEGER_MSG = "第%s行比例格式错误";
-    //商品的批号不能为空
-    public static final int MATERIAL_BATCH_NUMBERE_EMPTY_CODE = 8000017;
-    public static final String MATERIAL_BATCH_NUMBERE_EMPTY_MSG = "抱歉，商品条码:%s的批号不能为空";
+
     /**
      *  单据信息
      * type = 85
@@ -375,6 +373,12 @@ public class ExceptionConstants {
     //单据录入-商品条码XXX的数量需要修改下
     public static final int DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_CODE = 85000014;
     public static final String DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_MSG = "商品条码%s的数量需要修改下";
+    //单据录入-商品的批号不能为空
+    public static final int DEPOT_HEAD_BATCH_NUMBERE_EMPTY_CODE = 8000015;
+    public static final String DEPOT_HEAD_BATCH_NUMBERE_EMPTY_MSG = "抱歉，商品条码:%s的批号不能为空";
+    //单据录入-商品的批号重复
+    public static final int DEPOT_HEAD_BATCH_NUMBERE_EXISTS_CODE = 8000016;
+    public static final String DEPOT_HEAD_BATCH_NUMBERE_EXISTS_MSG = "抱歉，商品条码:%s的批号已存在";
     /**
      *  单据明细信息
      * type = 90
@@ -426,7 +430,7 @@ public class ExceptionConstants {
      * */
     /**序列号已存在*/
     public static final int SERIAL_NUMBERE_ALREADY_EXISTS_CODE = 10500000;
-    public static final String SERIAL_NUMBERE_ALREADY_EXISTS_MSG = "序列号已存在";
+    public static final String SERIAL_NUMBERE_ALREADY_EXISTS_MSG = "序列号:%s已存在";
     /**序列号不能为为空*/
     public static final int SERIAL_NUMBERE_NOT_BE_EMPTY_CODE = 10500001;
     public static final String SERIAL_NUMBERE_NOT_BE_EMPTY_MSG = "序列号不能为为空";

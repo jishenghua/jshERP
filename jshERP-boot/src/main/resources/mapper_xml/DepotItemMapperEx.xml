@@ -635,4 +635,14 @@
           and ifnull(dh.delete_flag,'0') !='1'
         group by di.material_extend_id
     </select>
+
+    <select id="getCountByMaterialAndBatchNumber" resultType="java.lang.Long">
+        select count(di.id) from
+        jsh_depot_head dh
+        left join jsh_depot_item di on dh.id=di.header_id and ifnull(di.delete_flag,'0') !='1'
+        where 1=1
+        and ifnull(dh.delete_flag,'0') !='1'
+        and di.material_extend_id=#{meId}
+        and di.batch_number=#{batchNumber}
+    </select>
 </mapper>

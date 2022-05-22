@@ -166,4 +166,9 @@ public interface DepotItemMapperEx {
     List<DepotItemVo4MaterialAndSum> getBatchBillDetailMaterialSum(
             @Param("linkNumber") String linkNumber,
             @Param("type") String type);
+
+    Long getCountByMaterialAndBatchNumber(
+            @Param("meId") Long meId,
+            @Param("batchNumber") String batchNumber,
+            @Param("type") String type);
 }
