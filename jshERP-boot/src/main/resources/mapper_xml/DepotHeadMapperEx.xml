@@ -585,7 +585,7 @@
         and ifnull(delete_flag,'0') !='1'
     </select>
 
-    <select id="getBuyAndSaleStatistics" resultType="java.math.BigDecimal">
+    <select id="getBuyAndSaleBasicStatistics" resultType="java.math.BigDecimal">
         SELECT
         ifnull(sum(discount_last_money),0)
         FROM jsh_depot_head

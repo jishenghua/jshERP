@@ -157,7 +157,7 @@ public interface DepotHeadMapperEx {
 
     List<DepotHead> getDepotHeadListByCreator(@Param("creatorArray") String[] creatorArray);
 
-    BigDecimal getBuyAndSaleStatistics(
+    BigDecimal getBuyAndSaleBasicStatistics(
             @Param("type") String type,
             @Param("subType") String subType,
             @Param("hasSupplier") Integer hasSupplier,

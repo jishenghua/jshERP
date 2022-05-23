@@ -41,6 +41,40 @@ public class Tools {
     }
 
     /**
+     * 获取昨天的日期字符串
+     * @return
+     */
+    public static String getYesterday(){
+        Date date=new Date();//取时间
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        //把日期往后增加一天.整数往后推,负数往前移动(1:表示明天、-1：表示昨天，0：表示今天)
+        calendar.add(Calendar.DATE,-1);
+        //这个时间就是日期往前推一天的结果
+        date=calendar.getTime();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        return formatter.format(date);
+    }
+
+    /**
+     * 获取当年的第一天
+     * @return
+     */
+    public static String getYearBegin(){
+        String yearStr = new SimpleDateFormat("yyyy").format(new Date());
+        return yearStr + "-01-01";
+    }
+
+    /**
+     * 获取当年的最后一天
+     * @return
+     */
+    public static String getYearEnd(){
+        String yearStr = new SimpleDateFormat("yyyy").format(new Date());
+        return yearStr + "-12-31";
+    }
+
+    /**
      * 获取当前月 yyyy-MM
      *
      * @return
