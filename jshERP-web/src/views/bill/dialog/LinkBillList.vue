@@ -13,20 +13,20 @@
       <!-- 搜索区域 -->
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
-          <a-col :md="6" :sm="8">
+          <a-col :md="6" :sm="24">
             <a-form-item label="单据编号" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
               <a-input placeholder="请输入单据编号查询" v-model="queryParam.number"></a-input>
             </a-form-item>
           </a-col>
-          <a-col :md="6" :sm="8">
+          <a-col :md="6" :sm="24">
             <a-form-item label="商品信息" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
               <a-input placeholder="条码|名称|规格|型号" v-model="queryParam.materialParam"></a-input>
             </a-form-item>
           </a-col>
-          <a-col :md="7" :sm="10">
+          <a-col :md="6" :sm="24">
             <a-form-item label="单据日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
               <a-range-picker
-                style="width: 210px"
+                style="width: 100%"
                 v-model="queryParam.createTimeRange"
                 format="YYYY-MM-DD"
                 :placeholder="['开始时间', '结束时间']"

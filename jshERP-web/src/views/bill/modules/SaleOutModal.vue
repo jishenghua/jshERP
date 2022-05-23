@@ -95,6 +95,11 @@
                 </a-dropdown>
               </a-col>
             </a-row>
+            <a-row :gutter="24" style="float:left;padding-bottom: 5px;">
+              <a-col :md="24" :sm="24">
+                <a-button style="margin-left: 8px" @click="handleHistoryBillList"><a-icon type="history" />历史单据</a-button>
+              </a-col>
+            </a-row>
           </template>
         </j-editable-table>
         <a-row class="form-row" :gutter="24">
@@ -185,6 +190,7 @@
     <depot-modal ref="depotModalForm" @ok="depotModalFormOk"></depot-modal>
     <account-modal ref="accountModalForm" @ok="accountModalFormOk"></account-modal>
     <batch-set-depot ref="batchSetDepotModalForm" @ok="batchSetDepotModalFormOk"></batch-set-depot>
+    <history-bill-list ref="historyBillListModalForm"></history-bill-list>
   </j-modal>
 </template>
 <script>
@@ -195,6 +201,7 @@
   import DepotModal from '../../system/modules/DepotModal'
   import AccountModal from '../../system/modules/AccountModal'
   import BatchSetDepot from '../dialog/BatchSetDepot'
+  import HistoryBillList from '../dialog/HistoryBillList'
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
@@ -214,6 +221,7 @@
       DepotModal,
       AccountModal,
       BatchSetDepot,
+      HistoryBillList,
       JUpload,
       JDate,
       JSelectMultiple,
@@ -396,6 +404,11 @@
           info: JSON.stringify(billMain),
           rows: JSON.stringify(detailArr),
         }
+      },
+      handleHistoryBillList() {
+        let organId = this.form.getFieldValue('organId')
+        this.$refs.historyBillListModalForm.show('出库', '销售', '客户', organId);
+        this.$refs.historyBillListModalForm.disableSubmit = false;
       },
       onSearchLinkNumber() {
         this.$refs.linkBillList.show('其它', '销售订单', '客户', "1,3")

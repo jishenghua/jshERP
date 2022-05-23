@@ -82,6 +82,11 @@
                 <a-button @click="stopScan">收起扫码</a-button>
               </a-col>
             </a-row>
+            <a-row :gutter="24" style="float:left;padding-bottom: 5px;">
+              <a-col :md="24" :sm="24">
+                <a-button style="margin-left: 8px" @click="handleHistoryBillList"><a-icon type="history" />历史单据</a-button>
+              </a-col>
+            </a-row>
           </template>
         </j-editable-table>
         <a-row class="form-row" :gutter="24">
@@ -124,12 +129,14 @@
     </a-spin>
     <vendor-modal ref="vendorModalForm" @ok="vendorModalFormOk"></vendor-modal>
     <link-bill-list ref="linkBillList" @ok="linkBillListOk"></link-bill-list>
+    <history-bill-list ref="historyBillListModalForm"></history-bill-list>
   </j-modal>
 </template>
 <script>
   import pick from 'lodash.pick'
   import LinkBillList from '../dialog/LinkBillList'
   import VendorModal from '../../system/modules/VendorModal'
+  import HistoryBillList from '../dialog/HistoryBillList'
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
@@ -144,6 +151,7 @@
     components: {
       LinkBillList,
       VendorModal,
+      HistoryBillList,
       JUpload,
       JDate,
       VNodes: {
@@ -298,6 +306,11 @@
           info: JSON.stringify(billMain),
           rows: JSON.stringify(detailArr),
         }
+      },
+      handleHistoryBillList() {
+        let organId = this.form.getFieldValue('organId')
+        this.$refs.historyBillListModalForm.show('其它', '采购订单', '供应商', organId);
+        this.$refs.historyBillListModalForm.disableSubmit = false;
       },
       onSearchLinkNumber() {
         this.$refs.linkBillList.purchaseShow('其它', '销售订单', '客户', "1,3","0,3")
