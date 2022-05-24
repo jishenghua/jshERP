@@ -394,33 +394,39 @@ public class SerialNumberService {
         return count;
     }
 
-    public void addSerialNumberByBill(String inBillNo, Long materialId, Long depotId, String snList) throws Exception {
-        //将中文的逗号批量替换为英文逗号
-        snList = snList.replaceAll("，",",");
-        List<String> snArr = StringUtil.strToStringList(snList);
-        for(String sn: snArr) {
-            List<SerialNumber> list = new ArrayList<>();
-            SerialNumberExample example = new SerialNumberExample();
-            example.createCriteria().andMaterialIdEqualTo(materialId).andSerialNumberEqualTo(sn)
-                    .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-            list = serialNumberMapper.selectByExample(example);
-            //判断如果不存在重复序列号就新增
-            if(list == null || list.size() == 0) {
-                SerialNumber serialNumber = new SerialNumber();
-                serialNumber.setMaterialId(materialId);
-                serialNumber.setDepotId(depotId);
-                serialNumber.setSerialNumber(sn);
-                Date date = new Date();
-                serialNumber.setCreateTime(date);
-                serialNumber.setUpdateTime(date);
-                User userInfo = userService.getCurrentUser();
-                serialNumber.setCreator(userInfo == null ? null : userInfo.getId());
-                serialNumber.setUpdater(userInfo == null ? null : userInfo.getId());
-                serialNumber.setInBillNo(inBillNo);
-                serialNumberMapper.insertSelective(serialNumber);
-            } else {
-                throw new BusinessRunTimeException(ExceptionConstants.SERIAL_NUMBERE_ALREADY_EXISTS_CODE,
-                        String.format(ExceptionConstants.SERIAL_NUMBERE_ALREADY_EXISTS_MSG, sn));
+    public void addSerialNumberByBill(String type, String subType, String inBillNo, Long materialId, Long depotId, String snList) throws Exception {
+        //录入序列号的时候不能重复
+        if ((BusinessConstants.SUB_TYPE_PURCHASE.equals(subType) ||
+                BusinessConstants.SUB_TYPE_OTHER.equals(subType) ||
+                BusinessConstants.SUB_TYPE_SALES_RETURN.equals(subType)) &&
+                BusinessConstants.DEPOTHEAD_TYPE_IN.equals(type)) {
+            //将中文的逗号批量替换为英文逗号
+            snList = snList.replaceAll("，", ",");
+            List<String> snArr = StringUtil.strToStringList(snList);
+            for (String sn : snArr) {
+                List<SerialNumber> list = new ArrayList<>();
+                SerialNumberExample example = new SerialNumberExample();
+                example.createCriteria().andMaterialIdEqualTo(materialId).andSerialNumberEqualTo(sn)
+                        .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+                list = serialNumberMapper.selectByExample(example);
+                //判断如果不存在重复序列号就新增
+                if (list == null || list.size() == 0) {
+                    SerialNumber serialNumber = new SerialNumber();
+                    serialNumber.setMaterialId(materialId);
+                    serialNumber.setDepotId(depotId);
+                    serialNumber.setSerialNumber(sn);
+                    Date date = new Date();
+                    serialNumber.setCreateTime(date);
+                    serialNumber.setUpdateTime(date);
+                    User userInfo = userService.getCurrentUser();
+                    serialNumber.setCreator(userInfo == null ? null : userInfo.getId());
+                    serialNumber.setUpdater(userInfo == null ? null : userInfo.getId());
+                    serialNumber.setInBillNo(inBillNo);
+                    serialNumberMapper.insertSelective(serialNumber);
+                } else {
+                    throw new BusinessRunTimeException(ExceptionConstants.SERIAL_NUMBERE_ALREADY_EXISTS_CODE,
+                            String.format(ExceptionConstants.SERIAL_NUMBERE_ALREADY_EXISTS_MSG, sn));
+                }
             }
         }
     }

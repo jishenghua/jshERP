@@ -169,6 +169,5 @@ public interface DepotItemMapperEx {
 
     Long getCountByMaterialAndBatchNumber(
             @Param("meId") Long meId,
-            @Param("batchNumber") String batchNumber,
-            @Param("type") String type);
+            @Param("batchNumber") String batchNumber);
 }

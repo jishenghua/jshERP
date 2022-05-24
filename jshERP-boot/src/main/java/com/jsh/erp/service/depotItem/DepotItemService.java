@@ -405,11 +405,8 @@ public class DepotItemService {
                     depotItem.setSnList(rowObj.getString("snList"));
                     if(StringUtil.isExist(rowObj.get("depotId"))) {
                         Long depotId = rowObj.getLong("depotId");
-                        if(BusinessConstants.SUB_TYPE_PURCHASE.equals(depotHead.getSubType())||
-                                BusinessConstants.SUB_TYPE_OTHER.equals(depotHead.getSubType())||
-                                BusinessConstants.SUB_TYPE_SALES_RETURN.equals(depotHead.getSubType())) {
-                            serialNumberService.addSerialNumberByBill(depotHead.getNumber(), materialExtend.getMaterialId(), depotId, depotItem.getSnList());
-                        }
+                        serialNumberService.addSerialNumberByBill(depotHead.getType(), depotHead.getSubType(),
+                                depotHead.getNumber(), materialExtend.getMaterialId(), depotId, depotItem.getSnList());
                     }
                 } else {
                     //序列号不能为空
@@ -419,15 +416,9 @@ public class DepotItemService {
                     }
                 }
                 if (StringUtil.isExist(rowObj.get("batchNumber"))) {
-                    //入库的时候批号不能重复
-                    Long bnCount = depotItemMapperEx.getCountByMaterialAndBatchNumber(materialExtend.getId(), rowObj.getString("batchNumber"), "入库");
-                    if(bnCount == 0) {
-                        depotItem.setBatchNumber(rowObj.getString("batchNumber"));
-                    } else {
-                        throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_BATCH_NUMBERE_EXISTS_CODE,
-                                String.format(ExceptionConstants.DEPOT_HEAD_BATCH_NUMBERE_EXISTS_MSG, barCode));
-                    }
-
+                    //校验录入的批号是否重复
+                    checkBatchNumberIsExist(depotHead.getType(), depotHead.getSubType(), materialExtend.getId(), rowObj.getString("batchNumber"), barCode);
+                    depotItem.setBatchNumber(rowObj.getString("batchNumber"));
                 } else {
                     //批号不能为空
                     if(BusinessConstants.ENABLE_BATCH_NUMBER_ENABLED.equals(material.getEnableBatchNumber())) {
@@ -580,13 +571,34 @@ public class DepotItemService {
                     String.format(ExceptionConstants.DEPOT_HEAD_ROW_FAILED_MSG));
         }
     }
-
+    /**
+     * 校验录入的批号是否重复
+     * @param type
+     * @param subType
+     * @param meId
+     * @param batchNumber
+     * @param barCode
+     */
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public void checkBatchNumberIsExist(String type, String subType, Long meId, String batchNumber, String barCode) {
+        if ((BusinessConstants.SUB_TYPE_PURCHASE.equals(subType) ||
+                BusinessConstants.SUB_TYPE_OTHER.equals(subType) ||
+                BusinessConstants.SUB_TYPE_SALES_RETURN.equals(subType)) &&
+                BusinessConstants.DEPOTHEAD_TYPE_IN.equals(type)) {
+            Long bnCount = depotItemMapperEx.getCountByMaterialAndBatchNumber(meId, batchNumber);
+            if (bnCount > 0) {
+                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_BATCH_NUMBERE_EXISTS_CODE,
+                        String.format(ExceptionConstants.DEPOT_HEAD_BATCH_NUMBERE_EXISTS_MSG, barCode));
+            }
+        }
+    }
     /**
      * 判断单据的状态
      * 通过数组对比：原单据的商品和商品数量（汇总） 与 分批操作后单据的商品和商品数量（汇总）
      * @param depotHead
      * @return
      */
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public String getBillStatusByParam(DepotHead depotHead) {
         String res = BusinessConstants.BILLS_STATUS_SKIPED;
         //获取原单据的商品和商品数量（汇总）
@@ -616,6 +628,7 @@ public class DepotItemService {
      * @param depotHead
      * @param billStatus
      */
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void changeBillStatus(DepotHead depotHead, String billStatus) {
         DepotHead depotHeadOrders = new DepotHead();
         depotHeadOrders.setStatus(billStatus);
@@ -637,6 +650,7 @@ public class DepotItemService {
      * @param depotHead
      * @param billStatus
      */
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void changeBillPurchaseStatus(DepotHead depotHead, String billStatus) {
         DepotHead depotHeadOrders = new DepotHead();
         depotHeadOrders.setPurchaseStatus(billStatus);
