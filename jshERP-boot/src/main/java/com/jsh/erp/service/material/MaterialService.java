@@ -132,7 +132,7 @@ public class MaterialService {
                 Map<Long,BigDecimal> currentStockMap = getCurrentStockMapByMaterialList(list);
                 for (MaterialVo4Unit m : list) {
                     m.setMaterialOther(getMaterialOtherByParam(mpArr, m));
-                    m.setStock(currentStockMap.get(m.getId()));
+                    m.setStock(currentStockMap.get(m.getId())!=null? currentStockMap.get(m.getId()): BigDecimal.ZERO);
                     resList.add(m);
                 }
             }
@@ -182,7 +182,7 @@ public class MaterialService {
                             highSafeStock = jsonObj.getBigDecimal("highSafeStock");
                         }
                         Long depotId = jsonObj.getLong("id");
-                        if(StringUtil.isNotEmpty(number) && Double.valueOf(number)>0 || lowSafeStock!=null || highSafeStock!=null) {
+                        if(StringUtil.isNotEmpty(number) && Double.parseDouble(number)>0 || lowSafeStock!=null || highSafeStock!=null) {
                             insertInitialStockByMaterialAndDepot(depotId, mId, parseBigDecimalEx(number), lowSafeStock, highSafeStock);
                             insertCurrentStockByMaterialAndDepot(depotId, mId, parseBigDecimalEx(number));
                         }
@@ -233,7 +233,7 @@ public class MaterialService {
                         MaterialInitialStockExample example = new MaterialInitialStockExample();
                         example.createCriteria().andMaterialIdEqualTo(material.getId()).andDepotIdEqualTo(depotId);
                         materialInitialStockMapper.deleteByExample(example);
-                        if (StringUtil.isNotEmpty(number) && Double.parseDouble(number) != 0 || lowSafeStock!=null || highSafeStock!=null) {
+                        if (StringUtil.isNotEmpty(number) || lowSafeStock!=null || highSafeStock!=null) {
                             insertInitialStockByMaterialAndDepot(depotId, material.getId(), parseBigDecimalEx(number), lowSafeStock, highSafeStock);
                         }
                         //更新当前库存
