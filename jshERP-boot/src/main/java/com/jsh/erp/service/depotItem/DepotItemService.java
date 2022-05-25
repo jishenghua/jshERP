@@ -550,9 +550,10 @@ public class DepotItemService {
                 //更新当前库存
                 updateCurrentStock(depotItem);
             }
-            //如果关联单据号非空则更新订单的状态,单据类型：采购入库单或销售出库单
+            //如果关联单据号非空则更新订单的状态,单据类型：采购入库单或销售出库单或盘点复盘单
             if(BusinessConstants.SUB_TYPE_PURCHASE.equals(depotHead.getSubType())
-                    || BusinessConstants.SUB_TYPE_SALES.equals(depotHead.getSubType())) {
+                    || BusinessConstants.SUB_TYPE_SALES.equals(depotHead.getSubType())
+                    || BusinessConstants.SUB_TYPE_REPLAY.equals(depotHead.getSubType())) {
                 if(StringUtil.isNotEmpty(depotHead.getLinkNumber())) {
                     //单据状态:是否全部完成 2-全部完成 3-部分完成（针对订单的分批出入库）
                     String billStatus = getBillStatusByParam(depotHead);
