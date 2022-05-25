@@ -230,7 +230,7 @@
             this.requestFailed(err)
             this.Logout();
           } else if(res.data.msgTip == 'tenant is expire'){
-            err.message = '用户所属的租户已过期';
+            err.message = '试用期已结束，请联系客服续费';
             this.requestFailed(err)
             this.Logout();
           } else if(res.data.msgTip == 'access service error'){
