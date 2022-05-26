@@ -327,6 +327,7 @@
             let info = selectBillDetailRows[j];
             if (info.preNumber) {
               info.operNumber = info.preNumber - info.finishNumber
+              info.unitPrice = info.purchaseDecimal
               info.allPrice = (info.operNumber * info.unitPrice).toFixed(2) - 0;
               info.taxRate = 0
               info.taxMoney = 0
