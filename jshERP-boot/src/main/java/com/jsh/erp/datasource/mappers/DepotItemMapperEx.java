@@ -29,12 +29,14 @@ public interface DepotItemMapperEx {
             @Param("type") Integer type,
             @Param("remark") String remark);
 
-    List<DepotItemVo4DetailByTypeAndMId> findDetailByTypeAndMaterialIdList(
+    List<DepotItemVo4DetailByTypeAndMId> findDetailByDepotIdsAndMaterialIdList(
+            @Param("depotIdArray") String[] depotIdArray,
             @Param("mId") Long mId,
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
-    Long findDetailByTypeAndMaterialIdCounts(
+    Long findDetailByDepotIdsAndMaterialIdCount(
+            @Param("depotIdArray") String[] depotIdArray,
             @Param("mId") Long mId);
 
     List<DepotItemVo4WithInfoEx> getDetailList(

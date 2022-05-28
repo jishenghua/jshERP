@@ -61,28 +61,21 @@ public class DepotItemController {
     private RedisService redisService;
 
     /**
-     * 只根据商品id查询单据列表
+     * 根据仓库和商品查询单据列表
      * @param mId
      * @param request
      * @return
      */
-    @GetMapping(value = "/findDetailByTypeAndMaterialId")
-    @ApiOperation(value = "只根据商品id查询单据列表")
-    public String findDetailByTypeAndMaterialId(
+    @GetMapping(value = "/findDetailByDepotIdsAndMaterialId")
+    @ApiOperation(value = "根据仓库和商品查询单据列表")
+    public String findDetailByDepotIdsAndMaterialId(
             @RequestParam(value = Constants.PAGE_SIZE, required = false) Integer pageSize,
             @RequestParam(value = Constants.CURRENT_PAGE, required = false) Integer currentPage,
-            @RequestParam("materialId") String mId, HttpServletRequest request)throws Exception {
-        Map<String, String> parameterMap = ParamUtils.requestToMap(request);
-        parameterMap.put("mId", mId);
-        Map<String, Object> objectMap = new HashMap<String, Object>();
-        if (pageSize != null && pageSize <= 0) {
-            pageSize = 10;
-        }
-        String offset = ParamUtils.getPageOffset(currentPage, pageSize);
-        if (StringUtil.isNotEmpty(offset)) {
-            parameterMap.put(Constants.OFFSET, offset);
-        }
-        List<DepotItemVo4DetailByTypeAndMId> list = depotItemService.findDetailByTypeAndMaterialIdList(parameterMap);
+            @RequestParam(value = "depotIds",required = false) String depotIds,
+            @RequestParam("materialId") Long mId,
+            HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        List<DepotItemVo4DetailByTypeAndMId> list = depotItemService.findDetailByDepotIdsAndMaterialIdList(depotIds, mId, (currentPage-1)*pageSize, pageSize);
         JSONArray dataArray = new JSONArray();
         if (list != null) {
             for (DepotItemVo4DetailByTypeAndMId d: list) {
@@ -109,7 +102,7 @@ public class DepotItemController {
             return returnJson(objectMap, "查找不到数据", ErpInfo.OK.code);
         }
         objectMap.put("rows", dataArray);
-        objectMap.put("total", depotItemService.findDetailByTypeAndMaterialIdCounts(parameterMap));
+        objectMap.put("total", depotItemService.findDetailByDepotIdsAndMaterialIdCount(depotIds, mId));
         return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
     }
 

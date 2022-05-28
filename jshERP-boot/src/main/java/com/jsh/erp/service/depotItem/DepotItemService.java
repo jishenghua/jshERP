@@ -168,30 +168,28 @@ public class DepotItemService {
         return list==null?0:list.size();
     }
 
-    public List<DepotItemVo4DetailByTypeAndMId> findDetailByTypeAndMaterialIdList(Map<String, String> map)throws Exception {
-        String mIdStr = map.get("mId");
-        Long mId = null;
-        if(!StringUtil.isEmpty(mIdStr)) {
-            mId = Long.parseLong(mIdStr);
+    public List<DepotItemVo4DetailByTypeAndMId> findDetailByDepotIdsAndMaterialIdList(String depotIds, Long mId, int offset, int rows)throws Exception {
+        String [] depotIdArray = null;
+        if(StringUtil.isNotEmpty(depotIds)) {
+            depotIdArray = depotIds.split(",");
         }
         List<DepotItemVo4DetailByTypeAndMId> list =null;
         try{
-            list = depotItemMapperEx.findDetailByTypeAndMaterialIdList(mId, QueryUtils.offset(map), QueryUtils.rows(map));
+            list = depotItemMapperEx.findDetailByDepotIdsAndMaterialIdList(depotIdArray, mId, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
     }
 
-    public Long findDetailByTypeAndMaterialIdCounts(Map<String, String> map)throws Exception {
-        String mIdStr = map.get("mId");
-        Long mId = null;
-        if(!StringUtil.isEmpty(mIdStr)) {
-            mId = Long.parseLong(mIdStr);
+    public Long findDetailByDepotIdsAndMaterialIdCount(String depotIds, Long mId)throws Exception {
+        String [] depotIdArray = null;
+        if(StringUtil.isNotEmpty(depotIds)) {
+            depotIdArray = depotIds.split(",");
         }
         Long result =null;
         try{
-            result = depotItemMapperEx.findDetailByTypeAndMaterialIdCounts(mId);
+            result = depotItemMapperEx.findDetailByDepotIdsAndMaterialIdCount(depotIdArray, mId);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }

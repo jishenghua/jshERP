@@ -136,8 +136,9 @@
         and ifnull(delete_flag,'0') !='1'
     </select>
 
-    <select id="findDetailByTypeAndMaterialIdList" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="DetailByTypeAndMIdResultMap">
-        select dh.number,me.bar_code,m.name material_name,dh.type,dh.sub_type,
+    <select id="findDetailByDepotIdsAndMaterialIdList" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="DetailByTypeAndMIdResultMap">
+        select tb.* from
+        (select dh.number,me.bar_code,m.name material_name,dh.type,dh.sub_type,
         case
             when type='入库' then ifnull(di.basic_number,0)
             when type='出库' then 0-di.basic_number
@@ -155,28 +156,68 @@
         left join jsh_depot_item di on dh.id=di.header_id and ifnull(di.delete_flag,'0') !='1'
         left join jsh_material m on di.material_id=m.id and ifnull(m.delete_flag,'0') !='1'
         left join jsh_material_extend me on me.id=di.material_extend_id and ifnull(me.delete_Flag,'0') !='1'
-        where ((dh.type!='其它' and dh.sub_type!='调拨')
+        where (dh.type!='其它'
         or (dh.type='其它' and dh.sub_type='组装单')
         or (dh.type='其它' and dh.sub_type='拆卸单')
         or (dh.type='其它' and dh.sub_type='盘点复盘'))
+        <if test="depotIdArray != null">
+            and di.depot_id in (
+            <foreach collection="depotIdArray" item="depotId" separator=",">#{depotId}</foreach>
+            )
+        </if>
         and di.material_id = #{mId}
         and ifnull(dh.delete_flag,'0') !='1'
-        ORDER BY oTime desc
+        union all
+        --单独构造记录：调拨入库
+        select dh.number,me.bar_code,m.name material_name,dh.type,dh.sub_type,
+        ifnull(di.basic_number,0) as b_num,
+        (select concat(name,'[调入]') from jsh_depot d where d.id=di.another_depot_id and ifnull(d.delete_flag,'0') !='1') as depotName,
+        date_format(dh.oper_time,'%Y-%m-%d %H:%i:%S') as oTime
+        from jsh_depot_head dh
+        left join jsh_depot_item di on dh.id=di.header_id and ifnull(di.delete_flag,'0') !='1'
+        left join jsh_material m on di.material_id=m.id and ifnull(m.delete_flag,'0') !='1'
+        left join jsh_material_extend me on me.id=di.material_extend_id and ifnull(me.delete_Flag,'0') !='1'
+        where dh.type='出库' and dh.sub_type='调拨'
+        <if test="depotIdArray != null">
+            and di.another_depot_id in (
+            <foreach collection="depotIdArray" item="depotId" separator=",">#{depotId}</foreach>
+            )
+        </if>
+        and di.material_id = #{mId}
+        and ifnull(dh.delete_flag,'0') !='1') tb
+        order by tb.oTime desc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
         </if>
     </select>
 
-    <select id="findDetailByTypeAndMaterialIdCounts" resultType="java.lang.Long">
-        select count(1)
-        from jsh_depot_head dh
+    <select id="findDetailByDepotIdsAndMaterialIdCount" resultType="java.lang.Long">
+        select count(tb.number) from
+        (select dh.number from jsh_depot_head dh
         left JOIN jsh_depot_item di on dh.id=di.header_id and ifnull(di.delete_flag,'0') !='1'
-        where ((dh.type!='其它' and dh.sub_type!='调拨')
+        where (dh.type!='其它'
         or (dh.type='其它' and dh.sub_type='组装单')
         or (dh.type='其它' and dh.sub_type='拆卸单')
         or (dh.type='其它' and dh.sub_type='盘点复盘'))
+        <if test="depotIdArray != null">
+            and di.depot_id in (
+            <foreach collection="depotIdArray" item="depotId" separator=",">#{depotId}</foreach>
+            )
+        </if>
         and di.material_id =#{mId}
         and ifnull(dh.delete_flag,'0') !='1'
+        union all
+        --单独构造记录：调拨入库
+        select dh.number from jsh_depot_head dh
+        left join jsh_depot_item di on dh.id=di.header_id and ifnull(di.delete_flag,'0') !='1'
+        where dh.type='出库' and dh.sub_type='调拨'
+        <if test="depotIdArray != null">
+            and di.another_depot_id in (
+            <foreach collection="depotIdArray" item="depotId" separator=",">#{depotId}</foreach>
+            )
+        </if>
+        and di.material_id = #{mId}
+        and ifnull(dh.delete_flag,'0') !='1') tb
     </select>
 
     <select id="getDetailList" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
