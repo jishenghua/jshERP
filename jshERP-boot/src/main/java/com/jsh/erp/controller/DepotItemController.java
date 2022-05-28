@@ -207,12 +207,13 @@ public class DepotItemController {
                     item.put("operNumber", diEx.getOperNumber());
                     item.put("basicNumber", diEx.getBasicNumber());
                     item.put("preNumber", diEx.getOperNumber()); //原数量
-                    item.put("finishNumber", depotItemService.getFinishNumber(diEx.getMaterialExtendId(), diEx.getHeaderId(), unitInfo, materialUnit, linkType)); //已入库|已出库
+                    item.put("finishNumber", depotItemService.getFinishNumber(diEx.getMaterialExtendId(), diEx.getId(), diEx.getHeaderId(), unitInfo, materialUnit, linkType)); //已入库|已出库
                     item.put("purchaseDecimal", diEx.getPurchaseDecimal());  //采购价
                     item.put("unitPrice", diEx.getUnitPrice());
                     item.put("taxUnitPrice", diEx.getTaxUnitPrice());
                     item.put("allPrice", diEx.getAllPrice());
                     item.put("remark", diEx.getRemark());
+                    item.put("linkId", diEx.getLinkId());
                     item.put("depotId", diEx.getDepotId() == null ? "" : diEx.getDepotId());
                     item.put("depotName", diEx.getDepotId() == null ? "" : diEx.getDepotName());
                     item.put("anotherDepotId", diEx.getAnotherDepotId() == null ? "" : diEx.getAnotherDepotId());

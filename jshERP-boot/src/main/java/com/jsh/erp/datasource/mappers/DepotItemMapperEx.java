@@ -143,11 +143,13 @@ public interface DepotItemMapperEx {
 
     BigDecimal getFinishNumber(
             @Param("meId") Long meId,
+            @Param("linkId") Long linkId,
             @Param("linkNumber") String linkNumber,
             @Param("goToType") String goToType);
 
     BigDecimal getRealFinishNumber(
             @Param("meId") Long meId,
+            @Param("linkId") Long linkId,
             @Param("linkNumber") String linkNumber,
             @Param("currentHeaderId") Long currentHeaderId,
             @Param("goToType") String goToType);

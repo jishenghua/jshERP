@@ -23,6 +23,7 @@
     <result column="sn_list" jdbcType="VARCHAR" property="snList" />
     <result column="batch_number" jdbcType="VARCHAR" property="batchNumber" />
     <result column="expiration_date" jdbcType="TIMESTAMP" property="expirationDate" />
+    <result column="link_id" jdbcType="BIGINT" property="linkId" />
     <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
     <result column="delete_flag" jdbcType="VARCHAR" property="deleteFlag" />
   </resultMap>
@@ -88,7 +89,7 @@
     id, header_id, material_id, material_extend_id, material_unit, sku, oper_number, 
     basic_number, unit_price, tax_unit_price, all_price, remark, depot_id, another_depot_id, 
     tax_rate, tax_money, tax_last_money, material_type, sn_list, batch_number, expiration_date, 
-    tenant_id, delete_flag
+    link_id, tenant_id, delete_flag
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="BaseResultMap">
     select
@@ -128,7 +129,8 @@
       depot_id, another_depot_id, tax_rate, 
       tax_money, tax_last_money, material_type, 
       sn_list, batch_number, expiration_date, 
-      tenant_id, delete_flag)
+      link_id, tenant_id, delete_flag
+      )
     values (#{id,jdbcType=BIGINT}, #{headerId,jdbcType=BIGINT}, #{materialId,jdbcType=BIGINT}, 
       #{materialExtendId,jdbcType=BIGINT}, #{materialUnit,jdbcType=VARCHAR}, #{sku,jdbcType=VARCHAR}, 
       #{operNumber,jdbcType=DECIMAL}, #{basicNumber,jdbcType=DECIMAL}, #{unitPrice,jdbcType=DECIMAL}, 
@@ -136,7 +138,8 @@
       #{depotId,jdbcType=BIGINT}, #{anotherDepotId,jdbcType=BIGINT}, #{taxRate,jdbcType=DECIMAL}, 
       #{taxMoney,jdbcType=DECIMAL}, #{taxLastMoney,jdbcType=DECIMAL}, #{materialType,jdbcType=VARCHAR}, 
       #{snList,jdbcType=VARCHAR}, #{batchNumber,jdbcType=VARCHAR}, #{expirationDate,jdbcType=TIMESTAMP}, 
-      #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR})
+      #{linkId,jdbcType=BIGINT}, #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.DepotItem">
     insert into jsh_depot_item
@@ -203,6 +206,9 @@
       </if>
       <if test="expirationDate != null">
         expiration_date,
+      </if>
+      <if test="linkId != null">
+        link_id,
       </if>
       <if test="tenantId != null">
         tenant_id,
@@ -274,6 +280,9 @@
       </if>
       <if test="expirationDate != null">
         #{expirationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="linkId != null">
+        #{linkId,jdbcType=BIGINT},
       </if>
       <if test="tenantId != null">
         #{tenantId,jdbcType=BIGINT},
@@ -355,6 +364,9 @@
       <if test="record.expirationDate != null">
         expiration_date = #{record.expirationDate,jdbcType=TIMESTAMP},
       </if>
+      <if test="record.linkId != null">
+        link_id = #{record.linkId,jdbcType=BIGINT},
+      </if>
       <if test="record.tenantId != null">
         tenant_id = #{record.tenantId,jdbcType=BIGINT},
       </if>
@@ -389,6 +401,7 @@
       sn_list = #{record.snList,jdbcType=VARCHAR},
       batch_number = #{record.batchNumber,jdbcType=VARCHAR},
       expiration_date = #{record.expirationDate,jdbcType=TIMESTAMP},
+      link_id = #{record.linkId,jdbcType=BIGINT},
       tenant_id = #{record.tenantId,jdbcType=BIGINT},
       delete_flag = #{record.deleteFlag,jdbcType=VARCHAR}
     <if test="_parameter != null">
@@ -458,6 +471,9 @@
       <if test="expirationDate != null">
         expiration_date = #{expirationDate,jdbcType=TIMESTAMP},
       </if>
+      <if test="linkId != null">
+        link_id = #{linkId,jdbcType=BIGINT},
+      </if>
       <if test="tenantId != null">
         tenant_id = #{tenantId,jdbcType=BIGINT},
       </if>
@@ -489,6 +505,7 @@
       sn_list = #{snList,jdbcType=VARCHAR},
       batch_number = #{batchNumber,jdbcType=VARCHAR},
       expiration_date = #{expirationDate,jdbcType=TIMESTAMP},
+      link_id = #{linkId,jdbcType=BIGINT},
       tenant_id = #{tenantId,jdbcType=BIGINT},
       delete_flag = #{deleteFlag,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}

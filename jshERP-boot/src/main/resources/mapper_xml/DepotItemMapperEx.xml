@@ -598,6 +598,7 @@
     <select id="getFinishNumber" resultType="java.math.BigDecimal">
         select ifnull(sum(di.basic_number),0) from jsh_depot_item di
         where di.material_extend_id=#{meId}
+        and di.link_id=#{linkId}
         and ifnull(di.delete_flag,'0') !='1'
         and di.header_id
         in
@@ -615,6 +616,7 @@
     <select id="getRealFinishNumber" resultType="java.math.BigDecimal">
         select ifnull(sum(di.basic_number),0) from jsh_depot_item di
         where di.material_extend_id=#{meId}
+        and di.link_id=#{linkId}
         and ifnull(di.delete_flag,'0') !='1'
         and di.header_id
         in

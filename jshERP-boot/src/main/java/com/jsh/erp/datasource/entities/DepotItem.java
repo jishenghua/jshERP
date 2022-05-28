@@ -46,6 +46,8 @@ public class DepotItem {
 
     private Date expirationDate;
 
+    private Long linkId;
+
     private Long tenantId;
 
     private String deleteFlag;
@@ -216,6 +218,14 @@ public class DepotItem {
 
     public void setExpirationDate(Date expirationDate) {
         this.expirationDate = expirationDate;
+    }
+
+    public Long getLinkId() {
+        return linkId;
+    }
+
+    public void setLinkId(Long linkId) {
+        this.linkId = linkId;
     }
 
     public Long getTenantId() {

@@ -259,12 +259,12 @@ public class DepotItemService {
      * @return
      * @throws Exception
      */
-    public DepotItem getPreItemByHeaderIdAndMaterial(String linkNumber, Long meId)throws Exception {
+    public DepotItem getPreItemByHeaderIdAndMaterial(String linkNumber, Long meId, Long linkId)throws Exception {
         DepotItem depotItem = new DepotItem();
         try{
             DepotHead depotHead = depotHeadService.getDepotHead(linkNumber);
             DepotItemExample example = new DepotItemExample();
-            example.createCriteria().andHeaderIdEqualTo(depotHead.getId()).andMaterialExtendIdEqualTo(meId).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+            example.createCriteria().andHeaderIdEqualTo(depotHead.getId()).andMaterialExtendIdEqualTo(meId).andIdEqualTo(linkId).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
             List<DepotItem> list = depotItemMapper.selectByExample(example);
             if(list!=null && list.size()>0) {
                 depotItem = list.get(0);
@@ -430,6 +430,9 @@ public class DepotItemService {
                 if (StringUtil.isExist(rowObj.get("sku"))) {
                     depotItem.setSku(rowObj.getString("sku"));
                 }
+                if (StringUtil.isExist(rowObj.get("linkId"))) {
+                    depotItem.setLinkId(rowObj.getLong("linkId"));
+                }
                 //以下进行单位换算
                 Unit unitInfo = materialService.findUnit(materialExtend.getMaterialId()); //查询计量单位信息
                 if (StringUtil.isExist(rowObj.get("operNumber"))) {
@@ -467,9 +470,9 @@ public class DepotItemService {
                         String unit = rowObj.get("unit").toString();
                         Long preHeaderId = depotHeadService.getDepotHead(depotHead.getLinkNumber()).getId();
                         //前一个单据的数量
-                        BigDecimal preNumber = getPreItemByHeaderIdAndMaterial(depotHead.getLinkNumber(), depotItem.getMaterialExtendId()).getOperNumber();
+                        BigDecimal preNumber = getPreItemByHeaderIdAndMaterial(depotHead.getLinkNumber(), depotItem.getMaterialExtendId(), depotItem.getLinkId()).getOperNumber();
                         //除去此单据之外的已入库|已出库
-                        BigDecimal realFinishNumber = getRealFinishNumber(depotItem.getMaterialExtendId(), preHeaderId, headerId, unitInfo, unit);
+                        BigDecimal realFinishNumber = getRealFinishNumber(depotItem.getMaterialExtendId(), depotItem.getLinkId(), preHeaderId, headerId, unitInfo, unit);
                         if(depotItem.getOperNumber().add(realFinishNumber).compareTo(preNumber)>0) {
                             throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_CODE,
                                     String.format(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_MSG, barCode));
@@ -853,7 +856,8 @@ public class DepotItemService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public BigDecimal getFinishNumber(Long meId, Long headerId, Unit unitInfo, String materialUnit, String linkType) {
+    public BigDecimal getFinishNumber(Long meId, Long id, Long headerId, Unit unitInfo, String materialUnit, String linkType) {
+        Long linkId = id;
         String goToType = "";
         DepotHead depotHead =depotHeadMapper.selectByPrimaryKey(headerId);
         String linkNumber = depotHead.getNumber(); //订单号
@@ -869,7 +873,7 @@ public class DepotItemService {
                 goToType = BusinessConstants.SUB_TYPE_SALES;
             }
         }
-        BigDecimal count = depotItemMapperEx.getFinishNumber(meId, linkNumber, goToType);
+        BigDecimal count = depotItemMapperEx.getFinishNumber(meId, linkId, linkNumber, goToType);
         //根据多单位情况进行数量的转换
         if(materialUnit.equals(unitInfo.getOtherUnit()) && unitInfo.getRatio() != 0) {
             count = count.divide(BigDecimal.valueOf(unitInfo.getRatio()),2,BigDecimal.ROUND_HALF_UP);
@@ -886,6 +890,7 @@ public class DepotItemService {
     /**
      * 除去此单据之外的已入库|已出库
      * @param meId
+     * @param linkId
      * @param preHeaderId
      * @param currentHeaderId
      * @param unitInfo
@@ -893,7 +898,7 @@ public class DepotItemService {
      * @return
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public BigDecimal getRealFinishNumber(Long meId, Long preHeaderId, Long currentHeaderId, Unit unitInfo, String materialUnit) {
+    public BigDecimal getRealFinishNumber(Long meId, Long linkId, Long preHeaderId, Long currentHeaderId, Unit unitInfo, String materialUnit) {
         String goToType = "";
         DepotHead depotHead =depotHeadMapper.selectByPrimaryKey(preHeaderId);
         String linkNumber = depotHead.getNumber(); //订单号
@@ -903,7 +908,7 @@ public class DepotItemService {
         if(BusinessConstants.SUB_TYPE_SALES_ORDER.equals(depotHead.getSubType())) {
             goToType = BusinessConstants.SUB_TYPE_SALES;
         }
-        BigDecimal count = depotItemMapperEx.getRealFinishNumber(meId, linkNumber, currentHeaderId, goToType);
+        BigDecimal count = depotItemMapperEx.getRealFinishNumber(meId, linkId, linkNumber, currentHeaderId, goToType);
         //根据多单位情况进行数量的转换
         if(materialUnit.equals(unitInfo.getOtherUnit()) && unitInfo.getRatio() != 0) {
             count = count.divide(BigDecimal.valueOf(unitInfo.getRatio()),2,BigDecimal.ROUND_HALF_UP);

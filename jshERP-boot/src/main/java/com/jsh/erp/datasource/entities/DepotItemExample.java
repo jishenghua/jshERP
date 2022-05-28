@@ -1426,6 +1426,66 @@ public class DepotItemExample {
             return (Criteria) this;
         }
 
+        public Criteria andLinkIdIsNull() {
+            addCriterion("link_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLinkIdIsNotNull() {
+            addCriterion("link_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLinkIdEqualTo(Long value) {
+            addCriterion("link_id =", value, "linkId");
+            return (Criteria) this;
+        }
+
+        public Criteria andLinkIdNotEqualTo(Long value) {
+            addCriterion("link_id <>", value, "linkId");
+            return (Criteria) this;
+        }
+
+        public Criteria andLinkIdGreaterThan(Long value) {
+            addCriterion("link_id >", value, "linkId");
+            return (Criteria) this;
+        }
+
+        public Criteria andLinkIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("link_id >=", value, "linkId");
+            return (Criteria) this;
+        }
+
+        public Criteria andLinkIdLessThan(Long value) {
+            addCriterion("link_id <", value, "linkId");
+            return (Criteria) this;
+        }
+
+        public Criteria andLinkIdLessThanOrEqualTo(Long value) {
+            addCriterion("link_id <=", value, "linkId");
+            return (Criteria) this;
+        }
+
+        public Criteria andLinkIdIn(List<Long> values) {
+            addCriterion("link_id in", values, "linkId");
+            return (Criteria) this;
+        }
+
+        public Criteria andLinkIdNotIn(List<Long> values) {
+            addCriterion("link_id not in", values, "linkId");
+            return (Criteria) this;
+        }
+
+        public Criteria andLinkIdBetween(Long value1, Long value2) {
+            addCriterion("link_id between", value1, value2, "linkId");
+            return (Criteria) this;
+        }
+
+        public Criteria andLinkIdNotBetween(Long value1, Long value2) {
+            addCriterion("link_id not between", value1, value2, "linkId");
+            return (Criteria) this;
+        }
+
         public Criteria andTenantIdIsNull() {
             addCriterion("tenant_id is null");
             return (Criteria) this;

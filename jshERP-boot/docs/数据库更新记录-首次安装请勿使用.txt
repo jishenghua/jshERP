@@ -1354,3 +1354,10 @@ alter table jsh_system_config add sale_agreement varchar(500) DEFAULT NULL COMME
 alter table jsh_depot_head add purchase_status varchar(1) DEFAULT NULL COMMENT '采购状态，0未采购、2完成采购、3部分采购' after status;
 alter table jsh_system_config add purchase_by_sale_flag varchar(1) DEFAULT '0' COMMENT '以销定购启用标记，0未启用，1启用' after minus_stock_flag;
 update jsh_depot_head set purchase_status='0';
+
+-- --------------------------------------------------------
+-- 时间 2022年05月28日
+-- by jishenghua
+-- 给单据子表增加关联明细id
+-- --------------------------------------------------------
+alter table jsh_depot_item add link_id bigint(20) DEFAULT NULL COMMENT '关联明细id' after expiration_date;
