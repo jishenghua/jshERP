@@ -285,7 +285,11 @@ export const BillModalMixin = {
               for (let i = 0; i < detailArr.length; i++) {
                 let item = detailArr[i]
                 item.depotId = depotId
-                item.stock = mList[i].stock
+                for (let j = 0; j < mList.length; j++) {
+                  if(mList[j].mBarCode === item.barCode) {
+                    item.stock = mList[j].stock
+                  }
+                }
                 newDetailArr.push(item)
               }
             } else {
