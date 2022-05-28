@@ -158,7 +158,7 @@
         where ((dh.type!='其它' and dh.sub_type!='调拨')
         or (dh.type='其它' and dh.sub_type='组装单')
         or (dh.type='其它' and dh.sub_type='拆卸单')
-        or (dh.type='其它' and dh.sub_type='盘点复盘' and dh.Status=1))
+        or (dh.type='其它' and dh.sub_type='盘点复盘'))
         and di.material_id = #{mId}
         and ifnull(dh.delete_flag,'0') !='1'
         ORDER BY oTime desc
@@ -174,7 +174,7 @@
         where ((dh.type!='其它' and dh.sub_type!='调拨')
         or (dh.type='其它' and dh.sub_type='组装单')
         or (dh.type='其它' and dh.sub_type='拆卸单')
-        or (dh.type='其它' and dh.sub_type='盘点复盘' and dh.Status=1))
+        or (dh.type='其它' and dh.sub_type='盘点复盘'))
         and di.material_id =#{mId}
         and ifnull(dh.delete_flag,'0') !='1'
     </select>
