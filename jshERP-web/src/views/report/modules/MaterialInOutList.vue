@@ -50,7 +50,8 @@
         toFromType: '',
         // 查询条件
         queryParam: {
-          materialId:''
+          depotIds: '',
+          materialId:'',
         },
         tabKey: "1",
         // 表头
@@ -85,7 +86,7 @@
           sm: { span: 16 },
         },
         url: {
-          list: "/depotItem/findDetailByTypeAndMaterialId"
+          list: "/depotItem/findDetailByDepotIdsAndMaterialId"
         }
       }
     },
@@ -99,9 +100,10 @@
         param.pageSize = this.ipagination.pageSize;
         return param;
       },
-      show(record) {
+      show(record, depotIds) {
         this.model = Object.assign({}, record);
         this.visible = true;
+        this.queryParam.depotIds = depotIds
         this.queryParam.materialId = record.id
         this.loadData(1)
       },

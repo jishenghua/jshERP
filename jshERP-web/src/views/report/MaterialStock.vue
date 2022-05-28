@@ -230,8 +230,12 @@
         })
       },
       showMaterialInOutList(record) {
-        this.$refs.materialInOutList.show(record);
-        this.$refs.materialInOutList.title = "查看商品库存流水（全部仓库）";
+        let depotIds = ''
+        if(this.depotSelected && this.depotSelected.length>0) {
+          depotIds = this.depotSelected.join()
+        }
+        this.$refs.materialInOutList.show(record, depotIds);
+        this.$refs.materialInOutList.title = "查看商品库存流水";
         this.$refs.materialInOutList.disableSubmit = false;
       },
       exportExcel() {
