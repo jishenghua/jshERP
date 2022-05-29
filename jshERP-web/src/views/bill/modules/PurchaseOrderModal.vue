@@ -121,7 +121,7 @@
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="结算账户" data-step="9" data-title="结算账户"
                          data-intro="如果在下拉框中选择多账户，则可以通过多个结算账户进行结算">
-              <a-select style="width:185px;" placeholder="选择结算账户" v-decorator="[ 'accountId', validatorRules.accountId ]"
+              <a-select style="width:185px;" placeholder="选择结算账户" v-decorator="[ 'accountId' ]"
                         :dropdownMatchSelectWidth="false" allowClear @select="selectAccount">
                 <div slot="dropdownRender" slot-scope="menu">
                   <v-nodes :vnodes="menu" />
@@ -140,7 +140,7 @@
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="支付订金">
-              <a-input placeholder="请输入支付订金" v-decorator.trim="[ 'changeAmount' ]" @keyup="onKeyUpChangeAmount"/>
+              <a-input placeholder="请输入支付订金" v-decorator.trim="[ 'changeAmount', validatorRules.price ]" @keyup="onKeyUpChangeAmount"/>
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
@@ -175,7 +175,7 @@
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
   import { getCurrentSystemConfig } from '@/api/api'
-  import { getMpListShort,handleIntroJs } from "@/utils/util"
+  import { getMpListShort, changeListFmtMinus,handleIntroJs } from "@/utils/util"
   import JUpload from '@/components/jeecg/JUpload'
   import JDate from '@/components/jeecg/JDate'
   import Vue from 'vue'
@@ -296,6 +296,14 @@
             this.materialTable.columns[1].type = FormTypes.normal
           }
           this.model.operTime = this.model.operTimeStr
+          if(this.model.accountId == null) {
+            this.model.accountId = 0
+            this.manyAccountBtnStatus = true
+            this.accountIdList = this.model.accountIdList
+            this.accountMoneyList = this.model.accountMoneyList
+          } else {
+            this.manyAccountBtnStatus = false
+          }
           this.fileList = this.model.fileName
           this.$nextTick(() => {
             this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'number', 'linkNumber', 'remark',
@@ -332,6 +340,12 @@
         }
         billMain.totalPrice = 0-totalPrice
         billMain.changeAmount = 0-billMain.changeAmount
+        if(billMain.accountId === 0) {
+          billMain.accountId = ''
+        }
+        this.accountMoneyList = changeListFmtMinus(this.accountMoneyList)
+        billMain.accountIdList = this.accountIdList.length>0 ? JSON.stringify(this.accountIdList) : ""
+        billMain.accountMoneyList = this.accountMoneyList.length>0 ? JSON.stringify(this.accountMoneyList) : ""
         if(this.fileList && this.fileList.length > 0) {
           billMain.fileName = this.fileList
         } else {

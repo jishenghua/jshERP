@@ -140,7 +140,7 @@
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收取订金">
-              <a-input placeholder="请输入收取订金" v-decorator.trim="[ 'changeAmount' ]" @keyup="onKeyUpChangeAmount"/>
+              <a-input placeholder="请输入收取订金" v-decorator.trim="[ 'changeAmount', validatorRules.price ]" @keyup="onKeyUpChangeAmount"/>
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
@@ -278,6 +278,14 @@
           })
         } else {
           this.model.operTime = this.model.operTimeStr
+          if(this.model.accountId == null) {
+            this.model.accountId = 0
+            this.manyAccountBtnStatus = true
+            this.accountIdList = this.model.accountIdList
+            this.accountMoneyList = this.model.accountMoneyList
+          } else {
+            this.manyAccountBtnStatus = false
+          }
           this.personList.value = this.model.salesMan
           this.fileList = this.model.fileName
           this.$nextTick(() => {
@@ -315,6 +323,11 @@
           totalPrice += item.allPrice-0
         }
         billMain.totalPrice = totalPrice
+        if(billMain.accountId === 0) {
+          billMain.accountId = ''
+        }
+        billMain.accountIdList = this.accountIdList.length>0 ? JSON.stringify(this.accountIdList) : ""
+        billMain.accountMoneyList = this.accountMoneyList.length>0 ? JSON.stringify(this.accountMoneyList) : ""
         if(this.fileList && this.fileList.length > 0) {
           billMain.fileName = this.fileList
         } else {

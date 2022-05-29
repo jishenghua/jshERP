@@ -28,6 +28,13 @@ export const BillModalMixin = {
       billStatus: '0',
       isCanCheck: true,
       isTenant: false,
+      validatorRules:{
+        price:{
+          rules: [
+            { pattern: /^(([0-9][0-9]*)|([0]\.\d{0,4}|[0-9][0-9]*\.\d{0,4}))$/, message: '金额格式不正确!' }
+          ]
+        }
+      },
       spans: {
         labelCol1: {span: 2},
         wrapperCol1: {span: 22},
@@ -112,7 +119,7 @@ export const BillModalMixin = {
         if(columns[i].key === key) {
           if(type){
             if(key === 'snList' || key === 'batchNumber') {
-              if(this.prefixNo === 'LSCK' || this.prefixNo === 'CGTH'  || this.prefixNo === 'XSCK' || this.prefixNo === 'QTCK') {
+              if(this.prefixNo === 'LSCK' || this.prefixNo === 'CGTH'  || this.prefixNo === 'XSCK' || this.prefixNo === 'QTCK' || this.prefixNo === 'DBCK') {
                 columns[i].type = FormTypes.popupJsh //显示
               } else {
                 columns[i].type = FormTypes.input //显示
@@ -215,7 +222,6 @@ export const BillModalMixin = {
       let otherMoney = this.form.getFieldValue('otherMoney')?this.form.getFieldValue('otherMoney')-0:0
       let debt = (discountLastMoney + otherMoney - allPrice).toFixed(2)
       this.$nextTick(() => {
-        allPrice = this.prefixNo === 'CGDD' || this.prefixNo === 'XSDD'?0:allPrice
         this.form.setFieldsValue({'changeAmount':allPrice, 'debt':debt})
       });
     },
