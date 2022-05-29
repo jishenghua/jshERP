@@ -72,6 +72,13 @@
             </foreach>
             )
         </if>
+        <if test="purchaseStatusArray != null and purchaseStatusArray !=''">
+            and dh.purchase_status in (
+            <foreach collection="purchaseStatusArray" item="purchaseStatus" separator=",">
+                #{purchaseStatus}
+            </foreach>
+            )
+        </if>
         <if test="number != null">
             <bind name="bindNumber" value="'%'+number+'%'"/>
             and dh.number like #{bindNumber}
@@ -145,6 +152,13 @@
             and dh.status in (
             <foreach collection="statusArray" item="status" separator=",">
                 #{status}
+            </foreach>
+            )
+        </if>
+        <if test="purchaseStatusArray != null and purchaseStatusArray !=''">
+            and dh.purchase_status in (
+            <foreach collection="purchaseStatusArray" item="purchaseStatus" separator=",">
+                #{purchaseStatus}
             </foreach>
             )
         </if>

@@ -98,7 +98,7 @@ public class DepotHeadService {
         return list;
     }
 
-    public List<DepotHeadVo4List> select(String type, String subType, String roleType, String status, String number, String linkNumber,
+    public List<DepotHeadVo4List> select(String type, String subType, String roleType, String status, String purchaseStatus, String number, String linkNumber,
            String beginTime, String endTime, String materialParam, Long organId, Long creator, Long depotId, Long accountId, String remark, int offset, int rows) throws Exception {
         List<DepotHeadVo4List> resList = new ArrayList<>();
         List<DepotHeadVo4List> list=new ArrayList<>();
@@ -106,11 +106,12 @@ public class DepotHeadService {
             String [] depotArray = getDepotArray(subType);
             String [] creatorArray = getCreatorArray(roleType);
             String [] statusArray = StringUtil.isNotEmpty(status) ? status.split(",") : null;
+            String [] purchaseStatusArray = StringUtil.isNotEmpty(purchaseStatus) ? purchaseStatus.split(",") : null;
             Map<Long,String> personMap = personService.getPersonMap();
             Map<Long,String> accountMap = accountService.getAccountMap();
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            list=depotHeadMapperEx.selectByConditionDepotHead(type, subType, creatorArray, statusArray, number, linkNumber, beginTime, endTime,
+            list=depotHeadMapperEx.selectByConditionDepotHead(type, subType, creatorArray, statusArray, purchaseStatusArray, number, linkNumber, beginTime, endTime,
                  materialParam, organId, creator, depotId, depotArray, accountId, remark, offset, rows);
             if (null != list) {
                 for (DepotHeadVo4List dh : list) {
@@ -152,16 +153,17 @@ public class DepotHeadService {
         return resList;
     }
 
-    public Long countDepotHead(String type, String subType, String roleType, String status, String number, String linkNumber,
+    public Long countDepotHead(String type, String subType, String roleType, String status, String purchaseStatus, String number, String linkNumber,
            String beginTime, String endTime, String materialParam, Long organId, Long creator, Long depotId, Long accountId, String remark) throws Exception{
         Long result=null;
         try{
             String [] depotArray = getDepotArray(subType);
             String [] creatorArray = getCreatorArray(roleType);
             String [] statusArray = StringUtil.isNotEmpty(status) ? status.split(",") : null;
+            String [] purchaseStatusArray = StringUtil.isNotEmpty(purchaseStatus) ? purchaseStatus.split(",") : null;
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            result=depotHeadMapperEx.countsByDepotHead(type, subType, creatorArray, statusArray, number, linkNumber, beginTime, endTime,
+            result=depotHeadMapperEx.countsByDepotHead(type, subType, creatorArray, statusArray, purchaseStatusArray, number, linkNumber, beginTime, endTime,
                    materialParam, organId, creator, depotId, depotArray, accountId, remark);
         }catch(Exception e){
             JshException.readFail(logger, e);
@@ -750,10 +752,13 @@ public class DepotHeadService {
         if(depotHead.getDeposit()!=null && StringUtil.isNotEmpty(depotHead.getLinkNumber())) {
             BigDecimal finishDeposit = depotHeadMapperEx.getFinishDepositByNumberExceptCurrent(depotHead.getLinkNumber(), depotHead.getNumber());
             //订单中的订金金额
-            BigDecimal preDeposit = getDepotHead(depotHead.getLinkNumber()).getChangeAmount().abs();
-            if(depotHead.getDeposit().add(finishDeposit).compareTo(preDeposit)>0) {
-                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_DEPOSIT_OVER_PRE_CODE,
-                        String.format(ExceptionConstants.DEPOT_HEAD_DEPOSIT_OVER_PRE_MSG));
+            BigDecimal changeAmount = getDepotHead(depotHead.getLinkNumber()).getChangeAmount();
+            if(changeAmount!=null) {
+                BigDecimal preDeposit = changeAmount.abs();
+                if(depotHead.getDeposit().add(finishDeposit).compareTo(preDeposit)>0) {
+                    throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_DEPOSIT_OVER_PRE_CODE,
+                            String.format(ExceptionConstants.DEPOT_HEAD_DEPOSIT_OVER_PRE_MSG));
+                }
             }
         }
         try{
@@ -833,10 +838,13 @@ public class DepotHeadService {
         if(depotHead.getDeposit()!=null && StringUtil.isNotEmpty(depotHead.getLinkNumber())) {
             BigDecimal finishDeposit = depotHeadMapperEx.getFinishDepositByNumberExceptCurrent(depotHead.getLinkNumber(), depotHead.getNumber());
             //订单中的订金金额
-            BigDecimal preDeposit = getDepotHead(depotHead.getLinkNumber()).getChangeAmount().abs();
-            if(depotHead.getDeposit().add(finishDeposit).compareTo(preDeposit)>0) {
-                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_DEPOSIT_OVER_PRE_CODE,
-                        String.format(ExceptionConstants.DEPOT_HEAD_DEPOSIT_OVER_PRE_MSG));
+            BigDecimal changeAmount = getDepotHead(depotHead.getLinkNumber()).getChangeAmount();
+            if(changeAmount!=null) {
+                BigDecimal preDeposit = changeAmount.abs();
+                if(depotHead.getDeposit().add(finishDeposit).compareTo(preDeposit)>0) {
+                    throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_DEPOSIT_OVER_PRE_CODE,
+                            String.format(ExceptionConstants.DEPOT_HEAD_DEPOSIT_OVER_PRE_MSG));
+                }
             }
         }
         try{
