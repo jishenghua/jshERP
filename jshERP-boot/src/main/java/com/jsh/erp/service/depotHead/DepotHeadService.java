@@ -132,6 +132,9 @@ public class DepotHeadService {
                     if(dh.getTotalPrice() != null) {
                         dh.setTotalPrice(dh.getTotalPrice().abs());
                     }
+                    if(dh.getDeposit() == null) {
+                        dh.setDeposit(BigDecimal.ZERO);
+                    }
                     if(StringUtil.isNotEmpty(dh.getSalesMan())) {
                         dh.setSalesManStr(personService.getPersonByMapAndIds(personMap,dh.getSalesMan()));
                     }
@@ -750,7 +753,13 @@ public class DepotHeadService {
         /**入库和出库处理预付款信息*/
         if(BusinessConstants.PAY_TYPE_PREPAID.equals(depotHead.getPayType())){
             if(depotHead.getOrganId()!=null) {
-                supplierService.updateAdvanceIn(depotHead.getOrganId(), BigDecimal.ZERO.subtract(depotHead.getTotalPrice()));
+                BigDecimal currentAdvanceIn = supplierService.getSupplier(depotHead.getOrganId()).getAdvanceIn();
+                if(currentAdvanceIn.compareTo(depotHead.getTotalPrice())>=0) {
+                    supplierService.updateAdvanceIn(depotHead.getOrganId(), BigDecimal.ZERO.subtract(depotHead.getTotalPrice()));
+                } else {
+                    throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_MEMBER_PAY_LACK_CODE,
+                            String.format(ExceptionConstants.DEPOT_HEAD_MEMBER_PAY_LACK_MSG));
+                }
             }
         }
         //根据单据编号查询单据id
@@ -817,7 +826,13 @@ public class DepotHeadService {
         /**入库和出库处理预付款信息*/
         if(BusinessConstants.PAY_TYPE_PREPAID.equals(depotHead.getPayType())){
             if(depotHead.getOrganId()!=null){
-                supplierService.updateAdvanceIn(depotHead.getOrganId(), BigDecimal.ZERO.subtract(depotHead.getTotalPrice().subtract(preTotalPrice)));
+                BigDecimal currentAdvanceIn = supplierService.getSupplier(depotHead.getOrganId()).getAdvanceIn();
+                if(currentAdvanceIn.compareTo(depotHead.getTotalPrice())>=0) {
+                    supplierService.updateAdvanceIn(depotHead.getOrganId(), BigDecimal.ZERO.subtract(depotHead.getTotalPrice().subtract(preTotalPrice)));
+                } else {
+                    throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_MEMBER_PAY_LACK_CODE,
+                            String.format(ExceptionConstants.DEPOT_HEAD_MEMBER_PAY_LACK_MSG));
+                }
             }
         }
         /**入库和出库处理单据子表信息*/
@@ -936,6 +951,9 @@ public class DepotHeadService {
                     }
                     if(dh.getTotalPrice() != null) {
                         dh.setTotalPrice(dh.getTotalPrice().abs());
+                    }
+                    if(dh.getDeposit() == null) {
+                        dh.setDeposit(BigDecimal.ZERO);
                     }
                     if(dh.getOperTime() != null) {
                         dh.setOperTimeStr(getCenternTime(dh.getOperTime()));
