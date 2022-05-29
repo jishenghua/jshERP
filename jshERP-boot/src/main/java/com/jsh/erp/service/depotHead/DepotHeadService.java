@@ -135,6 +135,7 @@ public class DepotHeadService {
                     if(dh.getDeposit() == null) {
                         dh.setDeposit(BigDecimal.ZERO);
                     }
+                    dh.setFinishDeposit(depotHeadMapperEx.getFinishDepositByNumber(dh.getNumber()));
                     if(StringUtil.isNotEmpty(dh.getSalesMan())) {
                         dh.setSalesManStr(personService.getPersonByMapAndIds(personMap,dh.getSalesMan()));
                     }
@@ -745,6 +746,16 @@ public class DepotHeadService {
             }
             depotHead.setAccountMoneyList(accountMoneyList);
         }
+        //校验累计扣除订金是否超出订单中的金额
+        if(depotHead.getDeposit()!=null && StringUtil.isNotEmpty(depotHead.getLinkNumber())) {
+            BigDecimal finishDeposit = depotHeadMapperEx.getFinishDepositByNumberExceptCurrent(depotHead.getLinkNumber(), depotHead.getNumber());
+            //订单中的订金金额
+            BigDecimal preDeposit = getDepotHead(depotHead.getLinkNumber()).getChangeAmount().abs();
+            if(depotHead.getDeposit().add(finishDeposit).compareTo(preDeposit)>0) {
+                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_DEPOSIT_OVER_PRE_CODE,
+                        String.format(ExceptionConstants.DEPOT_HEAD_DEPOSIT_OVER_PRE_MSG));
+            }
+        }
         try{
             depotHeadMapper.insertSelective(depotHead);
         }catch(Exception e){
@@ -817,6 +828,16 @@ public class DepotHeadService {
                         String.format(ExceptionConstants.DEPOT_HEAD_MANY_ACCOUNT_FAILED_MSG));
             }
             depotHead.setAccountMoneyList(accountMoneyList);
+        }
+        //校验累计扣除订金是否超出订单中的金额
+        if(depotHead.getDeposit()!=null && StringUtil.isNotEmpty(depotHead.getLinkNumber())) {
+            BigDecimal finishDeposit = depotHeadMapperEx.getFinishDepositByNumberExceptCurrent(depotHead.getLinkNumber(), depotHead.getNumber());
+            //订单中的订金金额
+            BigDecimal preDeposit = getDepotHead(depotHead.getLinkNumber()).getChangeAmount().abs();
+            if(depotHead.getDeposit().add(finishDeposit).compareTo(preDeposit)>0) {
+                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_DEPOSIT_OVER_PRE_CODE,
+                        String.format(ExceptionConstants.DEPOT_HEAD_DEPOSIT_OVER_PRE_MSG));
+            }
         }
         try{
             depotHeadMapper.updateByPrimaryKeySelective(depotHead);

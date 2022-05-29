@@ -1359,5 +1359,7 @@ update jsh_depot_head set purchase_status='0';
 -- 时间 2022年05月28日
 -- by jishenghua
 -- 给单据子表增加关联明细id
+-- 给单据主表增加订金字段
 -- --------------------------------------------------------
 alter table jsh_depot_item add link_id bigint(20) DEFAULT NULL COMMENT '关联明细id' after expiration_date;
+alter table jsh_depot_head add deposit decimal(24,6) DEFAULT NULL COMMENT '订金' after other_money;

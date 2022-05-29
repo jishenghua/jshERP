@@ -414,8 +414,6 @@ public class DepotItemService {
                     }
                 }
                 if (StringUtil.isExist(rowObj.get("batchNumber"))) {
-                    //校验录入的批号是否重复
-                    checkBatchNumberIsExist(depotHead.getType(), depotHead.getSubType(), materialExtend.getId(), rowObj.getString("batchNumber"), barCode);
                     depotItem.setBatchNumber(rowObj.getString("batchNumber"));
                 } else {
                     //批号不能为空
@@ -571,27 +569,6 @@ public class DepotItemService {
         } else {
             throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_ROW_FAILED_CODE,
                     String.format(ExceptionConstants.DEPOT_HEAD_ROW_FAILED_MSG));
-        }
-    }
-    /**
-     * 校验录入的批号是否重复
-     * @param type
-     * @param subType
-     * @param meId
-     * @param batchNumber
-     * @param barCode
-     */
-    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public void checkBatchNumberIsExist(String type, String subType, Long meId, String batchNumber, String barCode) {
-        if ((BusinessConstants.SUB_TYPE_PURCHASE.equals(subType) ||
-                BusinessConstants.SUB_TYPE_OTHER.equals(subType) ||
-                BusinessConstants.SUB_TYPE_SALES_RETURN.equals(subType)) &&
-                BusinessConstants.DEPOTHEAD_TYPE_IN.equals(type)) {
-            Long bnCount = depotItemMapperEx.getCountByMaterialAndBatchNumber(meId, batchNumber);
-            if (bnCount > 0) {
-                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_BATCH_NUMBERE_EXISTS_CODE,
-                        String.format(ExceptionConstants.DEPOT_HEAD_BATCH_NUMBERE_EXISTS_MSG, barCode));
-            }
         }
     }
     /**

@@ -376,9 +376,12 @@ public class ExceptionConstants {
     //单据录入-商品的批号不能为空
     public static final int DEPOT_HEAD_BATCH_NUMBERE_EMPTY_CODE = 8000015;
     public static final String DEPOT_HEAD_BATCH_NUMBERE_EMPTY_MSG = "抱歉，商品条码:%s的批号不能为空";
-    //单据录入-商品的批号重复
-    public static final int DEPOT_HEAD_BATCH_NUMBERE_EXISTS_CODE = 8000016;
-    public static final String DEPOT_HEAD_BATCH_NUMBERE_EXISTS_MSG = "抱歉，商品条码:%s的批号已存在";
+    //单据录入-会员预付款余额不足
+    public static final int DEPOT_HEAD_MEMBER_PAY_LACK_CODE = 8000016;
+    public static final String DEPOT_HEAD_MEMBER_PAY_LACK_MSG = "抱歉，会员预付款余额不足";
+    //单据录入-累计订金超出原订单中的订金
+    public static final int DEPOT_HEAD_DEPOSIT_OVER_PRE_CODE = 8000017;
+    public static final String DEPOT_HEAD_DEPOSIT_OVER_PRE_MSG = "抱歉，累计订金超出原订单中的订金";
     /**
      *  单据明细信息
      * type = 90

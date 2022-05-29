@@ -118,6 +118,8 @@ public class AccountController {
             JSONArray dataArray = new JSONArray();
             if (null != dataList) {
                 for (AccountVo4InOutList aEx : dataList) {
+                    String type = aEx.getType().replace("其它", "");
+                    aEx.setType(type);
                     String timeStr = aEx.getOperTime().toString();
                     BigDecimal balance = accountService.getAccountSum(accountId, timeStr, "date").add(accountService.getAccountSumByHead(accountId, timeStr, "date"))
                             .add(accountService.getAccountSumByDetail(accountId, timeStr, "date")).add(accountService.getManyAccountSum(accountId, timeStr, "date")).add(initialAmount);

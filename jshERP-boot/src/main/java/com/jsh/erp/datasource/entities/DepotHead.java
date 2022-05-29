@@ -52,6 +52,8 @@ public class DepotHead {
 
     private BigDecimal otherMoney;
 
+    private BigDecimal deposit;
+
     private String status;
 
     private String purchaseStatus;
@@ -252,6 +254,14 @@ public class DepotHead {
 
     public void setOtherMoney(BigDecimal otherMoney) {
         this.otherMoney = otherMoney;
+    }
+
+    public BigDecimal getDeposit() {
+        return deposit;
+    }
+
+    public void setDeposit(BigDecimal deposit) {
+        this.deposit = deposit;
     }
 
     public String getStatus() {

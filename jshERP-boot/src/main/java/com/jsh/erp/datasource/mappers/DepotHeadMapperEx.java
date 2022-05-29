@@ -181,4 +181,11 @@ public interface DepotHeadMapperEx {
             @Param("endTime") String endTime,
             @Param("materialParam") String materialParam,
             @Param("depotArray") String[] depotArray);
+
+    BigDecimal getFinishDepositByNumber(
+            @Param("number") String number);
+
+    BigDecimal getFinishDepositByNumberExceptCurrent(
+            @Param("linkNumber") String linkNumber,
+            @Param("number") String number);
 }

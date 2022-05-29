@@ -35,6 +35,8 @@ public class DepotHeadVo4List extends DepotHead{
 
     private String address;
 
+    private BigDecimal finishDeposit;
+
     public String getProjectName() {
         return projectName;
     }
@@ -145,5 +147,13 @@ public class DepotHeadVo4List extends DepotHead{
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public BigDecimal getFinishDeposit() {
+        return finishDeposit;
+    }
+
+    public void setFinishDeposit(BigDecimal finishDeposit) {
+        this.finishDeposit = finishDeposit;
     }
 }

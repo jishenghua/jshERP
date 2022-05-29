@@ -424,8 +424,10 @@ public class SerialNumberService {
                     serialNumber.setInBillNo(inBillNo);
                     serialNumberMapper.insertSelective(serialNumber);
                 } else {
-                    throw new BusinessRunTimeException(ExceptionConstants.SERIAL_NUMBERE_ALREADY_EXISTS_CODE,
-                            String.format(ExceptionConstants.SERIAL_NUMBERE_ALREADY_EXISTS_MSG, sn));
+                    if(!inBillNo.equals(list.get(0).getInBillNo())) {
+                        throw new BusinessRunTimeException(ExceptionConstants.SERIAL_NUMBERE_ALREADY_EXISTS_CODE,
+                                String.format(ExceptionConstants.SERIAL_NUMBERE_ALREADY_EXISTS_MSG, sn));
+                    }
                 }
             }
         }
