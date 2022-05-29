@@ -290,7 +290,7 @@
           let that = this
           setTimeout(function() {
             that.showWeixin()
-          },3000)
+          },1000)
         }
       },
       showWeixinSpan() {
