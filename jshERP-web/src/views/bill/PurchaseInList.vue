@@ -232,7 +232,7 @@
           { title: '付款', dataIndex: 'changeAmount',width:60},
           { title: '欠款', dataIndex: 'debt',width:60,
             customRender:function (text,record,index) {
-              let debt = record.discountLastMoney + record.otherMoney - record.changeAmount
+              let debt = record.discountLastMoney + record.otherMoney - (record.deposit + record.changeAmount)
               return debt? debt.toFixed(2):''
             }
           },

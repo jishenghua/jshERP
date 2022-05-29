@@ -237,8 +237,21 @@
                 {{model.discountLastMoney}}
               </a-form-item>
             </a-col>
+            <a-col :span="6"></a-col>
+          </a-row>
+          <a-row class="form-row" :gutter="24">
             <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="结算账户">
+                {{model.accountName}}
+              </a-form-item>
             </a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="支付订金">
+                {{model.changeAmount}}
+              </a-form-item>
+            </a-col>
+            <a-col :span="6"></a-col>
+            <a-col :span="6"></a-col>
           </a-row>
         </section>
       </template>
@@ -314,6 +327,11 @@
                 {{model.accountName}}
               </a-form-item>
             </a-col>
+            <a-col v-if="model.deposit" :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="扣除订金">
+                {{model.deposit}}
+              </a-form-item>
+            </a-col>
             <a-col :span="6">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="本次付款">
                 {{model.changeAmount}}
@@ -323,8 +341,6 @@
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="本次欠款">
                 {{model.debt}}
               </a-form-item>
-            </a-col>
-            <a-col :span="6">
             </a-col>
           </a-row>
         </section>
@@ -476,8 +492,21 @@
                 {{model.discountLastMoney}}
               </a-form-item>
             </a-col>
+            <a-col :span="6"></a-col>
+          </a-row>
+          <a-row class="form-row" :gutter="24">
             <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="结算账户">
+                {{model.accountName}}
+              </a-form-item>
             </a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收取订金">
+                {{model.changeAmount}}
+              </a-form-item>
+            </a-col>
+            <a-col :span="6"></a-col>
+            <a-col :span="6"></a-col>
           </a-row>
         </section>
       </template>
@@ -553,6 +582,11 @@
                 {{model.accountName}}
               </a-form-item>
             </a-col>
+            <a-col v-if="model.deposit" :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="扣除订金">
+                {{model.deposit}}
+              </a-form-item>
+            </a-col>
             <a-col :span="6">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="本次收款">
                 {{model.changeAmount}}
@@ -563,6 +597,9 @@
                 {{model.debt}}
               </a-form-item>
             </a-col>
+            <a-col :span="6"></a-col>
+          </a-row>
+          <a-row class="form-row" :gutter="24">
             <a-col :span="6">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="销售人员">
                 {{model.salesManStr}}
@@ -1358,7 +1395,7 @@
         } else {
           this.model.getAmount = this.model.changeAmount
         }
-        this.model.debt = (this.model.discountLastMoney + this.model.otherMoney - this.model.changeAmount).toFixed(2)
+        this.model.debt = (this.model.discountLastMoney + this.model.otherMoney - this.model.deposit - this.model.changeAmount).toFixed(2)
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model,'id'))
         });

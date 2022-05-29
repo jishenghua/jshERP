@@ -115,6 +115,36 @@
               <a-input placeholder="请输入优惠后金额" v-decorator.trim="[ 'discountLastMoney' ]" :readOnly="true"/>
             </a-form-item>
           </a-col>
+          <a-col :lg="6" :md="12" :sm="24"></a-col>
+        </a-row>
+        <a-row class="form-row" :gutter="24">
+          <a-col :lg="6" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="结算账户" data-step="9" data-title="结算账户"
+                         data-intro="如果在下拉框中选择多账户，则可以通过多个结算账户进行结算">
+              <a-select style="width:185px;" placeholder="选择结算账户" v-decorator="[ 'accountId', validatorRules.accountId ]"
+                        :dropdownMatchSelectWidth="false" allowClear @select="selectAccount">
+                <div slot="dropdownRender" slot-scope="menu">
+                  <v-nodes :vnodes="menu" />
+                  <a-divider style="margin: 4px 0;" />
+                  <div v-if="isTenant" style="padding: 4px 8px; cursor: pointer;"
+                       @mousedown="e => e.preventDefault()" @click="addAccount"><a-icon type="plus" /> 新增结算账户</div>
+                </div>
+                <a-select-option v-for="(item,index) in accountList" :key="index" :value="item.id">
+                  {{ item.name }}
+                </a-select-option>
+              </a-select>
+              <a-tooltip title="多账户明细">
+                <a-button type="default" icon="folder" style="margin-left: 8px;" size="small" v-show="manyAccountBtnStatus" @click="handleManyAccount"/>
+              </a-tooltip>
+            </a-form-item>
+          </a-col>
+          <a-col :lg="6" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收取订金">
+              <a-input placeholder="请输入收取订金" v-decorator.trim="[ 'changeAmount' ]" @keyup="onKeyUpChangeAmount"/>
+            </a-form-item>
+          </a-col>
+          <a-col :lg="6" :md="12" :sm="24">
+          </a-col>
           <a-col :lg="6" :md="12" :sm="24">
           </a-col>
         </a-row>
@@ -127,13 +157,17 @@
         </a-row>
       </a-form>
     </a-spin>
+    <many-account-modal ref="manyAccountModalForm" @ok="manyAccountModalFormOk"></many-account-modal>
     <customer-modal ref="customerModalForm" @ok="customerModalFormOk"></customer-modal>
+    <account-modal ref="accountModalForm" @ok="accountModalFormOk"></account-modal>
     <history-bill-list ref="historyBillListModalForm"></history-bill-list>
   </j-modal>
 </template>
 <script>
   import pick from 'lodash.pick'
+  import ManyAccountModal from '../dialog/ManyAccountModal'
   import CustomerModal from '../../system/modules/CustomerModal'
+  import AccountModal from '../../system/modules/AccountModal'
   import HistoryBillList from '../dialog/HistoryBillList'
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
@@ -147,7 +181,9 @@
     name: "SaleOrderModal",
     mixins: [JEditableTableMixin, BillModalMixin],
     components: {
+      ManyAccountModal,
       CustomerModal,
+      AccountModal,
       HistoryBillList,
       JUpload,
       JDate,
@@ -246,7 +282,7 @@
           this.fileList = this.model.fileName
           this.$nextTick(() => {
             this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'number', 'remark',
-              'discount','discountMoney','discountLastMoney','otherMoney','accountId','changeAmount','salesMan'))
+              'discount','discountMoney','discountLastMoney','accountId','changeAmount','salesMan'))
           });
           // 加载子表数据
           let params = {
@@ -264,6 +300,7 @@
         }
         this.initCustomer()
         this.initSalesman()
+        this.initAccount()
       },
       //提交单据时整理成formData
       classifyIntoFormData(allValues) {

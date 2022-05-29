@@ -211,6 +211,7 @@
               }
             }
           },
+          { title: '收取订金', dataIndex: 'changeAmount',width:60},
           { title: '状态', dataIndex: 'status', width: 70, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }
           },

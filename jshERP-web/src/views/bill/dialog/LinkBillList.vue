@@ -111,6 +111,7 @@
         linkNumber: '',
         organId: '',
         discount: '',
+        deposit: '',
         remark: '',
         queryParam: {
           number: "",
@@ -231,12 +232,13 @@
             this.linkNumber = record.number
             this.organId = record.organId
             this.discount = record.discount
+            this.deposit = record.changeAmount - record.finishDeposit
             this.remark = record.remark
             this.loadDetailData(1)
           }
         } else {
           this.getSelectBillDetailRows();
-          this.$emit('ok', this.selectBillDetailRows, this.linkNumber, this.organId, this.discount, this.remark)
+          this.$emit('ok', this.selectBillDetailRows, this.linkNumber, this.organId, this.discount, this.deposit, this.remark)
           this.close();
         }
       },

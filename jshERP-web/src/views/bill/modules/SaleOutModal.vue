@@ -156,6 +156,11 @@
               </a-tooltip>
             </a-form-item>
           </a-col>
+          <a-col v-if="depositStatus" :lg="6" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="扣除订金">
+              <a-input v-decorator.trim="[ 'deposit' ]" />
+            </a-form-item>
+          </a-col>
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="本次收款">
               <a-input placeholder="请输入本次付款" v-decorator.trim="[ 'changeAmount' ]" @keyup="onKeyUpChangeAmount"/>
@@ -167,11 +172,19 @@
               <a-input placeholder="请输入本次欠款" v-decorator.trim="[ 'debt' ]" :readOnly="true"/>
             </a-form-item>
           </a-col>
+        </a-row>
+        <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="销售人员" data-step="11" data-title="销售人员"
                          data-intro="销售人员的数据来自【经手人管理】菜单中的业务员">
-              <j-select-multiple placeholder="请选择销售人员" v-model="personList.value" :options="personList.options"/>
+              <j-select-multiple style="width:185px;" placeholder="请选择销售人员" v-model="personList.value" :options="personList.options"/>
             </a-form-item>
+          </a-col>
+          <a-col :lg="6" :md="12" :sm="24">
+          </a-col>
+          <a-col :lg="6" :md="12" :sm="24">
+          </a-col>
+          <a-col :lg="6" :md="12" :sm="24">
           </a-col>
         </a-row>
         <a-row class="form-row" :gutter="24">
@@ -240,6 +253,7 @@
         visible: false,
         operTimeStr: '',
         prefixNo: 'XSCK',
+        depositStatus: false,
         fileList:[],
         rowCanEdit: true,
         model: {},
@@ -328,6 +342,7 @@
         this.changeFormTypes(this.materialTable.columns, 'preNumber', 0)
         this.changeFormTypes(this.materialTable.columns, 'finishNumber', 0)
         if (this.action === 'add') {
+          this.depositStatus = false
           this.addInit(this.prefixNo)
           this.personList.value = ''
           this.fileList = []
@@ -340,7 +355,13 @@
             this.materialTable.columns[1].type = FormTypes.normal
           }
           this.model.operTime = this.model.operTimeStr
-          this.model.debt = (this.model.discountLastMoney + this.model.otherMoney - this.model.changeAmount).toFixed(2)
+          if(this.model.deposit) {
+            this.depositStatus = true
+          } else {
+            this.depositStatus = false
+            this.model.deposit = 0
+          }
+          this.model.debt = (this.model.discountLastMoney + this.model.otherMoney - this.model.deposit - this.model.changeAmount).toFixed(2)
           if(this.model.accountId == null) {
             this.model.accountId = 0
             this.manyAccountBtnStatus = true
@@ -353,7 +374,7 @@
           this.fileList = this.model.fileName
           this.$nextTick(() => {
             this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'number', 'linkNumber', 'remark',
-              'discount','discountMoney','discountLastMoney','otherMoney','accountId','changeAmount','debt','salesMan'))
+              'discount','discountMoney','discountLastMoney','otherMoney','accountId','deposit','changeAmount','debt','salesMan'))
           });
           // 加载子表数据
           let params = {
@@ -415,7 +436,7 @@
         this.$refs.linkBillList.show('其它', '销售订单', '客户', "1,3")
         this.$refs.linkBillList.title = "选择销售订单"
       },
-      linkBillListOk(selectBillDetailRows, linkNumber, organId, discount, remark) {
+      linkBillListOk(selectBillDetailRows, linkNumber, organId, discount, deposit, remark) {
         this.rowCanEdit = false
         this.materialTable.columns[1].type = FormTypes.normal
         this.changeFormTypes(this.materialTable.columns, 'preNumber', 1)
@@ -442,6 +463,11 @@
           if(allTaxLastMoney) {
             let discountMoney = (discount*allTaxLastMoney/100).toFixed(2)-0
             let discountLastMoney = (allTaxLastMoney - discountMoney).toFixed(2)-0
+            let changeAmount = discountLastMoney
+            if(deposit) {
+              this.depositStatus = true
+              changeAmount = (discountLastMoney - deposit).toFixed(2)-0
+            }
             this.$nextTick(() => {
               this.form.setFieldsValue({
                 'organId': organId,
@@ -449,7 +475,8 @@
                 'discount': discount,
                 'discountMoney': discountMoney,
                 'discountLastMoney': discountLastMoney,
-                'changeAmount': discountLastMoney,
+                'deposit': deposit,
+                'changeAmount': changeAmount,
                 'remark': remark
               })
             })

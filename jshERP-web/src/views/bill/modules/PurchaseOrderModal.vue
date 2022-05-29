@@ -54,7 +54,7 @@
             <a-form-item v-if="purchaseBySaleFlag" :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联订单" data-step="3" data-title="关联订单"
                          data-intro="采购订单单据可以通过关联订单来选择已录入的销售订单，选择之后会自动加载订单的内容，
               提交之后原来的销售订单会对应的改变单据状态。另外本系统支持分批多次关联">
-              <a-input-search placeholder="请选择关联订单" v-decorator="[ 'linkNumber' ]" @search="onSearchLinkNumber" :readOnly="true"/>
+              <a-input-search placeholder="请选择关联销售订单" v-decorator="[ 'linkNumber' ]" @search="onSearchLinkNumber" :readOnly="true"/>
             </a-form-item>
           </a-col>
         </a-row>
@@ -115,27 +115,61 @@
               <a-input placeholder="请输入优惠后金额" v-decorator.trim="[ 'discountLastMoney' ]" :readOnly="true"/>
             </a-form-item>
           </a-col>
+          <a-col :lg="6" :md="12" :sm="24"></a-col>
+        </a-row>
+        <a-row class="form-row" :gutter="24">
+          <a-col :lg="6" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="结算账户" data-step="9" data-title="结算账户"
+                         data-intro="如果在下拉框中选择多账户，则可以通过多个结算账户进行结算">
+              <a-select style="width:185px;" placeholder="选择结算账户" v-decorator="[ 'accountId', validatorRules.accountId ]"
+                        :dropdownMatchSelectWidth="false" allowClear @select="selectAccount">
+                <div slot="dropdownRender" slot-scope="menu">
+                  <v-nodes :vnodes="menu" />
+                  <a-divider style="margin: 4px 0;" />
+                  <div v-if="isTenant" style="padding: 4px 8px; cursor: pointer;"
+                       @mousedown="e => e.preventDefault()" @click="addAccount"><a-icon type="plus" /> 新增结算账户</div>
+                </div>
+                <a-select-option v-for="(item,index) in accountList" :key="index" :value="item.id">
+                  {{ item.name }}
+                </a-select-option>
+              </a-select>
+              <a-tooltip title="多账户明细">
+                <a-button type="default" icon="folder" style="margin-left: 8px;" size="small" v-show="manyAccountBtnStatus" @click="handleManyAccount"/>
+              </a-tooltip>
+            </a-form-item>
+          </a-col>
+          <a-col :lg="6" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="支付订金">
+              <a-input placeholder="请输入支付订金" v-decorator.trim="[ 'changeAmount' ]" @keyup="onKeyUpChangeAmount"/>
+            </a-form-item>
+          </a-col>
+          <a-col :lg="6" :md="12" :sm="24">
+          </a-col>
           <a-col :lg="6" :md="12" :sm="24">
           </a-col>
         </a-row>
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="附件" data-step="8" data-title="附件" data-intro="可以上传与单据相关的图片、文档，支持多个文件">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="附件" data-step="10" data-title="附件" data-intro="可以上传与单据相关的图片、文档，支持多个文件">
               <j-upload v-model="fileList" bizPath="bill"></j-upload>
             </a-form-item>
           </a-col>
         </a-row>
       </a-form>
     </a-spin>
+    <many-account-modal ref="manyAccountModalForm" @ok="manyAccountModalFormOk"></many-account-modal>
     <vendor-modal ref="vendorModalForm" @ok="vendorModalFormOk"></vendor-modal>
+    <account-modal ref="accountModalForm" @ok="accountModalFormOk"></account-modal>
     <link-bill-list ref="linkBillList" @ok="linkBillListOk"></link-bill-list>
     <history-bill-list ref="historyBillListModalForm"></history-bill-list>
   </j-modal>
 </template>
 <script>
   import pick from 'lodash.pick'
+  import ManyAccountModal from '../dialog/ManyAccountModal'
   import LinkBillList from '../dialog/LinkBillList'
   import VendorModal from '../../system/modules/VendorModal'
+  import AccountModal from '../../system/modules/AccountModal'
   import HistoryBillList from '../dialog/HistoryBillList'
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
@@ -149,8 +183,10 @@
     name: "PurchaseOrderModal",
     mixins: [JEditableTableMixin,BillModalMixin],
     components: {
+      ManyAccountModal,
       LinkBillList,
       VendorModal,
+      AccountModal,
       HistoryBillList,
       JUpload,
       JDate,
@@ -263,7 +299,7 @@
           this.fileList = this.model.fileName
           this.$nextTick(() => {
             this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'number', 'linkNumber', 'remark',
-            'discount','discountMoney','discountLastMoney'))
+            'discount','discountMoney','discountLastMoney','accountId','changeAmount'))
           });
           // 加载子表数据
           let params = {
@@ -280,6 +316,7 @@
           this.copyAddInit(this.prefixNo)
         }
         this.initSupplier()
+        this.initAccount()
       },
       /** 整理成formData */
       classifyIntoFormData(allValues) {
@@ -294,6 +331,7 @@
           totalPrice += item.allPrice-0
         }
         billMain.totalPrice = 0-totalPrice
+        billMain.changeAmount = 0-billMain.changeAmount
         if(this.fileList && this.fileList.length > 0) {
           billMain.fileName = this.fileList
         } else {

@@ -119,13 +119,13 @@
           { title: '操作员', dataIndex: 'userName',width:60},
           { title: '欠款', dataIndex: 'needDebt',width:70,
             customRender:function (text,record,index) {
-              return (record.discountLastMoney + record.otherMoney - record.changeAmount).toFixed(2);
+              return (record.discountLastMoney + record.otherMoney - (record.deposit + record.changeAmount)).toFixed(2);
             }
           },
           { title: '已收欠款', dataIndex: 'finishDebt',width:70 },
           { title: '待收欠款', dataIndex: 'debt',width:70,
             customRender:function (text,record,index) {
-              return (record.discountLastMoney + record.otherMoney - record.changeAmount - record.finishDebt).toFixed(2);
+              return (record.discountLastMoney + record.otherMoney - (record.deposit + record.changeAmount + record.finishDebt)).toFixed(2);
             }
           }
         ],

@@ -370,7 +370,7 @@
         this.$refs.linkBillList.show('出库', '零售', '会员', "1")
         this.$refs.linkBillList.title = "选择零售出库"
       },
-      linkBillListOk(selectBillDetailRows, linkNumber, organId, discount, remark) {
+      linkBillListOk(selectBillDetailRows, linkNumber, organId, discount, deposit, remark) {
         this.rowCanEdit = false
         this.materialTable.columns[1].type = FormTypes.normal
         if(selectBillDetailRows && selectBillDetailRows.length>0) {
