@@ -1034,6 +1034,10 @@ public class MaterialService {
         return materialMapperEx.getMaterialByBarCodeAndWithOutMId(barCodeArray, mId);
     }
 
+    public List<MaterialInitialStockWithMaterial> getInitialStockWithMaterial(List<Long> depotList) {
+        return materialMapperEx.getInitialStockWithMaterial(depotList);
+    }
+
     public List<MaterialVo4Unit> getListWithStock(List<Long> depotList, List<Long> idList, String materialParam, Integer zeroStock,
                                                   String column, String order, Integer offset, Integer rows) {
         return materialMapperEx.getListWithStock(depotList, idList, materialParam, zeroStock, column, order, offset, rows);

@@ -2,6 +2,7 @@ package com.jsh.erp.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.jsh.erp.datasource.entities.MaterialInitialStockWithMaterial;
 import com.jsh.erp.datasource.entities.MaterialVo4Unit;
 import com.jsh.erp.datasource.entities.Unit;
 import com.jsh.erp.service.depot.DepotService;
@@ -591,6 +592,11 @@ public class MaterialController {
                     depotList.add(object.getLong("id"));
                 }
             }
+            Map<Long, BigDecimal> initialStockMap = new HashMap<>();
+            List<MaterialInitialStockWithMaterial> initialStockList = materialService.getInitialStockWithMaterial(depotList);
+            for (MaterialInitialStockWithMaterial mism: initialStockList) {
+                initialStockMap.put(mism.getMaterialId(), mism.getNumber());
+            }
             List<MaterialVo4Unit> dataList = materialService.getListWithStock(depotList, idList, StringUtil.toNull(materialParam), zeroStock,
                     StringUtil.safeSqlParse(column), StringUtil.safeSqlParse(order), (currentPage-1)*pageSize, pageSize);
             int total = materialService.getListWithStockCount(depotList, idList, StringUtil.toNull(materialParam), zeroStock);
@@ -598,7 +604,9 @@ public class MaterialController {
             map.put("total", total);
             map.put("currentStock", materialVo4Unit.getCurrentStock());
             map.put("currentStockPrice", materialVo4Unit.getCurrentStockPrice());
-            //存放数据json数组
+            for(MaterialVo4Unit item: dataList) {
+                item.setInitialStock(initialStockMap.get(item.getId()));
+            }
             map.put("rows", dataList);
             res.code = 200;
             res.data = map;

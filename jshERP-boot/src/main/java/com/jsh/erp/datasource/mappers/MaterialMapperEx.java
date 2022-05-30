@@ -1,11 +1,9 @@
 package com.jsh.erp.datasource.mappers;
 
-import com.jsh.erp.datasource.entities.AccountHead;
-import com.jsh.erp.datasource.entities.Material;
-import com.jsh.erp.datasource.entities.MaterialVo4Unit;
-import com.jsh.erp.datasource.entities.Unit;
+import com.jsh.erp.datasource.entities.*;
 import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -109,6 +107,9 @@ public interface MaterialMapperEx {
     List<MaterialVo4Unit> getMaterialByBarCodeAndWithOutMId(
             @Param("barCodeArray") String [] barCodeArray,
             @Param("mId") Long mId);
+
+    List<MaterialInitialStockWithMaterial> getInitialStockWithMaterial(
+            @Param("depotList") List<Long> depotList);
 
     List<MaterialVo4Unit> getListWithStock(
             @Param("depotList") List<Long> depotList,

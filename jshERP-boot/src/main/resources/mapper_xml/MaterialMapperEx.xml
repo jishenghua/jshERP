@@ -30,6 +30,11 @@
         <result column="sku" jdbcType="VARCHAR" property="sku" />
     </resultMap>
 
+    <resultMap id="InitialStockWithMaterialMap" type="com.jsh.erp.datasource.entities.MaterialInitialStockWithMaterial">
+        <result column="materialId" jdbcType="BIGINT" property="materialId" />
+        <result column="number" jdbcType="DECIMAL" property="number" />
+    </resultMap>
+
     <select id="selectByConditionMaterial" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultMapList">
         select m.*,u.name unitName, mc.name categoryName, me.bar_code,
         me.purchase_decimal, me.commodity_decimal, me.wholesale_decimal,me.low_decimal,me.sku
@@ -531,17 +536,22 @@
         and id = #{id}
     </update>
 
-    <select id="getListWithStock" resultMap="ResultMapListWithStock">
-        select m.*, me.commodity_unit unitName, mc.name categoryName, me.bar_code,
-        ifnull(me.purchase_decimal,0) purchase_decimal,
-        (select ifnull(sum(mis.number),0) from jsh_material_initial_stock mis where mis.material_id = m.id
+    <select id="getInitialStockWithMaterial" resultMap="InitialStockWithMaterialMap">
+        select material_id, ifnull(sum(mis.number),0)
+        from jsh_material_initial_stock mis
+        where 1=1
         <if test="depotList.size()>0">
             and mis.depot_id in
             <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
                 #{item}
             </foreach>
         </if>
-        ) initialStock,
+        group by mis.material_id
+    </select>
+
+    <select id="getListWithStock" resultMap="ResultMapListWithStock">
+        select m.*, me.commodity_unit unitName, mc.name categoryName, me.bar_code,
+        ifnull(me.purchase_decimal,0) purchase_decimal,
         ifnull(sum(mcs.current_number),0) currentStock,
         sum(ifnull(me.purchase_decimal, 0) * ifnull(mcs.current_number, 0)) currentStockPrice
         FROM jsh_material m
