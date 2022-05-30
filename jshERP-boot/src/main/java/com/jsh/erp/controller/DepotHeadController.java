@@ -187,20 +187,13 @@ public class DepotHeadController {
                     depotList.add(object.getLong("id"));
                 }
             }
-            List<DepotHeadVo4InOutMCount> resList = new ArrayList<>();
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
             List<DepotHeadVo4InOutMCount> list = depotHeadService.findInOutMaterialCount(beginTime, endTime, type, materialParam,
                     depotList, oId, (currentPage-1)*pageSize, pageSize);
             int total = depotHeadService.findInOutMaterialCountTotal(beginTime, endTime, type, materialParam, depotList, oId);
             map.put("total", total);
-            //存放数据json数组
-            if (null != list) {
-                for (DepotHeadVo4InOutMCount dhc : list) {
-                    resList.add(dhc);
-                }
-            }
-            map.put("rows", resList);
+            map.put("rows", list);
             res.code = 200;
             res.data = map;
         } catch(Exception e){
