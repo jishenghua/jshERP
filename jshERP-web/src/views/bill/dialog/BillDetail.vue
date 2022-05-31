@@ -1398,7 +1398,7 @@
         } else {
           this.model.getAmount = this.model.changeAmount
         }
-        this.model.debt = (this.model.discountLastMoney + this.model.otherMoney - this.model.deposit - this.model.changeAmount).toFixed(2)
+        this.model.debt = (this.model.discountLastMoney + this.model.otherMoney - (this.model.deposit + this.model.changeAmount)).toFixed(2)
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model,'id'))
         });
