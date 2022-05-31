@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-input-search v-if="kind === 'material'" v-model="names" placeholder="请选择" @pressEnter="onPressEnter" @search="onSearch"></a-input-search>
+    <a-input-search v-if="kind === 'material'" v-model="names" placeholder="条码或名称" @pressEnter="onPressEnter" @search="onSearch"></a-input-search>
     <a-input-search v-if="kind === 'batch'||kind === 'sn'" v-model="names" placeholder="请选择" readOnly @search="onSearch"></a-input-search>
     <j-select-material-modal v-if="kind === 'material'" ref="selectModal" :rows="rows" :multi="multi" :bar-code="value" @ok="selectOK" @initComp="initComp"/>
     <j-select-batch-modal v-if="kind === 'batch'" ref="selectModal" :rows="rows" :multi="multi" :bar-code="value" @ok="selectOK" @initComp="initComp"/>

@@ -2781,11 +2781,11 @@
         })
       },
       /** 自动选中特殊的key **/
-      autoSelectBySpecialKey(specialKey) {
+      autoSelectBySpecialKey(specialKey, orderNum) {
         let trs = this.getElement('tbody').getElementsByClassName('tr')
         let trEls = []
-        for (let tr of trs) {
-          trEls.push(tr)
+        if(trs && trs.length && orderNum>=1) {
+          trEls.push(trs[orderNum-1])
         }
         trEls.forEach(tr => {
           let { idx } = tr.dataset

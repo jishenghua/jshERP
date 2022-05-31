@@ -319,6 +319,7 @@ export const BillModalMixin = {
     },
     onAdded(event) {
       const { row, target } = event
+      target.setValues([{rowKey: row.id, values: {operNumber:0}}])
       getAction('/depot/findDepotByCurrentUser').then((res) => {
         if (res.code === 200) {
           let arr = res.data
@@ -394,7 +395,7 @@ export const BillModalMixin = {
                     target.setValues(mArr);
                     target.recalcAllStatisticsColumns()
                     that.autoChangePrice(target)
-                    target.autoSelectBySpecialKey('operNumber')
+                    target.autoSelectBySpecialKey('operNumber', row.orderNum)
                   }
                 })
               }

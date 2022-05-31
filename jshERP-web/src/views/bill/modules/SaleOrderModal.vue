@@ -69,6 +69,7 @@
           :actionButton="true"
           :dragSort="true"
           @valueChange="onValueChange"
+          @added="onAdded"
           @deleted="onDeleted">
           <template #buttonAfter>
             <a-row :gutter="24" style="float:left;" data-step="4" data-title="扫码录入" data-intro="此功能支持扫码枪扫描商品条码进行录入">
