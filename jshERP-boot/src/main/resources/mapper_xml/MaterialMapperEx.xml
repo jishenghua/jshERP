@@ -31,7 +31,7 @@
     </resultMap>
 
     <resultMap id="InitialStockWithMaterialMap" type="com.jsh.erp.datasource.entities.MaterialInitialStockWithMaterial">
-        <result column="materialId" jdbcType="BIGINT" property="materialId" />
+        <result column="material_id" jdbcType="BIGINT" property="materialId" />
         <result column="number" jdbcType="DECIMAL" property="number" />
     </resultMap>
 
@@ -537,7 +537,7 @@
     </update>
 
     <select id="getInitialStockWithMaterial" resultMap="InitialStockWithMaterialMap">
-        select material_id, ifnull(sum(mis.number),0)
+        select material_id, ifnull(sum(mis.number),0) number
         from jsh_material_initial_stock mis
         where 1=1
         <if test="depotList.size()>0">
