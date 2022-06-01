@@ -241,21 +241,6 @@
     computed: {
     },
     methods: {
-      myHandleEdit(record) {
-        if(record.status === '0') {
-          this.$refs.modalForm.action = "edit";
-          this.handleEdit(record);
-        } else {
-          this.$message.warning("抱歉，只有未审核的单据才能编辑！")
-        }
-      },
-      myHandleDelete(record) {
-        if(record.status === '0') {
-          this.handleDelete(record.id)
-        } else {
-          this.$message.warning("抱歉，只有未审核的单据才能删除！")
-        }
-      },
       getSystemConfig() {
         getCurrentSystemConfig().then((res) => {
           if(res.code === 200 && res.data){
