@@ -57,17 +57,27 @@
       :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange, type: getType}"
       :customRow="rowAction"
       @change="handleTableChange">
+      <span slot="numberCustomRender" slot-scope="text, record">
+        <a @click="myHandleDetail(record)">{{record.number}}</a>
+      </span>
     </a-table>
     <!-- table区域-end -->
+    <!-- 表单区域 -->
+    <bill-detail ref="modalDetail"></bill-detail>
   </a-modal>
 </template>
 
 <script>
+  import BillDetail from '../../bill/dialog/BillDetail'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
+  import { findBillDetailByNumber } from '@/api/api'
   import Vue from 'vue'
   export default {
     name: 'DebtBillList',
     mixins:[JeecgListMixin],
+    components: {
+      BillDetail
+    },
     data () {
       return {
         title: "操作",
@@ -107,7 +117,10 @@
             }
           },
           { title: '', dataIndex: 'organName',width:120},
-          { title: '单据编号', dataIndex: 'number',width:120},
+          {
+            title: '单据编号', dataIndex: 'number', width: 120,
+            scopedSlots: { customRender: 'numberCustomRender' },
+          },
           { title: '商品信息', dataIndex: 'materialsList',width:200, ellipsis:true,
             customRender:function (text,record,index) {
               if(text) {
@@ -160,6 +173,15 @@
         this.ipagination.pageSize = 100
         this.ipagination.pageSizeOptions = ['100', '200', '300']
         this.loadData(1)
+      },
+      myHandleDetail(record) {
+        findBillDetailByNumber({ number: record.number }).then((res) => {
+          if (res && res.code === 200) {
+            let type = res.data.depotHeadType
+            type = type.replace('其它','')
+            this.handleDetail(res.data, type)
+          }
+        })
       },
       close () {
         this.$emit('close');

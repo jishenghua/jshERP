@@ -57,6 +57,9 @@
       :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange, type: getType}"
       :customRow="rowAction"
       @change="handleTableChange">
+      <span slot="numberCustomRender" slot-scope="text, record">
+        <a @click="myHandleDetail(record)">{{record.number}}</a>
+      </span>
       <template slot="customRenderStatus" slot-scope="text, record">
         <template v-if="!queryParam.purchaseStatus">
           <a-tag v-if="record.status === '0'" color="red">未审核</a-tag>
@@ -85,17 +88,22 @@
       @change="handleTableChange">
     </a-table>
     <!-- table区域-end -->
+    <!-- 表单区域 -->
+    <bill-detail ref="billDetail"></bill-detail>
   </a-modal>
 </template>
 
 <script>
+  import BillDetail from './BillDetail'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
+  import { findBillDetailByNumber } from '@/api/api'
   import { getAction } from '@/api/manage'
   import Vue from 'vue'
   export default {
     name: 'LinkBillList',
     mixins:[JeecgListMixin],
     components: {
+      BillDetail
     },
     data () {
       return {
@@ -131,7 +139,9 @@
         // 表头
         columns: [
           { title: '', dataIndex: 'organName',width:120, ellipsis:true},
-          { title: '单据编号', dataIndex: 'number',width:150},
+          { title: '单据编号', dataIndex: 'number',width:150,
+            scopedSlots: { customRender: 'numberCustomRender' },
+          },
           { title: '商品信息', dataIndex: 'materialsList',width:280, ellipsis:true,
             customRender:function (text,record,index) {
               if(text) {
@@ -208,6 +218,16 @@
         this.model = Object.assign({}, {});
         this.visible = true;
         this.loadData(1)
+      },
+      myHandleDetail(record) {
+        findBillDetailByNumber({ number: record.number }).then((res) => {
+          if (res && res.code === 200) {
+            let type = res.data.depotHeadType
+            type = type.replace('其它','')
+            this.$refs.billDetail.show(res.data, type)
+            this.$refs.billDetail.title=type+"-详情"
+          }
+        })
       },
       close () {
         this.$emit('close');
