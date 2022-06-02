@@ -89,7 +89,11 @@
                 return res + "[多账户]";
               }
               else {
-                return r.changeAmount;
+                if(r.changeAmount>0) {
+                  return '+' + r.changeAmount
+                } else {
+                  return r.changeAmount
+                }
               }
             }
           },
