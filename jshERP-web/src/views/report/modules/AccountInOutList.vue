@@ -80,11 +80,14 @@
               if (r.aList && r.amList) {
                 let aListArr = r.aList.toString().split(",");
                 let amListArr = r.amList.toString().split(",");
-                let res = "";
+                let res = 0;
                 for (let i = 0; i < aListArr.length; i++) {
                   if (aListArr[i] == r.accountId) {
                     res = amListArr[i];
                   }
+                }
+                if(res>0) {
+                  res = '+' + res
                 }
                 return res + "[多账户]";
               }
