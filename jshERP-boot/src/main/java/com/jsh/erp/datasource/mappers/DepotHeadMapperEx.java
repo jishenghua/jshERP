@@ -148,6 +148,12 @@ public interface DepotHeadMapperEx {
             @Param("subType") String subType,
             @Param("endTime") String endTime);
 
+    BigDecimal findDepositMoney(
+            @Param("supplierId") Integer supplierId,
+            @Param("type") String type,
+            @Param("subType") String subType,
+            @Param("endTime") String endTime);
+
     List<DepotHeadVo4List> getDetailByNumber(
             @Param("number") String number);
 

@@ -580,11 +580,13 @@ public class DepotHeadService {
     public BigDecimal findAllMoney(Integer supplierId, String type, String subType, String mode, String endTime)throws Exception {
         String modeName = "";
         BigDecimal allOtherMoney = BigDecimal.ZERO;
+        BigDecimal allDepositMoney = BigDecimal.ZERO;
         if (mode.equals("实际")) {
             modeName = "change_amount";
         } else if (mode.equals("合计")) {
             modeName = "discount_last_money";
             allOtherMoney = depotHeadMapperEx.findAllOtherMoney(supplierId, type, subType, endTime);
+            allDepositMoney = depotHeadMapperEx.findDepositMoney(supplierId, type, subType, endTime);
         }
         BigDecimal result = BigDecimal.ZERO;
         try{
@@ -594,6 +596,9 @@ public class DepotHeadService {
         }
         if(allOtherMoney!=null) {
             result = result.add(allOtherMoney);
+        }
+        if(allDepositMoney!=null) {
+            result = result.subtract(allDepositMoney);
         }
         return result;
     }

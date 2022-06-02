@@ -534,6 +534,12 @@
         and ifnull(delete_flag,'0') !='1'
     </select>
 
+    <select id="findDepositMoney" resultType="java.math.BigDecimal">
+        select ifnull(sum(deposit),0) as allDepositMoney from jsh_depot_head where type=#{type} and sub_type = #{subType}
+        and organ_id =#{supplierId} and oper_time &lt;=#{endTime}
+        and ifnull(delete_flag,'0') !='1'
+    </select>
+
     <select id="getDetailByNumber" parameterType="com.jsh.erp.datasource.entities.DepotHeadExample" resultMap="ResultMapEx">
         select dh.*, concat(dh.sub_type,dh.type) as depotHeadType, a.name AccountName,
                s.supplier OrganName, s.contacts, s.telephone, s.address
