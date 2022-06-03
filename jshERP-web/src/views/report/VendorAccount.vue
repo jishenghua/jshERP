@@ -18,7 +18,7 @@
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item label="单据日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                <a-form-item label="账单周期" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-range-picker
                     style="width: 100%"
                     v-model="queryParam.createTimeRange"
@@ -57,8 +57,8 @@
             :scroll="scroll"
             :loading="loading"
             @change="handleTableChange">
-            <span slot="numberCustomRender" slot-scope="text, record">
-              <a @click="myHandleDetail(record)">{{record.number}}</a>
+            <span slot="action" slot-scope="text, record">
+              <a @click="showDebtAccountList(record)">{{record.id?'详情':''}}</a>
             </span>
           </a-table>
           <a-row :gutter="24" style="margin-top: 8px;text-align:right;">
@@ -81,15 +81,13 @@
         </section>
         <!-- table区域-end -->
         <!-- 表单区域 -->
-        <bill-detail ref="modalBillDetail"></bill-detail>
-        <financial-detail ref="modalFinancialDetail"></financial-detail>
+        <debt-account-list ref="debtAccountList"></debt-account-list>
       </a-card>
     </a-col>
   </a-row>
 </template>
 <script>
-  import BillDetail from '../bill/dialog/BillDetail'
-  import FinancialDetail from '../financial/dialog/FinancialDetail'
+  import DebtAccountList from './modules/DebtAccountList'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { getNowFormatYear, openDownloadDialog, sheet2blob} from "@/utils/util"
   import { getAction } from '@/api/manage'
@@ -100,8 +98,7 @@
     name: "VendorAccount",
     mixins:[JeecgListMixin],
     components: {
-      BillDetail,
-      FinancialDetail,
+      DebtAccountList,
       JEllipsis
     },
     data () {
@@ -115,7 +112,7 @@
         },
         // 查询条件
         queryParam: {
-          supType: "供应商",
+          supplierType: "供应商",
           organId: '',
           beginTime: getNowFormatYear() + '-01-01',
           endTime: moment().format('YYYY-MM-DD'),
@@ -139,19 +136,21 @@
               return (t !== '合计') ? (parseInt(index) + 1) : t
             }
           },
-          {
-            title: '单据编号', dataIndex: 'number', width: 140,
-            scopedSlots: { customRender: 'numberCustomRender' },
-          },
-          {title: '类型', dataIndex: 'type', width: 100},
-          {title: '单位名称', dataIndex: 'supplierName', width: 200},
-          {title: '单据金额', dataIndex: 'billMoney', width: 80},
-          {title: '实际支付', dataIndex: 'changeAmount', width: 80},
-          {title: '本期变化', dataIndex: 'allPrice', width: 80},
-          {title: '单据日期', dataIndex: 'oTime', width: 160}
+          {title: '供应商', dataIndex: 'supplier', width: 150, ellipsis:true},
+          {title: '联系人', dataIndex: 'contacts', width: 100, ellipsis:true},
+          {title: '手机号码', dataIndex: 'telephone', width: 100},
+          {title: '联系电话', dataIndex: 'phoneNum', width: 100},
+          {title: '电子邮箱', dataIndex: 'email', width: 100},
+          {title: '期初应付', dataIndex: 'preNeed', width: 80},
+          {title: '本期欠款', dataIndex: 'debtMoney', width: 80},
+          {title: '本期付款', dataIndex: 'backMoney', width: 80},
+          {title: '期末应付', dataIndex: 'allNeed', width: 80},
+          {title: '欠款详情', dataIndex: 'action', align:"center", width: 80,
+            scopedSlots: { customRender: 'action' }
+          }
         ],
         url: {
-          list: "/depotHead/findStatementAccount",
+          list: "/depotHead/getStatementAccount",
         }
       }
     },
@@ -209,10 +208,8 @@
             this.dataSource = res.data.rows;
             this.ipagination.total = res.data.total;
             this.tableAddTotalRow(this.columns, this.dataSource)
-            if(this.queryParam.organId) {
-              this.firstTotal = '期初应付：' + res.data.firstMoney + "，"
-              this.lastTotal = '期末应付：' + res.data.lastMoney
-            }
+            this.firstTotal = '期初应付：' + res.data.firstMoney + "，"
+            this.lastTotal = '期末应付：' + res.data.lastMoney
           }
           if(res.code===510){
             this.$message.warning(res.data)
@@ -228,13 +225,18 @@
         }
       },
       exportExcel() {
-        let aoa = [['单据编号', '类型', '单位名称', '单据金额', '实际支付', '本期变化', '单据日期']]
+        let aoa = [['供应商', '联系人', '手机号码', '联系电话', '电子邮箱', '期初应付', '本期欠款', '本期付款', '期末应付']]
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.number, ds.type, ds.supplierName, ds.billMoney, ds.changeAmount, ds.allPrice, ds.oTime]
+          let item = [ds.supplier, ds.contacts, ds.telephone, ds.phoneNum, ds.email, ds.preNeed, ds.debtMoney, ds.backMoney, ds.allNeed]
           aoa.push(item)
         }
         openDownloadDialog(sheet2blob(aoa), '供应商对账')
+      },
+      showDebtAccountList(record) {
+        this.$refs.debtAccountList.show(record.id, '入库', '采购', '供应商', "", this.queryParam.beginTime, this.queryParam.endTime)
+        this.$refs.debtAccountList.title = "欠款详情"
+        this.$refs.debtAccountList.disableSubmit = false
       }
     }
   }
