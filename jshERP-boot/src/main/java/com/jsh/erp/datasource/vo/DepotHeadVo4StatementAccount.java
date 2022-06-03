@@ -5,103 +5,133 @@ import java.math.BigDecimal;
 
 public class DepotHeadVo4StatementAccount {
 
-    private String number;
+    private Long id;
 
-    private String type;
+    private String supplier;
 
-    private BigDecimal discountLastMoney;
+    private String contacts;
 
-    private BigDecimal otherMoney;
+    private String telephone;
 
-    private BigDecimal billMoney;
+    private String phoneNum;
 
-    private BigDecimal changeAmount;
+    private String email;
 
-    private BigDecimal allPrice;
+    private BigDecimal beginNeed;
 
-    private String supplierName;
+    private BigDecimal preDebtMoney;
 
-    private String oTime;
+    private BigDecimal preBackMoney;
 
-    private Long tenantId;
+    private BigDecimal preNeed;
 
-    public String getNumber() {
-        return number;
+    private BigDecimal debtMoney;
+
+    private BigDecimal backMoney;
+
+    private BigDecimal allNeed;
+
+    public Long getId() {
+        return id;
     }
 
-    public void setNumber(String number) {
-        this.number = number;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public String getType() {
-        return type;
+    public String getSupplier() {
+        return supplier;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setSupplier(String supplier) {
+        this.supplier = supplier;
     }
 
-    public BigDecimal getDiscountLastMoney() {
-        return discountLastMoney;
+    public String getContacts() {
+        return contacts;
     }
 
-    public void setDiscountLastMoney(BigDecimal discountLastMoney) {
-        this.discountLastMoney = discountLastMoney;
+    public void setContacts(String contacts) {
+        this.contacts = contacts;
     }
 
-    public BigDecimal getOtherMoney() {
-        return otherMoney;
+    public String getTelephone() {
+        return telephone;
     }
 
-    public void setOtherMoney(BigDecimal otherMoney) {
-        this.otherMoney = otherMoney;
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
     }
 
-    public BigDecimal getBillMoney() {
-        return billMoney;
+    public String getPhoneNum() {
+        return phoneNum;
     }
 
-    public void setBillMoney(BigDecimal billMoney) {
-        this.billMoney = billMoney;
+    public void setPhoneNum(String phoneNum) {
+        this.phoneNum = phoneNum;
     }
 
-    public BigDecimal getChangeAmount() {
-        return changeAmount;
+    public String getEmail() {
+        return email;
     }
 
-    public void setChangeAmount(BigDecimal changeAmount) {
-        this.changeAmount = changeAmount;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public BigDecimal getAllPrice() {
-        return allPrice;
+    public BigDecimal getBeginNeed() {
+        return beginNeed;
     }
 
-    public void setAllPrice(BigDecimal allPrice) {
-        this.allPrice = allPrice;
+    public void setBeginNeed(BigDecimal beginNeed) {
+        this.beginNeed = beginNeed;
     }
 
-    public String getSupplierName() {
-        return supplierName;
+    public BigDecimal getPreDebtMoney() {
+        return preDebtMoney;
     }
 
-    public void setSupplierName(String supplierName) {
-        this.supplierName = supplierName;
+    public void setPreDebtMoney(BigDecimal preDebtMoney) {
+        this.preDebtMoney = preDebtMoney;
     }
 
-    public String getoTime() {
-        return oTime;
+    public BigDecimal getPreBackMoney() {
+        return preBackMoney;
     }
 
-    public void setoTime(String oTime) {
-        this.oTime = oTime;
+    public void setPreBackMoney(BigDecimal preBackMoney) {
+        this.preBackMoney = preBackMoney;
     }
 
-    public Long getTenantId() {
-        return tenantId;
+    public BigDecimal getPreNeed() {
+        return preNeed;
     }
 
-    public void setTenantId(Long tenantId) {
-        this.tenantId = tenantId;
+    public void setPreNeed(BigDecimal preNeed) {
+        this.preNeed = preNeed;
+    }
+
+    public BigDecimal getDebtMoney() {
+        return debtMoney;
+    }
+
+    public void setDebtMoney(BigDecimal debtMoney) {
+        this.debtMoney = debtMoney;
+    }
+
+    public BigDecimal getBackMoney() {
+        return backMoney;
+    }
+
+    public void setBackMoney(BigDecimal backMoney) {
+        this.backMoney = backMoney;
+    }
+
+    public BigDecimal getAllNeed() {
+        return allNeed;
+    }
+
+    public void setAllNeed(BigDecimal allNeed) {
+        this.allNeed = allNeed;
     }
 }

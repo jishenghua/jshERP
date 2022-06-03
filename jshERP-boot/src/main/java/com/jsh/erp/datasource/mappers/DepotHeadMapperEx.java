@@ -121,19 +121,31 @@ public interface DepotHeadMapperEx {
             @Param("depotFList") List<Long> depotFList,
             @Param("remark") String remark);
 
-    List<DepotHeadVo4StatementAccount> findStatementAccount(
+    List<DepotHeadVo4StatementAccount> getStatementAccount(
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("organId") Integer organId,
-            @Param("supType") String supType,
+            @Param("supplierType") String supplierType,
+            @Param("type") String type,
+            @Param("subType") String subType,
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
-    int findStatementAccountCount(
+    int getStatementAccountCount(
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("organId") Integer organId,
-            @Param("supType") String supType);
+            @Param("supplierType") String supplierType,
+            @Param("type") String type,
+            @Param("subType") String subType);
+
+    List<DepotHeadVo4StatementAccount> getStatementAccountTotalPay(
+            @Param("beginTime") String beginTime,
+            @Param("endTime") String endTime,
+            @Param("organId") Integer organId,
+            @Param("supplierType") String supplierType,
+            @Param("type") String type,
+            @Param("subType") String subType);
 
     BigDecimal findAllMoney(
             @Param("supplierId") Integer supplierId,

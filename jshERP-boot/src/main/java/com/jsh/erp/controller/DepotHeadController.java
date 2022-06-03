@@ -280,44 +280,54 @@ public class DepotHeadController {
      * @param beginTime
      * @param endTime
      * @param organId
-     * @param supType
+     * @param supplierType
      * @param request
      * @return
      */
-    @GetMapping(value = "/findStatementAccount")
+    @GetMapping(value = "/getStatementAccount")
     @ApiOperation(value = "对账单接口")
-    public BaseResponseInfo findStatementAccount(@RequestParam("currentPage") Integer currentPage,
-                                                   @RequestParam("pageSize") Integer pageSize,
-                                                   @RequestParam("beginTime") String beginTime,
-                                                   @RequestParam("endTime") String endTime,
-                                                   @RequestParam(value = "organId", required = false) Integer organId,
-                                                   @RequestParam("supType") String supType,
-                                                   HttpServletRequest request) throws Exception{
+    public BaseResponseInfo getStatementAccount(@RequestParam("currentPage") Integer currentPage,
+                                                 @RequestParam("pageSize") Integer pageSize,
+                                                 @RequestParam("beginTime") String beginTime,
+                                                 @RequestParam("endTime") String endTime,
+                                                 @RequestParam(value = "organId", required = false) Integer organId,
+                                                 @RequestParam("supplierType") String supplierType,
+                                                 HttpServletRequest request) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         try {
+            String type = "";
+            String subType = "";
+            if (("供应商").equals(supplierType)) {
+                type = "入库";
+                subType = "采购";
+            } else if (("客户").equals(supplierType)) {
+                type = "出库";
+                subType = "销售";
+            }
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            List<DepotHeadVo4StatementAccount> list = depotHeadService.findStatementAccount(beginTime, endTime, organId, supType, (currentPage-1)*pageSize, pageSize);
-            int total = depotHeadService.findStatementAccountCount(beginTime, endTime, organId, supType);
+            List<DepotHeadVo4StatementAccount> list = depotHeadService.getStatementAccount(beginTime, endTime, organId,
+                    supplierType, type, subType, (currentPage-1)*pageSize, pageSize);
+            int total = depotHeadService.getStatementAccountCount(beginTime, endTime, organId,
+                    supplierType, type, subType);
+            for(DepotHeadVo4StatementAccount item: list) {
+                BigDecimal preNeed = item.getBeginNeed().add(item.getPreDebtMoney()).subtract(item.getPreBackMoney());
+                item.setPreNeed(preNeed);
+                BigDecimal allNeedGet = preNeed.add(item.getDebtMoney()).subtract(item.getBackMoney());
+                item.setAllNeed(allNeedGet);
+            }
             map.put("rows", list);
             map.put("total", total);
-            if(null!=organId) {
-                Supplier supplier = supplierService.getSupplier(organId);
-                BigDecimal beginNeed = BigDecimal.ZERO;
-                if (("客户").equals(supType)) {
-                    if(supplier.getBeginNeedGet()!=null) {
-                        beginNeed = supplier.getBeginNeedGet();
-                    }
-                } else if (("供应商").equals(supType)) {
-                    if(supplier.getBeginNeedPay()!=null) {
-                        beginNeed = supplier.getBeginNeedPay();
-                    }
+            List<DepotHeadVo4StatementAccount> totalPayList = depotHeadService.getStatementAccountTotalPay(beginTime, endTime, organId, supplierType, type, subType);
+            if(totalPayList.size()>0) {
+                DepotHeadVo4StatementAccount totalPayItem = totalPayList.get(0);
+                BigDecimal firstMoney = BigDecimal.ZERO;
+                BigDecimal lastMoney = BigDecimal.ZERO;
+                if(totalPayItem!=null) {
+                    firstMoney = totalPayItem.getBeginNeed().add(totalPayItem.getPreDebtMoney()).subtract(totalPayItem.getPreBackMoney());
+                    lastMoney = firstMoney.add(totalPayItem.getDebtMoney()).subtract(totalPayItem.getBackMoney());
                 }
-                BigDecimal firstMoney = depotHeadService.findTotalPay(organId, beginTime, supType)
-                        .subtract(accountHeadService.findTotalPay(organId, beginTime, supType)).add(beginNeed);
-                BigDecimal lastMoney = depotHeadService.findTotalPay(organId, endTime, supType)
-                        .subtract(accountHeadService.findTotalPay(organId, endTime, supType)).add(beginNeed);
                 map.put("firstMoney", firstMoney); //期初
                 map.put("lastMoney", lastMoney);  //期末
             }

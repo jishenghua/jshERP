@@ -511,70 +511,37 @@ public class DepotHeadService {
         return result;
     }
 
-    public List<DepotHeadVo4StatementAccount> findStatementAccount(String beginTime, String endTime, Integer organId, String supType, Integer offset, Integer rows)throws Exception {
+    public List<DepotHeadVo4StatementAccount> getStatementAccount(String beginTime, String endTime, Integer organId, String supplierType,
+                                                                  String type, String subType, Integer offset, Integer rows) {
         List<DepotHeadVo4StatementAccount> list = null;
         try{
-            int j = 1;
-            if (supType.equals("客户")) { //客户
-                j = 1;
-            } else if (supType.equals("供应商")) { //供应商
-                j = -1;
-            }
-            list =depotHeadMapperEx.findStatementAccount(beginTime, endTime, organId, supType, offset, rows);
-            if (null != list) {
-                for (DepotHeadVo4StatementAccount dha : list) {
-                    dha.setNumber(dha.getNumber()); //单据编号
-                    dha.setType(dha.getType()); //类型
-                    String type = dha.getType();
-                    BigDecimal p1 = BigDecimal.ZERO ;
-                    BigDecimal p2 = BigDecimal.ZERO;
-                    if (dha.getDiscountLastMoney() != null) {
-                        p1 = dha.getDiscountLastMoney();
-                    }
-                    if (dha.getChangeAmount() != null) {
-                        p2 = dha.getChangeAmount();
-                    }
-                    BigDecimal allPrice = BigDecimal.ZERO;
-                    if ((p1.compareTo(BigDecimal.ZERO))==-1) {
-                        p1 = p1.abs();
-                    }
-                    if(dha.getOtherMoney()!=null) {
-                        p1 = p1.add(dha.getOtherMoney()); //与其它费用相加
-                    }
-                    if ((p2 .compareTo(BigDecimal.ZERO))==-1) {
-                        p2 = p2.abs();
-                    }
-                    if (type.equals("采购入库")) {
-                        allPrice = p2.subtract(p1);
-                    } else if (type.equals("销售出库")) {
-                        allPrice = p1.subtract(p2);
-                    } else if (type.equals("收款")) {
-                        allPrice = BigDecimal.ZERO.subtract(p1);
-                    } else if (type.equals("付款")) {
-                        allPrice = p1;
-                    }
-                    dha.setBillMoney(p1); //单据金额
-                    dha.setChangeAmount(p2); //实际支付
-                    DecimalFormat df = new DecimalFormat(".##");
-                    dha.setAllPrice(new BigDecimal(df.format(allPrice.multiply(new BigDecimal(j))))); //本期变化
-                    dha.setSupplierName(dha.getSupplierName()); //单位名称
-                    dha.setoTime(dha.getoTime()); //单据日期
-                }
-            }
+            list = depotHeadMapperEx.getStatementAccount(beginTime, endTime, organId, supplierType, type, subType, offset, rows);
         } catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
     }
 
-    public int findStatementAccountCount(String beginTime, String endTime, Integer organId, String supType) throws Exception{
+    public int getStatementAccountCount(String beginTime, String endTime, Integer organId, String supplierType,
+                                        String type, String subType) {
         int result = 0;
         try{
-            result =depotHeadMapperEx.findStatementAccountCount(beginTime, endTime, organId, supType);
-        }catch(Exception e){
+            result = depotHeadMapperEx.getStatementAccountCount(beginTime, endTime, organId, supplierType, type, subType);
+        } catch(Exception e){
             JshException.readFail(logger, e);
         }
         return result;
+    }
+
+    public List<DepotHeadVo4StatementAccount> getStatementAccountTotalPay(String beginTime, String endTime, Integer organId, String supplierType,
+                                        String type, String subType) {
+        List<DepotHeadVo4StatementAccount> list = null;
+        try{
+            list = depotHeadMapperEx.getStatementAccountTotalPay(beginTime, endTime, organId, supplierType, type, subType);
+        } catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list;
     }
 
     public BigDecimal findAllMoney(Integer supplierId, String type, String subType, String mode, String endTime)throws Exception {
