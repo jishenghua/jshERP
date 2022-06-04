@@ -176,4 +176,11 @@
         )
         and ifnull(delete_flag,'0') !='1'
     </select>
+
+    <select id="getFinancialBillNoByBillId" resultType="com.jsh.erp.datasource.entities.AccountHead">
+        select ah.bill_no from jsh_account_head ah
+        left join jsh_account_item ai on ah.id=ai.header_id and ifnull(ai.delete_flag,'0') !='1'
+        where bill_id=#{billId}
+        and ifnull(ah.delete_flag,'0') !='1'
+    </select>
 </mapper>

@@ -392,4 +392,8 @@ public class AccountHeadService {
         }
         return resList;
     }
+
+    public List<AccountHead> getFinancialBillNoByBillId(Long billId) {
+        return accountHeadMapperEx.getFinancialBillNoByBillId(billId);
+    }
 }
