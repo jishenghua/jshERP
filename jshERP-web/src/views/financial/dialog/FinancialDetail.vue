@@ -283,9 +283,6 @@
             :pagination="false"
             :columns="moneyInColumns"
             :dataSource="dataSource">
-            <span slot="numberCustomRender" slot-scope="text, record">
-              <a @click="myHandleDetail(record)">{{record.billNumber}}</a>
-            </span>
           </a-table>
           <a-row class="form-row" :gutter="24">
             <a-col :lg="24" :md="24" :sm="24">
@@ -395,20 +392,16 @@
         </a-row>
       </template>
     </a-form>
-    <!-- 表单区域 -->
-    <bill-detail ref="modalDetail"></bill-detail>
   </j-modal>
 </template>
 <script>
   import pick from 'lodash.pick'
-  import BillDetail from '../../bill/dialog/BillDetail'
   import { getAction } from '@/api/manage'
   import { findBillDetailByNumber} from '@/api/api'
   import JUpload from '@/components/jeecg/JUpload'
   export default {
     name: 'FinancialDetail',
     components: {
-      BillDetail,
       JUpload
     },
     data () {
@@ -455,8 +448,7 @@
         ],
         moneyInColumns: [
           {
-            title: '销售单据编号', dataIndex: 'billNumber', width: '20%',
-            scopedSlots: { customRender: 'numberCustomRender' },
+            title: '销售单据编号', dataIndex: 'billNumber', width: '20%'
           },
           { title: '应收欠款',dataIndex: 'needDebt', width: '10%'},
           { title: '已收欠款',dataIndex: 'finishDebt', width: '10%'},
@@ -464,7 +456,9 @@
           { title: '备注',dataIndex: 'remark', width: '20%'}
         ],
         moneyOutColumns: [
-          { title: '采购单据编号',dataIndex: 'billNumber',width: '20%'},
+          {
+            title: '采购单据编号', dataIndex: 'billNumber', width: '20%'
+          },
           { title: '应付欠款',dataIndex: 'needDebt', width: '10%'},
           { title: '已付欠款',dataIndex: 'finishDebt', width: '10%'},
           { title: '本次付款',dataIndex: 'eachAmount', width: '10%'},
@@ -510,14 +504,6 @@
         this.$emit('close');
         this.visible = false;
       },
-      myHandleDetail(record) {
-        findBillDetailByNumber({ number: record.billNumber }).then((res) => {
-          if (res && res.code === 200) {
-            this.$refs.modalDetail.show(res.data, res.data.subType + res.data.type);
-            this.$refs.modalDetail.title= res.data.subType + res.data.type + "-详情";
-          }
-        })
-      }
     }
   }
 </script>

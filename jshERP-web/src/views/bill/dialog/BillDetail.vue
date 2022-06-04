@@ -342,6 +342,13 @@
                 {{model.debt}}
               </a-form-item>
             </a-col>
+            <a-col v-if="financialBillNoList.length" :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款单号">
+                <template v-for="(item, index) in financialBillNoList">
+                  <a @click="myHandleFinancialDetail(item.billNo)">{{item.billNo}}</a><br/>
+                </template>
+              </a-form-item>
+            </a-col>
           </a-row>
         </section>
       </template>
@@ -603,6 +610,13 @@
             <a-col :span="6">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="销售人员">
                 {{model.salesManStr}}
+              </a-form-item>
+            </a-col>
+            <a-col v-if="financialBillNoList.length" :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款单号">
+                <template v-for="(item, index) in financialBillNoList">
+                  <a @click="myHandleFinancialDetail(item.billNo)">{{item.billNo}}</a><br/>
+                </template>
               </a-form-item>
             </a-col>
           </a-row>
@@ -954,21 +968,24 @@
       </template>
     </a-form>
     <bill-print-iframe ref="modalDetail"></bill-print-iframe>
+    <financial-detail ref="financialDetailModal"></financial-detail>
   </j-modal>
 </template>
 
 <script>
   import pick from 'lodash.pick'
   import { getAction } from '@/api/manage'
-  import { findBillDetailByNumber, getPlatformConfigByKey, getCurrentSystemConfig} from '@/api/api'
+  import { findBillDetailByNumber, findFinancialDetailByNumber, getPlatformConfigByKey, getCurrentSystemConfig} from '@/api/api'
   import { getMpListShort } from "@/utils/util"
   import BillPrintIframe from './BillPrintIframe'
+  import FinancialDetail from '../../financial/dialog/FinancialDetail'
   import JUpload from '@/components/jeecg/JUpload'
   import Vue from 'vue'
   export default {
     name: 'BillDetail',
     components: {
       BillPrintIframe,
+      FinancialDetail,
       JUpload
     },
     data () {
@@ -981,6 +998,7 @@
         billPrintFlag: false,
         fileList: [],
         purchaseBySaleFlag: false,
+        financialBillNoList: [],
         tableWidth: {
           'width': '1550px'
         },
@@ -1387,6 +1405,13 @@
           }
         })
       },
+      getFinancialBillNoByBillId(billId) {
+        getAction('/accountHead/getFinancialBillNoByBillId', {billId: billId}).then(res => {
+          if(res && res.code === 200){
+            this.financialBillNoList = res.data
+          }
+        })
+      },
       show(record, type) {
         this.billType = type
         //附件下载
@@ -1417,6 +1442,7 @@
         this.requestSubTableData(record, type, url, params);
         this.initPlatform()
         this.getSystemConfig()
+        this.getFinancialBillNoByBillId(this.model.id)
       },
       requestSubTableData(record, type, url, params, success) {
         this.loading = true
@@ -1443,6 +1469,17 @@
             let type = res.data.type === "其它"? "":res.data.type
             this.show(res.data, res.data.subType + type);
             this.title = res.data.subType + type + "-详情";
+          }
+        })
+      },
+      myHandleFinancialDetail(billNo) {
+        let that = this
+        findFinancialDetailByNumber({ billNo: billNo }).then((res) => {
+          if (res && res.code === 200) {
+            if(that.$refs.financialDetailModal) {
+              that.$refs.financialDetailModal.show(res.data, res.data.type);
+              that.$refs.financialDetailModal.title= res.data.type + "-详情";
+            }
           }
         })
       },
