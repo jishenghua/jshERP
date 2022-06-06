@@ -225,7 +225,7 @@
           },
           { title: '待收金额', dataIndex: 'needOutMoney',width:80,
             customRender:function (text,record,index) {
-              let needOutMoney = record.discountLastMoney + record.otherMoney
+              let needOutMoney = record.discountLastMoney + record.otherMoney - record.deposit
               return needOutMoney? needOutMoney.toFixed(2):''
             }
           },
