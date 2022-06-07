@@ -468,7 +468,7 @@
     },
     created () {
       let realScreenWidth = window.screen.width * window.devicePixelRatio
-      this.width = realScreenWidth<1600?'1300px':'1600px'
+      this.width = realScreenWidth<1500?'1300px':'1550px'
     },
     methods: {
       show(record, type) {
