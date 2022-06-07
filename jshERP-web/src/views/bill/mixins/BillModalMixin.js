@@ -26,6 +26,7 @@ export const BillModalMixin = {
       scanBarCode: '',
       scanStatus: true,
       billStatus: '0',
+      minWidth: 1100,
       isCanCheck: true,
       isTenant: false,
       validatorRules:{
@@ -55,6 +56,7 @@ export const BillModalMixin = {
     this.isTenant = userInfo.id === userInfo.tenantId? true:false
     let realScreenWidth = window.screen.width * window.devicePixelRatio
     this.width = realScreenWidth<1500?'1300px':'1550px'
+    this.minWidth = realScreenWidth<1500?1250:1500
   },
   computed: {
     readOnly: function() {

@@ -64,6 +64,7 @@
           :loading="materialTable.loading"
           :columns="materialTable.columns"
           :dataSource="materialTable.dataSource"
+          :minWidth="minWidth"
           :maxHeight="300"
           :rowNumber="false"
           :rowSelection="rowCanEdit"

@@ -68,7 +68,7 @@
               :loading="materialTable.loading"
               :columns="materialTable.columns"
               :dataSource="materialTable.dataSource"
-              :minWidth="1100"
+              :minWidth="minWidth"
               :maxHeight="300"
               :rowNumber="false"
               :rowSelection="true"
@@ -125,28 +125,28 @@
                 <a-col :lg="24" :md="6" :sm="6">
                   <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" data-step="5" data-title="单据金额"
                                data-intro="单据金额等于左侧商品的总金额">
-                    <span slot="label" style="font-size: 24px;line-height:24px">单据金额</span>
+                    <span slot="label" style="font-size: 20px;line-height:20px">单据金额</span>
                     <a-input v-decorator.trim="[ 'changeAmount' ]" :style="{color:'purple'}" :readOnly="true"/>
                   </a-form-item>
                 </a-col>
                 <a-col :lg="24" :md="6" :sm="6">
                   <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" data-step="6" data-title="收款金额"
                                data-intro="收款金额为收银员收取用户的实际金额">
-                    <span slot="label" style="font-size: 24px;line-height:24px">收款金额</span>
+                    <span slot="label" style="font-size: 20px;line-height:20px">收款金额</span>
                     <a-input v-decorator.trim="[ 'getAmount' ]" :style="{color:'red'}" defaultValue="0" @keyup="onKeyUpGetAmount"/>
                   </a-form-item>
                 </a-col>
                 <a-col :lg="24" :md="6" :sm="6">
                   <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" data-step="7" data-title="找零"
                                data-intro="找零等于收款金额减去实收金额">
-                    <span slot="label" style="font-size: 24px;line-height:24px">找零</span>
+                    <span slot="label" style="font-size: 20px;line-height:20px">找零</span>
                     <a-input v-decorator.trim="[ 'backAmount' ]" :style="{color:'green'}" :readOnly="true" defaultValue="0"/>
                   </a-form-item>
                 </a-col>
                 <a-col :lg="24" :md="6" :sm="6">
                   <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" data-step="8" data-title="收款账户"
                                data-intro="收款账户的信息来自基本资料菜单下的【结算账户】">
-                    <span slot="label" style="font-size: 24px;line-height:24px">收款账户</span>
+                    <span slot="label" style="font-size: 20px;line-height:20px">收款账户</span>
                     <a-select placeholder="选择收款账户" style="font-size:20px;" v-decorator="[ 'accountId', validatorRules.accountId ]" :dropdownMatchSelectWidth="false">
                       <div slot="dropdownRender" slot-scope="menu">
                         <v-nodes :vnodes="menu" />
@@ -214,6 +214,7 @@
         prefixNo: 'LSCK',
         fileList:[],
         payTypeList: [],
+        minWidth: 1100,
         model: {},
         labelCol: {
           xs: { span: 24 },
@@ -229,7 +230,7 @@
           loading: false,
           dataSource: [],
           columns: [
-            { title: '仓库名称', key: 'depotId', width: '7%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
+            { title: '仓库名称', key: 'depotId', width: '9%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
               allowSearch:true, validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             { title: '条码', key: 'barCode', width: '12%', type: FormTypes.popupJsh, kind: 'material', multi: true,
@@ -241,7 +242,7 @@
             { title: '颜色', key: 'color', width: '5%', type: FormTypes.normal },
             { title: '扩展信息', key: 'materialOther', width: '7%', type: FormTypes.normal },
             { title: '库存', key: 'stock', width: '5%', type: FormTypes.normal },
-            { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
+            { title: '单位', key: 'unit', width: '5%', type: FormTypes.normal },
             { title: '序列号', key: 'snList', width: '12%', type: FormTypes.popupJsh, kind: 'sn', multi: true },
             { title: '批号', key: 'batchNumber', width: '7%', type: FormTypes.popupJsh, kind: 'batch', multi: false },
             { title: '有效期', key: 'expirationDate',width: '7%', type: FormTypes.normal },
@@ -276,6 +277,8 @@
     },
     created () {
       this.initPayTypeList()
+      let realScreenWidth = window.screen.width * window.devicePixelRatio
+      this.minWidth = realScreenWidth<1500?900:1100
     },
     methods: {
       //调用完edit()方法之后会自动调用此方法

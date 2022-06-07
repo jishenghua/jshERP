@@ -58,7 +58,7 @@
               :loading="materialTable.loading"
               :columns="materialTable.columns"
               :dataSource="materialTable.dataSource"
-              :minWidth="1100"
+              :minWidth="minWidth"
               :maxHeight="300"
               :rowNumber="false"
               :rowSelection="rowCanEdit"
@@ -113,25 +113,25 @@
                 <a-col :lg="24" :md="6" :sm="6"><br/><br/></a-col>
                 <a-col :lg="24" :md="6" :sm="6">
                   <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <span slot="label" style="font-size: 24px;line-height:24px">单据金额</span>
+                    <span slot="label" style="font-size: 20px;line-height:20px">单据金额</span>
                     <a-input v-decorator.trim="[ 'changeAmount' ]" :style="{color:'purple'}" :readOnly="true"/>
                   </a-form-item>
                 </a-col>
                 <a-col :lg="24" :md="6" :sm="6">
                   <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <span slot="label" style="font-size: 24px;line-height:24px">付款金额</span>
+                    <span slot="label" style="font-size: 20px;line-height:20px">付款金额</span>
                     <a-input v-decorator.trim="[ 'getAmount' ]" :style="{color:'red'}" defaultValue="0" @keyup="onKeyUpGetAmount"/>
                   </a-form-item>
                 </a-col>
                 <a-col :lg="24" :md="6" :sm="6">
                   <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <span slot="label" style="font-size: 24px;line-height:24px">找零</span>
+                    <span slot="label" style="font-size: 20px;line-height:20px">找零</span>
                     <a-input v-decorator.trim="[ 'backAmount' ]" :style="{color:'green'}" :readOnly="true" defaultValue="0"/>
                   </a-form-item>
                 </a-col>
                 <a-col :lg="24" :md="6" :sm="6">
                   <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <span slot="label" style="font-size: 24px;line-height:24px">付款账户</span>
+                    <span slot="label" style="font-size: 20px;line-height:20px">付款账户</span>
                     <a-select placeholder="选择付款账户" style="font-size:20px;" v-decorator="[ 'accountId', validatorRules.accountId ]" :dropdownMatchSelectWidth="false">
                       <div slot="dropdownRender" slot-scope="menu">
                         <v-nodes :vnodes="menu" />
@@ -201,6 +201,7 @@
         operTimeStr: '',
         prefixNo: 'LSTH',
         fileList:[],
+        minWidth: 1100,
         rowCanEdit: true,
         model: {},
         labelCol: {
@@ -217,7 +218,7 @@
           loading: false,
           dataSource: [],
           columns: [
-            { title: '仓库名称', key: 'depotId', width: '7%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
+            { title: '仓库名称', key: 'depotId', width: '9%', type: FormTypes.select, placeholder: '请选择${title}', options: [],
               allowSearch:true, validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             { title: '条码', key: 'barCode', width: '12%', type: FormTypes.popupJsh, kind: 'material', multi: true,
@@ -229,7 +230,7 @@
             { title: '颜色', key: 'color', width: '5%', type: FormTypes.normal },
             { title: '扩展信息', key: 'materialOther', width: '7%', type: FormTypes.normal },
             { title: '库存', key: 'stock', width: '5%', type: FormTypes.normal },
-            { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
+            { title: '单位', key: 'unit', width: '5%', type: FormTypes.normal },
             { title: '序列号', key: 'snList', width: '12%', type: FormTypes.input, placeholder: '多个序列号请用逗号隔开',
               validateRules: [{ pattern: /^\S{1,100}$/, message: '请小于100位字符' }]
             },
@@ -265,6 +266,8 @@
       }
     },
     created () {
+      let realScreenWidth = window.screen.width * window.devicePixelRatio
+      this.minWidth = realScreenWidth<1500?900:1100
     },
     methods: {
       //调用完edit()方法之后会自动调用此方法

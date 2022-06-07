@@ -818,6 +818,11 @@
         type: Boolean,
         default: false
       },
+      // 页面是否在加载中
+      minWidth: {
+        type: Number,
+        default: 1500
+      },
       maxHeight: {
         type: Number,
         default: 400
@@ -914,7 +919,6 @@
         statisticsColumns: {},
         // 只有在行编辑被销毁时才主动清空GroupRequest的内存
         destroyCleanGroupRequest: false,
-        minWidth: 1500,
       }
     },
     created() {
@@ -922,8 +926,6 @@
       // 当前显示的tr
       this.visibleTrEls = []
       this.disabledRowIds = (this.disabledRowIds || [])
-      let realScreenWidth = window.screen.width * window.devicePixelRatio
-      this.minWidth = realScreenWidth<1500?1250:1500
     },
     // 计算属性
     computed: {

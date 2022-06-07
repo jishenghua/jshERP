@@ -1302,6 +1302,9 @@
       this.tableWidth = {
         'width': realScreenWidth<1500?'1250px':'1500px'
       }
+      this.tableWidthRetail = {
+        'width': realScreenWidth<1500?'900px':'1100px'
+      }
     },
     methods: {
       initSetting(record, type, ds) {
