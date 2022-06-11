@@ -277,7 +277,7 @@
     },
     created () {
       this.initPayTypeList()
-      let realScreenWidth = window.screen.width * window.devicePixelRatio
+      let realScreenWidth = window.screen.width
       this.minWidth = realScreenWidth<1500?900:1100
     },
     methods: {

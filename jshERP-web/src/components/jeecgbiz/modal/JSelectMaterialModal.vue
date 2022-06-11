@@ -238,7 +238,7 @@
       },
       // 触发屏幕自适应
       resetScreenSize() {
-        let realScreenWidth = window.screen.width * window.devicePixelRatio
+        let realScreenWidth = window.screen.width
         this.modalWidth = realScreenWidth<1600?'1200px':'1450px'
         let screenWidth = document.body.clientWidth;
         if (screenWidth < 500) {
