@@ -72,10 +72,11 @@ public class DepotItemController {
             @RequestParam(value = Constants.PAGE_SIZE, required = false) Integer pageSize,
             @RequestParam(value = Constants.CURRENT_PAGE, required = false) Integer currentPage,
             @RequestParam(value = "depotIds",required = false) String depotIds,
+            @RequestParam(value = "sku",required = false) String sku,
             @RequestParam("materialId") Long mId,
             HttpServletRequest request)throws Exception {
         Map<String, Object> objectMap = new HashMap<>();
-        List<DepotItemVo4DetailByTypeAndMId> list = depotItemService.findDetailByDepotIdsAndMaterialIdList(depotIds, mId, (currentPage-1)*pageSize, pageSize);
+        List<DepotItemVo4DetailByTypeAndMId> list = depotItemService.findDetailByDepotIdsAndMaterialIdList(depotIds, sku, mId, (currentPage-1)*pageSize, pageSize);
         JSONArray dataArray = new JSONArray();
         if (list != null) {
             for (DepotItemVo4DetailByTypeAndMId d: list) {
@@ -102,7 +103,7 @@ public class DepotItemController {
             return returnJson(objectMap, "查找不到数据", ErpInfo.OK.code);
         }
         objectMap.put("rows", dataArray);
-        objectMap.put("total", depotItemService.findDetailByDepotIdsAndMaterialIdCount(depotIds, mId));
+        objectMap.put("total", depotItemService.findDetailByDepotIdsAndMaterialIdCount(depotIds, sku, mId));
         return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
     }
 

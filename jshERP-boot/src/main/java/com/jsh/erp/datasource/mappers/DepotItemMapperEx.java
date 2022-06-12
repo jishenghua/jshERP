@@ -31,12 +31,14 @@ public interface DepotItemMapperEx {
 
     List<DepotItemVo4DetailByTypeAndMId> findDetailByDepotIdsAndMaterialIdList(
             @Param("depotIdArray") String[] depotIdArray,
+            @Param("sku") String sku,
             @Param("mId") Long mId,
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
     Long findDetailByDepotIdsAndMaterialIdCount(
             @Param("depotIdArray") String[] depotIdArray,
+            @Param("sku") String sku,
             @Param("mId") Long mId);
 
     List<DepotItemVo4WithInfoEx> getDetailList(
