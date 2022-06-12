@@ -1,7 +1,6 @@
 jshERP-web Vue
 ====
 
-当前最新版本： 3.0
 
 Overview
 ----
