@@ -62,7 +62,7 @@
               </a-popconfirm>
             </span>
             <span slot="linkInfo" slot-scope="text, record">
-              <a @click="linkTo(record)" target='_blank'>链接跳转</a>
+              <a :href="linkUrl(record)" target='_blank' :title="linkUrl(record)">{{linkUrl(record)}}</a>
             </span>
             <template slot="customRenderFlag" slot-scope="pluginState">
               <a-tag v-if="pluginState=='STARTED'" color="green">启用</a-tag>
@@ -146,10 +146,10 @@
               }
             }
           },
-          {title: '页面链接', dataIndex: '', width: 250,
+          {title: '页面链接', dataIndex: '', width: 250, ellipsis:true,
             scopedSlots: { customRender: 'linkInfo' }
           },
-          {title: '状态', dataIndex: 'pluginState', width: 80, align: "center",
+          {title: '状态', dataIndex: 'pluginState', width: 60, align: "center",
             scopedSlots: { customRender: 'customRenderFlag' }
           },
           {
@@ -192,11 +192,13 @@
         this.$refs.modalForm.title = "填写激活码";
         this.$refs.modalForm.disableSubmit = false;
       },
-      linkTo(record) {
-        let desc = record.pluginDescriptor.pluginDescription;
+      linkUrl(record) {
+        let desc = record.pluginDescriptor.pluginDescription
         if(desc.indexOf("|")){
-          let arr = desc.split("|");
-          window.location.href = arr[1]
+          let arr = desc.split("|")
+          return arr[1]
+        } else {
+          return ''
         }
       },
       uploadTemplate(record) {
