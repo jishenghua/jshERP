@@ -3,6 +3,9 @@ package com.jsh.erp.controller;
 import com.gitee.starblues.integration.application.PluginApplication;
 import com.gitee.starblues.integration.operator.PluginOperator;
 import com.gitee.starblues.integration.operator.module.PluginInfo;
+import com.jsh.erp.constants.BusinessConstants;
+import com.jsh.erp.datasource.entities.User;
+import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.ComputerInfo;
 import com.jsh.erp.utils.StringUtil;
@@ -13,6 +16,7 @@ import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.nio.file.Paths;
@@ -28,6 +32,8 @@ import java.util.*;
 @Api(tags = {"插件管理"})
 public class PluginController {
 
+    @Resource
+    private UserService userService;
 
     private final PluginOperator pluginOperator;
 
@@ -49,14 +55,17 @@ public class PluginController {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
             List<PluginInfo> resList = new ArrayList<>();
-            List<PluginInfo> list = pluginOperator.getPluginInfo();
-            if(StringUtil.isEmpty(name)) {
-                resList = list;
-            } else {
-                for(PluginInfo pi : list) {
-                    String desc = pi.getPluginDescriptor().getPluginDescription();
-                    if(desc.contains(name)) {
-                        resList.add(pi);
+            User userInfo = userService.getCurrentUser();
+            if(BusinessConstants.DEFAULT_MANAGER.equals(userInfo.getLoginName())) {
+                List<PluginInfo> list = pluginOperator.getPluginInfo();
+                if (StringUtil.isEmpty(name)) {
+                    resList = list;
+                } else {
+                    for (PluginInfo pi : list) {
+                        String desc = pi.getPluginDescriptor().getPluginDescription();
+                        if (desc.contains(name)) {
+                            resList.add(pi);
+                        }
                     }
                 }
             }
@@ -80,7 +89,12 @@ public class PluginController {
     @ApiOperation(value = "获取插件jar文件名")
     public Set<String> getPluginFilePaths(){
         try {
-            return pluginOperator.getPluginFilePaths();
+            User userInfo = userService.getCurrentUser();
+            if(BusinessConstants.DEFAULT_MANAGER.equals(userInfo.getLoginName())) {
+                return pluginOperator.getPluginFilePaths();
+            } else {
+                return null;
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -100,10 +114,15 @@ public class PluginController {
         Map<String, Object> map = new HashMap<String, Object>();
         String message = "";
         try {
-            if(pluginOperator.stop(id)){
-                message = "plugin '" + id +"' stop success";
+            User userInfo = userService.getCurrentUser();
+            if(BusinessConstants.DEFAULT_MANAGER.equals(userInfo.getLoginName())) {
+                if (pluginOperator.stop(id)) {
+                    message = "plugin '" + id + "' stop success";
+                } else {
+                    message = "plugin '" + id + "' stop failure";
+                }
             } else {
-                message = "plugin '" + id +"' stop failure";
+                message = "power is limit";
             }
             map.put("message", message);
             res.code = 200;
@@ -129,10 +148,15 @@ public class PluginController {
         Map<String, Object> map = new HashMap<String, Object>();
         String message = "";
         try {
-            if(pluginOperator.start(id)){
-                message = "plugin '" + id +"' start success";
+            User userInfo = userService.getCurrentUser();
+            if(BusinessConstants.DEFAULT_MANAGER.equals(userInfo.getLoginName())) {
+                if (pluginOperator.start(id)) {
+                    message = "plugin '" + id + "' start success";
+                } else {
+                    message = "plugin '" + id + "' start failure";
+                }
             } else {
-                message = "plugin '" + id +"' start failure";
+                message = "power is limit";
             }
             map.put("message", message);
             res.code = 200;
@@ -159,10 +183,15 @@ public class PluginController {
         Map<String, Object> map = new HashMap<String, Object>();
         String message = "";
         try {
-            if(pluginOperator.uninstall(id, true)){
-                message = "plugin '" + id +"' uninstall success";
+            User userInfo = userService.getCurrentUser();
+            if(BusinessConstants.DEFAULT_MANAGER.equals(userInfo.getLoginName())) {
+                if (pluginOperator.uninstall(id, true)) {
+                    message = "plugin '" + id + "' uninstall success";
+                } else {
+                    message = "plugin '" + id + "' uninstall failure";
+                }
             } else {
-                message = "plugin '" + id +"' uninstall failure";
+                message = "power is limit";
             }
             map.put("message", message);
             res.code = 200;
@@ -186,8 +215,13 @@ public class PluginController {
     @ApiOperation(value = "根据插件路径安装插件")
     public String install(@RequestParam("path") String path){
         try {
-            if(pluginOperator.install(Paths.get(path))){
-                return "installByPath success";
+            User userInfo = userService.getCurrentUser();
+            if(BusinessConstants.DEFAULT_MANAGER.equals(userInfo.getLoginName())) {
+                if (pluginOperator.install(Paths.get(path))) {
+                    return "installByPath success";
+                } else {
+                    return "installByPath failure";
+                }
             } else {
                 return "installByPath failure";
             }
@@ -208,9 +242,15 @@ public class PluginController {
     public BaseResponseInfo install(MultipartFile file, HttpServletRequest request, HttpServletResponse response){
         BaseResponseInfo res = new BaseResponseInfo();
         try {
-            pluginOperator.uploadPluginAndStart(file);
-            res.code = 200;
-            res.data = "导入成功";
+            User userInfo = userService.getCurrentUser();
+            if(BusinessConstants.DEFAULT_MANAGER.equals(userInfo.getLoginName())) {
+                pluginOperator.uploadPluginAndStart(file);
+                res.code = 200;
+                res.data = "导入成功";
+            } else {
+                res.code = 500;
+                res.data = "抱歉，无操作权限！";
+            }
         } catch(Exception e){
             e.printStackTrace();
             res.code = 500;
@@ -228,10 +268,15 @@ public class PluginController {
     @ApiOperation(value = "上传插件的配置文件")
     public String uploadConfig(@RequestParam("configFile") MultipartFile multipartFile){
         try {
-            if(pluginOperator.uploadConfigFile(multipartFile)){
-                return "uploadConfig success";
+            User userInfo = userService.getCurrentUser();
+            if(BusinessConstants.DEFAULT_MANAGER.equals(userInfo.getLoginName())) {
+                if (pluginOperator.uploadConfigFile(multipartFile)) {
+                    return "uploadConfig success";
+                } else {
+                    return "uploadConfig failure";
+                }
             } else {
-                return "uploadConfig failure";
+                return "installByPath failure";
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -249,8 +294,13 @@ public class PluginController {
     @ApiOperation(value = "备份插件")
     public String backupPlugin(@PathVariable("pluginId") String pluginId){
         try {
-            if(pluginOperator.backupPlugin(pluginId, "testBack")){
-                return "backupPlugin success";
+            User userInfo = userService.getCurrentUser();
+            if(BusinessConstants.DEFAULT_MANAGER.equals(userInfo.getLoginName())) {
+                if (pluginOperator.backupPlugin(pluginId, "testBack")) {
+                    return "backupPlugin success";
+                } else {
+                    return "backupPlugin failure";
+                }
             } else {
                 return "backupPlugin failure";
             }
