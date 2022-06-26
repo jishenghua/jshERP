@@ -52,10 +52,10 @@
     <select id="selectByConditionDepotHead" parameterType="com.jsh.erp.datasource.entities.DepotHeadExample" resultMap="ResultMapEx">
         select distinct dh.*, s.supplier OrganName, u.username userName, a.name AccountName
         from jsh_depot_head dh
+        left join jsh_depot_item di on dh.id = di.header_id and ifnull(di.delete_flag,'0') !='1'
         left join jsh_supplier s on dh.organ_id=s.id and ifnull(s.delete_Flag,'0') !='1'
         left join jsh_user u on dh.creator=u.id and ifnull(u.Status,'0') !='1'
         left join jsh_account a on dh.account_id=a.id and ifnull(a.delete_Flag,'0') !='1'
-        left join jsh_depot_item di on dh.id = di.header_id and ifnull(di.delete_flag,'0') !='1'
         left join jsh_material m on di.material_id = m.id and ifnull(m.delete_flag,'0') !='1'
         left join jsh_material_extend me on di.material_extend_id = me.id and ifnull(me.delete_flag,'0') !='1'
         where 1=1
@@ -126,7 +126,7 @@
         </if>
         <if test="remark != null and remark !=''">
             <bind name="bindRemark" value="'%'+remark+'%'"/>
-            and dh.remark like #{bindRemark}
+            and (dh.remark like #{bindRemark} or di.remark like #{bindRemark})
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
         order by dh.id desc
@@ -209,7 +209,7 @@
         </if>
         <if test="remark != null and remark !=''">
             <bind name="bindRemark" value="'%'+remark+'%'"/>
-            and dh.remark like #{bindRemark}
+            and (dh.remark like #{bindRemark} or di.remark like #{bindRemark})
         </if>
         and ifnull(dh.delete_Flag,'0') !='1') tb
     </select>
