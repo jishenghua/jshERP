@@ -1,15 +1,11 @@
 package com.jsh.erp.utils;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
+import jxl.*;
 import org.springframework.util.StringUtils;
-import jxl.Cell;
-import jxl.Sheet;
-import jxl.Workbook;
 import jxl.format.*;
 import jxl.write.Label;
 import jxl.write.WritableCellFormat;
@@ -208,6 +204,21 @@ public class ExcelUtils {
 			return src.getRow(rowNum)[colNum].getContents().trim();
 		} else {
 			return null;
+		}
+	}
+
+	public static String getDateContent(Sheet src, int rowNum, int colNum) {
+		// 日期 类型的处理
+		Cell c = src.getRow(rowNum)[colNum];
+		if(CellType.DATE.equals(c.getType())) {
+			DateCell dc = (DateCell) c;
+			Date jxlDate = dc.getDate();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+			return sdf.format(jxlDate);
+		} else {
+			String dateStr =  c.getContents().trim();
+			return dateStr;
 		}
 	}
 
