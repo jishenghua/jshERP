@@ -123,7 +123,7 @@
         <a-card :bordered="false" :body-style="{padding: '5'}" data-step="7" data-title="服务和版权"
                 data-intro="展示服务到期时间（快到期时会出现续费链接，请注意及时续费）、
           用户数量（是指最多可以录入的用户数量）、版权信息">
-          <div class="hidden-xs" style="float:right;">&copy; 2015-2030 {{systemTitle}} V3.1</div>
+          <div class="hidden-xs" style="float:right;">&copy; 2015-2030 {{systemTitle}} V3.2</div>
           <a-tag v-if="tenant.type==0" color="blue">试用到期：{{tenant.expireTime}}</a-tag>
           <a-tag v-if="tenant.type==0" color="blue">试用用户：{{tenant.userCurrentNum}}/{{tenant.userNumLimit}}</a-tag>
           <a-tag v-if="tenant.type==1" color="blue">服务到期：{{tenant.expireTime}}</a-tag>
