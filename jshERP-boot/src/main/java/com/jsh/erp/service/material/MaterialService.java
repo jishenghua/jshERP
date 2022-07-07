@@ -705,7 +705,7 @@ public class MaterialService {
                 String depotName = ExcelUtils.getContent(src, 1, col); //获取仓库名称
                 if(StringUtil.isNotEmpty(depotName)) {
                     Long depotId = depotMap.get(depotName);
-                    if(depotId!=0L){
+                    if(depotId!=null && depotId!=0L){
                         String stockStr = ExcelUtils.getContent(src, i, col);
                         if(StringUtil.isNotEmpty(stockStr)) {
                             stockMap.put(depotId, parseBigDecimalEx(stockStr));
