@@ -382,6 +382,9 @@ public class ExceptionConstants {
     //单据录入-累计订金超出原订单中的订金
     public static final int DEPOT_HEAD_DEPOSIT_OVER_PRE_CODE = 8000017;
     public static final String DEPOT_HEAD_DEPOSIT_OVER_PRE_MSG = "抱歉，累计订金超出原订单中的订金";
+    //单据录入-商品条码XXX的单价低于最低售价
+    public static final int DEPOT_HEAD_UNIT_PRICE_LOW_CODE = 8000018;
+    public static final String DEPOT_HEAD_UNIT_PRICE_LOW_MSG = "商品条码%s的单价低于最低售价";
     /**
      *  单据明细信息
      * type = 90

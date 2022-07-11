@@ -486,7 +486,17 @@ public class DepotItemService {
                     }
                 }
                 if (StringUtil.isExist(rowObj.get("unitPrice"))) {
-                    depotItem.setUnitPrice(rowObj.getBigDecimal("unitPrice"));
+                    BigDecimal unitPrice = rowObj.getBigDecimal("unitPrice");
+                    depotItem.setUnitPrice(unitPrice);
+                    if(materialExtend.getLowDecimal()!=null) {
+                        //零售或销售单价低于最低售价，进行提示
+                        if("零售".equals(depotHead.getSubType()) || "销售".equals(depotHead.getSubType())) {
+                            if (unitPrice.compareTo(materialExtend.getLowDecimal()) < 0) {
+                                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_UNIT_PRICE_LOW_CODE,
+                                        String.format(ExceptionConstants.DEPOT_HEAD_UNIT_PRICE_LOW_MSG, barCode));
+                            }
+                        }
+                    }
                 }
                 if (StringUtil.isExist(rowObj.get("taxUnitPrice"))) {
                     depotItem.setTaxUnitPrice(rowObj.getBigDecimal("taxUnitPrice"));
