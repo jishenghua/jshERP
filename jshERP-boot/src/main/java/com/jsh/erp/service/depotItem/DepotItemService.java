@@ -407,19 +407,27 @@ public class DepotItemService {
                                 depotHead.getNumber(), materialExtend.getMaterialId(), depotId, depotItem.getSnList());
                     }
                 } else {
-                    //序列号不能为空
-                    if(BusinessConstants.ENABLE_SERIAL_NUMBER_ENABLED.equals(material.getEnableSerialNumber())) {
-                        throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_SERIAL_NUMBERE_EMPTY_CODE,
-                                String.format(ExceptionConstants.MATERIAL_SERIAL_NUMBERE_EMPTY_MSG, barCode));
+                    //入库或出库
+                    if(BusinessConstants.DEPOTHEAD_TYPE_IN.equals(depotHead.getType()) ||
+                            BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())) {
+                        //序列号不能为空
+                        if(BusinessConstants.ENABLE_SERIAL_NUMBER_ENABLED.equals(material.getEnableSerialNumber())) {
+                            throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_SERIAL_NUMBERE_EMPTY_CODE,
+                                    String.format(ExceptionConstants.MATERIAL_SERIAL_NUMBERE_EMPTY_MSG, barCode));
+                        }
                     }
                 }
                 if (StringUtil.isExist(rowObj.get("batchNumber"))) {
                     depotItem.setBatchNumber(rowObj.getString("batchNumber"));
                 } else {
-                    //批号不能为空
-                    if(BusinessConstants.ENABLE_BATCH_NUMBER_ENABLED.equals(material.getEnableBatchNumber())) {
-                        throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_BATCH_NUMBERE_EMPTY_CODE,
-                                String.format(ExceptionConstants.DEPOT_HEAD_BATCH_NUMBERE_EMPTY_MSG, barCode));
+                    //入库或出库
+                    if(BusinessConstants.DEPOTHEAD_TYPE_IN.equals(depotHead.getType()) ||
+                            BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())) {
+                        //批号不能为空
+                        if (BusinessConstants.ENABLE_BATCH_NUMBER_ENABLED.equals(material.getEnableBatchNumber())) {
+                            throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_BATCH_NUMBERE_EMPTY_CODE,
+                                    String.format(ExceptionConstants.DEPOT_HEAD_BATCH_NUMBERE_EMPTY_MSG, barCode));
+                        }
                     }
                 }
                 if (StringUtil.isExist(rowObj.get("expirationDate"))) {
