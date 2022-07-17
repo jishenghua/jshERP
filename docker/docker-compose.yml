@@ -1,0 +1,53 @@
+version: "3.5"
+
+services:
+  db:
+    image: mysql:5.7.33
+    container_name: jsh_erp_db
+    command:
+      - "mysqld"
+      - "--innodb-file-per-table=1"
+      - "--lower-case-table-names=0"
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+    volumes:
+      - ./init/:/docker-entrypoint-initdb.d/
+    expose:
+      - "3306"
+    restart: always
+
+  redis:
+    image: redis:6.2.1
+    container_name: jsh_erp_redis
+    expose:
+      - "6379"
+    restart: always
+
+  jsh_erp_bk:
+    image: beer5215/jsh_erp_bk
+    build:
+      context: .
+      dockerfile: bk.dockerfile
+    container_name: jsh_erp_bk
+    expose:
+      - "9999"
+    depends_on:
+      - db
+      - redis
+    env_file:
+      - .env
+    restart: always
+
+  jsh_erp_nginx:
+    image: beer5215/jsh_erp_nginx
+    build:
+      context: .
+      dockerfile: nginx.dockerfile
+    container_name: jsh_erp_nginx
+    ports:
+      - target: 3000
+        published: 3000
+        protocol: tcp
+    depends_on:
+      - jsh_erp_bk
+    restart: always
