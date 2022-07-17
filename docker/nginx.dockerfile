@@ -1,10 +1,14 @@
 FROM nginx:1.15.3-alpine
 
-COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
+RUN mkdir -p /etc/nginx/logs
 
-COPY dist/dist.zip /home
+COPY nginx/nginx.conf /etc/nginx/nginx.conf
 
-RUN cd /home && unzip dist.zip -d . && cd -
+RUN mkdir -p /home/jshERP
+
+COPY dist/dist.zip /home/jshERP
+
+RUN cd /home/jshERP && unzip dist.zip -d . && mv dist jshERP-web
 
 EXPOSE 3000
 

@@ -1,27 +1,15 @@
 > jshERP docker 版
 
-### build
+目前使用 3.2 版本
 
-#### jshERP-boot
+### 更新
 
+可自己更新版本，然后构建
+
+```shell
+docker/boot/jshERP.jar
+docker/dist/dist.zip
 ```
-cd jshERP-boot
-
-mvn package -Dmaven.test.skip
-
-cp target/jshERP.jar ../docker/boot
-```
-
-#### jshERP-web
-
-```
-yarn build
-
-zip dist.zip dist/*
-
-cp dist.zip ../docker/web
-```
-
 
 ### Reference
 

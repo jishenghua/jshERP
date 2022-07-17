@@ -9,9 +9,10 @@ services:
       - "--innodb-file-per-table=1"
       - "--lower-case-table-names=0"
     environment:
-      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_ROOT_PASSWORD=111111
     volumes:
       - ./init/:/docker-entrypoint-initdb.d/
+      - ./mysql:/etc/mysql/conf.d
     expose:
       - "3306"
     restart: always
