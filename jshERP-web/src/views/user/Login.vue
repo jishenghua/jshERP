@@ -48,7 +48,7 @@
           <a-col>
             © 2015-2030 {{systemTitle}} - Powered By
             <a style="color:#00458a;" :href="systemUrl" target="_blank">官方网站</a>
-            <span v-if="showWeixinSpan()" class="weixin" @mouseover="showWeixin" @click="hideWeixin">微信小程序</span>
+            <span v-if="showWeixinSpan()" class="weixin" @mouseover="showWeixin" @click="changeWeixinStatus">微信小程序</span>
           </a-col>
         </a-row>
       </div>
@@ -304,9 +304,13 @@
       showWeixin() {
         this.showWeixinFlag = true
       },
-      hideWeixin() {
-        this.showWeixinFlag = false
-      }
+      changeWeixinStatus() {
+        if(this.showWeixinFlag) {
+          this.showWeixinFlag = false
+        } else {
+          this.showWeixinFlag = true
+        }
+      },
     }
   }
 </script>

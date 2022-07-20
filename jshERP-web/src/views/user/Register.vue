@@ -5,7 +5,7 @@
       <a-form-item
         fieldDecoratorId="username"
         :fieldDecoratorOptions="{rules: [{ required: true, message: '用户名不能为空'}, { validator: this.handleUserName}], validateTrigger: ['change', 'blur'], validateFirst: true}">
-        <a-input size="large" type="text" autocomplete="false" placeholder="请输入用户名"></a-input>
+        <a-input size="large" type="text" @focus="initWeixin" autocomplete="false" placeholder="请输入用户名"></a-input>
       </a-form-item>
 
       <a-popover placement="rightTop" trigger="click" :visible="state.passwordLevelChecked">
@@ -69,8 +69,13 @@
           <a-col>
             © 2015-2030 {{systemTitle}} - Powered By
             <a style="color:#00458a;" :href="systemUrl" target="_blank">官方网站</a>
+            <span v-if="showWeixinSpan()" class="weixin" @mouseover="showWeixin" @click="changeWeixinStatus">微信小程序</span>
           </a-col>
         </a-row>
+      </div>
+
+      <div v-if="showWeixinFlag" style="text-align: center; padding-top: 10px;">
+        <img src="/static/weixin.jpg" style="width:258px" />
       </div>
     </a-form>
   </div>
@@ -120,7 +125,8 @@
           percent: 10,
           progressColor: '#FF0000'
         },
-        registerBtn: false
+        registerBtn: false,
+        showWeixinFlag:false,
       }
     },
     computed: {
@@ -280,6 +286,32 @@
         });
         this.registerBtn = false;
       },
+      initWeixin() {
+        if(this.showWeixinSpan()) {
+          let that = this
+          setTimeout(function() {
+            that.showWeixin()
+          },1000)
+        }
+      },
+      showWeixinSpan() {
+        let host = window.location.host
+        if(host === 'cloud.huaxiaerp.vip') {
+          return true
+        } else {
+          return false
+        }
+      },
+      showWeixin() {
+        this.showWeixinFlag = true
+      },
+      changeWeixinStatus() {
+        if(this.showWeixinFlag) {
+          this.showWeixinFlag = false
+        } else {
+          this.showWeixinFlag = true
+        }
+      },
     },
     watch: {
       'state.passwordLevel'(val) {
@@ -342,5 +374,11 @@
   }
   .login-copyright, .login-copyright a {
     color: #666
+  }
+
+  .login-copyright .weixin {
+    padding-left:10px;
+    color: red;
+    cursor:pointer
   }
 </style>
