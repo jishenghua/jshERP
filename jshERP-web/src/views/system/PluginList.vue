@@ -16,7 +16,7 @@
                 <a-col :md="6" :sm="24">
                   <a-button type="primary" @click="searchQuery">查询</a-button>
                   <a-button style="margin-left: 8px" @click="searchReset">重置</a-button>
-                  <a-button type="primary" style="margin-left: 8px" @click="writeCode">填写激活码</a-button>
+                  <a-button type="primary" style="margin-left: 8px" @click="writeCode">填写插件激活码</a-button>
                   <a-button type="primary" style="margin-left: 8px" @click="writeAppCode">填写手机端激活码</a-button>
                 </a-col>
               </span>
@@ -193,7 +193,7 @@
       },
       writeCode() {
         this.$refs.modalForm.edit();
-        this.$refs.modalForm.title = "填写激活码";
+        this.$refs.modalForm.title = "填写插件激活码";
         this.$refs.modalForm.disableSubmit = false;
       },
       writeAppCode() {

@@ -14,8 +14,8 @@
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="机器码">
           <a-input v-decorator.trim="[ 'platformKey' ]" :readOnly="true"/>
         </a-form-item>
-        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="激活码">
-          <a-textarea :rows="2" placeholder="请输入激活码" v-decorator="[ 'platformValue' ]"/>
+        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="插件激活码">
+          <a-textarea :rows="2" placeholder="请输入插件激活码" v-decorator="[ 'platformValue' ]"/>
         </a-form-item>
       </a-form>
     </a-spin>
