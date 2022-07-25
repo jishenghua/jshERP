@@ -44,17 +44,6 @@
         },
         confirmLoading: false,
         form: this.$form.createForm(this),
-        validatorRules:{
-          name:{
-            rules: [
-              { required: true, message: '请输入姓名!' },
-            ]},
-          type:{
-            rules: [
-              { required: true, message: '请选择类型!' }
-            ]
-          }
-        },
       }
     },
     created () {

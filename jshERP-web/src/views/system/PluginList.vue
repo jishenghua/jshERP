@@ -17,6 +17,7 @@
                   <a-button type="primary" @click="searchQuery">查询</a-button>
                   <a-button style="margin-left: 8px" @click="searchReset">重置</a-button>
                   <a-button type="primary" style="margin-left: 8px" @click="writeCode">填写激活码</a-button>
+                  <a-button type="primary" style="margin-left: 8px" @click="writeAppCode">填写手机端激活码</a-button>
                 </a-col>
               </span>
             </a-row>
@@ -73,6 +74,7 @@
         <!-- table区域-end -->
         <!-- 表单区域 -->
         <plugin-modal ref="modalForm" @ok="modalFormOk"></plugin-modal>
+        <plugin-app-modal ref="appModalForm" @ok="appModalFormOk"></plugin-app-modal>
       </a-card>
     </a-col>
   </a-row>
@@ -80,6 +82,7 @@
 <!-- f r o m 7 5  2 7 1  8 9 2 0 -->
 <script>
   import PluginModal from './modules/PluginModal'
+  import PluginAppModal from './modules/PluginAppModal'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import {postAction} from '@/api/manage';
   import JDate from '@/components/jeecg/JDate'
@@ -89,6 +92,7 @@
     mixins:[JeecgListMixin],
     components: {
       PluginModal,
+      PluginAppModal,
       JDate
     },
     data () {
@@ -191,6 +195,11 @@
         this.$refs.modalForm.edit();
         this.$refs.modalForm.title = "填写激活码";
         this.$refs.modalForm.disableSubmit = false;
+      },
+      writeAppCode() {
+        this.$refs.appModalForm.edit();
+        this.$refs.appModalForm.title = "填写手机端激活码";
+        this.$refs.appModalForm.disableSubmit = false;
       },
       linkUrl(record) {
         let desc = record.pluginDescriptor.pluginDescription
