@@ -1363,3 +1363,10 @@ update jsh_depot_head set purchase_status='0';
 -- --------------------------------------------------------
 alter table jsh_depot_item add link_id bigint(20) DEFAULT NULL COMMENT '关联明细id' after expiration_date;
 alter table jsh_depot_head add deposit decimal(24,6) DEFAULT NULL COMMENT '订金' after other_money;
+
+-- --------------------------------------------------------
+-- 时间 2022年07月25日
+-- by jishenghua
+-- 给平台参数表添加手机端激活码
+-- --------------------------------------------------------
+INSERT INTO `jsh_platform_config` VALUES ('8', 'app_activation_code', '手机端激活码', '');
