@@ -178,26 +178,6 @@ public class FunctionService {
         return list;
     }
 
-    /**
-     * 获取功能列表的叶子节点
-     * @return
-     * @throws Exception
-     */
-    public List<Function> getRoleFunctionLeaf()throws Exception {
-        FunctionExample example = new FunctionExample();
-        example.createCriteria().andEnabledEqualTo(true).andParentNumberNotEqualTo("0")
-                .andComponentNotEqualTo("/layouts/IframePageView")
-                .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        example.setOrderByClause("Sort");
-        List<Function> list=null;
-        try{
-            list = functionsMapper.selectByExample(example);
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        return list;
-    }
-
     public List<Function> findRoleFunction(String pnumber)throws Exception{
         FunctionExample example = new FunctionExample();
         example.createCriteria().andEnabledEqualTo(true).andParentNumberEqualTo(pnumber)
