@@ -104,20 +104,21 @@
             }
           },
           {title: '编号 ', dataIndex: 'number', width: 80},
-          {title: '名称', dataIndex: 'name', width: 100},
+          {title: '名称', dataIndex: 'name', width: 120, ellipsis:true},
           {title: '上级编号', dataIndex: 'parentNumber', width: 80},
-          {title: '链接', dataIndex: 'url', width: 250},
-          {title: '组件', dataIndex: 'component', width: 250},
-          {title: '排序', dataIndex: 'sort', width: 80},
+          {title: '上级名称', dataIndex: 'parentName', width: 120, ellipsis:true},
+          {title: '链接', dataIndex: 'url', width: 250, ellipsis:true},
+          {title: '组件', dataIndex: 'component', width: 250, ellipsis:true},
+          {title: '排序', dataIndex: 'sort', width: 60},
           {
             title: '是否启用', dataIndex: 'enabled', width: 80, align: "center",
             scopedSlots: { customRender: 'customRenderFlag' }
           },
-          {title: '图标', dataIndex: 'icon', width: 110},
+          {title: '图标', dataIndex: 'icon', width: 120},
           {
             title: '操作',
             dataIndex: 'action',
-            width: 200,
+            width: 150,
             align:"center",
             scopedSlots: { customRender: 'action' },
           }

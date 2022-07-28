@@ -72,6 +72,7 @@ const getAllMaterialAttribute = (params)=>getAction("/materialAttribute/getAll",
 const addFunction = (params)=>postAction("/function/add",params);
 const editFunction = (params)=>putAction("/function/update",params);
 const checkFunction = (params)=>getAction("/function/checkIsNameExist",params);
+const checkNumber = (params)=>getAction("/function/checkIsNumberExist",params);
 //系统配置
 const addSystemConfig = (params)=>postAction("/systemConfig/add",params);
 const editSystemConfig = (params)=>putAction("/systemConfig/update",params);
@@ -163,6 +164,7 @@ export {
   addFunction,
   editFunction,
   checkFunction,
+  checkNumber,
   addSystemConfig,
   editSystemConfig,
   checkSystemConfig,
