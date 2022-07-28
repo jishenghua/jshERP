@@ -1,6 +1,6 @@
 package com.jsh.erp.datasource.mappers;
 
-import com.jsh.erp.datasource.entities.Function;
+import com.jsh.erp.datasource.entities.FunctionEx;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface FunctionMapperEx {
 
-    List<Function> selectByConditionFunction(
+    List<FunctionEx> selectByConditionFunction(
             @Param("name") String name,
             @Param("type") String type,
             @Param("offset") Integer offset,

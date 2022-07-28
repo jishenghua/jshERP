@@ -3,6 +3,7 @@ package com.jsh.erp.service.functions;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.Function;
+import com.jsh.erp.datasource.entities.FunctionEx;
 import com.jsh.erp.datasource.entities.FunctionExample;
 import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.mappers.FunctionMapper;
@@ -73,8 +74,8 @@ public class FunctionService {
         return list;
     }
 
-    public List<Function> select(String name, String type, int offset, int rows)throws Exception {
-        List<Function> list=null;
+    public List<FunctionEx> select(String name, String type, int offset, int rows)throws Exception {
+        List<FunctionEx> list=null;
         try{
             list= functionMapperEx.selectByConditionFunction(name, type, offset, rows);
         }catch(Exception e){
@@ -155,6 +156,18 @@ public class FunctionService {
     public int checkIsNameExist(Long id, String name)throws Exception {
         FunctionExample example = new FunctionExample();
         example.createCriteria().andIdNotEqualTo(id).andNameEqualTo(name).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        List<Function> list=null;
+        try{
+            list = functionsMapper.selectByExample(example);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list==null?0:list.size();
+    }
+
+    public int checkIsNumberExist(Long id, String number)throws Exception {
+        FunctionExample example = new FunctionExample();
+        example.createCriteria().andIdNotEqualTo(id).andNumberEqualTo(number).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<Function> list=null;
         try{
             list = functionsMapper.selectByExample(example);

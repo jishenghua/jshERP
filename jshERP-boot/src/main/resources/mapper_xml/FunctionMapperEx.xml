@@ -1,36 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jsh.erp.datasource.mappers.FunctionMapperEx">
-    <select id="selectByConditionFunction" parameterType="com.jsh.erp.datasource.entities.FunctionExample" resultMap="com.jsh.erp.datasource.mappers.FunctionMapper.BaseResultMap">
-        select *
-        FROM jsh_function
+    <resultMap extends="com.jsh.erp.datasource.mappers.FunctionMapper.BaseResultMap" id="ResultMapEx" type="com.jsh.erp.datasource.entities.FunctionEx">
+        <result column="parent_name" jdbcType="VARCHAR" property="parentName" />
+    </resultMap>
+    <select id="selectByConditionFunction" parameterType="com.jsh.erp.datasource.entities.FunctionExample"
+            resultMap="ResultMapEx">
+        select fa.*, fb.name parent_name
+        from jsh_function fa
+        left join jsh_function fb on fa.parent_number = fb.number
         where 1=1
         <if test="name != null">
             <bind name="bindName" value="'%'+name+'%'"/>
-            and name like #{bindName}
+            and fa.name like #{bindName}
         </if>
         <if test="type != null">
-            and type=#{type}
+            and fa.type=#{type}
         </if>
-        and ifnull(delete_flag,'0') !='1'
-        order by sort asc
+        and ifnull(fa.delete_flag,'0') !='1'
+        order by fa.sort asc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
         </if>
     </select>
     <select id="countsByFunction" resultType="java.lang.Long">
-        SELECT
-        COUNT(id)
-        FROM jsh_function
+        select
+        count(fa.id)
+        from jsh_function fa
+        left join jsh_function fb on fa.parent_number = fb.number
         WHERE 1=1
         <if test="name != null">
             <bind name="bindName" value="'%'+name+'%'"/>
-            and name like #{bindName}
+            and fa.name like #{bindName}
         </if>
         <if test="type != null">
-            and type=#{type}
+            and fa.type=#{type}
         </if>
-        and ifnull(delete_flag,'0') !='1'
+        and ifnull(fa.delete_flag,'0') !='1'
     </select>
     <update id="batchDeleteFunctionByIds">
         update jsh_function

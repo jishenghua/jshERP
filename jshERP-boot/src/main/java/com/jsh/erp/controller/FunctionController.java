@@ -10,6 +10,7 @@ import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.functions.FunctionService;
 import com.jsh.erp.service.userBusiness.UserBusinessService;
 import com.jsh.erp.utils.BaseResponseInfo;
+import com.jsh.erp.utils.ErpInfo;
 import com.jsh.erp.utils.StringUtil;
 import com.jsh.erp.utils.Tools;
 import io.swagger.annotations.Api;
@@ -26,6 +27,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
+
 /**
  * @author ji-sheng-hua  jshERP
  */
@@ -40,6 +43,21 @@ public class FunctionController {
 
     @Resource
     private UserBusinessService userBusinessService;
+
+    @GetMapping(value = "/checkIsNumberExist")
+    @ApiOperation(value = "检查编号是否存在")
+    public String checkIsNumberExist(@RequestParam Long id,
+                                     @RequestParam(value ="number", required = false) String number,
+                                     HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<String, Object>();
+        int exist = functionService.checkIsNumberExist(id, number);
+        if(exist > 0) {
+            objectMap.put("status", true);
+        } else {
+            objectMap.put("status", false);
+        }
+        return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+    }
 
     /**
      * 根据父编号查询菜单
