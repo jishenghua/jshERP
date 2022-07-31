@@ -23,7 +23,11 @@
           <a-input placeholder="请输入名称" v-decorator.trim="[ 'name', validatorRules.name]" />
         </a-form-item>
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="上级编号">
-          <a-input placeholder="请输入上级编号" v-decorator.trim="[ 'parentNumber', validatorRules.parentNumber ]" />
+          <a-input-search placeholder="请选择上级编号" v-decorator.trim="[ 'parentNumber', validatorRules.parentNumber ]"
+                          @search="onSearchParentNumber" :readOnly="true" />
+        </a-form-item>
+        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="上级名称">
+          <a-input v-decorator.trim="[ 'parentName' ]" :readOnly="true" />
         </a-form-item>
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="链接">
           <a-input placeholder="请输入链接" v-decorator.trim="[ 'url', validatorRules.url ]" />
@@ -45,16 +49,19 @@
         </a-form-item>
       </a-form>
     </a-spin>
+    <function-tree-modal ref="functionTreeModal" @ok="functionTreeModalOk"></function-tree-modal>
   </a-modal>
 </template>
 <script>
   import pick from 'lodash.pick'
+  import FunctionTreeModal from './FunctionTreeModal'
   import {addFunction,editFunction,checkFunction, checkNumber } from '@/api/api'
   import {autoJumpNextInput} from "@/utils/util"
   import JSelectMultiple from '@/components/jeecg/JSelectMultiple'
   export default {
     name: "FunctionModal",
     components: {
+      FunctionTreeModal,
       JSelectMultiple
     },
     data () {
@@ -224,6 +231,14 @@
             callback(res.data);
           }
         });
+      },
+      onSearchParentNumber() {
+        this.$refs.functionTreeModal.edit(this.model.id);
+        this.$refs.functionTreeModal.title = "选择上级编号";
+        this.$refs.functionTreeModal.disableSubmit = false;
+      },
+      functionTreeModalOk(number, name) {
+        this.form.setFieldsValue({'parentNumber': number, 'parentName': name})
       }
     }
   }
