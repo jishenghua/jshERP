@@ -99,6 +99,8 @@ public class FunctionService {
         Function functions = JSONObject.parseObject(obj.toJSONString(), Function.class);
         int result=0;
         try{
+            functions.setState(false);
+            functions.setType("电脑版");
             result=functionsMapper.insertSelective(functions);
             logService.insertLog("功能",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(functions.getName()).toString(),request);
