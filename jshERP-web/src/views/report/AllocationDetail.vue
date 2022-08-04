@@ -132,6 +132,7 @@
   import {findBySelectSup, findBillDetailByNumber} from '@/api/api'
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import moment from 'moment'
+  import Vue from 'vue'
   export default {
     name: "AllocationDetail",
     mixins:[JeecgListMixin],
@@ -158,6 +159,7 @@
           beginTime: getNowFormatYear() + '-01-01',
           endTime: moment().format('YYYY-MM-DD'),
           subType: "调拨",
+          roleType: Vue.ls.get('roleType'),
           remark: ''
         },
         ipagination:{

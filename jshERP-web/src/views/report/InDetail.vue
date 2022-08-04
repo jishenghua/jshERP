@@ -124,6 +124,7 @@
   import {findBySelectSup, findBillDetailByNumber} from '@/api/api'
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import moment from 'moment'
+  import Vue from 'vue'
   export default {
     name: "InDetail",
     mixins:[JeecgListMixin],
@@ -148,8 +149,9 @@
           depotId: '',
           beginTime: getNowFormatYear() + '-01-01',
           endTime: moment().format('YYYY-MM-DD'),
+          roleType: Vue.ls.get('roleType'),
           type: "入库",
-          remark: ''
+          remark: '',
         },
         ipagination:{
           pageSize: 11,
