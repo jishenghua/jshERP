@@ -35,7 +35,6 @@
 </template>
 
 <script>
-  import { queryDepartTreeList } from '@/api/api'
   export default {
     name: 'JSelectDepartModal',
     props:['modalWidth','multi','rootOpened','departId'],
@@ -53,7 +52,6 @@
       }
     },
     created(){
-      this.loadDepart();
     },
     watch:{
       departId(){
@@ -75,19 +73,6 @@
         this.visible=true
         this.checkedRows=[]
         this.checkedKeys=[]
-      },
-      loadDepart(){
-        queryDepartTreeList().then(res=>{
-          if(res.success){
-            let arr = [...res.result]
-            this.reWriterWithSlot(arr)
-            this.treeData = arr
-            this.initDepartComponent()
-            if(this.rootOpened){
-              this.initExpandedKeys(res.result)
-            }
-          }
-        })
       },
       initDepartComponent(){
         let names = ''

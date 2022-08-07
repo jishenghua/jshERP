@@ -56,7 +56,7 @@
 
 <script>
   import {filterObj} from '@/utils/util'
-  import {queryDepartTreeList, getUserList, queryUserByDepId} from '@/api/api'
+  import {getUserList, queryUserByDepId} from '@/api/api'
 
   export default {
     name: 'JSelectUserByDepModal',
@@ -298,13 +298,6 @@
         })
       },
       queryDepartTree() {
-        queryDepartTreeList().then((res) => {
-          if (res.success) {
-            this.departTree = res.result;
-            // 默认展开父节点
-            this.expandedKeys = this.departTree.map(item => item.id)
-          }
-        })
       },
       modalFormOk() {
         this.loadData();
