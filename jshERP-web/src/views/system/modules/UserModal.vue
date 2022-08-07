@@ -63,7 +63,6 @@
   import { getAction } from '@/api/manage'
   import {addUser,editUser,queryOrganizationTreeList,roleAllList} from '@/api/api'
   import { disabledAuthFilter } from "@/utils/authFilter"
-  import {duplicateCheck } from '@/api/api'
   import {autoJumpNextInput} from "@/utils/util"
   import JImageUpload from '../../../components/jeecg/JImageUpload'
   export default {

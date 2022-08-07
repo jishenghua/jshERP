@@ -315,55 +315,6 @@ export function jsExpand(options = {}) {
   document.body.appendChild(script)
 }
 
-
-/**
- * 重复值验证工具方法
- *
- * 使用示例：
- * { validator: (rule, value, callback) => validateDuplicateValue('sys_fill_rule', 'rule_code', value, this.model.id, callback) }
- *
- * @param tableName 被验证的表名
- * @param fieldName 被验证的字段名
- * @param fieldVal 被验证的值
- * @param dataId 数据ID，可空
- * @param callback
- */
-export function validateDuplicateValue(tableName, fieldName, fieldVal, dataId, callback) {
-  if (fieldVal) {
-    let params = { tableName, fieldName, fieldVal, dataId }
-    api.duplicateCheck(params).then(res => {
-      res['success'] ? callback() : callback(res['message'])
-    }).catch(err => {
-      callback(err.message || err)
-    })
-  } else {
-    callback()
-  }
-}
-
-/**
- * 根据编码校验规则code，校验传入的值是否合法
- *
- * 使用示例：
- * { validator: (rule, value, callback) => validateCheckRule('common', value, callback) }
- *
- * @param ruleCode 编码校验规则 code
- * @param value 被验证的值
- * @param callback
- */
-export function validateCheckRule(ruleCode, value, callback) {
-  if (ruleCode && value) {
-    value = encodeURIComponent(value)
-    api.checkRuleByCode({ ruleCode, value }).then(res => {
-      res['success'] ? callback() : callback(res['message'])
-    }).catch(err => {
-      callback(err.message || err)
-    })
-  } else {
-    callback()
-  }
-}
-
 /**
  * 如果值不存在就 push 进数组，反之不处理
  * @param array 要操作的数据

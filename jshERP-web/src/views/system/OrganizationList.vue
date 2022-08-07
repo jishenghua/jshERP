@@ -98,7 +98,7 @@
 <script>
 import OrganizationModal from './modules/OrganizationModal'
 import pick from 'lodash.pick'
-import {queryOrganizationTreeList,queryOrganizationById, checkOrganization, deleteByDepartId} from '@/api/api'
+import {queryOrganizationTreeList,queryOrganizationById, checkOrganization} from '@/api/api'
 import {httpAction, deleteAction} from '@/api/manage'
 import {JeecgListMixin} from '@/mixins/JeecgListMixin'
 export default {
@@ -396,30 +396,6 @@ export default {
     handleAdd() {
       this.$refs.organizationModal.add()
       this.$refs.organizationModal.title = '新增'
-    },
-    handleDelete() {
-      var that = this
-      this.$confirm({
-        title: '确认删除',
-        content: '确定要删除此机构吗?',
-        onOk: function () {
-          deleteByDepartId({id: that.rightClickSelectedKey}).then((resp) => {
-            if (resp.success) {
-              //删除成功后，去除已选中中的数据
-              that.checkedKeys.splice(that.checkedKeys.findIndex(key => key === that.rightClickSelectedKey), 1);
-              that.$message.success('删除成功!')
-              that.loadTree()
-              //删除后同步清空右侧基本信息内容
-              let orgCode=that.form.getFieldValue("orgCode");
-              if(orgCode && orgCode === that.rightClickSelectedOrgCode){
-                that.onClearSelected()
-              }
-            } else {
-              that.$message.warning('删除失败!')
-            }
-          })
-        }
-      })
     },
     selectDirectiveOk(record) {
       console.log('选中指令数据', record)

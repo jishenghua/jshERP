@@ -84,7 +84,6 @@
 <script>
   import {mixinDevice} from '@/utils/mixin.js'
   import {getAction, postAction} from '@/api/manage'
-  import {checkOnlyUser} from '@/api/api'
   import md5 from 'md5'
 
   const levelNames = {
@@ -210,19 +209,6 @@
           callback(new Error('两次密码不一致'))
         }
         callback()
-      },
-
-      handlePhoneCheck(rule, value, callback) {
-        var params = {
-          phone: value,
-        };
-        checkOnlyUser(params).then((res) => {
-          if (res.success) {
-            callback()
-          } else {
-            callback("手机号已存在!")
-          }
-        })
       },
 
       handlePasswordInputClick() {
