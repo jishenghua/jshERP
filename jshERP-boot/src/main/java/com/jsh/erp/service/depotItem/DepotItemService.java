@@ -305,33 +305,36 @@ public class DepotItemService {
         return result;
     }
 
-    public List<DepotItemVo4WithInfoEx> getListWithBugOrSale(String materialParam, String billType, String beginTime, String endTime, Integer offset, Integer rows)throws Exception {
+    public List<DepotItemVo4WithInfoEx> getListWithBugOrSale(String materialParam, String billType,
+                     String beginTime, String endTime, String[] creatorArray, Integer offset, Integer rows)throws Exception {
         List<DepotItemVo4WithInfoEx> list =null;
         try{
-            list = depotItemMapperEx.getListWithBugOrSale(materialParam, billType, beginTime, endTime, offset, rows);
+            list = depotItemMapperEx.getListWithBugOrSale(materialParam, billType, beginTime, endTime, creatorArray, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
     }
 
-    public int getListWithBugOrSaleCount(String materialParam, String billType, String beginTime, String endTime)throws Exception {
+    public int getListWithBugOrSaleCount(String materialParam, String billType,
+                     String beginTime, String endTime, String[] creatorArray)throws Exception {
         int result=0;
         try{
-            result = depotItemMapperEx.getListWithBugOrSaleCount(materialParam, billType, beginTime, endTime);
+            result = depotItemMapperEx.getListWithBugOrSaleCount(materialParam, billType, beginTime, endTime, creatorArray);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return result;
     }
 
-    public BigDecimal buyOrSale(String type, String subType, Long MId, String beginTime, String endTime, String sumType) throws Exception{
+    public BigDecimal buyOrSale(String type, String subType, Long MId, String beginTime, String endTime,
+                                String[] creatorArray, String sumType) throws Exception{
         BigDecimal result= BigDecimal.ZERO;
         try{
             if (SUM_TYPE.equals(sumType)) {
-                result= depotItemMapperEx.buyOrSaleNumber(type, subType, MId, beginTime, endTime, sumType);
+                result= depotItemMapperEx.buyOrSaleNumber(type, subType, MId, beginTime, endTime, creatorArray, sumType);
             } else {
-                result= depotItemMapperEx.buyOrSalePrice(type, subType, MId, beginTime, endTime, sumType);
+                result= depotItemMapperEx.buyOrSalePrice(type, subType, MId, beginTime, endTime, creatorArray, sumType);
             }
         }catch(Exception e){
             JshException.readFail(logger, e);

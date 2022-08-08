@@ -331,6 +331,13 @@
         <if test="oId != null">
             and dh.organ_id = #{oId}
         </if>
+        <if test="creatorArray != null">
+            and dh.creator in (
+            <foreach collection="creatorArray" item="creator" separator=",">
+                #{creator}
+            </foreach>
+            )
+        </if>
         <if test="depotList.size()>0">
             <if test="type == '入库'">
                 and ((
@@ -373,6 +380,13 @@
         and (dh.type=#{type} or dh.sub_type='调拨') and dh.oper_time >=#{beginTime} and dh.oper_time &lt;=#{endTime}
         <if test="oId != null">
             and dh.organ_id = #{oId}
+        </if>
+        <if test="creatorArray != null">
+            and dh.creator in (
+            <foreach collection="creatorArray" item="creator" separator=",">
+                #{creator}
+            </foreach>
+            )
         </if>
         <if test="depotList.size()>0">
             <if test="type == '入库'">

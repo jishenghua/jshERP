@@ -52,12 +52,6 @@ public class DepotHeadController {
     private DepotHeadService depotHeadService;
 
     @Resource
-    private AccountHeadService accountHeadService;
-
-    @Resource
-    private SupplierService supplierService;
-
-    @Resource
     private DepotService depotService;
 
     @Resource
@@ -175,6 +169,7 @@ public class DepotHeadController {
                                          @RequestParam("beginTime") String beginTime,
                                          @RequestParam("endTime") String endTime,
                                          @RequestParam("type") String type,
+                                         @RequestParam(value = "roleType", required = false) String roleType,
                                          HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
@@ -193,8 +188,9 @@ public class DepotHeadController {
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
             List<DepotHeadVo4InOutMCount> list = depotHeadService.findInOutMaterialCount(beginTime, endTime, type, StringUtil.toNull(materialParam),
-                    depotList, oId, (currentPage-1)*pageSize, pageSize);
-            int total = depotHeadService.findInOutMaterialCountTotal(beginTime, endTime, type, StringUtil.toNull(materialParam), depotList, oId);
+                    depotList, oId, roleType, (currentPage-1)*pageSize, pageSize);
+            int total = depotHeadService.findInOutMaterialCountTotal(beginTime, endTime, type, StringUtil.toNull(materialParam),
+                    depotList, oId, roleType);
             map.put("total", total);
             map.put("rows", list);
             res.code = 200;

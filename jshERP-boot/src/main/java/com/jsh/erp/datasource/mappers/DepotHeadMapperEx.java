@@ -90,6 +90,7 @@ public interface DepotHeadMapperEx {
             @Param("materialParam") String materialParam,
             @Param("depotList") List<Long> depotList,
             @Param("oId") Integer oId,
+            @Param("creatorArray") String[] creatorArray,
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
@@ -99,7 +100,8 @@ public interface DepotHeadMapperEx {
             @Param("type") String type,
             @Param("materialParam") String materialParam,
             @Param("depotList") List<Long> depotList,
-            @Param("oId") Integer oId);
+            @Param("oId") Integer oId,
+            @Param("creatorArray") String[] creatorArray);
 
     List<DepotHeadVo4InDetail> findAllocationDetail(
             @Param("beginTime") String beginTime,

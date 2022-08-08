@@ -472,20 +472,23 @@ public class DepotHeadService {
     }
 
     public List<DepotHeadVo4InOutMCount> findInOutMaterialCount(String beginTime, String endTime, String type, String materialParam,
-                                                                List<Long> depotList, Integer oId, Integer offset, Integer rows)throws Exception {
+                              List<Long> depotList, Integer oId, String roleType, Integer offset, Integer rows)throws Exception {
         List<DepotHeadVo4InOutMCount> list = null;
         try{
-            list =depotHeadMapperEx.findInOutMaterialCount(beginTime, endTime, type, materialParam, depotList, oId, offset, rows);
+            String [] creatorArray = getCreatorArray(roleType);
+            list =depotHeadMapperEx.findInOutMaterialCount(beginTime, endTime, type, materialParam, depotList, oId, creatorArray, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
     }
 
-    public int findInOutMaterialCountTotal(String beginTime, String endTime, String type, String materialParam, List<Long> depotList, Integer oId)throws Exception {
+    public int findInOutMaterialCountTotal(String beginTime, String endTime, String type, String materialParam,
+                               List<Long> depotList, Integer oId, String roleType)throws Exception {
         int result = 0;
         try{
-            result =depotHeadMapperEx.findInOutMaterialCountTotal(beginTime, endTime, type, materialParam, depotList, oId);
+            String [] creatorArray = getCreatorArray(roleType);
+            result =depotHeadMapperEx.findInOutMaterialCountTotal(beginTime, endTime, type, materialParam, depotList, oId, creatorArray);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }

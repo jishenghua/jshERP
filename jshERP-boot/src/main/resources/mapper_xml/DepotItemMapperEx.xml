@@ -315,6 +315,13 @@
         <if test="endTime != null">
             and dh.oper_time &lt;= #{endTime}
         </if>
+        <if test="creatorArray != null">
+            and dh.creator in (
+            <foreach collection="creatorArray" item="creator" separator=",">
+                #{creator}
+            </foreach>
+            )
+        </if>
         and ifnull(m.delete_flag,'0') !='1'
         group by m.id
         order by m.id desc
@@ -346,6 +353,13 @@
         <if test="endTime != null">
             and dh.oper_time &lt;= #{endTime}
         </if>
+        <if test="creatorArray != null">
+            and dh.creator in (
+            <foreach collection="creatorArray" item="creator" separator=",">
+                #{creator}
+            </foreach>
+            )
+        </if>
         and ifnull(di.delete_flag,'0') !='1'
         group by m.id) cc
     </select>
@@ -357,6 +371,13 @@
         and di.material_id =#{MId}
         and dh.oper_time &gt;= #{beginTime}
         and dh.oper_time &lt;= #{endTime}
+        <if test="creatorArray != null">
+            and dh.creator in (
+            <foreach collection="creatorArray" item="creator" separator=",">
+                #{creator}
+            </foreach>
+            )
+        </if>
         and ifnull(dh.delete_flag,'0') !='1'
         and ifnull(di.delete_flag,'0') !='1'
     </select>
@@ -368,6 +389,13 @@
         and di.material_id =#{MId}
         and dh.oper_time &gt;= #{beginTime}
         and dh.oper_time &lt;= #{endTime}
+        <if test="creatorArray != null">
+            and dh.creator in (
+            <foreach collection="creatorArray" item="creator" separator=",">
+                #{creator}
+            </foreach>
+            )
+        </if>
         and ifnull(dh.delete_flag,'0') !='1'
         and ifnull(di.delete_flag,'0') !='1'
     </select>

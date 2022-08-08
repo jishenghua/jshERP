@@ -59,6 +59,7 @@ public interface DepotItemMapperEx {
             @Param("billType") String billType,
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
+            @Param("creatorArray") String[] creatorArray,
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
@@ -66,7 +67,8 @@ public interface DepotItemMapperEx {
             @Param("materialParam") String materialParam,
             @Param("billType") String billType,
             @Param("beginTime") String beginTime,
-            @Param("endTime") String endTime);
+            @Param("endTime") String endTime,
+            @Param("creatorArray") String[] creatorArray);
 
     BigDecimal buyOrSaleNumber(
             @Param("type") String type,
@@ -74,6 +76,7 @@ public interface DepotItemMapperEx {
             @Param("MId") Long MId,
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
+            @Param("creatorArray") String[] creatorArray,
             @Param("sumType") String sumType);
 
     BigDecimal buyOrSalePrice(
@@ -82,6 +85,7 @@ public interface DepotItemMapperEx {
             @Param("MId") Long MId,
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
+            @Param("creatorArray") String[] creatorArray,
             @Param("sumType") String sumType);
 
     BigDecimal inOrOutPrice(
