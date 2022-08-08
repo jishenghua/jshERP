@@ -107,6 +107,7 @@
   import {findBySelectSup} from '@/api/api'
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import moment from 'moment'
+  import Vue from 'vue'
   export default {
     name: "InMaterialCount",
     mixins:[JeecgListMixin],
@@ -129,7 +130,8 @@
           depotId: '',
           beginTime: getNowFormatYear() + '-01-01',
           endTime: moment().format('YYYY-MM-DD'),
-          type: "入库"
+          type: "入库",
+          roleType: Vue.ls.get('roleType'),
         },
         ipagination:{
           pageSize: 11,

@@ -101,7 +101,8 @@
           materialParam:'',
           beginTime: getNowFormatYear() + '-01-01',
           endTime: moment().format('YYYY-MM-DD'),
-          mpList: getMpListShort(Vue.ls.get('materialPropertyList'))
+          mpList: getMpListShort(Vue.ls.get('materialPropertyList')),
+          roleType: Vue.ls.get('roleType'),
         },
         ipagination:{
           pageSize: 11,
