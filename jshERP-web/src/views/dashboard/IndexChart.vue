@@ -148,6 +148,7 @@
   import { getBuyAndSaleStatistics, buyOrSalePrice, getPlatformConfigByKey } from '@/api/api'
   import { handleIntroJs } from "@/utils/util"
   import { getAction,postAction } from '../../api/manage'
+  import Vue from 'vue'
 
   export default {
     name: "IndexChart",
@@ -199,12 +200,12 @@
     },
     methods: {
       initInfo () {
-        getBuyAndSaleStatistics(null).then((res)=>{
+        getBuyAndSaleStatistics({"roleType": Vue.ls.get('roleType')}).then((res)=>{
           if(res.code === 200){
             this.statistics = res.data;
           }
         })
-        buyOrSalePrice(null).then(res=>{
+        buyOrSalePrice({"roleType": Vue.ls.get('roleType')}).then(res=>{
           if(res.code === 200){
             this.buyPriceData = res.data.buyPriceList;
             this.salePriceData = res.data.salePriceList;
