@@ -378,16 +378,30 @@
         and dh.type=#{type} and dh.sub_type=#{subType}
         and dh.oper_time &gt;= #{beginTime}
         and dh.oper_time &lt;= #{endTime}
+        <if test="creatorArray != null">
+            and dh.creator in (
+            <foreach collection="creatorArray" item="creator" separator=",">
+                #{creator}
+            </foreach>
+            )
+        </if>
         and ifnull(dh.delete_flag,'0') !='1'
     </select>
 
     <select id="inOrOutRetailPrice" resultType="java.math.BigDecimal">
         select ifnull(sum(total_price),0) as allMoney from jsh_depot_head dh
         where 1=1
-          and dh.type=#{type} and dh.sub_type=#{subType}
-          and dh.oper_time &gt;= #{beginTime}
-          and dh.oper_time &lt;= #{endTime}
-          and ifnull(dh.delete_flag,'0') !='1'
+        and dh.type=#{type} and dh.sub_type=#{subType}
+        and dh.oper_time &gt;= #{beginTime}
+        and dh.oper_time &lt;= #{endTime}
+        <if test="creatorArray != null">
+            and dh.creator in (
+            <foreach collection="creatorArray" item="creator" separator=",">
+                #{creator}
+            </foreach>
+            )
+        </if>
+        and ifnull(dh.delete_flag,'0') !='1'
     </select>
 
     <select id="getStockCheckSumByDepotList"  resultType="java.math.BigDecimal">

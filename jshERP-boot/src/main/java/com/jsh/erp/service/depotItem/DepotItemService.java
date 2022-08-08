@@ -348,12 +348,13 @@ public class DepotItemService {
      * @return
      * @throws Exception
      */
-    public BigDecimal inOrOutPrice(String type, String subType, String month) throws Exception{
+    public BigDecimal inOrOutPrice(String type, String subType, String month, String roleType) throws Exception{
         BigDecimal result= BigDecimal.ZERO;
         try{
+            String [] creatorArray = depotHeadService.getCreatorArray(roleType);
             String beginTime = Tools.firstDayOfMonth(month) + BusinessConstants.DAY_FIRST_TIME;
             String endTime = Tools.lastDayOfMonth(month) + BusinessConstants.DAY_LAST_TIME;
-            result = depotItemMapperEx.inOrOutPrice(type, subType, beginTime, endTime);
+            result = depotItemMapperEx.inOrOutPrice(type, subType, beginTime, endTime, creatorArray);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -368,12 +369,13 @@ public class DepotItemService {
      * @return
      * @throws Exception
      */
-    public BigDecimal inOrOutRetailPrice(String type, String subType, String month) throws Exception{
+    public BigDecimal inOrOutRetailPrice(String type, String subType, String month, String roleType) throws Exception{
         BigDecimal result= BigDecimal.ZERO;
         try{
+            String [] creatorArray = depotHeadService.getCreatorArray(roleType);
             String beginTime = Tools.firstDayOfMonth(month) + BusinessConstants.DAY_FIRST_TIME;
             String endTime = Tools.lastDayOfMonth(month) + BusinessConstants.DAY_LAST_TIME;
-            result = depotItemMapperEx.inOrOutRetailPrice(type, subType, beginTime, endTime);
+            result = depotItemMapperEx.inOrOutRetailPrice(type, subType, beginTime, endTime, creatorArray);
             result = result.abs();
         }catch(Exception e){
             JshException.readFail(logger, e);

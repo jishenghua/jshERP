@@ -633,17 +633,17 @@ public class DepotItemController {
      */
     @GetMapping(value = "/buyOrSalePrice")
     @ApiOperation(value = "统计采购、销售、零售的总金额")
-    public BaseResponseInfo buyOrSalePrice(HttpServletRequest request, HttpServletResponse response)throws Exception {
+    public BaseResponseInfo buyOrSalePrice(@RequestParam(value = "roleType", required = false) String roleType,
+                                           HttpServletRequest request, HttpServletResponse response)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
-        String message = "成功";
         try {
             List<String> list = Tools.getLastMonths(6);
             JSONArray buyPriceList = new JSONArray();
             for(String month: list) {
                 JSONObject obj = new JSONObject();
-                BigDecimal outPrice = depotItemService.inOrOutPrice("入库", "采购", month);
-                BigDecimal inPrice = depotItemService.inOrOutPrice("出库", "采购退货", month);
+                BigDecimal outPrice = depotItemService.inOrOutPrice("入库", "采购", month, roleType);
+                BigDecimal inPrice = depotItemService.inOrOutPrice("出库", "采购退货", month, roleType);
                 obj.put("x", month);
                 obj.put("y", outPrice.subtract(inPrice));
                 buyPriceList.add(obj);
@@ -652,8 +652,8 @@ public class DepotItemController {
             JSONArray salePriceList = new JSONArray();
             for(String month: list) {
                 JSONObject obj = new JSONObject();
-                BigDecimal outPrice = depotItemService.inOrOutPrice("出库", "销售", month);
-                BigDecimal inPrice = depotItemService.inOrOutPrice("入库", "销售退货", month);
+                BigDecimal outPrice = depotItemService.inOrOutPrice("出库", "销售", month, roleType);
+                BigDecimal inPrice = depotItemService.inOrOutPrice("入库", "销售退货", month, roleType);
                 obj.put("x", month);
                 obj.put("y", outPrice.subtract(inPrice));
                 salePriceList.add(obj);
@@ -662,8 +662,8 @@ public class DepotItemController {
             JSONArray retailPriceList = new JSONArray();
             for(String month: list) {
                 JSONObject obj = new JSONObject();
-                BigDecimal outPrice = depotItemService.inOrOutRetailPrice("出库", "零售", month);
-                BigDecimal inPrice = depotItemService.inOrOutRetailPrice("入库", "零售退货", month);
+                BigDecimal outPrice = depotItemService.inOrOutRetailPrice("出库", "零售", month, roleType);
+                BigDecimal inPrice = depotItemService.inOrOutRetailPrice("入库", "零售退货", month, roleType);
                 obj.put("x", month);
                 obj.put("y", outPrice.subtract(inPrice));
                 retailPriceList.add(obj);
@@ -673,8 +673,8 @@ public class DepotItemController {
             res.data = map;
         } catch (Exception e) {
             e.printStackTrace();
-            message = "统计失败";
             res.code = 500;
+            res.data = "统计失败";
         }
         return res;
     }

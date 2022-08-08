@@ -103,12 +103,12 @@ public class DepotHeadController {
     public BaseResponseInfo findInDetail(@RequestParam("currentPage") Integer currentPage,
                                         @RequestParam("pageSize") Integer pageSize,
                                         @RequestParam(value = "organId", required = false) Integer oId,
-                                         @RequestParam("number") String number,
+                                        @RequestParam("number") String number,
                                         @RequestParam("materialParam") String materialParam,
                                         @RequestParam(value = "depotId", required = false) Long depotId,
                                         @RequestParam("beginTime") String beginTime,
                                         @RequestParam("endTime") String endTime,
-                                         @RequestParam(value = "roleType", required = false) String roleType,
+                                        @RequestParam(value = "roleType", required = false) String roleType,
                                         @RequestParam("type") String type,
                                         @RequestParam("remark") String remark,
                                         HttpServletRequest request)throws Exception {
@@ -415,7 +415,8 @@ public class DepotHeadController {
      */
     @GetMapping(value = "/getBuyAndSaleStatistics")
     @ApiOperation(value = "统计今日采购额、昨日采购额、本月采购额、今年采购额|销售额|零售额")
-    public BaseResponseInfo getBuyAndSaleStatistics(HttpServletRequest request) {
+    public BaseResponseInfo getBuyAndSaleStatistics(@RequestParam(value = "roleType", required = false) String roleType,
+                                                    HttpServletRequest request) {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
             String today = Tools.getNow() + BusinessConstants.DAY_FIRST_TIME;
@@ -425,7 +426,7 @@ public class DepotHeadController {
             String yearBegin = Tools.getYearBegin() + BusinessConstants.DAY_FIRST_TIME;
             String yearEnd = Tools.getYearEnd() + BusinessConstants.DAY_LAST_TIME;
             Map<String, Object> map = depotHeadService.getBuyAndSaleStatistics(today, monthFirstDay,
-                    yesterdayBegin, yesterdayEnd, yearBegin, yearEnd);
+                    yesterdayBegin, yesterdayEnd, yearBegin, yearEnd, roleType);
             res.code = 200;
             res.data = map;
         } catch(Exception e){

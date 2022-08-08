@@ -850,60 +850,62 @@ public class DepotHeadService {
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
     }
 
-    public Map<String, Object> getBuyAndSaleStatistics(String today, String monthFirstDay, String yesterdayBegin, String yesterdayEnd, String yearBegin, String yearEnd) {
+    public Map<String, Object> getBuyAndSaleStatistics(String today, String monthFirstDay, String yesterdayBegin, String yesterdayEnd,
+                                                       String yearBegin, String yearEnd, String roleType) throws Exception {
+        String [] creatorArray = getCreatorArray(roleType);
         Map<String, Object> map = new HashMap<>();
         //今日
         BigDecimal todayBuy = getBuyAndSaleBasicStatistics("入库", "采购",
-                1, today, getNow3()); //今日采购入库
+                1, today, getNow3(), creatorArray); //今日采购入库
         BigDecimal todayBuyBack = getBuyAndSaleBasicStatistics("出库", "采购退货",
-                1, today, getNow3()); //今日采购退货
+                1, today, getNow3(), creatorArray); //今日采购退货
         BigDecimal todaySale = getBuyAndSaleBasicStatistics("出库", "销售",
-                1, today, getNow3()); //今日销售出库
+                1, today, getNow3(), creatorArray); //今日销售出库
         BigDecimal todaySaleBack = getBuyAndSaleBasicStatistics("入库", "销售退货",
-                1, today, getNow3()); //今日销售退货
+                1, today, getNow3(), creatorArray); //今日销售退货
         BigDecimal todayRetailSale = getBuyAndSaleRetailStatistics("出库", "零售",
-                today, getNow3()); //今日零售出库
+                today, getNow3(), creatorArray); //今日零售出库
         BigDecimal todayRetailSaleBack = getBuyAndSaleRetailStatistics("入库", "零售退货",
-                today, getNow3()); //今日零售退货
+                today, getNow3(), creatorArray); //今日零售退货
         //本月
         BigDecimal monthBuy = getBuyAndSaleBasicStatistics("入库", "采购",
-                1, monthFirstDay, getNow3()); //本月采购入库
+                1, monthFirstDay, getNow3(), creatorArray); //本月采购入库
         BigDecimal monthBuyBack = getBuyAndSaleBasicStatistics("出库", "采购退货",
-                1, monthFirstDay, getNow3()); //本月采购退货
+                1, monthFirstDay, getNow3(), creatorArray); //本月采购退货
         BigDecimal monthSale = getBuyAndSaleBasicStatistics("出库", "销售",
-                1,monthFirstDay, getNow3()); //本月销售出库
+                1,monthFirstDay, getNow3(), creatorArray); //本月销售出库
         BigDecimal monthSaleBack = getBuyAndSaleBasicStatistics("入库", "销售退货",
-                1,monthFirstDay, getNow3()); //本月销售退货
+                1,monthFirstDay, getNow3(), creatorArray); //本月销售退货
         BigDecimal monthRetailSale = getBuyAndSaleRetailStatistics("出库", "零售",
-                monthFirstDay, getNow3()); //本月零售出库
+                monthFirstDay, getNow3(), creatorArray); //本月零售出库
         BigDecimal monthRetailSaleBack = getBuyAndSaleRetailStatistics("入库", "零售退货",
-                monthFirstDay, getNow3()); //本月零售退货
+                monthFirstDay, getNow3(), creatorArray); //本月零售退货
         //昨日
         BigDecimal yesterdayBuy = getBuyAndSaleBasicStatistics("入库", "采购",
-                1, yesterdayBegin, yesterdayEnd); //昨日采购入库
+                1, yesterdayBegin, yesterdayEnd, creatorArray); //昨日采购入库
         BigDecimal yesterdayBuyBack = getBuyAndSaleBasicStatistics("出库", "采购退货",
-                1, yesterdayBegin, yesterdayEnd); //昨日采购退货
+                1, yesterdayBegin, yesterdayEnd, creatorArray); //昨日采购退货
         BigDecimal yesterdaySale = getBuyAndSaleBasicStatistics("出库", "销售",
-                1, yesterdayBegin, yesterdayEnd); //昨日销售出库
+                1, yesterdayBegin, yesterdayEnd, creatorArray); //昨日销售出库
         BigDecimal yesterdaySaleBack = getBuyAndSaleBasicStatistics("入库", "销售退货",
-                1, yesterdayBegin, yesterdayEnd); //昨日销售退货
+                1, yesterdayBegin, yesterdayEnd, creatorArray); //昨日销售退货
         BigDecimal yesterdayRetailSale = getBuyAndSaleRetailStatistics("出库", "零售",
-                yesterdayBegin, yesterdayEnd); //昨日零售出库
+                yesterdayBegin, yesterdayEnd, creatorArray); //昨日零售出库
         BigDecimal yesterdayRetailSaleBack = getBuyAndSaleRetailStatistics("入库", "零售退货",
-                yesterdayBegin, yesterdayEnd); //昨日零售退货
+                yesterdayBegin, yesterdayEnd, creatorArray); //昨日零售退货
         //今年
         BigDecimal yearBuy = getBuyAndSaleBasicStatistics("入库", "采购",
-                1, yearBegin, yearEnd); //今年采购入库
+                1, yearBegin, yearEnd, creatorArray); //今年采购入库
         BigDecimal yearBuyBack = getBuyAndSaleBasicStatistics("出库", "采购退货",
-                1, yearBegin, yearEnd); //今年采购退货
+                1, yearBegin, yearEnd, creatorArray); //今年采购退货
         BigDecimal yearSale = getBuyAndSaleBasicStatistics("出库", "销售",
-                1, yearBegin, yearEnd); //今年销售出库
+                1, yearBegin, yearEnd, creatorArray); //今年销售出库
         BigDecimal yearSaleBack = getBuyAndSaleBasicStatistics("入库", "销售退货",
-                1, yearBegin, yearEnd); //今年销售退货
+                1, yearBegin, yearEnd, creatorArray); //今年销售退货
         BigDecimal yearRetailSale = getBuyAndSaleRetailStatistics("出库", "零售",
-                yearBegin, yearEnd); //今年零售出库
+                yearBegin, yearEnd, creatorArray); //今年零售出库
         BigDecimal yearRetailSaleBack = getBuyAndSaleRetailStatistics("入库", "零售退货",
-                yearBegin, yearEnd); //今年零售退货
+                yearBegin, yearEnd, creatorArray); //今年零售退货
         map.put("todayBuy", todayBuy.subtract(todayBuyBack));
         map.put("todaySale", todaySale.subtract(todaySaleBack));
         map.put("todayRetailSale", todayRetailSale.subtract(todayRetailSaleBack));
@@ -919,12 +921,14 @@ public class DepotHeadService {
         return map;
     }
 
-    public BigDecimal getBuyAndSaleBasicStatistics(String type, String subType, Integer hasSupplier, String beginTime, String endTime) {
-        return depotHeadMapperEx.getBuyAndSaleBasicStatistics(type, subType, hasSupplier, beginTime, endTime);
+    public BigDecimal getBuyAndSaleBasicStatistics(String type, String subType, Integer hasSupplier,
+                                                   String beginTime, String endTime, String[] creatorArray) {
+        return depotHeadMapperEx.getBuyAndSaleBasicStatistics(type, subType, hasSupplier, beginTime, endTime, creatorArray);
     }
 
-    public BigDecimal getBuyAndSaleRetailStatistics(String type, String subType, String beginTime, String endTime) {
-        return depotHeadMapperEx.getBuyAndSaleRetailStatistics(type, subType, beginTime, endTime).abs();
+    public BigDecimal getBuyAndSaleRetailStatistics(String type, String subType,
+                                                    String beginTime, String endTime, String[] creatorArray) {
+        return depotHeadMapperEx.getBuyAndSaleRetailStatistics(type, subType, beginTime, endTime, creatorArray).abs();
     }
 
     public DepotHead getDepotHead(String number)throws Exception {
