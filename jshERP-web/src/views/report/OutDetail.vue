@@ -151,6 +151,7 @@
           endTime: moment().format('YYYY-MM-DD'),
           roleType: Vue.ls.get('roleType'),
           type: "出库",
+          subType: "销售",
           remark: ''
         },
         ipagination:{
