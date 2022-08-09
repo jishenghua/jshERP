@@ -23,7 +23,9 @@ import com.jsh.erp.service.person.PersonService;
 import com.jsh.erp.service.redis.RedisService;
 import com.jsh.erp.service.serialNumber.SerialNumberService;
 import com.jsh.erp.service.supplier.SupplierService;
+import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.user.UserService;
+import com.jsh.erp.service.userBusiness.UserBusinessService;
 import com.jsh.erp.utils.StringUtil;
 import com.jsh.erp.utils.Tools;
 import org.slf4j.Logger;
@@ -59,6 +61,10 @@ public class DepotHeadService {
     DepotItemService depotItemService;
     @Resource
     private SupplierService supplierService;
+    @Resource
+    private UserBusinessService userBusinessService;
+    @Resource
+    private SystemConfigService systemConfigService;
     @Resource
     private SerialNumberService serialNumberService;
     @Resource
@@ -107,12 +113,13 @@ public class DepotHeadService {
             String [] creatorArray = getCreatorArray(roleType);
             String [] statusArray = StringUtil.isNotEmpty(status) ? status.split(",") : null;
             String [] purchaseStatusArray = StringUtil.isNotEmpty(purchaseStatus) ? purchaseStatus.split(",") : null;
+            String [] organArray = getOrganArray(subType, purchaseStatus);
             Map<Long,String> personMap = personService.getPersonMap();
             Map<Long,String> accountMap = accountService.getAccountMap();
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
             list=depotHeadMapperEx.selectByConditionDepotHead(type, subType, creatorArray, statusArray, purchaseStatusArray, number, linkNumber, beginTime, endTime,
-                 materialParam, organId, creator, depotId, depotArray, accountId, remark, offset, rows);
+                 materialParam, organId, organArray, creator, depotId, depotArray, accountId, remark, offset, rows);
             if (null != list) {
                 for (DepotHeadVo4List dh : list) {
                     if(accountMap!=null && StringUtil.isNotEmpty(dh.getAccountIdList()) && StringUtil.isNotEmpty(dh.getAccountMoneyList())) {
@@ -161,10 +168,11 @@ public class DepotHeadService {
             String [] creatorArray = getCreatorArray(roleType);
             String [] statusArray = StringUtil.isNotEmpty(status) ? status.split(",") : null;
             String [] purchaseStatusArray = StringUtil.isNotEmpty(purchaseStatus) ? purchaseStatus.split(",") : null;
+            String [] organArray = getOrganArray(subType, purchaseStatus);
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
             result=depotHeadMapperEx.countsByDepotHead(type, subType, creatorArray, statusArray, purchaseStatusArray, number, linkNumber, beginTime, endTime,
-                   materialParam, organId, creator, depotId, depotArray, accountId, remark);
+                   materialParam, organId, organArray, creator, depotId, depotArray, accountId, remark);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -199,6 +207,37 @@ public class DepotHeadService {
             creatorArray = creator.split(",");
         }
         return creatorArray;
+    }
+
+    /**
+     * 获取机构数组
+     * @return
+     */
+    public String[] getOrganArray(String subType, String purchaseStatus) throws Exception {
+        String [] organArray = null;
+        String type = "UserCustomer";
+        Long userId = userService.getCurrentUser().getId();
+        //获取权限信息
+        String ubValue = userBusinessService.getUBValueByTypeAndKeyId(type, userId.toString());
+        List<Supplier> supplierList = supplierService.findBySelectCus();
+        if(BusinessConstants.SUB_TYPE_SALES_ORDER.equals(subType) || BusinessConstants.SUB_TYPE_SALES.equals(subType)
+                ||BusinessConstants.SUB_TYPE_SALES_RETURN.equals(subType) ) {
+            //采购订单里面选择销售订单的时候不要过滤
+            if(StringUtil.isEmpty(purchaseStatus)) {
+                if (null != supplierList) {
+                    boolean customerFlag = systemConfigService.getCustomerFlag();
+                    List<String> organList = new ArrayList<>();
+                    for (Supplier supplier : supplierList) {
+                        boolean flag = ubValue.contains("[" + supplier.getId().toString() + "]");
+                        if (!customerFlag || flag) {
+                            organList.add(supplier.getId().toString());
+                        }
+                    }
+                    organArray = StringUtil.listToStringArray(organList);
+                }
+            }
+        }
+        return organArray;
     }
 
     /**
@@ -448,11 +487,11 @@ public class DepotHeadService {
     }
 
     public List<DepotHeadVo4InDetail> findByAll(String beginTime, String endTime, String type, String [] creatorArray,
-                                                String materialParam, List<Long> depotList, Integer oId, String number,
+                                                String [] organArray, String materialParam, List<Long> depotList, Integer oId, String number,
                                                 String remark, Integer offset, Integer rows) throws Exception{
         List<DepotHeadVo4InDetail> list = null;
         try{
-            list =depotHeadMapperEx.findByAll(beginTime, endTime, type, creatorArray, materialParam, depotList, oId, number, remark, offset, rows);
+            list =depotHeadMapperEx.findByAll(beginTime, endTime, type, creatorArray, organArray, materialParam, depotList, oId, number, remark, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -460,11 +499,11 @@ public class DepotHeadService {
     }
 
     public int findByAllCount(String beginTime, String endTime, String type, String [] creatorArray,
-                              String materialParam, List<Long> depotList, Integer oId, String number,
+                              String [] organArray, String materialParam, List<Long> depotList, Integer oId, String number,
                               String remark) throws Exception{
         int result = 0;
         try{
-            result =depotHeadMapperEx.findByAllCount(beginTime, endTime, type, creatorArray, materialParam, depotList, oId, number, remark);
+            result =depotHeadMapperEx.findByAllCount(beginTime, endTime, type, creatorArray, organArray, materialParam, depotList, oId, number, remark);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -476,7 +515,10 @@ public class DepotHeadService {
         List<DepotHeadVo4InOutMCount> list = null;
         try{
             String [] creatorArray = getCreatorArray(roleType);
-            list =depotHeadMapperEx.findInOutMaterialCount(beginTime, endTime, type, materialParam, depotList, oId, creatorArray, offset, rows);
+            String subType = "出库".equals(type)? "销售" : "";
+            String [] organArray = getOrganArray(subType, "");
+            list =depotHeadMapperEx.findInOutMaterialCount(beginTime, endTime, type, materialParam, depotList, oId,
+                    creatorArray, organArray, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -488,7 +530,10 @@ public class DepotHeadService {
         int result = 0;
         try{
             String [] creatorArray = getCreatorArray(roleType);
-            result =depotHeadMapperEx.findInOutMaterialCountTotal(beginTime, endTime, type, materialParam, depotList, oId, creatorArray);
+            String subType = "出库".equals(type)? "销售" : "";
+            String [] organArray = getOrganArray(subType, "");
+            result =depotHeadMapperEx.findInOutMaterialCountTotal(beginTime, endTime, type, materialParam, depotList, oId,
+                    creatorArray, organArray);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -521,33 +566,34 @@ public class DepotHeadService {
         return result;
     }
 
-    public List<DepotHeadVo4StatementAccount> getStatementAccount(String beginTime, String endTime, Integer organId, String supplierType,
-                                                                  String type, String subType, Integer offset, Integer rows) {
+    public List<DepotHeadVo4StatementAccount> getStatementAccount(String beginTime, String endTime, Integer organId, String [] organArray,
+                                              String supplierType, String type, String subType, Integer offset, Integer rows) {
         List<DepotHeadVo4StatementAccount> list = null;
         try{
-            list = depotHeadMapperEx.getStatementAccount(beginTime, endTime, organId, supplierType, type, subType, offset, rows);
+            list = depotHeadMapperEx.getStatementAccount(beginTime, endTime, organId, organArray, supplierType, type, subType, offset, rows);
         } catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
     }
 
-    public int getStatementAccountCount(String beginTime, String endTime, Integer organId, String supplierType,
-                                        String type, String subType) {
+    public int getStatementAccountCount(String beginTime, String endTime, Integer organId,
+                                        String [] organArray, String supplierType, String type, String subType) {
         int result = 0;
         try{
-            result = depotHeadMapperEx.getStatementAccountCount(beginTime, endTime, organId, supplierType, type, subType);
+            result = depotHeadMapperEx.getStatementAccountCount(beginTime, endTime, organId, organArray, supplierType, type, subType);
         } catch(Exception e){
             JshException.readFail(logger, e);
         }
         return result;
     }
 
-    public List<DepotHeadVo4StatementAccount> getStatementAccountTotalPay(String beginTime, String endTime, Integer organId, String supplierType,
+    public List<DepotHeadVo4StatementAccount> getStatementAccountTotalPay(String beginTime, String endTime, Integer organId,
+                                                                          String [] organArray, String supplierType,
                                         String type, String subType) {
         List<DepotHeadVo4StatementAccount> list = null;
         try{
-            list = depotHeadMapperEx.getStatementAccountTotalPay(beginTime, endTime, organId, supplierType, type, subType);
+            list = depotHeadMapperEx.getStatementAccountTotalPay(beginTime, endTime, organId, organArray, supplierType, type, subType);
         } catch(Exception e){
             JshException.readFail(logger, e);
         }

@@ -30,6 +30,7 @@ public interface DepotHeadMapperEx {
             @Param("endTime") String endTime,
             @Param("materialParam") String materialParam,
             @Param("organId") Long organId,
+            @Param("organArray") String[] organArray,
             @Param("creator") Long creator,
             @Param("depotId") Long depotId,
             @Param("depotArray") String[] depotArray,
@@ -50,6 +51,7 @@ public interface DepotHeadMapperEx {
             @Param("endTime") String endTime,
             @Param("materialParam") String materialParam,
             @Param("organId") Long organId,
+            @Param("organArray") String[] organArray,
             @Param("creator") Long creator,
             @Param("depotId") Long depotId,
             @Param("depotArray") String[] depotArray,
@@ -64,6 +66,7 @@ public interface DepotHeadMapperEx {
             @Param("endTime") String endTime,
             @Param("type") String type,
             @Param("creatorArray") String[] creatorArray,
+            @Param("organArray") String[] organArray,
             @Param("materialParam") String materialParam,
             @Param("depotList") List<Long> depotList,
             @Param("oId") Integer oId,
@@ -77,6 +80,7 @@ public interface DepotHeadMapperEx {
             @Param("endTime") String endTime,
             @Param("type") String type,
             @Param("creatorArray") String[] creatorArray,
+            @Param("organArray") String[] organArray,
             @Param("materialParam") String materialParam,
             @Param("depotList") List<Long> depotList,
             @Param("oId") Integer oId,
@@ -91,6 +95,7 @@ public interface DepotHeadMapperEx {
             @Param("depotList") List<Long> depotList,
             @Param("oId") Integer oId,
             @Param("creatorArray") String[] creatorArray,
+            @Param("organArray") String[] organArray,
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
@@ -101,7 +106,8 @@ public interface DepotHeadMapperEx {
             @Param("materialParam") String materialParam,
             @Param("depotList") List<Long> depotList,
             @Param("oId") Integer oId,
-            @Param("creatorArray") String[] creatorArray);
+            @Param("creatorArray") String[] creatorArray,
+            @Param("organArray") String[] organArray);
 
     List<DepotHeadVo4InDetail> findAllocationDetail(
             @Param("beginTime") String beginTime,
@@ -131,6 +137,7 @@ public interface DepotHeadMapperEx {
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("organId") Integer organId,
+            @Param("organArray") String[] organArray,
             @Param("supplierType") String supplierType,
             @Param("type") String type,
             @Param("subType") String subType,
@@ -141,6 +148,7 @@ public interface DepotHeadMapperEx {
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("organId") Integer organId,
+            @Param("organArray") String[] organArray,
             @Param("supplierType") String supplierType,
             @Param("type") String type,
             @Param("subType") String subType);
@@ -149,6 +157,7 @@ public interface DepotHeadMapperEx {
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("organId") Integer organId,
+            @Param("organArray") String[] organArray,
             @Param("supplierType") String supplierType,
             @Param("type") String type,
             @Param("subType") String subType);

@@ -100,6 +100,13 @@
         <if test="organId != null">
             and dh.organ_id=#{organId}
         </if>
+        <if test="organArray != null and organArray !=''">
+            and dh.organ_id in (
+            <foreach collection="organArray" item="organId" separator=",">
+                #{organId}
+            </foreach>
+            )
+        </if>
         <if test="creator != null">
             and dh.creator=#{creator}
         </if>
@@ -183,6 +190,13 @@
         <if test="organId != null">
             and dh.organ_id=#{organId}
         </if>
+        <if test="organArray != null and organArray !=''">
+            and dh.organ_id in (
+            <foreach collection="organArray" item="organId" separator=",">
+                #{organId}
+            </foreach>
+            )
+        </if>
         <if test="creator != null">
             and dh.creator=#{creator}
         </if>
@@ -251,6 +265,13 @@
             </foreach>
             )
         </if>
+        <if test="organArray != null and organArray !=''">
+            and dh.organ_id in (
+            <foreach collection="organArray" item="organId" separator=",">
+                #{organId}
+            </foreach>
+            )
+        </if>
         <if test="number != null and number !=''">
             <bind name="bindNumber" value="'%'+number+'%'"/>
             and dh.number like #{bindNumber}
@@ -299,6 +320,13 @@
             </foreach>
             )
         </if>
+        <if test="organArray != null and organArray !=''">
+            and dh.organ_id in (
+            <foreach collection="organArray" item="organId" separator=",">
+                #{organId}
+            </foreach>
+            )
+        </if>
         <if test="number != null and number !=''">
             <bind name="bindNumber" value="'%'+number+'%'"/>
             and dh.number like #{bindNumber}
@@ -335,6 +363,13 @@
             and dh.creator in (
             <foreach collection="creatorArray" item="creator" separator=",">
                 #{creator}
+            </foreach>
+            )
+        </if>
+        <if test="organArray != null and organArray !=''">
+            and dh.organ_id in (
+            <foreach collection="organArray" item="organId" separator=",">
+                #{organId}
             </foreach>
             )
         </if>
@@ -385,6 +420,13 @@
             and dh.creator in (
             <foreach collection="creatorArray" item="creator" separator=",">
                 #{creator}
+            </foreach>
+            )
+        </if>
+        <if test="organArray != null and organArray !=''">
+            and dh.organ_id in (
+            <foreach collection="organArray" item="organId" separator=",">
+                #{organId}
             </foreach>
             )
         </if>
@@ -549,6 +591,13 @@
         <if test="organId != null">
             and s.id = #{organId}
         </if>
+        <if test="organArray != null and organArray !=''">
+            and s.id in (
+            <foreach collection="organArray" item="organId" separator=",">
+                #{organId}
+            </foreach>
+            )
+        </if>
         and ifnull(s.delete_flag,'0') !='1') tb
         where begin_need+preDebtMoney-preBackMoney+debtMoney-backMoney>0
         order by begin_need+preDebtMoney-preBackMoney+debtMoney-backMoney desc
@@ -591,6 +640,13 @@
         <if test="organId != null">
             and s.id = #{organId}
         </if>
+        <if test="organArray != null and organArray !=''">
+            and s.id in (
+            <foreach collection="organArray" item="organId" separator=",">
+                #{organId}
+            </foreach>
+            )
+        </if>
         and ifnull(s.delete_flag,'0') !='1') tb
         where begin_need+preDebtMoney-preBackMoney+debtMoney-backMoney>0
     </select>
@@ -629,6 +685,13 @@
         and s.type=#{supplierType}
         <if test="organId != null">
             and s.id = #{organId}
+        </if>
+        <if test="organArray != null and organArray !=''">
+            and s.id in (
+            <foreach collection="organArray" item="organId" separator=",">
+                #{organId}
+            </foreach>
+            )
         </if>
         and ifnull(s.delete_flag,'0') !='1') tb
         where begin_need+preDebtMoney-preBackMoney+debtMoney-backMoney>0
