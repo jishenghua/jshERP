@@ -1442,7 +1442,8 @@
         let params = {
           headerId: this.model.id,
           mpList: getMpListShort(Vue.ls.get('materialPropertyList')),  //扩展属性
-          linkType: showType
+          linkType: showType,
+          isReadOnly: '1'
         }
         let url = this.readOnly ? this.url.detailList : this.url.detailList;
         this.requestSubTableData(record, type, url, params);
