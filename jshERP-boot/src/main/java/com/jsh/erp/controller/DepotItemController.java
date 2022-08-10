@@ -161,6 +161,7 @@ public class DepotItemController {
     public BaseResponseInfo getDetailList(@RequestParam("headerId") Long headerId,
                               @RequestParam("mpList") String mpList,
                               @RequestParam(value = "linkType", required = false) String linkType,
+                              @RequestParam(value = "isReadOnly", required = false) String isReadOnly,
                               HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
@@ -174,6 +175,10 @@ public class DepotItemController {
             //存放数据json数组
             JSONArray dataArray = new JSONArray();
             if (null != dataList) {
+                BigDecimal totalOperNumber = BigDecimal.ZERO;
+                BigDecimal totalAllPrice = BigDecimal.ZERO;
+                BigDecimal totalTaxMoney = BigDecimal.ZERO;
+                BigDecimal totalTaxLastMoney = BigDecimal.ZERO;
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
                     JSONObject item = new JSONObject();
                     item.put("id", diEx.getId());
@@ -223,6 +228,19 @@ public class DepotItemController {
                     item.put("mType", diEx.getMaterialType());
                     item.put("op", 1);
                     dataArray.add(item);
+                    //合计数据汇总
+                    totalOperNumber = totalOperNumber.add(diEx.getOperNumber()==null?BigDecimal.ZERO:diEx.getOperNumber());
+                    totalAllPrice = totalAllPrice.add(diEx.getAllPrice()==null?BigDecimal.ZERO:diEx.getAllPrice());
+                    totalTaxMoney = totalTaxMoney.add(diEx.getTaxMoney()==null?BigDecimal.ZERO:diEx.getTaxMoney());
+                    totalTaxLastMoney = totalTaxLastMoney.add(diEx.getTaxLastMoney()==null?BigDecimal.ZERO:diEx.getTaxLastMoney());
+                }
+                if(StringUtil.isNotEmpty(isReadOnly) && "1".equals(isReadOnly)) {
+                    JSONObject footItem = new JSONObject();
+                    footItem.put("operNumber", totalOperNumber);
+                    footItem.put("allPrice", totalAllPrice);
+                    footItem.put("taxMoney", totalTaxMoney);
+                    footItem.put("taxLastMoney", totalTaxLastMoney);
+                    dataArray.add(footItem);
                 }
             }
             outer.put("rows", dataArray);
