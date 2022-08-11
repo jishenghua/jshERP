@@ -104,7 +104,6 @@ public class DepotHeadController {
                                         @RequestParam("endTime") String endTime,
                                         @RequestParam(value = "roleType", required = false) String roleType,
                                         @RequestParam("type") String type,
-                                        @RequestParam(value = "subType",required = false) String subType,
                                         @RequestParam("remark") String remark,
                                         HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
@@ -123,6 +122,7 @@ public class DepotHeadController {
             }
             List<DepotHeadVo4InDetail> resList = new ArrayList<DepotHeadVo4InDetail>();
             String [] creatorArray = depotHeadService.getCreatorArray(roleType);
+            String subType = "出库".equals(type)? "销售" : "";
             String [] organArray = depotHeadService.getOrganArray(subType, "");
             beginTime = Tools.parseDayToTime(beginTime, BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
