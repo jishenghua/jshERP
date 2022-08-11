@@ -59,6 +59,7 @@
         this.close()
       },
       close() {
+        this.billPrintUrl = ''
         this.$emit('close');
         this.visible = false;
       }
