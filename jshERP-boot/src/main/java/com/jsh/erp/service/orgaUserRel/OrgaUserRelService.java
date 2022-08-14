@@ -179,20 +179,19 @@ public class OrgaUserRelService {
      * @throws Exception
      */
     public String getUserIdListByUserId(Long userId) throws Exception{
-        OrgaUserRel our = new OrgaUserRel();
+        String users = "";
         OrgaUserRelExample example = new OrgaUserRelExample();
         example.createCriteria().andUserIdEqualTo(userId);
         List<OrgaUserRel> list = orgaUserRelMapper.selectByExample(example);
         if(list!=null && list.size()>0) {
-            our = list.get(0);
-        }
-        List<Long> userIdList = getUserIdListByOrgId(our.getOrgaId());
-        String users = "";
-        for(Long u: userIdList){
-            users = users + u + ",";
-        }
-        if(users.length()>0){
-            users = users.substring(0,users.length()-1);
+            OrgaUserRel our = list.get(0);
+            List<Long> userIdList = getUserIdListByOrgId(our.getOrgaId());
+            for(Long u: userIdList){
+                users = users + u + ",";
+            }
+            if(users.length()>0){
+                users = users.substring(0,users.length()-1);
+            }
         }
         return users;
     }
