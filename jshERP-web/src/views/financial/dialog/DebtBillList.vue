@@ -116,7 +116,7 @@
               return parseInt(index)+1;
             }
           },
-          { title: '', dataIndex: 'organName',width:120},
+          { title: '', dataIndex: 'organName',width:120, ellipsis:true},
           {
             title: '单据编号', dataIndex: 'number', width: 120,
             scopedSlots: { customRender: 'numberCustomRender' },
