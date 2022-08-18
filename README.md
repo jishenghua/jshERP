@@ -5,7 +5,6 @@
 * 推荐使用网络版（100元1年）淘宝链接：https://item.taobao.com/item.htm?id=674169489573
 * 欢迎加入华夏ERP交流QQ群(入群帮安装)，群3：805736336(满)、群4：146571538
 * 平台地址：http://cloud.huaxiaerp.vip 欢迎大家注册租户进行使用
-* 系统默认租户账号：jsh，默认超管账户：admin，默认密码均为：123456
 
 # 定制和插件
 * 如有ERP私人定制需求，请将需求整理成文档，发给邮箱： **752718920@qq.com** ，我会及时回复哒
@@ -48,6 +47,7 @@
 * 为方便大家搭建运行环境，分享了下载地址 https://pan.baidu.com/s/1jlild9uyGdQ7H2yaMx76zw  提取码:814g
 * 不会打包的小伙伴，请下载此打包后的文件 https://share.weiyun.com/Y6BXPOxn 密码：ae8jcy
 * 不会部署的小伙伴，请参考部署教程 http://www.huaxiaerp.com/thread-177-1-1.html
+* 部署后登录系统的默认租户账号：jsh，默认超管账户：admin，默认密码均为：123456
 
 # 开源说明
 * 本系统100%开源，遵守GPL-3.0协议
