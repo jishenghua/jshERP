@@ -165,7 +165,7 @@
             { title: '条码', key: 'barCode', width: '8%', type: FormTypes.popupJsh, kind: 'material', multi: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
-            { title: '名称', key: 'name', width: '6%', type: FormTypes.normal },
+            { title: '名称', key: 'name', width: '8%', type: FormTypes.normal },
             { title: '规格', key: 'standard', width: '5%', type: FormTypes.normal },
             { title: '型号', key: 'model', width: '5%', type: FormTypes.normal },
             { title: '颜色', key: 'color', width: '5%', type: FormTypes.normal },
