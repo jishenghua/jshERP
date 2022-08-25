@@ -26,6 +26,12 @@ public class DepotHeadVo4InDetail {
 
     private BigDecimal AllPrice;
 
+    private BigDecimal taxRate;
+
+    private BigDecimal taxMoney;
+
+    private BigDecimal taxLastMoney;
+
     private String SName;
 
     private String DName;
@@ -114,6 +120,30 @@ public class DepotHeadVo4InDetail {
 
     public void setAllPrice(BigDecimal allPrice) {
         AllPrice = allPrice;
+    }
+
+    public BigDecimal getTaxRate() {
+        return taxRate;
+    }
+
+    public void setTaxRate(BigDecimal taxRate) {
+        this.taxRate = taxRate;
+    }
+
+    public BigDecimal getTaxMoney() {
+        return taxMoney;
+    }
+
+    public void setTaxMoney(BigDecimal taxMoney) {
+        this.taxMoney = taxMoney;
+    }
+
+    public BigDecimal getTaxLastMoney() {
+        return taxLastMoney;
+    }
+
+    public void setTaxLastMoney(BigDecimal taxLastMoney) {
+        this.taxLastMoney = taxLastMoney;
     }
 
     public String getSName() {

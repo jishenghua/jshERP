@@ -126,9 +126,9 @@ public class DepotHeadController {
             String [] organArray = depotHeadService.getOrganArray(subType, "");
             beginTime = Tools.parseDayToTime(beginTime, BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            List<DepotHeadVo4InDetail> list = depotHeadService.findByAll(beginTime, endTime, type, creatorArray, organArray,
+            List<DepotHeadVo4InDetail> list = depotHeadService.findInDetail(beginTime, endTime, type, creatorArray, organArray,
                     StringUtil.toNull(materialParam), depotList, oId, StringUtil.toNull(number), remark, (currentPage-1)*pageSize, pageSize);
-            int total = depotHeadService.findByAllCount(beginTime, endTime, type, creatorArray, organArray,
+            int total = depotHeadService.findInDetailCount(beginTime, endTime, type, creatorArray, organArray,
                     StringUtil.toNull(materialParam), depotList, oId, StringUtil.toNull(number), remark);
             map.put("total", total);
             //存放数据json数组

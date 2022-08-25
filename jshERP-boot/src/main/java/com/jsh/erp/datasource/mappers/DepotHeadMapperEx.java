@@ -61,7 +61,7 @@ public interface DepotHeadMapperEx {
     String findMaterialsListByHeaderId(
             @Param("id") Long id);
 
-    List<DepotHeadVo4InDetail> findByAll(
+    List<DepotHeadVo4InDetail> findInDetail(
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("type") String type,
@@ -75,7 +75,7 @@ public interface DepotHeadMapperEx {
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
-    int findByAllCount(
+    int findInDetailCount(
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("type") String type,

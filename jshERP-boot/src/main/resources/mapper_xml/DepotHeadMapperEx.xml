@@ -21,6 +21,9 @@
         <result column="unit_price" jdbcType="DECIMAL" property="UnitPrice" />
         <result column="oper_number" jdbcType="DECIMAL" property="OperNumber" />
         <result column="all_price" jdbcType="DECIMAL" property="AllPrice" />
+        <result column="tax_rate" jdbcType="DECIMAL" property="taxRate" />
+        <result column="tax_money" jdbcType="DECIMAL" property="taxMoney" />
+        <result column="tax_last_money" jdbcType="DECIMAL" property="taxLastMoney" />
         <result column="SName" jdbcType="VARCHAR" property="SName" />
         <result column="DName" jdbcType="VARCHAR" property="DName" />
         <result column="OperTime" jdbcType="VARCHAR" property="OperTime" />
@@ -236,9 +239,11 @@
         and ifnull(jsh_depot_item.delete_flag,'0') !='1'
     </select>
 
-    <select id="findByAll" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
-        select dh.number,me.bar_code, m.`name` MName,m.model,m.standard,di.unit_price,di.material_unit as mUnit,di.oper_number,di.all_price,s.supplier SName,d.dName DName,
-        date_format(dh.oper_time, '%Y-%m-%d') OperTime, concat(dh.sub_type,dh.type) as NewType, concat_ws('  ',dh.remark,di.remark) as newRemark
+    <select id="findInDetail" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
+        select dh.number,me.bar_code, m.`name` MName,m.model,m.standard,di.unit_price,di.material_unit as mUnit,
+        di.oper_number,di.all_price, ifnull(di.tax_rate,0) tax_rate, ifnull(di.tax_money,0) tax_money, ifnull(di.tax_last_money,0) tax_last_money,
+        s.supplier SName,d.dName DName, date_format(dh.oper_time, '%Y-%m-%d') OperTime, concat(dh.sub_type,dh.type) as NewType,
+        concat_ws('  ',dh.remark,di.remark) as newRemark
         from jsh_depot_head dh
         left join jsh_depot_item di on di.header_id=dh.id and ifnull(di.delete_flag,'0') !='1'
         left join jsh_material m on m.id=di.material_id and ifnull(m.delete_flag,'0') !='1'
@@ -292,7 +297,7 @@
         </if>
     </select>
 
-    <select id="findByAllCount" resultType="java.lang.Integer">
+    <select id="findInDetailCount" resultType="java.lang.Integer">
         select count(1)
         from jsh_depot_head dh
         left join jsh_depot_item di on di.header_id=dh.id and ifnull(di.delete_flag,'0') !='1'

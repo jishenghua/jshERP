@@ -486,24 +486,24 @@ public class DepotHeadService {
         return result;
     }
 
-    public List<DepotHeadVo4InDetail> findByAll(String beginTime, String endTime, String type, String [] creatorArray,
+    public List<DepotHeadVo4InDetail> findInDetail(String beginTime, String endTime, String type, String [] creatorArray,
                                                 String [] organArray, String materialParam, List<Long> depotList, Integer oId, String number,
                                                 String remark, Integer offset, Integer rows) throws Exception{
         List<DepotHeadVo4InDetail> list = null;
         try{
-            list =depotHeadMapperEx.findByAll(beginTime, endTime, type, creatorArray, organArray, materialParam, depotList, oId, number, remark, offset, rows);
+            list =depotHeadMapperEx.findInDetail(beginTime, endTime, type, creatorArray, organArray, materialParam, depotList, oId, number, remark, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
     }
 
-    public int findByAllCount(String beginTime, String endTime, String type, String [] creatorArray,
+    public int findInDetailCount(String beginTime, String endTime, String type, String [] creatorArray,
                               String [] organArray, String materialParam, List<Long> depotList, Integer oId, String number,
                               String remark) throws Exception{
         int result = 0;
         try{
-            result =depotHeadMapperEx.findByAllCount(beginTime, endTime, type, creatorArray, organArray, materialParam, depotList, oId, number, remark);
+            result =depotHeadMapperEx.findInDetailCount(beginTime, endTime, type, creatorArray, organArray, materialParam, depotList, oId, number, remark);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
