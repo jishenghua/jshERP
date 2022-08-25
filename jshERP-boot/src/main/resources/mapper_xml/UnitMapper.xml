@@ -11,6 +11,7 @@
     <result column="ratio" jdbcType="INTEGER" property="ratio" />
     <result column="ratio_two" jdbcType="INTEGER" property="ratioTwo" />
     <result column="ratio_three" jdbcType="INTEGER" property="ratioThree" />
+    <result column="enabled" jdbcType="BIT" property="enabled" />
     <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
     <result column="delete_flag" jdbcType="VARCHAR" property="deleteFlag" />
   </resultMap>
@@ -74,7 +75,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, name, basic_unit, other_unit, other_unit_two, other_unit_three, ratio, ratio_two, 
-    ratio_three, tenant_id, delete_flag
+    ratio_three, enabled, tenant_id, delete_flag
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.UnitExample" resultMap="BaseResultMap">
     select
@@ -110,11 +111,13 @@
     insert into jsh_unit (id, name, basic_unit, 
       other_unit, other_unit_two, other_unit_three, 
       ratio, ratio_two, ratio_three, 
-      tenant_id, delete_flag)
+      enabled, tenant_id, delete_flag
+      )
     values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{basicUnit,jdbcType=VARCHAR}, 
       #{otherUnit,jdbcType=VARCHAR}, #{otherUnitTwo,jdbcType=VARCHAR}, #{otherUnitThree,jdbcType=VARCHAR}, 
       #{ratio,jdbcType=INTEGER}, #{ratioTwo,jdbcType=INTEGER}, #{ratioThree,jdbcType=INTEGER}, 
-      #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR})
+      #{enabled,jdbcType=BIT}, #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.Unit">
     insert into jsh_unit
@@ -145,6 +148,9 @@
       </if>
       <if test="ratioThree != null">
         ratio_three,
+      </if>
+      <if test="enabled != null">
+        enabled,
       </if>
       <if test="tenantId != null">
         tenant_id,
@@ -180,6 +186,9 @@
       </if>
       <if test="ratioThree != null">
         #{ratioThree,jdbcType=INTEGER},
+      </if>
+      <if test="enabled != null">
+        #{enabled,jdbcType=BIT},
       </if>
       <if test="tenantId != null">
         #{tenantId,jdbcType=BIGINT},
@@ -225,6 +234,9 @@
       <if test="record.ratioThree != null">
         ratio_three = #{record.ratioThree,jdbcType=INTEGER},
       </if>
+      <if test="record.enabled != null">
+        enabled = #{record.enabled,jdbcType=BIT},
+      </if>
       <if test="record.tenantId != null">
         tenant_id = #{record.tenantId,jdbcType=BIGINT},
       </if>
@@ -247,6 +259,7 @@
       ratio = #{record.ratio,jdbcType=INTEGER},
       ratio_two = #{record.ratioTwo,jdbcType=INTEGER},
       ratio_three = #{record.ratioThree,jdbcType=INTEGER},
+      enabled = #{record.enabled,jdbcType=BIT},
       tenant_id = #{record.tenantId,jdbcType=BIGINT},
       delete_flag = #{record.deleteFlag,jdbcType=VARCHAR}
     <if test="_parameter != null">
@@ -280,6 +293,9 @@
       <if test="ratioThree != null">
         ratio_three = #{ratioThree,jdbcType=INTEGER},
       </if>
+      <if test="enabled != null">
+        enabled = #{enabled,jdbcType=BIT},
+      </if>
       <if test="tenantId != null">
         tenant_id = #{tenantId,jdbcType=BIGINT},
       </if>
@@ -299,6 +315,7 @@
       ratio = #{ratio,jdbcType=INTEGER},
       ratio_two = #{ratioTwo,jdbcType=INTEGER},
       ratio_three = #{ratioThree,jdbcType=INTEGER},
+      enabled = #{enabled,jdbcType=BIT},
       tenant_id = #{tenantId,jdbcType=BIGINT},
       delete_flag = #{deleteFlag,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}

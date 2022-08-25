@@ -1370,3 +1370,26 @@ alter table jsh_depot_head add deposit decimal(24,6) DEFAULT NULL COMMENT '订�
 -- 给平台参数表添加手机端激活码
 -- --------------------------------------------------------
 INSERT INTO `jsh_platform_config` VALUES ('8', 'app_activation_code', '手机端激活码', '');
+
+-- --------------------------------------------------------
+-- 时间 2022年08月25日
+-- by jishenghua
+-- 给部分表增加启用状态和排序字段
+-- --------------------------------------------------------
+alter table jsh_unit add enabled bit(1) DEFAULT NULL COMMENT '启用' after ratio_three;
+update jsh_unit set enabled=1;
+alter table jsh_supplier add sort varchar(10) DEFAULT NULL COMMENT '排序' after tax_rate;
+alter table jsh_depot add enabled bit(1) DEFAULT NULL COMMENT '启用' after principal;
+update jsh_depot set enabled=1;
+alter table jsh_in_out_item add enabled bit(1) DEFAULT NULL COMMENT '启用' after remark;
+alter table jsh_in_out_item add sort varchar(10) DEFAULT NULL COMMENT '排序' after enabled;
+update jsh_in_out_item set enabled=1;
+alter table jsh_account add enabled bit(1) DEFAULT NULL COMMENT '启用' after remark;
+alter table jsh_account add sort varchar(10) DEFAULT NULL COMMENT '排序' after enabled;
+update jsh_account set enabled=1;
+alter table jsh_person add enabled bit(1) DEFAULT NULL COMMENT '启用' after name;
+alter table jsh_person add sort varchar(10) DEFAULT NULL COMMENT '排序' after enabled;
+update jsh_person set enabled=1;
+alter table jsh_role add enabled bit(1) DEFAULT NULL COMMENT '启用' after description;
+alter table jsh_role add sort varchar(10) DEFAULT NULL COMMENT '排序' after enabled;
+update jsh_role set enabled=1;

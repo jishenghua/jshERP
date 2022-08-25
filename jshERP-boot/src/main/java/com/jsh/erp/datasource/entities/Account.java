@@ -15,6 +15,10 @@ public class Account {
 
     private String remark;
 
+    private Boolean enabled;
+
+    private String sort;
+
     private Boolean isDefault;
 
     private Long tenantId;
@@ -67,6 +71,22 @@ public class Account {
 
     public void setRemark(String remark) {
         this.remark = remark == null ? null : remark.trim();
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public String getSort() {
+        return sort;
+    }
+
+    public void setSort(String sort) {
+        this.sort = sort == null ? null : sort.trim();
     }
 
     public Boolean getIsDefault() {

@@ -11,6 +11,10 @@ public class Role {
 
     private String description;
 
+    private Boolean enabled;
+
+    private String sort;
+
     private Long tenantId;
 
     private String deleteFlag;
@@ -53,6 +57,22 @@ public class Role {
 
     public void setDescription(String description) {
         this.description = description == null ? null : description.trim();
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public String getSort() {
+        return sort;
+    }
+
+    public void setSort(String sort) {
+        this.sort = sort == null ? null : sort.trim();
     }
 
     public Long getTenantId() {

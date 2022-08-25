@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50704
 File Encoding         : 65001
 
-Date: 2021-12-12 23:29:17
+Date: 2022-08-26 00:10:15
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -26,6 +26,8 @@ CREATE TABLE `jsh_account` (
   `initial_amount` decimal(24,6) DEFAULT NULL COMMENT '期初金额',
   `current_amount` decimal(24,6) DEFAULT NULL COMMENT '当前余额',
   `remark` varchar(100) DEFAULT NULL COMMENT '备注',
+  `enabled` bit(1) DEFAULT NULL COMMENT '启用',
+  `sort` varchar(10) DEFAULT NULL COMMENT '排序',
   `is_default` bit(1) DEFAULT NULL COMMENT '是否默认',
   `tenant_id` bigint(20) DEFAULT NULL COMMENT '租户id',
   `delete_flag` varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除',
@@ -35,8 +37,8 @@ CREATE TABLE `jsh_account` (
 -- ----------------------------
 -- Records of jsh_account
 -- ----------------------------
-INSERT INTO `jsh_account` VALUES ('17', '账户1', 'zzz111', '100.000000', '829.000000', 'aabb', '', '63', '0');
-INSERT INTO `jsh_account` VALUES ('18', '账户2', '1234131324', '200.000000', '-1681.000000', 'bbbb', '\0', '63', '0');
+INSERT INTO `jsh_account` VALUES ('17', '账户1', 'zzz111', '100.000000', '829.000000', 'aabb', '', null, '', '63', '0');
+INSERT INTO `jsh_account` VALUES ('18', '账户2', '1234131324', '200.000000', '-1681.000000', 'bbbb', '', null, '\0', '63', '0');
 
 -- ----------------------------
 -- Table structure for jsh_account_head
@@ -121,6 +123,7 @@ CREATE TABLE `jsh_depot` (
   `sort` varchar(10) DEFAULT NULL COMMENT '排序',
   `remark` varchar(100) DEFAULT NULL COMMENT '描述',
   `principal` bigint(20) DEFAULT NULL COMMENT '负责人',
+  `enabled` bit(1) DEFAULT NULL COMMENT '启用',
   `tenant_id` bigint(20) DEFAULT NULL COMMENT '租户id',
   `delete_Flag` varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除',
   `is_default` bit(1) DEFAULT NULL COMMENT '是否默认',
@@ -130,9 +133,9 @@ CREATE TABLE `jsh_depot` (
 -- ----------------------------
 -- Records of jsh_depot
 -- ----------------------------
-INSERT INTO `jsh_depot` VALUES ('14', '仓库1', 'dizhi', '12.000000', '12.000000', '0', '1', '描述', '131', '63', '0', '');
-INSERT INTO `jsh_depot` VALUES ('15', '仓库2', '地址100', '555.000000', '666.000000', '0', '2', 'dfdf', '131', '63', '0', '\0');
-INSERT INTO `jsh_depot` VALUES ('17', '仓库3', '123123', '123.000000', '123.000000', '0', '3', '123', '131', '63', '0', '\0');
+INSERT INTO `jsh_depot` VALUES ('14', '仓库1', 'dizhi', '12.000000', '12.000000', '0', '1', '描述', '131', '', '63', '0', '');
+INSERT INTO `jsh_depot` VALUES ('15', '仓库2', '地址100', '555.000000', '666.000000', '0', '2', 'dfdf', '131', '', '63', '0', '\0');
+INSERT INTO `jsh_depot` VALUES ('17', '仓库3', '123123', '123.000000', '123.000000', '0', '3', '123', '131', '', '63', '0', '\0');
 
 -- ----------------------------
 -- Table structure for jsh_depot_head
@@ -349,6 +352,8 @@ CREATE TABLE `jsh_in_out_item` (
   `name` varchar(50) DEFAULT NULL COMMENT '名称',
   `type` varchar(20) DEFAULT NULL COMMENT '类型',
   `remark` varchar(100) DEFAULT NULL COMMENT '备注',
+  `enabled` bit(1) DEFAULT NULL COMMENT '启用',
+  `sort` varchar(10) DEFAULT NULL COMMENT '排序',
   `tenant_id` bigint(20) DEFAULT NULL COMMENT '租户id',
   `delete_flag` varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除',
   PRIMARY KEY (`id`)
@@ -357,9 +362,9 @@ CREATE TABLE `jsh_in_out_item` (
 -- ----------------------------
 -- Records of jsh_in_out_item
 -- ----------------------------
-INSERT INTO `jsh_in_out_item` VALUES ('21', '快递费', '支出', '', '63', '0');
-INSERT INTO `jsh_in_out_item` VALUES ('22', '房租收入', '收入', '', '63', '0');
-INSERT INTO `jsh_in_out_item` VALUES ('23', '利息收入', '收入', '收入', '63', '0');
+INSERT INTO `jsh_in_out_item` VALUES ('21', '快递费', '支出', '', '', null, '63', '0');
+INSERT INTO `jsh_in_out_item` VALUES ('22', '房租收入', '收入', '', '', null, '63', '0');
+INSERT INTO `jsh_in_out_item` VALUES ('23', '利息收入', '收入', '收入', '', null, '63', '0');
 
 -- ----------------------------
 -- Table structure for jsh_log
@@ -667,6 +672,8 @@ CREATE TABLE `jsh_person` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `type` varchar(20) DEFAULT NULL COMMENT '类型',
   `name` varchar(50) DEFAULT NULL COMMENT '姓名',
+  `enabled` bit(1) DEFAULT NULL COMMENT '启用',
+  `sort` varchar(10) DEFAULT NULL COMMENT '排序',
   `tenant_id` bigint(20) DEFAULT NULL COMMENT '租户id',
   `delete_flag` varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除',
   PRIMARY KEY (`id`)
@@ -675,10 +682,10 @@ CREATE TABLE `jsh_person` (
 -- ----------------------------
 -- Records of jsh_person
 -- ----------------------------
-INSERT INTO `jsh_person` VALUES ('14', '业务员', '小李', '63', '0');
-INSERT INTO `jsh_person` VALUES ('15', '仓管员', '小军', '63', '0');
-INSERT INTO `jsh_person` VALUES ('16', '财务员', '小夏', '63', '0');
-INSERT INTO `jsh_person` VALUES ('17', '财务员', '小曹', '63', '0');
+INSERT INTO `jsh_person` VALUES ('14', '业务员', '小李', '', null, '63', '0');
+INSERT INTO `jsh_person` VALUES ('15', '仓管员', '小军', '', null, '63', '0');
+INSERT INTO `jsh_person` VALUES ('16', '财务员', '小夏', '', null, '63', '0');
+INSERT INTO `jsh_person` VALUES ('17', '财务员', '小曹', '', null, '63', '0');
 
 -- ----------------------------
 -- Table structure for jsh_platform_config
@@ -690,7 +697,7 @@ CREATE TABLE `jsh_platform_config` (
   `platform_key_info` varchar(100) DEFAULT NULL COMMENT '关键词名称',
   `platform_value` varchar(200) DEFAULT NULL COMMENT '值',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COMMENT='平台参数';
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COMMENT='平台参数';
 
 -- ----------------------------
 -- Records of jsh_platform_config
@@ -714,6 +721,8 @@ CREATE TABLE `jsh_role` (
   `type` varchar(50) DEFAULT NULL COMMENT '类型',
   `value` varchar(200) DEFAULT NULL COMMENT '值',
   `description` varchar(100) DEFAULT NULL COMMENT '描述',
+  `enabled` bit(1) DEFAULT NULL COMMENT '启用',
+  `sort` varchar(10) DEFAULT NULL COMMENT '排序',
   `tenant_id` bigint(20) DEFAULT NULL COMMENT '租户id',
   `delete_flag` varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除',
   PRIMARY KEY (`id`)
@@ -722,10 +731,10 @@ CREATE TABLE `jsh_role` (
 -- ----------------------------
 -- Records of jsh_role
 -- ----------------------------
-INSERT INTO `jsh_role` VALUES ('4', '管理员', '全部数据', null, null, null, '0');
-INSERT INTO `jsh_role` VALUES ('10', '租户', '全部数据', null, '', null, '0');
-INSERT INTO `jsh_role` VALUES ('16', '销售经理', '全部数据', null, 'ddd', '63', '0');
-INSERT INTO `jsh_role` VALUES ('17', '销售代表', '个人数据', null, 'rrr', '63', '0');
+INSERT INTO `jsh_role` VALUES ('4', '管理员', '全部数据', null, null, '', null, null, '0');
+INSERT INTO `jsh_role` VALUES ('10', '租户', '全部数据', null, '', '', null, null, '0');
+INSERT INTO `jsh_role` VALUES ('16', '销售经理', '全部数据', null, 'ddd', '', null, '63', '0');
+INSERT INTO `jsh_role` VALUES ('17', '销售代表', '个人数据', null, 'rrr', '', null, '63', '0');
 
 -- ----------------------------
 -- Table structure for jsh_sequence
@@ -801,6 +810,7 @@ CREATE TABLE `jsh_supplier` (
   `bank_name` varchar(50) DEFAULT NULL COMMENT '开户行',
   `account_number` varchar(50) DEFAULT NULL COMMENT '账号',
   `tax_rate` decimal(24,6) DEFAULT NULL COMMENT '税率',
+  `sort` varchar(10) DEFAULT NULL COMMENT '排序',
   `tenant_id` bigint(20) DEFAULT NULL COMMENT '租户id',
   `delete_flag` varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除',
   PRIMARY KEY (`id`)
@@ -809,13 +819,13 @@ CREATE TABLE `jsh_supplier` (
 -- ----------------------------
 -- Records of jsh_supplier
 -- ----------------------------
-INSERT INTO `jsh_supplier` VALUES ('57', '供应商1', '小军', '12345678', '', '', null, '供应商', '', '0.000000', '0.000000', '0.000000', '0.000000', '4.000000', '', '15000000000', '地址1', '', '', '', '12.000000', '63', '0');
-INSERT INTO `jsh_supplier` VALUES ('58', '客户1', '小李', '12345678', '', '', null, '客户', '', '0.000000', '0.000000', '0.000000', '-100.000000', null, '', '', '', '', '', '', '12.000000', '63', '0');
-INSERT INTO `jsh_supplier` VALUES ('59', '客户2', '小陈', '', '', '', null, '客户', '', '0.000000', '0.000000', '0.000000', '0.000000', null, '', '', '', '', '', '', null, '63', '0');
-INSERT INTO `jsh_supplier` VALUES ('60', '12312666', '小曹', '', '', '', null, '会员', '', '970.000000', '0.000000', '0.000000', null, null, '', '13000000000', '', '', '', '', null, '63', '0');
-INSERT INTO `jsh_supplier` VALUES ('68', '供应商3', '晓丽', '12345678', '', 'fasdfadf', null, '供应商', '', '0.000000', '0.000000', '0.000000', '0.000000', '-35.000000', '', '13000000000', 'aaaa', '1341324', '', '', '13.000000', '63', '0');
-INSERT INTO `jsh_supplier` VALUES ('71', '客户3', '小周', '', '', '', null, '客户', '', '0.000000', '0.000000', '0.000000', '0.000000', null, '', '', '', '', '', '', null, '63', '0');
-INSERT INTO `jsh_supplier` VALUES ('74', '供应商5', '小季', '77779999', '', '', null, '供应商', '', '0.000000', '0.000000', '5.000000', '0.000000', '5.000000', '', '15806283912', '', '', '', '', '3.000000', '63', '0');
+INSERT INTO `jsh_supplier` VALUES ('57', '供应商1', '小军', '12345678', '', '', null, '供应商', '', '0.000000', '0.000000', '0.000000', '0.000000', '4.000000', '', '15000000000', '地址1', '', '', '', '12.000000', null, '63', '0');
+INSERT INTO `jsh_supplier` VALUES ('58', '客户1', '小李', '12345678', '', '', null, '客户', '', '0.000000', '0.000000', '0.000000', '-100.000000', null, '', '', '', '', '', '', '12.000000', null, '63', '0');
+INSERT INTO `jsh_supplier` VALUES ('59', '客户2', '小陈', '', '', '', null, '客户', '', '0.000000', '0.000000', '0.000000', '0.000000', null, '', '', '', '', '', '', null, null, '63', '0');
+INSERT INTO `jsh_supplier` VALUES ('60', '12312666', '小曹', '', '', '', null, '会员', '', '970.000000', '0.000000', '0.000000', null, null, '', '13000000000', '', '', '', '', null, null, '63', '0');
+INSERT INTO `jsh_supplier` VALUES ('68', '供应商3', '晓丽', '12345678', '', 'fasdfadf', null, '供应商', '', '0.000000', '0.000000', '0.000000', '0.000000', '-35.000000', '', '13000000000', 'aaaa', '1341324', '', '', '13.000000', null, '63', '0');
+INSERT INTO `jsh_supplier` VALUES ('71', '客户3', '小周', '', '', '', null, '客户', '', '0.000000', '0.000000', '0.000000', '0.000000', null, '', '', '', '', '', '', null, null, '63', '0');
+INSERT INTO `jsh_supplier` VALUES ('74', '供应商5', '小季', '77779999', '', '', null, '供应商', '', '0.000000', '0.000000', '5.000000', '0.000000', '5.000000', '', '15806283912', '', '', '', '', '3.000000', null, '63', '0');
 
 -- ----------------------------
 -- Table structure for jsh_system_config
@@ -880,6 +890,7 @@ CREATE TABLE `jsh_unit` (
   `ratio` int(11) DEFAULT NULL COMMENT '比例',
   `ratio_two` int(11) DEFAULT NULL COMMENT '比例2',
   `ratio_three` int(11) DEFAULT NULL COMMENT '比例3',
+  `enabled` bit(1) DEFAULT NULL COMMENT '启用',
   `tenant_id` bigint(20) DEFAULT NULL COMMENT '租户id',
   `delete_flag` varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除',
   PRIMARY KEY (`id`)
@@ -888,10 +899,10 @@ CREATE TABLE `jsh_unit` (
 -- ----------------------------
 -- Records of jsh_unit
 -- ----------------------------
-INSERT INTO `jsh_unit` VALUES ('15', '个/(箱=12个)', '个', '箱', null, null, '12', null, null, '63', '0');
-INSERT INTO `jsh_unit` VALUES ('19', '个/(盒=15个)', '个', '盒', null, null, '15', null, null, '63', '0');
-INSERT INTO `jsh_unit` VALUES ('20', '盒/(箱=8盒)', '盒', '箱', null, null, '8', null, null, '63', '0');
-INSERT INTO `jsh_unit` VALUES ('21', '瓶/(箱=12瓶)', '瓶', '箱', null, null, '12', null, null, '63', '0');
+INSERT INTO `jsh_unit` VALUES ('15', '个/(箱=12个)', '个', '箱', null, null, '12', null, null, '', '63', '0');
+INSERT INTO `jsh_unit` VALUES ('19', '个/(盒=15个)', '个', '盒', null, null, '15', null, null, '', '63', '0');
+INSERT INTO `jsh_unit` VALUES ('20', '盒/(箱=8盒)', '盒', '箱', null, null, '8', null, null, '', '63', '0');
+INSERT INTO `jsh_unit` VALUES ('21', '瓶/(箱=12瓶)', '瓶', '箱', null, null, '12', null, null, '', '63', '0');
 
 -- ----------------------------
 -- Table structure for jsh_user

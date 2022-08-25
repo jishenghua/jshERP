@@ -45,6 +45,8 @@ public class Supplier {
 
     private BigDecimal taxRate;
 
+    private String sort;
+
     private Long tenantId;
 
     private String deleteFlag;
@@ -215,6 +217,14 @@ public class Supplier {
 
     public void setTaxRate(BigDecimal taxRate) {
         this.taxRate = taxRate;
+    }
+
+    public String getSort() {
+        return sort;
+    }
+
+    public void setSort(String sort) {
+        this.sort = sort == null ? null : sort.trim();
     }
 
     public Long getTenantId() {

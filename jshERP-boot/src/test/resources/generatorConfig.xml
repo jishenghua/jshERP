@@ -48,7 +48,7 @@
         <table tableName="jsh_depot_head" domainObjectName="DepotHead"></table>
         <table tableName="jsh_depot_item" domainObjectName="DepotItem"></table>
         <table tableName="jsh_function" domainObjectName="Function"></table>
-        <table tableName="jsh_inoutitem" domainObjectName="InOutItem"></table>
+        <table tableName="jsh_in_out_item" domainObjectName="InOutItem"></table>
         <table tableName="jsh_log" domainObjectName="Log"></table>
         <table tableName="jsh_material" domainObjectName="Material"></table>
         <table tableName="jsh_material_attribute" domainObjectName="MaterialAttribute"></table>

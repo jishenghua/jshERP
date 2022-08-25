@@ -19,6 +19,8 @@ public class Unit {
 
     private Integer ratioThree;
 
+    private Boolean enabled;
+
     private Long tenantId;
 
     private String deleteFlag;
@@ -93,6 +95,14 @@ public class Unit {
 
     public void setRatioThree(Integer ratioThree) {
         this.ratioThree = ratioThree;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 
     public Long getTenantId() {

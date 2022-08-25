@@ -694,6 +694,66 @@ public class UnitExample {
             return (Criteria) this;
         }
 
+        public Criteria andEnabledIsNull() {
+            addCriterion("enabled is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnabledIsNotNull() {
+            addCriterion("enabled is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnabledEqualTo(Boolean value) {
+            addCriterion("enabled =", value, "enabled");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnabledNotEqualTo(Boolean value) {
+            addCriterion("enabled <>", value, "enabled");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnabledGreaterThan(Boolean value) {
+            addCriterion("enabled >", value, "enabled");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnabledGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("enabled >=", value, "enabled");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnabledLessThan(Boolean value) {
+            addCriterion("enabled <", value, "enabled");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnabledLessThanOrEqualTo(Boolean value) {
+            addCriterion("enabled <=", value, "enabled");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnabledIn(List<Boolean> values) {
+            addCriterion("enabled in", values, "enabled");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnabledNotIn(List<Boolean> values) {
+            addCriterion("enabled not in", values, "enabled");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnabledBetween(Boolean value1, Boolean value2) {
+            addCriterion("enabled between", value1, value2, "enabled");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnabledNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("enabled not between", value1, value2, "enabled");
+            return (Criteria) this;
+        }
+
         public Criteria andTenantIdIsNull() {
             addCriterion("tenant_id is null");
             return (Criteria) this;

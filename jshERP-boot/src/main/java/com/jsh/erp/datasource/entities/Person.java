@@ -7,6 +7,10 @@ public class Person {
 
     private String name;
 
+    private Boolean enabled;
+
+    private String sort;
+
     private Long tenantId;
 
     private String deleteFlag;
@@ -33,6 +37,22 @@ public class Person {
 
     public void setName(String name) {
         this.name = name == null ? null : name.trim();
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public String getSort() {
+        return sort;
+    }
+
+    public void setSort(String sort) {
+        this.sort = sort == null ? null : sort.trim();
     }
 
     public Long getTenantId() {

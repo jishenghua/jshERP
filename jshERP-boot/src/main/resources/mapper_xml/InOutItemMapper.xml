@@ -6,6 +6,8 @@
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="type" jdbcType="VARCHAR" property="type" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="enabled" jdbcType="BIT" property="enabled" />
+    <result column="sort" jdbcType="VARCHAR" property="sort" />
     <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
     <result column="delete_flag" jdbcType="VARCHAR" property="deleteFlag" />
   </resultMap>
@@ -68,7 +70,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, name, type, remark, tenant_id, delete_flag
+    id, name, type, remark, enabled, sort, tenant_id, delete_flag
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.InOutItemExample" resultMap="BaseResultMap">
     select
@@ -102,11 +104,11 @@
   </delete>
   <insert id="insert" parameterType="com.jsh.erp.datasource.entities.InOutItem">
     insert into jsh_in_out_item (id, name, type, 
-      remark, tenant_id, delete_flag
-      )
+      remark, enabled, sort, 
+      tenant_id, delete_flag)
     values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, 
-      #{remark,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR}
-      )
+      #{remark,jdbcType=VARCHAR}, #{enabled,jdbcType=BIT}, #{sort,jdbcType=VARCHAR}, 
+      #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.InOutItem">
     insert into jsh_in_out_item
@@ -122,6 +124,12 @@
       </if>
       <if test="remark != null">
         remark,
+      </if>
+      <if test="enabled != null">
+        enabled,
+      </if>
+      <if test="sort != null">
+        sort,
       </if>
       <if test="tenantId != null">
         tenant_id,
@@ -142,6 +150,12 @@
       </if>
       <if test="remark != null">
         #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="enabled != null">
+        #{enabled,jdbcType=BIT},
+      </if>
+      <if test="sort != null">
+        #{sort,jdbcType=VARCHAR},
       </if>
       <if test="tenantId != null">
         #{tenantId,jdbcType=BIGINT},
@@ -172,6 +186,12 @@
       <if test="record.remark != null">
         remark = #{record.remark,jdbcType=VARCHAR},
       </if>
+      <if test="record.enabled != null">
+        enabled = #{record.enabled,jdbcType=BIT},
+      </if>
+      <if test="record.sort != null">
+        sort = #{record.sort,jdbcType=VARCHAR},
+      </if>
       <if test="record.tenantId != null">
         tenant_id = #{record.tenantId,jdbcType=BIGINT},
       </if>
@@ -189,6 +209,8 @@
       name = #{record.name,jdbcType=VARCHAR},
       type = #{record.type,jdbcType=VARCHAR},
       remark = #{record.remark,jdbcType=VARCHAR},
+      enabled = #{record.enabled,jdbcType=BIT},
+      sort = #{record.sort,jdbcType=VARCHAR},
       tenant_id = #{record.tenantId,jdbcType=BIGINT},
       delete_flag = #{record.deleteFlag,jdbcType=VARCHAR}
     <if test="_parameter != null">
@@ -207,6 +229,12 @@
       <if test="remark != null">
         remark = #{remark,jdbcType=VARCHAR},
       </if>
+      <if test="enabled != null">
+        enabled = #{enabled,jdbcType=BIT},
+      </if>
+      <if test="sort != null">
+        sort = #{sort,jdbcType=VARCHAR},
+      </if>
       <if test="tenantId != null">
         tenant_id = #{tenantId,jdbcType=BIGINT},
       </if>
@@ -221,6 +249,8 @@
     set name = #{name,jdbcType=VARCHAR},
       type = #{type,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR},
+      enabled = #{enabled,jdbcType=BIT},
+      sort = #{sort,jdbcType=VARCHAR},
       tenant_id = #{tenantId,jdbcType=BIGINT},
       delete_flag = #{deleteFlag,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}

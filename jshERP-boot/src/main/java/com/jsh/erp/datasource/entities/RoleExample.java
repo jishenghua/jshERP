@@ -444,6 +444,136 @@ public class RoleExample {
             return (Criteria) this;
         }
 
+        public Criteria andEnabledIsNull() {
+            addCriterion("enabled is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnabledIsNotNull() {
+            addCriterion("enabled is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnabledEqualTo(Boolean value) {
+            addCriterion("enabled =", value, "enabled");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnabledNotEqualTo(Boolean value) {
+            addCriterion("enabled <>", value, "enabled");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnabledGreaterThan(Boolean value) {
+            addCriterion("enabled >", value, "enabled");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnabledGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("enabled >=", value, "enabled");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnabledLessThan(Boolean value) {
+            addCriterion("enabled <", value, "enabled");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnabledLessThanOrEqualTo(Boolean value) {
+            addCriterion("enabled <=", value, "enabled");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnabledIn(List<Boolean> values) {
+            addCriterion("enabled in", values, "enabled");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnabledNotIn(List<Boolean> values) {
+            addCriterion("enabled not in", values, "enabled");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnabledBetween(Boolean value1, Boolean value2) {
+            addCriterion("enabled between", value1, value2, "enabled");
+            return (Criteria) this;
+        }
+
+        public Criteria andEnabledNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("enabled not between", value1, value2, "enabled");
+            return (Criteria) this;
+        }
+
+        public Criteria andSortIsNull() {
+            addCriterion("sort is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSortIsNotNull() {
+            addCriterion("sort is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSortEqualTo(String value) {
+            addCriterion("sort =", value, "sort");
+            return (Criteria) this;
+        }
+
+        public Criteria andSortNotEqualTo(String value) {
+            addCriterion("sort <>", value, "sort");
+            return (Criteria) this;
+        }
+
+        public Criteria andSortGreaterThan(String value) {
+            addCriterion("sort >", value, "sort");
+            return (Criteria) this;
+        }
+
+        public Criteria andSortGreaterThanOrEqualTo(String value) {
+            addCriterion("sort >=", value, "sort");
+            return (Criteria) this;
+        }
+
+        public Criteria andSortLessThan(String value) {
+            addCriterion("sort <", value, "sort");
+            return (Criteria) this;
+        }
+
+        public Criteria andSortLessThanOrEqualTo(String value) {
+            addCriterion("sort <=", value, "sort");
+            return (Criteria) this;
+        }
+
+        public Criteria andSortLike(String value) {
+            addCriterion("sort like", value, "sort");
+            return (Criteria) this;
+        }
+
+        public Criteria andSortNotLike(String value) {
+            addCriterion("sort not like", value, "sort");
+            return (Criteria) this;
+        }
+
+        public Criteria andSortIn(List<String> values) {
+            addCriterion("sort in", values, "sort");
+            return (Criteria) this;
+        }
+
+        public Criteria andSortNotIn(List<String> values) {
+            addCriterion("sort not in", values, "sort");
+            return (Criteria) this;
+        }
+
+        public Criteria andSortBetween(String value1, String value2) {
+            addCriterion("sort between", value1, value2, "sort");
+            return (Criteria) this;
+        }
+
+        public Criteria andSortNotBetween(String value1, String value2) {
+            addCriterion("sort not between", value1, value2, "sort");
+            return (Criteria) this;
+        }
+
         public Criteria andTenantIdIsNull() {
             addCriterion("tenant_id is null");
             return (Criteria) this;
