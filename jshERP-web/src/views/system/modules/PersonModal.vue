@@ -8,7 +8,7 @@
     @cancel="handleCancel"
     cancelText="关闭"
     wrapClassName="ant-modal-cust-warp"
-    style="top:30%;height: 40%;overflow-y: hidden">
+    style="top:30%;height: 45%;overflow-y: hidden">
     <template slot="footer">
       <a-button key="back" v-if="isReadOnly" @click="handleCancel">
         关闭
@@ -25,6 +25,9 @@
             <a-select-option value="仓管员">仓管员</a-select-option>
             <a-select-option value="财务员">财务员</a-select-option>
           </a-select>
+        </a-form-item>
+        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="排序">
+          <a-input placeholder="请输入排序" v-decorator.trim="[ 'sort' ]" />
         </a-form-item>
       </a-form>
     </a-spin>
@@ -78,7 +81,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'name', 'type', 'description'))
+          this.form.setFieldsValue(pick(this.model,'name', 'type', 'sort'))
           autoJumpNextInput('personModal')
         });
       },

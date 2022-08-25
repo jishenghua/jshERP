@@ -27,6 +27,8 @@
           <a-dropdown>
             <a-menu slot="overlay">
               <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
+              <a-menu-item key="2" v-if="btnEnableList.indexOf(1)>-1" @click="batchSetStatus(true)"><a-icon type="check-square"/>启用</a-menu-item>
+              <a-menu-item key="3" v-if="btnEnableList.indexOf(1)>-1" @click="batchSetStatus(false)"><a-icon type="close-square"/>禁用</a-menu-item>
             </a-menu>
             <a-button>
               批量操作 <a-icon type="down" />
@@ -58,6 +60,11 @@
                 <a>删除</a>
               </a-popconfirm>
             </span>
+            <!-- 状态渲染模板 -->
+            <template slot="customRenderFlag" slot-scope="enabled">
+              <a-tag v-if="enabled" color="green">启用</a-tag>
+              <a-tag v-if="!enabled" color="orange">禁用</a-tag>
+            </template>
           </a-table>
         </div>
         <!-- table区域-end -->
@@ -115,22 +122,17 @@
             }
           },
           {
-            title: '角色名称',
-            align:"center",
-            dataIndex: 'name',
-            width: 100
+            title: '角色名称', align:"center", dataIndex: 'name', width: 100
           },
           {
-            title: '数据类型',
-            align:"center",
-            dataIndex: 'type',
-            width: 100
+            title: '数据类型', align:"center", dataIndex: 'type', width: 100
           },
           {
-            title: '描述',
-            align:"center",
-            dataIndex: 'description',
-            width: 100
+            title: '描述', align:"center", dataIndex: 'description', width: 100
+          },
+          { title: '排序', dataIndex: 'sort', width: 60},
+          { title: '状态',dataIndex: 'enabled',width:60,align:"center",
+            scopedSlots: { customRender: 'customRenderFlag' }
           },
           {
             title: '操作',
@@ -143,7 +145,8 @@
         url: {
           list: "/role/list",
           delete: "/role/delete",
-          deleteBatch: "/role/deleteBatch"
+          deleteBatch: "/role/deleteBatch",
+          batchSetStatusUrl: "/role/batchSetStatus"
         },
       }
     },

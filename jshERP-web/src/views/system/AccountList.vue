@@ -38,6 +38,8 @@
           <a-dropdown>
             <a-menu slot="overlay">
               <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
+              <a-menu-item key="2" v-if="btnEnableList.indexOf(1)>-1" @click="batchSetStatus(true)"><a-icon type="check-square"/>启用</a-menu-item>
+              <a-menu-item key="3" v-if="btnEnableList.indexOf(1)>-1" @click="batchSetStatus(false)"><a-icon type="close-square"/>禁用</a-menu-item>
             </a-menu>
             <a-button>
               批量操作 <a-icon type="down" />
@@ -70,6 +72,10 @@
               </a-popconfirm>
             </span>
             <!-- 状态渲染模板 -->
+            <template slot="customRenderEnabledFlag" slot-scope="enabled">
+              <a-tag v-if="enabled" color="green">启用</a-tag>
+              <a-tag v-if="!enabled" color="orange">禁用</a-tag>
+            </template>
             <template slot="customRenderFlag" slot-scope="isDefault">
               <a-tag v-if="isDefault" color="green">是</a-tag>
               <a-tag v-if="!isDefault" color="orange">否</a-tag>
@@ -119,14 +125,18 @@
               return parseInt(index)+1;
             }
           },
-          {title: '名称', dataIndex: 'name', width: 100},
-          {title: '编号', dataIndex: 'serialNo', width: 150, align: "center"},
-          {title: '期初金额', dataIndex: 'initialAmount', width: 100, align: "center"},
-          {title: '当前余额', dataIndex: 'currentAmount', width: 100, align: "center"},
-          { title: '是否默认',dataIndex: 'isDefault',width:100,align:"center",
+          { title: '名称', dataIndex: 'name', width: 100},
+          { title: '编号', dataIndex: 'serialNo', width: 150, align: "center"},
+          { title: '期初金额', dataIndex: 'initialAmount', width: 100, align: "center"},
+          { title: '当前余额', dataIndex: 'currentAmount', width: 100, align: "center"},
+          { title: '备注', dataIndex: 'remark', width: 100},
+          { title: '排序', dataIndex: 'sort', width: 60},
+          { title: '状态',dataIndex: 'enabled',width:60,align:"center",
+            scopedSlots: { customRender: 'customRenderEnabledFlag' }
+          },
+          { title: '是否默认',dataIndex: 'isDefault',width:80,align:"center",
             scopedSlots: { customRender: 'customRenderFlag' }
           },
-          {title: '备注', dataIndex: 'remark', width: 100},
           {
             title: '操作',
             dataIndex: 'action',
@@ -139,7 +149,8 @@
           list: "/account/list",
           delete: "/account/delete",
           deleteBatch: "/account/deleteBatch",
-          setDefault: "/account/updateIsDefault"
+          setDefault: "/account/updateIsDefault",
+          batchSetStatusUrl: "/account/batchSetStatus"
         }
       }
     },

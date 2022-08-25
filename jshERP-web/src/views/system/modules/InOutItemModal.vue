@@ -25,6 +25,9 @@
             <a-select-option value="支出">支出</a-select-option>
           </a-select>
         </a-form-item>
+        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="排序">
+          <a-input placeholder="请输入排序" v-decorator.trim="[ 'sort' ]" />
+        </a-form-item>
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="备注">
           <a-textarea :rows="2" placeholder="请输入备注" v-decorator="[ 'remark' ]" />
         </a-form-item>
@@ -80,7 +83,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'name', 'type', 'remark'))
+          this.form.setFieldsValue(pick(this.model,'name', 'type', 'sort', 'remark'))
           autoJumpNextInput('inOutItemModal')
         });
       },

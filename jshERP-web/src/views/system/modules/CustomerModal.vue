@@ -8,7 +8,7 @@
     @cancel="handleCancel"
     cancelText="关闭"
     wrapClassName="ant-modal-cust-warp"
-    style="top:15%;height: 70%;overflow-y: hidden">
+    style="top:15%;height: 75%;overflow-y: hidden">
     <template slot="footer">
       <a-button key="back" v-if="isReadOnly" @click="handleCancel">
         关闭
@@ -82,6 +82,11 @@
           </a-form-item>
         </a-col>
         <a-col :span="24/2">
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="排序">
+            <a-input placeholder="请输入排序" v-decorator.trim="[ 'sort' ]" />
+          </a-form-item>
+        </a-col>
+        <a-col :span="24/2">
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="备注">
             <a-textarea :rows="2" placeholder="请输入备注" v-decorator.trim="[ 'description' ]" />
           </a-form-item>
@@ -136,7 +141,7 @@
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model,'supplier', 'contacts', 'telephone', 'email', 'telephone',
             'phoneNum', 'fax', 'beginNeedGet', 'beginNeedPay', 'allNeedGet', 'allNeedPay', 'taxNum', 'taxRate',
-            'bankName', 'accountNumber', 'address', 'description'))
+            'bankName', 'accountNumber', 'address', 'sort', 'description'))
           autoJumpNextInput('customerModal')
         });
       },

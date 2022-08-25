@@ -142,7 +142,8 @@
           { title: '期初应收',dataIndex: 'beginNeedGet',width:80,align:"center"},
           { title: '期末应收',dataIndex: 'allNeedGet',width:80,align:"center"},
           { title: '税率(%)', dataIndex: 'taxRate',width:80,align:"center"},
-          { title: '状态',dataIndex: 'enabled',width:70,align:"center",
+          { title: '排序', dataIndex: 'sort', width: 60},
+          { title: '状态',dataIndex: 'enabled',width:60, align:"center",
             scopedSlots: { customRender: 'customRenderFlag' }
           },
           {

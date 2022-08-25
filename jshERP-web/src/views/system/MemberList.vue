@@ -139,7 +139,8 @@
           { title: '联系电话', dataIndex: 'phoneNum',width:100,align:"center"},
           { title: '电子邮箱', dataIndex: 'email',width:150,align:"center"},
           { title: '预付款',dataIndex: 'advanceIn',width:70,align:"center"},
-          { title: '状态',dataIndex: 'enabled',width:70,align:"center",
+          { title: '排序', dataIndex: 'sort', width: 60},
+          { title: '状态',dataIndex: 'enabled',width:60,align:"center",
             scopedSlots: { customRender: 'customRenderFlag' }
           },
           {

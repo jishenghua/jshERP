@@ -42,6 +42,11 @@
           </a-form-item>
         </a-col>
         <a-col :span="24/2">
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="排序">
+            <a-input placeholder="请输入排序" v-decorator.trim="[ 'sort' ]" />
+          </a-form-item>
+        </a-col>
+        <a-col :span="24/2">
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="备注">
             <a-textarea :rows="2" placeholder="请输入备注" v-decorator.trim="[ 'description' ]" />
           </a-form-item>
@@ -95,7 +100,7 @@
         this.visible = true;
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model,'supplier', 'contacts', 'telephone', 'email', 'telephone',
-            'phoneNum', 'description'))
+            'phoneNum', 'sort', 'description'))
           autoJumpNextInput('memberModal')
         });
       },

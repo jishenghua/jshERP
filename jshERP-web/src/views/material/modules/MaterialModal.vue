@@ -732,9 +732,9 @@
         let params = {};
         params.currentPage = 1;
         params.pageSize = 100;
-        getAction('/unit/list', params).then((res) => {
+        getAction('/unit/getAllList', params).then((res) => {
           if(res){
-            that.unitList = res.data.rows;
+            that.unitList = res.data;
           }
         })
       },
