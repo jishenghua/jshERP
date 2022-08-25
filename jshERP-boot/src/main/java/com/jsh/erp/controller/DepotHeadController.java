@@ -126,10 +126,10 @@ public class DepotHeadController {
             String [] organArray = depotHeadService.getOrganArray(subType, "");
             beginTime = Tools.parseDayToTime(beginTime, BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            List<DepotHeadVo4InDetail> list = depotHeadService.findByAll(beginTime, endTime, type, creatorArray,
-                    organArray, materialParam, depotList, oId, number, remark, (currentPage-1)*pageSize, pageSize);
-            int total = depotHeadService.findByAllCount(beginTime, endTime, type, creatorArray,
-                    organArray, materialParam, depotList, oId, number, remark);
+            List<DepotHeadVo4InDetail> list = depotHeadService.findByAll(beginTime, endTime, type, creatorArray, organArray,
+                    StringUtil.toNull(materialParam), depotList, oId, StringUtil.toNull(number), remark, (currentPage-1)*pageSize, pageSize);
+            int total = depotHeadService.findByAllCount(beginTime, endTime, type, creatorArray, organArray,
+                    StringUtil.toNull(materialParam), depotList, oId, StringUtil.toNull(number), remark);
             map.put("total", total);
             //存放数据json数组
             if (null != list) {
@@ -261,10 +261,10 @@ public class DepotHeadController {
             String [] creatorArray = depotHeadService.getCreatorArray(roleType);
             beginTime = Tools.parseDayToTime(beginTime, BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            List<DepotHeadVo4InDetail> list = depotHeadService.findAllocationDetail(beginTime, endTime, subType, number,
-                    creatorArray, materialParam, depotList, depotFList, remark, (currentPage-1)*pageSize, pageSize);
-            int total = depotHeadService.findAllocationDetailCount(beginTime, endTime, subType, number,
-                    creatorArray, materialParam, depotList, depotFList, remark);
+            List<DepotHeadVo4InDetail> list = depotHeadService.findAllocationDetail(beginTime, endTime, subType, StringUtil.toNull(number),
+                    creatorArray, StringUtil.toNull(materialParam), depotList, depotFList, remark, (currentPage-1)*pageSize, pageSize);
+            int total = depotHeadService.findAllocationDetailCount(beginTime, endTime, subType, StringUtil.toNull(number),
+                    creatorArray, StringUtil.toNull(materialParam), depotList, depotFList, remark);
             map.put("rows", list);
             map.put("total", total);
             res.code = 200;
