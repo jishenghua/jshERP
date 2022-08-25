@@ -30,7 +30,10 @@
           </a-tooltip>
         </a-form-item>
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="描述">
-          <a-textarea :rows="2" placeholder="请输入描述" v-decorator="[ 'description', validatorRules.description ]" />
+          <a-textarea :rows="1" placeholder="请输入描述" v-decorator="[ 'description', validatorRules.description ]" />
+        </a-form-item>
+        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="排序">
+          <a-input placeholder="请输入排序" v-decorator.trim="[ 'sort' ]" />
         </a-form-item>
       </a-form>
     </a-spin>
@@ -90,7 +93,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'name', 'type', 'description'))
+          this.form.setFieldsValue(pick(this.model,'name', 'type', 'sort', 'description'))
           autoJumpNextInput('roleModal')
         });
       },
