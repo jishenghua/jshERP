@@ -412,7 +412,7 @@ public class DepotItemController {
                 depotList.add(object.getLong("id"));
             }
             //如果有权限的仓库数量太多则提示要选择仓库
-            if(depotList.size()>10) {
+            if(depotList.size()>20) {
                 throw new BusinessRunTimeException(ExceptionConstants.REPORT_TWO_MANY_DEPOT_FAILED_CODE,
                         ExceptionConstants.REPORT_TWO_MANY_DEPOT_FAILED_MSG);
             }
