@@ -1,10 +1,12 @@
 package com.jsh.erp.service.unit;
 
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
-import com.jsh.erp.datasource.entities.*;
+import com.jsh.erp.datasource.entities.Material;
+import com.jsh.erp.datasource.entities.Unit;
+import com.jsh.erp.datasource.entities.UnitExample;
+import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.mappers.MaterialMapperEx;
 import com.jsh.erp.datasource.mappers.UnitMapper;
 import com.jsh.erp.datasource.mappers.UnitMapperEx;
@@ -68,7 +70,7 @@ public class UnitService {
 
     public List<Unit> getUnit()throws Exception {
         UnitExample example = new UnitExample();
-        example.createCriteria().andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        example.createCriteria().andEnabledEqualTo(true).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<Unit> list=null;
         try{
             list=unitMapper.selectByExample(example);
@@ -104,6 +106,7 @@ public class UnitService {
         int result=0;
         try{
             parseNameByUnit(unit);
+            unit.setEnabled(true);
             result=unitMapper.insertSelective(unit);
             logService.insertLog("计量单位",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(unit.getName()).toString(), request);
@@ -244,5 +247,24 @@ public class UnitService {
             stock = stock.divide(BigDecimal.valueOf(unitInfo.getRatioThree()),2,BigDecimal.ROUND_HALF_UP);
         }
         return stock;
+    }
+
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int batchSetStatus(Boolean status, String ids)throws Exception {
+        logService.insertLog("计量单位",
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ENABLED).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+        List<Long> unitIds = StringUtil.strToLongList(ids);
+        Unit unit = new Unit();
+        unit.setEnabled(status);
+        UnitExample example = new UnitExample();
+        example.createCriteria().andIdIn(unitIds);
+        int result=0;
+        try{
+            result = unitMapper.updateByExampleSelective(unit, example);
+        }catch(Exception e){
+            JshException.writeFail(logger, e);
+        }
+        return result;
     }
 }

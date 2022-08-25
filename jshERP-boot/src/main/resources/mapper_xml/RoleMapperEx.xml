@@ -10,9 +10,10 @@
             <bind name="bindName" value="'%'+name+'%'"/>
             and name like #{bindName}
         </if>
+        order by sort asc, id desc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
-        </if>;
+        </if>
     </select>
     <select id="countsByRole" resultType="java.lang.Long">
         SELECT

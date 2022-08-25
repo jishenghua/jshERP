@@ -13,6 +13,7 @@
             and type=#{type}
         </if>
         and ifnull(delete_flag,'0') !='1'
+        order by sort asc, id desc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
         </if>

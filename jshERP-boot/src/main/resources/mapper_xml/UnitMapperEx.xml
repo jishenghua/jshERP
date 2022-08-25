@@ -10,6 +10,7 @@
             and name like #{bindName}
         </if>
         and ifnull(delete_flag,'0') !='1'
+        order by id desc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
         </if>

@@ -2,13 +2,11 @@ package com.jsh.erp.service.role;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
-import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.Role;
 import com.jsh.erp.datasource.entities.RoleExample;
 import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.mappers.RoleMapper;
 import com.jsh.erp.datasource.mappers.RoleMapperEx;
-import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
@@ -64,7 +62,7 @@ public class RoleService {
 
     public List<Role> allList()throws Exception {
         RoleExample example = new RoleExample();
-        example.createCriteria().andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        example.createCriteria().andEnabledEqualTo(true).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<Role> list=null;
         try{
             list=roleMapper.selectByExample(example);
@@ -99,6 +97,7 @@ public class RoleService {
         Role role = JSONObject.parseObject(obj.toJSONString(), Role.class);
         int result=0;
         try{
+            role.setEnabled(true);
             result=roleMapper.insertSelective(role);
             logService.insertLog("角色",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(role.getName()).toString(), request);
@@ -147,7 +146,7 @@ public class RoleService {
     public List<Role> findUserRole()throws Exception{
         RoleExample example = new RoleExample();
         example.setOrderByClause("Id");
-        example.createCriteria().andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        example.createCriteria().andEnabledEqualTo(true).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<Role> list=null;
         try{
             list=roleMapper.selectByExample(example);
@@ -186,5 +185,24 @@ public class RoleService {
 
     public Role getRoleWithoutTenant(Long roleId) {
         return roleMapperEx.getRoleWithoutTenant(roleId);
+    }
+
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int batchSetStatus(Boolean status, String ids)throws Exception {
+        logService.insertLog("角色",
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ENABLED).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+        List<Long> roleIds = StringUtil.strToLongList(ids);
+        Role role = new Role();
+        role.setEnabled(status);
+        RoleExample example = new RoleExample();
+        example.createCriteria().andIdIn(roleIds);
+        int result=0;
+        try{
+            result = roleMapper.updateByExampleSelective(role, example);
+        }catch(Exception e){
+            JshException.writeFail(logger, e);
+        }
+        return result;
     }
 }

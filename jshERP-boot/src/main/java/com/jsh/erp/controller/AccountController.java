@@ -182,4 +182,25 @@ public class AccountController {
         }
         return res;
     }
+
+    /**
+     * 批量设置状态-启用或者禁用
+     * @param jsonObject
+     * @param request
+     * @return
+     */
+    @PostMapping(value = "/batchSetStatus")
+    @ApiOperation(value = "批量设置状态")
+    public String batchSetStatus(@RequestBody JSONObject jsonObject,
+                                 HttpServletRequest request)throws Exception {
+        Boolean status = jsonObject.getBoolean("status");
+        String ids = jsonObject.getString("ids");
+        Map<String, Object> objectMap = new HashMap<>();
+        int res = accountService.batchSetStatus(status, ids);
+        if(res > 0) {
+            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+        } else {
+            return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
+        }
+    }
 }

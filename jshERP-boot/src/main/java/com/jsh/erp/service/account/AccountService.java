@@ -1,7 +1,6 @@
 package com.jsh.erp.service.account;
 
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.*;
@@ -76,7 +75,7 @@ public class AccountService {
 
     public List<Account> getAccount() throws Exception{
         AccountExample example = new AccountExample();
-        example.createCriteria().andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        example.createCriteria().andEnabledEqualTo(true).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<Account> list=null;
         try{
             list=accountMapper.selectByExample(example);
@@ -139,6 +138,7 @@ public class AccountService {
             account.setInitialAmount(BigDecimal.ZERO);
         }
         account.setIsDefault(false);
+        account.setEnabled(true);
         int result=0;
         try{
             result = accountMapper.insertSelective(account);
@@ -250,7 +250,7 @@ public class AccountService {
 
     public List<Account> findBySelect()throws Exception {
         AccountExample example = new AccountExample();
-        example.createCriteria().andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        example.createCriteria().andEnabledEqualTo(true).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         example.setOrderByClause("id desc");
         List<Account> list=null;
         try{
@@ -572,5 +572,24 @@ public class AccountService {
             priceFmt = df.format(price);
         }
         return priceFmt;
+    }
+
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int batchSetStatus(Boolean status, String ids)throws Exception {
+        logService.insertLog("账户",
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ENABLED).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+        List<Long> accountIds = StringUtil.strToLongList(ids);
+        Account account = new Account();
+        account.setEnabled(status);
+        AccountExample example = new AccountExample();
+        example.createCriteria().andIdIn(accountIds);
+        int result=0;
+        try{
+            result = accountMapper.updateByExampleSelective(account, example);
+        }catch(Exception e){
+            JshException.writeFail(logger, e);
+        }
+        return result;
     }
 }

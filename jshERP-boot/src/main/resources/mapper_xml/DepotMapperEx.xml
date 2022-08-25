@@ -22,7 +22,7 @@
             and dep.remark like #{bindRemark}
         </if>
         and ifnull(dep.delete_Flag,'0') !='1'
-        order by dep.sort asc
+        order by dep.sort asc, dep.id desc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
         </if>

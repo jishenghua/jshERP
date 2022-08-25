@@ -170,6 +170,7 @@ public class BusinessConstants {
     public static final String LOG_OPERATION_TYPE_DELETE = "删除";
     public static final String LOG_OPERATION_TYPE_LOGIN = "登录";
     public static final String LOG_OPERATION_TYPE_IMPORT = "导入";
+    public static final String LOG_OPERATION_TYPE_ENABLED = "更新状态";
 
     /**
      * 数据数量单位

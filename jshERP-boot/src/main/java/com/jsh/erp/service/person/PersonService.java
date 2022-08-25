@@ -1,10 +1,12 @@
 package com.jsh.erp.service.person;
 
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
-import com.jsh.erp.datasource.entities.*;
+import com.jsh.erp.datasource.entities.AccountHead;
+import com.jsh.erp.datasource.entities.DepotHead;
+import com.jsh.erp.datasource.entities.Person;
+import com.jsh.erp.datasource.entities.PersonExample;
 import com.jsh.erp.datasource.mappers.AccountHeadMapperEx;
 import com.jsh.erp.datasource.mappers.DepotHeadMapperEx;
 import com.jsh.erp.datasource.mappers.PersonMapper;
@@ -23,7 +25,10 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class PersonService {
@@ -68,7 +73,7 @@ public class PersonService {
 
     public List<Person> getPerson()throws Exception {
         PersonExample example = new PersonExample();
-        example.createCriteria().andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        example.createCriteria().andEnabledEqualTo(true).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<Person> list=null;
         try{
             list=personMapper.selectByExample(example);
@@ -103,6 +108,7 @@ public class PersonService {
         Person person = JSONObject.parseObject(obj.toJSONString(), Person.class);
         int result=0;
         try{
+            person.setEnabled(true);
             result=personMapper.insertSelective(person);
             logService.insertLog("经手人",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(person.getName()).toString(), request);
@@ -216,7 +222,8 @@ public class PersonService {
 
     public List<Person> getPersonByType(String type)throws Exception {
         PersonExample example = new PersonExample();
-        example.createCriteria().andTypeEqualTo(type).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        example.createCriteria().andTypeEqualTo(type).andEnabledEqualTo(true)
+                .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         example.setOrderByClause("id asc");
         List<Person> list =null;
         try{
@@ -225,5 +232,24 @@ public class PersonService {
             JshException.readFail(logger, e);
         }
         return list;
+    }
+
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int batchSetStatus(Boolean status, String ids)throws Exception {
+        logService.insertLog("经手人",
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ENABLED).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+        List<Long> personIds = StringUtil.strToLongList(ids);
+        Person person = new Person();
+        person.setEnabled(status);
+        PersonExample example = new PersonExample();
+        example.createCriteria().andIdIn(personIds);
+        int result=0;
+        try{
+            result = personMapper.updateByExampleSelective(person, example);
+        }catch(Exception e){
+            JshException.writeFail(logger, e);
+        }
+        return result;
     }
 }

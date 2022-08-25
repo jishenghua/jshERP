@@ -8,6 +8,7 @@ import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.role.RoleService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.service.userBusiness.UserBusinessService;
+import com.jsh.erp.utils.ErpInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -16,7 +17,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 
 /**
  * @author ji sheng hua jshERP
@@ -69,5 +74,26 @@ public class RoleController {
     @ApiOperation(value = "查询全部角色列表")
     public List<Role> allList(HttpServletRequest request)throws Exception {
         return roleService.allList();
+    }
+
+    /**
+     * 批量设置状态-启用或者禁用
+     * @param jsonObject
+     * @param request
+     * @return
+     */
+    @PostMapping(value = "/batchSetStatus")
+    @ApiOperation(value = "批量设置状态")
+    public String batchSetStatus(@RequestBody JSONObject jsonObject,
+                                 HttpServletRequest request)throws Exception {
+        Boolean status = jsonObject.getBoolean("status");
+        String ids = jsonObject.getString("ids");
+        Map<String, Object> objectMap = new HashMap<>();
+        int res = roleService.batchSetStatus(status, ids);
+        if(res > 0) {
+            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+        } else {
+            return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
+        }
     }
 }

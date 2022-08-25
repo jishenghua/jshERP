@@ -1,10 +1,12 @@
 package com.jsh.erp.service.inOutItem;
 
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
-import com.jsh.erp.datasource.entities.*;
+import com.jsh.erp.datasource.entities.AccountItem;
+import com.jsh.erp.datasource.entities.InOutItem;
+import com.jsh.erp.datasource.entities.InOutItemExample;
+import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.mappers.AccountItemMapperEx;
 import com.jsh.erp.datasource.mappers.InOutItemMapper;
 import com.jsh.erp.datasource.mappers.InOutItemMapperEx;
@@ -102,6 +104,7 @@ public class InOutItemService {
         InOutItem inOutItem = JSONObject.parseObject(obj.toJSONString(), InOutItem.class);
         int result=0;
         try{
+            inOutItem.setEnabled(true);
             result=inOutItemMapper.insertSelective(inOutItem);
             logService.insertLog("收支项目",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(inOutItem.getName()).toString(), request);
@@ -186,9 +189,11 @@ public class InOutItemService {
     public List<InOutItem> findBySelect(String type)throws Exception {
         InOutItemExample example = new InOutItemExample();
         if (type.equals("in")) {
-            example.createCriteria().andTypeEqualTo("收入").andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+            example.createCriteria().andTypeEqualTo("收入").andEnabledEqualTo(true)
+                    .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         } else if (type.equals("out")) {
-            example.createCriteria().andTypeEqualTo("支出").andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+            example.createCriteria().andTypeEqualTo("支出").andEnabledEqualTo(true)
+                    .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         }
         example.setOrderByClause("id desc");
         List<InOutItem> list = null;
@@ -198,5 +203,24 @@ public class InOutItemService {
             JshException.readFail(logger, e);
         }
         return list;
+    }
+
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int batchSetStatus(Boolean status, String ids)throws Exception {
+        logService.insertLog("收支项目",
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ENABLED).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+        List<Long> inOutItemIds = StringUtil.strToLongList(ids);
+        InOutItem inOutItem = new InOutItem();
+        inOutItem.setEnabled(status);
+        InOutItemExample example = new InOutItemExample();
+        example.createCriteria().andIdIn(inOutItemIds);
+        int result=0;
+        try{
+            result = inOutItemMapper.updateByExampleSelective(inOutItem, example);
+        }catch(Exception e){
+            JshException.writeFail(logger, e);
+        }
+        return result;
     }
 }
