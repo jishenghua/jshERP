@@ -63,6 +63,7 @@ public class RoleService {
     public List<Role> allList()throws Exception {
         RoleExample example = new RoleExample();
         example.createCriteria().andEnabledEqualTo(true).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        example.setOrderByClause("sort asc, id desc");
         List<Role> list=null;
         try{
             list=roleMapper.selectByExample(example);

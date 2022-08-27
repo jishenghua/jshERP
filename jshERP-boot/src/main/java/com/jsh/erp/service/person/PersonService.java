@@ -224,7 +224,7 @@ public class PersonService {
         PersonExample example = new PersonExample();
         example.createCriteria().andTypeEqualTo(type).andEnabledEqualTo(true)
                 .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        example.setOrderByClause("id asc");
+        example.setOrderByClause("sort asc, id desc");
         List<Person> list =null;
         try{
             list=personMapper.selectByExample(example);

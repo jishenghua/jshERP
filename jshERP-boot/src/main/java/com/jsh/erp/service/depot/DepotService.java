@@ -89,7 +89,7 @@ public class DepotService {
     public List<Depot> getAllList()throws Exception {
         DepotExample example = new DepotExample();
         example.createCriteria().andEnabledEqualTo(true).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        example.setOrderByClause("sort");
+        example.setOrderByClause("sort asc, id desc");
         List<Depot> list=null;
         try{
             list=depotMapper.selectByExample(example);
@@ -232,7 +232,7 @@ public class DepotService {
         DepotExample example = new DepotExample();
         example.createCriteria().andTypeEqualTo(0).andEnabledEqualTo(true)
                 .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        example.setOrderByClause("sort");
+        example.setOrderByClause("sort asc, id desc");
         List<Depot> list=null;
         try{
             list= depotMapper.selectByExample(example);

@@ -195,7 +195,7 @@ public class InOutItemService {
             example.createCriteria().andTypeEqualTo("支出").andEnabledEqualTo(true)
                     .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         }
-        example.setOrderByClause("id desc");
+        example.setOrderByClause("sort asc, id desc");
         List<InOutItem> list = null;
         try{
             list=inOutItemMapper.selectByExample(example);

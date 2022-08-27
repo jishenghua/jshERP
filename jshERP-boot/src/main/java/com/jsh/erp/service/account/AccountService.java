@@ -74,10 +74,11 @@ public class AccountService {
     }
 
     public List<Account> getAccount() throws Exception{
-        AccountExample example = new AccountExample();
-        example.createCriteria().andEnabledEqualTo(true).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<Account> list=null;
         try{
+            AccountExample example = new AccountExample();
+            example.createCriteria().andEnabledEqualTo(true).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+            example.setOrderByClause("sort asc, id desc");
             list=accountMapper.selectByExample(example);
         }catch(Exception e){
             JshException.readFail(logger, e);
@@ -251,7 +252,7 @@ public class AccountService {
     public List<Account> findBySelect()throws Exception {
         AccountExample example = new AccountExample();
         example.createCriteria().andEnabledEqualTo(true).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        example.setOrderByClause("id desc");
+        example.setOrderByClause("sort asc, id desc");
         List<Account> list=null;
         try{
             list = accountMapper.selectByExample(example);

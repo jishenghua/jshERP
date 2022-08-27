@@ -69,7 +69,7 @@
             and telephone like #{bindTelephone}
         </if>
         and ifnull(delete_flag,'0') !='1'
-        order by id desc
+        order by sort asc, id desc
     </select>
 
     <update id="batchDeleteSupplierByIds">

@@ -307,7 +307,7 @@ public class SupplierService {
     public List<Supplier> findBySelectCus()throws Exception {
         SupplierExample example = new SupplierExample();
         example.createCriteria().andTypeLike("客户").andEnabledEqualTo(true).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        example.setOrderByClause("id desc");
+        example.setOrderByClause("sort asc, id desc");
         List<Supplier> list=null;
         try{
             list = supplierMapper.selectByExample(example);
@@ -321,7 +321,7 @@ public class SupplierService {
         SupplierExample example = new SupplierExample();
         example.createCriteria().andTypeLike("供应商").andEnabledEqualTo(true)
                 .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        example.setOrderByClause("id desc");
+        example.setOrderByClause("sort asc, id desc");
         List<Supplier> list=null;
         try{
             list = supplierMapper.selectByExample(example);
@@ -335,7 +335,7 @@ public class SupplierService {
         SupplierExample example = new SupplierExample();
         example.createCriteria().andTypeLike("会员").andEnabledEqualTo(true)
                 .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        example.setOrderByClause("id desc");
+        example.setOrderByClause("sort asc, id desc");
         List<Supplier> list=null;
         try{
             list = supplierMapper.selectByExample(example);
@@ -349,7 +349,7 @@ public class SupplierService {
         SupplierExample example = new SupplierExample();
         example.createCriteria().andIdEqualTo(supplierId)
                 .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        example.setOrderByClause("id desc");
+        example.setOrderByClause("sort asc, id desc");
         List<Supplier> list=null;
         try{
             list = supplierMapper.selectByExample(example);
@@ -382,7 +382,7 @@ public class SupplierService {
         SupplierExample example = new SupplierExample();
         example.createCriteria().andTypeEqualTo("客户")
                 .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        example.setOrderByClause("id desc");
+        example.setOrderByClause("sort asc, id desc");
         List<Supplier> list=null;
         try{
             list = supplierMapper.selectByExample(example);
