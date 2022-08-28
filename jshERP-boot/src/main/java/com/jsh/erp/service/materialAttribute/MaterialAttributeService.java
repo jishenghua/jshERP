@@ -164,57 +164,9 @@ public class MaterialAttributeService {
         return list==null?0:list.size();
     }
 
-    public JSONObject getAll() {
-        JSONObject obj = new JSONObject();
-        //属性名
-        obj.put("manyColorName", getNameByField("manyColor"));
-        obj.put("manySizeName", getNameByField("manySize"));
-        obj.put("other1Name", getNameByField("other1"));
-        obj.put("other2Name", getNameByField("other2"));
-        obj.put("other3Name", getNameByField("other3"));
-        //属性值
-        obj.put("manyColorValue", getValueArrByField("manyColor"));
-        obj.put("manySizeValue", getValueArrByField("manySize"));
-        obj.put("other1Value", getValueArrByField("other1"));
-        obj.put("other2Value", getValueArrByField("other2"));
-        obj.put("other3Value", getValueArrByField("other3"));
-        return obj;
-    }
-
-    public MaterialAttribute getInfoByField(String field) {
-        MaterialAttributeExample example = new MaterialAttributeExample();
-        example.createCriteria().andAttributeFieldEqualTo(field).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        List<MaterialAttribute> list = materialAttributeMapper.selectByExample(example);
-        if(list!=null && list.size()>0) {
-            return list.get(0);
-        } else {
-            return null;
-        }
-    }
-
-    public String getNameByField(String field) {
-        String res = "";
-        if("manyColor".equals(field)){
-            res = "多颜色";
-        } else if("manySize".equals(field)){
-            res = "多尺寸";
-        } else if("other1".equals(field)){
-            res = "自定义1";
-        } else if("other2".equals(field)){
-            res = "自定义2";
-        } else if("other3".equals(field)){
-            res = "自定义3";
-        }
-        MaterialAttribute ma = getInfoByField(field);
-        if(ma!=null && StringUtil.isNotEmpty(ma.getAttributeName())) {
-            res = ma.getAttributeName();
-        }
-        return res;
-    }
-
-    public JSONArray getValueArrByField(String field) {
+    public JSONArray getValueArrById(Long id) {
         JSONArray valueArr = new JSONArray();
-        MaterialAttribute ma = getInfoByField(field);
+        MaterialAttribute ma = getInfoById(id);
         if(ma!=null) {
             String value = ma.getAttributeValue();
             if(StringUtil.isNotEmpty(value)){
@@ -228,5 +180,16 @@ public class MaterialAttributeService {
             }
         }
         return valueArr;
+    }
+
+    public MaterialAttribute getInfoById(Long id) {
+        MaterialAttributeExample example = new MaterialAttributeExample();
+        example.createCriteria().andIdEqualTo(id).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        List<MaterialAttribute> list = materialAttributeMapper.selectByExample(example);
+        if(list!=null && list.size()>0) {
+            return list.get(0);
+        } else {
+            return null;
+        }
     }
 }
