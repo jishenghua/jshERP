@@ -67,7 +67,8 @@ const getEnableSerialNumberList = (params)=>getAction("/serialNumber/getEnableSe
 const addMaterialAttribute = (params)=>postAction("/materialAttribute/add",params);
 const editMaterialAttribute = (params)=>putAction("/materialAttribute/update",params);
 const checkMaterialAttribute = (params)=>getAction("/materialAttribute/checkIsNameExist",params);
-const getAllMaterialAttribute = (params)=>getAction("/materialAttribute/getAll",params);
+const getMaterialAttributeNameList = (params)=>getAction("/materialAttribute/getNameList",params);
+const getMaterialAttributeValueListById = (params)=>getAction("/materialAttribute/getValueListById",params);
 //功能管理
 const addFunction = (params)=>postAction("/function/add",params);
 const editFunction = (params)=>putAction("/function/update",params);
@@ -160,7 +161,8 @@ export {
   addMaterialAttribute,
   editMaterialAttribute,
   checkMaterialAttribute,
-  getAllMaterialAttribute,
+  getMaterialAttributeNameList,
+  getMaterialAttributeValueListById,
   addFunction,
   editFunction,
   checkFunction,

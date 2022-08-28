@@ -113,69 +113,42 @@
                   </a-select>
                 </a-form-item>
               </a-col>
-              <a-col :md="6" :sm="24">
+              <a-col :md="6" :sm="24" v-if="!model.id">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="多属性" data-step="11" data-title="多属性"
                   data-intro="多属性是针对的sku商品（比如服装、鞋帽行业），此处开关如果启用就可以在下方进行多sku的配置，配置具体的颜色、尺码之类的组合">
-                  <a-switch checked-children="启用" un-checked-children="关闭" v-model="skuSwitch" :disabled="switchDisabled" @change="onSkuChange"></a-switch>
+                  <a-select mode="multiple" v-decorator="[ 'manySku' ]" showSearch optionFilterProp="children" @change="onManySkuChange">
+                    <a-select-option v-for="(item,index) in materialAttributeList" :key="index" :value="item.value" :disabled="item.disabled">
+                      {{ item.name }}
+                    </a-select-option>
+                  </a-select>
                 </a-form-item>
               </a-col>
             </a-row>
-            <a-card v-if="skuSwitch">
-              <a-row class="form-row" :gutter="24">
-                <a-col :md="6" :sm="24">
-                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="sku.manyColor">
-                    <a-select mode="multiple" v-decorator="[ 'manyColor' ]" showSearch optionFilterProp="children">
-                      <a-select-option v-for="(item,index) in sku.manyColorList" :key="index" :value="item.value">
-                        {{ item.name }}
-                      </a-select-option>
-                    </a-select>
-                  </a-form-item>
-                </a-col>
-                <a-col :md="6" :sm="24">
-                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="sku.manySize">
-                    <a-select mode="multiple" v-decorator="[ 'manySize' ]" showSearch optionFilterProp="children">
-                      <a-select-option v-for="(item,index) in sku.manySizeList" :key="index" :value="item.value">
-                        {{ item.name }}
-                      </a-select-option>
-                    </a-select>
-                  </a-form-item>
-                </a-col>
-                <a-col :md="6" :sm="24">
-                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="sku.other1">
-                    <a-select mode="multiple" v-decorator="[ 'other1' ]" showSearch optionFilterProp="children">
-                      <a-select-option v-for="(item,index) in sku.other1List" :key="index" :value="item.value">
-                        {{ item.name }}
-                      </a-select-option>
-                    </a-select>
-                  </a-form-item>
-                </a-col>
-              </a-row>
-              <a-row class="form-row" :gutter="24">
-                <a-col :md="6" :sm="24">
-                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="sku.other2">
-                    <a-select mode="multiple" v-decorator="[ 'other2' ]" showSearch optionFilterProp="children">
-                      <a-select-option v-for="(item,index) in sku.other2List" :key="index" :value="item.value">
-                        {{ item.name }}
-                      </a-select-option>
-                    </a-select>
-                  </a-form-item>
-                </a-col>
-                <a-col :md="6" :sm="24">
-                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="sku.other3">
-                    <a-select mode="multiple" v-decorator="[ 'other3' ]" showSearch optionFilterProp="children">
-                      <a-select-option v-for="(item,index) in sku.other3List" :key="index" :value="item.value">
-                        {{ item.name }}
-                      </a-select-option>
-                    </a-select>
-                  </a-form-item>
-                </a-col>
-                <a-col :md="6" :sm="24">
-                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="生成条码">
-                    <a-switch v-model="barCodeSwitch" @change="onBarCodeChange"></a-switch>
-                  </a-form-item>
-                </a-col>
-              </a-row>
-            </a-card>
+            <a-row class="form-row" :gutter="24">
+              <a-col :md="6" :sm="24" v-if="manySkuSelected>=1">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="skuOneTitle">
+                  <a-select mode="multiple" v-decorator="[ 'skuOne' ]" showSearch optionFilterProp="children">
+                    <a-select-option v-for="(item,index) in skuOneList" :key="index" :value="item.value">
+                      {{ item.name }}
+                    </a-select-option>
+                  </a-select>
+                </a-form-item>
+              </a-col>
+              <a-col :md="6" :sm="24" v-if="manySkuSelected>=2">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="skuTwoTitle">
+                  <a-select mode="multiple" v-decorator="[ 'skuTwo' ]" showSearch optionFilterProp="children">
+                    <a-select-option v-for="(item,index) in skuTwoList" :key="index" :value="item.value">
+                      {{ item.name }}
+                    </a-select-option>
+                  </a-select>
+                </a-form-item>
+              </a-col>
+              <a-col :md="6" :sm="24" v-if="manySkuSelected>=1">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="生成条码">
+                  <a-switch v-model="barCodeSwitch" @change="onBarCodeChange"></a-switch>
+                </a-form-item>
+              </a-col>
+            </a-row>
             <div style="margin-top:8px;" id="materialDetailModal">
               <j-editable-table
                 ref="editableMeTable"
@@ -281,13 +254,15 @@
   import BatchSetStockModal from './BatchSetStockModal'
   import UnitModal from '../../system/modules/UnitModal'
   import JEditableTable from '@/components/jeecg/JEditableTable'
-  import { FormTypes, VALIDATE_NO_PASSED, getRefPromise, validateFormAndTables } from '@/utils/JEditableTableUtil'
-  import {queryMaterialCategoryTreeList,checkMaterial,checkMaterialBarCode,getAllMaterialAttribute,getMaxBarCode} from '@/api/api'
-  import { handleIntroJs,autoJumpNextInput } from "@/utils/util"
-  import { httpAction, getAction } from '@/api/manage'
+  import { FormTypes, getRefPromise, VALIDATE_NO_PASSED, validateFormAndTables } from '@/utils/JEditableTableUtil'
+  import { checkMaterial, checkMaterialBarCode, getMaterialAttributeNameList,
+    getMaterialAttributeValueListById, getMaxBarCode, queryMaterialCategoryTreeList } from '@/api/api'
+  import { autoJumpNextInput, handleIntroJs } from '@/utils/util'
+  import { getAction, httpAction } from '@/api/manage'
   import JImageUpload from '@/components/jeecg/JImageUpload'
   import JDate from '@/components/jeecg/JDate'
   import Vue from 'vue'
+
   export default {
     name: "MaterialModal",
     components: {
@@ -313,24 +288,17 @@
         unitStatus: false,
         manyUnitStatus: true,
         unitChecked: false,
-        skuSwitch: false, //sku开启状态
         switchDisabled: false, //开关的启用状态
         barCodeSwitch: false, //生成条码开关
         maxBarCodeInfo: '', //最大条码
         meDeleteIdList: [], //删除条码信息的id数组
         prefixNo: 'material',
-        sku: {
-          manyColor: '多颜色',
-          manySize: '多尺寸',
-          other1: '自定义1',
-          other2: '自定义2',
-          other3: '自定义3',
-          manyColorList: [],
-          manySizeList: [],
-          other1List: [],
-          other2List: [],
-          other3List: [],
-        },
+        materialAttributeList: [],
+        skuOneTitle: '属性1',
+        skuTwoTitle: '属性2',
+        skuOneList: [],
+        skuTwoList: [],
+        manySkuSelected: 0,
         model: {},
         isReadOnly: false,
         labelCol: {
@@ -450,7 +418,7 @@
         this.form.resetFields();
         this.model = Object.assign({}, record);
         this.activeKey = '1'
-        this.skuSwitch = false
+        this.manySkuSelected = 0
         this.barCodeSwitch = false
         this.visible = true;
         if(JSON.stringify(record) === '{}') {
@@ -565,7 +533,6 @@
           stock: allValues.tablesValue[1].values,
         }
       },
-
       /** 发起新增或修改的请求 */
       requestAddOrEdit(formData) {
         if(formData.unit === '' && formData.unitId === '') {
@@ -738,61 +705,95 @@
           }
         })
       },
-      onSkuChange(checked) {
-        this.skuSwitch = checked
-        if (checked) {
+      onManySkuChange(value) {
+        this.manySkuSelected = value.length
+        //控制多属性下拉框中选择项的状态
+        if(value.length < 2){
+          this.materialAttributeList.forEach((item,index,array)=>{
+            (array.indexOf(item.value) === -1)?Vue.set(array[index], 'disabled', false):''
+          })
+        }else{
+          this.materialAttributeList.forEach((item,index,array)=>{
+            (value.indexOf(item.value) === -1)?Vue.set(array[index], 'disabled', true):''
+          })
+        }
+        //更新属性1和属性2的下拉框
+        if(value.length <= 2) {
+          let skuOneId = value[0]
+          let skuTwoId = value[1]
+          this.materialAttributeList.forEach(item => {
+            if(item.value === skuOneId) {
+              this.skuOneTitle = item.name
+            }
+            if(item.value === skuTwoId) {
+              this.skuTwoTitle = item.name
+            }
+          })
+          getMaterialAttributeValueListById({'id': skuOneId}).then((res)=>{
+            if(res) {
+              this.skuOneList = res
+            }
+          })
+          getMaterialAttributeValueListById({'id': skuTwoId}).then((res)=>{
+            if(res) {
+              this.skuTwoList = res
+            }
+          })
+        }
+        //控制条码列表中的多属性列
+        if(value.length>0) {
           this.meTable.columns[2].type = FormTypes.input
-          this.form.setFieldsValue({ 'color': '' })
         } else {
           this.meTable.columns[2].type = FormTypes.hidden
         }
+        this.barCodeSwitch = false;
+        this.meTable.dataSource = []
       },
       onBarCodeChange(checked) {
         let unit = this.form.getFieldValue('unit')
         if(unit) {
           if(checked){
             //计算多属性已经选择了几个
-            let count = this.getNumByField('manyColor') + this.getNumByField('manySize')
-              + this.getNumByField('other1') + this.getNumByField('other2') + this.getNumByField('other3')
-            if(count === 2) {
+            let count = this.getNumByField('skuOne') + this.getNumByField('skuTwo')
+            let barCodeSku = []
+            if(count === 1) {
               let skuArr = []
-              if(this.getNumByField('manyColor')) {
-                skuArr.push(this.form.getFieldValue('manyColor'))
+              if(this.getNumByField('skuOne')) {
+                skuArr.push(this.form.getFieldValue('skuOne'))
               }
-              if(this.getNumByField('manySize')) {
-                skuArr.push(this.form.getFieldValue('manySize'))
+              let skuArrOne = skuArr[0]
+              for (let i = 0; i < skuArrOne.length; i++) {
+                barCodeSku.push(skuArrOne[i])
               }
-              if(this.getNumByField('other1')) {
-                skuArr.push(this.form.getFieldValue('other1'))
+            } else if(count === 2) {
+              let skuArr = []
+              if(this.getNumByField('skuOne')) {
+                skuArr.push(this.form.getFieldValue('skuOne'))
               }
-              if(this.getNumByField('other2')) {
-                skuArr.push(this.form.getFieldValue('other2'))
-              }
-              if(this.getNumByField('other3')) {
-                skuArr.push(this.form.getFieldValue('other3'))
+              if(this.getNumByField('skuTwo')) {
+                skuArr.push(this.form.getFieldValue('skuTwo'))
               }
               let skuArrOne = skuArr[0]
               let skuArrTwo = skuArr[1]
-              let barCodeSku = []
               for (let i = 0; i < skuArrOne.length; i++) {
                 for (let j = 0; j < skuArrTwo.length; j++) {
                   barCodeSku.push(skuArrOne[i] + ',' + skuArrTwo[j])
                 }
               }
-              let meTableData = []
-              getMaxBarCode({}).then((res)=>{
-                if(res && res.code===200) {
-                  let maxBarCode = res.data.barCode-0
-                  for (let i = 0; i < barCodeSku.length; i++) {
-                    let currentBarCode = maxBarCode + i + 1
-                    meTableData.push({barCode: currentBarCode, commodityUnit: unit, sku: barCodeSku[i]})
-                  }
-                  this.meTable.dataSource = meTableData
+            }
+            let meTableData = []
+            getMaxBarCode({}).then((res)=>{
+              if(res && res.code===200) {
+                let maxBarCode = res.data.barCode-0
+                for (let i = 0; i < barCodeSku.length; i++) {
+                  let currentBarCode = maxBarCode + i + 1
+                  meTableData.push({barCode: currentBarCode, commodityUnit: unit, sku: barCodeSku[i]})
                 }
-              })
-            } else {
-              this.$message.warning('请选择两个属性！');
-              this.barCodeSwitch = false;
+                this.meTable.dataSource = meTableData
+              }
+            })
+            if(this.skuOneTitle === '多颜色' || this.skuTwoTitle === '多颜色') {
+              this.form.setFieldsValue({ 'color': '' })
             }
           } else {
             this.meTable.dataSource = []
@@ -889,7 +890,7 @@
         }
       },
       batchSetPrice(type) {
-        if(this.skuSwitch || this.model.id){
+        if(this.manySkuSelected>0 || this.model.id){
           this.$refs.priceModalForm.add(type);
           this.$refs.priceModalForm.disableSubmit = false;
         } else {
@@ -948,22 +949,11 @@
         this.depotTable.dataSource = depotTableData
       },
       initMaterialAttribute() {
-        getAllMaterialAttribute({}).then((res)=>{
-          if(res && res.code===200) {
-            if(res.data) {
-              this.sku.manyColor = res.data.manyColorName;
-              this.sku.manySize = res.data.manySizeName;
-              this.sku.other1 = res.data.other1Name;
-              this.sku.other2 = res.data.other2Name;
-              this.sku.other3 = res.data.other3Name;
-              this.sku.manyColorList = res.data.manyColorValue;
-              this.sku.manySizeList = res.data.manySizeValue;
-              this.sku.other1List = res.data.other1Value;
-              this.sku.other2List = res.data.other2Value;
-              this.sku.other3List = res.data.other3Value;
-            }
+        getMaterialAttributeNameList().then((res)=>{
+          if(res) {
+            this.materialAttributeList = res
           }
-        });
+        })
       },
       loadParseMaterialProperty() {
         let mpList = Vue.ls.get('materialPropertyList')
