@@ -792,9 +792,6 @@
                 this.meTable.dataSource = meTableData
               }
             })
-            if(this.skuOneTitle === '多颜色' || this.skuTwoTitle === '多颜色') {
-              this.form.setFieldsValue({ 'color': '' })
-            }
           } else {
             this.meTable.dataSource = []
           }
