@@ -1,5 +1,5 @@
 <template>
-  <j-modal
+  <a-modal
     :title="title"
     :width="1300"
     :visible="visible"
@@ -116,7 +116,8 @@
               <a-col :md="6" :sm="24" v-if="!model.id">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="多属性" data-step="11" data-title="多属性"
                   data-intro="多属性是针对的sku商品（比如服装、鞋帽行业），此处开关如果启用就可以在下方进行多sku的配置，配置具体的颜色、尺码之类的组合">
-                  <a-select mode="multiple" v-decorator="[ 'manySku' ]" showSearch optionFilterProp="children" @change="onManySkuChange">
+                  <a-select mode="multiple" v-decorator="[ 'manySku' ]" showSearch optionFilterProp="children"
+                    placeholder="请选择多属性（可多选）" @change="onManySkuChange">
                     <a-select-option v-for="(item,index) in materialAttributeList" :key="index" :value="item.value" :disabled="item.disabled">
                       {{ item.name }}
                     </a-select-option>
@@ -246,7 +247,7 @@
       </a-form>
     </a-spin>
     <unit-modal ref="unitModalForm" @ok="unitModalFormOk"></unit-modal>
-  </j-modal>
+  </a-modal>
 </template>
 <script>
   import pick from 'lodash.pick'
