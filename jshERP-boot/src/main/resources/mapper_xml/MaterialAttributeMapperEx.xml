@@ -5,8 +5,9 @@
     <select id="selectByConditionMaterialAttribute" resultType="com.jsh.erp.datasource.entities.MaterialAttribute">
         select * from jsh_material_attribute ma
         where 1=1
-        <if test="attributeField != null">
-            and ma.attribute_field = #{attributeField}
+        <if test="attributeName != null">
+            <bind name="bindAttributeName" value="'%'+attributeName+'%'"/>
+            and ma.attribute_name like #{bindAttributeName}
         </if>
         and ifnull(ma.delete_flag,'0') !='1'
         order by ma.id desc
@@ -18,8 +19,9 @@
     <select id="countsByMaterialAttribute" resultType="java.lang.Long">
         SELECT count(ma.id) from jsh_material_attribute ma
         where 1=1
-        <if test="attributeField != null">
-            and ma.attribute_field = #{attributeField}
+        <if test="attributeName != null">
+            <bind name="bindAttributeName" value="'%'+attributeName+'%'"/>
+            and ma.attribute_name like #{bindAttributeName}
         </if>
         and ifnull(ma.delete_flag,'0') !='1'
     </select>

@@ -437,7 +437,6 @@ INSERT INTO `jsh_material` VALUES ('619', null, '衣服', null, null, null, null
 DROP TABLE IF EXISTS `jsh_material_attribute`;
 CREATE TABLE `jsh_material_attribute` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `attribute_field` varchar(50) DEFAULT NULL COMMENT '属性字段',
   `attribute_name` varchar(50) DEFAULT NULL COMMENT '属性名',
   `attribute_value` varchar(500) DEFAULT NULL COMMENT '属性值',
   `tenant_id` bigint(20) DEFAULT NULL COMMENT '租户id',
@@ -448,11 +447,11 @@ CREATE TABLE `jsh_material_attribute` (
 -- ----------------------------
 -- Records of jsh_material_attribute
 -- ----------------------------
-INSERT INTO `jsh_material_attribute` VALUES ('1', 'manyColor', '多颜色', '红色|橙色|黄色|绿色|蓝色|紫色', '63', '0');
-INSERT INTO `jsh_material_attribute` VALUES ('2', 'manySize', '多尺寸', 'S|M|L|XL|XXL|XXXL', '63', '0');
-INSERT INTO `jsh_material_attribute` VALUES ('3', 'other1', '自定义1', '小米|华为', '63', '0');
-INSERT INTO `jsh_material_attribute` VALUES ('4', 'other2', '自定义2', null, '63', '0');
-INSERT INTO `jsh_material_attribute` VALUES ('5', 'other3', '自定义3', null, '63', '0');
+INSERT INTO `jsh_material_attribute` VALUES ('1', '多颜色', '红色|橙色|黄色|绿色|蓝色|紫色', '63', '0');
+INSERT INTO `jsh_material_attribute` VALUES ('2', '多尺寸', 'S|M|L|XL|XXL|XXXL', '63', '0');
+INSERT INTO `jsh_material_attribute` VALUES ('3', '自定义1', '小米|华为', '63', '0');
+INSERT INTO `jsh_material_attribute` VALUES ('4', '自定义2', null, '63', '0');
+INSERT INTO `jsh_material_attribute` VALUES ('5', '自定义3', null, '63', '0');
 
 -- ----------------------------
 -- Table structure for jsh_material_category

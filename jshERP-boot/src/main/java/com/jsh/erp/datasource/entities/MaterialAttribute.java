@@ -3,8 +3,6 @@ package com.jsh.erp.datasource.entities;
 public class MaterialAttribute {
     private Long id;
 
-    private String attributeField;
-
     private String attributeName;
 
     private String attributeValue;
@@ -19,14 +17,6 @@ public class MaterialAttribute {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getAttributeField() {
-        return attributeField;
-    }
-
-    public void setAttributeField(String attributeField) {
-        this.attributeField = attributeField == null ? null : attributeField.trim();
     }
 
     public String getAttributeName() {

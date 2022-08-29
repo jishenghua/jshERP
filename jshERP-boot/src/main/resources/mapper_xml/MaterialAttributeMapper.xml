@@ -3,7 +3,6 @@
 <mapper namespace="com.jsh.erp.datasource.mappers.MaterialAttributeMapper">
   <resultMap id="BaseResultMap" type="com.jsh.erp.datasource.entities.MaterialAttribute">
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="attribute_field" jdbcType="VARCHAR" property="attributeField" />
     <result column="attribute_name" jdbcType="VARCHAR" property="attributeName" />
     <result column="attribute_value" jdbcType="VARCHAR" property="attributeValue" />
     <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
@@ -68,7 +67,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, attribute_field, attribute_name, attribute_value, tenant_id, delete_flag
+    id, attribute_name, attribute_value, tenant_id, delete_flag
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.MaterialAttributeExample" resultMap="BaseResultMap">
     select
@@ -101,21 +100,16 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.jsh.erp.datasource.entities.MaterialAttribute">
-    insert into jsh_material_attribute (id, attribute_field, attribute_name, 
-      attribute_value, tenant_id, delete_flag
-      )
-    values (#{id,jdbcType=BIGINT}, #{attributeField,jdbcType=VARCHAR}, #{attributeName,jdbcType=VARCHAR}, 
-      #{attributeValue,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR}
-      )
+    insert into jsh_material_attribute (id, attribute_name, attribute_value, 
+      tenant_id, delete_flag)
+    values (#{id,jdbcType=BIGINT}, #{attributeName,jdbcType=VARCHAR}, #{attributeValue,jdbcType=VARCHAR}, 
+      #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.MaterialAttribute">
     insert into jsh_material_attribute
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
-      </if>
-      <if test="attributeField != null">
-        attribute_field,
       </if>
       <if test="attributeName != null">
         attribute_name,
@@ -133,9 +127,6 @@
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
         #{id,jdbcType=BIGINT},
-      </if>
-      <if test="attributeField != null">
-        #{attributeField,jdbcType=VARCHAR},
       </if>
       <if test="attributeName != null">
         #{attributeName,jdbcType=VARCHAR},
@@ -163,9 +154,6 @@
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
       </if>
-      <if test="record.attributeField != null">
-        attribute_field = #{record.attributeField,jdbcType=VARCHAR},
-      </if>
       <if test="record.attributeName != null">
         attribute_name = #{record.attributeName,jdbcType=VARCHAR},
       </if>
@@ -186,7 +174,6 @@
   <update id="updateByExample" parameterType="map">
     update jsh_material_attribute
     set id = #{record.id,jdbcType=BIGINT},
-      attribute_field = #{record.attributeField,jdbcType=VARCHAR},
       attribute_name = #{record.attributeName,jdbcType=VARCHAR},
       attribute_value = #{record.attributeValue,jdbcType=VARCHAR},
       tenant_id = #{record.tenantId,jdbcType=BIGINT},
@@ -198,9 +185,6 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.jsh.erp.datasource.entities.MaterialAttribute">
     update jsh_material_attribute
     <set>
-      <if test="attributeField != null">
-        attribute_field = #{attributeField,jdbcType=VARCHAR},
-      </if>
       <if test="attributeName != null">
         attribute_name = #{attributeName,jdbcType=VARCHAR},
       </if>
@@ -218,8 +202,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.jsh.erp.datasource.entities.MaterialAttribute">
     update jsh_material_attribute
-    set attribute_field = #{attributeField,jdbcType=VARCHAR},
-      attribute_name = #{attributeName,jdbcType=VARCHAR},
+    set attribute_name = #{attributeName,jdbcType=VARCHAR},
       attribute_value = #{attributeValue,jdbcType=VARCHAR},
       tenant_id = #{tenantId,jdbcType=BIGINT},
       delete_flag = #{deleteFlag,jdbcType=VARCHAR}

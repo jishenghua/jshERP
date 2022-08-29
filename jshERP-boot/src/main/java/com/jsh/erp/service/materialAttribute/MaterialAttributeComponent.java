@@ -31,8 +31,8 @@ public class MaterialAttributeComponent implements ICommonQuery {
 
     private List<?> getMaterialList(Map<String, String> map) throws Exception{
         String search = map.get(Constants.SEARCH);
-        String attributeField = StringUtil.getInfo(search, "attributeField");
-        return materialAttributeService.select(attributeField, QueryUtils.offset(map), QueryUtils.rows(map));
+        String attributeName = StringUtil.getInfo(search, "attributeName");
+        return materialAttributeService.select(attributeName, QueryUtils.offset(map), QueryUtils.rows(map));
     }
 
     @Override

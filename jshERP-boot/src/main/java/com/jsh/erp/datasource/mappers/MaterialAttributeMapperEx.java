@@ -8,7 +8,7 @@ import java.util.List;
 public interface MaterialAttributeMapperEx {
 
     List<MaterialAttribute> selectByConditionMaterialAttribute(
-            @Param("attributeField") String attributeField,
+            @Param("attributeName") String attributeName,
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 

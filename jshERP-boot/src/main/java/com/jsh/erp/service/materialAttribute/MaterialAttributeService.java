@@ -49,6 +49,7 @@ public class MaterialAttributeService {
     public List<MaterialAttribute> getMaterialAttribute() throws Exception{
         MaterialAttributeExample example = new MaterialAttributeExample();
         example.createCriteria().andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        example.setOrderByClause("id desc");
         List<MaterialAttribute> list=null;
         try{
             list=materialAttributeMapper.selectByExample(example);
@@ -58,31 +59,11 @@ public class MaterialAttributeService {
         return list;
     }
 
-    public List<MaterialAttribute> select(String attributeField, int offset, int rows)
+    public List<MaterialAttribute> select(String attributeName, int offset, int rows)
             throws Exception{
-        String[] arr = {"manyColor","manySize","other1","other2","other3"};
-        Map<String, String> map = new HashMap<>();
-        map.put("manyColor", "多颜色");
-        map.put("manySize", "多尺寸");
-        map.put("other1", "自定义1");
-        map.put("other2", "自定义2");
-        map.put("other3", "自定义3");
         List<MaterialAttribute> list = new ArrayList<>();
         try{
-            List<MaterialAttribute> maList = materialAttributeMapperEx.selectByConditionMaterialAttribute(attributeField, offset, rows);
-            for(String field: arr) {
-                MaterialAttribute materialAttribute = new MaterialAttribute();
-                materialAttribute.setAttributeField(field);
-                materialAttribute.setAttributeName(map.get(field));
-                for(MaterialAttribute ma: maList) {
-                    if(field.equals(ma.getAttributeField())){
-                        materialAttribute.setId(ma.getId());
-                        materialAttribute.setAttributeName(ma.getAttributeName());
-                        materialAttribute.setAttributeValue(ma.getAttributeValue());
-                    }
-                }
-                list.add(materialAttribute);
-            }
+            list = materialAttributeMapperEx.selectByConditionMaterialAttribute(attributeName, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
