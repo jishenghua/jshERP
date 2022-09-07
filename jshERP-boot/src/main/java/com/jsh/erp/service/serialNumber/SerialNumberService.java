@@ -398,7 +398,8 @@ public class SerialNumberService {
         //录入序列号的时候不能重复
         if ((BusinessConstants.SUB_TYPE_PURCHASE.equals(subType) ||
                 BusinessConstants.SUB_TYPE_OTHER.equals(subType) ||
-                BusinessConstants.SUB_TYPE_SALES_RETURN.equals(subType)) &&
+                BusinessConstants.SUB_TYPE_SALES_RETURN.equals(subType)||
+                BusinessConstants.SUB_TYPE_RETAIL_RETURN.equals(subType)) &&
                 BusinessConstants.DEPOTHEAD_TYPE_IN.equals(type)) {
             //将中文的逗号批量替换为英文逗号
             snList = snList.replaceAll("，", ",");
@@ -406,7 +407,7 @@ public class SerialNumberService {
             for (String sn : snArr) {
                 List<SerialNumber> list = new ArrayList<>();
                 SerialNumberExample example = new SerialNumberExample();
-                example.createCriteria().andMaterialIdEqualTo(materialId).andSerialNumberEqualTo(sn)
+                example.createCriteria().andMaterialIdEqualTo(materialId).andSerialNumberEqualTo(sn).andIsSellEqualTo("0")
                         .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
                 list = serialNumberMapper.selectByExample(example);
                 //判断如果不存在重复序列号就新增
@@ -431,5 +432,13 @@ public class SerialNumberService {
                 }
             }
         }
+    }
+
+    /**
+     * 直接删除序列号
+     * @param example
+     */
+    public void deleteByExample(SerialNumberExample example) {
+        serialNumberMapper.deleteByExample(example);
     }
 }

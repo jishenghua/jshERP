@@ -390,6 +390,8 @@ public class DepotItemService {
     public void saveDetials(String rows, Long headerId, String actionType, HttpServletRequest request) throws Exception{
         //查询单据主表信息
         DepotHead depotHead =depotHeadMapper.selectByPrimaryKey(headerId);
+        //删除序列号和回收序列号
+        deleteOrCancelSerialNumber(actionType, depotHead, headerId);
         //删除单据的明细
         deleteDepotItemHeadId(headerId);
         JSONArray rowArr = JSONArray.parseArray(rows);
@@ -684,6 +686,37 @@ public class DepotItemService {
             }
         }catch(Exception e){
             JshException.writeFail(logger, e);
+        }
+    }
+
+    /**
+     * 删除序列号和回收序列号
+     * @param actionType
+     * @throws Exception
+     */
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public void deleteOrCancelSerialNumber(String actionType, DepotHead depotHead, Long headerId) throws Exception {
+        if(actionType.equals("update")) {
+            User userInfo = userService.getCurrentUser();
+            if(BusinessConstants.DEPOTHEAD_TYPE_IN.equals(depotHead.getType())){
+                //入库逻辑
+                String number = depotHead.getNumber();
+                SerialNumberExample example = new SerialNumberExample();
+                example.createCriteria().andInBillNoEqualTo(number);
+                serialNumberService.deleteByExample(example);
+            } else if(BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())){
+                //出库逻辑
+                DepotItemExample example = new DepotItemExample();
+                example.createCriteria().andHeaderIdEqualTo(headerId).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+                List<DepotItem> depotItemList = depotItemMapper.selectByExample(example);
+                if(null != depotItemList && depotItemList.size() > 0){
+                    for (DepotItem depotItem : depotItemList){
+                        if(StringUtil.isNotEmpty(depotItem.getSnList())){
+                            serialNumberService.cancelSerialNumber(depotItem.getMaterialId(), depotHead.getNumber(), (depotItem.getBasicNumber() == null ? 0 : depotItem.getBasicNumber()).intValue(), userInfo);
+                        }
+                    }
+                }
+            }
         }
     }
 
