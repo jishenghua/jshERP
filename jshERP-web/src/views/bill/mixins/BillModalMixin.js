@@ -124,7 +124,11 @@ export const BillModalMixin = {
               if(this.prefixNo === 'LSCK' || this.prefixNo === 'CGTH'  || this.prefixNo === 'XSCK' || this.prefixNo === 'QTCK' || this.prefixNo === 'DBCK') {
                 columns[i].type = FormTypes.popupJsh //显示
               } else {
-                columns[i].type = FormTypes.input //显示
+                if(key === 'snList') {
+                  columns[i].type = FormTypes.input_pop //显示
+                } else {
+                  columns[i].type = FormTypes.input //显示
+                }
               }
             } else if(key === 'expirationDate') {
               if(this.prefixNo === 'LSTH' || this.prefixNo === 'CGRK' || this.prefixNo === 'XSTH' || this.prefixNo === 'QTRK') {
