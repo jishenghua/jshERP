@@ -7,11 +7,11 @@
         <a-icon type="close" @click="visible=false"/>
       </span>
     </div>
-    <a-input :value="inputContent" @change="handleInputChange">
+    <a-input :value="inputContent" @change="handleInputChange" :placeholder="placeholder">
       <a-icon slot="suffix" type="fullscreen" @click.stop="pop" />
     </a-input>
     <div slot="content">
-      <textarea :value="inputContent" @input="handleInputChange" :style="{ height: height + 'px', width: width + 'px' }"></textarea>
+      <textarea :value="inputContent" @input="handleInputChange" :placeholder="placeholder" :style="{ height: height + 'px', width: width + 'px' }"></textarea>
     </div>
   </a-popover>
 </template>
@@ -48,8 +48,11 @@
         type:String,
         default:'',
         required:false
-      }
-
+      },
+      placeholder:{
+        type:String,
+        required:false
+      },
     },
     data(){
       return {
