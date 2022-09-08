@@ -1,5 +1,7 @@
 package com.jsh.erp.datasource.entities;
 
+import java.util.Date;
+
 /**
  * Description
  *
@@ -29,6 +31,10 @@ public class SerialNumberEx extends SerialNumber{
     private String depotHeadType;
 
     private String depotName;
+
+    private String createTimeStr;
+
+    private String updateTimeStr;
 
     public String getMaterialCode() {
         return materialCode;
@@ -84,5 +90,21 @@ public class SerialNumberEx extends SerialNumber{
 
     public void setDepotName(String depotName) {
         this.depotName = depotName;
+    }
+
+    public String getCreateTimeStr() {
+        return createTimeStr;
+    }
+
+    public void setCreateTimeStr(String createTimeStr) {
+        this.createTimeStr = createTimeStr;
+    }
+
+    public String getUpdateTimeStr() {
+        return updateTimeStr;
+    }
+
+    public void setUpdateTimeStr(String updateTimeStr) {
+        this.updateTimeStr = updateTimeStr;
     }
 }

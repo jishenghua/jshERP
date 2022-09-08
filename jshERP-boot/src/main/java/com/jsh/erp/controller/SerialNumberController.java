@@ -1,17 +1,14 @@
 package com.jsh.erp.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.jsh.erp.constants.ExceptionConstants;
-import com.jsh.erp.datasource.entities.SerialNumber;
+import com.jsh.erp.datasource.entities.DepotItem;
 import com.jsh.erp.datasource.entities.SerialNumberEx;
-import com.jsh.erp.exception.BusinessParamCheckingException;
-import com.jsh.erp.exception.BusinessRunTimeException;
+import com.jsh.erp.service.depotHead.DepotHeadService;
+import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.serialNumber.SerialNumberService;
 import com.jsh.erp.utils.BaseResponseInfo;
-import com.jsh.erp.utils.Constants;
 import com.jsh.erp.utils.ErpInfo;
-import com.jsh.erp.utils.StringUtil;
+import com.jsh.erp.utils.Tools;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -40,6 +37,10 @@ public class SerialNumberController {
 
     @Resource
     private SerialNumberService serialNumberService;
+    @Resource
+    private DepotHeadService depotHeadService;
+    @Resource
+    private DepotItemService depotItemService;
 
     /**
      * create by: cjl
@@ -84,6 +85,7 @@ public class SerialNumberController {
     @GetMapping(value = "/getEnableSerialNumberList")
     @ApiOperation(value = "获取序列号商品")
     public BaseResponseInfo getEnableSerialNumberList(@RequestParam("name") String name,
+                                                      @RequestParam("depotItemId") Long depotItemId,
                                                       @RequestParam("depotId") Long depotId,
                                                       @RequestParam("barCode") String barCode,
                                                       @RequestParam("page") Integer currentPage,
@@ -92,8 +94,16 @@ public class SerialNumberController {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<>();
         try {
-            List<SerialNumber> list = serialNumberService.getEnableSerialNumberList(name, depotId, barCode, (currentPage-1)*pageSize, pageSize);
-            Long total = serialNumberService.getEnableSerialNumberCount(name, depotId, barCode);
+            String number = "";
+            if(depotItemId != null) {
+                DepotItem depotItem = depotItemService.getDepotItem(depotItemId);
+                number = depotHeadService.getDepotHead(depotItem.getHeaderId()).getNumber();
+            }
+            List<SerialNumberEx> list = serialNumberService.getEnableSerialNumberList(number, name, depotId, barCode, (currentPage-1)*pageSize, pageSize);
+            for(SerialNumberEx serialNumberEx: list) {
+                serialNumberEx.setCreateTimeStr(Tools.getCenternTime(serialNumberEx.getCreateTime()));
+            }
+            Long total = serialNumberService.getEnableSerialNumberCount(number, name, depotId, barCode);
             map.put("rows", list);
             map.put("total", total);
             res.code = 200;

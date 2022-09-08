@@ -709,6 +709,7 @@ public class DepotItemController {
     @GetMapping(value = "/getBatchNumberList")
     @ApiOperation(value = "获取批次商品列表信息")
     public BaseResponseInfo getBatchNumberList(@RequestParam("name") String name,
+                                               @RequestParam("depotItemId") Long depotItemId,
                                                @RequestParam("depotId") Long depotId,
                                                @RequestParam("barCode") String barCode,
                                                @RequestParam(value = "batchNumber", required = false) String batchNumber,
@@ -716,8 +717,13 @@ public class DepotItemController {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<>();
         try {
+            String number = "";
+            if(depotItemId != null) {
+                DepotItem depotItem = depotItemService.getDepotItem(depotItemId);
+                number = depotHeadService.getDepotHead(depotItem.getHeaderId()).getNumber();
+            }
             List<DepotItemVoBatchNumberList> reslist = new ArrayList<>();
-            List<DepotItemVoBatchNumberList> list = depotItemService.getBatchNumberList(name, depotId, barCode, batchNumber);
+            List<DepotItemVoBatchNumberList> list = depotItemService.getBatchNumberList(number, name, depotId, barCode, batchNumber);
             for(DepotItemVoBatchNumberList bn: list) {
                 if(bn.getTotalNum()!=null && bn.getTotalNum().compareTo(BigDecimal.ZERO)>0) {
                     reslist.add(bn);

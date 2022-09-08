@@ -44,12 +44,14 @@ public interface SerialNumberMapperEx {
 
     int batchDeleteSerialNumberByIds(@Param("updateTime") Date updateTime, @Param("updater") Long updater, @Param("ids") String ids[]);
 
-    List<SerialNumber> getEnableSerialNumberList(@Param("name") String name,
+    List<SerialNumberEx> getEnableSerialNumberList(@Param("number") String number,
+                                                 @Param("name") String name,
                                                  @Param("depotId") Long depotId,
                                                  @Param("barCode") String barCode,
                                                  @Param("offset") Integer offset, @Param("rows") Integer rows);
 
-    Long getEnableSerialNumberCount(@Param("name") String name,
+    Long getEnableSerialNumberCount(@Param("number") String number,
+                                    @Param("name") String name,
                                     @Param("depotId") Long depotId,
                                     @Param("barCode") String barCode);
 }

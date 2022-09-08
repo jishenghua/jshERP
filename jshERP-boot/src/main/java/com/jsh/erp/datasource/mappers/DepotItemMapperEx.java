@@ -163,6 +163,7 @@ public interface DepotItemMapperEx {
             @Param("goToType") String goToType);
 
     List<DepotItemVoBatchNumberList> getBatchNumberList(
+            @Param("number") String number,
             @Param("name") String name,
             @Param("depotId") Long depotId,
             @Param("barCode") String barCode,

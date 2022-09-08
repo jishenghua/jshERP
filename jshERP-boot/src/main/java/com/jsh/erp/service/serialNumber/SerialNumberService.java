@@ -7,6 +7,7 @@ import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.mappers.*;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
+import com.jsh.erp.service.depotHead.DepotHeadService;
 import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.material.MaterialService;
@@ -41,8 +42,6 @@ public class SerialNumberService {
     private SerialNumberMapperEx serialNumberMapperEx;
     @Resource
     private MaterialMapperEx materialMapperEx;
-    @Resource
-    private MaterialMapper materialMapper;
     @Resource
     private MaterialService materialService;
     @Resource
@@ -374,20 +373,20 @@ public class SerialNumberService {
         return result;
     }
 
-    public List<SerialNumber> getEnableSerialNumberList(String name, Long depotId, String barCode, Integer offset, Integer rows)throws Exception {
-        List<SerialNumber> list =null;
+    public List<SerialNumberEx> getEnableSerialNumberList(String number, String name, Long depotId, String barCode, Integer offset, Integer rows)throws Exception {
+        List<SerialNumberEx> list =null;
         try{
-            list = serialNumberMapperEx.getEnableSerialNumberList(StringUtil.toNull(name), depotId, barCode, offset, rows);
+            list = serialNumberMapperEx.getEnableSerialNumberList(StringUtil.toNull(number), StringUtil.toNull(name), depotId, barCode, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
     }
 
-    public Long getEnableSerialNumberCount(String name, Long depotId, String barCode)throws Exception {
+    public Long getEnableSerialNumberCount(String number, String name, Long depotId, String barCode)throws Exception {
         Long count = 0L;
         try{
-            count = serialNumberMapperEx.getEnableSerialNumberCount(StringUtil.toNull(name), depotId, barCode);
+            count = serialNumberMapperEx.getEnableSerialNumberCount(StringUtil.toNull(number), StringUtil.toNull(name), depotId, barCode);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }

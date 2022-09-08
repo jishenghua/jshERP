@@ -955,8 +955,8 @@ public class DepotItemService {
         return count;
     }
 
-    public List<DepotItemVoBatchNumberList> getBatchNumberList(String name, Long depotId, String barCode, String batchNumber){
-        return depotItemMapperEx.getBatchNumberList(name, depotId, barCode, batchNumber);
+    public List<DepotItemVoBatchNumberList> getBatchNumberList(String number, String name, Long depotId, String barCode, String batchNumber){
+        return depotItemMapperEx.getBatchNumberList(StringUtil.toNull(number), name, depotId, barCode, batchNumber);
     }
 
     public Long getCountByMaterialAndDepot(Long mId, Long depotId) {

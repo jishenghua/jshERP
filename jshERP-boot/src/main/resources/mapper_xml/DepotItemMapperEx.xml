@@ -687,8 +687,7 @@
         select id, bar_code, name, standard, model, batch_number, expiration_date, sum(oper_number) total_num  from
         (select di.batch_number id, me.bar_code, m.name, m.standard, m.model,di.batch_number,di.expiration_date,
         di.oper_number*(case dh.type when '入库' then 1 when '出库' then -1 end) as oper_number
-        from
-        jsh_depot_head dh
+        from jsh_depot_head dh
         left join jsh_depot_item di on dh.id=di.header_id
         left join jsh_material m on m.id=di.material_id and ifnull(m.delete_flag, '0') != '1'
         left join jsh_material_extend me on me.material_id=m.id and ifnull(me.delete_flag,'0') !='1'
@@ -702,6 +701,9 @@
         </if>
         <if test="batchNumber != null">
             and di.batch_number= #{batchNumber}
+        </if>
+        <if test="number != null">
+            and dh.number!= #{number}
         </if>
         and m.enable_batch_number =1
         and di.delete_flag!=1) tb
