@@ -406,6 +406,20 @@ public class DepotItemService {
                 depotItem.setMaterialExtendId(materialExtend.getId());
                 depotItem.setMaterialUnit(rowObj.getString("unit"));
                 Material material= materialService.getMaterial(depotItem.getMaterialId());
+                if (BusinessConstants.ENABLE_SERIAL_NUMBER_ENABLED.equals(material.getEnableSerialNumber()) ||
+                        BusinessConstants.ENABLE_BATCH_NUMBER_ENABLED.equals(material.getEnableBatchNumber())) {
+                    //组装拆卸单不能选择批号或序列号商品
+                    if(BusinessConstants.SUB_TYPE_ASSEMBLE.equals(depotHead.getSubType()) ||
+                            BusinessConstants.SUB_TYPE_DISASSEMBLE.equals(depotHead.getSubType())) {
+                        throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_ASSEMBLE_SELECT_ERROR_CODE,
+                                String.format(ExceptionConstants.MATERIAL_ASSEMBLE_SELECT_ERROR_MSG, barCode));
+                    }
+                    //调拨单不能选择批号或序列号商品（该场景走出库和入库单）
+                    if(BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubType())) {
+                        throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_TRANSFER_SELECT_ERROR_CODE,
+                                String.format(ExceptionConstants.MATERIAL_TRANSFER_SELECT_ERROR_MSG, barCode));
+                    }
+                }
                 if (StringUtil.isExist(rowObj.get("snList"))) {
                     depotItem.setSnList(rowObj.getString("snList"));
                     if(StringUtil.isExist(rowObj.get("depotId"))) {

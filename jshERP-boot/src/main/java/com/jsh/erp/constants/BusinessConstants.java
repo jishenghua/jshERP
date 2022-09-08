@@ -93,6 +93,8 @@ public class BusinessConstants {
     public static final String SUB_TYPE_SALES_RETURN = "销售退货";
     public static final String SUB_TYPE_TRANSFER = "调拨";
     public static final String SUB_TYPE_REPLAY = "盘点复盘";
+    public static final String SUB_TYPE_ASSEMBLE = "组装单";
+    public static final String SUB_TYPE_DISASSEMBLE = "拆卸单";
     /**
      * 批量插入sql时最大的数据条数
      * */

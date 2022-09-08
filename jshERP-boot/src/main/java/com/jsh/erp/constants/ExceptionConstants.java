@@ -326,6 +326,12 @@ public class ExceptionConstants {
     //比例格式错误
     public static final int MATERIAL_RATIO_NOT_INTEGER_CODE = 8000016;
     public static final String MATERIAL_RATIO_NOT_INTEGER_MSG = "第%s行比例格式错误";
+    //组装拆卸单不能选择批号或序列号商品
+    public static final int MATERIAL_ASSEMBLE_SELECT_ERROR_CODE = 80000017;
+    public static final String MATERIAL_ASSEMBLE_SELECT_ERROR_MSG = "抱歉，组装拆卸单不能选择批号或序列号商品:%s";
+    //调拨单不能选择批号或序列号商品
+    public static final int MATERIAL_TRANSFER_SELECT_ERROR_CODE = 80000018;
+    public static final String MATERIAL_TRANSFER_SELECT_ERROR_MSG = "抱歉，调拨单不能选择批号或序列号商品:%s";
 
     /**
      *  单据信息
