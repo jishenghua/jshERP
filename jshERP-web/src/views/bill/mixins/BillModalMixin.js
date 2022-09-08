@@ -426,7 +426,12 @@ export const BillModalMixin = {
           break;
         case "batchNumber":
           batchNumber = value
-          getBatchNumberList({name:'', depotId: row.depotId, barCode: row.barCode, batchNumber: batchNumber}).then((res) => {
+          let depotItemId = ''
+          let rowId = row.id
+          if(rowId.length<=19) {
+            depotItemId = rowId-0
+          }
+          getBatchNumberList({name:'', depotItemId: depotItemId, depotId: row.depotId, barCode: row.barCode, batchNumber: batchNumber}).then((res) => {
             if (res && res.code === 200) {
               if(res.data && res.data.rows) {
                 let info = res.data.rows[0]

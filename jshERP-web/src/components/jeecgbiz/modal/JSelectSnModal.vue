@@ -16,13 +16,13 @@
           <!-- 搜索区域 -->
           <a-form layout="inline" @keyup.enter.native="onSearch">
             <a-row :gutter="24">
-              <a-col :md="6" :sm="8">
+              <a-col :md="12" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="序列号">
                   <a-input placeholder="请输入序列号" v-model="queryParam.name"></a-input>
                 </a-form-item>
               </a-col>
               <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-                <a-col :md="6" :sm="24">
+                <a-col :md="12" :sm="24">
                   <a-button type="primary" @click="onSearch">查询</a-button>
                   <a-button style="margin-left: 8px" @click="searchReset(1)">重置</a-button>
                 </a-col>
@@ -63,6 +63,7 @@
         modalWidth: 800,
         queryParam: {
           name: "",
+          depotItemId: '',
           depotId: '',
           barCode: ''
         },
@@ -76,7 +77,9 @@
         },
         categoryTree:[],
         columns: [
-          {dataIndex: 'serialNumber', title: '序列号', width: 100, align: 'left'}
+          {dataIndex: 'serialNumber', title: '序列号', width: 100, align: 'left'},
+          {dataIndex: 'inBillNo', title: '入库单号', width: 100, align: 'left'},
+          {dataIndex: 'createTimeStr', title: '创建时间', width: 100, align: 'left'},
         ],
         scrollTrigger: {},
         dataSource: [],
@@ -136,6 +139,10 @@
       async loadData(arg) {
         if(this.rows) {
           if(JSON.parse(this.rows).depotId && JSON.parse(this.rows).barCode ){
+            let depotItemId = JSON.parse(this.rows).id
+            if(depotItemId.length<=19) {
+              this.queryParam.depotItemId = depotItemId-0
+            }
             this.queryParam.depotId = JSON.parse(this.rows).depotId-0
             this.queryParam.barCode = JSON.parse(this.rows).barCode
           }
@@ -178,6 +185,10 @@
           if(this.rows) {
             this.queryParam.name=''
             if(JSON.parse(this.rows).depotId && JSON.parse(this.rows).barCode ){
+              let depotItemId = JSON.parse(this.rows).id
+              if(depotItemId.length<=19) {
+                this.queryParam.depotItemId = depotItemId-0
+              }
               this.queryParam.depotId = JSON.parse(this.rows).depotId-0
               this.queryParam.barCode = JSON.parse(this.rows).barCode
             }
