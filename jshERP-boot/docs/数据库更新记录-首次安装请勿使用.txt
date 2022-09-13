@@ -1400,3 +1400,11 @@ update jsh_role set enabled=1;
 -- 给产品属性表移除属性字段
 -- --------------------------------------------------------
 alter table jsh_material_attribute drop column attribute_field;
+
+-- --------------------------------------------------------
+-- 时间 2022年09月13日
+-- by jishenghua
+-- 给商品和财务单据的备注修改字段长度
+-- --------------------------------------------------------
+alter table jsh_material change remark remark varchar(500) DEFAULT NULL COMMENT '备注';
+alter table jsh_account_head change remark remark varchar(1000) DEFAULT NULL COMMENT '备注';
