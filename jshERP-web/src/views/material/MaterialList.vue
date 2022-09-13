@@ -83,14 +83,7 @@
         <!-- 操作按钮区域 -->
         <div class="table-operator"  style="margin-top: 5px">
           <a-button v-if="btnEnableList.indexOf(1)>-1" @click="handleAdd" type="primary" icon="plus">新增</a-button>
-          <a-upload v-if="btnEnableList.indexOf(1)>-1" name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
-            <a-popover title="表格模板">
-              <template slot="content">
-                <p><a target="_blank" href="/doc/goods_template.xls"><b>商品Excel模板下载</b></a></p>
-              </template>
-              <a-button type="primary" icon="import">导入</a-button>
-            </a-popover>
-          </a-upload>
+          <a-button v-if="btnEnableList.indexOf(1)>-1" @click="handleImportXls()" type="primary" icon="import">导入</a-button>
           <a-button type="primary" icon="download" @click="handleExportXls('商品信息')">导出</a-button>
           <a-dropdown>
             <a-menu slot="overlay">
@@ -161,6 +154,7 @@
         <!-- table区域-end -->
         <!-- 表单区域 -->
         <material-modal ref="modalForm" @ok="modalFormOk"></material-modal>
+        <material-import-modal ref="modalImportForm" @ok="modalFormOk"></material-import-modal>
         <batch-set-info-modal ref="batchSetInfoModalForm" @ok="modalFormOk"></batch-set-info-modal>
       </a-card>
     </a-col>
@@ -168,6 +162,7 @@
 </template>
 <script>
   import MaterialModal from './modules/MaterialModal'
+  import MaterialImportModal from './modules/MaterialImportModal'
   import BatchSetInfoModal from './modules/BatchSetInfoModal'
   import { queryMaterialCategoryTreeList } from '@/api/api'
   import { postAction } from '@/api/manage'
@@ -182,6 +177,7 @@
     mixins:[JeecgListMixin],
     components: {
       MaterialModal,
+      MaterialImportModal,
       BatchSetInfoModal,
       JEllipsis,
       JDate
@@ -373,6 +369,10 @@
         if(this.btnEnableList.indexOf(1)===-1) {
           this.$refs.modalForm.isReadOnly = true
         }
+      },
+      handleImportXls() {
+        this.$refs.modalImportForm.init();
+        this.$refs.modalImportForm.title = "商品导入";
       },
       searchReset() {
         this.queryParam = {
