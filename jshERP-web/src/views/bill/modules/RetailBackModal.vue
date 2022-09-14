@@ -237,12 +237,15 @@
             { title: '批号', key: 'batchNumber', width: '8%', type: FormTypes.input },
             { title: '有效期', key: 'expirationDate',width: '9%', type: FormTypes.date },
             { title: '多属性', key: 'sku', width: '9%', type: FormTypes.normal },
+            { title: '原数量', key: 'preNumber', width: '6%', type: FormTypes.normal },
+            { title: '已退货', key: 'finishNumber', width: '6%', type: FormTypes.normal },
             { title: '数量', key: 'operNumber', width: '6%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             { title: '单价', key: 'unitPrice', width: '6%', type: FormTypes.inputNumber},
             { title: '金额', key: 'allPrice', width: '6%', type: FormTypes.inputNumber, statistics: true },
-            { title: '备注', key: 'remark', width: '7%', type: FormTypes.input }
+            { title: '备注', key: 'remark', width: '7%', type: FormTypes.input },
+            { title: '关联id', key: 'linkId', width: '5%', type: FormTypes.hidden },
           ]
         },
         confirmLoading: false,
@@ -279,6 +282,8 @@
         this.changeFormTypes(this.materialTable.columns, 'snList', 0)
         this.changeFormTypes(this.materialTable.columns, 'batchNumber', 0)
         this.changeFormTypes(this.materialTable.columns, 'expirationDate', 0)
+        this.changeFormTypes(this.materialTable.columns, 'preNumber', 0)
+        this.changeFormTypes(this.materialTable.columns, 'finishNumber', 0)
         if (this.action === 'add') {
           this.addInit(this.prefixNo)
           this.fileList = []
@@ -376,11 +381,14 @@
       linkBillListOk(selectBillDetailRows, linkNumber, organId, discount, deposit, remark) {
         this.rowCanEdit = false
         this.materialTable.columns[1].type = FormTypes.normal
+        this.changeFormTypes(this.materialTable.columns, 'preNumber', 1)
+        this.changeFormTypes(this.materialTable.columns, 'finishNumber', 1)
         if(selectBillDetailRows && selectBillDetailRows.length>0) {
           let listEx = []
           let allTaxLastMoney = 0
           for(let j=0; j<selectBillDetailRows.length; j++) {
             let info = selectBillDetailRows[j];
+            info.linkId = info.id
             allTaxLastMoney += info.allPrice
             listEx.push(info)
             this.changeColumnShow(info)

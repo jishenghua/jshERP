@@ -282,9 +282,14 @@
               let listEx = []
               for(let j=0; j<list.length; j++){
                 let info = list[j];
-                //去掉已经全部转换的明细
                 if(info.preNumber !== info.finishNumber) {
+                  //去掉已经全部转换的明细
                   listEx.push(info)
+                } else {
+                  if(this.queryParam.subType === '采购' || this.queryParam.subType === '销售' || this.queryParam.subType === '零售') {
+                    //针对退货单，不过滤明细
+                    listEx.push(info)
+                  }
                 }
               }
               this.dataSourceDetail = listEx
