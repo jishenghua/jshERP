@@ -406,7 +406,7 @@ public class SupplierService {
         String type = "供应商";
         Workbook workbook = Workbook.getWorkbook(file.getInputStream());
         Sheet src = workbook.getSheet(0);
-        //'名称', '联系人', '手机号码', '联系电话', '电子邮箱', '传真', '期初应付', '纳税人识别号', '税率(%)', '开户行', '账号', '地址', '备注', '状态'
+        //'名称', '联系人', '手机号码', '联系电话', '电子邮箱', '传真', '期初应付', '纳税人识别号', '税率(%)', '开户行', '账号', '地址', '备注', '排序', '状态'
         List<Supplier> sList = new ArrayList<>();
         for (int i = 2; i < src.getRows(); i++) {
             Supplier s = new Supplier();
@@ -436,7 +436,7 @@ public class SupplierService {
         String type = "客户";
         Workbook workbook = Workbook.getWorkbook(file.getInputStream());
         Sheet src = workbook.getSheet(0);
-        //'名称', '联系人', '手机号码', '联系电话', '电子邮箱', '传真', '期初应收', '纳税人识别号', '税率(%)', '开户行', '账号', '地址', '备注', '状态'
+        //'名称', '联系人', '手机号码', '联系电话', '电子邮箱', '传真', '期初应收', '纳税人识别号', '税率(%)', '开户行', '账号', '地址', '备注', '排序', '状态'
         List<Supplier> sList = new ArrayList<>();
         for (int i = 2; i < src.getRows(); i++) {
             Supplier s = new Supplier();
@@ -466,7 +466,7 @@ public class SupplierService {
         String type = "会员";
         Workbook workbook = Workbook.getWorkbook(file.getInputStream());
         Sheet src = workbook.getSheet(0);
-        //'名称', '联系人', '手机号码', '联系电话', '电子邮箱', '备注', '状态'
+        //'名称', '联系人', '手机号码', '联系电话', '电子邮箱', '备注', '排序', '状态'
         List<Supplier> sList = new ArrayList<>();
         for (int i = 2; i < src.getRows(); i++) {
             Supplier s = new Supplier();
