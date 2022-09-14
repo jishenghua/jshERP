@@ -909,15 +909,26 @@ public class DepotItemService {
         DepotHead depotHead =depotHeadMapper.selectByPrimaryKey(headerId);
         String linkNumber = depotHead.getNumber(); //订单号
         if("purchase".equals(linkType)) {
+            //针对以销定购的情况
             if(BusinessConstants.SUB_TYPE_SALES_ORDER.equals(depotHead.getSubType())) {
                 goToType = BusinessConstants.SUB_TYPE_PURCHASE_ORDER;
             }
         } else {
+            //采购订单转采购入库
             if(BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(depotHead.getSubType())) {
                 goToType = BusinessConstants.SUB_TYPE_PURCHASE;
             }
+            //销售订单转销售出库
             if(BusinessConstants.SUB_TYPE_SALES_ORDER.equals(depotHead.getSubType())) {
                 goToType = BusinessConstants.SUB_TYPE_SALES;
+            }
+            //采购入库转采购退货
+            if(BusinessConstants.SUB_TYPE_PURCHASE.equals(depotHead.getSubType())) {
+                goToType = BusinessConstants.SUB_TYPE_PURCHASE_RETURN;
+            }
+            //销售出库转销售退货
+            if(BusinessConstants.SUB_TYPE_SALES.equals(depotHead.getSubType())) {
+                goToType = BusinessConstants.SUB_TYPE_SALES_RETURN;
             }
         }
         BigDecimal count = depotItemMapperEx.getFinishNumber(meId, linkId, linkNumber, goToType);
