@@ -417,14 +417,15 @@ public class SupplierService {
             s.setPhoneNum(ExcelUtils.getContent(src, i, 3));
             s.setEmail(ExcelUtils.getContent(src, i, 4));
             s.setFax(ExcelUtils.getContent(src, i, 5));
-            s.setBeginNeedGet(parseBigDecimalEx(ExcelUtils.getContent(src, i, 6)));
+            s.setBeginNeedPay(parseBigDecimalEx(ExcelUtils.getContent(src, i, 6)));
             s.setTaxNum(ExcelUtils.getContent(src, i, 7));
             s.setTaxRate(parseBigDecimalEx(ExcelUtils.getContent(src, i, 8)));
             s.setBankName(ExcelUtils.getContent(src, i, 9));
             s.setAccountNumber(ExcelUtils.getContent(src, i, 10));
             s.setAddress(ExcelUtils.getContent(src, i, 11));
             s.setDescription(ExcelUtils.getContent(src, i, 12));
-            String enabled = ExcelUtils.getContent(src, i, 13);
+            s.setSort(ExcelUtils.getContent(src, i, 13));
+            String enabled = ExcelUtils.getContent(src, i, 14);
             s.setEnabled(enabled.equals("1"));
             sList.add(s);
         }
@@ -453,7 +454,8 @@ public class SupplierService {
             s.setAccountNumber(ExcelUtils.getContent(src, i, 10));
             s.setAddress(ExcelUtils.getContent(src, i, 11));
             s.setDescription(ExcelUtils.getContent(src, i, 12));
-            String enabled = ExcelUtils.getContent(src, i, 13);
+            s.setSort(ExcelUtils.getContent(src, i, 13));
+            String enabled = ExcelUtils.getContent(src, i, 14);
             s.setEnabled(enabled.equals("1"));
             sList.add(s);
         }
@@ -475,7 +477,8 @@ public class SupplierService {
             s.setPhoneNum(ExcelUtils.getContent(src, i, 3));
             s.setEmail(ExcelUtils.getContent(src, i, 4));
             s.setDescription(ExcelUtils.getContent(src, i, 5));
-            String enabled = ExcelUtils.getContent(src, i, 6);
+            s.setSort(ExcelUtils.getContent(src, i, 6));
+            String enabled = ExcelUtils.getContent(src, i, 7);
             s.setEnabled(enabled.equals("1"));
             sList.add(s);
         }
@@ -528,12 +531,12 @@ public class SupplierService {
             return exportExcelVendorOrCustomer(dataList, type);
         } else {
             //会员
-            String[] names = {"名称", "联系人", "手机号码", "联系电话", "电子邮箱", "预付款", "备注", "状态"};
+            String[] names = {"名称", "联系人", "手机号码", "联系电话", "电子邮箱", "预付款", "备注", "排序", "状态"};
             String title = "信息内容";
             List<String[]> objects = new ArrayList<String[]>();
             if (null != dataList) {
                 for (Supplier s : dataList) {
-                    String[] objs = new String[15];
+                    String[] objs = new String[10];
                     objs[0] = s.getSupplier();
                     objs[1] = s.getContacts();
                     objs[2] = s.getTelephone();
@@ -541,7 +544,8 @@ public class SupplierService {
                     objs[4] = s.getEmail();
                     objs[5] = s.getAdvanceIn() == null? "" : s.getAdvanceIn().toString();
                     objs[6] = s.getDescription();
-                    objs[7] = s.getEnabled() ? "启用" : "禁用";
+                    objs[7] = s.getSort();
+                    objs[8] = s.getEnabled() ? "启用" : "禁用";
                     objects.add(objs);
                 }
             }
@@ -560,7 +564,7 @@ public class SupplierService {
             allNeedStr = "期末应收";
         }
         String[] names = {"名称", "联系人", "手机号码", "联系电话", "电子邮箱", "传真", beginNeedStr,
-                allNeedStr, "纳税人识别号", "税率(%)", "开户行", "账号", "地址", "备注", "状态"};
+                allNeedStr, "纳税人识别号", "税率(%)", "开户行", "账号", "地址", "备注", "排序", "状态"};
         String title = "信息内容";
         List<String[]> objects = new ArrayList<String[]>();
         if (null != dataList) {
@@ -586,7 +590,7 @@ public class SupplierService {
                     sum = sum.add(beginNeedPay);
                     s.setAllNeedPay(sum);
                 }
-                String[] objs = new String[15];
+                String[] objs = new String[20];
                 objs[0] = s.getSupplier();
                 objs[1] = s.getContacts();
                 objs[2] = s.getTelephone();
@@ -606,7 +610,8 @@ public class SupplierService {
                 objs[11] = s.getAccountNumber();
                 objs[12] = s.getAddress();
                 objs[13] = s.getDescription();
-                objs[14] = s.getEnabled() ? "启用" : "禁用";
+                objs[14] = s.getSort();
+                objs[15] = s.getEnabled() ? "启用" : "禁用";
                 objects.add(objs);
             }
         }
