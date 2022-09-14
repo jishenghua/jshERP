@@ -139,8 +139,8 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'supplier', 'contacts', 'telephone', 'email', 'telephone',
-            'phoneNum', 'fax', 'beginNeedGet', 'beginNeedPay', 'allNeedGet', 'allNeedPay', 'taxNum', 'taxRate',
+          this.form.setFieldsValue(pick(this.model,'supplier', 'contacts', 'telephone', 'email',
+            'phoneNum', 'fax', 'beginNeedGet', 'allNeedGet', 'taxNum', 'taxRate',
             'bankName', 'accountNumber', 'address', 'sort', 'description'))
           autoJumpNextInput('customerModal')
         });

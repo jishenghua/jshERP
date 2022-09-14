@@ -323,8 +323,9 @@ export const JeecgListMixin = {
           } else {
             this.$message.warning(info.file.response.data)
           }
-          this.loadData()
           this.loading = false
+          this.visible = false
+          this.$emit('ok')
         } else {
           this.$message.error(`${info.file.name} ${info.file.response.data}.`);
           this.loading = false

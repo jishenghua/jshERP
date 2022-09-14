@@ -99,7 +99,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'supplier', 'contacts', 'telephone', 'email', 'telephone',
+          this.form.setFieldsValue(pick(this.model,'supplier', 'contacts', 'telephone', 'email',
             'phoneNum', 'sort', 'description'))
           autoJumpNextInput('memberModal')
         });

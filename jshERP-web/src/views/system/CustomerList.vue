@@ -35,14 +35,7 @@
         <!-- 操作按钮区域 -->
         <div class="table-operator"  style="margin-top: 5px">
           <a-button v-if="btnEnableList.indexOf(1)>-1" @click="handleAdd" type="primary" icon="plus">新增</a-button>
-          <a-upload v-if="btnEnableList.indexOf(1)>-1" name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
-            <a-popover title="导入注意点">
-              <template slot="content">
-                <p><a target="_blank" href="/doc/customer_template.xls"><b>客户Excel模板下载</b></a></p>
-              </template>
-              <a-button type="primary" icon="import">导入</a-button>
-            </a-popover>
-          </a-upload>
+          <a-button v-if="btnEnableList.indexOf(1)>-1" @click="handleImportXls()" type="primary" icon="import">导入</a-button>
           <a-button type="primary" icon="download" @click="handleExportXls('客户信息')">导出</a-button>
           <a-dropdown>
             <a-menu slot="overlay">
@@ -86,6 +79,7 @@
         <!-- table区域-end -->
         <!-- 表单区域 -->
         <customer-modal ref="modalForm" @ok="modalFormOk"></customer-modal>
+        <import-file-modal ref="modalImportForm" @ok="modalFormOk"></import-file-modal>
       </a-card>
     </a-col>
   </a-row>
@@ -93,14 +87,15 @@
 <!-- BY cao_yu_li -->
 <script>
   import CustomerModal from './modules/CustomerModal'
+  import ImportFileModal from '@/components/tools/ImportFileModal'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import { openDownloadDialog, sheet2blob} from "@/utils/util"
   import JDate from '@/components/jeecg/JDate'
   export default {
     name: "CustomerList",
     mixins:[JeecgListMixin],
     components: {
       CustomerModal,
+      ImportFileModal,
       JDate
     },
     data () {
@@ -175,6 +170,13 @@
           type:'客户',
         }
         this.loadData(1);
+      },
+      handleImportXls() {
+        let importExcelUrl = this.url.importExcelUrl
+        let templateUrl = '/doc/customer_template.xls'
+        let templateName = '客户Excel模板[下载]'
+        this.$refs.modalImportForm.initModal(importExcelUrl, templateUrl, templateName);
+        this.$refs.modalImportForm.title = "客户导入";
       },
       handleEdit: function (record) {
         this.$refs.modalForm.edit(record);

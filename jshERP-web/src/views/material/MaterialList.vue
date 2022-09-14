@@ -154,7 +154,7 @@
         <!-- table区域-end -->
         <!-- 表单区域 -->
         <material-modal ref="modalForm" @ok="modalFormOk"></material-modal>
-        <material-import-modal ref="modalImportForm" @ok="modalFormOk"></material-import-modal>
+        <import-file-modal ref="modalImportForm" @ok="modalFormOk"></import-file-modal>
         <batch-set-info-modal ref="batchSetInfoModalForm" @ok="modalFormOk"></batch-set-info-modal>
       </a-card>
     </a-col>
@@ -162,7 +162,7 @@
 </template>
 <script>
   import MaterialModal from './modules/MaterialModal'
-  import MaterialImportModal from './modules/MaterialImportModal'
+  import ImportFileModal from '@/components/tools/ImportFileModal'
   import BatchSetInfoModal from './modules/BatchSetInfoModal'
   import { queryMaterialCategoryTreeList } from '@/api/api'
   import { postAction } from '@/api/manage'
@@ -177,7 +177,7 @@
     mixins:[JeecgListMixin],
     components: {
       MaterialModal,
-      MaterialImportModal,
+      ImportFileModal,
       BatchSetInfoModal,
       JEllipsis,
       JDate
@@ -371,7 +371,10 @@
         }
       },
       handleImportXls() {
-        this.$refs.modalImportForm.init();
+        let importExcelUrl = this.url.importExcelUrl
+        let templateUrl = '/doc/goods_template.xls'
+        let templateName = '商品Excel模板[下载]'
+        this.$refs.modalImportForm.initModal(importExcelUrl, templateUrl, templateName);
         this.$refs.modalImportForm.title = "商品导入";
       },
       searchReset() {
