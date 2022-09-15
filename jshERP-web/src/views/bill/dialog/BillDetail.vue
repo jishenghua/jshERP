@@ -1394,7 +1394,8 @@
       initPlatform() {
         getPlatformConfigByKey({"platformKey": "bill_print_flag"}).then((res)=> {
           if (res && res.code === 200) {
-            if(this.billType === '采购订单'||this.billType === '采购入库'||this.billType === '采购退货出库'||
+            if(this.billType === '零售出库'||this.billType === '零售退货入库'||
+              this.billType === '采购订单'||this.billType === '采购入库'||this.billType === '采购退货出库'||
               this.billType === '销售订单'||this.billType === '销售出库'||this.billType === '销售退货入库') {
               this.billPrintFlag = res.data.platformValue==='1'?true:false
             }
