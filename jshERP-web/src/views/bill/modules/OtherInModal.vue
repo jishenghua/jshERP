@@ -173,7 +173,7 @@
             { title: '库存', key: 'stock', width: '5%', type: FormTypes.normal },
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
             { title: '序列号', key: 'snList', width: '12%', type: FormTypes.input, placeholder: '多个序列号用逗号隔开',
-              validateRules: [{ pattern: /^\S{1,100}$/, message: '请小于100位字符' }]
+              validateRules: [{ pattern: /^.{1,100}$/, message: '请小于100位字符' }]
             },
             { title: '批号', key: 'batchNumber', width: '7%', type: FormTypes.input },
             { title: '有效期', key: 'expirationDate',width: '7%', type: FormTypes.date },
