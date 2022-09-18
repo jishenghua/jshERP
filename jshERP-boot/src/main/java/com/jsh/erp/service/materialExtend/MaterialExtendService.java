@@ -312,7 +312,7 @@ public class MaterialExtendService {
         MaterialExtend materialExtend = JSONObject.parseObject(obj.toJSONString(), MaterialExtend.class);
         int result=0;
         try{
-            result = materialExtendMapper.insertSelective(materialExtend);
+            result = materialExtendMapper.updateByPrimaryKeySelective(materialExtend);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }

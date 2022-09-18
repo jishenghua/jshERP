@@ -587,6 +587,8 @@ public class DepotItemService {
                 this.insertDepotItemWithObj(depotItem);
                 //更新当前库存
                 updateCurrentStock(depotItem);
+                //更新商品的价格
+                updateMaterialExtendPrice(materialExtend.getId(), depotHead.getSubType(), rowObj);
             }
             //如果关联单据号非空则更新订单的状态,单据类型：采购入库单或销售出库单或盘点复盘单
             if(BusinessConstants.SUB_TYPE_PURCHASE.equals(depotHead.getSubType())
@@ -731,6 +733,31 @@ public class DepotItemService {
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * 更新商品的价格
+     * @param meId
+     * @param subType
+     * @param rowObj
+     */
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public void updateMaterialExtendPrice(Long meId, String subType, JSONObject rowObj) throws Exception {
+        if (StringUtil.isExist(rowObj.get("unitPrice"))) {
+            BigDecimal unitPrice = rowObj.getBigDecimal("unitPrice");
+            MaterialExtend materialExtend = new MaterialExtend();
+            materialExtend.setId(meId);
+            if(BusinessConstants.SUB_TYPE_PURCHASE.equals(subType)) {
+                materialExtend.setPurchaseDecimal(unitPrice);
+            }
+            if(BusinessConstants.SUB_TYPE_SALES.equals(subType)) {
+                materialExtend.setWholesaleDecimal(unitPrice);
+            }
+            if(BusinessConstants.SUB_TYPE_RETAIL.equals(subType)) {
+                materialExtend.setCommodityDecimal(unitPrice);
+            }
+            materialExtendService.updateMaterialExtend(materialExtend);
         }
     }
 
