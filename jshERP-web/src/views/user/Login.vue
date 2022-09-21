@@ -173,10 +173,16 @@
               if(res && res.code === 200) {
                 let currentTime = new Date(); //新建一个日期对象，默认现在的时间
                 let expireTime = new Date(res.data.expireTime); //设置过去的一个时间点，"yyyy-MM-dd HH:mm:ss"格式化日期
+                let type = res.data.type  //租户类型，0免费租户，1付费租户
                 let difftime = expireTime - currentTime; //计算时间差
-                //如果距离到期还剩5天就进行提示续费
-                if(difftime<86400000*5) {
-                  this.$message.warning('您好，服务即将到期，请及时续费！',5)
+                let tipInfo = '您好，服务即将到期，请及时续费！'
+                //0免费租户-如果距离到期还剩5天就进行提示续费
+                if(type === '0' && difftime<86400000*5) {
+                  this.$message.warning(tipInfo,8)
+                }
+                //1付费租户-如果距离到期还剩15天就进行提示续费
+                if(type === '1' && difftime<86400000*15) {
+                  this.$message.warning(tipInfo,8)
                 }
               }
             })
