@@ -191,7 +191,7 @@
       // update_begin author:sunjianlei date:20191230 for: 解决外部链接打开失败的问题
       searchMethods(value) {
         let route = this.searchMenuOptions.filter(item => item.id === value)[0]
-        this.$router.push({ path: route.url })
+        this.$emit("searchGlobalHeader",route.url, route.id, route.text, route.component)
         this.searchMenuVisible = false
       },
       // update_end author:sunjianlei date:20191230 for: 解决外部链接打开失败的问题

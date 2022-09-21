@@ -20,7 +20,7 @@
       <span v-if="device === 'desktop'"></span>
       <span v-else>{{ systemTitle }}</span>
 
-      <user-menu :theme="theme"/>
+      <user-menu :theme="theme" @searchGlobalHeader="searchGlobalHeader" />
     </div>
     <!-- 顶部导航栏模式 -->
     <div v-else :class="['top-nav-header-index', theme]">
@@ -156,6 +156,9 @@
             this.topMenuStyle.headerIndexLeft = { 'width': `calc(100% - ${rightWidth})` }
           }
         }
+      },
+      searchGlobalHeader(key, id, title, component){
+        this.$emit("searchGlobalLayout", key, id, title, component)
       }
       //update-begin--author:sunjianlei---date:20190508------for: 顶部导航栏过长时显示更多按钮-----
     }

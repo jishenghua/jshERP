@@ -61,6 +61,7 @@
         :collapsed="collapsed"
         :device="device"
         @toggle="toggle"
+        @searchGlobalLayout="searchGlobalLayout"
       />
 
       <!-- layout content -->
@@ -165,6 +166,9 @@
             this.findMenuBykey(i.children,key)
           }
         }
+      },
+      searchGlobalLayout(key, id, title, component){
+        this.$emit("dynamicRouterShow", key, id, title, component)
       }
       //update-end-author:taoyan date:20190430 for:动态路由title显示配置的菜单title而不是其对应路由的title
     }
