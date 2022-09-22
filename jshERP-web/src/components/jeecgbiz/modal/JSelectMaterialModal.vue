@@ -212,8 +212,16 @@
             this.dataSource = res.rows
             this.ipagination.total = res.total
             if(res.total ===1) {
-              this.title = '选择商品【再次回车可以直接选中】'
-              this.$nextTick(() => this.$refs.material.focus());
+              if(this.queryParam.q === this.dataSource[0].mBarCode||
+                this.queryParam.q === this.dataSource[0].name||
+                this.queryParam.q === this.dataSource[0].standard||
+                this.queryParam.q === this.dataSource[0].model||
+                this.queryParam.q === this.dataSource[0].color) {
+                this.title = '选择商品【再次回车可以直接选中】'
+                this.$nextTick(() => this.$refs.material.focus());
+              } else {
+                this.title = '选择商品'
+              }
             } else {
               this.title = '选择商品'
             }
