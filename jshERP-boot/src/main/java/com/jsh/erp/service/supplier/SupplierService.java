@@ -409,25 +409,28 @@ public class SupplierService {
         //'名称', '联系人', '手机号码', '联系电话', '电子邮箱', '传真', '期初应付', '纳税人识别号', '税率(%)', '开户行', '账号', '地址', '备注', '排序', '状态'
         List<Supplier> sList = new ArrayList<>();
         for (int i = 2; i < src.getRows(); i++) {
-            Supplier s = new Supplier();
-            s.setType(type);
-            s.setSupplier(ExcelUtils.getContent(src, i, 0));
-            s.setContacts(ExcelUtils.getContent(src, i, 1));
-            s.setTelephone(ExcelUtils.getContent(src, i, 2));
-            s.setPhoneNum(ExcelUtils.getContent(src, i, 3));
-            s.setEmail(ExcelUtils.getContent(src, i, 4));
-            s.setFax(ExcelUtils.getContent(src, i, 5));
-            s.setBeginNeedPay(parseBigDecimalEx(ExcelUtils.getContent(src, i, 6)));
-            s.setTaxNum(ExcelUtils.getContent(src, i, 7));
-            s.setTaxRate(parseBigDecimalEx(ExcelUtils.getContent(src, i, 8)));
-            s.setBankName(ExcelUtils.getContent(src, i, 9));
-            s.setAccountNumber(ExcelUtils.getContent(src, i, 10));
-            s.setAddress(ExcelUtils.getContent(src, i, 11));
-            s.setDescription(ExcelUtils.getContent(src, i, 12));
-            s.setSort(ExcelUtils.getContent(src, i, 13));
+            String supplierName = ExcelUtils.getContent(src, i, 0);
             String enabled = ExcelUtils.getContent(src, i, 14);
-            s.setEnabled(enabled.equals("1"));
-            sList.add(s);
+            if(StringUtil.isNotEmpty(supplierName) && StringUtil.isNotEmpty(enabled)) {
+                Supplier s = new Supplier();
+                s.setType(type);
+                s.setSupplier(supplierName);
+                s.setContacts(ExcelUtils.getContent(src, i, 1));
+                s.setTelephone(ExcelUtils.getContent(src, i, 2));
+                s.setPhoneNum(ExcelUtils.getContent(src, i, 3));
+                s.setEmail(ExcelUtils.getContent(src, i, 4));
+                s.setFax(ExcelUtils.getContent(src, i, 5));
+                s.setBeginNeedPay(parseBigDecimalEx(ExcelUtils.getContent(src, i, 6)));
+                s.setTaxNum(ExcelUtils.getContent(src, i, 7));
+                s.setTaxRate(parseBigDecimalEx(ExcelUtils.getContent(src, i, 8)));
+                s.setBankName(ExcelUtils.getContent(src, i, 9));
+                s.setAccountNumber(ExcelUtils.getContent(src, i, 10));
+                s.setAddress(ExcelUtils.getContent(src, i, 11));
+                s.setDescription(ExcelUtils.getContent(src, i, 12));
+                s.setSort(ExcelUtils.getContent(src, i, 13));
+                s.setEnabled("1".equals(enabled));
+                sList.add(s);
+            }
         }
         importExcel(sList, type);
     }
@@ -439,25 +442,28 @@ public class SupplierService {
         //'名称', '联系人', '手机号码', '联系电话', '电子邮箱', '传真', '期初应收', '纳税人识别号', '税率(%)', '开户行', '账号', '地址', '备注', '排序', '状态'
         List<Supplier> sList = new ArrayList<>();
         for (int i = 2; i < src.getRows(); i++) {
-            Supplier s = new Supplier();
-            s.setType(type);
-            s.setSupplier(ExcelUtils.getContent(src, i, 0));
-            s.setContacts(ExcelUtils.getContent(src, i, 1));
-            s.setTelephone(ExcelUtils.getContent(src, i, 2));
-            s.setPhoneNum(ExcelUtils.getContent(src, i, 3));
-            s.setEmail(ExcelUtils.getContent(src, i, 4));
-            s.setFax(ExcelUtils.getContent(src, i, 5));
-            s.setBeginNeedGet(parseBigDecimalEx(ExcelUtils.getContent(src, i, 6)));
-            s.setTaxNum(ExcelUtils.getContent(src, i, 7));
-            s.setTaxRate(parseBigDecimalEx(ExcelUtils.getContent(src, i, 8)));
-            s.setBankName(ExcelUtils.getContent(src, i, 9));
-            s.setAccountNumber(ExcelUtils.getContent(src, i, 10));
-            s.setAddress(ExcelUtils.getContent(src, i, 11));
-            s.setDescription(ExcelUtils.getContent(src, i, 12));
-            s.setSort(ExcelUtils.getContent(src, i, 13));
+            String supplierName = ExcelUtils.getContent(src, i, 0);
             String enabled = ExcelUtils.getContent(src, i, 14);
-            s.setEnabled(enabled.equals("1"));
-            sList.add(s);
+            if(StringUtil.isNotEmpty(supplierName) && StringUtil.isNotEmpty(enabled)) {
+                Supplier s = new Supplier();
+                s.setType(type);
+                s.setSupplier(supplierName);
+                s.setContacts(ExcelUtils.getContent(src, i, 1));
+                s.setTelephone(ExcelUtils.getContent(src, i, 2));
+                s.setPhoneNum(ExcelUtils.getContent(src, i, 3));
+                s.setEmail(ExcelUtils.getContent(src, i, 4));
+                s.setFax(ExcelUtils.getContent(src, i, 5));
+                s.setBeginNeedGet(parseBigDecimalEx(ExcelUtils.getContent(src, i, 6)));
+                s.setTaxNum(ExcelUtils.getContent(src, i, 7));
+                s.setTaxRate(parseBigDecimalEx(ExcelUtils.getContent(src, i, 8)));
+                s.setBankName(ExcelUtils.getContent(src, i, 9));
+                s.setAccountNumber(ExcelUtils.getContent(src, i, 10));
+                s.setAddress(ExcelUtils.getContent(src, i, 11));
+                s.setDescription(ExcelUtils.getContent(src, i, 12));
+                s.setSort(ExcelUtils.getContent(src, i, 13));
+                s.setEnabled("1".equals(enabled));
+                sList.add(s);
+            }
         }
         importExcel(sList, type);
     }
@@ -469,18 +475,21 @@ public class SupplierService {
         //'名称', '联系人', '手机号码', '联系电话', '电子邮箱', '备注', '排序', '状态'
         List<Supplier> sList = new ArrayList<>();
         for (int i = 2; i < src.getRows(); i++) {
-            Supplier s = new Supplier();
-            s.setType(type);
-            s.setSupplier(ExcelUtils.getContent(src, i, 0));
-            s.setContacts(ExcelUtils.getContent(src, i, 1));
-            s.setTelephone(ExcelUtils.getContent(src, i, 2));
-            s.setPhoneNum(ExcelUtils.getContent(src, i, 3));
-            s.setEmail(ExcelUtils.getContent(src, i, 4));
-            s.setDescription(ExcelUtils.getContent(src, i, 5));
-            s.setSort(ExcelUtils.getContent(src, i, 6));
+            String supplierName = ExcelUtils.getContent(src, i, 0);
             String enabled = ExcelUtils.getContent(src, i, 7);
-            s.setEnabled(enabled.equals("1"));
-            sList.add(s);
+            if(StringUtil.isNotEmpty(supplierName) && StringUtil.isNotEmpty(enabled)) {
+                Supplier s = new Supplier();
+                s.setType(type);
+                s.setSupplier(supplierName);
+                s.setContacts(ExcelUtils.getContent(src, i, 1));
+                s.setTelephone(ExcelUtils.getContent(src, i, 2));
+                s.setPhoneNum(ExcelUtils.getContent(src, i, 3));
+                s.setEmail(ExcelUtils.getContent(src, i, 4));
+                s.setDescription(ExcelUtils.getContent(src, i, 5));
+                s.setSort(ExcelUtils.getContent(src, i, 6));
+                s.setEnabled("1".equals(enabled));
+                sList.add(s);
+            }
         }
         importExcel(sList, type);
     }
