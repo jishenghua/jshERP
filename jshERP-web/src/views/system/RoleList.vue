@@ -122,15 +122,15 @@
             }
           },
           {
-            title: '角色名称', align:"center", dataIndex: 'name', width: 100
+            title: '角色名称', align:"left", dataIndex: 'name', width: 120
           },
           {
-            title: '数据类型', align:"center", dataIndex: 'type', width: 100
+            title: '数据类型', align:"left", dataIndex: 'type', width: 100
           },
           {
-            title: '描述', align:"center", dataIndex: 'description', width: 100
+            title: '描述', align:"left", dataIndex: 'description', width: 150
           },
-          { title: '排序', dataIndex: 'sort', width: 60},
+          { title: '排序', align:"left", dataIndex: 'sort', width: 50},
           { title: '状态',dataIndex: 'enabled',width:60,align:"center",
             scopedSlots: { customRender: 'customRenderFlag' }
           },

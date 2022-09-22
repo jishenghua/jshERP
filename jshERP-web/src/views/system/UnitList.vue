@@ -105,16 +105,16 @@
               return parseInt(index)+1;
             }
           },
-          { title: '计量单位', align:"center", dataIndex: 'name', width:200 },
-          { title: '基本单位', align:"center", dataIndex: 'basicUnit', width:80 },
-          { title: '副单位', align:"center", dataIndex: 'otherUnit', width:100,
+          { title: '计量单位', align:"left", dataIndex: 'name', width:200 },
+          { title: '基本单位', align:"left", dataIndex: 'basicUnit', width:80 },
+          { title: '副单位', align:"left", dataIndex: 'otherUnit', width:100,
             customRender:function (t,r,index) {
               if (r) {
                 return r.otherUnit + '=' + r.ratio + r.basicUnit;
               }
             }
           },
-          { title: '副单位2', align:"center", dataIndex: 'otherUnitTwo', width:100,
+          { title: '副单位2', align:"left", dataIndex: 'otherUnitTwo', width:100,
             customRender:function (t,r,index) {
               if (r) {
                 if(r.otherUnitTwo) {
@@ -123,7 +123,7 @@
               }
             }
           },
-          { title: '副单位3', align:"center", dataIndex: 'otherUnitThree', width:100,
+          { title: '副单位3', align:"left", dataIndex: 'otherUnitThree', width:100,
             customRender:function (t,r,index) {
               if (r) {
                 if(r.otherUnitThree) {

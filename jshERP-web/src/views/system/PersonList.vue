@@ -115,12 +115,8 @@
               return parseInt(index)+1;
             }
           },
-          {
-            title: '姓名', align:"center", dataIndex: 'name', width: 100,
-          },
-          {
-            title: '类型', align:"center", dataIndex: 'type', width: 100,
-          },
+          { title: '姓名', align:"left", dataIndex: 'name', width: 200, },
+          { title: '类型', align:"left", dataIndex: 'type', width: 150, },
           { title: '排序', dataIndex: 'sort', width: 60},
           { title: '状态',dataIndex: 'enabled',width:60,align:"center",
             scopedSlots: { customRender: 'customRenderFlag' }
@@ -129,7 +125,7 @@
             title: '操作',
             dataIndex: 'action',
             align:"center",
-            width: 150,
+            width: 100,
             scopedSlots: { customRender: 'action' },
           }
         ],

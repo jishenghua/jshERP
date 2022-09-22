@@ -119,12 +119,12 @@
               return parseInt(index)+1;
             }
           },
-          {title: '操作模块', dataIndex: 'operation', width: 120},
-          {title: '操作详情', align:"left", dataIndex: 'content', scopedSlots: { customRender: 'content' }, width: 350 },
-          {title: '操作员账号', dataIndex: 'loginName', width: 80, align: "center"},
-          {title: '操作员姓名', dataIndex: 'userName', width: 80, align: "center"},
+          {title: '操作模块', dataIndex: 'operation', width: 120, align: "left"},
+          {title: '操作详情', dataIndex: 'content', scopedSlots: { customRender: 'content' }, width: 350, align:"left" },
+          {title: '操作员账号', dataIndex: 'loginName', width: 80, align: "left"},
+          {title: '操作员姓名', dataIndex: 'userName', width: 80, align: "left"},
           {
-            title: '操作状态', dataIndex: 'status',width:80, align:"center",
+            title: '操作状态', dataIndex: 'status',width:80, align:"left",
             customRender:function (text) {
               if(text){
                 return "失败";
@@ -133,8 +133,8 @@
               }
             }
           },
-          {title: '操作IP', dataIndex: 'clientIp', width: 110, align: "center"},
-          {title: '操作时间', dataIndex: 'createTimeStr', width: 120, align: "center"}
+          {title: '操作IP', dataIndex: 'clientIp', width: 110, align: "left"},
+          {title: '操作时间', dataIndex: 'createTimeStr', width: 120, align: "left"}
         ],
         operateColumn:
         {
