@@ -96,7 +96,6 @@ public class MaterialExtendService {
             } else if("update".equals(type)){
                 for (int i = 0; i < meArr.size(); i++) {
                     JSONObject tempJson = meArr.getJSONObject(i);
-                    String barCode = tempJson.getString("barCode");
                     String tempId = tempJson.getString("id");
                     if(tempId.length()>19){
                         insertedJson.add(tempJson);
@@ -167,6 +166,9 @@ public class MaterialExtendService {
                 }
                 if (StringUtils.isNotEmpty(tempUpdatedJson.getString("commodityUnit"))) {
                     materialExtend.setCommodityUnit(tempUpdatedJson.getString("commodityUnit"));
+                }
+                if (tempUpdatedJson.get("sku")!=null) {
+                    materialExtend.setSku(tempUpdatedJson.getString("sku"));
                 }
                 if (StringUtils.isNotEmpty(tempUpdatedJson.getString("purchaseDecimal"))) {
                     materialExtend.setPurchaseDecimal(tempUpdatedJson.getBigDecimal("purchaseDecimal"));
