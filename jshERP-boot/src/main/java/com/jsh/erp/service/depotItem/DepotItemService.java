@@ -419,6 +419,12 @@ public class DepotItemService {
                         throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_TRANSFER_SELECT_ERROR_CODE,
                                 String.format(ExceptionConstants.MATERIAL_TRANSFER_SELECT_ERROR_MSG, barCode));
                     }
+                    //盘点业务不能选择批号或序列号商品（该场景走出库和入库单）
+                    if(BusinessConstants.SUB_TYPE_CHECK_ENTER.equals(depotHead.getSubType())
+                       ||BusinessConstants.SUB_TYPE_REPLAY.equals(depotHead.getSubType())) {
+                        throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_STOCK_CHECK_ERROR_CODE,
+                                String.format(ExceptionConstants.MATERIAL_STOCK_CHECK_ERROR_MSG, barCode));
+                    }
                 }
                 if (StringUtil.isExist(rowObj.get("snList"))) {
                     depotItem.setSnList(rowObj.getString("snList"));

@@ -331,7 +331,10 @@ public class ExceptionConstants {
     public static final String MATERIAL_ASSEMBLE_SELECT_ERROR_MSG = "抱歉，组装拆卸单不能选择批号或序列号商品:%s";
     //调拨单不能选择批号或序列号商品
     public static final int MATERIAL_TRANSFER_SELECT_ERROR_CODE = 80000018;
-    public static final String MATERIAL_TRANSFER_SELECT_ERROR_MSG = "抱歉，调拨单不能选择批号或序列号商品:%s";
+    public static final String MATERIAL_TRANSFER_SELECT_ERROR_MSG = "抱歉，调拨单不能选择批号或序列号商品:%s，建议走其它入库和出库单";
+    //盘点业务不能选择批号或序列号商品
+    public static final int MATERIAL_STOCK_CHECK_ERROR_CODE = 80000019;
+    public static final String MATERIAL_STOCK_CHECK_ERROR_MSG = "抱歉，盘点业务不能选择批号或序列号商品:%s，建议走其它入库和出库单";
 
     /**
      *  单据信息
