@@ -4,6 +4,7 @@
     :width="400"
     :visible="visible"
     :confirm-loading="confirmLoading"
+    :maskClosable="false"
     @cancel="handleCancel"
     wrapClassName="ant-modal-cust-warp"
     style="top:25%;height: 45%;overflow-y: hidden">

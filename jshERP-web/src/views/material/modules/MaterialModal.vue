@@ -391,8 +391,6 @@
     },
     created () {
       this.maxBarCodeAction();
-      this.loadTreeData();
-      this.loadUnitListData();
       this.loadParseMaterialProperty();
     },
     methods: {
@@ -436,6 +434,8 @@
           autoJumpNextInput('materialDetailModal')
         });
         this.initMaterialAttribute()
+        this.loadTreeData()
+        this.loadUnitListData()
         // 加载子表数据
         if (this.model.id) {
           //禁用多属性开关

@@ -311,7 +311,7 @@ export const JeecgListMixin = {
     },
     /* 导入 */
     handleImportExcel(info){
-      this.loading = true
+      this.confirmLoading = true
       if (info.file.status !== 'uploading') {
         console.log(info.file, info.fileList);
       }
@@ -323,16 +323,16 @@ export const JeecgListMixin = {
           } else {
             this.$message.warning(info.file.response.data)
           }
-          this.loading = false
+          this.confirmLoading = false
           this.visible = false
           this.$emit('ok')
         } else {
           this.$message.error(`${info.file.name} ${info.file.response.data}.`);
-          this.loading = false
+          this.confirmLoading = false
         }
       } else if (info.file.status === 'error') {
         this.$message.error(`文件上传失败: ${info.file.msg} `)
-        this.loading = false
+        this.confirmLoading = false
       }
     },
     /* 图片预览 */
