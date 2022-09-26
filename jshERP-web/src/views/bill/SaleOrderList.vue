@@ -242,17 +242,18 @@
     },
     methods: {
       getSystemConfig() {
+        let statusIndex = 0
+        for(let i=0; i<this.columns.length; i++){
+          if(this.columns[i].dataIndex === 'purchaseStatus') {
+            statusIndex = i
+          }
+        }
         getCurrentSystemConfig().then((res) => {
           if(res.code === 200 && res.data){
             let purchaseBySaleFlag = res.data.purchaseBySaleFlag
-            let statusIndex = 0
-            for(let i=0; i<this.columns.length; i++){
-              if(this.columns[i].dataIndex === 'purchaseStatus') {
-                statusIndex = i
-              }
-            }
             if(purchaseBySaleFlag === "0") {
               if(statusIndex>0) {
+                //移除采购进度列
                 this.columns.splice(statusIndex, 1)
               }
             } else {
@@ -260,8 +261,14 @@
                 let purchaseStatusObj = { title: '采购进度', dataIndex: 'purchaseStatus', width: 70, align: "center",
                   scopedSlots: { customRender: 'customRenderPurchaseStatus' }
                 }
-                this.columns.splice(8, 0, purchaseStatusObj)
+                //添加采购进度列
+                this.columns.splice(statusIndex-1, 0, purchaseStatusObj)
               }
+            }
+          } else {
+            if(statusIndex>0) {
+              //移除采购进度列
+              this.columns.splice(statusIndex, 1)
             }
           }
         })

@@ -211,7 +211,7 @@
         prefixNo: 'CGDD',
         fileList:[],
         rowCanEdit: true,
-        purchaseBySaleFlag: true,
+        purchaseBySaleFlag: false,
         model: {},
         labelCol: {
           xs: { span: 24 },
