@@ -244,14 +244,14 @@
           {title: '销售价', dataIndex: 'wholesaleDecimal', width: 80},
           {title: '最低售价', dataIndex: 'lowDecimal', width: 80},
           {title: '备注', dataIndex: 'remark'},
-          {title: '状态', dataIndex: 'enabled', align: "center", width: 60,
-            scopedSlots: { customRender: 'customRenderEnabled' }
-          },
           {title: '序列号', dataIndex: 'enableSerialNumber', align: "center", width: 60,
             scopedSlots: { customRender: 'customRenderEnableSerialNumber' }
           },
           {title: '批号', dataIndex: 'enableBatchNumber', align: "center", width: 60,
             scopedSlots: { customRender: 'customRenderEnableBatchNumber' }
+          },
+          {title: '状态', dataIndex: 'enabled', align: "center", width: 60,
+            scopedSlots: { customRender: 'customRenderEnabled' }
           },
           {
             title: '操作',
