@@ -1,5 +1,5 @@
 <template>
-  <a-modal
+  <j-modal
     :title="title"
     :width="1300"
     :visible="visible"
@@ -98,50 +98,60 @@
               <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="序列号" data-step="9" data-title="序列号"
                   data-intro="此处是商品的序列号开关，如果选择了有，则在采购入库单据需要录入该商品的序列号，在销售出库单据需要选择该商品的序列号进行出库">
-                  <a-select placeholder="有无序列号" v-decorator="[ 'enableSerialNumber' ]">
-                    <a-select-option value="1">有</a-select-option>
-                    <a-select-option value="0">无</a-select-option>
-                  </a-select>
+                  <a-tooltip title="如果选择为有，则在采购入库单需要录入该商品的序列号">
+                    <a-select placeholder="有无序列号" v-decorator="[ 'enableSerialNumber' ]">
+                      <a-select-option value="1">有</a-select-option>
+                      <a-select-option value="0">无</a-select-option>
+                    </a-select>
+                  </a-tooltip>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="批号" data-step="10" data-title="批号"
                   data-intro="此处是商品的批号开关，如果选择了有，则在采购入库单据需要录入该商品的批号和生产日期，在销售出库单据需要选择该商品的批号进行出库">
-                  <a-select placeholder="有无批号" v-decorator="[ 'enableBatchNumber' ]">
-                    <a-select-option value="1">有</a-select-option>
-                    <a-select-option value="0">无</a-select-option>
-                  </a-select>
+                  <a-tooltip title="如果选择为有，则在采购入库单需要录入该商品的批号和生产日期">
+                    <a-select placeholder="有无批号" v-decorator="[ 'enableBatchNumber' ]">
+                      <a-select-option value="1">有</a-select-option>
+                      <a-select-option value="0">无</a-select-option>
+                    </a-select>
+                  </a-tooltip>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24" v-if="!model.id">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="多属性" data-step="11" data-title="多属性"
                   data-intro="多属性是针对的sku商品（比如服装、鞋帽行业），此处开关如果启用就可以在下方进行多sku的配置，配置具体的颜色、尺码之类的组合">
-                  <a-select mode="multiple" v-decorator="[ 'manySku' ]" showSearch optionFilterProp="children"
-                    placeholder="请选择多属性（可多选）" @change="onManySkuChange">
-                    <a-select-option v-for="(item,index) in materialAttributeList" :key="index" :value="item.value" :disabled="item.disabled">
-                      {{ item.name }}
-                    </a-select-option>
-                  </a-select>
+                  <a-tooltip title="多属性针对服装、鞋帽等行业，配合生成条码一起使用">
+                    <a-select mode="multiple" v-decorator="[ 'manySku' ]" showSearch optionFilterProp="children"
+                      placeholder="请选择多属性（可多选）" @change="onManySkuChange">
+                      <a-select-option v-for="(item,index) in materialAttributeList" :key="index" :value="item.value" :disabled="item.disabled">
+                        {{ item.name }}
+                      </a-select-option>
+                    </a-select>
+                  </a-tooltip>
                 </a-form-item>
               </a-col>
             </a-row>
             <a-row class="form-row" :gutter="24">
               <a-col :md="6" :sm="24" v-if="manySkuSelected>=1">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="skuOneTitle">
-                  <a-select mode="multiple" v-decorator="[ 'skuOne' ]" showSearch optionFilterProp="children">
-                    <a-select-option v-for="(item,index) in skuOneList" :key="index" :value="item.value">
-                      {{ item.name }}
-                    </a-select-option>
-                  </a-select>
+                  <a-tooltip title="选择之后请点击生成条码">
+                    <a-select mode="multiple" v-decorator="[ 'skuOne' ]" showSearch optionFilterProp="children" placeholder="请选择（可多选）" >
+                      <a-select-option v-for="(item,index) in skuOneList" :key="index" :value="item.value">
+                        {{ item.name }}
+                      </a-select-option>
+                    </a-select>
+                  </a-tooltip>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24" v-if="manySkuSelected>=2">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="skuTwoTitle">
-                  <a-select mode="multiple" v-decorator="[ 'skuTwo' ]" showSearch optionFilterProp="children">
-                    <a-select-option v-for="(item,index) in skuTwoList" :key="index" :value="item.value">
-                      {{ item.name }}
-                    </a-select-option>
-                  </a-select>
+                  <a-tooltip title="选择之后请点击生成条码">
+                    <a-select mode="multiple" v-decorator="[ 'skuTwo' ]" showSearch optionFilterProp="children" placeholder="请选择（可多选）" >
+                      <a-select-option v-for="(item,index) in skuTwoList" :key="index" :value="item.value">
+                        {{ item.name }}
+                      </a-select-option>
+                    </a-select>
+                  </a-tooltip>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24" v-if="manySkuSelected>=1">
@@ -247,7 +257,7 @@
       </a-form>
     </a-spin>
     <unit-modal ref="unitModalForm" @ok="unitModalFormOk"></unit-modal>
-  </a-modal>
+  </j-modal>
 </template>
 <script>
   import pick from 'lodash.pick'
@@ -797,7 +807,7 @@
             this.meTable.dataSource = []
           }
         } else {
-          this.$message.warning('请填写单位，注意不要勾选多单位！');
+          this.$message.warning('请填写单位（注意不要勾选多单位）');
           this.barCodeSwitch = false;
         }
       },

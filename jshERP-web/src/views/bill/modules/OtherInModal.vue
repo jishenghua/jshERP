@@ -172,7 +172,7 @@
             { title: '扩展信息', key: 'materialOther', width: '5%', type: FormTypes.normal },
             { title: '库存', key: 'stock', width: '5%', type: FormTypes.normal },
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
-            { title: '序列号', key: 'snList', width: '12%', type: FormTypes.input, placeholder: '多个序列号用逗号隔开',
+            { title: '序列号', key: 'snList', width: '12%', type: FormTypes.input, placeholder: '多个序列号用逗号隔开，请少于100个字符',
               validateRules: [{ pattern: /^.{1,100}$/, message: '请小于100位字符' }]
             },
             { title: '批号', key: 'batchNumber', width: '7%', type: FormTypes.input },
