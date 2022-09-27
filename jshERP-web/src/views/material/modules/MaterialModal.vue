@@ -108,8 +108,8 @@
               </a-col>
               <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="批号" data-step="10" data-title="批号"
-                  data-intro="此处是商品的批号开关，如果选择了有，则在采购入库单据需要录入该商品的批号和生产日期，在销售出库单据需要选择该商品的批号进行出库">
-                  <a-tooltip title="如果选择为有，则在采购入库单需要录入该商品的批号和生产日期">
+                  data-intro="此处是商品的批号开关，如果选择了有，则在采购入库单据需要录入该商品的批号和有效期，在销售出库单据需要选择该商品的批号进行出库">
+                  <a-tooltip title="如果选择为有，则在采购入库单需要录入该商品的批号和有效期">
                     <a-select placeholder="有无批号" v-decorator="[ 'enableBatchNumber' ]">
                       <a-select-option value="1">有</a-select-option>
                       <a-select-option value="0">无</a-select-option>
