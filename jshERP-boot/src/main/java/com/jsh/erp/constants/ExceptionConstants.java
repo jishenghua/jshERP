@@ -335,6 +335,12 @@ public class ExceptionConstants {
     //盘点业务不能选择批号或序列号商品
     public static final int MATERIAL_STOCK_CHECK_ERROR_CODE = 80000019;
     public static final String MATERIAL_STOCK_CHECK_ERROR_MSG = "抱歉，盘点业务不能选择批号或序列号商品:%s，建议走其它入库和出库单";
+    //EXCEL中存在重复的商品
+    public static final int MATERIAL_EXCEL_IMPORT_EXIST_CODE = 80000020;
+    public static final String MATERIAL_EXCEL_IMPORT_EXIST_MSG = "抱歉，EXCEL中存在重复的商品，具体信息为：%s";
+    //EXCEL中存在重复的条码
+    public static final int MATERIAL_EXCEL_IMPORT_BARCODE_EXIST_CODE = 80000021;
+    public static final String MATERIAL_EXCEL_IMPORT_BARCODE_EXIST_MSG = "抱歉，EXCEL中存在重复的条码，具体条码为：%s";
 
     /**
      *  单据信息

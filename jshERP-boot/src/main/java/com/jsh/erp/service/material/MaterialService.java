@@ -499,6 +499,8 @@ public class MaterialService {
                     throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_UNIT_EMPTY_CODE,
                             String.format(ExceptionConstants.MATERIAL_UNIT_EMPTY_MSG, i+1));
                 }
+                // 批量校验excel中有无重复商品，是指名称、规格、型号、颜色、单位
+                batchCheckExistMaterialListByParam(mList, name, standard, model, color, unit);
                 MaterialWithInitStock m = new MaterialWithInitStock();
                 m.setName(name);
                 m.setStandard(standard);
@@ -550,6 +552,8 @@ public class MaterialService {
                     throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_BARCODE_NOT_INTEGER_CODE,
                             String.format(ExceptionConstants.MATERIAL_BARCODE_NOT_INTEGER_MSG, manyBarCode));
                 }
+                //批量校验excel中有无重复条码
+                batchCheckExistBarCodeByParam(mList, barCode, manyBarCode);
                 JSONObject materialExObj = new JSONObject();
                 JSONObject basicObj = new JSONObject();
                 basicObj.put("barCode", barCode);
@@ -649,7 +653,17 @@ public class MaterialService {
                             insertCurrentStockMaterialList.add(materialCurrentStock);
                         }
                     } else {
-                        depotItemService.updateCurrentStockFun(mId, depotId);
+                        BigDecimal initStock = getInitStock(mId, depotId);
+                        BigDecimal currentNumber = getCurrentStockByMaterialIdAndDepotId(mId, depotId);
+                        //当前库存的更新：减去初始库存，再加上导入的新初始库存
+                        if(currentNumber!=null && initStock!=null) {
+                            currentNumber = currentNumber.subtract(initStock).add(stock);
+                        }
+                        MaterialCurrentStock materialCurrentStock = new MaterialCurrentStock();
+                        materialCurrentStock.setMaterialId(mId);
+                        materialCurrentStock.setDepotId(depotId);
+                        materialCurrentStock.setCurrentNumber(currentNumber);
+                        insertCurrentStockMaterialList.add(materialCurrentStock);
                     }
                 }
             }
@@ -715,6 +729,56 @@ public class MaterialService {
             }
         }
         return stockMap;
+    }
+
+    /**
+     * 批量校验excel中有无重复商品，是指名称、规格、型号、颜色、单位
+     * @param mList
+     */
+    public void batchCheckExistMaterialListByParam(List<MaterialWithInitStock> mList, String name, String standard,
+                                                   String model, String color, String unit) {
+        for(MaterialWithInitStock material: mList){
+            if(name.equals(material.getName()) &&
+                    standard.equals(material.getStandard()) &&
+                    model.equals(material.getModel()) &&
+                    color.equals(material.getColor()) &&
+                    unit.equals(material.getUnit())){
+                String info = name + "-" + standard + "-" + model + "-" + color + "-" + unit;
+                throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_EXCEL_IMPORT_EXIST_CODE,
+                        String.format(ExceptionConstants.MATERIAL_EXCEL_IMPORT_EXIST_MSG, info));
+            }
+        }
+    }
+
+    /**
+     * 批量校验excel中有无重复条码
+     * @param mList
+     */
+    public void batchCheckExistBarCodeByParam(List<MaterialWithInitStock> mList,
+                                              String barCode, String manyBarCode) {
+        for(MaterialWithInitStock material: mList){
+            JSONObject materialExObj = material.getMaterialExObj();
+            String basicBarCode = "";
+            String otherBarCode = "";
+            if(materialExObj.get("basic")!=null) {
+                JSONObject basicObj = materialExObj.getJSONObject("basic");
+                basicBarCode = basicObj.getString("barCode");
+            }
+            if(materialExObj.get("other")!=null) {
+                JSONObject otherObj = materialExObj.getJSONObject("other");
+                otherBarCode = otherObj.getString("barCode");
+            }
+            if(barCode.equals(basicBarCode) || barCode.equals(otherBarCode)){
+                throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_EXCEL_IMPORT_BARCODE_EXIST_CODE,
+                        String.format(ExceptionConstants.MATERIAL_EXCEL_IMPORT_BARCODE_EXIST_MSG, barCode));
+            }
+            if(StringUtil.isNotEmpty(manyBarCode)) {
+                if(manyBarCode.equals(basicBarCode) || manyBarCode.equals(otherBarCode)){
+                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_EXCEL_IMPORT_BARCODE_EXIST_CODE,
+                            String.format(ExceptionConstants.MATERIAL_EXCEL_IMPORT_BARCODE_EXIST_MSG, manyBarCode));
+                }
+            }
+        }
     }
 
     /**
