@@ -321,7 +321,7 @@ export const JeecgListMixin = {
           if (info.file.response.code === 200) {
             this.$message.success(info.file.response.data || `${info.file.name} 文件上传成功`)
           } else {
-            this.$message.warning(info.file.response.data)
+            this.$message.warning(info.file.response.data, 8)
           }
           this.confirmLoading = false
           this.visible = false
