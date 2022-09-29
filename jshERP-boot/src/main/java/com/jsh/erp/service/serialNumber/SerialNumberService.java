@@ -406,7 +406,7 @@ public class SerialNumberService {
             for (String sn : snArr) {
                 List<SerialNumber> list = new ArrayList<>();
                 SerialNumberExample example = new SerialNumberExample();
-                example.createCriteria().andMaterialIdEqualTo(materialId).andSerialNumberEqualTo(sn).andIsSellEqualTo("0")
+                example.createCriteria().andMaterialIdEqualTo(materialId).andSerialNumberEqualTo(sn.trim()).andIsSellEqualTo("0")
                         .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
                 list = serialNumberMapper.selectByExample(example);
                 //判断如果不存在重复序列号就新增
