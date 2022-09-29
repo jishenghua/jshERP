@@ -18,13 +18,14 @@
             <a-row :gutter="24">
               <a-col :md="12" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="批号">
-                  <a-input placeholder="请输入批号" v-model="queryParam.name"></a-input>
+                  <a-input ref="name" placeholder="请输入批号" v-model="queryParam.name"></a-input>
                 </a-form-item>
               </a-col>
               <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                 <a-col :md="12" :sm="24">
-                  <a-button type="primary" @click="onSearch">查询</a-button>
+                  <a-button type="primary" @click="loadData(1)">查询</a-button>
                   <a-button style="margin-left: 8px" @click="searchReset(1)">重置</a-button>
+                  <span style="margin-left: 20px">提示：双击行可以直接选中</span>
                 </a-col>
               </span>
             </a-row>
@@ -127,7 +128,7 @@
           this.$emit('initComp', '')
         }
       },
-      async loadData(arg) {
+      loadData(arg) {
         if(this.rows) {
           if(JSON.parse(this.rows).depotId && JSON.parse(this.rows).barCode ){
             let depotItemId = JSON.parse(this.rows).id
@@ -143,7 +144,7 @@
         }
         this.loading = true
         let params = this.getQueryParams()//查询条件
-        await getBatchNumberList(params).then((res) => {
+        getBatchNumberList(params).then((res) => {
           if (res && res.code === 200) {
             this.dataSource = res.data.rows
             this.ipagination.total = res.data.total
@@ -153,9 +154,10 @@
         })
       },
       showModal() {
-        this.visible = true;
-        this.loadData();
-        this.form.resetFields();
+        this.visible = true
+        this.$nextTick(() => this.$refs.name.focus())
+        this.loadData()
+        this.form.resetFields()
       },
       getQueryParams() {
         let param = Object.assign({}, this.queryParam, this.isorter);
@@ -216,7 +218,18 @@
         this.selectionRows = selectionRows;
       },
       onSearch() {
-        this.loadData(1);
+        if(this.dataSource && this.dataSource.length===1) {
+          if(this.queryParam.name === this.dataSource[0].batchNumber) {
+            let arr = []
+            arr.push(this.dataSource[0].id)
+            this.selectedRowKeys = arr
+            this.handleSubmit()
+          } else {
+            this.loadData(1)
+          }
+        } else {
+          this.loadData(1)
+        }
       },
       modalFormOk() {
         this.loadData();

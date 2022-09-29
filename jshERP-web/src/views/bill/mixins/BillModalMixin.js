@@ -125,7 +125,7 @@ export const BillModalMixin = {
                 columns[i].type = FormTypes.popupJsh //显示
               } else {
                 if(key === 'snList') {
-                  columns[i].type = FormTypes.input_pop //显示
+                  columns[i].type = FormTypes.popupJsh //显示
                 } else {
                   columns[i].type = FormTypes.input //显示
                 }

@@ -1,10 +1,11 @@
 <template>
   <div>
     <a-input-search v-if="kind === 'material'" v-model="names" placeholder="条码或名称" @pressEnter="onPressEnter" @search="onSearch"></a-input-search>
-    <a-input-search v-if="kind === 'batch'||kind === 'sn'" v-model="names" placeholder="请选择" readOnly @search="onSearch"></a-input-search>
+    <a-input-search v-if="kind === 'batch'||kind === 'sn'||kind === 'snAdd'" v-model="names" placeholder="请点开弹窗" readOnly @search="onSearch"></a-input-search>
     <j-select-material-modal v-if="kind === 'material'" ref="selectModal" :rows="rows" :multi="multi" :bar-code="value" @ok="selectOK" @initComp="initComp"/>
     <j-select-batch-modal v-if="kind === 'batch'" ref="selectModal" :rows="rows" :multi="multi" :bar-code="value" @ok="selectOK" @initComp="initComp"/>
     <j-select-sn-modal v-if="kind === 'sn'" ref="selectModal" :rows="rows" :multi="multi" :bar-code="value" @ok="selectOK" @initComp="initComp"/>
+    <j-select-sn-add-modal v-if="kind === 'snAdd'" ref="selectModal" :rows="rows" :multi="multi" :bar-code="value" @ok="selectOK" @initComp="initComp"/>
   </div>
 </template>
 
@@ -12,13 +13,14 @@
   import JSelectMaterialModal from './modal/JSelectMaterialModal'
   import JSelectBatchModal from './modal/JSelectBatchModal'
   import JSelectSnModal from './modal/JSelectSnModal'
+  import JSelectSnAddModal from './modal/JSelectSnAddModal'
   import { getMpListShort } from "@/utils/util"
   import {getMaterialByBarCode} from '@/api/api'
   import Vue from 'vue'
 
   export default {
     name: 'JSelectList',
-    components: {JSelectMaterialModal, JSelectBatchModal, JSelectSnModal},
+    components: {JSelectMaterialModal, JSelectBatchModal, JSelectSnModal, JSelectSnAddModal},
     props: {
       value: {
         type: String,
