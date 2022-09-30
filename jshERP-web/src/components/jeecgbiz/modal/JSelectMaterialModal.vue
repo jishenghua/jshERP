@@ -40,8 +40,9 @@
               </a-col>
               <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                 <a-col :md="6" :sm="24">
-                  <a-button type="primary" @click="loadMaterialData(1)">查询</a-button>
-                  <a-button style="margin-left: 8px" @click="searchReset(1)">重置</a-button>
+                  <a-button type="primary" icon="search" @click="loadMaterialData(1)" title="查询"></a-button>
+                  <a-button style="margin-left: 8px" icon="reload" @click="searchReset(1)" title="重置"></a-button>
+                  <a-button style="margin-left: 8px" icon="plus" @click="addMaterial" title="添加"></a-button>
                   <a @click="handleToggleSearch" style="margin-left: 8px">
                     {{ toggleSearchStatus ? '收起' : '展开' }}
                     <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
@@ -92,6 +93,7 @@
         </div>
       </a-col>
     </a-row>
+    <material-modal ref="modalForm" @ok="modalFormOk"></material-modal>
   </a-modal>
 </template>
 
@@ -105,7 +107,9 @@
   export default {
     name: 'JSelectMaterialModal',
     mixins:[JeecgListMixin],
-    components: {},
+    components: {
+      MaterialModal: () => import('@/views/material/modules/MaterialModal')
+    },
     props: ['rows', 'multi', 'barCode'],
     data() {
       return {
@@ -288,6 +292,10 @@
         }
         that.selectedRowKeys = [];
         that.selectMaterialIds = [];
+      },
+      addMaterial() {
+        this.$refs.modalForm.add()
+        this.$refs.modalForm.title = '新增商品'
       },
       close() {
         this.searchReset(0);

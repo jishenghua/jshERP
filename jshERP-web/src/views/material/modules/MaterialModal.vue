@@ -4,6 +4,7 @@
     :width="1300"
     :visible="visible"
     :confirmLoading="confirmLoading"
+    :maskClosable="false"
     v-bind:prefixNo="prefixNo"
     switchHelp
     switchFullscreen
