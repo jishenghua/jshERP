@@ -75,18 +75,18 @@
           <template #buttonAfter>
             <a-row v-if="rowCanEdit" :gutter="24" style="float:left;padding-bottom: 5px;" data-step="4" data-title="扫码录入" data-intro="此功能支持扫码枪扫描商品条码进行录入">
               <a-col v-if="scanStatus" :md="6" :sm="24">
-                <a-button @click="scanEnter">扫码录入</a-button>
+                <a-button @click="scanEnter" style="margin-right: 8px">扫码录入</a-button>
               </a-col>
               <a-col v-if="!scanStatus" :md="16" :sm="24" style="padding: 0 6px 0 12px">
                 <a-input placeholder="请扫码商品条码并回车" v-model="scanBarCode" @pressEnter="scanPressEnter" ref="scanBarCode"/>
               </a-col>
               <a-col v-if="!scanStatus" :md="6" :sm="24" style="padding: 0px">
-                <a-button @click="stopScan">收起扫码</a-button>
+                <a-button @click="stopScan" style="margin-right: 8px">收起扫码</a-button>
               </a-col>
             </a-row>
             <a-row :gutter="24" style="float:left;padding-bottom: 5px;">
               <a-col :md="24" :sm="24">
-                <a-button style="margin-left: 8px" @click="handleHistoryBillList"><a-icon type="history" />历史单据</a-button>
+                <a-button @click="handleHistoryBillList"><a-icon type="history" />历史单据</a-button>
               </a-col>
             </a-row>
           </template>
@@ -229,7 +229,6 @@
           loading: false,
           dataSource: [],
           columns: [
-            { title: '仓库名称', key: 'depotId', width: '8%', type: FormTypes.hidden },
             { title: '条码', key: 'barCode', width: '10%', type: FormTypes.popupJsh, kind: 'material', multi: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
@@ -282,7 +281,7 @@
       editAfter() {
         this.billStatus = '0'
         this.rowCanEdit = true
-        this.materialTable.columns[1].type = FormTypes.popupJsh
+        this.materialTable.columns[0].type = FormTypes.popupJsh
         this.getSystemConfig()
         this.changeColumnHide()
         this.changeFormTypes(this.materialTable.columns, 'preNumber', 0)
@@ -296,7 +295,7 @@
         } else {
           if(this.model.linkNumber) {
             this.rowCanEdit = false
-            this.materialTable.columns[1].type = FormTypes.normal
+            this.materialTable.columns[0].type = FormTypes.normal
           }
           this.model.operTime = this.model.operTimeStr
           if(this.model.accountId == null) {
@@ -374,7 +373,7 @@
       },
       linkBillListOk(selectBillDetailRows, linkNumber, organId) {
         this.rowCanEdit = false
-        this.materialTable.columns[1].type = FormTypes.normal
+        this.materialTable.columns[0].type = FormTypes.normal
         this.changeFormTypes(this.materialTable.columns, 'preNumber', 1)
         this.changeFormTypes(this.materialTable.columns, 'finishNumber', 1)
         if(selectBillDetailRows && selectBillDetailRows.length>0) {

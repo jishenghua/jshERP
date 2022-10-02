@@ -222,7 +222,6 @@
           loading: false,
           dataSource: [],
           columns: [
-            { title: '仓库名称', key: 'depotId', width: '8%', type: FormTypes.hidden },
             { title: '条码', key: 'barCode', width: '10%', type: FormTypes.popupJsh, kind: 'material', multi: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },

@@ -386,7 +386,8 @@ export const BillModalMixin = {
                 })
               } else {
                 //单个条码
-                findStockByDepotAndBarCode({ depotId: row.depotId, barCode: row.barCode }).then((res) => {
+                let depotIdSelected = this.prefixNo !== 'CGDD' && this.prefixNo !== 'XSDD'? row.depotId: ''
+                findStockByDepotAndBarCode({ depotId: depotIdSelected, barCode: row.barCode }).then((res) => {
                   if (res && res.code === 200) {
                     let mArr = []
                     let mInfo = mList[0]
