@@ -239,6 +239,7 @@ public class MaterialController {
                     }
                     item.put("stock", stock);
                     item.put("expand", materialService.getMaterialOtherByParam(mpArr, material));
+                    item.put("imgName", material.getImgName());
                     dataArray.add(item);
                 }
             }
