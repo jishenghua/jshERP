@@ -81,6 +81,15 @@
             :loading="loading"
             :customRow="rowAction"
             @change="handleTableChange">
+            <template slot="customBarCode" slot-scope="text, record">
+              {{record.mBarCode}}
+              <a-popover placement="right" trigger="click">
+                <template slot="content">
+                  <img :src='getImgUrl(record.imgName)' width="500px" />
+                </template>
+                <a-icon v-if="record.imgName" style="font-size: 18px" theme="twoTone" type="file-image" />
+              </a-popover>
+            </template>
             <template slot="customRenderEnableSerialNumber" slot-scope="enableSerialNumber">
               <a-tag v-if="enableSerialNumber==1" color="green">有</a-tag>
               <a-tag v-if="enableSerialNumber==0" color="orange">无</a-tag>
@@ -98,7 +107,7 @@
 </template>
 
 <script>
-  import { httpAction, getAction } from '@/api/manage'
+  import { getAction, getFileAccessHttpUrl } from '@/api/manage'
   import {filterObj, getMpListShort} from '@/utils/util'
   import {getMaterialBySelect, queryMaterialCategoryTreeList} from '@/api/api'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
@@ -131,7 +140,7 @@
         },
         categoryTree:[],
         columns: [
-          {dataIndex: 'mBarCode', title: '条码', align: 'left'},
+          {dataIndex: 'mBarCode', title: '条码', scopedSlots: { customRender: 'customBarCode' }},
           {dataIndex: 'name', title: '名称'},
           {dataIndex: 'categoryName', title: '类别'},
           {dataIndex: 'standard', title: '规格'},
@@ -296,6 +305,13 @@
       addMaterial() {
         this.$refs.modalForm.add()
         this.$refs.modalForm.title = '新增商品'
+      },
+      getImgUrl(imgName) {
+        if(imgName && imgName.split(',')) {
+          return getFileAccessHttpUrl('systemConfig/static/' + imgName.split(',')[0])
+        } else {
+          return ''
+        }
       },
       close() {
         this.searchReset(0);

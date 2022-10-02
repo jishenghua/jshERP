@@ -137,6 +137,15 @@
                 <a>删除</a>
               </a-popconfirm>
             </span>
+            <template slot="customBarCode" slot-scope="text, record">
+              {{record.mBarCode}}
+              <a-popover placement="right" trigger="click">
+                <template slot="content">
+                  <img :src='getImgUrl(record.imgName)' width="500px" />
+                </template>
+                <a-icon v-if="record.imgName" style="font-size: 18px" theme="twoTone" type="file-image" />
+              </a-popover>
+            </template>
             <template slot="customRenderEnabled" slot-scope="enabled">
               <a-tag v-if="enabled" color="green">启用</a-tag>
               <a-tag v-if="!enabled" color="orange">禁用</a-tag>
@@ -165,7 +174,7 @@
   import ImportFileModal from '@/components/tools/ImportFileModal'
   import BatchSetInfoModal from './modules/BatchSetInfoModal'
   import { queryMaterialCategoryTreeList } from '@/api/api'
-  import { postAction } from '@/api/manage'
+  import { postAction, getFileAccessHttpUrl } from '@/api/manage'
   import { getMpListShort } from '@/utils/util'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import JEllipsis from '@/components/jeecg/JEllipsis'
@@ -217,7 +226,7 @@
           'purchaseDecimal','commodityDecimal','wholesaleDecimal','lowDecimal','enabled','enableSerialNumber','enableBatchNumber','action'],
         // 默认的列
         defColumns: [
-          {title: '条码', dataIndex: 'mBarCode'},
+          {title: '条码', dataIndex: 'mBarCode',scopedSlots: { customRender: 'customBarCode' }},
           {title: '名称', dataIndex: 'name'},
           {title: '规格', dataIndex: 'standard'},
           {title: '型号', dataIndex: 'model'},
@@ -368,6 +377,13 @@
         this.$refs.modalForm.disableSubmit = false;
         if(this.btnEnableList.indexOf(1)===-1) {
           this.$refs.modalForm.isReadOnly = true
+        }
+      },
+      getImgUrl(imgName) {
+        if(imgName && imgName.split(',')) {
+          return getFileAccessHttpUrl('systemConfig/static/' + imgName.split(',')[0])
+        } else {
+          return ''
         }
       },
       handleImportXls() {
