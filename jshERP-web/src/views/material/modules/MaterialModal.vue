@@ -246,12 +246,20 @@
           </a-tab-pane>
           <a-tab-pane key="4" tab="图片信息" forceRender>
             <a-row class="form-row" :gutter="24">
-              <a-col :lg="12" :md="12" :sm="24">
-                <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 4 }}" :wrapperCol="{xs: { span: 24 },sm: { span: 20 }}" label="图片信息">
+              <a-col :lg="18" :md="18" :sm="24">
+                <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 3 }}" :wrapperCol="{xs: { span: 24 },sm: { span: 20 }}" label="图片信息">
                   <j-image-upload v-model="fileList" bizPath="material" text="上传" isMultiple></j-image-upload>
                 </a-form-item>
               </a-col>
-              <a-col :lg="12" :md="12" :sm="24"></a-col>
+              <a-col :lg="6" :md="6" :sm="24"></a-col>
+            </a-row>
+            <a-row class="form-row" :gutter="24">
+              <a-col :lg="18" :md="18" :sm="24">
+                <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 3 }}" :wrapperCol="{xs: { span: 24 },sm: { span: 20 }}" label="上传提示">
+                  图片最多4张，且单张大小不超过1M
+                </a-form-item>
+              </a-col>
+              <a-col :lg="6" :md="6" :sm="24"></a-col>
             </a-row>
           </a-tab-pane>
         </a-tabs>
@@ -638,6 +646,11 @@
               }
               if(this.fileList && this.fileList.length > 0) {
                 formData.imgName = this.fileList
+                let fileArr = this.fileList.split(',')
+                if(fileArr.length > 4) {
+                  this.$message.warning('抱歉，商品图片不能超过4张！');
+                  return
+                }
               } else {
                 formData.imgName = ''
               }
