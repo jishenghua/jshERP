@@ -525,6 +525,11 @@ public class DepotItemService {
                         }
                     }
                 }
+                //如果是销售出库单则给采购单价字段赋值
+                if(BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType()) &&
+                    BusinessConstants.SUB_TYPE_SALES.equals(depotHead.getSubType())) {
+                    depotItem.setPurchaseUnitPrice(materialExtend.getPurchaseDecimal());
+                }
                 if (StringUtil.isExist(rowObj.get("taxUnitPrice"))) {
                     depotItem.setTaxUnitPrice(rowObj.getBigDecimal("taxUnitPrice"));
                 }

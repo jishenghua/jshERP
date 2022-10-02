@@ -1408,3 +1408,10 @@ alter table jsh_material_attribute drop column attribute_field;
 -- --------------------------------------------------------
 alter table jsh_material change remark remark varchar(500) DEFAULT NULL COMMENT '备注';
 alter table jsh_account_head change remark remark varchar(1000) DEFAULT NULL COMMENT '备注';
+
+-- --------------------------------------------------------
+-- 时间 2022年10月2日
+-- by jishenghua
+-- 给单据明细增加采购单价字段
+-- --------------------------------------------------------
+alter table jsh_depot_item add purchase_unit_price decimal(24,6) DEFAULT NULL COMMENT '采购单价' after unit_price;

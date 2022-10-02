@@ -22,6 +22,8 @@ public class DepotItem {
 
     private BigDecimal unitPrice;
 
+    private BigDecimal purchaseUnitPrice;
+
     private BigDecimal taxUnitPrice;
 
     private BigDecimal allPrice;
@@ -122,6 +124,14 @@ public class DepotItem {
 
     public void setUnitPrice(BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
+    }
+
+    public BigDecimal getPurchaseUnitPrice() {
+        return purchaseUnitPrice;
+    }
+
+    public void setPurchaseUnitPrice(BigDecimal purchaseUnitPrice) {
+        this.purchaseUnitPrice = purchaseUnitPrice;
     }
 
     public BigDecimal getTaxUnitPrice() {

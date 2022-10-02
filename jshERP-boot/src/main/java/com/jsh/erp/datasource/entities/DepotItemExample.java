@@ -666,6 +666,66 @@ public class DepotItemExample {
             return (Criteria) this;
         }
 
+        public Criteria andPurchaseUnitPriceIsNull() {
+            addCriterion("purchase_unit_price is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseUnitPriceIsNotNull() {
+            addCriterion("purchase_unit_price is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseUnitPriceEqualTo(BigDecimal value) {
+            addCriterion("purchase_unit_price =", value, "purchaseUnitPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseUnitPriceNotEqualTo(BigDecimal value) {
+            addCriterion("purchase_unit_price <>", value, "purchaseUnitPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseUnitPriceGreaterThan(BigDecimal value) {
+            addCriterion("purchase_unit_price >", value, "purchaseUnitPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseUnitPriceGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("purchase_unit_price >=", value, "purchaseUnitPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseUnitPriceLessThan(BigDecimal value) {
+            addCriterion("purchase_unit_price <", value, "purchaseUnitPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseUnitPriceLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("purchase_unit_price <=", value, "purchaseUnitPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseUnitPriceIn(List<BigDecimal> values) {
+            addCriterion("purchase_unit_price in", values, "purchaseUnitPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseUnitPriceNotIn(List<BigDecimal> values) {
+            addCriterion("purchase_unit_price not in", values, "purchaseUnitPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseUnitPriceBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("purchase_unit_price between", value1, value2, "purchaseUnitPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseUnitPriceNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("purchase_unit_price not between", value1, value2, "purchaseUnitPrice");
+            return (Criteria) this;
+        }
+
         public Criteria andTaxUnitPriceIsNull() {
             addCriterion("tax_unit_price is null");
             return (Criteria) this;

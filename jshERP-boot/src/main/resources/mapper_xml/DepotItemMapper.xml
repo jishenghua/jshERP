@@ -11,6 +11,7 @@
     <result column="oper_number" jdbcType="DECIMAL" property="operNumber" />
     <result column="basic_number" jdbcType="DECIMAL" property="basicNumber" />
     <result column="unit_price" jdbcType="DECIMAL" property="unitPrice" />
+    <result column="purchase_unit_price" jdbcType="DECIMAL" property="purchaseUnitPrice" />
     <result column="tax_unit_price" jdbcType="DECIMAL" property="taxUnitPrice" />
     <result column="all_price" jdbcType="DECIMAL" property="allPrice" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
@@ -87,9 +88,9 @@
   </sql>
   <sql id="Base_Column_List">
     id, header_id, material_id, material_extend_id, material_unit, sku, oper_number, 
-    basic_number, unit_price, tax_unit_price, all_price, remark, depot_id, another_depot_id, 
-    tax_rate, tax_money, tax_last_money, material_type, sn_list, batch_number, expiration_date, 
-    link_id, tenant_id, delete_flag
+    basic_number, unit_price, purchase_unit_price, tax_unit_price, all_price, remark, 
+    depot_id, another_depot_id, tax_rate, tax_money, tax_last_money, material_type, sn_list, 
+    batch_number, expiration_date, link_id, tenant_id, delete_flag
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="BaseResultMap">
     select
@@ -125,21 +126,21 @@
     insert into jsh_depot_item (id, header_id, material_id, 
       material_extend_id, material_unit, sku, 
       oper_number, basic_number, unit_price, 
-      tax_unit_price, all_price, remark, 
-      depot_id, another_depot_id, tax_rate, 
-      tax_money, tax_last_money, material_type, 
-      sn_list, batch_number, expiration_date, 
-      link_id, tenant_id, delete_flag
-      )
+      purchase_unit_price, tax_unit_price, all_price, 
+      remark, depot_id, another_depot_id, 
+      tax_rate, tax_money, tax_last_money, 
+      material_type, sn_list, batch_number, 
+      expiration_date, link_id, tenant_id, 
+      delete_flag)
     values (#{id,jdbcType=BIGINT}, #{headerId,jdbcType=BIGINT}, #{materialId,jdbcType=BIGINT}, 
       #{materialExtendId,jdbcType=BIGINT}, #{materialUnit,jdbcType=VARCHAR}, #{sku,jdbcType=VARCHAR}, 
       #{operNumber,jdbcType=DECIMAL}, #{basicNumber,jdbcType=DECIMAL}, #{unitPrice,jdbcType=DECIMAL}, 
-      #{taxUnitPrice,jdbcType=DECIMAL}, #{allPrice,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, 
-      #{depotId,jdbcType=BIGINT}, #{anotherDepotId,jdbcType=BIGINT}, #{taxRate,jdbcType=DECIMAL}, 
-      #{taxMoney,jdbcType=DECIMAL}, #{taxLastMoney,jdbcType=DECIMAL}, #{materialType,jdbcType=VARCHAR}, 
-      #{snList,jdbcType=VARCHAR}, #{batchNumber,jdbcType=VARCHAR}, #{expirationDate,jdbcType=TIMESTAMP}, 
-      #{linkId,jdbcType=BIGINT}, #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR}
-      )
+      #{purchaseUnitPrice,jdbcType=DECIMAL}, #{taxUnitPrice,jdbcType=DECIMAL}, #{allPrice,jdbcType=DECIMAL}, 
+      #{remark,jdbcType=VARCHAR}, #{depotId,jdbcType=BIGINT}, #{anotherDepotId,jdbcType=BIGINT}, 
+      #{taxRate,jdbcType=DECIMAL}, #{taxMoney,jdbcType=DECIMAL}, #{taxLastMoney,jdbcType=DECIMAL}, 
+      #{materialType,jdbcType=VARCHAR}, #{snList,jdbcType=VARCHAR}, #{batchNumber,jdbcType=VARCHAR}, 
+      #{expirationDate,jdbcType=TIMESTAMP}, #{linkId,jdbcType=BIGINT}, #{tenantId,jdbcType=BIGINT}, 
+      #{deleteFlag,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.DepotItem">
     insert into jsh_depot_item
@@ -170,6 +171,9 @@
       </if>
       <if test="unitPrice != null">
         unit_price,
+      </if>
+      <if test="purchaseUnitPrice != null">
+        purchase_unit_price,
       </if>
       <if test="taxUnitPrice != null">
         tax_unit_price,
@@ -244,6 +248,9 @@
       </if>
       <if test="unitPrice != null">
         #{unitPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="purchaseUnitPrice != null">
+        #{purchaseUnitPrice,jdbcType=DECIMAL},
       </if>
       <if test="taxUnitPrice != null">
         #{taxUnitPrice,jdbcType=DECIMAL},
@@ -328,6 +335,9 @@
       <if test="record.unitPrice != null">
         unit_price = #{record.unitPrice,jdbcType=DECIMAL},
       </if>
+      <if test="record.purchaseUnitPrice != null">
+        purchase_unit_price = #{record.purchaseUnitPrice,jdbcType=DECIMAL},
+      </if>
       <if test="record.taxUnitPrice != null">
         tax_unit_price = #{record.taxUnitPrice,jdbcType=DECIMAL},
       </if>
@@ -389,6 +399,7 @@
       oper_number = #{record.operNumber,jdbcType=DECIMAL},
       basic_number = #{record.basicNumber,jdbcType=DECIMAL},
       unit_price = #{record.unitPrice,jdbcType=DECIMAL},
+      purchase_unit_price = #{record.purchaseUnitPrice,jdbcType=DECIMAL},
       tax_unit_price = #{record.taxUnitPrice,jdbcType=DECIMAL},
       all_price = #{record.allPrice,jdbcType=DECIMAL},
       remark = #{record.remark,jdbcType=VARCHAR},
@@ -434,6 +445,9 @@
       </if>
       <if test="unitPrice != null">
         unit_price = #{unitPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="purchaseUnitPrice != null">
+        purchase_unit_price = #{purchaseUnitPrice,jdbcType=DECIMAL},
       </if>
       <if test="taxUnitPrice != null">
         tax_unit_price = #{taxUnitPrice,jdbcType=DECIMAL},
@@ -493,6 +507,7 @@
       oper_number = #{operNumber,jdbcType=DECIMAL},
       basic_number = #{basicNumber,jdbcType=DECIMAL},
       unit_price = #{unitPrice,jdbcType=DECIMAL},
+      purchase_unit_price = #{purchaseUnitPrice,jdbcType=DECIMAL},
       tax_unit_price = #{taxUnitPrice,jdbcType=DECIMAL},
       all_price = #{allPrice,jdbcType=DECIMAL},
       remark = #{remark,jdbcType=VARCHAR},
