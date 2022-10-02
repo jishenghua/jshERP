@@ -409,8 +409,7 @@
       }
     },
     created () {
-      this.maxBarCodeAction();
-      this.loadParseMaterialProperty();
+      this.loadParseMaterialProperty()
     },
     methods: {
       // 获取所有的editableTable实例
@@ -438,6 +437,7 @@
         this.activeKey = '1'
         this.manySkuSelected = 0
         this.barCodeSwitch = false
+        this.maxBarCodeInfo = ''
         this.visible = true;
         if(JSON.stringify(record) === '{}') {
           this.fileList = []
@@ -698,13 +698,6 @@
           }
         });
       },
-      maxBarCodeAction(){
-        getMaxBarCode({}).then((res)=> {
-          if (res && res.code === 200) {
-            this.maxBarCodeInfo = res.data.barCode - 0
-          }
-        })
-      },
       loadTreeData(){
         let that = this;
         let params = {};
@@ -840,8 +833,18 @@
         if(this.unitStatus == false) {
           unit = this.form.getFieldValue('unit')
         }
-        this.maxBarCodeInfo = this.maxBarCodeInfo + 1
-        target.setValues([{rowKey: row.id, values: {barCode: this.maxBarCodeInfo, commodityUnit: unit?unit:''}}])
+        if(this.maxBarCodeInfo === '') {
+          getMaxBarCode({}).then((res)=> {
+            if (res && res.code === 200) {
+              this.maxBarCodeInfo = res.data.barCode - 0
+              this.maxBarCodeInfo = this.maxBarCodeInfo + 1
+              target.setValues([{rowKey: row.id, values: {barCode: this.maxBarCodeInfo, commodityUnit: unit?unit:''}}])
+            }
+          })
+        } else {
+          this.maxBarCodeInfo = this.maxBarCodeInfo + 1
+          target.setValues([{rowKey: row.id, values: {barCode: this.maxBarCodeInfo, commodityUnit: unit?unit:''}}])
+        }
       },
       onDeleted(value) {
         this.meDeleteIdList = (value)
