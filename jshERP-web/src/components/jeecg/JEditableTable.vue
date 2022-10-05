@@ -11,13 +11,13 @@
       <a-col>
         <!-- 操作按钮 -->
         <div v-if="actionButton" class="action-button">
-          <a-button type="primary" icon="plus" @click="handleClickAdd" :disabled="disabled">新增行</a-button>
+          <a-button type="primary" icon="plus" @click="handleClickAdd" :disabled="disabled">插入行</a-button>
           <span class="gap"></span>
           <template v-if="selectedRowIds.length>0">
             <a-popconfirm
-              :title="`确定要删除这 ${selectedRowIds.length} 项吗?`"
+              :title="`确定要移除这 ${selectedRowIds.length} 项吗?`"
               @confirm="handleConfirmDelete">
-              <a-button type="primary" icon="minus" :disabled="disabled">删除行</a-button>
+              <a-button type="primary" icon="minus" :disabled="disabled">移除行</a-button>
               <span class="gap"></span>
             </a-popconfirm>
             <template v-if="showClearSelectButton">
