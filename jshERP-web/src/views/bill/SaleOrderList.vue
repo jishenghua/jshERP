@@ -182,6 +182,12 @@
         },
         // 表头
         columns: [
+          {
+            title: '操作',
+            dataIndex: 'action',
+            align:"center", width: 150,
+            scopedSlots: { customRender: 'action' },
+          },
           { title: '客户', dataIndex: 'organName',width:120, ellipsis:true},
           { title: '单据编号', dataIndex: 'number',width:160,
             customRender:function (text,record,index) {
@@ -217,12 +223,6 @@
           },
           { title: '采购进度', dataIndex: 'purchaseStatus', width: 70, align: "center",
             scopedSlots: { customRender: 'customRenderPurchaseStatus' }
-          },
-          {
-            title: '操作',
-            dataIndex: 'action',
-            align:"center", width: 150,
-            scopedSlots: { customRender: 'action' },
           }
         ],
         url: {

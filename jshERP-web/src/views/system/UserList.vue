@@ -125,6 +125,13 @@
               return parseInt(index)+1;
             }
           },
+          {
+            title: '操作',
+            dataIndex: 'action',
+            scopedSlots: {customRender: 'action'},
+            align: "center",
+            width: 260
+          },
           { title: '登录名称', dataIndex: 'loginName', width: 100, align: "left"},
           { title: '用户姓名', dataIndex: 'username', width: 100, align: "left"},
           { title: '用户类型', dataIndex: 'userType', width: 80, align: "left" },
@@ -134,13 +141,6 @@
           { title: '排序', dataIndex: 'userBlngOrgaDsplSeq', width: 60, align: "left"},
           { title: '状态',dataIndex: 'status',width:70,align:"center",
             scopedSlots: { customRender: 'customRenderFlag' }
-          },
-          {
-            title: '操作',
-            dataIndex: 'action',
-            scopedSlots: {customRender: 'action'},
-            align: "center",
-            width: 260
           }
         ],
         url: {

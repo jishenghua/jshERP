@@ -97,15 +97,15 @@
               return parseInt(index)+1;
             }
           },
-          {title: '属性名', dataIndex: 'attributeName', width: 200},
-          {title: '属性值（用竖线隔开）', dataIndex: 'attributeValue', width: 500},
           {
             title: '操作',
             dataIndex: 'action',
             width: 100,
             align:"center",
             scopedSlots: { customRender: 'action' },
-          }
+          },
+          {title: '属性名', dataIndex: 'attributeName', width: 200},
+          {title: '属性值（用竖线隔开）', dataIndex: 'attributeValue', width: 500}
         ],
         url: {
           list: "/materialAttribute/list",

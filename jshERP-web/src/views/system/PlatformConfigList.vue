@@ -62,6 +62,13 @@
             }
           },
           {
+            title: '操作',
+            dataIndex: 'action',
+            align:"center",
+            width: 100,
+            scopedSlots: { customRender: 'action' },
+          },
+          {
             title: '配置名称',
             dataIndex: 'platformKeyInfo',
             width: 100
@@ -70,13 +77,6 @@
             title: '配置值',
             dataIndex: 'platformValue',
             width: 500
-          },
-          {
-            title: '操作',
-            dataIndex: 'action',
-            align:"center",
-            width: 100,
-            scopedSlots: { customRender: 'action' },
           }
         ],
         url: {

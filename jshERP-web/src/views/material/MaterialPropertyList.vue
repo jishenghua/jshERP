@@ -85,20 +85,20 @@
               return parseInt(index)+1;
             }
           },
-          {title: '名称', dataIndex: 'nativeName', width: 100},
-          {
-            title: '是否启用', dataIndex: 'enabled', width: 100, align: "center",
-            scopedSlots: { customRender: 'customRenderFlag' }
-          },
-          {title: '排序', dataIndex: 'sort', width: 100},
-          {title: '别名', dataIndex: 'anotherName', width: 100},
           {
             title: '操作',
             dataIndex: 'action',
             width: 200,
             align:"center",
             scopedSlots: { customRender: 'action' },
-          }
+          },
+          {title: '名称', dataIndex: 'nativeName', width: 100},
+          {
+            title: '是否启用', dataIndex: 'enabled', width: 100, align: "center",
+            scopedSlots: { customRender: 'customRenderFlag' }
+          },
+          {title: '排序', dataIndex: 'sort', width: 100},
+          {title: '别名', dataIndex: 'anotherName', width: 100}
         ],
         url: {
           list: "/materialProperty/list",

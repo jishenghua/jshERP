@@ -105,6 +105,13 @@
               return parseInt(index)+1;
             }
           },
+          {
+            title: '操作',
+            dataIndex: 'action',
+            width:100,
+            align:"center",
+            scopedSlots: { customRender: 'action' },
+          },
           { title: '计量单位', align:"left", dataIndex: 'name', width:200 },
           { title: '基本单位', align:"left", dataIndex: 'basicUnit', width:80 },
           { title: '副单位', align:"left", dataIndex: 'otherUnit', width:100,
@@ -134,13 +141,6 @@
           },
           { title: '状态',dataIndex: 'enabled',width:60,align:"center",
             scopedSlots: { customRender: 'customRenderFlag' }
-          },
-          {
-            title: '操作',
-            dataIndex: 'action',
-            width:100,
-            align:"center",
-            scopedSlots: { customRender: 'action' },
           }
         ],
         url: {

@@ -226,7 +226,14 @@
           'purchaseDecimal','commodityDecimal','wholesaleDecimal','lowDecimal','enabled','enableSerialNumber','enableBatchNumber','action'],
         // 默认的列
         defColumns: [
-          {title: '条码', dataIndex: 'mBarCode',scopedSlots: { customRender: 'customBarCode' }},
+          {
+            title: '操作',
+            dataIndex: 'action',
+            align:"center",
+            width: 100,
+            scopedSlots: { customRender: 'action' },
+          },
+          {title: '条码', dataIndex: 'mBarCode', width: 140, scopedSlots: { customRender: 'customBarCode' }},
           {title: '名称', dataIndex: 'name'},
           {title: '规格', dataIndex: 'standard'},
           {title: '型号', dataIndex: 'model'},
@@ -261,13 +268,6 @@
           },
           {title: '状态', dataIndex: 'enabled', align: "center", width: 60,
             scopedSlots: { customRender: 'customRenderEnabled' }
-          },
-          {
-            title: '操作',
-            dataIndex: 'action',
-            align:"center",
-            width: 100,
-            scopedSlots: { customRender: 'action' },
           }
         ],
         url: {

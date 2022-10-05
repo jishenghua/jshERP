@@ -172,6 +172,13 @@
         },
         // 表头
         columns: [
+          {
+            title: '操作',
+            dataIndex: 'action',
+            width:200,
+            align:"center",
+            scopedSlots: { customRender: 'action' },
+          },
           { title: '财务人员', dataIndex: 'handsPersonName',width:140},
           { title: '单据编号', dataIndex: 'billNo',width:160},
           { title: '单据日期 ', dataIndex: 'billTimeStr',width:160},
@@ -180,13 +187,6 @@
           { title: '备注', dataIndex: 'remark',width:200},
           { title: '状态', dataIndex: 'status', width: 80, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }
-          },
-          {
-            title: '操作',
-            dataIndex: 'action',
-            width:200,
-            align:"center",
-            scopedSlots: { customRender: 'action' },
           }
         ],
         url: {

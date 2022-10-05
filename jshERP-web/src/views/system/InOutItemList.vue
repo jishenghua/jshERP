@@ -119,19 +119,19 @@
               return parseInt(index)+1;
             }
           },
-          { title: '名称', dataIndex: 'name', width: 200},
-          { title: '类型', dataIndex: 'type', width: 100},
-          { title: '备注', dataIndex: 'remark', width: 200},
-          { title: '排序', dataIndex: 'sort', width: 60},
-          { title: '状态',dataIndex: 'enabled',width:60,align:"center",
-            scopedSlots: { customRender: 'customRenderFlag' }
-          },
           {
             title: '操作',
             dataIndex: 'action',
             width: 100,
             align:"center",
             scopedSlots: { customRender: 'action' },
+          },
+          { title: '名称', dataIndex: 'name', width: 200},
+          { title: '类型', dataIndex: 'type', width: 100},
+          { title: '备注', dataIndex: 'remark', width: 200},
+          { title: '排序', dataIndex: 'sort', width: 60},
+          { title: '状态',dataIndex: 'enabled',width:60,align:"center",
+            scopedSlots: { customRender: 'customRenderFlag' }
           }
         ],
         url: {

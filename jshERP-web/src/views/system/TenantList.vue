@@ -121,6 +121,13 @@
               return parseInt(index)+1;
             }
           },
+          {
+            title: '操作',
+            dataIndex: 'action',
+            scopedSlots: {customRender: 'action'},
+            align: "center",
+            width: 100
+          },
           { title: '登录名称', dataIndex: 'loginName', width: 100, align: "center"},
           { title: '用户数量限制', dataIndex: 'userNumLimit', width: 100, align: "center"},
           { title: '租户类型',dataIndex: 'type',width:70,align:"center",
@@ -131,14 +138,7 @@
           },
           { title: '创建时间', dataIndex: 'createTimeStr', width: 100, align: "center"},
           { title: '到期时间', dataIndex: 'expireTimeStr', width: 100, align: "center"},
-          { title: '描述', dataIndex: 'remark', width: 200, align: "center", ellipsis:true},
-          {
-            title: '操作',
-            dataIndex: 'action',
-            scopedSlots: {customRender: 'action'},
-            align: "center",
-            width: 100
-          }
+          { title: '描述', dataIndex: 'remark', width: 200, align: "center", ellipsis:true}
         ],
         url: {
           list: "/tenant/list",

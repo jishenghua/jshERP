@@ -186,6 +186,12 @@
         },
         // 表头
         columns: [
+          {
+            title: '操作',
+            dataIndex: 'action',
+            align:"center", width: 150,
+            scopedSlots: { customRender: 'action' },
+          },
           { title: '供应商', dataIndex: 'organName',width:120, ellipsis:true},
           { title: '单据编号', dataIndex: 'number',width:160,
             customRender:function (text,record,index) {
@@ -208,12 +214,6 @@
           { title: '金额合计', dataIndex: 'totalPrice',width:80},
           { title: '状态', dataIndex: 'status', width: 80, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }
-          },
-          {
-            title: '操作',
-            dataIndex: 'action',
-            align:"center", width: 150,
-            scopedSlots: { customRender: 'action' },
           }
         ],
         url: {

@@ -125,6 +125,13 @@
               return parseInt(index)+1;
             }
           },
+          {
+            title: '操作',
+            dataIndex: 'action',
+            width: 150,
+            align:"center",
+            scopedSlots: { customRender: 'action' },
+          },
           { title: '名称', dataIndex: 'name', width: 100, align: "left"},
           { title: '编号', dataIndex: 'serialNo', width: 150, align: "left"},
           { title: '期初金额', dataIndex: 'initialAmount', width: 100, align: "left"},
@@ -136,13 +143,6 @@
           },
           { title: '是否默认',dataIndex: 'isDefault',width:80,align:"center",
             scopedSlots: { customRender: 'customRenderFlag' }
-          },
-          {
-            title: '操作',
-            dataIndex: 'action',
-            width: 150,
-            align:"center",
-            scopedSlots: { customRender: 'action' },
           }
         ],
         url: {

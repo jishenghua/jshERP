@@ -196,6 +196,12 @@
         },
         // 表头
         columns: [
+          {
+            title: '操作',
+            dataIndex: 'action',
+            align:"center", width: 160,
+            scopedSlots: { customRender: 'action' },
+          },
           { title: '客户', dataIndex: 'organName',width:120, ellipsis:true},
           { title: '单据编号', dataIndex: 'number',width:160,
             customRender:function (text,record,index) {
@@ -230,12 +236,6 @@
           { title: '退款', dataIndex: 'changeAmount',width:50},
           { title: '状态', dataIndex: 'status', width: 80, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }
-          },
-          {
-            title: '操作',
-            dataIndex: 'action',
-            align:"center", width: 160,
-            scopedSlots: { customRender: 'action' },
           }
         ],
         url: {
