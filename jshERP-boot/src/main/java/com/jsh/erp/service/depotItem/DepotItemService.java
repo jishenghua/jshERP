@@ -525,10 +525,13 @@ public class DepotItemService {
                         }
                     }
                 }
-                //如果是销售出库单则给采购单价字段赋值
+                //如果是销售出库单则给采购单价字段赋值（如果是批次商品，则要根据批号去找之前的采购价）
                 if(BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType()) &&
                     BusinessConstants.SUB_TYPE_SALES.equals(depotHead.getSubType())) {
                     depotItem.setPurchaseUnitPrice(materialExtend.getPurchaseDecimal());
+                    if(StringUtil.isNotEmpty(depotItem.getBatchNumber())) {
+                        depotItem.setPurchaseUnitPrice(getDepotItemByBatchNumber(depotItem.getBatchNumber()).getUnitPrice());
+                    }
                 }
                 if (StringUtil.isExist(rowObj.get("taxUnitPrice"))) {
                     depotItem.setTaxUnitPrice(rowObj.getBigDecimal("taxUnitPrice"));
@@ -696,6 +699,22 @@ public class DepotItemService {
             throw new BusinessRunTimeException(ExceptionConstants.DATA_WRITE_FAIL_CODE,
                     ExceptionConstants.DATA_WRITE_FAIL_MSG);
         }
+    }
+
+    /**
+     * 根据批号查询单据明细信息
+     * @param batchNumber
+     * @return
+     */
+    public DepotItem getDepotItemByBatchNumber(String batchNumber) {
+        DepotItem depotItem = new DepotItem();
+        DepotItemExample example = new DepotItemExample();
+        example.createCriteria().andBatchNumberEqualTo(batchNumber).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        List<DepotItem> depotItemList = depotItemMapper.selectByExample(example);
+        if(null != depotItemList && depotItemList.size() > 0){
+            depotItem = depotItemList.get(0);
+        }
+        return depotItem;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
