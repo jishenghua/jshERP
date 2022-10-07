@@ -117,14 +117,14 @@
               return (t !== '合计') ? (parseInt(index) + 1) : t
             }
           },
+          { title: '账户流水', dataIndex: 'action', align:"center", width: 120,
+            scopedSlots: { customRender: 'action' }
+          },
           { title: '名称', dataIndex: 'name', width: 150},
           { title: '编号', dataIndex: 'serialNo', width: 150},
           { title: '期初金额', dataIndex: 'initialAmount', sorter: (a, b) => a.initialAmount - b.initialAmount, width: 100},
           { title: '本月发生额', dataIndex: 'thisMonthAmount', sorter: (a, b) => a.thisMonthAmount - b.thisMonthAmount, width: 100},
-          { title: '当前余额', dataIndex: 'currentAmount', sorter: (a, b) => a.currentAmount - b.currentAmount, width: 100},
-          { title: '账户流水', dataIndex: 'action', align:"center", width: 120,
-            scopedSlots: { customRender: 'action' }
-          }
+          { title: '当前余额', dataIndex: 'currentAmount', sorter: (a, b) => a.currentAmount - b.currentAmount, width: 100}
         ],
         url: {
           list: "/account/list",

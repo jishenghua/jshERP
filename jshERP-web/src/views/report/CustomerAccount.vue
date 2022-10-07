@@ -136,6 +136,9 @@
               return (t !== '合计') ? (parseInt(index) + 1) : t
             }
           },
+          {title: '欠款详情', dataIndex: 'action', align:"center", width: 80,
+            scopedSlots: { customRender: 'action' }
+          },
           {title: '客户', dataIndex: 'supplier', width: 150, ellipsis:true},
           {title: '联系人', dataIndex: 'contacts', width: 100, ellipsis:true},
           {title: '手机号码', dataIndex: 'telephone', width: 100},
@@ -144,10 +147,7 @@
           {title: '期初应收', dataIndex: 'preNeed', width: 80},
           {title: '本期欠款', dataIndex: 'debtMoney', width: 80},
           {title: '本期收款', dataIndex: 'backMoney', width: 80},
-          {title: '期末应收', dataIndex: 'allNeed', width: 80},
-          {title: '欠款详情', dataIndex: 'action', align:"center", width: 80,
-            scopedSlots: { customRender: 'action' }
-          }
+          {title: '期末应收', dataIndex: 'allNeed', width: 80}
         ],
         url: {
           list: "/depotHead/getStatementAccount",

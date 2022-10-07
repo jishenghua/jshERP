@@ -146,6 +146,9 @@
               return (t !== '合计') ? (parseInt(index) + 1) : t
             }
           },
+          {title: '库存流水', dataIndex: 'action', align:"center", width: 100,
+            scopedSlots: { customRender: 'action' }
+          },
           {title: '条码', dataIndex: 'mBarCode', width: 80},
           {title: '名称', dataIndex: 'name', width: 140, ellipsis:true},
           {title: '规格', dataIndex: 'standard', width: 80, ellipsis:true},
@@ -156,10 +159,7 @@
           {title: '单价', dataIndex: 'purchaseDecimal', sorter: (a, b) => a.purchaseDecimal - b.purchaseDecimal, width: 60},
           {title: '初始库存', dataIndex: 'initialStock', sorter: (a, b) => a.initialStock - b.initialStock, width: 60},
           {title: '库存', dataIndex: 'currentStock', sorter: (a, b) => a.currentStock - b.currentStock, width: 60},
-          {title: '库存金额', dataIndex: 'currentStockPrice', sorter: (a, b) => a.currentStockPrice - b.currentStockPrice, width: 80},
-          {title: '库存流水', dataIndex: 'action', align:"center", width: 100,
-            scopedSlots: { customRender: 'action' }
-          }
+          {title: '库存金额', dataIndex: 'currentStockPrice', sorter: (a, b) => a.currentStockPrice - b.currentStockPrice, width: 80}
         ],
         url: {
           list: "/material/getListWithStock"
