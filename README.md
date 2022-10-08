@@ -45,7 +45,7 @@
 * 需要用户手册请访问这里 http://www.huaxiaerp.com/thread-9-1-1.html
 * 喜欢视频教程可以看这里 https://space.bilibili.com/540003552/channel/series 
 * 为方便大家搭建运行环境，分享了下载地址 https://pan.baidu.com/s/1jlild9uyGdQ7H2yaMx76zw  提取码:814g
-* 不会打包的小伙伴，请下载此打包后的文件 https://share.weiyun.com/Y6BXPOxn 密码：ae8jcy
+* 不会打包的小伙伴，请下载此打包后的文件 https://share.weiyun.com/NDJNLhry 密码：vd3aig
 * 不会部署的小伙伴，请参考部署教程 http://www.huaxiaerp.com/thread-177-1-1.html
 * 部署后登录系统的默认租户账号：jsh，默认超管账户：admin，默认密码均为：123456
 
