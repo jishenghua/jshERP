@@ -8,10 +8,10 @@
           <a-form layout="inline" @keyup.enter.native="searchQuery">
             <a-row :gutter="24">
               <a-col :md="6" :sm="24">
-                <a-form-item label="客户" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-select placeholder="选择客户" v-model="queryParam.organId"
+                <a-form-item label="往来单位" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-select placeholder="选择往来单位" v-model="queryParam.organId"
                     :dropdownMatchSelectWidth="false" showSearch allow-clear optionFilterProp="children">
-                    <a-select-option v-for="(item,index) in supList" :key="index" :value="item.id">
+                    <a-select-option v-for="(item,index) in organList" :key="index" :value="item.id">
                       {{ item.supplier }}
                     </a-select-option>
                   </a-select>
@@ -104,7 +104,7 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { getNowFormatYear, openDownloadDialog, sheet2blob} from "@/utils/util"
   import {getAction} from '@/api/manage'
-  import {findBySelectCus} from '@/api/api'
+  import {findBySelectOrgan} from '@/api/api'
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import moment from 'moment'
   import Vue from 'vue'
@@ -140,7 +140,7 @@
         dateFormat: 'YYYY-MM-DD',
         currentDay: moment().format('YYYY-MM-DD'),
         defaultTimeStr: '',
-        supList: [],
+        organList: [],
         depotList: [],
         tabKey: "1",
         // 表头
@@ -186,9 +186,9 @@
       },
       initSupplier() {
         let that = this;
-        findBySelectCus({}).then((res)=>{
+        findBySelectOrgan({}).then((res)=>{
           if(res) {
-            that.supList = res;
+            that.organList = res;
           }
         });
       },

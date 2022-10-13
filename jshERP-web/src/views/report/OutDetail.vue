@@ -42,10 +42,10 @@
               </a-col>
               <template v-if="toggleSearchStatus">
                 <a-col :md="6" :sm="24">
-                  <a-form-item label="客户" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-select placeholder="选择客户" v-model="queryParam.organId"
+                  <a-form-item label="往来单位" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select placeholder="选择往来单位" v-model="queryParam.organId"
                               :dropdownMatchSelectWidth="false" showSearch allow-clear optionFilterProp="children">
-                      <a-select-option v-for="(item,index) in supList" :key="index" :value="item.id">
+                      <a-select-option v-for="(item,index) in organList" :key="index" :value="item.id">
                         {{ item.supplier }}
                       </a-select-option>
                     </a-select>
@@ -121,7 +121,7 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { getNowFormatYear, openDownloadDialog, sheet2blob} from "@/utils/util"
   import {getAction} from '@/api/manage'
-  import {findBySelectCus, findBillDetailByNumber} from '@/api/api'
+  import {findBySelectOrgan, findBillDetailByNumber} from '@/api/api'
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import moment from 'moment'
   import Vue from 'vue'
@@ -160,7 +160,7 @@
         dateFormat: 'YYYY-MM-DD',
         currentDay: moment().format('YYYY-MM-DD'),
         defaultTimeStr: '',
-        supList: [],
+        organList: [],
         depotList: [],
         tabKey: "1",
         // 表头
@@ -185,13 +185,13 @@
           {title: '金额', dataIndex: 'allPrice', sorter: (a, b) => a.allPrice - b.allPrice, width: 60},
           {title: '税率(%)', dataIndex: 'taxRate', width: 60},
           {title: '税额', dataIndex: 'taxMoney', sorter: (a, b) => a.taxMoney - b.taxMoney, width: 60},
-          {title: '客户', dataIndex: 'sname', width: 80, ellipsis:true},
+          {title: '往来单位', dataIndex: 'sname', width: 80, ellipsis:true},
           {title: '仓库', dataIndex: 'dname', width: 80, ellipsis:true},
           {title: '出库日期', dataIndex: 'operTime', width: 70},
           {title: '备注', dataIndex: 'newRemark', width: 100, ellipsis:true}
         ],
         url: {
-          list: "/depotHead/findInDetail",
+          list: "/depotHead/findInOutDetail",
         }
       }
     },
@@ -216,9 +216,9 @@
       },
       initSupplier() {
         let that = this;
-        findBySelectCus({}).then((res)=>{
+        findBySelectOrgan({}).then((res)=>{
           if(res) {
-            that.supList = res;
+            that.organList = res;
           }
         });
       },
