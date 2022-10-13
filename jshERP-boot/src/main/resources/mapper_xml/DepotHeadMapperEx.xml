@@ -239,7 +239,7 @@
         and ifnull(jsh_depot_item.delete_flag,'0') !='1'
     </select>
 
-    <select id="findInDetail" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
+    <select id="findInOutDetail" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
         select dh.number,me.bar_code, m.`name` MName,m.model,m.standard,di.unit_price,di.material_unit as mUnit,
         di.oper_number,di.all_price, ifnull(di.tax_rate,0) tax_rate, ifnull(di.tax_money,0) tax_money, ifnull(di.tax_last_money,0) tax_last_money,
         s.supplier SName,d.dName DName, date_format(dh.oper_time, '%Y-%m-%d') OperTime, concat(dh.sub_type,dh.type) as NewType,
@@ -271,11 +271,11 @@
             )
         </if>
         <if test="organArray != null and organArray !=''">
-            and dh.organ_id in (
+            and (dh.organ_id in (
             <foreach collection="organArray" item="organId" separator=",">
                 #{organId}
             </foreach>
-            )
+            ) or dh.sub_type='采购退货' or dh.sub_type='零售')
         </if>
         <if test="number != null and number !=''">
             <bind name="bindNumber" value="'%'+number+'%'"/>
@@ -297,7 +297,7 @@
         </if>
     </select>
 
-    <select id="findInDetailCount" resultType="java.lang.Integer">
+    <select id="findInOutDetailCount" resultType="java.lang.Integer">
         select count(1)
         from jsh_depot_head dh
         left join jsh_depot_item di on di.header_id=dh.id and ifnull(di.delete_flag,'0') !='1'
@@ -326,11 +326,11 @@
             )
         </if>
         <if test="organArray != null and organArray !=''">
-            and dh.organ_id in (
+            and (dh.organ_id in (
             <foreach collection="organArray" item="organId" separator=",">
                 #{organId}
             </foreach>
-            )
+            ) or dh.sub_type='采购退货' or dh.sub_type='零售')
         </if>
         <if test="number != null and number !=''">
             <bind name="bindNumber" value="'%'+number+'%'"/>
@@ -372,11 +372,11 @@
             )
         </if>
         <if test="organArray != null and organArray !=''">
-            and dh.organ_id in (
+            and (dh.organ_id in (
             <foreach collection="organArray" item="organId" separator=",">
                 #{organId}
             </foreach>
-            )
+            ) or dh.sub_type='采购退货' or dh.sub_type='零售')
         </if>
         <if test="depotList.size()>0">
             <if test="type == '入库'">
@@ -429,11 +429,11 @@
             )
         </if>
         <if test="organArray != null and organArray !=''">
-            and dh.organ_id in (
+            and (dh.organ_id in (
             <foreach collection="organArray" item="organId" separator=",">
                 #{organId}
             </foreach>
-            )
+            ) or dh.sub_type='采购退货' or dh.sub_type='零售')
         </if>
         <if test="depotList.size()>0">
             <if test="type == '入库'">

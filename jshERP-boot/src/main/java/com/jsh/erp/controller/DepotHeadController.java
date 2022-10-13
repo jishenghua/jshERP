@@ -92,9 +92,9 @@ public class DepotHeadController {
      * @param request
      * @return
      */
-    @GetMapping(value = "/findInDetail")
+    @GetMapping(value = "/findInOutDetail")
     @ApiOperation(value = "入库出库明细接口")
-    public BaseResponseInfo findInDetail(@RequestParam("currentPage") Integer currentPage,
+    public BaseResponseInfo findInOutDetail(@RequestParam("currentPage") Integer currentPage,
                                         @RequestParam("pageSize") Integer pageSize,
                                         @RequestParam(value = "organId", required = false) Integer oId,
                                         @RequestParam("number") String number,
@@ -126,9 +126,82 @@ public class DepotHeadController {
             String [] organArray = depotHeadService.getOrganArray(subType, "");
             beginTime = Tools.parseDayToTime(beginTime, BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            List<DepotHeadVo4InDetail> list = depotHeadService.findInDetail(beginTime, endTime, type, creatorArray, organArray,
+            List<DepotHeadVo4InDetail> list = depotHeadService.findInOutDetail(beginTime, endTime, type, creatorArray, organArray,
                     StringUtil.toNull(materialParam), depotList, oId, StringUtil.toNull(number), remark, (currentPage-1)*pageSize, pageSize);
-            int total = depotHeadService.findInDetailCount(beginTime, endTime, type, creatorArray, organArray,
+            int total = depotHeadService.findInOutDetailCount(beginTime, endTime, type, creatorArray, organArray,
+                    StringUtil.toNull(materialParam), depotList, oId, StringUtil.toNull(number), remark);
+            map.put("total", total);
+            //存放数据json数组
+            if (null != list) {
+                for (DepotHeadVo4InDetail dhd : list) {
+                    resList.add(dhd);
+                }
+            }
+            map.put("rows", resList);
+            res.code = 200;
+            res.data = map;
+        } catch(Exception e){
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
+    }
+
+    /**
+     * 改接口准备停用
+     * @param currentPage
+     * @param pageSize
+     * @param oId
+     * @param number
+     * @param materialParam
+     * @param depotId
+     * @param beginTime
+     * @param endTime
+     * @param roleType
+     * @param type
+     * @param remark
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @GetMapping(value = "/findInDetail")
+    @ApiOperation(value = "入库出库明细接口")
+    public BaseResponseInfo findInDetail(@RequestParam("currentPage") Integer currentPage,
+                                         @RequestParam("pageSize") Integer pageSize,
+                                         @RequestParam(value = "organId", required = false) Integer oId,
+                                         @RequestParam("number") String number,
+                                         @RequestParam("materialParam") String materialParam,
+                                         @RequestParam(value = "depotId", required = false) Long depotId,
+                                         @RequestParam("beginTime") String beginTime,
+                                         @RequestParam("endTime") String endTime,
+                                         @RequestParam(value = "roleType", required = false) String roleType,
+                                         @RequestParam("type") String type,
+                                         @RequestParam("remark") String remark,
+                                         HttpServletRequest request)throws Exception {
+        BaseResponseInfo res = new BaseResponseInfo();
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            List<Long> depotList = new ArrayList<>();
+            if(depotId != null) {
+                depotList.add(depotId);
+            } else {
+                //未选择仓库时默认为当前用户有权限的仓库
+                JSONArray depotArr = depotService.findDepotByCurrentUser();
+                for(Object obj: depotArr) {
+                    JSONObject object = JSONObject.parseObject(obj.toString());
+                    depotList.add(object.getLong("id"));
+                }
+            }
+            List<DepotHeadVo4InDetail> resList = new ArrayList<DepotHeadVo4InDetail>();
+            String [] creatorArray = depotHeadService.getCreatorArray(roleType);
+            String subType = "出库".equals(type)? "销售" : "";
+            String [] organArray = depotHeadService.getOrganArray(subType, "");
+            beginTime = Tools.parseDayToTime(beginTime, BusinessConstants.DAY_FIRST_TIME);
+            endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
+            List<DepotHeadVo4InDetail> list = depotHeadService.findInOutDetail(beginTime, endTime, type, creatorArray, organArray,
+                    StringUtil.toNull(materialParam), depotList, oId, StringUtil.toNull(number), remark, (currentPage-1)*pageSize, pageSize);
+            int total = depotHeadService.findInOutDetailCount(beginTime, endTime, type, creatorArray, organArray,
                     StringUtil.toNull(materialParam), depotList, oId, StringUtil.toNull(number), remark);
             map.put("total", total);
             //存放数据json数组
