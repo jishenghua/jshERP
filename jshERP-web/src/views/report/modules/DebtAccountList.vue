@@ -3,7 +3,6 @@
     :title="title"
     :width="1250"
     :visible="visible"
-    @ok="handleOk"
     @cancel="handleCancel"
     cancelText="关闭"
     wrapClassName="ant-modal-cust-warp"
@@ -43,7 +42,7 @@
       rowKey="id"
       :columns="columns"
       :dataSource="dataSource"
-      :pagination="ipagination"
+      :pagination="false"
       :loading="loading"
       @change="handleTableChange">
       <span slot="numberCustomRender" slot-scope="text, record">
@@ -81,6 +80,9 @@
           roleType: Vue.ls.get('roleType'),
           status: ""
         },
+        ipagination:{
+          pageSize: 10001
+        },
         labelCol: {
           xs: { span: 24 },
           sm: { span: 8 },
@@ -92,13 +94,9 @@
         // 表头
         columns: [
           {
-            title: '#',
-            dataIndex: '',
-            key:'rowIndex',
-            width:40,
-            align:"center",
+            title: '#', dataIndex: 'rowIndex', width:40, align:"center",
             customRender:function (t,r,index) {
-              return parseInt(index)+1;
+              return (t !== '合计') ? (parseInt(index) + 1) : t
             }
           },
           {
@@ -115,17 +113,9 @@
           },
           { title: '单据日期', dataIndex: 'operTimeStr',width:130},
           { title: '操作员', dataIndex: 'userName',width:60},
-          { title: '欠款', dataIndex: 'needDebt',width:70,
-            customRender:function (text,record,index) {
-              return (record.discountLastMoney + record.otherMoney - (record.deposit + record.changeAmount)).toFixed(2);
-            }
-          },
-          { title: '已收欠款', dataIndex: 'finishDebt',width:70 },
-          { title: '待收欠款', dataIndex: 'debt',width:70,
-            customRender:function (text,record,index) {
-              return (record.discountLastMoney + record.otherMoney - (record.deposit + record.changeAmount + record.finishDebt)).toFixed(2);
-            }
-          }
+          { title: '欠款', dataIndex: 'needDebt',width:70},
+          { title: '已收欠款', dataIndex: 'finishDebt',width:70},
+          { title: '待收欠款', dataIndex: 'debt',width:70}
         ],
         url: {
           list: "/depotHead/debtList"
@@ -157,8 +147,6 @@
         }
         this.model = Object.assign({}, {});
         this.visible = true;
-        this.ipagination.pageSize = 100
-        this.ipagination.pageSizeOptions = ['100', '200', '300']
         this.loadData(1)
       },
       myHandleDetail(record) {
