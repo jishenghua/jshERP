@@ -246,7 +246,7 @@
         }
       },
       exportExcel() {
-        let aoa = [['单据编号', '条码', '名称', '规格', '型号', '单位', '数量', '单价', '金额', '税率(%)', '税额', '供应商', '仓库', '入库日期', '备注']]
+        let aoa = [['单据编号', '条码', '名称', '规格', '型号', '单位', '数量', '单价', '金额', '税率(%)', '税额', '往来单位', '仓库', '入库日期', '备注']]
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
           let item = [ds.number, ds.barCode, ds.mname, ds.standard, ds.model, ds.mUnit, ds.operNumber, ds.unitPrice,
