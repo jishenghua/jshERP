@@ -1019,7 +1019,18 @@ public class DepotHeadService {
                     if(dh.getOperTime() != null) {
                         dh.setOperTimeStr(getCenternTime(dh.getOperTime()));
                     }
-                    dh.setFinishDebt(accountItemService.getEachAmountByBillId(dh.getId()));
+                    BigDecimal discountLastMoney = dh.getDiscountLastMoney()!=null?dh.getDiscountLastMoney():BigDecimal.ZERO;
+                    BigDecimal otherMoney = dh.getOtherMoney()!=null?dh.getOtherMoney():BigDecimal.ZERO;
+                    BigDecimal deposit = dh.getDeposit()!=null?dh.getDeposit():BigDecimal.ZERO;
+                    BigDecimal changeAmount = dh.getChangeAmount()!=null?dh.getChangeAmount():BigDecimal.ZERO;
+                    //欠款
+                    dh.setNeedDebt(discountLastMoney.add(otherMoney).subtract(deposit.add(changeAmount)));
+                    BigDecimal finishDebt = accountItemService.getEachAmountByBillId(dh.getId());
+                    finishDebt = finishDebt!=null?finishDebt:BigDecimal.ZERO;
+                    //已收欠款
+                    dh.setFinishDebt(finishDebt);
+                    //待收欠款
+                    dh.setDebt(discountLastMoney.add(otherMoney).subtract(deposit.add(changeAmount).add(finishDebt)));
                     dh.setMaterialsList(findMaterialsListByHeaderId(dh.getId()));
                     resList.add(dh);
                 }
