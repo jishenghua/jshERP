@@ -1,4 +1,3 @@
-import * as api from '@/api/api'
 import { isURL } from '@/utils/validate'
 import XLSX from 'xlsx'
 import Vue from 'vue'
@@ -527,8 +526,7 @@ export function getNowFormatStr() {
   if (strSeconds >= 0 && strSeconds <= 9) {
     strSeconds = "0" + strSeconds;
   }
-  let currentdate = month + strDate + strHours + strMinutes + strSeconds;
-  return currentdate;
+  return month +''+ strDate +''+ strHours +''+ strMinutes +''+ strSeconds;
 }
 
 /**
@@ -609,7 +607,7 @@ export function sheet2blob (aoa, sheetName) {
   workbook.Sheets[sheetName] = sheet
   // 生成excel的配置项
   let wopts = {
-    bookType: 'xlsx', // 要生成的文件类型
+    bookType: 'xls', // 要生成的文件类型
     bookSST: false, // 是否生成Shared String Table，官方解释是，如果开启生成速度会下降，但在低版本IOS设备上有更好的兼容性
     type: 'binary'
   }

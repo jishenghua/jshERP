@@ -28,27 +28,30 @@
           <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
             <a-col :md="6" :sm="24">
               <a-button type="primary" @click="searchQuery">查询</a-button>
-              <a-button style="margin-left: 8px" @click="searchReset">重置</a-button>
+              <a-button style="margin-left: 8px" v-print="'#debtAccountPrint'" icon="printer">打印</a-button>
+              <a-button style="margin-left: 8px" @click="exportExcel" icon="download">导出</a-button>
             </a-col>
           </span>
         </a-row>
       </a-form>
     </div>
     <!-- table区域-begin -->
-    <a-table
-      bordered
-      ref="table"
-      size="middle"
-      rowKey="id"
-      :columns="columns"
-      :dataSource="dataSource"
-      :pagination="false"
-      :loading="loading"
-      @change="handleTableChange">
-      <span slot="numberCustomRender" slot-scope="text, record">
-        <a @click="myHandleDetail(record)">{{record.number}}</a>
-      </span>
-    </a-table>
+    <section ref="debtPrint" id="debtAccountPrint">
+      <a-table
+        bordered
+        ref="table"
+        size="middle"
+        rowKey="id"
+        :columns="columns"
+        :dataSource="dataSource"
+        :pagination="false"
+        :loading="loading"
+        @change="handleTableChange">
+        <span slot="numberCustomRender" slot-scope="text, record">
+          <a @click="myHandleDetail(record)">{{record.number}}</a>
+        </span>
+      </a-table>
+    </section>
     <!-- table区域-end -->
     <!-- 表单区域 -->
     <bill-detail ref="modalDetail"></bill-detail>
@@ -58,6 +61,7 @@
 <script>
   import BillDetail from '../../bill/dialog/BillDetail'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
+  import { openDownloadDialog, sheet2blob} from "@/utils/util"
   import { findBillDetailByNumber } from '@/api/api'
   import Vue from 'vue'
   export default {
@@ -168,17 +172,15 @@
       onDateOk(value) {
         console.log(value);
       },
-      searchReset() {
-        this.queryParam = {
-          organId: this.queryParam.organId,
-          type: this.queryParam.type,
-          subType: this.queryParam.subType,
-          beginTime: this.queryParam.beginTime,
-          endTime: this.queryParam.endTime,
-          roleType: Vue.ls.get('roleType'),
+      exportExcel() {
+        let aoa = [['单据编号', this.columns[2].title, '商品信息', '单据日期', '操作员', '欠款', '已收欠款', '待收欠款']]
+        for (let i = 0; i < this.dataSource.length; i++) {
+          let ds = this.dataSource[i]
+          let item = [ds.number, ds.organName, ds.materialsList, ds.operTimeStr, ds.userName, ds.needDebt, ds.finishDebt, ds.debt]
+          aoa.push(item)
         }
-        this.loadData(1);
-      },
+        openDownloadDialog(sheet2blob(aoa), '欠款详情')
+      }
     }
   }
 </script>
