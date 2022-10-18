@@ -163,7 +163,7 @@
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="本次付款">
-              <a-input placeholder="请输入本次付款" v-decorator.trim="[ 'changeAmount', validatorRules.price ]" @keyup="onKeyUpChangeAmount"/>
+              <a-input placeholder="请输入本次付款" v-decorator.trim="[ 'changeAmount', validatorRules.changeAmount ]" @keyup="onKeyUpChangeAmount"/>
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
@@ -291,17 +291,23 @@
         validatorRules:{
           operTime:{
             rules: [
-              { required: true, message: '请输入单据日期!' }
+              { required: true, message: '请输入单据日期！' }
             ]
           },
           organId:{
             rules: [
-              { required: true, message: '请选择供应商!' }
+              { required: true, message: '请选择供应商！' }
             ]
           },
           accountId:{
             rules: [
-              { required: true, message: '请选择结算账户!' }
+              { required: true, message: '请选择结算账户！' }
+            ]
+          },
+          changeAmount:{
+            rules: [
+              { required: true, message: '请输入金额，如果为空请填0！' },
+              { pattern: /^(([0-9][0-9]*)|([0]\.\d{0,4}|[0-9][0-9]*\.\d{0,4}))$/, message: '金额格式不正确!' }
             ]
           }
         },
