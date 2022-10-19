@@ -41,6 +41,8 @@ public class DepotHeadVo4List extends DepotHead{
 
     private BigDecimal debt;
 
+    private BigDecimal materialCount;
+
     public String getProjectName() {
         return projectName;
     }
@@ -175,5 +177,13 @@ public class DepotHeadVo4List extends DepotHead{
 
     public void setDebt(BigDecimal debt) {
         this.debt = debt;
+    }
+
+    public BigDecimal getMaterialCount() {
+        return materialCount;
+    }
+
+    public void setMaterialCount(BigDecimal materialCount) {
+        this.materialCount = materialCount;
     }
 }

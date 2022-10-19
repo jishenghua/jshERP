@@ -61,6 +61,9 @@ public interface DepotHeadMapperEx {
     String findMaterialsListByHeaderId(
             @Param("id") Long id);
 
+    BigDecimal getMaterialCountByHeaderId(
+            @Param("id") Long id);
+
     List<DepotHeadVo4InDetail> findInOutDetail(
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,

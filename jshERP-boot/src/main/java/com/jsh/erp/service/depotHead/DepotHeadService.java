@@ -151,6 +151,7 @@ public class DepotHeadService {
                         dh.setOperTimeStr(getCenternTime(dh.getOperTime()));
                     }
                     dh.setMaterialsList(findMaterialsListByHeaderId(dh.getId()));
+                    dh.setMaterialCount(getMaterialCountByHeaderId(dh.getId()));
                     resList.add(dh);
                 }
             }
@@ -480,6 +481,16 @@ public class DepotHeadService {
         String result = null;
         try{
             result = depotHeadMapperEx.findMaterialsListByHeaderId(id);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return result;
+    }
+
+    private BigDecimal getMaterialCountByHeaderId(Long id) {
+        BigDecimal result = null;
+        try{
+            result = depotHeadMapperEx.getMaterialCountByHeaderId(id);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
