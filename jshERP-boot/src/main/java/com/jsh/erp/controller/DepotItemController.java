@@ -213,18 +213,21 @@ public class DepotItemController {
                     item.put("preNumber", diEx.getOperNumber()); //原数量
                     item.put("finishNumber", depotItemService.getFinishNumber(diEx.getMaterialExtendId(), diEx.getId(), diEx.getHeaderId(), unitInfo, materialUnit, linkType)); //已入库|已出库
                     item.put("purchaseDecimal", diEx.getPurchaseDecimal());  //采购价
-                    item.put("unitPrice", diEx.getUnitPrice());
-                    item.put("taxUnitPrice", diEx.getTaxUnitPrice());
-                    item.put("allPrice", diEx.getAllPrice());
+                    if("basic".equals(linkType)) {
+                        //正常情况显示金额，而以销定购的情况不能显示金额
+                        item.put("unitPrice", diEx.getUnitPrice());
+                        item.put("taxUnitPrice", diEx.getTaxUnitPrice());
+                        item.put("allPrice", diEx.getAllPrice());
+                        item.put("taxRate", diEx.getTaxRate());
+                        item.put("taxMoney", diEx.getTaxMoney());
+                        item.put("taxLastMoney", diEx.getTaxLastMoney());
+                    }
                     item.put("remark", diEx.getRemark());
                     item.put("linkId", diEx.getLinkId());
                     item.put("depotId", diEx.getDepotId() == null ? "" : diEx.getDepotId());
                     item.put("depotName", diEx.getDepotId() == null ? "" : diEx.getDepotName());
                     item.put("anotherDepotId", diEx.getAnotherDepotId() == null ? "" : diEx.getAnotherDepotId());
                     item.put("anotherDepotName", diEx.getAnotherDepotId() == null ? "" : diEx.getAnotherDepotName());
-                    item.put("taxRate", diEx.getTaxRate());
-                    item.put("taxMoney", diEx.getTaxMoney());
-                    item.put("taxLastMoney", diEx.getTaxLastMoney());
                     item.put("mType", diEx.getMaterialType());
                     item.put("op", 1);
                     dataArray.add(item);

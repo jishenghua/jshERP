@@ -150,8 +150,15 @@ public class DepotHeadService {
                     if(dh.getOperTime() != null) {
                         dh.setOperTimeStr(getCenternTime(dh.getOperTime()));
                     }
+                    //商品信息简述
                     dh.setMaterialsList(findMaterialsListByHeaderId(dh.getId()));
+                    //商品总数量
                     dh.setMaterialCount(getMaterialCountByHeaderId(dh.getId()));
+                    //以销定购的情况（不能显示销售单据的金额）
+                    if(StringUtil.isNotEmpty(purchaseStatus)) {
+                        dh.setTotalPrice(null);
+                        dh.setDiscountLastMoney(null);
+                    }
                     resList.add(dh);
                 }
             }
