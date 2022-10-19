@@ -26,6 +26,8 @@
       <a-button v-if="billType === '组装单'" v-print="'#assemblePrint'">普通打印</a-button>
       <a-button v-if="billType === '拆卸单'" v-print="'#disassemblePrint'">普通打印</a-button>
       <a-button v-if="billType === '盘点复盘'" v-print="'#stockCheckReplayPrint'">普通打印</a-button>
+      <!--导出Excel-->
+      <a-button v-if="billType === '采购订单'||billType === '销售订单'" @click="exportExcel()">导出</a-button>
       <a-button key="back" @click="handleCancel">取消</a-button>
     </template>
     <a-form :form="form">
@@ -976,7 +978,7 @@
   import pick from 'lodash.pick'
   import { getAction } from '@/api/manage'
   import { findBillDetailByNumber, findFinancialDetailByNumber, getPlatformConfigByKey, getCurrentSystemConfig} from '@/api/api'
-  import { getMpListShort } from "@/utils/util"
+  import { getMpListShort, openDownloadDialog, sheet2blob } from "@/utils/util"
   import BillPrintIframe from './BillPrintIframe'
   import FinancialDetail from '../../financial/dialog/FinancialDetail'
   import JUpload from '@/components/jeecg/JUpload'
@@ -1498,6 +1500,29 @@
             this.$refs.modalDetail.title = this.billType + "-三联打印预览";
           }
         })
+      },
+      exportExcel() {
+        let aoa = []
+        let finishType = ''
+        let organType = ''
+        if(this.billType === '采购订单') {
+          finishType = '已入库'
+          organType = '供应商：'
+        } else if(this.billType === '销售订单') {
+          finishType = '已出库'
+          organType = '客户：'
+        }
+        aoa = [[organType, this.model.organName, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number],[]]
+        let title = ['条码', '名称', '规格', '型号', '颜色', '扩展信息', '库存', '单位', '多属性', '数量', finishType,
+          '单价', '金额', '税率(%)', '税额', '价税合计', '备注']
+        aoa.push(title)
+        for (let i = 0; i < this.dataSource.length; i++) {
+          let ds = this.dataSource[i]
+          let item = [ds.barCode, ds.name, ds.standard, ds.model, ds.color, ds.materialOther, ds.stock, ds.unit, ds.sku,
+            ds.operNumber, ds.finishNumber, ds.unitPrice, ds.allPrice, ds.taxRate, ds.taxMoney, ds.taxLastMoney, ds.remark]
+          aoa.push(item)
+        }
+        openDownloadDialog(sheet2blob(aoa), this.billType + '_' + this.model.number)
       }
     }
   }
