@@ -154,8 +154,9 @@ public class DepotHeadService {
                     dh.setMaterialsList(findMaterialsListByHeaderId(dh.getId()));
                     //商品总数量
                     dh.setMaterialCount(getMaterialCountByHeaderId(dh.getId()));
-                    //以销定购的情况（不能显示销售单据的金额）
+                    //以销定购的情况（不能显示销售单据的金额和客户名称）
                     if(StringUtil.isNotEmpty(purchaseStatus)) {
+                        dh.setOrganName("****");
                         dh.setTotalPrice(null);
                         dh.setDiscountLastMoney(null);
                     }
