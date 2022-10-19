@@ -58,7 +58,8 @@
       :customRow="rowAction"
       @change="handleTableChange">
       <span slot="numberCustomRender" slot-scope="text, record">
-        <a @click="myHandleDetail(record)">{{record.number}}</a>
+        <a v-if="!queryParam.purchaseStatus" @click="myHandleDetail(record)">{{record.number}}</a>
+        <span v-if="queryParam.purchaseStatus">{{record.number}}</span>
       </span>
       <template slot="customRenderStatus" slot-scope="text, record">
         <template v-if="!queryParam.purchaseStatus">
@@ -139,7 +140,7 @@
         // 表头
         columns: [
           { title: '', dataIndex: 'organName',width:120, ellipsis:true},
-          { title: '单据编号', dataIndex: 'number',width:150,
+          { title: '单据编号', dataIndex: 'number',width:130,
             scopedSlots: { customRender: 'numberCustomRender' },
           },
           { title: '商品信息', dataIndex: 'materialsList',width:280, ellipsis:true,
@@ -151,6 +152,7 @@
           },
           { title: '单据日期', dataIndex: 'operTimeStr',width:145},
           { title: '操作员', dataIndex: 'userName',width:70},
+          { title: '数量', dataIndex: 'materialCount',width:60},
           { title: '金额合计', dataIndex: 'totalPrice',width:70},
           { title: '含税合计', dataIndex: 'totalTaxLastMoney',width:70,
             customRender:function (text,record,index) {

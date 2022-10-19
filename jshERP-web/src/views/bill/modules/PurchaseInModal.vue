@@ -368,7 +368,8 @@
           // 加载子表数据
           let params = {
             headerId: this.model.id,
-            mpList: getMpListShort(Vue.ls.get('materialPropertyList'))  //扩展属性
+            mpList: getMpListShort(Vue.ls.get('materialPropertyList')),  //扩展属性
+            linkType: 'basic'
           }
           let url = this.readOnly ? this.url.detailList : this.url.detailList;
           this.requestSubTableData(url, params, this.materialTable);

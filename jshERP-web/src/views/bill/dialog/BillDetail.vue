@@ -201,7 +201,7 @@
             </a-col>
             <a-col :span="6">
               <a-form-item v-if="purchaseBySaleFlag" :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联订单">
-                <a @click="myHandleDetail(model.linkNumber)">{{model.linkNumber}}</a>
+                {{model.linkNumber}}
               </a-form-item>
             </a-col>
           </a-row>
