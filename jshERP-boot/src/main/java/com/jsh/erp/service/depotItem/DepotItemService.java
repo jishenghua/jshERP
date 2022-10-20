@@ -499,13 +499,15 @@ public class DepotItemService {
                                     String.format(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_MSG, barCode));
                         }
                     } else if("update".equals(actionType)) {
+                        //当前单据的类型
+                        String currentSubType = depotHead.getSubType();
                         //在更新模式进行状态赋值
                         String unit = rowObj.get("unit").toString();
                         Long preHeaderId = depotHeadService.getDepotHead(depotHead.getLinkNumber()).getId();
                         //前一个单据的数量
                         BigDecimal preNumber = getPreItemByHeaderIdAndMaterial(depotHead.getLinkNumber(), depotItem.getMaterialExtendId(), depotItem.getLinkId()).getOperNumber();
                         //除去此单据之外的已入库|已出库
-                        BigDecimal realFinishNumber = getRealFinishNumber(depotItem.getMaterialExtendId(), depotItem.getLinkId(), preHeaderId, headerId, unitInfo, unit);
+                        BigDecimal realFinishNumber = getRealFinishNumber(currentSubType, depotItem.getMaterialExtendId(), depotItem.getLinkId(), preHeaderId, headerId, unitInfo, unit);
                         if(depotItem.getOperNumber().add(realFinishNumber).compareTo(preNumber)>0) {
                             throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_CODE,
                                     String.format(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_MSG, barCode));
@@ -1003,7 +1005,8 @@ public class DepotItemService {
     }
 
     /**
-     * 除去此单据之外的已入库|已出库
+     * 除去此单据之外的已入库|已出库|已转采购
+     * @param currentSubType
      * @param meId
      * @param linkId
      * @param preHeaderId
@@ -1013,16 +1016,10 @@ public class DepotItemService {
      * @return
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public BigDecimal getRealFinishNumber(Long meId, Long linkId, Long preHeaderId, Long currentHeaderId, Unit unitInfo, String materialUnit) {
-        String goToType = "";
+    public BigDecimal getRealFinishNumber(String currentSubType, Long meId, Long linkId, Long preHeaderId, Long currentHeaderId, Unit unitInfo, String materialUnit) {
+        String goToType = currentSubType;
         DepotHead depotHead =depotHeadMapper.selectByPrimaryKey(preHeaderId);
         String linkNumber = depotHead.getNumber(); //订单号
-        if(BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(depotHead.getSubType())) {
-            goToType = BusinessConstants.SUB_TYPE_PURCHASE;
-        }
-        if(BusinessConstants.SUB_TYPE_SALES_ORDER.equals(depotHead.getSubType())) {
-            goToType = BusinessConstants.SUB_TYPE_SALES;
-        }
         BigDecimal count = depotItemMapperEx.getRealFinishNumber(meId, linkId, linkNumber, currentHeaderId, goToType);
         //根据多单位情况进行数量的转换
         if(materialUnit.equals(unitInfo.getOtherUnit()) && unitInfo.getRatio() != 0) {
