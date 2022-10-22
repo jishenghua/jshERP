@@ -30,16 +30,8 @@ import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 public class PlatformConfigController {
     private Logger logger = LoggerFactory.getLogger(PlatformConfigController.class);
 
-    @Value("${demonstrate.open}")
-    private boolean demonstrateOpen;
-
     @Resource
     private PlatformConfigService platformConfigService;
-
-    @Resource
-    private UserService userService;
-
-    private static final String TEST_USER = "jsh";
 
     /**
      * 获取平台名称

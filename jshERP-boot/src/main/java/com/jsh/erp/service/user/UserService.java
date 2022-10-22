@@ -38,11 +38,6 @@ import java.util.*;
 public class UserService {
     private Logger logger = LoggerFactory.getLogger(UserService.class);
 
-    private static final String TEST_USER = "jsh";
-
-    @Value("${demonstrate.open}")
-    private boolean demonstrateOpen;
-
     @Resource
     private UserMapper userMapper;
 
@@ -106,16 +101,12 @@ public class UserService {
             list=userMapperEx.selectByConditionUser(userName, loginName, offset, rows);
             for(UserEx ue: list){
                 String userType = "";
-                if(demonstrateOpen && TEST_USER.equals(ue.getLoginName())){
-                    userType = "演示用户";
+                if (ue.getId().equals(ue.getTenantId())) {
+                    userType = "租户";
+                } else if(ue.getTenantId() == null){
+                    userType = "超管";
                 } else {
-                    if (ue.getId().equals(ue.getTenantId())) {
-                        userType = "租户";
-                    } else if(ue.getTenantId() == null){
-                        userType = "超管";
-                    } else {
-                        userType = "普通";
-                    }
+                    userType = "普通";
                 }
                 ue.setUserType(userType);
             }
@@ -257,12 +248,6 @@ public class UserService {
         sb.append(BusinessConstants.LOG_OPERATION_TYPE_DELETE);
         List<User> list = getUserListByIds(ids);
         for(User user: list){
-            if(demonstrateOpen && user.getLoginName().equals(TEST_USER)){
-                logger.error("异常码[{}],异常提示[{}],参数,ids:[{}]",
-                        ExceptionConstants.USER_LIMIT_DELETE_CODE,ExceptionConstants.USER_LIMIT_DELETE_MSG,ids);
-                throw new BusinessRunTimeException(ExceptionConstants.USER_LIMIT_DELETE_CODE,
-                        ExceptionConstants.USER_LIMIT_DELETE_MSG);
-            }
             if(user.getId().equals(user.getTenantId())) {
                 logger.error("异常码[{}],异常提示[{}],参数,ids:[{}]",
                         ExceptionConstants.USER_LIMIT_TENANT_DELETE_CODE,ExceptionConstants.USER_LIMIT_TENANT_DELETE_MSG,ids);
@@ -373,25 +358,6 @@ public class UserService {
         HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
         Long userId = Long.parseLong(redisService.getObjectFromSessionByKey(request,"userId").toString());
         return getUser(userId);
-    }
-
-    /**
-     * 检查当前用户是否是演示用户
-     * @return
-     */
-    public Boolean checkIsTestUser() throws Exception{
-        Boolean result = false;
-        try {
-            if (demonstrateOpen) {
-                User user = getCurrentUser();
-                if (TEST_USER.equals(user.getLoginName())) {
-                    result = true;
-                }
-            }
-        } catch (Exception e) {
-            JshException.readFail(logger, e);
-        }
-        return result;
     }
 
     /**
@@ -557,12 +523,6 @@ public class UserService {
             throw new BusinessRunTimeException(ExceptionConstants.USER_NAME_LIMIT_USE_CODE,
                     ExceptionConstants.USER_NAME_LIMIT_USE_MSG);
         } else {
-            if(demonstrateOpen && ue.getLoginName().equals(TEST_USER)){
-                logger.error("异常码[{}],异常提示[{}],参数,obj:[{}]",
-                        ExceptionConstants.USER_LIMIT_UPDATE_CODE,ExceptionConstants.USER_LIMIT_UPDATE_MSG, TEST_USER);
-                throw new BusinessRunTimeException(ExceptionConstants.USER_LIMIT_UPDATE_CODE,
-                        ExceptionConstants.USER_LIMIT_UPDATE_MSG);
-            }
             logService.insertLog("用户",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(ue.getId()).toString(),
                     ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
@@ -820,14 +780,10 @@ public class UserService {
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchSetStatus(Byte status, String ids)throws Exception {
         int result=0;
+        StringBuilder userStr = new StringBuilder();
         List<User> list = getUserListByIds(ids);
         for(User user: list) {
-            if (demonstrateOpen && user.getLoginName().equals(TEST_USER)) {
-                logger.error("异常码[{}],异常提示[{}],参数,obj:[{}]",
-                        ExceptionConstants.USER_LIMIT_UPDATE_CODE, ExceptionConstants.USER_LIMIT_UPDATE_MSG, TEST_USER);
-                throw new BusinessRunTimeException(ExceptionConstants.USER_LIMIT_UPDATE_CODE,
-                        ExceptionConstants.USER_LIMIT_UPDATE_MSG);
-            }
+            userStr.append(user.getLoginName()).append(" ");
         }
         String statusStr ="";
         if(status == 0) {
@@ -836,7 +792,7 @@ public class UserService {
             statusStr ="批量禁用";
         }
         logService.insertLog("用户",
-                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(ids).append("-").append(statusStr).toString(),
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(userStr).append("-").append(statusStr).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         List<Long> idList = StringUtil.strToLongList(ids);
         User user = new User();

@@ -48,9 +48,6 @@ public class UserController {
     @Value("${manage.roleId}")
     private Integer manageRoleId;
 
-    @Value("${demonstrate.open}")
-    private boolean demonstrateOpen;
-
     @Resource
     private UserService userService;
 
@@ -232,10 +229,7 @@ public class UserController {
             String password = jsonObject.getString("password");
             User user = userService.getUser(userId);
             //必须和原始密码一致才可以更新密码
-            if(demonstrateOpen && user.getLoginName().equals(TEST_USER)){
-                flag = 3; //jsh用户不能修改密码
-                info = "jsh用户不能修改密码";
-            } else if (oldpwd.equalsIgnoreCase(user.getPassword())) {
+            if (oldpwd.equalsIgnoreCase(user.getPassword())) {
                 user.setPassword(password);
                 flag = userService.updateUserByObj(user); //1-成功
                 info = "修改成功";

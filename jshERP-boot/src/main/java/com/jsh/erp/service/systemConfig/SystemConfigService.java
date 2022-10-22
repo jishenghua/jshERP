@@ -88,13 +88,9 @@ public class SystemConfigService {
         SystemConfig systemConfig = JSONObject.parseObject(obj.toJSONString(), SystemConfig.class);
         int result=0;
         try{
-            if(userService.checkIsTestUser()) {
-                result=-1;
-            } else {
-                result=systemConfigMapper.insertSelective(systemConfig);
-                logService.insertLog("系统配置",
-                        new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(systemConfig.getCompanyName()).toString(), request);
-            }
+            result=systemConfigMapper.insertSelective(systemConfig);
+            logService.insertLog("系统配置",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(systemConfig.getCompanyName()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -106,13 +102,9 @@ public class SystemConfigService {
         SystemConfig systemConfig = JSONObject.parseObject(obj.toJSONString(), SystemConfig.class);
         int result=0;
         try{
-            if(userService.checkIsTestUser()) {
-                result=-1;
-            } else {
-                result = systemConfigMapper.updateByPrimaryKeySelective(systemConfig);
-                logService.insertLog("系统配置",
-                        new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(systemConfig.getCompanyName()).toString(), request);
-            }
+            result = systemConfigMapper.updateByPrimaryKeySelective(systemConfig);
+            logService.insertLog("系统配置",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(systemConfig.getCompanyName()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -138,11 +130,7 @@ public class SystemConfigService {
         String [] idArray=ids.split(",");
         int result=0;
         try{
-            if(userService.checkIsTestUser()) {
-                result=-1;
-            } else {
-                result = systemConfigMapperEx.batchDeleteSystemConfigByIds(new Date(), userInfo == null ? null : userInfo.getId(), idArray);
-            }
+            result = systemConfigMapperEx.batchDeleteSystemConfigByIds(new Date(), userInfo == null ? null : userInfo.getId(), idArray);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
