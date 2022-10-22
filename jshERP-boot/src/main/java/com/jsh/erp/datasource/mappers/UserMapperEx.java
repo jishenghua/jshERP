@@ -30,4 +30,6 @@ public interface UserMapperEx {
 
     List<TreeNodeEx> getNodeTree();
     List<TreeNodeEx> getNextNodeTree(Map<String, Object> parameterMap);
+
+    void disableUserByLimit(@Param("tenantId") Long tenantId);
 }

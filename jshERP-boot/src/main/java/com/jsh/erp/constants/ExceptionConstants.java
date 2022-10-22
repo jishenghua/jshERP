@@ -34,12 +34,6 @@ public class ExceptionConstants {
      **/
     public static final int SERVICE_SYSTEM_ERROR_CODE = 500;
     public static final String SERVICE_SYSTEM_ERROR_MSG = "未知异常";
-
-    /**
-     * 删除操作被拒绝，请联系管理员
-     **/
-    public static final int DELETE_REFUSED_CODE = 600;
-    public static final String DELETE_REFUSED_MSG = "删除操作被拒绝，请联系管理员";
     /**
      * 检测到存在依赖数据，是否强制删除？
      **/
@@ -66,16 +60,13 @@ public class ExceptionConstants {
     public static final String USER_LOGIN_NAME_ALREADY_EXISTS_MSG = "登录名在本系统已存在";
     //用户录入数量超出限制
     public static final int USER_OVER_LIMIT_FAILED_CODE = 500004;
-    public static final String USER_OVER_LIMIT_FAILED_MSG = "用户录入数量超出限制，请联系管理员";
+    public static final String USER_OVER_LIMIT_FAILED_MSG = "用户录入数量超出限制，请联系平台管理员";
     //此用户名限制使用
     public static final int USER_NAME_LIMIT_USE_CODE = 500005;
     public static final String USER_NAME_LIMIT_USE_MSG = "此用户名限制使用";
-    //演示用户不允许删除
-    public static final int USER_LIMIT_DELETE_CODE = 500006;
-    public static final String USER_LIMIT_DELETE_MSG = "抱歉，演示模式下的演示用户不允许删除";
-    //演示用户不允许修改
-    public static final int USER_LIMIT_UPDATE_CODE = 500007;
-    public static final String USER_LIMIT_UPDATE_MSG = "抱歉，演示模式下的演示用户不允许修改";
+    //启用的用户数量超出限制
+    public static final int USER_ENABLE_OVER_LIMIT_FAILED_CODE = 500006;
+    public static final String USER_ENABLE_OVER_LIMIT_FAILED_MSG = "启用的用户数量超出限制，请联系平台管理员";
     //租户不能被删除
     public static final int USER_LIMIT_TENANT_DELETE_CODE = 500008;
     public static final String USER_LIMIT_TENANT_DELETE_MSG = "抱歉，租户不能被删除";
@@ -517,13 +508,6 @@ public class ExceptionConstants {
         JSONObject success = new JSONObject();
         success.put(GLOBAL_RETURNS_CODE, SERVICE_SUCCESS_CODE);
         success.put(GLOBAL_RETURNS_MESSAGE, SERVICE_SUCCESS_MSG);
-        return success;
-    }
-
-    public static JSONObject standardErrorUserOver () {
-        JSONObject success = new JSONObject();
-        success.put(GLOBAL_RETURNS_CODE, USER_OVER_LIMIT_FAILED_CODE);
-        success.put(GLOBAL_RETURNS_MESSAGE, USER_OVER_LIMIT_FAILED_MSG);
         return success;
     }
 }

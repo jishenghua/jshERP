@@ -3,10 +3,12 @@
 <mapper namespace="com.jsh.erp.datasource.mappers.TenantMapperEx">
 
     <resultMap extends="com.jsh.erp.datasource.mappers.LogMapper.BaseResultMap" id="ResultMapEx" type="com.jsh.erp.datasource.entities.TenantEx">
+        <result column="userCount" jdbcType="VARCHAR" property="userCount" />
     </resultMap>
 
     <select id="selectByConditionTenant" parameterType="com.jsh.erp.datasource.entities.TenantExample" resultMap="ResultMapEx">
-        select *
+        select jsh_tenant.*,
+        (select count(jsh_user.id) from jsh_user where jsh_user.Status='0' and jsh_user.tenant_id=jsh_tenant.tenant_id) userCount
         FROM jsh_tenant
         where 1=1
         <if test="loginName != null">

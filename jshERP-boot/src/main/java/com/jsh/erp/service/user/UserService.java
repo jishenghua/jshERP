@@ -1,6 +1,7 @@
 package com.jsh.erp.service.user;
 
 import com.jsh.erp.datasource.entities.*;
+import com.jsh.erp.exception.BusinessParamCheckingException;
 import com.jsh.erp.service.functions.FunctionService;
 import com.jsh.erp.service.redis.RedisService;
 import com.jsh.erp.service.role.RoleService;
@@ -778,12 +779,27 @@ public class UserService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchSetStatus(Byte status, String ids)throws Exception {
+    public int batchSetStatus(Byte status, String ids, HttpServletRequest request)throws Exception {
         int result=0;
-        StringBuilder userStr = new StringBuilder();
         List<User> list = getUserListByIds(ids);
+        //选中的用户的数量
+        int selectUserSize = list.size();
+        //查询启用状态的用户的数量
+        int enableUserSize = getUser().size();
+        long userNumLimit = Long.parseLong(redisService.getObjectFromSessionByKey(request,"userNumLimit").toString());
+        if(selectUserSize + enableUserSize > userNumLimit && status == 0) {
+            throw new BusinessParamCheckingException(ExceptionConstants.USER_ENABLE_OVER_LIMIT_FAILED_CODE,
+                    ExceptionConstants.USER_ENABLE_OVER_LIMIT_FAILED_MSG);
+        }
+        StringBuilder userStr = new StringBuilder();
+        List<Long> idList = new ArrayList<>();
         for(User user: list) {
-            userStr.append(user.getLoginName()).append(" ");
+            if(user.getId().equals(user.getTenantId())) {
+                //租户不能进行禁用
+            } else {
+                idList.add(user.getId());
+                userStr.append(user.getLoginName()).append(" ");
+            }
         }
         String statusStr ="";
         if(status == 0) {
@@ -791,15 +807,18 @@ public class UserService {
         } else if(status == 2) {
             statusStr ="批量禁用";
         }
-        logService.insertLog("用户",
-                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(userStr).append("-").append(statusStr).toString(),
-                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
-        List<Long> idList = StringUtil.strToLongList(ids);
-        User user = new User();
-        user.setStatus(status);
-        UserExample example = new UserExample();
-        example.createCriteria().andIdIn(idList);
-        result = userMapper.updateByExampleSelective(user, example);
+        if(idList.size()>0) {
+            User user = new User();
+            user.setStatus(status);
+            UserExample example = new UserExample();
+            example.createCriteria().andIdIn(idList);
+            result = userMapper.updateByExampleSelective(user, example);
+            logService.insertLog("用户",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(userStr).append("-").append(statusStr).toString(),
+                    ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+        } else {
+            result = 1;
+        }
         return result;
     }
 }

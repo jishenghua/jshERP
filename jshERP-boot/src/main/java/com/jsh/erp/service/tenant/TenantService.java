@@ -6,6 +6,7 @@ import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.mappers.TenantMapper;
 import com.jsh.erp.datasource.mappers.TenantMapperEx;
+import com.jsh.erp.datasource.mappers.UserMapperEx;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.log.LogService;
@@ -32,6 +33,9 @@ public class TenantService {
 
     @Resource
     private TenantMapperEx tenantMapperEx;
+
+    @Resource
+    private UserMapperEx userMapperEx;
 
     @Resource
     private LogService logService;
@@ -113,6 +117,8 @@ public class TenantService {
         Tenant tenant = JSONObject.parseObject(obj.toJSONString(), Tenant.class);
         int result=0;
         try{
+            //如果租户下的用户限制数量为1，则将该租户之外的用户全部禁用
+            userMapperEx.disableUserByLimit(tenant.getTenantId());
             result=tenantMapper.updateByPrimaryKeySelective(tenant);
         }catch(Exception e){
             JshException.writeFail(logger, e);

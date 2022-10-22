@@ -444,7 +444,7 @@ public class UserController {
         Byte status = jsonObject.getByte("status");
         String ids = jsonObject.getString("ids");
         Map<String, Object> objectMap = new HashMap<>();
-        int res = userService.batchSetStatus(status, ids);
+        int res = userService.batchSetStatus(status, ids, request);
         if(res > 0) {
             return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
         } else {
@@ -466,7 +466,7 @@ public class UserController {
             Long userId = Long.parseLong(redisService.getObjectFromSessionByKey(request,"userId").toString());
             User user = userService.getUser(userId);
             //获取当前用户数
-            Long userCurrentNum = userService.countUser(null, null);
+            int userCurrentNum = userService.getUser().size();
             Tenant tenant = tenantService.getTenantByTenantId(user.getTenantId());
             data.put("type", tenant.getType()); //租户类型，0免费租户，1付费租户
             data.put("expireTime", Tools.parseDateToStr(tenant.getExpireTime()));
