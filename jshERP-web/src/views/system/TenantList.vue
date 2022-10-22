@@ -14,7 +14,7 @@
               <a-col :md="6" :sm="24">
                 <a-form-item label="租户类型" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-select v-model="queryParam.type" placeholder="请选择租户类型">
-                    <a-select-option value="0">免费租户</a-select-option>
+                    <a-select-option value="0">试用租户</a-select-option>
                     <a-select-option value="1">付费租户</a-select-option>
                   </a-select>
                 </a-form-item>
@@ -69,7 +69,7 @@
             </span>
             <!-- 状态渲染模板 -->
             <template slot="customRenderType" slot-scope="type">
-              <a-tag v-if="type==0">免费租户</a-tag>
+              <a-tag v-if="type==0">试用租户</a-tag>
               <a-tag v-if="type==1" color="green">付费租户</a-tag>
             </template>
             <template slot="customRenderEnabled" slot-scope="enabled">
@@ -129,11 +129,12 @@
             width: 100
           },
           { title: '登录名称', dataIndex: 'loginName', width: 100, align: "center"},
-          { title: '用户数量限制', dataIndex: 'userNumLimit', width: 100, align: "center"},
-          { title: '租户类型',dataIndex: 'type',width:70,align:"center",
+          { title: '用户数量', dataIndex: 'userCount', width: 60, align: "center"},
+          { title: '用户数量限制', dataIndex: 'userNumLimit', width: 80, align: "center"},
+          { title: '租户类型',dataIndex: 'type',width:60,align:"center",
             scopedSlots: { customRender: 'customRenderType' }
           },
-          { title: '租户状态',dataIndex: 'enabled',width:70,align:"center",
+          { title: '租户状态',dataIndex: 'enabled',width:60,align:"center",
             scopedSlots: { customRender: 'customRenderEnabled' }
           },
           { title: '创建时间', dataIndex: 'createTimeStr', width: 100, align: "center"},
