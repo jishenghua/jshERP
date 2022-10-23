@@ -7,6 +7,8 @@ public class Role {
 
     private String type;
 
+    private String priceLimit;
+
     private String value;
 
     private String description;
@@ -41,6 +43,14 @@ public class Role {
 
     public void setType(String type) {
         this.type = type == null ? null : type.trim();
+    }
+
+    public String getPriceLimit() {
+        return priceLimit;
+    }
+
+    public void setPriceLimit(String priceLimit) {
+        this.priceLimit = priceLimit == null ? null : priceLimit.trim();
     }
 
     public String getValue() {

@@ -1,6 +1,7 @@
 package com.jsh.erp.datasource.mappers;
 
 import com.jsh.erp.datasource.entities.Role;
+import com.jsh.erp.datasource.entities.RoleEx;
 import com.jsh.erp.datasource.entities.RoleExample;
 import org.apache.ibatis.annotations.Param;
 
@@ -9,7 +10,7 @@ import java.util.List;
 
 public interface RoleMapperEx {
 
-    List<Role> selectByConditionRole(
+    List<RoleEx> selectByConditionRole(
             @Param("name") String name,
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);

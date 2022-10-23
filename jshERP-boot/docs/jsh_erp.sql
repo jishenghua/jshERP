@@ -719,6 +719,7 @@ CREATE TABLE `jsh_role` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `name` varchar(50) DEFAULT NULL COMMENT '名称',
   `type` varchar(50) DEFAULT NULL COMMENT '类型',
+  `price_limit` varchar(50) DEFAULT NULL COMMENT '价格屏蔽 1-屏蔽采购价 2-屏蔽零售价 3-屏蔽销售价',
   `value` varchar(200) DEFAULT NULL COMMENT '值',
   `description` varchar(100) DEFAULT NULL COMMENT '描述',
   `enabled` bit(1) DEFAULT NULL COMMENT '启用',
@@ -731,10 +732,10 @@ CREATE TABLE `jsh_role` (
 -- ----------------------------
 -- Records of jsh_role
 -- ----------------------------
-INSERT INTO `jsh_role` VALUES ('4', '管理员', '全部数据', null, null, '', null, null, '0');
-INSERT INTO `jsh_role` VALUES ('10', '租户', '全部数据', null, '', '', null, null, '0');
-INSERT INTO `jsh_role` VALUES ('16', '销售经理', '全部数据', null, 'ddd', '', null, '63', '0');
-INSERT INTO `jsh_role` VALUES ('17', '销售代表', '个人数据', null, 'rrr', '', null, '63', '0');
+INSERT INTO `jsh_role` VALUES ('4', '管理员', '全部数据', null, null, null, '', null, null, '0');
+INSERT INTO `jsh_role` VALUES ('10', '租户', '全部数据', null, null, '', '', null, null, '0');
+INSERT INTO `jsh_role` VALUES ('16', '销售经理', '全部数据', null, null, 'ddd', '', null, '63', '0');
+INSERT INTO `jsh_role` VALUES ('17', '销售代表', '个人数据', null, null, 'rrr', '', null, '63', '0');
 
 -- ----------------------------
 -- Table structure for jsh_sequence

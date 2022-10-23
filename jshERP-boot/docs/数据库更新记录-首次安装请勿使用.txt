@@ -1415,3 +1415,10 @@ alter table jsh_account_head change remark remark varchar(1000) DEFAULT NULL COM
 -- 给单据明细增加采购单价字段
 -- --------------------------------------------------------
 alter table jsh_depot_item add purchase_unit_price decimal(24,6) DEFAULT NULL COMMENT '采购单价' after unit_price;
+
+-- --------------------------------------------------------
+-- 时间 2022年10月23日
+-- by jishenghua
+-- 给角色表增加价格屏蔽字段
+-- --------------------------------------------------------
+alter table jsh_role add price_limit varchar(50) DEFAULT NULL COMMENT '价格屏蔽 1-屏蔽采购价 2-屏蔽零售价 3-屏蔽销售价' after type;

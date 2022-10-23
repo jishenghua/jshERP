@@ -3,6 +3,7 @@ package com.jsh.erp.service.role;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.Role;
+import com.jsh.erp.datasource.entities.RoleEx;
 import com.jsh.erp.datasource.entities.RoleExample;
 import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.mappers.RoleMapper;
@@ -73,10 +74,19 @@ public class RoleService {
         return list;
     }
 
-    public List<Role> select(String name, int offset, int rows)throws Exception {
-        List<Role> list=null;
+    public List<RoleEx> select(String name, int offset, int rows)throws Exception {
+        List<RoleEx> list=null;
         try{
             list=roleMapperEx.selectByConditionRole(name, offset, rows);
+            for(RoleEx roleEx: list) {
+                String priceLimit = roleEx.getPriceLimit();
+                if(StringUtil.isNotEmpty(priceLimit)) {
+                    String priceLimitStr = priceLimit.replace("1", "屏蔽采购价")
+                            .replace("2", "屏蔽零售价")
+                            .replace("3", "屏蔽销售价");
+                    roleEx.setPriceLimitStr(priceLimitStr);
+                }
+            }
         }catch(Exception e){
             JshException.readFail(logger, e);
         }

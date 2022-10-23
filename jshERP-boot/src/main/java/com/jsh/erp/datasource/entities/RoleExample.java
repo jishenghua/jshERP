@@ -304,6 +304,76 @@ public class RoleExample {
             return (Criteria) this;
         }
 
+        public Criteria andPriceLimitIsNull() {
+            addCriterion("price_limit is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPriceLimitIsNotNull() {
+            addCriterion("price_limit is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPriceLimitEqualTo(String value) {
+            addCriterion("price_limit =", value, "priceLimit");
+            return (Criteria) this;
+        }
+
+        public Criteria andPriceLimitNotEqualTo(String value) {
+            addCriterion("price_limit <>", value, "priceLimit");
+            return (Criteria) this;
+        }
+
+        public Criteria andPriceLimitGreaterThan(String value) {
+            addCriterion("price_limit >", value, "priceLimit");
+            return (Criteria) this;
+        }
+
+        public Criteria andPriceLimitGreaterThanOrEqualTo(String value) {
+            addCriterion("price_limit >=", value, "priceLimit");
+            return (Criteria) this;
+        }
+
+        public Criteria andPriceLimitLessThan(String value) {
+            addCriterion("price_limit <", value, "priceLimit");
+            return (Criteria) this;
+        }
+
+        public Criteria andPriceLimitLessThanOrEqualTo(String value) {
+            addCriterion("price_limit <=", value, "priceLimit");
+            return (Criteria) this;
+        }
+
+        public Criteria andPriceLimitLike(String value) {
+            addCriterion("price_limit like", value, "priceLimit");
+            return (Criteria) this;
+        }
+
+        public Criteria andPriceLimitNotLike(String value) {
+            addCriterion("price_limit not like", value, "priceLimit");
+            return (Criteria) this;
+        }
+
+        public Criteria andPriceLimitIn(List<String> values) {
+            addCriterion("price_limit in", values, "priceLimit");
+            return (Criteria) this;
+        }
+
+        public Criteria andPriceLimitNotIn(List<String> values) {
+            addCriterion("price_limit not in", values, "priceLimit");
+            return (Criteria) this;
+        }
+
+        public Criteria andPriceLimitBetween(String value1, String value2) {
+            addCriterion("price_limit between", value1, value2, "priceLimit");
+            return (Criteria) this;
+        }
+
+        public Criteria andPriceLimitNotBetween(String value1, String value2) {
+            addCriterion("price_limit not between", value1, value2, "priceLimit");
+            return (Criteria) this;
+        }
+
         public Criteria andValueIsNull() {
             addCriterion("value is null");
             return (Criteria) this;

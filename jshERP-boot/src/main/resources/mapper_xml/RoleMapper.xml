@@ -5,6 +5,7 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="price_limit" jdbcType="VARCHAR" property="priceLimit" />
     <result column="value" jdbcType="VARCHAR" property="value" />
     <result column="description" jdbcType="VARCHAR" property="description" />
     <result column="enabled" jdbcType="BIT" property="enabled" />
@@ -71,7 +72,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, name, type, value, description, enabled, sort, tenant_id, delete_flag
+    id, name, type, price_limit, value, description, enabled, sort, tenant_id, delete_flag
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.RoleExample" resultMap="BaseResultMap">
     select
@@ -105,13 +106,13 @@
   </delete>
   <insert id="insert" parameterType="com.jsh.erp.datasource.entities.Role">
     insert into jsh_role (id, name, type, 
-      value, description, enabled, 
-      sort, tenant_id, delete_flag
-      )
+      price_limit, value, description, 
+      enabled, sort, tenant_id, 
+      delete_flag)
     values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, 
-      #{value,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{enabled,jdbcType=BIT}, 
-      #{sort,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR}
-      )
+      #{priceLimit,jdbcType=VARCHAR}, #{value,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
+      #{enabled,jdbcType=BIT}, #{sort,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, 
+      #{deleteFlag,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.Role">
     insert into jsh_role
@@ -124,6 +125,9 @@
       </if>
       <if test="type != null">
         type,
+      </if>
+      <if test="priceLimit != null">
+        price_limit,
       </if>
       <if test="value != null">
         value,
@@ -153,6 +157,9 @@
       </if>
       <if test="type != null">
         #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="priceLimit != null">
+        #{priceLimit,jdbcType=VARCHAR},
       </if>
       <if test="value != null">
         #{value,jdbcType=VARCHAR},
@@ -192,6 +199,9 @@
       <if test="record.type != null">
         type = #{record.type,jdbcType=VARCHAR},
       </if>
+      <if test="record.priceLimit != null">
+        price_limit = #{record.priceLimit,jdbcType=VARCHAR},
+      </if>
       <if test="record.value != null">
         value = #{record.value,jdbcType=VARCHAR},
       </if>
@@ -220,6 +230,7 @@
     set id = #{record.id,jdbcType=BIGINT},
       name = #{record.name,jdbcType=VARCHAR},
       type = #{record.type,jdbcType=VARCHAR},
+      price_limit = #{record.priceLimit,jdbcType=VARCHAR},
       value = #{record.value,jdbcType=VARCHAR},
       description = #{record.description,jdbcType=VARCHAR},
       enabled = #{record.enabled,jdbcType=BIT},
@@ -238,6 +249,9 @@
       </if>
       <if test="type != null">
         type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="priceLimit != null">
+        price_limit = #{priceLimit,jdbcType=VARCHAR},
       </if>
       <if test="value != null">
         value = #{value,jdbcType=VARCHAR},
@@ -264,6 +278,7 @@
     update jsh_role
     set name = #{name,jdbcType=VARCHAR},
       type = #{type,jdbcType=VARCHAR},
+      price_limit = #{priceLimit,jdbcType=VARCHAR},
       value = #{value,jdbcType=VARCHAR},
       description = #{description,jdbcType=VARCHAR},
       enabled = #{enabled,jdbcType=BIT},
