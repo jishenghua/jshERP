@@ -135,6 +135,9 @@
             title: '数据类型', align:"left", dataIndex: 'type', width: 100
           },
           {
+            title: '价格屏蔽', align:"left", dataIndex: 'priceLimitStr', width: 100
+          },
+          {
             title: '描述', align:"left", dataIndex: 'description', width: 150
           },
           { title: '排序', align:"left", dataIndex: 'sort', width: 50},
