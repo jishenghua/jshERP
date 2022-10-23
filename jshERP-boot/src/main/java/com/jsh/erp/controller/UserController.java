@@ -13,6 +13,7 @@ import com.jsh.erp.datasource.vo.TreeNodeEx;
 import com.jsh.erp.exception.BusinessParamCheckingException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.redis.RedisService;
+import com.jsh.erp.service.role.RoleService;
 import com.jsh.erp.service.tenant.TenantService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.*;
@@ -50,6 +51,9 @@ public class UserController {
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private RoleService roleService;
 
     @Resource
     private TenantService tenantService;
@@ -380,6 +384,24 @@ public class UserController {
             }
         }
         return arr;
+    }
+
+    @GetMapping(value = "/getCurrentPriceLimit")
+    @ApiOperation(value = "查询当前用户的价格屏蔽")
+    public BaseResponseInfo getCurrentPriceLimit(HttpServletRequest request)throws Exception {
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            Map<String, Object> data = new HashMap<>();
+            String priceLimit = roleService.getCurrentPriceLimit(request);
+            data.put("priceLimit", priceLimit);
+            res.code = 200;
+            res.data = data;
+        } catch(Exception e){
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取session失败";
+        }
+        return res;
     }
 
     /**

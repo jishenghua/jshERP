@@ -240,4 +240,9 @@ public class RoleService {
         }
         return price;
     }
+
+    public String getCurrentPriceLimit(HttpServletRequest request) throws Exception {
+        Long userId = userService.getUserId(request);
+        return userService.getRoleTypeByUserId(userId).getPriceLimit();
+    }
 }
