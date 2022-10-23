@@ -692,12 +692,13 @@ public class UserService {
     }
 
     /**
-     * 根据用户id查询角色类型
+     * 根据用户id查询角色信息
      * @param userId
      * @return
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public String getRoleTypeByUserId(long userId) throws Exception {
+    public Role getRoleTypeByUserId(long userId) throws Exception {
+        Role role = new Role();
         List<UserBusiness> list = userBusinessService.getBasicData(String.valueOf(userId), "UserRole");
         UserBusiness ub = null;
         if(list.size() > 0) {
@@ -711,15 +712,9 @@ public class UserService {
             if(valueArray.length>0) {
                 roleId = valueArray[0];
             }
-            Role role = roleService.getRoleWithoutTenant(Long.parseLong(roleId));
-            if(role!=null) {
-                return role.getType();
-            } else {
-                return null;
-            }
-        } else {
-            return null;
+            role = roleService.getRoleWithoutTenant(Long.parseLong(roleId));
         }
+        return role;
     }
 
     /**

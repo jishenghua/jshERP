@@ -425,7 +425,7 @@ public class DepotHeadController {
             String yearBegin = Tools.getYearBegin() + BusinessConstants.DAY_FIRST_TIME;
             String yearEnd = Tools.getYearEnd() + BusinessConstants.DAY_LAST_TIME;
             Map<String, Object> map = depotHeadService.getBuyAndSaleStatistics(today, monthFirstDay,
-                    yesterdayBegin, yesterdayEnd, yearBegin, yearEnd, roleType);
+                    yesterdayBegin, yesterdayEnd, yearBegin, yearEnd, roleType, request);
             res.code = 200;
             res.data = map;
         } catch(Exception e){

@@ -21,6 +21,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -215,5 +216,28 @@ public class RoleService {
             JshException.writeFail(logger, e);
         }
         return result;
+    }
+
+    /**
+     * 根据权限进行屏蔽价格
+     * @param price
+     * @param type
+     * @return
+     */
+    public Object parsePriceByLimit(BigDecimal price, String type, HttpServletRequest request) throws Exception {
+        Long userId = userService.getUserId(request);
+        String priceLimit = userService.getRoleTypeByUserId(userId).getPriceLimit();
+        if(StringUtil.isNotEmpty(priceLimit)) {
+            if("buy".equals(type) && priceLimit.contains("1")) {
+                return "***";
+            }
+            if("retail".equals(type) && priceLimit.contains("2")) {
+                return "***";
+            }
+            if("sale".equals(type) && priceLimit.contains("3")) {
+                return "***";
+            }
+        }
+        return price;
     }
 }

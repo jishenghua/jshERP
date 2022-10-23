@@ -140,7 +140,7 @@ public class UserController {
             Map<String, Object> data = new HashMap<String, Object>();
             data.put("msgTip", msgTip);
             if(user!=null){
-                String roleType = userService.getRoleTypeByUserId(user.getId()); //角色类型
+                String roleType = userService.getRoleTypeByUserId(user.getId()).getType(); //角色类型
                 redisService.storageObjectBySession(token,"roleType",roleType);
                 redisService.storageObjectBySession(token,"clientIp", Tools.getLocalIp(request));
                 logService.insertLogWithUserId(user.getId(), user.getTenantId(), "用户",

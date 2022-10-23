@@ -21,6 +21,7 @@ import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.orgaUserRel.OrgaUserRelService;
 import com.jsh.erp.service.person.PersonService;
 import com.jsh.erp.service.redis.RedisService;
+import com.jsh.erp.service.role.RoleService;
 import com.jsh.erp.service.serialNumber.SerialNumberService;
 import com.jsh.erp.service.supplier.SupplierService;
 import com.jsh.erp.service.systemConfig.SystemConfigService;
@@ -56,6 +57,8 @@ public class DepotHeadService {
     @Resource
     private UserService userService;
     @Resource
+    private RoleService roleService;
+    @Resource
     private DepotService depotService;
     @Resource
     DepotItemService depotItemService;
@@ -79,8 +82,6 @@ public class DepotHeadService {
     DepotItemMapperEx depotItemMapperEx;
     @Resource
     private LogService logService;
-    @Resource
-    private RedisService redisService;
 
     public DepotHead getDepotHead(long id)throws Exception {
         DepotHead result=null;
@@ -919,7 +920,7 @@ public class DepotHeadService {
     }
 
     public Map<String, Object> getBuyAndSaleStatistics(String today, String monthFirstDay, String yesterdayBegin, String yesterdayEnd,
-                                                       String yearBegin, String yearEnd, String roleType) throws Exception {
+                                                       String yearBegin, String yearEnd, String roleType, HttpServletRequest request) throws Exception {
         String [] creatorArray = getCreatorArray(roleType);
         Map<String, Object> map = new HashMap<>();
         //今日
@@ -974,18 +975,18 @@ public class DepotHeadService {
                 yearBegin, yearEnd, creatorArray); //今年零售出库
         BigDecimal yearRetailSaleBack = getBuyAndSaleRetailStatistics("入库", "零售退货",
                 yearBegin, yearEnd, creatorArray); //今年零售退货
-        map.put("todayBuy", todayBuy.subtract(todayBuyBack));
-        map.put("todaySale", todaySale.subtract(todaySaleBack));
-        map.put("todayRetailSale", todayRetailSale.subtract(todayRetailSaleBack));
-        map.put("monthBuy", monthBuy.subtract(monthBuyBack));
-        map.put("monthSale", monthSale.subtract(monthSaleBack));
-        map.put("monthRetailSale", monthRetailSale.subtract(monthRetailSaleBack));
-        map.put("yesterdayBuy", yesterdayBuy.subtract(yesterdayBuyBack));
-        map.put("yesterdaySale", yesterdaySale.subtract(yesterdaySaleBack));
-        map.put("yesterdayRetailSale", yesterdayRetailSale.subtract(yesterdayRetailSaleBack));
-        map.put("yearBuy", yearBuy.subtract(yearBuyBack));
-        map.put("yearSale", yearSale.subtract(yearSaleBack));
-        map.put("yearRetailSale", yearRetailSale.subtract(yearRetailSaleBack));
+        map.put("todayBuy", roleService.parsePriceByLimit(todayBuy.subtract(todayBuyBack), "buy", request));
+        map.put("todaySale", roleService.parsePriceByLimit(todaySale.subtract(todaySaleBack), "sale", request));
+        map.put("todayRetailSale", roleService.parsePriceByLimit(todayRetailSale.subtract(todayRetailSaleBack), "retail", request));
+        map.put("monthBuy", roleService.parsePriceByLimit(monthBuy.subtract(monthBuyBack), "buy", request));
+        map.put("monthSale", roleService.parsePriceByLimit(monthSale.subtract(monthSaleBack), "sale", request));
+        map.put("monthRetailSale", roleService.parsePriceByLimit(monthRetailSale.subtract(monthRetailSaleBack), "retail", request));
+        map.put("yesterdayBuy", roleService.parsePriceByLimit(yesterdayBuy.subtract(yesterdayBuyBack), "buy", request));
+        map.put("yesterdaySale", roleService.parsePriceByLimit(yesterdaySale.subtract(yesterdaySaleBack), "sale", request));
+        map.put("yesterdayRetailSale", roleService.parsePriceByLimit(yesterdayRetailSale.subtract(yesterdayRetailSaleBack), "retail", request));
+        map.put("yearBuy", roleService.parsePriceByLimit(yearBuy.subtract(yearBuyBack), "buy", request));
+        map.put("yearSale", roleService.parsePriceByLimit(yearSale.subtract(yearSaleBack), "sale", request));
+        map.put("yearRetailSale", roleService.parsePriceByLimit(yearRetailSale.subtract(yearRetailSaleBack), "retail", request));
         return map;
     }
 

@@ -15,6 +15,7 @@ import com.jsh.erp.service.depotHead.DepotHeadService;
 import com.jsh.erp.service.materialExtend.MaterialExtendService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.material.MaterialService;
+import com.jsh.erp.service.role.RoleService;
 import com.jsh.erp.service.serialNumber.SerialNumberService;
 import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.user.UserService;
@@ -60,6 +61,8 @@ public class DepotItemService {
     private UserService userService;
     @Resource
     private SystemConfigService systemConfigService;
+    @Resource
+    private RoleService roleService;
     @Resource
     private MaterialCurrentStockMapper materialCurrentStockMapper;
     @Resource

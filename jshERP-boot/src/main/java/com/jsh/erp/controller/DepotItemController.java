@@ -14,6 +14,7 @@ import com.jsh.erp.service.materialExtend.MaterialExtendService;
 import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.service.redis.RedisService;
+import com.jsh.erp.service.role.RoleService;
 import com.jsh.erp.service.unit.UnitService;
 import com.jsh.erp.utils.*;
 import io.swagger.annotations.Api;
@@ -57,6 +58,9 @@ public class DepotItemController {
 
     @Resource
     private DepotService depotService;
+
+    @Resource
+    private RoleService roleService;
 
     /**
      * 根据仓库和商品查询单据列表
@@ -670,7 +674,7 @@ public class DepotItemController {
                 BigDecimal outPrice = depotItemService.inOrOutPrice("入库", "采购", month, roleType);
                 BigDecimal inPrice = depotItemService.inOrOutPrice("出库", "采购退货", month, roleType);
                 obj.put("x", month);
-                obj.put("y", outPrice.subtract(inPrice));
+                obj.put("y", roleService.parsePriceByLimit(outPrice.subtract(inPrice), "buy", request));
                 buyPriceList.add(obj);
             }
             map.put("buyPriceList", buyPriceList);
@@ -680,7 +684,7 @@ public class DepotItemController {
                 BigDecimal outPrice = depotItemService.inOrOutPrice("出库", "销售", month, roleType);
                 BigDecimal inPrice = depotItemService.inOrOutPrice("入库", "销售退货", month, roleType);
                 obj.put("x", month);
-                obj.put("y", outPrice.subtract(inPrice));
+                obj.put("y", roleService.parsePriceByLimit(outPrice.subtract(inPrice), "sale", request));
                 salePriceList.add(obj);
             }
             map.put("salePriceList", salePriceList);
@@ -690,7 +694,7 @@ public class DepotItemController {
                 BigDecimal outPrice = depotItemService.inOrOutRetailPrice("出库", "零售", month, roleType);
                 BigDecimal inPrice = depotItemService.inOrOutRetailPrice("入库", "零售退货", month, roleType);
                 obj.put("x", month);
-                obj.put("y", outPrice.subtract(inPrice));
+                obj.put("y", roleService.parsePriceByLimit(outPrice.subtract(inPrice), "retail", request));
                 retailPriceList.add(obj);
             }
             map.put("retailPriceList", retailPriceList);
