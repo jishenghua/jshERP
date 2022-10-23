@@ -224,18 +224,18 @@ public class RoleService {
      * @param type
      * @return
      */
-    public Object parsePriceByLimit(BigDecimal price, String type, HttpServletRequest request) throws Exception {
+    public Object parsePriceByLimit(BigDecimal price, String type, String emptyInfo, HttpServletRequest request) throws Exception {
         Long userId = userService.getUserId(request);
         String priceLimit = userService.getRoleTypeByUserId(userId).getPriceLimit();
         if(StringUtil.isNotEmpty(priceLimit)) {
             if("buy".equals(type) && priceLimit.contains("1")) {
-                return "***";
+                return emptyInfo;
             }
             if("retail".equals(type) && priceLimit.contains("2")) {
-                return "***";
+                return emptyInfo;
             }
             if("sale".equals(type) && priceLimit.contains("3")) {
-                return "***";
+                return emptyInfo;
             }
         }
         return price;
