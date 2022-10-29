@@ -204,6 +204,12 @@ public class AccountHeadService {
                 throw new BusinessRunTimeException(ExceptionConstants.ACCOUNT_HEAD_UN_AUDIT_DELETE_FAILED_CODE,
                         String.format(ExceptionConstants.ACCOUNT_HEAD_UN_AUDIT_DELETE_FAILED_MSG));
             }
+            if("收预付款".equals(accountHead.getType())){
+                if (accountHead.getOrganId() != null) {
+                    //删除时需要从会员扣除预付款
+                    supplierService.updateAdvanceIn(accountHead.getOrganId(), BigDecimal.ZERO.subtract(accountHead.getTotalPrice()));
+                }
+            }
         }
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");
